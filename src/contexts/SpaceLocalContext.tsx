@@ -2,22 +2,22 @@
 import React, { createContext, useState } from 'react';
 
 // Define an enum for the available tab options
-export enum TabOption {
+export enum SpaceTabOption {
   Spaces = 'spaces',
   Requests = 'requests'
 }
 
 // Define the type for the local context
 type SpaceLocalContextType = {
-  activeTab: TabOption; // The currently active tab option
-  setActiveTab: React.Dispatch<React.SetStateAction<TabOption>>; // Function to set the active tab
+  activeTab: SpaceTabOption; // The currently active tab option
+  setActiveTab: React.Dispatch<React.SetStateAction<SpaceTabOption>>; // Function to set the active tab
   selectedSpace: string; // The ID of the currently selected space
   setSelectedSpace: React.Dispatch<React.SetStateAction<string>>; // Function to set the selected space
 };
 
 // Create the local context with default values
 export const SpaceLocalContext = createContext<SpaceLocalContextType>({
-  activeTab: TabOption.Spaces,
+  activeTab: SpaceTabOption.Spaces,
   setActiveTab: () => {},
   selectedSpace: '',
   setSelectedSpace: () => {},
@@ -31,7 +31,7 @@ type SpaceLocalContextProviderProps = {
 // Create the local context provider component
 export const SpaceLocalContextProvider: React.FC<SpaceLocalContextProviderProps> = ({ children }) => {
   // Define the state for the local context
-  const [activeTab, setActiveTab] = useState<TabOption>(TabOption.Spaces);
+  const [activeTab, setActiveTab] = useState<SpaceTabOption>(SpaceTabOption.Spaces);
   const [selectedSpace, setSelectedSpace] = useState<string>('');
 
   // Combine the state and setter functions into a single context value object

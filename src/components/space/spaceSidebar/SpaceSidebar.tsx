@@ -3,13 +3,14 @@ import React, { useContext } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
+import AddIcon from '@mui/icons-material/Add';
 
 // Internal Components
-import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { SpaceLocalContext } from 'contexts';
-import Searchbar from './searchBar';
-import SpaceCard from './spaceCard';
-import { TabOption } from 'contexts';
+import Searchbar from '../searchBar/searcBar';
+import SpaceCard from './spaceCard/spaceCard';
+import { SpaceTabOption } from 'contexts';
 
 export const SpaceSidebar = () => {
   const { activeTab, setActiveTab } = useContext(SpaceLocalContext);
@@ -21,10 +22,38 @@ export const SpaceSidebar = () => {
       alignItems="flex-start"
       justifyContent="flex-start"
     >
-      <Searchbar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-      />
+      {activeTab === SpaceTabOption.Spaces && (
+        <ItemHV2
+          justifyContent="space-between"
+          width="100%"
+          flex="initial"
+        >
+          <Searchbar
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
+          <ItemVV2
+            flex="initial"
+            margin="0px 0px 0px 10px"
+            alignItems="center"
+            width="48px"
+            height="48px"
+            top="10px"
+            right="0px"
+            display={activeTab === SpaceTabOption.Requests ? 'none' : 'flex'}
+          >
+            <ButtonV2
+              alignSelf="stretch"
+              background="#D53893"
+              hoverBackground="transparent"
+              borderRadius="50%"
+              onClick={() => setActiveTab(SpaceTabOption.Requests)}
+            >
+              <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }} />
+            </ButtonV2>
+          </ItemVV2>
+        </ItemHV2>
+      )}
       <SpanV2
         fontWeight="700"
         fontSize="12px"
@@ -32,9 +61,9 @@ export const SpaceSidebar = () => {
         margin="0 0 13px 0"
         color={theme.default.secondaryColor}
       >
-        {activeTab === TabOption.Spaces ? 'SPACES' : 'REQUESTS'}
+        {activeTab === SpaceTabOption.Spaces ? 'SPACES' : 'REQUESTS'}
       </SpanV2>
-      {activeTab === TabOption.Spaces ? (
+      {activeTab === SpaceTabOption.Spaces ? (
         <SpaceContainer>
           <SpaceCard
             name="adam.eth"

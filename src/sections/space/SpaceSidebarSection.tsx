@@ -18,20 +18,11 @@ export const SpaceSidebarSection = () => {
     <ItemVV2>
       <SpaceSidebarTabs />
       <SpaceSidebar />
-      <ProfileContainer borderTop={`2px solid ${theme.default.border}`}>
-        <ProfileHeader
-          setActiveTab={setActiveTab}
-          showQR={false}
-        />
-      </ProfileContainer>
+      <ProfileHeader
+        setActiveTab={setActiveTab}
+        showQR={false}
+      />
+      
     </ItemVV2>
   );
 };
-
-const ProfileContainer = styled(ItemHV2)`
-   flex: initial;
-   justify-content: space-between;
-   margin: 15px 0px 5px 0px;
-   padding: 14px 10px 0px 10px;
-   border-top: ${props => props.borderTop};
-`;

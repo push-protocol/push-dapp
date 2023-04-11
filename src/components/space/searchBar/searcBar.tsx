@@ -4,82 +4,54 @@ import React, { useContext } from 'react';
 // External Packages
 import styled, { useTheme } from 'styled-components';
 import CloseIcon from '@material-ui/icons/Close';
-import AddIcon from '@mui/icons-material/Add';
 
 // Internal Components
-import { ButtonV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
-import { TabOption } from 'contexts';
+import { SpaceTabOption } from 'contexts';
 
 const Searchbar = ({ setActiveTab, activeTab }: any) => {
   const them = useTheme();
 
   const searchSpace = () => {};
   const clearInput = () => {};
-  
+
   return (
-    <ItemHV2
-      justifyContent="space-between"
-      width="100%"
-      flex="initial"
+    <ItemVV2
+      alignItems="stretch"
     >
-      <ItemVV2
-        alignItems="stretch"
-        display={activeTab === TabOption.Requests ? 'none' : 'flex'}
-      >
-        <SearchBarContent onSubmit={searchSpace}>
-          <Input
-            type="text"
-            placeholder="Search space name"
-          />
-          {false && (
-            <ItemVV2
-              position="absolute"
-              alignItems="flex-end"
-              width="24px"
-              height="24px"
-              top="22px"
-              right="34px"
-            >
-              <CloseIcon onClick={clearInput} />
-            </ItemVV2>
-          )}
+      <SearchBarContent onSubmit={searchSpace}>
+        <Input
+          type="text"
+          placeholder="Search space name"
+        />
+        {false && (
           <ItemVV2
             position="absolute"
             alignItems="flex-end"
             width="24px"
             height="24px"
             top="22px"
-            right="16px"
+            right="34px"
           >
-            <SearchIcon
-              style={{ cursor: 'pointer' }}
-              onClick={searchSpace}
-            />
+            <CloseIcon onClick={clearInput} />
           </ItemVV2>
-        </SearchBarContent>
-      </ItemVV2>
-      <ItemVV2
-        flex="initial"
-        margin="0px 0px 0px 10px"
-        alignItems="center"
-        width="48px"
-        height="48px"
-        top="10px"
-        right="0px"
-        display={activeTab === TabOption.Requests ? 'none' : 'flex'}
-      >
-        <ButtonV2
-          alignSelf="stretch"
-          background="#D53893"
-          hoverBackground="transparent"
-          borderRadius="50%"
-          onClick={() => setActiveTab(TabOption.Requests)}
+        )}
+        <ItemVV2
+          position="absolute"
+          alignItems="flex-end"
+          width="24px"
+          height="24px"
+          top="22px"
+          right="16px"
         >
-          <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }} />
-        </ButtonV2>
-      </ItemVV2>
-    </ItemHV2>
+          <SearchIcon
+            style={{ cursor: 'pointer' }}
+            onClick={searchSpace}
+          />
+        </ItemVV2>
+      </SearchBarContent>
+    </ItemVV2>
   );
 };
 

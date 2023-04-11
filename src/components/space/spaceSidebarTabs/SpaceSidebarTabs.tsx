@@ -7,7 +7,7 @@ import styled, { useTheme } from 'styled-components';
 // Internal Components
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { SpaceLocalContext } from 'contexts';
-import { TabOption } from 'contexts';
+import { SpaceTabOption } from 'contexts';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -22,28 +22,28 @@ export const SpaceSidebarTabs = () => {
       <ItemVV2 flex="initial">
         <ItemHV2>
           {/* Set active and onCLick to customize tab */}
-          {Object.keys(TabOption).map((option) => {
+          {Object.keys(SpaceTabOption).map((option) => {
             return (
               <TabButton
-                active={activeTab == TabOption[option] ? true : false}
+                active={activeTab == SpaceTabOption[option] ? true : false}
                 background="transparent"
                 hoverBackground="transparent"
                 color={theme.default.color}
                 flex="1"
                 padding="10px 10px 20px 10px"
                 onClick={() => {
-                  setActiveTab(TabOption[option]);
+                  setActiveTab(SpaceTabOption[option]);
                 }}
               >
                 <ItemHV2 alignItems="center">
                   <SpanV2
                     fontSize="16px"
                     fontWeight="400"
-                    color={activeTab === TabOption[option] ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
+                    color={activeTab === SpaceTabOption[option] ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
                   >
                     {option}
                   </SpanV2>
-                  {TabOption[option] === TabOption['Requests'] && (
+                  {SpaceTabOption[option] === SpaceTabOption['Requests'] && (
                     <SpanV2
                       background={GLOBALS.COLORS.PRIMARY_PINK}
                       color={GLOBALS.COLORS.WHITE}
