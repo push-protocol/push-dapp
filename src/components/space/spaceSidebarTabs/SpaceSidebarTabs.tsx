@@ -15,7 +15,6 @@ import GLOBALS from 'config/Globals';
 export const SpaceSidebarTabs = () => {
   const { activeTab, setActiveTab } = useContext(SpaceLocalContext);
   const theme = useTheme();
-
   return (
     <ItemVV2 justifyContent="flex-start">
       {/* Header */}
@@ -43,7 +42,7 @@ export const SpaceSidebarTabs = () => {
                   >
                     {option}
                   </SpanV2>
-                  {SpaceTabOption[option] === SpaceTabOption['Requests'] && (
+                  {SpaceTabOption[option] === SpaceTabOption.Requests&& (
                     <SpanV2
                       background={GLOBALS.COLORS.PRIMARY_PINK}
                       color={GLOBALS.COLORS.WHITE}

@@ -19,7 +19,7 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
 
   const {connectedUser} = useContext(ChatUserContext);
 
-  const ensName=useResolveWeb3Name(connectedUser.wallets)
+  const ensName=useResolveWeb3Name(connectedUser?.wallets)
 
 
   const account = caip10ToWallet(connectedUser?.wallets);
@@ -40,11 +40,11 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
         >
           <ImageV2
             alt="Profile"
-            src={connectedUser.profilePicture}
+            src={connectedUser?.profilePicture}
           />
         </ItemVV2>
         <SpanV2
-          color={theme.default.secondaryColor}
+          color={theme.default?.secondaryColor}
           size="16px"
           weight="400"
         >

@@ -10,7 +10,8 @@ import Calendar from 'assets/space/calendar.svg';
 import { shortenText } from 'helpers/UtilityHelper';
 import { Space } from 'types';
 
-const SpaceCard = ({spaceData}: Space ) => {
+
+const SpaceCard = ({spaceData}:{spaceData:Space}) => {
   return (
     <SpaceCardContainer>
       <SpaceCardHeader>
@@ -23,7 +24,6 @@ const SpaceCard = ({spaceData}: Space ) => {
         >
           <ImageV2
             alt="Profile"
-            // src={Profile}
             src={spaceData?.spaceImage}
           />
         </ItemVV2>
@@ -34,7 +34,6 @@ const SpaceCard = ({spaceData}: Space ) => {
           color="#fff"
         >
           {shortenText(spaceData?.spaceCreator,4,4)}
-          {/* {name} */}
         </SpanV2>
         <HostBadge>Host</HostBadge>
       </SpaceCardHeader>
@@ -46,7 +45,6 @@ const SpaceCard = ({spaceData}: Space ) => {
         margin="24px 0px 0px 0px"
       >
         {spaceData?.spaceName?.length > 45 ? spaceData?.spaceName?.slice(0,43)+'...' : spaceData?.spaceName}
-      {/* {description} */}
       </SpanV2>
       <SpaceCardFooter>
         <ItemVV2
@@ -67,7 +65,6 @@ const SpaceCard = ({spaceData}: Space ) => {
           color="#fff"
         >
           {spaceData?.scheduleAt ?? '30 Apr 4:30PM'}
-          {/* {'30 Apr 4:30PM'} */}
         </SpanV2>
       </SpaceCardFooter>
     </SpaceCardContainer>
