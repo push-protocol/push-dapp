@@ -69,17 +69,9 @@ export const SpaceSidebar = () => {
       </SpanV2>
       {activeTab === SpaceTabOption.Spaces ? (
         <SpaceContainer>
-          {userSpaces[account].spaces['1'].map((space, index) => {
-            return (
               <SpaceCard
-                name="adam.eth"
-                description="Push Chat: The solution to centralized messaging"
-                date="30 Apr"
-                time="4:30 PM"
-                spaceData={space}
+                spaceData={userSpaces[account].spaces['1']}
               />
-              );
-          })}   
 
           {/* <SpanV2
             color={theme.default.secondaryColor}

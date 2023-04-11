@@ -8,9 +8,9 @@ import styled from 'styled-components';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Calendar from 'assets/space/calendar.svg';
 import { shortenText } from 'helpers/UtilityHelper';
-import Profile from "assets/chat/group-chat/profile.svg"
+import { Space } from 'types';
 
-const SpaceCard = ({ name, description,spaceData }: any) => {
+const SpaceCard = ({spaceData}: Space ) => {
   return (
     <SpaceCardContainer>
       <SpaceCardHeader>
@@ -23,8 +23,8 @@ const SpaceCard = ({ name, description,spaceData }: any) => {
         >
           <ImageV2
             alt="Profile"
-            src={spaceData?.spaceImage}
             // src={Profile}
+            src={spaceData?.spaceImage}
           />
         </ItemVV2>
         <SpanV2
@@ -46,7 +46,7 @@ const SpaceCard = ({ name, description,spaceData }: any) => {
         margin="24px 0px 0px 0px"
       >
         {spaceData?.spaceName?.length > 45 ? spaceData?.spaceName?.slice(0,43)+'...' : spaceData?.spaceName}
-        {/* {description} */}
+      {/* {description} */}
       </SpanV2>
       <SpaceCardFooter>
         <ItemVV2

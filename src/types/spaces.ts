@@ -32,7 +32,7 @@ export interface Space{
 }
 
 export interface Spaces {
-    [key: string]: Space[];
+    [key: string]: Space;
 }
   
 export interface UserSpaces {

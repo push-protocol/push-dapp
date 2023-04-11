@@ -13,7 +13,7 @@ export const getSpacesFromIndexedDB = async (connectedUser:ConnectedUser):Promis
     //change decryptFeeds to a common function
     // const decryptedInboxes: Spaces = await decryptFeedsNew({ feeds: inboxes, connectedUser });
     // console.log(decryptedInboxes)
-      return {'1':spaces};
+      return {'1':spaces[1]};
 //   }
 };
 
@@ -26,6 +26,6 @@ export const getSpaceRequestsFromIndexedDB = async (connectedUser:ConnectedUser)
     //change decryptFeeds to a common function
     // const decryptedRequests: Spaces = await decryptFeedsNew({ feeds: requests, connectedUser });
     // console.log(decryptedRequests)
-    return {'1':spaces};
+    return {'2':spaces[1]};
 //   }
 };
