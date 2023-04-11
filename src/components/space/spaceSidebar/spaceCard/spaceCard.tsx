@@ -6,10 +6,11 @@ import styled from 'styled-components';
 
 // Internal Components
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import Profile from 'assets/chat/group-chat/profile.svg';
 import Calendar from 'assets/space/calendar.svg';
+import { shortenText } from 'helpers/UtilityHelper';
+import Profile from "assets/chat/group-chat/profile.svg"
 
-const SpaceCard = ({ name, description, date, time }: any) => {
+const SpaceCard = ({ name, description,spaceData }: any) => {
   return (
     <SpaceCardContainer>
       <SpaceCardHeader>
@@ -22,7 +23,8 @@ const SpaceCard = ({ name, description, date, time }: any) => {
         >
           <ImageV2
             alt="Profile"
-            src={Profile}
+            src={spaceData?.spaceImage}
+            // src={Profile}
           />
         </ItemVV2>
         <SpanV2
@@ -31,7 +33,8 @@ const SpaceCard = ({ name, description, date, time }: any) => {
           fontWeight="500"
           color="#fff"
         >
-          {name}
+          {shortenText(spaceData?.spaceCreator,4,4)}
+          {/* {name} */}
         </SpanV2>
         <HostBadge>Host</HostBadge>
       </SpaceCardHeader>
@@ -40,8 +43,10 @@ const SpaceCard = ({ name, description, date, time }: any) => {
         fontWeight="500"
         color="#fff"
         textAlign="left"
+        margin="24px 0px 0px 0px"
       >
-        {description}
+        {spaceData?.spaceName?.length > 45 ? spaceData?.spaceName?.slice(0,43)+'...' : spaceData?.spaceName}
+        {/* {description} */}
       </SpanV2>
       <SpaceCardFooter>
         <ItemVV2
@@ -61,7 +66,8 @@ const SpaceCard = ({ name, description, date, time }: any) => {
           fontWeight="500"
           color="#fff"
         >
-          {`${date} at ${time}`}
+          {spaceData?.scheduleAt ?? '30 Apr 4:30PM'}
+          {/* {'30 Apr 4:30PM'} */}
         </SpanV2>
       </SpaceCardFooter>
     </SpaceCardContainer>
@@ -80,6 +86,7 @@ const HostBadge = styled.div`
 const SpaceCardFooter = styled(ItemHV2)`
   justify-content: flex-start;
   max-height: 20px;
+  margin-top:12px;
 `;
 
 const SpaceCardHeader = styled(ItemHV2)`
@@ -90,11 +97,12 @@ const SpaceCardHeader = styled(ItemHV2)`
 const SpaceCardContainer = styled(ItemVV2)`
   width: 100%;
   box-sizing: border-box;
-  justify-content: space-between;
-  max-height: 151px;
+  justify-content: flex-start;
+  max-height: 169px;
   background: linear-gradient(87.17deg, #b6a0f5 0%, #f46ef7 57.29%, #ff95d5 100%);
   border-radius: 17px;
   padding: 16px;
+  margin-bottom: 10px;
 `;
 
 export default SpaceCard;

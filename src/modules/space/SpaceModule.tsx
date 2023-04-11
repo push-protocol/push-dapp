@@ -24,7 +24,9 @@ export const SpaceModule = () => {
   const { userSpaces,setSpaceRequests,setSpaces } = useContext(SpaceGlobalContext);
 
   useEffect(() => {
+    console.log('in effect',connectedUser);
     if(connectedUser || !account || !library) return;
+    
     (async function () {
       try {
         const signer = await library.getSigner();
@@ -34,7 +36,8 @@ export const SpaceModule = () => {
         console.log(err);
       }
     })()
-  }, [account, library]);
+  },[]);
+
 console.log(connectedUser)
   useEffect(() => {
     if(!connectedUser) return;

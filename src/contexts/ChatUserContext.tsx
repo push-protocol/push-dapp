@@ -76,7 +76,7 @@ const ChatUserContextProvider = (props) => {
         privateKey: '',
       };
     }
-
+console.log("connected in chat",connectedUser);
     setConnectedUser(connectedUser);
   };
 
