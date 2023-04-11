@@ -9,6 +9,7 @@ import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { SpaceLocalContext } from 'contexts';
 import Searchbar from './searchBar';
 import SpaceCard from './spaceCard';
+import { TabOption } from 'contexts';
 
 export const SpaceSidebar = () => {
   const { activeTab, setActiveTab } = useContext(SpaceLocalContext);
@@ -31,9 +32,9 @@ export const SpaceSidebar = () => {
         margin="0 0 13px 0"
         color={theme.default.secondaryColor}
       >
-        {activeTab == 'spaces' ? 'SPACES' : 'REQUESTS'}
+        {activeTab === TabOption.Spaces ? 'SPACES' : 'REQUESTS'}
       </SpanV2>
-      {activeTab == 'spaces' ? (
+      {activeTab === TabOption.Spaces ? (
         <SpaceContainer>
           <SpaceCard
             name="adam.eth"

@@ -4,7 +4,7 @@ import React, { createContext, useState } from 'react';
 // Define an enum for the available tab options
 export enum TabOption {
   Spaces = 'spaces',
-  Requests = 'requests',
+  Requests = 'requests'
 }
 
 // Define the type for the local context

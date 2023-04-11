@@ -1,12 +1,22 @@
+// React + Web3 Essentials
+import React, { useContext } from 'react';
+
+// External Packages
 import styled, { useTheme } from 'styled-components';
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@mui/icons-material/Add';
+
+// Internal Components
 import { ButtonV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
+import { TabOption } from 'contexts';
 
 const Searchbar = ({ setActiveTab, activeTab }: any) => {
+  const them = useTheme();
+
   const searchSpace = () => {};
   const clearInput = () => {};
+  
   return (
     <ItemHV2
       justifyContent="space-between"
@@ -15,7 +25,7 @@ const Searchbar = ({ setActiveTab, activeTab }: any) => {
     >
       <ItemVV2
         alignItems="stretch"
-        display={activeTab == 'requests' ? 'none' : 'flex'}
+        display={activeTab === TabOption.Requests ? 'none' : 'flex'}
       >
         <SearchBarContent onSubmit={searchSpace}>
           <Input
@@ -57,14 +67,14 @@ const Searchbar = ({ setActiveTab, activeTab }: any) => {
         height="48px"
         top="10px"
         right="0px"
-        display={activeTab == 'requests' ? 'none' : 'flex'}
+        display={activeTab === TabOption.Requests ? 'none' : 'flex'}
       >
         <ButtonV2
           alignSelf="stretch"
           background="#D53893"
           hoverBackground="transparent"
           borderRadius="50%"
-          onClick={() => setActiveTab('requests')}
+          onClick={() => setActiveTab(TabOption.Requests)}
         >
           <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }} />
         </ButtonV2>
