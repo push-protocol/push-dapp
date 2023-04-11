@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { AiOutlineMore } from 'react-icons/ai';
@@ -19,12 +19,12 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
 
   const {connectedUser} = useContext(ChatUserContext);
 
-  const ensName=useResolveWeb3Name(connectedUser.wallets)
+  const ensName=useResolveWeb3Name(connectedUser?.wallets)
 
 
   const account = caip10ToWallet(connectedUser?.wallets);
   return (
-    <>
+    <ProfileContainer borderTop={`1px solid ${theme.default.secondaryBg}`}>
       {/* <Tooltip title="Profile" placement="top-start"> */}
       <WalletDetailsContainer
         direction="row"
@@ -40,11 +40,11 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
         >
           <ImageV2
             alt="Profile"
-            src={connectedUser.profilePicture}
+            src={connectedUser?.profilePicture}
           />
         </ItemVV2>
         <SpanV2
-          color={theme.default.secondaryColor}
+          color={theme.default?.secondaryColor}
           size="16px"
           weight="400"
         >
@@ -61,7 +61,7 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
       {/* <IconButton aria-label="more">
         <MoreVertIcon />
       </IconButton> */}
-    </>
+    </ProfileContainer>
   );
 };
 
@@ -92,6 +92,14 @@ const Settings = styled(AiOutlineMore)`
   cursor: pointer;
   transition: 400ms;
   transform: ${(props) => (props.active ? 'rotateZ(90deg)' : 'none')};
+`;
+
+const ProfileContainer = styled(ItemHV2)`
+   flex: initial;
+   justify-content: space-between;
+   margin: 15px 0px 5px 0px;
+   padding: 14px 10px 0px 10px;
+   border-top: ${props => props.borderTop};
 `;
 
 export default Profile;

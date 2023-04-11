@@ -2,6 +2,7 @@ import { ConnectedUser } from "types/chat";
 
 import { intitializeDb } from "helpers/IndexedDbHelper";
 import { Spaces } from "types";
+import { spaces } from "services/space/spaceList";
 
 export const getSpacesFromIndexedDB = async (connectedUser:ConnectedUser):Promise<Spaces> => {
   //remove old indexDb structure
@@ -12,7 +13,7 @@ export const getSpacesFromIndexedDB = async (connectedUser:ConnectedUser):Promis
     //change decryptFeeds to a common function
     // const decryptedInboxes: Spaces = await decryptFeedsNew({ feeds: inboxes, connectedUser });
     // console.log(decryptedInboxes)
-      return {};
+      return {'1':spaces[1]};
 //   }
 };
 
@@ -25,6 +26,6 @@ export const getSpaceRequestsFromIndexedDB = async (connectedUser:ConnectedUser)
     //change decryptFeeds to a common function
     // const decryptedRequests: Spaces = await decryptFeedsNew({ feeds: requests, connectedUser });
     // console.log(decryptedRequests)
-    return {};
+    return {'2':spaces[1]};
 //   }
 };

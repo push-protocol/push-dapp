@@ -1,6 +1,7 @@
 
-import React, { createContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Spaces, UserSpaces } from 'types';
+
 
 type SpaceGlobalContextType = {
   userSpaces: UserSpaces,
@@ -11,7 +12,6 @@ export const SpaceGlobalContext = createContext<SpaceGlobalContextType>({} as Sp
 
 export const SpaceGlobalContextProvider = (props) => {
   const [userSpaces, setUserSpaces] = useState<UserSpaces>({});
-
   
   const setSpaces = (spaces:Spaces, id:string) => {
     setUserSpaces(prevUserFeeds => ({

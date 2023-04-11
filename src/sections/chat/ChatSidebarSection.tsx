@@ -270,13 +270,11 @@ useClickAway(containerRef, () => closeQRDropdown())
         </QRCodeContainer>
       ) : null}
 
-      <ProfileContainer borderTop={`1px solid ${theme.default.secondaryBg}`}>
         <ProfileHeader
           setActiveTab={setActiveTab}
           setShowQR={setShowQR}
           showQR={showQR}
         />
-      </ProfileContainer>
     </ItemVV2>
   );
 };
@@ -285,14 +283,6 @@ export default ChatSidebarSection;
 const TabButton = styled(ButtonV2)`
   border-bottom: 2px solid ${(props) => (props.active ? GLOBALS.COLORS.PRIMARY_PINK : props.theme.default.secondaryBg)};
   pointer: hand;
-`;
-
-const ProfileContainer = styled(ItemHV2)`
-   flex: initial;
-   justify-content: space-between;
-   margin: 15px 0px 5px 0px;
-   padding: 14px 10px 0px 10px;
-   border-top: ${props => props.borderTop};
 `;
 
 const QRCodeContainer = styled.div`
