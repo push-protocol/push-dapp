@@ -27,7 +27,7 @@ import { Content } from 'components/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import * as w2wHelper from 'helpers/w2w/';
 import {
-  checkIfIntentExist,
+  checkIfChatExist,
   fetchInbox
 } from 'helpers/w2w/user';
 import { useDeviceWidthCheck } from 'hooks';
@@ -724,7 +724,7 @@ useEffect(() => {
                         )}
                           <Chats
                             msg={
-                              (!currentChat?.groupInformation?.isPublic && checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup }))
+                              (!currentChat?.groupInformation?.isPublic && checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser, isGroup }))
                                 ? ''
                                 : msg
                             }
@@ -741,7 +741,7 @@ useEffect(() => {
                     messages={messages}
                     isGroup={isGroup}
                   />
-                  {checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup }) && (
+                  {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser, isGroup }) && (
                     <Chats
                       msg={{
                         ...messages[0],
@@ -760,7 +760,7 @@ useEffect(() => {
             <div ref={bottomRef}></div>
           </MessageContainer>
 
-          {checkIfIntentExist({ receivedIntents, currentChat, connectedUser,isGroup }) ? null : (
+          {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser,isGroup }) ? null : (
             <>
               <Typebar
                 messageBeingSent={messageBeingSent}
@@ -772,6 +772,7 @@ useEffect(() => {
                 sendIntent={sendIntent}
                 setOpenSuccessSnackBar={setOpenSuccessSnackBar}
                 setSnackbarText={setSnackbarText}
+                isJoinGroup = {(!checkIfChatExist({ chats:inbox, currentChat, connectedUser,isGroup }) && isGroup)}
                 approveIntent= {ApproveIntent}
               />
             </>

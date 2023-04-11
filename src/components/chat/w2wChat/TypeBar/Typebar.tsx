@@ -18,11 +18,7 @@ import { AppContext } from 'types/chat';
 import { caip10ToWallet } from 'helpers/w2w';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { MessagetypeType } from '../../../../types/chat';
-import { convertToWalletAddressList, getAdminList, updateGroup } from 'helpers/w2w/groupChat';
-import { useWeb3React } from '@web3-react/core';
-import { ethers } from 'ethers';
-import useToast from 'hooks/useToast';
-import { MdCheckCircle, MdError } from 'react-icons/md';
+
 
 interface ITypeBar {
   isGroup: boolean;
@@ -35,6 +31,7 @@ interface ITypeBar {
   sendIntent: ({ message, messageType }: { message: string; messageType: MessagetypeType }) => void;
   setOpenSuccessSnackBar: (openReprovalSnackbar: boolean) => void;
   openReprovalSnackbar?: boolean;
+  isJoinGroup?:boolean;
   setSnackbarText: (SnackbarText: string) => void;
   approveIntent: (status:string) => void;
 }
@@ -47,11 +44,11 @@ const Typebar = ({
   setVideoCallInfo,
   sendMessage,
   sendIntent,
+  isJoinGroup,
   setOpenSuccessSnackBar,
   setSnackbarText,
   approveIntent,
 }: ITypeBar) => {
-  const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const { currentChat, activeTab, setChat }: AppContext = useContext<AppContext>(Context);
   const {connectedUser} = useContext(ChatUserContext);
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
@@ -59,7 +56,6 @@ const Typebar = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [filesUploading, setFileUploading] = useState<boolean>(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const groupInfoToast = useToast();
   const [value, setValue] = useState('');
 
   const theme = useTheme();
@@ -133,54 +129,6 @@ const Typebar = ({
     }
   };
 
-  const joinGroup = async () => {
-    //Already Present Members and PendingMembers
-    const groupMemberList = convertToWalletAddressList([
-      ...currentChat?.groupInformation?.members,
-      ...currentChat?.groupInformation?.pendingMembers,
-    ]);
-
-    //Newly Added Members and alreadyPresent Members in the groupchat
-    const members = [...groupMemberList,account];
-
-    //Admins wallet address from both members and pendingMembers
-    const adminList = getAdminList(currentChat?.groupInformation);
-
-    try {
-      const { updateResponse, updatedCurrentChat } = await updateGroup({
-        currentChat,
-        connectedUser,
-        adminList,
-        memeberList: members,
-      });
-
-     await approveIntent('Approved');
-      groupInfoToast.showMessageToast({
-        toastTitle: 'Success',
-        toastMessage: 'Group Invitation sent',
-        toastType: 'SUCCESS',
-        getToastIcon: (size) => (
-          <MdCheckCircle
-            size={size}
-            color="green"
-          />
-        ),
-      });
-    } catch (error) {
-      console.log('Error', error);
-      groupInfoToast.showMessageToast({
-        toastTitle: 'Error',
-        toastMessage: error.message,
-        toastType: 'ERROR',
-        getToastIcon: (size) => (
-          <MdError
-            size={size}
-            color="red"
-          />
-        ),
-      });
-    }
-  };
 
   const uploadFile = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
     const file: File = e.target.files?.[0];
@@ -223,7 +171,7 @@ const Typebar = ({
   };
 
   return (
-    <TypeBarContainer background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg} isJoinGroup={(isGroup && activeTab ===3)}>
+    <TypeBarContainer background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg} isJoinGroup={isJoinGroup}>
       {messageBeingSent ? (
         <SpinnerContainer>
           <ItemHV2
@@ -243,7 +191,7 @@ const Typebar = ({
         </SpinnerContainer>
       ) : (
         <>
-         {!(isGroup && activeTab===3) && <Icon
+         {!isJoinGroup && <Icon
             onClick={(): void => setShowEmojis(!showEmojis)}
             filter={theme.snackbarBorderIcon}
           >
@@ -267,7 +215,7 @@ const Typebar = ({
             />
           )}
           
-            {(isGroup && activeTab ===3) ? 
+            {isJoinGroup ? 
             <SpanV2>You need to join the group in order to send a message</SpanV2>
             :
             <TextInput
@@ -282,7 +230,7 @@ const Typebar = ({
             
           
 
-         {!(isGroup && activeTab===3)? <>
+         {!isJoinGroup? <>
             <GifDiv>
               <label>
                 {isGifPickerOpened && (
@@ -350,7 +298,7 @@ const Typebar = ({
           borderRadius="12px"
           padding="15px 8px"
           onClick={() => {
-            joinGroup()
+            approveIntent('Approved')
           }}
         >
           <SpanV2 fontWeight="500" fontSize = "17px">Join Group</SpanV2>

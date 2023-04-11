@@ -22,26 +22,26 @@ export function checkConnectedUser(connectedUser: ConnectedUser): boolean {
   } else return false;
 }
 
-type CheckIfIntentExistPropType = {
-  receivedIntents: Feeds[];
+type CheckIfChatsExistPropType = {
+  chats: Feeds[];
   currentChat: Feeds;
   connectedUser: ConnectedUser;
   isGroup?: boolean;
 };
 
-export const checkIfIntentExist = ({
-  receivedIntents,
+export const checkIfChatExist = ({
+  chats,
   currentChat,
   connectedUser,
   isGroup,
-}: CheckIfIntentExistPropType): boolean => {
+}: CheckIfChatsExistPropType): boolean => {
   let val: boolean;
   if (isGroup) {
-    val = receivedIntents?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)
+    val = chats?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)
       ? true
       : false;
   } else {
-    val = receivedIntents?.find(
+    val = chats?.find(
       (x) => x?.combinedDID === currentChat?.combinedDID && x?.msg?.toDID === connectedUser?.did
     )
       ? true

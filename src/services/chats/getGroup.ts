@@ -11,7 +11,6 @@ export const getGroup = async (searchedGroup:string,setInvalidSearch:()=>void): 
         if((err.message as string).includes('No group with chatId')){
           try{
             group = await getGroupByName(searchedGroup);
-            console.log(group)
           }
       catch(err){
         setInvalidSearch();

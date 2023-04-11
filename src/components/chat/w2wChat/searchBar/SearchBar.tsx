@@ -110,7 +110,14 @@ const SearchBar = ({ autofilled }) => {
   const submitSearch = (event: React.FormEvent | null, autoSearch: string = null): void => {
     if (autoSearch) {
       //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
-      handleSearch(autoSearch);
+      if(autoSearch.includes('chatid'))
+      {
+        handleSearch(autoSearch.split(':')[1]);
+      }
+      else{
+        handleSearch(autoSearch);
+      }
+  
     } else {
       //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
       event.preventDefault();
@@ -124,7 +131,6 @@ const SearchBar = ({ autofilled }) => {
     setFilteredUserData([]);
     setHasUserBeenSearched(true);
   }
-
   const handleSearch = async (autoSearch: string = null): Promise<void> => {
     let searchText = autoSearch ? autoSearch : searchedUser;
 
@@ -144,6 +150,7 @@ const SearchBar = ({ autofilled }) => {
           }
         }
         else{
+       
           group = await getGroup(searchText,setInvalidSearch);
         }
        
