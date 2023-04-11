@@ -78,8 +78,8 @@ export const SpaceSidebar = () => {
                 time="4:30 PM"
                 spaceData={space}
               />
-             );
-          })}  
+              );
+          })}   
 
           {/* <SpanV2
             color={theme.default.secondaryColor}

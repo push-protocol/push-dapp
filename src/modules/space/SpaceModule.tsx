@@ -24,7 +24,6 @@ export const SpaceModule = () => {
   const { userSpaces,setSpaceRequests,setSpaces } = useContext(SpaceGlobalContext);
 
   useEffect(() => {
-    console.log('in effect',connectedUser);
     if(connectedUser || !account || !library) return;
     
     (async function () {
@@ -36,7 +35,7 @@ export const SpaceModule = () => {
         console.log(err);
       }
     })()
-  },[]);
+  },[account,library]);
 
 console.log(connectedUser)
   useEffect(() => {
