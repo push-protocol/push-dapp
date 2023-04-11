@@ -1,11 +1,10 @@
 import * as PushAPI from '@pushprotocol/restapi';
-import { ConnectedUser, Feeds, IGroup, User } from 'types/chat';
-import { appConfig } from '../../config';
-import * as w2wHelper from 'helpers/w2w/';
-import * as PushNodeClient from 'api';
-import { walletToCAIP10 } from '.';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { profilePicture } from 'config/W2WConfig';
+import * as w2wHelper from 'helpers/w2w/';
+import { ConnectedUser, Feeds, IGroup, User } from 'types/chat';
+import { walletToCAIP10 } from '.';
+import { appConfig } from '../../config';
 
 export function checkConnectedUser(connectedUser: ConnectedUser): boolean {
   if (
@@ -139,6 +138,7 @@ export const getDefaultGroupFeed = async ({
 }): Promise<{feed:Feeds,isNew:boolean}> => {
     let isNew:boolean = false;
     let feed:Feeds;
+    console.log(inbox)
     const inboxGroup = inbox.filter((inb) => inb?.groupInformation?.chatId === groupData.chatId);
 
     const intentGroup = intents.filter((int) =>int?.groupInformation?.chatId === groupData.chatId);
@@ -150,7 +150,7 @@ export const getDefaultGroupFeed = async ({
     else {
    feed = getDefaultFeedObject({groupInformation:groupData});
    isNew = true;
-}
+   }
   return {feed,isNew};
 };
 

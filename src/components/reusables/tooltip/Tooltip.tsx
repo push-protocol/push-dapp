@@ -11,10 +11,11 @@ type TooltipProps = {
     right?:string,
     transform?: string,
     borderRadius?: string,
-    width?: string
+    width?: string,
+    padding?:string
   },
   wrapperProps?: {},
-  key:any,
+  key?:any,
 };
 
 const Tooltip: React.FC<TooltipProps> = ({ children, tooltipContent, isDisabled, placementProps, wrapperProps }) => {

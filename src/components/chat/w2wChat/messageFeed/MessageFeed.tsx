@@ -159,6 +159,7 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
             else {
               feed = await getDefaultFeed({userData:searchedData as User,inbox,intents:receivedIntents});
             }
+            console.log(isNew)
             if(isNew && !feed?.groupInformation?.isPublic)
             {
               messageFeedToast.showMessageToast({

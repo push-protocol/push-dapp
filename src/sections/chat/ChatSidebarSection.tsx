@@ -38,26 +38,26 @@ import { appConfig } from '../../config';
 
 
 const createGroupOnMouseEnter = [{
-  name:'create-group-fill-icon',
-  property:'display',
-  value:'inline-block'
+  name: 'create-group-fill-icon',
+  property: 'display',
+  value: 'inline-block'
 },
 {
-  name:'create-group-icon',
-  property:'display',
-  value:'none'
+  name: 'create-group-icon',
+  property: 'display',
+  value: 'none'
 },
 ];
 
 const createGroupOnMouseLeave = [{
-  name:'create-group-fill-icon',
-  property:'display',
-  value:'none'
+  name: 'create-group-fill-icon',
+  property: 'display',
+  value: 'none'
 },
 {
-  name:'create-group-icon',
-  property:'display',
-  value:'inline-block'
+  name: 'create-group-icon',
+  property: 'display',
+  value: 'inline-block'
 },
 ];
 
@@ -72,7 +72,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
 
   const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-22T00:00:00.000"), 90);
 
-  const {connectedUser, displayQR, setDisplayQR} = useContext(ChatUserContext);
+  const { connectedUser, displayQR, setDisplayQR } = useContext(ChatUserContext);
 
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser?.profilePicture);
@@ -89,37 +89,37 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   const getRequests = async (): Promise<void> => {
     await resolveThreadhash();
     fetchIntentApi();
-};
+  };
   useEffect(() => {
     // This will run when the page first loads
     getRequests();
   }, []);
 
-  const closeQRDropdown = ()=>{
+  const closeQRDropdown = () => {
     setShowQR(false);
-}
-useClickAway(containerRef, () => closeQRDropdown())
+  }
+  useClickAway(containerRef, () => closeQRDropdown())
 
   async function resolveThreadhash(): Promise<void> {
     let getIntent;
-      getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account }), '', 'did');
+    getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account }), '', 'did');
 
-    if (getIntent!== undefined && !receivedIntents.length) {
+    if (getIntent !== undefined && !receivedIntents.length) {
 
       let intents: Feeds[] = getIntent.body;
       intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
       setReceivedIntents(intents);
       setLoadingRequests(false);
-    } 
+    }
     setLoadingRequests(false);
   }
   const fetchIntentApi = async (): Promise<Feeds[]> => {
-   const intents = await fetchIntent(connectedUser);
-   if(JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
-    setReceivedIntents(intents);
+    const intents = await fetchIntent(connectedUser);
+    if (JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
+      setReceivedIntents(intents);
+      setLoadingRequests(false);
+    }
     setLoadingRequests(false);
-   }
-   setLoadingRequests(false);
     return intents;
   };
 
@@ -127,14 +127,13 @@ useClickAway(containerRef, () => closeQRDropdown())
 
   // RENDER
   return (
-    <ItemVV2 ref={containerRef}>
+    <ItemVV2 ref={containerRef} >
       {/* Header */}
       {activeTab == 0 || activeTab == 1 ? (
         <ItemVV2
           flex="initial"
-          ref={containerRef}
         >
-          <ItemHV2 ref={containerRef}>
+          <ItemHV2 >
             {/* Set active and onCLick to customize tab */}
             <TabButton
               active={activeTab == 0 ? true : false}
@@ -169,7 +168,7 @@ useClickAway(containerRef, () => closeQRDropdown())
             >
               <ItemHV2
                 alignItems="center"
-                ref={containerRef}
+              // ref={containerRef}
               >
                 <SpanV2
                   flex="initial"
@@ -202,9 +201,11 @@ useClickAway(containerRef, () => closeQRDropdown())
       <ItemVV2
         justifyContent="flex-start"
         alignItems="stretch"
+        // ref={containerRef}
+        onClick={closeQRDropdown}
       >
         {activeTab == 0 && <SearchBar />}
-        {activeTab == 0 && filteredUserData.length==0 && (
+        {activeTab == 0 && filteredUserData.length == 0 && (
           <CreateGroupContainer
             // justifyContent="flex-start"
             flex="none"
@@ -214,10 +215,10 @@ useClickAway(containerRef, () => closeQRDropdown())
             background="transparent"
             hover={theme.chat.snapFocusBg}
             hoverBackground="transparent"
-            onMouseEnter={() => 
-             StyleHelper.changeStyle(createGroupOnMouseEnter)
+            onMouseEnter={() =>
+              StyleHelper.changeStyle(createGroupOnMouseEnter)
             }
-            onMouseLeave={() => 
+            onMouseLeave={() =>
               StyleHelper.changeStyle(createGroupOnMouseLeave)
             }
           >
@@ -235,14 +236,15 @@ useClickAway(containerRef, () => closeQRDropdown())
             {isNewTagVisible && <NewTag />}
           </CreateGroupContainer>
         )}
-        
-        {activeTab == 0 && filteredUserData.length==0 && (
+
+        {activeTab == 0 && filteredUserData.length == 0 && (
           <MessageFeed
             hasUserBeenSearched={false}
             filteredUserData={[]}
             isInvalidAddress={false}
             automatedSearch={false}
           />
+
         )}
         {activeTab == 1 && (
           <>
@@ -302,6 +304,7 @@ align-items: center;
 padding: 8px;
 gap: 9px;
 width: 200px;
+z-index:100;
 height: 48px;
 background: #FFFFFF;
 border: 1px solid #BAC4D6;
