@@ -113,14 +113,19 @@ export const ScheduledSpace = () => {
   )
 }
 
-const ScheduledItem = styled(ItemVV2)`
+// const ScheduledItem = styled(ItemVV2)`
+const ScheduledItem = styled.div`
   width: 70%;
   display: flex;
   justify-content: center;
+  flex-direction: column !important;
   margin: auto auto;
+  height: auto;
   background: ${(props) => props.theme.modalContentBackground};
   border-radius: 22px;
-  flex: 0 !important;
+  // flex: 0 !important;
+  box-sizing: border-box;
+  overflow: hidden;
   @media (max-width: 768px) {
     width: auto;
     border: 1px solid rgba(87, 93, 115, 0.2);
@@ -128,6 +133,16 @@ const ScheduledItem = styled(ItemVV2)`
 
   @media (min-width: 768px) and (max-width: 1330px) {
     width: 95%;
+  }
+
+  @media (min-width: 768px) and (max-height: 780px) {
+    width: 95%;
+    position: relative;
+    justify-content: inherit;
+    height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    // flex: auto !important;
   }
 `;
 
