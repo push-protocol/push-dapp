@@ -43,11 +43,13 @@ const Profile = ({ isDarkMode }) => {
       id: 'walletAddress',
       value: account,
       title: account,
+      function: ()=>{},
       invertedIcon: './copy.svg',
     },
     {
       id: 'prodDapp',
       value: '',
+      function: ()=>{},
       link: `https://${envUtil.prod}`,
       title: 'Production dapp',
       invertedIcon: './prod.svg',

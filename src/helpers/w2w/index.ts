@@ -1,11 +1,10 @@
 // Internal Components
-import * as PGP from './pgp';
-import * as DIDHelper from './did';
-import * as Ceramic from './ceramic';
-import * as AES from './aes';
 import { ConnectedUser, Feeds, MessageIPFSWithCID } from '../../types/chat';
+import * as AES from './aes';
+import * as Ceramic from './ceramic';
+import * as DIDHelper from './did';
 import { checkIfGroup, getMemberDetails } from './groupChat';
-import { getUser } from '../../api/w2w';
+import * as PGP from './pgp';
 // import { ConnectedUser, Feeds, MessageIPFSWithCID } from 'api'
 const decryptionErrorMsg = 'Error decrypting message: Session key decryption failed.';
 
