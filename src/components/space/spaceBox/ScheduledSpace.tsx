@@ -126,7 +126,7 @@ const ScheduledItem = styled(ItemVV2)`
     border: 1px solid rgba(87, 93, 115, 0.2);
   }
 
-  @media (min-width: 1000px) and (max-width: 1060px) {
+  @media (min-width: 768px) and (max-width: 1330px) {
     width: 95%;
   }
 `;
@@ -226,7 +226,7 @@ const TopItem = styled.div`
     flex-direction: column;
   }
 
-  @media (min-width: 1000px) and (max-width: 1060px) {
+  @media (min-width: 768px) and (max-width: 1330px) {
     flex-direction: column;
   }
 `;
@@ -236,7 +236,7 @@ const ButtonItem = styled(Button)`
     width: 100%;
   }
 
-  @media (min-width: 1000px) and (max-width: 1060px) {
+  @media (min-width: 768px) and (max-width: 1330px) {
     flex:1;
     width: 100%;
   }
@@ -253,7 +253,7 @@ const ItemTop = styled.div`
     margin-top: 10px;
   }
   
-  @media (min-width: 1000px) and (max-width: 1060px) {
+  @media (min-width: 768px) and (max-width: 1330px) {
     flex:1;
     width: 100%;
     margin-top: 10px;
