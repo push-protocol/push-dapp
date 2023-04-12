@@ -56,5 +56,4 @@ export const toolingPostReq = async (path, obj) => {
 };
 
 export * from './ipfs';
-export * from './w2w';
 

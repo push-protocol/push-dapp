@@ -21,8 +21,10 @@ import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
 import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
+import videoCallIcon from 'assets/icons/videoCallIcon.svg';
 import LoaderSpinner, { LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { Content } from 'components/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import * as w2wHelper from 'helpers/w2w/';
@@ -40,8 +42,6 @@ import Chats from '../chats/Chats';
 import Typebar from '../TypeBar/Typebar';
 import { intitializeDb } from '../w2wIndexeddb';
 import { HeaderMessage } from './HeaderMessage';
-import Tooltip from 'components/reusables/tooltip/Tooltip';
-import videoCallIcon from 'assets/icons/videoCallIcon.svg'
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -77,7 +77,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setInbox,
     setHasUserBeenSearched,
     setReceivedIntents,
-    setBlockedLoading,
   }: AppContext = useContext<AppContext>(Context);
   const [chatMeta, setChatMeta] = useState(null);
 
@@ -415,17 +414,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         });
 
         if (typeof sendResponse === 'string') {
-          if (sendResponse.toLowerCase() === 'your wallet is not whitelisted') {
-            // Getting User Info
-            setBlockedLoading({
-              enabled: true,
-              title: 'Wallet is not whitelisted',
-              spinnerType: LOADER_SPINNER_TYPE.WHITELIST,
-              progressEnabled: true,
-              progress: 0,
-              progressNotice: 'Reminder: Push Chat is in alpha, Things might break.',
-            });
-          }
           // Display toaster
           chatBoxToast.showMessageToast({
             toastTitle: 'Error',
