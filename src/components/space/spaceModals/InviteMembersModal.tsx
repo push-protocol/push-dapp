@@ -85,6 +85,12 @@ export default InviteMembersModal;
 const Container = styled.div`
     width: 475px;
     padding:0px 12px;
+
+    @media(max-width:600px){
+        width: 350px;
+        padding:0px;
+    }
+
 `
 
 const LabelContainer = styled(ItemHV2)`
@@ -114,6 +120,12 @@ const InviteButton = styled(Button)`
     text-align: center;
     color: #FFFFFF;
     padding:16px;
+
+    @media(max-width:600px){
+        width: 224px;
+    }
+
+
 `
 
 const FooterText = styled.p`

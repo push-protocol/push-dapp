@@ -231,7 +231,7 @@ const Input = styled.input`
   box-sizing: border-box;
   display: flex;
   flex: 1;
-  min-width: 445px;
+  // min-width: 445px;
   height: 48px;
   padding: 0px 50px 0px 16px;
   margin: 10px 0px 0px;

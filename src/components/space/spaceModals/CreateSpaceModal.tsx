@@ -96,7 +96,14 @@ const CreateSpaceModal = ({
 export default CreateSpaceModal;
 
 const Container = styled.div`
-    padding:32px 24px 30px 24px;
+  padding:32px 24px 30px 24px;
+
+
+  @media(max-width:400px){
+    padding:30px 12px;
+  }
+
+
 `
 
 const ModalInnerContainer = styled(ItemVV2)`
@@ -180,6 +187,11 @@ const CreateButton = styled(Button)`
   width: 310px;
   border-radius: 15px;
   margin-right:18px;
+
+  @media(max-width:500px){
+    width:225px;
+  }
+
 
 `
 

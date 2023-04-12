@@ -1,34 +1,32 @@
 // React + Web3 Essentials
-import React from 'react';
+import React,{useContext,useState} from 'react';
 
 // External Packages
+import styled,{useTheme} from 'styled-components';
 
-// Internal Compoonents
+// Internal Components
 import { SpaceSidebar, SpaceSidebarTabs } from 'components/space';
-import { Button } from 'primaries/SharedStyling';
-import useModalBlur from 'hooks/useModalBlur';
-import { MODAL_POSITION } from 'hooks/useModalBlur';
-import useToast from 'hooks/useToast';
-import CreateSpaceModal from 'components/space/spaceModals/CreateSpaceModal';
 
 // Internal Configs
+import {ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { SpaceLocalContext } from 'contexts';
+import ProfileHeader from 'components/chat/w2wChat/profile';
 
-export const SpaceSidebarSection = ({
-  showCreateSpaceModal
-}) => {
-
+export const SpaceSidebarSection = ({showCreateSpaceModal}) => {
+  const { setActiveTab } = useContext(SpaceLocalContext);
+  const [ showQR, setShowQR ]=useState(false);
+  const theme = useTheme();
   // RENDER
   return (
-    <>
-
-    <div>
-      Space Sidebar Section
-    </div>
-
-    <Button onClick={showCreateSpaceModal}>Create Space</Button>
-
-    <SpaceSidebarTabs />
-    <SpaceSidebar />
-    {/* Profile */}
-    </>);
+    <ItemVV2>
+      <SpaceSidebarTabs />
+      <SpaceSidebar showCreateSpaceModal={showCreateSpaceModal}/>
+      <ProfileHeader
+        setActiveTab={setActiveTab}
+        showQR={showQR}
+        setShowQR={setShowQR}
+      />
+      
+    </ItemVV2>
+  );
 };

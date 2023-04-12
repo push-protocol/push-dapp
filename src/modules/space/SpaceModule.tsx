@@ -23,21 +23,22 @@ export const SpaceModule = () => {
   const theme = useTheme();
   const { account, library } = useWeb3React();
   //shift getUser to app context and add type 
-  const { connectedUser,setConnectedUser,getUser } = useContext(ChatUserContext);
+  const { connectedUser,getUser } = useContext(ChatUserContext);
   const { userSpaces,setSpaceRequests,setSpaces } = useContext(SpaceGlobalContext);
 
   useEffect(() => {
     if(connectedUser || !account || !library) return;
+    
     (async function () {
       try {
         const signer = await library.getSigner();
-        const connectedUserResponse = await getUser(account, signer);
-        setConnectedUser(connectedUserResponse);
+        await getUser(account, signer);
       } catch (err) {
         console.log(err);
       }
     })()
-  }, [account, library]);
+  },[account,library]);
+
 console.log(connectedUser)
   useEffect(() => {
     if(!connectedUser) return;
