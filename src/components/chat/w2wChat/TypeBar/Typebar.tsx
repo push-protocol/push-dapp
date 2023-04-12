@@ -302,15 +302,16 @@ const Typebar = ({
           </>:
           <>
          <ButtonV2
-          background="#D53A94"
-          color="#fff"
+          background={'#F4DCEA'}
+          color={'#CF1C84'}
           flex="initial"
           width="160px"
           borderRadius="12px"
           padding="15px 8px"
-          onClick={() => {
-            approveIntent('Approved')
-          }}
+          // onClick={() => {
+          //   approveIntent('Approved')
+          // }}
+          disabled={true}
         >
           <SpanV2 fontWeight="500" fontSize = "17px">Join Group</SpanV2>
         </ButtonV2>
