@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React from 'react';
+import React, { useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -16,6 +16,7 @@ import {ReactComponent as LinkSVG} from 'assets/space/Link.svg'
 
 export const ScheduledSpace = () => {
   const theme = useTheme();
+  const [step, setStep] = useState(3);
 
   return (
     <ScheduledItem theme={theme}>
@@ -56,21 +57,35 @@ export const ScheduledSpace = () => {
             <ScheduledSpaceSVG />
         </Div>
         
-        <P size="16px" weight="500" margin='10px 0px 5px 0px' color={theme.snackbarBorderText}>
+        {step === 1 && (<><P size="16px" weight="500" margin='10px 0px 5px 0px' color={theme.snackbarBorderText}>
           Your space is scheduled. 
         </P>
         <P size="16px" weight="500" margin='0px 10px' color={theme.snackbarBorderText}>
           Share and let people know when to join!
-        </P>
+        </P></>)}
+
+       
+
+        {step === 2 && (<P size="16px" weight="500" margin='10px 10px 0px 10px' color={theme.snackbarBorderText}>
+          This space will go live on 5 Apr at 9:00 AM
+        </P>)}
+
+        {step === 3 && (<P size="16px" weight="500" margin='10px 10px' color={theme.snackbarBorderText}>
+          It’s time to start your space
+        </P>)}
 
         <SpaceLink>
 
-        <SpaceDiv>
-           <ButtonDiv>Remind Me</ButtonDiv>
-        </SpaceDiv>
+        {step === 2 && (<SpaceDiv>
+           <ButtonDiv margin="20px 0px 0px 0px">Remind Me</ButtonDiv>
+        </SpaceDiv>)}
+
+        {step === 3 && (<SpaceDiv>
+           <ButtonDiv padding="16px 54px" margin="0px 0px 30px 0px">Start this space</ButtonDiv>
+        </SpaceDiv>)}
         
 
-        <LinkSection>
+        {(step === 1 || step === 2) && (<LinkSection>
           <LinkDiv>
              <LinkIcon><TwitterSVG className='svg' /></LinkIcon>
              <P size="12px" weight="200" margin='10px 0px' color={theme.snackbarBorderText}>Twitter</P>
@@ -83,14 +98,14 @@ export const ScheduledSpace = () => {
 
           <LinkDiv>
              <LinkIcon><LinkSVG  className='svg' /></LinkIcon>
-             <P size="12px" weight="200" margin='10px 0px' color={theme.snackbarBorderText}>Link</P>
+             <P size="12px" weight="200" margin='10px 0px' color={theme.snackbarBorderText}>Copy Link</P>
           </LinkDiv>
 
           <LinkDiv>
              <LinkIcon><EmailSVG  className='svg' /></LinkIcon>
              <P size="12px" weight="200" margin='10px 0px' color={theme.snackbarBorderText}>Email</P>
           </LinkDiv>
-        </LinkSection>
+        </LinkSection>)}
 
         </SpaceLink>
       </DivCard>
@@ -129,13 +144,16 @@ const ButtonDiv = styled.div`
   color: #fff;
   background: #D53A94;
   border-radius: 15px;
+  padding: ${(props) => props.padding};
+  margin: ${(props) => props.margin};
+
 `;
 
 const DivCard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 80px 0 47px 0px;
+  padding: 80px 0 57px 0px;
 
 `;
 
@@ -163,7 +181,7 @@ const LinkDiv = styled.div`
 const SpaceLink = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
+  // margin-top: 20px;
 `;
 
 const SpaceDiv = styled.div`
