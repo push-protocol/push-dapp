@@ -8,7 +8,7 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemHV2 } from 'components/reusables/SharedStylingV2';
+import { ButtonV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext, VideoCallInfoI } from 'types/chat';
 import { FileMessageContent } from './Files/Files';
@@ -19,6 +19,7 @@ import { appConfig } from 'config';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { caip10ToWallet } from 'helpers/w2w';
 import { MessagetypeType } from '../../../../types/chat';
+
 
 interface ITypeBar {
   isGroup: boolean;
@@ -31,7 +32,9 @@ interface ITypeBar {
   sendIntent: ({ message, messageType }: { message: string; messageType: MessagetypeType }) => void;
   setOpenSuccessSnackBar: (openReprovalSnackbar: boolean) => void;
   openReprovalSnackbar?: boolean;
+  isJoinGroup?:boolean;
   setSnackbarText: (SnackbarText: string) => void;
+  approveIntent: (status:string) => void;
 }
 
 const Typebar = ({
@@ -42,10 +45,12 @@ const Typebar = ({
   setVideoCallInfo,
   sendMessage,
   sendIntent,
+  isJoinGroup,
   setOpenSuccessSnackBar,
   setSnackbarText,
+  approveIntent,
 }: ITypeBar) => {
-  const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const { currentChat, activeTab, setChat }: AppContext = useContext<AppContext>(Context);
   const {connectedUser} = useContext(ChatUserContext);
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
@@ -135,6 +140,7 @@ const Typebar = ({
     }
   };
 
+
   const uploadFile = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
     const file: File = e.target.files?.[0];
     if (file) {
@@ -176,7 +182,7 @@ const Typebar = ({
   };
 
   return (
-    <TypeBarContainer background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg}>
+    <TypeBarContainer background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg} isJoinGroup={isJoinGroup}>
       {messageBeingSent ? (
         <SpinnerContainer>
           <ItemHV2
@@ -196,7 +202,7 @@ const Typebar = ({
         </SpinnerContainer>
       ) : (
         <>
-          <Icon
+         {!isJoinGroup && <Icon
             onClick={(): void => setShowEmojis(!showEmojis)}
             filter={theme.snackbarBorderIcon}
           >
@@ -206,7 +212,7 @@ const Typebar = ({
               width="24px"
               alt=""
             />
-          </Icon>
+          </Icon>}
           {showEmojis && (
             <Picker
               onEmojiClick={addEmoji}
@@ -219,7 +225,10 @@ const Typebar = ({
               }}
             />
           )}
-          {
+          
+            {isJoinGroup ? 
+            <SpanV2>You need to join the group in order to send a message</SpanV2>
+            :
             <TextInput
               placeholder="Type your message..."
               onKeyDown={handleKeyPress}
@@ -228,10 +237,11 @@ const Typebar = ({
               rows={1}
               ref={textAreaRef}
               autoFocus="autoFocus"
-            />
-          }
+            />}
+            
+          
 
-          <>
+         {!isJoinGroup? <>
             <GifDiv>
               <label>
                 {isGifPickerOpened && (
@@ -289,7 +299,23 @@ const Typebar = ({
                 </Icon>
               </>
             )}
-          </>
+          </>:
+          <>
+         <ButtonV2
+          background={'#F4DCEA'}
+          color={'#CF1C84'}
+          flex="initial"
+          width="160px"
+          borderRadius="12px"
+          padding="15px 8px"
+          // onClick={() => {
+          //   approveIntent('Approved')
+          // }}
+          disabled={true}
+        >
+          <SpanV2 fontWeight="500" fontSize = "17px">Join Group</SpanV2>
+        </ButtonV2>
+          </>}
         </>
       )}
     </TypeBarContainer>
@@ -309,7 +335,7 @@ const TypeBarContainer = styled.div`
   right: 9px;
 
   height: auto;
-  padding: 13px 16px 13px 16px;
+  padding: ${(props) => props.isJoinGroup?"6px 6px 6px 26px":"13px 16px"};
   border-radius: 13px;
   background: ${(props) => (props.background ? props.background : props.theme.chat.sendMesageBg)};
 `;

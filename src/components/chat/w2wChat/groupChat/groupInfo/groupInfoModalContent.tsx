@@ -43,7 +43,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const { currentChat, setChat, inbox, receivedIntents }: AppContext = useContext<AppContext>(Context);
   const { connectedUser } = useContext(ChatUserContext);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
-  const createGroupToast = useToast();
+  const groupInfoToast = useToast();
   const [selectedMemeberAddress, setSelectedMemeberAddress] = React.useState<string | null>(null);
   const [showAddMoreWalletModal, setShowAddMoreWalletModal] = React.useState<boolean>(false);
   // const [memberList, setMemberList] = React.useState<any>(currentChat?.groupInformation?.groupMembers);
@@ -87,7 +87,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
         setSelectedMemeberAddress(null);
         if (updatedCurrentChat) setChat(updatedCurrentChat);
       } else {
-        createGroupToast.showMessageToast({
+        groupInfoToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: updateResponse,
           toastType: 'ERROR',
@@ -102,7 +102,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
       }
     } catch (e) {
       console.error('Error while adding admin', e);
-      createGroupToast.showMessageToast({
+      groupInfoToast.showMessageToast({
         toastTitle: 'Error',
         toastMessage: e.message,
         toastType: 'ERROR',
@@ -134,7 +134,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
         setSelectedMemeberAddress(null);
         if (updatedCurrentChat) setChat(updatedCurrentChat);
       } else {
-        createGroupToast.showMessageToast({
+        groupInfoToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: updateResponse,
           toastType: 'ERROR',
@@ -149,7 +149,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
       }
     } catch (e) {
       console.error('Error while dismissing admin', e);
-      createGroupToast.showMessageToast({
+      groupInfoToast.showMessageToast({
         toastTitle: 'Error',
         toastMessage: e.message,
         toastType: 'ERROR',
@@ -179,7 +179,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
         setSelectedMemeberAddress(null);
         if (updatedCurrentChat) setChat(updatedCurrentChat);
       } else {
-        createGroupToast.showMessageToast({
+        groupInfoToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: updateResponse,
           toastType: 'ERROR',
@@ -194,7 +194,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
       }
     } catch (error) {
       console.error('Error in removing memeber', error);
-      createGroupToast.showMessageToast({
+      groupInfoToast.showMessageToast({
         toastTitle: 'Error',
         toastMessage: error.message,
         toastType: 'ERROR',
@@ -236,7 +236,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
         setSelectedMemeberAddress(null);
         if (updatedCurrentChat) setChat(updatedCurrentChat);
       } else {
-        createGroupToast.showMessageToast({
+        groupInfoToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: updateResponse,
           toastType: 'ERROR',
@@ -250,7 +250,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
         setSelectedMemeberAddress(null);
       }
       setIsLoading(false);
-      createGroupToast.showMessageToast({
+      groupInfoToast.showMessageToast({
         toastTitle: 'Success',
         toastMessage: 'Group Invitation sent',
         toastType: 'SUCCESS',
@@ -265,7 +265,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
     } catch (error) {
       setIsLoading(false);
       console.log('Error', error);
-      createGroupToast.showMessageToast({
+      groupInfoToast.showMessageToast({
         toastTitle: 'Error',
         toastMessage: error.message,
         toastType: 'ERROR',

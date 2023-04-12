@@ -68,7 +68,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   // theme context
   const theme = useTheme();
 
-  const { receivedIntents, searchedUser, setReceivedIntents, filteredUserData } = useContext(Context);
+  const { receivedIntents, setReceivedIntents, filteredUserData } = useContext(Context);
 
   const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-22T00:00:00.000"), 90);
 

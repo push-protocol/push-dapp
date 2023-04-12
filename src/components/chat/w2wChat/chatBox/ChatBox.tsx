@@ -28,7 +28,10 @@ import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { Content } from 'components/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import * as w2wHelper from 'helpers/w2w/';
-import { checkIfIntentExist, fetchInbox, getLatestThreadHash } from 'helpers/w2w/user';
+import {
+  checkIfChatExist,
+  fetchInbox
+} from 'helpers/w2w/user';
 import { useDeviceWidthCheck } from 'hooks';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import useToast from 'hooks/useToast';
@@ -196,6 +199,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setIsGroup(false);
     setShowGroupInfo(false);
     setMessages([]);
+
     if (currentChat) {
       setIsGroup(checkIfGroup(currentChat));
       // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
@@ -261,6 +265,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         updatedCurrentChat.msg = sendResponse;
         setChat(updatedCurrentChat);
         setNewMessage('');
+        // console.log(messages)
+        // console.log(sendResponse)
         setMessages([...messages, sendResponse]);
 
         setTimeout(() => {
@@ -297,7 +303,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       setMessageBeingSent(false);
     }
   };
-
+// console.log(messages)
   useEffect(() => {
     if (messageBeingSent == false) {
       setTimeout(() => {
@@ -626,7 +632,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
             </SpanV2>
 
             {/* Video call button */}
-            <Tooltip
+           {!isGroup &&  <Tooltip
               tooltipContent="Video call"
               placementProps={{
                 bottom: '1.4rem',
@@ -640,7 +646,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
               <VideoCallButton onClick={startVideoCallHandler}>
                 <ImageV2 cursor="pointer" src={videoCallIcon} />
               </VideoCallButton>
-            </Tooltip>
+            </Tooltip>}
 
             {currentChat.groupInformation && (
               <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
@@ -707,16 +713,17 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                             isGroup={isGroup}
                           />
                         )}
-                        <Chats
-                          msg={
-                            isGroup && checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup })
-                              ? ''
-                              : msg
-                          }
-                          caip10={walletToCAIP10({ account: account! })}
-                          messageBeingSent={messageBeingSent}
-                          isGroup={isGroup}
-                        />
+                          <Chats
+                            msg={
+                              (!currentChat?.groupInformation?.isPublic && checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser, isGroup }))
+                                ? ''
+                                : msg
+                            }
+                            caip10={walletToCAIP10({ account: account! })}
+                            messageBeingSent={messageBeingSent}
+                            isGroup={isGroup}
+                          />
+                        
                       </div>
                     );
                   })}
@@ -725,7 +732,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                   messages={messages}
                   isGroup={isGroup}
                 />
-                {checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup }) && (
+                {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser, isGroup }) && (
                   <Chats
                     msg={{
                       ...messages[0],
@@ -744,7 +751,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
             <div ref={bottomRef}></div>
           </MessageContainer>
 
-          {checkIfIntentExist({ receivedIntents, currentChat, connectedUser }) ? null : (
+          {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser,isGroup }) ? null : (
             <>
               <Typebar
                 messageBeingSent={messageBeingSent}
@@ -756,6 +763,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                 sendIntent={sendIntent}
                 setOpenSuccessSnackBar={setOpenSuccessSnackBar}
                 setSnackbarText={setSnackbarText}
+                isJoinGroup = {(!checkIfChatExist({ chats:inbox, currentChat, connectedUser,isGroup }) && isGroup)}
+                approveIntent= {ApproveIntent}
               />
             </>
           )}
