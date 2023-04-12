@@ -162,7 +162,8 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
 
     peer.on('signal', (data) => {
       console.log("CALL USER -> SIGNAL CALLBACK");
-      
+
+      const notificationText = `Video Call from ${fromAddress}`;
 
       // send a notification to the user
       // Prepare post request
@@ -176,8 +177,8 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
       };
       let identityPayload = {
         notification: {
-          title: 'VideoCall',
-          body: 'VideoCall',
+          title: notificationText,
+          body: notificationText,
         },
         data: {
           amsg: 'VideoCall',
@@ -302,6 +303,8 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
       if (!receiverPeerSignalled) {
         setRecieverPeerSignalled(true);
 
+        const notificationText = `Video Call from ${fromAddress}`;
+
         console.log('Sending Payload for answer call - Peer on Signal - Step 3', receiverPeerSignalled);
         const videoPayload: videoPayloadType = {
           userToCall: toAddress,
@@ -312,8 +315,8 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
         };
         let identityPayload = {
           notification: {
-            title: 'VideoCall',
-            body: 'VideoCall',
+            title: notificationText,
+            body: notificationText,
           },
           data: {
             amsg: 'VideoCall',
