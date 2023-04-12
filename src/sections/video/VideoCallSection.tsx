@@ -89,7 +89,7 @@ const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
         setBlockedLoading({
           enabled: true,
           title: `Error: ${err}`,
-          spinnerType: LOADER_SPINNER_TYPE.PROCESSING,
+          spinnerType: LOADER_SPINNER_TYPE.ERROR,
           progressEnabled: false,
         });
       }
