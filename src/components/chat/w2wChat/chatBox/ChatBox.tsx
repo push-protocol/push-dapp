@@ -744,7 +744,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                   messages={messages}
                   isGroup={isGroup}
                 />
-                {checkIfChatExist({ receivedIntents, currentChat, connectedUser, isGroup }) && (
+                {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser, isGroup }) && (
                   <Chats
                     msg={{
                       ...messages[0],
