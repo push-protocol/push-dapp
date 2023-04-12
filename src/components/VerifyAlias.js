@@ -4,18 +4,15 @@ import { ethers } from 'ethers';
 import React, { useRef, useState } from 'react';
 
 // External Packages
-import styled, { css, useTheme } from 'styled-components';
+import { useTheme } from 'styled-components';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
 import FadeLoader from 'react-spinners/FadeLoader';
-import { useClickAway } from 'react-use';
 
 // Internal Components
 import { SpanV2 } from 'components/reusables/SharedStylingV2';
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import { setProcessingState } from 'redux/slices/channelCreationSlice';
-import { getReq, postReq } from '../api';
-import { A, Button, H3, Item, Section, Span } from '../primaries/SharedStyling';
+import { A, Button, Item, Span } from '../primaries/SharedStyling';
 import { getAliasDetails } from 'services';
 
 // Internal Configs
@@ -57,7 +54,6 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
 
   const checkAliasVerification = async () => {
     const { aliasVerified } = await getAliasDetails({account,chainId}).then(( data ) => {
-      console.log("Alias Data",data)
       if (data) {
         dispatch(setAliasVerified(data.is_alias_verified));
         return { aliasVerified: data['is_alias_verified'] };
