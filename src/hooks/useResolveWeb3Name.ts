@@ -13,12 +13,12 @@ import { AppContextType } from 'types/context';
 import { appConfig } from '../config';
 import { getUdResolver } from 'helpers/w2w/udResolver';
 
-const getEnsName = async (provider: ethers.providers.BaseProvider | any, checksumWallet: string,setEnsNames:any) => {
+const getEnsName = async (provider: ethers.providers.BaseProvider | any, checksumWallet: string,setWeb3NameList:any) => {
   let ensName: string = '';
   provider.lookupAddress(checksumWallet).then(async (ens) => {
     if (ens) {
       ensName = ens;
-      setEnsNames(prev=>[...prev,{address:checksumWallet,name:ens}])
+      setWeb3NameList(prev=>[...prev,{[checksumWallet]:ens}])
     } else {
       ensName = null;
     }
@@ -26,14 +26,14 @@ const getEnsName = async (provider: ethers.providers.BaseProvider | any, checksu
   return ensName;
 };
 
-const getUnstoppableName = async (checksumWallet: string,setEnsNames:any) => {
+const getUnstoppableName = async (checksumWallet: string,setWeb3NameList:any) => {
   // Unstoppable Domains resolution library
   const udResolver = getUdResolver();
 
   // attempt reverse resolution on provided address
   let udName = await udResolver.reverse(checksumWallet);
   if (udName) {
-    setEnsNames(prev=>[...prev,{address:checksumWallet,name:udName}])
+    setWeb3NameList(prev=>[...prev,{[checksumWallet]:udName}])
   } else {
     udName = null;
   }
@@ -45,7 +45,7 @@ export function useResolveWeb3Name(address?: string): string {
 
   const ctx: ContextType = useContext<ContextType>(Context);
 
-  const {web3NameList,setWeb3NameList}:AppContextType=useContext<AppContextType>(AppContext)
+  const {web3NameList,setWeb3NameList}:AppContextType=useContext<AppContextType>(AppContext);
 
   useEffect(() => {
     (async () => {
@@ -59,8 +59,8 @@ export function useResolveWeb3Name(address?: string): string {
               // attempt ENS name resolution first, with a fallback to Unstoppable Domains if
               // a value is not found from ENS.
               web3NameList.forEach(element => {
-                if(element.address==checksumWallet){
-                  setWeb3Name(element.name);
+                if(element[checksumWallet]){
+                  setWeb3Name(element[checksumWallet]);
                   return;
                 }
               });

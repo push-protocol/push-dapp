@@ -1,6 +1,5 @@
 export interface Web3NameListType {
-  address: string;
-  name: string;
+  [key: string]: string;
 }
 
 export interface AppContextType {
