@@ -63,8 +63,10 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
   function endLocalStream(){
     if(localStream){
       console.log("END LOCAL STREAM")
-      const peer = connectionRef.current;
-      peer.send(JSON.stringify({ type: 'endLocalStream', endLocalStream: true }));
+      if(isPeerConnected){
+        const peer = connectionRef.current;
+        peer.send(JSON.stringify({ type: 'endLocalStream', endLocalStream: true }));
+      }
       window.location.reload();
       localStream.getTracks().forEach(track => track.stop());
     }
