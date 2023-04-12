@@ -14,6 +14,7 @@ import { device } from 'config/Globals';
 import AddAdmin from 'assets/chat/group-chat/addadmin.svg';
 import DismissAdmin from 'assets/chat/group-chat/dismissadmin.svg';
 import Remove from 'assets/chat/group-chat/removewallet.svg';
+import Microphone from "assets/MicrophoneStage.svg";
 import { DropdownValueType } from '../../../../Dropdown';
 
 type MemberListContainerType = {
@@ -24,8 +25,9 @@ type MemberListContainerType = {
   lightIcon: any;
   darkIcon: any;
   memberList?: any;
+  spaces?:boolean
 };
-const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList, lightIcon, darkIcon, memberList }: MemberListContainerType) => {
+const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList, lightIcon, darkIcon, memberList, spaces }: MemberListContainerType) => {
   const [selectedWallet, setSelectedWallet] = React.useState<string>(null);
   const dropdownRef = React.useRef<any>(null);
   const theme = useTheme();
@@ -41,6 +43,10 @@ const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList,
   const removeUserDropdown: DropdownValueType =
     { id: 'remove_user', title: 'Remove', icon: Remove, function: () => removeUser() }
 
+  const makeCoHost:DropdownValueType = {
+    id:'make_Co_Host', title:'Make co-host',icon:Microphone, function:()=> makecohost()
+  }
+
   const dismissGroupAdmin = () => {
     const updatedMembers = memberList.map(member => member.wallets == memberData.wallets ? ({ ...member, isAdmin: false }) : member)
     handleMembers(updatedMembers)
@@ -55,6 +61,11 @@ const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList,
 
   const removeUser = () => {
     handleMemberList(memberData)
+    setSelectedWallet(null)
+  }
+
+  const makecohost = ()=>{
+    console.log("Made Co Host");
     setSelectedWallet(null)
   }
 
@@ -86,6 +97,21 @@ const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList,
           Admin
         </SpanV2>
       )}
+
+      {spaces && (
+         <SpanV2
+          background="#F4DCEA"
+            color="#D53A94"
+            borderRadius="8px"
+            padding="6px"
+            fontWeight="500"
+            fontSize="10px"
+        >
+          Co-Host
+        </SpanV2>
+      )}
+
+
       <ItemVV2
         maxWidth='fit-content'
         onClick={() => {
@@ -108,6 +134,19 @@ const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList,
           />
         </DropdownContainer>
       )}
+
+      {spaces && selectedWallet &&  (
+         <DropdownContainer ref={dropdownRef}>
+         <Dropdown
+           dropdownValues={[makeCoHost,removeUserDropdown]}
+           hoverBGColor={theme.chat.snapFocusBg}
+         />
+       </DropdownContainer>
+      )}
+
+
+
+
     </WalletProfileContainer>
   );
 };
@@ -139,6 +178,8 @@ const DropdownContainer = styled(ItemVV2)`
   border-radius: 16px;
   padding: 14px 8px;
   background: ${(props) => props.theme.modalContentBackground};
+  border: 1px solid rgba(186, 196, 214, 0.2);
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.02);
   z-index: 11;
   @media ${device.mobileL} {
     left: 27%;

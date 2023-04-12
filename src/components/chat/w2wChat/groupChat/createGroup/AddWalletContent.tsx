@@ -102,8 +102,6 @@ export const AddWalletContent = ({
     }
   };
 
-
-
   const handleUserSearch = async (userSearchData: string): Promise<void> => {
     const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData });
     let filteredData: User;
