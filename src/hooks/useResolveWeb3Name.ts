@@ -18,7 +18,7 @@ const getEnsName = async (provider: ethers.providers.BaseProvider | any, checksu
   provider.lookupAddress(checksumWallet).then(async (ens) => {
     if (ens) {
       ensName = ens;
-      setWeb3NameList(prev=>[...prev,{[checksumWallet]:ens}])
+      setWeb3NameList(prev=>({...prev,[checksumWallet]:ens}))
     } else {
       ensName = null;
     }
@@ -33,7 +33,7 @@ const getUnstoppableName = async (checksumWallet: string,setWeb3NameList:any) =>
   // attempt reverse resolution on provided address
   let udName = await udResolver.reverse(checksumWallet);
   if (udName) {
-    setWeb3NameList(prev=>[...prev,{[checksumWallet]:udName}])
+    setWeb3NameList(prev=>({...prev,[checksumWallet]:udName}))
   } else {
     udName = null;
   }
@@ -58,9 +58,9 @@ export function useResolveWeb3Name(address?: string): string {
           try {
               // attempt ENS name resolution first, with a fallback to Unstoppable Domains if
               // a value is not found from ENS.
-              web3NameList.forEach(element => {
-                if(element[checksumWallet]){
-                  setWeb3Name(element[checksumWallet]);
+              Object.keys(web3NameList).forEach(element => {
+                if(web3NameList[checksumWallet]){
+                  setWeb3Name(web3NameList[checksumWallet]);
                   return;
                 }
               });

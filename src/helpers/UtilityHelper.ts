@@ -228,9 +228,9 @@ export const getWeb3Name=({isGroup, address, web3NameList})=>{
   if(!isGroup && address){
     const walletLowercase = caip10ToWallet(address).toLowerCase();
     const checksumWallet = utils.getAddress(walletLowercase);
-    web3NameList.forEach(element => {
-      if(element[checksumWallet]){
-        web3Name=element[checksumWallet];
+    Object.keys(web3NameList).forEach(element => {
+      if(web3NameList[checksumWallet]){
+        web3Name=web3NameList[checksumWallet];
       }
     })
     if(web3Name === null){
