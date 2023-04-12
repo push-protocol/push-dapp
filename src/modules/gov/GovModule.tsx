@@ -24,7 +24,6 @@ import { executeDelegateTx } from 'helpers/WithGasHelper';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
-import { getWeb3Name } from 'helpers/UtilityHelper';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
@@ -72,7 +71,7 @@ const GovModule = () => {
 
   // Resolving web3 names
   useResolveWeb3Name(account);
-  const web3Name = getWeb3Name({isGroup:false, address:account, web3NameList})
+  const web3Name = web3NameList[account];
 
   const toggleShowAnswer = (id) => {
     let newShowAnswers = [...showAnswers];

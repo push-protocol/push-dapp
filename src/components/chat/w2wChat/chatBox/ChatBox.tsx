@@ -44,7 +44,6 @@ import { intitializeDb } from '../w2wIndexeddb';
 import { HeaderMessage } from './HeaderMessage';
 import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
-import { getWeb3Name } from 'helpers/UtilityHelper';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -111,9 +110,16 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
-  //get ens name
+  //resolve web3 names
   useResolveWeb3Name(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
-  const ensName= getWeb3Name({isGroup, address:currentChat?.wallets?.split(',')[0].toString(), web3NameList})
+
+  // get web3 name
+  let ensName=''
+  if(!isGroup && currentChat?.wallets?.split(',')[0].toString()){
+    const walletLowercase = caip10ToWallet(currentChat?.wallets?.split(',')[0].toString()).toLowerCase();
+    const checksumWallet = ethers.utils.getAddress(walletLowercase);
+    ensName = web3NameList[checksumWallet];
+  }
   const navigate = useNavigate();
   const location = useLocation();
 

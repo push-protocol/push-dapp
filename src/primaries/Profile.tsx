@@ -17,7 +17,6 @@ import { walletconnect } from 'connectors';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
-import { getWeb3Name } from 'helpers/UtilityHelper';
 
 // Create Header
 const Profile = ({ isDarkMode }) => {
@@ -27,8 +26,9 @@ const Profile = ({ isDarkMode }) => {
   const modalRef = React.useRef(null);
   const { error, account } = useWeb3React();
 
+  // resolve web3 name
   useResolveWeb3Name(account);
-  const web3Name = getWeb3Name({isGroup:false, address:account, web3NameList})
+  const web3Name = web3NameList[account]
 
   // Get theme
   const theme = useTheme();

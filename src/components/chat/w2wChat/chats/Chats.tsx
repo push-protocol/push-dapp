@@ -1,5 +1,6 @@
 // React + Web3 Essentials
 import React, { useContext, useEffect, useState } from 'react';
+import { ethers } from 'ethers';
 
 // External Packages
 import { TwitterTweetEmbed } from 'react-twitter-embed';
@@ -9,7 +10,7 @@ import styled from 'styled-components';
 import * as PushAPI from '@pushprotocol/restapi';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { getWeb3Name, shortenText } from 'helpers/UtilityHelper';
+import { shortenText } from 'helpers/UtilityHelper';
 import { caip10ToWallet } from 'helpers/w2w';
 import { checkTwitterUrl } from 'helpers/w2w/twitter';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
@@ -50,8 +51,11 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const { tweetId, messageType }: TwitterFeedReturnType = checkTwitterUrl({ message: msg?.messageContent });
   const walletAddress = shortenText(caip10ToWallet(msg.fromCAIP10)?.toLowerCase(), 6);
   useResolveWeb3Name(msg.fromCAIP10);
-  const ensName= getWeb3Name({isGroup:false, address:msg.fromCAIP10, web3NameList})
-  
+
+  const walletLowercase = caip10ToWallet(msg.fromCAIP10).toLowerCase();
+  const checksumWallet = ethers.utils.getAddress(walletLowercase);
+  const ensName = web3NameList[checksumWallet];
+
   const getProfilePicture = async() =>{
     let member = getMemberDetails(currentChat,msg?.fromCAIP10);
     if(member){

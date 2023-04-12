@@ -12,7 +12,6 @@ import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { convertTimestampToDateDayTime } from 'helpers/TimerHelper';
 import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
-import { getWeb3Name } from 'helpers/UtilityHelper';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -37,15 +36,20 @@ interface ChatSnapPropsI {
 // Other Information section
 const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, isGroup }: ChatSnapPropsI) => {
   const { web3NameList }:AppContextType=useContext(AppContext);
+  let ensName = '';
 
   // get theme
   const theme = useTheme();
 
-  // get ens name
+  // resolve web3 names
   useResolveWeb3Name(!isGroup ? username : null);
 
   // get ens name from context
-  const ensName = getWeb3Name({isGroup, address:username, web3NameList})
+  if(!isGroup){
+    const walletLowercase = caip10ToWallet(username).toLowerCase();
+    const checksumWallet = ethers.utils.getAddress(walletLowercase);
+    ensName = web3NameList[checksumWallet];
+  }
 
   // get short username
   const walletAddress = !isGroup ? caip10ToWallet(username) : null;

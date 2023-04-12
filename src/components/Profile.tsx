@@ -8,7 +8,7 @@ import styled from 'styled-components';
 // Internal Compoonents
 import Blockies from "components/BlockiesIdenticon";
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
-import { getWeb3Name, shortenText } from 'helpers/UtilityHelper';
+import { shortenText } from 'helpers/UtilityHelper';
 import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
 
@@ -20,7 +20,7 @@ function Profile() {
   useResolveWeb3Name(account);
 
   // get ens name from context
-  const ensName= getWeb3Name({isGroup:false, address:account, web3NameList})
+  const ensName= web3NameList[account]
 
   React.useEffect(() => {
     if (account && account != '') {

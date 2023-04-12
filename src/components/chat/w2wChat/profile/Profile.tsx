@@ -1,6 +1,8 @@
 // React + Web3 Essentials
 import React, { useContext } from 'react';
+import { ethers } from 'ethers';
 
+// External packages
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import styled, { useTheme } from 'styled-components';
@@ -14,7 +16,6 @@ import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { shortenText } from 'helpers/UtilityHelper';
 import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
-import { getWeb3Name } from 'helpers/UtilityHelper';
 
 const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
   const { web3NameList }:AppContextType=useContext(AppContext);
@@ -24,8 +25,11 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
 
   const {connectedUser} = useContext(ChatUserContext);
 
+  // resolve web3 name
   useResolveWeb3Name(connectedUser.wallets);
-  const ensName = getWeb3Name({isGroup:false, address:connectedUser.wallets, web3NameList})
+  const walletLowercase = caip10ToWallet(connectedUser.wallets).toLowerCase();
+  const checksumWallet = ethers.utils.getAddress(walletLowercase);
+  const ensName = web3NameList[checksumWallet];
 
   const account = caip10ToWallet(connectedUser?.wallets);
   return (
