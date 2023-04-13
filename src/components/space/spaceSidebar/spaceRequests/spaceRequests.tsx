@@ -36,7 +36,7 @@ export const SpaceRequests = () => {
             fontWeight="400"
             margin="55px 0px 0px"
           >
-            Get started by creating your space
+          You don't have any request yet. Start a new space by using the + button
           </SpanV2>
         ) :
           (Object.keys(userSpaces[account]?.spaces).map((key) => (

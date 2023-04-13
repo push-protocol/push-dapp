@@ -15,7 +15,6 @@ const SpaceRequestCard = (
     const [selected, setSelected] = useState(false);
 
     return (
-        <Container>
             <ChatSnapContainer
                 padding="10px"
                 margin="5px 5px 5px 0"
@@ -26,20 +25,20 @@ const SpaceRequestCard = (
                 hoverBackground={selected ? theme.chat.snapFocusBg : 'transparent'}
             >
 
-                <ProfileContainer>
-                    <ItemVV2
+                    <ItemHV2
                         width="48px"
                         maxWidth="48px"
+                        maxheight= "48px"
+                        height= "48px"
                         borderRadius="100%"
                         overflow="hidden"
-                        margin="0 5px 0 0"
+                        margin="0"
                     >
                         <ImageV2
                             alt="Profile"
                             src={spaceData?.spaceImage}
                         />
-                    </ItemVV2>
-                </ProfileContainer>
+                    </ItemHV2>
 
                 <InfoContainer>
                     <HeadTextSection>
@@ -51,45 +50,33 @@ const SpaceRequestCard = (
                         </SecondaryText>
                     </HeadTextSection>
 
-                    <SecondaryText>
+                    <SecondaryTextMessage>
                         {spaceData?.spaceName?.length > 27 ? spaceData?.spaceName?.slice(0, 27) + '...' : spaceData?.spaceName}
-                    </SecondaryText>
+                    </SecondaryTextMessage>
                 </InfoContainer>
 
             </ChatSnapContainer>
 
 
-        </Container>
     );
 };
 
 export default SpaceRequestCard;
 
-const Container = styled.div`
-    font-family: 'Strawford';
-    font-style: normal;
-    display: flex;
-    width: 100%;
-
-    &:hover{
-
-    }
-
-`
 const ChatSnapContainer = styled(ButtonV2)`
+display: flex;
   flex-direction: row;
   align-self: stretch;
+  flex:initial;
+  font-family: 'Strawford';
+  font-style: normal;
+  width: 100%;
+
+
 `;
 
 
-const ProfileContainer = styled(ItemVV2)`
-    max-height: 48px;
-    align-self: center;
-    justify-content: flex-start;
-`
-
 const InfoContainer = styled(ItemVV2)`
-    flex: 8;
     align-items: baseline;
     margin:0px 11px;
     gap: 4px;
@@ -109,10 +96,14 @@ const PrimaryText = styled.div`
 `
 
 const SecondaryText = styled.p`
-    font-weight: 400;
-    font-size: 15px;
+    font-weight: 500;
+    font-size: 14px;
     line-height: 130%;
     color: ${(props)=>props.theme.default.secondaryColor};
     
     margin:0px;
+`
+const SecondaryTextMessage = styled(SecondaryText)`
+    font-weight: 400;
+    font-size: 15px;
 `
