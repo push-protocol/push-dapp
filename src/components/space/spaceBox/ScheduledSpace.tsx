@@ -52,7 +52,7 @@ export const ScheduledSpace = () => {
       
 
 
-      <DivCard>
+      <DivCard step={step}>
         <Div>
             <ScheduledSpaceSVG />
         </Div>
@@ -81,7 +81,7 @@ export const ScheduledSpace = () => {
         </SpaceDiv>)}
 
         {step === 3 && (<SpaceDiv>
-           <ButtonDiv padding="16px 54px" margin="0px 0px 30px 0px">Start this space</ButtonDiv>
+           <ButtonDiv padding="16px 54px" margin="0px 0px 0px 0px">Start this space</ButtonDiv>
         </SpaceDiv>)}
         
 
@@ -168,7 +168,9 @@ const DivCard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 80px 0 57px 0px;
+  padding: 43px 0 57px 0px;
+  padding: ${(props) => props.step === 3 ? "63px 0 97px 0" : (props) => props.step === 2 ? "36px 0 56px 0px" : "43px 0 67px 0"};
+
 
 `;
 
