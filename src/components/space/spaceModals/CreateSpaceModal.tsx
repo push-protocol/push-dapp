@@ -25,7 +25,7 @@ const CreateSpaceModal = ({
     const themes = useTheme();
 
     return (
-        <Container ref={containerRef}>
+        <Container>
 
             {spaceModalState == 2 && (
                 <ScheduleModal
