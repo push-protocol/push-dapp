@@ -15,14 +15,14 @@ const SpaceRequestCard = (
     const [selected, setSelected] = useState(false);
 
     return (
-            <ChatSnapContainer
-                padding="10px"
+            <SpaceSnapContainer
+                padding="10px 7px 10px 10px"
                 margin="5px 5px 5px 0"
+                alignSelf = "stretch"
                 borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
                 //   onClick={onClick}
                 background={selected ? theme.chat.snapFocusBg : 'transparent'}
-                hover={theme.chat.snapFocusBg}
-                hoverBackground={selected ? theme.chat.snapFocusBg : 'transparent'}
+                theme = {theme}
             >
 
                     <ItemHV2
@@ -55,7 +55,7 @@ const SpaceRequestCard = (
                     </SecondaryTextMessage>
                 </InfoContainer>
 
-            </ChatSnapContainer>
+            </SpaceSnapContainer>
 
 
     );
@@ -63,22 +63,22 @@ const SpaceRequestCard = (
 
 export default SpaceRequestCard;
 
-const ChatSnapContainer = styled(ButtonV2)`
-display: flex;
-  flex-direction: row;
-  align-self: stretch;
-  flex:initial;
+const SpaceSnapContainer = styled(ItemHV2)`
+  flex:unset;
   font-family: 'Strawford';
   font-style: normal;
-  width: 100%;
-
-
+  &:hover{
+    background: ${(props)=>props.theme.chat.snapFocusBg}};
+  }
 `;
 
 
 const InfoContainer = styled(ItemVV2)`
     align-items: baseline;
-    margin:0px 11px;
+    display:flex;
+    flex-direction: column;
+
+    margin:0px 0px 0 11px;
     gap: 4px;
 `
 

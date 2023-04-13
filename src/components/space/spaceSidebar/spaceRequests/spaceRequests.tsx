@@ -52,6 +52,7 @@ export const SpaceRequests = () => {
 const SpaceContainer = styled(ItemVV2)`
   margin-top: 0px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   flex: 1 1 auto;
@@ -64,6 +65,6 @@ const SpaceContainer = styled(ItemVV2)`
     width: 4px;
   }
   &&::-webkit-scrollbar-thumb {
-    background: ${(props) => props.theme.default.secondaryBg || '#000000'};
+    background: #cf1c84;
   }
 `;

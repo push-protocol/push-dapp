@@ -51,11 +51,13 @@ const SpaceContainer = styled(ItemVV2)`
   overflow-y: auto;
   height: 85px;
   flex-flow: column;
+  padding-right:3px;
 
   &&::-webkit-scrollbar {
     width: 4px;
   }
   &&::-webkit-scrollbar-thumb {
-    background: ${(props) => props.theme.default.secondaryBg || '#000000'};
+    background: #cf1c84;
+
   }
 `;
