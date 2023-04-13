@@ -483,13 +483,32 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   };
 
   const startVideoCallHandler = () => {
-    setVideoCallInfo({
-      address: caip10ToWallet(currentChat.wallets.toString()),
-      fromPublicKeyArmored: connectedUser.publicKey,
-      toPublicKeyArmored: currentChat.publicKey,
-      privateKeyArmored: connectedUser.privateKey,
-      establishConnection: 1,
-    });
+    const fetchUser = async () => {
+      return PushAPI.user.get({
+        account: caip10ToWallet(currentChat.wallets.toString()),
+        env: appConfig.appEnv
+      });
+    }
+
+    // call the function
+    fetchUser()
+      .then (toUser => {
+        // set video call
+        setVideoCallInfo({
+          address: caip10ToWallet(currentChat.wallets.toString()),
+          fromPublicKeyArmored: connectedUser.publicKey,
+          fromProfileUsername: connectedUser.name,
+          fromProfilePic: connectedUser.profilePicture,
+          toPublicKeyArmored: currentChat.publicKey,
+          toProfileUsername: toUser.name,
+          toProfilePic: toUser.profilePicture,
+          privateKeyArmored: connectedUser.privateKey,
+          establishConnection: 1,
+        });
+      })
+      .catch(e => {
+        console.log("Error occured in ChatModule::useEffect::callAccepted - ", e);
+      });
   };
 
   const InfoMessages = [
