@@ -10,13 +10,13 @@ import { SpaceBox, WelcomeSpaceContentBox } from 'components/space';
 
 // Internal Configs
 
-export const SpaceBoxSection = () => {
+export const SpaceBoxSection = ({showSpaceInfoModal}:any) => {
   const theme = useTheme();
   // RENDER
   return (
     <ItemVV2 justifyContent="stretch" background={theme.space.spaceBoxBg} borderRadius="24px">
       SpaceBox Section
-
+      <button onClick={showSpaceInfoModal}>ShowSpaceInfo</button>
       {/* conditionally Render */}
       <SpaceBox />
       <WelcomeSpaceContentBox />

@@ -15,6 +15,10 @@ import { useWeb3React } from '@web3-react/core';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { getSpaceRequests, getSpaces } from 'services/space';
 import { getSpaceRequestsFromIndexedDB, getSpacesFromIndexedDB } from 'helpers/space';
+import useModalBlur from "hooks/useModalBlur"
+import { SpaceInfoModalContent } from 'components/space/spaceInfoModal';
+import { MODAL_POSITION } from 'hooks/useModalBlur';
+import useToast from 'hooks/useToast';
 
 export const SpaceModule = () => {
   const theme = useTheme();
@@ -35,6 +39,14 @@ export const SpaceModule = () => {
       }
     })()
   },[account,library]);
+
+  const spaceToast=useToast()
+
+  const {
+    isModalOpen: isSpaceInfoModalOpen,
+    showModal: showSpaceInfoModal,
+    ModalComponent: SpaceInfoModalComponent,
+  } = useModalBlur();
 
 console.log(connectedUser)
   useEffect(() => {
@@ -75,8 +87,14 @@ console.log(connectedUser)
       <SpaceBoxContainer
         padding="10px"
       >
-        <SpaceBoxSection />
+        <SpaceBoxSection showSpaceInfoModal={showSpaceInfoModal}/>
       </SpaceBoxContainer>
+      <SpaceInfoModalComponent
+        InnerComponent={SpaceInfoModalContent}
+        toastObject={spaceToast}
+        modalPadding="0px"
+        modalPosition={MODAL_POSITION.ON_PARENT}
+      />
     </Container>
   </SpaceLocalContextProvider>
   );
