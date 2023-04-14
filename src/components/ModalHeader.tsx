@@ -6,12 +6,19 @@ import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import { useDeviceWidthCheck } from 'hooks';
 import { useTheme } from 'styled-components';
 
-const GroupModalHeader = ({
+
+type ModalHeaderType = {
+    handlePrevious?:()=>{},
+    handleClose:()=>{},
+    title:string,
+    margin?:string,
+}
+const ModalHeader = ({
     handlePrevious,
     handleClose,
     title,
     margin,
-}) => {
+}:ModalHeaderType) => {
     const isMobile = useDeviceWidthCheck(600);
     const themes = useTheme();
     return (
@@ -43,4 +50,4 @@ const GroupModalHeader = ({
     );
 };
 
-export default GroupModalHeader;
+export default ModalHeader;
