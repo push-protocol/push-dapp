@@ -1,4 +1,4 @@
-import GroupModalHeader from 'components/chat/w2wChat/groupChat/createGroup/GroupModalHeader';
+import ModalHeader from 'components/ModalHeader';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { device } from 'config/Globals';
 import React from 'react';
@@ -50,7 +50,7 @@ const ScheduleModal = ({
 
     return (
         <Container>
-            <GroupModalHeader
+            <ModalHeader
                 title="Schedule your Space"
                 handleClose={handleClose}
                 handlePrevious={handlePrevious}

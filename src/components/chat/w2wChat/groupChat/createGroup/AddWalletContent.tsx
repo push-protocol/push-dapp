@@ -28,7 +28,7 @@ import { device } from 'config/Globals';
 import { addWalletValidation, MemberAlreadyPresent } from 'helpers/w2w/groupChat';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext, User } from '../../../../../types/chat';
-import GroupModalHeader from './GroupModalHeader';
+import ModalHeader from '../../../../ModalHeader';
 import AddMembers from 'components/searchAndAddMembers/AddMembers';
 
 export const AddWalletContent = ({
@@ -169,7 +169,7 @@ export const AddWalletContent = ({
 
   return (
     <ThemeProvider theme={theme}>
-      <GroupModalHeader
+      <ModalHeader
         handlePrevious={handlePrevious}
         handleClose={handleClose}
         title={title}

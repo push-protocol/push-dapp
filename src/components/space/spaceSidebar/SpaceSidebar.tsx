@@ -47,9 +47,9 @@ export const SpaceSidebar = ({showCreateSpaceModal}) => {
               background="#D53893"
               hoverBackground="transparent"
               borderRadius="50%"
-              onClick={() => setActiveTab(SpaceTabOption.Requests)}
+              onClick={showCreateSpaceModal}
             >
-              <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }} onClick={showCreateSpaceModal}/>
+              <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }} />
             </ButtonV2>
           </ItemVV2>
         </ItemHV2>

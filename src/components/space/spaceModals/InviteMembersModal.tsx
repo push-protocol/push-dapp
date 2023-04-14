@@ -5,7 +5,7 @@ import React from 'react';
 import styled, { useTheme } from 'styled-components';
 
 //Internal packages
-import GroupModalHeader from 'components/chat/w2wChat/groupChat/createGroup/GroupModalHeader';
+import ModalHeader from 'components/ModalHeader';
 import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { device } from 'config/Globals';
 import SearchWallets from 'components/searchAndAddMembers/SearchWallets';
@@ -37,7 +37,7 @@ const InviteMembersModal = ({
 
     return (
         <Container>
-            <GroupModalHeader
+            <ModalHeader
                 title="Invite Members"
                 handleClose={handleClose}
                 handlePrevious={handlePrevious}

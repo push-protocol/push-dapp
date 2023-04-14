@@ -7,18 +7,18 @@ import { useDeviceWidthCheck } from 'hooks';
 import { useTheme } from 'styled-components';
 
 
-type GroupModalHeaderType = {
+type ModalHeaderType = {
     handlePrevious?:()=>{},
     handleClose:()=>{},
     title:string,
     margin?:string,
 }
-const GroupModalHeader = ({
+const ModalHeader = ({
     handlePrevious,
     handleClose,
     title,
     margin,
-}:GroupModalHeaderType) => {
+}:ModalHeaderType) => {
     const isMobile = useDeviceWidthCheck(600);
     const themes = useTheme();
     return (
@@ -50,4 +50,4 @@ const GroupModalHeader = ({
     );
 };
 
-export default GroupModalHeader;
+export default ModalHeader;

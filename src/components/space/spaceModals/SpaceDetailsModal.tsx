@@ -1,4 +1,4 @@
-import GroupModalHeader from 'components/chat/w2wChat/groupChat/createGroup/GroupModalHeader';
+import ModalHeader from 'components/ModalHeader';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Button, Input, TextField } from 'primaries/SharedStyling';
 import React from 'react';
@@ -37,7 +37,7 @@ const SpaceDetailsModal = ({
 
                 <ModalInnerContainer>
                     <ItemHV2 padding="0px 14.5px">
-                        <GroupModalHeader
+                        <ModalHeader
                           title="Create Your Space"
                           handleClose={handleClose}
                         />
