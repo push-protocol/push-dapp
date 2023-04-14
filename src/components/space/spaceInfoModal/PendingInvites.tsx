@@ -83,7 +83,7 @@ export const PendingInvites = ({ setShowPendingInvites, showPendingInvites }) =>
                   color={theme.modalProfileTextColor}
                 >
                   {/* {shortenText(member?.wallet?.split(':')[1], 6)} */}
-                  {shortenText(member?.wallet, 7, 8)}
+                  {shortenText(member?.wallet, 6)}
                 </SpanV2>
               </ItemHV2>
             );

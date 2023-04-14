@@ -2,7 +2,7 @@ export const spaces = [
   {
     members: [
       {
-        wallet: '0x842a882b4c054801F06d52181231A77e467BE41f',
+        wallet: 'eip155:0x842a882b4c054801F06d52181231A77e467BE41f',
         publicKey: 'dddd',
         isAdmin: false,
         image:

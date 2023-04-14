@@ -14,7 +14,8 @@ import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedSt
 import { ReactComponent as AddMember } from 'assets/chat/group-chat/addicon.svg';
 import { spaces } from 'services/space/spaceList';
 import { PendingInvites } from './PendingInvites';
-import { ProfileCard } from './ProfileCard';
+// import { ProfileCard } from './ProfileCard';
+import { ProfileCard } from 'components/chat/w2wChat/groupChat/groupInfo/ProfileCard';
 import { caip10ToWallet } from 'helpers/w2w';
 import { DropdownValueType } from 'components/Dropdown';
 import Cohost from 'assets/space/cohost.svg';
@@ -92,7 +93,7 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
               fontWeight="500"
               margin="0px 8px 0px"
             >
-              {shortenText(selectedSpace?.spaceCreator,6,6)}
+              {shortenText(selectedSpace?.spaceCreator,6)}
             </SpanV2>
             <SpanV2
               background="#F3D7FA"
@@ -112,7 +113,7 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
             alignSelf="flex-start"
             margin="0px 0px 8px"
           >
-            {shortenText(selectedSpace?.spaceCreator,6,6)}'s Space
+            {shortenText(selectedSpace?.spaceCreator,6)}'s Space
           </SpanV2>
           <Description>{selectedSpace.spaceDescription}</Description>
           {isAccountOwnerAdmin && selectedSpace?.members?.length < 10 && (
