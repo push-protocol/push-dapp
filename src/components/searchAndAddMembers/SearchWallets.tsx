@@ -27,7 +27,7 @@ import { appConfig } from 'config';
 import { device } from 'config/Globals';
 
 type SearchWalletsType = {
-  setMemberList:()=>{},
+  setMemberList:any,
   memberList:Array<User>,
   spaces:boolean,
 };
@@ -141,7 +141,7 @@ const SearchWallets = ({
         // errorMessage = addWalletValidation(member, memberList, groupMembers, account);
     
         if (errorMessage) {
-          searchFeedToast.showMessageToast({
+          searchToast.showMessageToast({
             toastTitle: 'Error',
             toastMessage: `${errorMessage}`,
             toastType: 'ERROR',
