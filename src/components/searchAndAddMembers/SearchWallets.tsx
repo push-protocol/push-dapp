@@ -1,12 +1,15 @@
 import React from 'react';
+
+
 import styled, { useTheme } from 'styled-components';
-import { ItemHV2, ItemVV2 } from './reusables/SharedStylingV2';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import { appConfig } from 'config';
+import { MdError } from 'react-icons/md';
+import * as PushAPI from "@pushprotocol/restapi";
+
+import { ItemHV2, ItemVV2 } from '../reusables/SharedStylingV2';
 import * as w2wChatHelper from 'helpers/w2w';
 import { User } from 'types/chat';
-import * as PushAPI from "@pushprotocol/restapi";
 import { displayDefaultUser } from 'helpers/w2w/user';
 import { ReactComponent as AddDark } from 'assets/chat/group-chat/adddark.svg';
 import { ReactComponent as AddLight } from 'assets/chat/group-chat/addlight.svg';
@@ -14,17 +17,26 @@ import { ReactComponent as Clear } from 'assets/chat/group-chat/close.svg';
 import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
-import { device } from 'config/Globals';
-import MemberListContainer from './chat/w2wChat/groupChat/createGroup/MemberListContainer';
-import { MdError } from 'react-icons/md';
-import LoaderSpinner, { LOADER_TYPE } from './reusables/loaders/LoaderSpinner';
+import AddMembers from './AddMembers';
+
+import LoaderSpinner, { LOADER_TYPE } from '../reusables/loaders/LoaderSpinner';
 import useToast from 'hooks/useToast';
 
-const DisplayWallets = ({
+
+import { appConfig } from 'config';
+import { device } from 'config/Globals';
+
+type SearchWalletsType = {
+  setMemberList:()=>{},
+  memberList:Array<User>,
+  spaces:boolean,
+};
+
+const SearchWallets = ({
     setMemberList,
     memberList,
     spaces
-}) => {
+}:SearchWalletsType) => {
 
 
     const [searchedUser, setSearchedUser] = React.useState<string>('');
@@ -36,11 +48,28 @@ const DisplayWallets = ({
     const { library } = useWeb3React();
 
     const theme = useTheme();
-    const searchFeedToast = useToast();
+    const searchToast = useToast();
 
     const onChangeSearchBox = (e) => {
         setSearchedUser(e.target.value);
     };
+
+
+  React.useEffect(() => {
+    if (isInValidAddress) {
+      searchToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: 'Invalid Address',
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+    }
+  }, [isInValidAddress]);
 
     const handleSearch = async (e): Promise<void> => {
         setIsLoadingSearch(true);
@@ -168,7 +197,7 @@ const DisplayWallets = ({
             </SearchbarContainer>
             {filteredUserData ? (
           <MemberList>
-            <MemberListContainer
+            <AddMembers
               memberData={filteredUserData}
               handleMemberList={addMemberToList}
               lightIcon={<AddLight />}
@@ -187,7 +216,7 @@ const DisplayWallets = ({
 
         <MultipleMemberList>
           {memberList.map((member, index) => (
-            <MemberListContainer
+            <AddMembers
               key={index}
               memberList={memberList}
               memberData={member}
@@ -208,7 +237,7 @@ const DisplayWallets = ({
     );
 };
 
-export default DisplayWallets;
+export default SearchWallets;
 
 const Container = styled.div`
     flex:1;

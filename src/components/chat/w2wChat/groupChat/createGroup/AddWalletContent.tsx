@@ -29,7 +29,7 @@ import { addWalletValidation, MemberAlreadyPresent } from 'helpers/w2w/groupChat
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext, User } from '../../../../../types/chat';
 import GroupModalHeader from './GroupModalHeader';
-import MemberListContainer from './MemberListContainer';
+import AddMembers from 'components/searchAndAddMembers/AddMembers';
 
 export const AddWalletContent = ({
   onSubmit,
@@ -223,7 +223,7 @@ export const AddWalletContent = ({
         </SearchbarContainer>
         {filteredUserData ? (
           <MemberList>
-            <MemberListContainer
+            <AddMembers
               memberData={filteredUserData}
               handleMemberList={addMemberToList}
               lightIcon={<AddLight />}
@@ -242,7 +242,7 @@ export const AddWalletContent = ({
 
         <MultipleMemberList>
           {memberList.map((member, index) => (
-            <MemberListContainer
+            <AddMembers
               key={index}
               memberList={memberList}
               memberData={member}

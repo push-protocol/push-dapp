@@ -15,10 +15,15 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { Button } from 'primaries/SharedStyling';
 
 
+type ScheduleModalType = {
+    handleClose: ()=>{};
+    setSpaceModalState: ()=>{};
+}
+
 const ScheduleModal = ({
     handleClose,
     setSpaceModalState,
-}) => {
+}:ScheduleModalType) => {
 
     const handlePrevious = () => {
         setSpaceModalState(1);

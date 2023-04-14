@@ -1,28 +1,35 @@
-import GroupModalHeader from 'components/chat/w2wChat/groupChat/createGroup/GroupModalHeader';
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
-import { Button, Input, TextField } from 'primaries/SharedStyling';
 import React from 'react';
+
+
 import { useClickAway } from 'react-use';
-import styled, { useTheme } from 'styled-components';
-import Schedule from "../../../assets/schedule.svg";
+import styled from 'styled-components';
+
+
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { Button, Input, TextField } from 'primaries/SharedStyling';
 import ScheduleModal from './ScheduleModal';
 import InviteMembersModal from './InviteMembersModal';
+import SpaceDetailsModal from './SpaceDetailsModal';
+import { User } from 'types/chat';
+
+
+type CreateSpaceModalType = {
+  onClose : ()=>{}
+};
 
 const CreateSpaceModal = ({
     onClose
-}) => {
+}:CreateSpaceModalType) => {
     const [spaceModalState, setSpaceModalState] = React.useState<number>(1);
     const [spaceName,setSpaceName] = React.useState<string>('');
-    const [spaceDes,setSpaceDes] = React.useState<string>('');
+    const [spaceDescription,setSpaceDescription] = React.useState<string>('');
 
-    const [memberList,setMemberList] = React.useState<any>([]);
+    const [memberList,setMemberList] = React.useState<Array<User>>([]);
 
     const handleClose = () => onClose();
     const containerRef = React.useRef(null);
     useClickAway(containerRef, () => handleClose());
 
-    const themes = useTheme();
 
     return (
         <Container>
@@ -43,48 +50,12 @@ const CreateSpaceModal = ({
             )}
 
             {spaceModalState == 1 && (
-                <ModalInnerContainer>
-                    <ItemHV2 padding="0px 14.5px">
-                        <GroupModalHeader
-                          title="Create Your Space"
-                          handleClose={handleClose}
-                        />
-                    </ItemHV2>
-                    
-                    <TextFieldContainer>
-
-                        <TextFieldHeaderContainer>
-                            <TextFieldHeading color={themes.modalHeadingColor}>Name your space</TextFieldHeading>
-                            <CharacterCount color={themes.modalSecondaryTextColor}>{spaceName.length}/50</CharacterCount>
-                        </TextFieldHeaderContainer>
-                        <CustomInput
-                            type="text"
-                            value={spaceName}
-                            onChange={(e) => setSpaceName(e.target.value.slice(0, 50))}
-                            borderColor={themes.modalInputBorderColor}
-                            color={themes.modalMessageColor}
-                        />
-
-
-                        <TextFieldHeaderContainer>
-                            <TextFieldHeading color={themes.modalHeadingColor}>Description</TextFieldHeading>
-                            <CharacterCount color={themes.modalSecondaryTextColor}>{spaceDes.length}/150</CharacterCount>
-                        </TextFieldHeaderContainer>
-                        <GroupDescription
-                            rows="4"
-                            value={spaceDes}
-                            onChange={(e) => setSpaceDes(e.target.value.slice(0, 150))}
-                            borderColor={themes.modalInputBorderColor}
-                            color={themes.modalMessageColor}
-                        />
-                    </TextFieldContainer>
-
-                    <ItemHV2>
-                        <CreateButton onClick={()=>setSpaceModalState(3)}>Create</CreateButton>
-                        <ScheduleImage src={Schedule} onClick={()=>setSpaceModalState(2)}/>
-                    </ItemHV2>
-                    
-                </ModalInnerContainer>
+               <SpaceDetailsModal onClose={onClose} 
+               setSpaceModalState={setSpaceModalState}
+                spaceName={spaceName} 
+                spaceDescription= {spaceDescription} 
+                setSpaceName={setSpaceName}
+                setSpaceDecription= {setSpaceDescription}/>
             )}
 
 
