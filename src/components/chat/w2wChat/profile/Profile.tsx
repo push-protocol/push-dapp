@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import React, { useContext } from 'react';
-import { ethers } from 'ethers';
+import { useWeb3React } from '@web3-react/core';
 
 // External packages
 import Stack from '@mui/material/Stack';
@@ -9,7 +9,6 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { caip10ToWallet } from 'helpers/w2w';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { AiOutlineMore } from 'react-icons/ai';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
@@ -19,6 +18,7 @@ import { AppContextType } from 'types/context';
 
 const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
   const { web3NameList }:AppContextType=useContext(AppContext);
+  const { account }=useWeb3React()
 
   // theme context
   const theme = useTheme();
@@ -26,12 +26,10 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
   const {connectedUser} = useContext(ChatUserContext);
 
   // resolve web3 name
-  useResolveWeb3Name(connectedUser.wallets);
-  const walletLowercase = caip10ToWallet(connectedUser.wallets).toLowerCase();
-  const checksumWallet = ethers.utils.getAddress(walletLowercase);
-  const ensName = web3NameList[checksumWallet];
+  useResolveWeb3Name(account);
+  
+  const ensName = web3NameList[account];
 
-  const account = caip10ToWallet(connectedUser?.wallets);
   return (
     <>
       {/* <Tooltip title="Profile" placement="top-start"> */}

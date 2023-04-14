@@ -40,7 +40,7 @@ const getUnstoppableName = async (checksumWallet: string,setWeb3NameList:any) =>
   return udName;
 };
 
-export function useResolveWeb3Name(address?: string): string {
+export function useResolveWeb3Name(address?: string) {
   const [web3Name, setWeb3Name] = useState<string>(null);
 
   const ctx: ContextType = useContext<ContextType>(Context);
@@ -85,6 +85,5 @@ export function useResolveWeb3Name(address?: string): string {
       setWeb3Name("");
     })();
   }, [ctx?.currentChat, address]);
-
-  return web3Name;
+  
 }
