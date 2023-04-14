@@ -1,21 +1,63 @@
-import React, { useRef } from 'react';
+// React + Web3 Essentials
+import React, { useRef, useState } from 'react';
+import { useWeb3React } from '@web3-react/core';
+
+// External Packages
 import { useClickAway } from 'react-use';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
+
+// Internal Components
 import { ModalInnerComponentType } from 'hooks/useModalBlur';
 import { useDeviceWidthCheck } from 'hooks';
 import GroupModalHeader from 'components/chat/w2wChat/groupChat/createGroup/GroupModalHeader';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import Profile from 'assets/chat/group-chat/profile.svg';
 import { ReactComponent as AddMember } from 'assets/chat/group-chat/addicon.svg';
+import { spaces } from 'services/space/spaceList';
+import { PendingInvites } from './PendingInvites';
+import { ProfileCard } from './ProfileCard';
+import { caip10ToWallet } from 'helpers/w2w';
+import { DropdownValueType } from 'components/Dropdown';
+import Cohost from 'assets/space/cohost.svg';
+import Remove from 'assets/chat/group-chat/remove.svg';
+import { shortenText } from 'helpers/UtilityHelper';
 
 export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
-  const theme = useTheme();
+  const selectedSpace = spaces[0];
+  const [showPendingInvites, setShowPendingInvites] = useState<boolean>(false);
+  const [selectedMemeberAddress, setSelectedMemeberAddress] = useState('');
   const containerRef = useRef();
+  const dropdownRef = useRef();
+  const { account } = useWeb3React();
+
+  const theme = useTheme();
+
   const isMobile = useDeviceWidthCheck(600);
+
+  const isAccountOwnerAdmin = selectedSpace?.members?.some(
+    (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
+  );
 
   const handleClose = () => onClose();
 
   useClickAway(containerRef, () => handleClose());
+  useClickAway(dropdownRef, () => setSelectedMemeberAddress(null));
+
+  const makeCohost = () => {};
+  const removeCohost = () => {};
+
+  const makeCohostDropdown: DropdownValueType = {
+    id: 'make_cohost',
+    title: 'Make co-host',
+    icon: Cohost,
+    function: () => makeCohost(),
+  };
+  const removeCohostDropdown: DropdownValueType = {
+    id: 'remove_cohost',
+    title: 'Remove',
+    icon: Remove,
+    function: () => removeCohost(),
+    textColor: '#ED5858',
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -41,7 +83,7 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
               <ImageV2
                 maxHeight="100%"
                 objectFit="cover"
-                src={Profile}
+                src={selectedSpace?.spaceImage}
               />
             </ItemVV2>
             <SpanV2
@@ -50,7 +92,7 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
               fontWeight="500"
               margin="0px 8px 0px"
             >
-              1234...5566
+              {shortenText(selectedSpace?.spaceCreator,6,6)}
             </SpanV2>
             <SpanV2
               background="#F3D7FA"
@@ -70,20 +112,50 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
             alignSelf="flex-start"
             margin="0px 0px 8px"
           >
-            0x1234...3456's Space
+            {shortenText(selectedSpace?.spaceCreator,6,6)}'s Space
           </SpanV2>
-          <Description>This is description about the space, for what inention space is happening</Description>
-          <AddWalletContainer>
-            <AddMember />
-            <SpanV2
-              color={theme.modalDescriptionTextColor}
-              margin="0px  14px"
-              fontSize="18px"
-              fontWeight="400"
-            >
-              Invite Members
-            </SpanV2>
-          </AddWalletContainer>
+          <Description>{selectedSpace.spaceDescription}</Description>
+          {isAccountOwnerAdmin && selectedSpace?.members?.length < 10 && (
+            <AddWalletContainer>
+              <AddMember />
+              <SpanV2
+                color={theme.modalDescriptionTextColor}
+                margin="0px  14px"
+                fontSize="18px"
+                fontWeight="400"
+              >
+                Invite Members
+              </SpanV2>
+            </AddWalletContainer>
+          )}
+          {selectedSpace?.pendingMembers?.length > 0 && (
+            <PendingInvites
+              showPendingInvites={showPendingInvites}
+              setShowPendingInvites={setShowPendingInvites}
+            />
+          )}
+          <ProfileContainer minHeight={selectedSpace?.members?.length < 4 ? 72 * selectedSpace?.members?.length : 216}>
+            {selectedSpace?.members?.map((member, index) => {
+              return (
+                member && (
+                  <ProfileCard
+                    key={index}
+                    member={member}
+                    dropdownValues={
+                      member?.isAdmin && isAccountOwnerAdmin
+                        ? [makeCohostDropdown, removeCohostDropdown]
+                        : isAccountOwnerAdmin
+                        ? [makeCohostDropdown, removeCohostDropdown]
+                        : []
+                    }
+                    selectedMemeberAddress={selectedMemeberAddress}
+                    setSelectedMemeberAddress={setSelectedMemeberAddress}
+                    dropdownRef={dropdownRef}
+                  />
+                )
+              );
+            })}
+          </ProfileContainer>
         </BodyContainer>
       </ModalContainer>
     </ThemeProvider>
@@ -132,12 +204,13 @@ const HostProfile = styled(ItemHV2)`
   margin-bottom: 29px;
 `;
 
-const DescriptionContainer = styled(ItemHV2)`
+const Description = styled(ItemHV2)`
   font-size: 18px;
   font-weight: 400;
   justify-content: flex-start;
   color: ${(props) => props.theme.modalDescriptionTextColor};
   min-width: 445px;
+  max-width: 445px;
   box-sizing: border-box;
   justify-ceontent: felx-start;
   margin-bottom: 10px;
@@ -148,9 +221,35 @@ const DescriptionContainer = styled(ItemHV2)`
 `;
 
 const AddWalletContainer = styled(ItemHV2)`
+  box-sizing: border-box;
   border: 1px solid ${(props) => props.theme.default.border};
+  max-width: 445px;
   border-radius: 16px;
   padding: 15px 24px;
   margin-bottom: 15px;
   cursor: pointer;
+`;
+
+const ProfileContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-right: 3px;
+  align-items: center;
+  min-width: 445px;
+  min-height: 72px;
+  max-height: 216px;
+  min-height: ${(props) => `${props.minHeight}px`};
+  overflow-y: auto;
+  overflow-x: hidden;
+  &&::-webkit-scrollbar {
+    width: 4px;
+  }
+  &&::-webkit-scrollbar-thumb {
+    background: #cf1c84;
+    border-radius: 10px;
+  }
+  @media (max-width: 480px) {
+    min-width: 300px;
+  }
 `;
