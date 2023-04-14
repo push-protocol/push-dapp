@@ -112,6 +112,15 @@ export const chainNameBackendStandard = {
   80001: 'POLYGON_TEST_MUMBAI',
 }
 
+export const aliasChainIdToChainName={
+  80001:'POLYGON',
+  97:'BSC',
+  420:'OPTIMISM',
+  137:'POLYGON',
+  56:'BSC',
+  10:'OPTIMISM',
+}
+
 export const aliasChainIdsMapping = {
   1: 137,
   42: 80001,

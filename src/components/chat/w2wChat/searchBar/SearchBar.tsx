@@ -21,7 +21,10 @@ import * as w2wChatHelper from 'helpers/w2w';
 import { displayDefaultUser } from 'helpers/w2w/user';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext, User } from 'types/chat';
+import { getGroup } from 'services/chats/getGroup';
+import { getGroupbyChatId } from 'services/chats/getGroupByChatId';
+import { getGroupByName } from 'services/chats/getGroupByName';
+import { AppContext, IGroup, User } from 'types/chat';
 import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
 import MessageFeed from '../messageFeed/MessageFeed';
 import { getUdResolver } from 'helpers/w2w/udResolver';
@@ -65,24 +68,21 @@ const SearchBar = ({ autofilled }) => {
   useEffect(() => {
     if (autofilled && !userShouldBeSearched) {
       // automate search
-      setSearchedUser(autofilled);
+      // setSearchedUser(autofilled);
+
+      // const event = new KeyboardEvent('keypress', {
+      //   key: 'enter',
+      // });
+      // console.log("in search")
+      submitSearch(null, autofilled);
     }
   }, [userShouldBeSearched, autofilled]);
-
-  useEffect(() => {
-    if (searchedUser) {
-      const event = new KeyboardEvent('keypress', {
-        key: 'enter',
-      });
-      submitSearch(event);
-    }
-  }, [searchedUser]);
 
   useEffect(() => {
     if (isInValidAddress) {
       searchFeedToast.showMessageToast({
         toastTitle: 'Error',
-        toastMessage: 'Invalid Address',
+        toastMessage: 'Invalid Search',
         toastType: 'ERROR',
         getToastIcon: (size) => (
           <MdError
@@ -107,52 +107,78 @@ const SearchBar = ({ autofilled }) => {
     }
   };
 
-  const submitSearch = (event: React.FormEvent): void => {
-    //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
-    event.preventDefault();
-    handleSearch();
+  const submitSearch = (event: React.FormEvent | null, autoSearch: string = null): void => {
+    if (autoSearch) {
+      //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
+      if(autoSearch.includes('chatid'))
+      {
+        handleSearch(autoSearch.split(':')[1]);
+      }
+      else{
+        handleSearch(autoSearch);
+      }
+  
+    } else {
+      //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
+      event.preventDefault();
+      handleSearch();
+    }
+
   };
 
-  const handleSearch = async (): Promise<void> => {
-    if (!ethers.utils.isAddress(searchedUser)) {
+  const setInvalidSearch = () =>{
+    setIsInvalidAddress(true);
+    setFilteredUserData([]);
+    setHasUserBeenSearched(true);
+  }
+  const handleSearch = async (autoSearch: string = null): Promise<void> => {
+    let searchText = autoSearch ? autoSearch : searchedUser;
+
+    if (!ethers.utils.isAddress(searchText)) {
       setIsLoadingSearch(true);
       let address: string;
-      try {
-        // query the requested name from supported providers
-        address =
-          (await provider.resolveName(searchedUser)) ||
-          (await library.resolveName(searchedUser)) ||
-          (await udResolver.owner(searchedUser));
+      let group: IGroup;
 
-        // this ensures address are checksummed
-        address = ethers.utils.getAddress(address.toLowerCase());
-
-        // console.log("searched address", address)
-        if (address) {
-          handleUserSearch(address);
-        } else {
-          setIsInvalidAddress(true);
-          setFilteredUserData([]);
-          setHasUserBeenSearched(true);
+        if(searchText.includes('.eth')){
+          try{
+            address = await provider.resolveName(searchText);
+            if (!address) {
+              address = await library.resolveName(searchText);
+            }
+          } catch (err) {
+            setInvalidSearch();
+          }
         }
-      } catch (err) {
-        setIsInvalidAddress(true);
-        setFilteredUserData([]);
-        setHasUserBeenSearched(true);
-      }
+        else{
+       
+          group = await getGroup(searchText,setInvalidSearch);
+        }
+       
+        // this ensures address are checksummed
+
+        if (address) {
+          address = ethers.utils.getAddress(address.toLowerCase());
+          handleUserSearch({userSearchData:address});
+        } else if(group){
+          handleUserSearch({groupSearchData:group});
+        }
+          else if(!group && !address) {
+            setInvalidSearch();
+          }
     } else {
-      await handleUserSearch(searchedUser);
+      await handleUserSearch({userSearchData:searchText});
     }
     setIsLoadingSearch(false);
   };
 
-  const handleUserSearch = async (userSearchData: string): Promise<void> => {
+//this function needs some optimisation
+  const handleUserSearch = async ({userSearchData,groupSearchData}:{userSearchData?:string,groupSearchData?:IGroup}): Promise<void> => {
     setIsLoadingSearch(true);
-    const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData });
     let filteredData: User;
     setHasUserBeenSearched(true);
 
-    if (userSearchData.length) {
+    if (userSearchData) {
+      const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData });
       filteredData = await PushAPI.user.get({ 
         account: caip10,
         env: appConfig.appEnv
@@ -163,7 +189,6 @@ const SearchBar = ({ autofilled }) => {
       if (filteredData !== null && isUserConnected) {
         if (activeTab !== 0) {
           setUserShouldBeSearched(true);
-
           if (autofilled) {
             setActiveTab(4);
           } else {
@@ -172,26 +197,49 @@ const SearchBar = ({ autofilled }) => {
         }
         setFilteredUserData([filteredData]);
         setSearchedUser('');
+      } else if (ethers.utils.isAddress(userSearchData)) {
+        setUserShouldBeSearched(true);
+        if (autofilled) {
+          setActiveTab(4);
+        } else {
+          setActiveTab(3);
+        }
+        const displayUser = displayDefaultUser({ caip10 });
+        setFilteredUserData([displayUser]);
+        setSearchedUser('');
+      } else {
+        setIsInvalidAddress(true);
+        setFilteredUserData([]);
       }
       // User is not in the protocol. Create new user
-      else {
-        if (ethers.utils.isAddress(userSearchData)) {
+    } else {
+      if (groupSearchData) {
+        const isGroupInInbox = inbox.find((inb) => inb?.groupInformation?.chatId === groupSearchData.chatId);
+        if (isGroupInInbox) {
+          if (activeTab != 0) {
+            setUserShouldBeSearched(true);
+            //check if in inbox
+            if (autofilled) {
+              setActiveTab(4);
+            } else {
+              setActiveTab(3);
+            }
+          }
+        } else {
           setUserShouldBeSearched(true);
+          //check if in inbox
           if (autofilled) {
             setActiveTab(4);
           } else {
             setActiveTab(3);
           }
-          const displayUser = displayDefaultUser({ caip10 });
-          setFilteredUserData([displayUser]);
-          setSearchedUser('');
-        } else {
-          setIsInvalidAddress(true);
-          setFilteredUserData([]);
         }
+        setFilteredUserData([groupSearchData]);
+        setSearchedUser('');
+      } else {
+        setIsInvalidAddress(true);
+        setFilteredUserData([]);
       }
-    } else {
-      setFilteredUserData([]);
     }
   };
 
