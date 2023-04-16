@@ -105,12 +105,11 @@ const YieldUniswapV2 = () => {
             <ItemVV2 padding=" 0px 14px" margin="24px 0px 0px 0px">
                 <ButtonsContainer>
                     <FilledButton style={{ margin: "0px 10px 0px 0px" }}>Stake Uni-V2</FilledButton>
-                    <EmptyButton>Unstake Uni-V2</EmptyButton>
                 </ButtonsContainer>
 
                 <ButtonsContainer>
-                    <EmptyButton style={{ margin: "0px 10px 0px 0px" }}>Claim Rewards</EmptyButton>
-                    <EmptyButton>Migrate to V3</EmptyButton>
+                    <EmptyButton>Unstake Uni-V2</EmptyButton>
+                    <EmptyButton style={{ margin: "0px 10px 0px 10px" }}>Claim Rewards</EmptyButton>
                 </ButtonsContainer>
             </ItemVV2>
         </Container>

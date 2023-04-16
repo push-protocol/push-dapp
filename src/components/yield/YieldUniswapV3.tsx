@@ -8,14 +8,119 @@ import styled from 'styled-components';
 import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2,SectionV2,SpanV2 } from 'components/reusables/SharedStylingV2';
 import InfoLogo from "../../assets/inforWithoutBG.svg";
 import { Button } from 'primaries/SharedStyling';
+import { ethers } from 'ethers';
+import { addresses } from 'config';
+import { useWeb3React } from '@web3-react/core';
+import { abis } from 'config';
+import YieldFarmingDataStore from 'singletons/YieldFarmingDataStore';
 
 const YieldUniswapV3 = () => {
+    const { active, error, account, library, chainId } = useWeb3React();
+    const [txInProgressDep, setTxInProgressDep] = React.useState(false);
+    const [poolStats, setPoolStats] = React.useState(null);
+    const [lpPoolStats, setLpPoolStats] = React.useState(null);
+    const [userDataLP, setUserDataLP] = React.useState(null);
+
+    const [epnsToken, setEpnsToken] = React.useState(null);
+    const [staking, setStaking] = React.useState(null);
+    const [yieldFarmingPUSH, setYieldFarmingPUSH] = React.useState(null);
+    const [yieldFarmingLP, setYieldFarmingLP] = React.useState(null);
+    const [uniswapV2Router02, setUniswapV2Router02] = React.useState(null);
+
+    console.log("Addresses",addresses,abis);
+    const tokenAddress = addresses.epnsLPToken;
+
+    const getPoolStats = React.useCallback(async () => {
+        const poolStats = await YieldFarmingDataStore.instance.getPoolStats();
+        console.log("pool stats",poolStats)
+    
+        setPoolStats({ ...poolStats });
+    }, [epnsToken, staking, yieldFarmingPUSH, yieldFarmingLP, uniswapV2Router02]);
+
+    const getLPPoolStats = React.useCallback(
+        async (poolStats) => {
+          const lpPoolStats = await YieldFarmingDataStore.instance.getLPPoolStats(poolStats);
+          console.log("LPPool Stats",lpPoolStats);
+
+          setLpPoolStats({ ...lpPoolStats });
+        },
+        [epnsToken, staking, yieldFarmingPUSH, yieldFarmingLP, uniswapV2Router02]
+    );
+
+    const getUserDataLP = React.useCallback(async () => {
+        const userDataLP = await YieldFarmingDataStore.instance.getUserData(yieldFarmingLP);
+        console.log("User Data LP",userDataLP);
+
+        setUserDataLP({ ...userDataLP });
+    }, [yieldFarmingLP]);
+
+    React.useEffect(() => {
+        let epnsToken = new ethers.Contract(addresses.epnsToken, abis.epnsToken, library);
+    
+        //changed the address and abis
+        let staking = new ethers.Contract(addresses.staking, abis.stakingV2, library);
+
+        let yieldFarmingPUSH = new ethers.Contract(addresses.yieldFarmPUSH, abis.yieldFarming, library);
+        
+        //changed the address
+        let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, library);
+    
+        let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, library);
+
+        console.log("UseEffect",staking,yieldFarmingPUSH,yieldFarmingLP)
+    
+        setEpnsToken(epnsToken);
+        setStaking(staking);
+        setYieldFarmingPUSH(yieldFarmingPUSH);
+        setYieldFarmingLP(yieldFarmingLP);
+        setUniswapV2Router02(uniswapV2Router02Instance);
+    
+        if (!!(library && account)) {
+          var signer = library.getSigner(account);
+    
+          let epnsToken = new ethers.Contract(addresses.epnsToken, abis.epnsToken, signer);
+          let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
+          let yieldFarmingPUSH = new ethers.Contract(addresses.yieldFarmPUSH, abis.yieldFarming, signer);
+          let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, signer);
+    
+          let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, signer);
+    
+          setEpnsToken(epnsToken);
+          setStaking(staking);
+          setYieldFarmingPUSH(yieldFarmingPUSH);
+          setYieldFarmingLP(yieldFarmingLP);
+          setUniswapV2Router02(uniswapV2Router02Instance);
+        }
+    }, [account]);
+
+    React.useEffect(() => {
+        console.log("This ran",epnsToken,staking,yieldFarmingPUSH);
+         
+        if (epnsToken != null && staking != null && yieldFarmingPUSH != null) {
+          // Instantiate Data Stores
+          YieldFarmingDataStore.instance.init(
+            account,
+            epnsToken,
+            staking,
+            yieldFarmingPUSH,
+            yieldFarmingLP,
+            uniswapV2Router02
+          );
+    
+          getPoolStats();
+    
+          // setpoolStats(YieldFarmingDataStore.instance.state);
+        }
+    }, [getPoolStats]);   
+
+
+
     return (
         <Container>
             {/* Top Section */}
             <ItemVV2 margin="0px 0px 20px 0px">
-                <Heading>Uniswap V3 LP Staking Pool</Heading>
-                <SecondaryText>
+                <Heading onClick={getLPPoolStats}>Uniswap V2 LP Staking Pool</Heading>
+                <SecondaryText onClick={getUserDataLP}>
                     Current APR <SpanV2 color="#D53A94">9.89%</SpanV2>
                 </SecondaryText>
             </ItemVV2>
@@ -103,7 +208,7 @@ const YieldUniswapV3 = () => {
             {/* Bottom Section */}
             <ItemVV2 padding=" 0px 14px" margin="24px 0px 0px 0px">
                 <ItemHV2>
-                    <FilledButton>Stake PUSH/WETH LP NFTs</FilledButton>
+                    <FilledButton>Stake PUSH/WETH LP Tokens</FilledButton>
                 </ItemHV2>
                 <ButtonsContainer>
                     <EmptyButton style={{ margin: "0px 10px 0px 0px" }}>Unstake PUSH/WETH</EmptyButton>

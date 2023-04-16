@@ -59,6 +59,8 @@ export default class YieldFarmingDataStore {
       const yieldFarmingPUSH = this.state.yieldFarmingPUSH;
       const yieldFarmingLP = this.state.yieldFarmingLP;
 
+      console.log("Stats",yieldFarmingPUSH)
+
       const currentEpochPUSH = await yieldFarmingPUSH.getCurrentEpoch();
 
       const pushPriceAmounts = await this.state.uniswapV2Router02.getAmountsOut(ONE_PUSH.toString(), [addresses.epnsToken, addresses.WETHAddress, addresses.USDTAddress]);
@@ -155,6 +157,8 @@ export default class YieldFarmingDataStore {
       const epnsToken = this.state.epnsToken;
       const staking = this.state.staking;
       const yieldFarmingLP = this.state.yieldFarmingLP;
+
+      console.log("Stats",yieldFarmingLP)
 
       const currentEpochPUSH = await yieldFarmingLP.getCurrentEpoch();
       const totalEpochPUSH = (await yieldFarmingLP.NR_OF_EPOCHS()).toString();
