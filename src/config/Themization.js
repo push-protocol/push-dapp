@@ -229,6 +229,9 @@ const themeLight = {
   tooltipContentHeading: "#CF1C84",
   tooltipContentDesc:"#494D5F",
   tooltipIconBorderClr: "#E6E7EC",
+
+
+  materialUIMode:'light',
 };
 
 const themeDark = {
@@ -464,6 +467,8 @@ const themeDark = {
   tooltipContentHeading: "#CF1C84",
   tooltipContentDesc: "#B6BCD6",
   tooltipIconBorderClr: "#E6E7EC",
+
+  materialUIMode:'dark'
 };
 
 module.exports = {

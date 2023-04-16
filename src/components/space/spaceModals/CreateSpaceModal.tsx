@@ -8,6 +8,7 @@ import styled, { useTheme } from 'styled-components';
 import Schedule from "../../../assets/schedule.svg";
 import ScheduleModal from './ScheduleModal';
 import InviteMembersModal from './InviteMembersModal';
+import dayjs, { Dayjs } from 'dayjs';
 
 const CreateSpaceModal = ({
     onClose
@@ -15,6 +16,8 @@ const CreateSpaceModal = ({
     const [spaceModalState, setSpaceModalState] = React.useState<number>(1);
     const [spaceName,setSpaceName] = React.useState<string>('');
     const [spaceDes,setSpaceDes] = React.useState<string>('');
+    const [dateValue,setDateValue] = React.useState<Dayjs | null>(dayjs(new Date()));
+    const [timeValue,setTimeValue] = React.useState<Dayjs | null>(dayjs(new Date()));
 
     const [memberList,setMemberList] = React.useState<any>([]);
 
@@ -24,6 +27,8 @@ const CreateSpaceModal = ({
 
     const themes = useTheme();
 
+    console.log("Date and time ",dateValue,timeValue);
+
     return (
         <Container>
 
@@ -31,6 +36,11 @@ const CreateSpaceModal = ({
                 <ScheduleModal
                 handleClose={handleClose} 
                 setSpaceModalState={setSpaceModalState} 
+                dateValue={dateValue}
+                setDateValue={setDateValue}
+                timeValue={timeValue}
+                setTimeValue={setTimeValue}
+
                 />
             )}
 
@@ -102,6 +112,8 @@ const Container = styled.div`
   @media(max-width:400px){
     padding:30px 12px;
   }
+
+  
 
 
 `
