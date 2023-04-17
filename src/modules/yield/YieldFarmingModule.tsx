@@ -21,7 +21,7 @@ import { AInlineV2 } from 'components/reusables/SharedStylingV2';
 
 // Create Header
 function YieldFarmingModule() {
-  const { account, library, chainId } = useWeb3React();
+  const {account, library, chainId } = useWeb3React();
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const themes = useTheme();

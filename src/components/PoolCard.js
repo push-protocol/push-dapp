@@ -546,7 +546,7 @@ export default function PoolCard({
             <Item bg="#000" margin="5px 10px" radius="12px" flex="1">
               <PoolBoxTitle>Current Epoch Reward <InfoTooltip title={"This is only an estimation for the user's reward that they might get after the epoch. This might change depending upon deposits from other users."} /></PoolBoxTitle>
               {/* TODO fix calculation*/}
-              <PoolBoxMsg>{ poolName == "Uniswap LP Pool (UNI-V2)" ? userData.potentialUserReward : 0} PUSH</PoolBoxMsg>
+              <PoolBoxMsg>{0} PUSH</PoolBoxMsg>
             </Item>
 
             <Item bg="#000" margin="5px 10px" radius="12px" flex="1">
@@ -664,6 +664,7 @@ export default function PoolCard({
           <ButtonAlt
             bg="#000"
             onClick={() => massHarvestTokensAll()}
+            disabled={!(userData.totalAvailableReward>0)}
           >
             {!txInProgressMassHarvest &&
               <Span color="#fff" weight="400">Harvest</Span>
