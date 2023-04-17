@@ -1,21 +1,136 @@
+// React + Web3 Essentials
+import React, { useState } from 'react';
+
+// External Packages
 import styled from 'styled-components';
+
+// Internal Components
+import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ReactComponent as Space } from 'assets/space/space.svg';
+import { ReactComponent as Close } from 'assets/space/close.svg';
+import { ReactComponent as Check } from 'assets/space/check.svg';
+import { shortenText } from 'helpers/UtilityHelper';
+import { spaces } from 'services/space/spaceList';
+
+// Internal Configs
+import { device } from 'config/Globals';
+
 const SpaceWidget = () => {
+  const [isExit, setIsExit] = useState<boolean>(false);
+  const selectedSpace = spaces[0];
+
+  const exitSpace = () => {};
+
   return (
     <WidgetContainer>
-      Space Widget
+      {!isExit ? (
+        <>
+          <WidgetData>
+            <SpanV2
+              color="#F5F5F5"
+              fontSize="15px"
+              fontWeight="500"
+            >
+              {shortenText(selectedSpace?.spaceCreator, 6)}'s Space
+            </SpanV2>
+            <Close
+              style={{ cursor: 'pointer' }}
+              onClick={() => setIsExit(true)}
+            />
+          </WidgetData>
+          <WidgetData>
+            <ItemHV2 justifyContent="flex-start">
+              <Space />
+              <SpanV2
+                color="#F5F5F5"
+                fontSize="14px"
+                fontWeight="500"
+              >
+                Live
+              </SpanV2>
+            </ItemHV2>
+            <ItemHV2 justifyContent="flex-end">
+              {selectedSpace?.members?.slice(0, 3).map((member, index) => {
+                return (
+                  <ItemVV2
+                    width="31px"
+                    height="31px"
+                    maxWidth="31px"
+                    borderRadius="100%"
+                    overflow="hidden"
+                    margin="0px 0px 0px -18px"
+                    zIndex={4 - index}
+                    key={index}
+                  >
+                    <ImageV2
+                      height="100%"
+                      objectFit="cover"
+                      src={member?.image}
+                      alt="Member Image"
+                    />
+                  </ItemVV2>
+                );
+              })}
+              <SpanV2
+                color="#FFFFFF"
+                fontSize="14px"
+                fontWeight="500"
+                margin="0px 0px 0px 3px"
+              >
+                +190
+              </SpanV2>
+            </ItemHV2>
+          </WidgetData>
+        </>
+      ) : (
+        <WarningContainer>
+          <SpanV2
+            fontSize="15px"
+            fontWeight="500"
+            color="#F5F5F5"
+          >
+            Do you want to leave this space?
+          </SpanV2>
+          <ItemHV2 justifyContent="flex-end">
+            <Check
+              style={{ marginRight: '12px', cursor: 'pointer' }}
+              onClick={() => exitSpace()}
+            />
+            <Close
+              style={{ cursor: 'pointer' }}
+              onClick={() => setIsExit(false)}
+            />
+          </ItemHV2>
+        </WarningContainer>
+      )}
     </WidgetContainer>
   );
 };
 
+const WarningContainer = styled(ItemHV2)`
+  height: 100%;
+  min-height: 50px;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const WidgetContainer = styled.div`
-  height: 50px;
+  min-height: 50px;
   width: 317px;
   padding: 8px 16px;
   border-radius: 17px;
-  background:  linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%);
+  background: linear-gradient(87.17deg, #b6a0f5 0%, #f46ef7 57.29%, #ff95d5 100%);
   position: fixed;
   right: 47px;
   bottom: 124px;
+  z-index: 10;
+  @media (${device.mobileL}) {
+    right: 20px;
+  }
+`;
+
+const WidgetData = styled(ItemHV2)`
+  justify-content: space-between;
 `;
 
 export default SpaceWidget;
