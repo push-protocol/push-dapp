@@ -14,7 +14,7 @@ import { SpaceTabOption } from 'contexts';
 import { SpaceInbox } from './spaceInbox';
 import { SpaceRequests } from './spaceRequests';
 
-export const SpaceSidebar = () => {
+export const SpaceSidebar = ({showCreateSpaceModal}) => {
   const { activeTab, setActiveTab } = useContext(SpaceLocalContext);
 
   return (
@@ -47,7 +47,7 @@ export const SpaceSidebar = () => {
               background="#D53893"
               hoverBackground="transparent"
               borderRadius="50%"
-              onClick={() => setActiveTab(SpaceTabOption.Requests)}
+              onClick={showCreateSpaceModal}
             >
               <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }} />
             </ButtonV2>

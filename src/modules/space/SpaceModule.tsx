@@ -15,10 +15,10 @@ import { useWeb3React } from '@web3-react/core';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { getSpaceRequests, getSpaces } from 'services/space';
 import { getSpaceRequestsFromIndexedDB, getSpacesFromIndexedDB } from 'helpers/space';
-import useModalBlur from "hooks/useModalBlur"
 import { SpaceInfoModalContent } from 'components/space/spaceInfoModal';
-import { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+import CreateSpaceModal from 'components/space/spaceModals/CreateSpaceModal';
 
 export const SpaceModule = () => {
   const theme = useTheme();
@@ -70,6 +70,15 @@ console.log(connectedUser)
       }
     })()
   },[connectedUser]);
+
+  const spaceModalToast = useToast();
+
+  const {
+    isModalOpen: isCreateSpaceModalOpen,
+    showModal: showCreateSpaceModal,
+    ModalComponent: CreateSpaceModalComponent,
+  } = useModalBlur();
+
   // RENDER
   return (
     <SpaceLocalContextProvider>
@@ -82,7 +91,7 @@ console.log(connectedUser)
         boxSizing="border-box"
         background={theme.default.bg}
       >
-        <SpaceSidebarSection />
+        <SpaceSidebarSection showCreateSpaceModal={showCreateSpaceModal}/>
       </SpaceSidebarContainer>
       <SpaceBoxContainer
         padding="10px"
@@ -95,6 +104,20 @@ console.log(connectedUser)
         modalPadding="0px"
         modalPosition={MODAL_POSITION.ON_PARENT}
       />
+
+      <CreateSpaceModalComponent
+       InnerComponent={CreateSpaceModal}
+       onConfirm={() => {}}
+       toastObject={spaceModalToast}
+       modalPadding="0px"
+       modalPosition={MODAL_POSITION.ON_PARENT}
+      />
+
+
+
+
+
+
     </Container>
   </SpaceLocalContextProvider>
   );

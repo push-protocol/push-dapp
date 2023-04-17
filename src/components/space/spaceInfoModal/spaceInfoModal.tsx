@@ -9,7 +9,7 @@ import styled, { ThemeProvider, useTheme } from 'styled-components';
 // Internal Components
 import { ModalInnerComponentType } from 'hooks/useModalBlur';
 import { useDeviceWidthCheck } from 'hooks';
-import GroupModalHeader from 'components/chat/w2wChat/groupChat/createGroup/GroupModalHeader';
+import ModalHeader from 'components/ModalHeader';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ReactComponent as AddMember } from 'assets/chat/group-chat/addicon.svg';
 import { spaces } from 'services/space/spaceList';
@@ -67,7 +67,7 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
         ref={containerRef}
         padding="24px 0px 20px 0px"
       >
-        <GroupModalHeader
+        <ModalHeader
           handleClose={handleClose}
           title={'Space Info'}
           margin={isMobile ? '0px 24px 34px 24px' : '0px 36px 34px 36px'}
