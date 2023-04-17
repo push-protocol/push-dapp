@@ -18,6 +18,7 @@ import { getSpaceRequestsFromIndexedDB, getSpacesFromIndexedDB } from 'helpers/s
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import CreateSpaceModal from 'components/space/spaceModals/CreateSpaceModal';
+import SpaceNotification from 'components/space/spaceNotification/spaceNotification';
 
 export const SpaceModule = () => {
   const theme = useTheme();
@@ -88,6 +89,7 @@ console.log(connectedUser)
         padding="10px"
       >
         <SpaceBoxSection />
+        <SpaceNotification/>
       </SpaceBoxContainer>
 
 
