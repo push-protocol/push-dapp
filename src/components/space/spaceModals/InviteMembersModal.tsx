@@ -14,14 +14,16 @@ import { User } from 'types/chat';
 
 
 type InviteMembersModalType = {
-    handleClose : ()=>{};
+    handleClose : ()=>void;
+    handleBack:()=>void;
     memberList:Array<User>;
-    setSpaceModalState: ()=>{}
-    setMemberList: ()=>{};
+    setSpaceModalState?: ()=>void
+    setMemberList: ()=>void;
   };
 
 const InviteMembersModal = ({
     handleClose,
+    handleBack,
     setSpaceModalState,
     memberList,
     setMemberList
@@ -30,7 +32,7 @@ const InviteMembersModal = ({
     const theme = useTheme();
 
     const handlePrevious = ()=>{
-        setSpaceModalState(1);
+        setSpaceModalState ? setSpaceModalState(1) : handleBack();
     }
 
     
