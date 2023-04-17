@@ -34,6 +34,7 @@ import { resetAdminSlice } from 'redux/slices/adminSlice';
 import Navigation from 'structure/Navigation';
 import ChatUserContextProvider from 'contexts/ChatUserContext';
 import { SpaceGlobalContextProvider } from 'contexts';
+import SpaceWidget from 'components/space/spaceWidget/spaceWidget';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -221,6 +222,7 @@ export default function App() {
                 <ChatUserContextProvider>
                   {/* Shared among all pages, load universal things here */}
                   <MasterInterfacePage />
+                  <SpaceWidget/>
                 </ChatUserContextProvider>
                 </SpaceGlobalContextProvider>
               </ContentContainer>
