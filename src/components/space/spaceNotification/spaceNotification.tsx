@@ -7,6 +7,9 @@ import { ReactComponent as Space } from 'assets/space/space.svg';
 
 const SpaceNotification = () => {
   const selectedSpace = spaces[0];
+
+  const joinSpace = () => {};
+
   return (
     <NotificationContainer>
       <NotificationHeader>
@@ -51,6 +54,7 @@ const SpaceNotification = () => {
             fontSize="14px"
             fontWeight="500"
             color="#FFFFFF"
+            margin="0px 0px 0px 3px"
           >
             Live
           </SpanV2>
@@ -60,11 +64,12 @@ const SpaceNotification = () => {
         fontSize="20px"
         fontWeight="500"
         color="#F5F5F5"
-        textAlign="left"
+        alignSelf="flex-start"
+        margin="0px 0px 12px 0px"
       >
         {`${shortenText(selectedSpace?.spaceCreator, 6)}'s Space`}
       </SpanV2>
-      <JoinButton>Join this space</JoinButton>
+      <JoinButton onClick={() => joinSpace()}>Join this space</JoinButton>
     </NotificationContainer>
   );
 };
@@ -73,29 +78,30 @@ const NotificationHeader = styled(ItemHV2)`
   align-items: center;
   justify-content: space-between;
   max-height: 32px;
-  margin-bottom: 14px;
   width: 100%;
+  margin-bottom: 14px;
 `;
 
 const NotificationContainer = styled(ItemVV2)`
   position: fixed;
   right: 51px;
   bottom: 84px;
-  min-height: 152px;
+  max-height: 152px;
   min-width: 343px;
   background: linear-gradient(87.17deg, #b6a0f5 0%, #f46ef7 57.29%, #ff95d5 100%);
   border-radius: 17px;
   padding: 16px;
+  justify-content: flex-start;
 `;
 
 const JoinButton = styled(ItemHV2)`
+  height: 36px;
   border-radius: 8px;
-  padding: 5px 20px;
   font-size: 14px;
   color: #ffffff;
   background: transparent;
   border: 1px solid #ffffff;
-  max-height: 35px;
+  cursor: pointer;
 `;
 
 export default SpaceNotification;
