@@ -152,7 +152,7 @@ export default class YieldFarmingDataStore {
     });
   };
 
-  getLPPoolStats = async (poolStats) => {
+  getLPPoolStats = async () => {
     return new Promise(async (resolve, reject) => {
       const epnsToken = this.state.epnsToken;
       const staking = this.state.staking;
@@ -177,20 +177,20 @@ export default class YieldFarmingDataStore {
         currentEpochPUSH.add(1)
       );
 
-      const stakingAPR = await this.calcLPPoolAPR(
-        genesisEpochAmount,
-        currentEpochPUSH,
-        deprecationPerEpoch,
-        poolBalance,
-        poolStats
-      );
+      // const stakingAPR = await this.calcLPPoolAPR(
+      //   genesisEpochAmount,
+      //   currentEpochPUSH,
+      //   deprecationPerEpoch,
+      //   poolBalance,
+      //   poolStats
+      // );
 
       resolve({
         currentEpochPUSH,
         totalEpochPUSH,
         rewardForCurrentEpoch,
         poolBalance,
-        stakingAPR
+        // stakingAPR
       });
     });
   };
@@ -274,8 +274,12 @@ export default class YieldFarmingDataStore {
   calcTotalAmountPerEpoch = (
     genesisEpochAmount,
     epochId,
-    deprecationPerEpoch
+    deprecationPerEpoch,
+    maxEpochs=100,
   ) => {
+    if (epochId > maxEpochs){
+      return genesisEpochAmount.mul(0)
+    }
     return genesisEpochAmount.sub(epochId.mul(deprecationPerEpoch));
   };
 

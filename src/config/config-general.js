@@ -26,6 +26,7 @@ import UniswapV2Router02Abi from "./abis/UniswapV2Router02.json";
 import yieldFarmingAbi from "./abis/YieldFarm.json";
 import pushTokenAbi from "./abis/pushToken.json";
 import stakingV2Abi from "./abis/StakingV2.json";
+import uniV2LpTokenAbi from "./abis/UniV2LPToken.json";
 
 export const abis = {
   erc20: erc20Abi,
@@ -45,5 +46,6 @@ export const abis = {
   uniswapV2Router02: UniswapV2Router02Abi,
   rockstarV2: rockstarV2Abi,
   NFTRewardsV2: NFTRewardsV2,
-  stakingV2: stakingV2Abi
+  stakingV2: stakingV2Abi,
+  uniV2LpToken:uniV2LpTokenAbi
 };

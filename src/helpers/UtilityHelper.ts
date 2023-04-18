@@ -111,6 +111,15 @@ export const chainNameBackendStandard = {
   80001: 'POLYGON_TEST_MUMBAI',
 }
 
+export const aliasChainIdToChainName={
+  80001:'POLYGON',
+  97:'BSC',
+  420:'OPTIMISM',
+  137:'POLYGON',
+  56:'BSC',
+  10:'OPTIMISM',
+}
+
 export const aliasChainIdsMapping = {
   1: 137,
   42: 80001,
@@ -203,5 +212,23 @@ export const shortenText = (str: string, substringLengthStart: number, substring
   return `${str?.substring(0, substringLengthStart)}...${str?.substring(str?.length-(substringLengthEnd??substringLengthStart))}`;
 };
 
+export const swapPropertyOrder = <T extends object>(obj: T, prop1: keyof T, prop2: keyof T): T =>{
+  if (!obj.hasOwnProperty(prop1) || !obj.hasOwnProperty(prop2)) {
+    throw new Error(`Object does not have one or both of the properties: ${String(prop1)}, ${String(prop2)}`);
+  }
+
+  const props = Object.keys(obj) as (keyof T)[];
+  const index1 = props.indexOf(prop1);
+  const index2 = props.indexOf(prop2);
+
+  if (index1 === -1 || index2 === -1) {
+    throw new Error(`One or both properties are not present in the object: ${String(prop1)}, ${String(prop2)}`);
+  }
+
+  const reorderedProps = [...props];
+  [reorderedProps[index1], reorderedProps[index2]] = [reorderedProps[index2], reorderedProps[index1]];
+
+  return Object.fromEntries(reorderedProps.map(key => [key, obj[key]])) as T;
+}
 
 export default UtilityHelper;

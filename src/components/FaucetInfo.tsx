@@ -11,7 +11,7 @@ import { device } from 'config/Globals';
 import { useEffect, useState } from 'react';
 import { getHasEnoughPushToken } from 'helpers';
 import { useWeb3React } from '@web3-react/core';
-import useModal from 'hooks/useModal';
+import useModalBlur, {MODAL_POSITION} from 'hooks/useModalBlur';
 import { UniswapWidgetModal } from './UniswapWidget';
 
 type FaucetInfoType = {
@@ -44,7 +44,7 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
     isModalOpen: isUniswapWidgetModalOpen,
     showModal: showUniswapWidgetModal,
     ModalComponent: UniswapWidgetModalComponent,
-  } = useModal();
+  } = useModalBlur();
 
   useEffect(() => {
     (async () => {
@@ -99,7 +99,8 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
         <UniswapWidgetModalComponent
           InnerComponent={UniswapWidgetModal}
           InnerComponentProps={{ defaultPushTokenAmount: noOfPushTokensToCheck }}
-          extraOuterPadding="0px"
+          modalPadding="0px"
+          modalPosition={MODAL_POSITION.ON_ROOT}
         />
       }
     </Container>
@@ -109,10 +110,7 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
 };
 
 const Container = styled.div`
-transform: translateY(-40px);
-z-index: 0;
 width:100%;
-
 `
 
 const TextSpace = styled.div`

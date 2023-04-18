@@ -1,6 +1,6 @@
 // Internal Components
-import { getReq } from "api";
-import { channelsServiceEndpoints } from "helpers/RoutesHelper"
+import * as PushAPI from "@pushprotocol/restapi";
+import { appConfig } from "config";
 
 // Types
 type Props = {
@@ -8,11 +8,9 @@ type Props = {
 }
 
 export const getChannelDelegates = async ({ channelCaipAddress }: Props) => {
-    const reqEndpoint = channelsServiceEndpoints.channelDelegates(channelCaipAddress);
-
     try {
-        const response = await getReq(reqEndpoint);
-        return response?.data?.delegates;
+        const response = await PushAPI.channels.getDelegates({channel:channelCaipAddress,env:appConfig.appEnv})
+        return response;
     } catch (err) {
         throw new Error(err.message);
     }

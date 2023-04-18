@@ -25,7 +25,7 @@ import useToast from "hooks/useToast";
 import { appConfig } from "config";
 import { Button } from "components/SharedStyling";
 import EditChannel from "modules/editChannel/EditChannel";
-import useModal from "hooks/useModal";
+import useModalBlur from "hooks/useModalBlur";
 
 // Constants
 // interval after which alias details api will be called, in seconds
@@ -156,7 +156,7 @@ const ChannelOwnerDashboard = () => {
     isModalOpen: isUploadLogoModalOpen,
     showModal: displayUplaodLogoModal,
     ModalComponent: UploadLogoComponent,
-  } = useModal();
+  } = useModalBlur();
 
   return (
     <ItemHV2>

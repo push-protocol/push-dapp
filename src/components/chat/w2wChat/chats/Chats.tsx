@@ -12,7 +12,7 @@ import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedSt
 import { shortenText } from 'helpers/UtilityHelper';
 import { caip10ToWallet } from 'helpers/w2w';
 import { checkTwitterUrl } from 'helpers/w2w/twitter';
-import { useResolveEns } from 'hooks/useResolveEns';
+import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext, MessageIPFSWithCID, TwitterFeedReturnType } from 'types/chat';
 import tickIcon from '../../../../assets/chat/tick.svg';
@@ -43,10 +43,10 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const [profilePicture, setProfilePicture] = useState<string>('');
   const time: Date = new Date(msg?.timestamp);
   const time1: string = time.toLocaleTimeString('en-US');
-  const date: string = time1.slice(0, -6) + time1.slice(-2);
+  const date: string = time1.slice(0, -6) + ' ' + time1.slice(-2).toLowerCase();
   const { tweetId, messageType }: TwitterFeedReturnType = checkTwitterUrl({ message: msg?.messageContent });
   const walletAddress = shortenText(caip10ToWallet(msg.fromCAIP10)?.toLowerCase(), 6);
-  const ensName = useResolveEns(msg.fromCAIP10);
+  const ensName = useResolveWeb3Name(msg.fromCAIP10);
   
   const getProfilePicture = async() =>{
     let member = getMemberDetails(currentChat,msg?.fromCAIP10);

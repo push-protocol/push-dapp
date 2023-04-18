@@ -2,17 +2,28 @@
 import React from 'react';
 
 // External Packages
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 // Internal Compoonents
-import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2,SectionV2,SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import InfoLogo from "../../assets/inforWithoutBG.svg";
-import { Button } from 'primaries/SharedStyling';
+import { B, Button, Input, Item, ItemH, Span } from 'primaries/SharedStyling';
 import { ethers } from 'ethers';
 import { addresses } from 'config';
 import { useWeb3React } from '@web3-react/core';
 import { abis } from 'config';
 import YieldFarmingDataStore from 'singletons/YieldFarmingDataStore';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { toast } from 'react-toastify';
+import useToast from 'hooks/useToast';
+import { MdCheckCircle, MdError } from 'react-icons/md';
+
+
+const bn = function (number, defaultValue = null) { if (number == null) { if (defaultValue == null) { return null } number = defaultValue } return ethers.BigNumber.from(number) }
+
+// const tokens = function (amount) { return (bn(amount).mul(bn(10).pow(18))).toString() }
+// const tokensBN = function (amount) { return (bn(amount).mul(bn(10).pow(18))) }
+const bnToInt = function (bnAmount) { return bnAmount.div(bn(10).pow(18)) }
 
 const YieldUniswapV3 = () => {
     const { active, error, account, library, chainId } = useWeb3React();
@@ -21,97 +32,475 @@ const YieldUniswapV3 = () => {
     const [lpPoolStats, setLpPoolStats] = React.useState(null);
     const [userDataLP, setUserDataLP] = React.useState(null);
 
+    const [depositAmountToken, setDepositAmountToken] = React.useState(0);
+    const [depositApproved, setDepositApprove] = React.useState(false);
+    const [showDepSlip, setShowDepSlip] = React.useState(null);
+    const [showDepositItem, setShowDepositItem] = React.useState(false);
+    const [txInProgress, setTxInProgress] = React.useState(false);
+
+    const [txInProgressWithdraw, setTxInProgressWithdraw] = React.useState(false);
+
+    const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
+
+
+
+
     const [epnsToken, setEpnsToken] = React.useState(null);
     const [staking, setStaking] = React.useState(null);
     const [yieldFarmingPUSH, setYieldFarmingPUSH] = React.useState(null);
     const [yieldFarmingLP, setYieldFarmingLP] = React.useState(null);
     const [uniswapV2Router02, setUniswapV2Router02] = React.useState(null);
 
-    console.log("Addresses",addresses,abis);
+
+    const [txInProgressApprDep, setTxInProgressApprDep] = React.useState(false);
+
+    const uniswapV2Toast = useToast();
+
+
+    console.log("Addresses", addresses, abis);
     const tokenAddress = addresses.epnsLPToken;
 
-    const getPoolStats = React.useCallback(async () => {
-        const poolStats = await YieldFarmingDataStore.instance.getPoolStats();
-        console.log("pool stats",poolStats)
-    
-        setPoolStats({ ...poolStats });
-    }, [epnsToken, staking, yieldFarmingPUSH, yieldFarmingLP, uniswapV2Router02]);
-
     const getLPPoolStats = React.useCallback(
-        async (poolStats) => {
-          const lpPoolStats = await YieldFarmingDataStore.instance.getLPPoolStats(poolStats);
-          console.log("LPPool Stats",lpPoolStats);
+        async () => {
+            const lpPoolStats = await YieldFarmingDataStore.instance.getLPPoolStats();
+            console.log("LPPool Stats", lpPoolStats);
 
-          setLpPoolStats({ ...lpPoolStats });
+            setLpPoolStats({ ...lpPoolStats });
         },
-        [epnsToken, staking, yieldFarmingPUSH, yieldFarmingLP, uniswapV2Router02]
+        [epnsToken, staking, yieldFarmingLP, uniswapV2Router02]
     );
 
-    const getUserDataLP = React.useCallback(async () => {
+    const getUserDataLP = React.useCallback(async (yieldFarmingLP) => {
         const userDataLP = await YieldFarmingDataStore.instance.getUserData(yieldFarmingLP);
-        console.log("User Data LP",userDataLP);
-
+        console.log("User Data LP", userDataLP);
         setUserDataLP({ ...userDataLP });
     }, [yieldFarmingLP]);
 
+
     React.useEffect(() => {
         let epnsToken = new ethers.Contract(addresses.epnsToken, abis.epnsToken, library);
-    
+
         //changed the address and abis
         let staking = new ethers.Contract(addresses.staking, abis.stakingV2, library);
 
         let yieldFarmingPUSH = new ethers.Contract(addresses.yieldFarmPUSH, abis.yieldFarming, library);
-        
+
         //changed the address
         let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, library);
-    
+
         let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, library);
 
-        console.log("UseEffect",staking,yieldFarmingPUSH,yieldFarmingLP)
-    
+        console.log("UseEffect", staking, yieldFarmingPUSH, yieldFarmingLP)
+
         setEpnsToken(epnsToken);
         setStaking(staking);
         setYieldFarmingPUSH(yieldFarmingPUSH);
         setYieldFarmingLP(yieldFarmingLP);
         setUniswapV2Router02(uniswapV2Router02Instance);
-    
-        if (!!(library && account)) {
-          var signer = library.getSigner(account);
-    
-          let epnsToken = new ethers.Contract(addresses.epnsToken, abis.epnsToken, signer);
-          let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
-          let yieldFarmingPUSH = new ethers.Contract(addresses.yieldFarmPUSH, abis.yieldFarming, signer);
-          let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, signer);
-    
-          let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, signer);
-    
-          setEpnsToken(epnsToken);
-          setStaking(staking);
-          setYieldFarmingPUSH(yieldFarmingPUSH);
-          setYieldFarmingLP(yieldFarmingLP);
-          setUniswapV2Router02(uniswapV2Router02Instance);
-        }
-    }, [account]);
 
-    React.useEffect(() => {
-        console.log("This ran",epnsToken,staking,yieldFarmingPUSH);
-         
-        if (epnsToken != null && staking != null && yieldFarmingPUSH != null) {
-          // Instantiate Data Stores
-          YieldFarmingDataStore.instance.init(
+        if (!!(library && account)) {
+            var signer = library.getSigner(account);
+
+            let epnsToken = new ethers.Contract(addresses.epnsToken, abis.epnsToken, signer);
+            let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
+            let yieldFarmingPUSH = new ethers.Contract(addresses.yieldFarmPUSH, abis.yieldFarming, signer);
+            let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, signer);
+
+            let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, signer);
+
+            setEpnsToken(epnsToken);
+            setStaking(staking);
+            setYieldFarmingPUSH(yieldFarmingPUSH);
+            setYieldFarmingLP(yieldFarmingLP);
+            setUniswapV2Router02(uniswapV2Router02Instance);
+        }
+
+        YieldFarmingDataStore.instance.init(
             account,
             epnsToken,
             staking,
             yieldFarmingPUSH,
             yieldFarmingLP,
             uniswapV2Router02
-          );
-    
-          getPoolStats();
-    
-          // setpoolStats(YieldFarmingDataStore.instance.state);
+        );
+
+        getLPPoolStats();
+        getUserDataLP(yieldFarmingLP);
+
+
+    }, [account]);
+
+    const fillMax = async () => {
+        var signer = library.getSigner(account);
+        const tokenAddr = addresses.uniV2LPToken;
+        let token = new ethers.Contract(tokenAddr, abis.epnsToken, signer);
+
+        let balance = bnToInt(await token.balanceOf(account));
+        console.log("balance", balance)
+        setDepositAmountToken(parseInt(balance.toString().replace(/\D/, '')) || 0)
+    }
+
+    const approveDeposit = async () => {
+        if (depositApproved || txInProgressApprDep) {
+            return
         }
-    }, [getPoolStats]);   
+
+        setTxInProgressApprDep(true);
+
+        var signer = library.getSigner(account);
+        let uniV2LPToken = new ethers.Contract(addresses.uniV2LPToken, abis.uniV2LpToken, signer);
+        let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
+
+        const uintMax = bn(2).pow(bn(256)).sub(1)
+
+        console.log("Approve", uniV2LPToken, staking, uintMax);
+
+        const tx = uniV2LPToken.approve(
+            staking.address,
+            uintMax
+        );
+
+        console.log("Approve TX", tx);
+
+
+        tx.then(async (tx) => {
+            uniswapV2Toast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
+
+
+            try {
+                await library.waitForTransaction(tx.hash);
+                uniswapV2Toast.showMessageToast({
+                    toastTitle: 'Success',
+                    toastMessage: 'Successfully approved LP Tokens!',
+                    toastType: 'SUCCESS',
+                    getToastIcon: (size) => (
+                        <MdCheckCircle
+                            size={size}
+                            color="green"
+                        />
+                    ),
+                });
+
+                setTxInProgressApprDep(false);
+                setDepositApprove(true);
+
+            } catch (e) {
+                uniswapV2Toast.showMessageToast({
+                    toastTitle: 'Error',
+                    toastMessage: `User denied message signature.`,
+                    toastType: 'ERROR',
+                    getToastIcon: (size) => <MdError size={size} color="red" />,
+                });
+
+                setTxInProgressApprDep(false);
+            }
+        }).catch((err) => {
+
+            uniswapV2Toast.showMessageToast({
+                toastTitle: 'Error',
+                toastMessage: `User denied message signature`,
+                toastType: 'ERROR',
+                getToastIcon: (size) => <MdError size={size} color="red" />,
+            });
+
+            setTxInProgressApprDep(false);
+        });
+    }
+
+    const depositAmountTokenFarmSingleTx = async () => {
+        if (txInProgressDep || !approveDeposit) {
+            return
+        }
+
+        setTxInProgressDep(true)
+
+        var signer = library.getSigner(account);
+        let uniV2LPToken = new ethers.Contract(addresses.uniV2LPToken, abis.uniV2LpToken, signer);
+        let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
+        console.log("Depositing amount", depositAmountToken);
+
+        const tx2 = staking.deposit(
+            addresses.uniV2LPToken,
+            ethers.BigNumber.from(depositAmountToken).mul(
+                ethers.BigNumber.from(10).pow(18)
+            )
+        );
+
+        tx2
+            .then(async (tx) => {
+                uniswapV2Toast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
+
+
+                try {
+                    await library.waitForTransaction(tx.hash);
+                    uniswapV2Toast.showMessageToast({
+                        toastTitle: 'Success',
+                        toastMessage: 'Transaction Completed!',
+                        toastType: 'SUCCESS',
+                        getToastIcon: (size) => (
+                            <MdCheckCircle
+                                size={size}
+                                color="green"
+                            />
+                        ),
+                    });
+
+                    //   getPoolStats();
+                    getLPPoolStats();
+                    getUserDataLP(yieldFarmingLP);
+
+                    setTxInProgressDep(false);
+                    setShowDepSlip(true);
+                    // window.location.reload();
+                } catch (e) {
+                    uniswapV2Toast.showMessageToast({
+                        toastTitle: 'Error',
+                        toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
+                        toastType: 'ERROR',
+                        getToastIcon: (size) => <MdError size={size} color="red" />,
+                    });
+
+                    setTxInProgressDep(false);
+                }
+            })
+            .catch((err) => {
+                uniswapV2Toast.showMessageToast({
+                    toastTitle: 'Error',
+                    toastMessage: `Transaction Cancelled!`,
+                    toastType: 'ERROR',
+                    getToastIcon: (size) => <MdError size={size} color="red" />,
+                });
+
+                setTxInProgressDep(false);
+            });
+    };
+
+    const withdrawAmountTokenFarmAutomatic = async () => {
+        if (txInProgressWithdraw) {
+            return;
+        }
+
+        setTxInProgressWithdraw(true);
+        const withdrawAmount = formatTokens(userDataLP.epochStakeNext);
+
+        console.log("Withdraw amount", withdrawAmount, ethers.BigNumber.from(withdrawAmount).mul(
+            ethers.BigNumber.from(10).pow(18)
+        ),userDataLP.epochStakeNext);
+
+        if (withdrawAmount == 0) {
+            // toast.dark("Nothing to Withdraw!", {
+            //     position: "bottom-right",
+            //     type: toast.TYPE.ERROR,
+            //     autoClose: 5000,
+            //     hideProgressBar: false,
+            //     closeOnClick: true,
+            //     pauseOnHover: true,
+            //     draggable: true,
+            //     progress: undefined,
+            // });
+
+            uniswapV2Toast.showMessageToast({
+                toastTitle: 'Error',
+                toastMessage: `Nothing to Withdraw!`,
+                toastType: 'ERROR',
+                getToastIcon: (size) => <MdError size={size} color="red" />,
+            });
+
+            setTxInProgressWithdraw(false);
+            return;
+        }
+
+        var signer = library.getSigner(account);
+        let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
+
+        const amounttowithdraw = await staking.balanceOf(
+            account,
+            addresses.uniV2LPToken
+        )
+
+        console.log("Amount to be taken out",formatTokens(amounttowithdraw),formatTokens(ethers.BigNumber.from(withdrawAmount).mul(
+            ethers.BigNumber.from(10).pow(18)
+        )));
+
+        const tx = staking.withdraw(
+            addresses.uniV2LPToken,
+            ethers.BigNumber.from(withdrawAmount).mul(
+                ethers.BigNumber.from(10).pow(18)
+            )
+        );
+
+        tx.then(async (tx) => {
+            // let txToast = toast.dark(
+            //     <LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />,
+            //     {
+            //         position: "bottom-right",
+            //         autoClose: false,
+            //         hideProgressBar: true,
+            //         closeOnClick: true,
+            //         pauseOnHover: true,
+            //         draggable: true,
+            //         progress: undefined,
+            //     }
+            // );
+
+            uniswapV2Toast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
+
+            try {
+                await library.waitForTransaction(tx.hash);
+
+                // toast.update(txToast, {
+                //     render: "Transaction Completed!",
+                //     type: toast.TYPE.SUCCESS,
+                //     autoClose: 5000,
+                // });
+
+                uniswapV2Toast.showMessageToast({
+                    toastTitle: 'Success',
+                    toastMessage: 'Transaction Completed!',
+                    toastType: 'SUCCESS',
+                    getToastIcon: (size) => (
+                        <MdCheckCircle
+                            size={size}
+                            color="green"
+                        />
+                    ),
+                });
+
+                setTxInProgressWithdraw(false);
+
+                // getPoolStats();
+                getLPPoolStats();
+                getUserDataLP(yieldFarmingLP);
+            } catch (e) {
+                // toast.update(txToast, {
+                //     render: "Transaction Failed! (" + e.name + ")",
+                //     type: toast.TYPE.ERROR,
+                //     autoClose: 5000,
+                // });
+
+                uniswapV2Toast.showMessageToast({
+                    toastTitle: 'Error',
+                    toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
+                    toastType: 'ERROR',
+                    getToastIcon: (size) => <MdError size={size} color="red" />,
+                });
+
+                setTxInProgressWithdraw(false);
+            }
+        }).catch((err) => {
+            // toast.dark("Transaction Cancelled!", {
+            //     position: "bottom-right",
+            //     type: toast.TYPE.ERROR,
+            //     autoClose: 5000,
+            //     hideProgressBar: false,
+            //     closeOnClick: true,
+            //     pauseOnHover: true,
+            //     draggable: true,
+            //     progress: undefined,
+            // });
+
+            uniswapV2Toast.showMessageToast({
+                toastTitle: 'Error',
+                toastMessage: `Transaction Cancelled!`,
+                toastType: 'ERROR',
+                getToastIcon: (size) => <MdError size={size} color="red" />,
+            });
+
+            setTxInProgressWithdraw(false);
+        });
+    };
+
+    const massClaimRewardsTokensAll = async () => {
+        if (txInProgressClaimRewards) {
+            return;
+        }
+
+        if (!lpPoolStats.currentEpochPUSH || lpPoolStats.currentEpochPUSH == 1) {
+            toast.dark("Harvest unlocks from Epoch 2!", {
+                position: "bottom-right",
+                type: toast.TYPE.ERROR,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+
+            return;
+        }
+        setTxInProgressClaimRewards(true);
+
+        console.log(addresses.yieldFarmLP);
+
+        var signer = library.getSigner(account);
+        let yieldFarmingPUSH = new ethers.Contract(
+            addresses.yieldFarmLP,
+            abis.yieldFarming,
+            signer
+        );
+        const tx = yieldFarmingPUSH.massHarvest();
+
+
+        tx.then(async (tx) => {
+            let txToast = toast.dark(
+                <LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />,
+                {
+                    position: "bottom-right",
+                    autoClose: false,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                }
+            );
+
+            try {
+                await library.waitForTransaction(tx.hash);
+
+                toast.update(txToast, {
+                    render: "Transaction Completed!",
+                    type: toast.TYPE.SUCCESS,
+                    autoClose: 5000,
+                });
+
+                setTxInProgressClaimRewards(false);
+            } catch (e) {
+                toast.update(txToast, {
+                    render: "Transaction Failed! (" + e.name + ")",
+                    type: toast.TYPE.ERROR,
+                    autoClose: 5000,
+                });
+
+                setTxInProgressClaimRewards(false);
+            }
+        }).catch((err) => {
+            toast.dark("Transaction Cancelled!", {
+                position: "bottom-right",
+                type: toast.TYPE.ERROR,
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+
+            setTxInProgressClaimRewards(false);
+        });
+    };
+
+    const formatTokens = (tokens) => {
+        if (tokens) {
+            return tokens.div(ethers.BigNumber.from(10).pow(18)).toString();
+        }
+    };
+
+    function numberWithCommas(x) {
+        return x?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+
 
 
 
@@ -119,8 +508,8 @@ const YieldUniswapV3 = () => {
         <Container>
             {/* Top Section */}
             <ItemVV2 margin="0px 0px 20px 0px">
-                <Heading onClick={getLPPoolStats}>Uniswap V2 LP Staking Pool</Heading>
-                <SecondaryText onClick={getUserDataLP}>
+                <Heading >Uniswap V2 LP Staking Pool</Heading>
+                <SecondaryText>
                     Current APR <SpanV2 color="#D53A94">9.89%</SpanV2>
                 </SecondaryText>
             </ItemVV2>
@@ -142,7 +531,7 @@ const YieldUniswapV3 = () => {
                             color="#D53A94"
                             letterSpacing="-0.03em"
                         >
-                            24,900 PUSH
+                            {numberWithCommas(formatTokens(lpPoolStats?.rewardForCurrentEpoch))} PUSH
                         </H2V2>
                     </ItemVV2>
 
@@ -155,7 +544,8 @@ const YieldUniswapV3 = () => {
                             fontWeight="700"
                             letterSpacing="-0.03em"
                         >
-                            12.725 Uni-V3
+                            {/* 12.725 Uni-V3 */}
+                            {numberWithCommas(formatTokens(lpPoolStats?.poolBalance))} UNI-V2
                         </H2V2>
                     </ItemVV2>
                 </ItemHV2>
@@ -167,7 +557,12 @@ const YieldUniswapV3 = () => {
                     color="#575D73"
                     letterSpacing="-0.03em"
                 >
-                    Current Epoch 100/100
+                    <Span padding="0px 5px 0px 0px">Current Epoch</Span>
+                    <B>
+                        {Math.min(lpPoolStats?.currentEpochPUSH, lpPoolStats?.totalEpochPUSH).toString()}
+                        /
+                        {lpPoolStats?.totalEpochPUSH}
+                    </B>
                 </ItemHV2>
 
                 {/* Deposit Cash Data */}
@@ -177,42 +572,116 @@ const YieldUniswapV3 = () => {
                             User Deposit
                             <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
                         </DataTitle>
-                        <DataValue> 0 PUSH</DataValue>
+                        <DataValue>{formatTokens(userDataLP?.epochStakeNext)} UNI-V2</DataValue>
                     </ItemHV2>
                     <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                         <DataTitle>
                             Rewards Claimed
                             <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
                         </DataTitle>
-                        <DataValue> 0 PUSH</DataValue>
+                        <DataValue> {(userDataLP?.totalAccumulatedReward - userDataLP?.totalAvailableReward).toFixed(2)} PUSH</DataValue>
                     </ItemHV2>
                     <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                         <DataTitle>
                             Current Epoch Reward
                             <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
                         </DataTitle>
-                        <DataValue> 0 PUSH</DataValue>
+                        <DataValue> {userDataLP?.potentialUserReward} PUSH</DataValue>
                     </ItemHV2>
                     <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                         <DataTitle>
                             Available for Claiming
                             <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
                         </DataTitle>
-                        <DataValue> 0 PUSH</DataValue>
+                        <DataValue> {userDataLP?.totalAvailableReward} PUSH</DataValue>
                     </ItemHV2>
 
                 </ItemVV2>
 
             </ItemVV2>
 
+            {showDepositItem && (
+                <Item bg="#f1f1f1" radius="0px" margin="20px 0px -10px 0px" padding="10px 20px" align="stretch" self="stretch">
+                    <ItemHV2>
+                        <MaxButton
+                            bg="#000"
+                            onClick={fillMax}
+                            position="absolute"
+                        >
+                            Max
+                        </MaxButton>
+
+                        <Input
+                            placeholder="Number of Tokens"
+                            radius="4px"
+                            padding="12px"
+                            self="stretch"
+                            bg="#fff"
+                            value={depositAmountToken}
+                            onChange={(e) => {
+                                setDepositAmountToken(parseInt(e.target.value.replace(/\D/, '')) || 0)
+                            }}
+                        />
+                    </ItemHV2>
+
+                    <ItemH padding="10px 0 0 0">
+                        <ButtonAlt
+                            bg={depositApproved ? "#999" : "#e20880"}
+                            onClick={approveDeposit}
+                            disabled={depositApproved ? true : false}
+                        >
+                            {!depositApproved && !txInProgressApprDep &&
+                                <Span color="#fff" weight="400">Approve</Span>
+                            }
+                            {txInProgressApprDep && !depositApproved &&
+                                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
+                            }
+                            {!txInProgress && depositApproved &&
+                                <Span color="#fff" weight="600">Approved</Span>
+                            }
+                        </ButtonAlt>
+
+                        <ButtonAlt
+                            bg={!depositApproved ? "#999" : "#e20880"}
+                            disabled={!depositApproved ? true : false}
+                            onClick={depositAmountTokenFarmSingleTx}
+                        >
+                            {!txInProgressDep &&
+                                <Span color="#fff" weight="400">Deposit</Span>
+                            }
+                            {txInProgressDep &&
+                                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
+                            }
+                        </ButtonAlt>
+                    </ItemH>
+                </Item>
+            )}
+
+
+
+
             {/* Bottom Section */}
             <ItemVV2 padding=" 0px 14px" margin="24px 0px 0px 0px">
                 <ItemHV2>
-                    <FilledButton>Stake PUSH/WETH LP Tokens</FilledButton>
+                    <FilledButton onClick={() => setShowDepositItem(!showDepositItem)}>Stake PUSH/WETH LP Tokens</FilledButton>
                 </ItemHV2>
                 <ButtonsContainer>
-                    <EmptyButton style={{ margin: "0px 10px 0px 0px" }}>Unstake PUSH/WETH</EmptyButton>
-                    <EmptyButton>Claim Rewards</EmptyButton>
+                    <EmptyButton style={{ margin: "0px 10px 0px 0px" }} onClick={() => withdrawAmountTokenFarmAutomatic()}>
+
+                        {txInProgressWithdraw ?
+                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#D53A94" />) :
+                            "Unstake PUSH/WETH"
+                        }
+
+                    </EmptyButton>
+                    <EmptyButton onClick={() => massClaimRewardsTokensAll()}>
+
+                        {txInProgressWithdraw ?
+                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#D53A94" />) :
+                            "Claim Rewards"
+                        }
+
+                    </EmptyButton>
                 </ButtonsContainer>
             </ItemVV2>
         </Container>
@@ -220,6 +689,13 @@ const YieldUniswapV3 = () => {
 };
 
 export default YieldUniswapV3;
+
+const LoaderToast = ({ msg, color }) => (
+    <Toaster>
+        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} spinnerColor={color} />
+        <ToasterMsg>{msg}</ToasterMsg>
+    </Toaster>
+);
 
 const Container = styled(SectionV2)`
     border: 1px solid #BAC4D6;
@@ -316,3 +792,65 @@ const EmptyButton = styled(Button)`
         color: #FFFFFF;
     }
 `
+
+const MaxButton = styled(Button)`
+  position: absolute;
+  right: 0;
+  padding: 4px 8px;
+  margin: 5px;
+  border-radius: 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+`
+
+const Toaster = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0px 10px;
+`;
+
+const ToasterMsg = styled.div`
+  margin: 0px 10px;
+`;
+
+const ButtonAlt = styled(Button)`
+  border: 0;
+  outline: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 15px;
+  margin: 10px;
+  color: #fff;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 400;
+  position: relative;
+  &:hover {
+    opacity: 0.9;
+    cursor: pointer;
+    pointer: hand;
+  }
+  &:active {
+    opacity: 0.75;
+    cursor: pointer;
+    pointer: hand;
+  }
+  ${(props) =>
+        props.disabled &&
+        css`
+      &:hover {
+        opacity: 1;
+        cursor: default;
+        pointer: default;
+      }
+      &:active {
+        opacity: 1;
+        cursor: default;
+        pointer: default;
+      }
+    `}
+`;

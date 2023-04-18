@@ -13,10 +13,10 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
-import { fetchInbox } from 'helpers/w2w/user';
+import { fetchInbox, getDefaultGroupFeed } from 'helpers/w2w/user';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext, Feeds, User } from 'types/chat';
+import { AppContext, Feeds, IGroup, User } from 'types/chat';
 import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../../../helpers/w2w/groupChat';
 import { getDefaultFeed } from '../../../../helpers/w2w/user';
 import { intitializeDb } from '../w2wIndexeddb';
@@ -25,7 +25,7 @@ import { intitializeDb } from '../w2wIndexeddb';
 
 
 interface MessageFeedPropsI {
-  filteredUserData: User[];
+  filteredUserData: User[] | IGroup;
   hasUserBeenSearched: boolean;
   isInvalidAddress: boolean;
   automatedSearch: boolean;
@@ -78,8 +78,12 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
         setFeeds(inboxes);
         setInbox(inboxes);
         if(checkIfGroup(currentChat)){
-          if(currentChat?.groupInformation?.members?.length !== inboxes[selectedChatSnap]?.groupInformation?.members?.length)
-           setChat(inboxes[selectedChatSnap]);
+       
+          if(currentChat && inboxes[selectedChatSnap] && currentChat?.groupInformation?.members?.length !== inboxes[selectedChatSnap]?.groupInformation?.members?.length)
+          {
+            setChat(inboxes[selectedChatSnap]);
+          }
+       
         }
       }
       setShowError(false);
@@ -147,16 +151,42 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
           } else {
             // When searching as of now the search will always result in only one user being displayed.
             // There is no multiple users appearing on the sidebar when a search is done. The wallets must match exactly.
-            const user: User = props.filteredUserData[0];
-            let feed: Feeds;
-                feed = await getDefaultFeed({userData:user,inbox,intents:receivedIntents});
-            setFeeds([feed]);
+            const searchedData: User | IGroup = props.filteredUserData[0];
+            let feed: Feeds,isNew:boolean;
+            if((searchedData as IGroup)?.groupName) {
+              ({feed,isNew} = await getDefaultGroupFeed({groupData:searchedData as IGroup,inbox,intents:receivedIntents}));
+            }
+            else {
+              feed = await getDefaultFeed({userData:searchedData as User,inbox,intents:receivedIntents});
+            }
+            console.log(isNew)
+            if(isNew && !feed?.groupInformation?.isPublic)
+            {
+              messageFeedToast.showMessageToast({
+                toastTitle: 'Error',
+                toastMessage: 'Cannot search for private groups now',
+                toastType: 'ERROR',
+                getToastIcon: (size) => (
+                  <MdError
+                    size={size}
+                    color="red"
+                  />
+                ),
+              });
+              setFilteredUserData([]);
+              setActiveTab(0);
+            }
+            else{
+              setFeeds([feed]);
+            }
+            
           }
+       
         } else {
           if (props.isInvalidAddress) {
             messageFeedToast.showMessageToast({
               toastTitle: 'Error',
-              toastMessage: 'Invalid Address',
+              toastMessage: 'Invalid Search',
               toastType: 'ERROR',
               getToastIcon: (size) => (
                 <MdError
@@ -184,7 +214,6 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
       setMessagesLoading(false);
     }
   }, [props.hasUserBeenSearched, props.filteredUserData]);
-
   return (
     <ItemVV2
       flex={6}
