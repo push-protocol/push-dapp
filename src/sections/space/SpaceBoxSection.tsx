@@ -20,8 +20,8 @@ export const SpaceBoxSection = () => {
 
       {/* conditionally Render */}
       <SpaceBox />
-      {/* <WelcomeSpaceContentBox /> */}
-      <ScheduledSpace />
+      <WelcomeSpaceContentBox />
+      {/* <ScheduledSpace /> */}
     </ItemVV2>
   );
 }
