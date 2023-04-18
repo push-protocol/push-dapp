@@ -8,7 +8,7 @@ import styled from 'styled-components';
 // Internal Components
 import * as PushAPI from '@pushprotocol/restapi';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
 import { caip10ToWallet } from 'helpers/w2w';
 import { checkTwitterUrl } from 'helpers/w2w/twitter';
@@ -21,6 +21,8 @@ import Modal from '../Modal/Modal';
 import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import { ReceivedMessageWrapper } from './MessageWrappers/ReceivedMessageWrapper';
 import { SentMessageWrapper } from './MessageWrappers/SentMessageWrapper';
+import SpacePreviewCard from './spacePreviewCards/spacePreviewCard';
+import { spaces } from 'services/space/spaceList';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -47,6 +49,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const { tweetId, messageType }: TwitterFeedReturnType = checkTwitterUrl({ message: msg?.messageContent });
   const walletAddress = shortenText(caip10ToWallet(msg.fromCAIP10)?.toLowerCase(), 6);
   const ensName = useResolveWeb3Name(msg.fromCAIP10);
+  const spaceData=spaces[0]
   
   const getProfilePicture = async() =>{
     let member = getMemberDetails(currentChat,msg?.fromCAIP10);
@@ -120,10 +123,11 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper align="row-reverse">
               <SenderMessage>
-                {msg.messageContent.split('\n').map((str) => (
-                  <TextMessage key={Math.random().toString()}>{str}</TextMessage>
-                ))}
-                <TimeStamp>{date}</TimeStamp>
+                 {/* {msg.messageContent.split('\n').map((str) => (
+                   <TextMessage key={Math.random().toString()}>{str}</TextMessage>
+                 ))}
+                 <TimeStamp>{date}</TimeStamp> */}
+               <SpacePreviewCard borderRadius="17px 2px 17px 17px" background="linear-gradient(87.17deg, #5C74F2 0%, #9065EC 67.25%, #8D6BEF 100%)" spaceData={spaceData}/>
               </SenderMessage>
             </SentMessageWrapper>
           ) : (
@@ -135,10 +139,11 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
               msgType={msg.messageType}
             >
               <ReceivedMessage left={isGroup ? '8px' : '34px'}>
-                {msg.messageContent.split('\n').map((str) => (
+                {/* {msg.messageContent.split('\n').map((str) => (
                   <TextMessage key={Math.random().toString()}>{str}</TextMessage>
                 ))}
-                <TimeStamp>{date}</TimeStamp>
+                <TimeStamp>{date}</TimeStamp> */}
+                <SpacePreviewCard borderRadius="2px 17px 17px 17px" background="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)" spaceData={spaceData}/>
               </ReceivedMessage>
             </ReceivedMessageWrapper>
           )}
