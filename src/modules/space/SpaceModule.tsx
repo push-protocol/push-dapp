@@ -26,6 +26,7 @@ export const SpaceModule = () => {
   //shift getUser to app context and add type 
   const { connectedUser,getUser } = useContext(ChatUserContext);
   const { userSpaces,setSpaceRequests,setSpaces } = useContext(SpaceGlobalContext);
+  const [ showNotification, setShowNotification ]=React.useState<boolean>(false);
 
   useEffect(() => {
     if(connectedUser || !account || !library) return;
@@ -89,7 +90,7 @@ console.log(connectedUser)
         padding="10px"
       >
         <SpaceBoxSection />
-        <SpaceNotification/>
+        {showNotification && <SpaceNotification/>}
       </SpaceBoxContainer>
 
 
