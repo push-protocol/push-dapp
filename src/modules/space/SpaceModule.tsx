@@ -90,6 +90,7 @@ console.log(connectedUser)
         padding="10px"
       >
         <SpaceBoxSection />
+        {/* Added notification here to test it out need to be moved to notification UI */}
         {showNotification && <SpaceNotification/>}
       </SpaceBoxContainer>
 
