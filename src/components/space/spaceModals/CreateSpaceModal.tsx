@@ -1,14 +1,18 @@
-import GroupModalHeader from 'components/chat/w2wChat/groupChat/createGroup/GroupModalHeader';
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
-import { Button, Input, TextField } from 'primaries/SharedStyling';
+// React + Web3 Essentials
 import React from 'react';
-import { useClickAway } from 'react-use';
+
+// External Packages
 import styled, { useTheme } from 'styled-components';
+import dayjs, { Dayjs } from 'dayjs';
+import { useClickAway } from 'react-use';
+
+// Internal Components
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { Button, Input, TextField } from 'primaries/SharedStyling';
 import Schedule from "../../../assets/schedule.svg";
+import GroupModalHeader from 'components/chat/w2wChat/groupChat/createGroup/GroupModalHeader';
 import ScheduleModal from './ScheduleModal';
 import InviteMembersModal from './InviteMembersModal';
-import dayjs, { Dayjs } from 'dayjs';
 
 const CreateSpaceModal = ({
     onClose
