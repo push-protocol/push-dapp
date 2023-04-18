@@ -1,9 +1,17 @@
+// React + Web3 Essentials
 import React from 'react';
+
+// External Packages
 import styled from 'styled-components';
+
+// Internal Components
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { spaces } from 'services/space/spaceList';
 import { shortenText } from 'helpers/UtilityHelper';
 import { ReactComponent as Space } from 'assets/space/space.svg';
+
+// Internal Configs
+import { device } from 'config/Globals';
 
 const SpaceNotification = () => {
   const selectedSpace = spaces[0];
@@ -92,6 +100,9 @@ const NotificationContainer = styled(ItemVV2)`
   border-radius: 17px;
   padding: 16px;
   justify-content: flex-start;
+  @media (${device.mobileL}) {
+    right: 10px;
+  }
 `;
 
 const JoinButton = styled(ItemHV2)`
