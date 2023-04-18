@@ -11,16 +11,18 @@ import { ReactComponent as Close } from 'assets/space/close.svg';
 import { ReactComponent as Check } from 'assets/space/check.svg';
 import { shortenText } from 'helpers/UtilityHelper';
 import { spaces } from 'services/space/spaceList';
+import { SpaceGlobalContext } from 'contexts';
 
 // Internal Configs
 import { device } from 'config/Globals';
 
-const SpaceWidget = ({setExitSpace}) => {
+const SpaceWidget = () => {
   const [exitOption, setExitOption] = useState<boolean>(false);
+  const { setUserSpaceId } = useContext(SpaceGlobalContext);
   const selectedSpace = spaces[0];
 
   const exitSpace = () => {
-    setExitSpace(true);
+    setUserSpaceId('');
   };
 
   return (

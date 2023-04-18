@@ -29,6 +29,8 @@ const SpamPage = lazy(() => import('pages/SpamPage'));
 const SupportPage = lazy(() => import('pages/SupportPage'));
 const TutorialPage = lazy(() => import('pages/TutorialPage'));
 const YieldFarmingPage = lazy(() => import('pages/YieldFarmingPage'));
+import SpaceWidget from 'components/space/spaceWidget/spaceWidget';
+import { SpaceGlobalContext } from 'contexts';
 
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
@@ -62,6 +64,7 @@ function MasterInterfacePage() {
   // Master Interface controls settings
   const [playTeaserVideo, setPlayTeaserVideo] = React.useState(false);
   const [loadTeaserVideo, setLoadTeaserVideo] = React.useState(null);
+  const {userSpaceId}=React.useContext(SpaceGlobalContext);
   const location = useLocation();
 
   // Render
@@ -154,6 +157,7 @@ function MasterInterfacePage() {
           </PreviewBG>
         </PreviewOuter>
       )}
+       {userSpaceId && <SpaceWidget/>}
     </Container>
   );
 }

@@ -34,7 +34,6 @@ import { resetAdminSlice } from 'redux/slices/adminSlice';
 import Navigation from 'structure/Navigation';
 import ChatUserContextProvider from 'contexts/ChatUserContext';
 import { SpaceGlobalContextProvider } from 'contexts';
-import SpaceWidget from 'components/space/spaceWidget/spaceWidget';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -54,7 +53,6 @@ const GlobalStyle = createGlobalStyle`
 export default function App() {
   const dispatch = useDispatch();
 
-  const [exitSpace, setExitSpace] = useState<boolean>(false);
   const { connector, activate, active, error, account, chainId } = useWeb3React<ethers.providers.Web3Provider>();
   const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
   const [currentTime, setcurrentTime] = React.useState(0);
@@ -223,7 +221,6 @@ export default function App() {
                 <ChatUserContextProvider>
                   {/* Shared among all pages, load universal things here */}
                   <MasterInterfacePage />
-                  {!exitSpace && <SpaceWidget setExitSpace={setExitSpace}/>}
                 </ChatUserContextProvider>
                 </SpaceGlobalContextProvider>
               </ContentContainer>
