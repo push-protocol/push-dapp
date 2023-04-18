@@ -54,6 +54,7 @@ const GlobalStyle = createGlobalStyle`
 export default function App() {
   const dispatch = useDispatch();
 
+  const [exitSpace, setExitSpace] = useState<boolean>(false);
   const { connector, activate, active, error, account, chainId } = useWeb3React<ethers.providers.Web3Provider>();
   const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
   const [currentTime, setcurrentTime] = React.useState(0);
@@ -222,7 +223,7 @@ export default function App() {
                 <ChatUserContextProvider>
                   {/* Shared among all pages, load universal things here */}
                   <MasterInterfacePage />
-                  <SpaceWidget/>
+                  {!exitSpace && <SpaceWidget setExitSpace={setExitSpace}/>}
                 </ChatUserContextProvider>
                 </SpaceGlobalContextProvider>
               </ContentContainer>

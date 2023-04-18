@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
@@ -15,15 +15,17 @@ import { spaces } from 'services/space/spaceList';
 // Internal Configs
 import { device } from 'config/Globals';
 
-const SpaceWidget = () => {
-  const [isExit, setIsExit] = useState<boolean>(false);
+const SpaceWidget = ({setExitSpace}) => {
+  const [exitOption, setExitOption] = useState<boolean>(false);
   const selectedSpace = spaces[0];
 
-  const exitSpace = () => {};
+  const exitSpace = () => {
+    setExitSpace(true);
+  };
 
   return (
     <WidgetContainer>
-      {!isExit ? (
+      {!exitOption ? (
         <>
           <WidgetData>
             <SpanV2
@@ -35,7 +37,7 @@ const SpaceWidget = () => {
             </SpanV2>
             <Close
               style={{ cursor: 'pointer' }}
-              onClick={() => setIsExit(true)}
+              onClick={() => setExitOption(true)}
             />
           </WidgetData>
           <WidgetData>
@@ -98,7 +100,7 @@ const SpaceWidget = () => {
             />
             <Close
               style={{ cursor: 'pointer' }}
-              onClick={() => setIsExit(false)}
+              onClick={() => setExitOption(false)}
             />
           </ItemHV2>
         </WarningContainer>
