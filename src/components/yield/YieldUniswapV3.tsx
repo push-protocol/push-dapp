@@ -28,7 +28,6 @@ const bnToInt = function (bnAmount) { return bnAmount.div(bn(10).pow(18)) }
 const YieldUniswapV3 = () => {
     const { active, error, account, library, chainId } = useWeb3React();
     const [txInProgressDep, setTxInProgressDep] = React.useState(false);
-    const [poolStats, setPoolStats] = React.useState(null);
     const [lpPoolStats, setLpPoolStats] = React.useState(null);
     const [userDataLP, setUserDataLP] = React.useState(null);
 
@@ -42,9 +41,6 @@ const YieldUniswapV3 = () => {
 
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
 
-
-
-
     const [epnsToken, setEpnsToken] = React.useState(null);
     const [staking, setStaking] = React.useState(null);
     const [yieldFarmingPUSH, setYieldFarmingPUSH] = React.useState(null);
@@ -54,6 +50,9 @@ const YieldUniswapV3 = () => {
 
     const [txInProgressApprDep, setTxInProgressApprDep] = React.useState(false);
 
+    const [loading, setLoading] = React.useState<boolean>(false);
+    const [loadingUserData, setLoadingUserData] = React.useState<boolean>(false);
+
     const uniswapV2Toast = useToast();
 
 
@@ -62,18 +61,22 @@ const YieldUniswapV3 = () => {
 
     const getLPPoolStats = React.useCallback(
         async () => {
+            setLoading(true);
             const lpPoolStats = await YieldFarmingDataStore.instance.getLPPoolStats();
             console.log("LPPool Stats", lpPoolStats);
 
             setLpPoolStats({ ...lpPoolStats });
+            setLoading(false);
         },
         [epnsToken, staking, yieldFarmingLP, uniswapV2Router02]
     );
 
     const getUserDataLP = React.useCallback(async (yieldFarmingLP) => {
+        setLoadingUserData(true);
         const userDataLP = await YieldFarmingDataStore.instance.getUserData(yieldFarmingLP);
         console.log("User Data LP", userDataLP);
         setUserDataLP({ ...userDataLP });
+        setLoadingUserData(false);
     }, [yieldFarmingLP]);
 
 
@@ -130,6 +133,12 @@ const YieldUniswapV3 = () => {
 
     }, [account]);
 
+    React.useEffect(() => {
+        // Check if the account has approved deposit
+        checkApprDeposit();
+
+    }, [depositAmountToken]);
+
     const fillMax = async () => {
         var signer = library.getSigner(account);
         const tokenAddr = addresses.uniV2LPToken;
@@ -138,6 +147,39 @@ const YieldUniswapV3 = () => {
         let balance = bnToInt(await token.balanceOf(account));
         console.log("balance", balance)
         setDepositAmountToken(parseInt(balance.toString().replace(/\D/, '')) || 0)
+    }
+
+    const checkApprDeposit = async () => {
+        if (depositAmountToken <= 0) {
+            setDepositApprove(false);
+            return;
+        }
+        setTxInProgressApprDep(true);
+
+        var signer = library.getSigner(account);
+        const tokenAddr = addresses.uniV2LPToken;
+        let token = new ethers.Contract(tokenAddr, abis.uniV2LpToken, signer);
+
+        const allowance = await token.allowance(account, addresses.staking);
+        console.log("Allowance", formatTokens(allowance), allowance.gte(bn(depositAmountToken)), depositAmountToken);
+
+
+        // if(formatTokens(allowance) >= depositAmountToken){
+        //     setDepositApprove(true);
+        // }else{
+        //     console.log("Small")
+        //     setDepositApprove(false);
+        // }
+
+
+        if (allowance.gte(bn(depositAmountToken))) {
+            setDepositApprove(true);
+        }
+        else {
+            setDepositApprove(false);
+        }
+
+        setTxInProgressApprDep(false);
     }
 
     const approveDeposit = async () => {
@@ -285,20 +327,9 @@ const YieldUniswapV3 = () => {
 
         console.log("Withdraw amount", withdrawAmount, ethers.BigNumber.from(withdrawAmount).mul(
             ethers.BigNumber.from(10).pow(18)
-        ),userDataLP.epochStakeNext);
+        ), userDataLP.epochStakeNext);
 
         if (withdrawAmount == 0) {
-            // toast.dark("Nothing to Withdraw!", {
-            //     position: "bottom-right",
-            //     type: toast.TYPE.ERROR,
-            //     autoClose: 5000,
-            //     hideProgressBar: false,
-            //     closeOnClick: true,
-            //     pauseOnHover: true,
-            //     draggable: true,
-            //     progress: undefined,
-            // });
-
             uniswapV2Toast.showMessageToast({
                 toastTitle: 'Error',
                 toastMessage: `Nothing to Withdraw!`,
@@ -318,9 +349,9 @@ const YieldUniswapV3 = () => {
             addresses.uniV2LPToken
         )
 
-        console.log("Amount to be taken out",formatTokens(amounttowithdraw),formatTokens(ethers.BigNumber.from(withdrawAmount).mul(
-            ethers.BigNumber.from(10).pow(18)
-        )));
+        // console.log("Amount to be taken out", formatTokens(amounttowithdraw), formatTokens(ethers.BigNumber.from(withdrawAmount).mul(
+        //     ethers.BigNumber.from(10).pow(18)
+        // )));
 
         const tx = staking.withdraw(
             addresses.uniV2LPToken,
@@ -330,30 +361,10 @@ const YieldUniswapV3 = () => {
         );
 
         tx.then(async (tx) => {
-            // let txToast = toast.dark(
-            //     <LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />,
-            //     {
-            //         position: "bottom-right",
-            //         autoClose: false,
-            //         hideProgressBar: true,
-            //         closeOnClick: true,
-            //         pauseOnHover: true,
-            //         draggable: true,
-            //         progress: undefined,
-            //     }
-            // );
-
             uniswapV2Toast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
             try {
                 await library.waitForTransaction(tx.hash);
-
-                // toast.update(txToast, {
-                //     render: "Transaction Completed!",
-                //     type: toast.TYPE.SUCCESS,
-                //     autoClose: 5000,
-                // });
-
                 uniswapV2Toast.showMessageToast({
                     toastTitle: 'Success',
                     toastMessage: 'Transaction Completed!',
@@ -368,16 +379,9 @@ const YieldUniswapV3 = () => {
 
                 setTxInProgressWithdraw(false);
 
-                // getPoolStats();
                 getLPPoolStats();
                 getUserDataLP(yieldFarmingLP);
             } catch (e) {
-                // toast.update(txToast, {
-                //     render: "Transaction Failed! (" + e.name + ")",
-                //     type: toast.TYPE.ERROR,
-                //     autoClose: 5000,
-                // });
-
                 uniswapV2Toast.showMessageToast({
                     toastTitle: 'Error',
                     toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
@@ -388,17 +392,6 @@ const YieldUniswapV3 = () => {
                 setTxInProgressWithdraw(false);
             }
         }).catch((err) => {
-            // toast.dark("Transaction Cancelled!", {
-            //     position: "bottom-right",
-            //     type: toast.TYPE.ERROR,
-            //     autoClose: 5000,
-            //     hideProgressBar: false,
-            //     closeOnClick: true,
-            //     pauseOnHover: true,
-            //     draggable: true,
-            //     progress: undefined,
-            // });
-
             uniswapV2Toast.showMessageToast({
                 toastTitle: 'Error',
                 toastMessage: `Transaction Cancelled!`,
@@ -505,7 +498,15 @@ const YieldUniswapV3 = () => {
 
 
     return (
+        // <Container>
+        //     {!loading ? (
+        //         <div>
+        //             <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
+        //         </div>
+        //     ) : (
         <Container>
+
+
             {/* Top Section */}
             <ItemVV2 margin="0px 0px 20px 0px">
                 <Heading >Uniswap V2 LP Staking Pool</Heading>
@@ -525,28 +526,38 @@ const YieldUniswapV3 = () => {
                 >
                     <ItemVV2 margin="0px 18px 0px 0px" padding="10px">
                         <SecondaryText>Current Reward</SecondaryText>
-                        <H2V2
-                            fontSize="24px"
-                            fontWeight="700"
-                            color="#D53A94"
-                            letterSpacing="-0.03em"
-                        >
-                            {numberWithCommas(formatTokens(lpPoolStats?.rewardForCurrentEpoch))} PUSH
-                        </H2V2>
+
+                        {loading ? (
+                            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} />
+                        ) :
+                            <H2V2
+                                fontSize="24px"
+                                fontWeight="700"
+                                color="#D53A94"
+                                letterSpacing="-0.03em"
+                            >
+                                {numberWithCommas(formatTokens(lpPoolStats?.rewardForCurrentEpoch))} PUSH
+                            </H2V2>
+                        }
                     </ItemVV2>
 
                     <Line width="10px" height="100%"></Line>
 
                     <ItemVV2 margin="0px 0px 0px 18px" padding="10px">
                         <SecondaryText>Total Staked</SecondaryText>
-                        <H2V2
-                            fontSize="24px"
-                            fontWeight="700"
-                            letterSpacing="-0.03em"
-                        >
-                            {/* 12.725 Uni-V3 */}
-                            {numberWithCommas(formatTokens(lpPoolStats?.poolBalance))} UNI-V2
-                        </H2V2>
+
+                        {loading ? (
+                            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} />
+                        ) :
+                            <H2V2
+                                fontSize="24px"
+                                fontWeight="700"
+                                letterSpacing="-0.03em"
+                            >
+                                {/* 12.725 Uni-V3 */}
+                                {numberWithCommas(formatTokens(lpPoolStats?.poolBalance))} UNI-V2
+                            </H2V2>
+                        }
                     </ItemVV2>
                 </ItemHV2>
 
@@ -566,35 +577,43 @@ const YieldUniswapV3 = () => {
                 </ItemHV2>
 
                 {/* Deposit Cash Data */}
-                <ItemVV2 >
-                    <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
-                        <DataTitle>
-                            User Deposit
-                            <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
-                        </DataTitle>
-                        <DataValue>{formatTokens(userDataLP?.epochStakeNext)} UNI-V2</DataValue>
-                    </ItemHV2>
-                    <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
-                        <DataTitle>
-                            Rewards Claimed
-                            <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
-                        </DataTitle>
-                        <DataValue> {(userDataLP?.totalAccumulatedReward - userDataLP?.totalAvailableReward).toFixed(2)} PUSH</DataValue>
-                    </ItemHV2>
-                    <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
-                        <DataTitle>
-                            Current Epoch Reward
-                            <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
-                        </DataTitle>
-                        <DataValue> {userDataLP?.potentialUserReward} PUSH</DataValue>
-                    </ItemHV2>
-                    <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
-                        <DataTitle>
-                            Available for Claiming
-                            <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
-                        </DataTitle>
-                        <DataValue> {userDataLP?.totalAvailableReward} PUSH</DataValue>
-                    </ItemHV2>
+                <ItemVV2
+                    padding={loadingUserData ? "60px " : "0px"}
+                >
+                    {loadingUserData ? (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={75} />) : (
+                        <>
+                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                                <DataTitle>
+                                    User Deposit
+                                    <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
+                                </DataTitle>
+                                <DataValue>{formatTokens(userDataLP?.epochStakeNext)} UNI-V2</DataValue>
+                            </ItemHV2>
+                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                                <DataTitle>
+                                    Rewards Claimed
+                                    <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
+                                </DataTitle>
+                                <DataValue> {(userDataLP?.totalAccumulatedReward - userDataLP?.totalAvailableReward).toFixed(2)} PUSH</DataValue>
+                            </ItemHV2>
+                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                                <DataTitle>
+                                    Current Epoch Reward
+                                    <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
+                                </DataTitle>
+                                <DataValue> {userDataLP?.potentialUserReward} PUSH</DataValue>
+                            </ItemHV2>
+                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                                <DataTitle>
+                                    Available for Claiming
+                                    <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
+                                </DataTitle>
+                                <DataValue> {userDataLP?.totalAvailableReward} PUSH</DataValue>
+                            </ItemHV2>
+
+                        </>
+                    )}
+
 
                 </ItemVV2>
 
@@ -602,7 +621,8 @@ const YieldUniswapV3 = () => {
 
             {showDepositItem && (
                 <Item bg="#f1f1f1" radius="0px" margin="20px 0px -10px 0px" padding="10px 20px" align="stretch" self="stretch">
-                    <ItemHV2>
+                    <ItemHV2
+                    >
                         <MaxButton
                             bg="#000"
                             onClick={fillMax}
@@ -617,6 +637,7 @@ const YieldUniswapV3 = () => {
                             padding="12px"
                             self="stretch"
                             bg="#fff"
+                            height='20px'
                             value={depositAmountToken}
                             onChange={(e) => {
                                 setDepositAmountToken(parseInt(e.target.value.replace(/\D/, '')) || 0)
@@ -624,7 +645,7 @@ const YieldUniswapV3 = () => {
                         />
                     </ItemHV2>
 
-                    <ItemH padding="10px 0 0 0">
+                    <ItemH padding="10px 0 0 0" margin='10px 0 0 0'>
                         <ButtonAlt
                             bg={depositApproved ? "#999" : "#e20880"}
                             onClick={approveDeposit}
@@ -676,7 +697,7 @@ const YieldUniswapV3 = () => {
                     </EmptyButton>
                     <EmptyButton onClick={() => massClaimRewardsTokensAll()}>
 
-                        {txInProgressWithdraw ?
+                        {txInProgressClaimRewards ?
                             (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#D53A94" />) :
                             "Claim Rewards"
                         }
@@ -685,6 +706,15 @@ const YieldUniswapV3 = () => {
                 </ButtonsContainer>
             </ItemVV2>
         </Container>
+        //     )}
+
+
+
+
+
+        // </Container>
+
+
     );
 };
 
@@ -705,6 +735,7 @@ const Container = styled(SectionV2)`
     font-family: 'Strawford';
     font-style: normal;
     font-weight: 500;
+
 
 `;
 
