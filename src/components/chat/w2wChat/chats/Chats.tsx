@@ -8,7 +8,7 @@ import styled from 'styled-components';
 // Internal Components
 import * as PushAPI from '@pushprotocol/restapi';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
 import { caip10ToWallet } from 'helpers/w2w';
 import { checkTwitterUrl } from 'helpers/w2w/twitter';
@@ -21,8 +21,9 @@ import Modal from '../Modal/Modal';
 import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import { ReceivedMessageWrapper } from './MessageWrappers/ReceivedMessageWrapper';
 import { SentMessageWrapper } from './MessageWrappers/SentMessageWrapper';
-import SpacePreviewCard from './spacePreviewCards/spacePreviewCard';
+import SpacePreviewCard from './spacePreviewCards/SpacePreviewCard';
 import { spaces } from 'services/space/spaceList';
+import { getSpaceData } from 'services/space';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -47,6 +48,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const time1: string = time.toLocaleTimeString('en-US');
   const date: string = time1.slice(0, -6) + ' ' + time1.slice(-2).toLowerCase();
   const { tweetId, messageType }: TwitterFeedReturnType = checkTwitterUrl({ message: msg?.messageContent });
+
   const walletAddress = shortenText(caip10ToWallet(msg.fromCAIP10)?.toLowerCase(), 6);
   const ensName = useResolveWeb3Name(msg.fromCAIP10);
   const spaceData=spaces[0]
@@ -70,6 +72,30 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
 
   return (
     <ItemVV2>
+      {/* Support Msg Type = SpaceLink */}
+      {msg.messageType === 'SpaceLink' &&
+        <ItemVV2>
+          {msg.fromCAIP10 === caip10 ? (
+            <SentMessageWrapper align="row-reverse">
+              <SenderMessage background="transparent" padding="0px">
+               <SpacePreviewCard isGroup={isGroup} borderRadius="17px 2px 17px 17px" background="linear-gradient(87.17deg, #5C74F2 0%, #9065EC 67.25%, #8D6BEF 100%)" spaceData={spaceData} messageFrom="sender"/>
+              </SenderMessage>
+            </SentMessageWrapper>
+          ) : (
+            <ReceivedMessageWrapper
+              align="row"
+              isGroup={isGroup}
+              sender={ensName ? ensName : walletAddress}
+              profilePicture={profilePicture}
+              msgType={msg.messageType}
+            >
+              <ReceivedMessage background="transparent" padding="0px" left={isGroup ? '8px' : '34px'}>
+                <SpacePreviewCard isGroup={isGroup} borderRadius="2px 17px 17px 17px" background="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)" spaceData={spaceData} messageFrom="receiver"/>
+              </ReceivedMessage>
+            </ReceivedMessageWrapper>
+          )}
+        </ItemVV2>
+      } 
       {/* Support Msg Type = TwitterFeedLink */}
       {msg.messageType === 'TwitterFeedLink' && 
         <ItemVV2>
@@ -123,11 +149,10 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper align="row-reverse">
               <SenderMessage>
-                 {/* {msg.messageContent.split('\n').map((str) => (
+                 {msg.messageContent.split('\n').map((str) => (
                    <TextMessage key={Math.random().toString()}>{str}</TextMessage>
                  ))}
-                 <TimeStamp>{date}</TimeStamp> */}
-               <SpacePreviewCard borderRadius="17px 2px 17px 17px" background="linear-gradient(87.17deg, #5C74F2 0%, #9065EC 67.25%, #8D6BEF 100%)" spaceData={spaceData}/>
+                 <TimeStamp>{date}</TimeStamp>
               </SenderMessage>
             </SentMessageWrapper>
           ) : (
@@ -139,11 +164,10 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
               msgType={msg.messageType}
             >
               <ReceivedMessage left={isGroup ? '8px' : '34px'}>
-                {/* {msg.messageContent.split('\n').map((str) => (
+                {msg.messageContent.split('\n').map((str) => (
                   <TextMessage key={Math.random().toString()}>{str}</TextMessage>
                 ))}
-                <TimeStamp>{date}</TimeStamp> */}
-                <SpacePreviewCard borderRadius="2px 17px 17px 17px" background="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)" spaceData={spaceData}/>
+                <TimeStamp>{date}</TimeStamp>
               </ReceivedMessage>
             </ReceivedMessageWrapper>
           )}
@@ -404,7 +428,10 @@ const ReceivedMessage = styled.div`
   color: #000000;
   flex-direction: column;
   align-items: center;
-  padding: 9px 17px;
+  // padding: 9px 17px;
+  @media(${device.mobileL}){
+    margin-left: 16px;
+  }
 `;
 
 const IntentMessage = styled(ReceivedMessage)`
@@ -426,4 +453,7 @@ const SenderMessage = styled.div`
   color: #ffffff;
   flex-direction: column;
   align-items: baseline;
+  @media(${device.mobileL}){
+    margin-right: 16px;
+  }
 `;

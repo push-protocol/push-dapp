@@ -1,1 +1,1 @@
-export * from "./spacePreviewCard"
+export * from "./SpacePreviewCard"
