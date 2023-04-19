@@ -12,7 +12,7 @@ import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
 import Dropdown from 'components/Dropdown';
-import { caip10ToWallet } from '../../../../../helpers/w2w';
+import { caip10ToWallet } from '../helpers/w2w';
 import { device } from 'config/Globals';
 
 export const ProfileCard = ({

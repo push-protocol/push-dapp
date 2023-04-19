@@ -19,7 +19,7 @@ import { AppContext } from 'types/chat';
 import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
 import { ChatUserContext } from 'contexts/ChatUserContext';
-import { ProfileCard } from './ProfileCard';
+import { ProfileCard } from '../../../../ProfileCard';
 import {
   convertToWalletAddressList,
   getAdminList,
@@ -31,7 +31,7 @@ import { getDefaultFeed } from '../../../../../helpers/w2w/user';
 import { Feeds } from '../../../../../types/chat';
 import { DropdownValueType } from '../../../../Dropdown';
 import { useDeviceWidthCheck } from 'hooks';
-import { PendingMembers } from './PendingMembers';
+import { PendingMembers } from 'components/PendingMembers';
 
 //Internal Configs
 import useToast from 'hooks/useToast';
@@ -458,6 +458,9 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                 <PendingMembers
                   setshowPendingRequests={setshowPendingRequests}
                   showPendingRequests={showPendingRequests}
+                  pendingMemberData={currentChat?.groupInformation?.pendingMembers}
+                  backgroundColor={theme.pendingCardBackground}
+                  pendingHeader="Pending Requests"
                 />
               )}
               <ProfileContainer

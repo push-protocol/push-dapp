@@ -15,10 +15,10 @@ import { useWeb3React } from '@web3-react/core';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { getSpaceRequests, getSpaces } from 'services/space';
 import { getSpaceRequestsFromIndexedDB, getSpacesFromIndexedDB } from 'helpers/space';
-import { SpaceInfoModalContent } from 'components/space/spaceInfoModal';
+import { SpaceInfoModalContent } from 'components/space/spaceModals/spaceInfoModal';
 import useToast from 'hooks/useToast';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
-import CreateSpaceModal from 'components/space/spaceModals/CreateSpaceModal';
+import CreateSpaceModal from 'components/space/spaceModals/createSpaceModals/CreateSpaceModal';
 
 export const SpaceModule = () => {
   const theme = useTheme();

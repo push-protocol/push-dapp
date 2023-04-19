@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext } from 'react';
+import React from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -7,12 +7,9 @@ import styled, { useTheme } from 'styled-components';
 // Internal Components
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
-import { spaces } from 'services/space/spaceList';
 
-export const PendingInvites = ({ setShowPendingInvites, showPendingInvites }) => {
+export const PendingMembers = ({ setshowPendingRequests, showPendingRequests, pendingMemberData, backgroundColor, pendingHeader }) => {
   const theme = useTheme();
-  const selectedSpace = spaces[0];
-
   return (
     <ItemVV2
       border={`1px solid ${theme.default.border}`}
@@ -24,7 +21,7 @@ export const PendingInvites = ({ setShowPendingInvites, showPendingInvites }) =>
       <ItemHV2
         justifyContent="space-between"
         padding="13px 20px 13px 16px"
-        onClick={() => setShowPendingInvites(!showPendingInvites)}
+        onClick={() => setshowPendingRequests(!showPendingRequests)}
       >
         <ItemHV2 justifyContent="flex-start">
           <SpanV2
@@ -32,7 +29,7 @@ export const PendingInvites = ({ setShowPendingInvites, showPendingInvites }) =>
             fontWeight="400"
             color={theme.modalProfileTextColor}
           >
-            Pending Invites
+            {pendingHeader}
           </SpanV2>
           <SpanV2
             background="#CF1C84"
@@ -43,24 +40,31 @@ export const PendingInvites = ({ setShowPendingInvites, showPendingInvites }) =>
             padding="4px 12px"
             margin="0px 0px 0px 8px"
           >
-            {selectedSpace?.pendingMembers?.length}
+            {pendingMemberData?.length}
           </SpanV2>
         </ItemHV2>
         <ToggleArrowImg filter={theme.scheme == 'dark' ? theme.snackbarBorderIcon : 'brightness(0) invert(55%)'}>
           <img
             alt="arrow"
-            className={`${showPendingInvites ? 'down' : 'up'}`}
+            className={`${showPendingRequests ? 'down' : 'up'}`}
             src="/svg/arrow.svg"
           />
         </ToggleArrowImg>
       </ItemHV2>
-      {showPendingInvites && (
-        <PendingRequestContainer minHeight={selectedSpace?.pendingMembers?.length < 4 ? 56 * selectedSpace?.members?.length : 224}>
-          {selectedSpace?.pendingMembers?.map((member) => {
+      {showPendingRequests && (
+        <PendingRequestContainer
+          minHeight={
+            pendingMemberData?.length < 4
+              ? 56 * pendingMemberData?.length
+              : 224
+          }
+        >
+          {pendingMemberData?.map((member) => {
             return (
               <ItemHV2
                 key={member.wallet}
                 justifyContent="flex-start"
+                background={backgroundColor}
                 padding="8px 16px"
                 margin="2px 0px 0px 0px"
               >
@@ -82,8 +86,7 @@ export const PendingInvites = ({ setShowPendingInvites, showPendingInvites }) =>
                   fontWeight="400"
                   color={theme.modalProfileTextColor}
                 >
-                  {/* {shortenText(member?.wallet?.split(':')[1], 6)} */}
-                  {shortenText(member?.wallet, 6)}
+                  {shortenText(member?.wallet?.split(':')[1], 6)}
                 </SpanV2>
               </ItemHV2>
             );

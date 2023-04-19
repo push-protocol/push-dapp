@@ -44,9 +44,6 @@ const InviteMembersModal = ({
                 handleClose={handleClose}
                 handlePrevious={handlePrevious}
             />
-
-           
-
             <ItemHV2
                 margin="25px 0px 0px 0px"
             >
@@ -66,11 +63,8 @@ const InviteMembersModal = ({
                         {`0${memberList.length} / 04 members`}
                     </SpanV2>
                 </LabelContainer>
-
                 <SearchWallets memberList={memberList} setMemberList={setMemberList} spaces={true}/>
-
             </ItemHV2>
-
             <Footer>
                 <InviteButton>Send Invite</InviteButton>
                <FooterText>Skip</FooterText>

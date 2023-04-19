@@ -13,21 +13,21 @@ import ModalHeader from 'components/ModalHeader';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ReactComponent as AddMember } from 'assets/chat/group-chat/addicon.svg';
 import { spaces } from 'services/space/spaceList';
-import { PendingInvites } from './PendingInvites';
-import { ProfileCard } from 'components/chat/w2wChat/groupChat/groupInfo/ProfileCard';
+import { PendingMembers } from 'components/PendingMembers';
+import { ProfileCard } from 'components/ProfileCard';
 import { caip10ToWallet } from 'helpers/w2w';
 import { DropdownValueType } from 'components/Dropdown';
 import Cohost from 'assets/space/cohost.svg';
 import Remove from 'assets/chat/group-chat/remove.svg';
 import { shortenText } from 'helpers/UtilityHelper';
-import InviteMembersModal from '../spaceModals/InviteMembersModal';
+import InviteMembersModal from '../InviteMembersModal';
 import { User } from 'types/chat';
 
 export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const selectedSpace = spaces[0];
-  const [showPendingInvites, setShowPendingInvites] = useState<boolean>(false);
   const [selectedMemeberAddress, setSelectedMemeberAddress] = useState('');
-  const [showInviteMembersModal, setShowInviteMembersModal] = React.useState<boolean>(false);
+  const [showInviteMembersModal, setShowInviteMembersModal] = useState<boolean>(false);
+  const [showPendingRequests, setshowPendingRequests] = useState<boolean>(false);
   const [memberList, setMemberList] = React.useState<User[]>([]);
   const containerRef = useRef();
   const dropdownRef = useRef();
@@ -70,7 +70,6 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
       <ModalContainer
         background={theme.blurModalContentBackground}
         ref={containerRef}
-        padding="24px 0px 20px 0px"
       >
         {!showInviteMembersModal && (
           <>
@@ -137,9 +136,12 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
               </AddWalletContainer>
               {/* )} */}
               {selectedSpace?.pendingMembers?.length > 0 && (
-                <PendingInvites
-                  showPendingInvites={showPendingInvites}
-                  setShowPendingInvites={setShowPendingInvites}
+                <PendingMembers
+                  setshowPendingRequests={setshowPendingRequests}
+                  showPendingRequests={showPendingRequests}
+                  pendingMemberData={selectedSpace?.pendingMembers}
+                  backgroundColor="transparent"
+                  pendingHeader="Pending Invites"
                 />
               )}
               <ProfileContainer
@@ -171,12 +173,12 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
         )}
 
         {showInviteMembersModal && (
-          <InviteMembersModal
-            handleClose={handleClose}
-            handleBack={handlePrevious}
-            memberList={memberList}
-            setMemberList={setMemberList}
-          />
+            <InviteMembersModal
+              handleClose={handleClose}
+              handleBack={handlePrevious}
+              memberList={memberList}
+              setMemberList={setMemberList}
+            />
         )}
       </ModalContainer>
     </ThemeProvider>
@@ -188,8 +190,7 @@ const ModalContainer = styled.div`
   border-radius: 16px;
   background-color: ${(props) => props.background};
   margin: 0px;
-  padding: 0px;
-  padding: ${(props) => props.padding};
+  padding: 24px 0px 20px 0px;
 `;
 
 const BodyContainer = styled.div`

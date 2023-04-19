@@ -1,11 +1,15 @@
+// React + Web3 Essentials
+import React from 'react';
+
+// External Packages
+import { useClickAway } from 'react-use';
+import styled, { useTheme } from 'styled-components';
+
+// Internal Components
 import ModalHeader from 'components/ModalHeader';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Button, Input, TextField } from 'primaries/SharedStyling';
-import React from 'react';
-import { useClickAway } from 'react-use';
-import styled, { useTheme } from 'styled-components';
-import Schedule from "../../../assets//space/schedule.svg";
-
+import Schedule from "assets/space/schedule.svg";
 
 type SpaceDetailsModalType = {
     onClose : ()=>{};

@@ -1,7 +1,7 @@
-import ModalHeader from 'components/ModalHeader';
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { device } from 'config/Globals';
+// React + Web3 Essentials
 import React from 'react';
+
+// External Packages
 import styled, { useTheme } from 'styled-components';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -12,7 +12,14 @@ import dayjs from 'dayjs';
 import TextField from '@mui/material/TextField';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+
+// Internal Components
+import ModalHeader from 'components/ModalHeader';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Button } from 'primaries/SharedStyling';
+
+// Internal configs
+import { device } from 'config/Globals';
 
 
 type ScheduleModalType = {
