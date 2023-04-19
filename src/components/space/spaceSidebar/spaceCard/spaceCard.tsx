@@ -12,8 +12,13 @@ import { Space } from 'types';
 
 
 const SpaceCard = ({spaceData}:{spaceData:Space}) => {
+
+  const selectSpace = (content: Space) => {
+    console.log(content, 'sitContent');
+  };
+
   return (
-    <SpaceCardContainer>
+    <SpaceCardContainer onClick={()=>selectSpace(spaceData)}>
       <SpaceCardHeader>
         <ItemVV2
           width="32px"
