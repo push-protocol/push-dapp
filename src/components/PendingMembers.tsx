@@ -5,8 +5,9 @@ import React from 'react';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
+import { ProfileImage } from './ProfileImage';
 
 export const PendingMembers = ({ setshowPendingRequests, showPendingRequests, pendingMemberData, backgroundColor, pendingHeader }) => {
   const theme = useTheme();
@@ -68,19 +69,7 @@ export const PendingMembers = ({ setshowPendingRequests, showPendingRequests, pe
                 padding="8px 16px"
                 margin="2px 0px 0px 0px"
               >
-                <ItemVV2
-                  height="36px"
-                  maxWidth="36px"
-                  borderRadius="100%"
-                  overflow="hidden"
-                  margin="0px 12px 0px 0px"
-                >
-                  <ImageV2
-                    objectFit="cover"
-                    src={member?.image}
-                    alt="profilePicture"
-                  />
-                </ItemVV2>
+                <ProfileImage imageSrc={member?.image} dimension="36px" borderRadius="50%" margin="0px 12px 0px 0px"/>
                 <SpanV2
                   fontSize="18px"
                   fontWeight="400"

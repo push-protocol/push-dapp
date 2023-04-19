@@ -10,6 +10,7 @@ import { ethers } from 'ethers';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ProfileImage } from './ProfileImage';
 import { shortenText } from 'helpers/UtilityHelper';
 import Dropdown from 'components/Dropdown';
 import { caip10ToWallet } from '../helpers/w2w';
@@ -28,19 +29,7 @@ export const ProfileCard = ({
   return (
     <ProfileCardItem key={key}>
       <ItemHV2 justifyContent="flex-start">
-        <ItemVV2
-          height="48px"
-          maxWidth="48px"
-          borderRadius="100%"
-          overflow="hidden"
-          margin="0px 12px 0px 0px"
-        >
-          <ImageV2
-            maxHeight="100%"
-            objectFit="cover"
-            src={member?.image}
-          />
-        </ItemVV2>
+        <ProfileImage imageSrc={member?.image} dimension="48px" borderRadius="50%" margin="0px 12px 0px 0px"/>
         <SpanV2
           fontSize="18px"
           fontWeight="400"

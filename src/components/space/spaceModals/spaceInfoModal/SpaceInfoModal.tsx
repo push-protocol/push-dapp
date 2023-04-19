@@ -10,18 +10,19 @@ import styled, { ThemeProvider, useTheme } from 'styled-components';
 import { ModalInnerComponentType } from 'hooks/useModalBlur';
 import { useDeviceWidthCheck } from 'hooks';
 import ModalHeader from 'components/ModalHeader';
-import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { ReactComponent as AddMember } from 'assets/chat/group-chat/addicon.svg';
+import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { spaces } from 'services/space/spaceList';
 import { PendingMembers } from 'components/PendingMembers';
-import { ProfileCard } from 'components/ProfileCard';
 import { caip10ToWallet } from 'helpers/w2w';
 import { DropdownValueType } from 'components/Dropdown';
 import Cohost from 'assets/space/cohost.svg';
 import Remove from 'assets/chat/group-chat/remove.svg';
 import { shortenText } from 'helpers/UtilityHelper';
 import InviteMembersModal from '../InviteMembersModal';
+import { AddMoreMember } from 'components/AddMoreMember';
 import { User } from 'types/chat';
+import { MembersProfileList } from 'components/MembersProfileList';
+import { ProfileImage } from 'components/ProfileImage';
 
 export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const selectedSpace = spaces[0];
@@ -37,7 +38,7 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
 
   const isMobile = useDeviceWidthCheck(600);
 
-  const isAccountOwnerAdmin = selectedSpace?.members?.some(
+  const isAccountOwnerAdmin = selectedSpace?.spaceInformation?.members?.some(
     (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
   );
 
@@ -80,26 +81,19 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
             />
             <BodyContainer padding="0 36px">
               <HostProfile>
-                <ItemVV2
-                  height="48px"
-                  maxWidth="48px"
-                  borderRadius="100%"
-                  overflow="hidden"
+                <ProfileImage
+                  imageSrc={selectedSpace?.spaceInformation?.spaceImage}
+                  dimension="48px"
+                  borderRadius="50%"
                   margin="0px 12px 0px 0px"
-                >
-                  <ImageV2
-                    maxHeight="100%"
-                    objectFit="cover"
-                    src={selectedSpace?.spaceImage}
-                  />
-                </ItemVV2>
+                />
                 <SpanV2
                   color={theme.default.color}
                   fontSize="17px"
                   fontWeight="500"
                   margin="0px 8px 0px"
                 >
-                  {shortenText(selectedSpace?.spaceCreator, 6)}
+                  {shortenText(selectedSpace?.spaceInformation?.spaceCreator, 6)}
                 </SpanV2>
                 <SpanV2
                   background="#F3D7FA"
@@ -119,66 +113,45 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                 alignSelf="flex-start"
                 margin="0px 0px 8px"
               >
-                {shortenText(selectedSpace?.spaceCreator, 6)}'s Space
+                {shortenText(selectedSpace?.spaceInformation?.spaceCreator, 6)}'s Space
               </SpanV2>
-              <Description>{selectedSpace.spaceDescription}</Description>
-              {/* {isAccountOwnerAdmin && selectedSpace?.members?.length < 10 && ( */}
-              <AddWalletContainer onClick={() => setShowInviteMembersModal(true)}>
-                <AddMember />
-                <SpanV2
-                  color={theme.modalDescriptionTextColor}
-                  margin="0px  14px"
-                  fontSize="18px"
-                  fontWeight="400"
-                >
-                  Invite Members
-                </SpanV2>
-              </AddWalletContainer>
-              {/* )} */}
-              {selectedSpace?.pendingMembers?.length > 0 && (
+              <Description>{selectedSpace?.spaceInformation?.spaceDescription}</Description>
+              {isAccountOwnerAdmin && selectedSpace?.members?.length < 10 && (
+                <AddMoreMember
+                  showAddMoreMemberModal={setShowInviteMembersModal}
+                  title="Invite Members"
+                />
+              )}
+              {selectedSpace?.spaceInformation?.pendingMembers?.length > 0 && (
                 <PendingMembers
                   setshowPendingRequests={setshowPendingRequests}
                   showPendingRequests={showPendingRequests}
-                  pendingMemberData={selectedSpace?.pendingMembers}
+                  pendingMemberData={selectedSpace?.spaceInformation?.pendingMembers}
                   backgroundColor="transparent"
                   pendingHeader="Pending Invites"
                 />
               )}
-              <ProfileContainer
-                minHeight={selectedSpace?.members?.length < 4 ? 72 * selectedSpace?.members?.length : 216}
-              >
-                {selectedSpace?.members?.map((member, index) => {
-                  return (
-                    member && (
-                      <ProfileCard
-                        key={index}
-                        member={member}
-                        dropdownValues={
-                          member?.isAdmin && isAccountOwnerAdmin
-                            ? [makeCohostDropdown, removeCohostDropdown]
-                            : isAccountOwnerAdmin
-                            ? [makeCohostDropdown, removeCohostDropdown]
-                            : []
-                        }
-                        selectedMemeberAddress={selectedMemeberAddress}
-                        setSelectedMemeberAddress={setSelectedMemeberAddress}
-                        dropdownRef={dropdownRef}
-                      />
-                    )
-                  );
-                })}
-              </ProfileContainer>
+              <MembersProfileList
+                memberData={selectedSpace?.spaceInformation}
+                makeCohostDropdown={makeCohostDropdown}
+                removeCohostDropdown={removeCohostDropdown}
+                selectedMemeberAddress={selectedMemeberAddress}
+                setSelectedMemeberAddress={setSelectedMemeberAddress}
+                dropdownRef={dropdownRef}
+                isAccountOwnerAdmin={isAccountOwnerAdmin}
+                membersType="space"
+              />
             </BodyContainer>
           </>
         )}
 
         {showInviteMembersModal && (
-            <InviteMembersModal
-              handleClose={handleClose}
-              handleBack={handlePrevious}
-              memberList={memberList}
-              setMemberList={setMemberList}
-            />
+          <InviteMembersModal
+            handleClose={handleClose}
+            handleBack={handlePrevious}
+            memberList={memberList}
+            setMemberList={setMemberList}
+          />
         )}
       </ModalContainer>
     </ThemeProvider>

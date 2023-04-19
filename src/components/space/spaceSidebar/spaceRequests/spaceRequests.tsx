@@ -40,7 +40,7 @@ export const SpaceRequests = () => {
           </SpanV2>
         ) :
           (Object.keys(userSpaces[account]?.spaces).map((key) => (
-            <SpaceRequestCard spaceData={userSpaces[account]?.spaces[key]}/>
+            <SpaceRequestCard spaceData={userSpaces[account]?.spaces[key]?.spaceInformation}/>
           )))}
       </SpaceContainer>
 

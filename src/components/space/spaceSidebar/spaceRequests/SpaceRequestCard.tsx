@@ -1,7 +1,7 @@
-import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2} from 'components/reusables/SharedStylingV2';
+import { ProfileImage } from 'components/ProfileImage';
 import React, { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
-import Image from "assets/space/push-space.svg";
 import GLOBALS from 'config/Globals';
 import { Space } from 'types';
 import { shortenText } from 'helpers/UtilityHelper';
@@ -24,21 +24,12 @@ const SpaceRequestCard = (
                 background={selected ? theme.chat.snapFocusBg : 'transparent'}
                 theme = {theme}
             >
-
-                    <ItemHV2
-                        width="48px"
-                        maxWidth="48px"
-                        maxheight= "48px"
-                        height= "48px"
-                        borderRadius="100%"
-                        overflow="hidden"
-                        margin="0"
-                    >
-                        <ImageV2
-                            alt="Profile"
-                            src={spaceData?.spaceImage}
-                        />
-                    </ItemHV2>
+                <ProfileImage
+                    imageSrc={spaceData?.spaceImage} 
+                    dimension="48px"
+                    borderRadius="50%"
+                    margin="0" 
+                />
 
                 <InfoContainer>
                     <HeadTextSection>
