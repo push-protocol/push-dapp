@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React from 'react';
+import React, { useContext } from 'react';
 
 // External Packages
 import styled from 'styled-components';
@@ -9,12 +9,18 @@ import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedSt
 import Calendar from 'assets/space/calendar.svg';
 import { shortenText } from 'helpers/UtilityHelper';
 import { Space } from 'types';
+import { useNavigate } from 'react-router';
+import { SpaceLocalContext } from 'contexts';
 
 
 const SpaceCard = ({spaceData}:{spaceData:Space}) => {
+  const { selectedSpace,setSelectedSpace } = useContext(SpaceLocalContext);
+  const navigate = useNavigate();
 
-  const selectSpace = (content: Space) => {
-    console.log(content, 'sitContent');
+  const selectSpace = (spaceData: Space) => {
+    let spaceid = spaceData.spaceId;
+    setSelectedSpace(spaceid);
+    // navigate(`/space/${spaceid}`);
   };
 
   return (

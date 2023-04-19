@@ -13,10 +13,14 @@ import {ReactComponent as EmailSVG} from 'assets/space/Email.svg'
 import {ReactComponent as LensterSVG} from 'assets/space/Lenster.svg'
 import {ReactComponent as TwitterSVG} from 'assets/space/Twitter.svg'
 import {ReactComponent as LinkSVG} from 'assets/space/Link.svg'
+import { Space } from 'types';
+import { shortenText } from 'helpers/UtilityHelper';
 
-export const ScheduledSpace = () => {
+export const ScheduledSpace = ({currentSpace}:{currentSpace:Space}) => {
   const theme = useTheme();
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
+
+  console.log(currentSpace);
 
   return (
     <ScheduledItem theme={theme}>
@@ -24,8 +28,8 @@ export const ScheduledSpace = () => {
 
       <TopItem>
         <DivItem>
-          <Image src="https://avatars.dicebear.com/api/adventurer-neutral/mail%40ashallendesign.co.uk.svg"></Image>
-          <P color='#fff' margin="0px 20px" size="17px" weight="500">0x123...45678</P>
+          <Image src={currentSpace.spaceImage}></Image>
+          <P color='#fff' margin="0px 20px" size="17px" weight="500">{shortenText(currentSpace?.spaceCreator,5,5)}</P>
           <SpanV2 background='rgba(255, 255, 255, 0.2)' color='#ffff' borderRadius="8px" fontSize="12px" fontWeight="500" padding="8px">Host</SpanV2>
         </DivItem>
         
@@ -39,12 +43,12 @@ export const ScheduledSpace = () => {
       </TopItem>
 
       <Div>
-        <P color='#fff' margin="50px 0px 5px 0px" size="28px" weight="500">0x123...45678’s Space</P>
-        <P color='#fff' margin="0px 0px" size="16px" weight="400">Ac orci quam cras in placerat. Sollicitudin tristique sed nisi proin duis.</P>
+        <P color='#fff' margin="50px 0px 5px 0px" size="28px" weight="500">{shortenText(currentSpace?.spaceCreator,5,5)}’s Space</P>
+        <P color='#fff' margin="0px 0px" size="16px" weight="400">{currentSpace.spaceName}</P>
 
        <DateSection>
         <Div><AiOutlineCalendar color='#fff' size={25} /></Div>
-        <P size="14px" weight="500" margin='0px 10px' color='#ffff'>Today, 5 Apr at 9:00 AM</P>
+        <P size="14px" weight="500" margin='0px 10px' color='#ffff'>{currentSpace?.scheduleAt ?? '30 Apr 4:30PM'}</P>
       </DateSection>
 
       </Div>

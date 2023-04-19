@@ -16,7 +16,7 @@ import { ChatUserContext } from 'contexts/ChatUserContext';
 import { getSpaceRequests, getSpaces } from 'services/space';
 import { getSpaceRequestsFromIndexedDB, getSpacesFromIndexedDB } from 'helpers/space';
 
-export const SpaceModule = () => {
+export const SpaceModule = ({ }) => {
   const theme = useTheme();
   const { account, library } = useWeb3React();
   //shift getUser to app context and add type 
