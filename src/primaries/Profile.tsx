@@ -1,7 +1,7 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -15,14 +15,20 @@ import Dropdown from '../components/Dropdown';
 import { useClickAway } from 'hooks/useClickAway';
 import { walletconnect } from 'connectors';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
+import { AppContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
 
 // Create Header
 const Profile = ({ isDarkMode }) => {
+  const { web3NameList }:AppContextType=useContext(AppContext);
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
   const modalRef = React.useRef(null);
   const { error, account } = useWeb3React();
-  const web3Name = useResolveWeb3Name(account);
+
+  // resolve web3 name
+  useResolveWeb3Name(account);
+  const web3Name = web3NameList[account]
 
   // Get theme
   const theme = useTheme();

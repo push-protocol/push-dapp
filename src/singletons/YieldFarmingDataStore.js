@@ -195,7 +195,8 @@ export default class YieldFarmingDataStore {
   getUserData = async (contract) => {
     return new Promise(async (resolve, reject) => {
       if (this.state.account) {
-        const currentEpochPUSH = await contract.getCurrentEpoch();
+        const currentEpochPUSH = await contract.getCurrentEpoch()
+          .then(res=>ethers.BigNumber.from(Math.min(res,100)));
 
         const potentialUserReward = (await this.calculateUserEpochReward(currentEpochPUSH, contract)).toFixed(2)
 
@@ -239,7 +240,11 @@ export default class YieldFarmingDataStore {
     const currentEpochPUSH = await yieldFarmingPUSH.getCurrentEpoch();
     const genesisEpochAmountPUSH = tokenToBn(ethers.BigNumber.from(this.state.genesisEpochAmountPUSH))
     const deprecationPerEpochPUSH = tokenToBn(ethers.BigNumber.from(this.state.deprecationPerEpochPUSH))
-    const currentEpochLP = await yieldFarmingLP.getCurrentEpoch();
+    
+    const currentEpochLP = await yieldFarmingLP.getCurrentEpoch().then(
+      res=>ethers.BigNumber.from(Math.min(res.toNumber(),100)
+    ));
+    
     const genesisEpochAmountLP = tokenToBn(ethers.BigNumber.from(this.state.genesisEpochAmountLP))
     const deprecationPerEpochLP = tokenToBn(ethers.BigNumber.from(this.state.deprecationPerEpochLP))
 
@@ -273,9 +278,9 @@ export default class YieldFarmingDataStore {
     deprecationPerEpoch,
     maxEpochs=100,
   ) => {
-    if (epochId > maxEpochs){
-      return genesisEpochAmount.mul(0)
-    }
+    // if (epochId > maxEpochs){
+    //   return genesisEpochAmount.mul(0)
+    // }
     return genesisEpochAmount.sub(epochId.mul(deprecationPerEpoch));
   };
 

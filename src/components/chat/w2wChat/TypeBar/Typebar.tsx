@@ -327,7 +327,7 @@ export default Typebar;
 const TypeBarContainer = styled.div`
   position: absolute;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 10px;
   bottom: 9px;
@@ -357,10 +357,11 @@ const Icon = styled.i`
 const TextInput = styled.textarea`
   font-size: 16px;
   width: 100%;
-  height: 25px;
+  min-height: 25px;
   max-height: 75px;
   outline: none;
-  padding-top: 4px;
+  box-sizing:border-box;
+  padding-top: 3px;
   border: none;
   resize: none;
   background: transparent;

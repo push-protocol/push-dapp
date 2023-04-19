@@ -166,7 +166,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
 
   const removeMember = async () => {
     const updatedMemberList = getUpdatedMemberList(currentChat, selectedMemeberAddress);
-    const adminList = getAdminList(currentChat?.groupInformation);
+    const adminList = getUpdatedAdminList(currentChat?.groupInformation, selectedMemeberAddress, true);
     try {
       const { updateResponse, updatedCurrentChat } = await updateGroup({
         currentChat,

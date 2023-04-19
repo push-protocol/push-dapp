@@ -31,6 +31,7 @@ import { setProcessingState } from 'redux/slices/channelCreationSlice';
 import { setPushAdmin } from 'redux/slices/contractSlice';
 import { getChannelsSearch, getUserDelegations } from 'services';
 import * as PushAPI from '@pushprotocol/restapi';
+import { getAliasDetails } from 'services';
 
 // Internals Configs
 import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config';
@@ -166,9 +167,8 @@ const InitState = () => {
           });
         } else {
           channelInformationPromise = [...delegateeList].map(({ channel }) => {
-            const channelAddressInCaip = convertAddressToAddrCaip(channel, chainId)
-            return getReq(`/v1/alias/${channelAddressInCaip}/channel`).then(
-              ({ data }) => PushAPI.channels.getChannel({
+            return getAliasDetails({account,chainId}).then(
+              (data) => PushAPI.channels.getChannel({
               channel: convertAddressToAddrCaip(data.channel, appConfig.coreContractChain),
               env: appConfig.appEnv
             }));
@@ -193,8 +193,7 @@ const InitState = () => {
 
   // get core address of alias
   const checkUserForEthAlias = async () => {
-    const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
-    const { aliasEth, aliasVerified } = await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
+    const { aliasEth, aliasVerified } = await getAliasDetails({account,chainId}).then((data) => {
       if (data) {
         dispatch(setAliasEthAddress(data.channel));
         dispatch(setCoreChannelAdmin(data.channel));

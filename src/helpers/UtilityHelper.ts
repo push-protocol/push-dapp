@@ -3,6 +3,7 @@ import { utils } from 'ethers';
 
 // Internal Components
 import { convertChainIdToChainCaip } from './CaipHelper';
+import { caip10ToWallet } from './w2w';
 
 // Internal Configs
 import { appConfig } from '../config';
@@ -109,6 +110,15 @@ export const chainNameBackendStandard = {
   1: 'ETH_MAINNET',
   137: 'POLYGON_MAINNET',
   80001: 'POLYGON_TEST_MUMBAI',
+}
+
+export const aliasChainIdToChainName={
+  80001:'POLYGON',
+  97:'BSC',
+  420:'OPTIMISM',
+  137:'POLYGON',
+  56:'BSC',
+  10:'OPTIMISM',
 }
 
 export const aliasChainIdsMapping = {
@@ -220,6 +230,26 @@ export const swapPropertyOrder = <T extends object>(obj: T, prop1: keyof T, prop
   [reorderedProps[index1], reorderedProps[index2]] = [reorderedProps[index2], reorderedProps[index1]];
 
   return Object.fromEntries(reorderedProps.map(key => [key, obj[key]])) as T;
+}
+
+export const getWeb3Name=({isGroup, address, web3NameList})=>{
+  let web3Name = null;
+  if(!isGroup && address){
+    const walletLowercase = caip10ToWallet(address).toLowerCase();
+    const checksumWallet = utils.getAddress(walletLowercase);
+    Object.keys(web3NameList).forEach(element => {
+      if(web3NameList[checksumWallet]){
+        web3Name=web3NameList[checksumWallet];
+      }
+    })
+    if(web3Name === null){
+      web3Name=''
+    }
+  }
+  else{
+    web3Name='';
+  }
+  return web3Name;
 }
 
 export default UtilityHelper;
