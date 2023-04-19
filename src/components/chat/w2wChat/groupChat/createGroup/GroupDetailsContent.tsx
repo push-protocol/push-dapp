@@ -15,7 +15,7 @@ import { isLengthValid } from 'helpers/ValidationHelper';
 import ErrorMessage from 'components/reusables/errorMessageLabel/errorMessageLabel';
 import { appConfig } from 'config';
 import { device } from 'config/Globals';
-import GroupModalHeader from './GroupModalHeader';
+import ModalHeader from '../../../../ModalHeader';
 import AutoImageClipper from 'primaries/AutoImageClipper';
 
 export const GroupDetailsContent = ({
@@ -122,7 +122,7 @@ export const GroupDetailsContent = ({
     <ThemeProvider theme={themes}>
 
 
-      <GroupModalHeader
+      <ModalHeader
         handleClose={handleClose}
         title={"Create Group"}
       />
