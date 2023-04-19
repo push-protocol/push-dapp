@@ -7,7 +7,7 @@ import { Space } from 'types';
 import { shortenText } from 'helpers/UtilityHelper';
 
 const SpaceRequestCard = (
-    { spaceData }: { spaceData: Space }
+    // { spaceData }: { spaceData: Space }
 ) => {
 
     const theme = useTheme();
@@ -36,22 +36,26 @@ const SpaceRequestCard = (
                     >
                         <ImageV2
                             alt="Profile"
-                            src={spaceData?.spaceImage}
+                            // src={spaceData?.spaceImage}
+                            src={Image}
                         />
                     </ItemHV2>
 
                 <InfoContainer>
                     <HeadTextSection>
                         <PrimaryText>
-                            {shortenText(spaceData?.spaceCreator, 6, 6)}
+                            {/* {shortenText(spaceData?.spaceCreator, 6, 6)} */}
+                            0x3B51...03bA1
                         </PrimaryText>
                         <SecondaryText>
-                            {spaceData?.scheduleAt ?? ' 4:30PM'}
+                            {/* {spaceData?.scheduleAt ?? ' 4:30PM'} */}
+                            9:30
                         </SecondaryText>
                     </HeadTextSection>
 
                     <SecondaryTextMessage>
-                        {spaceData?.spaceName?.length > 27 ? spaceData?.spaceName?.slice(0, 27) + '...' : spaceData?.spaceName}
+                        {/* {spaceData?.spaceName?.length > 27 ? spaceData?.spaceName?.slice(0, 27) + '...' : spaceData?.spaceName} */}
+                        Hey! My space just went Live...
                     </SecondaryTextMessage>
                 </InfoContainer>
 

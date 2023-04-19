@@ -29,7 +29,7 @@ export const SpaceRequests = () => {
 
       <SpaceContainer>
 
-        {!Object.keys(userSpaces[account]?.spaces || {}).length ? (
+        {/* {!Object.keys(userSpaces[account]?.spaces || {}).length ? (
           <SpanV2
             color={theme.default.secondaryColor}
             fontSize="15px"
@@ -41,7 +41,9 @@ export const SpaceRequests = () => {
         ) :
           (Object.keys(userSpaces[account]?.spaces).map((key) => (
             <SpaceRequestCard spaceData={userSpaces[account]?.spaces[key]}/>
-          )))}
+          )))} */}
+
+        <SpaceRequestCard/>
       </SpaceContainer>
 
 
