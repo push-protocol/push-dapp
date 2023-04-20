@@ -11,7 +11,7 @@ import Calendar from 'assets/space/calendar.svg';
 import { ReactComponent as Space } from 'assets/space/space.svg';
 import { device } from 'config/Globals';
 
-const SpacePreviewCard = ({ borderRadius, background, spaceData, messageFrom, isGroup }) => {
+export const SpacePreviewCard = ({ borderRadius, background, spaceData, messageFrom, isGroup }) => {
   const remindMe = () => {};
 
   return (
@@ -186,5 +186,3 @@ const WidgetData = styled(ItemHV2)`
   max-height: 31px;
   align-items: center;
 `;
-
-export default SpacePreviewCard;

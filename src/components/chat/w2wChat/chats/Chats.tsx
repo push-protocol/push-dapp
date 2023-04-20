@@ -21,14 +21,13 @@ import Modal from '../Modal/Modal';
 import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import { ReceivedMessageWrapper } from './MessageWrappers/ReceivedMessageWrapper';
 import { SentMessageWrapper } from './MessageWrappers/SentMessageWrapper';
-import SpacePreviewCard from './spacePreviewCards/SpacePreviewCard';
+import { SpacePreviewCard } from './spacePreviewCards';
 import { spaces } from 'services/space/spaceList';
-import { getSpaceData } from 'services/space';
+import { checkSpaceUrl } from 'helpers/space';
 
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
-
 
 interface ChatProps {
   msg: MessageIPFSWithCID;
@@ -37,7 +36,6 @@ interface ChatProps {
   ApproveIntent?: Function;
   isGroup?: boolean;
 }
-
 
 export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, isGroup }: ChatProps) {
   const { currentChat }: AppContext = useContext<AppContext>(Context);
@@ -48,37 +46,47 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const time1: string = time.toLocaleTimeString('en-US');
   const date: string = time1.slice(0, -6) + ' ' + time1.slice(-2).toLowerCase();
   const { tweetId, messageType }: TwitterFeedReturnType = checkTwitterUrl({ message: msg?.messageContent });
+  const { spaceId, spaceType, spaceData } = checkSpaceUrl(msg?.messageContent);
+  if (spaceType === 'SpaceLink') {
+    msg.messageType = 'SpaceLink';
+  }
 
   const walletAddress = shortenText(caip10ToWallet(msg.fromCAIP10)?.toLowerCase(), 6);
   const ensName = useResolveWeb3Name(msg.fromCAIP10);
-  const spaceData=spaces[0]
-  
-  const getProfilePicture = async() =>{
-    let member = getMemberDetails(currentChat,msg?.fromCAIP10);
-    if(member){
+
+  const getProfilePicture = async () => {
+    let member = getMemberDetails(currentChat, msg?.fromCAIP10);
+    if (member) {
       setProfilePicture(member.image);
-    }
-    else {
+    } else {
       // console.log(msg)
-      let user = await PushAPI.user.get({account:msg.fromCAIP10,env:appConfig.appEnv});
-      setProfilePicture(user.profilePicture); 
+      let user = await PushAPI.user.get({ account: msg.fromCAIP10, env: appConfig.appEnv });
+      setProfilePicture(user.profilePicture);
     }
-  }
+  };
 
   useEffect(() => {
-    if(isGroup && msg && msg.messageType !== 'Intent')
-     getProfilePicture();
+    if (isGroup && msg && msg.messageType !== 'Intent') getProfilePicture();
   }, []);
 
   return (
     <ItemVV2>
       {/* Support Msg Type = SpaceLink */}
-      {msg.messageType === 'SpaceLink' &&
+      {msg.messageType === 'SpaceLink' && (
         <ItemVV2>
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper align="row-reverse">
-              <SenderMessage background="transparent" padding="0px">
-               <SpacePreviewCard isGroup={isGroup} borderRadius="17px 2px 17px 17px" background="linear-gradient(87.17deg, #5C74F2 0%, #9065EC 67.25%, #8D6BEF 100%)" spaceData={spaceData} messageFrom="sender"/>
+              <SenderMessage
+                background="transparent"
+                padding="0px"
+              >
+                <SpacePreviewCard
+                  isGroup={isGroup}
+                  borderRadius="17px 2px 17px 17px"
+                  background="linear-gradient(87.17deg, #5C74F2 0%, #9065EC 67.25%, #8D6BEF 100%)"
+                  spaceData={spaceData}
+                  messageFrom="sender"
+                />
               </SenderMessage>
             </SentMessageWrapper>
           ) : (
@@ -89,15 +97,25 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
               profilePicture={profilePicture}
               msgType={msg.messageType}
             >
-              <ReceivedMessage background="transparent" padding="0px" left={isGroup ? '8px' : '34px'}>
-                <SpacePreviewCard isGroup={isGroup} borderRadius="2px 17px 17px 17px" background="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)" spaceData={spaceData} messageFrom="receiver"/>
+              <ReceivedMessage
+                background="transparent"
+                padding="0px"
+                left={isGroup ? '8px' : '34px'}
+              >
+                <SpacePreviewCard
+                  isGroup={isGroup}
+                  borderRadius="2px 17px 17px 17px"
+                  background="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
+                  spaceData={spaceData}
+                  messageFrom="receiver"
+                />
               </ReceivedMessage>
             </ReceivedMessageWrapper>
           )}
         </ItemVV2>
-      } 
+      )}
       {/* Support Msg Type = TwitterFeedLink */}
-      {msg.messageType === 'TwitterFeedLink' && 
+      {msg.messageType === 'TwitterFeedLink' && (
         <ItemVV2>
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper align="row-reverse">
@@ -141,18 +159,18 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
             </ReceivedMessageWrapper>
           )}
         </ItemVV2>
-      } 
-        
+      )}
+
       {/* Support Msg Type = Text */}
-      {msg.messageType === 'Text' &&
+      {msg.messageType === 'Text' && (
         <ItemVV2>
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper align="row-reverse">
               <SenderMessage>
-                 {msg.messageContent.split('\n').map((str) => (
-                   <TextMessage key={Math.random().toString()}>{str}</TextMessage>
-                 ))}
-                 <TimeStamp>{date}</TimeStamp>
+                {msg.messageContent.split('\n').map((str) => (
+                  <TextMessage key={Math.random().toString()}>{str}</TextMessage>
+                ))}
+                <TimeStamp>{date}</TimeStamp>
               </SenderMessage>
             </SentMessageWrapper>
           ) : (
@@ -172,10 +190,10 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
             </ReceivedMessageWrapper>
           )}
         </ItemVV2>
-      } 
-      
+      )}
+
       {/* Support Msg Type = Intent */}
-      {msg.messageType === 'Intent' &&
+      {msg.messageType === 'Intent' && (
         <ItemVV2>
           <ReceivedMessageWrapper
             align="row"
@@ -211,10 +229,10 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
             </IntentMessage>
           </ReceivedMessageWrapper>
         </ItemVV2>
-      }
-      
+      )}
+
       {/* Support Msg Type = Image */}
-      {msg.messageType === 'Image' &&
+      {msg.messageType === 'Image' && (
         <ItemVV2>
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper
@@ -267,10 +285,10 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
             />
           )}
         </ItemVV2>
-      } 
-      
+      )}
+
       {/* Support Msg Type = GIF OR Support Msg Type = MediaEmbed */}
-      {(msg.messageType === 'GIF' || msg.messageType === 'MediaEmbed') &&
+      {(msg.messageType === 'GIF' || msg.messageType === 'MediaEmbed') && (
         <ItemVV2>
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper
@@ -324,10 +342,10 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
             />
           )}
         </ItemVV2>
-      }
-      
+      )}
+
       {/* Support Msg Type = GIF OR Support Msg Type = MediaEmbed */}
-      {msg.messageType === 'File' &&
+      {msg.messageType === 'File' && (
         <ItemVV2>
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper align="row-reverse">
@@ -359,7 +377,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
             </ReceivedMessageWrapper>
           )}
         </ItemVV2>
-      }
+      )}
     </ItemVV2>
   );
 }
@@ -429,7 +447,7 @@ const ReceivedMessage = styled.div`
   flex-direction: column;
   align-items: center;
   // padding: 9px 17px;
-  @media(${device.mobileL}){
+  @media (${device.mobileL}) {
     margin-left: 16px;
   }
 `;
@@ -453,7 +471,7 @@ const SenderMessage = styled.div`
   color: #ffffff;
   flex-direction: column;
   align-items: baseline;
-  @media(${device.mobileL}){
+  @media (${device.mobileL}) {
     margin-right: 16px;
   }
 `;
