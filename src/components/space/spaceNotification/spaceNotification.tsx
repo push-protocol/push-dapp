@@ -105,14 +105,18 @@ const NotificationContainer = styled(ItemVV2)`
   }
 `;
 
-const JoinButton = styled(ItemHV2)`
-  height: 36px;
+const JoinButton = styled(ButtonV2)`
+  width: 100%;
+  max-height: 36px;
+  box-sizing: border-box;
+  padding: 16px;
   border-radius: 8px;
-  font-size: 14px;
-  color: #ffffff;
-  background: transparent;
   border: 1px solid #ffffff;
-  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  background: transparent;
+  color: #ffffff;
+  margin-top: 16px;
 `;
 
 export default SpaceNotification;
