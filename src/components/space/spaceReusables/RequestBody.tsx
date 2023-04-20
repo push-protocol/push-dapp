@@ -5,49 +5,47 @@ import { Space } from 'types';
 import SpaceCard from '../spaceSidebar/spaceCard/spaceCard';
 
 const RequestBody = ({
-    filteredUserData
+  filteredUserData
 }: { filteredUserData: Space }) => {
-    return (
-        <Container>
+  return (
+    <Container>
 
-            <MessageTime>Today</MessageTime>
+      <MessageTime>Today</MessageTime>
 
-            <MessageBox>
-                <ReceivedMessage>
-                    <TextMessage>Hey! You’re invited to my space. Set a reminder for when the space goes live</TextMessage>
-                    <TimeStamp>{filteredUserData?.scheduleAt ?? '4:30PM'}</TimeStamp>
-                </ReceivedMessage>
-                <ReceivedMessage>
-                    <TextMessage>Hey! You’re invited to my space. Set a reminder for when the space goes live</TextMessage>
-                    <TimeStamp>{filteredUserData?.scheduleAt ?? '4:30PM'}</TimeStamp>
-                </ReceivedMessage>
+      <MessageBox>
+        <ItemVV2>
+          <ReceivedMessageWrapper
+            align="row"
+          >
+            <ReceivedMessage left='34px'>
+              <TextMessage>Hey! You’re invited to my space. Set a reminder for when the space goes live</TextMessage>
+              <TimeStamp>{filteredUserData?.scheduleAt ?? '4:30PM'}</TimeStamp>
+            </ReceivedMessage>
+          </ReceivedMessageWrapper>
 
-                <ReceivedMessage>
-                    <TextMessage>Hey! You’re invited to my space. Set a reminder for when the space goes live</TextMessage>
-                    <TimeStamp>{filteredUserData?.scheduleAt ?? '4:30PM'}</TimeStamp>
-                </ReceivedMessage>
-                <ReceivedMessage>
-                    <TextMessage>Hey! You’re invited to my space. Set a reminder for when the space goes live</TextMessage>
-                    <TimeStamp>{filteredUserData?.scheduleAt ?? '4:30PM'}</TimeStamp>
-                </ReceivedMessage>
-                <ReceivedMessage>
-                    <TextMessage>Hey! You’re invited to my space. Set a reminder for when the space goes live</TextMessage>
-                    <TimeStamp>{filteredUserData?.scheduleAt ?? '4:30PM'}</TimeStamp>
-                </ReceivedMessage>
+          <ReceivedMessageWrapper
+            align="row"
+          >
+            <ReceivedMessage left='34px'>
+              <TextMessage>Hey! You’re invited to my space. Set a reminder for when the space goes live</TextMessage>
+              <TimeStamp>{filteredUserData?.scheduleAt ?? '4:30PM'}</TimeStamp>
+            </ReceivedMessage>
+          </ReceivedMessageWrapper>
 
-                <SpaceCardContainer>
-                    <SpaceCard spaceData={filteredUserData} />
-                </SpaceCardContainer>
+          <ReceivedMessageWrapper
+            align="row"
+          >
+            <ReceivedMessageSpace left='34px'>
+              <SpaceCard spaceData={filteredUserData} borderRadius='0px 17px 17px 17px' showReminder={true}/>
+            </ReceivedMessageSpace>
+          </ReceivedMessageWrapper>
 
+        </ItemVV2>
 
+      </MessageBox>
 
-
-
-            </MessageBox>
-
-
-        </Container>
-    );
+    </Container>
+  );
 };
 
 export default RequestBody;
@@ -110,14 +108,14 @@ const MessageTime = styled(ItemHV2)`
   width: 100%;
   font-size: 11px;
   color: ${(props) => props.theme.default.secondaryColor};
-    position: absolute;
-    top: 35px;
-    z-index: 10;
+  position: absolute;
+  top: 35px;
 `;
 
 const MessageBox = styled(ItemVV2)`
-position: absolute;
-top: 65px;
+  // position: absolute;
+  // top: 65px;
+  padding-top:65px;
 `
 
 const TimeStamp = styled(ItemHV2)`
@@ -141,6 +139,14 @@ const TextMessage = styled.p`
   margin: 0px;
 `;
 
+const ReceivedMessageWrapper = styled.div`
+  width: 100%;
+  min-height: ${(props: any): string => props.height || '48px'};
+  padding: 0;
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: ${(props: any): string => props.align || 'row'};
+`
 
 const ReceivedMessage = styled.div`
   box-sizing: border-box;
@@ -159,18 +165,8 @@ const ReceivedMessage = styled.div`
   padding: 9px 17px;
 `;
 
-const SpaceCardContainer = styled.div`
-    box-sizing: border-box;
-  position: relative;
-  margin-left: ${(props) => props.left || '34px'};
-  max-width: 419px;
-  padding: ${(props: any): string => props.padding || '5px 11px 10px 15px'};
-  text-align: left;
-  border-radius: 2px 16px 16px 16px;
-  display: flex;
-  justify-content: flex-start;
-  color: #000000;
-  flex-direction: column;
-  align-items: center;
-  padding: 9px 17px;
+const ReceivedMessageSpace = styled(ReceivedMessage)`
+  background:transparent;
+  max-width: 350px;
+  padding:0px 17px 9px 0px;
 `
