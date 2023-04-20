@@ -79,7 +79,7 @@ export const SpacePreviewCard = ({ borderRadius, background, spaceData, messageF
           </SpanV2>
         </ItemHV2>
       ) : (
-        <WidgetData>
+        <LiveSpaceData>
           <ItemHV2 justifyContent="flex-start">
             <Space />
             <SpanV2
@@ -121,26 +121,18 @@ export const SpacePreviewCard = ({ borderRadius, background, spaceData, messageF
               fontWeight="500"
               margin="0px 0px 0px 3px"
             >
-              +190
+              +{spaceData?.members?.length-3}
             </SpanV2>
           </ItemHV2>
-        </WidgetData>
+        </LiveSpaceData>
       )}
 
-      <RemindButton onClick={() => remindMe()}>
+      <ActionButton onClick={() => remindMe()}>
         {messageFrom === 'sender' ? 'Remind Me' : 'Join this space'}
-      </RemindButton>
+      </ActionButton>
     </SpacePreviewContainer>
   );
 };
-
-const Description = styled(ItemHV2)`
-  font-size: 20px;
-  font-weight: 500;
-  margin-top: 24px;
-  justify-content: flex-start;
-  color: #fff;
-`;
 
 const SpacePreviewContainer = styled(ItemVV2)`
   min-height: 211px;
@@ -158,6 +150,14 @@ const SpacePreviewHeader = styled(ItemHV2)`
   max-height: 32px;
 `;
 
+const Description = styled(ItemHV2)`
+  font-size: 20px;
+  font-weight: 500;
+  margin-top: 24px;
+  justify-content: flex-start;
+  color: #fff;
+`;
+
 const HostBadge = styled.div`
   font-size: 12px;
   font-weight: 500;
@@ -167,9 +167,9 @@ const HostBadge = styled.div`
   border-radius: 8px;
 `;
 
-const RemindButton = styled(ButtonV2)`
+const ActionButton = styled(ButtonV2)`
   width: 100%;
-  height: 36px;
+  max-height: 36px;
   box-sizing: border-box;
   padding: 16px;
   border-radius: 8px;
@@ -181,7 +181,7 @@ const RemindButton = styled(ButtonV2)`
   margin-top: 16px;
 `;
 
-const WidgetData = styled(ItemHV2)`
+const LiveSpaceData = styled(ItemHV2)`
   justify-content: space-between;
   max-height: 31px;
   align-items: center;
