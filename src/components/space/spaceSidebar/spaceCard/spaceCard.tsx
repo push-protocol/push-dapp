@@ -13,7 +13,7 @@ import { Space } from 'types';
 
 const SpaceCard = ({spaceData}:{spaceData:Space}) => {
   return (
-    <SpaceCardContainer>
+    <SpaceCardContainer borderRadius="0px 17px 17px 17px">
       <SpaceCardHeader>
         <ItemVV2
           width="32px"

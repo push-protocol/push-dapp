@@ -13,6 +13,7 @@ import { useWeb3React } from '@web3-react/core';
 import { Space } from 'types';
 import { shortenText } from 'helpers/UtilityHelper';
 import SpaceCard from '../spaceSidebar/spaceCard/spaceCard';
+import RequestBody from '../spaceReusables/RequestBody';
 
 
 const RequestBox = () => {
@@ -78,7 +79,7 @@ const RequestBox = () => {
 
 
             <BodyContainer>
-                <SpaceCard spaceData={filteredUserData} />
+                <RequestBody filteredUserData={filteredUserData}/>
             </BodyContainer>
 
             <SpaceTypeBar />

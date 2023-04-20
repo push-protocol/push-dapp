@@ -1,0 +1,176 @@
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import React from 'react';
+import styled from 'styled-components';
+import { Space } from 'types';
+import SpaceCard from '../spaceSidebar/spaceCard/spaceCard';
+
+const RequestBody = ({
+    filteredUserData
+}: { filteredUserData: Space }) => {
+    return (
+        <Container>
+
+            <MessageTime>Today</MessageTime>
+
+            <MessageBox>
+                <ReceivedMessage>
+                    <TextMessage>Hey! You’re invited to my space. Set a reminder for when the space goes live</TextMessage>
+                    <TimeStamp>{filteredUserData?.scheduleAt ?? '4:30PM'}</TimeStamp>
+                </ReceivedMessage>
+                <ReceivedMessage>
+                    <TextMessage>Hey! You’re invited to my space. Set a reminder for when the space goes live</TextMessage>
+                    <TimeStamp>{filteredUserData?.scheduleAt ?? '4:30PM'}</TimeStamp>
+                </ReceivedMessage>
+
+                <ReceivedMessage>
+                    <TextMessage>Hey! You’re invited to my space. Set a reminder for when the space goes live</TextMessage>
+                    <TimeStamp>{filteredUserData?.scheduleAt ?? '4:30PM'}</TimeStamp>
+                </ReceivedMessage>
+                <ReceivedMessage>
+                    <TextMessage>Hey! You’re invited to my space. Set a reminder for when the space goes live</TextMessage>
+                    <TimeStamp>{filteredUserData?.scheduleAt ?? '4:30PM'}</TimeStamp>
+                </ReceivedMessage>
+                <ReceivedMessage>
+                    <TextMessage>Hey! You’re invited to my space. Set a reminder for when the space goes live</TextMessage>
+                    <TimeStamp>{filteredUserData?.scheduleAt ?? '4:30PM'}</TimeStamp>
+                </ReceivedMessage>
+
+                <SpaceCardContainer>
+                    <SpaceCard spaceData={filteredUserData} />
+                </SpaceCardContainer>
+
+
+
+
+
+            </MessageBox>
+
+
+        </Container>
+    );
+};
+
+export default RequestBody;
+
+
+const Container = styled(ItemVV2)`
+  align-items: unset;
+  display: block;
+  justify-content: flex-start;
+  position: absolute;
+  top: 65px;
+  bottom: 66px;
+  left: 0;
+  right: 0;
+  margin: 0;
+  width: 100%;
+  height: calc(100% - 140px);
+  overflow-x: none;
+  overflow-y: scroll;
+  // background: red;
+
+  &::-webkit-scrollbar-track {
+    background-color: ${(props) => props.theme.scrollBg};
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: ${(props) => props.theme.scrollBg};
+    width: 5px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0px 0px 0px 0px;
+
+    &::-webkit-scrollbar-track {
+      background-color: none;
+      border-radius: 9px;
+    }
+
+    &::-webkit-scrollbar {
+      background-color: none;
+      width: 4px;
+    }
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0.44, #cf1c84),
+      color-stop(0.72, #cf1c84),
+      color-stop(0.86, #cf1c84)
+    );
+  }
+`
+
+const MessageTime = styled(ItemHV2)`
+  width: 100%;
+  font-size: 11px;
+  color: ${(props) => props.theme.default.secondaryColor};
+    position: absolute;
+    top: 35px;
+    z-index: 10;
+`;
+
+const MessageBox = styled(ItemVV2)`
+position: absolute;
+top: 65px;
+`
+
+const TimeStamp = styled(ItemHV2)`
+  min-width: 44px;
+  font-size: 11px;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding: 5px 0px 0px 5px;
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
+`;
+
+const TextMessage = styled.p`
+  max-width: 300px;
+  padding: 7px 44px 10px 0px;
+  font-size: 14px;
+  word-wrap: break-word;
+  text-align: left;
+  font-weight: 400;
+  margin: 0px;
+`;
+
+
+const ReceivedMessage = styled.div`
+  box-sizing: border-box;
+  position: relative;
+  margin-left: ${(props) => props.left || '34px'};
+  max-width: 419px;
+  padding: ${(props: any): string => props.padding || '5px 11px 10px 15px'};
+  background: ${(props: any): string => props.color || '#ffffff'};
+  text-align: left;
+  border-radius: 2px 16px 16px 16px;
+  display: flex;
+  justify-content: flex-start;
+  color: #000000;
+  flex-direction: column;
+  align-items: center;
+  padding: 9px 17px;
+`;
+
+const SpaceCardContainer = styled.div`
+    box-sizing: border-box;
+  position: relative;
+  margin-left: ${(props) => props.left || '34px'};
+  max-width: 419px;
+  padding: ${(props: any): string => props.padding || '5px 11px 10px 15px'};
+  text-align: left;
+  border-radius: 2px 16px 16px 16px;
+  display: flex;
+  justify-content: flex-start;
+  color: #000000;
+  flex-direction: column;
+  align-items: center;
+  padding: 9px 17px;
+`
