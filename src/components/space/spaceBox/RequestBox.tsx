@@ -1,18 +1,38 @@
 import { Content } from 'components/SharedStyling';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import GLOBALS, { device } from 'config/Globals';
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
 import styled, { useTheme } from 'styled-components';
 import Image from "assets/space/push-space.svg";
 import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import SpaceTypeBar from '../spaceReusables/SpaceTypeBar';
+import { SpaceGlobalContext, SpaceLocalContext } from 'contexts';
+import { useWeb3React } from '@web3-react/core';
+import { Space } from 'types';
+import { shortenText } from 'helpers/UtilityHelper';
+import SpaceCard from '../spaceSidebar/spaceCard/spaceCard';
 
 
 const RequestBox = () => {
 
-    const theme = useTheme()
+    const theme = useTheme();
+    const { account } = useWeb3React();
+    const { userSpaces } = useContext(SpaceGlobalContext);
+    const { selectedSpace } = useContext(SpaceLocalContext);
+    const [filteredUserData, setFilteredUserData] = useState<Space>();
+
+    const getUserData = (selectedSpace: string) => {
+        const userDataFromSpaceId = userSpaces[account]?.spaces[selectedSpace];
+        setFilteredUserData(userDataFromSpaceId);
+    }
+
+    useEffect(() => {
+        console.log("Space id changed", selectedSpace, typeof (selectedSpace));
+        getUserData(selectedSpace);
+    }, [selectedSpace])
+
 
     return (
         <Container>
@@ -27,9 +47,6 @@ const RequestBox = () => {
                         background="transparent"
                         hover="transparent"
                         hoverBackground="transparent"
-                        onClick={() => {
-                            // setChat(null);
-                        }}
                     >
                         <MdOutlineArrowBackIos size={24} />
                     </TabletBackButton>
@@ -38,7 +55,7 @@ const RequestBox = () => {
                         height="48px"
                         width="48px"
                         alt="Profile Picture"
-                        src={Image}
+                        src={filteredUserData?.spaceImage}
                         borderRadius="100%"
                         overflow="hidden"
                         objectFit="cover"
@@ -51,7 +68,7 @@ const RequestBox = () => {
                     fontWeight="400"
                     textAlign="start"
                 >
-                    0x3B51...03bA1
+                    {shortenText(filteredUserData?.spaceCreator, 6)}
                 </SpanV2>
 
                 <MoreOptions >
@@ -61,9 +78,10 @@ const RequestBox = () => {
 
 
             <BodyContainer>
+                <SpaceCard spaceData={filteredUserData} />
             </BodyContainer>
 
-            <SpaceTypeBar/>
+            <SpaceTypeBar />
         </Container>
     );
 };
@@ -101,6 +119,7 @@ const HeaderContainer = styled(ItemHV2)`
     z-index:1;
 
 `
+
 const BodyContainer = styled(ItemVV2)``
 
 const FooterContainer = styled(ItemHV2)`

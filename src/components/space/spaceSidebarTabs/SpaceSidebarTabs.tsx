@@ -18,6 +18,8 @@ export const SpaceSidebarTabs = () => {
   const { account } = useWeb3React();
   const { userSpaces } = useContext(SpaceGlobalContext);
   const theme = useTheme();
+
+
   return (
     <ItemVV2 justifyContent="flex-start">
       {/* Header */}
@@ -36,6 +38,7 @@ export const SpaceSidebarTabs = () => {
                 onClick={() => {
                   setActiveTab(SpaceTabOption[option]);
                 }}
+                key={SpaceTabOption[option]}
               >
                 <ItemHV2 alignItems="center">
                   <SpanV2

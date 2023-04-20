@@ -5,76 +5,105 @@ import GifPicker from 'components/chat/w2wChat/TypeBar/Gifs/GifPicker';
 import { ItemHV2 } from 'components/reusables/SharedStylingV2';
 
 const SpaceTypeBar = () => {
-    const theme = useTheme();
-    const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
-    const [showEmojis, setShowEmojis] = useState<boolean>(false);
+  const theme = useTheme();
+  const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
+  const [showEmojis, setShowEmojis] = useState<boolean>(false);
 
-    const addEmoji = (e: any, emojiObject: { emoji: any }): void => {
-        setShowEmojis(false);
-    };
+  const addEmoji = (e: any, emojiObject: { emoji: any }): void => {
+    setShowEmojis(false);
+  };
 
-    return (
-        <Container>
-            <Icon
-                // onClick={(): void => setShowEmojis(!showEmojis)}
-                filter={theme.snackbarBorderIcon}
-            >
-                <img
-                    src="/svg/chats/smiley.svg"
-                    height="24px"
-                    width="24px"
-                    alt=""
-                />
-            </Icon>
+  const isDarkMode = theme.scheme === 'dark';
 
-            {showEmojis && (
-                <Picker
-                    onEmojiClick={addEmoji}
-                    pickerStyle={{
-                        width: '300px',
-                        position: 'absolute',
-                        bottom: '2.5rem',
-                        zindex: '700',
-                        left: '2.5rem',
-                    }}
-                />
-            )}
+  const handleSubmit = () => {
+    console.log("Message sent")
+  }
 
-            <TextInput
-                placeholder="Type your message..."
-                // onKeyDown={handleKeyPress}
-                // onChange={textOnChange}
-                // value={newMessage}
-                rows={1}
-                // ref={textAreaRef}
-                autoFocus="autoFocus"
+  return (
+    <Container>
+      <Icon
+        filter={theme.snackbarBorderIcon}
+      >
+        <img
+          src="/svg/chats/smiley.svg"
+          height="24px"
+          width="24px"
+          alt=""
+        />
+      </Icon>
+
+      {showEmojis && (
+        <Picker
+          onEmojiClick={addEmoji}
+          pickerStyle={{
+            width: '300px',
+            position: 'absolute',
+            bottom: '2.5rem',
+            zindex: '700',
+            left: '2.5rem',
+          }}
+        />
+      )}
+
+      <TextInput
+        placeholder="Type your message..."
+        // onKeyDown={handleKeyPress}
+        // onChange={textOnChange}
+        // value={newMessage}
+        rows={1}
+        // ref={textAreaRef}
+        autoFocus="autoFocus"
+      />
+
+      <GifDiv>
+        <label>
+          {isGifPickerOpened && (
+            <GifPicker
+              setIsOpened={setIsGifPickerOpened}
+              isOpen={isGifPickerOpened}
+            // onSelect={sendGif}
             />
+          )}
+          <Icon
+            onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}
+            filter={theme.snackbarBorderIcon}
+          >
+            <img
+              src="/svg/chats/gif.svg"
+              height="18px"
+              width="22px"
+              alt=""
+            />
+          </Icon>
+        </label>
+      </GifDiv>
+      <label>
+        <Icon filter={theme.snackbarBorderIcon}>
+          <img
+            src="/svg/chats/attachment.svg"
+            height="24px"
+            width="20px"
+            alt=""
+          />
+        </Icon>
+        <FileInput
+          type="file"
+          // ref={fileInputRef}
+          // onChange={uploadFile}
+        />
+      </label>
 
-            <GifDiv>
-                <label>
-                    {isGifPickerOpened && (
-                        <GifPicker
-                            setIsOpened={setIsGifPickerOpened}
-                            isOpen={isGifPickerOpened}
-                        // onSelect={sendGif}
-                        />
-                    )}
-                    <Icon
-                        onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}
-                        filter={theme.snackbarBorderIcon}
-                    >
-                        <img
-                            src="/svg/chats/gif.svg"
-                            height="18px"
-                            width="22px"
-                            alt=""
-                        />
-                    </Icon>
-                </label>
-            </GifDiv>
+      <Icon onClick={handleSubmit}>
+        <img
+          src={`/svg/chats/send${isDarkMode ? '_dark' : ''}.svg`}
+          height="27px"
+          width="27px"
+          alt=""
+        />
+      </Icon>
 
-        </Container>
-    );
+    </Container>
+  );
 };
 
 export default SpaceTypeBar;
@@ -134,4 +163,8 @@ const GifDiv = styled.div`
   background: ${(props) => props.theme.chat.gifContainerBg || '#F7F8FF'};
   padding: 5px 8px 5px 6px;
   border-radius: 7px;
+`;
+
+const FileInput = styled.input`
+  display: none;
 `;

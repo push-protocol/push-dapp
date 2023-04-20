@@ -26,6 +26,9 @@ export const SpaceModule = () => {
   const { connectedUser,getUser } = useContext(ChatUserContext);
   const { userSpaces,setSpaceRequests,setSpaces } = useContext(SpaceGlobalContext);
 
+
+  console.log("User Spaces in space module",userSpaces);
+
   useEffect(() => {
     if(connectedUser || !account || !library) return;
     
@@ -69,6 +72,7 @@ console.log(connectedUser)
     showModal: showCreateSpaceModal,
     ModalComponent: CreateSpaceModalComponent,
   } = useModalBlur();
+
 
   // RENDER
   return (

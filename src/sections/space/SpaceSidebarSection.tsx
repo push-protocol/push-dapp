@@ -26,7 +26,7 @@ export const SpaceSidebarSection = ({showCreateSpaceModal}) => {
         showQR={showQR}
         setShowQR={setShowQR}
       />
-      
+    
     </ItemVV2>
   );
 };
