@@ -164,7 +164,7 @@ export const ActiveSpaces = () => {
         </ButtonDiv>
     </ActiveSpaceItem>
 
-    {/* <RequestItem>
+    <RequestItem>
       <RequestSpan>
         <BsFillMicFill size={22} color='#D53A94' />
         <P size="14px" weight="500" color='#D53A94' margin="0px 8px">Speaking</P>
@@ -175,7 +175,7 @@ export const ActiveSpaces = () => {
               <BsShare size={20} color={'#657795'}  />
               <Button bg="transparent" border="1px solid #D53A94" color='#D53A94' size="14px" weight="500" radius="12px" padding="12px 32px">Leave</Button>
             </RequestDiv>
-    </RequestItem> */}
+    </RequestItem>
     </StackedItems>
   )
 }
@@ -184,8 +184,6 @@ const StackedItems = styled.div`
   display: flex;
   flex-direction: column;
   width: 65%;
-  // align-items: center;
-  // justify-content: center;
   gap: 10px 0px;
   margin: auto 0;
   height: auto;
@@ -219,6 +217,7 @@ const RequestDiv = styled.div`
   display: flex;
   flex-direction: row;
   gap: 0px 16px;
+  align-items: center;
 `;
 
 const RequestSpan = styled.div`
@@ -231,30 +230,14 @@ const RequestSpan = styled.div`
 const ActiveSpaceItem = styled.div`
   width: 100%;
   display: flex;
-  // justify-content: center;
   flex-direction: column !important;
-  // margin: auto auto;
   height: auto;
   background: ${(props) => props.theme.modalContentBackground};
   border-radius: 22px;
-  // box-sizing: border-box;
   overflow: hidden;
-  // @media (max-width: 768px) {
-  //   width: auto;
-  //   border: 1px solid rgba(87, 93, 115, 0.2);
-  // }
-
-  // @media (min-width: 768px) and (max-width: 1330px) {
-  //   width: 95%;
-  // }
-
-  // @media (min-width: 768px) and (max-height: 780px) {
-  //   width: 95%;
-  //   position: relative;
-  //   justify-content: inherit;
-  //   height: 400px;
-  //   overflow: hidden;
-  // }
+  @media (max-width: 768px) {
+    border: 1px solid rgba(87, 93, 115, 0.2);
+  }
 `;
 
 const Div = styled.div`
@@ -416,7 +399,6 @@ const Image = styled.img`
 
 const SpaceButton = styled(Button)`
   width: 100%;
-  // margin-top: 30px;
   padding: 12px 5px;
   background: #D53A94;
   border-radius: 14px;
@@ -424,17 +406,6 @@ const SpaceButton = styled(Button)`
   font-size: 16px;
   line-height: 22px;
   position: relative;
-  // bottom: 0px;
-  // margin: 8px 8px 8px 8px;
-  // box-sizing: border-box;
-
-  // @media (min-width: 768px) and (max-height: 780px) {
-  //        margin-top: 0px;
-  //        margin: 0 8px;
-  //        width: 95%;
-  //        position: absolute;
-  //        bottom: 8px;
-  //   }
 `;
 
 const Settings = styled(AiOutlineMore)`
@@ -442,5 +413,4 @@ const Settings = styled(AiOutlineMore)`
   height: 25px;
   cursor: pointer;
   color: white;
-  // transition: 400ms;
 `;
