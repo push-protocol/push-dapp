@@ -152,7 +152,9 @@ export default class YieldFarmingDataStore {
     });
   };
 
-  getLPPoolStats = async () => {
+  getLPPoolStats = async (
+    // poolStats
+  ) => {
     return new Promise(async (resolve, reject) => {
       const epnsToken = this.state.epnsToken;
       const staking = this.state.staking;

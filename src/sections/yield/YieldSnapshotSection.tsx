@@ -24,7 +24,7 @@ const YieldSnapshotSection = () => {
     <>
       <V3Container>
         <YieldUniswapV3/>
-        <YieldPushFeeV3/>
+        {/* <YieldPushFeeV3/> */}
       </V3Container>
 
       <V2Container>
@@ -37,11 +37,33 @@ const YieldSnapshotSection = () => {
 export default YieldSnapshotSection;
 
 const V3Container = styled(ItemHV2)`
+  width: 50%;
+  margin: auto;
+
+  @media (max-width:1300px){
+    width: 75%;
+  }
+
+  @media (max-width:768px){
+    width: 100%;
+  }
+
   @media (max-width:900px){
     flex-direction:column;
   }
 `
 const V2Container = styled(ItemHV2)`
+
+  @media (max-width:1300px){
+    margin:auto;
+    width: 75%;
+    flex-direction:column;
+  }
+
+  @media (max-width:768px){
+    width: 100%;
+  }
+
   @media (max-width:900px){
     flex-direction:column;
   }

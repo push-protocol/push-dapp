@@ -26,55 +26,52 @@ const bn = function (number, defaultValue = null) { if (number == null) { if (de
 const bnToInt = function (bnAmount) { return bnAmount.div(bn(10).pow(18)) }
 
 const YieldUniswapV3 = () => {
+
+    // staking contract Address - stakingV2 and stakingV2(stakingV2Abi)
+    // uniV2LP token contract address - uniV2LPToken and uniV2LPToken(uniV2LpTokenAbi)
+
     const { active, error, account, library, chainId } = useWeb3React();
-    const [txInProgressDep, setTxInProgressDep] = React.useState(false);
     const [lpPoolStats, setLpPoolStats] = React.useState(null);
     const [userDataLP, setUserDataLP] = React.useState(null);
 
     const [depositAmountToken, setDepositAmountToken] = React.useState(0);
     const [depositApproved, setDepositApprove] = React.useState(false);
-    const [showDepSlip, setShowDepSlip] = React.useState(null);
     const [showDepositItem, setShowDepositItem] = React.useState(false);
-    const [txInProgress, setTxInProgress] = React.useState(false);
-
+    
+    const [txInProgressDep, setTxInProgressDep] = React.useState(false);
+    const [txInProgressApprDep, setTxInProgressApprDep] = React.useState(false);
     const [txInProgressWithdraw, setTxInProgressWithdraw] = React.useState(false);
-
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
 
-    const [epnsToken, setEpnsToken] = React.useState(null);
     const [staking, setStaking] = React.useState(null);
-    const [yieldFarmingPUSH, setYieldFarmingPUSH] = React.useState(null);
     const [yieldFarmingLP, setYieldFarmingLP] = React.useState(null);
-    const [uniswapV2Router02, setUniswapV2Router02] = React.useState(null);
-
-
-    const [txInProgressApprDep, setTxInProgressApprDep] = React.useState(false);
 
     const [loading, setLoading] = React.useState<boolean>(false);
     const [loadingUserData, setLoadingUserData] = React.useState<boolean>(false);
 
+
+    const [epnsToken, setEpnsToken] = React.useState(null);
+    const [yieldFarmingPUSH, setYieldFarmingPUSH] = React.useState(null);
+    const [uniswapV2Router02, setUniswapV2Router02] = React.useState(null);
+    
+
     const uniswapV2Toast = useToast();
-
-
-    console.log("Addresses", addresses, abis);
-    const tokenAddress = addresses.epnsLPToken;
 
     const getLPPoolStats = React.useCallback(
         async () => {
             setLoading(true);
             const lpPoolStats = await YieldFarmingDataStore.instance.getLPPoolStats();
-            console.log("LPPool Stats", lpPoolStats);
 
             setLpPoolStats({ ...lpPoolStats });
             setLoading(false);
         },
-        [epnsToken, staking, yieldFarmingLP, uniswapV2Router02]
+        [ staking, yieldFarmingLP,uniswapV2Router02]
     );
 
     const getUserDataLP = React.useCallback(async (yieldFarmingLP) => {
         setLoadingUserData(true);
         const userDataLP = await YieldFarmingDataStore.instance.getUserData(yieldFarmingLP);
-        console.log("User Data LP", userDataLP);
+
         setUserDataLP({ ...userDataLP });
         setLoadingUserData(false);
     }, [yieldFarmingLP]);
@@ -82,30 +79,25 @@ const YieldUniswapV3 = () => {
 
     React.useEffect(() => {
         let epnsToken = new ethers.Contract(addresses.epnsToken, abis.epnsToken, library);
+        let yieldFarmingPUSH = new ethers.Contract(addresses.yieldFarmPUSH, abis.yieldFarming, library);
+        let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, library);
+        setEpnsToken(epnsToken);
+        setYieldFarmingPUSH(yieldFarmingPUSH);
+        setUniswapV2Router02(uniswapV2Router02Instance);
+
 
         //changed the address and abis
-        let staking = new ethers.Contract(addresses.staking, abis.stakingV2, library);
-
-        let yieldFarmingPUSH = new ethers.Contract(addresses.yieldFarmPUSH, abis.yieldFarming, library);
-
+        let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, library);
         //changed the address
         let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, library);
-
-        let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, library);
-
-        console.log("UseEffect", staking, yieldFarmingPUSH, yieldFarmingLP)
-
-        setEpnsToken(epnsToken);
         setStaking(staking);
-        setYieldFarmingPUSH(yieldFarmingPUSH);
         setYieldFarmingLP(yieldFarmingLP);
-        setUniswapV2Router02(uniswapV2Router02Instance);
 
         if (!!(library && account)) {
             var signer = library.getSigner(account);
 
             let epnsToken = new ethers.Contract(addresses.epnsToken, abis.epnsToken, signer);
-            let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
+            let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
             let yieldFarmingPUSH = new ethers.Contract(addresses.yieldFarmPUSH, abis.yieldFarming, signer);
             let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, signer);
 
@@ -142,10 +134,9 @@ const YieldUniswapV3 = () => {
     const fillMax = async () => {
         var signer = library.getSigner(account);
         const tokenAddr = addresses.uniV2LPToken;
-        let token = new ethers.Contract(tokenAddr, abis.epnsToken, signer);
+        let token = new ethers.Contract(tokenAddr, abis.uniV2LpToken, signer);
 
         let balance = bnToInt(await token.balanceOf(account));
-        console.log("balance", balance)
         setDepositAmountToken(parseInt(balance.toString().replace(/\D/, '')) || 0)
     }
 
@@ -160,17 +151,7 @@ const YieldUniswapV3 = () => {
         const tokenAddr = addresses.uniV2LPToken;
         let token = new ethers.Contract(tokenAddr, abis.uniV2LpToken, signer);
 
-        const allowance = await token.allowance(account, addresses.staking);
-        console.log("Allowance", formatTokens(allowance), allowance.gte(bn(depositAmountToken)), depositAmountToken);
-
-
-        // if(formatTokens(allowance) >= depositAmountToken){
-        //     setDepositApprove(true);
-        // }else{
-        //     console.log("Small")
-        //     setDepositApprove(false);
-        // }
-
+        const allowance = await token.allowance(account, addresses.stakingV2);
 
         if (allowance.gte(bn(depositAmountToken))) {
             setDepositApprove(true);
@@ -191,19 +172,14 @@ const YieldUniswapV3 = () => {
 
         var signer = library.getSigner(account);
         let uniV2LPToken = new ethers.Contract(addresses.uniV2LPToken, abis.uniV2LpToken, signer);
-        let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
+        let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
 
         const uintMax = bn(2).pow(bn(256)).sub(1)
-
-        console.log("Approve", uniV2LPToken, staking, uintMax);
 
         const tx = uniV2LPToken.approve(
             staking.address,
             uintMax
         );
-
-        console.log("Approve TX", tx);
-
 
         tx.then(async (tx) => {
             uniswapV2Toast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
@@ -258,8 +234,7 @@ const YieldUniswapV3 = () => {
 
         var signer = library.getSigner(account);
         let uniV2LPToken = new ethers.Contract(addresses.uniV2LPToken, abis.uniV2LpToken, signer);
-        let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
-        console.log("Depositing amount", depositAmountToken);
+        let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
 
         const tx2 = staking.deposit(
             addresses.uniV2LPToken,
@@ -290,9 +265,10 @@ const YieldUniswapV3 = () => {
                     //   getPoolStats();
                     getLPPoolStats();
                     getUserDataLP(yieldFarmingLP);
+                    
 
                     setTxInProgressDep(false);
-                    setShowDepSlip(true);
+                    setShowDepositItem(false);
                     // window.location.reload();
                 } catch (e) {
                     uniswapV2Toast.showMessageToast({
@@ -325,10 +301,6 @@ const YieldUniswapV3 = () => {
         setTxInProgressWithdraw(true);
         const withdrawAmount = formatTokens(userDataLP.epochStakeNext);
 
-        console.log("Withdraw amount", withdrawAmount, ethers.BigNumber.from(withdrawAmount).mul(
-            ethers.BigNumber.from(10).pow(18)
-        ), userDataLP.epochStakeNext);
-
         if (withdrawAmount == 0) {
             uniswapV2Toast.showMessageToast({
                 toastTitle: 'Error',
@@ -342,16 +314,12 @@ const YieldUniswapV3 = () => {
         }
 
         var signer = library.getSigner(account);
-        let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
+        let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
 
         const amounttowithdraw = await staking.balanceOf(
             account,
             addresses.uniV2LPToken
         )
-
-        // console.log("Amount to be taken out", formatTokens(amounttowithdraw), formatTokens(ethers.BigNumber.from(withdrawAmount).mul(
-        //     ethers.BigNumber.from(10).pow(18)
-        // )));
 
         const tx = staking.withdraw(
             addresses.uniV2LPToken,
@@ -423,8 +391,6 @@ const YieldUniswapV3 = () => {
         }
         setTxInProgressClaimRewards(true);
 
-        console.log(addresses.yieldFarmLP);
-
         var signer = library.getSigner(account);
         let yieldFarmingPUSH = new ethers.Contract(
             addresses.yieldFarmLP,
@@ -493,17 +459,7 @@ const YieldUniswapV3 = () => {
         return x?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
-
-
-
-
     return (
-        // <Container>
-        //     {!loading ? (
-        //         <div>
-        //             <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
-        //         </div>
-        //     ) : (
         <Container>
 
 
@@ -657,7 +613,7 @@ const YieldUniswapV3 = () => {
                             {txInProgressApprDep && !depositApproved &&
                                 <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
                             }
-                            {!txInProgress && depositApproved &&
+                            { depositApproved &&
                                 <Span color="#fff" weight="600">Approved</Span>
                             }
                         </ButtonAlt>
@@ -684,7 +640,7 @@ const YieldUniswapV3 = () => {
             {/* Bottom Section */}
             <ItemVV2 padding=" 0px 14px" margin="24px 0px 0px 0px">
                 <ItemHV2>
-                    <FilledButton onClick={() => setShowDepositItem(!showDepositItem)}>Stake PUSH/WETH LP Tokens</FilledButton>
+                    <FilledButton onClick={() => setShowDepositItem(true)}>Stake PUSH/WETH LP Tokens</FilledButton>
                 </ItemHV2>
                 <ButtonsContainer>
                     <EmptyButton style={{ margin: "0px 10px 0px 0px" }} onClick={() => withdrawAmountTokenFarmAutomatic()}>
