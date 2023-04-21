@@ -14,6 +14,7 @@ import {ReactComponent as LensterSVG} from 'assets/space/Lenster.svg'
 import {ReactComponent as TwitterSVG} from 'assets/space/Twitter.svg'
 import {ReactComponent as LinkSVG} from 'assets/space/Link.svg'
 import {ReactComponent as LiveSVG} from 'assets/space/Live.svg'
+import { BsFillMicFill, BsPeople, BsShare } from 'react-icons/bs'
 
 export const ActiveSpaces = () => {
   const theme = useTheme();
@@ -107,6 +108,7 @@ export const ActiveSpaces = () => {
   ]
 
   return (
+    <StackedItems>
     <ActiveSpaceItem theme={theme}>
       <CardItem>
 
@@ -159,12 +161,72 @@ export const ActiveSpaces = () => {
         <SpaceButton>Join this space</SpaceButton>
       </DivCard>
     </ActiveSpaceItem>
+
+    <RequestItem>
+      <RequestSpan>
+        <BsFillMicFill size={22} color='#D53A94' />
+        <P size="14px" weight="500" color='#D53A94' margin="0px 8px">Speaking</P>
+      </RequestSpan>
+            
+            <RequestDiv>
+              <BsPeople size={25} color={'#657795'} />
+              <BsShare size={20} color={'#657795'}  />
+              <Button bg="transparent" border="1px solid #D53A94" color='#D53A94' size="14px" weight="500" radius="12px" padding="12px 32px">Leave</Button>
+            </RequestDiv>
+    </RequestItem>
+    </StackedItems>
   )
 }
 
+const StackedItems = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 65%;
+  // align-items: center;
+  // justify-content: center;
+  gap: 10px 0px;
+  margin: auto 0;
+  height: auto;
+  box-sizing: border-box;
+
+  @media (min-width: 768px) and (max-width: 1330px) {
+      width: 95%;
+    }
+  
+    @media (min-width: 768px) and (max-height: 780px) {
+      width: 95%;
+      position: relative;
+      justify-content: inherit;
+      height: 400px;
+      overflow: hidden;
+`;
+
+const RequestItem = styled.div`
+  width: 100%;
+  display: flex;
+  background: ${(props) => props.theme.modalContentBackground};
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 8px 8px 20px;
+  border-radius: 16px;
+  box-sizing: border-box;
+`;
+
+const RequestDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 0px 16px;
+`;
+
+const RequestSpan = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
 // const ActiveSpaceItem = styled(ItemVV2)`
 const ActiveSpaceItem = styled.div`
-  width: 65%;
+  width: 100%;
   display: flex;
   justify-content: center;
   flex-direction: column !important;
@@ -172,7 +234,6 @@ const ActiveSpaceItem = styled.div`
   height: auto;
   background: ${(props) => props.theme.modalContentBackground};
   border-radius: 22px;
-  // flex: 0 !important;
   box-sizing: border-box;
   overflow: hidden;
   @media (max-width: 768px) {
@@ -180,19 +241,17 @@ const ActiveSpaceItem = styled.div`
     border: 1px solid rgba(87, 93, 115, 0.2);
   }
 
-  @media (min-width: 768px) and (max-width: 1330px) {
-    width: 95%;
-  }
+  // @media (min-width: 768px) and (max-width: 1330px) {
+  //   width: 95%;
+  // }
 
-  @media (min-width: 768px) and (max-height: 780px) {
-    width: 95%;
-    position: relative;
-    justify-content: inherit;
-    height: 400px;
-    // overflow-y: scroll;
-    overflow: hidden;
-    // flex: auto !important;
-  }
+  // @media (min-width: 768px) and (max-height: 780px) {
+  //   width: 95%;
+  //   position: relative;
+  //   justify-content: inherit;
+  //   height: 400px;
+  //   overflow: hidden;
+  // }
 `;
 
 const Div = styled.div`

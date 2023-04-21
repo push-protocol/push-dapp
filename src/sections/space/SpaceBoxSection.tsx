@@ -6,8 +6,7 @@ import { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import { SpaceBox, WelcomeSpaceContentBox } from 'components/space';
-import { ActiveSpaces } from './ActiveSpaces';
+import { ActiveSpaces, SpaceBox, WelcomeSpaceContentBox } from 'components/space';
 
 // Internal Configs
 
