@@ -110,7 +110,6 @@ const HeaderContainer = styled(ItemHV2)`
     justify-content:flex-start;
     top:10px;
     left:10px;
-    min-height:55px;
     color:${(props) => props.theme.default.color};
     background:${(props) => props.theme.default.bg};
     padding:6px;
