@@ -21,17 +21,22 @@ import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
 import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
+import videoCallIcon from 'assets/icons/videoCallIcon.svg';
 import LoaderSpinner, { LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { Content } from 'components/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import * as w2wHelper from 'helpers/w2w/';
-import { checkIfIntentExist, fetchInbox, getLatestThreadHash } from 'helpers/w2w/user';
+import {
+  checkIfChatExist,
+  fetchInbox
+} from 'helpers/w2w/user';
 import { useDeviceWidthCheck } from 'hooks';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext, Feeds, MessageIPFS } from 'types/chat';
+import { AppContext as ContextType, Feeds, MessageIPFS } from 'types/chat';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w';
 import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpers/w2w/groupChat';
@@ -40,8 +45,8 @@ import Chats from '../chats/Chats';
 import Typebar from '../TypeBar/Typebar';
 import { intitializeDb } from '../w2wIndexeddb';
 import { HeaderMessage } from './HeaderMessage';
-import Tooltip from 'components/reusables/tooltip/Tooltip';
-import videoCallIcon from 'assets/icons/videoCallIcon.svg'
+import { AppContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -78,7 +83,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setHasUserBeenSearched,
     setReceivedIntents,
     setBlockedLoading,
-  }: AppContext = useContext<AppContext>(Context);
+  }: ContextType = useContext<ContextType>(Context);
+  const { web3NameList }:AppContextType=useContext(AppContext);
   const [chatMeta, setChatMeta] = useState(null);
 
   const [newMessage, setNewMessage] = useState<string>('');
@@ -107,8 +113,16 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
-  //get ens name
-  const ensName = useResolveWeb3Name(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
+  //resolve web3 names
+  useResolveWeb3Name(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
+
+  // get web3 name
+  let ensName=''
+  if(!isGroup && currentChat?.wallets?.split(',')[0].toString()){
+    const walletLowercase = caip10ToWallet(currentChat?.wallets?.split(',')[0].toString()).toLowerCase();
+    const checksumWallet = ethers.utils.getAddress(walletLowercase);
+    ensName = web3NameList[checksumWallet];
+  }
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -197,6 +211,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setIsGroup(false);
     setShowGroupInfo(false);
     setMessages([]);
+
     if (currentChat) {
       setIsGroup(checkIfGroup(currentChat));
       // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
@@ -262,6 +277,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         updatedCurrentChat.msg = sendResponse;
         setChat(updatedCurrentChat);
         setNewMessage('');
+        // console.log(messages)
+        // console.log(sendResponse)
         setMessages([...messages, sendResponse]);
 
         setTimeout(() => {
@@ -298,7 +315,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       setMessageBeingSent(false);
     }
   };
-
+// console.log(messages)
   useEffect(() => {
     if (messageBeingSent == false) {
       setTimeout(() => {
@@ -415,17 +432,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         });
 
         if (typeof sendResponse === 'string') {
-          if (sendResponse.toLowerCase() === 'your wallet is not whitelisted') {
-            // Getting User Info
-            setBlockedLoading({
-              enabled: true,
-              title: 'Wallet is not whitelisted',
-              spinnerType: LOADER_SPINNER_TYPE.WHITELIST,
-              progressEnabled: true,
-              progress: 0,
-              progressNotice: 'Reminder: Push Chat is in alpha, Things might break.',
-            });
-          }
           // Display toaster
           chatBoxToast.showMessageToast({
             toastTitle: 'Error',
@@ -500,12 +506,38 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       fromProfileUsername: connectedUser.name,
       fromProfilePic: connectedUser.profilePicture,
       toPublicKeyArmored: currentChat.publicKey,
-      toProfileUsername: toUser.name,
-      toProfilePic: toUser.profilePicture,
+      toProfileUsername: null,
+      toProfilePic: currentChat.profilePicture,
       privateKeyArmored: connectedUser.privateKey,
       establishConnection: 1,
       chatId: currentChat.chatId
     });
+    // const fetchUser = async () => {
+    //   return PushAPI.user.get({
+    //     account: caip10ToWallet(currentChat.wallets.toString()),
+    //     env: appConfig.appEnv
+    //   });
+    // }
+
+    // // call the function
+    // fetchUser()
+    //   .then (toUser => {
+    //     // set video call
+    //     setVideoCallInfo({
+    //       address: caip10ToWallet(currentChat.wallets.toString()),
+    //       fromPublicKeyArmored: connectedUser.publicKey,
+    //       fromProfileUsername: connectedUser.name,
+    //       fromProfilePic: connectedUser.profilePicture,
+    //       toPublicKeyArmored: currentChat.publicKey,
+    //       toProfileUsername: toUser.name,
+    //       toProfilePic: toUser.profilePicture,
+    //       privateKeyArmored: connectedUser.privateKey,
+    //       establishConnection: 1,
+    //     });
+    //   })
+    //   .catch(e => {
+    //     console.log("Error occured in ChatModule::useEffect::callAccepted - ", e);
+    //   });
   };
 
   const InfoMessages = [
@@ -648,7 +680,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
             </SpanV2>
 
             {/* Video call button */}
-            <Tooltip
+           {!isGroup &&  <Tooltip
               tooltipContent="Video call"
               placementProps={{
                 bottom: '1.4rem',
@@ -662,7 +694,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
               <VideoCallButton onClick={startVideoCallHandler}>
                 <ImageV2 cursor="pointer" src={videoCallIcon} />
               </VideoCallButton>
-            </Tooltip>
+            </Tooltip>}
 
             {currentChat.groupInformation && (
               <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
@@ -729,16 +761,17 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                             isGroup={isGroup}
                           />
                         )}
-                        <Chats
-                          msg={
-                            isGroup && checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup })
-                              ? ''
-                              : msg
-                          }
-                          caip10={walletToCAIP10({ account: account! })}
-                          messageBeingSent={messageBeingSent}
-                          isGroup={isGroup}
-                        />
+                          <Chats
+                            msg={
+                              (!currentChat?.groupInformation?.isPublic && checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser, isGroup }))
+                                ? ''
+                                : msg
+                            }
+                            caip10={walletToCAIP10({ account: account! })}
+                            messageBeingSent={messageBeingSent}
+                            isGroup={isGroup}
+                          />
+                        
                       </div>
                     );
                   })}
@@ -747,7 +780,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                   messages={messages}
                   isGroup={isGroup}
                 />
-                {checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup }) && (
+                {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser, isGroup }) && (
                   <Chats
                     msg={{
                       ...messages[0],
@@ -766,7 +799,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
             <div ref={bottomRef}></div>
           </MessageContainer>
 
-          {checkIfIntentExist({ receivedIntents, currentChat, connectedUser }) ? null : (
+          {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser,isGroup }) ? null : (
             <>
               <Typebar
                 messageBeingSent={messageBeingSent}
@@ -778,6 +811,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                 sendIntent={sendIntent}
                 setOpenSuccessSnackBar={setOpenSuccessSnackBar}
                 setSnackbarText={setSnackbarText}
+                isJoinGroup = {(!checkIfChatExist({ chats:inbox, currentChat, connectedUser,isGroup }) && isGroup)}
+                approveIntent= {ApproveIntent}
               />
             </>
           )}

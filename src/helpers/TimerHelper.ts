@@ -29,7 +29,7 @@ export const nextDaysDateFromTimestamp = (endTimestamp: EpochTimeStamp, nextExtr
   return moment(endTimestamp).add(nextExtraDays, 'days').format(DATE_FORMAT_DDMMYY)
 }
 
-export const getAppropriateTimestamp = (time: Date):string => {
+export const convertTimestampToDateDayTime = (time: Date):string => {
   let day = new Date();
 
   if ((day.getDate() === time.getDate()) && (day.getMonth() === time.getMonth()) && (day.getFullYear() === time.getFullYear())) {

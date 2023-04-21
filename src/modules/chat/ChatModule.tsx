@@ -87,7 +87,7 @@ function Chat({ chatid }) {
 
   useEffect(()=>{
     if(connectedUser && socketData.messagesSinceLastConnection && (w2wHelper.caip10ToWallet(socketData.messagesSinceLastConnection.fromCAIP10) !== account)){
-      if(currentChat )
+      if(currentChat)
         getUpdatedChats(socketData.messagesSinceLastConnection);
       getUpdatedInbox(socketData.messagesSinceLastConnection)
     }
@@ -287,15 +287,6 @@ function Chat({ chatid }) {
 
 
   const connectUser = async (): Promise<void> => {
-    // Getting User Info
-    setBlockedLoading({
-      enabled: true,
-      title: 'Step 1/4: Getting Account Info',
-      progressEnabled: true,
-      progress: 25,
-      progressNotice: 'Important: Push Chat encryption standard is updated, you might need to sign 3-4 transactions to upgrade (required once).',
-    });
-
     const caip10:string = w2wHelper.walletToCAIP10({account});
 
     
@@ -303,11 +294,12 @@ function Chat({ chatid }) {
       await getUser();
     }
 
+
     setBlockedLoading({
       enabled: false,
-      title: "Step 4/4: Let's Chat ;)",
+      title: "Push Profile Setup Complete",
       spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
-      progressEnabled: true,
+      progressEnabled: false,
       progress: 100,
     });
 
@@ -317,10 +309,9 @@ function Chat({ chatid }) {
       // reformat chatid first
       chatid = reformatChatId(chatid);
 
-
       if(connectedUser?.wallets === caip10){
         // dynamic url
-      setCurrentTab(4);
+        setCurrentTab(4);
       }
 
       // dynamic url
@@ -440,7 +431,7 @@ function Chat({ chatid }) {
                 userShouldBeSearched,
                 setUserShouldBeSearched,
                 filteredUserData,
-                setFilteredUserData
+                setFilteredUserData,
               }}
             >
               <ChatSidebarContainer

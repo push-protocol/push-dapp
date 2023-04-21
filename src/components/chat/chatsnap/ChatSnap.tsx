@@ -1,5 +1,6 @@
 // React + Web3 Essentials
-import React from 'react';
+import React,{useContext} from 'react';
+import { ethers } from 'ethers';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -8,7 +9,9 @@ import styled, { useTheme } from 'styled-components';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
-import { getAppropriateTimestamp } from 'helpers/TimerHelper';
+import { convertTimestampToDateDayTime } from 'helpers/TimerHelper';
+import { AppContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -32,10 +35,21 @@ interface ChatSnapPropsI {
 
 // Other Information section
 const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, isGroup }: ChatSnapPropsI) => {
+  const { web3NameList }:AppContextType=useContext(AppContext);
+  let ensName = '';
+
   // get theme
   const theme = useTheme();
-  // get ens name
-  const ensName = useResolveWeb3Name(!isGroup ? username : null);
+
+  // resolve web3 names
+  useResolveWeb3Name(!isGroup ? username : null);
+
+  // get ens name from context
+  if(!isGroup){
+    const walletLowercase = caip10ToWallet(username).toLowerCase();
+    const checksumWallet = ethers.utils.getAddress(walletLowercase);
+    ensName = web3NameList[checksumWallet];
+  }
 
   // get short username
   const walletAddress = !isGroup ? caip10ToWallet(username) : null;
@@ -95,7 +109,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
       timestamp = timestamp.replace('Z', '');
     }
   
-    date = getAppropriateTimestamp(new Date(timestamp));
+    date = convertTimestampToDateDayTime(new Date(timestamp));
   }
 
   // RENDER

@@ -17,6 +17,7 @@ import * as dotenv from 'dotenv';
 import InitState from 'components/InitState';
 import { injected, ledger, walletconnect } from 'connectors';
 import NavigationContextProvider from 'contexts/NavigationContext';
+import AppContextProvider from 'contexts/AppContext';
 import { EnvHelper } from 'helpers/UtilityHelper';
 import { useEagerConnect, useInactiveListener, useSDKSocket } from 'hooks';
 import UserJourneySteps from 'segments/userJourneySteps';
@@ -175,6 +176,7 @@ export default function App() {
           <GlobalStyle />
           <InitState />
           <NavigationContextProvider>
+            <AppContextProvider>
             <Joyride
               run={run}
               steps={steps}
@@ -221,6 +223,7 @@ export default function App() {
                 </ChatUserContextProvider>
               </ContentContainer>
             </ParentContainer>
+            </AppContextProvider>
           </NavigationContextProvider>
         </>
       )}

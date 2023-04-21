@@ -60,13 +60,14 @@ const sendVideoCallNotification = async (
     }
 
     let notifRecipient;
-    // TODO: CHECK IF THIS EQUALITY IS WORKING
     if (type === PushAPI.payloads.NOTIFICATION_TYPE.BROADCAST) {
       notifRecipient = senderAddrInCaip;
     }
     if (type === PushAPI.payloads.NOTIFICATION_TYPE.TARGETTED) {
       notifRecipient = convertAddressToAddrCaip(toAddress, chainId);
     }
+
+    const notificationText = `Video Call from ${fromAddress}`;
 
     await PushAPI.payloads.sendNotification({
       senderType: 1, // for chat notification
@@ -77,8 +78,8 @@ const sendVideoCallNotification = async (
       identityType: 2,
       hidden: true,
       notification: {
-        title: 'VideoCall',
-        body: 'VideoCall',
+        title: notificationText,
+        body: notificationText,
       },
       payload: {
         title: 'VideoCall',

@@ -131,7 +131,7 @@ export interface AppContext {
   userShouldBeSearched: boolean;
   setUserShouldBeSearched: (value: boolean) => void;
   filteredUserData:User[];
-  setFilteredUserData:(value:User[])=>void;
+  setFilteredUserData:(value:User[] |IGroup[])=>void;
 }
 
 export type MessagetypeType = 'Text' | 'Image' | 'File' | 'GIF';

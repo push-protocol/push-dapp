@@ -12,15 +12,16 @@ const VideoCallContext = createContext(null);
 
 const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   const { account, library, chainId } = useWeb3React();
-
+  
   const myVideo = useRef<any>();
   const userVideo = useRef<any>();
   const connectionRef = useRef<any>();
-
+  
   // general info regarding video call
   const [me, setMe] = useState<string>('');
   const [name, setName] = useState<string>('Joe');
   const [localStream, setLocalStream] = useState<MediaStream>();
+  const[isPeerConnected, setPeerConnected] = useState<boolean>(false);
 
   // wallet to wallet video call
   const [callAccepted, setCallAccepted] = useState<boolean>(false);
@@ -53,6 +54,8 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   function endLocalStream(){
     if(localStream){
       console.log("END LOCAL STREAM")
+      const peer = connectionRef.current;
+      peer.send(JSON.stringify({ type: 'endLocalStream', endLocalStream: true }));
       window.location.reload();
       localStream.getTracks().forEach(track => track.stop());
     }
@@ -94,15 +97,20 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
   function VideoToggler(){
     if(isVideoOn === false){
-      const peer = connectionRef.current;
-      peer.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: true }));
+      if(isPeerConnected)
+      {
+        const peer = connectionRef.current;
+        peer.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: true }));
+      }
       console.log("INITIALIZE LOCAL STREAM");
       setVideoOn(true);
       restartLocalStream();
     }if(isVideoOn === true && localStream){
       console.log("STOP LOCAL STREAM");
-      const peer = connectionRef.current;
-      peer.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: false }));
+      if(isPeerConnected){
+        const peer = connectionRef.current;
+        peer.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: false }));
+      }
       setVideoOn(false);
       stopLocalStream();
     }
@@ -110,14 +118,18 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
   function AudioToggler(){
     if(isAudioOn === false){
-      const peer = connectionRef.current;
-      peer.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: true }));
+      if(isPeerConnected){
+        const peer = connectionRef.current;
+        peer.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: true }));
+      }
       console.log("RESTART AUDIO");
       setAudioOn(true);
       restartAudio();
     }if(isAudioOn === true && localStream){
-      const peer = connectionRef.current;
-      peer.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: false }));
+      if(isPeerConnected){
+        const peer = connectionRef.current;
+        peer.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: false }));
+      }
       console.log("STOP AUDIO");
       setAudioOn(false);
       stopAudio();
@@ -165,10 +177,23 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     peer.on('connect', () => {
       // wait for 'connect' event before using the data channel
-      peer.send('hey reciever, how is it going?');
-    });
-
-    peer.on('data', (data) => {
+      peer.send('hey reciever, how is it going?')
+      setPeerConnected(true);
+      if(isVideoOn === false){
+        peer.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: false }));
+      }
+      if(isAudioOn === false){
+        peer.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: false }));
+      }
+      if(isVideoOn === true){
+        peer.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: true }));
+      }
+      if(isAudioOn === true){
+        peer.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: true }));
+      }
+    })
+    
+    peer.on('data', data => {
       // got a data channel message
       console.log('got a message from reciever: ' + data)
       if(isJSON(data)){
@@ -179,6 +204,10 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         }if(dataObj.type === 'isAudioOn'){
           console.log("IS AUDIO ON", dataObj.isAudioOn);
           setIncomingAudioOn(dataObj.isAudioOn);
+        }
+        if(dataObj.type === 'endLocalStream'){
+          console.log("END LOCAL STREAM", dataObj.endLocalStream);
+          window.location.reload();
         }
       }
     })
@@ -254,6 +283,8 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
       if (!receiverPeerSignalled) {
         setRecieverPeerSignalled(true);
 
+        const notificationText = `Video Call from ${fromAddress}`;
+
         console.log('Sending Payload for answer call - Peer on Signal - Step 3', receiverPeerSignalled);
 
         sendVideoCallNotification(
@@ -266,10 +297,23 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     peer2.on('connect', () => {
       // wait for 'connect' event before using the data channel
-      peer2.send('hey caller, how is it going?');
-    });
-
-    peer2.on('data', (data) => {
+      peer2.send('hey caller, how is it going?')
+      setPeerConnected(true);
+      if(isVideoOn === false){
+        peer2.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: false }));
+      }
+      if(isAudioOn === false){
+        peer2.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: false }));
+      }
+      if(isVideoOn === true){
+        peer2.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: true }));
+      }
+      if(isAudioOn === true){
+        peer2.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: true }));
+      }
+    })
+    
+    peer2.on('data', data => {
       // got a data channel message
       console.log('got a message from caller: ' + data)
       if(isJSON(data)){
@@ -280,6 +324,10 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         }if(dataObj.type === 'isAudioOn'){
           console.log("IS AUDIO ON", dataObj.isAudioOn);
           setIncomingAudioOn(dataObj.isAudioOn);
+        }
+        if(dataObj.type === 'endLocalStream'){
+          console.log("END LOCAL STREAM", dataObj.endLocalStream);
+          window.location.reload();
         }
       }
     })
