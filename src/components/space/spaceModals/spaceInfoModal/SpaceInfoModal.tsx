@@ -70,6 +70,7 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
     <ThemeProvider theme={theme}>
       <ModalContainer
         background={theme.blurModalContentBackground}
+        padding={ showInviteMembersModal ? '24px' : '24px 0px 20px 0px' }
         ref={containerRef}
       >
         {!showInviteMembersModal && (
@@ -116,12 +117,12 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                 {shortenText(selectedSpace?.spaceInformation?.spaceCreator, 6)}'s Space
               </SpanV2>
               <Description>{selectedSpace?.spaceInformation?.spaceDescription}</Description>
-              {isAccountOwnerAdmin && selectedSpace?.members?.length < 10 && (
+              {/* {isAccountOwnerAdmin && selectedSpace?.members?.length < 10 && ( */}
                 <AddMoreMember
                   showAddMoreMemberModal={setShowInviteMembersModal}
                   title="Invite Members"
                 />
-              )}
+              {/* )} */}
               {selectedSpace?.spaceInformation?.pendingMembers?.length > 0 && (
                 <PendingMembers
                   setshowPendingRequests={setshowPendingRequests}
@@ -163,7 +164,10 @@ const ModalContainer = styled.div`
   border-radius: 16px;
   background-color: ${(props) => props.background};
   margin: 0px;
-  padding: 24px 0px 20px 0px;
+  padding: ${props => props.padding || '24px 0px 20px 0px'};
+  @media(max-width:480px){
+    max-width:90vw;
+  }
 `;
 
 const BodyContainer = styled.div`
@@ -173,6 +177,7 @@ const BodyContainer = styled.div`
   max-width: 517px;
   overflow-y: auto;
   overflow-x: hidden;
+  padding: ${(props) => props.padding};
   &&::-webkit-scrollbar {
     width: 4px;
   }
@@ -185,11 +190,11 @@ const BodyContainer = styled.div`
   @media (max-width: 600px) {
     max-height: 67vh;
     max-width: 94vw;
+    padding:0px 24px;
     &&::-webkit-scrollbar-thumb {
       border-bottom: 300px solid transparent;
     }
   }
-  padding: ${(props) => props.padding};
 `;
 
 const HostProfile = styled(ItemHV2)`

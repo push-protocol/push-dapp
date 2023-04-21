@@ -9,10 +9,16 @@ import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
 import { ProfileImage } from './ProfileImage';
 
-export const PendingMembers = ({ setshowPendingRequests, showPendingRequests, pendingMemberData, backgroundColor, pendingHeader }) => {
+export const PendingMembers = ({
+  setshowPendingRequests,
+  showPendingRequests,
+  pendingMemberData,
+  backgroundColor,
+  pendingHeader,
+}) => {
   const theme = useTheme();
   return (
-    <ItemVV2
+    <PendingMembersContainer
       border={`1px solid ${theme.default.border}`}
       borderRadius="16px"
       margin="0px 0px 15px 0px"
@@ -53,13 +59,7 @@ export const PendingMembers = ({ setshowPendingRequests, showPendingRequests, pe
         </ToggleArrowImg>
       </ItemHV2>
       {showPendingRequests && (
-        <PendingRequestContainer
-          minHeight={
-            pendingMemberData?.length < 4
-              ? 56 * pendingMemberData?.length
-              : 224
-          }
-        >
+        <PendingRequestContainer minHeight={pendingMemberData?.length < 4 ? 56 * pendingMemberData?.length : 224}>
           {pendingMemberData?.map((member) => {
             return (
               <ItemHV2
@@ -69,7 +69,12 @@ export const PendingMembers = ({ setshowPendingRequests, showPendingRequests, pe
                 padding="8px 16px"
                 margin="2px 0px 0px 0px"
               >
-                <ProfileImage imageSrc={member?.image} dimension="36px" borderRadius="50%" margin="0px 12px 0px 0px"/>
+                <ProfileImage
+                  imageSrc={member?.image}
+                  dimension="36px"
+                  borderRadius="50%"
+                  margin="0px 12px 0px 0px"
+                />
                 <SpanV2
                   fontSize="18px"
                   fontWeight="400"
@@ -82,9 +87,15 @@ export const PendingMembers = ({ setshowPendingRequests, showPendingRequests, pe
           })}
         </PendingRequestContainer>
       )}
-    </ItemVV2>
+    </PendingMembersContainer>
   );
 };
+
+const PendingMembersContainer = styled(ItemVV2)`
+  @media (max-width: 600px) {
+    max-width: 300px;
+  }
+`;
 
 const PendingRequestContainer = styled.div`
   display: flex;

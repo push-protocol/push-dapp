@@ -29,7 +29,11 @@ export const AddMoreMember = ({ showAddMoreMemberModal, title }) => {
 const AddWalletContainer = styled(ItemHV2)`
   border: 1px solid ${(props) => props.theme.default.border};
   border-radius: 16px;
+  box-sizing: border-box;
   padding: 15px 24px;
   margin-bottom: 15px;
   cursor: pointer;
+  @media(max-width:600px){
+    max-width: 300px;
+  }
 `;
