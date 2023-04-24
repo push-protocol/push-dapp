@@ -4457,7 +4457,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/utils@npm:^5.12.0":
+"@mui/utils@npm:^5.11.13, @mui/utils@npm:^5.12.0":
   version: 5.12.0
   resolution: "@mui/utils@npm:5.12.0"
   dependencies:

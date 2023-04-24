@@ -2,43 +2,52 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import { useTheme } from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import { SpaceBox, WelcomeSpaceContentBox } from 'components/space';
-import { ScheduledSpace } from 'components/space/spaceBox/ScheduledSpace';
-import { SpaceGlobalContext, SpaceLocalContext } from 'contexts';
-import { useWeb3React } from '@web3-react/core';
+import { SpaceBox } from 'components/space';
+
 
 // Internal Configs
+import { device } from 'config/Globals';
+import { SpaceLocalContext } from 'contexts';
+
 
 export const SpaceBoxSection = () => {
-  const { account } = useWeb3React();
-  const { selectedSpace } = useContext(SpaceLocalContext);
-  const { userSpaces } = useContext(SpaceGlobalContext);
   const theme = useTheme();
+  const { selectedSpace,activeTab } = useContext(SpaceLocalContext);
 
-  const [currentSpace, setCurrentSpace] = useState(null);
-
-  useEffect(() => {
-    if (selectedSpace === '') {
-      setCurrentSpace(null);
-      return;
-    }
-    
-    setCurrentSpace(userSpaces[account]?.spaces[selectedSpace]);
-  }, [selectedSpace])
 
   // RENDER
   return (
+    <SpaceBoxContainer
+    padding="10px"
+    spaceActive= {!!selectedSpace}
+  >
     <ItemVV2 justifyContent="stretch" background={theme.space.spaceBoxBg} borderRadius="24px">
-      SpaceBox Section
 
       {/* conditionally Render */}
       <SpaceBox />
-      {!currentSpace && (<WelcomeSpaceContentBox />)}
-      {currentSpace && (<ScheduledSpace currentSpace={currentSpace}  />)}
+      
     </ItemVV2>
+  </SpaceBoxContainer>
   );
 }
+
+
+
+const SpaceBoxContainer = styled(ItemVV2)`
+  @media ${device.tablet} {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 95%;
+    margin-left: ${(props) => (props.spaceActive ? '0%' : '100%')};
+    transition: margin-left 0.25s;
+    max-width: initial;
+    min-width: auto;
+    z-index: 2;
+  }
+`;

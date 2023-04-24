@@ -10,7 +10,7 @@ import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
-import { SpaceGlobalContext, SpaceLocalContextProvider } from 'contexts';
+import { SpaceGlobalContext, SpaceLocalContext, SpaceLocalContextProvider } from 'contexts';
 import { useWeb3React } from '@web3-react/core';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { getSpaceRequests, getSpaces } from 'services/space';
@@ -25,6 +25,8 @@ export const SpaceModule = ({ }) => {
   //shift getUser to app context and add type 
   const { connectedUser,getUser } = useContext(ChatUserContext);
   const { userSpaces,setSpaceRequests,setSpaces } = useContext(SpaceGlobalContext);
+  const { selectedSpace,activeTab } = useContext(SpaceLocalContext);
+
 
   useEffect(() => {
     if(connectedUser || !account || !library) return;
@@ -39,7 +41,6 @@ export const SpaceModule = ({ }) => {
     })()
   },[account,library]);
 
-console.log(connectedUser)
   useEffect(() => {
     if(!connectedUser) return;
     (async function () {
@@ -69,26 +70,17 @@ console.log(connectedUser)
     showModal: showCreateSpaceModal,
     ModalComponent: CreateSpaceModalComponent,
   } = useModalBlur();
-
+console.log(selectedSpace)
+console.log(activeTab)
+useEffect(()=>{console.log("in heree")},[selectedSpace])
   // RENDER
   return (
     <SpaceLocalContextProvider>
     <Container>
-      <SpaceSidebarContainer
-        flex="1"
-        maxWidth="310px"
-        minWidth="280px"
-        padding="10px 7px 10px 20px"
-        boxSizing="border-box"
-        background={theme.default.bg}
-      >
+    
         <SpaceSidebarSection showCreateSpaceModal={showCreateSpaceModal}/>
-      </SpaceSidebarContainer>
-      <SpaceBoxContainer
-        padding="10px"
-      >
+     
         <SpaceBoxSection />
-      </SpaceBoxContainer>
 
 
       <CreateSpaceModalComponent
@@ -98,10 +90,6 @@ console.log(connectedUser)
        modalPadding="0px"
        modalPosition={MODAL_POSITION.ON_PARENT}
       />
-
-
-
-
 
 
     </Container>
@@ -147,33 +135,4 @@ const Container = styled.div`
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 `;
 
-const SpaceSidebarContainer = styled(ItemVV2)`
-  @media ${device.tablet} {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 95%;
-    margin-right: 0%;
-    opacity: 1;
-    transition: margin-right 0.25s;
-    max-width: initial;
-    min-width: auto;
-    z-index: 1;
-  }
-`;
 
-const SpaceBoxContainer = styled(ItemVV2)`
-  @media ${device.tablet} {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 95%;
-    margin-left: 100%;
-    transition: margin-left 0.25s;
-    max-width: initial;
-    min-width: auto;
-    z-index: 2;
-  }
-`;

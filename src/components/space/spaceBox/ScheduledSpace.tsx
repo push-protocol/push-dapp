@@ -20,7 +20,6 @@ export const ScheduledSpace = ({currentSpace}:{currentSpace:Space}) => {
   const theme = useTheme();
   const [step, setStep] = useState(1);
 
-  console.log(currentSpace);
 
   return (
     <ScheduledItem theme={theme}>
