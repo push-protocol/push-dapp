@@ -60,7 +60,7 @@ const SpaceWidget = () => {
                   Live
                 </SpanV2>
               </ItemHV2>
-              <ItemHV2 justifyContent="flex-end">
+              <ItemHV2 justifyContent="flex-end" margin="4px 0 0 0">
                 {(selectedSpace?.members?.length > 3
                   ? selectedSpace?.members?.slice(0, 3)
                   : selectedSpace?.members?.slice(0, selectedSpace?.members?.length)
