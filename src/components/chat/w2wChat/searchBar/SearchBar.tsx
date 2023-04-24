@@ -134,8 +134,6 @@ const SearchBar = ({ autofilled }) => {
   const handleSearch = async (autoSearch: string = null): Promise<void> => {
     let searchText = autoSearch ? autoSearch : searchedUser;
 
-    console.log("Search text", searchText);
-
     if (!ethers.utils.isAddress(searchText)) {
       setIsLoadingSearch(true);
       let address: string;
@@ -149,11 +147,10 @@ const SearchBar = ({ autofilled }) => {
           // }
 
           address =
-            (await provider.resolveName(searchedUser)) ||
-            (await library.resolveName(searchedUser)) ||
-            (await udResolver.owner(searchedUser));
+            (await provider.resolveName(searchText)) ||
+            (await library.resolveName(searchText)) ||
+            (await udResolver.owner(searchText));
 
-          console.log("Address", address);
 
         } catch (err) {
           setInvalidSearch();
