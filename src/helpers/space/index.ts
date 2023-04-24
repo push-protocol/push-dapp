@@ -1,2 +1,2 @@
 export * from './indexedDbEndpoints';
-export * from "./checkSpaceUrl";
+export * from "./spaceUtility";

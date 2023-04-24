@@ -1,12 +1,23 @@
+import { useWeb3React } from '@web3-react/core';
+import React, { useContext } from 'react';
+
 // External Packages
 import * as PushAPI from '@pushprotocol/restapi';
 
 //Internal Configs
 import { appConfig } from 'config';
 import { spaces } from '../../services/space/spaceList';
+import { SpaceGlobalContext } from 'contexts';
+import { Space } from 'types';
+
+interface CheckSpaceReturnType {
+  spaceId: string;
+  spaceType: string;
+  spaceData: Space;
+}
 
 //add sdk call for spaces
-export const checkSpaceUrl = (url: string) => {
+export const checkIfSpaceUrl = (url: string): CheckSpaceReturnType => {
   let spaceId = '',
     messageType = '',
     spaceData = null;
@@ -20,8 +31,17 @@ export const checkSpaceUrl = (url: string) => {
 
       spaceId = spaceIdString.split(':')[1];
       messageType = 'SpaceLink';
-      spaceData = spaces[0];
+      spaceData=getSpaceData(spaceId)
     }
   }
   return { spaceId, spaceType: messageType, spaceData };
+};
+
+export const getSpaceData = (spaceId: string):Space => {
+  const { userSpaces } = useContext(SpaceGlobalContext);
+  const { account } = useWeb3React();
+
+  // use sdk call to get spaceData
+  const spaceData = userSpaces[account]?.spaces[1111];
+  return spaceData;
 };

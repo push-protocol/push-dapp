@@ -23,7 +23,7 @@ import { ReceivedMessageWrapper } from './MessageWrappers/ReceivedMessageWrapper
 import { SentMessageWrapper } from './MessageWrappers/SentMessageWrapper';
 import { SpacePreviewCard } from './spacePreviewCards';
 import { spaces } from 'services/space/spaceList';
-import { checkSpaceUrl } from 'helpers/space';
+import { checkIfSpaceUrl } from 'helpers/space';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -46,7 +46,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const time1: string = time.toLocaleTimeString('en-US');
   const date: string = time1.slice(0, -6) + ' ' + time1.slice(-2).toLowerCase();
   const { tweetId, messageType }: TwitterFeedReturnType = checkTwitterUrl({ message: msg?.messageContent });
-  const { spaceId, spaceType, spaceData } = checkSpaceUrl(msg?.messageContent);
+  const { spaceId, spaceType, spaceData } = checkIfSpaceUrl(msg?.messageContent);
   if (spaceType === 'SpaceLink') {
     msg.messageType = 'SpaceLink';
   }
