@@ -3,10 +3,11 @@ import React, { useContext } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
+import { useWeb3React } from '@web3-react/core';
 
 // Internal Components
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { SpaceLocalContext } from 'contexts';
+import { SpaceGlobalContext, SpaceLocalContext } from 'contexts';
 import { SpaceTabOption } from 'contexts';
 
 // Internal Configs
@@ -14,6 +15,8 @@ import GLOBALS from 'config/Globals';
 
 export const SpaceSidebarTabs = () => {
   const { activeTab, setActiveTab } = useContext(SpaceLocalContext);
+  const { account } = useWeb3React();
+  const { userSpaces } = useContext(SpaceGlobalContext);
   const theme = useTheme();
   return (
     <ItemVV2 justifyContent="flex-start">
@@ -51,7 +54,7 @@ export const SpaceSidebarTabs = () => {
                       fontSize="12px"
                       borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
                     >
-                      {5}
+                      {Object.keys(userSpaces[account]?.spaceRequests || {}).length}
                     </SpanV2>
                   )}
                 </ItemHV2>

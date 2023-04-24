@@ -10,10 +10,11 @@ import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 interface BlurBGPropsI {
   blur: number,
   zIndex: number | string;
+  additionalStyles?: {}
 }
 
 // Create Blur BG
-const BlurBG = ({ blur = 5, zIndex = "auto" }: BlurBGPropsI) => {
+const BlurBG = ({ blur = 5, zIndex = "auto", additionalStyles = {} }: BlurBGPropsI) => {
   return (
     <>
       {blur > 0 &&
@@ -23,6 +24,7 @@ const BlurBG = ({ blur = 5, zIndex = "auto" }: BlurBGPropsI) => {
           overflow="hidden"
           blur={blur}
           zIndex={zIndex}
+          style={additionalStyles}
         />
       }
     </>

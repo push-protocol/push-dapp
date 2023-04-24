@@ -78,7 +78,7 @@ console.log(connectedUser)
         flex="1"
         maxWidth="310px"
         minWidth="280px"
-        padding="10px 10px 10px 20px"
+        padding="10px 7px 10px 20px"
         boxSizing="border-box"
         background={theme.default.bg}
       >

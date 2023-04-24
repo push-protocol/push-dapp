@@ -8,16 +8,16 @@ import { useClickAway } from 'react-use';
 // Internal Components
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { findObject, shortenText } from 'helpers/UtilityHelper';
-import { User } from '../../../../../types/chat';
+import { User } from '../../types/chat';
 import Dropdown from 'components/Dropdown';
 import { device } from 'config/Globals';
 import AddAdmin from 'assets/chat/group-chat/addadmin.svg';
 import DismissAdmin from 'assets/chat/group-chat/dismissadmin.svg';
 import Remove from 'assets/chat/group-chat/removewallet.svg';
-import Microphone from "assets/MicrophoneStage.svg";
-import { DropdownValueType } from '../../../../Dropdown';
+import Microphone from "assets//space/MicrophoneStage.svg";
+import { DropdownValueType } from '../Dropdown';
 
-type MemberListContainerType = {
+type AddMembersType = {
   key?: number;
   memberData: User;
   handleMemberList: (member: User) => void;
@@ -27,7 +27,7 @@ type MemberListContainerType = {
   memberList?: any;
   spaces?:boolean
 };
-const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList, lightIcon, darkIcon, memberList, spaces }: MemberListContainerType) => {
+const AddMembers = ({ key, memberData, handleMembers, handleMemberList, lightIcon, darkIcon, memberList, spaces }: AddMembersType) => {
   const [selectedWallet, setSelectedWallet] = React.useState<string>(null);
   const dropdownRef = React.useRef<any>(null);
   const theme = useTheme();
@@ -151,7 +151,7 @@ const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList,
   );
 };
 
-export default MemberListContainer;
+export default AddMembers;
 
 const WalletProfileContainer = styled(ItemHV2)`
   position:unset;

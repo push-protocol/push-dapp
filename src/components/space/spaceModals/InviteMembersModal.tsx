@@ -1,34 +1,31 @@
-import GroupModalHeader from 'components/chat/w2wChat/groupChat/createGroup/GroupModalHeader';
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { device } from 'config/Globals';
+//React
 import React from 'react';
+
+//External packages
 import styled, { useTheme } from 'styled-components';
-import { ReactComponent as Clear } from 'assets/chat/group-chat/close.svg';
-import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
-import { displayDefaultUser } from 'helpers/w2w/user';
-import { ethers } from 'ethers';
-import { appConfig } from 'config';
-import { User } from 'types/chat';
-import * as w2wChatHelper from 'helpers/w2w';
-import * as PushAPI from "@pushprotocol/restapi";
-import { useWeb3React } from '@web3-react/core';
-import MemberListContainer from 'components/chat/w2wChat/groupChat/createGroup/MemberListContainer';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ReactComponent as AddDark } from 'assets/chat/group-chat/adddark.svg';
-import { ReactComponent as AddLight } from 'assets/chat/group-chat/addlight.svg';
-import useToast from 'hooks/useToast';
-import { MdError } from 'react-icons/md';
-import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
-import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
-import DisplayWallets from 'components/DisplayWallets';
+
+//Internal packages
+import ModalHeader from 'components/ModalHeader';
+import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { device } from 'config/Globals';
+import SearchWallets from 'components/searchAndAddMembers/SearchWallets';
 import { Button } from 'primaries/SharedStyling';
+import { User } from 'types/chat';
+
+
+type InviteMembersModalType = {
+    handleClose : ()=>{};
+    memberList:Array<User>;
+    setSpaceModalState: ()=>{}
+    setMemberList: ()=>{};
+  };
 
 const InviteMembersModal = ({
     handleClose,
     setSpaceModalState,
     memberList,
     setMemberList
-}) => {
+}:InviteMembersModalType) => {
 
     const theme = useTheme();
 
@@ -40,7 +37,7 @@ const InviteMembersModal = ({
 
     return (
         <Container>
-            <GroupModalHeader
+            <ModalHeader
                 title="Invite Members"
                 handleClose={handleClose}
                 handlePrevious={handlePrevious}
@@ -68,7 +65,7 @@ const InviteMembersModal = ({
                     </SpanV2>
                 </LabelContainer>
 
-                <DisplayWallets memberList={memberList} setMemberList={setMemberList} spaces={true}/>
+                <SearchWallets memberList={memberList} setMemberList={setMemberList} spaces={true}/>
 
             </ItemHV2>
 

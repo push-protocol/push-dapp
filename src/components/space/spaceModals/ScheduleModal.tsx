@@ -1,15 +1,15 @@
 // React + Web3 Essentials
+
 import React from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
 import dayjs, { Dayjs } from 'dayjs';
-import { useClickAway } from 'react-use';
 
 // Internal Components
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Button} from 'primaries/SharedStyling';
-import GroupModalHeader from 'components/chat/w2wChat/groupChat/createGroup/GroupModalHeader';
+import ModalHeader from 'components/ModalHeader';
 import CustomDatePicker from 'components/reusables/DatePicker/CustomDatePicker';
 import CustomTimePicker from 'components/reusables/DatePicker/CustomTimePicker';
 
@@ -23,6 +23,11 @@ interface IScheduleModal{
     setDateValue:(dateValue:Dayjs)=>void;
     timeValue:Dayjs;
     setTimeValue:(timeValue:Dayjs)=>void;
+}
+
+type ScheduleModalType = {
+    handleClose: ()=>{};
+    setSpaceModalState: ()=>{};
 }
 
 const ScheduleModal = ({
@@ -50,7 +55,7 @@ const ScheduleModal = ({
 
     return (
         <Container>
-            <GroupModalHeader
+            <ModalHeader
                 title="Schedule your Space"
                 handleClose={handleClose}
                 handlePrevious={handlePrevious}

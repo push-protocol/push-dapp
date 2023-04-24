@@ -37,7 +37,7 @@ import { PendingMembers } from './PendingMembers';
 import useToast from 'hooks/useToast';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { AddWalletContent } from '../createGroup/AddWalletContent';
-import GroupModalHeader from '../createGroup/GroupModalHeader';
+import ModalHeader from '../../../../ModalHeader';
 
 export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const { currentChat, setChat, inbox, receivedIntents }: AppContext = useContext<AppContext>(Context);
@@ -334,7 +334,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
       >
         {!showAddMoreWalletModal && (
           <>
-            <GroupModalHeader
+            <ModalHeader
               handleClose={handleClose}
               title={'Group Info'}
               margin={isMobile ? '0px 24px 34px 24px' : '0px 36px 34px 36px'}

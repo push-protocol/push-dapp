@@ -2,21 +2,22 @@
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
-import styled, { useTheme } from 'styled-components';
+import * as PushAPI from "@pushprotocol/restapi";
 import Picker from 'emoji-picker-react';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemHV2 } from 'components/reusables/SharedStylingV2';
-import { VideoCallInfoI } from 'sections/video/VideoCallSection';
 import { Context } from 'modules/chat/ChatModule';
+import { AppContext, VideoCallInfoI } from 'types/chat';
 import { FileMessageContent } from './Files/Files';
 import GifPicker from './Gifs/GifPicker';
-import { AppContext } from 'types/chat';
 
-// Internal Configs
-import { caip10ToWallet } from 'helpers/w2w';
+// Internal configs
+import { appConfig } from 'config';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { caip10ToWallet } from 'helpers/w2w';
 import { MessagetypeType } from '../../../../types/chat';
 
 interface ITypeBar {
@@ -83,15 +84,25 @@ const Typebar = ({
     }
   };
 
-  const handleKeyPress = (e: any): void => {
+  const handleKeyPress = async (e: any): void => {
     const x = e.keyCode;
-
+  
     // Send video request only when two users are chatting
     if (e.target.value === '/video' && currentChat.threadhash) {
+      // get to user info
+      const toUser = await PushAPI.user.get({
+        account: caip10ToWallet(currentChat.wallets.toString()),
+        env: appConfig.appEnv
+      });
+
       setVideoCallInfo({
         address: caip10ToWallet(currentChat.wallets.toString()),
         fromPublicKeyArmored: connectedUser.publicKey,
+        fromProfileUsername: connectedUser.name,
+        fromProfilePic: connectedUser.profilePicture,
         toPublicKeyArmored: currentChat.publicKey,
+        toProfileUsername: toUser.name,
+        toProfilePic: toUser.profilePicture,
         privateKeyArmored: connectedUser.privateKey,
         establishConnection: 1,
       });

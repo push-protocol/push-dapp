@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
 // External Packages
+import * as PushAPI from "@pushprotocol/restapi";
 import ReactGA from 'react-ga';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -27,16 +28,16 @@ import LoaderSpinner, {
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { VideoCallContext } from 'contexts/VideoCallContext';
+import { caip10ToWallet } from 'helpers/w2w';
 import * as w2wHelper from 'helpers/w2w/';
 import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
 import { useDeviceWidthCheck, useSDKSocket } from 'hooks';
-import useModalBlur, {MODAL_POSITION} from 'hooks/useModalBlur';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
-import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
-import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
-
+import VideoCallSection from 'sections/video/VideoCallSection';
+import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -184,25 +185,63 @@ function Chat({ chatid }) {
   const { call, callAccepted } = useContext(VideoCallContext);
   useEffect(() => {
     if (Object.keys(call).length > 0) {
-      setVideoCallInfo({
-        address: call.from,
-        fromPublicKeyArmored: connectedUser.publicKey,
-        toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
-        privateKeyArmored: connectedUser.privateKey,
-        establishConnection: 2,
-      });
+      const fetchUser = async () => {
+        return PushAPI.user.get({
+          account: caip10ToWallet(call.from),
+          env: appConfig.appEnv
+        });
+      }
+
+      // call the function
+      fetchUser()
+        .then (fromUser => {
+          // set video call
+          setVideoCallInfo({
+            address: call.from,
+            fromPublicKeyArmored: connectedUser.publicKey,
+            fromProfileUsername: fromUser.name,
+            fromProfilePic: fromUser.profilePicture,
+            toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
+            toProfileUsername: connectedUser.name,
+            toProfilePic: connectedUser.profilePicture,
+            privateKeyArmored: connectedUser.privateKey,
+            establishConnection: 2,
+          });
+        })
+        .catch(e => {
+          console.log("Error occured in ChatModule::useEffect::callAccepted - ", e);
+        });
     }
   }, [call]);
 
   useEffect(() => {
     if (callAccepted && videoCallInfo.establishConnection == 2) {
-      setVideoCallInfo({
-        address: call.from,
-        fromPublicKeyArmored: connectedUser.publicKey,
-        toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
-        privateKeyArmored: connectedUser.privateKey,
-        establishConnection: 3,
-      });
+      const fetchUser = async () => {
+        return PushAPI.user.get({
+          account: caip10ToWallet(call.from),
+          env: appConfig.appEnv
+        });
+      }
+
+      // call the function
+      fetchUser()
+        .then (fromUser => {
+          // set video call
+          setVideoCallInfo({
+            address: call.from,
+            fromPublicKeyArmored: connectedUser.publicKey,
+            fromProfileUsername: fromUser.name,
+            fromProfilePic: fromUser.profilePicture,
+            toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
+            toProfileUsername: connectedUser.name,
+            toProfilePic: connectedUser.profilePicture,
+            privateKeyArmored: connectedUser.privateKey,
+            establishConnection: 3,
+          });
+        })
+        .catch(e => {
+          console.log("Error occured in ChatModule::useEffect::callAccepted - ", e);
+        });
     }
   }, [callAccepted]);
 
@@ -247,15 +286,6 @@ function Chat({ chatid }) {
 
 
   const connectUser = async (): Promise<void> => {
-    // Getting User Info
-    setBlockedLoading({
-      enabled: true,
-      title: 'Step 1/4: Getting Account Info',
-      progressEnabled: true,
-      progress: 25,
-      progressNotice: 'Important: Push Chat encryption standard is updated, you might need to sign 3-4 transactions to upgrade (required once).',
-    });
-
     const caip10:string = w2wHelper.walletToCAIP10({account});
 
     
@@ -263,11 +293,12 @@ function Chat({ chatid }) {
       await getUser();
     }
 
+
     setBlockedLoading({
       enabled: false,
-      title: "Step 4/4: Let's Chat ;)",
+      title: "Push Profile Setup Complete",
       spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
-      progressEnabled: true,
+      progressEnabled: false,
       progress: 100,
     });
 
@@ -277,10 +308,9 @@ function Chat({ chatid }) {
       // reformat chatid first
       chatid = reformatChatId(chatid);
 
-
       if(connectedUser?.wallets === caip10){
         // dynamic url
-      setCurrentTab(4);
+        setCurrentTab(4);
       }
 
       // dynamic url
@@ -488,6 +518,7 @@ function Chat({ chatid }) {
           />
         )}
 
+        {/* TEMP */}
         {/* But video chat trumps this now!!! */}
         {videoCallInfo.establishConnection > 0 && (
           <VideoCallSection
@@ -497,7 +528,11 @@ function Chat({ chatid }) {
               setVideoCallInfo({
                 address: null,
                 fromPublicKeyArmored: null,
+                fromProfileUsername: null,
+                fromProfilePic: null,
                 toPublicKeyArmored: null,
+                toProfileUsername: null,
+                toProfilePic: null,
                 privateKeyArmored: null,
                 establishConnection: 0,
               });
