@@ -34,7 +34,7 @@
     "@mui/lab": "^5.0.0-alpha.72",
     "@mui/material": "^5.5.0",
     "@pushprotocol/ledgerlive": "latest",
-    "@pushprotocol/restapi": "latest",
+    "@pushprotocol/restapi": "^1.2.4",
     "@pushprotocol/socket": "latest",
     "@pushprotocol/uiweb": "latest",
     "@reduxjs/toolkit": "^1.7.1",

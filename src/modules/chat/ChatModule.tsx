@@ -392,7 +392,6 @@ function Chat({ chatid }) {
         }
       }
       chatid = reformatChatId(chatid);
-      // console.log(feed);
       setCurrentChat(feed);
 
       // lastly, set navigation for dynamic linking

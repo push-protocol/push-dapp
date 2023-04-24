@@ -72,10 +72,6 @@ const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
         } else {
           // send notification with id
           if (videoCallInfo.establishConnection == 1) {
-            console.log('CALLING A USER');
-            console.log('fromAddress', account);
-            console.log('toAddress', videoCallInfo.address);
-
             callUser({
               fromAddress: account,
               toAddress: videoCallInfo.address,
