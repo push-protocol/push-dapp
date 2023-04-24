@@ -61,7 +61,10 @@ const SpaceWidget = () => {
                 </SpanV2>
               </ItemHV2>
               <ItemHV2 justifyContent="flex-end">
-                {selectedSpace?.members?.slice(0, 3).map((member, index) => {
+                {(selectedSpace?.members?.length > 3
+                  ? selectedSpace?.members?.slice(0, 3)
+                  : selectedSpace?.members?.slice(0, selectedSpace?.members?.length)
+                ).map((member, index) => {
                   return (
                     <ItemVV2
                       width="31px"
@@ -90,7 +93,7 @@ const SpaceWidget = () => {
                 >
                   {selectedSpace?.members?.length > 3
                     ? `+${selectedSpace?.members?.length - 3}`
-                    : selectedSpace?.members?.length}
+                    : ``}
                 </SpanV2>
               </ItemHV2>
             </WidgetData>
@@ -145,7 +148,7 @@ const WidgetContainer = styled.div`
   }
   @media (${device.mobileL}) {
     right: ${(props) => (props.rightMarginFor === 'chat' ? '20px' : '20px')};
-    bottom: ${(props) => (props.bottomMarginFor === 'chat' ? '125px' : '40px')};
+    bottom: ${(props) => (props.bottomMarginFor === 'chat' ? '118px' : '40px')};
   }
 `;
 
