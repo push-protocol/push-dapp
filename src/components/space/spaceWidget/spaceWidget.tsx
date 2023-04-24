@@ -144,7 +144,8 @@ const WidgetContainer = styled.div`
     bottom: ${(props) => (props.bottomMarginFor === 'chat' ? '120px' : '40px')};
   }
   @media (${device.mobileL}) {
-    right: 20px;
+    right: ${(props) => (props.rightMarginFor === 'chat' ? '20px' : '20px')};
+    bottom: ${(props) => (props.bottomMarginFor === 'chat' ? '125px' : '40px')};
   }
 `;
 
