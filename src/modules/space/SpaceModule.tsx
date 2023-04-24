@@ -18,6 +18,7 @@ import { getSpaceRequestsFromIndexedDB, getSpacesFromIndexedDB } from 'helpers/s
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import CreateSpaceModal from 'components/space/spaceModals/CreateSpaceModal';
+import SpaceNotification from 'components/space/spaceNotification/spaceNotification';
 
 export const SpaceModule = () => {
   const theme = useTheme();
@@ -25,6 +26,7 @@ export const SpaceModule = () => {
   //shift getUser to app context and add type 
   const { connectedUser,getUser } = useContext(ChatUserContext);
   const { userSpaces,setSpaceRequests,setSpaces } = useContext(SpaceGlobalContext);
+  const [ showNotification, setShowNotification ]=React.useState<boolean>(false);
 
   useEffect(() => {
     if(connectedUser || !account || !library) return;
@@ -88,6 +90,8 @@ console.log(connectedUser)
         padding="10px"
       >
         <SpaceBoxSection />
+        {/* Added notification here to test it out need to be moved to notification UI */}
+        {showNotification && <SpaceNotification/>}
       </SpaceBoxContainer>
 
 
