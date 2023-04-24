@@ -100,7 +100,7 @@ console.log(connectedUser)
        onConfirm={() => {}}
        toastObject={spaceModalToast}
        modalPadding="0px"
-       modalPosition={MODAL_POSITION.ON_PARENT}
+       modalPosition={MODAL_POSITION.ON_ROOT}
       />
 
 
