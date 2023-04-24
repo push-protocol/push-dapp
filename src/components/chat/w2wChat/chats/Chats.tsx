@@ -49,12 +49,13 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const time1: string = time.toLocaleTimeString('en-US');
   const date: string = time1.slice(0, -6) + ' ' + time1.slice(-2).toLowerCase();
   const { tweetId, messageType }: TwitterFeedReturnType = checkTwitterUrl({ message: msg?.messageContent });
-  const walletAddress = shortenText(caip10ToWallet(msg.fromCAIP10)?.toLowerCase(), 6);
-  useResolveWeb3Name(msg.fromCAIP10);
-
-  const walletLowercase = caip10ToWallet(msg.fromCAIP10).toLowerCase();
-  const checksumWallet = ethers.utils.getAddress(walletLowercase);
+  const walletAddress = shortenText(caip10ToWallet(msg?.fromCAIP10)?.toLowerCase(), 6);
+  useResolveWeb3Name(msg?.fromCAIP10);
+ 
+  const walletLowercase = caip10ToWallet(msg?.fromCAIP10)?.toLowerCase();
+  const checksumWallet = walletLowercase ? ethers.utils.getAddress(walletLowercase) : null;
   const ensName = web3NameList[checksumWallet];
+  
 
   const getProfilePicture = async() =>{
     let member = getMemberDetails(currentChat,msg?.fromCAIP10);
