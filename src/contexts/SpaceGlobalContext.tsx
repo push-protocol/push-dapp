@@ -7,14 +7,14 @@ type SpaceGlobalContextType = {
   userSpaces: UserSpaces,
   setSpaces: (chats:Spaces, id:string) => void,
   setSpaceRequests: (requests:Spaces,id:string) => void,
-  userSpaceId: string,
-  setUserSpaceId: (value:string) => void,
+  joinedSpaceId: string,
+  setJoinedSpaceId: (value:string) => void,
 }
 export const SpaceGlobalContext = createContext<SpaceGlobalContextType>({} as SpaceGlobalContextType);
 
 export const SpaceGlobalContextProvider = (props) => {
   const [userSpaces, setUserSpaces] = useState<UserSpaces>({});
-  const [userSpaceId,setUserSpaceId]=useState<string>("0xsdsfsdfsdf")
+  const [joinedSpaceId,setJoinedSpaceId]=useState<string>("0xsdsfsdfsdf")
   
   const setSpaces = (spaces:Spaces, id:string) => {
     setUserSpaces(prevUserFeeds => ({
@@ -35,8 +35,8 @@ export const SpaceGlobalContextProvider = (props) => {
       userSpaces,
       setSpaceRequests,
       setSpaces,
-      userSpaceId,
-      setUserSpaceId
+      joinedSpaceId,
+      setJoinedSpaceId
       }}>
       {props.children}
     </SpaceGlobalContext.Provider>

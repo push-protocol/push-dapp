@@ -20,19 +20,19 @@ import { device } from 'config/Globals';
 
 const SpaceWidget = () => {
   const [exitOption, setExitOption] = useState<boolean>(false);
-  const { setUserSpaceId } = useContext(SpaceGlobalContext);
+  const { setJoinedSpaceId } = useContext(SpaceGlobalContext);
   const { pathname } = useLocation();
   const selectedSpace = spaces[0];
 
   const exitSpace = () => {
-    setUserSpaceId('');
+    setJoinedSpaceId('');
   };
 
   return (
     <Draggable>
       <WidgetContainer
-        bottom={pathname.split('/')[2]?.includes('chatid') ? '138px' : '20px'}
-        right={pathname.split('/')[2]?.includes('chatid') ? '47px' : '20px'}
+        bottomMarginFor={pathname.split('/')[1] === 'chat' && pathname.split('/')[2] ? 'chat' : 'other'}
+        rightMarginFor={pathname.split('/')[1] === 'chat' && pathname.split('/')[2] ? 'chat' : 'other'}
       >
         {!exitOption ? (
           <>
@@ -88,7 +88,9 @@ const SpaceWidget = () => {
                   fontWeight="500"
                   margin="0px 0px 0px 3px"
                 >
-                  +190
+                  {selectedSpace?.members?.length > 3
+                    ? `+${selectedSpace?.members?.length - 3}`
+                    : selectedSpace?.members?.length}
                 </SpanV2>
               </ItemHV2>
             </WidgetData>
@@ -133,10 +135,14 @@ const WidgetContainer = styled.div`
   border-radius: 17px;
   background: linear-gradient(87.17deg, #b6a0f5 0%, #f46ef7 57.29%, #ff95d5 100%);
   position: fixed;
-  right: ${(props) => props.right || '47px'};
-  bottom: ${(props) => props.bottom || '84px'};
+  right: ${(props) => (props.rightMarginFor === 'chat' ? '47px' : '20px')};
+  bottom: ${(props) => (props.bottomMarginFor === 'chat' ? '145px' : '20px')};
   z-index: 1001;
   cursor: pointer;
+  @media (${device.tablet}) {
+    right: ${(props) => (props.rightMarginFor === 'chat' ? '65px' : '40px')};
+    bottom: ${(props) => (props.bottomMarginFor === 'chat' ? '120px' : '40px')};
+  }
   @media (${device.mobileL}) {
     right: 20px;
   }

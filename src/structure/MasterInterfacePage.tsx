@@ -64,7 +64,7 @@ function MasterInterfacePage() {
   // Master Interface controls settings
   const [playTeaserVideo, setPlayTeaserVideo] = React.useState(false);
   const [loadTeaserVideo, setLoadTeaserVideo] = React.useState(null);
-  const {userSpaceId}=React.useContext(SpaceGlobalContext);
+  const {joinedSpaceId}=React.useContext(SpaceGlobalContext);
   const location = useLocation();
 
   // Render
@@ -157,7 +157,7 @@ function MasterInterfacePage() {
           </PreviewBG>
         </PreviewOuter>
       )}
-       {userSpaceId && <SpaceWidget/>}
+       {joinedSpaceId && <SpaceWidget/>}
     </Container>
   );
 }
