@@ -13,7 +13,6 @@ import { Space } from 'types';
 interface CheckSpaceReturnType {
   spaceId: string;
   spaceType: string;
-  spaceData: Space;
 }
 
 //add sdk call for spaces
@@ -31,10 +30,9 @@ export const checkIfSpaceUrl = (url: string): CheckSpaceReturnType => {
 
       spaceId = spaceIdString.split(':')[1];
       messageType = 'SpaceLink';
-      spaceData = getSpaceData(spaceId);
     }
   }
-  return { spaceId, spaceType: messageType, spaceData };
+  return { spaceId, spaceType: messageType};
 };
 
 export const getSpaceData = (spaceId: string): Space => {

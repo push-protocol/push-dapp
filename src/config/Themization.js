@@ -49,7 +49,7 @@ const themeLight = {
     spaceBoxBg: 'linear-gradient(179.97deg, #EEF5FF 0.02%, #ECE9FA 123.25%)',
     spaceWelcomeBackground:'#FFFFFF',
     liveSpaceCardBackground:'linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)',
-    scheduledSpaceCardBackground:'linear-gradient(87.17deg, #5C74F2 0%, #9065EC 67.25%, #8D6BEF 100%)'
+    scheduledSpaceCardBackground:'linear-gradient(87.17deg, #5C74F2 0%, #9065EC 67.25%, #8D6BEF 100%)',
     snapFocusBg: '#F4F5FA',
   },
 
@@ -293,7 +293,7 @@ const themeDark = {
     spaceBoxBg: '#282A2E',
     spaceWelcomeBackground:'#404650',
     liveSpaceCardBackground:'linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)',
-    scheduledSpaceCardBackground:'linear-gradient(87.17deg, #5C74F2 0%, #9065EC 67.25%, #8D6BEF 100%)'
+    scheduledSpaceCardBackground:'linear-gradient(87.17deg, #5C74F2 0%, #9065EC 67.25%, #8D6BEF 100%)',
     snapFocusBg: '#404650',
   },
 
