@@ -72,7 +72,7 @@ const RequestBox = () => {
                     {shortenText(filteredUserData?.spaceCreator, 6)}
                 </SpanV2>
 
-                <MoreOptions >
+                <MoreOptions>
                     <ItemHV2 padding="0px 11px 0px 0px">{theme.scheme == 'light' ? <More /> : <MoreDark />}</ItemHV2>
                 </MoreOptions>
             </HeaderContainer>
@@ -82,7 +82,7 @@ const RequestBox = () => {
                 <RequestBody filteredUserData={filteredUserData}/>
             </BodyContainer>
 
-            <SpaceTypeBar />
+            {/* <SpaceTypeBar /> */}
         </Container>
     );
 };
