@@ -3,13 +3,13 @@ import React, { useContext } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { SpaceGlobalContext, SpaceLocalContext, SpaceTabOption } from 'contexts';
 import { useWeb3React } from '@web3-react/core';
-import SpaceCard from '../spaceCard/spaceCard';
+import SpaceCard from '../spaceCard/SpaceCard';
 
 export const SpaceInbox = () => {
   const { account } = useWeb3React();
   const { userSpaces } = useContext(SpaceGlobalContext);
   const theme = useTheme();
-  console.log(userSpaces)
+  console.log(userSpaces);
   return (
     <>
       <SpanV2
@@ -22,8 +22,7 @@ export const SpaceInbox = () => {
         SPACES
       </SpanV2>
       <SpaceContainer>
-
-        {!Object.keys(userSpaces[account]?.spaces || {}).length? (
+        {!Object.keys(userSpaces[account]?.spaces || {}).length ? (
           <SpanV2
             color={theme.default.secondaryColor}
             fontSize="15px"
@@ -32,10 +31,16 @@ export const SpaceInbox = () => {
           >
             Get started by creating your space
           </SpanV2>
-        ):
-        (Object.keys(userSpaces[account]?.spaces).map((key) => (
-          <SpaceCard spaceData={userSpaces[account]?.spaces[key]} key={userSpaces[account]?.spaces[key].spaceId} borderRadius='17px'/>
-        )))}
+        ) : (
+          Object.keys(userSpaces[account]?.spaces).map((key) => (
+            <SpaceCardContainer key={userSpaces[account]?.spaces[key].spaceId}>
+              <SpaceCard
+                spaceData={userSpaces[account]?.spaces[key]}
+                borderRadius="17px"
+              />
+            </SpaceCardContainer>
+          ))
+        )}
       </SpaceContainer>
     </>
   );
@@ -51,13 +56,16 @@ const SpaceContainer = styled(ItemVV2)`
   overflow-y: auto;
   height: 85px;
   flex-flow: column;
-  padding-right:3px;
+  padding-right: 3px;
 
   &&::-webkit-scrollbar {
     width: 4px;
   }
   &&::-webkit-scrollbar-thumb {
     background: #cf1c84;
-
   }
+`;
+
+const SpaceCardContainer = styled(ItemVV2)`
+  margin-bottom: 10px;
 `;

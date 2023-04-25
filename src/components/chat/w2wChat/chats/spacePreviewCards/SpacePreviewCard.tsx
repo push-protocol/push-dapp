@@ -37,7 +37,7 @@ export const SpacePreviewCard = ({ borderRadius, spaceData, messageFrom, isGroup
     <SpacePreviewContainer
       borderRadius={borderRadius}
       background={activeSpace ? theme.space.liveSpaceCardBackground : theme.space.scheduledSpaceCardBackground}
-      width={messageFrom === 'receiver' && isGroup ? '315px' : '342px'}
+      // width={messageFrom === 'receiver' && isGroup ? '315px' : '342px'} 
     >
       <SpacePreviewHeader>
         <ItemVV2

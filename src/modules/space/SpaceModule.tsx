@@ -18,7 +18,7 @@ import { getSpaceRequestsFromIndexedDB, getSpacesFromIndexedDB } from 'helpers/s
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import CreateSpaceModal from 'components/space/spaceModals/CreateSpaceModal';
-import SpaceNotification from 'components/space/spaceNotification/spaceNotification';
+import SpaceNotification from 'components/space/spaceNotification/SpaceNotification';
 
 export const SpaceModule = () => {
   const theme = useTheme();

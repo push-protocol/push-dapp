@@ -22,8 +22,8 @@ import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import { ReceivedMessageWrapper } from './MessageWrappers/ReceivedMessageWrapper';
 import { SentMessageWrapper } from './MessageWrappers/SentMessageWrapper';
 import { SpacePreviewCard } from './spacePreviewCards';
-import { spaces } from 'services/space/spaceList';
 import { checkIfSpaceUrl, getSpaceData } from 'helpers/space';
+import SpaceCard from 'components/space/spaceSidebar/spaceCard/SpaceCard';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -83,12 +83,13 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                 background="transparent"
                 padding="0px"
               >
-                <SpacePreviewCard
+                <SpaceCard spaceData={spaceData} borderRadius="17px 2px 17px 17px" showActions={true}/>
+                {/* <SpacePreviewCard
                   isGroup={isGroup}
                   borderRadius="17px 2px 17px 17px"
                   spaceData={spaceData}
                   messageFrom="sender"
-                />
+                /> */}
               </SenderMessage>
             </SentMessageWrapper>
           ) : (
@@ -104,12 +105,13 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                 padding="0px"
                 left={isGroup ? '8px' : '34px'}
               >
-                <SpacePreviewCard
+                {/* <SpacePreviewCard
                   isGroup={isGroup}
                   borderRadius="2px 17px 17px 17px"
                   spaceData={spaceData}
                   messageFrom="receiver"
-                />
+                /> */}
+                 <SpaceCard spaceData={spaceData} borderRadius="2px 17px 17px 17px" showActions={true}/>
               </ReceivedMessage>
             </ReceivedMessageWrapper>
           )}

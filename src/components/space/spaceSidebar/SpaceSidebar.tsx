@@ -9,7 +9,7 @@ import AddIcon from '@mui/icons-material/Add';
 // Internal Components
 import { ButtonV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { SpaceLocalContext } from 'contexts';
-import Searchbar from './searchBar/searcBar';
+import Searchbar from './searchBar/Searchbar';
 import { SpaceTabOption } from 'contexts';
 import { SpaceInbox } from './spaceInbox';
 import { SpaceRequests } from './spaceRequests';

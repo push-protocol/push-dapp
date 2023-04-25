@@ -2,7 +2,7 @@ import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import React from 'react';
 import styled from 'styled-components';
 import { Space } from 'types';
-import SpaceCard from '../spaceSidebar/spaceCard/spaceCard';
+import SpaceCard from '../spaceSidebar/spaceCard/SpaceCard';
 
 const RequestBody = ({
   filteredUserData
@@ -36,7 +36,7 @@ const RequestBody = ({
             align="row"
           >
             <ReceivedMessageSpace left='34px'>
-              <SpaceCard spaceData={filteredUserData} borderRadius='0px 17px 17px 17px' showReminder={true}/>
+              <SpaceCard spaceData={filteredUserData} borderRadius='0px 17px 17px 17px' showActions={true}/>
             </ReceivedMessageSpace>
           </ReceivedMessageWrapper>
 
