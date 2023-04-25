@@ -31,9 +31,11 @@ export const SpaceModule = ({ }) => {
   const { connectedUser,getUser } = useContext(ChatUserContext);
   const { userSpaces,setSpaceRequests,setSpaces } = useContext(SpaceGlobalContext);
   // const { selectedSpace,activeTab } = useContext(SpaceLocalContext);
-  const [viewSpaceBox, setViewSpaceBox] = useState<boolean>(false);
-  const [selectedSpace, setSelectedSpace] = useState<string>('');
+  // const [viewSpaceBox, setViewSpaceBox] = useState<boolean>(false);
+  // const [selectedSpace, setSelectedSpace] = useState<string>('');
   const [ showNotification, setShowNotification ]=React.useState<boolean>(false);
+  const {selectedSpace, setSelectedSpace} = useContext(SpaceLocalContext);
+
 
   useEffect(() => {
     if(connectedUser || !account || !library) return;
@@ -78,12 +80,12 @@ export const SpaceModule = ({ }) => {
   // console.log(selectedSpace)
 // console.log(activeTab)
 useEffect(()=>{
-  console.log("in heree",selectedSpace,viewSpaceBox)
+  console.log("in heree",selectedSpace)
     if(selectedSpace) {
-      setViewSpaceBox(true);
+      // setViewSpaceBox(true);
       console.log('wow 1')
     }else{
-      setViewSpaceBox(false);
+      // setViewSpaceBox(false);
       console.log('wow 2')
     }
 },[selectedSpace]);
@@ -98,14 +100,13 @@ useEffect(()=>{
 
   // RENDER
   return (
-    <SpaceLocalContextProvider>
-      <SpaceContext.Provider value={{
-        viewSpaceBox,
-        setViewSpaceBox,
-        selectedSpace,
-        setSelectedSpace
-      }}>
-    <Container spaceActive={viewSpaceBox}>
+      // <SpaceContext.Provider value={{
+      //   viewSpaceBox,
+      //   setViewSpaceBox,
+      //   selectedSpace,
+      //   setSelectedSpace
+      // }}>
+    <Container spaceActive={!!selectedSpace}>
     <ItemHV2>
       
       <SpaceSidebarContainer
@@ -115,13 +116,13 @@ useEffect(()=>{
         padding="10px 7px 10px 20px"
         boxSizing="border-box"
         background={theme.default.bg}
-        spaceActive={viewSpaceBox}
+        spaceActive={!!selectedSpace}
       >
         <SpaceSidebarSection showCreateSpaceModal={showCreateSpaceModal}/>
       </SpaceSidebarContainer>
 
       <SpaceContainer
-        spaceActive={viewSpaceBox}
+        spaceActive={!!selectedSpace}
       >
         <SpaceBoxSection />
         {/* Added notification here to test it out need to be moved to notification UI */}
@@ -139,8 +140,7 @@ useEffect(()=>{
 
     </ItemHV2>
     </Container>
-    </SpaceContext.Provider>
-  </SpaceLocalContextProvider>
+    // </SpaceContext.Provider>
   );
 }
 

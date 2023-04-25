@@ -10,12 +10,14 @@ import Calendar from 'assets/space/calendar.svg';
 import { shortenText } from 'helpers/UtilityHelper';
 import { Space } from 'types';
 import { useNavigate } from 'react-router';
-import { NewContext } from 'types/chat';
-import {SpaceContext} from 'modules/space/SpaceModule'
+import { SpaceLocalContext } from 'contexts';
+// import { NewContext } from 'types/chat';
+// import {SpaceContext} from 'modules/space/SpaceModule'
 
 
 const SpaceCard = ({spaceData}:{spaceData:Space}) => {
-  const { selectedSpace,setSelectedSpace,setViewSpaceBox }: NewContext = useContext<NewContext>(SpaceContext);
+  const {selectedSpace, setSelectedSpace} = useContext(SpaceLocalContext);
+  // const { selectedSpace,setSelectedSpace,setViewSpaceBox }: NewContext = useContext<NewContext>(SpaceContext);
   const navigate = useNavigate();
 
   const selectSpace = (spaceData: Space) => {
