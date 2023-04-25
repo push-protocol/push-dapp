@@ -216,7 +216,7 @@ const GovModule = () => {
     setTxInProgress(true);
 
     const isAddress = await isValidAddress(newDelegatee);
-    const delegateeAddress = newDelegatee;
+    const delegateeAddress = await newDelegatee;
     console.log(isAddress);
     if (!isAddress) {
       setTxInProgress(false);
