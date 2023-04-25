@@ -9,11 +9,10 @@ import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 
 import { SpaceBox, WelcomeSpaceContentBox } from 'components/space';
 import RequestBox from 'components/space/spaceBox/RequestBox';
-import { SpaceGlobalContext, SpaceLocalContext } from 'contexts';
+import { SpaceGlobalContext, SpaceLocalContext, SpaceTabOption } from 'contexts';
 
 // Internal Configs
 import { device } from 'config/Globals';
-import { SpaceLocalContext } from 'contexts';
 
 
 export const SpaceBoxSection = () => {
@@ -31,16 +30,9 @@ export const SpaceBoxSection = () => {
       {/* SpaceBox Section */}
 
       {/* conditionally Render */}
-      {/* <SpaceBox /> */}
-      {/* <WelcomeSpaceContentBox /> */}
-
-      {selectedSpace ? (
-        <RequestBox />
-      ) : (
-        <WelcomeSpaceContentBox />
-      )}
-
-
+      {selectedSpace && activeTab === SpaceTabOption.Spaces && (<SpaceBox />)} 
+      {selectedSpace && activeTab === SpaceTabOption.Requests && (<RequestBox />)} 
+      {!selectedSpace && (<WelcomeSpaceContentBox />)}
 
     </ItemVV2>
   );
