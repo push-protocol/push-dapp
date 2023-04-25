@@ -67,7 +67,7 @@ export const spaces = [
     ],
     pendingMembers: [
       {
-        wallet: '0x4CA7f516594c3e8E74E3018a160950FB4e4C83B8',
+        wallet: '0x6CA7f516594c3e8E74E3018a160950FB4e4C83B8',
         publicKey: '',
         isAdmin: false,
         image:
@@ -84,7 +84,7 @@ export const spaces = [
     spaceName: 'Push Video: The solution to centralized video',
     isPublic: true,
     spaceDescription: 'sample space2',
-    spaceCreator: '0x459AB94401A00AdD8C6e230596Bde9B2F113E8BE',
+    spaceCreator: '0x659AB94401A00AdD8C6e230596Bde9B2F113E8BE',
     spaceId: '2220',
     scheduleAt: null,
     scheduleEnd: null,
@@ -119,7 +119,7 @@ export const spaces = [
     spaceName: 'Push Video: The solution to centralized video',
     isPublic: true,
     spaceDescription: 'sample space2',
-    spaceCreator: '0x459AB94401A00AdD8C6e230596Bde9B2F113E8BE',
+    spaceCreator: '0x759AB94401A00AdD8C6e230596Bde9B2F113E8BE',
     spaceId: '2221',
     scheduleAt: null,
     scheduleEnd: null,

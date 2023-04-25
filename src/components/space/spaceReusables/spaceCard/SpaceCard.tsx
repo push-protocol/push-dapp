@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React from 'react';
+import React, { useContext } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -13,18 +13,31 @@ import { Space } from 'types';
 import { Button } from 'primaries/SharedStyling';
 import { getSpaceStatus, getSpaceTime } from 'helpers/space';
 import { SpaceMembersIndicator } from '../spaceMembersIndicator/SpaceMembersIndicator';
+import { useNavigate } from 'react-router';
+import { SpaceLocalContext } from 'contexts';
 
 interface SpaceCardType {
+  isSidebarCard?: boolean;
   spaceData: Space;
   borderRadius: string;
   showActions?: boolean;
-  minWidth?:string;
+  minWidth?: string;
 }
 
-const SpaceCard = ({ spaceData, borderRadius, showActions, minWidth }: SpaceCardType) => {
+const SpaceCard = ({ spaceData, borderRadius, showActions, minWidth, isSidebarCard }: SpaceCardType) => {
   const spaceStatus = getSpaceStatus(spaceData?.scheduleAt, spaceData?.scheduleEnd);
-
   const theme = useTheme();
+  const { setSelectedSpace } = useContext(SpaceLocalContext);
+
+  const navigate = useNavigate();
+
+  const selectSpace = (spaceData: Space) => {
+    let spaceid = spaceData.spaceId;
+    setSelectedSpace(spaceid);
+
+    // lastly, set navigation for dynamic linking
+    navigate(`/space/${spaceid}`);
+  };
 
   const remindMe = () => {
     console.log('Will remind');
@@ -41,6 +54,7 @@ const SpaceCard = ({ spaceData, borderRadius, showActions, minWidth }: SpaceCard
         spaceStatus === 'live' ? theme.space.liveSpaceCardBackground : theme.space.scheduledSpaceCardBackground
       }
       minWidth={minWidth}
+      onClick={() => (isSidebarCard ? selectSpace(spaceData) : null)}
     >
       <SpaceCardHeader>
         <ItemVV2
@@ -144,7 +158,7 @@ const SpaceCard = ({ spaceData, borderRadius, showActions, minWidth }: SpaceCard
 
 const SpaceCardContainer = styled(ItemVV2)`
   // width: 100%;
-  min-width:${(props) => props.minWidth || '100%'};
+  min-width: ${(props) => props.minWidth || '100%'};
   box-sizing: border-box;
   justify-content: flex-start;
   padding: 16px;

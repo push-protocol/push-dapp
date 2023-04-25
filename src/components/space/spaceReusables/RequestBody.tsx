@@ -1,6 +1,11 @@
-import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+// React + Web3 Essentials
 import React from 'react';
+
+// External Packages
 import styled from 'styled-components';
+
+// Internal Components
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { Space } from 'types';
 import SpaceCard from './spaceCard/SpaceCard';
 import { useDeviceWidthCheck } from 'hooks';
@@ -38,7 +43,7 @@ const RequestBody = ({
             align="row"
           >
             <ReceivedMessageSpace left='34px'>
-              <SpaceCard spaceData={filteredUserData} borderRadius='0px 17px 17px 17px' showActions={true}minWidth={isMobile ? '358px' : '342px'}/>
+              <SpaceCard spaceData={filteredUserData} borderRadius='0px 17px 17px 17px' showActions={true} minWidth={isMobile ? '358px' : '342px'}/>
             </ReceivedMessageSpace>
           </ReceivedMessageWrapper>
 
