@@ -19,6 +19,7 @@ import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import CreateSpaceModal from 'components/space/spaceModals/CreateSpaceModal';
 import { NewContext } from 'types/chat';
+import SpaceNotification from 'components/space/spaceNotification/spaceNotification';
 
 
 export const SpaceContext = React.createContext<NewContext | null>(null);
@@ -32,8 +33,7 @@ export const SpaceModule = ({ }) => {
   // const { selectedSpace,activeTab } = useContext(SpaceLocalContext);
   const [viewSpaceBox, setViewSpaceBox] = useState<boolean>(false);
   const [selectedSpace, setSelectedSpace] = useState<string>('');
-
-
+  const [ showNotification, setShowNotification ]=React.useState<boolean>(false);
 
   useEffect(() => {
     if(connectedUser || !account || !library) return;
@@ -107,23 +107,21 @@ useEffect(()=>{
     <ItemHV2>
       
       <SpaceSidebarContainer
-          flex="1"
-          maxWidth="310px"
-          minWidth="280px"
-          padding="10px 10px 10px 20px"
-          boxSizing="border-box"
-          background={theme.default.bg}
-          spaceActive={viewSpaceBox}
-        >
-            <SpaceSidebarSection showCreateSpaceModal={showCreateSpaceModal}/>
-        </SpaceSidebarContainer>
-     
-        <SpaceContainer
-          // padding="10px 10px 10px 10px"
-          spaceActive={viewSpaceBox}
-        >
-            <SpaceBoxSection />
-        </SpaceContainer>
+        flex="1"
+        maxWidth="310px"
+        minWidth="280px"
+        padding="10px 7px 10px 20px"
+        boxSizing="border-box"
+        background={theme.default.bg}
+      >
+        <SpaceSidebarSection showCreateSpaceModal={showCreateSpaceModal}/>
+      </SpaceSidebarContainer>
+      <SpaceBoxContainer
+      >
+        <SpaceBoxSection />
+        {/* Added notification here to test it out need to be moved to notification UI */}
+        {showNotification && <SpaceNotification/>}
+      </SpaceBoxContainer>
 
 
       <CreateSpaceModalComponent
@@ -131,7 +129,7 @@ useEffect(()=>{
        onConfirm={() => {}}
        toastObject={spaceModalToast}
        modalPadding="0px"
-       modalPosition={MODAL_POSITION.ON_PARENT}
+       modalPosition={MODAL_POSITION.ON_ROOT}
       />
 
     </ItemHV2>

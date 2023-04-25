@@ -231,6 +231,8 @@ const themeLight = {
   tooltipContentDesc:"#494D5F",
   tooltipIconBorderClr: "#E6E7EC",
 
+
+  materialUIMode:'light',
   // video call
   vcBGColor: "linear-gradient(179.97deg, #EEF5FF 0.02%, #ECE9FA 123.25%)",
   vcBorderColor: "#FFFFFF",
@@ -474,6 +476,7 @@ const themeDark = {
   tooltipContentDesc: "#B6BCD6",
   tooltipIconBorderClr: "#E6E7EC",
 
+  materialUIMode:'dark',
   // video call
   vcBGColor: "#282A2E",
   vcBorderColor: "#2F3137",
