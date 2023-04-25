@@ -81,8 +81,10 @@ useEffect(()=>{
   console.log("in heree",selectedSpace,viewSpaceBox)
     if(selectedSpace) {
       setViewSpaceBox(true);
+      console.log('wow 1')
     }else{
       setViewSpaceBox(false);
+      console.log('wow 2')
     }
 },[selectedSpace]);
 
@@ -113,15 +115,18 @@ useEffect(()=>{
         padding="10px 7px 10px 20px"
         boxSizing="border-box"
         background={theme.default.bg}
+        spaceActive={viewSpaceBox}
       >
         <SpaceSidebarSection showCreateSpaceModal={showCreateSpaceModal}/>
       </SpaceSidebarContainer>
-      <SpaceBoxContainer
+
+      <SpaceContainer
+        spaceActive={viewSpaceBox}
       >
         <SpaceBoxSection />
         {/* Added notification here to test it out need to be moved to notification UI */}
         {showNotification && <SpaceNotification/>}
-      </SpaceBoxContainer>
+      </SpaceContainer>
 
 
       <CreateSpaceModalComponent
@@ -172,8 +177,6 @@ const Container = styled.div`
     height: ${(props) => (props.spaceActive ? `100vh` : `calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${globalsMargin.MINI_MODULES.MOBILE.BOTTOM })`)};
     border-radius: ${(props) => (props.spaceActive ? '0px' : GLOBALS.ADJUSTMENTS.RADIUS.LARGE )};
     overflow-y: ${(props) => (props.spaceActive ? 'scroll' : 'hidden')};
-    // padding: ${(props) => (props.spaceActive ? '30px 0 0 0' : '')};
-
 }
   `;
 
