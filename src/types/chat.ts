@@ -135,13 +135,6 @@ export interface AppContext {
   setFilteredUserData:(value:User[])=>void;
 }
 
-export interface NewContext {
-  viewSpaceBox: boolean;
-  setViewSpaceBox:(viewSpaceBox: boolean) => void;
-  selectedSpace: string;
-  setSelectedSpace: (selectedSpace: string) => void;
-}
-
 export type MessagetypeType = 'Text' | 'Image' | 'File' | 'GIF';
 
 export interface VideoCallInfoI {

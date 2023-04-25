@@ -18,11 +18,8 @@ import { getSpaceRequestsFromIndexedDB, getSpacesFromIndexedDB } from 'helpers/s
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import CreateSpaceModal from 'components/space/spaceModals/CreateSpaceModal';
-import { NewContext } from 'types/chat';
 import SpaceNotification from 'components/space/spaceNotification/spaceNotification';
 
-
-export const SpaceContext = React.createContext<NewContext | null>(null);
 
 export const SpaceModule = ({ }) => {
   const theme = useTheme();
@@ -30,9 +27,6 @@ export const SpaceModule = ({ }) => {
   //shift getUser to app context and add type 
   const { connectedUser,getUser } = useContext(ChatUserContext);
   const { userSpaces,setSpaceRequests,setSpaces } = useContext(SpaceGlobalContext);
-  // const { selectedSpace,activeTab } = useContext(SpaceLocalContext);
-  // const [viewSpaceBox, setViewSpaceBox] = useState<boolean>(false);
-  // const [selectedSpace, setSelectedSpace] = useState<string>('');
   const [ showNotification, setShowNotification ]=React.useState<boolean>(false);
   const {selectedSpace, setSelectedSpace} = useContext(SpaceLocalContext);
 
@@ -81,13 +75,6 @@ export const SpaceModule = ({ }) => {
 // console.log(activeTab)
 useEffect(()=>{
   console.log("in heree",selectedSpace)
-    if(selectedSpace) {
-      // setViewSpaceBox(true);
-      console.log('wow 1')
-    }else{
-      // setViewSpaceBox(false);
-      console.log('wow 2')
-    }
 },[selectedSpace]);
 
   const spaceModalToast = useToast();

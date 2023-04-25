@@ -17,10 +17,9 @@ import { Space } from 'types';
 import { shortenText } from 'helpers/UtilityHelper';
 import { device } from 'config/Globals';
 import { FiArrowLeft } from 'react-icons/fi'
-import { NewContext } from 'types/chat';
-import { SpaceContext } from 'modules/space';
 import { useNavigate } from 'react-router';
 import useMediaQuery from 'hooks/useMediaQuery';
+import { SpaceLocalContext } from 'contexts';
 
 
 const SpaceItem = ({currentSpace, step, setStep}) => {
@@ -124,8 +123,8 @@ const SpaceItem = ({currentSpace, step, setStep}) => {
 export const ScheduledSpace = ({currentSpace}:{currentSpace:Space}) => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { selectedSpace,setSelectedSpace,setViewSpaceBox }: NewContext = useContext<NewContext>(SpaceContext);
   const [step, setStep] = useState(1);
+  const { setSelectedSpace } = useContext(SpaceLocalContext);
   const isMobile = useMediaQuery(device.tablet);
 
   const goToSpaces = () => {

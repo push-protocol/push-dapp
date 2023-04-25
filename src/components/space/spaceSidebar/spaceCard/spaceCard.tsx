@@ -11,19 +11,15 @@ import { shortenText } from 'helpers/UtilityHelper';
 import { Space } from 'types';
 import { useNavigate } from 'react-router';
 import { SpaceLocalContext } from 'contexts';
-// import { NewContext } from 'types/chat';
-// import {SpaceContext} from 'modules/space/SpaceModule'
 
 
 const SpaceCard = ({spaceData}:{spaceData:Space}) => {
   const {selectedSpace, setSelectedSpace} = useContext(SpaceLocalContext);
-  // const { selectedSpace,setSelectedSpace,setViewSpaceBox }: NewContext = useContext<NewContext>(SpaceContext);
   const navigate = useNavigate();
 
   const selectSpace = (spaceData: Space) => {
     let spaceid = spaceData.spaceId;
     setSelectedSpace(spaceid);
-    // setViewSpaceBox(true);
 
     // lastly, set navigation for dynamic linking
     navigate(`/space/${spaceid}`);
