@@ -3,8 +3,10 @@ import styled from 'styled-components';
 
 // Internal Components
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { useDeviceWidthCheck } from 'hooks';
 
 export const ReceivedMessageWrapper = (props): JSX.Element => {
+  const isMobile = useDeviceWidthCheck('600');
   return (
     <MessageWrapper
       align={props?.align}
@@ -12,7 +14,7 @@ export const ReceivedMessageWrapper = (props): JSX.Element => {
     >
       <ItemHV2
         position="relative"
-        margin={props?.isGroup ? '0 0 0 34px' : '0px'}
+        margin={props?.isGroup ? isMobile? '0 0 0 10px':'0 0 0 34px' : '0px'}
       >
         {props?.isGroup && props?.profilePicture && props.msgType !== 'Intent' && (
           <ItemVV2

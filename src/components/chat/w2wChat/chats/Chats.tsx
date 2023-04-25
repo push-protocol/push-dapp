@@ -21,9 +21,8 @@ import Modal from '../Modal/Modal';
 import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import { ReceivedMessageWrapper } from './MessageWrappers/ReceivedMessageWrapper';
 import { SentMessageWrapper } from './MessageWrappers/SentMessageWrapper';
-import { SpacePreviewCard } from './spacePreviewCards';
 import { checkIfSpaceUrl, getSpaceData } from 'helpers/space';
-import SpaceCard from 'components/space/spaceSidebar/spaceCard/SpaceCard';
+import SpaceCard from 'components/space/spaceReusables/spaceCard/SpaceCard';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -52,7 +51,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
     msg.messageType = 'SpaceLink';
   }
 
-  console.log("time",msg.timestamp)
+  console.log('time', msg.timestamp);
 
   const walletAddress = shortenText(caip10ToWallet(msg.fromCAIP10)?.toLowerCase(), 6);
   const ensName = useResolveWeb3Name(msg.fromCAIP10);
@@ -80,16 +79,15 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper align="row-reverse">
               <SenderMessage
-                background="transparent"
+                color="transparent"
                 padding="0px"
+                width="342px"
               >
-                <SpaceCard spaceData={spaceData} borderRadius="17px 2px 17px 17px" showActions={true}/>
-                {/* <SpacePreviewCard
-                  isGroup={isGroup}
-                  borderRadius="17px 2px 17px 17px"
+                <SpaceCard
                   spaceData={spaceData}
-                  messageFrom="sender"
-                /> */}
+                  borderRadius="17px 2px 17px 17px"
+                  showActions={true}
+                />
               </SenderMessage>
             </SentMessageWrapper>
           ) : (
@@ -101,17 +99,16 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
               msgType={msg.messageType}
             >
               <ReceivedMessage
-                background="transparent"
+                color="transparent"
                 padding="0px"
+                width="342px"
                 left={isGroup ? '8px' : '34px'}
               >
-                {/* <SpacePreviewCard
-                  isGroup={isGroup}
-                  borderRadius="2px 17px 17px 17px"
+                <SpaceCard
                   spaceData={spaceData}
-                  messageFrom="receiver"
-                /> */}
-                 <SpaceCard spaceData={spaceData} borderRadius="2px 17px 17px 17px" showActions={true}/>
+                  borderRadius="2px 17px 17px 17px"
+                  showActions={true}
+                />
               </ReceivedMessage>
             </ReceivedMessageWrapper>
           )}
@@ -439,7 +436,7 @@ const ReceivedMessage = styled.div`
   box-sizing: border-box;
   position: relative;
   margin-left: ${(props) => props.left || '34px'};
-  max-width: 419px;
+  max-width: ${(props) => props.width || '419px'};
   padding: ${(props: any): string => props.padding || '5px 11px 10px 15px'};
   background: ${(props: any): string => props.color || '#ffffff'};
   text-align: left;
@@ -464,7 +461,7 @@ const SenderMessage = styled.div`
   box-sizing: border-box;
   position: relative;
   margin-right: 34px;
-  max-width: 419px;
+  max-width: ${(props) => props.width || '419px'};
   text-align: left;
   padding: ${(props: any): string => props.padding || '11px 11px 5px 15px'};
   background: ${(props: any): string => props.color || '#ca599b'};

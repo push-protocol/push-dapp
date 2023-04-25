@@ -32,7 +32,7 @@ export const checkIfSpaceUrl = (url: string): CheckSpaceReturnType => {
       messageType = 'SpaceLink';
     }
   }
-  return { spaceId, spaceType: messageType};
+  return { spaceId, spaceType: messageType };
 };
 
 export const getSpaceData = (spaceId: string): Space => {
@@ -60,8 +60,24 @@ export const getSpaceTime = (spaceScheduleTime: Date | number): string => {
   return spaceTime;
 };
 
-export const isSpaceActive = (spaceStartTime: Date | number, spaceEndTime: Date | number): boolean => {
-  const isSpaceActive = spaceStartTime <= Date.now() && spaceEndTime >= Date.now();
+export const getSpaceStatus = (spaceStartTime: Date | number, spaceEndTime: Date | number): string => {
+  let spaceStatus='';
 
-  return isSpaceActive;
+  // checks for scheduled space
+  if (spaceStartTime > Date.now()) {
+    spaceStatus = 'scheduled';
+  }
+
+  // checks for live space
+  if (spaceStartTime <= Date.now() && spaceEndTime >= Date.now()) {
+    spaceStatus = 'live';
+  }
+
+  // checks for completed space
+  // correct value is 'ended' 
+  if (spaceEndTime < Date.now()) {
+    spaceStatus = 'live';
+  }
+
+  return spaceStatus;
 };

@@ -12,7 +12,7 @@ import { SpaceGlobalContext, SpaceLocalContext } from 'contexts';
 import { useWeb3React } from '@web3-react/core';
 import { Space } from 'types';
 import { shortenText } from 'helpers/UtilityHelper';
-import SpaceCard from '../spaceSidebar/spaceCard/SpaceCard';
+import SpaceCard from '../spaceReusables/spaceCard/SpaceCard';
 import RequestBody from '../spaceReusables/RequestBody';
 
 

@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { SpaceGlobalContext, SpaceLocalContext, SpaceTabOption } from 'contexts';
 import { useWeb3React } from '@web3-react/core';
-import SpaceCard from '../spaceCard/SpaceCard';
+import SpaceCard from '../../spaceReusables/spaceCard/SpaceCard';
 
 export const SpaceInbox = () => {
   const { account } = useWeb3React();

@@ -2,7 +2,7 @@ import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import React from 'react';
 import styled from 'styled-components';
 import { Space } from 'types';
-import SpaceCard from '../spaceSidebar/spaceCard/SpaceCard';
+import SpaceCard from './spaceCard/SpaceCard';
 
 const RequestBody = ({
   filteredUserData
