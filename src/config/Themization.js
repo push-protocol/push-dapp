@@ -47,7 +47,8 @@ const themeLight = {
     color:'#000000',
     secondaryColor:'#657795',
     spaceBoxBg: 'linear-gradient(179.97deg, #EEF5FF 0.02%, #ECE9FA 123.25%)',
-    spaceWelcomeBackground:'#FFFFFF'
+    spaceWelcomeBackground:'#FFFFFF',
+    snapFocusBg: '#F4F5FA',
   },
 
   // Default Background Theme
@@ -288,7 +289,8 @@ const themeDark = {
     color:'#B6BCD6',
     secondaryColor:'#787E99',
     spaceBoxBg: '#282A2E',
-    spaceWelcomeBackground:'#404650'
+    spaceWelcomeBackground:'#404650',
+    snapFocusBg: '#404650',
   },
 
   // Header Theme

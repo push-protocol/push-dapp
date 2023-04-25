@@ -34,7 +34,7 @@ export const SpaceInbox = () => {
           </SpanV2>
         ):
         (Object.keys(userSpaces[account]?.spaces).map((key) => (
-          <SpaceCard spaceData={userSpaces[account]?.spaces[key]} />
+          <SpaceCard spaceData={userSpaces[account]?.spaces[key]} key={userSpaces[account]?.spaces[key].spaceId} borderRadius='17px'/>
         )))}
       </SpaceContainer>
     </>

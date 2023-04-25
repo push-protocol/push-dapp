@@ -28,6 +28,9 @@ export const SpaceModule = () => {
   const { userSpaces,setSpaceRequests,setSpaces } = useContext(SpaceGlobalContext);
   const [ showNotification, setShowNotification ]=React.useState<boolean>(false);
 
+
+  console.log("User Spaces in space module",userSpaces);
+
   useEffect(() => {
     if(connectedUser || !account || !library) return;
     
@@ -71,6 +74,7 @@ console.log(connectedUser)
     showModal: showCreateSpaceModal,
     ModalComponent: CreateSpaceModalComponent,
   } = useModalBlur();
+
 
   // RENDER
   return (
