@@ -1,5 +1,6 @@
 import { useWeb3React } from '@web3-react/core';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
+import moment from 'moment';
 
 // External Packages
 import * as PushAPI from '@pushprotocol/restapi';
@@ -45,17 +46,8 @@ export const getSpaceData = (spaceId: string): Space => {
 };
 
 export const getSpaceTime = (spaceScheduleTime: Date | number): string => {
-  // construct date string
-  const dateStringArray = new Date(spaceScheduleTime).toString().split(' ');
-  const dateString = dateStringArray[2] + ' ' + dateStringArray[1];
-
-  // construct time string
-  const timeStringArray = dateStringArray[4].split(':');
-  const timePeriod = Number(timeStringArray[0]) > 12 ? 'PM' : 'AM';
-  const timeData = timeStringArray[0] + ':' + timeStringArray[1] + timePeriod;
-
-  // final date string
-  const spaceTime = dateString + ' ' + timeData;
+  
+  const spaceTime= `${moment(spaceScheduleTime).format('D MMM')} at ${moment(spaceScheduleTime).format('h:mm A')}`;
 
   return spaceTime;
 };
