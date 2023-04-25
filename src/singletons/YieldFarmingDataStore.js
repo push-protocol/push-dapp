@@ -113,8 +113,6 @@ export default class YieldFarmingDataStore {
   // 1. Listen for Subscribe Async
   getPUSHPoolStats = async () => {
     return new Promise(async (resolve, reject) => {
-      const epnsToken = this.state.epnsToken;
-      const staking = this.state.staking;
       const yieldFarmingPUSH = this.state.yieldFarmingPUSH;
 
       const currentEpochPUSH = await yieldFarmingPUSH.getCurrentEpoch();
@@ -174,12 +172,7 @@ export default class YieldFarmingDataStore {
     poolStats
   ) => {
     return new Promise(async (resolve, reject) => {
-      const epnsToken = this.state.epnsToken;
-      const staking = this.state.staking;
       const yieldFarmingLP = this.state.yieldFarmingLP;
-
-      console.log("Stats",yieldFarmingLP)
-
       const currentEpochPUSH = await yieldFarmingLP.getCurrentEpoch();
       const totalEpochPUSH = (await yieldFarmingLP.NR_OF_EPOCHS()).toString();
       const genesisEpochAmount = tokenToBn(ethers.BigNumber.from(this.state.genesisEpochAmountLP));
@@ -219,7 +212,8 @@ export default class YieldFarmingDataStore {
   getUserData = async (contract) => {
     return new Promise(async (resolve, reject) => {
       if (this.state.account) {
-        const currentEpochPUSH = await contract.getCurrentEpoch();
+        const numEpoch = await contract.NR_OF_EPOCHS();
+        const currentEpochPUSH = await contract.getCurrentEpoch().then(epoch => epoch > numEpoch ? numEpoch : epoch);
         const potentialUserReward = (await this.calculateUserEpochReward(currentEpochPUSH, contract)).toFixed(2)
         const epochStakeNext = await contract.getEpochStake(
           this.state.account,
