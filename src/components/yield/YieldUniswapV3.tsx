@@ -18,18 +18,10 @@ import { toast } from 'react-toastify';
 import useToast from 'hooks/useToast';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 
-
 const bn = function (number, defaultValue = null) { if (number == null) { if (defaultValue == null) { return null } number = defaultValue } return ethers.BigNumber.from(number) }
-
-// const tokens = function (amount) { return (bn(amount).mul(bn(10).pow(18))).toString() }
-// const tokensBN = function (amount) { return (bn(amount).mul(bn(10).pow(18))) }
 const bnToInt = function (bnAmount) { return bnAmount.div(bn(10).pow(18)) }
 
 const YieldUniswapV3 = () => {
-
-    // staking contract Address - stakingV2 and stakingV2(stakingV2Abi)
-    // uniV2LP token contract address - uniV2LPToken and uniV2LPToken(uniV2LpTokenAbi)
-
     const { active, error, account, library, chainId } = useWeb3React();
     const [lpPoolStats, setLpPoolStats] = React.useState(null);
     const [userDataLP, setUserDataLP] = React.useState(null);
@@ -60,7 +52,9 @@ const YieldUniswapV3 = () => {
     const getLPPoolStats = React.useCallback(
         async () => {
             setLoading(true);
-            const lpPoolStats = await YieldFarmingDataStore.instance.getLPPoolStats();
+            
+            const poolStats = await YieldFarmingDataStore.instance.getPoolStats();
+            const lpPoolStats = await YieldFarmingDataStore.instance.getLPPoolStats(poolStats);
 
             setLpPoolStats({ ...lpPoolStats });
             setLoading(false);
@@ -72,6 +66,8 @@ const YieldUniswapV3 = () => {
         setLoadingUserData(true);
         const userDataLP = await YieldFarmingDataStore.instance.getUserData(yieldFarmingLP);
 
+        console.log("setting lp",userDataLP);
+        
         setUserDataLP({ ...userDataLP });
         setLoadingUserData(false);
     }, [yieldFarmingLP]);
@@ -80,7 +76,7 @@ const YieldUniswapV3 = () => {
     React.useEffect(() => {
         let epnsToken = new ethers.Contract(addresses.epnsToken, abis.epnsToken, library);
         let yieldFarmingPUSH = new ethers.Contract(addresses.yieldFarmPUSH, abis.yieldFarming, library);
-        let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, library);
+        let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02,library);
         setEpnsToken(epnsToken);
         setYieldFarmingPUSH(yieldFarmingPUSH);
         setUniswapV2Router02(uniswapV2Router02Instance);
@@ -101,7 +97,7 @@ const YieldUniswapV3 = () => {
             let yieldFarmingPUSH = new ethers.Contract(addresses.yieldFarmPUSH, abis.yieldFarming, signer);
             let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, signer);
 
-            let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, signer);
+            let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02,signer);
 
             setEpnsToken(epnsToken);
             setStaking(staking);
@@ -116,7 +112,7 @@ const YieldUniswapV3 = () => {
             staking,
             yieldFarmingPUSH,
             yieldFarmingLP,
-            uniswapV2Router02
+            uniswapV2Router02Instance
         );
 
         getLPPoolStats();
@@ -467,7 +463,7 @@ const YieldUniswapV3 = () => {
             <ItemVV2 margin="0px 0px 20px 0px">
                 <Heading >Uniswap V2 LP Staking Pool</Heading>
                 <SecondaryText>
-                    Current APR <SpanV2 color="#D53A94">9.89%</SpanV2>
+                    Current APR <SpanV2 color="#D53A94">{lpPoolStats?.stakingAPR}</SpanV2>
                 </SecondaryText>
             </ItemVV2>
 
