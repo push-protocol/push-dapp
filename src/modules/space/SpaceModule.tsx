@@ -31,6 +31,9 @@ export const SpaceModule = ({ }) => {
   const {selectedSpace, setSelectedSpace} = useContext(SpaceLocalContext);
 
 
+
+  console.log("User Spaces in space module",userSpaces);
+
   useEffect(() => {
     if(connectedUser || !account || !library) return;
     
@@ -84,6 +87,7 @@ useEffect(()=>{
     showModal: showCreateSpaceModal,
     ModalComponent: CreateSpaceModalComponent,
   } = useModalBlur();
+
 
   // RENDER
   return (

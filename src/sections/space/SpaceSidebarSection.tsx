@@ -20,15 +20,16 @@ export const SpaceSidebarSection = ({ showCreateSpaceModal }) => {
   const theme = useTheme();
   // RENDER
   return (
-      <ItemVV2>
-        <SpaceSidebarTabs />
-        <SpaceSidebar showCreateSpaceModal={showCreateSpaceModal} />
-        <ProfileHeader
-          setActiveTab={setActiveTab}
-          showQR={showQR}
-          setShowQR={setShowQR}
-        />
-      </ItemVV2>
+    <ItemVV2>
+      <SpaceSidebarTabs />
+      <SpaceSidebar showCreateSpaceModal={showCreateSpaceModal}/>
+      <ProfileHeader
+        setActiveTab={setActiveTab}
+        showQR={showQR}
+        setShowQR={setShowQR}
+      />
+    
+    </ItemVV2>
   );
 };
 

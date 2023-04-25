@@ -49,6 +49,7 @@ const themeLight = {
     spaceBoxBg: 'linear-gradient(179.97deg, #EEF5FF 0.02%, #ECE9FA 123.25%)',
     spaceWelcomeBackground:'#FFFFFF',
     spaceIcon :'#E5E8F7',
+    snapFocusBg: '#F4F5FA',
   },
 
   // Default Background Theme
@@ -291,6 +292,7 @@ const themeDark = {
     spaceBoxBg: '#282A2E',
     spaceWelcomeBackground:'#404650',
     spaceIcon:'#404650',
+    snapFocusBg: '#404650',
   },
 
   // Header Theme
