@@ -2,22 +2,41 @@
 import React from 'react';
 
 // External Packages
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
 import Calendar from 'assets/space/calendar.svg';
-import { ReactComponent as Space } from 'assets/space/space.svg';
+import { ReactComponent as SpaceIcon } from 'assets/space/space.svg';
 import { device } from 'config/Globals';
+import { Space } from 'types';
+import { getSpaceTime, isSpaceActive } from 'helpers/space';
 
-export const SpacePreviewCard = ({ borderRadius, background, spaceData, messageFrom, isGroup }) => {
-  const remindMe = () => {};
+interface SpacePreviewCardType {
+  borderRadius: string;
+  spaceData: Space;
+  messageFrom: string;
+  isGroup: boolean;
+}
+
+export const SpacePreviewCard = ({ borderRadius, spaceData, messageFrom, isGroup }: SpacePreviewCardType) => {
+  const activeSpace = isSpaceActive(spaceData?.scheduleAt, spaceData?.scheduleEnd);
+
+  const theme = useTheme();
+
+  const remindMe = () => {
+    console.log('Will remind');
+  };
+
+  const joinSpace = () => {
+    console.log('Joining');
+  };
 
   return (
     <SpacePreviewContainer
       borderRadius={borderRadius}
-      background={background}
+      background={activeSpace ? theme.space.liveSpaceCardBackground : theme.space.scheduledSpaceCardBackground}
       width={messageFrom === 'receiver' && isGroup ? '315px' : '342px'}
     >
       <SpacePreviewHeader>
@@ -47,13 +66,13 @@ export const SpacePreviewCard = ({ borderRadius, background, spaceData, messageF
         <HostBadge>Host</HostBadge>
       </SpacePreviewHeader>
       <Description>
-        {messageFrom === 'sender'
+        {!activeSpace
           ? spaceData?.spaceName?.length > 45
             ? spaceData?.spaceName?.slice(0, 43) + '...'
             : spaceData?.spaceName
           : `${shortenText(spaceData?.spaceCreator, 6)}'s Space`}
       </Description>
-      {messageFrom === 'sender' ? (
+      {!activeSpace ? (
         <ItemHV2
           justifyContent="flex-start"
           margin="4px 0px 0px"
@@ -75,13 +94,13 @@ export const SpacePreviewCard = ({ borderRadius, background, spaceData, messageF
             fontWeight="500"
             color="#fff"
           >
-            {spaceData?.scheduleAt ?? '30 Apr 4:30PM'}
+            {spaceData?.scheduleAt ? getSpaceTime(spaceData?.scheduleAt) : '30 Apr 4:30PM'}
           </SpanV2>
         </ItemHV2>
       ) : (
         <LiveSpaceData>
           <ItemHV2 justifyContent="flex-start">
-            <Space />
+            <SpaceIcon />
             <SpanV2
               color="#F5F5F5"
               fontSize="14px"
@@ -121,14 +140,18 @@ export const SpacePreviewCard = ({ borderRadius, background, spaceData, messageF
               fontWeight="500"
               margin="0px 0px 0px 3px"
             >
-              +{spaceData?.members?.length-3}
+              +{spaceData?.members?.length - 3}
             </SpanV2>
           </ItemHV2>
         </LiveSpaceData>
       )}
 
-      <ActionButton onClick={() => remindMe()}>
-        {messageFrom === 'sender' ? 'Remind Me' : 'Join this space'}
+      <ActionButton
+        onClick={() => {
+          activeSpace ? joinSpace() : remindMe();
+        }}
+      >
+        {activeSpace ? 'Join this space' : 'Remind Me'}
       </ActionButton>
     </SpacePreviewContainer>
   );

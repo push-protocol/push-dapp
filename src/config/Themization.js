@@ -47,7 +47,9 @@ const themeLight = {
     color:'#000000',
     secondaryColor:'#657795',
     spaceBoxBg: 'linear-gradient(179.97deg, #EEF5FF 0.02%, #ECE9FA 123.25%)',
-    spaceWelcomeBackground:'#FFFFFF'
+    spaceWelcomeBackground:'#FFFFFF',
+    liveSpaceCardBackground:'linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)',
+    scheduledSpaceCardBackground:'linear-gradient(87.17deg, #5C74F2 0%, #9065EC 67.25%, #8D6BEF 100%)'
   },
 
   // Default Background Theme
@@ -288,7 +290,9 @@ const themeDark = {
     color:'#B6BCD6',
     secondaryColor:'#787E99',
     spaceBoxBg: '#282A2E',
-    spaceWelcomeBackground:'#404650'
+    spaceWelcomeBackground:'#404650',
+    liveSpaceCardBackground:'linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)',
+    scheduledSpaceCardBackground:'linear-gradient(87.17deg, #5C74F2 0%, #9065EC 67.25%, #8D6BEF 100%)'
   },
 
   // Header Theme

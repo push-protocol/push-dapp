@@ -51,6 +51,8 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
     msg.messageType = 'SpaceLink';
   }
 
+  console.log("time",msg.timestamp)
+
   const walletAddress = shortenText(caip10ToWallet(msg.fromCAIP10)?.toLowerCase(), 6);
   const ensName = useResolveWeb3Name(msg.fromCAIP10);
 
@@ -83,7 +85,6 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                 <SpacePreviewCard
                   isGroup={isGroup}
                   borderRadius="17px 2px 17px 17px"
-                  background="linear-gradient(87.17deg, #5C74F2 0%, #9065EC 67.25%, #8D6BEF 100%)"
                   spaceData={spaceData}
                   messageFrom="sender"
                 />
@@ -105,7 +106,6 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                 <SpacePreviewCard
                   isGroup={isGroup}
                   borderRadius="2px 17px 17px 17px"
-                  background="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
                   spaceData={spaceData}
                   messageFrom="receiver"
                 />

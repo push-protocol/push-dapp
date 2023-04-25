@@ -51,8 +51,8 @@ export const spaces = [
     spaceDescription: 'sample space',
     spaceCreator: '0x842a882b4c054801F06d52181231A77e467BE41f',
     spaceId: '1111',
-    scheduleAt: null,
-    scheduleEnd: null,
+    scheduleAt: 1682402347000,
+    scheduleEnd: 1682402527000,
     status: null,
   },
   {
