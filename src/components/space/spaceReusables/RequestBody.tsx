@@ -3,10 +3,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { Space } from 'types';
 import SpaceCard from './spaceCard/SpaceCard';
+import { useDeviceWidthCheck } from 'hooks';
 
 const RequestBody = ({
   filteredUserData
 }: { filteredUserData: Space }) => {
+  const isMobile = useDeviceWidthCheck(480);
   return (
     <Container>
 
@@ -36,7 +38,7 @@ const RequestBody = ({
             align="row"
           >
             <ReceivedMessageSpace left='34px'>
-              <SpaceCard spaceData={filteredUserData} borderRadius='0px 17px 17px 17px' showActions={true}/>
+              <SpaceCard spaceData={filteredUserData} borderRadius='0px 17px 17px 17px' showActions={true}minWidth={isMobile ? '358px' : '342px'}/>
             </ReceivedMessageSpace>
           </ReceivedMessageWrapper>
 

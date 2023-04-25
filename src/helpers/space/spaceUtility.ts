@@ -76,7 +76,7 @@ export const getSpaceStatus = (spaceStartTime: Date | number, spaceEndTime: Date
   // checks for completed space
   // correct value is 'ended' 
   if (spaceEndTime < Date.now()) {
-    spaceStatus = 'live';
+    spaceStatus = 'scheduled';
   }
 
   return spaceStatus;

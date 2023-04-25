@@ -22,6 +22,7 @@ import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import { ReceivedMessageWrapper } from './MessageWrappers/ReceivedMessageWrapper';
 import { SentMessageWrapper } from './MessageWrappers/SentMessageWrapper';
 import { checkIfSpaceUrl, getSpaceData } from 'helpers/space';
+import { useDeviceWidthCheck } from 'hooks';
 import SpaceCard from 'components/space/spaceReusables/spaceCard/SpaceCard';
 
 // Internal Configs
@@ -38,6 +39,7 @@ interface ChatProps {
 
 export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, isGroup }: ChatProps) {
   const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const isMobile = useDeviceWidthCheck(480);
   const [showImageModal, setShowImageModal] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string>('');
   const [profilePicture, setProfilePicture] = useState<string>('');
@@ -87,6 +89,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                   spaceData={spaceData}
                   borderRadius="17px 2px 17px 17px"
                   showActions={true}
+                  minWidth={isMobile ? '358px' : '342px'}
                 />
               </SenderMessage>
             </SentMessageWrapper>
@@ -108,6 +111,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                   spaceData={spaceData}
                   borderRadius="2px 17px 17px 17px"
                   showActions={true}
+                  minWidth={isMobile ? '305px' : '342px'}
                 />
               </ReceivedMessage>
             </ReceivedMessageWrapper>

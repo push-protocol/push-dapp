@@ -12,15 +12,16 @@ import { shortenText } from 'helpers/UtilityHelper';
 import { Space } from 'types';
 import { Button } from 'primaries/SharedStyling';
 import { getSpaceStatus, getSpaceTime } from 'helpers/space';
-import { SpaceMembersIndicator } from '../spaceMembers/SpaceMembersIndicator';
+import { SpaceMembersIndicator } from '../spaceMembersIndicator/SpaceMembersIndicator';
 
 interface SpaceCardType {
   spaceData: Space;
   borderRadius: string;
   showActions?: boolean;
+  minWidth?:string;
 }
 
-const SpaceCard = ({ spaceData, borderRadius, showActions }: SpaceCardType) => {
+const SpaceCard = ({ spaceData, borderRadius, showActions, minWidth }: SpaceCardType) => {
   const spaceStatus = getSpaceStatus(spaceData?.scheduleAt, spaceData?.scheduleEnd);
 
   const theme = useTheme();
@@ -39,6 +40,7 @@ const SpaceCard = ({ spaceData, borderRadius, showActions }: SpaceCardType) => {
       background={
         spaceStatus === 'live' ? theme.space.liveSpaceCardBackground : theme.space.scheduledSpaceCardBackground
       }
+      minWidth={minWidth}
     >
       <SpaceCardHeader>
         <ItemVV2
@@ -141,14 +143,11 @@ const SpaceCard = ({ spaceData, borderRadius, showActions }: SpaceCardType) => {
 };
 
 const SpaceCardContainer = styled(ItemVV2)`
-  width: 100%;
-  min-width: 342px;
+  // width: 100%;
+  min-width:${(props) => props.minWidth || '100%'};
   box-sizing: border-box;
   justify-content: flex-start;
   padding: 16px;
-  @media (max-width: 480px) {
-    min-width: 315px;
-  }
 `;
 
 const SpaceCardHeader = styled(ItemHV2)`
