@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React from 'react';
+import React, { useContext } from 'react';
 
 // External Packages
 import styled from 'styled-components';
@@ -11,14 +11,30 @@ import { shortenText } from 'helpers/UtilityHelper';
 import { Space } from 'types';
 import { Button } from 'primaries/SharedStyling';
 
+import { useNavigate } from 'react-router';
+import { SpaceLocalContext } from 'contexts';
+
+
 
 const SpaceCard = ({
   spaceData,
   borderRadius,
   showReminder
 }: { spaceData: Space, borderRadius: string,showReminder?:boolean }) => {
+
+ const {selectedSpace, setSelectedSpace} = useContext(SpaceLocalContext);
+  const navigate = useNavigate();
+
+  const selectSpace = (spaceData: Space) => {
+    let spaceid = spaceData.spaceId;
+    setSelectedSpace(spaceid);
+
+    // lastly, set navigation for dynamic linking
+    navigate(`/space/${spaceid}`);
+  };
+  
   return (
-    <SpaceCardContainer borderRadius={borderRadius}>
+    <SpaceCardContainer borderRadius={borderRadius} onClick={()=>selectSpace(spaceData)}>
       <SpaceCardHeader>
         <ItemVV2
           width="32px"

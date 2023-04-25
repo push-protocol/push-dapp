@@ -8,6 +8,7 @@ import styled from 'styled-components';
 // Internal Components
 import { SectionV2 } from 'components/reusables/SharedStylingV2';
 import { SpaceModule } from 'modules/space';
+import { SpaceLocalContextProvider } from 'contexts';
 
 // Internal Configs
 
@@ -19,9 +20,11 @@ const SpacePage = () => {
   
   // RENDER
   return (
+    <SpaceLocalContextProvider>
     <Container>
       <SpaceModule />
     </Container>
+    </SpaceLocalContextProvider>
   );
 }
 export default SpacePage;
