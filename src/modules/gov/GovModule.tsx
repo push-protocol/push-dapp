@@ -216,6 +216,7 @@ const GovModule = () => {
     setTxInProgress(true);
 
     const isAddress = await isValidAddress(newDelegatee);
+    const delegateeAddress = await newDelegatee;
     console.log(isAddress);
     if (!isAddress) {
       setTxInProgress(false);
@@ -240,7 +241,7 @@ const GovModule = () => {
     }
 
     if (transactionMode === 'withgas') {
-      executeDelegateTx({ newDelegatee, epnsToken, toast, setTxInProgress, library, LoaderToast });
+      executeDelegateTx({ delegateeAddress, epnsToken, toast, setTxInProgress, library, LoaderToast });
       return;
     }
     if (tokenBalance < PUSH_BALANCE_TRESHOLD) {
@@ -257,8 +258,9 @@ const GovModule = () => {
       setTxInProgress(false);
       return;
     }
+    console.log(newDelegatee,'lets see');
     await createTransactionObject({
-      newDelegatee,
+      delegateeAddress,
       account,
       epnsToken,
       addresses,

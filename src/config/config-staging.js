@@ -13,7 +13,7 @@ export const config = {
   pushNodeApiVersion: 1,
   apiUrl: 'https://backend-staging.epns.io/apis',
   w2wApiUrl: 'https://backend-staging.epns.io/apis',
-  toolingApiUrl: 'https://tooling.epns.io/apis',
+  toolingApiUrl: 'https://staging-tooling.epns.io/apis',
 
   ipfsInfuraAPIKey: process.env.REACT_APP_IPFS_INFURA_API_KEY || '22rfiNb1J645FdehoqbKMpLbF6V',
   ipfsInfuraAPISecret: process.env.REACT_APP_IPFS_INFURA_API_SECRET || 'a757597f020425c3ae532e6be84de552',
