@@ -38,7 +38,7 @@ const VideoPlayer = ({ videoCallInfo, localVideoStyles }: VideoPlayerType) => {
           className={callAccepted && !callEnded ? !localStream.getVideoTracks()[0].enabled ? 'connectionAccepted videoOff' : 'connectionAccepted videoOn' : null}
           style={localVideoStyles}
         >
-          <LocalVideo ref={localVideoRef} />
+          <LocalVideo ref={localVideoRef} muted />
           {!localStream.getVideoTracks()[0].enabled ? (
             <VideoDisabledContainer>
               <PfpContainerMini>
