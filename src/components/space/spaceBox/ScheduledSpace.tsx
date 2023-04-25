@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -15,104 +15,138 @@ import {ReactComponent as TwitterSVG} from 'assets/space/Twitter.svg'
 import {ReactComponent as LinkSVG} from 'assets/space/Link.svg'
 import { Space } from 'types';
 import { shortenText } from 'helpers/UtilityHelper';
+import { device } from 'config/Globals';
+import { FiArrowLeft } from 'react-icons/fi'
+import { NewContext } from 'types/chat';
+import { SpaceContext } from 'modules/space';
+import { useNavigate } from 'react-router';
+import useMediaQuery from 'hooks/useMediaQuery';
+
+
+const SpaceItem = ({currentSpace, step, setStep}) => {
+  const theme = useTheme();
+
+  return(
+    <ScheduledItem theme={theme}>
+          <CardItem>
+
+          <TopItem>
+            <DivItem>
+              <Image src={currentSpace.spaceImage}></Image>
+              <P color='#fff' margin="0px 20px" size="17px" weight="500">{shortenText(currentSpace?.spaceCreator,5,5)}</P>
+              <SpanV2 background='rgba(255, 255, 255, 0.2)' color='#ffff' borderRadius="8px" fontSize="12px" fontWeight="500" padding="8px">Host</SpanV2>
+            </DivItem>
+            
+          
+          
+          <ItemTop>
+            <ButtonItem radius='8px' bg='transparent' color='#fff' border='1px solid white' margin='0 10px 0 0'style={{whiteSpace:'nowrap'}}>Edit Space</ButtonItem>
+            <Settings />
+          </ItemTop>
+
+          </TopItem>
+
+          <Div>
+            <P color='#fff' margin="50px 0px 5px 0px" size="28px" weight="500">{shortenText(currentSpace?.spaceCreator,5,5)}’s Space</P>
+            <P color='#fff' margin="0px 0px" size="16px" weight="400">{currentSpace.spaceName}</P>
+
+          <DateSection>
+            <Div><AiOutlineCalendar color='#fff' size={25} /></Div>
+            <P size="14px" weight="500" margin='0px 10px' color='#ffff'>{currentSpace?.scheduleAt ?? '30 Apr 4:30PM'}</P>
+          </DateSection>
+
+          </Div>
+          </CardItem>
+          
+
+
+          <DivCard step={step}>
+            <Div>
+                <ScheduledSpaceSVG />
+            </Div>
+            
+            {step === 1 && (<><P size="16px" weight="500" margin='10px 0px 5px 0px' color={theme.snackbarBorderText}>
+              Your space is scheduled. 
+            </P>
+            <P size="16px" weight="500" margin='0px 10px' color={theme.snackbarBorderText}>
+              Share and let people know when to join!
+            </P></>)}
+
+          
+
+            {step === 2 && (<P size="16px" weight="500" margin='10px 10px 0px 10px' color={theme.snackbarBorderText}>
+              This space will go live on 5 Apr at 9:00 AM
+            </P>)}
+
+            {step === 3 && (<P size="16px" weight="500" margin='10px 10px' color={theme.snackbarBorderText}>
+              It’s time to start your space
+            </P>)}
+
+            <SpaceLink>
+
+            {step === 2 && (<SpaceDiv>
+              <ButtonDiv margin="20px 0px 0px 0px">Remind Me</ButtonDiv>
+            </SpaceDiv>)}
+
+            {step === 3 && (<SpaceDiv>
+              <ButtonDiv padding="16px 54px" margin="0px 0px 0px 0px">Start this space</ButtonDiv>
+            </SpaceDiv>)}
+            
+
+            {(step === 1 || step === 2) && (<LinkSection>
+              <LinkDiv>
+                <LinkIcon><TwitterSVG className='svg' /></LinkIcon>
+                <P size="12px" weight="200" margin='10px 0px' color={theme.snackbarBorderText}>Twitter</P>
+              </LinkDiv>
+
+              <LinkDiv>
+                <LinkIcon><LensterSVG  className='svg' /></LinkIcon>
+                <P size="12px" weight="200" margin='10px 0px' color={theme.snackbarBorderText}>Lenster</P>
+              </LinkDiv>
+
+              <LinkDiv>
+                <LinkIcon><LinkSVG  className='svg' /></LinkIcon>
+                <P size="12px" weight="200" margin='10px 0px' color={theme.snackbarBorderText}>Copy Link</P>
+              </LinkDiv>
+
+              <LinkDiv>
+                <LinkIcon><EmailSVG  className='svg' /></LinkIcon>
+                <P size="12px" weight="200" margin='10px 0px' color={theme.snackbarBorderText}>Email</P>
+              </LinkDiv>
+            </LinkSection>)}
+
+            </SpaceLink>
+          </DivCard>
+        </ScheduledItem>
+  )
+}
 
 export const ScheduledSpace = ({currentSpace}:{currentSpace:Space}) => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const { selectedSpace,setSelectedSpace,setViewSpaceBox }: NewContext = useContext<NewContext>(SpaceContext);
   const [step, setStep] = useState(1);
+  const isMobile = useMediaQuery(device.tablet);
+
+  const goToSpaces = () => {
+    setSelectedSpace(null);
+
+    // lastly, set navigation for dynamic linking
+    navigate(`/space`);
+  };
 
 
   return (
-    <ScheduledItem theme={theme}>
-      <CardItem>
+    <>{isMobile ? (<ScrollView isMobile={isMobile}>
+      <MobileTopView onClick={()=>goToSpaces()}>
+        <Div><FiArrowLeft size={25} color={theme.snackbarBorderText} /></Div>
+        <P color={theme.snackbarBorderText} margin="0px 20px" size="19px" weight="500">{shortenText(currentSpace?.spaceCreator,5,5)}’s Space</P>
+      </MobileTopView>
 
-      <TopItem>
-        <DivItem>
-          <Image src={currentSpace.spaceImage}></Image>
-          <P color='#fff' margin="0px 20px" size="17px" weight="500">{shortenText(currentSpace?.spaceCreator,5,5)}</P>
-          <SpanV2 background='rgba(255, 255, 255, 0.2)' color='#ffff' borderRadius="8px" fontSize="12px" fontWeight="500" padding="8px">Host</SpanV2>
-        </DivItem>
-        
-      
-      
-      <ItemTop>
-        <ButtonItem radius='8px' bg='transparent' color='#fff' border='1px solid white' margin='0 10px 0 0'style={{whiteSpace:'nowrap'}}>Edit Space</ButtonItem>
-        <Settings />
-      </ItemTop>
-
-      </TopItem>
-
-      <Div>
-        <P color='#fff' margin="50px 0px 5px 0px" size="28px" weight="500">{shortenText(currentSpace?.spaceCreator,5,5)}’s Space</P>
-        <P color='#fff' margin="0px 0px" size="16px" weight="400">{currentSpace.spaceName}</P>
-
-       <DateSection>
-        <Div><AiOutlineCalendar color='#fff' size={25} /></Div>
-        <P size="14px" weight="500" margin='0px 10px' color='#ffff'>{currentSpace?.scheduleAt ?? '30 Apr 4:30PM'}</P>
-      </DateSection>
-
-      </Div>
-      </CardItem>
-      
-
-
-      <DivCard step={step}>
-        <Div>
-            <ScheduledSpaceSVG />
-        </Div>
-        
-        {step === 1 && (<><P size="16px" weight="500" margin='10px 0px 5px 0px' color={theme.snackbarBorderText}>
-          Your space is scheduled. 
-        </P>
-        <P size="16px" weight="500" margin='0px 10px' color={theme.snackbarBorderText}>
-          Share and let people know when to join!
-        </P></>)}
-
-       
-
-        {step === 2 && (<P size="16px" weight="500" margin='10px 10px 0px 10px' color={theme.snackbarBorderText}>
-          This space will go live on 5 Apr at 9:00 AM
-        </P>)}
-
-        {step === 3 && (<P size="16px" weight="500" margin='10px 10px' color={theme.snackbarBorderText}>
-          It’s time to start your space
-        </P>)}
-
-        <SpaceLink>
-
-        {step === 2 && (<SpaceDiv>
-           <ButtonDiv margin="20px 0px 0px 0px">Remind Me</ButtonDiv>
-        </SpaceDiv>)}
-
-        {step === 3 && (<SpaceDiv>
-           <ButtonDiv padding="16px 54px" margin="0px 0px 0px 0px">Start this space</ButtonDiv>
-        </SpaceDiv>)}
-        
-
-        {(step === 1 || step === 2) && (<LinkSection>
-          <LinkDiv>
-             <LinkIcon><TwitterSVG className='svg' /></LinkIcon>
-             <P size="12px" weight="200" margin='10px 0px' color={theme.snackbarBorderText}>Twitter</P>
-          </LinkDiv>
-
-          <LinkDiv>
-             <LinkIcon><LensterSVG  className='svg' /></LinkIcon>
-             <P size="12px" weight="200" margin='10px 0px' color={theme.snackbarBorderText}>Lenster</P>
-          </LinkDiv>
-
-          <LinkDiv>
-             <LinkIcon><LinkSVG  className='svg' /></LinkIcon>
-             <P size="12px" weight="200" margin='10px 0px' color={theme.snackbarBorderText}>Copy Link</P>
-          </LinkDiv>
-
-          <LinkDiv>
-             <LinkIcon><EmailSVG  className='svg' /></LinkIcon>
-             <P size="12px" weight="200" margin='10px 0px' color={theme.snackbarBorderText}>Email</P>
-          </LinkDiv>
-        </LinkSection>)}
-
-        </SpaceLink>
-      </DivCard>
-    </ScheduledItem>
+      <SpaceItem currentSpace={currentSpace} step={step} setStep={setStep} />   
+    </ScrollView>) : 
+    (<SpaceItem currentSpace={currentSpace} step={step} setStep={setStep} /> )}
+    </>
   )
 }
 
@@ -286,9 +320,26 @@ const Image = styled.img`
 `
 
 const Settings = styled(AiOutlineMore)`
-  width: 20.73px;
-  height: 22px;
+  width: 27px;
+  height: 30px;
   cursor: pointer;
   color: white;
   // transition: 400ms;
+`;
+
+const MobileTopView = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 15px 0px;
+`;
+
+const ScrollView = styled.div`
+  @media (max-width: 768px) {
+    padding: 16px;
+    box-sizing: border-box;
+    background: ${(props) => props.theme.modalContentBackground};
+  }
+    
 `;

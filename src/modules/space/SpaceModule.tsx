@@ -1,12 +1,12 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { SpaceBoxSection, SpaceSidebarSection } from 'sections/space';
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
@@ -18,6 +18,10 @@ import { getSpaceRequestsFromIndexedDB, getSpacesFromIndexedDB } from 'helpers/s
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import CreateSpaceModal from 'components/space/spaceModals/CreateSpaceModal';
+import { NewContext } from 'types/chat';
+
+
+export const SpaceContext = React.createContext<NewContext | null>(null);
 
 export const SpaceModule = ({ }) => {
   const theme = useTheme();
@@ -25,7 +29,10 @@ export const SpaceModule = ({ }) => {
   //shift getUser to app context and add type 
   const { connectedUser,getUser } = useContext(ChatUserContext);
   const { userSpaces,setSpaceRequests,setSpaces } = useContext(SpaceGlobalContext);
-  const { selectedSpace,activeTab } = useContext(SpaceLocalContext);
+  // const { selectedSpace,activeTab } = useContext(SpaceLocalContext);
+  const [viewSpaceBox, setViewSpaceBox] = useState<boolean>(false);
+  const [selectedSpace, setSelectedSpace] = useState<string>('');
+
 
 
   useEffect(() => {
@@ -63,6 +70,22 @@ export const SpaceModule = ({ }) => {
     })()
   },[connectedUser]);
 
+  // useEffect(()=>{
+  //   setViewSpaceBox(true)
+  // },[account])
+
+
+  // console.log(selectedSpace)
+// console.log(activeTab)
+useEffect(()=>{
+  console.log("in heree",selectedSpace,viewSpaceBox)
+    if(selectedSpace) {
+      setViewSpaceBox(true);
+    }else{
+      setViewSpaceBox(false);
+    }
+},[selectedSpace]);
+
   const spaceModalToast = useToast();
 
   const {
@@ -70,17 +93,37 @@ export const SpaceModule = ({ }) => {
     showModal: showCreateSpaceModal,
     ModalComponent: CreateSpaceModalComponent,
   } = useModalBlur();
-console.log(selectedSpace)
-console.log(activeTab)
-useEffect(()=>{console.log("in heree")},[selectedSpace])
+
   // RENDER
   return (
     <SpaceLocalContextProvider>
-    <Container>
-    
-        <SpaceSidebarSection showCreateSpaceModal={showCreateSpaceModal}/>
+      <SpaceContext.Provider value={{
+        viewSpaceBox,
+        setViewSpaceBox,
+        selectedSpace,
+        setSelectedSpace
+      }}>
+    <Container spaceActive={viewSpaceBox}>
+    <ItemHV2>
+      
+      <SpaceSidebarContainer
+          flex="1"
+          maxWidth="310px"
+          minWidth="280px"
+          padding="10px 10px 10px 20px"
+          boxSizing="border-box"
+          background={theme.default.bg}
+          spaceActive={viewSpaceBox}
+        >
+            <SpaceSidebarSection showCreateSpaceModal={showCreateSpaceModal}/>
+        </SpaceSidebarContainer>
      
-        <SpaceBoxSection />
+        <SpaceContainer
+          // padding="10px 10px 10px 10px"
+          spaceActive={viewSpaceBox}
+        >
+            <SpaceBoxSection />
+        </SpaceContainer>
 
 
       <CreateSpaceModalComponent
@@ -91,8 +134,9 @@ useEffect(()=>{console.log("in heree")},[selectedSpace])
        modalPosition={MODAL_POSITION.ON_PARENT}
       />
 
-
+    </ItemHV2>
     </Container>
+    </SpaceContext.Provider>
   </SpaceLocalContextProvider>
   );
 }
@@ -108,7 +152,7 @@ const Container = styled.div`
 	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	flex: initial;
 	justify-content: center;
 	position: relative;
@@ -122,17 +166,49 @@ const Container = styled.div`
   
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${
-  globalsMargin.MINI_MODULES.TABLET.BOTTOM
-});
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${ globalsMargin.MINI_MODULES.TABLET.BOTTOM });
   }
 
   @media ${device.mobileL} {
-    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${
-  globalsMargin.MINI_MODULES.MOBILE.BOTTOM
-});
-    border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+    margin: ${(props) => (props.spaceActive ? GLOBALS.ADJUSTMENTS.MARGIN.BIG_MODULES.MOBILE : GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE)};
+    height: ${(props) => (props.spaceActive ? `100vh` : `calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${globalsMargin.MINI_MODULES.MOBILE.BOTTOM })`)};
+    border-radius: ${(props) => (props.spaceActive ? '0px' : GLOBALS.ADJUSTMENTS.RADIUS.LARGE )};
+    overflow-y: ${(props) => (props.spaceActive ? 'scroll' : 'hidden')};
+    // padding: ${(props) => (props.spaceActive ? '30px 0 0 0' : '')};
+
+}
+  `;
+
+  const SpaceSidebarContainer = styled(ItemVV2)`
+  @media ${device.tablet} {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 95%;
+    margin-right: ${(props) => (props.spaceActive ? '20%' : '0%')};
+    opacity: ${(props) => (props.spaceActive ? '0' : '1')};
+    transition: margin-right 0.25s;
+    max-width: initial;
+    min-width: auto;
+    z-index: 1;
+  }
 `;
 
+
+  const SpaceContainer = styled(ItemVV2)`
+  @media ${device.tablet} {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin-left: ${(props) => (props.spaceActive ? '0%' : '100%')};
+    transition: margin-left 0.25s;
+    max-width: initial;
+    min-width: auto;
+    z-index: 2;
+    background: white;
+  }
+`;
 

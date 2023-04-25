@@ -9,11 +9,14 @@ import { SpaceGlobalContext, SpaceLocalContext } from 'contexts';
 import { useWeb3React } from '@web3-react/core';
 import { WelcomeSpaceContentBox } from './WelcomeSpaceContentBox';
 import { ScheduledSpace } from './ScheduledSpace';
+import { NewContext } from 'types/chat';
+import { SpaceContext } from 'modules/space';
 
 export const SpaceBox = () => {
   const { account } = useWeb3React();
-  const { selectedSpace } = useContext(SpaceLocalContext);
+  // const { selectedSpace } = useContext(SpaceLocalContext);
   const { userSpaces } = useContext(SpaceGlobalContext);
+  const { selectedSpace,setSelectedSpace }: NewContext = useContext<NewContext>(SpaceContext);
 
   const [currentSpace, setCurrentSpace] = useState(null);
 
@@ -22,7 +25,6 @@ export const SpaceBox = () => {
       setCurrentSpace(null);
       return;
     }
-console.log(selectedSpace)
     setCurrentSpace(userSpaces[account]?.spaces[selectedSpace]);
   }, [selectedSpace]);
 

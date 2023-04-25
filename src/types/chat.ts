@@ -1,3 +1,5 @@
+import { string } from "yargs"
+
 export interface MessageIPFS {
     fromCAIP10: string
     toCAIP10: string
@@ -131,6 +133,13 @@ export interface AppContext {
   setUserShouldBeSearched: (value: boolean) => void;
   filteredUserData:User[];
   setFilteredUserData:(value:User[])=>void;
+}
+
+export interface NewContext {
+  viewSpaceBox: boolean;
+  setViewSpaceBox:(viewSpaceBox: boolean) => void;
+  selectedSpace: string;
+  setSelectedSpace: (selectedSpace: string) => void;
 }
 
 export type MessagetypeType = 'Text' | 'Image' | 'File' | 'GIF';

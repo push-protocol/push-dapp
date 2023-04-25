@@ -717,6 +717,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                           messageBeingSent={messageBeingSent}
                           isGroup={isGroup}
                         />
+                        
                       </div>
                     );
                   })}

@@ -395,9 +395,10 @@ function Chat({ chatid }) {
       setCurrentChat(feed);
 
       // lastly, set navigation for dynamic linking
+    
       navigate(`/chat/${chatid}`);
     } else {
-      setViewChatBox(false);
+      // setViewChatBox(false);
       navigate(`/chat`);
     }
   };

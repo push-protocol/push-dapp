@@ -21,33 +21,11 @@ export const SpaceBoxSection = () => {
 
   // RENDER
   return (
-    <SpaceBoxContainer
-    padding="10px"
-    spaceActive= {!!selectedSpace}
-  >
     <ItemVV2 justifyContent="stretch" background={theme.space.spaceBoxBg} borderRadius="24px">
 
       {/* conditionally Render */}
       <SpaceBox />
       
     </ItemVV2>
-  </SpaceBoxContainer>
   );
 }
-
-
-
-const SpaceBoxContainer = styled(ItemVV2)`
-  @media ${device.tablet} {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 95%;
-    margin-left: ${(props) => (props.spaceActive ? '0%' : '100%')};
-    transition: margin-left 0.25s;
-    max-width: initial;
-    min-width: auto;
-    z-index: 2;
-  }
-`;

@@ -18,18 +18,17 @@ export const SpaceSidebarSection = ({ showCreateSpaceModal }) => {
   const { setActiveTab, selectedSpace } = useContext(SpaceLocalContext);
   const [showQR, setShowQR] = useState(false);
   const theme = useTheme();
-  console.log(selectedSpace);
   // RENDER
   return (
-    <SpaceSidebarContainer
-      flex="1"
-      maxWidth="310px"
-      minWidth="280px"
-      padding="10px 7px 10px 20px"
-      boxSizing="border-box"
-      background={theme.default.bg}
-      spaceActive={!!selectedSpace}
-    >
+    // <SpaceSidebarContainer
+    //   flex="1"
+    //   maxWidth="310px"
+    //   minWidth="280px"
+    //   padding="10px 7px 10px 20px"
+    //   boxSizing="border-box"
+    //   background={theme.default.bg}
+    //   spaceActive={!!selectedSpace}
+    // >
       <ItemVV2>
         <SpaceSidebarTabs />
         <SpaceSidebar showCreateSpaceModal={showCreateSpaceModal} />
@@ -39,7 +38,7 @@ export const SpaceSidebarSection = ({ showCreateSpaceModal }) => {
           setShowQR={setShowQR}
         />
       </ItemVV2>
-    </SpaceSidebarContainer>
+    // </SpaceSidebarContainer>
   );
 };
 
