@@ -361,13 +361,19 @@ const ImageMessage = styled.img`
 `;
 
 const TextMessage = styled.p`
-  max-width: 300px;
+  max-width: 475px;
   padding: 7px 44px 10px 0px;
   font-size: 14px;
   word-wrap: break-word;
   text-align: left;
   font-weight: 400;
   margin: 0px;
+  @media(${device.tablet}){
+    max-width:70vw;
+  }
+  @media(${device.mobileL}){
+    max-width:65vw;
+  }
 `;
 
 const TimeStamp = styled(ItemHV2)`
@@ -392,13 +398,22 @@ const MessageText = styled(SpanV2)`
     padding: 0px 10px 0px 0px;
     max-width: 8rem;
   }
+`
+
+const MessageWrapper = styled.div`
+  width: 100%;
+  min-height: ${(props: any): string => props.height || '48px'};
+  padding: 0;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: ${(props: any): string => props.align || 'row'};
 `;
 
 const ReceivedMessage = styled.div`
   box-sizing: border-box;
   position: relative;
-  margin-left: ${(props) => props.left || '34px'};
-  max-width: 419px;
+  max-width: 525px;
+  left: ${(props) => props.left || '34px'};
   padding: ${(props: any): string => props.padding || '5px 11px 10px 15px'};
   background: ${(props: any): string => props.color || '#ffffff'};
   text-align: left;
@@ -409,6 +424,12 @@ const ReceivedMessage = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 9px 17px;
+  @media(${device.tablet}){
+    max-width:80vw;
+  }
+  @media(${device.mobileL}){
+    max-width: 75vw;
+  }
 `;
 
 const IntentMessage = styled(ReceivedMessage)`
@@ -419,8 +440,8 @@ const IntentMessage = styled(ReceivedMessage)`
 const SenderMessage = styled.div`
   box-sizing: border-box;
   position: relative;
-  margin-right: 34px;
-  max-width: 419px;
+  right: 34px;
+  max-width: 525px;
   text-align: left;
   padding: ${(props: any): string => props.padding || '11px 11px 5px 15px'};
   background: ${(props: any): string => props.color || '#ca599b'};
@@ -430,4 +451,10 @@ const SenderMessage = styled.div`
   color: #ffffff;
   flex-direction: column;
   align-items: baseline;
+  @media(${device.tablet}){
+    max-width:80vw;
+  }
+  @media(${device.mobileL}){
+    max-width: 75vw;
+  }
 `;
