@@ -94,7 +94,7 @@ export const SpacePreviewCard = ({ borderRadius, spaceData, messageFrom, isGroup
             fontWeight="500"
             color="#fff"
           >
-            {spaceData?.scheduleAt ? getSpaceTime(spaceData?.scheduleAt) : '30 Apr 4:30PM'}
+            {spaceData?.scheduleAt ? getSpaceTime({spaceScheduleTime:spaceData?.scheduleAt}) : '30 Apr 4:30PM'}
           </SpanV2>
         </ItemHV2>
       ) : (

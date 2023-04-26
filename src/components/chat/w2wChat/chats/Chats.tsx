@@ -53,8 +53,6 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
     msg.messageType = 'SpaceLink';
   }
 
-  console.log('time', msg.timestamp);
-
   const walletAddress = shortenText(caip10ToWallet(msg.fromCAIP10)?.toLowerCase(), 6);
   const ensName = useResolveWeb3Name(msg.fromCAIP10);
 

@@ -3,6 +3,7 @@ import React from 'react';
 
 // External Packages
 import styled from 'styled-components';
+import moment from 'moment';
 
 // Internal Components
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
@@ -26,7 +27,7 @@ const RequestBody = ({
           >
             <ReceivedMessage left='34px'>
               <TextMessage>Hey! You’re invited to my space. Set a reminder for when the space goes live</TextMessage>
-              <TimeStamp>{filteredUserData?.scheduleAt ?? '4:30PM'}</TimeStamp>
+              <TimeStamp>{filteredUserData?.scheduleAt ? moment(filteredUserData?.scheduleAt).format('h:mma') : '4:30PM'}</TimeStamp>
             </ReceivedMessage>
           </ReceivedMessageWrapper>
 
@@ -35,7 +36,7 @@ const RequestBody = ({
           >
             <ReceivedMessage left='34px'>
               <TextMessage>Hey! You’re invited to my space. Set a reminder for when the space goes live</TextMessage>
-              <TimeStamp>{filteredUserData?.scheduleAt ?? '4:30PM'}</TimeStamp>
+              <TimeStamp>{filteredUserData?.scheduleAt ? moment(filteredUserData?.scheduleAt).format('h:mma') : '4:30PM'}</TimeStamp>
             </ReceivedMessage>
           </ReceivedMessageWrapper>
 

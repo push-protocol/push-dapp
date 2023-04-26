@@ -45,15 +45,35 @@ export const getSpaceData = (spaceId: string): Space => {
   return spaceData;
 };
 
-export const getSpaceTime = (spaceScheduleTime: Date | number): string => {
-  
-  const spaceTime= `${moment(spaceScheduleTime).format('D MMM')} at ${moment(spaceScheduleTime).format('h:mm A')}`;
+export const getSpaceTime = ({
+  spaceScheduleTime,
+  isDayRequired = false,
+}: {
+  spaceScheduleTime: Date | number;
+  isDayRequired?: boolean;
+}): string => {
+  let day = '',
+    dayFlag = false;
 
-  return spaceTime;
+  if (isDayRequired) {
+    if (new Date().getDate() === new Date(spaceScheduleTime).getDate()) {
+      day = 'Today';
+      dayFlag = true;
+    } else if (new Date().getDate() + 1 === new Date(spaceScheduleTime).getDate()) {
+      day = 'Tomorrow';
+      dayFlag = true;
+    }
+  }
+
+  const spaceTime = `${moment(spaceScheduleTime).format('D MMM')} at ${moment(spaceScheduleTime).format('h:mm A')}`;
+
+  const finalSpaceTime = isDayRequired && dayFlag ? `${day}, ${spaceTime}` : spaceTime;
+
+  return finalSpaceTime;
 };
 
 export const getSpaceStatus = (spaceStartTime: Date | number, spaceEndTime: Date | number): string => {
-  let spaceStatus='';
+  let spaceStatus = '';
 
   // checks for scheduled space
   if (spaceStartTime > Date.now()) {
@@ -66,7 +86,7 @@ export const getSpaceStatus = (spaceStartTime: Date | number, spaceEndTime: Date
   }
 
   // checks for completed space
-  // correct value is 'ended' 
+  // correct value is 'ended'
   if (spaceEndTime < Date.now()) {
     spaceStatus = 'scheduled';
   }
