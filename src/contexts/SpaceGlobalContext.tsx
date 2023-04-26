@@ -14,7 +14,7 @@ export const SpaceGlobalContext = createContext<SpaceGlobalContextType>({} as Sp
 
 export const SpaceGlobalContextProvider = (props) => {
   const [userSpaces, setUserSpaces] = useState<UserSpaces>({});
-  const [joinedSpaceId,setJoinedSpaceId]=useState<string>("0xsdsfsdfsdf")
+  const [joinedSpaceId,setJoinedSpaceId]=useState<string>();
   
   const setSpaces = (spaces:Spaces, id:string) => {
     setUserSpaces(prevUserFeeds => ({

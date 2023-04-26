@@ -16,13 +16,14 @@ import {ReactComponent as LinkSVG} from 'assets/space/Link.svg'
 import { Space } from 'types';
 import { shortenText } from 'helpers/UtilityHelper';
 import { device } from 'config/Globals';
-import { FiArrowLeft } from 'react-icons/fi'
+import { FiArrowLeft } from 'react-icons/fi';
 import { useNavigate } from 'react-router';
 import useMediaQuery from 'hooks/useMediaQuery';
-import { SpaceLocalContext } from 'contexts';
+import { SpaceGlobalContext, SpaceLocalContext } from 'contexts';
 
 
 const SpaceItem = ({currentSpace, step, setStep}) => {
+  const { setJoinedSpaceId } = useContext(SpaceGlobalContext);
   const theme = useTheme();
 
   return(
@@ -88,7 +89,7 @@ const SpaceItem = ({currentSpace, step, setStep}) => {
             </SpaceDiv>)}
 
             {step === 3 && (<SpaceDiv>
-              <ButtonDiv padding="16px 54px" margin="0px 0px 0px 0px">Start this space</ButtonDiv>
+              <ButtonDiv padding="16px 54px" margin="0px 0px 0px 0px" onClick={()=> setJoinedSpaceId(currentSpace?.spaceId)}>Start this space</ButtonDiv>
             </SpaceDiv>)}
             
 
@@ -123,7 +124,7 @@ const SpaceItem = ({currentSpace, step, setStep}) => {
 export const ScheduledSpace = ({currentSpace}:{currentSpace:Space}) => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(3);
   const { setSelectedSpace } = useContext(SpaceLocalContext);
   const isMobile = useMediaQuery(device.tablet);
 
@@ -197,7 +198,7 @@ const ButtonDiv = styled.div`
   border-radius: 15px;
   padding: ${(props) => props.padding};
   margin: ${(props) => props.margin};
-
+  cursor:pointer;
 `;
 
 const DivCard = styled.div`
