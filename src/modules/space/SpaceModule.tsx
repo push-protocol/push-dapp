@@ -104,7 +104,7 @@ useEffect(()=>{
         flex="1"
         maxWidth="310px"
         minWidth="280px"
-        padding="10px 7px 10px 20px"
+        padding="0px 7px 0px 0px"
         boxSizing="border-box"
         background={theme.default.bg}
         spaceActive={!!selectedSpace}
@@ -152,6 +152,7 @@ const Container = styled.div`
 	position: relative;
   overflow: hidden;
   box-sizing: border-box;
+  padding:13px;
 
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
   height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${
