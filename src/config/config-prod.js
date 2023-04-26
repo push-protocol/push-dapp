@@ -79,11 +79,9 @@ export const addresses = {
   epnsPolyComm: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa', // mainnet address polygon comm
   pushToken: '0xf418588522d5dd018b425E472991E52EBBeEEEEE', // mainnet address
   aDai: '0xcB1Fe6F440c49E9290c3eb7f158534c2dC374201', // mainnet address
-  staking: '0x4AB6FE33e912fbF57ed0CaB0F97c155b8728B9e3', // mainnet address
-  // staking: '0xB72ff1e675117beDefF05a7D0a472c3844cfec85', // mainnet address
+  staking: '0xB72ff1e675117beDefF05a7D0a472c3844cfec85', // mainnet address
   yieldFarmPUSH: '0x6019B84E2eE9EB62BC42E32AB6375A7095886366', // mainnet address
-  yieldFarmLP: '0xF1d3805c7481C11D58c2F3273ad207116c78a827', // mainnet address
-  // yieldFarmLP: '0xbB2A70e67770D0A7F5f42d883C5BBE9b85e0DcD6', // mainnet address
+  yieldFarmLP: '0xbB2A70e67770D0A7F5f42d883C5BBE9b85e0DcD6', // mainnet address
   epnsToken: '0xf418588522d5dd018b425E472991E52EBBeEEEEE', // mainnet address
   epnsLPToken: '0xaf31fd9c3b0350424bf96e551d2d1264d8466205', // mainnet address
   rockstar: '0x3f8C2152b79276b78315CAF66cCF951780580A8a', // mainnet address
