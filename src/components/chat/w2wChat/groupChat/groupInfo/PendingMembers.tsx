@@ -15,12 +15,10 @@ export const PendingMembers = ({ setshowPendingRequests, showPendingRequests }) 
   const theme = useTheme();
 
   return (
-    <ItemVV2
+    <PendingRequestWrapper
       border={`1px solid ${theme.default.border}`}
       borderRadius="16px"
       margin="0px 0px 15px 0px"
-      maxWidth="445px"
-      style={{ boxSizing: 'border-box' }}
     >
       <ItemHV2
         justifyContent="space-between"
@@ -97,16 +95,25 @@ export const PendingMembers = ({ setshowPendingRequests, showPendingRequests }) 
           })}
         </PendingRequestContainer>
       )}
-    </ItemVV2>
+    </PendingRequestWrapper>
   );
 };
+
+const PendingRequestWrapper = styled(ItemVV2)`
+  min-width: 445px;
+  box-sizing: border-box;
+  @media (max-width: 480px) {
+    min-width: 300px;
+    max-width: 300px;
+  }
+`;
 
 const PendingRequestContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   max-height: 224px;
-  min-heght: ${(props) => props.minHeight || '224px'};
+  min-height: ${(props) => props.minHeight || '224px'};
   overflow: hidden;
   overflow-x: hidden;
   overflow-y: auto;
