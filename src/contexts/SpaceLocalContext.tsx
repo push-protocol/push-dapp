@@ -19,7 +19,7 @@ type SpaceLocalContextType = {
 export const SpaceLocalContext = createContext<SpaceLocalContextType>({
   activeTab: SpaceTabOption.Spaces,
   setActiveTab: () => {},
-  selectedSpace: '',
+  selectedSpace: null,
   setSelectedSpace: () => {},
 });
 

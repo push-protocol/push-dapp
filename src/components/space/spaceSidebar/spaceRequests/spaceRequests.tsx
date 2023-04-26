@@ -1,16 +1,23 @@
-import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import React, { useContext } from 'react';
-import styled, { useTheme } from 'styled-components';
-import { SpaceGlobalContext, SpaceLocalContext, SpaceTabOption } from 'contexts';
+// React + Web3 Essentials
+import React,{useContext} from 'react';
+
+// External Packages
+import styled,{useTheme} from 'styled-components';
 import { useWeb3React } from '@web3-react/core';
-import SpaceCard from '../spaceCard/spaceCard';
+
+// Internal Components
 import SpaceRequestCard from './SpaceRequestCard';
+
+// Internal Configs
+import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { SpaceGlobalContext} from 'contexts';
 
 export const SpaceRequests = () => {
 
   const theme = useTheme();
   const { account } = useWeb3React();
   const { userSpaces } = useContext(SpaceGlobalContext);
+  
   console.log(userSpaces)
 
   return (
@@ -40,8 +47,9 @@ export const SpaceRequests = () => {
           </SpanV2>
         ) :
           (Object.keys(userSpaces[account]?.spaces).map((key) => (
-            <SpaceRequestCard spaceData={userSpaces[account]?.spaces[key]}/>
+            <SpaceRequestCard spaceData={userSpaces[account]?.spaces[key]} key={userSpaces[account]?.spaceRequests[key].spaceId} />
           )))}
+
       </SpaceContainer>
 
 

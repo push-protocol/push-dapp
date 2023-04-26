@@ -9,7 +9,6 @@ export const SpaceInbox = () => {
   const { account } = useWeb3React();
   const { userSpaces } = useContext(SpaceGlobalContext);
   const theme = useTheme();
-  console.log(userSpaces)
   return (
     <>
       <SpanV2
@@ -34,7 +33,7 @@ export const SpaceInbox = () => {
           </SpanV2>
         ):
         (Object.keys(userSpaces[account]?.spaces).map((key) => (
-          <SpaceCard spaceData={userSpaces[account]?.spaces[key]} />
+          <SpaceCard spaceData={userSpaces[account]?.spaces[key]} key={userSpaces[account]?.spaces[key].spaceId} borderRadius='17px'/>
         )))}
       </SpaceContainer>
     </>
@@ -42,6 +41,7 @@ export const SpaceInbox = () => {
 };
 
 const SpaceContainer = styled(ItemVV2)`
+  cursor: pointer;
   margin-top: 0px;
   display: flex;
   align-items: center;

@@ -1,3 +1,5 @@
+import { string } from "yargs"
+
 export interface MessageIPFS {
     fromCAIP10: string
     toCAIP10: string
