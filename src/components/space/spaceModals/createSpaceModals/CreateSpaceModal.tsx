@@ -2,8 +2,9 @@
 import React from 'react';
 
 // External Packages
+import styled, { useTheme } from 'styled-components';
+import dayjs, { Dayjs } from 'dayjs';
 import { useClickAway } from 'react-use';
-import styled from 'styled-components';
 
 // Internal Components
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -23,6 +24,8 @@ const CreateSpaceModal = ({
 }:CreateSpaceModalType) => {
     const [spaceModalState, setSpaceModalState] = React.useState<number>(1);
     const [spaceName,setSpaceName] = React.useState<string>('');
+    const [dateValue,setDateValue] = React.useState<Dayjs | null>(dayjs(new Date()));
+    const [timeValue,setTimeValue] = React.useState<Dayjs | null>(dayjs(new Date()));
     const [spaceDescription,setSpaceDescription] = React.useState<string>('');
 
     const [memberList,setMemberList] = React.useState<Array<User>>([]);
@@ -32,6 +35,8 @@ const CreateSpaceModal = ({
     useClickAway(containerRef, () => handleClose());
 
 
+    console.log("Date and time ",dateValue,timeValue);
+
     return (
         <Container>
 
@@ -39,6 +44,11 @@ const CreateSpaceModal = ({
                 <ScheduleModal
                 handleClose={handleClose} 
                 setSpaceModalState={setSpaceModalState} 
+                dateValue={dateValue}
+                setDateValue={setDateValue}
+                timeValue={timeValue}
+                setTimeValue={setTimeValue}
+
                 />
             )}
 
@@ -74,6 +84,8 @@ const Container = styled.div`
   @media(max-width:400px){
     padding:30px 12px;
   }
+
+  
 
 
 `
