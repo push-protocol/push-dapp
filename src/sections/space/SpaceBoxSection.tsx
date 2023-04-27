@@ -26,9 +26,8 @@ export const SpaceBoxSection = ({showSpaceInfoModal}:any) => {
   // RENDER
   return (
     <ItemVV2 justifyContent="stretch" background={theme.space.spaceBoxBg} borderRadius="24px">
-      {!selectedSpace && <button onClick={showSpaceInfoModal}>ShowSpaceInfo</button>}
       {/* conditionally Render */}
-      {selectedSpace && activeTab === SpaceTabOption.Spaces && (<SpaceBox />)} 
+      {selectedSpace && activeTab === SpaceTabOption.Spaces && (<SpaceBox showSpaceInfoModal={showSpaceInfoModal}/>)} 
       {selectedSpace && activeTab === SpaceTabOption.Requests && (<RequestBox />)} 
       {!selectedSpace && (<WelcomeSpaceContentBox />)}
 

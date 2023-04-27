@@ -79,12 +79,14 @@ const ProfileCardItem = styled(ItemHV2)`
   padding: 8px 16px;
   border-radius: 16px;
   position: unset;
-  box-sizing: border-box;
   background-color: ${(props) => props.theme.chat.snapFocusBg};
   margin-bottom: 8px;
   max-height: 64px;
-  @media (max-width: 600px) {
-    max-width: 300px;
+  box-sizing: border-box;
+  max-width:445px;
+  @media (max-width: 480px) {
+    // max-width: 300px;
+    min-width: 300px;
   }
 `;
 

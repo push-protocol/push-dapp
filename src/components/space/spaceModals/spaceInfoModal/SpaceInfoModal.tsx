@@ -30,13 +30,12 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const [showInviteMembersModal, setShowInviteMembersModal] = useState<boolean>(false);
   const [showPendingRequests, setshowPendingRequests] = useState<boolean>(false);
   const [memberList, setMemberList] = React.useState<User[]>([]);
+  const isMobile = useDeviceWidthCheck(480);
   const containerRef = useRef();
   const dropdownRef = useRef();
   const { account } = useWeb3React();
 
   const theme = useTheme();
-
-  const isMobile = useDeviceWidthCheck(600);
 
   const isAccountOwnerAdmin = selectedSpace?.spaceInformation?.members?.some(
     (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
@@ -70,7 +69,7 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
     <ThemeProvider theme={theme}>
       <ModalContainer
         background={theme.blurModalContentBackground}
-        padding={ showInviteMembersModal ? '24px' : '24px 0px 20px 0px' }
+        padding={ showInviteMembersModal ? isMobile ? '24px 10px' : '24px' : '24px 0px 20px 0px' }
         ref={containerRef}
       >
         {!showInviteMembersModal && (
@@ -166,7 +165,7 @@ const ModalContainer = styled.div`
   margin: 0px;
   padding: ${props => props.padding || '24px 0px 20px 0px'};
   @media(max-width:480px){
-    max-width:90vw;
+    max-width:95vw;
   }
 `;
 
@@ -189,7 +188,7 @@ const BodyContainer = styled.div`
   }
   @media (max-width: 600px) {
     max-height: 67vh;
-    max-width: 94vw;
+    max-width: 95vw;
     padding:0px 24px;
     &&::-webkit-scrollbar-thumb {
       border-bottom: 300px solid transparent;

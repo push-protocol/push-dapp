@@ -3,8 +3,10 @@ import React, { useContext, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
+import { useClickAway } from 'react-use';
+
 // Internal Components
-import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Button } from 'components/SharedStyling';
 import { AiOutlineCalendar, AiOutlineMore } from 'react-icons/ai'
 import { P } from 'primaries/SharedStyling';
@@ -20,9 +22,15 @@ import { FiArrowLeft } from 'react-icons/fi'
 import { useNavigate } from 'react-router';
 import useMediaQuery from 'hooks/useMediaQuery';
 import { SpaceLocalContext } from 'contexts';
+import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 
 
-const SpaceItem = ({currentSpace, step, setStep}) => {
+const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
+  const [showSpaceInfo, setShowSpaceInfo] = useState<boolean>(false);
+  const infoRef = React.useRef(null);
+
+  useClickAway(infoRef, ()=>setShowSpaceInfo(false))
+
   const theme = useTheme();
 
   return(
@@ -40,7 +48,21 @@ const SpaceItem = ({currentSpace, step, setStep}) => {
           
           <ItemTop>
             <ButtonItem radius='8px' bg='transparent' color='#fff' border='1px solid white' margin='0 10px 0 0' style={{whiteSpace:'nowrap'}}>Edit Space</ButtonItem>
-            <Settings />
+            <MoreOptions>
+            <Settings onClick={()=>setShowSpaceInfo(true)}/>
+            {
+              showSpaceInfo && <SpaceInfo
+              onClick={()=>{
+                setShowSpaceInfo(false);
+                showSpaceInfoModal();
+              }}
+              ref={infoRef}
+            >
+              <ItemVV2 maxWidth="32px"><Info /></ItemVV2>
+              <SpanV2 color="rgba(101, 119, 149, 1)">Space Info</SpanV2>
+            </SpaceInfo>
+            }
+            </MoreOptions>
           </ItemTop>
 
           </TopItem>
@@ -120,7 +142,7 @@ const SpaceItem = ({currentSpace, step, setStep}) => {
   )
 }
 
-export const ScheduledSpace = ({currentSpace}:{currentSpace:Space}) => {
+export const ScheduledSpace = ({currentSpace, showSpaceInfoModal}:{currentSpace:Space, showSpaceInfoModal:any}) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -144,12 +166,34 @@ export const ScheduledSpace = ({currentSpace}:{currentSpace:Space}) => {
 
       <SpaceItem currentSpace={currentSpace} step={step} setStep={setStep} />   
     </ScrollView>) : 
-    (<SpaceItem currentSpace={currentSpace} step={step} setStep={setStep} /> )}
+    (<SpaceItem currentSpace={currentSpace} step={step} setStep={setStep} showSpaceInfoModal={showSpaceInfoModal}/> )}
     </>
   )
 }
 
-// const ScheduledItem = styled(ItemVV2)`
+const MoreOptions = styled.div`
+  position: relative;
+  max-width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
+
+const SpaceInfo = styled(ItemHV2)`
+  position: absolute;
+  top: 0px;
+  right: 15px;
+  width: 151px;
+  border: 1px solid rgba(186, 196, 214, 0.2);
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  justify-content: flex-start;
+  gap: 9px;
+  padding: 8px;
+  z-index: 5;
+`;
+
 const ScheduledItem = styled.div`
   width: 70%;
   display: flex;

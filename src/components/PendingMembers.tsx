@@ -22,8 +22,6 @@ export const PendingMembers = ({
       border={`1px solid ${theme.default.border}`}
       borderRadius="16px"
       margin="0px 0px 15px 0px"
-      maxWidth="445px"
-      style={{ boxSizing: 'border-box' }}
     >
       <ItemHV2
         justifyContent="space-between"
@@ -92,8 +90,11 @@ export const PendingMembers = ({
 };
 
 const PendingMembersContainer = styled(ItemVV2)`
-  @media (max-width: 600px) {
-    max-width: 300px;
+  box-sizing: border-box;
+  max-width: 445px;
+  @media (max-width: 480px) {
+    // max-width: 300px;
+    min-width: 300px;
   }
 `;
 
