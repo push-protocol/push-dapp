@@ -135,6 +135,7 @@
   "devDependencies": {
     "@3id/connect": "0.4.1",
     "@babel/eslint-parser": "7.19.1",
+    "@babel/preset-typescript": "^7.21.4",
     "@ceramicnetwork/ceramic-core": "0.12.4",
     "@testing-library/dom": "^6.12.2",
     "@types/crypto-js": "^4.1.1",
@@ -143,6 +144,7 @@
     "@types/react": "^16.9.19",
     "@types/react-scroll-to-bottom": "^4.2.0",
     "@types/styled-components": "5.1.26",
+    "@typescript-eslint/parser": "^5.59.1",
     "customize-cra": "1.0.0",
     "eslint": "7.32.0",
     "eslint-plugin-flowtype": "^4.6.0",

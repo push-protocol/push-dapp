@@ -21,21 +21,19 @@ import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
 import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
+import videoCallIcon from 'assets/icons/videoCallIcon.svg';
 import LoaderSpinner, { LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { Content } from 'components/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import * as w2wHelper from 'helpers/w2w/';
-import {
-  checkIfIntentExist,
-  fetchInbox,
-  getLatestThreadHash
-} from 'helpers/w2w/user';
+import { checkIfChatExist, fetchInbox } from 'helpers/w2w/user';
 import { useDeviceWidthCheck } from 'hooks';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext, Feeds, MessageIPFS } from 'types/chat';
+import { AppContext as ContextType, Feeds, MessageIPFS } from 'types/chat';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w';
 import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpers/w2w/groupChat';
@@ -44,9 +42,10 @@ import Chats from '../chats/Chats';
 import Typebar from '../TypeBar/Typebar';
 import { intitializeDb } from '../w2wIndexeddb';
 import { HeaderMessage } from './HeaderMessage';
+import { AppContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
 
 // Internal Configs
-import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import { getChats } from 'services';
@@ -81,11 +80,12 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setHasUserBeenSearched,
     setReceivedIntents,
     setBlockedLoading,
-  }: AppContext = useContext<AppContext>(Context);
+  }: ContextType = useContext<ContextType>(Context);
+  const { web3NameList }: AppContextType = useContext(AppContext);
   const [chatMeta, setChatMeta] = useState(null);
 
   const [newMessage, setNewMessage] = useState<string>('');
-  const { chainId, account ,library} = useWeb3React<ethers.providers.Web3Provider>();
+  const { chainId, account, library } = useWeb3React<ethers.providers.Web3Provider>();
   const [Loading, setLoading] = useState<boolean>(true);
   const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false);
   const [imageSource, setImageSource] = useState<string>('');
@@ -107,19 +107,27 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const isMobile = useDeviceWidthCheck(600);
   let showTime = false;
   let time = '';
- 
+
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
-  //get ens name
-  const ensName = useResolveWeb3Name(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
+  //resolve web3 names
+  useResolveWeb3Name(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
+
+  // get web3 name
+  let ensName = '';
+  if (!isGroup && currentChat?.wallets?.split(',')[0].toString()) {
+    const walletLowercase = caip10ToWallet(currentChat?.wallets?.split(',')[0].toString()).toLowerCase();
+    const checksumWallet = ethers.utils.getAddress(walletLowercase);
+    ensName = web3NameList[checksumWallet];
+  }
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   useEffect(() => {
     // if ens is resolved, update browse to match ens name is it doesn't match
     if (ensName && location.pathname !== `/chat/${ensName}`) {
       // lastly, set navigation for dynamic linking
-      navigate(`/chat/${ensName}`, {replace: true});
+      navigate(`/chat/${ensName}`, { replace: true });
     }
   }, [ensName]);
 
@@ -141,25 +149,23 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
         let newScroll = content.scrollHeight - content.clientHeight;
         content.scrollTop = curScrollPos + (newScroll - oldScroll);
-        
       }
     }
   };
 
-
   const scrollToBottom = (behavior) => {
-    bottomRef?.current?.scrollIntoView(!behavior ? true : { behavior: 'smooth' })
-  }
+    bottomRef?.current?.scrollIntoView(!behavior ? true : { behavior: 'smooth' });
+  };
 
+  useEffect(() => {
+    if (messages.length <= chatsFetchedLimit) scrollToBottom(null);
+  }, [messages]);
 
-useEffect(() => {
-    if (messages.length <= chatsFetchedLimit) 
-      scrollToBottom(null);
-}, [messages]);
-
-
-  const getChatCall = async (wasLastListPresentProp = wasLastListPresent, messagesProp = messages, lastThreadHashFetchedProp = lastThreadHashFetched) => {
-    
+  const getChatCall = async (
+    wasLastListPresentProp = wasLastListPresent,
+    messagesProp = messages,
+    lastThreadHashFetchedProp = lastThreadHashFetched
+  ) => {
     if (!connectedUser) return;
     if (wasLastListPresentProp && !lastThreadHashFetchedProp) return;
     setChatsLoading(true);
@@ -174,13 +180,17 @@ useEffect(() => {
 
     // remove this custom decryption after SDK issue is resolved in future
     const promiseArrToDecryptMsg = [];
-    chatsResponse.forEach((chat) => promiseArrToDecryptMsg.push(w2wHelper.decryptMessages({
-      savedMsg: chat,
-      connectedUser,
-      account,
-      currentChat,
-      inbox
-    })));
+    chatsResponse.forEach((chat) =>
+      promiseArrToDecryptMsg.push(
+        w2wHelper.decryptMessages({
+          savedMsg: chat,
+          connectedUser,
+          account,
+          currentChat,
+          inbox,
+        })
+      )
+    );
     const decryptedMsgArr = await Promise.all(promiseArrToDecryptMsg);
     decryptedMsgArr.sort((a, b) => {
       return a.timestamp! > b.timestamp! ? 1 : -1;
@@ -190,7 +200,6 @@ useEffect(() => {
     setLastThreadHashFetched(lastThreadHash);
     setWasLastListPresent(lastListPresent);
     setChatsLoading(false);
-
   };
 
   useEffect(() => {
@@ -199,6 +208,7 @@ useEffect(() => {
     setIsGroup(false);
     setShowGroupInfo(false);
     setMessages([]);
+
     if (currentChat) {
       setIsGroup(checkIfGroup(currentChat));
       // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
@@ -212,7 +222,7 @@ useEffect(() => {
         setImageSource(image);
       }
     }
-    if(Loading) setLoading(false);
+    if (Loading) setLoading(false);
   }, [currentChat]);
 
   const getDisplayName = () => {
@@ -227,9 +237,9 @@ useEffect(() => {
   };
 
   const fetchInboxApi = async (): Promise<Feeds> => {
-      const inboxes: Feeds[] = await fetchInbox(connectedUser);
-      setInbox(inboxes);
-      return inboxes?.find((x) => x.wallets.split(':')[1] === currentChat.wallets.split(':')[1]);
+    const inboxes: Feeds[] = await fetchInbox(connectedUser);
+    setInbox(inboxes);
+    return inboxes?.find((x) => x.wallets.split(':')[1] === currentChat.wallets.split(':')[1]);
   };
 
   const sendMessage = async ({
@@ -243,7 +253,7 @@ useEffect(() => {
 
     try {
       let createdUser;
-      if(!connectedUser.publicKey){
+      if (!connectedUser.publicKey) {
         createdUser = await createUserIfNecessary();
       }
       const signer = await library.getSigner();
@@ -264,11 +274,13 @@ useEffect(() => {
         updatedCurrentChat.msg = sendResponse;
         setChat(updatedCurrentChat);
         setNewMessage('');
+        // console.log(messages)
+        // console.log(sendResponse)
         setMessages([...messages, sendResponse]);
-        
+
         setTimeout(() => {
           setMessageBeingSent(false);
-        }, 1)
+        }, 1);
       } else {
         chatBoxToast.showMessageToast({
           toastTitle: 'Error',
@@ -300,19 +312,19 @@ useEffect(() => {
       setMessageBeingSent(false);
     }
   };
-
+  // console.log(messages)
   useEffect(() => {
     if (messageBeingSent == false) {
       setTimeout(() => {
         scrollToBottom(null);
-      }, 10)
+      }, 10);
     }
-  }, [messageBeingSent])
+  }, [messageBeingSent]);
 
   async function resolveThreadhash(): Promise<void> {
     setLoading(true);
     let getIntent;
-      getIntent = await intitializeDb<string>('Read', 'Intent', walletToCAIP10({ account: account! }), '', 'did');
+    getIntent = await intitializeDb<string>('Read', 'Intent', walletToCAIP10({ account: account! }), '', 'did');
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(':')[1];
     let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: false });
@@ -327,15 +339,15 @@ useEffect(() => {
     let updatedIntent: any;
     try {
       let createdUser;
-        if(!connectedUser.publicKey){
-          createdUser = await createUserIfNecessary();
-        }
+      if (!connectedUser.publicKey) {
+        createdUser = await createUserIfNecessary();
+      }
       const signer = await library.getSigner();
       updatedIntent = await PushAPI.chat.approve({
         status: 'Approved',
         signer: signer!,
         senderAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat.intentSentBy,
-        pgpPrivateKey:connectedUser?.privateKey || createdUser?.privateKey,
+        pgpPrivateKey: connectedUser?.privateKey || createdUser?.privateKey,
         env: appConfig.appEnv,
       });
 
@@ -403,10 +415,10 @@ useEffect(() => {
         !currentChat.intent.includes(currentChat.wallets.split(':')[1])
       ) {
         let createdUser;
-        if(!connectedUser.publicKey){
+        if (!connectedUser.publicKey) {
           createdUser = await createUserIfNecessary();
         }
-         const signer = await library.getSigner();
+        const signer = await library.getSigner();
         const sendResponse = await PushAPI.chat.send({
           messageContent: message,
           messageType: messageType,
@@ -417,18 +429,6 @@ useEffect(() => {
         });
 
         if (typeof sendResponse === 'string') {
-          if (sendResponse.toLowerCase() === 'your wallet is not whitelisted') {
-            // Getting User Info
-            setBlockedLoading({
-              enabled: true,
-              title: 'Wallet is not whitelisted',
-              spinnerType: LOADER_SPINNER_TYPE.WHITELIST,
-              progressEnabled: true,
-              progress: 0,
-              progressNotice:
-                'Reminder: Push Chat is in alpha, Things might break.',
-            });
-          }
           // Display toaster
           chatBoxToast.showMessageToast({
             toastTitle: 'Error',
@@ -479,8 +479,7 @@ useEffect(() => {
         ),
       });
       setMessageBeingSent(false);
-    }
-    finally{
+    } finally {
       setMessageBeingSent(false);
     }
   };
@@ -496,10 +495,40 @@ useEffect(() => {
     setVideoCallInfo({
       address: caip10ToWallet(currentChat.wallets.toString()),
       fromPublicKeyArmored: connectedUser.publicKey,
+      fromProfileUsername: connectedUser.name,
+      fromProfilePic: connectedUser.profilePicture,
       toPublicKeyArmored: currentChat.publicKey,
+      toProfileUsername: null,
+      toProfilePic: currentChat.profilePicture,
       privateKeyArmored: connectedUser.privateKey,
       establishConnection: 1,
     });
+    // const fetchUser = async () => {
+    //   return PushAPI.user.get({
+    //     account: caip10ToWallet(currentChat.wallets.toString()),
+    //     env: appConfig.appEnv
+    //   });
+    // }
+
+    // // call the function
+    // fetchUser()
+    //   .then (toUser => {
+    //     // set video call
+    //     setVideoCallInfo({
+    //       address: caip10ToWallet(currentChat.wallets.toString()),
+    //       fromPublicKeyArmored: connectedUser.publicKey,
+    //       fromProfileUsername: connectedUser.name,
+    //       fromProfilePic: connectedUser.profilePicture,
+    //       toPublicKeyArmored: currentChat.publicKey,
+    //       toProfileUsername: toUser.name,
+    //       toProfilePic: toUser.profilePicture,
+    //       privateKeyArmored: connectedUser.privateKey,
+    //       establishConnection: 1,
+    //     });
+    //   })
+    //   .catch(e => {
+    //     console.log("Error occured in ChatModule::useEffect::callAccepted - ", e);
+    //   });
   };
 
   const InfoMessages = [
@@ -523,15 +552,14 @@ useEffect(() => {
     <Container>
       {!viewChatBox ? (
         <WelcomeItem gap="25px">
-          {activeTab == 4 && 
+          {activeTab == 4 && (
             <LoaderSpinner
               type={LOADER_TYPE.STANDALONE_MINIMAL}
               spinnerSize={40}
             />
-          }
+          )}
 
-
-          {activeTab != 4 && 
+          {activeTab != 4 && (
             <>
               <WelcomeMainText theme={theme}>
                 <WelcomeText>Say</WelcomeText>
@@ -547,32 +575,32 @@ useEffect(() => {
               </WelcomeMainText>
 
               <WelcomeInfo>
-                    <SpanV2
-                      fontWeight="500"
-                      fontSize="15px"
-                      lineHeight="130%"
-                    >
-                      Push Chat is in alpha and things might break.
-                    </SpanV2>
-                    
-                    <Atag
-                      href={'https://discord.gg/pushprotocol'}
-                      target="_blank"
-                    >
-                      We would love to hear your feedback
-                    </Atag>
+                <SpanV2
+                  fontWeight="500"
+                  fontSize="15px"
+                  lineHeight="130%"
+                >
+                  Push Chat is in alpha and things might break.
+                </SpanV2>
 
-                    <ItemBody>
-                      {InfoMessages.map((item) => (
-                        <WelcomeContent key={item.id}>
-                          <BsDashLg className="icon" />
-                          <TextInfo>{item.content}</TextInfo>
-                        </WelcomeContent>
-                      ))}
-                    </ItemBody>
+                <Atag
+                  href={'https://discord.gg/pushprotocol'}
+                  target="_blank"
+                >
+                  We would love to hear your feedback
+                </Atag>
+
+                <ItemBody>
+                  {InfoMessages.map((item) => (
+                    <WelcomeContent key={item.id}>
+                      <BsDashLg className="icon" />
+                      <TextInfo>{item.content}</TextInfo>
+                    </WelcomeContent>
+                  ))}
+                </ItemBody>
               </WelcomeInfo>
             </>
-          }
+          )}
         </WelcomeItem>
       ) : (
         <>
@@ -643,21 +671,26 @@ useEffect(() => {
             </SpanV2>
 
             {/* Video call button */}
-            {/* <Tooltip 
-              tooltipContent='Video Call'
-              placementProps={{
-                bottom:"1.4rem",
-                transform:"translateX(-92%)",
-                borderRadius: "12px 12px 2px 12px",
-                width: "70px"
-
-              }}
-              wrapperProps={{width:"fit-content", minWidth:"fit-content" }}
-            >
-              <VideoCallButton onClick={startVideoCallHandler}>
-                <ImageV2 src={videoCallIcon} />
-              </VideoCallButton>
-            </Tooltip> */}
+            {!isGroup && (
+              <Tooltip
+                tooltipContent="Video call"
+                placementProps={{
+                  bottom: '1.4rem',
+                  transform: 'translateX(-92%)',
+                  borderRadius: '12px 12px 2px 12px',
+                  width: '75px',
+                  padding: '0.3rem 0.8rem 0.25rem 0.8rem',
+                }}
+                wrapperProps={{ width: 'fit-content', minWidth: 'fit-content' }}
+              >
+                <VideoCallButton onClick={startVideoCallHandler}>
+                  <ImageV2
+                    cursor="pointer"
+                    src={videoCallIcon}
+                  />
+                </VideoCallButton>
+              </Tooltip>
+            )}
 
             {currentChat.groupInformation && (
               <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
@@ -678,27 +711,30 @@ useEffect(() => {
             )}
           </ItemHV2>
 
-          <MessageContainer ref={listInnerRef} onScroll={onScroll}>
-          {/* style={{overflow: "scroll",backgroundColor:'red'}} */}
+          <MessageContainer
+            ref={listInnerRef}
+            onScroll={onScroll}
+          >
+            {/* style={{overflow: "scroll",backgroundColor:'red'}} */}
             {/* <CustomScrollContent initialScrollBehavior="smooth"> */}
-              {Loading ? (
-                <SpinnerWrapper>
-                  <LoaderSpinner
-                    type={LOADER_TYPE.SEAMLESS}
-                    spinnerSize={40}
-                  />
-                </SpinnerWrapper>
-              ) : (
-                <>
-                  {chatsLoading &&
-                    <SpinnerWrapper height="35px">
-                      <LoaderSpinner
-                        type={LOADER_TYPE.SEAMLESS}
-                        spinnerSize={40}
-                      />
-                    </SpinnerWrapper>
-                  }
-                  <div ref={topRef}>
+            {Loading ? (
+              <SpinnerWrapper>
+                <LoaderSpinner
+                  type={LOADER_TYPE.SEAMLESS}
+                  spinnerSize={40}
+                />
+              </SpinnerWrapper>
+            ) : (
+              <>
+                {chatsLoading && (
+                  <SpinnerWrapper height="35px">
+                    <LoaderSpinner
+                      type={LOADER_TYPE.SEAMLESS}
+                      spinnerSize={40}
+                    />
+                  </SpinnerWrapper>
+                )}
+                <div ref={topRef}>
                   {messages?.map((msg, i) => {
                     //const isLast = i === messages.length - 1
                     //const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
@@ -721,45 +757,45 @@ useEffect(() => {
                             isGroup={isGroup}
                           />
                         )}
-                          <Chats
-                            msg={
-                              isGroup && checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup })
-                                ? ''
-                                : msg
-                            }
-                            caip10={walletToCAIP10({ account: account! })}
-                            messageBeingSent={messageBeingSent}
-                            isGroup={isGroup}
-                          />
-                        
+                        <Chats
+                          msg={
+                            !currentChat?.groupInformation?.isPublic &&
+                            checkIfChatExist({ chats: receivedIntents, currentChat, connectedUser, isGroup })
+                              ? ''
+                              : msg
+                          }
+                          caip10={walletToCAIP10({ account: account! })}
+                          messageBeingSent={messageBeingSent}
+                          isGroup={isGroup}
+                        />
                       </div>
                     );
                   })}
-                  </div>
-                  <HeaderMessage
-                    messages={messages}
+                </div>
+                <HeaderMessage
+                  messages={messages}
+                  isGroup={isGroup}
+                />
+                {checkIfChatExist({ chats: receivedIntents, currentChat, connectedUser, isGroup }) && (
+                  <Chats
+                    msg={{
+                      ...messages[0],
+                      messageContent: getIntentMessage(currentChat, isGroup),
+                      messageType: 'Intent',
+                    }}
+                    caip10={walletToCAIP10({ account: account! })}
+                    messageBeingSent={messageBeingSent}
+                    ApproveIntent={() => ApproveIntent('Approved')}
                     isGroup={isGroup}
                   />
-                  {checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup }) && (
-                    <Chats
-                      msg={{
-                        ...messages[0],
-                        messageContent: getIntentMessage(currentChat, isGroup),
-                        messageType: 'Intent',
-                      }}
-                      caip10={walletToCAIP10({ account: account! })}
-                      messageBeingSent={messageBeingSent}
-                      ApproveIntent={() => ApproveIntent('Approved')}
-                      isGroup={isGroup}
-                    />
-                  )}
-                </>
-              )}
+                )}
+              </>
+            )}
             {/* </CustomScrollContent> */}
             <div ref={bottomRef}></div>
           </MessageContainer>
 
-          {checkIfIntentExist({ receivedIntents, currentChat, connectedUser }) ? null : (
+          {checkIfChatExist({ chats: receivedIntents, currentChat, connectedUser, isGroup }) ? null : (
             <>
               <Typebar
                 messageBeingSent={messageBeingSent}
@@ -771,6 +807,8 @@ useEffect(() => {
                 sendIntent={sendIntent}
                 setOpenSuccessSnackBar={setOpenSuccessSnackBar}
                 setSnackbarText={setSnackbarText}
+                isJoinGroup={!checkIfChatExist({ chats: inbox, currentChat, connectedUser, isGroup }) && isGroup}
+                approveIntent={ApproveIntent}
               />
             </>
           )}
@@ -783,7 +821,7 @@ useEffect(() => {
 const SpinnerWrapper = styled.div`
   width: 100%;
   margin-top: 20px;
-  height: ${(props) => props.height || "90px"};;
+  height: ${(props) => props.height || '90px'};
 `;
 
 const MessageContainer = styled(ItemVV2)`
@@ -802,7 +840,6 @@ const MessageContainer = styled(ItemVV2)`
   overflow-y: scroll;
   // background: red;
 
-
   &::-webkit-scrollbar-track {
     background-color: ${(props) => props.theme.scrollBg};
     border-radius: 10px;
@@ -820,14 +857,12 @@ const MessageContainer = styled(ItemVV2)`
       background-color: none;
       border-radius: 9px;
     }
-  
+
     &::-webkit-scrollbar {
       background-color: none;
       width: 4px;
     }
   }
-
-
 
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
@@ -835,9 +870,9 @@ const MessageContainer = styled(ItemVV2)`
       linear,
       left top,
       left bottom,
-      color-stop(0.44,  #CF1C84),
-      color-stop(0.72, #CF1C84),
-      color-stop(0.86, #CF1C84)
+      color-stop(0.44, #cf1c84),
+      color-stop(0.72, #cf1c84),
+      color-stop(0.86, #cf1c84)
     );
   }
 `;

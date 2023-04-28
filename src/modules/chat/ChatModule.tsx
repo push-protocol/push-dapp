@@ -2,9 +2,10 @@
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 // External Packages
+import * as PushAPI from '@pushprotocol/restapi';
 import ReactGA from 'react-ga';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -22,21 +23,21 @@ import LoaderSpinner, {
   LOADER_OVERLAY,
   LOADER_SPINNER_TYPE,
   LOADER_TYPE,
-  PROGRESS_POSITIONING
+  PROGRESS_POSITIONING,
 } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { VideoCallContext } from 'contexts/VideoCallContext';
+import { caip10ToWallet } from 'helpers/w2w';
 import * as w2wHelper from 'helpers/w2w/';
 import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
 import { useDeviceWidthCheck, useSDKSocket } from 'hooks';
-import useModalBlur, {MODAL_POSITION} from 'hooks/useModalBlur';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
-import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
-import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
-
+import VideoCallSection from 'sections/video/VideoCallSection';
+import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -82,86 +83,87 @@ function Chat({ chatid }) {
   const containerRef = React.useRef(null);
   // For video calling
 
-  const socketData = useSDKSocket({ account, chainId, env: appConfig.appEnv,socketType: 'chat' });
+  const socketData = useSDKSocket({ account, chainId, env: appConfig.appEnv, socketType: 'chat' });
 
-  useEffect(()=>{
-    if(connectedUser && socketData.messagesSinceLastConnection && (w2wHelper.caip10ToWallet(socketData.messagesSinceLastConnection.fromCAIP10) !== account)){
-      if(currentChat )
-        getUpdatedChats(socketData.messagesSinceLastConnection);
-      getUpdatedInbox(socketData.messagesSinceLastConnection)
+  useEffect(() => {
+    if (
+      connectedUser &&
+      socketData.messagesSinceLastConnection &&
+      w2wHelper.caip10ToWallet(socketData.messagesSinceLastConnection.fromCAIP10) !== account
+    ) {
+      if (currentChat) getUpdatedChats(socketData.messagesSinceLastConnection);
+      getUpdatedInbox(socketData.messagesSinceLastConnection);
     }
-  },[socketData.messagesSinceLastConnection])
+  }, [socketData.messagesSinceLastConnection]);
 
-  useEffect(()=>{
-    if(connectedUser && socketData.groupInformationSinceLastConnection) {
+  useEffect(() => {
+    if (connectedUser && socketData.groupInformationSinceLastConnection) {
       getUpdatedGroup(socketData.groupInformationSinceLastConnection);
     }
-  },[socketData.groupInformationSinceLastConnection])
+  }, [socketData.groupInformationSinceLastConnection]);
 
-  const getUpdatedChats = async(chat) => {
-    if((currentChat.did === chat.fromCAIP10) || currentChat?.groupInformation?.chatId === chat.toCAIP10){
-    const decryptedChat:MessageIPFS = await w2wHelper.decryptMessages({
-      savedMsg: chat,
-      connectedUser,
-      account,
-      currentChat,
-      inbox
-    });
-    setMessages([...messages,{...decryptedChat,cid:socketData.messagesSinceLastConnection.cid}]);
+  const getUpdatedChats = async (chat) => {
+    if (currentChat.did === chat.fromCAIP10 || currentChat?.groupInformation?.chatId === chat.toCAIP10) {
+      const decryptedChat: MessageIPFS = await w2wHelper.decryptMessages({
+        savedMsg: chat,
+        connectedUser,
+        account,
+        currentChat,
+        inbox,
+      });
+      setMessages([...messages, { ...decryptedChat, cid: socketData.messagesSinceLastConnection.cid }]);
     }
-  }
+  };
 
-  const getUpdatedInbox = async(message) => {
+  const getUpdatedInbox = async (message) => {
     let isInInbox = false;
-    let decryptedChat:MessageIPFS;
+    let decryptedChat: MessageIPFS;
 
     //change to common decryption for getUpdatedInbox and getUpdatedChats using filter
-    const updatedFeed = inbox.filter(feed=>(feed.did === message.fromCAIP10) || (feed?.groupInformation?.chatId === message.toCAIP10));
-   if(updatedFeed.length){
-     decryptedChat = await w2wHelper.decryptMessages({
-      savedMsg: message,
-      connectedUser,
-      account,
-      currentChat:updatedFeed[0],
-      inbox
-    });
-
-  }
-    const updatedInbox = inbox.map(feed => {
-      if((feed.did === message.fromCAIP10) || feed?.groupInformation?.chatId === message.toCAIP10){
+    const updatedFeed = inbox.filter(
+      (feed) => feed.did === message.fromCAIP10 || feed?.groupInformation?.chatId === message.toCAIP10
+    );
+    if (updatedFeed.length) {
+      decryptedChat = await w2wHelper.decryptMessages({
+        savedMsg: message,
+        connectedUser,
+        account,
+        currentChat: updatedFeed[0],
+        inbox,
+      });
+    }
+    const updatedInbox = inbox.map((feed) => {
+      if (feed.did === message.fromCAIP10 || feed?.groupInformation?.chatId === message.toCAIP10) {
         feed.msg = decryptedChat;
         isInInbox = true;
       }
       return feed;
     });
-    if(isInInbox){
-
-    setInbox(updatedInbox);
-    }
-    else {
+    if (isInInbox) {
+      setInbox(updatedInbox);
+    } else {
       //update msg for already received intents
       const intents = await fetchIntent(connectedUser);
       setReceivedIntents(intents);
     }
-  }
+  };
 
-  const getUpdatedGroup = async(groupInfo) => {
+  const getUpdatedGroup = async (groupInfo) => {
     let isInInbox = false;
-    const updatedInbox = inbox.map(feed => {
-      if(feed?.groupInformation?.chatId === groupInfo.chatId){
+    const updatedInbox = inbox.map((feed) => {
+      if (feed?.groupInformation?.chatId === groupInfo.chatId) {
         feed.groupInformation = groupInfo;
         isInInbox = true;
       }
       return feed;
     });
-    if(isInInbox){
-    setInbox(updatedInbox);
-    }
-    else {
+    if (isInInbox) {
+      setInbox(updatedInbox);
+    } else {
       const intents = await fetchIntent(connectedUser);
       setReceivedIntents(intents);
     }
-  }
+  };
 
   const [videoCallInfo, setVideoCallInfo] = useState<VideoCallInfoI>({
     address: null,
@@ -174,7 +176,6 @@ function Chat({ chatid }) {
   // React GA Analytics
   ReactGA.pageview('/chat');
 
-
   useEffect(() => {
     if (videoCallInfo) {
       console.log(videoCallInfo);
@@ -184,29 +185,67 @@ function Chat({ chatid }) {
   const { call, callAccepted } = useContext(VideoCallContext);
   useEffect(() => {
     if (Object.keys(call).length > 0) {
-      setVideoCallInfo({
-        address: call.from,
-        fromPublicKeyArmored: connectedUser.publicKey,
-        toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
-        privateKeyArmored: connectedUser.privateKey,
-        establishConnection: 2,
-      });
+      const fetchUser = async () => {
+        return PushAPI.user.get({
+          account: caip10ToWallet(call.from),
+          env: appConfig.appEnv,
+        });
+      };
+
+      // call the function
+      fetchUser()
+        .then((fromUser) => {
+          // set video call
+          setVideoCallInfo({
+            address: call.from,
+            fromPublicKeyArmored: connectedUser.publicKey,
+            fromProfileUsername: fromUser.name,
+            fromProfilePic: fromUser.profilePicture,
+            toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
+            toProfileUsername: connectedUser.name,
+            toProfilePic: connectedUser.profilePicture,
+            privateKeyArmored: connectedUser.privateKey,
+            establishConnection: 2,
+          });
+        })
+        .catch((e) => {
+          console.log('Error occured in ChatModule::useEffect::callAccepted - ', e);
+        });
     }
   }, [call]);
 
   useEffect(() => {
     if (callAccepted && videoCallInfo.establishConnection == 2) {
-      setVideoCallInfo({
-        address: call.from,
-        fromPublicKeyArmored: connectedUser.publicKey,
-        toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
-        privateKeyArmored: connectedUser.privateKey,
-        establishConnection: 3,
-      });
+      const fetchUser = async () => {
+        return PushAPI.user.get({
+          account: caip10ToWallet(call.from),
+          env: appConfig.appEnv,
+        });
+      };
+
+      // call the function
+      fetchUser()
+        .then((fromUser) => {
+          // set video call
+          setVideoCallInfo({
+            address: call.from,
+            fromPublicKeyArmored: connectedUser.publicKey,
+            fromProfileUsername: fromUser.name,
+            fromProfilePic: fromUser.profilePicture,
+            toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
+            toProfileUsername: connectedUser.name,
+            toProfilePic: connectedUser.profilePicture,
+            privateKeyArmored: connectedUser.privateKey,
+            establishConnection: 3,
+          });
+        })
+        .catch((e) => {
+          console.log('Error occured in ChatModule::useEffect::callAccepted - ', e);
+        });
     }
   }, [callAccepted]);
 
-  useEffect(()=>{
+  useEffect(() => {
     setChat(null);
     setInbox([]);
     setReceivedIntents([]);
@@ -214,7 +253,7 @@ function Chat({ chatid }) {
     setViewChatBox(false);
     setIsLoading(true);
     setConnectedUser(null);
-  },[account])
+  }, [account]);
 
   // Rest of the loading logic
   useEffect(() => {
@@ -245,29 +284,18 @@ function Chat({ chatid }) {
     ModalComponent: CreateGroupModalComponent,
   } = useModalBlur();
 
-
   const connectUser = async (): Promise<void> => {
-    // Getting User Info
-    setBlockedLoading({
-      enabled: true,
-      title: 'Step 1/4: Getting Account Info',
-      progressEnabled: true,
-      progress: 25,
-      progressNotice: 'Important: Push Chat encryption standard is updated, you might need to sign 3-4 transactions to upgrade (required once).',
-    });
+    const caip10: string = w2wHelper.walletToCAIP10({ account });
 
-    const caip10:string = w2wHelper.walletToCAIP10({account});
-
-    
-    if(connectedUser?.wallets !== caip10){
+    if (connectedUser?.wallets !== caip10) {
       await getUser();
     }
 
     setBlockedLoading({
       enabled: false,
-      title: "Step 4/4: Let's Chat ;)",
+      title: 'Push Profile Setup Complete',
       spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
-      progressEnabled: true,
+      progressEnabled: false,
       progress: 100,
     });
 
@@ -277,10 +305,9 @@ function Chat({ chatid }) {
       // reformat chatid first
       chatid = reformatChatId(chatid);
 
-
-      if(connectedUser?.wallets === caip10){
+      if (connectedUser?.wallets === caip10) {
         // dynamic url
-      setCurrentTab(4);
+        setCurrentTab(4);
       }
 
       // dynamic url
@@ -341,15 +368,14 @@ function Chat({ chatid }) {
     }
 
     return chatid;
-  }
+  };
 
   let navigate = useNavigate();
   const setChat = (feed: Feeds): void => {
     if (feed) {
       setViewChatBox(true);
-      if(checkIfGroup(feed))
-      {
-        rearrangeMembers(feed,connectedUser);
+      if (checkIfGroup(feed)) {
+        rearrangeMembers(feed, connectedUser);
       }
 
       // check and set to wallet or chat id
@@ -400,7 +426,7 @@ function Chat({ chatid }) {
                 userShouldBeSearched,
                 setUserShouldBeSearched,
                 filteredUserData,
-                setFilteredUserData
+                setFilteredUserData,
               }}
             >
               <ChatSidebarContainer
@@ -412,13 +438,19 @@ function Chat({ chatid }) {
                 background={theme.default.bg}
                 chatActive={viewChatBox}
               >
-                <ChatSidebarSection showCreateGroupModal={showCreateGroupModal} autofilledSearch={chatid} />
+                <ChatSidebarSection
+                  showCreateGroupModal={showCreateGroupModal}
+                  autofilledSearch={chatid}
+                />
               </ChatSidebarContainer>
               <ChatContainer
                 padding="10px 10px 10px 10px"
                 chatActive={viewChatBox}
               >
-                <ChatBoxSection setVideoCallInfo={setVideoCallInfo} showGroupInfoModal={showGroupInfoModal}/>
+                <ChatBoxSection
+                  setVideoCallInfo={setVideoCallInfo}
+                  showGroupInfoModal={showGroupInfoModal}
+                />
               </ChatContainer>
               <GroupInfoModalComponent
                 InnerComponent={GroupInfoModalContent}
@@ -426,7 +458,7 @@ function Chat({ chatid }) {
                 toastObject={groupInfoToast}
                 modalPadding="0px"
                 modalPosition={MODAL_POSITION.ON_PARENT}
-                />
+              />
               <CreateGroupModalComponent
                 InnerComponent={CreateGroupModalContent}
                 toastObject={createGroupToast}
@@ -488,6 +520,7 @@ function Chat({ chatid }) {
           />
         )}
 
+        {/* TEMP */}
         {/* But video chat trumps this now!!! */}
         {videoCallInfo.establishConnection > 0 && (
           <VideoCallSection
@@ -497,7 +530,11 @@ function Chat({ chatid }) {
               setVideoCallInfo({
                 address: null,
                 fromPublicKeyArmored: null,
+                fromProfileUsername: null,
+                fromProfilePic: null,
                 toPublicKeyArmored: null,
+                toProfileUsername: null,
+                toProfilePic: null,
                 privateKeyArmored: null,
                 establishConnection: 0,
               });

@@ -7,14 +7,15 @@ type TooltipProps = {
   isDisabled?: boolean; // if isDisabled is undefined -> Tooltip doesnt have undefined behavior
   // for aligning the tooltip acc. to requirement
   placementProps?: {
-    bottom?: string,
-    right?:string,
-    transform?: string,
-    borderRadius?: string,
-    width?: string
-  },
-  wrapperProps?: {},
-  key:any,
+    bottom?: string;
+    right?: string;
+    transform?: string;
+    borderRadius?: string;
+    width?: string;
+    padding?: string;
+  };
+  wrapperProps?: {};
+  key?: any;
 };
 
 const Tooltip: React.FC<TooltipProps> = ({ children, tooltipContent, isDisabled, placementProps, wrapperProps }) => {
@@ -42,22 +43,25 @@ const Tooltip: React.FC<TooltipProps> = ({ children, tooltipContent, isDisabled,
     }
   }, [isDisabled]);
 
-return (
-  <Wrapper
-    style={wrapperProps}
-    onMouseEnter={isDisabled ? () => { } : showTip}
-    onFocus={isDisabled ? () => { } : showTip}
-    onMouseLeave={isDisabled ? () => { } : hideTip}
-    onBlur={isDisabled ? () => { } : hideTip}
-  >
-    <div>
-      {children}
-
-    </div>
-    {!isDisabled && active && <Content id="channel" style={placementProps}>{tooltipContent}</Content>}
-  </Wrapper>
-
-);
+  return (
+    <Wrapper
+      style={wrapperProps}
+      onMouseEnter={isDisabled ? () => {} : showTip}
+      onFocus={isDisabled ? () => {} : showTip}
+      onMouseLeave={isDisabled ? () => {} : hideTip}
+      onBlur={isDisabled ? () => {} : hideTip}
+    >
+      <div>{children}</div>
+      {!isDisabled && active && (
+        <Content
+          id="channel"
+          style={placementProps}
+        >
+          {tooltipContent}
+        </Content>
+      )}
+    </Wrapper>
+  );
 };
 
 const Wrapper = styled.div`
@@ -77,7 +81,7 @@ const Wrapper = styled.div`
 const Content = styled.div`
   position: absolute;
   border-radius: 2px 12px 12px 12px;
-  
+
   // padding: 0.5rem 1rem;
   color: #fff;
   background: #131313;

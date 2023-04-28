@@ -1,19 +1,17 @@
 // Internal Components
-import { getReq } from "api";
-import { usersServiceEndpoints } from "helpers/RoutesHelper"
+import * as PushAPI from '@pushprotocol/restapi';
+import { appConfig } from 'config';
 
 // Types
 type Props = {
-    userCaipAddress: string;
-}
+  userCaipAddress: string;
+};
 
 export const getUserDelegations = async ({ userCaipAddress }: Props) => {
-    const reqEndpoint = usersServiceEndpoints.userDelegations(userCaipAddress);
-
-    try {
-        const response = await getReq(reqEndpoint);
-        return response?.data?.delegations;
-    } catch (err) {
-        throw new Error(err.message);
-    }
-}
+  try {
+    const response = await PushAPI.user.getDelegations({ user: userCaipAddress, env: appConfig.appEnv });
+    return response;
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};

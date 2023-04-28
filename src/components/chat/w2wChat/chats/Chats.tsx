@@ -1,5 +1,6 @@
 // React + Web3 Essentials
 import React, { useContext, useEffect, useState } from 'react';
+import { ethers } from 'ethers';
 
 // External Packages
 import { TwitterTweetEmbed } from 'react-twitter-embed';
@@ -14,18 +15,19 @@ import { caip10ToWallet } from 'helpers/w2w';
 import { checkTwitterUrl } from 'helpers/w2w/twitter';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext, MessageIPFSWithCID, TwitterFeedReturnType } from 'types/chat';
+import { AppContext as ContextType, MessageIPFSWithCID, TwitterFeedReturnType } from 'types/chat';
 import tickIcon from '../../../../assets/chat/tick.svg';
 import { getMemberDetails } from '../../../../helpers/w2w/groupChat';
 import Modal from '../Modal/Modal';
 import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import { ReceivedMessageWrapper } from './MessageWrappers/ReceivedMessageWrapper';
 import { SentMessageWrapper } from './MessageWrappers/SentMessageWrapper';
+import { AppContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
 
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
-
 
 interface ChatProps {
   msg: MessageIPFSWithCID;
@@ -35,9 +37,9 @@ interface ChatProps {
   isGroup?: boolean;
 }
 
-
 export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, isGroup }: ChatProps) {
-  const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const { currentChat }: ContextType = useContext<ContextType>(Context);
+  const { web3NameList }: AppContextType = useContext(AppContext);
   const [showImageModal, setShowImageModal] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string>('');
   const [profilePicture, setProfilePicture] = useState<string>('');
@@ -45,30 +47,32 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const time1: string = time.toLocaleTimeString('en-US');
   const date: string = time1.slice(0, -6) + ' ' + time1.slice(-2).toLowerCase();
   const { tweetId, messageType }: TwitterFeedReturnType = checkTwitterUrl({ message: msg?.messageContent });
-  const walletAddress = shortenText(caip10ToWallet(msg.fromCAIP10)?.toLowerCase(), 6);
-  const ensName = useResolveWeb3Name(msg.fromCAIP10);
-  
-  const getProfilePicture = async() =>{
-    let member = getMemberDetails(currentChat,msg?.fromCAIP10);
-    if(member){
+  const walletAddress = shortenText(caip10ToWallet(msg?.fromCAIP10)?.toLowerCase(), 6);
+  useResolveWeb3Name(msg?.fromCAIP10);
+
+  const walletLowercase = caip10ToWallet(msg?.fromCAIP10)?.toLowerCase();
+  const checksumWallet = walletLowercase ? ethers.utils.getAddress(walletLowercase) : null;
+  const ensName = web3NameList[checksumWallet];
+
+  const getProfilePicture = async () => {
+    let member = getMemberDetails(currentChat, msg?.fromCAIP10);
+    if (member) {
       setProfilePicture(member.image);
-    }
-    else {
+    } else {
       // console.log(msg)
-      let user = await PushAPI.user.get({account:msg.fromCAIP10,env:appConfig.appEnv});
-      setProfilePicture(user.profilePicture); 
+      let user = await PushAPI.user.get({ account: msg.fromCAIP10, env: appConfig.appEnv });
+      setProfilePicture(user.profilePicture);
     }
-  }
+  };
 
   useEffect(() => {
-    if(isGroup && msg && msg.messageType !== 'Intent')
-     getProfilePicture();
+    if (isGroup && msg && msg.messageType !== 'Intent') getProfilePicture();
   }, []);
 
   return (
     <ItemVV2>
       {/* Support Msg Type = TwitterFeedLink */}
-      {msg.messageType === 'TwitterFeedLink' && 
+      {msg.messageType === 'TwitterFeedLink' && (
         <ItemVV2>
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper align="row-reverse">
@@ -112,10 +116,10 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
             </ReceivedMessageWrapper>
           )}
         </ItemVV2>
-      } 
-        
+      )}
+
       {/* Support Msg Type = Text */}
-      {msg.messageType === 'Text' &&
+      {msg.messageType === 'Text' && (
         <ItemVV2>
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper align="row-reverse">
@@ -143,10 +147,10 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
             </ReceivedMessageWrapper>
           )}
         </ItemVV2>
-      } 
-      
+      )}
+
       {/* Support Msg Type = Intent */}
-      {msg.messageType === 'Intent' &&
+      {msg.messageType === 'Intent' && (
         <ItemVV2>
           <ReceivedMessageWrapper
             align="row"
@@ -182,10 +186,10 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
             </IntentMessage>
           </ReceivedMessageWrapper>
         </ItemVV2>
-      }
-      
+      )}
+
       {/* Support Msg Type = Image */}
-      {msg.messageType === 'Image' &&
+      {msg.messageType === 'Image' && (
         <ItemVV2>
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper
@@ -238,10 +242,10 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
             />
           )}
         </ItemVV2>
-      } 
-      
+      )}
+
       {/* Support Msg Type = GIF OR Support Msg Type = MediaEmbed */}
-      {(msg.messageType === 'GIF' || msg.messageType === 'MediaEmbed') &&
+      {(msg.messageType === 'GIF' || msg.messageType === 'MediaEmbed') && (
         <ItemVV2>
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper
@@ -295,10 +299,10 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
             />
           )}
         </ItemVV2>
-      }
-      
+      )}
+
       {/* Support Msg Type = GIF OR Support Msg Type = MediaEmbed */}
-      {msg.messageType === 'File' &&
+      {msg.messageType === 'File' && (
         <ItemVV2>
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper align="row-reverse">
@@ -330,7 +334,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
             </ReceivedMessageWrapper>
           )}
         </ItemVV2>
-      }
+      )}
     </ItemVV2>
   );
 }
@@ -352,13 +356,19 @@ const ImageMessage = styled.img`
 `;
 
 const TextMessage = styled.p`
-  max-width: 300px;
+  max-width: 475px;
   padding: 7px 44px 10px 0px;
   font-size: 14px;
   word-wrap: break-word;
   text-align: left;
   font-weight: 400;
   margin: 0px;
+  @media (${device.tablet}) {
+    max-width: 70vw;
+  }
+  @media (${device.mobileL}) {
+    max-width: 65vw;
+  }
 `;
 
 const TimeStamp = styled(ItemHV2)`
@@ -385,11 +395,20 @@ const MessageText = styled(SpanV2)`
   }
 `;
 
+const MessageWrapper = styled.div`
+  width: 100%;
+  min-height: ${(props: any): string => props.height || '48px'};
+  padding: 0;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: ${(props: any): string => props.align || 'row'};
+`;
+
 const ReceivedMessage = styled.div`
   box-sizing: border-box;
   position: relative;
-  margin-left: ${(props) => props.left || '34px'};
-  max-width: 419px;
+  max-width: 525px;
+  left: ${(props) => props.left || '34px'};
   padding: ${(props: any): string => props.padding || '5px 11px 10px 15px'};
   background: ${(props: any): string => props.color || '#ffffff'};
   text-align: left;
@@ -400,6 +419,12 @@ const ReceivedMessage = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 9px 17px;
+  @media (${device.tablet}) {
+    max-width: 80vw;
+  }
+  @media (${device.mobileL}) {
+    max-width: 75vw;
+  }
 `;
 
 const IntentMessage = styled(ReceivedMessage)`
@@ -410,8 +435,8 @@ const IntentMessage = styled(ReceivedMessage)`
 const SenderMessage = styled.div`
   box-sizing: border-box;
   position: relative;
-  margin-right: 34px;
-  max-width: 419px;
+  right: 34px;
+  max-width: 525px;
   text-align: left;
   padding: ${(props: any): string => props.padding || '11px 11px 5px 15px'};
   background: ${(props: any): string => props.color || '#ca599b'};
@@ -421,4 +446,10 @@ const SenderMessage = styled.div`
   color: #ffffff;
   flex-direction: column;
   align-items: baseline;
+  @media (${device.tablet}) {
+    max-width: 80vw;
+  }
+  @media (${device.mobileL}) {
+    max-width: 75vw;
+  }
 `;

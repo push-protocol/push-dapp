@@ -1,11 +1,11 @@
 const webpack = require('webpack');
-const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 const smp = new SpeedMeasurePlugin();
 
 module.exports = {
-    webpack: (config, env) => {
+  webpack: (config, env) => {
     // do stuff with the webpack config...
     config.resolve.fallback = {
       assert: require.resolve('assert'),
@@ -20,24 +20,25 @@ module.exports = {
       path: require.resolve('path-browserify'),
       url: require.resolve('url'),
       util: require.resolve('util/'),
-      stream: require.resolve('stream-browserify')
+      stream: require.resolve('stream-browserify'),
     };
-    config.devtool = false;
+    // config.devtool = false;
     config.resolve.extensions = [...config.resolve.extensions, '.ts', '.js'];
     config.plugins = [
       ...config.plugins,
       new webpack.ProvidePlugin({
         process: 'process/browser',
-        Buffer: ['buffer', 'Buffer']
+        Buffer: ['buffer', 'Buffer'],
       }),
     ];
-    config.module.rules = [...config.module.rules,
+    config.module.rules = [
+      ...config.module.rules,
       {
         test: /\.m?js/,
         resolve: {
-          fullySpecified: false
-        }
-      }
+          fullySpecified: false,
+        },
+      },
     ];
     config.optimization.minimizer = [
       new TerserPlugin({
@@ -49,4 +50,4 @@ module.exports = {
 
     return config;
   },
-}
+};

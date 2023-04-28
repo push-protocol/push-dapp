@@ -2,21 +2,22 @@
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
-import styled, { useTheme } from 'styled-components';
+import * as PushAPI from '@pushprotocol/restapi';
 import Picker from 'emoji-picker-react';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemHV2 } from 'components/reusables/SharedStylingV2';
-import { VideoCallInfoI } from 'sections/video/VideoCallSection';
+import { ButtonV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Context } from 'modules/chat/ChatModule';
+import { AppContext, VideoCallInfoI } from 'types/chat';
 import { FileMessageContent } from './Files/Files';
 import GifPicker from './Gifs/GifPicker';
-import { AppContext } from 'types/chat';
 
-// Internal Configs
-import { caip10ToWallet } from 'helpers/w2w';
+// Internal configs
+import { appConfig } from 'config';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { caip10ToWallet } from 'helpers/w2w';
 import { MessagetypeType } from '../../../../types/chat';
 
 interface ITypeBar {
@@ -26,11 +27,13 @@ interface ITypeBar {
   setNewMessage: (newMessage: string) => void;
   setVideoCallInfo?: (videoCallInfo: VideoCallInfoI) => void;
   videoCallInfo?: VideoCallInfoI;
-  sendMessage: ({ message, messageType }: { message: string; messageType: MessagetypeType}) => void;
+  sendMessage: ({ message, messageType }: { message: string; messageType: MessagetypeType }) => void;
   sendIntent: ({ message, messageType }: { message: string; messageType: MessagetypeType }) => void;
   setOpenSuccessSnackBar: (openReprovalSnackbar: boolean) => void;
   openReprovalSnackbar?: boolean;
+  isJoinGroup?: boolean;
   setSnackbarText: (SnackbarText: string) => void;
+  approveIntent: (status: string) => void;
 }
 
 const Typebar = ({
@@ -41,11 +44,13 @@ const Typebar = ({
   setVideoCallInfo,
   sendMessage,
   sendIntent,
+  isJoinGroup,
   setOpenSuccessSnackBar,
   setSnackbarText,
+  approveIntent,
 }: ITypeBar) => {
-  const { currentChat }: AppContext = useContext<AppContext>(Context);
-  const {connectedUser} = useContext(ChatUserContext);
+  const { currentChat, activeTab, setChat }: AppContext = useContext<AppContext>(Context);
+  const { connectedUser } = useContext(ChatUserContext);
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -83,15 +88,25 @@ const Typebar = ({
     }
   };
 
-  const handleKeyPress = (e: any): void => {
+  const handleKeyPress = async (e: any): void => {
     const x = e.keyCode;
 
     // Send video request only when two users are chatting
     if (e.target.value === '/video' && currentChat.threadhash) {
+      // get to user info
+      const toUser = await PushAPI.user.get({
+        account: caip10ToWallet(currentChat.wallets.toString()),
+        env: appConfig.appEnv,
+      });
+
       setVideoCallInfo({
         address: caip10ToWallet(currentChat.wallets.toString()),
         fromPublicKeyArmored: connectedUser.publicKey,
+        fromProfileUsername: connectedUser.name,
+        fromProfilePic: connectedUser.profilePicture,
         toPublicKeyArmored: currentChat.publicKey,
+        toProfileUsername: toUser.name,
+        toProfilePic: toUser.profilePicture,
         privateKeyArmored: connectedUser.privateKey,
         establishConnection: 1,
       });
@@ -118,7 +133,6 @@ const Typebar = ({
         message: url,
         messageType: 'GIF',
       });
-     
     } else {
       sendIntent({ message: url, messageType: 'GIF' });
     }
@@ -147,14 +161,12 @@ const Typebar = ({
             size: file.size,
           };
           if (currentChat.threadhash || isGroup) {
-
             sendMessage({
               message: JSON.stringify(fileMessageContent),
               messageType,
             });
           } else {
             sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType });
-
           }
           setFileUploading(false);
         };
@@ -165,7 +177,10 @@ const Typebar = ({
   };
 
   return (
-    <TypeBarContainer background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg}>
+    <TypeBarContainer
+      background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg}
+      isJoinGroup={isJoinGroup}
+    >
       {messageBeingSent ? (
         <SpinnerContainer>
           <ItemHV2
@@ -185,17 +200,19 @@ const Typebar = ({
         </SpinnerContainer>
       ) : (
         <>
-          <Icon
-            onClick={(): void => setShowEmojis(!showEmojis)}
-            filter={theme.snackbarBorderIcon}
-          >
-            <img
-              src="/svg/chats/smiley.svg"
-              height="24px"
-              width="24px"
-              alt=""
-            />
-          </Icon>
+          {!isJoinGroup && (
+            <Icon
+              onClick={(): void => setShowEmojis(!showEmojis)}
+              filter={theme.snackbarBorderIcon}
+            >
+              <img
+                src="/svg/chats/smiley.svg"
+                height="24px"
+                width="24px"
+                alt=""
+              />
+            </Icon>
+          )}
           {showEmojis && (
             <Picker
               onEmojiClick={addEmoji}
@@ -208,7 +225,10 @@ const Typebar = ({
               }}
             />
           )}
-          {
+
+          {isJoinGroup ? (
+            <SpanV2>You need to join the group in order to send a message</SpanV2>
+          ) : (
             <TextInput
               placeholder="Type your message..."
               onKeyDown={handleKeyPress}
@@ -218,67 +238,91 @@ const Typebar = ({
               ref={textAreaRef}
               autoFocus="autoFocus"
             />
-          }
+          )}
 
-          <>
-            <GifDiv>
+          {!isJoinGroup ? (
+            <>
+              <GifDiv>
+                <label>
+                  {isGifPickerOpened && (
+                    <GifPicker
+                      setIsOpened={setIsGifPickerOpened}
+                      isOpen={isGifPickerOpened}
+                      onSelect={sendGif}
+                    />
+                  )}
+                  <Icon
+                    onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}
+                    filter={theme.snackbarBorderIcon}
+                  >
+                    <img
+                      src="/svg/chats/gif.svg"
+                      height="18px"
+                      width="22px"
+                      alt=""
+                    />
+                  </Icon>
+                </label>
+              </GifDiv>
               <label>
-                {isGifPickerOpened && (
-                  <GifPicker
-                    setIsOpened={setIsGifPickerOpened}
-                    isOpen={isGifPickerOpened}
-                    onSelect={sendGif}
-                  />
-                )}
-                <Icon
-                  onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}
-                  filter={theme.snackbarBorderIcon}
-                >
+                <Icon filter={theme.snackbarBorderIcon}>
                   <img
-                    src="/svg/chats/gif.svg"
-                    height="18px"
-                    width="22px"
+                    src="/svg/chats/attachment.svg"
+                    height="24px"
+                    width="20px"
                     alt=""
                   />
                 </Icon>
+                <FileInput
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={uploadFile}
+                />
               </label>
-            </GifDiv>
-            <label>
-              <Icon filter={theme.snackbarBorderIcon}>
-                <img
-                  src="/svg/chats/attachment.svg"
-                  height="24px"
-                  width="20px"
-                  alt=""
-                />
-              </Icon>
-              <FileInput
-                type="file"
-                ref={fileInputRef}
-                onChange={uploadFile}
-              />
-            </label>
 
-            {filesUploading ? (
-              <div className="imageloader">
-                <LoaderSpinner
-                  type={LOADER_TYPE.SEAMLESS}
-                  spinnerSize={20}
-                />
-              </div>
-            ) : (
-              <>
-                <Icon onClick={handleSubmit}>
-                  <img
-                    src={`/svg/chats/send${isDarkMode ? '_dark' : ''}.svg`}
-                    height="27px"
-                    width="27px"
-                    alt=""
+              {filesUploading ? (
+                <div className="imageloader">
+                  <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={20}
                   />
-                </Icon>
-              </>
-            )}
-          </>
+                </div>
+              ) : (
+                <>
+                  <Icon onClick={handleSubmit}>
+                    <img
+                      src={`/svg/chats/send${isDarkMode ? '_dark' : ''}.svg`}
+                      height="27px"
+                      width="27px"
+                      alt=""
+                    />
+                  </Icon>
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              <ButtonV2
+                background={'#F4DCEA'}
+                color={'#CF1C84'}
+                flex="initial"
+                width="160px"
+                borderRadius="12px"
+                padding="15px 8px"
+                // onClick={() => {
+                //   approveIntent('Approved')
+                // }}
+                disabled={true}
+              >
+                <SpanV2
+                  fontWeight="500"
+                  fontSize="17px"
+                >
+                  Join Group
+                </SpanV2>
+              </ButtonV2>
+            </>
+          )}
         </>
       )}
     </TypeBarContainer>
@@ -290,7 +334,7 @@ export default Typebar;
 const TypeBarContainer = styled.div`
   position: absolute;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 10px;
   bottom: 9px;
@@ -298,7 +342,7 @@ const TypeBarContainer = styled.div`
   right: 9px;
 
   height: auto;
-  padding: 13px 16px 13px 16px;
+  padding: ${(props) => (props.isJoinGroup ? '6px 6px 6px 26px' : '13px 16px')};
   border-radius: 13px;
   background: ${(props) => (props.background ? props.background : props.theme.chat.sendMesageBg)};
 `;
@@ -320,10 +364,11 @@ const Icon = styled.i`
 const TextInput = styled.textarea`
   font-size: 16px;
   width: 100%;
-  height: 25px;
+  min-height: 25px;
   max-height: 75px;
   outline: none;
-  padding-top: 4px;
+  box-sizing: border-box;
+  padding-top: 3px;
   border: none;
   resize: none;
   background: transparent;

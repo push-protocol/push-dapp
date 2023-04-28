@@ -31,6 +31,7 @@ import { setProcessingState } from 'redux/slices/channelCreationSlice';
 import { setPushAdmin } from 'redux/slices/contractSlice';
 import { getChannelsSearch, getUserDelegations } from 'services';
 import * as PushAPI from '@pushprotocol/restapi';
+import { getAliasDetails } from 'services';
 
 // Internals Configs
 import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config';
@@ -157,21 +158,21 @@ const InitState = () => {
       }
       if (delegateeList.length > 0) {
         let channelInformationPromise;
-        if(onCoreNetwork) {
+        if (onCoreNetwork) {
           channelInformationPromise = [...delegateeList].map(({ channel }) => {
             return PushAPI.channels.getChannel({
               channel: convertAddressToAddrCaip(channel, chainId),
-              env: appConfig.appEnv
-            })
+              env: appConfig.appEnv,
+            });
           });
         } else {
           channelInformationPromise = [...delegateeList].map(({ channel }) => {
-            const channelAddressInCaip = convertAddressToAddrCaip(channel, chainId)
-            return getReq(`/v1/alias/${channelAddressInCaip}/channel`).then(
-              ({ data }) => PushAPI.channels.getChannel({
-              channel: convertAddressToAddrCaip(data.channel, appConfig.coreContractChain),
-              env: appConfig.appEnv
-            }));
+            return getAliasDetails({ account, chainId }).then((data) =>
+              PushAPI.channels.getChannel({
+                channel: convertAddressToAddrCaip(data.channel, appConfig.coreContractChain),
+                env: appConfig.appEnv,
+              })
+            );
           });
         }
         const channelInformation = await Promise.all(channelInformationPromise);
@@ -193,8 +194,7 @@ const InitState = () => {
 
   // get core address of alias
   const checkUserForEthAlias = async () => {
-    const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
-    const { aliasEth, aliasVerified } = await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
+    const { aliasEth, aliasVerified } = await getAliasDetails({ account, chainId }).then((data) => {
       if (data) {
         dispatch(setAliasEthAddress(data.channel));
         dispatch(setCoreChannelAdmin(data.channel));
@@ -244,12 +244,12 @@ const InitState = () => {
             page: 1,
             limit: 1,
             query: aliasEth,
-            env: appConfig.appEnv
+            env: appConfig.appEnv,
           });
-          if(channelDetail) {
+          if (channelDetail) {
             dispatch(setUserChannelDetails(channelDetail[0]));
             const channelDetailsFromContract = await epnsReadProvider.channels(aliasEth);
-            dispatch(setUserChannelDetails({...channelDetail[0], ...channelDetailsFromContract}));
+            dispatch(setUserChannelDetails({ ...channelDetail[0], ...channelDetailsFromContract }));
           }
           if (!aliasVerified) {
             dispatch(setProcessingState(3));

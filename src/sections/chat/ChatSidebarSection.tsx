@@ -9,7 +9,7 @@ import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import * as PushAPI from "@pushprotocol/restapi";
+import * as PushAPI from '@pushprotocol/restapi';
 import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
 import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
 import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
@@ -28,39 +28,36 @@ import { checkConnectedUser } from 'helpers/w2w/user';
 import { Context } from 'modules/chat/ChatModule';
 import { Feeds } from 'types/chat';
 
-
 // Internal Configs
 import NewTag from 'components/NewTag';
 import GLOBALS from 'config/Globals';
 import { appConfig } from '../../config';
 
-
-
-
-const createGroupOnMouseEnter = [{
-  name:'create-group-fill-icon',
-  property:'display',
-  value:'inline-block'
-},
-{
-  name:'create-group-icon',
-  property:'display',
-  value:'none'
-},
+const createGroupOnMouseEnter = [
+  {
+    name: 'create-group-fill-icon',
+    property: 'display',
+    value: 'inline-block',
+  },
+  {
+    name: 'create-group-icon',
+    property: 'display',
+    value: 'none',
+  },
 ];
 
-const createGroupOnMouseLeave = [{
-  name:'create-group-fill-icon',
-  property:'display',
-  value:'none'
-},
-{
-  name:'create-group-icon',
-  property:'display',
-  value:'inline-block'
-},
+const createGroupOnMouseLeave = [
+  {
+    name: 'create-group-fill-icon',
+    property: 'display',
+    value: 'none',
+  },
+  {
+    name: 'create-group-icon',
+    property: 'display',
+    value: 'inline-block',
+  },
 ];
-
 
 // Chat Sections
 // Divided into two, left and right
@@ -68,11 +65,11 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   // theme context
   const theme = useTheme();
 
-  const { receivedIntents, searchedUser, setReceivedIntents, filteredUserData } = useContext(Context);
+  const { receivedIntents, setReceivedIntents, filteredUserData } = useContext(Context);
 
-  const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-22T00:00:00.000"), 90);
+  const isNewTagVisible = getIsNewTagVisible(new Date('2023-02-22T00:00:00.000'), 90);
 
-  const {connectedUser, displayQR, setDisplayQR} = useContext(ChatUserContext);
+  const { connectedUser, displayQR, setDisplayQR } = useContext(ChatUserContext);
 
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser?.profilePicture);
@@ -89,52 +86,46 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   const getRequests = async (): Promise<void> => {
     await resolveThreadhash();
     fetchIntentApi();
-};
+  };
   useEffect(() => {
     // This will run when the page first loads
     getRequests();
   }, []);
 
-  const closeQRDropdown = ()=>{
+  const closeQRDropdown = () => {
     setShowQR(false);
-}
-useClickAway(containerRef, () => closeQRDropdown())
+  };
+  useClickAway(containerRef, () => closeQRDropdown());
 
   async function resolveThreadhash(): Promise<void> {
     let getIntent;
-      getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account }), '', 'did');
+    getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account }), '', 'did');
 
-    if (getIntent!== undefined && !receivedIntents.length) {
-
+    if (getIntent !== undefined && !receivedIntents.length) {
       let intents: Feeds[] = getIntent.body;
       intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
       setReceivedIntents(intents);
       setLoadingRequests(false);
-    } 
+    }
     setLoadingRequests(false);
   }
   const fetchIntentApi = async (): Promise<Feeds[]> => {
-   const intents = await fetchIntent(connectedUser);
-   if(JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
-    setReceivedIntents(intents);
+    const intents = await fetchIntent(connectedUser);
+    if (JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
+      setReceivedIntents(intents);
+      setLoadingRequests(false);
+    }
     setLoadingRequests(false);
-   }
-   setLoadingRequests(false);
     return intents;
   };
-
-
 
   // RENDER
   return (
     <ItemVV2 ref={containerRef}>
       {/* Header */}
       {activeTab == 0 || activeTab == 1 ? (
-        <ItemVV2
-          flex="initial"
-          ref={containerRef}
-        >
-          <ItemHV2 ref={containerRef}>
+        <ItemVV2 flex="initial">
+          <ItemHV2>
             {/* Set active and onCLick to customize tab */}
             <TabButton
               active={activeTab == 0 ? true : false}
@@ -169,7 +160,7 @@ useClickAway(containerRef, () => closeQRDropdown())
             >
               <ItemHV2
                 alignItems="center"
-                ref={containerRef}
+                // ref={containerRef}
               >
                 <SpanV2
                   flex="initial"
@@ -202,9 +193,11 @@ useClickAway(containerRef, () => closeQRDropdown())
       <ItemVV2
         justifyContent="flex-start"
         alignItems="stretch"
+        // ref={containerRef}
+        onClick={closeQRDropdown}
       >
         {activeTab == 0 && <SearchBar />}
-        {activeTab == 0 && filteredUserData.length==0 && (
+        {activeTab == 0 && filteredUserData.length == 0 && (
           <CreateGroupContainer
             // justifyContent="flex-start"
             flex="none"
@@ -214,12 +207,8 @@ useClickAway(containerRef, () => closeQRDropdown())
             background="transparent"
             hover={theme.chat.snapFocusBg}
             hoverBackground="transparent"
-            onMouseEnter={() => 
-             StyleHelper.changeStyle(createGroupOnMouseEnter)
-            }
-            onMouseLeave={() => 
-              StyleHelper.changeStyle(createGroupOnMouseLeave)
-            }
+            onMouseEnter={() => StyleHelper.changeStyle(createGroupOnMouseEnter)}
+            onMouseLeave={() => StyleHelper.changeStyle(createGroupOnMouseLeave)}
           >
             <CreateGroupIcon id="create-group-icon" />
             <CreateGroupFillIcon id="create-group-fill-icon" />
@@ -235,8 +224,8 @@ useClickAway(containerRef, () => closeQRDropdown())
             {isNewTagVisible && <NewTag />}
           </CreateGroupContainer>
         )}
-        
-        {activeTab == 0 && filteredUserData.length==0 && (
+
+        {activeTab == 0 && filteredUserData.length == 0 && (
           <MessageFeed
             hasUserBeenSearched={false}
             filteredUserData={[]}
@@ -266,7 +255,7 @@ useClickAway(containerRef, () => closeQRDropdown())
           }}
         >
           <QROutline />
-          <TextQR >Link Mobile App</TextQR>
+          <TextQR>Link Mobile App</TextQR>
         </QRCodeContainer>
       ) : null}
 
@@ -288,57 +277,57 @@ const TabButton = styled(ButtonV2)`
 `;
 
 const ProfileContainer = styled(ItemHV2)`
-   flex: initial;
-   justify-content: space-between;
-   margin: 15px 0px 5px 0px;
-   padding: 14px 10px 0px 10px;
-   border-top: ${props => props.borderTop};
+  flex: initial;
+  justify-content: space-between;
+  margin: 15px 0px 5px 0px;
+  padding: 14px 10px 0px 10px;
+  border-top: ${(props) => props.borderTop};
 `;
 
 const QRCodeContainer = styled.div`
-display: flex;
-flex-direction: row;
-align-items: center;
-padding: 8px;
-gap: 9px;
-width: 200px;
-height: 48px;
-background: #FFFFFF;
-border: 1px solid #BAC4D6;
-box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
-border-radius: 12px;
-cursor:pointer;
-position: absolute;
-z-index: 100;
-bottom: 45px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px;
+  gap: 9px;
+  width: 200px;
+  z-index: 100;
+  height: 48px;
+  background: #ffffff;
+  border: 1px solid #bac4d6;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  cursor: pointer;
+  position: absolute;
+  z-index: 100;
+  bottom: 45px;
 
-@media (max-width:768px){
-right:30px;
-}
+  @media (max-width: 768px) {
+    right: 30px;
+  }
 
-@media(min-width:768px){
-  left:85px;
-}
-
+  @media (min-width: 768px) {
+    left: 85px;
+  }
 `;
 
 const QROutline = styled(AiOutlineQrcode)`
-width: 35px;
-height: 30px;
-`
+  width: 35px;
+  height: 30px;
+`;
 
 const TextQR = styled.p`
-font-family: 'Strawford';
-font-style: normal;
-font-weight: 400;
-font-size: 16px;
-line-height: 140%;
-text-align: center;
-// color: #657795;
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 140%;
+  text-align: center;
+  // color: #657795;
 `;
 
 const CreateGroupContainer = styled(ButtonV2)`
   flex-direction: row;
   align-self: stretch;
-  justify-content:flex-start
+  justify-content: flex-start;
 `;

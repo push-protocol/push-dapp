@@ -21,32 +21,27 @@ export function checkConnectedUser(connectedUser: ConnectedUser): boolean {
   } else return false;
 }
 
-type CheckIfIntentExistPropType = {
-  receivedIntents: Feeds[];
+type CheckIfChatsExistPropType = {
+  chats: Feeds[];
   currentChat: Feeds;
   connectedUser: ConnectedUser;
   isGroup?: boolean;
 };
 
-export const checkIfIntentExist = ({
-  receivedIntents,
+export const checkIfChatExist = ({
+  chats,
   currentChat,
   connectedUser,
   isGroup,
-}: CheckIfIntentExistPropType): boolean => {
+}: CheckIfChatsExistPropType): boolean => {
   let val: boolean;
   if (isGroup) {
-    val = receivedIntents?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)
-      ? true
-      : false;
+    val = chats?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId) ? true : false;
   } else {
-    val = receivedIntents?.find(
-      (x) => x?.combinedDID === currentChat?.combinedDID && x?.msg?.toDID === connectedUser?.did
-    )
+    val = chats?.find((x) => x?.combinedDID === currentChat?.combinedDID && x?.msg?.toDID === connectedUser?.did)
       ? true
       : false;
   }
-
   return val;
 };
 
@@ -106,29 +101,53 @@ export const getDefaultFeed = async ({
   inbox: Feeds[];
   intents: Feeds[];
 }): Promise<Feeds> => {
-  
   const user =
     userData ??
     (await PushAPI.user.get({
       account: walletAddress!,
       env: appConfig.appEnv,
     }));
-    let feed:Feeds;
-    const inboxUser = inbox.filter((inb) => inb.did === user.did);
+  let feed: Feeds;
+  const inboxUser = inbox.filter((inb) => inb.did === user.did);
 
-    const intentUser = intents.filter((userExist) => userExist.did === user.did);
-    if (inboxUser.length) {
-      feed = inboxUser[0];
-    } else if(intentUser.length){
-      feed = intentUser[0];
-    }
-    else {
-   feed = getDefaultFeedObject(user);
-}
+  const intentUser = intents.filter((userExist) => userExist.did === user.did);
+  if (inboxUser.length) {
+    feed = inboxUser[0];
+  } else if (intentUser.length) {
+    feed = intentUser[0];
+  } else {
+    feed = getDefaultFeedObject({ user });
+  }
   return feed;
 };
 
-export const getDefaultFeedObject = (user?:User,groupInformation?:IGroup) => {
+export const getDefaultGroupFeed = async ({
+  groupData,
+  inbox,
+  intents,
+}: {
+  groupData: IGroup;
+  inbox: Feeds[];
+  intents: Feeds[];
+}): Promise<{ feed: Feeds; isNew: boolean }> => {
+  let isNew: boolean = false;
+  let feed: Feeds;
+  console.log(inbox);
+  const inboxGroup = inbox.filter((inb) => inb?.groupInformation?.chatId === groupData.chatId);
+
+  const intentGroup = intents.filter((int) => int?.groupInformation?.chatId === groupData.chatId);
+  if (inboxGroup.length) {
+    feed = inboxGroup[0];
+  } else if (intentGroup.length) {
+    feed = intentGroup[0];
+  } else {
+    feed = getDefaultFeedObject({ groupInformation: groupData });
+    isNew = true;
+  }
+  return { feed, isNew };
+};
+
+export const getDefaultFeedObject = ({ user, groupInformation }: { user?: User; groupInformation?: IGroup }) => {
   const feed = {
     msg: {
       messageContent: null,
@@ -144,34 +163,46 @@ export const getDefaultFeedObject = (user?:User,groupInformation?:IGroup) => {
       toDID: null,
       toCAIP10: null,
     },
-    wallets: user.wallets,
-    did: user.did,
+    wallets: groupInformation ? null : user.wallets,
+    did: groupInformation ? null : user.did,
     threadhash: null,
-    profilePicture: user.profilePicture,
-    about: user.about,
+    profilePicture: groupInformation ? groupInformation.groupImage : user.profilePicture,
+    about: groupInformation ? null : user.about,
     intent: null,
     intentSentBy: null,
     intentTimestamp: null,
-    publicKey: user.publicKey,
+    publicKey: groupInformation ? null : user.publicKey,
     combinedDID: null,
     cid: null,
-    groupInformation: groupInformation??undefined,
+    groupInformation: groupInformation ?? undefined,
   };
   return feed;
-}
+};
 
-
-
-export const fetchInbox = async (connectedUser):Promise<Feeds[]>=> {
-  let inboxes:Feeds[] = await PushAPI.chat.chats({ account: connectedUser.wallets!, env: appConfig.appEnv, toDecrypt: false });
+export const fetchInbox = async (connectedUser): Promise<Feeds[]> => {
+  let inboxes: Feeds[] = await PushAPI.chat.chats({
+    account: connectedUser.wallets!,
+    env: appConfig.appEnv,
+    toDecrypt: false,
+  });
   await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account: connectedUser.wallets! }), inboxes, 'did');
   inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: connectedUser });
-  return inboxes
+  return inboxes;
 };
 
 export const fetchIntent = async (connectedUser): Promise<Feeds[]> => {
-  let intents = await PushAPI.chat.requests({account:connectedUser.wallets.split(':')[1],env:appConfig.appEnv, toDecrypt:false});
-  await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account: connectedUser.wallets }),intents, 'did');
+  let intents = await PushAPI.chat.requests({
+    account: connectedUser.wallets.split(':')[1],
+    env: appConfig.appEnv,
+    toDecrypt: false,
+  });
+  await intitializeDb<Feeds[]>(
+    'Insert',
+    'Intent',
+    w2wHelper.walletToCAIP10({ account: connectedUser.wallets }),
+    intents,
+    'did'
+  );
   intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
   return intents;
 };

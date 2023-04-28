@@ -1,11 +1,10 @@
 // Internal Components
-import * as PGP from './pgp';
-import * as DIDHelper from './did';
-import * as Ceramic from './ceramic';
-import * as AES from './aes';
 import { ConnectedUser, Feeds, MessageIPFSWithCID } from '../../types/chat';
+import * as AES from './aes';
+import * as Ceramic from './ceramic';
+import * as DIDHelper from './did';
 import { checkIfGroup, getMemberDetails } from './groupChat';
-import { getUser } from '../../api/w2w';
+import * as PGP from './pgp';
 // import { ConnectedUser, Feeds, MessageIPFSWithCID } from 'api'
 const decryptionErrorMsg = 'Error decrypting message: Session key decryption failed.';
 
@@ -101,7 +100,7 @@ export const decryptFeeds = async ({
         });
       } catch (e) {
         // console.log(e);
-        if(e.message == decryptionErrorMsg){
+        if (e.message == decryptionErrorMsg) {
           feed.msg.messageType = 'Text';
           feed.msg.messageContent = 'message encrypted before you joined';
         }
@@ -157,7 +156,7 @@ export const decryptMessages = async ({
       });
     } catch (e) {
       // console.log(e);
-      if(e.message == decryptionErrorMsg){
+      if (e.message == decryptionErrorMsg) {
         savedMsg.messageType = 'Text';
         savedMsg.messageContent = 'message encrypted before you joined';
       }

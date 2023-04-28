@@ -5,7 +5,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { MdError } from 'react-icons/md';
 import styled, { useTheme } from 'styled-components';
 
-
 // Internal Components
 import { useWeb3React } from '@web3-react/core';
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
@@ -13,19 +12,18 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
-import { fetchInbox } from 'helpers/w2w/user';
+import { fetchInbox, getDefaultGroupFeed } from 'helpers/w2w/user';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext, Feeds, User } from 'types/chat';
+import { AppContext, Feeds, IGroup, User } from 'types/chat';
 import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../../../helpers/w2w/groupChat';
 import { getDefaultFeed } from '../../../../helpers/w2w/user';
 import { intitializeDb } from '../w2wIndexeddb';
 
 // Internal Configs
 
-
 interface MessageFeedPropsI {
-  filteredUserData: User[];
+  filteredUserData: User[] | IGroup;
   hasUserBeenSearched: boolean;
   isInvalidAddress: boolean;
   automatedSearch: boolean;
@@ -34,7 +32,18 @@ interface MessageFeedPropsI {
 const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, setInbox, currentChat, receivedIntents, setActiveTab, activeTab, inbox, setHasUserBeenSearched, filteredUserData, setFilteredUserData }: AppContext = useContext<AppContext>(Context);
+  const {
+    setChat,
+    setInbox,
+    currentChat,
+    receivedIntents,
+    setActiveTab,
+    activeTab,
+    inbox,
+    setHasUserBeenSearched,
+    filteredUserData,
+    setFilteredUserData,
+  }: AppContext = useContext<AppContext>(Context);
 
   const { connectedUser } = useContext(ChatUserContext);
 
@@ -46,40 +55,44 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const [showError, setShowError] = useState<boolean>(false);
   const messageFeedToast = useToast();
 
-  const onFeedClick = (feed:Feeds,i:number):void => {
-    if((receivedIntents?.filter((userExist) => userExist.did === props?.filteredUserData[0]?.did)).length)
-    {
+  const onFeedClick = (feed: Feeds, i: number): void => {
+    if ((receivedIntents?.filter((userExist) => userExist.did === props?.filteredUserData[0]?.did)).length) {
       setActiveTab(1);
     }
     setChat(feed);
     setSelectedChatSnap(i);
     setHasUserBeenSearched(false);
-    filteredUserData.length>0 ? setFilteredUserData([]):null;
-  }
+    filteredUserData.length > 0 ? setFilteredUserData([]) : null;
+  };
 
   const getInbox = async (): Promise<Feeds[]> => {
-      const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account }), '', 'did');
-      if (getInbox !== undefined && !inbox.length) {
-        let inboxes: Feeds[] = getInbox.body;
-        inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-        if (JSON.stringify(feeds) !== JSON.stringify(inboxes))
-        {
-         setFeeds(inboxes)
-         setInbox(inboxes);
-        }
-        return inboxes;
-    }
-  };
-  
-  const fetchInboxApi = async (): Promise<Feeds[]> => {
-    try {
-      const inboxes:Feeds[] = await fetchInbox(connectedUser);
-      if (JSON.stringify(feeds) !== JSON.stringify(inbox)){
+    const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account }), '', 'did');
+    if (getInbox !== undefined && !inbox.length) {
+      let inboxes: Feeds[] = getInbox.body;
+      inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
+      if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
         setFeeds(inboxes);
         setInbox(inboxes);
-        if(checkIfGroup(currentChat)){
-          if(currentChat?.groupInformation?.members?.length !== inboxes[selectedChatSnap]?.groupInformation?.members?.length)
-           setChat(inboxes[selectedChatSnap]);
+      }
+      return inboxes;
+    }
+  };
+
+  const fetchInboxApi = async (): Promise<Feeds[]> => {
+    try {
+      const inboxes: Feeds[] = await fetchInbox(connectedUser);
+      if (JSON.stringify(feeds) !== JSON.stringify(inbox)) {
+        setFeeds(inboxes);
+        setInbox(inboxes);
+        if (checkIfGroup(currentChat)) {
+          if (
+            currentChat &&
+            inboxes[selectedChatSnap] &&
+            currentChat?.groupInformation?.members?.length !==
+              inboxes[selectedChatSnap]?.groupInformation?.members?.length
+          ) {
+            setChat(inboxes[selectedChatSnap]);
+          }
         }
       }
       setShowError(false);
@@ -103,27 +116,26 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   };
 
   const updateInbox = async (): Promise<void> => {
-      await getInbox();
-      fetchInboxApi();
+    await getInbox();
+    fetchInboxApi();
 
     setMessagesLoading(false);
   };
 
   useEffect(() => {
-    setFeeds(inbox);  
-  },[inbox]);
+    setFeeds(inbox);
+  }, [inbox]);
 
   useEffect(() => {
-    if(feeds && feeds.length > 0 && props.automatedSearch) {
+    if (feeds && feeds.length > 0 && props.automatedSearch) {
       onFeedClick(feeds[0], 0);
       setActiveTab(0);
     }
   }, [feeds]);
 
   useEffect(() => {
-    if(!props.hasUserBeenSearched)
-      updateInbox();
-  },[]);
+    if (!props.hasUserBeenSearched) updateInbox();
+  }, []);
 
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
@@ -147,16 +159,41 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
           } else {
             // When searching as of now the search will always result in only one user being displayed.
             // There is no multiple users appearing on the sidebar when a search is done. The wallets must match exactly.
-            const user: User = props.filteredUserData[0];
-            let feed: Feeds;
-                feed = await getDefaultFeed({userData:user,inbox,intents:receivedIntents});
-            setFeeds([feed]);
+            const searchedData: User | IGroup = props.filteredUserData[0];
+            let feed: Feeds, isNew: boolean;
+            if ((searchedData as IGroup)?.groupName) {
+              ({ feed, isNew } = await getDefaultGroupFeed({
+                groupData: searchedData as IGroup,
+                inbox,
+                intents: receivedIntents,
+              }));
+            } else {
+              feed = await getDefaultFeed({ userData: searchedData as User, inbox, intents: receivedIntents });
+            }
+            console.log(isNew);
+            if (isNew && !feed?.groupInformation?.isPublic) {
+              messageFeedToast.showMessageToast({
+                toastTitle: 'Error',
+                toastMessage: 'Cannot search for private groups now',
+                toastType: 'ERROR',
+                getToastIcon: (size) => (
+                  <MdError
+                    size={size}
+                    color="red"
+                  />
+                ),
+              });
+              setFilteredUserData([]);
+              setActiveTab(0);
+            } else {
+              setFeeds([feed]);
+            }
           }
         } else {
           if (props.isInvalidAddress) {
             messageFeedToast.showMessageToast({
               toastTitle: 'Error',
-              toastMessage: 'Invalid Address',
+              toastMessage: 'Invalid Search',
               toastType: 'ERROR',
               getToastIcon: (size) => (
                 <MdError
@@ -170,8 +207,7 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
           // reset if active tab is 4
           if (activeTab == 4) {
             setActiveTab(0);
-          }
-          else {
+          } else {
             setFeeds([]);
           }
         }
@@ -180,11 +216,10 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
       searchFn();
     }
 
-    return ()=>{
+    return () => {
       setMessagesLoading(false);
-    }
+    };
   }, [props.hasUserBeenSearched, props.filteredUserData]);
-
   return (
     <ItemVV2
       flex={6}
@@ -211,7 +246,7 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
           />
         ) : (
           <>
-            {!feeds?.length && !messagesLoading && activeTab!==3 && activeTab!==4 ? (
+            {!feeds?.length && !messagesLoading && activeTab !== 3 && activeTab !== 4 ? (
               <EmptyConnection>
                 Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
               </EmptyConnection>
@@ -225,11 +260,11 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
                   <ChatSnap
                     pfp={getGroupImage(feed)}
                     username={getName(feed)}
-                    isGroup = {checkIfGroup(feed)}
-                    chatSnapMsg={getChatsnapMessage(feed,account!,false)}
-                    timestamp={feed.msg.timestamp??feed.intentTimestamp}
+                    isGroup={checkIfGroup(feed)}
+                    chatSnapMsg={getChatsnapMessage(feed, account!, false)}
+                    timestamp={feed.msg.timestamp ?? feed.intentTimestamp}
                     selected={i == selectedChatSnap ? true : false}
-                    onClick={(): void => onFeedClick(feed,i)}
+                    onClick={(): void => onFeedClick(feed, i)}
                   />
                 </ItemVV2>
               ))

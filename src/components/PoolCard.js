@@ -1,25 +1,35 @@
 // React + Web3 Essentials
-import { useWeb3React } from "@web3-react/core";
+import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import React from "react";
+import React from 'react';
 
 // External Packages
-import styled, { css } from "styled-components";
-import { toast } from "react-toastify";
+import styled, { css } from 'styled-components';
+import { toast } from 'react-toastify';
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import InfoTooltip from "../primaries/InfoTooltip";
+import InfoTooltip from '../primaries/InfoTooltip';
 import { B, Button, H2, H3, Input, Item, ItemH, Span } from '../primaries/SharedStyling';
 
 // Internal Configs
-import { abis, addresses } from "config";
+import { abis, addresses } from 'config';
 
-const bn = function (number, defaultValue = null) { if (number == null) { if (defaultValue == null) { return null } number = defaultValue } return ethers.BigNumber.from(number) }
+const bn = function (number, defaultValue = null) {
+  if (number == null) {
+    if (defaultValue == null) {
+      return null;
+    }
+    number = defaultValue;
+  }
+  return ethers.BigNumber.from(number);
+};
 
 // const tokens = function (amount) { return (bn(amount).mul(bn(10).pow(18))).toString() }
 // const tokensBN = function (amount) { return (bn(amount).mul(bn(10).pow(18))) }
-const bnToInt = function (bnAmount) { return bnAmount.div(bn(10).pow(18)) }
+const bnToInt = function (bnAmount) {
+  return bnAmount.div(bn(10).pow(18));
+};
 
 // Create Header
 export default function PoolCard({
@@ -53,7 +63,6 @@ export default function PoolCard({
   React.useEffect(() => {
     // Check if the account has approved deposit
     checkApprDeposit();
-
   }, [depositAmountToken]);
 
   const checkApprDeposit = async () => {
@@ -64,32 +73,31 @@ export default function PoolCard({
     setTxInProgressApprDep(true);
 
     var signer = library.getSigner(account);
-    const tokenAddr = poolName == "Uniswap LP Pool (UNI-V2)" ? addresses.epnsLPToken : addresses.epnsToken;
+    const tokenAddr = poolName == 'Uniswap LP Pool (UNI-V2)' ? addresses.epnsLPToken : addresses.epnsToken;
     let token = new ethers.Contract(tokenAddr, abis.epnsToken, signer);
 
     const allowance = await token.allowance(account, addresses.staking);
     if (allowance.gte(bn(depositAmountToken))) {
       setDepositApprove(true);
-    }
-    else {
+    } else {
       setDepositApprove(false);
     }
 
     setTxInProgressApprDep(false);
-  }
+  };
 
   const fillMax = async () => {
     var signer = library.getSigner(account);
-    const tokenAddr = poolName == "Uniswap LP Pool (UNI-V2)" ? addresses.epnsLPToken : addresses.epnsToken;
+    const tokenAddr = poolName == 'Uniswap LP Pool (UNI-V2)' ? addresses.epnsLPToken : addresses.epnsToken;
     let token = new ethers.Contract(tokenAddr, abis.epnsToken, signer);
 
     let balance = bnToInt(await token.balanceOf(account));
-    setDepositAmountToken(parseInt(balance.toString().replace(/\D/, '')) || 0)
-  }
+    setDepositAmountToken(parseInt(balance.toString().replace(/\D/, '')) || 0);
+  };
 
   const approveDeposit = async () => {
     if (depositApproved || txInProgressApprDep) {
-      return
+      return;
     }
 
     setTxInProgressApprDep(true);
@@ -98,18 +106,18 @@ export default function PoolCard({
     let epnsToken = new ethers.Contract(tokenAddress, abis.epnsToken, signer);
     let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
 
-    const uintMax = bn(2).pow(bn(256)).sub(1)
+    const uintMax = bn(2).pow(bn(256)).sub(1);
 
-    const tx = epnsToken.approve(
-      staking.address,
-      uintMax
-    );
+    const tx = epnsToken.approve(staking.address, uintMax);
 
     tx.then(async (tx) => {
       let txToast = toast.dark(
-        <LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />,
+        <LoaderToast
+          msg="Waiting for Confirmation..."
+          color="#35c5f3"
+        />,
         {
-          position: "bottom-right",
+          position: 'bottom-right',
           autoClose: false,
           hideProgressBar: true,
           closeOnClick: true,
@@ -123,16 +131,15 @@ export default function PoolCard({
         await library.waitForTransaction(tx.hash);
 
         toast.update(txToast, {
-          render: "Transaction Completed!",
+          render: 'Transaction Completed!',
           type: toast.TYPE.SUCCESS,
           autoClose: 5000,
         });
         setTxInProgressApprDep(false);
         setDepositApprove(true);
-
       } catch (e) {
         toast.update(txToast, {
-          render: "Transaction Failed! (" + e.name + ")",
+          render: 'Transaction Failed! (' + e.name + ')',
           type: toast.TYPE.ERROR,
           autoClose: 5000,
         });
@@ -140,8 +147,8 @@ export default function PoolCard({
         setTxInProgressApprDep(false);
       }
     }).catch((err) => {
-      toast.dark("Transaction Cancelled!", {
-        position: "bottom-right",
+      toast.dark('Transaction Cancelled!', {
+        position: 'bottom-right',
         type: toast.TYPE.ERROR,
         autoClose: 5000,
         hideProgressBar: false,
@@ -153,14 +160,14 @@ export default function PoolCard({
 
       setTxInProgressApprDep(false);
     });
-  }
+  };
 
   const depositAmountTokenFarmSingleTx = async () => {
     if (txInProgressDep || !approveDeposit) {
-      return
+      return;
     }
 
-    setTxInProgressDep(true)
+    setTxInProgressDep(true);
 
     var signer = library.getSigner(account);
     let epnsToken = new ethers.Contract(tokenAddress, abis.epnsToken, signer);
@@ -169,17 +176,18 @@ export default function PoolCard({
 
     const tx2 = staking.deposit(
       tokenAddress,
-      ethers.BigNumber.from(depositAmountToken).mul(
-        ethers.BigNumber.from(10).pow(18)
-      )
+      ethers.BigNumber.from(depositAmountToken).mul(ethers.BigNumber.from(10).pow(18))
     );
 
     tx2
       .then(async (tx) => {
         let txToast = toast.dark(
-          <LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />,
+          <LoaderToast
+            msg="Waiting for Confirmation..."
+            color="#35c5f3"
+          />,
           {
-            position: "bottom-right",
+            position: 'bottom-right',
             autoClose: false,
             hideProgressBar: true,
             closeOnClick: true,
@@ -193,7 +201,7 @@ export default function PoolCard({
           await library.waitForTransaction(tx.hash);
 
           toast.update(txToast, {
-            render: "Transaction Completed!",
+            render: 'Transaction Completed!',
             type: toast.TYPE.SUCCESS,
             autoClose: 5000,
           });
@@ -207,7 +215,7 @@ export default function PoolCard({
           // window.location.reload();
         } catch (e) {
           toast.update(txToast, {
-            render: "Transaction Failed! (" + e.name + ")",
+            render: 'Transaction Failed! (' + e.name + ')',
             type: toast.TYPE.ERROR,
             autoClose: 5000,
           });
@@ -216,8 +224,8 @@ export default function PoolCard({
         }
       })
       .catch((err) => {
-        toast.dark("Transaction Cancelled!", {
-          position: "bottom-right",
+        toast.dark('Transaction Cancelled!', {
+          position: 'bottom-right',
           type: toast.TYPE.ERROR,
           autoClose: 5000,
           hideProgressBar: false,
@@ -240,8 +248,8 @@ export default function PoolCard({
     const withdrawAmount = formatTokens(userData.epochStakeNext);
 
     if (withdrawAmount == 0) {
-      toast.dark("Nothing to Withdraw!", {
-        position: "bottom-right",
+      toast.dark('Nothing to Withdraw!', {
+        position: 'bottom-right',
         type: toast.TYPE.ERROR,
         autoClose: 5000,
         hideProgressBar: false,
@@ -260,16 +268,17 @@ export default function PoolCard({
 
     const tx = staking.withdraw(
       tokenAddress,
-      ethers.BigNumber.from(withdrawAmount).mul(
-        ethers.BigNumber.from(10).pow(18)
-      )
+      ethers.BigNumber.from(withdrawAmount).mul(ethers.BigNumber.from(10).pow(18))
     );
 
     tx.then(async (tx) => {
       let txToast = toast.dark(
-        <LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />,
+        <LoaderToast
+          msg="Waiting for Confirmation..."
+          color="#35c5f3"
+        />,
         {
-          position: "bottom-right",
+          position: 'bottom-right',
           autoClose: false,
           hideProgressBar: true,
           closeOnClick: true,
@@ -283,7 +292,7 @@ export default function PoolCard({
         await library.waitForTransaction(tx.hash);
 
         toast.update(txToast, {
-          render: "Transaction Completed!",
+          render: 'Transaction Completed!',
           type: toast.TYPE.SUCCESS,
           autoClose: 5000,
         });
@@ -295,7 +304,7 @@ export default function PoolCard({
         getUserData();
       } catch (e) {
         toast.update(txToast, {
-          render: "Transaction Failed! (" + e.name + ")",
+          render: 'Transaction Failed! (' + e.name + ')',
           type: toast.TYPE.ERROR,
           autoClose: 5000,
         });
@@ -303,8 +312,8 @@ export default function PoolCard({
         setTxInProgressWithdraw(false);
       }
     }).catch((err) => {
-      toast.dark("Transaction Cancelled!", {
-        position: "bottom-right",
+      toast.dark('Transaction Cancelled!', {
+        position: 'bottom-right',
         type: toast.TYPE.ERROR,
         autoClose: 5000,
         hideProgressBar: false,
@@ -320,19 +329,18 @@ export default function PoolCard({
 
   const harvestTokens = async () => {
     var signer = library.getSigner(account);
-    let yieldFarmingPUSH = new ethers.Contract(
-      poolAddress,
-      abis.yieldFarming,
-      signer
-    );
+    let yieldFarmingPUSH = new ethers.Contract(poolAddress, abis.yieldFarming, signer);
 
     if (harvestEpochValue) {
       const tx = yieldFarmingPUSH.harvest(harvestEpochValue);
       tx.then(async (tx) => {
         let txToast = toast.dark(
-          <LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />,
+          <LoaderToast
+            msg="Waiting for Confirmation..."
+            color="#35c5f3"
+          />,
           {
-            position: "bottom-right",
+            position: 'bottom-right',
             autoClose: false,
             hideProgressBar: true,
             closeOnClick: true,
@@ -346,7 +354,7 @@ export default function PoolCard({
           await library.waitForTransaction(tx.hash);
 
           toast.update(txToast, {
-            render: "Transaction Completed!",
+            render: 'Transaction Completed!',
             type: toast.TYPE.SUCCESS,
             autoClose: 5000,
           });
@@ -354,7 +362,7 @@ export default function PoolCard({
           setTxInProgress(false);
         } catch (e) {
           toast.update(txToast, {
-            render: "Transaction Failed! (" + e.name + ")",
+            render: 'Transaction Failed! (' + e.name + ')',
             type: toast.TYPE.ERROR,
             autoClose: 5000,
           });
@@ -362,8 +370,8 @@ export default function PoolCard({
           setTxInProgress(false);
         }
       }).catch((err) => {
-        toast.dark("Transaction Cancelled!", {
-          position: "bottom-right",
+        toast.dark('Transaction Cancelled!', {
+          position: 'bottom-right',
           type: toast.TYPE.ERROR,
           autoClose: 5000,
           hideProgressBar: false,
@@ -384,8 +392,8 @@ export default function PoolCard({
     }
 
     if (!pushPoolStats.currentEpochPUSH || pushPoolStats.currentEpochPUSH == 1) {
-      toast.dark("Harvest unlocks from Epoch 2!", {
-        position: "bottom-right",
+      toast.dark('Harvest unlocks from Epoch 2!', {
+        position: 'bottom-right',
         type: toast.TYPE.ERROR,
         hideProgressBar: false,
         closeOnClick: true,
@@ -401,19 +409,17 @@ export default function PoolCard({
     console.log(poolAddress);
 
     var signer = library.getSigner(account);
-    let yieldFarmingPUSH = new ethers.Contract(
-      poolAddress,
-      abis.yieldFarming,
-      signer
-    );
+    let yieldFarmingPUSH = new ethers.Contract(poolAddress, abis.yieldFarming, signer);
     const tx = yieldFarmingPUSH.massHarvest();
-
 
     tx.then(async (tx) => {
       let txToast = toast.dark(
-        <LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />,
+        <LoaderToast
+          msg="Waiting for Confirmation..."
+          color="#35c5f3"
+        />,
         {
-          position: "bottom-right",
+          position: 'bottom-right',
           autoClose: false,
           hideProgressBar: true,
           closeOnClick: true,
@@ -427,7 +433,7 @@ export default function PoolCard({
         await library.waitForTransaction(tx.hash);
 
         toast.update(txToast, {
-          render: "Transaction Completed!",
+          render: 'Transaction Completed!',
           type: toast.TYPE.SUCCESS,
           autoClose: 5000,
         });
@@ -435,7 +441,7 @@ export default function PoolCard({
         setTxInProgressMassHarvest(false);
       } catch (e) {
         toast.update(txToast, {
-          render: "Transaction Failed! (" + e.name + ")",
+          render: 'Transaction Failed! (' + e.name + ')',
           type: toast.TYPE.ERROR,
           autoClose: 5000,
         });
@@ -443,8 +449,8 @@ export default function PoolCard({
         setTxInProgressMassHarvest(false);
       }
     }).catch((err) => {
-      toast.dark("Transaction Cancelled!", {
-        position: "bottom-right",
+      toast.dark('Transaction Cancelled!', {
+        position: 'bottom-right',
         type: toast.TYPE.ERROR,
         autoClose: 5000,
         hideProgressBar: false,
@@ -465,50 +471,112 @@ export default function PoolCard({
   };
 
   function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
   return (
     <>
-      <Item margin="20px" align="stretch" self="stretch" border="1px solid #e1e1e1" radius="12px">
+      <Item
+        margin="20px"
+        align="stretch"
+        self="stretch"
+        border="1px solid #e1e1e1"
+        radius="12px"
+      >
         <Item>
           <Item>
-            <H2 textTransform="uppercase" spacing="0.1em">
-              <Span bg={poolName == "Uniswap LP Pool (UNI-V2)" ? "#35c5f3" : "#e20880"} size="0.8em" color="#fff" weight="600" padding="0px 8px">{poolName}</Span>
+            <H2
+              textTransform="uppercase"
+              spacing="0.1em"
+            >
+              <Span
+                bg={poolName == 'Uniswap LP Pool (UNI-V2)' ? '#35c5f3' : '#e20880'}
+                size="0.8em"
+                color="#fff"
+                weight="600"
+                padding="0px 8px"
+              >
+                {poolName}
+              </Span>
             </H2>
             <Item
               align="flex-end"
               self="stretch"
             >
               <H3>
-                <Span>Current APR </Span><Span bg={poolName == "Uniswap LP Pool (UNI-V2)" ? "#35c5f3" : "#e20880"} padding="2px 8px" weight="600" color="#fff"><b>{pushPoolStats.stakingAPR}%</b></Span>
+                <Span>Current APR </Span>
+                <Span
+                  bg={poolName == 'Uniswap LP Pool (UNI-V2)' ? '#35c5f3' : '#e20880'}
+                  padding="2px 8px"
+                  weight="600"
+                  color="#fff"
+                >
+                  <b>{Math.max(pushPoolStats.stakingAPR, 0)}%</b>
+                </Span>
               </H3>
             </Item>
           </Item>
 
-          <ItemH margin="10px 0px 0px 0px" self="stretch" items="stretch" bg="#f1f1f1">
-            <PoolContainer bg="#fff" margin="5px 15px" radius="12px" border="1px solid #ddd" borderBottom="8px solid #e1e1e1">
-              <PoolBoxTitle margin="15px 10px" fg="#999" textTransform="uppercase" size="10px" spacing="0.2em">Current Reward</PoolBoxTitle>
+          <ItemH
+            margin="10px 0px 0px 0px"
+            self="stretch"
+            items="stretch"
+            bg="#f1f1f1"
+          >
+            <PoolContainer
+              bg="#fff"
+              margin="5px 15px"
+              radius="12px"
+              border="1px solid #ddd"
+              borderBottom="8px solid #e1e1e1"
+            >
+              <PoolBoxTitle
+                margin="15px 10px"
+                fg="#999"
+                textTransform="uppercase"
+                size="10px"
+                spacing="0.2em"
+              >
+                Current Reward
+              </PoolBoxTitle>
               <PoolBoxMsg
                 bg="transparent"
-                fg={poolName == "Uniswap LP Pool (UNI-V2)" ? "#35c5f3" : "#e20880"}
-                size="16px"
-                margin="-15px 5px 10px 5px"
-              > 
-                {/* TODO: fix calculation */}
-                { poolName == "Uniswap LP Pool (UNI-V2)" ? numberWithCommas(formatTokens(pushPoolStats.rewardForCurrentEpoch)) : 0 } PUSH
-              </PoolBoxMsg>
-            </PoolContainer>
-
-            <PoolContainer bg="#fff" margin="5px 15px" radius="12px" border="1px solid #ddd" borderBottom="8px solid #e1e1e1">
-              <PoolBoxTitle margin="15px 10px" fg="#999" textTransform="uppercase" size="10px" spacing="0.2em">Total Staked</PoolBoxTitle>
-              <PoolBoxMsg
-                bg="transparent"
-                fg={poolName == "Uniswap LP Pool (UNI-V2)" ? "#35c5f3" : "#e20880"}
+                fg={poolName == 'Uniswap LP Pool (UNI-V2)' ? '#35c5f3' : '#e20880'}
                 size="16px"
                 margin="-15px 5px 10px 5px"
               >
-                {numberWithCommas(formatTokens(pushPoolStats.poolBalance))} {poolName == "Uniswap LP Pool (UNI-V2)" ? "UNI-V2" : "PUSH"}
+                {/* TODO: fix calculation */}
+                {poolName == 'Uniswap LP Pool (UNI-V2)'
+                  ? numberWithCommas(formatTokens(pushPoolStats.rewardForCurrentEpoch))
+                  : 0}{' '}
+                PUSH
+              </PoolBoxMsg>
+            </PoolContainer>
+
+            <PoolContainer
+              bg="#fff"
+              margin="5px 15px"
+              radius="12px"
+              border="1px solid #ddd"
+              borderBottom="8px solid #e1e1e1"
+            >
+              <PoolBoxTitle
+                margin="15px 10px"
+                fg="#999"
+                textTransform="uppercase"
+                size="10px"
+                spacing="0.2em"
+              >
+                Total Staked
+              </PoolBoxTitle>
+              <PoolBoxMsg
+                bg="transparent"
+                fg={poolName == 'Uniswap LP Pool (UNI-V2)' ? '#35c5f3' : '#e20880'}
+                size="16px"
+                margin="-15px 5px 10px 5px"
+              >
+                {numberWithCommas(formatTokens(pushPoolStats.poolBalance))}{' '}
+                {poolName == 'Uniswap LP Pool (UNI-V2)' ? 'UNI-V2' : 'PUSH'}
               </PoolBoxMsg>
             </PoolContainer>
           </ItemH>
@@ -520,46 +588,110 @@ export default function PoolCard({
           >
             <EpochDisplayer>
               <Span padding="0px 5px 0px 0px">Current Epoch</Span>
-                <B>
-                  {Math.min(pushPoolStats.currentEpochPUSH,pushPoolStats.totalEpochPUSH).toString()}
-                  /
-                  {pushPoolStats.totalEpochPUSH}
-                </B>
+              <B>
+                {Math.min(pushPoolStats.currentEpochPUSH, pushPoolStats.totalEpochPUSH).toString()}/
+                {pushPoolStats.totalEpochPUSH}
+              </B>
             </EpochDisplayer>
           </Item>
         </Item>
 
-        <Item padding="10px 20px 0px 20px" align="stretch" self="stretch">
-          <ItemH margin="0px" align="stretch" self="stretch" flex="1">
-            <Item bg="#000" margin="5px 10px" radius="12px" flex="1">
+        <Item
+          padding="10px 20px 0px 20px"
+          align="stretch"
+          self="stretch"
+        >
+          <ItemH
+            margin="0px"
+            align="stretch"
+            self="stretch"
+            flex="1"
+          >
+            <Item
+              bg="#000"
+              margin="5px 10px"
+              radius="12px"
+              flex="1"
+            >
               <PoolBoxTitle>User Deposit</PoolBoxTitle>
-              <PoolBoxMsg>{formatTokens(userData.epochStakeNext)} {poolName == "Uniswap LP Pool (UNI-V2)" ? "UNI-V2" : "PUSH"}</PoolBoxMsg>
+              <PoolBoxMsg>
+                {formatTokens(userData.epochStakeNext)} {poolName == 'Uniswap LP Pool (UNI-V2)' ? 'UNI-V2' : 'PUSH'}
+              </PoolBoxMsg>
             </Item>
 
-            <Item bg="#000" margin="5px 10px" radius="12px" flex="1">
-              <PoolBoxTitle>Rewards Claimed <InfoTooltip title={"The total rewards you have already claimed from the pool. This includes all the rewards including the ones already harvested."} /></PoolBoxTitle>
-              <PoolBoxMsg>{(userData.totalAccumulatedReward - userData.totalAvailableReward).toFixed(2)} PUSH</PoolBoxMsg>
+            <Item
+              bg="#000"
+              margin="5px 10px"
+              radius="12px"
+              flex="1"
+            >
+              <PoolBoxTitle>
+                Rewards Claimed{' '}
+                <InfoTooltip
+                  title={
+                    'The total rewards you have already claimed from the pool. This includes all the rewards including the ones already harvested.'
+                  }
+                />
+              </PoolBoxTitle>
+              <PoolBoxMsg>
+                {(userData.totalAccumulatedReward - userData.totalAvailableReward).toFixed(2)} PUSH
+              </PoolBoxMsg>
             </Item>
           </ItemH>
 
-          <ItemH margin="0px" align="stretch" self="stretch" flex="1">
-            <Item bg="#000" margin="5px 10px" radius="12px" flex="1">
-              <PoolBoxTitle>Current Epoch Reward <InfoTooltip title={"This is only an estimation for the user's reward that they might get after the epoch. This might change depending upon deposits from other users."} /></PoolBoxTitle>
+          <ItemH
+            margin="0px"
+            align="stretch"
+            self="stretch"
+            flex="1"
+          >
+            <Item
+              bg="#000"
+              margin="5px 10px"
+              radius="12px"
+              flex="1"
+            >
+              <PoolBoxTitle>
+                Current Epoch Reward{' '}
+                <InfoTooltip
+                  title={
+                    "This is only an estimation for the user's reward that they might get after the epoch. This might change depending upon deposits from other users."
+                  }
+                />
+              </PoolBoxTitle>
               {/* TODO fix calculation*/}
-              <PoolBoxMsg>{ poolName == "Uniswap LP Pool (UNI-V2)" ? userData.potentialUserReward : 0} PUSH</PoolBoxMsg>
+              <PoolBoxMsg>{0} PUSH</PoolBoxMsg>
             </Item>
 
-            <Item bg="#000" margin="5px 10px" radius="12px" flex="1">
-              <PoolBoxTitle>Available for Harvest <InfoTooltip title={"The rewards that are currently available for harvesting and can be immediately transferred to your address."} /></PoolBoxTitle>
+            <Item
+              bg="#000"
+              margin="5px 10px"
+              radius="12px"
+              flex="1"
+            >
+              <PoolBoxTitle>
+                Available for Harvest{' '}
+                <InfoTooltip
+                  title={
+                    'The rewards that are currently available for harvesting and can be immediately transferred to your address.'
+                  }
+                />
+              </PoolBoxTitle>
               <PoolBoxMsg>{userData.totalAvailableReward} PUSH</PoolBoxMsg>
             </Item>
           </ItemH>
         </Item>
 
-        {showDepositItem &&
-          <Item bg="#f1f1f1" radius="0px" margin="20px 0px -10px 0px" padding="10px 20px" align="stretch" self="stretch">
-
-            {!showDepSlip &&
+        {showDepositItem && (
+          <Item
+            bg="#f1f1f1"
+            radius="0px"
+            margin="20px 0px -10px 0px"
+            padding="10px 20px"
+            align="stretch"
+            self="stretch"
+          >
+            {!showDepSlip && (
               <>
                 <Item>
                   <MaxButton
@@ -578,44 +710,67 @@ export default function PoolCard({
                     bg="#fff"
                     value={depositAmountToken}
                     onChange={(e) => {
-                      setDepositAmountToken(parseInt(e.target.value.replace(/\D/, '')) || 0)
+                      setDepositAmountToken(parseInt(e.target.value.replace(/\D/, '')) || 0);
                     }}
                   />
                 </Item>
 
                 <ItemH padding="10px 0 0 0">
                   <ButtonAlt
-                    bg={depositApproved ? "#999" : "#e20880"}
+                    bg={depositApproved ? '#999' : '#e20880'}
                     onClick={approveDeposit}
                     disabled={depositApproved ? true : false}
                   >
-                    {!depositApproved && !txInProgressApprDep &&
-                      <Span color="#fff" weight="400">Approve</Span>
-                    }
-                    {txInProgressApprDep && !depositApproved &&
-                      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
-                    }
-                    {!txInProgress && depositApproved &&
-                      <Span color="#fff" weight="600">Approved</Span>
-                    }
+                    {!depositApproved && !txInProgressApprDep && (
+                      <Span
+                        color="#fff"
+                        weight="400"
+                      >
+                        Approve
+                      </Span>
+                    )}
+                    {txInProgressApprDep && !depositApproved && (
+                      <LoaderSpinner
+                        type={LOADER_TYPE.SEAMLESS}
+                        spinnerSize={16}
+                        spinnerColor="#fff"
+                      />
+                    )}
+                    {!txInProgress && depositApproved && (
+                      <Span
+                        color="#fff"
+                        weight="600"
+                      >
+                        Approved
+                      </Span>
+                    )}
                   </ButtonAlt>
                   <ButtonAlt
-                    bg={!depositApproved ? "#999" : "#e20880"}
+                    bg={!depositApproved ? '#999' : '#e20880'}
                     disabled={!depositApproved ? true : false}
                     onClick={depositAmountTokenFarmSingleTx}
                   >
-                    {!txInProgressDep &&
-                      <Span color="#fff" weight="400">Deposit</Span>
-                    }
-                    {txInProgressDep &&
-                      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
-                    }
+                    {!txInProgressDep && (
+                      <Span
+                        color="#fff"
+                        weight="400"
+                      >
+                        Deposit
+                      </Span>
+                    )}
+                    {txInProgressDep && (
+                      <LoaderSpinner
+                        type={LOADER_TYPE.SEAMLESS}
+                        spinnerSize={16}
+                        spinnerColor="#fff"
+                      />
+                    )}
                   </ButtonAlt>
                 </ItemH>
               </>
-            }
+            )}
 
-            {showDepSlip &&
+            {showDepSlip && (
               <Span
                 bg="#e20880"
                 color="#fff"
@@ -629,48 +784,80 @@ export default function PoolCard({
               >
                 Deposit Successful!
               </Span>
-            }
-
+            )}
           </Item>
-        }
+        )}
 
-        <ItemH padding="0px 20px 0px 20px" margin="20px 0px 20px 0px" align="center" self="stretch">
-          {!showDepositItem &&
+        <ItemH
+          padding="0px 20px 0px 20px"
+          margin="20px 0px 20px 0px"
+          align="center"
+          self="stretch"
+        >
+          {!showDepositItem && (
             <ButtonAlt
               bg="#e20880"
               onClick={() => setShowDepositItem(!showDepositItem)}
             >
-              {!txInProgressDep &&
-                <Span color="#fff" weight="400">Deposit</Span>
-              }
-              {txInProgressApprDep &&
-                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
-              }
+              {!txInProgressDep && (
+                <Span
+                  color="#fff"
+                  weight="400"
+                >
+                  Deposit
+                </Span>
+              )}
+              {txInProgressApprDep && (
+                <LoaderSpinner
+                  type={LOADER_TYPE.SEAMLESS}
+                  spinnerSize={16}
+                  spinnerColor="#fff"
+                />
+              )}
             </ButtonAlt>
-          }
+          )}
 
           <ButtonAlt
             bg="#000"
             onClick={() => withdrawAmountTokenFarmAutomatic()}
           >
-            {!txInProgressWithdraw &&
-              <Span color="#fff" weight="400">Withdraw</Span>
-            }
-            {txInProgressWithdraw &&
-              <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
-            }
+            {!txInProgressWithdraw && (
+              <Span
+                color="#fff"
+                weight="400"
+              >
+                Withdraw
+              </Span>
+            )}
+            {txInProgressWithdraw && (
+              <LoaderSpinner
+                type={LOADER_TYPE.SEAMLESS}
+                spinnerSize={16}
+                spinnerColor="#fff"
+              />
+            )}
           </ButtonAlt>
 
           <ButtonAlt
             bg="#000"
             onClick={() => massHarvestTokensAll()}
+            disabled={!(userData.totalAvailableReward > 0)}
           >
-            {!txInProgressMassHarvest &&
-              <Span color="#fff" weight="400">Harvest</Span>
-            }
-            {txInProgressMassHarvest &&
-              <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
-            }
+            {!txInProgressMassHarvest && (
+              <Span
+                color="#fff"
+                weight="400"
+              >
+                Harvest
+              </Span>
+            )}
+            {txInProgressMassHarvest && (
+              <LoaderSpinner
+                type={LOADER_TYPE.SEAMLESS}
+                spinnerSize={16}
+                spinnerColor="#fff"
+              />
+            )}
           </ButtonAlt>
         </ItemH>
       </Item>
@@ -681,11 +868,14 @@ export default function PoolCard({
 // toast customize
 const LoaderToast = ({ msg, color }) => (
   <Toaster>
-    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} spinnerColor={color} />
+    <LoaderSpinner
+      type={LOADER_TYPE.SEAMLESS}
+      spinnerSize={30}
+      spinnerColor={color}
+    />
     <ToasterMsg>{msg}</ToasterMsg>
   </Toaster>
 );
-
 
 const MaxButton = styled(Button)`
   position: absolute;
@@ -697,31 +887,31 @@ const MaxButton = styled(Button)`
   text-transform: uppercase;
   font-weight: 600;
   letter-spacing: 0.1em;
-`
+`;
 
 const PoolContainer = styled(Item)`
-  border-bottom: ${props => props.borderBottom || "none"};
-`
+  border-bottom: ${(props) => props.borderBottom || 'none'};
+`;
 
 const PoolBoxTitle = styled(Span)`
-  background: ${props => props.bg || 'transparent'};
-  color: ${props => props.fg || '#fff'};
+  background: ${(props) => props.bg || 'transparent'};
+  color: ${(props) => props.fg || '#fff'};
   font-weight: 600;
-  font-size: ${props => props.size || '12px'};
-  margin: ${props => props.margin || '10px 5px'};
+  font-size: ${(props) => props.size || '12px'};
+  margin: ${(props) => props.margin || '10px 5px'};
   letter-spacing: 0.1em;
-`
+`;
 
 const PoolBoxMsg = styled(Span)`
-  background: ${props => props.bg || '#fff'};
-  color: ${props => props.fg || '#000'};
+  background: ${(props) => props.bg || '#fff'};
+  color: ${(props) => props.fg || '#000'};
   font-weight: 600;
-  font-size: ${props => props.size || '12px'};
-  margin: ${props => props.margin || '5px 5px 10px 5px'};
+  font-size: ${(props) => props.size || '12px'};
+  margin: ${(props) => props.margin || '5px 5px 10px 5px'};
   letter-spacing: 0.1em;
   padding: 4px 15px;
   border-radius: 10px;
-`
+`;
 
 const Container = styled.div`
   padding: 18px;
@@ -771,7 +961,7 @@ const EpochDisplayer = styled(Span)`
     content: '';
     position: absolute;
   }
-`
+`;
 
 const ButtonAlt = styled(Button)`
   border: 0;
