@@ -182,8 +182,8 @@ const MoreOptions = styled.div`
 
 const SpaceInfo = styled(ItemHV2)`
   position: absolute;
-  top: 0px;
-  right: 15px;
+  top: -10px;
+  right: 0px;
   width: 151px;
   border: 1px solid rgba(186, 196, 214, 0.2);
   background-color: #FFFFFF;
