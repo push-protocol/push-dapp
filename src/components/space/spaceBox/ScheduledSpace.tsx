@@ -37,7 +37,6 @@ const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
   return(
     <ScheduledItem theme={theme}>
           <CardItem>
-
           <TopItem>
             <DivItem>
               <Image src={currentSpace?.spaceInformation?.spaceImage}></Image>
@@ -45,8 +44,6 @@ const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
               <SpanV2 background='rgba(255, 255, 255, 0.2)' color='#ffff' borderRadius="8px" fontSize="12px" fontWeight="500" padding="4px 8px">Host</SpanV2>
             </DivItem>
             
-          
-          
           <ItemTop>
             <ButtonItem radius='8px' bg='transparent' color='#fff' border='1px solid white' margin='0 10px 0 0' style={{whiteSpace:'nowrap'}}>Edit Space</ButtonItem>
             <MoreOptions>
@@ -80,21 +77,16 @@ const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
           </Div>
           </CardItem>
           
-
-
           <DivCard step={step}>
             <Div>
                 <ScheduledSpaceSVG />
             </Div>
-            
             {step === 1 && (<><P size="16px" weight="500" margin='10px 0px 5px 0px' color={theme.snackbarBorderText}>
               Your space is scheduled. 
             </P>
             <P size="16px" weight="500" margin='0px 10px' color={theme.snackbarBorderText}>
               Share and let people know when to join!
             </P></>)}
-
-          
 
             {step === 2 && (<P size="16px" weight="500" margin='10px 10px 0px 10px' color={theme.snackbarBorderText}>
               This space will go live on 5 Apr at 9:00 AM
