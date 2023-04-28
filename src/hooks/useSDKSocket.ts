@@ -6,7 +6,6 @@ import { createSocketConnection, EVENTS } from '@pushprotocol/socket';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { convertAddressToAddrCaip } from '../helpers/CaipHelper';
-import { ENV } from '@pushprotocol/restapi/src/lib/constants';
 
 
 // Types

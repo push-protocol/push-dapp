@@ -13,7 +13,7 @@ export const config = {
   pushNodeApiVersion: 1,
   apiUrl: 'https://backend-staging.epns.io/apis',
   w2wApiUrl: 'https://backend-staging.epns.io/apis',
-  toolingApiUrl: 'https://tooling.epns.io/apis',
+  toolingApiUrl: 'https://staging-tooling.epns.io/apis',
 
   ipfsInfuraAPIKey: process.env.REACT_APP_IPFS_INFURA_API_KEY || '22rfiNb1J645FdehoqbKMpLbF6V',
   ipfsInfuraAPISecret: process.env.REACT_APP_IPFS_INFURA_API_SECRET || 'a757597f020425c3ae532e6be84de552',
@@ -101,14 +101,16 @@ export const CHAIN_DETAILS = {
     name: "ETH_TEST_GOERLI",
     chainId: 5,
     rpcUrl: "https://goerli.infura.io/v3/4ff53a5254144d988a8318210b56f47a",
-    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
+    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa",
+    network: "goerli",
   }, 
   80001: {
     label: "Polygon Mumbai",
     name: "POLYGON_TEST_MUMBAI",
     chainId: 80001,
     rpcUrl: "https://polygon-mumbai.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
-    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
+    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa",
+    network: "polygon-mumbai",
   },
   97: {
     label: "BNB Testnet",

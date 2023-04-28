@@ -481,7 +481,7 @@ export default function PoolCard({
               self="stretch"
             >
               <H3>
-                <Span>Current APR </Span><Span bg={poolName == "Uniswap LP Pool (UNI-V2)" ? "#35c5f3" : "#e20880"} padding="2px 8px" weight="600" color="#fff"><b>{pushPoolStats.stakingAPR}%</b></Span>
+                <Span>Current APR </Span><Span bg={poolName == "Uniswap LP Pool (UNI-V2)" ? "#35c5f3" : "#e20880"} padding="2px 8px" weight="600" color="#fff"><b>{Math.max(pushPoolStats.stakingAPR,0)}%</b></Span>
               </H3>
             </Item>
           </Item>
@@ -546,7 +546,7 @@ export default function PoolCard({
             <Item bg="#000" margin="5px 10px" radius="12px" flex="1">
               <PoolBoxTitle>Current Epoch Reward <InfoTooltip title={"This is only an estimation for the user's reward that they might get after the epoch. This might change depending upon deposits from other users."} /></PoolBoxTitle>
               {/* TODO fix calculation*/}
-              <PoolBoxMsg>{ poolName == "Uniswap LP Pool (UNI-V2)" ? userData.potentialUserReward : 0} PUSH</PoolBoxMsg>
+              <PoolBoxMsg>{0} PUSH</PoolBoxMsg>
             </Item>
 
             <Item bg="#000" margin="5px 10px" radius="12px" flex="1">
@@ -664,6 +664,7 @@ export default function PoolCard({
           <ButtonAlt
             bg="#000"
             onClick={() => massHarvestTokensAll()}
+            disabled={!(userData.totalAvailableReward>0)}
           >
             {!txInProgressMassHarvest &&
               <Span color="#fff" weight="400">Harvest</Span>

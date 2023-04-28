@@ -110,6 +110,7 @@ export const ButtonV2 = styled.button`
   margin: ${(props) => props.margin || "0px"};
   max-width: ${(props) => props.maxWidth || 'initial'};
   min-width: ${(props) => props.minWidth || 'auto'};
+  width: ${(props) => props.width || 'auto'};
   overflow: ${(props) => props.overflow || "hidden"};
   padding: ${(props) => props.padding || "0px"};
   pointer: ${(props) => props.pointer || "hand"};

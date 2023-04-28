@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import ReactGA from 'react-ga';
 import { BsChevronExpand } from 'react-icons/bs';
 import { toast } from 'react-toastify';
-import styled, { css, ThemeProvider , useTheme } from 'styled-components';
+import styled, { css, ThemeProvider, useTheme } from 'styled-components';
 
 // Internal Components
 import { toolingPostReq } from 'api/index';
@@ -21,9 +21,12 @@ import LoaderSpinner from 'components/reusables/loaders/LoaderSpinner';
 import ViewDelegateeItem from 'components/ViewDelegateeItem';
 import { createTransactionObject } from 'helpers/GaslessHelper';
 import { executeDelegateTx } from 'helpers/WithGasHelper';
+import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
+import { AppContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
 
 // Internal Configs
-import { abis, addresses,appConfig } from 'config';
+import { abis, addresses, appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { shortenText } from 'helpers/UtilityHelper';
 const delegateesJSON = require('config/delegatees.json');
@@ -39,12 +42,9 @@ const GovModule = () => {
   // setup theme (styled components)
   const theme = useTheme();
 
+  const { web3NameList }:AppContextType = React.useContext(AppContext);
   const { account, library, chainId } = useWeb3React();
   const onCoreNetwork = chainId === appConfig.coreContractChain;
-
-  const [address, setAddress] = React.useState('');
-  const [ens, setENS] = React.useState('');
-  const [ensFetched, setENSFetched] = React.useState(false);
 
   const [dashboardLoading, setDashboardLoading] = React.useState(true);
   const [delegateesLoading, setDelegateesLoading] = React.useState(true);
@@ -69,6 +69,10 @@ const GovModule = () => {
   const [gaslessInfo, setGaslessInfo] = useState(null);
   const [transactionMode, setTransactionMode] = React.useState('gasless');
 
+  // Resolving web3 names
+  useResolveWeb3Name(account);
+  const web3Name = web3NameList[account];
+
   const toggleShowAnswer = (id) => {
     let newShowAnswers = [...showAnswers];
     newShowAnswers[id] = !newShowAnswers[id];
@@ -88,28 +92,6 @@ const GovModule = () => {
       setGaslessInfo(res.data.user);
     });
   }, []);
-  React.useEffect(() => {
-    if (account && account != '') {
-      // Check if the address is the same
-      if (address !== account) {
-        setENS('');
-        setENSFetched(false);
-
-        // get ens
-        library
-          .lookupAddress(account)
-          .then(function (name) {
-            setENS(name);
-            setENSFetched(true);
-            setAddress(account);
-          })
-          .catch(() => {
-            setENSFetched(true);
-            setAddress(account);
-          });
-      }
-    }
-  }, [account]);
 
   React.useEffect(() => {
     console.log(account);
@@ -234,6 +216,7 @@ const GovModule = () => {
     setTxInProgress(true);
 
     const isAddress = await isValidAddress(newDelegatee);
+    const delegateeAddress = await newDelegatee;
     console.log(isAddress);
     if (!isAddress) {
       setTxInProgress(false);
@@ -258,7 +241,7 @@ const GovModule = () => {
     }
 
     if (transactionMode === 'withgas') {
-      executeDelegateTx({newDelegatee, epnsToken, toast, setTxInProgress, library, LoaderToast});
+      executeDelegateTx({ delegateeAddress, epnsToken, toast, setTxInProgress, library, LoaderToast });
       return;
     }
     if (tokenBalance < PUSH_BALANCE_TRESHOLD) {
@@ -275,7 +258,16 @@ const GovModule = () => {
       setTxInProgress(false);
       return;
     }
-    await createTransactionObject({newDelegatee, account, epnsToken, addresses, signerObject, library, setTxLoading:setTxInProgress});
+    console.log(newDelegatee,'lets see');
+    await createTransactionObject({
+      delegateeAddress,
+      account,
+      epnsToken,
+      addresses,
+      signerObject,
+      library,
+      setTxLoading: setTxInProgress,
+    });
     toolingPostReq('/gov/prev_delegation', { walletAddress: account })
       .then((res) => {
         console.log('result', res.data.user);
@@ -321,7 +313,11 @@ const GovModule = () => {
   return (
     <Container>
       <ItemVV2 alignItems="stretch">
-        <Item align="stretch" justify="flex-start" margin="0px 15px 15px 15px">
+        <Item
+          align="stretch"
+          justify="flex-start"
+          margin="0px 15px 15px 15px"
+        >
           {(dashboardLoading || !prettyTokenBalance || !selfVotingPower) && (
             <Item padding="20px">
               <LoaderSpinner />
@@ -330,19 +326,41 @@ const GovModule = () => {
 
           <ItemVV2 margin="0px 0px 0px 0px">
             <H2>
-              <Span weight="400" size="32px" color={theme.color}>
+              <Span
+                weight="400"
+                size="32px"
+                color={theme.color}
+              >
                 Governance Dashboard
               </Span>
             </H2>
           </ItemVV2>
 
           {!dashboardLoading && prettyTokenBalance && selfVotingPower && (
-            <Item margin="10px 0px 0px 0px" self="stretch" items="stretch">
-              <StatsCard align="stretch" justify="flex-start" self="stretch" bg={theme.default.secondaryBg} op="1">
+            <Item
+              margin="10px 0px 0px 0px"
+              self="stretch"
+              items="stretch"
+            >
+              <StatsCard
+                align="stretch"
+                justify="flex-start"
+                self="stretch"
+                bg={theme.default.secondaryBg}
+                op="1"
+              >
                 <StatsHeading bg="#e20880">Governance Dashboard</StatsHeading>
                 <StatsContent>
-                  <ItemH align="stretch" self="stretch">
-                    <Item align="center" self="center" flex="initial" padding="10px">
+                  <ItemH
+                    align="stretch"
+                    self="stretch"
+                  >
+                    <Item
+                      align="center"
+                      self="center"
+                      flex="initial"
+                      padding="10px"
+                    >
                       <Blocky>
                         <BlockyInner>
                           <Blockies
@@ -352,36 +370,70 @@ const GovModule = () => {
                         </BlockyInner>
                       </Blocky>
                       <Wallet>
-                        {!ensFetched && <LoaderSpinner />}
-                        {ensFetched && ens && <>{ens}</>}
-                        {ensFetched && !ens && (
-                          <>
-                            {shortenText(account,6)}
-                          </>
+                        {web3Name === null ? (
+                          <LoaderSpinner />
+                        ) : web3Name ? (
+                          <>{web3Name}</>
+                        ) : (
+                          <>{shortenText(account, 6)}</>
                         )}
                       </Wallet>
                     </Item>
 
-                    <Item align="flex-start" self="stretch" padding="10px" size="16px">
-                      <ItemH flex="initial" padding="5px">
-                        <Span weight="500" padding="0px 8px 0px 0px" color={theme.color}>
+                    <Item
+                      align="flex-start"
+                      self="stretch"
+                      padding="10px"
+                      size="16px"
+                    >
+                      <ItemH
+                        flex="initial"
+                        padding="5px"
+                      >
+                        <Span
+                          weight="500"
+                          padding="0px 8px 0px 0px"
+                          color={theme.color}
+                        >
                           $PUSH Balance:{' '}
                         </Span>
-                        <CurvedSpan bg="#e20880" color="#fff" weight="600" padding="4px 8px" textTransform="uppercase">
+                        <CurvedSpan
+                          bg="#e20880"
+                          color="#fff"
+                          weight="600"
+                          padding="4px 8px"
+                          textTransform="uppercase"
+                        >
                           {prettyTokenBalance}
                         </CurvedSpan>
                       </ItemH>
 
-                      <ItemH flex="initial" padding="5px">
-                        <Span weight="500" padding="0px 8px 0px 0px" color={theme.color}>
+                      <ItemH
+                        flex="initial"
+                        padding="5px"
+                      >
+                        <Span
+                          weight="500"
+                          padding="0px 8px 0px 0px"
+                          color={theme.color}
+                        >
                           Voting Power:{' '}
                         </Span>
-                        <CurvedSpan bg="#35c5f3" color="#fff" weight="600" padding="4px 8px" textTransform="uppercase">
+                        <CurvedSpan
+                          bg="#35c5f3"
+                          color="#fff"
+                          weight="600"
+                          padding="4px 8px"
+                          textTransform="uppercase"
+                        >
                           {selfVotingPower}
                         </CurvedSpan>
                       </ItemH>
                       {delegatee !== '0x0000000000000000000000000000000000000000' && (
-                        <ItemH flex="initial" padding="5px">
+                        <ItemH
+                          flex="initial"
+                          padding="5px"
+                        >
                           <Span padding="0px 8px 0px 0px">Delegated To: </Span>
                           <Span weight="600">{delegatee}</Span>
                         </ItemH>
@@ -390,8 +442,14 @@ const GovModule = () => {
                       {gaslessInfo ? (
                         // <Item align="flex-start" self="stretch" padding="10px" size="16px">
                         <>
-                          <ItemH flex="initial" padding="5px">
-                            <Span weight="500" padding="0px 8px 0px 0px">
+                          <ItemH
+                            flex="initial"
+                            padding="5px"
+                          >
+                            <Span
+                              weight="500"
+                              padding="0px 8px 0px 0px"
+                            >
                               Last Gasless Delegation On:{' '}
                             </Span>
                             <CurvedSpan
@@ -399,12 +457,19 @@ const GovModule = () => {
                               color="#fff"
                               weight="600"
                               padding="4px 8px"
-                              textTransform="uppercase">
+                              textTransform="uppercase"
+                            >
                               {new Date(gaslessInfo.timestamp).toLocaleDateString()}
                             </CurvedSpan>
                           </ItemH>
-                          <ItemH flex="initial" padding="5px">
-                            <Span weight="500" padding="0px 8px 0px 0px">
+                          <ItemH
+                            flex="initial"
+                            padding="5px"
+                          >
+                            <Span
+                              weight="500"
+                              padding="0px 8px 0px 0px"
+                            >
                               Last Gasless Delegation To:{' '}
                             </Span>
                             <CurvedSpan
@@ -412,7 +477,8 @@ const GovModule = () => {
                               color="#fff"
                               weight="600"
                               padding="4px 8px"
-                              textTransform="uppercase">
+                              textTransform="uppercase"
+                            >
                               {gaslessInfo.delegatee}
                             </CurvedSpan>
                           </ItemH>
@@ -424,9 +490,23 @@ const GovModule = () => {
                   </ItemH>
 
                   {showDelegateePrompt && (
-                    <Item bg="#eeeeeeee" position="absolute" top="0" bottom="0" left="0" right="0">
-                      <Item align="stretch" self="stretch" margin="0px 20px 40px 20px">
-                        <Span color="#000" weight="400">
+                    <Item
+                      bg="#eeeeeeee"
+                      position="absolute"
+                      top="0"
+                      bottom="0"
+                      left="0"
+                      right="0"
+                    >
+                      <Item
+                        align="stretch"
+                        self="stretch"
+                        margin="0px 20px 40px 20px"
+                      >
+                        <Span
+                          color="#000"
+                          weight="400"
+                        >
                           Enter delegatee address
                         </Span>
                         <br></br>
@@ -449,7 +529,10 @@ const GovModule = () => {
                     </Item>
                   )}
 
-                  <Item self="stretch" align="flex-end">
+                  <Item
+                    self="stretch"
+                    align="flex-end"
+                  >
                     <ItemH>
                       <RadioGroup>
                         <div style={{ marginRight: '0px' }}>
@@ -513,8 +596,12 @@ const GovModule = () => {
                             } else {
                               setShowDelegateePrompt(true);
                             }
-                          }}>
-                          <Span color="#fff" weight="400">
+                          }}
+                        >
+                          <Span
+                            color="#fff"
+                            weight="400"
+                          >
                             Delegate to Others
                           </Span>
                         </ButtonAlt>
@@ -525,8 +612,12 @@ const GovModule = () => {
                           disabled={txInProgress ? true : false}
                           onClick={() => {
                             delegateAction(account);
-                          }}>
-                          <Span color="#fff" weight="400">
+                          }}
+                        >
+                          <Span
+                            color="#fff"
+                            weight="400"
+                          >
                             Delegate to Myself
                           </Span>
                         </ButtonAlt>
@@ -540,13 +631,17 @@ const GovModule = () => {
                           } else {
                             setShowDelegateePrompt(true);
                           }
-                        }}>
+                        }}
+                      >
                         {txInProgress ? (
                           <ActionTitle>
                             <LoaderSpinner />
                           </ActionTitle>
                         ) : (
-                          <Span color="#fff" weight="400">
+                          <Span
+                            color="#fff"
+                            weight="400"
+                          >
                             Query Voting Power
                           </Span>
                         )}
@@ -557,8 +652,12 @@ const GovModule = () => {
                           bg="#000"
                           onClick={() => {
                             setShowDelegateePrompt(false);
-                          }}>
-                          <Span color="#fff" weight="400">
+                          }}
+                        >
+                          <Span
+                            color="#fff"
+                            weight="400"
+                          >
                             Close
                           </Span>
                         </ButtonAlt>
@@ -572,8 +671,17 @@ const GovModule = () => {
           )}
         </Item>
 
-        <Item align="stretch" justify="flex-start" margin="15px 15px 0px 15px">
-          <StatsCard align="stretch" justify="flex-start" self="stretch" bg={theme.default.secondaryBg}>
+        <Item
+          align="stretch"
+          justify="flex-start"
+          margin="15px 15px 0px 15px"
+        >
+          <StatsCard
+            align="stretch"
+            justify="flex-start"
+            self="stretch"
+            bg={theme.default.secondaryBg}
+          >
             <StatsHeading bg="#35c5f3">Meet the PUSH Nominees</StatsHeading>
             <NomineeContainer>
               {delegateesLoading ? (
@@ -602,13 +710,30 @@ const GovModule = () => {
         </Item>
       </ItemVV2>
 
-      <ItemVV2 alignItems="stretch" padding="40px 0 20px 0">
-        <Item align="flex-start" margin="0px 15px 0px 15px">
-          <H2 textTransform="uppercase" spacing="0.1em">
-            <Span weight="200" color={theme.color}>
+      <ItemVV2
+        alignItems="stretch"
+        padding="40px 0 20px 0"
+      >
+        <Item
+          align="flex-start"
+          margin="0px 15px 0px 15px"
+        >
+          <H2
+            textTransform="uppercase"
+            spacing="0.1em"
+          >
+            <Span
+              weight="200"
+              color={theme.color}
+            >
               PUSH{' '}
             </Span>
-            <Span bg="#35c5f3" color="#fff" weight="600" padding="0px 8px">
+            <Span
+              bg="#35c5f3"
+              color="#fff"
+              weight="600"
+              padding="0px 8px"
+            >
               DELEGATEES
             </Span>
           </H2>
@@ -625,13 +750,31 @@ const GovModule = () => {
           )}
 
           {!dashboardLoading && controlAt == 0 && (
-            <ItemH padding="0px 20px 20px 20px" self="stretch">
+            <ItemH
+              padding="0px 20px 20px 20px"
+              self="stretch"
+            >
               {pushDelegatees.length == 0 && (
-                <Item align="flex-start" self="stretch">
-                  <Span padding="10px 10px" margin="10px 0px" bg="#666" color="#fff" weight="600">
+                <Item
+                  align="flex-start"
+                  self="stretch"
+                >
+                  <Span
+                    padding="10px 10px"
+                    margin="10px 0px"
+                    bg="#666"
+                    color="#fff"
+                    weight="600"
+                  >
                     🤷 Awkward!!
                   </Span>
-                  <Span padding="10px 10px" margin="10px 0px" bg="#666" color="#fff" weight="600">
+                  <Span
+                    padding="10px 10px"
+                    margin="10px 0px"
+                    bg="#666"
+                    color="#fff"
+                    weight="600"
+                  >
                     Show some 💕 to Nominees to kickstart Governance!
                   </Span>
                 </Item>
@@ -658,18 +801,32 @@ const GovModule = () => {
       </ItemVV2>
 
       {/* FAQs */}
-      <ItemVV2 alignItems="stretch" padding="20px 0 35px 0">
-        <Item align="stretch" justify="flex-start" margin="-10px 20px 0px 20px">
+      <ItemVV2
+        alignItems="stretch"
+        padding="20px 0 35px 0"
+      >
+        <Item
+          align="stretch"
+          justify="flex-start"
+          margin="-10px 20px 0px 20px"
+        >
           {/* Question */}
-          <Item align="stretch" margin="0px 0px 0px 0px">
+          <Item
+            align="stretch"
+            margin="0px 0px 0px 0px"
+          >
             <QnAItem>
               <Question
                 onClick={() => {
                   toggleShowAnswer(0);
                 }}
-                hover="#e20880">
+                hover="#e20880"
+              >
                 <Span color={theme.color}>What are PUSH Delegatees?</Span>
-                <BsChevronExpand size={20} color={'#ddd'} />
+                <BsChevronExpand
+                  size={20}
+                  color={'#ddd'}
+                />
               </Question>
 
               {showAnswers[0] && (
@@ -688,9 +845,13 @@ const GovModule = () => {
                 onClick={() => {
                   toggleShowAnswer(1);
                 }}
-                hover="#e20880">
+                hover="#e20880"
+              >
                 <Span color={theme.color}>What are PUSH Nominees</Span>
-                <BsChevronExpand size={20} color={'#ddd'} />
+                <BsChevronExpand
+                  size={20}
+                  color={'#ddd'}
+                />
               </Question>
 
               {showAnswers[1] && (
@@ -710,9 +871,13 @@ const GovModule = () => {
                 onClick={() => {
                   toggleShowAnswer(2);
                 }}
-                hover="#e20880">
+                hover="#e20880"
+              >
                 <Span color={theme.color}>How can I become a PUSH Nominee?</Span>
-                <BsChevronExpand size={20} color={'#ddd'} />
+                <BsChevronExpand
+                  size={20}
+                  color={'#ddd'}
+                />
               </Question>
 
               {showAnswers[2] && (
@@ -722,7 +887,11 @@ const GovModule = () => {
                     <LI>
                       <Span>
                         Sign up on:-{' '}
-                        <AMod href="https://gov.epns.io/" target="_blank" title="Join our Push (EPNS)'s Telegram channel">
+                        <AMod
+                          href="https://gov.epns.io/"
+                          target="_blank"
+                          title="Join our Push (EPNS)'s Telegram channel"
+                        >
                           Push (EPNS) Governance Portal
                         </AMod>
                       </Span>
@@ -733,7 +902,8 @@ const GovModule = () => {
                         <AMod
                           href="https://gov.epns.io/t/epns-push-delegatee-nominations/21"
                           target="_blank"
-                          title="Join our Push (EPNS)'s Telegram channel">
+                          title="Join our Push (EPNS)'s Telegram channel"
+                        >
                           https://gov.epns.io/t/epns-push-delegatee-nominations/21
                         </AMod>
                       </Span>
@@ -755,9 +925,13 @@ const GovModule = () => {
                 onClick={() => {
                   toggleShowAnswer(3);
                 }}
-                hover="#e20880">
+                hover="#e20880"
+              >
                 <Span color={theme.color}>What if I don't wish to be a PUSH Nominee?</Span>
-                <BsChevronExpand size={20} color={'#ddd'} />
+                <BsChevronExpand
+                  size={20}
+                  color={'#ddd'}
+                />
               </Question>
 
               {showAnswers[3] && (
@@ -775,16 +949,24 @@ const GovModule = () => {
                 onClick={() => {
                   toggleShowAnswer(4);
                 }}
-                hover="#e20880">
+                hover="#e20880"
+              >
                 <Span color={theme.color}>Where should I start?</Span>
-                <BsChevronExpand size={20} color={'#ddd'} />
+                <BsChevronExpand
+                  size={20}
+                  color={'#ddd'}
+                />
               </Question>
 
               {showAnswers[4] && (
                 <Answer>
                   <Span>
                     Visit{' '}
-                    <AMod href="https://gov.epns.io/" target="_blank" title="Join our Push (EPNS)'s Telegram channel">
+                    <AMod
+                      href="https://gov.epns.io/"
+                      target="_blank"
+                      title="Join our Push (EPNS)'s Telegram channel"
+                    >
                       Push (EPNS) Governance Portal
                     </AMod>{' '}
                     and introduce yoursef on the platform in the suggested format.
@@ -798,9 +980,13 @@ const GovModule = () => {
                 onClick={() => {
                   toggleShowAnswer(5);
                 }}
-                hover="#e20880">
+                hover="#e20880"
+              >
                 <Span color={theme.color}>What happens to the delegated voting power when I sell my PUSH tokens?</Span>
-                <BsChevronExpand size={20} color={'#ddd'} />
+                <BsChevronExpand
+                  size={20}
+                  color={'#ddd'}
+                />
               </Question>
 
               {showAnswers[5] && (
@@ -818,9 +1004,13 @@ const GovModule = () => {
                 onClick={() => {
                   toggleShowAnswer(6);
                 }}
-                hover="#e20880">
+                hover="#e20880"
+              >
                 <Span color={theme.color}>How can I cast my vote?</Span>
-                <BsChevronExpand size={20} color={'#ddd'} />
+                <BsChevronExpand
+                  size={20}
+                  color={'#ddd'}
+                />
               </Question>
 
               {showAnswers[6] && (
@@ -830,7 +1020,8 @@ const GovModule = () => {
                     <AMod
                       href="https://snapshot.org/#/epns.eth"
                       target="_blank"
-                      title="Push (EPNS) Governance - Snapshot Portal">
+                      title="Push (EPNS) Governance - Snapshot Portal"
+                    >
                       Push (EPNS) Governance - Snapshot Portal
                     </AMod>{' '}
                     to view the ongoing on-chain proposals and cast your vote.
@@ -844,27 +1035,40 @@ const GovModule = () => {
                 onClick={() => {
                   toggleShowAnswer(7);
                 }}
-                hover="#e20880">
+                hover="#e20880"
+              >
                 <Span color={theme.color}>How can I keep up with Push (EPNS) Governance?</Span>
-                <BsChevronExpand size={20} color={'#ddd'} />
+                <BsChevronExpand
+                  size={20}
+                  color={'#ddd'}
+                />
               </Question>
 
               {showAnswers[7] && (
                 <Answer>
                   <Span>
                     Join our{' '}
-                    <AMod href="https://t.me/epnsproject" target="_blank" title="Join our EPNS's Telegram channel">
+                    <AMod
+                      href="https://t.me/epnsproject"
+                      target="_blank"
+                      title="Join our EPNS's Telegram channel"
+                    >
                       Telegram
                     </AMod>
                     , follow us on{' '}
                     <AMod
                       href="https://twitter.com/epnsproject"
                       target="_blank"
-                      title="Join our Push (EPNS)'s Twitter channel">
+                      title="Join our Push (EPNS)'s Twitter channel"
+                    >
                       Twitter
                     </AMod>
                     , and sign up for our 5 minute{' '}
-                    <AMod href="https://epns.substack.com/" target="_blank" title="Join our Push (EPNS)'s Twitter channel">
+                    <AMod
+                      href="https://epns.substack.com/"
+                      target="_blank"
+                      title="Join our Push (EPNS)'s Twitter channel"
+                    >
                       weekly product updates
                     </AMod>
                     .
