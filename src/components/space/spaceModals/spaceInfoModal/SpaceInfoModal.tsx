@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 
 // External Packages
@@ -11,7 +11,6 @@ import { ModalInnerComponentType } from 'hooks/useModalBlur';
 import { useDeviceWidthCheck } from 'hooks';
 import ModalHeader from 'components/ModalHeader';
 import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { spaces } from 'services/space/spaceList';
 import { PendingMembers } from 'components/PendingMembers';
 import { caip10ToWallet } from 'helpers/w2w';
 import { DropdownValueType } from 'components/Dropdown';
@@ -23,21 +22,24 @@ import { AddMoreMember } from 'components/AddMoreMember';
 import { User } from 'types/chat';
 import { MembersProfileList } from 'components/MembersProfileList';
 import { ProfileImage } from 'components/ProfileImage';
+import { SpaceGlobalContext, SpaceLocalContext } from 'contexts';
 
 export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
-  const selectedSpace = spaces[0];
   const [selectedMemeberAddress, setSelectedMemeberAddress] = useState('');
   const [showInviteMembersModal, setShowInviteMembersModal] = useState<boolean>(false);
   const [showPendingRequests, setshowPendingRequests] = useState<boolean>(false);
   const [memberList, setMemberList] = React.useState<User[]>([]);
+  const { userSpaces } = useContext(SpaceGlobalContext);
+  const { selectedSpace } = useContext(SpaceLocalContext);
   const isMobile = useDeviceWidthCheck(480);
   const containerRef = useRef();
   const dropdownRef = useRef();
   const { account } = useWeb3React();
+  const selectedSpaceData = userSpaces[account]?.spaces[selectedSpace];
 
   const theme = useTheme();
 
-  const isAccountOwnerAdmin = selectedSpace?.spaceInformation?.members?.some(
+  const isAccountOwnerAdmin = selectedSpaceData?.spaceInformation?.members?.some(
     (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
   );
 
@@ -82,7 +84,7 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
             <BodyContainer padding="0 36px">
               <HostProfile>
                 <ProfileImage
-                  imageSrc={selectedSpace?.spaceInformation?.spaceImage}
+                  imageSrc={selectedSpaceData?.spaceInformation?.spaceImage}
                   dimension="48px"
                   borderRadius="50%"
                   margin="0px 12px 0px 0px"
@@ -93,7 +95,7 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                   fontWeight="500"
                   margin="0px 8px 0px"
                 >
-                  {shortenText(selectedSpace?.spaceInformation?.spaceCreator, 6)}
+                  {shortenText(caip10ToWallet(selectedSpaceData?.spaceInformation?.spaceCreator), 6)}
                 </SpanV2>
                 <SpanV2
                   background="#F3D7FA"
@@ -113,26 +115,26 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                 alignSelf="flex-start"
                 margin="0px 0px 8px"
               >
-                {shortenText(selectedSpace?.spaceInformation?.spaceCreator, 6)}'s Space
+                {shortenText(caip10ToWallet(selectedSpaceData?.spaceInformation?.spaceCreator), 6)}'s Space
               </SpanV2>
-              <Description>{selectedSpace?.spaceInformation?.spaceDescription}</Description>
+              <Description>{selectedSpaceData?.spaceInformation?.spaceDescription}</Description>
               {/* {isAccountOwnerAdmin && selectedSpace?.members?.length < 10 && ( */}
                 <AddMoreMember
                   showAddMoreMemberModal={setShowInviteMembersModal}
                   title="Invite Members"
                 />
               {/* )} */}
-              {selectedSpace?.spaceInformation?.pendingMembers?.length > 0 && (
+              {selectedSpaceData?.spaceInformation?.pendingMembers?.length > 0 && (
                 <PendingMembers
                   setshowPendingRequests={setshowPendingRequests}
                   showPendingRequests={showPendingRequests}
-                  pendingMemberData={selectedSpace?.spaceInformation?.pendingMembers}
+                  pendingMemberData={selectedSpaceData?.spaceInformation?.pendingMembers}
                   backgroundColor="transparent"
                   pendingHeader="Pending Invites"
                 />
               )}
               <MembersProfileList
-                memberData={selectedSpace?.spaceInformation}
+                memberData={selectedSpaceData?.spaceInformation}
                 makeCohostDropdown={makeCohostDropdown}
                 removeCohostDropdown={removeCohostDropdown}
                 selectedMemeberAddress={selectedMemeberAddress}

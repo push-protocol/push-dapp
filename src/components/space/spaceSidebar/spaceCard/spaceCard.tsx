@@ -1,5 +1,6 @@
 // React + Web3 Essentials
 import React, { useContext } from 'react';
+import { useNavigate } from 'react-router'
 
 // External Packages
 import styled from 'styled-components';
@@ -10,8 +11,7 @@ import Calendar from 'assets/space/calendar.svg';
 import { shortenText } from 'helpers/UtilityHelper';
 import { Space } from 'types';
 import { Button } from 'primaries/SharedStyling';
-
-import { useNavigate } from 'react-router';
+import { caip10ToWallet } from 'helpers/w2w';;
 import { SpaceLocalContext } from 'contexts';
 
 
@@ -54,7 +54,7 @@ const SpaceCard = ({
           fontWeight="500"
           color="#fff"
         >
-          {shortenText(spaceData?.spaceInformation?.spaceCreator, 4, 4)}
+          {shortenText(caip10ToWallet(spaceData?.spaceInformation?.spaceCreator), 4, 4)}
         </SpanV2>
         <HostBadge>Host</HostBadge>
       </SpaceCardHeader>

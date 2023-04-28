@@ -14,6 +14,7 @@ import { Space } from 'types';
 import { shortenText } from 'helpers/UtilityHelper';
 import SpaceCard from '../spaceSidebar/spaceCard/spaceCard';
 import RequestBody from '../spaceReusables/RequestBody';
+import { caip10ToWallet } from 'helpers/w2w';
 
 
 const RequestBox = () => {
@@ -69,7 +70,7 @@ const RequestBox = () => {
                     fontWeight="400"
                     textAlign="start"
                 >
-                    {shortenText(filteredUserData?.spaceInformation?.spaceCreator, 6)}
+                    {shortenText(caip10ToWallet(filteredUserData?.spaceInformation?.spaceCreator), 6)}
                 </SpanV2>
 
                 <MoreOptions >

@@ -22,6 +22,7 @@ import { FiArrowLeft } from 'react-icons/fi'
 import { useNavigate } from 'react-router';
 import useMediaQuery from 'hooks/useMediaQuery';
 import { SpaceLocalContext } from 'contexts';
+import { caip10ToWallet } from 'helpers/w2w';
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 
 
@@ -40,7 +41,7 @@ const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
           <TopItem>
             <DivItem>
               <Image src={currentSpace?.spaceInformation?.spaceImage}></Image>
-              <P color='#fff' margin="0px 19px 0px 8px" size="17px" weight="500">{shortenText(currentSpace?.spaceInformation?.spaceCreator,5,5)}</P>
+              <P color='#fff' margin="0px 19px 0px 8px" size="17px" weight="500">{shortenText(caip10ToWallet(currentSpace?.spaceInformation?.spaceCreator),5,5)}</P>
               <SpanV2 background='rgba(255, 255, 255, 0.2)' color='#ffff' borderRadius="8px" fontSize="12px" fontWeight="500" padding="4px 8px">Host</SpanV2>
             </DivItem>
             
@@ -68,7 +69,7 @@ const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
           </TopItem>
 
           <Div>
-            <P color='#fff' margin="50px 0px 5px 0px" size="28px" weight="500">{shortenText(currentSpace?.spaceInformation?.spaceCreator,5,5)}’s Space</P>
+            <P color='#fff' margin="50px 0px 5px 0px" size="28px" weight="500">{shortenText(caip10ToWallet(currentSpace?.spaceInformation?.spaceCreator),5,5)}’s Space</P>
             <P color='#fff' margin="0px 0px" size="16px" weight="400">{currentSpace?.spaceInformation?.spaceName}</P>
 
           <DateSection>
@@ -161,10 +162,10 @@ export const ScheduledSpace = ({currentSpace, showSpaceInfoModal}:{currentSpace:
     <>{isMobile ? (<ScrollView isMobile={isMobile}>
       <MobileTopView onClick={()=>goToSpaces()}>
         <Div><FiArrowLeft size={25} color={theme.snackbarBorderText} /></Div>
-        <P color={theme.snackbarBorderText} margin="0px 20px" size="19px" weight="500">{shortenText(currentSpace?.spaceInformation?.spaceCreator,5,5)}’s Space</P>
+        <P color={theme.snackbarBorderText} margin="0px 20px" size="19px" weight="500">{shortenText(caip10ToWallet(currentSpace?.spaceInformation?.spaceCreator),5,5)}’s Space</P>
       </MobileTopView>
 
-      <SpaceItem currentSpace={currentSpace} step={step} setStep={setStep} />   
+      <SpaceItem currentSpace={currentSpace} step={step} setStep={setStep} showSpaceInfoModal={showSpaceInfoModal}/>   
     </ScrollView>) : 
     (<SpaceItem currentSpace={currentSpace} step={step} setStep={setStep} showSpaceInfoModal={showSpaceInfoModal}/> )}
     </>
@@ -273,6 +274,7 @@ const LinkDiv = styled.div`
   flex-direction: column;
   align-items: center;
   margin: 0 6px;
+  cursor: pointer;
 `;
 
 const SpaceLink = styled.div`

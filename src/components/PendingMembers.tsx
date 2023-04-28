@@ -8,6 +8,7 @@ import styled, { useTheme } from 'styled-components';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
 import { ProfileImage } from './ProfileImage';
+import { caip10ToWallet } from 'helpers/w2w';
 
 export const PendingMembers = ({
   setshowPendingRequests,
@@ -17,6 +18,7 @@ export const PendingMembers = ({
   pendingHeader,
 }) => {
   const theme = useTheme();
+  console.log("pending members",pendingMemberData);
   return (
     <PendingMembersContainer
       border={`1px solid ${theme.default.border}`}
@@ -78,7 +80,7 @@ export const PendingMembers = ({
                   fontWeight="400"
                   color={theme.modalProfileTextColor}
                 >
-                  {shortenText(member?.wallet?.split(':')[1], 6)}
+                  {shortenText( caip10ToWallet(member?.wallet), 6)}
                 </SpanV2>
               </ItemHV2>
             );

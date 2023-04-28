@@ -9,7 +9,7 @@ import { ethers } from 'ethers';
 // Internal Components
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
-import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ProfileImage } from './ProfileImage';
 import { shortenText } from 'helpers/UtilityHelper';
 import Dropdown from 'components/Dropdown';
@@ -35,7 +35,7 @@ export const ProfileCard = ({
           fontWeight="400"
           color={theme.modalProfileTextColor}
         >
-          {shortenText(member?.wallet?.split(':')[1], 6)}
+          {shortenText(caip10ToWallet(member?.wallet), 6)}
         </SpanV2>
       </ItemHV2>
       <ItemHV2 justifyContent="flex-end">

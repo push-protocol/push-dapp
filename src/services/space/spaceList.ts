@@ -71,7 +71,7 @@ export const spaces = [
       spaceName: 'Push Chat: The solution to centralized messaging',
       isPublic: true,
       spaceDescription: 'This is description about the space, for what inention space is happening',
-      spaceCreator: '0xaD45Ee335dF4cc961362366a00EC5D7E5c7B5ab6',
+      spaceCreator: 'eip155:0xaD45Ee335dF4cc961362366a00EC5D7E5c7B5ab6',
       spaceId: '1111',
       scheduleAt: null,
       scheduleEnd: null,
@@ -82,7 +82,7 @@ export const spaces = [
     spaceInformation: {
       members: [
         {
-          wallet: '0x8eECBeD669154Fc4c4629bD8dD7643b382143a8B',
+          wallet: 'eip155:0x8eECBeD669154Fc4c4629bD8dD7643b382143a8B',
           publicKey: '',
           isAdmin: false,
           image:
@@ -91,7 +91,7 @@ export const spaces = [
       ],
       pendingMembers: [
         {
-          wallet: '0x4CA7f516594c3e8E74E3018a160950FB4e4C83B8',
+          wallet: 'eip155:0x4CA7f516594c3e8E74E3018a160950FB4e4C83B8',
           publicKey: '',
           isAdmin: false,
           image:
@@ -108,7 +108,7 @@ export const spaces = [
       spaceName: 'Push Video: The solution to centralized video',
       isPublic: true,
       spaceDescription: 'sample space2',
-      spaceCreator: '0x459AB94401A00AdD8C6e230596Bde9B2F113E8BE',
+      spaceCreator: 'eip155:0x459AB94401A00AdD8C6e230596Bde9B2F113E8BE',
       spaceId: '2220',
       scheduleAt: null,
       scheduleEnd: null,
@@ -119,7 +119,7 @@ export const spaces = [
     spaceInformation: {
       members: [
         {
-          wallet: '0x8eECBeD669154Fc4c4629bD8dD7643b382143a8B',
+          wallet: 'eip155:0x8eECBeD669154Fc4c4629bD8dD7643b382143a8B',
           publicKey: '',
           isAdmin: false,
           image:
@@ -128,7 +128,7 @@ export const spaces = [
       ],
       pendingMembers: [
         {
-          wallet: '0x4CA7f516594c3e8E74E3018a160950FB4e4C83B8',
+          wallet: 'eip155:0x4CA7f516594c3e8E74E3018a160950FB4e4C83B8',
           publicKey: '',
           isAdmin: false,
           image:
@@ -145,7 +145,7 @@ export const spaces = [
       spaceName: 'Push Video: The solution to centralized video',
       isPublic: true,
       spaceDescription: 'sample space2',
-      spaceCreator: '0x459AB94401A00AdD8C6e230596Bde9B2F113E8BE',
+      spaceCreator: 'eip155:0x459AB94401A00AdD8C6e230596Bde9B2F113E8BE',
       spaceId: '2221',
       scheduleAt: null,
       scheduleEnd: null,
@@ -156,7 +156,7 @@ export const spaces = [
     spaceInformation: {
       members: [
         {
-          wallet: '0x8eECBeD669154Fc4c4629bD8dD7643b382143a8B',
+          wallet: 'eip155:0x8eECBeD669154Fc4c4629bD8dD7643b382143a8B',
           publicKey: '',
           isAdmin: false,
           image:
@@ -165,7 +165,7 @@ export const spaces = [
       ],
       pendingMembers: [
         {
-          wallet: '0x4CA7f516594c3e8E74E3018a160950FB4e4C83B8',
+          wallet: 'eip155:0x4CA7f516594c3e8E74E3018a160950FB4e4C83B8',
           publicKey: '',
           isAdmin: false,
           image:
@@ -182,7 +182,7 @@ export const spaces = [
       spaceName: 'Push Video: The solution to centralized video',
       isPublic: true,
       spaceDescription: 'sample space2',
-      spaceCreator: '0x459AB94401A00AdD8C6e230596Bde9B2F113E8BE',
+      spaceCreator: 'eip155:0x459AB94401A00AdD8C6e230596Bde9B2F113E8BE',
       spaceId: '2222',
       scheduleAt: null,
       scheduleEnd: null,
@@ -193,7 +193,7 @@ export const spaces = [
     spaceInformation: {
       members: [
         {
-          wallet: '0x8eECBeD669154Fc4c4629bD8dD7643b382143a8B',
+          wallet: 'eip155:0x8eECBeD669154Fc4c4629bD8dD7643b382143a8B',
           publicKey: '',
           isAdmin: false,
           image:
@@ -202,7 +202,7 @@ export const spaces = [
       ],
       pendingMembers: [
         {
-          wallet: '0x4CA7f516594c3e8E74E3018a160950FB4e4C83B8',
+          wallet: 'eip155:0x4CA7f516594c3e8E74E3018a160950FB4e4C83B8',
           publicKey: '',
           isAdmin: false,
           image:
@@ -219,7 +219,7 @@ export const spaces = [
       spaceName: 'Push Video: The solution to centralized video',
       isPublic: true,
       spaceDescription: 'sample space2',
-      spaceCreator: '0x459AB94401A00AdD8C6e230596Bde9B2F113E8BE',
+      spaceCreator: 'eip155:0x459AB94401A00AdD8C6e230596Bde9B2F113E8BE',
       spaceId: '2223',
       scheduleAt: null,
       scheduleEnd: null,
@@ -230,7 +230,7 @@ export const spaces = [
     spaceInformation: {
       members: [
         {
-          wallet: '0x8eECBeD669154Fc4c4629bD8dD7643b382143a8B',
+          wallet: 'eip155:0x8eECBeD669154Fc4c4629bD8dD7643b382143a8B',
           publicKey: '',
           isAdmin: false,
           image:
@@ -239,7 +239,7 @@ export const spaces = [
       ],
       pendingMembers: [
         {
-          wallet: '0x4CA7f516594c3e8E74E3018a160950FB4e4C83B8',
+          wallet: 'eip155:0x4CA7f516594c3e8E74E3018a160950FB4e4C83B8',
           publicKey: '',
           isAdmin: false,
           image:
@@ -256,7 +256,7 @@ export const spaces = [
       spaceName: 'Push Video: The solution to centralized video',
       isPublic: true,
       spaceDescription: 'sample space2',
-      spaceCreator: '0x459AB94401A00AdD8C6e230596Bde9B2F113E8BE',
+      spaceCreator: 'eip155:0x459AB94401A00AdD8C6e230596Bde9B2F113E8BE',
       spaceId: '2224',
       scheduleAt: null,
       scheduleEnd: null,
@@ -267,7 +267,7 @@ export const spaces = [
     spaceInformation: {
       members: [
         {
-          wallet: '0x8eECBeD669154Fc4c4629bD8dD7643b382143a8B',
+          wallet: 'eip155:0x8eECBeD669154Fc4c4629bD8dD7643b382143a8B',
           publicKey: '',
           isAdmin: false,
           image:
@@ -276,7 +276,7 @@ export const spaces = [
       ],
       pendingMembers: [
         {
-          wallet: '0x4CA7f516594c3e8E74E3018a160950FB4e4C83B8',
+          wallet: 'eip155:0x4CA7f516594c3e8E74E3018a160950FB4e4C83B8',
           publicKey: '',
           isAdmin: false,
           image:
@@ -293,7 +293,7 @@ export const spaces = [
       spaceName: 'Push Video: The solution to centralized video',
       isPublic: true,
       spaceDescription: 'sample space2',
-      spaceCreator: '0x459AB94401A00AdD8C6e230596Bde9B2F113E8BE',
+      spaceCreator: 'eip155:0x459AB94401A00AdD8C6e230596Bde9B2F113E8BE',
       spaceId: '2225',
       scheduleAt: null,
       scheduleEnd: null,
@@ -304,7 +304,7 @@ export const spaces = [
     spaceInformation: {
       members: [
         {
-          wallet: '0x8eECBeD669154Fc4c4629bD8dD7643b382143a8B',
+          wallet: 'eip155:0x8eECBeD669154Fc4c4629bD8dD7643b382143a8B',
           publicKey: '',
           isAdmin: false,
           image:
@@ -313,7 +313,7 @@ export const spaces = [
       ],
       pendingMembers: [
         {
-          wallet: '0x4CA7f516594c3e8E74E3018a160950FB4e4C83B8',
+          wallet: 'eip155:0x4CA7f516594c3e8E74E3018a160950FB4e4C83B8',
           publicKey: '',
           isAdmin: false,
           image:
@@ -330,7 +330,7 @@ export const spaces = [
       spaceName: 'Push Video: The solution to centralized video',
       isPublic: true,
       spaceDescription: 'sample space2',
-      spaceCreator: '0x459AB94401A00AdD8C6e230596Bde9B2F113E8BE',
+      spaceCreator: 'eip155:0x459AB94401A00AdD8C6e230596Bde9B2F113E8BE',
       spaceId: '2226',
       scheduleAt: null,
       scheduleEnd: null,
