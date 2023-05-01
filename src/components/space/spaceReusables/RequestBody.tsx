@@ -8,7 +8,7 @@ import moment from 'moment';
 // Internal Components
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { Space } from 'types';
-import SpaceCard from './spaceCard/SpaceCard';
+import SpaceCard from './SpaceCard';
 import { useDeviceWidthCheck } from 'hooks';
 
 const RequestBody = ({

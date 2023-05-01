@@ -23,7 +23,7 @@ import { ReceivedMessageWrapper } from './MessageWrappers/ReceivedMessageWrapper
 import { SentMessageWrapper } from './MessageWrappers/SentMessageWrapper';
 import { checkIfSpaceUrl, getSpaceData } from 'helpers/space';
 import { useDeviceWidthCheck } from 'hooks';
-import SpaceCard from 'components/space/spaceReusables/spaceCard/SpaceCard';
+import SpaceCard from 'components/space/spaceReusables/SpaceCard';
 
 // Internal Configs
 import { appConfig } from 'config';

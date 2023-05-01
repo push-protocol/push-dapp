@@ -12,7 +12,7 @@ import { shortenText } from 'helpers/UtilityHelper';
 import { Space } from 'types';
 import { Button } from 'primaries/SharedStyling';
 import { getSpaceStatus, getSpaceTime } from 'helpers/space';
-import { SpaceMembersIndicator } from '../spaceMembersIndicator/SpaceMembersIndicator';
+import { SpaceMembersIndicator } from './SpaceMembersIndicator';
 import { useNavigate } from 'react-router';
 import { SpaceLocalContext } from 'contexts';
 
