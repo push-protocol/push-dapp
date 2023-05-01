@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -15,9 +15,96 @@ import {ReactComponent as TwitterSVG} from 'assets/space/Twitter.svg'
 import {ReactComponent as LinkSVG} from 'assets/space/Link.svg'
 import {ReactComponent as LiveSVG} from 'assets/space/Live.svg'
 import { BsFillMicFill, BsPeople, BsShare } from 'react-icons/bs'
+import { FiArrowLeft } from 'react-icons/fi';
+import useMediaQuery from 'hooks/useMediaQuery';
+import { SpaceLocalContext } from 'contexts';
+import { device } from 'config/Globals';
+import { useNavigate } from 'react-router';
+import { Space } from 'types';
+import { shortenText } from 'helpers/UtilityHelper';
 
-export const ActiveSpaces = () => {
+
+const ActiveSpacesItem = ({SpaceList}) => {
   const theme = useTheme();
+
+  return(
+    <StackedItems theme={theme}>
+    <ActiveSpaceItem>
+      <CardItem>
+
+      <TopItem>
+        <DivItem>
+          <P color='#fff' margin="0px 0px 0px 0px" size="28px" weight="500">0x123...45678’s Space</P>
+        </DivItem>
+        
+        <ItemTop>
+            <Settings />
+        </ItemTop>
+      </TopItem>
+
+      <ListenerSection>
+            <LiveSection>
+                <Div><LiveSVG /></Div>
+                <P size="14px" weight="500" margin='0px 10px' color='#ffff'>Live</P>
+            </LiveSection>
+
+
+            <LiveSection>
+                <AvatarGroup>
+                    <Image className="avatars__item" src="https://randomuser.me/api/portraits/women/65.jpg" alt="" />
+
+                    <Image className="avatars__item" src="https://randomuser.me/api/portraits/women/25.jpg" alt="" />
+
+                    <Image className="avatars__item" src="https://randomuser.me/api/portraits/men/25.jpg" alt="" />
+                </AvatarGroup>
+                <P size="14px" weight="500" margin='0px 10px' color='#ffff'>+ 190 listeners</P>
+            </LiveSection>
+      </ListenerSection>
+      </CardItem>
+      
+
+
+        <SpaceSection>
+            {SpaceList?.map((item) => (
+                <SpaceItem>
+                    <SpaceImage src={item.image} alt="" />
+                    
+                    
+                    <P size="14px" weight="500" margin='10px 0px 0px 0px' color={theme.default.color}>{item.name}</P>
+
+                    <P size="14px" weight="400" margin='5px 0px 0px 0px' color={theme.default.secondaryColor}>{item.role}</P>
+                </SpaceItem>
+            ))}
+        </SpaceSection>
+
+        <ButtonDiv>
+           <SpaceButton>Join this space</SpaceButton>
+        </ButtonDiv>
+    </ActiveSpaceItem>
+
+    <RequestItem>
+      <RequestSpan>
+        <BsFillMicFill size={22} color='#D53A94' />
+        <P size="14px" weight="500" color='#D53A94' margin="0px 8px">Speaking</P>
+      </RequestSpan>
+            
+            <RequestDiv>
+              <BsPeople size={25} color={'#657795'} />
+              <BsShare size={20} color={'#657795'}  />
+              <Button bg="transparent" border="1px solid #D53A94" color='#D53A94' size="14px" weight="500" radius="12px" padding="12px 32px">Leave</Button>
+            </RequestDiv>
+    </RequestItem>
+    </StackedItems>
+  )
+}
+
+export const ActiveSpaces =  ({currentSpace}:{currentSpace:Space}) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(device.tablet);
+  const { setSelectedSpace } = useContext(SpaceLocalContext);
+  const navigate = useNavigate();
+
+
   
   const SpaceList = [
     {
@@ -107,76 +194,24 @@ export const ActiveSpaces = () => {
     },
   ]
 
+  const goToSpaces = () => {
+    setSelectedSpace(null);
+
+    // lastly, set navigation for dynamic linking
+    navigate(`/space`);
+  };
+
   return (
-    <StackedItems>
-    <ActiveSpaceItem theme={theme}>
-      <CardItem>
+       <>{isMobile ? (<ScrollView isMobile={isMobile}>
+      <MobileTopView onClick={()=>goToSpaces()}>
+        <Div><FiArrowLeft size={25} color={theme.snackbarBorderText} /></Div>
+        <P color={theme.snackbarBorderText} margin="0px 20px" size="19px" weight="500">{shortenText(currentSpace?.spaceCreator,5,5)}’s Space</P>
+      </MobileTopView>
 
-      <TopItem>
-        <DivItem>
-          <P color='#fff' margin="0px 0px 0px 0px" size="28px" weight="500">0x123...45678’s Space</P>
-        </DivItem>
-        
-        <ItemTop>
-            <Settings />
-        </ItemTop>
-      </TopItem>
-
-      <ListenerSection>
-            <LiveSection>
-                <Div><LiveSVG /></Div>
-                <P size="14px" weight="500" margin='0px 10px' color='#ffff'>Live</P>
-            </LiveSection>
-
-
-            <LiveSection>
-                <AvatarGroup>
-                    <Image className="avatars__item" src="https://randomuser.me/api/portraits/women/65.jpg" alt="" />
-
-                    <Image className="avatars__item" src="https://randomuser.me/api/portraits/women/25.jpg" alt="" />
-
-                    <Image className="avatars__item" src="https://randomuser.me/api/portraits/men/25.jpg" alt="" />
-                </AvatarGroup>
-                <P size="14px" weight="500" margin='0px 10px' color='#ffff'>+ 190 listeners</P>
-            </LiveSection>
-      </ListenerSection>
-      </CardItem>
-      
-
-
-      {/* <DivCard> */}
-        <SpaceSection>
-            {SpaceList?.map((item) => (
-                <SpaceItem>
-                    <SpaceImage src={item.image} alt="" />
-                    
-                    
-                    <P size="14px" weight="500" margin='10px 0px 0px 0px' color={theme.default.color}>{item.name}</P>
-
-                    <P size="14px" weight="400" margin='5px 0px 0px 0px' color={theme.default.secondaryColor}>{item.role}</P>
-                </SpaceItem>
-            ))}
-        </SpaceSection>
-      {/* </DivCard> */}
-
-        <ButtonDiv>
-           <SpaceButton>Join this space</SpaceButton>
-        </ButtonDiv>
-    </ActiveSpaceItem>
-
-    <RequestItem>
-      <RequestSpan>
-        <BsFillMicFill size={22} color='#D53A94' />
-        <P size="14px" weight="500" color='#D53A94' margin="0px 8px">Speaking</P>
-      </RequestSpan>
-            
-            <RequestDiv>
-              <BsPeople size={25} color={'#657795'} />
-              <BsShare size={20} color={'#657795'}  />
-              <Button bg="transparent" border="1px solid #D53A94" color='#D53A94' size="14px" weight="500" radius="12px" padding="12px 32px">Leave</Button>
-            </RequestDiv>
-    </RequestItem>
-    </StackedItems>
+      <ActiveSpacesItem SpaceList={SpaceList} />   
+    </ScrollView>) : 
+    (<ActiveSpacesItem SpaceList={SpaceList} /> )}
+    </>
   )
 }
 
@@ -189,6 +224,11 @@ const StackedItems = styled.div`
   height: auto;
   box-sizing: border-box;
   overflow: hidden;
+  justify-content: center;
+
+  @media (max-width: 768px) {
+    width: auto;
+  }
 
   @media (min-width: 768px) and (max-width: 1330px) {
       width: 95%;
@@ -228,8 +268,8 @@ const RequestSpan = styled.div`
 
 // const ActiveSpaceItem = styled(ItemVV2)`
 const ActiveSpaceItem = styled.div`
-  width: 100%;
   display: flex;
+  flex: 1;
   flex-direction: column !important;
   height: auto;
   background: ${(props) => props.theme.modalContentBackground};
@@ -413,4 +453,23 @@ const Settings = styled(AiOutlineMore)`
   height: 25px;
   cursor: pointer;
   color: white;
+`;
+
+const ScrollView = styled.div`
+  @media (max-width: 768px) {
+    width: 100vw !important;
+    padding: 16px;
+    box-sizing: border-box;
+    background: ${(props) => props.theme.modalContentBackground};
+  }
+    
+`;
+
+const MobileTopView = styled.div`
+  width: 100%;
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: row;
+  align-items: center;
+  margin: 15px 0px;
 `;
