@@ -32,14 +32,10 @@ const MenuOptions = ({
 
     return (
         <Container>
-            <FilledButton> {memberData.button} </FilledButton>
+           {memberData.id !== 'requests' &&  <FilledButton> {memberData.button} </FilledButton>}
 
             <MembersContainer>
                 {memberData?.members?.map((member) => {
-
-                    if (memberData.id === 'requests') {
-                        console.log("request section", memberData);
-                    }
 
                     return (
                         <Members>
