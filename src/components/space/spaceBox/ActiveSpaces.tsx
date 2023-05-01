@@ -26,6 +26,7 @@ import { shortenText } from 'helpers/UtilityHelper';
 
 const ActiveSpacesItem = ({SpaceList}) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(device.tablet);
 
   return(
     <StackedItems theme={theme}>
@@ -77,12 +78,29 @@ const ActiveSpacesItem = ({SpaceList}) => {
             ))}
         </SpaceSection>
 
-        <ButtonDiv>
+        {isMobile ? 
+        (<MobileRequestItem>
+          <MobileRequest>
+            <RequestSpan>
+              <BsFillMicFill size={22} color='#D53A94' />
+              <P size="14px" weight="500" color='#D53A94' margin="0px 8px">Speaking</P>
+            </RequestSpan>
+                  
+              <RequestDiv>
+                <BsPeople size={25} color={'#657795'} />
+                <BsShare size={20} color={'#657795'}  />
+              </RequestDiv>
+          </MobileRequest>
+
+          <MobileRequestButton><Button bg="transparent" border="1px solid #D53A94" color='#D53A94' size="14px" weight="500" radius="12px" padding="12px 32px" flex='1 !important' display='flex !important'>End Space</Button></MobileRequestButton>
+
+          </MobileRequestItem>) : 
+          (<ButtonDiv>
            <SpaceButton>Join this space</SpaceButton>
-        </ButtonDiv>
+        </ButtonDiv>)}
     </ActiveSpaceItem>
 
-    <RequestItem>
+    {!isMobile && (<RequestItem>
       <RequestSpan>
         <BsFillMicFill size={22} color='#D53A94' />
         <P size="14px" weight="500" color='#D53A94' margin="0px 8px">Speaking</P>
@@ -93,7 +111,7 @@ const ActiveSpacesItem = ({SpaceList}) => {
               <BsShare size={20} color={'#657795'}  />
               <Button bg="transparent" border="1px solid #D53A94" color='#D53A94' size="14px" weight="500" radius="12px" padding="12px 32px">Leave</Button>
             </RequestDiv>
-    </RequestItem>
+    </RequestItem>)}
     </StackedItems>
   )
 }
@@ -217,7 +235,7 @@ export const ActiveSpaces =  ({currentSpace}:{currentSpace:Space}) => {
 
 const StackedItems = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: column !important;
   width: 65%;
   gap: 10px 0px;
   margin: auto 0;
@@ -240,6 +258,7 @@ const StackedItems = styled.div`
       justify-content: inherit;
       height: 400px;
       overflow-y: scroll;
+      overflow-x: hidden;
 `;
 
 const RequestItem = styled.div`
@@ -329,6 +348,34 @@ const ListenerSection = styled.div`
   width: 100%;
 `;
 
+const MobileRequest = styled.div`
+  width: 100% !important;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+`;
+
+const MobileRequestItem = styled.div`
+  width: 100% !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+
+  padding: 10px;
+  box-sizing: border-box;
+`;
+
+const MobileRequestButton = styled.div`
+  margin-top: 10px;
+  flex: 1;
+  width: 100% !important;
+  display: flex;
+`;
+
 const SpaceSection = styled.div`
     width: 100%;
     display: grid;
@@ -346,6 +393,11 @@ const SpaceSection = styled.div`
       &&::-webkit-scrollbar-thumb {
         background: #cf1c84; 
         border-radius: 10px;
+      }
+
+      @media (max-width: 768px) {
+        padding: 8px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
       @media (min-width: 768px) and (max-width: 1330px) {

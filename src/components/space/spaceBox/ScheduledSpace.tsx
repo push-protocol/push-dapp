@@ -159,7 +159,6 @@ const ScheduledItem = styled.div`
   height: auto;
   background: ${(props) => props.theme.modalContentBackground};
   border-radius: 22px;
-  // flex: 0 !important;
   box-sizing: border-box;
   overflow: hidden;
   @media (max-width: 768px) {
@@ -178,7 +177,6 @@ const ScheduledItem = styled.div`
     height: 400px;
     overflow-y: scroll;
     overflow-x: hidden;
-    // flex: auto !important;
   }
 `;
 
