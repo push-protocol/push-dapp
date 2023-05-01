@@ -22,7 +22,7 @@ import useMediaQuery from 'hooks/useMediaQuery';
 import { SpaceLocalContext } from 'contexts';
 
 
-const SpaceItem = ({currentSpace, step, setStep}) => {
+const SpaceItem = ({currentSpace, step, setStep,showMemberMenuModal}) => {
   const theme = useTheme();
 
   return(
@@ -120,7 +120,7 @@ const SpaceItem = ({currentSpace, step, setStep}) => {
   )
 }
 
-export const ScheduledSpace = ({currentSpace}:{currentSpace:Space}) => {
+export const ScheduledSpace = ({currentSpace,showMemberMenuModal}:{currentSpace:Space,showMemberMenuModal:()=>boolean}) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -136,7 +136,9 @@ export const ScheduledSpace = ({currentSpace}:{currentSpace:Space}) => {
 
 
   return (
-    <>{isMobile ? (<ScrollView isMobile={isMobile}>
+    <>
+    <p onClick={showMemberMenuModal}>Show member Menu Modal</p>
+    {isMobile ? (<ScrollView isMobile={isMobile}>
       <MobileTopView onClick={()=>goToSpaces()}>
         <Div><FiArrowLeft size={25} color={theme.snackbarBorderText} /></Div>
         <P color={theme.snackbarBorderText} margin="0px 20px" size="19px" weight="500">{shortenText(currentSpace?.spaceCreator,5,5)}’s Space</P>

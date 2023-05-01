@@ -19,6 +19,7 @@ import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import CreateSpaceModal from 'components/space/spaceModals/CreateSpaceModal';
 import SpaceNotification from 'components/space/spaceNotification/spaceNotification';
+import MemberMenuModal from 'components/space/spaceModals/MemberMenu/MemberMenuModal';
 
 
 export const SpaceModule = ({ }) => {
@@ -88,6 +89,13 @@ useEffect(()=>{
     ModalComponent: CreateSpaceModalComponent,
   } = useModalBlur();
 
+  const {
+    isModalOpen:isMemberMenuModalOpen,
+    showModal:showMemberMenuModal,
+    ModalComponent:MemberMenuModalComponent,
+  } = useModalBlur();
+
+
 
   // RENDER
   return (
@@ -115,18 +123,26 @@ useEffect(()=>{
       <SpaceContainer
         spaceActive={!!selectedSpace}
       >
-        <SpaceBoxSection />
+        <SpaceBoxSection showMemberMenuModal={showMemberMenuModal}/>
         {/* Added notification here to test it out need to be moved to notification UI */}
         {showNotification && <SpaceNotification/>}
       </SpaceContainer>
 
 
+      {/* Modal for creating a space, it includes schedule and invite member option */}
       <CreateSpaceModalComponent
        InnerComponent={CreateSpaceModal}
        onConfirm={() => {}}
        toastObject={spaceModalToast}
        modalPadding="0px"
        modalPosition={MODAL_POSITION.ON_ROOT}
+      />
+
+      {/* Modal for various options for a member when the space is live */}
+      <MemberMenuModalComponent
+      InnerComponent={MemberMenuModal}
+      modalPadding="0px"
+      modalPosition={MODAL_POSITION.ON_PARENT}
       />
 
     </ItemHV2>
