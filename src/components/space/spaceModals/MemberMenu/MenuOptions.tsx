@@ -12,64 +12,83 @@ import { ReactComponent as CheckCircle } from 'assets/space/CheckCircle.svg'
 import { ReactComponent as XCircle } from 'assets/space/XCircle.svg'
 import Dropdown from 'components/Dropdown';
 import { useClickAway } from 'react-use';
+import MemberData from './MemberData';
+import { useDeviceWidthCheck } from 'hooks';
 
 const MenuOptions = ({
-    memberData
+    optionData
 }) => {
 
     const [selectedWalletAddress, setSelectedWalletAddress] = useState(null);
+    const [dropdownheight, setDropDownHeight] = useState(0);
 
     const dropdownRef = React.useRef<any>(null);
     useClickAway(dropdownRef, () => setSelectedWalletAddress(null));
-
     const theme = useTheme();
-    const dropdownValues = memberData?.dropdownOptions;
 
-    //this is when the section is requests
-    const acceptRequest = memberData?.Acceptfunction;
-    const declineRequest = memberData?.Declinefunction;
+    //this is for request section where we have two svgs
+    const acceptRequest = optionData?.Acceptfunction;
+    const declineRequest = optionData?.Declinefunction;
 
+
+    const dropdownValues = optionData?.dropdownOptions;
+
+    // const handleHeight = () => {
+    //     const containerHeight = document.getElementById(member?.wallet)?.getBoundingClientRect();
+    //     setDropDownHeight(containerHeight?.top);
+    // };
+
+    const isMobile = useDeviceWidthCheck(600);
 
     return (
         <Container>
-           {memberData.id !== 'requests' &&  <FilledButton> {memberData.button} </FilledButton>}
+            {optionData.id !== 'requests' && <FilledButton> {optionData.button} </FilledButton>}
 
             <MembersContainer>
-                {memberData?.members?.map((member) => {
-
+                {optionData?.members?.map((member) => {
                     return (
-                        <Members>
-                            <ItemHV2 position='relative' width='auto' padding='8px 16px 8px 8px' background={theme.chat.snapFocusBg} borderRadius='16px' margin='10px 0 0 0'>
+                        <Members key={member.wallet} id={member.wallet}>
+                            <ItemHV2 position='unset' width='auto' padding='8px 16px 8px 8px' background={theme.chat.snapFocusBg} borderRadius='16px' margin='10px 0 0 0'>
                                 <Image src={member?.image}></Image>
-                                <P flex='1' color='#000' margin="0px 20px" size="17px" weight="500">{shortenText(member?.wallet, 5, 5)}</P>
+                                <P flex='1' color={theme.modalProfileTextColor} margin="0px 20px" size="17px" weight="500">{shortenText(member?.wallet, 5, 5)}</P>
 
 
-                                {memberData.id === 'requests' ? (
+                                {optionData.id === 'requests' ? (
                                     <div>
-                                        <XCircle onClick={declineRequest} />
-                                        <CheckCircle onClick={acceptRequest} />
+                                        <XCircle width={isMobile ? '30px' : '48px'} onClick={declineRequest} />
+                                        <CheckCircle width={isMobile ? '30px' : '48px'} onClick={acceptRequest} />
                                     </div>
                                 ) : (
                                     <ItemVV2
                                         maxWidth="4px"
                                         padding="0 20px 0 0"
-                                        onClick={() => setSelectedWalletAddress(member.wallet)}
+                                        onClick={() => {
+                                            // handleHeight();
+                                            setSelectedWalletAddress(member.wallet)
+                                        }
+                                        }
                                         style={{ cursor: 'pointer' }}
                                     >
                                         {theme.scheme == 'light' ? <MoreLight /> : <MoreDark />}
                                     </ItemVV2>
+
+
                                 )}
 
-                            </ItemHV2>
+                                {(selectedWalletAddress === member.wallet) && (
+                                    <DropdownContainer
+                                        key={member.wallet}
+                                        ref={dropdownRef}>
+                                        <Dropdown
+                                            dropdownValues={dropdownValues}
+                                            hoverBGColor={theme.chat.snapFocusBg}
+                                        />
+                                    </DropdownContainer>
+                                )}
 
-                            {(selectedWalletAddress === member.wallet) && (
-                                <DropdownContainer ref={dropdownRef}>
-                                    <Dropdown
-                                        dropdownValues={dropdownValues}
-                                        hoverBGColor={theme.chat.snapFocusBg}
-                                    />
-                                </DropdownContainer>
-                            )}
+
+
+                            </ItemHV2>
 
                         </Members>
                     )
@@ -100,12 +119,20 @@ const FilledButton = styled(Button)`
 `
 
 const MembersContainer = styled.div`
-    overflow: scroll;
-    max-height: 200px;
+    overflow-Y: scroll;
+    max-height: 150px;
+    &&::-webkit-scrollbar {
+        width: 4px;
+    }
+    &&::-webkit-scrollbar-thumb {
+        background: #cf1c84;
+        border-radius: 10px;
+    }
 `
 
 const Members = styled.div`
-    position: relative;
+    position: unset;
+    
 `
 
 const Image = styled.img`
@@ -118,14 +145,8 @@ const DropdownContainer = styled(ItemVV2)`
   right:26px;
   top:50%;
   border-radius: 16px;
-  border: 1px solid #E5E8F7;
+  border: 1px solid ${(props) => props.theme.default.border};
   padding: 14px 8px;
   background: ${(props) => props.theme.modalContentBackground};
   z-index: 11;
-//   @media ${device.mobileL} {
-//     left: 27%;
-//   }
-//   @media (min-width: 426px) and (max-width: 1150px) {
-//     left: 48%;
-//   }
 `;
