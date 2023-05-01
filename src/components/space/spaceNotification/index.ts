@@ -1,1 +1,1 @@
-export * from './spaceNotification';
+export * from './SpaceNotification';
