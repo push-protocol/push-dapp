@@ -15,7 +15,7 @@ import {ReactComponent as TwitterSVG} from 'assets/space/Twitter.svg'
 import {ReactComponent as LinkSVG} from 'assets/space/Link.svg'
 import {ReactComponent as LiveSVG} from 'assets/space/Live.svg'
 import { BsFillMicFill, BsPeople, BsShare } from 'react-icons/bs'
-import { FiArrowLeft } from 'react-icons/fi';
+import { FiArrowLeft, FiMicOff } from 'react-icons/fi';
 import useMediaQuery from 'hooks/useMediaQuery';
 import { SpaceLocalContext } from 'contexts';
 import { device } from 'config/Globals';
@@ -24,7 +24,7 @@ import { Space } from 'types';
 import { shortenText } from 'helpers/UtilityHelper';
 
 
-const ActiveSpacesItem = ({SpaceList}) => {
+const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(device.tablet);
 
@@ -35,7 +35,7 @@ const ActiveSpacesItem = ({SpaceList}) => {
 
       <TopItem>
         <DivItem>
-          <P color='#fff' margin="0px 0px 0px 0px" size="28px" weight="500">0x123...45678’s Space</P>
+          <P color='#fff' margin="0px 0px 0px 0px" size="28px" weight="500">{shortenText(currentSpace?.spaceCreator,5,5)}’s Space</P>
         </DivItem>
         
         <ItemTop>
@@ -73,12 +73,15 @@ const ActiveSpacesItem = ({SpaceList}) => {
                     
                     <P size="14px" weight="500" margin='10px 0px 0px 0px' color={theme.default.color}>{item.name}</P>
 
-                    <P size="14px" weight="400" margin='5px 0px 0px 0px' color={theme.default.secondaryColor}>{item.role}</P>
+                   <SpaceDiv>
+                    <P size="14px" weight="400"  margin='0px 0px 0px 0px' color={theme.default.secondaryColor}>{item.role}</P>
+                    {item?.role == 'Co-host' || item?.role == 'Host' && (<FiMicOff color='#E93636' size={12}/>)}
+                    </SpaceDiv> 
                 </SpaceItem>
             ))}
         </SpaceSection>
 
-        {isMobile ? 
+        {isMobile && space &&  
         (<MobileRequestItem>
           <MobileRequest>
             <RequestSpan>
@@ -92,15 +95,16 @@ const ActiveSpacesItem = ({SpaceList}) => {
               </RequestDiv>
           </MobileRequest>
 
-          <MobileRequestButton><Button bg="transparent" border="1px solid #D53A94" color='#D53A94' size="14px" weight="500" radius="12px" padding="12px 32px" flex='1 !important' display='flex !important'>End Space</Button></MobileRequestButton>
+          <MobileRequestButton><Button bg="transparent" border="1px solid #D53A94" color='#D53A94' size="14px" weight="500" radius="12px" padding="12px 32px" flex='1 !important' display='flex !important' onClick={()=>leaveSpace()}>End Space</Button></MobileRequestButton>
 
-          </MobileRequestItem>) : 
-          (<ButtonDiv>
+          </MobileRequestItem>)} 
+
+          {!space && (<ButtonDiv onClick={()=>joinSpace()}>
            <SpaceButton>Join this space</SpaceButton>
         </ButtonDiv>)}
     </ActiveSpaceItem>
 
-    {!isMobile && (<RequestItem>
+    {!isMobile && space && (<RequestItem>
       <RequestSpan>
         <BsFillMicFill size={22} color='#D53A94' />
         <P size="14px" weight="500" color='#D53A94' margin="0px 8px">Speaking</P>
@@ -109,7 +113,7 @@ const ActiveSpacesItem = ({SpaceList}) => {
             <RequestDiv>
               <BsPeople size={25} color={'#657795'} />
               <BsShare size={20} color={'#657795'}  />
-              <Button bg="transparent" border="1px solid #D53A94" color='#D53A94' size="14px" weight="500" radius="12px" padding="12px 32px">Leave</Button>
+              <Button bg="transparent" border="1px solid #D53A94" color='#D53A94' size="14px" weight="500" radius="12px" padding="12px 32px" onClick={()=>leaveSpace()}>Leave</Button>
             </RequestDiv>
     </RequestItem>)}
     </StackedItems>
@@ -121,9 +125,17 @@ export const ActiveSpaces =  ({currentSpace}:{currentSpace:Space}) => {
   const isMobile = useMediaQuery(device.tablet);
   const { setSelectedSpace } = useContext(SpaceLocalContext);
   const navigate = useNavigate();
+  const [space, setSpace] = useState(false);
+  const joinSpace = () => {
+      setSpace(true);
+  }
+
+  const leaveSpace = () => {
+    setSpace(false);
+}
 
 
-  
+  // spacelist will be the members under the currentSpace props when populated
   const SpaceList = [
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
@@ -143,78 +155,77 @@ export const ActiveSpaces =  ({currentSpace}:{currentSpace:Space}) => {
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
         name: '0x123...45678',
-        role: 'Host'
+        role: 'Listener'
     },
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
         name: '0x123...45678',
-        role: 'Host'
+        role: 'Listener'
     },
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
         name: '0x123...45678',
-        role: 'Host'
+        role: 'Listener'
     },
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
         name: '0x123...45678',
-        role: 'Host'
+        role: 'Listener'
     },
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
         name: '0x123...45678',
-        role: 'Host'
+        role: 'Listener'
     },
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
         name: '0x123...45678',
-        role: 'Host'
+        role: 'Listener'
     },
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
         name: '0x123...45678',
-        role: 'Host'
+        role: 'Listener'
     },
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
         name: '0x123...45678',
-        role: 'Host'
+        role: 'Listener'
     },
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
         name: '0x123...45678',
-        role: 'Host'
+        role: 'Listener'
     },
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
         name: '0x123...45678',
-        role: 'Host'
+        role: 'Listener'
     },
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
         name: '0x123...45678',
-        role: 'Host'
+        role: 'Listener'
     },
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
         name: '0x123...45678',
-        role: 'Host'
+        role: 'Listener'
     },
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
         name: '0x123...45678',
-        role: 'Host'
+        role: 'Listener'
     },
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
         name: '0x123...45678',
-        role: 'Host'
+        role: 'Listener'
     },
   ]
 
   const goToSpaces = () => {
     setSelectedSpace(null);
-
     // lastly, set navigation for dynamic linking
     navigate(`/space`);
   };
@@ -226,9 +237,9 @@ export const ActiveSpaces =  ({currentSpace}:{currentSpace:Space}) => {
         <P color={theme.snackbarBorderText} margin="0px 20px" size="19px" weight="500">{shortenText(currentSpace?.spaceCreator,5,5)}’s Space</P>
       </MobileTopView>
 
-      <ActiveSpacesItem SpaceList={SpaceList} />   
+      <ActiveSpacesItem SpaceList={SpaceList} currentSpace={currentSpace} space={space} joinSpace={joinSpace} leaveSpace={leaveSpace} />   
     </ScrollView>) : 
-    (<ActiveSpacesItem SpaceList={SpaceList} /> )}
+    (<ActiveSpacesItem SpaceList={SpaceList} currentSpace={currentSpace} space={space} joinSpace={joinSpace} leaveSpace={leaveSpace} /> )}
     </>
   )
 }
@@ -365,7 +376,7 @@ const MobileRequestItem = styled.div`
   justify-content: space-between;
   flex: 1;
 
-  padding: 10px;
+  padding: 20px 10px 10px 10px;
   box-sizing: border-box;
 `;
 
@@ -386,6 +397,7 @@ const SpaceSection = styled.div`
 
     height: 20em;
     overflow-y: scroll;
+    padding: 8px;
 
     &&::-webkit-scrollbar {
         width: 4px;
@@ -509,8 +521,9 @@ const Settings = styled(AiOutlineMore)`
 
 const ScrollView = styled.div`
   @media (max-width: 768px) {
-    width: 100vw !important;
-    padding: 16px;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 8px;
     box-sizing: border-box;
     background: ${(props) => props.theme.modalContentBackground};
   }
@@ -524,4 +537,13 @@ const MobileTopView = styled.div`
   flex-direction: row;
   align-items: center;
   margin: 15px 0px;
+`;
+
+const SpaceDiv = styled.div`
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: row;
+  gap: 0 5px;
+  align-items: center;
+  margin: 5px 0px 0px 0px;
 `;
