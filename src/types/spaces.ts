@@ -26,8 +26,8 @@ export interface Space{
     spaceDescription: string | null;
     spaceCreator: string;
     spaceId: string;
-    scheduleAt?: Date | null;
-    scheduleEnd?: Date | null;
+    scheduleAt?: Date | number;
+    scheduleEnd?: Date | number;
     status: ChatStatus | null;
 }
 
