@@ -24,7 +24,7 @@ const ERROR_TOAST_DEFAULTS = {
   progress: undefined,
 };
 interface ICreateTransactionObjectProps {
-  newDelegatee: string;
+  delegateeAddress: string;
   account: string;
   epnsToken: ethers.Contract;
   addresses: any;
@@ -55,7 +55,7 @@ const checkForDelegateError = async (gasEstimate: any, library: any): Promise<st
 };
 
 export const createTransactionObject = async ({
-  newDelegatee,
+  delegateeAddress,
   account,
   epnsToken,
   addresses,
@@ -63,7 +63,7 @@ export const createTransactionObject = async ({
   library,
   setTxLoading,
 }: ICreateTransactionObjectProps): Promise<any> => {
-  console.log('🚀 ~ file: ViewDelegateeItem.js ~ line 63 ~ createTransactionObject ~ newDelegatee', newDelegatee);
+  console.log('🚀 ~ file: ViewDelegateeItem.js ~ line 63 ~ createTransactionObject ~ delegateeAddress', delegateeAddress);
   const contractName: string = await epnsToken.name();
   const nonce: any = await epnsToken.nonces(account);
   const chainId: number = appConfig.coreContractChain;
@@ -92,7 +92,7 @@ export const createTransactionObject = async ({
     nonce: any;
     expiry: string;
   } = {
-    delegatee: newDelegatee.toString(),
+    delegatee: delegateeAddress?.toString(),
     nonce: nonce.toString(),
     expiry: expiry.toString(),
   };
@@ -100,7 +100,7 @@ export const createTransactionObject = async ({
   try {
     signature = await signerObject._signTypedData(domain, types, value);
     var { r, s, v } = ethers.utils.splitSignature(signature);
-    const gasEstimate = await epnsToken.estimateGas.delegateBySig(newDelegatee, nonce, expiry, v, r, s);
+    const gasEstimate = await epnsToken.estimateGas.delegateBySig(delegateeAddress, nonce, expiry, v, r, s);
 
     const errorMessage = await checkForDelegateError(gasEstimate, library);
     if (errorMessage) {
@@ -110,7 +110,7 @@ export const createTransactionObject = async ({
       });
     }
     try {
-      await callDelegateAPI({ signature, delegatee: newDelegatee, nonce, expiry, account });
+      await callDelegateAPI({ signature, delegatee: delegateeAddress, nonce, expiry, account });
       toast.dark('Successfully Delegated', {
         position: 'bottom-right',
         type: toast.TYPE.SUCCESS,
