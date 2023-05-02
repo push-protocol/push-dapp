@@ -129,13 +129,13 @@ const MemberMenuModal = ({ onClose }:MemberMenuModalType) => {
 
     return (
         <Container ref={containerRef}>
-            <ModalHeader title='Members' handleClose={onClose} />
+            <ModalHeader margin='0 20px 20px 20px' title='Members' handleClose={onClose} />
 
             <BodyContainer>
                 <ItemHV2 width='auto' padding='8px'>
                     <Image src={currentSpace?.spaceImage}></Image>
                     <P flex='1' color={theme.modalProfileTextColor} margin="0px 20px" size="17px" weight="500">{shortenText(currentSpace?.spaceCreator, 5, 4)}</P>
-                    <SpanV2 background='#F3D7FA' color='#D53A94' borderRadius="8px" fontSize="12px" fontWeight="500" padding="8px">Host</SpanV2>
+                    <SpanV2 background='#F3D7FA' color='#D53A94' borderRadius="8px" fontSize="12px" fontWeight="500" padding="5px 10px">Host</SpanV2>
                 </ItemHV2>
 
                 <ItemHV2>
@@ -176,22 +176,10 @@ const MemberMenuModal = ({ onClose }:MemberMenuModalType) => {
 export default MemberMenuModal;
 
 const Container = styled.div`
-    margin:11px 0px;
+    margin:26px 0px;
     max-width:475px;
     width:475px;
-    max-height:70vh;
-    overflow-Y:scroll;
-    padding:15px;
-
-   
-
-    &&::-webkit-scrollbar {
-        width: 4px;
-    }
-    &&::-webkit-scrollbar-thumb {
-        background: #cf1c84;
-        border-radius: 10px;
-    }
+    overflow:hidden;
 
     @media (min-width:500px) and (max-width: 600px) {
         width:350px;
@@ -199,20 +187,30 @@ const Container = styled.div`
 
     @media screen and (max-width: 500px) {
         width:300px;
-        padding:15px;
     }
-
-    // @media (min-width:600px){
-    //     height:500px;
-    // }
-
 `
 
 const BodyContainer = styled.div`
-    margin:15px 15px 0px 15px;
+    max-height: 60vh;
+    overflow-Y: scroll;
+    padding: 15px 30px 0px 30px;
+
+    &&::-webkit-scrollbar {
+        width: 4px;
+    }
+    &&::-webkit-scrollbar-thumb {
+        background: #cf1c84;
+        border-radius: 10px;
+        border-bottom: 150px solid transparent;
+        background-clip: padding-box;
+    }
 
     @media screen and (max-width: 600px) {
         margin:0px;
+        padding: 15px 15px 0px 15px;
+        &&::-webkit-scrollbar-thumb {
+            border-bottom: 300px solid transparent;
+        }
     }
 
 
