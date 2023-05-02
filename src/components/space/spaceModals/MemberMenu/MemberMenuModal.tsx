@@ -179,10 +179,11 @@ const Container = styled.div`
     margin:11px 0px;
     max-width:475px;
     width:475px;
-    max-height:450px;
+    max-height:70vh;
     overflow-Y:scroll;
     padding:15px;
-    padding-right:20px;
+
+   
 
     &&::-webkit-scrollbar {
         width: 4px;
@@ -200,6 +201,10 @@ const Container = styled.div`
         width:300px;
         padding:15px;
     }
+
+    // @media (min-width:600px){
+    //     height:500px;
+    // }
 
 `
 

@@ -77,7 +77,7 @@ const MenuOptions = ({
                 {optionData?.members?.map((member) => {
                     return (
                         <Members key={member.wallet} id={member.wallet}>
-                            <ItemHV2 position='relative' width='auto' padding='8px 16px 8px 8px' background={theme.chat.snapFocusBg} borderRadius='16px' margin='10px 0 0 0'>
+                            <ItemHV2 position='relative' width='auto' padding='8px 16px 8px 8px' background={ selectedWalletAddress === member.wallet && theme.chat.snapFocusBg} borderRadius='16px' margin='10px 0 0 0'>
                                 <Image src={member?.image}></Image>
                                 <P flex='1' color={theme.modalProfileTextColor} margin="0px 20px" size="17px" weight="500">{shortenText(member?.wallet, 5, 5)}</P>
 
@@ -150,7 +150,7 @@ const FilledButton = styled(Button)`
 
 const MembersContainer = styled.div`
     overflow-Y: scroll;
-    max-height: 150px;
+    max-height: 300px;
     &&::-webkit-scrollbar {
         width: 4px;
     }
