@@ -1,17 +1,29 @@
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import React, { useContext, useEffect, useState } from 'react';
-import { useClickAway } from 'react-use';
-import styled, { useTheme } from 'styled-components';
-import { Button, P } from 'primaries/SharedStyling';
-import ModalHeader from 'components/ModalHeader';
-import { SpaceGlobalContext, SpaceLocalContext } from 'contexts';
-import { useWeb3React } from '@web3-react/core';
-import MenuOptions from './MenuOptions';
-import { shortenText } from 'helpers/UtilityHelper';
-import { H2V2 } from 'components/reusables/SharedStylingV2';
-import MemberData from './MemberData';
 
-const MemberMenuModal = ({ onClose }) => {
+// React + Web3 Essentials
+import React, { useContext, useEffect, useState } from 'react';
+
+// External Packages
+import styled, { useTheme } from 'styled-components';
+import { useWeb3React } from '@web3-react/core';
+import { useClickAway } from 'react-use';
+
+// Internal Components
+import { ItemHV2, ItemVV2,SpanV2 } from 'components/reusables/SharedStylingV2';
+import { H2V2 } from 'components/reusables/SharedStylingV2';
+import { Button, P } from 'primaries/SharedStyling';
+import { shortenText } from 'helpers/UtilityHelper';
+
+
+// Internal Configs
+import ModalHeader from 'components/ModalHeader';
+import MenuOptions from './MenuOptions';
+import { SpaceGlobalContext, SpaceLocalContext } from 'contexts';
+
+type MemberMenuModalType = {
+    onClose : ()=>boolean
+};
+
+const MemberMenuModal = ({ onClose }:MemberMenuModalType) => {
     const { account } = useWeb3React();
     const { selectedSpace } = useContext(SpaceLocalContext);
     const { userSpaces } = useContext(SpaceGlobalContext);

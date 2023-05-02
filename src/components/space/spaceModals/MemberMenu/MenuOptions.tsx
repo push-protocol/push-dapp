@@ -1,23 +1,51 @@
+// React + Web3 Essentials
 import React, { useState } from 'react';
+
+// External Packages
 import styled, { useTheme } from 'styled-components';
-import { Button, P } from 'primaries/SharedStyling';
-import { shortenText } from 'helpers/UtilityHelper';
-import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
-import { device } from 'config/Globals';
+import { useClickAway } from 'react-use';
 
 // Internal Components
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as CheckCircle } from 'assets/space/CheckCircle.svg'
 import { ReactComponent as XCircle } from 'assets/space/XCircle.svg'
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import Dropdown from 'components/Dropdown';
-import { useClickAway } from 'react-use';
-import MemberData from './MemberData';
+import { Button, P } from 'primaries/SharedStyling';
+import { shortenText } from 'helpers/UtilityHelper';
 import { useDeviceWidthCheck } from 'hooks';
+
+type DropdownValueType = {
+    id: number|string,
+    title: string,
+    function: () => void,
+}
+
+type MembersType={
+    image:string,
+    isAdmin:boolean,
+    publicKey:string,
+    wallet:string,
+}
+
+type IOptionType = {
+    button : string,
+    dropdownOptions: DropdownValueType[],
+    id:string,
+    members:MembersType[],
+    title:string,
+    Acceptfunction?:()=>void,
+    Declinefunction?:()=>void,
+}
+
+type IOptionsDataType = {
+    optionData:IOptionType
+}
 
 const MenuOptions = ({
     optionData
-}) => {
+}:IOptionsDataType) => {
 
     const [selectedWalletAddress, setSelectedWalletAddress] = useState(null);
     const [dropdownheight, setDropDownHeight] = useState(0);
@@ -85,8 +113,6 @@ const MenuOptions = ({
                                         />
                                     </DropdownContainer>
                                 )}
-
-
 
                             </ItemHV2>
 
