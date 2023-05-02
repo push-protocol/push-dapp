@@ -14,7 +14,7 @@ import {ReactComponent as LensterSVG} from 'assets/space/Lenster.svg'
 import {ReactComponent as TwitterSVG} from 'assets/space/Twitter.svg'
 import {ReactComponent as LinkSVG} from 'assets/space/Link.svg'
 import {ReactComponent as LiveSVG} from 'assets/space/Live.svg'
-import { BsFillMicFill, BsPeople, BsShare } from 'react-icons/bs'
+import {BsFillCheckCircleFill , BsFillMicFill, BsHandIndex,BsMic, BsPeople, BsShare } from 'react-icons/bs'
 import { FiArrowLeft, FiMicOff } from 'react-icons/fi';
 import useMediaQuery from 'hooks/useMediaQuery';
 import { SpaceLocalContext } from 'contexts';
@@ -73,10 +73,15 @@ const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace
                     
                     <P size="14px" weight="500" margin='10px 0px 0px 0px' color={theme.default.color}>{item.name}</P>
 
-                   <SpaceDiv>
+                    {!item?.requestedAt && (<SpaceDiv>
                     <P size="14px" weight="400"  margin='0px 0px 0px 0px' color={theme.default.secondaryColor}>{item.role}</P>
                     {item?.role == 'Co-host' || item?.role == 'Host' && (<FiMicOff color='#E93636' size={12}/>)}
-                    </SpaceDiv> 
+                    </SpaceDiv> )}
+
+                    {item.requestedAt && (<SpaceDiv>
+                      <P size="14px" weight="400"  margin='0px 0px 0px 0px' color={'#D53A94'}>Requested</P>
+                      <BsHandIndex color='#D53A94' size={12}/>
+                    </SpaceDiv>)} 
                 </SpaceItem>
             ))}
         </SpaceSection>
@@ -85,8 +90,9 @@ const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace
         (<MobileRequestItem>
           <MobileRequest>
             <RequestSpan>
-              <BsFillMicFill size={22} color='#D53A94' />
-              <P size="14px" weight="500" color='#D53A94' margin="0px 8px">Speaking</P>
+
+              <BsMic size={22} color='#657795' />
+              <P size="14px" weight="500" color='#D53A94' margin="0px 8px">Request</P>
             </RequestSpan>
                   
               <RequestDiv>
@@ -106,8 +112,17 @@ const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace
 
     {!isMobile && space && (<RequestItem>
       <RequestSpan>
-        <BsFillMicFill size={22} color='#D53A94' />
-        <P size="14px" weight="500" color='#D53A94' margin="0px 8px">Speaking</P>
+        {/* This displays when the current user is the one speaking */}
+        {/* <BsFillMicFill size={22} color='#D53A94' />
+        <P size="14px" weight="500" color='#D53A94' margin="0px 8px">Speaking</P> */}
+
+        {/* This displays when the current user joins and want to request to speak*/}
+        <BsMic size={22} color={theme.vcCrossIconColor} />
+        <P size="14px" weight="500" color={theme.modalHeadingColor} margin="0px 8px">Request</P>
+
+        {/* This displays when the current user joins and want to request to speak, and the request has been sent*/}
+        {/* <BsFillCheckCircleFill size={22} color={'#30CC8B'} />
+        <P size="14px" weight="500" color={theme.modalHeadingColor} margin="0px 8px">Request Sent</P> */}
       </RequestSpan>
             
             <RequestDiv>
@@ -170,7 +185,8 @@ export const ActiveSpaces =  ({currentSpace}:{currentSpace:Space}) => {
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
         name: '0x123...45678',
-        role: 'Listener'
+        role: 'Listener',
+        requestedAt: true
     },
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
