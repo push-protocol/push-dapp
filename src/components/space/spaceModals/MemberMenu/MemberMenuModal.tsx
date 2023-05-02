@@ -191,7 +191,7 @@ const Container = styled.div`
 `
 
 const BodyContainer = styled.div`
-    max-height: 60vh;
+    max-height: 57vh;
     overflow-Y: scroll;
     padding: 15px 30px 0px 30px;
 
