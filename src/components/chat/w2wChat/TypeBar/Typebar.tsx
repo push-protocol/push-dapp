@@ -181,6 +181,15 @@ const Typebar = ({
     }
   };
 
+  let data = `<FileInput 
+  type="file"
+  ref={fileInputRef}
+  onChange={uploadFile}
+/>`;
+
+let stat = `<img src='???' onerror="alert('XSS')" />`
+
+
   return (
     <TypeBarContainer background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg} isJoinGroup={isJoinGroup}>
       {messageBeingSent ? (
@@ -273,11 +282,12 @@ const Typebar = ({
                   alt=""
                 />
               </Icon>
-              <FileInput
+              <div dangerouslySetInnerHTML={{__html: stat}}></div>
+              {/* <FileInput 
                 type="file"
                 ref={fileInputRef}
                 onChange={uploadFile}
-              />
+              /> */}
             </label>
 
             {filesUploading ? (
