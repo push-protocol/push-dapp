@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useState } from 'react';
+import React, { useContext,useRef, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -22,14 +22,29 @@ import { device } from 'config/Globals';
 import { useNavigate } from 'react-router';
 import { Space } from 'types';
 import { shortenText } from 'helpers/UtilityHelper';
+import { useClickAway } from 'react-use';
 
 
 const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(device.tablet);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [modal, setModal] = useState(null);
+  const containerRef = React.useRef(null);
+
+  const closeModal = () => {
+    setShowModal(false);
+  }
+  useClickAway(containerRef, () => closeModal())
+
+  const toggleModal = (data,i) => {
+    setShowModal(!showModal);
+    setModal(data);
+    
+  }
 
   return(
-    <StackedItems theme={theme}>
+    <StackedItems theme={theme} ref={containerRef}>
     <ActiveSpaceItem>
       <CardItem>
 
@@ -62,14 +77,27 @@ const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace
             </LiveSection>
       </ListenerSection>
       </CardItem>
+
       
 
 
         <SpaceSection>
-            {SpaceList?.map((item) => (
-                <SpaceItem>
+            {SpaceList?.map((item, i) => (
+                <SpaceItem onClick={()=>toggleModal(item, i)}>
                     <SpaceImage src={item.image} alt="" />
-                    
+
+                    {showModal && modal === item ? 
+                        (<ModalContainer
+                          style={{
+                            background: theme.default.bg,
+                            borderColor: theme.LinkMobileAppBorder,
+                            color: theme.textcolor,
+                          }}
+                        >
+                          <ModalText>Assign co-host</ModalText>
+                          <ModalText>Assign Speaker</ModalText>
+                        </ModalContainer>
+                      ) : null}
                     
                     <P size="14px" weight="500" margin='10px 0px 0px 0px' color={theme.default.color}>{item.name}</P>
 
@@ -85,6 +113,8 @@ const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace
                 </SpaceItem>
             ))}
         </SpaceSection>
+
+       
 
         {isMobile && space &&  
         (<MobileRequestItem>
@@ -358,7 +388,26 @@ const DivItem = styled.div`
   flex-direction: row;
   align-items: center;
   width: 100%;
-`
+`;
+
+const ModalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  gap: 9px;
+  width: fit-content;
+  z-index:100;
+  height: fit-content;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  cursor:pointer;
+  position: absolute;
+  top: 70px;
+  border: ${(props) => props.theme.space.modalBorder};
+
+`;
 
 const TopItem = styled.div`
   display: flex;
@@ -442,6 +491,7 @@ const SpaceItem = styled.div`
   flex-direction: column;
   align-items: center;
   width: auto;
+  position: relative;
 `;
 
 const SpaceImage = styled.img`
@@ -562,4 +612,16 @@ const SpaceDiv = styled.div`
   gap: 0 5px;
   align-items: center;
   margin: 5px 0px 0px 0px;
+`;
+
+const ModalText = styled.p`
+font-family: 'Strawford';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 140%;
+text-align: center;
+margin: 8px 0px;
+color: ${(props) => props.theme.nav.color};
+// color: #657795;
 `;
