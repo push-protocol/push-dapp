@@ -335,7 +335,7 @@ const MobileTopView = styled.div`
 
 const ScrollView = styled.div`
   @media (max-width: 768px) {
-    padding: 16px;
+    padding: 8px;
     box-sizing: border-box;
     background: ${(props) => props.theme.modalContentBackground};
   }

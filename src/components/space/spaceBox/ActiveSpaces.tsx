@@ -589,7 +589,7 @@ const ScrollView = styled.div`
   @media (max-width: 768px) {
     width: 100% !important;
     height: 100% !important;
-    padding: 8px;
+    padding: 0px;
     box-sizing: border-box;
     background: ${(props) => props.theme.modalContentBackground};
   }
@@ -623,5 +623,6 @@ line-height: 140%;
 text-align: center;
 margin: 8px 0px;
 color: ${(props) => props.theme.nav.color};
+white-space: nowrap;
 // color: #657795;
 `;
