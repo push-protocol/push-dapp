@@ -43,6 +43,8 @@ import { swapPropertyOrder } from 'helpers/UtilityHelper';
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
+import { connect } from 'react-redux';
+import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 
 // define the different type of connectors which we use
 const web3Connectors = {
@@ -112,6 +114,10 @@ const AppLogin = ({ toggleDarkMode }) => {
     if (activatingConnector && activatingConnector === connector) {
       setActivatingConnector(undefined);
     }
+    if (connector instanceof WalletConnectConnector && walletconnect.walletConnectProvider?.wc?.uri) { 
+      walletconnect.walletConnectProvider = undefined 
+    }
+
   }, [activatingConnector, connector]);
 
   // theme context
@@ -180,13 +186,12 @@ const AppLogin = ({ toggleDarkMode }) => {
           <ItemVV2 alignSelf="stretch" alignItems="flex-start" margin={`0 0 ${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0`}>
             {Object.keys(web3ConnectorsObj).map((name) => {
               const currentConnector = web3Connectors[name].obj;
-              const disabled = currentConnector === connector;
+              const [disabled, setDisabled] = useState(false);
               const image = theme.scheme == 'light' ? web3Connectors[name].logolight : web3Connectors[name].logodark;
               const title = web3Connectors[name].title;
 
               return (
                 <LoginButton
-                  disabled={disabled}
                   margin="10px"
                   padding="10px"
                   hover={theme.default.hover}
@@ -195,9 +200,11 @@ const AppLogin = ({ toggleDarkMode }) => {
                   minWidth="140px"
                   alignSelf="stretch"
                   key={name}
-                  onClick={() => {
+                  onClick={async () => {
                     setActivatingConnector(currentConnector);
                     activate(currentConnector);
+                 
+               
                   }}>
                   <ImageV2 src={image} height="40px" width="50px" padding="5px" />
 
