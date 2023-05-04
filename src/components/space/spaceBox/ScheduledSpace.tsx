@@ -20,6 +20,7 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { useNavigate } from 'react-router';
 import useMediaQuery from 'hooks/useMediaQuery';
 import { SpaceGlobalContext, SpaceLocalContext } from 'contexts';
+import { getSpaceTime } from 'helpers/space';
 
 
 const SpaceItem = ({currentSpace, step, setStep}) => {
@@ -52,7 +53,7 @@ const SpaceItem = ({currentSpace, step, setStep}) => {
 
           <DateSection>
             <Div><AiOutlineCalendar color='#fff' size={25} /></Div>
-            <P size="14px" weight="500" margin='0px 10px' color='#ffff'>{currentSpace?.scheduleAt ?? '30 Apr 4:30PM'}</P>
+            <P size="14px" weight="500" margin='0px 10px' color='#ffff'>{currentSpace?.scheduleAt ? getSpaceTime({spaceScheduleTime:currentSpace?.scheduleAt, isDayRequired:true}) : '30 Apr 4:30PM'}</P>
           </DateSection>
 
           </Div>
