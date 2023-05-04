@@ -11,6 +11,7 @@ import { WelcomeSpaceContentBox } from './WelcomeSpaceContentBox';
 import { ScheduledSpace } from './ScheduledSpace';
 import { ActiveSpaces } from './ActiveSpaces';
 import moment from 'moment';
+import { getSpaceStatus, getSpaceTime } from 'helpers/space';
 
 
 export const SpaceBox = () => {
@@ -34,11 +35,13 @@ export const SpaceBox = () => {
   },[]);
 
   const getCurrentTime = async () => {
-    var today = new Date();
-    //date in the between params will be scheduleAt and scheduleEnd for the 
-    // let howWork = moment(today).isBetween('2023-10-01', '2023-10-25'); 
-    let howWork = moment(today).isBetween('2023-01-01', '2023-10-25'); 
-    await setActive(howWork)
+    if(currentSpace?.scheduleAt === null) return;
+
+    let time = getSpaceStatus(currentSpace?.scheduleAt, currentSpace?.scheduleEnd);
+    if(time === 'live'){
+      setActive(true);
+    }
+
     // return howWork;
   }
 
