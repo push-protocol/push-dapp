@@ -563,11 +563,16 @@ const InfoContainer = styled(ItemHV2)`
 `;
 
 const AddWalletContainer = styled(ItemHV2)`
+  box-sizing: border-box;
   border: 1px solid ${(props) => props.theme.default.border};
   border-radius: 16px;
   padding: 15px 24px;
   margin-bottom: 15px;
   cursor: pointer;
+  @media(max-width:480px){
+    min-width: 300px;
+    max-width: 300px;
+  }
 `;
 
 const ProfileContainer = styled.div`
