@@ -4,17 +4,11 @@ import React, { useContext,useRef, useState } from 'react';
 // External Packages
 import styled, { useTheme } from 'styled-components';
 // Internal Components
-import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Button } from 'components/SharedStyling';
-import { AiOutlineCalendar, AiOutlineMore } from 'react-icons/ai'
+import { AiOutlineMore } from 'react-icons/ai'
 import { P } from 'primaries/SharedStyling';
-import {ReactComponent as ScheduledSpaceSVG} from 'assets/space/ScheduledSpace.svg'
-import {ReactComponent as EmailSVG} from 'assets/space/Email.svg'
-import {ReactComponent as LensterSVG} from 'assets/space/Lenster.svg'
-import {ReactComponent as TwitterSVG} from 'assets/space/Twitter.svg'
-import {ReactComponent as LinkSVG} from 'assets/space/Link.svg'
 import {ReactComponent as LiveSVG} from 'assets/space/Live.svg'
-import {BsFillCheckCircleFill , BsFillMicFill, BsHandIndex,BsMic, BsPeople, BsShare } from 'react-icons/bs'
+import { BsHandIndex,BsMic, BsPeople, BsShare } from 'react-icons/bs'
 import { FiArrowLeft, FiMicOff } from 'react-icons/fi';
 import useMediaQuery from 'hooks/useMediaQuery';
 import { SpaceLocalContext } from 'contexts';
@@ -394,7 +388,7 @@ const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 8px;
+  padding: 8px 30px;
   gap: 9px;
   width: fit-content;
   z-index:100;
@@ -406,6 +400,10 @@ const ModalContainer = styled.div`
   position: absolute;
   top: 70px;
   border: ${(props) => props.theme.space.modalBorder};
+
+  @media (max-width: 768px) {
+    padding: 8px 8px;
+  }
 
 `;
 
@@ -460,7 +458,8 @@ const SpaceSection = styled.div`
     margin-top: 20px;
     box-sizing: border-box;
 
-    height: 20em;
+    // height: 20em;
+    height: 30em;
     overflow-y: scroll;
     padding: 8px;
 
@@ -474,6 +473,7 @@ const SpaceSection = styled.div`
 
       @media (max-width: 768px) {
         padding: 8px;
+        height: 20em;
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
@@ -495,8 +495,8 @@ const SpaceItem = styled.div`
 `;
 
 const SpaceImage = styled.img`
-    width: 4em;
-    height: 4em;
+    width: 56px;
+    height: 56px;
     border-radius: 100%;
 `;
 

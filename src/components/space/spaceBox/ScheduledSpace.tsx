@@ -4,7 +4,7 @@ import React, { useContext, useState } from 'react';
 // External Packages
 import styled, { useTheme } from 'styled-components';
 // Internal Components
-import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Button } from 'components/SharedStyling';
 import { AiOutlineCalendar, AiOutlineMore } from 'react-icons/ai'
 import { P } from 'primaries/SharedStyling';
