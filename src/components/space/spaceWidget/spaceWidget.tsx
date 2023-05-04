@@ -1,6 +1,7 @@
 // React + Web3 Essentials
 import React, { useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import styled from 'styled-components';
@@ -12,7 +13,6 @@ import { ReactComponent as Space } from 'assets/space/space.svg';
 import { ReactComponent as Close } from 'assets/space/close.svg';
 import { ReactComponent as Check } from 'assets/space/check.svg';
 import { shortenText } from 'helpers/UtilityHelper';
-import { spaces } from 'services/space/spaceList';
 import { SpaceGlobalContext } from 'contexts';
 import { SpaceMembersIndicator } from '../spaceReusables';
 
@@ -21,9 +21,10 @@ import { device } from 'config/Globals';
 
 const SpaceWidget = () => {
   const [exitOption, setExitOption] = useState<boolean>(false);
-  const { setJoinedSpaceId } = useContext(SpaceGlobalContext);
+  const { account } = useWeb3React();
+  const { joinedSpaceId, setJoinedSpaceId, userSpaces } = useContext(SpaceGlobalContext);
   const { pathname } = useLocation();
-  const selectedSpace = spaces[0];
+  const selectedSpace = userSpaces[account]?.spaces[joinedSpaceId];
 
   const exitSpace = () => {
     setJoinedSpaceId('');
