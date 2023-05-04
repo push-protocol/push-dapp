@@ -163,7 +163,7 @@ const Wallet = styled.div`
     box-sizing: border-box;
     justify-content: space-between;
     border-radius: 13px;
-    background: linear-gradient(90deg, #5762c2 0%, #f72cbe 72.11%, #ff9c9c 100%);
+    background: linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%);
     margin: 0px 0px;
   }
 
