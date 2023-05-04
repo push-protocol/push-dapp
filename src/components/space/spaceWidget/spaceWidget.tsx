@@ -7,13 +7,14 @@ import styled from 'styled-components';
 import Draggable from 'react-draggable';
 
 // Internal Components
-import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ReactComponent as Space } from 'assets/space/space.svg';
 import { ReactComponent as Close } from 'assets/space/close.svg';
 import { ReactComponent as Check } from 'assets/space/check.svg';
 import { shortenText } from 'helpers/UtilityHelper';
 import { spaces } from 'services/space/spaceList';
 import { SpaceGlobalContext } from 'contexts';
+import { SpaceMembersIndicator } from '../spaceReusables';
 
 // Internal Configs
 import { device } from 'config/Globals';
@@ -61,40 +62,7 @@ const SpaceWidget = () => {
                 </SpanV2>
               </ItemHV2>
               <ItemHV2 justifyContent="flex-end" margin="4px 0 0 0">
-                {(selectedSpace?.members?.length > 3
-                  ? selectedSpace?.members?.slice(0, 3)
-                  : selectedSpace?.members?.slice(0, selectedSpace?.members?.length)
-                ).map((member, index) => {
-                  return (
-                    <ItemVV2
-                      width="31px"
-                      height="31px"
-                      maxWidth="31px"
-                      borderRadius="100%"
-                      overflow="hidden"
-                      margin="0px 0px 0px -18px"
-                      zIndex={4 - index}
-                      key={index}
-                    >
-                      <ImageV2
-                        height="100%"
-                        objectFit="cover"
-                        src={member?.image}
-                        alt="Member Image"
-                      />
-                    </ItemVV2>
-                  );
-                })}
-                <SpanV2
-                  color="#FFFFFF"
-                  fontSize="14px"
-                  fontWeight="500"
-                  margin="0px 0px 0px 3px"
-                >
-                  {selectedSpace?.members?.length > 3
-                    ? `+${selectedSpace?.members?.length - 3}`
-                    : ``}
-                </SpanV2>
+                <SpaceMembersIndicator spaceMembers={selectedSpace?.members}/>
               </ItemHV2>
             </WidgetData>
           </>
