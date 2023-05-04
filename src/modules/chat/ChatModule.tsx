@@ -164,23 +164,8 @@ function Chat({ chatid }) {
     }
   }
 
-  const [videoCallInfo, setVideoCallInfo] = useState<VideoCallInfoI>({
-    address: null,
-    fromPublicKeyArmored: null,
-    toPublicKeyArmored: null,
-    privateKeyArmored: null,
-    establishConnection: 0,
-  });
-
   // React GA Analytics
   ReactGA.pageview('/chat');
-
-
-  useEffect(() => {
-    if (videoCallInfo) {
-      console.log(videoCallInfo);
-    }
-  }, [videoCallInfo]);
 
   const { call, callAccepted } = useContext(VideoCallContext);
   useEffect(() => {

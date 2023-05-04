@@ -26,8 +26,6 @@ interface ITypeBar {
   messageBeingSent: boolean;
   newMessage: string;
   setNewMessage: (newMessage: string) => void;
-  setVideoCallInfo?: (videoCallInfo: VideoCallInfoI) => void;
-  videoCallInfo?: VideoCallInfoI;
   sendMessage: ({ message, messageType }: { message: string; messageType: MessagetypeType}) => void;
   sendIntent: ({ message, messageType }: { message: string; messageType: MessagetypeType }) => void;
   setOpenSuccessSnackBar: (openReprovalSnackbar: boolean) => void;
@@ -42,7 +40,6 @@ const Typebar = ({
   messageBeingSent,
   setNewMessage,
   newMessage,
-  setVideoCallInfo,
   sendMessage,
   sendIntent,
   isJoinGroup,
