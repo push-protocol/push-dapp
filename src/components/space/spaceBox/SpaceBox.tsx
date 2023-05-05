@@ -10,7 +10,7 @@ import { useWeb3React } from '@web3-react/core';
 import { WelcomeSpaceContentBox } from './WelcomeSpaceContentBox';
 import { ScheduledSpace } from './ScheduledSpace';
 
-export const SpaceBox = () => {
+export const SpaceBox = ({showSpaceInfoModal}:any) => {
   const { account } = useWeb3React();
   const { selectedSpace } = useContext(SpaceLocalContext);
   const { userSpaces } = useContext(SpaceGlobalContext);
@@ -29,7 +29,7 @@ export const SpaceBox = () => {
   return (
     <>
       {!currentSpace && <WelcomeSpaceContentBox />}
-      {currentSpace && <ScheduledSpace currentSpace={currentSpace} />}
+      {currentSpace && <ScheduledSpace currentSpace={currentSpace} showSpaceInfoModal={showSpaceInfoModal}/>}
     </>
   );
 };

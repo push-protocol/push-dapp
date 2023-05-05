@@ -10,7 +10,7 @@ import { useClickAway } from 'react-use';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Button, Input, TextField } from 'primaries/SharedStyling';
 import ScheduleModal from './ScheduleModal';
-import InviteMembersModal from './InviteMembersModal';
+import InviteMembersModal from '../InviteMembersModal';
 import SpaceDetailsModal from './SpaceDetailsModal';
 import { User } from 'types/chat';
 

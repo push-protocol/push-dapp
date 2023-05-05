@@ -1,3 +1,4 @@
+// React + Web3 Essentials
 import React, { useContext, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { useWeb3React } from '@web3-react/core';
@@ -9,7 +10,6 @@ import { useClickAway } from 'react-use';
 // Internal Components
 import { ModalInnerComponentType } from 'hooks/useModal';
 import { ReactComponent as Lock } from 'assets/chat/group-chat/lockdark.svg';
-import { ReactComponent as AddMember } from 'assets/chat/group-chat/addicon.svg';
 import Message from 'assets/chat/group-chat/chat.svg';
 import AddAdmin from 'assets/chat/group-chat/addadmin.svg';
 import DismissAdmin from 'assets/chat/group-chat/dismissadmin.svg';
@@ -19,7 +19,6 @@ import { AppContext } from 'types/chat';
 import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
 import { ChatUserContext } from 'contexts/ChatUserContext';
-import { ProfileCard } from './ProfileCard';
 import {
   convertToWalletAddressList,
   getAdminList,
@@ -31,13 +30,16 @@ import { getDefaultFeed } from '../../../../../helpers/w2w/user';
 import { Feeds } from '../../../../../types/chat';
 import { DropdownValueType } from '../../../../Dropdown';
 import { useDeviceWidthCheck } from 'hooks';
-import { PendingMembers } from './PendingMembers';
+import { PendingMembers } from 'components/PendingMembers';
+import { AddMoreMember } from 'components/AddMoreMember';
+import { MembersProfileList } from 'components/MembersProfileList';
+import { ProfileImage } from 'components/ProfileImage';
 
 //Internal Configs
 import useToast from 'hooks/useToast';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { AddWalletContent } from '../createGroup/AddWalletContent';
-import ModalHeader from '../../../../ModalHeader';
+import ModalHeader from 'components/ModalHeader';
 
 export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const { currentChat, setChat, inbox, receivedIntents }: AppContext = useContext<AppContext>(Context);
@@ -354,21 +356,12 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                 justifyContent="flex-start"
                 margin="0px 0px 29px 0px"
               >
-                <ItemVV2
-                  width="64px"
-                  height="64px"
-                  maxWidth="64px"
-                  borderRadius="16px"
-                  overflow="hidden"
+                <ProfileImage 
+                  imageSrc={currentChat?.groupInformation?.groupImage} 
+                  dimension="64px" 
+                  borderRadius="16px" 
                   margin="0px 16px 0px 0px"
-                >
-                  <ImageV2
-                    height="100%"
-                    objectFit="cover"
-                    src={currentChat?.groupInformation?.groupImage}
-                    alt="Group Image"
-                  />
-                </ItemVV2>
+                />
                 <ItemVV2 alignItems="flex-start">
                   <SpanV2
                     fontSize="20px"
@@ -442,52 +435,29 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                 </ItemVV2>
               </InfoContainer>
               {isAccountOwnerAdmin && currentChat?.groupInformation?.members?.length < 10 && (
-                <AddWalletContainer onClick={() => setShowAddMoreWalletModal(true)}>
-                  <AddMember />
-                  <SpanV2
-                    color={theme.modalProfileTextColor}
-                    margin="0px  14px"
-                    fontSize="18px"
-                    fontWeight="400"
-                  >
-                    Add more wallets
-                  </SpanV2>
-                </AddWalletContainer>
+                <AddMoreMember showAddMoreMemberModal={setShowAddMoreWalletModal} title="Add more wallets"/>
               )}
               {currentChat?.groupInformation?.pendingMembers?.length > 0 && (
                 <PendingMembers
                   setshowPendingRequests={setshowPendingRequests}
                   showPendingRequests={showPendingRequests}
+                  pendingMemberData={currentChat?.groupInformation?.pendingMembers}
+                  backgroundColor={theme.pendingCardBackground}
+                  pendingHeader="Pending Requests"
                 />
               )}
-              <ProfileContainer
-                minHeight={
-                  currentChat?.groupInformation?.members?.length < 4
-                    ? 72 * currentChat?.groupInformation?.members?.length
-                    : 216
-                }
-              >
-                {currentChat?.groupInformation?.members?.map((member, index) => {
-                  return (
-                    member && (
-                      <ProfileCard
-                        key={index}
-                        member={member}
-                        dropdownValues={
-                          member?.isAdmin && isAccountOwnerAdmin
-                            ? [removeAdminDropdown, removeMemberDropdown]
-                            : isAccountOwnerAdmin
-                            ? [addAdminDropdown, removeMemberDropdown]
-                            : []
-                        }
-                        selectedMemeberAddress={selectedMemeberAddress}
-                        setSelectedMemeberAddress={setSelectedMemeberAddress}
-                        dropdownRef={dropdownRef}
-                      />
-                    )
-                  );
-                })}
-              </ProfileContainer>
+
+              <MembersProfileList 
+                memberData={ currentChat?.groupInformation} 
+                removeAdminDropdown={removeAdminDropdown} 
+                removeMemberDropdown={removeMemberDropdown} 
+                addAdminDropdown={addAdminDropdown}
+                selectedMemeberAddress={selectedMemeberAddress}
+                setSelectedMemeberAddress={setSelectedMemeberAddress}
+                dropdownRef={dropdownRef}
+                isAccountOwnerAdmin={isAccountOwnerAdmin}
+                membersType='group'
+              />
             </BodyContainer>
           </>
         )}

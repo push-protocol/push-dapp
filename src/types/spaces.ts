@@ -1,15 +1,14 @@
-
 export enum ChatStatus {
-    ACTIVE = 'ACTIVE',
-    PENDING = 'PENDING',
-    ENDED = 'ENDED'
+  ACTIVE = 'ACTIVE',
+  PENDING = 'PENDING',
+  ENDED = 'ENDED',
 }
 
-export interface SpaceMember{
-    wallet: string;
-    publicKey: string;
-    isAdmin: boolean;
-    image: string;
+export interface SpaceMember {
+  wallet: string;
+  publicKey: string;
+  isAdmin: boolean;
+  image: string;
 }
 
 export interface Space{
@@ -32,12 +31,12 @@ export interface Space{
 }
 
 export interface Spaces {
-    [key: string]: Space;
+  [key: string]: Space;
 }
-  
+
 export interface UserSpaces {
-    [key: string]: {
-        spaces:Spaces,
-        spaceRequests: Spaces,
-    };
+  [key: string]: {
+    spaces: Spaces;
+    spaceRequests: Spaces;
+  };
 }
