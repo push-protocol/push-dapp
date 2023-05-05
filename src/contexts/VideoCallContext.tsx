@@ -1,11 +1,25 @@
 // React + Web3 Essentials
-import React, { createContext, useMemo, useState } from 'react';
+import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
+import React, { createContext, useContext, useMemo, useState } from 'react';
+import {ChatUserContext} from './ChatUserContext';
+import {AppContext} from '../../src/types/chat';
+import { Context } from 'modules/chat/ChatModule';
+import Constants from '@pushprotocol/restapi/src/lib/constants';
 
 const VideoCallContext = createContext(null);
 
 const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
+
+  const {chainId } = useWeb3React<ethers.providers.Web3Provider>();
+  const { connectedUser } = useContext(ChatUserContext);
+
+
+  const { currentChat }: AppContext = React.useContext<AppContext>(Context);
+
   const [localStream, setLocalStream] = useState<PushAPI.IMediaStream>();
   const [incomingStream, setIncomingStream] = useState<PushAPI.IMediaStream>();
+  const [receivedSignalData, setReceivedSignalData] = useState<any>({});
 
   const [videoCallInfo, setVideoCallInfo] = useState<PushAPI.VideoCallInfoType>(
     {
@@ -55,9 +69,16 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     }
   };
 
-  const requestWrapper = (senderAddress: string, recipientAddress: string, chatId): void => {
+  const requestWrapper = (senderAddress: string, recipientAddress: string): void => {
     console.log("CALL USER");
-
+    const chatId = currentChat?.chatId;
+    const pgpPrivateKey = connectedUser?.pgpPrivateKey;
+    const env = Constants.ENV.PROD;
+    try{
+      VideoObject.request('',chainId,recipientAddress,senderAddress,chatId,'',pgpPrivateKey,env);
+    }catch(err){
+      console.log('Error in requesting video call', err);
+    }
   };
 
   const incomingCall = (videoMeta: any) => {
@@ -65,8 +86,16 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     
   };
 
-  const acceptRequestWrapper = (toAddress: string, fromAddress: string): void => {
+  const acceptRequestWrapper = (recipientAddress: string, senderAddress: string): void => {
     console.log("ANSWER CALL");
+    const chatId = currentChat?.chatId;
+    const pgpPrivateKey = connectedUser?.pgpPrivateKey;
+    const env = Constants.ENV.PROD;
+    try{
+      VideoObject.request(receivedSignalData,'',chainId,recipientAddress,senderAddress,chatId,'',pgpPrivateKey,env);
+    }catch(err){
+      console.log('Error in requesting video call', err);
+    }
 
   };
 
