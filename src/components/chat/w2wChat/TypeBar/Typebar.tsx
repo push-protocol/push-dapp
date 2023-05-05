@@ -19,6 +19,7 @@ import { appConfig } from 'config';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { caip10ToWallet } from 'helpers/w2w';
 import { MessagetypeType } from '../../../../types/chat';
+import {filterXSS} from 'xss'
 
 
 interface ITypeBar {
@@ -164,14 +165,15 @@ const Typebar = ({
             type: file.type,
             size: file.size,
           };
+             //  FILTERXSS is a module used to filter input from users to prevent XSS attacks, this data from the file is already encoded, filter xss is used incase to filter out any malicious scripts or any corrupt file of sorts
           if (currentChat.threadhash || isGroup) {
 
             sendMessage({
-              message: JSON.stringify(fileMessageContent),
+              message: filterXSS(JSON.stringify(fileMessageContent)),
               messageType,
             });
           } else {
-            sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType });
+            sendIntent({ message: filterXSS(JSON.stringify(fileMessageContent)), messageType: messageType });
 
           }
           setFileUploading(false);
@@ -181,6 +183,9 @@ const Typebar = ({
       }
     }
   };
+
+// let stat = `<img src='???' onerror="alert('XSS')" />`
+
 
   return (
     <TypeBarContainer background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg} isJoinGroup={isJoinGroup}>
@@ -274,11 +279,14 @@ const Typebar = ({
                   alt=""
                 />
               </Icon>
-              <FileInput
+              <FileInput type="file"
+                  ref={fileInputRef}
+                  onChange={uploadFile} />
+              {/* <FileInput 
                 type="file"
                 ref={fileInputRef}
                 onChange={uploadFile}
-              />
+              /> */}
             </label>
 
             {filesUploading ? (
