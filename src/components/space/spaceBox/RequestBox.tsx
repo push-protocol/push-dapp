@@ -12,6 +12,7 @@ import { useWeb3React } from '@web3-react/core';
 import { Space } from 'types';
 import { shortenText } from 'helpers/UtilityHelper';
 import RequestBody from '../spaceReusables/RequestBody';
+import { caip10ToWallet } from 'helpers/w2w';
 
 
 const RequestBox = () => {
@@ -67,7 +68,7 @@ const RequestBox = () => {
                     fontWeight="400"
                     textAlign="start"
                 >
-                    {shortenText(filteredUserData?.spaceCreator, 6)}
+                    {shortenText(caip10ToWallet(filteredUserData?.spaceCreator), 6)}
                 </SpanV2>
 
                 <MoreOptions >
