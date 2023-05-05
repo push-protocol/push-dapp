@@ -3,8 +3,10 @@ import React, { useContext, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
+import { useClickAway } from 'react-use';
+
 // Internal Components
-import { SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Button } from 'components/SharedStyling';
 import { AiOutlineCalendar, AiOutlineMore } from 'react-icons/ai'
 import { P } from 'primaries/SharedStyling';
@@ -20,6 +22,8 @@ import { FiArrowLeft } from 'react-icons/fi'
 import { useNavigate } from 'react-router';
 import useMediaQuery from 'hooks/useMediaQuery';
 import { SpaceLocalContext } from 'contexts';
+import { caip10ToWallet } from 'helpers/w2w';
+import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { getSpaceTime } from 'helpers/space';
 
 type ScheduledSpacesType = {
@@ -28,32 +32,48 @@ type ScheduledSpacesType = {
   setStep: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const SpaceItem = ({currentSpace, step, setStep}: ScheduledSpacesType) => {
+const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
+  const [showSpaceInfo, setShowSpaceInfo] = useState<boolean>(false);
+  const infoRef = React.useRef(null);
+
+  useClickAway(infoRef, ()=>setShowSpaceInfo(false))
+
   const theme = useTheme();
 
   return(
     <ScheduledItem theme={theme}>
           <CardItem>
-
           <TopItem>
             <DivItem>
-              <Image src={currentSpace.spaceImage}></Image>
-              <P color='#fff' margin="0px 20px" size="17px" weight="500">{shortenText(currentSpace?.spaceCreator,5,5)}</P>
-              <SpanV2 background='rgba(255, 255, 255, 0.2)' color='#ffff' borderRadius="8px" fontSize="12px" fontWeight="500" padding="8px">Host</SpanV2>
+              <Image src={currentSpace?.spaceImage}></Image>
+              <P color='#fff' margin="0px 19px 0px 8px" size="17px" weight="500">{shortenText(caip10ToWallet(currentSpace?.spaceCreator),5,5)}</P>
+              <SpanV2 background='rgba(255, 255, 255, 0.2)' color='#ffff' borderRadius="8px" fontSize="12px" fontWeight="500" padding="4px 8px">Host</SpanV2>
             </DivItem>
             
-          
-          
           <ItemTop>
-            <ButtonItem radius='8px' bg='transparent' color='#fff' border='1px solid white' margin='0 10px 0 0'style={{whiteSpace:'nowrap'}}>Edit Space</ButtonItem>
-            <Settings />
+            <ButtonItem radius='8px' bg='transparent' color='#fff' border='1px solid white' margin='0 10px 0 0' style={{whiteSpace:'nowrap'}}>Edit Space</ButtonItem>
+            <MoreOptions>
+            <Settings onClick={()=>setShowSpaceInfo(true)}/>
+            {
+              showSpaceInfo && <SpaceInfo
+              onClick={()=>{
+                setShowSpaceInfo(false);
+                showSpaceInfoModal();
+              }}
+              ref={infoRef}
+            >
+              <ItemVV2 maxWidth="32px"><Info /></ItemVV2>
+              <SpanV2 color="rgba(101, 119, 149, 1)">Space Info</SpanV2>
+            </SpaceInfo>
+            }
+            </MoreOptions>
           </ItemTop>
 
           </TopItem>
 
           <Div>
-            <P color='#fff' margin="50px 0px 5px 0px" size="28px" weight="500">{shortenText(currentSpace?.spaceCreator,5,5)}’s Space</P>
-            <P color='#fff' margin="0px 0px" size="16px" weight="400">{currentSpace.spaceName}</P>
+            <P color='#fff' margin="50px 0px 5px 0px" size="28px" weight="500">{shortenText(caip10ToWallet(currentSpace?.spaceCreator),5,5)}’s Space</P>
+            <P color='#fff' margin="0px 0px" size="16px" weight="400">{currentSpace?.spaceName}</P>
 
           <DateSection>
             <Div><AiOutlineCalendar color='#fff' size={25} /></Div>
@@ -63,21 +83,16 @@ const SpaceItem = ({currentSpace, step, setStep}: ScheduledSpacesType) => {
           </Div>
           </CardItem>
           
-
-
           <DivCard step={step}>
             <Div>
                 <ScheduledSpaceSVG />
             </Div>
-            
             {step === 1 && (<><P size="16px" weight="500" margin='10px 0px 5px 0px' color={theme.snackbarBorderText}>
               Your space is scheduled. 
             </P>
             <P size="16px" weight="500" margin='0px 10px' color={theme.snackbarBorderText}>
               Share and let people know when to join!
             </P></>)}
-
-          
 
             {step === 2 && (<P size="16px" weight="500" margin='10px 10px 0px 10px' color={theme.snackbarBorderText}>
               This space will go live on 5 Apr at 9:00 AM
@@ -126,7 +141,7 @@ const SpaceItem = ({currentSpace, step, setStep}: ScheduledSpacesType) => {
   )
 }
 
-export const ScheduledSpace = ({currentSpace}:{currentSpace:Space}) => {
+export const ScheduledSpace = ({currentSpace, showSpaceInfoModal}:{currentSpace:Space, showSpaceInfoModal:any}) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [step, setStep] = useState<number>(1);
@@ -145,15 +160,38 @@ export const ScheduledSpace = ({currentSpace}:{currentSpace:Space}) => {
     <>{isMobile ? (<ScrollView isMobile={isMobile}>
       <MobileTopView onClick={()=>goToSpaces()}>
         <Div><FiArrowLeft size={25} color={theme.snackbarBorderText} /></Div>
-        <P color={theme.snackbarBorderText} margin="0px 20px" size="19px" weight="500">{shortenText(currentSpace?.spaceCreator,5,5)}’s Space</P>
+        <P color={theme.snackbarBorderText} margin="0px 20px" size="19px" weight="500">{shortenText(caip10ToWallet(currentSpace?.spaceCreator),5,5)}’s Space</P>
       </MobileTopView>
 
-      <SpaceItem currentSpace={currentSpace} step={step} setStep={setStep} />   
+      <SpaceItem currentSpace={currentSpace} step={step} setStep={setStep} showSpaceInfoModal={showSpaceInfoModal}/>   
     </ScrollView>) : 
-    (<SpaceItem currentSpace={currentSpace} step={step} setStep={setStep} /> )}
+    (<SpaceItem currentSpace={currentSpace} step={step} setStep={setStep} showSpaceInfoModal={showSpaceInfoModal}/> )}
     </>
   )
 }
+
+const MoreOptions = styled.div`
+  position: relative;
+  max-width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
+
+const SpaceInfo = styled(ItemHV2)`
+  position: absolute;
+  top: -10px;
+  right: 0px;
+  width: 151px;
+  border: 1px solid rgba(186, 196, 214, 0.2);
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  justify-content: flex-start;
+  gap: 9px;
+  padding: 8px;
+  z-index: 5;
+`;
 
 const ScheduledItem = styled.div`
   width: 70%;
@@ -232,6 +270,7 @@ const LinkDiv = styled.div`
   flex-direction: column;
   align-items: center;
   margin: 0 6px;
+  cursor: pointer;
 `;
 
 const SpaceLink = styled.div`
@@ -317,7 +356,7 @@ const ItemTop = styled.div`
 `;
 
 const Image = styled.img`
-  width: 3.5em;
+  width: 48px;
   border-radius: 100%; 
 `
 

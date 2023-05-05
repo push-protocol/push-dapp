@@ -15,7 +15,7 @@ import { SpaceGlobalContext, SpaceLocalContext, SpaceTabOption } from 'contexts'
 import { device } from 'config/Globals';
 
 
-export const SpaceBoxSection = () => {
+export const SpaceBoxSection = ({showSpaceInfoModal}:any) => {
   const theme = useTheme();
   const { selectedSpace,activeTab } = useContext(SpaceLocalContext);
   const { userSpaces } = useContext(SpaceGlobalContext);
@@ -26,11 +26,8 @@ export const SpaceBoxSection = () => {
   // RENDER
   return (
     <ItemVV2 justifyContent="stretch" background={theme.space.spaceBoxBg} borderRadius="24px">
-
-      {/* SpaceBox Section */}
-
       {/* conditionally Render */}
-      {selectedSpace && activeTab === SpaceTabOption.Spaces && (<SpaceBox />)} 
+      {selectedSpace && activeTab === SpaceTabOption.Spaces && (<SpaceBox showSpaceInfoModal={showSpaceInfoModal}/>)} 
       {selectedSpace && activeTab === SpaceTabOption.Requests && (<RequestBox />)} 
       {!selectedSpace && (<WelcomeSpaceContentBox />)}
     </ItemVV2>

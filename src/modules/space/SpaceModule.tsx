@@ -15,9 +15,10 @@ import { useWeb3React } from '@web3-react/core';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { getSpaceRequests, getSpaces } from 'services/space';
 import { getSpaceRequestsFromIndexedDB, getSpacesFromIndexedDB } from 'helpers/space';
-import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+import { SpaceInfoModalContent } from 'components/space/spaceModals/spaceInfoModal';
 import useToast from 'hooks/useToast';
-import CreateSpaceModal from 'components/space/spaceModals/CreateSpaceModal';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+import CreateSpaceModal from 'components/space/spaceModals/createSpaceModals/CreateSpaceModal';
 import SpaceNotification from 'components/space/spaceNotification/SpaceNotification';
 
 
@@ -47,6 +48,15 @@ export const SpaceModule = ({ }) => {
     })()
   },[account,library]);
 
+  const spaceToast=useToast()
+
+  const {
+    isModalOpen: isSpaceInfoModalOpen,
+    showModal: showSpaceInfoModal,
+    ModalComponent: SpaceInfoModalComponent,
+  } = useModalBlur();
+
+console.log(connectedUser)
   useEffect(() => {
     if(!connectedUser) return;
     (async function () {
@@ -115,12 +125,16 @@ useEffect(()=>{
       <SpaceContainer
         spaceActive={!!selectedSpace}
       >
-        <SpaceBoxSection />
+        <SpaceBoxSection showSpaceInfoModal={showSpaceInfoModal}/>
         {/* Added notification here to test it out need to be moved to notification UI */}
         {showNotification && <SpaceNotification/>}
       </SpaceContainer>
-
-
+      <SpaceInfoModalComponent
+          InnerComponent={SpaceInfoModalContent}
+          toastObject={spaceToast}
+          modalPadding="0px"
+          modalPosition={MODAL_POSITION.ON_PARENT}
+      />
       <CreateSpaceModalComponent
        InnerComponent={CreateSpaceModal}
        onConfirm={() => {}}

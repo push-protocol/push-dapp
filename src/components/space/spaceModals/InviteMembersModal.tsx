@@ -14,14 +14,16 @@ import { User } from 'types/chat';
 
 
 type InviteMembersModalType = {
-    handleClose : ()=>{};
+    handleClose : ()=>void;
+    handleBack:()=>void;
     memberList:Array<User>;
-    setSpaceModalState: ()=>{}
-    setMemberList: ()=>{};
+    setSpaceModalState?: ()=>void
+    setMemberList: ()=>void;
   };
 
 const InviteMembersModal = ({
     handleClose,
+    handleBack,
     setSpaceModalState,
     memberList,
     setMemberList
@@ -30,7 +32,7 @@ const InviteMembersModal = ({
     const theme = useTheme();
 
     const handlePrevious = ()=>{
-        setSpaceModalState(1);
+        setSpaceModalState ? setSpaceModalState(1) : handleBack();
     }
 
     
@@ -42,9 +44,6 @@ const InviteMembersModal = ({
                 handleClose={handleClose}
                 handlePrevious={handlePrevious}
             />
-
-           
-
             <ItemHV2
                 margin="25px 0px 0px 0px"
             >
@@ -64,11 +63,8 @@ const InviteMembersModal = ({
                         {`0${memberList.length} / 04 members`}
                     </SpanV2>
                 </LabelContainer>
-
                 <SearchWallets memberList={memberList} setMemberList={setMemberList} spaces={true}/>
-
             </ItemHV2>
-
             <Footer>
                 <InviteButton>Send Invite</InviteButton>
                <FooterText>Skip</FooterText>

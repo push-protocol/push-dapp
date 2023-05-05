@@ -14,7 +14,7 @@ import moment from 'moment';
 import { getSpaceStatus, getSpaceTime } from 'helpers/space';
 
 
-export const SpaceBox = () => {
+export const SpaceBox = ({showSpaceInfoModal}:any) => {
   const { account } = useWeb3React();
   const { selectedSpace } = useContext(SpaceLocalContext);
   const { userSpaces } = useContext(SpaceGlobalContext);
@@ -49,7 +49,7 @@ export const SpaceBox = () => {
   return (
     <>
       {!currentSpace && <WelcomeSpaceContentBox />}
-      {currentSpace && !active && <ScheduledSpace currentSpace={currentSpace} />}
+      {currentSpace && !active && <ScheduledSpace currentSpace={currentSpace} showSpaceInfoModal={showSpaceInfoModal} />}
       {currentSpace && active && (<ActiveSpaces currentSpace={currentSpace} />)}
     </>
   );
