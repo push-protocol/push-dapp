@@ -2,9 +2,8 @@ import { Content } from 'components/SharedStyling';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import GLOBALS, { device } from 'config/Globals';
 import React, { useContext, useEffect, useState } from 'react';
-import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
+import { MdOutlineArrowBackIos } from 'react-icons/md';
 import styled, { useTheme } from 'styled-components';
-import Image from "assets/space/push-space.svg";
 import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import SpaceTypeBar from '../spaceReusables/SpaceTypeBar';
@@ -12,7 +11,6 @@ import { SpaceGlobalContext, SpaceLocalContext } from 'contexts';
 import { useWeb3React } from '@web3-react/core';
 import { Space } from 'types';
 import { shortenText } from 'helpers/UtilityHelper';
-import SpaceCard from '../spaceSidebar/spaceCard/spaceCard';
 import RequestBody from '../spaceReusables/RequestBody';
 import { caip10ToWallet } from 'helpers/w2w';
 

@@ -1,13 +1,20 @@
-import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+// React + Web3 Essentials
 import React from 'react';
+
+// External Packages
 import styled from 'styled-components';
+import moment from 'moment';
+
+// Internal Components
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { Space } from 'types';
-import SpaceCard from '../spaceSidebar/spaceCard/spaceCard';
+import SpaceCard from './SpaceCard';
+import { useDeviceWidthCheck } from 'hooks';
 
 const RequestBody = ({
   filteredUserData
 }: { filteredUserData: Space }) => {
-  
+  const isMobile = useDeviceWidthCheck(480);
   return (
     <Container>
 
@@ -20,7 +27,7 @@ const RequestBody = ({
           >
             <ReceivedMessage left='34px'>
               <TextMessage>Hey! You’re invited to my space. Set a reminder for when the space goes live</TextMessage>
-              <TimeStamp>{filteredUserData?.spaceInformation?.scheduleAt ?? '4:30PM'}</TimeStamp>
+              <TimeStamp>{filteredUserData?.scheduleAt ? moment(filteredUserData?.scheduleAt).format('h:mma') : '4:30PM'}</TimeStamp>
             </ReceivedMessage>
           </ReceivedMessageWrapper>
 
@@ -29,7 +36,7 @@ const RequestBody = ({
           >
             <ReceivedMessage left='34px'>
               <TextMessage>Hey! You’re invited to my space. Set a reminder for when the space goes live</TextMessage>
-              <TimeStamp>{filteredUserData?.spaceInformation?.scheduleAt ?? '4:30PM'}</TimeStamp>
+              <TimeStamp>{filteredUserData?.scheduleAt ? moment(filteredUserData?.scheduleAt).format('h:mma') : '4:30PM'}</TimeStamp>
             </ReceivedMessage>
           </ReceivedMessageWrapper>
 
@@ -37,7 +44,7 @@ const RequestBody = ({
             align="row"
           >
             <ReceivedMessageSpace left='34px'>
-              <SpaceCard spaceData={filteredUserData} borderRadius='0px 17px 17px 17px' showReminder={true}/>
+              <SpaceCard spaceData={filteredUserData} borderRadius='0px 17px 17px 17px' showActions={true} minWidth={isMobile ? '358px' : '342px'}/>
             </ReceivedMessageSpace>
           </ReceivedMessageWrapper>
 

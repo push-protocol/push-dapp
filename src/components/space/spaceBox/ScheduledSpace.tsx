@@ -24,6 +24,7 @@ import useMediaQuery from 'hooks/useMediaQuery';
 import { SpaceLocalContext } from 'contexts';
 import { caip10ToWallet } from 'helpers/w2w';
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
+import { getSpaceTime } from 'helpers/space';
 
 
 const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
@@ -71,7 +72,7 @@ const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
 
           <DateSection>
             <Div><AiOutlineCalendar color='#fff' size={25} /></Div>
-            <P size="14px" weight="500" margin='0px 10px' color='#ffff'>{currentSpace?.spaceInformation?.scheduleAt ?? '30 Apr 4:30PM'}</P>
+            <P size="14px" weight="500" margin='0px 10px' color='#ffff'>{currentSpace?.scheduleAt ? getSpaceTime({spaceScheduleTime:currentSpace?.scheduleAt, isDayRequired:true}) : '30 Apr 4:30PM'}</P>
           </DateSection>
 
           </Div>

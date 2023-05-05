@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
+import moment from 'moment';
 
 // Internal Components
 import { Space } from 'types';
@@ -60,7 +61,7 @@ const SpaceRequestCard = (
                         {shortenText(caip10ToWallet(spaceData?.spaceInformation?.spaceCreator), 6, 6)}
                     </PrimaryText>
                     <SecondaryText>
-                        {spaceData?.spaceInformation?.scheduleAt ?? ' 4:30PM'}
+                    {spaceData?.scheduleAt ? moment(spaceData?.scheduleAt).format('h:mma') : '4:30PM'}
                     </SecondaryText>
                 </HeadTextSection>
 
