@@ -26,13 +26,13 @@ interface SpaceListType {
   role: string;
   requestedAt?: boolean;
 }
+
 type ActiveSpacesType = {
    SpaceList: SpaceListType[];
    currentSpace: Space;
    space: boolean;
    joinSpace: ()=>void;
    leaveSpace: ()=>void;
-
 };
 
 const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace}: ActiveSpacesType) => {
@@ -471,7 +471,7 @@ const SpaceSection = styled.div`
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 20px 0px;
-    margin-top: 20px;
+    margin-top: 10px;
     box-sizing: border-box;
 
     // height: 20em;
@@ -511,8 +511,8 @@ const SpaceItem = styled.div`
 `;
 
 const SpaceImage = styled.img`
-    width: 56px;
-    height: 56px;
+    width: 52px;
+    height: 52px;
     border-radius: 100%;
 `;
 
