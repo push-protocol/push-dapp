@@ -1,54 +1,45 @@
 // React + Web3 Essentials
-import React, { createContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useContext, useRef, useState } from 'react';
+import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import Peer from 'simple-peer';
 
-// Internal Configs
-import { appConfig } from '../config';
-
-interface videoPayloadType {
-  userToCall: string;
-  fromUser: string;
-  signalData: any;
-  name: string;
-  status: number;
-}
-
-interface payloadType {
-  sender: string;
-  recipient: string;
-  identity: string;
-  source: string;
-}
+// Internal Components
+import sendVideoCallNotification from 'helpers/videoCall/sendVideoCallNotification';
 
 const VideoCallContext = createContext(null);
 
-const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
+const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
+  const { account, library, chainId } = useWeb3React();
+  
+  const myVideo = useRef<any>();
+  const userVideo = useRef<any>();
+  const connectionRef = useRef<any>();
+  
+  // general info regarding video call
+  const [me, setMe] = useState<string>('');
+  const [name, setName] = useState<string>('Joe');
+  const [localStream, setLocalStream] = useState<MediaStream>();
+  const[isPeerConnected, setPeerConnected] = useState<boolean>(false);
+
+  // wallet to wallet video call
   const [callAccepted, setCallAccepted] = useState<boolean>(false);
   const [callEnded, setCallEnded] = useState<boolean>(false);
   const [receiverPeerSignalled, setRecieverPeerSignalled] = useState<boolean>(false);
-  const [localStream, setLocalStream] = useState<MediaStream>();
-  const [name, setName] = useState<string>('Joe');
   const [call, setCall] = useState<any>({});
-  const [me, setMe] = useState<string>('');
   const[isVideoOn, setVideoOn] = useState<boolean>(true);
   const [isAudioOn, setAudioOn] = useState<boolean>(true);
   const [incomingVideoOn, setIncomingVideoOn] = useState<boolean>(true);
   const [incomingAudioOn, setIncomingAudioOn] = useState<boolean>(true);
-  const[isPeerConnected, setPeerConnected] = useState<boolean>(false);
-
-  const myVideo = useRef<any>();
-  const userVideo = useRef<any>();
-  const connectionRef = useRef<any>();
 
   /**
-   * Initializes the local stream and sets the local stream to the user's video element.           
-   * @param {string} address - the address of the user who is calling the function           
-   * @returns None           
+   * Initializes the local stream and sets the local stream to the user's video element.
+   * @param {string} address - the address of the user who is calling the function
+   * @returns None
    */
   const initializeLocalStream = async (address: string): Promise<void> => {
-    console.log("INITIALIZE LOCAL STREAM");
+    console.log('INITIALIZE LOCAL STREAM');
 
     try {
       const localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -149,63 +140,39 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
 
 
   /**
-   * Call the user with the given address.       
-   * @param {string} fromAddress - The address of the user who is calling.       
-   * @param {string} toAddress - The address of the user who is being called.       
-   * @returns None       
+   * Call the user with the given address.
+   * @param {string} fromAddress - The address of the user who is calling.
+   * @param {string} toAddress - The address of the user who is being called.
+   * @param {string} chatId - chatId of the chat between the 2 users
+   * @returns None
    */
-  const callUser = (fromAddress: string, toAddress: string): void => {
-    console.log("CALL USER");
+  const callUser = ({
+    fromAddress,
+    toAddress,
+    chatId,
+    connectedUser,
+    createUserIfNecessary,
+  }: {
+    fromAddress: string;
+    toAddress: string;
+    chatId: string;
+    connectedUser: any;
+    createUserIfNecessary: any; // n
+  }): void => {
+    console.log('CALL USER');
 
-    console.log("LOCAL STREAM CALL USER", localStream);
+    console.log('LOCAL STREAM CALL USER', localStream);
     const peer = new Peer({ initiator: true, trickle: false, stream: localStream });
 
     peer.on('signal', (data) => {
-      console.log("CALL USER -> SIGNAL CALLBACK");
+      console.log('CALL USER -> SIGNAL CALLBACK');
+      console.log('CALL USER -> CHATID', chatId);
 
-      const notificationText = `Video Call from ${fromAddress}`;
-
-      // send a notification to the user
-      // Prepare post request
-      // 1 is call initiated, 2 is call answered
-      const videoPayload: videoPayloadType = {
-        userToCall: toAddress,
-        fromUser: fromAddress,
-        signalData: data,
-        name: name,
-        status: 1,
-      };
-      let identityPayload = {
-        notification: {
-          title: notificationText,
-          body: notificationText,
-        },
-        data: {
-          amsg: 'VideoCall',
-          asub: 'VideoCall',
-          type: '3',
-          etime: Date.now() + 245543,
-          hidden: '1',
-          videoMeta: videoPayload,
-        },
-      };
-
-      const identityType: number = 2;
-      const stringifiedData: string = JSON.stringify(identityPayload);
-      const identity: string = `${identityType}+${stringifiedData}`;
-
-      const payload: payloadType = {
-        sender: `eip155:42:${fromAddress}`,
-        recipient: `eip155:42:${toAddress}`,
-        identity: identity,
-        source: 'PUSH_VIDEO',
-      };
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      };
-      fetch(`${appConfig.w2wApiUrl}/v1/payloads/video/poc`, requestOptions);
+      sendVideoCallNotification(
+        { toAddress, fromAddress, signalData: data, status: 1, name },
+        { account, library, chainId, connectedUser, createUserIfNecessary },
+        { type: 3, chatId }
+      );
     });
 
     peer.on('connect', () => {
@@ -246,8 +213,8 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     })
 
     peer.on('stream', (currentStream: MediaStream) => {
-      console.log("GOT STREAM BACK IN CALLUSER");
-      
+      console.log('GOT STREAM BACK IN CALLUSER');
+
       userVideo.current.srcObject = currentStream;
       userVideo.current.play();
     });
@@ -256,45 +223,58 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
   };
 
   /**
-   * Handles incoming calls.           
-   * @param {any} videoMeta - the video meta data of the incoming call.           
-   * @returns None           
+   * Handles incoming calls.
+   * @param {any} videoMeta - the video meta data of the incoming call.
+   * @returns None
    */
   const incomingCall = (videoMeta: any) => {
-    console.log("INCOMING CALL");
-    
+    console.log('INCOMING CALL');
+
     if (!call.isReceivingCall) {
       console.log('Setting Incoming Call');
       setCall({
         isReceivingCall: true,
         from: videoMeta.fromUser,
         name: videoMeta.callerName,
+        chatId: videoMeta.chatId,
         signal: videoMeta.signalData,
       });
     }
   };
 
   /**
-   * Answer a call from a user.           
-   * @param {string} toAddress - The address of the user to answer the call from.           
-   * @param {string} fromAddress - The address of the user to answer the call to.           
-   * @returns None           
+   * Answer a call from a user.
+   * @param {string} toAddress - The address of the user to answer the call from.
+   * @param {string} fromAddress - The address of the user to answer the call to.
+   * @returns None
    */
-  const answerCall = (toAddress: string, fromAddress: string): void => {
-    console.log("ANSWER CALL");
+  const answerCall = ({
+    toAddress,
+    fromAddress,
+    connectedUser,
+    createUserIfNecessary,
+  }: {
+    toAddress: string;
+    fromAddress: string;
+    connectedUser: any;
+    createUserIfNecessary: any;
+  }): void => {
+    console.log('ANSWER CALL');
 
     setCallAccepted(true);
-    console.log("LOCAL STREAM ANSWER CALL", localStream);
-    
+    console.log('LOCAL STREAM ANSWER CALL', localStream);
+
     const peer2: any = new Peer({ initiator: false, trickle: false, stream: localStream });
-    console.log("answer call -> data", call);
+    console.log('answer call -> data', call);
     peer2.signal(call.signal);
 
     console.log('Sending Payload for answer call - Step 1');
 
     peer2.on('signal', (data) => {
-      console.log("ANSWER CALL -> SIGNAL CALLBACK");
-      console.log("RECIEVER PEER SIGNALED", receiverPeerSignalled)
+      console.log('ANSWER CALL -> SIGNAL CALLBACK');
+      console.log('ANSWER USER -> CHATID', call.chatId);
+
+      console.log('RECIEVER PEER SIGNALED', receiverPeerSignalled);
 
       // send answer call notification
       // Prepare post request
@@ -306,46 +286,13 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
         const notificationText = `Video Call from ${fromAddress}`;
 
         console.log('Sending Payload for answer call - Peer on Signal - Step 3', receiverPeerSignalled);
-        const videoPayload: videoPayloadType = {
-          userToCall: toAddress,
-          fromUser: fromAddress,
-          signalData: data,
-          name: name,
-          status: 2,
-        };
-        let identityPayload = {
-          notification: {
-            title: notificationText,
-            body: notificationText,
-          },
-          data: {
-            amsg: 'VideoCall',
-            asub: 'VideoCall',
-            type: '3',
-            etime: Date.now() + 245543,
-            hidden: '1',
-            videoMeta: videoPayload,
-          },
-        };
 
-        const identityType: number = 2;
-        const stringifiedData: string = JSON.stringify(identityPayload);
-        const identity: string = `${identityType}+${stringifiedData}`;
-
-        const payload: payloadType = {
-          sender: `eip155:42:${fromAddress}`,
-          recipient: `eip155:42:${toAddress}`,
-          identity: identity,
-          source: 'PUSH_VIDEO',
-        };
-        const requestOptions = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        };
-        fetch(`${appConfig.w2wApiUrl}/v1/payloads/video/poc`, requestOptions);
+        sendVideoCallNotification(
+          { toAddress, fromAddress, signalData: data, status: 2, name },
+          { account, library, chainId, connectedUser, createUserIfNecessary },
+          { type: 3, chatId: call.chatId }
+        );
       }
-      // socket.emit('answerCall', { signal: data, to: call.from });
     });
 
     peer2.on('connect', () => {
@@ -386,8 +333,8 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     })
 
     peer2.on('stream', (currentStream: MediaStream) => {
-      console.log("GOT STREAM BACK IN ANSWERCALL");
-      
+      console.log('GOT STREAM BACK IN ANSWERCALL');
+
       userVideo.current.srcObject = currentStream;
       userVideo.current.play();
     });
@@ -397,12 +344,12 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
   };
 
   /**
-   * Accepts a call from a user.           
-   * @param {VideoMeta} videoMeta - The video meta data of the peer.           
-   * @returns None           
+   * Accepts a call from a user.
+   * @param {VideoMeta} videoMeta - The video meta data of the peer.
+   * @returns None
    */
   const acceptCall = (videoMeta) => {
-    console.log("ACCEPT CALL");
+    console.log('ACCEPT CALL');
 
     if (!callAccepted) {
       setCallAccepted(true);
@@ -413,11 +360,11 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
   };
 
   /**
-   * Leave the call.           
-   * @returns None           
+   * Leave the call.
+   * @returns None
    */
   const leaveCall = () => {
-    console.log("LEAVE CALL");
+    console.log('LEAVE CALL');
 
     setCallEnded(true);
     setRecieverPeerSignalled(false);
