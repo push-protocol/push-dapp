@@ -26,6 +26,11 @@ import { caip10ToWallet } from 'helpers/w2w';
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { getSpaceTime } from 'helpers/space';
 
+type ScheduledSpacesType = {
+  currentSpace: Space;
+  step: number;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
+};
 
 const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
   const [showSpaceInfo, setShowSpaceInfo] = useState<boolean>(false);
@@ -139,7 +144,7 @@ const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
 export const ScheduledSpace = ({currentSpace, showSpaceInfoModal}:{currentSpace:Space, showSpaceInfoModal:any}) => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<number>(1);
   const { setSelectedSpace } = useContext(SpaceLocalContext);
   const isMobile = useMediaQuery(device.tablet);
 
@@ -197,7 +202,6 @@ const ScheduledItem = styled.div`
   height: auto;
   background: ${(props) => props.theme.modalContentBackground};
   border-radius: 22px;
-  // flex: 0 !important;
   box-sizing: border-box;
   overflow: hidden;
   @media (max-width: 768px) {
@@ -216,7 +220,6 @@ const ScheduledItem = styled.div`
     height: 400px;
     overflow-y: scroll;
     overflow-x: hidden;
-    // flex: auto !important;
   }
 `;
 
@@ -375,7 +378,7 @@ const MobileTopView = styled.div`
 
 const ScrollView = styled.div`
   @media (max-width: 768px) {
-    padding: 16px;
+    padding: 8px;
     box-sizing: border-box;
     background: ${(props) => props.theme.modalContentBackground};
   }

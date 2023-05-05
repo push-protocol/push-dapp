@@ -183,6 +183,7 @@ const Container = styled.div`
     height: ${(props) => (props.spaceActive ? `100vh` : `calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${globalsMargin.MINI_MODULES.MOBILE.BOTTOM })`)};
     border-radius: ${(props) => (props.spaceActive ? '0px' : GLOBALS.ADJUSTMENTS.RADIUS.LARGE )};
     overflow-y: ${(props) => (props.spaceActive ? 'scroll' : 'hidden')};
+    padding: 8px;
 }
   `;
 

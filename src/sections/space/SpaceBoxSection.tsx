@@ -30,7 +30,6 @@ export const SpaceBoxSection = ({showSpaceInfoModal}:any) => {
       {selectedSpace && activeTab === SpaceTabOption.Spaces && (<SpaceBox showSpaceInfoModal={showSpaceInfoModal}/>)} 
       {selectedSpace && activeTab === SpaceTabOption.Requests && (<RequestBox />)} 
       {!selectedSpace && (<WelcomeSpaceContentBox />)}
-
     </ItemVV2>
   );
 }
