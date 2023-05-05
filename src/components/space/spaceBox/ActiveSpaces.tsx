@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router';
 import { Space } from 'types';
 import { shortenText } from 'helpers/UtilityHelper';
 import { useClickAway } from 'react-use';
+import { SpaceMembersIndicator } from '../spaceReusables';
 
 
 
@@ -76,14 +77,7 @@ const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace
 
 
             <LiveSection>
-                <AvatarGroup>
-                    <Image className="avatars__item" src="https://randomuser.me/api/portraits/women/65.jpg" alt="" />
-
-                    <Image className="avatars__item" src="https://randomuser.me/api/portraits/women/25.jpg" alt="" />
-
-                    <Image className="avatars__item" src="https://randomuser.me/api/portraits/men/25.jpg" alt="" />
-                </AvatarGroup>
-                <P size="14px" weight="500" margin='0px 10px' color='#ffff'>+ 190 listeners</P>
+                <SpaceMembersIndicator spaceMembers={currentSpace?.members} />
             </LiveSection>
       </ListenerSection>
       </CardItem>
@@ -516,51 +510,6 @@ const SpaceImage = styled.img`
     border-radius: 100%;
 `;
 
-const AvatarGroup = styled.div`
-  display: flex;
-  list-style-type: none;
-  flex-direction: row;
-
-  .avatars__item {
-	  background-color: #d9d9d9;
-	  border-radius: 100%;
-	  display: block;
-	  font-family: sans-serif;
-	  font-size: 12px;
-	  font-weight: 100;
-	  height: 31px;
-	  width: 31px;
-	  line-height: 31px;
-	  text-align: center;
-	  transition: margin 0.1s ease-in-out;
-	  overflow: hidden;
-	 margin-left: -15px;
-  
-     &:first-child {
-        z-index: 5;
-        }
-        &:nth-child(2) {
-        z-index: 4;
-        }
-        &:nth-child(3) {
-        z-index: 3;
-        }
-        &:nth-child(4) {
-        z-index: 2;
-        }
-		&:nth-child(5) {
-        z-index: 1;
-        }
-        &:last-child {z-index: 0}
-        img{width:100%}
-        }
-        &:hover {
-        .avatars__item {
-             margin-right: 15px;
-        }
-	}
-`;
-
 const ItemTop = styled.div`
   display: flex;
   flex-direction: row;
@@ -580,8 +529,6 @@ const ItemTop = styled.div`
   }
 `;
 
-const Image = styled.img`
-`;
 
 const SpaceButton = styled(Button)`
   width: 100%;
