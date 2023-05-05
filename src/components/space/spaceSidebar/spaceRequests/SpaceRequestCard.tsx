@@ -37,7 +37,7 @@ const SpaceRequestCard = (
             borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
             background={selected ? theme.space.snapFocusBg : 'transparent'}
             theme={theme}
-            onClick={()=>setSelectedSpace(spaceData?.spaceInformation?.spaceId)}
+            onClick={()=>setSelectedSpace(spaceData?.spaceId)}
         >
 
             <ItemHV2
@@ -51,14 +51,14 @@ const SpaceRequestCard = (
             >
                 <ImageV2
                     alt="Profile"
-                    src={spaceData?.spaceInformation?.spaceImage}
+                    src={spaceData?.spaceImage}
                 />
             </ItemHV2>
 
             <InfoContainer>
                 <HeadTextSection>
                     <PrimaryText>
-                        {shortenText(caip10ToWallet(spaceData?.spaceInformation?.spaceCreator), 6, 6)}
+                        {shortenText(caip10ToWallet(spaceData?.spaceCreator), 6, 6)}
                     </PrimaryText>
                     <SecondaryText>
                     {spaceData?.scheduleAt ? moment(spaceData?.scheduleAt).format('h:mma') : '4:30PM'}
@@ -66,7 +66,7 @@ const SpaceRequestCard = (
                 </HeadTextSection>
 
                 <SecondaryTextMessage>
-                    {spaceData?.spaceInformation?.spaceName?.length > 27 ? spaceData?.spaceInformation?.spaceName?.slice(0, 27) + '...' : spaceData?.spaceInformation?.spaceName}
+                    {spaceData?.spaceName?.length > 27 ? spaceData?.spaceName?.slice(0, 27) + '...' : spaceData?.spaceName}
                 </SecondaryTextMessage>
             </InfoContainer>
 

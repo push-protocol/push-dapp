@@ -15,7 +15,7 @@ export const getSpacesFromIndexedDB = async (connectedUser:ConnectedUser):Promis
     // console.log(decryptedInboxes)
 
     //move this method to decryption method
-    const mappedSpaces:Spaces = Object.assign({}, ...spaces.map(s => ({[s?.spaceInformation?.spaceId]: s})));
+    const mappedSpaces:Spaces = Object.assign({}, ...spaces.map(s => ({[s.spaceId]: s})));
       return mappedSpaces;
 //   }
 };
@@ -30,7 +30,7 @@ export const getSpaceRequestsFromIndexedDB = async (connectedUser:ConnectedUser)
     // const decryptedRequests: Spaces = await decryptFeedsNew({ feeds: requests, connectedUser });
     // console.log(decryptedRequests)
      //move this method to decryption method
-     const mappedSpaces:Spaces = Object.assign({}, ...spaces.map(s => ({[s?.spaceInformation?.spaceId]: s})));
+     const mappedSpaces:Spaces = Object.assign({}, ...spaces.map(s => ({[s.spaceId]: s})));
      return mappedSpaces;
 //   }
 };

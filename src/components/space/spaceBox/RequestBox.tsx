@@ -55,7 +55,7 @@ const RequestBox = () => {
                         height="48px"
                         width="48px"
                         alt="Profile Picture"
-                        src={filteredUserData?.spaceInformation?.spaceImage}
+                        src={filteredUserData?.spaceImage}
                         borderRadius="100%"
                         overflow="hidden"
                         objectFit="cover"
@@ -68,7 +68,7 @@ const RequestBox = () => {
                     fontWeight="400"
                     textAlign="start"
                 >
-                    {shortenText(caip10ToWallet(filteredUserData?.spaceInformation?.spaceCreator), 6)}
+                    {shortenText(caip10ToWallet(filteredUserData?.spaceCreator), 6)}
                 </SpanV2>
 
                 <MoreOptions >

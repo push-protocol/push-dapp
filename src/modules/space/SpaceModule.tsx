@@ -19,7 +19,7 @@ import { SpaceInfoModalContent } from 'components/space/spaceModals/spaceInfoMod
 import useToast from 'hooks/useToast';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import CreateSpaceModal from 'components/space/spaceModals/createSpaceModals/CreateSpaceModal';
-import SpaceNotification from 'components/space/spaceNotification/spaceNotification';
+import SpaceNotification from 'components/space/spaceNotification/SpaceNotification';
 
 
 export const SpaceModule = ({ }) => {

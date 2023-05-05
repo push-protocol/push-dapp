@@ -11,27 +11,23 @@ export interface SpaceMember {
   image: string;
 }
 
-export interface SpaceInfoType {
-  members: SpaceMember[];
-  pendingMembers: SpaceMember[];
-  contractAddressERC20: string | null;
-  numberOfERC20: number;
-  contractAddressNFT: string | null;
-  numberOfNFTTokens: number;
-  verificationProof: string;
-  spaceImage: string | null;
-  spaceName: string;
-  isPublic: boolean;
-  spaceDescription: string | null;
-  spaceCreator: string;
-  spaceId: string;
-  scheduleAt?: Date | null;
-  scheduleEnd?: Date | null;
-  status: ChatStatus | null;
-}
-
-export interface Space {
-  spaceInformation: SpaceInfoType;
+export interface Space{
+    members: SpaceMember[];
+    pendingMembers:SpaceMember[];
+    contractAddressERC20: string | null;
+    numberOfERC20: number;
+    contractAddressNFT: string | null;
+    numberOfNFTTokens: number;
+    verificationProof: string;
+    spaceImage: string | null;
+    spaceName: string;
+    isPublic: boolean;
+    spaceDescription: string | null;
+    spaceCreator: string;
+    spaceId: string;
+    scheduleAt?: Date | number;
+    scheduleEnd?: Date | number;
+    status: ChatStatus | null;
 }
 
 export interface Spaces {

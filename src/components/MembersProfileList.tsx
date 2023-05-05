@@ -6,10 +6,10 @@ import styled from 'styled-components';
 
 // Internal Components
 import { ProfileCard } from './ProfileCard';
-import { SpaceInfoType } from 'types';
+import { Space } from 'types';
 
 interface MembersProfileListType {
-  memberData: SpaceInfoType;
+  memberData: Space;
   isAccountOwnerAdmin: boolean;
   removeAdminDropdown?: any;
   removeMemberDropdown?: any;

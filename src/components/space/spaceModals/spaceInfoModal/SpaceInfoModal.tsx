@@ -35,13 +35,19 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const containerRef = useRef();
   const dropdownRef = useRef();
   const { account } = useWeb3React();
+
+  console.log("Space Info modal data",userSpaces, selectedSpace);
+
   const selectedSpaceData = userSpaces[account]?.spaces[selectedSpace];
 
   const theme = useTheme();
 
-  const isAccountOwnerAdmin = selectedSpaceData?.spaceInformation?.members?.some(
+  const isAccountOwnerAdmin = selectedSpaceData?.members?.some(
     (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
   );
+
+  console.log("Space Info modal data",userSpaces, isAccountOwnerAdmin);
+
 
   const handleClose = () => onClose();
 
@@ -84,7 +90,7 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
             <BodyContainer padding="0 36px">
               <HostProfile>
                 <ProfileImage
-                  imageSrc={selectedSpaceData?.spaceInformation?.spaceImage}
+                  imageSrc={selectedSpaceData?.spaceImage}
                   dimension="48px"
                   borderRadius="50%"
                   margin="0px 12px 0px 0px"
@@ -95,7 +101,7 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                   fontWeight="500"
                   margin="0px 8px 0px"
                 >
-                  {shortenText(caip10ToWallet(selectedSpaceData?.spaceInformation?.spaceCreator), 6)}
+                  {shortenText(caip10ToWallet(selectedSpaceData?.spaceCreator), 6)}
                 </SpanV2>
                 <SpanV2
                   background="#F3D7FA"
@@ -115,26 +121,26 @@ export const SpaceInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                 alignSelf="flex-start"
                 margin="0px 0px 8px"
               >
-                {shortenText(caip10ToWallet(selectedSpaceData?.spaceInformation?.spaceCreator), 6)}'s Space
+                {shortenText(caip10ToWallet(selectedSpaceData?.spaceCreator), 6)}'s Space
               </SpanV2>
-              <Description>{selectedSpaceData?.spaceInformation?.spaceDescription}</Description>
+              <Description>{selectedSpaceData?.spaceDescription}</Description>
               {/* {isAccountOwnerAdmin && selectedSpace?.members?.length < 10 && ( */}
                 <AddMoreMember
                   showAddMoreMemberModal={setShowInviteMembersModal}
                   title="Invite Members"
                 />
               {/* )} */}
-              {selectedSpaceData?.spaceInformation?.pendingMembers?.length > 0 && (
+              {selectedSpaceData?.pendingMembers?.length > 0 && (
                 <PendingMembers
                   setshowPendingRequests={setshowPendingRequests}
                   showPendingRequests={showPendingRequests}
-                  pendingMemberData={selectedSpaceData?.spaceInformation?.pendingMembers}
+                  pendingMemberData={selectedSpaceData?.pendingMembers}
                   backgroundColor="transparent"
                   pendingHeader="Pending Invites"
                 />
               )}
               <MembersProfileList
-                memberData={selectedSpaceData?.spaceInformation}
+                memberData={selectedSpaceData}
                 makeCohostDropdown={makeCohostDropdown}
                 removeCohostDropdown={removeCohostDropdown}
                 selectedMemeberAddress={selectedMemeberAddress}
