@@ -19,7 +19,23 @@ import { shortenText } from 'helpers/UtilityHelper';
 import { useClickAway } from 'react-use';
 
 
-const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace}) => {
+
+interface SpaceListType {
+  image: string;
+  name: string;
+  role: string;
+  requestedAt?: boolean;
+}
+type ActiveSpacesType = {
+   SpaceList: SpaceListType[];
+   currentSpace: Space;
+   space: boolean;
+   joinSpace: ()=>void;
+   leaveSpace: ()=>void;
+
+};
+
+const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace}: ActiveSpacesType) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(device.tablet);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -164,7 +180,7 @@ export const ActiveSpaces =  ({currentSpace}:{currentSpace:Space}) => {
   const isMobile = useMediaQuery(device.tablet);
   const { setSelectedSpace } = useContext(SpaceLocalContext);
   const navigate = useNavigate();
-  const [space, setSpace] = useState(false);
+  const [space, setSpace] = useState<boolean>(false);
   const joinSpace = () => {
       setSpace(true);
   }
@@ -175,7 +191,7 @@ export const ActiveSpaces =  ({currentSpace}:{currentSpace:Space}) => {
 
 
   // spacelist will be the members under the currentSpace props when populated
-  const SpaceList = [
+  const SpaceList:SpaceListType[] = [
     {
         image: 'https://randomuser.me/api/portraits/women/65.jpg',
         name: '0x123...45678',

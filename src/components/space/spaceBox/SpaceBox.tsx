@@ -41,8 +41,6 @@ export const SpaceBox = () => {
     if(time === 'live'){
       setActive(true);
     }
-
-    // return howWork;
   }
 
   console.log(currentSpace);

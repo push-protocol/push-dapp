@@ -22,8 +22,13 @@ import useMediaQuery from 'hooks/useMediaQuery';
 import { SpaceLocalContext } from 'contexts';
 import { getSpaceTime } from 'helpers/space';
 
+type ScheduledSpacesType = {
+  currentSpace: Space;
+  step: number;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
+};
 
-const SpaceItem = ({currentSpace, step, setStep}) => {
+const SpaceItem = ({currentSpace, step, setStep}: ScheduledSpacesType) => {
   const theme = useTheme();
 
   return(
@@ -124,7 +129,7 @@ const SpaceItem = ({currentSpace, step, setStep}) => {
 export const ScheduledSpace = ({currentSpace}:{currentSpace:Space}) => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<number>(1);
   const { setSelectedSpace } = useContext(SpaceLocalContext);
   const isMobile = useMediaQuery(device.tablet);
 
@@ -150,7 +155,6 @@ export const ScheduledSpace = ({currentSpace}:{currentSpace:Space}) => {
   )
 }
 
-// const ScheduledItem = styled(ItemVV2)`
 const ScheduledItem = styled.div`
   width: 70%;
   display: flex;
