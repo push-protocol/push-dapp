@@ -10,7 +10,7 @@ import { appConfig } from '../config';
 // Utility Helper Functions
 const UtilityHelper = {
   isMainnet: (chainId: number):boolean => {
-    if (chainId === 1 || chainId === 137 || chainId === 56) {
+    if (chainId === 1 || chainId === 137 || chainId === 56 || chainId === 1101) {
       return true;
     }
     return false;
@@ -46,7 +46,8 @@ export const MaskedAliasChannels:{
   97: {},
   10: {},
   420: {},
-  1442: {}
+  1442: {},
+  1101: {}
  }
  export const findObject = (data: any,parentArray: any[],property: string ): boolean => {
   let isPresent = false;
@@ -103,7 +104,8 @@ export const networkName = {
   56: "BNB Mainnet",
   420: "Optimism Goerli",
   10: "Optimism Mainnet",
-  1442: "Polygon zkEVM Testnet"
+  1442: "Polygon zkEVM Testnet",
+  1101: "Polygon zkEVM Mainnet"
 };
 
 export const chainNameBackendStandard = {
@@ -163,11 +165,18 @@ export const NETWORK_DETAILS = {
     blockExplorerUrls: ['https://optimistic.etherscan.io/']
   },
   POLYGON_ZK_EVM_TESTNET: {
-    chainId: utils.hexValue(10),
-    chainName: 'Optimism Mainnet',
+    chainId: utils.hexValue(1442),
+    chainName: 'Polygon zkEVM Testnet',
     nativeCurrency: {name: 'ETH', symbol: 'ETH', decimals: 18},
     rpcUrls: ['https://rpc.public.zkevm-test.net'],
     blockExplorerUrls: ['https://testnet-zkevm.polygonscan.com']
+  },
+  POLYGON_ZK_EVM_MAINNET: {
+    chainId: utils.hexValue(1101),
+    chainName: 'Polygon zkEVM Mainnet',
+    nativeCurrency: {name: 'ETH', symbol: 'ETH', decimals: 18},
+    rpcUrls: ['https://rpc.polygon-zkevm.gateway.fm'],
+    blockExplorerUrls: ['https://zkevm.polygonscan.com']
   }
 };
 
@@ -184,7 +193,8 @@ export const LOGO_FROM_CHAIN_ID: {
   56: "BNB.svg",
   420: "Optimism.svg",
   10: "Optimism.svg",
-  1442: "PolygonZkEVM.svg"
+  1442: "PolygonZkEVM.svg",
+  1101: "PolygonZkEVM.svg"
 }
 
 export type getAliasResponseType = {
