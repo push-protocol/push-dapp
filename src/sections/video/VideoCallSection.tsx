@@ -30,7 +30,7 @@ const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
   const { account } = useWeb3React();
 
   // get stream
-  const { initializeLocalStream, localStream, callUser, answerCall, leaveCall } = useContext(VideoCallContext);
+  const { initializeLocalStream,createWrapper, requestWrapper,acceptRequestWrapper, endWrapper } = useContext(VideoCallContext);
 
   const answerCallHandler = () => {
     setVideoCallInfo({
@@ -44,12 +44,12 @@ const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
       privateKeyArmored: videoCallInfo.privateKeyArmored,
       establishConnection: 3,
     });
-    answerCall(videoCallInfo.address, account);
+    acceptRequestWrapper(videoCallInfo.address,account);
   };
 
   const endCallHandler = () => {
     if (videoCallInfo.establishConnection === 3) {
-      leaveCall();
+      endWrapper();
     }
     endVideoCallHook();
   };
@@ -64,20 +64,9 @@ const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
 
       try {
         // initialize the local stream for the given account
-        if (!localStream) {
-          await initializeLocalStream(account);
-        } else {
-          // send notification with id
-          if (videoCallInfo.establishConnection == 1) {
-            console.log('CALLING A USER');
-            console.log('fromAddress', account);
-            console.log('toAddress', videoCallInfo.address);
+        await createWrapper();
 
-            callUser(account, videoCallInfo.address);
-          } else if (videoCallInfo.establishConnection == 2) {
-            // do nothing video player should handle that
-          }
-        }
+        requestWrapper(account, videoCallInfo.address);
 
         setBlockedLoading({
           enabled: false,
@@ -96,7 +85,7 @@ const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
     };
 
     setupStream();
-  }, [localStream]);
+  });
 
   // Incoming call UI
   if (videoCallInfo.establishConnection === 2) {
