@@ -494,7 +494,12 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
-  const startVideoCallHandler = () => {
+  const startVideoCallHandler = async () => {
+    const toUser = await PushAPI.user.get({
+      account: caip10ToWallet(currentChat.wallets.toString()),
+      env: appConfig.appEnv
+    });
+
     setVideoCallInfo({
       address: caip10ToWallet(currentChat.wallets.toString()),
       fromPublicKeyArmored: connectedUser.publicKey,
@@ -505,34 +510,10 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       toProfilePic: currentChat.profilePicture,
       privateKeyArmored: connectedUser.privateKey,
       establishConnection: 1,
+      chatId: currentChat.chatId
     });
-    // const fetchUser = async () => {
-    //   return PushAPI.user.get({
-    //     account: caip10ToWallet(currentChat.wallets.toString()),
-    //     env: appConfig.appEnv
-    //   });
-    // }
-
-    // // call the function
-    // fetchUser()
-    //   .then (toUser => {
-    //     // set video call
-    //     setVideoCallInfo({
-    //       address: caip10ToWallet(currentChat.wallets.toString()),
-    //       fromPublicKeyArmored: connectedUser.publicKey,
-    //       fromProfileUsername: connectedUser.name,
-    //       fromProfilePic: connectedUser.profilePicture,
-    //       toPublicKeyArmored: currentChat.publicKey,
-    //       toProfileUsername: toUser.name,
-    //       toProfilePic: toUser.profilePicture,
-    //       privateKeyArmored: connectedUser.privateKey,
-    //       establishConnection: 1,
-    //     });
-    //   })
-    //   .catch(e => {
-    //     console.log("Error occured in ChatModule::useEffect::callAccepted - ", e);
-    //   });
   };
+
 
   const InfoMessages = [
     { id: 1, content: 'You can send up to 10 group requests in alpha' },

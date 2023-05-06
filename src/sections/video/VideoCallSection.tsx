@@ -8,6 +8,7 @@ import IncomingCall from 'components/video/IncomingCall';
 import OutgoingOngoingCall from 'components/video/OutgoingOngoingCall';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { BlockedLoadingI, VideoCallInfoI } from 'types/chat';
+import { ChatUserContext } from 'contexts/ChatUserContext';
 
 // Internal Configs
 
@@ -20,6 +21,8 @@ interface VideoCallSectionPropsI {
 
 // Create Video Call
 const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }: VideoCallSectionPropsI) => {
+  const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
+
   const [isLoading, setLoading] = useState(true);
   const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
     enabled: false,

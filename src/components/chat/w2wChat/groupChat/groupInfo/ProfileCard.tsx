@@ -94,7 +94,7 @@ const ProfileCardItem = styled(ItemHV2)`
   background-color: ${(props) => props.theme.chat.snapFocusBg};
   margin-bottom: 8px;
   max-height: 64px;
-  @media (max-width: 600px) {
+  @media (max-width: 480px) {
     max-width: 300px;
   }
 `;
