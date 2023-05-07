@@ -52,6 +52,7 @@ const themeLight = {
     scheduledSpaceCardBackground:'linear-gradient(87.17deg, #5C74F2 0%, #9065EC 67.25%, #8D6BEF 100%)',
     spaceIcon :'#E5E8F7',
     snapFocusBg: '#F4F5FA',
+    modalBorder:"1px solid #E5E8F7",
   },
 
   // Default Background Theme
@@ -297,6 +298,8 @@ const themeDark = {
     scheduledSpaceCardBackground:'linear-gradient(87.17deg, #5C74F2 0%, #9065EC 67.25%, #8D6BEF 100%)',
     spaceIcon:'#404650',
     snapFocusBg: '#404650',
+    modalBorder:"1px solid #4A4F67",
+
   },
 
   // Header Theme

@@ -63,7 +63,6 @@ const MenuOptions = ({
 
     const handleHeight = (id) => {
         const containerHeight = document.getElementById(id?.wallet)?.getBoundingClientRect();
-        console.log("containerHeight",containerHeight)
         setDropDownHeight(containerHeight?.top);
     };
 

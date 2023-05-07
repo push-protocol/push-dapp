@@ -18,8 +18,6 @@ export const SpaceRequests = () => {
   const { account } = useWeb3React();
   const { userSpaces } = useContext(SpaceGlobalContext);
   
-  console.log(userSpaces)
-
   return (
     <>
       <SpanV2
