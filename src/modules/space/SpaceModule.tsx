@@ -17,6 +17,7 @@ import { getSpaceRequests, getSpaces } from 'services/space';
 import { getSpaceRequestsFromIndexedDB, getSpacesFromIndexedDB } from 'helpers/space';
 import { SpaceInfoModalContent } from 'components/space/spaceModals/spaceInfoModal';
 import useToast from 'hooks/useToast';
+import MemberMenuModal from 'components/space/spaceModals/MemberMenu/MemberMenuModal';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import CreateSpaceModal from 'components/space/spaceModals/createSpaceModals/CreateSpaceModal';
 import SpaceNotification from 'components/space/spaceNotification/SpaceNotification';
@@ -30,10 +31,6 @@ export const SpaceModule = ({ }) => {
   const { userSpaces,setSpaceRequests,setSpaces } = useContext(SpaceGlobalContext);
   const [ showNotification, setShowNotification ]=React.useState<boolean>(false);
   const {selectedSpace, setSelectedSpace} = useContext(SpaceLocalContext);
-
-
-
-  console.log("User Spaces in space module",userSpaces);
 
   useEffect(() => {
     if(connectedUser || !account || !library) return;
@@ -56,7 +53,6 @@ export const SpaceModule = ({ }) => {
     ModalComponent: SpaceInfoModalComponent,
   } = useModalBlur();
 
-console.log(connectedUser)
   useEffect(() => {
     if(!connectedUser) return;
     (async function () {
@@ -98,6 +94,13 @@ useEffect(()=>{
     ModalComponent: CreateSpaceModalComponent,
   } = useModalBlur();
 
+  const {
+    isModalOpen:isMemberMenuModalOpen,
+    showModal:showMemberMenuModal,
+    ModalComponent:MemberMenuModalComponent,
+  } = useModalBlur();
+
+
 
   // RENDER
   return (
@@ -125,7 +128,9 @@ useEffect(()=>{
       <SpaceContainer
         spaceActive={!!selectedSpace}
       >
-        <SpaceBoxSection showSpaceInfoModal={showSpaceInfoModal}/>
+
+      {/* Modal for creating a space, it includes schedule and invite member option */}
+        <SpaceBoxSection showSpaceInfoModal={showSpaceInfoModal} showMemberMenuModal={showMemberMenuModal}/>
         {/* Added notification here to test it out need to be moved to notification UI */}
         {showNotification && <SpaceNotification/>}
       </SpaceContainer>
@@ -141,6 +146,13 @@ useEffect(()=>{
        toastObject={spaceModalToast}
        modalPadding="0px"
        modalPosition={MODAL_POSITION.ON_ROOT}
+      />
+
+      {/* Modal for various options for a member when the space is live */}
+      <MemberMenuModalComponent
+      InnerComponent={MemberMenuModal}
+      modalPadding="0px"
+      modalPosition={MODAL_POSITION.ON_PARENT}
       />
 
     </ItemHV2>

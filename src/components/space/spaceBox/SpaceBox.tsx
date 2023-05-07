@@ -13,8 +13,7 @@ import { ActiveSpaces } from './ActiveSpaces';
 import moment from 'moment';
 import { getSpaceStatus, getSpaceTime } from 'helpers/space';
 
-
-export const SpaceBox = ({showSpaceInfoModal}:any) => {
+export const SpaceBox = ({showSpaceInfoModal,showMemberMenuModal}:{showSpaceInfoModal:any,showMemberMenuModal:()=>void}) => {
   const { account } = useWeb3React();
   const { selectedSpace } = useContext(SpaceLocalContext);
   const { userSpaces } = useContext(SpaceGlobalContext);
@@ -43,14 +42,12 @@ export const SpaceBox = ({showSpaceInfoModal}:any) => {
     // }
   }
 
-  console.log(currentSpace);
-
   //RENDER
   return (
     <>
       {!currentSpace && <WelcomeSpaceContentBox />}
-      {currentSpace && !active && <ScheduledSpace currentSpace={currentSpace} showSpaceInfoModal={showSpaceInfoModal} />}
-      {currentSpace && active && (<ActiveSpaces currentSpace={currentSpace} />)}
+      {currentSpace && !active && <ScheduledSpace currentSpace={currentSpace} showSpaceInfoModal={showSpaceInfoModal}/>}
+      {currentSpace && active && (<ActiveSpaces currentSpace={currentSpace} showMemberMenuModal={showMemberMenuModal}/>)}
     </>
   );
 };

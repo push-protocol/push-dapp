@@ -37,7 +37,6 @@ const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
   const infoRef = React.useRef(null);
 
   useClickAway(infoRef, ()=>setShowSpaceInfo(false))
-
   const theme = useTheme();
 
   return(
@@ -141,7 +140,7 @@ const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
   )
 }
 
-export const ScheduledSpace = ({currentSpace, showSpaceInfoModal}:{currentSpace:Space, showSpaceInfoModal:any}) => {
+export const ScheduledSpace = ({currentSpace,showSpaceInfoModal}:{currentSpace:Space,showSpaceInfoModal:any}) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [step, setStep] = useState<number>(1);
@@ -157,7 +156,8 @@ export const ScheduledSpace = ({currentSpace, showSpaceInfoModal}:{currentSpace:
 
 
   return (
-    <>{isMobile ? (<ScrollView isMobile={isMobile}>
+    <>
+    {isMobile ? (<ScrollView isMobile={isMobile}>
       <MobileTopView onClick={()=>goToSpaces()}>
         <Div><FiArrowLeft size={25} color={theme.snackbarBorderText} /></Div>
         <P color={theme.snackbarBorderText} margin="0px 20px" size="19px" weight="500">{shortenText(caip10ToWallet(currentSpace?.spaceCreator),5,5)}’s Space</P>

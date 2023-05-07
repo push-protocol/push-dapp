@@ -34,9 +34,10 @@ type ActiveSpacesType = {
    space: boolean;
    joinSpace: ()=>void;
    leaveSpace: ()=>void;
+   showMemberMenuModal:()=>void;
 };
 
-const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace}: ActiveSpacesType) => {
+const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace,showMemberMenuModal}: ActiveSpacesType) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(device.tablet);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -130,7 +131,7 @@ const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace
             </RequestSpan>
                   
               <RequestDiv>
-                <BsPeople size={25} color={'#657795'} />
+                <BsPeople style={{cursor:'pointer'}} size={25} color={'#657795'} onClick={showMemberMenuModal}/>
                 <BsShare size={20} color={'#657795'}  />
               </RequestDiv>
           </MobileRequest>
@@ -160,7 +161,7 @@ const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace
       </RequestSpan>
             
             <RequestDiv>
-              <BsPeople size={25} color={'#657795'} />
+              <BsPeople style={{cursor:'pointer'}} size={25} color={'#657795'} onClick={showMemberMenuModal}/>
               <BsShare size={20} color={'#657795'}  />
               <Button bg="transparent" border="1px solid #D53A94" color='#D53A94' size="14px" weight="500" radius="12px" padding="12px 32px" onClick={()=>leaveSpace()}>Leave</Button>
             </RequestDiv>
@@ -169,7 +170,7 @@ const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace
   )
 }
 
-export const ActiveSpaces =  ({currentSpace}:{currentSpace:Space}) => {
+export const ActiveSpaces =  ({currentSpace,showMemberMenuModal}:{currentSpace:Space,showMemberMenuModal:()=>void}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(device.tablet);
   const { setSelectedSpace } = useContext(SpaceLocalContext);
@@ -287,9 +288,9 @@ export const ActiveSpaces =  ({currentSpace}:{currentSpace:Space}) => {
         <P color={theme.snackbarBorderText} margin="0px 20px" size="19px" weight="500">{shortenText(currentSpace?.spaceCreator,5,5)}’s Space</P>
       </MobileTopView>
 
-      <ActiveSpacesItem SpaceList={SpaceList} currentSpace={currentSpace} space={space} joinSpace={joinSpace} leaveSpace={leaveSpace} />   
+      <ActiveSpacesItem SpaceList={SpaceList} currentSpace={currentSpace} space={space} joinSpace={joinSpace} leaveSpace={leaveSpace} showMemberMenuModal={showMemberMenuModal}/>   
     </ScrollView>) : 
-    (<ActiveSpacesItem SpaceList={SpaceList} currentSpace={currentSpace} space={space} joinSpace={joinSpace} leaveSpace={leaveSpace} /> )}
+    (<ActiveSpacesItem SpaceList={SpaceList} currentSpace={currentSpace} space={space} joinSpace={joinSpace} leaveSpace={leaveSpace} showMemberMenuModal={showMemberMenuModal}/> )}
     </>
   )
 }
