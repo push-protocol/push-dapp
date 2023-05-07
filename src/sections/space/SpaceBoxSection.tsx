@@ -15,22 +15,18 @@ import { SpaceGlobalContext, SpaceLocalContext, SpaceTabOption } from 'contexts'
 import { device } from 'config/Globals';
 
 
-export const SpaceBoxSection = ({showSpaceInfoModal}:any) => {
+export const SpaceBoxSection = ({showSpaceInfoModal,showMemberMenuModal}:{showSpaceInfoModal:any,showMemberMenuModal:()=>void}) => {
   const theme = useTheme();
-  const { selectedSpace,activeTab } = useContext(SpaceLocalContext);
+  const { selectedSpace, activeTab } = useContext(SpaceLocalContext);
   const { userSpaces } = useContext(SpaceGlobalContext);
-
-  console.log("selectedSpace", selectedSpace);
-
 
   // RENDER
   return (
     <ItemVV2 justifyContent="stretch" background={theme.space.spaceBoxBg} borderRadius="24px">
       {/* conditionally Render */}
-      {selectedSpace && activeTab === SpaceTabOption.Spaces && (<SpaceBox showSpaceInfoModal={showSpaceInfoModal}/>)} 
+      {selectedSpace && activeTab === SpaceTabOption.Spaces && (<SpaceBox showSpaceInfoModal={showSpaceInfoModal} showMemberMenuModal={showMemberMenuModal}/>)} 
       {selectedSpace && activeTab === SpaceTabOption.Requests && (<RequestBox />)} 
       {!selectedSpace && (<WelcomeSpaceContentBox />)}
-
     </ItemVV2>
   );
 }

@@ -327,7 +327,8 @@ font-weight: 400;
 font-size: 16px;
 line-height: 140%;
 text-align: center;
-// color: #657795;
+color: #657795;
+
 `;
 
 const CreateGroupContainer = styled(ButtonV2)`

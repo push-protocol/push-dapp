@@ -26,6 +26,11 @@ import { getSpaceTime } from 'helpers/space';
 import { caip10ToWallet } from 'helpers/w2w';
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 
+type ScheduledSpacesType = {
+  currentSpace: Space;
+  step: number;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
+};
 
 const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
   const { setJoinedSpaceId } = useContext(SpaceGlobalContext);
@@ -35,6 +40,7 @@ const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
 
   useClickAway(infoRef, ()=>setShowSpaceInfo(false))
 
+  const theme = useTheme();
 
   return(
     <ScheduledItem theme={theme}>
@@ -137,10 +143,10 @@ const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
   )
 }
 
-export const ScheduledSpace = ({currentSpace, showSpaceInfoModal}:{currentSpace:Space, showSpaceInfoModal:any}) => {
+export const ScheduledSpace = ({currentSpace,showSpaceInfoModal}:{currentSpace:Space,showSpaceInfoModal:any}) => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState<number>(1);
   const { setSelectedSpace } = useContext(SpaceLocalContext);
   const isMobile = useMediaQuery(device.tablet);
 
@@ -153,7 +159,8 @@ export const ScheduledSpace = ({currentSpace, showSpaceInfoModal}:{currentSpace:
 
 
   return (
-    <>{isMobile ? (<ScrollView isMobile={isMobile}>
+    <>
+    {isMobile ? (<ScrollView isMobile={isMobile}>
       <MobileTopView onClick={()=>goToSpaces()}>
         <Div><FiArrowLeft size={25} color={theme.snackbarBorderText} /></Div>
         <P color={theme.snackbarBorderText} margin="0px 20px" size="19px" weight="500">{shortenText(caip10ToWallet(currentSpace?.spaceCreator),5,5)}’s Space</P>
@@ -198,7 +205,6 @@ const ScheduledItem = styled.div`
   height: auto;
   background: ${(props) => props.theme.modalContentBackground};
   border-radius: 22px;
-  // flex: 0 !important;
   box-sizing: border-box;
   overflow: hidden;
   @media (max-width: 768px) {
@@ -217,7 +223,6 @@ const ScheduledItem = styled.div`
     height: 400px;
     overflow-y: scroll;
     overflow-x: hidden;
-    // flex: auto !important;
   }
 `;
 
@@ -376,7 +381,7 @@ const MobileTopView = styled.div`
 
 const ScrollView = styled.div`
   @media (max-width: 768px) {
-    padding: 16px;
+    padding: 8px;
     box-sizing: border-box;
     background: ${(props) => props.theme.modalContentBackground};
   }
