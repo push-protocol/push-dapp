@@ -140,7 +140,7 @@ const ChatUserContextProvider = (props) => {
 
     // new user might not have a private key
     if (user && user.encryptedPrivateKey) {
-      if (user.wallets.includes(',') || !user.wallets.includes(caip10)) {
+      if (user.wallets.includes(',') || !user.wallets.toLowerCase().includes(caip10.toLowerCase())) {
         throw Error('Invalid user');
       }
       const _signer = await library.getSigner();
