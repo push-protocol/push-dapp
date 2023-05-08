@@ -34,12 +34,12 @@ export const SpaceBox = ({showSpaceInfoModal,showMemberMenuModal}:{showSpaceInfo
   },[]);
 
   const getCurrentTime = async () => {
-    // if(currentSpace?.scheduleAt === null) return;
+    if(currentSpace?.scheduleAt === null) return;
 
-    // let time = getSpaceStatus(currentSpace?.scheduleAt, currentSpace?.scheduleEnd);
-    // if(time === 'live'){
+    let time = getSpaceStatus(currentSpace?.scheduleAt, currentSpace?.scheduleEnd);
+    if(time === 'live'){
       setActive(true);
-    // }
+    }
   }
 
   //RENDER
