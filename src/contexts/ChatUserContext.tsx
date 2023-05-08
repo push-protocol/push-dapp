@@ -181,9 +181,8 @@ const ChatUserContextProvider = (props) => {
   const createUserIfNecessary = async (): Promise<ConnectedUser> => {
     try {
       const signer = await library.getSigner();
-      // let ac = account?.toLowerCase();
       await PushAPI.user.create({ 
-        account: account?.toLowerCase(),
+        account: account,
         env: appConfig.appEnv,
         signer: signer,
         progressHook: onboardingProgressReformatter
