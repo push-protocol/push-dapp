@@ -29,7 +29,7 @@ const SpamPage = lazy(() => import('pages/SpamPage'));
 const SupportPage = lazy(() => import('pages/SupportPage'));
 const TutorialPage = lazy(() => import('pages/TutorialPage'));
 const YieldFarmingPage = lazy(() => import('pages/YieldFarmingPage'));
-import SpaceWidget from 'components/space/spaceWidget/spaceWidget';
+import SpaceWidget from 'components/space/spaceWidget/SpaceWidget';
 import { SpaceGlobalContext } from 'contexts';
 
 // import AirdropPage from 'pages/AirdropPage';

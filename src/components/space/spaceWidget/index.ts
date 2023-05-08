@@ -1,1 +1,1 @@
-export * from "./spaceWidget"
+export * from "./SpaceWidget"
