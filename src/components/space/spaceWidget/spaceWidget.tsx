@@ -5,7 +5,6 @@ import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import styled from 'styled-components';
-import Draggable from 'react-draggable';
 
 // Internal Components
 import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -21,75 +20,103 @@ import { device } from 'config/Globals';
 
 const SpaceWidget = () => {
   const [exitOption, setExitOption] = useState<boolean>(false);
+  const [pressed, setPressed] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
   const { account } = useWeb3React();
   const { joinedSpaceId, setJoinedSpaceId, userSpaces } = useContext(SpaceGlobalContext);
   const { pathname } = useLocation();
   const selectedSpace = userSpaces[account]?.spaces[joinedSpaceId];
+  const ref = React.useRef();
 
   const exitSpace = () => {
     setJoinedSpaceId('');
   };
 
+  // Monitor changes to position state and update DOM
+  React.useEffect(() => {
+    if (ref.current) {
+      ref.current.style.transform = `translate(${position.x}px, ${position.y}px)`;
+    }
+  }, [position]);
+
+  // Update the current position if mouse is down
+  const onMouseMove = (event) => {
+    if (pressed) {
+      setPosition({
+        x: position.x + event.movementX,
+        y: position.y + event.movementY,
+      });
+    }
+  };
+
   return (
-    <Draggable>
-      <WidgetContainer
-        bottomMarginFor={pathname.split('/')[1] === 'chat' && pathname.split('/')[2] ? 'chat' : 'other'}
-        rightMarginFor={pathname.split('/')[1] === 'chat' && pathname.split('/')[2] ? 'chat' : 'other'}
-      >
-        {!exitOption ? (
-          <>
-            <WidgetData>
-              <SpanV2
-                color="#F5F5F5"
-                fontSize="15px"
-                fontWeight="500"
-              >
-                {shortenText(selectedSpace?.spaceCreator, 6)}'s Space
-              </SpanV2>
-              <Close
-                style={{ cursor: 'pointer' }}
-                onClick={() => setExitOption(true)}
-              />
-            </WidgetData>
-            <WidgetData>
-              <ItemHV2 justifyContent="flex-start">
-                <Space />
-                <SpanV2
-                  color="#F5F5F5"
-                  fontSize="14px"
-                  fontWeight="500"
-                >
-                  Live
-                </SpanV2>
-              </ItemHV2>
-              <ItemHV2 justifyContent="flex-end" margin="4px 0 0 0">
-                <SpaceMembersIndicator spaceMembers={selectedSpace?.members}/>
-              </ItemHV2>
-            </WidgetData>
-          </>
-        ) : (
-          <WarningContainer>
+    <WidgetContainer
+      ref={ref}
+      bottomMarginFor={pathname.split('/')[1] === 'chat' && pathname.split('/')[2] ? 'chat' : 'other'}
+      rightMarginFor={pathname.split('/')[1] === 'chat' && pathname.split('/')[2] ? 'chat' : 'other'}
+      onMouseMove={onMouseMove}
+      onMouseDown={() => setPressed(true)}
+      onMouseUp={() => setPressed(false)}
+    >
+      {!exitOption ? (
+        <>
+          <WidgetData>
             <SpanV2
+              color="#F5F5F5"
               fontSize="15px"
               fontWeight="500"
-              color="#F5F5F5"
             >
-              Do you want to leave this space?
+              {shortenText(selectedSpace?.spaceCreator, 6)}'s Space
             </SpanV2>
-            <ItemHV2 justifyContent="flex-end">
-              <Check
-                style={{ marginRight: '12px', cursor: 'pointer' }}
-                onClick={() => exitSpace()}
-              />
-              <Close
-                style={{ cursor: 'pointer' }}
-                onClick={() => setExitOption(false)}
-              />
+            <Close
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                setExitOption(true);
+                console.log('clicked close');
+              }}
+            />
+          </WidgetData>
+          <WidgetData>
+            <ItemHV2 justifyContent="flex-start">
+              <Space />
+              <SpanV2
+                color="#F5F5F5"
+                fontSize="14px"
+                fontWeight="500"
+              >
+                Live
+              </SpanV2>
             </ItemHV2>
-          </WarningContainer>
-        )}
-      </WidgetContainer>
-    </Draggable>
+            <ItemHV2
+              justifyContent="flex-end"
+              margin="4px 0 0 0"
+            >
+              <SpaceMembersIndicator spaceMembers={selectedSpace?.members} />
+            </ItemHV2>
+          </WidgetData>
+        </>
+      ) : (
+        <WarningContainer>
+          <SpanV2
+            fontSize="15px"
+            fontWeight="500"
+            color="#F5F5F5"
+          >
+            Do you want to leave this space?
+          </SpanV2>
+          <ItemHV2 justifyContent="flex-end">
+            <Check
+              style={{ marginRight: '12px', cursor: 'pointer' }}
+              onClick={() => exitSpace()}
+            />
+            <Close
+              style={{ cursor: 'pointer' }}
+              onClick={() => setExitOption(false)}
+            />
+          </ItemHV2>
+        </WarningContainer>
+      )}
+    </WidgetContainer>
   );
 };
 
