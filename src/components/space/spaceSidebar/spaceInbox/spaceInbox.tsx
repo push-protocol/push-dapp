@@ -64,6 +64,7 @@ const SpaceContainer = styled(ItemVV2)`
   }
   &&::-webkit-scrollbar-thumb {
     background: #cf1c84;
+    border-radius: 10px;
   }
 `;
 

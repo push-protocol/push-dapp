@@ -1,26 +1,29 @@
 // React + Web3 Essentials
-import React, { useContext } from 'react';
+import React from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
-import { Context } from 'modules/chat/ChatModule';
-import { AppContext } from 'types/chat';
+import { ProfileImage } from './ProfileImage';
+import { caip10ToWallet } from 'helpers/w2w';
 
-export const PendingMembers = ({ setshowPendingRequests, showPendingRequests }) => {
-  const { currentChat }: AppContext = useContext<AppContext>(Context);
+export const PendingMembers = ({
+  setshowPendingRequests,
+  showPendingRequests,
+  pendingMemberData,
+  backgroundColor,
+  pendingHeader,
+}) => {
   const theme = useTheme();
-
+  console.log("pending members",pendingMemberData);
   return (
-    <ItemVV2
+    <PendingMembersContainer
       border={`1px solid ${theme.default.border}`}
       borderRadius="16px"
       margin="0px 0px 15px 0px"
-      maxWidth="445px"
-      style={{ boxSizing: 'border-box' }}
     >
       <ItemHV2
         justifyContent="space-between"
@@ -33,7 +36,7 @@ export const PendingMembers = ({ setshowPendingRequests, showPendingRequests }) 
             fontWeight="400"
             color={theme.modalProfileTextColor}
           >
-            Pending Requests
+            {pendingHeader}
           </SpanV2>
           <SpanV2
             background="#CF1C84"
@@ -44,7 +47,7 @@ export const PendingMembers = ({ setshowPendingRequests, showPendingRequests }) 
             padding="4px 12px"
             margin="0px 0px 0px 8px"
           >
-            {currentChat?.groupInformation?.pendingMembers?.length}
+            {pendingMemberData?.length}
           </SpanV2>
         </ItemHV2>
         <ToggleArrowImg filter={theme.scheme == 'dark' ? theme.snackbarBorderIcon : 'brightness(0) invert(55%)'}>
@@ -56,50 +59,46 @@ export const PendingMembers = ({ setshowPendingRequests, showPendingRequests }) 
         </ToggleArrowImg>
       </ItemHV2>
       {showPendingRequests && (
-        <PendingRequestContainer
-          minHeight={
-            currentChat?.groupInformation?.pendingMembers?.length < 4
-              ? 56 * currentChat?.groupInformation?.members?.length
-              : 224
-          }
-        >
-          {currentChat?.groupInformation?.pendingMembers?.map((member) => {
+        <PendingRequestContainer minHeight={pendingMemberData?.length < 4 ? 56 * pendingMemberData?.length : 224}>
+          {pendingMemberData?.map((member) => {
             return (
               <ItemHV2
-                key={member.wallets}
+                key={member.wallet}
                 justifyContent="flex-start"
-                background={theme.pendingCardBackground}
+                background={backgroundColor}
                 padding="8px 16px"
                 margin="2px 0px 0px 0px"
               >
-                <ItemVV2
-                  height="36px"
-                  maxWidth="36px"
-                  borderRadius="100%"
-                  overflow="hidden"
+                <ProfileImage
+                  imageSrc={member?.image}
+                  dimension="36px"
+                  borderRadius="50%"
                   margin="0px 12px 0px 0px"
-                >
-                  <ImageV2
-                    objectFit="cover"
-                    src={member?.image}
-                    alt="profilePicture"
-                  />
-                </ItemVV2>
+                />
                 <SpanV2
                   fontSize="18px"
                   fontWeight="400"
                   color={theme.modalProfileTextColor}
                 >
-                  {shortenText(member?.wallet?.split(':')[1], 6)}
+                  {shortenText( caip10ToWallet(member?.wallet), 6)}
                 </SpanV2>
               </ItemHV2>
             );
           })}
         </PendingRequestContainer>
       )}
-    </ItemVV2>
+    </PendingMembersContainer>
   );
 };
+
+const PendingMembersContainer = styled(ItemVV2)`
+  box-sizing: border-box;
+  max-width: 445px;
+  @media (max-width: 480px) {
+    // max-width: 300px;
+    min-width: 300px;
+  }
+`;
 
 const PendingRequestContainer = styled.div`
   display: flex;

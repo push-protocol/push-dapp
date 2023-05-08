@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-
 import React from 'react';
 
 // External Packages

@@ -15,9 +15,11 @@ import { useWeb3React } from '@web3-react/core';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { getSpaceRequests, getSpaces } from 'services/space';
 import { getSpaceRequestsFromIndexedDB, getSpacesFromIndexedDB } from 'helpers/space';
-import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+import { SpaceInfoModalContent } from 'components/space/spaceModals/spaceInfoModal';
 import useToast from 'hooks/useToast';
-import CreateSpaceModal from 'components/space/spaceModals/CreateSpaceModal';
+import MemberMenuModal from 'components/space/spaceModals/MemberMenu/MemberMenuModal';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+import CreateSpaceModal from 'components/space/spaceModals/createSpaceModals/CreateSpaceModal';
 import SpaceNotification from 'components/space/spaceNotification/SpaceNotification';
 
 
@@ -29,10 +31,6 @@ export const SpaceModule = ({ }) => {
   const { userSpaces,setSpaceRequests,setSpaces } = useContext(SpaceGlobalContext);
   const [ showNotification, setShowNotification ]=React.useState<boolean>(false);
   const {selectedSpace, setSelectedSpace} = useContext(SpaceLocalContext);
-
-
-
-  console.log("User Spaces in space module",userSpaces);
 
   useEffect(() => {
     if(connectedUser || !account || !library) return;
@@ -46,6 +44,14 @@ export const SpaceModule = ({ }) => {
       }
     })()
   },[account,library]);
+
+  const spaceToast=useToast()
+
+  const {
+    isModalOpen: isSpaceInfoModalOpen,
+    showModal: showSpaceInfoModal,
+    ModalComponent: SpaceInfoModalComponent,
+  } = useModalBlur();
 
   useEffect(() => {
     if(!connectedUser) return;
@@ -88,6 +94,13 @@ useEffect(()=>{
     ModalComponent: CreateSpaceModalComponent,
   } = useModalBlur();
 
+  const {
+    isModalOpen:isMemberMenuModalOpen,
+    showModal:showMemberMenuModal,
+    ModalComponent:MemberMenuModalComponent,
+  } = useModalBlur();
+
+
 
   // RENDER
   return (
@@ -115,18 +128,31 @@ useEffect(()=>{
       <SpaceContainer
         spaceActive={!!selectedSpace}
       >
-        <SpaceBoxSection />
+
+      {/* Modal for creating a space, it includes schedule and invite member option */}
+        <SpaceBoxSection showSpaceInfoModal={showSpaceInfoModal} showMemberMenuModal={showMemberMenuModal}/>
         {/* Added notification here to test it out need to be moved to notification UI */}
         {showNotification && <SpaceNotification/>}
       </SpaceContainer>
-
-
+      <SpaceInfoModalComponent
+          InnerComponent={SpaceInfoModalContent}
+          toastObject={spaceToast}
+          modalPadding="0px"
+          modalPosition={MODAL_POSITION.ON_PARENT}
+      />
       <CreateSpaceModalComponent
        InnerComponent={CreateSpaceModal}
        onConfirm={() => {}}
        toastObject={spaceModalToast}
        modalPadding="0px"
        modalPosition={MODAL_POSITION.ON_ROOT}
+      />
+
+      {/* Modal for various options for a member when the space is live */}
+      <MemberMenuModalComponent
+      InnerComponent={MemberMenuModal}
+      modalPadding="0px"
+      modalPosition={MODAL_POSITION.ON_PARENT}
       />
 
     </ItemHV2>
@@ -169,6 +195,7 @@ const Container = styled.div`
     height: ${(props) => (props.spaceActive ? `100vh` : `calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${globalsMargin.MINI_MODULES.MOBILE.BOTTOM })`)};
     border-radius: ${(props) => (props.spaceActive ? '0px' : GLOBALS.ADJUSTMENTS.RADIUS.LARGE )};
     overflow-y: ${(props) => (props.spaceActive ? 'scroll' : 'hidden')};
+    padding: 8px;
 }
   `;
 

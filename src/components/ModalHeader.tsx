@@ -37,7 +37,7 @@ const ModalHeader = ({
             <SpanV2
                 fontWeight="500"
                 fontSize="24px"
-                color={themes.fontColor}
+                color={themes.modalProfileTextColor}
                 flex="1"
             >
                 {title}

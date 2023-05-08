@@ -5,7 +5,7 @@ import React from 'react';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { SpaceMember } from 'types';
 
-export const SpaceMembersIndicator = ({ spaceMembers }: { spaceMembers: SpaceMember[] }) => {
+export const SpaceMembersIndicator = ({ spaceMembers, listenersText }: { spaceMembers: SpaceMember[], listenersText: boolean }) => {
   return (
     <ItemHV2
       justifyContent="flex-end"
@@ -40,7 +40,7 @@ export const SpaceMembersIndicator = ({ spaceMembers }: { spaceMembers: SpaceMem
         fontWeight="500"
         margin="0px 0px 0px 3px"
       >
-        {spaceMembers?.length > 3 ? `+${spaceMembers?.length - 3}` : ``}
+        {spaceMembers?.length > 3 ? `+${spaceMembers?.length - 3}` : ``} listeners
       </SpanV2>
     </ItemHV2>
   );

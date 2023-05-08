@@ -8,13 +8,12 @@ import moment from 'moment';
 // Internal Components
 import { Space } from 'types';
 import { shortenText } from 'helpers/UtilityHelper';
+import { ImageV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { SpaceLocalContext } from 'contexts';
+import { caip10ToWallet } from 'helpers/w2w';
 
 // Internal Configs
-import { ImageV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import GLOBALS from 'config/Globals';
-import { Spaces, UserSpaces } from 'types';
-import { SpaceLocalContext } from 'contexts';
-
 
 const SpaceRequestCard = (
     { spaceData,
@@ -59,7 +58,7 @@ const SpaceRequestCard = (
             <InfoContainer>
                 <HeadTextSection>
                     <PrimaryText>
-                        {shortenText(spaceData?.spaceCreator, 6, 6)}
+                        {shortenText(caip10ToWallet(spaceData?.spaceCreator), 6, 6)}
                     </PrimaryText>
                     <SecondaryText>
                     {spaceData?.scheduleAt ? moment(spaceData?.scheduleAt).format('h:mma') : '4:30PM'}

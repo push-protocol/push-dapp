@@ -6,7 +6,8 @@ import styled, { useTheme } from 'styled-components';
 import { useClickAway } from 'react-use';
 
 // Internal Components
-import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ProfileImage } from 'components/ProfileImage';
 import { findObject, shortenText } from 'helpers/UtilityHelper';
 import { User } from '../../types/chat';
 import Dropdown from 'components/Dropdown';
@@ -72,15 +73,7 @@ const AddMembers = ({ key, memberData, handleMembers, handleMemberList, lightIco
   return (
     <WalletProfileContainer background={memberList?'transparent':theme.groupSearchProfilBackground} border={memberList?`1px solid ${theme.modalInputBorderColor}`:'none'}>
       <WalletProfile>
-        <ItemVV2
-          width="48px"
-          maxWidth="48px"
-          borderRadius="100%"
-          overflow="hidden"
-          margin="0px 12px 0px 0px"
-        >
-          <ImageV2 src={memberData?.profilePicture} />
-        </ItemVV2>
+        <ProfileImage imageSrc={memberData?.profilePicture} dimension="48px" borderRadius="50%" margin="0px 12px 0px 0px"/>
         <SpanV2
             fontSize="18px" fontWeight="400" color={theme.modalPrimaryTextColor}>{shortenText(memberData.wallets.split(':')[1], 8, 6)}</SpanV2>
       </WalletProfile>
