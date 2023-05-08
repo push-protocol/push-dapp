@@ -46,7 +46,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
 
   // get ens name from context
   if(!isGroup){
-    const walletLowercase = caip10ToWallet(username).toLowerCase();
+    const walletLowercase = caip10ToWallet(username)?.toLowerCase();
     const checksumWallet = ethers.utils.getAddress(walletLowercase);
     ensName = web3NameList[checksumWallet];
   }

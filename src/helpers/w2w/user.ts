@@ -35,13 +35,17 @@ export const checkIfChatExist = ({
   isGroup,
 }: CheckIfChatsExistPropType): boolean => {
   let val: boolean;
-  if (isGroup) {
+  console.log(chats)
+  console.log(currentChat)
+  console.log(connectedUser?.did?.toLowerCase())
+  if (isGroup ) {
     val = chats?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)
       ? true
       : false;
   } else {
+    // if(currentChat && currentChat?.combinedDID)
     val = chats?.find(
-      (x) => x?.combinedDID === currentChat?.combinedDID && x?.msg?.toDID === connectedUser?.did
+      (x) => x?.combinedDID?.toLowerCase() === currentChat?.combinedDID?.toLowerCase() && x?.msg?.toDID?.toLowerCase() === connectedUser?.did?.toLowerCase()
     )
       ? true
       : false;
@@ -68,8 +72,8 @@ export const getLatestThreadHash = ({
       receivedIntents?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)?.threadhash;
   } else {
     latestThreadHash =
-      inbox?.find((x) => x?.combinedDID === currentChat?.combinedDID)?.threadhash ||
-      receivedIntents?.find((x) => x?.combinedDID === currentChat?.combinedDID)?.threadhash;
+      inbox?.find((x) => x?.combinedDID?.toLowerCase() === currentChat?.combinedDID?.toLowerCase())?.threadhash ||
+      receivedIntents?.find((x) => x?.combinedDID?.toLowerCase() === currentChat?.combinedDID?.toLowerCase())?.threadhash;
   }
 
   return latestThreadHash;
@@ -113,9 +117,9 @@ export const getDefaultFeed = async ({
       env: appConfig.appEnv,
     }));
     let feed:Feeds;
-    const inboxUser = inbox.filter((inb) => inb.did === user.did);
+    const inboxUser = inbox.filter((inb) => inb.did?.toLowerCase() === user.did?.toLowerCase());
 
-    const intentUser = intents.filter((userExist) => userExist.did === user.did);
+    const intentUser = intents.filter((userExist) => userExist.did?.toLowerCase() === user.did?.toLowerCase());
     if (inboxUser.length) {
       feed = inboxUser[0];
     } else if(intentUser.length){
