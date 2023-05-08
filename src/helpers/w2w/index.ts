@@ -81,7 +81,7 @@ export const decryptFeeds = async ({
     if (feed.msg.encType !== 'PlainText' && feed.msg.encType !== null && feed.msg.messageContent) {
       // To do signature verification it depends on who has sent the message
       let signatureValidationPubliKey: string;
-      if (feed.msg.fromCAIP10 === connectedUser.wallets) {
+      if (feed.msg.fromCAIP10.toLowerCase() === connectedUser.wallets.toLowerCase()) {
         signatureValidationPubliKey = connectedUser.publicKey;
       } else {
         if (checkIfGroup(feed) && !feed.publicKey) {
@@ -128,7 +128,7 @@ export const decryptMessages = async ({
   if (savedMsg.encType !== 'PlainText' && savedMsg.encType !== null) {
     // To do signature verification it depends on who has sent the message
     let signatureValidationPubliKey: string;
-    if (savedMsg.fromCAIP10 === walletToCAIP10({ account })) {
+    if (savedMsg.fromCAIP10.toLowerCase() === walletToCAIP10({ account }).toLowerCase()) {
       signatureValidationPubliKey = connectedUser.publicKey;
     } else {
       if (!currentChat?.publicKey) {

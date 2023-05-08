@@ -42,13 +42,13 @@ const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList,
     { id: 'remove_user', title: 'Remove', icon: Remove, function: () => removeUser() }
 
   const dismissGroupAdmin = () => {
-    const updatedMembers = memberList.map(member => member.wallets == memberData.wallets ? ({ ...member, isAdmin: false }) : member)
+    const updatedMembers = memberList.map(member => member.wallets.toLowerCase() == memberData.wallets.toLowerCase() ? ({ ...member, isAdmin: false }) : member)
     handleMembers(updatedMembers)
     setSelectedWallet(null)
   }
 
   const makeGroupAdmin = () => {
-    const updatedMembers = memberList.map(member => member.wallets == memberData.wallets ? ({ ...member, isAdmin: true }) : member)
+    const updatedMembers = memberList.map(member => member.wallets.toLowerCase() == memberData.wallets.toLowerCase() ? ({ ...member, isAdmin: true }) : member)
     handleMembers(updatedMembers)
     setSelectedWallet(null)
   }
@@ -100,7 +100,7 @@ const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList,
         {theme.scheme == 'light' ? lightIcon : darkIcon}
       </ItemVV2>
       </ItemHV2>
-      {selectedWallet == memberData.wallets && (
+      {selectedWallet.toLowerCase() == memberData.wallets.toLowerCase() && (
         <DropdownContainer ref={dropdownRef}>
           <Dropdown
             dropdownValues={memberData?.isAdmin ?[removeAdminDropdown,removeUserDropdown] : [addAdminDropdown, removeUserDropdown]}

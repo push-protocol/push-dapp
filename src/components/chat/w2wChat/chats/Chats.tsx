@@ -77,7 +77,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
       {/* Support Msg Type = TwitterFeedLink */}
       {msg.messageType === 'TwitterFeedLink' && (
         <ItemVV2>
-          {msg.fromCAIP10 === caip10 ? (
+          {msg.fromCAIP10.toLowerCase() === caip10.toLowerCase() ? (
             <SentMessageWrapper align="row-reverse">
               <SenderMessage
                 color="transparent"
@@ -124,7 +124,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
       {/* Support Msg Type = Text */}
       {msg.messageType === 'Text' && (
         <ItemVV2>
-          {msg.fromCAIP10 === caip10 ? (
+          {msg.fromCAIP10.toLowerCase() === caip10.toLowerCase() ? (
             <SentMessageWrapper align="row-reverse">
               <SenderMessage>
                 {msg.messageContent.split('\n').map((str) => (
@@ -194,7 +194,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
       {/* Support Msg Type = Image */}
       {msg.messageType === 'Image' && (
         <ItemVV2>
-          {msg.fromCAIP10 === caip10 ? (
+          {msg.fromCAIP10.toLowerCase() === caip10.toLowerCase() ? (
             <SentMessageWrapper
               height="138px"
               align="row-reverse"
@@ -250,7 +250,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
       {/* Support Msg Type = GIF OR Support Msg Type = MediaEmbed */}
       {(msg.messageType === 'GIF' || msg.messageType === 'MediaEmbed') && (
         <ItemVV2>
-          {msg.fromCAIP10 === caip10 ? (
+          {msg.fromCAIP10.toLowerCase() === caip10.toLowerCase() ? (
             <SentMessageWrapper
               height="170px"
               align="row-reverse"
@@ -307,7 +307,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
       {/* Support Msg Type = GIF OR Support Msg Type = MediaEmbed */}
       {msg.messageType === 'File' && (
         <ItemVV2>
-          {msg.fromCAIP10 === caip10 ? (
+          {msg.fromCAIP10.toLowerCase() === caip10.toLowerCase() ? (
             <SentMessageWrapper align="row-reverse">
               <SenderMessage
                 color="transparent"

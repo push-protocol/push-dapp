@@ -62,7 +62,7 @@ export const ProfileCard = ({
             Admin
           </SpanV2>
         )}
-        {caip10ToWallet(member?.wallet) !== account && dropdownValues.length > 0 && (
+        {caip10ToWallet(member?.wallet).toLowerCase() !== account.toLowerCase() && dropdownValues.length > 0 && (
           <ItemVV2
             maxWidth="4px"
             padding="0 20px 0 0"
@@ -73,7 +73,7 @@ export const ProfileCard = ({
           </ItemVV2>
         )}
       </ItemHV2>
-      {selectedMemeberAddress == member?.wallet && (
+      {selectedMemeberAddress.toLowerCase() == member?.wallet.toLowerCase() && (
         <DropdownContainer ref={dropdownRef}>
           <Dropdown
             dropdownValues={dropdownValues}

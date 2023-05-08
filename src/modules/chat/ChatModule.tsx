@@ -129,7 +129,7 @@ function Chat({ chatid }) {
 
   }
     const updatedInbox = inbox.map(feed => {
-      if((feed.did === message.fromCAIP10) || feed?.groupInformation?.chatId === message.toCAIP10){
+      if((feed.did.toLowerCase() === message.fromCAIP10.toLowerCase()) || feed?.groupInformation?.chatId === message.toCAIP10){
         feed.msg = decryptedChat;
         isInInbox = true;
       }
@@ -290,7 +290,7 @@ function Chat({ chatid }) {
     const caip10:string = w2wHelper.walletToCAIP10({account});
 
     
-    if(connectedUser?.wallets !== caip10){
+    if(connectedUser?.wallets.toLowerCase() !== caip10.toLowerCase()){
       await getUser();
     }
 
@@ -309,7 +309,7 @@ function Chat({ chatid }) {
       // reformat chatid first
       chatid = reformatChatId(chatid);
 
-      if(connectedUser?.wallets === caip10){
+      if(connectedUser?.wallets.toLowerCase() === caip10.toLowerCase()){
         // dynamic url
         setCurrentTab(4);
       }
