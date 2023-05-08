@@ -7,16 +7,15 @@ import { showNotifcationToast } from 'components/reusables/toasts/toastControlle
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { convertAddressToAddrCaip } from '../helpers/CaipHelper';
 
-
 // Types
 export type SDKSocketHookOptions = {
   account?: string | null;
   env?: ENV;
   chainId?: number;
-  socketType?: 'chat' | 'notification',
+  socketType?: 'chat' | 'notification';
 };
 
-export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHookOptions) => {
+export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHookOptions) => {
   const [epnsSDKSocket, setEpnsSDKSocket] = useState<any>(null);
   const [isSDKSocketConnected, setIsSDKSocketConnected] = useState(epnsSDKSocket?.connected);
   const [messagesSinceLastConnection, setMessagesSinceLastConnection] = useState<any>('');
@@ -28,7 +27,6 @@ export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHook
     });
 
     epnsSDKSocket?.on(EVENTS.DISCONNECT, () => {
-
       setIsSDKSocketConnected(false);
     });
 
@@ -39,18 +37,19 @@ export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHook
       try {
         const { payload } = feedItem || {};
 
-        // if video meta, skip notification
-        if (payload.hasOwnProperty('data') && payload['data'].hasOwnProperty('videoMeta')) {
-          const videoMeta = JSON.parse(payload['data']['videoMeta']);
+        // if additional meta, skip notification
+        // currently for video calls only
+        if (payload.hasOwnProperty('data') && payload['data'].hasOwnProperty('additionalMeta')) {
+          const additionalMeta = JSON.parse(payload['data']['additionalMeta']);
 
-          console.log("RECIEVED CALL FEED", videoMeta);
+          console.log('RECIEVED CALL FEED', additionalMeta);
 
-          if (videoMeta.status == 1) {
+          if (additionalMeta.status == 1) {
             // incoming call
-            incomingCall(videoMeta);
-          } else if (videoMeta.status == 2) {
+            incomingCall(additionalMeta);
+          } else if (additionalMeta.status == 2) {
             // call answered
-            acceptCall(videoMeta);
+            acceptCall(additionalMeta);
           }
         }
 
@@ -72,7 +71,7 @@ export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHook
       /**
        * We receive a group creation or updated event.
        */
-      console.log(groupInfo)
+      console.log(groupInfo);
       setGroupInformationSinceLastConnection(groupInfo);
     });
   };
@@ -110,7 +109,7 @@ export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHook
 
       // this is auto-connect on instantiation
       const connectionObject = createSocketConnection({
-        user: socketType == 'chat'?account:convertAddressToAddrCaip(account, chainId),
+        user: socketType == 'chat' ? account : convertAddressToAddrCaip(account, chainId),
         socketType,
         env,
       });

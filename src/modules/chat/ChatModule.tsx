@@ -171,6 +171,7 @@ function Chat({ chatid }) {
     toPublicKeyArmored: null,
     privateKeyArmored: null,
     establishConnection: 0,
+    chatId: null,
   });
 
   // React GA Analytics
@@ -387,7 +388,6 @@ function Chat({ chatid }) {
         }
       }
       chatid = reformatChatId(chatid);
-      // console.log(feed);
       setCurrentChat(feed);
 
       // lastly, set navigation for dynamic linking
@@ -537,6 +537,7 @@ function Chat({ chatid }) {
                 toProfilePic: null,
                 privateKeyArmored: null,
                 establishConnection: 0,
+                chatId: null,
               });
             }}
           />
