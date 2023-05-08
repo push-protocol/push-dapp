@@ -79,10 +79,10 @@ export const addresses = {
   epnsPolyComm: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa", // the ploygon comm contract
   pushToken: "0x2b9bE9259a4F5Ba6344c1b1c07911539642a2D33", //address for push token
   aDai: "0x31f30d9A5627eAfeC4433Ae2886Cf6cc3D25E772",
-  staking: "0x65Cd2765997E779218b3F6d3395fd92F951e692B",
-  stakingV2:"0x65Cd2765997E779218b3F6d3395fd92F951e692B",// for new staking V2 Contract on staging
+  staking: "0xb93fc9467f1b85a24dcf0f80c5017dd316d15551",
+  stakingV2:"0xb93fc9467f1b85a24dcf0f80c5017dd316d15551",// for new staking V2 Contract on staging
   yieldFarmPUSH: "0x073ce8E0650FfF2BA1D468dB700EDC97ca604D25",
-  yieldFarmLP: "0x073ce8E0650FfF2BA1D468dB700EDC97ca604D25", 
+  yieldFarmLP: "0x83fd32f3e15482b80765bd2d1df9f71fbd97e671", 
   epnsToken: "0x2b9bE9259a4F5Ba6344c1b1c07911539642a2D33",
   epnsLPToken: "0x1f094Bd8c260D0C3fC79157096015990885af4d2",
   uniV2LPToken:"0x698839247E5b83572fFF6ccdcf386CC37e60bEf5",// for new staking V2 Contract on staging
@@ -92,7 +92,7 @@ export const addresses = {
   distributor: "0x5B548D33874DeABaC2F683A6E1864795E09932F0",
   uniswapV2Router02: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
   WETHAddress: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
-  USDTAddress: "0x13512979ade267ab5100878e2e0f485b568328a4",
+  USDTAddress: "0x11fe4b6ae13d2a6055c8d9cf65c55bac32b5d844",
   rockstarV2:"0xA2b885e7065EA59a3251489715ca80DE5Ff642f8",//mainnet address
   NFTRewardsV2: "0xdc66567a990B7fa10730459537620857c9e03287", //mainnet address
 }
