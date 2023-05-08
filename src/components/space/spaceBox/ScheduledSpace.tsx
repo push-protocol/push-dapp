@@ -40,8 +40,6 @@ const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
 
   useClickAway(infoRef, ()=>setShowSpaceInfo(false))
 
-  const theme = useTheme();
-
   return(
     <ScheduledItem theme={theme}>
           <CardItem>
