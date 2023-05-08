@@ -41,7 +41,7 @@ export const checkIfChatExist = ({
       : false;
   } else {
     val = chats?.find(
-      (x) => x?.combinedDID === currentChat?.combinedDID && x?.msg?.toDID === connectedUser?.did
+      (x) => x?.combinedDID.toLowerCase() === currentChat?.combinedDID.toLowerCase() && x?.msg?.toDID.toLowerCase() === connectedUser?.did.toLowerCase()
     )
       ? true
       : false;
@@ -113,9 +113,9 @@ export const getDefaultFeed = async ({
       env: appConfig.appEnv,
     }));
     let feed:Feeds;
-    const inboxUser = inbox.filter((inb) => inb.did === user.did);
+    const inboxUser = inbox.filter((inb) => inb.did.toLowerCase() === user.did.toLowerCase());
 
-    const intentUser = intents.filter((userExist) => userExist.did === user.did);
+    const intentUser = intents.filter((userExist) => userExist.did.toLowerCase() === user.did.toLowerCase());
     if (inboxUser.length) {
       feed = inboxUser[0];
     } else if(intentUser.length){

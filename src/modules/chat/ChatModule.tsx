@@ -100,7 +100,7 @@ function Chat({ chatid }) {
   },[socketData.groupInformationSinceLastConnection])
 
   const getUpdatedChats = async(chat) => {
-    if((currentChat.did === chat.fromCAIP10) || currentChat?.groupInformation?.chatId === chat.toCAIP10){
+    if((currentChat.did.toLowerCase() === chat.fromCAIP10.toLowerCase()) || currentChat?.groupInformation?.chatId === chat.toCAIP10){
     const decryptedChat:MessageIPFS = await w2wHelper.decryptMessages({
       savedMsg: chat,
       connectedUser,
@@ -117,7 +117,7 @@ function Chat({ chatid }) {
     let decryptedChat:MessageIPFS;
 
     //change to common decryption for getUpdatedInbox and getUpdatedChats using filter
-    const updatedFeed = inbox.filter(feed=>(feed.did === message.fromCAIP10) || (feed?.groupInformation?.chatId === message.toCAIP10));
+    const updatedFeed = inbox.filter(feed=>(feed.did.toLowerCase() === message.fromCAIP10.toLowerCase()) || (feed?.groupInformation?.chatId === message.toCAIP10));
    if(updatedFeed.length){
      decryptedChat = await w2wHelper.decryptMessages({
       savedMsg: message,

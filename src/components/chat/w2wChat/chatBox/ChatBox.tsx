@@ -242,7 +242,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const fetchInboxApi = async (): Promise<Feeds> => {
     const inboxes: Feeds[] = await fetchInbox(connectedUser);
     setInbox(inboxes);
-    return inboxes?.find((x) => x.wallets.split(':')[1] === currentChat.wallets.split(':')[1]);
+    return inboxes?.find((x) => x.wallets.split(':')[1].toLowerCase() === currentChat.wallets.split(':')[1].toLowerCase());
   };
 
   const sendMessage = async ({
@@ -415,7 +415,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       if (
         currentChat.intent === null ||
         currentChat.intent === '' ||
-        !currentChat.intent.includes(currentChat.wallets.split(':')[1])
+        !currentChat.intent.toLowerCase().includes(currentChat.wallets.split(':')[1].toLowerCase())
       ) {
         let createdUser;
         if (!connectedUser.publicKey) {

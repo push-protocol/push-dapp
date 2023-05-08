@@ -431,7 +431,15 @@ const ReceivedMessage = styled.div`
 
 const IntentMessage = styled(ReceivedMessage)`
   flex-direction: row;
-  width: 80%;
+  @media(${device.laptop}){
+    width:80%;
+  }
+  @media(${device.laptopL}){
+    width:70%;
+  }
+  @media(${device.tablet}){
+    width:65%;
+  }
 `;
 
 const SenderMessage = styled.div`

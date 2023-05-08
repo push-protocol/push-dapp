@@ -136,7 +136,7 @@ export const decryptMessages = async ({
           const member = getMemberDetails(currentChat, currentChat?.msg?.fromCAIP10);
           signatureValidationPubliKey = member ? member.publicKey : '';
         } else {
-          const latestUserInfo = inbox.find((x) => x.wallets.split(':')[1] === currentChat?.wallets?.split(':')[1]);
+          const latestUserInfo = inbox.find((x) => x.wallets.split(':')[1].toLowerCase() === currentChat?.wallets?.split(':')[1].toLowerCase());
 
           if (latestUserInfo) {
             signatureValidationPubliKey = latestUserInfo.publicKey!;
