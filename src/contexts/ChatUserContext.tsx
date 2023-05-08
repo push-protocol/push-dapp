@@ -140,7 +140,7 @@ const ChatUserContextProvider = (props) => {
 
     // new user might not have a private key
     if (user && user.encryptedPrivateKey) {
-      if (user.wallets.includes(',') || !user.wallets.toLowerCase().includes(caip10.toLowerCase())) {
+      if (user.wallets.includes(',') || !user.wallets?.toLowerCase().includes(caip10?.toLowerCase())) {
         throw Error('Invalid user');
       }
       const _signer = await library.getSigner();
@@ -181,9 +181,9 @@ const ChatUserContextProvider = (props) => {
   const createUserIfNecessary = async (): Promise<ConnectedUser> => {
     try {
       const signer = await library.getSigner();
-      // let ac = account.toLowerCase();
+      // let ac = account?.toLowerCase();
       await PushAPI.user.create({ 
-        account: account.toLowerCase(),
+        account: account?.toLowerCase(),
         env: appConfig.appEnv,
         signer: signer,
         progressHook: onboardingProgressReformatter

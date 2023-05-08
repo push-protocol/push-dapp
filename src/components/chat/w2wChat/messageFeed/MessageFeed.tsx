@@ -47,7 +47,7 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const messageFeedToast = useToast();
 
   const onFeedClick = (feed:Feeds,i:number):void => {
-    if((receivedIntents?.filter((userExist) => userExist.did.toLowerCase() === props?.filteredUserData[0]?.did.toLowerCase())).length)
+    if((receivedIntents?.filter((userExist) => userExist.did?.toLowerCase() === props?.filteredUserData[0]?.did?.toLowerCase())).length)
     {
       setActiveTab(1);
     }
@@ -135,7 +135,7 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
     } else {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
-          if (Object(props.filteredUserData[0]).wallets.toLowerCase() === walletToCAIP10({ account }).toLowerCase()) {
+          if (Object(props.filteredUserData[0]).wallets?.toLowerCase() === walletToCAIP10({ account })?.toLowerCase()) {
             messageFeedToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: "You can't send intent to yourself",

@@ -235,7 +235,7 @@ export const swapPropertyOrder = <T extends object>(obj: T, prop1: keyof T, prop
 export const getWeb3Name=({isGroup, address, web3NameList})=>{
   let web3Name = null;
   if(!isGroup && address){
-    const walletLowercase = caip10ToWallet(address).toLowerCase();
+    const walletLowercase = caip10ToWallet(address)?.toLowerCase();
     const checksumWallet = utils.getAddress(walletLowercase);
     Object.keys(web3NameList).forEach(element => {
       if(web3NameList[checksumWallet]){

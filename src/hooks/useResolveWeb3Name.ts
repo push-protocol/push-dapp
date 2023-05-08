@@ -52,7 +52,7 @@ export function useResolveWeb3Name(address?: string) {
       setWeb3Name(null);
       let provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
       if (address) {
-        const walletLowercase = caip10ToWallet(address).toLowerCase();
+        const walletLowercase = caip10ToWallet(address)?.toLowerCase();
         const checksumWallet = ethers.utils.getAddress(walletLowercase);
         if (ethers.utils.isAddress(checksumWallet)) {
           try {

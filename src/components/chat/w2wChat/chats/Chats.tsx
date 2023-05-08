@@ -45,7 +45,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const [profilePicture, setProfilePicture] = useState<string>('');
   const time: Date = new Date(msg?.timestamp);
   const time1: string = time.toLocaleTimeString('en-US');
-  const date: string = time1.slice(0, -6) + ' ' + time1.slice(-2).toLowerCase();
+  const date: string = time1.slice(0, -6) + ' ' + time1.slice(-2)?.toLowerCase();
   const { tweetId, messageType }: TwitterFeedReturnType = checkTwitterUrl({ message: msg?.messageContent });
   if (messageType === 'TwitterFeedLink') {
     msg.messageType = 'TwitterFeedLink';
@@ -77,7 +77,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
       {/* Support Msg Type = TwitterFeedLink */}
       {msg.messageType === 'TwitterFeedLink' && (
         <ItemVV2>
-          {msg.fromCAIP10.toLowerCase() === caip10.toLowerCase() ? (
+          {msg.fromCAIP10?.toLowerCase() === caip10?.toLowerCase() ? (
             <SentMessageWrapper align="row-reverse">
               <SenderMessage
                 color="transparent"
@@ -124,7 +124,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
       {/* Support Msg Type = Text */}
       {msg.messageType === 'Text' && (
         <ItemVV2>
-          {msg.fromCAIP10.toLowerCase() === caip10.toLowerCase() ? (
+          {msg.fromCAIP10?.toLowerCase() === caip10?.toLowerCase() ? (
             <SentMessageWrapper align="row-reverse">
               <SenderMessage>
                 {msg.messageContent.split('\n').map((str) => (
@@ -194,7 +194,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
       {/* Support Msg Type = Image */}
       {msg.messageType === 'Image' && (
         <ItemVV2>
-          {msg.fromCAIP10.toLowerCase() === caip10.toLowerCase() ? (
+          {msg.fromCAIP10?.toLowerCase() === caip10?.toLowerCase() ? (
             <SentMessageWrapper
               height="138px"
               align="row-reverse"
@@ -250,7 +250,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
       {/* Support Msg Type = GIF OR Support Msg Type = MediaEmbed */}
       {(msg.messageType === 'GIF' || msg.messageType === 'MediaEmbed') && (
         <ItemVV2>
-          {msg.fromCAIP10.toLowerCase() === caip10.toLowerCase() ? (
+          {msg.fromCAIP10?.toLowerCase() === caip10?.toLowerCase() ? (
             <SentMessageWrapper
               height="170px"
               align="row-reverse"
@@ -307,7 +307,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
       {/* Support Msg Type = GIF OR Support Msg Type = MediaEmbed */}
       {msg.messageType === 'File' && (
         <ItemVV2>
-          {msg.fromCAIP10.toLowerCase() === caip10.toLowerCase() ? (
+          {msg.fromCAIP10?.toLowerCase() === caip10?.toLowerCase() ? (
             <SentMessageWrapper align="row-reverse">
               <SenderMessage
                 color="transparent"

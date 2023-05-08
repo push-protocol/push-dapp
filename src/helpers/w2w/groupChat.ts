@@ -26,7 +26,7 @@ export const getGroupImage = (feed: Feeds): string => {
 
 export const getMemberDetails = (feed:Feeds,walletAddress:string) => {
 
-    const senderProfile = feed?.groupInformation?.members?.filter((chat) => chat?.wallet.toLowerCase() == walletAddress.toLowerCase())!;
+    const senderProfile = feed?.groupInformation?.members?.filter((chat) => chat?.wallet?.toLowerCase() == walletAddress?.toLowerCase())!;
 
 
     return senderProfile? senderProfile[0]: null;
@@ -105,7 +105,7 @@ export const getAdminList = (groupInformation: GroupDTO): Array<string> => {
 };
 
 export const getUpdatedMemberList = (feed:Feeds,walletAddress:string): Array<string> =>{
-  const members = feed?.groupInformation?.members?.filter((i) => i.wallet.toLowerCase() !== walletAddress.toLowerCase());
+  const members = feed?.groupInformation?.members?.filter((i) => i.wallet?.toLowerCase() !== walletAddress?.toLowerCase());
   return convertToWalletAddressList([...members,...feed?.groupInformation?.pendingMembers]);
 }
 
@@ -138,14 +138,14 @@ export const rearrangeMembers = (currentChat,connectedUser) => {
   currentChat?.groupInformation?.members.sort(x => (x?.isAdmin) ? -1 : 1);
   currentChat?.groupInformation?.members.some(
     (member, idx) =>
-      member?.wallet.toLowerCase() == currentChat?.groupInformation?.groupCreator.toLowerCase() &&
+      member?.wallet?.toLowerCase() == currentChat?.groupInformation?.groupCreator?.toLowerCase() &&
       currentChat?.groupInformation?.members.unshift(
         currentChat?.groupInformation?.members.splice(idx, 1)[0]
       )
   );
   currentChat?.groupInformation?.members.some(
     (member, idx) =>
-      member?.wallet.toLowerCase() == connectedUser.wallets.toLowerCase() &&
+      member?.wallet?.toLowerCase() == connectedUser.wallets?.toLowerCase() &&
       currentChat?.groupInformation?.members.unshift(
         currentChat?.groupInformation?.members.splice(idx, 1)[0]
       )
@@ -154,7 +154,7 @@ export const rearrangeMembers = (currentChat,connectedUser) => {
 }
 
 export const MemberAlreadyPresent = (member:any,groupMembers:any)=>{
-  const memberCheck = groupMembers?.find((x)=>x.wallet.toLowerCase() == member.wallets.toLowerCase());
+  const memberCheck = groupMembers?.find((x)=>x.wallet?.toLowerCase() == member.wallets?.toLowerCase());
   if(memberCheck){
     return true;
   }
@@ -182,7 +182,7 @@ export const addWalletValidation = (member:User,memberList:any,groupMembers:any,
       errorMessage = 'Address is already added'
     }
 
-    if (member?.wallets.toLowerCase() === w2wChatHelper.walletToCAIP10({ account }).toLowerCase()) {
+    if (member?.wallets?.toLowerCase() === w2wChatHelper.walletToCAIP10({ account })?.toLowerCase()) {
       errorMessage = 'Group Creator cannot be added as Member'
     }
 
