@@ -24,6 +24,10 @@ const YieldFarmingModuleV2 = () => {
   // React GA Analytics
   ReactGA.pageview('/yield');
 
+  const getPushprice = ()=>{
+    console.log("Get push price");
+  }
+
   // Render
   return (
     <Container>
