@@ -15,7 +15,7 @@ import UserInfo from 'components/video/UserInfo';
 import VideoPlayer from 'components/video/VideoPlayer';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { useDeviceWidthCheck } from 'hooks';
-import { BlockedLoadingI, VideoCallInfoI } from 'types/chat';
+import { BlockedLoadingI } from 'types/chat';
 import audioIcon from '../../assets/icons/audio-icon.svg';
 import audioOffIcon from '../../assets/icons/audio-off-icon.svg';
 import endCallIcon from '../../assets/icons/end-call-icon.svg';
@@ -28,7 +28,6 @@ import MediaToggleButton from './MediaToggleButton';
 import GLOBALS from 'config/Globals';
 
 type OutgoingOngoingCallType = {
-  videoCallInfo: VideoCallInfoI;
   blockedLoading: BlockedLoadingI;
   onEndCall: () => void;
 };
@@ -57,19 +56,21 @@ const callControlsImmersiveStyles = {
   justifyContent: 'center',
 };
 
-const OutgoingOngoingCall = ({ videoCallInfo, blockedLoading, onEndCall, callStatus }: OutgoingOngoingCallType) => {
-  const isImmersive = useDeviceWidthCheck(425) && callStatus === 1;
+const OutgoingOngoingCall = ({ blockedLoading, onEndCall }: OutgoingOngoingCallType) => {
+  const { videoCallInfo } = useContext(VideoCallContext);
+
+  const isImmersive = useDeviceWidthCheck(425) && videoCallInfo.callStatus === 1;
   const { VideoToggler, AudioToggler, isVideoOn, isAudioOn, endLocalStream } = useContext(VideoCallContext);
 
   function handleClick() {
     endLocalStream();
     onEndCall();
   }
-  console.log("Outer", videoCallInfo)
+
   return (
     <Container>
       {/* remote user info */}
-      {videoCallInfo.establishConnection != 3 && 
+      {videoCallInfo.callStatus != 3 && 
         <UserInfo
           // TODO: make this dynamic with remote user's info
           pfp={videoCallInfo.toProfilePic}
@@ -83,7 +84,6 @@ const OutgoingOngoingCall = ({ videoCallInfo, blockedLoading, onEndCall, callSta
 
       {/* display the local and incoming video */}
       <VideoPlayer
-        videoCallInfo={videoCallInfo}
         localVideoStyles={isImmersive ? playerImmersiveStyles : {}}
       />
 

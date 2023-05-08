@@ -37,7 +37,7 @@ import useToast from 'hooks/useToast';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection from 'sections/video/VideoCallSection';
-import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
+import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -61,6 +61,7 @@ function Chat({ chatid }) {
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
   const { getUser, connectedUser, setConnectedUser, blockedLoading, setBlockedLoading, displayQR, setDisplayQR } =
     useContext(ChatUserContext);
+    const { videoCallInfo } = useContext(VideoCallContext);
 
   const theme = useTheme();
 
@@ -81,7 +82,6 @@ function Chat({ chatid }) {
   const queryClient = new QueryClient({});
 
   const containerRef = React.useRef(null);
-  // For video calling
 
   const socketData = useSDKSocket({ account, chainId, env: appConfig.appEnv,socketType: 'chat' });
 
@@ -166,69 +166,6 @@ function Chat({ chatid }) {
 
   // React GA Analytics
   ReactGA.pageview('/chat');
-
-  const { call, callAccepted } = useContext(VideoCallContext);
-  useEffect(() => {
-    if (Object.keys(call).length > 0) {
-      const fetchUser = async () => {
-        return PushAPI.user.get({
-          account: caip10ToWallet(call.from),
-          env: appConfig.appEnv
-        });
-      }
-
-      // call the function
-      fetchUser()
-        .then (fromUser => {
-          // set video call
-          setVideoCallInfo({
-            address: call.from,
-            fromPublicKeyArmored: connectedUser.publicKey,
-            fromProfileUsername: fromUser.name,
-            fromProfilePic: fromUser.profilePicture,
-            toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
-            toProfileUsername: connectedUser.name,
-            toProfilePic: connectedUser.profilePicture,
-            privateKeyArmored: connectedUser.privateKey,
-            establishConnection: 2,
-          });
-        })
-        .catch(e => {
-          console.log("Error occured in ChatModule::useEffect::callAccepted - ", e);
-        });
-    }
-  }, [call]);
-
-  useEffect(() => {
-    if (callAccepted && videoCallInfo.establishConnection == 2) {
-      const fetchUser = async () => {
-        return PushAPI.user.get({
-          account: caip10ToWallet(call.from),
-          env: appConfig.appEnv
-        });
-      }
-
-      // call the function
-      fetchUser()
-        .then (fromUser => {
-          // set video call
-          setVideoCallInfo({
-            address: call.from,
-            fromPublicKeyArmored: connectedUser.publicKey,
-            fromProfileUsername: fromUser.name,
-            fromProfilePic: fromUser.profilePicture,
-            toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
-            toProfileUsername: connectedUser.name,
-            toProfilePic: connectedUser.profilePicture,
-            privateKeyArmored: connectedUser.privateKey,
-            establishConnection: 3,
-          });
-        })
-        .catch(e => {
-          console.log("Error occured in ChatModule::useEffect::callAccepted - ", e);
-        });
-    }
-  }, [callAccepted]);
 
   useEffect(()=>{
     setChat(null);
@@ -432,7 +369,7 @@ function Chat({ chatid }) {
                 padding="10px 10px 10px 10px"
                 chatActive={viewChatBox}
               >
-                <ChatBoxSection setVideoCallInfo={setVideoCallInfo} showGroupInfoModal={showGroupInfoModal}/>
+                <ChatBoxSection showGroupInfoModal={showGroupInfoModal}/>
               </ChatContainer>
               <GroupInfoModalComponent
                 InnerComponent={GroupInfoModalContent}
@@ -502,27 +439,9 @@ function Chat({ chatid }) {
           />
         )}
 
-        {/* TEMP */}
-        {/* But video chat trumps this now!!! */}
-        {videoCallInfo.establishConnection > 0 && (
-          <VideoCallSection
-            videoCallInfo={videoCallInfo}
-            setVideoCallInfo={setVideoCallInfo}
-            endVideoCallHook={() => {
-              setVideoCallInfo({
-                address: null,
-                fromPublicKeyArmored: null,
-                fromProfileUsername: null,
-                fromProfilePic: null,
-                toPublicKeyArmored: null,
-                toProfileUsername: null,
-                toProfilePic: null,
-                privateKeyArmored: null,
-                establishConnection: 0,
-                chatId: null
-              });
-            }}
-          />
+        {/* Video Call Section */}
+        {videoCallInfo.callStatus > 0 && (
+          <VideoCallSection />
         )}
       </ItemHV2>
     </Container>

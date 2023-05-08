@@ -9,7 +9,6 @@ import styled from 'styled-components';
 import { ItemHV2, SectionV2 } from 'components/reusables/SharedStylingV2';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { useDeviceWidthCheck } from 'hooks';
-import { BlockedLoadingI, VideoCallInfoI } from 'types/chat';
 import endCallIcon from '../../assets/icons/end-call-icon.svg';
 import pickCallIcon from '../../assets/icons/pick-call-icon.svg';
 import CallButton from './CallButton';
@@ -21,12 +20,13 @@ import VideoPlayer from './VideoPlayer';
 import { device } from 'config/Globals';
 
 type IncomingCallType = {
-  videoCallInfo: VideoCallInfoI;
   onAnswerCall: () => void;
   onEndCall: () => void;
 };
 
-const IncomingCall = ({ videoCallInfo, onAnswerCall, onEndCall }: IncomingCallType) => {
+const IncomingCall = ({ onAnswerCall, onEndCall }: IncomingCallType) => {
+  const { videoCallInfo, endLocalStream } = useContext(VideoCallContext);
+
   // for conditional css
   const isMobile = useDeviceWidthCheck(425);
   const isLaptopS = useDeviceWidthCheck(1025) && !isMobile;
@@ -36,8 +36,6 @@ const IncomingCall = ({ videoCallInfo, onAnswerCall, onEndCall }: IncomingCallTy
   const minimizeCallHandler = () => {
     setIsIncomingCallMinimized(true);
   };
-
-  const { endLocalStream } = useContext(VideoCallContext);
 
   function handleClick() {
     endLocalStream();
@@ -54,7 +52,7 @@ const IncomingCall = ({ videoCallInfo, onAnswerCall, onEndCall }: IncomingCallTy
         }
 
         {/* remote user info */}
-        {videoCallInfo.establishConnection != 3 && 
+        {videoCallInfo.callStatus != 3 && 
           <UserInfo
             // TODO: make this dynamic with remote user's info
             pfp={videoCallInfo.fromProfilePic}
@@ -67,7 +65,6 @@ const IncomingCall = ({ videoCallInfo, onAnswerCall, onEndCall }: IncomingCallTy
 
         {!isIncomingCallMinimized && (
           <VideoPlayer
-            videoCallInfo={videoCallInfo}
             localVideoStyles={{
               height: '35vh',
               maxHeight: '35vh',

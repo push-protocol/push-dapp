@@ -21,7 +21,7 @@ export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHook
   const [isSDKSocketConnected, setIsSDKSocketConnected] = useState(epnsSDKSocket?.connected);
   const [messagesSinceLastConnection, setMessagesSinceLastConnection] = useState<any>('');
   const [groupInformationSinceLastConnection, setGroupInformationSinceLastConnection] = useState<any>('');
-  const { incomingCall, acceptCall } = useContext(VideoCallContext);
+  const { incomingCall, establishWrapper } = useContext(VideoCallContext);
   const addSocketEvents = () => {
     epnsSDKSocket?.on(EVENTS.CONNECT, () => {
       setIsSDKSocketConnected(true);
@@ -39,19 +39,22 @@ export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHook
       try {
         const { payload } = feedItem || {};
 
-        // if additional meta, skip notification
-        // currently for video calls only
+        // if video meta, skip notification
         if (payload.hasOwnProperty('data') && payload['data'].hasOwnProperty('additionalMeta')) {
           const additionalMeta = JSON.parse(payload['data']['additionalMeta']);
 
-          console.log("RECIEVED CALL FEED", additionalMeta);
+          console.log("RECIEVED ADDITIONAL META", additionalMeta);
 
-          if (additionalMeta.status == 1) {
+          if (additionalMeta.status === 1) {
             // incoming call
             incomingCall(additionalMeta);
-          } else if (additionalMeta.status == 2) {
-            // call answered
-            acceptCall(additionalMeta);
+          } else if (additionalMeta.status === 2) {
+            // call established
+            establishWrapper(additionalMeta);
+          }
+          else if(additionalMeta.status === 4){
+            // call ended from the other peer
+            window.location.reload();
           }
         }
 

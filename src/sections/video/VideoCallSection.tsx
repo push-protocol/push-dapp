@@ -7,20 +7,14 @@ import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner'
 import IncomingCall from 'components/video/IncomingCall';
 import OutgoingOngoingCall from 'components/video/OutgoingOngoingCall';
 import { VideoCallContext } from 'contexts/VideoCallContext';
-import { BlockedLoadingI, VideoCallInfoI } from 'types/chat';
+import { BlockedLoadingI } from 'types/chat';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 
-// Internal Configs
-
-// Interface
-interface VideoCallSectionPropsI {
-  videoCallInfo: VideoCallInfoI;
-  setVideoCallInfo: Function;
-  endVideoCallHook: Function;
-}
-
 // Create Video Call
-const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }: VideoCallSectionPropsI) => {
+const VideoCallSection = () => {
+  const { account } = useWeb3React();
+  const { videoCallInfo, localStream, createWrapper, requestWrapper, acceptRequestWrapper, endWrapper } =
+    useContext(VideoCallContext);
   const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
 
   const [isLoading, setLoading] = useState(true);
@@ -29,32 +23,25 @@ const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
     title: null,
   });
 
-  // get account
-  const { account } = useWeb3React();
+  const answerCallHandler = async () => {
+    let createdUser;
+    if (!connectedUser.publicKey) {
+      createdUser = await createUserIfNecessary();
+    }
 
-  // get stream
-  const { initializeLocalStream,createWrapper, requestWrapper,acceptRequestWrapper, endWrapper } = useContext(VideoCallContext);
+    console.log("SENDER", account);
+    console.log("RECEIVER", videoCallInfo.receiverAddress);
 
-  const answerCallHandler = () => {
-    setVideoCallInfo({
-      address: videoCallInfo.address,
-      fromProfileUsername: videoCallInfo.toProfileUsername,
-      fromProfilePic: videoCallInfo.toProfilePic,
-      fromPublicKeyArmored: videoCallInfo.fromPublicKeyArmored,
-      toPublicKeyArmored: videoCallInfo.toPublicKeyArmored,
-      toProfileUsername: videoCallInfo.fromProfileUsername,
-      toProfilePic: videoCallInfo.fromProfilePic,
-      privateKeyArmored: videoCallInfo.privateKeyArmored,
-      establishConnection: 3,
+    acceptRequestWrapper({
+      senderAddress: account,
+      recipientAddress: videoCallInfo.receiverAddress,
+      chatId: videoCallInfo.chatId,
+      pgpPrivateKey: connectedUser.privateKey || createdUser?.privateKey,
     });
-    acceptRequestWrapper(videoCallInfo.address,account);
   };
 
   const endCallHandler = () => {
-    if (videoCallInfo.establishConnection === 3) {
-      endWrapper();
-    }
-    endVideoCallHook();
+    endWrapper();
   };
 
   React.useEffect(() => {
@@ -66,10 +53,21 @@ const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
       });
 
       try {
-        // initialize the local stream for the given account
-        await createWrapper();
+        if (!localStream) {
+          await createWrapper();
+        } else if (videoCallInfo.callStatus === 1) {
+          let createdUser;
+          if (!connectedUser.publicKey) {
+            createdUser = await createUserIfNecessary();
+          }
 
-        requestWrapper(account, videoCallInfo.address);
+          requestWrapper({
+            senderAddress: account,
+            recipientAddress: videoCallInfo.receiverAddress,
+            chatId: videoCallInfo.chatId,
+            pgpPrivateKey: connectedUser.privateKey || createdUser?.privateKey,
+          });
+        }
 
         setBlockedLoading({
           enabled: false,
@@ -88,13 +86,12 @@ const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
     };
 
     setupStream();
-  });
+  }, [localStream]);
 
   // Incoming call UI
-  if (videoCallInfo.establishConnection === 2) {
+  if (videoCallInfo.callStatus === 2) {
     return (
       <IncomingCall
-        videoCallInfo={videoCallInfo}
         onAnswerCall={answerCallHandler}
         onEndCall={endCallHandler}
       />
@@ -104,7 +101,6 @@ const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
   // Outgoing & Ongoing call UI
   return (
     <OutgoingOngoingCall
-      videoCallInfo={videoCallInfo}
       blockedLoading={blockedLoading}
       onEndCall={endCallHandler}
     />

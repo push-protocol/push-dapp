@@ -1,37 +1,52 @@
 // React + Web3 Essentials
+import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import React, { createContext, useContext, useMemo, useState } from 'react';
-import {ChatUserContext} from './ChatUserContext';
-import {AppContext} from '../../src/types/chat';
-import { Context } from 'modules/chat/ChatModule';
-import Constants from '@pushprotocol/restapi/src/lib/constants';
+
+import * as PushAPI from '@pushprotocol/restapi';
+
+import Constants, { ENV } from '@pushprotocol/restapi/src/lib/constants';
+import { appConfig } from 'config';
+
+interface RequestWrapperOptionsType {
+  senderAddress: string;
+  recipientAddress: string;
+  chatId: string;
+  pgpPrivateKey: string | null;
+}
+
+interface AcceptRequestWrapperOptionsType {
+  senderAddress: string;
+  recipientAddress: string;
+  chatId: string;
+  pgpPrivateKey: string | null;
+}
+
+interface VideoCallMetaDataType {
+  recipientAddress: string;
+  senderAddress: string;
+  chatId: string;
+  signalingData?: any;
+  status: number;
+}
 
 const VideoCallContext = createContext(null);
 
-const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
-
-  const {chainId } = useWeb3React<ethers.providers.Web3Provider>();
-  const { connectedUser } = useContext(ChatUserContext);
-
-
-  const { currentChat }: AppContext = React.useContext<AppContext>(Context);
+const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
+  const { chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
 
   const [localStream, setLocalStream] = useState<PushAPI.IMediaStream>();
   const [incomingStream, setIncomingStream] = useState<PushAPI.IMediaStream>();
-  const [receivedSignalData, setReceivedSignalData] = useState<any>({});
 
-  const [videoCallInfo, setVideoCallInfo] = useState<PushAPI.VideoCallInfoType>(
-    {
-      senderAddress: '',
-      receiverAddress: '',
-      callStatus: 0,
-      chatId: '',
-    }
-  );
-  
-  // video signalling data state
- 
+  const [videoCallInfo, setVideoCallInfo] = useState<PushAPI.VideoCallInfoType>({
+    senderAddress: '',
+    receiverAddress: '',
+    callStatus: 0,
+    chatId: '',
+  });
+
+  const [receivedSignalData, setReceivedSignalData] = useState();
+
   const [isVideoOn, setIsVideoOn] = useState(false);
   const [isAudioOn, setIsAudioOn] = useState(false);
 
@@ -57,8 +72,10 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     });
   }, []);
 
+  // wrapper methods over the class methods
+
   const createWrapper = async (): Promise<void> => {
-    console.log("INITIALIZE LOCAL STREAM");
+    console.log('CREATE WRAPPER');
 
     try {
       if (!localStream) {
@@ -69,50 +86,95 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     }
   };
 
-  const requestWrapper = (senderAddress: string, recipientAddress: string): void => {
-    console.log("CALL USER");
-    const chatId = currentChat?.chatId;
-    const pgpPrivateKey = connectedUser?.pgpPrivateKey;
-    const env = Constants.ENV.PROD;
-    try{
-      VideoObject.request('',chainId,recipientAddress,senderAddress,chatId,'',pgpPrivateKey,env);
-    }catch(err){
+  const requestWrapper = ({
+    senderAddress,
+    recipientAddress,
+    chatId,
+    pgpPrivateKey,
+  }: RequestWrapperOptionsType): void => {
+    console.log('REQUEST WRAPPER');
+    try {
+      VideoObject.request({
+        library,
+        chainId,
+        senderAddress,
+        recipientAddress,
+        chatId,
+        onRecieveMessage: (message) => {
+          console.log('received a message', message);
+        },
+        pgpPrivateKey,
+        env: appConfig.appEnv,
+      });
+    } catch (err) {
       console.log('Error in requesting video call', err);
     }
   };
 
-  const incomingCall = (videoMeta: any) => {
-    console.log("INCOMING CALL");
-    
-  };
+  const acceptRequestWrapper = ({
+    senderAddress,
+    recipientAddress,
+    chatId,
+    pgpPrivateKey,
+  }: AcceptRequestWrapperOptionsType): void => {
+    console.log('ACCEPT REQUEST WRAPPER');
 
-  const acceptRequestWrapper = (recipientAddress: string, senderAddress: string): void => {
-    console.log("ANSWER CALL");
-    const chatId = currentChat?.chatId;
-    const pgpPrivateKey = connectedUser?.pgpPrivateKey;
-    const env = Constants.ENV.PROD;
-    try{
-      VideoObject.request(receivedSignalData,'',chainId,recipientAddress,senderAddress,chatId,'',pgpPrivateKey,env);
-    }catch(err){
+    try {
+      VideoObject.acceptRequest({
+        signalData: receivedSignalData,
+        library,
+        chainId,
+        senderAddress,
+        recipientAddress,
+        chatId,
+        onRecieveMessage: (message) => {
+          console.log('received a message', message);
+        },
+        pgpPrivateKey,
+        env: appConfig.appEnv,
+      });
+    } catch (err) {
       console.log('Error in requesting video call', err);
     }
-
   };
 
-  const establishWrapper = (videoMeta) => {
-    console.log("ACCEPT CALL");
-
+  const establishWrapper = (videoCallMetaData: VideoCallMetaDataType) => {
+    console.log('ESTABLISH WRAPPER');
+    VideoObject.establish({ signalData: videoCallMetaData.signalingData });
   };
 
   const endWrapper = () => {
-    console.log("LEAVE CALL");
-
+    console.log('END WRAPPER');
   };
+
+  // to set an incoming call
+  const incomingCall = async (videoCallMetaData: VideoCallMetaDataType) => {
+    setReceivedSignalData(videoCallMetaData.signalingData);
+    setVideoCallInfo({
+      senderAddress: videoCallMetaData.recipientAddress,
+      receiverAddress: videoCallMetaData.senderAddress,
+      callStatus: 2,
+      chatId: videoCallMetaData.chatId,
+    });
+  };
+
+  // temp
+  useEffect(()=>{
+    console.log("INCOMING STREAM", incomingStream);
+  }, [incomingStream])
 
   return (
     <VideoCallContext.Provider
       value={{
-       
+        localStream,
+        videoCallInfo,
+        setVideoCallInfo,
+        createWrapper,
+        requestWrapper,
+        acceptRequestWrapper,
+        establishWrapper,
+        endWrapper,
+        incomingCall,
       }}
     >
       {children}
