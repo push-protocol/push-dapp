@@ -76,7 +76,7 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
       if (JSON.stringify(inbox) !== JSON.stringify(inboxes)){
         setFeeds(inboxes);
         setInbox(inboxes);
-        intitializeDb<Feeds[]>('Insert', 'Intent', walletToCAIP10({ account }), inboxes, 'did');
+        intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account }), inboxes, 'did');
         if(checkIfGroup(currentChat)){
        
           if(currentChat && inboxes[selectedChatSnap] && currentChat?.groupInformation?.members?.length !== inboxes[selectedChatSnap]?.groupInformation?.members?.length)
