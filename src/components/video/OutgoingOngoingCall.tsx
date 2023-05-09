@@ -60,7 +60,7 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall }: OutgoingOngoingCallT
   const { videoCallInfo } = useContext(VideoCallContext);
 
   const isImmersive = useDeviceWidthCheck(425) && videoCallInfo.callStatus === 1;
-  const { VideoToggler, AudioToggler, isVideoOn, isAudioOn, endLocalStream } = useContext(VideoCallContext);
+  const { toggleAudio, toggleVideo, isVideoOn, isAudioOn, endLocalStream } = useContext(VideoCallContext);
 
   function handleClick() {
     endLocalStream();
@@ -94,7 +94,7 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall }: OutgoingOngoingCallT
           iconWidth="23px"
           backgroundColor={isVideoOn ? 'white' : '#e60808'}
           onClick={() => {
-            VideoToggler();
+            toggleVideo();
             console.log('video toggled');
           }}
         />
@@ -103,7 +103,7 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall }: OutgoingOngoingCallT
           iconWidth="14.5px"
           backgroundColor={isAudioOn ? 'white' : '#e60808'}
           onClick={() => {
-            AudioToggler();
+            toggleAudio();
             console.log('audio toggled');
           }}
         />
