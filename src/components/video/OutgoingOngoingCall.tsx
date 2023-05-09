@@ -95,7 +95,6 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall }: OutgoingOngoingCallT
           backgroundColor={isVideoOn ? 'white' : '#e60808'}
           onClick={() => {
             toggleVideo();
-            console.log('video toggled');
           }}
         />
         <MediaToggleButton

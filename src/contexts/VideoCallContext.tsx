@@ -160,10 +160,14 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
   const toggleVideo = () => {
     VideoObject.toggleVideo();
+    setIsVideoOn(!isVideoOn);
+    console.log("TOGGLE VIDEO", isVideoOn);
   }
 
   const toggleAudio = () => {
     VideoObject.toggleAudio();
+    setIsAudioOn(!isAudioOn);
+    console.log("TOGGLE AUDIO", isAudioOn);
   }
 
   // temp
@@ -184,7 +188,9 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         endWrapper,
         incomingCall,
         toggleVideo,
-        toggleAudio
+        toggleAudio,
+        isVideoOn,
+        isAudioOn,
       }}
     >
       {children}
