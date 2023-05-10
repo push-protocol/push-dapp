@@ -56,7 +56,6 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
     setHasUserBeenSearched(false);
     filteredUserData.length>0 ? setFilteredUserData([]):null;
   }
-
   const getInbox = async (): Promise<Feeds[]> => {
       const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account }), '', 'did');
       if (getInbox !== undefined && !inbox.length) {
@@ -74,9 +73,10 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const fetchInboxApi = async (): Promise<Feeds[]> => {
     try {
       const inboxes:Feeds[] = await fetchInbox(connectedUser);
-      if (JSON.stringify(feeds) !== JSON.stringify(inbox)){
+      if (JSON.stringify(inbox) !== JSON.stringify(inboxes)){
         setFeeds(inboxes);
         setInbox(inboxes);
+        intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account }), inboxes, 'did');
         if(checkIfGroup(currentChat)){
        
           if(currentChat && inboxes[selectedChatSnap] && currentChat?.groupInformation?.members?.length !== inboxes[selectedChatSnap]?.groupInformation?.members?.length)
@@ -159,7 +159,6 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
             else {
               feed = await getDefaultFeed({userData:searchedData as User,inbox,intents:receivedIntents});
             }
-            console.log(isNew)
             if(isNew && !feed?.groupInformation?.isPublic)
             {
               messageFeedToast.showMessageToast({
