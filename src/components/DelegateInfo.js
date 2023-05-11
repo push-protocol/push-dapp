@@ -141,7 +141,6 @@ const Wallet = styled(WalletAddressDisplay)`
   &:hover {
     opacity: 0.9;
     cursor: pointer;
-    pointer: hand;
   }
 `;
 

@@ -35,7 +35,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
   }
 
  
-  const copyToClipboard = (address) => {
+  const copyToClipboard = (address:string) => {
     if (navigator && navigator.clipboard) {
       navigator.clipboard.writeText(address);
     } else {
@@ -156,7 +156,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
 // css styles
 const SpanAddress = styled(Span)`
   margin: 11px 22px 11px 2px;
-  weight: 400;
+  font-weight: 400;
   size: 14px;
   text-transform: uppercase;
   color: #fff;
