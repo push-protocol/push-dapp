@@ -144,7 +144,7 @@ const SpaceItem = ({currentSpace, step, setStep, showSpaceInfoModal}) => {
 export const ScheduledSpace = ({currentSpace,showSpaceInfoModal}:{currentSpace:Space,showSpaceInfoModal:any}) => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [step, setStep] = useState<number>(1);
+  const [step, setStep] = useState<number>(3);
   const { setSelectedSpace } = useContext(SpaceLocalContext);
   const isMobile = useMediaQuery(device.tablet);
 
