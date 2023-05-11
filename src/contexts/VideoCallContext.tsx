@@ -158,6 +158,16 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     });
   };
 
+  const toggleVideo = () => {
+    VideoObject.toggleVideo();
+    console.log("TOGGLE VIDEO", isVideoOn);
+  }
+
+  const toggleAudio = () => {
+    VideoObject.toggleAudio();
+    console.log("TOGGLE AUDIO", isAudioOn);
+  }
+
   // temp
   useEffect(()=>{
     console.log("INCOMING STREAM", incomingStream);
@@ -175,6 +185,10 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         establishWrapper,
         endWrapper,
         incomingCall,
+        toggleVideo,
+        toggleAudio,
+        isVideoOn,
+        isAudioOn,
       }}
     >
       {children}
