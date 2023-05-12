@@ -27,6 +27,7 @@ const SpaceWidget = () => {
   const { pathname } = useLocation();
   const selectedSpace = userSpaces[account]?.spaces[joinedSpaceId];
   const ref = React.useRef();
+  let initialPosition, finalPosition;
 
   const exitSpace = () => {
     setJoinedSpaceId('');
@@ -49,6 +50,32 @@ const SpaceWidget = () => {
     }
   };
 
+  const handleTouchStart = (event) => {
+    initialPosition = {
+      x: event.touches[0].clientX,
+      y: event.touches[0].clientY,
+    };
+  };
+
+  const handleTouchEnd = (event) => {
+    finalPosition = {
+      x: event.changedTouches[0].clientX,
+      y: event.changedTouches[0].clientY,
+    };
+    getPositionDifference();
+  };
+
+  const getPositionDifference = () => {
+    const differences = {
+      x: initialPosition.x - finalPosition.x,
+      y: initialPosition.y - finalPosition.y,
+    };
+    setPosition({
+      x: position.x - differences.x,
+      y: position.y - differences.y,
+    });
+  };
+
   return (
     <WidgetContainer
       ref={ref}
@@ -57,6 +84,8 @@ const SpaceWidget = () => {
       onMouseMove={onMouseMove}
       onMouseDown={() => setPressed(true)}
       onMouseUp={() => setPressed(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       {!exitOption ? (
         <>
@@ -72,7 +101,6 @@ const SpaceWidget = () => {
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 setExitOption(true);
-                console.log('clicked close');
               }}
             />
           </WidgetData>
