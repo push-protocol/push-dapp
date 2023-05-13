@@ -121,7 +121,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   // get web3 name
   let ensName=''
   if(!isGroup && currentChat?.wallets?.split(',')[0].toString()){
-    const walletLowercase = caip10ToWallet(currentChat?.wallets?.split(',')[0].toString()).toLowerCase();
+    const walletLowercase = caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase();
     const checksumWallet = ethers.utils.getAddress(walletLowercase);
     ensName = web3NameList[checksumWallet];
   }
@@ -244,7 +244,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const fetchInboxApi = async (): Promise<Feeds> => {
     const inboxes: Feeds[] = await fetchInbox(connectedUser);
     setInbox(inboxes);
-    return inboxes?.find((x) => x.wallets.split(':')[1] === currentChat.wallets.split(':')[1]);
+    return inboxes?.find((x) => x.wallets.split(':')[1]?.toLowerCase() === currentChat.wallets.split(':')[1]?.toLowerCase());
   };
 
   const sendMessage = async ({
@@ -417,7 +417,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       if (
         currentChat.intent === null ||
         currentChat.intent === '' ||
-        !currentChat.intent.includes(currentChat.wallets.split(':')[1])
+        !currentChat.intent?.toLowerCase().includes(currentChat.wallets.split(':')[1]?.toLowerCase())
       ) {
         let createdUser;
         if (!connectedUser.publicKey) {
