@@ -66,7 +66,9 @@ export const decryptAndVerifySignature = async ({
     cipherText: encryptedSecretKey,
     toPrivateKeyArmored: privateKeyArmored,
   });
-  // await PGP.verifySignature({ messageContent: cipherText, signatureArmored, publicKeyArmored });
+  console.log("verifying signature");
+  await PGP.verifySignature({ messageContent: cipherText, signatureArmored, publicKeyArmored });
+  console.log("verified signature",AES.decrypt({ cipherText, secretKey }),"secret key", secretKey);
   return AES.decrypt({ cipherText, secretKey });
 };
 
