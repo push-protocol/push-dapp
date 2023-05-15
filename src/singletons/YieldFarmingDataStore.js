@@ -65,7 +65,8 @@ export default class YieldFarmingDataStore {
 
       const currentEpochPUSH = await yieldFarmingPUSH.getCurrentEpoch();
       const pushPriceAmounts = await this.state.uniswapV2Router02.getAmountsOut(ONE_PUSH.toString(), [addresses.epnsToken, addresses.WETHAddress, addresses.USDTAddress]);
-      const pushPrice = pushPriceAmounts[pushPriceAmounts.length -1].toNumber()/1000000;
+      const pushPrice = pushPriceAmounts[pushPriceAmounts.length -1].div(1000000).toNumber();
+
 
       const pushAmountReserve = tokenBNtoNumber(await this.state.epnsToken.balanceOf(addresses.uniV2LPToken))
       const wethAmountReserve = tokenBNtoNumber(await this.state.epnsToken.attach(addresses.WETHAddress).balanceOf(addresses.uniV2LPToken)) // Using epnsToken instance for WETH instance

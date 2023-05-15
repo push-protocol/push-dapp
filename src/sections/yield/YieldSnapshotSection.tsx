@@ -18,18 +18,41 @@ import GLOBALS from 'config/Globals';
 
 // Chat Sections
 // Divided into two, left and right
-const YieldSnapshotSection = () => {
+const YieldSnapshotSection = ({
+  userDataPush,
+  getUserDataPush,
+  PUSHPoolstats,
+  loadingComponent,
+  lpPoolStats,
+  userDataLP,
+  getLpPoolStats,
+  getUserDataLP,
+  getPUSHPoolStats
+}) => {
   // RENDER
   return (
     <>
       <V3Container>
-        <YieldUniswapV3/>
-        {/* <YieldPushFeeV3/> */}
+        {/* <YieldUniswapV3/> */}
+        <YieldUniswapV3
+          loadingComponent={loadingComponent}
+          lpPoolStats={lpPoolStats}
+          userDataLP={userDataLP}
+          getLpPoolStats={getLpPoolStats}
+          getUserDataLP={getUserDataLP}
+        />
+        <YieldPushFeeV3
+          userDataPush={userDataPush}
+          getUserDataPush={getUserDataPush}
+          PUSHPoolstats={PUSHPoolstats}
+          loadingComponent={loadingComponent}
+          getPUSHPoolStats={getPUSHPoolStats}
+        />
       </V3Container>
 
       <V2Container>
-        <YieldUniswapV2/>
-        <YieldPushFeeV2/>
+        <YieldUniswapV2 />
+        <YieldPushFeeV2 />
       </V2Container>
     </>
   );
@@ -37,16 +60,16 @@ const YieldSnapshotSection = () => {
 export default YieldSnapshotSection;
 
 const V3Container = styled(ItemHV2)`
-  width: 50%;
-  margin: auto;
+  // width: 50%;
+  // margin: auto;
 
-  @media (max-width:1300px){
-    width: 75%;
-  }
+  // @media (max-width:1300px){
+  //   width: 75%;
+  // }
 
-  @media (max-width:768px){
-    width: 100%;
-  }
+  // @media (max-width:768px){
+  //   width: 100%;
+  // }
 
   @media (max-width:900px){
     flex-direction:column;
@@ -65,6 +88,7 @@ const V2Container = styled(ItemHV2)`
   }
 
   @media (max-width:900px){
+    width: 100%;
     flex-direction:column;
   }
 `

@@ -17,277 +17,29 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { toast } from 'react-toastify';
 import useToast from 'hooks/useToast';
 import { MdCheckCircle, MdError } from 'react-icons/md';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+import StakingModalComponent from './StakingModalComponent';
+
 
 const bn = function (number, defaultValue = null) { if (number == null) { if (defaultValue == null) { return null } number = defaultValue } return ethers.BigNumber.from(number) }
 const bnToInt = function (bnAmount) { return bnAmount.div(bn(10).pow(18)) }
 
-const YieldUniswapV3 = () => {
+const YieldUniswapV3 = ({
+    loadingComponent,
+    lpPoolStats,
+    userDataLP,
+    getLpPoolStats,
+    getUserDataLP
+}) => {
     const { active, error, account, library, chainId } = useWeb3React();
-    const [lpPoolStats, setLpPoolStats] = React.useState(null);
-    const [userDataLP, setUserDataLP] = React.useState(null);
 
-    const [depositAmountToken, setDepositAmountToken] = React.useState(0);
-    const [depositApproved, setDepositApprove] = React.useState(false);
-    const [showDepositItem, setShowDepositItem] = React.useState(false);
-    
-    const [txInProgressDep, setTxInProgressDep] = React.useState(false);
-    const [txInProgressApprDep, setTxInProgressApprDep] = React.useState(false);
     const [txInProgressWithdraw, setTxInProgressWithdraw] = React.useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
-
-    const [staking, setStaking] = React.useState(null);
-    const [yieldFarmingLP, setYieldFarmingLP] = React.useState(null);
 
     const [loading, setLoading] = React.useState<boolean>(false);
     const [loadingUserData, setLoadingUserData] = React.useState<boolean>(false);
 
-
-    const [epnsToken, setEpnsToken] = React.useState(null);
-    const [yieldFarmingPUSH, setYieldFarmingPUSH] = React.useState(null);
-    const [uniswapV2Router02, setUniswapV2Router02] = React.useState(null);
-    
-
     const uniswapV2Toast = useToast();
-
-    const getLPPoolStats = React.useCallback(
-        async () => {
-            setLoading(true);
-            
-            const poolStats = await YieldFarmingDataStore.instance.getPoolStats();
-            const lpPoolStats = await YieldFarmingDataStore.instance.getLPPoolStats(poolStats);
-
-            setLpPoolStats({ ...lpPoolStats });
-            setLoading(false);
-        },
-        [ staking, yieldFarmingLP,uniswapV2Router02]
-    );
-
-    const getUserDataLP = React.useCallback(async (yieldFarmingLP) => {
-        setLoadingUserData(true);
-        const userDataLP = await YieldFarmingDataStore.instance.getUserData(yieldFarmingLP);
-
-        console.log("setting lp",userDataLP);
-        
-        setUserDataLP({ ...userDataLP });
-        setLoadingUserData(false);
-    }, [yieldFarmingLP]);
-
-
-    React.useEffect(() => {
-        let epnsToken = new ethers.Contract(addresses.epnsToken, abis.epnsToken, library);
-        let yieldFarmingPUSH = new ethers.Contract(addresses.yieldFarmPUSH, abis.yieldFarming, library);
-        let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02,library);
-        setEpnsToken(epnsToken);
-        setYieldFarmingPUSH(yieldFarmingPUSH);
-        setUniswapV2Router02(uniswapV2Router02Instance);
-
-
-        //changed the address and abis
-        let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, library);
-        //changed the address
-        let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, library);
-        setStaking(staking);
-        setYieldFarmingLP(yieldFarmingLP);
-
-        if (!!(library && account)) {
-            var signer = library.getSigner(account);
-
-            let epnsToken = new ethers.Contract(addresses.epnsToken, abis.epnsToken, signer);
-            let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
-            let yieldFarmingPUSH = new ethers.Contract(addresses.yieldFarmPUSH, abis.yieldFarming, signer);
-            let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, signer);
-
-            let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02,signer);
-
-            setEpnsToken(epnsToken);
-            setStaking(staking);
-            setYieldFarmingPUSH(yieldFarmingPUSH);
-            setYieldFarmingLP(yieldFarmingLP);
-            setUniswapV2Router02(uniswapV2Router02Instance);
-        }
-
-        YieldFarmingDataStore.instance.init(
-            account,
-            epnsToken,
-            staking,
-            yieldFarmingPUSH,
-            yieldFarmingLP,
-            uniswapV2Router02Instance
-        );
-
-        getLPPoolStats();
-        getUserDataLP(yieldFarmingLP);
-
-
-    }, [account]);
-
-    React.useEffect(() => {
-        // Check if the account has approved deposit
-        checkApprDeposit();
-
-    }, [depositAmountToken]);
-
-    const fillMax = async () => {
-        var signer = library.getSigner(account);
-        const tokenAddr = addresses.uniV2LPToken;
-        let token = new ethers.Contract(tokenAddr, abis.uniV2LpToken, signer);
-
-        let balance = bnToInt(await token.balanceOf(account));
-        setDepositAmountToken(parseInt(balance.toString().replace(/\D/, '')) || 0)
-    }
-
-    const checkApprDeposit = async () => {
-        if (depositAmountToken <= 0) {
-            setDepositApprove(false);
-            return;
-        }
-        setTxInProgressApprDep(true);
-
-        var signer = library.getSigner(account);
-        const tokenAddr = addresses.uniV2LPToken;
-        let token = new ethers.Contract(tokenAddr, abis.uniV2LpToken, signer);
-
-        const allowance = await token.allowance(account, addresses.stakingV2);
-
-        if (allowance.gte(bn(depositAmountToken))) {
-            setDepositApprove(true);
-        }
-        else {
-            setDepositApprove(false);
-        }
-
-        setTxInProgressApprDep(false);
-    }
-
-    const approveDeposit = async () => {
-        if (depositApproved || txInProgressApprDep) {
-            return
-        }
-
-        setTxInProgressApprDep(true);
-
-        var signer = library.getSigner(account);
-        let uniV2LPToken = new ethers.Contract(addresses.uniV2LPToken, abis.uniV2LpToken, signer);
-        let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
-
-        const uintMax = bn(2).pow(bn(256)).sub(1)
-
-        const tx = uniV2LPToken.approve(
-            staking.address,
-            uintMax
-        );
-
-        tx.then(async (tx) => {
-            uniswapV2Toast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
-
-
-            try {
-                await library.waitForTransaction(tx.hash);
-                uniswapV2Toast.showMessageToast({
-                    toastTitle: 'Success',
-                    toastMessage: 'Successfully approved LP Tokens!',
-                    toastType: 'SUCCESS',
-                    getToastIcon: (size) => (
-                        <MdCheckCircle
-                            size={size}
-                            color="green"
-                        />
-                    ),
-                });
-
-                setTxInProgressApprDep(false);
-                setDepositApprove(true);
-
-            } catch (e) {
-                uniswapV2Toast.showMessageToast({
-                    toastTitle: 'Error',
-                    toastMessage: `User denied message signature.`,
-                    toastType: 'ERROR',
-                    getToastIcon: (size) => <MdError size={size} color="red" />,
-                });
-
-                setTxInProgressApprDep(false);
-            }
-        }).catch((err) => {
-
-            uniswapV2Toast.showMessageToast({
-                toastTitle: 'Error',
-                toastMessage: `User denied message signature`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => <MdError size={size} color="red" />,
-            });
-
-            setTxInProgressApprDep(false);
-        });
-    }
-
-    const depositAmountTokenFarmSingleTx = async () => {
-        if (txInProgressDep || !approveDeposit) {
-            return
-        }
-
-        setTxInProgressDep(true)
-
-        var signer = library.getSigner(account);
-        let uniV2LPToken = new ethers.Contract(addresses.uniV2LPToken, abis.uniV2LpToken, signer);
-        let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
-
-        const tx2 = staking.deposit(
-            addresses.uniV2LPToken,
-            ethers.BigNumber.from(depositAmountToken).mul(
-                ethers.BigNumber.from(10).pow(18)
-            )
-        );
-
-        tx2
-            .then(async (tx) => {
-                uniswapV2Toast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
-
-
-                try {
-                    await library.waitForTransaction(tx.hash);
-                    uniswapV2Toast.showMessageToast({
-                        toastTitle: 'Success',
-                        toastMessage: 'Transaction Completed!',
-                        toastType: 'SUCCESS',
-                        getToastIcon: (size) => (
-                            <MdCheckCircle
-                                size={size}
-                                color="green"
-                            />
-                        ),
-                    });
-
-                    //   getPoolStats();
-                    getLPPoolStats();
-                    getUserDataLP(yieldFarmingLP);
-                    
-
-                    setTxInProgressDep(false);
-                    setShowDepositItem(false);
-                    // window.location.reload();
-                } catch (e) {
-                    uniswapV2Toast.showMessageToast({
-                        toastTitle: 'Error',
-                        toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
-                        toastType: 'ERROR',
-                        getToastIcon: (size) => <MdError size={size} color="red" />,
-                    });
-
-                    setTxInProgressDep(false);
-                }
-            })
-            .catch((err) => {
-                uniswapV2Toast.showMessageToast({
-                    toastTitle: 'Error',
-                    toastMessage: `Transaction Cancelled!`,
-                    toastType: 'ERROR',
-                    getToastIcon: (size) => <MdError size={size} color="red" />,
-                });
-
-                setTxInProgressDep(false);
-            });
-    };
 
     const withdrawAmountTokenFarmAutomatic = async () => {
         if (txInProgressWithdraw) {
@@ -296,6 +48,8 @@ const YieldUniswapV3 = () => {
 
         setTxInProgressWithdraw(true);
         const withdrawAmount = formatTokens(userDataLP.epochStakeNext);
+
+        console.log("Withdraw amount: " + withdrawAmount);
 
         if (withdrawAmount == 0) {
             uniswapV2Toast.showMessageToast({
@@ -343,9 +97,11 @@ const YieldUniswapV3 = () => {
 
                 setTxInProgressWithdraw(false);
 
-                getLPPoolStats();
-                getUserDataLP(yieldFarmingLP);
+                console.log("This running")
+                getLpPoolStats();
+                getUserDataLP();
             } catch (e) {
+                console.log("Error", e);
                 uniswapV2Toast.showMessageToast({
                     toastTitle: 'Error',
                     toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
@@ -373,14 +129,11 @@ const YieldUniswapV3 = () => {
         }
 
         if (!lpPoolStats.currentEpochPUSH || lpPoolStats.currentEpochPUSH == 1) {
-            toast.dark("Harvest unlocks from Epoch 2!", {
-                position: "bottom-right",
-                type: toast.TYPE.ERROR,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
+            uniswapV2Toast.showMessageToast({
+                toastTitle: 'Error',
+                toastMessage: `Harvest unlocks from Epoch 2!)`,
+                toastType: 'ERROR',
+                getToastIcon: (size) => <MdError size={size} color="red" />,
             });
 
             return;
@@ -397,48 +150,40 @@ const YieldUniswapV3 = () => {
 
 
         tx.then(async (tx) => {
-            let txToast = toast.dark(
-                <LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />,
-                {
-                    position: "bottom-right",
-                    autoClose: false,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                }
-            );
+            uniswapV2Toast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
             try {
                 await library.waitForTransaction(tx.hash);
 
-                toast.update(txToast, {
-                    render: "Transaction Completed!",
-                    type: toast.TYPE.SUCCESS,
-                    autoClose: 5000,
+                uniswapV2Toast.showMessageToast({
+                    toastTitle: 'Success',
+                    toastMessage: 'Transaction Completed!',
+                    toastType: 'SUCCESS',
+                    getToastIcon: (size) => (
+                        <MdCheckCircle
+                            size={size}
+                            color="green"
+                        />
+                    ),
                 });
 
                 setTxInProgressClaimRewards(false);
             } catch (e) {
-                toast.update(txToast, {
-                    render: "Transaction Failed! (" + e.name + ")",
-                    type: toast.TYPE.ERROR,
-                    autoClose: 5000,
+                uniswapV2Toast.showMessageToast({
+                    toastTitle: 'Error',
+                    toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
+                    toastType: 'ERROR',
+                    getToastIcon: (size) => <MdError size={size} color="red" />,
                 });
 
                 setTxInProgressClaimRewards(false);
             }
         }).catch((err) => {
-            toast.dark("Transaction Cancelled!", {
-                position: "bottom-right",
-                type: toast.TYPE.ERROR,
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
+            uniswapV2Toast.showMessageToast({
+                toastTitle: 'Error',
+                toastMessage: `Transaction Cancelled!`,
+                toastType: 'ERROR',
+                getToastIcon: (size) => <MdError size={size} color="red" />,
             });
 
             setTxInProgressClaimRewards(false);
@@ -455,85 +200,108 @@ const YieldUniswapV3 = () => {
         return x?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
+    const {
+        isModalOpen: isStakingModalOpen,
+        showModal: showStakingModal,
+        ModalComponent: StakingComponent,
+    } = useModalBlur();
+
+    const stakingModalToast = useToast();
+
     return (
         <Container>
 
+            <StakingComponent
+                InnerComponent={StakingModalComponent}
+                InnerComponentProps={{
+                    title: 'Uni-V2',
+                    getUserData: getUserDataLP,
+                    getLpPoolStats: getLpPoolStats
+                }}
+                toastObject={stakingModalToast}
+                modalPosition={MODAL_POSITION.ON_PARENT}
+            />
 
-            {/* Top Section */}
-            <ItemVV2 margin="0px 0px 20px 0px">
-                <Heading >Uniswap V2 LP Staking Pool</Heading>
-                <SecondaryText>
-                    Current APR <SpanV2 color="#D53A94">{lpPoolStats?.stakingAPR}</SpanV2>
-                </SecondaryText>
-            </ItemVV2>
+            {loadingComponent ? (
 
-            {/* Body Section */}
-            <ItemVV2
+                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={50} spinnerColor="#D53A94" />
+            ) : (
+                <>
 
-            >
-                {/* Reward Section */}
-                <ItemHV2
-                    border="1px solid #BAC4D6"
-                    borderRadius="16px"
-                >
-                    <ItemVV2 margin="0px 18px 0px 0px" padding="10px">
-                        <SecondaryText>Current Reward</SecondaryText>
-
-                        {loading ? (
-                            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} />
-                        ) :
-                            <H2V2
-                                fontSize="24px"
-                                fontWeight="700"
-                                color="#D53A94"
-                                letterSpacing="-0.03em"
-                            >
-                                {numberWithCommas(formatTokens(lpPoolStats?.rewardForCurrentEpoch))} PUSH
-                            </H2V2>
-                        }
+                    {/* Top Section */}
+                    <ItemVV2 margin="0px 0px 20px 0px">
+                        <Heading >Uniswap V2 LP Staking Pool</Heading>
+                        <SecondaryText>
+                            Current APR <SpanV2 color="#D53A94">{lpPoolStats?.stakingAPR}</SpanV2>
+                        </SecondaryText>
                     </ItemVV2>
 
-                    <Line width="10px" height="100%"></Line>
+                    {/* Body Section */}
+                    <ItemVV2
+                        flex='5'
+                    >
+                        {/* Reward Section */}
+                        <ItemHV2
+                            border="1px solid #BAC4D6"
+                            borderRadius="16px"
+                        >
+                            <ItemVV2 margin="0px 18px 0px 0px" padding="10px">
+                                <SecondaryText>Current Reward</SecondaryText>
 
-                    <ItemVV2 margin="0px 0px 0px 18px" padding="10px">
-                        <SecondaryText>Total Staked</SecondaryText>
+                                {loading ? (
+                                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} />
+                                ) :
+                                    <H2V2
+                                        fontSize="24px"
+                                        fontWeight="700"
+                                        color="#D53A94"
+                                        letterSpacing="-0.03em"
+                                    >
+                                        {numberWithCommas(formatTokens(lpPoolStats?.rewardForCurrentEpoch))} PUSH
+                                    </H2V2>
+                                }
+                            </ItemVV2>
 
-                        {loading ? (
-                            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} />
-                        ) :
-                            <H2V2
-                                fontSize="24px"
-                                fontWeight="700"
-                                letterSpacing="-0.03em"
-                            >
-                                {/* 12.725 Uni-V3 */}
-                                {numberWithCommas(formatTokens(lpPoolStats?.poolBalance))} UNI-V2
-                            </H2V2>
-                        }
-                    </ItemVV2>
-                </ItemHV2>
+                            <Line width="10px" height="100%"></Line>
 
-                {/* Epoch Text */}
-                <ItemHV2
-                    alignSelf="end"
-                    margin="12px 13px 24px 0px"
-                    color="#575D73"
-                    letterSpacing="-0.03em"
-                >
-                    <Span padding="0px 5px 0px 0px">Current Epoch</Span>
-                    <B>
-                        {Math.min(lpPoolStats?.currentEpochPUSH, lpPoolStats?.totalEpochPUSH).toString()}
-                        /
-                        {lpPoolStats?.totalEpochPUSH}
-                    </B>
-                </ItemHV2>
+                            <ItemVV2 margin="0px 0px 0px 18px" padding="10px">
+                                <SecondaryText>Total Staked</SecondaryText>
 
-                {/* Deposit Cash Data */}
-                <ItemVV2
-                    padding={loadingUserData ? "60px " : "0px"}
-                >
-                    {loadingUserData ? (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={75} />) : (
-                        <>
+                                {loading ? (
+                                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} />
+                                ) :
+                                    <H2V2
+                                        fontSize="24px"
+                                        fontWeight="700"
+                                        letterSpacing="-0.03em"
+                                    >
+                                        {/* 12.725 Uni-V3 */}
+                                        {numberWithCommas(formatTokens(lpPoolStats?.poolBalance))} UNI-V2
+                                    </H2V2>
+                                }
+                            </ItemVV2>
+                        </ItemHV2>
+
+                        {/* Epoch Text */}
+                        <ItemHV2
+                            alignSelf="end"
+                            margin="12px 13px 24px 0px"
+                            color="#575D73"
+                            letterSpacing="-0.03em"
+                        >
+                            <Span padding="0px 5px 0px 0px">Current Epoch</Span>
+                            <B>
+                                {Math.min(lpPoolStats?.currentEpochPUSH, lpPoolStats?.totalEpochPUSH).toString()}
+                                /
+                                {lpPoolStats?.totalEpochPUSH}
+                            </B>
+                        </ItemHV2>
+
+                        {/* Deposit Cash Data */}
+                        <ItemVV2
+
+                            padding={loadingUserData ? "60px " : "0px"}
+                        >
                             <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                                 <DataTitle>
                                     User Deposit
@@ -563,109 +331,49 @@ const YieldUniswapV3 = () => {
                                 <DataValue> {userDataLP?.totalAvailableReward} PUSH</DataValue>
                             </ItemHV2>
 
-                        </>
-                    )}
 
 
-                </ItemVV2>
+                        </ItemVV2>
 
-            </ItemVV2>
+                    </ItemVV2>
 
-            {showDepositItem && (
-                <Item bg="#f1f1f1" radius="0px" margin="20px 0px -10px 0px" padding="10px 20px" align="stretch" self="stretch">
-                    <ItemHV2
-                    >
-                        <MaxButton
-                            bg="#000"
-                            onClick={fillMax}
-                            position="absolute"
-                        >
-                            Max
-                        </MaxButton>
+                    {/* Bottom Section */}
+                    <ItemVV2 padding=" 0px 14px" margin="24px 0px 24px 0px">
+                        <ItemHV2>
+                            <FilledButton onClick={() => {
+                                showStakingModal();
+                                // setShowDepositItem(true)
+                            }}>Stake PUSH/WETH LP Tokens</FilledButton>
+                        </ItemHV2>
+                        <ButtonsContainer>
+                            <EmptyButton style={{ margin: "0px 10px 0px 0px" }} onClick={() => withdrawAmountTokenFarmAutomatic()}>
 
-                        <Input
-                            placeholder="Number of Tokens"
-                            radius="4px"
-                            padding="12px"
-                            self="stretch"
-                            bg="#fff"
-                            height='20px'
-                            value={depositAmountToken}
-                            onChange={(e) => {
-                                setDepositAmountToken(parseInt(e.target.value.replace(/\D/, '')) || 0)
-                            }}
-                        />
-                    </ItemHV2>
+                                {txInProgressWithdraw ?
+                                    (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#D53A94" />) :
+                                    "Unstake PUSH/WETH"
+                                }
 
-                    <ItemH padding="10px 0 0 0" margin='10px 0 0 0'>
-                        <ButtonAlt
-                            bg={depositApproved ? "#999" : "#e20880"}
-                            onClick={approveDeposit}
-                            disabled={depositApproved ? true : false}
-                        >
-                            {!depositApproved && !txInProgressApprDep &&
-                                <Span color="#fff" weight="400">Approve</Span>
-                            }
-                            {txInProgressApprDep && !depositApproved &&
-                                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
-                            }
-                            { depositApproved &&
-                                <Span color="#fff" weight="600">Approved</Span>
-                            }
-                        </ButtonAlt>
+                            </EmptyButton>
+                            <EmptyButton onClick={() => massClaimRewardsTokensAll()}>
 
-                        <ButtonAlt
-                            bg={!depositApproved ? "#999" : "#e20880"}
-                            disabled={!depositApproved ? true : false}
-                            onClick={depositAmountTokenFarmSingleTx}
-                        >
-                            {!txInProgressDep &&
-                                <Span color="#fff" weight="400">Deposit</Span>
-                            }
-                            {txInProgressDep &&
-                                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
-                            }
-                        </ButtonAlt>
-                    </ItemH>
-                </Item>
+                                {txInProgressClaimRewards ?
+                                    (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#D53A94" />) :
+                                    "Claim Rewards"
+                                }
+
+                            </EmptyButton>
+                        </ButtonsContainer>
+                    </ItemVV2>
+
+                </>
             )}
 
 
 
 
-            {/* Bottom Section */}
-            <ItemVV2 padding=" 0px 14px" margin="24px 0px 0px 0px">
-                <ItemHV2>
-                    <FilledButton onClick={() => setShowDepositItem(true)}>Stake PUSH/WETH LP Tokens</FilledButton>
-                </ItemHV2>
-                <ButtonsContainer>
-                    <EmptyButton style={{ margin: "0px 10px 0px 0px" }} onClick={() => withdrawAmountTokenFarmAutomatic()}>
 
-                        {txInProgressWithdraw ?
-                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#D53A94" />) :
-                            "Unstake PUSH/WETH"
-                        }
 
-                    </EmptyButton>
-                    <EmptyButton onClick={() => massClaimRewardsTokensAll()}>
-
-                        {txInProgressClaimRewards ?
-                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#D53A94" />) :
-                            "Claim Rewards"
-                        }
-
-                    </EmptyButton>
-                </ButtonsContainer>
-            </ItemVV2>
         </Container>
-        //     )}
-
-
-
-
-
-        // </Container>
-
 
     );
 };
@@ -687,7 +395,7 @@ const Container = styled(SectionV2)`
     font-family: 'Strawford';
     font-style: normal;
     font-weight: 500;
-
+    min-height: 587px;
 
 `;
 
