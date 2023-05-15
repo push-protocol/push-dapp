@@ -61,7 +61,7 @@ function Chat({ chatid }) {
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
   const { getUser, connectedUser, setConnectedUser, blockedLoading, setBlockedLoading, displayQR, setDisplayQR } =
     useContext(ChatUserContext);
-    const { videoCallInfo } = useContext(VideoCallContext);
+    const { videoCallData } = useContext(VideoCallContext);
 
   const theme = useTheme();
 
@@ -440,7 +440,7 @@ function Chat({ chatid }) {
         )}
 
         {/* Video Call Section */}
-        {videoCallInfo.callStatus > 0 && (
+        {videoCallData.incoming[0].status > 0 && (
           <VideoCallSection />
         )}
       </ItemHV2>

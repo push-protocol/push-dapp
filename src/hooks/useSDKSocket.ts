@@ -6,29 +6,29 @@ import { createSocketConnection, EVENTS } from '@pushprotocol/socket';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { convertAddressToAddrCaip } from '../helpers/CaipHelper';
-
+import { VideoCallStatus } from '@pushprotocol/restapi';
 
 // Types
 export type SDKSocketHookOptions = {
   account?: string | null;
   env?: ENV;
   chainId?: number;
-  socketType?: 'chat' | 'notification',
+  socketType?: 'chat' | 'notification';
 };
 
-export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHookOptions) => {
+export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHookOptions) => {
   const [epnsSDKSocket, setEpnsSDKSocket] = useState<any>(null);
   const [isSDKSocketConnected, setIsSDKSocketConnected] = useState(epnsSDKSocket?.connected);
   const [messagesSinceLastConnection, setMessagesSinceLastConnection] = useState<any>('');
   const [groupInformationSinceLastConnection, setGroupInformationSinceLastConnection] = useState<any>('');
-  const { incomingCall, establishWrapper } = useContext(VideoCallContext);
+  const { videoCallData, incomingCall, connectWrapper, requestWrapper, acceptRequestWrapper } =
+    useContext(VideoCallContext);
   const addSocketEvents = () => {
     epnsSDKSocket?.on(EVENTS.CONNECT, () => {
       setIsSDKSocketConnected(true);
     });
 
     epnsSDKSocket?.on(EVENTS.DISCONNECT, () => {
-
       setIsSDKSocketConnected(false);
     });
 
@@ -43,18 +43,32 @@ export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHook
         if (payload.hasOwnProperty('data') && payload['data'].hasOwnProperty('additionalMeta')) {
           const additionalMeta = JSON.parse(payload['data']['additionalMeta']);
 
-          console.log("RECIEVED ADDITIONAL META", additionalMeta);
+          console.log('RECIEVED ADDITIONAL META', additionalMeta);
 
-          if (additionalMeta.status === 1) {
-            // incoming call
+          if (additionalMeta.status === VideoCallStatus.INITIALIZED) {
             incomingCall(additionalMeta);
-          } else if (additionalMeta.status === 2) {
-            // call established
-            establishWrapper(additionalMeta);
-          }
-          else if(additionalMeta.status === 4){
-            // call ended from the other peer
+          } else if (
+            additionalMeta.status === VideoCallStatus.RECEIVED ||
+            additionalMeta.status === VideoCallStatus.RETRY_RECEIVED
+          ) {
+            connectWrapper(additionalMeta);
+          } else if (additionalMeta.status === VideoCallStatus.DISCONNECTED) {
             window.location.reload();
+          } else if (additionalMeta.status === VideoCallStatus.RETRY_INITIALIZED && videoCallData.isInitiator()) {
+            requestWrapper({
+              senderAddress: videoCallData.local.address,
+              recipientAddress: videoCallData.incoming[0].address,
+              chatId: videoCallData.meta.chatId,
+              retry: true,
+            });
+          } else if (additionalMeta.status === VideoCallStatus.RETRY_INITIALIZED && !videoCallData.isInitiator()) {
+            acceptRequestWrapper({
+              signalData: additionalMeta.signalingData,
+              senderAddress: videoCallData.local.address,
+              recipientAddress: videoCallData.incoming[0].address,
+              chatId: videoCallData.meta.chatId,
+              retry: true,
+            });
           }
         }
 
@@ -76,7 +90,7 @@ export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHook
       /**
        * We receive a group creation or updated event.
        */
-      console.log(groupInfo)
+      console.log(groupInfo);
       setGroupInformationSinceLastConnection(groupInfo);
     });
   };
@@ -114,7 +128,7 @@ export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHook
 
       // this is auto-connect on instantiation
       const connectionObject = createSocketConnection({
-        user: socketType == 'chat'?account:convertAddressToAddrCaip(account, chainId),
+        user: socketType == 'chat' ? account : convertAddressToAddrCaip(account, chainId),
         socketType,
         env,
       });

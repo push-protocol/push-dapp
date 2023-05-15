@@ -1,25 +1,25 @@
 // React + Web3 Essentials
-import React, { createContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
-import { ethers } from 'ethers';
+import { produce } from 'immer';
 
 import * as PushAPI from '@pushprotocol/restapi';
 
-import Constants, { ENV } from '@pushprotocol/restapi/src/lib/constants';
 import { appConfig } from 'config';
+import { initVideoCallData } from '@pushprotocol/restapi/src/lib/video';
+import { ChatUserContext } from './ChatUserContext';
 
 interface RequestWrapperOptionsType {
   senderAddress: string;
   recipientAddress: string;
   chatId: string;
-  pgpPrivateKey: string | null;
 }
 
 interface AcceptRequestWrapperOptionsType {
   senderAddress: string;
   recipientAddress: string;
   chatId: string;
-  pgpPrivateKey: string | null;
+  signalData?: any;
 }
 
 interface VideoCallMetaDataType {
@@ -33,78 +33,54 @@ interface VideoCallMetaDataType {
 const VideoCallContext = createContext(null);
 
 const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
-  const { chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
+  const videoObjectRef = useRef(null);
 
-  const [localStream, setLocalStream] = useState<PushAPI.IMediaStream>();
-  const [incomingStream, setIncomingStream] = useState<PushAPI.IMediaStream>();
+  const { chainId, account, library } = useWeb3React();
+  const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
 
-  const [videoCallInfo, setVideoCallInfo] = useState<PushAPI.VideoCallInfoType>({
-    senderAddress: '',
-    receiverAddress: '',
-    callStatus: 0,
-    chatId: '',
-  });
+  const [data, setData] = useState<PushAPI.VideoCallData>(initVideoCallData);
 
-  const [receivedSignalData, setReceivedSignalData] = useState();
+  useEffect(() => {
+    if (!library || !account || !connectedUser) return null;
 
-  const [isVideoOn, setIsVideoOn] = useState(false);
-  const [isAudioOn, setIsAudioOn] = useState(false);
-
-  const [isIncomingVideoOn, setIsIncomingVideoOn] = useState(true);
-  const [isIncomingAudioOn, setIsIncomingAudioOn] = useState(true);
-
-  const VideoObject = useMemo(() => {
-    return new PushAPI.video.Video({
-      localStream,
-      setLocalStream,
-      incomingStream,
-      setIncomingStream,
-      videoCallInfo,
-      setVideoCallInfo,
-      isVideoOn,
-      setIsVideoOn,
-      isAudioOn,
-      setIsAudioOn,
-      isIncomingVideoOn,
-      setIsIncomingVideoOn,
-      isIncomingAudioOn,
-      setIsIncomingAudioOn,
-    });
-  }, []);
+    (async () => {
+      let createdUser;
+      if (!connectedUser.publicKey) {
+        createdUser = await createUserIfNecessary();
+      }
+      videoObjectRef.current = new PushAPI.video.Video({
+        signer: library.getSigner(account),
+        chainId,
+        pgpPrivateKey: connectedUser.privateKey || createdUser?.privateKey,
+        env: appConfig.appEnv,
+        setData,
+      });
+    })();
+  }, [connectedUser, library, account]);
 
   // wrapper methods over the class methods
 
   const createWrapper = async (): Promise<void> => {
     console.log('CREATE WRAPPER');
+    console.log('videoObjectRef.current', videoObjectRef.current);
 
     try {
-      if (!localStream) {
-        await VideoObject.create();
+      if (!data.local.stream) {
+        await videoObjectRef.current.create({ video: true, audio: true });
       }
     } catch (err) {
       console.log('Error in getting local stream', err);
     }
   };
 
-  const requestWrapper = ({
-    senderAddress,
-    recipientAddress,
-    chatId,
-    pgpPrivateKey,
-  }: RequestWrapperOptionsType): void => {
-    console.log('REQUEST WRAPPER');
+  const requestWrapper = ({ senderAddress, recipientAddress, chatId }: RequestWrapperOptionsType): void => {
     try {
-      VideoObject.request({
-        library,
-        chainId,
+      console.log('REQUEST WRAPPER');
+
+      videoObjectRef.current.request({
         senderAddress,
         recipientAddress,
         chatId,
-        onRecieveMessage: (message) => {
-          console.log('received a message', message);
-        },
-        pgpPrivateKey,
-        env: appConfig.appEnv,
       });
     } catch (err) {
       console.log('Error in requesting video call', err);
@@ -115,80 +91,67 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     senderAddress,
     recipientAddress,
     chatId,
-    pgpPrivateKey,
+    signalData,
   }: AcceptRequestWrapperOptionsType): void => {
-    console.log('ACCEPT REQUEST WRAPPER');
-
     try {
-      VideoObject.acceptRequest({
-        signalData: receivedSignalData,
-        library,
-        chainId,
+      console.log('ACCEPT REQUEST WRAPPER');
+
+      videoObjectRef.current.acceptRequest({
+        signalData: signalData ? signalData : data.meta.initiator.signal,
         senderAddress,
         recipientAddress,
         chatId,
-        onRecieveMessage: (message) => {
-          console.log('received a message', message);
-        },
-        pgpPrivateKey,
-        env: appConfig.appEnv,
       });
     } catch (err) {
       console.log('Error in requesting video call', err);
     }
   };
 
-  const establishWrapper = (videoCallMetaData: VideoCallMetaDataType) => {
-    console.log('ESTABLISH WRAPPER');
-    VideoObject.establish({ signalData: videoCallMetaData.signalingData });
+  const connectWrapper = (videoCallMetaData: VideoCallMetaDataType) => {
+    console.log('CONNECT WRAPPER');
+    videoObjectRef.current.connect({ signalData: videoCallMetaData.signalingData });
   };
 
-  const endWrapper = () => {
-    console.log('END WRAPPER');
+  const disconnectWrapper = () => {
+    console.log('DISCONNECT WRAPPER');
+    videoObjectRef.current.disconnect();
   };
 
   // to set an incoming call
   const incomingCall = async (videoCallMetaData: VideoCallMetaDataType) => {
-    setReceivedSignalData(videoCallMetaData.signalingData);
-    setVideoCallInfo({
-      senderAddress: videoCallMetaData.recipientAddress,
-      receiverAddress: videoCallMetaData.senderAddress,
-      callStatus: 2,
-      chatId: videoCallMetaData.chatId,
+    videoObjectRef.current.setData((oldData) => {
+      return produce(oldData, (draft) => {
+        draft.local.address = videoCallMetaData.recipientAddress;
+        draft.incoming[0].address = videoCallMetaData.senderAddress;
+        draft.incoming[0].status = PushAPI.VideoCallStatus.RECEIVED;
+        draft.meta.chatId = videoCallMetaData.chatId;
+        draft.meta.initiator.address = videoCallMetaData.senderAddress;
+        draft.meta.initiator.signal = videoCallMetaData.signalingData;
+      });
     });
   };
 
-  const toggleVideo = () => {
-    VideoObject.toggleVideo();
-    console.log("TOGGLE VIDEO", isVideoOn);
-  }
+  const toggleVideoWrapper = () => {
+    videoObjectRef.current.toggleVideo();
+  };
 
-  const toggleAudio = () => {
-    VideoObject.toggleAudio();
-    console.log("TOGGLE AUDIO", isAudioOn);
-  }
-
-  // temp
-  useEffect(()=>{
-    console.log("INCOMING STREAM", incomingStream);
-  }, [incomingStream])
+  const toggleAudioWrapper = () => {
+    videoObjectRef.current.toggleAudio();
+  };
 
   return (
     <VideoCallContext.Provider
       value={{
-        localStream,
-        videoCallInfo,
-        setVideoCallInfo,
+        videoCallData: data,
+        setVideoCallData: setData,
         createWrapper,
         requestWrapper,
         acceptRequestWrapper,
-        establishWrapper,
-        endWrapper,
+        connectWrapper,
+        disconnectWrapper,
         incomingCall,
-        toggleVideo,
-        toggleAudio,
-        isVideoOn,
-        isAudioOn,
+        toggleVideoWrapper,
+        toggleAudioWrapper,
       }}
     >
       {children}

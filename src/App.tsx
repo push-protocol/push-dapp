@@ -38,7 +38,6 @@ import Navigation from 'structure/Navigation';
 import { appConfig } from 'config';
 import { themeDark, themeLight } from 'config/Themization';
 import GLOBALS from 'config/Globals';
-import ChatUserContextProvider from 'contexts/ChatUserContext';
 
 dotenv.config();
 
@@ -177,52 +176,54 @@ export default function App() {
           <InitState />
           <NavigationContextProvider>
             <AppContextProvider>
-            <Joyride
-              run={run}
-              steps={steps}
-              continuous={tutorialContinous}
-              stepIndex={stepIndex}
-              // hideFooter={true}
-              // primaryProps={false}
-              hideBackButton={true}
-              hideCloseButton={false}
-              disableScrolling={true}
-              disableScrollParentFix={true}
-              // disableFlip={true}
-              // showNextButton={false}
-              showSkipButton={false}
-              disableOverlayClose={true}
-              callback={handleJoyrideCallback}
-              styles={{
-                options: {
-                  arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-                  backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-                  overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
-                  primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
-                  textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
-                  zIndex: 1000,
-                },
-              }}
-            />
+              <Joyride
+                run={run}
+                steps={steps}
+                continuous={tutorialContinous}
+                stepIndex={stepIndex}
+                // hideFooter={true}
+                // primaryProps={false}
+                hideBackButton={true}
+                hideCloseButton={false}
+                disableScrolling={true}
+                disableScrollParentFix={true}
+                // disableFlip={true}
+                // showNextButton={false}
+                showSkipButton={false}
+                disableOverlayClose={true}
+                callback={handleJoyrideCallback}
+                styles={{
+                  options: {
+                    arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                    backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                    overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
+                    primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
+                    textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
+                    zIndex: 1000,
+                  },
+                }}
+              />
 
-            <HeaderContainer>
-              <Header isDarkMode={darkMode} darkModeToggle={toggleDarkMode} />
-            </HeaderContainer>
+              <HeaderContainer>
+                <Header
+                  isDarkMode={darkMode}
+                  darkModeToggle={toggleDarkMode}
+                />
+              </HeaderContainer>
 
-            <ParentContainer
-              bg={darkMode ? themeDark.backgroundBG : !active ? themeLight.connectWalletBg : themeLight.backgroundBG}
-              headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
-              <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                <Navigation />
-              </LeftBarContainer>
+              <ParentContainer
+                bg={darkMode ? themeDark.backgroundBG : !active ? themeLight.connectWalletBg : themeLight.backgroundBG}
+                headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
+              >
+                <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                  <Navigation />
+                </LeftBarContainer>
 
-              <ContentContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                <ChatUserContextProvider>
+                <ContentContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
                   {/* Shared among all pages, load universal things here */}
                   <MasterInterfacePage />
-                </ChatUserContextProvider>
-              </ContentContainer>
-            </ParentContainer>
+                </ContentContainer>
+              </ParentContainer>
             </AppContextProvider>
           </NavigationContextProvider>
         </>

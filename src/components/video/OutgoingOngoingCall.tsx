@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import LoaderSpinner, {
   LOADER_OVERLAY,
   LOADER_TYPE,
-  PROGRESS_POSITIONING
+  PROGRESS_POSITIONING,
 } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemHV2, SectionV2 } from 'components/reusables/SharedStylingV2';
 import UserInfo from 'components/video/UserInfo';
@@ -23,13 +23,13 @@ import videoIcon from '../../assets/icons/video-icon.svg';
 import videoOffIcon from '../../assets/icons/video-off-icon.svg';
 import CallButton from './CallButton';
 import MediaToggleButton from './MediaToggleButton';
+import { VideoCallStatus } from '@pushprotocol/restapi';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
 
 type OutgoingOngoingCallType = {
   blockedLoading: BlockedLoadingI;
-  onEndCall: () => void;
 };
 
 const userInfoImmersiveStyles = {
@@ -56,60 +56,46 @@ const callControlsImmersiveStyles = {
   justifyContent: 'center',
 };
 
-const OutgoingOngoingCall = ({ blockedLoading, onEndCall }: OutgoingOngoingCallType) => {
-  const { videoCallInfo } = useContext(VideoCallContext);
-
-  const isImmersive = useDeviceWidthCheck(425) && videoCallInfo.callStatus === 1;
-  const { toggleAudio, toggleVideo, isVideoOn, isAudioOn, endLocalStream } = useContext(VideoCallContext);
-
-  function handleClick() {
-    endLocalStream();
-    onEndCall();
-  }
+const OutgoingOngoingCall = ({ blockedLoading }: OutgoingOngoingCallType) => {
+  const { videoCallData, disconnectWrapper, toggleVideoWrapper, toggleAudioWrapper } = useContext(VideoCallContext);
+  const isImmersive = useDeviceWidthCheck(425) && videoCallData.incoming[0].status === VideoCallStatus.INITIALIZED;
 
   return (
     <Container>
       {/* remote user info */}
-      {videoCallInfo.callStatus != 3 && 
+      {videoCallData.incoming[0].status !== VideoCallStatus.CONNECTED && (
         <UserInfo
           // TODO: make this dynamic with remote user's info
-          pfp={videoCallInfo.toProfilePic}
-          username={videoCallInfo.toProfileUsername}
-          address={`${videoCallInfo.address}`}
+          pfp={''}
+          username={''}
+          address={`${videoCallData.incoming[0].address}`}
           status={'Calling'}
           containerStyles={isImmersive ? userInfoImmersiveStyles : {}}
           fontColor={isImmersive ? 'white' : null}
         />
-      }
+      )}
 
       {/* display the local and incoming video */}
-      <VideoPlayer
-        localVideoStyles={isImmersive ? playerImmersiveStyles : {}}
-      />
+      <VideoPlayer localVideoStyles={isImmersive ? playerImmersiveStyles : {}} />
 
       {/* display video call controls */}
       <VideoCallControlsContainer style={isImmersive ? callControlsImmersiveStyles : {}}>
         <MediaToggleButton
-          iconSrc={isVideoOn ? videoIcon : videoOffIcon}
+          iconSrc={videoCallData.local.video ? videoIcon : videoOffIcon}
           iconWidth="23px"
-          backgroundColor={isVideoOn ? 'white' : '#e60808'}
-          onClick={() => {
-            toggleVideo();
-          }}
+          backgroundColor={videoCallData.local.video ? 'white' : '#e60808'}
+          onClick={toggleVideoWrapper}
         />
         <MediaToggleButton
-          iconSrc={isAudioOn ? audioIcon : audioOffIcon}
+          iconSrc={videoCallData.local.audio ? audioIcon : audioOffIcon}
           iconWidth="14.5px"
-          backgroundColor={isAudioOn ? 'white' : '#e60808'}
-          onClick={() => {
-            toggleAudio();
-            console.log('audio toggled');
-          }}
+          backgroundColor={videoCallData.local.audio ? 'white' : '#e60808'}
+          onClick={toggleAudioWrapper}
         />
         <CallButton
           buttonStyles={{ background: '#e60808' }}
           iconSrc={endCallIcon}
-          onClick={handleClick}
+          onClick={disconnectWrapper}
         />
       </VideoCallControlsContainer>
 

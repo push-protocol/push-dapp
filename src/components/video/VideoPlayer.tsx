@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { device } from 'config/Globals';
 import { VideoCallContext } from 'contexts/VideoCallContext';
+import { VideoCallStatus } from '@pushprotocol/restapi';
 
 type VideoPlayerType = {
   localVideoStyles?: {};
@@ -15,23 +16,32 @@ type VideoPlayerType = {
 
 const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
   const localVideoRef = useRef(null);
-  const { userVideo, localStream, incomingVideoOn, incomingAudioOn, videoCallInfo } = useContext(VideoCallContext);
+  const incomingVideoRef = useRef(null);
+  const { videoCallData } = useContext(VideoCallContext);
 
   useEffect(() => {
     if (localVideoRef.current) {
       let video = localVideoRef.current;
-      video.srcObject = localStream;
+      video.srcObject = videoCallData.local.stream;
       video.play();
     }
-  }, [localVideoRef, localStream]);
+  }, [localVideoRef, videoCallData.local.stream]);
+
+  useEffect(() => {
+    if (incomingVideoRef.current) {
+      let video = incomingVideoRef.current;
+      video.srcObject = videoCallData.incoming[0].stream;
+      video.play();
+    }
+  }, [incomingVideoRef, videoCallData.incoming[0].stream]);
 
   return (
     <Container>
-      {localStream && (
+      {videoCallData.local.stream && (
         <LocalVideoContainer
           className={
-            videoCallInfo.callStatus === 3
-              ? !localStream.getVideoTracks()[0].enabled
+            videoCallData.incoming[0].status === VideoCallStatus.CONNECTED
+              ? !videoCallData.local.stream.getVideoTracks()[0].enabled
                 ? 'connectionAccepted videoOff'
                 : 'connectionAccepted videoOn'
               : null
@@ -42,14 +52,14 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
             ref={localVideoRef}
             muted
           />
-          {!localStream.getVideoTracks()[0].enabled ? (
+          {!videoCallData.local.stream.getVideoTracks()[0].enabled ? (
             <VideoDisabledContainer>
               <PfpContainerMini>
                 <ImageV2
                   height="100%"
                   width="100%"
                   alt={`Profile pic`}
-                  src={videoCallInfo.fromProfilePic}
+                  src={''}
                   objectFit="cover"
                 />
               </PfpContainerMini>
@@ -57,22 +67,18 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
           ) : null}
         </LocalVideoContainer>
       )}
-      {videoCallInfo.callStatus === 3 && (
+      {videoCallData.incoming[0].status === VideoCallStatus.CONNECTED && (
         <IncomingVideoContainer>
-          <IncomingVideo
-            playsInline
-            ref={userVideo}
-            autoPlay
-          />
+          <IncomingVideo ref={incomingVideoRef} />
 
-          {!incomingVideoOn && (
+          {!videoCallData.incoming[0].video && (
             <VideoDisabledContainer>
               <PfpContainer>
                 <ImageV2
                   height="100%"
                   width="100%"
                   alt={`Profile pic`}
-                  src={videoCallInfo.toProfilePic}
+                  src={""}
                   objectFit="cover"
                 />
               </PfpContainer>
@@ -85,7 +91,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
                 height="100%"
                 width="100%"
                 alt={`Profile pic`}
-                src={videoCallInfo.toProfilePic}
+                src={""}
                 objectFit="cover"
               />
             </PfpContainerMini>
@@ -95,7 +101,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
               background="#ffffffbb"
               zIndex="3"
             >
-              {videoCallInfo.address}
+              {videoCallData.incoming[0].address}
             </SpanV2>
           </ProfileInfoMini>
         </IncomingVideoContainer>

@@ -9,12 +9,11 @@ import OutgoingOngoingCall from 'components/video/OutgoingOngoingCall';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { BlockedLoadingI } from 'types/chat';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { VideoCallStatus } from '@pushprotocol/restapi';
 
 // Create Video Call
 const VideoCallSection = () => {
-  const { account } = useWeb3React();
-  const { videoCallInfo, localStream, createWrapper, requestWrapper, acceptRequestWrapper, endWrapper } =
-    useContext(VideoCallContext);
+  const { videoCallData, createWrapper, requestWrapper, acceptRequestWrapper, disconnectWrapper } = useContext(VideoCallContext);
   const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
 
   const [isLoading, setLoading] = useState(true);
@@ -22,27 +21,6 @@ const VideoCallSection = () => {
     enabled: false,
     title: null,
   });
-
-  const answerCallHandler = async () => {
-    let createdUser;
-    if (!connectedUser.publicKey) {
-      createdUser = await createUserIfNecessary();
-    }
-
-    console.log("SENDER", account);
-    console.log("RECEIVER", videoCallInfo.receiverAddress);
-
-    acceptRequestWrapper({
-      senderAddress: account,
-      recipientAddress: videoCallInfo.receiverAddress,
-      chatId: videoCallInfo.chatId,
-      pgpPrivateKey: connectedUser.privateKey || createdUser?.privateKey,
-    });
-  };
-
-  const endCallHandler = () => {
-    endWrapper();
-  };
 
   React.useEffect(() => {
     const setupStream = async () => {
@@ -52,19 +30,21 @@ const VideoCallSection = () => {
         progressEnabled: false,
       });
 
+      console.log("VIDEO CALL SECTION USE EFFECT", "LOCAL STREAM", videoCallData.local.stream);
+      
       try {
-        if (!localStream) {
+        if (videoCallData.local.stream === null) {
           await createWrapper();
-        } else if (videoCallInfo.callStatus === 1) {
+        } else if (videoCallData.incoming[0].status === VideoCallStatus.INITIALIZED) {
           let createdUser;
           if (!connectedUser.publicKey) {
             createdUser = await createUserIfNecessary();
           }
 
           requestWrapper({
-            senderAddress: account,
-            recipientAddress: videoCallInfo.receiverAddress,
-            chatId: videoCallInfo.chatId,
+            senderAddress: videoCallData.local.address,
+            recipientAddress: videoCallData.incoming[0].address,
+            chatId: videoCallData.meta.chatId,
             pgpPrivateKey: connectedUser.privateKey || createdUser?.privateKey,
           });
         }
@@ -86,15 +66,12 @@ const VideoCallSection = () => {
     };
 
     setupStream();
-  }, [localStream]);
+  }, [videoCallData.local.stream]);
 
   // Incoming call UI
-  if (videoCallInfo.callStatus === 2) {
+  if (videoCallData.incoming[0].status === VideoCallStatus.RECEIVED) {
     return (
-      <IncomingCall
-        onAnswerCall={answerCallHandler}
-        onEndCall={endCallHandler}
-      />
+      <IncomingCall />
     );
   }
 
@@ -102,7 +79,6 @@ const VideoCallSection = () => {
   return (
     <OutgoingOngoingCall
       blockedLoading={blockedLoading}
-      onEndCall={endCallHandler}
     />
   );
 };
