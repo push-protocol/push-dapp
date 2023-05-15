@@ -152,6 +152,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         incomingCall,
         toggleVideoWrapper,
         toggleAudioWrapper,
+        isVideoCallInitiator:  videoObjectRef.current?.isInitiator,
       }}
     >
       {children}

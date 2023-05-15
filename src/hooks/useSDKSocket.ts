@@ -21,7 +21,7 @@ export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHoo
   const [isSDKSocketConnected, setIsSDKSocketConnected] = useState(epnsSDKSocket?.connected);
   const [messagesSinceLastConnection, setMessagesSinceLastConnection] = useState<any>('');
   const [groupInformationSinceLastConnection, setGroupInformationSinceLastConnection] = useState<any>('');
-  const { videoCallData, incomingCall, connectWrapper, requestWrapper, acceptRequestWrapper } =
+  const { videoCallData, incomingCall, connectWrapper, requestWrapper, acceptRequestWrapper, isVideoCallInitiator } =
     useContext(VideoCallContext);
   const addSocketEvents = () => {
     epnsSDKSocket?.on(EVENTS.CONNECT, () => {
@@ -54,14 +54,14 @@ export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHoo
             connectWrapper(additionalMeta);
           } else if (additionalMeta.status === VideoCallStatus.DISCONNECTED) {
             window.location.reload();
-          } else if (additionalMeta.status === VideoCallStatus.RETRY_INITIALIZED && videoCallData.isInitiator()) {
+          } else if (additionalMeta.status === VideoCallStatus.RETRY_INITIALIZED && isVideoCallInitiator()) {
             requestWrapper({
               senderAddress: videoCallData.local.address,
               recipientAddress: videoCallData.incoming[0].address,
               chatId: videoCallData.meta.chatId,
               retry: true,
             });
-          } else if (additionalMeta.status === VideoCallStatus.RETRY_INITIALIZED && !videoCallData.isInitiator()) {
+          } else if (additionalMeta.status === VideoCallStatus.RETRY_INITIALIZED && !isVideoCallInitiator()) {
             acceptRequestWrapper({
               signalData: additionalMeta.signalingData,
               senderAddress: videoCallData.local.address,
