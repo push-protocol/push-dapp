@@ -66,9 +66,9 @@ export const decryptAndVerifySignature = async ({
     cipherText: encryptedSecretKey,
     toPrivateKeyArmored: privateKeyArmored,
   });
-  console.log("verifying signature");
+  console.log("verifying signature cipher",cipherText,AES.decrypt({ cipherText, secretKey }));
   await PGP.verifySignature({ messageContent: cipherText, signatureArmored, publicKeyArmored });
-  console.log("verified signature",AES.decrypt({ cipherText, secretKey }),"secret key", secretKey);
+  // console.log("verified signature",AES.decrypt({ cipherText, secretKey }),"secret key", secretKey);
   return AES.decrypt({ cipherText, secretKey });
 };
 
@@ -93,6 +93,7 @@ export const decryptFeeds = async ({
         signatureValidationPubliKey = feed.publicKey!;
       }
       try {
+        // console.log("decrypted message",feed.msg.messageContent)
         feed.msg.messageContent = await decryptAndVerifySignature({
           cipherText: feed.msg.messageContent,
           encryptedSecretKey: feed.msg.encryptedSecret,
@@ -100,6 +101,7 @@ export const decryptFeeds = async ({
           signatureArmored: feed.msg.signature,
           privateKeyArmored: connectedUser.privateKey!,
         });
+        
       } catch (e) {
         // console.log(e);
         if(e.message == decryptionErrorMsg){
