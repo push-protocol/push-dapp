@@ -9,6 +9,9 @@ import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedSt
 import { device } from 'config/Globals';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { VideoCallStatus } from '@pushprotocol/restapi';
+import { ChatUserContext } from 'contexts/ChatUserContext';
+import { Context } from 'modules/chat/ChatModule';
+import { AppContext } from 'types/chat';
 
 type VideoPlayerType = {
   localVideoStyles?: {};
@@ -18,6 +21,8 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
   const localVideoRef = useRef(null);
   const incomingVideoRef = useRef(null);
   const { videoCallData } = useContext(VideoCallContext);
+  const { connectedUser } =useContext(ChatUserContext);
+  const { currentChat }: AppContext = useContext<AppContext>(Context);
 
   useEffect(() => {
     if (localVideoRef.current) {
@@ -59,7 +64,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
                   height="100%"
                   width="100%"
                   alt={`Profile pic`}
-                  src={''}
+                  src={connectedUser?.profilePicture}
                   objectFit="cover"
                 />
               </PfpContainerMini>
@@ -78,7 +83,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
                   height="100%"
                   width="100%"
                   alt={`Profile pic`}
-                  src={""}
+                  src={currentChat?.profilePicture}
                   objectFit="cover"
                 />
               </PfpContainer>
@@ -91,7 +96,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
                 height="100%"
                 width="100%"
                 alt={`Profile pic`}
-                src={""}
+                src={currentChat?.profilePicture}
                 objectFit="cover"
               />
             </PfpContainerMini>

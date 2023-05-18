@@ -385,6 +385,11 @@ function Chat({ chatid }) {
                 modalPosition={MODAL_POSITION.ON_PARENT}
               />
 
+               {/* Video Call Section */}
+              {videoCallData.incoming[0].status > 0 && (
+              <VideoCallSection />
+              )}
+
               {displayQR && !isMobile && (
                 <>
                   <ChatQR
@@ -437,11 +442,6 @@ function Chat({ chatid }) {
             progress={blockedLoading.progress}
             progressNotice={blockedLoading.progressNotice}
           />
-        )}
-
-        {/* Video Call Section */}
-        {videoCallData.incoming[0].status > 0 && (
-          <VideoCallSection />
         )}
       </ItemHV2>
     </Container>
