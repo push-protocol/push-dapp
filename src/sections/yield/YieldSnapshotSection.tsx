@@ -27,7 +27,8 @@ const YieldSnapshotSection = ({
   userDataLP,
   getLpPoolStats,
   getUserDataLP,
-  getPUSHPoolStats
+  getPUSHPoolStats,
+  loadingPushComponent
 }) => {
   // RENDER
   return (
@@ -45,8 +46,9 @@ const YieldSnapshotSection = ({
           userDataPush={userDataPush}
           getUserDataPush={getUserDataPush}
           PUSHPoolstats={PUSHPoolstats}
-          loadingComponent={loadingComponent}
+          // loadingComponent={loadingComponent}
           getPUSHPoolStats={getPUSHPoolStats}
+          loadingPushComponent={loadingPushComponent}
         />
       </V3Container>
 

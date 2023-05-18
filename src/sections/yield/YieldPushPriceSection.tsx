@@ -9,8 +9,15 @@ import { H2V2, ImageV2, ItemHV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import { ethers } from 'ethers';
 
-const YieldPushPriceSection = () => {
+const YieldPushPriceSection = ({
+  poolStats
+}) => {
+    function numberWithCommas(x) {
+      return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
   // RENDER
   return (
     <ItemHV2Modified justifyContent="stretch">
@@ -27,7 +34,7 @@ const YieldPushPriceSection = () => {
           textAlign="left"
           fontWeight={600}
         >
-          $ 0.34
+          $ {numberWithCommas(poolStats?.pushPrice)}
         </H2V2ThemeColor>
         <ImageV2
           width="25px"

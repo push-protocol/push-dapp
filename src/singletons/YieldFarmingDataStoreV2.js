@@ -143,7 +143,7 @@ export default class YieldFarmingDataStoreV2 {
       const currentEpoch = await this.currentEpochCalculation(provider);
 
       //get Current Rewards
-      const currentReward = await pushCoreV2.epochRewards(currentEpoch.toNumber() - 1);
+      const currentReward = await pushCoreV2.epochRewards(currentEpoch.toNumber());
 
       //get Total staked Amount
       const CHANNEL_POOL_FUNDS = await pushCoreV2.CHANNEL_POOL_FUNDS();
@@ -153,13 +153,13 @@ export default class YieldFarmingDataStoreV2 {
       const totalStakedAmount = balanceOfContract.sub(CHANNEL_POOL_FUNDS).sub(PROTOCOL_POOL_FEES);
 
       //TODO: calculate PUSH Staking APR
-    //   const stakingAPR = await this.calcPushStakingAPR(totalStakedAmount);
-    //   console.log('stakingAPR', stakingAPR);
+      const stakingAPR = await this.calcPushStakingAPR(totalStakedAmount);
 
       resolve({
         currentEpoch,
         currentReward,
         totalStakedAmount,
+        stakingAPR
       });
     });
   };
@@ -182,19 +182,17 @@ export default class YieldFarmingDataStoreV2 {
         //Current Epoch Reward Calculation
         const potentialUserReward = await pushCoreV2.calculateEpochRewards(
           this.state.account,
-          currentEpoch.toNumber() - 1
+          currentEpoch.toNumber()
         );
 
-        //get Rewards Available for claiming
         let lastClaimedEpoch;
+
         if (userstakedAmount.lastClaimedBlock.toNumber() != 0) {
           lastClaimedEpoch = await pushCoreV2.lastEpochRelative(genesisBlock, userstakedAmount.lastClaimedBlock);
         } else {
           const currentBlock = await provider.getBlock('latest');
           lastClaimedEpoch = await pushCoreV2.lastEpochRelative(genesisBlock, currentBlock.number);
         }
-
-        console.log('lastClaimedEpoch', lastClaimedEpoch.toNumber());
 
         let totalClaimableReward = 0;
 
@@ -282,21 +280,19 @@ export default class YieldFarmingDataStoreV2 {
     return annualEpochReward;
   };
 
-//   calcPushStakingAPR = (totalStaked) => {
-//     // get annual rewards
-//     const annualRewards = bn(this.state.annualPushReward);
-//     console.log('Annual rewards', annualRewards, annualRewards.toNumber(), totalStaked, tokenBNtoNumber(totalStaked));
-//     let apr;
-//     if (appConfig.coreContractChain === 42 || appConfig.coreContractChain === 5) apr = annualRewards.div(totalStaked);
-//     else apr = annualRewards.mul(1000000).div(totalStaked);
-//     //  apr = (annualRewards * 100) / tokenBNtoNumber(totalStaked);
+  calcPushStakingAPR = (totalStaked) => {
+    // get annual rewards
+    const annualRewards = this.state.annualPushReward;
+    let apr;
+    if (appConfig.coreContractChain === 42 || appConfig.coreContractChain === 5)
+      apr = (annualRewards / Math.max(tokenBNtoNumber(totalStaked), 1)) * 100;
+    else apr = (annualRewards / tokenBNtoNumber(totalStaked)) * 100;
+    //  apr = (annualRewards * 100) / tokenBNtoNumber(totalStaked);
 
-//     console.log('Annual rewards', apr, tokenBNtoNumber(apr), (parseInt(apr.toString()) / 10000).toFixed(2));
+    const aprFormatted = apr.toFixed(2);
 
-//     const aprFormatted = (parseInt(apr.toString()) / 10000).toFixed(2);
-
-//     return aprFormatted;
-//   };
+    return aprFormatted;
+  };
 
   calcLPPoolAPR = async (genesisEpochAmount, epochId, deprecationPerEpoch, totalStaked, poolStats) => {
     // get annual rewards

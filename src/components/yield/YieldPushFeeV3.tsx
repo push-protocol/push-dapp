@@ -22,7 +22,7 @@ const YieldPushFeeV3 = ({
     userDataPush,
     getUserDataPush,
     PUSHPoolstats,
-    loadingComponent,
+    loadingPushComponent,
     getPUSHPoolStats
 }) => {
     const { active, error, account, library, chainId } = useWeb3React();
@@ -48,11 +48,26 @@ const YieldPushFeeV3 = ({
     const pushFeeToast = useToast();
 
     const withdrawAmountTokenFarmAutomatic = async () => {
-        if (txInProgressWithdraw || (formatTokens(userDataPush?.userstakedAmount?.stakedAmount) == 0)) {
+        if (txInProgressWithdraw) {
             return;
         }
 
         setTxInProgressWithdraw(true);
+
+        const unstakeAmount = formatTokens(userDataPush?.userstakedAmount?.stakedAmount);
+
+        if (unstakeAmount == 0) {
+            pushFeeToast.showMessageToast({
+                toastTitle: 'Error',
+                toastMessage: `Nothing to unstake!`,
+                toastType: 'ERROR',
+                getToastIcon: (size) => <MdError size={size} color="red" />,
+            });
+
+            setTxInProgressWithdraw(false);
+            return
+        }
+
         var signer = library.getSigner(account);
 
         let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
@@ -118,11 +133,10 @@ const YieldPushFeeV3 = ({
                     ),
                 });
 
+                getPUSHPoolStats();
                 getUserDataPush();
                 setTxInProgressWithdraw(false);
 
-                // getLPPoolStats();
-                // getUserDataLP(yieldFarmingLP);
             } catch (e) {
                 pushFeeToast.showMessageToast({
                     toastTitle: 'Error',
@@ -148,11 +162,26 @@ const YieldPushFeeV3 = ({
     };
 
     const massClaimRewardsTokensAll = async () => {
-        if (txInProgressClaimRewards || (userDataPush?.totalClaimableReward == 0)) {
+        if (txInProgressClaimRewards ) {
             return;
         }
 
         setTxInProgressClaimRewards(true);
+
+        const withdrawAmount = userDataPush?.totalClaimableReward;
+
+        if (withdrawAmount == 0) {
+            pushFeeToast.showMessageToast({
+                toastTitle: 'Error',
+                toastMessage: `Nothing to Claim!`,
+                toastType: 'ERROR',
+                getToastIcon: (size) => <MdError size={size} color="red" />,
+            });
+
+            setTxInProgressClaimRewards(false);
+            return;
+        }
+
         var signer = library.getSigner(account);
 
         let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
@@ -244,6 +273,10 @@ const YieldPushFeeV3 = ({
         });
     };
 
+    function numberWithCommas(x) {
+        return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
     return (
         <Container>
             <StakingComponent
@@ -257,7 +290,7 @@ const YieldPushFeeV3 = ({
                 modalPosition={MODAL_POSITION.ON_PARENT}
             />
 
-            {loadingComponent ? (
+            {loadingPushComponent ? (
                 <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={50} spinnerColor="#D53A94" />
             ) : (
                 <>
@@ -267,7 +300,7 @@ const YieldPushFeeV3 = ({
                     <ItemVV2 margin="0px 0px 20px 0px">
                         <Heading>PUSH Fee Staking Pool</Heading>
                         <SecondaryText>
-                            Current APR <SpanV2 color="#D53A94">9.89%</SpanV2>
+                            Current APR <SpanV2 color="#D53A94">{numberWithCommas(PUSHPoolstats?.stakingAPR)}%</SpanV2>
                         </SecondaryText>
                     </ItemVV2>
 
@@ -323,7 +356,7 @@ const YieldPushFeeV3 = ({
                                     User Deposit
                                     <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
                                 </DataTitle>
-                                <DataValue> {userDataPush ? formatTokens(userDataPush?.userstakedAmount?.stakedAmount) : '0'} PUSH</DataValue>
+                                <DataValue> {formatTokens(userDataPush?.userstakedAmount.stakedAmount)} PUSH</DataValue>
                             </ItemHV2>
                             <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                                 <DataTitle>
