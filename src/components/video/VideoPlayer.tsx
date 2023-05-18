@@ -197,7 +197,7 @@ const IncomingVideoContainer = styled(ItemVV2)`
   /* height: 20vh;
   max-height: 62vh;
   width: 95%; */
-  background-color: #000000;
+  background-color: ${props=> props.theme.chat.snapFocusBg};
   /* left: 2.5%; */
   border-radius: 34px;
   z-index: 1;
