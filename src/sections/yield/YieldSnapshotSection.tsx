@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React from 'react';
+import React, { useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
@@ -14,6 +14,11 @@ import YieldPushFeeV2 from 'components/yield/YieldPushFeeV2';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import { ethers } from 'ethers';
+import { abis, addresses } from 'config';
+import { useWeb3React } from '@web3-react/core';
+import YieldFarmingDataStore from 'singletons/YieldFarmingDataStore';
+import YieldPoolCard from 'components/yield/YieldPoolCard';
 
 
 // Chat Sections
@@ -30,6 +35,13 @@ const YieldSnapshotSection = ({
   getPUSHPoolStats,
   loadingPushComponent
 }) => {
+
+
+  
+
+
+
+
   // RENDER
   return (
     <>
@@ -52,10 +64,7 @@ const YieldSnapshotSection = ({
         />
       </V3Container>
 
-      <V2Container>
-        <YieldUniswapV2 />
-        <YieldPushFeeV2 />
-      </V2Container>
+      
     </>
   );
 }
@@ -74,23 +83,6 @@ const V3Container = styled(ItemHV2)`
   // }
 
   @media (max-width:900px){
-    flex-direction:column;
-  }
-`
-const V2Container = styled(ItemHV2)`
-
-  @media (max-width:1300px){
-    margin:auto;
-    width: 75%;
-    flex-direction:column;
-  }
-
-  @media (max-width:768px){
-    width: 100%;
-  }
-
-  @media (max-width:900px){
-    width: 100%;
     flex-direction:column;
   }
 `

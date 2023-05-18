@@ -45,10 +45,10 @@ export default class YieldFarmingDataStore {
   };
 
   // init
-  init = (account, epnsToken, staking, yieldFarmingPUSH, yieldFarmingLP, uniswapV2Router02) => {
+  init = (account, pushToken, staking, yieldFarmingPUSH, yieldFarmingLP, uniswapV2Router02) => {
     // set account
     this.state.account = account;
-    this.state.epnsToken = epnsToken;
+    this.state.pushToken = pushToken;
     this.state.staking = staking;
     this.state.yieldFarmingPUSH = yieldFarmingPUSH;
     this.state.yieldFarmingLP = yieldFarmingLP;
@@ -64,17 +64,17 @@ export default class YieldFarmingDataStore {
       const yieldFarmingLP = this.state.yieldFarmingLP;
 
       const currentEpochPUSH = await yieldFarmingPUSH.getCurrentEpoch();
-      const pushPriceAmounts = await this.state.uniswapV2Router02.getAmountsOut(ONE_PUSH.toString(), [addresses.epnsToken, addresses.WETHAddress, addresses.USDTAddress]);
+      const pushPriceAmounts = await this.state.uniswapV2Router02.getAmountsOut(ONE_PUSH.toString(), [addresses.pushToken, addresses.WETHAddress, addresses.USDTAddress]);
       const pushPrice = pushPriceAmounts[pushPriceAmounts.length -1].div(1000000).toNumber();
 
 
-      const pushAmountReserve = tokenBNtoNumber(await this.state.epnsToken.balanceOf(addresses.uniV2LPToken))
-      const wethAmountReserve = tokenBNtoNumber(await this.state.epnsToken.attach(addresses.WETHAddress).balanceOf(addresses.uniV2LPToken)) // Using epnsToken instance for WETH instance
+      const pushAmountReserve = tokenBNtoNumber(await this.state.pushToken.balanceOf(addresses.uniV2LPToken))
+      const wethAmountReserve = tokenBNtoNumber(await this.state.pushToken.attach(addresses.WETHAddress).balanceOf(addresses.uniV2LPToken)) // Using pushToken instance for WETH instance
 
       const ethPriceAmounts =  await this.state.uniswapV2Router02.getAmountsOut(ONE_PUSH.toString(), [addresses.WETHAddress, addresses.USDTAddress]);
       const ethPrice = tokenBNtoNumber(ethPriceAmounts[ethPriceAmounts.length -1]);
 
-      const uniTotalSupply = tokenBNtoNumber(await this.state.epnsToken.attach(addresses.uniV2LPToken).totalSupply()) // Using epnsToken instance for Uni-V2 instance
+      const uniTotalSupply = tokenBNtoNumber(await this.state.pushToken.attach(addresses.uniV2LPToken).totalSupply()) // Using pushToken instance for Uni-V2 instance
       const uniLpPrice = ((pushAmountReserve * pushPrice) + (wethAmountReserve * ethPrice)) / uniTotalSupply
       const lpToPushRatio = uniLpPrice / pushPrice
 
@@ -152,16 +152,16 @@ export default class YieldFarmingDataStore {
   };
 
   getlpToPushRatio = async () =>{
-    const pushPriceAmounts = await this.state.uniswapV2Router02.getAmountsOut(ONE_PUSH.toString(), [addresses.epnsToken, addresses.WETHAddress, addresses.USDTAddress]);
+    const pushPriceAmounts = await this.state.uniswapV2Router02.getAmountsOut(ONE_PUSH.toString(), [addresses.pushToken, addresses.WETHAddress, addresses.USDTAddress]);
     const pushPrice = pushPriceAmounts[pushPriceAmounts.length -1].toNumber()/1000000;
 
-    const pushAmountReserve = tokenBNtoNumber(await this.state.epnsToken.balanceOf(addresses.epnsLPToken))
-    const wethAmountReserve = tokenBNtoNumber(await this.state.epnsToken.attach(addresses.WETHAddress).balanceOf(addresses.epnsLPToken)) // Using epnsToken instance for WETH instance
+    const pushAmountReserve = tokenBNtoNumber(await this.state.pushToken.balanceOf(addresses.epnsLPToken))
+    const wethAmountReserve = tokenBNtoNumber(await this.state.pushToken.attach(addresses.WETHAddress).balanceOf(addresses.epnsLPToken)) // Using pushToken instance for WETH instance
 
     const ethPriceAmounts = await this.state.uniswapV2Router02.getAmountsOut(ONE_PUSH.toString(), [addresses.WETHAddress, addresses.USDTAddress]);
     const ethPrice = ethPriceAmounts[ethPriceAmounts.length -1].toNumber()/1000000;
 
-    const uniTotalSupply = tokenBNtoNumber(await this.state.epnsToken.attach(addresses.epnsLPToken).totalSupply()) // Using epnsToken instance for Uni-V2 instance
+    const uniTotalSupply = tokenBNtoNumber(await this.state.pushToken.attach(addresses.epnsLPToken).totalSupply()) // Using pushToken instance for Uni-V2 instance
 
     const uniLpPrice = ((pushAmountReserve * pushPrice) + (wethAmountReserve * ethPrice)) / uniTotalSupply
     const lpToPushRatio = uniLpPrice / pushPrice
@@ -191,20 +191,20 @@ export default class YieldFarmingDataStore {
         currentEpochPUSH.add(1)
       );
 
-      const stakingAPR = await this.calcLPPoolAPR(
-        genesisEpochAmount,
-        currentEpochPUSH,
-        deprecationPerEpoch,
-        poolBalance,
-        poolStats
-      );
+      // const stakingAPR = await this.calcLPPoolAPR(
+      //   genesisEpochAmount,
+      //   currentEpochPUSH,
+      //   deprecationPerEpoch,
+      //   poolBalance,
+      //   poolStats
+      // );
 
       resolve({
         currentEpochPUSH,
         totalEpochPUSH,
         rewardForCurrentEpoch,
         poolBalance,
-        stakingAPR
+        // stakingAPR
       });
     });
   };
