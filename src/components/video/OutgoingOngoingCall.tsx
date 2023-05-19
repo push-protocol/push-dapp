@@ -24,6 +24,8 @@ import videoOffIcon from '../../assets/icons/video-off-icon.svg';
 import CallButton from './CallButton';
 import MediaToggleButton from './MediaToggleButton';
 import { VideoCallStatus } from '@pushprotocol/restapi';
+import { Context } from 'modules/chat/ChatModule';
+import { AppContext } from 'types/chat';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -59,6 +61,7 @@ const callControlsImmersiveStyles = {
 const OutgoingOngoingCall = ({ blockedLoading }: OutgoingOngoingCallType) => {
   const { videoCallData, disconnectWrapper, toggleVideoWrapper, toggleAudioWrapper } = useContext(VideoCallContext);
   const isImmersive = useDeviceWidthCheck(425) && videoCallData.incoming[0].status === VideoCallStatus.INITIALIZED;
+  const { currentChat }: AppContext = useContext<AppContext>(Context);
 
   return (
     <Container>
@@ -66,7 +69,7 @@ const OutgoingOngoingCall = ({ blockedLoading }: OutgoingOngoingCallType) => {
       {videoCallData.incoming[0].status !== VideoCallStatus.CONNECTED && (
         <UserInfo
           // TODO: make this dynamic with remote user's info
-          pfp={''}
+          pfp={currentChat?.profilePicture}
           username={''}
           address={`${videoCallData.incoming[0].address}`}
           status={'Calling'}

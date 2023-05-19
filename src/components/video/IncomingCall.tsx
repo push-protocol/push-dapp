@@ -1,9 +1,10 @@
 // React + Web3 Essentials
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import { MdClear } from 'react-icons/md';
 import styled from 'styled-components';
+import * as PushAPI  from '@pushprotocol/restapi'
 
 // Internal Components
 import { ItemHV2, SectionV2 } from 'components/reusables/SharedStylingV2';
@@ -16,20 +17,29 @@ import CallButton from './CallButton';
 import IncomingCallModalContent from './IncomingCallModalContent';
 import UserInfo from './UserInfo';
 import VideoPlayer from './VideoPlayer';
+import { User } from 'types/chat';
 
 // Internal Configs
 import { device } from 'config/Globals';
 import { VideoCallStatus } from '@pushprotocol/restapi';
+import { appConfig } from 'config';
 
 const IncomingCall = () => {
   const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
   const { videoCallData, acceptRequestWrapper, disconnectWrapper } = useContext(VideoCallContext);
+  const [incomingCallUserData,setIncomingCallUserData]=useState<User|null>(null);
+  const [isIncomingCallMinimized, setIsIncomingCallMinimized] = useState(false);
 
   // for conditional css
   const isMobile = useDeviceWidthCheck(425);
   const isLaptopS = useDeviceWidthCheck(1025) && !isMobile;
 
-  const [isIncomingCallMinimized, setIsIncomingCallMinimized] = useState(false);
+  useEffect(()=>{
+    (async()=>{
+      const userData = await PushAPI.user.get({account:videoCallData.incoming[0].address,env:appConfig.appEnv});
+      setIncomingCallUserData(userData);
+    })()
+  },[])
 
   const minimizeCallHandler = () => {
     setIsIncomingCallMinimized(true);
@@ -62,7 +72,7 @@ const IncomingCall = () => {
         {videoCallData.incoming[0].status !== VideoCallStatus.CONNECTED && (
           <UserInfo
             // TODO: make this dynamic with remote user's info
-            pfp={""}
+            pfp={incomingCallUserData?.profilePicture}
             username={""}
             address={`${videoCallData.incoming[0].address}`}
             status="Incoming Video Call"
