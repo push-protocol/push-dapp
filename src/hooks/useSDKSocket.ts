@@ -7,6 +7,7 @@ import { showNotifcationToast } from 'components/reusables/toasts/toastControlle
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { convertAddressToAddrCaip } from '../helpers/CaipHelper';
 import { VideoCallStatus } from '@pushprotocol/restapi';
+import { ADDITIONAL_META_TYPE } from '@pushprotocol/restapi/src/lib/payloads/constants';
 
 // Types
 export type SDKSocketHookOptions = {
@@ -39,36 +40,41 @@ export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHoo
       try {
         const { payload } = feedItem || {};
 
-        // if video meta, skip notification
+        // check for additionalMeta
         if (payload.hasOwnProperty('data') && payload['data'].hasOwnProperty('additionalMeta')) {
-          const additionalMeta = JSON.parse(payload['data']['additionalMeta']);
+          const additionalMeta = payload['data']['additionalMeta'];
+          console.log("RECEIVED ADDITIONAL META", additionalMeta);
+          
+          // check for PUSH_VIDEO
+          if (additionalMeta.type === `${ADDITIONAL_META_TYPE.PUSH_VIDEO}+1`) {
+            const videoCallMetaData = JSON.parse(additionalMeta.data);
+            console.log('RECIEVED VIDEO DATA', videoCallMetaData);
 
-          console.log('RECIEVED ADDITIONAL META', additionalMeta);
-
-          if (additionalMeta.status === VideoCallStatus.INITIALIZED) {
-            incomingCall(additionalMeta);
-          } else if (
-            additionalMeta.status === VideoCallStatus.RECEIVED ||
-            additionalMeta.status === VideoCallStatus.RETRY_RECEIVED
-          ) {
-            connectWrapper(additionalMeta);
-          } else if (additionalMeta.status === VideoCallStatus.DISCONNECTED) {
-            window.location.reload();
-          } else if (additionalMeta.status === VideoCallStatus.RETRY_INITIALIZED && isVideoCallInitiator()) {
-            requestWrapper({
-              senderAddress: videoCallData.local.address,
-              recipientAddress: videoCallData.incoming[0].address,
-              chatId: videoCallData.meta.chatId,
-              retry: true,
-            });
-          } else if (additionalMeta.status === VideoCallStatus.RETRY_INITIALIZED && !isVideoCallInitiator()) {
-            acceptRequestWrapper({
-              signalData: additionalMeta.signalingData,
-              senderAddress: videoCallData.local.address,
-              recipientAddress: videoCallData.incoming[0].address,
-              chatId: videoCallData.meta.chatId,
-              retry: true,
-            });
+            if (videoCallMetaData.status === VideoCallStatus.INITIALIZED) {
+              incomingCall(videoCallMetaData);
+            } else if (
+              videoCallMetaData.status === VideoCallStatus.RECEIVED ||
+              videoCallMetaData.status === VideoCallStatus.RETRY_RECEIVED
+            ) {
+              connectWrapper(videoCallMetaData);
+            } else if (videoCallMetaData.status === VideoCallStatus.DISCONNECTED) {
+              window.location.reload();
+            } else if (videoCallMetaData.status === VideoCallStatus.RETRY_INITIALIZED && isVideoCallInitiator()) {
+              requestWrapper({
+                senderAddress: videoCallMetaData.local.address,
+                recipientAddress: videoCallMetaData.incoming[0].address,
+                chatId: videoCallMetaData.meta.chatId,
+                retry: true,
+              });
+            } else if (videoCallMetaData.status === VideoCallStatus.RETRY_INITIALIZED && !isVideoCallInitiator()) {
+              acceptRequestWrapper({
+                signalData: videoCallMetaData.signalData,
+                senderAddress: videoCallMetaData.local.address,
+                recipientAddress: videoCallMetaData.incoming[0].address,
+                chatId: videoCallMetaData.meta.chatId,
+                retry: true,
+              });
+            }
           }
         }
 

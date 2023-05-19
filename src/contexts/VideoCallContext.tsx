@@ -26,7 +26,7 @@ interface VideoCallMetaDataType {
   recipientAddress: string;
   senderAddress: string;
   chatId: string;
-  signalingData?: any;
+  signalData?: any;
   status: number;
 }
 
@@ -109,7 +109,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
 
   const connectWrapper = (videoCallMetaData: VideoCallMetaDataType) => {
     console.log('CONNECT WRAPPER');
-    videoObjectRef.current.connect({ signalData: videoCallMetaData.signalingData });
+    videoObjectRef.current.connect({ signalData: videoCallMetaData.signalData });
   };
 
   const disconnectWrapper = () => {
@@ -126,17 +126,17 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         draft.incoming[0].status = PushAPI.VideoCallStatus.RECEIVED;
         draft.meta.chatId = videoCallMetaData.chatId;
         draft.meta.initiator.address = videoCallMetaData.senderAddress;
-        draft.meta.initiator.signal = videoCallMetaData.signalingData;
+        draft.meta.initiator.signal = videoCallMetaData.signalData;
       });
     });
   };
 
   const toggleVideoWrapper = () => {
-    videoObjectRef.current.toggleVideo();
+    videoObjectRef.current.enableVideo({ state: !data.local.video });
   };
 
   const toggleAudioWrapper = () => {
-    videoObjectRef.current.toggleAudio();
+    videoObjectRef.current.enableAudio({ state: !data.local.audio });
   };
 
   return (
@@ -152,7 +152,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         incomingCall,
         toggleVideoWrapper,
         toggleAudioWrapper,
-        isVideoCallInitiator:  videoObjectRef.current?.isInitiator,
+        isVideoCallInitiator: videoObjectRef.current?.isInitiator,
       }}
     >
       {children}
