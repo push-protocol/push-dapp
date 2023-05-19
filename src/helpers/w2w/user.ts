@@ -35,9 +35,6 @@ export const checkIfChatExist = ({
   isGroup,
 }: CheckIfChatsExistPropType): boolean => {
   let val: boolean;
-  console.log(chats)
-  console.log(currentChat)
-  console.log(connectedUser?.did?.toLowerCase())
   if (isGroup ) {
     val = chats?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)
       ? true
@@ -193,7 +190,8 @@ export const getDefaultFeedObject = ({user,groupInformation}:{user?:User,groupIn
 
 
 export const fetchInbox = async (connectedUser):Promise<Feeds[]>=> {
-  let inboxes:Feeds[] = await PushAPI.chat.chats({ account: connectedUser.wallets!, env: appConfig.appEnv, toDecrypt: false });
+  let inboxes:Feeds[] = await PushAPI.chat.chats({ account: connectedUser.wallets!, env: appConfig.appEnv, toDecrypt: true, pgpPrivateKey:connectedUser.privateKey });
+  console.log("in fetchInbox result",inboxes);
   await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account: connectedUser.wallets! }), inboxes, 'did');
   inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: connectedUser });
   return inboxes
