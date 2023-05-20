@@ -20,7 +20,9 @@ import { useWeb3React } from '@web3-react/core';
 import YieldFarmingDataStoreV2 from 'singletons/YieldFarmingDataStoreV2';
 import DeprecatedYieldFarming from 'sections/yield/DeprecatedYieldFarming';
 
-const NewYieldFarming = () => {
+const NewYieldFarming = ({
+    setLoading
+}) => {
 
     const { account, library } = useWeb3React();
 
@@ -125,19 +127,19 @@ const NewYieldFarming = () => {
             <YieldAnnouncementSection />
             <YieldStatsSection />
             <YieldPushPriceSection
-            poolStats={poolStats}
+                poolStats={poolStats}
             />
             <YieldSnapshotSection
-            lpPoolStats={lpPoolStats}
-            userDataLP={userDataLP}
-            userDataPush={userDataPush}
-            PUSHPoolstats={PUSHPoolstats}
-            getUserDataPush={getUserDataPush}
-            getPUSHPoolStats={getPUSHPoolStats}
-            getLpPoolStats={getLpPoolStats}
-            getUserDataLP={getUserDataLP}
-            loadingComponent={loadingComponent}
-            loadingPushComponent={loadingPushComponent}
+                lpPoolStats={lpPoolStats}
+                userDataLP={userDataLP}
+                userDataPush={userDataPush}
+                PUSHPoolstats={PUSHPoolstats}
+                getUserDataPush={getUserDataPush}
+                getPUSHPoolStats={getPUSHPoolStats}
+                getLpPoolStats={getLpPoolStats}
+                getUserDataLP={getUserDataLP}
+                loadingComponent={loadingComponent}
+                loadingPushComponent={loadingPushComponent}
             />
         </>
     );

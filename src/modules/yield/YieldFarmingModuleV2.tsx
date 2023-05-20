@@ -20,6 +20,7 @@ import { useWeb3React } from '@web3-react/core';
 import YieldFarmingDataStoreV2 from 'singletons/YieldFarmingDataStoreV2';
 import DeprecatedYieldFarming from 'sections/yield/DeprecatedYieldFarming';
 import NewYieldFarming from 'sections/yield/NewYieldFarming';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 // Constants
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
@@ -30,18 +31,27 @@ const YieldFarmingModuleV2 = () => {
   ReactGA.pageview('/yield');
 
   const [activeTab, setActiveTab] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   // Render
   return (
     <Container>
 
-      <ItemHV2>
-        <Tabs onClick={() => setActiveTab(0)}>Yield Farming V2</Tabs>
-        <Tabs onClick={() => setActiveTab(1)}>Yield Farming V1</Tabs>
+      <ItemHV2 justifyContent='flex-start'>
+        <Tabs
+          style={{ borderColor: activeTab === 0 && '#D53A94' }}
+          onClick={() => setActiveTab(0)}>Yield Farming V2</Tabs>
+        <Tabs
+        style={{ borderColor: activeTab === 1 && '#D53A94' }}
+        onClick={() => setActiveTab(1)}>Yield Farming V1</Tabs>
       </ItemHV2>
 
-      {activeTab === 0 && <NewYieldFarming />}
-      {activeTab === 1 && <DeprecatedYieldFarming />}
+      {loading && (
+        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
+      )}
+
+      {activeTab === 0 && <NewYieldFarming setLoading={setLoading} />}
+      {activeTab === 1 && <DeprecatedYieldFarming setActiveTab={setActiveTab} setLoading={setLoading} />}
 
 
     </Container>
@@ -96,4 +106,5 @@ const Container = styled(SectionV2)`
 const Tabs = styled.div`
   cursor:pointer;
   margin:10px;
+  border-bottom:2px solid #657795; 
 `

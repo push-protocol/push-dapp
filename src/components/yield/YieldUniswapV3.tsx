@@ -232,7 +232,7 @@ const YieldUniswapV3 = ({
                     <ItemVV2 margin="0px 0px 20px 0px">
                         <Heading >Uniswap V2 LP Staking Pool</Heading>
                         <SecondaryText>
-                            Current APR <SpanV2 color="#D53A94">{lpPoolStats?.stakingAPR}</SpanV2>
+                            Current APR <SpanV2 color="#D53A94">{lpPoolStats?.stakingAPR}%</SpanV2>
                         </SecondaryText>
                     </ItemVV2>
 
@@ -349,7 +349,7 @@ const YieldUniswapV3 = ({
                             <EmptyButton style={{ margin: "0px 10px 0px 0px" }} onClick={() => withdrawAmountTokenFarmAutomatic()}>
 
                                 {txInProgressWithdraw ?
-                                    (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#D53A94" />) :
+                                    (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
                                     "Unstake PUSH/WETH"
                                 }
 
@@ -357,7 +357,7 @@ const YieldUniswapV3 = ({
                             <EmptyButton onClick={() => massClaimRewardsTokensAll()}>
 
                                 {txInProgressClaimRewards ?
-                                    (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#D53A94" />) :
+                                    (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
                                     "Claim Rewards"
                                 }
 
@@ -463,14 +463,14 @@ const FilledButton = styled(ButtonV2)`
 `;
 
 const EmptyButton = styled(Button)`
-    border: 1px solid #D53A94;
+    border: 1px solid #657795;
     border-radius: 8px;
     padding: 12px;
     background:#ffffff;
     font-size: 18px;
     line-height: 141%;
     letter-spacing: -0.03em;
-    color: #D53A94;
+    color: #657795;
     flex:1;
     cursor:pointer;
     & > div{
@@ -478,11 +478,11 @@ const EmptyButton = styled(Button)`
     }
 
     &:hover{
-        background: #D53A94;
+        background: #e3e3e3;
         opacity:1;
-        color: #FFFFFF;
     }
 `
+
 
 const MaxButton = styled(Button)`
   position: absolute;

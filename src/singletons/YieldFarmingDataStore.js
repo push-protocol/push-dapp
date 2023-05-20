@@ -37,9 +37,9 @@ export default class YieldFarmingDataStore {
     rewardForCurrentEpochLP: null,
 
     genesisEpochAmountPUSH: GENESIS_EPOCH_AMOUNT_PUSH,
-    deprecationPerEpochPUSH: 100,
+    deprecationPerEpochPUSH: 900,
     genesisEpochAmountLP: GENESIS_EPOCH_AMOUNT_LP,
-    deprecationPerEpochLP: 300,
+    deprecationPerEpochLP: 900,
     
     uniswapV2Router02:null,
   };
@@ -191,20 +191,20 @@ export default class YieldFarmingDataStore {
         currentEpochPUSH.add(1)
       );
 
-      // const stakingAPR = await this.calcLPPoolAPR(
-      //   genesisEpochAmount,
-      //   currentEpochPUSH,
-      //   deprecationPerEpoch,
-      //   poolBalance,
-      //   poolStats
-      // );
+      const stakingAPR = await this.calcLPPoolAPR(
+        genesisEpochAmount,
+        currentEpochPUSH,
+        deprecationPerEpoch,
+        poolBalance,
+        poolStats
+      );
 
       resolve({
         currentEpochPUSH,
         totalEpochPUSH,
         rewardForCurrentEpoch,
         poolBalance,
-        // stakingAPR
+        stakingAPR
       });
     });
   };
@@ -214,13 +214,15 @@ export default class YieldFarmingDataStore {
     return new Promise(async (resolve, reject) => {
       if (this.state.account) {
         const numEpoch = await contract.NR_OF_EPOCHS();
-        const currentEpochPUSH = await contract.getCurrentEpoch().then(epoch => epoch > numEpoch ? numEpoch : epoch);
-        const potentialUserReward = (await this.calculateUserEpochReward(currentEpochPUSH, contract)).toFixed(2)
+        const epoch = await contract.getCurrentEpoch();
+        // const currentEpochPUSH = await contract.getCurrentEpoch().then(epoch => epoch < numEpoch ? numEpoch : epoch);
+        const currentEpochPUSH = await contract.getCurrentEpoch().then(res=>ethers.BigNumber.from(Math.min(res,100)));
+        const potentialUserReward = (await this.calculateUserEpochReward(currentEpochPUSH, contract)).toFixed(2);
         const epochStakeNext = await contract.getEpochStake(
           this.state.account,
           currentEpochPUSH.add(1)
         );
-        
+
         // TODO: these two loops can be done in one loop
         let totalAccumulatedReward = 0
         for(var i=1; i<=currentEpochPUSH.sub(1).toNumber(); i++){
@@ -308,6 +310,8 @@ export default class YieldFarmingDataStore {
 
     const annualEpochReward = (currentEpochReward.mul(weeks)).sub(depreciate)
 
+    console.log("Staking APR Calc",tokenBNtoNumber(currentEpochReward),tokenBNtoNumber(depreciate),tokenBNtoNumber(annualEpochReward));
+
     return annualEpochReward
   }
 
@@ -319,15 +323,18 @@ export default class YieldFarmingDataStore {
   ) => {
     // get annual rewards
     const annualRewards = this.calcAnnualEpochReward(genesisEpochAmount, epochId, deprecationPerEpoch)
-    let apr;
-    if(appConfig.coreContractChain === 42 || appConfig.coreContractChain === 5)
-    apr = annualRewards.mul(1000000).div(Math.max(totalStaked, 1));
-    else
-    apr = annualRewards.mul(1000000).div(totalStaked);
-    const aprFormatted = (parseInt(apr.toString())/10000).toFixed(2)
 
-    return aprFormatted
+    if(totalStaked <= ethers.BigNumber.from(0)){
+      totalStaked = totalStaked.add(1);
+    }
+
+    console.log("Staking APR",tokenBNtoNumber(totalStaked),tokenBNtoNumber(annualRewards));
+
+    let apr = annualRewards.div(totalStaked)
+
+    return (parseInt(apr.toString())).toFixed(2)
   }
+
 
   calcLPPoolAPR = async (
     genesisEpochAmount,
@@ -338,7 +345,7 @@ export default class YieldFarmingDataStore {
   ) => {
     // get annual rewards
     const annualRewards = this.calcAnnualEpochReward(genesisEpochAmount, epochId, deprecationPerEpoch)
-    if(totalStaked < ethers.BigNumber.from(0)){
+    if(totalStaked <= ethers.BigNumber.from(0)){
       totalStaked = totalStaked.add(1);
     }
 
@@ -356,9 +363,11 @@ export default class YieldFarmingDataStore {
         epochId
       ));
       const poolSize = tokenBNtoNumber(await contract.getPoolSize(epochId));
+
+      console.log("Epoch stake and Pool Size",epochStake,poolSize);
       let potentialUserReward = 0;
       if (poolSize > 0) {
-        if (contract.address == addresses.yieldFarmLP) {
+        if (contract.address == addresses.depYieldFarmLP) {
           const genesisEpochAmount = this.state.genesisEpochAmountLP;
           const deprecationPerEpoch = this.state.deprecationPerEpochLP;
           const rewardForCurrentEpoch =  genesisEpochAmount - deprecationPerEpoch*epochId

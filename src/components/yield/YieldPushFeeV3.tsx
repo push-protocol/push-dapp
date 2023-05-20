@@ -162,7 +162,7 @@ const YieldPushFeeV3 = ({
     };
 
     const massClaimRewardsTokensAll = async () => {
-        if (txInProgressClaimRewards ) {
+        if (txInProgressClaimRewards) {
             return;
         }
 
@@ -390,8 +390,18 @@ const YieldPushFeeV3 = ({
                             <FilledButton onClick={showStakingModal}> Stake PUSH</FilledButton>
                         </ItemHV2>
                         <ButtonsContainer>
-                            <EmptyButton onClick={withdrawAmountTokenFarmAutomatic} style={{ margin: "0px 10px 0px 0px" }}>{txInProgressWithdraw ? 'Loading..' : 'Unstake PUSH'}</EmptyButton>
-                            <EmptyButton onClick={massClaimRewardsTokensAll}>{txInProgressClaimRewards ? 'Loading..' : 'Claim Rewards'}</EmptyButton>
+                            <EmptyButton onClick={withdrawAmountTokenFarmAutomatic} style={{ margin: "0px 10px 0px 0px" }}>
+                                {txInProgressWithdraw ?
+                                    (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                    "Unstake PUSH/WETH"
+                                }
+                            </EmptyButton>
+                            <EmptyButton onClick={massClaimRewardsTokensAll}>
+                                {txInProgressClaimRewards ?
+                                    (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                    "Claim Rewards"
+                                }
+                            </EmptyButton>
                         </ButtonsContainer>
                     </ItemVV2>
 
@@ -483,14 +493,14 @@ const FilledButton = styled(ButtonV2)`
 `;
 
 const EmptyButton = styled(Button)`
-    border: 1px solid #D53A94;
+    border: 1px solid #657795;
     border-radius: 8px;
     padding: 12px;
     background:#ffffff;
     font-size: 18px;
     line-height: 141%;
     letter-spacing: -0.03em;
-    color: #D53A94;
+    color: #657795;
     flex:1;
     cursor:pointer;
     & > div{
@@ -498,8 +508,7 @@ const EmptyButton = styled(Button)`
     }
 
     &:hover{
-        background: #D53A94;
+        background: #e3e3e3;
         opacity:1;
-        color: #FFFFFF;
     }
 `

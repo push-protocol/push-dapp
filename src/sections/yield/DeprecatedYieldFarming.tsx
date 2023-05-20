@@ -10,7 +10,10 @@ import React, { useState } from 'react';
 import YieldFarmingDataStore from 'singletons/YieldFarmingDataStore';
 import styled from 'styled-components';
 
-const DeprecatedYieldFarming = () => {
+const DeprecatedYieldFarming = ({
+    setActiveTab,
+    setLoading
+}) => {
     const { account, library, chainId } = useWeb3React();
 
     //Initializing the Deprecated YieldFarmingDataStore Class
@@ -28,38 +31,48 @@ const DeprecatedYieldFarming = () => {
     const [depUserDataLP, setDepUserDataLP] = useState(null);
 
     const getDepPoolStats = React.useCallback(async () => {
+        setLoading(true);
         const poolStats = await YieldFarmingDataStore.instance.getPoolStats();
         // console.log("PoolStats", poolStats);
 
         setDepPoolStats({ ...poolStats });
+        setLoading(false);
     }, [pushToken, depStaking, depYieldFarmLP, depYieldFarmPUSH, uniswapV2Router02]);
 
     const getDepPUSHPoolStats = React.useCallback(async () => {
+        setLoading(true);
         const pushPoolStats = await YieldFarmingDataStore.instance.getPUSHPoolStats();
         console.log("PUSH Pool Stats: ", pushPoolStats);
 
         setDepPushPoolStats({ ...pushPoolStats });
+        setLoading(false);
     }, [pushToken, depStaking, depYieldFarmLP, depYieldFarmPUSH, uniswapV2Router02]);
 
-    const getLPPoolStats = React.useCallback(
+    const getDepLPPoolStats = React.useCallback(
         async (poolStats) => {
+            setLoading(true);
             const lpPoolStats = await YieldFarmingDataStore.instance.getLPPoolStats(poolStats);
             console.log("Lp Pool Stats: ", lpPoolStats);
 
             setDepLpPoolStats({ ...lpPoolStats });
+            setLoading(false);
         }, [pushToken, depStaking, depYieldFarmLP, depYieldFarmPUSH, uniswapV2Router02]);
 
     const getDepUserDataPUSH = React.useCallback(async () => {
+        setLoading(true);
         const userDataPUSH = await YieldFarmingDataStore.instance.getUserData(depYieldFarmPUSH);
         console.log("UserData PUSh", userDataPUSH);
         setDepUserDataPUSH({ ...userDataPUSH });
+        setLoading(false);
     }, [depYieldFarmPUSH]);
 
     const getDepUserDataLP = React.useCallback(async () => {
+        setLoading(true);
         const userDataLP = await YieldFarmingDataStore.instance.getUserData(depYieldFarmLP);
         console.log("UserData LP", userDataLP);
 
         setDepUserDataLP({ ...userDataLP });
+        setLoading(false);
     }, [depYieldFarmLP]);
 
 
@@ -125,13 +138,13 @@ const DeprecatedYieldFarming = () => {
 
     const syncData = async (poolStats) => {
         getDepPUSHPoolStats();
-        getLPPoolStats(poolStats);
+        getDepLPPoolStats(poolStats);
 
         getDepUserDataPUSH();
         getDepUserDataLP();
     };
 
-    console.log("Data",depUserDataLP,depLpPoolStats)
+    console.log("Data", depUserDataLP, depLpPoolStats)
 
     return (
         <>
@@ -140,20 +153,34 @@ const DeprecatedYieldFarming = () => {
                     <YieldPoolCard
                         poolName={"UNI-V2"}
                         userData={depUserDataLP}
-                        PoolStats={depLpPoolStats} />
+                        PoolStats={depLpPoolStats}
+                        poolAddress={addresses.depYieldFarmLP}
+                        getUserData={getDepUserDataLP}
+                        getPoolStats={getDepLPPoolStats}
+                        tokenAddress={addresses.uniV2LPToken}
+                        setActiveTab={setActiveTab}
+                    />
                 )}
 
                 {(depUserDataPUSH && depPushPoolStats) && (
                     <YieldPoolCard
                         poolName={"PUSH"}
                         userData={depUserDataPUSH}
-                        PoolStats={depPushPoolStats} />
+                        PoolStats={depPushPoolStats}
+                        poolAddress={addresses.depYieldFarmPUSH}
+                        getUserData={getDepUserDataPUSH}
+                        getPoolStats={getDepPUSHPoolStats}
+                        tokenAddress={addresses.pushToken}
+                        setActiveTab={setActiveTab}
+                    />
                 )}
 
 
                 {/* <YieldUniswapV2 /> */}
                 {/* <YieldPushFeeV2 /> */}
             </V2Container>
+
+
         </>
     );
 };

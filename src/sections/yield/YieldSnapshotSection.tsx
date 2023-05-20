@@ -36,12 +36,6 @@ const YieldSnapshotSection = ({
   loadingPushComponent
 }) => {
 
-
-  
-
-
-
-
   // RENDER
   return (
     <>

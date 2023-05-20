@@ -79,9 +79,9 @@ export const addresses = {
   epnsPolyComm: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa", // the ploygon comm contract
   pushToken: "0x2b9bE9259a4F5Ba6344c1b1c07911539642a2D33", //address for push token
   aDai: "0x31f30d9A5627eAfeC4433Ae2886Cf6cc3D25E772",
-  staking: "0xB7E20399A50a877852104D0B31b2b97DA259DCf5", // deprecated staking addresses
-  depYieldFarmPUSH: "0x706575716A52787F9ac816873103d88E89f1ec15", // deprecated YieldFarm Push address
-  depYieldFarmLP:"0x44457b45190A797d99460F377012Dc18F4a80c83", // deprecated YieldFarm LP address
+  staking: "0xAECb9074e222e8F06f8034140A3F86610E4d3c3E", // deprecated staking addresses
+  depYieldFarmPUSH: "0x6EA019f7FE2640A55154DdC36Bfd21275De388BD", // deprecated YieldFarm Push address
+  depYieldFarmLP:"0xc2886D0e7DAd16cc92b1156Dc9A0b0D3F047FD15", // deprecated YieldFarm LP address
   epnsToken: "0x2b9bE9259a4F5Ba6344c1b1c07911539642a2D33",
   epnsLPToken: "0x1f094Bd8c260D0C3fC79157096015990885af4d2",
   uniV2LPToken:"0x698839247E5b83572fFF6ccdcf386CC37e60bEf5",// for new staking V2 Contract on staging
@@ -94,7 +94,7 @@ export const addresses = {
   USDTAddress: "0x11fe4b6ae13d2a6055c8d9cf65c55bac32b5d844",
   rockstarV2:"0xA2b885e7065EA59a3251489715ca80DE5Ff642f8",//mainnet address
   NFTRewardsV2: "0xdc66567a990B7fa10730459537620857c9e03287", //mainnet address
-  pushCoreV2:'0x99408C7C96EFCF09382B70541586448E40aEc663', //for new staking V2 Push Token
+  pushCoreV2:'0xb4B1512ECdd9Bb21Bb41d888f4Cac22A39bab1D2', //for new staking V2 Push Token
   stakingV2:"0x65Cd2765997E779218b3F6d3395fd92F951e692B",// for new staking V2 Contract on staging
   yieldFarmLP: "0x073ce8E0650FfF2BA1D468dB700EDC97ca604D25", // for new staking V2 UNI LP token 
 }
