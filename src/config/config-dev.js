@@ -25,7 +25,8 @@ export const config = {
     5, // for eth goerli
     80001, //for mumbai polygon
     97, // bnb testnet
-    420 // optimism goerli testnet
+    420, // optimism goerli testnet
+    1442 // polygon zkevm testnet
   ],
 
   /** 
@@ -38,7 +39,8 @@ export const config = {
   aliasRPC: {
     80001: "https://polygon-mumbai.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
     97: "https://data-seed-prebsc-1-s1.binance.org:8545",
-    420: "https://opt-goerli.g.alchemy.com/v2/98vFj7OCg4vbGKvCDpj6pOAMSBVC7rzm"
+    420: "https://opt-goerli.g.alchemy.com/v2/98vFj7OCg4vbGKvCDpj6pOAMSBVC7rzm",
+    1442: "https://rpc.public.zkevm-test.net"
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
 
@@ -125,5 +127,12 @@ export const CHAIN_DETAILS = {
     chainId: 420,
     rpcUrl: 'https://opt-goerli.g.alchemy.com/v2/98vFj7OCg4vbGKvCDpj6pOAMSBVC7rzm',
     commAddress: '0x4305D572F2bf38Fc2AE8D0172055b1EFd18F57a6'
+  },
+  1442: {
+    label: "Polygon zkEVM Testnet",
+    name: "POLYGON_ZK_EVM_TESTNET",
+    chainId: 1442,
+    rpcUrl: 'https://rpc.public.zkevm-test.net',
+    commAddress: '0x630b152e4185c63D7177c656b56b26f878C61572'
   }
 }

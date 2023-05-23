@@ -75,6 +75,7 @@ export interface ChatMetaI {
 }
 
 export interface Feeds {
+    chatId?: string;
     msg: MessageIPFS;
     did: string;
     wallets: string;
@@ -145,4 +146,5 @@ export interface VideoCallInfoI {
   toProfilePic?: string;
   privateKeyArmored: string;
   establishConnection: number;
+  chatId?:string;
 }
