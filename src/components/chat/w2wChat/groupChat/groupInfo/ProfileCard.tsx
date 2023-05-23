@@ -26,11 +26,11 @@ export const ProfileCard = ({
   const theme = useTheme();
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
 
-  const [dropdownHeight,setDropdownHeight] = useState(0);
+  const [dropdownHeight, setDropdownHeight] = useState(0);
 
   const handleHeight = (id) => {
     const containerHeight = document.getElementById(id)?.getBoundingClientRect();
-    console.log("height",containerHeight);
+    console.log("height", containerHeight);
     setDropdownHeight(containerHeight?.top);
   };
 
@@ -71,23 +71,24 @@ export const ProfileCard = ({
             Admin
           </SpanV2>
         )}
-        {caip10ToWallet(member?.wallet) !== account && dropdownValues.length > 0 && (
+        {caip10ToWallet(member?.wallet)?.toLowerCase() !== account?.toLowerCase() && dropdownValues.length > 0 && (
           <ItemVV2
             maxWidth="4px"
             padding="0 20px 0 0"
             onClick={() => {
               handleHeight(member.wallet);
-              setSelectedMemeberAddress(member?.wallet)}}
+              setSelectedMemeberAddress(member?.wallet)
+            }}
             style={{ cursor: 'pointer' }}
           >
             {theme.scheme == 'light' ? <MoreLight /> : <MoreDark />}
           </ItemVV2>
         )}
       </ItemHV2>
-      {selectedMemeberAddress == member?.wallet && (
-        <DropdownContainer 
-        style={{top:dropdownHeight>570 ? '-70%' : '70%'}}
-        ref={dropdownRef}>
+      {selectedMemeberAddress?.toLowerCase() == member?.wallet?.toLowerCase() && (
+        <DropdownContainer
+          style={{ top: dropdownHeight > 570 ? '-70%' : '70%' }}
+          ref={dropdownRef}>
           <Dropdown
             dropdownValues={dropdownValues}
             hoverBGColor={theme.chat.snapFocusBg}
