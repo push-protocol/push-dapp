@@ -43,7 +43,6 @@ import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpe
 import { MessagetypeType } from '../../../../types/chat';
 import Chats from '../chats/Chats';
 import Typebar from '../TypeBar/Typebar';
-import { intitializeDb } from '../w2wIndexeddb';
 import { HeaderMessage } from './HeaderMessage';
 import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
@@ -271,7 +270,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       });
 
       if (typeof sendResponse !== 'string') {
-        intitializeDb<MessageIPFS>('Insert', 'CID_store', sendResponse.cid, sendResponse, 'cid');
         sendResponse.messageContent = message;
         const updatedCurrentChat = currentChat;
         updatedCurrentChat.msg = sendResponse;

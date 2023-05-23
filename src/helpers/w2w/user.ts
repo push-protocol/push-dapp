@@ -1,5 +1,4 @@
 import * as PushAPI from '@pushprotocol/restapi';
-import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { profilePicture } from 'config/W2WConfig';
 import * as w2wHelper from 'helpers/w2w/';
 import { ConnectedUser, Feeds, IGroup, User } from 'types/chat';
