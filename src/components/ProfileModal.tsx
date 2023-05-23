@@ -146,7 +146,7 @@ const MobileAddress= styled(SpanAddress)`
 `
 
 const ItemHead = styled(ItemH)`
-    background: linear-gradient(90deg, #5762C2 0%, #F72CBE 72.11%, #FF9C9C 100%);
+    background: linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%);
     border-radius: 13px;
     padding: 2px 12px;
     flex-wrap: nowrap;
