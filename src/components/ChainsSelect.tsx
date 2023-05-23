@@ -11,6 +11,7 @@ import Dropdown from "./Dropdown";
 
 // Internal Configs
 import { appConfig, CHAIN_DETAILS } from "config";
+import { LOGO_FROM_CHAIN_ID } from "helpers/UtilityHelper";
 
 // Faucet URLs
 const ChainsSelect = ({channelsNetworkId, setChannelsNetworkId}) => {
@@ -30,9 +31,9 @@ const ChainsSelect = ({channelsNetworkId, setChannelsNetworkId}) => {
     appConfig.allowedNetworks.map((chainId: number) => {
         dropdown.push({
             id: chainId,
-            value: CHAIN_DETAILS[chainId].label.split(' ')[0],
-            title: CHAIN_DETAILS[chainId].label.split(' ')[0],
-            icon: `./svg/${CHAIN_DETAILS[chainId].label.split(' ')[0]}.svg`,
+            value: CHAIN_DETAILS[chainId].label,
+            title: CHAIN_DETAILS[chainId].label,
+            icon: `./svg/${LOGO_FROM_CHAIN_ID[chainId]}`,
             function: () => {
               setChannelsNetworkId(chainId);
               setShowDropdown(false);
@@ -47,9 +48,9 @@ const ChainsSelect = ({channelsNetworkId, setChannelsNetworkId}) => {
     <Container>
       <Faucet color={theme.viewChannelSearchText} onClick={() => setShowDropdown(!showDropdown)} ref={toggleArrowRef}>
         <ItemH padding="0 8px 0 0">
-          <Image src={`./svg/${CHAIN_DETAILS[channelsNetworkId].label.split(' ')[0]}.svg`} alt="active chain" width="32px" height="32px" />
+          <Image src={`./svg/${LOGO_FROM_CHAIN_ID[channelsNetworkId]}`} alt="active chain" width="32px" height="32px" />
         </ItemH>
-         <Item className="text">{CHAIN_DETAILS[channelsNetworkId].label.split(' ')[0]}</Item>
+         <Item width="max-content" className="text">{CHAIN_DETAILS[channelsNetworkId].label}</Item>
         <ToggleArrowImg>
           <img
             alt="arrow"
