@@ -144,22 +144,35 @@ const DeprecatedYieldFarming = ({
         getDepUserDataLP();
     };
 
-    console.log("Data", depUserDataLP, depLpPoolStats)
-
     return (
         <>
             <V2Container>
-                {(depUserDataLP && depLpPoolStats) && (
-                    <YieldPoolCard
-                        poolName={"UNI-V2"}
-                        userData={depUserDataLP}
-                        PoolStats={depLpPoolStats}
-                        poolAddress={addresses.depYieldFarmLP}
-                        getUserData={getDepUserDataLP}
-                        getPoolStats={getDepLPPoolStats}
-                        tokenAddress={addresses.uniV2LPToken}
-                        setActiveTab={setActiveTab}
-                    />
+
+                <YieldPoolCard
+                    poolName={"UNI-V2"}
+                    userData={depUserDataLP}
+                    PoolStats={depLpPoolStats}
+                    poolAddress={addresses.depYieldFarmLP}
+                    getUserData={getDepUserDataLP}
+                    getPoolStats={getDepLPPoolStats}
+                    tokenAddress={addresses.uniV2LPToken}
+                    setActiveTab={setActiveTab}
+                />
+
+                <YieldPoolCard
+                    poolName={"PUSH"}
+                    userData={depUserDataPUSH}
+                    PoolStats={depPushPoolStats}
+                    poolAddress={addresses.depYieldFarmPUSH}
+                    getUserData={getDepUserDataPUSH}
+                    getPoolStats={getDepPUSHPoolStats}
+                    tokenAddress={addresses.pushToken}
+                    setActiveTab={setActiveTab}
+                />
+
+
+                {/* {(depUserDataLP && depLpPoolStats) && (
+                    
                 )}
 
                 {(depUserDataPUSH && depPushPoolStats) && (
@@ -173,7 +186,7 @@ const DeprecatedYieldFarming = ({
                         tokenAddress={addresses.pushToken}
                         setActiveTab={setActiveTab}
                     />
-                )}
+                )} */}
 
 
                 {/* <YieldUniswapV2 /> */}

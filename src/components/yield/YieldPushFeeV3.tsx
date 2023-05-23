@@ -17,33 +17,18 @@ import { useWeb3React } from '@web3-react/core';
 import YieldFarmingDataStoreV2 from "../../singletons/YieldFarmingDataStoreV2";
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';
 
 const YieldPushFeeV3 = ({
     userDataPush,
     getUserDataPush,
     PUSHPoolstats,
-    loadingPushComponent,
     getPUSHPoolStats
 }) => {
     const { active, error, account, library, chainId } = useWeb3React();
 
     const [txInProgressWithdraw, setTxInProgressWithdraw] = useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
-
-    const {
-        isModalOpen: isStakingModalOpen,
-        showModal: showStakingModal,
-        ModalComponent: StakingComponent,
-    } = useModalBlur();
-
-    const stakingModalToast = useToast();
-
-
-    const formatTokens = (tokens) => {
-        if (tokens) {
-            return tokens.div(ethers.BigNumber.from(10).pow(18)).toString();
-        }
-    };
 
     const pushFeeToast = useToast();
 
@@ -273,9 +258,13 @@ const YieldPushFeeV3 = ({
         });
     };
 
-    function numberWithCommas(x) {
-        return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    }
+    const {
+        isModalOpen: isStakingModalOpen,
+        showModal: showStakingModal,
+        ModalComponent: StakingComponent,
+    } = useModalBlur();
+
+    const stakingModalToast = useToast();
 
     return (
         <Container>
@@ -284,18 +273,14 @@ const YieldPushFeeV3 = ({
                 InnerComponentProps={{
                     title: 'PUSH',
                     getUserData: getUserDataPush,
-                    getLpPoolStats: getPUSHPoolStats
+                    getPoolStats: getPUSHPoolStats
                 }}
                 toastObject={stakingModalToast}
                 modalPosition={MODAL_POSITION.ON_PARENT}
             />
 
-            {loadingPushComponent ? (
-                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={50} spinnerColor="#D53A94" />
-            ) : (
+            {(userDataPush && PUSHPoolstats) ? (
                 <>
-
-
                     {/* Top Section */}
                     <ItemVV2 margin="0px 0px 20px 0px">
                         <Heading>PUSH Fee Staking Pool</Heading>
@@ -406,6 +391,8 @@ const YieldPushFeeV3 = ({
                     </ItemVV2>
 
                 </>
+            ) : (
+                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={50} spinnerColor="#D53A94" />
             )}
 
 

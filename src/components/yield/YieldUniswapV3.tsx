@@ -19,13 +19,13 @@ import useToast from 'hooks/useToast';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import StakingModalComponent from './StakingModalComponent';
+import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';
 
 
 const bn = function (number, defaultValue = null) { if (number == null) { if (defaultValue == null) { return null } number = defaultValue } return ethers.BigNumber.from(number) }
 const bnToInt = function (bnAmount) { return bnAmount.div(bn(10).pow(18)) }
 
 const YieldUniswapV3 = ({
-    loadingComponent,
     lpPoolStats,
     userDataLP,
     getLpPoolStats,
@@ -35,9 +35,6 @@ const YieldUniswapV3 = ({
 
     const [txInProgressWithdraw, setTxInProgressWithdraw] = React.useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
-
-    const [loading, setLoading] = React.useState<boolean>(false);
-    const [loadingUserData, setLoadingUserData] = React.useState<boolean>(false);
 
     const uniswapV2Toast = useToast();
 
@@ -49,7 +46,7 @@ const YieldUniswapV3 = ({
         setTxInProgressWithdraw(true);
         const withdrawAmount = formatTokens(userDataLP.epochStakeNext);
 
-        console.log("Withdraw amount: " + withdrawAmount);
+        console.log("Withdraw amount: ", withdrawAmount);
 
         if (withdrawAmount == 0) {
             uniswapV2Toast.showMessageToast({
@@ -97,7 +94,6 @@ const YieldUniswapV3 = ({
 
                 setTxInProgressWithdraw(false);
 
-                console.log("This running")
                 getLpPoolStats();
                 getUserDataLP();
             } catch (e) {
@@ -141,12 +137,12 @@ const YieldUniswapV3 = ({
         setTxInProgressClaimRewards(true);
 
         var signer = library.getSigner(account);
-        let yieldFarmingPUSH = new ethers.Contract(
+        let yieldFarmingLP = new ethers.Contract(
             addresses.yieldFarmLP,
             abis.yieldFarming,
             signer
         );
-        const tx = yieldFarmingPUSH.massHarvest();
+        const tx = yieldFarmingLP.massHarvest();
 
 
         tx.then(async (tx) => {
@@ -167,6 +163,7 @@ const YieldUniswapV3 = ({
                     ),
                 });
 
+                getUserDataLP();
                 setTxInProgressClaimRewards(false);
             } catch (e) {
                 uniswapV2Toast.showMessageToast({
@@ -190,16 +187,6 @@ const YieldUniswapV3 = ({
         });
     };
 
-    const formatTokens = (tokens) => {
-        if (tokens) {
-            return tokens.div(ethers.BigNumber.from(10).pow(18)).toString();
-        }
-    };
-
-    function numberWithCommas(x) {
-        return x?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-
     const {
         isModalOpen: isStakingModalOpen,
         showModal: showStakingModal,
@@ -216,18 +203,14 @@ const YieldUniswapV3 = ({
                 InnerComponentProps={{
                     title: 'Uni-V2',
                     getUserData: getUserDataLP,
-                    getLpPoolStats: getLpPoolStats
+                    getPoolStats: getLpPoolStats
                 }}
                 toastObject={stakingModalToast}
                 modalPosition={MODAL_POSITION.ON_PARENT}
             />
 
-            {loadingComponent ? (
-
-                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={50} spinnerColor="#D53A94" />
-            ) : (
+            {(userDataLP && lpPoolStats) ? (
                 <>
-
                     {/* Top Section */}
                     <ItemVV2 margin="0px 0px 20px 0px">
                         <Heading >Uniswap V2 LP Staking Pool</Heading>
@@ -248,18 +231,14 @@ const YieldUniswapV3 = ({
                             <ItemVV2 margin="0px 18px 0px 0px" padding="10px">
                                 <SecondaryText>Current Reward</SecondaryText>
 
-                                {loading ? (
-                                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} />
-                                ) :
-                                    <H2V2
-                                        fontSize="24px"
-                                        fontWeight="700"
-                                        color="#D53A94"
-                                        letterSpacing="-0.03em"
-                                    >
-                                        {numberWithCommas(formatTokens(lpPoolStats?.rewardForCurrentEpoch))} PUSH
-                                    </H2V2>
-                                }
+                                <H2V2
+                                    fontSize="24px"
+                                    fontWeight="700"
+                                    color="#D53A94"
+                                    letterSpacing="-0.03em"
+                                >
+                                    {numberWithCommas(formatTokens(lpPoolStats?.rewardForCurrentEpoch))} PUSH
+                                </H2V2>
                             </ItemVV2>
 
                             <Line width="10px" height="100%"></Line>
@@ -267,18 +246,13 @@ const YieldUniswapV3 = ({
                             <ItemVV2 margin="0px 0px 0px 18px" padding="10px">
                                 <SecondaryText>Total Staked</SecondaryText>
 
-                                {loading ? (
-                                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} />
-                                ) :
-                                    <H2V2
-                                        fontSize="24px"
-                                        fontWeight="700"
-                                        letterSpacing="-0.03em"
-                                    >
-                                        {/* 12.725 Uni-V3 */}
-                                        {numberWithCommas(formatTokens(lpPoolStats?.poolBalance))} UNI-V2
-                                    </H2V2>
-                                }
+                                <H2V2
+                                    fontSize="24px"
+                                    fontWeight="700"
+                                    letterSpacing="-0.03em"
+                                >
+                                    {numberWithCommas(formatTokens(lpPoolStats?.poolBalance))} UNI-V2
+                                </H2V2>
                             </ItemVV2>
                         </ItemHV2>
 
@@ -300,7 +274,7 @@ const YieldUniswapV3 = ({
                         {/* Deposit Cash Data */}
                         <ItemVV2
 
-                            padding={loadingUserData ? "60px " : "0px"}
+                        // padding={loadingUserData ? "60px " : "0px"}
                         >
                             <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                                 <DataTitle>
@@ -342,7 +316,6 @@ const YieldUniswapV3 = ({
                         <ItemHV2>
                             <FilledButton onClick={() => {
                                 showStakingModal();
-                                // setShowDepositItem(true)
                             }}>Stake PUSH/WETH LP Tokens</FilledButton>
                         </ItemHV2>
                         <ButtonsContainer>
@@ -365,9 +338,11 @@ const YieldUniswapV3 = ({
                         </ButtonsContainer>
                     </ItemVV2>
 
-                </>
-            )}
 
+                </>
+            ) : (
+                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={50} spinnerColor="#D53A94" />
+            )}
 
 
 

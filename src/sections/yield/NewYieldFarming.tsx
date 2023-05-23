@@ -6,7 +6,7 @@ import ReactGA from 'react-ga';
 import styled from 'styled-components';
 
 // Internal Compoonents
-import { ItemVV2, SectionV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2, SectionV2 } from 'components/reusables/SharedStylingV2';
 import YieldAnnouncementSection from 'sections/yield/YieldAnnouncementSection';
 import YieldPushPriceSection from 'sections/yield/YieldPushPriceSection';
 import YieldSnapshotSection from 'sections/yield/YieldSnapshotSection';
@@ -19,6 +19,9 @@ import { ethers } from 'ethers';
 import { useWeb3React } from '@web3-react/core';
 import YieldFarmingDataStoreV2 from 'singletons/YieldFarmingDataStoreV2';
 import DeprecatedYieldFarming from 'sections/yield/DeprecatedYieldFarming';
+import YieldUniswapV3 from 'components/yield/YieldUniswapV3';
+import YieldPushFeeV3 from 'components/yield/YieldPushFeeV3';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 const NewYieldFarming = ({
     setLoading
@@ -129,7 +132,7 @@ const NewYieldFarming = ({
             <YieldPushPriceSection
                 poolStats={poolStats}
             />
-            <YieldSnapshotSection
+            {/* <YieldSnapshotSection
                 lpPoolStats={lpPoolStats}
                 userDataLP={userDataLP}
                 userDataPush={userDataPush}
@@ -140,9 +143,44 @@ const NewYieldFarming = ({
                 getUserDataLP={getUserDataLP}
                 loadingComponent={loadingComponent}
                 loadingPushComponent={loadingPushComponent}
-            />
+            /> */}
+
+            <V3Container>
+                <YieldUniswapV3
+                    lpPoolStats={lpPoolStats}
+                    userDataLP={userDataLP}
+                    getLpPoolStats={getLpPoolStats}
+                    getUserDataLP={getUserDataLP}
+                />
+
+                <YieldPushFeeV3
+                    userDataPush={userDataPush}
+                    getUserDataPush={getUserDataPush}
+                    PUSHPoolstats={PUSHPoolstats}
+                    getPUSHPoolStats={getPUSHPoolStats}
+                />
+
+            </V3Container>
+
         </>
     );
 };
 
 export default NewYieldFarming;
+
+const V3Container = styled(ItemHV2)`
+  // width: 50%;
+  // margin: auto;
+
+  // @media (max-width:1300px){
+  //   width: 75%;
+  // }
+
+  // @media (max-width:768px){
+  //   width: 100%;
+  // }
+
+  @media (max-width:900px){
+    flex-direction:column;
+  }
+`

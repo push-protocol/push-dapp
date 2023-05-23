@@ -31,28 +31,41 @@ const YieldFarmingModuleV2 = () => {
   ReactGA.pageview('/yield');
 
   const [activeTab, setActiveTab] = useState(1);
+  const [newStaking, setNewStaking] = useState(true);
   const [loading, setLoading] = useState(false);
 
   // Render
   return (
     <Container>
 
-      <ItemHV2 justifyContent='flex-start'>
+      <TabContainer >
         <Tabs
-          style={{ borderColor: activeTab === 0 && '#D53A94' }}
-          onClick={() => setActiveTab(0)}>Yield Farming V2</Tabs>
-        <Tabs
-        style={{ borderColor: activeTab === 1 && '#D53A94' }}
-        onClick={() => setActiveTab(1)}>Yield Farming V1</Tabs>
-      </ItemHV2>
+          isActive={newStaking}
+          onClick={() => {
+            setNewStaking(true)
+            setActiveTab(0)
+          }
 
-      {loading && (
+          }>Yield Farming V2</Tabs>
+        <Tabs
+          isActive={!newStaking}
+          onClick={() => {
+            setNewStaking(false)
+            setActiveTab(1)
+          }
+
+          }>Yield Farming V1</Tabs>
+      </TabContainer>
+
+      {/* {loading && (
         <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
+      )} */}
+
+      {newStaking ? (
+        <NewYieldFarming setLoading={setLoading} />
+      ) : (
+        <DeprecatedYieldFarming setActiveTab={setActiveTab} setLoading={setLoading} />
       )}
-
-      {activeTab === 0 && <NewYieldFarming setLoading={setLoading} />}
-      {activeTab === 1 && <DeprecatedYieldFarming setActiveTab={setActiveTab} setLoading={setLoading} />}
-
 
     </Container>
   );
@@ -102,9 +115,47 @@ const Container = styled(SectionV2)`
     padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
 `;
 
+const TabContainer = styled(ItemHV2)`
+  justify-content:flex-start;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 80px;
+  position: relative;
+
+  :after {
+    position: absolute;
+    height: 2px;
+    left: 0;
+    bottom: 12px;
+    width: 100%;
+    content: '';
+    background-color: ${props => props.theme.default.border};
+  }
+`
 
 const Tabs = styled.div`
   cursor:pointer;
-  margin:10px;
-  border-bottom:2px solid #657795; 
+  padding: 0 25px;
+  width: 48;
+  height: 25px;
+  line-height: 141%;
+  text-align: center;
+  position: relative;
+  color: ${(props) => (props.isActive ? '#CF1C84' : props.theme.color)};
+
+  ${(props) =>
+    props.isActive &&
+    `&:after{
+        position: absolute;
+        height: 2px;
+        left: 0;
+        bottom: -15px;
+        width: 100%;
+        content: '';
+        background-color: #CF1C84;
+        z-index: 1;
+        
+    }`}
+
 `

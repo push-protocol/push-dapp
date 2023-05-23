@@ -526,149 +526,153 @@ const YieldPoolCard = ({
         })
     }
 
-    console.log("Pool Stats", PoolStats, PoolStats.currentEpochPUSH.toString(), PoolStats.totalEpochPUSH.toString(), PoolStats.totalEpochPUSH.toString())
-
 
     return (
         <Container>
-
-            <Note>
-                <MdWarning color='#E2B71D' />This function has been deprecated. Please migrate to the new pool.
-            </Note>
-
-            {/* Top Section */}
-            <ItemVV2 margin="14px 0px 20px 0px">
-                <Heading>
-                    {poolName === 'UNI-V2' ? 'Uniswap V2 Staking Pool' : 'PUSH Staking Pool '}
-                    <Deprecated>Deprecated</Deprecated>
-                </Heading>
-                <SecondaryText>
-                    Current APR <SpanV2 color="#D53A94">
-                        {Math.max(PoolStats.stakingAPR, 0)}
-                        %</SpanV2>
-                </SecondaryText>
-            </ItemVV2>
-
-            {/* Body Section */}
-            <ItemVV2
-
-            >
-                {/* Reward Section */}
-                <ItemHV2
-                    border="1px solid #BAC4D6"
-                    borderRadius="16px"
-                >
-                    <ItemVV2 margin="0px 18px 0px 0px" padding="10px">
-                        <SecondaryText>Current Reward</SecondaryText>
-                        <H2V2
-                            fontSize="24px"
-                            fontWeight="700"
-                            color="#D53A94"
-                            letterSpacing="-0.03em"
-                        >
-                            {numberWithCommas(formatTokens(PoolStats.rewardForCurrentEpoch))} PUSH
-                        </H2V2>
+            {(userData && PoolStats) ? (
+                <>
+                    <Note>
+                        <MdWarning color='#E2B71D' />This function has been deprecated. Please migrate to the new pool.
+                    </Note>
+                    {/* Top Section */}
+                    <ItemVV2 margin="14px 0px 20px 0px">
+                        <Heading>
+                            {poolName === 'UNI-V2' ? 'Uniswap V2 Staking Pool' : 'PUSH Staking Pool '}
+                            <Deprecated>Deprecated</Deprecated>
+                        </Heading>
+                        <SecondaryText>
+                            Current APR <SpanV2 color="#D53A94">
+                                {Math.max(PoolStats?.stakingAPR, 0)}
+                                %</SpanV2>
+                        </SecondaryText>
                     </ItemVV2>
 
-                    <Line width="10px" height="100%"></Line>
+                    {/* Body Section */}
+                    <ItemVV2
 
-                    <ItemVV2 margin="0px 0px 0px 18px" padding="10px">
-                        <SecondaryText>Total Staked</SecondaryText>
-                        <H2V2
-                            fontSize="24px"
-                            fontWeight="700"
+                    >
+                        {/* Reward Section */}
+                        <ItemHV2
+                            border="1px solid #BAC4D6"
+                            borderRadius="16px"
+                        >
+                            <ItemVV2 margin="0px 18px 0px 0px" padding="10px">
+                                <SecondaryText>Current Reward</SecondaryText>
+                                <H2V2
+                                    fontSize="24px"
+                                    fontWeight="700"
+                                    color="#D53A94"
+                                    letterSpacing="-0.03em"
+                                >
+                                    {numberWithCommas(formatTokens(PoolStats?.rewardForCurrentEpoch))} PUSH
+                                </H2V2>
+                            </ItemVV2>
+
+                            <Line width="10px" height="100%"></Line>
+
+                            <ItemVV2 margin="0px 0px 0px 18px" padding="10px">
+                                <SecondaryText>Total Staked</SecondaryText>
+                                <H2V2
+                                    fontSize="24px"
+                                    fontWeight="700"
+                                    letterSpacing="-0.03em"
+                                >
+                                    {numberWithCommas(formatTokens(PoolStats?.poolBalance))} {poolName == "UNI-V2" ? "UNI-V2" : "PUSH"}
+                                </H2V2>
+                            </ItemVV2>
+                        </ItemHV2>
+
+                        {/* Epoch Text */}
+                        <ItemHV2
+                            alignSelf="end"
+                            margin="12px 13px 24px 0px"
+                            color="#575D73"
                             letterSpacing="-0.03em"
                         >
-                            {numberWithCommas(formatTokens(PoolStats.poolBalance))} {poolName == "UNI-V2" ? "UNI-V2" : "PUSH"}
-                        </H2V2>
+                            Current Epoch
+                            <Span margin='0 0 0 5px'>
+                                {Math.min(PoolStats?.currentEpoch, PoolStats?.totalEpochPUSH).toString()}
+                                /
+                                {PoolStats?.totalEpochPUSH}
+                            </Span>
+                        </ItemHV2>
+
+                        {/* Deposit Cash Data */}
+                        <ItemVV2 >
+                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                                <DataTitle>
+                                    User Deposit
+                                    <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
+                                </DataTitle>
+                                <DataValue> {formatTokens(userData?.epochStakeNext)} {poolName == "UNI-V2" ? "UNI-V2" : "PUSH"}</DataValue>
+                            </ItemHV2>
+                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                                <DataTitle>
+                                    Rewards Claimed
+                                    <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
+                                </DataTitle>
+                                <DataValue> {(userData?.totalAccumulatedReward - userData?.totalAvailableReward).toFixed(2)} PUSH</DataValue>
+                            </ItemHV2>
+                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                                <DataTitle>
+                                    Current Epoch Reward
+                                    <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
+                                </DataTitle>
+                                <DataValue>
+                                    {/* {poolName == "UNI-V2" ? userData.potentialUserReward : 0}  */}
+                                    {userData?.potentialUserReward}PUSH</DataValue>
+                            </ItemHV2>
+                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                                <DataTitle>
+                                    Available for Claiming
+                                    <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
+                                </DataTitle>
+                                <DataValue>{userData?.totalAvailableReward} PUSH</DataValue>
+                            </ItemHV2>
+
+                        </ItemVV2>
+
                     </ItemVV2>
-                </ItemHV2>
 
-                {/* Epoch Text */}
-                <ItemHV2
-                    alignSelf="end"
-                    margin="12px 13px 24px 0px"
-                    color="#575D73"
-                    letterSpacing="-0.03em"
-                >
-                    Current Epoch
-                    <Span margin='0 0 0 5px'>
-                        {Math.min(PoolStats.currentEpochPUSH, PoolStats.totalEpochPUSH).toString()}
-                        /
-                        {PoolStats.totalEpochPUSH}
-                    </Span>
-                </ItemHV2>
+                    {/* Bottom Section */}
+                    <ItemVV2 padding=" 0px 14px" margin="24px 0px 0px 0px">
+                        <ButtonsContainer>
+                            <FilledButton onClick={migrateToNewPool} style={{ margin: "0px 10px 0px 0px" }} >
 
-                {/* Deposit Cash Data */}
-                <ItemVV2 >
-                    <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
-                        <DataTitle>
-                            User Deposit
-                            <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
-                        </DataTitle>
-                        <DataValue> {formatTokens(userData.epochStakeNext)} {poolName == "UNI-V2" ? "UNI-V2" : "PUSH"}</DataValue>
-                    </ItemHV2>
-                    <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
-                        <DataTitle>
-                            Rewards Claimed
-                            <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
-                        </DataTitle>
-                        <DataValue> {(userData.totalAccumulatedReward - userData.totalAvailableReward).toFixed(2)} PUSH</DataValue>
-                    </ItemHV2>
-                    <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
-                        <DataTitle>
-                            Current Epoch Reward
-                            <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
-                        </DataTitle>
-                        <DataValue>
-                            {/* {poolName == "UNI-V2" ? userData.potentialUserReward : 0}  */}
-                            {userData.potentialUserReward}PUSH</DataValue>
-                    </ItemHV2>
-                    <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
-                        <DataTitle>
-                            Available for Claiming
-                            <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
-                        </DataTitle>
-                        <DataValue>{userData.totalAvailableReward} PUSH</DataValue>
-                    </ItemHV2>
+                                {!txInProgressMigrate &&
+                                    <Span color="#FFF" weight="400" cursor='pointer'>Migrate to {poolName} Pool</Span>
+                                }
+                                {txInProgressMigrate &&
+                                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#FFF" />
+                                }
 
-                </ItemVV2>
+                            </FilledButton>
+                        </ButtonsContainer>
 
-            </ItemVV2>
+                        <ButtonsContainer>
+                            <EmptyButton margin='0 10px 0 0' onClick={withdrawTokens}>
+                                {txInProgressWithdraw ?
+                                    (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                    ` Unstake ${poolName}`
+                                }
 
-            {/* Bottom Section */}
-            <ItemVV2 padding=" 0px 14px" margin="24px 0px 0px 0px">
-                <ButtonsContainer>
-                    <FilledButton onClick={migrateToNewPool} style={{ margin: "0px 10px 0px 0px" }} >
+                            </EmptyButton>
+                            <EmptyButton onClick={massClaimRewardsTokensAll}>
+                                {!txInProgressClaimRewards &&
+                                    <Span color="#657795" weight="400">Claim Rewards</Span>
+                                }
+                                {txInProgressClaimRewards &&
+                                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />
+                                }
+                            </EmptyButton>
+                        </ButtonsContainer>
+                    </ItemVV2>
+                </>
+            ) : (
+                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={50} spinnerColor="#D53A94" />
+            )}
 
-                        {!txInProgressMigrate &&
-                            <Span color="#FFF" weight="400" cursor='pointer'>Migrate to {poolName} Pool</Span>
-                        }
-                        {txInProgressMigrate &&
-                            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#FFF" />
-                        }
 
-                    </FilledButton>
-                </ButtonsContainer>
-
-                <ButtonsContainer>
-                    <EmptyButton margin='0 10px 0 0' onClick={withdrawTokens}>
-                        {txInProgressWithdraw ?
-                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
-                            ` Unstake ${poolName}`
-                        }
-
-                    </EmptyButton>
-                    <EmptyButton onClick={massClaimRewardsTokensAll}>
-                        {!txInProgressClaimRewards &&
-                            <Span color="#657795" weight="400">Claim Rewards</Span>
-                        }
-                        {txInProgressClaimRewards &&
-                            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />
-                        }
-                    </EmptyButton>
-                </ButtonsContainer>
-            </ItemVV2>
         </Container>
     );
 };
@@ -683,6 +687,7 @@ const Container = styled(SectionV2)`
     font-family: 'Strawford';
     font-style: normal;
     font-weight: 500;
+    min-height: 587px;
 
 `;
 
