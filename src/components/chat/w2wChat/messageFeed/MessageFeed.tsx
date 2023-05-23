@@ -44,7 +44,6 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
   const [showError, setShowError] = useState<boolean>(false);
   const [limit, setLimit] = React.useState(10);
-  const [page, setPage] =React.useState(1);
   const messageFeedToast = useToast();
 
   const onFeedClick = (feed:Feeds,i:number):void => {
@@ -58,9 +57,9 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
     filteredUserData.length>0 ? setFilteredUserData([]):null;
   }
   
-  const fetchInboxApi = async (): Promise<Feeds[]> => {
+  const fetchInboxApi = async ({limit}): Promise<Feeds[]> => {
     try {
-      const inboxes:Feeds[] = await fetchInbox({connectedUser});
+      const inboxes:Feeds[] = await fetchInbox({connectedUser, limit});
       if (JSON.stringify(inbox) !== JSON.stringify(inboxes)){
         setFeeds(inboxes);
         setInbox(inboxes);
@@ -93,9 +92,9 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
     }
   };
 
-  const updateInbox = async (): Promise<void> => {
+  const updateInbox = async ({chatLimit}:{chatLimit?:number}): Promise<void> => {
     setMessagesLoading(true);
-    await fetchInboxApi();
+    await fetchInboxApi({limit:chatLimit});
     setMessagesLoading(false);
   };
 
@@ -112,12 +111,12 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
 
   useEffect(() => {
     if(!props.hasUserBeenSearched)
-      updateInbox();
+      updateInbox({chatLimit:limit});
   },[]);
 
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
-      updateInbox();
+      updateInbox({chatLimit:limit});
     } else {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
@@ -201,7 +200,8 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   }, [props.hasUserBeenSearched, props.filteredUserData]);
 
   const handlePagination = async () => {
-    updateInbox();
+    setLimit(prevLimit=>prevLimit+10);
+    updateInbox({chatLimit:limit+10});
   };
 
   const showWayPoint = (index: any) => {
