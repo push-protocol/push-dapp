@@ -40,7 +40,7 @@ export const SpaceMembersIndicator = ({ spaceMembers, listenersText }: { spaceMe
         fontWeight="500"
         margin="0px 0px 0px 3px"
       >
-        {spaceMembers?.length > 3 ? `+${spaceMembers?.length - 3}` : ``} listeners
+        {spaceMembers?.length > 3 ? `+${spaceMembers?.length - 3} listeners` : ``} 
       </SpanV2>
     </ItemHV2>
   );

@@ -11,7 +11,7 @@ import {ReactComponent as LiveSVG} from 'assets/space/Live.svg'
 import { BsHandIndex,BsMic, BsPeople, BsShare } from 'react-icons/bs'
 import { FiArrowLeft, FiMicOff } from 'react-icons/fi';
 import useMediaQuery from 'hooks/useMediaQuery';
-import { SpaceLocalContext } from 'contexts';
+import { SpaceGlobalContext, SpaceLocalContext } from 'contexts';
 import { device } from 'config/Globals';
 import { useNavigate } from 'react-router';
 import { Space } from 'types';
@@ -38,6 +38,7 @@ type ActiveSpacesType = {
 };
 
 const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace,showMemberMenuModal}: ActiveSpacesType) => {
+  const { setJoinedSpaceId } = useContext(SpaceGlobalContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(device.tablet);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -141,7 +142,7 @@ const ActiveSpacesItem = ({SpaceList, currentSpace, space, joinSpace, leaveSpace
           </MobileRequestItem>)} 
 
           {!space && (<ButtonDiv onClick={()=>joinSpace()}>
-           <SpaceButton>Join this space</SpaceButton>
+           <SpaceButton onClick={()=> setJoinedSpaceId(currentSpace?.spaceId)}>Join this space</SpaceButton>
         </ButtonDiv>)}
     </ActiveSpaceItem>
 
