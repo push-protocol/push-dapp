@@ -43,7 +43,9 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const [selectedChatSnap, setSelectedChatSnap] = useState<number>();
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
   const [showError, setShowError] = useState<boolean>(false);
+  const [bgUpdateLoading,setBgUpdateLoading]=useState<boolean>(false);
   const [limit, setLimit] = React.useState(10);
+  const [isFetchingDone,setIsFetchingDone]=useState<boolean>(false)
   const messageFeedToast = useToast();
 
   const onFeedClick = (feed:Feeds,i:number):void => {
@@ -60,6 +62,9 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const fetchInboxApi = async ({limit}): Promise<Feeds[]> => {
     try {
       const inboxes:Feeds[] = await fetchInbox({connectedUser, limit});
+      if(inboxes?.length>10 && inboxes?.length===feeds?.length){
+        setIsFetchingDone(true);
+      }
       if (JSON.stringify(inbox) !== JSON.stringify(inboxes)){
         setFeeds(inboxes);
         setInbox(inboxes);
@@ -201,11 +206,13 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
 
   const handlePagination = async () => {
     setLimit(prevLimit=>prevLimit+10);
-    updateInbox({chatLimit:limit+10});
+    setBgUpdateLoading(true);
+    await updateInbox({chatLimit:limit+10});
+    setBgUpdateLoading(false);
   };
 
   const showWayPoint = (index: any) => {
-    return Number(index) === feeds?.length - 1 && !messagesLoading;
+    return Number(index) === feeds?.length - 1 && !messagesLoading && !bgUpdateLoading;
   };
 
   return (
@@ -227,7 +234,7 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
         </SpanV2>
       )}
       <UserChats flexFlow="column">
-        {messagesLoading ? (
+        {messagesLoading && !bgUpdateLoading ? (
           <LoaderSpinner
             type={LOADER_TYPE.SEAMLESS}
             spinnerSize={40}
@@ -238,14 +245,14 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
               <EmptyConnection>
                 Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
               </EmptyConnection>
-            ) : !messagesLoading ? (
+            ) : (
               feeds.map((feed: Feeds, i) => (
                 <ItemVV2
                   alignSelf="stretch"
                   flex="initial"
                   key={`${feed.threadhash}${i}`}
                 >
-                  {showWayPoint(i) && !messagesLoading && <Waypoint onEnter={handlePagination} />}
+                  {showWayPoint(i) && !isFetchingDone && <Waypoint onEnter={handlePagination} />}
                   <ChatSnap
                     pfp={getGroupImage(feed)}
                     username={getName(feed)}
@@ -257,9 +264,17 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
                   />
                 </ItemVV2>
               ))
-            ) : null}
+            ) }
           </>
         )}
+        {
+        messagesLoading && bgUpdateLoading && (
+          <LoaderSpinner
+            type={LOADER_TYPE.SEAMLESS}
+            spinnerSize={40}
+          />
+        )
+      }
       </UserChats>
     </ItemVV2>
   );
