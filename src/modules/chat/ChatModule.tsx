@@ -141,7 +141,7 @@ function Chat({ chatid }) {
     }
     else {
       //update msg for already received intents
-      const intents = await fetchIntent(connectedUser);
+      const intents = await fetchIntent({connectedUser});
       setReceivedIntents(intents);
     }
   }
@@ -159,7 +159,7 @@ function Chat({ chatid }) {
     setInbox(updatedInbox);
     }
     else {
-      const intents = await fetchIntent(connectedUser);
+      const intents = await fetchIntent({connectedUser});
       setReceivedIntents(intents);
     }
   }

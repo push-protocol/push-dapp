@@ -87,8 +87,8 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   };
 
   const getRequests = async (): Promise<void> => {
-    await resolveThreadhash();
-    fetchIntentApi();
+    await fetchIntentApi();
+    setLoadingRequests(false)
   };
   useEffect(() => {
     // This will run when the page first loads
@@ -100,23 +100,9 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   }
   useClickAway(containerRef, () => closeQRDropdown())
 
-  async function resolveThreadhash(): Promise<void> {
-    let getIntent;
-    getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account }), '', 'did');
-
-    if (getIntent !== undefined && !receivedIntents.length) {
-
-      let intents: Feeds[] = getIntent.body;
-      intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
-      setReceivedIntents(intents);
-      setLoadingRequests(false);
-    }
-    setLoadingRequests(false);
-  }
   const fetchIntentApi = async (): Promise<Feeds[]> => {
-    const intents = await fetchIntent(connectedUser);
+    const intents = await fetchIntent({connectedUser});
     if (JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
-      intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account }), intents, 'did');
       setReceivedIntents(intents);
       setLoadingRequests(false);
     }

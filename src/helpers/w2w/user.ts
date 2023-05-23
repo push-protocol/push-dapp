@@ -189,17 +189,14 @@ export const getDefaultFeedObject = ({user,groupInformation}:{user?:User,groupIn
 
 
 
-export const fetchInbox = async (connectedUser):Promise<Feeds[]>=> {
-  let inboxes:Feeds[] = await PushAPI.chat.chats({ account: connectedUser.wallets!, env: appConfig.appEnv, toDecrypt: true, pgpPrivateKey:connectedUser.privateKey });
+export const fetchInbox = async ({connectedUser, page, limit}:{connectedUser:any, page?:number, limit?:number}):Promise<Feeds[]>=> {
+  let inboxes:Feeds[] = await PushAPI.chat.chats({ account: connectedUser.wallets!, env: appConfig.appEnv, toDecrypt: true, pgpPrivateKey: connectedUser.privateKey, page, limit});
   console.log("in fetchInbox result",inboxes);
-  await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account: connectedUser.wallets! }), inboxes, 'did');
-  inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: connectedUser });
   return inboxes
 };
 
-export const fetchIntent = async (connectedUser): Promise<Feeds[]> => {
-  let intents = await PushAPI.chat.requests({account:connectedUser.wallets.split(':')[1],env:appConfig.appEnv, toDecrypt:false});
-  await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account: connectedUser.wallets }),intents, 'did');
-  intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
+export const fetchIntent = async ({connectedUser, page, limit}:{connectedUser:any, page?:number, limit?:number}): Promise<Feeds[]> => {
+  let intents = await PushAPI.chat.requests({account:connectedUser.wallets.split(':')[1], env:appConfig.appEnv, toDecrypt: true, pgpPrivateKey: connectedUser.privateKey, page, limit});
+  console.log("in fetchIntent result",intents);
   return intents;
 };

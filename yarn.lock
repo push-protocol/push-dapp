@@ -4623,7 +4623,7 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
     "@pushprotocol/ledgerlive": latest
-    "@pushprotocol/restapi": latest
+    "@pushprotocol/restapi": 0.0.1-alpha.12
     "@pushprotocol/socket": latest
     "@pushprotocol/uiweb": latest
     "@reduxjs/toolkit": ^1.7.1
@@ -4823,21 +4823,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:latest":
-  version: 1.2.12
-  resolution: "@pushprotocol/restapi@npm:1.2.12"
+"@pushprotocol/restapi@npm:0.0.1-alpha.12":
+  version: 0.0.1-alpha.12
+  resolution: "@pushprotocol/restapi@npm:0.0.1-alpha.12"
   dependencies:
     "@metamask/eth-sig-util": ^5.0.2
     axios: ^0.27.2
     buffer: ^6.0.3
     crypto-js: ^4.1.1
+    immer: ^10.0.2
     openpgp: ^5.5.0
-    react: 17.0.2
+    simple-peer: ^9.11.1
     tslib: ^2.3.0
     uuid: ^9.0.0
   peerDependencies:
     ethers: ^5.6.8
-  checksum: b6c1cd94fd5557607e0c688f7fcfb6f9a26dfe0c36258afd2a8a892fbc4108fa3f8d85299aa92a4ba26b80fb8380e0d414976f34b0b5a9e95c2f3229080c465a
+  checksum: 156ec8707121eb4e097b9c415534db9aaa2b2d78f593a60f78302b699a0c27996ebc28a9a0f2b63d0606085c646200fe6d6b1af6d142667353200718c3f0f5aa
   languageName: node
   linkType: hard
 
@@ -16786,6 +16787,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"immer@npm:^10.0.2":
+  version: 10.0.2
+  resolution: "immer@npm:10.0.2"
+  checksum: 525a3b14210d02ae420c3b9f6ca14f7e9bcf625611d1356e773e7739f14c7c8de50dac442e6c7de3a6e24a782f7b792b6b8666bc0b3f00269d21a95f8f68ca84
+  languageName: node
+  linkType: hard
+
 "immer@npm:^9.0.16, immer@npm:^9.0.6, immer@npm:^9.0.7":
   version: 9.0.21
   resolution: "immer@npm:9.0.21"
@@ -26861,7 +26869,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"simple-peer@npm:9.11.1":
+"simple-peer@npm:9.11.1, simple-peer@npm:^9.11.1":
   version: 9.11.1
   resolution: "simple-peer@npm:9.11.1"
   dependencies:

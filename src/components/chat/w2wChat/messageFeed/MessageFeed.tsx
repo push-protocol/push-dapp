@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from 'react';
 // External Packages
 import { MdError } from 'react-icons/md';
 import styled, { useTheme } from 'styled-components';
-
+import { Waypoint } from 'react-waypoint';
 
 // Internal Components
 import { useWeb3React } from '@web3-react/core';
@@ -22,7 +22,6 @@ import { getDefaultFeed } from '../../../../helpers/w2w/user';
 import { intitializeDb } from '../w2wIndexeddb';
 
 // Internal Configs
-
 
 interface MessageFeedPropsI {
   filteredUserData: User[] | IGroup;
@@ -44,6 +43,8 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const [selectedChatSnap, setSelectedChatSnap] = useState<number>();
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
   const [showError, setShowError] = useState<boolean>(false);
+  const [limit, setLimit] = React.useState(10);
+  const [page, setPage] =React.useState(1);
   const messageFeedToast = useToast();
 
   const onFeedClick = (feed:Feeds,i:number):void => {
@@ -56,27 +57,13 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
     setHasUserBeenSearched(false);
     filteredUserData.length>0 ? setFilteredUserData([]):null;
   }
-  const getInbox = async (): Promise<Feeds[]> => {
-      const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account }), '', 'did');
-      if (getInbox !== undefined && !inbox.length) {
-        let inboxes: Feeds[] = getInbox.body;
-        inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-        if (JSON.stringify(feeds) !== JSON.stringify(inboxes))
-        {
-         setFeeds(inboxes)
-         setInbox(inboxes);
-        }
-        return inboxes;
-    }
-  };
   
   const fetchInboxApi = async (): Promise<Feeds[]> => {
     try {
-      const inboxes:Feeds[] = await fetchInbox(connectedUser);
+      const inboxes:Feeds[] = await fetchInbox({connectedUser});
       if (JSON.stringify(inbox) !== JSON.stringify(inboxes)){
         setFeeds(inboxes);
         setInbox(inboxes);
-        intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account }), inboxes, 'did');
         if(checkIfGroup(currentChat)){
        
           if(currentChat && inboxes[selectedChatSnap] && currentChat?.groupInformation?.members?.length !== inboxes[selectedChatSnap]?.groupInformation?.members?.length)
@@ -107,9 +94,8 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   };
 
   const updateInbox = async (): Promise<void> => {
-      await getInbox();
-      fetchInboxApi();
-
+    setMessagesLoading(true);
+    await fetchInboxApi();
     setMessagesLoading(false);
   };
 
@@ -213,6 +199,15 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
       setMessagesLoading(false);
     }
   }, [props.hasUserBeenSearched, props.filteredUserData]);
+
+  const handlePagination = async () => {
+    updateInbox();
+  };
+
+  const showWayPoint = (index: any) => {
+    return Number(index) === feeds?.length - 1 && !messagesLoading;
+  };
+
   return (
     <ItemVV2
       flex={6}
@@ -250,6 +245,7 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
                   flex="initial"
                   key={`${feed.threadhash}${i}`}
                 >
+                  {showWayPoint(i) && !messagesLoading && <Waypoint onEnter={handlePagination} />}
                   <ChatSnap
                     pfp={getGroupImage(feed)}
                     username={getName(feed)}

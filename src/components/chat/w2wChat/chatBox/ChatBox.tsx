@@ -240,7 +240,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   };
 
   const fetchInboxApi = async (): Promise<Feeds> => {
-    const inboxes: Feeds[] = await fetchInbox(connectedUser);
+    const inboxes: Feeds[] = await fetchInbox({connectedUser});
     setInbox(inboxes);
     return inboxes?.find((x) => x.wallets.split(':')[1]?.toLowerCase() === currentChat.wallets.split(':')[1]?.toLowerCase());
   };
@@ -327,12 +327,12 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   async function resolveThreadhash(): Promise<void> {
     setLoading(true);
     let getIntent;
-    getIntent = await intitializeDb<string>('Read', 'Intent', walletToCAIP10({ account: account! }), '', 'did');
+    // getIntent = await intitializeDb<string>('Read', 'Intent', walletToCAIP10({ account: account! }), '', 'did');
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(':')[1];
     let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: false });
-    await intitializeDb<Feeds[]>('Insert', 'Intent', walletToCAIP10({ account: account! }), intents, 'did');
-    intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
+    // await intitializeDb<Feeds[]>('Insert', 'Intent', walletToCAIP10({ account: account! }), intents, 'did');
+    // intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
     setReceivedIntents(intents);
     setLoading(false);
   }
