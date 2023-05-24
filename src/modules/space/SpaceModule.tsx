@@ -21,11 +21,13 @@ import MemberMenuModal from 'components/space/spaceModals/MemberMenu/MemberMenuM
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import CreateSpaceModal from 'components/space/spaceModals/createSpaceModals/CreateSpaceModal';
 import SpaceNotification from 'components/space/spaceNotification/SpaceNotification';
+import { useDeviceWidthCheck } from 'hooks/useDeviceWidthCheck';
 
 
 export const SpaceModule = ({ }) => {
   const theme = useTheme();
   const { account, library } = useWeb3React();
+  const isMobile = useDeviceWidthCheck(768);
   //shift getUser to app context and add type 
   const { connectedUser,getUser } = useContext(ChatUserContext);
   const { userSpaces,setSpaceRequests,setSpaces } = useContext(SpaceGlobalContext);
@@ -110,7 +112,7 @@ useEffect(()=>{
       //   selectedSpace,
       //   setSelectedSpace
       // }}>
-    <Container spaceActive={!!selectedSpace}>
+    <Container spaceActive={!!selectedSpace} isMobile={isMobile}>
     <ItemHV2>
       
       <SpaceSidebarContainer
