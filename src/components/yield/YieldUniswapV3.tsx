@@ -1,8 +1,8 @@
 // React + Web3 Essentials
-import React from 'react';
+import React, { useState } from 'react';
 
 // External Packages
-import styled, { css } from 'styled-components';
+import styled, { css, useTheme } from 'styled-components';
 
 // Internal Compoonents
 import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -20,6 +20,8 @@ import { MdCheckCircle, MdError } from 'react-icons/md';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import StakingModalComponent from './StakingModalComponent';
 import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';
+import Tooltip from 'components/reusables/tooltip/Tooltip';
+import StakingToolTipContent from './StakingToolTipContent';
 
 
 const bn = function (number, defaultValue = null) { if (number == null) { if (defaultValue == null) { return null } number = defaultValue } return ethers.BigNumber.from(number) }
@@ -37,6 +39,7 @@ const YieldUniswapV3 = ({
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
 
     const uniswapV2Toast = useToast();
+    const theme = useTheme();
 
     const withdrawAmountTokenFarmAutomatic = async () => {
         if (txInProgressWithdraw) {
@@ -225,7 +228,7 @@ const YieldUniswapV3 = ({
                     >
                         {/* Reward Section */}
                         <ItemHV2
-                            border="1px solid #BAC4D6"
+                            border={`1px solid ${theme.stakingBorder}`}
                             borderRadius="16px"
                         >
                             <ItemVV2 margin="0px 18px 0px 0px" padding="10px">
@@ -233,7 +236,7 @@ const YieldUniswapV3 = ({
 
                                 <H2V2
                                     fontSize="24px"
-                                    fontWeight="700"
+                                    fontWeight="600"
                                     color="#D53A94"
                                     letterSpacing="-0.03em"
                                 >
@@ -246,13 +249,13 @@ const YieldUniswapV3 = ({
                             <ItemVV2 margin="0px 0px 0px 18px" padding="10px">
                                 <SecondaryText>Total Staked</SecondaryText>
 
-                                <H2V2
+                                <StakedAmount
                                     fontSize="24px"
-                                    fontWeight="700"
+                                    fontWeight="600"
                                     letterSpacing="-0.03em"
                                 >
                                     {numberWithCommas(formatTokens(lpPoolStats?.poolBalance))} UNI-V2
-                                </H2V2>
+                                </StakedAmount>
                             </ItemVV2>
                         </ItemHV2>
 
@@ -263,12 +266,12 @@ const YieldUniswapV3 = ({
                             color="#575D73"
                             letterSpacing="-0.03em"
                         >
-                            <Span padding="0px 5px 0px 0px">Current Epoch</Span>
-                            <B>
+                            <EpochNo padding="0px 5px 0px 0px">Current Epoch</EpochNo>
+                            <EpochNo>
                                 {Math.min(lpPoolStats?.currentEpochPUSH, lpPoolStats?.totalEpochPUSH).toString()}
                                 /
                                 {lpPoolStats?.totalEpochPUSH}
-                            </B>
+                            </EpochNo>
                         </ItemHV2>
 
                         {/* Deposit Cash Data */}
@@ -279,28 +282,121 @@ const YieldUniswapV3 = ({
                             <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                                 <DataTitle>
                                     User Deposit
-                                    <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
+                                    <InfoSpan>
+                                        <Tooltip
+                                            wrapperProps={{
+                                                width: 'fit-content',
+                                                maxWidth: 'fit-content',
+                                                minWidth: 'fit-content',
+                                                // zIndex: "10",
+                                            }}
+                                            placementProps={{
+                                                background: 'none',
+                                                bottom: '25px',
+                                                // top: "20px",
+                                                left: "0px",
+
+                                            }}
+                                            tooltipContent={
+                                                <StakingToolTipContent title={"User Deposited"} body={"Amount of Uni-V2 Token User Staked"} />
+                                            }
+
+                                        >
+                                            <ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" style={{ cursor: 'pointer' }} />
+                                        </Tooltip>
+                                    </InfoSpan>
                                 </DataTitle>
                                 <DataValue>{formatTokens(userDataLP?.epochStakeNext)} UNI-V2</DataValue>
                             </ItemHV2>
                             <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                                 <DataTitle>
                                     Rewards Claimed
-                                    <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
+                                    <InfoSpan>
+                                        <Tooltip
+                                            wrapperProps={{
+                                                width: 'fit-content',
+                                                maxWidth: 'fit-content',
+                                                minWidth: 'fit-content',
+                                                // zIndex: "10",
+                                            }}
+                                            placementProps={{
+                                                background: 'none',
+                                                bottom: '25px',
+                                                // top: "20px",
+                                                left: "0px",
+
+                                            }}
+                                            tooltipContent={
+                                                <StakingToolTipContent
+                                                    title={"Rewards Claimed"}
+                                                    body={"Amount of Push Claimed by User"} />
+                                            }
+
+                                        >
+                                            <ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" style={{ cursor: 'pointer' }} />
+                                        </Tooltip>
+                                    </InfoSpan>
                                 </DataTitle>
                                 <DataValue> {(userDataLP?.totalAccumulatedReward - userDataLP?.totalAvailableReward).toFixed(2)} PUSH</DataValue>
                             </ItemHV2>
                             <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                                 <DataTitle>
                                     Current Epoch Reward
-                                    <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
+                                    <InfoSpan>
+                                        <Tooltip
+                                            wrapperProps={{
+                                                width: 'fit-content',
+                                                maxWidth: 'fit-content',
+                                                minWidth: 'fit-content',
+                                                // zIndex: "10",
+                                            }}
+                                            placementProps={{
+                                                background: 'none',
+                                                bottom: '25px',
+                                                // top: "20px",
+                                                left: "0px",
+
+                                            }}
+                                            tooltipContent={
+                                                <StakingToolTipContent
+                                                    title={"Current Epoch Reward"}
+                                                    body={"Amount of Push Token Claimable in this EPOCH"} />
+                                            }
+                                        >
+                                            <ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" style={{ cursor: 'pointer' }} />
+                                        </Tooltip>
+                                    </InfoSpan>
                                 </DataTitle>
                                 <DataValue> {userDataLP?.potentialUserReward} PUSH</DataValue>
                             </ItemHV2>
                             <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                                 <DataTitle>
                                     Available for Claiming
-                                    <SpanV2 margin="0px 0px 0px 6px"><ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" /></SpanV2>
+                                    <InfoSpan>
+                                        <Tooltip
+                                            wrapperProps={{
+                                                width: 'fit-content',
+                                                maxWidth: 'fit-content',
+                                                minWidth: 'fit-content',
+                                                // zIndex: "10",
+                                            }}
+                                            placementProps={{
+                                                background: 'none',
+                                                bottom: '25px',
+                                                // top: "20px",
+                                                left: "0px",
+
+                                            }}
+                                            tooltipContent={
+                                                <StakingToolTipContent
+                                                    title={"Available for Claiming"}
+                                                    body={"Amount of Push Token Available to claim"} />
+                                            }
+
+                                        >
+                                            <ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" style={{ cursor: 'pointer' }} />
+                                        </Tooltip>
+                                    </InfoSpan>
                                 </DataTitle>
                                 <DataValue> {userDataLP?.totalAvailableReward} PUSH</DataValue>
                             </ItemHV2>
@@ -363,24 +459,24 @@ const LoaderToast = ({ msg, color }) => (
 );
 
 const Container = styled(SectionV2)`
-    border: 1px solid #BAC4D6;
+    border: 1px solid  ${(props) => props.theme.stakingBorder};
     border-radius: 24px;
     padding:20px;
     margin:10px;
     font-family: 'Strawford';
+    
     font-style: normal;
     font-weight: 500;
     min-height: 587px;
+    color: ${(props) => props.theme.stakingPrimaryText};
 
 `;
 
 const Heading = styled(H2V2)`
-   
-   
     font-size: 24px;
     line-height: 141%;
     letter-spacing: -0.03em;
-    color: #333333;
+    color: ${(props) => props.theme.stakingPrimaryText};
 
 `
 const SecondaryText = styled.p`
@@ -388,30 +484,49 @@ const SecondaryText = styled.p`
     font-size: 18px;
     line-height: 141%;
     letter-spacing: -0.03em;
-    color: #333333;
+    // color: #333333;
 `
 
 const Line = styled.div`
     width: 1px;
     height: 100%;
-    background:#BAC4D6;
+    background:${(props) => props.theme.stakingBorder};
 `
 const DataTitle = styled.div`
     font-size: 18px;
     line-height: 141%;
     letter-spacing: -0.03em;
-    color: rgba(87, 93, 115, 0.8);
+    // color: rgba(87, 93, 115, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
+    color: ${(props) => props.theme.stakingUserDetails};
 
+`
+
+const StakedAmount = styled(H2V2)`
+    color: ${(props) => props.theme.stakingSecondaryText};
+`
+
+const EpochNo = styled(B)`
+    font-weight: 500;
+    text-align: right;
+    letter-spacing: -0.03em;
+    font-size: 16px;
+    line-height: 141%;
+    color: ${(props) => props.theme.stakingUserDetails};
+`
+
+const InfoSpan = styled(SpanV2)`
+    margin:0px 0px 0px 6px;
+    cursor:pointer;
 `
 
 const DataValue = styled(H2V2)`
     font-size: 18px;
     line-height: 141%;
     letter-spacing: -0.03em;
-    color: #333333;
+    color: ${(props) => props.theme.stakingPrimaryText};
 `
 
 const ButtonsContainer = styled.div`
@@ -438,14 +553,14 @@ const FilledButton = styled(ButtonV2)`
 `;
 
 const EmptyButton = styled(Button)`
-    border: 1px solid #657795;
+    border: 1px solid ${(props) => props.theme.emptyButtonText};
     border-radius: 8px;
     padding: 12px;
-    background:#ffffff;
+    background:transparent;
     font-size: 18px;
     line-height: 141%;
     letter-spacing: -0.03em;
-    color: #657795;
+    color: ${(props) => props.theme.emptyButtonText};
     flex:1;
     cursor:pointer;
     & > div{
@@ -453,7 +568,6 @@ const EmptyButton = styled(Button)`
     }
 
     &:hover{
-        background: #e3e3e3;
         opacity:1;
     }
 `

@@ -64,5 +64,5 @@ const ItemHV2Modified = styled(ItemHV2)`
 `;
 
 const H2V2ThemeColor = styled(H2V2)`
-  color: ${(props) => props.theme.color};
+  color: ${(props) => props.theme.stakingPrimaryText};
 `;

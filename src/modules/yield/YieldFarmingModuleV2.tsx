@@ -127,7 +127,7 @@ const TabContainer = styled(ItemHV2)`
     position: absolute;
     height: 2px;
     left: 0;
-    bottom: 12px;
+    bottom: 13px;
     width: 100%;
     content: '';
     background-color: ${props => props.theme.default.border};
