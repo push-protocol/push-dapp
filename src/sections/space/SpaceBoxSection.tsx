@@ -13,16 +13,18 @@ import { SpaceGlobalContext, SpaceLocalContext, SpaceTabOption } from 'contexts'
 
 // Internal Configs
 import { device } from 'config/Globals';
+import { useDeviceWidthCheck } from 'hooks/useDeviceWidthCheck';
 
 
 export const SpaceBoxSection = ({showSpaceInfoModal,showMemberMenuModal}:{showSpaceInfoModal:any,showMemberMenuModal:()=>void}) => {
   const theme = useTheme();
+  const isMobile = useDeviceWidthCheck(768);
   const { selectedSpace, activeTab } = useContext(SpaceLocalContext);
   const { userSpaces } = useContext(SpaceGlobalContext);
 
   // RENDER
   return (
-    <ItemVV2 justifyContent="stretch" background={theme.space.spaceBoxBg} borderRadius="24px">
+    <ItemVV2 justifyContent="stretch" background={!isMobile ? theme.space.spaceBoxBg : theme.default.bg} borderRadius={isMobile ? "0px" : "24px"}>
       {/* conditionally Render */}
       {selectedSpace && activeTab === SpaceTabOption.Spaces && (<SpaceBox showSpaceInfoModal={showSpaceInfoModal} showMemberMenuModal={showMemberMenuModal}/>)} 
       {selectedSpace && activeTab === SpaceTabOption.Requests && (<RequestBox />)} 

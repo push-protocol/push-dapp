@@ -382,6 +382,7 @@ const ScrollView = styled.div`
     padding: 8px;
     box-sizing: border-box;
     background: ${(props) => props.theme.modalContentBackground};
+    width: 100%;
   }
     
 `;
