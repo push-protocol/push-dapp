@@ -1,8 +1,8 @@
-// External Packages
-import styled from 'styled-components';
+  // External Packages
+  import styled from 'styled-components';
 
-// Internal Components
-import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+  // Internal Components
+  import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import { device } from 'config/Globals';
@@ -47,7 +47,7 @@ const Container = styled(ItemHV2)`
   min-height: 5.1rem;
   align-items: center;
   justify-content: center;
-  margin: 2% auto 1% auto;
+  margin: 2.5rem auto 1rem auto;
 
   @media ${device.mobileL} {
     height: 2.95rem;
@@ -59,9 +59,9 @@ const Container = styled(ItemHV2)`
 `;
 
 const PfpContainer = styled(ItemVV2)`
-  width: 3rem;
-  height: 3rem;
-  max-width: 3rem;
+  width: 5rem;
+  height: 5rem;
+  max-width: 5rem;
   margin: 0 1rem 0 0;
   border-radius: 100%;
   overflow: hidden;
@@ -71,14 +71,14 @@ const PfpContainer = styled(ItemVV2)`
     width: 2.875rem;
     height: 2.875rem;
     max-width: 2.875rem;
-    margin: auto 1rem auto 0.3rem;
+    margin: 1.5rem 1rem auto 0.2rem;
   }
 
   @media ${device.mobileS} {
     width: 2.5rem;
     height: 2.5rem;
     max-width: 2.5rem;
-    margin: auto 0.5rem auto 0rem;
+    margin: 1.5rem 0.5rem auto 0rem;
   }
 `;
 
@@ -86,6 +86,9 @@ const InfoContainer = styled(ItemVV2)`
   align-items: flex-start;
   width: fit-content;
   max-width: fit-content;
+  @media ${device.mobileL} {
+    margin-top: 1.5rem;
+  }
 `;
 
 const ShortedAddress = styled(SpanV2)`
@@ -96,7 +99,8 @@ const ShortedAddress = styled(SpanV2)`
   text-align: left;
 
   @media ${device.mobileL} {
-    font-size: 0.93rem;
+    font-size: 1rem;
+    font-weight: 600;
   }
 
   @media ${device.mobileS} {

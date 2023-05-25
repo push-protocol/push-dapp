@@ -21,7 +21,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
   const localVideoRef = useRef(null);
   const incomingVideoRef = useRef(null);
   const { videoCallData } = useContext(VideoCallContext);
-  const { connectedUser } =useContext(ChatUserContext);
+  const { connectedUser } = useContext(ChatUserContext);
   const { currentChat }: AppContext = useContext<AppContext>(Context);
 
   useEffect(() => {
@@ -125,11 +125,21 @@ const Container = styled(ItemVV2)`
 
 const LocalVideoContainer = styled(ItemVV2)`
   overflow: hidden;
-  height: 47vh;
-  max-height: 47vh;
+  height: 49vh;
+  max-height: 49vh;
   border-radius: 34px;
   margin: 0 auto;
   z-index: 2;
+  width: 41vw;
+  
+  @media ${device.mobileL} {
+    width: auto;
+    max-width: 100%;
+  }
+  @media ${device.mobileM} {
+    width: auto;
+    max-width: 100%;
+  }
 
   &.connectionAccepted {
     border-radius: 24px;
@@ -197,7 +207,7 @@ const IncomingVideoContainer = styled(ItemVV2)`
   /* height: 20vh;
   max-height: 62vh;
   width: 95%; */
-  background-color: ${props=> props.theme.chat.snapFocusBg};
+  background-color: ${(props) => props.theme.chat.snapFocusBg};
   /* left: 2.5%; */
   border-radius: 34px;
   z-index: 1;
@@ -270,22 +280,24 @@ const ProfileInfoMini = styled(ItemHV2)`
 `;
 
 const PfpContainerMini = styled(ItemVV2)`
-  margin: 10px;
-  width: 3rem;
-  height: 3rem;
-  max-width: 3rem;
+  margin: 10px 10px 10px -5px;
+  width: 5rem;
+  height: 5rem;
+  max-width: 5rem;
   border-radius: 100%;
   overflow: hidden;
 
   @media ${device.mobileL} {
-    width: 2.875rem;
-    height: 2.875rem;
-    max-width: 2.875rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    max-width: 3rem;
+    margin: auto 1rem auto -0.2rem;
   }
 
   @media ${device.mobileS} {
     width: 2.5rem;
     height: 2.5rem;
     max-width: 2.5rem;
+    margin: auto 1rem auto -0.2rem;
   }
 `;
