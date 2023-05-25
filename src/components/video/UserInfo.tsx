@@ -41,10 +41,8 @@ const UserInfo = ({ pfp, username, address, status, containerStyles, fontColor }
 const Container = styled(ItemHV2)`
   width: fit-content;
   max-width: fit-content;
-  min-width: fit-content;
   height: 5.1rem;
   max-height: 5.1rem;
-  min-height: 5.1rem;
   align-items: center;
   justify-content: center;
   margin: 2.5rem auto 1rem auto;
