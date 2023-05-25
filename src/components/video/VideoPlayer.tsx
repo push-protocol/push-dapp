@@ -21,7 +21,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
   const localVideoRef = useRef(null);
   const incomingVideoRef = useRef(null);
   const { videoCallData } = useContext(VideoCallContext);
-  const { connectedUser } =useContext(ChatUserContext);
+  const { connectedUser } = useContext(ChatUserContext);
   const { currentChat }: AppContext = useContext<AppContext>(Context);
 
   useEffect(() => {
@@ -39,6 +39,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
       video.play();
     }
   }, [incomingVideoRef, videoCallData.incoming[0].stream]);
+  const shortnedAddress = videoCallData.incoming[0].address.substring(0, 6) + '...' + videoCallData.incoming[0].address.substring(videoCallData.incoming[0].address.length - 6);
 
   return (
     <Container>
@@ -91,22 +92,14 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
           )}
 
           <ProfileInfoMini position="absolute">
-            <PfpContainerMini>
-              <ImageV2
-                height="100%"
-                width="100%"
-                alt={`Profile pic`}
-                src={currentChat?.profilePicture}
-                objectFit="cover"
-              />
-            </PfpContainerMini>
             <SpanV2
-              padding="10px"
+              padding="3px 8px 3px 8px"
               borderRadius="24px"
-              background="#ffffffbb"
+              background="#2E313B"
               zIndex="3"
+              color='#FFFFFF'
             >
-              {videoCallData.incoming[0].address}
+              {shortnedAddress}
             </SpanV2>
           </ProfileInfoMini>
         </IncomingVideoContainer>
@@ -137,19 +130,17 @@ const LocalVideoContainer = styled(ItemVV2)`
     max-height: 18vh;
     position: absolute;
     width: inherit;
-    right: 35px;
+    right: 8px;
     bottom: 8px;
     @media ${device.laptop} {
-      right: 26px;
+      right: 8px;
     }
     @media ${device.tablet} {
-      bottom: -10px;
-      right: 25px;
+      bottom: 8px;
+      right: 8px;
     }
     @media ${device.mobileL} {
       border-radius: 16px;
-      bottom: -18px;
-      right: 2.4%;
     }
 
     &.videoOff {
@@ -197,10 +188,11 @@ const IncomingVideoContainer = styled(ItemVV2)`
   /* height: 20vh;
   max-height: 62vh;
   width: 95%; */
-  background-color: ${props=> props.theme.chat.snapFocusBg};
+  background-color: ${props => props.theme.chat.snapFocusBg};
   /* left: 2.5%; */
   border-radius: 34px;
   z-index: 1;
+  width: 100%;
 
   /* @media (max-height: 800px) {
     max-height: 50vh;
