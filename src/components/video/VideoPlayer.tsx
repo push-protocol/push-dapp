@@ -182,10 +182,12 @@ const IncomingVideo = styled.video`
   border-radius: 34px;
   width: 100%;
   height: auto;
+ 
 
-  @media (max-width: 768px) {
-    width: auto;
-    height: 100%;
+  @media (max-width: 820px) {
+    width: 100%;
+    height: 75vh;
+    object-fit: cover;
   }
   @media (max-width: 425px) {
     border-radius: 20px;
