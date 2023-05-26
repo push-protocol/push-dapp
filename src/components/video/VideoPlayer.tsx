@@ -229,7 +229,9 @@ const VideoDisabledContainer = styled(ItemVV2)`
   text-align: center;
   color: white;
   z-index: 10;
-  left: 45%;
+  left: 0;
+  right: 0;
+  margin: auto;
   justify-content: center;
   align-items: center;
 
