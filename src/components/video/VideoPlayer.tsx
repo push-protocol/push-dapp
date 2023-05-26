@@ -12,6 +12,8 @@ import { VideoCallStatus } from '@pushprotocol/restapi';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext } from 'types/chat';
+import { AppContext as MainContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
 
 type VideoPlayerType = {
   localVideoStyles?: {};
@@ -23,6 +25,8 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
   const { videoCallData } = useContext(VideoCallContext);
   const { connectedUser } =useContext(ChatUserContext);
   const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const { web3NameList }:AppContextType=React.useContext(MainContext);
+  const web3Name=web3NameList[videoCallData.incoming[0].address]
 
   useEffect(() => {
     if (localVideoRef.current) {
@@ -106,7 +110,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
               background="#ffffffbb"
               zIndex="3"
             >
-              {videoCallData.incoming[0].address}
+              {web3Name ? web3Name : videoCallData.incoming[0].address}
             </SpanV2>
           </ProfileInfoMini>
         </IncomingVideoContainer>
