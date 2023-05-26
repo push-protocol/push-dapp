@@ -64,6 +64,9 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
       if(inboxes?.length>10 && inboxes?.length===feeds?.length){
         setIsFetchingDone(true);
       }
+      else if(inboxes.length<10){
+        setIsFetchingDone(true);
+      }
       if (JSON.stringify(inbox) !== JSON.stringify(inboxes)){
         setFeeds(inboxes);
         setInbox(inboxes);

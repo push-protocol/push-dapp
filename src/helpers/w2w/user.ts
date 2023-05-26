@@ -1,9 +1,10 @@
 import * as PushAPI from '@pushprotocol/restapi';
 import { profilePicture } from 'config/W2WConfig';
 import * as w2wHelper from 'helpers/w2w/';
-import { ConnectedUser, Feeds, IGroup, User } from 'types/chat';
+import { ConnectedUser, Feeds, IGroup, MessageIPFS, User } from 'types/chat';
 import { walletToCAIP10 } from '.';
 import { appConfig } from '../../config';
+import { decrypt, message } from 'openpgp';
 
 export function checkConnectedUser(connectedUser: ConnectedUser): boolean {
   if (
@@ -197,3 +198,45 @@ export const fetchIntent = async ({connectedUser, page, limit}:{connectedUser:an
   let intents = await PushAPI.chat.requests({account:connectedUser.wallets.split(':')[1], env:appConfig.appEnv, toDecrypt: true, pgpPrivateKey: connectedUser.privateKey, page, limit});
   return intents;
 };
+
+export const getUpdatedChatAndIntent= async ({chatList,message,connectedUser,account, checkInbox})=>{
+  let isUpdated = false;
+  let decryptedChat:MessageIPFS;
+
+  //change to common decryption for getUpdatedInbox and getUpdatedChats using filter
+  const updatedFeed = chatList.filter(feed=>(feed.did?.toLowerCase() === message.fromCAIP10?.toLowerCase()) || (feed?.groupInformation?.chatId === message.toCAIP10));
+  if(updatedFeed.length && checkInbox){
+    decryptedChat = await w2wHelper.decryptMessages({
+      savedMsg: message,
+      connectedUser,
+      account,
+      currentChat:updatedFeed[0],
+      inbox:chatList
+    });
+  }
+  else{
+    decryptedChat=updatedFeed[0]
+  }
+  const updatedChatList = chatList.map(feed => {
+    if((feed.did?.toLowerCase() === message.fromCAIP10?.toLowerCase()) || feed?.groupInformation?.chatId === message.toCAIP10){
+      feed.msg = decryptedChat;
+      isUpdated=true;
+    }
+    return feed;
+  });
+
+  return checkInbox 
+        ? {updatedInbox:updatedChatList, isInboxUpdated:isUpdated}
+        : {updatedIntents:updatedChatList, isIntentsUpdated:isUpdated};
+}
+
+export const checkIfIntent = ({chat,account}):boolean => {
+  if(chat && (chat?.combinedDID?.toLowerCase())?.includes(walletToCAIP10({account})?.toLowerCase()))
+  {
+    if( chat?.intent && (chat?.intent?.toLowerCase())?.includes(walletToCAIP10({account})?.toLowerCase()))
+    return false;
+    else
+    return true;
+  }
+  return false;
+} 

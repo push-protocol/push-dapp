@@ -38,6 +38,7 @@ import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection from 'sections/video/VideoCallSection';
 import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
+import { checkIfIntent, getUpdatedChatAndIntent } from 'helpers/w2w/user';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -113,37 +114,68 @@ function Chat({ chatid }) {
   }
 
   const getUpdatedInbox = async(message) => {
-    let isInInbox = false;
-    let decryptedChat:MessageIPFS;
-
-    //change to common decryption for getUpdatedInbox and getUpdatedChats using filter
-    const updatedFeed = inbox.filter(feed=>(feed.did?.toLowerCase() === message.fromCAIP10?.toLowerCase()) || (feed?.groupInformation?.chatId === message.toCAIP10));
-   if(updatedFeed.length){
-     decryptedChat = await w2wHelper.decryptMessages({
-      savedMsg: message,
-      connectedUser,
-      account,
-      currentChat:updatedFeed[0],
-      inbox
-    });
-
-  }
-    const updatedInbox = inbox.map(feed => {
-      if((feed.did?.toLowerCase() === message.fromCAIP10?.toLowerCase()) || feed?.groupInformation?.chatId === message.toCAIP10){
-        feed.msg = decryptedChat;
-        isInInbox = true;
+    let isListUpdated=false;
+    const {updatedInbox,isInboxUpdated}=await getUpdatedChatAndIntent({chatList:inbox,message,connectedUser,account,checkInbox:true});
+    // console.log("feed isChatList updated?",isInboxUpdated)
+    if(isInboxUpdated){
+      isListUpdated=true;
+      setInbox(updatedInbox);
+    }
+    else{
+      const {updatedIntents,isIntentsUpdated}=await getUpdatedChatAndIntent({chatList:receivedIntents,message,connectedUser,account,checkInbox:false});
+      // console.log("intent isChatList updated?",isIntentsUpdated)
+      if(isIntentsUpdated){
+        isListUpdated=true;
+        setReceivedIntents(updatedIntents);
       }
-      return feed;
-    });
-    if(isInInbox){
+    }
+    if(!isListUpdated){
+      const fetchedChat = await PushAPI.chat.chat({
+        account: account,
+        toDecrypt: true,
+        pgpPrivateKey: connectedUser?.privateKey,
+        recipient: caip10ToWallet(message?.fromCAIP10),
+        env: appConfig.appEnv
+      });
+      if(checkIfIntent({chat:fetchedChat, account})){
+        setReceivedIntents(prev=> [fetchedChat, ...prev]);
+        
+      }
+      else{
+        setInbox(prev=>[fetchedChat,...prev])
+      }
+      
+    }
+  //   let isInInbox = false;
+  //   let decryptedChat:MessageIPFS;
 
-    setInbox(updatedInbox);
-    }
-    else {
-      //update msg for already received intents
-      const intents = await fetchIntent({connectedUser});
-      setReceivedIntents(intents);
-    }
+  //   //change to common decryption for getUpdatedInbox and getUpdatedChats using filter
+  //   const updatedFeed = inbox.filter(feed=>(feed.did?.toLowerCase() === message.fromCAIP10?.toLowerCase()) || (feed?.groupInformation?.chatId === message.toCAIP10));
+  //  if(updatedFeed.length){
+  //    decryptedChat = await w2wHelper.decryptMessages({
+  //     savedMsg: message,
+  //     connectedUser,
+  //     account,
+  //     currentChat:updatedFeed[0],
+  //     inbox
+  //   });
+  // }
+  //   const updatedInbox = inbox.map(feed => {
+  //     if((feed.did?.toLowerCase() === message.fromCAIP10?.toLowerCase()) || feed?.groupInformation?.chatId === message.toCAIP10){
+  //       feed.msg = decryptedChat;
+  //       isInInbox = true;
+  //     }
+  //     return feed;
+  //   });
+  //   if(isInInbox){
+
+  //   setInbox(updatedInbox);
+  //   }
+  //   else if(!isInInbox){
+  //     //update msg for already received intents
+  //     const intents = await fetchIntent({connectedUser});
+  //     setReceivedIntents(intents);
+  //   }
   }
 
   const getUpdatedGroup = async(groupInfo) => {
