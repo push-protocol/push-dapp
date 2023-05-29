@@ -27,16 +27,11 @@ const IncomingCallModalContent: React.FC<IncomingCallModalContentProps> = ({ isI
 
 const Container = styled(ItemHV2)<IncomingCallModalContentProps>`
   position: absolute;
-  /* right: ${props => props.isIncomingCallMinimized ? "2%" : "18%"}; */
-  right: 0;
-  left: 0;
-  bottom: ${props => props.isIncomingCallMinimized ? "18%" : "unset"};
+  right: ${props => props.isIncomingCallMinimized ? "2%" : "25%"};
+  bottom: ${props => props.isIncomingCallMinimized ? "10%" : "unset"};
   border-radius: 1.5rem;
-
-  max-width: 25%;
-  min-width: 320px;
-  margin: auto;
-  /* 
+  width: ${props => props.isIncomingCallMinimized ? "24vw" : "24vw"};
+   
   @media ${device.laptop} {
     right: 3%;
   }
@@ -46,26 +41,28 @@ const Container = styled(ItemHV2)<IncomingCallModalContentProps>`
   }
 
   @media ${device.mobileL} {
-    right: 3.5%;
-  } 
-  */
+    right: 3%;
+    bottom: ${props => props.isIncomingCallMinimized ? "10%" : "20%"};
+    width: auto;
+  }
 `;
 
 const ContentContainer = styled(ItemVV2)<IncomingCallModalContentProps>`
+  display: flex;
   background: ${(props) => props.theme.vcModalBGColor};
   border: ${(props) => {
     return `2px solid ${props.theme.vcBorderColor}`;
   }};
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05);
   border-radius: 1.5rem;
-  width: ${props => props.isIncomingCallMinimized ? "32vw" : "25vw"};
+  width: ${props => props.isIncomingCallMinimized ? "auto" : "25vw"};
   flex-direction: ${props => props.isIncomingCallMinimized ? "row" : "column"};
-  justify-content: ${props => props.isIncomingCallMinimized ? "space-between" : "center"};
+  justify-content: ${props => props.isIncomingCallMinimized ? "center" : "center"};
   height: fit-content;
   z-index: 10;
 
   @media ${device.laptop} {
-    width: 31vw;
+    // width: 31vw;
   }
 
   @media ${device.tablet} {
