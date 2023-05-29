@@ -77,6 +77,7 @@ const IncomingCall = () => {
             address={`${videoCallData.incoming[0].address}`}
             status="Incoming Video Call"
             containerStyles={{ margin: isMobile ? '2.5% 0 4% 2%' : '2.5% auto' }}
+            source="minimized"
           />
         )}
 
