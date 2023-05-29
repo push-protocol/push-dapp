@@ -75,7 +75,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
         </LocalVideoContainer>
       )}
       {videoCallData.incoming[0].status === VideoCallStatus.CONNECTED && (
-        <IncomingVideoContainer background={videoCallData.incoming[0].video ? theme.chat.snapFocusBg : "transparent"}>
+        <IncomingVideoContainer background={videoCallData.incoming[0].video ? "transparent" : theme.chat.snapFocusBg }>
           <IncomingVideoInnerContainer >
             <IncomingVideo ref={incomingVideoRef} />
 
