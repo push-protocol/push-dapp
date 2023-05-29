@@ -2,7 +2,7 @@
 import React, { useContext, useEffect, useRef } from 'react';
 
 // External Packages
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -12,6 +12,7 @@ import { VideoCallStatus } from '@pushprotocol/restapi';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext } from 'types/chat';
+import { shortenText } from 'helpers/UtilityHelper';
 
 type VideoPlayerType = {
   localVideoStyles?: {};
@@ -23,6 +24,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
   const { videoCallData } = useContext(VideoCallContext);
   const { connectedUser } =useContext(ChatUserContext);
   const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const theme=useTheme();
 
   useEffect(() => {
     if (localVideoRef.current) {
@@ -73,42 +75,35 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
         </LocalVideoContainer>
       )}
       {videoCallData.incoming[0].status === VideoCallStatus.CONNECTED && (
-        <IncomingVideoContainer>
-          <IncomingVideo ref={incomingVideoRef} />
+        <IncomingVideoContainer background={videoCallData.incoming[0].video ? theme.chat.snapFocusBg : "transparent"}>
+          <IncomingVideoInnerContainer >
+            <IncomingVideo ref={incomingVideoRef} />
 
-          {!videoCallData.incoming[0].video && (
-            <VideoDisabledContainer>
-              <PfpContainer>
-                <ImageV2
-                  height="100%"
-                  width="100%"
-                  alt={`Profile pic`}
-                  src={currentChat?.profilePicture}
-                  objectFit="cover"
-                />
-              </PfpContainer>
-            </VideoDisabledContainer>
-          )}
+            {!videoCallData.incoming[0].video && (
+              <VideoDisabledContainer>
+                <PfpContainer>
+                  <ImageV2
+                    height="100%"
+                    width="100%"
+                    alt={`Profile pic`}
+                    src={currentChat?.profilePicture}
+                    objectFit="cover"
+                  />
+                </PfpContainer>
+              </VideoDisabledContainer>
+            )}
 
-          <ProfileInfoMini position="absolute">
-            <PfpContainerMini>
-              <ImageV2
-                height="100%"
-                width="100%"
-                alt={`Profile pic`}
-                src={currentChat?.profilePicture}
-                objectFit="cover"
-              />
-            </PfpContainerMini>
-            <SpanV2
-              padding="10px"
-              borderRadius="24px"
-              background="#ffffffbb"
-              zIndex="3"
-            >
-              {videoCallData.incoming[0].address}
-            </SpanV2>
-          </ProfileInfoMini>
+            <ProfileInfoMini position="absolute">
+              <SpanV2
+                padding="10px"
+                borderRadius="24px"
+                background="#ffffffbb"
+                zIndex="3"
+              >
+                {shortenText(videoCallData.incoming[0].address,5)}
+              </SpanV2>
+            </ProfileInfoMini>
+          </IncomingVideoInnerContainer>
         </IncomingVideoContainer>
       )}
     </Container>
@@ -180,10 +175,9 @@ const LocalVideo = styled.video`
 
 const IncomingVideo = styled.video`
   border-radius: 34px;
-  width: 100%;
-  height: auto;
+  width: auto;
+  height: 100%;
  
-
   @media (max-width: 820px) {
     width: 100%;
     height: 75vh;
@@ -194,15 +188,17 @@ const IncomingVideo = styled.video`
   }
 `;
 
+
 const IncomingVideoContainer = styled(ItemVV2)`
   overflow: hidden;
   /* height: 20vh;
   max-height: 62vh;
   width: 95%; */
-  background-color: ${props=> props.theme.chat.snapFocusBg};
+  background-color: ${props=> props.background};
   /* left: 2.5%; */
   border-radius: 34px;
   z-index: 1;
+  width: 100%;
 
   /* @media (max-height: 800px) {
     max-height: 50vh;
@@ -211,6 +207,14 @@ const IncomingVideoContainer = styled(ItemVV2)`
     border-radius: 20px;
   } */
 `;
+
+const IncomingVideoInnerContainer=styled.div`
+  width: auto;
+  min-height: 100%;
+  max-height: 100%;
+  border-radius: 34px;
+  position: relative;
+`
 
 const IncomingEnsContainer = styled(ItemVV2)`
   position: absolute;
