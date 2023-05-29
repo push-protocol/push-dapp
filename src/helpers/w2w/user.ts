@@ -230,6 +230,20 @@ export const getUpdatedChatAndIntent= async ({chatList,message,connectedUser,acc
         : {updatedIntents:updatedChatList, isIntentsUpdated:isUpdated};
 }
 
+export const getUpdatedGroupInfo = async({chatList, groupInfo, checkInbox})=>{
+  let isUpdated = false;
+  const updatedChatList = chatList.map(feed => {
+    if(feed?.groupInformation?.chatId === groupInfo.chatId){
+      feed.groupInformation = groupInfo;
+      isUpdated=true;
+    }
+    return feed;
+  });
+  return  checkInbox 
+          ?{updatedInbox:updatedChatList, isInboxUpdated:isUpdated}
+          :{updatedIntents:updatedChatList, isIntentsUpdated:isUpdated}
+}
+
 export const checkIfIntent = ({chat,account}):boolean => {
   if(chat && (chat?.combinedDID?.toLowerCase())?.includes(walletToCAIP10({account})?.toLowerCase()))
   {

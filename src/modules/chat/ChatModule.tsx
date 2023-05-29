@@ -38,7 +38,7 @@ import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection from 'sections/video/VideoCallSection';
 import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
-import { checkIfIntent, getUpdatedChatAndIntent } from 'helpers/w2w/user';
+import { checkIfIntent, getUpdatedChatAndIntent, getUpdatedGroupInfo } from 'helpers/w2w/user';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -178,22 +178,50 @@ function Chat({ chatid }) {
   //   }
   }
 
-  const getUpdatedGroup = async(groupInfo) => {
-    let isInInbox = false;
-    const updatedInbox = inbox.map(feed => {
-      if(feed?.groupInformation?.chatId === groupInfo.chatId){
-        feed.groupInformation = groupInfo;
-        isInInbox = true;
-      }
-      return feed;
-    });
-    if(isInInbox){
+const getUpdatedGroup = async(groupInfo) => {
+  let isGroupUpdated=false;
+  const {updatedInbox, isInboxUpdated} = await getUpdatedGroupInfo({chatList:inbox, groupInfo, checkInbox:true});
+  if(isInboxUpdated){
     setInbox(updatedInbox);
+    isGroupUpdated=true;
+  }
+  else{
+    const {updatedIntents, isIntentsUpdated} = await getUpdatedGroupInfo({chatList:intents, groupInfo,checkInbox:false})
+    if(isIntentsUpdated){
+      setReceivedIntents(updatedIntents);
+      isGroupUpdated=true;
     }
-    else {
-      const intents = await fetchIntent({connectedUser});
-      setReceivedIntents(intents);
+  }
+  if(!isGroupUpdated){
+    const fetchedChat = await PushAPI.chat.chat({
+      account: account,
+      toDecrypt: true,
+      pgpPrivateKey: connectedUser?.privateKey,
+      recipient: groupInfo?.chatId,
+      env: appConfig.appEnv
+    });
+    if(checkIfIntent({chat:fetchedChat, account})){
+      setReceivedIntents(prev=> [fetchedChat, ...prev]);   
     }
+    else{
+      setInbox(prev=>[fetchedChat,...prev])
+    }  
+  }
+    // let isInInbox = false;
+    // const updatedInbox = inbox.map(feed => {
+    //   if(feed?.groupInformation?.chatId === groupInfo.chatId){
+    //     feed.groupInformation = groupInfo;
+    //     isInInbox = true;
+    //   }
+    //   return feed;
+    // });
+    // if(isInInbox){
+    // setInbox(updatedInbox);
+    // }
+    // else {
+    //   const intents = await fetchIntent({connectedUser});
+    //   setReceivedIntents(intents);
+    // }
   }
 
   const [videoCallInfo, setVideoCallInfo] = useState<VideoCallInfoI>({
