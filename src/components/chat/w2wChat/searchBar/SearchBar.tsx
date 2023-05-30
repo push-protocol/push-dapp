@@ -156,7 +156,7 @@ const SearchBar = ({ autofilled }) => {
       // this ensures address are checksummed
 
       if (address) {
-        address = ethers.utils.getAddress(address.toLowerCase());
+        address = ethers.utils.getAddress(address?.toLowerCase());
         handleUserSearch({ userSearchData: address });
       } else if (group) {
         handleUserSearch({ groupSearchData: group });

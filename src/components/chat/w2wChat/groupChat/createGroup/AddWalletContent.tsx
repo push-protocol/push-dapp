@@ -8,7 +8,7 @@ import { MdError } from 'react-icons/md';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 
 // Internal Components
-import * as PushAPI from "@pushprotocol/restapi";
+import * as PushAPI from '@pushprotocol/restapi';
 import { ReactComponent as AddDark } from 'assets/chat/group-chat/adddark.svg';
 import { ReactComponent as AddLight } from 'assets/chat/group-chat/addlight.svg';
 import { ReactComponent as Clear } from 'assets/chat/group-chat/close.svg';
@@ -84,7 +84,7 @@ export const AddWalletContent = ({
           address = await library.resolveName(searchedUser);
         }
         // this ensures address are checksummed
-        address = ethers.utils.getAddress(address.toLowerCase());
+        address = ethers.utils.getAddress(address?.toLowerCase());
         if (address) {
           handleUserSearch(address);
         } else {
@@ -102,19 +102,17 @@ export const AddWalletContent = ({
     }
   };
 
-
-
   const handleUserSearch = async (userSearchData: string): Promise<void> => {
     const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData });
     let filteredData: User;
 
     if (userSearchData.length) {
-      filteredData = await PushAPI.user.get({ 
+      filteredData = await PushAPI.user.get({
         account: caip10,
-        env: appConfig.appEnv
+        env: appConfig.appEnv,
       });
 
-      if (filteredData !== null) {  
+      if (filteredData !== null) {
         setFilteredUserData(filteredData);
       }
       // User is not in the protocol. Create new user
@@ -235,10 +233,10 @@ export const AddWalletContent = ({
         ) : isLoadingSearch ? (
           <ItemHV2 margin="0px 0px 34px 0px">
             <LoaderSpinner
-            type={LOADER_TYPE.SEAMLESS}
-            width="auto"
-            spinnerSize={40}
-          />
+              type={LOADER_TYPE.SEAMLESS}
+              width="auto"
+              spinnerSize={40}
+            />
           </ItemHV2>
         ) : null}
 

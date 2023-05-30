@@ -9,7 +9,7 @@ import styled, { useTheme } from 'styled-components';
 // Internal Components
 import Dropdown, { DropdownValueType } from './Dropdown';
 import { H3, Image, Item, ItemH } from './SharedStyling.js';
-import { networkName } from 'helpers/UtilityHelper';
+import { LOGO_FROM_CHAIN_ID, networkName } from 'helpers/UtilityHelper';
 import { appConfig } from 'config/index.js';
 import { useClickAway } from 'hooks/useClickAway';
 
@@ -20,7 +20,7 @@ import { handleChangeNetwork } from 'helpers/ChainHelper';
 const ChainIndicator = ({ isDarkMode }) => {
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
-  const { error, account, library, chainId:currentChainId } = useWeb3React<ethers.providers.Web3Provider>();
+  const { error, account, library, chainId: currentChainId } = useWeb3React<ethers.providers.Web3Provider>();
   const theme = useTheme();
 
   const [showDropdown, setShowDropdown] = React.useState<boolean>(false);
@@ -34,7 +34,7 @@ const ChainIndicator = ({ isDarkMode }) => {
         id: chainId,
         value: chainName,
         title: chainName,
-        icon: `./svg/${networkName[chainId].split(' ')[0]}.svg`,
+        icon: `./svg/${LOGO_FROM_CHAIN_ID[chainId]}`,
         function: () => {
           handleChangeNetwork(chainId, library.provider);
           setShowDropdown(false);

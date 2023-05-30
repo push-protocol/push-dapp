@@ -25,41 +25,68 @@ type MemberListContainerType = {
   darkIcon: any;
   memberList?: any;
 };
-const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList, lightIcon, darkIcon, memberList }: MemberListContainerType) => {
+const MemberListContainer = ({
+  key,
+  memberData,
+  handleMembers,
+  handleMemberList,
+  lightIcon,
+  darkIcon,
+  memberList,
+}: MemberListContainerType) => {
   const [selectedWallet, setSelectedWallet] = React.useState<string>(null);
   const dropdownRef = React.useRef<any>(null);
   const theme = useTheme();
 
   useClickAway(dropdownRef, () => setSelectedWallet(null));
 
-  const removeAdminDropdown: DropdownValueType =
-    { id: 'dismiss_admin', title: 'Dismiss as admin', icon: DismissAdmin, function: () => dismissGroupAdmin() }
+  const removeAdminDropdown: DropdownValueType = {
+    id: 'dismiss_admin',
+    title: 'Dismiss as admin',
+    icon: DismissAdmin,
+    function: () => dismissGroupAdmin(),
+  };
 
-  const addAdminDropdown: DropdownValueType =
-    { id: 'dismiss_admin', title: 'Make group admin', icon: AddAdmin, function: () => makeGroupAdmin() }
+  const addAdminDropdown: DropdownValueType = {
+    id: 'dismiss_admin',
+    title: 'Make group admin',
+    icon: AddAdmin,
+    function: () => makeGroupAdmin(),
+  };
 
-  const removeUserDropdown: DropdownValueType =
-    { id: 'remove_user', title: 'Remove', icon: Remove, function: () => removeUser() }
+  const removeUserDropdown: DropdownValueType = {
+    id: 'remove_user',
+    title: 'Remove',
+    icon: Remove,
+    function: () => removeUser(),
+  };
 
   const dismissGroupAdmin = () => {
-    const updatedMembers = memberList.map(member => member.wallets == memberData.wallets ? ({ ...member, isAdmin: false }) : member)
-    handleMembers(updatedMembers)
-    setSelectedWallet(null)
-  }
+    const updatedMembers = memberList.map((member) =>
+      member.wallets?.toLowerCase() == memberData.wallets?.toLowerCase() ? { ...member, isAdmin: false } : member
+    );
+    handleMembers(updatedMembers);
+    setSelectedWallet(null);
+  };
 
   const makeGroupAdmin = () => {
-    const updatedMembers = memberList.map(member => member.wallets == memberData.wallets ? ({ ...member, isAdmin: true }) : member)
-    handleMembers(updatedMembers)
-    setSelectedWallet(null)
-  }
+    const updatedMembers = memberList.map((member) =>
+      member.wallets?.toLowerCase() == memberData.wallets?.toLowerCase() ? { ...member, isAdmin: true } : member
+    );
+    handleMembers(updatedMembers);
+    setSelectedWallet(null);
+  };
 
   const removeUser = () => {
-    handleMemberList(memberData)
-    setSelectedWallet(null)
-  }
+    handleMemberList(memberData);
+    setSelectedWallet(null);
+  };
 
   return (
-    <WalletProfileContainer background={memberList?'transparent':theme.groupSearchProfilBackground} border={memberList?`1px solid ${theme.modalInputBorderColor}`:'none'}>
+    <WalletProfileContainer
+      background={memberList ? 'transparent' : theme.groupSearchProfilBackground}
+      border={memberList ? `1px solid ${theme.modalInputBorderColor}` : 'none'}
+    >
       <WalletProfile>
         <ItemVV2
           width="48px"
@@ -71,39 +98,46 @@ const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList,
           <ImageV2 src={memberData?.profilePicture} />
         </ItemVV2>
         <SpanV2
-            fontSize="18px" fontWeight="400" color={theme.modalPrimaryTextColor}>{shortenText(memberData.wallets.split(':')[1], 8, 6)}</SpanV2>
+          fontSize="18px"
+          fontWeight="400"
+          color={theme.modalPrimaryTextColor}
+        >
+          {shortenText(memberData.wallets.split(':')[1], 8, 6)}
+        </SpanV2>
       </WalletProfile>
       <ItemHV2 justifyContent="flex-end">
-      {memberData?.isAdmin && (
-        <SpanV2
-         background="#F4DCEA"
+        {memberData?.isAdmin && (
+          <SpanV2
+            background="#F4DCEA"
             color="#D53A94"
             borderRadius="8px"
             padding="6px"
             fontWeight="500"
             fontSize="10px"
+          >
+            Admin
+          </SpanV2>
+        )}
+        <ItemVV2
+          maxWidth="fit-content"
+          onClick={() => {
+            setSelectedWallet(null);
+            memberList
+              ? findObject(memberData, memberList, 'wallets')
+                ? setSelectedWallet(memberData.wallets)
+                : handleMemberList(memberData)
+              : handleMemberList(memberData);
+          }}
         >
-          Admin
-        </SpanV2>
-      )}
-      <ItemVV2
-        maxWidth='fit-content'
-        onClick={() => {
-          setSelectedWallet(null)
-          memberList
-            ? findObject(memberData, memberList, 'wallets')
-              ? setSelectedWallet(memberData.wallets)
-              : handleMemberList(memberData)
-            : handleMemberList(memberData)
-        }}
-      >
-        {theme.scheme == 'light' ? lightIcon : darkIcon}
-      </ItemVV2>
+          {theme.scheme == 'light' ? lightIcon : darkIcon}
+        </ItemVV2>
       </ItemHV2>
-      {selectedWallet == memberData.wallets && (
+      {selectedWallet?.toLowerCase() == memberData.wallets?.toLowerCase() && (
         <DropdownContainer ref={dropdownRef}>
           <Dropdown
-            dropdownValues={memberData?.isAdmin ?[removeAdminDropdown,removeUserDropdown] : [addAdminDropdown, removeUserDropdown]}
+            dropdownValues={
+              memberData?.isAdmin ? [removeAdminDropdown, removeUserDropdown] : [addAdminDropdown, removeUserDropdown]
+            }
             hoverBGColor={theme.chat.snapFocusBg}
           />
         </DropdownContainer>
@@ -115,7 +149,7 @@ const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList,
 export default MemberListContainer;
 
 const WalletProfileContainer = styled(ItemHV2)`
-  position:unset;
+  position: unset;
   padding: 8px 16px;
   margin: 0px 0px 8px 0px;
   justify-content: space-between;

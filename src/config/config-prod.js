@@ -26,6 +26,7 @@ export const config = {
     137, //for polygon mainnet
     56, // for bnb mainnet
     // 10 // for optimism mainnet
+    1101, // polygon zkevm mainnet
   ],
 
   /**
@@ -36,9 +37,9 @@ export const config = {
   mainnetCoreRPC: 'https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
   mainnetCoreContractChain: 1,
   aliasRPC: {
-    137: "https://polygon-mainnet.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
-    56: "https://bsc-dataseed.binance.org/",
-    10: "https://opt-mainnet.g.alchemy.com/v2/JYW0UaSC5Zd0hrI6vE2K9VN1wJupoY5B"
+    137: 'https://polygon-mainnet.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9',
+    56: 'https://bsc-dataseed.binance.org/',
+    10: 'https://opt-mainnet.g.alchemy.com/v2/JYW0UaSC5Zd0hrI6vE2K9VN1wJupoY5B',
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
 
@@ -97,33 +98,40 @@ export const addresses = {
 
 export const CHAIN_DETAILS = {
   1: {
-    label: "Ethereum Mainnet",
-    name: "ETH_MAINNET",
+    label: 'Ethereum Mainnet',
+    name: 'ETH_MAINNET',
     chainId: 1,
-    rpcUrl: "https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a",
-    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa",
-    network: "mainnet",
-  }, 
+    rpcUrl: 'https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
+    network: 'mainnet',
+  },
   137: {
-    label: "Polygon Mainnet",
-    name: "POLYGON_MAINNET",
+    label: 'Polygon Mainnet',
+    name: 'POLYGON_MAINNET',
     chainId: 137,
-    rpcUrl: "https://polygon-mainnet.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
-    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa",
-    network: "polygon-mainnet",
+    rpcUrl: 'https://polygon-mainnet.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
+    network: 'polygon-mainnet',
   },
   56: {
-    label: "BNB Mainnet",
-    name: "BNB_MAINNET",
+    label: 'BNB Mainnet',
+    name: 'BNB_MAINNET',
     chainId: 56,
-    rpcUrl: "https://bsc-dataseed.binance.org/",
-    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
+    rpcUrl: 'https://bsc-dataseed.binance.org/',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
   },
   10: {
-    label: "Optimism Mainnet",
-    name: "OPTIMISM_MAINNET",
+    label: 'Optimism Mainnet',
+    name: 'OPTIMISM_MAINNET',
     chainId: 10,
     rpcUrl: 'https://opt-mainnet.g.alchemy.com/v2/JYW0UaSC5Zd0hrI6vE2K9VN1wJupoY5B',
-    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa'
-  }
-}
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
+  },
+  1101: {
+    label: 'Polygon zkEVM Mainnet',
+    name: 'POLYGON_ZK_EVM_MAINNET',
+    chainId: 1101,
+    rpcUrl: 'https://rpc.polygon-zkevm.gateway.fm',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
+  },
+};

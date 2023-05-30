@@ -9,13 +9,13 @@ import styled, { useTheme } from 'styled-components';
 import { A, Image, ItemH, Span } from '../primaries/SharedStyling';
 
 export type DropdownValueType = {
-  id: number|string,
-  value?: string,
-  title: string,
-  icon: string,
-  textColor?: string,
-  function: () => void,
-}
+  id: number | string;
+  value?: string;
+  title: string;
+  icon: string;
+  textColor?: string;
+  function: () => void;
+};
 
 type DropdownProps = {
   dropdownValues: any[];
@@ -24,17 +24,14 @@ type DropdownProps = {
   hoverBGColor?: string;
 };
 
-
 // Create Dropdown
 function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: DropdownProps) {
-
   const theme = useTheme();
 
-  const getTextColor = (dropdownValue:DropdownValueType) => {
-    return dropdownValue.textColor ? dropdownValue.textColor:textColor? textColor : theme.snackbarBorderText;
-  }
+  const getTextColor = (dropdownValue: DropdownValueType) => {
+    return dropdownValue.textColor ? dropdownValue.textColor : textColor ? textColor : theme.snackbarBorderText;
+  };
 
- 
   const copyToClipboard = (address) => {
     if (navigator && navigator.clipboard) {
       navigator.clipboard.writeText(address);
@@ -58,7 +55,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
             wrap="nowrap"
             margin="0px 0 8px 0"
             width="max-content"
-            style={{cursor: "pointer"}}
+            style={{ cursor: 'pointer' }}
             onClick={() => dropdownValue?.function()}
           >
             <Span
@@ -71,9 +68,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
               width="max-content"
             >
               <DesktopAddress>{dropdownValue?.title}</DesktopAddress>
-              <MobileAddress>
-                {shortenText(dropdownValue?.title,6)}
-              </MobileAddress>
+              <MobileAddress>{shortenText(dropdownValue?.title, 6)}</MobileAddress>
             </Span>
             {dropdownValue?.invertedIcon && (
               <Image
@@ -100,7 +95,10 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
             )}
           </ItemH>
         ) : (
-          <DropdownItemContainer hoverBGColor={hoverBGColor} onClick={() => dropdownValue?.function()}>
+          <DropdownItemContainer
+            hoverBGColor={hoverBGColor}
+            onClick={() => dropdownValue?.function()}
+          >
             {dropdownValue?.invertedIcon && (
               <Image
                 src={dropdownValue.invertedIcon}
@@ -182,6 +180,7 @@ const DropdownItemContainer = styled(ItemH)`
   padding: 2px 8px;
   border-radius: 12px;
   cursor: pointer;
+  text-align: left;
 
   &:hover {
     background-color: ${(props) => props.hoverBGColor || 'none'};

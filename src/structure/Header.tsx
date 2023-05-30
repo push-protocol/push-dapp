@@ -37,14 +37,14 @@ import { handleChangeNetwork } from 'helpers/ChainHelper';
 function Header({ isDarkMode, darkModeToggle }) {
   // Get theme
   const theme = useTheme();
-  const navRef = useRef()
+  const navRef = useRef();
 
   // Get Web3 Context
   // const context = useWeb3React<Web3Provider>()
 
   const { navigationSetup } = useContext(NavigationContext);
 
-  const { active, error,library, chainId } = useWeb3React();
+  const { active, error, library, chainId } = useWeb3React();
 
   const [showLoginControls, setShowLoginControls] = React.useState(false);
 
@@ -90,12 +90,12 @@ function Header({ isDarkMode, darkModeToggle }) {
     if (error instanceof NoEthereumProviderError) {
       return 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile';
     } else if (error instanceof UnsupportedChainIdError) {
-      handleChangeNetwork(chainId,library.provider);
+      handleChangeNetwork(chainId, library.provider);
       if (appConfig.coreContractChain === 42)
         return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network';
       else if (appConfig.coreContractChain === 5)
-        return 'Unsupported Network, please connect to the Ethereum Goerli, Polygon Mumbai, BNB testnet or Optimism Goerli';
-      else return 'Unsupported Network, please connect to the Ethereum, Polygon, or BNB Mainnet';
+        return 'Unsupported Network, please connect to the Ethereum Goerli, Polygon Mumbai, BNB testnet, Optimism Goerli or Polygon zkEVM testnet';
+      else return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB, or Polygon zkEVM Mainnet';
     } else if (error instanceof UserRejectedRequestErrorInjected) {
       return 'Please authorize this website to access the dApp';
     } else {
@@ -109,30 +109,50 @@ function Header({ isDarkMode, darkModeToggle }) {
   };
 
   const isMobile = useDeviceWidthCheck(600);
-  
 
   return (
-    <Container direction="row" padding="0px 15px">
-      <ItemH justify="flex-start" flex="0">
-        <RightBarContainer justify="flex-start" flex="0">
-          <RightBarDesktop justify="flex-start" flex="0">
+    <Container
+      direction="row"
+      padding="0px 15px"
+    >
+      <ItemH
+        justify="flex-start"
+        flex="0"
+      >
+        <RightBarContainer
+          justify="flex-start"
+          flex="0"
+        >
+          <RightBarDesktop
+            justify="flex-start"
+            flex="0"
+          >
             <Logo src={!isDarkMode ? 'push.svg' : 'pushDark.svg'} />
           </RightBarDesktop>
 
-          <LogoMobile justify="flex-start" flex="0">
+          <LogoMobile
+            justify="flex-start"
+            flex="0"
+          >
             <Logo src={!isDarkMode ? 'logo512.png' : 'logo512.png'} />
           </LogoMobile>
         </RightBarContainer>
-        
+
         {/* mobile navbar */}
         {navigationSetup && showNavBar && active && !error && (
-          <NavMenuContainer ref={navRef} tabletAlign="flex-start">
+          <NavMenuContainer
+            ref={navRef}
+            tabletAlign="flex-start"
+          >
             <NavMenu>
-              <ChainIndicator isDarkMode={isDarkMode}/>
+              <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
 
               <NavMenuInner tabletAlign="flex-start">
-                <MobileNavigation showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
+                <MobileNavigation
+                  showNavBar={showNavBar}
+                  setShowNavBar={setShowNavBar}
+                />
               </NavMenuInner>
             </NavMenu>
           </NavMenuContainer>
@@ -141,14 +161,18 @@ function Header({ isDarkMode, darkModeToggle }) {
 
       <ItemH justify="flex-end">
         {headerTag && active && !error && (
-          <HeaderTag align="flex-start" overflow="hidden">
+          <HeaderTag
+            align="flex-start"
+            overflow="hidden"
+          >
             <Span
               textTransform="capitalize"
               spacing="-0.02em"
               weight="normal"
-              padding={isMobile ? "8px 7px" : "8px 20px" }
-              className='text'
-              color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}>
+              padding={isMobile ? '8px 7px' : '8px 20px'}
+              className="text"
+              color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}
+            >
               {headerTag.title}
             </Span>
           </HeaderTag>
@@ -165,26 +189,36 @@ function Header({ isDarkMode, darkModeToggle }) {
           />
         )}
 
-      {active && !error && (
-            <RightBarMobile>
-              <Button
-                bg="transparent"
-                padding="5px"
-                radius="4px"
-                onClick={() => {
-                  setShowNavBar(!showNavBar);
-                }}>
-                <AiOutlineMenu size={30} color={theme.headerIconsBg} />
-              </Button>
-            </RightBarMobile>
-          )}
+        {active && !error && (
+          <RightBarMobile>
+            <Button
+              bg="transparent"
+              padding="5px"
+              radius="4px"
+              onClick={() => {
+                setShowNavBar(!showNavBar);
+              }}
+            >
+              <AiOutlineMenu
+                size={30}
+                color={theme.headerIconsBg}
+              />
+            </Button>
+          </RightBarMobile>
+        )}
 
-        <ItemH justify="flex-end" flex="initial">
+        <ItemH
+          justify="flex-end"
+          flex="initial"
+        >
           {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>}
           {!active && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>}
           {active && !showLoginControls && !error && (
-            <RightBarDesktop justify="flex-end" flex="initial">
-              <ChainIndicator isDarkMode={isDarkMode}/>
+            <RightBarDesktop
+              justify="flex-end"
+              flex="initial"
+            >
+              <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
             </RightBarDesktop>
           )}{' '}
@@ -225,11 +259,11 @@ const RightBarMobile = styled(ItemH)`
   }
 `;
 
- const LogoMobile = styled(ItemH)`
-    @media (min-width: 993px) {
-      display: none;
-    }
- `
+const LogoMobile = styled(ItemH)`
+  @media (min-width: 993px) {
+    display: none;
+  }
+`;
 
 const NavMenuContainer = styled(Item)`
   position: fixed;
@@ -246,11 +280,10 @@ const NavMenuContainer = styled(Item)`
   backdrop-filter: blur(30px);
   z-index: 11;
   width: 250px;
-  box-shadow: 0 0 0 10000px rgba(0,0,0,0.9);
+  box-shadow: 0 0 0 10000px rgba(0, 0, 0, 0.9);
   padding: 30px 30px;
-  
 
-  @media (min-width: 993px){
+  @media (min-width: 993px) {
     display: none;
   }
 `;
@@ -298,17 +331,17 @@ const ThirdTheme = styled(Notice)`
 const HeaderTag = styled(Item)`
   flex: 1;
   margin: 0px 5px;
-   @media (min-width: 993px) {
+  @media (min-width: 993px) {
     margin: 5px 10px;
   }
 
   @media (max-width: 993px) {
     margin: 5px 0px;
   }
-  .text{
+  .text {
     font-size: 24px;
-    
-    @media (max-width: 993px){
+
+    @media (max-width: 993px) {
       font-size: 20px;
     }
   }

@@ -4631,9 +4631,9 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
     "@pushprotocol/ledgerlive": latest
-    "@pushprotocol/restapi": ^1.2.4
+    "@pushprotocol/restapi": 1.2.14
     "@pushprotocol/socket": latest
-    "@pushprotocol/uiweb": latest
+    "@pushprotocol/uiweb": 1.0.2
     "@reduxjs/toolkit": ^1.7.1
     "@testing-library/dom": ^6.12.2
     "@testing-library/jest-dom": ^4.2.4
@@ -4835,9 +4835,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:^1.2.4":
-  version: 1.2.10
-  resolution: "@pushprotocol/restapi@npm:1.2.10"
+"@pushprotocol/restapi@npm:1.2.14":
+  version: 1.2.14
+  resolution: "@pushprotocol/restapi@npm:1.2.14"
   dependencies:
     "@metamask/eth-sig-util": ^5.0.2
     axios: ^0.27.2
@@ -4848,11 +4848,11 @@ __metadata:
     uuid: ^9.0.0
   peerDependencies:
     ethers: ^5.6.8
-  checksum: 05284e13db830f647ef38f8fb787894fcc3eb4e2889149cad55d4f2185b43611c185cd753577ea470fb3b2565f361d5789cb2e36a670059a9259ce14bc0ffe5d
+  checksum: 904d9def3e233305b80421fc35989a3dad72cd5093c293320809ac5e39f38cf4b46969dd9e81470038408a76b8f985ab0e807e6aa0f318085507acdab33f092a
   languageName: node
   linkType: hard
 
-"@pushprotocol/socket@npm:latest":
+"@pushprotocol/socket@npm:^0.5.0, @pushprotocol/socket@npm:latest":
   version: 0.5.0
   resolution: "@pushprotocol/socket@npm:0.5.0"
   dependencies:
@@ -4864,20 +4864,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:latest":
-  version: 1.0.1
-  resolution: "@pushprotocol/uiweb@npm:1.0.1"
+"@pushprotocol/uiweb@npm:1.0.2":
+  version: 1.0.2
+  resolution: "@pushprotocol/uiweb@npm:1.0.2"
   dependencies:
+    "@pushprotocol/socket": ^0.5.0
     date-fns: ^2.28.0
     emoji-picker-react: ^3.5.1
     html-react-parser: ^1.4.13
   peerDependencies:
-    "@pushprotocol/restapi": ^1.2.8
-    "@pushprotocol/socket": ^0.4.2
+    "@pushprotocol/restapi": ^1.2.15
+    "@pushprotocol/socket": ^0.5.0
     ethers: ^5.7.1
     react: ">=16.8.0"
     styled-components: ^5.3.5
-  checksum: 5356e8d34e240faa8d20c0741f45c752a4c2c4f654e3cff37b0efbe63def42cb752a7fe09fdc51344a0a1ce94563b1bd7fded5003710b1e7fad29df9ed5ef61a
+  checksum: 7a7b17c980579963ba8925b4a2365177ac550b4fd2e0e28b3508b6f8fdfc5eb76cd5147cb14563a9383a71f25aec9574df6b44bff277d1caf7736b1ba5ae19af
   languageName: node
   linkType: hard
 
