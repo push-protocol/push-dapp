@@ -32,12 +32,16 @@ const Container = styled(ItemHV2)<IncomingCallModalContentProps>`
   border-radius: 1.5rem;
   width: ${props => props.isIncomingCallMinimized ? "24vw" : "24vw"};
    
-  @media ${device.laptop} {
-    right: 3%;
+  @media ${device.laptopL} {
+    right: ${props => props.isIncomingCallMinimized ? "2%" : "25%"};
+    bottom: ${props => props.isIncomingCallMinimized ? "10%" : "20%"};
+    width: ${props => props.isIncomingCallMinimized ? "31vw" : "24vw"};
   }
 
   @media ${device.tablet} {
-    right: ${props => props.isIncomingCallMinimized ? "5%" : "25%"};
+    right: ${props => props.isIncomingCallMinimized ? "5%" : "30%"};
+    bottom: ${props => props.isIncomingCallMinimized ? "10%" : "25%"};
+    width: ${props => props.isIncomingCallMinimized ? "60vw" : "37vw"};
   }
 
   @media ${device.mobileL} {

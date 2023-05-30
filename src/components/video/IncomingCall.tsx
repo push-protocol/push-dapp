@@ -2,7 +2,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import { MdClear } from 'react-icons/md';
+// import { MdClear } from 'react-icons/md';
+import { BsChevronDown } from 'react-icons/bs';
 import styled from 'styled-components';
 import * as PushAPI  from '@pushprotocol/restapi'
 
@@ -134,7 +135,7 @@ const CrossIconContainer = styled(ItemHV2)`
   padding: 1rem 1rem 0 1rem;
 `;
 
-const CrossIcon = styled(MdClear)`
+const CrossIcon = styled(BsChevronDown)`
   width: 25px;
   height: 25px;
   cursor: pointer;
