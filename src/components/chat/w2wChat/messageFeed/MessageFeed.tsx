@@ -97,12 +97,13 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
       }
       setShowError(true);
     }
+    finally{
+      setMessagesLoading(false);
+    }
   };
 
   const updateInbox = async ({chatLimit}:{chatLimit?:number}): Promise<void> => {
-    setMessagesLoading(true);
     await fetchInboxApi({limit:chatLimit});
-    setMessagesLoading(false);
   };
 
   useEffect(() => {
@@ -223,7 +224,6 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
       alignItems="flex-start"
       justifyContent="flex-start"
     >
-      {/* hey there */}
       {activeTab !== 3 && activeTab !== 4 && (
         <SpanV2
           fontWeight="700"
@@ -270,7 +270,7 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
           </>
         )}
         {
-        messagesLoading && bgUpdateLoading && (
+        bgUpdateLoading && (
           <LoaderSpinner
             type={LOADER_TYPE.SEAMLESS}
             spinnerSize={40}
