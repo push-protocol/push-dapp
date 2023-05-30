@@ -130,16 +130,16 @@ const LocalVideoContainer = styled(ItemVV2)`
     right: 9px;
     bottom: 9px;
     @media ${device.laptop} {
-      right: 26px;
+      right: 9px;
     }
     @media ${device.tablet} {
-      bottom: -10px;
-      right: 25px;
+      bottom: 5px;
+      right: 5px;
     }
     @media ${device.mobileL} {
       border-radius: 16px;
-      bottom: -18px;
-      right: 2.4%;
+      bottom: 5px;
+      right: 5px;
     }
 
     &.videoOff {
