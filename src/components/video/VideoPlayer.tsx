@@ -76,7 +76,10 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
       )}
       {videoCallData.incoming[0].status === VideoCallStatus.CONNECTED && (
         <IncomingVideoContainer background={videoCallData.incoming[0].video ? "transparent" : theme.chat.snapFocusBg }>
-          <IncomingVideoInnerContainer width={videoCallData.incoming[0].video ? "auto":"100%"}>
+          <IncomingVideoInnerContainer 
+            width={videoCallData.incoming[0].video ? "auto":"100%"}
+            minHeight={videoCallData.incoming[0].video ? "auto":"100%"}
+          >
             <IncomingVideo ref={incomingVideoRef} display={videoCallData.incoming[0].video?'block':'none'}/>
 
             {!videoCallData.incoming[0].video && (
@@ -176,8 +179,9 @@ const IncomingVideo = styled.video`
  
   @media (max-width: 820px) {
     width: 100%;
-    height: 75vh;
+    height: auto;
     object-fit: cover;
+
   }
   @media (max-width: 425px) {
     border-radius: 20px;
@@ -210,6 +214,11 @@ const IncomingVideoInnerContainer=styled.div`
   max-height: 100%;
   border-radius: 34px;
   position: relative;
+  @media (max-width:820px){
+    width: 100%;
+    min-height:${props => props.minHeight};
+    max-height: 100%;
+  }
 `
 
 const IncomingEnsContainer = styled(ItemVV2)`
