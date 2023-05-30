@@ -47,7 +47,8 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const messageFeedToast = useToast();
 
   const onFeedClick = (feed:Feeds,i:number):void => {
-    if((receivedIntents?.filter((userExist) => userExist.did?.toLowerCase() === props?.filteredUserData[0]?.did?.toLowerCase())).length)
+    if((receivedIntents?.filter((userExist) => userExist.did && props?.filteredUserData[0]?.did && userExist.did?.toLowerCase() === props?.filteredUserData[0]?.did?.toLowerCase()))
+.length)
     {
       setActiveTab(1);
     }

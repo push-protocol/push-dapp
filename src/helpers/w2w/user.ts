@@ -35,9 +35,6 @@ export const checkIfChatExist = ({
   isGroup,
 }: CheckIfChatsExistPropType): boolean => {
   let val: boolean;
-  console.log(chats)
-  console.log(currentChat)
-  console.log(connectedUser?.did?.toLowerCase())
   if (isGroup ) {
     val = chats?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)
       ? true
@@ -142,7 +139,6 @@ export const getDefaultGroupFeed = async ({
 }): Promise<{feed:Feeds,isNew:boolean}> => {
     let isNew:boolean = false;
     let feed:Feeds;
-    console.log(inbox)
     const inboxGroup = inbox.filter((inb) => inb?.groupInformation?.chatId === groupData.chatId);
 
     const intentGroup = intents.filter((int) =>int?.groupInformation?.chatId === groupData.chatId);
