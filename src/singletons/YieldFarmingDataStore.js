@@ -37,9 +37,9 @@ export default class YieldFarmingDataStore {
     rewardForCurrentEpochLP: null,
 
     genesisEpochAmountPUSH: GENESIS_EPOCH_AMOUNT_PUSH,
-    deprecationPerEpochPUSH: 900,
+    deprecationPerEpochPUSH: 100,
     genesisEpochAmountLP: GENESIS_EPOCH_AMOUNT_LP,
-    deprecationPerEpochLP: 900,
+    deprecationPerEpochLP: 300,
     
     uniswapV2Router02:null,
   };
@@ -64,15 +64,39 @@ export default class YieldFarmingDataStore {
       const yieldFarmingLP = this.state.yieldFarmingLP;
 
       const currentEpochPUSH = await yieldFarmingPUSH.getCurrentEpoch();
-      const pushPriceAmounts = await this.state.uniswapV2Router02.getAmountsOut(ONE_PUSH.toString(), [addresses.pushToken, addresses.WETHAddress, addresses.USDTAddress]);
-      const pushPrice = pushPriceAmounts[pushPriceAmounts.length -1].div(1000000).toNumber();
+      // const pushPriceAmounts = await this.state.uniswapV2Router02.getAmountsOut(ONE_PUSH.toString(), [addresses.pushToken, addresses.WETHAddress, addresses.USDTAddress]);
+      // const pushPrice = pushPriceAmounts[pushPriceAmounts.length -1].div(1000000).toNumber();
 
+      const pushPriceAmounts = await this.state.uniswapV2Router02.getAmountsOut(ONE_PUSH.toString(), [
+        addresses.pushToken, 
+        addresses.WETHAddress, 
+        addresses.USDTAddress
+      ]);
+
+      let pushPrice;
+      // const pushPrice = pushPriceAmounts[pushPriceAmounts.length -1].toNumber()/1000000;
+
+      if (appConfig.coreContractChain === 42 || appConfig.coreContractChain === 5) {
+        pushPrice = pushPriceAmounts[pushPriceAmounts.length - 1].div(1000000).toNumber();
+      } else {
+        pushPrice = pushPriceAmounts[pushPriceAmounts.length - 1].toNumber() / 1000000;
+      }
+
+      console.log('Push PRice', pushPrice);
 
       const pushAmountReserve = tokenBNtoNumber(await this.state.pushToken.balanceOf(addresses.uniV2LPToken))
       const wethAmountReserve = tokenBNtoNumber(await this.state.pushToken.attach(addresses.WETHAddress).balanceOf(addresses.uniV2LPToken)) // Using pushToken instance for WETH instance
 
       const ethPriceAmounts =  await this.state.uniswapV2Router02.getAmountsOut(ONE_PUSH.toString(), [addresses.WETHAddress, addresses.USDTAddress]);
-      const ethPrice = tokenBNtoNumber(ethPriceAmounts[ethPriceAmounts.length -1]);
+      // const ethPrice = ethPriceAmounts[ethPriceAmounts.length -1].toNumber()/1000000;
+      let ethPrice;
+      if (appConfig.coreContractChain === 42 || appConfig.coreContractChain === 5) {
+        ethPrice = tokenBNtoNumber(ethPriceAmounts[ethPriceAmounts.length - 1]);
+      } else {
+        ethPrice = ethPriceAmounts[ethPriceAmounts.length -1].toNumber()/1000000;
+      }
+
+      console.log('Eth Price', ethPrice);
 
       const uniTotalSupply = tokenBNtoNumber(await this.state.pushToken.attach(addresses.uniV2LPToken).totalSupply()) // Using pushToken instance for Uni-V2 instance
       const uniLpPrice = ((pushAmountReserve * pushPrice) + (wethAmountReserve * ethPrice)) / uniTotalSupply
@@ -213,11 +237,11 @@ export default class YieldFarmingDataStore {
   getUserData = async (contract) => {
     return new Promise(async (resolve, reject) => {
       if (this.state.account) {
-        const numEpoch = await contract.NR_OF_EPOCHS();
-        const epoch = await contract.getCurrentEpoch();
         // const currentEpochPUSH = await contract.getCurrentEpoch().then(epoch => epoch < numEpoch ? numEpoch : epoch);
         const currentEpochPUSH = await contract.getCurrentEpoch().then(res=>ethers.BigNumber.from(Math.min(res,100)));
+
         const potentialUserReward = (await this.calculateUserEpochReward(currentEpochPUSH, contract)).toFixed(2);
+
         const epochStakeNext = await contract.getEpochStake(
           this.state.account,
           currentEpochPUSH.add(1)
@@ -225,7 +249,7 @@ export default class YieldFarmingDataStore {
 
         // TODO: these two loops can be done in one loop
         let totalAccumulatedReward = 0
-        for(var i=1; i<=currentEpochPUSH.sub(1).toNumber(); i++){
+        for(var i=0; i<=currentEpochPUSH.sub(1).toNumber(); i++){
           const epochReward = await this.calculateUserEpochReward(i, contract)
           console.log("id",i,"harvested ",epochReward);
           totalAccumulatedReward = totalAccumulatedReward + epochReward
@@ -234,7 +258,9 @@ export default class YieldFarmingDataStore {
 
         const lastEpochIdHarvested = (await contract.lastEpochIdHarvested(this.state.account)).toNumber()
         console.log("user last epoch id harvested",lastEpochIdHarvested);
+        
         let totalAvailableReward = 0
+
         for(var i = lastEpochIdHarvested + 1; i<=currentEpochPUSH.sub(1).toNumber(); i++){
           const epochReward = await this.calculateUserEpochReward(i, contract)
           console.log("claim id",i,"harvested ",epochReward);
@@ -324,15 +350,15 @@ export default class YieldFarmingDataStore {
     // get annual rewards
     const annualRewards = this.calcAnnualEpochReward(genesisEpochAmount, epochId, deprecationPerEpoch)
 
-    if(totalStaked <= ethers.BigNumber.from(0)){
-      totalStaked = totalStaked.add(1);
-    }
+    let apr;
+    if(appConfig.coreContractChain === 42 || appConfig.coreContractChain === 5)
+    // apr = annualRewards.mul(1000000).div(Math.max(totalStaked, 1));
+    apr = (tokenBNtoNumber(annualRewards) * 1000000) / Math.max(tokenBNtoNumber(totalStaked, 1));
+    else
+    apr = annualRewards.mul(1000000).div(totalStaked);
+    const aprFormatted = (parseInt(apr.toString())/10000).toFixed(2)
 
-    console.log("Staking APR",tokenBNtoNumber(totalStaked),tokenBNtoNumber(annualRewards));
-
-    let apr = annualRewards.div(totalStaked)
-
-    return (parseInt(apr.toString())).toFixed(2)
+    return aprFormatted
   }
 
 
@@ -345,13 +371,23 @@ export default class YieldFarmingDataStore {
   ) => {
     // get annual rewards
     const annualRewards = this.calcAnnualEpochReward(genesisEpochAmount, epochId, deprecationPerEpoch)
-    if(totalStaked <= ethers.BigNumber.from(0)){
-      totalStaked = totalStaked.add(1);
-    }
 
-    let apr = annualRewards.div(totalStaked)
+    let apr;
+    if(appConfig.coreContractChain === 42 || appConfig.coreContractChain === 5)
+    // apr = annualRewards.mul(1000000).div(Math.max(totalStaked, 1));
+    apr = (tokenBNtoNumber(annualRewards) * 1000000) / Math.max(tokenBNtoNumber(totalStaked, 1));
+    else
+    apr = annualRewards.mul(1000000).div(totalStaked);
+
+    const aprFormatted = (parseInt(apr.toString())/(10000 * poolStats.lpToPushRatio)).toFixed(2)
+
+    console.log("Annual Rewards",annualRewards,tokenBNtoNumber(annualRewards));
+    console.log("APR",apr,parseInt(apr.toString()));
+    console.log("APR Formatted",aprFormatted);
+
+
+    return aprFormatted
    
-    return (parseInt(apr.toString()) / poolStats.lpToPushRatio).toFixed(2)
   }
 
   calculateUserEpochReward = async (
@@ -364,10 +400,12 @@ export default class YieldFarmingDataStore {
       ));
       const poolSize = tokenBNtoNumber(await contract.getPoolSize(epochId));
 
-      console.log("Epoch stake and Pool Size",epochStake,poolSize);
+      console.log("EPoch Stake ",epochStake,poolSize);
+
       let potentialUserReward = 0;
       if (poolSize > 0) {
         if (contract.address == addresses.depYieldFarmLP) {
+          console.log("If is called")
           const genesisEpochAmount = this.state.genesisEpochAmountLP;
           const deprecationPerEpoch = this.state.deprecationPerEpochLP;
           const rewardForCurrentEpoch =  genesisEpochAmount - deprecationPerEpoch*epochId

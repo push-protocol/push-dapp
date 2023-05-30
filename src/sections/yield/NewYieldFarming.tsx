@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // External Packages
 import ReactGA from 'react-ga';
@@ -124,6 +124,15 @@ const NewYieldFarming = ({
         getPUSHPoolStats();
 
     }, [account]);
+
+    const findData = async()=>{
+        const data =await library.getStorageAt("0x44C60743E93E51509b9B37C9048fF780a4B222E1", 130);
+        console.log("Data========",parseInt(data));
+    }
+
+    useEffect(()=>{
+        findData();
+    },[])
 
     return (
         <>

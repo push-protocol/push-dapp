@@ -36,7 +36,7 @@ const YieldPushPriceSection = ({
         >
           $ 
           {/* 0.34 */}
-          {numberWithCommas(poolStats?.pushPrice)}
+          {numberWithCommas(poolStats?.pushPrice.toFixed(2))}
         </H2V2ThemeColor>
         <ImageV2
           width="25px"

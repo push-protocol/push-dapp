@@ -7,10 +7,6 @@ import styled from 'styled-components';
 
 // Internal Compoonents
 import { ItemHV2, ItemVV2, SectionV2 } from 'components/reusables/SharedStylingV2';
-import YieldAnnouncementSection from 'sections/yield/YieldAnnouncementSection';
-import YieldPushPriceSection from 'sections/yield/YieldPushPriceSection';
-import YieldSnapshotSection from 'sections/yield/YieldSnapshotSection';
-import YieldStatsSection from 'sections/yield/YieldStatsSection';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';

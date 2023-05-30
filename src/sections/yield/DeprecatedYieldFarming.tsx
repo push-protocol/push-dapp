@@ -158,7 +158,7 @@ const DeprecatedYieldFarming = ({
                     tokenAddress={addresses.uniV2LPToken}
                     setActiveTab={setActiveTab}
                 />
-
+                
                 <YieldPoolCard
                     poolName={"PUSH"}
                     userData={depUserDataPUSH}

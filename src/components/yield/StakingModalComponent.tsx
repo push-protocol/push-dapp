@@ -101,7 +101,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                 await library.waitForTransaction(tx.hash);
                 toastObject.showMessageToast({
                     toastTitle: 'Success',
-                    toastMessage: 'Successfully approved LP Tokens!',
+                    toastMessage: `Successfully approved ${title} Tokens!`,
                     toastType: 'SUCCESS',
                     getToastIcon: (size) => (
                         <MdCheckCircle
@@ -234,7 +234,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
 
     return (
-        <Container ref={containerRef}>
+        <Container>
 
             <ItemHV2 justifyContent='space-between'>
                 <PrimaryText>{title === 'Uni-V2' ? 'Uniswap V2 Staking Pool' : 'Push Fee staking Pool'}</PrimaryText>

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, Skeleton, SkeletonLine, SpanV2 } from 'components/reusables/SharedStylingV2';
 import InfoLogo from "../../assets/inforWithoutBG.svg";
 import { Button } from 'primaries/SharedStyling';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
@@ -283,26 +283,49 @@ const YieldPushFeeV3 = ({
                 modalPosition={MODAL_POSITION.ON_PARENT}
             />
 
-            {(userDataPush && PUSHPoolstats) ? (
-                <>
-                    {/* Top Section */}
-                    <ItemVV2 margin="0px 0px 20px 0px">
+            {/* Top Section */}
+            <ItemVV2 margin="0px 0px 20px 0px">
+                {PUSHPoolstats ? (
+                    <>
                         <Heading>PUSH Fee Staking Pool</Heading>
                         <SecondaryText>
                             Current APR <SpanV2 color="#D53A94">{numberWithCommas(PUSHPoolstats?.stakingAPR)}%</SpanV2>
                         </SecondaryText>
-                    </ItemVV2>
-
-                    {/* Body Section */}
-                    <ItemVV2
-                        flex='5'
+                    </>
+                ) : (
+                    <SkeletonContainer
+                        padding='5px 15px 0 15px'
                     >
-                        {/* Reward Section */}
-                        <ItemHV2
-                            border={`1px solid ${theme.stakingBorder}`}
-                            borderRadius="16px"
-                        >
-                            <ItemVV2 margin="0px 18px 0px 0px" padding="10px">
+                        <SkeletonLine height='12px' width='234px' margin='0 0 10px 0'></SkeletonLine>
+                        <SkeletonLine height='12px' width='112px'></SkeletonLine>
+                    </SkeletonContainer>
+                )}
+
+
+            </ItemVV2>
+
+            {/* Body Section */}
+            <ItemVV2
+                flex='5'
+            >
+                {/* Reward Section */}
+                <RewardContainer
+                    border={`1px solid ${theme.stakingBorder}`}
+                    borderRadius="16px"
+                >
+                    <ItemVV2 margin="0px 18px 0px 0px" padding="10px">
+                        {/* <SecondaryText>Current Reward</SecondaryText>
+                                <H2V2
+                                    fontSize="24px"
+                                    fontWeight="600"
+                                    color="#D53A94"
+                                    letterSpacing="-0.03em"
+                                >
+                                    {formatTokens(PUSHPoolstats?.currentReward)} PUSH
+                                </H2V2> */}
+
+                        {PUSHPoolstats ? (
+                            <>
                                 <SecondaryText>Current Reward</SecondaryText>
                                 <H2V2
                                     fontSize="24px"
@@ -312,11 +335,43 @@ const YieldPushFeeV3 = ({
                                 >
                                     {formatTokens(PUSHPoolstats?.currentReward)} PUSH
                                 </H2V2>
-                            </ItemVV2>
+                            </>
+                        ) : (
+                            // <Skeleton
+                            //     padding='0 15px'
+                            //     width='100%'
+                            //     maxWidth=' -webkit-fill-available'
+                            //     borderRadius='5px'
+                            //     gap='5px'
+                            // >
+                            //     <RewardSkeletonLine></RewardSkeletonLine>
+                            //     <RewardSkeletonLine></RewardSkeletonLine>
+                            // </Skeleton>
+                            <SkeletonContainer
+                                padding='5px 15px 0 15px'
+                            >
+                                <SkeletonLine height='12px' width='135px' margin='0 0 8px 0'></SkeletonLine>
+                                <SkeletonLine height='12px' width='100px'></SkeletonLine>
+                            </SkeletonContainer>
+                        )}
 
-                            <Line width="10px" height="100%"></Line>
 
-                            <ItemVV2 margin="0px 0px 0px 18px" padding="10px">
+                    </ItemVV2>
+
+                    <Line width="10px" height="100%"></Line>
+
+                    <ItemVV2 margin="0px 0px 0px 18px" padding="10px">
+                        {/* <SecondaryText>Total Staked</SecondaryText>
+                                <StakedAmount
+                                    fontSize="24px"
+                                    fontWeight="600"
+                                    letterSpacing="-0.03em"
+                                >
+                                    {formatTokens(PUSHPoolstats?.totalStakedAmount)} PUSH
+                                </StakedAmount> */}
+
+                        {PUSHPoolstats ? (
+                            <>
                                 <SecondaryText>Total Staked</SecondaryText>
                                 <StakedAmount
                                     fontSize="24px"
@@ -325,155 +380,144 @@ const YieldPushFeeV3 = ({
                                 >
                                     {formatTokens(PUSHPoolstats?.totalStakedAmount)} PUSH
                                 </StakedAmount>
-                            </ItemVV2>
-                        </ItemHV2>
+                            </>
+                        ) : (
+                            // <Skeleton
+                            //     padding='0 15px'
+                            //     width='100%'
+                            //     maxWidth=' -webkit-fill-available'
+                            //     borderRadius='5px'
+                            //     gap='5px'
+                            // >
+                            //     <RewardSkeletonLine></RewardSkeletonLine>
+                            //     <RewardSkeletonLine></RewardSkeletonLine>
+                            // </Skeleton>
+                            <SkeletonContainer
+                                padding='5px 15px 0 15px'
+                            >
+                                <SkeletonLine height='12px' width='135px' margin='0 0 8px 0'></SkeletonLine>
+                                <SkeletonLine height='12px' width='100px'></SkeletonLine>
+                            </SkeletonContainer>
+                        )}
 
-                        {/* Epoch Text */}
-                        <ItemHV2
-                            alignSelf="end"
-                            margin="12px 13px 24px 0px"
-                            color="#575D73"
-                            letterSpacing="-0.03em"
-                        >
-                            <EpochNo>
-                                Current Epoch  {PUSHPoolstats?.currentEpoch.toNumber()}
-                            </EpochNo>
-                        </ItemHV2>
-
-                        {/* Deposit Cash Data */}
-                        <ItemVV2>
-                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
-                                <DataTitle>
-                                    User Deposit
-                                    <InfoSpan>
-                                        <Tooltip
-                                            wrapperProps={{
-                                                width: 'fit-content',
-                                                maxWidth: 'fit-content',
-                                                minWidth: 'fit-content',
-                                                // zIndex: "10",
-                                            }}
-                                            placementProps={{
-                                                background: 'none',
-                                                bottom: '25px',
-                                                // top: "20px",
-                                                left: "0px",
-
-                                            }}
-                                            tooltipContent={
-                                                <StakingToolTipContent title={"User Deposited"} body={"Amount of Uni-V2 Token User Staked"} />
-                                            }
-
-                                        >
-                                            <ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" style={{ cursor: 'pointer' }} />
-                                        </Tooltip>
-                                    </InfoSpan>
-                                
-                                </DataTitle>
-                                <DataValue> {formatTokens(userDataPush?.userstakedAmount.stakedAmount)} PUSH</DataValue>
-                            </ItemHV2>
-                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
-                                <DataTitle>
-                                    Rewards Claimed
-                                    <InfoSpan>
-                                        <Tooltip
-                                            wrapperProps={{
-                                                width: 'fit-content',
-                                                maxWidth: 'fit-content',
-                                                minWidth: 'fit-content',
-                                                // zIndex: "10",
-                                            }}
-                                            placementProps={{
-                                                background: 'none',
-                                                bottom: '25px',
-                                                // top: "20px",
-                                                left: "0px",
-
-                                            }}
-                                            tooltipContent={
-                                                <StakingToolTipContent
-                                                    title={"Rewards Claimed"}
-                                                    body={"Amount of Push Claimed by User"} />
-                                            }
-
-                                        >
-                                            <ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" style={{ cursor: 'pointer' }} />
-                                        </Tooltip>
-                                    </InfoSpan>
-                                
-                                </DataTitle>
-                                <DataValue> {userDataPush ? formatTokens(userDataPush?.claimedReward) : '0'} PUSH</DataValue>
-                            </ItemHV2>
-                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
-                                <DataTitle>
-                                    Current Epoch Reward
-                                    <InfoSpan>
-                                        <Tooltip
-                                            wrapperProps={{
-                                                width: 'fit-content',
-                                                maxWidth: 'fit-content',
-                                                minWidth: 'fit-content',
-                                                // zIndex: "10",
-                                            }}
-                                            placementProps={{
-                                                background: 'none',
-                                                bottom: '25px',
-                                                // top: "20px",
-                                                left: "0px",
-
-                                            }}
-                                            tooltipContent={
-                                                <StakingToolTipContent
-                                                    title={"Current Epoch Reward"}
-                                                    body={"Amount of Push Token Claimable in this EPOCH"} />
-                                            }
-                                        >
-                                            <ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" style={{ cursor: 'pointer' }} />
-                                        </Tooltip>
-                                    </InfoSpan>
-                                
-                                </DataTitle>
-                                <DataValue> {userDataPush ? formatTokens(userDataPush?.potentialUserReward) : '0'} PUSH</DataValue>
-                            </ItemHV2>
-                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
-                                <DataTitle>
-                                    Available for Claiming
-                                    <InfoSpan>
-                                        <Tooltip
-                                            wrapperProps={{
-                                                width: 'fit-content',
-                                                maxWidth: 'fit-content',
-                                                minWidth: 'fit-content',
-                                                // zIndex: "10",
-                                            }}
-                                            placementProps={{
-                                                background: 'none',
-                                                bottom: '25px',
-                                                // top: "20px",
-                                                left: "0px",
-
-                                            }}
-                                            tooltipContent={
-                                                <StakingToolTipContent
-                                                    title={"Available for Claiming"}
-                                                    body={"Amount of Push Token Available to claim"} />
-                                            }
-
-                                        >
-                                            <ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" style={{ cursor: 'pointer' }} />
-                                        </Tooltip>
-                                    </InfoSpan>
-                                
-                                </DataTitle>
-                                <DataValue> {userDataPush ? userDataPush?.totalClaimableReward : '0'} PUSH</DataValue>
-                            </ItemHV2>
-                        </ItemVV2>
 
                     </ItemVV2>
+                </RewardContainer>
 
-                    {/* Bottom Section */}
-                    <ItemVV2 padding=" 0px 14px" margin="24px 0px 24px 0px">
+                {/* Epoch Text */}
+                <ItemHV2
+                    alignSelf="end"
+                    margin="12px 13px 24px 0px"
+                    color="#575D73"
+                    letterSpacing="-0.03em"
+                >
+                    {PUSHPoolstats ? (
+                        <>
+                            <EpochNo>Current Epoch</EpochNo>
+                            <B>
+                                {PUSHPoolstats?.currentEpoch.toNumber()}
+                            </B>
+                        </>
+                    ) : (
+                        <SkeletonContainer
+                            padding='5px 0px 0 15px'
+                        >
+                            <SkeletonLine height='12px' width='124px' ></SkeletonLine>
+                        </SkeletonContainer>
+                    )}
+                </ItemHV2>
 
+                {/* Deposit Cash Data */}
+
+                {userDataPush ? (
+                    <ItemVV2>
+                        <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                            <DataTitle>
+                                User Deposit
+                                <InfoSpan>
+                                    <StakingToolTip
+                                        title={"User Deposited"}
+                                        body={"Amount of PUSH Token User Staked"}
+                                    />
+                                </InfoSpan>
+                            </DataTitle>
+                            <DataValue> {formatTokens(userDataPush?.userstakedAmount.stakedAmount)} PUSH</DataValue>
+                        </ItemHV2>
+                        <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                            <DataTitle>
+                                Rewards Claimed
+                                <InfoSpan>
+                                    <StakingToolTip
+                                        title={"Rewards Claimed"}
+                                        body={"Amount of Push Claimed by User"}
+                                    />
+                                </InfoSpan>
+
+                            </DataTitle>
+                            <DataValue> {userDataPush ? formatTokens(userDataPush?.claimedReward) : '0'} PUSH</DataValue>
+                        </ItemHV2>
+                        <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                            <DataTitle>
+                                Current Epoch Reward
+                                <InfoSpan>
+                                    <StakingToolTip
+                                        title={"Current Epoch Reward"}
+                                        body={"Amount of Push Token Claimable in this EPOCH"}
+                                    />
+                                </InfoSpan>
+
+                            </DataTitle>
+                            <DataValue> {userDataPush ? formatTokens(userDataPush?.potentialUserReward) : '0'} PUSH</DataValue>
+                        </ItemHV2>
+                        <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                            <DataTitle>
+                                Available for Claiming
+                                <InfoSpan>
+                                    <StakingToolTip
+                                        title={"Available for Claiming"}
+                                        body={"Amount of Push Token Available to claim"}
+                                    />
+                                </InfoSpan>
+
+                            </DataTitle>
+                            <DataValue> {userDataPush ? userDataPush?.totalClaimableReward : '0'} PUSH</DataValue>
+                        </ItemHV2>
+                    </ItemVV2>
+                ) : (
+                    <Skeleton
+                        padding='0 15px 15px 15px'
+                        width='100%'
+                        maxWidth=' -webkit-fill-available'
+                        borderRadius='5px'
+                    >
+                        <ItemHV2 justifyContent='space-between' margin='0 0 23px 0'>
+                            <SkeletonLine height='12px' width='164px' ></SkeletonLine>
+                            <SkeletonLine height='12px' width='72px'></SkeletonLine>
+                        </ItemHV2>
+                        <ItemHV2 justifyContent='space-between' margin='0 0 23px 0'>
+                            <SkeletonLine height='12px' width='164px' ></SkeletonLine>
+                            <SkeletonLine height='12px' width='72px'></SkeletonLine>
+                        </ItemHV2>
+                        <ItemHV2 justifyContent='space-between' margin='0 0 23px 0'>
+                            <SkeletonLine height='12px' width='164px' ></SkeletonLine>
+                            <SkeletonLine height='12px' width='72px'></SkeletonLine>
+                        </ItemHV2>
+                        <ItemHV2 justifyContent='space-between'>
+                            <SkeletonLine height='12px' width='164px' ></SkeletonLine>
+                            <SkeletonLine height='12px' width='72px'></SkeletonLine>
+                        </ItemHV2>
+
+                    </Skeleton>
+                )}
+
+
+            </ItemVV2>
+
+            {/* Bottom Section */}
+            <ItemVV2 padding=" 0px 14px" margin="24px 0px 24px 0px">
+
+                {userDataPush ? (
+                    <>
                         <ItemHV2>
                             <FilledButton onClick={showStakingModal}> Stake PUSH</FilledButton>
                         </ItemHV2>
@@ -491,19 +535,59 @@ const YieldPushFeeV3 = ({
                                 }
                             </EmptyButton>
                         </ButtonsContainer>
-                    </ItemVV2>
+                    </>
+                ) : (
 
-                </>
-            ) : (
-                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={50} spinnerColor="#D53A94" />
-            )}
+                    <SkeletonContainer
+                        width='100%'
+                    >
+                        <SkeletonLine height='49px' width='100%' margin='0 0 8px 0'></SkeletonLine>
+                        <SkeletonLine height='49px' width='100%'></SkeletonLine>
+                    </SkeletonContainer>
 
 
+                )}
+
+
+            </ItemVV2>
         </Container>
     );
 };
 
 export default YieldPushFeeV3;
+
+const StakingToolTip = ({
+    title,
+    body
+}) => {
+    return (
+        <Tooltip
+            wrapperProps={{
+                width: 'fit-content',
+                maxWidth: 'fit-content',
+                minWidth: 'fit-content',
+                // zIndex: "10",
+            }}
+            placementProps={{
+                background: 'none',
+                bottom: '25px',
+                // top: "20px",
+                left: "0px",
+
+            }}
+            tooltipContent={
+                <StakingToolTipContent
+                    title={title}
+                    body={body} />
+            }
+        >
+            <ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" style={{ cursor: 'pointer' }} />
+        </Tooltip>
+    )
+
+}
+
+
 
 const Container = styled(SectionV2)`
 border: 1px solid  ${(props) => props.theme.stakingBorder};
@@ -532,6 +616,10 @@ const SecondaryText = styled.p`
     letter-spacing: -0.03em;
 `
 
+const RewardContainer = styled(ItemHV2)`
+    min-height:110px;
+`
+
 const Line = styled.div`
     width: 1px;
     height: 100%;
@@ -557,6 +645,7 @@ const EpochNo = styled(B)`
     letter-spacing: -0.03em;
     font-size: 16px;
     line-height: 141%;
+    margin-right:5px;
     color: ${(props) => props.theme.stakingUserDetails};
 `
 
@@ -615,4 +704,23 @@ const EmptyButton = styled(Button)`
     &:hover{
         opacity:1;
     }
+`
+
+const SkeletonContainer = styled(Skeleton)`
+    // width:150px;
+    max-width:-webkit-fill-available;
+    border-radius: 5px;
+    gap:5px;
+`
+
+const UserSkeletonLine = styled(SkeletonLine)`
+    height: 25px;
+    width:100%;
+    border-radius: 2px;
+`
+
+const RewardSkeletonLine = styled(SkeletonLine)`
+    height: 20px;
+    width:100%;
+    border-radius: 2px;
 `
