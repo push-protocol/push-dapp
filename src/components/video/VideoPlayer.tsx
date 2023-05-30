@@ -94,14 +94,9 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
             )}
 
             <ProfileInfoMini position="absolute">
-              <SpanV2
-                padding="10px"
-                borderRadius="24px"
-                background="#ffffffbb"
-                zIndex="3"
-              >
+              <NameBadge>
                 {shortenText(videoCallData.incoming[0].address,5)}
-              </SpanV2>
+              </NameBadge>
             </ProfileInfoMini>
           </IncomingVideoInnerContainer>
         </IncomingVideoContainer>
@@ -132,8 +127,8 @@ const LocalVideoContainer = styled(ItemVV2)`
     max-height: 18vh;
     position: absolute;
     width: inherit;
-    right: 35px;
-    bottom: 8px;
+    right: 9px;
+    bottom: 9px;
     @media ${device.laptop} {
       right: 26px;
     }
@@ -271,11 +266,11 @@ const PfpContainer = styled(ItemVV2)`
 `;
 
 const ProfileInfoMini = styled(ItemHV2)`
-  left: 10px;
+  left: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  bottom: 10px;
+  bottom: 18px;
 `;
 
 const PfpContainerMini = styled(ItemVV2)`
@@ -298,3 +293,11 @@ const PfpContainerMini = styled(ItemVV2)`
     max-width: 2.5rem;
   }
 `;
+
+const NameBadge = styled(SpanV2)`
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: rgba(46, 49, 59, 0.75);
+  color: #fff;
+  z-index: 3;
+`
