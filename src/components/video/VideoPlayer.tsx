@@ -236,9 +236,11 @@ const VideoDisabledContainer = styled(ItemVV2)`
   text-align: center;
   color: white;
   z-index: 10;
-  left: 45%;
   justify-content: center;
   align-items: center;
+  left:50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
 
   &.connectionAccepted {
     visibility: hidden;
