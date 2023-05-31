@@ -21,6 +21,7 @@ module.exports = {
       url: require.resolve('url'),
       util: require.resolve('util/'),
       stream: require.resolve('stream-browserify'),
+      zlib: require.resolve('browserify-zlib'),
     };
     // config.devtool = false;
     config.resolve.extensions = [...config.resolve.extensions, '.ts', '.js'];
