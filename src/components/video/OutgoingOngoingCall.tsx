@@ -143,8 +143,8 @@ const Container = styled(SectionV2)`
 const VideoCallControlsContainer = styled(ItemHV2)`
   width: fit-content;
   max-width: fit-content;
-  margin: 0 auto;
-  padding: 0 0 4% 0;
+  margin: 3% auto;
+  padding: 0 0 2% 0;
   flex: 0;
 `;
 

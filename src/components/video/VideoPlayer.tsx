@@ -128,7 +128,7 @@ const LocalVideoContainer = styled(ItemVV2)`
   height: 49vh;
   max-height: 49vh;
   border-radius: 34px;
-  margin: 0 auto;
+  margin: 2% auto;
   z-index: 2;
   width: 41vw;
   
