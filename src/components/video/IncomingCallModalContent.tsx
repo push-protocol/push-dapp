@@ -38,6 +38,11 @@ const Container = styled(ItemHV2)<IncomingCallModalContentProps>`
     width: ${props => props.isIncomingCallMinimized ? "31vw" : "24vw"};
   }
 
+  @media ${device.laptop} {
+    right: ${props => props.isIncomingCallMinimized ? "2%" : "25%"};
+    bottom: ${props => props.isIncomingCallMinimized ? "10%" : "20%"};
+    width: ${props => props.isIncomingCallMinimized ? "45vw" : "24vw"};
+
   @media ${device.tablet} {
     right: ${props => props.isIncomingCallMinimized ? "5%" : "30%"};
     bottom: ${props => props.isIncomingCallMinimized ? "10%" : "25%"};
@@ -52,7 +57,7 @@ const Container = styled(ItemHV2)<IncomingCallModalContentProps>`
 `;
 
 const ContentContainer = styled(ItemVV2)<IncomingCallModalContentProps>`
-  display: flex;
+  // display: flex;
   background: ${(props) => props.theme.vcModalBGColor};
   border: ${(props) => {
     return `2px solid ${props.theme.vcBorderColor}`;
