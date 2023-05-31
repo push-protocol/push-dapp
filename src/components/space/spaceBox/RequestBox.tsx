@@ -6,6 +6,8 @@ import { MdOutlineArrowBackIos } from 'react-icons/md';
 import styled, { useTheme } from 'styled-components';
 import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
+import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
+import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
 import SpaceTypeBar from '../spaceReusables/SpaceTypeBar';
 import { SpaceGlobalContext, SpaceLocalContext } from 'contexts';
 import { useWeb3React } from '@web3-react/core';
@@ -14,7 +16,9 @@ import { shortenText } from 'helpers/UtilityHelper';
 import RequestBody from '../spaceReusables/RequestBody';
 import { caip10ToWallet } from 'helpers/w2w';
 import { useNavigate } from 'react-router';
-
+import { SpaceInfoModalContent } from '../spaceModals/spaceInfoModal';
+import { SpaceModule } from 'modules/space';
+import useModalBlur, { MODAL_POSITION } from "hooks/useModalBlur";
 
 const RequestBox = () => {
 
@@ -24,11 +28,18 @@ const RequestBox = () => {
     const { userSpaces } = useContext(SpaceGlobalContext);
     const { selectedSpace, setSelectedSpace } = useContext(SpaceLocalContext);
     const [filteredUserData, setFilteredUserData] = useState<Space>();
+    const [showMoreOptions, setShowMoreOptions] = useState<boolean>(false);
 
     const getUserData = (selectedSpace: string) => {
         const userDataFromSpaceId = userSpaces[account]?.spaces[selectedSpace];
         setFilteredUserData(userDataFromSpaceId);
     }
+
+    const {
+        isModalOpen: isSpaceInfoModalOpen,
+        showModal: showSpaceInfoModal,
+        ModalComponent: SpaceInfoModalComponent,
+    } = useModalBlur();
 
     useEffect(() => {
         console.log("Space id changed", selectedSpace, typeof (selectedSpace));
@@ -39,7 +50,7 @@ const RequestBox = () => {
         setSelectedSpace(null);
         // lastly, set navigation for dynamic linking
         navigate(`/space`);
-      };
+    };
 
 
     return (
@@ -58,7 +69,7 @@ const RequestBox = () => {
                         onClick={goToRequests}
 
                     >
-                        <MdOutlineArrowBackIos size={24} style={{cursor:'pointer'}} />
+                        <MdOutlineArrowBackIos size={24} style={{ cursor: 'pointer' }} />
                     </TabletBackButton>
 
                     <ImageV2
@@ -81,14 +92,21 @@ const RequestBox = () => {
                     {shortenText(caip10ToWallet(filteredUserData?.spaceCreator), 6)}
                 </SpanV2>
 
-                <MoreOptions >
+                <MoreOptions onClick={() => !showMoreOptions ? setShowMoreOptions(true) : setShowMoreOptions(false)} >
                     <ItemHV2 padding="0px 11px 0px 0px">{theme.scheme == 'light' ? <More /> : <MoreDark />}</ItemHV2>
+                    {showMoreOptions && (
+                        <GroupInfo onClick={() => showSpaceInfoModal()}>
+                            <ItemVV2 maxWidth="32px">{theme.scheme == 'light' ? <Info /> : <InfoDark />}</ItemVV2>
+                            <SpanV2 color={theme.default.secondaryColor}>Space Info</SpanV2>
+                        </GroupInfo>
+                    )}
                 </MoreOptions>
             </HeaderContainer>
 
+            <SpaceInfoModalComponent InnerComponent={SpaceInfoModalContent} modalPadding='0px' modalPosition={MODAL_POSITION.ON_PARENT} />
 
             <BodyContainer>
-                <RequestBody filteredUserData={filteredUserData}/>
+                <RequestBody filteredUserData={filteredUserData} />
             </BodyContainer>
 
             <SpaceTypeBar />
@@ -111,6 +129,19 @@ const Container = styled(Content)`
   justify-content: center;
   position: relative;
   padding:0px;
+`;
+
+const GroupInfo = styled(ItemHV2)`
+  position: absolute;
+  top: 32px;
+  right: 15px;
+  width: 200px;
+  border: 1px solid ${(props) => props.theme.default.border};
+  background-color: ${(props) => props.theme.default.bg};
+  border-radius: 12px;
+  justify-content: flex-start;
+  gap: 9px;
+  padding: 10px;
 `;
 
 const HeaderContainer = styled(ItemHV2)`
