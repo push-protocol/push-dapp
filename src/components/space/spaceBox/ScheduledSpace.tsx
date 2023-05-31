@@ -160,7 +160,7 @@ export const ScheduledSpace = ({currentSpace,showSpaceInfoModal}:{currentSpace:S
     <>
     {isMobile ? (<ScrollView isMobile={isMobile}>
       <MobileTopView onClick={()=>goToSpaces()}>
-        <Div><FiArrowLeft size={25} color={theme.snackbarBorderText} /></Div>
+        <Div><FiArrowLeft size={25} color={theme.snackbarBorderText} style={{cursor:'pointer'}} /></Div>
         <P color={theme.snackbarBorderText} margin="0px 20px" size="19px" weight="500">{shortenText(caip10ToWallet(currentSpace?.spaceCreator),5,5)}’s Space</P>
       </MobileTopView>
 

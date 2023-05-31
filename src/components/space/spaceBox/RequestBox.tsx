@@ -13,14 +13,16 @@ import { Space } from 'types';
 import { shortenText } from 'helpers/UtilityHelper';
 import RequestBody from '../spaceReusables/RequestBody';
 import { caip10ToWallet } from 'helpers/w2w';
+import { useNavigate } from 'react-router';
 
 
 const RequestBox = () => {
 
     const theme = useTheme();
     const { account } = useWeb3React();
+    const navigate = useNavigate();
     const { userSpaces } = useContext(SpaceGlobalContext);
-    const { selectedSpace } = useContext(SpaceLocalContext);
+    const { selectedSpace, setSelectedSpace } = useContext(SpaceLocalContext);
     const [filteredUserData, setFilteredUserData] = useState<Space>();
 
     const getUserData = (selectedSpace: string) => {
@@ -32,6 +34,12 @@ const RequestBox = () => {
         console.log("Space id changed", selectedSpace, typeof (selectedSpace));
         getUserData(selectedSpace);
     }, [selectedSpace])
+
+    const goToRequests = () => {
+        setSelectedSpace(null);
+        // lastly, set navigation for dynamic linking
+        navigate(`/space`);
+      };
 
 
     return (
@@ -47,8 +55,10 @@ const RequestBox = () => {
                         background="transparent"
                         hover="transparent"
                         hoverBackground="transparent"
+                        onClick={goToRequests}
+
                     >
-                        <MdOutlineArrowBackIos size={24} />
+                        <MdOutlineArrowBackIos size={24} style={{cursor:'pointer'}} />
                     </TabletBackButton>
 
                     <ImageV2
