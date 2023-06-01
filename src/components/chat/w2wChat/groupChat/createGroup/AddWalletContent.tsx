@@ -75,6 +75,7 @@ export const AddWalletContent = ({
 
   const handleSearch = async (e): Promise<void> => {
     setIsLoadingSearch(true);
+    setIsInvalidAddress(false);
     e.preventDefault();
     if (!ethers.utils.isAddress(searchedUser)) {
       let address: string;
