@@ -130,6 +130,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
         overflow="hidden"
         margin="0 5px 0 0"
       >
+        <h1>Test</h1>
         <ImageV2
           height="100%"
           alt={`Profile pic of ${username}`}
