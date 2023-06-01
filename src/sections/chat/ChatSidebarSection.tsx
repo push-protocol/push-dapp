@@ -116,6 +116,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   const fetchIntentApi = async (): Promise<Feeds[]> => {
     const intents = await fetchIntent(connectedUser);
     if (JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
+      intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account }), intents, 'did');
       setReceivedIntents(intents);
       setLoadingRequests(false);
     }

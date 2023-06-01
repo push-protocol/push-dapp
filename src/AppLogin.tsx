@@ -87,8 +87,8 @@ function getErrorMessage(error: Error) {
     if (appConfig.coreContractChain === 42)
       return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network';
     else if (appConfig.coreContractChain === 5)
-      return 'Unsupported Network, please connect to the Ethereum Goerli, Polygon Mumbai, BNB testnet or Optimism Goerli';
-    else return 'Unsupported Network, please connect to the Ethereum, Polygon or BNB Mainnet';
+      return 'Unsupported Network, please connect to the Ethereum Goerli, Polygon Mumbai, BNB testnet, Optimism Goerli or Polygon zkEVM testnet';
+    else return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB or Polygon zkEVM Mainnet';
   } else if (error instanceof UserRejectedRequestErrorInjected) {
     return 'Please authorize this website to access the dApp';
   } else {

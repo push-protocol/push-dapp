@@ -43,6 +43,10 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
     420: {
       label: "Goerli OpETH",
       url: "https://faucet.quicknode.com/optimism/goerli"
+    },
+    1442: {
+      label: "Polygon zkEVM ETH",
+      url: "https://public.zkevm-test.net/"
     }
   }
 

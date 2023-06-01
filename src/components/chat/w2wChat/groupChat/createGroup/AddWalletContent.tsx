@@ -84,7 +84,7 @@ export const AddWalletContent = ({
           address = await library.resolveName(searchedUser);
         }
         // this ensures address are checksummed
-        address = ethers.utils.getAddress(address.toLowerCase());
+        address = ethers.utils.getAddress(address?.toLowerCase());
         if (address) {
           handleUserSearch(address);
         } else {

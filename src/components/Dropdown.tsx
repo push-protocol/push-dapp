@@ -182,6 +182,7 @@ const DropdownItemContainer = styled(ItemH)`
   padding: 2px 8px;
   border-radius: 12px;
   cursor: pointer;
+  text-align: left;
 
   &:hover {
     background-color: ${(props) => props.hoverBGColor || 'none'};

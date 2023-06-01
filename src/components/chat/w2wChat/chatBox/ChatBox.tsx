@@ -119,7 +119,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   // get web3 name
   let ensName=''
   if(!isGroup && currentChat?.wallets?.split(',')[0].toString()){
-    const walletLowercase = caip10ToWallet(currentChat?.wallets?.split(',')[0].toString()).toLowerCase();
+    const walletLowercase = caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase();
     const checksumWallet = ethers.utils.getAddress(walletLowercase);
     ensName = web3NameList[checksumWallet];
   }
@@ -242,7 +242,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const fetchInboxApi = async (): Promise<Feeds> => {
     const inboxes: Feeds[] = await fetchInbox(connectedUser);
     setInbox(inboxes);
-    return inboxes?.find((x) => x.wallets.split(':')[1] === currentChat.wallets.split(':')[1]);
+    return inboxes?.find((x) => x.wallets.split(':')[1]?.toLowerCase() === currentChat.wallets.split(':')[1]?.toLowerCase());
   };
 
   const sendMessage = async ({
@@ -391,7 +391,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       if (
         currentChat.intent === null ||
         currentChat.intent === '' ||
-        !currentChat.intent.includes(currentChat.wallets.split(':')[1])
+        !currentChat.intent?.toLowerCase().includes(currentChat.wallets.split(':')[1]?.toLowerCase())
       ) {
         let createdUser;
         if (!connectedUser.publicKey) {
@@ -456,7 +456,12 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
-  const startVideoCallHandler = () => {
+  const startVideoCallHandler = async () => {
+    const toUser = await PushAPI.user.get({
+      account: caip10ToWallet(currentChat.wallets.toString()),
+      env: appConfig.appEnv
+    });
+
     setVideoCallInfo({
       address: caip10ToWallet(currentChat.wallets.toString()),
       fromPublicKeyArmored: connectedUser.publicKey,
@@ -467,34 +472,10 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       toProfilePic: currentChat.profilePicture,
       privateKeyArmored: connectedUser.privateKey,
       establishConnection: 1,
+      chatId: currentChat.chatId
     });
-    // const fetchUser = async () => {
-    //   return PushAPI.user.get({
-    //     account: caip10ToWallet(currentChat.wallets.toString()),
-    //     env: appConfig.appEnv
-    //   });
-    // }
-
-    // // call the function
-    // fetchUser()
-    //   .then (toUser => {
-    //     // set video call
-    //     setVideoCallInfo({
-    //       address: caip10ToWallet(currentChat.wallets.toString()),
-    //       fromPublicKeyArmored: connectedUser.publicKey,
-    //       fromProfileUsername: connectedUser.name,
-    //       fromProfilePic: connectedUser.profilePicture,
-    //       toPublicKeyArmored: currentChat.publicKey,
-    //       toProfileUsername: toUser.name,
-    //       toProfilePic: toUser.profilePicture,
-    //       privateKeyArmored: connectedUser.privateKey,
-    //       establishConnection: 1,
-    //     });
-    //   })
-    //   .catch(e => {
-    //     console.log("Error occured in ChatModule::useEffect::callAccepted - ", e);
-    //   });
   };
+
 
   const InfoMessages = [
     { id: 1, content: 'You can send up to 10 group requests in alpha' },

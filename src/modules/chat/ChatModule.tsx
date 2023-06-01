@@ -86,7 +86,7 @@ function Chat({ chatid }) {
   const socketData = useSDKSocket({ account, chainId, env: appConfig.appEnv,socketType: 'chat' });
 
   useEffect(()=>{
-    if(connectedUser && socketData.messagesSinceLastConnection && (w2wHelper.caip10ToWallet(socketData.messagesSinceLastConnection.fromCAIP10) !== account)){
+    if(connectedUser && socketData.messagesSinceLastConnection && ((w2wHelper.caip10ToWallet(socketData.messagesSinceLastConnection.fromCAIP10)).toLowerCase() !== account.toLowerCase())){
       if(currentChat)
         getUpdatedChats(socketData.messagesSinceLastConnection);
       getUpdatedInbox(socketData.messagesSinceLastConnection)
@@ -100,7 +100,7 @@ function Chat({ chatid }) {
   },[socketData.groupInformationSinceLastConnection])
 
   const getUpdatedChats = async(chat) => {
-    if((currentChat.did === chat.fromCAIP10) || currentChat?.groupInformation?.chatId === chat.toCAIP10){
+    if((currentChat.did?.toLowerCase() === chat.fromCAIP10?.toLowerCase()) || currentChat?.groupInformation?.chatId === chat.toCAIP10){
     const decryptedChat:MessageIPFS = await w2wHelper.decryptMessages({
       savedMsg: chat,
       connectedUser,
@@ -117,7 +117,7 @@ function Chat({ chatid }) {
     let decryptedChat:MessageIPFS;
 
     //change to common decryption for getUpdatedInbox and getUpdatedChats using filter
-    const updatedFeed = inbox.filter(feed=>(feed.did === message.fromCAIP10) || (feed?.groupInformation?.chatId === message.toCAIP10));
+    const updatedFeed = inbox.filter(feed=>(feed.did?.toLowerCase() === message.fromCAIP10?.toLowerCase()) || (feed?.groupInformation?.chatId === message.toCAIP10));
    if(updatedFeed.length){
      decryptedChat = await w2wHelper.decryptMessages({
       savedMsg: message,
@@ -129,7 +129,7 @@ function Chat({ chatid }) {
 
   }
     const updatedInbox = inbox.map(feed => {
-      if((feed.did === message.fromCAIP10) || feed?.groupInformation?.chatId === message.toCAIP10){
+      if((feed.did?.toLowerCase() === message.fromCAIP10?.toLowerCase()) || feed?.groupInformation?.chatId === message.toCAIP10){
         feed.msg = decryptedChat;
         isInInbox = true;
       }
@@ -170,6 +170,7 @@ function Chat({ chatid }) {
     toPublicKeyArmored: null,
     privateKeyArmored: null,
     establishConnection: 0,
+    chatId: null
   });
 
   // React GA Analytics
@@ -289,7 +290,7 @@ function Chat({ chatid }) {
     const caip10:string = w2wHelper.walletToCAIP10({account});
 
     
-    if(connectedUser?.wallets !== caip10){
+    if(connectedUser?.wallets?.toLowerCase() !== caip10?.toLowerCase()){
       await getUser();
     }
 
@@ -308,7 +309,7 @@ function Chat({ chatid }) {
       // reformat chatid first
       chatid = reformatChatId(chatid);
 
-      if(connectedUser?.wallets === caip10){
+      if(connectedUser?.wallets?.toLowerCase() === caip10?.toLowerCase()){
         // dynamic url
         setCurrentTab(4);
       }
@@ -391,7 +392,6 @@ function Chat({ chatid }) {
         }
       }
       chatid = reformatChatId(chatid);
-      // console.log(feed);
       setCurrentChat(feed);
 
       // lastly, set navigation for dynamic linking
@@ -535,6 +535,7 @@ function Chat({ chatid }) {
                 toProfilePic: null,
                 privateKeyArmored: null,
                 establishConnection: 0,
+                chatId: null
               });
             }}
           />
