@@ -277,8 +277,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         updatedCurrentChat.msg = sendResponse;
         setChat(updatedCurrentChat);
         setNewMessage('');
-        // console.log(messages)
-        // console.log(sendResponse)
         setMessages([...messages, sendResponse]);
 
         setTimeout(() => {
@@ -302,7 +300,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       setMessageBeingSent(false);
     }
   };
-// console.log(messages)
+
   useEffect(() => {
     if (messageBeingSent == false) {
       setTimeout(() => {
