@@ -65,10 +65,6 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
   );
 });
 
-const dummy = () => {
-  console.log('testing empty');
-};
-
 const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const {
     currentChat,
