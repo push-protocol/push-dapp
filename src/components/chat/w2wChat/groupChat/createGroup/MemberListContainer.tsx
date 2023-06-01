@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React from 'react';
+import React, { useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -37,6 +37,7 @@ const MemberListContainer = ({
   const [selectedWallet, setSelectedWallet] = React.useState<string>(null);
   const dropdownRef = React.useRef<any>(null);
   const theme = useTheme();
+  const [dropdownHeight, setDropdownHeight] = useState(0);
 
   useClickAway(dropdownRef, () => setSelectedWallet(null));
 
@@ -82,8 +83,24 @@ const MemberListContainer = ({
     setSelectedWallet(null);
   };
 
+  const handleHeight = (id) => {
+    // try {
+    //   const dropdownHeight = document.getElementById(id);
+    //   console.log("heights", dropdownHeight);
+    //   // setDropdownHeight(dropdownHeight?.top);
+    //   // console.log("height", dropdownHeight);
+    // } catch (error) {
+    //   console.log("error", error.message);
+    // }
+    const containerHeight = document.getElementById(id)?.getBoundingClientRect();
+    console.log('height', containerHeight);
+    setDropdownHeight(containerHeight?.top);
+    console.log('height', dropdownHeight);
+  };
+
   return (
     <WalletProfileContainer
+      id={memberData.wallets}
       background={memberList ? 'transparent' : theme.groupSearchProfilBackground}
       border={memberList ? `1px solid ${theme.modalInputBorderColor}` : 'none'}
     >
@@ -92,7 +109,7 @@ const MemberListContainer = ({
           width="48px"
           maxWidth="48px"
           borderRadius="100%"
-          overflow="hidden"
+          overflow="auto"
           margin="0px 12px 0px 0px"
         >
           <ImageV2 src={memberData?.profilePicture} />
@@ -121,6 +138,7 @@ const MemberListContainer = ({
         <ItemVV2
           maxWidth="fit-content"
           onClick={() => {
+            handleHeight(memberData.wallets);
             setSelectedWallet(null);
             memberList
               ? findObject(memberData, memberList, 'wallets')
@@ -133,7 +151,10 @@ const MemberListContainer = ({
         </ItemVV2>
       </ItemHV2>
       {selectedWallet?.toLowerCase() == memberData.wallets?.toLowerCase() && (
-        <DropdownContainer ref={dropdownRef}>
+        <DropdownContainer
+          style={{ top: dropdownHeight > 420 ? '-70%' : '70%' }}
+          ref={dropdownRef}
+        >
           <Dropdown
             dropdownValues={
               memberData?.isAdmin ? [removeAdminDropdown, removeUserDropdown] : [addAdminDropdown, removeUserDropdown]
@@ -149,11 +170,11 @@ const MemberListContainer = ({
 export default MemberListContainer;
 
 const WalletProfileContainer = styled(ItemHV2)`
-  position: unset;
+  position: relative;
   padding: 8px 16px;
   margin: 0px 0px 8px 0px;
   justify-content: space-between;
-  min-width: 424px;
+  min-width: 450px;
   box-sizing: border-box;
   align-items: center;
   border-radius: 16px;
@@ -168,8 +189,7 @@ const WalletProfile = styled(ItemHV2)`
 
 const DropdownContainer = styled(ItemVV2)`
   position: absolute;
-  left: 87%;
-  top: 55%;
+  left: 48%;
   border-radius: 16px;
   padding: 14px 8px;
   background: ${(props) => props.theme.modalContentBackground};
