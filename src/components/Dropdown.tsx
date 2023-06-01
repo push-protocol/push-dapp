@@ -35,7 +35,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
   }
 
  
-  const copyToClipboard = (address) => {
+  const copyToClipboard = (address:string) => {
     if (navigator && navigator.clipboard) {
       navigator.clipboard.writeText(address);
     } else {
@@ -52,7 +52,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
       {dropdownValues.map((dropdownValue) =>
         dropdownValue.id === 'walletAddress' ? (
           <ItemH
-            bg="linear-gradient(87.17deg, #F72C81 0%, #6C55AF 50%, #4FD5FF 100%)"
+            bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
             radius="17px"
             padding="2px 12px"
             wrap="nowrap"
@@ -156,7 +156,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
 // css styles
 const SpanAddress = styled(Span)`
   margin: 11px 22px 11px 2px;
-  weight: 400;
+  font-weight: 400;
   size: 14px;
   text-transform: uppercase;
   color: #fff;
@@ -175,7 +175,7 @@ const DesktopAddress = styled(SpanAddress)`
 `;
 
 const DropdownItemContainer = styled(ItemH)`
-  width: 11.5rem;
+  width: 12.5rem;
   justify-content: flex-start;
   flex-wrap: nowrap;
   margin: 1px 0;
