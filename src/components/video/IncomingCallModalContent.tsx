@@ -35,13 +35,14 @@ const Container = styled(ItemHV2)<IncomingCallModalContentProps>`
   @media ${device.laptopL} {
     right: ${props => props.isIncomingCallMinimized ? "2%" : "25%"};
     bottom: ${props => props.isIncomingCallMinimized ? "10%" : "20%"};
-    width: ${props => props.isIncomingCallMinimized ? "31vw" : "24vw"};
+    width: ${props => props.isIncomingCallMinimized ? "36vw" : "24vw"};
   }
 
   @media ${device.laptop} {
     right: ${props => props.isIncomingCallMinimized ? "2%" : "25%"};
     bottom: ${props => props.isIncomingCallMinimized ? "10%" : "20%"};
     width: ${props => props.isIncomingCallMinimized ? "45vw" : "24vw"};
+  }
 
   @media ${device.tablet} {
     right: ${props => props.isIncomingCallMinimized ? "5%" : "30%"};
