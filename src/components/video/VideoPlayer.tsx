@@ -133,7 +133,6 @@ const LocalVideoContainer = styled(ItemVV2)`
   z-index: 2;
 
   @media ${device.laptopL} {
-    width: 21vw;
     aspect-ratio: 16/9;
   }
 
