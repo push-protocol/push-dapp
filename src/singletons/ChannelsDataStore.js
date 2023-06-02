@@ -1,20 +1,21 @@
 // Internal Components
-import EPNSCoreHelper from "helpers/EPNSCoreHelper";
-import { getReq, postReq } from "api";
+import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
+import { getReq, postReq } from 'api';
+import * as PushAPI from '@pushprotocol/restapi';
 
 // Internal Configs
-import { appConfig } from "config";
+import { appConfig } from 'config';
 
 // STATIC SINGLETON
 export const ChannelEvents = {
-  ADD_CHANNEL_ANY: "AddChannelAny",
-  ADD_CHANNEL_SELF: "AddChannelSelf",
-  UPDATE_CHANNEL_ANY: "UpdateChannelAny",
-  UPDATE_CHANNEL_SELF: "UpdateChannelSelf",
-  SUBSCRIBER_ANY_CHANNEL: "SubscriberAnyChannel",
-  SUBSCRIBER_SELF_CHANNEL: "SubscriberSelfChannel",
-  UNSUBSCRIBER_ANY_CHANNEL: "UnsubscriberAnyChannel",
-  UNSUBSCRIBER_SELF_CHANNEL: "UnsubscriberSelfChannel",
+  ADD_CHANNEL_ANY: 'AddChannelAny',
+  ADD_CHANNEL_SELF: 'AddChannelSelf',
+  UPDATE_CHANNEL_ANY: 'UpdateChannelAny',
+  UPDATE_CHANNEL_SELF: 'UpdateChannelSelf',
+  SUBSCRIBER_ANY_CHANNEL: 'SubscriberAnyChannel',
+  SUBSCRIBER_SELF_CHANNEL: 'SubscriberSelfChannel',
+  UNSUBSCRIBER_ANY_CHANNEL: 'UnsubscriberAnyChannel',
+  UNSUBSCRIBER_SELF_CHANNEL: 'UnsubscriberSelfChannel',
 };
 
 export default class ChannelsDataStore {
@@ -60,10 +61,10 @@ export default class ChannelsDataStore {
   resetChannelsListeners = () => {
     // only proceed if a read provider is attached
     if (this.state.epnsReadProvider) {
-      this.state.epnsReadProvider.removeAllListeners("AddChannel");
-      this.state.epnsReadProvider.removeAllListeners("UpdateChannel");
-      this.state.epnsCommReadProvider.removeAllListeners("Subscribe");
-      this.state.epnsCommReadProvider.removeAllListeners("Unsubscribe");
+      this.state.epnsReadProvider.removeAllListeners('AddChannel');
+      this.state.epnsReadProvider.removeAllListeners('UpdateChannel');
+      this.state.epnsCommReadProvider.removeAllListeners('Subscribe');
+      this.state.epnsCommReadProvider.removeAllListeners('Unsubscribe');
     }
   };
 
@@ -94,9 +95,7 @@ export default class ChannelsDataStore {
 
       // then perform callbacks
       if (this.state.callbacks[ChannelEvents.ADD_CHANNEL_ANY]) {
-        for (let [callbackID, callback] of Object.entries(
-          this.state.callbacks[ChannelEvents.ADD_CHANNEL_ANY]
-        )) {
+        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.ADD_CHANNEL_ANY])) {
           if (callback) {
             callback(channel, ipfs);
           }
@@ -116,9 +115,7 @@ export default class ChannelsDataStore {
 
       // then perform callbacks
       if (this.state.callbacks[ChannelEvents.ADD_CHANNEL_SELF]) {
-        for (let [callbackID, callback] of Object.entries(
-          this.state.callbacks[ChannelEvents.ADD_CHANNEL_SELF]
-        )) {
+        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.ADD_CHANNEL_SELF])) {
           if (callback) {
             callback(channel, ipfs);
           }
@@ -135,9 +132,7 @@ export default class ChannelsDataStore {
     contract.on(filter, async (channel, ipfs) => {
       // then perform callbacks
       if (this.state.callbacks[ChannelEvents.UPDATE_CHANNEL_ANY]) {
-        for (let [callbackID, callback] of Object.entries(
-          this.state.callbacks[ChannelEvents.UPDATE_CHANNEL_ANY]
-        )) {
+        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.UPDATE_CHANNEL_ANY])) {
           if (callback) {
             callback(channel, ipfs);
           }
@@ -154,9 +149,7 @@ export default class ChannelsDataStore {
     contract.on(filter, async (channel, ipfs) => {
       // then perform callbacks
       if (this.state.callbacks[ChannelEvents.UPDATE_CHANNEL_SELF]) {
-        for (let [callbackID, callback] of Object.entries(
-          this.state.callbacks[ChannelEvents.UPDATE_CHANNEL_SELF]
-        )) {
+        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.UPDATE_CHANNEL_SELF])) {
           if (callback) {
             callback(channel, ipfs);
           }
@@ -181,9 +174,7 @@ export default class ChannelsDataStore {
 
       // then perform callbacks
       if (this.state.callbacks[ChannelEvents.SUBSCRIBER_ANY_CHANNEL]) {
-        for (let [callbackID, callback] of Object.entries(
-          this.state.callbacks[ChannelEvents.SUBSCRIBER_ANY_CHANNEL]
-        )) {
+        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.SUBSCRIBER_ANY_CHANNEL])) {
           if (callback) {
             callback(channel, user);
           }
@@ -283,18 +274,15 @@ export default class ChannelsDataStore {
     return new Promise(async (resolve, reject) => {
       if (this.state.channelsCount == -1) {
         // Count not set, get and set it first
-        const count = EPNSCoreHelper.getTotalNumberOfChannels(
-          this.state.epnsReadProvider
-        )
+        const count = EPNSCoreHelper.getTotalNumberOfChannels(this.state.epnsReadProvider)
           .then((response) => {
             this.state.channelsCount = response;
 
-            if (enableLogs)
-              console.log("getChannelsCountAsync() --> %o", response);
+            if (enableLogs) console.log('getChannelsCountAsync() --> %o', response);
             resolve(this.state.channelsCount);
           })
           .catch((err) => {
-            console.log("!!!Error, getChannelsCountAsync() --> %o", err);
+            console.log('!!!Error, getChannelsCountAsync() --> %o', err);
             reject(err);
           });
       } else {
@@ -308,14 +296,11 @@ export default class ChannelsDataStore {
       this.getChannelsCountAsync()
         .then((response) => {
           this.state.channelsCount = response + incrementCount;
-          console.log(
-            "incrementChannelsCountAsync() --> %d",
-            this.state.channelsCount
-          );
+          console.log('incrementChannelsCountAsync() --> %d', this.state.channelsCount);
           resolve(this.state.channelsCount);
         })
         .catch((err) => {
-          console.log("!!!Error, incrementChannelsCountAsync() --> %o", err);
+          console.log('!!!Error, incrementChannelsCountAsync() --> %o', err);
           reject(err);
         });
     });
@@ -327,26 +312,24 @@ export default class ChannelsDataStore {
    * @returns
    */
   getChannelFromApi = async (startIndex, pageCount, account, chainId) => {
-    return postReq("/channels/_search", {
+    return postReq('/channels/_search', {
       page: Math.ceil(startIndex / pageCount) || 1,
       pageSize: pageCount,
       address: account,
       chainId: chainId,
-      query: " ",
-      op: "read",
+      query: ' ',
+      op: 'read',
     }).then((response) => {
       let output;
-      output = response.data.channels.map(
-        ({ alias_address, channel, memberCount, isSubscriber }) => {
-          this.state.subscribersCount[channel] = memberCount;
-          return {
-            addr: channel,
-            alias_address: alias_address,
-            memberCount: memberCount,
-            isSubscriber: isSubscriber,
-          };
-        }
-      );
+      output = response.data.channels.map(({ alias_address, channel, memberCount, isSubscriber }) => {
+        this.state.subscribersCount[channel] = memberCount;
+        return {
+          addr: channel,
+          alias_address: alias_address,
+          memberCount: memberCount,
+          isSubscriber: isSubscriber,
+        };
+      });
       return output;
     });
   };
@@ -379,29 +362,28 @@ export default class ChannelsDataStore {
 
     return new Promise((resolve, reject) => {
       // To get channel info from a channel address
-      getReq(`/v1/channels/search?query=${channel}`)
+      PushAPI.channels
+        .getChannel({
+          channel: channel,
+          env: appConfig.appEnv,
+        })
         .then((response) => {
           let output;
-          output = response.data.channels.map(
-            ({
-              alias_address,
-              is_alias_verified,
-            }) => {
-              return {
-                aliasAddress: alias_address,
-                isAliasVerified: is_alias_verified,
-              };
-            }
-          );
-          if (enableLogs)
-            console.log("getChannelDetailsFromAddress() --> %o", response);
-          if (output.length === 0) {
-            output.push({ alias_address: null, isAliasVerified: null });
+          if (response && response != 'channel not found') {
+            output = {
+              ...response,
+              aliasAddress: response.alias_address,
+              isAliasVerified: response.is_alias_verified,
+            };
           }
-          resolve(output[0]);
+          if (enableLogs) console.log('getChannelDetailsFromAddress() --> %o', response);
+          if (response === 'channel not found' || !response) {
+            output = { alias_address: null, isAliasVerified: null };
+          }
+          resolve(output);
         })
         .catch((err) => {
-          console.log("!!!Error, getChannelDetailsFromAddress() --> %o", err);
+          console.log('!!!Error, getChannelDetailsFromAddress() --> %o', err);
           reject(err);
         });
     });
@@ -411,12 +393,7 @@ export default class ChannelsDataStore {
   // get channels meta in a paginated format
   // by passing in the starting index and the number of items per page
   getChannelsMetaAsync = async (startIndex, pageCount) => {
-    this.getChannelFromApi(
-      startIndex,
-      pageCount,
-      this.state.account,
-      this.state.chainId
-    );
+    this.getChannelFromApi(startIndex, pageCount, this.state.account, this.state.chainId);
     return new Promise(async (resolve, reject) => {
       // get total number of channels
       const channelsCount = await this.getChannelsCountAsync();
@@ -439,12 +416,7 @@ export default class ChannelsDataStore {
         // Match the cache
         return this.getChannelMetaAsync(channelID)
           .then((response) => response)
-          .catch((err) =>
-            console.log(
-              "!!!Error (but skipping), getChannelMetaAsync() --> %o",
-              err
-            )
-          );
+          .catch((err) => console.log('!!!Error (but skipping), getChannelMetaAsync() --> %o', err));
       });
 
       // wait until all promises are resolved
@@ -460,34 +432,26 @@ export default class ChannelsDataStore {
   getChannelMetaAsync = async (channelID) => {
     return new Promise(async (resolve, reject) => {
       if (this.state.channelsMeta[channelID]) {
-        console.log(
-          "getChannelMetaAsync() [CACHED] --> %o",
-          this.state.channelsMeta[channelID]
-        );
+        console.log('getChannelMetaAsync() [CACHED] --> %o', this.state.channelsMeta[channelID]);
         resolve(this.state.channelsMeta[channelID]);
       } else {
         let channelAddress;
 
-        await EPNSCoreHelper.getChannelAddressFromID(
-          channelID,
-          this.state.epnsReadProvider
-        )
+        await EPNSCoreHelper.getChannelAddressFromID(channelID, this.state.epnsReadProvider)
           .then(async (response) => {
             channelAddress = response;
-            await this.getChannelMetaViaAddressAsync(channelAddress).then(
-              (response) => {
-                // update the channel cache before resolving
-                this.state.channelsMeta[channelID] = response;
-                this.state.channelsMeta[channelAddress] = channelID;
+            await this.getChannelMetaViaAddressAsync(channelAddress).then((response) => {
+              // update the channel cache before resolving
+              this.state.channelsMeta[channelID] = response;
+              this.state.channelsMeta[channelAddress] = channelID;
 
-                // resolve
-                // console.log("getChannelMetaAsync() [Address: %s] --> %o", channelAddress, response);
-                resolve(response);
-              }
-            );
+              // resolve
+              // console.log("getChannelMetaAsync() [Address: %s] --> %o", channelAddress, response);
+              resolve(response);
+            });
           })
           .catch((err) => {
-            console.log("!!!Error, getChannelMetaAsync() --> %o", err);
+            console.log('!!!Error, getChannelMetaAsync() --> %o', err);
             reject(err);
           });
       }
@@ -500,27 +464,18 @@ export default class ChannelsDataStore {
       if (this.state.channelsMeta[channelAddress]) {
         const channelID = this.state.channelsMeta[channelAddress];
 
-        console.log(
-          "getChannelMetaViaAddressAsync() [CACHED] --> %o",
-          this.state.channelsMeta[channelID]
-        );
+        console.log('getChannelMetaViaAddressAsync() [CACHED] --> %o', this.state.channelsMeta[channelID]);
         resolve(this.state.channelsMeta[channelID]);
       } else {
         // Can't cache this :(, no way to know channel id
-        await EPNSCoreHelper.getChannelInfo(
-          channelAddress,
-          this.state.epnsReadProvider
-        )
+        await EPNSCoreHelper.getChannelInfo(channelAddress, this.state.epnsReadProvider)
           .then((response) => {
             // resolve
             // console.log("getChannelMetaViaAddressAsync() [Address: %s] --> %o", channelAddress, response);
             resolve(response);
           })
           .catch((err) => {
-            console.log(
-              "!!!Error, getChannelMetaViaAddressAsync() --> %o",
-              err
-            );
+            console.log('!!!Error, getChannelMetaViaAddressAsync() --> %o', err);
             reject(err);
           });
       }
@@ -535,10 +490,10 @@ export default class ChannelsDataStore {
     }
     let address = channelAddress;
 
-    return postReq("/channels/_get_subscribers", {
+    return postReq('/channels/_get_subscribers', {
       channel: address,
       blockchain: this.state.chainId,
-      op: "read",
+      op: 'read',
     })
       .then(({ data }) => {
         const subs = data.subscribers;
@@ -559,10 +514,10 @@ export default class ChannelsDataStore {
     }
     let address = channelAddress;
 
-    return postReq("/channels/_get_subscribers", {
+    return postReq('/channels/_get_subscribers', {
       channel: address,
       blockchain: this.state.chainId,
-      op: "read",
+      op: 'read',
     })
       .then(({ data }) => {
         const subs = data.subscribers;
@@ -592,14 +547,11 @@ export default class ChannelsDataStore {
             return response;
           });
 
-          console.log(
-            "getChannelJsonAsync() [Address: %s] --> %o",
-            getChannelJson
-          );
+          console.log('getChannelJsonAsync() [Address: %s] --> %o', getChannelJson);
           this.state.channelsJson[channelAddress] = getChannelJson;
           resolve(getChannelJson);
         } catch (err) {
-          console.log("!!!Error, getChannelJsonAsync() --> %o", err);
+          console.log('!!!Error, getChannelJsonAsync() --> %o', err);
           reject(err);
         }
       }
@@ -616,19 +568,16 @@ export default class ChannelsDataStore {
         try {
           const getChannelJson = await EPNSCoreHelper.getChannelJsonFromChannelAddressStartBlock(
             channelAddress,
-            this.state.epnsReadProvider,
+            this.state.epnsReadProvider
           ).then((response) => {
             return response;
           });
 
-          console.log(
-            "getChannelJsonStartBlockAsync() [Address: %s] --> %o",
-            getChannelJson
-          );
+          console.log('getChannelJsonStartBlockAsync() [Address: %s] --> %o', getChannelJson);
           this.state.channelJsonStartBlock[channelAddress] = getChannelJson;
           resolve(getChannelJson);
         } catch (err) {
-          console.log("!!!Error, getChannelJsonStartBlockAsync() --> %o", err);
+          console.log('!!!Error, getChannelJsonStartBlockAsync() --> %o', err);
           reject(err);
         }
       }
