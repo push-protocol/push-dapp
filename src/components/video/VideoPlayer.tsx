@@ -12,6 +12,7 @@ import { VideoCallStatus } from '@pushprotocol/restapi';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext } from 'types/chat';
+import { max } from 'lodash';
 
 type VideoPlayerType = {
   localVideoStyles?: {};
@@ -125,13 +126,24 @@ const Container = styled(ItemVV2)`
 
 const LocalVideoContainer = styled(ItemVV2)`
   overflow: hidden;
-  height: 49vh;
-  max-height: 49vh;
+  height: 50vh;
+  max-height: 50vh;
   border-radius: 34px;
   margin: 2% auto;
   z-index: 2;
-  width: 41vw;
+
+  @media ${device.laptopL} {
+    width: 21vw;
+    aspect-ratio: 16/9;
+  }
+
+  @media ${device.laptop} {
+    aspect-ratio: 16/9;
+  }
   
+  @media {max-width : 768px} {
+    aspect-ratio: 4/3;
+  }
   @media ${device.mobileL} {
     width: auto;
     max-width: 100%;
