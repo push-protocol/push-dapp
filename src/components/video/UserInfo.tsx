@@ -31,7 +31,7 @@ const UserInfo = ({ pfp, username, address, status, containerStyles, fontColor, 
         />
       </PfpContainer>
 
-      <InfoContainer>
+      <InfoContainer source={source}>
         <ShortedAddress color={fontColor}>{shortnedAddress}</ShortedAddress>
         <Status color={fontColor}>{status}</Status>
       </InfoContainer>
@@ -70,7 +70,7 @@ const PfpContainer = styled(ItemVV2)`
     width: 2.875rem;
     height: 2.875rem;
     max-width: 2.875rem;
-    margin: 1.5rem 1rem auto 0.2rem;
+    margin: ${props => props.source === "minimized" ? "0.8rem 1rem auto 0.2rem" : "1.5rem 1rem auto 0.2rem"};
   }
 
   @media ${device.mobileS} {
@@ -86,7 +86,7 @@ const InfoContainer = styled(ItemVV2)`
   width: fit-content;
   max-width: fit-content;
   @media ${device.mobileL} {
-    margin-top: 1.5rem;
+    margin-top: ${props => props.source === "minimized" ? "0.8rem" : "1.5rem"};
   }
 `;
 
