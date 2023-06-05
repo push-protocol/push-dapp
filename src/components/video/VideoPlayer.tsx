@@ -87,7 +87,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
             <IncomingVideo ref={incomingVideoRef} display={videoCallData.incoming[0].video?'block':'none'}/>
 
             {!videoCallData.incoming[0].video && (
-              <VideoDisabledContainer>
+              <VideoDisabledContainer className="videoIsoff">
                 <PfpContainer>
                   <ImageV2
                     height="100%"
@@ -217,6 +217,7 @@ const IncomingVideoContainer = styled(ItemVV2)`
   border-radius: 34px;
   z-index: 1;
   width: 100%;
+  margin: 0 auto;
 
   /* @media (max-height: 800px) {
     max-height: 50vh;
@@ -263,12 +264,13 @@ const VideoDisabledContainer = styled(ItemVV2)`
   margin: auto;
   justify-content: center;
   align-items: center;
-  left:50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
 
   &.connectionAccepted {
     visibility: hidden;
+  }
+  &.videoIsoff {
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 `;
 
@@ -276,7 +278,6 @@ const PfpContainer = styled(ItemVV2)`
   width: 5rem;
   height: 5rem;
   max-width: 5rem;
-  margin: 0 1rem 0 0;
   border-radius: 100%;
   overflow: hidden;
 
