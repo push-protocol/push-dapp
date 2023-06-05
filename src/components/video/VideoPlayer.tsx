@@ -12,6 +12,8 @@ import { VideoCallStatus } from '@pushprotocol/restapi';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext } from 'types/chat';
+import { AppContext as MainContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
 import { shortenText } from 'helpers/UtilityHelper';
 
 type VideoPlayerType = {
@@ -24,6 +26,8 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
   const { videoCallData } = useContext(VideoCallContext);
   const { connectedUser } =useContext(ChatUserContext);
   const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const { web3NameList }:AppContextType=React.useContext(MainContext);
+  const web3Name=web3NameList[videoCallData.incoming[0].address]
   const theme=useTheme();
 
   useEffect(() => {
@@ -96,11 +100,25 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
               </VideoDisabledContainer>
             )}
 
-            <ProfileInfoMini position="absolute">
-              <NameBadge>
-                {shortenText(videoCallData.incoming[0].address,5)}
-              </NameBadge>
-            </ProfileInfoMini>
+          <ProfileInfoMini position="absolute">
+            <PfpContainerMini>
+              <ImageV2
+                height="100%"
+                width="100%"
+                alt={`Profile pic`}
+                src={currentChat?.profilePicture}
+                objectFit="cover"
+              />
+            </PfpContainerMini>
+            <SpanV2
+              padding="10px"
+              borderRadius="24px"
+              background="#ffffffbb"
+              zIndex="3"
+            >
+              {web3Name ? web3Name : shortenText(videoCallData.incoming[0].address,5)}
+            </SpanV2>
+          </ProfileInfoMini>
           </IncomingVideoInnerContainer>
         </IncomingVideoContainer>
       )}
