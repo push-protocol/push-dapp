@@ -185,6 +185,16 @@ function Chat({ chatid }) {
     }
   }, [connectedUser]);
 
+  useEffect(()=>{
+    if(currentChat?.threadhash==null){
+      for(let i=0;i<inbox?.length;i++){
+        if(inbox[i]?.wallets===currentChat?.wallets){
+          setChat(inbox[i]);
+        }
+      }
+    }
+  },[inbox])
+
   const closeQRModal = () => {
     setDisplayQR(false);
   };
