@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useRef, useContext, useEffect } from 'react';
 
 // External Packages
 import styled from 'styled-components';
@@ -70,8 +70,6 @@ const VideoPlayer = ({ videoCallInfo, localVideoStyles }: VideoPlayerType) => {
             ref={userVideo}
             autoPlay
           />
-
-          
 
           {!incomingVideoOn && (
             <VideoDisabledContainer>
