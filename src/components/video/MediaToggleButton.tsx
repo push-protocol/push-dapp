@@ -20,8 +20,8 @@ const MediaToggleButton = ({ iconSrc, iconWidth, onClick, backgroundColor}: Medi
 };
 
 const Button = styled(ButtonV2)`
-  width: 2.875rem;
-  max-width: 2.875rem;
+  width: 3rem;
+  max-width: 3rem;
   height: 2.75rem;
   background: ${(props) => props.bgColor || 'white'};
   hover-background: transparent;
