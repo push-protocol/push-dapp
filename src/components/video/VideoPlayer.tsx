@@ -152,8 +152,12 @@ const LocalVideoContainer = styled(ItemVV2)`
     aspect-ratio: 4/3;
   }
   
+  @media (max-width: 820px) {
+    aspect-ratio: 3/4;
+  }
+
   @media (max-width: 768px) {
-    aspect-ratio: 4/3;
+    aspect-ratio: 3/4;
   }
   @media ${device.mobileL} {
     height: 60%;
