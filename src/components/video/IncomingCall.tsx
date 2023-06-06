@@ -84,6 +84,7 @@ const IncomingCall = () => {
 
         {!isIncomingCallMinimized && (
           <VideoPlayer
+            incoming={true}
             localVideoStyles={{
               height: '35vh',
               maxHeight: '35vh',

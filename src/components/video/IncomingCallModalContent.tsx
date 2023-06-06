@@ -70,9 +70,10 @@ const Container = styled(ItemHV2)<IncomingCallModalContentProps>`
   }
 
   @media ${device.mobileL} {
-    right: 4%;
-    bottom: ${props => props.isIncomingCallMinimized ? "10%" : "20%"};
-    width: ${props => props.isIncomingCallMinimized ? "91vw" : "37vw"};;
+    // right: 4%;
+    right: ${props => props.isIncomingCallMinimized ? "4%" : "11%"};
+    bottom: ${props => props.isIncomingCallMinimized ? "10%" : "25%"};
+    width: ${props => props.isIncomingCallMinimized ? "91vw" : "77vw"};;
   }
 `;
 

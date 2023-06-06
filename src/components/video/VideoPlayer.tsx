@@ -18,9 +18,10 @@ import { shortenText } from 'helpers/UtilityHelper';
 
 type VideoPlayerType = {
   localVideoStyles?: {};
+  incoming?: boolean
 };
 
-const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
+const VideoPlayer = ({ localVideoStyles, incoming }: VideoPlayerType) => {
   const localVideoRef = useRef(null);
   const incomingVideoRef = useRef(null);
   const { videoCallData } = useContext(VideoCallContext);
@@ -51,6 +52,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
     <Container>
       {videoCallData.local.stream && (
         <LocalVideoContainer
+          incomingStyle={incoming}
           className={
             videoCallData.incoming[0].status === VideoCallStatus.CONNECTED
               ? !videoCallData.local.stream.getVideoTracks()[0].enabled
@@ -131,36 +133,37 @@ const LocalVideoContainer = styled(ItemVV2)`
   border-radius: 34px;
   margin: 1% auto;
   z-index: 2;
-  aspect-ratio: 16/9;
+  aspect-ratio: ${props => props.incomingStyle || '16/9'};
+
 
   @media ${device.laptopL} {
-    aspect-ratio: 16/9;
+    aspect-ratio: ${props => props.incomingStyle || '16/9'};
   }
 
   @media (max-width: 1239px) {
-    aspect-ratio: 4/3;
+    aspect-ratio: ${props => props.incomingStyle || '4/3'};
   }
 
   @media ${device.laptop} {
-    aspect-ratio: 4/3;
+    aspect-ratio: ${props => props.incomingStyle || '4/3'};
   }
   
   @media (max-width: 820px) {
-    aspect-ratio: 3/4;
+    aspect-ratio: ${props => props.incomingStyle || '3/4'};
   }
 
   @media (max-width: 768px) {
-    aspect-ratio: 3/4;
+    aspect-ratio: ${props => props.incomingStyle || '3/4'};
   }
   @media ${device.mobileL} {
     height: 60%;
-    aspect-ratio: 9/20;
+    aspect-ratio: ${props => props.incomingStyle || '9/20'};
   }
   @media ${device.mobileM} {
-    aspect-ratio: 9/23;
+    aspect-ratio: ${props => props.incomingStyle || '9/23'};
   }
   @media ${device.mobileS} {
-    aspect-ratio: 9/27;
+    aspect-ratio: ${props => props.incomingStyle || '9/27'};
   }
 
   &.connectionAccepted {
@@ -180,6 +183,8 @@ const LocalVideoContainer = styled(ItemVV2)`
     }
     @media ${device.mobileL} {
       border-radius: 16px;
+      aspect-ratio: ${props => props.incomingStyle || '4/3'};
+
     }
 
     &.videoOff {
