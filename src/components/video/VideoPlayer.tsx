@@ -2,7 +2,7 @@
 import React, { useContext, useEffect, useRef } from 'react';
 
 // External Packages
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -12,6 +12,9 @@ import { VideoCallStatus } from '@pushprotocol/restapi';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext } from 'types/chat';
+import { AppContext as MainContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
+import { shortenText } from 'helpers/UtilityHelper';
 
 type VideoPlayerType = {
   localVideoStyles?: {};
@@ -23,6 +26,9 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
   const { videoCallData } = useContext(VideoCallContext);
   const { connectedUser } = useContext(ChatUserContext);
   const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const { web3NameList }:AppContextType=React.useContext(MainContext);
+  const web3Name=web3NameList[videoCallData.incoming[0].address]
+  const theme=useTheme();
 
   useEffect(() => {
     if (localVideoRef.current) {
@@ -74,22 +80,26 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
         </LocalVideoContainer>
       )}
       {videoCallData.incoming[0].status === VideoCallStatus.CONNECTED && (
-        <IncomingVideoContainer>
-          <IncomingVideo ref={incomingVideoRef} />
+        <IncomingVideoContainer background={videoCallData.incoming[0].video ? "transparent" : theme.chat.snapFocusBg }>
+          <IncomingVideoInnerContainer 
+            width={videoCallData.incoming[0].video ? "auto":"100%"}
+            minHeight={videoCallData.incoming[0].video ? "auto":"100%"}
+          >
+            <IncomingVideo ref={incomingVideoRef} display={videoCallData.incoming[0].video?'block':'none'}/>
 
-          {!videoCallData.incoming[0].video && (
-            <VideoDisabledContainer>
-              <PfpContainer>
-                <ImageV2
-                  height="100%"
-                  width="100%"
-                  alt={`Profile pic`}
-                  src={currentChat?.profilePicture}
-                  objectFit="cover"
-                />
-              </PfpContainer>
-            </VideoDisabledContainer>
-          )}
+            {!videoCallData.incoming[0].video && (
+              <VideoDisabledContainer>
+                <PfpContainer>
+                  <ImageV2
+                    height="100%"
+                    width="100%"
+                    alt={`Profile pic`}
+                    src={currentChat?.profilePicture}
+                    objectFit="cover"
+                  />
+                </PfpContainer>
+              </VideoDisabledContainer>
+            )}
 
           <ProfileInfoMini position="absolute">
             <SpanV2
@@ -99,9 +109,10 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
               zIndex="3"
               color='#FFFFFF'
             >
-              {shortnedAddress}
+              {web3Name ? web3Name : shortenText(videoCallData.incoming[0].address,5)}
             </SpanV2>
           </ProfileInfoMini>
+          </IncomingVideoInnerContainer>
         </IncomingVideoContainer>
       )}
     </Container>
@@ -171,17 +182,21 @@ const LocalVideo = styled.video`
 
 const IncomingVideo = styled.video`
   border-radius: 34px;
-  width: 100%;
-  height: auto;
+  width: auto;
+  height: 100%;
+  display:${props=> props.display};
+ 
+  @media (max-width: 820px) {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
 
-  @media (max-width: 768px) {
-    width: auto;
-    height: 100%;
   }
   @media (max-width: 425px) {
     border-radius: 20px;
   }
 `;
+
 
 const IncomingVideoContainer = styled(ItemVV2)`
   overflow: hidden;
@@ -202,6 +217,19 @@ const IncomingVideoContainer = styled(ItemVV2)`
   } */
 `;
 
+const IncomingVideoInnerContainer=styled.div`
+  width: ${props => props.width};
+  min-height: 100%;
+  max-height: 100%;
+  border-radius: 34px;
+  position: relative;
+  @media (max-width:820px){
+    width: 100%;
+    min-height:${props => props.minHeight};
+    max-height: 100%;
+  }
+`
+
 const IncomingEnsContainer = styled(ItemVV2)`
   position: absolute;
   height: 10px;
@@ -221,9 +249,11 @@ const VideoDisabledContainer = styled(ItemVV2)`
   text-align: center;
   color: white;
   z-index: 10;
-  left: 45%;
   justify-content: center;
   align-items: center;
+  left:50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
 
   &.connectionAccepted {
     visibility: hidden;
@@ -254,11 +284,11 @@ const PfpContainer = styled(ItemVV2)`
 `;
 
 const ProfileInfoMini = styled(ItemHV2)`
-  left: 10px;
+  left: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  bottom: 10px;
+  bottom: 18px;
 `;
 
 const PfpContainerMini = styled(ItemVV2)`
@@ -281,3 +311,11 @@ const PfpContainerMini = styled(ItemVV2)`
     max-width: 2.5rem;
   }
 `;
+
+const NameBadge = styled(SpanV2)`
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: rgba(46, 49, 59, 0.75);
+  color: #fff;
+  z-index: 3;
+`
