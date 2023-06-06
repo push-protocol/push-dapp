@@ -27,45 +27,71 @@ const IncomingCallModalContent: React.FC<IncomingCallModalContentProps> = ({ isI
 
 const Container = styled(ItemHV2)<IncomingCallModalContentProps>`
   position: absolute;
-  /* right: ${props => props.isIncomingCallMinimized ? "2%" : "18%"}; */
-  right: 0;
-  left: 0;
-  bottom: ${props => props.isIncomingCallMinimized ? "18%" : "unset"};
+  right: ${props => props.isIncomingCallMinimized ? "2%" : "25%"};
+  bottom: ${props => props.isIncomingCallMinimized ? "10%" : "unset"};
   border-radius: 1.5rem;
+  width: ${props => props.isIncomingCallMinimized ? "24vw" : "24vw"};
+   
+  @media ${device.laptopL} {
+    right: ${props => props.isIncomingCallMinimized ? "2%" : "25%"};
+    bottom: ${props => props.isIncomingCallMinimized ? "10%" : "20%"};
+    width: ${props => props.isIncomingCallMinimized ? "33vw" : "24vw"};
+  }
 
-  max-width: 25%;
-  min-width: 320px;
-  margin: auto;
-  /* 
+  @media (max-width: 1364px) {
+    width : ${props => props.isIncomingCallMinimized ? "36vw" : "24vw"};
+  }
+
+  @media (max-width: 1240px) {
+    width : ${props => props.isIncomingCallMinimized ? "40vw" : "24vw"};
+  }
+
+  @media (max-width: 1130px) {
+    width : ${props => props.isIncomingCallMinimized ? "44vw" : "24vw"};
+  }
+
   @media ${device.laptop} {
-    right: 3%;
+    right: ${props => props.isIncomingCallMinimized ? "2%" : "25%"};
+    bottom: ${props => props.isIncomingCallMinimized ? "10%" : "20%"};
+    width: ${props => props.isIncomingCallMinimized ? "45vw" : "24vw"};
+
+  @media (max-width: 996px) {
+    width: ${props => props.isIncomingCallMinimized ? "49vw" : "24vw"};
+  }
+
+  @media (max-width: 932px) {
+    width: ${props => props.isIncomingCallMinimized ? "55vw" : "24vw"};
   }
 
   @media ${device.tablet} {
-    right: ${props => props.isIncomingCallMinimized ? "5%" : "25%"};
+    right: ${props => props.isIncomingCallMinimized ? "5%" : "30%"};
+    bottom: ${props => props.isIncomingCallMinimized ? "10%" : "25%"};
+    width: ${props => props.isIncomingCallMinimized ? "60vw" : "37vw"};
   }
 
   @media ${device.mobileL} {
-    right: 3.5%;
-  } 
-  */
+    right: 4%;
+    bottom: ${props => props.isIncomingCallMinimized ? "10%" : "20%"};
+    width: ${props => props.isIncomingCallMinimized ? "91vw" : "37vw"};;
+  }
 `;
 
 const ContentContainer = styled(ItemVV2)<IncomingCallModalContentProps>`
+  // display: flex;
   background: ${(props) => props.theme.vcModalBGColor};
   border: ${(props) => {
     return `2px solid ${props.theme.vcBorderColor}`;
   }};
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05);
   border-radius: 1.5rem;
-  width: ${props => props.isIncomingCallMinimized ? "32vw" : "25vw"};
+  width: ${props => props.isIncomingCallMinimized ? "auto" : "25vw"};
   flex-direction: ${props => props.isIncomingCallMinimized ? "row" : "column"};
-  justify-content: ${props => props.isIncomingCallMinimized ? "space-between" : "center"};
+  justify-content: ${props => props.isIncomingCallMinimized ? "center" : "center"};
   height: fit-content;
   z-index: 10;
 
   @media ${device.laptop} {
-    width: 31vw;
+    // width: 31vw;
   }
 
   @media ${device.tablet} {
@@ -73,7 +99,7 @@ const ContentContainer = styled(ItemVV2)<IncomingCallModalContentProps>`
   }
 
   @media ${device.mobileL} {
-    width: 90vw;
+    width: 100%;
   }
 `;
 

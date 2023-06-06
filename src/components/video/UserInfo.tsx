@@ -19,16 +19,18 @@ type UserInfoType = {
   status: 'Calling' | 'Call Ended' | 'Incoming Video Call';
   containerStyles?: {};
   fontColor?: string;
+  source?: string;
 };
 
-const UserInfo = ({ pfp, username, address, status, containerStyles, fontColor }: UserInfoType) => {
+
+const UserInfo = ({ pfp, username, address, status, containerStyles, fontColor, source }: UserInfoType) => {
   const { web3NameList }:AppContextType=React.useContext(AppContext);
   const web3Name=web3NameList[address]
   const shortnedAddress = address.substring(0, 8) + '...' + address.substring(address.length - 8);
 
   return (
     <Container style={containerStyles}>
-      <PfpContainer>
+      <PfpContainer source={source}>
         <ImageV2
           height="100%"
           alt={`Profile pic of ${username}`}
@@ -37,7 +39,8 @@ const UserInfo = ({ pfp, username, address, status, containerStyles, fontColor }
         />
       </PfpContainer>
 
-      <InfoContainer>
+
+      <InfoContainer source={source}>
         <ShortedAddress color={fontColor}>{web3Name ? web3Name : shortnedAddress}</ShortedAddress>
         <Status color={fontColor}>{status}</Status>
       </InfoContainer>
@@ -64,9 +67,9 @@ const Container = styled(ItemHV2)`
 `;
 
 const PfpContainer = styled(ItemVV2)`
-  width: 5rem;
-  height: 5rem;
-  max-width: 5rem;
+  width: ${props => props.source === "minimized" ? "4rem" : "5rem"};
+  height: ${props => props.source === "minimized" ? "4rem" : "5rem"};
+  max-width: ${props => props.source === "minimized" ? "4rem" : "5rem"};
   margin: 0 1rem 0 0;
   border-radius: 100%;
   overflow: hidden;
@@ -76,7 +79,7 @@ const PfpContainer = styled(ItemVV2)`
     width: 2.875rem;
     height: 2.875rem;
     max-width: 2.875rem;
-    margin: 1.5rem 1rem auto 0.2rem;
+    margin: ${props => props.source === "minimized" ? "0.8rem 1rem auto 0.2rem" : "1.5rem 1rem auto 0.2rem"};
   }
 
   @media ${device.mobileS} {
@@ -92,7 +95,7 @@ const InfoContainer = styled(ItemVV2)`
   width: fit-content;
   max-width: fit-content;
   @media ${device.mobileL} {
-    margin-top: 1.5rem;
+    margin-top: ${props => props.source === "minimized" ? "0.8rem" : "1.5rem"};
   }
 `;
 
