@@ -24,7 +24,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
   const localVideoRef = useRef(null);
   const incomingVideoRef = useRef(null);
   const { videoCallData } = useContext(VideoCallContext);
-  const { connectedUser } =useContext(ChatUserContext);
+  const { connectedUser } = useContext(ChatUserContext);
   const { currentChat }: AppContext = useContext<AppContext>(Context);
   const { web3NameList }:AppContextType=React.useContext(MainContext);
   const web3Name=web3NameList[videoCallData.incoming[0].address]
@@ -128,19 +128,47 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
 export default VideoPlayer;
 
 const Container = styled(ItemVV2)`
-  height: fit-content;
-  max-height: fit-content;
-  min-height: fit-content;
   overflow: hidden;
+  margin: 2% auto 1% auto;
 `;
 
 const LocalVideoContainer = styled(ItemVV2)`
   overflow: hidden;
-  height: 47vh;
-  max-height: 47vh;
+  height: 100%;
   border-radius: 34px;
-  margin: 0 auto;
+  margin: 1% auto;
   z-index: 2;
+  aspect-ratio: 16/9;
+
+  @media ${device.laptopL} {
+    aspect-ratio: 16/9;
+  }
+
+  @media (max-width: 1239px) {
+    aspect-ratio: 4/3;
+  }
+
+  @media ${device.laptop} {
+    aspect-ratio: 4/3;
+  }
+  
+  @media (max-width: 820px) {
+    aspect-ratio: 3/4;
+  }
+
+  @media (max-width: 768px) {
+    aspect-ratio: 3/4;
+  }
+  @media ${device.mobileL} {
+    height: 60%;
+    aspect-ratio: 9/20;
+  }
+  @media ${device.mobileM} {
+    aspect-ratio: 9/23;
+  }
+  @media ${device.mobileS} {
+    aspect-ratio: 9/27;
+  }
 
   &.connectionAccepted {
     border-radius: 24px;
@@ -301,23 +329,25 @@ const ProfileInfoMini = styled(ItemHV2)`
 `;
 
 const PfpContainerMini = styled(ItemVV2)`
-  margin: 10px;
-  width: 3rem;
-  height: 3rem;
-  max-width: 3rem;
+  margin: 10px 10px 10px -5px;
+  width: 5rem;
+  height: 5rem;
+  max-width: 5rem;
   border-radius: 100%;
   overflow: hidden;
 
   @media ${device.mobileL} {
-    width: 2.875rem;
-    height: 2.875rem;
-    max-width: 2.875rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    max-width: 3rem;
+    margin: auto 1rem auto -0.2rem;
   }
 
   @media ${device.mobileS} {
     width: 2.5rem;
     height: 2.5rem;
     max-width: 2.5rem;
+    margin: auto 1rem auto -0.2rem;
   }
 `;
 
