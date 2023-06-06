@@ -5,7 +5,7 @@ import React, { useRef, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 
 // Internal Components
-import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import {  SpanV2, ImageV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import UserInfo from 'components/video/UserInfo';
 import { device } from 'config/Globals';
 import { VideoCallContext } from 'contexts/VideoCallContext';
