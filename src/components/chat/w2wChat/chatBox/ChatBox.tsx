@@ -43,7 +43,6 @@ import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpe
 import { MessagetypeType } from '../../../../types/chat';
 import Chats from '../chats/Chats';
 import Typebar from '../TypeBar/Typebar';
-import { intitializeDb } from '../w2wIndexeddb';
 import { HeaderMessage } from './HeaderMessage';
 import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
@@ -240,7 +239,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   };
 
   const fetchInboxApi = async (): Promise<Feeds> => {
-    const inboxes: Feeds[] = await fetchInbox(connectedUser);
+    const inboxes: Feeds[] = await fetchInbox({connectedUser});
     setInbox(inboxes);
     return inboxes?.find((x) => x.wallets.split(':')[1]?.toLowerCase() === currentChat.wallets.split(':')[1]?.toLowerCase());
   };
@@ -271,7 +270,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       });
 
       if (typeof sendResponse !== 'string') {
-        intitializeDb<MessageIPFS>('Insert', 'CID_store', sendResponse.cid, sendResponse, 'cid');
         sendResponse.messageContent = message;
         const updatedCurrentChat = currentChat;
         updatedCurrentChat.msg = sendResponse;
@@ -311,13 +309,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   async function resolveThreadhash(): Promise<void> {
     setLoading(true);
-    let getIntent;
-    getIntent = await intitializeDb<string>('Read', 'Intent', walletToCAIP10({ account: account! }), '', 'did');
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(':')[1];
-    let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: false });
-    await intitializeDb<Feeds[]>('Insert', 'Intent', walletToCAIP10({ account: account! }), intents, 'did');
-    intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
+    let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: true, pgpPrivateKey:connectedUser.privateKey });
     setReceivedIntents(intents);
     setLoading(false);
   }

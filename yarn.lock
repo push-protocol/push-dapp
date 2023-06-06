@@ -4831,6 +4831,7 @@ __metadata:
     axios: ^0.27.2
     buffer: ^6.0.3
     crypto-js: ^4.1.1
+    immer: ^10.0.2
     openpgp: ^5.5.0
     tslib: ^2.3.0
     uuid: ^9.0.0
@@ -16798,6 +16799,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"immer@npm:^10.0.2":
+  version: 10.0.2
+  resolution: "immer@npm:10.0.2"
+  checksum: 525a3b14210d02ae420c3b9f6ca14f7e9bcf625611d1356e773e7739f14c7c8de50dac442e6c7de3a6e24a782f7b792b6b8666bc0b3f00269d21a95f8f68ca84
+  languageName: node
+  linkType: hard
+
 "immer@npm:^9.0.16, immer@npm:^9.0.6, immer@npm:^9.0.7":
   version: 9.0.21
   resolution: "immer@npm:9.0.21"
@@ -26873,7 +26881,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"simple-peer@npm:9.11.1":
+"simple-peer@npm:9.11.1, simple-peer@npm:^9.11.1":
   version: 9.11.1
   resolution: "simple-peer@npm:9.11.1"
   dependencies:

@@ -74,7 +74,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
           env: appConfig.appEnv,
         });
         if (typeof createGroupRes !== 'string') {
-          const inboxes: Feeds[] = await fetchInbox(connectedUser);
+          const inboxes: Feeds[] = await fetchInbox({connectedUser});
           setInbox(inboxes);
           createGroupToast.showMessageToast({
             toastTitle: 'Success',
