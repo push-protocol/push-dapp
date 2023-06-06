@@ -258,26 +258,16 @@ const VideoDisabledContainer = styled(ItemVV2)`
   text-align: center;
   color: white;
   z-index: 10;
-  left: 0;
-  right: 0;
-  margin: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   justify-content: center;
   align-items: center;
 
   &.connectionAccepted {
     visibility: hidden;
   }
-  @media (min-width: 1025px) {
-    &.incomingCallvideoOff {
-      top: 50%;
-      transform: translate(-50%, -50%);
-    }
-  }
-  @media (max-width: 1024px) {
-    &.incomingCallvideoOff {
-      top: 35%;
-      transform: translate(0%, 50%);
-    }
+
   }
 `;
 
