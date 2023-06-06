@@ -26,9 +26,9 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
   const { videoCallData } = useContext(VideoCallContext);
   const { connectedUser } = useContext(ChatUserContext);
   const { currentChat }: AppContext = useContext<AppContext>(Context);
-  const { web3NameList }:AppContextType=React.useContext(MainContext);
-  const web3Name=web3NameList[videoCallData.incoming[0].address]
-  const theme=useTheme();
+  const { web3NameList }: AppContextType = React.useContext(MainContext);
+  const web3Name = web3NameList[videoCallData.incoming[0].address]
+  const theme = useTheme();
 
   useEffect(() => {
     if (localVideoRef.current) {
@@ -79,15 +79,15 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
         </LocalVideoContainer>
       )}
       {videoCallData.incoming[0].status === VideoCallStatus.CONNECTED && (
-        <IncomingVideoContainer background={videoCallData.incoming[0].video ? "transparent" : theme.chat.snapFocusBg }>
-          <IncomingVideoInnerContainer 
-            width={videoCallData.incoming[0].video ? "auto":"100%"}
-            minHeight={videoCallData.incoming[0].video ? "auto":"100%"}
+        <IncomingVideoContainer background={videoCallData.incoming[0].video ? "transparent" : theme.chat.snapFocusBg}>
+          <IncomingVideoInnerContainer
+            width={videoCallData.incoming[0].video ? "auto" : "100%"}
+            minHeight={videoCallData.incoming[0].video ? "auto" : "100%"}
           >
-            <IncomingVideo ref={incomingVideoRef} display={videoCallData.incoming[0].video?'block':'none'}/>
+            <IncomingVideo ref={incomingVideoRef} display={videoCallData.incoming[0].video ? 'block' : 'none'} />
 
             {!videoCallData.incoming[0].video && (
-              <VideoDisabledContainer>
+              <VideoDisabledContainer className="incomingCallvideoOff">
                 <PfpContainer>
                   <ImageV2
                     height="100%"
@@ -100,25 +100,25 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
               </VideoDisabledContainer>
             )}
 
-          <ProfileInfoMini position="absolute">
-            <PfpContainerMini>
-              <ImageV2
-                height="100%"
-                width="100%"
-                alt={`Profile pic`}
-                src={currentChat?.profilePicture}
-                objectFit="cover"
-              />
-            </PfpContainerMini>
-            <SpanV2
-              padding="10px"
-              borderRadius="24px"
-              background="#ffffffbb"
-              zIndex="3"
-            >
-              {web3Name ? web3Name : shortenText(videoCallData.incoming[0].address,5)}
-            </SpanV2>
-          </ProfileInfoMini>
+            <ProfileInfoMini position="absolute">
+              <PfpContainerMini>
+                <ImageV2
+                  height="100%"
+                  width="100%"
+                  alt={`Profile pic`}
+                  src={currentChat?.profilePicture}
+                  objectFit="cover"
+                />
+              </PfpContainerMini>
+              <SpanV2
+                padding="10px"
+                borderRadius="24px"
+                background="#ffffffbb"
+                zIndex="3"
+              >
+                {web3Name ? web3Name : shortenText(videoCallData.incoming[0].address, 5)}
+              </SpanV2>
+            </ProfileInfoMini>
           </IncomingVideoInnerContainer>
         </IncomingVideoContainer>
       )}
@@ -221,7 +221,7 @@ const IncomingVideo = styled.video`
   border-radius: 34px;
   width: auto;
   height: 100%;
-  display:${props=> props.display};
+  display:${props => props.display};
  
   @media (max-width: 820px) {
     width: 100%;
@@ -240,7 +240,7 @@ const IncomingVideoContainer = styled(ItemVV2)`
   /* height: 20vh;
   max-height: 62vh;
   width: 95%; */
-  background-color: ${props=> props.background};
+  background-color: ${props => props.background};
   /* left: 2.5%; */
   border-radius: 34px;
   z-index: 1;
@@ -254,7 +254,7 @@ const IncomingVideoContainer = styled(ItemVV2)`
   } */
 `;
 
-const IncomingVideoInnerContainer=styled.div`
+const IncomingVideoInnerContainer = styled.div`
   width: ${props => props.width};
   min-height: 100%;
   max-height: 100%;
@@ -286,14 +286,16 @@ const VideoDisabledContainer = styled(ItemVV2)`
   text-align: center;
   color: white;
   z-index: 10;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   justify-content: center;
   align-items: center;
-  left:50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
 
   &.connectionAccepted {
     visibility: hidden;
+  }
+
   }
 `;
 
@@ -301,7 +303,6 @@ const PfpContainer = styled(ItemVV2)`
   width: 5rem;
   height: 5rem;
   max-width: 5rem;
-  margin: 0 1rem 0 0;
   border-radius: 100%;
   overflow: hidden;
 
