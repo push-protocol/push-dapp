@@ -31,7 +31,7 @@ const Button = styled(ButtonV2)`
   max-width: 4.56rem;
   height: 2.75rem;
   hover-background: transparent;
-  border-radius: 1rem;
+  border-radius: 10px;
   margin: 0 0.35rem;
 
   @media ${device.mobileL} {

@@ -25,7 +25,7 @@ const Button = styled(ButtonV2)`
   height: 2.75rem;
   background: ${(props) => props.bgColor || 'white'};
   hover-background: transparent;
-  border-radius: 1rem;
+  border-radius: 10px;
   margin: 0 0.35rem;
 `;
 
