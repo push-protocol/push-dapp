@@ -144,6 +144,10 @@ const LocalVideoContainer = styled(ItemVV2)`
     aspect-ratio: 16/9;
   }
 
+  @media (max-width: 1239px) {
+    aspect-ratio: 4/3;
+  }
+
   @media ${device.laptop} {
     aspect-ratio: 4/3;
   }
