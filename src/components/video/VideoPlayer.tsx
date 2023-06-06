@@ -71,6 +71,8 @@ const VideoPlayer = ({ videoCallInfo, localVideoStyles }: VideoPlayerType) => {
             autoPlay
           />
 
+          
+
           {!incomingVideoOn && (
             <VideoDisabledContainer>
               <PfpContainer>
