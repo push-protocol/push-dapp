@@ -29,6 +29,7 @@ import { AppContext } from 'types/chat';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import EndToEnd from './EndToEnd';
 
 type OutgoingOngoingCallType = {
   blockedLoading: BlockedLoadingI;
@@ -65,6 +66,7 @@ const OutgoingOngoingCall = ({ blockedLoading }: OutgoingOngoingCallType) => {
 
   return (
     <Container>
+      {/* <EndToEnd /> */}
       {/* remote user info */}
       {videoCallData.incoming[0].status !== VideoCallStatus.CONNECTED && (
         <UserInfo
@@ -141,7 +143,8 @@ const Container = styled(SectionV2)`
 const VideoCallControlsContainer = styled(ItemHV2)`
   width: fit-content;
   max-width: fit-content;
-  margin: 1% auto;
+  margin: 2% auto 0 auto;
+  padding: 0 0 1% 0;
   flex: 0;
 `;
 

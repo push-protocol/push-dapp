@@ -35,8 +35,8 @@ const Button = styled(ButtonV2)`
   margin: 0 0.35rem;
 
   @media ${device.mobileL} {
-    width: 3.375rem;
-    max-width: 3.375rem;
+    width: 5rem;
+    max-width: 5rem;
     height: 2.75rem;
     border-radius: 0.75rem;
   }
