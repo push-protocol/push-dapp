@@ -81,6 +81,14 @@ const NewYieldFarming = ({
 
     //initiate the YieldFarmV2 data store here
     React.useEffect(() => {
+
+        setLpPoolStats(null);
+        setUserDataLP(null);
+        setPUSHPoolStats(null);
+        setUserDataPush(null);
+
+
+
         let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, library);
         let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, library);
         let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, library);

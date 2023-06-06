@@ -454,7 +454,7 @@ const YieldPushFeeV3 = ({
                                 </InfoSpan>
 
                             </DataTitle>
-                            <DataValue> {userDataPush ? formatTokens(userDataPush?.claimedReward) : '0'} PUSH</DataValue>
+                            <DataValue> {formatTokens(userDataPush?.claimedReward)} PUSH</DataValue>
                         </ItemHV2>
                         <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                             <DataTitle>
@@ -467,7 +467,7 @@ const YieldPushFeeV3 = ({
                                 </InfoSpan>
 
                             </DataTitle>
-                            <DataValue> {userDataPush ? formatTokens(userDataPush?.potentialUserReward) : '0'} PUSH</DataValue>
+                            <DataValue> {formatTokens(userDataPush?.potentialUserReward)} PUSH</DataValue>
                         </ItemHV2>
                         <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                             <DataTitle>
@@ -480,7 +480,7 @@ const YieldPushFeeV3 = ({
                                 </InfoSpan>
 
                             </DataTitle>
-                            <DataValue> {userDataPush ? userDataPush?.totalClaimableReward : '0'} PUSH</DataValue>
+                            <DataValue> {userDataPush?.totalClaimableReward} PUSH</DataValue>
                         </ItemHV2>
                     </ItemVV2>
                 ) : (

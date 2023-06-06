@@ -214,12 +214,18 @@ export default class YieldFarmingDataStoreV2 {
 
         let totalClaimableReward = 0;
 
+        //we can just see the last staked block so the loop will be small
+        
+
+        //TODO: Here below one thing is left to 
+        // If the user claims reward at some block then the epoch Length will decrease.
+
         const epochsToCondider = Array.from({ length: computationalEpochId }, (_, i) => i + 1);
 
         const userRewards = await Promise.all(
           epochsToCondider.map((epochId) => {
             return pushCoreV2.calculateEpochRewards(userAddress, epochId).then((reward) => {
-              // console.log('Epoch ID', epochId, 'Reward in this epoch', reward, tokenBNtoNumber(reward));
+              console.log('Epoch ID', epochId, 'Reward in this epoch', reward, tokenBNtoNumber(reward));
               return reward;
             });
           })
@@ -247,6 +253,7 @@ export default class YieldFarmingDataStoreV2 {
     const lastTotalStakeEpochInitialized = await pushCoreV2.provider
       .getStorageAt(pushCoreV2.address, 129)
       .then((data) => parseInt(data));
+      
     const _lastTotalStakeEpochInitialized = await this.getEpochRelation(lastTotalStakeEpochInitialized);
 
     let computationalEpochId = epochId;
