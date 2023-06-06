@@ -276,27 +276,11 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         updatedCurrentChat.msg = sendResponse;
         setChat(updatedCurrentChat);
         setNewMessage('');
-        // console.log(messages)
-        // console.log(sendResponse)
         setMessages([...messages, sendResponse]);
 
         setTimeout(() => {
           setMessageBeingSent(false);
         }, 1);
-      } else {
-        chatBoxToast.showMessageToast({
-          toastTitle: 'Error',
-          toastMessage: `${sendResponse}`,
-          toastType: 'ERROR',
-          getToastIcon: (size) => (
-            <MdError
-              size={size}
-              color="red"
-            />
-          ),
-        });
-
-        setMessageBeingSent(false);
       }
     } catch (error) {
       chatBoxToast.showMessageToast({
@@ -314,7 +298,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       setMessageBeingSent(false);
     }
   };
-  // console.log(messages)
+
   useEffect(() => {
     if (messageBeingSent == false) {
       setTimeout(() => {
@@ -370,19 +354,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
             />
           ),
         });
-      } else {
-        chatBoxToast.showMessageToast({
-          toastTitle: 'Error',
-          toastMessage: `There was a problem in approving the chat request, please try again.`,
-          toastType: 'ERROR',
-          getToastIcon: (size) => (
-            <MdError
-              size={size}
-              color="red"
-            />
-          ),
-        });
       }
+
       setActiveTab(0);
       await resolveThreadhash();
       setMessageBeingSent(false);
@@ -430,21 +403,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
           env: appConfig.appEnv,
         });
 
-        if (typeof sendResponse === 'string') {
-          // Display toaster
-          chatBoxToast.showMessageToast({
-            toastTitle: 'Error',
-            toastMessage: `${sendResponse}`,
-            toastType: 'ERROR',
-            getToastIcon: (size) => (
-              <MdError
-                size={size}
-                color="red"
-              />
-            ),
-          });
-          setMessageBeingSent(false);
-        } else {
+        if (typeof sendResponse !== 'string') {
           // We store the message in state decrypted so we display to the user the intent message
           sendResponse.messageContent = message;
           setNewMessage('');
@@ -462,13 +421,13 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
               />
             ),
           });
+          setMessageBeingSent(false);
         }
       }
 
       setHasUserBeenSearched(false);
       setActiveTab(0);
     } catch (error) {
-      console.error(error.message);
       chatBoxToast.showMessageToast({
         toastTitle: 'Error',
         toastMessage: 'Cannot send request, Try again later',
