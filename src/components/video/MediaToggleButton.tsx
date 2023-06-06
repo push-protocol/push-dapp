@@ -26,7 +26,7 @@ const Button = styled(ButtonV2)`
   background: ${(props) => props.bgColor || 'white'};
   hover-background: transparent;
   border-radius: 1rem;
-  margin: 0 0.35rem;
+  margin: 5% 0.35rem;
 `;
 
 const Icon = styled(ImageV2)`

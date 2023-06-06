@@ -128,38 +128,38 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
 export default VideoPlayer;
 
 const Container = styled(ItemVV2)`
-  height: fit-content;
-  max-height: fit-content;
-  min-height: fit-content;
   overflow: hidden;
+  margin: 2% auto 1% auto;
 `;
 
 const LocalVideoContainer = styled(ItemVV2)`
   overflow: hidden;
-  height: 50vh;
-  max-height: 50vh;
+  height: 100%;
   border-radius: 34px;
-  margin: 2% auto;
+  margin: 1% auto;
   z-index: 2;
+  aspect-ratio: 16/9;
 
   @media ${device.laptopL} {
     aspect-ratio: 16/9;
   }
 
   @media ${device.laptop} {
-    aspect-ratio: 16/9;
+    aspect-ratio: 4/3;
   }
   
-  @media {max-width : 768px} {
+  @media (max-width: 768px) {
     aspect-ratio: 4/3;
   }
   @media ${device.mobileL} {
-    width: auto;
-    max-width: 100%;
+    height: 60%;
+    aspect-ratio: 9/20;
   }
   @media ${device.mobileM} {
-    width: auto;
-    max-width: 100%;
+    aspect-ratio: 9/23;
+  }
+  @media ${device.mobileS} {
+    aspect-ratio: 9/27;
   }
 
   &.connectionAccepted {
