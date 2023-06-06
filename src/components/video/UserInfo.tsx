@@ -1,8 +1,13 @@
-  // External Packages
-  import styled from 'styled-components';
+// React + Web3 Essentials
+import React from 'react';
 
-  // Internal Components
-  import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+// External Packages
+import styled from 'styled-components';
+
+// Internal Components
+import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { AppContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
 
 // Internal Configs
 import { device } from 'config/Globals';
@@ -17,7 +22,10 @@ type UserInfoType = {
   source?: string;
 };
 
+
 const UserInfo = ({ pfp, username, address, status, containerStyles, fontColor, source }: UserInfoType) => {
+  const { web3NameList }:AppContextType=React.useContext(AppContext);
+  const web3Name=web3NameList[address]
   const shortnedAddress = address.substring(0, 8) + '...' + address.substring(address.length - 8);
 
   return (
@@ -31,8 +39,9 @@ const UserInfo = ({ pfp, username, address, status, containerStyles, fontColor, 
         />
       </PfpContainer>
 
+
       <InfoContainer source={source}>
-        <ShortedAddress color={fontColor}>{shortnedAddress}</ShortedAddress>
+        <ShortedAddress color={fontColor}>{web3Name ? web3Name : shortnedAddress}</ShortedAddress>
         <Status color={fontColor}>{status}</Status>
       </InfoContainer>
     </Container>
