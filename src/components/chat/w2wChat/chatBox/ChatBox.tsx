@@ -107,7 +107,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const isMobile = useDeviceWidthCheck(600);
   let showTime = false;
   let time = '';
-  console.log('checking husky');
 
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
