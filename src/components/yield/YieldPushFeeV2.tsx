@@ -2,7 +2,7 @@
 import React from 'react';
 
 // External Packages
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -11,6 +11,9 @@ import { Button } from 'primaries/SharedStyling';
 import { MdWarning } from 'react-icons/md';
 
 const YieldPushFeeV2 = () => {
+
+    const theme = useTheme();
+
     return (
         <Container>
 
@@ -125,7 +128,7 @@ const YieldPushFeeV2 = () => {
 export default YieldPushFeeV2;
 
 const Container = styled(SectionV2)`
-    border: 1px solid #BAC4D6;
+    border: 1px solid ${(props)=>props.theme.modalSearchBarBorderColor};
     border-radius: 24px;
     padding:20px;
     margin:10px;
@@ -174,19 +177,24 @@ const SecondaryText = styled.p`
     font-size: 18px;
     line-height: 141%;
     letter-spacing: -0.03em;
-    color: #333333;
+    color: ${(props)=>props.theme.modalMessageColor};
+`
+
+const RewardsContainer = styled(ItemHV2)`
+    border: 1px solid ${(props)=>props.theme.modalSearchBarBorderColor};
+    border-radius:16px;
 `
 
 const Line = styled.div`
     width: 1px;
     height: 100%;
-    background:#BAC4D6;
+    background:${(props)=>props.theme.modalSearchBarBorderColor};
 `
 const DataTitle = styled.div`
     font-size: 18px;
     line-height: 141%;
     letter-spacing: -0.03em;
-    color: rgba(87, 93, 115, 0.8);
+    color: ${(props)=>props.theme.modalDescriptionTextColor};
     display: flex;
     justify-content: center;
     align-items: center;
@@ -197,7 +205,14 @@ const DataValue = styled(H2V2)`
     font-size: 18px;
     line-height: 141%;
     letter-spacing: -0.03em;
-    color: #333333;
+    color:${(props)=>props.theme.modalMessageColor};
+`
+
+const EpochText = styled(ItemHV2)`
+    align-self:end;
+    margin:12px 13px 24px 0px;
+    letter-spacing:-0.03em;
+    color: ${(props)=>props.theme.modalDescriptionTextColor};
 `
 
 const ButtonsContainer = styled.div`
@@ -228,7 +243,7 @@ const EmptyButton = styled.button`
     border: 1px solid #657795;
     border-radius: 8px;
     padding: 12px;
-    background:#ffffff;
+    background:transparent;
     font-size: 18px;
     line-height: 141%;
     letter-spacing: -0.03em;
@@ -237,6 +252,10 @@ const EmptyButton = styled.button`
     cursor:pointer;
     & > div{
         display:block;
+    }
+
+    &:after{
+        background:transparent;
     }
 
     &:hover{

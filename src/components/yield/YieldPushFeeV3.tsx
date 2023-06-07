@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 
 // External Packages
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -29,6 +29,8 @@ const YieldPushFeeV3 = ({
 
     const [txInProgressWithdraw, setTxInProgressWithdraw] = useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
+
+    const theme = useTheme();
 
     const {
         isModalOpen: isStakingModalOpen,
@@ -345,6 +347,7 @@ const YieldPushFeeV3 = ({
                             margin="12px 13px 24px 0px"
                             color="#575D73"
                             letterSpacing="-0.03em"
+                            color={theme.fontColor}
                         >
                             Current Epoch  {PUSHPoolstats?.currentEpoch.toNumber()}
                         </ItemHV2>
@@ -406,7 +409,7 @@ const YieldPushFeeV3 = ({
 export default YieldPushFeeV3;
 
 const Container = styled(SectionV2)`
-    border: 1px solid #BAC4D6;
+    border: 1px solid ${(props) => props.theme.modalSearchBarBorderColor};
     border-radius: 24px;
     padding:20px;
     margin:10px;
@@ -418,12 +421,10 @@ const Container = styled(SectionV2)`
 `;
 
 const Heading = styled(H2V2)`
-   
-   
     font-size: 24px;
     line-height: 141%;
     letter-spacing: -0.03em;
-    color: #333333;
+    color: ${(props) => props.theme.modalMessageColor};
 
 `
 const SecondaryText = styled.p`
@@ -431,19 +432,26 @@ const SecondaryText = styled.p`
     font-size: 18px;
     line-height: 141%;
     letter-spacing: -0.03em;
-    color: #333333;
+    color: ${(props) => props.theme.modalMessageColor};
+`
+
+const RewardsContainer = styled(ItemHV2)`
+    border: 1px solid ${(props) => props.theme.modalSearchBarBorderColor};
+    border-radius:16px;
 `
 
 const Line = styled.div`
     width: 1px;
     height: 100%;
-    background:#BAC4D6;
+    background:${(props) => props.theme.modalSearchBarBorderColor};
+
 `
 const DataTitle = styled.div`
     font-size: 18px;
     line-height: 141%;
     letter-spacing: -0.03em;
-    color: rgba(87, 93, 115, 0.8);
+    // color: rgba(87, 93, 115, 0.8);
+    color: ${(props) => props.theme.modalDescriptionTextColor};
     display: flex;
     justify-content: center;
     align-items: center;
@@ -454,16 +462,21 @@ const DataValue = styled(H2V2)`
     font-size: 18px;
     line-height: 141%;
     letter-spacing: -0.03em;
-    color: #333333;
+    color:${(props) => props.theme.modalMessageColor};
 `
 
+const EpochText = styled(ItemHV2)`
+    align-self:end;
+    margin:12px 13px 24px 0px;
+    letter-spacing:-0.03em;
+    color: ${(props) => props.theme.modalDescriptionTextColor};
+`
 
 const ButtonsContainer = styled.div`
     display: flex;
     width: 100%;
     margin:15px 0px 0px 0px;
 `
-
 
 const FilledButton = styled(ButtonV2)`
     width:100%;
@@ -482,24 +495,27 @@ const FilledButton = styled(ButtonV2)`
     
 `;
 
-const EmptyButton = styled(Button)`
-    border: 1px solid #D53A94;
+const EmptyButton = styled(ButtonV2)`
+    border: 1px solid ${(props) => props.theme.default.secondaryColor};
     border-radius: 8px;
     padding: 12px;
-    background:#ffffff;
+    background:transparent;
     font-size: 18px;
     line-height: 141%;
     letter-spacing: -0.03em;
-    color: #D53A94;
+    color:${(props) => props.theme.default.secondaryColor};
     flex:1;
     cursor:pointer;
+    opacity:1;
     & > div{
         display:block;
     }
+    &:after{
+        background:transparent;
+    }
 
     &:hover{
-        background: #D53A94;
-        opacity:1;
-        color: #FFFFFF;
+        border-color:#D53A94;
+        color: #D53A94;
     }
 `
