@@ -6,11 +6,7 @@ import ReactGA from 'react-ga';
 import styled from 'styled-components';
 
 // Internal Compoonents
-import { ItemVV2, SectionV2 } from 'components/reusables/SharedStylingV2';
-import YieldAnnouncementSection from 'sections/yield/YieldAnnouncementSection';
-import YieldPushPriceSection from 'sections/yield/YieldPushPriceSection';
-import YieldSnapshotSection from 'sections/yield/YieldSnapshotSection';
-import YieldStatsSection from 'sections/yield/YieldStatsSection';
+import { ItemHV2, ItemVV2, SectionV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
@@ -18,6 +14,9 @@ import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { ethers } from 'ethers';
 import { useWeb3React } from '@web3-react/core';
 import YieldFarmingDataStoreV2 from 'singletons/YieldFarmingDataStoreV2';
+import DeprecatedYieldFarming from 'sections/yield/DeprecatedYieldFarming';
+import NewYieldFarming from 'sections/yield/NewYieldFarming';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 // Constants
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
@@ -27,123 +26,43 @@ const YieldFarmingModuleV2 = () => {
   // React GA Analytics
   ReactGA.pageview('/yield');
 
-  const { account, library } = useWeb3React();
-
-  const [loadingComponent, setLoadingComponent] = useState(false);
-  const [loadingPushComponent, setLoadingPushComponent] = useState(false);
-
-  const [pushToken, setPushToken] = useState(null);
-  const [staking, setStaking] = useState(null);
-  const [yieldFarmingLP, setYieldFarmingLP] = useState(null);
-  const [pushCoreV2, setPushCoreV2] = useState(null);
-  const [uniswapV2Router02Instance, setUniswapV2Router02Instance] = useState(null);
-
-  const [poolStats, setPoolStats] = useState(null);
-  const [lpPoolStats, setLpPoolStats] = useState(null);
-  const [userDataLP, setUserDataLP] = useState(null);
-  const [userDataPush, setUserDataPush] = useState(null);
-  const [PUSHPoolstats, setPUSHPoolStats] = useState(null);
-
-  const getLpPoolStats = React.useCallback(async () => {
-    setLoadingComponent(true);
-    const poolStats = await YieldFarmingDataStoreV2.instance.getPoolStats();
-    const lpPoolStats = await YieldFarmingDataStoreV2.instance.getLPPoolStats(poolStats);
-
-    setPoolStats({ ...poolStats });
-    setLpPoolStats({ ...lpPoolStats });
-    setLoadingComponent(false);
-  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
-
-  const getPUSHPoolStats = React.useCallback(async () => {
-    const pushPoolStats = await YieldFarmingDataStoreV2.instance.getPUSHPoolStats(library);
-    console.log("Push Pool Stats", pushPoolStats);
-
-    setPUSHPoolStats({ ...pushPoolStats });
-  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
-
-  const getUserDataLP = React.useCallback(async () => {
-    setLoadingComponent(true);
-    const userDataLP = await YieldFarmingDataStoreV2.instance.getUserDataLP();
-    console.log("user Data LP", userDataLP);
-
-    setUserDataLP({ ...userDataLP });
-    setLoadingComponent(false);
-  }, [yieldFarmingLP]);
-
-  const getUserDataPush = React.useCallback(async () => {
-    setLoadingPushComponent(true);
-    const userDataPush = await YieldFarmingDataStoreV2.instance.getUserDataPUSH(library);
-    console.log("userData Push", userDataPush);
-
-    setUserDataPush({ ...userDataPush });
-    setLoadingPushComponent(false);
-  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
-
-  //initiate the YieldFarmV2 data store here
-  React.useEffect(() => {
-    let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, library);
-    let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, library);
-    let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, library);
-    let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, library);
-    let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, library);
-
-    setStaking(staking);
-    setPushToken(pushToken);
-    setPushCoreV2(pushCoreV2);
-    setYieldFarmingLP(yieldFarmingLP);
-    setUniswapV2Router02Instance(uniswapV2Router02Instance);
-
-    if (!!(library && account)) {
-      var signer = library.getSigner(account);
-
-      let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
-      let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
-      let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
-      let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, signer);
-      let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, signer);
-
-      setStaking(staking);
-      setPushToken(pushToken);
-      setPushCoreV2(pushCoreV2);
-      setYieldFarmingLP(yieldFarmingLP);
-      setUniswapV2Router02Instance(uniswapV2Router02Instance);
-    }
-
-    YieldFarmingDataStoreV2.instance.init(
-      account,
-      staking,
-      pushToken,
-      pushCoreV2,
-      yieldFarmingLP,
-      uniswapV2Router02Instance
-    );
-
-    getLpPoolStats();
-    getUserDataLP();
-    getUserDataPush();
-    getPUSHPoolStats();
-
-  }, [account]);
-
+  const [activeTab, setActiveTab] = useState(1);
+  const [newStaking, setNewStaking] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // Render
   return (
     <Container>
-      <YieldAnnouncementSection />
-      <YieldStatsSection />
-      <YieldPushPriceSection poolStats={poolStats}/>
-      <YieldSnapshotSection
-        lpPoolStats={lpPoolStats}
-        userDataLP={userDataLP}
-        userDataPush={userDataPush}
-        PUSHPoolstats={PUSHPoolstats}
-        getUserDataPush={getUserDataPush}
-        getPUSHPoolStats={getPUSHPoolStats}
-        getLpPoolStats={getLpPoolStats}
-        getUserDataLP={getUserDataLP}
-        loadingComponent={loadingComponent}
-        loadingPushComponent={loadingPushComponent}
-      />
+
+      <TabContainer >
+        <Tabs
+          isActive={newStaking}
+          onClick={() => {
+            setNewStaking(true)
+            setActiveTab(0)
+          }
+
+          }>Yield Farming V2</Tabs>
+        <Tabs
+          isActive={!newStaking}
+          onClick={() => {
+            setNewStaking(false)
+            setActiveTab(1)
+          }
+
+          }>Yield Farming V1</Tabs>
+      </TabContainer>
+
+      {/* {loading && (
+        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
+      )} */}
+
+      {newStaking ? (
+        <NewYieldFarming setLoading={setLoading} />
+      ) : (
+        <DeprecatedYieldFarming setActiveTab={setActiveTab} setLoading={setLoading} />
+      )}
+
     </Container>
   );
 };
@@ -191,3 +110,48 @@ const Container = styled(SectionV2)`
     width: 100%;
     padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
 `;
+
+const TabContainer = styled(ItemHV2)`
+  justify-content:flex-start;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 80px;
+  position: relative;
+
+  :after {
+    position: absolute;
+    height: 2px;
+    left: 0;
+    bottom: 13px;
+    width: 100%;
+    content: '';
+    background-color: ${props => props.theme.default.border};
+  }
+`
+
+const Tabs = styled.div`
+  cursor:pointer;
+  padding: 0 25px;
+  width: 48;
+  height: 25px;
+  line-height: 141%;
+  text-align: center;
+  position: relative;
+  color: ${(props) => (props.isActive ? '#CF1C84' : props.theme.color)};
+
+  ${(props) =>
+    props.isActive &&
+    `&:after{
+        position: absolute;
+        height: 2px;
+        left: 0;
+        bottom: -15px;
+        width: 100%;
+        content: '';
+        background-color: #CF1C84;
+        z-index: 1;
+        
+    }`}
+
+`

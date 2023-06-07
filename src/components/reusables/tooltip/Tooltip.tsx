@@ -8,14 +8,14 @@ type TooltipProps = {
   // for aligning the tooltip acc. to requirement
   placementProps?: {
     bottom?: string,
-    right?:string,
+    right?: string,
     transform?: string,
     borderRadius?: string,
     width?: string,
-    padding?:string
+    padding?: string
   },
   wrapperProps?: {},
-  key?:any,
+  key?: any,
 };
 
 const Tooltip: React.FC<TooltipProps> = ({ children, tooltipContent, isDisabled, placementProps, wrapperProps }) => {
@@ -43,22 +43,23 @@ const Tooltip: React.FC<TooltipProps> = ({ children, tooltipContent, isDisabled,
     }
   }, [isDisabled]);
 
-return (
-  <Wrapper
-    style={wrapperProps}
-    onMouseEnter={isDisabled ? () => { } : showTip}
-    onFocus={isDisabled ? () => { } : showTip}
-    onMouseLeave={isDisabled ? () => { } : hideTip}
-    onBlur={isDisabled ? () => { } : hideTip}
-  >
-    <div>
-      {children}
+  return (
+    <Wrapper
+      style={wrapperProps}
+      onMouseEnter={isDisabled ? () => { } : showTip}
+      onFocus={isDisabled ? () => { } : showTip}
+      onMouseLeave={isDisabled ? () => { } : hideTip}
+      onBlur={isDisabled ? () => { } : hideTip}
+    >
+      <div>
+        {children}
 
-    </div>
-    {!isDisabled && active && <Content id="channel" style={placementProps}>{tooltipContent}</Content>}
-  </Wrapper>
+      </div>
+      {!isDisabled && active && <Content id="channel" style={placementProps}>{tooltipContent}</Content>}
+    </Wrapper>
 
-);
+
+  );
 };
 
 const Wrapper = styled.div`

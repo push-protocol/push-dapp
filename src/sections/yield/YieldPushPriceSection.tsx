@@ -34,7 +34,9 @@ const YieldPushPriceSection = ({
           textAlign="left"
           fontWeight={600}
         >
-          $ {numberWithCommas(poolStats?.pushPrice)}
+          $ 
+          {/* 0.34 */}
+          {numberWithCommas(poolStats?.pushPrice.toFixed(2))}
         </H2V2ThemeColor>
         <ImageV2
           width="25px"
@@ -62,5 +64,5 @@ const ItemHV2Modified = styled(ItemHV2)`
 `;
 
 const H2V2ThemeColor = styled(H2V2)`
-  color: ${(props) => props.theme.color};
+  color: ${(props) => props.theme.stakingPrimaryText};
 `;
