@@ -138,37 +138,39 @@ const LocalVideoContainer = styled(ItemVV2)`
   height: 100%;
   border-radius: 34px;
   z-index: 2;
-  aspect-ratio: ${props => props.incomingStyle || '16/9'};
+  // aspect-ratio: ${props => props.incomingStyle || '16/9'};
 
 
-  @media ${device.laptopL} {
-    aspect-ratio: ${props => props.incomingStyle || '16/9'};
-  }
+  // @media ${device.laptopL} {
+  //   aspect-ratio: ${props => props.incomingStyle || '16/9'};
+  // }
 
-  @media (max-width: 1239px) {
-    aspect-ratio: ${props => props.incomingStyle || '4/3'};
-  }
+  // @media (max-width: 1239px) {
+  //   aspect-ratio: ${props => props.incomingStyle || '4/3'};
+  // }
 
-  @media ${device.laptop} {
-    aspect-ratio: ${props => props.incomingStyle || '4/3'};
-  }
+  // @media ${device.laptop} {
+  //   aspect-ratio: ${props => props.incomingStyle || '4/3'};
+  // }
   
-  @media (max-width: 820px) {
-    aspect-ratio: ${props => props.incomingStyle || '3/4'};
-  }
+  // @media (max-width: 820px) {
+  //   aspect-ratio: ${props => props.incomingStyle || '3/4'};
+  // }
 
-  @media (max-width: 768px) {
-    aspect-ratio: ${props => props.incomingStyle || '3/4'};
-  }
-  @media ${device.mobileL} {
-    height: 60%;
-    aspect-ratio: ${props => props.incomingStyle || '9/20'};
-  }
-  @media ${device.mobileM} {
-    aspect-ratio: ${props => props.incomingStyle || '9/23'};
-  }
-  @media ${device.mobileS} {
-    aspect-ratio: ${props => props.incomingStyle || '9/27'};
+  // @media (max-width: 768px) {
+  //   aspect-ratio: ${props => props.incomingStyle || '3/4'};
+  // }
+  // @media ${device.mobileL} {
+  //   height: 60%;
+  //   aspect-ratio: ${props => props.incomingStyle || '9/20'};
+  // }
+  // @media ${device.mobileM} {
+  //   aspect-ratio: ${props => props.incomingStyle || '9/23'};
+  // }
+  // @media ${device.mobileS} {
+  //   aspect-ratio: ${props => props.incomingStyle || '9/27'};
+  // }
+
     
      &.connectionNotAccepted{
     @media (min-width: 1024px){
