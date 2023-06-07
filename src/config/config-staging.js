@@ -79,20 +79,23 @@ export const addresses = {
   epnsPolyComm: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa", // the ploygon comm contract
   pushToken: "0x2b9bE9259a4F5Ba6344c1b1c07911539642a2D33", //address for push token
   aDai: "0x31f30d9A5627eAfeC4433Ae2886Cf6cc3D25E772",
-  staking: "0x8e129EF695F8761922F1AA38588292f8d8817bA5",
-  yieldFarmPUSH: "0xb41cd6760d3b1d0d216851f63fda9573b04dd46e",
-  yieldFarmLP: "0x604f629A6b5E85805D57f39493BBC2856cE8A540",
+  staking: "0x65Cd2765997E779218b3F6d3395fd92F951e692B",
+  stakingV2:"0x65Cd2765997E779218b3F6d3395fd92F951e692B",// for new staking V2 Contract on staging
+  yieldFarmPUSH: "0x073ce8E0650FfF2BA1D468dB700EDC97ca604D25",
+  yieldFarmLP: "0x073ce8E0650FfF2BA1D468dB700EDC97ca604D25", 
   epnsToken: "0x2b9bE9259a4F5Ba6344c1b1c07911539642a2D33",
   epnsLPToken: "0x1f094Bd8c260D0C3fC79157096015990885af4d2",
+  uniV2LPToken:"0x698839247E5b83572fFF6ccdcf386CC37e60bEf5",// for new staking V2 Contract on staging
   rockstar: "0x3f8C2152b79276b78315CAF66cCF951780580A8a",
   batchMintNFT: "0xCf733D547B9f7F87c1B1f63f45c197C007F8eedf",
   NFTRewards: "0xc4708BB6EC3B797344f123126171302e4e3E68E2",
   distributor: "0x5B548D33874DeABaC2F683A6E1864795E09932F0",
   uniswapV2Router02: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
   WETHAddress: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
-  USDTAddress: "0x13512979ade267ab5100878e2e0f485b568328a4",
+  USDTAddress: "0x11fe4b6ae13d2a6055c8d9cf65c55bac32b5d844",
   rockstarV2:"0xA2b885e7065EA59a3251489715ca80DE5Ff642f8",//mainnet address
   NFTRewardsV2: "0xdc66567a990B7fa10730459537620857c9e03287", //mainnet address
+  pushCoreV2:'0x99408C7C96EFCF09382B70541586448E40aEc663',
 }
 
 export const CHAIN_DETAILS = {
@@ -101,14 +104,16 @@ export const CHAIN_DETAILS = {
     name: "ETH_TEST_GOERLI",
     chainId: 5,
     rpcUrl: "https://goerli.infura.io/v3/4ff53a5254144d988a8318210b56f47a",
-    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
+    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa",
+    network: "goerli",
   }, 
   80001: {
     label: "Polygon Mumbai",
     name: "POLYGON_TEST_MUMBAI",
     chainId: 80001,
     rpcUrl: "https://polygon-mumbai.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
-    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
+    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa",
+    network: "polygon-mumbai",
   },
   97: {
     label: "BNB Testnet",

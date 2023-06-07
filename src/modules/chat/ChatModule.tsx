@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
 // External Packages
+import * as PushAPI from "@pushprotocol/restapi";
 import ReactGA from 'react-ga';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -27,16 +28,16 @@ import LoaderSpinner, {
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { VideoCallContext } from 'contexts/VideoCallContext';
+import { caip10ToWallet } from 'helpers/w2w';
 import * as w2wHelper from 'helpers/w2w/';
 import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
 import { useDeviceWidthCheck, useSDKSocket } from 'hooks';
-import { default as useModalBlur } from 'hooks/useModalBlur';
-import { default as useToast } from 'hooks/useToast';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+import useToast from 'hooks/useToast';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
-import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
-import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
-
+import VideoCallSection from 'sections/video/VideoCallSection';
+import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -85,7 +86,7 @@ function Chat({ chatid }) {
   const socketData = useSDKSocket({ account, chainId, env: appConfig.appEnv,socketType: 'chat' });
 
   useEffect(()=>{
-    if(connectedUser && socketData.messagesSinceLastConnection){
+    if(connectedUser && socketData.messagesSinceLastConnection && (w2wHelper.caip10ToWallet(socketData.messagesSinceLastConnection.fromCAIP10) !== account)){
       if(currentChat)
         getUpdatedChats(socketData.messagesSinceLastConnection);
       getUpdatedInbox(socketData.messagesSinceLastConnection)
@@ -174,12 +175,6 @@ function Chat({ chatid }) {
   // React GA Analytics
   ReactGA.pageview('/chat');
 
-  window.ethereum.on('accountsChanged', (account) => {
-    window.location.reload();
-  });
-  window.ethereum.on('networksChanged', () => {
-    window.location.reload();
-  });
 
   useEffect(() => {
     if (videoCallInfo) {
@@ -190,27 +185,75 @@ function Chat({ chatid }) {
   const { call, callAccepted } = useContext(VideoCallContext);
   useEffect(() => {
     if (Object.keys(call).length > 0) {
-      setVideoCallInfo({
-        address: call.from,
-        fromPublicKeyArmored: connectedUser.publicKey,
-        toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
-        privateKeyArmored: connectedUser.privateKey,
-        establishConnection: 2,
-      });
+      const fetchUser = async () => {
+        return PushAPI.user.get({
+          account: caip10ToWallet(call.from),
+          env: appConfig.appEnv
+        });
+      }
+
+      // call the function
+      fetchUser()
+        .then (fromUser => {
+          // set video call
+          setVideoCallInfo({
+            address: call.from,
+            fromPublicKeyArmored: connectedUser.publicKey,
+            fromProfileUsername: fromUser.name,
+            fromProfilePic: fromUser.profilePicture,
+            toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
+            toProfileUsername: connectedUser.name,
+            toProfilePic: connectedUser.profilePicture,
+            privateKeyArmored: connectedUser.privateKey,
+            establishConnection: 2,
+          });
+        })
+        .catch(e => {
+          console.log("Error occured in ChatModule::useEffect::callAccepted - ", e);
+        });
     }
   }, [call]);
 
   useEffect(() => {
     if (callAccepted && videoCallInfo.establishConnection == 2) {
-      setVideoCallInfo({
-        address: call.from,
-        fromPublicKeyArmored: connectedUser.publicKey,
-        toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
-        privateKeyArmored: connectedUser.privateKey,
-        establishConnection: 3,
-      });
+      const fetchUser = async () => {
+        return PushAPI.user.get({
+          account: caip10ToWallet(call.from),
+          env: appConfig.appEnv
+        });
+      }
+
+      // call the function
+      fetchUser()
+        .then (fromUser => {
+          // set video call
+          setVideoCallInfo({
+            address: call.from,
+            fromPublicKeyArmored: connectedUser.publicKey,
+            fromProfileUsername: fromUser.name,
+            fromProfilePic: fromUser.profilePicture,
+            toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
+            toProfileUsername: connectedUser.name,
+            toProfilePic: connectedUser.profilePicture,
+            privateKeyArmored: connectedUser.privateKey,
+            establishConnection: 3,
+          });
+        })
+        .catch(e => {
+          console.log("Error occured in ChatModule::useEffect::callAccepted - ", e);
+        });
     }
   }, [callAccepted]);
+
+  useEffect(()=>{
+    setChat(null);
+    setInbox([]);
+    setReceivedIntents([]);
+    setActiveTab(0);
+    setViewChatBox(false);
+    setIsLoading(true);
+    setConnectedUser(null);
+  },[account])
 
   // Rest of the loading logic
   useEffect(() => {
@@ -231,7 +274,7 @@ function Chat({ chatid }) {
     isModalOpen: isGroupInfoModalOpen,
     showModal: showGroupInfoModal,
     ModalComponent: GroupInfoModalComponent,
-  } = useModalBlur({padding:"0px"});
+  } = useModalBlur();
 
   const createGroupToast = useToast();
 
@@ -239,28 +282,23 @@ function Chat({ chatid }) {
     isModalOpen: isCreateGroupModalOpen,
     showModal: showCreateGroupModal,
     ModalComponent: CreateGroupModalComponent,
-  } = useModalBlur({padding:'0px'});
+  } = useModalBlur();
 
 
   const connectUser = async (): Promise<void> => {
-    // Getting User Info
-    setBlockedLoading({
-      enabled: true,
-      title: 'Step 1/4: Getting Account Info',
-      progressEnabled: true,
-      progress: 25,
-      progressNotice: 'Important: Push Chat encryption standard is updated, you might need to sign 3-4 transactions to upgrade (required once).',
-    });
+    const caip10:string = w2wHelper.walletToCAIP10({account});
 
-    if (!connectedUser) {
+    
+    if(connectedUser?.wallets !== caip10){
       await getUser();
     }
 
+
     setBlockedLoading({
       enabled: false,
-      title: "Step 4/4: Let's Chat ;)",
+      title: "Push Profile Setup Complete",
       spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
-      progressEnabled: true,
+      progressEnabled: false,
       progress: 100,
     });
 
@@ -270,8 +308,13 @@ function Chat({ chatid }) {
       // reformat chatid first
       chatid = reformatChatId(chatid);
 
+      if(connectedUser?.wallets === caip10){
+        // dynamic url
+        setCurrentTab(4);
+      }
+
       // dynamic url
-      setCurrentTab(4);
+      // setCurrentTab(4);
     }
   };
 
@@ -411,10 +454,14 @@ function Chat({ chatid }) {
                 InnerComponent={GroupInfoModalContent}
                 onConfirm={() => {}}
                 toastObject={groupInfoToast}
+                modalPadding="0px"
+                modalPosition={MODAL_POSITION.ON_PARENT}
                 />
               <CreateGroupModalComponent
                 InnerComponent={CreateGroupModalContent}
                 toastObject={createGroupToast}
+                modalPadding="0px"
+                modalPosition={MODAL_POSITION.ON_PARENT}
               />
 
               {displayQR && !isMobile && (
@@ -471,6 +518,7 @@ function Chat({ chatid }) {
           />
         )}
 
+        {/* TEMP */}
         {/* But video chat trumps this now!!! */}
         {videoCallInfo.establishConnection > 0 && (
           <VideoCallSection
@@ -480,7 +528,11 @@ function Chat({ chatid }) {
               setVideoCallInfo({
                 address: null,
                 fromPublicKeyArmored: null,
+                fromProfileUsername: null,
+                fromProfilePic: null,
                 toPublicKeyArmored: null,
+                toProfileUsername: null,
+                toProfilePic: null,
                 privateKeyArmored: null,
                 establishConnection: 0,
               });

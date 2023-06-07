@@ -40,6 +40,8 @@ function YieldFarmingModule() {
   const [yieldFarmingLP, setYieldFarmingLP] = React.useState(null);
   const [uniswapV2Router02, setUniswapV2Router02] = React.useState(null);
 
+  console.log("Addresses",addresses,abis);
+
   React.useEffect(() => {
     if (!onCoreNetwork) {
       const url = window.location.origin;
@@ -49,6 +51,7 @@ function YieldFarmingModule() {
 
   const getPoolStats = React.useCallback(async () => {
     const poolStats = await YieldFarmingDataStore.instance.getPoolStats();
+    console.log("PoolStats",poolStats);
 
     setPoolStats({ ...poolStats });
   }, [epnsToken, staking, yieldFarmingPUSH, yieldFarmingLP, uniswapV2Router02]);
@@ -121,6 +124,8 @@ function YieldFarmingModule() {
     let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, library);
 
     let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, library);
+
+    console.log("UseEffect",staking,yieldFarmingPUSH,yieldFarmingLP)
 
     setEpnsToken(epnsToken);
     setStaking(staking);

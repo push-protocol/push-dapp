@@ -130,8 +130,19 @@ export interface AppContext {
   userShouldBeSearched: boolean;
   setUserShouldBeSearched: (value: boolean) => void;
   filteredUserData:User[];
-  setFilteredUserData:(value:User[])=>void;
+  setFilteredUserData:(value:User[] |IGroup[])=>void;
 }
 
 export type MessagetypeType = 'Text' | 'Image' | 'File' | 'GIF';
 
+export interface VideoCallInfoI {
+  address: string;
+  fromPublicKeyArmored: string;
+  fromProfileUsername?: string;
+  fromProfilePic?: string;
+  toPublicKeyArmored: string;
+  toProfileUsername?: string;
+  toProfilePic?: string;
+  privateKeyArmored: string;
+  establishConnection: number;
+}

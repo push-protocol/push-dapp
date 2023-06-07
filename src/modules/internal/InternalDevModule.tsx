@@ -11,12 +11,14 @@ import LoaderSpinner, {
   LOADER_OVERLAY,
   LOADER_SPINNER_TYPE,
   LOADER_TYPE,
-  PROGRESS_POSITIONING
+  PROGRESS_POSITIONING,
 } from 'components/reusables/loaders/LoaderSpinner';
 import ProgressBar, { NOTICE_POSITIONING } from 'components/reusables/progress/ProgressBarUnit';
 import { ButtonV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+import { DemoModalContent} from './DemoModalContent';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
@@ -102,9 +104,62 @@ const InternalDevModule = () => {
     }
   }, [randomText]);
 
+  const {
+    isModalOpen: isLocalScreenDemoModalOpen,
+    showModal: showLocalScreenDemoModal,
+    ModalComponent: LocalScreenDemoModalComponent,
+  } = useModalBlur();
+
+  const {
+    isModalOpen: isFullScreenDemoModalOpen,
+    showModal: showFullScreenDemoModal,
+    ModalComponent: FullScreenDemoModalComponent,
+  } = useModalBlur();
+
   return (
     <Container>
-      {/* Progess Bar Component */}
+      {/* Full Screen useModalBlur Component */}
+      <IndividualComps caption="hooks/useModalBlur  isFullScreen={true}">
+        <ButtonV2
+          background="#e20880"
+          color="#fff"
+          flex="initial"
+          borderRadius="15px"
+          padding="20px 20px"
+          onClick={ showFullScreenDemoModal}
+        >
+          <SpanV2>Show Full Screen Modal</SpanV2>
+        </ButtonV2>
+        <FullScreenDemoModalComponent
+          InnerComponent={DemoModalContent}
+          modalPadding='0px'
+          InnerComponentProps={{heading:'Full Screen Modal'}}
+          modalPosition={MODAL_POSITION.ON_ROOT}
+        />
+     </IndividualComps>
+
+     {/* Local Screen useModalBlur Component */}
+     <IndividualComps caption="hooks/useModalBlur  isFullScreen={false}">
+      {isLocalScreenDemoModalOpen && <SpanV2 color={theme.default.color}>{randomText.slice(0,70)}</SpanV2>}
+        <ButtonV2
+          background="#e20880"
+          color="#fff"
+          flex="initial"
+          borderRadius="15px"
+          padding="20px 20px"
+          onClick={showLocalScreenDemoModal}
+        >
+          <SpanV2>Show Local Modal</SpanV2>
+        </ButtonV2>
+        <LocalScreenDemoModalComponent
+          InnerComponent={DemoModalContent}
+          modalPadding='0px'
+          InnerComponentProps={{heading:'Local Modal'}}
+          modalPosition={MODAL_POSITION.ON_PARENT}
+        />
+     </IndividualComps>
+
+     {/* Progess Bar Component */}
       <IndividualComps caption="components/reusables/progress/ProgressBarUnit">
         <ProgressBar
           percent={progress}
@@ -549,6 +604,7 @@ const Container = styled(SectionV2)`
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
   }
 `;
+
 
 const IndividualComps = styled(ItemVV2)`
   border-radius: 32px;

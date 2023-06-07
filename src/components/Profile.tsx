@@ -7,14 +7,14 @@ import styled from 'styled-components';
 
 // Internal Compoonents
 import Blockies from "components/BlockiesIdenticon";
-import { useResolveEns } from 'hooks/useResolveEns';
+import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { shortenText } from 'helpers/UtilityHelper';
 
 // Create Header
 function Profile() {
   const { active, error, account, library, chainId } = useWeb3React();
 
-  const ensName = useResolveEns(account);
+  const ensName = useResolveWeb3Name(account);
 
   React.useEffect(() => {
     if (account && account != '') {
