@@ -30,11 +30,17 @@ const Container = styled(ItemHV2)<IncomingCallModalContentProps>`
   right: ${props => props.isIncomingCallMinimized ? "2%" : "25%"};
   bottom: ${props => props.isIncomingCallMinimized ? "10%" : "unset"};
   border-radius: 1.5rem;
-  width: ${props => props.isIncomingCallMinimized ? "24vw" : "24vw"};
+  width: ${props => props.isIncomingCallMinimized ? "28vw" : "24vw"};
    
   @media ${device.laptopL} {
     right: ${props => props.isIncomingCallMinimized ? "2%" : "25%"};
-    bottom: ${props => props.isIncomingCallMinimized ? "10%" : "20%"};
+    bottom: ${props => props.isIncomingCallMinimized ? "10%" : "17%"};
+    width: ${props => props.isIncomingCallMinimized ? "33vw" : "24vw"};
+  }
+
+  @media (min-width: 768px) and (max-height: 700px){
+    right: ${props => props.isIncomingCallMinimized ? "2%" : "25%"};
+    bottom: ${props => props.isIncomingCallMinimized ? "10%" : "12%"};
     width: ${props => props.isIncomingCallMinimized ? "33vw" : "24vw"};
   }
 
@@ -70,9 +76,10 @@ const Container = styled(ItemHV2)<IncomingCallModalContentProps>`
   }
 
   @media ${device.mobileL} {
-    right: 4%;
-    bottom: ${props => props.isIncomingCallMinimized ? "10%" : "20%"};
-    width: ${props => props.isIncomingCallMinimized ? "91vw" : "37vw"};;
+    // right: 4%;
+    right: ${props => props.isIncomingCallMinimized ? "4%" : "11%"};
+    bottom: ${props => props.isIncomingCallMinimized ? "10%" : "25%"};
+    width: ${props => props.isIncomingCallMinimized ? "91vw" : "77vw"};;
   }
 `;
 
