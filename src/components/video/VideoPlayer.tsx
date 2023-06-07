@@ -135,7 +135,6 @@ const LocalVideoContainer = styled(ItemVV2)`
   overflow: hidden;
   height: 100%;
   border-radius: 34px;
-  margin: 1% auto;
   z-index: 2;
 
   &.connectionNotAccepted{
@@ -185,7 +184,7 @@ const LocalVideo = styled.video`
     z-index: 2;
     width: auto;
     @media (max-width: 768px) {
-      height: 12vh;
+      height: 16vh;
       width: auto;
     }
   }
