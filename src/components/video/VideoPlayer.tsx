@@ -56,13 +56,18 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
               ? !videoCallData.local.stream.getVideoTracks()[0].enabled
                 ? 'connectionAccepted videoOff'
                 : 'connectionAccepted videoOn'
-              : null
+              : 'connectionNotAccepted'
           }
           style={localVideoStyles}
         >
           <LocalVideo
             ref={localVideoRef}
             muted
+            className={
+              videoCallData.incoming[0].status === VideoCallStatus.CONNECTED
+                ? 'connectionAccepted'
+                : null
+            }
           />
           {!videoCallData.local.stream.getVideoTracks()[0].enabled ? (
             <VideoDisabledContainer>
@@ -123,44 +128,19 @@ export default VideoPlayer;
 const Container = styled(ItemVV2)`
   overflow: hidden;
   margin: 2% auto 1% auto;
+  width:100%;
 `;
 
 const LocalVideoContainer = styled(ItemVV2)`
   overflow: hidden;
   height: 100%;
   border-radius: 34px;
-  margin: 1% auto;
   z-index: 2;
-  aspect-ratio: 16/9;
 
-  @media ${device.laptopL} {
-    aspect-ratio: 16/9;
-  }
-
-  @media (max-width: 1239px) {
-    aspect-ratio: 4/3;
-  }
-
-  @media ${device.laptop} {
-    aspect-ratio: 4/3;
-  }
-  
-  @media (max-width: 820px) {
-    aspect-ratio: 3/4;
-  }
-
-  @media (max-width: 768px) {
-    aspect-ratio: 3/4;
-  }
-  @media ${device.mobileL} {
-    height: 60%;
-    aspect-ratio: 9/20;
-  }
-  @media ${device.mobileM} {
-    aspect-ratio: 9/23;
-  }
-  @media ${device.mobileS} {
-    aspect-ratio: 9/27;
+  &.connectionNotAccepted{
+    @media (min-width: 1024px){
+      aspect-ratio: 16/9;
+    }
   }
 
   &.connectionAccepted {
@@ -168,9 +148,10 @@ const LocalVideoContainer = styled(ItemVV2)`
     height: 18vh;
     max-height: 18vh;
     position: absolute;
-    width: inherit;
+    width: auto;
     right: 8px;
     bottom: 8px;
+   
     @media ${device.laptop} {
       right: 8px;
     }
@@ -201,9 +182,10 @@ const LocalVideo = styled.video`
   &.connectionAccepted {
     border: 1px solid #ffffff8c;
     z-index: 2;
+    width: auto;
     @media (max-width: 768px) {
-      height: 12vh;
-      width: 18vh;
+      height: 16vh;
+      width: auto;
     }
   }
 `;
@@ -231,11 +213,11 @@ const IncomingVideoContainer = styled(ItemVV2)`
   /* height: 20vh;
   max-height: 62vh;
   width: 95%; */
-  background-color: ${props => props.theme.chat.snapFocusBg};
+  background-color: ${props => props.background};
   /* left: 2.5%; */
   border-radius: 34px;
   z-index: 1;
-  width: 100%;
+  width:auto;
 
   /* @media (max-height: 800px) {
     max-height: 50vh;
@@ -298,18 +280,16 @@ const PfpContainer = styled(ItemVV2)`
   overflow: hidden;
 
   @media ${device.mobileL} {
-    width: 2.875rem;
-    height: 2.875rem;
+    width: 3.5rem;
+    height: 3.5rem;
     max-width: 2.875rem;
-    margin: auto 1rem auto 0.3rem;
   }
 
-  @media ${device.mobileS} {
-    width: 2.5rem;
-    height: 2.5rem;
-    max-width: 2.5rem;
-    margin: auto 0.5rem auto 0rem;
-  }
+  // @media ${device.mobileS} {
+  //   width: 2.5rem;
+  //   height: 2.5rem;
+  //   max-width: 2.5rem;
+  // }
 `;
 
 const ProfileInfoMini = styled(ItemHV2)`
@@ -321,9 +301,8 @@ const ProfileInfoMini = styled(ItemHV2)`
 `;
 
 const PfpContainerMini = styled(ItemVV2)`
-  margin: 10px 10px 10px -5px;
-  width: 5rem;
-  height: 5rem;
+  width: 3.5rem;
+  height: 3.5rem;
   max-width: 5rem;
   border-radius: 100%;
   overflow: hidden;
@@ -332,15 +311,13 @@ const PfpContainerMini = styled(ItemVV2)`
     width: 3.5rem;
     height: 3.5rem;
     max-width: 3rem;
-    margin: auto 1rem auto -0.2rem;
   }
 
-  @media ${device.mobileS} {
-    width: 2.5rem;
-    height: 2.5rem;
-    max-width: 2.5rem;
-    margin: auto 1rem auto -0.2rem;
-  }
+  // @media ${device.mobileS} {
+  //   width: 2.5rem;
+  //   height: 2.5rem;
+  //   max-width: 2.5rem;
+  // }
 `;
 
 const NameBadge = styled(SpanV2)`
