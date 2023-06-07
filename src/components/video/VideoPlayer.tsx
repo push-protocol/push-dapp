@@ -280,16 +280,16 @@ const PfpContainer = styled(ItemVV2)`
   overflow: hidden;
 
   @media ${device.mobileL} {
-    width: 2.875rem;
-    height: 2.875rem;
+    width: 3.5rem;
+    height: 3.5rem;
     max-width: 2.875rem;
   }
 
-  @media ${device.mobileS} {
-    width: 2.5rem;
-    height: 2.5rem;
-    max-width: 2.5rem;
-  }
+  // @media ${device.mobileS} {
+  //   width: 2.5rem;
+  //   height: 2.5rem;
+  //   max-width: 2.5rem;
+  // }
 `;
 
 const ProfileInfoMini = styled(ItemHV2)`
@@ -301,8 +301,8 @@ const ProfileInfoMini = styled(ItemHV2)`
 `;
 
 const PfpContainerMini = styled(ItemVV2)`
-  width: 5rem;
-  height: 5rem;
+  width: 3.5rem;
+  height: 3.5rem;
   max-width: 5rem;
   border-radius: 100%;
   overflow: hidden;
@@ -313,11 +313,11 @@ const PfpContainerMini = styled(ItemVV2)`
     max-width: 3rem;
   }
 
-  @media ${device.mobileS} {
-    width: 2.5rem;
-    height: 2.5rem;
-    max-width: 2.5rem;
-  }
+  // @media ${device.mobileS} {
+  //   width: 2.5rem;
+  //   height: 2.5rem;
+  //   max-width: 2.5rem;
+  // }
 `;
 
 const NameBadge = styled(SpanV2)`
