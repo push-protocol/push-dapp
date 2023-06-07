@@ -10,14 +10,16 @@ import { ethers } from 'ethers';
 import { abis, addresses } from 'config';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { bn, bnToInt, formatTokens } from 'helpers/StakingHelper';
+
+const bn = function (number, defaultValue = null) { if (number == null) { if (defaultValue == null) { return null } number = defaultValue } return ethers.BigNumber.from(number) }
+const bnToInt = function (bnAmount) { return bnAmount.div(bn(10).pow(18)) }
 
 const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) => {
 
     const {
         title,
         getUserData,
-        getPoolStats
+        getLpPoolStats
     } = InnerComponentProps;
 
     const { account, library } = useWeb3React();
@@ -31,11 +33,13 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
     const [depositAmount, setDepositAmount] = useState(0);
 
+
     const handleClose = () => onClose();
     const containerRef = React.useRef(null);
     useClickAway(containerRef, () => handleClose());
 
     const fillMax = async () => {
+        console.log("===========Calculating Max Value ===========");
         var signer = library.getSigner(account);
         const tokenAddr = title === 'Uni-V2' ? addresses.uniV2LPToken : addresses.pushToken;
         const token = new ethers.Contract(tokenAddr, abis.uniV2LpToken, signer);
@@ -45,28 +49,40 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
     }
 
-    const checkApprDeposit = async () => {
-        setTxInProgressApprDep(true);
-
-        var signer = library.getSigner(account);
-        let allowance;
-
-        if (title === 'Uni-V2') {
-            let token = new ethers.Contract(addresses.uniV2LPToken, abis.uniV2LpToken, signer);
-            allowance = await token.allowance(account, addresses.stakingV2);
-        } else {
-            let token = new ethers.Contract(addresses.pushToken, abis.uniV2LpToken, signer);
-            allowance = await token.allowance(account, addresses.pushCoreV2);
-        }
-
-        setApprovedToken(formatTokens(allowance));
-        setTxInProgressApprDep(false);
+    const setDepositAmountMax = (tokenAmount) => {
+        setDepositAmount(parseInt(tokenAmount.toString().replace(/\D/, '')) || 0)
     }
 
     React.useEffect(() => {
         fillMax();
         checkApprDeposit();
     }, [])
+
+    const formatTokens = (tokens) => {
+        if (tokens) {
+            return tokens.div(ethers.BigNumber.from(10).pow(18)).toString();
+        }
+    };
+
+    const checkApprDeposit = async () => {
+        console.log("==========Checking for Approved Amount==========");
+        setTxInProgressApprDep(true);
+
+        var signer = library.getSigner(account);
+
+        let allowance;
+        if (title === 'Uni-V2') {
+            let token = new ethers.Contract(addresses.uniV2LPToken, abis.uniV2LpToken, signer);
+            allowance = await token.allowance(account, addresses.stakingV2);
+        } else {
+            let token = new ethers.Contract(addresses.pushToken, abis.uniV2LpToken, signer);
+            allowance = await token.allowance(account, addresses.pushCoreV2);
+
+        }
+
+        setApprovedToken(formatTokens(allowance));
+        setTxInProgressApprDep(false);
+    }
 
     const approveDeposit = async () => {
         if (depositApproved || txInProgressApprDep) {
@@ -77,18 +93,21 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
         var signer = library.getSigner(account);
 
-
+        let tokencontractinstance;
         let tx;
-        const uintMax = bn(2).pow(bn(256)).sub(1);
+        const uintMax = bn(2).pow(bn(256)).sub(1)
+
 
         if (title === 'Uni-V2') {
-            const tokencontractinstance = new ethers.Contract(addresses.uniV2LPToken, abis.uniV2LpToken, signer);
+            console.log("====Approving Uni-V2 for staking contract===");
+            tokencontractinstance = new ethers.Contract(addresses.uniV2LPToken, abis.uniV2LpToken, signer);
             tx = tokencontractinstance.approve(
                 addresses.stakingV2,
                 uintMax
             );
         } else {
-            const tokencontractinstance = new ethers.Contract(addresses.pushToken, abis.uniV2LpToken, signer);
+            console.log("====Approving Push for CoreV2 contract===");
+            tokencontractinstance = new ethers.Contract(addresses.pushToken, abis.uniV2LpToken, signer);
             tx = tokencontractinstance.approve(
                 addresses.pushCoreV2,
                 uintMax
@@ -101,7 +120,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                 await library.waitForTransaction(tx.hash);
                 toastObject.showMessageToast({
                     toastTitle: 'Success',
-                    toastMessage: `Successfully approved ${title} Tokens!`,
+                    toastMessage: 'Successfully approved LP Tokens!',
                     toastType: 'SUCCESS',
                     getToastIcon: (size) => (
                         <MdCheckCircle
@@ -138,7 +157,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
     }
 
     const depositAmountTokenFarmSingleTx = async () => {
-        if (txInProgressDep || !depositApproved) {
+        if (txInProgressDep || !approveDeposit) {
             return
         }
 
@@ -149,6 +168,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
         let tx2;
 
         if (title === 'Uni-V2') {
+            let uniV2LPToken = new ethers.Contract(addresses.uniV2LPToken, abis.uniV2LpToken, signer);
             let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
 
             tx2 = staking.deposit(
@@ -159,6 +179,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
             );
 
         } else {
+            let pushToken = new ethers.Contract(addresses.pushToken, abis.uniV2LpToken, signer);
             let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
 
             tx2 = pushCoreV2.stake(
@@ -167,6 +188,8 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                 )
             )
         }
+
+
 
         tx2
             .then(async (tx) => {
@@ -187,7 +210,11 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                         ),
                     });
 
-                    getPoolStats();
+
+                    // TODO:call the getPoolStats and also userData one to get the fresh data and also close the Modal after txn done
+
+                    console.log("It worked");
+                    getLpPoolStats();
                     getUserData();
                     setTxInProgressDep(false);
                     handleClose();
@@ -228,13 +255,9 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
         }
     }
 
-    const setDepositAmountMax = (tokenAmount) => {
-        setDepositAmount(parseInt(tokenAmount.toString().replace(/\D/, '')) || 0)
-    }
-
 
     return (
-        <Container>
+        <Container ref={containerRef}>
 
             <ItemHV2 justifyContent='space-between'>
                 <PrimaryText>{title === 'Uni-V2' ? 'Uniswap V2 Staking Pool' : 'Push Fee staking Pool'}</PrimaryText>
@@ -254,13 +277,16 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                         flex='2'
                         radius="4px"
                         size='32px'
+                        // padding="12px"
                         height='32px'
                         self="auto"
                         bg='#F4F5FA'
                         value={depositAmount}
                         onChange={(e) => {
                             e.preventDefault();
+                            console.log("e.target", e.target.value)
                             handleInput(e);
+
                         }}
                         autoFocus={true}
                     />
@@ -288,21 +314,26 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                         <Span color="#fff" weight="600">Approved</Span>
                     }
 
+
+
+
+
                 </FilledButton>
                 <EmptyButton background={!depositApproved ? "#999" : "#ffffff"}
                     disabled={!depositApproved ? true : false} onClick={depositAmountTokenFarmSingleTx}>
-                    
                     {!txInProgressDep &&
                         <Span color="#657795" weight="400" cursor='pointer'>Deposit</Span>
                     }
-
                     {txInProgressDep &&
                         <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />
                     }
-
                 </EmptyButton>
 
+
+
             </ItemHV2>
+
+
 
         </Container>
     );
