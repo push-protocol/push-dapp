@@ -45,7 +45,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
       video.play();
     }
   }, [incomingVideoRef, videoCallData.incoming[0].stream]);
-  const shortnedAddress = videoCallData.incoming[0].address.substring(0, 6) + '...' + videoCallData.incoming[0].address.substring(videoCallData.incoming[0].address.length - 6);
+  // const shortnedAddress = videoCallData.incoming[0].address.substring(0, 6) + '...' + videoCallData.incoming[0].address.substring(videoCallData.incoming[0].address.length - 6);
 
   return (
     <Container>
@@ -80,26 +80,22 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
         </LocalVideoContainer>
       )}
       {videoCallData.incoming[0].status === VideoCallStatus.CONNECTED && (
-        <IncomingVideoContainer background={videoCallData.incoming[0].video ? "transparent" : theme.chat.snapFocusBg}>
-          <IncomingVideoInnerContainer
-            width={videoCallData.incoming[0].video ? "auto" : "100%"}
-            minHeight={videoCallData.incoming[0].video ? "auto" : "100%"}
-          >
-            <IncomingVideo ref={incomingVideoRef} display={videoCallData.incoming[0].video ? 'block' : 'none'} />
+        <IncomingVideoContainer>
+          <IncomingVideo ref={incomingVideoRef} />
 
-            {!videoCallData.incoming[0].video && (
-              <VideoDisabledContainer className="incomingCallvideoOff">
-                <PfpContainer>
-                  <ImageV2
-                    height="100%"
-                    width="100%"
-                    alt={`Profile pic`}
-                    src={currentChat?.profilePicture}
-                    objectFit="cover"
-                  />
-                </PfpContainer>
-              </VideoDisabledContainer>
-            )}
+          {!videoCallData.incoming[0].video && (
+            <VideoDisabledContainer>
+              <PfpContainer>
+                <ImageV2
+                  height="100%"
+                  width="100%"
+                  alt={`Profile pic`}
+                  src={currentChat?.profilePicture}
+                  objectFit="cover"
+                />
+              </PfpContainer>
+            </VideoDisabledContainer>
+          )}
 
           <ProfileInfoMini position="absolute">
             <SpanV2
@@ -109,10 +105,9 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
               zIndex="3"
               color='#FFFFFF'
             >
-              {web3Name ? web3Name : shortenText(videoCallData.incoming[0].address,5)}
+              {web3Name ? web3Name : shortenText(videoCallData.incoming[0].address, 5)}
             </SpanV2>
           </ProfileInfoMini>
-          </IncomingVideoInnerContainer>
         </IncomingVideoContainer>
       )}
     </Container>
@@ -121,47 +116,19 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
 export default VideoPlayer;
 
 const Container = styled(ItemVV2)`
+  height: fit-content;
+  max-height: fit-content;
+  min-height: fit-content;
   overflow: hidden;
-  margin: 2% auto 1% auto;
 `;
 
 const LocalVideoContainer = styled(ItemVV2)`
   overflow: hidden;
-  height: 100%;
+  height: 47vh;
+  max-height: 47vh;
   border-radius: 34px;
-  margin: 1% auto;
+  margin: 0 auto;
   z-index: 2;
-  aspect-ratio: 16/9;
-
-  @media ${device.laptopL} {
-    aspect-ratio: 16/9;
-  }
-
-  @media (max-width: 1239px) {
-    aspect-ratio: 4/3;
-  }
-
-  @media ${device.laptop} {
-    aspect-ratio: 4/3;
-  }
-  
-  @media (max-width: 820px) {
-    aspect-ratio: 3/4;
-  }
-
-  @media (max-width: 768px) {
-    aspect-ratio: 3/4;
-  }
-  @media ${device.mobileL} {
-    height: 60%;
-    aspect-ratio: 9/20;
-  }
-  @media ${device.mobileM} {
-    aspect-ratio: 9/23;
-  }
-  @media ${device.mobileS} {
-    aspect-ratio: 9/27;
-  }
 
   &.connectionAccepted {
     border-radius: 24px;
@@ -210,21 +177,21 @@ const LocalVideo = styled.video`
 
 const IncomingVideo = styled.video`
   border-radius: 34px;
-  width: auto;
-  height: 100%;
-  display:${props => props.display};
- 
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+
   @media (max-width: 820px) {
     width: 100%;
-    height: auto;
+    height: 100%;
     object-fit: cover;
-
   }
   @media (max-width: 425px) {
     border-radius: 20px;
   }
 `;
-
 
 const IncomingVideoContainer = styled(ItemVV2)`
   overflow: hidden;
@@ -244,19 +211,6 @@ const IncomingVideoContainer = styled(ItemVV2)`
     border-radius: 20px;
   } */
 `;
-
-const IncomingVideoInnerContainer = styled.div`
-  width: ${props => props.width};
-  min-height: 100%;
-  max-height: 100%;
-  border-radius: 34px;
-  position: relative;
-  @media (max-width:820px){
-    width: 100%;
-    min-height:${props => props.minHeight};
-    max-height: 100%;
-  }
-`
 
 const IncomingEnsContainer = styled(ItemVV2)`
   position: absolute;
@@ -280,13 +234,9 @@ const VideoDisabledContainer = styled(ItemVV2)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  justify-content: center;
-  align-items: center;
 
   &.connectionAccepted {
     visibility: hidden;
-  }
-
   }
 `;
 
@@ -294,6 +244,7 @@ const PfpContainer = styled(ItemVV2)`
   width: 5rem;
   height: 5rem;
   max-width: 5rem;
+  margin: 0 1rem 0 0;
   border-radius: 100%;
   overflow: hidden;
 
@@ -313,40 +264,30 @@ const PfpContainer = styled(ItemVV2)`
 `;
 
 const ProfileInfoMini = styled(ItemHV2)`
-  left: 18px;
+  left: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  bottom: 18px;
+  bottom: 10px;
 `;
 
 const PfpContainerMini = styled(ItemVV2)`
-  margin: 10px 10px 10px -5px;
-  width: 5rem;
-  height: 5rem;
-  max-width: 5rem;
+  margin: 10px;
+  width: 3rem;
+  height: 3rem;
+  max-width: 3rem;
   border-radius: 100%;
   overflow: hidden;
 
   @media ${device.mobileL} {
-    width: 3.5rem;
-    height: 3.5rem;
-    max-width: 3rem;
-    margin: auto 1rem auto -0.2rem;
+    width: 2.875rem;
+    height: 2.875rem;
+    max-width: 2.875rem;
   }
 
   @media ${device.mobileS} {
     width: 2.5rem;
     height: 2.5rem;
     max-width: 2.5rem;
-    margin: auto 1rem auto -0.2rem;
   }
 `;
-
-const NameBadge = styled(SpanV2)`
-  padding: 3px 8px;
-  border-radius: 8px;
-  background: rgba(46, 49, 59, 0.75);
-  color: #fff;
-  z-index: 3;
-`
