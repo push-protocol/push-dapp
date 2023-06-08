@@ -217,7 +217,6 @@ const LocalVideo = styled.video`
   object-fit: cover;
 
   &.connectionAccepted {
-    border: 1px solid #ffffff8c;
     z-index: 2;
     width: auto;
     @media (max-width: 768px) {
