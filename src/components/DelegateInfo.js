@@ -137,16 +137,10 @@ const HoverWallet = styled(WalletAddressDisplay)`
 const Wallet = styled(WalletAddressDisplay)`
   color: #fff;
   background: rgb(226, 8, 128);
-  background: linear-gradient(
-    107deg,
-    rgba(226, 8, 128, 1) 30%,
-    rgba(103, 76, 159, 1) 70%,
-    rgba(53, 197, 243, 1) 100%
-  );
+  background: linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%);
   &:hover {
     opacity: 0.9;
     cursor: pointer;
-    pointer: hand;
   }
 `;
 

@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React from 'react';
+import React, { useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -25,8 +25,17 @@ export const ProfileCard = ({
 }) => {
   const theme = useTheme();
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
+
+  const [dropdownHeight, setDropdownHeight] = useState(0);
+
+  const handleHeight = (id) => {
+    const containerHeight = document.getElementById(id)?.getBoundingClientRect();
+    console.log("height", containerHeight);
+    setDropdownHeight(containerHeight?.top);
+  };
+
   return (
-    <ProfileCardItem key={key}>
+    <ProfileCardItem background={member.wallet === selectedMemeberAddress ? theme.chat.snapFocusBg : ''} id={member.wallet} key={key}>
       <ItemHV2 justifyContent="flex-start">
         <ItemVV2
           height="48px"
@@ -66,7 +75,10 @@ export const ProfileCard = ({
           <ItemVV2
             maxWidth="4px"
             padding="0 20px 0 0"
-            onClick={() => setSelectedMemeberAddress(member?.wallet)}
+            onClick={() => {
+              handleHeight(member.wallet);
+              setSelectedMemeberAddress(member?.wallet)
+            }}
             style={{ cursor: 'pointer' }}
           >
             {theme.scheme == 'light' ? <MoreLight /> : <MoreDark />}
@@ -74,7 +86,9 @@ export const ProfileCard = ({
         )}
       </ItemHV2>
       {selectedMemeberAddress?.toLowerCase() == member?.wallet?.toLowerCase() && (
-        <DropdownContainer ref={dropdownRef}>
+        <DropdownContainer
+          style={{ top: dropdownHeight > 570 ? '-70%' : '70%' }}
+          ref={dropdownRef}>
           <Dropdown
             dropdownValues={dropdownValues}
             hoverBGColor={theme.chat.snapFocusBg}
@@ -89,9 +103,9 @@ const ProfileCardItem = styled(ItemHV2)`
   justify-content: space-between;
   padding: 8px 16px;
   border-radius: 16px;
-  position: unset;
+  position: relative;
   box-sizing: border-box;
-  background-color: ${(props) => props.theme.chat.snapFocusBg};
+  // background-color: ${(props) => props.theme.chat.snapFocusBg};
   margin-bottom: 8px;
   max-height: 64px;
   @media (max-width: 480px) {
@@ -101,16 +115,21 @@ const ProfileCardItem = styled(ItemHV2)`
 
 const DropdownContainer = styled(ItemVV2)`
   position: absolute;
-  left: 85.5%;
+  // left: 85.5%;
+  left:48%;
   top: 69%;
   border-radius: 16px;
   padding: 14px 8px;
   background: ${(props) => props.theme.modalContentBackground};
+  border:1px solid ${(props) => props.theme.modalBorderColor};
   z-index: 11;
   @media ${device.mobileL} {
     left: 27%;
   }
   @media (min-width: 426px) and (max-width: 1150px) {
     left: 48%;
+  }
+  @media (max-width: 480px){
+    left: 25%;
   }
 `;

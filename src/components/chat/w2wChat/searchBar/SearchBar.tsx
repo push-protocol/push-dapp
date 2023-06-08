@@ -133,6 +133,7 @@ const SearchBar = ({ autofilled }) => {
   }
   const handleSearch = async (autoSearch: string = null): Promise<void> => {
     let searchText = autoSearch ? autoSearch : searchedUser;
+    setIsInvalidAddress(false);
 
     if (!ethers.utils.isAddress(searchText)) {
       setIsLoadingSearch(true);

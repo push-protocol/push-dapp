@@ -8,6 +8,7 @@ import { VideoCallContext } from 'contexts/VideoCallContext';
 import { convertAddressToAddrCaip } from '../helpers/CaipHelper';
 import { VideoCallStatus } from '@pushprotocol/restapi';
 import { ADDITIONAL_META_TYPE } from '@pushprotocol/restapi/src/lib/payloads/constants';
+import { ENV } from '@pushprotocol/restapi/src/lib/constants';
 
 // Types
 export type SDKSocketHookOptions = {
@@ -40,14 +41,11 @@ export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHoo
       try {
         const { payload } = feedItem || {};
 
-        // check for additionalMeta
-        if (payload.hasOwnProperty('data') && payload['data'].hasOwnProperty('additionalMeta')) {
-          const additionalMeta = payload['data']['additionalMeta'];
-          console.log("RECEIVED ADDITIONAL META", additionalMeta);
-          
-          // check for PUSH_VIDEO
-          if (additionalMeta.type === `${ADDITIONAL_META_TYPE.PUSH_VIDEO}+1`) {
-            const videoCallMetaData = JSON.parse(additionalMeta.data);
+        if (Object.keys(payload).length > 0) {
+          // if additional meta, skip notification
+          // currently for video calls only
+          if (payload?.data?.additionalMeta?.type === `${ADDITIONAL_META_TYPE.PUSH_VIDEO}+1`) {
+            const videoCallMetaData = JSON.parse(payload.data.additionalMeta.data);
             console.log('RECIEVED VIDEO DATA', videoCallMetaData);
 
             if (videoCallMetaData.status === VideoCallStatus.INITIALIZED) {
@@ -75,10 +73,10 @@ export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHoo
                 retry: true,
               });
             }
+          } else {
+            showNotifcationToast(payload);
           }
         }
-
-        showNotifcationToast(payload);
       } catch (e) {
         console.error('DAPP Error while diplaying received Notification: ', e);
       }

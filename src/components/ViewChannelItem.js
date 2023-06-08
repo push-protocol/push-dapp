@@ -25,7 +25,7 @@ import { addNewWelcomeNotif, incrementStepIndex } from 'redux/slices/userJourney
 import ChannelTutorial, { isChannelTutorialized } from 'segments/ChannelTutorial';
 import NotificationToast from '../primaries/NotificationToast';
 import { Image, ItemH, Span } from '../primaries/SharedStyling';
-import { MaskedAliasChannels, shortenText } from 'helpers/UtilityHelper';
+import { LOGO_FROM_CHAIN_ID, MaskedAliasChannels, shortenText } from 'helpers/UtilityHelper';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 
 // Internal Configs
@@ -857,8 +857,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                     !MaskedAliasChannels[+channelObject?.alias_blockchain_id][channelObject?.channel] && (
                       <Span padding="0 0 0 5px">
                         <Image
-                          src={`./svg/${CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]}.svg`}
-                          alt="Polygon"
+                          src={`./svg/${LOGO_FROM_CHAIN_ID[+channelObject.alias_blockchain_id]}`}
+                          alt="Alias Chain Logo"
                           width="20px"
                           height="20px"
                         />

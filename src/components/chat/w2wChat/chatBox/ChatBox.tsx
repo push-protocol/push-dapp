@@ -44,7 +44,6 @@ import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpe
 import { MessagetypeType } from '../../../../types/chat';
 import Chats from '../chats/Chats';
 import Typebar from '../TypeBar/Typebar';
-import { intitializeDb } from '../w2wIndexeddb';
 import { HeaderMessage } from './HeaderMessage';
 import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
@@ -243,7 +242,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   };
 
   const fetchInboxApi = async (): Promise<Feeds> => {
-    const inboxes: Feeds[] = await fetchInbox(connectedUser);
+    const inboxes: Feeds[] = await fetchInbox({connectedUser});
     setInbox(inboxes);
     return inboxes?.find((x) => x.wallets.split(':')[1]?.toLowerCase() === currentChat.wallets.split(':')[1]?.toLowerCase());
   };
@@ -274,34 +273,18 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       });
 
       if (typeof sendResponse !== 'string') {
-        intitializeDb<MessageIPFS>('Insert', 'CID_store', sendResponse.cid, sendResponse, 'cid');
         sendResponse.messageContent = message;
         const updatedCurrentChat = currentChat;
         updatedCurrentChat.msg = sendResponse;
         setChat(updatedCurrentChat);
         setNewMessage('');
-        // console.log(messages)
-        // console.log(sendResponse)
         setMessages([...messages, sendResponse]);
 
         setTimeout(() => {
           setMessageBeingSent(false);
-        }, 1);
-      } else {
-        chatBoxToast.showMessageToast({
-          toastTitle: 'Error',
-          toastMessage: `${sendResponse}`,
-          toastType: 'ERROR',
-          getToastIcon: (size) => (
-            <MdError
-              size={size}
-              color="red"
-            />
-          ),
-        });
-
-        setMessageBeingSent(false);
+        }, 1)
       }
+
     } catch (error) {
       chatBoxToast.showMessageToast({
         toastTitle: 'Error',
@@ -318,7 +301,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       setMessageBeingSent(false);
     }
   };
-// console.log(messages)
+
   useEffect(() => {
     if (messageBeingSent == false) {
       setTimeout(() => {
@@ -329,13 +312,9 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
 
   async function resolveThreadhash(): Promise<void> {
     setLoading(true);
-    let getIntent;
-    getIntent = await intitializeDb<string>('Read', 'Intent', walletToCAIP10({ account: account! }), '', 'did');
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(':')[1];
-    let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: false });
-    await intitializeDb<Feeds[]>('Insert', 'Intent', walletToCAIP10({ account: account! }), intents, 'did');
-    intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
+    let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: true, pgpPrivateKey:connectedUser.privateKey });
     setReceivedIntents(intents);
     setLoading(false);
   }
@@ -374,19 +353,8 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             />
           ),
         });
-      } else {
-        chatBoxToast.showMessageToast({
-          toastTitle: 'Error',
-          toastMessage: `There was a problem in approving the chat request, please try again.`,
-          toastType: 'ERROR',
-          getToastIcon: (size) => (
-            <MdError
-              size={size}
-              color="red"
-            />
-          ),
-        });
       }
+
       setActiveTab(0);
       await resolveThreadhash();
       setMessageBeingSent(false);
@@ -434,45 +402,31 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
           env: appConfig.appEnv,
         });
 
-        if (typeof sendResponse === 'string') {
-          // Display toaster
-          chatBoxToast.showMessageToast({
-            toastTitle: 'Error',
-            toastMessage: `${sendResponse}`,
-            toastType: 'ERROR',
-            getToastIcon: (size) => (
-              <MdError
-                size={size}
-                color="red"
-              />
-            ),
-          });
+        if (typeof sendResponse !== 'string') {
+           // We store the message in state decrypted so we display to the user the intent message
+           sendResponse.messageContent = message;
+           setNewMessage('');
+           let result = await fetchInboxApi();
+           result.msg.messageContent = message;
+           setChat(result);
+           chatBoxToast.showMessageToast({
+             toastTitle: 'Success',
+             toastMessage: 'Chat Request Sent',
+             toastType: 'SUCCESS',
+             getToastIcon: (size) => (
+               <MdCheckCircle
+                 size={size}
+                 color="green"
+               />
+             ),
+           });
           setMessageBeingSent(false);
-        } else {
-          // We store the message in state decrypted so we display to the user the intent message
-          sendResponse.messageContent = message;
-          setNewMessage('');
-          let result = await fetchInboxApi();
-          result.msg.messageContent = message;
-          setChat(result);
-          chatBoxToast.showMessageToast({
-            toastTitle: 'Success',
-            toastMessage: 'Chat Request Sent',
-            toastType: 'SUCCESS',
-            getToastIcon: (size) => (
-              <MdCheckCircle
-                size={size}
-                color="green"
-              />
-            ),
-          });
         }
       }
 
       setHasUserBeenSearched(false);
       setActiveTab(0);
     } catch (error) {
-      console.error(error.message);
       chatBoxToast.showMessageToast({
         toastTitle: 'Error',
         toastMessage: 'Cannot send request, Try again later',

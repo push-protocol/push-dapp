@@ -9,7 +9,7 @@ import styled, { useTheme } from 'styled-components';
 // Internal Components
 import Dropdown, { DropdownValueType } from './Dropdown';
 import { H3, Image, Item, ItemH } from './SharedStyling.js';
-import { networkName } from 'helpers/UtilityHelper';
+import { LOGO_FROM_CHAIN_ID, networkName } from 'helpers/UtilityHelper';
 import { appConfig } from 'config/index.js';
 import { useClickAway } from 'hooks/useClickAway';
 
@@ -34,7 +34,7 @@ const ChainIndicator = ({ isDarkMode }) => {
         id: chainId,
         value: chainName,
         title: chainName,
-        icon: `./svg/${networkName[chainId].split(' ')[0]}.svg`,
+        icon: `./svg/${LOGO_FROM_CHAIN_ID[chainId]}`,
         function: () => {
           handleChangeNetwork(chainId, library.provider);
           setShowDropdown(false);

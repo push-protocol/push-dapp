@@ -110,12 +110,11 @@ const InitState = () => {
         // if channel admin, then get if the channel is verified or not, then also fetch more details about the channel
         const verificationStatus = await epnsWriteProvider.getChannelVerfication(ownerAccount);
         const channelJson = await epnsWriteProvider.channels(ownerAccount);
-        const channelDetail = await getChannelsSearch({
-          page: 1,
-          limit: 1,
-          query: account,
+        const channelDetail = await PushAPI.channels.getChannel({
+          channel: account,
+          env: appConfig.appEnv
         });
-        const subsCount = channelDetail[0].subscriber_count;
+        const subsCount = channelDetail.subscriber_count;
         dispatch(
           setUserChannelDetails({
             ...response,
@@ -239,16 +238,14 @@ const InitState = () => {
         const { aliasEth, aliasVerified } = await checkUserForEthAlias();
         if (aliasEth) {
           // await checkUserForChannelOwnership(aliasEth);
-          const channelDetail = await PushAPI.channels.search({
-            page: 1,
-            limit: 1,
-            query: aliasEth,
+          const channelDetail = await PushAPI.channels.getChannel({
+            channel: aliasEth,
             env: appConfig.appEnv
           });
-          if(channelDetail) {
-            dispatch(setUserChannelDetails(channelDetail[0]));
+          if(channelDetail != "channel not found" && channelDetail) {
+            dispatch(setUserChannelDetails(channelDetail));
             const channelDetailsFromContract = await epnsReadProvider.channels(aliasEth);
-            dispatch(setUserChannelDetails({...channelDetail[0], ...channelDetailsFromContract}));
+            dispatch(setUserChannelDetails({...channelDetail, ...channelDetailsFromContract}));
           }
           if (!aliasVerified) {
             dispatch(setProcessingState(3));
