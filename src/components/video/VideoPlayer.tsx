@@ -68,7 +68,7 @@ const VideoPlayer = ({ localVideoStyles, incoming }: VideoPlayerType) => {
             className={
               videoCallData.incoming[0].status === VideoCallStatus.CONNECTED
                 ? 'connectionAccepted'
-                : null
+                : 'connectionNotAccepted'
             }
           />
           {!videoCallData.local.stream.getVideoTracks()[0].enabled ? (
@@ -171,11 +171,11 @@ const LocalVideoContainer = styled(ItemVV2)`
   //   aspect-ratio: ${props => props.incomingStyle || '9/27'};
   // }
 
-    
-     &.connectionNotAccepted{
+  &.connectionNotAccepted{
     @media (min-width: 1024px){
       aspect-ratio: 16/9;
     }
+
   }
 
   &.connectionAccepted {
@@ -217,12 +217,18 @@ const LocalVideo = styled.video`
   object-fit: cover;
 
   &.connectionAccepted {
-    border: 1px solid #ffffff8c;
     z-index: 2;
     width: auto;
     @media (max-width: 768px) {
       height: 16vh;
       width: auto;
+    }
+  }
+  &.connectionNotAccepted{
+    @media (min-width: 1024px){
+      aspect-ratio: 16/9;
+      height:100%;
+      width:auto;
     }
   }
 `;
