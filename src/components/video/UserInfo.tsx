@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
+import { shortenText } from 'helpers/UtilityHelper';
 
 // Internal Configs
 import { device } from 'config/Globals';
@@ -26,7 +27,7 @@ type UserInfoType = {
 const UserInfo = ({ pfp, username, address, status, containerStyles, fontColor, source }: UserInfoType) => {
   const { web3NameList }:AppContextType=React.useContext(AppContext);
   const web3Name=web3NameList[address]
-  const shortnedAddress = address.substring(0, 8) + '...' + address.substring(address.length - 8);
+  const shortnedAddress = shortenText(address,5);
 
   return (
     <Container style={containerStyles}>
@@ -125,10 +126,6 @@ const Status = styled(SpanV2)`
   text-align: left;
 
   @media ${device.mobileL} {
-    font-size: 1rem;
-  }
-
-  @media ${device.mobileS} {
     font-size: 0.8rem;
   }
 `;
