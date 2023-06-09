@@ -70,6 +70,7 @@ export default class YieldFarmingDataStoreV2 {
     return new Promise(async (resolve, reject) => {
       const yieldFarmingPUSH = this.state.pushCoreV2;
       const yieldFarmingLP = this.state.yieldFarmingLP;
+      const currentEpochLP= await yieldFarmingLP.getCurrentEpoch();
 
       const pushPriceAmounts = await this.state.uniswapV2Router02.getAmountsOut(ONE_PUSH.toString(), [
         addresses.pushToken,
@@ -109,9 +110,45 @@ export default class YieldFarmingDataStoreV2 {
       const uniLpPrice = (pushAmountReserve * pushPrice + wethAmountReserve * ethPrice) / uniTotalSupply;
       const lpToPushRatio = uniLpPrice / pushPrice;
 
+
+      //calculating total Value locked
+      const lpNextPoolSize = tokenBNtoNumber(await yieldFarmingLP.getPoolSize(currentEpochLP.add(1)));
+      const totalValueLocked = 
+      // (pushNextPoolSize * pushPrice) + 
+      (lpNextPoolSize * uniLpPrice);
+
+      console.log("total value locked",lpNextPoolSize,uniLpPrice,totalValueLocked)
+
+
+
+      //calculating epoch Duration
+      const epochDuration = await yieldFarmingLP.epochDuration();
+      const epochStart = await yieldFarmingLP.epochStart();
+      const start = epochStart.add(currentEpochLP.sub(1).mul(epochDuration));
+      const epochEndTimestamp = start.add(epochDuration);
+
+
+      //calculation total distributed amount
+      // const pushTotalDistributedAmount = await yieldFarmingPUSH.TOTAL_DISTRIBUTED_AMOUNT();
+      const lpTotalDistributedAmount = await yieldFarmingLP.TOTAL_DISTRIBUTED_AMOUNT();
+
+      console.log("total distributed amount>>>>>",tokenBNtoNumber(lpTotalDistributedAmount));
+
+      // const totalDistributedAmount = pushTotalDistributedAmount.add(
+      //   lpTotalDistributedAmount
+      // );
+
+      const totalDistributedAmount = lpTotalDistributedAmount;
+
+
+
+
       resolve({
         pushPrice,
         lpToPushRatio,
+        epochEndTimestamp,
+        totalValueLocked,
+        totalDistributedAmount
       });
     });
   };
@@ -212,6 +249,8 @@ export default class YieldFarmingDataStoreV2 {
           lastClaimedEpoch = await pushCoreV2.lastEpochRelative(genesisBlock, currentBlock.number);
         }
 
+        lastClaimedEpoch = lastClaimedEpoch.toNumber();
+
         let totalClaimableReward = 0;
 
         //we can just see the last staked block so the loop will be small
@@ -220,7 +259,11 @@ export default class YieldFarmingDataStoreV2 {
         //TODO: Here below one thing is left to 
         // If the user claims reward at some block then the epoch Length will decrease.
 
-        const epochsToCondider = Array.from({ length: computationalEpochId }, (_, i) => i + 1);
+
+        const lengthToLoop = (computationalEpochId - lastClaimedEpoch) + 1;
+        console.log("Epoch DIfferences",lastClaimedEpoch,computationalEpochId,lengthToLoop);
+
+        const epochsToCondider = Array.from({ length: lengthToLoop }, (_, i) => i + lastClaimedEpoch);
 
         const userRewards = await Promise.all(
           epochsToCondider.map((epochId) => {
@@ -257,10 +300,12 @@ export default class YieldFarmingDataStoreV2 {
     const _lastTotalStakeEpochInitialized = await this.getEpochRelation(lastTotalStakeEpochInitialized);
 
     let computationalEpochId = epochId;
+    
     if (
       _lastTotalStakeEpochInitialized.toNumber() == 0 ||
       _lastTotalStakeEpochInitialized.toNumber() == computationalEpochId
     ) {
+
       computationalEpochId = epochId;
 
     } else {
@@ -415,6 +460,7 @@ export default class YieldFarmingDataStoreV2 {
       ]);
 
       const _epochGap = currentEpoch.sub(_lastEpochInitiliazed);
+      console.log("EPoch Gap",_epochGap.toNumber());
 
       if (!_epochGap > 1) {
         const availableRewardsPerEpoch = PROTOCOL_POOL_FEES.sub(previouslySetEpochRewards);

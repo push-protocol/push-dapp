@@ -9,17 +9,54 @@ import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';
 
-const YieldStatsSection = () => {
+const YieldStatsSection = ({
+  getLpPoolStats,
+  poolStats
+}
+) => {
+
+  const [formattedDuration, setFormattedDuration] = React.useState('');
+
+  const getFormattedDuration = () => {
+    if (poolStats?.epochEndTimestamp) {
+      const epochEndTimestamp = poolStats.epochEndTimestamp.toNumber();
+
+      const duration = epochEndTimestamp - Math.floor(new Date() / 1000);
+
+      if (duration < 0) {
+        getLpPoolStats();
+      }
+
+      const day = parseInt(duration / 86400);
+      const hour = parseInt((duration - day * 86400) / 3600);
+
+      const minutes = parseInt((duration - (day * 86400 + hour * 3600)) / 60);
+      const seconds = duration - (day * 86400 + hour * 3600 + minutes * 60);
+
+      setFormattedDuration(`${day}D ${hour}H ${minutes}M ${seconds}S`);
+    }
+  };
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      getFormattedDuration();
+    }, 1000);
+  });
+
+
+
+
   // RENDER
   return (
     <ItemHV2Modified>
       {/* Total Value Locked */}
       <StatsContainer justifyContent="stretch" background="linear-gradient(0deg, #7ADDB3, #7ADDB3), #FFFFFF">
-        <BgCircleEffect  background="radial-gradient(70% 90% at 40% 16.25%, #7CDCB4 2.6%, #7ADDB3 53.65%, #E888F8 85.42%, #F99DEA 100%)" />
+        <BgCircleEffect background="radial-gradient(70% 90% at 40% 16.25%, #7CDCB4 2.6%, #7ADDB3 53.65%, #E888F8 85.42%, #F99DEA 100%)" />
         <StatsText>
           <SpanV2 color="#fff" fontSize="18px" fontWeight="600" lineHeight="141%">Total Value Locked</SpanV2>
-          <SpanV2 color="#fff" fontSize="32px" fontWeight="700" lineHeight="141%">$ 3,914,526.55</SpanV2>
+          <SpanV2 color="#fff" fontSize="32px" fontWeight="700" lineHeight="141%">{`$ ${numberWithCommas(poolStats?.totalValueLocked)}`}</SpanV2>
         </StatsText>
       </StatsContainer>
 
@@ -29,8 +66,18 @@ const YieldStatsSection = () => {
         <StatsText>
           <SpanV2 color="#fff" fontSize="18px" fontWeight="600" lineHeight="141%">Push Rewards Given</SpanV2>
           <TextBox>
-            <SpanV2 color="#fff" fontSize="32px" fontWeight="700" lineHeight="141%">5,510,000</SpanV2>
-            <SpanV2 color="#fff" fontSize="16px" fontWeight="700" lineHeight="141%">out of 5,510,000</SpanV2>
+            <SpanV2 color="#fff" fontSize="32px" fontWeight="700" lineHeight="141%">
+              {
+                // TODO fix the calculation
+                numberWithCommas(
+                  Math.min(
+                    // formatTokens(poolStats?.pushRewardsDistributed),
+                    formatTokens(poolStats?.totalDistributedAmount)
+                  ))}
+            </SpanV2>
+            <SpanV2 color="#fff" fontSize="16px" fontWeight="700" lineHeight="141%">
+              out of {numberWithCommas(formatTokens(poolStats?.totalDistributedAmount))}
+            </SpanV2>
           </TextBox>
         </StatsText>
       </StatsContainer>
@@ -41,7 +88,7 @@ const YieldStatsSection = () => {
         <StatsText>
           <SpanV2 color="#fff" fontSize="18px" fontWeight="600" lineHeight="141%">Time Left</SpanV2>
           <TextBox>
-            <SpanV2 color="#fff" fontSize="32px" fontWeight="700" lineHeight="141%">00h 00M 00S</SpanV2>
+            <SpanV2 color="#fff" fontSize="32px" fontWeight="700" lineHeight="141%">{formattedDuration}</SpanV2>
             <SpanV2 color="#fff" fontSize="16px" fontWeight="700" lineHeight="141%">until next epoch</SpanV2>
           </TextBox>
         </StatsText>

@@ -39,7 +39,7 @@ export default class YieldFarmingDataStore {
     genesisEpochAmountPUSH: GENESIS_EPOCH_AMOUNT_PUSH,
     deprecationPerEpochPUSH: 100,
     genesisEpochAmountLP: GENESIS_EPOCH_AMOUNT_LP,
-    deprecationPerEpochLP: 300,
+    deprecationPerEpochLP: 900,
     
     uniswapV2Router02:null,
   };

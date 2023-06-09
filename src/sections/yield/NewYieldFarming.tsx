@@ -22,15 +22,13 @@ import DeprecatedYieldFarming from 'sections/yield/DeprecatedYieldFarming';
 import YieldUniswapV3 from 'components/yield/YieldUniswapV3';
 import YieldPushFeeV3 from 'components/yield/YieldPushFeeV3';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { duration } from 'moment';
 
 const NewYieldFarming = ({
     setLoading
 }) => {
 
     const { account, library } = useWeb3React();
-
-    const [loadingComponent, setLoadingComponent] = useState(false);
-    const [loadingPushComponent, setLoadingPushComponent] = useState(false);
 
     const [pushToken, setPushToken] = useState(null);
     const [staking, setStaking] = useState(null);
@@ -45,13 +43,11 @@ const NewYieldFarming = ({
     const [PUSHPoolstats, setPUSHPoolStats] = useState(null);
 
     const getLpPoolStats = React.useCallback(async () => {
-        setLoadingComponent(true);
         const poolStats = await YieldFarmingDataStoreV2.instance.getPoolStats();
         const lpPoolStats = await YieldFarmingDataStoreV2.instance.getLPPoolStats(poolStats);
 
         setPoolStats({ ...poolStats });
         setLpPoolStats({ ...lpPoolStats });
-        setLoadingComponent(false);
     }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
 
     const getPUSHPoolStats = React.useCallback(async () => {
@@ -62,21 +58,17 @@ const NewYieldFarming = ({
     }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
 
     const getUserDataLP = React.useCallback(async () => {
-        setLoadingComponent(true);
         const userDataLP = await YieldFarmingDataStoreV2.instance.getUserDataLP();
         console.log("user Data LP", userDataLP);
 
         setUserDataLP({ ...userDataLP });
-        setLoadingComponent(false);
     }, [yieldFarmingLP]);
 
     const getUserDataPush = React.useCallback(async () => {
-        setLoadingPushComponent(true);
         const userDataPush = await YieldFarmingDataStoreV2.instance.getUserDataPUSH(library);
         console.log("userData Push", userDataPush);
 
         setUserDataPush({ ...userDataPush });
-        setLoadingPushComponent(false);
     }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
 
     //initiate the YieldFarmV2 data store here
@@ -133,19 +125,12 @@ const NewYieldFarming = ({
 
     }, [account]);
 
-    const findData = async()=>{
-        const data =await library.getStorageAt("0x44C60743E93E51509b9B37C9048fF780a4B222E1", 130);
-        console.log("Data========",parseInt(data));
-    }
-
-    useEffect(()=>{
-        findData();
-    },[])
+    
 
     return (
         <>
             <YieldAnnouncementSection />
-            <YieldStatsSection />
+            <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats}/>
             <YieldPushPriceSection
                 poolStats={poolStats}
             />

@@ -53,9 +53,6 @@ const YieldFarmingModuleV2 = () => {
           }>Yield Farming V1</Tabs>
       </TabContainer>
 
-      {/* {loading && (
-        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
-      )} */}
 
       {newStaking ? (
         <NewYieldFarming setLoading={setLoading} />
