@@ -13,7 +13,8 @@ import { VideoCallStatus } from '@pushprotocol/restapi';
 
 // Create Video Call
 const VideoCallSection = () => {
-  const { videoCallData, createWrapper, requestWrapper, acceptRequestWrapper, disconnectWrapper } = useContext(VideoCallContext);
+  const { videoCallData, createWrapper, requestWrapper, acceptRequestWrapper, disconnectWrapper } =
+    useContext(VideoCallContext);
   const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
 
   const [isLoading, setLoading] = useState(true);
@@ -21,6 +22,22 @@ const VideoCallSection = () => {
     enabled: false,
     title: null,
   });
+
+  // handling a frontend error with resize-observer package
+  React.useEffect(() => {
+    window.addEventListener('error', function (err) {
+      if (err.message === 'ResizeObserver loop limit exceeded') {
+        const resizeObserverErrDiv = document.getElementById('webpack-dev-server-client-overlay-div');
+        const resizeObserverErr = document.getElementById('webpack-dev-server-client-overlay');
+        if (resizeObserverErr) {
+          resizeObserverErr.setAttribute('style', 'display: none');
+        }
+        if (resizeObserverErrDiv) {
+          resizeObserverErrDiv.setAttribute('style', 'display: none');
+        }
+      }
+    });
+  }, []);
 
   React.useEffect(() => {
     const setupStream = async () => {
@@ -30,8 +47,8 @@ const VideoCallSection = () => {
         progressEnabled: false,
       });
 
-      console.log("VIDEO CALL SECTION USE EFFECT", "LOCAL STREAM", videoCallData.local.stream);
-      
+      console.log('VIDEO CALL SECTION USE EFFECT', 'LOCAL STREAM', videoCallData.local.stream);
+
       try {
         if (videoCallData.local.stream === null) {
           await createWrapper();
@@ -70,17 +87,11 @@ const VideoCallSection = () => {
 
   // Incoming call UI
   if (videoCallData.incoming[0].status === VideoCallStatus.RECEIVED) {
-    return (
-      <IncomingCall />
-    );
+    return <IncomingCall />;
   }
 
   // Outgoing & Ongoing call UI
-  return (
-    <OutgoingOngoingCall
-      blockedLoading={blockedLoading}
-    />
-  );
+  return <OutgoingOngoingCall blockedLoading={blockedLoading} />;
 };
 
 export default VideoCallSection;
