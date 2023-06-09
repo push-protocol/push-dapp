@@ -38,7 +38,7 @@ const Container = styled(ItemHV2)<IncomingCallModalContentProps>`
   }
 
   @media (max-width: 2040px){
-    bottom: ${props => props.isIncomingCallMinimized ? "8%" : "unset"};
+    bottom: ${props => props.isIncomingCallMinimized ? "10%" : "unset"};
     width: ${props => props.isIncomingCallMinimized ? "29vw" : "24vw"};
   }
    
