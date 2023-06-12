@@ -6,29 +6,31 @@ import { createSocketConnection, EVENTS } from '@pushprotocol/socket';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { convertAddressToAddrCaip } from '../helpers/CaipHelper';
-
+import { VideoCallStatus } from '@pushprotocol/restapi';
+import { ADDITIONAL_META_TYPE } from '@pushprotocol/restapi/src/lib/payloads/constants';
+import { ENV } from '@pushprotocol/restapi/src/lib/constants';
 
 // Types
 export type SDKSocketHookOptions = {
   account?: string | null;
   env?: ENV;
   chainId?: number;
-  socketType?: 'chat' | 'notification',
+  socketType?: 'chat' | 'notification';
 };
 
-export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHookOptions) => {
+export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHookOptions) => {
   const [epnsSDKSocket, setEpnsSDKSocket] = useState<any>(null);
   const [isSDKSocketConnected, setIsSDKSocketConnected] = useState(epnsSDKSocket?.connected);
   const [messagesSinceLastConnection, setMessagesSinceLastConnection] = useState<any>('');
   const [groupInformationSinceLastConnection, setGroupInformationSinceLastConnection] = useState<any>('');
-  const { incomingCall, acceptCall } = useContext(VideoCallContext);
+  const { videoCallData, incomingCall, connectWrapper, requestWrapper, acceptRequestWrapper, isVideoCallInitiator } =
+    useContext(VideoCallContext);
   const addSocketEvents = () => {
     epnsSDKSocket?.on(EVENTS.CONNECT, () => {
       setIsSDKSocketConnected(true);
     });
 
     epnsSDKSocket?.on(EVENTS.DISCONNECT, () => {
-
       setIsSDKSocketConnected(false);
     });
 
@@ -42,17 +44,34 @@ export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHook
         if (Object.keys(payload).length > 0) {
           // if additional meta, skip notification
           // currently for video calls only
-          if (payload?.data?.additionalMeta && feedItem?.source === 'PUSH_VIDEO') {
-            const additionalMeta = JSON.parse(payload.data.additionalMeta);
+          if (payload?.data?.additionalMeta?.type === `${ADDITIONAL_META_TYPE.PUSH_VIDEO}+1`) {
+            const videoCallMetaData = JSON.parse(payload.data.additionalMeta.data);
+            console.log('RECIEVED VIDEO DATA', videoCallMetaData);
 
-            console.log("RECEIVED CALL FEED", additionalMeta);
-
-            if (additionalMeta.status === 1) {
-              // incoming call
-              incomingCall(additionalMeta);
-            } else if (additionalMeta.status === 2) {
-              // call answered
-              acceptCall(additionalMeta);
+            if (videoCallMetaData.status === VideoCallStatus.INITIALIZED) {
+              incomingCall(videoCallMetaData);
+            } else if (
+              videoCallMetaData.status === VideoCallStatus.RECEIVED ||
+              videoCallMetaData.status === VideoCallStatus.RETRY_RECEIVED
+            ) {
+              connectWrapper(videoCallMetaData);
+            } else if (videoCallMetaData.status === VideoCallStatus.DISCONNECTED) {
+              window.location.reload();
+            } else if (videoCallMetaData.status === VideoCallStatus.RETRY_INITIALIZED && isVideoCallInitiator()) {
+              requestWrapper({
+                senderAddress: videoCallMetaData.recipientAddress,
+                recipientAddress: videoCallMetaData.senderAddress,
+                chatId: videoCallMetaData.chatId,
+                retry: true,
+              });
+            } else if (videoCallMetaData.status === VideoCallStatus.RETRY_INITIALIZED && !isVideoCallInitiator()) {
+              acceptRequestWrapper({
+                signalData: videoCallMetaData.signalData,
+                senderAddress: videoCallMetaData.recipientAddress,
+                recipientAddress: videoCallMetaData.senderAddress,
+                chatId: videoCallMetaData.chatId,
+                retry: true,
+              });
             }
           } else {
             showNotifcationToast(payload);
@@ -75,7 +94,7 @@ export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHook
       /**
        * We receive a group creation or updated event.
        */
-      console.log(groupInfo)
+      console.log(groupInfo);
       setGroupInformationSinceLastConnection(groupInfo);
     });
   };
@@ -113,7 +132,7 @@ export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHook
 
       // this is auto-connect on instantiation
       const connectionObject = createSocketConnection({
-        user: socketType == 'chat'?account:convertAddressToAddrCaip(account, chainId),
+        user: socketType == 'chat' ? account : convertAddressToAddrCaip(account, chainId),
         socketType,
         env,
       });

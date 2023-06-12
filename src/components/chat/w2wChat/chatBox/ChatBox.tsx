@@ -15,6 +15,7 @@ import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
+import { produce } from 'immer';
 
 // Internal Components
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
@@ -51,6 +52,7 @@ import { AppContextType } from 'types/context';
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import { getChats } from 'services';
+import { VideoCallContext } from 'contexts/VideoCallContext';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -67,7 +69,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
   );
 });
 
-const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
+const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const {
     currentChat,
     viewChatBox,
@@ -97,6 +99,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
   const groupInfoRef = useRef<HTMLInputElement>(null);
   const { connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
+  const { setVideoCallData } = useContext(VideoCallContext);
 
   const listInnerRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
@@ -449,22 +452,15 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   };
 
   const startVideoCallHandler = async () => {
-    const toUser = await PushAPI.user.get({
-      account: caip10ToWallet(currentChat.wallets.toString()),
-      env: appConfig.appEnv
-    });
+    console.log("CURRENT CHAT", currentChat);
 
-    setVideoCallInfo({
-      address: caip10ToWallet(currentChat.wallets.toString()),
-      fromPublicKeyArmored: connectedUser.publicKey,
-      fromProfileUsername: connectedUser.name,
-      fromProfilePic: connectedUser.profilePicture,
-      toPublicKeyArmored: currentChat.publicKey,
-      toProfileUsername: null,
-      toProfilePic: currentChat.profilePicture,
-      privateKeyArmored: connectedUser.privateKey,
-      establishConnection: 1,
-      chatId: currentChat.chatId
+    setVideoCallData((oldData) => {
+      return produce(oldData, (draft) => {
+        draft.local.address = account;
+        draft.incoming[0].address = caip10ToWallet(currentChat.wallets.toString());
+        draft.incoming[0].status = PushAPI.VideoCallStatus.INITIALIZED;
+        draft.meta.chatId = currentChat.chatId;
+      });
     });
   };
 
@@ -734,7 +730,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                 messageBeingSent={messageBeingSent}
                 setNewMessage={setNewMessage}
                 newMessage={newMessage}
-                setVideoCallInfo={setVideoCallInfo}
                 sendMessage={sendMessage}
                 isGroup={isGroup}
                 sendIntent={sendIntent}

@@ -10,7 +10,7 @@ import styled, { useTheme } from 'styled-components';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext, VideoCallInfoI } from 'types/chat';
+import { AppContext } from 'types/chat';
 import { FileMessageContent } from './Files/Files';
 import GifPicker from './Gifs/GifPicker';
 
@@ -27,8 +27,6 @@ interface ITypeBar {
   messageBeingSent: boolean;
   newMessage: string;
   setNewMessage: (newMessage: string) => void;
-  setVideoCallInfo?: (videoCallInfo: VideoCallInfoI) => void;
-  videoCallInfo?: VideoCallInfoI;
   sendMessage: ({ message, messageType }: { message: string; messageType: MessagetypeType}) => void;
   sendIntent: ({ message, messageType }: { message: string; messageType: MessagetypeType }) => void;
   setOpenSuccessSnackBar: (openReprovalSnackbar: boolean) => void;
@@ -43,7 +41,6 @@ const Typebar = ({
   messageBeingSent,
   setNewMessage,
   newMessage,
-  setVideoCallInfo,
   sendMessage,
   sendIntent,
   isJoinGroup,
@@ -92,30 +89,6 @@ const Typebar = ({
 
   const handleKeyPress = async (e: any): void => {
     const x = e.keyCode;
-  
-    // Send video request only when two users are chatting
-    if (e.target.value === '/video' && currentChat.threadhash) {
-      // get to user info
-      const toUser = await PushAPI.user.get({
-        account: caip10ToWallet(currentChat.wallets.toString()),
-        env: appConfig.appEnv
-      });
-
-      setVideoCallInfo({
-        address: caip10ToWallet(currentChat.wallets.toString()),
-        fromPublicKeyArmored: connectedUser.publicKey,
-        fromProfileUsername: connectedUser.name,
-        fromProfilePic: connectedUser.profilePicture,
-        toPublicKeyArmored: currentChat.publicKey,
-        toProfileUsername: toUser.name,
-        toProfilePic: toUser.profilePicture,
-        privateKeyArmored: connectedUser.privateKey,
-        establishConnection: 1,
-        chatId: currentChat.chatId
-      });
-      setNewMessage('');
-      return;
-    }
 
     if (x === 13 && !e.shiftKey) {
       handleSubmit(e);
