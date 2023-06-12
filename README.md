@@ -1,13 +1,4 @@
-# Push (EPNS) dApp Mono Repo
 
-<div align="center">
-<h1 align="center">
-<br>
-Push dApp Mono Repo
-</h1>
-
-</div>
----
 
 ## 📚 Table of Contents
 - [📚 Table of Contents](#-table-of-contents)
