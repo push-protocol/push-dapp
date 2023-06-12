@@ -1,946 +1,52 @@
+<h1 align="center">
+    <a href="https://push.org/#gh-light-mode-only">
+    <img width='20%' height='10%' src="https://res.cloudinary.com/drdjegqln/image/upload/v1686227557/Push-Logo-Standard-Dark_xap7z5.png">
+    </a>
+    <a href="https://push.org/#gh-dark-mode-only">
+    <img width='20%' height='10%' src="https://res.cloudinary.com/drdjegqln/image/upload/v1686227558/Push-Logo-Standard-White_dlvapc.png">
+    </a>
+</h1>
 
+<p align="center">
+  <i align="center">Push Protocol is a web3 communication network, enabling cross-chain notifications and messaging for dapps, wallets, and services.🚀</i>
+</p>
+
+<h4 align="center">
+
+  <a href="discord.gg/pushprotocol">
+    <img src="https://img.shields.io/badge/discord-7289da.svg?style=flat-square" alt="discord">
+  </a>
+  <a href="https://twitter.com/pushprotocol">
+    <img src="https://img.shields.io/badge/twitter-18a1d6.svg?style=flat-square" alt="twitter">
+  </a>
+  <a href="https://www.youtube.com/@pushprotocol">
+    <img src="https://img.shields.io/badge/youtube-d95652.svg?style=flat-square&" alt="youtube">
+  </a>
+</h4>
+
+---
+# Push Protocol dApp
+
+Welcome to the repository for the decentralized application (dApp) of the Push Protocol. This repository contains the frontend code that powers our user-facing application, enabling users to interact with the Push Protocol in a user-friendly and intuitive manner.
+
+The Push Protocol is a web3 communication protocol that enables cross-chain notifications and messaging for decentralized applications (dApps), wallets, and services. Our dApp is the gateway for users to access and utilize these functionalities.
+
+In this repository, you will find the code that powers various aspects of the Push dApp, from user interface components to state management and interaction with blockchain networks. We have built our dApp to be responsive, user-friendly, and to provide a seamless experience for interacting with the Push Protocol.
+
+We invite you to explore, contribute, and help us build the future of web3 communication. Your contributions will help us improve the user experience and add new features to our dApp, making web3 communication more accessible and efficient for everyone.
+
+
+
+
+---
 
 ## 📚 Table of Contents
-- [📚 Table of Contents](#-table-of-contents)
-- [📂 Project Structure](#-project-structure)
-- [🧩 Modules](#-modules)
-- [🚀 Getting Started](#-getting-started)
-- [🤝 Contributing](#-contributing)
+- [Modules](#-modules)
+- [Getting Started](#getting-started)
+- [Resources](#resources)
+- [Contributing](#contributing)
 
 ---
-
-
-
-
-<img src="https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/ec559a9f6bfd399b82bb44393651661b08aaf7ba/icons/folder-github-open.svg" width="80" />
-
-## 📂 Project Structure
-
-
-```bash
-repo
-├── README.md
-├── build.mjs
-├── config-overrides.js
-├── dump.rdb
-├── jsconfig.json.old
-├── ledger.manifest.json
-├── license-v1
-├── package.json
-├── public
-│   ├── 404.html
-│   ├── CNAME
-│   ├── DOWNTIME2.png
-│   ├── Settings.svg
-│   ├── _redirects
-│   ├── android-chrome-192x192.png
-│   ├── android-chrome-256x256.png
-│   ├── apple-touch-icon.png
-│   ├── bell.png
-│   ├── bell@2x.png
-│   ├── bell@3x.png
-│   ├── bellball.png
-│   ├── bellball@2x.png
-│   ├── bellball@3x.png
-│   ├── browserconfig.xml
-│   ├── copy.svg
-│   ├── date.png
-│   ├── epns-dapp-loader.gif
-│   ├── favicon-16x16.png
-│   ├── favicon-32x32.png
-│   ├── favicon.ico
-│   ├── firebase-messaging-sw.js
-│   ├── i.png
-│   ├── icon.jpg
-│   ├── image-not-available.jpeg
-│   ├── index-alpha.html
-│   ├── index-dev.html
-│   ├── index-prod.html
-│   ├── index-staging.html
-│   ├── index-w2w.html
-│   ├── index.html
-│   ├── latest.svg
-│   ├── loading.gif
-│   ├── loading.png
-│   ├── loading2.gif
-│   ├── logo192.png
-│   ├── logo260.png
-│   ├── logo512.png
-│   ├── logout.svg
-│   ├── mstile-150x150.png
-│   ├── people.svg
-│   ├── previews
-│   │   ├── homepage-alpha.jpg
-│   │   ├── homepage-dev.jpg
-│   │   ├── homepage-staging.jpg
-│   │   ├── homepage-w2w.jpg
-│   │   ├── homepage.jpg
-│   │   ├── homepagetwitter-alpha.jpg
-│   │   ├── homepagetwitter-dev.jpg
-│   │   ├── homepagetwitter-staging.jpg
-│   │   ├── homepagetwitter-w2w.jpg
-│   │   └── homepagetwitter.jpg
-│   ├── prod.svg
-│   ├── push.svg
-│   ├── pushDark.svg
-│   ├── ring.png
-│   ├── ring@2x.png
-│   ├── ring@3x.png
-│   ├── robots-alpha.txt
-│   ├── robots-dev.txt
-│   ├── robots-prod.txt
-│   ├── robots-staging.txt
-│   ├── robots-w2w.txt
-│   ├── robots.txt
-│   ├── safari-pinned-tab.svg
-│   ├── searchicon.svg
-│   ├── site.webmanifest
-│   ├── sitemap-alpha.txt
-│   ├── sitemap-dev.txt
-│   ├── sitemap-prod.txt
-│   ├── sitemap-staging.txt
-│   ├── sitemap-w2w.txt
-│   ├── sitemap.txt
-│   ├── subcount.svg
-│   ├── svg
-│   │   ├── AppStore.svg
-│   │   ├── BNB.svg
-│   │   ├── Ethereum.svg
-│   │   ├── ExpiredTimer.svg
-│   │   ├── ExpiresTimer.svg
-│   │   ├── GooglePlay.svg
-│   │   ├── Optimism.svg
-│   │   ├── Polygon.svg
-│   │   ├── PolygonZkEVM.svg
-│   │   ├── SVG
-│   │   │   └── govern_1.svg
-│   │   ├── airdrop-icon.svg
-│   │   ├── arrow.svg
-│   │   ├── bell.svg
-│   │   ├── bellball.svg
-│   │   ├── channel.svg
-│   │   ├── channeladmin.svg
-│   │   ├── chats
-│   │   │   ├── accept.svg
-│   │   │   ├── arrowbendup.svg
-│   │   │   ├── attachment.svg
-│   │   │   ├── block.svg
-│   │   │   ├── cancel.svg
-│   │   │   ├── gif.svg
-│   │   │   ├── nickname.svg
-│   │   │   ├── search.svg
-│   │   │   ├── send.svg
-│   │   │   ├── send_dark.svg
-│   │   │   ├── smiley.svg
-│   │   │   └── user.svg
-│   │   ├── communicate.svg
-│   │   ├── create-channel-icon.svg
-│   │   ├── darkbg.svg
-│   │   ├── delegate.svg
-│   │   ├── developer.svg
-│   │   ├── epnsline.svg
-│   │   ├── epnslogo.svg
-│   │   ├── faucet.svg
-│   │   ├── feedbox.svg
-│   │   ├── filterIcon.svg
-│   │   ├── filterw.png
-│   │   ├── gasPump.svg
-│   │   ├── govern.svg
-│   │   ├── governalt.svg
-│   │   ├── gratitude.svg
-│   │   ├── incentive.svg
-│   │   ├── info.svg
-│   │   ├── lightbg.svg
-│   │   ├── network.svg
-│   │   ├── news.svg
-│   │   ├── qna.svg
-│   │   ├── ringer.svg
-│   │   ├── rockstars-icon.svg
-│   │   ├── rockstars.svg
-│   │   ├── settings.svg
-│   │   ├── share.svg
-│   │   ├── spam.svg
-│   │   ├── support.svg
-│   │   ├── tutorial.svg
-│   │   ├── users.svg
-│   │   ├── view-tutorial-icon.svg
-│   │   ├── walkthrough.svg
-│   │   └── yield.svg
-│   ├── swatch.png
-│   ├── tuts
-│   │   ├── aave
-│   │   │   ├── aave_dark.png
-│   │   │   ├── aave_dark@2x.png
-│   │   │   ├── aave_dark@3x.png
-│   │   │   ├── aave_light.png
-│   │   │   ├── aave_light@2x.png
-│   │   │   └── aave_light@3x.png
-│   │   ├── aragon
-│   │   │   ├── aragon_dark.png
-│   │   │   ├── aragon_dark@2x.png
-│   │   │   ├── aragon_dark@3x.png
-│   │   │   ├── aragon_light.png
-│   │   │   ├── aragon_light@2x.png
-│   │   │   └── aragon_light@3x.png
-│   │   ├── armor
-│   │   │   ├── armor_dark.png
-│   │   │   ├── armor_dark@2x.png
-│   │   │   ├── armor_dark@3x.png
-│   │   │   ├── armor_light.png
-│   │   │   ├── armor_light@2x.png
-│   │   │   └── armor_light@3x.png
-│   │   ├── bancor
-│   │   │   ├── bancor_dark.png
-│   │   │   ├── bancor_dark@2x.png
-│   │   │   ├── bancor_dark@3x.png
-│   │   │   ├── bancor_light.png
-│   │   │   ├── bancor_light@2x.png
-│   │   │   └── bancor_light@3x.png
-│   │   ├── banklessfr
-│   │   │   ├── banklessfr_dark.png
-│   │   │   ├── banklessfr_dark@2x.png
-│   │   │   ├── banklessfr_dark@3x.png
-│   │   │   ├── banklessfr_light.png
-│   │   │   ├── banklessfr_light@2x.png
-│   │   │   └── banklessfr_light@3x.png
-│   │   ├── btctracker
-│   │   │   ├── btctracker_dark.png
-│   │   │   ├── btctracker_dark@2x.png
-│   │   │   ├── btctracker_dark@3x.png
-│   │   │   ├── btctracker_light.png
-│   │   │   ├── btctracker_light@2x.png
-│   │   │   └── btctracker_light@3x.png
-│   │   ├── coindesk
-│   │   │   ├── coindesk_dark.png
-│   │   │   ├── coindesk_dark@2x.png
-│   │   │   ├── coindesk_dark@3x.png
-│   │   │   ├── coindesk_light.png
-│   │   │   ├── coindesk_light@2x.png
-│   │   │   └── coindesk_light@3x.png
-│   │   ├── cvi
-│   │   │   ├── cvi_dark.png
-│   │   │   ├── cvi_dark@2x.png
-│   │   │   ├── cvi_dark@3x.png
-│   │   │   ├── cvi_light.png
-│   │   │   ├── cvi_light@2x.png
-│   │   │   └── cvi_light@3x.png
-│   │   ├── dydx
-│   │   │   ├── dydx_dark.png
-│   │   │   ├── dydx_dark@2x.png
-│   │   │   ├── dydx_dark@3x.png
-│   │   │   ├── dydx_light.png
-│   │   │   ├── dydx_light@2x.png
-│   │   │   └── dydx_light@3x.png
-│   │   ├── ens
-│   │   │   ├── ens_dark.png
-│   │   │   ├── ens_dark@2x.png
-│   │   │   ├── ens_dark@3x.png
-│   │   │   ├── ens_light.png
-│   │   │   ├── ens_light@2x.png
-│   │   │   └── ens_light@3x.png
-│   │   ├── ethpricetracker
-│   │   │   ├── ethpricetracker_dark.png
-│   │   │   ├── ethpricetracker_dark@2x.png
-│   │   │   ├── ethpricetracker_dark@3x.png
-│   │   │   ├── ethpricetracker_light.png
-│   │   │   ├── ethpricetracker_light@2x.png
-│   │   │   └── ethpricetracker_light@3x.png
-│   │   ├── ethtracker
-│   │   │   ├── ethtracker_dark.png
-│   │   │   ├── ethtracker_dark@2x.png
-│   │   │   ├── ethtracker_dark@3x.png
-│   │   │   ├── ethtracker_light.png
-│   │   │   ├── ethtracker_light@2x.png
-│   │   │   └── ethtracker_light@3x.png
-│   │   ├── fabwelt
-│   │   │   ├── fabwelt_dark.png
-│   │   │   ├── fabwelt_dark@2x.png
-│   │   │   ├── fabwelt_dark@3x.png
-│   │   │   ├── fabwelt_light.png
-│   │   │   ├── fabwelt_light@2x.png
-│   │   │   └── fabwelt_light@3x.png
-│   │   ├── gro
-│   │   │   ├── gro_dark.png
-│   │   │   ├── gro_dark@2x.png
-│   │   │   ├── gro_dark@3x.png
-│   │   │   ├── gro_light.png
-│   │   │   ├── gro_light@2x.png
-│   │   │   └── gro_light@3x.png
-│   │   ├── idle
-│   │   │   ├── idle_dark.png
-│   │   │   ├── idle_dark@2x.png
-│   │   │   ├── idle_dark@3x.png
-│   │   │   ├── idle_light.png
-│   │   │   ├── idle_light@2x.png
-│   │   │   └── idle_light@3x.png
-│   │   ├── kyber
-│   │   │   ├── kyber_dark.png
-│   │   │   ├── kyber_dark@2x.png
-│   │   │   ├── kyber_dark@3x.png
-│   │   │   ├── kyber_light.png
-│   │   │   ├── kyber_light@2x.png
-│   │   │   └── kyber_light@3x.png
-│   │   ├── makerdao
-│   │   │   ├── makerdao_dark.png
-│   │   │   ├── makerdao_dark@2x.png
-│   │   │   ├── makerdao_dark@3x.png
-│   │   │   ├── makerdao_light.png
-│   │   │   ├── makerdao_light@2x.png
-│   │   │   └── makerdao_light@3x.png
-│   │   ├── mover
-│   │   │   ├── mover_dark.png
-│   │   │   ├── mover_dark@2x.png
-│   │   │   ├── mover_dark@3x.png
-│   │   │   ├── mover_light.png
-│   │   │   ├── mover_light@2x.png
-│   │   │   └── mover_light@3x.png
-│   │   ├── notifs_style_guide.psd
-│   │   ├── oasisapp
-│   │   │   ├── oasisapp_dark.png
-│   │   │   ├── oasisapp_dark@2x.png
-│   │   │   ├── oasisapp_dark@3x.png
-│   │   │   ├── oasisapp_light.png
-│   │   │   ├── oasisapp_light@2x.png
-│   │   │   └── oasisapp_light@3x.png
-│   │   ├── ooki
-│   │   │   ├── ooki_dark.png
-│   │   │   ├── ooki_dark@2x.png
-│   │   │   ├── ooki_dark@3x.png
-│   │   │   ├── ooki_light.png
-│   │   │   ├── ooki_light@2x.png
-│   │   │   └── ooki_light@3x.png
-│   │   ├── pods
-│   │   │   ├── pods_dark.png
-│   │   │   ├── pods_dark@2x.png
-│   │   │   ├── pods_dark@3x.png
-│   │   │   ├── pods_light.png
-│   │   │   ├── pods_light@2x.png
-│   │   │   └── pods_light@3x.png
-│   │   ├── poh
-│   │   │   ├── poh_dark.png
-│   │   │   ├── poh_dark@2x.png
-│   │   │   ├── poh_dark@3x.png
-│   │   │   ├── poh_light.png
-│   │   │   ├── poh_light@2x.png
-│   │   │   └── poh_light@3x.png
-│   │   ├── pushgov
-│   │   │   ├── pushgov_dark.png
-│   │   │   ├── pushgov_dark@2x.png
-│   │   │   ├── pushgov_dark@3x.png
-│   │   │   ├── pushgov_light.png
-│   │   │   ├── pushgov_light@2x.png
-│   │   │   └── pushgov_light@3x.png
-│   │   ├── snapshot
-│   │   │   ├── snapshot_dark.png
-│   │   │   ├── snapshot_dark@2x.png
-│   │   │   ├── snapshot_dark@3x.png
-│   │   │   ├── snapshot_light.png
-│   │   │   ├── snapshot_light@2x.png
-│   │   │   └── snapshot_light@3x.png
-│   │   ├── symphony
-│   │   │   ├── symphony_dark.png
-│   │   │   ├── symphony_dark@2x.png
-│   │   │   ├── symphony_dark@3x.png
-│   │   │   ├── symphony_light.png
-│   │   │   ├── symphony_light@2x.png
-│   │   │   └── symphony_light@3x.png
-│   │   ├── thedefiant
-│   │   │   ├── thedefiant_dark.png
-│   │   │   ├── thedefiant_dark@2x.png
-│   │   │   ├── thedefiant_dark@3x.png
-│   │   │   ├── thedefiant_light.png
-│   │   │   ├── thedefiant_light@2x.png
-│   │   │   └── thedefiant_light@3x.png
-│   │   └── tracerdao
-│   │       ├── tracerdao_dark.png
-│   │       ├── tracerdao_dark@2x.png
-│   │       ├── tracerdao_dark@3x.png
-│   │       ├── tracerdao_light.png
-│   │       ├── tracerdao_light@2x.png
-│   │       └── tracerdao_light@3x.png
-│   └── verify.png
-├── src
-│   ├── App.tsx
-│   ├── AppLogin.tsx
-│   ├── api
-│   │   ├── index.js
-│   │   └── ipfs.ts
-│   ├── assets
-│   │   ├── BellIcon.svg
-│   │   ├── Device.js
-│   │   ├── Image.svg
-│   │   ├── Lock.png
-│   │   ├── LockSlash.png
-│   │   ├── PushLogo.svg
-│   │   ├── RedCircle.svg
-│   │   ├── Vector.svg
-│   │   ├── XCircle.svg
-│   │   ├── chat
-│   │   │   ├── QRBackground.svg
-│   │   │   ├── arrowleft.svg
-│   │   │   ├── chatBox.svg
-│   │   │   ├── group-chat
-│   │   │   │   ├── addadmin.svg
-│   │   │   │   ├── adddark.svg
-│   │   │   │   ├── addicon.svg
-│   │   │   │   ├── addlight.svg
-│   │   │   │   ├── chat.svg
-│   │   │   │   ├── close.svg
-│   │   │   │   ├── creategroup.svg
-│   │   │   │   ├── creategroupfill.svg
-│   │   │   │   ├── creategroupicon.svg
-│   │   │   │   ├── creategroupicondark.svg
-│   │   │   │   ├── dismissadmin.svg
-│   │   │   │   ├── info.svg
-│   │   │   │   ├── infodark.svg
-│   │   │   │   ├── lockdark.svg
-│   │   │   │   ├── more.svg
-│   │   │   │   ├── moredark.svg
-│   │   │   │   ├── profile.svg
-│   │   │   │   ├── remove.svg
-│   │   │   │   └── removewallet.svg
-│   │   │   ├── handwave.svg
-│   │   │   ├── search.svg
-│   │   │   └── tick.svg
-│   │   ├── fonts
-│   │   │   ├── Strawford-Black.eot
-│   │   │   ├── Strawford-Black.svg
-│   │   │   ├── Strawford-Black.ttf
-│   │   │   ├── Strawford-Black.woff
-│   │   │   ├── Strawford-Black.woff2
-│   │   │   ├── Strawford-Bold.eot
-│   │   │   ├── Strawford-Bold.svg
-│   │   │   ├── Strawford-Bold.ttf
-│   │   │   ├── Strawford-Bold.woff
-│   │   │   ├── Strawford-Bold.woff2
-│   │   │   ├── Strawford-ExtraLight.otf
-│   │   │   ├── Strawford-ExtraLight.ttf
-│   │   │   ├── Strawford-ExtraLight.woff2
-│   │   │   ├── Strawford-Light.otf
-│   │   │   ├── Strawford-Light.ttf
-│   │   │   ├── Strawford-Light.woff2
-│   │   │   ├── Strawford-Medium.otf
-│   │   │   ├── Strawford-Medium.ttf
-│   │   │   ├── Strawford-Medium.woff2
-│   │   │   ├── Strawford-Regular.eot
-│   │   │   ├── Strawford-Regular.otf
-│   │   │   ├── Strawford-Regular.ttf
-│   │   │   ├── Strawford-Regular.woff
-│   │   │   └── Strawford-Regular.woff2
-│   │   ├── gov
-│   │   │   └── delegatees
-│   │   │       ├── aiswarya.jpg
-│   │   │       ├── aiswarya@2x.jpg
-│   │   │       ├── aiswarya@3x.jpg
-│   │   │       ├── alex.jpg
-│   │   │       ├── alex@2x.jpg
-│   │   │       ├── alex@3x.jpg
-│   │   │       ├── ashis.jpg
-│   │   │       ├── ashis@2x.jpg
-│   │   │       ├── ashis@3x.jpg
-│   │   │       ├── ashwani.jpg
-│   │   │       ├── ashwani@2x.jpg
-│   │   │       ├── ashwani@3x.jpg
-│   │   │       ├── auryn.jpg
-│   │   │       ├── auryn@2x.jpg
-│   │   │       ├── auryn@3x.jpg
-│   │   │       ├── beler.jpg
-│   │   │       ├── beler@2x.jpg
-│   │   │       ├── beler@3x.jpg
-│   │   │       ├── defi_dad.jpg
-│   │   │       ├── defi_dad@2x.jpg
-│   │   │       ├── defi_dad@3x.jpg
-│   │   │       ├── imvijaygir.jpg
-│   │   │       ├── imvijaygir@2x.jpg
-│   │   │       ├── imvijaygir@3x.jpg
-│   │   │       ├── jaf.jpg
-│   │   │       ├── jaf@2x.jpg
-│   │   │       ├── jaf@3x.jpg
-│   │   │       ├── jude.jpg
-│   │   │       ├── jude@2x.jpg
-│   │   │       ├── jude@3x.jpg
-│   │   │       ├── krishna.jpg
-│   │   │       ├── krishna@2x.jpg
-│   │   │       ├── krishna@3x.jpg
-│   │   │       ├── pranshu.jpg
-│   │   │       ├── pranshu@2x.jpg
-│   │   │       ├── pranshu@3x.jpg
-│   │   │       ├── ray.jpg
-│   │   │       ├── ray@2x.jpg
-│   │   │       ├── ray@3x.jpg
-│   │   │       ├── robin_rrtx.jpg
-│   │   │       ├── robin_rrtx@2x.jpg
-│   │   │       ├── robin_rrtx@3x.jpg
-│   │   │       ├── zaryab.jpg
-│   │   │       ├── zaryab@2x.jpg
-│   │   │       └── zaryab@3x.jpg
-│   │   ├── icons
-│   │   │   ├── audio-icon.svg
-│   │   │   ├── audio-off-icon.svg
-│   │   │   ├── cube.png
-│   │   │   ├── end-call-icon.svg
-│   │   │   ├── greenBell.svg
-│   │   │   ├── index.js
-│   │   │   ├── pick-call-icon.svg
-│   │   │   ├── redBellSlash.png
-│   │   │   ├── swapIcon.svg
-│   │   │   ├── userCircleMinus.png
-│   │   │   ├── userCirclePlus.png
-│   │   │   ├── video-icon.svg
-│   │   │   ├── video-off-icon.svg
-│   │   │   └── videoCallIcon.svg
-│   │   ├── info.svg
-│   │   ├── login
-│   │   │   ├── ledgerDark.svg
-│   │   │   ├── ledgerLight.svg
-│   │   │   ├── metamaskDark.svg
-│   │   │   ├── metamaskLight.svg
-│   │   │   ├── portisDark.svg
-│   │   │   ├── portisLight.svg
-│   │   │   ├── trezorDark.svg
-│   │   │   ├── trezorLight.svg
-│   │   │   ├── wcDark.svg
-│   │   │   └── wcLight.svg
-│   │   ├── moon.svg
-│   │   ├── navigation
-│   │   │   ├── airdropIcon.svg
-│   │   │   ├── channelsOffIcon.svg
-│   │   │   ├── channelsOnIcon.svg
-│   │   │   ├── chatOffIcon.svg
-│   │   │   ├── chatOnIcon.svg
-│   │   │   ├── createChannelIcon.svg
-│   │   │   ├── faqIcon.svg
-│   │   │   ├── govOffIcon.svg
-│   │   │   ├── govOnIcon.svg
-│   │   │   ├── homeOffIcon.svg
-│   │   │   ├── homeOnIcon.svg
-│   │   │   ├── inboxOffIcon.svg
-│   │   │   ├── inboxOnIcon.svg
-│   │   │   ├── incentivesOffIcon.svg
-│   │   │   ├── incentivesOnIcon.svg
-│   │   │   ├── moreOffIcon.svg
-│   │   │   ├── moreOnIcon.svg
-│   │   │   ├── olvyIcon.svg
-│   │   │   ├── receiveNotifOffIcon.svg
-│   │   │   ├── receiveNotifOnIcon.svg
-│   │   │   ├── rockstarsIcon.svg
-│   │   │   ├── sendNotifOffIcon.svg
-│   │   │   ├── sendNotifOnIcon.svg
-│   │   │   ├── supportIcon.svg
-│   │   │   ├── walkthroughIcon.svg
-│   │   │   └── yieldIcon.svg
-│   │   ├── pages
-│   │   │   ├── darkbg.svg
-│   │   │   └── lightbg.svg
-│   │   ├── pushDark.svg
-│   │   ├── pushLight.svg
-│   │   ├── reusables
-│   │   │   └── spinners
-│   │   │       ├── checkmark.svg
-│   │   │       ├── error.svg
-│   │   │       ├── spinner.svg
-│   │   │       ├── warning.svg
-│   │   │       └── whitelist.svg
-│   │   ├── searchicon.svg
-│   │   └── sun.svg
-│   ├── components
-│   │   ├── AddDelegateModalContent.tsx
-│   │   ├── AddSubgraphModalContent.tsx
-│   │   ├── AliasProcessing.js
-│   │   ├── AliasSetup.js
-│   │   ├── AliasVerificationModal.js
-│   │   ├── AllNFTs.js
-│   │   ├── AllNFTsV2.js
-│   │   ├── Bell.js
-│   │   ├── BlockiesIdenticon.js
-│   │   ├── ChainIndicator.tsx
-│   │   ├── ChainsSelect.tsx
-│   │   ├── ChangeNetwork.tsx
-│   │   ├── ChannelDeactivateModalContent.tsx
-│   │   ├── ChannelDetails.js
-│   │   ├── ChannelInfo.tsx
-│   │   ├── ChannelLoading.tsx
-│   │   ├── ChannelReactivateModalContent.tsx
-│   │   ├── ChannelSettings.jsx
-│   │   ├── ChannelSettingsDropdown.tsx
-│   │   ├── ComingSoon.js
-│   │   ├── DelegateInfo.js
-│   │   ├── DisplayNotice.js
-│   │   ├── Dropdown.tsx
-│   │   ├── FaucetInfo.tsx
-│   │   ├── Faucets.js
-│   │   ├── InboxComponent.js
-│   │   ├── InfoTooltip.js
-│   │   ├── InitState.tsx
-│   │   ├── MetaInfoDisplayer.js
-│   │   ├── MobileNavButton.js
-│   │   ├── MyNFTs.js
-│   │   ├── MyNFTsV2.js
-│   │   ├── NavButton.js
-│   │   ├── NavigationButton.js
-│   │   ├── NavigationLoaderButton.js
-│   │   ├── NewTag.tsx
-│   │   ├── NotificationToast.js
-│   │   ├── Offchain.js
-│   │   ├── PoolCard.js
-│   │   ├── PreviewNotif.js
-│   │   ├── ProcessingInfo.js
-│   │   ├── Profile.tsx
-│   │   ├── ProfileModal.tsx
-│   │   ├── RemoveDelegateModalContent.tsx
-│   │   ├── SearchFilter.css
-│   │   ├── SearchFilter.jsx
-│   │   ├── SendNotifications.tsx
-│   │   ├── Settings.tsx
-│   │   ├── SharedStyling.js
-│   │   ├── ShowDelegates.jsx
-│   │   ├── StakingInfo.tsx
-│   │   ├── Switch.js
-│   │   ├── ThemeToggle.js
-│   │   ├── ThemeToggleStyle.css
-│   │   ├── TimerItem.js
-│   │   ├── TransferNFT.js
-│   │   ├── TransferNFTv2.js
-│   │   ├── UnderProgressModal.js
-│   │   ├── UniswapWidget.tsx
-│   │   ├── UpdateChannelTooltipContent.tsx
-│   │   ├── UploadLogo.jsx
-│   │   ├── VerifiedTooltipContent.tsx
-│   │   ├── VerifyAlias.js
-│   │   ├── ViewChannelItem.js
-│   │   ├── ViewDelegateeItem.js
-│   │   ├── ViewInfoItem.js
-│   │   ├── ViewNFTItem.js
-│   │   ├── ViewNFTsV2Item.js
-│   │   ├── ViewNotificationItem.js
-│   │   ├── blockies.js
-│   │   ├── chat
-│   │   │   ├── chatsnap
-│   │   │   │   └── ChatSnap.tsx
-│   │   │   └── w2wChat
-│   │   │       ├── Modal
-│   │   │       │   └── Modal.tsx
-│   │   │       ├── TypeBar
-│   │   │       │   ├── Files
-│   │   │       │   │   └── Files.tsx
-│   │   │       │   ├── Gifs
-│   │   │       │   │   └── GifPicker.tsx
-│   │   │       │   └── Typebar.tsx
-│   │   │       ├── chatBox
-│   │   │       │   ├── ChatBox.tsx
-│   │   │       │   └── HeaderMessage.tsx
-│   │   │       ├── chatQR
-│   │   │       │   ├── chatQR.tsx
-│   │   │       │   └── mobileView.tsx
-│   │   │       ├── chats
-│   │   │       │   ├── Chats.tsx
-│   │   │       │   └── MessageWrappers
-│   │   │       │       ├── ReceivedMessageWrapper.tsx
-│   │   │       │       └── SentMessageWrapper.tsx
-│   │   │       ├── groupChat
-│   │   │       │   ├── createGroup
-│   │   │       │   │   ├── AddWalletContent.tsx
-│   │   │       │   │   ├── CreateGroupModalContent.tsx
-│   │   │       │   │   ├── GroupDetailsContent.tsx
-│   │   │       │   │   ├── GroupModalHeader.tsx
-│   │   │       │   │   └── MemberListContainer.tsx
-│   │   │       │   └── groupInfo
-│   │   │       │       ├── PendingMembers.tsx
-│   │   │       │       ├── ProfileCard.tsx
-│   │   │       │       └── groupInfoModalContent.tsx
-│   │   │       ├── intentFeed
-│   │   │       │   └── IntentFeed.tsx
-│   │   │       ├── messageFeed
-│   │   │       │   └── MessageFeed.tsx
-│   │   │       ├── profile
-│   │   │       │   ├── Profile.tsx
-│   │   │       │   └── index.ts
-│   │   │       ├── searchBar
-│   │   │       │   └── SearchBar.tsx
-│   │   │       ├── stickers
-│   │   │       │   ├── stickerHelper.ts
-│   │   │       │   └── useFetchHook.tsx
-│   │   │       └── w2wIndexeddb.ts
-│   │   ├── reusables
-│   │   │   ├── SharedStylingV2.js
-│   │   │   ├── blurs
-│   │   │   │   ├── BlurBG.tsx
-│   │   │   │   └── BlurBGClouds.tsx
-│   │   │   ├── errorMessageLabel
-│   │   │   │   └── errorMessageLabel.tsx
-│   │   │   ├── loaders
-│   │   │   │   └── LoaderSpinner.tsx
-│   │   │   ├── progress
-│   │   │   │   └── ProgressBarUnit.tsx
-│   │   │   ├── spinners
-│   │   │   │   └── SpinnerUnit.tsx
-│   │   │   ├── toasts
-│   │   │   │   ├── NotifToastUI.tsx
-│   │   │   │   ├── toastController.tsx
-│   │   │   │   └── toastOverrides.css
-│   │   │   ├── toggle
-│   │   │   │   └── Toggle.tsx
-│   │   │   └── tooltip
-│   │   │       └── Tooltip.tsx
-│   │   └── video
-│   │       ├── CallButton.tsx
-│   │       ├── IncomingCall.tsx
-│   │       ├── IncomingCallModalContent.tsx
-│   │       ├── MediaToggleButton.tsx
-│   │       ├── OutgoingOngoingCall.tsx
-│   │       ├── UserInfo.tsx
-│   │       └── VideoPlayer.tsx
-│   ├── config
-│   │   ├── Globals.js
-│   │   ├── NavigationList.js
-│   │   ├── Themization.js
-│   │   ├── W2WConfig.ts
-│   │   ├── abis
-│   │   │   ├── BatchMintNFT.json
-│   │   │   ├── EPNS.json
-│   │   │   ├── ERC721.json
-│   │   │   ├── IERC721.json
-│   │   │   ├── IERC721Enumerable.json
-│   │   │   ├── IERC721Metadata.json
-│   │   │   ├── IERC721Receiver.json
-│   │   │   ├── IRockstar.json
-│   │   │   ├── MerkleDistributor.json
-│   │   │   ├── NFTRewards.json
-│   │   │   ├── NFTRewardsV2.json
-│   │   │   ├── Rockstar.json
-│   │   │   ├── RockstarV2.json
-│   │   │   ├── Staking.json
-│   │   │   ├── UniswapV2Router02.json
-│   │   │   ├── YieldFarm.json
-│   │   │   ├── dai.json
-│   │   │   ├── epnsCommunicator.json
-│   │   │   ├── epnsRopstenCommunicator.json
-│   │   │   ├── epnscore.json
-│   │   │   ├── erc20.json
-│   │   │   ├── ownable.json
-│   │   │   └── pushToken.json
-│   │   ├── airdrop
-│   │   │   └── claims.json
-│   │   ├── channelTuts.js
-│   │   ├── config-dev.js
-│   │   ├── config-general.js
-│   │   ├── config-localhost.js
-│   │   ├── config-prod.js
-│   │   ├── config-staging.js
-│   │   ├── custom.d.ts
-│   │   ├── delegatees.json
-│   │   └── index.js
-│   ├── connectors.ts
-│   ├── contexts
-│   │   ├── AppContext.tsx
-│   │   ├── ChatUserContext.tsx
-│   │   ├── NavigationContext.tsx
-│   │   ├── NavigationContext_old.js
-│   │   ├── NotificationContext.tsx
-│   │   └── VideoCallContext.tsx
-│   ├── firebase.js
-│   ├── helpers
-│   │   ├── AirdropHelper.ts
-│   │   ├── CaipHelper.ts
-│   │   ├── ChainHelper.ts
-│   │   ├── CryptoHelper.ts
-│   │   ├── EPNSCoreHelper.ts
-│   │   ├── GaslessHelper.ts
-│   │   ├── InputValidation.ts
-│   │   ├── IpfsHelper.ts
-│   │   ├── LogoSizeHelper.ts
-│   │   ├── NFTHelper.ts
-│   │   ├── PushTokenContractHelper.ts
-│   │   ├── RoutesHelper.ts
-│   │   ├── StyleHelper.ts
-│   │   ├── TimerHelper.ts
-│   │   ├── UtilityHelper.old.js
-│   │   ├── UtilityHelper.ts
-│   │   ├── ValidationHelper.ts
-│   │   ├── WithGasHelper.tsx
-│   │   ├── index.ts
-│   │   ├── videoCall
-│   │   │   └── sendVideoCallNotification.ts
-│   │   └── w2w
-│   │       ├── aes.ts
-│   │       ├── ceramic.ts
-│   │       ├── did.ts
-│   │       ├── groupChat.ts
-│   │       ├── index.ts
-│   │       ├── pgp.ts
-│   │       ├── twitter.ts
-│   │       ├── udResolver.ts
-│   │       └── user.ts
-│   ├── hooks
-│   │   ├── index.ts
-│   │   ├── useAsyncOperation.ts
-│   │   ├── useBrowserNotification.ts
-│   │   ├── useClickAway.ts
-│   │   ├── useDeviceWidthCheck.ts
-│   │   ├── useEagerConnect.ts
-│   │   ├── useInactiveListener.ts
-│   │   ├── useMediaQuery.ts
-│   │   ├── useModal.tsx
-│   │   ├── useModalBlur.tsx
-│   │   ├── usePeer.ts
-│   │   ├── useResolveWeb3Name.ts
-│   │   ├── useSDKSocket.ts
-│   │   └── useToast.tsx
-│   ├── index.css
-│   ├── index.js
-│   ├── modules
-│   │   ├── airdrop
-│   │   │   └── AirdropModule.tsx
-│   │   ├── channelDashboard
-│   │   │   ├── ChannelOwnerDashboard.tsx
-│   │   │   └── channelDashboardModule.tsx
-│   │   ├── channels
-│   │   │   └── ChannelsModule.tsx
-│   │   ├── chat
-│   │   │   └── ChatModule.tsx
-│   │   ├── createChannel
-│   │   │   ├── CreateChannelModule.js
-│   │   │   └── createChannel.css
-│   │   ├── editChannel
-│   │   │   ├── EditChannel.tsx
-│   │   │   ├── EditChannelForms.tsx
-│   │   │   └── uploadLogoModal.tsx
-│   │   ├── faq
-│   │   │   └── FaqModule.tsx
-│   │   ├── gov
-│   │   │   └── GovModule.tsx
-│   │   ├── inbox
-│   │   │   └── InboxModule.tsx
-│   │   ├── internal
-│   │   │   ├── DemoModalContent.tsx
-│   │   │   └── InternalDevModule.tsx
-│   │   ├── nft
-│   │   │   └── NftModule.tsx
-│   │   ├── receiveNotifs
-│   │   │   └── ReceiveNotifsModule.tsx
-│   │   ├── sendNotifs
-│   │   │   └── SendNotifsModule.tsx
-│   │   ├── support
-│   │   │   └── SupportModule.tsx
-│   │   ├── tutorial
-│   │   │   └── TutorialModule.tsx
-│   │   └── yield
-│   │       └── YieldFarmingModule.tsx
-│   ├── pages
-│   │   ├── AirdropPage.tsx
-│   │   ├── ChannelDashboardPage.js
-│   │   ├── ChannelsPage.js
-│   │   ├── ChatPage.tsx
-│   │   ├── ComingSoonPage.tsx
-│   │   ├── FAQPage.tsx
-│   │   ├── GovPage.tsx
-│   │   ├── InboxPage.js
-│   │   ├── InternalDevPage.tsx
-│   │   ├── NFTPage.js
-│   │   ├── NotAvailablePage.tsx
-│   │   ├── ReceiveNotifsPage.js
-│   │   ├── SendNotifsPage.tsx
-│   │   ├── SpamPage.js
-│   │   ├── SupportPage.tsx
-│   │   ├── TutorialPage.tsx
-│   │   └── YieldFarmingPage.js
-│   ├── primaries
-│   │   ├── AutoImageClipper.tsx
-│   │   ├── Bell.js
-│   │   ├── BlockiesIdenticon.js
-│   │   ├── DisplayNotice.js
-│   │   ├── ImageClipper.js
-│   │   ├── InfoTooltip.js
-│   │   ├── LoaderSpinner.tsx
-│   │   ├── NotificationToast.js
-│   │   ├── Profile.tsx
-│   │   ├── SharedModalComponents
-│   │   │   ├── ModalConfirmButton.tsx
-│   │   │   ├── ModalHeader.tsx
-│   │   │   └── ModalInput.tsx
-│   │   ├── SharedStyling.js
-│   │   └── blockies.js
-│   ├── react-app-env.d.ts
-│   ├── redux
-│   │   ├── slices
-│   │   │   ├── adminSlice.js
-│   │   │   ├── channelCreationSlice.js
-│   │   │   ├── channelSlice.js
-│   │   │   ├── contractSlice.js
-│   │   │   ├── notificationSlice.js
-│   │   │   ├── sendNotificationSlice.js
-│   │   │   ├── spamSlice.js
-│   │   │   └── userJourneySlice.js
-│   │   └── store.js
-│   ├── sections
-│   │   ├── chat
-│   │   │   ├── ChatBoxSection.tsx
-│   │   │   └── ChatSidebarSection.tsx
-│   │   └── video
-│   │       └── VideoCallSection.tsx
-│   ├── segments
-│   │   ├── Airdrop.tsx
-│   │   ├── ChannelCreationDashboard.js
-│   │   ├── ChannelDashboard.js
-│   │   ├── ChannelTutorial.js
-│   │   ├── ChatSidebar.tsx
-│   │   ├── CreateChannel.js
-│   │   ├── DeprecatedViewChannels.tsx
-│   │   ├── Feedbox.tsx
-│   │   ├── Info.tsx
-│   │   ├── Spambox.tsx
-│   │   ├── TimerComponent.js
-│   │   ├── ViewChannels.tsx
-│   │   ├── spam.tsx
-│   │   └── userJourneySteps.tsx
-│   ├── serviceWorker.js
-│   ├── services
-│   │   ├── alias
-│   │   │   ├── getAliasDetails.ts
-│   │   │   └── index.ts
-│   │   ├── channels
-│   │   │   ├── getChannelDelegates.ts
-│   │   │   ├── getChannels.ts
-│   │   │   ├── getChannelsSearch.ts
-│   │   │   └── index.ts
-│   │   ├── chats
-│   │   │   ├── getChats.ts
-│   │   │   ├── getGroup.ts
-│   │   │   ├── getGroupByChatId.ts
-│   │   │   ├── getGroupByName.ts
-│   │   │   └── index.ts
-│   │   ├── index.ts
-│   │   ├── ipfs
-│   │   │   ├── index.ts
-│   │   │   └── ipfsUpload.ts
-│   │   └── users
-│   │       ├── getUserDelegations.ts
-│   │       ├── getUserSubscriptions.ts
-│   │       └── index.ts
-│   ├── singletons
-│   │   ├── ChannelsDataStore.js
-│   │   ├── UsersDataStore.js
-│   │   └── YieldFarmingDataStore.js
-│   ├── structure
-│   │   ├── Header.tsx
-│   │   ├── MasterInterfacePage.tsx
-│   │   ├── MobileNavigation.tsx
-│   │   └── Navigation.tsx
-│   ├── templates
-│   │   ├── ClassTemplate.js
-│   │   └── FunctionalTemplate.js
-│   └── types
-│       ├── chat.ts
-│       └── context.ts
-├── tsconfig.json
-└── yarn.lock
-
-122 directories, 794 files
-```
-
----
-
-<img src="https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/ec559a9f6bfd399b82bb44393651661b08aaf7ba/icons/folder-src-open.svg" width="80" />
 
 ## 🧩 Modules
 
@@ -1778,13 +884,13 @@ repo
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 🖥 Installation
 
 1. Clone the push-dapp repository:
 ```sh
-git clone https://github.com/ethereum-push-notification-service/push-dapp
+git clone https://github.com/ethereum-push-notification-service/push-dapp.git
 ```
 
 2. Change to the project directory:
@@ -1794,46 +900,52 @@ cd push-dapp
 
 3. Install the dependencies:
 ```sh
-npm install
+yarn install
 ```
 
-### 🤖 Using push-dapp
+4. Open up localhost:3000 by
 
 ```sh
-npm run build && node dist/main.js
+yarn start
 ```
 
-### 🧪 Running Tests
+### Note 
 ```sh
-npm test
+Make sure to have the generate the `.env` file from the .env.sample file.
+You can set up on different environments depending on the REACT_APP_DEPLOY_ENV variable(DEV or STAGING or PROD). 
 ```
 
 
-## 🤝 Contributing
+## Resources
+- **[Website](https://push.org)** To checkout our Product.
+- **[Docs](https://docs.push.org/developers/)** For comprehensive documentation.
+- **[Blog](https://medium.com/push-protocol)** To learn more about our partners, new launches, etc.
+- **[Discord](discord.gg/pushprotocol)** for support and discussions with the community and the team.
+- **[GitHub](https://github.com/ethereum-push-notification-service)** for source code, project board, issues, and pull requests.
+- **[Twitter](https://twitter.com/pushprotocol)** for the latest updates on the product and published blogs.
 
-Contributions are always welcome! Please follow these steps:
-1. Fork the project repository. This creates a copy of the project on your account that you can modify without affecting the original project.
-2. Clone the forked repository to your local machine using a Git client like Git or GitHub Desktop.
-3. Create a new branch with a descriptive name (e.g., `new-feature-branch` or `bugfix-issue-123`).
-```sh
-git checkout -b new-feature-branch
-```
-4. Make changes to the project's codebase.
-5. Commit your changes to your local branch with a clear commit message that explains the changes you've made.
-```sh
-git commit -m 'Implemented new feature.'
-```
-6. Push your changes to your forked repository on GitHub using the following command
-```sh
-git push origin new-feature-branch
-```
-7. Create a pull request to the original repository.
-Open a new pull request to the original project repository. In the pull request, describe the changes you've made and why they're necessary.
-The project maintainers will review your changes and provide feedback or merge them into the main branch.
 
----
+## Contributing
 
----- old Readme----
+Push Protocol is an open source Project. We firmly believe in a completely transparent development process and value any contributions. We would love to have you as a member of the community, whether you are assisting us in bug fixes, suggesting new features, enhancing our documentation, or simply spreading the word. 
+
+- Bug Report: Please create a bug report if you encounter any errors or problems while utilising the Push Protocol.
+- Feature Request: Please submit a feature request if you have an idea or discover a capability that would make development simpler and more reliable.
+- Documentation Request: If you're reading the Push documentation and believe that we're missing something, please create a docs request.
+
+
+Read how you can contribute <a href="https://github.com/ethereum-push-notification-service/push-sdk/blob/main/contributing.md">HERE</a>
+
+Not sure where to start? Join our discord and we will help you get started!
+
+
+<a href="discord.gg/pushprotocol" title="Join Our Community"><img src="https://www.freepnglogos.com/uploads/discord-logo-png/playerunknown-battlegrounds-bgparty-15.png" width="200" alt="Discord" /></a>
+
+## License
+Check out our License <a href='https://github.com/ethereum-push-notification-service/push-sdk/blob/main/license-v1.md'>HERE </a>
+
+
+<!-- ---- old Readme----
 
 The dApp that powers Push Protocol
 
@@ -1853,5 +965,5 @@ Open up localhost:3000 by
 yarn start
 ```
 Make sure to have the generate the `.env` file from the .env.sample file.
-You can set up on different environments depending on the REACT_APP_DEPLOY_ENV variable(DEV or STAGING or PROD). 
+You can set up on different environments depending on the REACT_APP_DEPLOY_ENV variable(DEV or STAGING or PROD).  -->
 
