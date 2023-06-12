@@ -24,7 +24,7 @@
   </a>
 </h4>
 
----
+
 # Push Protocol dApp
 
 Welcome to the repository for the decentralized application (dApp) of the Push Protocol. This repository contains the frontend code that powers our user-facing application, enabling users to interact with the Push Protocol in a user-friendly and intuitive manner.
