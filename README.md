@@ -903,7 +903,7 @@ cd push-dapp
 yarn install
 ```
 
-4. Open up localhost:3000 by
+4. View on Localhost by:
 
 ```sh
 yarn start
