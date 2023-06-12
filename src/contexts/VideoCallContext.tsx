@@ -61,30 +61,17 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   // wrapper methods over the class methods
 
   const createWrapper = async (): Promise<void> => {
-    console.log('CREATE WRAPPER');
-    console.log('videoObjectRef.current', videoObjectRef.current);
-
-    try {
-      if (!data.local.stream) {
-        await videoObjectRef.current.create({ video: true, audio: true });
-      }
-    } catch (err) {
-      console.log('Error in getting local stream', err);
+    if (!data.local.stream) {
+      await videoObjectRef.current.create({ video: true, audio: true });
     }
   };
 
   const requestWrapper = ({ senderAddress, recipientAddress, chatId }: RequestWrapperOptionsType): void => {
-    try {
-      console.log('REQUEST WRAPPER');
-
-      videoObjectRef.current.request({
-        senderAddress,
-        recipientAddress,
-        chatId,
-      });
-    } catch (err) {
-      console.log('Error in requesting video call', err);
-    }
+    videoObjectRef.current.request({
+      senderAddress,
+      recipientAddress,
+      chatId,
+    });
   };
 
   const acceptRequestWrapper = ({
@@ -93,27 +80,19 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     chatId,
     signalData,
   }: AcceptRequestWrapperOptionsType): void => {
-    try {
-      console.log('ACCEPT REQUEST WRAPPER');
-
-      videoObjectRef.current.acceptRequest({
-        signalData: signalData ? signalData : data.meta.initiator.signal,
-        senderAddress,
-        recipientAddress,
-        chatId,
-      });
-    } catch (err) {
-      console.log('Error in requesting video call', err);
-    }
+    videoObjectRef.current.acceptRequest({
+      signalData: signalData ? signalData : data.meta.initiator.signal,
+      senderAddress,
+      recipientAddress,
+      chatId,
+    });
   };
 
   const connectWrapper = (videoCallMetaData: VideoCallMetaDataType) => {
-    console.log('CONNECT WRAPPER');
     videoObjectRef.current.connect({ signalData: videoCallMetaData.signalData });
   };
 
   const disconnectWrapper = () => {
-    console.log('DISCONNECT WRAPPER');
     videoObjectRef.current.disconnect();
   };
 
@@ -152,7 +131,10 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         incomingCall,
         toggleVideoWrapper,
         toggleAudioWrapper,
-        isVideoCallInitiator: videoObjectRef.current?.isInitiator,
+        isVideoCallInitiator:
+          data.incoming[0].status !== PushAPI.VideoCallStatus.UNINITIALIZED
+            ? videoObjectRef.current?.isInitiator
+            : () => {},
       }}
     >
       {children}

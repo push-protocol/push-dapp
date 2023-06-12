@@ -29,7 +29,7 @@ import { AppContext } from 'types/chat';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
-import EndToEnd from './EndToEnd';
+// import EndToEnd from './EndToEnd';
 
 type OutgoingOngoingCallType = {
   blockedLoading: BlockedLoadingI;

@@ -47,8 +47,6 @@ const VideoCallSection = () => {
         progressEnabled: false,
       });
 
-      console.log('VIDEO CALL SECTION USE EFFECT', 'LOCAL STREAM', videoCallData.local.stream);
-
       try {
         if (videoCallData.local.stream === null) {
           await createWrapper();

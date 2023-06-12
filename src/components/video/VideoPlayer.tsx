@@ -15,7 +15,6 @@ import { AppContext } from 'types/chat';
 import { AppContext as MainContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
 import { shortenText } from 'helpers/UtilityHelper';
-import Lock from 'assets/Lock.png';
 
 type VideoPlayerType = {
   localVideoStyles?: {};
@@ -51,12 +50,6 @@ const VideoPlayer = ({ localVideoStyles, incoming }: VideoPlayerType) => {
 
   return (
     <Container>
-      {
-        videoCallData.incoming[0].status === VideoCallStatus.CONNECTED && <EncryptionMessage>
-        <Image src={Lock} />
-        End-to-end encrypted
-      </EncryptionMessage>
-      }
       {videoCallData.local.stream && (
         <LocalVideoContainer
           incomingStyle={incoming}
@@ -371,25 +364,3 @@ const NameBadge = styled(SpanV2)`
   color: #fff;
   z-index: 3;
 `
-
-const Image = styled.img`
-  width: 10px;
-  margin-right: 12px;
-  position: relative;
-  bottom: -1px;
-`;
-
-const EncryptionMessage = styled.div`
-  box-sizing: border-box;
-  color: ${(props) => props.theme.default.secondaryColor};
-  max-width: 556px;
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 130%;
-  background-color: ${(props) => props.theme.default.bg};
-  padding: 10px 15px;
-  border-radius: 14px;
-  text-align: center;
-  margin-bottom: 10px;
-  max-height:37px;
-`;

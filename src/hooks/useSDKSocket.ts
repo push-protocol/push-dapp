@@ -59,17 +59,17 @@ export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHoo
               window.location.reload();
             } else if (videoCallMetaData.status === VideoCallStatus.RETRY_INITIALIZED && isVideoCallInitiator()) {
               requestWrapper({
-                senderAddress: videoCallMetaData.local.address,
-                recipientAddress: videoCallMetaData.incoming[0].address,
-                chatId: videoCallMetaData.meta.chatId,
+                senderAddress: videoCallMetaData.recipientAddress,
+                recipientAddress: videoCallMetaData.senderAddress,
+                chatId: videoCallMetaData.chatId,
                 retry: true,
               });
             } else if (videoCallMetaData.status === VideoCallStatus.RETRY_INITIALIZED && !isVideoCallInitiator()) {
               acceptRequestWrapper({
                 signalData: videoCallMetaData.signalData,
-                senderAddress: videoCallMetaData.local.address,
-                recipientAddress: videoCallMetaData.incoming[0].address,
-                chatId: videoCallMetaData.meta.chatId,
+                senderAddress: videoCallMetaData.recipientAddress,
+                recipientAddress: videoCallMetaData.senderAddress,
+                chatId: videoCallMetaData.chatId,
                 retry: true,
               });
             }
