@@ -4,10 +4,12 @@ import { useWeb3React } from '@web3-react/core';
 import { produce } from 'immer';
 
 import * as PushAPI from '@pushprotocol/restapi';
+import { VideoCallStatus } from '@pushprotocol/restapi';
 
 import { appConfig } from 'config';
 import { initVideoCallData } from '@pushprotocol/restapi/src/lib/video';
 import { ChatUserContext } from './ChatUserContext';
+
 
 interface RequestWrapperOptionsType {
   senderAddress: string;
@@ -34,11 +36,23 @@ const VideoCallContext = createContext(null);
 
 const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   const videoObjectRef = useRef(null);
-
+  const [isCallConnected,setIsCallConnected]=useState(false);
+  const [isCallAccepted,setIsCallAccepted]=useState(false);
   const { chainId, account, library } = useWeb3React();
   const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
 
   const [data, setData] = useState<PushAPI.VideoCallData>(initVideoCallData);
+
+  useEffect(()=>{
+    if(data.incoming[0].status===VideoCallStatus.CONNECTED){
+      setIsCallConnected(true);
+      setIsCallAccepted(false);
+    }
+    return ()=>{
+      setIsCallConnected(false);
+      setIsCallAccepted(false);
+    }
+  },[data.incoming[0].status])
 
   useEffect(() => {
     if (!library || !account || !connectedUser) return null;
@@ -131,6 +145,10 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         incomingCall,
         toggleVideoWrapper,
         toggleAudioWrapper,
+        isCallAccepted,
+        isCallConnected,
+        setIsCallAccepted,
+        setIsCallConnected,
         isVideoCallInitiator:
           data.incoming[0].status !== PushAPI.VideoCallStatus.UNINITIALIZED
             ? videoObjectRef.current?.isInitiator

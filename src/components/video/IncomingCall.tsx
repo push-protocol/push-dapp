@@ -27,7 +27,7 @@ import { appConfig } from 'config';
 
 const IncomingCall = () => {
   const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
-  const { videoCallData, acceptRequestWrapper, disconnectWrapper } = useContext(VideoCallContext);
+  const { videoCallData, acceptRequestWrapper, disconnectWrapper, setIsCallAccepted } = useContext(VideoCallContext);
   const [incomingCallUserData,setIncomingCallUserData]=useState<User|null>(null);
   const [isIncomingCallMinimized, setIsIncomingCallMinimized] = useState(false);
 
@@ -47,6 +47,7 @@ const IncomingCall = () => {
   };
 
   const answerCallHandler = async () => {
+    setIsCallAccepted(true);
     let createdUser;
     if (!connectedUser.publicKey) {
       createdUser = await createUserIfNecessary();

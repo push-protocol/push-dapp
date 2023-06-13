@@ -13,7 +13,7 @@ import { VideoCallStatus } from '@pushprotocol/restapi';
 
 // Create Video Call
 const VideoCallSection = () => {
-  const { videoCallData, createWrapper, requestWrapper, acceptRequestWrapper, disconnectWrapper } =
+  const { videoCallData, createWrapper, requestWrapper, acceptRequestWrapper, disconnectWrapper, isCallAccepted } =
     useContext(VideoCallContext);
   const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
 

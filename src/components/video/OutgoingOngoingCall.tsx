@@ -60,7 +60,7 @@ const callControlsImmersiveStyles = {
 };
 
 const OutgoingOngoingCall = ({ blockedLoading }: OutgoingOngoingCallType) => {
-  const { videoCallData, disconnectWrapper, toggleVideoWrapper, toggleAudioWrapper } = useContext(VideoCallContext);
+  const { videoCallData, disconnectWrapper, toggleVideoWrapper, toggleAudioWrapper,isCallAccepted } = useContext(VideoCallContext);
   const isImmersive = useDeviceWidthCheck(425) && videoCallData.incoming[0].status === VideoCallStatus.INITIALIZED;
   const { currentChat }: AppContext = useContext<AppContext>(Context);
 
@@ -74,7 +74,7 @@ const OutgoingOngoingCall = ({ blockedLoading }: OutgoingOngoingCallType) => {
           pfp={currentChat?.profilePicture}
           username={''}
           address={`${videoCallData.incoming[0].address}`}
-          status={'Calling'}
+          status='Calling'
           containerStyles={isImmersive ? userInfoImmersiveStyles : {}}
           fontColor={isImmersive ? 'white' : null}
         />
