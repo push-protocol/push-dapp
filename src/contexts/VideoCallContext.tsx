@@ -13,6 +13,7 @@ interface RequestWrapperOptionsType {
   senderAddress: string;
   recipientAddress: string;
   chatId: string;
+  retry?: boolean;
 }
 
 interface AcceptRequestWrapperOptionsType {
@@ -20,6 +21,7 @@ interface AcceptRequestWrapperOptionsType {
   recipientAddress: string;
   chatId: string;
   signalData?: any;
+  retry?: boolean;
 }
 
 interface VideoCallMetaDataType {
@@ -66,11 +68,12 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     }
   };
 
-  const requestWrapper = ({ senderAddress, recipientAddress, chatId }: RequestWrapperOptionsType): void => {
+  const requestWrapper = ({ senderAddress, recipientAddress, chatId, retry=false }: RequestWrapperOptionsType): void => {
     videoObjectRef.current.request({
       senderAddress,
       recipientAddress,
       chatId,
+      retry
     });
   };
 
@@ -79,12 +82,14 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     recipientAddress,
     chatId,
     signalData,
+    retry=false
   }: AcceptRequestWrapperOptionsType): void => {
     videoObjectRef.current.acceptRequest({
       signalData: signalData ? signalData : data.meta.initiator.signal,
       senderAddress,
       recipientAddress,
       chatId,
+      retry
     });
   };
 
