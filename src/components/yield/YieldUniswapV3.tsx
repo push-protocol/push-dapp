@@ -306,7 +306,7 @@ const YieldUniswapV3 = ({
                             <B>
                                 {Math.min(lpPoolStats?.currentEpochPUSH, lpPoolStats?.totalEpochPUSH).toString()}
                                 /
-                                {lpPoolStats?.totalEpochPUSH}
+                                {(lpPoolStats?.totalEpochPUSH).toString()}
                             </B>
                         </>
                     ) : (
