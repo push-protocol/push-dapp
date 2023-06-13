@@ -47,7 +47,7 @@ export default class YieldFarmingDataStoreV2 {
     genesisEpochAmountPUSH: GENESIS_EPOCH_AMOUNT_PUSH,
     deprecationPerEpochPUSH: 100,
     genesisEpochAmountLP: GENESIS_EPOCH_AMOUNT_LP,
-    deprecationPerEpochLP: 300,
+    deprecationPerEpochLP: 900,
 
     annualPushReward: PUSH_ANNUAL_REWARD,
 
@@ -192,6 +192,7 @@ export default class YieldFarmingDataStoreV2 {
   getPUSHPoolStats = async (provider) => {
     return new Promise(async (resolve, reject) => {
       const pushCoreV2 = this.state.pushCoreV2;
+      console.log("pushCore",pushCoreV2)
       const pushToken = this.state.pushToken;
       const currentEpoch = await this.currentEpochCalculation(provider);
 
@@ -205,14 +206,15 @@ export default class YieldFarmingDataStoreV2 {
       const currentReward = await this.getEpochRewards(pushCoreV2, PROTOCOL_POOL_FEES, currentEpoch);
 
       //get Total staked Amount
-      const totalStakedAmount = balanceOfContract.sub(CHANNEL_POOL_FUNDS).sub(PROTOCOL_POOL_FEES);
+      // const totalStakedAmount = balanceOfContract.sub(CHANNEL_POOL_FUNDS).sub(PROTOCOL_POOL_FEES);
+      const StakedAmount = await pushCoreV2.totalStakedAmount();
 
-      const stakingAPR = this.calcPushStakingAPR(totalStakedAmount);
+      const stakingAPR = this.calcPushStakingAPR(StakedAmount);
 
       resolve({
         currentEpoch,
         currentReward,
-        totalStakedAmount,
+        StakedAmount,
         stakingAPR,
       });
     });
@@ -252,23 +254,24 @@ export default class YieldFarmingDataStoreV2 {
         lastClaimedEpoch = lastClaimedEpoch.toNumber();
 
         let totalClaimableReward = 0;
+        // let lengthToLoop = 0;
 
-        //we can just see the last staked block so the loop will be small
+        // if(computationalEpochId == lastClaimedEpoch){
+        //   lengthToLoop = (computationalEpochId - lastClaimedEpoch);
+        // }else{
+        //   lengthToLoop = (computationalEpochId - lastClaimedEpoch) + 1;
+        // }
         
-
-        //TODO: Here below one thing is left to 
-        // If the user claims reward at some block then the epoch Length will decrease.
-
-
-        const lengthToLoop = (computationalEpochId - lastClaimedEpoch) + 1;
-        console.log("Epoch DIfferences",lastClaimedEpoch,computationalEpochId,lengthToLoop);
+        let lengthToLoop = (computationalEpochId - lastClaimedEpoch);
+       
+        console.log("PUSH Epoch DIfferences",lastClaimedEpoch,computationalEpochId,lengthToLoop);
 
         const epochsToCondider = Array.from({ length: lengthToLoop }, (_, i) => i + lastClaimedEpoch);
 
         const userRewards = await Promise.all(
           epochsToCondider.map((epochId) => {
             return pushCoreV2.calculateEpochRewards(userAddress, epochId).then((reward) => {
-              console.log('Epoch ID', epochId, 'Reward in this epoch', reward, tokenBNtoNumber(reward));
+              console.log('Push: Epoch ID', epochId, 'Reward in this epoch', reward, tokenBNtoNumber(reward));
               return reward;
             });
           })

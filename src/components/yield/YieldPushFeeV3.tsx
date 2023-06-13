@@ -378,7 +378,7 @@ const YieldPushFeeV3 = ({
                                     fontWeight="600"
                                     letterSpacing="-0.03em"
                                 >
-                                    {formatTokens(PUSHPoolstats?.totalStakedAmount)} PUSH
+                                    {formatTokens(PUSHPoolstats?.StakedAmount)} PUSH
                                 </StakedAmount>
                             </>
                         ) : (
@@ -525,7 +525,7 @@ const YieldPushFeeV3 = ({
                             <EmptyButton onClick={withdrawAmountTokenFarmAutomatic} style={{ margin: "0px 10px 0px 0px" }}>
                                 {txInProgressWithdraw ?
                                     (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
-                                    "Unstake PUSH/WETH"
+                                    "Unstake PUSH"
                                 }
                             </EmptyButton>
                             <EmptyButton onClick={massClaimRewardsTokensAll}>

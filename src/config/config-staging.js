@@ -96,11 +96,26 @@ export const addresses = {
   NFTRewardsV2: "0xdc66567a990B7fa10730459537620857c9e03287", //mainnet address
   // pushCoreV2:'0xb4B1512ECdd9Bb21Bb41d888f4Cac22A39bab1D2', //for new staking V2 Push Token
   // pushCoreV2:'0x44C60743E93E51509b9B37C9048fF780a4B222E1', //for new staking V2 Push Token
-  pushCoreV2:'0x7a6bdCaF08fC2fedA583646054FA4429C0266eD7', //for new staking V2 Push Token very latest
-  // stakingV2:"0x65Cd2765997E779218b3F6d3395fd92F951e692B",// for new staking V2 Contract on staging
-  stakingV2:"0xb117C60C213581672F376180f183EBe4be981Dc0",// for new staking V2 Contract on staging
-  // yieldFarmLP: "0x073ce8E0650FfF2BA1D468dB700EDC97ca604D25", // for new staking V2 UNI LP token 
-  yieldFarmLP: "0x8280196B9836d259Fd4304e86cf6CB83Ce0C0c2E", // for new staking V2 UNI LP token 
+  // pushCoreV2:'0x7a6bdCaF08fC2fedA583646054FA4429C0266eD7', //for new staking V2 Push Token very latest
+
+
+
+  //this below one is the new one pushCoreV2 address
+  pushCoreV2:'0xC09B14263217F32c1Ce2D71fe231d83A3CE0301b', 
+
+
+  // this below is of 21 days epoch but has wrong distributed amount
+  // stakingV2:"0x65Cd2765997E779218b3F6d3395fd92F951e692B",
+  // yieldFarmLP: "0x073ce8E0650FfF2BA1D468dB700EDC97ca604D25", 
+ 
+  // this one is of 1 hour epoch duration for QA on goerli
+  // stakingV2:"0xb117C60C213581672F376180f183EBe4be981Dc0",
+  // yieldFarmLP: "0x8280196B9836d259Fd4304e86cf6CB83Ce0C0c2E", 
+
+  //this below is for 21 days epoch with 900 depAmount
+  stakingV2:"0x9d65129223451fbd58fc299C635Cd919BaF2564C",
+  yieldFarmLP: "0x9E0c685752E55CC01D1302Dc1cA71cCe7Dd0958a",
+
 }
 
 export const CHAIN_DETAILS = {
