@@ -10,7 +10,7 @@ import LoaderSpinner, {
   LOADER_TYPE,
   PROGRESS_POSITIONING,
 } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemHV2, SectionV2 } from 'components/reusables/SharedStylingV2';
+import { ImageV2, ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import UserInfo from 'components/video/UserInfo';
 import VideoPlayer from 'components/video/VideoPlayer';
 import { VideoCallContext } from 'contexts/VideoCallContext';
@@ -26,6 +26,7 @@ import MediaToggleButton from './MediaToggleButton';
 import { VideoCallStatus } from '@pushprotocol/restapi';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext } from 'types/chat';
+import { OnConnectingVideoCall } from './OnConnectingVideoCall';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -60,28 +61,40 @@ const callControlsImmersiveStyles = {
 };
 
 const OutgoingOngoingCall = ({ blockedLoading }: OutgoingOngoingCallType) => {
-  const { videoCallData, disconnectWrapper, toggleVideoWrapper, toggleAudioWrapper } = useContext(VideoCallContext);
+  const {
+    videoCallData,
+    disconnectWrapper,
+    toggleVideoWrapper,
+    toggleAudioWrapper,
+    isCallAccepted,
+  } = useContext(VideoCallContext);
   const isImmersive = useDeviceWidthCheck(425) && videoCallData.incoming[0].status === VideoCallStatus.INITIALIZED;
   const { currentChat }: AppContext = useContext<AppContext>(Context);
 
   return (
     <Container>
       {/* <EndToEnd /> */}
-      {/* remote user info */}
-      {videoCallData.incoming[0].status !== VideoCallStatus.CONNECTED && (
-        <UserInfo
-          // TODO: make this dynamic with remote user's info
-          pfp={currentChat?.profilePicture}
-          username={''}
-          address={`${videoCallData.incoming[0].address}`}
-          status={'Calling'}
-          containerStyles={isImmersive ? userInfoImmersiveStyles : {}}
-          fontColor={isImmersive ? 'white' : null}
-        />
-      )}
+      {isCallAccepted ? (
+        <OnConnectingVideoCall/>
+      ) : (
+        <>
+          {/* remote user info */}
+          {videoCallData.incoming[0].status !== VideoCallStatus.CONNECTED && (
+            <UserInfo
+              // TODO: make this dynamic with remote user's info
+              pfp={currentChat?.profilePicture}
+              username={''}
+              address={`${videoCallData.incoming[0].address}`}
+              status="Calling"
+              containerStyles={isImmersive ? userInfoImmersiveStyles : {}}
+              fontColor={isImmersive ? 'white' : null}
+            />
+          )}
 
-      {/* display the local and incoming video */}
-      <VideoPlayer localVideoStyles={isImmersive ? playerImmersiveStyles : {}} />
+          {/* display the local and incoming video */}
+          <VideoPlayer localVideoStyles={isImmersive ? playerImmersiveStyles : {}} />
+        </>
+      )}
 
       {/* display video call controls */}
       <VideoCallControlsContainer style={isImmersive ? callControlsImmersiveStyles : {}}>

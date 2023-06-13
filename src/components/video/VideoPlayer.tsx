@@ -15,20 +15,21 @@ import { AppContext } from 'types/chat';
 import { AppContext as MainContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
 import { shortenText } from 'helpers/UtilityHelper';
+import Lock from 'assets/chat/group-chat/lockdark.svg'
 
 type VideoPlayerType = {
   localVideoStyles?: {};
-  incoming?: boolean
+  incoming?: boolean;
 };
 
 const VideoPlayer = ({ localVideoStyles, incoming }: VideoPlayerType) => {
   const localVideoRef = useRef(null);
   const incomingVideoRef = useRef(null);
-  const { videoCallData } = useContext(VideoCallContext);
+  const { videoCallData, isCallAccepted } = useContext(VideoCallContext);
   const { connectedUser } = useContext(ChatUserContext);
   const { currentChat }: AppContext = useContext<AppContext>(Context);
   const { web3NameList }: AppContextType = React.useContext(MainContext);
-  const web3Name = web3NameList[videoCallData.incoming[0].address]
+  const web3Name = web3NameList[videoCallData.incoming[0].address];
   const theme = useTheme();
 
   useEffect(() => {
@@ -46,10 +47,19 @@ const VideoPlayer = ({ localVideoStyles, incoming }: VideoPlayerType) => {
       video.play();
     }
   }, [incomingVideoRef, videoCallData.incoming[0].stream]);
-  const shortnedAddress = videoCallData.incoming[0].address.substring(0, 6) + '...' + videoCallData.incoming[0].address.substring(videoCallData.incoming[0].address.length - 6);
+  const shortnedAddress =
+    videoCallData.incoming[0].address.substring(0, 6) +
+    '...' +
+    videoCallData.incoming[0].address.substring(videoCallData.incoming[0].address.length - 6);
 
   return (
     <Container>
+      {videoCallData.incoming[0].status === VideoCallStatus.CONNECTED && (
+        <EncryptionMessage>
+          <Image src={Lock} />
+          End-to-end encrypted
+        </EncryptionMessage>
+      )}
       {videoCallData.local.stream && (
         <LocalVideoContainer
           incomingStyle={incoming}
@@ -62,15 +72,17 @@ const VideoPlayer = ({ localVideoStyles, incoming }: VideoPlayerType) => {
           }
           style={localVideoStyles}
         >
-          <LocalVideo
-            ref={localVideoRef}
-            muted
-            className={
-              videoCallData.incoming[0].status === VideoCallStatus.CONNECTED
-                ? 'connectionAccepted'
-                : 'connectionNotAccepted'
-            }
-          />
+          
+            <LocalVideo
+              ref={localVideoRef}
+              muted
+              className={
+                videoCallData.incoming[0].status === VideoCallStatus.CONNECTED
+                  ? 'connectionAccepted'
+                  : 'connectionNotAccepted'
+              }
+            />
+          
           {!videoCallData.local.stream.getVideoTracks()[0].enabled ? (
             <VideoDisabledContainer>
               <PfpContainerMini>
@@ -87,12 +99,15 @@ const VideoPlayer = ({ localVideoStyles, incoming }: VideoPlayerType) => {
         </LocalVideoContainer>
       )}
       {videoCallData.incoming[0].status === VideoCallStatus.CONNECTED && (
-        <IncomingVideoContainer background={videoCallData.incoming[0].video ? "transparent" : theme.chat.snapFocusBg}>
+        <IncomingVideoContainer background={videoCallData.incoming[0].video ? 'transparent' : theme.chat.snapFocusBg}>
           <IncomingVideoInnerContainer
-            width={videoCallData.incoming[0].video ? "auto" : "100%"}
-            minHeight={videoCallData.incoming[0].video ? "auto" : "100%"}
+            width={videoCallData.incoming[0].video ? 'auto' : '100%'}
+            minHeight={videoCallData.incoming[0].video ? 'auto' : '100%'}
           >
-            <IncomingVideo ref={incomingVideoRef} display={videoCallData.incoming[0].video ? 'block' : 'none'} />
+            <IncomingVideo
+              ref={incomingVideoRef}
+              display={videoCallData.incoming[0].video ? 'block' : 'none'}
+            />
 
             {!videoCallData.incoming[0].video && (
               <VideoDisabledContainer className="incomingCallvideoOff">
@@ -108,11 +123,9 @@ const VideoPlayer = ({ localVideoStyles, incoming }: VideoPlayerType) => {
               </VideoDisabledContainer>
             )}
 
-          <ProfileInfoMini position="absolute">
-            <NameBadge>
-              {web3Name ? web3Name : shortenText(videoCallData.incoming[0].address,5)}
-            </NameBadge>
-          </ProfileInfoMini>
+            <ProfileInfoMini position="absolute">
+              <NameBadge>{web3Name ? web3Name : shortenText(videoCallData.incoming[0].address, 5)}</NameBadge>
+            </ProfileInfoMini>
           </IncomingVideoInnerContainer>
         </IncomingVideoContainer>
       )}
@@ -124,7 +137,7 @@ export default VideoPlayer;
 const Container = styled(ItemVV2)`
   overflow: hidden;
   margin: 2% auto 1% auto;
-  width:100%;
+  width: 100%;
 `;
 
 const LocalVideoContainer = styled(ItemVV2)`
@@ -132,44 +145,42 @@ const LocalVideoContainer = styled(ItemVV2)`
   height: 100%;
   border-radius: 34px;
   z-index: 2;
-  // aspect-ratio: ${props => props.incomingStyle || '16/9'};
-
+  // aspect-ratio: ${(props) => props.incomingStyle || '16/9'};
 
   // @media ${device.laptopL} {
-  //   aspect-ratio: ${props => props.incomingStyle || '16/9'};
+  //   aspect-ratio: ${(props) => props.incomingStyle || '16/9'};
   // }
 
   // @media (max-width: 1239px) {
-  //   aspect-ratio: ${props => props.incomingStyle || '4/3'};
+  //   aspect-ratio: ${(props) => props.incomingStyle || '4/3'};
   // }
 
   // @media ${device.laptop} {
-  //   aspect-ratio: ${props => props.incomingStyle || '4/3'};
+  //   aspect-ratio: ${(props) => props.incomingStyle || '4/3'};
   // }
-  
+
   // @media (max-width: 820px) {
-  //   aspect-ratio: ${props => props.incomingStyle || '3/4'};
+  //   aspect-ratio: ${(props) => props.incomingStyle || '3/4'};
   // }
 
   // @media (max-width: 768px) {
-  //   aspect-ratio: ${props => props.incomingStyle || '3/4'};
+  //   aspect-ratio: ${(props) => props.incomingStyle || '3/4'};
   // }
   // @media ${device.mobileL} {
   //   height: 60%;
-  //   aspect-ratio: ${props => props.incomingStyle || '9/20'};
+  //   aspect-ratio: ${(props) => props.incomingStyle || '9/20'};
   // }
   // @media ${device.mobileM} {
-  //   aspect-ratio: ${props => props.incomingStyle || '9/23'};
+  //   aspect-ratio: ${(props) => props.incomingStyle || '9/23'};
   // }
   // @media ${device.mobileS} {
-  //   aspect-ratio: ${props => props.incomingStyle || '9/27'};
+  //   aspect-ratio: ${(props) => props.incomingStyle || '9/27'};
   // }
 
-  &.connectionNotAccepted{
-    @media (min-width: 1024px){
+  &.connectionNotAccepted {
+    @media (min-width: 1024px) {
       aspect-ratio: 16/9;
     }
-
   }
 
   &.connectionAccepted {
@@ -180,7 +191,7 @@ const LocalVideoContainer = styled(ItemVV2)`
     width: auto;
     right: 8px;
     bottom: 8px;
-   
+
     @media ${device.laptop} {
       right: 8px;
     }
@@ -190,8 +201,7 @@ const LocalVideoContainer = styled(ItemVV2)`
     }
     @media ${device.mobileL} {
       border-radius: 16px;
-      aspect-ratio: ${props => props.incomingStyle || '4/3'};
-
+      aspect-ratio: ${(props) => props.incomingStyle || '4/3'};
     }
 
     &.videoOff {
@@ -218,11 +228,11 @@ const LocalVideo = styled.video`
       width: auto;
     }
   }
-  &.connectionNotAccepted{
-    @media (min-width: 1024px){
+  &.connectionNotAccepted {
+    @media (min-width: 1024px) {
       aspect-ratio: 16/9;
-      height:100%;
-      width:auto;
+      height: 100%;
+      width: auto;
     }
   }
 `;
@@ -231,30 +241,28 @@ const IncomingVideo = styled.video`
   border-radius: 34px;
   width: auto;
   height: 100%;
-  display:${props => props.display};
- 
+  display: ${(props) => props.display};
+
   @media (max-width: 820px) {
     width: 100%;
     height: auto;
     object-fit: cover;
-
   }
   @media (max-width: 425px) {
     border-radius: 20px;
   }
 `;
 
-
 const IncomingVideoContainer = styled(ItemVV2)`
   overflow: hidden;
   /* height: 20vh;
   max-height: 62vh;
   width: 95%; */
-  background-color: ${props => props.background};
+  background-color: ${(props) => props.background};
   /* left: 2.5%; */
   border-radius: 34px;
   z-index: 1;
-  width:auto;
+  width: auto;
 
   /* @media (max-height: 800px) {
     max-height: 50vh;
@@ -265,17 +273,17 @@ const IncomingVideoContainer = styled(ItemVV2)`
 `;
 
 const IncomingVideoInnerContainer = styled.div`
-  width: ${props => props.width};
+  width: ${(props) => props.width};
   min-height: 100%;
   max-height: 100%;
   border-radius: 34px;
   position: relative;
-  @media (max-width:820px){
+  @media (max-width: 820px) {
     width: 100%;
-    min-height:${props => props.minHeight};
+    min-height: ${(props) => props.minHeight};
     max-height: 100%;
   }
-`
+`;
 
 const IncomingEnsContainer = styled(ItemVV2)`
   position: absolute;
@@ -363,4 +371,26 @@ const NameBadge = styled(SpanV2)`
   background: rgba(46, 49, 59, 0.75);
   color: #fff;
   z-index: 3;
-`
+`;
+
+const Image = styled.img`
+  width: 10px;
+  margin-right: 12px;
+  position: relative;
+  bottom: -1px;
+`;
+
+const EncryptionMessage = styled.div`
+  box-sizing: border-box;
+  color: ${(props) => props.theme.default.secondaryColor};
+  max-width: 556px;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 130%;
+  background-color: ${(props) => props.theme.default.bg};
+  padding: 10px 15px;
+  border-radius: 14px;
+  text-align: center;
+  margin-bottom: 10px;
+  max-height: 37px;
+`;

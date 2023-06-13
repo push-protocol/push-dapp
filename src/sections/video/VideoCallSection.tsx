@@ -13,7 +13,7 @@ import { VideoCallStatus } from '@pushprotocol/restapi';
 
 // Create Video Call
 const VideoCallSection = () => {
-  const { videoCallData, createWrapper, requestWrapper, acceptRequestWrapper, disconnectWrapper } =
+  const { videoCallData, createWrapper, requestWrapper, acceptRequestWrapper, disconnectWrapper, isCallAccepted } =
     useContext(VideoCallContext);
   const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
 
@@ -85,7 +85,7 @@ const VideoCallSection = () => {
 
   // Incoming call UI
   if (videoCallData.incoming[0].status === VideoCallStatus.RECEIVED) {
-    return <IncomingCall />;
+    return isCallAccepted ? <OutgoingOngoingCall blockedLoading={blockedLoading}/> : <IncomingCall />;
   }
 
   // Outgoing & Ongoing call UI

@@ -18,7 +18,6 @@ import CallButton from './CallButton';
 import IncomingCallModalContent from './IncomingCallModalContent';
 import UserInfo from './UserInfo';
 import VideoPlayer from './VideoPlayer';
-import { User } from 'types/chat';
 
 // Internal Configs
 import { device } from 'config/Globals';
@@ -27,8 +26,7 @@ import { appConfig } from 'config';
 
 const IncomingCall = () => {
   const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
-  const { videoCallData, acceptRequestWrapper, disconnectWrapper } = useContext(VideoCallContext);
-  const [incomingCallUserData,setIncomingCallUserData]=useState<User|null>(null);
+  const { videoCallData, acceptRequestWrapper, disconnectWrapper, setIsCallAccepted, isCallAccepted,setIncomingCallUserData,incomingCallUserData } = useContext(VideoCallContext);
   const [isIncomingCallMinimized, setIsIncomingCallMinimized] = useState(false);
 
   // for conditional css
@@ -47,6 +45,7 @@ const IncomingCall = () => {
   };
 
   const answerCallHandler = async () => {
+    setIsCallAccepted(true);
     let createdUser;
     if (!connectedUser.publicKey) {
       createdUser = await createUserIfNecessary();
@@ -61,7 +60,9 @@ const IncomingCall = () => {
   };
 
   return (
-    <Container>
+    <>
+    {
+      !isCallAccepted &&<Container>
       <IncomingCallModalContent isIncomingCallMinimized={isIncomingCallMinimized}>
         {!isIncomingCallMinimized && (
           <CrossIconContainer>
@@ -114,6 +115,9 @@ const IncomingCall = () => {
         </VideoCallControlsContainer>
       </IncomingCallModalContent>
     </Container>
+    }
+    </>
+    
   );
 };
 
