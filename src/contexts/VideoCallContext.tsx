@@ -9,6 +9,7 @@ import { VideoCallStatus } from '@pushprotocol/restapi';
 import { appConfig } from 'config';
 import { initVideoCallData } from '@pushprotocol/restapi/src/lib/video';
 import { ChatUserContext } from './ChatUserContext';
+import { User } from 'types/chat';
 
 
 interface RequestWrapperOptionsType {
@@ -38,6 +39,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   const videoObjectRef = useRef(null);
   const [isCallConnected,setIsCallConnected]=useState(false);
   const [isCallAccepted,setIsCallAccepted]=useState(false);
+  const [incomingCallUserData,setIncomingCallUserData]=useState<User|null>(null);
   const { chainId, account, library } = useWeb3React();
   const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
 
@@ -143,6 +145,8 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         connectWrapper,
         disconnectWrapper,
         incomingCall,
+        incomingCallUserData,
+        setIncomingCallUserData,
         toggleVideoWrapper,
         toggleAudioWrapper,
         isCallAccepted,

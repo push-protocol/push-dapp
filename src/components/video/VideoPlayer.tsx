@@ -15,6 +15,7 @@ import { AppContext } from 'types/chat';
 import { AppContext as MainContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
 import { shortenText } from 'helpers/UtilityHelper';
+import Lock from 'assets/chat/group-chat/lockdark.svg'
 
 type VideoPlayerType = {
   localVideoStyles?: {};

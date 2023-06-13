@@ -85,7 +85,7 @@ const VideoCallSection = () => {
 
   // Incoming call UI
   if (videoCallData.incoming[0].status === VideoCallStatus.RECEIVED) {
-    return <IncomingCall />;
+    return isCallAccepted ? <OutgoingOngoingCall blockedLoading={blockedLoading}/> : <IncomingCall />;
   }
 
   // Outgoing & Ongoing call UI
