@@ -127,6 +127,16 @@ const YieldUniswapV3 = ({
             return;
         }
 
+        if (userDataLP?.totalAvailableReward == 0) {
+            uniswapV2Toast.showMessageToast({
+                toastTitle: 'Error',
+                toastMessage: `Nothing to Claim!`,
+                toastType: 'ERROR',
+                getToastIcon: (size) => <MdError size={size} color="red" />,
+            });
+            return;
+        }
+
         if (!lpPoolStats.currentEpochPUSH || lpPoolStats.currentEpochPUSH == 1) {
             uniswapV2Toast.showMessageToast({
                 toastTitle: 'Error',
