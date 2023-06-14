@@ -98,9 +98,9 @@ export const addresses = {
   // pushCoreV2:'0x44C60743E93E51509b9B37C9048fF780a4B222E1', //for new staking V2 Push Token
   pushCoreV2:'0x7a6bdCaF08fC2fedA583646054FA4429C0266eD7', //for new staking V2 Push Token very latest
   // stakingV2:"0x65Cd2765997E779218b3F6d3395fd92F951e692B",// for new staking V2 Contract on staging
-  stakingV2:"0xb117C60C213581672F376180f183EBe4be981Dc0",// for new staking V2 Contract on staging
+  stakingV2:"0x8ba0285744970ad46d9e24960272c39b02aee6db",// for new staking V2 Contract on staging
   // yieldFarmLP: "0x073ce8E0650FfF2BA1D468dB700EDC97ca604D25", // for new staking V2 UNI LP token 
-  yieldFarmLP: "0x8280196B9836d259Fd4304e86cf6CB83Ce0C0c2E", // for new staking V2 UNI LP token 
+  yieldFarmLP: "0x8c3d971e100eaccb7dc4e68f147da6ecc6b422db", // for new staking V2 UNI LP token 
 }
 
 export const CHAIN_DETAILS = {
