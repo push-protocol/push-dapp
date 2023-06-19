@@ -1,955 +1,52 @@
-# Push (EPNS) dApp Mono Repo
-
-<div align="center">
 <h1 align="center">
-<br>
-Push dApp Mono Repo
+    <a href="https://push.org/#gh-light-mode-only">
+    <img width='20%' height='10%' src="https://res.cloudinary.com/drdjegqln/image/upload/v1686227557/Push-Logo-Standard-Dark_xap7z5.png">
+    </a>
+    <a href="https://push.org/#gh-dark-mode-only">
+    <img width='20%' height='10%' src="https://res.cloudinary.com/drdjegqln/image/upload/v1686227558/Push-Logo-Standard-White_dlvapc.png">
+    </a>
 </h1>
 
-</div>
+<p align="center">
+  <i align="center">Push Protocol is a web3 communication network, enabling cross-chain notifications and messaging for dapps, wallets, and services.🚀</i>
+</p>
+
+<h4 align="center">
+
+  <a href="https://discord.gg/pushprotocol">
+    <img src="https://img.shields.io/badge/discord-7289da.svg?style=flat-square" alt="discord">
+  </a>
+  <a href="https://twitter.com/pushprotocol">
+    <img src="https://img.shields.io/badge/twitter-18a1d6.svg?style=flat-square" alt="twitter">
+  </a>
+  <a href="https://www.youtube.com/@pushprotocol">
+    <img src="https://img.shields.io/badge/youtube-d95652.svg?style=flat-square&" alt="youtube">
+  </a>
+</h4>
+
+
+# Push Protocol dApp
+
+Welcome to the repository for the decentralized application (dApp) of the Push Protocol. This repository contains the frontend code that powers our user-facing application, enabling users to interact with the Push Protocol in a user-friendly and intuitive manner.
+
+The Push Protocol is a web3 communication protocol that enables cross-chain notifications and messaging for decentralized applications (dApps), wallets, and services. Our dApp is the gateway for users to access and utilize these functionalities.
+
+In this repository, you will find the code that powers various aspects of the Push dApp, from user interface components to state management and interaction with blockchain networks. We have built our dApp to be responsive, user-friendly, and to provide a seamless experience for interacting with the Push Protocol.
+
+We invite you to explore, contribute, and help us build the future of web3 communication. Your contributions will help us improve the user experience and add new features to our dApp, making web3 communication more accessible and efficient for everyone.
+
+
+
+
 ---
 
 ## 📚 Table of Contents
-- [📚 Table of Contents](#-table-of-contents)
-- [📂 Project Structure](#-project-structure)
-- [🧩 Modules](#-modules)
-- [🚀 Getting Started](#-getting-started)
-- [🤝 Contributing](#-contributing)
+- [Modules](#-modules)
+- [Getting Started](#getting-started)
+- [Resources](#resources)
+- [Contributing](#contributing)
 
 ---
-
-
-
-
-<img src="https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/ec559a9f6bfd399b82bb44393651661b08aaf7ba/icons/folder-github-open.svg" width="80" />
-
-## 📂 Project Structure
-
-
-```bash
-repo
-├── README.md
-├── build.mjs
-├── config-overrides.js
-├── dump.rdb
-├── jsconfig.json.old
-├── ledger.manifest.json
-├── license-v1
-├── package.json
-├── public
-│   ├── 404.html
-│   ├── CNAME
-│   ├── DOWNTIME2.png
-│   ├── Settings.svg
-│   ├── _redirects
-│   ├── android-chrome-192x192.png
-│   ├── android-chrome-256x256.png
-│   ├── apple-touch-icon.png
-│   ├── bell.png
-│   ├── bell@2x.png
-│   ├── bell@3x.png
-│   ├── bellball.png
-│   ├── bellball@2x.png
-│   ├── bellball@3x.png
-│   ├── browserconfig.xml
-│   ├── copy.svg
-│   ├── date.png
-│   ├── epns-dapp-loader.gif
-│   ├── favicon-16x16.png
-│   ├── favicon-32x32.png
-│   ├── favicon.ico
-│   ├── firebase-messaging-sw.js
-│   ├── i.png
-│   ├── icon.jpg
-│   ├── image-not-available.jpeg
-│   ├── index-alpha.html
-│   ├── index-dev.html
-│   ├── index-prod.html
-│   ├── index-staging.html
-│   ├── index-w2w.html
-│   ├── index.html
-│   ├── latest.svg
-│   ├── loading.gif
-│   ├── loading.png
-│   ├── loading2.gif
-│   ├── logo192.png
-│   ├── logo260.png
-│   ├── logo512.png
-│   ├── logout.svg
-│   ├── mstile-150x150.png
-│   ├── people.svg
-│   ├── previews
-│   │   ├── homepage-alpha.jpg
-│   │   ├── homepage-dev.jpg
-│   │   ├── homepage-staging.jpg
-│   │   ├── homepage-w2w.jpg
-│   │   ├── homepage.jpg
-│   │   ├── homepagetwitter-alpha.jpg
-│   │   ├── homepagetwitter-dev.jpg
-│   │   ├── homepagetwitter-staging.jpg
-│   │   ├── homepagetwitter-w2w.jpg
-│   │   └── homepagetwitter.jpg
-│   ├── prod.svg
-│   ├── push.svg
-│   ├── pushDark.svg
-│   ├── ring.png
-│   ├── ring@2x.png
-│   ├── ring@3x.png
-│   ├── robots-alpha.txt
-│   ├── robots-dev.txt
-│   ├── robots-prod.txt
-│   ├── robots-staging.txt
-│   ├── robots-w2w.txt
-│   ├── robots.txt
-│   ├── safari-pinned-tab.svg
-│   ├── searchicon.svg
-│   ├── site.webmanifest
-│   ├── sitemap-alpha.txt
-│   ├── sitemap-dev.txt
-│   ├── sitemap-prod.txt
-│   ├── sitemap-staging.txt
-│   ├── sitemap-w2w.txt
-│   ├── sitemap.txt
-│   ├── subcount.svg
-│   ├── svg
-│   │   ├── AppStore.svg
-│   │   ├── BNB.svg
-│   │   ├── Ethereum.svg
-│   │   ├── ExpiredTimer.svg
-│   │   ├── ExpiresTimer.svg
-│   │   ├── GooglePlay.svg
-│   │   ├── Optimism.svg
-│   │   ├── Polygon.svg
-│   │   ├── PolygonZkEVM.svg
-│   │   ├── SVG
-│   │   │   └── govern_1.svg
-│   │   ├── airdrop-icon.svg
-│   │   ├── arrow.svg
-│   │   ├── bell.svg
-│   │   ├── bellball.svg
-│   │   ├── channel.svg
-│   │   ├── channeladmin.svg
-│   │   ├── chats
-│   │   │   ├── accept.svg
-│   │   │   ├── arrowbendup.svg
-│   │   │   ├── attachment.svg
-│   │   │   ├── block.svg
-│   │   │   ├── cancel.svg
-│   │   │   ├── gif.svg
-│   │   │   ├── nickname.svg
-│   │   │   ├── search.svg
-│   │   │   ├── send.svg
-│   │   │   ├── send_dark.svg
-│   │   │   ├── smiley.svg
-│   │   │   └── user.svg
-│   │   ├── communicate.svg
-│   │   ├── create-channel-icon.svg
-│   │   ├── darkbg.svg
-│   │   ├── delegate.svg
-│   │   ├── developer.svg
-│   │   ├── epnsline.svg
-│   │   ├── epnslogo.svg
-│   │   ├── faucet.svg
-│   │   ├── feedbox.svg
-│   │   ├── filterIcon.svg
-│   │   ├── filterw.png
-│   │   ├── gasPump.svg
-│   │   ├── govern.svg
-│   │   ├── governalt.svg
-│   │   ├── gratitude.svg
-│   │   ├── incentive.svg
-│   │   ├── info.svg
-│   │   ├── lightbg.svg
-│   │   ├── network.svg
-│   │   ├── news.svg
-│   │   ├── qna.svg
-│   │   ├── ringer.svg
-│   │   ├── rockstars-icon.svg
-│   │   ├── rockstars.svg
-│   │   ├── settings.svg
-│   │   ├── share.svg
-│   │   ├── spam.svg
-│   │   ├── support.svg
-│   │   ├── tutorial.svg
-│   │   ├── users.svg
-│   │   ├── view-tutorial-icon.svg
-│   │   ├── walkthrough.svg
-│   │   └── yield.svg
-│   ├── swatch.png
-│   ├── tuts
-│   │   ├── aave
-│   │   │   ├── aave_dark.png
-│   │   │   ├── aave_dark@2x.png
-│   │   │   ├── aave_dark@3x.png
-│   │   │   ├── aave_light.png
-│   │   │   ├── aave_light@2x.png
-│   │   │   └── aave_light@3x.png
-│   │   ├── aragon
-│   │   │   ├── aragon_dark.png
-│   │   │   ├── aragon_dark@2x.png
-│   │   │   ├── aragon_dark@3x.png
-│   │   │   ├── aragon_light.png
-│   │   │   ├── aragon_light@2x.png
-│   │   │   └── aragon_light@3x.png
-│   │   ├── armor
-│   │   │   ├── armor_dark.png
-│   │   │   ├── armor_dark@2x.png
-│   │   │   ├── armor_dark@3x.png
-│   │   │   ├── armor_light.png
-│   │   │   ├── armor_light@2x.png
-│   │   │   └── armor_light@3x.png
-│   │   ├── bancor
-│   │   │   ├── bancor_dark.png
-│   │   │   ├── bancor_dark@2x.png
-│   │   │   ├── bancor_dark@3x.png
-│   │   │   ├── bancor_light.png
-│   │   │   ├── bancor_light@2x.png
-│   │   │   └── bancor_light@3x.png
-│   │   ├── banklessfr
-│   │   │   ├── banklessfr_dark.png
-│   │   │   ├── banklessfr_dark@2x.png
-│   │   │   ├── banklessfr_dark@3x.png
-│   │   │   ├── banklessfr_light.png
-│   │   │   ├── banklessfr_light@2x.png
-│   │   │   └── banklessfr_light@3x.png
-│   │   ├── btctracker
-│   │   │   ├── btctracker_dark.png
-│   │   │   ├── btctracker_dark@2x.png
-│   │   │   ├── btctracker_dark@3x.png
-│   │   │   ├── btctracker_light.png
-│   │   │   ├── btctracker_light@2x.png
-│   │   │   └── btctracker_light@3x.png
-│   │   ├── coindesk
-│   │   │   ├── coindesk_dark.png
-│   │   │   ├── coindesk_dark@2x.png
-│   │   │   ├── coindesk_dark@3x.png
-│   │   │   ├── coindesk_light.png
-│   │   │   ├── coindesk_light@2x.png
-│   │   │   └── coindesk_light@3x.png
-│   │   ├── cvi
-│   │   │   ├── cvi_dark.png
-│   │   │   ├── cvi_dark@2x.png
-│   │   │   ├── cvi_dark@3x.png
-│   │   │   ├── cvi_light.png
-│   │   │   ├── cvi_light@2x.png
-│   │   │   └── cvi_light@3x.png
-│   │   ├── dydx
-│   │   │   ├── dydx_dark.png
-│   │   │   ├── dydx_dark@2x.png
-│   │   │   ├── dydx_dark@3x.png
-│   │   │   ├── dydx_light.png
-│   │   │   ├── dydx_light@2x.png
-│   │   │   └── dydx_light@3x.png
-│   │   ├── ens
-│   │   │   ├── ens_dark.png
-│   │   │   ├── ens_dark@2x.png
-│   │   │   ├── ens_dark@3x.png
-│   │   │   ├── ens_light.png
-│   │   │   ├── ens_light@2x.png
-│   │   │   └── ens_light@3x.png
-│   │   ├── ethpricetracker
-│   │   │   ├── ethpricetracker_dark.png
-│   │   │   ├── ethpricetracker_dark@2x.png
-│   │   │   ├── ethpricetracker_dark@3x.png
-│   │   │   ├── ethpricetracker_light.png
-│   │   │   ├── ethpricetracker_light@2x.png
-│   │   │   └── ethpricetracker_light@3x.png
-│   │   ├── ethtracker
-│   │   │   ├── ethtracker_dark.png
-│   │   │   ├── ethtracker_dark@2x.png
-│   │   │   ├── ethtracker_dark@3x.png
-│   │   │   ├── ethtracker_light.png
-│   │   │   ├── ethtracker_light@2x.png
-│   │   │   └── ethtracker_light@3x.png
-│   │   ├── fabwelt
-│   │   │   ├── fabwelt_dark.png
-│   │   │   ├── fabwelt_dark@2x.png
-│   │   │   ├── fabwelt_dark@3x.png
-│   │   │   ├── fabwelt_light.png
-│   │   │   ├── fabwelt_light@2x.png
-│   │   │   └── fabwelt_light@3x.png
-│   │   ├── gro
-│   │   │   ├── gro_dark.png
-│   │   │   ├── gro_dark@2x.png
-│   │   │   ├── gro_dark@3x.png
-│   │   │   ├── gro_light.png
-│   │   │   ├── gro_light@2x.png
-│   │   │   └── gro_light@3x.png
-│   │   ├── idle
-│   │   │   ├── idle_dark.png
-│   │   │   ├── idle_dark@2x.png
-│   │   │   ├── idle_dark@3x.png
-│   │   │   ├── idle_light.png
-│   │   │   ├── idle_light@2x.png
-│   │   │   └── idle_light@3x.png
-│   │   ├── kyber
-│   │   │   ├── kyber_dark.png
-│   │   │   ├── kyber_dark@2x.png
-│   │   │   ├── kyber_dark@3x.png
-│   │   │   ├── kyber_light.png
-│   │   │   ├── kyber_light@2x.png
-│   │   │   └── kyber_light@3x.png
-│   │   ├── makerdao
-│   │   │   ├── makerdao_dark.png
-│   │   │   ├── makerdao_dark@2x.png
-│   │   │   ├── makerdao_dark@3x.png
-│   │   │   ├── makerdao_light.png
-│   │   │   ├── makerdao_light@2x.png
-│   │   │   └── makerdao_light@3x.png
-│   │   ├── mover
-│   │   │   ├── mover_dark.png
-│   │   │   ├── mover_dark@2x.png
-│   │   │   ├── mover_dark@3x.png
-│   │   │   ├── mover_light.png
-│   │   │   ├── mover_light@2x.png
-│   │   │   └── mover_light@3x.png
-│   │   ├── notifs_style_guide.psd
-│   │   ├── oasisapp
-│   │   │   ├── oasisapp_dark.png
-│   │   │   ├── oasisapp_dark@2x.png
-│   │   │   ├── oasisapp_dark@3x.png
-│   │   │   ├── oasisapp_light.png
-│   │   │   ├── oasisapp_light@2x.png
-│   │   │   └── oasisapp_light@3x.png
-│   │   ├── ooki
-│   │   │   ├── ooki_dark.png
-│   │   │   ├── ooki_dark@2x.png
-│   │   │   ├── ooki_dark@3x.png
-│   │   │   ├── ooki_light.png
-│   │   │   ├── ooki_light@2x.png
-│   │   │   └── ooki_light@3x.png
-│   │   ├── pods
-│   │   │   ├── pods_dark.png
-│   │   │   ├── pods_dark@2x.png
-│   │   │   ├── pods_dark@3x.png
-│   │   │   ├── pods_light.png
-│   │   │   ├── pods_light@2x.png
-│   │   │   └── pods_light@3x.png
-│   │   ├── poh
-│   │   │   ├── poh_dark.png
-│   │   │   ├── poh_dark@2x.png
-│   │   │   ├── poh_dark@3x.png
-│   │   │   ├── poh_light.png
-│   │   │   ├── poh_light@2x.png
-│   │   │   └── poh_light@3x.png
-│   │   ├── pushgov
-│   │   │   ├── pushgov_dark.png
-│   │   │   ├── pushgov_dark@2x.png
-│   │   │   ├── pushgov_dark@3x.png
-│   │   │   ├── pushgov_light.png
-│   │   │   ├── pushgov_light@2x.png
-│   │   │   └── pushgov_light@3x.png
-│   │   ├── snapshot
-│   │   │   ├── snapshot_dark.png
-│   │   │   ├── snapshot_dark@2x.png
-│   │   │   ├── snapshot_dark@3x.png
-│   │   │   ├── snapshot_light.png
-│   │   │   ├── snapshot_light@2x.png
-│   │   │   └── snapshot_light@3x.png
-│   │   ├── symphony
-│   │   │   ├── symphony_dark.png
-│   │   │   ├── symphony_dark@2x.png
-│   │   │   ├── symphony_dark@3x.png
-│   │   │   ├── symphony_light.png
-│   │   │   ├── symphony_light@2x.png
-│   │   │   └── symphony_light@3x.png
-│   │   ├── thedefiant
-│   │   │   ├── thedefiant_dark.png
-│   │   │   ├── thedefiant_dark@2x.png
-│   │   │   ├── thedefiant_dark@3x.png
-│   │   │   ├── thedefiant_light.png
-│   │   │   ├── thedefiant_light@2x.png
-│   │   │   └── thedefiant_light@3x.png
-│   │   └── tracerdao
-│   │       ├── tracerdao_dark.png
-│   │       ├── tracerdao_dark@2x.png
-│   │       ├── tracerdao_dark@3x.png
-│   │       ├── tracerdao_light.png
-│   │       ├── tracerdao_light@2x.png
-│   │       └── tracerdao_light@3x.png
-│   └── verify.png
-├── src
-│   ├── App.tsx
-│   ├── AppLogin.tsx
-│   ├── api
-│   │   ├── index.js
-│   │   └── ipfs.ts
-│   ├── assets
-│   │   ├── BellIcon.svg
-│   │   ├── Device.js
-│   │   ├── Image.svg
-│   │   ├── Lock.png
-│   │   ├── LockSlash.png
-│   │   ├── PushLogo.svg
-│   │   ├── RedCircle.svg
-│   │   ├── Vector.svg
-│   │   ├── XCircle.svg
-│   │   ├── chat
-│   │   │   ├── QRBackground.svg
-│   │   │   ├── arrowleft.svg
-│   │   │   ├── chatBox.svg
-│   │   │   ├── group-chat
-│   │   │   │   ├── addadmin.svg
-│   │   │   │   ├── adddark.svg
-│   │   │   │   ├── addicon.svg
-│   │   │   │   ├── addlight.svg
-│   │   │   │   ├── chat.svg
-│   │   │   │   ├── close.svg
-│   │   │   │   ├── creategroup.svg
-│   │   │   │   ├── creategroupfill.svg
-│   │   │   │   ├── creategroupicon.svg
-│   │   │   │   ├── creategroupicondark.svg
-│   │   │   │   ├── dismissadmin.svg
-│   │   │   │   ├── info.svg
-│   │   │   │   ├── infodark.svg
-│   │   │   │   ├── lockdark.svg
-│   │   │   │   ├── more.svg
-│   │   │   │   ├── moredark.svg
-│   │   │   │   ├── profile.svg
-│   │   │   │   ├── remove.svg
-│   │   │   │   └── removewallet.svg
-│   │   │   ├── handwave.svg
-│   │   │   ├── search.svg
-│   │   │   └── tick.svg
-│   │   ├── fonts
-│   │   │   ├── Strawford-Black.eot
-│   │   │   ├── Strawford-Black.svg
-│   │   │   ├── Strawford-Black.ttf
-│   │   │   ├── Strawford-Black.woff
-│   │   │   ├── Strawford-Black.woff2
-│   │   │   ├── Strawford-Bold.eot
-│   │   │   ├── Strawford-Bold.svg
-│   │   │   ├── Strawford-Bold.ttf
-│   │   │   ├── Strawford-Bold.woff
-│   │   │   ├── Strawford-Bold.woff2
-│   │   │   ├── Strawford-ExtraLight.otf
-│   │   │   ├── Strawford-ExtraLight.ttf
-│   │   │   ├── Strawford-ExtraLight.woff2
-│   │   │   ├── Strawford-Light.otf
-│   │   │   ├── Strawford-Light.ttf
-│   │   │   ├── Strawford-Light.woff2
-│   │   │   ├── Strawford-Medium.otf
-│   │   │   ├── Strawford-Medium.ttf
-│   │   │   ├── Strawford-Medium.woff2
-│   │   │   ├── Strawford-Regular.eot
-│   │   │   ├── Strawford-Regular.otf
-│   │   │   ├── Strawford-Regular.ttf
-│   │   │   ├── Strawford-Regular.woff
-│   │   │   └── Strawford-Regular.woff2
-│   │   ├── gov
-│   │   │   └── delegatees
-│   │   │       ├── aiswarya.jpg
-│   │   │       ├── aiswarya@2x.jpg
-│   │   │       ├── aiswarya@3x.jpg
-│   │   │       ├── alex.jpg
-│   │   │       ├── alex@2x.jpg
-│   │   │       ├── alex@3x.jpg
-│   │   │       ├── ashis.jpg
-│   │   │       ├── ashis@2x.jpg
-│   │   │       ├── ashis@3x.jpg
-│   │   │       ├── ashwani.jpg
-│   │   │       ├── ashwani@2x.jpg
-│   │   │       ├── ashwani@3x.jpg
-│   │   │       ├── auryn.jpg
-│   │   │       ├── auryn@2x.jpg
-│   │   │       ├── auryn@3x.jpg
-│   │   │       ├── beler.jpg
-│   │   │       ├── beler@2x.jpg
-│   │   │       ├── beler@3x.jpg
-│   │   │       ├── defi_dad.jpg
-│   │   │       ├── defi_dad@2x.jpg
-│   │   │       ├── defi_dad@3x.jpg
-│   │   │       ├── imvijaygir.jpg
-│   │   │       ├── imvijaygir@2x.jpg
-│   │   │       ├── imvijaygir@3x.jpg
-│   │   │       ├── jaf.jpg
-│   │   │       ├── jaf@2x.jpg
-│   │   │       ├── jaf@3x.jpg
-│   │   │       ├── jude.jpg
-│   │   │       ├── jude@2x.jpg
-│   │   │       ├── jude@3x.jpg
-│   │   │       ├── krishna.jpg
-│   │   │       ├── krishna@2x.jpg
-│   │   │       ├── krishna@3x.jpg
-│   │   │       ├── pranshu.jpg
-│   │   │       ├── pranshu@2x.jpg
-│   │   │       ├── pranshu@3x.jpg
-│   │   │       ├── ray.jpg
-│   │   │       ├── ray@2x.jpg
-│   │   │       ├── ray@3x.jpg
-│   │   │       ├── robin_rrtx.jpg
-│   │   │       ├── robin_rrtx@2x.jpg
-│   │   │       ├── robin_rrtx@3x.jpg
-│   │   │       ├── zaryab.jpg
-│   │   │       ├── zaryab@2x.jpg
-│   │   │       └── zaryab@3x.jpg
-│   │   ├── icons
-│   │   │   ├── audio-icon.svg
-│   │   │   ├── audio-off-icon.svg
-│   │   │   ├── cube.png
-│   │   │   ├── end-call-icon.svg
-│   │   │   ├── greenBell.svg
-│   │   │   ├── index.js
-│   │   │   ├── pick-call-icon.svg
-│   │   │   ├── redBellSlash.png
-│   │   │   ├── swapIcon.svg
-│   │   │   ├── userCircleMinus.png
-│   │   │   ├── userCirclePlus.png
-│   │   │   ├── video-icon.svg
-│   │   │   ├── video-off-icon.svg
-│   │   │   └── videoCallIcon.svg
-│   │   ├── info.svg
-│   │   ├── login
-│   │   │   ├── ledgerDark.svg
-│   │   │   ├── ledgerLight.svg
-│   │   │   ├── metamaskDark.svg
-│   │   │   ├── metamaskLight.svg
-│   │   │   ├── portisDark.svg
-│   │   │   ├── portisLight.svg
-│   │   │   ├── trezorDark.svg
-│   │   │   ├── trezorLight.svg
-│   │   │   ├── wcDark.svg
-│   │   │   └── wcLight.svg
-│   │   ├── moon.svg
-│   │   ├── navigation
-│   │   │   ├── airdropIcon.svg
-│   │   │   ├── channelsOffIcon.svg
-│   │   │   ├── channelsOnIcon.svg
-│   │   │   ├── chatOffIcon.svg
-│   │   │   ├── chatOnIcon.svg
-│   │   │   ├── createChannelIcon.svg
-│   │   │   ├── faqIcon.svg
-│   │   │   ├── govOffIcon.svg
-│   │   │   ├── govOnIcon.svg
-│   │   │   ├── homeOffIcon.svg
-│   │   │   ├── homeOnIcon.svg
-│   │   │   ├── inboxOffIcon.svg
-│   │   │   ├── inboxOnIcon.svg
-│   │   │   ├── incentivesOffIcon.svg
-│   │   │   ├── incentivesOnIcon.svg
-│   │   │   ├── moreOffIcon.svg
-│   │   │   ├── moreOnIcon.svg
-│   │   │   ├── olvyIcon.svg
-│   │   │   ├── receiveNotifOffIcon.svg
-│   │   │   ├── receiveNotifOnIcon.svg
-│   │   │   ├── rockstarsIcon.svg
-│   │   │   ├── sendNotifOffIcon.svg
-│   │   │   ├── sendNotifOnIcon.svg
-│   │   │   ├── supportIcon.svg
-│   │   │   ├── walkthroughIcon.svg
-│   │   │   └── yieldIcon.svg
-│   │   ├── pages
-│   │   │   ├── darkbg.svg
-│   │   │   └── lightbg.svg
-│   │   ├── pushDark.svg
-│   │   ├── pushLight.svg
-│   │   ├── reusables
-│   │   │   └── spinners
-│   │   │       ├── checkmark.svg
-│   │   │       ├── error.svg
-│   │   │       ├── spinner.svg
-│   │   │       ├── warning.svg
-│   │   │       └── whitelist.svg
-│   │   ├── searchicon.svg
-│   │   └── sun.svg
-│   ├── components
-│   │   ├── AddDelegateModalContent.tsx
-│   │   ├── AddSubgraphModalContent.tsx
-│   │   ├── AliasProcessing.js
-│   │   ├── AliasSetup.js
-│   │   ├── AliasVerificationModal.js
-│   │   ├── AllNFTs.js
-│   │   ├── AllNFTsV2.js
-│   │   ├── Bell.js
-│   │   ├── BlockiesIdenticon.js
-│   │   ├── ChainIndicator.tsx
-│   │   ├── ChainsSelect.tsx
-│   │   ├── ChangeNetwork.tsx
-│   │   ├── ChannelDeactivateModalContent.tsx
-│   │   ├── ChannelDetails.js
-│   │   ├── ChannelInfo.tsx
-│   │   ├── ChannelLoading.tsx
-│   │   ├── ChannelReactivateModalContent.tsx
-│   │   ├── ChannelSettings.jsx
-│   │   ├── ChannelSettingsDropdown.tsx
-│   │   ├── ComingSoon.js
-│   │   ├── DelegateInfo.js
-│   │   ├── DisplayNotice.js
-│   │   ├── Dropdown.tsx
-│   │   ├── FaucetInfo.tsx
-│   │   ├── Faucets.js
-│   │   ├── InboxComponent.js
-│   │   ├── InfoTooltip.js
-│   │   ├── InitState.tsx
-│   │   ├── MetaInfoDisplayer.js
-│   │   ├── MobileNavButton.js
-│   │   ├── MyNFTs.js
-│   │   ├── MyNFTsV2.js
-│   │   ├── NavButton.js
-│   │   ├── NavigationButton.js
-│   │   ├── NavigationLoaderButton.js
-│   │   ├── NewTag.tsx
-│   │   ├── NotificationToast.js
-│   │   ├── Offchain.js
-│   │   ├── PoolCard.js
-│   │   ├── PreviewNotif.js
-│   │   ├── ProcessingInfo.js
-│   │   ├── Profile.tsx
-│   │   ├── ProfileModal.tsx
-│   │   ├── RemoveDelegateModalContent.tsx
-│   │   ├── SearchFilter.css
-│   │   ├── SearchFilter.jsx
-│   │   ├── SendNotifications.tsx
-│   │   ├── Settings.tsx
-│   │   ├── SharedStyling.js
-│   │   ├── ShowDelegates.jsx
-│   │   ├── StakingInfo.tsx
-│   │   ├── Switch.js
-│   │   ├── ThemeToggle.js
-│   │   ├── ThemeToggleStyle.css
-│   │   ├── TimerItem.js
-│   │   ├── TransferNFT.js
-│   │   ├── TransferNFTv2.js
-│   │   ├── UnderProgressModal.js
-│   │   ├── UniswapWidget.tsx
-│   │   ├── UpdateChannelTooltipContent.tsx
-│   │   ├── UploadLogo.jsx
-│   │   ├── VerifiedTooltipContent.tsx
-│   │   ├── VerifyAlias.js
-│   │   ├── ViewChannelItem.js
-│   │   ├── ViewDelegateeItem.js
-│   │   ├── ViewInfoItem.js
-│   │   ├── ViewNFTItem.js
-│   │   ├── ViewNFTsV2Item.js
-│   │   ├── ViewNotificationItem.js
-│   │   ├── blockies.js
-│   │   ├── chat
-│   │   │   ├── chatsnap
-│   │   │   │   └── ChatSnap.tsx
-│   │   │   └── w2wChat
-│   │   │       ├── Modal
-│   │   │       │   └── Modal.tsx
-│   │   │       ├── TypeBar
-│   │   │       │   ├── Files
-│   │   │       │   │   └── Files.tsx
-│   │   │       │   ├── Gifs
-│   │   │       │   │   └── GifPicker.tsx
-│   │   │       │   └── Typebar.tsx
-│   │   │       ├── chatBox
-│   │   │       │   ├── ChatBox.tsx
-│   │   │       │   └── HeaderMessage.tsx
-│   │   │       ├── chatQR
-│   │   │       │   ├── chatQR.tsx
-│   │   │       │   └── mobileView.tsx
-│   │   │       ├── chats
-│   │   │       │   ├── Chats.tsx
-│   │   │       │   └── MessageWrappers
-│   │   │       │       ├── ReceivedMessageWrapper.tsx
-│   │   │       │       └── SentMessageWrapper.tsx
-│   │   │       ├── groupChat
-│   │   │       │   ├── createGroup
-│   │   │       │   │   ├── AddWalletContent.tsx
-│   │   │       │   │   ├── CreateGroupModalContent.tsx
-│   │   │       │   │   ├── GroupDetailsContent.tsx
-│   │   │       │   │   ├── GroupModalHeader.tsx
-│   │   │       │   │   └── MemberListContainer.tsx
-│   │   │       │   └── groupInfo
-│   │   │       │       ├── PendingMembers.tsx
-│   │   │       │       ├── ProfileCard.tsx
-│   │   │       │       └── groupInfoModalContent.tsx
-│   │   │       ├── intentFeed
-│   │   │       │   └── IntentFeed.tsx
-│   │   │       ├── messageFeed
-│   │   │       │   └── MessageFeed.tsx
-│   │   │       ├── profile
-│   │   │       │   ├── Profile.tsx
-│   │   │       │   └── index.ts
-│   │   │       ├── searchBar
-│   │   │       │   └── SearchBar.tsx
-│   │   │       ├── stickers
-│   │   │       │   ├── stickerHelper.ts
-│   │   │       │   └── useFetchHook.tsx
-│   │   │       └── w2wIndexeddb.ts
-│   │   ├── reusables
-│   │   │   ├── SharedStylingV2.js
-│   │   │   ├── blurs
-│   │   │   │   ├── BlurBG.tsx
-│   │   │   │   └── BlurBGClouds.tsx
-│   │   │   ├── errorMessageLabel
-│   │   │   │   └── errorMessageLabel.tsx
-│   │   │   ├── loaders
-│   │   │   │   └── LoaderSpinner.tsx
-│   │   │   ├── progress
-│   │   │   │   └── ProgressBarUnit.tsx
-│   │   │   ├── spinners
-│   │   │   │   └── SpinnerUnit.tsx
-│   │   │   ├── toasts
-│   │   │   │   ├── NotifToastUI.tsx
-│   │   │   │   ├── toastController.tsx
-│   │   │   │   └── toastOverrides.css
-│   │   │   ├── toggle
-│   │   │   │   └── Toggle.tsx
-│   │   │   └── tooltip
-│   │   │       └── Tooltip.tsx
-│   │   └── video
-│   │       ├── CallButton.tsx
-│   │       ├── IncomingCall.tsx
-│   │       ├── IncomingCallModalContent.tsx
-│   │       ├── MediaToggleButton.tsx
-│   │       ├── OutgoingOngoingCall.tsx
-│   │       ├── UserInfo.tsx
-│   │       └── VideoPlayer.tsx
-│   ├── config
-│   │   ├── Globals.js
-│   │   ├── NavigationList.js
-│   │   ├── Themization.js
-│   │   ├── W2WConfig.ts
-│   │   ├── abis
-│   │   │   ├── BatchMintNFT.json
-│   │   │   ├── EPNS.json
-│   │   │   ├── ERC721.json
-│   │   │   ├── IERC721.json
-│   │   │   ├── IERC721Enumerable.json
-│   │   │   ├── IERC721Metadata.json
-│   │   │   ├── IERC721Receiver.json
-│   │   │   ├── IRockstar.json
-│   │   │   ├── MerkleDistributor.json
-│   │   │   ├── NFTRewards.json
-│   │   │   ├── NFTRewardsV2.json
-│   │   │   ├── Rockstar.json
-│   │   │   ├── RockstarV2.json
-│   │   │   ├── Staking.json
-│   │   │   ├── UniswapV2Router02.json
-│   │   │   ├── YieldFarm.json
-│   │   │   ├── dai.json
-│   │   │   ├── epnsCommunicator.json
-│   │   │   ├── epnsRopstenCommunicator.json
-│   │   │   ├── epnscore.json
-│   │   │   ├── erc20.json
-│   │   │   ├── ownable.json
-│   │   │   └── pushToken.json
-│   │   ├── airdrop
-│   │   │   └── claims.json
-│   │   ├── channelTuts.js
-│   │   ├── config-dev.js
-│   │   ├── config-general.js
-│   │   ├── config-localhost.js
-│   │   ├── config-prod.js
-│   │   ├── config-staging.js
-│   │   ├── custom.d.ts
-│   │   ├── delegatees.json
-│   │   └── index.js
-│   ├── connectors.ts
-│   ├── contexts
-│   │   ├── AppContext.tsx
-│   │   ├── ChatUserContext.tsx
-│   │   ├── NavigationContext.tsx
-│   │   ├── NavigationContext_old.js
-│   │   ├── NotificationContext.tsx
-│   │   └── VideoCallContext.tsx
-│   ├── firebase.js
-│   ├── helpers
-│   │   ├── AirdropHelper.ts
-│   │   ├── CaipHelper.ts
-│   │   ├── ChainHelper.ts
-│   │   ├── CryptoHelper.ts
-│   │   ├── EPNSCoreHelper.ts
-│   │   ├── GaslessHelper.ts
-│   │   ├── InputValidation.ts
-│   │   ├── IpfsHelper.ts
-│   │   ├── LogoSizeHelper.ts
-│   │   ├── NFTHelper.ts
-│   │   ├── PushTokenContractHelper.ts
-│   │   ├── RoutesHelper.ts
-│   │   ├── StyleHelper.ts
-│   │   ├── TimerHelper.ts
-│   │   ├── UtilityHelper.old.js
-│   │   ├── UtilityHelper.ts
-│   │   ├── ValidationHelper.ts
-│   │   ├── WithGasHelper.tsx
-│   │   ├── index.ts
-│   │   ├── videoCall
-│   │   │   └── sendVideoCallNotification.ts
-│   │   └── w2w
-│   │       ├── aes.ts
-│   │       ├── ceramic.ts
-│   │       ├── did.ts
-│   │       ├── groupChat.ts
-│   │       ├── index.ts
-│   │       ├── pgp.ts
-│   │       ├── twitter.ts
-│   │       ├── udResolver.ts
-│   │       └── user.ts
-│   ├── hooks
-│   │   ├── index.ts
-│   │   ├── useAsyncOperation.ts
-│   │   ├── useBrowserNotification.ts
-│   │   ├── useClickAway.ts
-│   │   ├── useDeviceWidthCheck.ts
-│   │   ├── useEagerConnect.ts
-│   │   ├── useInactiveListener.ts
-│   │   ├── useMediaQuery.ts
-│   │   ├── useModal.tsx
-│   │   ├── useModalBlur.tsx
-│   │   ├── usePeer.ts
-│   │   ├── useResolveWeb3Name.ts
-│   │   ├── useSDKSocket.ts
-│   │   └── useToast.tsx
-│   ├── index.css
-│   ├── index.js
-│   ├── modules
-│   │   ├── airdrop
-│   │   │   └── AirdropModule.tsx
-│   │   ├── channelDashboard
-│   │   │   ├── ChannelOwnerDashboard.tsx
-│   │   │   └── channelDashboardModule.tsx
-│   │   ├── channels
-│   │   │   └── ChannelsModule.tsx
-│   │   ├── chat
-│   │   │   └── ChatModule.tsx
-│   │   ├── createChannel
-│   │   │   ├── CreateChannelModule.js
-│   │   │   └── createChannel.css
-│   │   ├── editChannel
-│   │   │   ├── EditChannel.tsx
-│   │   │   ├── EditChannelForms.tsx
-│   │   │   └── uploadLogoModal.tsx
-│   │   ├── faq
-│   │   │   └── FaqModule.tsx
-│   │   ├── gov
-│   │   │   └── GovModule.tsx
-│   │   ├── inbox
-│   │   │   └── InboxModule.tsx
-│   │   ├── internal
-│   │   │   ├── DemoModalContent.tsx
-│   │   │   └── InternalDevModule.tsx
-│   │   ├── nft
-│   │   │   └── NftModule.tsx
-│   │   ├── receiveNotifs
-│   │   │   └── ReceiveNotifsModule.tsx
-│   │   ├── sendNotifs
-│   │   │   └── SendNotifsModule.tsx
-│   │   ├── support
-│   │   │   └── SupportModule.tsx
-│   │   ├── tutorial
-│   │   │   └── TutorialModule.tsx
-│   │   └── yield
-│   │       └── YieldFarmingModule.tsx
-│   ├── pages
-│   │   ├── AirdropPage.tsx
-│   │   ├── ChannelDashboardPage.js
-│   │   ├── ChannelsPage.js
-│   │   ├── ChatPage.tsx
-│   │   ├── ComingSoonPage.tsx
-│   │   ├── FAQPage.tsx
-│   │   ├── GovPage.tsx
-│   │   ├── InboxPage.js
-│   │   ├── InternalDevPage.tsx
-│   │   ├── NFTPage.js
-│   │   ├── NotAvailablePage.tsx
-│   │   ├── ReceiveNotifsPage.js
-│   │   ├── SendNotifsPage.tsx
-│   │   ├── SpamPage.js
-│   │   ├── SupportPage.tsx
-│   │   ├── TutorialPage.tsx
-│   │   └── YieldFarmingPage.js
-│   ├── primaries
-│   │   ├── AutoImageClipper.tsx
-│   │   ├── Bell.js
-│   │   ├── BlockiesIdenticon.js
-│   │   ├── DisplayNotice.js
-│   │   ├── ImageClipper.js
-│   │   ├── InfoTooltip.js
-│   │   ├── LoaderSpinner.tsx
-│   │   ├── NotificationToast.js
-│   │   ├── Profile.tsx
-│   │   ├── SharedModalComponents
-│   │   │   ├── ModalConfirmButton.tsx
-│   │   │   ├── ModalHeader.tsx
-│   │   │   └── ModalInput.tsx
-│   │   ├── SharedStyling.js
-│   │   └── blockies.js
-│   ├── react-app-env.d.ts
-│   ├── redux
-│   │   ├── slices
-│   │   │   ├── adminSlice.js
-│   │   │   ├── channelCreationSlice.js
-│   │   │   ├── channelSlice.js
-│   │   │   ├── contractSlice.js
-│   │   │   ├── notificationSlice.js
-│   │   │   ├── sendNotificationSlice.js
-│   │   │   ├── spamSlice.js
-│   │   │   └── userJourneySlice.js
-│   │   └── store.js
-│   ├── sections
-│   │   ├── chat
-│   │   │   ├── ChatBoxSection.tsx
-│   │   │   └── ChatSidebarSection.tsx
-│   │   └── video
-│   │       └── VideoCallSection.tsx
-│   ├── segments
-│   │   ├── Airdrop.tsx
-│   │   ├── ChannelCreationDashboard.js
-│   │   ├── ChannelDashboard.js
-│   │   ├── ChannelTutorial.js
-│   │   ├── ChatSidebar.tsx
-│   │   ├── CreateChannel.js
-│   │   ├── DeprecatedViewChannels.tsx
-│   │   ├── Feedbox.tsx
-│   │   ├── Info.tsx
-│   │   ├── Spambox.tsx
-│   │   ├── TimerComponent.js
-│   │   ├── ViewChannels.tsx
-│   │   ├── spam.tsx
-│   │   └── userJourneySteps.tsx
-│   ├── serviceWorker.js
-│   ├── services
-│   │   ├── alias
-│   │   │   ├── getAliasDetails.ts
-│   │   │   └── index.ts
-│   │   ├── channels
-│   │   │   ├── getChannelDelegates.ts
-│   │   │   ├── getChannels.ts
-│   │   │   ├── getChannelsSearch.ts
-│   │   │   └── index.ts
-│   │   ├── chats
-│   │   │   ├── getChats.ts
-│   │   │   ├── getGroup.ts
-│   │   │   ├── getGroupByChatId.ts
-│   │   │   ├── getGroupByName.ts
-│   │   │   └── index.ts
-│   │   ├── index.ts
-│   │   ├── ipfs
-│   │   │   ├── index.ts
-│   │   │   └── ipfsUpload.ts
-│   │   └── users
-│   │       ├── getUserDelegations.ts
-│   │       ├── getUserSubscriptions.ts
-│   │       └── index.ts
-│   ├── singletons
-│   │   ├── ChannelsDataStore.js
-│   │   ├── UsersDataStore.js
-│   │   └── YieldFarmingDataStore.js
-│   ├── structure
-│   │   ├── Header.tsx
-│   │   ├── MasterInterfacePage.tsx
-│   │   ├── MobileNavigation.tsx
-│   │   └── Navigation.tsx
-│   ├── templates
-│   │   ├── ClassTemplate.js
-│   │   └── FunctionalTemplate.js
-│   └── types
-│       ├── chat.ts
-│       └── context.ts
-├── tsconfig.json
-└── yarn.lock
-
-122 directories, 794 files
-```
-
----
-
-<img src="https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/ec559a9f6bfd399b82bb44393651661b08aaf7ba/icons/folder-src-open.svg" width="80" />
 
 ## 🧩 Modules
 
@@ -1017,8 +114,8 @@ repo
 |:-----------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------|
 | ChatSidebarSection.tsx | The provided code snippet contains a React component for the chat sidebar section, which includes various internal and external components, such as a search bar, intent feed, message feed, and profile header. The component also utilizes multiple hooks and functions for handling user interactions and fetching data from APIs, and it includes various styled components for rendering the UI elements. | src/sections/chat/ChatSidebarSection.tsx |
 | ChatBoxSection.tsx     | This code snippet is a functional React component that imports a ChatBox from an internal component and displays it within a section called ChatBoxSection. The ChatBoxSection takes in two props, setVideoCallInfo and showGroupInfoModal, and is centered using internal SharedStylingV2.                                                                                                                    | src/sections/chat/ChatBoxSection.tsx     |
-| ChatModule.tsx         | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                                                                                                                                                                                  | src/modules/chat/ChatModule.tsx          |
-|                        | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                                                                                                                                                                       |                                          |
+| ChatModule.tsx         | The given code is a React component for a chat application that uses the Web3 library for blockchain interactions. It handles user connection, chat message retrieval, and updates, as well as the display of chat boxes, sidebars, and modals for group information and group creation.| src/modules/chat/ChatModule.tsx          |
+|                        ||                                          |
 
 </details>
 
@@ -1026,8 +123,8 @@ repo
 
 | File              | Summary                                                                                                                                                                                                                                                 | Module                                                |
 |:------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------------|
-| ChatBox.tsx       | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                           | src/components/chat/w2wChat/chatBox/ChatBox.tsx       |
-|                   | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                |                                                       |
+| ChatBox.tsx       | The code implements a feature-rich chat box component in a React application with Web3 integration, enabling messaging capabilities, group chats, and video calling. It utilizes libraries, components, and APIs to handle message sending, receiving, and display, while employing context and state management for a seamless user experience.| src/components/chat/w2wChat/chatBox/ChatBox.tsx       |
+|                   | |                                                       |
 | HeaderMessage.tsx | This code snippet is a React component for displaying a chat message header. It includes conditional rendering of encryption status based on chat context, and links to encryption documentation. Styling is managed through styled-components package. | src/components/chat/w2wChat/chatBox/HeaderMessage.tsx |
 
 </details>
@@ -1075,7 +172,7 @@ repo
 | SearchFilter.jsx                  | The provided code snippet is a React component that allows users to filter notifications by applying various search criteria such as keywords, date range, and channels. It utilizes external packages such as react-multi-select-component and react-datetime-picker to provide a user-friendly UI for filtering notifications. Additionally, it includes constants and a useState hook to manage state changes dynamically.                                                                                                                                                                                                                                                                                  | src/components/SearchFilter.jsx                  |
 | NavButton.js                      | The code snippet contains a React component named NavButton that creates a button with icon, link, and other attributes. It also includes some CSS style components such as LeftBarPrimarySectionIcon and LeftBarPrimaryItemIcon that set the styles for specific icons. These can be used in a navigation bar or similar UI.                                                                                                                                                                                                                                                                                                                                                                                  | src/components/NavButton.js                      |
 | BlockiesIdenticon.js              | The provided code snippet is a React component that sets up and renders an identicon using blockies library. After importing the Blockies component, users can customize it using options like color and size, and the component will update as needed in response to these changes. Once the component has mounted, blockies are rendered using the provided options.                                                                                                                                                                                                                                                                                                                                         | src/components/BlockiesIdenticon.js              |
-| SendNotifications.tsx             | Prompt exceeds max token limit: 4340                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | src/components/SendNotifications.tsx             |
+| SendNotifications.tsx             | The "SendNotifications" component is a React form that allows users to send notifications through the EPNS API. It provides options for selecting the notification type, recipient(s), subject, message, media URL, and CTA link, with toast notifications for success or error messages.| src/components/SendNotifications.tsx             |
 | UpdateChannelTooltipContent.tsx   | The provided code snippet is a TypeScript/React component called UpdateChannelTooltipContent. It showcases a channel update through a tooltip with the channel's name, description, and logo. It uses styled-components to style its child components. The component takes in props for the channel name, description, logo source, and a height value.                                                                                                                                                                                                                                                                                                                                                        | src/components/UpdateChannelTooltipContent.tsx   |
 | ViewInfoItem.js                   | The code snippet provides a React component that displays several links and information for using the Push (EPNS) App and Browser Extension. It is styled using the styled-components package and imports configurations from an external appConfig file.                                                                                                                                                                                                                                                                                                                                                                                                                                                      | src/components/ViewInfoItem.js                   |
 | VerifiedTooltipContent.tsx        | This code exports a React component called'VerifiedTooltipContent', which accepts props for displaying a verified name and icon. It is styled using styled-components and uses conditional rendering for adjusting the container's border radius based on the height of the component.                                                                                                                                                                                                                                                                                                                                                                                                                         | src/components/VerifiedTooltipContent.tsx        |
@@ -1123,22 +220,22 @@ repo
 | UploadLogo.jsx                    | The code provides a React component named UploadLogo which allows a user to upload an image, crop it, and then submit it. It depends on various internal and external components including ImageClipper and LoaderSpinner, while accessing various libraries like ethers and styled-components. It also uses web3-react functionality for blockchain integration.                                                                                                                                                                                                                                                                                                                                              | src/components/UploadLogo.jsx                    |
 | UniswapWidget.tsx                 | The code snippet provides a React component that renders a Uniswap swap widget. It uses the `useWeb3React` hook for web3 integration, external packages such as `styled-components` and `react-use`, and internal configs such as addresses and appConfig. The component receives props, including default token amounts and an onClose callback function. It utilizes references and click away hooks to handle modal closing and applies a custom theme to the widget.                                                                                                                                                                                                                                       | src/components/UniswapWidget.tsx                 |
 | TimerItem.js                      | The provided code snippet is a React component that displays a countdown timer for a specified date/time configured in an external file. The component uses hooks to manage state and to update the timer in real-time. It also includes conditional rendering for displaying additional content and a button that links to an external URL.                                                                                                                                                                                                                                                                                                                                                                   | src/components/TimerItem.js                      |
-| SharedStyling.js                  | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | src/components/SharedStyling.js                  |
-|                                   | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                                                  |
+| SharedStyling.js                  | The provided code is a collection of styled components in React, defining various styles for different HTML elements. It includes styles for sections, headings, paragraphs, images, links, buttons, forms, inputs, and text areas. The styles are customized using props and media queries for responsive design.| src/components/SharedStyling.js                  |
+|                                   ||                                                  |
 | InitState.tsx                     | This code consists of React and Web3 essentials with internal and external components to initialize the contract provider and check user ownership in the Channel. It also checks if the user is an alias or not and fetches their delegators. This code snippet has five hooks written in which InitState() initializes contract provider parameters, checkUserForChannelOwnership() checks if the user is the channel admin, and fetches channel information for more details. checkUserForEthAlias() checks if the user is a channel admin for the Ethereum network and also sends channel details for get alias metadata. checkUserForAlias() checks if the user is a previously registered alias to EPNS. | src/components/InitState.tsx                     |
 | ShowDelegates.jsx                 | This code snippet is a React component that allows users to manage delegates for a specific channel. The component uses Web3React to obtain user account and chainId information, and allows for removal of delegated users. It also utilizes several external packages, including styled-components and react-icons.                                                                                                                                                                                                                                                                                                                                                                                          | src/components/ShowDelegates.jsx                 |
 | RemoveDelegateModalContent.tsx    | The provided code snippet is a React component that renders a modal for removing a delegate. It includes input fields for the delegate's address, confirmation buttons, and styling. Upon validation and execution, the dynamic toast library is called to display success or error alerts.                                                                                                                                                                                                                                                                                                                                                                                                                    | src/components/RemoveDelegateModalContent.tsx    |
 | NavigationButton.js               | The provided code snippet includes a React component named NavigationButton, which renders an item in the navigation bar. NavigationButton receives multiple props including item, data, sectionID, active, and bg, and both external and internal dependencies are imported. When rendered, the NavigationButton component conditionally displays various components and applies different styled-components styles depending on the sectionID and other props passed to it.                                                                                                                                                                                                                                  | src/components/NavigationButton.js               |
 | NewTag.tsx                        | The code defines a "NewTag" component, which renders a styled "New" label. The styling includes customizations for the font family, size, color, background, padding, and margin, and is based on a shared styling component ("SpanV2") defined in a separate file. The "NewTag" component can be used throughout the project to indicate new content or functionality.                                                                                                                                                                                                                                                                                                                                        | src/components/NewTag.tsx                        |
 | ProcessingInfo.js                 | The code provides a React component that displays a LinearProgress bar, and a message indicating the current progress of a certain process, along with a loading spinner. It also uses some third-party packages and internal components and configurations. The appearance of the component varies depending on the screen size.                                                                                                                                                                                                                                                                                                                                                                              | src/components/ProcessingInfo.js                 |
-| ChannelReactivateModalContent.tsx | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | src/components/ChannelReactivateModalContent.tsx |
-|                                   | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                                                  |
+| ChannelReactivateModalContent.tsx | The provided code snippet is a React component that represents a modal for reactivating a channel. It handles the reactivation process, displays channel details, and allows users to approve and deposit push tokens.| src/components/ChannelReactivateModalContent.tsx |
+|                                   | |                                                  |
 | AliasVerificationModal.js         | The provided code snippet is a React component that handles the verification of a user's alias on the Ethereum blockchain. It uses Web3 for blockchain interaction, external packages for UI, and internal components and configs for various functionalities such as post requests and contract verification.                                                                                                                                                                                                                                                                                                                                                                                                 | src/components/AliasVerificationModal.js         |
 | ChannelLoading.tsx                | This code provides a React component for displaying a loading skeleton while waiting for data to load. The skeleton consists of rectangular shapes created with MUI's Skeleton package and styled with styled-components. Additionally, a LoaderSpinner component is included for displaying a loading spinner with a title during longer loading times.                                                                                                                                                                                                                                                                                                                                                       | src/components/ChannelLoading.tsx                |
-| PoolCard.js                       | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | src/components/PoolCard.js                       |
-|                                   | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                                                  |
-| ViewChannelItem.js                | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | src/components/ViewChannelItem.js                |
-|                                   | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                                                  |
+| PoolCard.js                       | The provided code snippet is a React component that represents a pool card in a decentralized finance (DeFi) application. It includes functionalities such as depositing tokens, withdrawing tokens, and harvesting rewards from the pool. The component interacts with the Web3 library and uses various external packages and internal components for styling and functionality. | src/components/PoolCard.js                       |
+|                                   | |                                                  |
+| ViewChannelItem.js                | | src/components/ViewChannelItem.js                |
+|                                   ||                                                  |
 | AddSubgraphModalContent.tsx       | This is a React component that displays a modal for adding a subgraph. It includes input fields for subgraph ID and poll time, with validation and error messages. The component also handles communication with the parent component to add the subgraph and display success/failure messages.                                                                                                                                                                                                                                                                                                                                                                                                                | src/components/AddSubgraphModalContent.tsx       |
 
 </details>
@@ -1149,8 +246,8 @@ repo
 |:--------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------|
 | Globals.js          | The code provides constants for device sizes and margin/padding values, global variables for links, storage, and constants, adjustments for box shadow, radius, and blur, and a set of predefined color values.                                                                                                                                                                                                                                                    | src/config/Globals.js          |
 | config-dev.js       | The code snippet defines environmental configurations for a decentralized app (dapp), including API calls related settings, allowed networks, core network data, analytics settings, external links, and smart contract-related information, including addresses and chain details. It exports the configurations in two objects-config and addresses.                                                                                                             | src/config/config-dev.js       |
-| Themization.js      | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                                                                                                                                                                                                                                      | src/config/Themization.js      |
-|                     | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                                                                                                                                                                                                                           |                                |
+| Themization.js      | The code defines two theme objects, themeLight and themeDark, which represent light and dark color schemes, respectively. Each theme contains various color properties for different components of a user interface, such as background, text, borders, buttons, modals, and more. | src/config/Themization.js      |
+|                     | |                                |
 | channelTuts.js      | The code snippet defines an object that lists various partners of the Ethereum Push Notification Service (EPNS) along with their information such as maintainer address, YouTube videos, and articles. The object is exported as "channelsTuts" variable to be used in other parts of the code.                                                                                                                                                                    | src/config/channelTuts.js      |
 | config-localhost.js | The code snippet provides environmental configurations for the dapp, including API call details, allowed networks, network-related data, analytics and Firebase settings, external links, smart contract addresses, and chain details. It uses the config and addresses objects to group the related information into separate categories. The CHAIN_DETAILS object contains a label, name, chain ID, RPC URL, and communication address for each allowed network. | src/config/config-localhost.js |
 | config-general.js   | The code exports environmental configurations for a decentralized application (dapp) in different environments, which include API keys and internal components' ABI definitions. The components include various smart contract ABIs used for interacting with the Ethereum blockchain such as ERC20, EPNS, staking, Uniswap and more.                                                                                                                              | src/config/config-general.js   |
@@ -1182,8 +279,8 @@ repo
 | File                   | Summary                                                                                                                                                                                                                                                                                                                                                             | Module                                           |
 |:-----------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------|
 | createChannel.css      | The provided code snippet contains several CSS selectors, applying various styles to HTML elements in order to modify their appearance and behavior. These styles include changes to text color, border properties, box shadows, and element positioning. Additionally, there are styles for hover and focus events, an image filter, and the display of a tooltip. | src/modules/createChannel/createChannel.css      |
-| CreateChannelModule.js | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                                                                                                                                       | src/modules/createChannel/CreateChannelModule.js |
-|                        | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                                                                                                                            |                                                  |
+| CreateChannelModule.js | This code represents a React component that allows users to create a channel using Web3 and interact with smart contracts. It includes features like input validation, image uploading, and transaction handling. The component goes through different steps, such as providing channel information, uploading a logo, and specifying staking details, to complete the channel creation process. | src/modules/createChannel/CreateChannelModule.js |
+|                        ||
 
 </details>
 
@@ -1204,8 +301,8 @@ repo
 | File                 | Summary                                                                                                                                                                                                                                                                                                                                               | Module                                       |
 |:---------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------|
 | uploadLogoModal.tsx  | This code provides a react component that renders a modal for uploading and cropping images to resize to 128px, and saves the cropped image as channelLogo. It uses the react-use library to implement click-away functionality and the styled-components library for styling. It also provides buttons to crop or upload image based on user action. | src/modules/editChannel/uploadLogoModal.tsx  |
-| EditChannel.tsx      | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                                                                                                                         | src/modules/editChannel/EditChannel.tsx      |
-|                      | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                                                                                                              |                                              |
+| EditChannel.tsx      | The "EditChannel" component is a React component used for editing a channel's details. It allows users to update the channel's name, information, URL, and logo, and includes features such as fee calculation, logo upload, and approval of PUSH tokens. | src/modules/editChannel/EditChannel.tsx      |
+|                      | |                                              |
 | EditChannelForms.tsx | This code snippet is a React component that defines a form for editing a channel's name, description, and website URL. It uses styled-components and primates/SharedStyling to define the layout and styling of the form. The code also includes functions for validating the inputs and displaying error messages.                                   | src/modules/editChannel/EditChannelForms.tsx |
 
 </details>
@@ -1222,8 +319,8 @@ repo
 
 | File          | Summary                                                                                                                       | Module                        |
 |:--------------|:------------------------------------------------------------------------------------------------------------------------------|:------------------------------|
-| FaqModule.tsx | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions' | src/modules/faq/FaqModule.tsx |
-|               | For more information check: https://httpstatuses.com/400                                                                      |                               |
+| FaqModule.tsx | The "FaqModule" component is a React component that displays frequently asked questions (FAQs) and their corresponding answers. It includes features such as toggling the display of answers, tracking page views with ReactGA, and styling with styled-components. | src/modules/faq/FaqModule.tsx |
+|               | |                               |
 
 </details>
 
@@ -1247,8 +344,8 @@ repo
 
 | File          | Summary                                                                                                                       | Module                        |
 |:--------------|:------------------------------------------------------------------------------------------------------------------------------|:------------------------------|
-| GovModule.tsx | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions' | src/modules/gov/GovModule.tsx |
-|               | For more information check: https://httpstatuses.com/400                                                                      |                               |
+| GovModule.tsx | The GovModule is a React component that represents a governance module in a decentralized platform. It provides functionality for managing nominations and delegatees, displaying statistics, allowing users to cast votes, and providing an FAQ section for users to learn more about the governance process. | src/modules/gov/GovModule.tsx |
+|               | |                               |
 
 </details>
 
@@ -1258,8 +355,8 @@ repo
 |:--------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------|
 | PendingMembers.tsx        | This code snippet defines a React component named "Pending Members". It displays pending member requests within a styled wrapper, with a click-to-toggle button and arrow icon. The number of pending requests are displayed in a rounded label and the requests themselves can be expanded within a scrollable container, which can dynamically switch height. The code also imports and utilizes various styled-components and helper functions. | src/components/chat/w2wChat/groupChat/groupInfo/PendingMembers.tsx        |
 | ProfileCard.tsx           | This code snippet provides a React component called ProfileCard, which generates a custom user profile card complete with dropdown menus and admin labels. It imports several external packages such as'styled-components','useWeb3React','ethers' along with several helper functions. The component props come with functions to handle the display of the dropdown menu and which profile card components and data to render.                   | src/components/chat/w2wChat/groupChat/groupInfo/ProfileCard.tsx           |
-| groupInfoModalContent.tsx | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                                                                                                                                                                                                                      | src/components/chat/w2wChat/groupChat/groupInfo/groupInfoModalContent.tsx |
-|                           | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                                                                                                                                                                                                           |                                                                           |
+| groupInfoModalContent.tsx | The provided code is a React component that renders a modal for displaying and managing group information in a chat application. It includes features such as showing group details, adding/removing members and admins, messaging group members, and handling pending membership requests.| src/components/chat/w2wChat/groupChat/groupInfo/groupInfoModalContent.tsx |
+|                           |  |                                                                           |
 
 </details>
 
@@ -1282,8 +379,8 @@ repo
 | WithGasHelper.tsx          | This code provides a function to execute a delegate transaction with Ethereum Provider Notification Service (EPNS) Token. It includes error handling and the ability to display loading and completion messages. The function takes in variables including the delegateeAddress, EPNS Token, toast, and library.                                                                                                                                                                                                                                                                                                                           | src/helpers/WithGasHelper.tsx          |
 | CaipHelper.ts              | This code provides a set of functions that convert between standard chain and address formats and a format called CAIP designed for use in decentralized systems. The functions allow for the conversion of chain IDs to their respective CAIP format and the conversion of user addresses to their respective address CAIP format. The code also accounts for EIP-155 enabled chains, which require a slightly different format.                                                                                                                                                                                                          | src/helpers/CaipHelper.ts              |
 | index.ts                   | The provided code exports all the functionalities of the "PushTokenContractHelper" module, making them available for use in other parts of the codebase as needed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | src/helpers/index.ts                   |
-| EPNSCoreHelper.ts          | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | src/helpers/EPNSCoreHelper.ts          |
-|                            | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |                                        |
+| EPNSCoreHelper.ts          | The code snippet is a collection of helper functions for interacting with the EPNS (Ethereum Push Notification Service) Core contract. It includes functions for retrieving information about channels, users, gas prices, and other related data. These functions facilitate various operations within the EPNS ecosystem, such as fetching channel metadata, calculating fair share, and getting the total number of channels and users. | src/helpers/EPNSCoreHelper.ts          |
+|                            | |                                        |
 | IpfsHelper.ts              | The code snippet involves importing external packages like'ipfs-http-client' and internal components like'../services/ipfs' and'../UtilityHelper'. It uses environment-specific configurations based on whether a production environment is being used or not. The function'IPFSupload' uploads a provided string to the IPFS network using Infura and returns the storage pointer (path) of the uploaded content.                                                                                                                                                                                                                         | src/helpers/IpfsHelper.ts              |
 | LogoSizeHelper.ts          | The provided code snippet consists of two functions.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | src/helpers/LogoSizeHelper.ts          |
 |                            |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |                                        |
@@ -1334,8 +431,8 @@ repo
 
 | File                  | Summary                                                                                                                                                                                                                                                                                                                                                                                                     | Module                                     |
 |:----------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------|
-| InternalDevModule.tsx | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                                                                                                                                                                               | src/modules/internal/InternalDevModule.tsx |
-|                       | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                                                                                                                                                                    |                                            |
+| InternalDevModule.tsx | The provided code is a React component that demonstrates various reusable components and hooks used in a web application. It includes components like LoaderSpinner, ProgressBar, and BlurBG, showcasing their functionality and visual appearance. | src/modules/internal/InternalDevModule.tsx |
+|                       ||                                            |
 | DemoModalContent.tsx  | This code provides a React component implementing a demo modal window. It features a container with a customizable heading (text-based) and a close button with event listener, via styled-components and reusable UI components. The modal triggers automatically upon code call (i.e. onClick) and closes via both button-click or clicking of modal exterior, bringing users back to background content. | src/modules/internal/DemoModalContent.tsx  |
 
 </details>
@@ -1428,8 +525,8 @@ repo
 | ImageClipper.js      | The provided code snippet is a React component that enables image cropping and compression. It utilizes the libraries React, react-easy-crop, styled-components, Pica, and Compressor. Images can be resized and compressed using either Pica or Compressor, depending on the browser used. The component uses a canvas element for displaying and cropping images and allows the user to zoom and adjust the position of the crop area.                                                                     | src/primaries/ImageClipper.js      |
 | DisplayNotice.js     | This code snippet is a React component that displays a notice with a title that fades in and out when the title changes. It imports packages such as React, styled-components, and react-animation to implement the functional code. It also defines the CSS styles for the notice box container and the notice display.                                                                                                                                                                                     | src/primaries/DisplayNotice.js     |
 | LoaderSpinner.tsx    | The provided code snippet exports a React component called LoaderSpinner, which contains a loading spinner from an external package called react-spinners. The spinner displays a fading effect over a specified period. The spinner's height, width, color, and CSS styles have been overridden with props passed down to the component.                                                                                                                                                                    | src/primaries/LoaderSpinner.tsx    |
-| SharedStyling.js     | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                                                                                                                                                                                                                                                                                | src/primaries/SharedStyling.js     |
-|                      | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                                                                                                                                                                                                                                                                     |                                    |
+| SharedStyling.js     | The provided code defines styled components in React using the styled-components library. These components allow for the creation of reusable and customizable UI elements with properties such as alignment, background color, font styles, and more. | src/primaries/SharedStyling.js     |
+|                      | |                                    |
 
 </details>
 
@@ -1484,14 +581,6 @@ repo
 
 </details>
 
-<details closed><summary>Releases</summary>
-
-| File           | Summary                               | Module                        |
-|:---------------|:--------------------------------------|:------------------------------|
-| yarn-3.4.1.cjs | Prompt exceeds max token limit: 48443 | .yarn/releases/yarn-3.4.1.cjs |
-
-</details>
-
 <details closed><summary>Reusables</summary>
 
 | File               | Summary                                                                                                                                                                                                                                                                                                                                                  | Module                                      |
@@ -1536,8 +625,8 @@ repo
 | File                        | Summary                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Module                                   |
 |:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------|
 | Spambox.tsx                 | The provided code snippet is a React function component'Spambox' that sets the header components of a spambox UI, by importing other components and using styled-components. It takes props and returns a styled container with a SpamBox component including features like a filterbar and search capability. All these are exported to be used elsewhere as a package.                                                                                                                                              | src/segments/Spambox.tsx                 |
-| spam.tsx                    | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                                                                                                                                                                                                                                                                                         | src/segments/spam.tsx                    |
-|                             | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                                          |
+| spam.tsx                    | This code represents a React component called "SpamBox" that displays spam notifications. It integrates with Web3 and uses various packages and components to fetch and filter notifications, handle user interactions, and display the notifications in a styled container. | src/segments/spam.tsx                    |
+|                             | |                                          |
 | Feedbox.tsx                 | The code snippet includes a React functional component that renders a notification feedbox with external package imports such as React-Redux, React-use and styled-components as well as several internal components. The feedbox displays notifications fetched from an API and can be filtered, searched, paginated, and decrypted. The code includes state management, asynchronous API calls, and conditional rendering, among other functionalities.                                                             | src/segments/Feedbox.tsx                 |
 | Airdrop.tsx                 | The code snippet is a React component that allows a user to claim a token airdrop by interacting with a Solidity smart contract on the Ethereum blockchain. It checks whether the user is eligible and if so, prompts them to claim their tokens. The component also includes a FAQs section and customizable toasts for transaction updates.                                                                                                                                                                         | src/segments/Airdrop.tsx                 |
 | Info.tsx                    | This code snippet is for a React component that imports styled components and dotenv, and displays a ViewInfoItem component inside a container div with a maximum height of 80vh and centered alignment.                                                                                                                                                                                                                                                                                                              | src/segments/Info.tsx                    |
@@ -1548,8 +637,8 @@ repo
 | ChannelCreationDashboard.js | The code imports React and some components for styling and creating channels. The main function, ChannelCreationDashboard, renders the CreateChannel component and returns it with some styling components. It fires an empty React.useEffect() on mount. Being a React component, the code can easily be integrated into a larger application for creating channels on a dashboard.                                                                                                                                  | src/segments/ChannelCreationDashboard.js |
 | TimerComponent.js           | This code snippet imports React and styled-components packages and an internal TimerItem component. The TimerComponent function returns a Wrapper that displays the TimerItem component with a styled background of a png image. The component is exported as a default.                                                                                                                                                                                                                                              | src/segments/TimerComponent.js           |
 | DeprecatedViewChannels.tsx  | The provided code is a React component that implements a user interface for viewing and searching for channels. It uses various external packages and web3 essentials to achieve this. The component includes features such as pagination, dynamic search filtering, and conditional rendering of elements based on search results.                                                                                                                                                                                   | src/segments/DeprecatedViewChannels.tsx  |
-| userJourneySteps.tsx        | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                                                                                                                                                                                                                                                                                         | src/segments/userJourneySteps.tsx        |
-|                             | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                                          |
+| userJourneySteps.tsx        |This code is a React component that defines an array of steps for a user journey tutorial. Each step contains content and target elements to be highlighted or interacted with. The steps guide users through different features and actions of an application, providing explanations and instructions along the way.| src/segments/userJourneySteps.tsx        |
+|                             | |                                          |
 | ChatSidebar.tsx             | The provided code considers React and Web3 frameworks to build a chat UI feature. It includes an interface with two tabs ('chats' and'requests'), a search bar, message containers, profile cards, and a bottom bar. Styling is done with Material-UI and Styled-components. The functionality includes handling events such as clicking and typing, indicating unread messages status and rendering dynamic UI content based on user interactions.                                                                   | src/segments/ChatSidebar.tsx             |
 
 </details>
@@ -1586,8 +675,8 @@ repo
 |:-------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:----------------------------------------|
 | YieldFarmingDataStore.js | This code defines a YieldFarmingDataStore class that contains various functions for retrieving data related to yield farming pools, including pool stats, user data, and rewards distributed. It also includes calculations for staking APR and LP pool APR. The class is initialized with account, token, staking, yield farming, and uniswap information, and uses web3 and ethers.js.                                                                                      | src/singletons/YieldFarmingDataStore.js |
 | UsersDataStore.js        | The code provides a User Data Store class and a static singleton for User events that can be listened to. The class includes functions for initializing listeners, reseting them, adding and removing callbacks, and retrieving user metadata. The implementation includes calls to other helper functions from the external EPNSCoreHelper module. Finally, the code includes some unused but implemented code for listening to subscribe/unsubscribe and public key events. | src/singletons/UsersDataStore.js        |
-| ChannelsDataStore.js     | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                                                                                                                                                                                                                                                 | src/singletons/ChannelsDataStore.js     |
-|                          | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                                                                                                                                                                                                                                      |                                         |
+| ChannelsDataStore.js     |This code is a JavaScript class called ChannelsDataStore that handles the management and retrieval of channel-related data in an application. It includes functions for initializing the class, setting up event listeners for channel updates, retrieving channel metadata, subscribers, and channel JSON data, and managing callbacks for various channel events. | src/singletons/ChannelsDataStore.js     |
+|                          | |                                         |
 
 </details>
 
@@ -1643,11 +732,11 @@ repo
 | File                    | Summary                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Module                                |
 |:------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------|
 | MasterInterfacePage.tsx | The code is a React component that renders a web application interface with various internal components and routes that dynamically load their content using lazy loading. It also has logic to control the playing of YouTube teaser videos and displays toast containers on the page. Additionally, the component uses styled components to define custom CSS styles for various elements on the page.                                                          | src/structure/MasterInterfacePage.tsx |
-| MobileNavigation.tsx    | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                                                                                                                                                                                                                                     | src/structure/MobileNavigation.tsx    |
-|                         | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                                                                                                                                                                                                                          |                                       |
+| MobileNavigation.tsx    | This code defines a React component called MobileNavigation that represents a mobile navigation menu. It uses the useWeb3React hook from the @web3-react/core package and other dependencies to render a navigation menu with primary and secondary sections. The menu items and their behavior are determined by the navigationList configuration. | src/structure/MobileNavigation.tsx    |
+|                         | |                                       |
 | Header.tsx              | The provided code defines and exports a Header component with several functionalities, including getting user Web3 context and displaying navigation menus for both desktop and mobile devices. Additionally, it handles error scenarios when a user is unable to connect to Web3 networks and facilitates switching between light and dark mode. The component is built using React and styled-components and imports external packages and internal components. | src/structure/Header.tsx              |
-| Navigation.tsx          | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions'                                                                                                                                                                                                                                                                                                                                     | src/structure/Navigation.tsx          |
-|                         | For more information check: https://httpstatuses.com/400                                                                                                                                                                                                                                                                                                                                                                                                          |                                       |
+| Navigation.tsx          |This code represents a React component called "Navigation" that generates a navigation menu based on the provided configuration and the current state of the application. It includes logic to handle menu items, sections, and drilldowns, as well as conditional rendering based on the user's authentication status and other application states. | src/structure/Navigation.tsx          |
+|                         | |                                       |
 
 </details>
 
@@ -1780,20 +869,20 @@ repo
 
 | File                   | Summary                                                                                                                       | Module                                   |
 |:-----------------------|:------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------|
-| YieldFarmingModule.tsx | Error generating file summary. Exception: Client error '400 Bad Request' for url 'https://api.openai.com/v1/chat/completions' | src/modules/yield/YieldFarmingModule.tsx |
-|                        | For more information check: https://httpstatuses.com/400                                                                      |                                          |
+| YieldFarmingModule.tsx | This code is a React component that represents a yield farming module. It fetches data from a smart contract and displays various statistics related to yield farming pools, such as total value locked, rewards given, time left for the next epoch, and PUSH token price. It also renders pool cards for different yield farming pools and handles user interactions. | src/modules/yield/YieldFarmingModule.tsx |
+|                        ||                                          |
 
 </details>
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 🖥 Installation
 
 1. Clone the push-dapp repository:
 ```sh
-git clone https://github.com/ethereum-push-notification-service/push-dapp
+git clone https://github.com/ethereum-push-notification-service/push-dapp.git
 ```
 
 2. Change to the project directory:
@@ -1803,46 +892,52 @@ cd push-dapp
 
 3. Install the dependencies:
 ```sh
-npm install
+yarn install
 ```
 
-### 🤖 Using push-dapp
+4. View on Localhost by:
 
 ```sh
-npm run build && node dist/main.js
+yarn start
 ```
 
-### 🧪 Running Tests
+### Note 
 ```sh
-npm test
+Make sure to have the generate the `.env` file from the .env.sample file.
+You can set up on different environments depending on the REACT_APP_DEPLOY_ENV variable(DEV or STAGING or PROD). 
 ```
 
 
-## 🤝 Contributing
+## Resources
+- **[Website](https://push.org)** To checkout our Product.
+- **[Docs](https://docs.push.org/developers/)** For comprehensive documentation.
+- **[Blog](https://medium.com/push-protocol)** To learn more about our partners, new launches, etc.
+- **[Discord](discord.gg/pushprotocol)** for support and discussions with the community and the team.
+- **[GitHub](https://github.com/ethereum-push-notification-service)** for source code, project board, issues, and pull requests.
+- **[Twitter](https://twitter.com/pushprotocol)** for the latest updates on the product and published blogs.
 
-Contributions are always welcome! Please follow these steps:
-1. Fork the project repository. This creates a copy of the project on your account that you can modify without affecting the original project.
-2. Clone the forked repository to your local machine using a Git client like Git or GitHub Desktop.
-3. Create a new branch with a descriptive name (e.g., `new-feature-branch` or `bugfix-issue-123`).
-```sh
-git checkout -b new-feature-branch
-```
-4. Make changes to the project's codebase.
-5. Commit your changes to your local branch with a clear commit message that explains the changes you've made.
-```sh
-git commit -m 'Implemented new feature.'
-```
-6. Push your changes to your forked repository on GitHub using the following command
-```sh
-git push origin new-feature-branch
-```
-7. Create a pull request to the original repository.
-Open a new pull request to the original project repository. In the pull request, describe the changes you've made and why they're necessary.
-The project maintainers will review your changes and provide feedback or merge them into the main branch.
 
----
+## Contributing
 
----- old Readme----
+Push Protocol is an open source Project. We firmly believe in a completely transparent development process and value any contributions. We would love to have you as a member of the community, whether you are assisting us in bug fixes, suggesting new features, enhancing our documentation, or simply spreading the word. 
+
+- Bug Report: Please create a bug report if you encounter any errors or problems while utilising the Push Protocol.
+- Feature Request: Please submit a feature request if you have an idea or discover a capability that would make development simpler and more reliable.
+- Documentation Request: If you're reading the Push documentation and believe that we're missing something, please create a docs request.
+
+
+Read how you can contribute <a href="https://github.com/ethereum-push-notification-service/push-sdk/blob/main/contributing.md">HERE</a>
+
+Not sure where to start? Join our discord and we will help you get started!
+
+
+<a href="discord.gg/pushprotocol" title="Join Our Community"><img src="https://www.freepnglogos.com/uploads/discord-logo-png/playerunknown-battlegrounds-bgparty-15.png" width="200" alt="Discord" /></a>
+
+## License
+Check out our License <a href='https://github.com/ethereum-push-notification-service/push-sdk/blob/main/license-v1.md'>HERE </a>
+
+
+<!-- ---- old Readme----
 
 The dApp that powers Push Protocol
 
@@ -1862,5 +957,5 @@ Open up localhost:3000 by
 yarn start
 ```
 Make sure to have the generate the `.env` file from the .env.sample file.
-You can set up on different environments depending on the REACT_APP_DEPLOY_ENV variable(DEV or STAGING or PROD). 
+You can set up on different environments depending on the REACT_APP_DEPLOY_ENV variable(DEV or STAGING or PROD).  -->
 
