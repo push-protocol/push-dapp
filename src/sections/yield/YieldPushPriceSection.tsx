@@ -5,7 +5,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 // Internal Compoonents
-import { H2V2, ImageV2, ItemHV2 } from 'components/reusables/SharedStylingV2';
+import { H2V2, ImageV2, ItemHV2, Skeleton, SkeletonLine } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -14,37 +14,47 @@ import { ethers } from 'ethers';
 const YieldPushPriceSection = ({
   poolStats
 }) => {
-    function numberWithCommas(x) {
-      return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    }
+  function numberWithCommas(x) {
+    return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
 
   // RENDER
   return (
     <ItemHV2Modified justifyContent="stretch">
-      <H2V2ThemeColor
-        fontSize="18px"
-        textAlign="left"
-        fontWeight={600}
-      >
-        Push Price
-      </H2V2ThemeColor>
-      <ItemHV2 gap="5px" justifyContent="flex-end">
-        <H2V2ThemeColor
-          fontSize="24px"
-          textAlign="left"
-          fontWeight={600}
+      {poolStats ? (
+        <>
+          <H2V2ThemeColor
+            fontSize="18px"
+            textAlign="left"
+            fontWeight={600}
+          >
+            Push Price
+          </H2V2ThemeColor>
+          <ItemHV2 gap="5px" justifyContent="flex-end">
+            <H2V2ThemeColor
+              fontSize="24px"
+              textAlign="left"
+              fontWeight={600}
+            >
+              $
+              {/* 0.34 */}
+              {numberWithCommas(poolStats?.pushPrice.toFixed(2))}
+            </H2V2ThemeColor>
+            <ImageV2
+              width="25px"
+              height="27px"
+              src="svg/uniswapLogo.svg"
+              alt="Uniswap Logo"
+            />
+          </ItemHV2>
+        </>
+      ) : (
+        <SkeletonContainer
         >
-          $ 
-          {/* 0.34 */}
-          {numberWithCommas(poolStats?.pushPrice.toFixed(2))}
-        </H2V2ThemeColor>
-        <ImageV2
-          width="25px"
-          height="27px"
-          src="svg/uniswapLogo.svg"
-          alt="Uniswap Logo"
-        />
-      </ItemHV2>
+          <SkeletonLine height='12px' width='135px' margin='10px 0 10px 0' ></SkeletonLine>
+          <SkeletonLine height='12px' width='135px' margin='10px 0 10px 0' ></SkeletonLine>
+        </SkeletonContainer>
+      )}
     </ItemHV2Modified>
   );
 }
@@ -66,3 +76,15 @@ const ItemHV2Modified = styled(ItemHV2)`
 const H2V2ThemeColor = styled(H2V2)`
   color: ${(props) => props.theme.stakingPrimaryText};
 `;
+
+const SkeletonContainer = styled(Skeleton)`
+    // width:150px;
+    z-index:1;
+    align-items:baseline;
+    max-width:-webkit-fill-available;
+    border-radius: 5px;
+    gap:5px;
+    flex-direction: row;
+    justify-content: inherit;
+    flex: 1;
+`
