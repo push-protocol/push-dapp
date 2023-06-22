@@ -1,29 +1,30 @@
 // React + Web3 Essentials
-import { Web3ReactProvider } from "@web3-react/core";
-import { ethers } from "ethers";
-import React from "react";
+import { Web3ReactProvider } from '@web3-react/core';
+import { ethers } from 'ethers';
+import React from 'react';
 
 // External Packages
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 
 // Internal Components
-import { VideoCallContextProvider } from 'contexts/VideoCallContext';
-import App from "./App";
-import "./index.css";
-import store from "./redux/store";
-import * as serviceWorker from "./serviceWorker";
+import App from './App';
+import './index.css';
+import store from './redux/store';
+import * as serviceWorker from './serviceWorker';
+import ChatUserContextProvider from './contexts/ChatUserContext';
+import { VideoCallContextProvider } from './contexts/VideoCallContext';
 
 // Internal Configs
-import * as dotenv from "dotenv";
+import * as dotenv from 'dotenv';
 
 // enable environmental variables across the entire application
 dotenv.config();
 // You should replace this uri with your own and put it into a .env file
 const client = new ApolloClient({
-  uri: "https://api.thegraph.com/subgraphs/name/epnsproject/epnsstaging",
+  uri: 'https://api.thegraph.com/subgraphs/name/epnsproject/epnsstaging',
   cache: new InMemoryCache(),
 });
 
@@ -31,9 +32,9 @@ const client = new ApolloClient({
  * A utility function used to get the provider
  */
 function getLibrary(provider) {
-  const gottenProvider = new ethers.providers.Web3Provider(provider, "any");
+  const gottenProvider = new ethers.providers.Web3Provider(provider, 'any');
   // adding this is important to deal with changing networks
-  gottenProvider.on("network", (_, oldNetwork) => {
+  gottenProvider.on('network', (_, oldNetwork) => {
     if (oldNetwork) {
       // when network has been changed, refresh the page
       window.location.reload();
@@ -47,14 +48,16 @@ ReactDOM.render(
     <Provider store={store}>
       <ApolloProvider client={client}>
         <Web3ReactProvider getLibrary={getLibrary}>
-          <VideoCallContextProvider>
-            <App />
-          </VideoCallContextProvider>
+          <ChatUserContextProvider>
+            <VideoCallContextProvider>
+              <App />
+            </VideoCallContextProvider>
+          </ChatUserContextProvider>
         </Web3ReactProvider>
       </ApolloProvider>
     </Provider>
   </BrowserRouter>,
-  document.getElementById("root")
+  document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change

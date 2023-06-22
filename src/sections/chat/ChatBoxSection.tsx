@@ -12,15 +12,12 @@ import GLOBALS from 'config/Globals';
 
 // Chat Sections
 // Divided into two, left and right
-const ChatBoxSection = ({ setVideoCallInfo, showGroupInfoModal }) => {
+const ChatBoxSection = ({ showGroupInfoModal }) => {
   // RENDER
   return (
     <ItemVV2 justifyContent="stretch">
-      <ChatBox
-        setVideoCallInfo={setVideoCallInfo}
-        showGroupInfoModal={showGroupInfoModal}
-      />
+      <ChatBox showGroupInfoModal={showGroupInfoModal} />
     </ItemVV2>
   );
-}
+};
 export default ChatBoxSection;

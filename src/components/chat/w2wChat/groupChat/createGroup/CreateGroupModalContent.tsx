@@ -35,8 +35,8 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const [groupTypeObject, setGroupTypeObject] = React.useState<any>();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [memberList, setMemberList] = React.useState<any>([]);
-  const { connectedUser, setConnectedUser ,  createUserIfNecessary} = useContext(ChatUserContext);
-  const {library } = useWeb3React<ethers.providers.Web3Provider>();
+  const { connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
+  const { library } = useWeb3React<ethers.providers.Web3Provider>();
   const themes = useTheme();
   const createGroupToast = useToast();
   const isMobile = useDeviceWidthCheck(600);
@@ -51,14 +51,13 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => handleClose());
   const handleCreateGroup = async (): Promise<any> => {
-
     if (memberList.length >= 2) {
       setIsLoading(true);
       try {
         const memberWalletList = memberList.filter((member) => !member.isAdmin).map((member) => member.wallets);
-        const adminWalletList = memberList.filter(member => member.isAdmin).map((member) => member.wallets);
+        const adminWalletList = memberList.filter((member) => member.isAdmin).map((member) => member.wallets);
         let createdUser;
-        if(!connectedUser.publicKey){
+        if (!connectedUser.publicKey) {
           createdUser = await createUserIfNecessary();
         }
         const signer = await library.getSigner();
@@ -74,7 +73,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
           env: appConfig.appEnv,
         });
         if (typeof createGroupRes !== 'string') {
-          const inboxes: Feeds[] = await fetchInbox(connectedUser);
+          const inboxes: Feeds[] = await fetchInbox({ connectedUser });
           setInbox(inboxes);
           createGroupToast.showMessageToast({
             toastTitle: 'Success',
@@ -135,7 +134,6 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   return (
     <ThemeProvider theme={themes}>
       <ModalContainer createGroupState={createGroupState}>
-        
         {createGroupState == 1 && (
           <GroupDetailsContent
             groupNameData={groupNameData}
@@ -159,7 +157,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
             isLoading={isLoading}
             handlePrevious={handlePrevious}
             handleClose={handleClose}
-            title={"Create Group"}
+            title={'Create Group'}
           />
         )}
       </ModalContainer>

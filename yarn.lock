@@ -4631,7 +4631,7 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
     "@pushprotocol/ledgerlive": latest
-    "@pushprotocol/restapi": 1.2.14
+    "@pushprotocol/restapi": ^1.3.7
     "@pushprotocol/socket": latest
     "@pushprotocol/uiweb": 1.0.2
     "@reduxjs/toolkit": ^1.7.1
@@ -4687,6 +4687,7 @@ __metadata:
     https-browserify: 1.0.0
     husky: ^8.0.0
     image-size: 0.9.3
+    immer: ^10.0.2
     ipfs-api: 26.1.2
     ipfs-http-client: ^57.0.3
     jotai: ^2.0.3
@@ -4836,32 +4837,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:1.2.14":
-  version: 1.2.14
-  resolution: "@pushprotocol/restapi@npm:1.2.14"
+"@pushprotocol/restapi@npm:^1.3.7":
+  version: 1.3.7
+  resolution: "@pushprotocol/restapi@npm:1.3.7"
   dependencies:
     "@metamask/eth-sig-util": ^5.0.2
     axios: ^0.27.2
     buffer: ^6.0.3
     crypto-js: ^4.1.1
+    immer: ^10.0.2
     openpgp: ^5.5.0
+    simple-peer: ^9.11.1
     tslib: ^2.3.0
     uuid: ^9.0.0
   peerDependencies:
     ethers: ^5.6.8
-  checksum: 904d9def3e233305b80421fc35989a3dad72cd5093c293320809ac5e39f38cf4b46969dd9e81470038408a76b8f985ab0e807e6aa0f318085507acdab33f092a
+  checksum: 9571f02f0b7c25f394932dbd7e4deb232e0055850ffad26a680829d28e96d921d404875eb9e6048f9cba352dd62942ddd0e8c1a6f0d7cd855098ed9ad06d6411
   languageName: node
   linkType: hard
 
 "@pushprotocol/socket@npm:^0.5.0, @pushprotocol/socket@npm:latest":
-  version: 0.5.0
-  resolution: "@pushprotocol/socket@npm:0.5.0"
+  version: 0.5.1
+  resolution: "@pushprotocol/socket@npm:0.5.1"
   dependencies:
     socket.io-client: ^4.5.2
     tslib: ^2.3.0
   peerDependencies:
     ethers: ^5.6.8
-  checksum: 35cee58813b01f143ff314951e0f147a05d786be2905501a3ad36f8e45b7f0d783f8046fe1299a2ca4af7a28b23b1c3274e6f26648aab9a57de13ec140dc469e
+  checksum: 7833cec176b72c7e9a21aee75c6e0289d2101aea8d26ee45f56bc4aced5d186588e78d944cae2e90255595c9cd773aace104d25d6536dd59ab308f4962299893
   languageName: node
   linkType: hard
 
@@ -16917,6 +16920,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"immer@npm:^10.0.2":
+  version: 10.0.2
+  resolution: "immer@npm:10.0.2"
+  checksum: 525a3b14210d02ae420c3b9f6ca14f7e9bcf625611d1356e773e7739f14c7c8de50dac442e6c7de3a6e24a782f7b792b6b8666bc0b3f00269d21a95f8f68ca84
+  languageName: node
+  linkType: hard
+
 "immer@npm:^9.0.21, immer@npm:^9.0.6, immer@npm:^9.0.7":
   version: 9.0.21
   resolution: "immer@npm:9.0.21"
@@ -27140,7 +27150,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"simple-peer@npm:9.11.1":
+"simple-peer@npm:9.11.1, simple-peer@npm:^9.11.1":
   version: 9.11.1
   resolution: "simple-peer@npm:9.11.1"
   dependencies:
