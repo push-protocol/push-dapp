@@ -110,10 +110,6 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   let showTime = false;
   let time = '';
 
-  if (true) {
-    console.log('PAssed');
-  }
-
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
   //resolve web3 names
