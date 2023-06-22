@@ -178,7 +178,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint --fix",
     "pretty": "prettier --write .",
-    "prepare": "husky install"
+    "postinstall": "husky install"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
