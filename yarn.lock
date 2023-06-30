@@ -4626,7 +4626,7 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
     "@pushprotocol/ledgerlive": latest
-    "@pushprotocol/restapi": ^1.3.7
+    "@pushprotocol/restapi": ^1.3.9
     "@pushprotocol/socket": latest
     "@pushprotocol/uiweb": 1.0.2
     "@reduxjs/toolkit": ^1.7.1
@@ -4828,9 +4828,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:^1.3.7":
-  version: 1.3.7
-  resolution: "@pushprotocol/restapi@npm:1.3.7"
+"@pushprotocol/restapi@npm:^1.3.9":
+  version: 1.3.9
+  resolution: "@pushprotocol/restapi@npm:1.3.9"
   dependencies:
     "@metamask/eth-sig-util": ^5.0.2
     axios: ^0.27.2
@@ -4843,7 +4843,7 @@ __metadata:
     uuid: ^9.0.0
   peerDependencies:
     ethers: ^5.6.8
-  checksum: 9571f02f0b7c25f394932dbd7e4deb232e0055850ffad26a680829d28e96d921d404875eb9e6048f9cba352dd62942ddd0e8c1a6f0d7cd855098ed9ad06d6411
+  checksum: 4c62bc01f8da0e1cdc91231cc825a379e923a65c988c0145822b0e93486d5ba00ad1164287ed302290e9f4eec58a850b219404021e96aa83d873b32b6b366651
   languageName: node
   linkType: hard
 
