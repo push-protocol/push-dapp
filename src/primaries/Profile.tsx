@@ -13,7 +13,8 @@ import { envUtil, shortenText } from 'helpers/UtilityHelper';
 import ProfileModal from 'components/ProfileModal';
 import Dropdown from '../components/Dropdown';
 import { useClickAway } from 'hooks/useClickAway';
-import { walletconnect } from 'connectors';
+// import { walletconnect } from 'connectors';
+import { walletConnectV2 } from 'connectors';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
@@ -58,8 +59,8 @@ const Profile = ({ isDarkMode }) => {
       id: 'disconnect',
       value: '',
       function: () => {
-        if (connector === walletconnect) {
-          connector?.close();
+        if (connector === walletConnectV2) {
+          connector?.deactivate();
         } else {
           deactivate();
         }

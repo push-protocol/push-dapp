@@ -27,7 +27,9 @@ import {
   SectionV2,
   SpanV2
 } from 'components/reusables/SharedStylingV2';
-import { injected, ledger, walletconnect } from 'connectors';
+// import { injected, ledger, walletconnect } from 'connectors';
+import { injected, ledger} from 'connectors';
+import { walletConnectV2 } from 'connectors';
 import { useDeviceWidthCheck, useEagerConnect, useInactiveListener } from 'hooks';
 import styled, { useTheme } from 'styled-components';
 import LedgerLogoDark from './assets/login/ledgerDark.svg';
@@ -53,7 +55,7 @@ const web3Connectors = {
     title: 'Metamask',
   },
   WalletConnect: {
-    obj: walletconnect,
+    obj: walletConnectV2,
     logolight: WCLogoLight,
     logodark: WCLogoDark,
     title: 'Wallet Connect',

@@ -1,10 +1,12 @@
 // External Packages
 import { InjectedConnector } from '@web3-react/injected-connector';
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
+// import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
+import { WalletConnect as WalletConnectV2 } from '@web3-react/walletconnect-v2';
 import { LedgerHQFrameConnector } from '@pushprotocol/ledgerlive';
 import { LedgerConnector } from '@web3-react/ledger-connector';
 import { TrezorConnector } from '@web3-react/trezor-connector';
-
+import { initializeConnector } from '@web3-react/core';
+import { CHAIN_DETAILS } from 'config';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -15,23 +17,38 @@ const POLLING_INTERVAL = 12000;
 const CORE_CHAIN_ID = appConfig.coreContractChain;
 const CORE_RPC = appConfig.coreRPC;
 
-let RPC_URLS: { [chainId: number]: string } = {
-  [CORE_CHAIN_ID]: appConfig.coreRPC,
-};
+// let RPC_URLS: { [chainId: number]: string } = {
+//   [CORE_CHAIN_ID]: appConfig.coreRPC,
+// };
 
-RPC_URLS = Object.assign(RPC_URLS, appConfig.aliasRPC);
+// RPC_URLS = Object.assign(RPC_URLS, appConfig.aliasRPC);
 
 export const injected = new InjectedConnector({ supportedChainIds: SUPPORTED_CHAIN_IDS });
 
 // Only receive messages from platform.apps.ledger.com
 export const ledgerLiveConnector = new LedgerHQFrameConnector();
 
-export const walletconnect = new WalletConnectConnector({
-  rpc: { ...RPC_URLS },
-  bridge: 'https://bridge.walletconnect.org',
-  qrcode: true,
-  pollingInterval: POLLING_INTERVAL,
-});
+const [mainnet, ...optionalChains] = Object.keys(CHAIN_DETAILS).map(Number);
+
+export const [walletConnectV2, hooks] = initializeConnector<WalletConnectV2>(
+  (actions) =>
+    new WalletConnectV2({
+      actions,
+      options: {
+        projectId: process.env.PROJECT_ID,
+        showQrModal: true,
+        chains: [mainnet],
+        optionalChains,
+      },
+    })
+);
+
+// export const walletconnect = new WalletConnectConnector({
+//   rpc: { ...RPC_URLS },
+//   bridge: 'https://bridge.walletconnect.org',
+//   qrcode: true,
+//   pollingInterval: POLLING_INTERVAL,
+// });
 //
 // export const walletlink = new WalletLinkConnector({
 //   url: RPC_URLS[1],
