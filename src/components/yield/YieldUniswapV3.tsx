@@ -314,9 +314,9 @@ const YieldUniswapV3 = ({
                         <>
                             <EpochNo>Current Epoch</EpochNo>
                             <B>
-                                {Math.min(lpPoolStats?.currentEpochPUSH, lpPoolStats?.totalEpochPUSH).toString()}
+                                {Math.min(lpPoolStats?.currentEpochLP, lpPoolStats?.totalEpochLP).toString()}
                                 /
-                                {(lpPoolStats?.totalEpochPUSH).toString()}
+                                {lpPoolStats?.totalEpochLP.toString()}
                             </B>
                         </>
                     ) : (
@@ -430,14 +430,14 @@ const YieldUniswapV3 = ({
                         <ItemHV2>
                             <FilledButton onClick={() => {
                                 showStakingModal();
-                            }}>Stake PUSH/WETH LP Tokens</FilledButton>
+                            }}>Stake UNI-V2 LP Tokens</FilledButton>
                         </ItemHV2>
                         <ButtonsContainer>
                             <EmptyButton style={{ margin: "0px 10px 0px 0px" }} onClick={() => withdrawAmountTokenFarmAutomatic()}>
 
                                 {txInProgressWithdraw ?
                                     (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
-                                    "Unstake PUSH/WETH"
+                                    "Unstake UNI-V2"
                                 }
 
                             </EmptyButton>

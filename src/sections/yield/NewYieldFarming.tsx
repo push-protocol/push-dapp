@@ -43,7 +43,7 @@ const NewYieldFarming = ({
     const [PUSHPoolstats, setPUSHPoolStats] = useState(null);
 
     const getLpPoolStats = React.useCallback(async () => {
-        const poolStats = await YieldFarmingDataStoreV2.instance.getPoolStats();
+        const poolStats = await YieldFarmingDataStoreV2.instance.getPoolStats(library);
         const lpPoolStats = await YieldFarmingDataStoreV2.instance.getLPPoolStats(poolStats);
 
         setPoolStats({ ...poolStats });
@@ -78,7 +78,6 @@ const NewYieldFarming = ({
         setUserDataLP(null);
         setPUSHPoolStats(null);
         setUserDataPush(null);
-
 
 
         let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, library);
@@ -134,19 +133,6 @@ const NewYieldFarming = ({
             <YieldPushPriceSection
                 poolStats={poolStats}
             />
-            {/* <YieldSnapshotSection
-                lpPoolStats={lpPoolStats}
-                userDataLP={userDataLP}
-                userDataPush={userDataPush}
-                PUSHPoolstats={PUSHPoolstats}
-                getUserDataPush={getUserDataPush}
-                getPUSHPoolStats={getPUSHPoolStats}
-                getLpPoolStats={getLpPoolStats}
-                getUserDataLP={getUserDataLP}
-                loadingComponent={loadingComponent}
-                loadingPushComponent={loadingPushComponent}
-            /> */}
-
             <V3Container>
                 <YieldUniswapV3
                     lpPoolStats={lpPoolStats}

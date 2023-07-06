@@ -314,16 +314,6 @@ const YieldPushFeeV3 = ({
                     borderRadius="16px"
                 >
                     <ItemVV2 margin="0px 18px 0px 0px" padding="10px">
-                        {/* <SecondaryText>Current Reward</SecondaryText>
-                                <H2V2
-                                    fontSize="24px"
-                                    fontWeight="600"
-                                    color="#D53A94"
-                                    letterSpacing="-0.03em"
-                                >
-                                    {formatTokens(PUSHPoolstats?.currentReward)} PUSH
-                                </H2V2> */}
-
                         {PUSHPoolstats ? (
                             <>
                                 <SecondaryText>Current Reward</SecondaryText>
@@ -337,16 +327,6 @@ const YieldPushFeeV3 = ({
                                 </H2V2>
                             </>
                         ) : (
-                            // <Skeleton
-                            //     padding='0 15px'
-                            //     width='100%'
-                            //     maxWidth=' -webkit-fill-available'
-                            //     borderRadius='5px'
-                            //     gap='5px'
-                            // >
-                            //     <RewardSkeletonLine></RewardSkeletonLine>
-                            //     <RewardSkeletonLine></RewardSkeletonLine>
-                            // </Skeleton>
                             <SkeletonContainer
                                 padding='5px 15px 0 15px'
                             >
@@ -361,15 +341,6 @@ const YieldPushFeeV3 = ({
                     <Line width="10px" height="100%"></Line>
 
                     <ItemVV2 margin="0px 0px 0px 18px" padding="10px">
-                        {/* <SecondaryText>Total Staked</SecondaryText>
-                                <StakedAmount
-                                    fontSize="24px"
-                                    fontWeight="600"
-                                    letterSpacing="-0.03em"
-                                >
-                                    {formatTokens(PUSHPoolstats?.totalStakedAmount)} PUSH
-                                </StakedAmount> */}
-
                         {PUSHPoolstats ? (
                             <>
                                 <SecondaryText>Total Staked</SecondaryText>
@@ -382,16 +353,6 @@ const YieldPushFeeV3 = ({
                                 </StakedAmount>
                             </>
                         ) : (
-                            // <Skeleton
-                            //     padding='0 15px'
-                            //     width='100%'
-                            //     maxWidth=' -webkit-fill-available'
-                            //     borderRadius='5px'
-                            //     gap='5px'
-                            // >
-                            //     <RewardSkeletonLine></RewardSkeletonLine>
-                            //     <RewardSkeletonLine></RewardSkeletonLine>
-                            // </Skeleton>
                             <SkeletonContainer
                                 padding='5px 15px 0 15px'
                             >
@@ -525,7 +486,7 @@ const YieldPushFeeV3 = ({
                             <EmptyButton onClick={withdrawAmountTokenFarmAutomatic} style={{ margin: "0px 10px 0px 0px" }}>
                                 {txInProgressWithdraw ?
                                     (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
-                                    "Unstake PUSH/WETH"
+                                    "Unstake PUSH"
                                 }
                             </EmptyButton>
                             <EmptyButton onClick={massClaimRewardsTokensAll}>

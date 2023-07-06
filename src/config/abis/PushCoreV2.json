@@ -381,6 +381,19 @@
         "anonymous": false,
         "inputs": [
             {
+                "indexed": false,
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
+        ],
+        "name": "Unpaused",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
                 "indexed": true,
                 "internalType": "address",
                 "name": "user",
@@ -393,20 +406,7 @@
                 "type": "uint256"
             }
         ],
-        "name": "UnStaked",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "account",
-                "type": "address"
-            }
-        ],
-        "name": "Unpaused",
+        "name": "Unstaked",
         "type": "event"
     },
     {
@@ -1492,7 +1492,7 @@
     },
     {
         "inputs": [],
-        "name": "totalStakedWeight",
+        "name": "totalStakedAmount",
         "outputs": [
             {
                 "internalType": "uint256",
