@@ -4,12 +4,12 @@ import styled from 'styled-components';
 
 const StakingToolTipContent = ({
     title,
-    body
+    body,
 }) => {
     return (
         <Container>
             <TopHeading>{title}</TopHeading>
-            <TopSubHeading>{body}</TopSubHeading>
+            <TopSubHeading >{body}</TopSubHeading>
         </Container>
     );
 };

@@ -38,6 +38,8 @@ const YieldUniswapV3 = ({
     const [txInProgressWithdraw, setTxInProgressWithdraw] = React.useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
 
+    const [withdrawErrorMessage, setWithdrawErrorMessage] = useState(null);
+
     const uniswapV2Toast = useToast();
     const theme = useTheme();
 
@@ -128,9 +130,10 @@ const YieldUniswapV3 = ({
         }
 
         if (userDataLP?.totalAvailableReward == 0) {
+            setWithdrawErrorMessage("No Rewards to Claim!")
             uniswapV2Toast.showMessageToast({
                 toastTitle: 'Error',
-                toastMessage: `Nothing to Claim!`,
+                toastMessage: `No Rewards to Claim!`,
                 toastType: 'ERROR',
                 getToastIcon: (size) => <MdError size={size} color="red" />,
             });
@@ -501,7 +504,7 @@ const StakingToolTip = ({
                     body={body} />
             }
         >
-            <ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" style={{ cursor: 'pointer' }} />
+            <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
         </Tooltip>
     )
 

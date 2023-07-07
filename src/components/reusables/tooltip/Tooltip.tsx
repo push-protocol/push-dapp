@@ -51,10 +51,10 @@ const Tooltip: React.FC<TooltipProps> = ({ children, tooltipContent, isDisabled,
       onMouseLeave={isDisabled ? () => { } : hideTip}
       onBlur={isDisabled ? () => { } : hideTip}
     >
-      <div>
+      {/* <div> */}
         {children}
+      {/* </div> */}
 
-      </div>
       {!isDisabled && active && <Content id="channel" style={placementProps}>{tooltipContent}</Content>}
     </Wrapper>
 

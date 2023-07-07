@@ -102,7 +102,9 @@ export const addresses = {
 
   //this below one is the new one pushCoreV2 address
   // pushCoreV2:'0xC09B14263217F32c1Ce2D71fe231d83A3CE0301b', 
-  pushCoreV2:'0xEE805a4EE5B44D8bC1b8E5B6e75eE16d4790aD4A', 
+  // pushCoreV2:'0xb4B1512ECdd9Bb21Bb41d888f4Cac22A39bab1D2',  //21 days epoch
+  // pushCoreV2:'0xEE805a4EE5B44D8bC1b8E5B6e75eE16d4790aD4A', 
+  pushCoreV2:'0x0E8eca22ca65B46CE35d78f3dE66F450c904BC17', 
 
 
   // this below is of 21 days epoch but has wrong distributed amount
