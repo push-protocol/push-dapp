@@ -86,6 +86,8 @@ export default class YieldFarmingDataStoreV2 {
       const pushAmountReserve = tokenBNtoNumber(await this.state.pushToken.balanceOf(addresses.uniV2LPToken));
       const wethAmountReserve = tokenBNtoNumber(await this.state.pushToken.attach(addresses.WETHAddress).balanceOf(addresses.uniV2LPToken)); // Using pushToken instance for WETH instance
 
+      console.log("PpushAmountReserve",pushAmountReserve,wethAmountReserve);
+
       let ethPrice;
       const ethPriceAmounts = await this.state.uniswapV2Router02.getAmountsOut(ONE_PUSH.toString(),[addresses.WETHAddress,addresses.USDTAddress,]);
       if (appConfig.coreContractChain === 42 || appConfig.coreContractChain === 5) {
@@ -142,10 +144,6 @@ export default class YieldFarmingDataStoreV2 {
     const genesisEpochAmountLP = tokenToBn(ethers.BigNumber.from(this.state.genesisEpochAmountLP));
     const deprecationPerEpochLP = tokenToBn(ethers.BigNumber.from(this.state.deprecationPerEpochLP));
 
-    const genesisEpochAmountPUSH = tokenToBn(ethers.BigNumber.from(this.state.genesisEpochAmountPUSH));
-    const deprecationPerEpochPUSH = tokenToBn(ethers.BigNumber.from(this.state.deprecationPerEpochPUSH));
-
-
     console.log('Amount of LP', genesisEpochAmountLP, deprecationPerEpochLP, currentEpochLP.toNumber());
 
     let pushPoolRewardsDistributed = ethers.BigNumber.from(0);
@@ -161,18 +159,10 @@ export default class YieldFarmingDataStoreV2 {
 
       lpPoolRewardsDistributed = lpPoolRewardsDistributed.add(rewardForCurrentEpochLP);
 
-      const rewardForCurrentEpohcPUSH = this.calcTotalAmountPerEpoch(
-        genesisEpochAmountPUSH,
-        ethers.BigNumber.from(i),
-        deprecationPerEpochPUSH
-      );
+      const pushPoolRewardsDistributed = await pushCoreV2.epochRewards(i);
+      console.log("Reward for current epoch PUSH",tokenBNtoNumber(pushPoolRewardsDistributed));
 
-      const epochRewardsForCurrentEpochPUSH = await pushCoreV2.epochRewards(i);
-      console.log("Reward for current epoch PUSH",tokenBNtoNumber(epochRewardsForCurrentEpochPUSH));
-
-      pushPoolRewardsDistributed = pushPoolRewardsDistributed.add(epochRewardsForCurrentEpochPUSH).add(rewardForCurrentEpohcPUSH);
     }
-
     console.log('Lp Pool rewards distributed', tokenBNtoNumber(lpPoolRewardsDistributed),tokenBNtoNumber(pushPoolRewardsDistributed));
 
     return pushPoolRewardsDistributed.add(lpPoolRewardsDistributed)
@@ -223,20 +213,14 @@ export default class YieldFarmingDataStoreV2 {
       console.log('pushCore', pushCoreV2);
       const pushToken = this.state.pushToken;
       const currentEpoch = await this.currentEpochCalculation(provider);
-      const genesisEpochAmount = tokenToBn(ethers.BigNumber.from(this.state.genesisEpochAmountPUSH));
-      const deprecationPerEpoch = tokenToBn(ethers.BigNumber.from(this.state.deprecationPerEpochPUSH));
 
       const [ PROTOCOL_POOL_FEES, totalStakedAmount ]= await Promise.all([
         pushCoreV2.PROTOCOL_POOL_FEES(),
         pushCoreV2.totalStakedAmount(),
       ]);
 
-      //get Current Rewards 59400 - (136 * 900) = -63400
-      let defaultRewards = await this.calcTotalAmountPerEpoch(genesisEpochAmount, currentEpoch ,deprecationPerEpoch);
+      //get Current Rewards (If Admin adds the Pool Fees they will also stake 1 PUSH so the current reward will get updated)
       let currentReward = await this.getEpochRewards(pushCoreV2, PROTOCOL_POOL_FEES, currentEpoch);
-      currentReward = currentReward.add(defaultRewards);
-
-      console.log('defaultRewards', tokenBNtoNumber(defaultRewards), tokenBNtoNumber(currentReward));
 
       const stakingAPR = this.calcPushStakingAPR(totalStakedAmount);
 
@@ -257,7 +241,8 @@ export default class YieldFarmingDataStoreV2 {
         const numEpoch = await contract.NR_OF_EPOCHS();
         const currentEpochLP = await contract
           .getCurrentEpoch()
-          .then((epoch) => (epoch > numEpoch ? numEpoch : epoch));
+          .then((epoch) => (epoch.toNumber() > numEpoch.toNumber() ? numEpoch : epoch));
+          console.log("Current Epoch LP",currentEpochLP.toNumber())
         const epochStakeNext = await contract.getEpochStake(this.state.account, currentEpochLP.add(1));
 
         const potentialUserReward = (await this.calculateUserEpochReward(currentEpochLP, contract)).toFixed(2);

@@ -21,6 +21,7 @@ import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';
 import { B } from 'components/SharedStyling';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import StakingToolTipContent from './StakingToolTipContent';
+import ErrorLogo from "../../assets/errorLogo.svg"
 
 const YieldPushFeeV3 = ({
     userDataPush,
@@ -33,6 +34,9 @@ const YieldPushFeeV3 = ({
     const [txInProgressWithdraw, setTxInProgressWithdraw] = useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
 
+    const [unstakeErrorMessage, setUnstakeErrorMessage] = useState(null);
+    const [withdrawErrorMessage, setWithdrawErrorMessage] = useState(null);
+
     const pushFeeToast = useToast();
     const theme = useTheme();
 
@@ -44,6 +48,7 @@ const YieldPushFeeV3 = ({
         setTxInProgressWithdraw(true);
 
         const unstakeAmount = formatTokens(userDataPush?.userstakedAmount?.stakedAmount);
+        console.log("Unstake amount", unstakeAmount)
 
         if (unstakeAmount == 0) {
             pushFeeToast.showMessageToast({
@@ -72,15 +77,15 @@ const YieldPushFeeV3 = ({
         //First we will delegate the pushCoreV2 address then we will proceed further
         if (!isAddressDelegated) {
             try {
+                pushFeeToast.showLoaderToast({ loaderMessage: 'Delegating! Please wait..' });
                 const tx = await pushToken.setHolderDelegation(
                     pushCoreV2.address,
                     'true'
                 )
-                pushFeeToast.showLoaderToast({ loaderMessage: 'Delegating!!Waiting for Confirmation...' });
                 await library.waitForTransaction(tx.hash);
                 pushFeeToast.showMessageToast({
                     toastTitle: 'Success',
-                    toastMessage: 'Transaction Completed!',
+                    toastMessage: 'Transaction Completed! Address Delegated',
                     toastType: 'SUCCESS',
                     getToastIcon: (size) => (
                         <MdCheckCircle
@@ -90,14 +95,13 @@ const YieldPushFeeV3 = ({
                     ),
                 });
             } catch (error) {
-
+                console.log("Error in delegating",error)
                 pushFeeToast.showMessageToast({
                     toastTitle: 'Error',
-                    toastMessage: `Transaction failed`,
+                    toastMessage: `Transaction failed! ${error.reason}`,
                     toastType: 'ERROR',
                     getToastIcon: (size) => <MdError size={size} color="red" />,
                 });
-
                 setTxInProgressWithdraw(false);
                 return;
             }
@@ -106,7 +110,7 @@ const YieldPushFeeV3 = ({
 
         const tx = pushCoreV2.unstake();
         tx.then(async (tx) => {
-            pushFeeToast.showLoaderToast({ loaderMessage: 'Unstaking!!Waiting for Confirmation...' });
+            pushFeeToast.showLoaderToast({ loaderMessage: 'Unstaking! Waiting for Confirmation...' });
 
             try {
                 await library.waitForTransaction(tx.hash);
@@ -127,6 +131,7 @@ const YieldPushFeeV3 = ({
                 setTxInProgressWithdraw(false);
 
             } catch (e) {
+                console.log("Error", e)
                 pushFeeToast.showMessageToast({
                     toastTitle: 'Error',
                     toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
@@ -137,9 +142,16 @@ const YieldPushFeeV3 = ({
                 setTxInProgressWithdraw(false);
             }
         }).catch((err) => {
+            console.log("Error: ", err)
+            const message = err.reason.includes(" PushCoreV2::unstake:");
+            if (message) {
+                setUnstakeErrorMessage("PUSH cannot be unstaked until  current epoch is over.");
+            }
+            let errorMessage = err.reason.slice(err.reason.indexOf('::') + 1);
+            errorMessage = errorMessage.replace('unstake:', '');
             pushFeeToast.showMessageToast({
                 toastTitle: 'Error',
-                toastMessage: `Could not Perform that transaction!`,
+                toastMessage: `${errorMessage}`,
                 toastType: 'ERROR',
                 getToastIcon: (size) => <MdError size={size} color="red" />,
             });
@@ -160,9 +172,10 @@ const YieldPushFeeV3 = ({
         const withdrawAmount = userDataPush?.totalClaimableReward;
 
         if (withdrawAmount == 0) {
+            setWithdrawErrorMessage("No Rewards to Claim")
             pushFeeToast.showMessageToast({
                 toastTitle: 'Error',
-                toastMessage: `Nothing to Claim!`,
+                toastMessage: `No Rewards to Claim`,
                 toastType: 'ERROR',
                 getToastIcon: (size) => <MdError size={size} color="red" />,
             });
@@ -262,6 +275,12 @@ const YieldPushFeeV3 = ({
         });
     };
 
+
+    React.useEffect(()=>{
+        setWithdrawErrorMessage(null);
+        setUnstakeErrorMessage(null);
+    },[account])
+
     const {
         isModalOpen: isStakingModalOpen,
         showModal: showStakingModal,
@@ -300,8 +319,6 @@ const YieldPushFeeV3 = ({
                         <SkeletonLine height='12px' width='112px'></SkeletonLine>
                     </SkeletonContainer>
                 )}
-
-
             </ItemVV2>
 
             {/* Body Section */}
@@ -397,9 +414,11 @@ const YieldPushFeeV3 = ({
                                 User Deposit
                                 <InfoSpan>
                                     <StakingToolTip
-                                        title={"User Deposited"}
-                                        body={"Amount of PUSH Token User Staked"}
-                                    />
+                                        ToolTipTitle={"User Deposited"}
+                                        ToolTipBody={"Amount of PUSH Token User Staked"}
+                                    >
+                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                    </StakingToolTip>
                                 </InfoSpan>
                             </DataTitle>
                             <DataValue> {formatTokens(userDataPush?.userstakedAmount.stakedAmount)} PUSH</DataValue>
@@ -409,9 +428,11 @@ const YieldPushFeeV3 = ({
                                 Rewards Claimed
                                 <InfoSpan>
                                     <StakingToolTip
-                                        title={"Rewards Claimed"}
-                                        body={"Amount of Push Claimed by User"}
-                                    />
+                                        ToolTipTitle={"Rewards Claimed"}
+                                        ToolTipBody={"Amount of Push Claimed by User"}
+                                    >
+                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                    </StakingToolTip>
                                 </InfoSpan>
 
                             </DataTitle>
@@ -422,9 +443,11 @@ const YieldPushFeeV3 = ({
                                 Current Epoch Reward
                                 <InfoSpan>
                                     <StakingToolTip
-                                        title={"Current Epoch Reward"}
-                                        body={"Amount of Push Token Claimable in this EPOCH"}
-                                    />
+                                        ToolTipTitle={"Current Epoch Reward"}
+                                        ToolTipBody={"Amount of Push Token Claimable in this EPOCH"}
+                                    >
+                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                    </StakingToolTip>
                                 </InfoSpan>
 
                             </DataTitle>
@@ -435,9 +458,11 @@ const YieldPushFeeV3 = ({
                                 Available for Claiming
                                 <InfoSpan>
                                     <StakingToolTip
-                                        title={"Available for Claiming"}
-                                        body={"Amount of Push Token Available to claim"}
-                                    />
+                                        ToolTipTitle={"Available for Claiming"}
+                                        ToolTipBody={"Amount of Push Token Available to claim"}
+                                    >
+                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                    </StakingToolTip>
                                 </InfoSpan>
 
                             </DataTitle>
@@ -483,18 +508,67 @@ const YieldPushFeeV3 = ({
                             <FilledButton onClick={showStakingModal}> Stake PUSH</FilledButton>
                         </ItemHV2>
                         <ButtonsContainer>
-                            <EmptyButton onClick={withdrawAmountTokenFarmAutomatic} style={{ margin: "0px 10px 0px 0px" }}>
-                                {txInProgressWithdraw ?
-                                    (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
-                                    "Unstake PUSH"
-                                }
-                            </EmptyButton>
-                            <EmptyButton onClick={massClaimRewardsTokensAll}>
-                                {txInProgressClaimRewards ?
-                                    (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
-                                    "Claim Rewards"
-                                }
-                            </EmptyButton>
+
+                            {unstakeErrorMessage != null ?
+                                <StakingToolTip
+                                    bottom={'-50px'}
+                                    left={"40px"}
+                                    ToolTipTitle={"PUSH cannot be unstaked until  current epoch is over."}
+                                    error={true}
+                                    ToolTipWidth={"16rem"}
+                                    margin={'0 10px 0 0'}
+                                >
+                                    <ToolTipButton
+                                        style={{ borderColor: unstakeErrorMessage != null ? "#ED5858" : theme.emptyButtonText }}>
+                                        {unstakeErrorMessage != null && <ImageV2 src={ErrorLogo} width="19px" padding="0px 26px 4px 0px" />}
+                                        {txInProgressWithdraw ?
+                                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                            "Unstake PUSH"
+                                        }
+                                    </ToolTipButton>
+                                </StakingToolTip>
+
+                                :
+
+                                <EmptyButton
+                                    onClick={withdrawAmountTokenFarmAutomatic}
+                                    style={{ margin: "0px 10px 0px 0px" }}>
+                                    {txInProgressWithdraw ?
+                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                        "Unstake PUSH"
+                                    }
+                                </EmptyButton>
+
+                            }
+
+                            {withdrawErrorMessage != null ?
+                                <StakingToolTip
+                                    bottom={'-30px'}
+                                    left={"40px"}
+                                    ToolTipTitle={"No Rewards to Claim"}
+                                    error={true}
+                                    ToolTipWidth={"10rem"}
+                                >
+                                    <ToolTipButton
+                                        style={{ borderColor: withdrawErrorMessage != null ? "#ED5858" : theme.emptyButtonText }}>
+                                        {withdrawErrorMessage != null && <ImageV2 src={ErrorLogo} width="19px" padding="0px 26px 4px 0px" />}
+                                        {txInProgressClaimRewards ?
+                                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                            "Claim Rewards"
+                                        }
+                                    </ToolTipButton>
+                                </StakingToolTip>
+
+                                :
+
+                                <EmptyButton onClick={massClaimRewardsTokensAll}>
+                                    {txInProgressClaimRewards ?
+                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                        "Claim Rewards"
+                                    }
+                                </EmptyButton>
+
+                            }
                         </ButtonsContainer>
                     </>
                 ) : (
@@ -505,11 +579,7 @@ const YieldPushFeeV3 = ({
                         <SkeletonLine height='49px' width='100%' margin='0 0 8px 0'></SkeletonLine>
                         <SkeletonLine height='49px' width='100%'></SkeletonLine>
                     </SkeletonContainer>
-
-
                 )}
-
-
             </ItemVV2>
         </Container>
     );
@@ -517,32 +587,59 @@ const YieldPushFeeV3 = ({
 
 export default YieldPushFeeV3;
 
-const StakingToolTip = ({
-    title,
-    body
-}) => {
+const ErrorToolTipContent = (props) => {
+    return (
+        <ItemVV2
+            width={props.width}
+            background='#131313'
+            justifyContent='flex-start'
+            border='1px solid rgba(173, 176, 190, 0.2)'
+            alignItems='flex-start'
+            padding='0.75rem 0.75rem 0.75rem 1rem'
+            boxShadow='0px 4px 20px rgba(0, 0, 0, 0.05)'
+            color='#FFF'
+            borderRadius='2px 12px 12px 12px'
+
+        >
+            <H2V2 color='inherit'>{props.title}</H2V2>
+        </ItemVV2>
+    )
+}
+
+const StakingToolTip = (
+    props
+) => {
     return (
         <Tooltip
             wrapperProps={{
-                width: 'fit-content',
-                maxWidth: 'fit-content',
-                minWidth: 'fit-content',
-                // zIndex: "10",
+                width: '100%',
+                maxWidth: 'none',
+                minWidth: 'auto',
+                display: 'flex',
+                flex: '1',
+                margin: props.margin ? props.margin : '0'
             }}
             placementProps={{
                 background: 'none',
-                bottom: '25px',
-                // top: "20px",
-                left: "0px",
+                bottom: props.bottom ? props.bottom : '25px',
+                left: props.left ? props.left : "0px",
 
             }}
             tooltipContent={
-                <StakingToolTipContent
-                    title={title}
-                    body={body} />
+                props.error ? (
+                    <ErrorToolTipContent
+                        title={props.ToolTipTitle}
+                        width={props.ToolTipWidth}
+                    />
+                ) : (
+                    <StakingToolTipContent
+                        title={props.ToolTipTitle}
+                        body={props.ToolTipBody}
+                    />
+                )
             }
         >
-            <ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" style={{ cursor: 'pointer' }} />
+            {props.children}
         </Tooltip>
     )
 
@@ -551,7 +648,7 @@ const StakingToolTip = ({
 
 
 const Container = styled(SectionV2)`
-border: 1px solid  ${(props) => props.theme.stakingBorder};
+    border: 1px solid  ${(props) => props.theme.stakingBorder};
     border-radius: 24px;
     padding:20px;
     margin:10px;
@@ -652,9 +749,35 @@ const FilledButton = styled(ButtonV2)`
     
 `;
 
-const EmptyButton = styled(Button)`
+const ToolTipButton = styled.button`
+    margin:0 10px 0 0;
+    align-items: center;
+    align-self: auto
+    background: tranparent;
+    display: flex;
+    flex: initial;
+    justify-content: center;
+    letter-spacing: initial;
+    margin: 0;
+    overflow: hidden;
+    padding: 10px 15px;
     border: 1px solid ${(props) => props.theme.emptyButtonText};
     border-radius: 8px;
+    flex-direction:row;
+    color: ${(props) => props.theme.emptyButtonText};
+    padding: 12px;
+    background:transparent;
+    font-size: 18px;
+    line-height: 141%;
+    letter-spacing: -0.03em;
+    cursor: not-allowed;
+    width:inherit;
+`
+
+const EmptyButton = styled(ButtonV2)`
+    border: 1px solid ${(props) => props.theme.emptyButtonText};
+    border-radius: 8px;
+    flex-direction:row;
     padding: 12px;
     background:transparent;
     font-size: 18px;
@@ -682,6 +805,7 @@ const SkeletonContainer = styled(Skeleton)`
     border-radius: 5px;
     gap:5px;
 `
+
 
 const UserSkeletonLine = styled(SkeletonLine)`
     height: 25px;

@@ -38,6 +38,8 @@ const YieldUniswapV3 = ({
     const [txInProgressWithdraw, setTxInProgressWithdraw] = React.useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
 
+    const [withdrawErrorMessage, setWithdrawErrorMessage] = useState(null);
+
     const uniswapV2Toast = useToast();
     const theme = useTheme();
 
@@ -128,9 +130,10 @@ const YieldUniswapV3 = ({
         }
 
         if (userDataLP?.totalAvailableReward == 0) {
+            setWithdrawErrorMessage("No Rewards to Claim!")
             uniswapV2Toast.showMessageToast({
                 toastTitle: 'Error',
-                toastMessage: `Nothing to Claim!`,
+                toastMessage: `No Rewards to Claim!`,
                 toastType: 'ERROR',
                 getToastIcon: (size) => <MdError size={size} color="red" />,
             });
@@ -198,6 +201,19 @@ const YieldUniswapV3 = ({
             setTxInProgressClaimRewards(false);
         });
     };
+
+    const handleStakingModal = ()=>{
+        if(lpPoolStats?.currentEpochLP.toNumber() < lpPoolStats?.totalEpochLP.toNumber()){
+            showStakingModal();
+        }else{
+            uniswapV2Toast.showMessageToast({
+                toastTitle: 'Error',
+                toastMessage: `Epochs have ended!`,
+                toastType: 'ERROR',
+                getToastIcon: (size) => <MdError size={size} color="red" />,
+            });
+        }
+    }
 
     const {
         isModalOpen: isStakingModalOpen,
@@ -359,7 +375,7 @@ const YieldUniswapV3 = ({
                                     />
                                 </InfoSpan>
                             </DataTitle>
-                            <DataValue> {(userDataLP?.totalAccumulatedReward - userDataLP?.totalAvailableReward).toFixed(2)} PUSH</DataValue>
+                            <DataValue> {numberWithCommas((userDataLP?.totalAccumulatedReward - userDataLP?.totalAvailableReward).toFixed(2))} PUSH</DataValue>
                         </ItemHV2>
                         <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                             <DataTitle>
@@ -371,7 +387,7 @@ const YieldUniswapV3 = ({
                                     />
                                 </InfoSpan>
                             </DataTitle>
-                            <DataValue> {userDataLP?.potentialUserReward} PUSH</DataValue>
+                            <DataValue> {numberWithCommas(userDataLP?.potentialUserReward)} PUSH</DataValue>
                         </ItemHV2>
                         <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                             <DataTitle>
@@ -383,7 +399,7 @@ const YieldUniswapV3 = ({
                                     />
                                 </InfoSpan>
                             </DataTitle>
-                            <DataValue> {userDataLP?.totalAvailableReward} PUSH</DataValue>
+                            <DataValue> {numberWithCommas(userDataLP?.totalAvailableReward)} PUSH</DataValue>
                         </ItemHV2>
 
 
@@ -428,8 +444,9 @@ const YieldUniswapV3 = ({
                 {userDataLP ? (
                     <>
                         <ItemHV2>
-                            <FilledButton onClick={() => {
-                                showStakingModal();
+                            <FilledButton 
+                            onClick={() => {
+                                handleStakingModal();
                             }}>Stake UNI-V2 LP Tokens</FilledButton>
                         </ItemHV2>
                         <ButtonsContainer>
@@ -501,7 +518,7 @@ const StakingToolTip = ({
                     body={body} />
             }
         >
-            <ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" style={{ cursor: 'pointer' }} />
+            <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
         </Tooltip>
     )
 

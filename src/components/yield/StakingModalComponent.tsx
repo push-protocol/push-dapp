@@ -2,7 +2,7 @@ import { Image, P } from 'components/SharedStyling';
 import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import React, { useState } from 'react';
 import { useClickAway } from 'react-use';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
 import { Input, Span } from 'primaries/SharedStyling';
 import { useWeb3React } from '@web3-react/core';
@@ -32,6 +32,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
     const [depositAmount, setDepositAmount] = useState(0);
 
     const handleClose = () => onClose();
+    const theme = useTheme();
     const containerRef = React.useRef(null);
     useClickAway(containerRef, () => handleClose());
 
@@ -144,6 +145,19 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
         setTxInProgressDep(true)
 
+        console.log("Deposit amount",depositAmount)
+
+        if (depositAmount == 0) {
+            toastObject.showMessageToast({
+                toastTitle: 'Error',
+                toastMessage: `You need to deposit atleast 1 ${title} token `,
+                toastType: 'ERROR',
+                getToastIcon: (size) => <MdError size={size} color="red" />,
+            });
+            setTxInProgressDep(false)
+            return;
+        }
+
         var signer = library.getSigner(account);
 
         let tx2;
@@ -205,9 +219,11 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                 }
             })
             .catch((err) => {
+                console.log("Error in depositing", err)
+                err.reason = err.reason.slice(err.reason.indexOf('::') + 1);
                 toastObject.showMessageToast({
                     toastTitle: 'Error',
-                    toastMessage: `Transaction Cancelled!`,
+                    toastMessage: `Transaction Cancelled! ${ err.reason }`,
                     toastType: 'ERROR',
                     getToastIcon: (size) => <MdError size={size} color="red" />,
                 });
@@ -245,20 +261,22 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
             </ItemHV2>
 
             <ItemVV2>
-                <P weight='500' size='14px' self='baseline'>You are staking</P>
+                <P weight='500' size='14px' self='baseline' color={theme.stakingSecondaryText}>You are staking</P>
 
 
-                <ItemHV2 background='#F4F5FA' height='35px' padding='14px' borderRadius='12px'>
+                <ItemHV2 background={theme.default.bg} height='35px' padding='14px' borderRadius='12px'  border={`1px solid ${theme.modalBorderColor}`}>
                     <TokenInput
-                        placeholder="0"
+                        placeholder="Enter Amount"
                         flex='2'
                         radius="4px"
                         size='32px'
                         height='32px'
                         self="auto"
-                        bg='#F4F5FA'
+                        bg='#FFF'
+                        color={theme.stakingSecondaryText}
                         value={depositAmount}
                         onChange={(e) => {
+                            console.log("E",e.target.value)
                             e.preventDefault();
                             handleInput(e);
                         }}
@@ -323,10 +341,12 @@ const PrimaryText = styled(H2V2)`
     
     font-size: 16px;
     letter-spacing: -0.019em;
-    color: #333333;
+    color: ${(props) => props.theme.stakingPrimaryText};
 `
 
-const TokenInput = styled(Input)``
+const TokenInput = styled(Input)`
+    background:transparent;
+`
 
 const MaxText = styled.p`
     font-size: 14px;
@@ -358,7 +378,7 @@ const FilledButton = styled(ButtonV2)`
 
 const EmptyButton = styled.button`
     // padding: 16px;
-    background:#ffffff;
+    background:transparent;
     font-size: 16px;
     line-height: 19px;
     flex:1;
@@ -372,9 +392,11 @@ const EmptyButton = styled.button`
     & > div{
         display:block;
     }
+    &:after{
+        background:transparent;
+    }
 
     &:hover{
-        background: #e3e3e3;
         opacity:1;
     }
 
