@@ -1,27 +1,27 @@
 // React + Web3 Essentials
 import React, { useState } from 'react';
+import { ethers } from 'ethers';
+import { useWeb3React } from '@web3-react/core';
+
 
 // External Packages
 import styled, { css, useTheme } from 'styled-components';
+import { MdCheckCircle, MdError } from 'react-icons/md';
 
 // Internal Compoonents
-import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, Skeleton, SkeletonLine, SpanV2 } from 'components/reusables/SharedStylingV2';
-import InfoLogo from "../../assets/inforWithoutBG.svg";
-import { B, Button, Input, Item, ItemH, Span } from 'primaries/SharedStyling';
-import { ethers } from 'ethers';
-import { addresses } from 'config';
-import { useWeb3React } from '@web3-react/core';
-import { abis } from 'config';
-import YieldFarmingDataStore from 'singletons/YieldFarmingDataStore';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { toast } from 'react-toastify';
 import useToast from 'hooks/useToast';
-import { MdCheckCircle, MdError } from 'react-icons/md';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
-import StakingModalComponent from './StakingModalComponent';
+import InfoLogo from "../../assets/inforWithoutBG.svg";
+import { B, Button } from 'primaries/SharedStyling';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';
-import Tooltip from 'components/reusables/tooltip/Tooltip';
-import StakingToolTipContent from './StakingToolTipContent';
+import ErrorLogo from "../../assets/errorLogo.svg"
+import StakingToolTip from './StakingToolTip';
+import StakingModalComponent from './StakingModalComponent';
+import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, Skeleton, SkeletonLine, SpanV2 } from 'components/reusables/SharedStylingV2';
+
+// Internal Configs
+import { abis, addresses } from 'config';
 
 
 const bn = function (number, defaultValue = null) { if (number == null) { if (defaultValue == null) { return null } number = defaultValue } return ethers.BigNumber.from(number) }
@@ -131,12 +131,6 @@ const YieldUniswapV3 = ({
 
         if (userDataLP?.totalAvailableReward == 0) {
             setWithdrawErrorMessage("No Rewards to Claim!")
-            uniswapV2Toast.showMessageToast({
-                toastTitle: 'Error',
-                toastMessage: `No Rewards to Claim!`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => <MdError size={size} color="red" />,
-            });
             return;
         }
 
@@ -202,10 +196,14 @@ const YieldUniswapV3 = ({
         });
     };
 
-    const handleStakingModal = ()=>{
-        if(lpPoolStats?.currentEpochLP.toNumber() < lpPoolStats?.totalEpochLP.toNumber()){
+    React.useEffect(() => {
+        setWithdrawErrorMessage(null);
+    }, [account])
+
+    const handleStakingModal = () => {
+        if (lpPoolStats?.currentEpochLP.toNumber() + 1 <= lpPoolStats?.totalEpochLP.toNumber()) {
             showStakingModal();
-        }else{
+        } else {
             uniswapV2Toast.showMessageToast({
                 toastTitle: 'Error',
                 toastMessage: `Epochs have ended!`,
@@ -266,7 +264,6 @@ const YieldUniswapV3 = ({
                     borderRadius="16px"
                 >
                     <ItemVV2 margin="0px 18px 0px 0px" padding="10px">
-
                         {lpPoolStats ? (
                             <>
                                 <SecondaryText>Current Reward</SecondaryText>
@@ -289,11 +286,9 @@ const YieldUniswapV3 = ({
                         )}
                     </ItemVV2>
 
-
                     <Line width="10px" height="100%"></Line>
 
                     <ItemVV2 margin="0px 0px 0px 18px" padding="10px">
-
                         {lpPoolStats ? (
                             <>
                                 <SecondaryText>Total Staked</SecondaryText>
@@ -314,8 +309,8 @@ const YieldUniswapV3 = ({
                                 <SkeletonLine height='12px' width='100px'></SkeletonLine>
                             </SkeletonContainer>
                         )}
-
                     </ItemVV2>
+
                 </RewardContainer>
 
                 {/* Epoch Text */}
@@ -325,7 +320,6 @@ const YieldUniswapV3 = ({
                     color="#575D73"
                     letterSpacing="-0.03em"
                 >
-
                     {lpPoolStats ? (
                         <>
                             <EpochNo>Current Epoch</EpochNo>
@@ -342,24 +336,21 @@ const YieldUniswapV3 = ({
                             <SkeletonLine height='12px' width='124px' ></SkeletonLine>
                         </SkeletonContainer>
                     )}
-
                 </ItemHV2>
 
                 {/* Deposit Cash Data */}
-
                 {userDataLP ? (
-                    <ItemVV2
-
-                    // padding={loadingUserData ? "60px " : "0px"}
-                    >
+                    <ItemVV2>
                         <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                             <DataTitle>
                                 User Deposit
                                 <InfoSpan>
                                     <StakingToolTip
-                                        title={"User Deposited"}
-                                        body={"Amount of Uni-V2 Token User Staked"}
-                                    />
+                                        ToolTipTitle={"User Deposited"}
+                                        ToolTipBody={"Amount of PUSH Token User Staked"}
+                                    >
+                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                    </StakingToolTip>
                                 </InfoSpan>
                             </DataTitle>
                             <DataValue>{formatTokens(userDataLP?.epochStakeNext)} UNI-V2</DataValue>
@@ -368,11 +359,12 @@ const YieldUniswapV3 = ({
                             <DataTitle>
                                 Rewards Claimed
                                 <InfoSpan>
-
                                     <StakingToolTip
-                                        title={"Rewards Claimed"}
-                                        body={"Amount of Push Claimed by User"}
-                                    />
+                                        ToolTipTitle={"Rewards Claimed"}
+                                        ToolTipBody={"Amount of Push Claimed by User"}
+                                    >
+                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                    </StakingToolTip>
                                 </InfoSpan>
                             </DataTitle>
                             <DataValue> {numberWithCommas((userDataLP?.totalAccumulatedReward - userDataLP?.totalAvailableReward).toFixed(2))} PUSH</DataValue>
@@ -382,9 +374,11 @@ const YieldUniswapV3 = ({
                                 Current Epoch Reward
                                 <InfoSpan>
                                     <StakingToolTip
-                                        title={"Current Epoch Reward"}
-                                        body={"Amount of Push Token Claimable in this EPOCH"}
-                                    />
+                                        ToolTipTitle={"Current Epoch Reward"}
+                                        ToolTipBody={"Amount of Push Token Claimable in this EPOCH"}
+                                    >
+                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                    </StakingToolTip>
                                 </InfoSpan>
                             </DataTitle>
                             <DataValue> {numberWithCommas(userDataLP?.potentialUserReward)} PUSH</DataValue>
@@ -394,18 +388,16 @@ const YieldUniswapV3 = ({
                                 Available for Claiming
                                 <InfoSpan>
                                     <StakingToolTip
-                                        title={"Available for Claiming"}
-                                        body={"Amount of Push Token Available to claim"}
-                                    />
+                                        ToolTipTitle={"Available for Claiming"}
+                                        ToolTipBody={"Amount of Push Token Available to claim"}
+                                    >
+                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                    </StakingToolTip>
                                 </InfoSpan>
                             </DataTitle>
                             <DataValue> {numberWithCommas(userDataLP?.totalAvailableReward)} PUSH</DataValue>
                         </ItemHV2>
-
-
-
                     </ItemVV2>
-
                 ) : (
                     <Skeleton
                         padding='0 15px 15px 15px'
@@ -433,56 +425,65 @@ const YieldUniswapV3 = ({
                     </Skeleton>
                 )}
 
-
-
             </ItemVV2>
 
             {/* Bottom Section */}
             <ItemVV2 padding=" 0px 14px" margin="24px 0px 24px 0px">
-
-
                 {userDataLP ? (
                     <>
                         <ItemHV2>
-                            <FilledButton 
-                            onClick={() => {
-                                handleStakingModal();
-                            }}>Stake UNI-V2 LP Tokens</FilledButton>
+                            <FilledButton
+                                onClick={() => {
+                                    handleStakingModal();
+                                }}>Stake UNI-V2 LP Tokens</FilledButton>
                         </ItemHV2>
                         <ButtonsContainer>
                             <EmptyButton style={{ margin: "0px 10px 0px 0px" }} onClick={() => withdrawAmountTokenFarmAutomatic()}>
-
                                 {txInProgressWithdraw ?
                                     (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
                                     "Unstake UNI-V2"
                                 }
-
                             </EmptyButton>
-                            <EmptyButton onClick={() => massClaimRewardsTokensAll()}>
 
-                                {txInProgressClaimRewards ?
-                                    (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
-                                    "Claim Rewards"
-                                }
+                            {withdrawErrorMessage != null ?
+                                <StakingToolTip
+                                    bottom={'-30px'}
+                                    left={"40px"}
+                                    ToolTipTitle={"No Rewards to Claim"}
+                                    error={true}
+                                    ToolTipWidth={"10rem"}
+                                >
+                                    <EmptyButton
+                                        style={{ borderColor: withdrawErrorMessage != null ? "#ED5858" : theme.emptyButtonText }}
+                                    >
+                                        {withdrawErrorMessage != null && <ImageV2 src={ErrorLogo} width="19px" padding="0px 15px 4px 0px" />}
+                                        {txInProgressClaimRewards ?
+                                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                            "Claim Rewards"
+                                        }
+                                    </EmptyButton>
+                                </StakingToolTip>
+                                :
+                                <EmptyButton onClick={() => massClaimRewardsTokensAll()}>
+                                    {txInProgressClaimRewards ?
+                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                        "Claim Rewards"
+                                    }
 
-                            </EmptyButton>
+                                </EmptyButton>
+
+                            }
+
                         </ButtonsContainer>
 
                     </>
                 ) : (
 
-                    <SkeletonContainer
-                        width='100%'
-                    >
+                    <SkeletonContainer width='100%'>
                         <SkeletonLine height='49px' width='100%' margin='0 0 8px 0'></SkeletonLine>
                         <SkeletonLine height='49px' width='100%'></SkeletonLine>
                     </SkeletonContainer>
-
-
                 )}
-
-
-
 
             </ItemVV2>
 
@@ -492,38 +493,6 @@ const YieldUniswapV3 = ({
 };
 
 export default YieldUniswapV3;
-
-const StakingToolTip = ({
-    title,
-    body
-}) => {
-    return (
-        <Tooltip
-            wrapperProps={{
-                width: 'fit-content',
-                maxWidth: 'fit-content',
-                minWidth: 'fit-content',
-                // zIndex: "10",
-            }}
-            placementProps={{
-                background: 'none',
-                bottom: '25px',
-                // top: "20px",
-                left: "0px",
-
-            }}
-            tooltipContent={
-                <StakingToolTipContent
-                    title={title}
-                    body={body} />
-            }
-        >
-            <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
-        </Tooltip>
-    )
-
-}
-
 
 const Container = styled(SectionV2)`
     border: 1px solid  ${(props) => props.theme.stakingBorder};

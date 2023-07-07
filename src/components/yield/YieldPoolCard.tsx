@@ -1,27 +1,24 @@
 // React + Web3 Essentials
 import React, { useState } from 'react';
+import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
+import { MdCheckCircle, MdError, MdWarning } from 'react-icons/md';
 
 // Internal Compoonents
-import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, Skeleton, SkeletonLine, SpanV2 } from 'components/reusables/SharedStylingV2';
+import useToast from 'hooks/useToast';
+import { B } from 'components/SharedStyling';
+import StakingToolTip from './StakingToolTip';
 import InfoLogo from "../../assets/inforWithoutBG.svg";
 import { Button, Span } from 'primaries/SharedStyling';
-import { MdWarning } from 'react-icons/md';
-import { ethers } from 'ethers';
-import useToast from 'hooks/useToast';
-
-import { MdCheckCircle, MdError } from 'react-icons/md';
-import { useWeb3React } from '@web3-react/core';
-import { abis, addresses } from 'config';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { B } from 'components/SharedStyling';
-import Tooltip from 'components/reusables/tooltip/Tooltip';
-import StakingToolTipContent from './StakingToolTipContent';
 import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';
+import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, Skeleton, SkeletonLine, SpanV2 } from 'components/reusables/SharedStylingV2';
 
-
+// Internal Configs
+import { abis, addresses } from 'config';
 
 const YieldPoolCard = ({
     poolName,
@@ -661,9 +658,11 @@ const YieldPoolCard = ({
                                 User Deposit
                                 <InfoSpan>
                                     <StakingToolTip
-                                        title={"User Deposited"}
-                                        body={`Amount of ${poolName}Token User Staked`}
-                                    />
+                                        ToolTipTitle={"User Deposited"}
+                                        ToolTipBody={`Amount of ${poolName} Token User Staked`}
+                                    >
+                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                    </StakingToolTip>
                                 </InfoSpan>
                             </DataTitle>
                             <DataValue> {formatTokens(userData?.epochStakeNext)} {poolName == "UNI-V2" ? "UNI-V2" : "PUSH"}</DataValue>
@@ -672,11 +671,12 @@ const YieldPoolCard = ({
                             <DataTitle>
                                 Rewards Claimed
                                 <InfoSpan>
-
                                     <StakingToolTip
-                                        title={"Rewards Claimed"}
-                                        body={"Amount of Push Claimed by User"}
-                                    />
+                                        ToolTipTitle={"Rewards Claimed"}
+                                        ToolTipBody={"Amount of Push Claimed by User"}
+                                    >
+                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                    </StakingToolTip>
                                 </InfoSpan>
 
                             </DataTitle>
@@ -687,9 +687,11 @@ const YieldPoolCard = ({
                                 Current Epoch Reward
                                 <InfoSpan>
                                     <StakingToolTip
-                                        title={"Current Epoch Reward"}
-                                        body={"Amount of Push Token Claimable in this EPOCH"}
-                                    />
+                                        ToolTipTitle={"Current Epoch Reward"}
+                                        ToolTipBody={"Amount of Push Token Claimable in this EPOCH"}
+                                    >
+                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                    </StakingToolTip>
                                 </InfoSpan>
 
                             </DataTitle>
@@ -702,9 +704,11 @@ const YieldPoolCard = ({
                                 Available for Claiming
                                 <InfoSpan>
                                     <StakingToolTip
-                                        title={"Available for Claiming"}
-                                        body={"Amount of Push Token Available to claim"}
-                                    />
+                                        ToolTipTitle={"Available for Claiming"}
+                                        ToolTipBody={"Amount of Push Token Available to claim"}
+                                    >
+                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                    </StakingToolTip>
                                 </InfoSpan>
                             </DataTitle>
                             <DataValue>{userData?.totalAvailableReward} PUSH</DataValue>
@@ -795,39 +799,6 @@ const YieldPoolCard = ({
 };
 
 export default YieldPoolCard;
-
-const StakingToolTip = ({
-    title,
-    body
-}) => {
-    return (
-        <Tooltip
-            wrapperProps={{
-                width: 'fit-content',
-                maxWidth: 'fit-content',
-                minWidth: 'fit-content',
-                // zIndex: "10",
-            }}
-            placementProps={{
-                background: 'none',
-                bottom: '25px',
-                // top: "20px",
-                left: "0px",
-
-            }}
-            tooltipContent={
-                <StakingToolTipContent
-                    title={title}
-                    body={body} />
-            }
-        >
-            <ImageV2 src={InfoLogo} alt="Info-Logo" width="12.75px" style={{ cursor: 'pointer' }} />
-        </Tooltip>
-    )
-
-}
-
-
 
 const Container = styled(SectionV2)`
 border: 1px solid  ${(props) => props.theme.stakingBorder};

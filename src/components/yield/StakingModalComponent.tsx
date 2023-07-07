@@ -1,16 +1,25 @@
-import { Image, P } from 'components/SharedStyling';
-import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import React, { useState } from 'react';
 import { useClickAway } from 'react-use';
-import styled, { useTheme } from 'styled-components';
-import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
 import { Input, Span } from 'primaries/SharedStyling';
-import { useWeb3React } from '@web3-react/core';
+
+// React + Web3 Essentials
+import React, { useState } from 'react';
 import { ethers } from 'ethers';
-import { abis, addresses } from 'config';
+import { useWeb3React } from '@web3-react/core';
+
+// External Packages
+import styled, { useTheme } from 'styled-components';
 import { MdCheckCircle, MdError } from 'react-icons/md';
+
+
+// Internal Compoonents
+import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { bn, bnToInt, formatTokens } from 'helpers/StakingHelper';
+import { P } from 'components/SharedStyling';
+import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+
+// Internal Configs
+import { abis, addresses } from 'config';
 
 const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) => {
 
@@ -145,7 +154,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
         setTxInProgressDep(true)
 
-        console.log("Deposit amount",depositAmount)
+        console.log("Deposit amount", depositAmount)
 
         if (depositAmount == 0) {
             toastObject.showMessageToast({
@@ -223,7 +232,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                 err.reason = err.reason.slice(err.reason.indexOf('::') + 1);
                 toastObject.showMessageToast({
                     toastTitle: 'Error',
-                    toastMessage: `Transaction Cancelled! ${ err.reason }`,
+                    toastMessage: `Transaction Cancelled! ${err.reason}`,
                     toastType: 'ERROR',
                     getToastIcon: (size) => <MdError size={size} color="red" />,
                 });
@@ -264,7 +273,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                 <P weight='500' size='14px' self='baseline' color={theme.stakingSecondaryText}>You are staking</P>
 
 
-                <ItemHV2 background={theme.default.bg} height='35px' padding='14px' borderRadius='12px'  border={`1px solid ${theme.modalBorderColor}`}>
+                <ItemHV2 background={theme.default.bg} height='35px' padding='14px' borderRadius='12px' border={`1px solid ${theme.modalBorderColor}`}>
                     <TokenInput
                         placeholder="Enter Amount"
                         flex='2'
@@ -276,7 +285,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                         color={theme.stakingSecondaryText}
                         value={depositAmount}
                         onChange={(e) => {
-                            console.log("E",e.target.value)
+                            console.log("E", e.target.value)
                             e.preventDefault();
                             handleInput(e);
                         }}
@@ -309,7 +318,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                 </FilledButton>
                 <EmptyButton background={!depositApproved ? "#999" : "#ffffff"}
                     disabled={!depositApproved ? true : false} onClick={depositAmountTokenFarmSingleTx}>
-                    
+
                     {!txInProgressDep &&
                         <Span color="#657795" weight="400" cursor='pointer'>Deposit</Span>
                     }

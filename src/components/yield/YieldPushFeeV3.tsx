@@ -1,27 +1,26 @@
 // React + Web3 Essentials
 import React, { useEffect, useState } from 'react';
+import { ethers } from 'ethers';
+import { useWeb3React } from '@web3-react/core';
 
 // External Packages
-import styled, { useTheme } from 'styled-components';
+import styled, { css, useTheme } from 'styled-components';
+import { MdCheckCircle, MdError } from 'react-icons/md';
 
 // Internal Compoonents
-import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, Skeleton, SkeletonLine, SpanV2 } from 'components/reusables/SharedStylingV2';
-import InfoLogo from "../../assets/inforWithoutBG.svg";
-import { Button } from 'primaries/SharedStyling';
-import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
-import StakingModalComponent from './StakingModalComponent';
-import { ethers } from 'ethers';
-import { abis, addresses } from 'config';
-import { useWeb3React } from '@web3-react/core';
-import YieldFarmingDataStoreV2 from "../../singletons/YieldFarmingDataStoreV2";
-import { MdCheckCircle, MdError } from 'react-icons/md';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+import InfoLogo from "../../assets/inforWithoutBG.svg";
+import { B, Button } from 'primaries/SharedStyling';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';
-import { B } from 'components/SharedStyling';
-import Tooltip from 'components/reusables/tooltip/Tooltip';
-import StakingToolTipContent from './StakingToolTipContent';
 import ErrorLogo from "../../assets/errorLogo.svg"
+import StakingToolTip from './StakingToolTip';
+import StakingModalComponent from './StakingModalComponent';
+import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, Skeleton, SkeletonLine, SpanV2 } from 'components/reusables/SharedStylingV2';
+
+// Internal Configs
+import { abis, addresses } from 'config';
 
 const YieldPushFeeV3 = ({
     userDataPush,
@@ -46,9 +45,7 @@ const YieldPushFeeV3 = ({
         }
 
         setTxInProgressWithdraw(true);
-
         const unstakeAmount = formatTokens(userDataPush?.userstakedAmount?.stakedAmount);
-        console.log("Unstake amount", unstakeAmount)
 
         if (unstakeAmount == 0) {
             pushFeeToast.showMessageToast({
@@ -72,8 +69,6 @@ const YieldPushFeeV3 = ({
             pushCoreV2.address
         )
 
-        console.log("IsAddress Delegated", isAddressDelegated)
-
         //First we will delegate the pushCoreV2 address then we will proceed further
         if (!isAddressDelegated) {
             try {
@@ -95,7 +90,7 @@ const YieldPushFeeV3 = ({
                     ),
                 });
             } catch (error) {
-                console.log("Error in delegating",error)
+                console.log("Error in delegating", error)
                 pushFeeToast.showMessageToast({
                     toastTitle: 'Error',
                     toastMessage: `Transaction failed! ${error.reason}`,
@@ -146,20 +141,18 @@ const YieldPushFeeV3 = ({
             const message = err.reason.includes(" PushCoreV2::unstake:");
             if (message) {
                 setUnstakeErrorMessage("PUSH cannot be unstaked until  current epoch is over.");
+            } else {
+                let errorMessage = err.reason.slice(err.reason.indexOf('::') + 1);
+                errorMessage = errorMessage.replace('unstake:', '');
+                pushFeeToast.showMessageToast({
+                    toastTitle: 'Error',
+                    toastMessage: `${errorMessage}`,
+                    toastType: 'ERROR',
+                    getToastIcon: (size) => <MdError size={size} color="red" />,
+                });
             }
-            let errorMessage = err.reason.slice(err.reason.indexOf('::') + 1);
-            errorMessage = errorMessage.replace('unstake:', '');
-            pushFeeToast.showMessageToast({
-                toastTitle: 'Error',
-                toastMessage: `${errorMessage}`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => <MdError size={size} color="red" />,
-            });
-
             setTxInProgressWithdraw(false);
         });
-
-
     };
 
     const massClaimRewardsTokensAll = async () => {
@@ -168,18 +161,10 @@ const YieldPushFeeV3 = ({
         }
 
         setTxInProgressClaimRewards(true);
-
         const withdrawAmount = userDataPush?.totalClaimableReward;
 
         if (withdrawAmount == 0) {
             setWithdrawErrorMessage("No Rewards to Claim")
-            pushFeeToast.showMessageToast({
-                toastTitle: 'Error',
-                toastMessage: `No Rewards to Claim`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => <MdError size={size} color="red" />,
-            });
-
             setTxInProgressClaimRewards(false);
             return;
         }
@@ -193,8 +178,6 @@ const YieldPushFeeV3 = ({
             account,
             pushCoreV2.address
         )
-
-        console.log("IsAddress Delegated", isAddressDelegated)
 
         //First we will delegate the pushCoreV2 address then we will proceed further
         if (!isAddressDelegated) {
@@ -276,10 +259,10 @@ const YieldPushFeeV3 = ({
     };
 
 
-    React.useEffect(()=>{
+    React.useEffect(() => {
         setWithdrawErrorMessage(null);
         setUnstakeErrorMessage(null);
-    },[account])
+    }, [account])
 
     const {
         isModalOpen: isStakingModalOpen,
@@ -511,21 +494,20 @@ const YieldPushFeeV3 = ({
 
                             {unstakeErrorMessage != null ?
                                 <StakingToolTip
-                                    bottom={'-50px'}
-                                    left={"40px"}
-                                    ToolTipTitle={"PUSH cannot be unstaked until  current epoch is over."}
                                     error={true}
+                                    ToolTipTitle={"PUSH cannot be unstaked until  current epoch is over."}
                                     ToolTipWidth={"16rem"}
                                     margin={'0 10px 0 0'}
+                                    bottom={'-50px'}
                                 >
-                                    <ToolTipButton
+                                    <EmptyButton
                                         style={{ borderColor: unstakeErrorMessage != null ? "#ED5858" : theme.emptyButtonText }}>
-                                        {unstakeErrorMessage != null && <ImageV2 src={ErrorLogo} width="19px" padding="0px 26px 4px 0px" />}
+                                        {unstakeErrorMessage != null && <ImageV2 src={ErrorLogo} width="19px" padding="0px 15px 4px 0px" />}
                                         {txInProgressWithdraw ?
                                             (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
                                             "Unstake PUSH"
                                         }
-                                    </ToolTipButton>
+                                    </EmptyButton>
                                 </StakingToolTip>
 
                                 :
@@ -544,19 +526,18 @@ const YieldPushFeeV3 = ({
                             {withdrawErrorMessage != null ?
                                 <StakingToolTip
                                     bottom={'-30px'}
-                                    left={"40px"}
                                     ToolTipTitle={"No Rewards to Claim"}
                                     error={true}
                                     ToolTipWidth={"10rem"}
                                 >
-                                    <ToolTipButton
+                                    <EmptyButton
                                         style={{ borderColor: withdrawErrorMessage != null ? "#ED5858" : theme.emptyButtonText }}>
-                                        {withdrawErrorMessage != null && <ImageV2 src={ErrorLogo} width="19px" padding="0px 26px 4px 0px" />}
+                                        {withdrawErrorMessage != null && <ImageV2 src={ErrorLogo} width="19px" padding="0px 15px 4px 0px" />}
                                         {txInProgressClaimRewards ?
                                             (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
                                             "Claim Rewards"
                                         }
-                                    </ToolTipButton>
+                                    </EmptyButton>
                                 </StakingToolTip>
 
                                 :
@@ -586,66 +567,6 @@ const YieldPushFeeV3 = ({
 };
 
 export default YieldPushFeeV3;
-
-const ErrorToolTipContent = (props) => {
-    return (
-        <ItemVV2
-            width={props.width}
-            background='#131313'
-            justifyContent='flex-start'
-            border='1px solid rgba(173, 176, 190, 0.2)'
-            alignItems='flex-start'
-            padding='0.75rem 0.75rem 0.75rem 1rem'
-            boxShadow='0px 4px 20px rgba(0, 0, 0, 0.05)'
-            color='#FFF'
-            borderRadius='2px 12px 12px 12px'
-
-        >
-            <H2V2 color='inherit'>{props.title}</H2V2>
-        </ItemVV2>
-    )
-}
-
-const StakingToolTip = (
-    props
-) => {
-    return (
-        <Tooltip
-            wrapperProps={{
-                width: '100%',
-                maxWidth: 'none',
-                minWidth: 'auto',
-                display: 'flex',
-                flex: '1',
-                margin: props.margin ? props.margin : '0'
-            }}
-            placementProps={{
-                background: 'none',
-                bottom: props.bottom ? props.bottom : '25px',
-                left: props.left ? props.left : "0px",
-
-            }}
-            tooltipContent={
-                props.error ? (
-                    <ErrorToolTipContent
-                        title={props.ToolTipTitle}
-                        width={props.ToolTipWidth}
-                    />
-                ) : (
-                    <StakingToolTipContent
-                        title={props.ToolTipTitle}
-                        body={props.ToolTipBody}
-                    />
-                )
-            }
-        >
-            {props.children}
-        </Tooltip>
-    )
-
-}
-
-
 
 const Container = styled(SectionV2)`
     border: 1px solid  ${(props) => props.theme.stakingBorder};
@@ -748,31 +669,6 @@ const FilledButton = styled(ButtonV2)`
     }
     
 `;
-
-const ToolTipButton = styled.button`
-    margin:0 10px 0 0;
-    align-items: center;
-    align-self: auto
-    background: tranparent;
-    display: flex;
-    flex: initial;
-    justify-content: center;
-    letter-spacing: initial;
-    margin: 0;
-    overflow: hidden;
-    padding: 10px 15px;
-    border: 1px solid ${(props) => props.theme.emptyButtonText};
-    border-radius: 8px;
-    flex-direction:row;
-    color: ${(props) => props.theme.emptyButtonText};
-    padding: 12px;
-    background:transparent;
-    font-size: 18px;
-    line-height: 141%;
-    letter-spacing: -0.03em;
-    cursor: not-allowed;
-    width:inherit;
-`
 
 const EmptyButton = styled(ButtonV2)`
     border: 1px solid ${(props) => props.theme.emptyButtonText};

@@ -1,32 +1,24 @@
 // React + Web3 Essentials
 import React, { useEffect, useState } from 'react';
+import { ethers } from 'ethers';
+import { useWeb3React } from '@web3-react/core';
 
 // External Packages
-import ReactGA from 'react-ga';
 import styled from 'styled-components';
 
 // Internal Compoonents
 import { ItemHV2, ItemVV2, SectionV2 } from 'components/reusables/SharedStylingV2';
 import YieldAnnouncementSection from 'sections/yield/YieldAnnouncementSection';
 import YieldPushPriceSection from 'sections/yield/YieldPushPriceSection';
-import YieldSnapshotSection from 'sections/yield/YieldSnapshotSection';
 import YieldStatsSection from 'sections/yield/YieldStatsSection';
-
-// Internal Configs
-import { abis, addresses, appConfig } from 'config';
-import GLOBALS, { device, globalsMargin } from 'config/Globals';
-import { ethers } from 'ethers';
-import { useWeb3React } from '@web3-react/core';
 import YieldFarmingDataStoreV2 from 'singletons/YieldFarmingDataStoreV2';
-import DeprecatedYieldFarming from 'sections/yield/DeprecatedYieldFarming';
 import YieldUniswapV3 from 'components/yield/YieldUniswapV3';
 import YieldPushFeeV3 from 'components/yield/YieldPushFeeV3';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { duration } from 'moment';
 
-const NewYieldFarming = ({
-    setLoading
-}) => {
+// Internal Configs
+import { abis, addresses } from 'config';
+
+const NewYieldFarming = () => {
 
     const { account, library } = useWeb3React();
 
@@ -52,21 +44,18 @@ const NewYieldFarming = ({
 
     const getPUSHPoolStats = React.useCallback(async () => {
         const pushPoolStats = await YieldFarmingDataStoreV2.instance.getPUSHPoolStats(library);
-        console.log("Push Pool Stats", pushPoolStats);
 
         setPUSHPoolStats({ ...pushPoolStats });
     }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
 
     const getUserDataLP = React.useCallback(async () => {
         const userDataLP = await YieldFarmingDataStoreV2.instance.getUserDataLP();
-        console.log("user Data LP", userDataLP);
 
         setUserDataLP({ ...userDataLP });
     }, [yieldFarmingLP]);
 
     const getUserDataPush = React.useCallback(async () => {
         const userDataPush = await YieldFarmingDataStoreV2.instance.getUserDataPUSH(library);
-        console.log("userData Push", userDataPush);
 
         setUserDataPush({ ...userDataPush });
     }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
