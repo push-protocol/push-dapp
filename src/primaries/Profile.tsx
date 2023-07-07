@@ -14,18 +14,20 @@ import ProfileModal from 'components/ProfileModal';
 import Dropdown from '../components/Dropdown';
 import { useClickAway } from 'hooks/useClickAway';
 // import { walletconnect } from 'connectors';
-import { walletConnectV2 } from 'connectors';
+import { walletConnectV2 } from '../connectors/walletConnectV2';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { AppContext } from 'contexts/AppContext';
+import { ErrorContext } from 'contexts/ErrorContext';
 import { AppContextType } from 'types/context';
 
 // Create Header
 const Profile = ({ isDarkMode }) => {
   const { web3NameList }:AppContextType=useContext(AppContext);
+  const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
   const modalRef = React.useRef(null);
-  const { error, account } = useWeb3React();
+  const { account, connector } = useWeb3React();
 
   // resolve web3 name
   useResolveWeb3Name(account);
@@ -38,7 +40,7 @@ const Profile = ({ isDarkMode }) => {
 
   // Get Web3 Context
   const context = useWeb3React<Web3Provider>();
-  const { deactivate, connector } = context;
+  // const { connector } = context;
   const dropdownValues = [
     {
       id: 'walletAddress',
@@ -58,12 +60,24 @@ const Profile = ({ isDarkMode }) => {
     {
       id: 'disconnect',
       value: '',
-      function: () => {
-        if (connector === walletConnectV2) {
-          connector?.deactivate();
+      function: async () => {
+        if (connector?.deactivate) {
+        await connector.deactivate();
+        console.log('deactivate 1');
         } else {
-          deactivate();
+        await connector.resetState();
+        console.log('deactivate 2');
         }
+        // @ts-expect-error close can be returned by wallet
+        if (connector && connector.close) {
+          // @ts-expect-error close can be returned by wallet
+          await connector.close();
+        }
+        // if (connector === walletConnectV2) {
+        //   await connector?.deactivate();
+        // } else {
+        //   await connector?.deactivate();
+        // }
       },
       title: 'Logout',
       invertedIcon: './logout.svg',
@@ -77,7 +91,7 @@ const Profile = ({ isDarkMode }) => {
   // to create blockies
   return (
     <>
-      {account && account !== '' && !error && (
+      {account && account !== '' && !authError && (
         <Body>
           <Wallet
             bg={theme.profileBG}
