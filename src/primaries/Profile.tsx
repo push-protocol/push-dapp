@@ -61,12 +61,12 @@ const Profile = ({ isDarkMode }) => {
       id: 'disconnect',
       value: '',
       function: async () => {
-        if (connector?.deactivate) {
+        if (connector.deactivate) {
         await connector.deactivate();
-        console.log('deactivate 1');
+        console.log('deactivate 1', connector);
         } else {
         await connector.resetState();
-        console.log('deactivate 2');
+        console.log('deactivate 2', connector);
         }
         // @ts-expect-error close can be returned by wallet
         if (connector && connector.close) {

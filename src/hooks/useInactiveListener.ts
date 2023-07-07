@@ -27,18 +27,6 @@ export function useInactiveListener(suppress: boolean = false) {
           // console.log("Handling 'chainChanged' event with payload", chainId)
           const newChain = providerConnector?.provider?.chainId as any;
 
-          try {
-          console.log(newChain,'new chain tried', providerConnector);
-            if (providerConnector instanceof WalletConnect || providerConnector instanceof Network) {
-                await providerConnector.activate(newChain === -1 ? undefined : newChain);
-                console.log('listen 1');
-              } else {
-                await providerConnector.activate(newChain === -1 ? undefined : getAddChainParameters(newChain));
-                console.log('listen 2');
-              }
-          } catch (error) {
-           handleChangeNetwork(newChain, providerConnector?.provider);   
-          }
           // activate(injected)
 
         }
@@ -51,15 +39,15 @@ export function useInactiveListener(suppress: boolean = false) {
         const handleNetworkChanged = async (networkId: string | number) => {
           console.log("Handling 'networkChanged' event with payload", networkId, providerConnector)
         
-          try {
-            if (providerConnector instanceof WalletConnect || providerConnector instanceof Network) {
-                await providerConnector.activate(networkId === -1 ? undefined : networkId);
-              } else {
-                await providerConnector.activate(networkId === -1 ? undefined : getAddChainParameters(networkId));
-              }
-          } catch (error) {
-           handleChangeNetwork(networkId, providerConnector?.provider);   
-          }
+          // try {
+          //   if (providerConnector instanceof WalletConnect || providerConnector instanceof Network) {
+          //       await providerConnector.activate(networkId === -1 ? undefined : networkId);
+          //     } else {
+          //       await providerConnector.activate(networkId === -1 ? undefined : getAddChainParameters(networkId));
+          //     }
+          // } catch (error) {
+          //  handleChangeNetwork(networkId, providerConnector?.provider);   
+          // }
         }
   
         // console.log(providerConnector?.provider, 'provider');

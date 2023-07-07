@@ -37,6 +37,7 @@ export function useEagerConnect() {
           break;
 
         case "WalletConnect":
+          // await walletConnectV2.activate();
           await walletConnectV2.activate(appConfig.coreContractChain);
           console.log('i am here');
           break;
@@ -63,6 +64,7 @@ export function useEagerConnect() {
     walletConnectV2.connectEagerly().catch((error) => {
       console.debug('Failed to connect eagerly to walletconnect', error)
     })
+
   }, [])
 
   useEffect(() => {
