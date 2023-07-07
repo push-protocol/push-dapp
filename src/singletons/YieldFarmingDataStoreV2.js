@@ -71,9 +71,7 @@ export default class YieldFarmingDataStoreV2 {
       const pushCoreV2 = this.state.pushCoreV2;
       const yieldFarmingLP = this.state.yieldFarmingLP;
       const currentEpochLP = await yieldFarmingLP.getCurrentEpoch()
-      console.log("Current Epoch LP", currentEpochLP)
       const currentEpochPUSH = await this.currentEpochCalculation(provider);
-      console.log("Current Epoch PUSH", currentEpochPUSH)
 
       let pushPrice;
       const pushPriceAmounts = await this.state.uniswapV2Router02.getAmountsOut(ONE_PUSH.toString(), [addresses.pushToken,addresses.WETHAddress,addresses.USDTAddress]);
@@ -243,7 +241,8 @@ export default class YieldFarmingDataStoreV2 {
         const numEpoch = await contract.NR_OF_EPOCHS();
         const currentEpochLP = await contract
           .getCurrentEpoch()
-          .then((epoch) => (epoch > numEpoch ? numEpoch : epoch));
+          .then((epoch) => (epoch.toNumber() > numEpoch.toNumber() ? numEpoch : epoch));
+          console.log("Current Epoch LP",currentEpochLP.toNumber())
         const epochStakeNext = await contract.getEpochStake(this.state.account, currentEpochLP.add(1));
 
         const potentialUserReward = (await this.calculateUserEpochReward(currentEpochLP, contract)).toFixed(2);
