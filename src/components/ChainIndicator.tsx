@@ -21,7 +21,7 @@ import { ErrorContext } from 'contexts/ErrorContext';
 const ChainIndicator = ({ isDarkMode }) => {
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
-  const { account, chainId:currentChainId, connector } = useWeb3React<ethers.providers.Web3Provider>();
+  const { account, chainId:currentChainId, connector, provider } = useWeb3React<ethers.providers.Web3Provider>();
   const theme = useTheme();
   const { authError } = useContext(ErrorContext);
 
@@ -39,7 +39,6 @@ const ChainIndicator = ({ isDarkMode }) => {
         icon: `./svg/${LOGO_FROM_CHAIN_ID[chainId]}`,
         function: () => {
           handleChangeNetwork(chainId, connector.provider);
-          // handleChangeNetwork(chainId, library.provider);
           setShowDropdown(false);
         },
       });
@@ -50,6 +49,8 @@ const ChainIndicator = ({ isDarkMode }) => {
   useClickAway(toggleArrowRef, dropdownRef, () => {
     setShowDropdown(false);
   });
+
+  console.log(connector.provider, provider, provider.getSigner());
 
   return (
     <>

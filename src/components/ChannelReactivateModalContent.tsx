@@ -30,7 +30,7 @@ const DATE_FORMAT = 'DD MMM, YYYY';
 const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: ModalInnerComponentType) => {
   const themes = useTheme();
 
-  const { chainId, account, library } = useWeb3React();
+  const { chainId, account, provider } = useWeb3React();
   const dispatch = useDispatch();
 
   const {
@@ -72,12 +72,12 @@ const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
   }, [channelDetails]);
 
   useEffect(() => {
-    if (!account || !library) return;
+    if (!account || !provider) return;
 
     (async function () {
       const pushTokenApprovalAmount = await getPushTokenApprovalAmount({
         address: account,
-        provider: library,
+        provider: provider,
         contractAddress: addresses.epnscore,
       });
       setPushApprovalAmount(parseInt(pushTokenApprovalAmount));
@@ -89,17 +89,17 @@ const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
         setPushDeposited(false);
       }
     })();
-  }, [account, library]);
+  }, [account, provider]);
 
   // mint PUSH token
   const mintPushTokenHandler = async (noOfTokens: number) => {
-    await mintPushToken({ noOfTokens, library, account });
+    await mintPushToken({ noOfTokens, provider, account });
   };
 
   const depositPush = async () => {
     setIsLoading(true);
-    if (!library) return;
-    const signer = library.getSigner(account);
+    if (!provider) return;
+    const signer = provider.getSigner(account);
     toastObject.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
     try {
       const response = await approvePushToken({

@@ -38,7 +38,7 @@ export const ERROR_TOAST_DEFAULTS = {
 
 
 function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalance,setGaslessInfo, theme }) {
-  const { account, library } = useWeb3React();
+  const { account } = useWeb3React();
   const [loading, setLoading] = React.useState(true);
   const [txLoading, setTxLoading] = React.useState(false);
   const [txInProgress, setTxInProgress] = React.useState(false);
@@ -60,7 +60,7 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
     // return false if no error
     // otherwise return error message
     // get gas price
-    const gasPrice = await EPNSCoreHelper.getGasPriceInDollars(library);
+    const gasPrice = await EPNSCoreHelper.getGasPriceInDollars(provider);
     const totalCost = gasPrice * gasEstimate;
     if(totalCost > GAS_LIMIT){
       return "Gas Price is too high, Please try again in a while." 
@@ -84,12 +84,12 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
  
     setTxLoading(true);
     if(transactionMode === 'withgas'){
-     await executeDelegateTx({delegateeAddress,epnsToken,toast,setTxInProgress:setTxLoading,library,LoaderToast});
+     await executeDelegateTx({delegateeAddress,epnsToken,toast,setTxInProgress:setTxLoading,provider,LoaderToast});
      setTxInProgress(false); 
      return;
     }
     if (pushBalance < PUSH_BALANCE_TRESHOLD) {
-      // await  executeDelegateTx({delegateeAddress,epnsToken,toast,setTxInProgress:setTxLoading,library,LoaderToast})
+      // await  executeDelegateTx({delegateeAddress,epnsToken,toast,setTxInProgress:setTxLoading,provider,LoaderToast})
       toast.dark("Atleast " + PUSH_BALANCE_TRESHOLD +" PUSH required for gasless delegation!", {
         position: "bottom-right",
         type: toast.TYPE.ERROR,
@@ -106,7 +106,7 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
     }
     if(!web3.utils.isAddress(delegateeAddress))
     delegateeAddress = await ens.getAddress(delegateeAddress);
-    await createTransactionObject({delegateeAddress,account,epnsToken,addresses,signerObject,library,setTxLoading});
+    await createTransactionObject({delegateeAddress,account,epnsToken,addresses,signerObject,provider,setTxLoading});
     setTxInProgress(false);
     toolingPostReq('/gov/prev_delegation',{"walletAddress": account}).then(res=>{
       console.log("result",res.data.user)

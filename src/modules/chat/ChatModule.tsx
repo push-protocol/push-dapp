@@ -59,7 +59,7 @@ export const Context = React.createContext<AppContext | null>(null);
 
 // Create Header
 function Chat({ chatid }) {
-  const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
+  const { account, chainId } = useWeb3React<ethers.providers.Web3Provider>();
   const { getUser, connectedUser, setConnectedUser, blockedLoading, setBlockedLoading, displayQR, setDisplayQR } =
     useContext(ChatUserContext);
     const { videoCallData } = useContext(VideoCallContext);

@@ -21,8 +21,8 @@ import GLOBALS from "config/Globals";
 
 const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   const theme = useTheme();
-  const { account, library, chainId } = useWeb3React();
-  const signer = library.getSigner(account);
+  const { account, provider, chainId } = useWeb3React();
+  const signer = provider.getSigner(account);
   const dispatch = useDispatch();
 
   // const modalRef = useRef(null);

@@ -40,7 +40,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
   const modalRef = React.useRef(null);
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
 
-  const { account, library, chainId } = useWeb3React();
+  const { account, provider, chainId } = useWeb3React();
   const { notifications, page, finishedFetching, toggle } = useSelector(
     (state: any) => state.notifications
   );
@@ -266,7 +266,8 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
   const onDecrypt = async ({ secret, title, message, image, cta }) => {
     let txToast;
     try {
-      let decryptedSecret = await CryptoHelper.decryptWithWalletRPCMethod(library.provider, secret, account);
+      let decryptedSecret = await CryptoHelper.decryptWithWalletRPCMethod(provider, secret, account);
+      // let decryptedSecret = await CryptoHelper.decryptWithWalletRPCMethod(library.provider, secret, account);
 
       // decrypt notification message
       const decryptedBody = await CryptoHelper.decryptWithAES(message, decryptedSecret);

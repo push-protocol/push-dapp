@@ -120,7 +120,7 @@ const LIMITER_KEYS = ['Enter', ','];
 function SendNotifications() {
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(425);
-  const { account, library, chainId } = useWeb3React();
+  const { account, provider, chainId } = useWeb3React();
   const { epnsCommWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const { channelDetails, delegatees, aliasDetails: { aliasEthAddr } } = useSelector((state: any) => state.admin);
   const { CHANNNEL_DEACTIVATED_STATE } = useSelector((state: any) => state.channels);
@@ -588,7 +588,7 @@ function SendNotifications() {
 
         const channelAddressInCaip = convertAddressToAddrCaip(channelAddress, chainId);
 
-        const _signer = await library.getSigner(account);
+        const _signer = await provider.getSigner(account);
         await PushAPI.payloads.sendNotification({
           signer: _signer,
           type: parseInt(nfType), // target

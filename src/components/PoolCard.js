@@ -32,7 +32,7 @@ export default function PoolCard({
   pushPoolStats,
   userData,
 }) {
-  const { active, error, account, library, chainId } = useWeb3React();
+  const { active, error, account, provider, chainId } = useWeb3React();
   const [depositAmountToken, setDepositAmountToken] = React.useState(0);
   const [withdrawAmountToken, setWithdrawAmountToken] = React.useState(0);
   const [harvestEpochValue, setHarvestEpochValue] = React.useState(0);
@@ -63,7 +63,7 @@ export default function PoolCard({
     }
     setTxInProgressApprDep(true);
 
-    var signer = library.getSigner(account);
+    var signer = provider.getSigner(account);
     const tokenAddr = poolName == "Uniswap LP Pool (UNI-V2)" ? addresses.epnsLPToken : addresses.epnsToken;
     let token = new ethers.Contract(tokenAddr, abis.epnsToken, signer);
 
@@ -79,7 +79,7 @@ export default function PoolCard({
   }
 
   const fillMax = async () => {
-    var signer = library.getSigner(account);
+    var signer = provider.getSigner(account);
     const tokenAddr = poolName == "Uniswap LP Pool (UNI-V2)" ? addresses.epnsLPToken : addresses.epnsToken;
     let token = new ethers.Contract(tokenAddr, abis.epnsToken, signer);
 
@@ -94,7 +94,7 @@ export default function PoolCard({
 
     setTxInProgressApprDep(true);
 
-    var signer = library.getSigner(account);
+    var signer = provider.getSigner(account);
     let epnsToken = new ethers.Contract(tokenAddress, abis.epnsToken, signer);
     let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
 
@@ -120,7 +120,7 @@ export default function PoolCard({
       );
 
       try {
-        await library.waitForTransaction(tx.hash);
+        await provider.waitForTransaction(tx.hash);
 
         toast.update(txToast, {
           render: "Transaction Completed!",
@@ -162,7 +162,7 @@ export default function PoolCard({
 
     setTxInProgressDep(true)
 
-    var signer = library.getSigner(account);
+    var signer = provider.getSigner(account);
     let epnsToken = new ethers.Contract(tokenAddress, abis.epnsToken, signer);
     let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
     console.log(depositAmountToken);
@@ -190,7 +190,7 @@ export default function PoolCard({
         );
 
         try {
-          await library.waitForTransaction(tx.hash);
+          await provider.waitForTransaction(tx.hash);
 
           toast.update(txToast, {
             render: "Transaction Completed!",
@@ -255,7 +255,7 @@ export default function PoolCard({
       return;
     }
 
-    var signer = library.getSigner(account);
+    var signer = provider.getSigner(account);
     let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
 
     const tx = staking.withdraw(
@@ -280,7 +280,7 @@ export default function PoolCard({
       );
 
       try {
-        await library.waitForTransaction(tx.hash);
+        await provider.waitForTransaction(tx.hash);
 
         toast.update(txToast, {
           render: "Transaction Completed!",
@@ -319,7 +319,7 @@ export default function PoolCard({
   };
 
   const harvestTokens = async () => {
-    var signer = library.getSigner(account);
+    var signer = provider.getSigner(account);
     let yieldFarmingPUSH = new ethers.Contract(
       poolAddress,
       abis.yieldFarming,
@@ -343,7 +343,7 @@ export default function PoolCard({
         );
 
         try {
-          await library.waitForTransaction(tx.hash);
+          await provider.waitForTransaction(tx.hash);
 
           toast.update(txToast, {
             render: "Transaction Completed!",
@@ -400,7 +400,7 @@ export default function PoolCard({
 
     console.log(poolAddress);
 
-    var signer = library.getSigner(account);
+    var signer = provider.getSigner(account);
     let yieldFarmingPUSH = new ethers.Contract(
       poolAddress,
       abis.yieldFarming,
@@ -424,7 +424,7 @@ export default function PoolCard({
       );
 
       try {
-        await library.waitForTransaction(tx.hash);
+        await provider.waitForTransaction(tx.hash);
 
         toast.update(txToast, {
           render: "Transaction Completed!",

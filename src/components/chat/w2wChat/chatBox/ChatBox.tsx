@@ -89,7 +89,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const [chatMeta, setChatMeta] = useState(null);
 
   const [newMessage, setNewMessage] = useState<string>('');
-  const { chainId, account, library } = useWeb3React<ethers.providers.Web3Provider>();
+  const { chainId, account, provider } = useWeb3React<ethers.providers.Web3Provider>();
   const [Loading, setLoading] = useState<boolean>(true);
   const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false);
   const [imageSource, setImageSource] = useState<string>('');
@@ -261,7 +261,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       if (!connectedUser.publicKey) {
         createdUser = await createUserIfNecessary();
       }
-      const signer = await library.getSigner();
+      const signer = await provider.getSigner();
 
       const sendResponse = await PushAPI.chat.send({
         messageContent: message,
@@ -327,7 +327,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       if (!connectedUser.publicKey) {
         createdUser = await createUserIfNecessary();
       }
-      const signer = await library.getSigner();
+      const signer = await provider.getSigner();
       updatedIntent = await PushAPI.chat.approve({
         status: 'Approved',
         signer: signer!,
@@ -392,7 +392,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
         if (!connectedUser.publicKey) {
           createdUser = await createUserIfNecessary();
         }
-        const signer = await library.getSigner();
+        const signer = await provider.getSigner();
         const sendResponse = await PushAPI.chat.send({
           messageContent: message,
           messageType: messageType,

@@ -19,7 +19,7 @@ const ipfs = require('ipfs-api')();
 
 // Create Header
 function ChannelDashboard() {
-  const { active, error, account, library, chainId } = useWeb3React();
+  const { active, error, account, provider, chainId } = useWeb3React();
 
   const [processing, setProcessing] = React.useState(false);
 
@@ -38,7 +38,7 @@ function ChannelDashboard() {
     // skip this for now
     setProcessing(true);
 
-    var signer = library.getSigner(account);
+    var signer = provider.getSigner(account);
     let contract = new ethers.Contract(addresses.epnscore, abis.epnscore, signer);
 
     let nsub = sub;
