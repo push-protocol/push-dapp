@@ -202,6 +202,19 @@ const YieldUniswapV3 = ({
         });
     };
 
+    const handleStakingModal = ()=>{
+        if(lpPoolStats?.currentEpochLP.toNumber() < lpPoolStats?.totalEpochLP.toNumber()){
+            showStakingModal();
+        }else{
+            uniswapV2Toast.showMessageToast({
+                toastTitle: 'Error',
+                toastMessage: `Epochs have ended!`,
+                toastType: 'ERROR',
+                getToastIcon: (size) => <MdError size={size} color="red" />,
+            });
+        }
+    }
+
     const {
         isModalOpen: isStakingModalOpen,
         showModal: showStakingModal,
@@ -362,7 +375,7 @@ const YieldUniswapV3 = ({
                                     />
                                 </InfoSpan>
                             </DataTitle>
-                            <DataValue> {(userDataLP?.totalAccumulatedReward - userDataLP?.totalAvailableReward).toFixed(2)} PUSH</DataValue>
+                            <DataValue> {numberWithCommas((userDataLP?.totalAccumulatedReward - userDataLP?.totalAvailableReward).toFixed(2))} PUSH</DataValue>
                         </ItemHV2>
                         <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                             <DataTitle>
@@ -374,7 +387,7 @@ const YieldUniswapV3 = ({
                                     />
                                 </InfoSpan>
                             </DataTitle>
-                            <DataValue> {userDataLP?.potentialUserReward} PUSH</DataValue>
+                            <DataValue> {numberWithCommas(userDataLP?.potentialUserReward)} PUSH</DataValue>
                         </ItemHV2>
                         <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                             <DataTitle>
@@ -386,7 +399,7 @@ const YieldUniswapV3 = ({
                                     />
                                 </InfoSpan>
                             </DataTitle>
-                            <DataValue> {userDataLP?.totalAvailableReward} PUSH</DataValue>
+                            <DataValue> {numberWithCommas(userDataLP?.totalAvailableReward)} PUSH</DataValue>
                         </ItemHV2>
 
 
@@ -431,8 +444,9 @@ const YieldUniswapV3 = ({
                 {userDataLP ? (
                     <>
                         <ItemHV2>
-                            <FilledButton onClick={() => {
-                                showStakingModal();
+                            <FilledButton 
+                            onClick={() => {
+                                handleStakingModal();
                             }}>Stake UNI-V2 LP Tokens</FilledButton>
                         </ItemHV2>
                         <ButtonsContainer>
