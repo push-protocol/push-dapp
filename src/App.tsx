@@ -188,7 +188,6 @@ export default function App() {
     // }
   };
 
-  console.log(connector, isActive, account);
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>

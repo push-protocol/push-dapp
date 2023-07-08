@@ -15,13 +15,13 @@ import { useClickAway } from 'hooks/useClickAway';
 
 // Internal Configs
 import { SpanV2 } from './reusables/SharedStylingV2';
-import { handleChangeNetwork } from 'helpers/ChainHelper';
+import { handleChangeAllowedNetwork } from 'helpers/ChainHelper';
 import { ErrorContext } from 'contexts/ErrorContext';
 
 const ChainIndicator = ({ isDarkMode }) => {
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
-  const { account, chainId:currentChainId, connector, provider } = useWeb3React<ethers.providers.Web3Provider>();
+  const { account, chainId:currentChainId, connector} = useWeb3React<ethers.providers.Web3Provider>();
   const theme = useTheme();
   const { authError } = useContext(ErrorContext);
 
@@ -38,7 +38,8 @@ const ChainIndicator = ({ isDarkMode }) => {
         title: chainName,
         icon: `./svg/${LOGO_FROM_CHAIN_ID[chainId]}`,
         function: () => {
-          handleChangeNetwork(chainId, connector.provider);
+          // console.log(chainId, connector.provider, 'change network')
+          handleChangeAllowedNetwork(chainId, connector.provider, connector);
           setShowDropdown(false);
         },
       });
@@ -49,8 +50,6 @@ const ChainIndicator = ({ isDarkMode }) => {
   useClickAway(toggleArrowRef, dropdownRef, () => {
     setShowDropdown(false);
   });
-
-  console.log(connector.provider, provider, provider.getSigner());
 
   return (
     <>

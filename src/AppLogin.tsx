@@ -96,7 +96,7 @@ const AppLogin = ({ toggleDarkMode }) => {
   ReactGA.pageview('/login');
 
   // Web3 React logic
-  const { connector ,isActive, account } = useWeb3React<Web3Provider>();
+  const { connector ,isActive, account, chainId } = useWeb3React<Web3Provider>();
   const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
   const { authError, setAuthError } = useContext(ErrorContext);
   const [errorMessage, setErrorMessage] = React.useState(undefined);
@@ -120,7 +120,6 @@ const AppLogin = ({ toggleDarkMode }) => {
   // handle error functions
 function handleErrorMessage(error: Error) {
     console.log(error, 'get error');
-
     setErrorMessage(error);
 
   // if(error?.code == 4001){
@@ -217,7 +216,8 @@ useEffect(() => {
               const disabled = currentConnector === connector && isActive;
               const image = theme.scheme == 'light' ? web3Connectors[name].logolight : web3Connectors[name].logodark;
               const title = web3Connectors[name].title;
-              const desiredChain = appConfig.coreContractChain
+              const desiredChain = appConfig.coreContractChain;
+              const chainIds = appConfig.allowedNetworks;
 
               return (
                 <LoginButton
@@ -232,15 +232,20 @@ useEffect(() => {
                   key={name}
                   onClick={async () => {
                     setActivatingConnector(currentConnector);
-                    console.log(currentConnector);
                    
                     // await currentConnector?.activate();
+                    try {
+                    setAuthError(undefined);
                     if (currentConnector instanceof WalletConnect) {
+                      await currentConnector.activate(chainIds.includes(parseInt(window.ethereum.networkVersion)) ? '' : desiredChain)
                       await currentConnector.activate(desiredChain === -1 ? undefined : desiredChain);
-                      // console.log('wallet connect');
                     } else {
-                      await currentConnector.activate(desiredChain === -1 ? undefined : getAddChainParameters(desiredChain));
+                      await currentConnector.activate(chainIds.includes(parseInt(window.ethereum.networkVersion)) ? '' : getAddChainParameters(desiredChain));
                     }
+                  }
+                  catch(error){
+                    setAuthError(error);
+                  }
                   }}>
                   <ImageV2 src={image} height="40px" width="50px" padding="5px" />
 

@@ -47,7 +47,6 @@ export function useEagerConnect() {
       }
     } catch (error) {
       console.error("Failed to connect wallet. Please try again.", error);
-      // getErrorMessage(error);
       setAuthError(error);
     }
   }, []);

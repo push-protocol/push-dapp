@@ -8,12 +8,12 @@ import { getAddChainParameters } from '../connectors/chains';
 import { useSwitchChain } from '../connectors/chains'
 import { WalletConnect } from "@web3-react/walletconnect-v2";
 import { Network } from "@web3-react/network";
-import { handleChangeNetwork } from '../helpers/ChainHelper';
+import { handleChangeAllowedNetwork } from '../helpers/ChainHelper';
 
 // // const { useChainId, useAccounts, useIsActivating, useIsActive, useProvider, useENSNames } = hooks;
 
 export function useInactiveListener(suppress: boolean = false) {
-    const { connector, isActive, provider, chainId } = useWeb3React();
+    const { connector, isActive } = useWeb3React();
 //     // const isActive = useIsActive();
 //     // const isActivating = useIsActivating();
 //     // const chainId = useChainId();
@@ -23,45 +23,33 @@ export function useInactiveListener(suppress: boolean = false) {
     useEffect((): any => {
       const providerConnector = connector;
       const { ethereum } = window;
-        const handleChainChanged = async () => {
-          // console.log("Handling 'chainChanged' event with payload", chainId)
-          const newChain = providerConnector?.provider?.chainId as any;
+        const handleChainChanged = async (chainId: string| number) => {
+          console.log("Handling 'chainChanged' event with payload", chainId)
 
-          // activate(injected)
+          // providerConnector.activate(getAddChainParameters(chainId))
 
         }
         const handleAccountsChanged = (accounts: string[]) => {
-          console.log("Handling 'accountsChanged' event with payload", accounts)
+          console.log("Handling 'accountsChanged' event with payload", accounts, providerConnector)
           if (accounts.length > 0) {
             // activate(injected)
           }
         }
-        const handleNetworkChanged = async (networkId: string | number) => {
-          console.log("Handling 'networkChanged' event with payload", networkId, providerConnector)
-        
-          // try {
-          //   if (providerConnector instanceof WalletConnect || providerConnector instanceof Network) {
-          //       await providerConnector.activate(networkId === -1 ? undefined : networkId);
-          //     } else {
-          //       await providerConnector.activate(networkId === -1 ? undefined : getAddChainParameters(networkId));
-          //     }
-          // } catch (error) {
-          //  handleChangeNetwork(networkId, providerConnector?.provider);   
-          // }
+          const handleNetworkChanged = async (networkId: string | number) => {
+          console.log("Handling 'networkChanged' event with payload", networkId)
+          handleChangeAllowedNetwork(parseInt(networkId), providerConnector?.provider, providerConnector);
         }
   
-        // console.log(providerConnector?.provider, 'provider');
         providerConnector?.provider?.on('chainChanged', handleChainChanged)
         providerConnector?.provider?.on('accountsChanged', handleAccountsChanged)
         providerConnector?.provider?.on('networkChanged', handleNetworkChanged)
   
         return () => {
-          if (providerConnector.removeListener) {
-            providerConnector.removeListener('connect', handleConnect)
-            providerConnector.removeListener('chainChanged', handleChainChanged)
-            providerConnector.removeListener('accountsChanged', handleAccountsChanged)
-            providerConnector.removeListener('networkChanged', handleNetworkChanged)
+          if (providerConnector?.provider?.removeListener) {
+            providerConnector?.provider?.removeListener('chainChanged', handleChainChanged)
+            providerConnector?.provider?.removeListener('accountsChanged', handleAccountsChanged)
+            providerConnector?.provider?.removeListener('networkChanged', handleNetworkChanged)
           }
         }
-    }, [connector, isActive, chainId, suppress])
+    }, [connector, isActive, suppress])
   }
