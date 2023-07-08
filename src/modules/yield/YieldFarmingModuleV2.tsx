@@ -7,19 +7,16 @@ import styled from 'styled-components';
 
 // Internal Compoonents
 import { ItemHV2, ItemVV2, SectionV2 } from 'components/reusables/SharedStylingV2';
-
-// Internal Configs
-import { abis, addresses, appConfig } from 'config';
-import GLOBALS, { device, globalsMargin } from 'config/Globals';
-import { ethers } from 'ethers';
-import { useWeb3React } from '@web3-react/core';
-import YieldFarmingDataStoreV2 from 'singletons/YieldFarmingDataStoreV2';
 import DeprecatedYieldFarming from 'sections/yield/DeprecatedYieldFarming';
 import NewYieldFarming from 'sections/yield/NewYieldFarming';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+
+// Internal Configs
+import { appConfig } from 'config';
+import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 // Constants
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
+
 
 // Create Inbox Module
 const YieldFarmingModuleV2 = () => {
@@ -28,7 +25,6 @@ const YieldFarmingModuleV2 = () => {
 
   const [activeTab, setActiveTab] = useState(1);
   const [newStaking, setNewStaking] = useState(true);
-  const [loading, setLoading] = useState(false);
 
   // Render
   return (
@@ -55,9 +51,9 @@ const YieldFarmingModuleV2 = () => {
 
 
       {newStaking ? (
-        <NewYieldFarming setLoading={setLoading} />
+        <NewYieldFarming/>
       ) : (
-        <DeprecatedYieldFarming setActiveTab={setActiveTab} setLoading={setLoading} />
+        <DeprecatedYieldFarming setActiveTab={setActiveTab} />
       )}
 
     </Container>

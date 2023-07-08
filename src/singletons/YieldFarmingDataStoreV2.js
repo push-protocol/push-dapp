@@ -86,8 +86,6 @@ export default class YieldFarmingDataStoreV2 {
       const pushAmountReserve = tokenBNtoNumber(await this.state.pushToken.balanceOf(addresses.uniV2LPToken));
       const wethAmountReserve = tokenBNtoNumber(await this.state.pushToken.attach(addresses.WETHAddress).balanceOf(addresses.uniV2LPToken)); // Using pushToken instance for WETH instance
 
-      console.log("PpushAmountReserve",pushAmountReserve,wethAmountReserve);
-
       let ethPrice;
       const ethPriceAmounts = await this.state.uniswapV2Router02.getAmountsOut(ONE_PUSH.toString(),[addresses.WETHAddress,addresses.USDTAddress,]);
       if (appConfig.coreContractChain === 42 || appConfig.coreContractChain === 5) {
@@ -117,8 +115,6 @@ export default class YieldFarmingDataStoreV2 {
       const lpTotalDistributedAmount = await yieldFarmingLP.TOTAL_DISTRIBUTED_AMOUNT();
       const totalDistributedAmount = pushTotalDistributedAmount.add(lpTotalDistributedAmount);
 
-      console.log('total distributed amount>>>>>', tokenBNtoNumber(totalDistributedAmount));
-
       // calculating push distributed
       const pushRewardsDistributed = await this.getPushRewardsDistributed(currentEpochPUSH,currentEpochLP);
 
@@ -144,8 +140,6 @@ export default class YieldFarmingDataStoreV2 {
     const genesisEpochAmountLP = tokenToBn(ethers.BigNumber.from(this.state.genesisEpochAmountLP));
     const deprecationPerEpochLP = tokenToBn(ethers.BigNumber.from(this.state.deprecationPerEpochLP));
 
-    console.log('Amount of LP', genesisEpochAmountLP, deprecationPerEpochLP, currentEpochLP.toNumber());
-
     let pushPoolRewardsDistributed = ethers.BigNumber.from(0);
     let lpPoolRewardsDistributed = ethers.BigNumber.from(0);
 
@@ -159,12 +153,11 @@ export default class YieldFarmingDataStoreV2 {
 
       lpPoolRewardsDistributed = lpPoolRewardsDistributed.add(rewardForCurrentEpochLP);
 
-      const pushPoolRewardsDistributed = await pushCoreV2.epochRewards(i);
-      console.log("Reward for current epoch PUSH",tokenBNtoNumber(pushPoolRewardsDistributed));
+      const rewardForCurrentEpochPush = await pushCoreV2.epochRewards(i);
+
+      lpPoolRewardsDistributed = lpPoolRewardsDistributed.add(rewardForCurrentEpochPush);
 
     }
-    console.log('Lp Pool rewards distributed', tokenBNtoNumber(lpPoolRewardsDistributed),tokenBNtoNumber(pushPoolRewardsDistributed));
-
     return pushPoolRewardsDistributed.add(lpPoolRewardsDistributed)
   };
 
@@ -210,7 +203,6 @@ export default class YieldFarmingDataStoreV2 {
   getPUSHPoolStats = async (provider) => {
     return new Promise(async (resolve, reject) => {
       const pushCoreV2 = this.state.pushCoreV2;
-      console.log('pushCore', pushCoreV2);
       const pushToken = this.state.pushToken;
       const currentEpoch = await this.currentEpochCalculation(provider);
 
@@ -242,7 +234,6 @@ export default class YieldFarmingDataStoreV2 {
         const currentEpochLP = await contract
           .getCurrentEpoch()
           .then((epoch) => (epoch.toNumber() > numEpoch.toNumber() ? numEpoch : epoch));
-          console.log("Current Epoch LP",currentEpochLP.toNumber())
         const epochStakeNext = await contract.getEpochStake(this.state.account, currentEpochLP.add(1));
 
         const potentialUserReward = (await this.calculateUserEpochReward(currentEpochLP, contract)).toFixed(2);
@@ -250,7 +241,6 @@ export default class YieldFarmingDataStoreV2 {
         let totalAccumulatedReward = 0;
         for (var i = 1; i <= currentEpochLP.sub(1).toNumber(); i++) {
           const epochReward = await this.calculateUserEpochReward(i, contract);
-          // console.log("Epohc ID", i , "Reward ", epochReward)
           totalAccumulatedReward = totalAccumulatedReward + epochReward;
         }
         totalAccumulatedReward = totalAccumulatedReward.toFixed(2);
@@ -307,24 +297,13 @@ export default class YieldFarmingDataStoreV2 {
         lastClaimedEpoch = lastClaimedEpoch.toNumber();
 
         let totalClaimableReward = 0;
-        // let lengthToLoop = 0;
-
-        // if(computationalEpochId == lastClaimedEpoch){
-        //   lengthToLoop = (computationalEpochId - lastClaimedEpoch);
-        // }else{
-        //   lengthToLoop = (computationalEpochId - lastClaimedEpoch) + 1;
-        // }
-
         let lengthToLoop = computationalEpochId - lastClaimedEpoch;
-
-        console.log('PUSH Epoch DIfferences', lastClaimedEpoch, computationalEpochId, lengthToLoop);
 
         const epochsToCondider = Array.from({ length: lengthToLoop }, (_, i) => i + lastClaimedEpoch);
 
         const userRewards = await Promise.all(
           epochsToCondider.map((epochId) => {
             return pushCoreV2.calculateEpochRewards(userAddress, epochId).then((reward) => {
-              console.log('Push: Epoch ID', epochId, 'Reward in this epoch', reward, tokenBNtoNumber(reward));
               return reward;
             });
           })
@@ -375,7 +354,6 @@ export default class YieldFarmingDataStoreV2 {
         }
       }
     }
-    console.log('Final epoch ID', computationalEpochId);
     return computationalEpochId;
   };
 
@@ -457,12 +435,6 @@ export default class YieldFarmingDataStoreV2 {
     let epochRewards = await pushCoreV2.epochRewards(currentEpoch);
 
     let previouslySetEpochRewards = await pushCoreV2.previouslySetEpochRewards();
-    console.log(
-      '-----tsss-',
-      tokenBNtoNumber(previouslySetEpochRewards),
-      tokenBNtoNumber(PROTOCOL_POOL_FEES),
-      tokenBNtoNumber(epochRewards)
-    );
 
     if (tokenBNtoNumber(previouslySetEpochRewards) !== tokenBNtoNumber(PROTOCOL_POOL_FEES)) {
       // Manually Calculate Rewards
@@ -473,19 +445,13 @@ export default class YieldFarmingDataStoreV2 {
           .then((hexStr) => Number(hexStr))
           .then((blockNum) => this.getEpochRelation(blockNum)),
       ]);
-
-      console.log('Last Epoch inisitaliased', _lastEpochInitiliazed.toNumber());
-
       const _epochGap = currentEpoch.sub(_lastEpochInitiliazed);
-      console.log('EPoch Gap', _epochGap.toNumber()); // 1
 
       if (currentEpoch == _lastEpochInitiliazed + 1) {
-        console.log('<<<>> it worked');
         const availableRewardsPerEpoch = PROTOCOL_POOL_FEES.sub(previouslySetEpochRewards);
         epochRewards = epochRewards.add(availableRewardsPerEpoch);
       }
     }
-    console.log('*********** reward', epochRewards, tokenBNtoNumber(epochRewards));
     return epochRewards;
   };
 

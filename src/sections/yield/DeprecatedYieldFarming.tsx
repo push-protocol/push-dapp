@@ -1,18 +1,24 @@
-import { useWeb3React } from '@web3-react/core';
-import { Item } from 'components/SharedStyling';
-import { ItemHV2 } from 'components/reusables/SharedStylingV2';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import YieldPoolCard from 'components/yield/YieldPoolCard';
-import YieldPushFeeV2 from 'components/yield/YieldPushFeeV2';
-import { abis, addresses } from 'config';
-import { ethers } from 'ethers';
+// React + Web3 Essentials
 import React, { useState } from 'react';
-import YieldFarmingDataStore from 'singletons/YieldFarmingDataStore';
+import { ethers } from 'ethers';
+import { useWeb3React } from '@web3-react/core';
+
+// External Packages
 import styled from 'styled-components';
+
+// Internal Compoonents
+import { ItemHV2 } from 'components/reusables/SharedStylingV2';
+import YieldFarmingDataStore from 'singletons/YieldFarmingDataStore';
+import YieldPoolCard from 'components/yield/YieldPoolCard';
+
+// Internal Configs
+import { abis, addresses,appConfig } from 'config';
+
+// Constants
+export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
 
 const DeprecatedYieldFarming = ({
     setActiveTab,
-    setLoading
 }) => {
     const { account, library, chainId } = useWeb3React();
 
@@ -31,48 +37,34 @@ const DeprecatedYieldFarming = ({
     const [depUserDataLP, setDepUserDataLP] = useState(null);
 
     const getDepPoolStats = React.useCallback(async () => {
-        setLoading(true);
         const poolStats = await YieldFarmingDataStore.instance.getPoolStats();
-        // console.log("PoolStats", poolStats);
 
         setDepPoolStats({ ...poolStats });
-        setLoading(false);
     }, [pushToken, depStaking, depYieldFarmLP, depYieldFarmPUSH, uniswapV2Router02]);
 
     const getDepPUSHPoolStats = React.useCallback(async () => {
-        setLoading(true);
         const pushPoolStats = await YieldFarmingDataStore.instance.getPUSHPoolStats();
-        console.log("PUSH Pool Stats: ", pushPoolStats);
 
         setDepPushPoolStats({ ...pushPoolStats });
-        setLoading(false);
     }, [pushToken, depStaking, depYieldFarmLP, depYieldFarmPUSH, uniswapV2Router02]);
 
     const getDepLPPoolStats = React.useCallback(
         async (poolStats) => {
-            setLoading(true);
             const lpPoolStats = await YieldFarmingDataStore.instance.getLPPoolStats(poolStats);
-            console.log("Lp Pool Stats: ", lpPoolStats);
 
             setDepLpPoolStats({ ...lpPoolStats });
-            setLoading(false);
         }, [pushToken, depStaking, depYieldFarmLP, depYieldFarmPUSH, uniswapV2Router02]);
 
     const getDepUserDataPUSH = React.useCallback(async () => {
-        setLoading(true);
         const userDataPUSH = await YieldFarmingDataStore.instance.getUserData(depYieldFarmPUSH);
-        console.log("UserData PUSh", userDataPUSH);
+        
         setDepUserDataPUSH({ ...userDataPUSH });
-        setLoading(false);
     }, [depYieldFarmPUSH]);
 
     const getDepUserDataLP = React.useCallback(async () => {
-        setLoading(true);
         const userDataLP = await YieldFarmingDataStore.instance.getUserData(depYieldFarmLP);
-        console.log("UserData LP", userDataLP);
 
         setDepUserDataLP({ ...userDataLP });
-        setLoading(false);
     }, [depYieldFarmLP]);
 
 
@@ -122,9 +114,6 @@ const DeprecatedYieldFarming = ({
             );
 
             getDepPoolStats();
-            // getLPPoolStats();
-            // getDepUserDataLP();
-            // setpoolStats(YieldFarmingDataStore.instance.state);
         }
     }, [
         getDepPoolStats
@@ -170,27 +159,6 @@ const DeprecatedYieldFarming = ({
                     setActiveTab={setActiveTab}
                 />
 
-
-                {/* {(depUserDataLP && depLpPoolStats) && (
-                    
-                )}
-
-                {(depUserDataPUSH && depPushPoolStats) && (
-                    <YieldPoolCard
-                        poolName={"PUSH"}
-                        userData={depUserDataPUSH}
-                        PoolStats={depPushPoolStats}
-                        poolAddress={addresses.depYieldFarmPUSH}
-                        getUserData={getDepUserDataPUSH}
-                        getPoolStats={getDepPUSHPoolStats}
-                        tokenAddress={addresses.pushToken}
-                        setActiveTab={setActiveTab}
-                    />
-                )} */}
-
-
-                {/* <YieldUniswapV2 /> */}
-                {/* <YieldPushFeeV2 /> */}
             </V2Container>
 
 
