@@ -9,30 +9,39 @@ import { useSwitchChain } from '../connectors/chains'
 import { WalletConnect } from "@web3-react/walletconnect-v2";
 import { Network } from "@web3-react/network";
 import { handleChangeAllowedNetwork } from '../helpers/ChainHelper';
+import { appConfig } from 'config';
 
 // // const { useChainId, useAccounts, useIsActivating, useIsActive, useProvider, useENSNames } = hooks;
 
 export function useInactiveListener(suppress: boolean = false) {
-    const { connector, isActive } = useWeb3React();
+    const { connector, isActive, chainId } = useWeb3React();
 //     // const isActive = useIsActive();
 //     // const isActivating = useIsActivating();
-//     // const chainId = useChainId();
 
-//   // console.log('got here', isActive, isActivating, chainId);
+
   
     useEffect((): any => {
       const providerConnector = connector;
-      const { ethereum } = window;
+      // const { ethereum } = window;
+        if(chainId && providerConnector instanceof WalletConnect){
+          handleChangeAllowedNetwork(chainId, providerConnector?.provider, providerConnector);
+        }
+        
         const handleChainChanged = async (chainId: string| number) => {
           console.log("Handling 'chainChanged' event with payload", chainId)
-
+          if(providerConnector?.provider?.chainId && providerConnector instanceof WalletConnect){
+              await providerConnector.activate(providerConnector?.provider?.chainId)
+          }
+          else{
+            // await providerConnector.activate()
+          }
           // providerConnector.activate(getAddChainParameters(chainId))
 
         }
-        const handleAccountsChanged = (accounts: string[]) => {
-          console.log("Handling 'accountsChanged' event with payload", accounts, providerConnector)
+        const handleAccountsChanged = async (accounts: string[]) => {
+          console.log("Handling 'accountsChanged' event with payload", accounts)
           if (accounts.length > 0) {
-            // activate(injected)
+            await providerConnector.activate()
           }
         }
           const handleNetworkChanged = async (networkId: string | number) => {
@@ -51,5 +60,5 @@ export function useInactiveListener(suppress: boolean = false) {
             providerConnector?.provider?.removeListener('networkChanged', handleNetworkChanged)
           }
         }
-    }, [connector, isActive, suppress])
+    }, [connector, isActive, suppress, chainId])
   }

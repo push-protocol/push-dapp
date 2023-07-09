@@ -31,15 +31,11 @@ export function useEagerConnect() {
     try {
       switch (label) {
         case "MetaMask":
-          // await metaMask.activate();
           await metaMask.activate(getAddChainParameters(appConfig.coreContractChain));
-          // window.localStorage.setItem("connectorId", getName(metaMask));
           break;
 
         case "WalletConnect":
-          // await walletConnectV2.activate();
           await walletConnectV2.activate(appConfig.coreContractChain);
-          console.log('i am here');
           break;
 
         default:

@@ -238,7 +238,7 @@ useEffect(() => {
                     setAuthError(undefined);
                     if (currentConnector instanceof WalletConnect) {
                       await currentConnector.activate(chainIds.includes(parseInt(window.ethereum.networkVersion)) ? '' : desiredChain)
-                      await currentConnector.activate(desiredChain === -1 ? undefined : desiredChain);
+                      // await currentConnector.activate(desiredChain === -1 ? undefined : desiredChain);
                     } else {
                       await currentConnector.activate(chainIds.includes(parseInt(window.ethereum.networkVersion)) ? '' : getAddChainParameters(desiredChain));
                     }

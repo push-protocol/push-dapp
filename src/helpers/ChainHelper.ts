@@ -6,7 +6,6 @@ import { NETWORK_DETAILS } from 'helpers/UtilityHelper';
 import { appConfig, CHAIN_DETAILS } from 'config';
 // import { useWeb3React } from '@web3-react/core';
 
-
 // handles network change request
 export const handleChangeNetwork: (
   chainId: number,
@@ -71,8 +70,7 @@ export const handleChangeAllowedNetwork: (
     }
   } 
   else {
-    console.log('not allowed')
-
+   
     if (connector.deactivate) {
       await connector.deactivate();
       } else {
