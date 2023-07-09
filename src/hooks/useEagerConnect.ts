@@ -67,19 +67,28 @@ export function useEagerConnect() {
   }, [])
 
   useEffect(() => {
+    if(window.ethereum === undefined || window.ethereum.networkVersion === undefined){
+      setAuthError({
+       message: 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile',
+      })
+      return;
+     } 
     if (isActive || isActivating) return;
-      console.log(isActive, chainId, isActivating, connector ,'eager connect');
-    // if(connector instanceof WalletConnect){
-      // activateConnector("WalletConnect");
-    // }
-    // else {
+   
+
+    // console.log(window.ethereum,window.ethereum.networkVersion,'eager connect');
+
       try {
-       activateConnector("MetaMask");
+        if (connector instanceof WalletConnect){
+          activateConnector("WalletConnect");
+        }
+        else {
+          activateConnector("MetaMask");
+          }
        setTried(true);
       } catch (error) {
         setAuthError(error)
       }
-    // }
   }, []);
 
   return tried
