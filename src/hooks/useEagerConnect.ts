@@ -19,9 +19,12 @@ const { useIsActivating: useMMIsActivating } = metaMaskhooks;
 const { useIsActivating: useWCIsActivating } = walletConnectV2Hooks;
 
 export function useEagerConnect() {
-  const { connector, isActive } = useWeb3React();
+  const { connector, isActive, chainId, isActivating } = useWeb3React();
   const [tried, setTried] = useState(false);
   const { setAuthError } = useContext(ErrorContext);
+  const desiredChain = appConfig.coreContractChain;
+  const chainIds = appConfig.allowedNetworks;
+
 
 
   const isMMActivating = useMMIsActivating();
@@ -31,7 +34,8 @@ export function useEagerConnect() {
     try {
       switch (label) {
         case "MetaMask":
-          await metaMask.activate(getAddChainParameters(appConfig.coreContractChain));
+          // await metaMask.activate(getAddChainParameters(appConfig.coreContractChain));
+          await metaMask.activate(chainIds.includes(parseInt(window.ethereum.networkVersion)) ? '' : getAddChainParameters(desiredChain));
           break;
 
         case "WalletConnect":
@@ -63,13 +67,18 @@ export function useEagerConnect() {
   }, [])
 
   useEffect(() => {
-    // if (isActive) return;
-
+    if (isActive || isActivating) return;
+      console.log(isActive, chainId, isActivating, connector ,'eager connect');
     // if(connector instanceof WalletConnect){
       // activateConnector("WalletConnect");
     // }
     // else {
-    //   activateConnector("MetaMask");
+      try {
+       activateConnector("MetaMask");
+       setTried(true);
+      } catch (error) {
+        setAuthError(error)
+      }
     // }
   }, []);
 
