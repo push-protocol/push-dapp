@@ -56,8 +56,6 @@ const YieldPoolCard = ({
         }
         setTxInProgressClaimRewards(true);
 
-        console.log("Pool Addresses", poolAddress);
-
         var signer = library.getSigner(account);
         let yieldFarming = new ethers.Contract(
             poolAddress,
@@ -117,8 +115,6 @@ const YieldPoolCard = ({
         setTxInProgressWithdraw(true);
         const withdrawAmount = formatTokens(userData.epochStakeNext);
 
-        console.log("Withdraw amount: ", withdrawAmount);
-
         if (withdrawAmount == 0) {
             yieldFarmToast.showMessageToast({
                 toastTitle: 'Error',
@@ -138,8 +134,6 @@ const YieldPoolCard = ({
             account,
             tokenAddress
         )
-        console.log("Amount to Withdraw: ", amounttowithdraw, formatTokens(amounttowithdraw));
-
         const tx = staking.withdraw(
             tokenAddress,
             ethers.BigNumber.from(withdrawAmount).mul(
@@ -166,7 +160,6 @@ const YieldPoolCard = ({
 
                 setTxInProgressWithdraw(false);
 
-                console.log("This running")
                 // getLpPoolStats();
                 getUserData();
             } catch (e) {
@@ -192,27 +185,14 @@ const YieldPoolCard = ({
         });
     };
 
-    // const formatTokens = (tokens) => {
-    //     if (tokens) {
-    //         return tokens.div(ethers.BigNumber.from(10).pow(18)).toNumber();
-    //     }
-    // };
-
-    // function numberWithCommas(x) {
-    //     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    // }
-
-
     const migrateToNewPool = async () => {
         if (txInProgressMigrate) {
             return;
         }
         setTxInProgressMigrate(true);
         //unstake from the staking Contract
-        console.log("Migrating to new pool");
 
         const withdrawAmount = formatTokens(userData.epochStakeNext);
-        console.log("Withdraw amount: ", withdrawAmount);
 
         if (withdrawAmount == 0) {
             yieldFarmToast.showMessageToast({
@@ -233,11 +213,8 @@ const YieldPoolCard = ({
             account,
             tokenAddress
         )
-        console.log("Amount to Withdraw: ", amounttowithdraw, formatTokens(amounttowithdraw));
 
         let tx;
-
-        console.log("Token Address", tokenAddress, staking, withdrawAmount);
 
         // 1. First unstake the amount from the old(deprecated) staking Contract
         // 2. Now need to approve the contract addresses for deposit
@@ -287,13 +264,10 @@ const YieldPoolCard = ({
                         var token = new ethers.Contract(tokenAddress, abis.pushToken, signer);
                         let allowance = await token.allowance(account, addresses.pushCoreV2);
                         let TokensApproved = formatTokens(allowance);
-                        console.log("Allowance", TokensApproved, withdrawAmount);
 
                         if (TokensApproved > withdrawAmount) {
-                            console.log("Token Already approved : ", formatTokens(allowance), "Token Needed to deposit: ", withdrawAmount)
                             depositPushToken(tx, withdrawAmount);
                         } else {
-                            console.log("Sorry, Need TO Approve", formatTokens(allowance), withdrawAmount);
                             tx = token.approve(
                                 addresses.pushCoreV2,
                                 ethers.BigNumber.from(withdrawAmount).mul(
@@ -306,7 +280,6 @@ const YieldPoolCard = ({
 
                                 try {
                                     await library.waitForTransaction(tx.hash);
-                                    console.log("Approved the token amount");
 
                                     yieldFarmToast.showMessageToast({
                                         toastTitle: 'Success',
@@ -351,13 +324,10 @@ const YieldPoolCard = ({
                         var token = new ethers.Contract(tokenAddress, abis.pushToken, signer);
                         let allowance = await token.allowance(account, addresses.stakingV2);
                         let TokensApproved = formatTokens(allowance);
-                        console.log("Allowance", TokensApproved, withdrawAmount);
 
                         if (TokensApproved > withdrawAmount) {
-                            console.log("Allowance is way more than the withdraw amount", formatTokens(allowance), withdrawAmount)
-                            depositAmount(tx, withdrawAmount);
+                            depositLpToken(tx, withdrawAmount);
                         } else {
-                            console.log("Sorry amount not large", formatTokens(allowance), withdrawAmount);
                             tx = token.approve(
                                 addresses.stakingV2,
                                 ethers.BigNumber.from(withdrawAmount).mul(
@@ -370,7 +340,6 @@ const YieldPoolCard = ({
 
                                 try {
                                     await library.waitForTransaction(tx.hash);
-                                    console.log("Approved the token amount");
 
                                     yieldFarmToast.showMessageToast({
                                         toastTitle: 'Success',
@@ -384,7 +353,7 @@ const YieldPoolCard = ({
                                         ),
                                     });
 
-                                    depositAmount(tx, withdrawAmount);
+                                    depositLpToken(tx, withdrawAmount);
 
                                 } catch (error) {
                                     console.log("Error", error);
@@ -435,7 +404,7 @@ const YieldPoolCard = ({
     }
 
 
-    const depositAmount = async (tx, withdrawAmount) => {
+    const depositLpToken = async (tx, withdrawAmount) => {
         var signer = library.getSigner(account);
         var stakingV2 = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
 
@@ -450,7 +419,6 @@ const YieldPoolCard = ({
 
             await library.waitForTransaction(tx.hash);
 
-            console.log("Deposited the token amount");
 
             yieldFarmToast.showMessageToast({
                 toastTitle: 'Success',
@@ -463,6 +431,7 @@ const YieldPoolCard = ({
                     />
                 ),
             });
+            getUserData();
             setTxInProgressMigrate(false);
             //this will change the dApp to go to new staking.
             setActiveTab(0);
@@ -481,8 +450,6 @@ const YieldPoolCard = ({
 
     const depositPushToken = async (tx, withdrawAmount) => {
 
-        console.log("Deposit amount is called");
-
         var signer = library.getSigner(account);
         let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
 
@@ -497,8 +464,6 @@ const YieldPoolCard = ({
 
             await library.waitForTransaction(tx.hash);
 
-            console.log("Deposited Push token amount");
-
             yieldFarmToast.showMessageToast({
                 toastTitle: 'Success',
                 toastMessage: 'Transaction Completed! Successfully Deposited the Push Token to V2 ',
@@ -510,6 +475,7 @@ const YieldPoolCard = ({
                     />
                 ),
             });
+            getUserData();
             setTxInProgressMigrate(false);
             //this will change the dApp to go to new staking.
             setActiveTab(0);
@@ -611,9 +577,7 @@ const YieldPoolCard = ({
                                 </StakedAmount>
                             </>
                         ) : (
-                            <SkeletonContainer
-                                padding='5px 15px 0 15px'
-                            >
+                            <SkeletonContainer padding='5px 15px 0 15px'>
                                 <SkeletonLine height='12px' width='135px' margin='0 0 8px 0'></SkeletonLine>
                                 <SkeletonLine height='12px' width='100px'></SkeletonLine>
                             </SkeletonContainer>
@@ -640,9 +604,7 @@ const YieldPoolCard = ({
                             </EpochNo>
                         </>
                     ) : (
-                        <SkeletonContainer
-                            padding='5px 0px 0 15px'
-                        >
+                        <SkeletonContainer padding='5px 0px 0 15px'>
                             <SkeletonLine height='12px' width='124px' ></SkeletonLine>
                         </SkeletonContainer>
                     )}
