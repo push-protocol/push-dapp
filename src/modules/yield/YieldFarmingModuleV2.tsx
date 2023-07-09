@@ -11,7 +11,7 @@ import DeprecatedYieldFarming from 'sections/yield/DeprecatedYieldFarming';
 import NewYieldFarming from 'sections/yield/NewYieldFarming';
 
 // Internal Configs
-import { appConfig } from 'config';
+import { abis, addresses, appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 // Constants

@@ -405,7 +405,7 @@ export default class YieldFarmingDataStoreV2 {
     const annualRewards = this.calcAnnualEpochReward(genesisEpochAmount, epochId, deprecationPerEpoch);
     let apr;
     if (appConfig.coreContractChain === 42 || appConfig.coreContractChain === 5)
-      apr = (tokenBNtoNumber(annualRewards) * 1000000) / Math.max(tokenBNtoNumber(totalStaked, 1));
+      apr = (tokenBNtoNumber(annualRewards) * 1000000) / Math.max(tokenBNtoNumber(totalStaked), 1);
     else apr = annualRewards.mul(1000000).div(totalStaked);
 
     const aprFormatted = (parseInt(apr.toString()) / (10000 * poolStats.lpToPushRatio)).toFixed(2);
