@@ -23,7 +23,7 @@ const ChainIndicator = ({ isDarkMode }) => {
   const dropdownRef = useRef(null);
   const { account, chainId:currentChainId, connector} = useWeb3React<ethers.providers.Web3Provider>();
   const theme = useTheme();
-  const { authError } = useContext(ErrorContext);
+  const { authError, setAuthError } = useContext(ErrorContext);
 
   const [showDropdown, setShowDropdown] = React.useState<boolean>(false);
   const [dropdownValues, setDropdownValues] = React.useState<DropdownValueType[]>([]);
@@ -39,7 +39,7 @@ const ChainIndicator = ({ isDarkMode }) => {
         icon: `./svg/${LOGO_FROM_CHAIN_ID[chainId]}`,
         function: () => {
           // console.log(chainId, connector.provider, 'change network')
-          handleChangeAllowedNetwork(chainId, connector.provider, connector);
+          handleChangeAllowedNetwork(chainId, connector.provider, connector).then((res)=> res !== undefined && setAuthError({ message: res }));
           setShowDropdown(false);
         },
       });

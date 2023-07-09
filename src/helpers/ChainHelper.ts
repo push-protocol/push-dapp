@@ -70,17 +70,20 @@ export const handleChangeAllowedNetwork: (
     }
   } 
   else {
-   
-    if (connector.deactivate) {
-      await connector.deactivate();
-      } else {
-      await connector.resetState();
-      }
-      // @ts-expect-error close can be returned by wallet
-      if (connector && connector.close) {
-        // @ts-expect-error close can be returned by wallet
-        await connector.close();
-      }
+      if (connector.deactivate) {
+        await connector.deactivate();
+        } else {
+        await connector.resetState();
+        }
+
+        if (connector && connector.close) {
+          await connector.close();
+        }
+    if (appConfig.coreContractChain === 42)
+    return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network'
+    else if (appConfig.coreContractChain === 5)
+      return 'Unsupported Network, please connect to the Ethereum Goerli, Polygon Mumbai, BNB testnet, Optimism Goerli or Polygon zkEVM testnet';
+    else return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB or Polygon zkEVM Mainnet';
   }
 };
 

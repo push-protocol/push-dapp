@@ -1,6 +1,6 @@
 // // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 
 // // Internal Components
 import { hooks, metaMask } from '../connectors/metaMask';
@@ -9,12 +9,13 @@ import { useSwitchChain } from '../connectors/chains'
 import { WalletConnect } from "@web3-react/walletconnect-v2";
 import { Network } from "@web3-react/network";
 import { handleChangeAllowedNetwork } from '../helpers/ChainHelper';
-import { appConfig } from 'config';
+import { ErrorContext } from 'contexts/ErrorContext';
 
 // // const { useChainId, useAccounts, useIsActivating, useIsActive, useProvider, useENSNames } = hooks;
 
 export function useInactiveListener(suppress: boolean = false) {
     const { connector, isActive, chainId } = useWeb3React();
+    const { setAuthError } = useContext(ErrorContext);
 //     // const isActive = useIsActive();
 //     // const isActivating = useIsActivating();
 
@@ -46,7 +47,7 @@ export function useInactiveListener(suppress: boolean = false) {
         }
           const handleNetworkChanged = async (networkId: string | number) => {
           console.log("Handling 'networkChanged' event with payload", networkId)
-          handleChangeAllowedNetwork(parseInt(networkId), providerConnector?.provider, providerConnector);
+          handleChangeAllowedNetwork(parseInt(networkId), providerConnector?.provider, providerConnector).then((res)=> res !== undefined && setAuthError({ message: res }));
         }
   
         providerConnector?.provider?.on('chainChanged', handleChainChanged)

@@ -119,7 +119,6 @@ const AppLogin = ({ toggleDarkMode }) => {
 
   // handle error functions
 function handleErrorMessage(error: Error) {
-    console.log(error, 'get error');
     setErrorMessage(error);
 
   // if(error?.code == 4001){

@@ -76,7 +76,6 @@ export function useEagerConnect() {
     if (isActive || isActivating) return;
    
 
-    // console.log(window.ethereum,window.ethereum.networkVersion,'eager connect');
 
       try {
         if (connector instanceof WalletConnect){
