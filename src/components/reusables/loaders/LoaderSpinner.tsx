@@ -125,7 +125,7 @@ const LoaderSpinner = ({
 
           {title && (
             <SpanV2
-              padding="10px"
+              padding={titleColor ? "0 0 0 10px" : "10px"}
               fontWeight="500"
               color={titleColor??theme.default.color}
             >

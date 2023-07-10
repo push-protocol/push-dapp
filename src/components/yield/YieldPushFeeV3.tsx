@@ -49,13 +49,6 @@ const YieldPushFeeV3 = ({
 
         if (unstakeAmount == 0) {
             setUnstakeErrorMessage("Nothing to unstake, You need to stake first");
-            pushFeeToast.showMessageToast({
-                toastTitle: 'Error',
-                toastMessage: `Nothing to unstake!`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => <MdError size={size} color="red" />,
-            });
-
             setTxInProgressWithdraw(false);
             return
         }
@@ -378,9 +371,9 @@ const YieldPushFeeV3 = ({
                     {PUSHPoolstats ? (
                         <>
                             <EpochNo>Current Epoch</EpochNo>
-                            <B>
+                            <EpochNo>
                                 {PUSHPoolstats?.currentEpoch.toNumber()}
-                            </B>
+                            </EpochNo>
                         </>
                     ) : (
                         <SkeletonContainer
@@ -622,7 +615,7 @@ const StakedAmount = styled(H2V2)`
 `
 
 const EpochNo = styled(B)`
-    font-weight: 500;
+    font-weight: 600;
     text-align: right;
     letter-spacing: -0.03em;
     font-size: 16px;

@@ -6,7 +6,7 @@ import ReactGA from 'react-ga';
 import styled from 'styled-components';
 
 // Internal Compoonents
-import { ItemHV2, ItemVV2, SectionV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import DeprecatedYieldFarming from 'sections/yield/DeprecatedYieldFarming';
 import NewYieldFarming from 'sections/yield/NewYieldFarming';
 
@@ -23,8 +23,8 @@ const YieldFarmingModuleV2 = () => {
   // React GA Analytics
   ReactGA.pageview('/yield');
 
-  const [activeTab, setActiveTab] = useState(1);
-  const [newStaking, setNewStaking] = useState(true);
+  const [activeTab, setActiveTab] = useState(0);
+  const [newStaking, setNewStaking] = useState(false);
 
   // Render
   return (
@@ -32,7 +32,7 @@ const YieldFarmingModuleV2 = () => {
 
       <TabContainer >
         <Tabs
-          isActive={newStaking}
+          isActive={!activeTab}
           onClick={() => {
             setNewStaking(true)
             setActiveTab(0)
@@ -40,21 +40,17 @@ const YieldFarmingModuleV2 = () => {
 
           }>Yield Farming V2</Tabs>
         <Tabs
-          isActive={!newStaking}
+          isActive={activeTab}
           onClick={() => {
             setNewStaking(false)
             setActiveTab(1)
           }
 
-          }>Yield Farming V1</Tabs>
+          }>Yield Farming V1 <Deprecated>Deprecated</Deprecated> </Tabs>
       </TabContainer>
 
-
-      {newStaking ? (
-        <NewYieldFarming/>
-      ) : (
-        <DeprecatedYieldFarming setActiveTab={setActiveTab} />
-      )}
+      {activeTab === 0 && <NewYieldFarming/>}
+      {activeTab === 1  && <DeprecatedYieldFarming setActiveTab={setActiveTab} />}
 
     </Container>
   );
@@ -126,7 +122,9 @@ const TabContainer = styled(ItemHV2)`
 const Tabs = styled.div`
   cursor:pointer;
   padding: 0 25px;
-  width: 48;
+  width: 250px;
+  justify-content: center;
+  display:flex;
   height: 25px;
   line-height: 141%;
   text-align: center;
@@ -147,4 +145,17 @@ const Tabs = styled.div`
         
     }`}
 
+`
+
+const Deprecated = styled(SpanV2)`
+    font-size: 12px;
+    line-height: 140%;
+    display: flex;
+    align-items: center;
+    color: #D53A94;
+    margin-left:10px;
+    padding: 2px 6px;
+    background: #F3D7FA;
+    border-radius: 6px;
+    height: 17px;
 `

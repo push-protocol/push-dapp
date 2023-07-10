@@ -10,7 +10,12 @@ import { AInlineV2, H2V2, ImageV2, ItemHV2, ItemVV2 } from 'components/reusables
 import GLOBALS from 'config/Globals';
 
 // yield announcement section
-const YieldAnnouncementSection = () => {
+const YieldAnnouncementSection = (
+  {
+    title,
+    body
+  }
+) => {
   // RENDER
   return (
     <ItemHV2 justifyContent="stretch" padding="16px" background="linear-gradient(90deg, #121315 -2.55%, #2A2A39 32.62%, #8E317A 68.34%, #121315 102.97%)" borderRadius="16px">
@@ -27,7 +32,7 @@ const YieldAnnouncementSection = () => {
           textAlign="left"
           fontWeight={500}
         >
-          Rewards Program will be extended by 84 weeks !!
+         {title}
         </H2V2>
         <H2V2
           color="#fff"
@@ -35,10 +40,10 @@ const YieldAnnouncementSection = () => {
           textAlign="left"
           fontWeight={500}  
         >
-          The Push DAO has approved the extension of the Rewards Program for 84 more weeks! More info {" "}
-          <AInlineV2 color="#fff" href="https://medium.com/push-protocol/push-dao-extends-liquidity-rewards-program-26008926b05a" target='_blank'>
+          {body} {" "}
+          {title.includes("84 weeks") && <AInlineV2 color="#fff" href="https://medium.com/push-protocol/push-dao-extends-liquidity-rewards-program-26008926b05a" target='_blank'>
             here
-          </AInlineV2>
+          </AInlineV2>}
         </H2V2>
       </ItemVV2>
     </ItemHV2>
