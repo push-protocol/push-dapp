@@ -269,7 +269,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
         <Container>
 
             <ItemHV2 justifyContent='space-between'>
-                <PrimaryText>{title === 'Uni-V2' ? 'Uniswap V2 Staking Pool' : 'Push Fee staking Pool'}</PrimaryText>
+                <PrimaryText>{title === 'Uni-V2' ? 'Uniswap V2 Staking Pool' : 'Push Fee Staking Pool'}</PrimaryText>
                 <Close
                     onClick={() => handleClose()}
                     style={{ cursor: 'pointer' }}

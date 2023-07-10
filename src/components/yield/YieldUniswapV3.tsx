@@ -25,7 +25,6 @@ import { abis, addresses } from 'config';
 
 
 const bn = function (number, defaultValue = null) { if (number == null) { if (defaultValue == null) { return null } number = defaultValue } return ethers.BigNumber.from(number) }
-const bnToInt = function (bnAmount) { return bnAmount.div(bn(10).pow(18)) }
 
 const YieldUniswapV3 = ({
     lpPoolStats,
@@ -321,11 +320,11 @@ const YieldUniswapV3 = ({
                     {lpPoolStats ? (
                         <>
                             <EpochNo>Current Epoch</EpochNo>
-                            <B>
+                            <EpochNo>
                                 {Math.min(lpPoolStats?.currentEpochLP, lpPoolStats?.totalEpochLP).toString()}
                                 /
                                 {lpPoolStats?.totalEpochLP.toString()}
-                            </B>
+                            </EpochNo>
                         </>
                     ) : (
                         <SkeletonContainer
@@ -447,10 +446,10 @@ const YieldUniswapV3 = ({
                                 >
                                     <EmptyButton
                                         style={{ borderColor: unstakeErrorMessage != null ? "#ED5858" : theme.emptyButtonText }}>
-                                        {unstakeErrorMessage != null && <ImageV2 src={ErrorLogo} width="19px" padding="0px 15px 4px 0px" />}
+                                        {unstakeErrorMessage != null && <ImageV2 src={ErrorLogo} width="18px" padding="0px 2px 4px 0px" />}
                                         {txInProgressWithdraw ?
                                             (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
-                                            "Unstake PUSH"
+                                            "Unstake UNI-V2"
                                         }
                                     </EmptyButton>
                                 </StakingToolTip>
@@ -462,7 +461,7 @@ const YieldUniswapV3 = ({
                                     style={{ margin: "0px 10px 0px 0px" }}>
                                     {txInProgressWithdraw ?
                                         (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
-                                        "Unstake PUSH"
+                                        "Unstake UNI-V2"
                                     }
                                 </EmptyButton>
 
@@ -479,7 +478,7 @@ const YieldUniswapV3 = ({
                                     <EmptyButton
                                         style={{ borderColor: withdrawErrorMessage != null ? "#ED5858" : theme.emptyButtonText }}
                                     >
-                                        {withdrawErrorMessage != null && <ImageV2 src={ErrorLogo} width="19px" padding="0px 15px 4px 0px" />}
+                                        {withdrawErrorMessage != null && <ImageV2 src={ErrorLogo} width="18px" padding="0px 2px 4px 0px" />}
                                         {txInProgressClaimRewards ?
                                             (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
                                             "Claim Rewards"
@@ -572,7 +571,7 @@ const StakedAmount = styled(H2V2)`
 `
 
 const EpochNo = styled(B)`
-    font-weight: 500;
+    font-weight: 600;
     text-align: right;
     letter-spacing: -0.03em;
     font-size: 16px;

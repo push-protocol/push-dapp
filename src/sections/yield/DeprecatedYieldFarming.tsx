@@ -10,9 +10,10 @@ import styled from 'styled-components';
 import { ItemHV2 } from 'components/reusables/SharedStylingV2';
 import YieldFarmingDataStore from 'singletons/YieldFarmingDataStore';
 import YieldPoolCard from 'components/yield/YieldPoolCard';
+import YieldAnnouncementSection from './YieldAnnouncementSection';
 
 // Internal Configs
-import { abis, addresses,appConfig } from 'config';
+import { abis, addresses, appConfig } from 'config';
 
 // Constants
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
@@ -57,7 +58,7 @@ const DeprecatedYieldFarming = ({
 
     const getDepUserDataPUSH = React.useCallback(async () => {
         const userDataPUSH = await YieldFarmingDataStore.instance.getUserData(depYieldFarmPUSH);
-        
+
         setDepUserDataPUSH({ ...userDataPUSH });
     }, [depYieldFarmPUSH]);
 
@@ -135,6 +136,10 @@ const DeprecatedYieldFarming = ({
 
     return (
         <>
+            <YieldAnnouncementSection
+                title={"This Reward Program has ended."}
+                body={"Old Staking pools have now been deprecated. Please Migrate to new pools"}
+            />
             <V2Container>
 
                 <YieldPoolCard
@@ -147,7 +152,7 @@ const DeprecatedYieldFarming = ({
                     tokenAddress={addresses.uniV2LPToken}
                     setActiveTab={setActiveTab}
                 />
-                
+
                 <YieldPoolCard
                     poolName={"PUSH"}
                     userData={depUserDataPUSH}

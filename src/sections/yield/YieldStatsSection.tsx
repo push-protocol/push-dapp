@@ -57,7 +57,7 @@ const YieldStatsSection = ({
             <StatsText>
               <SpanV2 color="#fff" fontSize="18px" fontWeight="600" lineHeight="141%">Total Value Locked</SpanV2>
 
-              <SpanV2 color="#fff" fontSize="32px" fontWeight="700" lineHeight="141%">
+              <SpanV2 color="#fff" fontSize="32px" fontWeight="600" lineHeight="141%">
                 {`$ ${numberWithCommas(poolStats?.totalValueLocked.toFixed(2))}`}
 
               </SpanV2>
@@ -78,7 +78,7 @@ const YieldStatsSection = ({
             <StatsText>
               <SpanV2 color="#fff" fontSize="18px" fontWeight="600" lineHeight="141%">Push Rewards Given</SpanV2>
               <TextBox>
-                <SpanV2 color="#fff" fontSize="32px" fontWeight="700" lineHeight="141%">
+                <SpanV2 color="#fff" fontSize="32px" fontWeight="600" lineHeight="141%">
                   {
                     // TODO fix the calculation
                     numberWithCommas(
@@ -87,7 +87,7 @@ const YieldStatsSection = ({
                         formatTokens(poolStats?.totalDistributedAmount)
                       ))}
                 </SpanV2>
-                <SpanV2 color="#fff" fontSize="16px" fontWeight="700" lineHeight="141%">
+                <SpanV2 color="#fff" fontSize="16px" fontWeight="600" lineHeight="141%">
                   out of {numberWithCommas(formatTokens(poolStats?.totalDistributedAmount))}
                 </SpanV2>
               </TextBox>
@@ -107,10 +107,10 @@ const YieldStatsSection = ({
             <StatsText>
               <SpanV2 color="#fff" fontSize="18px" fontWeight="600" lineHeight="141%">Time Left</SpanV2>
               <TextBox>
-                <SpanV2 color="#fff" fontSize="32px" fontWeight="700" lineHeight="141%">
+                <SpanV2 color="#fff" fontSize="32px" fontWeight="600" lineHeight="141%">
                   {formattedDuration}
                 </SpanV2>
-                <SpanV2 color="#fff" fontSize="16px" fontWeight="700" lineHeight="141%">until next epoch</SpanV2>
+                <SpanV2 color="#fff" fontSize="16px" fontWeight="600" lineHeight="141%">until next epoch</SpanV2>
               </TextBox>
             </StatsText>
           </>

@@ -113,12 +113,15 @@ const NewYieldFarming = () => {
 
     }, [account]);
 
-    
+
 
     return (
         <>
-            <YieldAnnouncementSection />
-            <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats}/>
+            <YieldAnnouncementSection
+                title={" Rewards Program will be extended by 84 weeks !!"}
+                body={"The Push DAO has approved the extension of the Rewards Program for 84 more weeks! More info"}
+            />
+            <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} />
             <YieldPushPriceSection
                 poolStats={poolStats}
             />
