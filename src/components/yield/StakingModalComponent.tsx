@@ -26,7 +26,9 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
     const {
         title,
         getUserData,
-        getPoolStats
+        getPoolStats,
+        setUnstakeErrorMessage,
+        setWithdrawErrorMessage
     } = InnerComponentProps;
 
     const { account, library } = useWeb3React();
@@ -40,7 +42,12 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
     const [depositAmount, setDepositAmount] = useState(0);
 
-    const handleClose = () => onClose();
+    const handleClose = () => {
+        setUnstakeErrorMessage(null);
+        setWithdrawErrorMessage(null);
+        onClose();
+    
+    };
     const theme = useTheme();
     const containerRef = React.useRef(null);
     useClickAway(containerRef, () => handleClose());
@@ -270,7 +277,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
             </ItemHV2>
 
             <ItemVV2>
-                <P weight='500' size='14px' self='baseline' color={theme.stakingSecondaryText}>You are staking</P>
+                <P weight='500' size='14px' self='baseline' color={theme.stakingSecondaryText}>You are Staking</P>
 
 
                 <ItemHV2 background={theme.default.bg} height='35px' padding='14px' borderRadius='12px' border={`1px solid ${theme.modalBorderColor}`}>

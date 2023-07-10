@@ -497,7 +497,7 @@ const YieldPoolCard = ({
         <Container>
 
             <Note>
-                <MdWarning color='#E2B71D' />This function has been deprecated. Please migrate to the new pool.
+                <MdWarning color='#E2B71D' />Old Staking pools have now been deprecated. Please Migrate to new pools
             </Note>
 
 
@@ -714,7 +714,7 @@ const YieldPoolCard = ({
                 {userData ? (
                     <>
                         <ButtonsContainer>
-                            <FilledButton onClick={migrateToNewPool} style={{ margin: "0px 10px 0px 0px" }} >
+                            <FilledButton onClick={migrateToNewPool}  >
 
                                 {!txInProgressMigrate &&
                                     <Span color="#FFF" weight="400" cursor='pointer'>Migrate to {poolName} Pool</Span>

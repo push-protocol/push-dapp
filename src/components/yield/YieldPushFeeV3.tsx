@@ -48,6 +48,7 @@ const YieldPushFeeV3 = ({
         const unstakeAmount = formatTokens(userDataPush?.userstakedAmount?.stakedAmount);
 
         if (unstakeAmount == 0) {
+            setUnstakeErrorMessage("Nothing to unstake, You need to stake first");
             pushFeeToast.showMessageToast({
                 toastTitle: 'Error',
                 toastMessage: `Nothing to unstake!`,
@@ -279,7 +280,9 @@ const YieldPushFeeV3 = ({
                 InnerComponentProps={{
                     title: 'PUSH',
                     getUserData: getUserDataPush,
-                    getPoolStats: getPUSHPoolStats
+                    getPoolStats: getPUSHPoolStats,
+                    setUnstakeErrorMessage:setUnstakeErrorMessage,
+                    setWithdrawErrorMessage:setWithdrawErrorMessage,
                 }}
                 toastObject={stakingModalToast}
                 modalPosition={MODAL_POSITION.ON_PARENT}
@@ -495,7 +498,7 @@ const YieldPushFeeV3 = ({
                             {unstakeErrorMessage != null ?
                                 <StakingToolTip
                                     error={true}
-                                    ToolTipTitle={"PUSH cannot be unstaked until  current epoch is over."}
+                                    ToolTipTitle={unstakeErrorMessage}
                                     ToolTipWidth={"16rem"}
                                     margin={'0 10px 0 0'}
                                     bottom={'-50px'}
@@ -526,7 +529,7 @@ const YieldPushFeeV3 = ({
                             {withdrawErrorMessage != null ?
                                 <StakingToolTip
                                     bottom={'-30px'}
-                                    ToolTipTitle={"No Rewards to Claim"}
+                                    ToolTipTitle={withdrawErrorMessage}
                                     error={true}
                                     ToolTipWidth={"10rem"}
                                 >

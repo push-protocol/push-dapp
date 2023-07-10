@@ -39,6 +39,7 @@ const YieldUniswapV3 = ({
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
 
     const [withdrawErrorMessage, setWithdrawErrorMessage] = useState(null);
+    const [unstakeErrorMessage, setUnstakeErrorMessage] = useState(null);
 
     const uniswapV2Toast = useToast();
     const theme = useTheme();
@@ -54,13 +55,7 @@ const YieldUniswapV3 = ({
         console.log("Withdraw amount: ", withdrawAmount);
 
         if (withdrawAmount == 0) {
-            uniswapV2Toast.showMessageToast({
-                toastTitle: 'Error',
-                toastMessage: `Nothing to Withdraw!`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => <MdError size={size} color="red" />,
-            });
-
+            setUnstakeErrorMessage("Nothing to unstake. You need to stake first");
             setTxInProgressWithdraw(false);
             return;
         }
@@ -198,6 +193,7 @@ const YieldUniswapV3 = ({
 
     React.useEffect(() => {
         setWithdrawErrorMessage(null);
+        setUnstakeErrorMessage(null);
     }, [account])
 
     const handleStakingModal = () => {
@@ -229,7 +225,9 @@ const YieldUniswapV3 = ({
                 InnerComponentProps={{
                     title: 'Uni-V2',
                     getUserData: getUserDataLP,
-                    getPoolStats: getLpPoolStats
+                    getPoolStats: getLpPoolStats,
+                    setUnstakeErrorMessage:setUnstakeErrorMessage,
+                    setWithdrawErrorMessage:setWithdrawErrorMessage,
                 }}
                 toastObject={stakingModalToast}
                 modalPosition={MODAL_POSITION.ON_PARENT}
@@ -438,18 +436,43 @@ const YieldUniswapV3 = ({
                                 }}>Stake UNI-V2 LP Tokens</FilledButton>
                         </ItemHV2>
                         <ButtonsContainer>
-                            <EmptyButton style={{ margin: "0px 10px 0px 0px" }} onClick={() => withdrawAmountTokenFarmAutomatic()}>
-                                {txInProgressWithdraw ?
-                                    (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
-                                    "Unstake UNI-V2"
-                                }
-                            </EmptyButton>
+
+                            {unstakeErrorMessage != null ?
+                                <StakingToolTip
+                                    error={true}
+                                    ToolTipTitle={unstakeErrorMessage}
+                                    ToolTipWidth={"16rem"}
+                                    margin={'0 10px 0 0'}
+                                    bottom={'-50px'}
+                                >
+                                    <EmptyButton
+                                        style={{ borderColor: unstakeErrorMessage != null ? "#ED5858" : theme.emptyButtonText }}>
+                                        {unstakeErrorMessage != null && <ImageV2 src={ErrorLogo} width="19px" padding="0px 15px 4px 0px" />}
+                                        {txInProgressWithdraw ?
+                                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                            "Unstake PUSH"
+                                        }
+                                    </EmptyButton>
+                                </StakingToolTip>
+
+                                :
+
+                                <EmptyButton
+                                    onClick={withdrawAmountTokenFarmAutomatic}
+                                    style={{ margin: "0px 10px 0px 0px" }}>
+                                    {txInProgressWithdraw ?
+                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                        "Unstake PUSH"
+                                    }
+                                </EmptyButton>
+
+                            }
 
                             {withdrawErrorMessage != null ?
                                 <StakingToolTip
                                     bottom={'-30px'}
                                     left={"40px"}
-                                    ToolTipTitle={"No Rewards to Claim"}
+                                    ToolTipTitle={withdrawErrorMessage}
                                     error={true}
                                     ToolTipWidth={"10rem"}
                                 >
