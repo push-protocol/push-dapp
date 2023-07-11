@@ -26,6 +26,7 @@ export const config = {
     137, //for polygon mainnet
     56, // for bnb mainnet
     // 10 // for optimism mainnet
+    1101 // polygon zkevm mainnet
   ],
 
   /**
@@ -133,6 +134,13 @@ export const CHAIN_DETAILS = {
     name: "OPTIMISM_MAINNET",
     chainId: 10,
     rpcUrl: 'https://opt-mainnet.g.alchemy.com/v2/JYW0UaSC5Zd0hrI6vE2K9VN1wJupoY5B',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa'
+  },
+  1101: {
+    label: "Polygon zkEVM Mainnet",
+    name: "POLYGON_ZK_EVM_MAINNET",
+    chainId: 1101,
+    rpcUrl: 'https://rpc.polygon-zkevm.gateway.fm',
     commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa'
   }
 }

@@ -2,7 +2,6 @@
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useState } from 'react';
-import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 
 // External Packages
 import ReactGA from 'react-ga';
@@ -22,6 +21,9 @@ import LoaderSpinner from 'components/reusables/loaders/LoaderSpinner';
 import ViewDelegateeItem from 'components/ViewDelegateeItem';
 import { createTransactionObject } from 'helpers/GaslessHelper';
 import { executeDelegateTx } from 'helpers/WithGasHelper';
+import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
+import { AppContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
@@ -40,8 +42,8 @@ const GovModule = () => {
   // setup theme (styled components)
   const theme = useTheme();
 
+  const { web3NameList }:AppContextType = React.useContext(AppContext);
   const { account, library, chainId } = useWeb3React();
-  const web3Name = useResolveWeb3Name(account);
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const [dashboardLoading, setDashboardLoading] = React.useState(true);
@@ -66,6 +68,10 @@ const GovModule = () => {
   const [signerObject, setSignerObject] = React.useState(null);
   const [gaslessInfo, setGaslessInfo] = useState(null);
   const [transactionMode, setTransactionMode] = React.useState('gasless');
+
+  // Resolving web3 names
+  useResolveWeb3Name(account);
+  const web3Name = web3NameList[account];
 
   const toggleShowAnswer = (id) => {
     let newShowAnswers = [...showAnswers];
@@ -210,6 +216,7 @@ const GovModule = () => {
     setTxInProgress(true);
 
     const isAddress = await isValidAddress(newDelegatee);
+    const delegateeAddress = await newDelegatee;
     console.log(isAddress);
     if (!isAddress) {
       setTxInProgress(false);
@@ -234,7 +241,7 @@ const GovModule = () => {
     }
 
     if (transactionMode === 'withgas') {
-      executeDelegateTx({ newDelegatee, epnsToken, toast, setTxInProgress, library, LoaderToast });
+      executeDelegateTx({ delegateeAddress, epnsToken, toast, setTxInProgress, library, LoaderToast });
       return;
     }
     if (tokenBalance < PUSH_BALANCE_TRESHOLD) {
@@ -251,8 +258,9 @@ const GovModule = () => {
       setTxInProgress(false);
       return;
     }
+    console.log(newDelegatee,'lets see');
     await createTransactionObject({
-      newDelegatee,
+      delegateeAddress,
       account,
       epnsToken,
       addresses,

@@ -10,7 +10,7 @@ import styled, { useTheme } from 'styled-components';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext, VideoCallInfoI } from 'types/chat';
+import { AppContext } from 'types/chat';
 import { FileMessageContent } from './Files/Files';
 import GifPicker from './Gifs/GifPicker';
 
@@ -19,6 +19,7 @@ import { appConfig } from 'config';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { caip10ToWallet } from 'helpers/w2w';
 import { MessagetypeType } from '../../../../types/chat';
+import {filterXSS} from 'xss'
 
 
 interface ITypeBar {
@@ -26,8 +27,6 @@ interface ITypeBar {
   messageBeingSent: boolean;
   newMessage: string;
   setNewMessage: (newMessage: string) => void;
-  setVideoCallInfo?: (videoCallInfo: VideoCallInfoI) => void;
-  videoCallInfo?: VideoCallInfoI;
   sendMessage: ({ message, messageType }: { message: string; messageType: MessagetypeType}) => void;
   sendIntent: ({ message, messageType }: { message: string; messageType: MessagetypeType }) => void;
   setOpenSuccessSnackBar: (openReprovalSnackbar: boolean) => void;
@@ -42,7 +41,6 @@ const Typebar = ({
   messageBeingSent,
   setNewMessage,
   newMessage,
-  setVideoCallInfo,
   sendMessage,
   sendIntent,
   isJoinGroup,
@@ -91,29 +89,6 @@ const Typebar = ({
 
   const handleKeyPress = async (e: any): void => {
     const x = e.keyCode;
-  
-    // Send video request only when two users are chatting
-    if (e.target.value === '/video' && currentChat.threadhash) {
-      // get to user info
-      const toUser = await PushAPI.user.get({
-        account: caip10ToWallet(currentChat.wallets.toString()),
-        env: appConfig.appEnv
-      });
-
-      setVideoCallInfo({
-        address: caip10ToWallet(currentChat.wallets.toString()),
-        fromPublicKeyArmored: connectedUser.publicKey,
-        fromProfileUsername: connectedUser.name,
-        fromProfilePic: connectedUser.profilePicture,
-        toPublicKeyArmored: currentChat.publicKey,
-        toProfileUsername: toUser.name,
-        toProfilePic: toUser.profilePicture,
-        privateKeyArmored: connectedUser.privateKey,
-        establishConnection: 1,
-      });
-      setNewMessage('');
-      return;
-    }
 
     if (x === 13 && !e.shiftKey) {
       handleSubmit(e);
@@ -163,14 +138,15 @@ const Typebar = ({
             type: file.type,
             size: file.size,
           };
+             //  FILTERXSS is a module used to filter input from users to prevent XSS attacks, this data from the file is already encoded, filter xss is used incase to filter out any malicious scripts or any corrupt file of sorts
           if (currentChat.threadhash || isGroup) {
 
             sendMessage({
-              message: JSON.stringify(fileMessageContent),
+              message: filterXSS(JSON.stringify(fileMessageContent)),
               messageType,
             });
           } else {
-            sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType });
+            sendIntent({ message: filterXSS(JSON.stringify(fileMessageContent)), messageType: messageType });
 
           }
           setFileUploading(false);
@@ -180,6 +156,9 @@ const Typebar = ({
       }
     }
   };
+
+// let stat = `<img src='???' onerror="alert('XSS')" />`
+
 
   return (
     <TypeBarContainer background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg} isJoinGroup={isJoinGroup}>
@@ -273,11 +252,14 @@ const Typebar = ({
                   alt=""
                 />
               </Icon>
-              <FileInput
+              <FileInput type="file"
+                  ref={fileInputRef}
+                  onChange={uploadFile} />
+              {/* <FileInput 
                 type="file"
                 ref={fileInputRef}
                 onChange={uploadFile}
-              />
+              /> */}
             </label>
 
             {filesUploading ? (

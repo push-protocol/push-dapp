@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from 'react';
 // External Packages
 import { MdError } from 'react-icons/md';
 import styled, { useTheme } from 'styled-components';
-
+import { Waypoint } from 'react-waypoint';
 
 // Internal Components
 import { useWeb3React } from '@web3-react/core';
@@ -19,10 +19,8 @@ import { Context } from 'modules/chat/ChatModule';
 import { AppContext, Feeds, IGroup, User } from 'types/chat';
 import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../../../helpers/w2w/groupChat';
 import { getDefaultFeed } from '../../../../helpers/w2w/user';
-import { intitializeDb } from '../w2wIndexeddb';
 
 // Internal Configs
-
 
 interface MessageFeedPropsI {
   filteredUserData: User[] | IGroup;
@@ -44,10 +42,14 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const [selectedChatSnap, setSelectedChatSnap] = useState<number>();
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
   const [showError, setShowError] = useState<boolean>(false);
+  const [bgUpdateLoading,setBgUpdateLoading]=useState<boolean>(false);
+  const [limit, setLimit] = React.useState(10);
+  const [isFetchingDone,setIsFetchingDone]=useState<boolean>(false)
   const messageFeedToast = useToast();
 
   const onFeedClick = (feed:Feeds,i:number):void => {
-    if((receivedIntents?.filter((userExist) => userExist.did === props?.filteredUserData[0]?.did)).length)
+    if((receivedIntents?.filter((userExist) => userExist.did && props?.filteredUserData[0]?.did && userExist.did?.toLowerCase() === props?.filteredUserData[0]?.did?.toLowerCase()))
+.length)
     {
       setActiveTab(1);
     }
@@ -56,25 +58,17 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
     setHasUserBeenSearched(false);
     filteredUserData.length>0 ? setFilteredUserData([]):null;
   }
-
-  const getInbox = async (): Promise<Feeds[]> => {
-      const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account }), '', 'did');
-      if (getInbox !== undefined && !inbox.length) {
-        let inboxes: Feeds[] = getInbox.body;
-        inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-        if (JSON.stringify(feeds) !== JSON.stringify(inboxes))
-        {
-         setFeeds(inboxes)
-         setInbox(inboxes);
-        }
-        return inboxes;
-    }
-  };
   
-  const fetchInboxApi = async (): Promise<Feeds[]> => {
+  const fetchInboxApi = async ({limit}): Promise<Feeds[]> => {
     try {
-      const inboxes:Feeds[] = await fetchInbox(connectedUser);
-      if (JSON.stringify(feeds) !== JSON.stringify(inbox)){
+      const inboxes:Feeds[] = await fetchInbox({connectedUser, limit});
+      if(inboxes?.length>10 && inboxes?.length===feeds?.length){
+        setIsFetchingDone(true);
+      }
+      else if(inboxes.length<10){
+        setIsFetchingDone(true);
+      }
+      if (JSON.stringify(inbox) !== JSON.stringify(inboxes)){
         setFeeds(inboxes);
         setInbox(inboxes);
         if(checkIfGroup(currentChat)){
@@ -104,13 +98,13 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
       }
       setShowError(true);
     }
+    finally{
+      setMessagesLoading(false);
+    }
   };
 
-  const updateInbox = async (): Promise<void> => {
-      await getInbox();
-      fetchInboxApi();
-
-    setMessagesLoading(false);
+  const updateInbox = async ({chatLimit}:{chatLimit?:number}): Promise<void> => {
+    await fetchInboxApi({limit:chatLimit});
   };
 
   useEffect(() => {
@@ -126,16 +120,16 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
 
   useEffect(() => {
     if(!props.hasUserBeenSearched)
-      updateInbox();
+      updateInbox({chatLimit:limit});
   },[]);
 
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
-      updateInbox();
+      updateInbox({chatLimit:limit});
     } else {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
-          if (Object(props.filteredUserData[0]).wallets === walletToCAIP10({ account })) {
+          if (Object(props.filteredUserData[0]).wallets?.toLowerCase() === walletToCAIP10({ account })?.toLowerCase()) {
             messageFeedToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: "You can't send intent to yourself",
@@ -159,7 +153,6 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
             else {
               feed = await getDefaultFeed({userData:searchedData as User,inbox,intents:receivedIntents});
             }
-            console.log(isNew)
             if(isNew && !feed?.groupInformation?.isPublic)
             {
               messageFeedToast.showMessageToast({
@@ -214,13 +207,24 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
       setMessagesLoading(false);
     }
   }, [props.hasUserBeenSearched, props.filteredUserData]);
+
+  const handlePagination = async () => {
+    setLimit(prevLimit=>prevLimit+10);
+    setBgUpdateLoading(true);
+    await updateInbox({chatLimit:limit+10});
+    setBgUpdateLoading(false);
+  };
+
+  const showWayPoint = (index: any) => {
+    return Number(index) === feeds?.length - 1 && !messagesLoading && !bgUpdateLoading;
+  };
+
   return (
     <ItemVV2
       flex={6}
       alignItems="flex-start"
       justifyContent="flex-start"
     >
-      {/* hey there */}
       {activeTab !== 3 && activeTab !== 4 && (
         <SpanV2
           fontWeight="700"
@@ -233,7 +237,7 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
         </SpanV2>
       )}
       <UserChats flexFlow="column">
-        {messagesLoading ? (
+        {messagesLoading && !bgUpdateLoading ? (
           <LoaderSpinner
             type={LOADER_TYPE.SEAMLESS}
             spinnerSize={40}
@@ -244,13 +248,14 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
               <EmptyConnection>
                 Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
               </EmptyConnection>
-            ) : !messagesLoading ? (
+            ) : (
               feeds.map((feed: Feeds, i) => (
                 <ItemVV2
                   alignSelf="stretch"
                   flex="initial"
                   key={`${feed.threadhash}${i}`}
                 >
+                  {showWayPoint(i) && !isFetchingDone && <Waypoint onEnter={handlePagination} />}
                   <ChatSnap
                     pfp={getGroupImage(feed)}
                     username={getName(feed)}
@@ -262,9 +267,17 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
                   />
                 </ItemVV2>
               ))
-            ) : null}
+            ) }
           </>
         )}
+        {
+        bgUpdateLoading && (
+          <LoaderSpinner
+            type={LOADER_TYPE.SEAMLESS}
+            spinnerSize={40}
+          />
+        )
+      }
       </UserChats>
     </ItemVV2>
   );

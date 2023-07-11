@@ -1,15 +1,17 @@
 // React + Web3 Essentials
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import { MdClear } from 'react-icons/md';
+// import { MdClear } from 'react-icons/md';
+import { BsChevronDown } from 'react-icons/bs';
 import styled from 'styled-components';
+import * as PushAPI  from '@pushprotocol/restapi'
 
 // Internal Components
 import { ItemHV2, SectionV2 } from 'components/reusables/SharedStylingV2';
 import { VideoCallContext } from 'contexts/VideoCallContext';
+import { ChatUserContext } from 'contexts/ChatUserContext';
 import { useDeviceWidthCheck } from 'hooks';
-import { BlockedLoadingI, VideoCallInfoI } from 'types/chat';
 import endCallIcon from '../../assets/icons/end-call-icon.svg';
 import pickCallIcon from '../../assets/icons/pick-call-icon.svg';
 import CallButton from './CallButton';
@@ -19,55 +21,71 @@ import VideoPlayer from './VideoPlayer';
 
 // Internal Configs
 import { device } from 'config/Globals';
+import { VideoCallStatus } from '@pushprotocol/restapi';
+import { appConfig } from 'config';
 
-type IncomingCallType = {
-  videoCallInfo: VideoCallInfoI;
-  onAnswerCall: () => void;
-  onEndCall: () => void;
-};
+const IncomingCall = () => {
+  const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
+  const { videoCallData, acceptRequestWrapper, disconnectWrapper, setIsCallAccepted, isCallAccepted,setIncomingCallUserData,incomingCallUserData } = useContext(VideoCallContext);
+  const [isIncomingCallMinimized, setIsIncomingCallMinimized] = useState(false);
 
-const IncomingCall = ({ videoCallInfo, onAnswerCall, onEndCall }: IncomingCallType) => {
   // for conditional css
   const isMobile = useDeviceWidthCheck(425);
   const isLaptopS = useDeviceWidthCheck(1025) && !isMobile;
 
-  const [isIncomingCallMinimized, setIsIncomingCallMinimized] = useState(false);
+  useEffect(()=>{
+    (async()=>{
+      const userData = await PushAPI.user.get({account:videoCallData.incoming[0].address,env:appConfig.appEnv});
+      setIncomingCallUserData(userData);
+    })()
+  },[])
 
   const minimizeCallHandler = () => {
     setIsIncomingCallMinimized(true);
   };
 
-  const { endLocalStream } = useContext(VideoCallContext);
+  const answerCallHandler = async () => {
+    setIsCallAccepted(true);
+    let createdUser;
+    if (!connectedUser.publicKey) {
+      createdUser = await createUserIfNecessary();
+    }
 
-  function handleClick() {
-    endLocalStream();
-    onEndCall();
-  }
+    acceptRequestWrapper({
+      senderAddress: videoCallData.local.address,
+      recipientAddress: videoCallData.incoming[0].address,
+      chatId: videoCallData.meta.chatId,
+      pgpPrivateKey: connectedUser.privateKey || createdUser?.privateKey,
+    });
+  };
 
   return (
-    <Container>
+    <>
+    {
+      !isCallAccepted &&<Container>
       <IncomingCallModalContent isIncomingCallMinimized={isIncomingCallMinimized}>
-        {!isIncomingCallMinimized &&
+        {!isIncomingCallMinimized && (
           <CrossIconContainer>
             <CrossIcon onClick={minimizeCallHandler} />
           </CrossIconContainer>
-        }
+        )}
 
         {/* remote user info */}
-        {videoCallInfo.establishConnection != 3 && 
+        {videoCallData.incoming[0].status !== VideoCallStatus.CONNECTED && (
           <UserInfo
             // TODO: make this dynamic with remote user's info
-            pfp={videoCallInfo.fromProfilePic}
-            username={videoCallInfo.fromProfileUsername}
-            address={`${videoCallInfo.address}`}
+            pfp={incomingCallUserData?.profilePicture}
+            username={""}
+            address={`${videoCallData.incoming[0].address}`}
             status="Incoming Video Call"
             containerStyles={{ margin: isMobile ? '2.5% 0 4% 2%' : '2.5% auto' }}
+            source="minimized"
           />
-        }
+        )}
 
         {!isIncomingCallMinimized && (
           <VideoPlayer
-            videoCallInfo={videoCallInfo}
+            incoming={true}
             localVideoStyles={{
               height: '35vh',
               maxHeight: '35vh',
@@ -83,7 +101,7 @@ const IncomingCall = ({ videoCallInfo, onAnswerCall, onEndCall }: IncomingCallTy
           <CallButton
             buttonStyles={{ background: '#08e673' }}
             iconSrc={pickCallIcon}
-            onClick={onAnswerCall}
+            onClick={answerCallHandler}
           />
           <CallButton
             buttonStyles={{
@@ -92,11 +110,14 @@ const IncomingCall = ({ videoCallInfo, onAnswerCall, onEndCall }: IncomingCallTy
               maxWidth: isMobile ? '34px' : '46px',
             }}
             iconSrc={endCallIcon}
-            onClick={handleClick}
+            onClick={disconnectWrapper}
           />
         </VideoCallControlsContainer>
       </IncomingCallModalContent>
     </Container>
+    }
+    </>
+    
   );
 };
 
@@ -119,7 +140,7 @@ const CrossIconContainer = styled(ItemHV2)`
   padding: 1rem 1rem 0 1rem;
 `;
 
-const CrossIcon = styled(MdClear)`
+const CrossIcon = styled(BsChevronDown)`
   width: 25px;
   height: 25px;
   cursor: pointer;

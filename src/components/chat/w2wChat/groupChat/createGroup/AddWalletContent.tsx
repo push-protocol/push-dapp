@@ -75,6 +75,7 @@ export const AddWalletContent = ({
 
   const handleSearch = async (e): Promise<void> => {
     setIsLoadingSearch(true);
+    setIsInvalidAddress(false);
     e.preventDefault();
     if (!ethers.utils.isAddress(searchedUser)) {
       let address: string;
@@ -84,7 +85,7 @@ export const AddWalletContent = ({
           address = await library.resolveName(searchedUser);
         }
         // this ensures address are checksummed
-        address = ethers.utils.getAddress(address.toLowerCase());
+        address = ethers.utils.getAddress(address?.toLowerCase());
         if (address) {
           handleUserSearch(address);
         } else {
@@ -105,8 +106,9 @@ export const AddWalletContent = ({
 
 
   const handleUserSearch = async (userSearchData: string): Promise<void> => {
-    const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData });
-    let filteredData: User;
+    try{
+      const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData });
+      let filteredData: User;
 
     if (userSearchData.length) {
       filteredData = await PushAPI.user.get({ 
@@ -131,6 +133,21 @@ export const AddWalletContent = ({
       setFilteredUserData(null);
     }
     setIsLoadingSearch(false);
+    }
+    catch(error){
+      searchFeedToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: 'Unsuccesful search, Try again',
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+      setIsLoadingSearch(false);
+    }
   };
 
   const clearInput = () => {

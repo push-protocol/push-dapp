@@ -1,28 +1,35 @@
 // React + Web3 Essentials
 import React, { useContext } from 'react';
+import { useWeb3React } from '@web3-react/core';
 
+// External packages
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { caip10ToWallet } from 'helpers/w2w';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { AiOutlineMore } from 'react-icons/ai';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { shortenText } from 'helpers/UtilityHelper';
+import { AppContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
 
 const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
+  const { web3NameList }:AppContextType=useContext(AppContext);
+  const { account }=useWeb3React()
+
   // theme context
   const theme = useTheme();
 
   const {connectedUser} = useContext(ChatUserContext);
 
-  const ensName=useResolveWeb3Name(connectedUser.wallets)
+  // resolve web3 name
+  useResolveWeb3Name(account);
+  
+  const ensName = web3NameList[account];
 
-
-  const account = caip10ToWallet(connectedUser?.wallets);
   return (
     <>
       {/* <Tooltip title="Profile" placement="top-start"> */}
@@ -48,7 +55,7 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
           size="16px"
           weight="400"
         >
-          {shortenText(account,8,7)}
+          {ensName ? ensName : shortenText(account,8,7)}
         </SpanV2>
       </WalletDetailsContainer>
       {/* </Tooltip> */}

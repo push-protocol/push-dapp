@@ -1,7 +1,7 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -15,14 +15,20 @@ import Dropdown from '../components/Dropdown';
 import { useClickAway } from 'hooks/useClickAway';
 import { walletconnect } from 'connectors';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
+import { AppContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
 
 // Create Header
 const Profile = ({ isDarkMode }) => {
+  const { web3NameList }:AppContextType=useContext(AppContext);
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
   const modalRef = React.useRef(null);
   const { error, account } = useWeb3React();
-  const web3Name = useResolveWeb3Name(account);
+
+  // resolve web3 name
+  useResolveWeb3Name(account);
+  const web3Name = web3NameList[account]
 
   // Get theme
   const theme = useTheme();
@@ -157,7 +163,7 @@ const Wallet = styled.div`
     box-sizing: border-box;
     justify-content: space-between;
     border-radius: 13px;
-    background: linear-gradient(90deg, #5762c2 0%, #f72cbe 72.11%, #ff9c9c 100%);
+    background: linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%);
     margin: 0px 0px;
   }
 
@@ -165,7 +171,7 @@ const Wallet = styled.div`
     isDarkMode &&
     `
     border: solid 3px transparent;
-    background-image: linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%), linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%);
+    background-image: linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%), linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%);
     background-origin: border-box;
     background-clip: content-box, border-box;
     box-shadow: 2px 1000px 1px ${bg} inset;
@@ -174,12 +180,10 @@ const Wallet = styled.div`
   &:hover {
     opacity: 0.9;
     cursor: pointer;
-    pointer: hand;
   }
   &:active {
     opacity: 0.75;
     cursor: pointer;
-    pointer: hand;
   }
 `;
 const ToggleArrowImg = styled.div`

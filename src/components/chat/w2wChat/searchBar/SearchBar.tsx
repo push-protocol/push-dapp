@@ -53,6 +53,7 @@ const SearchBar = ({ autofilled }) => {
   const udResolver = getUdResolver();
   const searchFeedToast = useToast();
 
+
   if (autofilled) {
     // console.log("Search is autofilled:", autofilled);
   }
@@ -110,14 +111,13 @@ const SearchBar = ({ autofilled }) => {
   const submitSearch = (event: React.FormEvent | null, autoSearch: string = null): void => {
     if (autoSearch) {
       //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
-      if(autoSearch.includes('chatid'))
-      {
+      if (autoSearch.includes('chatid')) {
         handleSearch(autoSearch.split(':')[1]);
       }
-      else{
+      else {
         handleSearch(autoSearch);
       }
-  
+
     } else {
       //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
       event.preventDefault();
@@ -126,60 +126,67 @@ const SearchBar = ({ autofilled }) => {
 
   };
 
-  const setInvalidSearch = () =>{
+  const setInvalidSearch = () => {
     setIsInvalidAddress(true);
     setFilteredUserData([]);
     setHasUserBeenSearched(true);
   }
   const handleSearch = async (autoSearch: string = null): Promise<void> => {
     let searchText = autoSearch ? autoSearch : searchedUser;
+    setIsInvalidAddress(false);
 
     if (!ethers.utils.isAddress(searchText)) {
       setIsLoadingSearch(true);
       let address: string;
       let group: IGroup;
 
-        if(searchText.includes('.eth')){
-          try{
-            address = await provider.resolveName(searchText);
-            if (!address) {
-              address = await library.resolveName(searchText);
-            }
-          } catch (err) {
-            setInvalidSearch();
-          }
-        }
-        else{
-       
-          group = await getGroup(searchText,setInvalidSearch);
-        }
-       
-        // this ensures address are checksummed
+      if (searchText.includes('.')) {
+        try {
+          // address = await provider.resolveName(searchText);
+          // if (!address) {
+          //   address = await library.resolveName(searchText);
+          // }
 
-        if (address) {
-          address = ethers.utils.getAddress(address.toLowerCase());
-          handleUserSearch({userSearchData:address});
-        } else if(group){
-          handleUserSearch({groupSearchData:group});
+          address =
+            (await provider.resolveName(searchText)) ||
+            (await library.resolveName(searchText)) ||
+            (await udResolver.owner(searchText));
+
+
+        } catch (err) {
+          setInvalidSearch();
         }
-          else if(!group && !address) {
-            setInvalidSearch();
-          }
+      }
+      else {
+        group = await getGroup(searchText, setInvalidSearch);
+      }
+
+      // this ensures address are checksummed
+
+      if (address) {
+        address = ethers.utils.getAddress(address?.toLowerCase());
+        handleUserSearch({ userSearchData: address });
+      } else if (group) {
+        handleUserSearch({ groupSearchData: group });
+      }
+      else if (!group && !address) {
+        setInvalidSearch();
+      }
     } else {
-      await handleUserSearch({userSearchData:searchText});
+      await handleUserSearch({ userSearchData: searchText });
     }
     setIsLoadingSearch(false);
   };
 
-//this function needs some optimisation
-  const handleUserSearch = async ({userSearchData,groupSearchData}:{userSearchData?:string,groupSearchData?:IGroup}): Promise<void> => {
+  //this function needs some optimisation
+  const handleUserSearch = async ({ userSearchData, groupSearchData }: { userSearchData?: string, groupSearchData?: IGroup }): Promise<void> => {
     setIsLoadingSearch(true);
     let filteredData: User;
     setHasUserBeenSearched(true);
 
     if (userSearchData) {
       const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData });
-      filteredData = await PushAPI.user.get({ 
+      filteredData = await PushAPI.user.get({
         account: caip10,
         env: appConfig.appEnv
       });

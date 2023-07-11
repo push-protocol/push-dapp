@@ -14,10 +14,10 @@ let db: IDBDatabase;
 
 export const intitializeDb = async <T extends string | MessageIPFS | Feeds[]>(
   state: 'Read' | 'Insert',
-  dbName: 'Inbox' | 'Intent' | 'CID_store' | 'Wallets',
+  dbName: 'Inbox' | 'Intent' | 'CID_store',
   key: string,
   message: T | string,
-  index: 'did' | 'cid' | 'ens'
+  index: 'did' | 'cid'
 ): Promise<IDBValidKey> => {
   return await new Promise((resolve, reject) => {
     const openRequest = window.indexedDB.open('w2w_idxDb', 3);
@@ -35,10 +35,6 @@ export const intitializeDb = async <T extends string | MessageIPFS | Feeds[]>(
        if (!db.objectStoreNames.contains('Intent')) {
         cIDStore2 = db.createObjectStore('Intent', { keyPath: 'did' });
         cIDStore2.createIndex('did', 'did', { unique: true });
-       }
-       if (!db.objectStoreNames.contains('Wallets')) {
-        cIDStore3 = db.createObjectStore('Wallets', { keyPath: 'ens' });
-        cIDStore3.createIndex('ens', 'ens', { unique: true });
        }
  
     };
@@ -73,9 +69,7 @@ export const addData = async <T extends string | MessageIPFS | Feeds[]>(
     if (dbName === 'CID_store') {
       newItem['cid'] = key;
     }
-    if (dbName === 'Wallets') {
-      newItem['ens'] = key;
-    }
+    
     const tx: IDBTransaction = db.transaction(dbName, 'readwrite');
     const objectStore: IDBObjectStore = tx.objectStore(dbName);
     const query = objectStore.put(newItem);

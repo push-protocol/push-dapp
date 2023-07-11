@@ -1,10 +1,10 @@
 import * as PushAPI from '@pushprotocol/restapi';
-import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { profilePicture } from 'config/W2WConfig';
 import * as w2wHelper from 'helpers/w2w/';
-import { ConnectedUser, Feeds, IGroup, User } from 'types/chat';
+import { ConnectedUser, Feeds, IGroup, MessageIPFS, User } from 'types/chat';
 import { walletToCAIP10 } from '.';
 import { appConfig } from '../../config';
+import { decrypt, message } from 'openpgp';
 
 export function checkConnectedUser(connectedUser: ConnectedUser): boolean {
   if (
@@ -35,13 +35,14 @@ export const checkIfChatExist = ({
   isGroup,
 }: CheckIfChatsExistPropType): boolean => {
   let val: boolean;
-  if (isGroup) {
+  if (isGroup ) {
     val = chats?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)
       ? true
       : false;
   } else {
+    // if(currentChat && currentChat?.combinedDID)
     val = chats?.find(
-      (x) => x?.combinedDID === currentChat?.combinedDID && x?.msg?.toDID === connectedUser?.did
+      (x) => x?.combinedDID?.toLowerCase() === currentChat?.combinedDID?.toLowerCase() && x?.msg?.toDID?.toLowerCase() === connectedUser?.did?.toLowerCase()
     )
       ? true
       : false;
@@ -68,8 +69,8 @@ export const getLatestThreadHash = ({
       receivedIntents?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)?.threadhash;
   } else {
     latestThreadHash =
-      inbox?.find((x) => x?.combinedDID === currentChat?.combinedDID)?.threadhash ||
-      receivedIntents?.find((x) => x?.combinedDID === currentChat?.combinedDID)?.threadhash;
+      inbox?.find((x) => x?.combinedDID?.toLowerCase() === currentChat?.combinedDID?.toLowerCase())?.threadhash ||
+      receivedIntents?.find((x) => x?.combinedDID?.toLowerCase() === currentChat?.combinedDID?.toLowerCase())?.threadhash;
   }
 
   return latestThreadHash;
@@ -113,9 +114,9 @@ export const getDefaultFeed = async ({
       env: appConfig.appEnv,
     }));
     let feed:Feeds;
-    const inboxUser = inbox.filter((inb) => inb.did === user.did);
+    const inboxUser = inbox.filter((inb) => inb.did?.toLowerCase() === user.did?.toLowerCase());
 
-    const intentUser = intents.filter((userExist) => userExist.did === user.did);
+    const intentUser = intents.filter((userExist) => userExist.did?.toLowerCase() === user.did?.toLowerCase());
     if (inboxUser.length) {
       feed = inboxUser[0];
     } else if(intentUser.length){
@@ -138,7 +139,6 @@ export const getDefaultGroupFeed = async ({
 }): Promise<{feed:Feeds,isNew:boolean}> => {
     let isNew:boolean = false;
     let feed:Feeds;
-    console.log(inbox)
     const inboxGroup = inbox.filter((inb) => inb?.groupInformation?.chatId === groupData.chatId);
 
     const intentGroup = intents.filter((int) =>int?.groupInformation?.chatId === groupData.chatId);
@@ -188,16 +188,68 @@ export const getDefaultFeedObject = ({user,groupInformation}:{user?:User,groupIn
 
 
 
-export const fetchInbox = async (connectedUser):Promise<Feeds[]>=> {
-  let inboxes:Feeds[] = await PushAPI.chat.chats({ account: connectedUser.wallets!, env: appConfig.appEnv, toDecrypt: false });
-  await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account: connectedUser.wallets! }), inboxes, 'did');
-  inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: connectedUser });
+export const fetchInbox = async ({connectedUser, page, limit}:{connectedUser:any, page?:number, limit?:number}):Promise<Feeds[]>=> {
+  let inboxes:Feeds[] = await PushAPI.chat.chats({ account: connectedUser.wallets!, env: appConfig.appEnv, toDecrypt: true, pgpPrivateKey: connectedUser.privateKey, page, limit});
   return inboxes
 };
 
-export const fetchIntent = async (connectedUser): Promise<Feeds[]> => {
-  let intents = await PushAPI.chat.requests({account:connectedUser.wallets.split(':')[1],env:appConfig.appEnv, toDecrypt:false});
-  await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account: connectedUser.wallets }),intents, 'did');
-  intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
+export const fetchIntent = async ({connectedUser, page, limit}:{connectedUser:any, page?:number, limit?:number}): Promise<Feeds[]> => {
+  let intents = await PushAPI.chat.requests({account:connectedUser.wallets.split(':')[1], env:appConfig.appEnv, toDecrypt: true, pgpPrivateKey: connectedUser.privateKey, page, limit});
   return intents;
 };
+
+export const getUpdatedChatAndIntent= async ({chatList,message,connectedUser,account, checkInbox})=>{
+  let isUpdated = false;
+  let decryptedChat:MessageIPFS;
+
+  //change to common decryption for getUpdatedInbox and getUpdatedChats using filter
+  const updatedFeed = chatList.filter(feed=>(feed.did?.toLowerCase() === message.fromCAIP10?.toLowerCase()) || (feed?.groupInformation?.chatId === message.toCAIP10));
+  if(updatedFeed.length && checkInbox){
+    decryptedChat = await w2wHelper.decryptMessages({
+      savedMsg: message,
+      connectedUser,
+      account,
+      currentChat:updatedFeed[0],
+      inbox:chatList
+    });
+  }
+  else{
+    decryptedChat=updatedFeed[0]
+  }
+  const updatedChatList = chatList.map(feed => {
+    if((feed.did?.toLowerCase() === message.fromCAIP10?.toLowerCase()) || feed?.groupInformation?.chatId === message.toCAIP10){
+      feed.msg = decryptedChat;
+      isUpdated=true;
+    }
+    return feed;
+  });
+
+  return checkInbox 
+        ? {updatedInbox:updatedChatList, isInboxUpdated:isUpdated}
+        : {updatedIntents:updatedChatList, isIntentsUpdated:isUpdated};
+}
+
+export const getUpdatedGroupInfo = async({chatList, groupInfo, checkInbox})=>{
+  let isUpdated = false;
+  const updatedChatList = chatList.map(feed => {
+    if(feed?.groupInformation?.chatId === groupInfo.chatId){
+      feed.groupInformation = groupInfo;
+      isUpdated=true;
+    }
+    return feed;
+  });
+  return  checkInbox 
+          ?{updatedInbox:updatedChatList, isInboxUpdated:isUpdated}
+          :{updatedIntents:updatedChatList, isIntentsUpdated:isUpdated}
+}
+
+export const checkIfIntent = ({chat,account}):boolean => {
+  if(chat && (chat?.combinedDID?.toLowerCase())?.includes(walletToCAIP10({account})?.toLowerCase()))
+  {
+    if( chat?.intent && (chat?.intent?.toLowerCase())?.includes(walletToCAIP10({account})?.toLowerCase()))
+    return false;
+    else
+    return true;
+  }
+  return false;
+} 

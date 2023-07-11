@@ -15,6 +15,7 @@ import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
+import { produce } from 'immer';
 
 // Internal Components
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
@@ -36,20 +37,22 @@ import { useDeviceWidthCheck } from 'hooks';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext, Feeds, MessageIPFS } from 'types/chat';
+import { AppContext as ContextType, Feeds, MessageIPFS } from 'types/chat';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w';
 import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpers/w2w/groupChat';
 import { MessagetypeType } from '../../../../types/chat';
 import Chats from '../chats/Chats';
 import Typebar from '../TypeBar/Typebar';
-import { intitializeDb } from '../w2wIndexeddb';
 import { HeaderMessage } from './HeaderMessage';
+import { AppContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
 
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import { getChats } from 'services';
+import { VideoCallContext } from 'contexts/VideoCallContext';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -66,7 +69,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
   );
 });
 
-const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
+const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const {
     currentChat,
     viewChatBox,
@@ -80,7 +83,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setInbox,
     setHasUserBeenSearched,
     setReceivedIntents,
-  }: AppContext = useContext<AppContext>(Context);
+    setBlockedLoading,
+  }: ContextType = useContext<ContextType>(Context);
+  const { web3NameList }:AppContextType=useContext(AppContext);
   const [chatMeta, setChatMeta] = useState(null);
 
   const [newMessage, setNewMessage] = useState<string>('');
@@ -94,6 +99,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
   const groupInfoRef = useRef<HTMLInputElement>(null);
   const { connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
+  const { setVideoCallData } = useContext(VideoCallContext);
 
   const listInnerRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
@@ -109,8 +115,16 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
-  //get ens name
-  const ensName = useResolveWeb3Name(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
+  //resolve web3 names
+  useResolveWeb3Name(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
+
+  // get web3 name
+  let ensName=''
+  if(!isGroup && currentChat?.wallets?.split(',')[0].toString()){
+    const walletLowercase = caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase();
+    const checksumWallet = ethers.utils.getAddress(walletLowercase);
+    ensName = web3NameList[checksumWallet];
+  }
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -228,9 +242,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   };
 
   const fetchInboxApi = async (): Promise<Feeds> => {
-    const inboxes: Feeds[] = await fetchInbox(connectedUser);
+    const inboxes: Feeds[] = await fetchInbox({connectedUser});
     setInbox(inboxes);
-    return inboxes?.find((x) => x.wallets.split(':')[1] === currentChat.wallets.split(':')[1]);
+    return inboxes?.find((x) => x.wallets.split(':')[1]?.toLowerCase() === currentChat.wallets.split(':')[1]?.toLowerCase());
   };
 
   const sendMessage = async ({
@@ -259,34 +273,18 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       });
 
       if (typeof sendResponse !== 'string') {
-        intitializeDb<MessageIPFS>('Insert', 'CID_store', sendResponse.cid, sendResponse, 'cid');
         sendResponse.messageContent = message;
         const updatedCurrentChat = currentChat;
         updatedCurrentChat.msg = sendResponse;
         setChat(updatedCurrentChat);
         setNewMessage('');
-        // console.log(messages)
-        // console.log(sendResponse)
         setMessages([...messages, sendResponse]);
 
         setTimeout(() => {
           setMessageBeingSent(false);
-        }, 1);
-      } else {
-        chatBoxToast.showMessageToast({
-          toastTitle: 'Error',
-          toastMessage: `${sendResponse}`,
-          toastType: 'ERROR',
-          getToastIcon: (size) => (
-            <MdError
-              size={size}
-              color="red"
-            />
-          ),
-        });
-
-        setMessageBeingSent(false);
+        }, 1)
       }
+
     } catch (error) {
       chatBoxToast.showMessageToast({
         toastTitle: 'Error',
@@ -303,7 +301,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       setMessageBeingSent(false);
     }
   };
-// console.log(messages)
+
   useEffect(() => {
     if (messageBeingSent == false) {
       setTimeout(() => {
@@ -314,13 +312,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   async function resolveThreadhash(): Promise<void> {
     setLoading(true);
-    let getIntent;
-    getIntent = await intitializeDb<string>('Read', 'Intent', walletToCAIP10({ account: account! }), '', 'did');
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(':')[1];
-    let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: false });
-    await intitializeDb<Feeds[]>('Insert', 'Intent', walletToCAIP10({ account: account! }), intents, 'did');
-    intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
+    let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: true, pgpPrivateKey:connectedUser.privateKey });
     setReceivedIntents(intents);
     setLoading(false);
   }
@@ -359,19 +353,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
             />
           ),
         });
-      } else {
-        chatBoxToast.showMessageToast({
-          toastTitle: 'Error',
-          toastMessage: `There was a problem in approving the chat request, please try again.`,
-          toastType: 'ERROR',
-          getToastIcon: (size) => (
-            <MdError
-              size={size}
-              color="red"
-            />
-          ),
-        });
       }
+
       setActiveTab(0);
       await resolveThreadhash();
       setMessageBeingSent(false);
@@ -403,7 +386,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       if (
         currentChat.intent === null ||
         currentChat.intent === '' ||
-        !currentChat.intent.includes(currentChat.wallets.split(':')[1])
+        !currentChat.intent?.toLowerCase().includes(currentChat.wallets.split(':')[1]?.toLowerCase())
       ) {
         let createdUser;
         if (!connectedUser.publicKey) {
@@ -419,45 +402,31 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
           env: appConfig.appEnv,
         });
 
-        if (typeof sendResponse === 'string') {
-          // Display toaster
-          chatBoxToast.showMessageToast({
-            toastTitle: 'Error',
-            toastMessage: `${sendResponse}`,
-            toastType: 'ERROR',
-            getToastIcon: (size) => (
-              <MdError
-                size={size}
-                color="red"
-              />
-            ),
-          });
+        if (typeof sendResponse !== 'string') {
+           // We store the message in state decrypted so we display to the user the intent message
+           sendResponse.messageContent = message;
+           setNewMessage('');
+           let result = await fetchInboxApi();
+           result.msg.messageContent = message;
+           setChat(result);
+           chatBoxToast.showMessageToast({
+             toastTitle: 'Success',
+             toastMessage: 'Chat Request Sent',
+             toastType: 'SUCCESS',
+             getToastIcon: (size) => (
+               <MdCheckCircle
+                 size={size}
+                 color="green"
+               />
+             ),
+           });
           setMessageBeingSent(false);
-        } else {
-          // We store the message in state decrypted so we display to the user the intent message
-          sendResponse.messageContent = message;
-          setNewMessage('');
-          let result = await fetchInboxApi();
-          result.msg.messageContent = message;
-          setChat(result);
-          chatBoxToast.showMessageToast({
-            toastTitle: 'Success',
-            toastMessage: 'Chat Request Sent',
-            toastType: 'SUCCESS',
-            getToastIcon: (size) => (
-              <MdCheckCircle
-                size={size}
-                color="green"
-              />
-            ),
-          });
         }
       }
 
       setHasUserBeenSearched(false);
       setActiveTab(0);
     } catch (error) {
-      console.error(error.message);
       chatBoxToast.showMessageToast({
         toastTitle: 'Error',
         toastMessage: 'Cannot send request, Try again later',
@@ -482,45 +451,19 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
-  const startVideoCallHandler = () => {
-    setVideoCallInfo({
-      address: caip10ToWallet(currentChat.wallets.toString()),
-      fromPublicKeyArmored: connectedUser.publicKey,
-      fromProfileUsername: connectedUser.name,
-      fromProfilePic: connectedUser.profilePicture,
-      toPublicKeyArmored: currentChat.publicKey,
-      toProfileUsername: null,
-      toProfilePic: currentChat.profilePicture,
-      privateKeyArmored: connectedUser.privateKey,
-      establishConnection: 1,
-    });
-    // const fetchUser = async () => {
-    //   return PushAPI.user.get({
-    //     account: caip10ToWallet(currentChat.wallets.toString()),
-    //     env: appConfig.appEnv
-    //   });
-    // }
+  const startVideoCallHandler = async () => {
+    console.log("CURRENT CHAT", currentChat);
 
-    // // call the function
-    // fetchUser()
-    //   .then (toUser => {
-    //     // set video call
-    //     setVideoCallInfo({
-    //       address: caip10ToWallet(currentChat.wallets.toString()),
-    //       fromPublicKeyArmored: connectedUser.publicKey,
-    //       fromProfileUsername: connectedUser.name,
-    //       fromProfilePic: connectedUser.profilePicture,
-    //       toPublicKeyArmored: currentChat.publicKey,
-    //       toProfileUsername: toUser.name,
-    //       toProfilePic: toUser.profilePicture,
-    //       privateKeyArmored: connectedUser.privateKey,
-    //       establishConnection: 1,
-    //     });
-    //   })
-    //   .catch(e => {
-    //     console.log("Error occured in ChatModule::useEffect::callAccepted - ", e);
-    //   });
+    setVideoCallData((oldData) => {
+      return produce(oldData, (draft) => {
+        draft.local.address = account;
+        draft.incoming[0].address = caip10ToWallet(currentChat.wallets.toString());
+        draft.incoming[0].status = PushAPI.VideoCallStatus.INITIALIZED;
+        draft.meta.chatId = currentChat.chatId;
+      });
+    });
   };
+
 
   const InfoMessages = [
     { id: 1, content: 'You can send up to 10 group requests in alpha' },
@@ -787,7 +730,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                 messageBeingSent={messageBeingSent}
                 setNewMessage={setNewMessage}
                 newMessage={newMessage}
-                setVideoCallInfo={setVideoCallInfo}
                 sendMessage={sendMessage}
                 isGroup={isGroup}
                 sendIntent={sendIntent}

@@ -1,6 +1,7 @@
 // Internal Components
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import { getReq, postReq } from "api";
+import * as PushAPI from "@pushprotocol/restapi";
 
 // Internal Configs
 import { appConfig } from "config";
@@ -379,26 +380,25 @@ export default class ChannelsDataStore {
 
     return new Promise((resolve, reject) => {
       // To get channel info from a channel address
-      getReq(`/v1/channels/search?query=${channel}`)
+      PushAPI.channels.getChannel({
+        channel: channel,
+        env: appConfig.appEnv
+      })
         .then((response) => {
           let output;
-          output = response.data.channels.map(
-            ({
-              alias_address,
-              is_alias_verified,
-            }) => {
-              return {
-                aliasAddress: alias_address,
-                isAliasVerified: is_alias_verified,
-              };
-            }
-          );
+          if (response && response != "channel not found") {
+            output = {
+              ...response, 
+              aliasAddress: response.alias_address,
+              isAliasVerified: response.is_alias_verified
+            };
+          }
           if (enableLogs)
             console.log("getChannelDetailsFromAddress() --> %o", response);
-          if (output.length === 0) {
-            output.push({ alias_address: null, isAliasVerified: null });
+          if (response === "channel not found" || !response) {
+            output = { alias_address: null, isAliasVerified: null };
           }
-          resolve(output[0]);
+          resolve(output);
         })
         .catch((err) => {
           console.log("!!!Error, getChannelDetailsFromAddress() --> %o", err);

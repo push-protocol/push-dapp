@@ -13,7 +13,7 @@ export const config = {
   pushNodeApiVersion: 1,
   apiUrl: 'https://backend-staging.epns.io/apis',
   w2wApiUrl: 'https://backend-staging.epns.io/apis',
-  toolingApiUrl: 'https://tooling.epns.io/apis',
+  toolingApiUrl: 'https://staging-tooling.epns.io/apis',
 
   ipfsInfuraAPIKey: process.env.REACT_APP_IPFS_INFURA_API_KEY || '22rfiNb1J645FdehoqbKMpLbF6V',
   ipfsInfuraAPISecret: process.env.REACT_APP_IPFS_INFURA_API_SECRET || 'a757597f020425c3ae532e6be84de552',
@@ -25,7 +25,9 @@ export const config = {
     // 42, //for kovan
     5, // for goerli
     80001, //for mumbai polygon
-    97 // bnb testnet
+    97, // bnb testnet
+    420, // optimism goerli testnet
+    1442 // polygon zkevm testnet
   ],
 
   /** 
@@ -38,7 +40,8 @@ export const config = {
   aliasRPC: {
     80001: "https://polygon-mumbai.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
     97: "https://data-seed-prebsc-1-s1.binance.org:8545",
-    420: "https://opt-goerli.g.alchemy.com/v2/98vFj7OCg4vbGKvCDpj6pOAMSBVC7rzm"
+    420: "https://opt-goerli.g.alchemy.com/v2/98vFj7OCg4vbGKvCDpj6pOAMSBVC7rzm",
+    1442: "https://rpc.public.zkevm-test.net"
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
 
@@ -150,6 +153,13 @@ export const CHAIN_DETAILS = {
     name: "OPTIMISM_TESTNET",
     chainId: 420,
     rpcUrl: 'https://opt-goerli.g.alchemy.com/v2/98vFj7OCg4vbGKvCDpj6pOAMSBVC7rzm',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa'
+  },
+  1442: {
+    label: "Polygon zkEVM Testnet",
+    name: "POLYGON_ZK_EVM_TESTNET",
+    chainId: 1442,
+    rpcUrl: 'https://rpc.public.zkevm-test.net',
     commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa'
   }
 }

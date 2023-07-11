@@ -17,8 +17,6 @@ import MessageFeed from 'components/chat/w2wChat/messageFeed/MessageFeed';
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { fetchIntent } from 'helpers/w2w/user';
-
-import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import StyleHelper from 'helpers/StyleHelper';
@@ -87,8 +85,8 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   };
 
   const getRequests = async (): Promise<void> => {
-    await resolveThreadhash();
-    fetchIntentApi();
+    await fetchIntentApi();
+    setLoadingRequests(false)
   };
   useEffect(() => {
     // This will run when the page first loads
@@ -100,21 +98,8 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   }
   useClickAway(containerRef, () => closeQRDropdown())
 
-  async function resolveThreadhash(): Promise<void> {
-    let getIntent;
-    getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account }), '', 'did');
-
-    if (getIntent !== undefined && !receivedIntents.length) {
-
-      let intents: Feeds[] = getIntent.body;
-      intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
-      setReceivedIntents(intents);
-      setLoadingRequests(false);
-    }
-    setLoadingRequests(false);
-  }
   const fetchIntentApi = async (): Promise<Feeds[]> => {
-    const intents = await fetchIntent(connectedUser);
+    const intents = await fetchIntent({connectedUser});
     if (JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
       setReceivedIntents(intents);
       setLoadingRequests(false);

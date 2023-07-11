@@ -10,11 +10,12 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
 // Internal Components
-import { VideoCallContextProvider } from 'contexts/VideoCallContext';
 import App from "./App";
 import "./index.css";
 import store from "./redux/store";
 import * as serviceWorker from "./serviceWorker";
+import ChatUserContextProvider from './contexts/ChatUserContext';
+import { VideoCallContextProvider } from './contexts/VideoCallContext';
 
 // Internal Configs
 import * as dotenv from "dotenv";
@@ -47,14 +48,16 @@ ReactDOM.render(
     <Provider store={store}>
       <ApolloProvider client={client}>
         <Web3ReactProvider getLibrary={getLibrary}>
-          <VideoCallContextProvider>
-            <App />
-          </VideoCallContextProvider>
+          <ChatUserContextProvider>
+            <VideoCallContextProvider>
+              <App />
+            </VideoCallContextProvider>
+          </ChatUserContextProvider>
         </Web3ReactProvider>
       </ApolloProvider>
     </Provider>
   </BrowserRouter>,
-  document.getElementById("root")
+  document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change

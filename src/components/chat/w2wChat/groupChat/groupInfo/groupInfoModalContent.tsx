@@ -51,11 +51,11 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const [memberList, setMemberList] = React.useState<any>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const groupCreator = currentChat?.groupInformation?.groupCreator;
-  const membersExceptGroupCreator = currentChat?.groupInformation?.members.filter((x) => x.wallet !== groupCreator);
+  const membersExceptGroupCreator = currentChat?.groupInformation?.members.filter((x) => x.wallet?.toLowerCase() !== groupCreator?.toLowerCase());
   const groupMembers = [...membersExceptGroupCreator, ...currentChat?.groupInformation?.pendingMembers];
 
   const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
-    (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
+    (member) => caip10ToWallet(member?.wallet)?.toLowerCase() === account?.toLowerCase() && member?.isAdmin
   );
   const dropdownRef = React.useRef<any>(null);
   useClickAway(dropdownRef, () => setSelectedMemeberAddress(null));
@@ -563,11 +563,16 @@ const InfoContainer = styled(ItemHV2)`
 `;
 
 const AddWalletContainer = styled(ItemHV2)`
+  box-sizing: border-box;
   border: 1px solid ${(props) => props.theme.default.border};
   border-radius: 16px;
   padding: 15px 24px;
   margin-bottom: 15px;
   cursor: pointer;
+  @media(max-width:480px){
+    min-width: 300px;
+    max-width: 300px;
+  }
 `;
 
 const ProfileContainer = styled.div`
