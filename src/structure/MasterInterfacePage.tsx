@@ -28,6 +28,7 @@ const SpamPage = lazy(() => import('pages/SpamPage'));
 const SupportPage = lazy(() => import('pages/SupportPage'));
 const TutorialPage = lazy(() => import('pages/TutorialPage'));
 const YieldFarmingPage = lazy(() => import('pages/YieldFarmingPage'));
+const YieldFarmingV2Page = lazy(() => import('pages/YieldFarmingPageV2'));
 
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
@@ -91,6 +92,7 @@ function MasterInterfacePage() {
             <Route path="govern" element={<GovPage />} />
 
             <Route path="yield" element={<YieldFarmingPage />} />
+            <Route path="yieldv2" element={<YieldFarmingV2Page />} />
             <Route path="rockstar" element={<NFTPage />} />
             <Route path="gratitude" element={<AirdropPage />} />
             <Route path="live_walkthrough" element={<TutorialPage />} />

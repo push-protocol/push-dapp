@@ -81,9 +81,9 @@ export const addresses = {
   epnsPolyComm: "0xAf55BE8e6b0d6107891bA76eADeEa032ef8A4504", // the ploygon comm contract
   pushToken: "0x2b9bE9259a4F5Ba6344c1b1c07911539642a2D33", //address for push token
   aDai: "0x31f30d9A5627eAfeC4433Ae2886Cf6cc3D25E772",
-  staking: "0x8e129EF695F8761922F1AA38588292f8d8817bA5",
-  yieldFarmPUSH: "0xb41cd6760d3b1d0d216851f63fda9573b04dd46e",
-  yieldFarmLP: "0x604f629A6b5E85805D57f39493BBC2856cE8A540",
+  // staking: "0x8e129EF695F8761922F1AA38588292f8d8817bA5",
+  // yieldFarmPUSH: "0xb41cd6760d3b1d0d216851f63fda9573b04dd46e",
+  // yieldFarmLP: "0x604f629A6b5E85805D57f39493BBC2856cE8A540",
   epnsToken: "0x2b9bE9259a4F5Ba6344c1b1c07911539642a2D33",
   epnsLPToken: "0x1f094Bd8c260D0C3fC79157096015990885af4d2",
   rockstar: "0x3f8C2152b79276b78315CAF66cCF951780580A8a",
@@ -92,9 +92,25 @@ export const addresses = {
   distributor: "0x5B548D33874DeABaC2F683A6E1864795E09932F0",
   uniswapV2Router02: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D", //n
   WETHAddress: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6", // mainnet address //n
-  USDTAddress: "0x13512979ade267ab5100878e2e0f485b568328a4", // mainnet address //n
+  USDTAddress: "0x11fe4b6ae13d2a6055c8d9cf65c55bac32b5d844", // mainnet address //n
   rockstarV2: "0xA2b885e7065EA59a3251489715ca80DE5Ff642f8", //mainnet address
   NFTRewardsV2: "0xdc66567a990B7fa10730459537620857c9e03287", //mainnet address
+
+  uniV2LPToken:"0x698839247E5b83572fFF6ccdcf386CC37e60bEf5",// for new staking V2 Contract on staging
+
+  //for yield Farm v1
+  staking: "0xAECb9074e222e8F06f8034140A3F86610E4d3c3E", // deprecated staking addresses
+  depYieldFarmPUSH: "0x6EA019f7FE2640A55154DdC36Bfd21275De388BD", // deprecated YieldFarm Push address
+  depYieldFarmLP:"0xc2886D0e7DAd16cc92b1156Dc9A0b0D3F047FD15",
+
+  //For Push Fee staking Pool with 21 days epoch (same as epnsCore)
+  pushCoreV2:'0x23346b732d56d34ec4e890419fbfb8548216a799',
+
+  //For Uni V2 21 days epoch duration
+  stakingV2:"0x67Eb752D9C878d298650F9542ECC05Fb680D0EEE",
+  yieldFarmLP: "0xAa7647A5420e804909a215509554d66c8c349EA7",
+
+
 }
 
 export const CHAIN_DETAILS = {

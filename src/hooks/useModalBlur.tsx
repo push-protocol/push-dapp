@@ -29,10 +29,10 @@ export type ModalType = {
     showMessageToast: ShowMessageToastType;
   };
   InnerComponentProps?: any;
-  modalPosition?:number;
+  modalPosition?: number;
 };
 
-export const MODAL_POSITION={
+export const MODAL_POSITION = {
   ON_ROOT: 1,
   ON_PARENT: 2
 }
@@ -43,8 +43,13 @@ const useModalBlur = () => {
   // hacky fix to prevent background scroll when modal is open
   React.useEffect(() => {
     if (open) {
-      document.body.style.overflow = 'hidden';
+      if (MODAL_POSITION?.ON_PARENT) {
+        document.body.style.overflow = 'auto';
+      } else {
+        document.body.style.overflow = 'hidden';
+      }
       document.body.style.paddingRight = '1rem';
+
     } else {
       document.body.style.overflow = 'unset';
       document.body.style.paddingRight = '0px';
@@ -69,12 +74,12 @@ const useModalBlur = () => {
     modalPosition,
   }: ModalType) => {
     const themes = useTheme();
-    
+
     return (
       <ThemeProvider theme={themes}>
         {open && (
           <ItemHV2
-            position={modalPosition==MODAL_POSITION.ON_ROOT ? 'fixed' : 'absolute'}
+            position={modalPosition == MODAL_POSITION.ON_ROOT ? 'fixed' : 'absolute'}
             alignSelf="stretch"
             alignItems="flex-start"
             flex="initial"
