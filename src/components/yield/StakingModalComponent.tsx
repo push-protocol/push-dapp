@@ -161,8 +161,6 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
         setTxInProgressDep(true)
 
-        console.log("Deposit amount", depositAmount)
-
         if (depositAmount == 0) {
             toastObject.showMessageToast({
                 toastTitle: 'Error',
@@ -292,7 +290,6 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                         color={theme.stakingSecondaryText}
                         value={depositAmount}
                         onChange={(e) => {
-                            console.log("E", e.target.value)
                             e.preventDefault();
                             handleInput(e);
                         }}
