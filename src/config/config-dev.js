@@ -101,12 +101,12 @@ export const addresses = {
   depYieldFarmPUSH: "0x6EA019f7FE2640A55154DdC36Bfd21275De388BD", // deprecated YieldFarm Push address
   depYieldFarmLP:"0xc2886D0e7DAd16cc92b1156Dc9A0b0D3F047FD15",
 
-  //For Push with 1 hr epoch
-  pushCoreV2:'0x5f6BB69B62a6d01deF582221477e726c4B7E11a8', 
+  //For Push Fee staking Pool with 21 days epoch (same as epnsCore)
+  pushCoreV2:'0x23346b732d56d34ec4e890419fbfb8548216a799',
 
-  //For Uni V2 30 min duration
-  stakingV2:"0x0682aa9A86F7785AE9e7e764E3254CEA27Dd0Be2",
-  yieldFarmLP: "0x8Ed01007615601B0113DE5355cE9ee4Eec85F353",
+  //For Uni V2 21 days epoch duration
+  stakingV2:"0x67Eb752D9C878d298650F9542ECC05Fb680D0EEE",
+  yieldFarmLP: "0xAa7647A5420e804909a215509554d66c8c349EA7",
 
 
 }
