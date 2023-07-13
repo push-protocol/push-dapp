@@ -34,7 +34,15 @@ export const SpaceModule = ({ }) => {
   // RENDER
   return (
     <Container>
+        <div>
+
+            {/* Space feed items */}
             <div>Space</div>
+
+
+            {/* space widget items */}
+            <div>Widgets</div>
+        </div>
     </Container>
   );
 }
