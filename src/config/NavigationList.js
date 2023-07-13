@@ -82,6 +82,30 @@ const NavigationList = {
         },
       },
     },
+    spaces: {
+      src: 'navigation/spaceOffIcon.svg',
+      activeSrc: 'navigation/spaceOnIcon.svg',
+      iconFactory: null,
+      name: 'Spaces',
+      title: 'Spaces',
+      alt: 'Open Spaces',
+      href: '/space',
+      newTab: false,
+      isRoute: true,
+      hasMenuLogic: true,
+      hidden: false,
+      headerTag: {
+        title: 'Spaces',
+        light: {
+          bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+          fg: themeLight.headerTagFg,
+        },
+        dark: {
+          bg: themeDark.headerTagBg,
+          fg: themeDark.headerTagFg,
+        },
+      },
+    },
   },
   secondary: {
     createChannel: {

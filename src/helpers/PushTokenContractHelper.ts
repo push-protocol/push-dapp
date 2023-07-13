@@ -121,7 +121,6 @@ type MintPushTokenType = {
 }
 export const mintPushToken = async ({noOfTokens, library, account}:MintPushTokenType)=>{
   try {
-    var signer = library.getSigner(account);
     let pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
     console.log({
       pushTokenContract,
