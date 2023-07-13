@@ -40,6 +40,8 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
     const [txInProgressApprDep, setTxInProgressApprDep] = React.useState(false);
     const [txInProgressDep, setTxInProgressDep] = React.useState(false);
 
+    const [txnMessage, setTxnMessage] = useState(null);
+
     const [depositAmount, setDepositAmount] = useState(0);
 
     const handleClose = () => {
@@ -188,7 +190,6 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
         } else {
             let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
-
             tx2 = pushCoreV2.stake(
                 ethers.BigNumber.from(depositAmount).mul(
                     ethers.BigNumber.from(10).pow(18)
@@ -306,29 +307,32 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
                 <FilledButton
                     onClick={approveDeposit}
-                    bg={depositApproved ? "#999" : "#e20880"}
-                    disabled={depositApproved ? true : false}>
+                    background={!depositApproved ? "#D53A94" : theme.stakingEmptyButtonBG}
+                    cursor={!depositApproved ? 'pointer' : 'default'}
+                    disabled={!depositApproved  ? false : true}>
 
                     {!depositApproved && !txInProgressApprDep &&
-                        <Span color="#fff" weight="400" cursor='pointer'>Approve {title}</Span>
+                        <Span color='#FFFFFF'  weight="400"  cursor='pointer'>Approve {title}</Span>
                     }
                     {txInProgressApprDep && !depositApproved &&
-                        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#fff" />
+                        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#fff" title={"Approving"} titleColor="#FFF"/>
                     }
                     {depositApproved &&
-                        <Span color="#fff" weight="600">Approved</Span>
+                        <Span color={theme.emptyButtonText} weight="600" cursor="default">Approved</Span>
                     }
 
                 </FilledButton>
-                <EmptyButton background={!depositApproved ? "#999" : "#ffffff"}
-                    disabled={!depositApproved ? true : false} onClick={depositAmountTokenFarmSingleTx}>
+                <EmptyButton
+                    cursor={!depositApproved ? 'default' : 'pointer'}
+                    background={!depositApproved ? theme.stakingEmptyButtonBG : "#D53A94"}
+                    disabled={!depositApproved || (txInProgressDep) ? true : false} onClick={depositAmountTokenFarmSingleTx}>
 
                     {!txInProgressDep &&
-                        <Span color="#657795" weight="400" cursor='pointer'>Deposit</Span>
+                        <Span color={!depositApproved ? theme.emptyButtonText: "#FFFFFF"} weight="400" cursor={!depositApproved ? 'default' : 'pointer'}>Deposit</Span>
                     }
 
                     {txInProgressDep &&
-                        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />
+                        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#FFFFFF" title={"Depositing"} titleColor="#FFF"/>
                     }
 
                 </EmptyButton>
@@ -372,36 +376,36 @@ const MaxText = styled.p`
 
 const FilledButton = styled(ButtonV2)`
     width:100%;
-    background: #D53A94;
-    border: 1px solid #D53A94;
     border-radius: 8px;
     padding: 12px;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 141%;
     letter-spacing: -0.03em;
-    color: #FFFFFF;
-    cursor:pointer;
     width: 145px;
     height: 48px;
+    border:none;
     & > div{
         display:block;
+    }
+    &:after{
+        background:transparent;
+    }
+
+    &:hover{
+        opacity:1;
     }
     
 `;
 
-const EmptyButton = styled.button`
-    // padding: 16px;
-    background:transparent;
+const EmptyButton = styled(ButtonV2)`
     font-size: 16px;
     line-height: 19px;
     flex:1;
-    cursor:pointer;
     width: 145px;
     height: 48px;
-    border: 1px solid #657795;
     border-radius: 8px;
-    color: #657795;
     margin-left: 10px;
+    border:none;
     & > div{
         display:block;
     }

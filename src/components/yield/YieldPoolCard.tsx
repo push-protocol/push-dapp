@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 
@@ -40,6 +40,8 @@ const YieldPoolCard = ({
 
     const [unstakeErrorMessage, setUnstakeErrorMessage] = useState(null);
     const [withdrawErrorMessage, setWithdrawErrorMessage] = useState(null);
+
+    const [filled, setFilled] = useState(0);
 
     const yieldFarmToast = useToast();
 
@@ -228,13 +230,16 @@ const YieldPoolCard = ({
 
         const contractThatNeedApproval = tokenAddress === addresses.pushToken ? addresses.pushCoreV2 : addresses.stakingV2;
         var token = new ethers.Contract(tokenAddress, abis.pushToken, signer);
-        let allowance = await token.allowance(account,contractThatNeedApproval);
+        let allowance = await token.allowance(account, contractThatNeedApproval);
         let tokensApprovedAmount = formatTokens(allowance);
 
-        if(parseInt(tokensApprovedAmount) > parseInt(withdrawAmount)){
+        if (parseInt(tokensApprovedAmount) >= parseInt(withdrawAmount)) {
             totalTxnSteps = 2;
-        }else{
+            setFilled(50)
+
+        } else {
             totalTxnSteps = 3;
+            setFilled(33)
         }
 
 
@@ -265,173 +270,142 @@ const YieldPoolCard = ({
             .then(async (tx) => {
                 yieldFarmToast.showLoaderToast({ loaderMessage: 'Withdrawing! Please Wait...' });
 
-                try {
-                    await library.waitForTransaction(tx.hash);
+                await library.waitForTransaction(tx.hash);
 
-                    yieldFarmToast.showMessageToast({
-                        toastTitle: 'Success',
-                        toastMessage: 'Successfully withdrawn!',
-                        toastType: 'SUCCESS',
-                        getToastIcon: (size) => (
-                            <MdCheckCircle
-                                size={size}
-                                color="green"
-                            />
-                        ),
-                    });
-
-                    getUserData();
-
-                    // 2. Then check if the token address is UNI V2 LP or Push
-                    // First check if the approved Amount is greater than the withdraw amount
-                    // 2.1 If the token approved is PUSH then you need to approve the PushCoreV2 for the Push Token
-                    // 2.1.1 Deposit the amount to the stake function of the pushCore V2 Contract
-                    // 2.2 If the token approved is Uni V2 LP then you need to approve the staking V2 for the LP token
-                    // 2.2.1 Deposit the amount to the deposit function of the staking V2
+                yieldFarmToast.showMessageToast({
+                    toastTitle: 'Success',
+                    toastMessage: 'Successfully withdrawn!',
+                    toastType: 'SUCCESS',
+                    getToastIcon: (size) => (
+                        <MdCheckCircle
+                            size={size}
+                            color="green"
+                        />
+                    ),
+                });
 
 
-                    if (tokenAddress === addresses.pushToken) {
-                        //so we need to approve push token for the V2 contract
-                        var token = new ethers.Contract(tokenAddress, abis.pushToken, signer);
-                        let allowance = await token.allowance(account, addresses.pushCoreV2);
-                        let TokensApproved = formatTokens(allowance);
 
-                        if (parseInt(TokensApproved) > parseInt(withdrawAmount)) {
-                            depositPushToken(tx, withdrawAmount, totalTxnSteps);
-                        } else {
-                            tx = token.approve(
-                                addresses.pushCoreV2,
-                                ethers.BigNumber.from(withdrawAmount).mul(
-                                    ethers.BigNumber.from(10).pow(18)
-                                )
-                            )
-
-                            setMigrateMessage(`Approving 2/${totalTxnSteps}`)
-
-                            tx.then(async (tx) => {
-                                yieldFarmToast.showLoaderToast({ loaderMessage: 'Approving! Please Wait...' });
-
-                                try {
-                                    await library.waitForTransaction(tx.hash);
-
-                                    yieldFarmToast.showMessageToast({
-                                        toastTitle: 'Success',
-                                        toastMessage: 'Successfully Approved!',
-                                        toastType: 'SUCCESS',
-                                        getToastIcon: (size) => (
-                                            <MdCheckCircle
-                                                size={size}
-                                                color="green"
-                                            />
-                                        ),
-                                    });
-
-                                    depositPushToken(tx, withdrawAmount,totalTxnSteps);
-
-                                } catch (error) {
-                                    console.log("Error", error);
-                                    yieldFarmToast.showMessageToast({
-                                        toastTitle: 'Error',
-                                        toastMessage: `Transaction Failed! (" +${error.name}+ ")`,
-                                        toastType: 'ERROR',
-                                        getToastIcon: (size) => <MdError size={size} color="red" />,
-                                    });
-                                    setTxInProgressMigrate(false);
-                                    setMigrateMessage(null);
-                                }
-                            }).catch((err) => {
-                                console.log("Error in approving", err);
-                                yieldFarmToast.showMessageToast({
-                                    toastTitle: 'Error',
-                                    toastMessage: `Transaction Failed! Could Not Approve`,
-                                    toastType: 'ERROR',
-                                    getToastIcon: (size) => <MdError size={size} color="red" />,
-                                });
-                                setTxInProgressMigrate(false);
-                                setMigrateMessage(null);
-                            })
-                        }
+                // 2. Then check if the token address is UNI V2 LP or Push
+                // First check if the approved Amount is greater than the withdraw amount
+                // 2.1 If the token approved is PUSH then you need to approve the PushCoreV2 for the Push Token
+                // 2.1.1 Deposit the amount to the stake function of the pushCore V2 Contract
+                // 2.2 If the token approved is Uni V2 LP then you need to approve the staking V2 for the LP token
+                // 2.2.1 Deposit the amount to the deposit function of the staking V2
 
 
+                if (tokenAddress === addresses.pushToken) {
+                    //so we need to approve push token for the V2 contract
+                    var token = new ethers.Contract(tokenAddress, abis.pushToken, signer);
+                    let allowance = await token.allowance(account, addresses.pushCoreV2);
+                    let TokensApproved = formatTokens(allowance);
+
+                    if (parseInt(TokensApproved) >= parseInt(withdrawAmount)) {
+                        depositPushToken(tx, withdrawAmount, totalTxnSteps);
                     } else {
-                        // UNI V2 Lp Token is there so we need to simply approve stakingV2 for the token and then deposit
-
-                        var token = new ethers.Contract(tokenAddress, abis.pushToken, signer);
-                        let allowance = await token.allowance(account, addresses.stakingV2);
-                        let TokensApproved = formatTokens(allowance);
-
-                        if (parseInt(TokensApproved) > parseInt(withdrawAmount)) {
-                            depositLpToken(tx, withdrawAmount,totalTxnSteps);
-                        } else {
-                            tx = token.approve(
-                                addresses.stakingV2,
-                                ethers.BigNumber.from(withdrawAmount).mul(
-                                    ethers.BigNumber.from(10).pow(18)
-                                )
+                        tx = token.approve(
+                            addresses.pushCoreV2,
+                            ethers.BigNumber.from(withdrawAmount).mul(
+                                ethers.BigNumber.from(10).pow(18)
                             )
+                        )
 
-                            setMigrateMessage(`Approving 2/${totalTxnSteps}`)
+                        setMigrateMessage(`Approving 2/${totalTxnSteps}`)
+                        setFilled(66)
 
-                            tx.then(async (tx) => {
-                                yieldFarmToast.showLoaderToast({ loaderMessage: 'Approving! Please Wait...' });
+                        tx.then(async (tx) => {
+                            yieldFarmToast.showLoaderToast({ loaderMessage: 'Approving! Please Wait...' });
 
-                                try {
-                                    await library.waitForTransaction(tx.hash);
+                            await library.waitForTransaction(tx.hash);
 
-                                    yieldFarmToast.showMessageToast({
-                                        toastTitle: 'Success',
-                                        toastMessage: 'Successfully Approved!',
-                                        toastType: 'SUCCESS',
-                                        getToastIcon: (size) => (
-                                            <MdCheckCircle
-                                                size={size}
-                                                color="green"
-                                            />
-                                        ),
-                                    });
+                            yieldFarmToast.showMessageToast({
+                                toastTitle: 'Success',
+                                toastMessage: 'Successfully Approved!',
+                                toastType: 'SUCCESS',
+                                getToastIcon: (size) => (
+                                    <MdCheckCircle
+                                        size={size}
+                                        color="green"
+                                    />
+                                ),
+                            });
 
-                                    depositLpToken(tx, withdrawAmount,totalTxnSteps);
+                            depositPushToken(tx, withdrawAmount, totalTxnSteps);
 
-                                } catch (error) {
-                                    console.log("Error", error);
-                                    yieldFarmToast.showMessageToast({
-                                        toastTitle: 'Error',
-                                        toastMessage: `Transaction Failed! (" +${error.name}+ ")`,
-                                        toastType: 'ERROR',
-                                        getToastIcon: (size) => <MdError size={size} color="red" />,
-                                    });
-                                    setTxInProgressMigrate(false);
-                                    setMigrateMessage(null);
-                                }
-                            }).catch((err) => {
-                                console.log("Error in approving", err);
-                                yieldFarmToast.showMessageToast({
-                                    toastTitle: 'Error',
-                                    toastMessage: `Transaction Failed! Could Not Approve`,
-                                    toastType: 'ERROR',
-                                    getToastIcon: (size) => <MdError size={size} color="red" />,
-                                });
-                                setTxInProgressMigrate(false);
-                                setMigrateMessage(null);
-                            })
-                        }
+                        }).catch((err) => {
+                            console.log("Error in approving 2", err);
+                            yieldFarmToast.showMessageToast({
+                                toastTitle: 'Error',
+                                toastMessage: `Transaction Failed! Could Not Approve`,
+                                toastType: 'ERROR',
+                                getToastIcon: (size) => <MdError size={size} color="red" />,
+                            });
+                            setTxInProgressMigrate(false);
+                            setMigrateMessage(null);
+                            getUserData();
+                            setFilled(0);
+                        })
                     }
 
-                } catch (error) {
-                    console.log("Error inside withdraw", error);
-                    yieldFarmToast.showMessageToast({
-                        toastTitle: 'Error',
-                        toastMessage: `Transaction Failed! (" +${error.name}+ ")`,
-                        toastType: 'ERROR',
-                        getToastIcon: (size) => <MdError size={size} color="red" />,
-                    });
-                    setTxInProgressMigrate(false);
-                    setMigrateMessage(null);
 
+                } else {
+                    // UNI V2 Lp Token is there so we need to simply approve stakingV2 for the token and then deposit
+
+                    var token = new ethers.Contract(tokenAddress, abis.pushToken, signer);
+                    let allowance = await token.allowance(account, addresses.stakingV2);
+                    let TokensApproved = formatTokens(allowance);
+
+                    if (parseInt(TokensApproved) >= parseInt(withdrawAmount)) {
+                        depositLpToken(tx, withdrawAmount, totalTxnSteps);
+                    } else {
+                        tx = token.approve(
+                            addresses.stakingV2,
+                            ethers.BigNumber.from(withdrawAmount).mul(
+                                ethers.BigNumber.from(10).pow(18)
+                            )
+                        )
+
+                        setMigrateMessage(`Approving 2/${totalTxnSteps}`)
+                        setFilled(66)
+
+                        tx.then(async (tx) => {
+                            yieldFarmToast.showLoaderToast({ loaderMessage: 'Approving! Please Wait...' });
+
+                            await library.waitForTransaction(tx.hash);
+
+                            yieldFarmToast.showMessageToast({
+                                toastTitle: 'Success',
+                                toastMessage: 'Successfully Approved!',
+                                toastType: 'SUCCESS',
+                                getToastIcon: (size) => (
+                                    <MdCheckCircle
+                                        size={size}
+                                        color="green"
+                                    />
+                                ),
+                            });
+
+                            depositLpToken(tx, withdrawAmount, totalTxnSteps);
+
+
+                        }).catch((err) => {
+                            console.log("Error in approving", err);
+                            yieldFarmToast.showMessageToast({
+                                toastTitle: 'Error',
+                                toastMessage: `Transaction Failed! Could Not Approve`,
+                                toastType: 'ERROR',
+                                getToastIcon: (size) => <MdError size={size} color="red" />,
+                            });
+                            setTxInProgressMigrate(false);
+                            setMigrateMessage(null);
+                            getUserData();
+                            setFilled(0);
+                        })
+                    }
                 }
             })
             .catch((err) => {
-                console.log("Error in withdrawl", err);
+                console.log("Error in withdrawing: ", err);
                 yieldFarmToast.showMessageToast({
                     toastTitle: 'Error',
                     toastMessage: `Transaction Failed! Could Not Withdraw!`,
@@ -440,16 +414,18 @@ const YieldPoolCard = ({
                 });
                 setTxInProgressMigrate(false);
                 setMigrateMessage(null);
+                setFilled(0);
             })
 
     }
 
 
-    const depositLpToken = async (tx, withdrawAmount,totalTxnSteps) => {
+    const depositLpToken = async (tx, withdrawAmount, totalTxnSteps) => {
         var signer = library.getSigner(account);
         var stakingV2 = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
 
         setMigrateMessage(`Staking ${totalTxnSteps}/${totalTxnSteps}`)
+        setFilled(100);
 
         tx = stakingV2.deposit(
             tokenAddress,
@@ -475,11 +451,12 @@ const YieldPoolCard = ({
                 ),
             });
             setTxInProgressMigrate(false);
+            getUserData();
             setMigrateMessage(null);
             setActiveTab(0);
 
         }).catch((error) => {
-            console.log("Error in depositing", error);
+            console.log("Error in depositing: ", error);
             yieldFarmToast.showMessageToast({
                 toastTitle: 'Error',
                 toastMessage: `Transaction Failed! Could Not Deposit the Amount`,
@@ -487,16 +464,19 @@ const YieldPoolCard = ({
                 getToastIcon: (size) => <MdError size={size} color="red" />,
             });
             setTxInProgressMigrate(false);
+            getUserData();
             setMigrateMessage(null);
+            setFilled(0);
         })
     }
 
-    const depositPushToken = async (tx, withdrawAmount,totalTxnSteps) => {
+    const depositPushToken = async (tx, withdrawAmount, totalTxnSteps) => {
 
         var signer = library.getSigner(account);
         let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
 
         setMigrateMessage(`Staking ${totalTxnSteps}/${totalTxnSteps}`)
+        setFilled(100);
 
         tx = pushCoreV2.stake(
             ethers.BigNumber.from(withdrawAmount).mul(
@@ -522,11 +502,12 @@ const YieldPoolCard = ({
                 ),
             });
             setTxInProgressMigrate(false);
+            getUserData();
             setMigrateMessage(null)
-            setActiveTab(0);
+            setActiveTab(0);//This moves back the UI to YieldFarming V2
 
         }).catch((error) => {
-            console.log("Error in depositing", error);
+            console.log("Error in depositing: ", error);
             yieldFarmToast.showMessageToast({
                 toastTitle: 'Error',
                 toastMessage: `Transaction Failed! Could Not Deposit Push Token`,
@@ -534,8 +515,12 @@ const YieldPoolCard = ({
                 getToastIcon: (size) => <MdError size={size} color="red" />,
             });
             setTxInProgressMigrate(false);
+            getUserData();
             setMigrateMessage(null)
+            setFilled(0);
         })
+
+
     }
 
     React.useEffect(() => {
@@ -544,10 +529,12 @@ const YieldPoolCard = ({
     }, [account])
 
     return (
-        <Container>
+        <Container
+            margin={poolName === 'UNI-V2' ? " 10px 10px 10px 0 " : " 10px 0 10px 10px"}
+        >
 
             {/* Top Section */}
-            <ItemVV2 margin="14px 0px 20px 0px">
+            <ItemVV2 margin="0px 0px 20px 0">
                 {PoolStats ? (
                     <>
                         <Heading>
@@ -555,26 +542,24 @@ const YieldPoolCard = ({
                             <Deprecated>Deprecated</Deprecated>
                         </Heading>
                         <SecondaryText>
-                            Current APR <SpanV2 color="#D53A94">
+                            Current APR <SpanV2 color="#D53A94" fontWeight="600">
                                 {numberWithCommas(Math.max(PoolStats?.stakingAPR, 0))}
                                 %</SpanV2>
                         </SecondaryText>
                     </>
                 ) : (
                     <SkeletonContainer
-                        padding='5px 15px 0 15px'
+                        padding='15px 15px 0 15px'
                     >
-                        <SkeletonLine height='12px' width='234px' margin='0 0 10px 0'></SkeletonLine>
-                        <SkeletonLine height='12px' width='112px'></SkeletonLine>
+                        <SkeletonLine height='15px' width='234px' margin='0 0 10px 0'></SkeletonLine>
+                        <SkeletonLine height='15px' width='112px'></SkeletonLine>
                     </SkeletonContainer>
                 )}
 
             </ItemVV2>
 
             {/* Body Section */}
-            <ItemVV2
-
-            >
+            <ItemVV2>
                 {/* Reward Section */}
                 <RewardContainer
                     border={`1px solid ${theme.stakingBorder}`}
@@ -643,14 +628,14 @@ const YieldPoolCard = ({
                         <>
                             <EpochNo padding="0px 5px 0px 0px">Current Epoch</EpochNo>
                             <EpochNo margin='0 0 0 5px'>
-                                {Math.min(PoolStats.currentEpochPUSH, PoolStats.totalEpochPUSH).toString()}
+                                {Math.min(PoolStats?.currentEpochPUSH, PoolStats?.totalEpochPUSH).toString()}
                                 /
-                                {PoolStats.totalEpochPUSH}
+                                {PoolStats?.totalEpochPUSH}
                             </EpochNo>
                         </>
                     ) : (
-                        <SkeletonContainer padding='5px 0px 0 15px'>
-                            <SkeletonLine height='12px' width='124px' ></SkeletonLine>
+                        <SkeletonContainer padding='6px 0px 0 15px'>
+                            <SkeletonLine height='17px' width='124px' ></SkeletonLine>
                         </SkeletonContainer>
                     )}
 
@@ -658,185 +643,227 @@ const YieldPoolCard = ({
 
 
                 {/* Deposit Cash Data */}
-                {userData ? (
-                    <ItemVV2 >
-                        <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
-                            <DataTitle>
-                                User Deposit
-                                <InfoSpan>
-                                    <StakingToolTip
-                                        ToolTipTitle={"User Deposited"}
-                                        ToolTipBody={`Amount of ${poolName} Token User Staked`}
-                                    >
-                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
-                                    </StakingToolTip>
-                                </InfoSpan>
-                            </DataTitle>
-                            <DataValue> {formatTokens(userData?.epochStakeNext)} {poolName == "UNI-V2" ? "UNI-V2" : "PUSH"}</DataValue>
-                        </ItemHV2>
-                        <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
-                            <DataTitle>
-                                Rewards Claimed
-                                <InfoSpan>
-                                    <StakingToolTip
-                                        ToolTipTitle={"Rewards Claimed"}
-                                        ToolTipBody={"Amount of Push Claimed by User"}
-                                    >
-                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
-                                    </StakingToolTip>
-                                </InfoSpan>
+                <DepositContainer>
+                    {userData ? (
+                        <ItemVV2 >
+                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                                <DataTitle>
+                                    User Deposit
+                                    <InfoSpan>
+                                        <StakingToolTip
+                                            ToolTipTitle={"User Deposited"}
+                                            ToolTipBody={`Amount of ${poolName} Token User Staked`}
+                                        >
+                                            <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                        </StakingToolTip>
+                                    </InfoSpan>
+                                </DataTitle>
+                                <DataValue> {formatTokens(userData?.epochStakeNext)} {poolName == "UNI-V2" ? "UNI-V2" : "PUSH"}</DataValue>
+                            </ItemHV2>
+                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                                <DataTitle>
+                                    Rewards Claimed
+                                    <InfoSpan>
+                                        <StakingToolTip
+                                            ToolTipTitle={"Rewards Claimed"}
+                                            ToolTipBody={"Amount of Push Claimed by User"}
+                                        >
+                                            <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                        </StakingToolTip>
+                                    </InfoSpan>
 
-                            </DataTitle>
-                            <DataValue> {(userData?.totalAccumulatedReward - userData?.totalAvailableReward).toFixed(2)} PUSH</DataValue>
-                        </ItemHV2>
-                        <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
-                            <DataTitle>
-                                Current Epoch Reward
-                                <InfoSpan>
-                                    <StakingToolTip
-                                        ToolTipTitle={"Current Epoch Reward"}
-                                        ToolTipBody={"Amount of Push Token Claimable in this EPOCH"}
-                                    >
-                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
-                                    </StakingToolTip>
-                                </InfoSpan>
+                                </DataTitle>
+                                <DataValue> {(userData?.totalAccumulatedReward - userData?.totalAvailableReward).toFixed(2)} PUSH</DataValue>
+                            </ItemHV2>
+                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                                <DataTitle>
+                                    Current Epoch Reward
+                                    <InfoSpan>
+                                        <StakingToolTip
+                                            ToolTipTitle={"Current Epoch Reward"}
+                                            ToolTipBody={"Amount of Push Token Claimable in this EPOCH"}
+                                        >
+                                            <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                        </StakingToolTip>
+                                    </InfoSpan>
 
-                            </DataTitle>
-                            <DataValue>
-                                {/* {poolName == "UNI-V2" ? userData.potentialUserReward : 0}  */}
-                                {numberWithCommas(userData?.potentialUserReward)} PUSH</DataValue>
-                        </ItemHV2>
-                        <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
-                            <DataTitle>
-                                Available for Claiming
-                                <InfoSpan>
-                                    <StakingToolTip
-                                        ToolTipTitle={"Available for Claiming"}
-                                        ToolTipBody={"Amount of Push Token Available to claim"}
-                                    >
-                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
-                                    </StakingToolTip>
-                                </InfoSpan>
-                            </DataTitle>
-                            <DataValue>{userData?.totalAvailableReward} PUSH</DataValue>
-                        </ItemHV2>
+                                </DataTitle>
+                                <DataValue>
+                                    {/* {poolName == "UNI-V2" ? userData.potentialUserReward : 0}  */}
+                                    {numberWithCommas(userData?.potentialUserReward)} PUSH</DataValue>
+                            </ItemHV2>
+                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                                <DataTitle>
+                                    Available for Claiming
+                                    <InfoSpan>
+                                        <StakingToolTip
+                                            ToolTipTitle={"Available for Claiming"}
+                                            ToolTipBody={"Amount of Push Token Available to claim"}
+                                        >
+                                            <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                        </StakingToolTip>
+                                    </InfoSpan>
+                                </DataTitle>
+                                <DataValue>{userData?.totalAvailableReward} PUSH</DataValue>
+                            </ItemHV2>
 
-                    </ItemVV2>
-                ) : (
-                    <Skeleton
-                        padding='0 15px 15px 15px'
-                        width='100%'
-                        maxWidth=' -webkit-fill-available'
-                        borderRadius='5px'
-                    >
-                        <ItemHV2 justifyContent='space-between' margin='0 0 23px 0'>
-                            <SkeletonLine height='12px' width='164px' ></SkeletonLine>
-                            <SkeletonLine height='12px' width='72px'></SkeletonLine>
-                        </ItemHV2>
-                        <ItemHV2 justifyContent='space-between' margin='0 0 23px 0'>
-                            <SkeletonLine height='12px' width='164px' ></SkeletonLine>
-                            <SkeletonLine height='12px' width='72px'></SkeletonLine>
-                        </ItemHV2>
-                        <ItemHV2 justifyContent='space-between' margin='0 0 23px 0'>
-                            <SkeletonLine height='12px' width='164px' ></SkeletonLine>
-                            <SkeletonLine height='12px' width='72px'></SkeletonLine>
-                        </ItemHV2>
-                        <ItemHV2 justifyContent='space-between'>
-                            <SkeletonLine height='12px' width='164px' ></SkeletonLine>
-                            <SkeletonLine height='12px' width='72px'></SkeletonLine>
-                        </ItemHV2>
+                        </ItemVV2>
+                    ) : (
+                        <Skeleton
+                            padding='16px 15px 16px 15px'
+                            width='100%'
+                            maxWidth=' -webkit-fill-available'
+                            borderRadius='5px'
+                        >
+                            <ItemHV2 justifyContent='space-between' margin='0 0 23px 0'>
+                                <SkeletonLine height='12px' width='164px' ></SkeletonLine>
+                                <SkeletonLine height='12px' width='72px'></SkeletonLine>
+                            </ItemHV2>
+                            <ItemHV2 justifyContent='space-between' margin='0 0 23px 0'>
+                                <SkeletonLine height='12px' width='164px' ></SkeletonLine>
+                                <SkeletonLine height='12px' width='72px'></SkeletonLine>
+                            </ItemHV2>
+                            <ItemHV2 justifyContent='space-between' margin='0 0 23px 0'>
+                                <SkeletonLine height='12px' width='164px' ></SkeletonLine>
+                                <SkeletonLine height='12px' width='72px'></SkeletonLine>
+                            </ItemHV2>
+                            <ItemHV2 justifyContent='space-between'>
+                                <SkeletonLine height='12px' width='164px' ></SkeletonLine>
+                                <SkeletonLine height='12px' width='72px'></SkeletonLine>
+                            </ItemHV2>
 
-                    </Skeleton>
-                )}
+                        </Skeleton>
+                    )}
+
+                </DepositContainer>
+
 
 
 
             </ItemVV2>
 
             {/* Bottom Section */}
-            <ItemVV2 padding=" 0px 14px" margin="24px 0px 0px 0px">
+            <Buttons padding=" 0px 14px" margin="24px 0px 0px 0px">
 
                 {userData ? (
                     <>
-                        <ButtonsContainer>
+                        <ButtonsContainer >
 
-                            <FilledButton onClick={migrateToNewPool} >
+                            {formatTokens(userData?.epochStakeNext) === "0" ?
+                                <StakingToolTip
+                                    error={true}
+                                    ToolTipTitle={"Nothing to Withdraw, so you cannot Migrate."}
+                                    ToolTipWidth={"16rem"}
+                                    bottom={'-50px'}
+                                    margin="0 0 15px 0"
+                                >
+                                    <EmptyButton
+                                        border="none"
+                                        cursor='default'
+                                        background={theme.disableButtonBg}
+                                        color={theme.disabledButtonText}
+                                    >
+                                        <Text>
+                                            {!txInProgressMigrate && (MigrateMessage == null) &&
+                                                <Span color={theme.disabledButtonText} weight="400" cursor='default'>Migrate to {poolName === "UNI-V2" ? "UNI-V2 " : "PUSH Fee"} Pool</Span>
+                                            }
+                                        </Text>
+                                    </EmptyButton>
+                                </StakingToolTip>
 
-                                {!txInProgressMigrate && (MigrateMessage == null) &&
-                                    <Span color="#FFF" weight="400" cursor='pointer'>Migrate to {poolName === "UNI-V2" ? "UNI-V2 ":  "PUSH Fee"} Pool</Span>
-                                }
+                                :
 
-                                {txInProgressMigrate && (MigrateMessage != null) &&
-                                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#FFF" title={MigrateMessage} titleColor="#FFF" />
-                                }
 
-                            </FilledButton>
+                                <MigrateButton onClick={migrateToNewPool} >
+                                    <ProgressBar style={{ width: `${filled}%` }}></ProgressBar>
+                                    <Text>
+                                        {!txInProgressMigrate && (MigrateMessage == null) &&
+                                            <Span color="#FFF" weight="400" cursor='pointer'>Migrate to {poolName === "UNI-V2" ? "UNI-V2 " : "PUSH Fee"} Pool</Span>
+                                        }
+
+                                        {txInProgressMigrate && (MigrateMessage != null) &&
+                                            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#FFF" title={MigrateMessage} titleColor="#FFF" />
+                                        }
+                                    </Text>
+                                </MigrateButton>
+
+
+                            }
 
                         </ButtonsContainer>
 
                         <ButtonsContainer>
 
-                            {unstakeErrorMessage != null ?
+                            {formatTokens(userData?.epochStakeNext) === "0" ?
                                 <StakingToolTip
                                     error={true}
-                                    ToolTipTitle={unstakeErrorMessage}
+                                    ToolTipTitle={unstakeErrorMessage ? unstakeErrorMessage : "Nothing to unstake, Stake First"}
                                     ToolTipWidth={"16rem"}
                                     margin={'0 10px 0 0'}
-                                    bottom={'-50px'}
+                                    bottom={'-30px'}
                                 >
                                     <EmptyButton
-                                        style={{ borderColor: unstakeErrorMessage != null ? "#ED5858" : theme.emptyButtonText }}>
-                                        {unstakeErrorMessage != null && <ImageV2 src={ErrorLogo} width="18px" padding="0px 2px 4px 0px" />}
+                                        border="none"
+                                        cursor='default'
+                                        background={theme.disableButtonBg}
+                                        color={theme.disabledButtonText}
+                                    >
                                         {txInProgressWithdraw ?
-                                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor={theme.activeButtonText} title='Claiming' titleColor={theme.activeButtonText} />) :
                                             ` Unstake ${poolName}`
                                         }
                                     </EmptyButton>
                                 </StakingToolTip>
-
                                 :
-
                                 <EmptyButton
+                                    border={`1px solid ${theme.activeButtonText}`}
+                                    background={'transparent'}
+                                    color={theme.activeButtonText}
+                                    cursor='pointer'
                                     margin='0 10px 0 0'
                                     onClick={withdrawTokens}
                                 >
                                     {txInProgressWithdraw ?
-                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor={theme.activeButtonText} title="Unstaking" titleColor={theme.activeButtonText} />) :
                                         ` Unstake ${poolName}`
                                     }
                                 </EmptyButton>
-
                             }
 
-                            {withdrawErrorMessage != null ?
+                            {userData?.totalAvailableReward === "0.00" ?
                                 <StakingToolTip
                                     bottom={'-30px'}
-                                    ToolTipTitle={withdrawErrorMessage}
+                                    ToolTipTitle={"No Rewards to Claim"}
                                     error={true}
                                     ToolTipWidth={"10rem"}
                                 >
                                     <EmptyButton
-                                        style={{ borderColor: withdrawErrorMessage != null ? "#ED5858" : theme.emptyButtonText }}>
-
-                                        {withdrawErrorMessage != null && <ImageV2 src={ErrorLogo} width="18px" padding="0px 2px 4px 0px" />}
-
+                                        border="none"
+                                        cursor='default'
+                                        background={theme.disableButtonBg}
+                                        color={theme.disabledButtonText}
+                                    >
                                         {txInProgressClaimRewards ?
-                                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor={theme.activeButtonText} title='Claiming' titleColor={theme.activeButtonText} />) :
                                             ` Claim Rewards`
                                         }
                                     </EmptyButton>
                                 </StakingToolTip>
-
                                 :
-
-                                <EmptyButton onClick={massClaimRewardsTokensAll}>
+                                <EmptyButton
+                                    border={`1px solid ${theme.activeButtonText}`}
+                                    background={'transparent'}
+                                    color={theme.activeButtonText}
+                                    cursor='pointer'
+                                    onClick={massClaimRewardsTokensAll}
+                                >
                                     {txInProgressClaimRewards ?
-                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor={theme.activeButtonText} title='Claiming' titleColor={theme.activeButtonText} />) :
                                         "Claim Rewards"
                                     }
                                 </EmptyButton>
-
                             }
+
                         </ButtonsContainer>
                     </>
                 ) : (
@@ -844,12 +871,12 @@ const YieldPoolCard = ({
                     <SkeletonContainer
                         width='100%'
                     >
-                        <SkeletonLine height='49px' width='100%' margin='0 0 8px 0'></SkeletonLine>
+                        <SkeletonLine height='49px' width='100%' margin='0 0 11px 0'></SkeletonLine>
                         <SkeletonLine height='49px' width='100%'></SkeletonLine>
                     </SkeletonContainer>
                 )}
 
-            </ItemVV2>
+            </Buttons>
 
 
         </Container>
@@ -859,14 +886,13 @@ const YieldPoolCard = ({
 export default YieldPoolCard;
 
 const Container = styled(SectionV2)`
-border: 1px solid  ${(props) => props.theme.stakingBorder};
+    border: 1px solid  ${(props) => props.theme.stakingBorder};
     border-radius: 24px;
-    padding:20px;
-    margin:10px;
+    padding:24px 19px;
     font-family: 'Strawford';
     font-style: normal;
     font-weight: 500;
-    min-height: 587px;
+    // min-height: 587px;
     color: ${(props) => props.theme.stakingPrimaryText};
 `;
 
@@ -894,6 +920,7 @@ const Heading = styled(H2V2)`
 `
 
 const Deprecated = styled(SpanV2)`
+    font-weight: 600;
     font-size: 12px;
     line-height: 140%;
     display: flex;
@@ -949,7 +976,8 @@ const InfoSpan = styled(SpanV2)`
 `
 
 const RewardContainer = styled(ItemHV2)`
-    min-height:110px;
+    max-height:108px;
+    min-height:108px;
 `
 
 const DataValue = styled(H2V2)`
@@ -958,10 +986,19 @@ const DataValue = styled(H2V2)`
     letter-spacing: -0.03em;
     color: ${(props) => props.theme.stakingPrimaryText};
 `
+
+const DepositContainer = styled(ItemVV2)`
+    min-height:150px;
+`
+
+const Buttons = styled(ItemVV2)`
+    // min-height:132px;
+`
+
 const ButtonsContainer = styled.div`
     display: flex;
     width: 100%;
-    margin:15px 0px 0px 0px;
+    // margin:15px 0px 0px 0px;
 `
 
 const FilledButton = styled(ButtonV2)`
@@ -970,7 +1007,7 @@ const FilledButton = styled(ButtonV2)`
     border: 1px solid #D53A94;
     border-radius: 8px;
     padding: 12px;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 141%;
     flex-direction:row;
     letter-spacing: -0.03em;
@@ -982,17 +1019,68 @@ const FilledButton = styled(ButtonV2)`
     
 `;
 
-const EmptyButton = styled(Button)`
-    border: 1px solid ${(props) => props.theme.emptyButtonText};
+
+const MigrateButton = styled(ButtonV2)`
+    width:100%;
+    background: #D53A94;
+    border: 1px solid #D53A94;
     border-radius: 8px;
     padding: 12px;
-    background:transparent;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 141%;
+    flex-direction:row;
     letter-spacing: -0.03em;
-    color: ${(props) => props.theme.emptyButtonText};
-    flex:1;
+    color: #FFFFFF;
     cursor:pointer;
+    justify-content:flex-start;
+    margin:0px 0px 15px 0px;
+    min-height: 49px;
+    position:relative;
+
+    &:after{
+        background:transparent;
+    }
+
+
+    & > div{
+        display:block;
+    }
+
+    &:hover{
+        opacity:1;
+    }
+
+`;
+
+const ProgressBar = styled.div`
+    min-height: 37px;
+    background-color: rgb(183, 46, 126);
+    transition: width 0.5s ease 0s;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+`
+
+const Text = styled.div`
+    width:100%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    color: #eee;
+`
+
+const EmptyButton = styled(ButtonV2)`
+    font-size: 16px;
+    line-height: 19px;
+    flex-direction:row;
+    flex:1;
+    // width: 145px;
+    height: 49px;
+    padding:12px;
+    border-radius: 8px;
     & > div{
         display:block;
     }

@@ -12,33 +12,44 @@ import GLOBALS from 'config/Globals';
 // yield announcement section
 const YieldAnnouncementSection = (
   {
+    logo,
     title,
     body
   }
 ) => {
   // RENDER
   return (
-    <ItemHV2 justifyContent="stretch" padding="16px" background="linear-gradient(90deg, #121315 -2.55%, #2A2A39 32.62%, #8E317A 68.34%, #121315 102.97%)" borderRadius="16px">
+    <ItemHV2
+      style={{color:logo === "announcement" ? "white" : "#333"}}
+      justifyContent="stretch"
+      padding="16px"
+      background={logo === "announcement" ? "linear-gradient(90deg, #121315 -2.55%, #2A2A39 32.62%, #8E317A 68.34%, #121315 102.97%)" : "#FFF7DA"}
+      borderRadius="16px"
+    >
       <ImageV2
-        width="60px"
-        height="60px"
-        src="svg/announcement.svg"
+        width={logo === "announcement" ? "60px" : "32px"}
+        height={logo === "announcement" ? "60px" : "32px"}
+        src={`svg/${logo}.svg`}
         alt="Announcement Logo"
       />
-      <ItemVV2 margin="0 0 0 16px" justifyContent="center" alignItems="flex-start" gap="4px">
+      <ItemVV2
+        margin={logo === "announcement" ? "0 0 0 16px" : "0 0 0 13px"}
+        justifyContent="center" alignItems="flex-start"
+        gap={logo === "announcement" ? "4px" : "0px"}
+      >
         <H2V2
-          color="#fff"
-          fontSize="28px"
+          color="inherit"
+          fontSize="24px"
           textAlign="left"
           fontWeight={500}
         >
-         {title}
+          {title}
         </H2V2>
         <H2V2
-          color="#fff"
-          fontSize="18px"
+          color="inherit"
+          fontSize="16px"
           textAlign="left"
-          fontWeight={500}  
+          fontWeight={500}
         >
           {body} {" "}
           {title.includes("84 weeks") && <AInlineV2 color="#fff" href="https://medium.com/push-protocol/push-dao-extends-liquidity-rewards-program-26008926b05a" target='_blank'>

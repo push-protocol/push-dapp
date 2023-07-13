@@ -233,8 +233,13 @@ const themeLight = {
   stakingPrimaryText: '#333333',
   stakingSecondaryText: '#000000',
   stakingUserDetails:'rgba(87, 93, 115, 0.8)',
-  emptyButtonText:'#657795',
+  emptyButtonText:'#9D9FA6',
+  disabledButtonText:'#9D9FA6',
+  disableButtonBg:'#DEDFE1',
+  activeButtonText:'#657795',
   stakingBorder:'#BAC4D6',
+  stakingEmptyButtonBG:'#DEDFE1',
+
 };
 
 const themeDark = {
@@ -475,8 +480,13 @@ const themeDark = {
   stakingPrimaryText: '#B6BCD6',
   stakingSecondaryText: '#F4F5FA',
   stakingUserDetails:'#787E99',
-  emptyButtonText:'#B6BCD6',
   stakingBorder:'#4A4F67',
+  stakingEmptyButtonBG:'#404550',
+  disabledButtonText:'#2D313C',
+  disableButtonBg:'#404550',
+  activeButtonText:'#B6BCD6',
+  emptyButtonText:'#2D313C',
+  emptyButtonBg:'',
 };
 
 module.exports = {
