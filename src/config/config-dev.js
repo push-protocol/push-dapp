@@ -106,9 +106,9 @@ export const addresses = {
   //For Push Fee staking Pool with 21 days epoch (same as epnsCore)
   pushCoreV2:'0x23346b732d56d34ec4e890419fbfb8548216a799',
 
-  //For Uni V2 21 days epoch duration
-  stakingV2:"0x67Eb752D9C878d298650F9542ECC05Fb680D0EEE",
-  yieldFarmLP: "0xAa7647A5420e804909a215509554d66c8c349EA7",
+  //For Dev Dapp with 21 days epoch
+  stakingV2 : "0x6C83ce5eE433d53E10b64E277B1cf5207C37b662",
+  yieldFarmLP : "0x13ac63901c8fD5797939099553582951fAbAFDE3"
 
 
 }

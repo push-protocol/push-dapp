@@ -118,6 +118,7 @@ const NewYieldFarming = () => {
     return (
         <>
             <YieldAnnouncementSection
+                logo={"announcement"}
                 title={" Rewards Program will be extended by 84 weeks !!"}
                 body={"The Push DAO has approved the extension of the Rewards Program for 84 more weeks! More info"}
             />
