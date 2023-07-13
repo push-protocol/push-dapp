@@ -77,7 +77,7 @@ const Container = styled(SectionV2)`
       ${GLOBALS.ADJUSTMENTS.PADDING.BIG} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG}
   );
   gap: 16px;
-  padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
+  padding: 24px;
 
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
   
@@ -105,14 +105,14 @@ const TabContainer = styled(ItemHV2)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  min-height: 80px;
+  min-height: 51px;
   position: relative;
 
   :after {
     position: absolute;
     height: 2px;
     left: 0;
-    bottom: 13px;
+    bottom: 0px;
     width: 100%;
     content: '';
     background-color: ${props => props.theme.default.border};
@@ -137,7 +137,7 @@ const Tabs = styled.div`
         position: absolute;
         height: 2px;
         left: 0;
-        bottom: -15px;
+        bottom: -13px;
         width: 100%;
         content: '';
         background-color: #CF1C84;
@@ -148,14 +148,15 @@ const Tabs = styled.div`
 `
 
 const Deprecated = styled(SpanV2)`
-    font-size: 12px;
-    line-height: 140%;
-    display: flex;
-    align-items: center;
-    color: #D53A94;
-    margin-left:10px;
-    padding: 2px 6px;
-    background: #F3D7FA;
-    border-radius: 6px;
-    height: 17px;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 140%;
+  display: flex;
+  align-items: center;
+  color: #D53A94;
+  margin-left:10px;
+  padding: 2px 6px;
+  background: #F3D7FA;
+  border-radius: 6px;
+  height: 17px;
 `

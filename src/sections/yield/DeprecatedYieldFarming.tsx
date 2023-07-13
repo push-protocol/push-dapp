@@ -137,8 +137,9 @@ const DeprecatedYieldFarming = ({
     return (
         <>
             <YieldAnnouncementSection
+                logo={"WarningCircle"}
                 title={"This Reward Program has ended."}
-                body={"Old Staking pools have now been deprecated. Please Migrate to new pools"}
+                body={"Old Staking pools have now been deprecated. Please Migrate to new pools."}
             />
             <V2Container>
 

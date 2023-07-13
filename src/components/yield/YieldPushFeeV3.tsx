@@ -274,8 +274,8 @@ const YieldPushFeeV3 = ({
                     title: 'PUSH',
                     getUserData: getUserDataPush,
                     getPoolStats: getPUSHPoolStats,
-                    setUnstakeErrorMessage:setUnstakeErrorMessage,
-                    setWithdrawErrorMessage:setWithdrawErrorMessage,
+                    setUnstakeErrorMessage: setUnstakeErrorMessage,
+                    setWithdrawErrorMessage: setWithdrawErrorMessage,
                 }}
                 toastObject={stakingModalToast}
                 modalPosition={MODAL_POSITION.ON_PARENT}
@@ -287,7 +287,7 @@ const YieldPushFeeV3 = ({
                     <>
                         <Heading>PUSH Fee Staking Pool</Heading>
                         <SecondaryText>
-                            Current APR <SpanV2 color="#D53A94">{numberWithCommas(PUSHPoolstats?.stakingAPR)}%</SpanV2>
+                            Current APR <SpanV2 color="#D53A94" fontWeight="600">{numberWithCommas(PUSHPoolstats?.stakingAPR)}%</SpanV2>
                         </SecondaryText>
                     </>
                 ) : (
@@ -488,17 +488,20 @@ const YieldPushFeeV3 = ({
                         </ItemHV2>
                         <ButtonsContainer>
 
-                            {unstakeErrorMessage != null ?
+                            {formatTokens(userDataPush?.userstakedAmount.stakedAmount) === "0" || unstakeErrorMessage !== null ?
                                 <StakingToolTip
                                     error={true}
-                                    ToolTipTitle={unstakeErrorMessage}
+                                    ToolTipTitle={unstakeErrorMessage ? unstakeErrorMessage : "Nothing to unstake, Stake First"}
                                     ToolTipWidth={"16rem"}
                                     margin={'0 10px 0 0'}
-                                    bottom={'-50px'}
+                                    bottom={'-30px'}
                                 >
                                     <EmptyButton
-                                        style={{ borderColor: unstakeErrorMessage != null ? "#ED5858" : theme.emptyButtonText }}>
-                                        {unstakeErrorMessage != null && <ImageV2 src={ErrorLogo} width="19px" padding="0px 15px 4px 0px" />}
+                                        border="none"
+                                        background={theme.disableButtonBg}
+                                        cursor='default'
+                                        color={theme.disabledButtonText}
+                                    >
                                         {txInProgressWithdraw ?
                                             (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
                                             "Unstake PUSH"
@@ -509,26 +512,35 @@ const YieldPushFeeV3 = ({
                                 :
 
                                 <EmptyButton
+                                    border={`1px solid ${theme.activeButtonText}`}
+                                    background={'transparent'}
+                                    color={theme.activeButtonText}
+                                    cursor='pointer'
                                     onClick={withdrawAmountTokenFarmAutomatic}
-                                    style={{ margin: "0px 10px 0px 0px" }}>
+                                    style={{ margin: "0px 10px 0px 0px" }}
+                                >
                                     {txInProgressWithdraw ?
-                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor={theme.activeButtonText} title='Unstaking' titleColor={theme.activeButtonText} />) :
                                         "Unstake PUSH"
                                     }
                                 </EmptyButton>
 
                             }
 
-                            {withdrawErrorMessage != null ?
+                            {userDataPush?.totalClaimableReward === "0.00" ?
                                 <StakingToolTip
                                     bottom={'-30px'}
-                                    ToolTipTitle={withdrawErrorMessage}
+                                    ToolTipTitle={"No Rewards to Claim"}
                                     error={true}
+                                    left={"40px"}
                                     ToolTipWidth={"10rem"}
                                 >
                                     <EmptyButton
-                                        style={{ borderColor: withdrawErrorMessage != null ? "#ED5858" : theme.emptyButtonText }}>
-                                        {withdrawErrorMessage != null && <ImageV2 src={ErrorLogo} width="19px" padding="0px 15px 4px 0px" />}
+                                        border="none"
+                                        background={theme.disableButtonBg}
+                                        cursor='default'
+                                        color={theme.disabledButtonText}
+                                    >
                                         {txInProgressClaimRewards ?
                                             (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
                                             "Claim Rewards"
@@ -538,13 +550,18 @@ const YieldPushFeeV3 = ({
 
                                 :
 
-                                <EmptyButton onClick={massClaimRewardsTokensAll}>
+                                <EmptyButton
+                                    border={`1px solid ${theme.activeButtonText}`}
+                                    background={'transparent'}
+                                    color={theme.activeButtonText}
+                                    cursor='pointer'
+                                    onClick={massClaimRewardsTokensAll}
+                                >
                                     {txInProgressClaimRewards ?
-                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor={theme.activeButtonText} title='Claiming' titleColor={theme.activeButtonText} />) :
                                         "Claim Rewards"
                                     }
                                 </EmptyButton>
-
                             }
                         </ButtonsContainer>
                     </>
@@ -568,7 +585,7 @@ const Container = styled(SectionV2)`
     border: 1px solid  ${(props) => props.theme.stakingBorder};
     border-radius: 24px;
     padding:20px;
-    margin:10px;
+    margin:10px 0 10px 10px;
     font-family: 'Strawford';
     font-style: normal;
     font-weight: 500;
@@ -655,7 +672,7 @@ const FilledButton = styled(ButtonV2)`
     border: 1px solid #D53A94;
     border-radius: 8px;
     padding: 12px;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 141%;
     letter-spacing: -0.03em;
     color: #FFFFFF;
@@ -667,18 +684,15 @@ const FilledButton = styled(ButtonV2)`
 `;
 
 const EmptyButton = styled(ButtonV2)`
-    border: 1px solid ${(props) => props.theme.emptyButtonText};
-    border-radius: 8px;
+    font-size: 16px;
+    line-height: 19px;
     flex-direction:row;
-    padding: 12px;
-    background:transparent;
-    font-size: 18px;
-    line-height: 141%;
-    letter-spacing: -0.03em;
-    color: ${(props) => props.theme.emptyButtonText};
     flex:1;
-    cursor:pointer;
-    opacity:1;
+    padding:11px;
+    // width: 145px;
+    height: 49px;
+    border-radius: 8px;
+
     & > div{
         display:block;
     }

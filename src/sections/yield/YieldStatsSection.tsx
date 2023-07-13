@@ -77,8 +77,8 @@ const YieldStatsSection = ({
           <>
             <StatsText>
               <SpanV2 color="#fff" fontSize="18px" fontWeight="600" lineHeight="141%">Push Rewards Given</SpanV2>
-              <TextBox>
-                <SpanV2 color="#fff" fontSize="32px" fontWeight="600" lineHeight="141%">
+              <TextBox justifyContent="end">
+                <SpanV2 color="#fff" fontSize="32px" fontWeight="600" lineHeight="100%" >
                   {
                     // TODO fix the calculation
                     numberWithCommas(
@@ -106,8 +106,8 @@ const YieldStatsSection = ({
           <>
             <StatsText>
               <SpanV2 color="#fff" fontSize="18px" fontWeight="600" lineHeight="141%">Time Left</SpanV2>
-              <TextBox>
-                <SpanV2 color="#fff" fontSize="32px" fontWeight="600" lineHeight="141%">
+              <TextBox justifyContent="end">
+                <SpanV2 color="#fff" fontSize="32px" fontWeight="600" lineHeight="100%" >
                   {formattedDuration}
                 </SpanV2>
                 <SpanV2 color="#fff" fontSize="16px" fontWeight="600" lineHeight="141%">until next epoch</SpanV2>
@@ -164,13 +164,13 @@ const BgCircleEffect = styled(ItemVV2)`
 `;
 
 const TextBox = styled(ItemVV2)`
-  justify-content: flex-start;
   align-items: flex-start;
 `
 
 const StatsText = styled(TextBox)`
-  padding: 25px 10px 15px 15px;
-  gap: 8px;
+  padding: 20px 10px 20px 15px;
+  // gap: 8px;
+  justify-content:center;
 `;
 
 const SkeletonContainer = styled(Skeleton)`

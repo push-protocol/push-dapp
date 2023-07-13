@@ -225,8 +225,8 @@ const YieldUniswapV3 = ({
                     title: 'Uni-V2',
                     getUserData: getUserDataLP,
                     getPoolStats: getLpPoolStats,
-                    setUnstakeErrorMessage:setUnstakeErrorMessage,
-                    setWithdrawErrorMessage:setWithdrawErrorMessage,
+                    setUnstakeErrorMessage: setUnstakeErrorMessage,
+                    setWithdrawErrorMessage: setWithdrawErrorMessage,
                 }}
                 toastObject={stakingModalToast}
                 modalPosition={MODAL_POSITION.ON_PARENT}
@@ -238,7 +238,7 @@ const YieldUniswapV3 = ({
                     <>
                         <Heading >Uniswap V2 LP Staking Pool</Heading>
                         <SecondaryText>
-                            Current APR <SpanV2 color="#D53A94">{numberWithCommas(lpPoolStats?.stakingAPR)}%</SpanV2>
+                            Current APR <SpanV2 color="#D53A94" fontWeight="600">{numberWithCommas(lpPoolStats?.stakingAPR)}%</SpanV2>
                         </SecondaryText>
                     </>
                 ) : (
@@ -436,17 +436,20 @@ const YieldUniswapV3 = ({
                         </ItemHV2>
                         <ButtonsContainer>
 
-                            {unstakeErrorMessage != null ?
+                            {formatTokens(userDataLP?.epochStakeNext) === "0" ?
                                 <StakingToolTip
                                     error={true}
-                                    ToolTipTitle={unstakeErrorMessage}
+                                    ToolTipTitle={"Nothing to unstake! Stake First."}
                                     ToolTipWidth={"16rem"}
                                     margin={'0 10px 0 0'}
-                                    bottom={'-50px'}
+                                    bottom={'-30px'}
                                 >
                                     <EmptyButton
-                                        style={{ borderColor: unstakeErrorMessage != null ? "#ED5858" : theme.emptyButtonText }}>
-                                        {unstakeErrorMessage != null && <ImageV2 src={ErrorLogo} width="18px" padding="0px 2px 4px 0px" />}
+                                        border="none"
+                                        background={theme.disableButtonBg}
+                                        cursor='default'
+                                        color={theme.disabledButtonText}
+                                    >
                                         {txInProgressWithdraw ?
                                             (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
                                             "Unstake UNI-V2"
@@ -457,43 +460,54 @@ const YieldUniswapV3 = ({
                                 :
 
                                 <EmptyButton
+                                    border={`1px solid ${theme.activeButtonText}`}
+                                    background={'transparent'}
+                                    color={theme.activeButtonText}
+                                    cursor='pointer'
                                     onClick={withdrawAmountTokenFarmAutomatic}
-                                    style={{ margin: "0px 10px 0px 0px" }}>
+                                    style={{ margin: "0px 10px 0px 0px" }}
+                                >
                                     {txInProgressWithdraw ?
-                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26}  spinnerColor={theme.activeButtonText} title='Unstaking' titleColor={theme.activeButtonText}/>) :
                                         "Unstake UNI-V2"
                                     }
                                 </EmptyButton>
 
                             }
 
-                            {withdrawErrorMessage != null ?
+                            {userDataLP?.totalAvailableReward === "0.00" ?
                                 <StakingToolTip
                                     bottom={'-30px'}
                                     left={"40px"}
-                                    ToolTipTitle={withdrawErrorMessage}
+                                    ToolTipTitle={"No Rewards to Claim!"}
                                     error={true}
                                     ToolTipWidth={"10rem"}
                                 >
                                     <EmptyButton
-                                        style={{ borderColor: withdrawErrorMessage != null ? "#ED5858" : theme.emptyButtonText }}
+                                        border="none"
+                                        cursor='default'
+                                        background={theme.disableButtonBg}
+                                        color={theme.disabledButtonText}
                                     >
-                                        {withdrawErrorMessage != null && <ImageV2 src={ErrorLogo} width="18px" padding="0px 2px 4px 0px" />}
                                         {txInProgressClaimRewards ?
-                                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#FFFFF" />) :
                                             "Claim Rewards"
                                         }
                                     </EmptyButton>
                                 </StakingToolTip>
                                 :
-                                <EmptyButton onClick={() => massClaimRewardsTokensAll()}>
+                                <EmptyButton
+                                    border={`1px solid ${theme.activeButtonText}`}
+                                    background={'transparent'}
+                                    color={theme.activeButtonText}
+                                    cursor='pointer'
+                                    onClick={() => massClaimRewardsTokensAll()}
+                                >
                                     {txInProgressClaimRewards ?
-                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
+                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor={theme.activeButtonText} title='Claiming' titleColor={theme.activeButtonText} />) :
                                         "Claim Rewards"
                                     }
-
                                 </EmptyButton>
-
                             }
 
                         </ButtonsContainer>
@@ -520,7 +534,7 @@ const Container = styled(SectionV2)`
     border: 1px solid  ${(props) => props.theme.stakingBorder};
     border-radius: 24px;
     padding:20px;
-    margin:10px;
+    margin:10px 10px 10px 0;
     font-family: 'Strawford';
     
     font-style: normal;
@@ -604,7 +618,7 @@ const FilledButton = styled(ButtonV2)`
     border: 1px solid #D53A94;
     border-radius: 8px;
     padding: 12px;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 141%;
     letter-spacing: -0.03em;
     color: #FFFFFF;
@@ -615,18 +629,15 @@ const FilledButton = styled(ButtonV2)`
     
 `;
 
-const EmptyButton = styled(Button)`
-    border: 1px solid ${(props) => props.theme.emptyButtonText};
-    border-radius: 8px;
-    padding: 12px;
-    background:transparent;
-    font-size: 18px;
-    line-height: 141%;
-    letter-spacing: -0.03em;
-    color: ${(props) => props.theme.emptyButtonText};
+const EmptyButton = styled(ButtonV2)`
+    font-size: 16px;
+    line-height: 19px;
+    flex-direction:row;
     flex:1;
-    cursor:pointer;
-    opacity:1;
+    // width: 145px;
+    height: 49px;
+    padding:12px;
+    border-radius: 8px;
     & > div{
         display:block;
     }
@@ -650,20 +661,6 @@ const ToasterMsg = styled.div`
   margin: 0px 10px;
 `;
 
-// const Skeleton = styled.div`
-//     padding:15px;
-//     max-width: -webkit-fill-available;
-//     width: 100%;
-//     background: transparent;
-//     border-radius: 5px;
-//     display: flex;
-//     flex-direction:column;
-//     justify-content: center;
-//     align-items: center;
-//     margin-bottom: 0px;
-//     padding-bottom: 0px;
-//     padding-top: 0px;
-// `
 
 const SkeletonContainer = styled(Skeleton)`
     // width:150px;
