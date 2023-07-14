@@ -10,6 +10,7 @@ import { H2V2, ImageV2, ItemHV2, Skeleton, SkeletonLine } from 'components/reusa
 // Internal Configs
 import GLOBALS from 'config/Globals';
 import { ethers } from 'ethers';
+import { useDeviceWidthCheck } from 'hooks';
 
 const YieldPushPriceSection = ({
   poolStats
@@ -18,13 +19,15 @@ const YieldPushPriceSection = ({
     return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
+  const isMobile = useDeviceWidthCheck(600);
+
   // RENDER
   return (
     <ItemHV2Modified justifyContent="stretch">
       {poolStats ? (
         <>
           <H2V2ThemeColor
-            fontSize="18px"
+            fontSize={isMobile ? "16px" : "18px"}
             textAlign="left"
             fontWeight={600}
           >
@@ -32,7 +35,7 @@ const YieldPushPriceSection = ({
           </H2V2ThemeColor>
           <ItemHV2 gap="5px" justifyContent="flex-end">
             <H2V2ThemeColor
-              fontSize="24px"
+              fontSize={ isMobile ? "18px " : "24px"}
               textAlign="left"
               fontWeight={600}
             >
@@ -42,7 +45,7 @@ const YieldPushPriceSection = ({
             </H2V2ThemeColor>
             <ImageV2
               width="25px"
-              height="27px"
+              height={isMobile ? "20px" : "27px"}
               src="svg/uniswapLogo.svg"
               alt="Uniswap Logo"
             />
@@ -71,6 +74,12 @@ const ItemHV2Modified = styled(ItemHV2)`
   border: 1px solid #BAC4D6;
   border-color: ${(props) => props.theme.default.borderColor};
   border-radius: 14px;
+
+  @media (max-width:600px){
+    padding: 7px 14px;
+  }
+
+
 `;
 
 const H2V2ThemeColor = styled(H2V2)`
