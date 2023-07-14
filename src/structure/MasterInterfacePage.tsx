@@ -24,7 +24,6 @@ const NFTPage = lazy(() => import('pages/NFTPage'));
 const NotAvailablePage = lazy(() => import('pages/NotAvailablePage'));
 const ReceiveNotifsPage = lazy(() => import('pages/ReceiveNotifsPage'));
 const SendNotifsPage = lazy(() => import('pages/SendNotifsPage'));
-const SpamPage = lazy(() => import('pages/SpamPage'));
 const SupportPage = lazy(() => import('pages/SupportPage'));
 const TutorialPage = lazy(() => import('pages/TutorialPage'));
 const YieldFarmingPage = lazy(() => import('pages/YieldFarmingPage'));
@@ -87,7 +86,6 @@ function MasterInterfacePage() {
             />
             <Route path="dashboard" element={<ChannelDashboardPage />} />
             <Route path="send" element={<SendNotifsPage />} />
-            {/* <Route path="spam" element={<SpamPage />} /> */}
             <Route path="receive" element={<ReceiveNotifsPage />} />
 
             <Route path="govern" element={<GovPage />} />
