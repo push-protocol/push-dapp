@@ -23,57 +23,57 @@ import { useWeb3React } from '@web3-react/core';
 // import SpaceNotification from 'components/space/spaceNotification/SpaceNotification';
 // import { useDeviceWidthCheck } from 'hooks/useDeviceWidthCheck';
 
+import { SpaceFeedSection } from 'sections/space/SpaceFeedSection';
+import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 
-export const SpaceModule = ({ }) => {
+export const SpaceModule = ({}) => {
   const theme = useTheme();
   const { account, library } = useWeb3React();
-//   const isMobile = useDeviceWidthCheck(768);
-  //shift getUser to app context and add type 
-//   const { connectedUser,getUser } = useContext(ChatUserContext);
+  //   const isMobile = useDeviceWidthCheck(768);
+  //shift getUser to app context and add type
+  //   const { connectedUser,getUser } = useContext(ChatUserContext);
 
   // RENDER
   return (
     <Container>
-        <div>
-
-            {/* Space feed items */}
-            <div>Space</div>
-
-
-            {/* space widget items */}
-            <div>Widgets</div>
-        </div>
+        {/* Space feed items */}
+        <SpaceFeedSection />
+        {/* space widget items */}
+        <SpaceWidgetSection/>
     </Container>
   );
-}
+};
 
 // This defines the page settings, toggle align-self to center if not covering entire stuff, align-items to place them at center
 // justify content flex start to start from top, height is defined by module as well as amount of margin, padding
 // css styles
 const Container = styled.div`
-	align-items: stretch;
-	align-self: stretch;
-    flex: 1;
-	// background: ${(props) => props.theme.default.bg};
-	// border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
-	// box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
-	display: flex;
-	flex-direction: column;
-	flex: initial;
-	justify-content: center;
-	position: relative;
+  align-items: stretch;
+  align-self: stretch;
+  flex: 1;
+  // background: ${(props) => props.theme.default.bg};
+  // border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+  // box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
+  display: flex;
+  flex: initial;
+  justify-content: space-between;
+  position: relative;
   overflow: hidden;
   box-sizing: border-box;
-  padding:13px;
+  padding: 13px 13px 13px 0px;
 
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${
-  globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
-});
-  
+  height: calc(
+    100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} -
+      ${globalsMargin.MINI_MODULES.DESKTOP.BOTTOM}
+  );
+
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${ globalsMargin.MINI_MODULES.TABLET.BOTTOM });
+    height: calc(
+      100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} -
+        ${globalsMargin.MINI_MODULES.TABLET.BOTTOM}
+    );
   }
 
   @media ${device.mobileL} {
@@ -83,7 +83,7 @@ const Container = styled.div`
         ${globalsMargin.BIG_MODULES.MOBILE.BOTTOM}
     );
   }
-  `;
+`;
 
 //   const SpaceSidebarContainer = styled(ItemVV2)`
 //   @media ${device.tablet} {
@@ -100,7 +100,6 @@ const Container = styled.div`
 //     z-index: 1;
 //   }
 // `;
-
 
 //   const SpaceContainer = styled(ItemVV2)`
 //   @media ${device.tablet} {
