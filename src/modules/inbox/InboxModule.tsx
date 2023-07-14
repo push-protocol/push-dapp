@@ -28,7 +28,7 @@ import GLOBALS, { device, globalsMargin } from 'config/Globals';
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
 
 // Create Inbox Module
-const InboxModule = () => {
+const InboxModule = ({isSpam}) => {
   // React GA Analytics
   ReactGA.pageview('/inbox');
 
@@ -308,7 +308,7 @@ const InboxModule = () => {
           </Item>
         </Item> */}
         <div className="joyride"></div>
-        <InboxComponent />
+        <InboxComponent isSpam={isSpam}/>
         {/* <Feedbox /> */}
         {toast && <NotificationToast notification={toast} clearToast={clearToast} />}
       </Interface>
