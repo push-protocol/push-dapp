@@ -38,6 +38,7 @@ import Navigation from 'structure/Navigation';
 import { appConfig } from 'config';
 import { themeDark, themeLight } from 'config/Themization';
 import GLOBALS from 'config/Globals';
+import SpaceContextProvider from 'contexts/SpaceContext';
 
 dotenv.config();
 
@@ -175,6 +176,7 @@ export default function App() {
           <GlobalStyle />
           <InitState />
           <NavigationContextProvider>
+            <SpaceContextProvider>
             <AppContextProvider>
               <Joyride
                 run={run}
@@ -225,6 +227,7 @@ export default function App() {
                 </ContentContainer>
               </ParentContainer>
             </AppContextProvider>
+            </SpaceContextProvider>
           </NavigationContextProvider>
         </>
       )}

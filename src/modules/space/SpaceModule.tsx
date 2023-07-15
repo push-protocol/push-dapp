@@ -2,7 +2,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 
 // Internal Components
 // import { SpaceBoxSection, SpaceSidebarSection } from 'sections/space';
@@ -27,7 +27,7 @@ import { SpaceFeedSection } from 'sections/space/SpaceFeedSection';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 
 export const SpaceModule = ({}) => {
-  const theme = useTheme();
+  // const theme = useTheme();
   const { account, library } = useWeb3React();
   //   const isMobile = useDeviceWidthCheck(768);
   //shift getUser to app context and add type
@@ -36,8 +36,11 @@ export const SpaceModule = ({}) => {
   // RENDER
   return (
     <Container>
+      <div>
         {/* Space feed items */}
         <SpaceFeedSection />
+      </div>
+       
         {/* space widget items */}
         <SpaceWidgetSection/>
     </Container>

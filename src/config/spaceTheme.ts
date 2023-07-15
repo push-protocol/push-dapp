@@ -1,3 +1,26 @@
+/**
+ * @file theme file: all the predefined themes are defined here
+ */
+
+export interface ISpacesTheme {
+  titleBg?: string;
+  titleTextColor?: string;
+  bgColorPrimary?: string;
+  bgColorSecondary?: string;
+  textColorPrimary?: string;
+  textColorSecondary?: string;
+  textGradient?: string;
+  btnColorPrimary?: string;
+  btnOutline?: string;
+  borderColor?: string;
+  borderRadius?: string;
+  containerBorderRadius?: string;
+  statusColorError?: string;
+  statusColorSuccess?: string;
+  iconColorPrimary?: string;
+  fontFamily?: string;
+}
+
 export const lightTheme = {
   titleBg: 'linear-gradient(45deg, #E165EC 0.01%, #A483ED 100%)',//not changed
   titleTextColor: '#FFFFFF',
