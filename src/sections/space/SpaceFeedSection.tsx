@@ -15,9 +15,13 @@ import { useWeb3React } from '@web3-react/core';
 import { shortenText } from 'helpers/UtilityHelper';
 import { SpaceContext } from 'contexts/SpaceContext';
 
+const NewButton=()=>{
+  return <button>create Space</button>
+}
+
 
 export const SpaceFeedSection = () => {
-  const { SpaceFeedComponent, SpaceInvitesComponent, CreateSpaceComponent } = useSpaceComponents();
+  const { SpaceFeedComponent, SpaceInvitesComponent, CreateSpaceComponent} = useSpaceComponents();
   const { account } = useWeb3React();
   const { setSpaceId } = useContext(SpaceContext);
 
@@ -51,7 +55,7 @@ export const SpaceFeedSection = () => {
             Create your Space
           </Button> */}
           <CreateDiv>
-             <CreateSpaceComponent />
+             <CreateSpaceComponent CustomComponent={<NewButton/>}/>
           </CreateDiv>
 
           <Image
