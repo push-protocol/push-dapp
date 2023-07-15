@@ -1,12 +1,14 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 // Internal Compoonents
 import { useSpaceComponents } from 'hooks/useSpaceComponents';
+import { SpaceContext } from 'contexts/SpaceContext';
 
 export const SpaceWidgetSection = () => {
   const { SpaceWidgetComponent } = useSpaceComponents();
-  const [spaceId, setSpaceId] = useState<string>('spaceId');
+  const { spaceId } = useContext(SpaceContext)
+  // const [spaceId, setSpaceId] = useState<string>('spaceId');
   const [width, setWidth] = useState<string>('400');
   const [zIndex, setZIndex] = useState<string>('1000');
   const [shareUrl, setShareUrl] = useState<string>('');

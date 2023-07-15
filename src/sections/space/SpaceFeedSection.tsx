@@ -14,6 +14,7 @@ import Avatar from '@mui/material/Avatar';
 import { useWeb3React } from '@web3-react/core';
 import { shortenText } from 'helpers/UtilityHelper';
 import { SpaceContext } from 'contexts/SpaceContext';
+import { device } from 'config/Globals';
 
 const NewButton=()=>{
   return <button>create Space</button>
@@ -69,7 +70,8 @@ export const SpaceFeedSection = () => {
       <SpaceFeedComponent
         showTabs={true}
         orientation="vertical"
-        width={550}
+        // width={550}
+        width={'100%'}
         height={'100%'}
         onBannerClickHandler={(spaceId: string) => {
           console.log('spaceId: ', spaceId);
@@ -88,8 +90,14 @@ export const SpaceFeedSection = () => {
 const SpaceCard = styled.div`
   background: white;
   height: 100%;
+  width: calc(100% - 440px);
   border-radius: 32px !important;
   padding: 20px !important;
+  box-sizing: border-box !important;
+
+  @media ${device.laptop} {
+    width: 100%;
+  }
 `;
 
 const SpaceHeader = styled.div`
