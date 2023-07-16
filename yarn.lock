@@ -4933,7 +4933,7 @@ __metadata:
 
 "@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi::locator=%40project%2Freact-app%40workspace%3A.":
   version: 0.0.1-alpha.23
-  resolution: "@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi#../push-sdk/dist/packages/restapi::hash=3cbe3f&locator=%40project%2Freact-app%40workspace%3A."
+  resolution: "@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi#../push-sdk/dist/packages/restapi::hash=85c120&locator=%40project%2Freact-app%40workspace%3A."
   dependencies:
     "@livepeer/webrtmp-sdk": ^0.2.3
     "@metamask/eth-sig-util": ^5.0.2
@@ -4950,7 +4950,7 @@ __metadata:
     video-stream-merger: ^4.0.1
   peerDependencies:
     ethers: ^5.6.8
-  checksum: 946be23d7e91ecd6ef533e081ac7d0682b379014edde113fd8d8d917c984c537033df7f08b8f4a201d080dfbeb8a1b3ed2f11b395d5880e417bc5a234631bab9
+  checksum: 78e86f03a77a4dcf09ecee0b13665baec50ce6e45a1b780b9b36e03431bba83598f565e58d18bc0515760e1072ae57f5426893757cd7d374a8a465106ed9e609
   languageName: node
   linkType: hard
 
@@ -4980,7 +4980,7 @@ __metadata:
 
 "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb::locator=%40project%2Freact-app%40workspace%3A.":
   version: 1.0.2
-  resolution: "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb#../push-sdk/dist/packages/uiweb::hash=cc6e40&locator=%40project%2Freact-app%40workspace%3A."
+  resolution: "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb#../push-sdk/dist/packages/uiweb::hash=b8b75c&locator=%40project%2Freact-app%40workspace%3A."
   dependencies:
     "@livepeer/react": ^2.6.0
     "@pushprotocol/socket": ^0.5.0
@@ -4994,7 +4994,7 @@ __metadata:
     moment: ^2.29.4
     react: ">=16.8.0"
     styled-components: ^5.3.5
-  checksum: 9a40dfc8fb553599c9445b33effbcaae4f706d6463fb00093c17383d8fe3930043e7db55449c12afab26f4b7c6e4b12a2187cc786d2d35323b78479826b24706
+  checksum: 88b9515209766f2c3db7f443d5e577de3d6a4598a7a0f2f7f3566efd908978fa84d67776adb01ade6242ea0e9dd7155a4eb0eb075a853be1874517900db32d77
   languageName: node
   linkType: hard
 

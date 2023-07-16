@@ -42,7 +42,7 @@ export const SpaceModule = ({}) => {
       {/* </div> */}
        
         {/* space widget items */}
-        <SpaceWidgetSection/>
+        {/* <SpaceWidgetSection/> */}
     </Container>
   );
 };

@@ -7,7 +7,6 @@ import styled from 'styled-components';
 // Internal Components
 import { useSpaceComponents } from 'hooks/useSpaceComponents';
 import { Button } from 'primaries/SharedStyling';
-import { ReactComponent as SpaceChatIcon } from 'assets/spaces/space-chat.svg';
 import SpaceIcon from 'assets/spaces/Space-icon.svg';
 import { Image } from 'components/SharedStyling';
 import Avatar from '@mui/material/Avatar';

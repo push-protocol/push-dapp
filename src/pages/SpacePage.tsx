@@ -2,12 +2,11 @@
 import React from 'react';
 
 // External Packages
-import styled,{useTheme } from 'styled-components';
+import styled from 'styled-components';
 
 // Internal Components
 import { SectionV2 } from 'components/reusables/SharedStylingV2';
 import { SpaceModule } from 'modules/space';
-import { SpacesUIProvider } from '@pushprotocol/uiweb';
 import { lightTheme } from 'config/spaceTheme';
 import { useSpaceComponents } from 'hooks/useSpaceComponents';
 // import { SpaceLocalContextProvider } from 'contexts';
@@ -16,18 +15,13 @@ import { useSpaceComponents } from 'hooks/useSpaceComponents';
 
 // Space page
 const SpacePage = () => {
-  const { spaceUI } = useSpaceComponents();
-  const theme = useTheme();
-
   // update spaceid in global space context
   
   // RENDER
   return (
-    <SpacesUIProvider spaceUI={spaceUI} theme={lightTheme}>
       <Container>
         <SpaceModule />
       </Container>
-    </SpacesUIProvider>
   );
 }
 export default SpacePage;

@@ -39,6 +39,10 @@ import { appConfig } from 'config';
 import { themeDark, themeLight } from 'config/Themization';
 import GLOBALS from 'config/Globals';
 import SpaceContextProvider from 'contexts/SpaceContext';
+import { useSpaceComponents } from 'hooks/useSpaceComponents';
+import { SpacesUIProvider } from '@pushprotocol/uiweb';
+import { darkTheme,lightTheme } from 'config/spaceTheme';
+import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 
 dotenv.config();
 
@@ -163,6 +167,8 @@ export default function App() {
     // }
   };
 
+  const { spaceUI } = useSpaceComponents();
+
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
       {!active && (
@@ -222,8 +228,11 @@ export default function App() {
                 </LeftBarContainer>
 
                 <ContentContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                  {/* Shared among all pages, load universal things here */}
-                  <MasterInterfacePage />
+                   {/* Shared among all pages, load universal things here */}
+                   <SpacesUIProvider spaceUI={spaceUI} theme={darkMode ? darkTheme : lightTheme}>
+                      <MasterInterfacePage />
+                      <SpaceWidgetSection />
+                    </SpacesUIProvider>
                 </ContentContainer>
               </ParentContainer>
             </AppContextProvider>
