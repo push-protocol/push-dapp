@@ -9,7 +9,7 @@ import Joyride, { CallBackProps } from 'react-joyride';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
-import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
+import styled, { createGlobalStyle, ThemeProvider, useTheme } from 'styled-components';
 import ReactGA from 'react-ga';
 import * as dotenv from 'dotenv';
 
@@ -39,6 +39,10 @@ import { appConfig } from 'config';
 import { themeDark, themeLight } from 'config/Themization';
 import GLOBALS from 'config/Globals';
 import SpaceContextProvider from 'contexts/SpaceContext';
+import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
+import { SpacesUIProvider } from '@pushprotocol/uiweb';
+import { useSpaceComponents } from 'hooks/useSpaceComponents';
+import { lightTheme } from 'config/spaceTheme';
 
 dotenv.config();
 
@@ -77,7 +81,7 @@ export default function App() {
   }, [activatingConnector, connector]);
 
   useEffect(() => {
-    if(!account) return;
+    if (!account) return;
     dispatch(resetSpamSlice());
     dispatch(resetNotificationsSlice());
     dispatch(resetCanSendSlice());
@@ -101,7 +105,7 @@ export default function App() {
 
   // enable socket notifications
   useSDKSocket({ account, chainId, env: appConfig.appEnv });
-  
+
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
@@ -163,6 +167,8 @@ export default function App() {
     // }
   };
 
+  const { spaceUI } = useSpaceComponents();
+
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
       {!active && (
@@ -177,56 +183,61 @@ export default function App() {
           <InitState />
           <NavigationContextProvider>
             <SpaceContextProvider>
-            <AppContextProvider>
-              <Joyride
-                run={run}
-                steps={steps}
-                continuous={tutorialContinous}
-                stepIndex={stepIndex}
-                // hideFooter={true}
-                // primaryProps={false}
-                hideBackButton={true}
-                hideCloseButton={false}
-                disableScrolling={true}
-                disableScrollParentFix={true}
-                // disableFlip={true}
-                // showNextButton={false}
-                showSkipButton={false}
-                disableOverlayClose={true}
-                callback={handleJoyrideCallback}
-                styles={{
-                  options: {
-                    arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-                    backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-                    overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
-                    primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
-                    textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
-                    zIndex: 1000,
-                  },
-                }}
-              />
-
-              <HeaderContainer>
-                <Header
-                  isDarkMode={darkMode}
-                  darkModeToggle={toggleDarkMode}
+              <AppContextProvider>
+                <Joyride
+                  run={run}
+                  steps={steps}
+                  continuous={tutorialContinous}
+                  stepIndex={stepIndex}
+                  // hideFooter={true}
+                  // primaryProps={false}
+                  hideBackButton={true}
+                  hideCloseButton={false}
+                  disableScrolling={true}
+                  disableScrollParentFix={true}
+                  // disableFlip={true}
+                  // showNextButton={false}
+                  showSkipButton={false}
+                  disableOverlayClose={true}
+                  callback={handleJoyrideCallback}
+                  styles={{
+                    options: {
+                      arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                      backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                      overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
+                      primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
+                      textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
+                      zIndex: 1000,
+                    },
+                  }}
                 />
-              </HeaderContainer>
 
-              <ParentContainer
-                bg={darkMode ? themeDark.backgroundBG : !active ? themeLight.connectWalletBg : themeLight.backgroundBG}
-                headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
-              >
-                <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                  <Navigation />
-                </LeftBarContainer>
+                <HeaderContainer>
+                  <Header
+                    isDarkMode={darkMode}
+                    darkModeToggle={toggleDarkMode}
+                  />
+                </HeaderContainer>
 
-                <ContentContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                  {/* Shared among all pages, load universal things here */}
-                  <MasterInterfacePage />
-                </ContentContainer>
-              </ParentContainer>
-            </AppContextProvider>
+                <ParentContainer
+                  bg={darkMode ? themeDark.backgroundBG : !active ? themeLight.connectWalletBg : themeLight.backgroundBG}
+                  headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
+                >
+                  <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                    <Navigation />
+                  </LeftBarContainer>
+
+                  <ContentContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                    {/* Shared among all pages, load universal things here */}
+                    <SpacesUIProvider spaceUI={spaceUI} theme={lightTheme}>
+                      <MasterInterfacePage />
+                      <SpaceWidgetSection />
+                    </SpacesUIProvider>
+
+                  </ContentContainer>
+                </ParentContainer>
+                {/* <SpaceWidgetSection/> */}
+              </AppContextProvider>
             </SpaceContextProvider>
           </NavigationContextProvider>
         </>

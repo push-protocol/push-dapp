@@ -23,11 +23,11 @@ const SpacePage = () => {
   
   // RENDER
   return (
-    <SpacesUIProvider spaceUI={spaceUI} theme={lightTheme}>
+    // <SpacesUIProvider spaceUI={spaceUI} theme={lightTheme}>
       <Container>
         <SpaceModule />
       </Container>
-    </SpacesUIProvider>
+    // </SpacesUIProvider>
   );
 }
 export default SpacePage;
