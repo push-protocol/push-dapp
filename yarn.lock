@@ -4729,9 +4729,9 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
     "@pushprotocol/ledgerlive": latest
-    "@pushprotocol/restapi": "D:/Push_Protocol/push-sdk/dist/packages/restapi"
+    "@pushprotocol/restapi": ../push-sdk/dist/packages/restapi
     "@pushprotocol/socket": latest
-    "@pushprotocol/uiweb": "D:/Push_Protocol/push-sdk/dist/packages/uiweb"
+    "@pushprotocol/uiweb": ../push-sdk/dist/packages/uiweb
     "@reduxjs/toolkit": ^1.7.1
     "@testing-library/dom": ^6.12.2
     "@testing-library/jest-dom": ^4.2.4
@@ -4931,9 +4931,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@file:D:/Push_Protocol/push-sdk/dist/packages/restapi::locator=%40project%2Freact-app%40workspace%3A.":
-  version: 0.0.1-alpha.19
-  resolution: "@pushprotocol/restapi@file:/D%3A/Push_Protocol/push-sdk/dist/packages/restapi#/D%3A/Push_Protocol/push-sdk/dist/packages/restapi::hash=3c0def&locator=%40project%2Freact-app%40workspace%3A."
+"@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi::locator=%40project%2Freact-app%40workspace%3A.":
+  version: 0.0.1-alpha.23
+  resolution: "@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi#../push-sdk/dist/packages/restapi::hash=3cbe3f&locator=%40project%2Freact-app%40workspace%3A."
   dependencies:
     "@livepeer/webrtmp-sdk": ^0.2.3
     "@metamask/eth-sig-util": ^5.0.2
@@ -4950,7 +4950,7 @@ __metadata:
     video-stream-merger: ^4.0.1
   peerDependencies:
     ethers: ^5.6.8
-  checksum: e213be9e0af15f951044a42200ac094f971d6a8d6993b2d35fed7a808e0634a9932541e78fb49b8a5e1bb321c42067cb1716117bb19b991da917153b63aebc0f
+  checksum: 946be23d7e91ecd6ef533e081ac7d0682b379014edde113fd8d8d917c984c537033df7f08b8f4a201d080dfbeb8a1b3ed2f11b395d5880e417bc5a234631bab9
   languageName: node
   linkType: hard
 
@@ -4978,9 +4978,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@file:D:/Push_Protocol/push-sdk/dist/packages/uiweb::locator=%40project%2Freact-app%40workspace%3A.":
+"@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb::locator=%40project%2Freact-app%40workspace%3A.":
   version: 1.0.2
-  resolution: "@pushprotocol/uiweb@file:/D%3A/Push_Protocol/push-sdk/dist/packages/uiweb#/D%3A/Push_Protocol/push-sdk/dist/packages/uiweb::hash=65ecd0&locator=%40project%2Freact-app%40workspace%3A."
+  resolution: "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb#../push-sdk/dist/packages/uiweb::hash=cc6e40&locator=%40project%2Freact-app%40workspace%3A."
   dependencies:
     "@livepeer/react": ^2.6.0
     "@pushprotocol/socket": ^0.5.0
@@ -4991,9 +4991,10 @@ __metadata:
     "@pushprotocol/restapi": ^1.2.15
     "@pushprotocol/socket": ^0.5.0
     ethers: ^5.7.1
+    moment: ^2.29.4
     react: ">=16.8.0"
     styled-components: ^5.3.5
-  checksum: 8e9e083e574302749d3b46113cf13f106663ee47a68ba05c2628363904bccfab2495aba4f6465bb3156e77a177b4f6997a6dda1be6daf5e0e6a2e05643cf0522
+  checksum: 9a40dfc8fb553599c9445b33effbcaae4f706d6463fb00093c17383d8fe3930043e7db55449c12afab26f4b7c6e4b12a2187cc786d2d35323b78479826b24706
   languageName: node
   linkType: hard
 

@@ -7,39 +7,37 @@ import styled from 'styled-components';
 // Internal Components
 import { useSpaceComponents } from 'hooks/useSpaceComponents';
 import { Button } from 'primaries/SharedStyling';
-import { ReactComponent as SpaceChatIcon } from 'assets/spaces/space-chat.svg'
-import SpaceIcon from 'assets/spaces/Space-icon.svg'
+import { ReactComponent as SpaceChatIcon } from 'assets/spaces/space-chat.svg';
+import SpaceIcon from 'assets/spaces/Space-icon.svg';
 import { Image } from 'components/SharedStyling';
 import Avatar from '@mui/material/Avatar';
 import { useWeb3React } from '@web3-react/core';
 import { shortenText } from 'helpers/UtilityHelper';
 import { SpaceContext } from 'contexts/SpaceContext';
+import { device } from 'config/Globals';
 
+const NewButton = () => {
+  return <button>create Space</button>;
+};
 
 export const SpaceFeedSection = () => {
   const { SpaceFeedComponent, SpaceInvitesComponent, CreateSpaceComponent } = useSpaceComponents();
   const { account } = useWeb3React();
   const { setSpaceId } = useContext(SpaceContext);
 
-
   const createSpace = () => {
-    return <CreateSpaceComponent />
-  }
+    return <CreateSpaceComponent />;
+  };
   return (
     <SpaceCard>
       <SpaceHeader>
-
         <AvatarContainer>
-             {/* <Avatar alt="Remy Sharp" src="/svg/chats/user.svg" className='avatar' /> */}
+          {/* <Avatar alt="Remy Sharp" src="/svg/chats/user.svg" className='avatar' /> */}
         </AvatarContainer>
 
-        <SpaceUser>
-          {shortenText(account, 6)}
-        </SpaceUser>
+        <SpaceUser>{shortenText(account, 6)}</SpaceUser>
 
-
-
-          {/* <Button
+        {/* <Button
             bg='#D53A94'
             color='#fff'
             radius='12px'
@@ -50,46 +48,54 @@ export const SpaceFeedSection = () => {
             <SpaceChatIcon style={{marginRight: '10px'}} />
             Create your Space
           </Button> */}
-          <CreateDiv>
-             <CreateSpaceComponent />
-          </CreateDiv>
+        <CreateDiv>
+          <CreateSpaceComponent CustomComponent={<NewButton />} />
+        </CreateDiv>
 
+        <SpaceInvitesComponent>
           <Image
             src={SpaceIcon}
             srcSet={SpaceIcon}
             width={'30px'}
           />
+        </SpaceInvitesComponent>
       </SpaceHeader>
 
-    <div style={{marginTop: '30px'}}>
-      <SpaceFeedComponent
-        showTabs={true}
-        orientation="vertical"
-        width={550}
-        height={'100%'}
-        onBannerClickHandler={(spaceId: string) => {
-          console.log('spaceId: ', spaceId);
-          setSpaceId(spaceId)
-        }}
-      />
-    </div>
+      <div style={{ marginTop: '30px' }}>
+        <SpaceFeedComponent
+          showTabs={true}
+          orientation="vertical"
+          // width={550}
+          width={'100%'}
+          height={'100%'}
+          onBannerClickHandler={(spaceId: string) => {
+            console.log('spaceId: ', spaceId);
+            setSpaceId(spaceId);
+          }}
+        />
+      </div>
 
-
-        {/* <CreateSpaceComponent /> */}
+      {/* <CreateSpaceComponent /> */}
       {/* <SpaceInvitesComponent /> */}
-      </SpaceCard>
+    </SpaceCard>
   );
 };
 
 const SpaceCard = styled.div`
   background: white;
   height: 100%;
+  width: calc(100% - 440px);
   border-radius: 32px !important;
   padding: 20px !important;
+  box-sizing: border-box !important;
+
+  @media ${device.laptop} {
+    width: 100%;
+  }
 `;
 
 const SpaceHeader = styled.div`
-  border: 1px solid #DCDCDF;
+  border: 1px solid #dcdcdf;
   padding: 8px;
   border-radius: 16px;
 
@@ -120,5 +126,4 @@ const SpaceUser = styled.div`
 
 const CreateDiv = styled.div`
   margin: 0px 14px 0px auto;
-
 `;

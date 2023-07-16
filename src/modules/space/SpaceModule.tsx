@@ -36,10 +36,10 @@ export const SpaceModule = ({}) => {
   // RENDER
   return (
     <Container>
-      <div>
+      {/* <div> */}
         {/* Space feed items */}
         <SpaceFeedSection />
-      </div>
+      {/* </div> */}
        
         {/* space widget items */}
         <SpaceWidgetSection/>
@@ -58,18 +58,21 @@ const Container = styled.div`
   // border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
   // box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
   display: flex;
-  flex: initial;
+  // flex: initial;
   justify-content: space-between;
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
-  padding: 13px 13px 13px 0px;
+  // padding: 13px 13px 13px 0px;
+  margin: 0px 0px 17px 0px;
 
-  margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
+  // margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
   height: calc(
     100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} -
       ${globalsMargin.MINI_MODULES.DESKTOP.BOTTOM}
   );
+
+
 
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
