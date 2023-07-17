@@ -23,8 +23,26 @@ import GLOBALS, { device, globalsMargin } from '../../config/Globals';
 // import { useDeviceWidthCheck } from 'hooks/useDeviceWidthCheck';
 
 import { SpaceFeedSection } from 'sections/space/SpaceFeedSection';
+import { ChatUserContext } from 'contexts/ChatUserContext';
+import { useWeb3React } from '@web3-react/core';
 
 export const SpaceModule = ({ spaceid }) => {
+  const { account, library } = useWeb3React();
+  const {pgpPvtKey, getUser, setPgpPvtKey} = useContext(ChatUserContext);
+
+  useEffect(()=>{
+    if(!pgpPvtKey) {
+      getUser();
+    }
+  },[pgpPvtKey])
+
+
+  useEffect(()=>{
+    setPgpPvtKey(null);
+  },[account])
+
+
+
   // RENDER
   return (
     <Container>
