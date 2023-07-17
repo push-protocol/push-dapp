@@ -28,7 +28,7 @@ export const useSpaceComponents = (): IUseSpaceReturnValues => {
 
   const { pgpPvtKey } = useContext(ChatUserContext);
 
-  console.log("pgpPvtKey >>>>>>>",pgpPvtKey)
+  console.log("pgpPvtKey >>>>>>>",pgpPvtKey);
 
   const spaceUI = new SpacesUI({
     account: account,
