@@ -14,16 +14,30 @@ import { useWeb3React } from '@web3-react/core';
 import { shortenText } from 'helpers/UtilityHelper';
 import { SpaceContext } from 'contexts/SpaceContext';
 import { device } from 'config/Globals';
+import { useNavigate } from 'react-router-dom';
 
 const NewButton = () => {
   return <button>create Space</button>;
 };
 
-export const SpaceFeedSection = () => {
+export const SpaceFeedSection = ({spaceid}) => {
   const { SpaceFeedComponent, SpaceInvitesComponent, CreateSpaceComponent } = useSpaceComponents();
   const { account } = useWeb3React();
   const { setSpaceId, spaceInvites } = useContext(SpaceContext);
 
+  React.useEffect(() => {
+    if (spaceid) {
+      setSpaceId(spaceid)
+    }
+  }, [spaceid])
+  
+
+  let navigate = useNavigate();
+  const handleSpaceId = (spaceId: string) =>{
+    setSpaceId(spaceId);
+    navigate(`/space/${spaceId}`)
+  }
+  
   const createSpace = () => {
     return <CreateSpaceComponent />;
   };
@@ -73,8 +87,7 @@ export const SpaceFeedSection = () => {
           width={'100%'}
           height={'100%'}
           onBannerClickHandler={(spaceId: string) => {
-            console.log('spaceId: ', spaceId);
-            setSpaceId(spaceId);
+            handleSpaceId(spaceId)
           }}
         />
       </div>

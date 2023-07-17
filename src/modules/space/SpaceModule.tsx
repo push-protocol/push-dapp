@@ -11,7 +11,6 @@ import styled from 'styled-components';
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from '../../config/Globals';
 // import { SpaceGlobalContext, SpaceLocalContext, SpaceLocalContextProvider } from 'contexts';
-import { useWeb3React } from '@web3-react/core';
 // import { ChatUserContext } from 'contexts/ChatUserContext';
 // import { getSpaceRequests, getSpaces } from 'services/space';
 // import { getSpaceRequestsFromIndexedDB, getSpacesFromIndexedDB } from 'helpers/space';
@@ -24,25 +23,12 @@ import { useWeb3React } from '@web3-react/core';
 // import { useDeviceWidthCheck } from 'hooks/useDeviceWidthCheck';
 
 import { SpaceFeedSection } from 'sections/space/SpaceFeedSection';
-import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 
-export const SpaceModule = ({}) => {
-  // const theme = useTheme();
-  const { account, library } = useWeb3React();
-  //   const isMobile = useDeviceWidthCheck(768);
-  //shift getUser to app context and add type
-  //   const { connectedUser,getUser } = useContext(ChatUserContext);
-
+export const SpaceModule = ({ spaceid }) => {
   // RENDER
   return (
     <Container>
-      {/* <div> */}
-        {/* Space feed items */}
-        <SpaceFeedSection />
-      {/* </div> */}
-       
-        {/* space widget items */}
-        {/* <SpaceWidgetSection/> */}
+      <SpaceFeedSection spaceid={spaceid}/>
     </Container>
   );
 };

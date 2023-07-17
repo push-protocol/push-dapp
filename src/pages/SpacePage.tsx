@@ -7,8 +7,7 @@ import styled from 'styled-components';
 // Internal Components
 import { SectionV2 } from 'components/reusables/SharedStylingV2';
 import { SpaceModule } from 'modules/space';
-import { lightTheme } from 'config/spaceTheme';
-import { useSpaceComponents } from 'hooks/useSpaceComponents';
+import { useParams } from 'react-router-dom';
 // import { SpaceLocalContextProvider } from 'contexts';
 
 // Internal Configs
@@ -16,11 +15,11 @@ import { useSpaceComponents } from 'hooks/useSpaceComponents';
 // Space page
 const SpacePage = () => {
   // update spaceid in global space context
-  
+  let { spaceid } = useParams();
   // RENDER
   return (
       <Container>
-        <SpaceModule />
+        <SpaceModule spaceid={spaceid}/>
       </Container>
   );
 }
