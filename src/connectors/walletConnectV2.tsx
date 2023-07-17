@@ -11,7 +11,6 @@ import { appConfig } from '../config';
 require('dotenv').config();
 const CORE_CHAIN_ID = appConfig.coreContractChain;
 
-// import { URLS } from "../constants/networks";
 let RPC_URLS: { [chainId: number]: string } = {
     [CORE_CHAIN_ID]: appConfig.coreRPC,
   };

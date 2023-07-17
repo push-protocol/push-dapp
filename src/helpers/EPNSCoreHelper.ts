@@ -18,11 +18,11 @@ const ENS_HASH = '1+bafkreiekigkyezwrspignt7l7vsrjefjmogwmigy4eqtts277cu2p23ilm'
 // FeedDB Helper Function
 const EPNSCoreHelper = {
   // get gas price in dollars
-  getGasPriceInDollars: async (library: any): Promise<number> => {
+  getGasPriceInDollars: async (provider: any): Promise<number> => {
     const ethPrice = await axios
       .get('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
       .then(({ data }) => data.USD || 0);
-    const gasPriceInWei: number = await library.getGasPrice();
+    const gasPriceInWei: number = await provider.getGasPrice();
     const gasPriceInEth: string = ethers.utils.formatEther(gasPriceInWei);
     const gasPriceInUsd: number = gasPriceInEth * ethPrice;
     return gasPriceInUsd;

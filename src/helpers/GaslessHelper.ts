@@ -29,7 +29,7 @@ interface ICreateTransactionObjectProps {
   epnsToken: ethers.Contract;
   addresses: any;
   signerObject: any;
-  library: any;
+  provider: any;
   setTxLoading: (value: React.SetStateAction<boolean>) => void;
 }
 
@@ -41,12 +41,12 @@ interface ICallDelegateAPIProps {
   account: string;
 }
 
-const checkForDelegateError = async (gasEstimate: any, library: any): Promise<string | boolean> => {
+const checkForDelegateError = async (gasEstimate: any, provider: any): Promise<string | boolean> => {
   // return false if no error
   // otherwise return error message
   // get gas price
 
-  const gasPrice: number = await EPNSCoreHelper.getGasPriceInDollars(library);
+  const gasPrice: number = await EPNSCoreHelper.getGasPriceInDollars(provider);
   const totalCost: number = gasPrice * gasEstimate;
   if (totalCost > GAS_LIMIT) {
     return 'Gas Price is too high, Please try again in a while.';
@@ -60,7 +60,7 @@ export const createTransactionObject = async ({
   epnsToken,
   addresses,
   signerObject,
-  library,
+  provider,
   setTxLoading,
 }: ICreateTransactionObjectProps): Promise<any> => {
   console.log('🚀 ~ file: ViewDelegateeItem.js ~ line 63 ~ createTransactionObject ~ delegateeAddress', delegateeAddress);
@@ -102,7 +102,7 @@ export const createTransactionObject = async ({
     var { r, s, v } = ethers.utils.splitSignature(signature);
     const gasEstimate = await epnsToken.estimateGas.delegateBySig(delegateeAddress, nonce, expiry, v, r, s);
 
-    const errorMessage = await checkForDelegateError(gasEstimate, library);
+    const errorMessage = await checkForDelegateError(gasEstimate, provider);
     if (errorMessage) {
       return toast.dark(errorMessage, {
         position: 'bottom-right',
