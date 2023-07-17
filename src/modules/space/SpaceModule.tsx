@@ -30,13 +30,13 @@ import * as PushAPI from '@pushprotocol/restapi';
 
 export const SpaceModule = ({ spaceid }) => {
   const { account, library } = useWeb3React();
-  const {pgpPvtKey, getUser, setPgpPvtKey} = useContext(ChatUserContext);
+  const {pgpPvtKey, getUser, setPgpPvtKey, connectedUser} = useContext(ChatUserContext);
 
   // useEffect(()=>{
-  //   if(!pgpPvtKey) {
-  //     getUser();
-  //   }
-  // },[pgpPvtKey])
+    // if(!pgpPvtKey) {
+      // getUser();
+    // }
+  // },[account, library, appConfig?.env])
 
   useEffect(() => {
     (async () => {
@@ -53,7 +53,6 @@ export const SpaceModule = ({ spaceid }) => {
           env: appConfig?.appEnv,
         });
       }
-
       setPgpPvtKey(pgpPrivateKey);
     })();
   }, [account, appConfig?.appEnv, library]);
