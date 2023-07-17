@@ -16,7 +16,7 @@ import { abis, addresses } from "config";
 
 // Create Header
 function TransferNFTv2({ tokenId }) {
-  const { account, library } = useWeb3React();
+  const { account, provider } = useWeb3React();
 
   const [nftWriteProvider, setNftWriteProvider] = React.useState(null);
   const [toAddress, setToAddress] = React.useState('');
@@ -26,8 +26,8 @@ function TransferNFTv2({ tokenId }) {
 
 
   React.useEffect(() => {
-    if (!!(library && account)) {
-      let signer = library.getSigner(account);
+    if (!!(provider && account)) {
+      let signer = provider.getSigner(account);
       const signerInstance = new ethers.Contract(addresses.rockstarV2, abis.rockstarV2, signer);
       setNftWriteProvider(signerInstance);
     }
@@ -45,14 +45,14 @@ function TransferNFTv2({ tokenId }) {
       }
       setProcessing(1);
       setProcessingInfo("Transferring NFT...")
-      let signer = library.getSigner(account);
+      let signer = provider.getSigner(account);
       const signerInstance = new ethers.Contract(addresses.rockstarV2, abis.rockstarV2, signer)
       var txPromise = nftWriteProvider['safeTransferFrom(address,address,uint256)'](account, toAddress, tokenId);
       const tx = await txPromise;
       console.log(tx);
       console.log("waiting for tx to finish");
       setProcessingInfo("Waiting for Transfer tx to finish...");
-      await library.waitForTransaction(tx.hash);
+      await provider.waitForTransaction(tx.hash);
       setProcessingInfo("Transfer successfull! ");
       setProcessing(3);
     }

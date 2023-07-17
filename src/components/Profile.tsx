@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import React from "react";
+import React, { useContext } from "react";
 
 // External Packages
 import styled from 'styled-components';
@@ -11,11 +11,13 @@ import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { shortenText } from 'helpers/UtilityHelper';
 import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
+import { ErrorContext } from 'contexts/ErrorContext';
 
 // Create Header
 function Profile() {
   const { web3NameList }:AppContextType = React.useContext(AppContext);
-  const { active, error, account, library, chainId } = useWeb3React();
+  const { account, provider, chainId } = useWeb3React();
+  const { authError } = useContext(ErrorContext);
 
   useResolveWeb3Name(account);
 
@@ -32,7 +34,7 @@ function Profile() {
 
   return (
     <>
-    {account && account !== '' && !error &&
+    {account && account !== '' && !authError &&
       <Container>
         <Blocky>
           <BlockyInner>

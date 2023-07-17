@@ -8,7 +8,7 @@ import Skeleton from '@yisheng90/react-loading';
 import moment from 'moment';
 
 function ViewNotificationItem({ notificationObject }) {
-  const { account, library } = useWeb3React();
+  const { account } = useWeb3React();
   const [ notification, setNotification ] = React.useState(null);
   const [ subscribed, setSubscribed ] = React.useState(false);
   const [ loading, setLoading ] = React.useState(true);

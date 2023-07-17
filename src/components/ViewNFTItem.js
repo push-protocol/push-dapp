@@ -21,7 +21,7 @@ import { abis, addresses, appConfig } from "config";
 
 // Create Header
 function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
-  const { account, library, chainId } = useWeb3React();
+  const { account, provider, chainId } = useWeb3React();
 
   const [NFTRewardsContract, setNFTRewardsContract] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
@@ -31,12 +31,12 @@ function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
 
 
   React.useEffect(() => {
-    if (!!(library && account)) {
-      let signer = library.getSigner(account);
+    if (!!(provider && account)) {
+      let signer = provider.getSigner(account);
       const NFTRewardsInstance = new ethers.Contract(addresses.NFTRewards, abis.NFTRewards, signer);
       setNFTRewardsContract(NFTRewardsInstance);
     }
-  }, [account, library]);
+  }, [account, provider]);
 
   React.useEffect(() => {
     if (NFTObject) {
@@ -64,7 +64,7 @@ function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
         progress: undefined,
       });
       try {
-        await library.waitForTransaction(tx.hash);
+        await provider.waitForTransaction(tx.hash);
 
         toast.update(txToast, {
           render: "Transaction Completed!",
@@ -102,9 +102,9 @@ function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
     >
       <ChannelLogo
         theme={
-          !!account && !!library && account == NFTObject.owner ?
+          !!account && !!provider && account == NFTObject.owner ?
             "#e20880" :
-            !!account && !!library && NFTObject.owner != 0xFbA7Df351ADD4E79099f63E33b2679EDFDD5e2aB ?
+            !!account && !!provider && NFTObject.owner != 0xFbA7Df351ADD4E79099f63E33b2679EDFDD5e2aB ?
               "#eee" :
               "#fff"
         }
@@ -117,7 +117,7 @@ function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
             {!loading &&
               <ReactPlayer url={`https://ipfs.io/ipfs/${NFTObject.metadata}`} controls={true} playing={false} loop={true} />
             }
-            {!!account && !!library && NFTObject.owner != 0xFbA7Df351ADD4E79099f63E33b2679EDFDD5e2aB &&
+            {!!account && !!provider && NFTObject.owner != 0xFbA7Df351ADD4E79099f63E33b2679EDFDD5e2aB &&
               <NFTStatus>
                 <IoIosGift size={20} color="#fff" />
                 <NFTStatusTitle>
@@ -126,7 +126,7 @@ function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
               </NFTStatus>
             }
 
-            {!!account && !!library && NFTObject.claimable &&
+            {!!account && !!provider && NFTObject.claimable &&
               <NFTClaim>
                 <NFTClaimTitle>
                   2400 $PUSH
@@ -136,7 +136,7 @@ function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
           </ChannelLogoInner>
         </ChannelLogoOuter>
 
-        {!!account && !!library &&
+        {!!account && !!provider &&
           <ItemH>
 
             <ChannelActions>
@@ -145,7 +145,7 @@ function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
                   <Skeleton />
                 </SkeletonButton>
               }
-              {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
+              {!!account && !!provider && onMainnetCore && account == NFTObject.owner && !loading &&
                 <UnsubscribeButton >
                   <ActionTitle onClick={() => {
                     setTokenId(NFTObject.id)
@@ -154,7 +154,7 @@ function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
                   >Transfer</ActionTitle>
                 </UnsubscribeButton>
               }
-              {/* {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
+              {/* {!!account && !!provider && onMainnetCore && account == NFTObject.owner && !loading &&
                 <UnsubscribeButton disabled={!NFTObject.claimable}>
                   {txInProgress &&
                     <ActionLoader>

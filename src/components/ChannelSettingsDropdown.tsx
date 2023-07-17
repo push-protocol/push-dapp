@@ -46,7 +46,7 @@ type ChannelSettingsType = {
 // Create Header
 function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: ChannelSettingsType) {
   const dispatch = useDispatch();
-  const { account, library, chainId } = useWeb3React();
+  const { account, chainId } = useWeb3React();
   const { epnsWriteProvider, epnsCommWriteProvider } = useSelector((state: any) => state.contracts);
   const { channelDetails } = useSelector((state: any) => state.admin);
   const { CHANNNEL_DEACTIVATED_STATE, CHANNEL_BLOCKED_STATE } = useSelector((state: any) => state.channels);

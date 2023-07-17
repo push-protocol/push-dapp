@@ -50,7 +50,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   );
   const { canVerify } = useSelector((state) => state.admin);
   const { channelsCache, CHANNEL_BLACKLIST, subscriptionStatus } = useSelector((state) => state.channels);
-  const { account, library, chainId } = useWeb3React();
+  const { account, provider, chainId } = useWeb3React();
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
@@ -179,7 +179,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const EPNS_DOMAIN = {
     name: 'EPNS COMM V1',
     chainId: chainId,
-    verifyingContract: epnsCommReadProvider.address,
+    verifyingContract: epnsCommReadProvider?.address,
   };
 
   const generalToast = useToast();
@@ -349,7 +349,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           action: 'Subscribe',
         };
 
-        await library.getSigner(account)._signTypedData(EPNS_DOMAIN, type, message);
+        await provider.getSigner(account)._signTypedData(EPNS_DOMAIN, type, message);
 
         console.log('in run');
         subscribeToast.showMessageToast({
@@ -385,7 +385,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         return;
       }
 
-      const _signer = await library.getSigner(account);
+      const _signer = await provider.getSigner(account);
       await PushAPI.channels.subscribe({
         signer: _signer,
         channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
@@ -472,7 +472,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
       unsubscribeToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
-      const _signer = await library.getSigner(account);
+      const _signer = await provider.getSigner(account);
       await PushAPI.channels.unsubscribe({
         signer: _signer,
         channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
@@ -975,7 +975,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           )}
         </ChannelMeta>
       </ChannelInfo>
-      {!!account && !!library && (
+      {!!account && !!provider && (
         <>
           <LineBreak />
           <ChannelActions>

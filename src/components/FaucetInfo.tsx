@@ -21,7 +21,7 @@ type FaucetInfoType = {
 };
 
 const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: FaucetInfoType) => {
-  const { account, library } = useWeb3React();
+  const { account, provider } = useWeb3React();
   const isProd = appConfig.appEnv === 'prod';
 
   const [isFaucetVisible, setIsFaucetVisible] = useState<boolean>(false);
@@ -34,7 +34,7 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
   const checkSetFaucetVisibility = async () => {
     const hasEnoughPushToken = await getHasEnoughPushToken({
       address: account,
-      provider: library,
+      provider: provider,
       noOfPushTokensToCheck,
     });
     setIsFaucetVisible(!hasEnoughPushToken);

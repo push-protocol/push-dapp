@@ -21,7 +21,7 @@ import { AInlineV2 } from 'components/reusables/SharedStylingV2';
 
 // Create Header
 function YieldFarmingModule() {
-  const {account, library, chainId } = useWeb3React();
+  const {account, provider, chainId } = useWeb3React();
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const themes = useTheme();
@@ -116,14 +116,14 @@ function YieldFarmingModule() {
   });
 
   React.useEffect(() => {
-    let epnsToken = new ethers.Contract(addresses.epnsToken, abis.epnsToken, library);
+    let epnsToken = new ethers.Contract(addresses.epnsToken, abis.epnsToken, provider);
 
-    let staking = new ethers.Contract(addresses.staking, abis.staking, library);
-    let yieldFarmingPUSH = new ethers.Contract(addresses.yieldFarmPUSH, abis.yieldFarming, library);
+    let staking = new ethers.Contract(addresses.staking, abis.staking, provider);
+    let yieldFarmingPUSH = new ethers.Contract(addresses.yieldFarmPUSH, abis.yieldFarming, provider);
 
-    let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, library);
+    let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, provider);
 
-    let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, library);
+    let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, provider);
 
     console.log("UseEffect",staking,yieldFarmingPUSH,yieldFarmingLP)
 
@@ -133,8 +133,8 @@ function YieldFarmingModule() {
     setYieldFarmingLP(yieldFarmingLP);
     setUniswapV2Router02(uniswapV2Router02Instance);
 
-    if (!!(library && account)) {
-      var signer = library.getSigner(account);
+    if (!!(provider && account)) {
+      var signer = provider.getSigner(account);
 
       let epnsToken = new ethers.Contract(addresses.epnsToken, abis.epnsToken, signer);
       let staking = new ethers.Contract(addresses.staking, abis.staking, signer);

@@ -33,7 +33,7 @@ const InboxModule = ({isSpam}) => {
   ReactGA.pageview('/inbox');
 
   const dispatch = useDispatch();
-  const { account, chainId, library } = useWeb3React();
+  const { account, chainId, provider } = useWeb3React();
   const { epnsReadProvider, epnsCommReadProvider } = useSelector((state) => state.contracts);
 
   // toast related section
@@ -74,13 +74,13 @@ const InboxModule = ({isSpam}) => {
   React.useEffect(() => {
     if(!chainId) return;
     (async function init() {
-      const coreProvider = onCoreNetwork ? library : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
+      const coreProvider = onCoreNetwork ? provider : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
 
       // inititalise the read contract for the core network
       const coreContractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, coreProvider);
       // initialise the read contract for the communicator function
       const commAddress = CHAIN_DETAILS[chainId].commAddress;
-      const commContractInstance = new ethers.Contract(commAddress, abis.epnsComm, library);
+      const commContractInstance = new ethers.Contract(commAddress, abis.epnsComm, provider);
       dispatch(setCommunicatorReadProvider(commContractInstance));
       dispatch(setCoreReadProvider(coreContractInstance));
     })();

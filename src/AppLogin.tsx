@@ -1,13 +1,13 @@
 // React + Web3 Essentials
 import { Web3Provider } from '@ethersproject/providers';
 import { AbstractConnector } from '@web3-react/abstract-connector';
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
-import {
-  NoEthereumProviderError,
-  UserRejectedRequestError as UserRejectedRequestErrorInjected
-} from '@web3-react/injected-connector';
+import { useWeb3React } from '@web3-react/core';
+// import {
+//   NoEthereumProviderError,
+//   UserRejectedRequestError as UserRejectedRequestErrorInjected
+// } from '@web3-react/injected-connector';
 import { ethers } from "ethers";
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import ReactGA from 'react-ga';
@@ -27,7 +27,10 @@ import {
   SectionV2,
   SpanV2
 } from 'components/reusables/SharedStylingV2';
-import { injected, ledger, walletconnect } from 'connectors';
+// import { injected, ledger, walletconnect } from 'connectors';
+import { walletConnectV2 } from './connectors/walletConnectV2';
+import { metaMask } from './connectors/metaMask';
+// import { walletConnectV2 } from 'connectors';
 import { useDeviceWidthCheck, useEagerConnect, useInactiveListener } from 'hooks';
 import styled, { useTheme } from 'styled-components';
 import LedgerLogoDark from './assets/login/ledgerDark.svg';
@@ -39,6 +42,15 @@ import WCLogoLight from './assets/login/wcLight.svg';
 import { ReactComponent as PushLogoDark } from './assets/pushDark.svg';
 import { ReactComponent as PushLogoLight } from './assets/pushLight.svg';
 import { swapPropertyOrder } from 'helpers/UtilityHelper';
+import { ErrorContext } from './contexts/ErrorContext';
+import { getAddChainParameters } from './connectors/chains';
+
+import { WalletConnect } from '@web3-react/walletconnect-v2'
+import { Network } from "@web3-react/network";
+import { MetaMask } from '@web3-react/metamask';
+
+
+
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -47,19 +59,19 @@ import GLOBALS, { device } from 'config/Globals';
 // define the different type of connectors which we use
 const web3Connectors = {
   Injected: {
-    obj: injected,
+    obj: metaMask,
     logolight: MMLogoLight,
     logodark: MMLogoDark,
     title: 'Metamask',
   },
   WalletConnect: {
-    obj: walletconnect,
+    obj: walletConnectV2,
     logolight: WCLogoLight,
     logodark: WCLogoDark,
     title: 'Wallet Connect',
   },
   // Trezor: {obj: trezor, logo: './svg/login/trezor.svg', title: 'Trezor'},
-  Ledger: { obj: ledger, logolight: LedgerLogoLight, logodark: LedgerLogoDark, title: 'Ledger' },
+  // Ledger: { obj: ledger, logolight: LedgerLogoLight, logodark: LedgerLogoDark, title: 'Ledger' },
 };
 
 
@@ -78,32 +90,17 @@ async function handleChangeNetwork() {
   }
 }
 
-// handle error functions
-function getErrorMessage(error: Error) {
-  if (error instanceof NoEthereumProviderError) {
-    return 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile';
-  } else if (error instanceof UnsupportedChainIdError) {
-    handleChangeNetwork();
-    if (appConfig.coreContractChain === 42)
-      return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network';
-    else if (appConfig.coreContractChain === 5)
-      return 'Unsupported Network, please connect to the Ethereum Goerli, Polygon Mumbai, BNB testnet, Optimism Goerli or Polygon zkEVM testnet';
-    else return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB or Polygon zkEVM Mainnet';
-  } else if (error instanceof UserRejectedRequestErrorInjected) {
-    return 'Please authorize this website to access the dApp';
-  } else {
-    console.error(error);
-    return 'An unknown error occurred. Check the console for more details';
-  }
-}
 
 const AppLogin = ({ toggleDarkMode }) => {
   // React GA Analytics
   ReactGA.pageview('/login');
 
   // Web3 React logic
-  const { connector, activate, active, error, account } = useWeb3React<Web3Provider>();
+  const { connector ,isActive, account, chainId } = useWeb3React<Web3Provider>();
   const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
+  const { authError, setAuthError } = useContext(ErrorContext);
+  const [errorMessage, setErrorMessage] = React.useState(undefined);
+
 
   const isMobile = useDeviceWidthCheck(600);
   const web3ConnectorsObj:Object = isMobile?swapPropertyOrder(web3Connectors,'Injected','WalletConnect'):web3Connectors;
@@ -120,16 +117,31 @@ const AppLogin = ({ toggleDarkMode }) => {
   // SET LOADING
   const [loading, setLoading] = useState(true);
 
+  // handle error functions
+function handleErrorMessage(error: Error) {
+    setErrorMessage(error);
+}
+
+useEffect(() => {
+  if(!authError) return;
+  
+  handleErrorMessage(authError);
+}, [authError]);
+
+
   // RENDER
   return (
     <Container alignItems="center">
       <BlurBGClouds />
       <ItemHV2 flexWrap="nowrap" maxWidth="fit-content" alignSelf="flex-end" flex="initial">
-        {!!error && (
+        {!!errorMessage && (
           <SpanV2 padding="0.4rem 1rem" margin="0 1rem" borderRadius="20px" background="#CF1C84" color="#fff">
-            {getErrorMessage(error)}
+            {/* {getErrorMessage(error)} */}
+            {/* {errorMessage} */}
+          {errorMessage.name ?? 'Error'}
+          {errorMessage.message ? `: ${errorMessage.message}` : null}
           </SpanV2>
-        )}
+        )} 
         <ItemHV2
           padding="16px 0"
           width="fit-content"
@@ -180,9 +192,11 @@ const AppLogin = ({ toggleDarkMode }) => {
           <ItemVV2 alignSelf="stretch" alignItems="flex-start" margin={`0 0 ${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0`}>
             {Object.keys(web3ConnectorsObj).map((name) => {
               const currentConnector = web3Connectors[name].obj;
-              const disabled = currentConnector === connector;
+              const disabled = currentConnector === connector && isActive;
               const image = theme.scheme == 'light' ? web3Connectors[name].logolight : web3Connectors[name].logodark;
               const title = web3Connectors[name].title;
+              const desiredChain = appConfig.coreContractChain;
+              const chainIds = appConfig.allowedNetworks;
 
               return (
                 <LoginButton
@@ -195,9 +209,21 @@ const AppLogin = ({ toggleDarkMode }) => {
                   minWidth="140px"
                   alignSelf="stretch"
                   key={name}
-                  onClick={() => {
+                  onClick={async () => {
                     setActivatingConnector(currentConnector);
-                    activate(currentConnector);
+                   
+                    // await currentConnector?.activate();
+                    try {
+                    setAuthError(undefined);
+                    if (currentConnector instanceof WalletConnect) {
+                      await currentConnector.activate(chainIds.includes(parseInt(window.ethereum.networkVersion)) ? '' : desiredChain)
+                    } else {
+                      await currentConnector.activate(chainIds.includes(parseInt(window.ethereum.networkVersion)) ? '' : getAddChainParameters(desiredChain));
+                    }
+                  }
+                  catch(error){
+                    setAuthError(error);
+                  }
                   }}>
                   <ImageV2 src={image} height="40px" width="50px" padding="5px" />
 

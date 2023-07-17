@@ -1,8 +1,8 @@
 // React + Web3 Essentials
 import { AbstractConnector } from '@web3-react/abstract-connector';
-import { useWeb3React } from '@web3-react/core';
+import { useWeb3React, Web3ReactHooks } from '@web3-react/core';
 import { ethers } from 'ethers';
-import React, { useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState } from 'react';
 
 // External Packages
 import Joyride, { CallBackProps } from 'react-joyride';
@@ -15,7 +15,7 @@ import * as dotenv from 'dotenv';
 
 // Internal Compoonents
 import InitState from 'components/InitState';
-import { injected, ledger, walletconnect } from 'connectors';
+// import { injected, ledger, walletconnect } from 'connectors';
 import NavigationContextProvider from 'contexts/NavigationContext';
 import AppContextProvider from 'contexts/AppContext';
 import { EnvHelper } from 'helpers/UtilityHelper';
@@ -33,6 +33,18 @@ import { resetCanSendSlice } from 'redux/slices/sendNotificationSlice';
 import { resetChannelCreationSlice } from 'redux/slices/channelCreationSlice';
 import { resetAdminSlice } from 'redux/slices/adminSlice';
 import Navigation from 'structure/Navigation';
+import {  ErrorContext } from './contexts/ErrorContext'
+
+import { network, hooks as networkHooks } from './connectors/network';
+import { metaMask, hooks as metaMaskHooks } from './connectors/metaMask';
+import { walletConnectV2, hooks as walletConnectV2Hooks } from './connectors/walletConnectV2';
+
+import { MetaMask } from '@web3-react/metamask';
+import { WalletConnect as WalletConnectV2 } from '@web3-react/walletconnect-v2';
+import { Network } from "@web3-react/network";
+
+
+
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -48,12 +60,24 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+export const connectors: [
+  MetaMask | WalletConnectV2 | Network,
+  Web3ReactHooks,
+][] = [
+  [metaMask, metaMaskHooks],
+  [walletConnectV2, walletConnectV2Hooks],
+  [network, networkHooks]
+]
+
+
 export default function App() {
   const dispatch = useDispatch();
 
-  const { connector, activate, active, error, account, chainId } = useWeb3React<ethers.providers.Web3Provider>();
+  const { connector, isActive, account, chainId } = useWeb3React<ethers.providers.Web3Provider>();
   const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
   const [currentTime, setcurrentTime] = React.useState(0);
+  const {authError, setAuthError } = useContext(ErrorContext);
+
 
   const { run, stepIndex, tutorialContinous } = useSelector((state: any) => state.userJourney);
   const location = useLocation();
@@ -83,6 +107,8 @@ export default function App() {
     dispatch(resetChannelCreationSlice());
     dispatch(resetAdminSlice());
   }, [account]);
+
+  // console.log(isActive, chainId, account);
 
   // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
   const triedEager = useEagerConnect();
@@ -162,15 +188,17 @@ export default function App() {
     // }
   };
 
+
+
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
-      {!active && (
+      {!isActive && (
         <SectionV2 minHeight="100vh">
           <AppLogin toggleDarkMode={toggleDarkMode} />
         </SectionV2>
       )}
 
-      {active && !error && (
+      {isActive && !authError && (
         <>
           <GlobalStyle />
           <InitState />
@@ -212,7 +240,7 @@ export default function App() {
               </HeaderContainer>
 
               <ParentContainer
-                bg={darkMode ? themeDark.backgroundBG : !active ? themeLight.connectWalletBg : themeLight.backgroundBG}
+                bg={darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG}
                 headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
               >
                 <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>

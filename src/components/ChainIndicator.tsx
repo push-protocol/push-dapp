@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
@@ -15,13 +15,15 @@ import { useClickAway } from 'hooks/useClickAway';
 
 // Internal Configs
 import { SpanV2 } from './reusables/SharedStylingV2';
-import { handleChangeNetwork } from 'helpers/ChainHelper';
+import { handleChangeAllowedNetwork } from 'helpers/ChainHelper';
+import { ErrorContext } from 'contexts/ErrorContext';
 
 const ChainIndicator = ({ isDarkMode }) => {
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
-  const { error, account, library, chainId:currentChainId } = useWeb3React<ethers.providers.Web3Provider>();
+  const { account, chainId:currentChainId, connector} = useWeb3React<ethers.providers.Web3Provider>();
   const theme = useTheme();
+  const { authError, setAuthError } = useContext(ErrorContext);
 
   const [showDropdown, setShowDropdown] = React.useState<boolean>(false);
   const [dropdownValues, setDropdownValues] = React.useState<DropdownValueType[]>([]);
@@ -36,7 +38,8 @@ const ChainIndicator = ({ isDarkMode }) => {
         title: chainName,
         icon: `./svg/${LOGO_FROM_CHAIN_ID[chainId]}`,
         function: () => {
-          handleChangeNetwork(chainId, library.provider);
+          // console.log(chainId, connector.provider, 'change network')
+          handleChangeAllowedNetwork(chainId, connector.provider, connector).then((res)=> res !== undefined && setAuthError({ message: res }));
           setShowDropdown(false);
         },
       });
@@ -50,7 +53,7 @@ const ChainIndicator = ({ isDarkMode }) => {
 
   return (
     <>
-      {account && account !== '' && !error && (
+      {account && account !== '' && !authError && (
         <Container>
           <CurrentChain
             bg={theme.chainIndicatorBG}
