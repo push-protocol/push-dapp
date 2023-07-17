@@ -25,22 +25,38 @@ import GLOBALS, { device, globalsMargin } from '../../config/Globals';
 import { SpaceFeedSection } from 'sections/space/SpaceFeedSection';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { useWeb3React } from '@web3-react/core';
+import { appConfig } from 'config';
+import * as PushAPI from '@pushprotocol/restapi';
 
 export const SpaceModule = ({ spaceid }) => {
   const { account, library } = useWeb3React();
   const {pgpPvtKey, getUser, setPgpPvtKey} = useContext(ChatUserContext);
 
-  useEffect(()=>{
-    if(!pgpPvtKey) {
-      getUser();
-    }
-  },[pgpPvtKey])
-
-
   // useEffect(()=>{
-  //   setPgpPvtKey(null);
-  // },[account])
+  //   if(!pgpPvtKey) {
+  //     getUser();
+  //   }
+  // },[pgpPvtKey])
 
+  useEffect(() => {
+    (async () => {
+      if (!account || !appConfig?.appEnv || !library) return;
+
+      const user = await PushAPI.user.get({ account, env: appConfig?.appEnv });
+      let pgpPrivateKey;
+      const librarySigner = await library.getSigner(account);
+      if (user?.encryptedPrivateKey) {
+        pgpPrivateKey = await PushAPI.chat.decryptPGPKey({
+          encryptedPGPPrivateKey: user.encryptedPrivateKey,
+          account,
+          signer: librarySigner,
+          env: appConfig?.appEnv,
+        });
+      }
+
+      setPgpPvtKey(pgpPrivateKey);
+    })();
+  }, [account, appConfig?.appEnv, library]);
 
 
   // RENDER

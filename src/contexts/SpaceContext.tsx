@@ -7,7 +7,6 @@ import { ethers } from 'ethers';
 import * as PushAPI from '@pushprotocol/restapi';
 
 // Internal Components imports
-import { ChatUserContext } from './ChatUserContext';
 import { appConfig } from 'config';
 
 export const SpaceContext = createContext({
@@ -19,7 +18,6 @@ export const SpaceContext = createContext({
 const SpaceContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   const [spaceId, setSpaceId] = useState<string | undefined>(null);
   const [spaceInvites, setSpaceInvites] = useState<number>(0);
-  const { connectedUser } = useContext(ChatUserContext);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
 
   useEffect(() => {
