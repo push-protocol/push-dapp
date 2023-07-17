@@ -37,9 +37,9 @@ export const SpaceModule = ({ spaceid }) => {
   },[pgpPvtKey])
 
 
-  useEffect(()=>{
-    setPgpPvtKey(null);
-  },[account])
+  // useEffect(()=>{
+  //   setPgpPvtKey(null);
+  // },[account])
 
 
 
