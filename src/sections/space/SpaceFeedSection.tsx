@@ -48,7 +48,9 @@ export const SpaceFeedSection = () => {
             Create your Space
           </Button> */}
         <CreateDiv>
-          <CreateSpaceComponent CustomComponent={<NewButton />} />
+          <CreateSpaceComponent>
+              {/* <NewButton /> */}
+          </CreateSpaceComponent>
         </CreateDiv>
 
         <SpaceInvitesComponent>
