@@ -28,7 +28,6 @@ const SpaceContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         account,
         env: appConfig.appEnv,
       });
-      console.log('total space invites', feed);
       setSpaceInvites(feed?.length);
     })();
   }, []);
