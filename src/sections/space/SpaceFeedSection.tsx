@@ -22,7 +22,7 @@ const NewButton = () => {
 export const SpaceFeedSection = () => {
   const { SpaceFeedComponent, SpaceInvitesComponent, CreateSpaceComponent } = useSpaceComponents();
   const { account } = useWeb3React();
-  const { setSpaceId } = useContext(SpaceContext);
+  const { setSpaceId, spaceInvites } = useContext(SpaceContext);
 
   const createSpace = () => {
     return <CreateSpaceComponent />;
@@ -52,11 +52,14 @@ export const SpaceFeedSection = () => {
         </CreateDiv>
 
         <SpaceInvitesComponent>
-          <Image
-            src={SpaceIcon}
-            srcSet={SpaceIcon}
-            width={'30px'}
-          />
+          <div style={{ position: 'relative', marginRight: '10px', cursor: 'pointer' }}>
+            <Image
+              src={SpaceIcon}
+              srcSet={SpaceIcon}
+              width={'30px'}
+            />
+            {spaceInvites > 0 && <Badge>{spaceInvites}</Badge>}
+          </div>
         </SpaceInvitesComponent>
       </SpaceHeader>
 
@@ -125,4 +128,19 @@ const SpaceUser = styled.div`
 
 const CreateDiv = styled.div`
   margin: 0px 14px 0px auto;
+`;
+
+const Badge = styled.div`
+  position: absolute;
+  top: 15px;
+  left: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+  height: 19px;
+  width: 20px;
+  border-radius: 8px;
+  background: #d53a94;
+  color: #ffffff;
 `;
