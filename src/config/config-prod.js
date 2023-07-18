@@ -95,9 +95,9 @@ export const addresses = {
   rockstarV2: '0xA2b885e7065EA59a3251489715ca80DE5Ff642f8', //mainnet address
   NFTRewardsV2: '0xdc66567a990B7fa10730459537620857c9e03287', //mainnet address
 
-  stakingV2:"0xB72ff1e675117beDefF05a7D0a472c3844cfec85",
-  yieldFarmLP: "0xbB2A70e67770D0A7F5f42d883C5BBE9b85e0DcD6",
-  pushCoreV2:'0xB72ff1e675117beDefF05a7D0a472c3844cfec85', 
+  // stakingV2:"0xB72ff1e675117beDefF05a7D0a472c3844cfec85",
+  // yieldFarmLP: "0xbB2A70e67770D0A7F5f42d883C5BBE9b85e0DcD6",
+  // pushCoreV2:'0xB72ff1e675117beDefF05a7D0a472c3844cfec85', 
 
 
 
