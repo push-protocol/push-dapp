@@ -10,7 +10,7 @@ import { CiWarning } from "react-icons/ci";
 // Internal Compoonents
 import PoolCard from 'components/PoolCard';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import YieldFarmingDataStore from 'singletons/YieldFarmingDataStore';
+import DepYieldFarmingDataStore from 'singletons/DepYieldFarmingDataStore';
 import { Content, Item, ItemH, Section, Span } from '../../primaries/SharedStyling';
 
 // Internal Configs
@@ -40,7 +40,6 @@ function YieldFarmingModule() {
   const [yieldFarmingLP, setYieldFarmingLP] = React.useState(null);
   const [uniswapV2Router02, setUniswapV2Router02] = React.useState(null);
 
-  console.log("Addresses",addresses,abis);
 
   React.useEffect(() => {
     if (!onCoreNetwork) {
@@ -50,21 +49,20 @@ function YieldFarmingModule() {
   });
 
   const getPoolStats = React.useCallback(async () => {
-    const poolStats = await YieldFarmingDataStore.instance.getPoolStats();
-    console.log("PoolStats",poolStats);
+    const poolStats = await DepYieldFarmingDataStore.instance.getPoolStats();
 
     setPoolStats({ ...poolStats });
   }, [epnsToken, staking, yieldFarmingPUSH, yieldFarmingLP, uniswapV2Router02]);
 
   const getPUSHPoolStats = React.useCallback(async () => {
-    const pushPoolStats = await YieldFarmingDataStore.instance.getPUSHPoolStats();
+    const pushPoolStats = await DepYieldFarmingDataStore.instance.getPUSHPoolStats();
 
     setPushPoolStats({ ...pushPoolStats });
   }, [epnsToken, staking, yieldFarmingPUSH, yieldFarmingLP, uniswapV2Router02]);
 
   const getLPPoolStats = React.useCallback(
     async (poolStats) => {
-      const lpPoolStats = await YieldFarmingDataStore.instance.getLPPoolStats(poolStats);
+      const lpPoolStats = await DepYieldFarmingDataStore.instance.getLPPoolStats(poolStats);
 
       setLpPoolStats({ ...lpPoolStats });
     },
@@ -72,13 +70,13 @@ function YieldFarmingModule() {
   );
 
   const getUserDataPUSH = React.useCallback(async () => {
-    const userDataPUSH = await YieldFarmingDataStore.instance.getUserData(yieldFarmingPUSH);
+    const userDataPUSH = await DepYieldFarmingDataStore.instance.getUserData(yieldFarmingPUSH);
 
     setUserDataPUSH({ ...userDataPUSH });
   }, [yieldFarmingPUSH]);
 
   const getUserDataLP = React.useCallback(async () => {
-    const userDataLP = await YieldFarmingDataStore.instance.getUserData(yieldFarmingLP);
+    const userDataLP = await DepYieldFarmingDataStore.instance.getUserData(yieldFarmingLP);
 
     setUserDataLP({ ...userDataLP });
   }, [yieldFarmingLP]);
@@ -125,8 +123,6 @@ function YieldFarmingModule() {
 
     let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, provider);
 
-    console.log("UseEffect",staking,yieldFarmingPUSH,yieldFarmingLP)
-
     setEpnsToken(epnsToken);
     setStaking(staking);
     setYieldFarmingPUSH(yieldFarmingPUSH);
@@ -154,7 +150,7 @@ function YieldFarmingModule() {
   React.useEffect(() => {
     if (epnsToken != null && staking != null && yieldFarmingPUSH != null) {
       // Instantiate Data Stores
-      YieldFarmingDataStore.instance.init(
+      DepYieldFarmingDataStore.instance.init(
         account,
         epnsToken,
         staking,
@@ -165,7 +161,7 @@ function YieldFarmingModule() {
 
       getPoolStats();
 
-      // setpoolStats(YieldFarmingDataStore.instance.state);
+      // setpoolStats(DepYieldFarmingDataStore.instance.state);
     }
   }, [getPoolStats]);
 
