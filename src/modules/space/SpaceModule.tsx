@@ -86,7 +86,7 @@ const Container = styled.div`
   margin: 0px 0px 17px 0px;
 
   // margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-  height: calc(
+  max-height: calc(
     100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} -
       ${globalsMargin.MINI_MODULES.DESKTOP.BOTTOM}
   );
