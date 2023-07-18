@@ -4729,9 +4729,9 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
     "@pushprotocol/ledgerlive": latest
-    "@pushprotocol/restapi": ../push-sdk/dist/packages/restapi
+    "@pushprotocol/restapi": /Users/abhish3k/Desktop/push_sdk/dist/packages/restapi
     "@pushprotocol/socket": latest
-    "@pushprotocol/uiweb": ../push-sdk/dist/packages/uiweb
+    "@pushprotocol/uiweb": /Users/abhish3k/Desktop/push_sdk/dist/packages/uiweb
     "@reduxjs/toolkit": ^1.7.1
     "@testing-library/dom": ^6.12.2
     "@testing-library/jest-dom": ^4.2.4
@@ -4931,9 +4931,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi::locator=%40project%2Freact-app%40workspace%3A.":
+"@pushprotocol/restapi@file:/Users/abhish3k/Desktop/push_sdk/dist/packages/restapi::locator=%40project%2Freact-app%40workspace%3A.":
   version: 0.0.1-alpha.23
-  resolution: "@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi#../push-sdk/dist/packages/restapi::hash=beb412&locator=%40project%2Freact-app%40workspace%3A."
+  resolution: "@pushprotocol/restapi@file:/Users/abhish3k/Desktop/push_sdk/dist/packages/restapi#/Users/abhish3k/Desktop/push_sdk/dist/packages/restapi::hash=46d053&locator=%40project%2Freact-app%40workspace%3A."
   dependencies:
     "@livepeer/webrtmp-sdk": ^0.2.3
     "@metamask/eth-sig-util": ^5.0.2
@@ -4950,7 +4950,7 @@ __metadata:
     video-stream-merger: ^4.0.1
   peerDependencies:
     ethers: ^5.6.8
-  checksum: cdff9a3bd3c2b4c914e167112c1a0767659f7cbd13404a908cdab2eb83748c28cd0c213f3ad3d83f4995bd9d917b60564e75a946771d19c46a1a7439810bbf00
+  checksum: 078adfc16fc50e004cbadfbbf8f40fa15be11637d27d7f5daddffb6682a3343f3fde3f7bcb5d7bd42290aec6956e58563a38d6536dada0534b8cba9fefd98e27
   languageName: node
   linkType: hard
 
@@ -4978,9 +4978,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb::locator=%40project%2Freact-app%40workspace%3A.":
+"@pushprotocol/uiweb@file:/Users/abhish3k/Desktop/push_sdk/dist/packages/uiweb::locator=%40project%2Freact-app%40workspace%3A.":
   version: 1.0.2
-  resolution: "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb#../push-sdk/dist/packages/uiweb::hash=44f142&locator=%40project%2Freact-app%40workspace%3A."
+  resolution: "@pushprotocol/uiweb@file:/Users/abhish3k/Desktop/push_sdk/dist/packages/uiweb#/Users/abhish3k/Desktop/push_sdk/dist/packages/uiweb::hash=aedd4a&locator=%40project%2Freact-app%40workspace%3A."
   dependencies:
     "@livepeer/react": ^2.6.0
     "@pushprotocol/socket": ^0.5.0
@@ -4994,7 +4994,7 @@ __metadata:
     moment: ^2.29.4
     react: ">=16.8.0"
     styled-components: ^5.3.5
-  checksum: b183501d914322f1f1a513c31e102999d4177a669df09c946e96dfaced6f96a482f9695e486fe863c96908f6b86179294a4a52242e4686fc98ee080b0b89d6f7
+  checksum: 5dcc2c9e15aaaea1aabbba1f4748cc5f48723049b895eb677b647b654808f408fc6763dd670878ba769954294272275f146096d84328d15b61a844d0d70ec7c0
   languageName: node
   linkType: hard
 

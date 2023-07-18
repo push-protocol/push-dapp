@@ -10,6 +10,7 @@ import styled from 'styled-components';
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from '../../config/Globals';
+import * as w2wHelper from 'helpers/w2w/';
 // import { SpaceGlobalContext, SpaceLocalContext, SpaceLocalContextProvider } from 'contexts';
 // import { ChatUserContext } from 'contexts/ChatUserContext';
 // import { getSpaceRequests, getSpaces } from 'services/space';
@@ -27,41 +28,42 @@ import { ChatUserContext } from 'contexts/ChatUserContext';
 import { useWeb3React } from '@web3-react/core';
 import { appConfig } from 'config';
 import * as PushAPI from '@pushprotocol/restapi';
+import { ConnectedUser, User } from 'types/chat';
 
 export const SpaceModule = ({ spaceid }) => {
   const { account, library } = useWeb3React();
-  const {pgpPvtKey, getUser, setPgpPvtKey, connectedUser} = useContext(ChatUserContext);
+  const { pgpPvtKey, getUser, setPgpPvtKey, connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
 
-  // useEffect(()=>{
-    // if(!pgpPvtKey) {
-      // getUser();
-    // }
-  // },[account, library, appConfig?.env])
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    (async () => {
-      if (!account || !appConfig?.appEnv || !library) return;
+    setIsLoading(true);
+    setConnectedUser(null);
+  }, [account])
 
-      const user = await PushAPI.user.get({ account, env: appConfig?.appEnv });
-      let pgpPrivateKey;
-      const librarySigner = await library.getSigner(account);
-      if (user?.encryptedPrivateKey) {
-        pgpPrivateKey = await PushAPI.chat.decryptPGPKey({
-          encryptedPGPPrivateKey: user.encryptedPrivateKey,
-          account,
-          signer: librarySigner,
-          env: appConfig?.appEnv,
-        });
-      }
-      setPgpPvtKey(pgpPrivateKey);
-    })();
-  }, [account, appConfig?.appEnv, library]);
+  useEffect(() => {
+    if (isLoading) {
+      setConnectedUser(connectedUser);
+      connectUser();
+    }
+  }, [connectedUser]);
 
+  const connectUser = async (): Promise<void> => {
+    const caip10: string = w2wHelper.walletToCAIP10({ account });
+
+    if (connectedUser?.wallets?.toLowerCase() !== caip10?.toLowerCase()) {
+      await getUser();
+    }
+
+    setIsLoading(false);
+
+  };
 
   // RENDER
   return (
     <Container>
-      <SpaceFeedSection spaceid={spaceid}/>
+
+      {isLoading ? "Loading .... " : <SpaceFeedSection spaceid={spaceid} />}
     </Container>
   );
 };
