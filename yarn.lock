@@ -1981,13 +1981,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chainsafe/as-sha256@npm:^0.4.1":
-  version: 0.4.1
-  resolution: "@chainsafe/as-sha256@npm:0.4.1"
-  checksum: 6d86975e648ecdafd366802278ac15b392b252e967f3681412ec48b5a3518b936cc5e977517499882b084991446d25787d98f8f585891943688cc81549a44e9a
-  languageName: node
-  linkType: hard
-
 "@chainsafe/is-ip@npm:^2.0.1":
   version: 2.0.1
   resolution: "@chainsafe/is-ip@npm:2.0.1"
@@ -2001,26 +1994,6 @@ __metadata:
   dependencies:
     "@chainsafe/is-ip": ^2.0.1
   checksum: 90d27154c11ff878130150766ebfc490c829cd5249a61f7018fa4cefe3a18d92394285bb435c38bd0dbe45261006a82572e95ac201e9b28157de80127a6a3d06
-  languageName: node
-  linkType: hard
-
-"@chainsafe/persistent-merkle-tree@npm:^0.6.1":
-  version: 0.6.1
-  resolution: "@chainsafe/persistent-merkle-tree@npm:0.6.1"
-  dependencies:
-    "@chainsafe/as-sha256": ^0.4.1
-    "@noble/hashes": ^1.3.0
-  checksum: 74614b8d40970dc930d5bf741619498b0bbbde5ff24ce45fce6ad122143aa77bf57249a28175b1b972cf56bff57d529a4258b7222ab4e60c1261119b5986c51b
-  languageName: node
-  linkType: hard
-
-"@chainsafe/ssz@npm:^0.11.1":
-  version: 0.11.1
-  resolution: "@chainsafe/ssz@npm:0.11.1"
-  dependencies:
-    "@chainsafe/as-sha256": ^0.4.1
-    "@chainsafe/persistent-merkle-tree": ^0.6.1
-  checksum: e3c2928f9ab4a0544e645f0302b9535046d1e6e1d4b3bd1c3dd6bc8e6302fddad6036d65e7900d1446f285f496051da05fa14c1bde590b511d03033907175c8f
   languageName: node
   linkType: hard
 
@@ -2630,14 +2603,13 @@ __metadata:
   linkType: hard
 
 "@ethereumjs/util@npm:^8.0.6":
-  version: 8.0.6
-  resolution: "@ethereumjs/util@npm:8.0.6"
+  version: 8.1.0
+  resolution: "@ethereumjs/util@npm:8.1.0"
   dependencies:
-    "@chainsafe/ssz": ^0.11.1
     "@ethereumjs/rlp": ^4.0.1
     ethereum-cryptography: ^2.0.0
     micro-ftch: ^0.3.1
-  checksum: 034e06cddec27417318434a1a7cd7a9dc0f0b447c1f54423c515d8809c9697386eee6429d0a1c13517a85c696e6fdba570b243d882e65764c274859606027015
+  checksum: 9ae5dee8f12b0faf81cd83f06a41560e79b0ba96a48262771d897a510ecae605eb6d84f687da001ab8ccffd50f612ae50f988ef76e6312c752897f462f3ac08d
   languageName: node
   linkType: hard
 
@@ -4000,60 +3972,60 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@livepeer/core-react@npm:^1.6.1":
-  version: 1.6.1
-  resolution: "@livepeer/core-react@npm:1.6.1"
+"@livepeer/core-react@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "@livepeer/core-react@npm:1.7.0"
   dependencies:
-    "@livepeer/core": ^1.6.1
-    "@tanstack/query-async-storage-persister": 4.22.4
-    "@tanstack/query-core": 4.22.4
-    "@tanstack/react-query": 4.22.4
-    "@tanstack/react-query-persist-client": 4.22.4
+    "@livepeer/core": ^1.7.0
+    "@tanstack/query-async-storage-persister": 4.29.23
+    "@tanstack/query-core": 4.29.23
+    "@tanstack/react-query": 4.29.23
+    "@tanstack/react-query-persist-client": 4.29.23
     use-sync-external-store: ^1.2.0
-    zustand: ^4.3.2
+    zustand: ^4.3.9
   peerDependencies:
     react: ">=17.0.0"
-  checksum: 5f0dc912f7ad38d46570228b420914d6d83bf996706943977b800770d726c65dd6f39ff2293cca2af9d4d48a060116d40d805cc9b54dfd34e0b93571801cd6c4
+  checksum: 4713be22635061e4c0652f2a5ae6e17ffb09eb554fbea4668a77faf05790fcceeab0887b658f1853e562ff58425393fbb59dbe0f5708878a60e4cb049909072d
   languageName: node
   linkType: hard
 
-"@livepeer/core@npm:^1.6.1":
-  version: 1.6.1
-  resolution: "@livepeer/core@npm:1.6.1"
+"@livepeer/core@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "@livepeer/core@npm:1.7.0"
   dependencies:
-    cross-fetch: ^3.1.5
+    cross-fetch: ^4.0.0
     ms: ^3.0.0-canary.1
     multiformats: 9.9.0
-    tus-js-client: ^3.0.1
-    zustand: ^4.3.2
+    tus-js-client: ^3.1.0
+    zustand: ^4.3.9
   peerDependencies:
     react: ">=17.0.0"
   peerDependenciesMeta:
     react:
       optional: true
-  checksum: 1e762a0c5983507305adeb35c3188dad296eee3cbe345f79e5d3159e9a6c5e282fe53e92e6a70d5cdabcf7923522be8cb1c7786658b3de067b5514198caa6ab2
+  checksum: 55525ed7486d1c817511ac4bd23a135c34a024ee8362c3142382bb100b81a68d3144ede9e49ada81d55cccba32bd73e256ce136521acd59315a403f8ab934b70
   languageName: node
   linkType: hard
 
 "@livepeer/react@npm:^2.6.0":
-  version: 2.6.1
-  resolution: "@livepeer/react@npm:2.6.1"
+  version: 2.7.0
+  resolution: "@livepeer/react@npm:2.7.0"
   dependencies:
-    "@livepeer/core-react": ^1.6.1
+    "@livepeer/core-react": ^1.7.0
     "@radix-ui/react-dialog": ^1.0.4
     "@radix-ui/react-popover": ^1.0.6
     "@radix-ui/react-select": ^1.2.2
     "@stitches/react": ^1.2.8
-    core-js: ^3.27.2
-    livepeer: 2.6.1
-    zustand: ^4.3.2
+    core-js: ^3.31.1
+    livepeer: 2.7.0
+    zustand: ^4.3.9
   peerDependencies:
     react: ">=17.0.0"
     react-dom: ">=17.0.0"
   peerDependenciesMeta:
     react-dom:
       optional: true
-  checksum: 09778d5e1566276073372ff0ee667c441dd420392f955458fa41d4a2296b2f7eab4375c916933802c2851bee80b627acc6b5147cacd83eb7fb53c3933e5876a2
+  checksum: f5e5cc45e5196549522f2b4389dab764506c762f0787868b4411038c8363235df8949d27525814246b873bcf50adf2680990caaf59ae3a9d66da87b295237033
   languageName: node
   linkType: hard
 
@@ -4495,19 +4467,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noble/curves@npm:1.0.0, @noble/curves@npm:~1.0.0":
-  version: 1.0.0
-  resolution: "@noble/curves@npm:1.0.0"
+"@noble/curves@npm:1.1.0, @noble/curves@npm:~1.1.0":
+  version: 1.1.0
+  resolution: "@noble/curves@npm:1.1.0"
   dependencies:
-    "@noble/hashes": 1.3.0
-  checksum: 6bcef44d626c640dc8961819d68dd67dffb907e3b973b7c27efe0ecdd9a5c6ce62c7b9e3dfc930c66605dced7f1ec0514d191c09a2ce98d6d52b66e3315ffa79
+    "@noble/hashes": 1.3.1
+  checksum: 2658cdd3f84f71079b4e3516c47559d22cf4b55c23ac8ee9d2b1f8e5b72916d9689e59820e0f9d9cb4a46a8423af5b56dc6bb7782405c88be06a015180508db5
   languageName: node
   linkType: hard
 
-"@noble/hashes@npm:1.3.0, @noble/hashes@npm:^1.3.0, @noble/hashes@npm:~1.3.0":
-  version: 1.3.0
-  resolution: "@noble/hashes@npm:1.3.0"
-  checksum: d7ddb6d7c60f1ce1f87facbbef5b724cdea536fc9e7f59ae96e0fc9de96c8f1a2ae2bdedbce10f7dcc621338dfef8533daa73c873f2b5c87fa1a4e05a95c2e2e
+"@noble/hashes@npm:1.3.1, @noble/hashes@npm:~1.3.0, @noble/hashes@npm:~1.3.1":
+  version: 1.3.1
+  resolution: "@noble/hashes@npm:1.3.1"
+  checksum: 7fdefc0f7a0c1ec27acc6ff88841793e3f93ec4ce6b8a6a12bfc0dd70ae6b7c4c82fe305fdfeda1735d5ad4a9eebe761e6693b3d355689c559e91242f4bc95b1
   languageName: node
   linkType: hard
 
@@ -4980,7 +4952,7 @@ __metadata:
 
 "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb::locator=%40project%2Freact-app%40workspace%3A.":
   version: 1.0.2
-  resolution: "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb#../push-sdk/dist/packages/uiweb::hash=505668&locator=%40project%2Freact-app%40workspace%3A."
+  resolution: "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb#../push-sdk/dist/packages/uiweb::hash=d6f482&locator=%40project%2Freact-app%40workspace%3A."
   dependencies:
     "@livepeer/react": ^2.6.0
     "@pushprotocol/socket": ^0.5.0
@@ -4994,7 +4966,7 @@ __metadata:
     moment: ^2.29.4
     react: ">=16.8.0"
     styled-components: ^5.3.5
-  checksum: c6d8232bc0f471038a5cfead9b6887cbb1c1bebf9bf6696c15c55bdd3b89a7dc85aa4f38036069f594572f6bc03d27a2b9ec9531134884d00359a8a47524e0f3
+  checksum: 3172f60d9a0576a8a5cfa59b2d5afcf39e7de52073ffbd8b3d09d8ef305abde5381728fc8ad07cdaec043e165d509c5abd59efd5d2eb9a274ccef3395a9a4aab
   languageName: node
   linkType: hard
 
@@ -5762,24 +5734,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@scure/bip32@npm:1.3.0":
-  version: 1.3.0
-  resolution: "@scure/bip32@npm:1.3.0"
+"@scure/bip32@npm:1.3.1":
+  version: 1.3.1
+  resolution: "@scure/bip32@npm:1.3.1"
   dependencies:
-    "@noble/curves": ~1.0.0
-    "@noble/hashes": ~1.3.0
+    "@noble/curves": ~1.1.0
+    "@noble/hashes": ~1.3.1
     "@scure/base": ~1.1.0
-  checksum: 6eae997f9bdf41fe848134898960ac48e645fa10e63d579be965ca331afd0b7c1b8ebac170770d237ab4099dafc35e5a82995384510025ccf2abe669f85e8918
+  checksum: 394d65f77a40651eba21a5096da0f4233c3b50d422864751d373fcf142eeedb94a1149f9ab1dbb078086dab2d0bc27e2b1afec8321bf22d4403c7df2fea5bfe2
   languageName: node
   linkType: hard
 
-"@scure/bip39@npm:1.2.0":
-  version: 1.2.0
-  resolution: "@scure/bip39@npm:1.2.0"
+"@scure/bip39@npm:1.2.1":
+  version: 1.2.1
+  resolution: "@scure/bip39@npm:1.2.1"
   dependencies:
     "@noble/hashes": ~1.3.0
     "@scure/base": ~1.1.0
-  checksum: 980d761f53e63de04a9e4db840eb13bfb1bd1b664ecb04a71824c12c190f4972fd84146f3ed89b2a8e4c6bd2c17c15f8b592b7ac029e903323b0f9e2dae6916b
+  checksum: c5bd6f1328fdbeae2dcdd891825b1610225310e5e62a4942714db51066866e4f7bef242c7b06a1b9dcc8043a4a13412cf5c5df76d3b10aa9e36b82e9b6e3eeaa
   languageName: node
   linkType: hard
 
@@ -6340,47 +6312,47 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-async-storage-persister@npm:4.22.4":
-  version: 4.22.4
-  resolution: "@tanstack/query-async-storage-persister@npm:4.22.4"
+"@tanstack/query-async-storage-persister@npm:4.29.23":
+  version: 4.29.23
+  resolution: "@tanstack/query-async-storage-persister@npm:4.29.23"
   dependencies:
-    "@tanstack/query-persist-client-core": 4.22.4
-  checksum: cc40192a59ebd15b166f4a37712d773680c0ce4e5fa2b951f80a203eb5845899b3f71a35f138eb624ed5a939c8bfc6091417d17a443d9414d3d77d68ffd7885e
+    "@tanstack/query-persist-client-core": 4.29.23
+  checksum: 5a5845f8fc0563f9844272a140f28bb50ea064c4b3fdf5aa3512cd1e0e082156a94de7d5ee4cbc72dd302473c47045e73cc46118bb24752dd4b09940f8771ec4
   languageName: node
   linkType: hard
 
-"@tanstack/query-core@npm:4.22.4":
-  version: 4.22.4
-  resolution: "@tanstack/query-core@npm:4.22.4"
-  checksum: 01663a36ad7ed5c43cb7cfa8ffcdf7df4de05cf68e9991bbc339be2a656a1c94f69e0b5405dfa972cf877b09dac3cba4cbdf8c91f5dffabc46ac32ec0ce5f4bb
+"@tanstack/query-core@npm:4.29.23":
+  version: 4.29.23
+  resolution: "@tanstack/query-core@npm:4.29.23"
+  checksum: bd752e419619c415076816446f06904eba88a9600a9fc6544634afe929d24d40059a57809bf653c6581ae92b564942bed3988f3585ac59b0a60e8331b4ad8acb
   languageName: node
   linkType: hard
 
-"@tanstack/query-persist-client-core@npm:4.22.4":
-  version: 4.22.4
-  resolution: "@tanstack/query-persist-client-core@npm:4.22.4"
+"@tanstack/query-persist-client-core@npm:4.29.23":
+  version: 4.29.23
+  resolution: "@tanstack/query-persist-client-core@npm:4.29.23"
+  dependencies:
+    "@tanstack/query-core": 4.29.23
+  checksum: 93b8d30450bda9037d3849fa43264f2e4e5157124760e1dcfd6e6361dedd172d1c67949f35d3875efdef395c0f3bec5917bcde636bb1039afa45d4923bfc4d52
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query-persist-client@npm:4.29.23":
+  version: 4.29.23
+  resolution: "@tanstack/react-query-persist-client@npm:4.29.23"
+  dependencies:
+    "@tanstack/query-persist-client-core": 4.29.23
   peerDependencies:
-    "@tanstack/query-core": 4.22.4
-  checksum: 8672b2dd1fe3db6a39158048e76cca95c539fdf52f64375eb62ac78b02fa7126a6c957833b0f016d1016c41fb34462c21d994ea12b6a2b1aeb4f723aacf01c4d
+    "@tanstack/react-query": 4.29.23
+  checksum: c3f846055a664e46953433ac7271bde3cfddc06ce0faef182ac8547532c9d8d0011f5e2ca087fc06764f26527d9b27c5f92ced0395e96a038349390afa791967
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-persist-client@npm:4.22.4":
-  version: 4.22.4
-  resolution: "@tanstack/react-query-persist-client@npm:4.22.4"
+"@tanstack/react-query@npm:4.29.23":
+  version: 4.29.23
+  resolution: "@tanstack/react-query@npm:4.29.23"
   dependencies:
-    "@tanstack/query-persist-client-core": 4.22.4
-  peerDependencies:
-    "@tanstack/react-query": 4.22.4
-  checksum: 5119cdd76014977dd161f1825310ad903773a7e4a356e4a2d6b676e14369394a18143cfb69fa7f8dab6a114f017aedc5a17a10d0f34bfd3eeed9fdcf84ca1c22
-  languageName: node
-  linkType: hard
-
-"@tanstack/react-query@npm:4.22.4":
-  version: 4.22.4
-  resolution: "@tanstack/react-query@npm:4.22.4"
-  dependencies:
-    "@tanstack/query-core": 4.22.4
+    "@tanstack/query-core": 4.29.23
     use-sync-external-store: ^1.2.0
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -6391,7 +6363,7 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: 33eda9b0b91a79880f03f31d5c6d4e15fbd0a16c17d4a7bb9bdca8174f7574a6596fca6adb5b5a91d6d56bb0b24ef66c17225df4d33e058f4d0ebed314d64be1
+  checksum: 2d0e0b7c4362c0b7b37c754d2f335f61da2245c25141bd444fef93a53ae3b5d6af5a5cdcea096a981ab6eaeffd25d15fde7d9cb36a5006afe4c2ab3907a82a91
   languageName: node
   linkType: hard
 
@@ -12151,7 +12123,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js@npm:^3.27.2":
+"core-js@npm:^3.31.1":
   version: 3.31.1
   resolution: "core-js@npm:3.31.1"
   checksum: 14519213a63c55cf188bdd2f4dece54583feaf6b90e75d6c65e07f509cd487055bf64898aeda7c97c36029ac1ea2f2ed8e4b02281553f6a257e7143a32a14015
@@ -12299,12 +12271,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-fetch@npm:^3.1.5":
-  version: 3.1.8
-  resolution: "cross-fetch@npm:3.1.8"
+"cross-fetch@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "cross-fetch@npm:4.0.0"
   dependencies:
     node-fetch: ^2.6.12
-  checksum: 78f993fa099eaaa041122ab037fe9503ecbbcb9daef234d1d2e0b9230a983f64d645d088c464e21a247b825a08dc444a6e7064adfa93536d3a9454b4745b3632
+  checksum: ecca4f37ffa0e8283e7a8a590926b66713a7ef7892757aa36c2d20ffa27b0ac5c60dcf453119c809abe5923fc0bae3702a4d896bfb406ef1077b0d0018213e24
   languageName: node
   linkType: hard
 
@@ -12841,9 +12813,11 @@ __metadata:
   linkType: hard
 
 "date-fns@npm:^2.28.0":
-  version: 2.29.3
-  resolution: "date-fns@npm:2.29.3"
-  checksum: e01cf5b62af04e05dfff921bb9c9933310ed0e1ae9a81eb8653452e64dc841acf7f6e01e1a5ae5644d0337e9a7f936175fd2cb6819dc122fdd9c5e86c56be484
+  version: 2.30.0
+  resolution: "date-fns@npm:2.30.0"
+  dependencies:
+    "@babel/runtime": ^7.21.0
+  checksum: f7be01523282e9bb06c0cd2693d34f245247a29098527d4420628966a2d9aad154bd0e90a6b1cf66d37adcb769cd108cf8a7bd49d76db0fb119af5cdd13644f4
   languageName: node
   linkType: hard
 
@@ -15092,14 +15066,14 @@ __metadata:
   linkType: hard
 
 "ethereum-cryptography@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "ethereum-cryptography@npm:2.0.0"
+  version: 2.1.2
+  resolution: "ethereum-cryptography@npm:2.1.2"
   dependencies:
-    "@noble/curves": 1.0.0
-    "@noble/hashes": 1.3.0
-    "@scure/bip32": 1.3.0
-    "@scure/bip39": 1.2.0
-  checksum: 958f8aab2d1b32aa759fb27a27877b3647410e8bb9aca7d65d1d477db4864cf7fc46b918eb52a1e246c25e98ee0a35a632c88b496aeaefa13469ee767a76c8db
+    "@noble/curves": 1.1.0
+    "@noble/hashes": 1.3.1
+    "@scure/bip32": 1.3.1
+    "@scure/bip39": 1.2.1
+  checksum: 2e8f7b8cc90232ae838ab6a8167708e8362621404d26e79b5d9e762c7b53d699f7520aff358d9254de658fcd54d2d0af168ff909943259ed27dc4cef2736410c
   languageName: node
   linkType: hard
 
@@ -17102,7 +17076,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hls.js@npm:^1.4.0":
+"hls.js@npm:^1.4.9":
   version: 1.4.9
   resolution: "hls.js@npm:1.4.9"
   checksum: 51e469eb99e7093a1b71a7531731d9da8609104730f1030797d25c4e25d9d7d8a6d22603921cb9a9ee6ab26b28c569e91c68a37be92dc1f34bc58e0c5af65b99
@@ -20823,25 +20797,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"livepeer@npm:2.6.1, livepeer@npm:^2.5.8":
-  version: 2.6.1
-  resolution: "livepeer@npm:2.6.1"
+"livepeer@npm:2.7.0, livepeer@npm:^2.5.8":
+  version: 2.7.0
+  resolution: "livepeer@npm:2.7.0"
   dependencies:
-    "@livepeer/core": ^1.6.1
+    "@livepeer/core": ^1.7.0
     "@stitches/core": ^1.2.8
-    core-js: ^3.27.2
-    cross-fetch: ^3.1.5
-    hls.js: ^1.4.0
+    core-js: ^3.31.1
+    cross-fetch: ^4.0.0
+    hls.js: ^1.4.9
     ms: ^3.0.0-canary.1
-    multiformats: 9.9.0
-    tus-js-client: ^3.0.1
-    zustand: ^4.3.2
+    tus-js-client: ^3.1.0
+    zustand: ^4.3.9
   peerDependencies:
     react: ">=17.0.0"
   peerDependenciesMeta:
     react:
       optional: true
-  checksum: 50681a2059214fcc0d2d36c9a6997d9a9f476e142871a64f0f080acc95dfce3360f8e515a7fdc5ccf612620941c449cf84c73244241a6a5793e7a71cb430c88a
+  checksum: be9c8b5e7a952ad36cc65d9ffe1d21fc74388ede93acf678936102d228eaca7a27d0c49ec77dcb18acefb4dfc21a6808b6548e25070ab5f23a68680a33d685d7
   languageName: node
   linkType: hard
 
@@ -29627,7 +29600,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tus-js-client@npm:^3.0.1":
+"tus-js-client@npm:^3.1.0":
   version: 3.1.0
   resolution: "tus-js-client@npm:3.1.0"
   dependencies:
@@ -32200,23 +32173,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zustand@npm:^4.3.2":
-  version: 4.3.9
-  resolution: "zustand@npm:4.3.9"
-  dependencies:
-    use-sync-external-store: 1.2.0
-  peerDependencies:
-    immer: ">=9.0"
-    react: ">=16.8"
-  peerDependenciesMeta:
-    immer:
-      optional: true
-    react:
-      optional: true
-  checksum: fc83d653913fa537c354ba8b95d3a4fdebe62d2ebd3d9f5aeff2edf062811c0f5af48e02ab4da32b666752fd4f3e78c2b44624e445254f48503595435d4a7d70
-  languageName: node
-  linkType: hard
-
 "zustand@npm:^4.3.5":
   version: 4.3.7
   resolution: "zustand@npm:4.3.7"
@@ -32231,5 +32187,22 @@ __metadata:
     react:
       optional: true
   checksum: 355b414ba4830b6106bcb888077c5f90f40ed649e4127e337eff4fb4ea90e88bf5cccf32344711d743cb92a676a0643a6ab3674ddc60ed49f17ea1bc8e3f58e2
+  languageName: node
+  linkType: hard
+
+"zustand@npm:^4.3.9":
+  version: 4.3.9
+  resolution: "zustand@npm:4.3.9"
+  dependencies:
+    use-sync-external-store: 1.2.0
+  peerDependencies:
+    immer: ">=9.0"
+    react: ">=16.8"
+  peerDependenciesMeta:
+    immer:
+      optional: true
+    react:
+      optional: true
+  checksum: fc83d653913fa537c354ba8b95d3a4fdebe62d2ebd3d9f5aeff2edf062811c0f5af48e02ab4da32b666752fd4f3e78c2b44624e445254f48503595435d4a7d70
   languageName: node
   linkType: hard

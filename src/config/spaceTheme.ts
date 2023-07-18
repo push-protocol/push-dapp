@@ -22,16 +22,16 @@ export interface ISpacesTheme {
 }
 
 export const lightTheme = {
-  titleBg: 'linear-gradient(45deg, #E165EC 0.01%, #A483ED 100%)',//not changed
+  titleBg: 'linear-gradient(45deg, #E165EC 0.01%, #A483ED 100%)', //not changed
   titleTextColor: '#FFFFFF',
   bgColorPrimary: '#fff',
   bgColorSecondary: '#F7F1FB',
   textColorPrimary: '#000',
   textColorSecondary: '#657795',
-  textGradient: 'linear-gradient(45deg, #B6A0F5, #F46EF6, #FFDED3, #FFCFC5)',//not changed
+  textGradient: 'linear-gradient(45deg, #B6A0F5, #F46EF6, #FFDED3, #FFCFC5)', //not changed
   btnColorPrimary: '#D53A94',
   btnOutline: '#D53A94',
-  borderColor: '#FFFF',
+  borderColor: '#FFFF', // need to check
   borderRadius: '17px',
   containerBorderRadius: '12px',
   statusColorError: '#E93636',
@@ -40,7 +40,7 @@ export const lightTheme = {
 };
 
 export const darkTheme = {
-  titleBg: 'linear-gradient(87.17deg, #EA4EE4 0%, #D23CDF 0.01%, #8B5CF6 100%)',
+  titleBg: 'linear-gradient(45deg, #E165EC 0.01%, #A483ED 100%)',
   titleTextColor: '#fff',
   bgColorPrimary: '#2F3137',
   bgColorSecondary: '#404550',

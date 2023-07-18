@@ -2,12 +2,13 @@
 import React, { useContext, useState } from 'react';
 
 // External Packages
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { useSpaceComponents } from 'hooks/useSpaceComponents';
 import { Button } from 'primaries/SharedStyling';
 import SpaceIcon from 'assets/spaces/Space-icon.svg';
+import SpaceDark from 'assets/spaces/space-dark.svg';
 import { Image } from 'components/SharedStyling';
 import Avatar from '@mui/material/Avatar';
 import { useWeb3React } from '@web3-react/core';
@@ -20,24 +21,24 @@ const NewButton = () => {
   return <button>create Space</button>;
 };
 
-export const SpaceFeedSection = ({spaceid}) => {
+export const SpaceFeedSection = ({ spaceid }) => {
   const { SpaceFeedComponent, SpaceInvitesComponent, CreateSpaceComponent } = useSpaceComponents();
   const { account } = useWeb3React();
   const { setSpaceId, spaceInvites } = useContext(SpaceContext);
+  const theme = useTheme();
 
   React.useEffect(() => {
     if (spaceid) {
-      setSpaceId(spaceid)
+      setSpaceId(spaceid);
     }
-  }, [spaceid])
-  
+  }, [spaceid]);
 
   let navigate = useNavigate();
-  const handleSpaceId = (spaceId: string) =>{
+  const handleSpaceId = (spaceId: string) => {
     setSpaceId(spaceId);
-    navigate(`/space/${spaceId}`)
-  }
-  
+    navigate(`/space/${spaceId}`);
+  };
+
   const createSpace = () => {
     return <CreateSpaceComponent />;
   };
@@ -62,16 +63,14 @@ export const SpaceFeedSection = ({spaceid}) => {
             Create your Space
           </Button> */}
         <CreateDiv>
-          <CreateSpaceComponent>
-              {/* <NewButton /> */}
-          </CreateSpaceComponent>
+          <CreateSpaceComponent>{/* <NewButton /> */}</CreateSpaceComponent>
         </CreateDiv>
 
         <SpaceInvitesComponent>
           <div style={{ position: 'relative', marginRight: '10px', cursor: 'pointer' }}>
             <Image
-              src={SpaceIcon}
-              srcSet={SpaceIcon}
+              src={theme?.scheme == 'light' ? SpaceIcon : SpaceDark}
+              srcSet={theme?.scheme == 'light' ? SpaceIcon : SpaceDark}
               width={'30px'}
             />
             {spaceInvites > 0 && <Badge>{spaceInvites}</Badge>}
@@ -87,7 +86,7 @@ export const SpaceFeedSection = ({spaceid}) => {
           width={'100%'}
           height={'100%'}
           onBannerClickHandler={(spaceId: string) => {
-            handleSpaceId(spaceId)
+            handleSpaceId(spaceId);
           }}
         />
       </div>
@@ -99,7 +98,7 @@ export const SpaceFeedSection = ({spaceid}) => {
 };
 
 const SpaceCard = styled.div`
-  background: white;
+  background: ${({ theme }) => theme.default.bg};
   height: 100%;
   width: calc(100% - 440px);
   border-radius: 32px !important;
@@ -112,10 +111,10 @@ const SpaceCard = styled.div`
 `;
 
 const SpaceHeader = styled.div`
-  border: 1px solid #dcdcdf;
+  border: 1px solid ${({ theme }) => theme.default.borderColor};
+  background: ${({ theme }) => theme.chat.sendMesageBg};
   padding: 8px;
   border-radius: 16px;
-
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -139,6 +138,7 @@ const SpaceUser = styled.div`
   line-height: 150%;
   letter-spacing: -0.342px;
   margin-left: 10px;
+  color: ${({ theme }) => theme.spaceHostTextColor};
 `;
 
 const CreateDiv = styled.div`
