@@ -1,11 +1,10 @@
 // React + Web3 Essentials
-import React, { useContext, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
 
 // Internal Components
-import { useSpaceComponents } from 'hooks/useSpaceComponents';
 import { Button } from 'primaries/SharedStyling';
 import SpaceIcon from 'assets/spaces/Space-icon.svg';
 import { Image } from 'components/SharedStyling';
@@ -15,13 +14,14 @@ import { shortenText } from 'helpers/UtilityHelper';
 import { SpaceContext } from 'contexts/SpaceContext';
 import { device } from 'config/Globals';
 import { useNavigate } from 'react-router-dom';
+import { SpaceComponentContext }  from 'contexts/SpaceComponentsContext';
 
 const NewButton = () => {
   return <button>create Space</button>;
 };
 
-export const SpaceFeedSection = ({spaceid}) => {
-  const { SpaceFeedComponent, SpaceInvitesComponent, CreateSpaceComponent } = useSpaceComponents();
+const SpaceFeedSection = ({spaceid}) => {
+  const { SpaceFeedComponent, SpaceInvitesComponent, CreateSpaceComponent } = useContext(SpaceComponentContext);
   const { account } = useWeb3React();
   const { setSpaceId, spaceInvites } = useContext(SpaceContext);
 
@@ -36,7 +36,7 @@ export const SpaceFeedSection = ({spaceid}) => {
 
   const handleSpaceId = (spaceId: string) =>{
     setSpaceId(spaceId);
-    console.log(spaceId);
+    // console.log(spaceId);
     navigate(`/space/${spaceId}`)
   }
   
@@ -162,3 +162,5 @@ const FeedItem = styled.div`
     // margin-bottom: 70px;
     box-sizing: border-box !important;
 `;
+
+export default SpaceFeedSection;

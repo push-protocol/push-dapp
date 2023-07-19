@@ -23,7 +23,7 @@ import * as w2wHelper from 'helpers/w2w/';
 // import SpaceNotification from 'components/space/spaceNotification/SpaceNotification';
 // import { useDeviceWidthCheck } from 'hooks/useDeviceWidthCheck';
 
-import { SpaceFeedSection } from 'sections/space/SpaceFeedSection';
+import SpaceFeedSection from 'sections/space/SpaceFeedSection';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { useWeb3React } from '@web3-react/core';
 import { appConfig } from 'config';

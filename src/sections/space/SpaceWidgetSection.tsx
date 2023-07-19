@@ -2,12 +2,12 @@
 import React, { useContext, useState } from 'react';
 
 // Internal Compoonents
-import { useSpaceComponents } from 'hooks/useSpaceComponents';
 import { SpaceContext } from 'contexts/SpaceContext';
 import { useWeb3React } from '@web3-react/core';
+import { SpaceComponentContext } from 'contexts/SpaceComponentsContext';
 
 export const SpaceWidgetSection = () => {
-  const { SpaceWidgetComponent } = useSpaceComponents();
+  const { SpaceWidgetComponent } = useContext(SpaceComponentContext);
   const { account } = useWeb3React();
   const {spaceId, setSpaceId} = useContext(SpaceContext);
   const [width, setWidth] = useState<string>('400');
