@@ -29,6 +29,10 @@ import { useWeb3React } from '@web3-react/core';
 import { appConfig } from 'config';
 import * as PushAPI from '@pushprotocol/restapi';
 import { ConnectedUser, User } from 'types/chat';
+import LoaderSpinner from 'primaries/LoaderSpinner';
+import { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { Item } from 'primaries/SharedStyling';
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 
 export const SpaceModule = ({ spaceid }) => {
   const { account, library } = useWeb3React();
@@ -63,7 +67,13 @@ export const SpaceModule = ({ spaceid }) => {
   return (
     <Container>
 
-      {isLoading ? "Loading .... " : <SpaceFeedSection spaceid={spaceid} />}
+      {isLoading ? 
+        <CenterContainer>
+        <ItemVV2>
+           <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
+        </ItemVV2>
+      </CenterContainer>
+     : <SpaceFeedSection spaceid={spaceid} />} 
     </Container>
   );
 };
@@ -110,6 +120,19 @@ const Container = styled.div`
         ${globalsMargin.BIG_MODULES.MOBILE.BOTTOM}
     );
   }
+`;
+
+const ContainerInfo = styled.div`
+  padding: 20px;
+`;
+
+const CenterContainer = styled(ContainerInfo)`
+  width: 100%;
+  height: 100%;
+  align-self: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 //   const SpaceSidebarContainer = styled(ItemVV2)`

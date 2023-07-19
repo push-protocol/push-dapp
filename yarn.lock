@@ -4729,9 +4729,9 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
     "@pushprotocol/ledgerlive": latest
-    "@pushprotocol/restapi": /Users/abhish3k/Desktop/push_sdk/dist/packages/restapi
+    "@pushprotocol/restapi": ../push-sdk/dist/packages/restapi
     "@pushprotocol/socket": latest
-    "@pushprotocol/uiweb": /Users/abhish3k/Desktop/push_sdk/dist/packages/uiweb
+    "@pushprotocol/uiweb": ../push-sdk/dist/packages/uiweb
     "@reduxjs/toolkit": ^1.7.1
     "@testing-library/dom": ^6.12.2
     "@testing-library/jest-dom": ^4.2.4
@@ -4931,9 +4931,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@file:/Users/abhish3k/Desktop/push_sdk/dist/packages/restapi::locator=%40project%2Freact-app%40workspace%3A.":
+"@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi::locator=%40project%2Freact-app%40workspace%3A.":
   version: 0.0.1-alpha.23
-  resolution: "@pushprotocol/restapi@file:/Users/abhish3k/Desktop/push_sdk/dist/packages/restapi#/Users/abhish3k/Desktop/push_sdk/dist/packages/restapi::hash=46d053&locator=%40project%2Freact-app%40workspace%3A."
+  resolution: "@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi#../push-sdk/dist/packages/restapi::hash=46d053&locator=%40project%2Freact-app%40workspace%3A."
   dependencies:
     "@livepeer/webrtmp-sdk": ^0.2.3
     "@metamask/eth-sig-util": ^5.0.2
@@ -4978,9 +4978,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@file:/Users/abhish3k/Desktop/push_sdk/dist/packages/uiweb::locator=%40project%2Freact-app%40workspace%3A.":
+"@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb::locator=%40project%2Freact-app%40workspace%3A.":
   version: 1.0.2
-  resolution: "@pushprotocol/uiweb@file:/Users/abhish3k/Desktop/push_sdk/dist/packages/uiweb#/Users/abhish3k/Desktop/push_sdk/dist/packages/uiweb::hash=aedd4a&locator=%40project%2Freact-app%40workspace%3A."
+  resolution: "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb#../push-sdk/dist/packages/uiweb::hash=aedd4a&locator=%40project%2Freact-app%40workspace%3A."
   dependencies:
     "@livepeer/react": ^2.6.0
     "@pushprotocol/socket": ^0.5.0
