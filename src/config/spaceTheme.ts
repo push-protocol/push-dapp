@@ -22,37 +22,37 @@ export interface ISpacesTheme {
 }
 
 export const lightTheme = {
-  titleBg: 'linear-gradient(45deg, #E165EC 0.01%, #A483ED 100%)',//not changed
+  titleBg: 'linear-gradient(45deg, #E165EC 0.01%, #A483ED 100%)', //not changed
   titleTextColor: '#FFFFFF',
   bgColorPrimary: '#fff',
   bgColorSecondary: '#F7F1FB',
   textColorPrimary: '#000',
   textColorSecondary: '#657795',
-  textGradient: 'linear-gradient(45deg, #B6A0F5, #F46EF6, #FFDED3, #FFCFC5)',//not changed
+  textGradient: 'linear-gradient(45deg, #B6A0F5, #F46EF6, #FFDED3, #FFCFC5)', //not changed
   btnColorPrimary: '#D53A94',
   btnOutline: '#D53A94',
-  borderColor: '#FFFF',
+  borderColor: '#FFFF', // need to check
   borderRadius: '17px',
   containerBorderRadius: '12px',
   statusColorError: '#E93636',
   statusColorSuccess: '#30CC8B',
-  iconColorPrimary: '#82828A',
+  iconColorPrimary: '#82828A', // need to check
 };
 
 export const darkTheme = {
-  titleBg: 'linear-gradient(87.17deg, #EA4EE4 0%, #D23CDF 0.01%, #8B5CF6 100%)',
+  titleBg: 'linear-gradient(45deg, #E165EC 0.01%, #A483ED 100%)',
   titleTextColor: '#fff',
-  bgColorPrimary: '#000',
-  bgColorSecondary: '#292344',
+  bgColorPrimary: '#2F3137',
+  bgColorSecondary: '#404550',
   textColorPrimary: '#fff',
-  textColorSecondary: '#71717A',
+  textColorSecondary: '#B6BCD6',
   textGradient: 'linear-gradient(45deg, #B6A0F5, #F46EF6, #FFDED3, #FFCFC5)',
-  btnColorPrimary: '#8B5CF6',
-  btnOutline: '#8B5CF6',
-  borderColor: '#3F3F46',
+  btnColorPrimary: '#D53A94',
+  btnOutline: '#D53A94',
+  borderColor: '#3F3F46', //need to check
   borderRadius: '17px',
   containerBorderRadius: '12px',
   statusColorError: '#E93636',
   statusColorSuccess: '#30CC8B',
-  iconColorPrimary: '#71717A',
+  iconColorPrimary: '#71717A', //need to check
 };

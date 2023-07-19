@@ -240,6 +240,8 @@ const themeLight = {
   stakingBorder:'#BAC4D6',
   stakingEmptyButtonBG:'#DEDFE1',
   
+   //spaces
+   spaceHostTextColor: '#1e1e1e',
 
   spaceTheme: {
     titleBg: 'linear-gradient(45deg, #E165EC 0.01%, #A483ED 100%)',//not changed
@@ -506,6 +508,9 @@ const themeDark = {
   activeButtonText:'#B6BCD6',
   emptyButtonText:'#2D313C',
   emptyButtonBg:'',
+
+  //spaces
+  spaceHostTextColor: '#ffff',
 
   spaceTheme: {
     titleBg: 'linear-gradient(87.17deg, #EA4EE4 0%, #D23CDF 0.01%, #8B5CF6 100%)',
