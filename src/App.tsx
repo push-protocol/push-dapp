@@ -2,7 +2,7 @@
 import { AbstractConnector } from '@web3-react/abstract-connector';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import Joyride, { CallBackProps } from 'react-joyride';
@@ -38,11 +38,23 @@ import Navigation from 'structure/Navigation';
 import { appConfig } from 'config';
 import { themeDark, themeLight } from 'config/Themization';
 import GLOBALS from 'config/Globals';
+import { ChatUserContext } from 'contexts/ChatUserContext';
+
+// space imports
 import SpaceContextProvider from 'contexts/SpaceContext';
 import { useSpaceComponents } from 'hooks/useSpaceComponents';
 import { SpacesUIProvider } from '@pushprotocol/uiweb';
 import { darkTheme,lightTheme } from 'config/spaceTheme';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
+import {
+  ISpaceBannerProps,
+  ISpaceCreateWidgetProps,
+  ISpaceFeedProps,
+  ISpaceInvitesProps,
+  ISpaceWidgetProps,
+  SpacesUI,
+} from '@pushprotocol/uiweb';
+import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
 
 dotenv.config();
 
@@ -53,10 +65,19 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+export interface IUseSpaceReturnValues {
+  spaceUI: SpacesUI;
+  SpaceInvitesComponent: React.FC<ISpaceInvitesProps>;
+  SpaceWidgetComponent: React.FC<ISpaceWidgetProps>;
+  SpaceFeedComponent: React.FC<ISpaceFeedProps>;
+  SpaceBannerComponent: React.FC<ISpaceBannerProps>;
+  CreateSpaceComponent: React.FC<ISpaceCreateWidgetProps>;
+}
+
 export default function App() {
   const dispatch = useDispatch();
 
-  const { connector, activate, active, error, account, chainId } = useWeb3React<ethers.providers.Web3Provider>();
+  const { connector, activate, active, error, account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
   const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
   const [currentTime, setcurrentTime] = React.useState(0);
 
@@ -167,7 +188,18 @@ export default function App() {
     // }
   };
 
-  const { spaceUI } = useSpaceComponents();
+  const librarySigner = library?.getSigner();
+  const { pgpPvtKey } = useContext(ChatUserContext);
+
+
+  const spaceUI = new SpacesUI({
+    account: account,
+    signer: librarySigner,
+    pgpPrivateKey: pgpPvtKey,
+    env: appConfig?.appEnv,
+  });
+
+  // const { spaceUI } = useSpaceComponents();
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
@@ -183,6 +215,7 @@ export default function App() {
           <InitState />
           <NavigationContextProvider>
             <SpaceContextProvider>
+              <SpaceComponentContextProvider spaceUI={spaceUI}>
             <AppContextProvider>
               <Joyride
                 run={run}
@@ -236,6 +269,7 @@ export default function App() {
                 </ContentContainer>
               </ParentContainer>
             </AppContextProvider>
+            </SpaceComponentContextProvider>
             </SpaceContextProvider>
           </NavigationContextProvider>
         </>

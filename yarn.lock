@@ -4904,8 +4904,8 @@ __metadata:
   linkType: hard
 
 "@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi::locator=%40project%2Freact-app%40workspace%3A.":
-  version: 0.0.1-alpha.23
-  resolution: "@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi#../push-sdk/dist/packages/restapi::hash=beb412&locator=%40project%2Freact-app%40workspace%3A."
+  version: 0.0.1-alpha.24
+  resolution: "@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi#../push-sdk/dist/packages/restapi::hash=e95335&locator=%40project%2Freact-app%40workspace%3A."
   dependencies:
     "@livepeer/webrtmp-sdk": ^0.2.3
     "@metamask/eth-sig-util": ^5.0.2
@@ -4922,7 +4922,7 @@ __metadata:
     video-stream-merger: ^4.0.1
   peerDependencies:
     ethers: ^5.6.8
-  checksum: cdff9a3bd3c2b4c914e167112c1a0767659f7cbd13404a908cdab2eb83748c28cd0c213f3ad3d83f4995bd9d917b60564e75a946771d19c46a1a7439810bbf00
+  checksum: 1fff427999354353f8cbbb966fe947aece9376bdb208092ac60ad89e90d4e67526445a09f52764223130e4672dd8b1f3186731fb82ab88acf6fdd32beb9a3af8
   languageName: node
   linkType: hard
 
@@ -4951,22 +4951,25 @@ __metadata:
   linkType: hard
 
 "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb::locator=%40project%2Freact-app%40workspace%3A.":
-  version: 1.0.2
-  resolution: "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb#../push-sdk/dist/packages/uiweb::hash=44f142&locator=%40project%2Freact-app%40workspace%3A."
+  version: 1.1.1
+  resolution: "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb#../push-sdk/dist/packages/uiweb::hash=aa1981&locator=%40project%2Freact-app%40workspace%3A."
   dependencies:
     "@livepeer/react": ^2.6.0
     "@pushprotocol/socket": ^0.5.0
+    "@unstoppabledomains/resolution": ^8.5.0
     date-fns: ^2.28.0
-    emoji-picker-react: ^3.5.1
+    emoji-picker-react: ^4.4.9
+    font-awesome: ^4.7.0
+    gif-picker-react: ^1.1.0
     html-react-parser: ^1.4.13
+    moment: ^2.29.4
   peerDependencies:
     "@pushprotocol/restapi": ^1.2.15
     "@pushprotocol/socket": ^0.5.0
     ethers: ^5.7.1
-    moment: ^2.29.4
     react: ">=16.8.0"
     styled-components: ^5.3.5
-  checksum: b183501d914322f1f1a513c31e102999d4177a669df09c946e96dfaced6f96a482f9695e486fe863c96908f6b86179294a4a52242e4686fc98ee080b0b89d6f7
+  checksum: c37fc6c484304fe553b93bddd936ae6ae371bf90e17c7b9c24e0b9de3fa6808776a1dd206fd60b7f06d253f2c375f8f356db506390c1b13e7ef2edafb06fc3bc
   languageName: node
   linkType: hard
 
@@ -13845,6 +13848,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"emoji-picker-react@npm:^4.4.9":
+  version: 4.4.10
+  resolution: "emoji-picker-react@npm:4.4.10"
+  dependencies:
+    clsx: ^1.2.1
+  peerDependencies:
+    react: ">=16"
+  checksum: 7e33ab84a8ea030a1317864636d9a5b56a237721652245d9b8dc3afaa723d1d3d2ab9558abd50faacb754cb61077ee79ee7f24d9f675562846f4ab41f183944c
+  languageName: node
+  linkType: hard
+
 "emoji-regex@npm:^7.0.1":
   version: 7.0.3
   resolution: "emoji-regex@npm:7.0.3"
@@ -16529,6 +16543,16 @@ __metadata:
     gh-pages: bin/gh-pages.js
     gh-pages-clean: bin/gh-pages-clean.js
   checksum: d766aef02d2859bd2fa89b183a7cb7cdb4b86401369c734e9a76875afbdcf9132142b2cdf35a835ed056131a9cdc4b4d9c551cdc353a9a248ff3cec6346a36d8
+  languageName: node
+  linkType: hard
+
+"gif-picker-react@npm:^1.1.0":
+  version: 1.3.0
+  resolution: "gif-picker-react@npm:1.3.0"
+  peerDependencies:
+    react: ">=17"
+    react-dom: ">=17"
+  checksum: ccc1d275ebb597f5e109d6500677d365fe736db6a40e86970529dc596fc2929a16d2a18dd97513b408eb230ad1e5e7d28c7d3a00a2a193ff98f7975a44b24718
   languageName: node
   linkType: hard
 
@@ -21848,7 +21872,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"moment@npm:^2.19.3, moment@npm:^2.29.1":
+"moment@npm:^2.19.3, moment@npm:^2.29.1, moment@npm:^2.29.4":
   version: 2.29.4
   resolution: "moment@npm:2.29.4"
   checksum: 0ec3f9c2bcba38dc2451b1daed5daded747f17610b92427bebe1d08d48d8b7bdd8d9197500b072d14e326dd0ccf3e326b9e3d07c5895d3d49e39b6803b76e80e
