@@ -34,14 +34,13 @@ export const SpaceFeedSection = ({ spaceid }) => {
   }, [spaceid]);
 
   let navigate = useNavigate();
-  const handleSpaceId = (spaceId: string) => {
-    setSpaceId(spaceId);
-    navigate(`/space/${spaceId}`);
-  };
 
-  const createSpace = () => {
-    return <CreateSpaceComponent />;
-  };
+  const handleSpaceId = (spaceId: string) =>{
+    setSpaceId(spaceId);
+    console.log(spaceId);
+    navigate(`/space/${spaceId}`)
+  }
+  
   return (
     <SpaceCard>
       <SpaceHeader>
@@ -51,34 +50,23 @@ export const SpaceFeedSection = ({ spaceid }) => {
 
         <SpaceUser>{shortenText(account, 6)}</SpaceUser>
 
-        {/* <Button
-            bg='#D53A94'
-            color='#fff'
-            radius='12px'
-            size='14px'
-            margin='0px 14px 0px auto'
-            onClick={createSpace}
-          >
-            <SpaceChatIcon style={{marginRight: '10px'}} />
-            Create your Space
-          </Button> */}
         <CreateDiv>
           <CreateSpaceComponent>{/* <NewButton /> */}</CreateSpaceComponent>
         </CreateDiv>
 
         <SpaceInvitesComponent>
-          <div style={{ position: 'relative', marginRight: '10px', cursor: 'pointer' }}>
+          <SpaceInviteDiv>
             <Image
               src={theme?.scheme == 'light' ? SpaceIcon : SpaceDark}
               srcSet={theme?.scheme == 'light' ? SpaceIcon : SpaceDark}
               width={'30px'}
             />
             {spaceInvites > 0 && <Badge>{spaceInvites}</Badge>}
-          </div>
+          </SpaceInviteDiv>
         </SpaceInvitesComponent>
       </SpaceHeader>
 
-      <div style={{ marginTop: '30px' }}>
+      <FeedItem>
         <SpaceFeedComponent
           showTabs={true}
           orientation="vertical"
@@ -89,7 +77,7 @@ export const SpaceFeedSection = ({ spaceid }) => {
             handleSpaceId(spaceId);
           }}
         />
-      </div>
+      </FeedItem>
 
       {/* <CreateSpaceComponent /> */}
       {/* <SpaceInvitesComponent /> */}
@@ -158,4 +146,19 @@ const Badge = styled.div`
   border-radius: 8px;
   background: #d53a94;
   color: #ffffff;
+`;
+
+const SpaceInviteDiv = styled.div`
+  position: relative;
+  margin-right: 10px; 
+  cursor: pointer;
+`;
+
+const FeedItem = styled.div`
+    margin-top: 30px;
+    overflow-y: scroll;
+    max-height: 100%; //overflow for feed items itself
+    // max-height: 500px; //overflow for feed items itself
+    // margin-bottom: 70px;
+    box-sizing: border-box !important;
 `;
