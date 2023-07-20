@@ -2,7 +2,7 @@
 import { AbstractConnector } from '@web3-react/abstract-connector';
 import { useWeb3React, Web3ReactHooks } from '@web3-react/core';
 import { ethers } from 'ethers';
-import React, {useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import Joyride, { CallBackProps } from 'react-joyride';
@@ -50,6 +50,23 @@ import { Network } from "@web3-react/network";
 import { appConfig } from 'config';
 import { themeDark, themeLight } from 'config/Themization';
 import GLOBALS from 'config/Globals';
+import { ChatUserContext } from 'contexts/ChatUserContext';
+
+// space imports
+import SpaceContextProvider from 'contexts/SpaceContext';
+import { useSpaceComponents } from 'hooks/useSpaceComponents';
+import { SpacesUIProvider } from '@pushprotocol/uiweb';
+import { darkTheme,lightTheme } from 'config/spaceTheme';
+import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
+import {
+  ISpaceBannerProps,
+  ISpaceCreateWidgetProps,
+  ISpaceFeedProps,
+  ISpaceInvitesProps,
+  ISpaceWidgetProps,
+  SpacesUI,
+} from '@pushprotocol/uiweb';
+import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
 
 dotenv.config();
 
@@ -60,6 +77,14 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+export interface IUseSpaceReturnValues {
+  spaceUI: SpacesUI;
+  SpaceInvitesComponent: React.FC<ISpaceInvitesProps>;
+  SpaceWidgetComponent: React.FC<ISpaceWidgetProps>;
+  SpaceFeedComponent: React.FC<ISpaceFeedProps>;
+  SpaceBannerComponent: React.FC<ISpaceBannerProps>;
+  CreateSpaceComponent: React.FC<ISpaceCreateWidgetProps>;
+}
 export const connectors: [
   MetaMask | WalletConnectV2 | Network,
   Web3ReactHooks,
@@ -73,7 +98,7 @@ export const connectors: [
 export default function App() {
   const dispatch = useDispatch();
 
-  const { connector, isActive, account, chainId } = useWeb3React<ethers.providers.Web3Provider>();
+  const { connector, isActive, account, chainId, provider } = useWeb3React<ethers.providers.Web3Provider>();
   const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
   const [currentTime, setcurrentTime] = React.useState(0);
   const {authError, setAuthError } = useContext(ErrorContext);
@@ -188,7 +213,18 @@ export default function App() {
     // }
   };
 
+  const librarySigner = provider?.getSigner(account);
+  const { pgpPvtKey } = useContext<any>(ChatUserContext);
 
+
+  const spaceUI = useMemo(() => new SpacesUI({
+    account: account,
+    signer: librarySigner,
+    pgpPrivateKey: pgpPvtKey,
+    env: appConfig?.appEnv,
+  }), [account, librarySigner, pgpPvtKey, appConfig?.appEnv]);
+
+  // const { spaceUI } = useSpaceComponents();
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
@@ -203,6 +239,8 @@ export default function App() {
           <GlobalStyle />
           <InitState />
           <NavigationContextProvider>
+            <SpaceContextProvider>
+              <SpaceComponentContextProvider spaceUI={spaceUI}>
             <AppContextProvider>
               <Joyride
                 run={run}
@@ -248,11 +286,16 @@ export default function App() {
                 </LeftBarContainer>
 
                 <ContentContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                  {/* Shared among all pages, load universal things here */}
-                  <MasterInterfacePage />
+                   {/* Shared among all pages, load universal things here */}
+                   <SpacesUIProvider spaceUI={spaceUI} theme={darkMode ? darkTheme : lightTheme}>
+                      <MasterInterfacePage />
+                      <SpaceWidgetSection />
+                    </SpacesUIProvider>
                 </ContentContainer>
               </ParentContainer>
             </AppContextProvider>
+            </SpaceComponentContextProvider>
+            </SpaceContextProvider>
           </NavigationContextProvider>
         </>
       )}
