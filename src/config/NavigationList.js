@@ -89,7 +89,7 @@ const NavigationList = {
       name: 'Spaces',
       title: 'Spaces',
       alt: 'Open Spaces',
-      href: '/space',
+      href: '/spaces',
       newTab: false,
       isRoute: true,
       hasMenuLogic: true,

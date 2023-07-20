@@ -79,8 +79,8 @@ function MasterInterfacePage() {
             <Route path="inbox" element={<InboxPage />} />
             <Route path="chat/:chatid" element={<ChatPage />} />
             <Route path="chat" element={<ChatPage />} />
-            <Route path="space/:spaceid" element={<SpacePage />} />
-            <Route path="space" element={<SpacePage />} />
+            <Route path="spaces/:spaceid" element={<SpacePage />} />
+            <Route path="spaces" element={<SpacePage />} />
             {/* <Route path="chat-new" element={<NewChatPage />} /> */}
 
             <Route
