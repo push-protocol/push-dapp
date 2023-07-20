@@ -4905,7 +4905,7 @@ __metadata:
 
 "@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi::locator=%40project%2Freact-app%40workspace%3A.":
   version: 0.0.1-alpha.24
-  resolution: "@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi#../push-sdk/dist/packages/restapi::hash=3b26df&locator=%40project%2Freact-app%40workspace%3A."
+  resolution: "@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi#../push-sdk/dist/packages/restapi::hash=4fff16&locator=%40project%2Freact-app%40workspace%3A."
   dependencies:
     "@livepeer/webrtmp-sdk": ^0.2.3
     "@metamask/eth-sig-util": ^5.0.2
@@ -4922,7 +4922,7 @@ __metadata:
     video-stream-merger: ^4.0.1
   peerDependencies:
     ethers: ^5.6.8
-  checksum: b4e2ff291f91213ca688118d82dec8190a991d3eb4567c1521c5ade493b61622d12bc2a9e8b9b879e39b06c48b52755ae15b4552d18f3ae5f74335e84ad3c512
+  checksum: fbcaf4c8c98d98512d1fdb058d9c1527bf8fdd4ede3ac06aa7b6450a0f230fa2c56f1fae992ddf4fa2e92eef8aa578b82bb51ff2dfa45891bcc90055f86e913a
   languageName: node
   linkType: hard
 
@@ -4952,7 +4952,7 @@ __metadata:
 
 "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb::locator=%40project%2Freact-app%40workspace%3A.":
   version: 1.1.1
-  resolution: "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb#../push-sdk/dist/packages/uiweb::hash=6db628&locator=%40project%2Freact-app%40workspace%3A."
+  resolution: "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb#../push-sdk/dist/packages/uiweb::hash=4553e1&locator=%40project%2Freact-app%40workspace%3A."
   dependencies:
     "@livepeer/react": ^2.6.0
     "@pushprotocol/socket": ^0.5.0
@@ -4969,7 +4969,7 @@ __metadata:
     ethers: ^5.7.1
     react: ">=16.8.0"
     styled-components: ^5.3.5
-  checksum: e7da64838fe6631dd457b23026a29fefd2c087c4637db1b958d59aa095e540216049168e0ed09bc1ab9446bcef569655b4b66805edc9e7ab095bb23125aa4d81
+  checksum: f9303fd7c81552a8ff0286cf8b8666daeb18b7233f63e1fcc1c1c4eee964d9d5f8c7afc29bde6a6a29a9bf6170806376af53018cb8f535bce7df831b6f20485f
   languageName: node
   linkType: hard
 

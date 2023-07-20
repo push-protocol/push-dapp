@@ -38,7 +38,7 @@ const SpaceFeedSection = ({spaceid}) => {
   const handleSpaceId = (spaceId: string) =>{
     setSpaceId(spaceId);
     // console.log(spaceId);
-    navigate(`/space/${spaceId}`)
+    navigate(`/spaces/${spaceId}`)
   }
   
   return (
