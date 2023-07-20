@@ -23,7 +23,7 @@ import GLOBALS, { device, globalsMargin } from 'config/Globals';
 const AirdropModule = () => {
   const theme = useTheme();
 
-  const { account, library, chainId } = useWeb3React();
+  const { account, provider, chainId } = useWeb3React();
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const [controlAt, setControlAt] = React.useState(0);
@@ -49,15 +49,15 @@ const AirdropModule = () => {
   });
 
   React.useEffect(() => {
-    if (!!(library && account)) {
-      let signer = library.getSigner(account);
+    if (!!(provider && account)) {
+      let signer = provider.getSigner(account);
       console.log(abis.distributor);
       const signerInstance = new ethers.Contract(addresses.distributor, abis.distributor, signer);
       setDistributorContract(signerInstance);
       // const NFTRewardsInstance = new ethers.Contract(addresses.NFTRewards, abis.NFTRewards, signer);
       // setNFTRewardsContract(NFTRewardsInstance);
     }
-  }, [account, library]);
+  }, [account, provider]);
 
   React.useEffect(() => {
     if (distributorContract) {
@@ -91,7 +91,7 @@ const AirdropModule = () => {
         progress: undefined,
       });
       try {
-        await library.waitForTransaction(tx.hash);
+        await provider.waitForTransaction(tx.hash);
 
         toast.update(txToast, {
           render: 'Transaction Completed!',

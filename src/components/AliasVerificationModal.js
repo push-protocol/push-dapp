@@ -21,8 +21,8 @@ export default function AliasVerificationModal({
   verificationStatus,
   aliasEthAccount,
 }) {
-  const { account, library } = useWeb3React();
-  const signer = library.getSigner(account);
+  const { account, provider } = useWeb3React();
+  const signer = provider.getSigner(account);
 
   const themes = useTheme();
 

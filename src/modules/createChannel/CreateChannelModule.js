@@ -35,7 +35,7 @@ const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 // Create Header
 function CreateChannelModule() {
-  const { account, library, chainId } = useWeb3React();
+  const { account, provider, chainId } = useWeb3React();
   const theme = useTheme();
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const [processing, setProcessing] = React.useState(0);
@@ -78,7 +78,7 @@ function CreateChannelModule() {
   React.useEffect(() => {
     if (!onCoreNetwork) return;
     const checkPushTokenApprovalFunc = async () => {
-      let checkPushTokenApprovedAmount = new ethers.Contract(addresses.pushToken, abis.pushToken, library);
+      let checkPushTokenApprovedAmount = new ethers.Contract(addresses.pushToken, abis.pushToken, provider);
 
       let value = await checkPushTokenApprovedAmount.allowance(account, addresses.epnscore);
       value = value?.toString();
@@ -298,7 +298,7 @@ function CreateChannelModule() {
     
     // Send Transaction
     // First Approve DAI
-    var signer = library.getSigner(account);
+    var signer = provider.getSigner(account);
     console.log(signer);
 
     let pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
@@ -315,7 +315,7 @@ function CreateChannelModule() {
         console.log('waiting for tx to finish');
         setProgress(30);
 
-        await library.waitForTransaction(tx.hash);
+        await provider.waitForTransaction(tx.hash);
       }
 
       let contract = new ethers.Contract(addresses.epnscore, abis.epnscore, signer);
@@ -339,7 +339,7 @@ function CreateChannelModule() {
 
       console.log(tx);
       console.log('Check: ' + account);
-      let txCheck = await library.waitForTransaction(tx.hash);
+      let txCheck = await provider.waitForTransaction(tx.hash);
 
       if (txCheck.status === 0) {
         channelToast.showMessageToast({

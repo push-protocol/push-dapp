@@ -19,7 +19,7 @@ import { abis, addresses, appConfig } from "config";
 
 // Create Header
 function MyNFTs({ controlAt, setControlAt, setTokenId }) {
-  const { account, library, chainId } = useWeb3React();
+  const { account, provider, chainId } = useWeb3React();
 
   const [nftReadProvider, setNftReadProvider] = React.useState(null);
   const [nftWriteProvider, setNftWriteProvider] = React.useState(null);
@@ -31,7 +31,7 @@ function MyNFTs({ controlAt, setControlAt, setTokenId }) {
   const onMainnetCore = chainId === appConfig.mainnetCoreContractChain;
 
   const mainnetCoreProvider = onMainnetCore
-    ? library
+    ? provider
     : new ethers.providers.JsonRpcProvider(appConfig.mainnetCoreRPC);
 
   React.useEffect(() => {

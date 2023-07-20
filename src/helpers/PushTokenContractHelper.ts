@@ -116,11 +116,12 @@ export const importPushToken = async ({ provider }: ImportPushTokenType): Promis
 
 type MintPushTokenType = {
   noOfTokens: number,
-  library: any,
+  provider: any,
   account: any,
 }
-export const mintPushToken = async ({noOfTokens, library, account}:MintPushTokenType)=>{
+export const mintPushToken = async ({noOfTokens, provider, account}:MintPushTokenType)=>{
   try {
+    var signer = provider.getSigner(account);
     let pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
     console.log({
       pushTokenContract,
@@ -133,7 +134,7 @@ export const mintPushToken = async ({noOfTokens, library, account}:MintPushToken
     console.log(3);
     const tx = await mintTransactionPromise;
     console.log(tx);
-    await library.waitForTransaction(tx.hash);
+    await provider.waitForTransaction(tx.hash);
     console.log(4);
 
     console.log("Transaction Completed");

@@ -43,7 +43,7 @@ const GovModule = () => {
   const theme = useTheme();
 
   const { web3NameList }:AppContextType = React.useContext(AppContext);
-  const { account, library, chainId } = useWeb3React();
+  const { account, provider, chainId } = useWeb3React();
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const [dashboardLoading, setDashboardLoading] = React.useState(true);
@@ -95,19 +95,19 @@ const GovModule = () => {
 
   React.useEffect(() => {
     console.log(account);
-    if (!!(library && account)) {
-      let signer = library.getSigner(account);
+    if (!!(provider && account)) {
+      let signer = provider.getSigner(account);
       setSignerObject(signer);
       const epnsTokenContract = new ethers.Contract(addresses.epnsToken, abis.epnsToken, signer);
       setEpnsToken(epnsTokenContract);
     }
-  }, [account, library]);
+  }, [account, provider]);
 
   React.useEffect(() => {
     if (epnsToken) {
       getMyInfo();
     }
-  }, [epnsToken, account, library, prettyTokenBalance, tokenBalance]);
+  }, [epnsToken, account, provider, prettyTokenBalance, tokenBalance]);
 
   React.useEffect(() => {
     setDashboardLoading(false);
@@ -202,7 +202,7 @@ const GovModule = () => {
     // otherwise return error message
 
     // get gas price
-    const gasPrice = await EPNSCoreHelper.getGasPriceInDollars(library);
+    const gasPrice = await EPNSCoreHelper.getGasPriceInDollars(provider);
     const totalCost = gasPrice * gasEstimate;
     if (totalCost > GAS_LIMIT) {
       return 'Gas Price is too high, Please try again in a while.';
@@ -241,7 +241,7 @@ const GovModule = () => {
     }
 
     if (transactionMode === 'withgas') {
-      executeDelegateTx({ delegateeAddress, epnsToken, toast, setTxInProgress, library, LoaderToast });
+      executeDelegateTx({ delegateeAddress, epnsToken, toast, setTxInProgress, provider, LoaderToast });
       return;
     }
     if (tokenBalance < PUSH_BALANCE_TRESHOLD) {
@@ -265,7 +265,7 @@ const GovModule = () => {
       epnsToken,
       addresses,
       signerObject,
-      library,
+      provider,
       setTxLoading: setTxInProgress,
     });
     toolingPostReq('/gov/prev_delegation', { walletAddress: account })

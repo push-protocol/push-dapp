@@ -77,6 +77,7 @@ function MasterInterfacePage() {
         >
           <Routes>
             <Route path="inbox" element={<InboxPage />} />
+            <Route path="spam" element={<InboxPage />} />
             <Route path="chat/:chatid" element={<ChatPage />} />
             <Route path="chat" element={<ChatPage />} />
             <Route path="spaces/:spaceid" element={<SpacePage />} />
@@ -89,13 +90,12 @@ function MasterInterfacePage() {
             />
             <Route path="dashboard" element={<ChannelDashboardPage />} />
             <Route path="send" element={<SendNotifsPage />} />
-            <Route path="spam" element={<SpamPage />} />
             <Route path="receive" element={<ReceiveNotifsPage />} />
 
             <Route path="govern" element={<GovPage />} />
 
             <Route path="yield" element={<YieldFarmingPage />} />
-            <Route path="yieldv2" element={<YieldFarmingV2Page />} />
+            {/* <Route path="yieldv2" element={<YieldFarmingV2Page />} /> */}
             <Route path="rockstar" element={<NFTPage />} />
             <Route path="gratitude" element={<AirdropPage />} />
             <Route path="live_walkthrough" element={<TutorialPage />} />

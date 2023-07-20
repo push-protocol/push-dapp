@@ -25,7 +25,7 @@ function ChannelDashboardPage() {
   ReactGA.pageview('/send_notificaiton');
 
   const dispatch = useDispatch();
-  const { account, library, chainId } = useWeb3React();
+  const { account, chainId } = useWeb3React();
   const { epnsReadProvider, epnsWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const { channelDetails } = useSelector((state: any) => state.admin);
 

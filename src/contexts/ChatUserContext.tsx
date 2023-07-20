@@ -13,7 +13,7 @@ export const ChatUserContext = createContext({})
 //this context is global and it is called in APP.tsx
 const ChatUserContextProvider = (props) => {
   const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
-  const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
+  const { account, chainId, provider } = useWeb3React<ethers.providers.Web3Provider>();
 
   //this blocked loading is a modal which shows during the PGP keys generation time
   const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
@@ -143,7 +143,7 @@ const ChatUserContextProvider = (props) => {
       if (user.wallets.includes(',') || !user.wallets?.toLowerCase().includes(caip10?.toLowerCase())) {
         throw Error('Invalid user');
       }
-      const _signer = await library.getSigner();
+      const _signer = await provider.getSigner();
       const privateKeyArmored = await PushAPI.chat.decryptPGPKey({
         encryptedPGPPrivateKey: user.encryptedPrivateKey,
         signer: _signer,
@@ -180,7 +180,7 @@ const ChatUserContextProvider = (props) => {
 
   const createUserIfNecessary = async (): Promise<ConnectedUser> => {
     try {
-      const signer = await library.getSigner();
+      const signer = await provider.getSigner();
       await PushAPI.user.create({ 
         account: account,
         env: appConfig.appEnv,

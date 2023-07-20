@@ -51,7 +51,7 @@ const WidgetCustomTheme = {
 export const UniswapWidgetModal = ({ InnerComponentProps, onClose }: UniswapWidgetModalProps) => {
   const { defaultPushTokenAmount } = InnerComponentProps;
   const theme = useTheme();
-  const { library } = useWeb3React();
+  const { provider } = useWeb3React();
 
   const containerRef = useRef(null);
   useClickAway(containerRef, () => {
@@ -71,7 +71,7 @@ export const UniswapWidgetModal = ({ InnerComponentProps, onClose }: UniswapWidg
         defaultOutputAmount={defaultPushTokenAmount}
         theme={WidgetCustomTheme[theme.scheme]}
         jsonRpcUrlMap={jsonRpcUrlMap}
-        provider={library}
+        provider={provider}
       />
     </div>
   );

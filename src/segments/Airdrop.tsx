@@ -18,7 +18,7 @@ import { abis, addresses } from 'config';
 
 // Other Information section
 function Airdrop() {
-  const { account, library } = useWeb3React();
+  const { account, provider } = useWeb3React();
 
   const [controlAt, setControlAt] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
@@ -36,14 +36,14 @@ function Airdrop() {
   };
 
   React.useEffect(() => {
-    if (!!(library && account)) {
-      let signer = library.getSigner(account);
+    if (!!(provider && account)) {
+      let signer = provider.getSigner(account);
       const signerInstance = new ethers.Contract(addresses.distributor, abis.distributor, signer);
       setDistributorContract(signerInstance);
       // const NFTRewardsInstance = new ethers.Contract(addresses.NFTRewards, abis.NFTRewards, signer);
       // setNFTRewardsContract(NFTRewardsInstance);
     }
-  }, [account, library]);
+  }, [account, provider]);
 
   React.useEffect(() => {
     if (distributorContract) {
@@ -77,7 +77,7 @@ function Airdrop() {
         progress: undefined,
       });
       try {
-        await library.waitForTransaction(tx.hash);
+        await provider.waitForTransaction(tx.hash);
 
         toast.update(txToast, {
           render: 'Transaction Completed!',

@@ -2,10 +2,10 @@ import React, { useContext, useRef } from 'react';
 
 // React + Web3 Essentials
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
-import {
-  NoEthereumProviderError,
-  UserRejectedRequestError as UserRejectedRequestErrorInjected,
-} from '@web3-react/injected-connector';
+// import {
+//   NoEthereumProviderError,
+//   UserRejectedRequestError as UserRejectedRequestErrorInjected,
+// } from '@web3-react/injected-connector';
 import { ethers } from 'ethers';
 
 // External Packages
@@ -44,7 +44,7 @@ function Header({ isDarkMode, darkModeToggle }) {
 
   const { navigationSetup } = useContext(NavigationContext);
 
-  const { active, error,library, chainId } = useWeb3React();
+  const { isActive, error,library, chainId } = useWeb3React();
 
   const [showLoginControls, setShowLoginControls] = React.useState(false);
 
@@ -96,8 +96,8 @@ function Header({ isDarkMode, darkModeToggle }) {
       else if (appConfig.coreContractChain === 5)
         return 'Unsupported Network, please connect to the Ethereum Goerli, Polygon Mumbai, BNB testnet, Optimism Goerli or Polygon zkEVM testnet';
       else return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB, or Polygon zkEVM Mainnet';
-    } else if (error instanceof UserRejectedRequestErrorInjected) {
-      return 'Please authorize this website to access the dApp';
+    // } else if (error instanceof UserRejectedRequestErrorInjected) {
+    //   return 'Please authorize this website to access the dApp';
     } else {
       console.error(error);
       return 'An unknown error occurred. Check the console for more details';
@@ -125,7 +125,7 @@ function Header({ isDarkMode, darkModeToggle }) {
         </RightBarContainer>
         
         {/* mobile navbar */}
-        {navigationSetup && showNavBar && active && !error && (
+        {navigationSetup && showNavBar && isActive && !error && (
           <NavMenuContainer ref={navRef} tabletAlign="flex-start">
             <NavMenu>
               <ChainIndicator isDarkMode={isDarkMode}/>
@@ -140,7 +140,7 @@ function Header({ isDarkMode, darkModeToggle }) {
       </ItemH>
 
       <ItemH justify="flex-end">
-        {headerTag && active && !error && (
+        {headerTag && isActive && !error && (
           <HeaderTag align="flex-start" overflow="hidden">
             <Span
               textTransform="capitalize"
@@ -154,7 +154,7 @@ function Header({ isDarkMode, darkModeToggle }) {
           </HeaderTag>
         )}
 
-        {active && !showLoginControls && !error && (
+        {isActive && !showLoginControls && !error && (
           <DarkModeSwitch
             style={{ margin: '0 1rem' }}
             checked={isDarkMode}
@@ -165,7 +165,7 @@ function Header({ isDarkMode, darkModeToggle }) {
           />
         )}
 
-      {active && !error && (
+      {isActive && !error && (
             <RightBarMobile>
               <Button
                 bg="transparent"
@@ -181,8 +181,8 @@ function Header({ isDarkMode, darkModeToggle }) {
 
         <ItemH justify="flex-end" flex="initial">
           {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>}
-          {!active && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>}
-          {active && !showLoginControls && !error && (
+          {!isActive && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>}
+          {isActive && !showLoginControls && !error && (
             <RightBarDesktop justify="flex-end" flex="initial">
               <ChainIndicator isDarkMode={isDarkMode}/>
               <Profile isDarkMode={isDarkMode} />

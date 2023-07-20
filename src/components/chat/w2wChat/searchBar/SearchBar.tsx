@@ -44,7 +44,7 @@ const SearchBar = ({ autofilled }) => {
     setFilteredUserData,
     inbox,
   }: AppContext = useContext<AppContext>(Context);
-  const { library } = useWeb3React();
+  // const { library } = useWeb3React();
   const { chainId } = useWeb3React<Web3Provider>();
   const [searchedUser, setSearchedUser] = useState<string>('');
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
@@ -149,7 +149,7 @@ const SearchBar = ({ autofilled }) => {
 
           address =
             (await provider.resolveName(searchText)) ||
-            (await library.resolveName(searchText)) ||
+            // (await library.resolveName(searchText)) ||
             (await udResolver.owner(searchText));
 
 
