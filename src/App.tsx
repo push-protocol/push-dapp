@@ -2,7 +2,7 @@
 import { AbstractConnector } from '@web3-react/abstract-connector';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import Joyride, { CallBackProps } from 'react-joyride';
@@ -189,15 +189,15 @@ export default function App() {
   };
 
   const librarySigner = library?.getSigner();
-  const { pgpPvtKey } = useContext(ChatUserContext);
+  const { pgpPvtKey } = useContext<any>(ChatUserContext);
 
 
-  const spaceUI = new SpacesUI({
+  const spaceUI = useMemo(() => new SpacesUI({
     account: account,
     signer: librarySigner,
     pgpPrivateKey: pgpPvtKey,
     env: appConfig?.appEnv,
-  });
+  }), [account, librarySigner, pgpPvtKey, appConfig?.appEnv]);
 
   // const { spaceUI } = useSpaceComponents();
 
