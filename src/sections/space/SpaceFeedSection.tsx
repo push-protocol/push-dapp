@@ -15,17 +15,20 @@ import { shortenText } from 'helpers/UtilityHelper';
 import { SpaceContext } from 'contexts/SpaceContext';
 import { device } from 'config/Globals';
 import { useNavigate } from 'react-router-dom';
-import { SpaceComponentContext }  from 'contexts/SpaceComponentsContext';
+import { SpaceComponentContext } from 'contexts/SpaceComponentsContext';
+import { useDeviceWidthCheck } from 'hooks';
 
 const NewButton = () => {
   return <button>create Space</button>;
 };
 
-const SpaceFeedSection = ({spaceid}) => {
+const SpaceFeedSection = ({ spaceid }) => {
   const { SpaceFeedComponent, SpaceInvitesComponent, CreateSpaceComponent } = useContext(SpaceComponentContext);
   const { account } = useWeb3React();
   const { setSpaceId, spaceInvites } = useContext(SpaceContext);
   const theme = useTheme();
+
+  const isMobile = useDeviceWidthCheck(480);
 
   React.useEffect(() => {
     if (spaceid) {
@@ -35,12 +38,12 @@ const SpaceFeedSection = ({spaceid}) => {
 
   let navigate = useNavigate();
 
-  const handleSpaceId = (spaceId: string) =>{
+  const handleSpaceId = (spaceId: string) => {
     setSpaceId(spaceId);
     // console.log(spaceId);
-    navigate(`/spaces/${spaceId}`)
-  }
-  
+    navigate(`/spaces/${spaceId}`);
+  };
+
   return (
     <SpaceCard>
       <SpaceHeader>
@@ -71,7 +74,7 @@ const SpaceFeedSection = ({spaceid}) => {
           showTabs={true}
           orientation="vertical"
           // width={550}
-          width={'100%'}
+          width={isMobile ? 350 : '100%'}
           height={'100%'}
           onBannerClickHandler={(spaceId: string) => {
             handleSpaceId(spaceId);
@@ -150,17 +153,17 @@ const Badge = styled.div`
 
 const SpaceInviteDiv = styled.div`
   position: relative;
-  margin-right: 10px; 
+  margin-right: 10px;
   cursor: pointer;
 `;
 
 const FeedItem = styled.div`
-    margin-top: 30px;
-    overflow-y: scroll;
-    max-height: 100%; //overflow for feed items itself
-    // max-height: 500px; //overflow for feed items itself
-    // margin-bottom: 70px;
-    box-sizing: border-box !important;
+  margin-top: 30px;
+  overflow-y: scroll;
+  max-height: 100%; //overflow for feed items itself
+  // max-height: 500px; //overflow for feed items itself
+  // margin-bottom: 70px;
+  box-sizing: border-box !important;
 `;
 
 export default SpaceFeedSection;
