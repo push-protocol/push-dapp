@@ -294,7 +294,7 @@ const AirdropModule = () => {
                 <Span>
                   Join our{' '}
                   <AMod
-                    href="https://discord.com/invite/YVPB99F9W5"
+                    href="https://discord.gg/pushprotocol"
                     target="_blank"
                     title="Join our Push (EPNS)'s Telegram channel">
                     Discord
