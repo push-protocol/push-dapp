@@ -31,7 +31,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
         setWithdrawErrorMessage
     } = InnerComponentProps;
 
-    const { account, library } = useWeb3React();
+    const { account, provider } = useWeb3React<ethers.providers.Web3Provider>();
 
     const [maxAmount, setMaxAmount] = useState(0);
     const [approvedToken, setApprovedToken] = useState(0);
@@ -55,7 +55,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
     useClickAway(containerRef, () => handleClose());
 
     const fillMax = async () => {
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
         const tokenAddr = title === 'Uni-V2' ? addresses.uniV2LPToken : addresses.pushToken;
         const token = new ethers.Contract(tokenAddr, abis.uniV2LpToken, signer);
 
@@ -67,7 +67,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
     const checkApprDeposit = async () => {
         setTxInProgressApprDep(true);
 
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
         let allowance;
 
         if (title === 'Uni-V2') {
@@ -94,7 +94,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
         setTxInProgressApprDep(true);
 
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
 
 
         let tx;
@@ -117,7 +117,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
         tx.then(async (tx) => {
             toastObject.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
             try {
-                await library.waitForTransaction(tx.hash);
+                await provider.waitForTransaction(tx.hash);
                 toastObject.showMessageToast({
                     toastTitle: 'Success',
                     toastMessage: `Successfully approved ${title} Tokens!`,
@@ -174,7 +174,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
             return;
         }
 
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
 
         let tx2;
 
@@ -203,7 +203,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
 
                 try {
-                    await library.waitForTransaction(tx.hash);
+                    await provider.waitForTransaction(tx.hash);
                     toastObject.showMessageToast({
                         toastTitle: 'Success',
                         toastMessage: 'Transaction Completed!',

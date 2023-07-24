@@ -71,7 +71,13 @@ export default class YieldFarmingDataStoreV2 {
       const pushCoreV2 = this.state.pushCoreV2;
       const yieldFarmingLP = this.state.yieldFarmingLP;
       const currentEpochLP = await yieldFarmingLP.getCurrentEpoch()
+      console.log("current Epoch LP",currentEpochLP)
+
       const currentEpochPUSH = await this.currentEpochCalculation(provider);
+
+      console.log("current Epoch PUSH",currentEpochPUSH)
+
+
 
       let pushPrice;
       const pushPriceAmounts = await this.state.uniswapV2Router02.getAmountsOut(ONE_PUSH.toString(), [addresses.pushToken,addresses.WETHAddress,addresses.USDTAddress]);

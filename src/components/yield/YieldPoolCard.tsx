@@ -30,7 +30,7 @@ const YieldPoolCard = ({
     tokenAddress,
     setActiveTab
 }: any) => {
-    const { active, error, account, library, chainId } = useWeb3React();
+    const { account, provider } = useWeb3React<ethers.providers.Web3Provider>();
 
     const [txInProgressWithdraw, setTxInProgressWithdraw] = React.useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = useState(false);
@@ -72,7 +72,7 @@ const YieldPoolCard = ({
         }
         setTxInProgressClaimRewards(true);
 
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
         let yieldFarming = new ethers.Contract(
             poolAddress,
             abis.yieldFarming,
@@ -85,7 +85,7 @@ const YieldPoolCard = ({
             yieldFarmToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
             try {
-                await library.waitForTransaction(tx.hash);
+                await provider.waitForTransaction(tx.hash);
 
                 yieldFarmToast.showMessageToast({
                     toastTitle: 'Success',
@@ -137,7 +137,7 @@ const YieldPoolCard = ({
             return;
         }
 
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
         let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
 
         const amounttowithdraw = await staking.balanceOf(
@@ -155,7 +155,7 @@ const YieldPoolCard = ({
             yieldFarmToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
             try {
-                await library.waitForTransaction(tx.hash);
+                await provider.waitForTransaction(tx.hash);
                 yieldFarmToast.showMessageToast({
                     toastTitle: 'Success',
                     toastMessage: 'Transaction Completed!',
@@ -224,7 +224,7 @@ const YieldPoolCard = ({
         // 1. For Uni V2 migration the Uni V2 token has been approved for uni v2 staking contract
         // 2. For Push migration, the pushCoreV2 has been approved for Push Fee staking Pool 
 
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
         let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
 
 
@@ -270,7 +270,7 @@ const YieldPoolCard = ({
             .then(async (tx) => {
                 yieldFarmToast.showLoaderToast({ loaderMessage: 'Withdrawing! Please Wait...' });
 
-                await library.waitForTransaction(tx.hash);
+                await provider.waitForTransaction(tx.hash);
 
                 yieldFarmToast.showMessageToast({
                     toastTitle: 'Success',
@@ -316,7 +316,7 @@ const YieldPoolCard = ({
                         tx.then(async (tx) => {
                             yieldFarmToast.showLoaderToast({ loaderMessage: 'Approving! Please Wait...' });
 
-                            await library.waitForTransaction(tx.hash);
+                            await provider.waitForTransaction(tx.hash);
 
                             yieldFarmToast.showMessageToast({
                                 toastTitle: 'Success',
@@ -371,7 +371,7 @@ const YieldPoolCard = ({
                         tx.then(async (tx) => {
                             yieldFarmToast.showLoaderToast({ loaderMessage: 'Approving! Please Wait...' });
 
-                            await library.waitForTransaction(tx.hash);
+                            await provider.waitForTransaction(tx.hash);
 
                             yieldFarmToast.showMessageToast({
                                 toastTitle: 'Success',
@@ -421,7 +421,7 @@ const YieldPoolCard = ({
 
 
     const depositLpToken = async (tx, withdrawAmount, totalTxnSteps) => {
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
         var stakingV2 = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
 
         setMigrateMessage(`Staking ${totalTxnSteps}/${totalTxnSteps}`)
@@ -436,7 +436,7 @@ const YieldPoolCard = ({
         tx.then(async (tx) => {
             yieldFarmToast.showLoaderToast({ loaderMessage: 'Depositing to V2 ! Please Wait...' });
 
-            await library.waitForTransaction(tx.hash);
+            await provider.waitForTransaction(tx.hash);
 
 
             yieldFarmToast.showMessageToast({
@@ -472,7 +472,7 @@ const YieldPoolCard = ({
 
     const depositPushToken = async (tx, withdrawAmount, totalTxnSteps) => {
 
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
         let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
 
         setMigrateMessage(`Staking ${totalTxnSteps}/${totalTxnSteps}`)
@@ -488,7 +488,7 @@ const YieldPoolCard = ({
             yieldFarmToast.showLoaderToast({ loaderMessage: 'Depositing to V2 ! Please Wait...' });
 
 
-            await library.waitForTransaction(tx.hash);
+            await provider.waitForTransaction(tx.hash);
 
             yieldFarmToast.showMessageToast({
                 toastTitle: 'Success',
@@ -673,7 +673,7 @@ const YieldPoolCard = ({
                                     </InfoSpan>
 
                                 </DataTitle>
-                                <DataValue> {(userData?.totalAccumulatedReward - userData?.totalAvailableReward).toFixed(2)} PUSH</DataValue>
+                                <DataValue> {numberWithCommas((userData?.totalAccumulatedReward - userData?.totalAvailableReward).toFixed(2))} PUSH</DataValue>
                             </ItemHV2>
                             <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
                                 <DataTitle>
@@ -704,7 +704,7 @@ const YieldPoolCard = ({
                                         </StakingToolTip>
                                     </InfoSpan>
                                 </DataTitle>
-                                <DataValue>{userData?.totalAvailableReward} PUSH</DataValue>
+                                <DataValue>{numberWithCommas(userData?.totalAvailableReward)} PUSH</DataValue>
                             </ItemHV2>
 
                         </ItemVV2>

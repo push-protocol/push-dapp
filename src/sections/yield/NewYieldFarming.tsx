@@ -20,7 +20,7 @@ import { abis, addresses } from 'config';
 
 const NewYieldFarming = () => {
 
-    const { account, library } = useWeb3React();
+    const { connector, isActive,account, chainId, provider } = useWeb3React<ethers.providers.Web3Provider>();
 
     const [pushToken, setPushToken] = useState(null);
     const [staking, setStaking] = useState(null);
@@ -34,16 +34,21 @@ const NewYieldFarming = () => {
     const [userDataPush, setUserDataPush] = useState(null);
     const [PUSHPoolstats, setPUSHPoolStats] = useState(null);
 
+    const library =  provider?.getSigner(account);
+
     const getLpPoolStats = React.useCallback(async () => {
-        const poolStats = await YieldFarmingDataStoreV2.instance.getPoolStats(library);
+        console.log("function is called")
+        const poolStats = await YieldFarmingDataStoreV2.instance.getPoolStats(provider);
         const lpPoolStats = await YieldFarmingDataStoreV2.instance.getLPPoolStats(poolStats);
+
+        console.log("POOL Stats",poolStats);
 
         setPoolStats({ ...poolStats });
         setLpPoolStats({ ...lpPoolStats });
     }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
 
     const getPUSHPoolStats = React.useCallback(async () => {
-        const pushPoolStats = await YieldFarmingDataStoreV2.instance.getPUSHPoolStats(library);
+        const pushPoolStats = await YieldFarmingDataStoreV2.instance.getPUSHPoolStats(provider);
 
         setPUSHPoolStats({ ...pushPoolStats });
     }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
@@ -55,7 +60,7 @@ const NewYieldFarming = () => {
     }, [yieldFarmingLP]);
 
     const getUserDataPush = React.useCallback(async () => {
-        const userDataPush = await YieldFarmingDataStoreV2.instance.getUserDataPUSH(library);
+        const userDataPush = await YieldFarmingDataStoreV2.instance.getUserDataPUSH(provider);
 
         setUserDataPush({ ...userDataPush });
     }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
@@ -75,6 +80,8 @@ const NewYieldFarming = () => {
         let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, library);
         let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, library);
 
+        console.log("Staking,",staking)
+
         setStaking(staking);
         setPushToken(pushToken);
         setPushCoreV2(pushCoreV2);
@@ -82,7 +89,8 @@ const NewYieldFarming = () => {
         setUniswapV2Router02Instance(uniswapV2Router02Instance);
 
         if (!!(library && account)) {
-            var signer = library.getSigner(account);
+            var signer = provider?.getSigner(account);
+            
 
             let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
             let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
