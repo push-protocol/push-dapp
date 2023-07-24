@@ -28,7 +28,7 @@ const YieldPushFeeV3 = ({
     PUSHPoolstats,
     getPUSHPoolStats
 }) => {
-    const { active, error, account, library, chainId } = useWeb3React();
+    const { account, provider } = useWeb3React<ethers.providers.Web3Provider>();
 
     const [txInProgressWithdraw, setTxInProgressWithdraw] = useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
@@ -53,7 +53,7 @@ const YieldPushFeeV3 = ({
             return
         }
 
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
 
         let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
         let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
@@ -71,7 +71,7 @@ const YieldPushFeeV3 = ({
                     pushCoreV2.address,
                     'true'
                 )
-                await library.waitForTransaction(tx.hash);
+                await provider.waitForTransaction(tx.hash);
                 pushFeeToast.showMessageToast({
                     toastTitle: 'Success',
                     toastMessage: 'Transaction Completed! Address Delegated',
@@ -102,7 +102,7 @@ const YieldPushFeeV3 = ({
             pushFeeToast.showLoaderToast({ loaderMessage: 'Unstaking! Waiting for Confirmation...' });
 
             try {
-                await library.waitForTransaction(tx.hash);
+                await provider.waitForTransaction(tx.hash);
                 pushFeeToast.showMessageToast({
                     toastTitle: 'Success',
                     toastMessage: 'Transaction Completed!',
@@ -163,7 +163,7 @@ const YieldPushFeeV3 = ({
             return;
         }
 
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
 
         let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
         let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
@@ -181,7 +181,7 @@ const YieldPushFeeV3 = ({
                     'true'
                 )
                 pushFeeToast.showLoaderToast({ loaderMessage: 'Delegating!!Waiting for Confirmation...' });
-                await library.waitForTransaction(tx.hash);
+                await provider.waitForTransaction(tx.hash);
                 pushFeeToast.showMessageToast({
                     toastTitle: 'Success',
                     toastMessage: 'Transaction Completed!',
@@ -214,7 +214,7 @@ const YieldPushFeeV3 = ({
 
             try {
                 pushFeeToast.showLoaderToast({ loaderMessage: '!Waiting for Confirmation...' });
-                await library.waitForTransaction(tx.hash);
+                await provider.waitForTransaction(tx.hash);
 
                 pushFeeToast.showMessageToast({
                     toastTitle: 'Success',
