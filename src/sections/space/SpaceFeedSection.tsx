@@ -18,6 +18,7 @@ import { device } from 'config/Globals';
 import { useNavigate } from 'react-router-dom';
 import { SpaceComponentContext } from 'contexts/SpaceComponentsContext';
 import { useDeviceWidthCheck } from 'hooks';
+import useMediaQuery from 'hooks/useMediaQuery';
 
 const NewButton = () => {
   return <button>create Space</button>;
@@ -29,8 +30,7 @@ const SpaceFeedSection = ({ spaceid }) => {
   const { setSpaceId, spaceInvites } = useContext(SpaceContext);
   const theme = useTheme();
 
-  const isMobile = useDeviceWidthCheck(480);
-  console.log('space mobile', isMobile);
+  const isMobile = useMediaQuery(device.mobileL);
 
   React.useEffect(() => {
     if (spaceid) {
