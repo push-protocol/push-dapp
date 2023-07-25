@@ -56,7 +56,8 @@ export interface IGroup {
   isPublic: boolean,
   groupDescription: string | null,
   groupCreator: string,
-  chatId: string
+  chatId: string,
+  groupType:string | null
 }
 
 export interface ChatMetaI {
