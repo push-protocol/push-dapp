@@ -8,6 +8,7 @@ import styled, { useTheme } from 'styled-components';
 import { Button } from 'primaries/SharedStyling';
 import SpaceIcon from 'assets/spaces/Space-icon.svg';
 import SpaceDark from 'assets/spaces/space-dark.svg';
+import { ReactComponent as AddSpace } from 'assets/spaces/add-space.svg';
 import { Image } from 'components/SharedStyling';
 import Avatar from '@mui/material/Avatar';
 import { useWeb3React } from '@web3-react/core';
@@ -29,6 +30,7 @@ const SpaceFeedSection = ({ spaceid }) => {
   const theme = useTheme();
 
   const isMobile = useDeviceWidthCheck(480);
+  console.log('space mobile', isMobile);
 
   React.useEffect(() => {
     if (spaceid) {
@@ -54,7 +56,13 @@ const SpaceFeedSection = ({ spaceid }) => {
         <SpaceUser>{shortenText(account, 6)}</SpaceUser>
 
         <CreateDiv>
-          <CreateSpaceComponent>{/* <NewButton /> */}</CreateSpaceComponent>
+          {isMobile ? (
+            <CreateSpaceComponent>
+              <AddSpace />
+            </CreateSpaceComponent>
+          ) : (
+            <CreateSpaceComponent />
+          )}
         </CreateDiv>
 
         <SpaceInvitesComponent>
@@ -74,7 +82,7 @@ const SpaceFeedSection = ({ spaceid }) => {
           showTabs={true}
           orientation="vertical"
           // width={550}
-          width={isMobile ? 350 : '100%'}
+          width={isMobile ? 360 : '100%'}
           height={'100%'}
           onBannerClickHandler={(spaceId: string) => {
             handleSpaceId(spaceId);
@@ -94,10 +102,16 @@ const SpaceCard = styled.div`
   width: calc(100% - 440px);
   border-radius: 32px !important;
   padding: 20px !important;
+
   box-sizing: border-box !important;
 
   @media ${device.laptop} {
     width: 100%;
+  }
+
+  @media ${device.mobileL} {
+    padding: 5px !important;
+    border-radius: 15px !important;
   }
 `;
 
@@ -134,8 +148,11 @@ const SpaceUser = styled.div`
 
 const CreateDiv = styled.div`
   margin: 0px 14px 0px auto;
+  
+  @media ${device.mobileL}{
+    padding-top:5px;
+  }
 `;
-
 const Badge = styled.div`
   position: absolute;
   top: 15px;

@@ -26,9 +26,10 @@ export const SpaceWidgetSection = () => {
     <SpaceWidgetComponent
       account={account}
       spaceId={spaceId}
-      width={isMobile ? 370 : Number(width)}
+      width={isMobile ? 360 : Number(width)}
       zIndex={Number(zIndex)}
       onClose={handleClose}
+      rightOffset={7}
       //   share={{
       //     shareUrl: shareUrl,
       //     shareOptions: ['Lenster', 'Twitter', 'CopyShareUrl'],
