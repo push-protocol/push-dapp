@@ -5,29 +5,27 @@ import React, { useContext, useMemo, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import { Button } from 'primaries/SharedStyling';
 import SpaceIcon from 'assets/spaces/Space-icon.svg';
 import SpaceDark from 'assets/spaces/space-dark.svg';
 import { ReactComponent as AddSpace } from 'assets/spaces/add-space.svg';
 import { Image } from 'components/SharedStyling';
-import Avatar from '@mui/material/Avatar';
+import { ImageV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { useWeb3React } from '@web3-react/core';
 import { shortenText } from 'helpers/UtilityHelper';
 import { SpaceContext } from 'contexts/SpaceContext';
+import { ChatUserContext } from 'contexts/ChatUserContext';
 import { device } from 'config/Globals';
 import { useNavigate } from 'react-router-dom';
 import { SpaceComponentContext } from 'contexts/SpaceComponentsContext';
 import { useDeviceWidthCheck } from 'hooks';
 import useMediaQuery from 'hooks/useMediaQuery';
 
-const NewButton = () => {
-  return <button>create Space</button>;
-};
 
 const SpaceFeedSection = ({ spaceid }) => {
   const { SpaceFeedComponent, SpaceInvitesComponent, CreateSpaceComponent } = useContext(SpaceComponentContext);
   const { account } = useWeb3React();
   const { setSpaceId, spaceInvites } = useContext(SpaceContext);
+  const { connectedUser } = useContext(ChatUserContext);
   const theme = useTheme();
 
   const isMobile = useMediaQuery(device.mobileL);
@@ -49,9 +47,18 @@ const SpaceFeedSection = ({ spaceid }) => {
   return (
     <SpaceCard>
       <SpaceHeader>
-        <AvatarContainer>
-          {/* <Avatar alt="Remy Sharp" src="/svg/chats/user.svg" className='avatar' /> */}
-        </AvatarContainer>
+        <ItemVV2
+          width="48px"
+          maxWidth="48px"
+          borderRadius="100%"
+          overflow="hidden"
+          margin="0 5px 0 0"
+        >
+          <ImageV2
+            alt="Profile"
+            src={connectedUser?.profilePicture}
+          />
+        </ItemVV2>
 
         <SpaceUser>{shortenText(account, 6)}</SpaceUser>
 
@@ -89,9 +96,6 @@ const SpaceFeedSection = ({ spaceid }) => {
           }}
         />
       </FeedItem>
-
-      {/* <CreateSpaceComponent /> */}
-      {/* <SpaceInvitesComponent /> */}
     </SpaceCard>
   );
 };
@@ -123,17 +127,6 @@ const SpaceHeader = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-`;
-
-const AvatarContainer = styled.div`
-  width: 48px;
-  height: 48px;
-  background: red;
-  border-radius: 100%;
-  &. avatar {
-    width: 48px !important;
-    height: 48px !important;
-  }
 `;
 
 const SpaceUser = styled.div`
