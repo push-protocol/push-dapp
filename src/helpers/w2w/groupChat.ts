@@ -15,7 +15,7 @@ type UpdateGroupType = {
 }
 
 export const checkIfGroup = (feed: Feeds): boolean => {
-  if (feed?.hasOwnProperty('groupInformation') && feed?.groupInformation) return true;
+  if (feed?.hasOwnProperty('groupInformation') && feed?.groupInformation ) return true;
   return false;
 };
 
