@@ -34,7 +34,6 @@ export function useEagerConnect() {
     try {
       switch (label) {
         case "MetaMask":
-        console.log(chainIds.includes(parseInt(window.ethereum.networkVersion)), window.ethereum.networkVersion, 'slant');
           if(window.ethereum.networkVersion){
             await metaMask.activate(chainIds.includes(parseInt(window.ethereum.networkVersion)) ? '' : getAddChainParameters(desiredChain));
           }
