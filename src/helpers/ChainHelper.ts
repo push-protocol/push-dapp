@@ -21,6 +21,7 @@ export const handleChangeNetwork: (
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: ethers.utils.hexValue(chainId) }],
       });
+      window.location.reload();
     } catch (switchError) {
       // This error code indicates that the chain has not been added to MetaMask.
       if (switchError.code === 4902) {
@@ -53,6 +54,7 @@ export const handleChangeAllowedNetwork: (
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: ethers.utils.hexValue(chainId) }],
       });
+      window.location.reload();
     } catch (switchError) {
       // This error code indicates that the chain has not been added to MetaMask.
       if (switchError.code === 4902) {
