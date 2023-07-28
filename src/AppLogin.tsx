@@ -75,22 +75,6 @@ const web3Connectors = {
 };
 
 
-
-async function handleChangeNetwork() {
-  const chainIds = appConfig.allowedNetworks;
-  if (!chainIds.includes(window.ethereum.networkVersion)) {
-    try {
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: ethers.utils.hexValue(appConfig.coreContractChain) }],
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  }
-}
-
-
 const AppLogin = ({ toggleDarkMode }) => {
   // React GA Analytics
   ReactGA.pageview('/login');
