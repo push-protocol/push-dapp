@@ -212,13 +212,19 @@ useEffect(() => {
                   onClick={async () => {
                     setActivatingConnector(currentConnector);
                    
-                    // await currentConnector?.activate();
                     try {
                     setAuthError(undefined);
                     if (currentConnector instanceof WalletConnect) {
-                      await currentConnector.activate(chainIds.includes(parseInt(window.ethereum.networkVersion)) ? '' : desiredChain)
+                        await currentConnector.activate(desiredChain);
                     } else {
-                      await currentConnector.activate(chainIds.includes(parseInt(window.ethereum.networkVersion)) ? '' : getAddChainParameters(desiredChain));
+                      if (window.ethereum === undefined || window.ethereum.networkVersion === undefined){
+                        setAuthError({
+                          message: 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile',
+                         })
+                      }
+                      else{
+                        await currentConnector.activate(chainIds.includes(parseInt(window.ethereum.networkVersion)) ? '' : getAddChainParameters(desiredChain));
+                      }
                     }
                   }
                   catch(error){

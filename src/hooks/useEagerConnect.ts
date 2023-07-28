@@ -34,8 +34,12 @@ export function useEagerConnect() {
     try {
       switch (label) {
         case "MetaMask":
-          // await metaMask.activate(getAddChainParameters(appConfig.coreContractChain));
-          await metaMask.activate(chainIds.includes(parseInt(window.ethereum.networkVersion)) ? '' : getAddChainParameters(desiredChain));
+          if(window.ethereum.networkVersion){
+            await metaMask.activate(chainIds.includes(parseInt(window.ethereum.networkVersion)) ? '' : getAddChainParameters(desiredChain));
+          }
+          else{
+            await metaMask.activate();
+          }
           break;
 
         case "WalletConnect":
