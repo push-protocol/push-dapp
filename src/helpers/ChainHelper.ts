@@ -4,13 +4,15 @@ import { ethers } from 'ethers';
 // Internal Components
 import { NETWORK_DETAILS } from 'helpers/UtilityHelper';
 import { appConfig, CHAIN_DETAILS } from 'config';
+import { MetaMask } from '@web3-react/metamask';
 // import { useWeb3React } from '@web3-react/core';
 
 // handles network change request
 export const handleChangeNetwork: (
   chainId: number,
-  provider: ethers.providers.ExternalProvider
-) => Promise<void> = async (chainId, provider) => {
+  provider: ethers.providers.ExternalProvider,
+  connector: any
+) => Promise<void> = async (chainId, provider, connector) => {
   // const { connector } = useWeb3React();
 
   const chainIds = appConfig?.allowedNetworks;
@@ -21,7 +23,9 @@ export const handleChangeNetwork: (
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: ethers.utils.hexValue(chainId) }],
       });
-      window.location.reload();
+      if(connector instanceof MetaMask){
+        window.location.reload();
+      }
     } catch (switchError) {
       // This error code indicates that the chain has not been added to MetaMask.
       if (switchError.code === 4902) {
@@ -54,7 +58,9 @@ export const handleChangeAllowedNetwork: (
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: ethers.utils.hexValue(chainId) }],
       });
-      window.location.reload();
+      if(connector instanceof MetaMask){
+        window.location.reload();
+      }
     } catch (switchError) {
       // This error code indicates that the chain has not been added to MetaMask.
       if (switchError.code === 4902) {

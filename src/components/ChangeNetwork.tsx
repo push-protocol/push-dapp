@@ -53,7 +53,7 @@ const ChangeNetwork = () => {
           color="#fff"
           radius="15px"
           padding="20px 20px"
-          onClick={() => handleChangeNetwork(aliasChainId, connector.provider)}
+          onClick={() => handleChangeNetwork(aliasChainId, connector.provider, connector)}
         >
           <Span
             color="#fff"
