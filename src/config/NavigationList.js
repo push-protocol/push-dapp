@@ -246,30 +246,30 @@ const NavigationList = {
       isRoute: true,
       hasMenuLogic: true,
       drilldown: {
-        yield: {
-          src: 'navigation/yieldIcon.svg',
-          activeSrc: 'navigation/yieldIcon.svg',
-          iconFactory: null,
-          name: 'Yield Farming',
-          title: 'Yield Farming',
-          alt: 'Open Yield Farming',
-          href: '/yield',
-          newTab: false,
-          isRoute: true,
-          hasMenuLogic: true,
-          hidden: false,
-          headerTag: {
-            title: 'Yield Farming',
-            light: {
-              bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
-              fg: themeLight.headerTagFg,
-            },
-            dark: {
-              bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg,
-            },
-          },
-        },
+        // yield: {
+        //   src: 'navigation/yieldIcon.svg',
+        //   activeSrc: 'navigation/yieldIcon.svg',
+        //   iconFactory: null,
+        //   name: 'Yield Farming',
+        //   title: 'Yield Farming',
+        //   alt: 'Open Yield Farming',
+        //   href: '/yield',
+        //   newTab: false,
+        //   isRoute: true,
+        //   hasMenuLogic: true,
+        //   hidden: false,
+        //   headerTag: {
+        //     title: 'Yield Farming',
+        //     light: {
+        //       bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+        //       fg: themeLight.headerTagFg,
+        //     },
+        //     dark: {
+        //       bg: themeDark.headerTagBg,
+        //       fg: themeDark.headerTagFg,
+        //     },
+        //   },
+        // },
         yieldv2: {
           src: 'navigation/yieldIcon.svg',
           activeSrc: 'navigation/yieldIcon.svg',
