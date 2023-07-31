@@ -100,7 +100,12 @@ export const addresses = {
   pushCoreV2:'0xB72ff1e675117beDefF05a7D0a472c3844cfec85', 
 
 
+  //for yield Farm v1
+  staking: "0xB72ff1e675117beDefF05a7D0a472c3844cfec85", // deprecated staking addresses
+  depYieldFarmPUSH: "0x6019B84E2eE9EB62BC42E32AB6375A7095886366", // deprecated YieldFarm Push address
+  depYieldFarmLP:"0xbB2A70e67770D0A7F5f42d883C5BBE9b85e0DcD6",
 
+  uniV2LPToken: "0xaf31fd9c3b0350424bf96e551d2d1264d8466205",
 
 
 };

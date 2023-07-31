@@ -47,8 +47,7 @@ export default class YieldFarmingDataStore {
   // init
   init = (account, pushToken, staking, yieldFarmingPUSH, yieldFarmingLP, uniswapV2Router02) => {
     // set account
-    this.state.account = "0x3c04eC0d34F8C074644A792Ce04366AB789D3EB3";
-    // this.state.account = account;
+    this.state.account = account;
     this.state.pushToken = pushToken;
     this.state.staking = staking;
     this.state.yieldFarmingPUSH = yieldFarmingPUSH;
