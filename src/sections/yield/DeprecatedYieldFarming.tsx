@@ -142,6 +142,7 @@ const DeprecatedYieldFarming = ({
                 logo={"WarningCircle"}
                 title={"This Reward Program has ended."}
                 body={"Old Staking pools have now been deprecated. Please Migrate to new pools."}
+                setActiveTab={setActiveTab}
             />
             <V2Container>
 

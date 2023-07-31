@@ -49,7 +49,7 @@ const YieldFarmingModuleV2 = () => {
           }>Yield Farming V1 <Deprecated>Deprecated</Deprecated> </Tabs>
       </TabContainer>
 
-      {activeTab === 0 && <NewYieldFarming/>}
+      {activeTab === 0 && <NewYieldFarming setActiveTab={setActiveTab}/>}
       {activeTab === 1  && <DeprecatedYieldFarming setActiveTab={setActiveTab} />}
 
     </Container>

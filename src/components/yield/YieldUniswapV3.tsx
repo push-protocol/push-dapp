@@ -51,8 +51,6 @@ const YieldUniswapV3 = ({
         setTxInProgressWithdraw(true);
         const withdrawAmount = formatTokens(userDataLP.epochStakeNext);
 
-        console.log("Withdraw amount: ", withdrawAmount);
-
         if (withdrawAmount == 0) {
             setUnstakeErrorMessage("Nothing to unstake. You need to stake first");
             setTxInProgressWithdraw(false);

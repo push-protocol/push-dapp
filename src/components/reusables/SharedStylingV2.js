@@ -206,6 +206,8 @@ export const AInlineV2 = styled.a`
   letter-spacing: inherit;
   padding: 0px;
   text-transform: initial;
+  cursor:${(props)=>props.cursor || 'default'};
+
 `;
 
 export const Skeleton = styled.div`

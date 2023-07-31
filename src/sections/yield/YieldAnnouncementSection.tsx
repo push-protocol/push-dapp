@@ -14,7 +14,8 @@ const YieldAnnouncementSection = (
   {
     logo,
     title,
-    body
+    body,
+    setActiveTab
   }
 ) => {
   // RENDER
@@ -52,8 +53,8 @@ const YieldAnnouncementSection = (
           fontWeight={500}
         >
           {body} {" "}
-          {title.includes("84 weeks") && <AInlineV2 color="#fff" href="https://medium.com/push-protocol/push-dao-extends-liquidity-rewards-program-26008926b05a" target='_blank'>
-            here
+          {body.includes("migrate") && <AInlineV2 cursor="pointer" color="#fff" onClick={()=>setActiveTab(1)}>
+            Click here to Migrate
           </AInlineV2>}
         </H2V2>
       </ItemVV2>

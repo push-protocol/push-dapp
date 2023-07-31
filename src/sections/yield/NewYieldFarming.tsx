@@ -18,9 +18,11 @@ import YieldPushFeeV3 from 'components/yield/YieldPushFeeV3';
 // Internal Configs
 import { abis, addresses } from 'config';
 
-const NewYieldFarming = () => {
+const NewYieldFarming = (
+    { setActiveTab }
+) => {
 
-    const { connector, isActive,account, chainId, provider } = useWeb3React<ethers.providers.Web3Provider>();
+    const { connector, isActive, account, chainId, provider } = useWeb3React<ethers.providers.Web3Provider>();
 
     const [pushToken, setPushToken] = useState(null);
     const [staking, setStaking] = useState(null);
@@ -34,14 +36,11 @@ const NewYieldFarming = () => {
     const [userDataPush, setUserDataPush] = useState(null);
     const [PUSHPoolstats, setPUSHPoolStats] = useState(null);
 
-    const library =  provider?.getSigner(account);
+    const library = provider?.getSigner(account);
 
     const getLpPoolStats = React.useCallback(async () => {
-        console.log("function is called")
         const poolStats = await YieldFarmingDataStoreV2.instance.getPoolStats(provider);
         const lpPoolStats = await YieldFarmingDataStoreV2.instance.getLPPoolStats(poolStats);
-
-        console.log("POOL Stats",poolStats);
 
         setPoolStats({ ...poolStats });
         setLpPoolStats({ ...lpPoolStats });
@@ -80,8 +79,6 @@ const NewYieldFarming = () => {
         let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, library);
         let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, library);
 
-        console.log("Staking,",staking)
-
         setStaking(staking);
         setPushToken(pushToken);
         setPushCoreV2(pushCoreV2);
@@ -90,7 +87,6 @@ const NewYieldFarming = () => {
 
         if (!!(library && account)) {
             var signer = provider?.getSigner(account);
-            
 
             let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
             let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
@@ -129,6 +125,7 @@ const NewYieldFarming = () => {
                 logo={"announcement"}
                 title={" Rewards Program will be extended by 84 weeks !!"}
                 body={"The Push DAO has approved the extension of the Rewards Program for 84 more weeks! More info"}
+                setActiveTab={setActiveTab}
             />
             <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} />
             <YieldPushPriceSection

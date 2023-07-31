@@ -94,7 +94,7 @@ function MasterInterfacePage() {
 
             <Route path="govern" element={<GovPage />} />
 
-            <Route path="yield" element={<YieldFarmingPage />} />
+            {/* <Route path="yield" element={<YieldFarmingPage />} /> */}
             <Route path="yieldv2" element={<YieldFarmingV2Page />} />
             <Route path="rockstar" element={<NFTPage />} />
             <Route path="gratitude" element={<AirdropPage />} />
