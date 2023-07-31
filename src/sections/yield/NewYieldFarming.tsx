@@ -123,8 +123,8 @@ const NewYieldFarming = (
         <>
             <YieldAnnouncementSection
                 logo={"announcement"}
-                title={" Rewards Program will be extended by 84 weeks !!"}
-                body={"The Push DAO has approved the extension of the Rewards Program for 84 more weeks! More info"}
+                title={"New V2 Pools are now Live! Stake or migrate now."}
+                body={"Users who were part of the previous Push staking program, need to migrate migrate to new pools to continue earning rewards. Click here to"}
                 setActiveTab={setActiveTab}
             />
             <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} />
