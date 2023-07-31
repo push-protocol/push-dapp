@@ -95,12 +95,12 @@ export const addresses = {
   rockstarV2: '0xA2b885e7065EA59a3251489715ca80DE5Ff642f8', //mainnet address
   NFTRewardsV2: '0xdc66567a990B7fa10730459537620857c9e03287', //mainnet address
 
-  //For yield Farm V1(Deprecated)
+  //For Yield Farm V1(Deprecated)
   staking: "0xB72ff1e675117beDefF05a7D0a472c3844cfec85", // deprecated staking mainnet addresses
   depYieldFarmPUSH: "0x6019B84E2eE9EB62BC42E32AB6375A7095886366", // deprecated YieldFarmPUSH mainnet address
   depYieldFarmLP:"0xbB2A70e67770D0A7F5f42d883C5BBE9b85e0DcD6",// deprecated YieldFarmLP mainnet addresses 
 
-  //For YieldFarm V2
+  //For Yield Farm V2
   stakingV2:"0x9D2513F5b539DC774C66b28ACEc94e4bD00105C2",//mainnet address
   yieldFarmLP: "0x9af118D9fA1eFEa5b5a792847554960217DEdb04",//mainnet address
   uniV2LPToken: "0xaf31fd9c3b0350424bf96e551d2d1264d8466205",//same as epnsLPToken

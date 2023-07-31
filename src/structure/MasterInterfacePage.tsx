@@ -28,7 +28,7 @@ const SpacePage = lazy(() => import('pages/SpacePage'));
 const SpamPage = lazy(() => import('pages/SpamPage'));
 const SupportPage = lazy(() => import('pages/SupportPage'));
 const TutorialPage = lazy(() => import('pages/TutorialPage'));
-const YieldFarmingPage = lazy(() => import('pages/YieldFarmingPage'));
+// const YieldFarmingPage = lazy(() => import('pages/YieldFarmingPage'));
 const YieldFarmingV2Page = lazy(() => import('pages/YieldFarmingPageV2'));
 
 // import AirdropPage from 'pages/AirdropPage';

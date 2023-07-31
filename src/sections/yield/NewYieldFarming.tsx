@@ -124,7 +124,7 @@ const NewYieldFarming = (
             <YieldAnnouncementSection
                 logo={"announcement"}
                 title={"New V2 Pools are now Live! Stake or migrate now."}
-                body={"Users who were part of the previous Push staking program, need to migrate migrate to new pools to continue earning rewards. Click here to"}
+                body={"Users who were part of the previous Push staking program, need to migrate migrate to new pools to continue earning rewards. Click"}
                 setActiveTab={setActiveTab}
             />
             <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} />

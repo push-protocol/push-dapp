@@ -54,8 +54,9 @@ const YieldAnnouncementSection = (
         >
           {body} {" "}
           {title.includes("New V2") && <AInlineV2 cursor="pointer" color="#fff" onClick={()=>setActiveTab(1)}>
-            migrate
+            here
           </AInlineV2>}
+          {" "} to migrate.
         </H2V2>
       </ItemVV2>
     </ItemHV2>
