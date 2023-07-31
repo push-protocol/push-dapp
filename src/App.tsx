@@ -54,7 +54,6 @@ import { ChatUserContext } from 'contexts/ChatUserContext';
 
 // space imports
 import SpaceContextProvider from 'contexts/SpaceContext';
-import { useSpaceComponents } from 'hooks/useSpaceComponents';
 import { SpacesUIProvider } from '@pushprotocol/uiweb';
 import { darkTheme,lightTheme } from 'config/spaceTheme';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
