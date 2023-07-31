@@ -98,7 +98,7 @@ export const addresses = {
   rockstarV2:"0xA2b885e7065EA59a3251489715ca80DE5Ff642f8",//mainnet address
   NFTRewardsV2: "0xdc66567a990B7fa10730459537620857c9e03287", //mainnet address
 
-  //for yield Farm v1
+  //for yield Farm v1(deprecated)
   staking: "0xAECb9074e222e8F06f8034140A3F86610E4d3c3E", // deprecated staking addresses
   depYieldFarmPUSH: "0x6EA019f7FE2640A55154DdC36Bfd21275De388BD", // deprecated YieldFarm Push address
   depYieldFarmLP:"0xc2886D0e7DAd16cc92b1156Dc9A0b0D3F047FD15", // deprecated YieldFarm LP address
@@ -106,11 +106,9 @@ export const addresses = {
   //For YieldFarming V2
   stakingV2:"0xA99dE35dce05f59fF87ae393a7576B8Ce5881416",
   yieldFarmLP: "0xeE543C5bC1b6EB647CfC23fe95D3C5877945Ad21",
-  // pushCoreV2: "0xd4E3ceC407cD36d9e3767cD189ccCaFBF549202C",//not upgraded
+  pushCoreV2: "0xd4E3ceC407cD36d9e3767cD189ccCaFBF549202C",//not upgraded
   uniV2LPToken: "0x698839247E5b83572fFF6ccdcf386CC37e60bEf5",
   pushToken: "0x2b9bE9259a4F5Ba6344c1b1c07911539642a2D33",
-
-  pushCoreV2:'0x0E8eca22ca65B46CE35d78f3dE66F450c904BC17', 
 
 }
 
