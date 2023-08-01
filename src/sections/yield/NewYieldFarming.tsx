@@ -155,18 +155,7 @@ const NewYieldFarming = (
 export default NewYieldFarming;
 
 const V3Container = styled(ItemHV2)`
-  // width: 50%;
-  // margin: auto;
-
-  // @media (max-width:1300px){
-  //   width: 75%;
-  // }
-
-  // @media (max-width:768px){
-  //   width: 100%;
-  // }
-
-  @media (max-width:900px){
+  @media (max-width:1300px){
     flex-direction:column;
   }
 `

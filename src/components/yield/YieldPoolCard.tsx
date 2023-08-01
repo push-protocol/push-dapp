@@ -20,6 +20,7 @@ import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, Skeleton, Skeleto
 
 // Internal Configs
 import { abis, addresses } from 'config';
+import { useDeviceWidthCheck } from 'hooks';
 
 const YieldPoolCard = ({
     poolName,
@@ -526,6 +527,8 @@ const YieldPoolCard = ({
         setUnstakeErrorMessage(null);
     }, [account])
 
+    const isMobile = useDeviceWidthCheck(600);
+
     return (
         <Container
             margin={poolName === 'UNI-V2' ? " 10px 10px 10px 0 " : " 10px 0 10px 10px"}
@@ -561,13 +564,13 @@ const YieldPoolCard = ({
                     border={`1px solid ${theme.stakingBorder}`}
                     borderRadius="16px"
                 >
-                    <ItemVV2 margin="0px 18px 0px 0px" padding="10px">
+                    <ItemVV2 margin={isMobile ?"0px 6px 0 0 " :"0px 18px 0px 0px"} padding={isMobile  ? " 7px" : "10px"} padding="10px">
 
                         {PoolStats ? (
                             <>
                                 <SecondaryText>Current Reward</SecondaryText>
                                 <H2V2
-                                    fontSize="24px"
+                                   fontSize={isMobile ? "18px" : "24px"}
                                     fontWeight="600"
                                     color="#D53A94"
                                     letterSpacing="-0.03em"
@@ -578,10 +581,10 @@ const YieldPoolCard = ({
                             </>
                         ) : (
                             <SkeletonContainer
-                                padding='5px 15px 0 15px'
+                                padding={isMobile ? '0px' : '5px 15px 0 15px'}
                             >
-                                <SkeletonLine height='12px' width='135px' margin='0 0 8px 0'></SkeletonLine>
-                                <SkeletonLine height='12px' width='100px'></SkeletonLine>
+                                <SkeletonLine height='12px' width={isMobile ? '100px' : '135px'} margin='0 0 8px 0'></SkeletonLine>
+                                <SkeletonLine height='12px' width={isMobile ? '65px' : '100px}'}></SkeletonLine>
                             </SkeletonContainer>
                         )}
 
@@ -590,13 +593,13 @@ const YieldPoolCard = ({
 
                     <Line width="10px" height="100%"></Line>
 
-                    <ItemVV2 margin="0px 0px 0px 18px" padding="10px">
+                    <ItemVV2 margin={isMobile ?"0px 6px 0 0 " :"0px 18px 0px 0px"} padding={isMobile  ? " 7px" : "10px"} padding="10px">
 
                         {PoolStats ? (
                             <>
                                 <SecondaryText>Total Staked</SecondaryText>
                                 <StakedAmount
-                                    fontSize="24px"
+                                    fontSize={isMobile ? "18px" : "24px"}
                                     fontWeight="600"
                                     letterSpacing="-0.03em"
                                 >
@@ -604,9 +607,11 @@ const YieldPoolCard = ({
                                 </StakedAmount>
                             </>
                         ) : (
-                            <SkeletonContainer padding='5px 15px 0 15px'>
-                                <SkeletonLine height='12px' width='135px' margin='0 0 8px 0'></SkeletonLine>
-                                <SkeletonLine height='12px' width='100px'></SkeletonLine>
+                            <SkeletonContainer
+                                padding={isMobile ? '0px' : '5px 15px 0 15px'}
+                            >
+                                <SkeletonLine height='12px' width={isMobile ? '100px' : '135px'} margin='0 0 8px 0'></SkeletonLine>
+                                <SkeletonLine height='12px' width={isMobile ? '65px' : '100px}'}></SkeletonLine>
                             </SkeletonContainer>
                         )}
 
@@ -641,7 +646,7 @@ const YieldPoolCard = ({
                 <DepositContainer>
                     {userData ? (
                         <ItemVV2 >
-                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                            <ItemHV2 justifyContent="space-between" margin={ isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                                 <DataTitle>
                                     User Deposit
                                     <InfoSpan>
@@ -655,7 +660,7 @@ const YieldPoolCard = ({
                                 </DataTitle>
                                 <DataValue> {formatTokens(userData?.epochStakeNext)} {poolName == "UNI-V2" ? "UNI-V2" : "PUSH"}</DataValue>
                             </ItemHV2>
-                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                            <ItemHV2 justifyContent="space-between" margin={ isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                                 <DataTitle>
                                     Rewards Claimed
                                     <InfoSpan>
@@ -670,7 +675,7 @@ const YieldPoolCard = ({
                                 </DataTitle>
                                 <DataValue> {numberWithCommas((userData?.totalAccumulatedReward - userData?.totalAvailableReward).toFixed(2))} PUSH</DataValue>
                             </ItemHV2>
-                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                            <ItemHV2 justifyContent="space-between" margin={ isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                                 <DataTitle>
                                     Current Epoch Reward
                                     <InfoSpan>
@@ -685,7 +690,7 @@ const YieldPoolCard = ({
                                 </DataTitle>
                                 <DataValue>0 PUSH</DataValue>
                             </ItemHV2>
-                            <ItemHV2 justifyContent="space-between" margin="0px 13px 12px 13px">
+                            <ItemHV2 justifyContent="space-between" margin={ isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                                 <DataTitle>
                                     Available for Claiming
                                     <InfoSpan>
@@ -736,7 +741,7 @@ const YieldPoolCard = ({
             </ItemVV2>
 
             {/* Bottom Section */}
-            <Buttons padding=" 0px 14px" margin="24px 0px 0px 0px">
+            <Buttons padding={ isMobile ? "0px " : "0px 14px"} margin="24px 0px 0px 0px">
 
                 {userData ? (
                     <>
@@ -889,19 +894,6 @@ const Container = styled(SectionV2)`
     color: ${(props) => props.theme.stakingPrimaryText};
 `;
 
-const Note = styled(ItemHV2)`
-    padding: 8px 4px;
-    gap: 4px;
-    max-height:40px;
-    background: #FFF7DA;
-    border-radius: 8px;
-    font-size: 14px;
-    line-height: 118.5%;
-    letter-spacing: -0.03em;
-    color: rgba(87, 93, 115, 0.8);
-    
-`
-
 const Heading = styled(H2V2)`
     font-size: 24px;
     line-height: 141%;
@@ -909,6 +901,14 @@ const Heading = styled(H2V2)`
     display:flex;
     align-items:center;
     color: ${(props) => props.theme.stakingPrimaryText};
+
+    @media (max-width:600px){
+        font-size: 20px;
+    }
+
+    @media(max-width:470px){
+        flex-direction: column;
+    }
 
 `
 
@@ -931,7 +931,10 @@ const SecondaryText = styled.p`
     font-size: 18px;
     line-height: 141%;
     letter-spacing: -0.03em;
-    // color: #333333;
+
+    @media (max-width:600px){
+        font-size: 16px;
+    }
 `
 
 const Line = styled.div`
@@ -948,6 +951,10 @@ const DataTitle = styled.div`
     align-items: center;
     color: ${(props) => props.theme.stakingUserDetails};
 
+    @media (max-width:600px){
+        font-size: 16px;
+    }
+
 `
 const StakedAmount = styled(H2V2)`
     color: ${(props) => props.theme.stakingSecondaryText};
@@ -961,6 +968,10 @@ const EpochNo = styled(B)`
     margin-left:5px;
     line-height: 141%;
     color: ${(props) => props.theme.stakingUserDetails};
+
+    @media (max-width:600px){
+        font-size: 14px;
+    }
 `
 
 const InfoSpan = styled(SpanV2)`
@@ -971,6 +982,9 @@ const InfoSpan = styled(SpanV2)`
 const RewardContainer = styled(ItemHV2)`
     max-height:108px;
     min-height:108px;
+    @media(min-width:600px) and (max-width:992px){
+        margin:0px 13px;
+    }
 `
 
 const DataValue = styled(H2V2)`
@@ -978,6 +992,10 @@ const DataValue = styled(H2V2)`
     line-height: 141%;
     letter-spacing: -0.03em;
     color: ${(props) => props.theme.stakingPrimaryText};
+
+    @media (max-width:600px){
+        font-size: 16px;
+    }
 `
 
 const DepositContainer = styled(ItemVV2)`
@@ -1043,6 +1061,11 @@ const MigrateButton = styled(ButtonV2)`
         opacity:1;
     }
 
+    @media(max-width:600px){
+        font-size: 14px;
+    }
+
+
 `;
 
 const ProgressBar = styled.div`
@@ -1083,6 +1106,10 @@ const EmptyButton = styled(ButtonV2)`
 
     &:hover{
         opacity:1;
+    }
+
+    @media(max-width:600px){
+        font-size: 14px;
     }
 `
 

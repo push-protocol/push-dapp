@@ -46,7 +46,8 @@ const YieldFarmingModuleV2 = () => {
             setActiveTab(1)
           }
 
-          }>Yield Farming V1 <Deprecated>Deprecated</Deprecated> </Tabs>
+          }>Yield Farming V1 <Deprecated>Deprecated</Deprecated>
+        </Tabs>
       </TabContainer>
 
       {activeTab === 0 && <NewYieldFarming setActiveTab={setActiveTab}/>}
@@ -91,6 +92,7 @@ const Container = styled(SectionV2)`
         ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
     );
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
+    padding:16px;
   }
 
   @media ${device.mobileL} {
@@ -121,7 +123,7 @@ const TabContainer = styled(ItemHV2)`
 
 const Tabs = styled.div`
   cursor:pointer;
-  padding: 0 25px;
+  // padding: 0 25px;
   width: 250px;
   justify-content: center;
   display:flex;
@@ -130,6 +132,13 @@ const Tabs = styled.div`
   text-align: center;
   position: relative;
   color: ${(props) => (props.isActive ? '#CF1C84' : props.theme.color)};
+
+  @media (max-width:638px){
+    width:150px;
+    flex:1;
+    flex-direction:column;
+    align-items: baseline;
+  }
 
   ${(props) =>
     props.isActive &&
@@ -143,7 +152,10 @@ const Tabs = styled.div`
         background-color: #CF1C84;
         z-index: 1;
         
-    }`}
+    }`
+  }
+  
+ 
 
 `
 
@@ -159,4 +171,5 @@ const Deprecated = styled(SpanV2)`
   background: #F3D7FA;
   border-radius: 6px;
   height: 17px;
+  width:fit-content;
 `

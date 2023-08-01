@@ -20,6 +20,7 @@ import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/S
 
 // Internal Configs
 import { abis, addresses } from 'config';
+import { useDeviceWidthCheck } from 'hooks';
 
 const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) => {
 
@@ -264,6 +265,8 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
     }
 
 
+    const isMobile = useDeviceWidthCheck(600);
+
     return (
         <Container>
 
@@ -279,7 +282,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                 <P weight='500' size='14px' self='baseline' color={theme.stakingSecondaryText}>You are Staking</P>
 
 
-                <ItemHV2 background={theme.default.bg} height='35px' padding='14px' borderRadius='12px' border={`1px solid ${theme.modalBorderColor}`}>
+                <ItemHV2 width='-webkit-fill-available' background={theme.default.bg} height='35px' padding={isMobile ? '8px' :'14px'} borderRadius='12px' border={`1px solid ${theme.modalBorderColor}`}>
                     <TokenInput
                         placeholder="Enter Amount"
                         flex='2'
@@ -287,6 +290,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                         size='32px'
                         height='32px'
                         self="auto"
+                       
                         bg='#FFF'
                         color={theme.stakingSecondaryText}
                         value={depositAmount}
@@ -352,6 +356,13 @@ const Container = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 150%;
+
+    @media(max-width:500px){
+        width: 270px;
+        padding:16px 15px;
+    }
+
+
 `
 
 const PrimaryText = styled(H2V2)`

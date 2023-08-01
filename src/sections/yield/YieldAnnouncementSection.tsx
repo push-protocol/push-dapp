@@ -8,6 +8,7 @@ import { AInlineV2, H2V2, ImageV2, ItemHV2, ItemVV2 } from 'components/reusables
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import { useDeviceWidthCheck } from 'hooks';
 
 // yield announcement section
 const YieldAnnouncementSection = (
@@ -18,12 +19,15 @@ const YieldAnnouncementSection = (
     setActiveTab
   }
 ) => {
+
+  const isMobile = useDeviceWidthCheck(600);
+
   // RENDER
   return (
     <ItemHV2
       style={{color:logo === "announcement" ? "white" : "#333"}}
       justifyContent="stretch"
-      padding="16px"
+      padding={isMobile ? "12px" : "16px"}
       background={logo === "announcement" ? "linear-gradient(90deg, #121315 -2.55%, #2A2A39 32.62%, #8E317A 68.34%, #121315 102.97%)" : "#FFF7DA"}
       borderRadius="16px"
     >
@@ -40,7 +44,7 @@ const YieldAnnouncementSection = (
       >
         <H2V2
           color="inherit"
-          fontSize="24px"
+          fontSize={isMobile ? "20px" :  "24px"}
           textAlign="left"
           fontWeight={500}
         >
@@ -48,7 +52,7 @@ const YieldAnnouncementSection = (
         </H2V2>
         <H2V2
           color="inherit"
-          fontSize="16px"
+          fontSize={ isMobile ? "12px" : "16px"}
           textAlign="left"
           fontWeight={500}
         >
