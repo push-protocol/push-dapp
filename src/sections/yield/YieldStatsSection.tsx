@@ -10,6 +10,7 @@ import { ItemHV2, ItemVV2, Skeleton, SkeletonLine, SpanV2 } from 'components/reu
 // Internal Configs
 import GLOBALS from 'config/Globals';
 import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';
+import { useDeviceWidthCheck } from 'hooks';
 
 const YieldStatsSection = ({
   getLpPoolStats,
@@ -45,22 +46,23 @@ const YieldStatsSection = ({
     }, 1000);
   });
 
+
+
   // RENDER
   return (
     <ItemHV2Modified>
       {/* Total Value Locked */}
       <StatsContainer alignItems='baseline' justifyContent="center" background="linear-gradient(0deg, #7ADDB3, #7ADDB3), #FFFFFF">
         <BgCircleEffect background="radial-gradient(70% 90% at 40% 16.25%, #7CDCB4 2.6%, #7ADDB3 53.65%, #E888F8 85.42%, #F99DEA 100%)" />
-
         {poolStats ? (
           <>
             <StatsText>
-              <SpanV2 color="#fff" fontSize="18px" fontWeight="600" lineHeight="141%">Total Value Locked</SpanV2>
+              <PrimaryText>Total Value Locked</PrimaryText>
 
-              <SpanV2 color="#fff" fontSize="32px" fontWeight="600" lineHeight="141%">
+              <SecondaryText>
                 {`$ ${numberWithCommas(poolStats?.totalValueLocked.toFixed(2))}`}
 
-              </SpanV2>
+              </SecondaryText>
             </StatsText>
 
           </>
@@ -76,9 +78,9 @@ const YieldStatsSection = ({
         {poolStats ? (
           <>
             <StatsText>
-              <SpanV2 color="#fff" fontSize="18px" fontWeight="600" lineHeight="141%">Push Rewards Given</SpanV2>
+              <PrimaryText>Push Rewards Given</PrimaryText>
               <TextBox justifyContent="end">
-                <SpanV2 color="#fff" fontSize="32px" fontWeight="600" lineHeight="100%" >
+                <SecondaryText>
                   {
                     // TODO fix the calculation
                     numberWithCommas(
@@ -86,7 +88,7 @@ const YieldStatsSection = ({
                         formatTokens(poolStats?.pushRewardsDistributed),
                         formatTokens(poolStats?.totalDistributedAmount)
                       ))}
-                </SpanV2>
+                </SecondaryText>
                 <SpanV2 color="#fff" fontSize="16px" fontWeight="600" lineHeight="141%">
                   out of {numberWithCommas(formatTokens(poolStats?.totalDistributedAmount))}
                 </SpanV2>
@@ -105,11 +107,11 @@ const YieldStatsSection = ({
         {formattedDuration ? (
           <>
             <StatsText>
-              <SpanV2 color="#fff" fontSize="18px" fontWeight="600" lineHeight="141%">Time Left</SpanV2>
+              <PrimaryText>Time Left</PrimaryText>
               <TextBox justifyContent="end">
-                <SpanV2 color="#fff" fontSize="32px" fontWeight="600" lineHeight="100%" >
+                <SecondaryText>
                   {formattedDuration}
-                </SpanV2>
+                </SecondaryText>
                 <SpanV2 color="#fff" fontSize="16px" fontWeight="600" lineHeight="141%">until next epoch</SpanV2>
               </TextBox>
             </StatsText>
@@ -124,12 +126,14 @@ const YieldStatsSection = ({
 export default YieldStatsSection;
 
 const SkeletonLoader = () => {
+  
+  const isMobile = useDeviceWidthCheck(1300);
   return (
     <SkeletonContainer
       padding='21px 15px'
     >
       <SkeletonLine height='12px' width='135px' margin='0 0 10px 0' background='linear-gradient(to right,rgb(255 255 255 / 21%) 8%,rgb(221 221 221 / 15%) 18%,rgb(255 255 255 / 29%) 33%)'></SkeletonLine>
-      <SkeletonLine height='26px;' width='189px' margin='0 0 10px 0' background='linear-gradient(to right,rgb(255 255 255 / 21%) 8%,rgb(221 221 221 / 15%) 18%,rgb(255 255 255 / 29%) 33%)'></SkeletonLine>
+      <SkeletonLine height='26px;' width={isMobile ? '175px' : '189px'} margin='0 0 10px 0' background='linear-gradient(to right,rgb(255 255 255 / 21%) 8%,rgb(221 221 221 / 15%) 18%,rgb(255 255 255 / 29%) 33%)'></SkeletonLine>
       <SkeletonLine height='12px' width='135px' margin='0 0 10px 0' background='linear-gradient(to right,rgb(255 255 255 / 21%) 8%,rgb(221 221 221 / 15%) 18%,rgb(255 255 255 / 29%) 33%)'></SkeletonLine>
     </SkeletonContainer>
   )
@@ -139,7 +143,7 @@ const SkeletonLoader = () => {
 const ItemHV2Modified = styled(ItemHV2)`
   column-gap: 12px;
 
-  @media (max-width: 900px) {
+  @media (max-width: 992px) {
     flex-direction: column;
     row-gap: 12px;
   }
@@ -162,6 +166,49 @@ const BgCircleEffect = styled(ItemVV2)`
   box-shadow: 0px 30px 50px rgba(240, 86, 254, 0.5);
   filter: blur(2.5px);
 `;
+
+const PrimaryText = styled(SpanV2)`
+  color:#FFF;
+  font-size:18px;
+  font-weight:600;
+  line-height:141%;
+
+  @media (max-width:600px){
+    font-size:16px;
+  }
+
+  @media (min-width:992px) and (max-width:1150px){
+    font-size:14px;
+  }
+
+  @media(min-width:1150px) and (max-width:1300px){
+    font-size:16px;
+  }
+
+`  
+const SecondaryText = styled(SpanV2)`
+  color:#FFF;
+  font-size:32px;
+  font-weight:600;
+  line-height:141%;
+
+  @media (max-width:992px){
+    font-size:24px;
+  }
+
+  @media (min-width:992px) and (max-width:1150px){
+    font-size:18px;
+  }
+
+  @media(min-width:1150px) and (max-width:1300px){
+    font-size:24px;
+  }
+
+
+
+
+
+`  
 
 const TextBox = styled(ItemVV2)`
   align-items: flex-start;

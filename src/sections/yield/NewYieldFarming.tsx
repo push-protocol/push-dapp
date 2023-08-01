@@ -124,7 +124,7 @@ const NewYieldFarming = (
             <YieldAnnouncementSection
                 logo={"announcement"}
                 title={"New V2 Pools are now Live! Stake or migrate now."}
-                body={"Users who were part of the previous Push staking program, need to migrate migrate to new pools to continue earning rewards. Click"}
+                body={"Users who were part of the previous Push staking program, need to migrate to new pools to continue earning rewards. Click"}
                 setActiveTab={setActiveTab}
             />
             <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} />
@@ -155,18 +155,7 @@ const NewYieldFarming = (
 export default NewYieldFarming;
 
 const V3Container = styled(ItemHV2)`
-  // width: 50%;
-  // margin: auto;
-
-  // @media (max-width:1300px){
-  //   width: 75%;
-  // }
-
-  // @media (max-width:768px){
-  //   width: 100%;
-  // }
-
-  @media (max-width:900px){
+  @media (max-width:1300px){
     flex-direction:column;
   }
 `
