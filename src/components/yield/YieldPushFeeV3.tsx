@@ -289,7 +289,7 @@ const YieldPushFeeV3 = ({
                     <>
                         <Heading>PUSH Fee Staking Pool</Heading>
                         <SecondaryText>
-                            Current APR <SpanV2 color="#D53A94" fontWeight="600">{numberWithCommas(PUSHPoolstats?.stakingAPR)}%</SpanV2>
+                            Current APR <SpanV2 color="#D53A94" fontWeight="600">{numberWithCommas(PUSHPoolstats?.stakingAPR)}% +</SpanV2> 
                         </SecondaryText>
                     </>
                 ) : (
@@ -587,7 +587,7 @@ const Container = styled(SectionV2)`
     border: 1px solid  ${(props) => props.theme.stakingBorder};
     border-radius: 24px;
     padding:20px;
-    margin:10px 0 10px 10px;
+    margin:10px 10px 10px 0;
     font-family: 'Strawford';
     font-style: normal;
     font-weight: 500;

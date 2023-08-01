@@ -240,7 +240,7 @@ const YieldUniswapV3 = ({
                     <>
                         <Heading >Uniswap V2 LP Staking Pool</Heading>
                         <SecondaryText>
-                            Current APR <SpanV2 color="#D53A94" fontWeight="600">{numberWithCommas(lpPoolStats?.stakingAPR)}%</SpanV2>
+                            Current APR <SpanV2 color="#D53A94" fontWeight="600">{numberWithCommas(lpPoolStats?.stakingAPR)}% +</SpanV2> 
                         </SecondaryText>
                     </>
                 ) : (
@@ -536,8 +536,10 @@ const Container = styled(SectionV2)`
     border: 1px solid  ${(props) => props.theme.stakingBorder};
     border-radius: 24px;
     padding:20px;
-    margin:10px 10px 10px 0;
+    
     font-family: 'Strawford';
+
+    margin:10px 0 10px 10px;
     
     font-style: normal;
     font-weight: 500;

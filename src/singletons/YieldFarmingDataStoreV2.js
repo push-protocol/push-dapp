@@ -44,8 +44,8 @@ export default class YieldFarmingDataStoreV2 {
     rewardForCurrentEpochPush: null,
     rewardForCurrentEpochLP: null,
 
-    highCapLPStakingAPR: 44.16,
-    highCapPUSHStakingAPR: 15,
+    highCapLPStakingAPR: 200,
+    highCapPUSHStakingAPR: 200,
 
     genesisEpochAmountPUSH: GENESIS_EPOCH_AMOUNT_PUSH,
     deprecationPerEpochPUSH: 900,
@@ -99,6 +99,8 @@ export default class YieldFarmingDataStoreV2 {
 
       const uniTotalSupply = tokenBNtoNumber(await this.state.pushToken.attach(addresses.uniV2LPToken).totalSupply()); // Using pushToken instance for Uni-V2 instance
       const uniLpPrice = (pushAmountReserve * pushPrice + wethAmountReserve * ethPrice) / uniTotalSupply;
+
+      console.log("Uni LP Price",uniLpPrice);
       const lpToPushRatio = uniLpPrice / pushPrice;
 
       //calculating total Value locked
@@ -427,11 +429,14 @@ export default class YieldFarmingDataStoreV2 {
 
   calcAnnualEpochReward = (genesisEpochAmount, epochId, deprecationPerEpoch) => {
     const currentEpochReward = this.calcTotalAmountPerEpoch(genesisEpochAmount, epochId, deprecationPerEpoch);
+    //74400
 
     const weeks = 52;
     const depreciate = deprecationPerEpoch.mul(weeks * (weeks - 1)).div(2);
+    //(900*52*51)/2 = 
 
     const annualEpochReward = currentEpochReward.mul(weeks).sub(depreciate);
+    //74400*52 - (900*52*51)/2 = 
 
     return annualEpochReward;
   };
@@ -451,9 +456,12 @@ export default class YieldFarmingDataStoreV2 {
   calcLPPoolAPR = async (genesisEpochAmount, epochId, deprecationPerEpoch, totalStaked, poolStats) => {
     const annualRewards = this.calcAnnualEpochReward(genesisEpochAmount, epochId, deprecationPerEpoch);
     let apr;
+    
+    
+    
     if (appConfig.coreContractChain === 42 || appConfig.coreContractChain === 5)
       apr = (tokenBNtoNumber(annualRewards) * 1000000) / Math.max(tokenBNtoNumber(totalStaked), 1);
-    else apr = annualRewards.mul(1000000).div(totalStaked);
+    else apr = annualRewards.mul(1000000).div(Math.max(tokenBNtoNumber(totalStaked), 1));
 
     const aprFormatted = (parseInt(apr.toString()) / (10000 * poolStats.lpToPushRatio)).toFixed(2);
 
