@@ -20,7 +20,6 @@ export const SpaceWidgetSection = () => {
     setSpaceId(null);
   };
 
-  console.log('Account', account);
 
   return (
     <SpaceWidgetComponent
