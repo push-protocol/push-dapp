@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { Web3ReactProvider } from "@web3-react/core";
+import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
 import { ethers } from "ethers";
 import React from "react";
 
@@ -16,6 +16,10 @@ import store from "./redux/store";
 import * as serviceWorker from "./serviceWorker";
 import ChatUserContextProvider from './contexts/ChatUserContext';
 import { VideoCallContextProvider } from './contexts/VideoCallContext';
+import ErrorContextProvider from './contexts/ErrorContext';
+import { connectors } from './App'
+
+
 
 // Internal Configs
 import * as dotenv from "dotenv";
@@ -47,13 +51,17 @@ ReactDOM.render(
   <BrowserRouter basename={process.env.PUBLIC_URL}>
     <Provider store={store}>
       <ApolloProvider client={client}>
-        <Web3ReactProvider getLibrary={getLibrary}>
+        {/* <Web3ReactProvider getLibrary={getLibrary}> */}
+        <Web3ReactProvider connectors={connectors}>
+          <ErrorContextProvider>
           <ChatUserContextProvider>
             <VideoCallContextProvider>
               <App />
             </VideoCallContextProvider>
           </ChatUserContextProvider>
-        </Web3ReactProvider>
+          </ErrorContextProvider>
+          </Web3ReactProvider>
+        {/* </Web3ReactProvider> */}
       </ApolloProvider>
     </Provider>
   </BrowserRouter>,

@@ -21,7 +21,7 @@ export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
 const DeprecatedYieldFarming = ({
     setActiveTab,
 }) => {
-    const { account, library, chainId } = useWeb3React();
+    const { account, provider } = useWeb3React<ethers.providers.Web3Provider>();
 
     //Initializing the Deprecated YieldFarmingDataStore Class
     const [pushToken, setPushToken] = useState(null);
@@ -36,6 +36,8 @@ const DeprecatedYieldFarming = ({
 
     const [depUserDataPUSH, setDepUserDataPUSH] = useState(null);
     const [depUserDataLP, setDepUserDataLP] = useState(null);
+
+    const library =  provider?.getSigner(account);
 
     const getDepPoolStats = React.useCallback(async () => {
         const poolStats = await YieldFarmingDataStore.instance.getPoolStats();
@@ -73,8 +75,8 @@ const DeprecatedYieldFarming = ({
         let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, library);
 
         let staking = new ethers.Contract(addresses.staking, abis.staking, library);
-        let depYieldFarmPUSH = new ethers.Contract(addresses.depYieldFarmPUSH, abis.yieldFarming, signer);
-        let depYieldFarmLP = new ethers.Contract(addresses.depYieldFarmLP, abis.yieldFarming, signer);
+        let depYieldFarmPUSH = new ethers.Contract(addresses.depYieldFarmPUSH, abis.yieldFarming, library);
+        let depYieldFarmLP = new ethers.Contract(addresses.depYieldFarmLP, abis.yieldFarming, library);
         let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, library);
 
         setPushToken(pushToken);
@@ -84,7 +86,7 @@ const DeprecatedYieldFarming = ({
         setUniswapV2Router02(uniswapV2Router02Instance);
 
         if (!!(library && account)) {
-            var signer = library.getSigner(account);
+            var signer = provider.getSigner(account);
 
             let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
             let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
@@ -138,8 +140,9 @@ const DeprecatedYieldFarming = ({
         <>
             <YieldAnnouncementSection
                 logo={"WarningCircle"}
-                title={"This Reward Program has ended."}
-                body={"Old Staking pools have now been deprecated. Please Migrate to new pools."}
+                title={"This reward program (V1) has ended."}
+                body={"To continue earning rewards please migrate to new pools."}
+                setActiveTab={setActiveTab}
             />
             <V2Container>
 

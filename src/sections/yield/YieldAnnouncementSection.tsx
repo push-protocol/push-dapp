@@ -15,7 +15,8 @@ const YieldAnnouncementSection = (
   {
     logo,
     title,
-    body
+    body,
+    setActiveTab
   }
 ) => {
 
@@ -56,9 +57,10 @@ const YieldAnnouncementSection = (
           fontWeight={500}
         >
           {body} {" "}
-          {title.includes("84 weeks") && <AInlineV2 color="#fff" href="https://medium.com/push-protocol/push-dao-extends-liquidity-rewards-program-26008926b05a" target='_blank'>
+          {title.includes("New V2") && <AInlineV2 cursor="pointer" color="#fff" onClick={()=>setActiveTab(1)}>
             here
           </AInlineV2>}
+          {" "} to migrate.
         </H2V2>
       </ItemVV2>
     </ItemHV2>

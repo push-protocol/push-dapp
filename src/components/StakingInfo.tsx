@@ -20,7 +20,7 @@ import LoaderSpinner, { LOADER_TYPE } from "./reusables/loaders/LoaderSpinner";
 
 const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, handleCreateChannel}) => {
   const { loading, error, executeAsyncFunction: executeImportPushTokenFunc } = useAsyncOperation(importPushToken);
-  const { library, account, } = useWeb3React();
+  const { provider, account, connector } = useWeb3React();
   const [balance,setBalance] = useState(0);
   // const [loading,setLoading] = useState(false);
   const [faucetLoading,setFaucetLoading] = useState(false);
@@ -30,7 +30,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, 
   // mint PUSH token
   const mintPushTokenHandler = async (noOfTokens: number) => {
     setFaucetLoading(true);
-    const amount = await mintPushToken({noOfTokens, library, account})
+    const amount = await mintPushToken({noOfTokens, provider, account})
     setProcessingInfo(amount+"PUSH Tokens minted successfully!");
     setFaucetLoading(false);
     setBalance(amount);
@@ -40,13 +40,13 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, 
   const pushTokenInWallet = async () => {
     const amount = await getPushTokenFromWallet({
       address: account,
-      provider: library,
+      provider: provider,
     });
     setBalance(amount);
   }
 
   const handlePushTokenImport = async () => {
-    await executeImportPushTokenFunc({ provider: library.provider });
+    await executeImportPushTokenFunc({ provider: provider });
   }
 
   useEffect(()=>{

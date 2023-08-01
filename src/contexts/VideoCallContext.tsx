@@ -40,7 +40,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   const [isCallConnected,setIsCallConnected]=useState(false);
   const [isCallAccepted,setIsCallAccepted]=useState(false);
   const [incomingCallUserData,setIncomingCallUserData]=useState<User|null>(null);
-  const { chainId, account, library } = useWeb3React();
+  const { chainId, account, provider } = useWeb3React();
   const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
 
   const [data, setData] = useState<PushAPI.VideoCallData>(initVideoCallData);
@@ -57,7 +57,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   },[data.incoming[0].status])
 
   useEffect(() => {
-    if (!library || !account || !connectedUser) return null;
+    if (!provider || !account || !connectedUser) return null;
 
     (async () => {
       let createdUser;
@@ -65,14 +65,14 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         createdUser = await createUserIfNecessary();
       }
       videoObjectRef.current = new PushAPI.video.Video({
-        signer: library.getSigner(account),
+        signer: provider.getSigner(account),
         chainId,
         pgpPrivateKey: connectedUser.privateKey || createdUser?.privateKey,
         env: appConfig.appEnv,
         setData,
       });
     })();
-  }, [connectedUser, library, account]);
+  }, [connectedUser, provider, account]);
 
   // wrapper methods over the class methods
 

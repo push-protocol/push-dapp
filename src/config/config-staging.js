@@ -82,9 +82,9 @@ export const addresses = {
   epnsPolyComm: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa", // the ploygon comm contract
   pushToken: "0x2b9bE9259a4F5Ba6344c1b1c07911539642a2D33", //address for push token
   aDai: "0x31f30d9A5627eAfeC4433Ae2886Cf6cc3D25E772",
-  staking: "0xAECb9074e222e8F06f8034140A3F86610E4d3c3E", // deprecated staking addresses
-  depYieldFarmPUSH: "0x6EA019f7FE2640A55154DdC36Bfd21275De388BD", // deprecated YieldFarm Push address
-  depYieldFarmLP:"0xc2886D0e7DAd16cc92b1156Dc9A0b0D3F047FD15", // deprecated YieldFarm LP address
+  // staking: "0xAECb9074e222e8F06f8034140A3F86610E4d3c3E", // deprecated staking addresses
+  // yieldFarmPUSH: "0xb41cd6760d3b1d0d216851f63fda9573b04dd46e",
+  // yieldFarmLP: "0x604f629A6b5E85805D57f39493BBC2856cE8A540",
   epnsToken: "0x2b9bE9259a4F5Ba6344c1b1c07911539642a2D33",
   epnsLPToken: "0x1f094Bd8c260D0C3fC79157096015990885af4d2",
   uniV2LPToken:"0x698839247E5b83572fFF6ccdcf386CC37e60bEf5",// for new staking V2 Contract on staging
@@ -97,30 +97,18 @@ export const addresses = {
   USDTAddress: "0x11fe4b6ae13d2a6055c8d9cf65c55bac32b5d844",
   rockstarV2:"0xA2b885e7065EA59a3251489715ca80DE5Ff642f8",//mainnet address
   NFTRewardsV2: "0xdc66567a990B7fa10730459537620857c9e03287", //mainnet address
-  // pushCoreV2:'0xb4B1512ECdd9Bb21Bb41d888f4Cac22A39bab1D2', //for new staking V2 Push Token
-  // pushCoreV2:'0x44C60743E93E51509b9B37C9048fF780a4B222E1', //for new staking V2 Push Token
-  // pushCoreV2:'0x7a6bdCaF08fC2fedA583646054FA4429C0266eD7', //for new staking V2 Push Token very latest
 
+  //For Yield Farm v1(deprecated)
+  staking: "0xAECb9074e222e8F06f8034140A3F86610E4d3c3E", // deprecated staking addresses
+  depYieldFarmPUSH: "0x6EA019f7FE2640A55154DdC36Bfd21275De388BD", // deprecated YieldFarm Push address
+  depYieldFarmLP:"0xc2886D0e7DAd16cc92b1156Dc9A0b0D3F047FD15", // deprecated YieldFarm LP address
 
-
-  //this below one is the new one pushCoreV2 address
-  // pushCoreV2:'0xC09B14263217F32c1Ce2D71fe231d83A3CE0301b', 
-  // pushCoreV2:'0xb4B1512ECdd9Bb21Bb41d888f4Cac22A39bab1D2',  //21 days epoch
-  // pushCoreV2:'0xEE805a4EE5B44D8bC1b8E5B6e75eE16d4790aD4A', 
-  pushCoreV2:'0x0E8eca22ca65B46CE35d78f3dE66F450c904BC17', 
-
-
-  // this below is of 21 days epoch but has wrong distributed amount
-  // stakingV2:"0x65Cd2765997E779218b3F6d3395fd92F951e692B",
-  // yieldFarmLP: "0x073ce8E0650FfF2BA1D468dB700EDC97ca604D25", 
- 
-  // this one is of 1 hour epoch duration for QA on goerli
-  // stakingV2:"0xb117C60C213581672F376180f183EBe4be981Dc0",
-  // yieldFarmLP: "0x8280196B9836d259Fd4304e86cf6CB83Ce0C0c2E", 
-
-  //this below is for 21 days epoch with 900 depAmount
-  stakingV2:"0x9d65129223451fbd58fc299C635Cd919BaF2564C",
-  yieldFarmLP: "0x9E0c685752E55CC01D1302Dc1cA71cCe7Dd0958a",
+  //For Yield Farm V2
+  stakingV2:"0xA99dE35dce05f59fF87ae393a7576B8Ce5881416",
+  yieldFarmLP: "0xeE543C5bC1b6EB647CfC23fe95D3C5877945Ad21",
+  pushCoreV2: "0xd4E3ceC407cD36d9e3767cD189ccCaFBF549202C",//not upgraded
+  uniV2LPToken: "0x698839247E5b83572fFF6ccdcf386CC37e60bEf5",
+  pushToken: "0x2b9bE9259a4F5Ba6344c1b1c07911539642a2D33",
 
 }
 

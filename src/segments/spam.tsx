@@ -42,7 +42,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const dispatch = useDispatch();
   const modalRef = React.useRef(null);
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
-  const { account, chainId, library } = useWeb3React();
+  const { account, chainId, provider } = useWeb3React();
   const { epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const { subscriptionStatus } = useSelector((state: any) => state.channels);
 
@@ -353,8 +353,8 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     if (!address) return;
     console.log(address);
     subscribeToast.showLoaderToast({loaderMessage: "Waiting for Confirmation..."});
-    console.log(library, account);
-    const _signer = await library.getSigner(account);
+    console.log(provider, account);
+    const _signer = await provider.getSigner(account);
     console.log(_signer);
     console.log({
       signer: _signer,
@@ -394,7 +394,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const onDecrypt = async ({ secret, title, message, image, cta }) => {
     let txToast;
     try {
-      let decryptedSecret = await CryptoHelper.decryptWithWalletRPCMethod(library.provider, secret, account);
+      let decryptedSecret = await CryptoHelper.decryptWithWalletRPCMethod(provider, secret, account);
 
       // decrypt notification message
       const decryptedBody = await CryptoHelper.decryptWithAES(message, decryptedSecret);

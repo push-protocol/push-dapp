@@ -18,9 +18,11 @@ import YieldPushFeeV3 from 'components/yield/YieldPushFeeV3';
 // Internal Configs
 import { abis, addresses } from 'config';
 
-const NewYieldFarming = () => {
+const NewYieldFarming = (
+    { setActiveTab }
+) => {
 
-    const { account, library } = useWeb3React();
+    const { connector, isActive, account, chainId, provider } = useWeb3React<ethers.providers.Web3Provider>();
 
     const [pushToken, setPushToken] = useState(null);
     const [staking, setStaking] = useState(null);
@@ -34,8 +36,10 @@ const NewYieldFarming = () => {
     const [userDataPush, setUserDataPush] = useState(null);
     const [PUSHPoolstats, setPUSHPoolStats] = useState(null);
 
+    const library = provider?.getSigner(account);
+
     const getLpPoolStats = React.useCallback(async () => {
-        const poolStats = await YieldFarmingDataStoreV2.instance.getPoolStats(library);
+        const poolStats = await YieldFarmingDataStoreV2.instance.getPoolStats(provider);
         const lpPoolStats = await YieldFarmingDataStoreV2.instance.getLPPoolStats(poolStats);
 
         setPoolStats({ ...poolStats });
@@ -43,7 +47,7 @@ const NewYieldFarming = () => {
     }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
 
     const getPUSHPoolStats = React.useCallback(async () => {
-        const pushPoolStats = await YieldFarmingDataStoreV2.instance.getPUSHPoolStats(library);
+        const pushPoolStats = await YieldFarmingDataStoreV2.instance.getPUSHPoolStats(provider);
 
         setPUSHPoolStats({ ...pushPoolStats });
     }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
@@ -55,7 +59,7 @@ const NewYieldFarming = () => {
     }, [yieldFarmingLP]);
 
     const getUserDataPush = React.useCallback(async () => {
-        const userDataPush = await YieldFarmingDataStoreV2.instance.getUserDataPUSH(library);
+        const userDataPush = await YieldFarmingDataStoreV2.instance.getUserDataPUSH(provider);
 
         setUserDataPush({ ...userDataPush });
     }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
@@ -82,7 +86,7 @@ const NewYieldFarming = () => {
         setUniswapV2Router02Instance(uniswapV2Router02Instance);
 
         if (!!(library && account)) {
-            var signer = library.getSigner(account);
+            var signer = provider?.getSigner(account);
 
             let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
             let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
@@ -119,8 +123,9 @@ const NewYieldFarming = () => {
         <>
             <YieldAnnouncementSection
                 logo={"announcement"}
-                title={" Rewards Program will be extended by 84 weeks !!"}
-                body={"The Push DAO has approved the extension of the Rewards Program for 84 more weeks! More info"}
+                title={"New V2 Pools are now Live! Stake or migrate now."}
+                body={"Users who were part of the previous Push staking program, need to migrate migrate to new pools to continue earning rewards. Click"}
+                setActiveTab={setActiveTab}
             />
             <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} />
             <YieldPushPriceSection

@@ -73,7 +73,10 @@ export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHoo
                 retry: true,
               });
             }
-          } else {
+          } else if(payload?.data?.additionalMeta?.type === `${ADDITIONAL_META_TYPE.PUSH_SPACE}+1`){
+            // uiweb will handle this
+          }
+          else {
             showNotifcationToast(payload);
           }
         }

@@ -18,7 +18,7 @@ const ipfs = require('ipfs-api')()
 
 // Create Header
 function CreateChannel() {
-  const { active, error, account, library, chainId } = useWeb3React();
+  const { account, provider } = useWeb3React();
 
   const [processing, setProcessing] = React.useState(false);
   const [uploadDone, setUploadDone] = React.useState(false);
@@ -92,7 +92,7 @@ function CreateChannel() {
 
     // Send Transaction
     // First Approve DAI
-    var signer = library.getSigner(account);
+    var signer = provider.getSigner(account);
 
     let daiContract = new ethers.Contract(addresses.dai, abis.erc20, signer);
 
@@ -105,7 +105,7 @@ function CreateChannel() {
 
     console.log(tx);
     console.log("waiting for tx to finish");
-    await library.waitForTransaction(tx.hash);
+    await provider.waitForTransaction(tx.hash);
 
     let contract = new ethers.Contract(addresses.epnscore, abis.epnscore, signer);
     var anotherSendTxPromise = contract.createChannelWithFees(cid);

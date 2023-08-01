@@ -31,7 +31,7 @@ const YieldPoolCard = ({
     tokenAddress,
     setActiveTab
 }: any) => {
-    const { active, error, account, library, chainId } = useWeb3React();
+    const { account, provider } = useWeb3React<ethers.providers.Web3Provider>();
 
     const [txInProgressWithdraw, setTxInProgressWithdraw] = React.useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = useState(false);
@@ -61,19 +61,21 @@ const YieldPoolCard = ({
             return;
         }
 
-        if (!PoolStats.currentEpochPUSH || PoolStats.currentEpochPUSH == 1) {
-            yieldFarmToast.showMessageToast({
-                toastTitle: 'Error',
-                toastMessage: `Harvest unlocks from Epoch 2!)`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => <MdError size={size} color="red" />,
-            });
+        //No use here because the currentEpochPush will definitely be more than 1
+        // if (!PoolStats.currentEpochPUSH || PoolStats.currentEpochPUSH == 1) {
+        //     yieldFarmToast.showMessageToast({
+        //         toastTitle: 'Error',
+        //         toastMessage: `Harvest unlocks from Epoch 2!)`,
+        //         toastType: 'ERROR',
+        //         getToastIcon: (size) => <MdError size={size} color="red" />,
+        //     });
 
-            return;
-        }
+        //     return;
+        // }
+
         setTxInProgressClaimRewards(true);
 
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
         let yieldFarming = new ethers.Contract(
             poolAddress,
             abis.yieldFarming,
@@ -86,7 +88,7 @@ const YieldPoolCard = ({
             yieldFarmToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
             try {
-                await library.waitForTransaction(tx.hash);
+                await provider.waitForTransaction(tx.hash);
 
                 yieldFarmToast.showMessageToast({
                     toastTitle: 'Success',
@@ -138,7 +140,7 @@ const YieldPoolCard = ({
             return;
         }
 
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
         let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
 
         const amounttowithdraw = await staking.balanceOf(
@@ -156,7 +158,7 @@ const YieldPoolCard = ({
             yieldFarmToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
             try {
-                await library.waitForTransaction(tx.hash);
+                await provider.waitForTransaction(tx.hash);
                 yieldFarmToast.showMessageToast({
                     toastTitle: 'Success',
                     toastMessage: 'Transaction Completed!',
@@ -171,7 +173,6 @@ const YieldPoolCard = ({
 
                 setTxInProgressWithdraw(false);
 
-                // getLpPoolStats();
                 getUserData();
             } catch (e) {
                 console.log("Error", e);
@@ -201,12 +202,10 @@ const YieldPoolCard = ({
             return;
         }
 
-
         let totalTxnSteps = 3;
 
         //unstake from the staking Contract
         const withdrawAmount = formatTokens(userData.epochStakeNext);
-        console.log("Withdraw Amount: ", withdrawAmount)
 
         if (withdrawAmount == 0) {
             yieldFarmToast.showMessageToast({
@@ -225,10 +224,11 @@ const YieldPoolCard = ({
         // 1. For Uni V2 migration the Uni V2 token has been approved for uni v2 staking contract
         // 2. For Push migration, the pushCoreV2 has been approved for Push Fee staking Pool 
 
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
         let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
 
 
+        // Checking for the tokenAddress and allowance for staking
         const contractThatNeedApproval = tokenAddress === addresses.pushToken ? addresses.pushCoreV2 : addresses.stakingV2;
         var token = new ethers.Contract(tokenAddress, abis.pushToken, signer);
         let allowance = await token.allowance(account, contractThatNeedApproval);
@@ -271,7 +271,7 @@ const YieldPoolCard = ({
             .then(async (tx) => {
                 yieldFarmToast.showLoaderToast({ loaderMessage: 'Withdrawing! Please Wait...' });
 
-                await library.waitForTransaction(tx.hash);
+                await provider.waitForTransaction(tx.hash);
 
                 yieldFarmToast.showMessageToast({
                     toastTitle: 'Success',
@@ -317,7 +317,7 @@ const YieldPoolCard = ({
                         tx.then(async (tx) => {
                             yieldFarmToast.showLoaderToast({ loaderMessage: 'Approving! Please Wait...' });
 
-                            await library.waitForTransaction(tx.hash);
+                            await provider.waitForTransaction(tx.hash);
 
                             yieldFarmToast.showMessageToast({
                                 toastTitle: 'Success',
@@ -372,7 +372,7 @@ const YieldPoolCard = ({
                         tx.then(async (tx) => {
                             yieldFarmToast.showLoaderToast({ loaderMessage: 'Approving! Please Wait...' });
 
-                            await library.waitForTransaction(tx.hash);
+                            await provider.waitForTransaction(tx.hash);
 
                             yieldFarmToast.showMessageToast({
                                 toastTitle: 'Success',
@@ -422,7 +422,7 @@ const YieldPoolCard = ({
 
 
     const depositLpToken = async (tx, withdrawAmount, totalTxnSteps) => {
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
         var stakingV2 = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
 
         setMigrateMessage(`Staking ${totalTxnSteps}/${totalTxnSteps}`)
@@ -437,7 +437,7 @@ const YieldPoolCard = ({
         tx.then(async (tx) => {
             yieldFarmToast.showLoaderToast({ loaderMessage: 'Depositing to V2 ! Please Wait...' });
 
-            await library.waitForTransaction(tx.hash);
+            await provider.waitForTransaction(tx.hash);
 
 
             yieldFarmToast.showMessageToast({
@@ -473,7 +473,7 @@ const YieldPoolCard = ({
 
     const depositPushToken = async (tx, withdrawAmount, totalTxnSteps) => {
 
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
         let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
 
         setMigrateMessage(`Staking ${totalTxnSteps}/${totalTxnSteps}`)
@@ -488,9 +488,7 @@ const YieldPoolCard = ({
         tx.then(async (tx) => {
             yieldFarmToast.showLoaderToast({ loaderMessage: 'Depositing to V2 ! Please Wait...' });
 
-
-            await library.waitForTransaction(tx.hash);
-
+            await provider.waitForTransaction(tx.hash);
             yieldFarmToast.showMessageToast({
                 toastTitle: 'Success',
                 toastMessage: 'Transaction Completed! Successfully Deposited the Push Token to V2 ',
@@ -545,9 +543,7 @@ const YieldPoolCard = ({
                             <Deprecated>Deprecated</Deprecated>
                         </Heading>
                         <SecondaryText>
-                            Current APR <SpanV2 color="#D53A94" fontWeight="600">
-                                {numberWithCommas(Math.max(PoolStats?.stakingAPR, 0))}
-                                %</SpanV2>
+                            Current APR <SpanV2 color="#D53A94" fontWeight="600">0%</SpanV2>
                         </SecondaryText>
                     </>
                 ) : (
@@ -579,7 +575,8 @@ const YieldPoolCard = ({
                                     color="#D53A94"
                                     letterSpacing="-0.03em"
                                 >
-                                    {numberWithCommas(formatTokens(PoolStats?.rewardForCurrentEpoch))} PUSH
+
+                                    0 PUSH
                                 </H2V2>
                             </>
                         ) : (
@@ -633,9 +630,7 @@ const YieldPoolCard = ({
                         <>
                             <EpochNo padding="0px 5px 0px 0px">Current Epoch</EpochNo>
                             <EpochNo margin='0 0 0 5px'>
-                                {Math.min(PoolStats?.currentEpochPUSH, PoolStats?.totalEpochPUSH).toString()}
-                                /
-                                {PoolStats?.totalEpochPUSH}
+                                100 / 100
                             </EpochNo>
                         </>
                     ) : (
@@ -678,7 +673,7 @@ const YieldPoolCard = ({
                                     </InfoSpan>
 
                                 </DataTitle>
-                                <DataValue> {(userData?.totalAccumulatedReward - userData?.totalAvailableReward).toFixed(2)} PUSH</DataValue>
+                                <DataValue> {numberWithCommas((userData?.totalAccumulatedReward - userData?.totalAvailableReward).toFixed(2))} PUSH</DataValue>
                             </ItemHV2>
                             <ItemHV2 justifyContent="space-between" margin={ isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                                 <DataTitle>
@@ -693,9 +688,7 @@ const YieldPoolCard = ({
                                     </InfoSpan>
 
                                 </DataTitle>
-                                <DataValue>
-                                    {/* {poolName == "UNI-V2" ? userData.potentialUserReward : 0}  */}
-                                    {numberWithCommas(userData?.potentialUserReward)} PUSH</DataValue>
+                                <DataValue>0 PUSH</DataValue>
                             </ItemHV2>
                             <ItemHV2 justifyContent="space-between" margin={ isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                                 <DataTitle>
@@ -709,7 +702,7 @@ const YieldPoolCard = ({
                                         </StakingToolTip>
                                     </InfoSpan>
                                 </DataTitle>
-                                <DataValue>{userData?.totalAvailableReward} PUSH</DataValue>
+                                <DataValue>{numberWithCommas(userData?.totalAvailableReward)} PUSH</DataValue>
                             </ItemHV2>
 
                         </ItemVV2>

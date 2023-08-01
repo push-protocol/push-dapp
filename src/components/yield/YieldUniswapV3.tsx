@@ -33,7 +33,7 @@ const YieldUniswapV3 = ({
     getLpPoolStats,
     getUserDataLP
 }) => {
-    const { active, error, account, library, chainId } = useWeb3React();
+    const { account, provider } = useWeb3React<ethers.providers.Web3Provider>();
 
     const [txInProgressWithdraw, setTxInProgressWithdraw] = React.useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
@@ -52,15 +52,13 @@ const YieldUniswapV3 = ({
         setTxInProgressWithdraw(true);
         const withdrawAmount = formatTokens(userDataLP.epochStakeNext);
 
-        console.log("Withdraw amount: ", withdrawAmount);
-
         if (withdrawAmount == 0) {
             setUnstakeErrorMessage("Nothing to unstake. You need to stake first");
             setTxInProgressWithdraw(false);
             return;
         }
 
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
         let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
 
         const amounttowithdraw = await staking.balanceOf(
@@ -79,7 +77,7 @@ const YieldUniswapV3 = ({
             uniswapV2Toast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
             try {
-                await library.waitForTransaction(tx.hash);
+                await provider.waitForTransaction(tx.hash);
                 uniswapV2Toast.showMessageToast({
                     toastTitle: 'Success',
                     toastMessage: 'Transaction Completed!',
@@ -141,7 +139,7 @@ const YieldUniswapV3 = ({
         }
         setTxInProgressClaimRewards(true);
 
-        var signer = library.getSigner(account);
+        var signer = provider.getSigner(account);
         let yieldFarmingLP = new ethers.Contract(
             addresses.yieldFarmLP,
             abis.yieldFarming,
@@ -153,7 +151,7 @@ const YieldUniswapV3 = ({
             uniswapV2Toast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
             try {
-                await library.waitForTransaction(tx.hash);
+                await provider.waitForTransaction(tx.hash);
 
                 uniswapV2Toast.showMessageToast({
                     toastTitle: 'Success',

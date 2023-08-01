@@ -104,7 +104,9 @@ const IntentFeed = ({isLoading}): JSX.Element => {
                 key={`${intent.threadhash}${i}`}
               >
                  {showWayPoint(i) && !isFetchingDone && <Waypoint onEnter={handlePagination} />}
-                <ChatSnap
+                {
+                  intent?.groupInformation?.groupType !== 'spaces' && (
+                    <ChatSnap
                     pfp ={getGroupImage(intent)}
                     username={getName(intent)}
                     isGroup={checkIfGroup(intent)}
@@ -116,6 +118,8 @@ const IntentFeed = ({isLoading}): JSX.Element => {
                       setSelectedIntentSnap(i);
                     }}
                   />
+                  )
+                }
                 </ItemVV2>
               ))}
               {

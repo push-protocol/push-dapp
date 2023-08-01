@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import React, { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 // External Packages
 import styled, { useTheme } from 'styled-components';
 import { FiSearch, FiSliders } from 'react-icons/fi';
@@ -13,29 +13,31 @@ import SpamBox from 'segments/spam';
 // Internal Configs
 import GLOBALS from 'config/Globals';
 
-const InboxComponent = () => {
-  const [showInbox, setShowInbox] = useState(true);
+const InboxComponent = ({isSpam}) => {
+  const [showInbox, setShowInbox] = useState(!isSpam);
   const [showFilter, setShowFilter] = useState(false);
   const [search, setSearch] = useState('');
   const themes = useTheme();
 
+  const navigate = useNavigate();
   const toggleShowInbox = () => setShowInbox((prev) => !prev);
   const toggleShowFilter = () => setShowFilter((prev) => !prev);
 
-  const handleToggle = () => {
+  const handleToggle = (path) => {
     toggleShowInbox();
     setShowFilter(false);
     setSearch('');
+    navigate(path)
   };
 
   return (
     <Container>
       <NavBoxHolder>
         <NavHolder>
-          <NavTitleButton isActive={showInbox} onClick={handleToggle}>
+          <NavTitleButton isActive={showInbox} onClick={()=>handleToggle('/inbox')}>
             Inbox
           </NavTitleButton>
-          <NavTitleButton isActive={!showInbox} onClick={handleToggle}>
+          <NavTitleButton isActive={!showInbox} onClick={()=>handleToggle('/spam')}>
             Spam
           </NavTitleButton>
         </NavHolder>

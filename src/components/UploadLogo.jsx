@@ -35,7 +35,7 @@ const UploadLogo = ({
   setStepFlow
 }) => {
   const childRef = useRef();
-  const { chainId, library, account } = useWeb3React();
+  const { chainId, account } = useWeb3React();
 
   const handleDragOver = (e) => {
     e.preventDefault();

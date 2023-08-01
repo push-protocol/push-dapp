@@ -22,7 +22,7 @@ import { abis, addresses, appConfig } from "config";
 
 // Create Header
 function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
-  const { account, library, chainId } = useWeb3React();
+  const { account, provider, chainId } = useWeb3React();
 
   const [NFTRewardsV2Contract, setNFTRewardsV2Contract] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
@@ -32,13 +32,13 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
   const onMainnetCore = chainId === appConfig.mainnetCoreContractChain;
 
   React.useEffect(() => {
-    if (!!(library && account)) {
-      let signer = library.getSigner(account);
+    if (!!(provider && account)) {
+      let signer = provider.getSigner(account);
 
       const NFTRewardsV2Instance = new ethers.Contract(addresses.NFTRewardsV2, abis.NFTRewardsV2, signer);
       setNFTRewardsV2Contract(NFTRewardsV2Instance);
     }
-  }, [account, library]);
+  }, [account, provider]);
 
   React.useEffect(() => {
     if (NFTObject) {
@@ -66,7 +66,7 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
         progress: undefined,
       });
       try {
-        await library.waitForTransaction(tx.hash);
+        await provider.waitForTransaction(tx.hash);
 
         toast.update(txToast, {
           render: "Transaction Completed!",
@@ -106,9 +106,9 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
     >
       <ChannelLogo
         theme={
-          !!account && !!library && account == NFTObject.owner ?
+          !!account && !!provider && account == NFTObject.owner ?
             "#e20880" :
-            !!account && !!library && NFTObject.owner != 0xce5febfD9Eb155dd7d996FC04F1d763A3a9E0020 ?
+            !!account && !!provider && NFTObject.owner != 0xce5febfD9Eb155dd7d996FC04F1d763A3a9E0020 ?
               "#eee" :
               "#fff"
         }
@@ -121,7 +121,7 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
             {!loading &&
               <ReactPlayer url={`${newIp}`} controls={true} playing={false} loop={true} />
             }
-            {!!account && !!library && NFTObject.owner != 0xce5febfD9Eb155dd7d996FC04F1d763A3a9E0020 &&
+            {!!account && !!provider && NFTObject.owner != 0xce5febfD9Eb155dd7d996FC04F1d763A3a9E0020 &&
               <NFTStatus>
                 <IoIosGift size={20} color="#fff" />
                 <NFTStatusTitle>
@@ -130,7 +130,7 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
               </NFTStatus>
             }
 
-            {!!account && !!library && NFTObject.claimable &&
+            {!!account && !!provider && NFTObject.claimable &&
               <NFTClaim>
                 <NFTClaimTitle>
                   900 $PUSH
@@ -140,7 +140,7 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
           </ChannelLogoInner>
         </ChannelLogoOuter>
 
-        {!!account && !!library &&
+        {!!account && !!provider &&
           <ItemH>
 
             <ChannelActions>
@@ -149,7 +149,7 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
                   <Skeleton />
                 </SkeletonButton>
               }
-              {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
+              {!!account && !!provider && onMainnetCore && account == NFTObject.owner && !loading &&
                 <UnsubscribeButton >
                   <ActionTitle onClick={() => {
                     setTokenId(NFTObject.id)
@@ -158,7 +158,7 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
                   >Transfer</ActionTitle>
                 </UnsubscribeButton>
               }
-              {/* {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
+              {/* {!!account && !!provider && onMainnetCore && account == NFTObject.owner && !loading &&
                 <UnsubscribeButton disabled={!NFTObject.claimable}>
                   {txInProgress &&
                     <ActionLoader>

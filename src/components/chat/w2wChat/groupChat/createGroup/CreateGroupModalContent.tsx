@@ -36,7 +36,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [memberList, setMemberList] = React.useState<any>([]);
   const { connectedUser, setConnectedUser ,  createUserIfNecessary} = useContext(ChatUserContext);
-  const {library } = useWeb3React<ethers.providers.Web3Provider>();
+  const {provider } = useWeb3React<ethers.providers.Web3Provider>();
   const themes = useTheme();
   const createGroupToast = useToast();
   const isMobile = useDeviceWidthCheck(600);
@@ -61,7 +61,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
         if(!connectedUser.publicKey){
           createdUser = await createUserIfNecessary();
         }
-        const signer = await library.getSigner();
+        const signer = await provider.getSigner();
         const createGroupRes = await PushAPI.chat.createGroup({
           groupName: groupNameData,
           groupDescription: groupDescriptionData,

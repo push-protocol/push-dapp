@@ -39,7 +39,7 @@ export default function EditChannel({
   displayUplaodLogoModal,
   isUploadLogoModalOpen
 }) {
-  const { chainId, account, library } = useWeb3React();
+  const { chainId, account, provider } = useWeb3React();
   const {
     channelDetails,
     canVerify,
@@ -86,12 +86,12 @@ export default function EditChannel({
   }, [account]);
 
   useEffect(() => {
-    if (!account || !library) return;
+    if (!account || !provider) return;
 
     (async function () {
       const pushTokenApprovalAmount = await getPushTokenApprovalAmount({
         address: account,
-        provider: library,
+        provider: provider,
         contractAddress: addresses.epnscore
       });
       setPushApprovalAmount(parseInt(pushTokenApprovalAmount));
@@ -104,12 +104,12 @@ export default function EditChannel({
       }
 
     })();
-  }, [account, library]);
+  }, [account, provider]);
 
   const depositPush = async () => {
     setIsLoading(true);
-    if (!library) return;
-    const signer = library.getSigner(account);
+    if (!provider) return;
+    const signer = provider.getSigner(account);
     editChannelToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
     try {
       const response = await approvePushToken({
@@ -317,7 +317,7 @@ export default function EditChannel({
 
   // mint PUSH token
   const mintPushTokenHandler = async (noOfTokens: number) => {
-    await mintPushToken({ noOfTokens, library, account });
+    await mintPushToken({ noOfTokens, provider, account });
   };
 
   useEffect(() => {

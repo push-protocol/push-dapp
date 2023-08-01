@@ -1,5 +1,6 @@
 // React + Web3 Essentials
 import React, { useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 
 // External Packages
 import styled from 'styled-components';
@@ -14,9 +15,10 @@ import GLOBALS from "config/Globals";
 // Other Information section
 const InboxPage = () => {
   // RENDER
+  const location = useLocation();
   return (
     <Container>
-      <InboxModule />
+      <InboxModule isSpam={location.pathname === '/spam'?true:false} />
     </Container>
   );
 }
