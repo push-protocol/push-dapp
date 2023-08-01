@@ -434,7 +434,7 @@ const YieldUniswapV3 = ({
                             <FilledButton
                                 onClick={() => {
                                     handleStakingModal();
-                                }}>Stake UNI-V2 LP Tokens</FilledButton>
+                                }}>Stake $UNI-V2 LP Tokens</FilledButton>
                         </ItemHV2>
                         <ButtonsContainer>
 
@@ -454,7 +454,7 @@ const YieldUniswapV3 = ({
                                     >
                                         {txInProgressWithdraw ?
                                             (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
-                                            "Unstake UNI-V2"
+                                            "Unstake $UNI-V2"
                                         }
                                     </EmptyButton>
                                 </StakingToolTip>
@@ -471,7 +471,7 @@ const YieldUniswapV3 = ({
                                 >
                                     {txInProgressWithdraw ?
                                         (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26}  spinnerColor={theme.activeButtonText} title='Unstaking' titleColor={theme.activeButtonText}/>) :
-                                        "Unstake UNI-V2"
+                                        "Unstake $UNI-V2"
                                     }
                                 </EmptyButton>
 

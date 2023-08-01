@@ -7,7 +7,7 @@ import { addresses, appConfig } from 'config';
 // Constants
 const ONE_PUSH = ethers.BigNumber.from(1).mul(ethers.BigNumber.from(10).pow(ethers.BigNumber.from(18)));
 const GENESIS_EPOCH_AMOUNT_PUSH = 59400;
-const GENESIS_EPOCH_AMOUNT_LP = 74400;
+const GENESIS_EPOCH_AMOUNT_LP = 75300;
 const PUSH_ANNUAL_REWARD = 1323100;
 
 const bn = function (number, defaultValue = null) {
@@ -145,7 +145,7 @@ export default class YieldFarmingDataStoreV2 {
     let pushPoolRewardsDistributed = ethers.BigNumber.from(0);
     let lpPoolRewardsDistributed = ethers.BigNumber.from(0);
 
-    // for (var i = 0; i < currentEpochLP.toNumber(); i++) {
+
     for (var i = 0; i < currentEpochLP.toNumber(); i++) {
       const rewardForCurrentEpochLP = this.calcTotalAmountPerEpoch(
         genesisEpochAmountLP,
@@ -156,9 +156,9 @@ export default class YieldFarmingDataStoreV2 {
       lpPoolRewardsDistributed = lpPoolRewardsDistributed.add(rewardForCurrentEpochLP);
 
       const rewardForCurrentEpochPush = await pushCoreV2.epochRewards(i);
-
+      
       lpPoolRewardsDistributed = lpPoolRewardsDistributed.add(rewardForCurrentEpochPush);
-
+    
     }
     return pushPoolRewardsDistributed.add(lpPoolRewardsDistributed)
   };
@@ -370,6 +370,9 @@ export default class YieldFarmingDataStoreV2 {
   };
 
   calcTotalAmountPerEpoch = (genesisEpochAmount, epochId, deprecationPerEpoch) => {
+    if(epochId.toNumber() === 0 ){
+      return genesisEpochAmount.mul(0);
+    }
     return genesisEpochAmount.sub(epochId.mul(deprecationPerEpoch));
   };
 

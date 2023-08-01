@@ -486,7 +486,7 @@ const YieldPushFeeV3 = ({
                 {userDataPush ? (
                     <>
                         <ItemHV2>
-                            <FilledButton onClick={showStakingModal}> Stake PUSH</FilledButton>
+                            <FilledButton onClick={showStakingModal}> Stake $PUSH</FilledButton>
                         </ItemHV2>
                         <ButtonsContainer>
 
@@ -506,7 +506,7 @@ const YieldPushFeeV3 = ({
                                     >
                                         {txInProgressWithdraw ?
                                             (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
-                                            "Unstake PUSH"
+                                            "Unstake $PUSH"
                                         }
                                     </EmptyButton>
                                 </StakingToolTip>
@@ -523,7 +523,7 @@ const YieldPushFeeV3 = ({
                                 >
                                     {txInProgressWithdraw ?
                                         (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor={theme.activeButtonText} title='Unstaking' titleColor={theme.activeButtonText} />) :
-                                        "Unstake PUSH"
+                                        "Unstake $PUSH"
                                     }
                                 </EmptyButton>
 
