@@ -240,7 +240,7 @@ const YieldUniswapV3 = ({
                     <>
                         <Heading >Uniswap V2 LP Staking Pool</Heading>
                         <SecondaryText>
-                            Current APR <SpanV2 color="#D53A94" fontWeight="600">{numberWithCommas(lpPoolStats?.stakingAPR)}% +</SpanV2> 
+                            Current APR <SpanV2 color="#D53A94" fontWeight="600">&gt;{numberWithCommas(lpPoolStats?.stakingAPR)}%</SpanV2> 
                         </SecondaryText>
                     </>
                 ) : (

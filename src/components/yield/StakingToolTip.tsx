@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 // Internal Compoonents
-import { H2V2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { AInlineV2, H2V2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 
 
@@ -61,14 +61,22 @@ const ErrorToolTipContent = (props) => {
     )
 }
 
-const StakingToolTipContent = ({
+export const StakingToolTipContent = ({
     title,
     body,
 }) => {
     return (
         <Container>
             <TopHeading>{title}</TopHeading>
-            <TopSubHeading >{body}</TopSubHeading>
+            <TopSubHeading >
+                {body}  {" "} 
+                {/* {body.includes("Push Fee Pool APR") &&
+                    <AInlineV2 cursor='pointer' href="https://www.google.com/" target='_blank'>
+                      here
+                    </AInlineV2>
+                } */}
+            </TopSubHeading>
+
         </Container>
     );
 };
@@ -103,4 +111,5 @@ const TopSubHeading = styled(H2V2)`
   color: ${(props) => props.theme.tooltipTopSubHeading};
   font-weight: 300;
   font-size: 0.625rem;
+  text-align:left;
 `;

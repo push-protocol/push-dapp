@@ -37,7 +37,7 @@ const DeprecatedYieldFarming = ({
     const [depUserDataPUSH, setDepUserDataPUSH] = useState(null);
     const [depUserDataLP, setDepUserDataLP] = useState(null);
 
-    const library =  provider?.getSigner(account);
+    const library = provider?.getSigner(account);
 
     const getDepPoolStats = React.useCallback(async () => {
         const poolStats = await YieldFarmingDataStore.instance.getPoolStats();
@@ -147,6 +147,17 @@ const DeprecatedYieldFarming = ({
             <V2Container>
 
                 <YieldPoolCard
+                    poolName={"PUSH"}
+                    userData={depUserDataPUSH}
+                    PoolStats={depPushPoolStats}
+                    poolAddress={addresses.depYieldFarmPUSH}
+                    getUserData={getDepUserDataPUSH}
+                    getPoolStats={getDepPUSHPoolStats}
+                    tokenAddress={addresses.pushToken}
+                    setActiveTab={setActiveTab}
+                />
+
+                <YieldPoolCard
                     poolName={"UNI-V2"}
                     userData={depUserDataLP}
                     PoolStats={depLpPoolStats}
@@ -157,16 +168,7 @@ const DeprecatedYieldFarming = ({
                     setActiveTab={setActiveTab}
                 />
 
-                <YieldPoolCard
-                    poolName={"PUSH"}
-                    userData={depUserDataPUSH}
-                    PoolStats={depPushPoolStats}
-                    poolAddress={addresses.depYieldFarmPUSH}
-                    getUserData={getDepUserDataPUSH}
-                    getPoolStats={getDepPUSHPoolStats}
-                    tokenAddress={addresses.pushToken}
-                    setActiveTab={setActiveTab}
-                />
+
 
             </V2Container>
 

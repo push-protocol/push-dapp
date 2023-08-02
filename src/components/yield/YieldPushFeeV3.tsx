@@ -15,13 +15,16 @@ import { B, Button } from 'primaries/SharedStyling';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';
 import ErrorLogo from "../../assets/errorLogo.svg"
-import StakingToolTip from './StakingToolTip';
+import StakingToolTip, { StakingToolTipContent } from './StakingToolTip';
 import StakingModalComponent from './StakingModalComponent';
 import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, Skeleton, SkeletonLine, SpanV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import { abis, addresses } from 'config';
 import { useDeviceWidthCheck } from 'hooks';
+import Tooltip from 'components/reusables/tooltip/Tooltip';
+import { device } from 'config/Globals';
+import { useClickAway } from 'react-use';
 
 const YieldPushFeeV3 = ({
     userDataPush,
@@ -288,9 +291,13 @@ const YieldPushFeeV3 = ({
                 {PUSHPoolstats ? (
                     <>
                         <Heading>PUSH Fee Staking Pool</Heading>
-                        <SecondaryText>
-                            Current APR <SpanV2 color="#D53A94" fontWeight="600">{numberWithCommas(PUSHPoolstats?.stakingAPR)}% +</SpanV2> 
-                        </SecondaryText>
+                        <APRText>
+                            Current APR
+                            <SpanV2 color="#D53A94" fontWeight="600" margin='0 5px 0 5px'>
+                                &gt;{numberWithCommas(PUSHPoolstats?.stakingAPR)}% + Fee
+                            </SpanV2>
+                            <ToolTipAPR />
+                        </APRText>
                     </>
                 ) : (
                     <SkeletonContainer
@@ -311,17 +318,17 @@ const YieldPushFeeV3 = ({
                     border={`1px solid ${theme.stakingBorder}`}
                     borderRadius="16px"
                 >
-                    <ItemVV2 margin={isMobile ?"0px 6px 0 0 " :"0px 18px 0px 0px"} padding={isMobile  ? " 7px" : "10px"}>
+                    <ItemVV2 margin={isMobile ? "0px 6px 0 0 " : "0px 18px 0px 0px"} padding={isMobile ? " 7px" : "10px"}>
                         {PUSHPoolstats ? (
                             <>
                                 <SecondaryText>Current Reward</SecondaryText>
                                 <H2V2
-                                   fontSize={isMobile ? "18px" : "24px"}
+                                    fontSize={isMobile ? "18px" : "24px"}
                                     fontWeight="600"
                                     color="#D53A94"
                                     letterSpacing="-0.03em"
                                 >
-                                    {formatTokens(PUSHPoolstats?.currentReward)} PUSH
+                                    {numberWithCommas(formatTokens(PUSHPoolstats?.currentReward))} PUSH
                                 </H2V2>
                             </>
                         ) : (
@@ -338,7 +345,7 @@ const YieldPushFeeV3 = ({
 
                     <Line width="10px" height="100%"></Line>
 
-                    <ItemVV2 margin={isMobile ? "0 0 0 6px" : "0 0 0 18px"} padding={isMobile  ? " 7px" : "10px"}>
+                    <ItemVV2 margin={isMobile ? "0 0 0 6px" : "0 0 0 18px"} padding={isMobile ? " 7px" : "10px"}>
                         {PUSHPoolstats ? (
                             <>
                                 <SecondaryText>Total Staked</SecondaryText>
@@ -347,7 +354,7 @@ const YieldPushFeeV3 = ({
                                     fontWeight="600"
                                     letterSpacing="-0.03em"
                                 >
-                                    {formatTokens(PUSHPoolstats?.totalStakedAmount)} PUSH
+                                    {numberWithCommas(formatTokens(PUSHPoolstats?.totalStakedAmount))} PUSH
                                 </StakedAmount>
                             </>
                         ) : (
@@ -390,7 +397,7 @@ const YieldPushFeeV3 = ({
 
                 {userDataPush ? (
                     <ItemVV2>
-                        <ItemHV2 justifyContent="space-between" margin={ isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
+                        <ItemHV2 justifyContent="space-between" margin={isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                             <DataTitle>
                                 User Deposit
                                 <InfoSpan>
@@ -404,7 +411,7 @@ const YieldPushFeeV3 = ({
                             </DataTitle>
                             <DataValue> {formatTokens(userDataPush?.userstakedAmount.stakedAmount)} PUSH</DataValue>
                         </ItemHV2>
-                        <ItemHV2 justifyContent="space-between" margin={ isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
+                        <ItemHV2 justifyContent="space-between" margin={isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                             <DataTitle>
                                 Rewards Claimed
                                 <InfoSpan>
@@ -419,7 +426,7 @@ const YieldPushFeeV3 = ({
                             </DataTitle>
                             <DataValue> {formatTokens(userDataPush?.claimedReward)} PUSH</DataValue>
                         </ItemHV2>
-                        <ItemHV2 justifyContent="space-between" margin={ isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
+                        <ItemHV2 justifyContent="space-between" margin={isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                             <DataTitle>
                                 Current Epoch Reward
                                 <InfoSpan>
@@ -434,7 +441,7 @@ const YieldPushFeeV3 = ({
                             </DataTitle>
                             <DataValue> {formatTokens(userDataPush?.potentialUserReward)} PUSH</DataValue>
                         </ItemHV2>
-                        <ItemHV2 justifyContent="space-between" margin={ isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
+                        <ItemHV2 justifyContent="space-between" margin={isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                             <DataTitle>
                                 Available for Claiming
                                 <InfoSpan>
@@ -481,7 +488,7 @@ const YieldPushFeeV3 = ({
             </ItemVV2>
 
             {/* Bottom Section */}
-            <ItemVV2 padding={ isMobile ? "0px " : "0px 14px"} margin="24px 0px 24px 0px">
+            <ItemVV2 padding={isMobile ? "0px " : "0px 14px"} margin="24px 0px 24px 0px">
 
                 {userDataPush ? (
                     <>
@@ -583,6 +590,66 @@ const YieldPushFeeV3 = ({
 
 export default YieldPushFeeV3;
 
+const ToolTipAPR = () => {
+    const [isActive, setIsActive] = useState(false);
+
+    const handleClose = () => setIsActive(false);
+    const containerRef = React.useRef(null);
+    useClickAway(containerRef, () => handleClose());
+
+    return (
+        <OuterContainer ref={containerRef}>
+
+            <ImageV2 onClick={() => setIsActive(!isActive)} src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+
+            {isActive && <Content id="channel" >
+                <StakingToolTipContent
+                    title={""}
+                    body={"Push Fee Pool APR distributes yield farming rewards + fee earned by protocol. More Info later."}
+                />
+            </Content>}
+
+        </OuterContainer>
+    )
+}
+
+const OuterContainer = styled.div`
+    width: 34%;
+    width: 100%;
+    min-width: none;
+    max-width: none;
+    display:flex;
+    flex:1;
+    height: fit-content;
+    position: relative;
+    @media ${device.tablet} {
+      width: 100%;
+      min-width: 100%;
+      max-width: 100%;
+    }
+`
+
+const Content = styled.div`
+  position: absolute;
+  border-radius: 17px;
+  background: none;
+  bottom: 25px;
+  left: 5px;
+  color: #fff;
+  background: #131313;
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.9rem;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+  line-height: 21px;
+  z-index: 10;
+  &::before {
+    bottom: 100%;
+    border-bottom-color: #131313;
+  }
+`;
+
 const Container = styled(SectionV2)`
     border: 1px solid  ${(props) => props.theme.stakingBorder};
     border-radius: 24px;
@@ -615,6 +682,20 @@ const Heading = styled(H2V2)`
     }
 
 `
+
+const APRText = styled.div`
+    margin:0px;
+    font-size: 18px;
+    line-height: 141%;
+    letter-spacing: -0.03em;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    @media (max-width:600px){
+        font-size: 16px;
+    }
+`
+
 const SecondaryText = styled.p`
     margin:0px;
     font-size: 18px;

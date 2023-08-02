@@ -161,8 +161,6 @@ export default class YieldFarmingDataStore {
     return new Promise(async (resolve, reject) => {
       const yieldFarmingLP = this.state.yieldFarmingLP;
 
-      console.log("yieldFarmingLP: ", yieldFarmingLP)
-
       let totalEpochPUSH = (await yieldFarmingLP.NR_OF_EPOCHS());
       const currentEpochPUSH = await yieldFarmingLP.getCurrentEpoch();
 
@@ -238,8 +236,6 @@ export default class YieldFarmingDataStore {
       promises.push(epochReward);
     }
     let resolvePromises = await Promise.all(promises);
-    console.log("Rewards array",resolvePromises);
-
     let availableReward = resolvePromises.reduce((total,num)=>{
       return total + num;
     } , 0)
