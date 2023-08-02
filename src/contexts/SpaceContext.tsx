@@ -20,8 +20,6 @@ const SpaceContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   const [spaceInvites, setSpaceInvites] = useState<number>(0);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
 
-  console.log("spaceId in context",spaceId)
-
   useEffect(() => {
     (async () => {
       const feed = await PushAPI.space.requests({

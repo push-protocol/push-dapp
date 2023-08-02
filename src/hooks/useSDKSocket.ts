@@ -27,7 +27,7 @@ export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHoo
   const { videoCallData, incomingCall, connectWrapper, requestWrapper, acceptRequestWrapper, isVideoCallInitiator } =
     useContext(VideoCallContext);
   const { spaceId} = useContext(SpaceContext);
-  console.log("spaceId in useSDKSocket",spaceId)
+  console.log("spaceId in useSDKSocket",spaceId ,window.location.pathname.includes('/space'))
 
   const addSocketEvents = () => {
     epnsSDKSocket?.on(EVENTS.CONNECT, () => {
@@ -79,8 +79,8 @@ export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHoo
             }
           } else if(
             payload?.data?.additionalMeta?.type === `${ADDITIONAL_META_TYPE.PUSH_SPACE}+1` ||
-            (payload?.data?.additionalMeta?.type === `${ADDITIONAL_META_TYPE.CUSTOM}+1` && spaceId)){
-              console.log('notification hide',payload,'spaceId',spaceId)
+            (payload?.data?.additionalMeta?.type === `${ADDITIONAL_META_TYPE.CUSTOM}+1` && window.location.pathname.includes('/space'))){
+              console.log('notification hide',payload,'spaceId',spaceId, window.location.pathname.includes('/space'))
             // uiweb will handle this
           }
           else {
