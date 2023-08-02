@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // External Packages
 import ReactGA from 'react-ga';
@@ -13,6 +13,11 @@ import NewYieldFarming from 'sections/yield/NewYieldFarming';
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+import YieldFarmChainError from 'components/YieldFarmChainError';
+import { handleChangeAllowedNetwork } from 'helpers/ChainHelper';
 
 // Constants
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
@@ -26,9 +31,45 @@ const YieldFarmingModuleV2 = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [newStaking, setNewStaking] = useState(false);
 
+  const { account, chainId, connector} = useWeb3React<ethers.providers.Web3Provider>();
+
+
+  const handleChainChange = ()=>{
+
+    const chainIdToPass = appConfig.allowedNetworks[0];
+
+    if(chainId !== 1 && chainId !== 5){
+        handleChangeAllowedNetwork(chainIdToPass, connector?.provider, connector);
+    }
+
+}
+
+  useEffect(() => {
+
+    if (chainId !== 1 && chainId !== 5) {
+      displayNonEthChainModal();
+      handleChainChange();
+    }
+
+  }, [chainId])
+
+  const {
+    isModalOpen: isNonEthChainModalOpen,
+    showModal: displayNonEthChainModal,
+    ModalComponent: NonEthChainModal,
+  } = useModalBlur();
+
   // Render
   return (
     <Container>
+
+      <NonEthChainModal
+        InnerComponent={YieldFarmChainError}
+        onConfirm={() => { }}
+        modalPadding="0px"
+        modalPosition={MODAL_POSITION.ON_PARENT}
+
+      />
 
       <TabContainer >
         <Tabs
@@ -50,8 +91,8 @@ const YieldFarmingModuleV2 = () => {
         </Tabs>
       </TabContainer>
 
-      {activeTab === 0 && <NewYieldFarming setActiveTab={setActiveTab}/>}
-      {activeTab === 1  && <DeprecatedYieldFarming setActiveTab={setActiveTab} />}
+      {activeTab === 0 && <NewYieldFarming setActiveTab={setActiveTab} />}
+      {activeTab === 1 && <DeprecatedYieldFarming setActiveTab={setActiveTab} />}
 
     </Container>
   );

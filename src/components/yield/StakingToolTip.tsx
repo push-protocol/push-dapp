@@ -70,11 +70,11 @@ export const StakingToolTipContent = ({
             <TopHeading>{title}</TopHeading>
             <TopSubHeading >
                 {body}  {" "} 
-                {/* {body.includes("Push Fee Pool APR") &&
-                    <AInlineV2 cursor='pointer' href="https://www.google.com/" target='_blank'>
+                {body.includes("Push Fee Pool APR") &&
+                    <AInlineV2 cursor='pointer' href="https://medium.com/push-protocol/new-push-yield-farming-rewards-full-details-4a9ff473226d" target='_blank'>
                       here
                     </AInlineV2>
-                } */}
+                }
             </TopSubHeading>
 
         </Container>
