@@ -17,17 +17,16 @@ export type SDKSocketHookOptions = {
   env?: ENV;
   chainId?: number;
   socketType?: 'chat' | 'notification';
+  spaceId?: any;
 };
 
-export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHookOptions) => {
+export const useSDKSocket = ({ account, env, chainId, socketType, spaceId }: SDKSocketHookOptions) => {
   const [epnsSDKSocket, setEpnsSDKSocket] = useState<any>(null);
   const [isSDKSocketConnected, setIsSDKSocketConnected] = useState(epnsSDKSocket?.connected);
   const [messagesSinceLastConnection, setMessagesSinceLastConnection] = useState<any>('');
   const [groupInformationSinceLastConnection, setGroupInformationSinceLastConnection] = useState<any>('');
   const { videoCallData, incomingCall, connectWrapper, requestWrapper, acceptRequestWrapper, isVideoCallInitiator } =
     useContext(VideoCallContext);
-  const { spaceId} = useContext(SpaceContext);
-  console.log("spaceId in useSDKSocket",spaceId ,window.location.pathname.includes('/space'))
 
   const addSocketEvents = () => {
     epnsSDKSocket?.on(EVENTS.CONNECT, () => {
