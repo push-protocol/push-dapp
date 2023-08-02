@@ -531,7 +531,7 @@ const YieldPoolCard = ({
 
     return (
         <Container
-            margin={poolName === 'UNI-V2' ? " 10px 10px 10px 0 " : " 10px 0 10px 10px"}
+            margin={poolName === 'UNI-V2' ? " 10px 0 10px 10px " : "  10px 10px 10px 0"}
         >
 
             {/* Top Section */}
