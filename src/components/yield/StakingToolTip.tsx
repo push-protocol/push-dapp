@@ -70,11 +70,11 @@ export const StakingToolTipContent = ({
             <TopHeading>{title}</TopHeading>
             <TopSubHeading >
                 {body}  {" "} 
-                {body.includes("Push Fee Pool APR") &&
+                {/* {body.includes("Push Fee Pool APR") &&
                     <AInlineV2 cursor='pointer' href="https://www.google.com/" target='_blank'>
                       here
                     </AInlineV2>
-                }
+                } */}
             </TopSubHeading>
 
         </Container>
@@ -111,4 +111,5 @@ const TopSubHeading = styled(H2V2)`
   color: ${(props) => props.theme.tooltipTopSubHeading};
   font-weight: 300;
   font-size: 0.625rem;
+  text-align:left;
 `;
