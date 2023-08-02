@@ -605,7 +605,7 @@ const ToolTipAPR = () => {
             {isActive && <Content id="channel" >
                 <StakingToolTipContent
                     title={""}
-                    body={"Push Fee Pool APR distributes yield farming rewards + fee earned by protocol. More Info later."}
+                    body={"Push Fee Pool APR distributes yield farming rewards + fee earned by protocol. More Info "}
                 />
             </Content>}
 
