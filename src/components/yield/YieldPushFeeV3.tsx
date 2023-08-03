@@ -409,7 +409,7 @@ const YieldPushFeeV3 = ({
                                     </StakingToolTip>
                                 </InfoSpan>
                             </DataTitle>
-                            <DataValue> {formatTokens(userDataPush?.userstakedAmount.stakedAmount)} PUSH</DataValue>
+                            <DataValue> {numberWithCommas(formatTokens(userDataPush?.userstakedAmount.stakedAmount))} PUSH</DataValue>
                         </ItemHV2>
                         <ItemHV2 justifyContent="space-between" margin={isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                             <DataTitle>
@@ -424,7 +424,7 @@ const YieldPushFeeV3 = ({
                                 </InfoSpan>
 
                             </DataTitle>
-                            <DataValue> {formatTokens(userDataPush?.claimedReward)} PUSH</DataValue>
+                            <DataValue> {numberWithCommas(formatTokens(userDataPush?.claimedReward))} PUSH</DataValue>
                         </ItemHV2>
                         <ItemHV2 justifyContent="space-between" margin={isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                             <DataTitle>
@@ -439,7 +439,7 @@ const YieldPushFeeV3 = ({
                                 </InfoSpan>
 
                             </DataTitle>
-                            <DataValue> {formatTokens(userDataPush?.potentialUserReward)} PUSH</DataValue>
+                            <DataValue> {numberWithCommas((userDataPush?.potentialUserReward).toFixed(2))} PUSH</DataValue>
                         </ItemHV2>
                         <ItemHV2 justifyContent="space-between" margin={isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                             <DataTitle>
@@ -454,7 +454,7 @@ const YieldPushFeeV3 = ({
                                 </InfoSpan>
 
                             </DataTitle>
-                            <DataValue> {userDataPush?.totalClaimableReward} PUSH</DataValue>
+                            <DataValue> {numberWithCommas(userDataPush?.totalClaimableReward)} PUSH</DataValue>
                         </ItemHV2>
                     </ItemVV2>
                 ) : (

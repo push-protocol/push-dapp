@@ -182,18 +182,20 @@ export default class YieldFarmingDataStore {
   getUserData = async (contract) => {
     return new Promise(async (resolve, reject) => {
       if (this.state.account) {
-        const currentEpochPUSH = await contract.getCurrentEpoch().then(res=>ethers.BigNumber.from(Math.min(res,100)));
+        const currentEpochPUSH = await contract.getCurrentEpoch().then(res=>ethers.BigNumber.from(Math.min(res,100))); //100
+
+        const epoch = await contract.getCurrentEpoch(); // 120
 
         const epochStakeNext = await contract.getEpochStake(
           this.state.account,
-          currentEpochPUSH.add(1)
+          epoch.add(1)
         );
 
         const lastEpochIdHarvested = (await contract.lastEpochIdHarvested(this.state.account)).toNumber()
 
         let accumulatedReward =  this.getAccumulatedReward(currentEpochPUSH,contract);
         let availableReward =  this.getTotalAvailableRewards(lastEpochIdHarvested,currentEpochPUSH,contract)
-
+    
         let [totalAccumulatedReward,totalAvailableReward] = await Promise.all([accumulatedReward,availableReward]);
 
         resolve({
