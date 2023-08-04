@@ -27,11 +27,8 @@ export const useSDKSocket = ({ account, env, chainId, socketType, spaceId }: SDK
   const [groupInformationSinceLastConnection, setGroupInformationSinceLastConnection] = useState<any>('');
   const { videoCallData, incomingCall, connectWrapper, requestWrapper, acceptRequestWrapper, isVideoCallInitiator } =
     useContext(VideoCallContext);
-    // const { spaceId } = useContext(SpaceContext);
-    // console.log(spaceId, 'from socket')
 
   const addSocketEvents = () => {
-    // console.log(spaceId, 'from socket inner')
     epnsSDKSocket?.on(EVENTS.CONNECT, () => {
       setIsSDKSocketConnected(true);
     });
@@ -151,7 +148,7 @@ export const useSDKSocket = ({ account, env, chainId, socketType, spaceId }: SDK
       });
       setEpnsSDKSocket(connectionObject);
     }
-  }, [account, chainId, env, spaceId]);
+  }, [account, chainId, env]);
 
   return {
     epnsSDKSocket,
