@@ -17,7 +17,7 @@ export type SDKSocketHookOptions = {
   env?: ENV;
   chainId?: number;
   socketType?: 'chat' | 'notification';
-  spaceId?: any;
+  spaceId?: string;
 };
 
 export const useSDKSocket = ({ account, env, chainId, socketType, spaceId }: SDKSocketHookOptions) => {
@@ -27,8 +27,11 @@ export const useSDKSocket = ({ account, env, chainId, socketType, spaceId }: SDK
   const [groupInformationSinceLastConnection, setGroupInformationSinceLastConnection] = useState<any>('');
   const { videoCallData, incomingCall, connectWrapper, requestWrapper, acceptRequestWrapper, isVideoCallInitiator } =
     useContext(VideoCallContext);
+    // const { spaceId } = useContext(SpaceContext);
+    // console.log(spaceId, 'from socket')
 
   const addSocketEvents = () => {
+    // console.log(spaceId, 'from socket inner')
     epnsSDKSocket?.on(EVENTS.CONNECT, () => {
       setIsSDKSocketConnected(true);
     });
@@ -78,8 +81,8 @@ export const useSDKSocket = ({ account, env, chainId, socketType, spaceId }: SDK
             }
           } else if(
             payload?.data?.additionalMeta?.type === `${ADDITIONAL_META_TYPE.PUSH_SPACE}+1` ||
-            (payload?.data?.additionalMeta?.type === `${ADDITIONAL_META_TYPE.CUSTOM}+1` && window.location.pathname.includes('/space'))){
-              console.log('notification hide',payload,'spaceId',spaceId, window.location.pathname.includes('/space'))
+            (payload?.data?.additionalMeta?.type === `${ADDITIONAL_META_TYPE.CUSTOM}+1` && window.location.pathname.includes('/space')) || spaceId !== null){
+              console.log('notification hide',payload,'spaceId',spaceId)
             // uiweb will handle this
           }
           else {
@@ -127,7 +130,7 @@ export const useSDKSocket = ({ account, env, chainId, socketType, spaceId }: SDK
         removeSocketEvents();
       }
     };
-  }, [epnsSDKSocket]);
+  }, [epnsSDKSocket, spaceId]);
 
   /**
    * Whenever the requisite params to create a connection object change
@@ -148,7 +151,7 @@ export const useSDKSocket = ({ account, env, chainId, socketType, spaceId }: SDK
       });
       setEpnsSDKSocket(connectionObject);
     }
-  }, [account, chainId, env]);
+  }, [account, chainId, env, spaceId]);
 
   return {
     epnsSDKSocket,

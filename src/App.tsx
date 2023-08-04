@@ -53,7 +53,7 @@ import GLOBALS from 'config/Globals';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 
 // space imports
-import SpaceContextProvider from 'contexts/SpaceContext';
+import SpaceContextProvider, { SpaceContext } from 'contexts/SpaceContext';
 import { SpacesUIProvider } from '@pushprotocol/uiweb';
 import { darkTheme,lightTheme } from 'config/spaceTheme';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
@@ -101,7 +101,7 @@ export default function App() {
   const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
   const [currentTime, setcurrentTime] = React.useState(0);
   const {authError, setAuthError } = useContext(ErrorContext);
-
+  const { spaceId } = useContext(SpaceContext);
 
   const { run, stepIndex, tutorialContinous } = useSelector((state: any) => state.userJourney);
   const location = useLocation();
@@ -149,7 +149,7 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
 
   // enable socket notifications
-  useSDKSocket({ account, chainId, env: appConfig.appEnv });
+  useSDKSocket({ account, chainId, env: appConfig.appEnv, spaceId});
   
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -223,6 +223,7 @@ export default function App() {
     env: appConfig?.appEnv,
   }), [account, librarySigner, pgpPvtKey, appConfig?.appEnv]);
 
+
   // const { spaceUI } = useSpaceComponents();
 
   return (
@@ -238,7 +239,7 @@ export default function App() {
           <GlobalStyle />
           <InitState />
           <NavigationContextProvider>
-            <SpaceContextProvider>
+            {/* <SpaceContextProvider> */}
               <SpaceComponentContextProvider spaceUI={spaceUI}>
             <AppContextProvider>
               <Joyride
@@ -294,7 +295,7 @@ export default function App() {
               </ParentContainer>
             </AppContextProvider>
             </SpaceComponentContextProvider>
-            </SpaceContextProvider>
+            {/* </SpaceContextProvider> */}
           </NavigationContextProvider>
         </>
       )}

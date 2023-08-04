@@ -44,6 +44,8 @@ const SpaceFeedSection = ({ spaceid }) => {
     navigate(`/spaces/${spaceId}`);
   };
 
+  console.log(spaceInvites, 'spaceInvites');
+
   return (
     <SpaceCard>
       <SpaceHeader>

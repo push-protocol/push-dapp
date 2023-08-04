@@ -17,6 +17,7 @@ import * as serviceWorker from "./serviceWorker";
 import ChatUserContextProvider from './contexts/ChatUserContext';
 import { VideoCallContextProvider } from './contexts/VideoCallContext';
 import ErrorContextProvider from './contexts/ErrorContext';
+import SpaceContextProvider from './contexts/SpaceContext';
 import { connectors } from './App'
 
 
@@ -56,7 +57,9 @@ ReactDOM.render(
           <ErrorContextProvider>
           <ChatUserContextProvider>
             <VideoCallContextProvider>
+            <SpaceContextProvider>
               <App />
+            </SpaceContextProvider>
             </VideoCallContextProvider>
           </ChatUserContextProvider>
           </ErrorContextProvider>

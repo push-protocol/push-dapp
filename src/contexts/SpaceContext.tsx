@@ -27,8 +27,9 @@ const SpaceContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         env: appConfig.appEnv,
       });
       setSpaceInvites(feed?.length);
+      console.log('i am here', feed?.length)
     })();
-  }, []);
+  }, [spaceId]);
 
   return <SpaceContext.Provider value={{ spaceId, setSpaceId, spaceInvites }}>{children}</SpaceContext.Provider>;
 };
