@@ -371,7 +371,6 @@ export default class YieldFarmingDataStoreV2 {
     return potentialUserReward;
   };
 
-  // 
   getTotalAvailableRewards = async(
     lastEpochIdHarvested,
     currentEpochPUSH,
@@ -379,7 +378,6 @@ export default class YieldFarmingDataStoreV2 {
   ) =>{
     let promises = []
     for(var i = lastEpochIdHarvested + 1; i<=currentEpochPUSH.sub(1).toNumber(); i++){
-      //passing 1 2 3 4 5 6 7 8 9 10 11
       const epochReward =  this.calculateUserEpochReward(i, contract);
       promises.push(epochReward);
     }

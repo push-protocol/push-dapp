@@ -161,6 +161,33 @@ const NavigationList = {
     },
   },
   third: {
+
+    yieldv2: {
+      src: 'navigation/incentivesOffIcon.svg',
+      activeSrc: 'navigation/incentivesOnIcon.svg',
+      iconFactory: null,
+      name: 'Yield Farming V2',
+      title: 'Yield Farming V2',
+      alt: 'Open Yield Farming V2',
+      href: '/yieldv2',
+      newTab: false,
+      isRoute: true,
+      hasMenuLogic: true,
+      hidden: false,
+      headerTag: {
+        title: 'Yield Farming V2',
+        light: {
+          bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+          fg: themeLight.headerTagFg,
+        },
+        dark: {
+          bg: themeDark.headerTagBg,
+          fg: themeDark.headerTagFg,
+        },
+      },
+    },
+
+
     receiveNotifs: {
       src: 'navigation/receiveNotifOffIcon.svg',
       activeSrc: 'navigation/receiveNotifOnIcon.svg',
@@ -234,30 +261,7 @@ const NavigationList = {
       },
     },
 
-    yieldv2: {
-      src: 'navigation/incentivesOffIcon.svg',
-      activeSrc: 'navigation/incentivesOffIcon.svg',
-      iconFactory: null,
-      name: 'Yield Farming V2',
-      title: 'Yield Farming V2',
-      alt: 'Open Yield Farming V2',
-      href: '/yieldv2',
-      newTab: false,
-      isRoute: true,
-      hasMenuLogic: true,
-      hidden: false,
-      headerTag: {
-        title: 'Yield Farming V2',
-        light: {
-          bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
-          fg: themeLight.headerTagFg,
-        },
-        dark: {
-          bg: themeDark.headerTagBg,
-          fg: themeDark.headerTagFg,
-        },
-      },
-    },
+    
 
 
 
