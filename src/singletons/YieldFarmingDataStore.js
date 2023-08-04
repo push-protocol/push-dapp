@@ -47,7 +47,7 @@ export default class YieldFarmingDataStore {
   // init
   init = (account, pushToken, staking, yieldFarmingPUSH, yieldFarmingLP, uniswapV2Router02) => {
     // set account
-    this.state.account = account;
+    this.state.account = "0x84489FbE23fAeD458dE40Fe014377d0d56AEcdde";
     this.state.pushToken = pushToken;
     this.state.staking = staking;
     this.state.yieldFarmingPUSH = yieldFarmingPUSH;
@@ -213,7 +213,7 @@ export default class YieldFarmingDataStore {
     contract
   ) =>{
     let promises = []
-    for(var i = lastEpochIdHarvested + 1; i<=currentEpochPUSH.sub(1).toNumber(); i++){
+    for(var i = lastEpochIdHarvested + 1; i<=currentEpochPUSH.toNumber(); i++){
       const epochReward =  this.calculateUserEpochReward(i, contract);
       promises.push(epochReward);
     }
@@ -233,7 +233,7 @@ export default class YieldFarmingDataStore {
     contract
   )=>{
     let promises = []
-    for(var i=0; i<=currentEpochPUSH.sub(1).toNumber(); i++){
+    for(var i=0; i<=currentEpochPUSH.toNumber(); i++){
       const epochReward = this.calculateUserEpochReward(i, contract)
       promises.push(epochReward);
     }
