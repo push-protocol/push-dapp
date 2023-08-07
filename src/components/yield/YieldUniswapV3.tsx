@@ -127,7 +127,9 @@ const YieldUniswapV3 = ({
             return;
         }
 
-        if (!lpPoolStats.currentEpochPUSH || lpPoolStats.currentEpochPUSH == 1) {
+        console.log("Lp POOL stats", lpPoolStats)
+
+        if (!lpPoolStats.currentEpochLP || lpPoolStats.currentEpochLP == 1) {
             uniswapV2Toast.showMessageToast({
                 toastTitle: 'Error',
                 toastMessage: `Harvest unlocks from Epoch 2!)`,
