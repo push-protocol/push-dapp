@@ -76,12 +76,10 @@ export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHoo
               });
             }
           } else if(
-            payload?.data?.additionalMeta?.data === "PUSH SPACE META MESSAGE" ||  payload?.data?.additionalMeta?.type === `${ADDITIONAL_META_TYPE.CUSTOM}+1`){
-              console.log('notification hide',payload,'spaceId')
+            payload?.data?.additionalMeta?.data === "PUSH SPACE META MESSAGE" ||  payload?.data?.additionalMeta?.type === `${ADDITIONAL_META_TYPE.PUSH_SPACE}+1`){
             // uiweb will handle this
           }
           else {
-            console.log('notification custom',payload,'spaceId')
             showNotifcationToast(payload);
           }
         }

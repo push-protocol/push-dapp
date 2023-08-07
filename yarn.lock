@@ -4788,7 +4788,7 @@ __metadata:
 
 "@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi::locator=%40project%2Freact-app%40workspace%3A.":
   version: 1.4.3
-  resolution: "@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi#../push-sdk/dist/packages/restapi::hash=83bd92&locator=%40project%2Freact-app%40workspace%3A."
+  resolution: "@pushprotocol/restapi@file:../push-sdk/dist/packages/restapi#../push-sdk/dist/packages/restapi::hash=c9a353&locator=%40project%2Freact-app%40workspace%3A."
   dependencies:
     "@livepeer/webrtmp-sdk": ^0.2.3
     "@metamask/eth-sig-util": ^5.0.2
@@ -4805,7 +4805,7 @@ __metadata:
     video-stream-merger: ^4.0.1
   peerDependencies:
     ethers: ^5.6.8
-  checksum: 2993c3ee788040f7073d49d3ba8348727175e8fff9aefeec2cd2d46ad411ab972f85f2072ab0ae63f6a38564a1e1c8938806f7d889182b60ef1193e0ac0951ff
+  checksum: 9fe7896d7b90538dbd33ddb4b66788362bc6f55ca0970e70bafb764399e1f7570408ad2bb979fef2dc9f0262d9877d4f59fea85a8af89596549b78b07c8e1307
   languageName: node
   linkType: hard
 
@@ -4835,7 +4835,7 @@ __metadata:
 
 "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb::locator=%40project%2Freact-app%40workspace%3A.":
   version: 1.1.4
-  resolution: "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb#../push-sdk/dist/packages/uiweb::hash=c4a2ff&locator=%40project%2Freact-app%40workspace%3A."
+  resolution: "@pushprotocol/uiweb@file:../push-sdk/dist/packages/uiweb#../push-sdk/dist/packages/uiweb::hash=064ed1&locator=%40project%2Freact-app%40workspace%3A."
   dependencies:
     "@livepeer/react": ^2.6.0
     "@pushprotocol/socket": ^0.5.0
@@ -4852,7 +4852,7 @@ __metadata:
     ethers: ^5.7.1
     react: ">=16.8.0"
     styled-components: ^5.3.5
-  checksum: bb3367c8ac0169ee9d7de1b414c949a3dab27877b45e6cd9c837b2e0a5b4c457155b9f7d4cbe03f4f16d849751974e51a3e89614771c18857423f9eb08f49ddb
+  checksum: 44fbd62568358534b28936ccd2b34c0114f3602789108dddd501b0edf81158c304a04ed88524f5b62dc6e543714db8f0354bd2617fc572a4d301b5dea7784fa2
   languageName: node
   linkType: hard
 
