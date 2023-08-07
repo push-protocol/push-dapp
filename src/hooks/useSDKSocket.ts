@@ -17,10 +17,9 @@ export type SDKSocketHookOptions = {
   env?: ENV;
   chainId?: number;
   socketType?: 'chat' | 'notification';
-  spaceId?: string;
 };
 
-export const useSDKSocket = ({ account, env, chainId, socketType, spaceId }: SDKSocketHookOptions) => {
+export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHookOptions) => {
   const [epnsSDKSocket, setEpnsSDKSocket] = useState<any>(null);
   const [isSDKSocketConnected, setIsSDKSocketConnected] = useState(epnsSDKSocket?.connected);
   const [messagesSinceLastConnection, setMessagesSinceLastConnection] = useState<any>('');
@@ -77,13 +76,12 @@ export const useSDKSocket = ({ account, env, chainId, socketType, spaceId }: SDK
               });
             }
           } else if(
-            payload?.data?.additionalMeta?.type === `${ADDITIONAL_META_TYPE.PUSH_SPACE}+1` ||
-            (payload?.data?.additionalMeta?.type === `${ADDITIONAL_META_TYPE.CUSTOM}+1` && window.location.pathname.includes('/space')) || spaceId !== null){
-              console.log('notification hide',payload,'spaceId',spaceId)
+            payload?.data?.additionalMeta?.data === "PUSH SPACE META MESSAGE" ||  payload?.data?.additionalMeta?.type === `${ADDITIONAL_META_TYPE.CUSTOM}+1`){
+              console.log('notification hide',payload,'spaceId')
             // uiweb will handle this
           }
           else {
-            console.log('notification custom',payload,'spaceId',spaceId)
+            console.log('notification custom',payload,'spaceId')
             showNotifcationToast(payload);
           }
         }
@@ -127,7 +125,7 @@ export const useSDKSocket = ({ account, env, chainId, socketType, spaceId }: SDK
         removeSocketEvents();
       }
     };
-  }, [epnsSDKSocket, spaceId]);
+  }, [epnsSDKSocket]);
 
   /**
    * Whenever the requisite params to create a connection object change

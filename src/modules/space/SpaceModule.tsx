@@ -39,11 +39,10 @@ import { SpaceContext } from 'contexts/SpaceContext';
 export const SpaceModule = ({ spaceid }) => {
   const { account, chainId } = useWeb3React();
   const { pgpPvtKey, getUser, setPgpPvtKey, connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
-  const { spaceId } = useContext(SpaceContext);
 
   const [isLoading, setIsLoading] = useState(true);
 
-  useSDKSocket({ account, chainId, env: appConfig.appEnv, spaceId });
+  useSDKSocket({ account, chainId, env: appConfig.appEnv});
 
   useEffect(() => {
     setIsLoading(true);

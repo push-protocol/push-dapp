@@ -101,7 +101,6 @@ export default function App() {
   const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
   const [currentTime, setcurrentTime] = React.useState(0);
   const {authError, setAuthError } = useContext(ErrorContext);
-  const { spaceId } = useContext(SpaceContext);
 
   const { run, stepIndex, tutorialContinous } = useSelector((state: any) => state.userJourney);
   const location = useLocation();
@@ -149,7 +148,7 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
 
   // enable socket notifications
-  useSDKSocket({ account, chainId, env: appConfig.appEnv, spaceId});
+  useSDKSocket({ account, chainId, env: appConfig.appEnv});
   
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -239,7 +238,7 @@ export default function App() {
           <GlobalStyle />
           <InitState />
           <NavigationContextProvider>
-            {/* <SpaceContextProvider> */}
+            <SpaceContextProvider>
               <SpaceComponentContextProvider spaceUI={spaceUI}>
             <AppContextProvider>
               <Joyride
@@ -295,7 +294,7 @@ export default function App() {
               </ParentContainer>
             </AppContextProvider>
             </SpaceComponentContextProvider>
-            {/* </SpaceContextProvider> */}
+            </SpaceContextProvider>
           </NavigationContextProvider>
         </>
       )}
