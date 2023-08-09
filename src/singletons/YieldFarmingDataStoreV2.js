@@ -469,10 +469,10 @@ export default class YieldFarmingDataStoreV2 {
   };
 
   calcAnnualEpochReward = (genesisEpochAmount, epochId, deprecationPerEpoch) => {
+    const NUM_MONTHS = 12
     const currentEpochReward = this.calcTotalAmountPerEpoch(genesisEpochAmount, epochId, deprecationPerEpoch);
-
     let rew = currentEpochReward
-    for (let i = epochId.toNumber(); i <= epochId.toNumber()+11; i++) {
+    for (let i = epochId.toNumber(); i < epochId.toNumber() + NUM_MONTHS; i++) {
       rew = rew.add(currentEpochReward.sub(deprecationPerEpoch.mul(i)))
     }
 
@@ -494,10 +494,10 @@ export default class YieldFarmingDataStoreV2 {
   calcLPPoolAPR = async (genesisEpochAmount, epochId, deprecationPerEpoch, totalStaked, poolStats) => {
     const annualRewards = this.calcAnnualEpochReward(genesisEpochAmount, epochId, deprecationPerEpoch);
    
-    const din = totalStaked * poolStats.lpToPushRatio
-    const res = annualRewards.mul(100) / din
+    const denominator = totalStaked * poolStats.lpToPushRatio
+    const arr = annualRewards.mul(100) / denominator
 
-    return res.toFixed(2);
+    return arr.toFixed(2);
   };
 
   
