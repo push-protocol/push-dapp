@@ -76,8 +76,6 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   // wrapper methods over the class methods
 
   const createWrapper = async (): Promise<void> => {
-    console.log('BEFORE CREATE', data);
-
     if (!data.local.stream) {
       await videoObjectRef.current.create({ video: true, audio: true });
     }
