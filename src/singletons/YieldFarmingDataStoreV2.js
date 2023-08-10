@@ -468,20 +468,15 @@ export default class YieldFarmingDataStoreV2 {
     return currentEpochNumber;
   };
 
- 
-
   calcAnnualEpochReward = (genesisEpochAmount, epochId, deprecationPerEpoch) => {
+    const NUM_MONTHS = 12
     const currentEpochReward = this.calcTotalAmountPerEpoch(genesisEpochAmount, epochId, deprecationPerEpoch);
-    //74400
+    let rew = currentEpochReward
+    for (let i = epochId.toNumber(); i < epochId.toNumber() + NUM_MONTHS; i++) {
+      rew = rew.add(currentEpochReward.sub(deprecationPerEpoch.mul(i)))
+    }
 
-    const weeks = 52;
-    const depreciate = deprecationPerEpoch.mul(weeks * (weeks - 1)).div(2);
-    //(900*52*51)/2 = 
-
-    const annualEpochReward = currentEpochReward.mul(weeks).sub(depreciate);
-    //74400*52 - (900*52*51)/2 = 
-
-    return annualEpochReward;
+    return rew;
   };
 
   calcPushStakingAPR = (totalStaked) => {
@@ -498,17 +493,11 @@ export default class YieldFarmingDataStoreV2 {
 
   calcLPPoolAPR = async (genesisEpochAmount, epochId, deprecationPerEpoch, totalStaked, poolStats) => {
     const annualRewards = this.calcAnnualEpochReward(genesisEpochAmount, epochId, deprecationPerEpoch);
-    let apr;
-    
-    
-    
-    if (appConfig.coreContractChain === 42 || appConfig.coreContractChain === 5)
-      apr = (tokenBNtoNumber(annualRewards) * 1000000) / Math.max(tokenBNtoNumber(totalStaked), 1);
-    else apr = annualRewards.mul(1000000).div(Math.max(tokenBNtoNumber(totalStaked), 1));
+   
+    const denominator = totalStaked * poolStats.lpToPushRatio
+    const arr = annualRewards.mul(100) / denominator
 
-    const aprFormatted = (parseInt(apr.toString()) / (10000 * poolStats.lpToPushRatio)).toFixed(2);
-
-    return aprFormatted;
+    return arr.toFixed(2);
   };
 
   
