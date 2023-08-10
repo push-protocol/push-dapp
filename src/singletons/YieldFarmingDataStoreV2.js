@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 // Internal Configs
 import { addresses, appConfig } from 'config';
 
-import {getUserInfo} from './PushStaking/src'
+import {getUserPushStakingInfo} from 'helpers/pushStaking'
 
 // Constants
 const ONE_PUSH = ethers.BigNumber.from(1).mul(ethers.BigNumber.from(10).pow(ethers.BigNumber.from(18)));
@@ -338,7 +338,7 @@ export default class YieldFarmingDataStoreV2 {
     return new Promise(async (resolve, reject) => {
       if (this.state.account) {
         //?? TODO
-        const pushNewInfo = await getUserInfo(provider,this.state.account);
+        const pushNewInfo = await getUserPushStakingInfo(provider,this.state.account);
         console.log("*** (( got",pushNewInfo);
 
         const userAddress = this.state.account;
