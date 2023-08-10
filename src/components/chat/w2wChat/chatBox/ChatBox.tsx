@@ -99,7 +99,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
   const groupInfoRef = useRef<HTMLInputElement>(null);
   const { connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
-  const { setVideoCallData } = useContext(VideoCallContext);
+  const { videoObject } = useContext(VideoCallContext);
 
   const listInnerRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
@@ -454,7 +454,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const startVideoCallHandler = async () => {
     console.log("CURRENT CHAT", currentChat);
 
-    setVideoCallData((oldData) => {
+    videoObject?.setData((oldData) => {
       return produce(oldData, (draft) => {
         draft.local.address = account;
         draft.incoming[0].address = caip10ToWallet(currentChat.wallets.toString());

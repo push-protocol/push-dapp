@@ -161,8 +161,6 @@ export default class YieldFarmingDataStore {
     return new Promise(async (resolve, reject) => {
       const yieldFarmingLP = this.state.yieldFarmingLP;
 
-      console.log("yieldFarmingLP: ", yieldFarmingLP)
-
       let totalEpochPUSH = (await yieldFarmingLP.NR_OF_EPOCHS());
       const currentEpochPUSH = await yieldFarmingLP.getCurrentEpoch();
 
@@ -184,18 +182,20 @@ export default class YieldFarmingDataStore {
   getUserData = async (contract) => {
     return new Promise(async (resolve, reject) => {
       if (this.state.account) {
-        const currentEpochPUSH = await contract.getCurrentEpoch().then(res=>ethers.BigNumber.from(Math.min(res,100)));
+        const currentEpochPUSH = await contract.getCurrentEpoch().then(res=>ethers.BigNumber.from(Math.min(res,100))); //100
+
+        const epoch = await contract.getCurrentEpoch(); // 120
 
         const epochStakeNext = await contract.getEpochStake(
           this.state.account,
-          currentEpochPUSH.add(1)
+          epoch.add(1)
         );
 
         const lastEpochIdHarvested = (await contract.lastEpochIdHarvested(this.state.account)).toNumber()
 
         let accumulatedReward =  this.getAccumulatedReward(currentEpochPUSH,contract);
         let availableReward =  this.getTotalAvailableRewards(lastEpochIdHarvested,currentEpochPUSH,contract)
-
+    
         let [totalAccumulatedReward,totalAvailableReward] = await Promise.all([accumulatedReward,availableReward]);
 
         resolve({
@@ -213,7 +213,7 @@ export default class YieldFarmingDataStore {
     contract
   ) =>{
     let promises = []
-    for(var i = lastEpochIdHarvested + 1; i<=currentEpochPUSH.sub(1).toNumber(); i++){
+    for(var i = lastEpochIdHarvested + 1; i<=currentEpochPUSH.toNumber(); i++){
       const epochReward =  this.calculateUserEpochReward(i, contract);
       promises.push(epochReward);
     }
@@ -233,13 +233,11 @@ export default class YieldFarmingDataStore {
     contract
   )=>{
     let promises = []
-    for(var i=0; i<=currentEpochPUSH.sub(1).toNumber(); i++){
+    for(var i=0; i<=currentEpochPUSH.toNumber(); i++){
       const epochReward = this.calculateUserEpochReward(i, contract)
       promises.push(epochReward);
     }
     let resolvePromises = await Promise.all(promises);
-    console.log("Rewards array",resolvePromises);
-
     let availableReward = resolvePromises.reduce((total,num)=>{
       return total + num;
     } , 0)

@@ -11,7 +11,6 @@ import { initVideoCallData } from '@pushprotocol/restapi/src/lib/video';
 import { ChatUserContext } from './ChatUserContext';
 import { User } from 'types/chat';
 
-
 interface RequestWrapperOptionsType {
   senderAddress: string;
   recipientAddress: string;
@@ -37,24 +36,24 @@ const VideoCallContext = createContext(null);
 
 const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   const videoObjectRef = useRef(null);
-  const [isCallConnected,setIsCallConnected]=useState(false);
-  const [isCallAccepted,setIsCallAccepted]=useState(false);
-  const [incomingCallUserData,setIncomingCallUserData]=useState<User|null>(null);
+  const [isCallConnected, setIsCallConnected] = useState(false);
+  const [isCallAccepted, setIsCallAccepted] = useState(false);
+  const [incomingCallUserData, setIncomingCallUserData] = useState<User | null>(null);
   const { chainId, account, provider } = useWeb3React();
   const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
 
   const [data, setData] = useState<PushAPI.VideoCallData>(initVideoCallData);
 
-  useEffect(()=>{
-    if(data.incoming[0].status===VideoCallStatus.CONNECTED){
+  useEffect(() => {
+    if (data.incoming[0].status === VideoCallStatus.CONNECTED) {
       setIsCallConnected(true);
       setIsCallAccepted(false);
     }
-    return ()=>{
+    return () => {
       setIsCallConnected(false);
       setIsCallAccepted(false);
-    }
-  },[data.incoming[0].status])
+    };
+  }, [data.incoming[0].status]);
 
   useEffect(() => {
     if (!provider || !account || !connectedUser) return null;
@@ -105,7 +104,9 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   };
 
   const connectWrapper = (videoCallMetaData: VideoCallMetaDataType) => {
-    videoObjectRef.current.connect({ signalData: videoCallMetaData.signalData });
+    videoObjectRef.current.connect({
+      signalData: videoCallMetaData.signalData,
+    });
   };
 
   const disconnectWrapper = () => {
@@ -157,6 +158,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
           data.incoming[0].status !== PushAPI.VideoCallStatus.UNINITIALIZED
             ? videoObjectRef.current?.isInitiator
             : () => {},
+        videoObject: videoObjectRef.current,
       }}
     >
       {children}

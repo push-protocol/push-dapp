@@ -531,7 +531,7 @@ const YieldPoolCard = ({
 
     return (
         <Container
-            margin={poolName === 'UNI-V2' ? " 10px 10px 10px 0 " : " 10px 0 10px 10px"}
+            margin={poolName === 'UNI-V2' ? " 10px 0 10px 10px " : "  10px 10px 10px 0"}
         >
 
             {/* Top Section */}
@@ -681,7 +681,7 @@ const YieldPoolCard = ({
                                     <InfoSpan>
                                         <StakingToolTip
                                             ToolTipTitle={"Current Epoch Reward"}
-                                            ToolTipBody={"Amount of Push Token Claimable in this EPOCH"}
+                                            ToolTipBody={"Displays the approximate latest reward amount for current epoch"}
                                         >
                                             <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
                                         </StakingToolTip>

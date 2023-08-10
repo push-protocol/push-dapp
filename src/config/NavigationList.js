@@ -161,6 +161,33 @@ const NavigationList = {
     },
   },
   third: {
+
+    yieldv2: {
+      src: 'navigation/incentivesOffIcon.svg',
+      activeSrc: 'navigation/incentivesOnIcon.svg',
+      iconFactory: null,
+      name: 'Yield Farming V2',
+      title: 'Yield Farming V2',
+      alt: 'Open Yield Farming V2',
+      href: '/yieldv2',
+      newTab: false,
+      isRoute: true,
+      hasMenuLogic: true,
+      hidden: false,
+      headerTag: {
+        title: 'Yield Farming V2',
+        light: {
+          bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+          fg: themeLight.headerTagFg,
+        },
+        dark: {
+          bg: themeDark.headerTagBg,
+          fg: themeDark.headerTagFg,
+        },
+      },
+    },
+
+
     receiveNotifs: {
       src: 'navigation/receiveNotifOffIcon.svg',
       activeSrc: 'navigation/receiveNotifOnIcon.svg',
@@ -233,117 +260,123 @@ const NavigationList = {
         },
       },
     },
-    incentives: {
-      src: 'navigation/incentivesOffIcon.svg',
-      activeSrc: 'navigation/incentivesOnIcon.svg',
-      iconFactory: null,
-      name: 'Incentives',
-      title: 'Check Incentives Tab',
-      alt: 'Incentives Tab Icon',
-      href: null,
-      newTab: false,
-      opened: false,
-      isRoute: true,
-      hasMenuLogic: true,
-      drilldown: {
-        // yield: {
-        //   src: 'navigation/yieldIcon.svg',
-        //   activeSrc: 'navigation/yieldIcon.svg',
-        //   iconFactory: null,
-        //   name: 'Yield Farming',
-        //   title: 'Yield Farming',
-        //   alt: 'Open Yield Farming',
-        //   href: '/yield',
-        //   newTab: false,
-        //   isRoute: true,
-        //   hasMenuLogic: true,
-        //   hidden: false,
-        //   headerTag: {
-        //     title: 'Yield Farming',
-        //     light: {
-        //       bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
-        //       fg: themeLight.headerTagFg,
-        //     },
-        //     dark: {
-        //       bg: themeDark.headerTagBg,
-        //       fg: themeDark.headerTagFg,
-        //     },
-        //   },
-        // },
-        yieldv2: {
-          src: 'navigation/yieldIcon.svg',
-          activeSrc: 'navigation/yieldIcon.svg',
-          iconFactory: null,
-          name: 'Yield Farming V2',
-          title: 'Yield Farming V2',
-          alt: 'Open Yield Farming V2',
-          href: '/yieldv2',
-          newTab: false,
-          isRoute: true,
-          hasMenuLogic: true,
-          hidden: false,
-          headerTag: {
-            title: 'Yield Farming V2',
-            light: {
-              bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
-              fg: themeLight.headerTagFg,
-            },
-            dark: {
-              bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg,
-            },
-          },
-        },
-        rockstars: {
-          src: 'navigation/rockstarsIcon.svg',
-          activeSrc: 'navigation/rockstarsIcon.svg',
-          iconFactory: null,
-          name: 'Rockstars of Push (EPNS)',
-          title: 'Check Rockstars of Push (EPNS)',
-          alt: 'Open Inbox',
-          href: '/rockstar',
-          newTab: false,
-          isRoute: true,
-          hasMenuLogic: true,
-          hidden: false,
-          headerTag: {
-            title: 'Rockstars NFTs',
-            light: {
-              bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-              fg: themeLight.headerTagFg,
-            },
-            dark: {
-              bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg,
-            },
-          },
-        },
-        airdrop: {
-          src: 'navigation/airdropIcon.svg',
-          activeSrc: 'navigation/airdropIcon.svg',
-          iconFactory: null,
-          name: 'Gratitude Drops',
-          title: 'Check Gratitude Drop',
-          alt: 'Open Gratitude Drop',
-          href: '/gratitude',
-          newTab: false,
-          isRoute: true,
-          hasMenuLogic: true,
-          hidden: false,
-          headerTag: {
-            title: 'Gratitude Drop',
-            light: {
-              bg: GLOBALS.COLORS.GRADIENT_THIRD,
-              fg: themeLight.headerTagFg,
-            },
-            dark: {
-              bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg,
-            },
-          },
-        },
-      },
-    },
+
+    
+
+
+
+
+    // incentives: {
+    //   src: 'navigation/incentivesOffIcon.svg',
+    //   activeSrc: 'navigation/incentivesOnIcon.svg',
+    //   iconFactory: null,
+    //   name: 'Incentives',
+    //   title: 'Check Incentives Tab',
+    //   alt: 'Incentives Tab Icon',
+    //   href: null,
+    //   newTab: false,
+    //   opened: false,
+    //   isRoute: true,
+    //   hasMenuLogic: true,
+    //   drilldown: {
+    //     // yield: {
+    //     //   src: 'navigation/yieldIcon.svg',
+    //     //   activeSrc: 'navigation/yieldIcon.svg',
+    //     //   iconFactory: null,
+    //     //   name: 'Yield Farming',
+    //     //   title: 'Yield Farming',
+    //     //   alt: 'Open Yield Farming',
+    //     //   href: '/yield',
+    //     //   newTab: false,
+    //     //   isRoute: true,
+    //     //   hasMenuLogic: true,
+    //     //   hidden: false,
+    //     //   headerTag: {
+    //     //     title: 'Yield Farming',
+    //     //     light: {
+    //     //       bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+    //     //       fg: themeLight.headerTagFg,
+    //     //     },
+    //     //     dark: {
+    //     //       bg: themeDark.headerTagBg,
+    //     //       fg: themeDark.headerTagFg,
+    //     //     },
+    //     //   },
+    //     // },
+    //     yieldv2: {
+    //       src: 'navigation/yieldIcon.svg',
+    //       activeSrc: 'navigation/yieldIcon.svg',
+    //       iconFactory: null,
+    //       name: 'Yield Farming V2',
+    //       title: 'Yield Farming V2',
+    //       alt: 'Open Yield Farming V2',
+    //       href: '/yieldv2',
+    //       newTab: false,
+    //       isRoute: true,
+    //       hasMenuLogic: true,
+    //       hidden: false,
+    //       headerTag: {
+    //         title: 'Yield Farming V2',
+    //         light: {
+    //           bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+    //           fg: themeLight.headerTagFg,
+    //         },
+    //         dark: {
+    //           bg: themeDark.headerTagBg,
+    //           fg: themeDark.headerTagFg,
+    //         },
+    //       },
+    //     },
+    //     rockstars: {
+    //       src: 'navigation/rockstarsIcon.svg',
+    //       activeSrc: 'navigation/rockstarsIcon.svg',
+    //       iconFactory: null,
+    //       name: 'Rockstars of Push (EPNS)',
+    //       title: 'Check Rockstars of Push (EPNS)',
+    //       alt: 'Open Inbox',
+    //       href: '/rockstar',
+    //       newTab: false,
+    //       isRoute: true,
+    //       hasMenuLogic: true,
+    //       hidden: false,
+    //       headerTag: {
+    //         title: 'Rockstars NFTs',
+    //         light: {
+    //           bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+    //           fg: themeLight.headerTagFg,
+    //         },
+    //         dark: {
+    //           bg: themeDark.headerTagBg,
+    //           fg: themeDark.headerTagFg,
+    //         },
+    //       },
+    //     },
+    //     airdrop: {
+    //       src: 'navigation/airdropIcon.svg',
+    //       activeSrc: 'navigation/airdropIcon.svg',
+    //       iconFactory: null,
+    //       name: 'Gratitude Drops',
+    //       title: 'Check Gratitude Drop',
+    //       alt: 'Open Gratitude Drop',
+    //       href: '/gratitude',
+    //       newTab: false,
+    //       isRoute: true,
+    //       hasMenuLogic: true,
+    //       hidden: false,
+    //       headerTag: {
+    //         title: 'Gratitude Drop',
+    //         light: {
+    //           bg: GLOBALS.COLORS.GRADIENT_THIRD,
+    //           fg: themeLight.headerTagFg,
+    //         },
+    //         dark: {
+    //           bg: themeDark.headerTagBg,
+    //           fg: themeDark.headerTagFg,
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
     more: {
       src: 'navigation/moreOffIcon.svg',
       activeSrc: 'navigation/moreOnIcon.svg',
