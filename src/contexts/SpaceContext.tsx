@@ -20,15 +20,21 @@ const SpaceContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   const [spaceInvites, setSpaceInvites] = useState<number>(0);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
 
-  useEffect(() => {
-    (async () => {
-      const feed = await PushAPI.space.requests({
-        account,
-        env: appConfig.appEnv,
-      });
-      setSpaceInvites(feed?.length);
-    })();
-  }, []);
+  const getSpaceInvitesCount = async () => {
+    const feed = await PushAPI.space.requests({
+      account,
+      env: appConfig.appEnv,
+    });
+    return feed?.length
+  }
+
+  useEffect(async() => {
+    if (!account) return;
+
+    const count = await getSpaceInvitesCount();
+    setSpaceInvites(count);
+
+  }, [account]);
 
   return <SpaceContext.Provider value={{ spaceId, setSpaceId, spaceInvites }}>{children}</SpaceContext.Provider>;
 };
