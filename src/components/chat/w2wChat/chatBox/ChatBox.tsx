@@ -16,6 +16,7 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 import { produce } from 'immer';
+import { IMessageIPFS, MessageBubble } from '@pushprotocol/uiweb';
 
 // Internal Components
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
@@ -29,10 +30,7 @@ import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { Content } from 'components/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import * as w2wHelper from 'helpers/w2w/';
-import {
-  checkIfChatExist,
-  fetchInbox
-} from 'helpers/w2w/user';
+import { checkIfChatExist, fetchInbox } from 'helpers/w2w/user';
 import { useDeviceWidthCheck } from 'hooks';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import useToast from 'hooks/useToast';
@@ -85,7 +83,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     setReceivedIntents,
     setBlockedLoading,
   }: ContextType = useContext<ContextType>(Context);
-  const { web3NameList }:AppContextType=useContext(AppContext);
+  const { web3NameList }: AppContextType = useContext(AppContext);
   const [chatMeta, setChatMeta] = useState(null);
 
   const [newMessage, setNewMessage] = useState<string>('');
@@ -119,8 +117,8 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   useResolveWeb3Name(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
 
   // get web3 name
-  let ensName=''
-  if(!isGroup && currentChat?.wallets?.split(',')[0].toString()){
+  let ensName = '';
+  if (!isGroup && currentChat?.wallets?.split(',')[0].toString()) {
     const walletLowercase = caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase();
     const checksumWallet = ethers.utils.getAddress(walletLowercase);
     ensName = web3NameList[checksumWallet];
@@ -242,9 +240,11 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   };
 
   const fetchInboxApi = async (): Promise<Feeds> => {
-    const inboxes: Feeds[] = await fetchInbox({connectedUser});
+    const inboxes: Feeds[] = await fetchInbox({ connectedUser });
     setInbox(inboxes);
-    return inboxes?.find((x) => x.wallets.split(':')[1]?.toLowerCase() === currentChat.wallets.split(':')[1]?.toLowerCase());
+    return inboxes?.find(
+      (x) => x.wallets.split(':')[1]?.toLowerCase() === currentChat.wallets.split(':')[1]?.toLowerCase()
+    );
   };
 
   const sendMessage = async ({
@@ -282,9 +282,8 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
 
         setTimeout(() => {
           setMessageBeingSent(false);
-        }, 1)
+        }, 1);
       }
-
     } catch (error) {
       chatBoxToast.showMessageToast({
         toastTitle: 'Error',
@@ -314,7 +313,12 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     setLoading(true);
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(':')[1];
-    let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: true, pgpPrivateKey:connectedUser.privateKey });
+    let intents = await PushAPI.chat.requests({
+      account: didOrWallet!,
+      env: appConfig.appEnv,
+      toDecrypt: true,
+      pgpPrivateKey: connectedUser.privateKey,
+    });
     setReceivedIntents(intents);
     setLoading(false);
   }
@@ -403,23 +407,23 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
         });
 
         if (typeof sendResponse !== 'string') {
-           // We store the message in state decrypted so we display to the user the intent message
-           sendResponse.messageContent = message;
-           setNewMessage('');
-           let result = await fetchInboxApi();
-           result.msg.messageContent = message;
-           setChat(result);
-           chatBoxToast.showMessageToast({
-             toastTitle: 'Success',
-             toastMessage: 'Chat Request Sent',
-             toastType: 'SUCCESS',
-             getToastIcon: (size) => (
-               <MdCheckCircle
-                 size={size}
-                 color="green"
-               />
-             ),
-           });
+          // We store the message in state decrypted so we display to the user the intent message
+          sendResponse.messageContent = message;
+          setNewMessage('');
+          let result = await fetchInboxApi();
+          result.msg.messageContent = message;
+          setChat(result);
+          chatBoxToast.showMessageToast({
+            toastTitle: 'Success',
+            toastMessage: 'Chat Request Sent',
+            toastType: 'SUCCESS',
+            getToastIcon: (size) => (
+              <MdCheckCircle
+                size={size}
+                color="green"
+              />
+            ),
+          });
           setMessageBeingSent(false);
         }
       }
@@ -452,7 +456,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   };
 
   const startVideoCallHandler = async () => {
-    console.log("CURRENT CHAT", currentChat);
+    console.log('CURRENT CHAT', currentChat);
 
     videoObject?.setData((oldData) => {
       return produce(oldData, (draft) => {
@@ -463,7 +467,6 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       });
     });
   };
-
 
   const InfoMessages = [
     { id: 1, content: 'You can send up to 10 group requests in alpha' },
@@ -605,21 +608,26 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             </SpanV2>
 
             {/* Video call button */}
-           {!isGroup &&  <Tooltip
-              tooltipContent="Video call"
-              placementProps={{
-                bottom: '1.4rem',
-                transform: 'translateX(-92%)',
-                borderRadius: '12px 12px 2px 12px',
-                width: '75px',
-                padding: "0.3rem 0.8rem 0.25rem 0.8rem"
-              }}
-              wrapperProps={{ width: 'fit-content', minWidth: 'fit-content' }}
-            >
-              <VideoCallButton onClick={startVideoCallHandler}>
-                <ImageV2 cursor="pointer" src={videoCallIcon} />
-              </VideoCallButton>
-            </Tooltip>}
+            {!isGroup && (
+              <Tooltip
+                tooltipContent="Video call"
+                placementProps={{
+                  bottom: '1.4rem',
+                  transform: 'translateX(-92%)',
+                  borderRadius: '12px 12px 2px 12px',
+                  width: '75px',
+                  padding: '0.3rem 0.8rem 0.25rem 0.8rem',
+                }}
+                wrapperProps={{ width: 'fit-content', minWidth: 'fit-content' }}
+              >
+                <VideoCallButton onClick={startVideoCallHandler}>
+                  <ImageV2
+                    cursor="pointer"
+                    src={videoCallIcon}
+                  />
+                </VideoCallButton>
+              </Tooltip>
+            )}
 
             {currentChat.groupInformation && (
               <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
@@ -686,7 +694,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
                             isGroup={isGroup}
                           />
                         )}
-                          <Chats
+                        {/* <Chats
                             msg={
                               (!currentChat?.groupInformation?.isPublic && checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser, isGroup }))
                                 ? ''
@@ -695,8 +703,8 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
                             caip10={walletToCAIP10({ account: account! })}
                             messageBeingSent={messageBeingSent}
                             isGroup={isGroup}
-                          />
-                        
+                          /> */}
+                        <MessageBubble chat={msg} />
                       </div>
                     );
                   })}
@@ -705,7 +713,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
                   messages={messages}
                   isGroup={isGroup}
                 />
-                {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser, isGroup }) && (
+                {checkIfChatExist({ chats: receivedIntents, currentChat, connectedUser, isGroup }) && (
                   <Chats
                     msg={{
                       ...messages[0],
@@ -724,7 +732,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             <div ref={bottomRef}></div>
           </MessageContainer>
 
-          {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser,isGroup }) ? null : (
+          {checkIfChatExist({ chats: receivedIntents, currentChat, connectedUser, isGroup }) ? null : (
             <>
               <Typebar
                 messageBeingSent={messageBeingSent}
@@ -735,8 +743,8 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
                 sendIntent={sendIntent}
                 setOpenSuccessSnackBar={setOpenSuccessSnackBar}
                 setSnackbarText={setSnackbarText}
-                isJoinGroup = {(!checkIfChatExist({ chats:inbox, currentChat, connectedUser,isGroup }) && isGroup)}
-                approveIntent= {ApproveIntent}
+                isJoinGroup={!checkIfChatExist({ chats: inbox, currentChat, connectedUser, isGroup }) && isGroup}
+                approveIntent={ApproveIntent}
               />
             </>
           )}
