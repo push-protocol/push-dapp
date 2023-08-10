@@ -4,6 +4,8 @@ import { ethers } from 'ethers';
 // Internal Configs
 import { addresses, appConfig } from 'config';
 
+import {getUserInfo} from './PushStaking/src'
+
 // Constants
 const ONE_PUSH = ethers.BigNumber.from(1).mul(ethers.BigNumber.from(10).pow(ethers.BigNumber.from(18)));
 const GENESIS_EPOCH_AMOUNT_PUSH = 59400;
@@ -335,6 +337,10 @@ export default class YieldFarmingDataStoreV2 {
   getUserDataPUSH = async (provider) => {
     return new Promise(async (resolve, reject) => {
       if (this.state.account) {
+        //?? TODO
+        const pushNewInfo = await getUserInfo(provider,this.state.account);
+        console.log("*** (( got",pushNewInfo);
+
         const userAddress = this.state.account;
         const pushCoreV2 = this.state.pushCoreV2;
 
