@@ -33,7 +33,7 @@ import { resetCanSendSlice } from 'redux/slices/sendNotificationSlice';
 import { resetChannelCreationSlice } from 'redux/slices/channelCreationSlice';
 import { resetAdminSlice } from 'redux/slices/adminSlice';
 import Navigation from 'structure/Navigation';
-import {  ErrorContext } from './contexts/ErrorContext'
+import { ErrorContext } from './contexts/ErrorContext';
 
 import { network, hooks as networkHooks } from './connectors/network';
 import { metaMask, hooks as metaMaskHooks } from './connectors/metaMask';
@@ -41,10 +41,7 @@ import { walletConnectV2, hooks as walletConnectV2Hooks } from './connectors/wal
 
 import { MetaMask } from '@web3-react/metamask';
 import { WalletConnect as WalletConnectV2 } from '@web3-react/walletconnect-v2';
-import { Network } from "@web3-react/network";
-
-
-
+import { Network } from '@web3-react/network';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -55,7 +52,7 @@ import { ChatUserContext } from 'contexts/ChatUserContext';
 // space imports
 import SpaceContextProvider from 'contexts/SpaceContext';
 import { SpacesUIProvider } from '@pushprotocol/uiweb';
-import { darkTheme,lightTheme } from 'config/spaceTheme';
+import { darkTheme, lightTheme } from 'config/spaceTheme';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 import {
   ISpaceBannerProps,
@@ -66,6 +63,7 @@ import {
   SpacesUI,
 } from '@pushprotocol/uiweb';
 import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
+import { ChatUIProvider } from '@pushprotocol/uiweb';
 
 dotenv.config();
 
@@ -84,15 +82,11 @@ export interface IUseSpaceReturnValues {
   SpaceBannerComponent: React.FC<ISpaceBannerProps>;
   CreateSpaceComponent: React.FC<ISpaceCreateWidgetProps>;
 }
-export const connectors: [
-  MetaMask | WalletConnectV2 | Network,
-  Web3ReactHooks,
-][] = [
+export const connectors: [MetaMask | WalletConnectV2 | Network, Web3ReactHooks][] = [
   [metaMask, metaMaskHooks],
   [walletConnectV2, walletConnectV2Hooks],
-  [network, networkHooks]
-]
-
+  [network, networkHooks],
+];
 
 export default function App() {
   const dispatch = useDispatch();
@@ -100,8 +94,7 @@ export default function App() {
   const { connector, isActive, account, chainId, provider } = useWeb3React<ethers.providers.Web3Provider>();
   const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
   const [currentTime, setcurrentTime] = React.useState(0);
-  const {authError, setAuthError } = useContext(ErrorContext);
-
+  const { authError, setAuthError } = useContext(ErrorContext);
 
   const { run, stepIndex, tutorialContinous } = useSelector((state: any) => state.userJourney);
   const location = useLocation();
@@ -124,7 +117,7 @@ export default function App() {
   }, [activatingConnector, connector]);
 
   useEffect(() => {
-    if(!account) return;
+    if (!account) return;
     dispatch(resetSpamSlice());
     dispatch(resetNotificationsSlice());
     dispatch(resetCanSendSlice());
@@ -150,7 +143,7 @@ export default function App() {
 
   // enable socket notifications
   useSDKSocket({ account, chainId, env: appConfig.appEnv });
-  
+
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
@@ -172,17 +165,17 @@ export default function App() {
 
   React.useEffect(() => {
     window?.Olvy?.init({
-      organisation: "epns",
-      target: "#olvy-target",
-      type: "sidebar",
+      organisation: 'epns',
+      target: '#olvy-target',
+      type: 'sidebar',
       view: {
         showSearch: false,
         compact: false,
         showHeader: true, // only applies when widget type is embed. you cannot hide header for modal and sidebar widgets
         showUnreadIndicator: true,
-        unreadIndicatorColor: "#cc1919",
-        unreadIndicatorPosition: "top-right"
-      }
+        unreadIndicatorColor: '#cc1919',
+        unreadIndicatorPosition: 'top-right',
+      },
     });
     return function cleanup() {
       window?.Olvy?.teardown();
@@ -215,13 +208,16 @@ export default function App() {
   const librarySigner = provider?.getSigner(account);
   const { pgpPvtKey } = useContext<any>(ChatUserContext);
 
-
-  const spaceUI = useMemo(() => new SpacesUI({
-    account: account,
-    signer: librarySigner,
-    pgpPrivateKey: pgpPvtKey,
-    env: appConfig?.appEnv,
-  }), [account, librarySigner, pgpPvtKey, appConfig?.appEnv]);
+  const spaceUI = useMemo(
+    () =>
+      new SpacesUI({
+        account: account,
+        signer: librarySigner,
+        pgpPrivateKey: pgpPvtKey,
+        env: appConfig?.appEnv,
+      }),
+    [account, librarySigner, pgpPvtKey, appConfig?.appEnv]
+  );
 
   // const { spaceUI } = useSpaceComponents();
 
@@ -240,60 +236,76 @@ export default function App() {
           <NavigationContextProvider>
             <SpaceContextProvider>
               <SpaceComponentContextProvider spaceUI={spaceUI}>
-            <AppContextProvider>
-              <Joyride
-                run={run}
-                steps={steps}
-                continuous={tutorialContinous}
-                stepIndex={stepIndex}
-                // hideFooter={true}
-                // primaryProps={false}
-                hideBackButton={true}
-                hideCloseButton={false}
-                disableScrolling={true}
-                disableScrollParentFix={true}
-                // disableFlip={true}
-                // showNextButton={false}
-                showSkipButton={false}
-                disableOverlayClose={true}
-                callback={handleJoyrideCallback}
-                styles={{
-                  options: {
-                    arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-                    backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-                    overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
-                    primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
-                    textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
-                    zIndex: 1000,
-                  },
-                }}
-              />
+                <AppContextProvider>
+                  <Joyride
+                    run={run}
+                    steps={steps}
+                    continuous={tutorialContinous}
+                    stepIndex={stepIndex}
+                    // hideFooter={true}
+                    // primaryProps={false}
+                    hideBackButton={true}
+                    hideCloseButton={false}
+                    disableScrolling={true}
+                    disableScrollParentFix={true}
+                    // disableFlip={true}
+                    // showNextButton={false}
+                    showSkipButton={false}
+                    disableOverlayClose={true}
+                    callback={handleJoyrideCallback}
+                    styles={{
+                      options: {
+                        arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                        backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                        overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
+                        primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
+                        textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
+                        zIndex: 1000,
+                      },
+                    }}
+                  />
 
-              <HeaderContainer>
-                <Header
-                  isDarkMode={darkMode}
-                  darkModeToggle={toggleDarkMode}
-                />
-              </HeaderContainer>
+                  <HeaderContainer>
+                    <Header
+                      isDarkMode={darkMode}
+                      darkModeToggle={toggleDarkMode}
+                    />
+                  </HeaderContainer>
 
-              <ParentContainer
-                bg={darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG}
-                headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
-              >
-                <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                  <Navigation />
-                </LeftBarContainer>
+                  <ParentContainer
+                    bg={
+                      darkMode
+                        ? themeDark.backgroundBG
+                        : !isActive
+                        ? themeLight.connectWalletBg
+                        : themeLight.backgroundBG
+                    }
+                    headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
+                  >
+                    <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                      <Navigation />
+                    </LeftBarContainer>
 
-                <ContentContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                   {/* Shared among all pages, load universal things here */}
-                   <SpacesUIProvider spaceUI={spaceUI} theme={darkMode ? darkTheme : lightTheme}>
-                      <MasterInterfacePage />
-                      <SpaceWidgetSection />
-                    </SpacesUIProvider>
-                </ContentContainer>
-              </ParentContainer>
-            </AppContextProvider>
-            </SpaceComponentContextProvider>
+                    <ContentContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                      {/* Shared among all pages, load universal things here */}
+                      <ChatUIProvider
+                        account={account!}
+                        pgpPrivateKey={pgpPvtKey}
+                        env={appConfig.appEnv}
+                        theme={darkMode ? darkTheme : lightTheme}
+                      >
+                        <SpacesUIProvider
+                          spaceUI={spaceUI}
+                          theme={darkMode ? darkTheme : lightTheme}
+                        >
+                          <MasterInterfacePage />
+                          <SpaceWidgetSection />
+                        </SpacesUIProvider>
+                      </ChatUIProvider>
+                    </ContentContainer>
+                  </ParentContainer>
+                </AppContextProvider>
+              </SpaceComponentContextProvider>
             </SpaceContextProvider>
           </NavigationContextProvider>
         </>
