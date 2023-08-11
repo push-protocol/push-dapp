@@ -16,7 +16,7 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 import { produce } from 'immer';
-import { IMessageIPFS, MessageBubble } from '@pushprotocol/uiweb';
+import { IMessageIPFS, MessageBubble, MessageList } from '@pushprotocol/uiweb';
 
 // Internal Components
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
@@ -95,6 +95,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const [SnackbarText, setSnackbarText] = useState<string>('');
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
+  const [conversationHash, setConversationHash] = useState<string>('');
   const groupInfoRef = useRef<HTMLInputElement>(null);
   const { connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
   const { videoObject } = useContext(VideoCallContext);
@@ -180,6 +181,15 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       threadHash: lastThreadHashFetchedProp!,
       limit: chatsFetchedLimit,
     });
+
+    const chatId = currentChat?.did || currentChat?.groupInformation?.chatId;
+    const getConversationHash = await PushAPI.chat.conversationHash({
+      account,
+      conversationId: chatId,
+      env: appConfig.appEnv,
+    });
+
+    setConversationHash(getConversationHash.threadHash);
 
     // remove this custom decryption after SDK issue is resolved in future
     const promiseArrToDecryptMsg = [];
@@ -485,6 +495,8 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     { id: 7, content: 'Access to more chat requests and messages will be added in the near future' },
   ];
 
+  console.log('conversationHash', conversationHash);
+
   return (
     <Container>
       {!viewChatBox ? (
@@ -671,44 +683,11 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
                     />
                   </SpinnerWrapper>
                 )}
-                <div ref={topRef}>
-                  {messages?.map((msg, i) => {
-                    //const isLast = i === messages.length - 1
-                    //const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
 
-                    showTime = false;
-                    if (i >= 0) {
-                      const duration = new Date(messages[i]?.timestamp);
-                      const dateString = duration.toDateString();
-                      if (dateString !== time || i === 0) {
-                        showTime = true;
-                        time = dateString;
-                      }
-                    }
-                    return (
-                      <div key={i}>
-                        {!showTime ? null : (
-                          <HeaderMessage
-                            index={i}
-                            time={time}
-                            isGroup={isGroup}
-                          />
-                        )}
-                        {/* <Chats
-                            msg={
-                              (!currentChat?.groupInformation?.isPublic && checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser, isGroup }))
-                                ? ''
-                                : msg
-                            }
-                            caip10={walletToCAIP10({ account: account! })}
-                            messageBeingSent={messageBeingSent}
-                            isGroup={isGroup}
-                          /> */}
-                        <MessageBubble chat={msg} />
-                      </div>
-                    );
-                  })}
-                </div>
+                <MessageList
+                  conversationHash={conversationHash}
+                  limit={10}
+                />
                 <HeaderMessage
                   messages={messages}
                   isGroup={isGroup}
