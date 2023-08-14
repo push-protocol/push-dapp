@@ -62,7 +62,7 @@ export default class YieldFarmingDataStoreV2 {
   // init
   init = (account, staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02) => {
     // set account
-    this.state.account = account;
+    this.state.account = "0xF34310cB965A4c352941E53993eBAC5f8BC612E6";
     this.state.staking = staking;
     this.state.pushToken = pushToken;
     this.state.pushCoreV2 = pushCoreV2;
@@ -207,17 +207,14 @@ export default class YieldFarmingDataStoreV2 {
   getPUSHPoolStats = async (provider) => {
     return new Promise(async (resolve, reject) => {
       const pushCoreV2 = this.state.pushCoreV2;
-      const pushToken = this.state.pushToken;
-      const currentEpoch = await this.currentEpochCalculation(provider);
+
+      const {epochRewards, currentEpochNumber} = await getUserPushStakingInfo(provider,this.state.account);
 
       //Calculating TotalStaked Amount
-      const [PROTOCOL_POOL_FEES, totalStakedAmount] = await Promise.all([
-        pushCoreV2.PROTOCOL_POOL_FEES(),
-        pushCoreV2.totalStakedAmount(),
-      ]);
+      const totalStakedAmount = await pushCoreV2.totalStakedAmount();
 
       //Calculating Current Reward
-      let currentReward = await this.getEpochRewards(pushCoreV2, PROTOCOL_POOL_FEES, currentEpoch);
+      let currentReward = epochRewards;
 
       this.state.rewardForCurrentEpochPush = currentReward; //this sets the rewardForCurrentEpochPush equal to currentReward.
 
@@ -226,8 +223,8 @@ export default class YieldFarmingDataStoreV2 {
       stakingAPR = Math.min(this.state.highCapPUSHStakingAPR, stakingAPR);
 
       resolve({
-        currentEpoch,
-        currentReward,
+        currentEpochNumber,//Int
+        currentReward, //BN
         totalStakedAmount,
         stakingAPR,
       });
@@ -337,90 +334,58 @@ export default class YieldFarmingDataStoreV2 {
   getUserDataPUSH = async (provider) => {
     return new Promise(async (resolve, reject) => {
       if (this.state.account) {
-        //?? TODO
-        const pushNewInfo = await getUserPushStakingInfo(provider,this.state.account);
-        console.log("*** (( got",pushNewInfo);
 
-        const userAddress = this.state.account;
+        let {
+          userStaked,
+          potentialReward,
+          availableRewards
+        } = await getUserPushStakingInfo(provider,this.state.account);
+
+        // Rewards Claimed
         const pushCoreV2 = this.state.pushCoreV2;
+        let claimedReward = await pushCoreV2.usersRewardsClaimed(this.state.account);
+        claimedReward = tokenBNtoNumber(claimedReward);
 
-        const currentEpoch = await this.currentEpochCalculation(provider);
+        //Current Epoch Rewards
+        potentialReward = tokenBNtoNumber(potentialReward);
 
-        const [genesisBlock, userstakedAmount, claimedReward] = await Promise.all([
-          pushCoreV2.genesisEpoch(),
-          pushCoreV2.userFeesInfo(userAddress),
-          pushCoreV2.usersRewardsClaimed(userAddress),
-        ]);
+        //Available For Claiming
+        availableRewards = tokenBNtoNumber(availableRewards);
 
-
-        //checking for which Epoch ID to consider for calculation of the reward
-        const computationalEpochId = await this.getComputationalEpoch(currentEpoch.toNumber());
-
-        let potentialUserReward = await this.calculateCurrentPushReward(computationalEpochId, pushCoreV2, userstakedAmount);
-
-        let lastClaimedEpoch;
-
-        if (userstakedAmount.lastClaimedBlock.toNumber() != 0) {
-          lastClaimedEpoch = await pushCoreV2.lastEpochRelative(genesisBlock, userstakedAmount.lastClaimedBlock);
-        } else {
-          const currentBlock = await provider.getBlock('latest');
-          lastClaimedEpoch = await pushCoreV2.lastEpochRelative(genesisBlock, currentBlock.number);
-        }
-
-        lastClaimedEpoch = lastClaimedEpoch.toNumber();
-
-        let totalClaimableReward = 0;
-        let lengthToLoop = computationalEpochId - lastClaimedEpoch;
-
-        const epochsToCondider = Array.from({ length: lengthToLoop }, (_, i) => i + lastClaimedEpoch);
-
-        const userRewards = await Promise.all(
-          epochsToCondider.map((epochId) => {
-            return pushCoreV2.calculateEpochRewards(userAddress, epochId).then((reward) => {
-              return reward;
-            });
-          })
-        );
-
-        const userTotalReawards = userRewards.reduce(
-          (accumulator, currentValue) => accumulator.add(currentValue),
-          ethers.BigNumber.from(0)
-        );
-        totalClaimableReward = tokenBNtoNumber(userTotalReawards).toFixed(2);
 
         resolve({
-          userstakedAmount,
-          claimedReward,
-          potentialUserReward,
-          totalClaimableReward,
+          userStaked,//BN
+          claimedReward,//Int
+          potentialReward,//Int
+          availableRewards,//Int
         });
       }
     });
   };
 
   /* Calculation 'Current Epoch Reward' for Push Fee staking Pool */
-  calculateCurrentPushReward = async (epochId, contract, userstakedAmount) => {
+  // calculateCurrentPushReward = async (epochId, contract, userstakedAmount) => {
 
-    let [PROTOCOL_POOL_FEES, totalStakedAmount] = await Promise.all([
-      contract.PROTOCOL_POOL_FEES(),
-      contract.totalStakedAmount(),
-    ]);
-    totalStakedAmount = tokenBNtoNumber(totalStakedAmount);
+  //   let [PROTOCOL_POOL_FEES, totalStakedAmount] = await Promise.all([
+  //     contract.PROTOCOL_POOL_FEES(),
+  //     contract.totalStakedAmount(),
+  //   ]);
+  //   totalStakedAmount = tokenBNtoNumber(totalStakedAmount);
 
-    let epochReward = await this.getEpochRewards(contract, PROTOCOL_POOL_FEES, epochId);
-    epochReward = tokenBNtoNumber(epochReward);
-    const userStakedWeight = bnToInt(userstakedAmount.stakedWeight);
-    let totalStakedWeight = await contract.epochToTotalStakedWeight(epochId);
-    totalStakedWeight = bnToInt(totalStakedWeight);
+  //   let epochReward = await this.getEpochRewards(contract, PROTOCOL_POOL_FEES, epochId);
+  //   epochReward = tokenBNtoNumber(epochReward);
+  //   const userStakedWeight = bnToInt(userstakedAmount.stakedWeight);
+  //   let totalStakedWeight = await contract.epochToTotalStakedWeight(epochId);
+  //   totalStakedWeight = bnToInt(totalStakedWeight);
 
-    let currentEpochReward;
-    if (contract.address === addresses.pushCoreV2) {
-      currentEpochReward = (userStakedWeight / totalStakedWeight) * (epochReward);
-    }
+  //   let currentEpochReward;
+  //   if (contract.address === addresses.pushCoreV2) {
+  //     currentEpochReward = (userStakedWeight / totalStakedWeight) * (epochReward);
+  //   }
 
-    return currentEpochReward;
+  //   return currentEpochReward;
 
-  }
+  // }
 
   // Calculating 'Current Epoch Reward' for UNI-V2 LP Token
   calculateUserEpochReward = async (epochId, contract) => {
@@ -454,42 +419,42 @@ export default class YieldFarmingDataStoreV2 {
   };
 
   /* This Checks for which epoch to consider for calculation depending upon lastTotalStakeEpochInitialized */
-  getComputationalEpoch = async (epochId) => {
-    const pushCoreV2 = this.state.pushCoreV2;
+  // getComputationalEpoch = async (epochId) => {
+  //   const pushCoreV2 = this.state.pushCoreV2;
 
-    const lastTotalStakeEpochInitialized = await pushCoreV2.provider
-      .getStorageAt(pushCoreV2.address, 129)
-      .then((data) => parseInt(data));
+  //   const lastTotalStakeEpochInitialized = await pushCoreV2.provider
+  //     .getStorageAt(pushCoreV2.address, 129)
+  //     .then((data) => parseInt(data));
 
-    const _lastTotalStakeEpochInitialized = await this.getEpochRelation(lastTotalStakeEpochInitialized);
+  //   const _lastTotalStakeEpochInitialized = await this.getEpochRelation(lastTotalStakeEpochInitialized);
 
-    let computationalEpochId = epochId;
+  //   let computationalEpochId = epochId;
 
-    if (
-      _lastTotalStakeEpochInitialized.toNumber() == 0 ||
-      _lastTotalStakeEpochInitialized.toNumber() == computationalEpochId
-    ) {
-      computationalEpochId = epochId;
-    } else {
-      for (var i = _lastTotalStakeEpochInitialized.toNumber() + 1; i <= computationalEpochId; i++) {
-        if (tokenBNtoNumber(await pushCoreV2.epochToTotalStakedWeight(i)) == 0) {
-          computationalEpochId = i - 1;
-        } else {
-          computationalEpochId = i;
-        }
-      }
-    }
-    return computationalEpochId;
-  };
+  //   if (
+  //     _lastTotalStakeEpochInitialized.toNumber() == 0 ||
+  //     _lastTotalStakeEpochInitialized.toNumber() == computationalEpochId
+  //   ) {
+  //     computationalEpochId = epochId;
+  //   } else {
+  //     for (var i = _lastTotalStakeEpochInitialized.toNumber() + 1; i <= computationalEpochId; i++) {
+  //       if (tokenBNtoNumber(await pushCoreV2.epochToTotalStakedWeight(i)) == 0) {
+  //         computationalEpochId = i - 1;
+  //       } else {
+  //         computationalEpochId = i;
+  //       }
+  //     }
+  //   }
+  //   return computationalEpochId;
+  // };
 
-  getEpochRelation = async (blockNum) => {
-    const pushCoreV2 = this.state.pushCoreV2;
-    const genesisBlock = await pushCoreV2.genesisEpoch();
+  // getEpochRelation = async (blockNum) => {
+  //   const pushCoreV2 = this.state.pushCoreV2;
+  //   const genesisBlock = await pushCoreV2.genesisEpoch();
 
-    const epochNumber = await pushCoreV2.lastEpochRelative(genesisBlock, blockNum);
+  //   const epochNumber = await pushCoreV2.lastEpochRelative(genesisBlock, blockNum);
 
-    return epochNumber;
-  };
+  //   return epochNumber;
+  // };
 
   currentEpochCalculation = async (provider) => {
     const pushCoreV2 = this.state.pushCoreV2;
@@ -543,29 +508,29 @@ export default class YieldFarmingDataStoreV2 {
   };
 
 
-  getEpochRewards = async (pushCoreV2, PROTOCOL_POOL_FEES, currentEpoch) => {
-    let epochRewards = await pushCoreV2.epochRewards(currentEpoch);
+  // getEpochRewards = async (pushCoreV2, PROTOCOL_POOL_FEES, currentEpoch) => {
+  //   let epochRewards = await pushCoreV2.epochRewards(currentEpoch);
 
-    let previouslySetEpochRewards = await pushCoreV2.previouslySetEpochRewards();
+  //   let previouslySetEpochRewards = await pushCoreV2.previouslySetEpochRewards();
 
-    if (tokenBNtoNumber(previouslySetEpochRewards) !== tokenBNtoNumber(PROTOCOL_POOL_FEES)) {
-      // Manually Calculate Rewards
-      const [previouslySetEpochRewards, _lastEpochInitiliazed] = await Promise.all([
-        pushCoreV2.previouslySetEpochRewards(),
-        this.state.pushCoreV2.provider
-          .getStorageAt(pushCoreV2.address, 129)
-          .then((hexStr) => Number(hexStr))
-          .then((blockNum) => this.getEpochRelation(blockNum)),
-      ]);
-      // const _epochGap = currentEpoch.sub(_lastEpochInitiliazed);
+  //   if (tokenBNtoNumber(previouslySetEpochRewards) !== tokenBNtoNumber(PROTOCOL_POOL_FEES)) {
+  //     // Manually Calculate Rewards
+  //     const [previouslySetEpochRewards, _lastEpochInitiliazed] = await Promise.all([
+  //       pushCoreV2.previouslySetEpochRewards(),
+  //       this.state.pushCoreV2.provider
+  //         .getStorageAt(pushCoreV2.address, 129)
+  //         .then((hexStr) => Number(hexStr))
+  //         .then((blockNum) => this.getEpochRelation(blockNum)),
+  //     ]);
+  //     // const _epochGap = currentEpoch.sub(_lastEpochInitiliazed);
 
-      if (currentEpoch == _lastEpochInitiliazed + 1) {
-        const availableRewardsPerEpoch = PROTOCOL_POOL_FEES.sub(previouslySetEpochRewards);
-        epochRewards = epochRewards.add(availableRewardsPerEpoch);
-      }
-    }
-    return epochRewards;
-  };
+  //     if (currentEpoch == _lastEpochInitiliazed + 1) {
+  //       const availableRewardsPerEpoch = PROTOCOL_POOL_FEES.sub(previouslySetEpochRewards);
+  //       epochRewards = epochRewards.add(availableRewardsPerEpoch);
+  //     }
+  //   }
+  //   return epochRewards;
+  // };
 
 
 }

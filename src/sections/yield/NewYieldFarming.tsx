@@ -127,7 +127,7 @@ const NewYieldFarming = (
                 body={"Users who were part of the previous Push staking program, need to migrate to new pools to continue earning rewards. Click"}
                 setActiveTab={setActiveTab}
             />
-            <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} />
+            <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} setPoolStats={setPoolStats}/>
             <YieldPushPriceSection
                 poolStats={poolStats}
             />

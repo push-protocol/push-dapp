@@ -245,8 +245,9 @@ export class CoreV2Reward {
     const potentialReward = userstakedWeight
       .mul(epochRewards)
       .div(totalStakedWeight);
+    const currentEpochNumber = this.STATE.currentEpoch;
 
     const userStaked = this.STATE.userFeesInfo.stakedAmount;
-    return { potentialReward, epochRewards, userStaked };
+    return { potentialReward, epochRewards, userStaked, currentEpochNumber };
   }
 }
