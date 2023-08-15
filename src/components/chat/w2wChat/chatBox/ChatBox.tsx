@@ -674,7 +674,11 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
                 />
               </SpinnerWrapper>
             ) : (
-              <>
+              <div
+                style={{
+                  overflowX: 'hidden',
+                }}
+              >
                 {chatsLoading && (
                   <SpinnerWrapper height="35px">
                     <LoaderSpinner
@@ -705,7 +709,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
                     isGroup={isGroup}
                   />
                 )}
-              </>
+              </div>
             )}
             {/* </CustomScrollContent> */}
             <div ref={bottomRef}></div>
