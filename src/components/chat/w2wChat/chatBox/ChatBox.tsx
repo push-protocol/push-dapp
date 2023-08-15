@@ -687,11 +687,15 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
                     />
                   </SpinnerWrapper>
                 )}
-
-                <MessageList
+              <div style={{
+                padding: '0 30px'
+              }}>
+              <MessageList
                   conversationHash={conversationHash}
                   limit={10}
                 />
+              </div>
+                
                 <HeaderMessage
                   messages={messages}
                   isGroup={isGroup}
