@@ -27,7 +27,7 @@ const tokenToBn = (token) => {
 };
 
 const tokenBNtoNumber = (tokenBn) => {
-  return tokenBn.div(ethers.BigNumber.from(10).pow(ethers.BigNumber.from(10))).toNumber() / 100000000;
+  return parseFloat(ethers.utils.formatEther(tokenBn))
 };
 
 const bnToInt = function (bnAmount) {
@@ -208,7 +208,8 @@ export default class YieldFarmingDataStoreV2 {
     return new Promise(async (resolve, reject) => {
       const pushCoreV2 = this.state.pushCoreV2;
 
-      const {epochRewards, currentEpochNumber} = await getUserPushStakingInfo(provider,this.state.account);
+      const {epochRewards, currentEpochNumber, availableRewards,potentialReward,userStaked} = await getUserPushStakingInfo(provider,this.state.account);
+      // console.log("got the stats as",epochRewards, currentEpochNumber, availableRewards,potentialReward,userStaked);
 
       //Calculating TotalStaked Amount
       const totalStakedAmount = await pushCoreV2.totalStakedAmount();
@@ -340,6 +341,8 @@ export default class YieldFarmingDataStoreV2 {
           potentialReward,
           availableRewards
         } = await getUserPushStakingInfo(provider,this.state.account);
+ 
+        availableRewards = ethers.utils.parseEther("1000")
 
         // Rewards Claimed
         const pushCoreV2 = this.state.pushCoreV2;

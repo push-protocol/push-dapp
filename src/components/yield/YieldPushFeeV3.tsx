@@ -537,7 +537,7 @@ const YieldPushFeeV3 = ({
 
                             }
 
-                            {formatTokens(userDataPush?.availableRewards) === 0.00 ?
+                            {userDataPush?.availableRewards === 0.00 ?
                                 <StakingToolTip
                                     bottom={'-30px'}
                                     ToolTipTitle={"No Rewards to Claim"}
