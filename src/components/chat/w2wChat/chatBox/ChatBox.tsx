@@ -554,7 +554,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
         </WelcomeItem>
         </Container>
       ) : (
-        <div style={{display: "flex", minHeight: "-webkit-fill-available"}}>
+        <div style={{display: "flex", minHeight: "100%", minWidth: "100%"}}>
           <ChatViewComponent
             chatId={currentChat.chatId}
           />
