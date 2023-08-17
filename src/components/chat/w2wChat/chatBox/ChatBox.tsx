@@ -16,7 +16,7 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 import { produce } from 'immer';
-import { IMessageIPFS, MessageBubble, MessageList } from '@pushprotocol/uiweb';
+import { IMessageIPFS, ChatViewList, ChatViewComponent } from '@pushprotocol/uiweb';
 
 // Internal Components
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
@@ -498,8 +498,9 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   console.log('conversationHash', conversationHash);
 
   return (
-    <Container>
-      {!viewChatBox ? (
+    
+      !viewChatBox ? (
+        <Container>
         <WelcomeItem gap="25px">
           {activeTab == 4 && (
             <LoaderSpinner
@@ -551,193 +552,200 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             </>
           )}
         </WelcomeItem>
+        </Container>
       ) : (
-        <>
-          <Snackbar
-            open={openReprovalSnackbar}
-            autoHideDuration={10000}
-            onClose={handleCloseSuccessSnackbar}
-          >
-            <Alert
-              onClose={handleCloseSuccessSnackbar}
-              severity="error"
-              sx={{ width: '100%' }}
-            >
-              {SnackbarText}
-            </Alert>
-          </Snackbar>
+        <div style={{display: "flex", minHeight: "-webkit-fill-available"}}>
+          <ChatViewComponent
+            chatId={currentChat.chatId}
+          />
+        </div>
+        // <>
+        //   <Snackbar
+        //     open={openReprovalSnackbar}
+        //     autoHideDuration={10000}
+        //     onClose={handleCloseSuccessSnackbar}
+        //   >
+        //     <Alert
+        //       onClose={handleCloseSuccessSnackbar}
+        //       severity="error"
+        //       sx={{ width: '100%' }}
+        //     >
+        //       {SnackbarText}
+        //     </Alert>
+        //   </Snackbar>
 
-          <ItemHV2
-            position="absolute"
-            alignItems="center"
-            justifyContent="flex-start"
-            top="10px"
-            left="10px"
-            right="10px"
-            minHeight="55px"
-            borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.LARGE}
-            color={theme.default.color}
-            background={theme.default.bg}
-            padding="6px"
-            fontWeight="500"
-            zIndex="1"
-          >
-            <ItemHV2
-              height="48px"
-              flex="initial"
-            >
-              <TabletBackButton
-                margin="0px 5px 0px 0px"
-                color={theme.default.secondaryColor}
-                background="transparent"
-                hover="transparent"
-                hoverBackground="transparent"
-                onClick={() => {
-                  setChat(null);
-                }}
-              >
-                <MdOutlineArrowBackIos size={24} />
-              </TabletBackButton>
+        //   <ItemHV2
+        //     position="absolute"
+        //     alignItems="center"
+        //     justifyContent="flex-start"
+        //     top="10px"
+        //     left="10px"
+        //     right="10px"
+        //     minHeight="55px"
+        //     borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.LARGE}
+        //     color={theme.default.color}
+        //     background={theme.default.bg}
+        //     padding="6px"
+        //     fontWeight="500"
+        //     zIndex="1"
+        //   >
+        //     <ItemHV2
+        //       height="48px"
+        //       flex="initial"
+        //     >
+        //       <TabletBackButton
+        //         margin="0px 5px 0px 0px"
+        //         color={theme.default.secondaryColor}
+        //         background="transparent"
+        //         hover="transparent"
+        //         hoverBackground="transparent"
+        //         onClick={() => {
+        //           setChat(null);
+        //         }}
+        //       >
+        //         <MdOutlineArrowBackIos size={24} />
+        //       </TabletBackButton>
 
-              <ImageV2
-                height="48px"
-                width="48px"
-                alt="Profile Picture"
-                src={imageSource}
-                borderRadius="100%"
-                overflow="hidden"
-                objectFit="cover"
-              />
-            </ItemHV2>
+        //       <ImageV2
+        //         height="48px"
+        //         width="48px"
+        //         alt="Profile Picture"
+        //         src={imageSource}
+        //         borderRadius="100%"
+        //         overflow="hidden"
+        //         objectFit="cover"
+        //       />
+        //     </ItemHV2>
 
-            <SpanV2
-              flex="1"
-              margin="5px 10px"
-              fontWeight="400"
-              textAlign="start"
-            >
-              {getDisplayName()}
-            </SpanV2>
+        //     <SpanV2
+        //       flex="1"
+        //       margin="5px 10px"
+        //       fontWeight="400"
+        //       textAlign="start"
+        //     >
+        //       {getDisplayName()}
+        //     </SpanV2>
 
-            {/* Video call button */}
-            {!isGroup && (
-              <Tooltip
-                tooltipContent="Video call"
-                placementProps={{
-                  bottom: '1.4rem',
-                  transform: 'translateX(-92%)',
-                  borderRadius: '12px 12px 2px 12px',
-                  width: '75px',
-                  padding: '0.3rem 0.8rem 0.25rem 0.8rem',
-                }}
-                wrapperProps={{ width: 'fit-content', minWidth: 'fit-content' }}
-              >
-                <VideoCallButton onClick={startVideoCallHandler}>
-                  <ImageV2
-                    cursor="pointer"
-                    src={videoCallIcon}
-                  />
-                </VideoCallButton>
-              </Tooltip>
-            )}
+        //     {/* Video call button */}
+        //     {!isGroup && (
+        //       <Tooltip
+        //         tooltipContent="Video call"
+        //         placementProps={{
+        //           bottom: '1.4rem',
+        //           transform: 'translateX(-92%)',
+        //           borderRadius: '12px 12px 2px 12px',
+        //           width: '75px',
+        //           padding: '0.3rem 0.8rem 0.25rem 0.8rem',
+        //         }}
+        //         wrapperProps={{ width: 'fit-content', minWidth: 'fit-content' }}
+        //       >
+        //         <VideoCallButton onClick={startVideoCallHandler}>
+        //           <ImageV2
+        //             cursor="pointer"
+        //             src={videoCallIcon}
+        //           />
+        //         </VideoCallButton>
+        //       </Tooltip>
+        //     )}
 
-            {currentChat.groupInformation && (
-              <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
-                <ItemHV2 padding="0px 11px 0px 0px">{theme.scheme == 'light' ? <More /> : <MoreDark />}</ItemHV2>
-                {showGroupInfo && (
-                  <GroupInfo
-                    onClick={() => {
-                      showGroupInfoModal();
-                      setShowGroupInfo(false);
-                    }}
-                    ref={groupInfoRef}
-                  >
-                    <ItemVV2 maxWidth="32px">{theme.scheme == 'light' ? <Info /> : <InfoDark />}</ItemVV2>
-                    <SpanV2 color={theme.default.secondaryColor}>Group Info</SpanV2>
-                  </GroupInfo>
-                )}
-              </MoreOptions>
-            )}
-          </ItemHV2>
+        //     {currentChat.groupInformation && (
+        //       <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
+        //         <ItemHV2 padding="0px 11px 0px 0px">{theme.scheme == 'light' ? <More /> : <MoreDark />}</ItemHV2>
+        //         {showGroupInfo && (
+        //           <GroupInfo
+        //             onClick={() => {
+        //               showGroupInfoModal();
+        //               setShowGroupInfo(false);
+        //             }}
+        //             ref={groupInfoRef}
+        //           >
+        //             <ItemVV2 maxWidth="32px">{theme.scheme == 'light' ? <Info /> : <InfoDark />}</ItemVV2>
+        //             <SpanV2 color={theme.default.secondaryColor}>Group Info</SpanV2>
+        //           </GroupInfo>
+        //         )}
+        //       </MoreOptions>
+        //     )}
+        //   </ItemHV2>
 
-          <MessageContainer
-            ref={listInnerRef}
-            onScroll={onScroll}
-          >
-            {/* style={{overflow: "scroll",backgroundColor:'red'}} */}
-            {/* <CustomScrollContent initialScrollBehavior="smooth"> */}
-            {Loading ? (
-              <SpinnerWrapper>
-                <LoaderSpinner
-                  type={LOADER_TYPE.SEAMLESS}
-                  spinnerSize={40}
-                />
-              </SpinnerWrapper>
-            ) : (
-              <div
-                style={{
-                  overflowX: 'hidden',
-                }}
-              >
-                {chatsLoading && (
-                  <SpinnerWrapper height="35px">
-                    <LoaderSpinner
-                      type={LOADER_TYPE.SEAMLESS}
-                      spinnerSize={40}
-                    />
-                  </SpinnerWrapper>
-                )}
-              <div style={{
-                padding: '0 30px'
-              }}>
-              <MessageList
-                  conversationHash={conversationHash}
-                  limit={10}
-                />
-              </div>
+        //   <MessageContainer
+        //     ref={listInnerRef}
+        //     onScroll={onScroll}
+        //   >
+        //     {/* style={{overflow: "scroll",backgroundColor:'red'}} */}
+        //     {/* <CustomScrollContent initialScrollBehavior="smooth"> */}
+        //     {Loading ? (
+        //       <SpinnerWrapper>
+        //         <LoaderSpinner
+        //           type={LOADER_TYPE.SEAMLESS}
+        //           spinnerSize={40}
+        //         />
+        //       </SpinnerWrapper>
+        //     ) : (
+        //       <div
+        //         style={{
+        //           overflowX: 'hidden',
+        //         }}
+        //       >
+        //         {chatsLoading && (
+        //           <SpinnerWrapper height="35px">
+        //             <LoaderSpinner
+        //               type={LOADER_TYPE.SEAMLESS}
+        //               spinnerSize={40}
+        //             />
+        //           </SpinnerWrapper>
+        //         )}
+        //       <div style={{
+        //         padding: '0 30px'
+        //       }}>
+        //       <ChatViewList
+        //           chatId={conversationHash}
+        //           limit={10}
+        //         />
+        //       </div>
                 
-                <HeaderMessage
-                  messages={messages}
-                  isGroup={isGroup}
-                />
-                {checkIfChatExist({ chats: receivedIntents, currentChat, connectedUser, isGroup }) && (
-                  <Chats
-                    msg={{
-                      ...messages[0],
-                      messageContent: getIntentMessage(currentChat, isGroup),
-                      messageType: 'Intent',
-                    }}
-                    caip10={walletToCAIP10({ account: account! })}
-                    messageBeingSent={messageBeingSent}
-                    ApproveIntent={() => ApproveIntent('Approved')}
-                    isGroup={isGroup}
-                  />
-                )}
-              </div>
-            )}
-            {/* </CustomScrollContent> */}
-            <div ref={bottomRef}></div>
-          </MessageContainer>
+        //         <HeaderMessage
+        //           messages={messages}
+        //           isGroup={isGroup}
+        //         />
+        //         {checkIfChatExist({ chats: receivedIntents, currentChat, connectedUser, isGroup }) && (
+        //           <Chats
+        //             msg={{
+        //               ...messages[0],
+        //               messageContent: getIntentMessage(currentChat, isGroup),
+        //               messageType: 'Intent',
+        //             }}
+        //             caip10={walletToCAIP10({ account: account! })}
+        //             messageBeingSent={messageBeingSent}
+        //             ApproveIntent={() => ApproveIntent('Approved')}
+        //             isGroup={isGroup}
+        //           />
+        //         )}
+        //       </div>
+        //     )}
+        //     {/* </CustomScrollContent> */}
+        //     <div ref={bottomRef}></div>
+        //   </MessageContainer>
 
-          {checkIfChatExist({ chats: receivedIntents, currentChat, connectedUser, isGroup }) ? null : (
-            <>
-              <Typebar
-                messageBeingSent={messageBeingSent}
-                setNewMessage={setNewMessage}
-                newMessage={newMessage}
-                sendMessage={sendMessage}
-                isGroup={isGroup}
-                sendIntent={sendIntent}
-                setOpenSuccessSnackBar={setOpenSuccessSnackBar}
-                setSnackbarText={setSnackbarText}
-                isJoinGroup={!checkIfChatExist({ chats: inbox, currentChat, connectedUser, isGroup }) && isGroup}
-                approveIntent={ApproveIntent}
-              />
-            </>
-          )}
-        </>
-      )}
-    </Container>
+        //   {checkIfChatExist({ chats: receivedIntents, currentChat, connectedUser, isGroup }) ? null : (
+        //     <>
+        //       <Typebar
+        //         messageBeingSent={messageBeingSent}
+        //         setNewMessage={setNewMessage}
+        //         newMessage={newMessage}
+        //         sendMessage={sendMessage}
+        //         isGroup={isGroup}
+        //         sendIntent={sendIntent}
+        //         setOpenSuccessSnackBar={setOpenSuccessSnackBar}
+        //         setSnackbarText={setSnackbarText}
+        //         isJoinGroup={!checkIfChatExist({ chats: inbox, currentChat, connectedUser, isGroup }) && isGroup}
+        //         approveIntent={ApproveIntent}
+        //       />
+        //     </>
+        //   )}
+        // </>
+      )
+    // </Container>
+      
   );
 };
 
