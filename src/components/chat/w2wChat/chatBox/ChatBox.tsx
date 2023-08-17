@@ -48,9 +48,9 @@ import { AppContextType } from 'types/context';
 
 // Internal Configs
 import { appConfig } from 'config';
-import GLOBALS, { device } from 'config/Globals';
 import { getChats } from 'services';
 import { VideoCallContext } from 'contexts/VideoCallContext';
+import GLOBALS, { device, globalsMargin } from "config/Globals";
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -554,11 +554,11 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
         </WelcomeItem>
         </Container>
       ) : (
-        <div style={{display: "flex", minHeight: "100%", minWidth: "100%"}}>
+        <ChatContainer>
           <ChatViewComponent
             chatId={checkIfGroup(currentChat) ? currentChat.chatId : caip10ToWallet(currentChat.did)}
           />
-        </div>
+        </ChatContainer>
         // <>
         //   <Snackbar
         //     open={openReprovalSnackbar}
@@ -754,6 +754,26 @@ const SpinnerWrapper = styled.div`
   margin-top: 20px;
   height: ${(props) => props.height || '90px'};
 `;
+
+const ChatContainer = styled.div`
+  display: flex;
+  min-height: 100%;
+  min-width: 100%;
+  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${
+    globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
+  } - 48px);
+    
+  @media ${device.laptop} {
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${
+      globalsMargin.MINI_MODULES.TABLET.BOTTOM
+    } - 48px);
+  }
+
+  @media ${device.mobileL} {
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${
+      globalsMargin.MINI_MODULES.MOBILE.BOTTOM
+    } - 48px);
+`
 
 const MessageContainer = styled(ItemVV2)`
   align-items: unset;
