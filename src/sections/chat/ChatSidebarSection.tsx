@@ -118,7 +118,9 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
         <ItemVV2
           flex="initial"
         >
-          <ItemHV2 >
+          <ItemHV2 
+          zIndex='0'
+          >
             {/* Set active and onCLick to customize tab */}
             <TabButton
               active={activeTab == 0 ? true : false}
