@@ -556,7 +556,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       ) : (
         <div style={{display: "flex", minHeight: "100%", minWidth: "100%"}}>
           <ChatViewComponent
-            chatId={currentChat.chatId}
+            chatId={checkIfGroup(currentChat) ? currentChat.chatId : caip10ToWallet(currentChat.did)}
           />
         </div>
         // <>
