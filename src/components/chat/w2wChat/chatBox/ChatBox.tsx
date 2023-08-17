@@ -16,7 +16,7 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 import { produce } from 'immer';
-import { IMessageIPFS, ChatViewList, ChatViewComponent } from '@pushprotocol/uiweb';
+import { ChatViewComponent ,ChatViewList, IMessageIPFS} from '@pushprotocol/uiweb';
 
 // Internal Components
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';

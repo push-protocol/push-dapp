@@ -186,6 +186,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
       <ItemVV2
         justifyContent="flex-start"
         alignItems="stretch"
+        zIndex='0'
         // ref={containerRef}
         onClick={closeQRDropdown}
       >
