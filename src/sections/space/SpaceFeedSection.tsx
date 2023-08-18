@@ -19,12 +19,17 @@ import { useNavigate } from 'react-router-dom';
 import { SpaceComponentContext } from 'contexts/SpaceComponentsContext';
 import { useDeviceWidthCheck } from 'hooks';
 import useMediaQuery from 'hooks/useMediaQuery';
+import { appConfig } from 'config';
+
+
+// External imports
+import * as PushAPI from '@pushprotocol/restapi';
 
 
 const SpaceFeedSection = ({ spaceid }) => {
   const { SpaceFeedComponent, SpaceInvitesComponent, CreateSpaceComponent } = useContext(SpaceComponentContext);
   const { account } = useWeb3React();
-  const { setSpaceId, spaceInvites } = useContext(SpaceContext);
+  const { spaceId ,setSpaceId, spaceInvites } = useContext(SpaceContext);
   const { connectedUser } = useContext(ChatUserContext);
   const theme = useTheme();
 
@@ -43,6 +48,19 @@ const SpaceFeedSection = ({ spaceid }) => {
     // console.log(spaceId);
     navigate(`/spaces/${spaceId}`);
   };
+
+  // crossChecking this
+  
+  // React.useEffect(() => {
+  //   (async () => {
+  //     const feed = await PushAPI.space.requests({
+  //       account,
+  //       env: appConfig.appEnv,
+  //     });
+  //     // setSpaceInvites(feed?.length);
+  //   })();
+  // }, [spaceId]);
+
 
   return (
     <SpaceCard>

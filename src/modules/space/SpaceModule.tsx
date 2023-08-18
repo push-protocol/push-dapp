@@ -33,12 +33,16 @@ import LoaderSpinner from 'primaries/LoaderSpinner';
 import { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { Item } from 'primaries/SharedStyling';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { useSDKSocket } from 'hooks';
+import { SpaceContext } from 'contexts/SpaceContext';
 
 export const SpaceModule = ({ spaceid }) => {
-  const { account, library } = useWeb3React();
+  const { account, chainId } = useWeb3React();
   const { pgpPvtKey, getUser, setPgpPvtKey, connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
 
   const [isLoading, setIsLoading] = useState(true);
+
+  useSDKSocket({ account, chainId, env: appConfig.appEnv});
 
   useEffect(() => {
     setIsLoading(true);
