@@ -2,9 +2,7 @@ import { ethers } from "ethers";
 
 
 export const formatTokens = (tokens) => {
-    if (tokens) {
-        return tokens.div(ethers.BigNumber.from(10).pow(18)).toString();
-    }
+    return tokens.div(ethers.BigNumber.from(10).pow(18)).toString();
 };
 
 export const numberWithCommas = (x) => {

@@ -49,7 +49,7 @@ const YieldPushFeeV3 = ({
         }
 
         setTxInProgressWithdraw(true);
-        const unstakeAmount = formatTokens(userDataPush?.userstakedAmount?.stakedAmount);
+        const unstakeAmount = formatTokens(userDataPush?.userStaked);
 
         if (unstakeAmount == 0) {
             setUnstakeErrorMessage("Nothing to unstake, You need to stake first");
@@ -159,7 +159,7 @@ const YieldPushFeeV3 = ({
         }
 
         setTxInProgressClaimRewards(true);
-        const withdrawAmount = userDataPush?.totalClaimableReward;
+        const withdrawAmount = userDataPush?.availableRewards;
 
         if (withdrawAmount == 0) {
             setWithdrawErrorMessage("No Rewards to Claim")
@@ -271,6 +271,8 @@ const YieldPushFeeV3 = ({
     const stakingModalToast = useToast();
     const isMobile = useDeviceWidthCheck(600);
 
+    console.log("User Data Push",userDataPush);
+
     return (
         <Container>
             <StakingComponent
@@ -381,7 +383,7 @@ const YieldPushFeeV3 = ({
                         <>
                             <EpochNo>Current Epoch</EpochNo>
                             <EpochNo>
-                                {PUSHPoolstats?.currentEpoch.toNumber()}
+                                {PUSHPoolstats?.currentEpochNumber}
                             </EpochNo>
                         </>
                     ) : (
@@ -409,7 +411,7 @@ const YieldPushFeeV3 = ({
                                     </StakingToolTip>
                                 </InfoSpan>
                             </DataTitle>
-                            <DataValue> {numberWithCommas(formatTokens(userDataPush?.userstakedAmount.stakedAmount))} PUSH</DataValue>
+                            <DataValue> {numberWithCommas(formatTokens(userDataPush?.userStaked))} PUSH</DataValue>
                         </ItemHV2>
                         <ItemHV2 justifyContent="space-between" margin={isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                             <DataTitle>
@@ -424,7 +426,7 @@ const YieldPushFeeV3 = ({
                                 </InfoSpan>
 
                             </DataTitle>
-                            <DataValue> {numberWithCommas(formatTokens(userDataPush?.claimedReward))} PUSH</DataValue>
+                            <DataValue> {numberWithCommas((userDataPush?.claimedReward).toFixed(2))} PUSH</DataValue>
                         </ItemHV2>
                         <ItemHV2 justifyContent="space-between" margin={isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                             <DataTitle>
@@ -437,9 +439,8 @@ const YieldPushFeeV3 = ({
                                         <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
                                     </StakingToolTip>
                                 </InfoSpan>
-
                             </DataTitle>
-                            <DataValue> {numberWithCommas((userDataPush?.potentialUserReward).toFixed(2))} PUSH</DataValue>
+                            <DataValue> {numberWithCommas((userDataPush?.potentialReward).toFixed(2))} PUSH</DataValue>
                         </ItemHV2>
                         <ItemHV2 justifyContent="space-between" margin={isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                             <DataTitle>
@@ -454,7 +455,7 @@ const YieldPushFeeV3 = ({
                                 </InfoSpan>
 
                             </DataTitle>
-                            <DataValue> {numberWithCommas(userDataPush?.totalClaimableReward)} PUSH</DataValue>
+                            <DataValue> {numberWithCommas((userDataPush?.availableRewards).toFixed(2))} PUSH</DataValue>
                         </ItemHV2>
                     </ItemVV2>
                 ) : (
@@ -497,7 +498,7 @@ const YieldPushFeeV3 = ({
                         </ItemHV2>
                         <ButtonsContainer>
 
-                            {formatTokens(userDataPush?.userstakedAmount.stakedAmount) === "0" || unstakeErrorMessage !== null ?
+                            {formatTokens(userDataPush?.userStaked) === 0 || unstakeErrorMessage !== null ?
                                 <StakingToolTip
                                     error={true}
                                     ToolTipTitle={unstakeErrorMessage ? unstakeErrorMessage : "Nothing to unstake, Stake First"}
@@ -536,7 +537,7 @@ const YieldPushFeeV3 = ({
 
                             }
 
-                            {userDataPush?.totalClaimableReward === "0.00" ?
+                            {userDataPush?.availableRewards === 0.00 ?
                                 <StakingToolTip
                                     bottom={'-30px'}
                                     ToolTipTitle={"No Rewards to Claim"}
