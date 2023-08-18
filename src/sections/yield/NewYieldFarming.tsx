@@ -47,10 +47,10 @@ const NewYieldFarming = (
     }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
 
     const getPUSHPoolStats = React.useCallback(async () => {
-        const pushPoolStats = await YieldFarmingDataStoreV2.instance.getPUSHPoolStats(provider);
+        // const pushPoolStats = await YieldFarmingDataStoreV2.instance.getPUSHPoolStats(provider);
 
-        setPUSHPoolStats({ ...pushPoolStats });
-    }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
+        // setPUSHPoolStats({ ...pushPoolStats });
+    }, []);
 
     const getUserDataLP = React.useCallback(async () => {
         const userDataLP = await YieldFarmingDataStoreV2.instance.getUserDataLP();
@@ -59,8 +59,9 @@ const NewYieldFarming = (
     }, [yieldFarmingLP]);
 
     const getUserDataPush = React.useCallback(async () => {
-        const userDataPush = await YieldFarmingDataStoreV2.instance.getUserDataPUSH(provider);
+        const [pushPoolStats,userDataPush] = await YieldFarmingDataStoreV2.instance.getUserDataPUSH(provider);
 
+        setPUSHPoolStats({ ...pushPoolStats });
         setUserDataPush({ ...userDataPush });
     }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
 
@@ -127,7 +128,7 @@ const NewYieldFarming = (
                 body={"Users who were part of the previous Push staking program, need to migrate to new pools to continue earning rewards. Click"}
                 setActiveTab={setActiveTab}
             />
-            <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} />
+            <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} setPoolStats={setPoolStats}/>
             <YieldPushPriceSection
                 poolStats={poolStats}
             />

@@ -69,7 +69,8 @@ export class CoreV2Reward {
         Helpers.epochToUserStakedWeight(
           coreV2Contract.provider as ethers.providers.JsonRpcProvider,
           this.userAddress,
-          ep
+          ep,
+          this.coreV2Contract.address
         )
       )
     );
@@ -245,8 +246,9 @@ export class CoreV2Reward {
     const potentialReward = userstakedWeight
       .mul(epochRewards)
       .div(totalStakedWeight);
+    const currentEpochNumber = this.STATE.currentEpoch;
 
     const userStaked = this.STATE.userFeesInfo.stakedAmount;
-    return { potentialReward, epochRewards, userStaked };
+    return { potentialReward, epochRewards, userStaked, currentEpochNumber };
   }
 }

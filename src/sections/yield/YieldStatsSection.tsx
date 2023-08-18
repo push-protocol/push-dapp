@@ -14,7 +14,8 @@ import { useDeviceWidthCheck } from 'hooks';
 
 const YieldStatsSection = ({
   getLpPoolStats,
-  poolStats
+  poolStats,
+  setPoolStats
 }
 ) => {
 
@@ -27,6 +28,7 @@ const YieldStatsSection = ({
       const duration = epochEndTimestamp - Math.floor(new Date() / 1000);
 
       if (duration < 0) {
+        setPoolStats(null);
         getLpPoolStats();
       }
 

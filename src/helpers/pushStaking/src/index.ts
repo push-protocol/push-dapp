@@ -6,11 +6,12 @@ import { Constants } from "./constants";
 
 export const getUserPushStakingInfo = async (
   provider: ethers.providers.JsonRpcProvider,
-  userAddress: string
+  userAddress: string,
+  contractAddress:string
 ) => {
   const coreV2Contract = Helpers.getCoreV2Contract(
     provider,
-    Constants.config.contractAddress
+    contractAddress
   );
 
   const avilableRewardHelper = new CoreV2Reward(coreV2Contract, userAddress);
