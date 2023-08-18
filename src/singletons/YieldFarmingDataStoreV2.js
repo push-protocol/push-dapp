@@ -62,7 +62,7 @@ export default class YieldFarmingDataStoreV2 {
   // init
   init = (account, staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02) => {
     // set account
-    this.state.account = "0xF34310cB965A4c352941E53993eBAC5f8BC612E6";
+    this.state.account = account;
     this.state.staking = staking;
     this.state.pushToken = pushToken;
     this.state.pushCoreV2 = pushCoreV2;
@@ -204,34 +204,6 @@ export default class YieldFarmingDataStoreV2 {
     });
   };
 
-  getPUSHPoolStats = async (provider) => {
-    return new Promise(async (resolve, reject) => {
-      const pushCoreV2 = this.state.pushCoreV2;
-
-      const {epochRewards, currentEpochNumber, availableRewards,potentialReward,userStaked} = await getUserPushStakingInfo(provider,this.state.account);
-      // console.log("got the stats as",epochRewards, currentEpochNumber, availableRewards,potentialReward,userStaked);
-
-      //Calculating TotalStaked Amount
-      const totalStakedAmount = await pushCoreV2.totalStakedAmount();
-
-      //Calculating Current Reward
-      let currentReward = epochRewards;
-
-      this.state.rewardForCurrentEpochPush = currentReward; //this sets the rewardForCurrentEpochPush equal to currentReward.
-
-      //Calculating Staking APR
-      let stakingAPR = this.calcPushStakingAPR(totalStakedAmount);
-      stakingAPR = Math.min(this.state.highCapPUSHStakingAPR, stakingAPR);
-
-      resolve({
-        currentEpochNumber,//Int
-        currentReward, //BN
-        totalStakedAmount,
-        stakingAPR,
-      });
-    });
-  };
-
   getUserDataLP = async () => {
     return new Promise(async (resolve, reject) => {
       if (this.state.account) {
@@ -263,7 +235,6 @@ export default class YieldFarmingDataStoreV2 {
       }
     });
   };
-
 
   calculateLpEpochRewards = async (epochId, contract) => {
 
@@ -328,24 +299,30 @@ export default class YieldFarmingDataStoreV2 {
 
   }
 
-
-
-
-
   getUserDataPUSH = async (provider) => {
     return new Promise(async (resolve, reject) => {
       if (this.state.account) {
+        // Rewards Claimed
+        const pushCoreV2 = this.state.pushCoreV2;
 
         let {
+          epochRewards, 
+          currentEpochNumber,
           userStaked,
           potentialReward,
           availableRewards
-        } = await getUserPushStakingInfo(provider,this.state.account);
- 
-        availableRewards = ethers.utils.parseEther("1000")
+        } = await getUserPushStakingInfo(provider,this.state.account,addresses.pushCoreV2);
 
-        // Rewards Claimed
-        const pushCoreV2 = this.state.pushCoreV2;
+        //Calculating TotalStaked Amount
+        const totalStakedAmount = await pushCoreV2.totalStakedAmount();
+
+        //Calculating Current Reward
+        let currentReward = epochRewards;
+        this.state.rewardForCurrentEpochPush = currentReward; //this sets the rewardForCurrentEpochPush equal to currentReward.
+
+        //Calculating Staking APR
+        let stakingAPR = this.calcPushStakingAPR(totalStakedAmount);
+        stakingAPR = Math.min(this.state.highCapPUSHStakingAPR, stakingAPR);
         let claimedReward = await pushCoreV2.usersRewardsClaimed(this.state.account);
         claimedReward = tokenBNtoNumber(claimedReward);
 
@@ -355,13 +332,21 @@ export default class YieldFarmingDataStoreV2 {
         //Available For Claiming
         availableRewards = tokenBNtoNumber(availableRewards);
 
-
-        resolve({
+        const userPushInfo = {
           userStaked,//BN
           claimedReward,//Int
           potentialReward,//Int
           availableRewards,//Int
-        });
+        }
+
+        const userPushStats = {
+          currentEpochNumber,//Int
+          currentReward, //BN
+          totalStakedAmount,
+          stakingAPR,
+        }
+
+        resolve([userPushStats,userPushInfo]);
       }
     });
   };
@@ -394,10 +379,7 @@ export default class YieldFarmingDataStoreV2 {
   calculateUserEpochReward = async (epochId, contract) => {
 
     const epochStake = tokenBNtoNumber(await contract.getEpochStake(this.state.account, epochId));
-
-
     const poolSize = tokenBNtoNumber(await contract.getPoolSize(epochId));
-
 
     let potentialUserReward = 0;
     if (poolSize > 0) {
@@ -470,17 +452,13 @@ export default class YieldFarmingDataStoreV2 {
   };
 
 
-
   calcAnnualEpochReward = (genesisEpochAmount, epochId, deprecationPerEpoch) => {
     const currentEpochReward = this.calcTotalAmountPerEpoch(genesisEpochAmount, epochId, deprecationPerEpoch);
-    //74400
 
     const weeks = 52;
     const depreciate = deprecationPerEpoch.mul(weeks * (weeks - 1)).div(2);
-    //(900*52*51)/2 = 
 
     const annualEpochReward = currentEpochReward.mul(weeks).sub(depreciate);
-    //74400*52 - (900*52*51)/2 = 
 
     return annualEpochReward;
   };

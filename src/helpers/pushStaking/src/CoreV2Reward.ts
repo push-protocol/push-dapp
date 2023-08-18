@@ -69,7 +69,8 @@ export class CoreV2Reward {
         Helpers.epochToUserStakedWeight(
           coreV2Contract.provider as ethers.providers.JsonRpcProvider,
           this.userAddress,
-          ep
+          ep,
+          this.coreV2Contract.address
         )
       )
     );

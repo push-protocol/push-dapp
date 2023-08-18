@@ -25,10 +25,10 @@ export const Helpers = {
   epochToUserStakedWeight: async (
     provider: ethers.providers.JsonRpcProvider,
     userAddress: string,
-    epoch: number
+    epoch: number,
+    contractAddress:string
   ) => {
     const mappingSlot = Constants.config.SLOTS.userFeesInfo;
-    const contractAddress = Constants.config.contractAddress;
 
     const userFessInfoSlotHash = ethers.utils.solidityKeccak256(
       ["uint256", "uint256"],
