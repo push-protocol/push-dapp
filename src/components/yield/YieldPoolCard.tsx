@@ -747,7 +747,7 @@ const YieldPoolCard = ({
                     <>
                         <ButtonsContainer >
 
-                            {formatTokens(userData?.epochStakeNext) === "0" ?
+                            {true ?
                                 <StakingToolTip
                                     error={true}
                                     ToolTipTitle={"Nothing to Withdraw, so you cannot Migrate."}
@@ -792,7 +792,7 @@ const YieldPoolCard = ({
 
                         <ButtonsContainer>
 
-                            {formatTokens(userData?.epochStakeNext) === "0" ?
+                            {true ?
                                 <StakingToolTip
                                     error={true}
                                     ToolTipTitle={unstakeErrorMessage ? unstakeErrorMessage : "Nothing to unstake, Stake First"}
@@ -828,7 +828,7 @@ const YieldPoolCard = ({
                                 </EmptyButton>
                             }
 
-                            {userData?.totalAvailableReward === "0.00" ?
+                            {true ?
                                 <StakingToolTip
                                     bottom={'-30px'}
                                     ToolTipTitle={"No Rewards to Claim"}

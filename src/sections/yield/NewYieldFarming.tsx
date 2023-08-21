@@ -124,8 +124,10 @@ const NewYieldFarming = (
         <>
             <YieldAnnouncementSection
                 logo={"announcement"}
-                title={"New V2 Pools are now Live! Stake or migrate now."}
-                body={"Users who were part of the previous Push staking program, need to migrate to new pools to continue earning rewards. Click"}
+                title={"Dapp is currently under a Scheduled maintainence."}
+                // title={"New V2 Pools are now Live! Stake or migrate now."}
+                body={"All actions will be resumed shortly."}
+                // body={"Users who were part of the previous Push staking program, need to migrate to new pools to continue earning rewards. Click"}
                 setActiveTab={setActiveTab}
             />
             <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} setPoolStats={setPoolStats}/>

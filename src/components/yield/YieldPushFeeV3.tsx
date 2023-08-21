@@ -33,13 +33,11 @@ const YieldPushFeeV3 = ({
     getPUSHPoolStats
 }) => {
     const { account, provider } = useWeb3React<ethers.providers.Web3Provider>();
-
     const [txInProgressWithdraw, setTxInProgressWithdraw] = useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
 
     const [unstakeErrorMessage, setUnstakeErrorMessage] = useState(null);
     const [withdrawErrorMessage, setWithdrawErrorMessage] = useState(null);
-
     const pushFeeToast = useToast();
     const theme = useTheme();
 
@@ -494,85 +492,34 @@ const YieldPushFeeV3 = ({
                 {userDataPush ? (
                     <>
                         <ItemHV2>
-                            <FilledButton onClick={showStakingModal}> Stake $PUSH</FilledButton>
+                            {/* <FilledButton onClick={showStakingModal}> Stake $PUSH</FilledButton> */}
+                            <EmptyButton
+                                border="none"
+                                cursor='default'
+                                background={theme.disableButtonBg}
+                                color={theme.disabledButtonText}
+                            >
+                            Stake $PUSH
+                            </EmptyButton>
                         </ItemHV2>
                         <ButtonsContainer>
-
-                            {formatTokens(userDataPush?.userStaked) === 0 || unstakeErrorMessage !== null ?
-                                <StakingToolTip
-                                    error={true}
-                                    ToolTipTitle={unstakeErrorMessage ? unstakeErrorMessage : "Nothing to unstake, Stake First"}
-                                    ToolTipWidth={"16rem"}
-                                    margin={'0 10px 0 0'}
-                                    bottom={'-30px'}
-                                >
-                                    <EmptyButton
-                                        border="none"
-                                        background={theme.disableButtonBg}
-                                        cursor='default'
-                                        color={theme.disabledButtonText}
-                                    >
-                                        {txInProgressWithdraw ?
-                                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
-                                            "Unstake $PUSH"
-                                        }
-                                    </EmptyButton>
-                                </StakingToolTip>
-
-                                :
-
-                                <EmptyButton
-                                    border={`1px solid ${theme.activeButtonText}`}
-                                    background={'transparent'}
-                                    color={theme.activeButtonText}
-                                    cursor='pointer'
-                                    onClick={withdrawAmountTokenFarmAutomatic}
-                                    style={{ margin: "0px 10px 0px 0px" }}
-                                >
-                                    {txInProgressWithdraw ?
-                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor={theme.activeButtonText} title='Unstaking' titleColor={theme.activeButtonText} />) :
-                                        "Unstake $PUSH"
-                                    }
-                                </EmptyButton>
-
-                            }
-
-                            {userDataPush?.availableRewards === 0.00 ?
-                                <StakingToolTip
-                                    bottom={'-30px'}
-                                    ToolTipTitle={"No Rewards to Claim"}
-                                    error={true}
-                                    left={"40px"}
-                                    ToolTipWidth={"10rem"}
-                                >
-                                    <EmptyButton
-                                        border="none"
-                                        background={theme.disableButtonBg}
-                                        cursor='default'
-                                        color={theme.disabledButtonText}
-                                    >
-                                        {txInProgressClaimRewards ?
-                                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
-                                            "Claim Rewards"
-                                        }
-                                    </EmptyButton>
-                                </StakingToolTip>
-
-                                :
-
-                                <EmptyButton
-                                    border={`1px solid ${theme.activeButtonText}`}
-                                    background={'transparent'}
-                                    color={theme.activeButtonText}
-                                    cursor='pointer'
-                                    onClick={massClaimRewardsTokensAll}
-                                >
-                                    {txInProgressClaimRewards ?
-                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor={theme.activeButtonText} title='Claiming' titleColor={theme.activeButtonText} />) :
-                                        "Claim Rewards"
-                                    }
-                                </EmptyButton>
-                            }
+                            <EmptyButton
+                                border="none"
+                                cursor='default'
+                                background={theme.disableButtonBg}
+                                color={theme.disabledButtonText}
+                                margin={'0 10px 0 0'}
+                            >
+                                Unstake $PUSH
+                            </EmptyButton>
+                            <EmptyButton
+                                border="none"
+                                cursor='default'
+                                background={theme.disableButtonBg}
+                                color={theme.disabledButtonText}
+                            >
+                             Claim Rewards 
+                            </EmptyButton>
                         </ButtonsContainer>
                     </>
                 ) : (

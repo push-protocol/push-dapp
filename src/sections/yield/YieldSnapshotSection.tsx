@@ -41,13 +41,13 @@ const YieldSnapshotSection = ({
     <>
       <V3Container>
         {/* <YieldUniswapV3/> */}
-        <YieldUniswapV3
+        {/* <YieldUniswapV3
           loadingComponent={loadingComponent}
           lpPoolStats={lpPoolStats}
           userDataLP={userDataLP}
           getLpPoolStats={getLpPoolStats}
           getUserDataLP={getUserDataLP}
-        />
+        /> */}
         <YieldPushFeeV3
           userDataPush={userDataPush}
           getUserDataPush={getUserDataPush}

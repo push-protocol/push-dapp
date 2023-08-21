@@ -140,8 +140,8 @@ const DeprecatedYieldFarming = ({
         <>
             <YieldAnnouncementSection
                 logo={"WarningCircle"}
-                title={"This reward program (V1) has ended."}
-                body={"To continue earning rewards please migrate to new pools."}
+                title={"Dapp is currently under a Scheduled maintainence. "}
+                body={"All actions will be resumed shortly."}
                 setActiveTab={setActiveTab}
             />
             <V2Container>
