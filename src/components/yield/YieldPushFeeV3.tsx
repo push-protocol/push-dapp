@@ -271,8 +271,6 @@ const YieldPushFeeV3 = ({
     const stakingModalToast = useToast();
     const isMobile = useDeviceWidthCheck(600);
 
-    console.log("User Data Push",userDataPush);
-
     return (
         <Container>
             <StakingComponent
