@@ -21,22 +21,38 @@ const YieldStatsSection = ({
 
   const [formattedDuration, setFormattedDuration] = React.useState('');
 
+  const [epochEndTime,setEpochEndTime] = React.useState<number>();
+
+  const calculateEpochEndDuration = () =>{
+    const epochEndSeconds = poolStats.epochEndTime;
+    const epochEndTimeStamp = new Date().getTime() + epochEndSeconds * 1000;
+    setEpochEndTime(epochEndTimeStamp);
+
+  }
+
+  React.useEffect(()=>{
+    if(poolStats){
+      calculateEpochEndDuration()
+    }
+    
+  },[poolStats])
+
   const getFormattedDuration = () => {
     if (poolStats?.epochEndTimestamp) {
       const epochEndTimestamp = poolStats.epochEndTimestamp.toNumber();
 
-      const duration = epochEndTimestamp - Math.floor(new Date() / 1000);
+      const now = new Date().getTime();
+      const timeRemaining = epochEndTime - now;
 
-      if (duration < 0) {
+      if (timeRemaining < 0) {
         setPoolStats(null);
         getLpPoolStats();
       }
 
-      const day = parseInt(duration / 86400);
-      const hour = parseInt((duration - day * 86400) / 3600);
-
-      const minutes = parseInt((duration - (day * 86400 + hour * 3600)) / 60);
-      const seconds = duration - (day * 86400 + hour * 3600 + minutes * 60);
+      const day = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+      const hour = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
       setFormattedDuration(`${day}D ${hour}H ${minutes}M ${seconds}S`);
     }
@@ -44,6 +60,7 @@ const YieldStatsSection = ({
 
   React.useEffect(() => {
     setTimeout(() => {
+      console.log("Running")
       getFormattedDuration();
     }, 1000);
   });
