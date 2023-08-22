@@ -106,11 +106,21 @@ export default class YieldFarmingDataStoreV2 {
       const pushStakedAmount = tokenBNtoNumber(await pushCoreV2.totalStakedAmount());
       const totalValueLocked = pushStakedAmount * pushPrice + lpNextPoolSize * uniLpPrice;
 
+      
       //calculating epoch Duration
-      const epochDuration = await yieldFarmingLP.epochDuration();
+      const epochDurations = await yieldFarmingLP.epochDuration();
       const epochStart = await yieldFarmingLP.epochStart();
-      const start = epochStart.add(currentEpochLP.sub(1).mul(epochDuration));
-      const epochEndTimestamp = start.add(epochDuration);
+      const start = epochStart.add(currentEpochLP.sub(1).mul(epochDurations));
+      const epochEndTimestamp = start.add(epochDurations);
+
+
+      let currentBlockNumber = await provider.getBlock('latest');
+      currentBlockNumber = currentBlockNumber.number;
+      const genesisEpoch = await pushCoreV2.genesisEpoch();
+      const epochDuration = await pushCoreV2.epochDuration();
+      const remainingBlocks =  epochDuration.toNumber() - ( (currentBlockNumber - genesisEpoch.toNumber() ) % epochDuration.toNumber() ) ;
+      let epochEndTime = (remainingBlocks * 12.6);
+      epochEndTime = Math.round(epochEndTime);
 
       //calculation total distributed amount
       const pushTotalDistributedAmount = tokenToBn(ethers.BigNumber.from(this.state.annualPushReward));
@@ -124,6 +134,7 @@ export default class YieldFarmingDataStoreV2 {
         pushPrice,
         lpToPushRatio,
         epochEndTimestamp,
+        epochEndTime,
         totalValueLocked,
         totalDistributedAmount,
         pushRewardsDistributed,
