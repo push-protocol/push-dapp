@@ -381,7 +381,8 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
             <>
               <EpochNo>Current Epoch</EpochNo>
               <EpochNo>
-                {Math.min(lpPoolStats?.currentEpochLP, lpPoolStats?.totalEpochLP).toString()}/
+                1
+                /
                 {lpPoolStats?.totalEpochLP.toString()}
               </EpochNo>
             </>
@@ -490,7 +491,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                   </StakingToolTip>
                 </InfoSpan>
               </DataTitle>
-              <DataValue> {numberWithCommas(userDataLP?.totalAvailableReward)} PUSH</DataValue>
+              <DataValue> 0.00 PUSH</DataValue>
             </ItemHV2>
           </ItemVV2>
         ) : (
