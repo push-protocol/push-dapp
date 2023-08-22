@@ -561,7 +561,14 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
         {userDataLP ? (
           <>
             <ItemHV2>
-              <EmptyButton
+            <StakingToolTip
+                  error={true}
+                  ToolTipTitle={'Dapp is currently under a Scheduled maintainence. All actions will be resumed shortly'}
+                  ToolTipWidth={'22rem'}
+                  margin={'0 10px 0 0'}
+                  bottom={'-30px'}
+                >
+                  <EmptyButton
                 border="none"
                 cursor="default"
                 background={theme.disableButtonBg}
@@ -569,12 +576,14 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
               >
                 Stake $UNI-V2 LP Tokens
               </EmptyButton>
+                </StakingToolTip>
+              
             </ItemHV2>
             <ButtonsContainer>
               {true ? (
                 <StakingToolTip
                   error={true}
-                  ToolTipTitle={'Nothing to unstake! Stake First.'}
+                  ToolTipTitle={'Dapp is currently under a Scheduled maintainence. All actions will be resumed shortly'}
                   ToolTipWidth={'16rem'}
                   margin={'0 10px 0 0'}
                   bottom={'-30px'}
@@ -623,7 +632,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                 <StakingToolTip
                   bottom={'-30px'}
                   left={'40px'}
-                  ToolTipTitle={'No Rewards to Claim!'}
+                  ToolTipTitle={'Dapp is currently under a Scheduled maintainence. All actions will be resumed shortly.'}
                   error={true}
                   ToolTipWidth={'10rem'}
                 >

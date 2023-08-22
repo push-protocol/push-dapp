@@ -750,7 +750,7 @@ const YieldPoolCard = ({
                             {true ?
                                 <StakingToolTip
                                     error={true}
-                                    ToolTipTitle={"Nothing to Withdraw, so you cannot Migrate."}
+                                    ToolTipTitle={"Dapp is currently under a Scheduled maintainence. All actions will be resumed shortly"}
                                     ToolTipWidth={"16rem"}
                                     bottom={'-50px'}
                                     margin="0 0 15px 0"
@@ -795,7 +795,7 @@ const YieldPoolCard = ({
                             {true ?
                                 <StakingToolTip
                                     error={true}
-                                    ToolTipTitle={unstakeErrorMessage ? unstakeErrorMessage : "Nothing to unstake, Stake First"}
+                                    ToolTipTitle={"Dapp is currently under a Scheduled maintainence. All actions will be resumed shortly"}
                                     ToolTipWidth={"16rem"}
                                     margin={'0 10px 0 0'}
                                     bottom={'-30px'}
@@ -831,7 +831,7 @@ const YieldPoolCard = ({
                             {true ?
                                 <StakingToolTip
                                     bottom={'-30px'}
-                                    ToolTipTitle={"No Rewards to Claim"}
+                                    ToolTipTitle={"Dapp is currently under a Scheduled maintainence. All actions will be resumed shortly"}
                                     error={true}
                                     ToolTipWidth={"10rem"}
                                 >
