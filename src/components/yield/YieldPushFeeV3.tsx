@@ -330,7 +330,7 @@ const YieldPushFeeV3 = ({
                                     color="#D53A94"
                                     letterSpacing="-0.03em"
                                 >
-                                    {numberWithCommas(formatTokens(PUSHPoolstats?.currentReward))} PUSH
+                                    62,050 PUSH
                                 </H2V2>
                             </>
                         ) : (
@@ -383,7 +383,7 @@ const YieldPushFeeV3 = ({
                         <>
                             <EpochNo>Current Epoch</EpochNo>
                             <EpochNo>
-                                {PUSHPoolstats?.currentEpochNumber}
+                                1
                             </EpochNo>
                         </>
                     ) : (
@@ -455,7 +455,7 @@ const YieldPushFeeV3 = ({
                                 </InfoSpan>
 
                             </DataTitle>
-                            <DataValue> {numberWithCommas((userDataPush?.availableRewards).toFixed(2))} PUSH</DataValue>
+                            <DataValue> 0.00 PUSH</DataValue>
                         </ItemHV2>
                     </ItemVV2>
                 ) : (
@@ -537,7 +537,7 @@ const YieldPushFeeV3 = ({
 
                             }
 
-                            {userDataPush?.availableRewards === 0.00 ?
+                            {true ?
                                 <StakingToolTip
                                     bottom={'-30px'}
                                     ToolTipTitle={"No Rewards to Claim"}
@@ -565,7 +565,6 @@ const YieldPushFeeV3 = ({
                                     background={'transparent'}
                                     color={theme.activeButtonText}
                                     cursor='pointer'
-                                    onClick={massClaimRewardsTokensAll}
                                 >
                                     {txInProgressClaimRewards ?
                                         (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor={theme.activeButtonText} title='Claiming' titleColor={theme.activeButtonText} />) :

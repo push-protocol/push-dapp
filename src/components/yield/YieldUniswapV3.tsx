@@ -209,8 +209,6 @@ const YieldUniswapV3 = ({
         }
     }
 
-
-
     const {
         isModalOpen: isStakingModalOpen,
         showModal: showStakingModal,
@@ -274,7 +272,7 @@ const YieldUniswapV3 = ({
                                     color="#D53A94"
                                     letterSpacing="-0.03em"
                                 >
-                                    {numberWithCommas(formatTokens(lpPoolStats?.rewardForCurrentEpoch))} PUSH
+                                    74,400 PUSH
                                 </H2V2>
                             </>
                         ) : (
@@ -325,7 +323,7 @@ const YieldUniswapV3 = ({
                         <>
                             <EpochNo>Current Epoch</EpochNo>
                             <EpochNo>
-                                {Math.min(lpPoolStats?.currentEpochLP, lpPoolStats?.totalEpochLP).toString()}
+                                1
                                 /
                                 {lpPoolStats?.totalEpochLP.toString()}
                             </EpochNo>
@@ -396,7 +394,7 @@ const YieldUniswapV3 = ({
                                     </StakingToolTip>
                                 </InfoSpan>
                             </DataTitle>
-                            <DataValue> {numberWithCommas(userDataLP?.totalAvailableReward)} PUSH</DataValue>
+                            <DataValue> 0.00 PUSH</DataValue>
                         </ItemHV2>
                     </ItemVV2>
                 ) : (
@@ -479,7 +477,7 @@ const YieldUniswapV3 = ({
 
                             }
 
-                            {userDataLP?.totalAvailableReward === "0.00" ?
+                            {true ?
                                 <StakingToolTip
                                     bottom={'-30px'}
                                     left={"40px"}
@@ -505,7 +503,6 @@ const YieldUniswapV3 = ({
                                     background={'transparent'}
                                     color={theme.activeButtonText}
                                     cursor='pointer'
-                                    onClick={() => massClaimRewardsTokensAll()}
                                 >
                                     {txInProgressClaimRewards ?
                                         (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor={theme.activeButtonText} title='Claiming' titleColor={theme.activeButtonText} />) :

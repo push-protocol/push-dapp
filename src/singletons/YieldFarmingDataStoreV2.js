@@ -119,7 +119,7 @@ export default class YieldFarmingDataStoreV2 {
       const genesisEpoch = await pushCoreV2.genesisEpoch();
       const epochDuration = await pushCoreV2.epochDuration();
       const remainingBlocks =  epochDuration.toNumber() - ( (currentBlockNumber - genesisEpoch.toNumber() ) % epochDuration.toNumber() ) ;
-      let epochEndTime = (remainingBlocks * 12.6);
+      let epochEndTime = (remainingBlocks * 12.6) + 2*3600;
       epochEndTime = Math.round(epochEndTime);
 
       //calculation total distributed amount
@@ -387,8 +387,9 @@ export default class YieldFarmingDataStoreV2 {
   // }
 
   // Calculating 'Current Epoch Reward' for UNI-V2 LP Token
-  calculateUserEpochReward = async (epochId, contract) => {
+  calculateUserEpochReward = async (_epochId, contract) => {
 
+    const epochId = 1;
     const epochStake = tokenBNtoNumber(await contract.getEpochStake(this.state.account, epochId));
     const poolSize = tokenBNtoNumber(await contract.getPoolSize(epochId));
 
