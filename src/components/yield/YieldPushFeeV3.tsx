@@ -138,7 +138,7 @@ const YieldPushFeeV3 = ({
             console.log("Error: ", err)
             const message = err.reason.includes(" PushCoreV2::unstake:");
             if (message) {
-                setUnstakeErrorMessage("PUSH cannot be unstaked until  current epoch is over.");
+                setUnstakeErrorMessage("PUSH cannot be unstaked until current epoch is over.");
             } else {
                 let errorMessage = err.reason.slice(err.reason.indexOf('::') + 1);
                 errorMessage = errorMessage.replace('unstake:', '');
@@ -270,8 +270,6 @@ const YieldPushFeeV3 = ({
 
     const stakingModalToast = useToast();
     const isMobile = useDeviceWidthCheck(600);
-
-    console.log("User Data Push",userDataPush);
 
     return (
         <Container>
@@ -498,29 +496,18 @@ const YieldPushFeeV3 = ({
                         </ItemHV2>
                         <ButtonsContainer>
 
-                            {formatTokens(userDataPush?.userStaked) === 0 || unstakeErrorMessage !== null ?
-                                <StakingToolTip
-                                    error={true}
+                            {PUSHPoolstats?.currentEpochNumber <= 2 ?
+                                <ErrorToolTip
+                                    ToolTipTitle={"You can unstake once epoch 2 ends."}
+                                    ButtonTitle={"Unstake PUSH"}
+                                />
+                            :
+                            formatTokens(userDataPush?.userStaked) === 0 || unstakeErrorMessage !== null ?
+                                <ErrorToolTip
                                     ToolTipTitle={unstakeErrorMessage ? unstakeErrorMessage : "Nothing to unstake, Stake First"}
-                                    ToolTipWidth={"16rem"}
-                                    margin={'0 10px 0 0'}
-                                    bottom={'-30px'}
-                                >
-                                    <EmptyButton
-                                        border="none"
-                                        background={theme.disableButtonBg}
-                                        cursor='default'
-                                        color={theme.disabledButtonText}
-                                    >
-                                        {txInProgressWithdraw ?
-                                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor="#D53A94" />) :
-                                            "Unstake $PUSH"
-                                        }
-                                    </EmptyButton>
-                                </StakingToolTip>
-
+                                    ButtonTitle={"Unstake PUSH"}
+                                />
                                 :
-
                                 <EmptyButton
                                     border={`1px solid ${theme.activeButtonText}`}
                                     background={'transparent'}
@@ -590,6 +577,28 @@ const YieldPushFeeV3 = ({
 };
 
 export default YieldPushFeeV3;
+
+const ErrorToolTip = (props) => {
+    const theme = useTheme();
+    return (
+        <StakingToolTip
+            error={true}
+            ToolTipTitle={props.ToolTipTitle}
+            ToolTipWidth={"16rem"}
+            margin={'0 10px 0 0'}
+            bottom={'-30px'}
+        >
+            <EmptyButton
+                border="none"
+                background={theme.disableButtonBg}
+                cursor='default'
+                color={theme.disabledButtonText}
+            >
+                {props.ButtonTitle}
+            </EmptyButton>
+        </StakingToolTip>
+    )
+}
 
 const ToolTipAPR = () => {
     const [isActive, setIsActive] = useState(false);

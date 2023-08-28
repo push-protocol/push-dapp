@@ -42,7 +42,7 @@ const StakingToolTip = (props) => {
     );
 };
 
-const ErrorToolTipContent = (props) => {
+export const ErrorToolTipContent = (props) => {
     return (
         <ItemVV2
             width={props.width}
