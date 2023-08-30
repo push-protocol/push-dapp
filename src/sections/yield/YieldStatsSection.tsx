@@ -60,7 +60,6 @@ const YieldStatsSection = ({
 
   React.useEffect(() => {
     setTimeout(() => {
-      console.log("Running")
       getFormattedDuration();
     }, 1000);
   });
