@@ -62,7 +62,7 @@ export const config = {
    * External links
    */
   links: {
-    ios: 'https://discord.com/invite/YVPB99F9W5',
+    ios: 'https://discord.gg/pushprotocol',
     android: 'https://play.google.com/store/apps/details?gl=US&hl=en&id=io.epns.epnsstaging',
     extension: 'https://chrome.google.com/webstore/detail/epns-staging-protocol-alp/bjiennpmhdcandkpigcploafccldlakj',
     howto: 'https://docs.epns.io',
