@@ -256,6 +256,10 @@ const YieldPushFeeV3 = ({
         });
     };
 
+    const claimRewardsPaginated = async () =>{
+
+    }
+
 
     React.useEffect(() => {
         setWithdrawErrorMessage(null);
@@ -560,6 +564,9 @@ const YieldPushFeeV3 = ({
                                     }
                                 </EmptyButton>
                             }
+
+
+                            <EmptyButton onClick={claimRewardsPaginated}>Harvest Paginated</EmptyButton>
                         </ButtonsContainer>
                     </>
                 ) : (
