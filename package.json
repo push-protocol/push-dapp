@@ -117,6 +117,7 @@
     "react-select": "^5.2.2",
     "react-spinners": "0.8.3",
     "react-stack-grid": "0.7.1",
+    "react-switch": "^7.0.0",
     "react-time-picker": "^4.5.0",
     "react-toastify": "9.0.3",
     "react-toggle-dark-mode": "1.0.4",
