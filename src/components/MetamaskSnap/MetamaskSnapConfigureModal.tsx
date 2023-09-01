@@ -6,13 +6,16 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
+import { ReactComponent as RestrictIcon } from 'assets/PushSnaps/MinusCircle.svg';
 import Switch from "react-switch";
+import { useClickAway } from 'react-use';
 
 
 const MetamaskSnapConfigureModal = () => {
 
     const [walletAddresses, setWalletAddresses] = useState([]);
     const [searchedUser, setSearchedUser] = useState('');
+    const [showRemove, setShowRemove] = useState();
 
     const wallets = [
         "0x9452BCAf507CD6547574b78B810a723d8868C85a",
@@ -38,8 +41,18 @@ const MetamaskSnapConfigureModal = () => {
         setChecked(nextChecked);
     };
 
+    const removeWallet = (wallet) => {
+        console.log("Removing wallet", wallet);
+    }
+
+    const containerRef = React.useRef(null);
+    useClickAway(containerRef, () => {
+        console.log("Set show to be null")
+        setShowRemove(null);
+      });
+
     return (
-        <Container>
+        <Container >
 
             <SpanV2 fontSize='22px' fontWeight='500'>
                 Settings
@@ -60,12 +73,19 @@ const MetamaskSnapConfigureModal = () => {
                 <AddButton onClick={addWalletAddresses}>Add</AddButton>
             </ItemVV2>
 
-            {walletAddresses.length !== 0 && <WalletOuterContainer>
+            {walletAddresses.length !== 0 && <WalletOuterContainer ref={containerRef}>
                 {walletAddresses.map((wallet) => {
                     return (
-                        <WalletContainer>
+                        <WalletContainer >
+
+                            {showRemove === wallet && <RemoveContainer  onClick={() => removeWallet(wallet)}>
+                                <RestrictIcon />
+                                <SpanV2 fontSize='16px' fontWeight='400' color='#657795'>Remove</SpanV2>
+                            </RemoveContainer>
+                            }
+
                             <SpanV2>{shortenText(wallet, 6)}</SpanV2>
-                            <MoreLight />
+                            <MoreLight onClick={() => setShowRemove(wallet)} />
                         </WalletContainer>
                     )
                 })}
@@ -85,6 +105,7 @@ const MetamaskSnapConfigureModal = () => {
                         uncheckedIcon={false}
                         checkedIcon={false}
                         height={23}
+                        onColor="#D53A94"
                         width={44}
                     />
                     <SpanV2 fontSize='18px' fontWeight='500'>{checked ? "On" : "Off"}</SpanV2>
@@ -163,11 +184,27 @@ const WalletContainer = styled(ItemHV2)`
     border-radius: 12px;
     background: #F2F2F2;
     flex:none;
+    position:relative;
     padding: 13px 16px;
     justify-content: space-between;
     width:auto;
-    height:42px;
+    height:30px;
     margin-right: 10px;
+
+`
+
+const RemoveContainer = styled(ItemHV2)`
+    padding: 8px 12px 8px 8px;
+    gap: 9px;
+    cursor:pointer;
+    position:absolute;
+    right:0px;
+    top: 5px;
+    height: 25px;
+    border-radius: 12px;
+    border: 1px solid #BAC4D6;
+    background: #FFF;
+    box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.05);
 
 `
 
