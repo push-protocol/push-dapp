@@ -151,6 +151,9 @@
     "eslint-plugin-flowtype": "^4.6.0",
     "eslint-plugin-import": "2.26.0",
     "gh-pages": "^5.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
+    "prettier": "^3.0.3",
     "process": "0.11.10",
     "react-app-rewired": "2.2.1",
     "speed-measure-webpack-plugin": "^1.5.0",
@@ -169,7 +172,16 @@
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint --fix",
+    "pretty": "prettier --write .",
+    "postinstall": "husky install"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "npm run lint",
+      "prettier --write"
+    ]
   },
   "packageManager": "yarn@3.4.1"
 }
