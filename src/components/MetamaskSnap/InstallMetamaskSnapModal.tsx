@@ -1,6 +1,6 @@
 import { Button } from 'components/SharedStyling';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Metamask from 'assets/PushSnaps/metamasksnap.svg';
 import PushIcon from 'assets/PushSnaps/PushIcon.svg';
@@ -16,6 +16,23 @@ const InstallMetamaskSnapModal = ({
     configure,
     setConfigure
 }) => {
+
+    useEffect(() => {
+        getInstalledSnaps();
+    }, [configure])
+
+    async function getInstalledSnaps() {
+        const installedSnaps = await window.ethereum.request({
+            method: 'wallet_getSnaps'
+        });
+        Object.keys(installedSnaps).forEach((snap) => {
+            if (snap == 'npm:push-v1') {
+                setConfigure(true);
+            }
+        }
+        )
+    }
+
     return (
         <ItemVV2 margin='30px 0 20px 0' gap='8px'>
             <SnapContainer>
