@@ -7,7 +7,7 @@ interface IExecuteDelegateTxProps {
   epnsToken: ethers.Contract;
   toast: any;
   setTxInProgress: React.Dispatch<React.SetStateAction<boolean>>;
-  library: any;
+  provider: any;
   LoaderToast: ({ msg, color }: { msg: string; color: string }) => JSX.Element;
 }
 
@@ -16,7 +16,7 @@ export const executeDelegateTx = async ({
   epnsToken,
   toast,
   setTxInProgress,
-  library,
+  provider,
   LoaderToast,
 }: IExecuteDelegateTxProps): Promise<void> => {
   console.log('delegateeAddress', delegateeAddress);
@@ -41,7 +41,7 @@ export const executeDelegateTx = async ({
       );
 
       try {
-        await library.waitForTransaction(tx.hash);
+        await provider.waitForTransaction(tx.hash);
 
         toast.update(txToast, {
           render: 'Transaction Completed!',

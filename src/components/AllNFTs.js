@@ -1,25 +1,24 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import { ethers } from "ethers";
-import React from "react";
+import { ethers } from 'ethers';
+import React from 'react';
 
 // External Packages
 import styled from 'styled-components';
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemVV2 } from "components/reusables/SharedStylingV2";
-import ViewNFTItem from "components/ViewNFTItem";
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import ViewNFTItem from 'components/ViewNFTItem';
 import { ItemH, Section } from 'primaries/SharedStyling';
 import NFTHelper from 'helpers/NFTHelper';
 
 // Internal Configs
-import { abis, addresses, appConfig } from "config";
-
+import { abis, addresses, appConfig } from 'config';
 
 // Create Header
 function AllNFTs({ controlAt, setControlAt, setTokenId }) {
-  const { account, chainId, library } = useWeb3React();
+  const { account, chainId, provider } = useWeb3React();
 
   const [nftReadProvider, setNftReadProvider] = React.useState(null);
   const [nftWriteProvider, setNftWriteProvider] = React.useState(null);
@@ -30,9 +29,7 @@ function AllNFTs({ controlAt, setControlAt, setTokenId }) {
 
   const onMainnetCore = chainId === appConfig.mainnetCoreContractChain;
 
-  const mainnetCoreProvider = onMainnetCore
-    ? library
-    : new ethers.providers.JsonRpcProvider(appConfig.mainnetCoreRPC)
+  const mainnetCoreProvider = onMainnetCore ? provider : new ethers.providers.JsonRpcProvider(appConfig.mainnetCoreRPC);
 
   React.useEffect(() => {
     if (!!(mainnetCoreProvider && account)) {
@@ -57,23 +54,26 @@ function AllNFTs({ controlAt, setControlAt, setTokenId }) {
     let totalSupply = await NFTHelper.getTotalSupply(nftReadProvider);
     setLoading(false);
     for (let i = 0; i < totalSupply; i++) {
-      let tokenId = await NFTHelper.getTokenByIndex(i, nftReadProvider)
-      let NFTObject = await NFTHelper.getTokenData(tokenId, nftReadProvider, NFTRewardsContract)
-      await setNFTObjects(prev => [...prev, NFTObject])
+      let tokenId = await NFTHelper.getTokenByIndex(i, nftReadProvider);
+      let NFTObject = await NFTHelper.getTokenData(tokenId, nftReadProvider, NFTRewardsContract);
+      await setNFTObjects((prev) => [...prev, NFTObject]);
     }
-  }
+  };
 
   return (
     <Section align="center">
-      {loading &&
+      {loading && (
         <ItemVV2 padding="50px 20px 20px 20px">
           <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
         </ItemVV2>
-      }
+      )}
 
-      {!loading && NFTObjects.length != 0 &&
-        <ItemH id="scrollstyle-secondary" margin="20px 0 0 0">
-          {Object.keys(NFTObjects).map(index => {
+      {!loading && NFTObjects.length != 0 && (
+        <ItemH
+          id="scrollstyle-secondary"
+          margin="20px 0 0 0"
+        >
+          {Object.keys(NFTObjects).map((index) => {
             if (NFTObjects) {
               return (
                 <>
@@ -91,7 +91,7 @@ function AllNFTs({ controlAt, setControlAt, setTokenId }) {
             }
           })}
         </ItemH>
-      }
+      )}
     </Section>
   );
 }
@@ -99,7 +99,7 @@ function AllNFTs({ controlAt, setControlAt, setTokenId }) {
 // css styles
 const ContainerInfo = styled.div`
   padding: 20px;
-`
+`;
 
 // Export Default
 export default AllNFTs;

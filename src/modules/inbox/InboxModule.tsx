@@ -28,12 +28,12 @@ import GLOBALS, { device, globalsMargin } from 'config/Globals';
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
 
 // Create Inbox Module
-const InboxModule = () => {
+const InboxModule = ({ isSpam }) => {
   // React GA Analytics
   ReactGA.pageview('/inbox');
 
   const dispatch = useDispatch();
-  const { account, chainId, library } = useWeb3React();
+  const { account, chainId, provider } = useWeb3React();
   const { epnsReadProvider, epnsCommReadProvider } = useSelector((state) => state.contracts);
 
   // toast related section
@@ -72,15 +72,15 @@ const InboxModule = () => {
   // }, [enabledSecretNotif]);
 
   React.useEffect(() => {
-    if(!chainId) return;
+    if (!chainId) return;
     (async function init() {
-      const coreProvider = onCoreNetwork ? library : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
+      const coreProvider = onCoreNetwork ? provider : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
 
       // inititalise the read contract for the core network
       const coreContractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, coreProvider);
       // initialise the read contract for the communicator function
       const commAddress = CHAIN_DETAILS[chainId].commAddress;
-      const commContractInstance = new ethers.Contract(commAddress, abis.epnsComm, library);
+      const commContractInstance = new ethers.Contract(commAddress, abis.epnsComm, provider);
       dispatch(setCommunicatorReadProvider(commContractInstance));
       dispatch(setCoreReadProvider(coreContractInstance));
     })();
@@ -89,7 +89,11 @@ const InboxModule = () => {
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} spinnerColor={color} />
+      <LoaderSpinner
+        type={LOADER_TYPE.SEAMLESS}
+        spinnerSize={30}
+        spinnerColor={color}
+      />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
@@ -102,15 +106,21 @@ const InboxModule = () => {
 
   // notification toast
   let notificationToast = () =>
-    toaster.dark(<LoaderToast msg="Preparing Notification" color="#fff" />, {
-      position: 'bottom-right',
-      autoClose: false,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+    toaster.dark(
+      <LoaderToast
+        msg="Preparing Notification"
+        color="#fff"
+      />,
+      {
+        position: 'bottom-right',
+        autoClose: false,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      }
+    );
 
   /**
    * When we instantiate the contract instances, fetch basic information about the user
@@ -308,9 +318,14 @@ const InboxModule = () => {
           </Item>
         </Item> */}
         <div className="joyride"></div>
-        <InboxComponent />
+        <InboxComponent isSpam={isSpam} />
         {/* <Feedbox /> */}
-        {toast && <NotificationToast notification={toast} clearToast={clearToast} />}
+        {toast && (
+          <NotificationToast
+            notification={toast}
+            clearToast={clearToast}
+          />
+        )}
       </Interface>
     </Container>
   );
@@ -345,7 +360,8 @@ const Container = styled(Section)`
       100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.TABLET.TOP} -
         ${globalsMargin.BIG_MODULES.TABLET.BOTTOM}
     );
-    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}
+      ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
   }
 
   @media ${device.mobileL} {
@@ -355,7 +371,7 @@ const Container = styled(Section)`
         ${globalsMargin.BIG_MODULES.MOBILE.BOTTOM}
     );
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
-    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  0 0;
+    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} 0 0;
   }
 `;
 

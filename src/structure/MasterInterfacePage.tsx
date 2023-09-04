@@ -24,10 +24,12 @@ const NFTPage = lazy(() => import('pages/NFTPage'));
 const NotAvailablePage = lazy(() => import('pages/NotAvailablePage'));
 const ReceiveNotifsPage = lazy(() => import('pages/ReceiveNotifsPage'));
 const SendNotifsPage = lazy(() => import('pages/SendNotifsPage'));
+const SpacePage = lazy(() => import('pages/SpacePage'));
 const SpamPage = lazy(() => import('pages/SpamPage'));
 const SupportPage = lazy(() => import('pages/SupportPage'));
 const TutorialPage = lazy(() => import('pages/TutorialPage'));
-const YieldFarmingPage = lazy(() => import('pages/YieldFarmingPage'));
+// const YieldFarmingPage = lazy(() => import('pages/YieldFarmingPage'));
+const YieldFarmingV2Page = lazy(() => import('pages/YieldFarmingPageV2'));
 
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
@@ -67,39 +69,111 @@ function MasterInterfacePage() {
   return (
     <Container>
       <Interface location={location.pathname}>
-        <Suspense fallback={
+        <Suspense
+          fallback={
             <ItemVV2>
-              <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
+              <LoaderSpinner
+                type={LOADER_TYPE.SEAMLESS}
+                spinnerSize={24}
+              />
             </ItemVV2>
           }
         >
           <Routes>
-            <Route path="inbox" element={<InboxPage />} />
-            <Route path="chat/:chatid" element={<ChatPage />} />
-            <Route path="chat" element={<ChatPage />} />
+            <Route
+              path="inbox"
+              element={<InboxPage />}
+            />
+            <Route
+              path="spam"
+              element={<InboxPage />}
+            />
+            <Route
+              path="chat/:chatid"
+              element={<ChatPage />}
+            />
+            <Route
+              path="chat"
+              element={<ChatPage />}
+            />
+            <Route
+              path="spaces/:spaceid"
+              element={<SpacePage />}
+            />
+            <Route
+              path="spaces"
+              element={<SpacePage />}
+            />
             {/* <Route path="chat-new" element={<NewChatPage />} /> */}
 
             <Route
               path="channels"
-              element={<ChannelsPage loadTeaser={setLoadTeaserVideo} playTeaser={setPlayTeaserVideo} />}
+              element={
+                <ChannelsPage
+                  loadTeaser={setLoadTeaserVideo}
+                  playTeaser={setPlayTeaserVideo}
+                />
+              }
             />
-            <Route path="dashboard" element={<ChannelDashboardPage />} />
-            <Route path="send" element={<SendNotifsPage />} />
-            <Route path="spam" element={<SpamPage />} />
-            <Route path="receive" element={<ReceiveNotifsPage />} />
+            <Route
+              path="dashboard"
+              element={<ChannelDashboardPage />}
+            />
+            <Route
+              path="send"
+              element={<SendNotifsPage />}
+            />
+            <Route
+              path="receive"
+              element={<ReceiveNotifsPage />}
+            />
 
-            <Route path="govern" element={<GovPage />} />
+            <Route
+              path="govern"
+              element={<GovPage />}
+            />
 
-            <Route path="yield" element={<YieldFarmingPage />} />
-            <Route path="rockstar" element={<NFTPage />} />
-            <Route path="gratitude" element={<AirdropPage />} />
-            <Route path="live_walkthrough" element={<TutorialPage />} />
-            <Route path="comingsoon" element={<ComingSoonPage />} />
-            <Route path="notavailable" element={<NotAvailablePage />} />
-            <Route path="faq" element={<FAQPage />} />
-            <Route path="internal" element={<InternalDevPage />} />
-            <Route path="/" element={<Navigate to="/channels" />} />
-            <Route path="support" element={<SupportPage />} />
+            {/* <Route path="yield" element={<YieldFarmingPage />} /> */}
+            <Route
+              path="yieldv2"
+              element={<YieldFarmingV2Page />}
+            />
+            <Route
+              path="rockstar"
+              element={<NFTPage />}
+            />
+            <Route
+              path="gratitude"
+              element={<AirdropPage />}
+            />
+            <Route
+              path="live_walkthrough"
+              element={<TutorialPage />}
+            />
+            <Route
+              path="comingsoon"
+              element={<ComingSoonPage />}
+            />
+            <Route
+              path="notavailable"
+              element={<NotAvailablePage />}
+            />
+            <Route
+              path="faq"
+              element={<FAQPage />}
+            />
+            <Route
+              path="internal"
+              element={<InternalDevPage />}
+            />
+            <Route
+              path="/"
+              element={<Navigate to="/channels" />}
+            />
+            <Route
+              path="support"
+              element={<SupportPage />}
+            />
           </Routes>
         </Suspense>
       </Interface>
@@ -124,7 +198,8 @@ function MasterInterfacePage() {
             onClick={(e) => {
               e.preventDefault();
               setPlayTeaserVideo(!playTeaserVideo);
-            }}>
+            }}
+          >
             <PreviewContent className="contentBox">
               <PreviewClose
                 href="#"
@@ -134,8 +209,12 @@ function MasterInterfacePage() {
                 onClick={(e) => {
                   e.preventDefault();
                   setPlayTeaserVideo(!playTeaserVideo);
-                }}>
-                <VscClose size={40} color="#fff" />
+                }}
+              >
+                <VscClose
+                  size={40}
+                  color="#fff"
+                />
               </PreviewClose>
               <Preview>
                 <div className="videoWrapper">
@@ -143,7 +222,8 @@ function MasterInterfacePage() {
                     src={loadTeaserVideo}
                     frameborder="0"
                     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                    allowfullscreen
+                  ></iframe>
                 </div>
               </Preview>
             </PreviewContent>

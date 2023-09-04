@@ -8,7 +8,7 @@ import { toast as toaster } from 'react-toastify';
 import { useClickAway } from 'react-use';
 import { Waypoint } from 'react-waypoint';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
-import { MdCheckCircle, MdError } from "react-icons/md";
+import { MdCheckCircle, MdError } from 'react-icons/md';
 
 // Internal Components
 import * as PushAPI from '@pushprotocol/restapi';
@@ -21,7 +21,7 @@ import {
   addPaginatedNotifications,
   incrementPage,
   setFinishedFetching,
-  updateTopNotifications
+  updateTopNotifications,
 } from 'redux/slices/spamSlice';
 import SearchFilter from '../components/SearchFilter';
 import DisplayNotice from '../primaries/DisplayNotice';
@@ -31,7 +31,7 @@ import { updateSubscriptionStatus } from 'redux/slices/channelSlice';
 import { ScrollItem } from './ViewChannels';
 
 // Internal Configs
-import { appConfig } from "config";
+import { appConfig } from 'config';
 import { device } from 'config/Globals';
 
 // Constants
@@ -42,7 +42,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const dispatch = useDispatch();
   const modalRef = React.useRef(null);
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
-  const { account, chainId, library } = useWeb3React();
+  const { account, chainId, provider } = useWeb3React();
   const { epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const { subscriptionStatus } = useSelector((state: any) => state.channels);
 
@@ -59,7 +59,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const EPNS_DOMAIN = {
     name: 'EPNS COMM V1',
     chainId: chainId,
-    verifyingContract: epnsCommReadProvider?.address
+    verifyingContract: epnsCommReadProvider?.address,
   };
   const [allNotif, setNotif] = React.useState([]);
   const [loadFilter, setLoadFilter] = React.useState(false);
@@ -89,7 +89,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     ETH_TEST_KOVAN: 42,
     ETH_TEST_GOERLI: 5,
     POLYGON_MAINNET: 137,
-    ETH_MAINNET: 1
+    ETH_MAINNET: 1,
   };
 
   const reset = () => setFilter(false);
@@ -104,7 +104,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     endDate = endDate.getTime() / 1000;
     var Filter = {
       channels: channels,
-      date: { lowDate: startDate, highDate: endDate }
+      date: { lowDate: startDate, highDate: endDate },
     };
     if (channels.length == 0) delete Filter.channels;
 
@@ -147,7 +147,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
         page: page,
         env: appConfig.pushNodesEnv,
         spam: true,
-        raw: true
+        raw: true,
       });
       let parsedResponse = PushAPI.utils.parseApiResponse(results);
       parsedResponse.forEach((each, i) => {
@@ -192,7 +192,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
         page: 1,
         env: appConfig.pushNodesEnv,
         spam: true,
-        raw: true
+        raw: true,
       });
       if (!notifications.length) {
         dispatch(incrementPage());
@@ -243,7 +243,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
         page: 1,
         env: appConfig.pushNodesEnv,
         spam: true,
-        raw: true
+        raw: true,
       });
 
       if (!notifications.length) {
@@ -274,7 +274,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
       dispatch(
         updateTopNotifications({
           notifs: res,
-          pageSize: NOTIFICATIONS_PER_PAGE
+          pageSize: NOTIFICATIONS_PER_PAGE,
         })
       );
       setNotif(res);
@@ -352,39 +352,49 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
 
     if (!address) return;
     console.log(address);
-    subscribeToast.showLoaderToast({loaderMessage: "Waiting for Confirmation..."});
-    console.log(library, account);
-    const _signer = await library.getSigner(account);
+    subscribeToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
+    console.log(provider, account);
+    const _signer = await provider.getSigner(account);
     console.log(_signer);
     console.log({
       signer: _signer,
       channelAddress: convertAddressToAddrCaip(channelAddress, nameToId[blockchain]), // channel address in CAIP
       userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP
-    })
+    });
     await PushAPI.channels.subscribe({
       signer: _signer,
       channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
       userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP
       onSuccess: () => {
         subscribeToast.showMessageToast({
-          toastTitle:"Success", 
-          toastMessage: "Successfully opted into channel !", 
-          toastType: "SUCCESS", 
-          getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
-        })
+          toastTitle: 'Success',
+          toastMessage: 'Successfully opted into channel !',
+          toastType: 'SUCCESS',
+          getToastIcon: (size) => (
+            <MdCheckCircle
+              size={size}
+              color="green"
+            />
+          ),
+        });
         dispatch(updateSubscriptionStatus({ channelAddress: channelAddress, status: true }));
       },
       onError: (err) => {
         console.error(err);
         subscribeToast.showMessageToast({
-          toastTitle:"Error", 
-          toastMessage: `There was an error opting into channel`, 
-          toastType:  "ERROR", 
-          getToastIcon: (size) => <MdError size={size} color="red" />
-        })
+          toastTitle: 'Error',
+          toastMessage: `There was an error opting into channel`,
+          toastType: 'ERROR',
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
+        });
       },
-      env: appConfig.pushNodesEnv
-    })
+      env: appConfig.pushNodesEnv,
+    });
   };
 
   const isSubscribedFn = (channel: string) => {
@@ -394,7 +404,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const onDecrypt = async ({ secret, title, message, image, cta }) => {
     let txToast;
     try {
-      let decryptedSecret = await CryptoHelper.decryptWithWalletRPCMethod(library.provider, secret, account);
+      let decryptedSecret = await CryptoHelper.decryptWithWalletRPCMethod(provider, secret, account);
 
       // decrypt notification message
       const decryptedBody = await CryptoHelper.decryptWithAES(message, decryptedSecret);
@@ -420,7 +430,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined
+          progress: undefined,
         });
       } else if (error.code === -32601) {
         console.error(error);
@@ -432,7 +442,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined
+          progress: undefined,
         });
       } else {
         console.error(error);
@@ -444,7 +454,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined
+          progress: undefined,
         });
       }
     }
@@ -468,60 +478,54 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
           />
         </div>
         <ScrollItem>
-        {notifications && (
-          <Items id="scrollstyle-secondary">
-            {bgUpdateLoading && (
-              <Item padding="10px 20px">
-                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
-              </Item>
-            )}
-            {(filter && !run ? filteredNotifications : allNotif).map((oneNotification, index) => {
-              const {
-                cta,
-                title,
-                message,
-                app,
-                icon,
-                image,
-                secret,
-                notification,
-                channel,
-                blockchain,
-                url
-              } = oneNotification;
-              // render the notification item
-              // console.log(app , index);
-              return (
-                <NotifsOuter key={index}>
-                  {showWayPoint(index) && !loading && <Waypoint onEnter={handlePagination} />}
-                  <NotificationItem
-                    notificationTitle={title}
-                    notificationBody={message}
-                    cta={cta}
-                    app={app}
-                    icon={icon}
-                    image={image}
-                    theme={themes.scheme}
-                    subscribeFn={() => onSubscribeToChannel(channel, blockchain)}
-                    isSpam
-                    isSubscribedFn={async () => isSubscribedFn(channel)}
-                    isSecret={secret != ''}
-                    decryptFn={() => onDecrypt({ secret, title, message, image, cta })}
-                    chainName={blockchain}
-                    url={url}
-                  />
-                </NotifsOuter>
-              );
-            })}
-            {loading && !bgUpdateLoading && <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />}
-          </Items>
-        )}
-        {(!notifications.length || (filter && !filteredNotifications.length)) && !loading && (
-          <CenteredContainerInfo>
-            <DisplayNotice title="You currently have no spam notifications." />
-          </CenteredContainerInfo>
-        )}
-        {toast && <NotificationToast notification={toast} clearToast={clearToast} />}
+          {notifications && (
+            <Items id="scrollstyle-secondary">
+              {bgUpdateLoading && (
+                <Item padding="10px 20px">
+                  <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
+                </Item>
+              )}
+              {(filter && !run ? filteredNotifications : allNotif).map((oneNotification, index) => {
+                const { cta, title, message, app, icon, image, secret, notification, channel, blockchain, url } =
+                  oneNotification;
+                // render the notification item
+                // console.log(app , index);
+                return (
+                  <NotifsOuter key={index}>
+                    {showWayPoint(index) && !loading && <Waypoint onEnter={handlePagination} />}
+                    <NotificationItem
+                      notificationTitle={title}
+                      notificationBody={message}
+                      cta={cta}
+                      app={app}
+                      icon={icon}
+                      image={image}
+                      theme={themes.scheme}
+                      subscribeFn={() => onSubscribeToChannel(channel, blockchain)}
+                      isSpam
+                      isSubscribedFn={async () => isSubscribedFn(channel)}
+                      isSecret={secret != ''}
+                      decryptFn={() => onDecrypt({ secret, title, message, image, cta })}
+                      chainName={blockchain}
+                      url={url}
+                    />
+                  </NotifsOuter>
+                );
+              })}
+              {loading && !bgUpdateLoading && <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />}
+            </Items>
+          )}
+          {(!notifications.length || (filter && !filteredNotifications.length)) && !loading && (
+            <CenteredContainerInfo>
+              <DisplayNotice title="You currently have no spam notifications." />
+            </CenteredContainerInfo>
+          )}
+          {toast && (
+            <NotificationToast
+              notification={toast}
+              clearToast={clearToast}
+            />
+          )}
         </ScrollItem>
       </Container>
     </ThemeProvider>

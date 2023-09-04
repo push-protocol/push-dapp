@@ -35,7 +35,7 @@ const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 // Create Header
 function CreateChannelModule() {
-  const { account, library, chainId } = useWeb3React();
+  const { account, provider, chainId } = useWeb3React();
   const theme = useTheme();
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const [processing, setProcessing] = React.useState(0);
@@ -63,7 +63,7 @@ function CreateChannelModule() {
   const [progress, setProgress] = React.useState(0);
   const [progressInfo, setProgressInfo] = React.useState('');
   const [logoInfo, setLogoInfo] = React.useState('');
-  const [errorInfo, setErrorInfo] = React.useState({name: '',description: '', address: '', url: ''});
+  const [errorInfo, setErrorInfo] = React.useState({ name: '', description: '', address: '', url: '' });
 
   //image upload states
   const [view, setView] = useState(false);
@@ -78,7 +78,7 @@ function CreateChannelModule() {
   React.useEffect(() => {
     if (!onCoreNetwork) return;
     const checkPushTokenApprovalFunc = async () => {
-      let checkPushTokenApprovedAmount = new ethers.Contract(addresses.pushToken, abis.pushToken, library);
+      let checkPushTokenApprovedAmount = new ethers.Contract(addresses.pushToken, abis.pushToken, provider);
 
       let value = await checkPushTokenApprovedAmount.allowance(account, addresses.epnscore);
       value = value?.toString();
@@ -157,41 +157,44 @@ function CreateChannelModule() {
   const isAllFilledAndValid = () => {
     setErrorInfo('');
 
-    if (isEmpty(channelName) || isEmpty(channelInfo) || isEmpty(channelURL) || (isEmpty(channelAlias) && chainDetails !== coreChainId)){
-      if (
-        isEmpty(channelName)
-      ) {
-        setErrorInfo(x => ({
+    if (
+      isEmpty(channelName) ||
+      isEmpty(channelInfo) ||
+      isEmpty(channelURL) ||
+      (isEmpty(channelAlias) && chainDetails !== coreChainId)
+    ) {
+      if (isEmpty(channelName)) {
+        setErrorInfo((x) => ({
           ...x,
           name: 'Please, enter the channel name.',
         }));
       }
 
       if (isEmpty(channelInfo)) {
-        setErrorInfo(x => ({
+        setErrorInfo((x) => ({
           ...x,
           description: 'Please, enter the channel description',
         }));
       }
 
       if (isEmpty(channelURL)) {
-        setErrorInfo(x => ({
+        setErrorInfo((x) => ({
           ...x,
           url: 'Please, enter the channel url',
         }));
       }
 
       if (isEmpty(channelAlias) && chainDetails !== coreChainId) {
-        setErrorInfo(x => ({
+        setErrorInfo((x) => ({
           ...x,
-          address:'Please, enter the channel address',
+          address: 'Please, enter the channel address',
         }));
       }
-    return false
-  }
+      return false;
+    }
 
     if (!isLengthValid(channelName, 125)) {
-      setErrorInfo(x => ({
+      setErrorInfo((x) => ({
         ...x,
         name: 'Channel Name should not exceed 125 characters! Please retry!',
       }));
@@ -199,14 +202,14 @@ function CreateChannelModule() {
       return false;
     }
     if (!isLengthValid(channelURL, 125)) {
-      setErrorInfo(x => ({
+      setErrorInfo((x) => ({
         ...x,
         url: 'Channel Url should not exceed 125 characters! Please retry!',
       }));
       return false;
     }
-    if(chainDetails !== coreChainId && !isValidAddress(channelAlias)) {
-      setErrorInfo(x => ({
+    if (chainDetails !== coreChainId && !isValidAddress(channelAlias)) {
+      setErrorInfo((x) => ({
         ...x,
         address: 'Channel Alias address is invalid! Please enter a valid address!',
       }));
@@ -214,7 +217,7 @@ function CreateChannelModule() {
       return false;
     }
     if (!isValidUrl(channelURL)) {
-      setErrorInfo(x => ({
+      setErrorInfo((x) => ({
         ...x,
         url: 'Channel URL is invalid! Please enter a valid url!',
       }));
@@ -227,20 +230,31 @@ function CreateChannelModule() {
   const handleCreateChannel = async (e) => {
     // Check everything in order
     // skip this for now
-    
+
     // e.preventDefault();
 
     if (!isAllFilledAndValid()) {
       channelToast.showMessageToast({
         toastTitle: 'Error',
-        toastMessage: `${errorInfo.name || errorInfo.description || errorInfo.address || errorInfo.url || "Please enter the channel details"}`,
+        toastMessage: `${
+          errorInfo.name ||
+          errorInfo.description ||
+          errorInfo.address ||
+          errorInfo.url ||
+          'Please enter the channel details'
+        }`,
         toastType: 'ERROR',
-        getToastIcon: (size) => <MdError size={size} color="red" />,
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
       });
 
       return false;
     }
-  
+
     if (!channelFile) {
       setLogoInfo('Please upload logo of the channel');
 
@@ -248,7 +262,12 @@ function CreateChannelModule() {
         toastTitle: 'Error',
         toastMessage: `Please upload logo of the channel`,
         toastType: 'ERROR',
-        getToastIcon: (size) => <MdError size={size} color="red" />,
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
       });
 
       return false;
@@ -289,16 +308,16 @@ function CreateChannelModule() {
     console.log('IPFS storagePointer:', storagePointer);
     // setProcessingInfo("Payload Uploaded, Approval to transfer DAI...");
     //console.log(await ipfs.cat(storagePointer));
-    
+
     channelToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
     setProcessingInfo('Payload Uploaded');
     setProgressInfo('Please complete the transaction in your wallet to continue.');
-    
+
     setProgress(10);
-    
+
     // Send Transaction
     // First Approve DAI
-    var signer = library.getSigner(account);
+    var signer = provider.getSigner(account);
     console.log(signer);
 
     let pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
@@ -315,22 +334,21 @@ function CreateChannelModule() {
         console.log('waiting for tx to finish');
         setProgress(30);
 
-        await library.waitForTransaction(tx.hash);
+        await provider.waitForTransaction(tx.hash);
       }
 
       let contract = new ethers.Contract(addresses.epnscore, abis.epnscore, signer);
 
-      let channelType = CHANNEL_TYPE["GENERAL"]; // Open Channel
+      let channelType = CHANNEL_TYPE['GENERAL']; // Open Channel
       const identity = '1+' + storagePointer; // IPFS Storage Type and HASH
       const identityBytes = ethers.utils.toUtf8Bytes(identity);
-
 
       setProgress(50);
 
       let timestampIfTimebound = 0;
-      if(channelExpiryDate) {
+      if (channelExpiryDate) {
         timestampIfTimebound = channelExpiryDate.getTime() / 1000;
-        channelType = CHANNEL_TYPE["TIMEBOUND"];
+        channelType = CHANNEL_TYPE['TIMEBOUND'];
       }
 
       const tx = await contract.createChannelWithPUSH(channelType, identityBytes, fees, timestampIfTimebound, {
@@ -339,14 +357,19 @@ function CreateChannelModule() {
 
       console.log(tx);
       console.log('Check: ' + account);
-      let txCheck = await library.waitForTransaction(tx.hash);
+      let txCheck = await provider.waitForTransaction(tx.hash);
 
       if (txCheck.status === 0) {
         channelToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: `There was an error in creating the channel`,
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />,
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
         });
 
         setProcessing(3);
@@ -374,13 +397,18 @@ function CreateChannelModule() {
         }, 2000);
       }
     } catch (err) {
-      if (err.code === 4001 || err.code==="ACTION_REJECTED") {
+      if (err.code === 4001 || err.code === 'ACTION_REJECTED') {
         // EIP-1193 userRejectedRequest error
         channelToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: `User denied message signature.`,
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />,
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
         });
         setStepFlow(2);
         setProcessing(0);
@@ -390,7 +418,12 @@ function CreateChannelModule() {
           toastTitle: 'Error',
           toastMessage: `There was an error in creating the channel`,
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />,
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
         });
 
         console.log('Error --> %o', err);
@@ -405,12 +438,12 @@ function CreateChannelModule() {
 
   useEffect(() => {
     if (croppedImage) {
-      console.log("Image cropped",croppedImage);
+      console.log('Image cropped', croppedImage);
       toDataURL(croppedImage, function (dataUrl) {
         const response = handleLogoSizeLimitation(dataUrl);
-        console.log("response",response);
+        console.log('response', response);
         if (response.success) {
-          console.log("Cropped Image....",croppedImage);
+          console.log('Cropped Image....', croppedImage);
           setChannelFile(croppedImage);
         }
       });
@@ -436,172 +469,186 @@ function CreateChannelModule() {
   return (
     <ThemeProvider theme={theme}>
       <Test>
-      <BodySection>
-        <Content className='content'>
-          <Item align="center" className='center'>
-          {/* <ItemWarning>
+        <BodySection>
+          <Content className="content">
+            <Item
+              align="center"
+              className="center"
+            >
+              {/* <ItemWarning>
                  ⚠️ Channel Creation is currently Paused due to Smart Contract v1.5 Upgrade. Please check <ItemLink target={'_blank'} href='https://medium.com/push-protocol/introducing-push-protocol-v1-5-80eb39b55424'>this article</ItemLink> for more info.
             </ItemWarning> */}
 
-            <TextH2>
-              <Span className='text'>
-                Create Your Channel
+              <TextH2>
+                <Span className="text">Create Your Channel</Span>
+              </TextH2>
+              <Span className="body-text">
+                Push (EPNS) makes it extremely easy to open and maintain a genuine channel of communication with your
+                users.
               </Span>
-            </TextH2>
-            <Span
-              className='body-text'
-              >
-              Push (EPNS) makes it extremely easy to open and maintain a genuine channel of communication with your
-              users.
-            </Span>
-          </Item>
-          {txStatus === 0 && (
-            <Body>
-              <div>Transaction failed due to one of the following reasons:</div>
-              <p>1. There is not enough PUSH in your wallet.</p>
-              <p>2. Gas price increased due to network congestion. Adjust gas limit manually.</p>
-            </Body>
-          )}
-        </Content>
-      </BodySection>
+            </Item>
+            {txStatus === 0 && (
+              <Body>
+                <div>Transaction failed due to one of the following reasons:</div>
+                <p>1. There is not enough PUSH in your wallet.</p>
+                <p>2. Gas price increased due to network congestion. Adjust gas limit manually.</p>
+              </Body>
+            )}
+          </Content>
+        </BodySection>
 
-      {!onCoreNetwork ? (
-        <>
-          <TabSpace>
-            <p>Please select {networkName[appConfig.coreContractChain]} Network in your Wallet to create a channel.</p>
-          </TabSpace>
+        {!onCoreNetwork ? (
+          <>
+            <TabSpace>
+              <p>
+                Please select {networkName[appConfig.coreContractChain]} Network in your Wallet to create a channel.
+              </p>
+            </TabSpace>
 
-          <TextLine text-align="center">
-            You will be asked to change your network to the Alias Network after <br></br>
-            channel creation is complete.
-          </TextLine>
+            <TextLine text-align="center">
+              You will be asked to change your network to the Alias Network after <br></br>
+              channel creation is complete.
+            </TextLine>
 
-          <TextLink
-            href="https://docs.epns.io/developers/developer-zone/create-your-notif-channel/alias-on-polygon-network"
-            target="_blank">
-            <p>What is an Alias Network?</p>
-            <MdCallMade />
-          </TextLink>
-        </>
-      ) : (
-        <>
-          {!(processing === 1 || processing === 3) &&(<Section>
-            <ItemHere>
-              <Tab type={stepFlow >= 0 ? 'active' : 'inactive'} active={stepFlow == 0 ? 'active' : 'inactive'} 
-               onClick={() => setStepFlow(0)}
-               >
-                <div>Channel Info</div>
-                <Step type={stepFlow >= 0 ? 'active' : 'inactive'} />
-              </Tab>
-              <Tab type={stepFlow >= 1 ? 'active' : 'inactive'}  active={stepFlow == 1 ? 'active' : 'inactive'} 
-              onClick={() => setStepFlow(1)}
-              >
-                <div>Upload Logo</div>
-                <Step type={stepFlow >= 1 ? 'active' : 'inactive'} />
-              </Tab>
-              <Tab type={stepFlow >= 2 ? 'active' : 'inactive'} active={stepFlow == 2 ? 'active' : 'inactive'}
-               onClick={() => setStepFlow(2)}
-               >
-                <div>Staking Info</div>
-                <Step type={stepFlow >= 2 ? 'active' : 'inactive'} />
-              </Tab>
-              <Line />
-            </ItemHere>
-          </Section>)}
+            <TextLink
+              href="https://docs.epns.io/developers/developer-zone/create-your-notif-channel/alias-on-polygon-network"
+              target="_blank"
+            >
+              <p>What is an Alias Network?</p>
+              <MdCallMade />
+            </TextLink>
+          </>
+        ) : (
+          <>
+            {!(processing === 1 || processing === 3) && (
+              <Section>
+                <ItemHere>
+                  <Tab
+                    type={stepFlow >= 0 ? 'active' : 'inactive'}
+                    active={stepFlow == 0 ? 'active' : 'inactive'}
+                    onClick={() => setStepFlow(0)}
+                  >
+                    <div>Channel Info</div>
+                    <Step type={stepFlow >= 0 ? 'active' : 'inactive'} />
+                  </Tab>
+                  <Tab
+                    type={stepFlow >= 1 ? 'active' : 'inactive'}
+                    active={stepFlow == 1 ? 'active' : 'inactive'}
+                    onClick={() => setStepFlow(1)}
+                  >
+                    <div>Upload Logo</div>
+                    <Step type={stepFlow >= 1 ? 'active' : 'inactive'} />
+                  </Tab>
+                  <Tab
+                    type={stepFlow >= 2 ? 'active' : 'inactive'}
+                    active={stepFlow == 2 ? 'active' : 'inactive'}
+                    onClick={() => setStepFlow(2)}
+                  >
+                    <div>Staking Info</div>
+                    <Step type={stepFlow >= 2 ? 'active' : 'inactive'} />
+                  </Tab>
+                  <Line />
+                </ItemHere>
+              </Section>
+            )}
 
-          {/* Channel Entry */}
-          {stepFlow === 0 && (
-            <ItemVV2>
-              <ChannelInfo
-                setStepFlow={setStepFlow}
-                channelName={channelName}
-                channelExpiryDate={channelExpiryDate}
-                channelAlias={channelAlias}
-                channelInfo={channelInfo}
-                channelURL={channelURL}
-                chainDetails={chainDetails}
-                setChannelAlias={setChannelAlias}
-                setChainDetails={setChainDetails}
-                setChannelInfo={setChannelInfo}
-                setChannelName={setChannelName}
-                setChannelExpiryDate={setChannelExpiryDate}
-                setChannelURL={setChannelURL}
-                setChannelInfoDone={setChannelInfoDone}
-                setTxStatus={setTxStatus}
-                errorInfo={errorInfo}
-                isAllFilledAndValid={isAllFilledAndValid}
-              />
-
-              {processing === 1 ? (
-                <LoaderSpinner
-                type={LOADER_TYPE.STANDALONE}
-                overlay={LOADER_OVERLAY.ONTOP}
-                blur={5}
-                title="Channel Creation in Progress"
-                completed={false}
+            {/* Channel Entry */}
+            {stepFlow === 0 && (
+              <ItemVV2>
+                <ChannelInfo
+                  setStepFlow={setStepFlow}
+                  channelName={channelName}
+                  channelExpiryDate={channelExpiryDate}
+                  channelAlias={channelAlias}
+                  channelInfo={channelInfo}
+                  channelURL={channelURL}
+                  chainDetails={chainDetails}
+                  setChannelAlias={setChannelAlias}
+                  setChainDetails={setChainDetails}
+                  setChannelInfo={setChannelInfo}
+                  setChannelName={setChannelName}
+                  setChannelExpiryDate={setChannelExpiryDate}
+                  setChannelURL={setChannelURL}
+                  setChannelInfoDone={setChannelInfoDone}
+                  setTxStatus={setTxStatus}
+                  errorInfo={errorInfo}
+                  isAllFilledAndValid={isAllFilledAndValid}
                 />
+
+                {processing === 1 ? (
+                  <LoaderSpinner
+                    type={LOADER_TYPE.STANDALONE}
+                    overlay={LOADER_OVERLAY.ONTOP}
+                    blur={5}
+                    title="Channel Creation in Progress"
+                    completed={false}
+                  />
                 ) : null}
-            </ItemVV2>
-          )}
+              </ItemVV2>
+            )}
 
-          {/* Image Upload Section */}
-          {stepFlow === 1 && (
-            <ItemVV2>
-              <UploadLogo
-                croppedImage={croppedImage}
-                view={view}
-                imageSrc={imageSrc}
-                imageType={imageType}
-                processing={processing}
-                setCroppedImage={setCroppedImage}
-                setView={setView}
-                setImageSrc={setImageSrc}
-                setImageType={setImageType}
-                setProcessingInfo={setProcessingInfo}
-                logoInfo={logoInfo}
-                setStepFlow={setStepFlow}
+            {/* Image Upload Section */}
+            {stepFlow === 1 && (
+              <ItemVV2>
+                <UploadLogo
+                  croppedImage={croppedImage}
+                  view={view}
+                  imageSrc={imageSrc}
+                  imageType={imageType}
+                  processing={processing}
+                  setCroppedImage={setCroppedImage}
+                  setView={setView}
+                  setImageSrc={setImageSrc}
+                  setImageType={setImageType}
+                  setProcessingInfo={setProcessingInfo}
+                  logoInfo={logoInfo}
+                  setStepFlow={setStepFlow}
                 />
 
-              {processing === 1 ? (
-                <LoaderSpinner
-                type={LOADER_TYPE.STANDALONE}
-                overlay={LOADER_OVERLAY.ONTOP}
-                blur={5}
-                title="Channel Creation in Progress"
-                completed={false}
-                />
+                {processing === 1 ? (
+                  <LoaderSpinner
+                    type={LOADER_TYPE.STANDALONE}
+                    overlay={LOADER_OVERLAY.ONTOP}
+                    blur={5}
+                    title="Channel Creation in Progress"
+                    completed={false}
+                  />
                 ) : null}
-            </ItemVV2>
-          )}
+              </ItemVV2>
+            )}
 
-          {/* Stake Fees Section */}
-          {stepFlow === 2 && (
-            <ItemVV2>
-              <StakingInfo
-                channelStakeFees={channelStakeFees}
-                setStakeFeesChoosen={setStakeFeesChoosen}
-                setProcessingInfo={setProcessingInfo}
-                handleCreateChannel={handleCreateChannel}
-              />
-
-              {processing === 1 ? (
-                <LoaderSpinner
-                  type={LOADER_TYPE.STANDALONE}
-                  overlay={LOADER_OVERLAY.ONTOP}
-                  blur={5}
-                  title="Channel Creation in Progress"
-                  completed={false}
+            {/* Stake Fees Section */}
+            {stepFlow === 2 && (
+              <ItemVV2>
+                <StakingInfo
+                  channelStakeFees={channelStakeFees}
+                  setStakeFeesChoosen={setStakeFeesChoosen}
+                  setProcessingInfo={setProcessingInfo}
+                  handleCreateChannel={handleCreateChannel}
                 />
-              ) : null}
-            </ItemVV2>
-          )}
 
-          {/* Channel Setup Progress */}
-          {(processing === 1 || processing === 3) && (
-            <ProcessingInfo progress={progress} progressInfo={progressInfo} processingInfo={processingInfo} />
-          )}
-        </>
-      )}
+                {processing === 1 ? (
+                  <LoaderSpinner
+                    type={LOADER_TYPE.STANDALONE}
+                    overlay={LOADER_OVERLAY.ONTOP}
+                    blur={5}
+                    title="Channel Creation in Progress"
+                    completed={false}
+                  />
+                ) : null}
+              </ItemVV2>
+            )}
+
+            {/* Channel Setup Progress */}
+            {(processing === 1 || processing === 3) && (
+              <ProcessingInfo
+                progress={progress}
+                progressInfo={progressInfo}
+                processingInfo={processingInfo}
+              />
+            )}
+          </>
+        )}
       </Test>
     </ThemeProvider>
   );
@@ -620,41 +667,38 @@ const Step = styled.div`
       background: #e20880;
     `};
 
-    ${({ type }) =>
-    type === 'inactive' &&
-    css`
-    `};
+  ${({ type }) => type === 'inactive' && css``};
 `;
 
 const Test = styled.div`
   display: flex;
   flex-direction: column;
   align-self: stretch;
-`
+`;
 
 const ItemWarning = styled.div`
   color: white;
   text-align: center;
-  background: #F22E2E; 
-  flex: 1; 
-  padding: 10px 10px; 
+  background: #f22e2e;
+  flex: 1;
+  padding: 10px 10px;
   margin: 10px 0px;
   font-weight: 500;
   border-radius: 10px;
-`
+`;
 
 const ItemLink = styled.a`
   text-decoration: underline;
   color: white;
-`
+`;
 
 const BodySection = styled(Section)`
- margin: 0px 0px 40px;
- 
- .content {
-  padding: 10px 20px 10px;
-   .center {
-    .body-text {
+  margin: 0px 0px 40px;
+
+  .content {
+    padding: 10px 20px 10px;
+    .center {
+      .body-text {
         color: ${(props) => props.theme.default.secondaryColor};
         font-weight: 400;
         font-size: 16px;
@@ -663,45 +707,45 @@ const BodySection = styled(Section)`
         letter-spacing: 0.03em;
         margin: 0px 0px;
 
-        @media (max-width: 768px){
+        @media (max-width: 768px) {
           font-weight: 300;
           font-size: 14px;
           text-align: center;
           letter-spacing: 0em;
           line-height: 140%;
-         }
+        }
       }
-  }
+    }
 
-  @media (max-width: 768px){
-    padding: 0px 0px 0px;
-   }
- }
- @media (max-width: 768px){
-  margin: 0px 0px 0px;
- }
-`
+    @media (max-width: 768px) {
+      padding: 0px 0px 0px;
+    }
+  }
+  @media (max-width: 768px) {
+    margin: 0px 0px 0px;
+  }
+`;
 
 const TextH2 = styled(H2)`
   text-transform: capitalize;
   margin: 20px 0px;
 
   .text {
-    font-weight: 400; 
+    font-weight: 400;
     font-size: 32px;
     color: ${(props) => props.theme.color};
-    @media (max-width: 768px){
+    @media (max-width: 768px) {
       font-weight: 500;
       font-size: 26px;
       line-height: 141%;
-      }
+    }
   }
 
-  @media (max-width: 768px){
-     text-transform: capitalize;
-     margin: 0px 0px 12px 0px;
+  @media (max-width: 768px) {
+    text-transform: capitalize;
+    margin: 0px 0px 12px 0px;
   }
-`
+`;
 
 const Line = styled.div`
   position: absolute;
@@ -804,8 +848,8 @@ const Tab = styled.div`
     css`
       color: #e20880;
       @media (max-width: 768px) {
-          width: 100%;
-    }
+        width: 100%;
+      }
     `};
 
   ${({ active }) =>
@@ -813,21 +857,21 @@ const Tab = styled.div`
     css`
       color: #e20880;
       @media (max-width: 768px) {
-          width: 100%;
-    }
+        width: 100%;
+      }
     `};
 
-    ${({ active }) =>
+  ${({ active }) =>
     active === 'inactive' &&
     css`
-    @media (max-width: 768px) {
-      width: 40%;
+      @media (max-width: 768px) {
+        width: 40%;
         div {
           font-size: 0px;
-            @media (max-width: 768px) {
-            }
+          @media (max-width: 768px) {
+          }
         }
-    }
+      }
     `};
 `;
 

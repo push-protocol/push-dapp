@@ -96,18 +96,20 @@ const IntentFeed = ({ isLoading }): JSX.Element => {
                   key={`${intent.threadhash}${i}`}
                 >
                   {showWayPoint(i) && !isFetchingDone && <Waypoint onEnter={handlePagination} />}
-                  <ChatSnap
-                    pfp={getGroupImage(intent)}
-                    username={getName(intent)}
-                    isGroup={checkIfGroup(intent)}
-                    chatSnapMsg={getChatsnapMessage(intent, account, true)}
-                    timestamp={intent.msg.timestamp}
-                    selected={i == selectedIntentSnap ? true : false}
-                    onClick={(): void => {
-                      setChat(intent);
-                      setSelectedIntentSnap(i);
-                    }}
-                  />
+                  {intent?.groupInformation?.groupType !== 'spaces' && (
+                    <ChatSnap
+                      pfp={getGroupImage(intent)}
+                      username={getName(intent)}
+                      isGroup={checkIfGroup(intent)}
+                      chatSnapMsg={getChatsnapMessage(intent, account, true)}
+                      timestamp={intent.msg.timestamp}
+                      selected={i == selectedIntentSnap ? true : false}
+                      onClick={(): void => {
+                        setChat(intent);
+                        setSelectedIntentSnap(i);
+                      }}
+                    />
+                  )}
                 </ItemVV2>
               ))}
               {(isLoading || intentLoading) && bgUpdateLoading && (

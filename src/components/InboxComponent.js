@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import React, { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 // External Packages
 import styled, { useTheme } from 'styled-components';
 import { FiSearch, FiSliders } from 'react-icons/fi';
@@ -13,29 +13,37 @@ import SpamBox from 'segments/spam';
 // Internal Configs
 import GLOBALS from 'config/Globals';
 
-const InboxComponent = () => {
-  const [showInbox, setShowInbox] = useState(true);
+const InboxComponent = ({ isSpam }) => {
+  const [showInbox, setShowInbox] = useState(!isSpam);
   const [showFilter, setShowFilter] = useState(false);
   const [search, setSearch] = useState('');
   const themes = useTheme();
 
+  const navigate = useNavigate();
   const toggleShowInbox = () => setShowInbox((prev) => !prev);
   const toggleShowFilter = () => setShowFilter((prev) => !prev);
 
-  const handleToggle = () => {
+  const handleToggle = (path) => {
     toggleShowInbox();
     setShowFilter(false);
     setSearch('');
+    navigate(path);
   };
 
   return (
     <Container>
       <NavBoxHolder>
         <NavHolder>
-          <NavTitleButton isActive={showInbox} onClick={handleToggle}>
+          <NavTitleButton
+            isActive={showInbox}
+            onClick={() => handleToggle('/inbox')}
+          >
             Inbox
           </NavTitleButton>
-          <NavTitleButton isActive={!showInbox} onClick={handleToggle}>
+          <NavTitleButton
+            isActive={!showInbox}
+            onClick={() => handleToggle('/spam')}
+          >
             Spam
           </NavTitleButton>
         </NavHolder>
@@ -49,19 +57,46 @@ const InboxComponent = () => {
               setSearch(e.target.value);
             }}
           />
-          <ItemIcon position="absolute" top="0" bottom="0" left="22px">
-            <FiSearch size={18} style={{ color: '#657795' }} />
+          <ItemIcon
+            position="absolute"
+            top="0"
+            bottom="0"
+            left="22px"
+          >
+            <FiSearch
+              size={18}
+              style={{ color: '#657795' }}
+            />
           </ItemIcon>
 
-          <ItemIconRotate position="absolute" top="0" bottom="0" right="22px" onClick={toggleShowFilter}>
-            <FiSliders size={18} style={{ color: '#657795' }} />
+          <ItemIconRotate
+            position="absolute"
+            top="0"
+            bottom="0"
+            right="22px"
+            onClick={toggleShowFilter}
+          >
+            <FiSliders
+              size={18}
+              style={{ color: '#657795' }}
+            />
           </ItemIconRotate>
         </SearchContainer>
       </NavBoxHolder>
       {showInbox ? (
-        <Feedbox showFilter={showFilter} setShowFilter={setShowFilter} search={search} setSearch={setSearch} />
-        ) : (
-        <SpamBox showFilter={showFilter} setShowFilter={setShowFilter} search={search} setSearch={setSearch} />
+        <Feedbox
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
+          search={search}
+          setSearch={setSearch}
+        />
+      ) : (
+        <SpamBox
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
+          search={search}
+          setSearch={setSearch}
+        />
       )}
     </Container>
   );
@@ -94,7 +129,7 @@ const NavBoxHolder = styled.div`
     bottom: 0;
     width: 100%;
     content: '';
-    background-color: ${props => props.theme.default.border};
+    background-color: ${(props) => props.theme.default.border};
   }
 `;
 
@@ -158,7 +193,7 @@ const SearchBar = styled.input`
   padding-left: 50px;
   border-radius: 99px;
   border: none;
-  background: #F4F5FA;
+  background: #f4f5fa;
   // background: ${(props) => props.theme.viewChannelSearchBg};
   // color: ${(props) => props.theme.viewChannelSearchText};
   color: #657795;
@@ -169,11 +204,11 @@ const SearchBar = styled.input`
   font-size: 16px;
   line-height: 150%;
 
-  input[type="reset"] {
+  input[type='reset'] {
     display: none;
   }
   &::placeholder {
-  color: #657795;
+    color: #657795;
   }
   &:hover,
   &:active,

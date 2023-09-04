@@ -14,7 +14,7 @@ import styled, { useTheme } from 'styled-components';
 import { postReq } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
-import useModalBlur, {MODAL_POSITION} from 'hooks/useModalBlur';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import { setUserChannelDetails } from 'redux/slices/adminSlice';
 import cubeIcon from '../assets/icons/cube.png';
@@ -46,7 +46,7 @@ type ChannelSettingsType = {
 // Create Header
 function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: ChannelSettingsType) {
   const dispatch = useDispatch();
-  const { account, library, chainId } = useWeb3React();
+  const { account, chainId } = useWeb3React();
   const { epnsWriteProvider, epnsCommWriteProvider } = useSelector((state: any) => state.contracts);
   const { channelDetails } = useSelector((state: any) => state.admin);
   const { CHANNNEL_DEACTIVATED_STATE, CHANNEL_BLOCKED_STATE } = useSelector((state: any) => state.channels);
@@ -334,7 +334,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
         InnerComponent={RemoveDelegateModalContent}
         onConfirm={removeDelegate}
         toastObject={removeDelegateToast}
-        InnerComponentProps={{isNotDropdown:false}}
+        InnerComponentProps={{ isNotDropdown: false }}
         modalPosition={MODAL_POSITION.ON_ROOT}
       />
 

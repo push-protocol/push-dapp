@@ -48,7 +48,7 @@ export const AddWalletContent = ({
   const [isInValidAddress, setIsInvalidAddress] = React.useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = React.useState<boolean>(false);
   const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
-  const { library } = useWeb3React();
+  // const { library } = useWeb3React();
 
   const theme = useTheme();
   const searchFeedToast = useToast();
@@ -81,9 +81,9 @@ export const AddWalletContent = ({
       let address: string;
       try {
         address = await provider.resolveName(searchedUser);
-        if (!address) {
-          address = await library.resolveName(searchedUser);
-        }
+        // if (!address) {
+        //   address = await library.resolveName(searchedUser);
+        // }
         // this ensures address are checksummed
         address = ethers.utils.getAddress(address?.toLowerCase());
         if (address) {

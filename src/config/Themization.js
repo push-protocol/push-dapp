@@ -177,7 +177,7 @@ const themeLight = {
   toastErrorBackground: 'linear-gradient(90.15deg, #FF2070 -125.65%, #FF2D79 -125.63%, #FFF9FB 42.81%)',
 
   // Profile
-  profileBG: 'linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)',
+  profileBG: 'linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%)',
   profileText: '#fff',
 
   //Snackbar
@@ -228,6 +228,38 @@ const themeLight = {
   vcModalBGColor: 'linear-gradient(179.97deg, rgba(255, 255, 255, 0.6) 0.02%, rgba(236, 233, 250, 0.6) 123.25%)',
   vcUserInfoText: '#1e1e1e',
   vcCrossIconColor: '#657795',
+
+  //staking
+  stakingPrimaryText: '#333333',
+  stakingSecondaryText: '#000000',
+  stakingUserDetails: 'rgba(87, 93, 115, 0.8)',
+  emptyButtonText: '#9D9FA6',
+  disabledButtonText: '#9D9FA6',
+  disableButtonBg: '#DEDFE1',
+  activeButtonText: '#657795',
+  stakingBorder: '#BAC4D6',
+  stakingEmptyButtonBG: '#DEDFE1',
+
+  //spaces
+  spaceHostTextColor: '#1e1e1e',
+
+  spaceTheme: {
+    titleBg: 'linear-gradient(45deg, #E165EC 0.01%, #A483ED 100%)', //not changed
+    titleTextColor: '#FFFFFF',
+    bgColorPrimary: 'red',
+    bgColorSecondary: '#F7F1FB',
+    textColorPrimary: '#000',
+    textColorSecondary: '#657795',
+    textGradient: 'linear-gradient(45deg, #B6A0F5, #F46EF6, #FFDED3, #FFCFC5)', //not changed
+    btnColorPrimary: '#D53A94',
+    btnOutline: '#D53A94',
+    borderColor: '#FFFF',
+    borderRadius: '17px',
+    containerBorderRadius: '12px',
+    statusColorError: '#E93636',
+    statusColorSuccess: '#30CC8B',
+    iconColorPrimary: '#82828A',
+  },
 };
 
 const themeDark = {
@@ -463,6 +495,39 @@ const themeDark = {
   vcModalBGColor: 'rgba(40, 42, 46, 0.6)',
   vcUserInfoText: '#B6BCD6',
   vcCrossIconColor: '#787E99',
+
+  //staking
+  stakingPrimaryText: '#B6BCD6',
+  stakingSecondaryText: '#F4F5FA',
+  stakingUserDetails: '#787E99',
+  stakingBorder: '#4A4F67',
+  stakingEmptyButtonBG: '#404550',
+  disabledButtonText: '#2D313C',
+  disableButtonBg: '#404550',
+  activeButtonText: '#B6BCD6',
+  emptyButtonText: '#2D313C',
+  emptyButtonBg: '',
+
+  //spaces
+  spaceHostTextColor: '#ffff',
+
+  spaceTheme: {
+    titleBg: 'linear-gradient(87.17deg, #EA4EE4 0%, #D23CDF 0.01%, #8B5CF6 100%)',
+    titleTextColor: '#fff',
+    bgColorPrimary: '#000',
+    bgColorSecondary: '#292344',
+    textColorPrimary: '#fff',
+    textColorSecondary: '#71717A',
+    textGradient: 'linear-gradient(45deg, #B6A0F5, #F46EF6, #FFDED3, #FFCFC5)',
+    btnColorPrimary: '#8B5CF6',
+    btnOutline: '#8B5CF6',
+    borderColor: '#3F3F46',
+    borderRadius: '17px',
+    containerBorderRadius: '12px',
+    statusColorError: '#E93636',
+    statusColorSuccess: '#30CC8B',
+    iconColorPrimary: '#71717A',
+  },
 };
 
 module.exports = {

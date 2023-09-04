@@ -8,7 +8,7 @@ import styled, { css, useTheme } from 'styled-components';
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { Anchor, Image, ItemH, RouterLink, Span } from 'primaries/SharedStyling';
-import { ItemVV2 } from './reusables/SharedStylingV2';
+import { ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -48,7 +48,10 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
   return (
     <>
       {data.loading && (
-        <ItemVV2 alignSelf="flex-start" padding="0px 15px">
+        <ItemVV2
+          alignSelf="flex-start"
+          padding="0px 15px"
+        >
           <LoaderSpinner
             type={LOADER_TYPE.SEAMLESS}
             completed={false}
@@ -73,10 +76,14 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
           padding="12px"
           margin={definedMargin}
           bg={bg}
-          active={active?1:0}
-          className={data?.name?.toLowerCase()}>
+          active={active ? 1 : 0}
+          className={data?.name?.toLowerCase()}
+        >
           {data.iconFactory ? (
-            <ItemHV2 justifyContent="flex-start" padding="0 2rem">
+            <ItemHV2
+              justifyContent="flex-start"
+              padding="0 2rem"
+            >
               {data.iconFactory}
             </ItemHV2>
           ) : (
@@ -86,14 +93,14 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
                   src={require(`../assets/${data.src}`)}
                   margin="0 5px"
                   alt={`${data.alt}`}
-                  active={active?1:0}
+                  active={active ? 1 : 0}
                 />
               ) : (
                 <SelectedIcon
                   src={require(`../assets/${data.activeSrc}`)}
                   margin="0 5px"
                   alt={`${data.alt}`}
-                  active={active?1:0}
+                  active={active ? 1 : 0}
                 />
               )}
 
@@ -103,9 +110,12 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
                 spacing="0"
                 margin="0 5px"
                 color={theme.nav.color}
-                size="16px">
+                size="16px"
+              >
                 {data.name}
               </Span>
+
+              {data?.name === 'Yield Farming V2' && <NewTag>New</NewTag>}
 
               {item.hasItems && !item.opened && <BiChevronDown color={theme.nav.color} />}
 
@@ -147,7 +157,7 @@ const InheritedSectionGroupIcon = styled(Image)`
   margin: 0 5px;
 
   @media (max-width: 992px) {
-      margin: 0px 0px;
+    margin: 0px 0px;
   }
 
   ${(props) =>
@@ -164,7 +174,7 @@ const InheritedSectionItemIcon = styled(Image)`
 
   @media (max-width: 992px) {
     margin: 0px 0px;
-}
+  }
 
   ${(props) =>
     props.active &&
@@ -183,6 +193,22 @@ const LeftBarSecondarySectionIcon = styled(InheritedSectionGroupIcon)`
 `;
 
 const LeftBarSecondaryItemIcon = styled(InheritedSectionItemIcon)``;
+
+const NewTag = styled(SpanV2)`
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: 140%;
+  display: flex;
+  align-items: center;
+  color: #d53a94;
+  margin-left: 10px;
+  padding: 2px 6px;
+  background: #f3d7fa;
+  border-radius: 6px;
+  height: 17px;
+  width: fit-content;
+`;
 
 // Export Default
 export default NavigationButton;

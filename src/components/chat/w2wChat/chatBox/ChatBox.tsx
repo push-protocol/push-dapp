@@ -86,7 +86,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const [chatMeta, setChatMeta] = useState(null);
 
   const [newMessage, setNewMessage] = useState<string>('');
-  const { chainId, account, library } = useWeb3React<ethers.providers.Web3Provider>();
+  const { chainId, account, provider } = useWeb3React<ethers.providers.Web3Provider>();
   const [Loading, setLoading] = useState<boolean>(true);
   const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false);
   const [imageSource, setImageSource] = useState<string>('');
@@ -96,7 +96,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
   const groupInfoRef = useRef<HTMLInputElement>(null);
   const { connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
-  const { setVideoCallData } = useContext(VideoCallContext);
+  const { videoObject } = useContext(VideoCallContext);
 
   const listInnerRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
@@ -260,7 +260,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       if (!connectedUser.publicKey) {
         createdUser = await createUserIfNecessary();
       }
-      const signer = await library.getSigner();
+      const signer = await provider.getSigner();
 
       const sendResponse = await PushAPI.chat.send({
         messageContent: message,
@@ -330,7 +330,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       if (!connectedUser.publicKey) {
         createdUser = await createUserIfNecessary();
       }
-      const signer = await library.getSigner();
+      const signer = await provider.getSigner();
       updatedIntent = await PushAPI.chat.approve({
         status: 'Approved',
         signer: signer!,
@@ -395,7 +395,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
         if (!connectedUser.publicKey) {
           createdUser = await createUserIfNecessary();
         }
-        const signer = await library.getSigner();
+        const signer = await provider.getSigner();
         const sendResponse = await PushAPI.chat.send({
           messageContent: message,
           messageType: messageType,
@@ -457,7 +457,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const startVideoCallHandler = async () => {
     console.log('CURRENT CHAT', currentChat);
 
-    setVideoCallData((oldData) => {
+    videoObject?.setData((oldData) => {
       return produce(oldData, (draft) => {
         draft.local.address = account;
         draft.incoming[0].address = caip10ToWallet(currentChat.wallets.toString());

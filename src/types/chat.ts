@@ -57,6 +57,7 @@ export interface IGroup {
   groupDescription: string | null;
   groupCreator: string;
   chatId: string;
+  groupType: string | null;
 }
 
 export interface ChatMetaI {

@@ -1,25 +1,27 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import { utils } from "ethers";
-import React from "react";
+import { utils } from 'ethers';
+import React from 'react';
 
 // External Packages
-import { MdCheckCircle, MdError } from "react-icons/md";
-import styled, { useTheme } from "styled-components";
+import { MdCheckCircle, MdError } from 'react-icons/md';
+import styled, { useTheme } from 'styled-components';
 import { useSelector } from 'react-redux';
 
 // Internal Components
-import useToast from "hooks/useToast";
-import { Button, Item, Span } from "../primaries/SharedStyling";
-import { aliasChainIdsMapping, CORE_CHAIN_ID, networkName } from "helpers/UtilityHelper";
+import useToast from 'hooks/useToast';
+import { Button, Item, Span } from '../primaries/SharedStyling';
+import { aliasChainIdsMapping, CORE_CHAIN_ID, networkName } from 'helpers/UtilityHelper';
 import { CHAIN_DETAILS } from 'config';
 import { handleChangeNetwork } from 'helpers/ChainHelper';
 
 const ChangeNetwork = () => {
   const changeNetworkToast = useToast();
   const themes = useTheme();
-  const { chainId, library } = useWeb3React();
-  const { aliasDetails: {aliasChainId} } = useSelector((state: any) => state.admin);
+  const { connector, chainId, provider } = useWeb3React();
+  const {
+    aliasDetails: { aliasChainId },
+  } = useSelector((state: any) => state.admin);
 
   return (
     <Item
@@ -37,8 +39,7 @@ const ChangeNetwork = () => {
         weight="500"
         line="24px"
       >
-        Change your wallet network to <TextPink>{CHAIN_DETAILS[aliasChainId]?.label}</TextPink> to
-        start <br></br>
+        Change your wallet network to <TextPink>{CHAIN_DETAILS[aliasChainId]?.label}</TextPink> to start <br></br>
         verifying your Channel Alias.
       </Span>
 
@@ -53,7 +54,7 @@ const ChangeNetwork = () => {
           color="#fff"
           radius="15px"
           padding="20px 20px"
-          onClick={() => handleChangeNetwork(aliasChainId, library.provider)}
+          onClick={() => handleChangeNetwork(aliasChainId, connector.provider, connector)}
         >
           <Span
             color="#fff"

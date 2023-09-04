@@ -30,7 +30,7 @@ const DATE_FORMAT = 'DD MMM, YYYY';
 const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: ModalInnerComponentType) => {
   const themes = useTheme();
 
-  const { chainId, account, library } = useWeb3React();
+  const { chainId, account, provider } = useWeb3React();
   const dispatch = useDispatch();
 
   const {
@@ -72,12 +72,12 @@ const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
   }, [channelDetails]);
 
   useEffect(() => {
-    if (!account || !library) return;
+    if (!account || !provider) return;
 
     (async function () {
       const pushTokenApprovalAmount = await getPushTokenApprovalAmount({
         address: account,
-        provider: library,
+        provider: provider,
         contractAddress: addresses.epnscore,
       });
       setPushApprovalAmount(parseInt(pushTokenApprovalAmount));
@@ -89,17 +89,17 @@ const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
         setPushDeposited(false);
       }
     })();
-  }, [account, library]);
+  }, [account, provider]);
 
   // mint PUSH token
   const mintPushTokenHandler = async (noOfTokens: number) => {
-    await mintPushToken({ noOfTokens, library, account });
+    await mintPushToken({ noOfTokens, provider, account });
   };
 
   const depositPush = async () => {
     setIsLoading(true);
-    if (!library) return;
-    const signer = library.getSigner(account);
+    if (!provider) return;
+    const signer = provider.getSigner(account);
     toastObject.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
     try {
       const response = await approvePushToken({
@@ -219,100 +219,99 @@ const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
 
   return (
     <ThemeProvider theme={themes}>
-        <ModalContainer ref={containerRef}>
-          <Header>
-            <HeaderHeading>Reactivate Channel</HeaderHeading>
-            <IconButton
-              onClick={handleClose}
-              style={{ padding: '0', marginRight: '0.5rem' }}
-              sx={{ '&:hover': { backgroundColor: 'transparent' } }}
-              children={
-                <MdClose
-                  size="1.5rem"
-                  style={{
-                    color: themes.modalIconColor,
-                  }}
-                />
-              }
-            />
-          </Header>
+      <ModalContainer ref={containerRef}>
+        <Header>
+          <HeaderHeading>Reactivate Channel</HeaderHeading>
+          <IconButton
+            onClick={handleClose}
+            style={{ padding: '0', marginRight: '0.5rem' }}
+            sx={{ '&:hover': { backgroundColor: 'transparent' } }}
+            children={
+              <MdClose
+                size="1.5rem"
+                style={{
+                  color: themes.modalIconColor,
+                }}
+              />
+            }
+          />
+        </Header>
 
-          <AdaptiveMobileItemHV22
-            justifyContent="flex-start"
-            alignSelf="stretch"
+        <AdaptiveMobileItemHV22
+          justifyContent="flex-start"
+          alignSelf="stretch"
+        >
+          <ImageSection src={channelDetails.icon}></ImageSection>
+
+          <AdaptiveMobileItemVV2
+            alignItems="flex-start"
+            padding="5px 0px"
           >
-            <ImageSection src={channelDetails.icon}></ImageSection>
+            <ChannelName>
+              {channelDetails.name}
+              {canVerify && <VerifyImage src="/verify.png"></VerifyImage>}
+            </ChannelName>
 
             <AdaptiveMobileItemVV2
               alignItems="flex-start"
+              flex="initial"
               padding="5px 0px"
             >
-              <ChannelName>
-                {channelDetails.name}
-                {canVerify && <VerifyImage src="/verify.png"></VerifyImage>}
-              </ChannelName>
-
-              <AdaptiveMobileItemVV2
-                alignItems="flex-start"
-                flex="initial"
-                padding="5px 0px"
-              >
-                {(onCoreNetwork && aliasAddrFromContract && !isAliasVerified) ||
-                (!onCoreNetwork && !isAliasVerified) ? (
-                  <AliasStateText>Alias Network Setup Pending</AliasStateText>
-                ) : (
-                  <AdaptiveMobileItemHV2 justifyContent="flex-start">
-                    <Subscribers>
-                      <img
-                        style={{ width: '15px' }}
-                        src="/subcount.svg"
-                        alt="subscount"
-                      ></img>
-                      <SubscribersCount>{channelDetails.subscriber_count}</SubscribersCount>
-                    </Subscribers>
-                    <ChanneStateText active={channelIsActive}>
-                      {channelIsActive ? 'Active' : channelIsDeactivated ? 'Deactivated' : 'Blocked'}
-                    </ChanneStateText>
-                  </AdaptiveMobileItemHV2>
-                )}
-
-                {creationDate && <Date>Created {creationDate}</Date>}
-              </AdaptiveMobileItemVV2>
-            </AdaptiveMobileItemVV2>
-          </AdaptiveMobileItemHV22>
-
-          <Footer>
-            <FooterPrimaryText>Channel reactivation fee</FooterPrimaryText>
-            <ItemHV2 flex="0">
-              {pushDeposited ? <TickImage src={VerifyLogo} /> : null}
-              <ReactivateFee>{50} PUSH</ReactivateFee>
-            </ItemHV2>
-          </Footer>
-          <FaucetInfo
-            noOfPushTokensToCheck={50}
-            containerProps={{ width: '100%' }}
-            onMintPushToken={mintPushTokenHandler}
-          />
-
-          {isLoading ? (
-            <VerifyingContainer>
-              <Spinner
-                size={42}
-                color={Globals.COLORS.PRIMARY_PINK}
-                type={LOADER_SPINNER_TYPE.PROCESSING}
-              />
-              <TransactionText>Verifying Transaction</TransactionText>
-            </VerifyingContainer>
-          ) : (
-            <ButtonContainer>
-              {pushApprovalAmount >= 50 ? (
-                <ConfirmButton onClick={handleReactivateChannel}>Reactivate</ConfirmButton>
+              {(onCoreNetwork && aliasAddrFromContract && !isAliasVerified) || (!onCoreNetwork && !isAliasVerified) ? (
+                <AliasStateText>Alias Network Setup Pending</AliasStateText>
               ) : (
-                <ConfirmButton onClick={depositPush}>Approve PUSH</ConfirmButton>
+                <AdaptiveMobileItemHV2 justifyContent="flex-start">
+                  <Subscribers>
+                    <img
+                      style={{ width: '15px' }}
+                      src="/subcount.svg"
+                      alt="subscount"
+                    ></img>
+                    <SubscribersCount>{channelDetails.subscriber_count}</SubscribersCount>
+                  </Subscribers>
+                  <ChanneStateText active={channelIsActive}>
+                    {channelIsActive ? 'Active' : channelIsDeactivated ? 'Deactivated' : 'Blocked'}
+                  </ChanneStateText>
+                </AdaptiveMobileItemHV2>
               )}
-            </ButtonContainer>
-          )}
-        </ModalContainer>
+
+              {creationDate && <Date>Created {creationDate}</Date>}
+            </AdaptiveMobileItemVV2>
+          </AdaptiveMobileItemVV2>
+        </AdaptiveMobileItemHV22>
+
+        <Footer>
+          <FooterPrimaryText>Channel reactivation fee</FooterPrimaryText>
+          <ItemHV2 flex="0">
+            {pushDeposited ? <TickImage src={VerifyLogo} /> : null}
+            <ReactivateFee>{50} PUSH</ReactivateFee>
+          </ItemHV2>
+        </Footer>
+        <FaucetInfo
+          noOfPushTokensToCheck={50}
+          containerProps={{ width: '100%' }}
+          onMintPushToken={mintPushTokenHandler}
+        />
+
+        {isLoading ? (
+          <VerifyingContainer>
+            <Spinner
+              size={42}
+              color={Globals.COLORS.PRIMARY_PINK}
+              type={LOADER_SPINNER_TYPE.PROCESSING}
+            />
+            <TransactionText>Verifying Transaction</TransactionText>
+          </VerifyingContainer>
+        ) : (
+          <ButtonContainer>
+            {pushApprovalAmount >= 50 ? (
+              <ConfirmButton onClick={handleReactivateChannel}>Reactivate</ConfirmButton>
+            ) : (
+              <ConfirmButton onClick={depositPush}>Approve PUSH</ConfirmButton>
+            )}
+          </ButtonContainer>
+        )}
+      </ModalContainer>
     </ThemeProvider>
   );
 };

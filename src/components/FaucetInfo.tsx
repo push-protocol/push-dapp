@@ -11,7 +11,7 @@ import { device } from 'config/Globals';
 import { useEffect, useState } from 'react';
 import { getHasEnoughPushToken } from 'helpers';
 import { useWeb3React } from '@web3-react/core';
-import useModalBlur, {MODAL_POSITION} from 'hooks/useModalBlur';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import { UniswapWidgetModal } from './UniswapWidget';
 
 type FaucetInfoType = {
@@ -21,7 +21,7 @@ type FaucetInfoType = {
 };
 
 const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: FaucetInfoType) => {
-  const { account, library } = useWeb3React();
+  const { account, provider } = useWeb3React();
   const isProd = appConfig.appEnv === 'prod';
 
   const [isFaucetVisible, setIsFaucetVisible] = useState<boolean>(false);
@@ -34,7 +34,7 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
   const checkSetFaucetVisibility = async () => {
     const hasEnoughPushToken = await getHasEnoughPushToken({
       address: account,
-      provider: library,
+      provider: provider,
       noOfPushTokensToCheck,
     });
     setIsFaucetVisible(!hasEnoughPushToken);
@@ -49,7 +49,7 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
   useEffect(() => {
     (async () => {
       await checkSetFaucetVisibility();
-    })()
+    })();
   }, [noOfPushTokensToCheck]);
 
   return (
@@ -95,23 +95,21 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
       ) : (
         ''
       )}
-      {isUniswapWidgetModalOpen &&
+      {isUniswapWidgetModalOpen && (
         <UniswapWidgetModalComponent
           InnerComponent={UniswapWidgetModal}
           InnerComponentProps={{ defaultPushTokenAmount: noOfPushTokensToCheck }}
           modalPadding="0px"
           modalPosition={MODAL_POSITION.ON_ROOT}
         />
-      }
+      )}
     </Container>
-
-
   );
 };
 
 const Container = styled.div`
-width:100%;
-`
+  width: 100%;
+`;
 
 const TextSpace = styled.div`
   box-sizing: border-box;
@@ -124,7 +122,7 @@ const TextSpace = styled.div`
   background: #f4dcea;
   border-radius: 0px 0px 28px 28px;
   padding: 32px 32px 20px 32px;
-  margin-top:24px;
+  margin-top: 24px;
   @media ${device.tablet} {
     width: 100%;
     flex-direction: column;

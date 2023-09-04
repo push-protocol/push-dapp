@@ -41,7 +41,7 @@ const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 const InitState = () => {
   const dispatch = useDispatch();
-  const { account, library, chainId } = useWeb3React();
+  const { account, provider, chainId } = useWeb3React();
   const { epnsReadProvider, epnsWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const {
     channelDetails,
@@ -53,23 +53,23 @@ const InitState = () => {
   const onCoreNetwork: boolean = CORE_CHAIN_ID === chainId;
 
   useEffect(() => {
-    if (!library || !chainId) return;
+    if (!provider || !chainId) return;
 
     (async function init() {
-      const coreProvider = onCoreNetwork ? library : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
+      const coreProvider = onCoreNetwork ? provider : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
 
       // inititalise the read contract for the core network
       const coreContractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, coreProvider);
 
       // initialise the read contract for the communicator function
       const commAddress = CHAIN_DETAILS[chainId].commAddress;
-      const commContractInstance = new ethers.Contract(commAddress, abis.epnsComm, library);
+      const commContractInstance = new ethers.Contract(commAddress, abis.epnsComm, provider);
       dispatch(setCommunicatorReadProvider(commContractInstance));
       dispatch(setCoreReadProvider(coreContractInstance));
 
       // initialise the read contract for the communicator function
-      if (!!(library && account)) {
-        let signer = library.getSigner(account);
+      if (!!(provider && account)) {
+        let signer = provider.getSigner(account);
         let coreSigner = coreProvider.getSigner(account);
 
         const coreSignerInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, coreSigner);
