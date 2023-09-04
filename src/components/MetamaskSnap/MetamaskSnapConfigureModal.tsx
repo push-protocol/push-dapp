@@ -17,15 +17,6 @@ const MetamaskSnapConfigureModal = () => {
     const [searchedUser, setSearchedUser] = useState('');
     const [showRemove, setShowRemove] = useState();
 
-    const wallets = [
-        "0x9452BCAf507CD6547574b78B810a723d8868C85a",
-        "0x9452BCAf507CD6547574b78B810a723d8868C85a",
-        "0x9452BCAf507CD6547574b78B810a723d8868C85a",
-        "0x9452BCAf507CD6547574b78B810a723d8868C85a",
-        "0x9452BCAf507CD6547574b78B810a723d8868C85a",
-        "0x9452BCAf507CD6547574b78B810a723d8868C85a"
-    ]
-
     const addWalletAddresses = () => {
         console.log("searchedUser", searchedUser);
         if (searchedUser) {
@@ -49,7 +40,7 @@ const MetamaskSnapConfigureModal = () => {
     useClickAway(containerRef, () => {
         console.log("Set show to be null")
         setShowRemove(null);
-      });
+    });
 
     return (
         <Container >
@@ -70,26 +61,11 @@ const MetamaskSnapConfigureModal = () => {
                     placeholder="0x123 .... 4567"
                 //   color={theme.modalPrimaryTextColor}
                 />
-                <AddButton onClick={addWalletAddresses}>Add</AddButton>
+                <ItemHV2 margin='14px 0 0 0' justifyContent='end' gap='5px'>
+                    <AddButton onClick={addWalletAddresses}>Add</AddButton>
+                    <AddButton onClick={removeWallet}>Remove</AddButton>
+                </ItemHV2>
             </ItemVV2>
-
-            {walletAddresses.length !== 0 && <WalletOuterContainer ref={containerRef}>
-                {walletAddresses.map((wallet) => {
-                    return (
-                        <WalletContainer >
-
-                            {showRemove === wallet && <RemoveContainer  onClick={() => removeWallet(wallet)}>
-                                <RestrictIcon />
-                                <SpanV2 fontSize='16px' fontWeight='400' color='#657795'>Remove</SpanV2>
-                            </RemoveContainer>
-                            }
-
-                            <SpanV2>{shortenText(wallet, 6)}</SpanV2>
-                            <MoreLight onClick={() => setShowRemove(wallet)} />
-                        </WalletContainer>
-                    )
-                })}
-            </WalletOuterContainer>}
 
             <ItemVV2 alignItems='flex-start' margin='24px 0 0 0'>
                 <PrimaryText>Snooze Notifications</PrimaryText>
@@ -157,8 +133,6 @@ const AddButton = styled(Button)`
   line-height: normal;
   border-radius: 8px;
   padding: 14px;
-  margin-top:14px;
-  
 `;
 const WalletOuterContainer = styled.div`
     display:flex;
