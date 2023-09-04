@@ -37,6 +37,7 @@ interface ChatSnapPropsI {
 const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, isGroup }: ChatSnapPropsI) => {
   const { web3NameList }: AppContextType = useContext(AppContext);
   let ensName = '';
+  console.log('test');
 
   // get theme
   const theme = useTheme();
