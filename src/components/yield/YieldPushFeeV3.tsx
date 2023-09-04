@@ -258,6 +258,94 @@ const YieldPushFeeV3 = ({
 
     const claimRewardsPaginated = async () =>{
 
+        const currentEpoch = PUSHPoolstats?.currentEpochNumber;
+        const batchSize = 2;
+
+        var signer = provider.getSigner(account);
+        let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
+
+        let _tillEpoch = 0;
+
+        //TODO: before calling the loop we need to check last claimed Block of the user
+        //TODO: update the _tillEpoch variable with the claimed Epoch.
+
+        const userFeesInfo = await pushCoreV2.userFeesInfo(account);
+        const lastClaimedBlock = userFeesInfo.lastClaimedBlock;
+
+        console.log("Last claimed block: " + lastClaimedBlock,lastClaimedBlock.toNumber())
+        
+        if(lastClaimedBlock.toNumber() !== 0){
+            const genesisEpoch = await pushCoreV2.genesisEpoch();
+
+            const epochGap = await pushCoreV2.lastEpochRelative(
+                genesisEpoch,
+                lastClaimedBlock
+            );
+
+            console.log("Epochs gap", epochGap.toNumber(), "last claimed Block",lastClaimedBlock,lastClaimedBlock.toNumber(), "gen epoch",genesisEpoch,genesisEpoch.toNumber());
+
+            _tillEpoch = epochGap.toNumber();
+        }
+
+        
+
+        for(let i=0; i<Math.ceil(currentEpoch/batchSize); i++ ){
+
+
+            //0 , 1, 2, 3, 4, 5
+            // 3 + 2
+            // 5 + 2
+            // 7 + 2
+            //11
+            //13
+            //15
+
+            console.log("For loop count",i);
+
+            _tillEpoch+=batchSize;
+
+            let temp = Math.min(_tillEpoch,currentEpoch-1);
+
+
+
+            if(_tillEpoch > currentEpoch){
+                return;
+            }
+            console.log("_tillEpoch",_tillEpoch);
+            console.log("Collecting reward for the epoch ",temp," while the current epoch is ",currentEpoch-1);
+
+            const tx = pushCoreV2.harvestPaginated(temp,{
+                gasLimit:400000
+            });
+
+            await tx.then(async(tx) => {
+
+                try {
+                    pushFeeToast.showLoaderToast({ loaderMessage: 'Waiting for confirmation' });
+                    await provider.waitForTransaction(tx.hash);
+    
+                    pushFeeToast.showMessageToast({
+                        toastTitle: 'Success',
+                        toastMessage: 'Transaction Completed!',
+                        toastType: 'SUCCESS',
+                        getToastIcon: (size) => (
+                            <MdCheckCircle
+                                size={size}
+                                color="green"
+                            />
+                        ),
+                    });
+                } catch (error) {
+                    console.log("Error in the transaction",tx);
+                }
+                
+
+            }).catch((error)=>{
+                console.log("Error in claiming the reward",error);
+            })
+
+        }
+
     }
 
 
