@@ -9,6 +9,7 @@ import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg'
 import { ReactComponent as RestrictIcon } from 'assets/PushSnaps/MinusCircle.svg';
 import Switch from 'react-switch';
 import { useClickAway } from 'react-use';
+import { useWeb3React } from '@web3-react/core';
 
 const MetamaskSnapConfigureModal = () => {
   const [walletAddresses, setWalletAddresses] = useState([]);
@@ -17,25 +18,43 @@ const MetamaskSnapConfigureModal = () => {
 
   const defaultSnapOrigin = 'npm:push-v1';
 
+  const { chainId, account, provider } = useWeb3React();
+
+  async function getSignature(mode: number) {
+    if (mode == 1) {
+      const signer = provider.getSigner(account);
+      const signature = await signer.signMessage('Add address to receive notifications');
+      return signature;
+    }
+    if (mode == 2) {
+      const signer = provider.getSigner(account);
+      const signature = await signer.signMessage('Remove address to receive notifications');
+      return signature;
+    }
+  }
+
   const addWalletAddresses = async () => {
     console.log('searchedUser', searchedUser);
-    if (searchedUser) {
-      await window.ethereum?.request({
-        method: 'wallet_invokeSnap',
-        params: {
-          snapId: defaultSnapOrigin,
-          request: {
-            method: 'pushproto_addaddress',
-            params: { address: searchedUser },
+    const signatureResult = await getSignature(1);
+    if (signatureResult) {
+      if (searchedUser) {
+        await window.ethereum?.request({
+          method: 'wallet_invokeSnap',
+          params: {
+            snapId: defaultSnapOrigin,
+            request: {
+              method: 'pushproto_addaddress',
+              params: { address: searchedUser },
+            },
           },
-        },
-      });
-      console.log('Added', searchedUser);
-      setWalletAddresses((prev) => [...prev, searchedUser]);
+        });
+        console.log('Added', searchedUser);
+        setWalletAddresses((prev) => [...prev, searchedUser]);
+      }
+    } else {
+      console.log('Signature Validation Failed');
     }
   };
-
-  console.log('Addresses', walletAddresses);
 
   const [checked, setChecked] = useState(false);
   const handleChange = async (nextChecked) => {
@@ -50,17 +69,22 @@ const MetamaskSnapConfigureModal = () => {
   };
 
   const removeWalletAddresses = async () => {
-    if (searchedUser) {
-      await window.ethereum?.request({
-        method: 'wallet_invokeSnap',
-        params: {
-          snapId: defaultSnapOrigin,
-          request: {
-            method: 'pushproto_removeaddress',
-            params: { address: searchedUser },
+    const signatureResult = await getSignature(2);
+    if (signatureResult) {
+      if (searchedUser) {
+        await window.ethereum?.request({
+          method: 'wallet_invokeSnap',
+          params: {
+            snapId: defaultSnapOrigin,
+            request: {
+              method: 'pushproto_removeaddress',
+              params: { address: searchedUser },
+            },
           },
-        },
-      });
+        });
+      }
+    }else{
+        console.log('Signature Validation Failed');
     }
   };
 
