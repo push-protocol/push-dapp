@@ -247,13 +247,9 @@ useEffect(() => {
         {/* Chainsafe Audit and Discord */}
         <ItemVV2 margin="30px 0 0 0" flex="initial" maxWidth="920px">
           <SpanV2 fontSize="14px" padding="25px 15px" lineHeight="140%" color={theme.default.color}>
-            Note: The Push Protocol has been under development for 2+ years now. It has successfully completed its security audits of {' '}
-            <AInlineV2 href="https://github.com/ChainSafe/audits/blob/main/EPNS/epns-protocol-10-2021.pdf" target="_blank">
-              version 1 
-            </AInlineV2>{' '}
-            and {' '}
-            <AInlineV2 href="https://github.com/ChainSafe/audits/blob/main/EPNS/epns-protocol-11-2022.pdf" target="_blank">
-              version 1.5
+            Note: The Push Protocol has been under development for 2+ years now. It has successfully completed its latest security audits of {' '}
+            <AInlineV2 href="https://github.com/ChainSafe/audits/blob/main/EPNS/epns-protocol-05-2023.pdf" target="_blank">
+              Push Core V2 
             </AInlineV2>{' '}
             smart contracts by Chainsafe. However, always DYOR and anticipate UI bugs or improvements. You can use our {' '}
             <AInlineV2 href="https://zv9atndluia.typeform.com/to/KW3gwclM" target="_blank">
