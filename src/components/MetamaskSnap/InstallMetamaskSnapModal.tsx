@@ -1,7 +1,7 @@
 import { Button } from 'components/SharedStyling';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import React, { useEffect } from 'react';
-import styled from 'styled-components';
+import styled,{useTheme} from 'styled-components';
 import Metamask from 'assets/PushSnaps/metamasksnap.svg';
 import PushIcon from 'assets/PushSnaps/PushIcon.svg';
 import AppStoreQRCode from 'assets/PushSnaps/AppStoreQRCode.svg';
@@ -16,6 +16,8 @@ const InstallMetamaskSnapModal = ({
     configure,
     setConfigure
 }) => {
+
+    const theme = useTheme();
 
     useEffect(() => {
         getInstalledSnaps();
@@ -34,16 +36,17 @@ const InstallMetamaskSnapModal = ({
     }
 
     return (
-        <ItemVV2 margin='30px 0 20px 0' gap='8px'>
+        <ItemVV2 margin='30px 0 20px 0' gap='14px'>
             <SnapContainer>
                 <SnapInner>
-                    <Image
+                    <Logo
                         src={Metamask}
                         alt='Metamask'
                     />
                     <SpanV2
                         fontSize="16px"
                         fontWeight="400"
+                        color={theme.modalMessageColor}
                     >
                         Push Snaps
                     </SpanV2>
@@ -63,13 +66,14 @@ const InstallMetamaskSnapModal = ({
             </SnapContainer>
             <SnapContainer>
                 <SnapInner>
-                    <Image
+                    <Logo
                         src={PushIcon}
                         alt="Push Icon"
                     />
                     <SpanV2
                         fontSize="16px"
                         fontWeight="400"
+                        color={theme.modalMessageColor}
                     >
                         Push Browser Extension
                     </SpanV2>
@@ -145,8 +149,9 @@ export default InstallMetamaskSnapModal;
 const SnapContainer = styled(ItemHV2)`
     border-radius: 14px;
     padding:7px 14px;
-    background: #F9F9F9;
+    background:${(props)=>props.theme.snapUIBackground};
     justify-content:space-between;
+    border: 1px solid ${(props)=>props.theme.default.border};
 `
 
 const SnapInner = styled.div`
@@ -155,7 +160,10 @@ const SnapInner = styled.div`
     gap:8px;
 `
 
+const Logo = styled.img``
+
 const Image = styled.img`
+    border-radius: 14px;
 
 `
 
@@ -178,8 +186,10 @@ const InstallButton = styled(Button)`
 const QRCodeContainer = styled(ItemVV2)`
     border-radius: 14px;
     padding:7px 14px;
-    background: #F9F9F9;
+    background:${(props)=>props.theme.snapUIBackground};
+    border: 1px solid ${(props)=>props.theme.default.border};
     padding-bottom:15px;
+    gap:4px;
     &:hover{
         background:
     }
@@ -189,7 +199,7 @@ const QRCodeContainer = styled(ItemVV2)`
 const DownloadContainer = styled.div`
     display:flex;
     border-radius: 8px;
-    background: #1E1E1E;
+    background: ${(props)=>props.theme.snapButtonBackground};
     padding: 4px 11px;
     gap: 8px;
     height:36px;
