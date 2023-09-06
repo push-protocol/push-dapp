@@ -10,6 +10,8 @@ import { ReactComponent as RestrictIcon } from 'assets/PushSnaps/MinusCircle.svg
 import Switch from 'react-switch';
 import { useClickAway } from 'react-use';
 import { useWeb3React } from '@web3-react/core';
+import Tooltip from 'components/reusables/tooltip/Tooltip';
+import InfoImage from "assets/info.svg";
 
 const MetamaskSnapConfigureModal = () => {
   const [walletAddresses, setWalletAddresses] = useState([]);
@@ -83,8 +85,8 @@ const MetamaskSnapConfigureModal = () => {
           },
         });
       }
-    }else{
-        console.log('Signature Validation Failed');
+    } else {
+      console.log('Signature Validation Failed');
     }
   };
 
@@ -116,7 +118,7 @@ const MetamaskSnapConfigureModal = () => {
             setSearchedUser(e.target.value);
           }}
           placeholder="0x123 .... 4567"
-          //   color={theme.modalPrimaryTextColor}
+        //   color={theme.modalPrimaryTextColor}
         />
         <ItemHV2
           margin="14px 0 0 0"
@@ -132,7 +134,14 @@ const MetamaskSnapConfigureModal = () => {
         alignItems="flex-start"
         margin="24px 0 0 0"
       >
-        <PrimaryText>Snooze Notifications</PrimaryText>
+        <ItemHV2 justifyContent='flex-start'>
+          <PrimaryText>
+            Snooze Notifications
+          </PrimaryText>
+
+          <InfoToolTip/>
+        </ItemHV2>
+
         <SecondaryText>Toggle notification pop-ups on or off</SecondaryText>
 
         <ItemHV2
@@ -158,14 +167,66 @@ const MetamaskSnapConfigureModal = () => {
           </SpanV2>
         </ItemHV2>
       </ItemVV2>
-    </Container>
+    </Container >
   );
 };
 
 export default MetamaskSnapConfigureModal;
 
+const InfoToolTip = () =>{
+
+
+  return(
+    <Tooltip
+            wrapperProps={{
+              width: 'fit-content',
+              maxWidth: 'fit-content',
+              minWidth: 'fit-content',
+              // zIndex: "10",
+            }}
+            placementProps={{
+              background: 'none',
+              bottom: "20px",
+              // top: '20px',
+              // right: "-175px",
+              left: '5px',
+            }}
+            tooltipContent={
+              <ToolTipContainer>
+                <ToolTipText>Toggle popups in case of frequent incoming notifications</ToolTipText>
+              </ToolTipContainer>
+            }
+          >
+            <ItemVV2 margin='0 0 0 5px'>
+              <ImageInfo src={InfoImage} />
+            </ItemVV2>
+          </Tooltip>
+
+  )
+}
+
 const Container = styled(ItemVV2)`
   padding: 0px 9px 12px 9px;
+`;
+
+const ToolTipContainer = styled(ItemVV2)`
+box-sizing: border-box;
+width: 18.75rem;
+// height: 7.5rem;
+// max-height: 7.5rem;
+background: ${(props) => props.theme.default.bg};
+border-radius: 1rem 1rem 1rem 0.125rem;
+justify-content: flex-start;
+border: 1px solid rgba(173, 176, 190, 0.2);
+align-items: flex-start;
+padding: 0.75rem 0.25rem 0.75rem 1rem;
+box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+
+@media (max-width:400px){
+  width:16.75rem;
+}
+
+
 `;
 
 const PrimaryText = styled.p`
@@ -184,6 +245,16 @@ const SecondaryText = styled.p`
   text-align: left;
 `;
 
+const ToolTipText = styled.p`
+  margin: 0px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #62626a;
+  color: ${(props)=>props.theme.modalMessageColor};
+  text-align: left;
+`
+
 const AddButton = styled(Button)`
   align-self: end;
   width: fit-content;
@@ -200,49 +271,14 @@ const AddButton = styled(Button)`
   border-radius: 8px;
   padding: 14px;
 `;
-const WalletOuterContainer = styled.div`
+
+const ImageInfo = styled.img`
+  margin-right: 5px;
   display: flex;
-  flex-direction: column;
-  max-height: 250px;
-  overflow-y: auto;
-  width: 100%;
-  gap: 8px;
-  margin-top: 8px;
-
-  &::-webkit-scrollbar {
-    width: 3px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #d53a94;
-    border-radius: 99px;
-  }
-`;
-
-const WalletContainer = styled(ItemHV2)`
-  border-radius: 12px;
-  background: #f2f2f2;
-  flex: none;
-  position: relative;
-  padding: 13px 16px;
-  justify-content: space-between;
-  width: auto;
-  height: 30px;
-  margin-right: 10px;
-`;
-
-const RemoveContainer = styled(ItemHV2)`
-  padding: 8px 12px 8px 8px;
-  gap: 9px;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
   cursor: pointer;
-  position: absolute;
-  right: 0px;
-  top: 5px;
-  height: 25px;
-  border-radius: 12px;
-  border: 1px solid #bac4d6;
-  background: #fff;
-  box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.05);
 `;
 
 const Input = styled.input`
