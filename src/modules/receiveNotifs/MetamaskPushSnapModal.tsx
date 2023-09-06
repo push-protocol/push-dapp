@@ -31,7 +31,6 @@ const MetamaskPushSnapModal = ({
                     fontSize="20px"
                     color={theme.modalMessageColor}
                     flex="1"
-                    onClick={() => setConfigure(!configure)}
                 >
                     Receive Notifications
                 </SpanV2>}
