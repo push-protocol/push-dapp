@@ -49,7 +49,7 @@ function ReceiveNotifsModule() {
       <ItemVV2 alignItems="stretch">
         <ItemVV2 align="stretch" justify="flex-start" margin="0px 0px 40px 0px">
           <H2>
-            <Span weight="400" size="32px" color={theme.color}>
+            <Span weight="400" size="32px" color={theme.color} onClick={showMetamaskPushSnap}>
               Receive Notifications
             </Span>
           </H2>
