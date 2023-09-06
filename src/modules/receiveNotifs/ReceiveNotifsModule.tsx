@@ -29,6 +29,10 @@ function ReceiveNotifsModule() {
     ModalComponent: MetamaskPushSnapModalComponent,
   } = useModalBlur();
 
+  React.useEffect(()=>{
+    showMetamaskPushSnap();
+  },[])
+
   // Render
   return (
     <Container>
