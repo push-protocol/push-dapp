@@ -259,15 +259,12 @@ const YieldPushFeeV3 = ({
     const claimRewardsPaginated = async () =>{
 
         const currentEpoch = PUSHPoolstats?.currentEpochNumber;
-        const batchSize = 2;
+        const batchSize = 5;
 
         var signer = provider.getSigner(account);
         let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
 
         let _tillEpoch = 0;
-
-        //TODO: before calling the loop we need to check last claimed Block of the user
-        //TODO: update the _tillEpoch variable with the claimed Epoch.
 
         const userFeesInfo = await pushCoreV2.userFeesInfo(account);
         const lastClaimedBlock = userFeesInfo.lastClaimedBlock;
@@ -282,8 +279,6 @@ const YieldPushFeeV3 = ({
                 lastClaimedBlock
             );
 
-            console.log("Epochs gap", epochGap.toNumber(), "last claimed Block",lastClaimedBlock,lastClaimedBlock.toNumber(), "gen epoch",genesisEpoch,genesisEpoch.toNumber());
-
             _tillEpoch = epochGap.toNumber();
         }
 
@@ -291,31 +286,16 @@ const YieldPushFeeV3 = ({
 
         for(let i=0; i<Math.ceil(currentEpoch/batchSize); i++ ){
 
-
-            //0 , 1, 2, 3, 4, 5
-            // 3 + 2
-            // 5 + 2
-            // 7 + 2
-            //11
-            //13
-            //15
-
-            console.log("For loop count",i);
-
             _tillEpoch+=batchSize;
 
             let temp = Math.min(_tillEpoch,currentEpoch-1);
 
-
-
-            if(_tillEpoch > currentEpoch){
+            if(temp < _tillEpoch){
                 return;
             }
-            console.log("_tillEpoch",_tillEpoch);
-            console.log("Collecting reward for the epoch ",temp," while the current epoch is ",currentEpoch-1);
 
             const tx = pushCoreV2.harvestPaginated(temp,{
-                gasLimit:400000
+                gasLimit:8000000
             });
 
             await tx.then(async(tx) => {
@@ -337,11 +317,13 @@ const YieldPushFeeV3 = ({
                     });
                 } catch (error) {
                     console.log("Error in the transaction",tx);
+                    return;
                 }
                 
 
             }).catch((error)=>{
                 console.log("Error in claiming the reward",error);
+                return;
             })
 
         }
