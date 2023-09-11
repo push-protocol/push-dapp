@@ -136,8 +136,9 @@ const YieldPushFeeV3 = ({
             }
         }).catch((err) => {
             console.log("Error: ", err)
-            const message = err.reason.includes(" PushCoreV2::unstake:");
-            if (message) {
+            const unstakeErrorMessage = err.reason.includes("PushCoreV2::unstake:");
+            const harvestErrorMessage = err.reason.includes("PushCoreV2::harvestPaginated:");
+            if(unstakeErrorMessage || harvestErrorMessage){
                 setUnstakeErrorMessage("PUSH cannot be unstaked until current epoch is over.");
             } else {
                 let errorMessage = err.reason.slice(err.reason.indexOf('::') + 1);
