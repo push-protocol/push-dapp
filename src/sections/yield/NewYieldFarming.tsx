@@ -17,6 +17,8 @@ import YieldPushFeeV3 from 'components/yield/YieldPushFeeV3';
 
 // Internal Configs
 import { abis, addresses } from 'config';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+import StepsTransactionModal from 'components/StepsTransactionModal';
 
 const NewYieldFarming = (
     { setActiveTab }
@@ -59,7 +61,7 @@ const NewYieldFarming = (
     }, [yieldFarmingLP]);
 
     const getUserDataPush = React.useCallback(async () => {
-        const [pushPoolStats,userDataPush] = await YieldFarmingDataStoreV2.instance.getUserDataPUSH(provider);
+        const [pushPoolStats, userDataPush] = await YieldFarmingDataStoreV2.instance.getUserDataPUSH(provider);
 
         setPUSHPoolStats({ ...pushPoolStats });
         setUserDataPush({ ...userDataPush });
@@ -118,17 +120,43 @@ const NewYieldFarming = (
 
     }, [account]);
 
+    // const {
+    //     isModalOpen: isTransactionModalOpen,
+    //     showModal: openTransactionModal,
+    //     ModalComponent: TransactionModal,
+    // } = useModalBlur();
 
+    // const [currentTransactionNo,setCurrentTransactionNo] = useState(0);
+    // const [totalTransactionNo,setTotalTransactionNo] = useState(0);
+    // const [transactionSteps,setTransactionSteps] = useState(0);
 
     return (
         <>
+
+            {/* <TransactionModal
+                InnerComponent={StepsTransactionModal}
+                InnerComponentProps={{
+                    currentTransactionNo,
+                    totalTransactionNo,
+                    transactionSteps,
+                    setCurrentTransactionNo,
+                    setTotalTransactionNo
+                }}
+                onConfirm={() => { }}
+                modalPadding="0px"
+                modalPosition={MODAL_POSITION.ON_ROOT}
+            /> */}
+
+            {/* <div onClick={openTransactionModal}>Open Modal</div> */}
+
+
             <YieldAnnouncementSection
                 logo={"announcement"}
                 title={"New V2 Pools are now Live! Stake or migrate now."}
                 body={"Users who were part of the previous Push staking program, need to migrate to new pools to continue earning rewards. Click"}
                 setActiveTab={setActiveTab}
             />
-            <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} setPoolStats={setPoolStats}/>
+            <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} setPoolStats={setPoolStats} />
             <YieldPushPriceSection
                 poolStats={poolStats}
             />
@@ -139,6 +167,11 @@ const NewYieldFarming = (
                     getUserDataPush={getUserDataPush}
                     PUSHPoolstats={PUSHPoolstats}
                     getPUSHPoolStats={getPUSHPoolStats}
+                    // currentTransactionNo={currentTransactionNo}
+                    // setCurrentTransactionNo={setCurrentTransactionNo}
+                    // setTotalTransactionNo={setTotalTransactionNo}
+                    // openTransactionModal={openTransactionModal}
+                    // setTransactionSteps={setTransactionSteps}
                 />
 
                 <YieldUniswapV3

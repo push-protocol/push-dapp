@@ -20,24 +20,14 @@ export class CoreV2Reward {
     const coreV2Contract = this.coreV2Contract;
 
     const currentBlockNumber = await coreV2Contract.provider.getBlockNumber();
-    console.log("currentBlockNumber",currentBlockNumber);
     const genesisEpoch = await coreV2Contract
       .genesisEpoch()
       .then((res) => res.toNumber());
 
-    //TODO:Change this back
-    // const currentEpoch = Helpers.lastEpochRelative(
-    //   genesisEpoch,
-    //   currentBlockNumber
-    // );
-  
-
-    const epoch = await coreV2Contract.lastEpochRelative(
+    const currentEpoch = Helpers.lastEpochRelative(
       genesisEpoch,
       currentBlockNumber
-    )
-    const currentEpoch = epoch.toNumber();
-
+    );
 
     this.STATE.currentBlockNumber = currentBlockNumber;
     this.STATE.genesisEpoch = genesisEpoch;
@@ -224,28 +214,14 @@ export class CoreV2Reward {
       return Helpers.toBN(0);
     }
 
-    //TODO:Change this too
-    // const nextFromEpoch = Helpers.lastEpochRelative(
-    //   this.STATE.genesisEpoch,
-    //   Math.max(
-    //     this.STATE.userFeesInfo.lastClaimedBlock.toNumber(),
-    //     this.STATE.genesisEpoch
-    //   )
-    // );
-    const coreV2Contract = this.coreV2Contract;
-
-    const _nextFromEpoch = await coreV2Contract.lastEpochRelative(
+    const nextFromEpoch = Helpers.lastEpochRelative(
       this.STATE.genesisEpoch,
-        Math.max(
+      Math.max(
         this.STATE.userFeesInfo.lastClaimedBlock.toNumber(),
         this.STATE.genesisEpoch
       )
-    )
-
-    const nextFromEpoch = _nextFromEpoch.toNumber();
-
-    console.log("Last Claimed Block", nextFromEpoch, this.STATE.userFeesInfo.lastClaimedBlock.toNumber(),this.STATE.genesisEpoch);
-
+    );
+  
     if (!(_tillEpoch >= nextFromEpoch)) {
       return Helpers.toBN(0);
     }
@@ -253,11 +229,8 @@ export class CoreV2Reward {
     let rewards = Helpers.toBN(0);
     for (let i = nextFromEpoch; i <= _tillEpoch; i++) {
       const claimableReward = this.calculateEpochRewards(i);
-      console.log("Epoch Number", i , "ClaimableReward",claimableReward,parseFloat(ethers.utils.formatEther(claimableReward)));
       rewards = rewards.add(claimableReward);
     }
-
-    console.log("Available for claiming reward",rewards,parseFloat(ethers.utils.formatEther(rewards)));
 
     return rewards;
   }

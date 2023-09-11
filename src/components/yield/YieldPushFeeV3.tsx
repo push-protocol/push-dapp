@@ -25,12 +25,18 @@ import { useDeviceWidthCheck } from 'hooks';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { device } from 'config/Globals';
 import { useClickAway } from 'react-use';
+import StepsTransactionModal from 'components/StepsTransactionModal';
 
 const YieldPushFeeV3 = ({
     userDataPush,
     getUserDataPush,
     PUSHPoolstats,
-    getPUSHPoolStats
+    getPUSHPoolStats,
+    // currentTransactionNo,
+    // setCurrentTransactionNo,
+    // setTotalTransactionNo,
+    // openTransactionModal,
+    // setTransactionSteps
 }) => {
     const { account, provider } = useWeb3React<ethers.providers.Web3Provider>();
 
@@ -39,6 +45,10 @@ const YieldPushFeeV3 = ({
 
     const [unstakeErrorMessage, setUnstakeErrorMessage] = useState(null);
     const [withdrawErrorMessage, setWithdrawErrorMessage] = useState(null);
+
+    const [currentTransactionNo,setCurrentTransactionNo] = useState(0);
+    const [totalTransactionNo,setTotalTransactionNo] = useState(0);
+    const [transactionSteps,setTransactionSteps] = useState(0);
 
     const pushFeeToast = useToast();
     const theme = useTheme();
@@ -212,54 +222,17 @@ const YieldPushFeeV3 = ({
 
         }
 
-        const tx = pushCoreV2.harvestAll();
-
-        tx.then(async (tx) => {
-
-            try {
-                pushFeeToast.showLoaderToast({ loaderMessage: '!Waiting for Confirmation...' });
-                await provider.waitForTransaction(tx.hash);
-
-                pushFeeToast.showMessageToast({
-                    toastTitle: 'Success',
-                    toastMessage: 'Transaction Completed!',
-                    toastType: 'SUCCESS',
-                    getToastIcon: (size) => (
-                        <MdCheckCircle
-                            size={size}
-                            color="green"
-                        />
-                    ),
-                });
-
-                getUserDataPush();
-                setTxInProgressClaimRewards(false);
-            } catch (e) {
-                pushFeeToast.showMessageToast({
-                    toastTitle: 'Error',
-                    toastMessage: `Transaction failed`,
-                    toastType: 'ERROR',
-                    getToastIcon: (size) => <MdError size={size} color="red" />,
-                });
-
-                setTxInProgressClaimRewards(false);
-            }
-        }).catch((err) => {
-            pushFeeToast.showMessageToast({
-                toastTitle: 'Error',
-                toastMessage: `Transaction failed`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => <MdError size={size} color="red" />,
-            });
-
-            setTxInProgressClaimRewards(false);
-        });
+        setTxInProgressClaimRewards(false);
+        claimRewardsPaginated();
+        
     };
 
-    const claimRewardsPaginated = async () =>{
+    const claimRewardsPaginated = async () => {
+
+        openTransactionModal();
 
         const currentEpoch = PUSHPoolstats?.currentEpochNumber;
-        const batchSize = 5;
+        const batchSize = 2;
 
         var signer = provider.getSigner(account);
         let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
@@ -269,9 +242,7 @@ const YieldPushFeeV3 = ({
         const userFeesInfo = await pushCoreV2.userFeesInfo(account);
         const lastClaimedBlock = userFeesInfo.lastClaimedBlock;
 
-        console.log("Last claimed block: " + lastClaimedBlock,lastClaimedBlock.toNumber())
-        
-        if(lastClaimedBlock.toNumber() !== 0){
+        if (lastClaimedBlock.toNumber() !== 0) {
             const genesisEpoch = await pushCoreV2.genesisEpoch();
 
             const epochGap = await pushCoreV2.lastEpochRelative(
@@ -282,28 +253,26 @@ const YieldPushFeeV3 = ({
             _tillEpoch = epochGap.toNumber();
         }
 
-        
+        const totalTransactionNumber = Math.floor((currentEpoch-_tillEpoch) / batchSize);
+        setTotalTransactionNo(totalTransactionNumber);
 
-        for(let i=0; i<Math.ceil(currentEpoch/batchSize); i++ ){
+        let transactionNumber = 0;
+        for (let i = 0; i < totalTransactionNumber; i++) {
 
-            _tillEpoch+=batchSize;
+            _tillEpoch += batchSize;
 
-            let temp = Math.min(_tillEpoch,currentEpoch-1);
+            let temp = Math.min(_tillEpoch, currentEpoch - 1);
 
-            if(temp < _tillEpoch){
-                return;
-            }
-
-            const tx = pushCoreV2.harvestPaginated(temp,{
-                gasLimit:8000000
+            const tx = pushCoreV2.harvestPaginated(temp, {
+                gasLimit: 8000000
             });
 
-            await tx.then(async(tx) => {
+            await tx.then(async (tx) => {
 
                 try {
                     pushFeeToast.showLoaderToast({ loaderMessage: 'Waiting for confirmation' });
                     await provider.waitForTransaction(tx.hash);
-    
+
                     pushFeeToast.showMessageToast({
                         toastTitle: 'Success',
                         toastMessage: 'Transaction Completed!',
@@ -315,19 +284,30 @@ const YieldPushFeeV3 = ({
                             />
                         ),
                     });
+
+                    transactionNumber++;
+                    setCurrentTransactionNo(transactionNumber);
+
                 } catch (error) {
-                    console.log("Error in the transaction",tx);
+                    console.log("Error in the transaction", tx);
                     return;
                 }
-                
 
-            }).catch((error)=>{
-                console.log("Error in claiming the reward",error);
-                return;
+
+            }).catch((error) => {
+                console.log("Error in claiming the reward", error);
+                getUserDataPush();
+                setTransactionSteps(1);
+                setCurrentTransactionNo(0);
+               
+                throw error;
             })
 
         }
-
+        getUserDataPush();
+        setTransactionSteps(2);
+        setCurrentTransactionNo(0);
+        
     }
 
 
@@ -345,6 +325,14 @@ const YieldPushFeeV3 = ({
     const stakingModalToast = useToast();
     const isMobile = useDeviceWidthCheck(600);
 
+    const {
+        isModalOpen: isTransactionModalOpen,
+        showModal: openTransactionModal,
+        ModalComponent: TransactionModal,
+    } = useModalBlur();
+
+   
+
     return (
         <Container>
             <StakingComponent
@@ -355,9 +343,26 @@ const YieldPushFeeV3 = ({
                     getPoolStats: getPUSHPoolStats,
                     setUnstakeErrorMessage: setUnstakeErrorMessage,
                     setWithdrawErrorMessage: setWithdrawErrorMessage,
+                    
                 }}
                 toastObject={stakingModalToast}
                 modalPosition={MODAL_POSITION.ON_PARENT}
+            />
+
+            <TransactionModal
+                InnerComponent={StepsTransactionModal}
+                InnerComponentProps={{
+                    currentTransactionNo,
+                    totalTransactionNo,
+                    transactionSteps,
+                    setCurrentTransactionNo,
+                    setTotalTransactionNo,
+                    setTransactionSteps,
+                    claimRewardsPaginated
+                }}
+                onConfirm={() => { }}
+                modalPadding="0px"
+                modalPosition={MODAL_POSITION.ON_ROOT}
             />
 
             {/* Top Section */}
@@ -575,26 +580,26 @@ const YieldPushFeeV3 = ({
                                     ToolTipTitle={"You can unstake once epoch 2 ends."}
                                     ButtonTitle={"Unstake PUSH"}
                                 />
-                            :
-                            formatTokens(userDataPush?.userStaked) === 0 || unstakeErrorMessage !== null ?
-                                <ErrorToolTip
-                                    ToolTipTitle={unstakeErrorMessage ? unstakeErrorMessage : "Nothing to unstake, Stake First"}
-                                    ButtonTitle={"Unstake PUSH"}
-                                />
                                 :
-                                <EmptyButton
-                                    border={`1px solid ${theme.activeButtonText}`}
-                                    background={'transparent'}
-                                    color={theme.activeButtonText}
-                                    cursor='pointer'
-                                    onClick={withdrawAmountTokenFarmAutomatic}
-                                    style={{ margin: "0px 10px 0px 0px" }}
-                                >
-                                    {txInProgressWithdraw ?
-                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor={theme.activeButtonText} title='Unstaking' titleColor={theme.activeButtonText} />) :
-                                        "Unstake $PUSH"
-                                    }
-                                </EmptyButton>
+                                formatTokens(userDataPush?.userStaked) === 0 || unstakeErrorMessage !== null ?
+                                    <ErrorToolTip
+                                        ToolTipTitle={unstakeErrorMessage ? unstakeErrorMessage : "Nothing to unstake, Stake First"}
+                                        ButtonTitle={"Unstake PUSH"}
+                                    />
+                                    :
+                                    <EmptyButton
+                                        border={`1px solid ${theme.activeButtonText}`}
+                                        background={'transparent'}
+                                        color={theme.activeButtonText}
+                                        cursor='pointer'
+                                        onClick={withdrawAmountTokenFarmAutomatic}
+                                        style={{ margin: "0px 10px 0px 0px" }}
+                                    >
+                                        {txInProgressWithdraw ?
+                                            (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor={theme.activeButtonText} title='Unstaking' titleColor={theme.activeButtonText} />) :
+                                            "Unstake $PUSH"
+                                        }
+                                    </EmptyButton>
 
                             }
 
@@ -634,9 +639,6 @@ const YieldPushFeeV3 = ({
                                     }
                                 </EmptyButton>
                             }
-
-
-                            <EmptyButton onClick={claimRewardsPaginated}>Harvest Paginated</EmptyButton>
                         </ButtonsContainer>
                     </>
                 ) : (
