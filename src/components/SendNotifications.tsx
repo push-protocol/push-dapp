@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useEffect } from 'react';
 
@@ -41,7 +40,7 @@ import PreviewNotif from './PreviewNotif';
 
 // Internal Configs
 import { appConfig } from 'config';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -120,7 +119,7 @@ const LIMITER_KEYS = ['Enter', ','];
 function SendNotifications() {
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(425);
-  const { account, provider, chainId } = useWeb3React();
+  const { account, provider, chainId } = useAccount();
   const { epnsCommWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const { channelDetails, delegatees, aliasDetails: { aliasEthAddr } } = useSelector((state: any) => state.admin);
   const { CHANNNEL_DEACTIVATED_STATE } = useSelector((state: any) => state.channels);

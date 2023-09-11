@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React from 'react';
 
@@ -19,6 +18,7 @@ import { setCommunicatorReadProvider, setCoreReadProvider, setPushAdmin } from '
 import Feedbox from 'segments/Feedbox';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import UsersDataStore from 'singletons/UsersDataStore';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config';
@@ -33,7 +33,7 @@ const InboxModule = ({isSpam}) => {
   ReactGA.pageview('/inbox');
 
   const dispatch = useDispatch();
-  const { account, chainId, provider } = useWeb3React();
+  const { account, chainId, provider } = useAccount();
   const { epnsReadProvider, epnsCommReadProvider } = useSelector((state) => state.contracts);
 
   // toast related section

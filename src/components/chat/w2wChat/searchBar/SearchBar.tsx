@@ -1,6 +1,5 @@
 // React + Web3 Essentials
 import { Web3Provider } from '@ethersproject/providers';
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
@@ -44,8 +43,6 @@ const SearchBar = ({ autofilled }) => {
     setFilteredUserData,
     inbox,
   }: AppContext = useContext<AppContext>(Context);
-  // const { library } = useWeb3React();
-  const { chainId } = useWeb3React<Web3Provider>();
   const [searchedUser, setSearchedUser] = useState<string>('');
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);

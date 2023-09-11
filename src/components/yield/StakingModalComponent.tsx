@@ -4,7 +4,6 @@ import { Input, Span } from 'primaries/SharedStyling';
 // React + Web3 Essentials
 import React, { useState } from 'react';
 import { ethers } from 'ethers';
-import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -20,7 +19,7 @@ import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/S
 
 // Internal Configs
 import { abis, addresses } from 'config';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 
 const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) => {
 
@@ -32,7 +31,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
         setWithdrawErrorMessage
     } = InnerComponentProps;
 
-    const { account, provider } = useWeb3React<ethers.providers.Web3Provider>();
+    const { account, provider } = useAccount();
 
     const [maxAmount, setMaxAmount] = useState(0);
     const [approvedToken, setApprovedToken] = useState(0);

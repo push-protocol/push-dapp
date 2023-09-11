@@ -4,13 +4,13 @@ import styled from 'styled-components';
 // Internal Components
 import { ButtonV2, ImageV2, SpanV2 } from './reusables/SharedStylingV2';
 import swapIcon from '../assets/icons/swapIcon.svg';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { appConfig } from 'config';
 import { device } from 'config/Globals';
 import { useEffect, useState } from 'react';
 import { getHasEnoughPushToken } from 'helpers';
-import { useWeb3React } from '@web3-react/core';
 import useModalBlur, {MODAL_POSITION} from 'hooks/useModalBlur';
 import { UniswapWidgetModal } from './UniswapWidget';
 
@@ -21,7 +21,7 @@ type FaucetInfoType = {
 };
 
 const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: FaucetInfoType) => {
-  const { account, provider } = useWeb3React();
+  const { account, provider } = useAccount();
   const isProd = appConfig.appEnv === 'prod';
 
   const [isFaucetVisible, setIsFaucetVisible] = useState<boolean>(false);

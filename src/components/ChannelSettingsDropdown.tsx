@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import React from 'react';
 
 // External Packages
@@ -30,7 +29,7 @@ import RemoveDelegateModalContent from './RemoveDelegateModalContent';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 
 const ethers = require('ethers');
 
@@ -46,7 +45,7 @@ type ChannelSettingsType = {
 // Create Header
 function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: ChannelSettingsType) {
   const dispatch = useDispatch();
-  const { account, chainId } = useWeb3React();
+  const { account, chainId } = useAccount();
   const { epnsWriteProvider, epnsCommWriteProvider } = useSelector((state: any) => state.contracts);
   const { channelDetails } = useSelector((state: any) => state.admin);
   const { CHANNNEL_DEACTIVATED_STATE, CHANNEL_BLOCKED_STATE } = useSelector((state: any) => state.channels);

@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import React from 'react';
 
 // External Packages
@@ -16,6 +15,7 @@ import MyNFTs from 'components/MyNFTs';
 import MyNFTsV2 from 'components/MyNFTsV2';
 import TransferNFT from 'components/TransferNFT';
 import TransferNFTv2 from 'components/TransferNFTv2';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
@@ -25,7 +25,7 @@ function NftModule() {
   // React GA Analytics
   ReactGA.pageview('/rockstars');
 
-  const { account } = useWeb3React();
+  const { account } = useAccount();
 
   const theme = useTheme();
 

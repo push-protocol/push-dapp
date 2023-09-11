@@ -1,7 +1,6 @@
 // React + Web3 Essentials
 import React, { useState } from 'react';
 import { ethers } from 'ethers';
-import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import styled from 'styled-components';
@@ -11,6 +10,7 @@ import { ItemHV2 } from 'components/reusables/SharedStylingV2';
 import YieldFarmingDataStore from 'singletons/YieldFarmingDataStore';
 import YieldPoolCard from 'components/yield/YieldPoolCard';
 import YieldAnnouncementSection from './YieldAnnouncementSection';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
@@ -21,7 +21,7 @@ export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
 const DeprecatedYieldFarming = ({
     setActiveTab,
 }) => {
-    const { account, provider } = useWeb3React<ethers.providers.Web3Provider>();
+    const { account, provider } = useAccount();
 
     //Initializing the Deprecated YieldFarmingDataStore Class
     const [pushToken, setPushToken] = useState(null);

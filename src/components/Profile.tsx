@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import React, { useContext } from "react";
 
 // External Packages
@@ -12,11 +11,12 @@ import { shortenText } from 'helpers/UtilityHelper';
 import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
 import { ErrorContext } from 'contexts/ErrorContext';
+import { useAccount } from 'hooks';
 
 // Create Header
 function Profile() {
   const { web3NameList }:AppContextType = React.useContext(AppContext);
-  const { account, provider, chainId } = useWeb3React();
+  const { account } = useAccount();
   const { authError } = useContext(ErrorContext);
 
   useResolveWeb3Name(account);

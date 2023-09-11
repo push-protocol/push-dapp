@@ -1,7 +1,6 @@
 // React + Web3 Essentials
 import React, { useState } from 'react';
 import { ethers } from 'ethers';
-import { useWeb3React } from '@web3-react/core';
 
 
 // External Packages
@@ -22,7 +21,7 @@ import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, Skeleton, Skeleto
 
 // Internal Configs
 import { abis, addresses } from 'config';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 
 
 const bn = function (number, defaultValue = null) { if (number == null) { if (defaultValue == null) { return null } number = defaultValue } return ethers.BigNumber.from(number) }
@@ -33,7 +32,7 @@ const YieldUniswapV3 = ({
     getLpPoolStats,
     getUserDataLP
 }) => {
-    const { account, provider } = useWeb3React<ethers.providers.Web3Provider>();
+    const { account, provider } = useAccount();
 
     const [txInProgressWithdraw, setTxInProgressWithdraw] = React.useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);

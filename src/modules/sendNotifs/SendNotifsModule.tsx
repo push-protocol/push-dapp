@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import React from 'react';
 
 // External Packages
@@ -11,6 +10,7 @@ import { Navigate } from 'react-router-dom';
 // Internal Components
 import SendNotifications from 'components/SendNotifications';
 import { Section } from 'primaries/SharedStyling';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -25,7 +25,7 @@ function ChannelDashboardPage() {
   ReactGA.pageview('/send_notificaiton');
 
   const dispatch = useDispatch();
-  const { account, chainId } = useWeb3React();
+  const { account, chainId } = useAccount();
   const { epnsReadProvider, epnsWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const { channelDetails } = useSelector((state: any) => state.admin);
 

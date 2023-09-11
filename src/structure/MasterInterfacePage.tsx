@@ -50,7 +50,6 @@ const YieldFarmingV2Page = lazy(() => import('pages/YieldFarmingPageV2'));
 // import YieldFarmingPage from 'pages/YieldFarmingPage';
 
 // Internal Configs
-import { useWeb3React } from '@web3-react/core';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import GLOBALS from 'config/Globals';
 import { ethers } from 'ethers';
