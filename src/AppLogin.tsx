@@ -1,11 +1,5 @@
 // React + Web3 Essentials
 import { Web3Provider } from '@ethersproject/providers';
-import { AbstractConnector } from '@web3-react/abstract-connector';
-import { useWeb3React } from '@web3-react/core';
-// import {
-//   NoEthereumProviderError,
-//   UserRejectedRequestError as UserRejectedRequestErrorInjected
-// } from '@web3-react/injected-connector';
 import { ethers } from "ethers";
 import React, { useContext, useEffect, useState } from 'react';
 
@@ -27,11 +21,7 @@ import {
   SectionV2,
   SpanV2
 } from 'components/reusables/SharedStylingV2';
-// import { injected, ledger, walletconnect } from 'connectors';
-import { walletConnectV2 } from './connectors/walletConnectV2';
-import { metaMask } from './connectors/metaMask';
-// import { walletConnectV2 } from 'connectors';
-import { useDeviceWidthCheck, useEagerConnect, useInactiveListener } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import styled, { useTheme } from 'styled-components';
 import LedgerLogoDark from './assets/login/ledgerDark.svg';
 import LedgerLogoLight from './assets/login/ledgerLight.svg';
@@ -43,33 +33,20 @@ import { ReactComponent as PushLogoDark } from './assets/pushDark.svg';
 import { ReactComponent as PushLogoLight } from './assets/pushLight.svg';
 import { swapPropertyOrder } from 'helpers/UtilityHelper';
 import { ErrorContext } from './contexts/ErrorContext';
-import { getAddChainParameters } from './connectors/chains';
-
-import { WalletConnect } from '@web3-react/walletconnect-v2'
-import { Network } from "@web3-react/network";
-import { MetaMask } from '@web3-react/metamask';
-
-
-
 
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
+import { web3Onboard } from './connectors/web3Onboard';
 
 // define the different type of connectors which we use
 const web3Connectors = {
-  Injected: {
-    obj: metaMask,
-    logolight: MMLogoLight,
-    logodark: MMLogoDark,
-    title: 'Metamask',
-  },
-  WalletConnect: {
-    obj: walletConnectV2,
+  Web3Onboard: {
+    obj: web3Onboard,
     logolight: WCLogoLight,
     logodark: WCLogoDark,
-    title: 'Wallet Connect',
-  },
+    title: "Web3 Onboard",
+  }
   // Trezor: {obj: trezor, logo: './svg/login/trezor.svg', title: 'Trezor'},
   // Ledger: { obj: ledger, logolight: LedgerLogoLight, logodark: LedgerLogoDark, title: 'Ledger' },
 };
@@ -80,20 +57,12 @@ const AppLogin = ({ toggleDarkMode }) => {
   ReactGA.pageview('/login');
 
   // Web3 React logic
-  const { connector ,isActive, account, chainId } = useWeb3React<Web3Provider>();
-  const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
+  const { isActive, connect } = useAccount();
   const { authError, setAuthError } = useContext(ErrorContext);
   const [errorMessage, setErrorMessage] = React.useState(undefined);
 
 
   const isMobile = useDeviceWidthCheck(600);
-  const web3ConnectorsObj:Object = isMobile?swapPropertyOrder(web3Connectors,'Injected','WalletConnect'):web3Connectors;
-  
-  React.useEffect(() => {
-    if (activatingConnector && activatingConnector === connector) {
-      setActivatingConnector(undefined);
-    }
-  }, [activatingConnector, connector]);
 
   // theme context
   const theme = useTheme();
@@ -174,13 +143,10 @@ useEffect(() => {
           </H2V2>
 
           <ItemVV2 alignSelf="stretch" alignItems="flex-start" margin={`0 0 ${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0`}>
-            {Object.keys(web3ConnectorsObj).map((name) => {
-              const currentConnector = web3Connectors[name].obj;
-              const disabled = currentConnector === connector && isActive;
+            {Object.keys(web3Connectors).map((name) => {
+              const disabled = isActive();
               const image = theme.scheme == 'light' ? web3Connectors[name].logolight : web3Connectors[name].logodark;
               const title = web3Connectors[name].title;
-              const desiredChain = appConfig.coreContractChain;
-              const chainIds = appConfig.allowedNetworks;
 
               return (
                 <LoginButton
@@ -193,27 +159,14 @@ useEffect(() => {
                   minWidth="140px"
                   alignSelf="stretch"
                   key={name}
-                  onClick={async () => {
-                    setActivatingConnector(currentConnector);
-                   
+                  onClick={async () => {                   
                     try {
-                    setAuthError(undefined);
-                    if (currentConnector instanceof WalletConnect) {
-                        await currentConnector.activate(desiredChain);
-                    } else {
-                      if (window.ethereum === undefined || window.ethereum.networkVersion === undefined){
-                        setAuthError({
-                          message: 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile',
-                         })
-                      }
-                      else{
-                        await currentConnector.activate(chainIds.includes(parseInt(window.ethereum.networkVersion)) ? '' : getAddChainParameters(desiredChain));
-                      }
+                      setAuthError(undefined);
+                      connect();
                     }
-                  }
-                  catch(error){
-                    setAuthError(error);
-                  }
+                    catch(error){
+                      setAuthError(error);
+                    }
                   }}>
                   <ImageV2 src={image} height="40px" width="50px" padding="5px" />
 
