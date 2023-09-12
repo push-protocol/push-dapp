@@ -4619,7 +4619,7 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
     "@pushprotocol/ledgerlive": latest
-    "@pushprotocol/restapi": 1.4.15
+    "@pushprotocol/restapi": 1.4.18
     "@pushprotocol/socket": latest
     "@pushprotocol/uiweb": 1.1.13
     "@reduxjs/toolkit": ^1.7.1
@@ -4821,9 +4821,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:1.4.15":
-  version: 1.4.15
-  resolution: "@pushprotocol/restapi@npm:1.4.15"
+"@pushprotocol/restapi@npm:1.4.18":
+  version: 1.4.18
+  resolution: "@pushprotocol/restapi@npm:1.4.18"
   dependencies:
     "@ambire/signature-validator": ^1.3.1
     "@metamask/eth-sig-util": ^5.0.2
@@ -4841,7 +4841,7 @@ __metadata:
     video-stream-merger: ^4.0.1
   peerDependencies:
     ethers: ^5.6.8
-  checksum: db6c0dbb16cb3d73722f1276b79e9aa63cc6f87a1fa9c8225858b5316480fc3f2c0cf985c6ba18e610f416e6285708f8bf6d1a7e1d9ef7a1e110d62b488f7406
+  checksum: a350b385db72c5ce106ed940d77acfac11cec1960409b18698d63d3359a84788da503b62fa3fd01f94b7a7d3634614e26346432d833eb0d69b717c00bb627415
   languageName: node
   linkType: hard
 

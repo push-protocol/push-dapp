@@ -72,7 +72,7 @@ const SnapInformationModal = () => {
           />
           <ItemVV2 margin="0 0 0 16px">
             <PrimaryText>Notifications</PrimaryText>
-            <SecondaryText>Notifying users for all updates from the channels that they opt-in to.</SecondaryText>
+            <SecondaryText>Get notified by your favourite channels using Push Snap.</SecondaryText>
           </ItemVV2>
         </ItemHV2>
 
@@ -83,7 +83,7 @@ const SnapInformationModal = () => {
           />
           <ItemVV2 margin="0 0 0 16px">
             <PrimaryText>Address Selection</PrimaryText>
-            <SecondaryText>Add or remove your wallet address for receiving notifications. </SecondaryText>
+            <SecondaryText>Add or remove your wallet preferred wallet addresses for notifications.</SecondaryText>
           </ItemVV2>
         </ItemHV2>
 
@@ -94,7 +94,7 @@ const SnapInformationModal = () => {
           />
           <ItemVV2 margin="0 0 0 16px">
             <PrimaryText>Customize Notification Pop-ups</PrimaryText>
-            <SecondaryText>Snap allows users to toggle popup notifications as per their convenience. </SecondaryText>
+            <SecondaryText>Snooze popup notifications as per your convenience.</SecondaryText>
           </ItemVV2>
         </ItemHV2>
       </ItemVV2>
