@@ -99,19 +99,20 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
 
         let tx;
-        const uintMax = bn(2).pow(bn(256)).sub(1);
+        // const uintMax = bn(2).pow(bn(256)).sub(1);
+        const fees = ethers.utils.parseUnits(depositAmount.toString(), 18);
 
         if (title === 'Uni-V2') {
             const tokencontractinstance = new ethers.Contract(addresses.uniV2LPToken, abis.uniV2LpToken, signer);
             tx = tokencontractinstance.approve(
                 addresses.stakingV2,
-                uintMax
+                fees
             );
         } else {
             const tokencontractinstance = new ethers.Contract(addresses.pushToken, abis.uniV2LpToken, signer);
             tx = tokencontractinstance.approve(
                 addresses.pushCoreV2,
-                uintMax
+                fees
             )
         }
 
