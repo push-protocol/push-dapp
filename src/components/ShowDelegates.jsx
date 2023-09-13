@@ -20,7 +20,7 @@ import DelegateInfo from './DelegateInfo';
 import RemoveDelegateModalContent from './RemoveDelegateModalContent';
 
 const isOwner = (account, delegate) => {
-  return account.toLowerCase() !== delegate.toLowerCase();
+  return account?.toLowerCase() !== delegate?.toLowerCase();
 };
 
 const ShowDelegates = () => {
@@ -45,8 +45,8 @@ const ShowDelegates = () => {
   };
 
   useEffect(() => {
-    fetchDelegatees();
-  }, []);
+    if(account) fetchDelegatees();
+  }, [account]);
 
   const fetchDelegatees = async () => {
     try {

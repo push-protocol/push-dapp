@@ -101,7 +101,7 @@ const GovModule = () => {
       const epnsTokenContract = new ethers.Contract(addresses.epnsToken, abis.epnsToken, signer);
       setEpnsToken(epnsTokenContract);
     }
-  }, [account, provider]);
+  }, [account]);
 
   React.useEffect(() => {
     if (epnsToken) {

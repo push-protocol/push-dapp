@@ -227,7 +227,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                   setSearch(e.target.value);
                 }}
                 className="input"
-                placeholder={`Search by Name or ${account.slice(0, 6)}`}
+                placeholder={`Search by Name or ${account?.slice(0, 6)}`}
               />
               <Item
                 position="absolute"
