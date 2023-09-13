@@ -13,7 +13,12 @@ export const web3Onboard = Onboard({
     icon: PushLogo,
     logo: PushLogo,
     description: 'The Communication Protocol of Web3',
-    explore: "https://app.push.org"
+    explore: "https://app.push.org",
+    agreement: {
+      termsUrl: "https://push.org/tos",
+      version: "2nd Nov 2020",
+      privacyUrl: "https://push.org/privacy",
+    },
   },
   accountCenter: {
     desktop: {
@@ -24,7 +29,7 @@ export const web3Onboard = Onboard({
     },
   },
   connect: {
-    showSidebar: false,
+    showSidebar: true,
     autoConnectLastWallet: true,
     removeWhereIsMyWalletWarning: true,
   },

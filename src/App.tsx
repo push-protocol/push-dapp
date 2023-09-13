@@ -52,6 +52,7 @@ import {
   SpacesUI,
 } from '@pushprotocol/uiweb';
 import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
+import { useUpdateTheme } from '@web3-onboard/react';
 
 dotenv.config();
 
@@ -77,6 +78,7 @@ export default function App() {
   const {isActive, account, chainId, provider} = useAccount();
   const [currentTime, setcurrentTime] = React.useState(0);
   const {authError, setAuthError } = useContext(ErrorContext);
+  const updateOnboardTheme = useUpdateTheme();
 
   const { run, stepIndex, tutorialContinous } = useSelector((state: any) => state.userJourney);
   const location = useLocation();
@@ -118,13 +120,20 @@ export default function App() {
   useSDKSocket({ account, chainId, env: appConfig.appEnv});
   
   const toggleDarkMode = () => {
+    const newTheme = !darkMode ? 'dark' : 'light';
+    updateOnboardTheme(newTheme);
+    document.documentElement.setAttribute('theme', newTheme);
     setDarkMode(!darkMode);
   };
 
   React.useEffect(() => {
     const data = localStorage.getItem('theme');
     if (data) {
-      setDarkMode(JSON.parse(data));
+      const isDarkMode = JSON.parse(data);
+      const theme = isDarkMode ? 'dark' : 'light';
+      setDarkMode(isDarkMode);
+      updateOnboardTheme(theme);
+      document.documentElement.setAttribute('theme', theme);
     }
   }, []);
 
