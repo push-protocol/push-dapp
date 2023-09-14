@@ -5,7 +5,7 @@ import { ethers } from 'ethers';
 export const useAccount = () => {
   const [{ wallet, connecting }, connect, disconnect, updateBalances, setWalletModules, setPrimaryWallet] =
     useConnectWallet();
-  const [address, setAddress] = useState<string>();
+  const [address, setAddress] = useState<string>(wallet && wallet.accounts.length > 0 ? wallet.accounts[0].address : undefined);
 
   const [{ chains, connectedChain, settingChain }, setChain] = useSetChain();
 
