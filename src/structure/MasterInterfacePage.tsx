@@ -57,6 +57,7 @@ import { ethers } from 'ethers';
 import CryptoHelper from 'helpers/CryptoHelper';
 import * as w2wHelper from 'helpers/w2w';
 import { ConnectedUser, Feeds, User } from 'types/chat';
+import SnapPage from 'pages/SnapPage';
 
 // Create Header
 function MasterInterfacePage() {
@@ -93,6 +94,7 @@ function MasterInterfacePage() {
             <Route path="receive" element={<ReceiveNotifsPage />} />
 
             <Route path="govern" element={<GovPage />} />
+            <Route path="snap" element={<SnapPage />} />
 
             {/* <Route path="yield" element={<YieldFarmingPage />} /> */}
             <Route path="yieldv2" element={<YieldFarmingV2Page />} />

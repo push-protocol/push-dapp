@@ -187,7 +187,6 @@ const NavigationList = {
       },
     },
 
-
     receiveNotifs: {
       src: 'navigation/receiveNotifOffIcon.svg',
       activeSrc: 'navigation/receiveNotifOnIcon.svg',
