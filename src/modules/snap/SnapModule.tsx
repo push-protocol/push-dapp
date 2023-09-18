@@ -55,7 +55,7 @@ const SnapModule = () => {
 
             <Image src={PushMetamaskLogo} width='152px' height='55px' />
 
-            <SubContainer margin='24px 0 0 0'>
+            <SubContainer >
 
                 <ItemVV2>
                     <Image src={SnapExample} width='276px' height='202px' />
@@ -166,7 +166,7 @@ const SubContainer = styled(Section)`
     border-radius: 32px;
     background: #FFF;
     box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.05);
-    margin:auto;
+    margin: 24px auto;
 `
 
 const SnapButton = styled(ButtonV2)`
