@@ -25,12 +25,12 @@ const MetamaskSnapConfigureModal = () => {
   async function getSignature(mode: number) {
     if (mode == 1) {
       const signer = provider.getSigner(account);
-      const signature = await signer.signMessage('Add address to receive notifications');
+      const signature = await signer.signMessage(`Add address ${account} to receive notifications via Push Snap in MetaMask`);
       return signature;
     }
     if (mode == 2) {
       const signer = provider.getSigner(account);
-      const signature = await signer.signMessage('Remove address to receive notifications');
+      const signature = await signer.signMessage(`Remove address ${account }to stop receive notifications via Push Snap in MetaMask`);
       return signature;
     }
   }
@@ -51,7 +51,6 @@ const MetamaskSnapConfigureModal = () => {
           },
         });
         console.log('Added', searchedUser);
-        setWalletAddresses((prev) => [...prev, searchedUser]);
       }
     } else {
       console.log('Signature Validation Failed');
@@ -90,6 +89,18 @@ const MetamaskSnapConfigureModal = () => {
     }
   };
 
+  const getWalletAddresses = async () => {
+    const result = await window.ethereum?.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: defaultSnapOrigin,
+        request: { method: 'pushproto_getaddresses' },
+      },
+    });
+    console.log('result', result);
+    setWalletAddresses(result);
+  }
+
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => {
     console.log('Set show to be null');
@@ -126,7 +137,7 @@ const MetamaskSnapConfigureModal = () => {
           gap="5px"
         >
           <AddButton onClick={addWalletAddresses}>Add</AddButton>
-          <AddButton onClick={removeWalletAddresses}>Remove</AddButton>
+          <AddButton onClick={getWalletAddresses}>Get Addresses</AddButton>
         </ItemHV2>
       </ItemVV2>
 
