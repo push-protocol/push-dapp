@@ -33,16 +33,14 @@ const SnapModule = () => {
         setLoading(!loading);
     }
 
-    //notification modal
+    //About Snap Info Modal
     const {
         isModalOpen: isMetamaskPushSnapOpen,
         showModal: showPushSnapAbout,
         ModalComponent: AboutPushSnapModalComponent,
     } = useModalBlur();
 
-    // React.useEffect(() => {
-    //     showMetamaskPushSnap();
-    // }, [])
+    
 
     return (
         <Container>
@@ -55,11 +53,9 @@ const SnapModule = () => {
             />
 
 
-            <div onClick={() => setWalletConnected(!walletConnected)}> Dummy Connect button </div>
-
             <Image src={PushMetamaskLogo} width='152px' height='55px' />
 
-            <SubContainer>
+            <SubContainer margin='24px 0 0 0'>
 
                 <ItemVV2>
                     <Image src={SnapExample} width='276px' height='202px' />
@@ -96,7 +92,7 @@ const SnapModule = () => {
                             <SpanV2 color='#657795' fontSize='14px' fontWeight='400'>Connected to Push Snap</SpanV2>
                         </ItemHV2>
                     ) : (
-                        <ItemVV2 onClick={connectToMetamask}>
+                        <ItemVV2>
                             {loading ? (
                                 <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={44} />
                             ) : (

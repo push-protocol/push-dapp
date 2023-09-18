@@ -187,32 +187,6 @@ const NavigationList = {
       },
     },
 
-    pushSnaps: {
-      src: 'navigation/receiveNotifOffIcon.svg',
-      activeSrc: 'navigation/receiveNotifOnIcon.svg',
-      iconFactory: null,
-      name: 'Push Snap',
-      title: 'Push Snap',
-      alt: 'Push Snap',
-      href: '/snap',
-      newTab: false,
-      isRoute: true,
-      hasMenuLogic: true,
-      hidden: false,
-      headerTag: {
-        title: 'Push Snap',
-        light: {
-          bg: GLOBALS.COLORS.GRADIENT_THIRD,
-          fg: themeLight.headerTagFg,
-        },
-        dark: {
-          bg: themeDark.headerTagBg,
-          fg: themeDark.headerTagFg,
-        },
-      },
-    },
-
-
     receiveNotifs: {
       src: 'navigation/receiveNotifOffIcon.svg',
       activeSrc: 'navigation/receiveNotifOnIcon.svg',
