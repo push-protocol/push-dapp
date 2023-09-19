@@ -33,6 +33,10 @@ function ReceiveNotifsModule() {
   //   showMetamaskPushSnap();
   // },[])
 
+  // React.useEffect(()=>{
+  //   showMetamaskPushSnap();
+  // },[])
+
   // Render
   return (
     <Container>
