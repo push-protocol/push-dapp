@@ -263,6 +263,9 @@ const themeLight = {
 
   snapUIBackground:'#F9F9F9',
   snapButtonBackground:'#1E1E1E',
+  snapPrimaryText:'',
+  snapSecondaryText:'#62626a',
+  snapBackground:'#F2F2F2',
 
 };
 
@@ -535,6 +538,10 @@ const themeDark = {
 
   snapUIBackground:'transparent',
   snapButtonBackground:'#404650',
+  snapPrimaryText:'',
+  snapSecondaryText:'#787E99',
+  snapBackground:'#404650',
+  
 };
 
 module.exports = {
