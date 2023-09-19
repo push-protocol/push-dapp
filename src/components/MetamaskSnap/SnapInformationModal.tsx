@@ -59,6 +59,7 @@ const SnapInformationModal = () => {
         fontSize="22px"
         fontWeight="500"
         letterSpacing="-0.44px"
+        color={theme.modalMessageColor}
       >
         Connect to Metamask Push Snap
       </SpanV2>
@@ -136,6 +137,7 @@ const PrimaryText = styled.p`
   font-size: 18px;
   font-weight: 500;
   align-self: baseline;
+  color:${(props)=>props.theme.modalMessageColor};
 `;
 
 const SecondaryText = styled.p`
@@ -143,7 +145,7 @@ const SecondaryText = styled.p`
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  color: #62626a;
+  color:${(props)=>props.theme.snapSecondaryText};
   text-align: left;
 `;
 

@@ -26,7 +26,7 @@ const MetamaskPushSnapModal = ({
 
 
     return (
-        <ItemVV2 padding="20px 15px" width="420px">
+        <Container padding="20px 15px" >
             <ItemHV2 justifyContent='space-between'>
 
                 {SnapState !== 1 && <Back width='24px' cursor='pointer' onClick={()=>setSnapState(1)}/>}
@@ -50,8 +50,17 @@ const MetamaskPushSnapModal = ({
             {SnapState == 3 && <MetamaskSnapConfigureModal />}
 
 
-        </ItemVV2>
+        </Container>
     );
 };
 
 export default MetamaskPushSnapModal;
+
+const Container = styled(ItemVV2)`
+    min-width:420px;
+
+    @media(max-width:476px){
+        min-width:360px;
+    }
+
+`   

@@ -23,11 +23,14 @@ import { ReactComponent as Gear } from 'assets/PushSnaps/Gear.svg';
 
 import PushSnapModal from './PushSnapModal';
 import AboutSnapModal from './AboutSnapModal';
+import { AppContext } from 'contexts/AppContext';
 
 const SnapModule = () => {
   const [loading, setLoading] = useState(false);
   const [walletConnected, setWalletConnected] = useState(false);
   const [snapInstalled, setSnapInstalled] = useState(false);
+
+  const { showMetamaskPushSnap } = React.useContext(AppContext);
 
   const { account, provider } = useWeb3React();
 
@@ -214,7 +217,7 @@ const SnapModule = () => {
 
           {walletConnected ? (
             <ItemHV2 gap="12px">
-              <SettingsButton>
+              <SettingsButton onClick={showMetamaskPushSnap}>
                 <Gear
                   height="20px"
                   width="20px"
@@ -252,10 +255,6 @@ export default SnapModule;
 const Container = styled(Section)`
   align-items: center;
   align-self: center;
-  // background: ${(props) => props.theme.default.bg};
-  background: #f4f5fa;
-  border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
-  box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
   display: flex;
   flex-direction: column;
   flex: initial;
@@ -268,24 +267,7 @@ const Container = styled(Section)`
   padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
   position: relative;
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-
-  @media ${device.laptop} {
-    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
-    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
-    width: calc(
-      100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} -
-        ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
-    );
-  }
-
-  @media ${device.mobileL} {
-    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
-    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
-    width: calc(
-      100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} -
-        ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
-    );
-  }
+  
 `;
 
 const SubContainer = styled(Section)`
