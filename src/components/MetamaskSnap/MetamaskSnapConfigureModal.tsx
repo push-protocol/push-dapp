@@ -3,20 +3,23 @@ import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { device } from 'config/Globals';
 import { shortenText } from 'helpers/UtilityHelper';
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import { ReactComponent as RestrictIcon } from 'assets/PushSnaps/MinusCircle.svg';
+import { ReactComponent as MinusCircle } from 'assets/PushSnaps/MinusCircle.svg';
 import Switch from 'react-switch';
 import { useClickAway } from 'react-use';
 import { useWeb3React } from '@web3-react/core';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import InfoImage from "assets/info.svg";
+import { AiOutlineMore } from 'react-icons/ai';
 
 const MetamaskSnapConfigureModal = () => {
   const [walletAddresses, setWalletAddresses] = useState([]);
   const [searchedUser, setSearchedUser] = useState('');
   const [showRemove, setShowRemove] = useState();
+  const theme = useTheme();
 
   const defaultSnapOrigin = 'npm:push-v1';
 
@@ -30,7 +33,7 @@ const MetamaskSnapConfigureModal = () => {
     }
     if (mode == 2) {
       const signer = provider.getSigner(account);
-      const signature = await signer.signMessage(`Remove address ${account }to stop receive notifications via Push Snap in MetaMask`);
+      const signature = await signer.signMessage(`Remove address ${account}to stop receive notifications via Push Snap in MetaMask`);
       return signature;
     }
   }
@@ -104,14 +107,41 @@ const MetamaskSnapConfigureModal = () => {
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => {
     console.log('Set show to be null');
+    setWalletSelected(null);
     setShowRemove(null);
   });
 
+
+  const [addresses, setAddresses] = useState([]);
+  const addAddresses = () => {
+    console.log('Searched User', searchedUser);
+    if (searchedUser) {
+      setAddresses((prev) => [...prev, searchedUser])
+    }
+  }
+  const [walletSelected, setWalletSelected] = useState();
+
+  const wallets = [
+    '0x6D2a0194bD791CADd7a3F5c9464cE9fC24a49e71',
+    '0x6D2a0194bD791CADd7a3F5c9464cE9fC24a49e71',
+    '0x6D2a0194bD791CADd7a3F5c9464cE9fC24a49e71',
+    '0x6D2a0194bD791CADd7a3F5c9464cE9fC24a49e71',
+    '0x6D2a0194bD791CADd7a3F5c9464cE9fC24a49e71',
+    '0x6D2a0194bD791CADd7a3F5c9464cE9fC24a49e71',
+    '0x6D2a0194bD791CADd7a3F5c9464cE9fC24a49e71',
+    '0x6D2a0194bD791CADd7a3F5c9464cE9fC24a49e71'
+  ]
+
+  const handleWalletSelect = (address) => {
+    setWalletSelected(address);
+  }
+
   return (
-    <Container>
+    <Container >
       <SpanV2
         fontSize="22px"
         fontWeight="500"
+        color={theme.modalMessageColor}
       >
         Settings
       </SpanV2>
@@ -119,6 +149,7 @@ const MetamaskSnapConfigureModal = () => {
       <ItemVV2
         alignItems="baseline"
         margin="24px 0 0 0"
+        padding='0 9px 0 0'
       >
         <PrimaryText>Notification Address</PrimaryText>
         <SecondaryText>Add or remove wallet address to receive notifications</SecondaryText>
@@ -129,28 +160,49 @@ const MetamaskSnapConfigureModal = () => {
             setSearchedUser(e.target.value);
           }}
           placeholder="0x123 .... 4567"
-        //   color={theme.modalPrimaryTextColor}
         />
         <ItemHV2
           margin="14px 0 0 0"
           justifyContent="end"
           gap="5px"
         >
-          <AddButton onClick={addWalletAddresses}>Add</AddButton>
+          <AddButton
+            // onClick={addWalletAddresses}
+            onClick={addAddresses}
+          >Add</AddButton>
           <AddButton onClick={getWalletAddresses}>Get Addresses</AddButton>
         </ItemHV2>
       </ItemVV2>
 
+
+
+      <AddressesContainer ref={containerRef}>
+        {addresses?.map((wallet) => (
+          <AddressesSubContainer>
+            <SpanV2 fontSize='15px' fontWeight='500' color={walletSelected === wallet ? '#D53A94' : theme.default.color}>{shortenText(wallet, 8)}</SpanV2>
+            <MoreOptions onClick={() => handleWalletSelect(wallet)} color={theme.default.color}/>
+
+            {walletSelected === wallet && <RemoveDiv >
+                <MinusCircle />
+                <SpanV2 fontSize='16px' fontWeight='400' color='#657795'>Remove</SpanV2>
+              </RemoveDiv>
+            }
+          </AddressesSubContainer>
+        ))}
+      </AddressesContainer>
+
+
       <ItemVV2
         alignItems="flex-start"
         margin="24px 0 0 0"
+        
       >
         <ItemHV2 justifyContent='flex-start'>
           <PrimaryText>
             Snooze Notifications
           </PrimaryText>
 
-          <InfoToolTip/>
+          <InfoToolTip />
         </ItemHV2>
 
         <SecondaryText>Toggle notification pop-ups on or off</SecondaryText>
@@ -173,6 +225,7 @@ const MetamaskSnapConfigureModal = () => {
           <SpanV2
             fontSize="18px"
             fontWeight="500"
+            color={theme.modalMessageColor}
           >
             {checked ? 'On' : 'Off'}
           </SpanV2>
@@ -184,40 +237,40 @@ const MetamaskSnapConfigureModal = () => {
 
 export default MetamaskSnapConfigureModal;
 
-const InfoToolTip = () =>{
+const InfoToolTip = () => {
 
 
-  return(
+  return (
     <Tooltip
-            wrapperProps={{
-              width: 'fit-content',
-              maxWidth: 'fit-content',
-              minWidth: 'fit-content',
-              // zIndex: "10",
-            }}
-            placementProps={{
-              background: 'none',
-              bottom: "20px",
-              // top: '20px',
-              // right: "-175px",
-              left: '5px',
-            }}
-            tooltipContent={
-              <ToolTipContainer>
-                <ToolTipText>Toggle popups in case of frequent incoming notifications</ToolTipText>
-              </ToolTipContainer>
-            }
-          >
-            <ItemVV2 margin='0 0 0 5px'>
-              <ImageInfo src={InfoImage} />
-            </ItemVV2>
-          </Tooltip>
+      wrapperProps={{
+        width: 'fit-content',
+        maxWidth: 'fit-content',
+        minWidth: 'fit-content',
+        // zIndex: "10",
+      }}
+      placementProps={{
+        background: 'none',
+        bottom: "20px",
+        // top: '20px',
+        // right: "-175px",
+        left: '5px',
+      }}
+      tooltipContent={
+        <ToolTipContainer>
+          <ToolTipText>Toggle popups in case of frequent incoming notifications</ToolTipText>
+        </ToolTipContainer>
+      }
+    >
+      <ItemVV2 margin='0 0 0 5px'>
+        <ImageInfo src={InfoImage} />
+      </ItemVV2>
+    </Tooltip>
 
   )
 }
 
 const Container = styled(ItemVV2)`
-  padding: 0px 9px 12px 9px;
+  padding: 0px 0px 12px 9px;
 `;
 
 const ToolTipContainer = styled(ItemVV2)`
@@ -245,6 +298,7 @@ const PrimaryText = styled.p`
   font-size: 18px;
   font-weight: 500;
   align-self: baseline;
+  color:${(props)=>props.theme.modalMessageColor};
 `;
 
 const SecondaryText = styled.p`
@@ -252,8 +306,8 @@ const SecondaryText = styled.p`
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  color: #62626a;
   text-align: left;
+  color:${(props)=>props.theme.snapSecondaryText};
 `;
 
 const ToolTipText = styled.p`
@@ -262,7 +316,7 @@ const ToolTipText = styled.p`
   font-weight: 400;
   line-height: 24px;
   color: #62626a;
-  color: ${(props)=>props.theme.modalMessageColor};
+  color: ${(props) => props.theme.modalMessageColor};
   text-align: left;
 `
 
@@ -300,14 +354,12 @@ const Input = styled.input`
   height: 48px;
   padding: 13px 16px;
   margin: 10px 0px 0px;
-  //   border: 1px solid;
-  //   border-color: ${(props) => props.theme.modalSearchBarBorderColor};
   background: ${(props) => props.theme.modalSearchBarBackground};
 
   border-radius: 12px;
   border: 1px solid #bac4d6;
 
-  color: ${(props) => props.color || '#000'};
+  color: ${(props) => props.theme.default.secondaryColor || '#000'};
   &:focus {
     outline: none;
     background-origin: border;
@@ -315,9 +367,66 @@ const Input = styled.input`
     background-clip: padding-box, border-box;
   }
   &::placeholder {
-    color: #657795;
+    color: ${(props) => props.theme.default.secondaryColor || '#000'};
   }
   @media ${device.mobileL} {
     min-width: 300px;
   }
 `;
+
+const AddressesContainer = styled.div`
+  display:flex;
+  flex-direction:column;
+  width: -webkit-fill-available;
+  overflow-y: scroll;
+  gap: 8px;
+  margin:8px 0 0 0;
+  max-height: 250px;
+  flex-wrap: nowrap;
+  padding:5px 5px 5px 0;
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0.44, #cf1c84),
+      color-stop(0.72, #cf1c84),
+      color-stop(0.86, #cf1c84)
+    );
+  }
+`
+
+const AddressesSubContainer = styled(ItemHV2)`
+  max-height: 42px;
+  padding: 13px 16px;
+  border-radius: 12px;
+  background: ${(props)=>props.theme.snapBackground};
+  justify-content: space-between;
+`
+
+const MoreOptions = styled(AiOutlineMore)`
+  width:24px;
+  height:24px;
+`
+
+const RemoveDiv = styled(ItemHV2)`
+  border-radius: 12px;
+  border: 1px solid #BAC4D6;
+  background: #FFF;
+  box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.05);
+  padding: 8px 12px 8px 8px;
+  align-items: center;
+  gap: 9px;
+  position: absolute;
+  right: 0;
+  top: 3px;
+`
