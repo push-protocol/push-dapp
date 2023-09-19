@@ -1,19 +1,24 @@
-import { Button } from 'components/SharedStyling';
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { device } from 'config/Globals';
-import { shortenText } from 'helpers/UtilityHelper';
+// React + Web3 Essentials
 import React, { useState } from 'react';
+import { useWeb3React } from '@web3-react/core';
+
+// External Packages
 import styled, { useTheme } from 'styled-components';
-import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
-import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
-import { ReactComponent as RestrictIcon } from 'assets/PushSnaps/MinusCircle.svg';
-import { ReactComponent as MinusCircle } from 'assets/PushSnaps/MinusCircle.svg';
 import Switch from 'react-switch';
 import { useClickAway } from 'react-use';
-import { useWeb3React } from '@web3-react/core';
-import Tooltip from 'components/reusables/tooltip/Tooltip';
-import InfoImage from "assets/info.svg";
 import { AiOutlineMore } from 'react-icons/ai';
+
+// Internal Compoonents
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import Tooltip from 'components/reusables/tooltip/Tooltip';
+import { Button } from 'components/SharedStyling';
+import InfoImage from "assets/info.svg";
+import { shortenText } from 'helpers/UtilityHelper';
+import { ReactComponent as MinusCircle } from 'assets/PushSnaps/MinusCircle.svg';
+
+// Internal Configs
+import { device } from 'config/Globals';
+
 
 const MetamaskSnapConfigureModal = () => {
   const [walletAddresses, setWalletAddresses] = useState([]);

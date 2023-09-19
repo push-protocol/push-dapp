@@ -1,16 +1,18 @@
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+// React + Web3 Essentials
 import React from 'react';
+
+// External Packages
 import styled, { useTheme } from 'styled-components';
-import PushIcon from 'assets/PushSnaps/PushIcon.svg';
+
+// Internal Compoonents
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { Button } from 'components/SharedStyling';
 import PushLogoLight from 'assets/pushLight.svg';
 import PushLogoDark from 'assets/pushDark.svg';
-// import { ReactComponent as PushLogoLight } from '../../assets/pushLight.svg';
-
 import HandTap from 'assets/PushSnaps/HandTap.svg';
 import WalletLogo from 'assets/PushSnaps/Wallet.svg';
 import NotificationLogo from 'assets/PushSnaps/Notification.svg';
 import Metamask from 'assets/PushSnaps/metamasksnap.svg';
-import { Button } from 'components/SharedStyling';
 
 const SnapInformationModal = () => {
   const theme = useTheme();
