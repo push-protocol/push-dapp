@@ -43,13 +43,13 @@ const SnapModule = () => {
       method: 'wallet_getSnaps',
     });
     Object.keys(installedSnaps).forEach((snap) => {
-      if (snap == 'npm:push-v1') {
+      if (snap == 'npm:@pushprotocol/snaps') {
         setSnapInstalled(true);
       }
     });
   }
 
-  const defaultSnapOrigin = `npm:push-v1`;
+  const defaultSnapOrigin = `npm:@pushprotocol/snaps`;
 
   async function connectSnap (
     snapId = defaultSnapOrigin,
