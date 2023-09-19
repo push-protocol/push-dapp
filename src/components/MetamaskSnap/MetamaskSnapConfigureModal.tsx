@@ -137,26 +137,8 @@ const MetamaskSnapConfigureModal = () => {
     setWalletSelected(null);
     setShowRemove(null);
   });
-
-
-  const addAddresses = () => {
-    console.log('Searched User', searchedUser);
-    if (searchedUser) {
-      setAddresses((prev) => [...prev, searchedUser])
-    }
-  }
+  
   const [walletSelected, setWalletSelected] = useState();
-
-  const wallets = [
-    '0x6D2a0194bD791CADd7a3F5c9464cE9fC24a49e71',
-    '0x6D2a0194bD791CADd7a3F5c9464cE9fC24a49e71',
-    '0x6D2a0194bD791CADd7a3F5c9464cE9fC24a49e71',
-    '0x6D2a0194bD791CADd7a3F5c9464cE9fC24a49e71',
-    '0x6D2a0194bD791CADd7a3F5c9464cE9fC24a49e71',
-    '0x6D2a0194bD791CADd7a3F5c9464cE9fC24a49e71',
-    '0x6D2a0194bD791CADd7a3F5c9464cE9fC24a49e71',
-    '0x6D2a0194bD791CADd7a3F5c9464cE9fC24a49e71'
-  ]
 
   const handleWalletSelect = (address) => {
     setWalletSelected(address);
