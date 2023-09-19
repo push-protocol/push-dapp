@@ -33,7 +33,7 @@ const InstallMetamaskSnapModal = ({
             method: 'wallet_getSnaps'
         });
         Object.keys(installedSnaps).forEach((snap) => {
-            if (snap == 'npm:@pushprotocol/snaps') {
+            if (snap == 'npm:@pushprotocol/snap') {
                 setConfigure(true);
             }
         }

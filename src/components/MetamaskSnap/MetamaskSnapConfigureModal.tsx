@@ -28,7 +28,7 @@ const MetamaskSnapConfigureModal = () => {
   const[toggleStatus, setToggleStatus] = useState(0);
   const theme = useTheme();
 
-  const defaultSnapOrigin = 'npm:@pushprotocol/snaps';
+  const defaultSnapOrigin = 'npm:@pushprotocol/snap';
 
   const { chainId, account, provider } = useWeb3React();
 

@@ -17,7 +17,7 @@ import Metamask from 'assets/PushSnaps/metamasksnap.svg';
 const SnapInformationModal = () => {
   const theme = useTheme();
 
-  const defaultSnapOrigin = 'npm:@pushprotocol/snaps';
+  const defaultSnapOrigin = 'npm:@pushprotocol/snap';
 
   const connectSnap = async (snapId = defaultSnapOrigin, params = {}) => {
     await window.ethereum?.request({
