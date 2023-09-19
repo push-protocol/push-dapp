@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 
 // External Packages
@@ -22,13 +22,30 @@ import { device } from 'config/Globals';
 
 const MetamaskSnapConfigureModal = () => {
   const [walletAddresses, setWalletAddresses] = useState([]);
+  const [addresses, setAddresses] = useState([]);
   const [searchedUser, setSearchedUser] = useState('');
   const [showRemove, setShowRemove] = useState();
+  const[toggleStatus, setToggleStatus] = useState(0);
   const theme = useTheme();
 
   const defaultSnapOrigin = 'npm:push-v1';
 
   const { chainId, account, provider } = useWeb3React();
+
+  useEffect(async () => {
+    const res = await window.ethereum?.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: defaultSnapOrigin,
+        request: {
+          method: 'pushproto_gettogglestatus',
+          params: { address: searchedUser },
+        },
+      },
+    });
+    console.log('res', res);
+    setToggleStatus(res);
+  }, [toggleStatus])
 
   async function getSignature(mode: number) {
     if (mode == 1) {
@@ -75,19 +92,24 @@ const MetamaskSnapConfigureModal = () => {
         request: { method: 'pushproto_togglepopup' },
       },
     });
+    if(toggleStatus<40){
+      setToggleStatus(42);
+    }else{
+      setToggleStatus(0);
+    }
   };
 
-  const removeWalletAddresses = async () => {
+  const removeWalletAddresses = async (walletSelected:string) => {
     const signatureResult = await getSignature(2);
     if (signatureResult) {
-      if (searchedUser) {
+      if (walletSelected) {
         await window.ethereum?.request({
           method: 'wallet_invokeSnap',
           params: {
             snapId: defaultSnapOrigin,
             request: {
               method: 'pushproto_removeaddress',
-              params: { address: searchedUser },
+              params: { address: walletSelected },
             },
           },
         });
@@ -106,7 +128,7 @@ const MetamaskSnapConfigureModal = () => {
       },
     });
     console.log('result', result);
-    setWalletAddresses(result);
+    setAddresses(result);
   }
 
   const containerRef = React.useRef(null);
@@ -117,7 +139,6 @@ const MetamaskSnapConfigureModal = () => {
   });
 
 
-  const [addresses, setAddresses] = useState([]);
   const addAddresses = () => {
     console.log('Searched User', searchedUser);
     if (searchedUser) {
@@ -172,8 +193,8 @@ const MetamaskSnapConfigureModal = () => {
           gap="5px"
         >
           <AddButton
-            // onClick={addWalletAddresses}
-            onClick={addAddresses}
+            onClick={addWalletAddresses}
+            // onClick={addAddresses}
           >Add</AddButton>
           <AddButton onClick={getWalletAddresses}>Get Addresses</AddButton>
         </ItemHV2>
@@ -189,7 +210,7 @@ const MetamaskSnapConfigureModal = () => {
 
             {walletSelected === wallet && <RemoveDiv >
                 <MinusCircle />
-                <SpanV2 fontSize='16px' fontWeight='400' color='#657795'>Remove</SpanV2>
+                <SpanV2 fontSize='16px' fontWeight='400' color='#657795' onClick={()=>removeWalletAddresses(walletSelected)}>Remove</SpanV2>
               </RemoveDiv>
             }
           </AddressesSubContainer>
@@ -219,7 +240,7 @@ const MetamaskSnapConfigureModal = () => {
         >
           <Switch
             onChange={handleChange}
-            checked={checked}
+            checked={toggleStatus<40}
             className="react-switch"
             uncheckedIcon={false}
             checkedIcon={false}
@@ -232,7 +253,7 @@ const MetamaskSnapConfigureModal = () => {
             fontWeight="500"
             color={theme.modalMessageColor}
           >
-            {checked ? 'On' : 'Off'}
+            {toggleStatus<40 ? 'On' : 'Off'}
           </SpanV2>
         </ItemHV2>
       </ItemVV2>
