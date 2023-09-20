@@ -30,7 +30,7 @@ const SnapModule = () => {
   const [walletConnected, setWalletConnected] = useState(false);
   const [snapInstalled, setSnapInstalled] = useState(false);
 
-  const { showMetamaskPushSnap } = React.useContext(AppContext);
+  const { showMetamaskPushSnap, setSnapState } = React.useContext(AppContext);
 
   const { account, provider } = useWeb3React();
 
@@ -64,25 +64,33 @@ const SnapModule = () => {
     console.log('Snap Installed');
   };
 
-  async function connectToMetaMask(){
-    if(!snapInstalled){
+  async function connectToMetaMask() {
+    setLoading(true)
+
+    try {
+      if (!snapInstalled) {
         await connectSnap();
         setSnapInstalled(true);
-    }else{
-        setLoading(!loading);
+      } else {
         await addwalletAddress();
-        setLoading(!loading);
         setWalletConnected(true);
+      }
+
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log("Error", error);
     }
+
   }
 
-  async function getSignature(account: string){
+  async function getSignature(account: string) {
     const signer = provider.getSigner(account);
     const signature = await signer.signMessage(`Add address ${account} to receive notifications through Push Snap`);
     return signature;
   }
 
-  async function addwalletAddress () {
+  async function addwalletAddress() {
     const signatureResult = await getSignature(account);
     if (signatureResult) {
       if (account) {
@@ -109,6 +117,11 @@ const SnapModule = () => {
     showModal: showPushSnapAbout,
     ModalComponent: AboutPushSnapModalComponent,
   } = useModalBlur();
+
+  const handleSettingsClick = ()=>{
+    setSnapState(3);
+    showMetamaskPushSnap();
+  }
 
   return (
     <Container>
@@ -217,7 +230,7 @@ const SnapModule = () => {
 
           {walletConnected ? (
             <ItemHV2 gap="12px">
-              <SettingsButton onClick={showMetamaskPushSnap}>
+              <SettingsButton onClick={handleSettingsClick}>
                 <Gear
                   height="20px"
                   width="20px"
@@ -309,12 +322,12 @@ const ConnectButton = styled(SnapButton)`
 
 const SettingsButton = styled(SnapButton)`
   flex-direction: row;
-  color: #657795;
+  color: ${(props) => props.theme.default.secondaryColor};
   text-align: center;
   width: 135px;
   padding: 16px 24px;
   border: 1px solid #bac4d6;
-  background: #fff;
+  background: ${(props) => props.theme.default.bg};
   gap: 4px;
 `;
 

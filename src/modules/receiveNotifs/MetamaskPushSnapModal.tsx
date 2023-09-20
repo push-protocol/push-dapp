@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -12,6 +12,7 @@ import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import InstallMetamaskSnapModal from 'components/MetamaskSnap/InstallMetamaskSnapModal';
 import SnapInformationModal from 'components/MetamaskSnap/SnapInformationModal';
 import MetamaskSnapConfigureModal from 'components/MetamaskSnap/MetamaskSnapConfigureModal';
+import { AppContext } from 'contexts/AppContext';
 
 
 const MetamaskPushSnapModal = ({
@@ -19,11 +20,14 @@ const MetamaskPushSnapModal = ({
 }) => {
     const theme = useTheme();
 
-    const [SnapState, setSnapState] = useState(1);
     const [configure, setConfigure] = useState(false);
 
+    const {setSnapState,SnapState } = React.useContext(AppContext);
 
-
+    const handleCloseModal = ()=>{
+        setSnapState(1);
+        onClose();
+    }
 
     return (
         <Container padding="20px 15px" >
@@ -40,7 +44,7 @@ const MetamaskPushSnapModal = ({
                     Receive Notifications
                 </SpanV2>}
                 <Close
-                    onClick={() => onClose()}
+                    onClick={handleCloseModal}
                     style={{ cursor: 'pointer' }}
                 />
             </ItemHV2>
@@ -57,10 +61,10 @@ const MetamaskPushSnapModal = ({
 export default MetamaskPushSnapModal;
 
 const Container = styled(ItemVV2)`
-    min-width:420px;
+    width:420px;
 
     @media(max-width:476px){
-        min-width:360px;
+        width:360px;
     }
 
 `   

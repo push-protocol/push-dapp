@@ -23,7 +23,7 @@ const AboutSnapModal = ({
         },
         {
             title: 'Step 4 (optional)',
-            info: 'You can visit app.push.org/snap, click on Settings and Add/Remove Wallets or Snooze Notifications. '
+            info: 'You can visit app.push.org/snap, click on Settings and Add Wallets, Show All to remove wallets, and Snooze Notification Pop-ups.'
         }
     ]
 

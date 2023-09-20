@@ -59,7 +59,7 @@ const InstallMetamaskSnapModal = ({
                 {
                     configure ? (
                         <InstallButton onClick={() => setSnapState(3)}>
-                            Configure
+                            Settings
                         </InstallButton>
                     ) : (
                         <InstallButton onClick={() => setSnapState(2)}>
