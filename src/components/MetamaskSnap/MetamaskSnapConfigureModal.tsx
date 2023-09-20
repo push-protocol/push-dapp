@@ -55,7 +55,7 @@ const MetamaskSnapConfigureModal = () => {
     }
     if (mode == 2) {
       const signer = provider.getSigner(account);
-      const signature = await signer.signMessage(`Remove address ${account}to stop receive notifications via Push Snap in MetaMask`);
+      const signature = await signer.signMessage(`Remove address ${account} to stop receive notifications via Push Snap in MetaMask`);
       return signature;
     }
   }
