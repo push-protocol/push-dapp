@@ -220,7 +220,7 @@ const MetamaskSnapConfigureModal = () => {
         >
           <Switch
             onChange={handleChange}
-            checked={toggleStatus<40}
+            checked={toggleStatus>40}
             className="react-switch"
             uncheckedIcon={false}
             checkedIcon={false}
@@ -233,7 +233,7 @@ const MetamaskSnapConfigureModal = () => {
             fontWeight="500"
             color={theme.modalMessageColor}
           >
-            {toggleStatus<40 ? 'On' : 'Off'}
+            {toggleStatus>40 ? 'On' : 'Off'}
           </SpanV2>
         </ItemHV2>
       </ItemVV2>
