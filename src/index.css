@@ -566,6 +566,8 @@ button, a, a:before, a:after {
   --w3o-action-color: #C631C6 !important;
   --w3o-border-radius: 24px !important;
   --w3o-font-family: unset !important;
+  --onboard-modal-backdrop:transparent !important;
+  --modal-backdrop:transparent !important;
 }
 
 [theme="dark"] {
@@ -577,4 +579,7 @@ button, a, a:before, a:after {
   --w3o-action-color: #C631C6 !important;
   --w3o-border-radius: 24px !important;
   --w3o-font-family: unset !important;
+  --onboard-modal-backdrop:transparent !important;
+  --modal-backdrop:transparent !important;
 }
+
