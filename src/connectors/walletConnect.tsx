@@ -6,7 +6,6 @@ import { appConfig } from "config";
 
 require('dotenv').config();
 
-console.log('appConfig.allowedNetworks', appConfig.allowedNetworks);
 const wcV2InitOptions: WalletConnectOptions = {
   /**
    * Project ID associated with [WalletConnect account](https://cloud.walletconnect.com)

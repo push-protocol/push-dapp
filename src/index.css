@@ -583,3 +583,14 @@ button, a, a:before, a:after {
   --modal-backdrop:transparent !important;
 }
 
+#onboard-container {
+  position: absolute; 
+  top: 14rem;
+  margin: auto;
+  background-color:
+  transparent; 
+  left: 2rem;
+  right: 2rem; 
+  margin-left: auto; 
+  margin-right: auto;
+}
