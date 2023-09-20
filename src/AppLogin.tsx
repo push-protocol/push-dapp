@@ -83,17 +83,15 @@ useEffect(() => {
 }, [authError]);
 
   useEffect(() => {
-    setTimeout(() => {
-      const onboardModal = document.getElementById("onboard-container");
-      console.log('Height', onboardModal.offsetHeight);
-      setModalHeight(onboardModal.offsetHeight);
-    }, 500);
-  }, []);
-
-  useEffect(() => {
     try {
       setAuthError(undefined);
-      setTimeout(() => connect(), 500);
+      setTimeout(() => {
+        connect();
+        setTimeout(() => {
+          const onboardModal = document.getElementById("onboard-container");
+          setModalHeight(onboardModal.offsetHeight);
+        }, 500)
+      }, 500);
     }
     catch(error){
       setAuthError(error);
