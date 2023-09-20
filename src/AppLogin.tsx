@@ -90,6 +90,16 @@ useEffect(() => {
     }, 500);
   }, []);
 
+  useEffect(() => {
+    try {
+      setAuthError(undefined);
+      connect();
+    }
+    catch(error){
+      setAuthError(error);
+    }
+  }, []);
+
   // RENDER
   return (
     <Container alignItems="center">
