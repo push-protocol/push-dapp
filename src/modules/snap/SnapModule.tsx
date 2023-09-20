@@ -29,6 +29,7 @@ const SnapModule = () => {
   const [loading, setLoading] = useState(false);
   const [walletConnected, setWalletConnected] = useState(false);
   const [snapInstalled, setSnapInstalled] = useState(false);
+  const [addedAddress, setAddedAddress] = useState(false);
 
   const { showMetamaskPushSnap, setSnapState } = React.useContext(AppContext);
 
@@ -36,7 +37,8 @@ const SnapModule = () => {
 
   useEffect(() => {
     getInstalledSnaps();
-  }, [snapInstalled]);
+    getWalletAddresses();
+  });
 
   async function getInstalledSnaps() {
     const installedSnaps = await window.ethereum.request({
@@ -51,21 +53,35 @@ const SnapModule = () => {
 
   const defaultSnapOrigin = `npm:@pushprotocol/snap`;
 
-  async function connectSnap (
-    snapId = defaultSnapOrigin,
-    params = {}
-  ){
+  async function getWalletAddresses() {
+    const result = await window.ethereum?.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: defaultSnapOrigin,
+        request: { method: 'pushproto_getaddresses' },
+      },
+    });
+
+    console.log(account);
+    if (result.includes(account)) {
+      setAddedAddress(true);
+    }
+  }
+
+  async function connectSnap() {
+    let snapId = defaultSnapOrigin,
+      params = {};
     await window.ethereum?.request({
-      method: "wallet_requestSnaps",
+      method: 'wallet_requestSnaps',
       params: {
         [snapId]: params,
       },
     });
     console.log('Snap Installed');
-  };
+  }
 
   async function connectToMetaMask() {
-    setLoading(true)
+    setLoading(true);
 
     try {
       if (!snapInstalled) {
@@ -79,9 +95,8 @@ const SnapModule = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log("Error", error);
+      console.log('Error', error);
     }
-
   }
 
   async function getSignature(account: string) {
@@ -109,7 +124,7 @@ const SnapModule = () => {
     } else {
       console.log('Signature Validation Failed');
     }
-  };
+  }
 
   //About Snap Info Modal
   const {
@@ -118,10 +133,10 @@ const SnapModule = () => {
     ModalComponent: AboutPushSnapModalComponent,
   } = useModalBlur();
 
-  const handleSettingsClick = ()=>{
+  const handleSettingsClick = () => {
     setSnapState(3);
     showMetamaskPushSnap();
-  }
+  };
 
   return (
     <Container>
@@ -198,7 +213,7 @@ const SnapModule = () => {
             </ItemVV2>
           </ItemVV2>
 
-          {walletConnected ? (
+          {walletConnected || addedAddress ? (
             <ItemHV2 gap="8px">
               <Image
                 src={ActiveIcon}
@@ -221,14 +236,14 @@ const SnapModule = () => {
                   spinnerSize={44}
                 />
               ) : (
-                <ConnectButton onClick={()=>connectToMetaMask()}>
-                  {!snapInstalled ? 'Install Snap' : 'Connect Using MetaMask '}
+                <ConnectButton onClick={() => connectToMetaMask()}>
+                  {!snapInstalled && !addedAddress ? 'Install Snap' : 'Connect Using MetaMask '}
                 </ConnectButton>
               )}
             </ItemVV2>
           )}
 
-          {walletConnected ? (
+          {walletConnected || addedAddress ? (
             <ItemHV2 gap="12px">
               <SettingsButton onClick={handleSettingsClick}>
                 <Gear
@@ -237,7 +252,7 @@ const SnapModule = () => {
                 />
                 Settings
               </SettingsButton>
-              <FilledButton onClick={() => window.location.href='/channels'}>Get Started</FilledButton>            
+              <FilledButton onClick={() => (window.location.href = '/channels')}>Get Started</FilledButton>
             </ItemHV2>
           ) : (
             <InfoDiv
@@ -280,7 +295,6 @@ const Container = styled(Section)`
   padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
   position: relative;
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-  
 `;
 
 const SubContainer = styled(Section)`
