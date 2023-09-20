@@ -81,6 +81,15 @@ useEffect(() => {
   handleErrorMessage(authError);
 }, [authError]);
 
+  useEffect(() => {
+    try {
+      setAuthError(undefined);
+      connect();
+    }
+    catch(error){
+      setAuthError(error);
+    }
+  }, []);
 
   // RENDER
   return (
@@ -125,7 +134,7 @@ useEffect(() => {
         </ItemVV2>
 
         {/* Login Component */}
-        <ItemVV2
+        {/* <ItemVV2
           background={theme.default.bg}
           maxWidth="440px"
           padding={GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
@@ -140,9 +149,9 @@ useEffect(() => {
             fontWeight="500"
             margin={`${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0`}>
             Connect a Wallet
-          </H2V2>
+          </H2V2> */}
 
-          <ItemVV2 alignSelf="stretch" alignItems="flex-start" margin={`0 0 ${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0`}>
+          {/* <ItemVV2 alignSelf="stretch" alignItems="flex-start" margin={`0 0 ${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0`}>
             {Object.keys(web3Connectors).map((name) => {
               const disabled = isActive();
               const image = theme.scheme == 'light' ? web3Connectors[name].logolight : web3Connectors[name].logodark;
@@ -181,10 +190,10 @@ useEffect(() => {
                 </LoginButton>
               );
             })}
-          </ItemVV2>
+          </ItemVV2> */}
 
           {/* TOS and PRIVACY */}
-          <SpanV2 fontSize="14px" padding="0px 20px 10px 20px" color={theme.default.color} lineHeight="140%">
+          {/* <SpanV2 fontSize="14px" padding="0px 20px 10px 20px" color={theme.default.color} lineHeight="140%">
             By connecting your wallet, <b>You agree</b> to our{' '}
             <AInlineV2 href="https://epns.io/tos" target="_blank">
               Terms of Service
@@ -195,7 +204,7 @@ useEffect(() => {
             </AInlineV2>
             .
           </SpanV2>
-        </ItemVV2>
+        </ItemVV2> */}
 
         {/* Chainsafe Audit and Discord */}
         <ItemVV2 margin="30px 0 0 0" flex="initial" maxWidth="920px">

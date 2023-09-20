@@ -32,6 +32,10 @@ export const web3Onboard = Onboard({
     showSidebar: true,
     autoConnectLastWallet: true,
     removeWhereIsMyWalletWarning: true,
+    disableClose: true,
+  },
+  containerElements: {
+    connectModal: "#onboard-container"
   },
   wallets: [injected, walletConnect],
   chains: chains,
