@@ -1,21 +1,23 @@
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+// React + Web3 Essentials
 import React from 'react';
+
+// External Packages
 import styled, { useTheme } from 'styled-components';
-import PushIcon from 'assets/PushSnaps/PushIcon.svg';
+
+// Internal Compoonents
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { Button } from 'components/SharedStyling';
 import PushLogoLight from 'assets/pushLight.svg';
 import PushLogoDark from 'assets/pushDark.svg';
-// import { ReactComponent as PushLogoLight } from '../../assets/pushLight.svg';
-
 import HandTap from 'assets/PushSnaps/HandTap.svg';
 import WalletLogo from 'assets/PushSnaps/Wallet.svg';
 import NotificationLogo from 'assets/PushSnaps/Notification.svg';
 import Metamask from 'assets/PushSnaps/metamasksnap.svg';
-import { Button } from 'components/SharedStyling';
 
 const SnapInformationModal = () => {
   const theme = useTheme();
 
-  const defaultSnapOrigin = 'npm:push-v1';
+  const defaultSnapOrigin = 'npm:@pushprotocol/snap';
 
   const connectSnap = async (snapId = defaultSnapOrigin, params = {}) => {
     await window.ethereum?.request({
@@ -57,6 +59,7 @@ const SnapInformationModal = () => {
         fontSize="22px"
         fontWeight="500"
         letterSpacing="-0.44px"
+        color={theme.modalMessageColor}
       >
         Connect to Metamask Push Snap
       </SpanV2>
@@ -134,6 +137,7 @@ const PrimaryText = styled.p`
   font-size: 18px;
   font-weight: 500;
   align-self: baseline;
+  color:${(props)=>props.theme.modalMessageColor};
 `;
 
 const SecondaryText = styled.p`
@@ -141,7 +145,7 @@ const SecondaryText = styled.p`
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  color: #62626a;
+  color:${(props)=>props.theme.snapSecondaryText};
   text-align: left;
 `;
 

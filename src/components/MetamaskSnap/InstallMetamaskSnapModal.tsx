@@ -1,14 +1,19 @@
-import { Button } from 'components/SharedStyling';
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+// React + Web3 Essentials
 import React, { useEffect } from 'react';
+
+// External Packages
 import styled,{useTheme} from 'styled-components';
+
+// Internal Compoonents
+import { A } from 'primaries/SharedStyling';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { Button } from 'components/SharedStyling';
 import Metamask from 'assets/PushSnaps/metamasksnap.svg';
 import PushIcon from 'assets/PushSnaps/PushIcon.svg';
 import AppStoreQRCode from 'assets/PushSnaps/AppStoreQRCode.svg';
 import PlayStoreQRCode from 'assets/PushSnaps/PlayStoreQRCode.svg';
 import AppleIcon from 'assets/PushSnaps/AppleIcon.svg';
 import PlayStore from 'assets/PushSnaps/PlayStore.svg';
-import { A } from 'primaries/SharedStyling';
 
 
 const InstallMetamaskSnapModal = ({
@@ -28,7 +33,7 @@ const InstallMetamaskSnapModal = ({
             method: 'wallet_getSnaps'
         });
         Object.keys(installedSnaps).forEach((snap) => {
-            if (snap == 'npm:push-v1') {
+            if (snap == 'npm:@pushprotocol/snap') {
                 setConfigure(true);
             }
         }

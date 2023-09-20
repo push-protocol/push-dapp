@@ -1,12 +1,17 @@
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+// React + Web3 Essentials
 import React, { useState } from 'react';
+
+// External Packages
 import styled, { useTheme } from 'styled-components';
-import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
+
+// Internal Compoonents
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Button } from 'components/SharedStyling';
+import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
+import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import InstallMetamaskSnapModal from 'components/MetamaskSnap/InstallMetamaskSnapModal';
 import SnapInformationModal from 'components/MetamaskSnap/SnapInformationModal';
 import MetamaskSnapConfigureModal from 'components/MetamaskSnap/MetamaskSnapConfigureModal';
-import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 
 
 const MetamaskPushSnapModal = ({
@@ -21,7 +26,7 @@ const MetamaskPushSnapModal = ({
 
 
     return (
-        <ItemVV2 padding="20px 15px" width="420px">
+        <Container padding="20px 15px" >
             <ItemHV2 justifyContent='space-between'>
 
                 {SnapState !== 1 && <Back width='24px' cursor='pointer' onClick={()=>setSnapState(1)}/>}
@@ -45,8 +50,17 @@ const MetamaskPushSnapModal = ({
             {SnapState == 3 && <MetamaskSnapConfigureModal />}
 
 
-        </ItemVV2>
+        </Container>
     );
 };
 
 export default MetamaskPushSnapModal;
+
+const Container = styled(ItemVV2)`
+    min-width:420px;
+
+    @media(max-width:476px){
+        min-width:360px;
+    }
+
+`   
