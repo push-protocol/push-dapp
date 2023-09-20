@@ -38,7 +38,7 @@ const SnapModule = () => {
   useEffect(() => {
     getInstalledSnaps();
     getWalletAddresses();
-  });
+  },[account,walletConnected]);
 
   async function getInstalledSnaps() {
     const installedSnaps = await window.ethereum.request({
@@ -63,8 +63,11 @@ const SnapModule = () => {
     });
 
     console.log(account);
+    console.log(walletConnected);
     if (result.includes(account)) {
       setAddedAddress(true);
+    }else{
+      setAddedAddress(false);
     }
   }
 
@@ -237,7 +240,7 @@ const SnapModule = () => {
                 />
               ) : (
                 <ConnectButton onClick={() => connectToMetaMask()}>
-                  {!snapInstalled && !addedAddress ? 'Install Snap' : 'Connect Using MetaMask '}
+                  {!snapInstalled ? 'Install Snap' : 'Connect Using MetaMask '}
                 </ConnectButton>
               )}
             </ItemVV2>
