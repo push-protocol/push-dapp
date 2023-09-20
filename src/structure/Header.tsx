@@ -115,7 +115,7 @@ function Header({ isDarkMode, darkModeToggle }) {
         </RightBarContainer>
         
         {/* mobile navbar */}
-        {navigationSetup && showNavBar && isActive() && !error && (
+        {navigationSetup && showNavBar && isActive && !error && (
           <NavMenuContainer ref={navRef} tabletAlign="flex-start">
             <NavMenu>
               <ChainIndicator isDarkMode={isDarkMode}/>
@@ -130,7 +130,7 @@ function Header({ isDarkMode, darkModeToggle }) {
       </ItemH>
 
       <ItemH justify="flex-end">
-        {headerTag && isActive() && !error && (
+        {headerTag && isActive && !error && (
           <HeaderTag align="flex-start" overflow="hidden">
             <Span
               textTransform="capitalize"
@@ -144,7 +144,7 @@ function Header({ isDarkMode, darkModeToggle }) {
           </HeaderTag>
         )}
 
-        {isActive() && !showLoginControls && !error && (
+        {isActive && !showLoginControls && !error && (
           <DarkModeSwitch
             style={{ margin: '0 1rem' }}
             checked={isDarkMode}
@@ -155,7 +155,7 @@ function Header({ isDarkMode, darkModeToggle }) {
           />
         )}
 
-      {isActive() && !error && (
+      {isActive && !error && (
             <RightBarMobile>
               <Button
                 bg="transparent"
@@ -171,8 +171,8 @@ function Header({ isDarkMode, darkModeToggle }) {
 
         <ItemH justify="flex-end" flex="initial">
           {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>}
-          {!isActive() && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>}
-          {isActive() && !showLoginControls && !error && (
+          {!isActive && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>}
+          {isActive && !showLoginControls && !error && (
             <RightBarDesktop justify="flex-end" flex="initial">
               <ChainIndicator isDarkMode={isDarkMode}/>
               <Profile isDarkMode={isDarkMode} />

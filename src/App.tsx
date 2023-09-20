@@ -203,13 +203,13 @@ export default function App() {
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
-      {(!isActive() || !allowedChain) && (
+      {(!isActive || !allowedChain) && (
         <SectionV2 minHeight="100vh">
           <AppLogin toggleDarkMode={toggleDarkMode} />
         </SectionV2>
       )}
 
-      {isActive() && !authError && allowedChain && (
+      {isActive && !authError && allowedChain && (
         <>
           <GlobalStyle />
           <InitState />
@@ -253,7 +253,7 @@ export default function App() {
               </HeaderContainer>
 
               <ParentContainer
-                bg={darkMode ? themeDark.backgroundBG : !isActive() ? themeLight.connectWalletBg : themeLight.backgroundBG}
+                bg={darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG}
                 headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
               >
                 <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>

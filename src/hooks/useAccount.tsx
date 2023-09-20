@@ -8,16 +8,16 @@ export const useAccount = () => {
 
   const [{ chains, connectedChain, settingChain }, setChain] = useSetChain();
 
-  const isActive = () => {
-    return wallet && wallet.accounts.length > 0 ? true : false;
-  };
-
   const switchChain = async (desiredChain: number) => {
-    setChain({ chainId: ethers.utils.hexValue(desiredChain) });
+    return setChain({ chainId: ethers.utils.hexValue(desiredChain) });
   };
 
   const provider = useMemo(() => {
     return wallet ? new ethers.providers.Web3Provider(wallet.provider, 'any') : undefined;
+  }, [wallet]);
+
+  const isActive = useMemo(() => {
+    return wallet && wallet.accounts.length > 0 ? true : false
   }, [wallet]);
 
   return {

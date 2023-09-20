@@ -93,12 +93,12 @@ useEffect(() => {
   useEffect(() => {
     try {
       setAuthError(undefined);
-      connect();
+      setTimeout(() => connect(), 500);
     }
     catch(error){
       setAuthError(error);
     }
-  }, []);
+  }, [isActive]);
 
   // RENDER
   return (

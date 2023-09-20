@@ -9,7 +9,7 @@ import { ErrorContext } from 'contexts/ErrorContext';
 
 export function useInactiveListener() {
   const [allowedChain, setAllowedChain] = useState(false);
-  const { wallet, chainId, switchChain } = useAccount();
+  const { wallet, chainId, switchChain, disconnect, isActive } = useAccount();
   const { authError, setAuthError } = useContext(ErrorContext);
 
   const getErrorMessage = () => {
@@ -25,13 +25,15 @@ export function useInactiveListener() {
       if(!appConfig.allowedNetworks.includes(chainId)) {
         setAllowedChain(false);
         setAuthError(new UnsupportedChainIdError(getErrorMessage()));
-        switchChain(appConfig.coreContractChain);
+        switchChain(appConfig.coreContractChain).then(success => {
+          if(!success) disconnect(wallet);
+        })
       } else {
         if(authError) setAuthError(undefined);
         setAllowedChain(true);
       }
     }
-  }, [wallet, chainId]);
+  }, [wallet, chainId, isActive]);
 
   return { allowedChain };
 }
