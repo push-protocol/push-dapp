@@ -39,7 +39,7 @@ const SnapInformationModal = () => {
     });
 
     if (res) {
-        window.open("https://app.push.org/snap", '_self');
+        window.open("/snap", '_self');
     }
   };
 
