@@ -6,5 +6,7 @@ export interface AppContextType {
   web3NameList: Web3NameListType;
   setWeb3NameList: (ens: Web3NameListType) => void;
   MetamaskPushSnapModalComponent:any,
-  showMetamaskPushSnap:any
+  showMetamaskPushSnap:any,
+  SnapState:number,
+  setSnapState:any,
 }

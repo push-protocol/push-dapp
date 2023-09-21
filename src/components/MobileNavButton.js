@@ -8,15 +8,19 @@ import styled, { css, useTheme } from 'styled-components';
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { Anchor, Image, ItemH, RouterLink, Span } from 'primaries/SharedStyling';
-import { ItemVV2 } from './reusables/SharedStylingV2';
+import { ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
 import { nothing } from 'immer';
+import { AppContext } from 'contexts/AppContext';
 
 // Create Header
-function MobileNavButton({ item, data, sectionID, active, bg = 'none',showNavBar, setShowNavBar }) {
+function MobileNavButton({ item, data, sectionID, active, bg = 'none', showNavBar, setShowNavBar }) {
   const theme = useTheme();
+
+  const { showMetamaskPushSnap } = React.useContext(AppContext);
+
 
   let SelectedIcon;
   let RouteLogic;
@@ -77,11 +81,11 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none',showNavBar
           hover={'transparent'}
           hoverBG={'transparent'}
           onClick={() => {
-            if(item.data.drilldown){
-                return nothing;
+            if (item.data.drilldown) {
+              return nothing;
             }
             else {
-                setShowNavBar(!showNavBar);
+              setShowNavBar(!showNavBar);
             }
           }}
           className={data?.name?.toLowerCase()}>
@@ -113,10 +117,15 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none',showNavBar
                 spacing="0"
                 margin="0 10px"
                 color={theme.nav.color}
+                onClick={data?.hasOnClickFunction && showMetamaskPushSnap}
                 minWidth='100px'
                 size="17px">
                 {data.name}
               </Span>
+
+              {data?.showNewTag && (
+                <NewTag>New</NewTag>
+              )}
 
               {item.hasItems && !item.opened && <BiChevronDown color={theme.nav.color} />}
 
@@ -172,6 +181,22 @@ const LeftBarSecondarySectionIcon = styled(InheritedSectionGroupIcon)`
 `;
 
 const LeftBarSecondaryItemIcon = styled(InheritedSectionItemIcon)``;
+
+const NewTag = styled(SpanV2)`
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing:0;
+  line-height: 140%;
+  display: flex;
+  align-items: center;
+  color: #D53A94;
+  margin-left:10px;
+  padding: 2px 6px;
+  background: #F3D7FA;
+  border-radius: 6px;
+  height: 17px;
+  width:fit-content;
+`
 
 // Export Default
 export default MobileNavButton;

@@ -29,14 +29,16 @@ const SnapModule = () => {
   const [loading, setLoading] = useState(false);
   const [walletConnected, setWalletConnected] = useState(false);
   const [snapInstalled, setSnapInstalled] = useState(false);
+  const [addedAddress, setAddedAddress] = useState(false);
 
-  const { showMetamaskPushSnap } = React.useContext(AppContext);
+  const { showMetamaskPushSnap, setSnapState } = React.useContext(AppContext);
 
   const { account, provider } = useWeb3React();
 
   useEffect(() => {
     getInstalledSnaps();
-  }, [snapInstalled]);
+    getWalletAddresses();
+  },[account,walletConnected]);
 
   async function getInstalledSnaps() {
     const installedSnaps = await window.ethereum.request({
@@ -51,38 +53,62 @@ const SnapModule = () => {
 
   const defaultSnapOrigin = `npm:@pushprotocol/snap`;
 
-  async function connectSnap (
-    snapId = defaultSnapOrigin,
-    params = {}
-  ){
+  async function getWalletAddresses() {
+    const result = await window.ethereum?.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: defaultSnapOrigin,
+        request: { method: 'pushproto_getaddresses' },
+      },
+    });
+
+    console.log(account);
+    console.log(walletConnected);
+    if (result.includes(account)) {
+      setAddedAddress(true);
+    }else{
+      setAddedAddress(false);
+    }
+  }
+
+  async function connectSnap() {
+    let snapId = defaultSnapOrigin,
+      params = {};
     await window.ethereum?.request({
-      method: "wallet_requestSnaps",
+      method: 'wallet_requestSnaps',
       params: {
         [snapId]: params,
       },
     });
     console.log('Snap Installed');
-  };
+  }
 
-  async function connectToMetaMask(){
-    if(!snapInstalled){
+  async function connectToMetaMask() {
+    setLoading(true);
+
+    try {
+      if (!snapInstalled) {
         await connectSnap();
         setSnapInstalled(true);
-    }else{
-        setLoading(!loading);
+      } else {
         await addwalletAddress();
-        setLoading(!loading);
         setWalletConnected(true);
+      }
+
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log('Error', error);
     }
   }
 
-  async function getSignature(account: string){
+  async function getSignature(account: string) {
     const signer = provider.getSigner(account);
     const signature = await signer.signMessage(`Add address ${account} to receive notifications through Push Snap`);
     return signature;
   }
 
-  async function addwalletAddress () {
+  async function addwalletAddress() {
     const signatureResult = await getSignature(account);
     if (signatureResult) {
       if (account) {
@@ -101,7 +127,7 @@ const SnapModule = () => {
     } else {
       console.log('Signature Validation Failed');
     }
-  };
+  }
 
   //About Snap Info Modal
   const {
@@ -109,6 +135,11 @@ const SnapModule = () => {
     showModal: showPushSnapAbout,
     ModalComponent: AboutPushSnapModalComponent,
   } = useModalBlur();
+
+  const handleSettingsClick = () => {
+    setSnapState(3);
+    showMetamaskPushSnap();
+  };
 
   return (
     <Container>
@@ -185,7 +216,7 @@ const SnapModule = () => {
             </ItemVV2>
           </ItemVV2>
 
-          {walletConnected ? (
+          {walletConnected || addedAddress ? (
             <ItemHV2 gap="8px">
               <Image
                 src={ActiveIcon}
@@ -208,23 +239,23 @@ const SnapModule = () => {
                   spinnerSize={44}
                 />
               ) : (
-                <ConnectButton onClick={()=>connectToMetaMask()}>
+                <ConnectButton onClick={() => connectToMetaMask()}>
                   {!snapInstalled ? 'Install Snap' : 'Connect Using MetaMask '}
                 </ConnectButton>
               )}
             </ItemVV2>
           )}
 
-          {walletConnected ? (
+          {walletConnected || addedAddress ? (
             <ItemHV2 gap="12px">
-              <SettingsButton onClick={showMetamaskPushSnap}>
+              <SettingsButton onClick={handleSettingsClick}>
                 <Gear
                   height="20px"
                   width="20px"
                 />
                 Settings
               </SettingsButton>
-              <FilledButton onClick={() => window.location.href='/channels'}>Get Started</FilledButton>            
+              <FilledButton onClick={() => (window.location.href = '/channels')}>Get Started</FilledButton>
             </ItemHV2>
           ) : (
             <InfoDiv
@@ -267,7 +298,6 @@ const Container = styled(Section)`
   padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
   position: relative;
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-  
 `;
 
 const SubContainer = styled(Section)`
@@ -309,12 +339,12 @@ const ConnectButton = styled(SnapButton)`
 
 const SettingsButton = styled(SnapButton)`
   flex-direction: row;
-  color: #657795;
+  color: ${(props) => props.theme.default.secondaryColor};
   text-align: center;
   width: 135px;
   padding: 16px 24px;
   border: 1px solid #bac4d6;
-  background: #fff;
+  background: ${(props) => props.theme.default.bg};
   gap: 4px;
 `;
 

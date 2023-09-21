@@ -55,7 +55,7 @@ const MetamaskSnapConfigureModal = () => {
     }
     if (mode == 2) {
       const signer = provider.getSigner(account);
-      const signature = await signer.signMessage(`Remove address ${account}to stop receive notifications via Push Snap in MetaMask`);
+      const signature = await signer.signMessage(`Remove address ${account} to stop receive notifications via Push Snap in MetaMask`);
       return signature;
     }
   }
@@ -174,11 +174,11 @@ const MetamaskSnapConfigureModal = () => {
           justifyContent="end"
           gap="5px"
         >
-          <AddButton
+          <FilledButton
             onClick={addWalletAddresses}
             // onClick={addAddresses}
-          >Add</AddButton>
-          <AddButton onClick={getWalletAddresses}>Get Addresses</AddButton>
+          >Add</FilledButton>
+          <EnptyButton onClick={getWalletAddresses}>Show All</EnptyButton>
         </ItemHV2>
       </ItemVV2>
 
@@ -207,13 +207,11 @@ const MetamaskSnapConfigureModal = () => {
       >
         <ItemHV2 justifyContent='flex-start'>
           <PrimaryText>
-            Snooze Notifications
+            Snooze Notification Pop-ups
           </PrimaryText>
 
           <InfoToolTip />
         </ItemHV2>
-
-        <SecondaryText>Toggle notification pop-ups on or off</SecondaryText>
 
         <ItemHV2
           justifyContent="flex-start"
@@ -222,7 +220,7 @@ const MetamaskSnapConfigureModal = () => {
         >
           <Switch
             onChange={handleChange}
-            checked={toggleStatus<40}
+            checked={toggleStatus>40}
             className="react-switch"
             uncheckedIcon={false}
             checkedIcon={false}
@@ -235,7 +233,7 @@ const MetamaskSnapConfigureModal = () => {
             fontWeight="500"
             color={theme.modalMessageColor}
           >
-            {toggleStatus<40 ? 'On' : 'Off'}
+            {toggleStatus>40 ? 'On' : 'Off'}
           </SpanV2>
         </ItemHV2>
       </ItemVV2>
@@ -328,22 +326,36 @@ const ToolTipText = styled.p`
   text-align: left;
 `
 
-const AddButton = styled(Button)`
-  align-self: end;
-  width: fit-content;
-  background: #d53a94;
-  color: #fff;
-  height: 36px;
+const SnapButton = styled(Button)`
+align-self: end;
+height: 36px;
+z-index: 0;
+font-family: 'Strawford';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: normal;
+border-radius: 8px;
+`
+
+const FilledButton = styled(SnapButton)`
   min-width: 79px;
-  z-index: 0;
-  font-family: 'Strawford';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: normal;
-  border-radius: 8px;
   padding: 14px;
+  background: #d53a94;
+  width: fit-content;
+  color: #fff;
 `;
+
+const EnptyButton = styled(SnapButton)`
+  flex-direction: row;
+  color: ${(props)=>props.theme.default.secondaryColor};
+  text-align: center;
+  width:auto;
+  padding: 16px 24px;
+  border: 1px solid #bac4d6;
+  background: ${(props)=>props.theme.default.bg};
+  gap: 4px;
+`
 
 const ImageInfo = styled.img`
   margin-right: 5px;

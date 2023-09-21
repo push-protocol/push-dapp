@@ -10,6 +10,7 @@ export const AppContext = createContext<AppContextType | null>(null);
 const AppContextProvider=({children})=>{
     const [web3NameList,setWeb3NameList]=useState<Web3NameListType>({});
 
+    const [SnapState, setSnapState] = useState(1);
     const {
         isModalOpen: isMetamaskPushSnapOpen,
         showModal: showMetamaskPushSnap,
@@ -17,7 +18,14 @@ const AppContextProvider=({children})=>{
     } = useModalBlur();
 
     return(
-        <AppContext.Provider value={{web3NameList,setWeb3NameList,MetamaskPushSnapModalComponent,showMetamaskPushSnap}}>
+        <AppContext.Provider value={{
+            web3NameList,
+            setWeb3NameList,
+            MetamaskPushSnapModalComponent,
+            showMetamaskPushSnap,
+            setSnapState,
+            SnapState
+        }}>
             {children}
         </AppContext.Provider>
     )

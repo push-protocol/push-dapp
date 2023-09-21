@@ -39,8 +39,7 @@ const SnapInformationModal = () => {
     });
 
     if (res) {
-      //open a new tab
-      window.open('https://app.push.org/channels', '_blank');
+        window.open("/snap", '_self');
     }
   };
 
