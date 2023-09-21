@@ -12,10 +12,13 @@ import { ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import { AppContext } from 'contexts/AppContext';
 
 // Create Header
 function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
   const theme = useTheme();
+
+  const { showMetamaskPushSnap } = React.useContext(AppContext);
 
   let SelectedIcon;
   let RouteLogic;
@@ -44,6 +47,8 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
   } else {
     RouteLogic = Anchor;
   }
+
+
 
   return (
     <>
@@ -103,11 +108,12 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
                 spacing="0"
                 margin="0 5px"
                 color={theme.nav.color}
+                onClick={data?.hasOnClickFunction && showMetamaskPushSnap}
                 size="16px">
                 {data.name}
               </Span>
 
-              {data?.name === "Yield Farming V2" && (
+              {data?.showNewTag && (
                 <NewTag>New</NewTag>
               )}
 

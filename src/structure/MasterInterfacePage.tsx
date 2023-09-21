@@ -57,6 +57,11 @@ import { ethers } from 'ethers';
 import CryptoHelper from 'helpers/CryptoHelper';
 import * as w2wHelper from 'helpers/w2w';
 import { ConnectedUser, Feeds, User } from 'types/chat';
+import SnapPage from 'pages/SnapPage';
+import { AppContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
+import MetamaskPushSnapModal from 'modules/receiveNotifs/MetamaskPushSnapModal';
+import { MODAL_POSITION } from 'hooks/useModalBlur';
 
 // Create Header
 function MasterInterfacePage() {
@@ -65,15 +70,17 @@ function MasterInterfacePage() {
   const [loadTeaserVideo, setLoadTeaserVideo] = React.useState(null);
   const location = useLocation();
 
+  const { MetamaskPushSnapModalComponent }:AppContextType = React.useContext(AppContext);
+
   // Render
   return (
     <Container>
       <Interface location={location.pathname}>
         <Suspense fallback={
-            <ItemVV2>
-              <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
-            </ItemVV2>
-          }
+          <ItemVV2>
+            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
+          </ItemVV2>
+        }
         >
           <Routes>
             <Route path="inbox" element={<InboxPage />} />
@@ -93,6 +100,7 @@ function MasterInterfacePage() {
             <Route path="receive" element={<ReceiveNotifsPage />} />
 
             <Route path="govern" element={<GovPage />} />
+            <Route path="snap" element={<SnapPage />} />
 
             {/* <Route path="yield" element={<YieldFarmingPage />} /> */}
             <Route path="yieldv2" element={<YieldFarmingV2Page />} />
@@ -118,6 +126,13 @@ function MasterInterfacePage() {
         rtl={false}
         pauseOnFocusLoss
         draggable
+      />
+
+      <MetamaskPushSnapModalComponent
+        InnerComponent={MetamaskPushSnapModal}
+        modalPadding='0px'
+        // InnerComponentProps={}
+        modalPosition={MODAL_POSITION.ON_ROOT}
       />
 
       {/* To play youtube video from anywhere */}

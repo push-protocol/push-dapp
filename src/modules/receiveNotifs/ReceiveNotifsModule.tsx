@@ -12,6 +12,8 @@ import Info from "segments/Info";
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from "config/Globals";
+import useModalBlur, { MODAL_POSITION } from "hooks/useModalBlur";
+import MetamaskPushSnapModal from "./MetamaskPushSnapModal";
 
 // Create Header
 function ReceiveNotifsModule() {
@@ -20,9 +22,34 @@ function ReceiveNotifsModule() {
   // get theme
   const theme = useTheme();
 
+  //notification modal
+  // const {
+  //   isModalOpen: isMetamaskPushSnapOpen,
+  //   showModal: showMetamaskPushSnap,
+  //   ModalComponent: MetamaskPushSnapModalComponent,
+  // } = useModalBlur();
+
+  // React.useEffect(()=>{
+  //   showMetamaskPushSnap();
+  // },[])
+
+  // React.useEffect(()=>{
+  //   showMetamaskPushSnap();
+  // },[])
+
   // Render
   return (
     <Container>
+
+      {/* <MetamaskPushSnapModalComponent
+        InnerComponent={MetamaskPushSnapModal}
+        modalPadding='0px'
+        // InnerComponentProps={}
+        modalPosition={MODAL_POSITION.ON_PARENT}
+      /> */}
+
+
+
       <ItemVV2 alignItems="stretch">
         <ItemVV2 align="stretch" justify="flex-start" margin="0px 0px 40px 0px">
           <H2>

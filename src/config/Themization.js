@@ -259,7 +259,13 @@ const themeLight = {
     statusColorError: '#E93636',
     statusColorSuccess: '#30CC8B',
     iconColorPrimary: '#82828A',
-  }
+  },
+
+  snapUIBackground:'#F9F9F9',
+  snapButtonBackground:'#1E1E1E',
+  snapPrimaryText:'',
+  snapSecondaryText:'#62626a',
+  snapBackground:'#F2F2F2',
 
 };
 
@@ -528,7 +534,14 @@ const themeDark = {
     statusColorError: '#E93636',
     statusColorSuccess: '#30CC8B',
     iconColorPrimary: '#71717A',
-  }
+  },
+
+  snapUIBackground:'transparent',
+  snapButtonBackground:'#404650',
+  snapPrimaryText:'',
+  snapSecondaryText:'#787E99',
+  snapBackground:'#404650',
+  
 };
 
 module.exports = {
