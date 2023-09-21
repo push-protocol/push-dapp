@@ -1,24 +1,22 @@
 import Onboard from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
+import coinbaseWalletModule from '@web3-onboard/coinbase'
+import { EnvHelper } from 'helpers/UtilityHelper';
 import { getWeb3OnboardChains } from './chains';
 import { walletConnect } from './walletConnect';
 import PushBlocknativeLogo from '../assets/PushBlocknativeLogo.svg';
 
 const injected = injectedModule();
+const coinbase = coinbaseWalletModule();
 
 const chains = getWeb3OnboardChains();
 export const web3Onboard = Onboard({
   appMetadata: {
-    name: 'Push (EPNS)',
+    name: EnvHelper.dappTitle(),
     icon: PushBlocknativeLogo,
     logo: PushBlocknativeLogo,
     description: 'The Communication Protocol of Web3',
     explore: "https://app.push.org",
-    agreement: {
-      termsUrl: "https://push.org/tos",
-      version: "2nd Nov 2020",
-      privacyUrl: "https://push.org/privacy",
-    },
   },
   accountCenter: {
     desktop: {
@@ -32,12 +30,13 @@ export const web3Onboard = Onboard({
     showSidebar: true,
     autoConnectLastWallet: true,
     removeWhereIsMyWalletWarning: true,
+    removeIDontHaveAWalletInfoLink: true,
     disableClose: true,
   },
   containerElements: {
     connectModal: "#onboard-container"
   },
-  wallets: [injected, walletConnect],
+  wallets: [injected, walletConnect, coinbase],
   chains: chains,
   theme: 'system',
 });
