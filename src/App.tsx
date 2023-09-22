@@ -81,7 +81,7 @@ export default function App() {
   const updateOnboardTheme = useUpdateTheme();
 
   const { run, stepIndex, tutorialContinous } = useSelector((state: any) => state.userJourney);
-  const location = useLocation();
+  // const location = useLocation();
   // Build takes care of this now
   // const [title, setTitle] = useState(EnvHelper.dappTitle());
 
@@ -201,6 +201,9 @@ export default function App() {
 
   // const { spaceUI } = useSpaceComponents();
 
+  const location = useLocation();
+  const isSnapPage = location?.pathname === '/snap';
+
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
       {(!isActive || !allowedChain) && (
@@ -256,11 +259,11 @@ export default function App() {
                 bg={darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG}
                 headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
               >
-                <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                {!isSnapPage && <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
                   <Navigation />
-                </LeftBarContainer>
+                </LeftBarContainer>}
 
-                <ContentContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                <ContentContainer leftBarWidth={isSnapPage ? 0 : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
                    {/* Shared among all pages, load universal things here */}
                    <SpacesUIProvider spaceUI={spaceUI} theme={darkMode ? darkTheme : lightTheme}>
                       <MasterInterfacePage />

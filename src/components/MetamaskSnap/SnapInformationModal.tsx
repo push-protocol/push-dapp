@@ -1,21 +1,23 @@
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+// React + Web3 Essentials
 import React from 'react';
+
+// External Packages
 import styled, { useTheme } from 'styled-components';
-import PushIcon from 'assets/PushSnaps/PushIcon.svg';
+
+// Internal Compoonents
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { Button } from 'components/SharedStyling';
 import PushLogoLight from 'assets/pushLight.svg';
 import PushLogoDark from 'assets/pushDark.svg';
-// import { ReactComponent as PushLogoLight } from '../../assets/pushLight.svg';
-
 import HandTap from 'assets/PushSnaps/HandTap.svg';
 import WalletLogo from 'assets/PushSnaps/Wallet.svg';
 import NotificationLogo from 'assets/PushSnaps/Notification.svg';
 import Metamask from 'assets/PushSnaps/metamasksnap.svg';
-import { Button } from 'components/SharedStyling';
 
 const SnapInformationModal = () => {
   const theme = useTheme();
 
-  const defaultSnapOrigin = 'npm:push-v1';
+  const defaultSnapOrigin = 'npm:@pushprotocol/snap';
 
   const connectSnap = async (snapId = defaultSnapOrigin, params = {}) => {
     await window.ethereum?.request({
@@ -37,8 +39,7 @@ const SnapInformationModal = () => {
     });
 
     if (res) {
-      //open a new tab
-      window.open('https://app.push.org/channels', '_blank');
+        window.open("/snap", '_self');
     }
   };
 
@@ -57,6 +58,7 @@ const SnapInformationModal = () => {
         fontSize="22px"
         fontWeight="500"
         letterSpacing="-0.44px"
+        color={theme.modalMessageColor}
       >
         Connect to Metamask Push Snap
       </SpanV2>
@@ -72,7 +74,7 @@ const SnapInformationModal = () => {
           />
           <ItemVV2 margin="0 0 0 16px">
             <PrimaryText>Notifications</PrimaryText>
-            <SecondaryText>Notifying users for all updates from the channels that they opt-in to.</SecondaryText>
+            <SecondaryText>Get notified by your favourite channels using Push Snap.</SecondaryText>
           </ItemVV2>
         </ItemHV2>
 
@@ -83,7 +85,7 @@ const SnapInformationModal = () => {
           />
           <ItemVV2 margin="0 0 0 16px">
             <PrimaryText>Address Selection</PrimaryText>
-            <SecondaryText>Add or remove your wallet address for receiving notifications. </SecondaryText>
+            <SecondaryText>Add or remove your wallet preferred wallet addresses for notifications.</SecondaryText>
           </ItemVV2>
         </ItemHV2>
 
@@ -94,7 +96,7 @@ const SnapInformationModal = () => {
           />
           <ItemVV2 margin="0 0 0 16px">
             <PrimaryText>Customize Notification Pop-ups</PrimaryText>
-            <SecondaryText>Snap allows users to toggle popup notifications as per their convenience. </SecondaryText>
+            <SecondaryText>Snooze popup notifications as per your convenience.</SecondaryText>
           </ItemVV2>
         </ItemHV2>
       </ItemVV2>
@@ -134,6 +136,7 @@ const PrimaryText = styled.p`
   font-size: 18px;
   font-weight: 500;
   align-self: baseline;
+  color:${(props)=>props.theme.modalMessageColor};
 `;
 
 const SecondaryText = styled.p`
@@ -141,7 +144,7 @@ const SecondaryText = styled.p`
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  color: #62626a;
+  color:${(props)=>props.theme.snapSecondaryText};
   text-align: left;
 `;
 
