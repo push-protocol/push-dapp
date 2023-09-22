@@ -1,6 +1,5 @@
 // React + Web3 Essentials
 import React, { useEffect, useState } from 'react';
-import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -15,6 +14,7 @@ import { Button } from 'components/SharedStyling';
 import InfoImage from "assets/info.svg";
 import { shortenText } from 'helpers/UtilityHelper';
 import { ReactComponent as MinusCircle } from 'assets/PushSnaps/MinusCircle.svg';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { device } from 'config/Globals';
@@ -30,7 +30,7 @@ const MetamaskSnapConfigureModal = () => {
 
   const defaultSnapOrigin = 'npm:@pushprotocol/snap';
 
-  const { chainId, account, provider } = useWeb3React();
+  const { chainId, account, provider } = useAccount();
 
   useEffect(async () => {
     const res = await window.ethereum?.request({
