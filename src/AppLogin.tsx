@@ -57,18 +57,25 @@ useEffect(() => {
 }, [authError]);
 
   useEffect(() => {
+    let observer: ResizeObserver | undefined;
     try {
       setAuthError(undefined);
       setTimeout(() => {
         connect();
         setTimeout(() => {
           const onboardModal = document.getElementById("onboard-container");
-          setModalHeight(onboardModal.offsetHeight);
+          const observer = new ResizeObserver(() => {
+            setModalHeight(onboardModal.offsetHeight);
+          });
+          observer.observe(onboardModal);
         }, 500)
       }, 500);
     }
     catch(error){
       setAuthError(error);
+    }
+    return () => {
+      observer?.disconnect();
     }
   }, [isActive]);
 

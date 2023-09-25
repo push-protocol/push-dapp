@@ -587,10 +587,9 @@ button, a, a:before, a:after {
   position: absolute; 
   top: 14rem;
   margin: auto;
-  background-color:
-  transparent; 
-  left: 2rem;
-  right: 2rem; 
+  background-color: transparent; 
+  left: 20px;
+  right: 20px; 
   margin-left: auto; 
   margin-right: auto;
   border-radius: var(--w3o-border-radius);
