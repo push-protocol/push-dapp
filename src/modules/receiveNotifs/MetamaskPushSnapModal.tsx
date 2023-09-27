@@ -15,7 +15,6 @@ import MetamaskSnapConfigureModal from 'components/MetamaskSnap/MetamaskSnapConf
 import { AppContext } from 'contexts/AppContext';
 import GLOBALS, { device, globalsMargin } from "config/Globals";
 
-
 const MetamaskPushSnapModal = ({
     onClose
 }) => {

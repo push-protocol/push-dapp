@@ -82,10 +82,9 @@ const SnapModule = () => {
     });
     console.log('Snap Installed');
   }
-
+  
   async function connectToMetaMask() {
     setLoading(true);
-
     try {
       if (!snapInstalled) {
         await connectSnap();
@@ -250,6 +249,7 @@ const SnapModule = () => {
 
           {walletConnected || addedAddress ? (
             <ButtonContainer gap="12px" >
+
               <SettingsButton onClick={handleSettingsClick}>
                 <Gear
                   height="20px"
@@ -300,7 +300,6 @@ const Container = styled(Section)`
   padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
   position: relative;
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
     padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
