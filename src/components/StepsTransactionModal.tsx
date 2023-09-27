@@ -14,6 +14,7 @@ const StepsTransactionModal = ({ onClose, InnerComponentProps }) => {
         totalTransactionNo,
         transactionSteps,
         epochClaimed,
+        transactionText,
         setCurrentTransactionNo,
         setTotalTransactionNo,
         setTransactionSteps,
@@ -65,7 +66,7 @@ const StepsTransactionModal = ({ onClose, InnerComponentProps }) => {
                                 </ItemVV2>
 
                                 <H2V2 fontSize='18px' fontWeight='400' color='#657795'>
-                                    You are claiming the reward till Epoch Number {epochClaimed}
+                                    {transactionText}
                                 </H2V2>
 
                                 <ItemVV2 padding='16px'>

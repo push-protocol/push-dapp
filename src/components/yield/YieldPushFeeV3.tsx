@@ -51,6 +51,8 @@ const YieldPushFeeV3 = ({
     const [transactionSteps, setTransactionSteps] = useState(0);
     const [epochClaimed,setEpochClaimed] = useState(0);
 
+    const [transactionText,setTransactionText] = useState('');
+
 
     const pushFeeToast = useToast();
     const theme = useTheme();
@@ -320,7 +322,7 @@ const YieldPushFeeV3 = ({
         openTransactionModal();
 
         const currentEpoch = PUSHPoolstats?.currentEpochNumber;
-        const batchSize = 2;
+        const batchSize = 5;
 
         let _tillEpoch = 0;
         _tillEpoch = await getLastClaimedBlock(pushCoreV2);
@@ -333,14 +335,19 @@ const YieldPushFeeV3 = ({
         let transactionNumber = 0;
         for (let i = 0; i < totalTransactionNumber - 1; i++) {
 
+            let lastEpoch = _tillEpoch;
+            console.log("Last Epoch",lastEpoch);
+
             _tillEpoch += batchSize;
             let temp = Math.min(_tillEpoch, currentEpoch - 1);
             setEpochClaimed(temp);
 
+            setTransactionText(`Claiming the rewards from Epoch ${lastEpoch} to ${temp} `);
+
             console.log("Claiming reward for epoch ", temp, "where total number of epochs are", currentEpoch - 1);
 
             const tx = pushCoreV2.harvestPaginated(temp, {
-                gasLimit: 3000000
+                gasLimit: 8000000
             });
 
             await tx.then(async (tx) => {
@@ -348,8 +355,21 @@ const YieldPushFeeV3 = ({
                 try {
                     pushFeeToast.showLoaderToast({ loaderMessage: 'Waiting for confirmation' });
                     await provider.waitForTransaction(tx.hash);
+                    
                     transactionNumber++;
                     setCurrentTransactionNo(transactionNumber);
+
+                    pushFeeToast.showMessageToast({
+                        toastTitle: 'Success',
+                        toastMessage: 'Rewards claimed',
+                        toastType: 'SUCCESS',
+                        getToastIcon: (size) => (
+                            <MdCheckCircle
+                                size={size}
+                                color="green"
+                            />
+                        ),
+                    });
 
                 } catch (error) {
                     console.log("Error in the transaction", tx);
@@ -359,6 +379,7 @@ const YieldPushFeeV3 = ({
 
             }).catch((error) => {
                 console.log("Error in claiming the reward", error);
+                setTransactionText('');
                 setTxInProgressWithdraw(false);
                 getUserDataPush();
                 setTransactionSteps(1);
@@ -369,20 +390,10 @@ const YieldPushFeeV3 = ({
 
         }
 
-        pushFeeToast.showMessageToast({
-            toastTitle: 'Success',
-            toastMessage: 'Rewards have been claimed',
-            toastType: 'SUCCESS',
-            getToastIcon: (size) => (
-                <MdCheckCircle
-                    size={size}
-                    color="green"
-                />
-            ),
-        });
-
         console.log("Rewards have been claimed for ", _tillEpoch);
         console.log("<<<< Unstaking Amount >>>>")
+
+        setTransactionText("Unstaking Your Push Tokens. Please wait...")
         
         setEpochClaimed(currentEpoch - 1);
         const tx = pushCoreV2.unstake();
@@ -406,7 +417,6 @@ const YieldPushFeeV3 = ({
                 getPUSHPoolStats();
                 getUserDataPush();
                 setTxInProgressWithdraw(false);
-
                 setTransactionSteps(2);
                 setCurrentTransactionNo(0);
 
@@ -418,7 +428,7 @@ const YieldPushFeeV3 = ({
                     toastType: 'ERROR',
                     getToastIcon: (size) => <MdError size={size} color="red" />,
                 });
-
+                setTransactionText('');
                 setTxInProgressWithdraw(false);
                 
             }
@@ -580,6 +590,7 @@ const YieldPushFeeV3 = ({
                     totalTransactionNo,
                     transactionSteps,
                     epochClaimed,
+                    transactionText,
                     setCurrentTransactionNo,
                     setTotalTransactionNo,
                     setTransactionSteps,
