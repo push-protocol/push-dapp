@@ -6,4 +6,5 @@ export const Constants = {
   },
 
   epochDuration: 21 * 7156,
+  // epochDuration: 50,
 };

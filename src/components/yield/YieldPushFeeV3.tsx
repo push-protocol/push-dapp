@@ -46,31 +46,21 @@ const YieldPushFeeV3 = ({
     const [unstakeErrorMessage, setUnstakeErrorMessage] = useState(null);
     const [withdrawErrorMessage, setWithdrawErrorMessage] = useState(null);
 
-    const [currentTransactionNo,setCurrentTransactionNo] = useState(0);
-    const [totalTransactionNo,setTotalTransactionNo] = useState(0);
-    const [transactionSteps,setTransactionSteps] = useState(0);
+    const [currentTransactionNo, setCurrentTransactionNo] = useState(0);
+    const [totalTransactionNo, setTotalTransactionNo] = useState(0);
+    const [transactionSteps, setTransactionSteps] = useState(0);
+    const [epochClaimed,setEpochClaimed] = useState(0);
+
 
     const pushFeeToast = useToast();
     const theme = useTheme();
 
-    const withdrawAmountTokenFarmAutomatic = async () => {
-        if (txInProgressWithdraw) {
-            return;
-        }
 
-        setTxInProgressWithdraw(true);
-        const unstakeAmount = formatTokens(userDataPush?.userStaked);
-
-        if (unstakeAmount == 0) {
-            setUnstakeErrorMessage("Nothing to unstake, You need to stake first");
-            setTxInProgressWithdraw(false);
-            return
-        }
+    // Checking if the address is Delegated or not
+    const checkDelegateAddress = async (pushCoreV2) => {
 
         var signer = provider.getSigner(account);
-
         let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
-        let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
 
         const isAddressDelegated = await pushToken.holderDelegation(
             account,
@@ -111,57 +101,7 @@ const YieldPushFeeV3 = ({
 
         }
 
-        const tx = pushCoreV2.unstake();
-        tx.then(async (tx) => {
-            pushFeeToast.showLoaderToast({ loaderMessage: 'Unstaking! Waiting for Confirmation...' });
-
-            try {
-                await provider.waitForTransaction(tx.hash);
-                pushFeeToast.showMessageToast({
-                    toastTitle: 'Success',
-                    toastMessage: 'Transaction Completed!',
-                    toastType: 'SUCCESS',
-                    getToastIcon: (size) => (
-                        <MdCheckCircle
-                            size={size}
-                            color="green"
-                        />
-                    ),
-                });
-
-                getPUSHPoolStats();
-                getUserDataPush();
-                setTxInProgressWithdraw(false);
-
-            } catch (e) {
-                console.log("Error", e)
-                pushFeeToast.showMessageToast({
-                    toastTitle: 'Error',
-                    toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
-                    toastType: 'ERROR',
-                    getToastIcon: (size) => <MdError size={size} color="red" />,
-                });
-
-                setTxInProgressWithdraw(false);
-            }
-        }).catch((err) => {
-            console.log("Error: ", err)
-            const message = err.reason.includes(" PushCoreV2::unstake:");
-            if (message) {
-                setUnstakeErrorMessage("PUSH cannot be unstaked until current epoch is over.");
-            } else {
-                let errorMessage = err.reason.slice(err.reason.indexOf('::') + 1);
-                errorMessage = errorMessage.replace('unstake:', '');
-                pushFeeToast.showMessageToast({
-                    toastTitle: 'Error',
-                    toastMessage: `${errorMessage}`,
-                    toastType: 'ERROR',
-                    getToastIcon: (size) => <MdError size={size} color="red" />,
-                });
-            }
-            setTxInProgressWithdraw(false);
-        });
-    };
+    }
 
     const massClaimRewardsTokensAll = async () => {
         if (txInProgressClaimRewards) {
@@ -179,52 +119,78 @@ const YieldPushFeeV3 = ({
 
         var signer = provider.getSigner(account);
 
-        let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
         let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
 
-        const isAddressDelegated = await pushToken.holderDelegation(
-            account,
-            pushCoreV2.address
-        )
-
-        //First we will delegate the pushCoreV2 address then we will proceed further
-        if (!isAddressDelegated) {
-            try {
-                const tx = await pushToken.setHolderDelegation(
-                    pushCoreV2.address,
-                    'true'
-                )
-                pushFeeToast.showLoaderToast({ loaderMessage: 'Delegating!!Waiting for Confirmation...' });
-                await provider.waitForTransaction(tx.hash);
-                pushFeeToast.showMessageToast({
-                    toastTitle: 'Success',
-                    toastMessage: 'Transaction Completed!',
-                    toastType: 'SUCCESS',
-                    getToastIcon: (size) => (
-                        <MdCheckCircle
-                            size={size}
-                            color="green"
-                        />
-                    ),
-                });
-            } catch (error) {
-
-                pushFeeToast.showMessageToast({
-                    toastTitle: 'Error',
-                    toastMessage: `Transaction failed`,
-                    toastType: 'ERROR',
-                    getToastIcon: (size) => <MdError size={size} color="red" />,
-                });
-
-                setTxInProgressWithdraw(false);
-                return;
-            }
-
-        }
+        await checkDelegateAddress(pushCoreV2);
 
         setTxInProgressClaimRewards(false);
-        claimRewardsPaginated();
-        
+
+        // claimRewardsPaginated();
+
+        openTransactionModal();
+
+        const currentEpoch = PUSHPoolstats?.currentEpochNumber;
+        const batchSize = 100;
+
+        let _tillEpoch = 0;
+        _tillEpoch = await getLastClaimedBlock(pushCoreV2);
+
+        const totalTransactionNumber = Math.floor((currentEpoch - _tillEpoch) / batchSize);
+        setTotalTransactionNo(totalTransactionNumber);
+
+        let transactionNumber = 0;
+        for (let i = 0; i < totalTransactionNumber; i++) {
+
+            _tillEpoch += batchSize;
+
+            let temp = Math.min(_tillEpoch, currentEpoch - 1);
+            setEpochClaimed(temp);
+
+            const tx = pushCoreV2.harvestPaginated(temp, {
+                gasLimit: 8000000
+            });
+
+            await tx.then(async (tx) => {
+
+                try {
+                    pushFeeToast.showLoaderToast({ loaderMessage: 'Waiting for confirmation' });
+                    await provider.waitForTransaction(tx.hash);
+
+                    pushFeeToast.showMessageToast({
+                        toastTitle: 'Success',
+                        toastMessage: 'Transaction Completed!',
+                        toastType: 'SUCCESS',
+                        getToastIcon: (size) => (
+                            <MdCheckCircle
+                                size={size}
+                                color="green"
+                            />
+                        ),
+                    });
+
+                    transactionNumber++;
+                    setCurrentTransactionNo(transactionNumber);
+
+                } catch (error) {
+                    console.log("Error in the transaction", tx);
+                    return;
+                }
+
+
+            }).catch((error) => {
+                console.log("Error in claiming the reward", error);
+                getUserDataPush();
+                setTransactionSteps(1);
+                setCurrentTransactionNo(0);
+
+                throw error;
+            })
+
+        }
+        getUserDataPush();
+        setTransactionSteps(2);
+        setCurrentTransactionNo(0);
+
     };
 
     const claimRewardsPaginated = async () => {
@@ -253,7 +219,7 @@ const YieldPushFeeV3 = ({
             _tillEpoch = epochGap.toNumber();
         }
 
-        const totalTransactionNumber = Math.floor((currentEpoch-_tillEpoch) / batchSize);
+        const totalTransactionNumber = Math.floor((currentEpoch - _tillEpoch) / batchSize);
         setTotalTransactionNo(totalTransactionNumber);
 
         let transactionNumber = 0;
@@ -299,7 +265,7 @@ const YieldPushFeeV3 = ({
                 getUserDataPush();
                 setTransactionSteps(1);
                 setCurrentTransactionNo(0);
-               
+
                 throw error;
             })
 
@@ -307,7 +273,265 @@ const YieldPushFeeV3 = ({
         getUserDataPush();
         setTransactionSteps(2);
         setCurrentTransactionNo(0);
+
+    }
+
+    const getLastClaimedBlock = async (pushCoreV2) => {
+        const userFeesInfo = await pushCoreV2.userFeesInfo(account);
+        const lastClaimedBlock = userFeesInfo.lastClaimedBlock;
+
+        if (lastClaimedBlock.toNumber() !== 0) {
+            const genesisEpoch = await pushCoreV2.genesisEpoch();
+
+            const epochGap = await pushCoreV2.lastEpochRelative(
+                genesisEpoch,
+                lastClaimedBlock
+            );
+
+            const epochNumberGap = epochGap.toNumber();
+            return epochNumberGap;
+
+        }
+    }
+
+    
+
+    const withdrawAmountTokenFarmAutomatic = async () => {
+        if (txInProgressWithdraw) {
+            return;
+        }
+
+        setTxInProgressWithdraw(true);
+        const unstakeAmount = formatTokens(userDataPush?.userStaked);
+
+        if (unstakeAmount == 0) {
+            setUnstakeErrorMessage("Nothing to unstake, You need to stake first");
+            setTxInProgressWithdraw(false);
+            return
+        }
+
+        var signer = provider.getSigner(account);
+        let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
+
+        // Checking if the address is delegated or not
+        await checkDelegateAddress(pushCoreV2);
+
+        // Modal for displaying transactions
+        openTransactionModal();
+
+        const currentEpoch = PUSHPoolstats?.currentEpochNumber;
+        const batchSize = 2;
+
+        let _tillEpoch = 0;
+        _tillEpoch = await getLastClaimedBlock(pushCoreV2);
+
+        const totalTransactionNumber = Math.floor((currentEpoch - _tillEpoch) / batchSize);
+        setTotalTransactionNo(totalTransactionNumber);
+
+        console.log("Totlal transaction Number",totalTransactionNumber,_tillEpoch)
+
+        let transactionNumber = 0;
+        for (let i = 0; i < totalTransactionNumber - 1; i++) {
+
+            _tillEpoch += batchSize;
+            let temp = Math.min(_tillEpoch, currentEpoch - 1);
+            setEpochClaimed(temp);
+
+            console.log("Claiming reward for epoch ", temp, "where total number of epochs are", currentEpoch - 1);
+
+            const tx = pushCoreV2.harvestPaginated(temp, {
+                gasLimit: 3000000
+            });
+
+            await tx.then(async (tx) => {
+
+                try {
+                    pushFeeToast.showLoaderToast({ loaderMessage: 'Waiting for confirmation' });
+                    await provider.waitForTransaction(tx.hash);
+                    transactionNumber++;
+                    setCurrentTransactionNo(transactionNumber);
+
+                } catch (error) {
+                    console.log("Error in the transaction", tx);
+                    return;
+                }
+
+
+            }).catch((error) => {
+                console.log("Error in claiming the reward", error);
+                setTxInProgressWithdraw(false);
+                getUserDataPush();
+                setTransactionSteps(1);
+                setCurrentTransactionNo(0);
+
+                throw error;
+            })
+
+        }
+
+        pushFeeToast.showMessageToast({
+            toastTitle: 'Success',
+            toastMessage: 'Rewards have been claimed',
+            toastType: 'SUCCESS',
+            getToastIcon: (size) => (
+                <MdCheckCircle
+                    size={size}
+                    color="green"
+                />
+            ),
+        });
+
+        console.log("Rewards have been claimed for ", _tillEpoch);
+        console.log("<<<< Unstaking Amount >>>>")
         
+        setEpochClaimed(currentEpoch - 1);
+        const tx = pushCoreV2.unstake();
+        tx.then(async (tx) => {
+            pushFeeToast.showLoaderToast({ loaderMessage: 'Unstaking! Waiting for Confirmation...' });
+
+            try {
+                await provider.waitForTransaction(tx.hash);
+                pushFeeToast.showMessageToast({
+                    toastTitle: 'Success',
+                    toastMessage: 'Transaction Completed!',
+                    toastType: 'SUCCESS',
+                    getToastIcon: (size) => (
+                        <MdCheckCircle
+                            size={size}
+                            color="green"
+                        />
+                    ),
+                });
+
+                getPUSHPoolStats();
+                getUserDataPush();
+                setTxInProgressWithdraw(false);
+
+                setTransactionSteps(2);
+                setCurrentTransactionNo(0);
+
+            } catch (e) {
+                console.log("Error", e)
+                pushFeeToast.showMessageToast({
+                    toastTitle: 'Error',
+                    toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
+                    toastType: 'ERROR',
+                    getToastIcon: (size) => <MdError size={size} color="red" />,
+                });
+
+                setTxInProgressWithdraw(false);
+                
+            }
+        }).catch((err) => {
+            console.log("Error in unstake: ", err)
+            const message = err.reason.includes(" PushCoreV2::unstake:");
+            if (message) {
+                setUnstakeErrorMessage("PUSH cannot be unstaked until current epoch is over.");
+            } else {
+                let errorMessage = err.reason.slice(err.reason.indexOf('::') + 1);
+                errorMessage = errorMessage.replace('unstake:', '');
+                pushFeeToast.showMessageToast({
+                    toastTitle: 'Error',
+                    toastMessage: `${errorMessage}`,
+                    toastType: 'ERROR',
+                    getToastIcon: (size) => <MdError size={size} color="red" />,
+                });
+            }
+            setTxInProgressWithdraw(false);
+            getUserDataPush();
+            setTransactionSteps(1);
+            setCurrentTransactionNo(0);
+        });
+    };
+
+    const unstakePaginated = async () => {
+
+        openTransactionModal();
+
+        const currentEpoch = PUSHPoolstats?.currentEpochNumber;
+        const batchSize = 2;
+
+        var signer = provider.getSigner(account);
+        let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
+
+        let _tillEpoch = 0;
+        _tillEpoch = await getLastClaimedBlock(pushCoreV2);
+
+
+
+        /**
+         * Difference between rewards paginated and unstake Paginated
+         * 1. The rewards paginated are done till the last batch size while the unstake will be done till last - 1
+         * 2. Total number of transactions done are same but the last transaction changes in both the ways
+         * 
+         * 
+        */
+
+        const totalTransactionNumber = Math.floor((currentEpoch - _tillEpoch) / batchSize);
+        setTotalTransactionNo(totalTransactionNumber);
+
+        let transactionNumber = 0;
+        for (let i = 0; i < totalTransactionNumber - 1; i++) {
+
+            _tillEpoch += batchSize;
+
+            let temp = Math.min(_tillEpoch, currentEpoch - 1);
+
+            console.log("Claiming reward for epoch ", temp, "where total number of epochs are", currentEpoch - 1);
+
+            const tx = pushCoreV2.harvestPaginated(temp, {
+                gasLimit: 3000000
+            });
+
+            await tx.then(async (tx) => {
+
+                try {
+                    pushFeeToast.showLoaderToast({ loaderMessage: 'Waiting for confirmation' });
+                    await provider.waitForTransaction(tx.hash);
+
+                    pushFeeToast.showMessageToast({
+                        toastTitle: 'Success',
+                        toastMessage: 'Transaction Completed!',
+                        toastType: 'SUCCESS',
+                        getToastIcon: (size) => (
+                            <MdCheckCircle
+                                size={size}
+                                color="green"
+                            />
+                        ),
+                    });
+
+                    transactionNumber++;
+                    setCurrentTransactionNo(transactionNumber);
+
+                } catch (error) {
+                    console.log("Error in the transaction", tx);
+                    return;
+                }
+
+
+            }).catch((error) => {
+                console.log("Error in claiming the reward", error);
+                getUserDataPush();
+                setTransactionSteps(1);
+                setCurrentTransactionNo(0);
+
+                throw error;
+            })
+
+        }
+
+        console.log("Rewards have been claimed for ", _tillEpoch);
+        console.log("<<<< Withdrawing >>>>")
+
+        // Before this the rewards are claimed and then we do a unstake() function call to get all the remaining rewards and unstake at same time
+        withdrawAmountTokenFarmAutomatic();
+
+        getUserDataPush();
+        setTransactionSteps(2);
+        setCurrentTransactionNo(0);
+
+
     }
 
 
@@ -331,7 +555,7 @@ const YieldPushFeeV3 = ({
         ModalComponent: TransactionModal,
     } = useModalBlur();
 
-   
+
 
     return (
         <Container>
@@ -343,7 +567,7 @@ const YieldPushFeeV3 = ({
                     getPoolStats: getPUSHPoolStats,
                     setUnstakeErrorMessage: setUnstakeErrorMessage,
                     setWithdrawErrorMessage: setWithdrawErrorMessage,
-                    
+
                 }}
                 toastObject={stakingModalToast}
                 modalPosition={MODAL_POSITION.ON_PARENT}
@@ -355,6 +579,7 @@ const YieldPushFeeV3 = ({
                     currentTransactionNo,
                     totalTransactionNo,
                     transactionSteps,
+                    epochClaimed,
                     setCurrentTransactionNo,
                     setTotalTransactionNo,
                     setTransactionSteps,

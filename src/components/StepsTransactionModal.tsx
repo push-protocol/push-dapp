@@ -13,6 +13,7 @@ const StepsTransactionModal = ({ onClose, InnerComponentProps }) => {
         currentTransactionNo,
         totalTransactionNo,
         transactionSteps,
+        epochClaimed,
         setCurrentTransactionNo,
         setTotalTransactionNo,
         setTransactionSteps,
@@ -24,7 +25,7 @@ const StepsTransactionModal = ({ onClose, InnerComponentProps }) => {
         onClose();
     }
 
-    const retryClaimingRewards = async ()=>{
+    const retryClaimingRewards = async () => {
         setTransactionSteps(0);
         setCurrentTransactionNo(0);
         claimRewardsPaginated();
@@ -62,6 +63,10 @@ const StepsTransactionModal = ({ onClose, InnerComponentProps }) => {
                                         Processing your request
                                     </H2V2>
                                 </ItemVV2>
+
+                                <H2V2 fontSize='18px' fontWeight='400' color='#657795'>
+                                    You are claiming the reward till Epoch Number {epochClaimed}
+                                </H2V2>
 
                                 <ItemVV2 padding='16px'>
                                     <H2V2 fontSize='16px' fontWeight='400' color='#D53A94'>
