@@ -188,6 +188,7 @@ const DropdownSubmitButton = styled.button`
     outline: 0;
     display: flex;
     align-items: center;
+    min-width: max-content;
     justify-content: center;
     margin: 0px 0px 0px 10px;
     color: #fff;
@@ -197,7 +198,6 @@ const DropdownSubmitButton = styled.button`
     background: #e20880;
     border-radius: 8px;
     padding: 9px 15px;
-    min-width: 60px;
     @media (max-width: 768px) {
         padding: 9px 30px;
     }
