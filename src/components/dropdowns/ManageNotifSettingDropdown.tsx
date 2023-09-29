@@ -90,7 +90,7 @@ const DropdownBtn = styled.button`
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     background: transparent;
     cursor: pointer;
     gap: 5px;
