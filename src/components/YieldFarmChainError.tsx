@@ -2,25 +2,22 @@ import React from 'react';
 import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
 import { ButtonV2, ItemHV2, ItemVV2 } from './reusables/SharedStylingV2';
 import styled from 'styled-components';
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import { handleChangeAllowedNetwork } from 'helpers/ChainHelper';
 import { appConfig } from 'config';
+import { useAccount } from 'hooks';
 
 const YieldFarmChainError = () => {
 
-    const { account, chainId: currentChainId, connector } = useWeb3React<ethers.providers.Web3Provider>();
+    const { account, chainId: currentChainId, switchChain } = useAccount();
 
     const handleChainChange = () => {
-
-        // const { chainId } = useWeb3React<ethers.providers.Web3Provider>();
 
         const chainIdToPass = appConfig.allowedNetworks[0];
 
         if (currentChainId !== 1 && currentChainId !== 5) {
             console.log("Current Chain ID ", currentChainId);
             console.log("Chain Id to pass", chainIdToPass);
-            handleChangeAllowedNetwork(chainIdToPass, connector?.provider, connector);
+            switchChain(appConfig.coreContractChain);
         }
 
     }

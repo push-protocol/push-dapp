@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useEffect } from 'react';
 
@@ -32,6 +31,7 @@ import { setPushAdmin } from 'redux/slices/contractSlice';
 import { getChannelsSearch, getUserDelegations } from 'services';
 import * as PushAPI from '@pushprotocol/restapi';
 import { getAliasDetails } from 'services';
+import { useAccount } from 'hooks';
 
 // Internals Configs
 import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config';
@@ -41,7 +41,7 @@ const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 const InitState = () => {
   const dispatch = useDispatch();
-  const { account, provider, chainId } = useWeb3React();
+  const { account, provider, chainId } = useAccount();
   const { epnsReadProvider, epnsWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const {
     channelDetails,

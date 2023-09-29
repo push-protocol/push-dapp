@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import React from "react";
 
 // External Packages
@@ -8,13 +7,14 @@ import styled, { ThemeProvider, useTheme } from 'styled-components';
 // Internal Components
 import { Content, Item, Section } from '../primaries/SharedStyling';
 import { networkName } from "helpers/UtilityHelper";
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { appConfig } from "config";
 
 function NotAvailablePage(props) {
   const themes = useTheme();
-  const { chainId } = useWeb3React();
+  const { chainId } = useAccount();
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   React.useEffect(() => {

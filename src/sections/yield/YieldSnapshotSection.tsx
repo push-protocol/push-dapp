@@ -16,7 +16,6 @@ import YieldPushFeeV2 from 'components/yield/YieldPushFeeV2';
 import GLOBALS from 'config/Globals';
 import { ethers } from 'ethers';
 import { abis, addresses } from 'config';
-import { useWeb3React } from '@web3-react/core';
 import YieldFarmingDataStore from 'singletons/YieldFarmingDataStore';
 import YieldPoolCard from 'components/yield/YieldPoolCard';
 

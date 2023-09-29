@@ -7,7 +7,6 @@ import styled, { useTheme } from 'styled-components';
 import { Waypoint } from 'react-waypoint';
 
 // Internal Components
-import { useWeb3React } from '@web3-react/core';
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -19,6 +18,7 @@ import { Context } from 'modules/chat/ChatModule';
 import { AppContext, Feeds, IGroup, User } from 'types/chat';
 import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../../../helpers/w2w/groupChat';
 import { getDefaultFeed } from '../../../../helpers/w2w/user';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 
@@ -40,7 +40,7 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
   const [stopApi, setStopApi] = useState<boolean>(true);
   const [selectedChatSnap, setSelectedChatSnap] = useState<number>();
-  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
+  const { chainId, account } = useAccount();
   const [showError, setShowError] = useState<boolean>(false);
   const [bgUpdateLoading,setBgUpdateLoading]=useState<boolean>(false);
   const [limit, setLimit] = React.useState(10);

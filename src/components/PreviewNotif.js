@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from "@web3-react/core";
 import React from "react";
 
 // External Packages
@@ -11,13 +10,14 @@ import { NotificationItem } from "@pushprotocol/uiweb";
 import { H2, Item, Span } from "../primaries/SharedStyling";
 import { chainNameBackendStandard } from "helpers/UtilityHelper";
 import { appConfig } from 'config';
+import { useAccount } from "hooks";
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 export default function PreviewNotif({ details }) {
   const { delegatees, channelDetails } = useSelector((state) => state.admin);
-  const { chainId } = useWeb3React();
+  const { chainId } = useAccount();
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   let channelDetail;
   channelDetail = delegatees.filter(

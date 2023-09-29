@@ -1,6 +1,5 @@
 // React + Web3 Essentials
 import React, { useContext } from 'react';
-import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
@@ -23,7 +22,7 @@ import { AppContext, Feeds } from 'types/chat';
 import { Context } from 'modules/chat/ChatModule';
 import { fetchInbox } from 'helpers/w2w/user';
 import { profilePicture } from 'config/W2WConfig';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { device } from 'config/Globals';
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
@@ -36,7 +35,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [memberList, setMemberList] = React.useState<any>([]);
   const { connectedUser, setConnectedUser ,  createUserIfNecessary} = useContext(ChatUserContext);
-  const {provider } = useWeb3React<ethers.providers.Web3Provider>();
+  const {provider } = useAccount();
   const themes = useTheme();
   const createGroupToast = useToast();
   const isMobile = useDeviceWidthCheck(600);

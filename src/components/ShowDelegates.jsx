@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 
 // External Packages
@@ -12,7 +11,7 @@ import styled, { css, useTheme } from 'styled-components';
 import { getReq } from 'api';
 import { ButtonV2 } from 'components/reusables/SharedStylingV2';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import useModalBlur, {MODAL_POSITION} from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import { Button, Content, H2, H3, Item, Section, Span } from 'primaries/SharedStyling';
@@ -21,11 +20,11 @@ import DelegateInfo from './DelegateInfo';
 import RemoveDelegateModalContent from './RemoveDelegateModalContent';
 
 const isOwner = (account, delegate) => {
-  return account.toLowerCase() !== delegate.toLowerCase();
+  return account?.toLowerCase() !== delegate?.toLowerCase();
 };
 
 const ShowDelegates = () => {
-  const { account, chainId } = useWeb3React();
+  const { account, chainId } = useAccount();
   const [delegatees, setDelegatees] = React.useState([account]);
   const theme = useTheme();
   const [isActiveDelegateDropdown, setIsActiveDelegateDropdown] = React.useState(true);
@@ -46,8 +45,8 @@ const ShowDelegates = () => {
   };
 
   useEffect(() => {
-    fetchDelegatees();
-  }, []);
+    if(account) fetchDelegatees();
+  }, [account]);
 
   const fetchDelegatees = async () => {
     try {

@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from "ethers";
 import React from "react";
 
@@ -15,13 +14,14 @@ import { IoIosGift } from 'react-icons/io';
 import { Device } from 'assets/Device';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { Item, ItemH } from '../primaries/SharedStyling';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, addresses, appConfig } from "config";
 
 // Create Header
 function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
-  const { account, provider, chainId } = useWeb3React();
+  const { account, provider, chainId } = useAccount();
 
   const [NFTRewardsContract, setNFTRewardsContract] = React.useState(null);
   const [loading, setLoading] = React.useState(true);

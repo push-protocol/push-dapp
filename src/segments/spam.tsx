@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import React from 'react';
 
 // External Packages
@@ -29,6 +28,7 @@ import NotificationToast from '../primaries/NotificationToast';
 import useToast from 'hooks/useToast';
 import { updateSubscriptionStatus } from 'redux/slices/channelSlice';
 import { ScrollItem } from './ViewChannels';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { appConfig } from "config";
@@ -42,7 +42,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const dispatch = useDispatch();
   const modalRef = React.useRef(null);
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
-  const { account, chainId, provider } = useWeb3React();
+  const { account, chainId, provider } = useAccount();
   const { epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const { subscriptionStatus } = useSelector((state: any) => state.channels);
 

@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useState } from 'react';
 
@@ -24,6 +23,7 @@ import { executeDelegateTx } from 'helpers/WithGasHelper';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
@@ -43,7 +43,7 @@ const GovModule = () => {
   const theme = useTheme();
 
   const { web3NameList }:AppContextType = React.useContext(AppContext);
-  const { account, provider, chainId } = useWeb3React();
+  const { account, provider, chainId } = useAccount();
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const [dashboardLoading, setDashboardLoading] = React.useState(true);
@@ -101,7 +101,7 @@ const GovModule = () => {
       const epnsTokenContract = new ethers.Contract(addresses.epnsToken, abis.epnsToken, signer);
       setEpnsToken(epnsTokenContract);
     }
-  }, [account, provider]);
+  }, [account]);
 
   React.useEffect(() => {
     if (epnsToken) {

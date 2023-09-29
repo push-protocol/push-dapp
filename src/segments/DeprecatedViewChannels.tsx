@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from "@web3-react/core";
 import React from 'react';
 
 // External Packages
@@ -15,6 +14,7 @@ import ViewChannelItem from "components/ViewChannelItem";
 import { incrementPage, setChannelMeta } from "redux/slices/channelSlice";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { postReq } from "api";
+import { useAccount } from "hooks";
 
 // Internal Configs
 
@@ -28,7 +28,7 @@ const SEARCH_DELAY = 1500;
 // Create Header
 function ViewChannels({ loadTeaser, playTeaser }) {
   const dispatch = useDispatch();
-  const { account, chainId } = useWeb3React();
+  const { account, chainId } = useAccount();
   const { channels, page, ZERO_ADDRESS } = useSelector(
     (state: any) => state.channels
   );
