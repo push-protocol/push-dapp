@@ -239,6 +239,12 @@ const themeLight = {
   activeButtonText:'#657795',
   stakingBorder:'#BAC4D6',
   stakingEmptyButtonBG:'#DEDFE1',
+
+  // notif settings modal
+  settingsModalBorderBottomColor: '#D4DCEA',
+  sliderActiveColor: '#CF1C84',
+  sliderTrackColor: '#BAC4D6',
+  settingsModalPrimaryTextColor: '#1E1E1E',
   
    //spaces
    spaceHostTextColor: '#1e1e1e',
@@ -514,6 +520,12 @@ const themeDark = {
   activeButtonText:'#B6BCD6',
   emptyButtonText:'#2D313C',
   emptyButtonBg:'',
+
+  // notif settings modal
+  settingsModalBorderBottomColor: '#4A4F67',
+  sliderActiveColor: '#CF1C84',
+  sliderTrackColor: '#4A4F67',
+  settingsModalPrimaryTextColor: '#fff',
 
   //spaces
   spaceHostTextColor: '#ffff',

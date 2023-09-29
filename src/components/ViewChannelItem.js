@@ -36,6 +36,9 @@ import InfoImage from '../assets/info.svg';
 import VerifiedTooltipContent from "./VerifiedTooltipContent";
 import { IPFSGateway } from 'helpers/IpfsHelper';
 import { useDeviceWidthCheck } from 'hooks';
+import ManageNotifSettingDropdown from './dropdowns/ManageNotifSettingDropdown';
+import OptinNotifSettingDropdown from './dropdowns/OptinNotifSettingDropdown';
+import { ImageV2 } from './reusables/SharedStylingV2';
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -1039,22 +1042,24 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <>
                 {isOwner && <OwnerButton disabled>Owner</OwnerButton>}
                 {!isOwner && (
-                  <SubscribeButton
-                    onClick={subscribe}
-                    disabled={txInProgress}
-                    className="optin"
-                  >
-                    {txInProgress && (
-                      <ActionLoader>
-                        <LoaderSpinner
-                          type={LOADER_TYPE.SEAMLESS}
-                          spinnerSize={16}
-                          spinnerColor="#FFF"
-                        />
-                      </ActionLoader>
-                    )}
-                    <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
-                  </SubscribeButton>
+                  <OptinNotifSettingDropdown>
+                    <SubscribeButton
+                      onClick={() => {}}
+                      disabled={txInProgress}
+                      className="optin"
+                    >
+                      {txInProgress && (
+                        <ActionLoader>
+                          <LoaderSpinner
+                            type={LOADER_TYPE.SEAMLESS}
+                            spinnerSize={16}
+                            spinnerColor="#FFF"
+                          />
+                        </ActionLoader>
+                      )}
+                      <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
+                    </SubscribeButton>
+                  </OptinNotifSettingDropdown>
                 )}
               </>
             )}
@@ -1062,21 +1067,30 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <>
                 {isOwner && <OwnerButton disabled>Owner</OwnerButton>}
                 {!isOwner && (
-                  <UnsubscribeButton
-                    onClick={unsubscribeAction}
-                    disabled={txInProgress}
-                  >
-                    {txInProgress && (
-                      <ActionLoader>
-                        <LoaderSpinner
-                          type={LOADER_TYPE.SEAMLESS}
-                          spinnerSize={16}
-                          spinnerColor="#FFF"
-                        />
-                      </ActionLoader>
-                    )}
-                    <ActionTitle hideit={txInProgress}>Opt-out</ActionTitle>
-                  </UnsubscribeButton>
+                  <ManageNotifSettingDropdown>
+                    <UnsubscribeButton
+                      onClick={() => {}}
+                      disabled={txInProgress}
+                    >
+                      {txInProgress && (
+                        <ActionLoader>
+                          <LoaderSpinner
+                            type={LOADER_TYPE.SEAMLESS}
+                            spinnerSize={16}
+                            spinnerColor="#FFF"
+                          />
+                        </ActionLoader>
+                      )}
+                      <ActionTitle hideit={txInProgress}>Manage</ActionTitle>
+                      <ImageV2
+                        alt="arrow"
+                        src="/svg/arrow.svg"
+                        height="10px"
+                        width="12px"
+                        margin="0px 0px 0px 8px"
+                      />
+                    </UnsubscribeButton>
+                  </ManageNotifSettingDropdown>
                 )}
               </>
             )}
