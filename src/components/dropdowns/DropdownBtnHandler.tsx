@@ -63,6 +63,8 @@ const DropdownContainer = styled(ItemHV2)`
     right:-0.5rem;
 
     @media (max-width:768px){
-        right:0px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: fit-content;
     }
 `;
