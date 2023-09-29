@@ -201,6 +201,8 @@ export const ImageV2 = styled.img`
 
 export const AInlineV2 = styled.a`
   background: transparent;
+  font-size: ${(props) => props.fontSize || 'inherit'};
+  font-weight: ${(props) => props.fontWeight || '300'};
   color: ${(props) => props.color || '#e1087f'};
   display: inline;
   letter-spacing: inherit;

@@ -1,7 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import { ethers } from 'ethers';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import Switch from '@material-ui/core/Switch';
@@ -19,7 +18,7 @@ import styled, { useTheme } from 'styled-components';
 import * as PushAPI from '@pushprotocol/restapi';
 import { postReq } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { SectionV2 } from 'components/reusables/SharedStylingV2';
+import { SectionV2, AInlineV2 } from 'components/reusables/SharedStylingV2';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
@@ -129,23 +128,65 @@ function SendNotifications() {
   });
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
 
-  const [nfProcessing, setNFProcessing] = React.useState(0);
-  const [channelAddress, setChannelAddress] = React.useState('');
-  const [nfRecipient, setNFRecipient] = React.useState(account);
-  const [multipleRecipients, setMultipleRecipients] = React.useState([]);
-  const [tempRecipeint, setTempRecipient] = React.useState(''); // to temporarily hold the address of one recipient who would be entered into the recipeints array above.
-  const [nfType, setNFType] = React.useState('1');
-  const [nfSub, setNFSub] = React.useState('');
-  const [nfSubEnabled, setNFSubEnabled] = React.useState(false);
-  const [nfMsg, setNFMsg] = React.useState('');
-  const [nfCTA, setNFCTA] = React.useState('');
-  const [nfCTAEnabled, setNFCTAEnabled] = React.useState(false);
-  const [nfMedia, setNFMedia] = React.useState('');
-  const [nfMediaEnabled, setNFMediaEnabled] = React.useState(false);
-  const [nfInfo, setNFInfo] = React.useState('');
-  const [delegateeOptions, setDelegateeOptions] = React.useState([]);
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const [nfProcessing, setNFProcessing] = useState(0);
+  const [channelAddress, setChannelAddress] = useState('');
+  const [nfRecipient, setNFRecipient] = useState(account);
+  const [multipleRecipients, setMultipleRecipients] = useState([]);
+  const [tempRecipeint, setTempRecipient] = useState(''); // to temporarily hold the address of one recipient who would be entered into the recipeints array above.
+  const [nfType, setNFType] = useState('1');
+  const [nfSub, setNFSub] = useState('');
+  const [nfSubEnabled, setNFSubEnabled] = useState(false);
+  const [nfMsg, setNFMsg] = useState('');
+  const [nfCTA, setNFCTA] = useState('');
+  const [nfCTAEnabled, setNFCTAEnabled] = useState(false);
+  const [nfMedia, setNFMedia] = useState('');
+  const [nfMediaEnabled, setNFMediaEnabled] = useState(false);
+  const [nfInfo, setNFInfo] = useState('');
+  const [nfSettingType, setNFSettingType] = useState(null);
+  const [delegateeOptions, setDelegateeOptions] = useState([]);
 
+  const channelDetailsFromBackend = useMemo(() => {
+    if (delegatees) {
+      return delegatees.find(delegatee => delegatee.channel === channelAddress);
+    }
+    // Return a default value or handle the case when delegatees is not defined.
+    return null; // or some other default value
+  }, [delegatees, channelAddress]);
+
+  const channelSettings = useMemo(() => {
+    if (channelDetailsFromBackend) {
+      const { channel_settings } = channelDetailsFromBackend;
+  
+      if (channel_settings !== null) {
+        return JSON.parse(channel_settings);
+      }
+    }
+    // Return a default value or handle the case when channelDetailsFromBackend is not defined.
+    return null; // or some other default value
+  }, [channelDetailsFromBackend]);  
+
+  const channelSettingsOptions = useMemo(() => {
+    const defaultOption = { label: 'Default', value: null };
+  
+    if (channelSettings) {
+      const settingsOptions = channelSettings.map(setting => ({
+        label: setting.description,
+        value: setting.index,
+      }));
+  
+      return [defaultOption, ...settingsOptions];
+    }
+    // If channelSettings is not defined, just return the default option.
+    return [defaultOption];
+  }, [channelSettings]);  
+
+  const openManageSettings = () => {
+    const newPageUrl = '/channels'; // Replace with the URL of the manage settings later
+  
+    // Use window.open() to open the URL in a new tab
+    window.open(newPageUrl, '_blank');
+  }
+  
   useEffect(() => {
     if (canSend !== 1) {
       const url = window.location.origin;
@@ -164,7 +205,7 @@ function SendNotifications() {
       (delegatees.length === 1 && delegatees[0].alias_address === account) || !delegatees.length;
 
   // construct a list of channel delegators
-  React.useEffect(() => {
+  useEffect(() => {
     if (!account) return;
     if (!delegatees || !delegatees.length) {
       setChannelAddress(account);
@@ -191,31 +232,6 @@ function SendNotifications() {
     }
   }, [delegatees, account]);
 
-  // const isAllFieldsFilled = () => {
-  //     if (nfRecipient == "" ||
-  //         nfType == "" ||
-  //         nfMsg == "" ||
-  //         (nfSubEnabled && nfSub == "") ||
-  //         (nfCTAEnabled && nfCTA == "") ||
-  //         (nfMediaEnabled && nfMedia == "")
-  //     ) {
-  //         return false;
-  //     }
-  //     return true;
-  // };
-
-  // const previewNotif = (e: any) => {
-  //     e.preventDefault();
-  //     if(isAllFieldsFilled())
-  //         setPreviewNotifModalOpen(true)
-  //     else {
-  //         setNFInfo("Please fill all fields to preview");
-  //         setTimeout(() => {
-  //             setNFInfo('');
-  //         }, 2000);
-  //     }
-  // }
-
   // on change for the subset type notifications input
   const handleSubsetInputChange = (e: any) => {
     // if the user enters in a comma or an enter then separate the addresses
@@ -239,7 +255,7 @@ function SendNotifications() {
     setMultipleRecipients(filteredRecipients);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const broadcastIds = ['1']; //id's of notifications which qualify as broadcast
     setMultipleRecipients([]); //reset array when type changes/
     if (broadcastIds.includes(nfType)) {
@@ -296,128 +312,6 @@ function SendNotifications() {
     let amsg = nfMsg;
     let acta = nfCTA;
     let aimg = nfMedia;
-
-    // Decide type and storage
-    //   switch (nfType) {
-    //       // Broadcast Notification
-    //       case "1":
-    //           break;
-
-    //       // Targeted Notification
-    //       case "3":
-    //           break;
-
-    //       // Old Secret Notification
-    //     //   case "2":
-    //     //       // Create secret
-    //     //       let secret = CryptoHelper.makeid(14);
-
-    //     //       // Encrypt payload and change sub and nfMsg in notification
-    //     //       nsub = "You have a secret message!";
-    //     //       nmsg = "Open the app to see your secret message!";
-
-    //     //       // get public key from EPNSCoreHelper
-    //     //       let k = await EPNSCoreHelper.getPublicKey(
-    //     //           nfRecipient,
-    //     //           epnsCommWriteProvider
-    //     //       );
-    //     //       if (k == null) {
-    //     //           // No public key, can't encrypt
-    //     //           setNFInfo(
-    //     //               "Public Key Registration is required for encryption!"
-    //     //           );
-    //     //           setNFProcessing(2);
-
-    //     //           toast.update(notificationToast, {
-    //     //               render: "Unable to encrypt for this user, no public key registered",
-    //     //               type: toast.TYPE.ERROR,
-    //     //               autoClose: 5000,
-    //     //           });
-
-    //     //           return;
-    //     //       }
-
-    //     //       let publickey = k.toString().substring(2);
-    //     //       //console.log("This is public Key: " + publickey);
-
-    //     //       secretEncrypted = await CryptoHelper.encryptWithECIES(
-    //     //           secret,
-    //     //           publickey
-    //     //       );
-    //     //       asub = CryptoHelper.encryptWithAES(nfSub, secret);
-    //     //       amsg = CryptoHelper.encryptWithAES(nfMsg, secret);
-    //     //       acta = CryptoHelper.encryptWithAES(nfCTA, secret);
-    //     //       aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
-    //     //       break;
-
-    //       // Targeted Notification
-    //       case "4":
-    //           break;
-
-    //       // Secret Notification
-    //       case "5":
-    //             // Create secret
-    //           let secret = CryptoHelper.makeid(8);
-
-    //           // Encrypt payload and change sub and nfMsg in notification
-    //           nsub = "You have a secret message!";
-    //           nmsg = "Click on Decrypt button to see your secret message!";
-
-    //           // get public key from Backend API
-    //           let encryptionKey = await postReq('/encryption_key/get_encryption_key', {
-    //               address: nfRecipient,
-    //               op: "read"
-    //           }).then(res => {
-    //               return res.data?.encryption_key;
-    //           });
-
-    //           if (encryptionKey == null) {
-    //               // No public key, can't encrypt
-    //               setNFInfo(
-    //                   "Public Key Registration is required for encryption!"
-    //               );
-    //               setNFProcessing(2);
-
-    //               toast.update(notificationToast, {
-    //                   render: "Unable to encrypt for this user, no public key registered",
-    //                   type: toast.TYPE.ERROR,
-    //                   autoClose: 5000,
-    //               });
-
-    //               return;
-    //           }
-
-    //           let publickey = encryptionKey;
-
-    //           secretEncrypted = await CryptoHelper.encryptWithRPCEncryptionPublicKey(
-    //               secret,
-    //               publickey
-    //           );
-    //         //   console.log(secretEncrypted);
-    //           if(nfSubEnabled) asub = CryptoHelper.encryptWithAES(nfSub, secret);
-    //           amsg = CryptoHelper.encryptWithAES(nfMsg, secret);
-    //           if(nfCTAEnabled) acta = CryptoHelper.encryptWithAES(nfCTA, secret);
-    //           if(nfMediaEnabled) aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
-    //           break;
-
-    //       // Offchain Notification
-    //       case "6":
-    //           console.log(
-    //               nsub,
-    //               nmsg,
-    //               nfType,
-    //               asub,
-    //               amsg,
-    //               acta,
-    //               aimg,
-    //               "case 5"
-    //           );
-
-    //           break;
-
-    //       default:
-    //           break;
-    //   }
 
     // Handle Storage
     let storagePointer = '';
@@ -477,105 +371,8 @@ function SendNotifications() {
         });
         return;
       }
-
-      //   const jsonPayload = {
-      //       notification: {
-      //           title: nsub,
-      //           body: nmsg,
-      //       },
-      //       data: {
-      //           type: nfType,
-      //           secret: secretEncrypted,
-      //           asub: asub,
-      //           amsg: amsg,
-      //           acta: acta,
-      //           aimg: aimg,
-      //       },
-      //   };
-
-      //   // if we are sending a subset type, then include recipients
-      //   if (nfType === "4") {
-      //       jsonPayload["recipients"] = [...multipleRecipients];
-      //   }
-
-      //   const input = JSON.stringify(jsonPayload);
-      //   console.log(input);
-
-      //   console.log("Uploding to IPFS...");
-      //   toast.update(notificationToast, {
-      //       render: "Preparing Payload for upload",
-      //   });
-
-      //   const ipfs = require("nano-ipfs-store").at(
-      //       "https://ipfs.infura.io:5001"
-      //   );
-
-      //   try {
-      //     //   storagePointer = await ipfs.add(input);
-      //       storagePointer = await IPFSupload(input);
-      //   } catch (e) {
-      //       setNFProcessing(2);
-      //       setNFInfo("IPFS Upload Error");
-      //   }
-
-      //   console.log("IPFS cid: %o", storagePointer);
     }
     if (nfType === '1' || nfType === '2' || nfType === '3' || nfType === '4' || nfType === '5') {
-      // Prepare Identity and send notification
-      //   const identity = nfType + "+" + storagePointer;
-      //   const identityBytes = ethers.utils.toUtf8Bytes(identity);
-      //   console.log({
-      //       identityBytes,
-      //   });
-      //   const EPNS_DOMAIN = {
-      //       name: "Push (EPNS) COMM V1",
-      //       chainId: chainId,
-      //       verifyingContract: epnsCommReadProvider.address,
-      //   };
-
-      //   const type = {
-      //       Data: [
-      //           { name: "acta", type: "string" },
-      //           { name: "aimg", type: "string" },
-      //           { name: "amsg", type: "string" },
-      //           { name: "asub", type: "string" },
-      //           { name: "type", type: "string" },
-      //           { name: "secret", type: "string" },
-      //       ],
-      //   };
-
-      //   const payload = {
-      //       data: {
-      //           acta: acta,
-      //           aimg: aimg,
-      //           amsg: amsg,
-      //           asub: asub,
-      //           type: nfType,
-      //           secret: "",
-      //       },
-
-      //       notification: {
-      //           body: amsg,
-      //           title: asub,
-      //       },
-      //   };
-
-      //   if (nfType === "5" || nfType === "2") {
-      //       payload.notification = {
-      //           body: nmsg,
-      //           title: nsub
-      //       };
-      //       payload.data.secret = secretEncrypted;
-      //   }
-
-      //   const message = payload.data;
-      //   console.log(payload, "payload");
-      //   console.log("chainId", chainId);
-      //   const signature = await library
-      //       .getSigner(account)
-      //       ._signTypedData(EPNS_DOMAIN, type, message);
-      //   console.log("case5 signature", signature);
-
       try {
         // apiResponse?.status === 204, if sent successfully!
 
@@ -660,161 +457,7 @@ function SendNotifications() {
         setNFProcessing(0);
         console.log(err);
       }
-
-      // var anotherSendTxPromise;
-
-      // anotherSendTxPromise = communicatorContract.sendNotification(
-      //   channelAddress,
-      //   nfRecipient,
-      //   identityBytes
-      // );
-
-      // console.log("Sending Transaction... ");
-      // toast.update(notificationToast, {
-      //   render: "Sending Notification...",
-      // });
-
-      // anotherSendTxPromise
-      //   .then(async (tx) => {
-      //     console.log(tx);
-      //     console.log("Transaction Sent!");
-
-      //     toast.update(notificationToast, {
-      //       render: "Notification Sent",
-      //       type: toast.TYPE.INFO,
-      //       autoClose: 5000,
-      //     });
-
-      //     await tx.wait(1);
-      //     console.log("Transaction Mined!");
-
-      //     setNFProcessing(2);
-      //     setNFType("");
-      //     setNFInfo("Notification Sent");
-
-      //     toast.update(notificationToast, {
-      //       render: "Transaction Mined / Notification Sent",
-      //       type: toast.TYPE.SUCCESS,
-      //       autoClose: 5000,
-      //     });
-      //   })
-      //   .catch((err) => {
-      //     console.log("!!!Error handleSendMessage() --> %o", err);
-      //     setNFInfo("Transaction Failed, please try again");
-
-      //     toast.update(notificationToast, {
-      //       render: "Transacion Failed: " + err,
-      //       type: toast.TYPE.ERROR,
-      //       autoClose: 5000,
-      //     });
-      //     setNFProcessing(0);
-      //   });
     }
-    //   if (nfType === "6") {
-    //       // const jsonPayload = {
-    //       //   notification: {
-    //       //     title: nsub,
-    //       //     body: nmsg,
-    //       //   },
-    //       //   data: {
-    //       //     type: nfType,
-    //       //     secret: secretEncrypted,
-    //       //     asub: asub,
-    //       //     amsg: amsg,
-    //       //     acta: acta,
-    //       //     aimg: aimg,
-    //       //   },
-    //       // };
-
-    //       const EPNS_DOMAIN = {
-    //           name: "Push (EPNS) COMM V1",
-    //           chainId: chainId,
-    //           verifyingContract: epnsCommReadProvider.address,
-    //       };
-
-    //       const type = {
-    //           Data: [
-    //               { name: "acta", type: "string" },
-    //               { name: "aimg", type: "string" },
-    //               { name: "amsg", type: "string" },
-    //               { name: "asub", type: "string" },
-    //               { name: "type", type: "string" },
-    //               { name: "secret", type: "string" },
-    //           ],
-    //       };
-
-    //       const payload = {
-    //           data: {
-    //               acta: acta,
-    //               aimg: aimg,
-    //               amsg: amsg,
-    //               asub: asub,
-    //               type: nfType,
-    //               secret: "",
-    //           },
-
-    //           notification: {
-    //               body: amsg,
-    //               title: asub,
-    //           },
-    //       };
-
-    //       const message = payload.data;
-    //       console.log(payload, "payload");
-    //       console.log("chainId", chainId);
-    //       const signature = await library
-    //           .getSigner(account)
-    //           ._signTypedData(EPNS_DOMAIN, type, message);
-    //       console.log("case5 signature", signature);
-    //       try {
-    //           postReq("/payloads/add_manual_payload", {
-    //               signature,
-    //               op: "write",
-    //               chainId: chainId.toString(),
-    //               channel: channelAddress,
-    //               recipient: nfRecipient,
-    //               deployedContract: epnsCommReadProvider.address,
-    //               payload: payload,
-    //               type: "3",
-    //           }).then(async (res) => {
-    //               toast.update(notificationToast, {
-    //                   render: "Notification Sent",
-    //                   type: toast.TYPE.INFO,
-    //                   autoClose: 5000,
-    //               });
-
-    //               setNFProcessing(2);
-    //               setNFType("");
-    //               setNFInfo("Notification Sent");
-
-    //               toast.update(notificationToast, {
-    //                   render: "Notification Sent",
-    //                   type: toast.TYPE.SUCCESS,
-    //                   autoClose: 5000,
-    //               });
-    //               console.log(res);
-    //           });
-    //       } catch (err) {
-    //           if (err.code === 4001) {
-    //             // EIP-1193 userRejectedRequest error
-    //             toast.update(notificationToast, {
-    //                 render: "User denied message signature.",
-    //                 type: toast.TYPE.ERROR,
-    //                 autoClose: 5000,
-    //             });
-    //           } else {
-    //             setNFInfo("Sending Notification Failed, please try again");
-
-    //             toast.update(notificationToast, {
-    //                 render: "Notification Failed: " + err,
-    //                 type: toast.TYPE.ERROR,
-    //                 autoClose: 5000,
-    //             });
-    //           }
-    //           setNFProcessing(0);
-    //           console.log(err);
-    //       }
-    //   }
   };
 
   const isEmpty = (field: any) => {
@@ -921,32 +564,8 @@ function SendNotifications() {
                           }}
                           placeholder="Select a Channel"
                           value={delegateeOptions[0]}
-                          // value={delegateeOptions.find(
-                          //     (d) =>
-                          //         d.value ==
-                          //         channelAddress
-                          // )}
                         />
                       </DropdownStyledParent>
-                      {/* <DropdownStyledParentWhite>
-                                            <DropdownHeader>
-                                                SEND NOTIFICATION ON BEHALF
-                                                OF
-                                            </DropdownHeader>
-                                            <DropdownStyledWhite
-                                                options={delegateeOptions}
-                                                onChange={(option: any) => {
-                                                    setChannelAddress(
-                                                        option.value
-                                                    );
-                                                }}
-                                                value={delegateeOptions.find(
-                                                    (d) =>
-                                                        d.value ==
-                                                        channelAddress
-                                                )}
-                                            />
-                                        </DropdownStyledParentWhite> */}
                     </Item>
                   )}
 
@@ -994,7 +613,7 @@ function SendNotifications() {
                           color="#1E1E1E"
                           padding="5px 15px"
                           radius="30px">
-                          Subject
+                          Title
                         </Span>
                         <IOSSwitch checked={nfSubEnabled} onChange={() => setNFSubEnabled(!nfSubEnabled)} />
                       </ToggleOption>
@@ -1007,7 +626,7 @@ function SendNotifications() {
                           color="#1E1E1E"
                           padding="5px 15px"
                           radius="30px">
-                          Media
+                          Media URL
                         </Span>
                         <IOSSwitch checked={nfMediaEnabled} onChange={() => setNFMediaEnabled(!nfMediaEnabled)} />
                       </ToggleOption>
@@ -1026,7 +645,7 @@ function SendNotifications() {
                       </ToggleOption>
                     </ToggleOptionContainer>
                   )}
-                </Item>
+                
 
                 {(nfType === '2' || nfType === '3' || nfType === '5') && (
                   <Item margin="15px 0px" flex="1" self="stretch" align="stretch" width="100%">
@@ -1108,7 +727,7 @@ function SendNotifications() {
                       justify="space-between"
                     >
                       <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>
-                        Subject
+                        Notification Title
                       </Label>
                       <Span
                         color={theme.default.secondaryColor}
@@ -1183,6 +802,59 @@ function SendNotifications() {
                   </Item>
                 )}
 
+                {nfType && (
+                  <>
+                    <Item
+                      flex="1"
+                      justify="flex-start"
+                      align="stretch"
+                      margin="30px 0px 15px 0px"
+                      //   minWidth="280px"
+                    >
+                      <Item
+                        display="flex"
+                        direction="row"
+                        align="center"
+                        flex="1"
+                        self="stretch"
+                        justify="space-between"
+                        margin="0px 0px 7px 0px"
+                      >
+                        <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>
+                          Notification Setting Type
+                        </Label>
+                        <AInlineV2
+                          color={theme.default.primaryPushThemeTextColor}
+                          fontSize="13px"
+                          margin="0px 10px 0px 0px"
+                          fontWeight="600"
+                          onClick={openManageSettings}
+                          cursor="pointer"
+                        >
+                          Manage Settings
+                        </AInlineV2>
+                      </Item>
+                      <DropdownStyledParent>
+                        <DropdownStyled
+                          options={channelSettingsOptions}
+                          onChange={(option) => {
+                            setNFSettingType(option.value);
+                            console.log(option);
+                          }}
+                          value={channelSettingsOptions[0]}
+                        />
+                      </DropdownStyledParent>
+                    </Item>
+                    <Input
+                      display="none"
+                      value={nfSettingType}
+                      onChange={(e) => {
+                        setNFSettingType(e.target.value);
+                      }}
+                    />
+                  </>
+                )}
+
                 {nfType && nfMediaEnabled && (
                   <Item margin="15px 0" flex="1" self="stretch" align="stretch" width="100%">
                     <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>Media URL</Label>
@@ -1235,6 +907,7 @@ function SendNotifications() {
                     <div style={{ color: '#CF1C84', fontSize: '0.875rem', textAlign: 'center' }}>{nfInfo}</div>
                   </Item>
                 )}
+                </Item>
 
                 {showPreview && (
                   <PreviewNotif
