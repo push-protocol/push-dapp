@@ -594,6 +594,6 @@ button, a, a:before, a:after {
   margin-right: auto;
   border-radius: var(--w3o-border-radius);
   overflow: auto;
-	z-index: 999999;
+	z-index: 10;
 }
 
