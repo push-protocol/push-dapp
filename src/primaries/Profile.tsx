@@ -44,6 +44,14 @@ const Profile = ({ isDarkMode }) => {
       invertedIcon: './copy.svg',
     },
     {
+      id: 'userSettings',
+      value: '',
+      title: 'Settings',
+      function: ()=>{},
+      to: '/user/settings',
+      invertedIcon: 'svg/setting.svg'
+    },
+    {
       id: 'prodDapp',
       value: '',
       function: ()=>{},
