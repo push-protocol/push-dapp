@@ -71,6 +71,19 @@ export const MAINNET_CHAINS: ChainConfig = {
     urls: [getInfuraUrlFor('mainnet'), getAlchemyUrlFor('eth-mainnet'), 'https://cloudflare-eth.com'].filter(Boolean),
     nativeCurrency: ETH,
     name: 'Mainnet',
+    blockExplorerUrls: ['https://etherscan.io'],
+  },
+  56: {
+    urls: ['https://bsc-dataseed.binance.org/'],
+    nativeCurrency: BNB,
+    name: 'BNB Mainnet',
+    blockExplorerUrls: ['https://bscscan.com'],
+  }, 
+  1101: {
+    urls: ['https://rpc.polygon-zkevm.gateway.fm'],
+    nativeCurrency: MATIC,
+    name: 'Polygon zkEVM Mainnet',
+    blockExplorerUrls: ['https://zkevm.polygonscan.com/'],
   },
   10: {
     urls: [getInfuraUrlFor('optimism-mainnet'), 'https://mainnet.optimism.io'].filter(Boolean),
