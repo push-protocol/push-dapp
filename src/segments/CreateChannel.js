@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
+import { UnsupportedChainIdError } from '@web3-react/core';
 import {ethers} from 'ethers';
 import React from "react";
 
@@ -10,6 +10,7 @@ import styled from "styled-components";
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { useAccount } from "hooks";
 
 // Internal Configs
 import { abis, addresses } from "config";
@@ -18,7 +19,7 @@ const ipfs = require('ipfs-api')()
 
 // Create Header
 function CreateChannel() {
-  const { account, provider } = useWeb3React();
+  const { account, provider } = useAccount();
 
   const [processing, setProcessing] = React.useState(false);
   const [uploadDone, setUploadDone] = React.useState(false);

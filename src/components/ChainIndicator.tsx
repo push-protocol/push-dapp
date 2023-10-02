@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import React, { useContext, useRef } from 'react';
 import { ethers } from 'ethers';
 
@@ -12,16 +11,16 @@ import { H3, Image, Item, ItemH } from './SharedStyling.js';
 import { LOGO_FROM_CHAIN_ID, networkName } from 'helpers/UtilityHelper';
 import { appConfig } from 'config/index.js';
 import { useClickAway } from 'hooks/useClickAway';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { SpanV2 } from './reusables/SharedStylingV2';
-import { handleChangeAllowedNetwork } from 'helpers/ChainHelper';
 import { ErrorContext } from 'contexts/ErrorContext';
 
 const ChainIndicator = ({ isDarkMode }) => {
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
-  const { account, chainId:currentChainId, connector} = useWeb3React<ethers.providers.Web3Provider>();
+  const { account, chainId:currentChainId, switchChain} = useAccount();
   const theme = useTheme();
   const { authError, setAuthError } = useContext(ErrorContext);
 
@@ -30,7 +29,7 @@ const ChainIndicator = ({ isDarkMode }) => {
 
   React.useEffect(() => {
     const dropdown: DropdownValueType[] = [];
-    appConfig.allowedNetworks.map((chainId) => {
+    appConfig.allowedNetworks.map((chainId: number) => {
       const chainName = networkName[chainId];
       dropdown.push({
         id: chainId,
@@ -38,8 +37,7 @@ const ChainIndicator = ({ isDarkMode }) => {
         title: chainName,
         icon: `./svg/${LOGO_FROM_CHAIN_ID[chainId]}`,
         function: () => {
-          // console.log(chainId, connector.provider, 'change network')
-          handleChangeAllowedNetwork(chainId, connector.provider, connector).then((res)=> res !== undefined && setAuthError({ message: res }));
+          switchChain(chainId);
           setShowDropdown(false);
         },
       });
@@ -64,7 +62,7 @@ const ChainIndicator = ({ isDarkMode }) => {
           >
             <CurrentChainInfo>
               <Image
-                src={`./svg/${networkName[currentChainId].split(' ')[0]}.svg`}
+                src={`./svg/${networkName[currentChainId]?.split(' ')[0]}.svg`}
                 width="28px"
               />
               {/* will be shown only on mob devices */}

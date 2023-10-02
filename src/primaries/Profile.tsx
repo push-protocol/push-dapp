@@ -1,6 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
 import React, { useContext, useRef } from 'react';
 
 // External Packages
@@ -13,12 +11,11 @@ import { envUtil, shortenText } from 'helpers/UtilityHelper';
 import ProfileModal from 'components/ProfileModal';
 import Dropdown from '../components/Dropdown';
 import { useClickAway } from 'hooks/useClickAway';
-// import { walletconnect } from 'connectors';
-import { walletConnectV2 } from '../connectors/walletConnectV2';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { AppContext } from 'contexts/AppContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { AppContextType } from 'types/context';
+import { useAccount } from 'hooks';
 
 // Create Header
 const Profile = ({ isDarkMode }) => {
@@ -27,7 +24,7 @@ const Profile = ({ isDarkMode }) => {
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
   const modalRef = React.useRef(null);
-  const { account, connector } = useWeb3React();
+  const { account, disconnect, wallet } = useAccount();
 
   // resolve web3 name
   useResolveWeb3Name(account);
@@ -38,9 +35,6 @@ const Profile = ({ isDarkMode }) => {
   const [showDropdown, setShowDropdown] = React.useState(false);
   useClickAway(modalRef, dropdownRef, () => showDropdown && setShowDropdown(false));
 
-  // Get Web3 Context
-  const context = useWeb3React<Web3Provider>();
-  // const { connector } = context;
   const dropdownValues = [
     {
       id: 'walletAddress',
@@ -61,23 +55,7 @@ const Profile = ({ isDarkMode }) => {
       id: 'disconnect',
       value: '',
       function: async () => {
-        if (connector.deactivate) {
-        await connector.deactivate();
-        console.log('deactivate 1', connector);
-        } else {
-        await connector.resetState();
-        console.log('deactivate 2', connector);
-        }
-        // @ts-expect-error close can be returned by wallet
-        if (connector && connector.close) {
-          // @ts-expect-error close can be returned by wallet
-          await connector.close();
-        }
-        // if (connector === walletConnectV2) {
-        //   await connector?.deactivate();
-        // } else {
-        //   await connector?.deactivate();
-        // }
+        await disconnect(wallet);
       },
       title: 'Logout',
       invertedIcon: './logout.svg',

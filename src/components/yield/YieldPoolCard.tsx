@@ -1,6 +1,5 @@
 // React + Web3 Essentials
 import React, { useEffect, useState } from 'react';
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 
 // External Packages
@@ -20,7 +19,7 @@ import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, Skeleton, Skeleto
 
 // Internal Configs
 import { abis, addresses } from 'config';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 
 const YieldPoolCard = ({
     poolName,
@@ -31,7 +30,7 @@ const YieldPoolCard = ({
     tokenAddress,
     setActiveTab
 }: any) => {
-    const { account, provider } = useWeb3React<ethers.providers.Web3Provider>();
+    const { account, provider } = useAccount();
 
     const [txInProgressWithdraw, setTxInProgressWithdraw] = React.useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = useState(false);

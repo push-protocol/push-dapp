@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
@@ -31,7 +30,7 @@ import { VideoCallContext } from 'contexts/VideoCallContext';
 import { caip10ToWallet } from 'helpers/w2w';
 import * as w2wHelper from 'helpers/w2w/';
 import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
-import { useDeviceWidthCheck, useSDKSocket } from 'hooks';
+import { useAccount, useDeviceWidthCheck, useSDKSocket } from 'hooks';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
@@ -59,7 +58,7 @@ export const Context = React.createContext<AppContext | null>(null);
 
 // Create Header
 function Chat({ chatid }) {
-  const { account, chainId } = useWeb3React<ethers.providers.Web3Provider>();
+  const { account, chainId } = useAccount();
   const { getUser, connectedUser, setConnectedUser, blockedLoading, setBlockedLoading, displayQR, setDisplayQR } =
     useContext(ChatUserContext);
     const { videoCallData } = useContext(VideoCallContext);

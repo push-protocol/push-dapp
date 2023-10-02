@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 
@@ -23,6 +22,7 @@ import ProcessingInfo from 'components/ProcessingInfo';
 import StakingInfo from 'components/StakingInfo';
 import UploadLogo from 'components/UploadLogo';
 import { isLengthValid, isValidAddress, isValidUrl } from 'helpers/ValidationHelper';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
@@ -35,7 +35,7 @@ const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 // Create Header
 function CreateChannelModule() {
-  const { account, provider, chainId } = useWeb3React();
+  const { account, provider, chainId } = useAccount();
   const theme = useTheme();
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const [processing, setProcessing] = React.useState(0);

@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React from 'react';
 
@@ -11,6 +10,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import Switch from 'components/Switch';
 import CryptoHelper from 'helpers/CryptoHelper';
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, addresses } from 'config';
@@ -19,7 +19,7 @@ const ipfs = require('ipfs-api')();
 
 // Create Header
 function ChannelDashboard() {
-  const { active, error, account, provider, chainId } = useWeb3React();
+  const { account, provider } = useAccount();
 
   const [processing, setProcessing] = React.useState(false);
 

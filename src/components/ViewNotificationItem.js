@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import React from "react";
 
 // External Packages
@@ -8,7 +7,6 @@ import Skeleton from '@yisheng90/react-loading';
 import moment from 'moment';
 
 function ViewNotificationItem({ notificationObject }) {
-  const { account } = useWeb3React();
   const [ notification, setNotification ] = React.useState(null);
   const [ subscribed, setSubscribed ] = React.useState(false);
   const [ loading, setLoading ] = React.useState(true);

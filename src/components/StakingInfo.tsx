@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import React, { Fragment, useEffect, useState } from "react";
 
@@ -12,7 +11,7 @@ import { Button, Item, Span } from "primaries/SharedStyling";
 
 // Internal Configs
 import { abis, addresses, appConfig } from "config";
-import { useAsyncOperation, useDeviceWidthCheck } from "hooks";
+import { useAccount, useAsyncOperation, useDeviceWidthCheck } from "hooks";
 import { device } from "config/Globals";
 import { getPushTokenFromWallet, importPushToken, mintPushToken } from "helpers";
 import { SpanV2 } from "./reusables/SharedStylingV2";
@@ -20,7 +19,7 @@ import LoaderSpinner, { LOADER_TYPE } from "./reusables/loaders/LoaderSpinner";
 
 const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, handleCreateChannel}) => {
   const { loading, error, executeAsyncFunction: executeImportPushTokenFunc } = useAsyncOperation(importPushToken);
-  const { provider, account, connector } = useWeb3React();
+  const { provider, account } = useAccount();
   const [balance,setBalance] = useState(0);
   // const [loading,setLoading] = useState(false);
   const [faucetLoading,setFaucetLoading] = useState(false);

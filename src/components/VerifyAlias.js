@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useRef, useState } from 'react';
 
@@ -14,6 +13,7 @@ import { SpanV2 } from 'components/reusables/SharedStylingV2';
 import { setProcessingState } from 'redux/slices/channelCreationSlice';
 import { A, Button, Item, Span } from '../primaries/SharedStyling';
 import { getAliasDetails } from 'services';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, appConfig, CHAIN_DETAILS } from 'config';
@@ -21,7 +21,7 @@ import GLOBALS from "config/Globals";
 
 const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   const theme = useTheme();
-  const { account, provider, chainId } = useWeb3React();
+  const { account, provider, chainId } = useAccount();
   const signer = provider.getSigner(account);
   const dispatch = useDispatch();
 

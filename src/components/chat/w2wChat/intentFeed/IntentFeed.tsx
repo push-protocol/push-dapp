@@ -1,7 +1,6 @@
 // React + Web3 Essentials
 // @ts-ignore
 import React, { useContext, useState } from 'react';
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 
 // External Packages
@@ -17,6 +16,7 @@ import { AppContext, Feeds } from 'types/chat';
 import { checkIfGroup, getChatsnapMessage, getGroupImage,getName,  } from 'helpers/w2w/groupChat';
 import { fetchIntent } from 'helpers/w2w/user';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { useAccount } from 'hooks';
 
 
 
@@ -29,7 +29,7 @@ const IntentFeed = ({isLoading}): JSX.Element => {
   }: AppContext = useContext<AppContext>(Context);
   const { connectedUser} = useContext(ChatUserContext);
   const [selectedIntentSnap, setSelectedIntentSnap] = useState<number>();
-  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
+  const { chainId, account } = useAccount();
   const [limit, setLimit] = useState<number>(10);
   const [bgUpdateLoading,setBgUpdateLoading] = useState<boolean>(false);
   const [isFetchingDone,setIsFetchingDone] = useState<boolean>(false)

@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from "@web3-react/core";
 import React from "react";
 
 // External Packages
@@ -26,6 +25,7 @@ import {
 import DisplayNotice from "../primaries/DisplayNotice";
 import NotificationToast from "../primaries/NotificationToast";
 import { ScrollItem } from "./ViewChannels";
+import { useAccount } from "hooks";
 
 // Internal Configs
 import { appConfig } from "config";
@@ -40,7 +40,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
   const modalRef = React.useRef(null);
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
 
-  const { account, provider, chainId } = useWeb3React();
+  const { account, provider, chainId } = useAccount();
   const { notifications, page, finishedFetching, toggle } = useSelector(
     (state: any) => state.notifications
   );

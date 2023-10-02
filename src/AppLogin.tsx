@@ -1,18 +1,8 @@
 // React + Web3 Essentials
-import { Web3Provider } from '@ethersproject/providers';
-import { AbstractConnector } from '@web3-react/abstract-connector';
-import { useWeb3React } from '@web3-react/core';
-// import {
-//   NoEthereumProviderError,
-//   UserRejectedRequestError as UserRejectedRequestErrorInjected
-// } from '@web3-react/injected-connector';
-import { ethers } from "ethers";
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import ReactGA from 'react-ga';
-import Joyride, { CallBackProps } from 'react-joyride';
-import { useLocation } from 'react-router-dom';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
 // Internal Compoonents
@@ -27,73 +17,27 @@ import {
   SectionV2,
   SpanV2
 } from 'components/reusables/SharedStylingV2';
-// import { injected, ledger, walletconnect } from 'connectors';
-import { walletConnectV2 } from './connectors/walletConnectV2';
-import { metaMask } from './connectors/metaMask';
-// import { walletConnectV2 } from 'connectors';
-import { useDeviceWidthCheck, useEagerConnect, useInactiveListener } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import styled, { useTheme } from 'styled-components';
-import LedgerLogoDark from './assets/login/ledgerDark.svg';
-import LedgerLogoLight from './assets/login/ledgerLight.svg';
-import MMLogoDark from './assets/login/metamaskDark.svg';
-import MMLogoLight from './assets/login/metamaskLight.svg';
-import WCLogoDark from './assets/login/wcDark.svg';
-import WCLogoLight from './assets/login/wcLight.svg';
 import { ReactComponent as PushLogoDark } from './assets/pushDark.svg';
 import { ReactComponent as PushLogoLight } from './assets/pushLight.svg';
-import { swapPropertyOrder } from 'helpers/UtilityHelper';
 import { ErrorContext } from './contexts/ErrorContext';
-import { getAddChainParameters } from './connectors/chains';
-
-import { WalletConnect } from '@web3-react/walletconnect-v2'
-import { Network } from "@web3-react/network";
-import { MetaMask } from '@web3-react/metamask';
-
-
-
 
 // Internal Configs
-import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
-
-// define the different type of connectors which we use
-const web3Connectors = {
-  Injected: {
-    obj: metaMask,
-    logolight: MMLogoLight,
-    logodark: MMLogoDark,
-    title: 'Metamask',
-  },
-  WalletConnect: {
-    obj: walletConnectV2,
-    logolight: WCLogoLight,
-    logodark: WCLogoDark,
-    title: 'Wallet Connect',
-  },
-  // Trezor: {obj: trezor, logo: './svg/login/trezor.svg', title: 'Trezor'},
-  // Ledger: { obj: ledger, logolight: LedgerLogoLight, logodark: LedgerLogoDark, title: 'Ledger' },
-};
-
 
 const AppLogin = ({ toggleDarkMode }) => {
   // React GA Analytics
   ReactGA.pageview('/login');
 
   // Web3 React logic
-  const { connector ,isActive, account, chainId } = useWeb3React<Web3Provider>();
-  const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
+  const { isActive, connect } = useAccount();
   const { authError, setAuthError } = useContext(ErrorContext);
   const [errorMessage, setErrorMessage] = React.useState(undefined);
+  const [modalHeight, setModalHeight] = React.useState(0);
 
 
   const isMobile = useDeviceWidthCheck(600);
-  const web3ConnectorsObj:Object = isMobile?swapPropertyOrder(web3Connectors,'Injected','WalletConnect'):web3Connectors;
-  
-  React.useEffect(() => {
-    if (activatingConnector && activatingConnector === connector) {
-      setActivatingConnector(undefined);
-    }
-  }, [activatingConnector, connector]);
 
   // theme context
   const theme = useTheme();
@@ -112,6 +56,28 @@ useEffect(() => {
   handleErrorMessage(authError);
 }, [authError]);
 
+  useEffect(() => {
+    let observer: ResizeObserver | undefined;
+    try {
+      setAuthError(undefined);
+      setTimeout(() => {
+        connect();
+        setTimeout(() => {
+          const onboardModal = document.getElementById("onboard-container");
+          const observer = new ResizeObserver(() => {
+            setModalHeight(onboardModal.offsetHeight);
+          });
+          observer.observe(onboardModal);
+        }, 500)
+      }, 500);
+    }
+    catch(error){
+      setAuthError(error);
+    }
+    return () => {
+      observer?.disconnect();
+    }
+  }, [isActive]);
 
   // RENDER
   return (
@@ -155,83 +121,9 @@ useEffect(() => {
           {theme.scheme == 'dark' && <PushLogoDark />}
         </ItemVV2>
 
-        {/* Login Component */}
-        <ItemVV2
-          background={theme.default.bg}
-          maxWidth="440px"
-          padding={GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
-          borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.LARGE}
-          alignSelf="center"
-          flex="initial"
-          shadow="0px 0px 9px rgba(18, 8, 46, 0.04)">
-          <H2V2
-            textTransform="none"
-            color={theme.default.color}
-            fontSize="32px"
-            fontWeight="500"
-            margin={`${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0`}>
-            Connect a Wallet
-          </H2V2>
-
-          <ItemVV2 alignSelf="stretch" alignItems="flex-start" margin={`0 0 ${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0`}>
-            {Object.keys(web3ConnectorsObj).map((name) => {
-              const currentConnector = web3Connectors[name].obj;
-              const disabled = currentConnector === connector && isActive;
-              const image = theme.scheme == 'light' ? web3Connectors[name].logolight : web3Connectors[name].logodark;
-              const title = web3Connectors[name].title;
-              const desiredChain = appConfig.coreContractChain;
-              const chainIds = appConfig.allowedNetworks;
-
-              return (
-                <LoginButton
-                  disabled={disabled}
-                  margin="10px"
-                  padding="10px"
-                  hover={theme.default.hover}
-                  background={theme.default.bg}
-                  borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
-                  minWidth="140px"
-                  alignSelf="stretch"
-                  key={name}
-                  onClick={async () => {
-                    setActivatingConnector(currentConnector);
-                   
-                    try {
-                    setAuthError(undefined);
-                    if (currentConnector instanceof WalletConnect) {
-                        await currentConnector.activate(desiredChain);
-                    } else {
-                      if (window.ethereum === undefined || window.ethereum.networkVersion === undefined){
-                        setAuthError({
-                          message: 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile',
-                         })
-                      }
-                      else{
-                        await currentConnector.activate(chainIds.includes(parseInt(window.ethereum.networkVersion)) ? '' : getAddChainParameters(desiredChain));
-                      }
-                    }
-                  }
-                  catch(error){
-                    setAuthError(error);
-                  }
-                  }}>
-                  <ImageV2 src={image} height="40px" width="50px" padding="5px" />
-
-                  <SpanV2
-                    padding="5px"
-                    textTransform="Capitalize"
-                    fontSize="18px"
-                    fontWeight="500"
-                    color={theme.default.color}>
-                    {title}
-                  </SpanV2>
-                </LoginButton>
-              );
-            })}
-          </ItemVV2>
-
+        {modalHeight !== 0 && <ItemVV2 margin={`${modalHeight + 20}px 0 0 0`} flex="initial" maxWidth="920px">
           {/* TOS and PRIVACY */}
-          <SpanV2 fontSize="14px" padding="0px 20px 10px 20px" color={theme.default.color} lineHeight="140%">
+          <SpanV2 fontSize="14px" padding="15px 15px" color={theme.default.color} lineHeight="140%">
             By connecting your wallet, <b>You agree</b> to our{' '}
             <AInlineV2 href="https://epns.io/tos" target="_blank">
               Terms of Service
@@ -242,11 +134,8 @@ useEffect(() => {
             </AInlineV2>
             .
           </SpanV2>
-        </ItemVV2>
-
-        {/* Chainsafe Audit and Discord */}
-        <ItemVV2 margin="30px 0 0 0" flex="initial" maxWidth="920px">
-          <SpanV2 fontSize="14px" padding="25px 15px" lineHeight="140%" color={theme.default.color}>
+          {/* Chainsafe Audit and Discord */}
+          <SpanV2 fontSize="14px" padding="0px 20px 10px 20px" lineHeight="140%" color={theme.default.color}>
             Note: The Push Protocol has been under development for 2+ years now. It has successfully completed its security audits of {' '}
             <AInlineV2 href="https://github.com/ChainSafe/audits/blob/main/EPNS/epns-protocol-10-2021.pdf" target="_blank">
               version 1 
@@ -265,7 +154,7 @@ useEffect(() => {
             </AInlineV2>
             .
           </SpanV2>
-        </ItemVV2>
+        </ItemVV2>}
       </ItemVV2>
     </Container>
   );
