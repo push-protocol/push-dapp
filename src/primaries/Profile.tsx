@@ -12,10 +12,13 @@ import ProfileModal from 'components/ProfileModal';
 import Dropdown from '../components/Dropdown';
 import { useClickAway } from 'hooks/useClickAway';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
+import { useAccount } from 'hooks';
+
+// Internal Configs
+import APP_PATHS from 'config/AppPaths.js';
 import { AppContext } from 'contexts/AppContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { AppContextType } from 'types/context';
-import { useAccount } from 'hooks';
 
 // Create Header
 const Profile = ({ isDarkMode }) => {
@@ -48,7 +51,7 @@ const Profile = ({ isDarkMode }) => {
       value: '',
       title: 'Settings',
       function: ()=>{},
-      to: '/user/settings',
+      to: APP_PATHS.UserSettings,
       invertedIcon: 'svg/setting.svg'
     },
     {
