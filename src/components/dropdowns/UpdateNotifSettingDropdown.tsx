@@ -64,7 +64,7 @@ const UpdateNotifSettingDropdownContainer: React.FC<{ settings: any[] }> = ({ se
                         },
                         track: {
                             height: 4,
-                            width: 220,
+                            width: 250,
                             backgroundColor: theme.sliderTrackColor
                         },
                         thumb: {
@@ -79,7 +79,7 @@ const UpdateNotifSettingDropdownContainer: React.FC<{ settings: any[] }> = ({ se
                     xmin={setting.lowerLimit}
                     xmax={setting.upperLimit}
                 />
-                <SpanV2 color={theme.textcolor} fontSize="15px" fontWeight='500' textAlign="right">{setting.defaultValue}</SpanV2>
+                <SpanV2 color={theme.settingsModalPrimaryTextColor} fontSize="15px" fontWeight='500' textAlign="right">{setting.defaultValue}</SpanV2>
             </DropdownSliderItem>
           )}
         </DropdownInnerContainer>
@@ -144,6 +144,7 @@ const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({
         toggleDropdown={toggleDropdown}
         closeDropdown={closeDropdown}
         renderDropdownContainer={<UpdateNotifSettingDropdownContainer settings={settings} />}
+        containerPadding="0px 16px 16px 16px"
       >
         {children}
       </DropdownBtnHandler>
@@ -154,7 +155,7 @@ const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({
 export default UpdateNotifSettingDropdown;
 
 const DropdownOuterContainer = styled.div`
-    min-width: 280px;
+    min-width: 300px;
 `;
 
 const DropdownInnerContainer = styled.div<{ hasBottomBorder: boolean }>`
@@ -197,10 +198,7 @@ const DropdownSubmitButton = styled.button`
     position: relative;
     background: #e20880;
     border-radius: 8px;
-    padding: 9px 15px;
-    @media (max-width: 768px) {
-        padding: 9px 30px;
-    }
+    padding: 9px 20px;
     &:hover {
         opacity: 0.9;
         cursor: pointer;

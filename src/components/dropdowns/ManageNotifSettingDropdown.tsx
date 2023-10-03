@@ -30,18 +30,18 @@ const ManageNotifSettingDropdownContainer: React.FC = () => {
                     src="svg/manageSettings.svg"
                     alt="Settings Logo"
                 />
-                <SpanV2 color={theme.viewChannelPrimaryText} fontWeight={500}>Manage Settings</SpanV2>
+                <SpanV2 color={theme.viewChannelPrimaryText} fontWeight={500} fontSize="14px">Manage Settings</SpanV2>
             </DropdownBtn>
         </UpdateNotifSettingDropdown>
       </DropdownInnerContainer>
       <DropdownBtn flexDirection="row">
         <ImageV2
-            width="16px"
-            height="16px"
+            width="20px"
+            height="20px"
             src="svg/optout.svg"
             alt="Opt-out Logo"
         />
-        <SpanV2 color={theme.viewChannelPrimaryText} fontWeight={500}>Opt-out</SpanV2>
+        <SpanV2 color={theme.viewChannelPrimaryText} fontWeight={500} fontSize="14px">Opt-out</SpanV2>
       </DropdownBtn>
     </DropdownOuterContainer>
   );
@@ -65,6 +65,7 @@ const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = ({
         toggleDropdown={toggleDropdown}
         closeDropdown={closeDropdown}
         renderDropdownContainer={<ManageNotifSettingDropdownContainer />}
+        containerPadding="12px 16px"
       >
         {children}
       </DropdownBtnHandler>
@@ -76,7 +77,7 @@ export default ManageNotifSettingDropdown;
 
 const DropdownOuterContainer = styled.div`
     min-width: max-content;
-    gap: 5px;
+    gap: 16px;
     display: flex;
     flex-direction: column;
 `;
@@ -93,5 +94,5 @@ const DropdownBtn = styled.button`
     justify-content: flex-start;
     background: transparent;
     cursor: pointer;
-    gap: 5px;
+    gap: 8px;
 `;

@@ -1087,7 +1087,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                         src="/svg/arrow.svg"
                         height="10px"
                         width="12px"
-                        margin="0px 0px 0px 8px"
                       />
                     </UnsubscribeButton>
                   </ManageNotifSettingDropdown>
@@ -1448,8 +1447,6 @@ const ChannelActionButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 15px;
-  margin: 10px;
   color: #fff;
   border-radius: 5px;
   font-size: 14px;
@@ -1518,11 +1515,9 @@ const SkeletonButton = styled.div`
 const SubscribeButton = styled(ChannelActionButton)`
   background: #e20880;
   border-radius: 8px;
-  padding: 9px 15px;
-  min-width: 80px;
-  @media (max-width: 768px) {
-    padding: 9px 30px;
-  }
+  padding: 0px;
+  min-height: 36px;
+  min-width: 108px;
 `;
 
 const UnsubscribeButton = styled(ChannelActionButton)`
@@ -1530,11 +1525,10 @@ const UnsubscribeButton = styled(ChannelActionButton)`
   color: ${(props) => props.theme.viewChannelPrimaryText};
   border: 1px solid #bac4d6;
   border-radius: 8px;
-  padding: 9px 15px;
-  min-width: 80px;
-  @media (max-width: 768px) {
-    padding: 9px 30px;
-  }
+  padding: 0px 8px 0px 16px;
+  gap: 8px;
+  min-height: 36px;
+  min-width: 108px;
 `;
 
 const OwnerButton = styled(ChannelActionButton)`

@@ -245,6 +245,8 @@ const themeLight = {
   sliderActiveColor: '#CF1C84',
   sliderTrackColor: '#BAC4D6',
   settingsModalPrimaryTextColor: '#1E1E1E',
+  settingsModalBorderColor: '#D4DFF2',
+  settingsModalBackground: '#FFF',
   
    //spaces
    spaceHostTextColor: '#1e1e1e',
@@ -526,6 +528,8 @@ const themeDark = {
   sliderActiveColor: '#CF1C84',
   sliderTrackColor: '#4A4F67',
   settingsModalPrimaryTextColor: '#fff',
+  settingsModalBorderColor: '#4A4F67',
+  settingsModalBackground: '#2F3137',
 
   //spaces
   spaceHostTextColor: '#ffff',

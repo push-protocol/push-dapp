@@ -13,6 +13,7 @@ interface DropdownBtnHandlerProps {
   showDropdown: boolean;
   toggleDropdown: () => void;
   closeDropdown: () => void;
+  containerPadding?: string;
 }
 
 export const DropdownBtnHandler: React.FC<DropdownBtnHandlerProps> = ({ 
@@ -20,7 +21,8 @@ export const DropdownBtnHandler: React.FC<DropdownBtnHandlerProps> = ({
     renderDropdownContainer,
     showDropdown,
     toggleDropdown,
-    closeDropdown
+    closeDropdown,
+    containerPadding
 }) => {
   const dropdownRef = useRef<HTMLButtonElement | null>(null);
   const renderDropdownContainerRef = useRef<HTMLDivElement | null>(null);
@@ -31,7 +33,7 @@ export const DropdownBtnHandler: React.FC<DropdownBtnHandlerProps> = ({
         <Container ref={dropdownRef} onClick={toggleDropdown}>
             {children}
             {showDropdown && (
-                <DropdownContainer>
+                <DropdownContainer containerPadding={containerPadding}>
                     <div ref={renderDropdownContainerRef} onClick={(e) => e.stopPropagation()}>
                         {renderDropdownContainer}
                     </div>
@@ -50,13 +52,13 @@ const Container = styled.button`
   outline: 0;
 `
 
-const DropdownContainer = styled(ItemHV2)`
-    background: ${(props)=>props.theme.default.secondaryBg};
+const DropdownContainer = styled(ItemHV2)<{ containerPadding?: string}>`
+    background: ${(props)=>props.theme.settingsModalBackground};
     border:1px solid;
-    border-color:${(props)=>props.theme.snackbarBorderColor};
+    border-color:${(props)=>props.theme.settingsModalBorderColor};
     border-radius: 8px;
     align-items:flex-start;
-    padding:7px 14px 7px 14px;
+    padding: ${props => props.containerPadding ? props.containerPadding : '7px 14px'};
     position:absolute;
     top:0rem;
     z-index:10;
