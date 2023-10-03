@@ -1,12 +1,14 @@
 import React from 'react';
 import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
 import { H2V2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 
 const AboutSnapModal = ({
     onClose
 }) => {
+
+    const theme = useTheme();
 
     const InfoDetails = [
         {
@@ -40,13 +42,13 @@ const AboutSnapModal = ({
             <ItemVV2 gap='24px'>
 
                 <ItemVV2>
-                    <H2V2 fontSize='22px' fontWeight='500' letterSpacing='-0.44px'>Installing Push Snap</H2V2>
+                    <H2V2 fontSize='22px' fontWeight='500' letterSpacing='-0.44px' color={theme.snapPrimaryText}>Installing Push Snap</H2V2>
                 </ItemVV2>
 
                 {InfoDetails.map((detail) => (
                     <ItemVV2 alignItems='baseline'>
-                        <H2V2 fontSize='18px' fontWeight='500' >{detail.title}</H2V2>
-                        <SpanV2 textAlign='left' fontSize='16px' fontWeight='400' color='#62626A'>{detail.info}</SpanV2>
+                        <H2V2 fontSize='18px' fontWeight='500' color={theme.snapPrimaryText}>{detail.title}</H2V2>
+                        <SpanV2 textAlign='left' fontSize='16px' fontWeight='400'  color={theme.snapSecondaryText}>{detail.info}</SpanV2>
                     </ItemVV2>
                 ))}
 
@@ -64,6 +66,6 @@ const Container = styled(ItemVV2)`
     width: 375px;
     padding: 32px 24px;
     border-radius: 16px;
-    background: #FFF;
     align-items: end;
+    background: ${(props) => props.theme.default.bg};
 `
