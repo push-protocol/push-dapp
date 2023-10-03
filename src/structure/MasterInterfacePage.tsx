@@ -98,7 +98,7 @@ function MasterInterfacePage() {
             <Route path="dashboard" element={<ChannelDashboardPage />} />
             <Route path="send" element={<SendNotifsPage />} />
             <Route path="receive" element={<ReceiveNotifsPage />} />
-            <Route path="notif-settings" element={<NotifSettingsPage />} />
+            <Route path="channel/settings" element={<NotifSettingsPage />} />
 
             <Route path="govern" element={<GovPage />} />
             <Route path="snap" element={<SnapPage />} />

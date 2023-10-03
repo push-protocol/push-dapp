@@ -19,7 +19,7 @@ export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain; //chainId of ne
 
 // Create Header
 function NotifSettingsPage() {
-  ReactGA.pageview('/notif-settings');
+  ReactGA.pageview('/channel/settings');
 
   // toast related section
   const [toast, showToast] = React.useState(null);

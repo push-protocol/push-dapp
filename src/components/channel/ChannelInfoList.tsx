@@ -44,7 +44,7 @@ const ChannelInfoList = (props: ChannelInfoListProps) => {
   const navigate = useNavigate();
 
   const handleNavigateToModifySettings = () => {
-    navigate(`/notif-settings`);
+    navigate(`/channel/settings`);
   };
 
   return (

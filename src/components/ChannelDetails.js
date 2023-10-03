@@ -147,7 +147,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
   };
 
   const navigateToNotifSettings = () => {
-    navigate('/notif-settings');
+    navigate('/channel/settings');
   };
 
   return (
