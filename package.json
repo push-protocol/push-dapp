@@ -104,6 +104,7 @@
     "react-icons": "^4.7.1",
     "react-image-file-resizer": "^0.4.7",
     "react-images-upload": "^1.2.8",
+    "react-input-slider": "^6.0.1",
     "react-joyride": "^2.4.0",
     "react-loader-spinner": "^5.3.4",
     "react-multi-select-component": "^4.2.3",
