@@ -1,11 +1,6 @@
 import React, { useContext, useRef } from 'react';
 
 // React + Web3 Essentials
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
-// import {
-//   NoEthereumProviderError,
-//   UserRejectedRequestError as UserRejectedRequestErrorInjected,
-// } from '@web3-react/injected-connector';
 import { ethers } from 'ethers';
 
 // External Packages
@@ -23,15 +18,16 @@ import NavigationButton from 'components/NavigationButton';
 import Bell from 'primaries/Bell';
 import Profile from 'primaries/Profile';
 import { NavigationContext } from 'contexts/NavigationContext';
+import { ErrorContext } from 'contexts/ErrorContext';
 
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 import { useClickAway } from 'react-use';
 import MobileNavigation from './MobileNavigation';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import ChainIndicator from 'components/ChainIndicator';
-import { handleChangeNetwork } from 'helpers/ChainHelper';
+import { UnsupportedChainIdError } from 'connectors/error';
 
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
@@ -39,12 +35,11 @@ function Header({ isDarkMode, darkModeToggle }) {
   const theme = useTheme();
   const navRef = useRef()
 
-  // Get Web3 Context
-  // const context = useWeb3React<Web3Provider>()
-
   const { navigationSetup } = useContext(NavigationContext);
 
-  const { isActive, error,library, chainId } = useWeb3React();
+  // Get 
+  const { isActive, switchChain } = useAccount();
+  const { authError: error } = useContext(ErrorContext);
 
   const [showLoginControls, setShowLoginControls] = React.useState(false);
 
@@ -87,17 +82,13 @@ function Header({ isDarkMode, darkModeToggle }) {
 
   // handle error functions
   function getErrorMessage(error: Error) {
-    if (error instanceof NoEthereumProviderError) {
-      return 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile';
-    } else if (error instanceof UnsupportedChainIdError) {
-      handleChangeNetwork(chainId,library.provider);
+    if (error instanceof UnsupportedChainIdError) {
+      switchChain(appConfig.coreContractChain);
       if (appConfig.coreContractChain === 42)
         return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network';
       else if (appConfig.coreContractChain === 5)
         return 'Unsupported Network, please connect to the Ethereum Goerli, Polygon Mumbai, BNB testnet, Optimism Goerli or Polygon zkEVM testnet';
       else return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB, or Polygon zkEVM Mainnet';
-    // } else if (error instanceof UserRejectedRequestErrorInjected) {
-    //   return 'Please authorize this website to access the dApp';
     } else {
       console.error(error);
       return 'An unknown error occurred. Check the console for more details';
@@ -109,7 +100,6 @@ function Header({ isDarkMode, darkModeToggle }) {
   };
 
   const isMobile = useDeviceWidthCheck(600);
-  
 
   return (
     <Container direction="row" padding="0px 15px">

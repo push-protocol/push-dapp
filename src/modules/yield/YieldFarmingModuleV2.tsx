@@ -9,15 +9,14 @@ import styled from 'styled-components';
 import { ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import DeprecatedYieldFarming from 'sections/yield/DeprecatedYieldFarming';
 import NewYieldFarming from 'sections/yield/NewYieldFarming';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import YieldFarmChainError from 'components/YieldFarmChainError';
-import { handleChangeAllowedNetwork } from 'helpers/ChainHelper';
 
 // Constants
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
@@ -31,7 +30,7 @@ const YieldFarmingModuleV2 = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [newStaking, setNewStaking] = useState(false);
 
-  const { account, chainId, connector} = useWeb3React<ethers.providers.Web3Provider>();
+  const { account, chainId, switchChain} = useAccount();
 
 
   const handleChainChange = ()=>{
@@ -39,7 +38,7 @@ const YieldFarmingModuleV2 = () => {
     const chainIdToPass = appConfig.allowedNetworks[0];
 
     if(chainId !== 1 && chainId !== 5){
-        handleChangeAllowedNetwork(chainIdToPass, connector?.provider, connector);
+      switchChain(chainIdToPass);
     }
 
 }

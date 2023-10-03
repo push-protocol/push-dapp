@@ -1,6 +1,5 @@
 // React + Web3 Essentials
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { useWeb3React } from '@web3-react/core';
 import { produce } from 'immer';
 
 import * as PushAPI from '@pushprotocol/restapi';
@@ -10,6 +9,7 @@ import { appConfig } from 'config';
 import { initVideoCallData } from '@pushprotocol/restapi/src/lib/video';
 import { ChatUserContext } from './ChatUserContext';
 import { User } from 'types/chat';
+import { useAccount } from 'hooks';
 
 interface RequestWrapperOptionsType {
   senderAddress: string;
@@ -39,7 +39,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   const [isCallConnected, setIsCallConnected] = useState(false);
   const [isCallAccepted, setIsCallAccepted] = useState(false);
   const [incomingCallUserData, setIncomingCallUserData] = useState<User | null>(null);
-  const { chainId, account, provider } = useWeb3React();
+  const { chainId, account, provider } = useAccount();
   const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
 
   const [data, setData] = useState<PushAPI.VideoCallData>(initVideoCallData);

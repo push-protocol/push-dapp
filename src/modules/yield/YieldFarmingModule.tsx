@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React from 'react';
 
@@ -12,6 +11,7 @@ import PoolCard from 'components/PoolCard';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import DepYieldFarmingDataStore from 'singletons/DepYieldFarmingDataStore';
 import { Content, Item, ItemH, Section, Span } from '../../primaries/SharedStyling';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
@@ -21,7 +21,7 @@ import { AInlineV2 } from 'components/reusables/SharedStylingV2';
 
 // Create Header
 function YieldFarmingModule() {
-  const {account, provider, chainId } = useWeb3React();
+  const {account, provider, chainId } = useAccount();
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const themes = useTheme();

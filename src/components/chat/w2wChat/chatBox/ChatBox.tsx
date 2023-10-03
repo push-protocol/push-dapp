@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -33,7 +32,7 @@ import {
   checkIfChatExist,
   fetchInbox
 } from 'helpers/w2w/user';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
@@ -89,7 +88,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const [chatMeta, setChatMeta] = useState(null);
 
   const [newMessage, setNewMessage] = useState<string>('');
-  const { chainId, account, provider } = useWeb3React<ethers.providers.Web3Provider>();
+  const { chainId, account, provider } = useAccount();
   const [Loading, setLoading] = useState<boolean>(true);
   const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false);
   const [imageSource, setImageSource] = useState<string>('');

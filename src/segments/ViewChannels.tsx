@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useRef, useState } from 'react';
 
 // External Packages
@@ -20,6 +19,7 @@ import { Item, ItemH } from '../primaries/SharedStyling';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import ChainsSelect from 'components/ChainsSelect';
 import { getChannels, getChannelsSearch, getUserSubscriptions } from 'services'; // Api Services
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -42,7 +42,7 @@ const SEARCH_LIMIT = 10;
 function ViewChannels({ loadTeaser, playTeaser }) {
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { account, chainId } = useWeb3React();
+  const { account, chainId } = useAccount();
   const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
   const { run, stepIndex } = useSelector((state: any) => state.userJourney);
 
@@ -62,6 +62,11 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     setLoading(!channels.length); //if there are no channels initially then, set the loader
     fetchInitialsChannelMeta();
   }, [account, chainId]);
+
+  useEffect(() => {
+    setChannelsNetworkId(chainId);
+    fetchInitialsChannelMeta();
+  }, [chainId]);
 
   // to update a page
   const updateCurrentPage = () => {
@@ -222,7 +227,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                   setSearch(e.target.value);
                 }}
                 className="input"
-                placeholder={`Search by Name or ${account.slice(0, 6)}`}
+                placeholder={`Search by Name or ${account?.slice(0, 6)}`}
               />
               <Item
                 position="absolute"

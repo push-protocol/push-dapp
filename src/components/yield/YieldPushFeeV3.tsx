@@ -1,7 +1,6 @@
 // React + Web3 Essentials
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import styled, { css, useTheme } from 'styled-components';
@@ -21,7 +20,7 @@ import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, Skeleton, Skeleto
 
 // Internal Configs
 import { abis, addresses } from 'config';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { device } from 'config/Globals';
 import { useClickAway } from 'react-use';
@@ -32,7 +31,7 @@ const YieldPushFeeV3 = ({
     PUSHPoolstats,
     getPUSHPoolStats
 }) => {
-    const { account, provider } = useWeb3React<ethers.providers.Web3Provider>();
+    const { account, provider } = useAccount();
 
     const [txInProgressWithdraw, setTxInProgressWithdraw] = useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);

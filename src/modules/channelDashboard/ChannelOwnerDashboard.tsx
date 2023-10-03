@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from "@web3-react/core";
 import React, { useEffect, useState } from "react";
 
 // External Packages
@@ -15,7 +14,7 @@ import ChannelSettings from "components/ChannelSettings";
 import CreateChannelModule from "../createChannel/CreateChannelModule";
 import { ButtonV2, ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
 import { getAliasFromChannelDetails } from "helpers/UtilityHelper";
-import { useDeviceWidthCheck } from "hooks";
+import { useAccount, useDeviceWidthCheck } from "hooks";
 import { setAliasAddress, setAliasAddressFromContract, setAliasChainId, setAliasVerified, setUserChannelDetails } from "redux/slices/adminSlice";
 import { setProcessingState } from "redux/slices/channelCreationSlice";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
@@ -37,7 +36,7 @@ let intervalID = null;
 // CREATE CHANNEL OWNER DASHBOARD
 const ChannelOwnerDashboard = () => {
   const theme = useTheme();
-  const { account, chainId } = useWeb3React();
+  const { account, chainId } = useAccount();
   const { channelDetails, delegatees, aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified, aliasAddrFromContract } } = useSelector((state: any) => state.admin);
   const { processingState } = useSelector((state: any) => state.channelCreation);
   const { epnsWriteProvider } = useSelector((state: any) => state.contracts);

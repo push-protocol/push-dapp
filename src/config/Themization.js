@@ -11,6 +11,7 @@ const themeLight = {
     secondaryColor: '#657795',
     hover: '#F3F3FF',
     borderColor: '#dfdee9',
+    primaryPushThemeTextColor: '#cf1c84'
   },
 
   // Login Theme
@@ -289,6 +290,7 @@ const themeDark = {
     secondaryColor: '#B6BCD6',
     hover: '#00000033',
     borderColor: '#4A4F67',
+    primaryPushThemeTextColor: '#cf1c84'
   },
 
   // Login Theme

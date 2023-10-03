@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { useWeb3React, Web3ReactProvider } from "@web3-react/core";
+import { Web3OnboardProvider } from '@web3-onboard/react'
 import { ethers } from "ethers";
 import React from "react";
 
@@ -17,12 +17,12 @@ import * as serviceWorker from "./serviceWorker";
 import ChatUserContextProvider from './contexts/ChatUserContext';
 import { VideoCallContextProvider } from './contexts/VideoCallContext';
 import ErrorContextProvider from './contexts/ErrorContext';
-import { connectors } from './App'
 
 
 
 // Internal Configs
 import * as dotenv from "dotenv";
+import { web3Onboard } from './connectors/web3Onboard';
 
 // enable environmental variables across the entire application
 dotenv.config();
@@ -51,8 +51,7 @@ ReactDOM.render(
   <BrowserRouter basename={process.env.PUBLIC_URL}>
     <Provider store={store}>
       <ApolloProvider client={client}>
-        {/* <Web3ReactProvider getLibrary={getLibrary}> */}
-        <Web3ReactProvider connectors={connectors}>
+        <Web3OnboardProvider web3Onboard={web3Onboard}>
           <ErrorContextProvider>
           <ChatUserContextProvider>
             <VideoCallContextProvider>
@@ -60,8 +59,7 @@ ReactDOM.render(
             </VideoCallContextProvider>
           </ChatUserContextProvider>
           </ErrorContextProvider>
-          </Web3ReactProvider>
-        {/* </Web3ReactProvider> */}
+        </Web3OnboardProvider>
       </ApolloProvider>
     </Provider>
   </BrowserRouter>,

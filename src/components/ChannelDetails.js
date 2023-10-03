@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useEffect } from 'react';
 
@@ -12,7 +11,7 @@ import styled from 'styled-components';
 import { getReq, postReq } from 'api';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from "components/reusables/SharedStylingV2";
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import ChannelSettings from './ChannelSettings';
 import ShowDelegates from './ShowDelegates';
@@ -29,7 +28,7 @@ const DATE_FORMAT = 'DD MMM, YYYY';
 
 export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, showEditChannel, destroyChannel
 }) {
-  const { chainId } = useWeb3React();
+  const { chainId } = useAccount();
   const {
     channelDetails,
     canVerify,

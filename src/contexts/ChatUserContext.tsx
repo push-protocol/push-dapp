@@ -1,10 +1,10 @@
 import * as PushAPI from "@pushprotocol/restapi";
 import { ProgressHookType } from "@pushprotocol/restapi";
-import { useWeb3React } from '@web3-react/core';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { appConfig } from 'config';
 import { ethers } from 'ethers';
 import * as w2wHelper from 'helpers/w2w';
+import { useAccount } from "hooks";
 import React, { createContext, useState } from 'react';
 import { BlockedLoadingI, ConnectedUser, User } from 'types/chat';
 
@@ -13,7 +13,7 @@ export const ChatUserContext = createContext({})
 //this context is global and it is called in APP.tsx
 const ChatUserContextProvider = (props) => {
   const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
-  const { account, chainId, provider } = useWeb3React<ethers.providers.Web3Provider>();
+  const { account, provider } = useAccount();
 
   //this blocked loading is a modal which shows during the PGP keys generation time
   const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({

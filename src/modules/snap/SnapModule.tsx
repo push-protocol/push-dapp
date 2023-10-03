@@ -4,13 +4,13 @@ import React, { useEffect, useState } from 'react';
 // External Packages
 import ReactGA from 'react-ga';
 import styled, { useTheme } from 'styled-components';
-import { useWeb3React } from '@web3-react/core';
 
 // Internal Components
 import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { H2, Image, Item, Section, Span } from '../../primaries/SharedStyling';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import Info from 'segments/Info';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
@@ -33,7 +33,7 @@ const SnapModule = () => {
 
   const { showMetamaskPushSnap, setSnapState } = React.useContext(AppContext);
 
-  const { account, provider } = useWeb3React();
+  const { account, provider } = useAccount();
 
   useEffect(() => {
     getInstalledSnaps();

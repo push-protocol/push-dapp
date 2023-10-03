@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 
@@ -9,7 +8,7 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import { ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import FaucetInfo from 'components/FaucetInfo';
 
 // Internal Configs
@@ -39,7 +38,7 @@ export default function EditChannel({
   displayUplaodLogoModal,
   isUploadLogoModalOpen
 }) {
-  const { chainId, account, provider } = useWeb3React();
+  const { chainId, account, provider } = useAccount();
   const {
     channelDetails,
     canVerify,

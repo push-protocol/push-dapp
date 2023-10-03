@@ -25,7 +25,6 @@ import * as w2wHelper from 'helpers/w2w/';
 
 import SpaceFeedSection from 'sections/space/SpaceFeedSection';
 import { ChatUserContext } from 'contexts/ChatUserContext';
-import { useWeb3React } from '@web3-react/core';
 import { appConfig } from 'config';
 import * as PushAPI from '@pushprotocol/restapi';
 import { ConnectedUser, User } from 'types/chat';
@@ -33,11 +32,11 @@ import LoaderSpinner from 'primaries/LoaderSpinner';
 import { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { Item } from 'primaries/SharedStyling';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import { useSDKSocket } from 'hooks';
+import { useAccount, useSDKSocket } from 'hooks';
 import { SpaceContext } from 'contexts/SpaceContext';
 
 export const SpaceModule = ({ spaceid }) => {
-  const { account, chainId } = useWeb3React();
+  const { account, chainId } = useAccount();
   const { pgpPvtKey, getUser, setPgpPvtKey, connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
 
   const [isLoading, setIsLoading] = useState(true);

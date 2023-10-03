@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import React, { useEffect } from 'react';
 
 // External Packages
@@ -35,7 +34,7 @@ import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
 import InfoImage from '../assets/info.svg';
 import VerifiedTooltipContent from "./VerifiedTooltipContent";
 import { IPFSGateway } from 'helpers/IpfsHelper';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import ManageNotifSettingDropdown from './dropdowns/ManageNotifSettingDropdown';
 import OptinNotifSettingDropdown from './dropdowns/OptinNotifSettingDropdown';
 import { ImageV2 } from './reusables/SharedStylingV2';
@@ -53,7 +52,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   );
   const { canVerify } = useSelector((state) => state.admin);
   const { channelsCache, CHANNEL_BLACKLIST, subscriptionStatus } = useSelector((state) => state.channels);
-  const { account, provider, chainId } = useWeb3React();
+  const { account, provider, chainId } = useAccount();
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
