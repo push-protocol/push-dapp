@@ -79,7 +79,7 @@ const OptinNotifSettingDropdownContainer: React.FC<{ settings: any[] }> = ({ set
                     xmin={setting.lowerLimit}
                     xmax={setting.upperLimit}
                 />
-                <SpanV2 color={theme.settingsModalPrimaryTextColor} fontSize="15px" fontWeight='500' textAlign="right">{setting.defaultValue}</SpanV2>
+                <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right">{setting.defaultValue}</SpanV2>
             </DropdownSliderItem>
           )}
         </DropdownInnerContainer>
