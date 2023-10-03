@@ -17,7 +17,7 @@ import styled, { useTheme } from 'styled-components';
 import * as PushAPI from '@pushprotocol/restapi';
 import { postReq } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { SectionV2, AInlineV2 } from 'components/reusables/SharedStylingV2';
+import { AInlineV2, SectionV2 } from 'components/reusables/SharedStylingV2';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
