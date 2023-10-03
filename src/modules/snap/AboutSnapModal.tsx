@@ -42,12 +42,12 @@ const AboutSnapModal = ({
             <ItemVV2 gap='24px'>
 
                 <ItemVV2>
-                    <H2V2 fontSize='22px' fontWeight='500' letterSpacing='-0.44px' color={theme.modalMessageColor}>Installing Push Snap</H2V2>
+                    <H2V2 fontSize='22px' fontWeight='500' letterSpacing='-0.44px' color={theme.snapPrimaryText}>Installing Push Snap</H2V2>
                 </ItemVV2>
 
                 {InfoDetails.map((detail) => (
                     <ItemVV2 alignItems='baseline'>
-                        <H2V2 fontSize='18px' fontWeight='500' color={theme.modalMessageColor}>{detail.title}</H2V2>
+                        <H2V2 fontSize='18px' fontWeight='500' color={theme.snapPrimaryText}>{detail.title}</H2V2>
                         <SpanV2 textAlign='left' fontSize='16px' fontWeight='400'  color={theme.snapSecondaryText}>{detail.info}</SpanV2>
                     </ItemVV2>
                 ))}

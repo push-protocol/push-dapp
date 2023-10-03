@@ -82,7 +82,7 @@ const SnapModule = () => {
     });
     console.log('Snap Installed');
   }
-  
+
   async function connectToMetaMask() {
     setLoading(true);
     try {
@@ -172,7 +172,7 @@ const SnapModule = () => {
               <H2V2
                 fontSize="34px"
                 fontWeight="500"
-                color={theme.modalMessageColor}
+                color={theme.snapPrimaryText}
                 letterSpacing="-1.02px"
               >
                 Push Snap
@@ -180,7 +180,7 @@ const SnapModule = () => {
               <SpanV2
                 fontSize="12px"
                 fontWeight="400"
-                color="#657795"
+                color={theme.modalIconColor}
               >
                 powered by MetaMask
               </SpanV2>
@@ -269,7 +269,7 @@ const SnapModule = () => {
                 width={16}
               />
               <SpanV2
-                color="#657795"
+                color={theme.modalIconColor}
                 fontSize="14px"
                 fontWeight="400"
               >
@@ -366,7 +366,7 @@ const SettingsButton = styled(SnapButton)`
   text-align: center;
   width: 135px;
   padding: 16px 24px;
-  border: 1px solid #bac4d6;
+  border: 1px solid ${(props)=>props.theme.snapBorderColor};
   background: ${(props) => props.theme.default.bg};
   gap: 4px;
 
