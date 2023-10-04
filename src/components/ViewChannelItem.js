@@ -35,6 +35,9 @@ import InfoImage from '../assets/info.svg';
 import VerifiedTooltipContent from "./VerifiedTooltipContent";
 import { IPFSGateway } from 'helpers/IpfsHelper';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
+import ManageNotifSettingDropdown from './dropdowns/ManageNotifSettingDropdown';
+import OptinNotifSettingDropdown from './dropdowns/OptinNotifSettingDropdown';
+import { ImageV2 } from './reusables/SharedStylingV2';
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -1038,22 +1041,24 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <>
                 {isOwner && <OwnerButton disabled>Owner</OwnerButton>}
                 {!isOwner && (
-                  <SubscribeButton
-                    onClick={subscribe}
-                    disabled={txInProgress}
-                    className="optin"
-                  >
-                    {txInProgress && (
-                      <ActionLoader>
-                        <LoaderSpinner
-                          type={LOADER_TYPE.SEAMLESS}
-                          spinnerSize={16}
-                          spinnerColor="#FFF"
-                        />
-                      </ActionLoader>
-                    )}
-                    <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
-                  </SubscribeButton>
+                  <OptinNotifSettingDropdown>
+                    <SubscribeButton
+                      onClick={() => {}}
+                      disabled={txInProgress}
+                      className="optin"
+                    >
+                      {txInProgress && (
+                        <ActionLoader>
+                          <LoaderSpinner
+                            type={LOADER_TYPE.SEAMLESS}
+                            spinnerSize={16}
+                            spinnerColor="#FFF"
+                          />
+                        </ActionLoader>
+                      )}
+                      <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
+                    </SubscribeButton>
+                  </OptinNotifSettingDropdown>
                 )}
               </>
             )}
@@ -1061,21 +1066,29 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <>
                 {isOwner && <OwnerButton disabled>Owner</OwnerButton>}
                 {!isOwner && (
-                  <UnsubscribeButton
-                    onClick={unsubscribeAction}
-                    disabled={txInProgress}
-                  >
-                    {txInProgress && (
-                      <ActionLoader>
-                        <LoaderSpinner
-                          type={LOADER_TYPE.SEAMLESS}
-                          spinnerSize={16}
-                          spinnerColor="#FFF"
-                        />
-                      </ActionLoader>
-                    )}
-                    <ActionTitle hideit={txInProgress}>Opt-out</ActionTitle>
-                  </UnsubscribeButton>
+                  <ManageNotifSettingDropdown>
+                    <UnsubscribeButton
+                      onClick={() => {}}
+                      disabled={txInProgress}
+                    >
+                      {txInProgress && (
+                        <ActionLoader>
+                          <LoaderSpinner
+                            type={LOADER_TYPE.SEAMLESS}
+                            spinnerSize={16}
+                            spinnerColor="#FFF"
+                          />
+                        </ActionLoader>
+                      )}
+                      <ActionTitle hideit={txInProgress}>Manage</ActionTitle>
+                      <ImageV2
+                        alt="arrow"
+                        src="/svg/arrow.svg"
+                        height="10px"
+                        width="12px"
+                      />
+                    </UnsubscribeButton>
+                  </ManageNotifSettingDropdown>
                 )}
               </>
             )}
@@ -1433,8 +1446,6 @@ const ChannelActionButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 15px;
-  margin: 10px;
   color: #fff;
   border-radius: 5px;
   font-size: 14px;
@@ -1503,11 +1514,9 @@ const SkeletonButton = styled.div`
 const SubscribeButton = styled(ChannelActionButton)`
   background: #e20880;
   border-radius: 8px;
-  padding: 9px 15px;
-  min-width: 80px;
-  @media (max-width: 768px) {
-    padding: 9px 30px;
-  }
+  padding: 0px;
+  min-height: 36px;
+  min-width: 108px;
 `;
 
 const UnsubscribeButton = styled(ChannelActionButton)`
@@ -1515,11 +1524,10 @@ const UnsubscribeButton = styled(ChannelActionButton)`
   color: ${(props) => props.theme.viewChannelPrimaryText};
   border: 1px solid #bac4d6;
   border-radius: 8px;
-  padding: 9px 15px;
-  min-width: 80px;
-  @media (max-width: 768px) {
-    padding: 9px 30px;
-  }
+  padding: 0px 8px 0px 16px;
+  gap: 8px;
+  min-height: 36px;
+  min-width: 108px;
 `;
 
 const OwnerButton = styled(ChannelActionButton)`
