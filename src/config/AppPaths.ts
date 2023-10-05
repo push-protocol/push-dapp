@@ -20,6 +20,7 @@ enum APP_PATHS {
     Internal = '/internal',
     Support = '/support',
     UserSettings = '/user/settings',
+    ChannelSettings = '/channel/settings',
 }
   
 export default APP_PATHS;

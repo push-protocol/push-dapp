@@ -116,7 +116,7 @@ function MasterInterfacePage() {
             <Route path="/" element={<Navigate to={APP_PATHS.Channels} />} />
             <Route path={APP_PATHS.Support} element={<SupportPage />} />
             <Route path={APP_PATHS.UserSettings} element={<UserSettingsPage />} />
-            <Route path={APP_PATHS.UserSettings} element={<NotifSettingsPage />} />
+            <Route path={APP_PATHS.ChannelSettings} element={<NotifSettingsPage />} />
           </Routes>
         </Suspense>
       </Interface>

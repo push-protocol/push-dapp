@@ -15,7 +15,7 @@ import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { useAccount } from 'hooks';
 
 // Internal Configs
-import APP_PATHS from 'config/AppPaths.js';
+import APP_PATHS from 'config/AppPaths';
 import { AppContext } from 'contexts/AppContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { AppContextType } from 'types/context';
