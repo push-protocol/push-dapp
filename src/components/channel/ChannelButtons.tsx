@@ -47,28 +47,23 @@ export const AddSettingButton = ({ onClick }: ChannelButtonProps) => {
 
 const ChannelButton = styled(Button)`
   height: 36px;
-  background: #cf1c84;
+  background: ${(props) => props.theme.default.primaryPushThemeTextColor};
   color: #fff;
   z-index: 0;
-  font-family: 'Strawford';
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
   line-height: 17px;
   border-radius: 8px;
   padding: 4px 12px 4px 12px;
-  @media (min-width: 600px) and (max-width: 700px) {
-    margin-right: 9px;
-  }
 `;
 
 const ChannelButtonWhite = styled.button`
   height: 36px;
   border: 1px solid ${(props) => props.theme.default.borderColor};
   background: transparent;
-  color: #fff;
+  color: white;
   z-index: 0;
-  font-family: 'Strawford';
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
@@ -76,9 +71,6 @@ const ChannelButtonWhite = styled.button`
   border-radius: 8px;
   padding: 4px 12px 4px 12px;
   cursor: pointer;
-  @media (min-width: 600px) and (max-width: 700px) {
-    margin-right: 9px;
-  }
 `;
 
 const ButtonText = styled.span`

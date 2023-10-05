@@ -24,21 +24,18 @@ import { useAccount } from 'hooks';
 import { appConfig } from 'config';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import { ChannelSetting } from 'helpers/channel/types';
+import { getChannel } from 'services';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 function NotificationSettings() {
   const { account, chainId } = useAccount();
-  const {
-    coreChannelAdmin,
-    channelDetails,
-    delegatees,
-    aliasDetails: { aliasEthAddr },
-  } = useSelector((state: any) => state.admin);
+  const { coreChannelAdmin, delegatees } = useSelector((state: any) => state.admin);
   const { epnsWriteProvider } = useSelector((state: any) => state.contracts);
 
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
+  const EDIT_SETTING_FEE = 50;
 
   const [channelAddress, setChannelAddress] = React.useState('');
   const [settings, setSettings] = React.useState<ChannelSetting[]>([]);
@@ -53,14 +50,25 @@ function NotificationSettings() {
     ModalComponent: AddSettingModal,
   } = useModalBlur();
 
+  const redirectBack = () => {
+    const url = window.location.origin;
+    window.location.replace(`${url}/channels`);
+  };
+
   useEffect(() => {
     // Is not the channel admin so cannot edit settings
-    setIsLoading(true);
-    if (coreChannelAdmin && account && coreChannelAdmin !== account) {
-      const url = window.location.origin;
-      window.location.replace(`${url}/channels`);
-    }
-    setIsLoading(false);
+    (async () => {
+      setIsLoading(true);
+      if (!account) return;
+      try {
+        const channelDetails = await getChannel({ channel: account });
+        if (!channelDetails) redirectBack();
+      } catch {
+        redirectBack();
+      }
+      if (coreChannelAdmin && coreChannelAdmin !== account) redirectBack();
+      setIsLoading(false);
+    })();
   }, [account, coreChannelAdmin]);
 
   useEffect(() => {
@@ -257,6 +265,7 @@ function NotificationSettings() {
         ]}
       />
       <DepositFeeFooter
+        feeRequired={EDIT_SETTING_FEE}
         title="Modify Settings fee"
         description="Make sure all settings are ready before proceeding to the next step"
         onCancel={goBack}

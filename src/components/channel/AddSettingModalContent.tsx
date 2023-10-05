@@ -324,7 +324,7 @@ const ModalContainer = styled.div`
   }
 `;
 
-const Label = styled.div`
+const Label = styled.div<{ padding?: string }>`
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
@@ -347,13 +347,13 @@ const MaxWidthInput = styled(Input)<{ hasError: boolean }>`
   max-width: 108px;
   flex: 1;
   border: ${(props) =>
-    props.hasError ? `1px solid rgba(237, 88, 88, 1)` : `1px solid ${props.theme.default.borderColor}`};
+    props.hasError ? `1px solid ${props.theme.nfsError}` : `1px solid ${props.theme.default.borderColor}`};
 `;
 
 const InputWithError = styled(Input)<{ hasError: boolean }>`
   flex: 1;
   border: ${(props) =>
-    props.hasError ? `1px solid rgba(237, 88, 88, 1)` : `1px solid ${props.theme.default.borderColor}`};
+    props.hasError ? `1px solid ${props.theme.nfsError}` : `1px solid ${props.theme.default.borderColor}`};
 `;
 
 const ErrorInfo = styled.span`
@@ -362,7 +362,7 @@ const ErrorInfo = styled.span`
   line-height: 18px;
   letter-spacing: 0em;
   text-align: left;
-  color: rgba(237, 88, 88, 1);
+  color: ${(props) => props.theme.nfsError};
   margin-top: 4px;
 `;
 

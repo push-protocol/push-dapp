@@ -149,14 +149,16 @@ const DelegatesList = styled.div<{ isLoading: boolean }>`
 const Tag = styled.div`
   padding: 4px 8px 4px 8px;
   border-radius: 4px;
-  background-color: rgba(244, 245, 250, 1);
-  color: rgba(73, 77, 95, 1);
+  background-color: ${(props) => props.theme.default.secondaryBg};
+  color: ${(props) => props.theme.tooltipContentDesc};
   font-size: 10px;
   margin-left: 8px;
 `;
 
 const NotificationSettingName = styled.span`
   margin-left: 15px;
+  color: ${(props) =>
+    props.theme.scheme === 'light' ? props.theme.default.color : props.theme.default.secondaryColor};
 `;
 
 const EmptyNotificationSetting = styled.div`
@@ -169,7 +171,6 @@ const EmptyNotificationSetting = styled.div`
 `;
 
 const EmptyNotificationTitle = styled.div`
-  font-family: Strawford;
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
