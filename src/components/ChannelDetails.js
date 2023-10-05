@@ -29,6 +29,7 @@ import { appConfig } from 'config';
 import { device } from 'config/Globals';
 import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
 import { getDateFromTimestamp, nextDaysDateFromTimestamp, timeRemaining } from 'helpers/TimerHelper';
+import APP_PATHS from 'config/AppPaths';
 
 
 const DATE_FORMAT = 'DD MMM, YYYY';
@@ -147,7 +148,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
   };
 
   const navigateToNotifSettings = () => {
-    navigate('/channel/settings');
+    navigate(APP_PATHS.ChannelSettings);
   };
 
   return (
@@ -317,13 +318,15 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
               <ChannelInfoHeader
                 title="Notification Settings"
                 description="Customize notification preferences for users"
-                Button={<ManageSettingsButton onClick={() => navigateToNotifSettings()} />}
+                Button={<ManageSettingsButton onClick={navigateToNotifSettings} />}
               />
               <ChannelInfoList
                 account={account}
                 isAddress={false}
                 items={channelSettings}
                 isLoading={false}
+                onClickEmptyListButton={navigateToNotifSettings}
+                emptyListButtonTitle='Add Setting'
               />
             </DelegateContainer>
           </Section>

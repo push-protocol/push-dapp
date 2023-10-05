@@ -10,6 +10,10 @@ interface ChannelButtonProps {
   onClick: () => void;
 }
 
+interface ModifySettingsButtonProps extends ChannelButtonProps {
+  title?: string;
+}
+
 export const AddDelegateButton = ({ onClick }: ChannelButtonProps) => {
   return (
     <ChannelButton onClick={onClick}>
@@ -28,10 +32,10 @@ export const ManageSettingsButton = ({ onClick }: ChannelButtonProps) => {
   );
 };
 
-export const ModifySettingsButton = ({ onClick }: ChannelButtonProps) => {
+export const ModifySettingsButton = ({ onClick, title }: ModifySettingsButtonProps) => {
   return (
     <ChannelButtonWhite onClick={onClick}>
-      <TransparentButtonText>Modify Settings</TransparentButtonText>
+      <TransparentButtonText>{title ? title : 'Modify Settings'}</TransparentButtonText>
     </ChannelButtonWhite>
   );
 };

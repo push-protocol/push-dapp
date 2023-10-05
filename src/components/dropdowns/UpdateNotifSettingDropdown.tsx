@@ -14,6 +14,7 @@ import { SpanV2 } from "components/reusables/SharedStylingV2";
 
 interface UpdateNotifSettingDropdownProps {
   children: React.ReactNode;
+  centerOnMobile: boolean;
 }
 
 const UpdateNotifSettingDropdownContainer: React.FC<{ settings: any[] }> = ({ settings }) => {
@@ -93,7 +94,7 @@ const UpdateNotifSettingDropdownContainer: React.FC<{ settings: any[] }> = ({ se
 };
 
 // Faucet URLs
-const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({ children }) => {
+const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({ children, centerOnMobile }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -140,6 +141,7 @@ const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({
   // render
   return (
       <DropdownBtnHandler 
+        centerOnMobile={centerOnMobile}
         showDropdown={isOpen}
         toggleDropdown={toggleDropdown}
         closeDropdown={closeDropdown}

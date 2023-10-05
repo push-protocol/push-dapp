@@ -2,21 +2,19 @@
 import React from 'react';
 
 // External Packages
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 
 // Internal Compoonents
+import UserSettings from 'components/channel/UserSettings';
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 // Create Header
 const UserSettingsModule = () => {
-  
-  const theme = useTheme();
-
   return (
     <Container>
-      
+      <UserSettings />
     </Container>
   );
 }
@@ -51,10 +49,9 @@ const Container = styled.div`
 
   @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${
-      globalsMargin.MINI_MODULES.MOBILE.BOTTOM
-    });
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP});
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} 0 0;
 `;
 
 // Export Default

@@ -9,42 +9,40 @@ import { useNavigate } from 'react-router-dom';
 import { Item } from 'primaries/SharedStyling';
 import DelegateInfo from 'components/DelegateInfo';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import Icon from 'assets/navigation/receiveNotifOffIcon.svg';
-import { ImageV2 } from 'components/reusables/SharedStylingV2';
-import { ModifySettingsButton } from './ChannelButtons';
 import DelegateSettingsDropdown, { ChannelDropdownOption } from './DelegateSettingsDropdown';
+import EmptyNotificationSettings from './EmptyNotificationSettings';
 
 // Internal Configs
 import { device } from 'config/Globals';
 import { ChannelSetting } from 'helpers/channel/types';
 
-const isOwner = (account: string, delegate: string) => {
-  return account.toLowerCase() === delegate.toLowerCase();
-};
+// Types
+interface ChannelInfoListCommonProps {
+  isLoading: boolean;
+  account: string;
+  style?: CSSProperties;
+}
 
-type ChannelInfoListProps =
-  | {
-      isAddress: true;
-      items: string[];
-      isLoading: boolean;
-      account: string;
-      style?: CSSProperties;
-      addressDropdownOptions: Array<ChannelDropdownOption>;
-    }
-  | {
-      isAddress: false;
-      items: Array<ChannelSetting>;
-      isLoading: boolean;
-      account: string;
-      style?: CSSProperties;
-      settingsDropdownOptions?: Array<ChannelDropdownOption>;
-    };
+interface AddressListOptions extends ChannelInfoListCommonProps {
+  isAddress: true;
+  items: string[];
+  addressDropdownOptions: Array<ChannelDropdownOption>;
+}
+
+interface SettingListOptions extends ChannelInfoListCommonProps {
+  isAddress: false;
+  items: Array<ChannelSetting>;
+  isLoading: boolean;
+  settingsDropdownOptions?: Array<ChannelDropdownOption>;
+  onClickEmptyListButton: () => void;
+  emptyListButtonTitle: string;
+}
+
+type ChannelInfoListProps = AddressListOptions | SettingListOptions;
 
 const ChannelInfoList = (props: ChannelInfoListProps) => {
-  const navigate = useNavigate();
-
-  const handleNavigateToModifySettings = () => {
-    navigate(`/channel/settings`);
+  const isOwner = (account: string, delegate: string) => {
+    return account.toLowerCase() === delegate.toLowerCase();
   };
 
   return (
@@ -112,20 +110,13 @@ const ChannelInfoList = (props: ChannelInfoListProps) => {
                   </div>
                 );
               })}
-            {props.items && props.items.length === 0 && !props.isAddress && (
-              <EmptyNotificationSetting>
-                <NotifIcon
-                  src={Icon}
-                  alt="No Settings"
-                  width="24px"
-                  height="24px"
-                />
-                <EmptyNotificationTitle>No settings added</EmptyNotificationTitle>
-                <EmptyNotificationDesc>
-                  Add settings for users to customize their notification preferences.
-                </EmptyNotificationDesc>
-                <ModifySettingsButton onClick={handleNavigateToModifySettings} />
-              </EmptyNotificationSetting>
+            {props.items && props.items.length === 0 && props.isAddress === false && (
+              <EmptyNotificationSettings
+                title="No settings added"
+                description="Add settings for users to customize their notification preferences."
+                onClick={props.onClickEmptyListButton}
+                buttonTitle={props.emptyListButtonTitle}
+              />
             )}
           </>
         )}
@@ -159,36 +150,6 @@ const NotificationSettingName = styled.span`
   margin-left: 15px;
   color: ${(props) =>
     props.theme.scheme === 'light' ? props.theme.default.color : props.theme.default.secondaryColor};
-`;
-
-const EmptyNotificationSetting = styled.div`
-  border-top: ${(props) => `1px solid ${props.theme.default.borderColor}`};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  margin-bottom: 16px;
-`;
-
-const EmptyNotificationTitle = styled.div`
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  letter-spacing: 0em;
-  text-align: left;
-  color: ${(props) => props.theme.default.color};
-`;
-
-const EmptyNotificationDesc = styled.div`
-  margin-top: 1px;
-  margin-bottom: 16px;
-  color: ${(props) => props.theme.default.secondaryColor};
-`;
-
-const NotifIcon = styled(ImageV2)`
-  color: ${(props) => props.theme.default.color};
-  margin-top: 32px;
-  margin-bottom: 12px;
 `;
 
 const Divider = styled.div`
