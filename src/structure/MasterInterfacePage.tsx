@@ -23,6 +23,7 @@ const InternalDevPage = lazy(() => import('pages/InternalDevPage'));
 const NFTPage = lazy(() => import('pages/NFTPage'));
 const NotAvailablePage = lazy(() => import('pages/NotAvailablePage'));
 const ReceiveNotifsPage = lazy(() => import('pages/ReceiveNotifsPage'));
+const NotifSettingsPage = lazy(() => import('pages/NotifSettingsPage'));
 const SendNotifsPage = lazy(() => import('pages/SendNotifsPage'));
 const SpacePage = lazy(() => import('pages/SpacePage'));
 const SpamPage = lazy(() => import('pages/SpamPage'));
@@ -115,6 +116,7 @@ function MasterInterfacePage() {
             <Route path="/" element={<Navigate to={APP_PATHS.Channels} />} />
             <Route path={APP_PATHS.Support} element={<SupportPage />} />
             <Route path={APP_PATHS.UserSettings} element={<UserSettingsPage />} />
+            <Route path={APP_PATHS.UserSettings} element={<NotifSettingsPage />} />
           </Routes>
         </Suspense>
       </Interface>

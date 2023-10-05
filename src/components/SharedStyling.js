@@ -57,12 +57,10 @@ export const Item = styled.div`
   flex: ${props => props.flex || '1'};
   flex-basis: ${props => props.flexBasis || 'auto'};
   flex-direction: ${props => props.direction || 'column'};
-  flex-direction: column;
   flex-wrap: ${props => props.wrap || 'wrap'};
   font-size: ${props => props.size || 'inherit'};
   height: ${props => props.height || 'auto'};
   justify-content: ${props => props.justify || 'center'};
-  justify-content: center;
   left: ${props => props.left || 'auto'};
   margin: ${props => props.margin || '0px'};
 
