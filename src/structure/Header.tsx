@@ -44,6 +44,17 @@ const EXTRA_HEADER_TAGS = {
       fg: themeDark.headerTagFg,
     },
   },
+  [APP_PATHS.ChannelSettings]: {
+    title: 'Notification Settings',
+    light: {
+      bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+      fg: themeLight.headerTagFg,
+    },
+    dark: {
+      bg: themeDark.headerTagBg,
+      fg: themeDark.headerTagFg,
+    },
+  }
 }
 
 // Create Header
