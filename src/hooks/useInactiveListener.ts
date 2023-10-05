@@ -16,8 +16,8 @@ export function useInactiveListener() {
     if (appConfig.coreContractChain === 42)
       return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network';
     else if (appConfig.coreContractChain === 5)
-      return 'Unsupported Network, please connect to the Ethereum Goerli, Polygon Mumbai, BNB testnet, Optimism Goerli or Polygon zkEVM testnet';
-    else return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB, or Polygon zkEVM Mainnet';
+      return 'Unsupported Network, please connect to the Ethereum Goerli, Polygon Mumbai, BNB testnet, Optimism Goerli, Arbitrum testnet or Polygon zkEVM testnet';
+    else return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB, Optimism, Arbitrum or Polygon zkEVM Mainnet';
   }
 
   useEffect(() => {

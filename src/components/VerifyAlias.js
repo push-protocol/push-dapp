@@ -47,6 +47,10 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
     1442: {
       label: "Polygon zkEVM ETH",
       url: "https://public.zkevm-test.net/"
+    },
+    421613: {
+      label: "Goerli ArbETH",
+      url: "https://faucet.quicknode.com/arbitrum/goerli"
     }
   }
 

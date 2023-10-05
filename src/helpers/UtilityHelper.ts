@@ -11,7 +11,7 @@ import { appConfig } from '../config';
 // Utility Helper Functions
 const UtilityHelper = {
   isMainnet: (chainId: number):boolean => {
-    if (chainId === 1 || chainId === 137 || chainId === 56 || chainId === 1101) {
+    if (chainId === 1 || chainId === 137 || chainId === 56 || chainId === 1101 || chainId === 10 || chainId === 42161) {
       return true;
     }
     return false;
@@ -48,8 +48,11 @@ export const MaskedAliasChannels:{
   10: {},
   420: {},
   1442: {},
-  1101: {}
+  1101: {},
+  42161: {},
+  421613: {}
  }
+
  export const findObject = (data: any,parentArray: any[],property: string ): boolean => {
   let isPresent = false;
   if(data) {
@@ -106,7 +109,9 @@ export const networkName = {
   420: "Optimism Goerli",
   10: "Optimism Mainnet",
   1442: "Polygon zkEVM Testnet",
-  1101: "Polygon zkEVM Mainnet"
+  1101: "Polygon zkEVM Mainnet",
+  42161: "ArbitrumOne Mainnet",
+  421613: "Arbitrum Testnet"
 };
 
 export const chainNameBackendStandard = {
@@ -123,6 +128,10 @@ export const aliasChainIdToChainName={
   137:'POLYGON',
   56:'BSC',
   10:'OPTIMISM',
+  42161: 'ARBITRUMONE',
+  421613: 'ARBITRUMONE',
+  1101: "POLYGONZKEVM",
+  1442: "POLYGONZKEVM"
 }
 
 export const aliasChainIdsMapping = {
@@ -187,6 +196,20 @@ export const NETWORK_DETAILS = {
     nativeCurrency: {name: 'ETH', symbol: 'ETH', decimals: 18},
     rpcUrls: ['https://rpc.polygon-zkevm.gateway.fm'],
     blockExplorerUrls: ['https://zkevm.polygonscan.com']
+  },
+  ARBITRUM_TESTNET: {
+    chainId: utils.hexValue(421613),
+    chainName: 'Arbitrum Testnet',
+    nativeCurrency: {name: 'ETH', symbol: 'ETH', decimals: 18},
+    rpcUrls: ['https://goerli-rollup.arbitrum.io/rpc'],
+    blockExplorerUrls: ['https://testnet.arbiscan.io/']
+  },
+  ARBITRUMONE_MAINNET: {
+    chainId: utils.hexValue(42161),
+    chainName: 'ArbitrumOne Mainnet',
+    nativeCurrency: {name: 'ETH', symbol: 'ETH', decimals: 18},
+    rpcUrls: ['https://arb1.arbitrum.io/rpc'],
+    blockExplorerUrls: ['https://arbiscan.io/']
   }
 };
 
@@ -204,7 +227,9 @@ export const LOGO_FROM_CHAIN_ID: {
   420: "Optimism.svg",
   10: "Optimism.svg",
   1442: "PolygonZkEVM.svg",
-  1101: "PolygonZkEVM.svg"
+  1101: "PolygonZkEVM.svg",
+  42161: "Arbitrum.svg",
+  421613: "Arbitrum.svg"
 }
 
 export type getAliasResponseType = {
