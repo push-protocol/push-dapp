@@ -30,7 +30,7 @@ interface ChannelListItem {
 
 function UserSettings() {
   const { account, chainId } = useAccount();
-  const [selectedOption, setSelectedOption] = useState(1);
+  const [selectedOption, setSelectedOption] = useState(0);
   const [channelList, setChannelList] = useState<ChannelListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -86,7 +86,7 @@ function UserSettings() {
 
   const selectOptions = [
     {
-      value: 1,
+      value: 0,
       label: 'Notification Settings',
     },
   ];
@@ -109,7 +109,7 @@ function UserSettings() {
         </SelectSection>
         <ChannelWrapper>
           <ChannelContainer>
-            <SectionTitle>Notification Settings</SectionTitle>
+            <SectionTitle>{selectOptions[selectedOption].label}</SectionTitle>
             <>
               {isLoading ? (
                 <CenterContainer>
@@ -207,8 +207,10 @@ const Wrapper = styled.div`
 const SelectSection = styled.div`
   display: flex;
   flex-direction: column;
+  margin-right: 42px;
 
   @media ${device.tablet} {
+    margin-right: 0px;
     flex-direction: row;
     overflow-x: scroll;
     justify-content: center;
@@ -235,10 +237,10 @@ const SelectListOption = styled(Button)<{ isSelected: boolean }>`
 `;
 
 const ChannelWrapper = styled.div`
-  min-width: 65%;
   border: 1px solid ${(props) => props.theme.default.borderColor};
   padding: 12px;
   border-radius: 16px;
+  flex-grow: 1;
 
   @media ${device.tablet} {
     margin: 8px 0px;
