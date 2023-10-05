@@ -276,6 +276,10 @@ const themeLight = {
   snapSecondaryText:'#62626a',
   snapBackground:'#F2F2F2',
 
+  // Notification Settings
+  nfsError: '#ED5858',
+  nfsDisabled: '#DFDEE9',
+  nfsDisabledText: '#AFB3BF',
 };
 
 const themeDark = {
@@ -560,6 +564,10 @@ const themeDark = {
   snapSecondaryText:'#787E99',
   snapBackground:'#404650',
   
+  // Notification Settings
+  nfsError: '#ED5858',
+  nfsDisabled: '#AFB3BF',
+  nfsDisabledText: '#787E99',
 };
 
 module.exports = {

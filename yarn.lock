@@ -2166,7 +2166,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/core@npm:^10.0.0, @emotion/core@npm:^10.0.15":
+"@emotion/core@npm:^10.0.0, @emotion/core@npm:^10.0.14, @emotion/core@npm:^10.0.15":
   version: 10.3.1
   resolution: "@emotion/core@npm:10.3.1"
   dependencies:
@@ -5424,9 +5424,10 @@ __metadata:
     react-dropzone-uploader: 2.11.0
     react-easy-crop: ^4.1.4
     react-ga: 2.7.0
-    react-icons: ^4.7.1
+    react-icons: ^4.11.0
     react-image-file-resizer: ^0.4.7
     react-images-upload: ^1.2.8
+    react-input-slider: ^6.0.1
     react-joyride: ^2.4.0
     react-loader-spinner: ^5.3.4
     react-multi-select-component: ^4.2.3
@@ -24812,12 +24813,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-icons@npm:^4.7.1":
-  version: 4.8.0
-  resolution: "react-icons@npm:4.8.0"
+"react-icons@npm:^4.11.0":
+  version: 4.11.0
+  resolution: "react-icons@npm:4.11.0"
   peerDependencies:
     react: "*"
-  checksum: 4dbba7ad989c295b410e19b2a702722dae44368cb04b6515f9471353552f31ac80bd350f121d5bff79f81504b84039ede44d09e9f035f48bb1032e6eace126c4
+  checksum: 7b8b80bbe2dabcc54b6c2129b7761a04b19caebe24389adc7683478ef41212b9ca0b53c63abcc06b3c01b94c84855ec5142b4c357e19c4aaaad9a4db23a3c485
   languageName: node
   linkType: hard
 
@@ -24838,6 +24839,19 @@ __metadata:
     react: ^16.3.0
     react-dom: ^16.3.0
   checksum: 7420f697d6ab48297a455404498dc068b6a9b11871e612f612726a2d2f9ca06f6f0e7a0751d5fcb8943ad6050f39218f38b81d1304a6f3da59b6ce75320a7b25
+  languageName: node
+  linkType: hard
+
+"react-input-slider@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "react-input-slider@npm:6.0.1"
+  dependencies:
+    "@babel/runtime": ^7.9.2
+    "@emotion/core": ^10.0.14
+  peerDependencies:
+    react: ">=16"
+    react-dom: ">=16"
+  checksum: 8611d1309bc8a10c7181f30c072840548f0911511d10b7c98928eef461297a9c9b645956cadbe0d8e586db4c958cb5e422fbe440d2b422e4cb79e841e4109ef6
   languageName: node
   linkType: hard
 
