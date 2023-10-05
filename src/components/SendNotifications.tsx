@@ -40,6 +40,7 @@ import PreviewNotif from './PreviewNotif';
 // Internal Configs
 import { appConfig } from 'config';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
+import APP_PATHS from 'config/AppPaths';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -180,7 +181,7 @@ function SendNotifications() {
   }, [channelSettings]);  
 
   const openManageSettings = () => {
-    const newPageUrl = '/channels'; // Replace with the URL of the manage settings later
+    const newPageUrl = APP_PATHS.Channels; // Replace with the URL of the manage settings later
   
     // Use window.open() to open the URL in a new tab
     window.open(newPageUrl, '_blank');
@@ -189,7 +190,7 @@ function SendNotifications() {
   useEffect(() => {
     if (canSend !== 1) {
       const url = window.location.origin;
-      window.location.replace(`${url}/#/channels`);
+      window.location.replace(`${url}${APP_PATHS.Channels}`);
     }
   });
 

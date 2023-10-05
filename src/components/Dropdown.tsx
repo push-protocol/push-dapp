@@ -1,6 +1,7 @@
 // React + Web3 Essentials
 import { shortenText } from 'helpers/UtilityHelper';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -15,6 +16,7 @@ export type DropdownValueType = {
   icon: string,
   textColor?: string,
   function: () => void,
+  to?: string; // Add the 'to' property for navigation
 }
 
 type DropdownProps = {
@@ -118,7 +120,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
                 cursor="pointer"
               />
             )}
-            {!dropdownValue?.link && dropdownValue?.function && (
+            {!dropdownValue?.to && !dropdownValue?.link && dropdownValue?.function && (
               <Span
                 width="max-content"
                 color={getTextColor(dropdownValue)}
@@ -129,6 +131,21 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
               >
                 {dropdownValue.title}
               </Span>
+            )}
+            {dropdownValue?.to && (
+              <Link to={dropdownValue.to} style={{ textDecoration: 'none' }}>
+                {/* You can customize the Link as needed */}
+                <Span
+                  width="max-content"
+                  color={getTextColor(dropdownValue)}
+                  margin="8px 10px"
+                  weight="400"
+                  size="15px"
+                  cursor="pointer"
+                >
+                  {dropdownValue.title}
+                </Span>
+              </Link>
             )}
             {dropdownValue?.link && (
               <A

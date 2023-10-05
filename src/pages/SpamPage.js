@@ -7,10 +7,11 @@ import styled from "styled-components";
 
 // Internal Components
 import Spambox from "segments/Spambox";
+import APP_PATHS from "config/AppPaths";
 
 // Create Header
 function InboxPage() {
-  ReactGA.pageview("/spam");
+  ReactGA.pageview(APP_PATHS.Spam);
 
   // Render
   return (

@@ -1066,7 +1066,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <>
                 {isOwner && <OwnerButton disabled>Owner</OwnerButton>}
                 {!isOwner && (
-                  <ManageNotifSettingDropdown>
+                  <ManageNotifSettingDropdown centerOnMobile={true}>
                     <UnsubscribeButton
                       onClick={() => {}}
                       disabled={txInProgress}

@@ -139,7 +139,8 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = ({ c
 
   // render
   return (
-      <DropdownBtnHandler 
+      <DropdownBtnHandler
+        centerOnMobile={true}
         showDropdown={isOpen}
         toggleDropdown={toggleDropdown}
         closeDropdown={closeDropdown}

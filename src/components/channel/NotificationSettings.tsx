@@ -251,6 +251,8 @@ function NotificationSettings() {
         isAddress={false}
         isLoading={isLoadingSettings}
         items={settings}
+        onClickEmptyListButton={showAddSettingModal}
+        emptyListButtonTitle='Add Setting'
         settingsDropdownOptions={[
           {
             icon: <PiPencilSimpleBold />,

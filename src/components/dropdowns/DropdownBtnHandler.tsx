@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 
 // External Packages
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 // Internal Configs
 import { useClickAway } from 'hooks/useClickAway';
@@ -14,6 +14,7 @@ interface DropdownBtnHandlerProps {
   toggleDropdown: () => void;
   closeDropdown: () => void;
   containerPadding?: string;
+  centerOnMobile: boolean;
 }
 
 export const DropdownBtnHandler: React.FC<DropdownBtnHandlerProps> = ({ 
@@ -22,7 +23,8 @@ export const DropdownBtnHandler: React.FC<DropdownBtnHandlerProps> = ({
     showDropdown,
     toggleDropdown,
     closeDropdown,
-    containerPadding
+    containerPadding,
+    centerOnMobile,
 }) => {
   const dropdownRef = useRef<HTMLButtonElement | null>(null);
   const renderDropdownContainerRef = useRef<HTMLDivElement | null>(null);
@@ -33,7 +35,7 @@ export const DropdownBtnHandler: React.FC<DropdownBtnHandlerProps> = ({
         <Container ref={dropdownRef} onClick={toggleDropdown}>
             {children}
             {showDropdown && (
-                <DropdownContainer containerPadding={containerPadding}>
+                <DropdownContainer containerPadding={containerPadding} centerOnMobile={centerOnMobile}>
                     <div ref={renderDropdownContainerRef} onClick={(e) => e.stopPropagation()}>
                         {renderDropdownContainer}
                     </div>
@@ -52,7 +54,7 @@ const Container = styled.button`
   outline: 0;
 `
 
-const DropdownContainer = styled(ItemHV2)<{ containerPadding?: string}>`
+const DropdownContainer = styled(ItemHV2)<{ containerPadding?: string, centerOnMobile: boolean }>`
     background: ${(props)=>props.theme.settingsModalBackground};
     border:1px solid;
     border-color:${(props)=>props.theme.settingsModalBorderColor};
@@ -65,8 +67,10 @@ const DropdownContainer = styled(ItemHV2)<{ containerPadding?: string}>`
     right:-0.5rem;
 
     @media (max-width:768px){
-        left: 50%;
-        transform: translateX(-50%);
+        ${(props) => props.centerOnMobile && css`
+            left: 50%;
+            transform: translateX(-50%);
+        `}
         width: fit-content;
     }
 `;

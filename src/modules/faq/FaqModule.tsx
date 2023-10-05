@@ -237,7 +237,7 @@ function FaqModule() {
                 <Answer>
                   <Span>
                     Easiest way to create a channel is from our{' '}
-                    <AMod target="_blank" href="https://app.push.org/#/dashboard">
+                    <AMod target="_blank" href="https://app.push.org/dashboard">
                       Push (EPNS) Dapp
                     </AMod>{' '}
                     itself. Find the entire channel creation process{' '}

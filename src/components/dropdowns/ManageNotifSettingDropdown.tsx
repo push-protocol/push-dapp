@@ -13,16 +13,17 @@ import { ImageV2, SpanV2 } from "components/reusables/SharedStylingV2";
 
 interface ManageNotifSettingDropdownProps {
   children: React.ReactNode;
+  centerOnMobile: boolean;
 }
 
-const ManageNotifSettingDropdownContainer: React.FC = () => {
+const ManageNotifSettingDropdownContainer: React.FC<{centerOnMobile: boolean}> = ({centerOnMobile}) => {
 
   const theme = useTheme();
 
   return (
     <DropdownOuterContainer>
       <DropdownInnerContainer>
-        <UpdateNotifSettingDropdown>
+        <UpdateNotifSettingDropdown centerOnMobile={centerOnMobile}>
             <DropdownBtn flexDirection="row">
                 <ImageV2
                     width="20px"
@@ -47,7 +48,7 @@ const ManageNotifSettingDropdownContainer: React.FC = () => {
   );
 };
 
-const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = ({ children }) => {
+const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = ({ children, centerOnMobile }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -64,8 +65,9 @@ const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = ({
         showDropdown={isOpen}
         toggleDropdown={toggleDropdown}
         closeDropdown={closeDropdown}
-        renderDropdownContainer={<ManageNotifSettingDropdownContainer />}
+        renderDropdownContainer={<ManageNotifSettingDropdownContainer centerOnMobile={centerOnMobile} />}
         containerPadding="12px 16px"
+        centerOnMobile={centerOnMobile}
       >
         {children}
       </DropdownBtnHandler>
