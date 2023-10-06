@@ -281,6 +281,10 @@ const themeLight = {
   nfsError: '#ED5858',
   nfsDisabled: '#DFDEE9',
   nfsDisabledText: '#AFB3BF',
+
+  // Send Notification
+  snfBorder: '#BAC4D6',
+  snfToggleBg: '#f4f5fa',
 };
 
 const themeDark = {
@@ -570,6 +574,10 @@ const themeDark = {
   nfsError: '#ED5858',
   nfsDisabled: '#AFB3BF',
   nfsDisabledText: '#787E99',
+
+  // Send Notification
+  snfBorder: '#4A4F67',
+  snfToggleBg: '#404650',
 };
 
 module.exports = {
