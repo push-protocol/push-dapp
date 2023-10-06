@@ -564,7 +564,7 @@ const themeDark = {
   snapPrimaryText:'#fff',
   snapSecondaryText:'#B6BCD6',
   snapBackground:'#404650',
-  snapBorderColor:'#787E99'
+  snapBorderColor:'#787E99',
   
   // Notification Settings
   nfsError: '#ED5858',

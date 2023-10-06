@@ -12,12 +12,13 @@ import { MdCheckCircle, MdError } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { useTheme } from 'styled-components';
+import Slider from 'react-input-slider';
 
 // Internal Compoonents
 import * as PushAPI from '@pushprotocol/restapi';
 import { postReq } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { AInlineV2, SectionV2 } from 'components/reusables/SharedStylingV2';
+import { AInlineV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
@@ -144,6 +145,7 @@ function SendNotifications() {
   const [nfInfo, setNFInfo] = useState('');
   const [nfSettingType, setNFSettingType] = useState(null);
   const [delegateeOptions, setDelegateeOptions] = useState([]);
+  const [nfSliderValue, setNfSliderValue] = useState(0);
 
   const channelDetailsFromBackend = useMemo(() => {
     if (delegatees) {
@@ -181,7 +183,7 @@ function SendNotifications() {
   }, [channelSettings]);  
 
   const openManageSettings = () => {
-    const newPageUrl = APP_PATHS.Channels; // Replace with the URL of the manage settings later
+    const newPageUrl = APP_PATHS.ChannelSettings;
   
     // Use window.open() to open the URL in a new tab
     window.open(newPageUrl, '_blank');
@@ -284,6 +286,14 @@ function SendNotifications() {
     }
     return validated;
   };
+
+  const getIndex = () => {
+    if (nfSettingType === null) return undefined;
+    else if (channelSettings[nfSettingType - 1]?.type === 1) 
+      return `${nfSettingType}-1`;
+    else if (channelSettings[nfSettingType - 1]?.type === 2)
+      return `${nfSettingType}-2-${nfSliderValue}`;
+  }
 
   const handleSendMessage = async (e) => {
     // Check everything in order
@@ -399,6 +409,7 @@ function SendNotifications() {
             body: amsg,
             cta: acta,
             img: aimg,
+            index: getIndex(),
           },
           recipients: notifRecipients, // recipient address
           channel: channelAddressInCaip, // your channel address
@@ -839,19 +850,57 @@ function SendNotifications() {
                           options={channelSettingsOptions}
                           onChange={(option) => {
                             setNFSettingType(option.value);
-                            console.log(option);
+                            if(channelSettings[option.value - 1]?.type === 2) {
+                              setNfSliderValue(channelSettings[option.value - 1]?.default);
+                            }
                           }}
                           value={channelSettingsOptions[0]}
                         />
                       </DropdownStyledParent>
                     </Item>
-                    <Input
-                      display="none"
-                      value={nfSettingType}
-                      onChange={(e) => {
-                        setNFSettingType(e.target.value);
-                      }}
-                    />
+                    {nfSettingType !== null && channelSettings[nfSettingType - 1]?.type === 2 && (
+                      <Item
+                        display="flex"
+                        direction="column"
+                        align="flex-start"
+                        flex="1"
+                        self="stretch"
+                        margin="16px 0px 7px 0px"
+                      >
+                        <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px", marginBottom: "7px" }}>
+                          Range Value
+                        </Label>
+                        <Item
+                          display="flex"
+                          direction="row"
+                          width="100%"
+                        >
+                          <Slider
+                            styles={{
+                              active: {
+                                backgroundColor: theme.sliderActiveColor
+                              },
+                              track: {
+                                height: 4,
+                                flex: 1,
+                                backgroundColor: theme.sliderTrackColor
+                              },
+                              thumb: {
+                                width: 16,
+                                height: 16
+                              }
+                            }}
+                            x={nfSliderValue}
+                            axis="x"
+                            onChange={({ x }) => setNfSliderValue(x)}
+                            xstep={1}
+                            xmin={channelSettings[nfSettingType - 1]?.lowerLimit}
+                            xmax={channelSettings[nfSettingType - 1]?.upperLimit}
+                          />
+                          <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right" margin="0px 0px 0px 10px">{nfSliderValue}</SpanV2>
+                        </Item>
+                      </Item>
+                    )}
                   </>
                 )}
 

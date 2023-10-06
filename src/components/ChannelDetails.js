@@ -30,6 +30,8 @@ import { device } from 'config/Globals';
 import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
 import { getDateFromTimestamp, nextDaysDateFromTimestamp, timeRemaining } from 'helpers/TimerHelper';
 import APP_PATHS from 'config/AppPaths';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { getChannelDelegates } from 'services';
 
 
 const DATE_FORMAT = 'DD MMM, YYYY';
@@ -56,6 +58,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const isMobile = useDeviceWidthCheck(600);
 
+  const [delegateeList, setDelegateeList] = React.useState([account]);
   const [channelAddress, setChannelAddress] = React.useState(undefined);
   const { epnsCommWriteProvider } = useSelector((state) => state.contracts);
 
@@ -121,6 +124,24 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
     }
   }, [delegatees, account]);
 
+  useEffect(() => {
+    if (account) {
+      (async () => {
+        try {
+          const channelAddressinCAIP = convertAddressToAddrCaip(account, chainId);
+          const channelDelegates = await getChannelDelegates({ channelCaipAddress: channelAddressinCAIP });
+          if (channelDelegates) {
+            const delegateeList = channelDelegates.map((delegate) => delegate);
+            delegateeList.unshift(account);
+            setDelegateeList(delegateeList);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      })();
+    }
+  }, [account]);
+
   const channelSettings = useMemo(() => {
     if (delegatees) {
       const delegatee = delegatees.find(({ channel }) => channel === channelAddress);
@@ -133,15 +154,6 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
     }
     return [];
   }, [delegatees, channelAddress]);
-
-  const delegateeList = useMemo(() => {
-    if (delegatees) {
-      return delegatees.map(({ channel, alias_address }) => {
-        return onCoreNetwork ? channel : alias_address;
-      });
-    }
-    return [];
-  });
 
   const removeDelegate = (walletAddress) => {
     return epnsCommWriteProvider.removeDelegate(walletAddress);
