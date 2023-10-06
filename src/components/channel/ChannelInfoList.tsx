@@ -11,7 +11,7 @@ import DelegateInfo from 'components/DelegateInfo';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import DelegateSettingsDropdown, { ChannelDropdownOption } from './DelegateSettingsDropdown';
 import EmptyNotificationSettings from './EmptyNotificationSettings';
-import Tag from '../reusables/tags/Tag';
+import Tag from '../reusables/labels/Tag';
 
 // Internal Configs
 import { device } from 'config/Globals';
