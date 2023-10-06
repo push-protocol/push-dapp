@@ -42,7 +42,7 @@ import PreviewNotif from './PreviewNotif';
 import { appConfig } from 'config';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import APP_PATHS from 'config/AppPaths';
-import Tag from './channel/Tag';
+import Tag from './reusables/tags/Tag';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
