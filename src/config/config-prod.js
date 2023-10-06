@@ -25,7 +25,8 @@ export const config = {
     1, //for ethereum mainnet
     137, //for polygon mainnet
     56, // for bnb mainnet
-    // 10 // for optimism mainnet
+    // 10, // for optimism mainnet
+    // 42161, // arbitrum mainnet
     1101 // polygon zkevm mainnet
   ],
 
@@ -39,7 +40,9 @@ export const config = {
   aliasRPC: {
     137: "https://polygon-mainnet.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
     56: "https://bsc-dataseed.binance.org/",
-    10: "https://opt-mainnet.g.alchemy.com/v2/JYW0UaSC5Zd0hrI6vE2K9VN1wJupoY5B"
+    10: "https://opt-mainnet.g.alchemy.com/v2/JYW0UaSC5Zd0hrI6vE2K9VN1wJupoY5B",
+    42161: "https://arb1.arbitrum.io/rpc",
+    1101: 'https://rpc.polygon-zkevm.gateway.fm',
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
 
@@ -146,6 +149,13 @@ export const CHAIN_DETAILS = {
     name: "POLYGON_ZK_EVM_MAINNET",
     chainId: 1101,
     rpcUrl: 'https://rpc.polygon-zkevm.gateway.fm',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa'
+  },
+  42161: {
+    label: "Arbitrum Mainnet",
+    name: "ARBITRUMONE_MAINNET",
+    chainId: 42161,
+    rpcUrl: 'https://arb1.arbitrum.io/rpc',
     commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa'
   }
 }

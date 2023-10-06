@@ -272,9 +272,10 @@ const themeLight = {
 
   snapUIBackground:'#F9F9F9',
   snapButtonBackground:'#1E1E1E',
-  snapPrimaryText:'',
+  snapPrimaryText:'#000',
   snapSecondaryText:'#62626a',
   snapBackground:'#F2F2F2',
+  snapBorderColor:'#BAC4D6',
 
   // Notification Settings
   nfsError: '#ED5858',
@@ -560,9 +561,10 @@ const themeDark = {
 
   snapUIBackground:'transparent',
   snapButtonBackground:'#404650',
-  snapPrimaryText:'',
-  snapSecondaryText:'#787E99',
+  snapPrimaryText:'#fff',
+  snapSecondaryText:'#B6BCD6',
   snapBackground:'#404650',
+  snapBorderColor:'#787E99'
   
   // Notification Settings
   nfsError: '#ED5858',

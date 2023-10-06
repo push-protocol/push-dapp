@@ -26,31 +26,43 @@ const Faucets = () => {
       id: "5",
       value: "Goerli",
       title: "Goerli Faucet",
+      function: () => {},
       link: "https://goerlifaucet.com/",
     },
     {
       id: "80001",
       value: "Polygon",
       title: "Mumbai Faucet",
+      function: () => {},
       link: "https://faucet.polygon.technology/",
     },
     {
       id: "97",
       value: "BNB",
       title: "BNB Faucet",
+      function: () => {},
       link: "https://testnet.bnbchain.org/faucet-smart",
     },
     {
       id: "420",
       value: "Optimism",
       title: "Optimism Goerli Faucet",
+      function: () => {},
       link: "https://faucet.quicknode.com/optimism/goerli",
     },
     {
       id: "1442",
       value: "Polygon zkEVM",
       title: "Polygon zkEVM Bridge",
+      function: () => {},
       link: "https://public.zkevm-test.net/"
+    },
+    {
+      id: "421613",
+      value: "Arbitrum",
+      title: "Arbitrum Testnet Faucet",
+      function: () => {},
+      link: "https://faucet.quicknode.com/arbitrum/goerli"
     }
   ];
 

@@ -38,7 +38,7 @@ const SnapModule = () => {
   useEffect(() => {
     getInstalledSnaps();
     getWalletAddresses();
-  },[account,walletConnected]);
+  }, [account, walletConnected]);
 
   async function getInstalledSnaps() {
     const installedSnaps = await window.ethereum.request({
@@ -66,7 +66,7 @@ const SnapModule = () => {
     console.log(walletConnected);
     if (result.includes(account)) {
       setAddedAddress(true);
-    }else{
+    } else {
       setAddedAddress(false);
     }
   }
@@ -85,7 +85,6 @@ const SnapModule = () => {
 
   async function connectToMetaMask() {
     setLoading(true);
-
     try {
       if (!snapInstalled) {
         await connectSnap();
@@ -141,6 +140,8 @@ const SnapModule = () => {
     showMetamaskPushSnap();
   };
 
+  const theme = useTheme();
+
   return (
     <Container>
       <AboutPushSnapModalComponent
@@ -171,7 +172,7 @@ const SnapModule = () => {
               <H2V2
                 fontSize="34px"
                 fontWeight="500"
-                color="#1E1E1E"
+                color={theme.snapPrimaryText}
                 letterSpacing="-1.02px"
               >
                 Push Snap
@@ -179,7 +180,7 @@ const SnapModule = () => {
               <SpanV2
                 fontSize="12px"
                 fontWeight="400"
-                color="#657795"
+                color={theme.modalIconColor}
               >
                 powered by MetaMask
               </SpanV2>
@@ -191,14 +192,14 @@ const SnapModule = () => {
                   <SpanV2
                     fontSize="14px"
                     fontWeight="400"
-                    color="#000"
+                    color={theme.snapSecondaryText}
                   >
                     Get started by opting in to channels on Push.{' '}
                   </SpanV2>
                   <SpanV2
                     fontSize="14px"
                     fontWeight="400"
-                    color="#000"
+                    color={theme.snapSecondaryText}
                   >
                     Once you opt-in you will receive notifications on MetaMask.
                   </SpanV2>
@@ -207,7 +208,7 @@ const SnapModule = () => {
                 <SpanV2
                   fontSize="14px"
                   fontWeight="400"
-                  color="#000"
+                  color={theme.snapSecondaryText}
                 >
                   You’re about to install Push Snap which allows you to receive notifications from Push directly on
                   MetaMask!
@@ -247,7 +248,8 @@ const SnapModule = () => {
           )}
 
           {walletConnected || addedAddress ? (
-            <ItemHV2 gap="12px">
+            <ButtonContainer gap="12px" >
+
               <SettingsButton onClick={handleSettingsClick}>
                 <Gear
                   height="20px"
@@ -256,7 +258,7 @@ const SnapModule = () => {
                 Settings
               </SettingsButton>
               <FilledButton onClick={() => (window.location.href = '/channels')}>Get Started</FilledButton>
-            </ItemHV2>
+            </ButtonContainer>
           ) : (
             <InfoDiv
               gap="7px"
@@ -267,7 +269,7 @@ const SnapModule = () => {
                 width={16}
               />
               <SpanV2
-                color="#657795"
+                color={theme.modalIconColor}
                 fontSize="14px"
                 fontWeight="400"
               >
@@ -298,6 +300,17 @@ const Container = styled(Section)`
   padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
   position: relative;
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
+  @media ${device.laptop} {
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+    width: calc(100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
+  }
+    
+  @media ${device.mobileL} {
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+    width: calc(100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
+  }
 `;
 
 const SubContainer = styled(Section)`
@@ -306,8 +319,12 @@ const SubContainer = styled(Section)`
   padding: 48px 24px;
   border-radius: 32px;
   background: #fff;
+  background: ${(props) => props.theme.default.bg};
   box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.05);
   margin: 24px auto;
+  @media ${device.mobileL} {
+    width: 330px;
+  }
 `;
 
 const SnapButton = styled(ButtonV2)`
@@ -328,6 +345,10 @@ const SnapButton = styled(ButtonV2)`
   @media (max-width: 600px) {
     font-size: 14px;
   }
+
+  
+
+
 `;
 
 const ConnectButton = styled(SnapButton)`
@@ -335,6 +356,8 @@ const ConnectButton = styled(SnapButton)`
   padding: 16px 24px;
   background: #d53a94;
   border: 1px solid #d53a94;
+
+  
 `;
 
 const SettingsButton = styled(SnapButton)`
@@ -343,19 +366,31 @@ const SettingsButton = styled(SnapButton)`
   text-align: center;
   width: 135px;
   padding: 16px 24px;
-  border: 1px solid #bac4d6;
+  border: 1px solid ${(props)=>props.theme.snapBorderColor};
   background: ${(props) => props.theme.default.bg};
   gap: 4px;
+
+  @media ${device.mobileL} {
+    min-width: 246px;
+  }
 `;
 
 const FilledButton = styled(SnapButton)`
   width: 135px;
   padding: 16px 24px;
   background: #d53a94;
+
+  @media ${device.mobileL} {
+   min-width: 246px;
+  }
 `;
 
 const InfoDiv = styled(ItemHV2)`
   cursor: pointer;
 `;
 
-const ButtonContainer = styled(ItemHV2)``;
+const ButtonContainer = styled(ItemHV2)`
+@media ${device.mobileL} {
+  flex-direction:column;
+}
+`;
