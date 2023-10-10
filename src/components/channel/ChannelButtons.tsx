@@ -50,7 +50,7 @@ export const AddSettingButton = ({ onClick }: ChannelButtonProps) => {
 };
 
 const ChannelButton = styled(Button)`
-  height: 36px;
+  min-height: 36px;
   background: ${(props) => props.theme.default.primaryPushThemeTextColor};
   color: #fff;
   z-index: 0;
@@ -63,7 +63,7 @@ const ChannelButton = styled(Button)`
 `;
 
 const ChannelButtonWhite = styled.button`
-  height: 36px;
+  min-height: 36px;
   border: 1px solid ${(props) => props.theme.default.borderColor};
   background: transparent;
   color: white;

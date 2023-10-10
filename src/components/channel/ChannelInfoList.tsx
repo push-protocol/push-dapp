@@ -11,6 +11,7 @@ import DelegateInfo from 'components/DelegateInfo';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import DelegateSettingsDropdown, { ChannelDropdownOption } from './DelegateSettingsDropdown';
 import EmptyNotificationSettings from './EmptyNotificationSettings';
+import Tag from '../reusables/labels/Tag';
 
 // Internal Configs
 import { device } from 'config/Globals';
@@ -135,15 +136,6 @@ const DelegatesList = styled.div<{ isLoading: boolean }>`
     flex: 0;
     padding: ${(props) => (props.isLoading ? '0px' : '0px 16px 10px')};
   }
-`;
-
-const Tag = styled.div`
-  padding: 4px 8px 4px 8px;
-  border-radius: 4px;
-  background-color: ${(props) => props.theme.default.secondaryBg};
-  color: ${(props) => props.theme.tooltipContentDesc};
-  font-size: 10px;
-  margin-left: 8px;
 `;
 
 const NotificationSettingName = styled.span`

@@ -12,12 +12,13 @@ import { MdCheckCircle, MdError } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { useTheme } from 'styled-components';
+import Slider from 'react-input-slider';
 
 // Internal Compoonents
 import * as PushAPI from '@pushprotocol/restapi';
 import { postReq } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { AInlineV2, SectionV2 } from 'components/reusables/SharedStylingV2';
+import { AInlineV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
@@ -41,6 +42,7 @@ import PreviewNotif from './PreviewNotif';
 import { appConfig } from 'config';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import APP_PATHS from 'config/AppPaths';
+import Tag from './reusables/labels/Tag';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -144,6 +146,7 @@ function SendNotifications() {
   const [nfInfo, setNFInfo] = useState('');
   const [nfSettingType, setNFSettingType] = useState(null);
   const [delegateeOptions, setDelegateeOptions] = useState([]);
+  const [nfSliderValue, setNfSliderValue] = useState(0);
 
   const channelDetailsFromBackend = useMemo(() => {
     if (delegatees) {
@@ -166,12 +169,21 @@ function SendNotifications() {
   }, [channelDetailsFromBackend]);  
 
   const channelSettingsOptions = useMemo(() => {
-    const defaultOption = { label: 'Default', value: null };
+    const defaultOption = { label: 'Default', value: null, isRange: false };
   
     if (channelSettings) {
-      const settingsOptions = channelSettings.map(setting => ({
-        label: setting.description,
+      const settingsOptions = channelSettings.map((setting) => ({
+        label:
+          setting.type === 2 ? (
+            <DropdownLabel>
+              <div>{setting.description}</div>
+              <Tag>Range</Tag>
+            </DropdownLabel>
+          ) : (
+            setting.description
+          ),
         value: setting.index,
+        isRange: setting.type === 2,
       }));
   
       return [defaultOption, ...settingsOptions];
@@ -181,7 +193,7 @@ function SendNotifications() {
   }, [channelSettings]);  
 
   const openManageSettings = () => {
-    const newPageUrl = APP_PATHS.Channels; // Replace with the URL of the manage settings later
+    const newPageUrl = APP_PATHS.ChannelSettings;
   
     // Use window.open() to open the URL in a new tab
     window.open(newPageUrl, '_blank');
@@ -284,6 +296,14 @@ function SendNotifications() {
     }
     return validated;
   };
+
+  const getIndex = () => {
+    if (nfSettingType === null) return undefined;
+    else if (channelSettings[nfSettingType - 1]?.type === 1) 
+      return `${nfSettingType}-1`;
+    else if (channelSettings[nfSettingType - 1]?.type === 2)
+      return `${nfSettingType}-2-${nfSliderValue}`;
+  }
 
   const handleSendMessage = async (e) => {
     // Check everything in order
@@ -399,6 +419,7 @@ function SendNotifications() {
             body: amsg,
             cta: acta,
             img: aimg,
+            index: getIndex(),
           },
           recipients: notifRecipients, // recipient address
           channel: channelAddressInCaip, // your channel address
@@ -610,7 +631,7 @@ function SendNotifications() {
                           weight={isMobile ? "500" : "600"}
                           textTransform="none"
                           size={isMobile ? "15px" : "14px"}
-                          color="#1E1E1E"
+                          color={theme.default.color}
                           padding="5px 15px"
                           radius="30px">
                           Title
@@ -623,7 +644,7 @@ function SendNotifications() {
                           weight={isMobile ? "500" : "600"}
                           textTransform="none"
                           size={isMobile ? "15px" : "14px"}
-                          color="#1E1E1E"
+                          color={theme.default.color}
                           padding="5px 15px"
                           radius="30px">
                           Media URL
@@ -636,7 +657,7 @@ function SendNotifications() {
                          weight={isMobile ? "500" : "600"}
                          textTransform="none"
                          size={isMobile ? "15px" : "14px"}
-                          color="#1E1E1E"
+                          color={theme.default.color}
                           padding="5px 15px"
                           radius="30px">
                           CTA Link
@@ -656,10 +677,11 @@ function SendNotifications() {
                       padding="12px"
                       weight="400"
                       size="16px"
-                      bg="white"
+                      color={theme.default.color}
+                      bg={theme.default.bg}
                       height="25px"
                       margin="7px 0px 0px 0px"
-                      border="1px solid #BAC4D6"
+                      border={`1px solid ${theme.snfBorder}`}
                       focusBorder="1px solid #657795"
                       radius="12px"
                       value={nfRecipient}
@@ -691,10 +713,11 @@ function SendNotifications() {
                         padding="12px"
                         weight="400"
                         size="16px"
-                        bg="white"
+                        color={theme.default.color}
+                        bg={theme.default.bg}
                         height="25px"
                         margin="7px 0px 0px 0px"
-                        border="1px solid #BAC4D6"
+                        border={`1px solid ${theme.snfBorder}`}
                         focusBorder="1px solid #657795"
                         radius="12px"
                         value={tempRecipeint}
@@ -744,10 +767,11 @@ function SendNotifications() {
                       padding="12px"
                       weight="400"
                       size="16px"
-                      bg="white"
+                      color={theme.default.color}
+                      bg={theme.default.bg}
                       height="25px"
                       margin="7px 0px 0px 0px"
-                      border="1px solid #BAC4D6"
+                      border={`1px solid ${theme.snfBorder}`}
                       focusBorder="1px solid #657795"
                       radius="12px"
                       value={nfSub}
@@ -788,10 +812,11 @@ function SendNotifications() {
                       padding="12px"
                       weight="400"
                       margin="7px 0px 0px 0px"
-                      border="1px solid #BAC4D6"
+                      border={`1px solid ${theme.snfBorder}`}
                       focusBorder="1px solid #657795"
                       radius="12px"
-                      bg="#fff"
+                      color={theme.default.color}
+                      bg={theme.default.bg}
                       overflow="auto"
                       value={nfMsg}
                       onChange={(e) => {
@@ -839,19 +864,57 @@ function SendNotifications() {
                           options={channelSettingsOptions}
                           onChange={(option) => {
                             setNFSettingType(option.value);
-                            console.log(option);
+                            if(channelSettings[option.value - 1]?.type === 2) {
+                              setNfSliderValue(channelSettings[option.value - 1]?.default);
+                            }
                           }}
                           value={channelSettingsOptions[0]}
                         />
                       </DropdownStyledParent>
                     </Item>
-                    <Input
-                      display="none"
-                      value={nfSettingType}
-                      onChange={(e) => {
-                        setNFSettingType(e.target.value);
-                      }}
-                    />
+                    {nfSettingType !== null && channelSettings[nfSettingType - 1]?.type === 2 && (
+                      <Item
+                        display="flex"
+                        direction="column"
+                        align="flex-start"
+                        flex="1"
+                        self="stretch"
+                        margin="16px 0px 7px 0px"
+                      >
+                        <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px", marginBottom: "7px" }}>
+                          Range Value
+                        </Label>
+                        <Item
+                          display="flex"
+                          direction="row"
+                          width="100%"
+                        >
+                          <Slider
+                            styles={{
+                              active: {
+                                backgroundColor: theme.sliderActiveColor
+                              },
+                              track: {
+                                height: 4,
+                                flex: 1,
+                                backgroundColor: theme.sliderTrackColor
+                              },
+                              thumb: {
+                                width: 16,
+                                height: 16
+                              }
+                            }}
+                            x={nfSliderValue}
+                            axis="x"
+                            onChange={({ x }) => setNfSliderValue(x)}
+                            xstep={1}
+                            xmin={channelSettings[nfSettingType - 1]?.lowerLimit}
+                            xmax={channelSettings[nfSettingType - 1]?.upperLimit}
+                          />
+                          <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right" margin="0px 0px 0px 10px">{nfSliderValue}</SpanV2>
+                        </Item>
+                      </Item>
+                    )}
                   </>
                 )}
 
@@ -864,10 +927,11 @@ function SendNotifications() {
                       padding="12px"
                       weight="400"
                       size="16px"
-                      bg="white"
+                      color={theme.default.color}
+                      bg={theme.default.bg}
                       height="25px"
                       margin="7px 0px 0px 0px"
-                      border="1px solid #BAC4D6"
+                      border={`1px solid ${theme.snfBorder}`}
                       focusBorder="1px solid #657795"
                       radius="12px"
                       value={nfMedia}
@@ -888,10 +952,11 @@ function SendNotifications() {
                       padding="12px"
                       weight="400"
                       size="16px"
-                      bg="white"
+                      color={theme.default.color}
+                      bg={theme.default.bg}
                       height="25px"
                       margin="7px 0px 0px 0px"
-                      border="1px solid #BAC4D6"
+                      border={`1px solid ${theme.snfBorder}`}
                       radius="12px"
                       focusBorder="1px solid #657795"
                       value={nfCTA}
@@ -1069,9 +1134,9 @@ const Label = styled.div`
 
 const DropdownStyled = styled(Dropdown)`
   .Dropdown-control {
-    background-color: white;
-    color: #000;
-    border: 1px solid #bac4d6;
+    background-color: ${(props) => props.theme.default.bg};
+    color: ${(props) => props.theme.default.color};
+    border: 1px solid ${(props) => props.theme.snfBorder};
     border-radius: 12px;
     flex: 1;
     outline: none;
@@ -1102,14 +1167,14 @@ const DropdownStyled = styled(Dropdown)`
   }
 
   .Dropdown-option {
-    background-color: #fff;
-    color: #000;
+    background-color: ${(props) => props.theme.default.bg};
+    color: ${(props) => props.theme.default.color};
     font-size: 16px;
     padding: 20px 20px;
   }
   .Dropdown-option:hover {
     background-color: #d00775;
-    color: #000;
+    color: white;
   }
 `;
 
@@ -1156,7 +1221,7 @@ const CustomDropdownItem = styled.div`
     margin-right: 10px;
   }
   div {
-    color: black;
+    color: ${(props) => props.theme.default.color};
     font-size: 16px;
     letter-spacing: 2px;
   }
@@ -1189,7 +1254,7 @@ const ToggleOption = styled(ItemH)`
   box-sizing: border-box;
   margin: 15px 0px;
   width: 10em;
-  background: #f4f5fa;
+  background: ${(props) => props.theme.snfToggleBg};
   flex: none;
   padding: 15px;
   border-radius: 20px;
@@ -1216,6 +1281,12 @@ const SubmitButton = styled(Button)`
   @media (max-width: 380px) {
     width: 9.5rem;
   }
+`;
+
+const DropdownLabel = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
 
 // Export Default

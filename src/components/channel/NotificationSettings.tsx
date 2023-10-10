@@ -92,7 +92,27 @@ function NotificationSettings() {
       if (delegatee) {
         const { channel_settings } = delegatee;
         if (channel_settings !== null) {
-          const settings = JSON.parse(channel_settings);
+          const parsedData = JSON.parse(channel_settings);
+          const settings: ChannelSetting[] = parsedData.map((setting: any) => {
+            if(setting.type === 1) {
+              return {
+                type: 1,
+                isDefaultEnabled: setting.default,
+                description: setting.description,
+                index: setting.index,
+              }
+            } else {
+              return {
+                type: 2,
+                isDefaultEnabled: setting.enabled === 1 ? true : false,
+                defaultValue: setting.default,
+                description: setting.description,
+                index: setting.index,
+                lowerLimit: setting.lowerLimit,
+                upperLimit: setting.upperLimit,
+              }
+            }
+          });
           setSettings(settings);
           setCurrentSettings(settings);
           setIsLoadingSettings(false);
@@ -144,10 +164,11 @@ function NotificationSettings() {
       settings.forEach((setting) => {
         if (_notifSettings !== '') _notifSettings += '+';
         if (_notifDescription !== '') _notifDescription += '+';
+        const isEnabled = setting.isDefaultEnabled ? '1' : '0';
         if (setting.type === 1) {
-          _notifSettings += `${setting.type}-${setting.default ? '1' : '0'}`;
+          _notifSettings += `${setting.type}-${isEnabled}`;
         } else if (setting.type === 2) {
-          _notifSettings += `${setting.type}-${setting.default}-${setting.lowerLimit}-${setting.upperLimit}`;
+          _notifSettings += `${setting.type}-${isEnabled}-${setting.defaultValue}-${setting.lowerLimit}-${setting.upperLimit}`;
         }
         _notifDescription += setting.description;
       });
@@ -212,7 +233,6 @@ function NotificationSettings() {
 
   const settingsChanged = useMemo(() => {
     if (!settings || !currentSettings) return false;
-    console.log('Settings changed bro', settings, currentSettings);
     if (settings.length !== currentSettings.length) return true;
     let isUnchanged = true;
     for (let i = 0; i < settings.length; i++) {
@@ -223,13 +243,14 @@ function NotificationSettings() {
           isUnchanged &&
           setting1.type === setting2.type &&
           setting1.description === setting2.description &&
-          setting1.default === setting2.default;
+          setting1.isDefaultEnabled === setting2.isDefaultEnabled;
       } else if (setting1.type === 2) {
         isUnchanged =
           isUnchanged &&
           setting1.type === setting2.type &&
           setting1.description === setting2.description &&
-          setting1.default === setting2.default &&
+          setting1.defaultValue === setting2.defaultValue &&
+          setting1.isDefaultEnabled === setting2.isDefaultEnabled &&
           setting1.lowerLimit === setting2.lowerLimit &&
           setting1.upperLimit === setting2.upperLimit;
       }
@@ -252,7 +273,7 @@ function NotificationSettings() {
         isLoading={isLoadingSettings}
         items={settings}
         onClickEmptyListButton={showAddSettingModal}
-        emptyListButtonTitle='Add Setting'
+        emptyListButtonTitle="Add Setting"
         settingsDropdownOptions={[
           {
             icon: <PiPencilSimpleBold />,

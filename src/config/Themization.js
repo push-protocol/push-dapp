@@ -272,14 +272,19 @@ const themeLight = {
 
   snapUIBackground:'#F9F9F9',
   snapButtonBackground:'#1E1E1E',
-  snapPrimaryText:'',
+  snapPrimaryText:'#000',
   snapSecondaryText:'#62626a',
   snapBackground:'#F2F2F2',
+  snapBorderColor:'#BAC4D6',
 
   // Notification Settings
   nfsError: '#ED5858',
   nfsDisabled: '#DFDEE9',
   nfsDisabledText: '#AFB3BF',
+
+  // Send Notification
+  snfBorder: '#BAC4D6',
+  snfToggleBg: '#f4f5fa',
 };
 
 const themeDark = {
@@ -560,14 +565,19 @@ const themeDark = {
 
   snapUIBackground:'transparent',
   snapButtonBackground:'#404650',
-  snapPrimaryText:'',
-  snapSecondaryText:'#787E99',
+  snapPrimaryText:'#fff',
+  snapSecondaryText:'#B6BCD6',
   snapBackground:'#404650',
+  snapBorderColor:'#787E99',
   
   // Notification Settings
   nfsError: '#ED5858',
   nfsDisabled: '#AFB3BF',
   nfsDisabledText: '#787E99',
+
+  // Send Notification
+  snfBorder: '#4A4F67',
+  snfToggleBg: '#404650',
 };
 
 module.exports = {

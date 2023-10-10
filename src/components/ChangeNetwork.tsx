@@ -52,7 +52,7 @@ const ChangeNetwork = () => {
           color="#fff"
           radius="15px"
           padding="20px 20px"
-          onClick={() => switchChain(appConfig.coreContractChain)}
+          onClick={() => switchChain(aliasChainId)}
         >
           <Span
             color="#fff"

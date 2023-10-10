@@ -173,6 +173,10 @@ export default UserSettings;
 const Container = styled.div`
   padding: 32px 24px;
   flex: 1;
+
+  @media ${device.tablet} {
+    padding: 24px 12px;
+  }
 `;
 
 const PageTitle = styled.div`
