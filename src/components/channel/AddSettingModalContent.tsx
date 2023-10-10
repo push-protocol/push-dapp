@@ -67,8 +67,9 @@ const AddSettingModalContent = ({
   const [isLoading, setIsLoading] = useState(false);
   const [settingName, setSettingName] = useState(settingToEdit ? settingToEdit.description : '');
   const [isDefault, setIsDefault] = useState<boolean>(
-    settingToEdit &&
-      ((settingToEdit.type === 1 && settingToEdit.default) || (settingToEdit.type === 2 && settingToEdit.enabled))
+    settingToEdit
+      ? (settingToEdit.type === 1 && settingToEdit.default) || (settingToEdit.type === 2 && settingToEdit.enabled)
+      : true
   );
   const [isRange, setIsRange] = useState<boolean>(settingToEdit && settingToEdit.type === 2 ? true : false);
   const [lowerLimit, setLowerLimit] = useState<string>(
