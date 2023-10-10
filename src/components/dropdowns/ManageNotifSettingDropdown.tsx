@@ -52,28 +52,28 @@ const ManageNotifSettingDropdownContainer: React.FC<ManageNotifSettingDropdownCo
 
   return (
     <DropdownOuterContainer>
-      {channelSetting &&
-      <DropdownInnerContainer>
-        
-          <UpdateNotifSettingDropdown 
-            centerOnMobile={centerOnMobile} 
-            channelDetail={channelDetail}
-            userSetting={userSetting}
-            channelSetting={channelSetting}
-            onSuccessSave={closeDropdown}
-          >
-              <DropdownBtn flexDirection="row">
-                  <ImageV2
-                      width="20px"
-                      height="20px"
-                      src="svg/manageSettings.svg"
-                      alt="Settings Logo"
-                  />
-                  <SpanV2 color={theme.viewChannelPrimaryText} fontWeight={500} fontSize="14px">Manage Settings</SpanV2>
-              </DropdownBtn>
-          </UpdateNotifSettingDropdown>
-        
-      </DropdownInnerContainer>
+      {(channelSetting && channelSetting.length != 0) &&
+        <DropdownInnerContainer>
+          
+            <UpdateNotifSettingDropdown 
+              centerOnMobile={centerOnMobile} 
+              channelDetail={channelDetail}
+              userSetting={userSetting}
+              channelSetting={channelSetting}
+              onSuccessSave={closeDropdown}
+            >
+                <DropdownBtn flexDirection="row">
+                    <ImageV2
+                        width="20px"
+                        height="20px"
+                        src="svg/manageSettings.svg"
+                        alt="Settings Logo"
+                    />
+                    <SpanV2 color={theme.viewChannelPrimaryText} fontWeight={500} fontSize="14px">Manage Settings</SpanV2>
+                </DropdownBtn>
+            </UpdateNotifSettingDropdown>
+          
+        </DropdownInnerContainer>
 }
       <DropdownBtn flexDirection="row" onClick={() => optOutHandler({ setLoading: setTxInProgress })}>
         <ImageV2

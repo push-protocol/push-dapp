@@ -226,7 +226,7 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
 
   // render
   return (
-      channelSetting ? 
+      (channelSetting && channelSetting.length) ? 
       <DropdownBtnHandler
         centerOnMobile={true}
         showDropdown={isOpen}

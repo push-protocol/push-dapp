@@ -85,7 +85,7 @@ const UpdateNotifSettingDropdownContainer: React.FC<UpdateNotifSettingDropdownCo
                     handleDiameter={12}
                 />
             </DropdownSwitchItem>
-          {setting.type === 2 && setting.enabled && (
+          {setting.type === 2 && setting.enabled === true && (
             <DropdownSliderItem>
                 <Slider
                     styles={{
@@ -283,7 +283,7 @@ const DropdownSubmitButton = styled.button`
     outline: 0;
     display: flex;
     align-items: center;
-    min-width: max-content;
+    min-width: 90px;
     justify-content: center;
     margin: 0px 0px 0px 10px;
     color: #fff;

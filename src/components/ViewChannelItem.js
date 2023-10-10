@@ -1362,6 +1362,9 @@ const UnsubscribeButton = styled(ChannelActionButton)`
 
 const OwnerButton = styled(ChannelActionButton)`
   background: #35c5f3;
+  border-radius: 8px;
+  min-height: 36px;
+  min-width: 108px;
 `;
 
 const Toaster = styled.div`
