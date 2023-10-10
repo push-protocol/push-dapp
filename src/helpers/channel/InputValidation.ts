@@ -91,6 +91,5 @@ export const isAllFilledAndValid = ({
       }
     }
   }
-  console.log('Has error', hasError);
   return !hasError;
 };

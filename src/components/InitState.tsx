@@ -27,6 +27,7 @@ import {
   setUserChannelDetails,
 } from 'redux/slices/adminSlice';
 import { setProcessingState } from 'redux/slices/channelCreationSlice';
+import { updateBulkChannelSettings } from 'redux/slices/channelSlice';
 import { setPushAdmin } from 'redux/slices/contractSlice';
 import { getChannelsSearch, getUserDelegations } from 'services';
 import * as PushAPI from '@pushprotocol/restapi';
@@ -175,6 +176,12 @@ const InitState = () => {
         }
         const channelInformation = await Promise.all(channelInformationPromise);
         dispatch(setDelegatees(channelInformation));
+        // get channel settings of all the channels
+        const channelSettings = {};
+        for (const channel of channelInformation) {
+          channelSettings[channel.channel] = channel.channel_settings ? JSON.parse(channel.channel_settings) : [];
+        }
+        dispatch(updateBulkChannelSettings(channelSettings));
       } else {
         dispatch(setDelegatees([]));
       }

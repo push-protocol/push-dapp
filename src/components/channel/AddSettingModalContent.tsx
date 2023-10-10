@@ -66,7 +66,10 @@ const AddSettingModalContent = ({
   const settingToEdit = InnerComponentProps?.settingToEdit || undefined;
   const [isLoading, setIsLoading] = useState(false);
   const [settingName, setSettingName] = useState(settingToEdit ? settingToEdit.description : '');
-  const [isDefault, setIsDefault] = useState<boolean>(settingToEdit && settingToEdit.isDefaultEnabled === true);
+  const [isDefault, setIsDefault] = useState<boolean>(
+    settingToEdit &&
+      ((settingToEdit.type === 1 && settingToEdit.default) || (settingToEdit.type === 2 && settingToEdit.enabled))
+  );
   const [isRange, setIsRange] = useState<boolean>(settingToEdit && settingToEdit.type === 2 ? true : false);
   const [lowerLimit, setLowerLimit] = useState<string>(
     settingToEdit && settingToEdit.type === 2 ? settingToEdit.lowerLimit.toString() : ''
@@ -75,7 +78,7 @@ const AddSettingModalContent = ({
     settingToEdit && settingToEdit.type === 2 ? settingToEdit.upperLimit.toString() : ''
   );
   const [defaultValue, setDefaultValue] = useState<string>(
-    settingToEdit && settingToEdit.type === 2 ? settingToEdit.defaultValue.toString() : ''
+    settingToEdit && settingToEdit.type === 2 ? settingToEdit.default.toString() : ''
   );
   const [errorInfo, setErrorInfo] = useState<any>();
 
@@ -103,8 +106,8 @@ const AddSettingModalContent = ({
       const settingData: ChannelSetting = isRange
         ? {
             type: 2,
-            defaultValue: Number(defaultValue),
-            isDefaultEnabled: isDefault,
+            default: Number(defaultValue),
+            enabled: isDefault,
             description: settingName,
             index: index,
             lowerLimit: Number(lowerLimit),
@@ -112,7 +115,7 @@ const AddSettingModalContent = ({
           }
         : {
             type: 1,
-            isDefaultEnabled: isDefault,
+            default: isDefault,
             description: settingName,
             index: index,
           };
