@@ -59,6 +59,7 @@ const DropdownContainer = styled(ItemHV2)<{ containerPadding?: string, centerOnM
     border:1px solid;
     border-color:${(props)=>props.theme.settingsModalBorderColor};
     border-radius: 8px;
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.05);
     align-items:flex-start;
     padding: ${props => props.containerPadding ? props.containerPadding : '7px 14px'};
     position:absolute;

@@ -44,6 +44,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
     canVerify,
     aliasDetails: { isAliasVerified, aliasAddrFromContract },
   } = useSelector((state) => state.admin);
+  const { channelSettings } = useSelector((state) => state.channels); 
 
   const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector((state) => state.channels);
   const { processingState } = useSelector((state) => state.channelCreation);
@@ -141,19 +142,6 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
       })();
     }
   }, [account]);
-
-  const channelSettings = useMemo(() => {
-    if (delegatees) {
-      const delegatee = delegatees.find(({ channel }) => channel === channelAddress);
-      if (delegatee) {
-        const { channel_settings } = delegatee;
-        if (channel_settings !== null) {
-          return JSON.parse(channel_settings);
-        }
-      }
-    }
-    return [];
-  }, [delegatees, channelAddress]);
 
   const removeDelegate = (walletAddress) => {
     return epnsCommWriteProvider.removeDelegate(walletAddress);
@@ -335,7 +323,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
               <ChannelInfoList
                 account={account}
                 isAddress={false}
-                items={channelSettings}
+                items={channelSettings[account]}
                 isLoading={false}
                 onClickEmptyListButton={navigateToNotifSettings}
                 emptyListButtonTitle='Add Setting'

@@ -14,6 +14,8 @@ const initialState = {
   channels: [], // the channels meta-data
   subscriptionStatus: {}, // a mapping of channel address to user's subscription status
   channelsCache: {}, // a mapping of channel address to channel details
+  channelSettings: {}, // a mapping of channel address to channel settings
+  userSettings: {}, // a mapping of channel address to user settings
 };
 
 export const channelSlice = createSlice({
@@ -48,7 +50,24 @@ export const channelSlice = createSlice({
     updateSubscriptionStatus: (state, action) => {
       const { channelAddress, status } = action.payload;
       state.subscriptionStatus[channelAddress] = status;
-    }
+    },
+    updateBulkUserSettings: (state, action) => {
+      state.userSettings = action.payload;
+    },
+    updateUserSetting: (state, action) => {
+      const { channelAddress, settings } = action.payload;
+      state.userSettings[channelAddress] = settings;
+    },
+    removeUserSetting: (state, action) => {
+      delete state.userSettings[action.payload];
+    },
+    updateBulkChannelSettings: (state, action) => {
+      state.channelSettings = action.payload;
+    },
+    updateChannelSetting: (state, action) => {
+      const { channelAddress, settings } = action.payload;
+      state.channelSettings[channelAddress] = settings;
+    },
   },
 });
 
@@ -60,7 +79,12 @@ export const {
   cacheSubscribe,
   cacheUnsubscribe,
   updateBulkSubscriptions,
-  updateSubscriptionStatus
+  updateSubscriptionStatus,
+  updateBulkUserSettings,
+  updateUserSetting,
+  removeUserSetting,
+  updateBulkChannelSettings,
+  updateChannelSetting,
 } = channelSlice.actions;
 
 export default channelSlice.reducer;
