@@ -138,7 +138,7 @@ function NotificationSettings() {
       const parsedFees = ethers.utils.parseUnits(feesRequiredForEdit.toString(), 18);
 
       notificationToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
-      const notifOptions = ethers.utils.parseUnits('2', 18);
+      const notifOptions = settings.length;
       let _notifSettings = '';
       let _notifDescription = '';
       settings.forEach((setting) => {

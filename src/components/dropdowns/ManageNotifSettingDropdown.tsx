@@ -1,8 +1,8 @@
 // React + Web3 Essentials
-import React, { useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 
 // External Packages
-import styled, { useTheme } from "styled-components";
+import styled, { css, useTheme } from "styled-components";
 
 // Internal Components
 import { DropdownBtnHandler } from "./DropdownBtnHandler";
@@ -10,46 +10,109 @@ import UpdateNotifSettingDropdown from "./UpdateNotifSettingDropdown";
 
 // Internal Configs
 import { ImageV2, SpanV2 } from "components/reusables/SharedStylingV2";
+import { useAccount } from "hooks";
+import { AppContext } from "contexts/AppContext";
+import useToast from "hooks/useToast";
+import { appConfig } from "config";
+import { MdCheckCircle, MdError } from "react-icons/md";
+import LoaderSpinner, { LOADER_TYPE } from "components/reusables/loaders/LoaderSpinner";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import { ChannelSetting, UserSetting } from "helpers/channel/types";
 
 interface ManageNotifSettingDropdownProps {
   children: React.ReactNode;
   centerOnMobile: boolean;
+  channelDetail: any;
+  userSetting?: UserSetting[];
+  onSuccessOptout: () => void;
 }
 
-const ManageNotifSettingDropdownContainer: React.FC<{centerOnMobile: boolean}> = ({centerOnMobile}) => {
+interface ManageNotifSettingDropdownContainerProps {
+  centerOnMobile: boolean;
+  userSetting?: UserSetting[];
+  channelSetting?: ChannelSetting[];
+  channelDetail: any;
+  optOutHandler: (options: { setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => Promise<void>;
+  closeDropdown: () => void;
+}
+
+const ManageNotifSettingDropdownContainer: React.FC<ManageNotifSettingDropdownContainerProps> = ({ 
+  centerOnMobile,
+  optOutHandler,
+  channelSetting,
+  channelDetail,
+  userSetting,
+  closeDropdown
+}) => {
+  const [txInProgress, setTxInProgress] = useState(false);
 
   const theme = useTheme();
 
   return (
     <DropdownOuterContainer>
+      {channelSetting &&
       <DropdownInnerContainer>
-        <UpdateNotifSettingDropdown centerOnMobile={centerOnMobile}>
-            <DropdownBtn flexDirection="row">
-                <ImageV2
-                    width="20px"
-                    height="20px"
-                    src="svg/manageSettings.svg"
-                    alt="Settings Logo"
-                />
-                <SpanV2 color={theme.viewChannelPrimaryText} fontWeight={500} fontSize="14px">Manage Settings</SpanV2>
-            </DropdownBtn>
-        </UpdateNotifSettingDropdown>
+        
+          <UpdateNotifSettingDropdown 
+            centerOnMobile={centerOnMobile} 
+            channelDetail={channelDetail}
+            userSetting={userSetting}
+            channelSetting={channelSetting}
+            onSuccessSave={closeDropdown}
+          >
+              <DropdownBtn flexDirection="row">
+                  <ImageV2
+                      width="20px"
+                      height="20px"
+                      src="svg/manageSettings.svg"
+                      alt="Settings Logo"
+                  />
+                  <SpanV2 color={theme.viewChannelPrimaryText} fontWeight={500} fontSize="14px">Manage Settings</SpanV2>
+              </DropdownBtn>
+          </UpdateNotifSettingDropdown>
+        
       </DropdownInnerContainer>
-      <DropdownBtn flexDirection="row">
+}
+      <DropdownBtn flexDirection="row" onClick={() => optOutHandler({ setLoading: setTxInProgress })}>
         <ImageV2
             width="20px"
             height="20px"
             src="svg/optout.svg"
             alt="Opt-out Logo"
         />
-        <SpanV2 color={theme.viewChannelPrimaryText} fontWeight={500} fontSize="14px">Opt-out</SpanV2>
+        <SpanV2 color={theme.viewChannelPrimaryText} fontWeight={500} fontSize="14px">
+          {txInProgress &&
+            <LoaderSpinner
+              type={LOADER_TYPE.SEAMLESS}
+              spinnerSize={16}
+              spinnerColor="#FFF"
+            />
+          }
+          {!txInProgress && <ActionTitle hideIt={txInProgress}>Opt-out</ActionTitle>}
+        </SpanV2>
       </DropdownBtn>
     </DropdownOuterContainer>
   );
 };
 
-const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = ({ children, centerOnMobile }) => {
+const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = (options) => {
+  const { 
+    children,
+    centerOnMobile,
+    userSetting,
+    channelDetail,
+    onSuccessOptout
+  } = options;
   const [isOpen, setIsOpen] = useState(false);
+  const { chainId } = useAccount();
+  const { userPushSDKInstance } = useContext(AppContext);
+
+  const channelSetting = useMemo(() => {
+    if(channelDetail && channelDetail?.channel_settings) {
+      return JSON.parse(channelDetail?.channel_settings);
+    }
+    return null;
+  }, [channelDetail]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -59,13 +122,88 @@ const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = ({
     setIsOpen(false);
   };
 
+  const onCoreNetwork = chainId === appConfig.coreContractChain;
+
+  const unsubscribeToast = useToast();
+  const optOutHandler = async ({ setLoading }: { setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => {
+    const setLoadingFunc = setLoading || (() => {});
+    setLoadingFunc(true);
+
+    try {
+      let channelAddress = channelDetail.channel;
+      if (!onCoreNetwork) {
+        channelAddress = channelDetail.alias_address;
+      }
+
+      unsubscribeToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
+
+      await userPushSDKInstance.notification.unsubscribe(convertAddressToAddrCaip(channelAddress, chainId), {
+        onSuccess: () => {
+          onSuccessOptout();
+
+          unsubscribeToast.showMessageToast({
+            toastTitle: 'Success',
+            toastMessage: 'Successfully opted out of channel !',
+            toastType: 'SUCCESS',
+            getToastIcon: (size) => (
+              <MdCheckCircle
+                size={size}
+                color="green"
+              />
+            ),
+          });
+
+          closeDropdown();
+        },
+        onError: () => {
+          console.error('opt in error');
+          unsubscribeToast.showMessageToast({
+            toastTitle: 'Error',
+            toastMessage: `There was an error opting out of channel`,
+            toastType: 'ERROR',
+            getToastIcon: (size) => (
+              <MdError
+                size={size}
+                color="red"
+              />
+            ),
+          });
+        },
+      });
+    } catch (err) {
+      unsubscribeToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: `There was an error opting into channel ( ${err.message} )`,
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+
+      console.log(err);
+    } finally {
+      setLoadingFunc(false);
+    }
+  };
+
   // render
   return (
       <DropdownBtnHandler 
         showDropdown={isOpen}
         toggleDropdown={toggleDropdown}
         closeDropdown={closeDropdown}
-        renderDropdownContainer={<ManageNotifSettingDropdownContainer centerOnMobile={centerOnMobile} />}
+        renderDropdownContainer={
+          <ManageNotifSettingDropdownContainer 
+            centerOnMobile={centerOnMobile}
+            userSetting={userSetting}
+            channelSetting={channelSetting}
+            channelDetail={channelDetail}
+            optOutHandler={optOutHandler}
+            closeDropdown={closeDropdown}
+          />}
         containerPadding="12px 16px"
         centerOnMobile={centerOnMobile}
       >
@@ -97,4 +235,12 @@ const DropdownBtn = styled.button`
     background: transparent;
     cursor: pointer;
     gap: 8px;
+`;
+
+const ActionTitle = styled.span<{ hideIt: boolean }>`
+  ${(props) =>
+    props.hideIt &&
+    css`
+      visibility: hidden;
+    `};
 `;

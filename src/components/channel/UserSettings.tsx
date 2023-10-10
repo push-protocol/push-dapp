@@ -26,6 +26,7 @@ interface ChannelListItem {
   icon: string;
   name: string;
   id: number;
+  channel_settings: string;
 }
 
 function UserSettings() {
@@ -47,6 +48,7 @@ function UserSettings() {
         id: details.id,
         icon: details.icon,
         name: details.name,
+        channel_settings: details.channel_settings
       };
       return updatedChannelItem;
     } else return undefined;
@@ -127,7 +129,15 @@ function UserSettings() {
                                 <Icon src={channel.icon} />
                                 <ChannelName>{channel.name}</ChannelName>
                               </SettingsListRow>
-                              <ManageNotifSettingDropdown centerOnMobile={false}>
+                              <ManageNotifSettingDropdown 
+                                centerOnMobile={false}
+                                channelDetail={channel}
+                                onSuccessOptout={() => {
+                                  setChannelList((prevChannelList) =>
+                                    prevChannelList.filter((item) => item?.id !== channel.id)
+                                  );
+                                }}
+                              >
                                 <MoreButtonUI />
                               </ManageNotifSettingDropdown>
                             </SettingsListItem>
