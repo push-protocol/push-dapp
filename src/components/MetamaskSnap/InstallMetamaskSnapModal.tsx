@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 
 // External Packages
-import styled,{useTheme} from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import { A } from 'primaries/SharedStyling';
@@ -14,6 +14,7 @@ import AppStoreQRCode from 'assets/PushSnaps/AppStoreQRCode.svg';
 import PlayStoreQRCode from 'assets/PushSnaps/PlayStoreQRCode.svg';
 import AppleIcon from 'assets/PushSnaps/AppleIcon.svg';
 import PlayStore from 'assets/PushSnaps/PlayStore.svg';
+import { useNavigate } from 'react-router-dom';
 
 
 const InstallMetamaskSnapModal = ({
@@ -40,6 +41,8 @@ const InstallMetamaskSnapModal = ({
         )
     }
 
+    const navigate = useNavigate();
+
     return (
         <ItemVV2 margin='30px 0 20px 0' gap='14px'>
             <SnapContainer>
@@ -58,8 +61,11 @@ const InstallMetamaskSnapModal = ({
                 </SnapInner>
                 {
                     configure ? (
-                        <InstallButton onClick={() => setSnapState(3)}>
-                            Settings
+                        <InstallButton onClick={() => {
+                            setSnapState(3)
+                            navigate('/snap')
+                        }}>
+                            Configure
                         </InstallButton>
                     ) : (
                         <InstallButton onClick={() => setSnapState(2)}>
@@ -154,9 +160,9 @@ export default InstallMetamaskSnapModal;
 const SnapContainer = styled(ItemHV2)`
     border-radius: 14px;
     padding:7px 14px;
-    background:${(props)=>props.theme.snapUIBackground};
+    background:${(props) => props.theme.snapUIBackground};
     justify-content:space-between;
-    border: 1px solid ${(props)=>props.theme.default.border};
+    border: 1px solid ${(props) => props.theme.default.border};
 `
 
 const SnapInner = styled.div`
@@ -191,8 +197,8 @@ const InstallButton = styled(Button)`
 const QRCodeContainer = styled(ItemVV2)`
     border-radius: 14px;
     padding:7px 14px;
-    background:${(props)=>props.theme.snapUIBackground};
-    border: 1px solid ${(props)=>props.theme.default.border};
+    background:${(props) => props.theme.snapUIBackground};
+    border: 1px solid ${(props) => props.theme.default.border};
     padding-bottom:15px;
     gap:4px;
     &:hover{
@@ -204,7 +210,7 @@ const QRCodeContainer = styled(ItemVV2)`
 const DownloadContainer = styled.div`
     display:flex;
     border-radius: 8px;
-    background: ${(props)=>props.theme.snapButtonBackground};
+    background: ${(props) => props.theme.snapButtonBackground};
     padding: 4px 11px;
     gap: 8px;
     height:36px;

@@ -195,7 +195,7 @@ const NavigationList = {
       name: 'Receive Notifications',
       title: 'Receive Notifications',
       alt: 'Receive Notifications',
-      href: '',
+      href: '#receive-notifications',
       hasOnClickFunction:true,
       newTab: false,
       isRoute: true,

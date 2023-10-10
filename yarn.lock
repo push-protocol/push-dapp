@@ -5345,9 +5345,9 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
     "@pushprotocol/ledgerlive": latest
-    "@pushprotocol/restapi": 1.4.18
+    "@pushprotocol/restapi": 1.4.21
     "@pushprotocol/socket": latest
-    "@pushprotocol/uiweb": 1.1.13
+    "@pushprotocol/uiweb": 1.1.14
     "@reduxjs/toolkit": ^1.7.1
     "@testing-library/dom": ^6.12.2
     "@testing-library/jest-dom": ^4.2.4
@@ -5546,9 +5546,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:1.4.18":
-  version: 1.4.18
-  resolution: "@pushprotocol/restapi@npm:1.4.18"
+"@pushprotocol/restapi@npm:1.4.21":
+  version: 1.4.21
+  resolution: "@pushprotocol/restapi@npm:1.4.21"
   dependencies:
     "@ambire/signature-validator": ^1.3.1
     "@metamask/eth-sig-util": ^5.0.2
@@ -5566,7 +5566,7 @@ __metadata:
     video-stream-merger: ^4.0.1
   peerDependencies:
     ethers: ^5.6.8
-  checksum: a350b385db72c5ce106ed940d77acfac11cec1960409b18698d63d3359a84788da503b62fa3fd01f94b7a7d3634614e26346432d833eb0d69b717c00bb627415
+  checksum: e466b817bf19087d8b7bac25ac60354ad804fd964c668eac547d012d1a52cfe9ded2ffb74b67bb8c0ac40bb148410aa8c8b1269fcb7efb9a83bd211f84e1184c
   languageName: node
   linkType: hard
 
@@ -5594,9 +5594,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:1.1.13":
-  version: 1.1.13
-  resolution: "@pushprotocol/uiweb@npm:1.1.13"
+"@pushprotocol/uiweb@npm:1.1.14":
+  version: 1.1.14
+  resolution: "@pushprotocol/uiweb@npm:1.1.14"
   dependencies:
     "@livepeer/react": ^2.6.0
     "@pushprotocol/socket": ^0.5.0
@@ -5617,7 +5617,7 @@ __metadata:
     ethers: ^5.7.1
     react: ">=16.8.0"
     styled-components: ^5.3.5
-  checksum: a03933a5e2c010435aad2bf36657198276b75025521146a64e66847f9f7f492ff85ec4612cf190758d6fac873634feb7250ccf2f3034f399859f478716a96c8e
+  checksum: c06f684851892d3c71e4c8f38210a4b04e8e1f039d82a2bda728f3cc1414d059989c6ef91a5f6bf07e945ad61fd84a630c6e2ac72cba9493f138387396eda421
   languageName: node
   linkType: hard
 

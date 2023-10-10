@@ -71,6 +71,14 @@ function MasterInterfacePage() {
 
   const { MetamaskPushSnapModalComponent }:AppContextType = React.useContext(AppContext);
 
+  const { showMetamaskPushSnap } = React.useContext(AppContext);
+
+  React.useEffect(()=>{
+    if(location.hash == '#receive-notifications'){
+      showMetamaskPushSnap();
+    }
+  },[location])
+
   // Render
   return (
     <Container>
@@ -127,10 +135,11 @@ function MasterInterfacePage() {
         draggable
       />
 
+      {/* Modal displaying ReceiveNotifications */}
       <MetamaskPushSnapModalComponent
+        id='receive-notifications'
         InnerComponent={MetamaskPushSnapModal}
         modalPadding='0px'
-        // InnerComponentProps={}
         modalPosition={MODAL_POSITION.ON_ROOT}
       />
 
