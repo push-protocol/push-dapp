@@ -66,7 +66,7 @@ const AddSettingModalContent = ({
   const settingToEdit = InnerComponentProps?.settingToEdit || undefined;
   const [isLoading, setIsLoading] = useState(false);
   const [settingName, setSettingName] = useState(settingToEdit ? settingToEdit.description : '');
-  const [isDefault, setIsDefault] = useState<boolean>(settingToEdit && settingToEdit.default === true);
+  const [isDefault, setIsDefault] = useState<boolean>(settingToEdit && settingToEdit.isDefaultEnabled === true);
   const [isRange, setIsRange] = useState<boolean>(settingToEdit && settingToEdit.type === 2 ? true : false);
   const [lowerLimit, setLowerLimit] = useState<string>(
     settingToEdit && settingToEdit.type === 2 ? settingToEdit.lowerLimit.toString() : ''
@@ -75,7 +75,7 @@ const AddSettingModalContent = ({
     settingToEdit && settingToEdit.type === 2 ? settingToEdit.upperLimit.toString() : ''
   );
   const [defaultValue, setDefaultValue] = useState<string>(
-    settingToEdit && settingToEdit.default ? settingToEdit.default.toString() : ''
+    settingToEdit && settingToEdit.type === 2 ? settingToEdit.defaultValue.toString() : ''
   );
   const [errorInfo, setErrorInfo] = useState<any>();
 
@@ -103,7 +103,8 @@ const AddSettingModalContent = ({
       const settingData: ChannelSetting = isRange
         ? {
             type: 2,
-            default: Number(defaultValue),
+            defaultValue: Number(defaultValue),
+            isDefaultEnabled: isDefault,
             description: settingName,
             index: index,
             lowerLimit: Number(lowerLimit),
@@ -111,7 +112,7 @@ const AddSettingModalContent = ({
           }
         : {
             type: 1,
-            default: isDefault,
+            isDefaultEnabled: isDefault,
             description: settingName,
             index: index,
           };
@@ -297,6 +298,7 @@ const CloseButton = styled(MdClose)`
   align-self: flex-end;
   color: ${(props) => props.theme.default.secondaryColor};
   font-size: 20px;
+  cursor: pointer;
 `;
 
 const ModalTitle = styled.div`

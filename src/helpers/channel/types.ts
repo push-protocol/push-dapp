@@ -1,13 +1,14 @@
 export type ChannelSetting =
   | {
       type: 1; // Boolean
-      default: boolean;
+      isDefaultEnabled: boolean;
       description: string;
       index: number;
     }
   | {
       type: 2; // Range
-      default: number;
+      defaultValue: number;
+      isDefaultEnabled: boolean;
       description: string;
       index: number;
       lowerLimit: number;
