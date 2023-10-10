@@ -110,8 +110,6 @@ const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = (o
   const { userPushSDKInstance } = useContext(AppContext);
   const dispatch = useDispatch();
 
-  console.log('user setting', userSetting);
-
   const channelSetting = useMemo(() => {
     if(channelDetail && channelDetail?.channel_settings) {
       return JSON.parse(channelDetail?.channel_settings);

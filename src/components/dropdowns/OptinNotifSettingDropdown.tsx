@@ -83,7 +83,7 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
                     handleDiameter={12}
                 />
             </DropdownSwitchItem>
-          {setting.type === 2 && setting.enabled && (
+          {setting.type === 2 && setting.enabled === true && (
             <DropdownSliderItem>
                 <Slider
                     styles={{

@@ -199,7 +199,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       const userSettings = {};
       subscriptionsArr.map(({ channel, user_settings }) => {
         subscriptionsMapping[channel] = true;
-        userSettings[channel] = user_settings ? JSON.parse(user_settings) : {};
+        userSettings[channel] = user_settings ? JSON.parse(user_settings) : null;
       });
       dispatch(updateBulkSubscriptions(subscriptionsMapping));
       dispatch(updateBulkUserSettings(userSettings));
