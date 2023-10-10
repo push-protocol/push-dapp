@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 
 // External Packages
 import 'react-dropdown/style.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { useNavigate } from 'react-router-dom';
 import { PiPencilSimpleBold } from 'react-icons/pi';
@@ -25,6 +25,7 @@ import { appConfig } from 'config';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import { ChannelSetting } from 'helpers/channel/types';
 import { getChannel } from 'services';
+import { updateChannelSetting } from 'redux/slices/channelSlice';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -33,6 +34,9 @@ function NotificationSettings() {
   const { account, chainId } = useAccount();
   const { coreChannelAdmin, delegatees } = useSelector((state: any) => state.admin);
   const { epnsWriteProvider } = useSelector((state: any) => state.contracts);
+  const { channelSettings } = useSelector((state: any) => state.channels);
+
+  const dispatch = useDispatch();
 
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const EDIT_SETTING_FEE = 50;
@@ -41,7 +45,6 @@ function NotificationSettings() {
   const [settings, setSettings] = React.useState<ChannelSetting[]>([]);
   const [settingToEdit, setSettingToEdit] = React.useState<ChannelSetting>(undefined);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [currentSettings, setCurrentSettings] = React.useState<ChannelSetting[]>([]);
   const [isLoadingSettings, setIsLoadingSettings] = React.useState(true);
 
   const {
@@ -75,7 +78,7 @@ function NotificationSettings() {
     if (isAddSettingModalOpen === false) setSettingToEdit(undefined);
   }, [isAddSettingModalOpen]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!account) return;
     if (!delegatees || !delegatees.length) {
       setChannelAddress(account);
@@ -87,40 +90,11 @@ function NotificationSettings() {
   }, [delegatees, account]);
 
   useEffect(() => {
-    if (delegatees) {
-      const delegatee = delegatees.find(({ channel }) => channel === channelAddress);
-      if (delegatee) {
-        const { channel_settings } = delegatee;
-        if (channel_settings !== null) {
-          const parsedData = JSON.parse(channel_settings);
-          const settings: ChannelSetting[] = parsedData.map((setting: any) => {
-            if(setting.type === 1) {
-              return {
-                type: 1,
-                isDefaultEnabled: setting.default,
-                description: setting.description,
-                index: setting.index,
-              }
-            } else {
-              return {
-                type: 2,
-                isDefaultEnabled: setting.enabled === 1 ? true : false,
-                defaultValue: setting.default,
-                description: setting.description,
-                index: setting.index,
-                lowerLimit: setting.lowerLimit,
-                upperLimit: setting.upperLimit,
-              }
-            }
-          });
-          setSettings(settings);
-          setCurrentSettings(settings);
-          setIsLoadingSettings(false);
-        }
-      }
+    if (channelAddress && channelSettings[channelAddress]) {
+      setSettings(channelSettings[channelAddress] || []);
+      setIsLoadingSettings(false);
     }
-    return null;
-  }, [delegatees, channelAddress]);
+  }, [channelAddress, channelSettings]);
 
   // Notification Toast
   const notificationToast = useToast(5000);
@@ -164,11 +138,12 @@ function NotificationSettings() {
       settings.forEach((setting) => {
         if (_notifSettings !== '') _notifSettings += '+';
         if (_notifDescription !== '') _notifDescription += '+';
-        const isEnabled = setting.isDefaultEnabled ? '1' : '0';
         if (setting.type === 1) {
-          _notifSettings += `${setting.type}-${isEnabled}`;
+          _notifSettings += `${setting.type}-${setting.default ? '1' : '0'}`;
         } else if (setting.type === 2) {
-          _notifSettings += `${setting.type}-${isEnabled}-${setting.defaultValue}-${setting.lowerLimit}-${setting.upperLimit}`;
+          _notifSettings += `${setting.type}-${setting.enabled ? '1' : '0'}-${setting.default}-${setting.lowerLimit}-${
+            setting.upperLimit
+          }`;
         }
         _notifDescription += setting.description;
       });
@@ -183,7 +158,7 @@ function NotificationSettings() {
 
       console.log(tx);
       await tx.wait();
-      setCurrentSettings(settings);
+      dispatch(updateChannelSetting({ channelAddress, settings }));
       setIsLoading(false);
 
       notificationToast.showMessageToast({
@@ -199,7 +174,6 @@ function NotificationSettings() {
       });
     } catch (err) {
       setIsLoading(false);
-      console.log(err.message);
       if (err.code == 'ACTION_REJECTED') {
         // EIP-1193 userRejectedRequest error
         notificationToast.showMessageToast({
@@ -226,37 +200,36 @@ function NotificationSettings() {
           ),
         });
         console.log('Error --> %o', err);
-        console.log({ err });
       }
     }
   };
 
   const settingsChanged = useMemo(() => {
-    if (!settings || !currentSettings) return false;
-    if (settings.length !== currentSettings.length) return true;
+    if (!settings || !channelSettings[account]) return false;
+    if (settings.length !== channelSettings[account].length) return true;
     let isUnchanged = true;
     for (let i = 0; i < settings.length; i++) {
       const setting1 = settings[i];
-      const setting2 = currentSettings[i];
+      const setting2 = channelSettings[account][i];
       if (setting1.type === 1) {
         isUnchanged =
           isUnchanged &&
           setting1.type === setting2.type &&
           setting1.description === setting2.description &&
-          setting1.isDefaultEnabled === setting2.isDefaultEnabled;
+          setting1.default === setting2.default;
       } else if (setting1.type === 2) {
         isUnchanged =
           isUnchanged &&
           setting1.type === setting2.type &&
           setting1.description === setting2.description &&
-          setting1.defaultValue === setting2.defaultValue &&
-          setting1.isDefaultEnabled === setting2.isDefaultEnabled &&
+          setting1.default === setting2.default &&
+          setting1.enabled === setting2.enabled &&
           setting1.lowerLimit === setting2.lowerLimit &&
           setting1.upperLimit === setting2.upperLimit;
       }
     }
     return isUnchanged === false;
-  }, [settings, currentSettings]);
+  }, [settings, channelSettings[account]]);
 
   return (
     <>

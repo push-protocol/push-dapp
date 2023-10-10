@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 // External Packages
 import Skeleton from '@yisheng90/react-loading';
@@ -11,6 +11,7 @@ import { toast as toaster } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { css, useTheme } from 'styled-components';
 import axios from 'axios';
+import { cloneDeep } from 'lodash';
 
 // Internal Compoonents
 import * as PushAPI from '@pushprotocol/restapi';
@@ -19,7 +20,7 @@ import MetaInfoDisplayer from 'components/MetaInfoDisplayer';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import useToast from 'hooks/useToast';
-import { cacheChannelInfo, updateSubscriptionStatus } from 'redux/slices/channelSlice';
+import { cacheChannelInfo } from 'redux/slices/channelSlice';
 import { addNewWelcomeNotif, incrementStepIndex } from 'redux/slices/userJourneySlice';
 import ChannelTutorial, { isChannelTutorialized } from 'segments/ChannelTutorial';
 import NotificationToast from '../primaries/NotificationToast';
@@ -51,7 +52,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     (state) => state.contracts
   );
   const { canVerify } = useSelector((state) => state.admin);
-  const { channelsCache, CHANNEL_BLACKLIST, subscriptionStatus } = useSelector((state) => state.channels);
+  const { channelsCache, CHANNEL_BLACKLIST, subscriptionStatus, userSettings: currentUserSettings } = useSelector((state) => state.channels);
   const { account, provider, chainId } = useAccount();
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
@@ -185,6 +186,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   };
 
   const generalToast = useToast();
+
+  const userSettings = useMemo(() => {
+    return cloneDeep(currentUserSettings);
+  }, [currentUserSettings]);
 
   const formatAddress = (addressText) => {
     return addressText.length > 40 ? `${shortenText(addressText, 4, 6)}` : addressText;
@@ -853,7 +858,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                     channelDetail={channelObject} 
                     setLoading={setTxInProgress}
                     onSuccessOptin={() => {
-                      dispatch(updateSubscriptionStatus({ channelAddress: channelObject.channel, status: true }));
                       setSubscribed(true);
                       setSubscriberCount((prevSubscriberCount) => prevSubscriberCount + 1)
                     }}
@@ -886,9 +890,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                     centerOnMobile={true}
                     channelDetail={channelObject}
                     setSubscribed={setSubscribed}
+                    userSetting={userSettings[channelObject.channel]}
                     setSubscriberCount={setSubscriberCount}
                     onSuccessOptout={() => {
-                      dispatch(updateSubscriptionStatus({ channelAddress: channelObject.channel, status: false }));
                       setSubscribed(false);
                       setSubscriberCount((prevSubscriberCount) => prevSubscriberCount - 1)
                     }}

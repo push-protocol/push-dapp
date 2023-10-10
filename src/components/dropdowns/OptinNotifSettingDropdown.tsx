@@ -5,6 +5,7 @@ import React, { useContext, useMemo, useState } from "react";
 import Switch from 'react-switch';
 import Slider from 'react-input-slider';
 import styled, { css, useTheme } from "styled-components";
+import { useDispatch } from "react-redux";
 
 // Internal Components
 import { DropdownBtnHandler } from "./DropdownBtnHandler";
@@ -17,9 +18,10 @@ import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import useToast from "hooks/useToast";
 import { MdCheckCircle, MdError } from "react-icons/md";
 import { ChannelSetting } from "helpers/channel/types";
-import { notifChannelSettingFormatString } from "helpers/channel/notifSetting";
+import { notifChannelSettingFormatString, userSettingsFromDefaultChannelSetting } from "helpers/channel/notifSetting";
 import { AppContext } from "contexts/AppContext";
 import LoaderSpinner, { LOADER_TYPE } from "components/reusables/loaders/LoaderSpinner";
+import { updateSubscriptionStatus, updateUserSetting } from "redux/slices/channelSlice";
 
 interface OptinNotifSettingDropdownProps {
   children: React.ReactNode;
@@ -136,6 +138,7 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
   const { chainId } = useAccount();
   const { userPushSDKInstance } = useContext(AppContext);
   const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
@@ -172,6 +175,8 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
         // settings: [],
         onSuccess: () => {
           onSuccessOptin();
+          dispatch(updateSubscriptionStatus({ channelAddress, status: true }));
+          dispatch(updateUserSetting({ channelAddress, settings: userSettingsFromDefaultChannelSetting({ channelSetting: channelSettings })}));
 
           subscribeToast.showMessageToast({
             toastTitle: 'Success',

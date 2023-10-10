@@ -5,6 +5,7 @@ import React, { useContext, useState } from "react";
 import Switch from 'react-switch';
 import Slider from 'react-input-slider';
 import styled, { css, useTheme } from "styled-components";
+import { useDispatch } from "react-redux";
 
 // Internal Components
 import { DropdownBtnHandler } from "./DropdownBtnHandler";
@@ -20,6 +21,7 @@ import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import { notifUserSettingFormatString, userSettingsFromDefaultChannelSetting } from "helpers/channel/notifSetting";
 import { MdCheckCircle, MdError } from "react-icons/md";
 import LoaderSpinner, { LOADER_TYPE } from "components/reusables/loaders/LoaderSpinner";
+import { updateUserSetting } from "redux/slices/channelSlice";
 
 interface UpdateNotifSettingDropdownProps {
   children: React.ReactNode;
@@ -144,6 +146,7 @@ const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({
 
   const { chainId } = useAccount();
   const { userPushSDKInstance } = useContext(AppContext);
+  const dispatch = useDispatch();
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
@@ -175,6 +178,7 @@ const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({
         onSuccess: () => {
           saveOnSuccessSettingFunc();
           closeDropdown();
+          dispatch(updateUserSetting({ channelAddress, settings: userSetting }));
 
           subscribeToast.showMessageToast({
             toastTitle: 'Success',

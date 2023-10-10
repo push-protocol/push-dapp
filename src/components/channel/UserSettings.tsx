@@ -1,11 +1,12 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineMore } from 'react-icons/ai';
+import { cloneDeep } from 'lodash';
 
 // Internal Components
 import { useAccount } from 'hooks';
@@ -14,7 +15,7 @@ import { ImageV2 } from 'components/reusables/SharedStylingV2';
 import { getChannel, getUserSubscriptions } from 'services';
 import LoaderSpinner from 'primaries/LoaderSpinner';
 import EmptyNotificationSettings from './EmptyNotificationSettings';
-import { updateBulkSubscriptions } from 'redux/slices/channelSlice';
+import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import ManageNotifSettingDropdown from 'components/dropdowns/ManageNotifSettingDropdown';
 
@@ -31,13 +32,13 @@ interface ChannelListItem {
 
 function UserSettings() {
   const { account, chainId } = useAccount();
+  const { subscriptionStatus, userSettings: currentUserSettings } = useSelector((state: any) => state.channels);
   const [selectedOption, setSelectedOption] = useState(0);
   const [channelList, setChannelList] = useState<ChannelListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
 
-  const { subscriptionStatus } = useSelector((state: any) => state.channels);
   const dispatch = useDispatch();
 
   const fetchChannelDetails = async (channel: string) => {
@@ -48,7 +49,7 @@ function UserSettings() {
         id: details.id,
         icon: details.icon,
         name: details.name,
-        channel_settings: details.channel_settings
+        channel_settings: details.channel_settings,
       };
       return updatedChannelItem;
     } else return undefined;
@@ -72,8 +73,13 @@ function UserSettings() {
         const userCaipAddress = convertAddressToAddrCaip(account, chainId);
         const subscriptionsArr = await getUserSubscriptions({ userCaipAddress });
         const subscriptionsMapping = {};
-        subscriptionsArr.map(({ channel }) => (subscriptionsMapping[channel] = true));
+        const userSettings = {};
+        subscriptionsArr.map(({ channel, user_settings }) => {
+          subscriptionsMapping[channel] = true;
+          userSettings[channel] = user_settings ? JSON.parse(user_settings) : {};
+        });
         dispatch(updateBulkSubscriptions(subscriptionsMapping));
+        dispatch(updateBulkUserSettings(userSettings));
         await fillData(subscriptionsMapping);
       } else {
         await fillData(subscriptionStatus);
@@ -92,6 +98,10 @@ function UserSettings() {
       label: 'Notification Settings',
     },
   ];
+
+  const userSettings = useMemo(() => {
+    return cloneDeep(currentUserSettings);
+  }, [currentUserSettings]);
 
   return (
     <Container>
@@ -129,7 +139,8 @@ function UserSettings() {
                                 <Icon src={channel.icon} />
                                 <ChannelName>{channel.name}</ChannelName>
                               </SettingsListRow>
-                              <ManageNotifSettingDropdown 
+                              <ManageNotifSettingDropdown
+                                userSetting={userSettings[channel.channel]}
                                 centerOnMobile={false}
                                 channelDetail={channel}
                                 onSuccessOptout={() => {

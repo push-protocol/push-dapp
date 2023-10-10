@@ -3,6 +3,7 @@ import React, { useContext, useMemo, useState } from "react";
 
 // External Packages
 import styled, { css, useTheme } from "styled-components";
+import { useDispatch } from "react-redux";
 
 // Internal Components
 import { DropdownBtnHandler } from "./DropdownBtnHandler";
@@ -18,6 +19,7 @@ import { MdCheckCircle, MdError } from "react-icons/md";
 import LoaderSpinner, { LOADER_TYPE } from "components/reusables/loaders/LoaderSpinner";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import { ChannelSetting, UserSetting } from "helpers/channel/types";
+import { removeUserSetting, updateSubscriptionStatus } from "redux/slices/channelSlice";
 
 interface ManageNotifSettingDropdownProps {
   children: React.ReactNode;
@@ -106,6 +108,9 @@ const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = (o
   const [isOpen, setIsOpen] = useState(false);
   const { chainId } = useAccount();
   const { userPushSDKInstance } = useContext(AppContext);
+  const dispatch = useDispatch();
+
+  console.log('user setting', userSetting);
 
   const channelSetting = useMemo(() => {
     if(channelDetail && channelDetail?.channel_settings) {
@@ -140,6 +145,8 @@ const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = (o
       await userPushSDKInstance.notification.unsubscribe(convertAddressToAddrCaip(channelAddress, chainId), {
         onSuccess: () => {
           onSuccessOptout();
+          dispatch(updateSubscriptionStatus({ channelAddress: channelAddress, status: false }));
+          dispatch(removeUserSetting(channelAddress));
 
           unsubscribeToast.showMessageToast({
             toastTitle: 'Success',
