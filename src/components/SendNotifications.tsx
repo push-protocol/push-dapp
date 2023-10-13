@@ -1,6 +1,5 @@
 // React + Web3 Essentials
-import { ethers } from 'ethers';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import Switch from '@material-ui/core/Switch';
@@ -13,12 +12,13 @@ import { MdCheckCircle, MdError } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { useTheme } from 'styled-components';
+import Slider from 'react-input-slider';
 
 // Internal Compoonents
 import * as PushAPI from '@pushprotocol/restapi';
 import { postReq } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { SectionV2 } from 'components/reusables/SharedStylingV2';
+import { AInlineV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
@@ -41,6 +41,8 @@ import PreviewNotif from './PreviewNotif';
 // Internal Configs
 import { appConfig } from 'config';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
+import APP_PATHS from 'config/AppPaths';
+import Tag from './reusables/labels/Tag';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -128,27 +130,79 @@ function SendNotifications() {
   });
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
 
-  const [nfProcessing, setNFProcessing] = React.useState(0);
-  const [channelAddress, setChannelAddress] = React.useState('');
-  const [nfRecipient, setNFRecipient] = React.useState(account);
-  const [multipleRecipients, setMultipleRecipients] = React.useState([]);
-  const [tempRecipeint, setTempRecipient] = React.useState(''); // to temporarily hold the address of one recipient who would be entered into the recipeints array above.
-  const [nfType, setNFType] = React.useState('1');
-  const [nfSub, setNFSub] = React.useState('');
-  const [nfSubEnabled, setNFSubEnabled] = React.useState(false);
-  const [nfMsg, setNFMsg] = React.useState('');
-  const [nfCTA, setNFCTA] = React.useState('');
-  const [nfCTAEnabled, setNFCTAEnabled] = React.useState(false);
-  const [nfMedia, setNFMedia] = React.useState('');
-  const [nfMediaEnabled, setNFMediaEnabled] = React.useState(false);
-  const [nfInfo, setNFInfo] = React.useState('');
-  const [delegateeOptions, setDelegateeOptions] = React.useState([]);
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const [nfProcessing, setNFProcessing] = useState(0);
+  const [channelAddress, setChannelAddress] = useState('');
+  const [nfRecipient, setNFRecipient] = useState(account);
+  const [multipleRecipients, setMultipleRecipients] = useState([]);
+  const [tempRecipeint, setTempRecipient] = useState(''); // to temporarily hold the address of one recipient who would be entered into the recipeints array above.
+  const [nfType, setNFType] = useState('1');
+  const [nfSub, setNFSub] = useState('');
+  const [nfSubEnabled, setNFSubEnabled] = useState(false);
+  const [nfMsg, setNFMsg] = useState('');
+  const [nfCTA, setNFCTA] = useState('');
+  const [nfCTAEnabled, setNFCTAEnabled] = useState(false);
+  const [nfMedia, setNFMedia] = useState('');
+  const [nfMediaEnabled, setNFMediaEnabled] = useState(false);
+  const [nfInfo, setNFInfo] = useState('');
+  const [nfSettingType, setNFSettingType] = useState(null);
+  const [delegateeOptions, setDelegateeOptions] = useState([]);
+  const [nfSliderValue, setNfSliderValue] = useState(0);
 
+  const channelDetailsFromBackend = useMemo(() => {
+    if (delegatees) {
+      return delegatees.find(delegatee => delegatee.channel === channelAddress);
+    }
+    // Return a default value or handle the case when delegatees is not defined.
+    return null; // or some other default value
+  }, [delegatees, channelAddress]);
+
+  const channelSettings = useMemo(() => {
+    if (channelDetailsFromBackend) {
+      const { channel_settings } = channelDetailsFromBackend;
+  
+      if (channel_settings !== null) {
+        return JSON.parse(channel_settings);
+      }
+    }
+    // Return a default value or handle the case when channelDetailsFromBackend is not defined.
+    return null; // or some other default value
+  }, [channelDetailsFromBackend]);  
+
+  const channelSettingsOptions = useMemo(() => {
+    const defaultOption = { label: 'Default', value: null, isRange: false };
+  
+    if (channelSettings) {
+      const settingsOptions = channelSettings.map((setting) => ({
+        label:
+          setting.type === 2 ? (
+            <DropdownLabel>
+              <div>{setting.description}</div>
+              <Tag>Range</Tag>
+            </DropdownLabel>
+          ) : (
+            setting.description
+          ),
+        value: setting.index,
+        isRange: setting.type === 2,
+      }));
+  
+      return [defaultOption, ...settingsOptions];
+    }
+    // If channelSettings is not defined, just return the default option.
+    return [defaultOption];
+  }, [channelSettings]);  
+
+  const openManageSettings = () => {
+    const newPageUrl = APP_PATHS.ChannelSettings;
+  
+    // Use window.open() to open the URL in a new tab
+    window.open(newPageUrl, '_blank');
+  }
+  
   useEffect(() => {
     if (canSend !== 1) {
       const url = window.location.origin;
-      window.location.replace(`${url}/#/channels`);
+      window.location.replace(`${url}${APP_PATHS.Channels}`);
     }
   });
 
@@ -163,7 +217,7 @@ function SendNotifications() {
       (delegatees.length === 1 && delegatees[0].alias_address === account) || !delegatees.length;
 
   // construct a list of channel delegators
-  React.useEffect(() => {
+  useEffect(() => {
     if (!account) return;
     if (!delegatees || !delegatees.length) {
       setChannelAddress(account);
@@ -190,31 +244,6 @@ function SendNotifications() {
     }
   }, [delegatees, account]);
 
-  // const isAllFieldsFilled = () => {
-  //     if (nfRecipient == "" ||
-  //         nfType == "" ||
-  //         nfMsg == "" ||
-  //         (nfSubEnabled && nfSub == "") ||
-  //         (nfCTAEnabled && nfCTA == "") ||
-  //         (nfMediaEnabled && nfMedia == "")
-  //     ) {
-  //         return false;
-  //     }
-  //     return true;
-  // };
-
-  // const previewNotif = (e: any) => {
-  //     e.preventDefault();
-  //     if(isAllFieldsFilled())
-  //         setPreviewNotifModalOpen(true)
-  //     else {
-  //         setNFInfo("Please fill all fields to preview");
-  //         setTimeout(() => {
-  //             setNFInfo('');
-  //         }, 2000);
-  //     }
-  // }
-
   // on change for the subset type notifications input
   const handleSubsetInputChange = (e: any) => {
     // if the user enters in a comma or an enter then separate the addresses
@@ -238,7 +267,7 @@ function SendNotifications() {
     setMultipleRecipients(filteredRecipients);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const broadcastIds = ['1']; //id's of notifications which qualify as broadcast
     setMultipleRecipients([]); //reset array when type changes/
     if (broadcastIds.includes(nfType)) {
@@ -268,6 +297,14 @@ function SendNotifications() {
     return validated;
   };
 
+  const getIndex = () => {
+    if (nfSettingType === null) return undefined;
+    else if (channelSettings[nfSettingType - 1]?.type === 1) 
+      return `${nfSettingType}-1`;
+    else if (channelSettings[nfSettingType - 1]?.type === 2)
+      return `${nfSettingType}-2-${nfSliderValue}`;
+  }
+
   const handleSendMessage = async (e) => {
     // Check everything in order
     e.preventDefault();
@@ -295,128 +332,6 @@ function SendNotifications() {
     let amsg = nfMsg;
     let acta = nfCTA;
     let aimg = nfMedia;
-
-    // Decide type and storage
-    //   switch (nfType) {
-    //       // Broadcast Notification
-    //       case "1":
-    //           break;
-
-    //       // Targeted Notification
-    //       case "3":
-    //           break;
-
-    //       // Old Secret Notification
-    //     //   case "2":
-    //     //       // Create secret
-    //     //       let secret = CryptoHelper.makeid(14);
-
-    //     //       // Encrypt payload and change sub and nfMsg in notification
-    //     //       nsub = "You have a secret message!";
-    //     //       nmsg = "Open the app to see your secret message!";
-
-    //     //       // get public key from EPNSCoreHelper
-    //     //       let k = await EPNSCoreHelper.getPublicKey(
-    //     //           nfRecipient,
-    //     //           epnsCommWriteProvider
-    //     //       );
-    //     //       if (k == null) {
-    //     //           // No public key, can't encrypt
-    //     //           setNFInfo(
-    //     //               "Public Key Registration is required for encryption!"
-    //     //           );
-    //     //           setNFProcessing(2);
-
-    //     //           toast.update(notificationToast, {
-    //     //               render: "Unable to encrypt for this user, no public key registered",
-    //     //               type: toast.TYPE.ERROR,
-    //     //               autoClose: 5000,
-    //     //           });
-
-    //     //           return;
-    //     //       }
-
-    //     //       let publickey = k.toString().substring(2);
-    //     //       //console.log("This is public Key: " + publickey);
-
-    //     //       secretEncrypted = await CryptoHelper.encryptWithECIES(
-    //     //           secret,
-    //     //           publickey
-    //     //       );
-    //     //       asub = CryptoHelper.encryptWithAES(nfSub, secret);
-    //     //       amsg = CryptoHelper.encryptWithAES(nfMsg, secret);
-    //     //       acta = CryptoHelper.encryptWithAES(nfCTA, secret);
-    //     //       aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
-    //     //       break;
-
-    //       // Targeted Notification
-    //       case "4":
-    //           break;
-
-    //       // Secret Notification
-    //       case "5":
-    //             // Create secret
-    //           let secret = CryptoHelper.makeid(8);
-
-    //           // Encrypt payload and change sub and nfMsg in notification
-    //           nsub = "You have a secret message!";
-    //           nmsg = "Click on Decrypt button to see your secret message!";
-
-    //           // get public key from Backend API
-    //           let encryptionKey = await postReq('/encryption_key/get_encryption_key', {
-    //               address: nfRecipient,
-    //               op: "read"
-    //           }).then(res => {
-    //               return res.data?.encryption_key;
-    //           });
-
-    //           if (encryptionKey == null) {
-    //               // No public key, can't encrypt
-    //               setNFInfo(
-    //                   "Public Key Registration is required for encryption!"
-    //               );
-    //               setNFProcessing(2);
-
-    //               toast.update(notificationToast, {
-    //                   render: "Unable to encrypt for this user, no public key registered",
-    //                   type: toast.TYPE.ERROR,
-    //                   autoClose: 5000,
-    //               });
-
-    //               return;
-    //           }
-
-    //           let publickey = encryptionKey;
-
-    //           secretEncrypted = await CryptoHelper.encryptWithRPCEncryptionPublicKey(
-    //               secret,
-    //               publickey
-    //           );
-    //         //   console.log(secretEncrypted);
-    //           if(nfSubEnabled) asub = CryptoHelper.encryptWithAES(nfSub, secret);
-    //           amsg = CryptoHelper.encryptWithAES(nfMsg, secret);
-    //           if(nfCTAEnabled) acta = CryptoHelper.encryptWithAES(nfCTA, secret);
-    //           if(nfMediaEnabled) aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
-    //           break;
-
-    //       // Offchain Notification
-    //       case "6":
-    //           console.log(
-    //               nsub,
-    //               nmsg,
-    //               nfType,
-    //               asub,
-    //               amsg,
-    //               acta,
-    //               aimg,
-    //               "case 5"
-    //           );
-
-    //           break;
-
-    //       default:
-    //           break;
-    //   }
 
     // Handle Storage
     let storagePointer = '';
@@ -476,105 +391,8 @@ function SendNotifications() {
         });
         return;
       }
-
-      //   const jsonPayload = {
-      //       notification: {
-      //           title: nsub,
-      //           body: nmsg,
-      //       },
-      //       data: {
-      //           type: nfType,
-      //           secret: secretEncrypted,
-      //           asub: asub,
-      //           amsg: amsg,
-      //           acta: acta,
-      //           aimg: aimg,
-      //       },
-      //   };
-
-      //   // if we are sending a subset type, then include recipients
-      //   if (nfType === "4") {
-      //       jsonPayload["recipients"] = [...multipleRecipients];
-      //   }
-
-      //   const input = JSON.stringify(jsonPayload);
-      //   console.log(input);
-
-      //   console.log("Uploding to IPFS...");
-      //   toast.update(notificationToast, {
-      //       render: "Preparing Payload for upload",
-      //   });
-
-      //   const ipfs = require("nano-ipfs-store").at(
-      //       "https://ipfs.infura.io:5001"
-      //   );
-
-      //   try {
-      //     //   storagePointer = await ipfs.add(input);
-      //       storagePointer = await IPFSupload(input);
-      //   } catch (e) {
-      //       setNFProcessing(2);
-      //       setNFInfo("IPFS Upload Error");
-      //   }
-
-      //   console.log("IPFS cid: %o", storagePointer);
     }
     if (nfType === '1' || nfType === '2' || nfType === '3' || nfType === '4' || nfType === '5') {
-      // Prepare Identity and send notification
-      //   const identity = nfType + "+" + storagePointer;
-      //   const identityBytes = ethers.utils.toUtf8Bytes(identity);
-      //   console.log({
-      //       identityBytes,
-      //   });
-      //   const EPNS_DOMAIN = {
-      //       name: "Push (EPNS) COMM V1",
-      //       chainId: chainId,
-      //       verifyingContract: epnsCommReadProvider.address,
-      //   };
-
-      //   const type = {
-      //       Data: [
-      //           { name: "acta", type: "string" },
-      //           { name: "aimg", type: "string" },
-      //           { name: "amsg", type: "string" },
-      //           { name: "asub", type: "string" },
-      //           { name: "type", type: "string" },
-      //           { name: "secret", type: "string" },
-      //       ],
-      //   };
-
-      //   const payload = {
-      //       data: {
-      //           acta: acta,
-      //           aimg: aimg,
-      //           amsg: amsg,
-      //           asub: asub,
-      //           type: nfType,
-      //           secret: "",
-      //       },
-
-      //       notification: {
-      //           body: amsg,
-      //           title: asub,
-      //       },
-      //   };
-
-      //   if (nfType === "5" || nfType === "2") {
-      //       payload.notification = {
-      //           body: nmsg,
-      //           title: nsub
-      //       };
-      //       payload.data.secret = secretEncrypted;
-      //   }
-
-      //   const message = payload.data;
-      //   console.log(payload, "payload");
-      //   console.log("chainId", chainId);
-      //   const signature = await library
-      //       .getSigner(account)
-      //       ._signTypedData(EPNS_DOMAIN, type, message);
-      //   console.log("case5 signature", signature);
-
       try {
         // apiResponse?.status === 204, if sent successfully!
 
@@ -601,6 +419,7 @@ function SendNotifications() {
             body: amsg,
             cta: acta,
             img: aimg,
+            index: getIndex(),
           },
           recipients: notifRecipients, // recipient address
           channel: channelAddressInCaip, // your channel address
@@ -659,161 +478,7 @@ function SendNotifications() {
         setNFProcessing(0);
         console.log(err);
       }
-
-      // var anotherSendTxPromise;
-
-      // anotherSendTxPromise = communicatorContract.sendNotification(
-      //   channelAddress,
-      //   nfRecipient,
-      //   identityBytes
-      // );
-
-      // console.log("Sending Transaction... ");
-      // toast.update(notificationToast, {
-      //   render: "Sending Notification...",
-      // });
-
-      // anotherSendTxPromise
-      //   .then(async (tx) => {
-      //     console.log(tx);
-      //     console.log("Transaction Sent!");
-
-      //     toast.update(notificationToast, {
-      //       render: "Notification Sent",
-      //       type: toast.TYPE.INFO,
-      //       autoClose: 5000,
-      //     });
-
-      //     await tx.wait(1);
-      //     console.log("Transaction Mined!");
-
-      //     setNFProcessing(2);
-      //     setNFType("");
-      //     setNFInfo("Notification Sent");
-
-      //     toast.update(notificationToast, {
-      //       render: "Transaction Mined / Notification Sent",
-      //       type: toast.TYPE.SUCCESS,
-      //       autoClose: 5000,
-      //     });
-      //   })
-      //   .catch((err) => {
-      //     console.log("!!!Error handleSendMessage() --> %o", err);
-      //     setNFInfo("Transaction Failed, please try again");
-
-      //     toast.update(notificationToast, {
-      //       render: "Transacion Failed: " + err,
-      //       type: toast.TYPE.ERROR,
-      //       autoClose: 5000,
-      //     });
-      //     setNFProcessing(0);
-      //   });
     }
-    //   if (nfType === "6") {
-    //       // const jsonPayload = {
-    //       //   notification: {
-    //       //     title: nsub,
-    //       //     body: nmsg,
-    //       //   },
-    //       //   data: {
-    //       //     type: nfType,
-    //       //     secret: secretEncrypted,
-    //       //     asub: asub,
-    //       //     amsg: amsg,
-    //       //     acta: acta,
-    //       //     aimg: aimg,
-    //       //   },
-    //       // };
-
-    //       const EPNS_DOMAIN = {
-    //           name: "Push (EPNS) COMM V1",
-    //           chainId: chainId,
-    //           verifyingContract: epnsCommReadProvider.address,
-    //       };
-
-    //       const type = {
-    //           Data: [
-    //               { name: "acta", type: "string" },
-    //               { name: "aimg", type: "string" },
-    //               { name: "amsg", type: "string" },
-    //               { name: "asub", type: "string" },
-    //               { name: "type", type: "string" },
-    //               { name: "secret", type: "string" },
-    //           ],
-    //       };
-
-    //       const payload = {
-    //           data: {
-    //               acta: acta,
-    //               aimg: aimg,
-    //               amsg: amsg,
-    //               asub: asub,
-    //               type: nfType,
-    //               secret: "",
-    //           },
-
-    //           notification: {
-    //               body: amsg,
-    //               title: asub,
-    //           },
-    //       };
-
-    //       const message = payload.data;
-    //       console.log(payload, "payload");
-    //       console.log("chainId", chainId);
-    //       const signature = await library
-    //           .getSigner(account)
-    //           ._signTypedData(EPNS_DOMAIN, type, message);
-    //       console.log("case5 signature", signature);
-    //       try {
-    //           postReq("/payloads/add_manual_payload", {
-    //               signature,
-    //               op: "write",
-    //               chainId: chainId.toString(),
-    //               channel: channelAddress,
-    //               recipient: nfRecipient,
-    //               deployedContract: epnsCommReadProvider.address,
-    //               payload: payload,
-    //               type: "3",
-    //           }).then(async (res) => {
-    //               toast.update(notificationToast, {
-    //                   render: "Notification Sent",
-    //                   type: toast.TYPE.INFO,
-    //                   autoClose: 5000,
-    //               });
-
-    //               setNFProcessing(2);
-    //               setNFType("");
-    //               setNFInfo("Notification Sent");
-
-    //               toast.update(notificationToast, {
-    //                   render: "Notification Sent",
-    //                   type: toast.TYPE.SUCCESS,
-    //                   autoClose: 5000,
-    //               });
-    //               console.log(res);
-    //           });
-    //       } catch (err) {
-    //           if (err.code === 4001) {
-    //             // EIP-1193 userRejectedRequest error
-    //             toast.update(notificationToast, {
-    //                 render: "User denied message signature.",
-    //                 type: toast.TYPE.ERROR,
-    //                 autoClose: 5000,
-    //             });
-    //           } else {
-    //             setNFInfo("Sending Notification Failed, please try again");
-
-    //             toast.update(notificationToast, {
-    //                 render: "Notification Failed: " + err,
-    //                 type: toast.TYPE.ERROR,
-    //                 autoClose: 5000,
-    //             });
-    //           }
-    //           setNFProcessing(0);
-    //           console.log(err);
-    //       }
-    //   }
   };
 
   const isEmpty = (field: any) => {
@@ -920,32 +585,8 @@ function SendNotifications() {
                           }}
                           placeholder="Select a Channel"
                           value={delegateeOptions[0]}
-                          // value={delegateeOptions.find(
-                          //     (d) =>
-                          //         d.value ==
-                          //         channelAddress
-                          // )}
                         />
                       </DropdownStyledParent>
-                      {/* <DropdownStyledParentWhite>
-                                            <DropdownHeader>
-                                                SEND NOTIFICATION ON BEHALF
-                                                OF
-                                            </DropdownHeader>
-                                            <DropdownStyledWhite
-                                                options={delegateeOptions}
-                                                onChange={(option: any) => {
-                                                    setChannelAddress(
-                                                        option.value
-                                                    );
-                                                }}
-                                                value={delegateeOptions.find(
-                                                    (d) =>
-                                                        d.value ==
-                                                        channelAddress
-                                                )}
-                                            />
-                                        </DropdownStyledParentWhite> */}
                     </Item>
                   )}
 
@@ -990,10 +631,10 @@ function SendNotifications() {
                           weight={isMobile ? "500" : "600"}
                           textTransform="none"
                           size={isMobile ? "15px" : "14px"}
-                          color="#1E1E1E"
+                          color={theme.default.color}
                           padding="5px 15px"
                           radius="30px">
-                          Subject
+                          Title
                         </Span>
                         <IOSSwitch checked={nfSubEnabled} onChange={() => setNFSubEnabled(!nfSubEnabled)} />
                       </ToggleOption>
@@ -1003,10 +644,10 @@ function SendNotifications() {
                           weight={isMobile ? "500" : "600"}
                           textTransform="none"
                           size={isMobile ? "15px" : "14px"}
-                          color="#1E1E1E"
+                          color={theme.default.color}
                           padding="5px 15px"
                           radius="30px">
-                          Media
+                          Media URL
                         </Span>
                         <IOSSwitch checked={nfMediaEnabled} onChange={() => setNFMediaEnabled(!nfMediaEnabled)} />
                       </ToggleOption>
@@ -1016,7 +657,7 @@ function SendNotifications() {
                          weight={isMobile ? "500" : "600"}
                          textTransform="none"
                          size={isMobile ? "15px" : "14px"}
-                          color="#1E1E1E"
+                          color={theme.default.color}
                           padding="5px 15px"
                           radius="30px">
                           CTA Link
@@ -1025,7 +666,7 @@ function SendNotifications() {
                       </ToggleOption>
                     </ToggleOptionContainer>
                   )}
-                </Item>
+                
 
                 {(nfType === '2' || nfType === '3' || nfType === '5') && (
                   <Item margin="15px 0px" flex="1" self="stretch" align="stretch" width="100%">
@@ -1036,10 +677,11 @@ function SendNotifications() {
                       padding="12px"
                       weight="400"
                       size="16px"
-                      bg="white"
+                      color={theme.default.color}
+                      bg={theme.default.bg}
                       height="25px"
                       margin="7px 0px 0px 0px"
-                      border="1px solid #BAC4D6"
+                      border={`1px solid ${theme.snfBorder}`}
                       focusBorder="1px solid #657795"
                       radius="12px"
                       value={nfRecipient}
@@ -1071,10 +713,11 @@ function SendNotifications() {
                         padding="12px"
                         weight="400"
                         size="16px"
-                        bg="white"
+                        color={theme.default.color}
+                        bg={theme.default.bg}
                         height="25px"
                         margin="7px 0px 0px 0px"
-                        border="1px solid #BAC4D6"
+                        border={`1px solid ${theme.snfBorder}`}
                         focusBorder="1px solid #657795"
                         radius="12px"
                         value={tempRecipeint}
@@ -1107,7 +750,7 @@ function SendNotifications() {
                       justify="space-between"
                     >
                       <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>
-                        Subject
+                        Notification Title
                       </Label>
                       <Span
                         color={theme.default.secondaryColor}
@@ -1124,10 +767,11 @@ function SendNotifications() {
                       padding="12px"
                       weight="400"
                       size="16px"
-                      bg="white"
+                      color={theme.default.color}
+                      bg={theme.default.bg}
                       height="25px"
                       margin="7px 0px 0px 0px"
-                      border="1px solid #BAC4D6"
+                      border={`1px solid ${theme.snfBorder}`}
                       focusBorder="1px solid #657795"
                       radius="12px"
                       value={nfSub}
@@ -1168,10 +812,11 @@ function SendNotifications() {
                       padding="12px"
                       weight="400"
                       margin="7px 0px 0px 0px"
-                      border="1px solid #BAC4D6"
+                      border={`1px solid ${theme.snfBorder}`}
                       focusBorder="1px solid #657795"
                       radius="12px"
-                      bg="#fff"
+                      color={theme.default.color}
+                      bg={theme.default.bg}
                       overflow="auto"
                       value={nfMsg}
                       onChange={(e) => {
@@ -1180,6 +825,97 @@ function SendNotifications() {
                       autocomplete="off"
                     />
                   </Item>
+                )}
+
+                {nfType && (
+                  <>
+                    <Item
+                      flex="1"
+                      justify="flex-start"
+                      align="stretch"
+                      margin="30px 0px 15px 0px"
+                      //   minWidth="280px"
+                    >
+                      <Item
+                        display="flex"
+                        direction="row"
+                        align="center"
+                        flex="1"
+                        self="stretch"
+                        justify="space-between"
+                        margin="0px 0px 7px 0px"
+                      >
+                        <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>
+                          Notification Setting Type
+                        </Label>
+                        <AInlineV2
+                          color={theme.default.primaryPushThemeTextColor}
+                          fontSize="13px"
+                          margin="0px 10px 0px 0px"
+                          fontWeight="600"
+                          onClick={openManageSettings}
+                          cursor="pointer"
+                        >
+                          Manage Settings
+                        </AInlineV2>
+                      </Item>
+                      <DropdownStyledParent>
+                        <DropdownStyled
+                          options={channelSettingsOptions}
+                          onChange={(option) => {
+                            setNFSettingType(option.value);
+                            if(channelSettings[option.value - 1]?.type === 2) {
+                              setNfSliderValue(channelSettings[option.value - 1]?.default);
+                            }
+                          }}
+                          value={channelSettingsOptions[0]}
+                        />
+                      </DropdownStyledParent>
+                    </Item>
+                    {nfSettingType !== null && channelSettings[nfSettingType - 1]?.type === 2 && (
+                      <Item
+                        display="flex"
+                        direction="column"
+                        align="flex-start"
+                        flex="1"
+                        self="stretch"
+                        margin="16px 0px 7px 0px"
+                      >
+                        <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px", marginBottom: "7px" }}>
+                          Range Value
+                        </Label>
+                        <Item
+                          display="flex"
+                          direction="row"
+                          width="100%"
+                        >
+                          <Slider
+                            styles={{
+                              active: {
+                                backgroundColor: theme.sliderActiveColor
+                              },
+                              track: {
+                                height: 4,
+                                flex: 1,
+                                backgroundColor: theme.sliderTrackColor
+                              },
+                              thumb: {
+                                width: 16,
+                                height: 16
+                              }
+                            }}
+                            x={nfSliderValue}
+                            axis="x"
+                            onChange={({ x }) => setNfSliderValue(x)}
+                            xstep={1}
+                            xmin={channelSettings[nfSettingType - 1]?.lowerLimit}
+                            xmax={channelSettings[nfSettingType - 1]?.upperLimit}
+                          />
+                          <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right" margin="0px 0px 0px 10px">{nfSliderValue}</SpanV2>
+                        </Item>
+                      </Item>
+                    )}
+                  </>
                 )}
 
                 {nfType && nfMediaEnabled && (
@@ -1191,10 +927,11 @@ function SendNotifications() {
                       padding="12px"
                       weight="400"
                       size="16px"
-                      bg="white"
+                      color={theme.default.color}
+                      bg={theme.default.bg}
                       height="25px"
                       margin="7px 0px 0px 0px"
-                      border="1px solid #BAC4D6"
+                      border={`1px solid ${theme.snfBorder}`}
                       focusBorder="1px solid #657795"
                       radius="12px"
                       value={nfMedia}
@@ -1215,10 +952,11 @@ function SendNotifications() {
                       padding="12px"
                       weight="400"
                       size="16px"
-                      bg="white"
+                      color={theme.default.color}
+                      bg={theme.default.bg}
                       height="25px"
                       margin="7px 0px 0px 0px"
-                      border="1px solid #BAC4D6"
+                      border={`1px solid ${theme.snfBorder}`}
                       radius="12px"
                       focusBorder="1px solid #657795"
                       value={nfCTA}
@@ -1234,6 +972,7 @@ function SendNotifications() {
                     <div style={{ color: '#CF1C84', fontSize: '0.875rem', textAlign: 'center' }}>{nfInfo}</div>
                   </Item>
                 )}
+                </Item>
 
                 {showPreview && (
                   <PreviewNotif
@@ -1395,9 +1134,9 @@ const Label = styled.div`
 
 const DropdownStyled = styled(Dropdown)`
   .Dropdown-control {
-    background-color: white;
-    color: #000;
-    border: 1px solid #bac4d6;
+    background-color: ${(props) => props.theme.default.bg};
+    color: ${(props) => props.theme.default.color};
+    border: 1px solid ${(props) => props.theme.snfBorder};
     border-radius: 12px;
     flex: 1;
     outline: none;
@@ -1428,14 +1167,14 @@ const DropdownStyled = styled(Dropdown)`
   }
 
   .Dropdown-option {
-    background-color: #fff;
-    color: #000;
+    background-color: ${(props) => props.theme.default.bg};
+    color: ${(props) => props.theme.default.color};
     font-size: 16px;
     padding: 20px 20px;
   }
   .Dropdown-option:hover {
     background-color: #d00775;
-    color: #000;
+    color: white;
   }
 `;
 
@@ -1482,7 +1221,7 @@ const CustomDropdownItem = styled.div`
     margin-right: 10px;
   }
   div {
-    color: black;
+    color: ${(props) => props.theme.default.color};
     font-size: 16px;
     letter-spacing: 2px;
   }
@@ -1515,7 +1254,7 @@ const ToggleOption = styled(ItemH)`
   box-sizing: border-box;
   margin: 15px 0px;
   width: 10em;
-  background: #f4f5fa;
+  background: ${(props) => props.theme.snfToggleBg};
   flex: none;
   padding: 15px;
   border-radius: 20px;
@@ -1542,6 +1281,12 @@ const SubmitButton = styled(Button)`
   @media (max-width: 380px) {
     width: 9.5rem;
   }
+`;
+
+const DropdownLabel = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
 
 // Export Default

@@ -10,10 +10,11 @@ import ViewChannels from "segments/ViewChannels";
     
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from "config/Globals";
+import APP_PATHS from "config/AppPaths";
 
 // Create Channels Module
 const ChannelsModule = ({ loadTeaser, playTeaser }) => {
-  ReactGA.pageview("/channels");
+  ReactGA.pageview(APP_PATHS.Channels);
 
   // Render
   return (

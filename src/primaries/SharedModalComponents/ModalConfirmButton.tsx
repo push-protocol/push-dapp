@@ -10,16 +10,17 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 // Types
 type ModalConfirmButtonType = {
     text:string,
-    onClick: ()=>void,
+    onClick?: ()=>void,
     isLoading: boolean,
     color?:string,
     backgroundColor?:string,
     border?:string,
     topMargin?:string,
     loaderTitle?: string,
+    padding?:string,
 }
 
-const ModalConfirmButton = ({text, onClick, isLoading,color,backgroundColor,border,topMargin,loaderTitle}:ModalConfirmButtonType)=>{
+const ModalConfirmButton = ({text, onClick, isLoading,color,backgroundColor,border,topMargin,loaderTitle,padding}:ModalConfirmButtonType)=>{
     const themes = useTheme();
     return(
         <ThemeProvider theme={themes}>
@@ -46,6 +47,7 @@ const ModalConfirmButton = ({text, onClick, isLoading,color,backgroundColor,bord
                     color={color} 
                     backgroundColor={backgroundColor} 
                     border={border}
+                    style={{ padding: padding ? padding : "16px" }}
                     >
                         {text}
                     </CustomButton>
@@ -87,8 +89,6 @@ const CustomButton = styled.button`
     background-color:${props => props.backgroundColor || '#CF1C84'};
     border:${props=>props.border || '1px solid transparent'};
     border-radius:15px;
-    // padding: 5% 12%;
-    padding:16px;
 `;
 
 export default ModalConfirmButton

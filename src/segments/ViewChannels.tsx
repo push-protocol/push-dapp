@@ -12,7 +12,7 @@ import Faucets from 'components/Faucets';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import ViewChannelItem from 'components/ViewChannelItem';
 import UtilityHelper, { MaskedAliasChannels, MaskedChannels } from 'helpers/UtilityHelper';
-import { incrementPage, setChannelMeta, updateBulkSubscriptions } from 'redux/slices/channelSlice';
+import { incrementPage, setChannelMeta, updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
 import { incrementStepIndex } from 'redux/slices/userJourneySlice';
 import DisplayNotice from '../primaries/DisplayNotice';
 import { Item, ItemH } from '../primaries/SharedStyling';
@@ -196,8 +196,13 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       const userCaipAddress = convertAddressToAddrCaip(account, chainId);
       const subscriptionsArr = await getUserSubscriptions({ userCaipAddress });
       const subscriptionsMapping = {};
-      subscriptionsArr.map(({ channel }) => (subscriptionsMapping[channel] = true));
+      const userSettings = {};
+      subscriptionsArr.map(({ channel, user_settings }) => {
+        subscriptionsMapping[channel] = true;
+        userSettings[channel] = user_settings ? JSON.parse(user_settings) : null;
+      });
       dispatch(updateBulkSubscriptions(subscriptionsMapping));
+      dispatch(updateBulkUserSettings(userSettings));
     })();
   }, [account]);
 

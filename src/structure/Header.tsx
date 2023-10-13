@@ -28,6 +28,34 @@ import MobileNavigation from './MobileNavigation';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import ChainIndicator from 'components/ChainIndicator';
 import { UnsupportedChainIdError } from 'connectors/error';
+import APP_PATHS from 'config/AppPaths';
+import { themeDark, themeLight } from 'config/Themization';
+
+// header tags for pages that are not there in navigationList (Sidebar)
+const EXTRA_HEADER_TAGS = {
+  [APP_PATHS.UserSettings]: {
+    title: 'Settings',
+    light: {
+      bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+      fg: themeLight.headerTagFg,
+    },
+    dark: {
+      bg: themeDark.headerTagBg,
+      fg: themeDark.headerTagFg,
+    },
+  },
+  [APP_PATHS.ChannelSettings]: {
+    title: 'Notification Settings',
+    light: {
+      bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+      fg: themeLight.headerTagFg,
+    },
+    dark: {
+      bg: themeDark.headerTagBg,
+      fg: themeDark.headerTagFg,
+    },
+  }
+}
 
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
@@ -71,6 +99,9 @@ function Header({ isDarkMode, darkModeToggle }) {
         const item = navigationSetup.navigation[key];
         if (location.pathname === item.data.href) {
           setHeaderTag(item.data.headerTag);
+        } else {
+          if(EXTRA_HEADER_TAGS[location.pathname]) 
+            setHeaderTag(EXTRA_HEADER_TAGS[location.pathname]);
         }
       });
     }

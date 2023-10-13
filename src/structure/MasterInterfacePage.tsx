@@ -23,6 +23,7 @@ const InternalDevPage = lazy(() => import('pages/InternalDevPage'));
 const NFTPage = lazy(() => import('pages/NFTPage'));
 const NotAvailablePage = lazy(() => import('pages/NotAvailablePage'));
 const ReceiveNotifsPage = lazy(() => import('pages/ReceiveNotifsPage'));
+const NotifSettingsPage = lazy(() => import('pages/NotifSettingsPage'));
 const SendNotifsPage = lazy(() => import('pages/SendNotifsPage'));
 const SpacePage = lazy(() => import('pages/SpacePage'));
 const SpamPage = lazy(() => import('pages/SpamPage'));
@@ -30,6 +31,7 @@ const SupportPage = lazy(() => import('pages/SupportPage'));
 const TutorialPage = lazy(() => import('pages/TutorialPage'));
 // const YieldFarmingPage = lazy(() => import('pages/YieldFarmingPage'));
 const YieldFarmingV2Page = lazy(() => import('pages/YieldFarmingPageV2'));
+const UserSettingsPage = lazy(() => import('pages/UserSettingsPage'));
 
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
@@ -61,6 +63,7 @@ import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
 import MetamaskPushSnapModal from 'modules/receiveNotifs/MetamaskPushSnapModal';
 import { MODAL_POSITION } from 'hooks/useModalBlur';
+import APP_PATHS from 'config/AppPaths';
 
 // Create Header
 function MasterInterfacePage() {
@@ -82,36 +85,38 @@ function MasterInterfacePage() {
         }
         >
           <Routes>
-            <Route path="inbox" element={<InboxPage />} />
-            <Route path="spam" element={<InboxPage />} />
-            <Route path="chat/:chatid" element={<ChatPage />} />
-            <Route path="chat" element={<ChatPage />} />
-            <Route path="spaces/:spaceid" element={<SpacePage />} />
-            <Route path="spaces" element={<SpacePage />} />
+            <Route path={APP_PATHS.Inbox} element={<InboxPage />} />
+            <Route path={APP_PATHS.Spam} element={<InboxPage />} />
+            <Route path={`${APP_PATHS.Chat}/:chatid`} element={<ChatPage />} />
+            <Route path={APP_PATHS.Chat} element={<ChatPage />} />
+            <Route path={`${APP_PATHS.Spaces}/:spaceid`} element={<SpacePage />} />
+            <Route path={APP_PATHS.Spaces} element={<SpacePage />} />
             {/* <Route path="chat-new" element={<NewChatPage />} /> */}
 
             <Route
-              path="channels"
+              path={APP_PATHS.Channels}
               element={<ChannelsPage loadTeaser={setLoadTeaserVideo} playTeaser={setPlayTeaserVideo} />}
             />
-            <Route path="dashboard" element={<ChannelDashboardPage />} />
-            <Route path="send" element={<SendNotifsPage />} />
-            <Route path="receive" element={<ReceiveNotifsPage />} />
+            <Route path={APP_PATHS.Dashboard} element={<ChannelDashboardPage />} />
+            <Route path={APP_PATHS.Send} element={<SendNotifsPage />} />
+            <Route path={APP_PATHS.Receive} element={<ReceiveNotifsPage />} />
 
-            <Route path="govern" element={<GovPage />} />
-            <Route path="snap" element={<SnapPage />} />
+            <Route path={APP_PATHS.Govern} element={<GovPage />} />
+            <Route path={APP_PATHS.Snap} element={<SnapPage />} />
 
             {/* <Route path="yield" element={<YieldFarmingPage />} /> */}
-            <Route path="yieldv2" element={<YieldFarmingV2Page />} />
-            <Route path="rockstar" element={<NFTPage />} />
-            <Route path="gratitude" element={<AirdropPage />} />
-            <Route path="live_walkthrough" element={<TutorialPage />} />
-            <Route path="comingsoon" element={<ComingSoonPage />} />
-            <Route path="notavailable" element={<NotAvailablePage />} />
-            <Route path="faq" element={<FAQPage />} />
-            <Route path="internal" element={<InternalDevPage />} />
-            <Route path="/" element={<Navigate to="/channels" />} />
-            <Route path="support" element={<SupportPage />} />
+            <Route path={APP_PATHS.YieldV2} element={<YieldFarmingV2Page />} />
+            <Route path={APP_PATHS.Rockstar} element={<NFTPage />} />
+            <Route path={APP_PATHS.Gratitude} element={<AirdropPage />} />
+            <Route path={APP_PATHS.LiveWalkthrough} element={<TutorialPage />} />
+            <Route path={APP_PATHS.ComingSoon} element={<ComingSoonPage />} />
+            <Route path={APP_PATHS.NotAvailable} element={<NotAvailablePage />} />
+            <Route path={APP_PATHS.FAQ} element={<FAQPage />} />
+            <Route path={APP_PATHS.Internal} element={<InternalDevPage />} />
+            <Route path="/" element={<Navigate to={APP_PATHS.Channels} />} />
+            <Route path={APP_PATHS.Support} element={<SupportPage />} />
+            <Route path={APP_PATHS.UserSettings} element={<UserSettingsPage />} />
+            <Route path={APP_PATHS.ChannelSettings} element={<NotifSettingsPage />} />
           </Routes>
         </Suspense>
       </Interface>

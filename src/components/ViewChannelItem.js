@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 // External Packages
 import Skeleton from '@yisheng90/react-loading';
@@ -11,6 +11,7 @@ import { toast as toaster } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { css, useTheme } from 'styled-components';
 import axios from 'axios';
+import { cloneDeep } from 'lodash';
 
 // Internal Compoonents
 import * as PushAPI from '@pushprotocol/restapi';
@@ -19,7 +20,7 @@ import MetaInfoDisplayer from 'components/MetaInfoDisplayer';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import useToast from 'hooks/useToast';
-import { cacheChannelInfo, updateSubscriptionStatus } from 'redux/slices/channelSlice';
+import { cacheChannelInfo } from 'redux/slices/channelSlice';
 import { addNewWelcomeNotif, incrementStepIndex } from 'redux/slices/userJourneySlice';
 import ChannelTutorial, { isChannelTutorialized } from 'segments/ChannelTutorial';
 import NotificationToast from '../primaries/NotificationToast';
@@ -35,6 +36,9 @@ import InfoImage from '../assets/info.svg';
 import VerifiedTooltipContent from "./VerifiedTooltipContent";
 import { IPFSGateway } from 'helpers/IpfsHelper';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
+import ManageNotifSettingDropdown from './dropdowns/ManageNotifSettingDropdown';
+import OptinNotifSettingDropdown from './dropdowns/OptinNotifSettingDropdown';
+import { ImageV2 } from './reusables/SharedStylingV2';
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -48,7 +52,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     (state) => state.contracts
   );
   const { canVerify } = useSelector((state) => state.admin);
-  const { channelsCache, CHANNEL_BLACKLIST, subscriptionStatus } = useSelector((state) => state.channels);
+  const { channelsCache, CHANNEL_BLACKLIST, subscriptionStatus, userSettings: currentUserSettings } = useSelector((state) => state.channels);
   const { account, provider, chainId } = useAccount();
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
@@ -183,11 +187,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
   const generalToast = useToast();
 
-  // to subscribe
-  const subscribe = async () => {
-    console.log('click executed');
-    subscribeAction(false);
-  };
+  const userSettings = useMemo(() => {
+    return cloneDeep(currentUserSettings);
+  }, [currentUserSettings]);
 
   const formatAddress = (addressText) => {
     return addressText.length > 40 ? `${shortenText(addressText, 4, 6)}` : addressText;
@@ -322,125 +324,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       });
   };
 
-  const subscribeToast = useToast();
-  const subscribeAction = async () => {
-    setTxInProgress(true);
-    try {
-      let channelAddress = channelObject.channel;
-      if (!onCoreNetwork) {
-        channelAddress = channelObject.alias_address;
-      }
-
-      subscribeToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
-
-      if (run) {
-        const type = {
-          Subscribe: [
-            { name: 'channel', type: 'address' },
-            { name: 'subscriber', type: 'address' },
-            { name: 'action', type: 'string' },
-          ],
-        };
-
-        const message = {
-          channel: channelAddress,
-          subscriber: account,
-          action: 'Subscribe',
-        };
-
-        await provider.getSigner(account)._signTypedData(EPNS_DOMAIN, type, message);
-
-        console.log('in run');
-        subscribeToast.showMessageToast({
-          toastTitle: 'Success',
-          toastMessage: 'Successfully opted into channel !',
-          toastType: 'SUCCESS',
-          getToastIcon: (size) => (
-            <MdCheckCircle
-              size={size}
-              color="green"
-            />
-          ),
-        });
-
-        dispatch(
-          addNewWelcomeNotif({
-            cta: '',
-            title: channelObject.info,
-            message: `Welcome to ${channelObject.name} Channel. From now onwards, you'll be getting notifications from this channel`,
-            icon: channelIcon,
-            url: channelObject.url,
-            sid: '',
-            app: channelObject.name,
-            image: '',
-          })
-        );
-        setTxInProgress(false);
-        setSubscribed(true);
-        if (stepIndex === 5) {
-          console.log('this is working');
-          dispatch(incrementStepIndex());
-        }
-        return;
-      }
-
-      const _signer = await provider.getSigner(account);
-      await PushAPI.channels.subscribe({
-        signer: _signer,
-        channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
-        userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP
-        onSuccess: () => {
-          dispatch(updateSubscriptionStatus({ channelAddress: channelObject.channel, status: true }));
-          setSubscribed(true);
-          setSubscriberCount(subscriberCount + 1);
-
-          subscribeToast.showMessageToast({
-            toastTitle: 'Success',
-            toastMessage: 'Successfully opted into channel !',
-            toastType: 'SUCCESS',
-            getToastIcon: (size) => (
-              <MdCheckCircle
-                size={size}
-                color="green"
-              />
-            ),
-          });
-        },
-        onError: () => {
-          console.error('opt in error');
-          subscribeToast.showMessageToast({
-            toastTitle: 'Error',
-            toastMessage: `There was an error opting into channel`,
-            toastType: 'ERROR',
-            getToastIcon: (size) => (
-              <MdError
-                size={size}
-                color="red"
-              />
-            ),
-          });
-        },
-        env: appConfig.pushNodesEnv,
-      });
-    } catch (err) {
-      subscribeToast.showMessageToast({
-        toastTitle: 'Error',
-        toastMessage: `There was an error opting into channel ( ${err.message} )`,
-        toastType: 'ERROR',
-        getToastIcon: (size) => (
-          <MdError
-            size={size}
-            color="red"
-          />
-        ),
-      });
-
-      console.log(err);
-    } finally {
-      setTxInProgress(false);
-    }
-  };
-
   const copyToClipboard = (address) => {
     let hostname = window.location.hostname;
     // if we are on localhost, attach the port
@@ -458,73 +341,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       el.select();
       document.execCommand('copy');
       document.body.removeChild(el);
-    }
-  };
-
-  const unsubscribeToast = useToast();
-  const unsubscribeAction = async () => {
-    try {
-      let channelAddress = channelObject.channel;
-      if (!onCoreNetwork) {
-        channelAddress = channelObject.alias_address;
-      }
-
-      unsubscribeToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
-
-      const _signer = await provider.getSigner(account);
-      await PushAPI.channels.unsubscribe({
-        signer: _signer,
-        channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
-        userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP
-        onSuccess: () => {
-          dispatch(updateSubscriptionStatus({ channelAddress: channelObject.channel, status: false }));
-          setSubscribed(false);
-          setSubscriberCount(subscriberCount - 1);
-
-          unsubscribeToast.showMessageToast({
-            toastTitle: 'Success',
-            toastMessage: 'Successfully opted out of channel !',
-            toastType: 'SUCCESS',
-            getToastIcon: (size) => (
-              <MdCheckCircle
-                size={size}
-                color="green"
-              />
-            ),
-          });
-        },
-        onError: () => {
-          console.error('opt out error');
-          unsubscribeToast.showMessageToast({
-            toastTitle: 'Error',
-            toastMessage: `There was an error opting out of channel`,
-            toastType: 'ERROR',
-            getToastIcon: (size) => (
-              <MdError
-                size={size}
-                color="red"
-              />
-            ),
-          });
-        },
-        env: appConfig.pushNodesEnv,
-      });
-    } catch (err) {
-      unsubscribeToast.showMessageToast({
-        toastTitle: 'Error',
-        toastMessage: `There was an error opting out of channel ( ${err.message} )`,
-        toastType: 'ERROR',
-        getToastIcon: (size) => (
-          <MdError
-            size={size}
-            color="red"
-          />
-        ),
-      });
-
-      console.log(err);
-    } finally {
-      setTxInProgress(false);
     }
   };
 
@@ -1038,22 +854,31 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <>
                 {isOwner && <OwnerButton disabled>Owner</OwnerButton>}
                 {!isOwner && (
-                  <SubscribeButton
-                    onClick={subscribe}
-                    disabled={txInProgress}
-                    className="optin"
+                  <OptinNotifSettingDropdown 
+                    channelDetail={channelObject} 
+                    setLoading={setTxInProgress}
+                    onSuccessOptin={() => {
+                      setSubscribed(true);
+                      setSubscriberCount((prevSubscriberCount) => prevSubscriberCount + 1)
+                    }}
                   >
-                    {txInProgress && (
-                      <ActionLoader>
-                        <LoaderSpinner
-                          type={LOADER_TYPE.SEAMLESS}
-                          spinnerSize={16}
-                          spinnerColor="#FFF"
-                        />
-                      </ActionLoader>
-                    )}
-                    <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
-                  </SubscribeButton>
+                    <SubscribeButton
+                      onClick={() => {}}
+                      disabled={txInProgress}
+                      className="optin"
+                    >
+                      {txInProgress && (
+                        <ActionLoader>
+                          <LoaderSpinner
+                            type={LOADER_TYPE.SEAMLESS}
+                            spinnerSize={16}
+                            spinnerColor="#FFF"
+                          />
+                        </ActionLoader>
+                      )}
+                      <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
+                    </SubscribeButton>
+                  </OptinNotifSettingDropdown>
                 )}
               </>
             )}
@@ -1061,21 +886,39 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <>
                 {isOwner && <OwnerButton disabled>Owner</OwnerButton>}
                 {!isOwner && (
-                  <UnsubscribeButton
-                    onClick={unsubscribeAction}
-                    disabled={txInProgress}
+                  <ManageNotifSettingDropdown 
+                    centerOnMobile={true}
+                    channelDetail={channelObject}
+                    setSubscribed={setSubscribed}
+                    userSetting={userSettings[channelObject.channel]}
+                    setSubscriberCount={setSubscriberCount}
+                    onSuccessOptout={() => {
+                      setSubscribed(false);
+                      setSubscriberCount((prevSubscriberCount) => prevSubscriberCount - 1)
+                    }}
                   >
-                    {txInProgress && (
-                      <ActionLoader>
-                        <LoaderSpinner
-                          type={LOADER_TYPE.SEAMLESS}
-                          spinnerSize={16}
-                          spinnerColor="#FFF"
-                        />
-                      </ActionLoader>
-                    )}
-                    <ActionTitle hideit={txInProgress}>Opt-out</ActionTitle>
-                  </UnsubscribeButton>
+                    <UnsubscribeButton
+                      onClick={() => {}}
+                      disabled={txInProgress}
+                    >
+                      {txInProgress && (
+                        <ActionLoader>
+                          <LoaderSpinner
+                            type={LOADER_TYPE.SEAMLESS}
+                            spinnerSize={16}
+                            spinnerColor="#FFF"
+                          />
+                        </ActionLoader>
+                      )}
+                      <ActionTitle hideit={txInProgress}>Manage</ActionTitle>
+                      <ImageV2
+                        alt="arrow"
+                        src="/svg/arrow.svg"
+                        height="10px"
+                        width="12px"
+                      />
+                    </UnsubscribeButton>
+                  </ManageNotifSettingDropdown>
                 )}
               </>
             )}
@@ -1433,8 +1276,6 @@ const ChannelActionButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 15px;
-  margin: 10px;
   color: #fff;
   border-radius: 5px;
   font-size: 14px;
@@ -1503,11 +1344,9 @@ const SkeletonButton = styled.div`
 const SubscribeButton = styled(ChannelActionButton)`
   background: #e20880;
   border-radius: 8px;
-  padding: 9px 15px;
-  min-width: 80px;
-  @media (max-width: 768px) {
-    padding: 9px 30px;
-  }
+  padding: 0px;
+  min-height: 36px;
+  min-width: 108px;
 `;
 
 const UnsubscribeButton = styled(ChannelActionButton)`
@@ -1515,15 +1354,17 @@ const UnsubscribeButton = styled(ChannelActionButton)`
   color: ${(props) => props.theme.viewChannelPrimaryText};
   border: 1px solid #bac4d6;
   border-radius: 8px;
-  padding: 9px 15px;
-  min-width: 80px;
-  @media (max-width: 768px) {
-    padding: 9px 30px;
-  }
+  padding: 0px 8px 0px 16px;
+  gap: 8px;
+  min-height: 36px;
+  min-width: 108px;
 `;
 
 const OwnerButton = styled(ChannelActionButton)`
   background: #35c5f3;
+  border-radius: 8px;
+  min-height: 36px;
+  min-width: 108px;
 `;
 
 const Toaster = styled.div`
