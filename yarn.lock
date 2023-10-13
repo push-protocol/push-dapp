@@ -5423,9 +5423,9 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
     "@pushprotocol/ledgerlive": latest
-    "@pushprotocol/restapi": 0.0.1-alpha.48
+    "@pushprotocol/restapi": 0.0.1-alpha.49
     "@pushprotocol/socket": latest
-    "@pushprotocol/uiweb": 0.0.1-alpha.17
+    "@pushprotocol/uiweb": 0.0.1-alpha.19
     "@reduxjs/toolkit": ^1.7.1
     "@testing-library/dom": ^6.12.2
     "@testing-library/jest-dom": ^4.2.4
@@ -5625,9 +5625,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:0.0.1-alpha.48":
-  version: 0.0.1-alpha.48
-  resolution: "@pushprotocol/restapi@npm:0.0.1-alpha.48"
+"@pushprotocol/restapi@npm:0.0.1-alpha.49":
+  version: 0.0.1-alpha.49
+  resolution: "@pushprotocol/restapi@npm:0.0.1-alpha.49"
   dependencies:
     "@ambire/signature-validator": ^1.3.1
     "@metamask/eth-sig-util": ^5.0.2
@@ -5648,7 +5648,7 @@ __metadata:
     viem: ^1.3.0
   peerDependencies:
     ethers: ^5.6.8
-  checksum: 49aa8e537574b4fbcefa154dbdde36c66bda285a306794dc259f6cbf7e056fdfe9e2d4a1bd3f4bfa0c0f25370b9687e083fabd0113c309e021a0b702ab42dd40
+  checksum: 835229af4889c88573593ee19c97e9a73d3e67e70003ddcdd6ad16f65fe0bde1fd2f08adc6cb3fdb583cf8ef8746edd100fb20aada1578bb1a16f85ab6ab5ca5
   languageName: node
   linkType: hard
 
@@ -5688,9 +5688,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:0.0.1-alpha.17":
-  version: 0.0.1-alpha.17
-  resolution: "@pushprotocol/uiweb@npm:0.0.1-alpha.17"
+"@pushprotocol/uiweb@npm:0.0.1-alpha.19":
+  version: 0.0.1-alpha.19
+  resolution: "@pushprotocol/uiweb@npm:0.0.1-alpha.19"
   dependencies:
     "@livekit/components-react": ^1.2.2
     "@livekit/components-styles": ^1.0.6
@@ -5721,7 +5721,7 @@ __metadata:
     axios: ^0.27.2
     react: ">=16.8.0"
     styled-components: ^5.3.5
-  checksum: 699b576cc1612b41e83790f3e9845fc7702ecf362fb542f28156dadec039f52e41962ab774b61a910c5c05a9afda4ce6d0b79e7d02d33240054f8df230bdad92
+  checksum: ef121fb5aa04e24c4b65f5543439e50ecaac9453c16c07b0a5774ddde594a89aa884399a486517d48e00d5056c6817b4b204193229d908ad27fcf5c15fcebf6f
   languageName: node
   linkType: hard
 
