@@ -11,6 +11,7 @@ import { useAccount } from 'hooks';
 
 // Internal Configs
 import { appConfig } from "config";
+import APP_PATHS from "config/AppPaths";
 
 function NotAvailablePage(props) {
   const themes = useTheme();
@@ -20,7 +21,7 @@ function NotAvailablePage(props) {
   React.useEffect(() => {
     if (onCoreNetwork) {
       const url = window.location.origin;
-      window.location.replace(`${url}/#/channels`);
+      window.location.replace(`${url}${APP_PATHS.Channels}`);
     }
   })
 
