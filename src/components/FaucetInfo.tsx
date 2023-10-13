@@ -110,7 +110,8 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
 };
 
 const Container = styled.div`
-width:100%;
+  width:100%;
+  transform: translateY(-40px);
 `
 
 const TextSpace = styled.div`
@@ -125,6 +126,8 @@ const TextSpace = styled.div`
   border-radius: 0px 0px 28px 28px;
   padding: 32px 32px 20px 32px;
   margin-top:24px;
+  margin-bottom: -40px;
+
   @media ${device.tablet} {
     width: 100%;
     flex-direction: column;

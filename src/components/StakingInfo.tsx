@@ -56,7 +56,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, 
     <Fragment>
       {/* <Content padding="0px 0px 0px 0px"> */}
         <ItemContent>
-          <Item self="center" maxWidth="800px" width="100%" margin="20px 0px 0px 0px">
+          <Item self="center" maxWidth="800px" width="100%" margin="60px 0px 0px 0px">
             <TabSpace>
               <p>
                 Amount for Staking
@@ -115,7 +115,7 @@ const TabSpace = styled.div`
   border-radius: 20px;
   background-color: #f4f5fa;
   align-items: center;
-  transform: translateY(40px);
+  z-index: 1;
 
   @media ${device.tablet} {
     width: 100%;
