@@ -11,7 +11,7 @@ import { appConfig } from 'config';
 import { device } from 'config/Globals';
 import { useEffect, useState } from 'react';
 import { getHasEnoughPushToken } from 'helpers';
-import useModalBlur, {MODAL_POSITION} from 'hooks/useModalBlur';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import { UniswapWidgetModal } from './UniswapWidget';
 
 type FaucetInfoType = {
@@ -49,70 +49,70 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
   useEffect(() => {
     (async () => {
       await checkSetFaucetVisibility();
-    })()
+    })();
   }, [noOfPushTokensToCheck]);
 
   return (
-    <Container>
-      {isFaucetVisible ? (
-        <TextSpace style={containerProps}>
-          <InfoText>
-            {isProd
-              ? 'You do not have sufficient PUSH Tokens. Swap to add more PUSH.'
-              : 'Follow these steps to ensure you have enough Testnet Push to proceed.'}
-          </InfoText>
-          {isProd ? (
-            <SwapTokensButton onClick={showUniswapWidgetModal}>
-              <ImageV2
-                width="12px"
-                height="12px"
-                margin="0 0.5rem 0 0"
-                src={swapIcon}
-              />
-              <ButtonLabel>Swap Tokens for PUSH</ButtonLabel>
-            </SwapTokensButton>
-          ) : (
-            <ItemBody>
-              <AnchorLink
-                href="https://chaindrop.org/?chainid=5&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-                target="_blank"
-              >
-                <NumberIcon>1</NumberIcon>
-                <PoolShare>Goerli ETH Faucet</PoolShare>
-              </AnchorLink>
-              <Minter
-                onClick={async () => {
-                  await onMintPushToken(1000);
-                  await checkSetFaucetVisibility();
-                }}
-              >
-                <NumberIcon>2</NumberIcon>
-                <PoolShare>Get Testnet PUSH</PoolShare>
-              </Minter>
-            </ItemBody>
-          )}
-        </TextSpace>
-      ) : (
-        ''
-      )}
-      {isUniswapWidgetModalOpen &&
+    <>
+      <Container>
+        {isFaucetVisible ? (
+          <TextSpace style={containerProps}>
+            <InfoText>
+              {isProd
+                ? 'You do not have sufficient PUSH Tokens. Swap to add more PUSH.'
+                : 'Follow these steps to ensure you have enough Testnet Push to proceed.'}
+            </InfoText>
+            {isProd ? (
+              <SwapTokensButton onClick={showUniswapWidgetModal}>
+                <ImageV2
+                  width="12px"
+                  height="12px"
+                  margin="0 0.5rem 0 0"
+                  src={swapIcon}
+                />
+                <ButtonLabel>Swap Tokens for PUSH</ButtonLabel>
+              </SwapTokensButton>
+            ) : (
+              <ItemBody>
+                <AnchorLink
+                  href="https://chaindrop.org/?chainid=5&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                  target="_blank"
+                >
+                  <NumberIcon>1</NumberIcon>
+                  <PoolShare>Goerli ETH Faucet</PoolShare>
+                </AnchorLink>
+                <Minter
+                  onClick={async () => {
+                    await onMintPushToken(1000);
+                    await checkSetFaucetVisibility();
+                  }}
+                >
+                  <NumberIcon>2</NumberIcon>
+                  <PoolShare>Get Testnet PUSH</PoolShare>
+                </Minter>
+              </ItemBody>
+            )}
+          </TextSpace>
+        ) : (
+          ''
+        )}
+      </Container>
+      {isUniswapWidgetModalOpen && (
         <UniswapWidgetModalComponent
           InnerComponent={UniswapWidgetModal}
           InnerComponentProps={{ defaultPushTokenAmount: noOfPushTokensToCheck }}
           modalPadding="0px"
           modalPosition={MODAL_POSITION.ON_ROOT}
         />
-      }
-    </Container>
-
-
+      )}
+    </>
   );
 };
 
 const Container = styled.div`
-  width:100%;
+  width: 100%;
   transform: translateY(-40px);
-`
+`;
 
 const TextSpace = styled.div`
   box-sizing: border-box;
@@ -125,7 +125,7 @@ const TextSpace = styled.div`
   background: #f4dcea;
   border-radius: 0px 0px 28px 28px;
   padding: 32px 32px 20px 32px;
-  margin-top:24px;
+  margin-top: 24px;
   margin-bottom: -40px;
 
   @media ${device.tablet} {
