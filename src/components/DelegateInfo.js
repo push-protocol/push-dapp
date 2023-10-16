@@ -7,10 +7,9 @@ import { RiFileCopyFill, RiFileCopyLine } from "react-icons/ri";
 
 // Internal Components
 import { useDeviceWidthCheck } from "hooks";
-import { Item } from "primaries/SharedStyling";
 import { shortenText } from "helpers/UtilityHelper";
 
-const DelegateInfo = ({ delegateAddress, isDelegate, maxWidth }) => {
+const DelegateInfo = ({ delegateAddress, maxWidth }) => {
   const [addressText, setAddressText] = useState(delegateAddress);
   const [isCopied, setIsCopied] = useState(false);
   const isMobile = useDeviceWidthCheck(1200);
@@ -26,27 +25,14 @@ const DelegateInfo = ({ delegateAddress, isDelegate, maxWidth }) => {
   }, [isMobile]);
 
   return (
-    <>
-      {!isDelegate ? (
-        <Wallet
-          onMouseLeave={() => setIsCopied(false)}
-          minWidth={!isMobile ? "350px" : "120px"}
-        >
-          <WalletInfoContent
-            {...{ addressText, isCopied, setIsCopied, delegateAddress }}
-          />
-        </Wallet>
-      ) : (
-        <HoverWallet
-          onMouseLeave={() => setIsCopied(false)}
-          minWidth={!isMobile ? "350px" : "120px"}
-        >
-          <WalletInfoContent
-            {...{ addressText, isCopied, setIsCopied, delegateAddress }}
-          />
-        </HoverWallet>
-      )}
-    </>
+    <HoverWallet
+      onMouseLeave={() => setIsCopied(false)}
+      minWidth={!isMobile ? "350px" : "120px"}
+    >
+      <WalletInfoContent
+        {...{ addressText, isCopied, setIsCopied, delegateAddress }}
+      />
+    </HoverWallet>
   );
 };
 
@@ -57,6 +43,14 @@ const WalletInfoContent = ({
   delegateAddress,
 }) => {
   const isMobile = useDeviceWidthCheck(1000);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseOut = (e) => {
+    setIsHovered(false);
+  }
+  const handleMouseOver = (e) => {
+    setIsHovered(true);
+  }
 
   return (
     <div
@@ -66,9 +60,11 @@ const WalletInfoContent = ({
         justifyContent: "space-between",
         width: "100%",
       }}
+      onMouseEnter={handleMouseOver}
+      onMouseLeave={handleMouseOut}
     >
-      <div style={{ paddingTop: 3 }}>{addressText}</div>
-      <ItemHere
+      <Address>{shortenText(addressText, 7, 7)}</Address>
+      {isHovered && <ItemHere
         isMobile={isMobile ? "10px" : "50px"}
         onClick={() => {
           navigator.clipboard.writeText(delegateAddress);
@@ -80,7 +76,7 @@ const WalletInfoContent = ({
         ) : (
           <RiFileCopyLine size={18} color="white" style={{ paddingTop: 6 }} />
         )}
-      </ItemHere>
+      </ItemHere>}
     </div>
   );
 };
@@ -94,7 +90,7 @@ const WalletAddressDisplay = styled.span`
   flex: 3;
   // margin-right: 30px;
   // margin-left: 10px;
-  padding: 6px 25px;
+  padding: 0px 15px;
   max-height: 30px;
   display: flex;
   align-items: baseline;
@@ -134,10 +130,11 @@ const HoverWallet = styled(WalletAddressDisplay)`
   }
 `;
 
-const Wallet = styled(WalletAddressDisplay)`
-  color: #fff;
-  background: rgb(226, 8, 128);
-  background: linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%);
+const Address = styled.div`
+  padding-top: 3px;
+  font-size: 15px;
+  font-weight: 400;
+
   &:hover {
     opacity: 0.9;
     cursor: pointer;

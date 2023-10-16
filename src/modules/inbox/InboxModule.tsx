@@ -23,6 +23,7 @@ import { useAccount } from 'hooks';
 // Internal Configs
 import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import APP_PATHS from 'config/AppPaths';
 
 // Constants
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
@@ -30,7 +31,7 @@ export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
 // Create Inbox Module
 const InboxModule = ({isSpam}) => {
   // React GA Analytics
-  ReactGA.pageview('/inbox');
+  ReactGA.pageview(APP_PATHS.Inbox)
 
   const dispatch = useDispatch();
   const { account, chainId, provider } = useAccount();

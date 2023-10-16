@@ -26,7 +26,7 @@ export const config = {
     137, //for polygon mainnet
     56, // for bnb mainnet
     // 10, // for optimism mainnet
-    // 42161, // arbitrum mainnet
+    42161, // arbitrum mainnet
     1101 // polygon zkevm mainnet
   ],
 

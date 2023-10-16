@@ -533,6 +533,7 @@ const Footer = styled(ItemVV2)`
     justify-content: space-between;
     grid-gap: 40px;
     margin-top:35px;
+    z-index: 1;
 
     @media (max-width:600px){
       padding: 16px;

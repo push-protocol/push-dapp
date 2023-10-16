@@ -530,7 +530,7 @@ const Footer = styled(ItemHV2)`
   align-content: space-between;
   justify-content: space-between;
   grid-gap: 40px;
-  transform: translateY(40px);
+  z-index: 1;
 
   @media (max-width: 600px) {
     padding: 16px;
