@@ -5625,9 +5625,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
+"@pushprotocol/restapi@npm:1.4.21":
+  version: 1.4.21
+  resolution: "@pushprotocol/restapi@npm:1.4.21"
+=======
 "@pushprotocol/restapi@npm:0.0.1-alpha.49":
   version: 0.0.1-alpha.49
   resolution: "@pushprotocol/restapi@npm:0.0.1-alpha.49"
+>>>>>>> main
   dependencies:
     "@ambire/signature-validator": ^1.3.1
     "@metamask/eth-sig-util": ^5.0.2
@@ -5648,7 +5654,11 @@ __metadata:
     viem: ^1.3.0
   peerDependencies:
     ethers: ^5.6.8
+<<<<<<< HEAD
+  checksum: e466b817bf19087d8b7bac25ac60354ad804fd964c668eac547d012d1a52cfe9ded2ffb74b67bb8c0ac40bb148410aa8c8b1269fcb7efb9a83bd211f84e1184c
+=======
   checksum: 835229af4889c88573593ee19c97e9a73d3e67e70003ddcdd6ad16f65fe0bde1fd2f08adc6cb3fdb583cf8ef8746edd100fb20aada1578bb1a16f85ab6ab5ca5
+>>>>>>> main
   languageName: node
   linkType: hard
 
@@ -5688,9 +5698,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
+"@pushprotocol/uiweb@npm:1.1.14":
+  version: 1.1.14
+  resolution: "@pushprotocol/uiweb@npm:1.1.14"
+=======
 "@pushprotocol/uiweb@npm:0.0.1-alpha.20":
   version: 0.0.1-alpha.20
   resolution: "@pushprotocol/uiweb@npm:0.0.1-alpha.20"
+>>>>>>> main
   dependencies:
     "@livekit/components-react": ^1.2.2
     "@livekit/components-styles": ^1.0.6
@@ -5721,7 +5737,11 @@ __metadata:
     axios: ^0.27.2
     react: ">=16.8.0"
     styled-components: ^5.3.5
+<<<<<<< HEAD
+  checksum: c06f684851892d3c71e4c8f38210a4b04e8e1f039d82a2bda728f3cc1414d059989c6ef91a5f6bf07e945ad61fd84a630c6e2ac72cba9493f138387396eda421
+=======
   checksum: 1845fc427cca2ac9cafe92de9c16af4aa6d94312f391032afee8ffc9d6efdfb5c9fa3cfe085eec1d6a20d4d423b461db5537c331ef03f0844d8abd6e90bd5e7a
+>>>>>>> main
   languageName: node
   linkType: hard
 
