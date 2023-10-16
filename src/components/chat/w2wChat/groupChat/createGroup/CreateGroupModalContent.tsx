@@ -24,6 +24,9 @@ import { fetchInbox } from 'helpers/w2w/user';
 import { profilePicture } from 'config/W2WConfig';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { device } from 'config/Globals';
+import { CreateGroupModal } from "@pushprotocol/uiweb";
+import { ChatUIProvider } from '@pushprotocol/uiweb';
+
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const [createGroupState, setCreateGroupState] = React.useState<number>(1);
@@ -40,6 +43,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const createGroupToast = useToast();
   const isMobile = useDeviceWidthCheck(600);
 
+  
   const handlePrevious = () => {
     setCreateGroupState(1);
   };
@@ -133,34 +137,8 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   };
   return (
     <ThemeProvider theme={themes}>
-      <ModalContainer createGroupState={createGroupState}>
-        
-        {createGroupState == 1 && (
-          <GroupDetailsContent
-            groupNameData={groupNameData}
-            groupDescriptionData={groupDescriptionData}
-            groupImageData={groupImageData}
-            groupTypeObject={groupTypeObject}
-            handleGroupNameData={setGroupNameData}
-            handleGroupDescriptionData={setGroupDescriptionData}
-            handleGroupImageData={setGroupImageData}
-            handleGroupTypeObject={setGroupTypeObject}
-            handleCreateGroupState={setCreateGroupState}
-            handlePrevious={handlePrevious}
-            handleClose={handleClose}
-          />
-        )}
-        {createGroupState == 2 && (
-          <AddWalletContent
-            onSubmit={handleCreateGroup}
-            memberList={memberList}
-            handleMemberList={setMemberList}
-            isLoading={isLoading}
-            handlePrevious={handlePrevious}
-            handleClose={handleClose}
-            title={"Create Group"}
-          />
-        )}
+      <ModalContainer>
+        <CreateGroupModal onClose={() => handleClose()} />
       </ModalContainer>
     </ThemeProvider>
   );
