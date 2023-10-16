@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
@@ -26,12 +26,14 @@ import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import { ChannelSetting } from 'helpers/channel/types';
 import { getChannel } from 'services';
 import { updateChannelSetting } from 'redux/slices/channelSlice';
+import { AppContext } from 'contexts/AppContext';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 function NotificationSettings() {
   const { account, chainId } = useAccount();
+  const { userPushSDKInstance } = useContext(AppContext);
   const { coreChannelAdmin, delegatees } = useSelector((state: any) => state.admin);
   const { epnsWriteProvider } = useSelector((state: any) => state.contracts);
   const { channelSettings } = useSelector((state: any) => state.channels);
@@ -64,7 +66,7 @@ function NotificationSettings() {
       setIsLoading(true);
       if (!account) return;
       try {
-        const channelDetails = await getChannel({ channel: account });
+        const channelDetails = await userPushSDKInstance.channel.info(account);
         if (!channelDetails) redirectBack();
       } catch {
         redirectBack();

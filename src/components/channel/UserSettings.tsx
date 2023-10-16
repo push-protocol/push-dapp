@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
@@ -12,7 +12,6 @@ import { cloneDeep } from 'lodash';
 import { useAccount } from 'hooks';
 import { Button } from 'primaries/SharedStyling';
 import { ImageV2 } from 'components/reusables/SharedStylingV2';
-import { getChannel, getUserSubscriptions } from 'services';
 import LoaderSpinner from 'primaries/LoaderSpinner';
 import EmptyNotificationSettings from './EmptyNotificationSettings';
 import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
@@ -21,6 +20,7 @@ import ManageNotifSettingDropdown from 'components/dropdowns/ManageNotifSettingD
 
 // Internal Configs
 import { device } from 'config/Globals';
+import { AppContext } from 'contexts/AppContext';
 
 interface ChannelListItem {
   channel: string;
@@ -32,6 +32,7 @@ interface ChannelListItem {
 
 function UserSettings() {
   const { account, chainId } = useAccount();
+  const { userPushSDKInstance } = useContext(AppContext);
   const { subscriptionStatus, userSettings: currentUserSettings } = useSelector((state: any) => state.channels);
   const [selectedOption, setSelectedOption] = useState(0);
   const [channelList, setChannelList] = useState<ChannelListItem[]>([]);
@@ -42,7 +43,7 @@ function UserSettings() {
   const dispatch = useDispatch();
 
   const fetchChannelDetails = async (channel: string) => {
-    const details = await getChannel({ channel });
+    const details = await userPushSDKInstance.channel.info(channel);
     if (details) {
       const updatedChannelItem: ChannelListItem = {
         channel,
@@ -70,8 +71,7 @@ function UserSettings() {
     (async function () {
       setIsLoading(true);
       if (Object.keys(subscriptionStatus).length === 0) {
-        const userCaipAddress = convertAddressToAddrCaip(account, chainId);
-        const subscriptionsArr = await getUserSubscriptions({ userCaipAddress });
+        const subscriptionsArr = await userPushSDKInstance.notification.subscriptions();
         const subscriptionsMapping = {};
         const userSettings = {};
         subscriptionsArr.map(({ channel, user_settings }) => {
