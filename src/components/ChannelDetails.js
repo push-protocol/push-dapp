@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React, { useEffect, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 
 // External Packages
 import moment from 'moment';
@@ -31,7 +31,7 @@ import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
 import { getDateFromTimestamp, nextDaysDateFromTimestamp, timeRemaining } from 'helpers/TimerHelper';
 import APP_PATHS from 'config/AppPaths';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import { getChannelDelegates } from 'services';
+import { AppContext } from 'contexts/AppContext';
 
 
 const DATE_FORMAT = 'DD MMM, YYYY';
@@ -45,6 +45,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
     aliasDetails: { isAliasVerified, aliasAddrFromContract },
   } = useSelector((state) => state.admin);
   const { channelSettings } = useSelector((state) => state.channels); 
+  const { userPushSDKInstance } = useContext(AppContext);
 
   const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector((state) => state.channels);
   const { processingState } = useSelector((state) => state.channelCreation);
@@ -73,7 +74,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
 
   const addDelegateToast = useToast();
   const addDelegate = async (walletAddress) => {
-    return epnsCommWriteProvider.addDelegate(walletAddress);
+    return userPushSDKInstance.channel.delegate.add(convertAddressToAddrCaip(walletAddress, chainId));
   };
 
   // BEGIN CHANGE
@@ -130,7 +131,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
       (async () => {
         try {
           const channelAddressinCAIP = convertAddressToAddrCaip(account, chainId);
-          const channelDelegates = await getChannelDelegates({ channelCaipAddress: channelAddressinCAIP });
+          const channelDelegates = await userPushSDKInstance.channel.delegate.get(channelAddressinCAIP);
           if (channelDelegates) {
             const delegateeList = channelDelegates.map((delegate) => delegate);
             delegateeList.unshift(account);
@@ -144,7 +145,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
   }, [account]);
 
   const removeDelegate = (walletAddress) => {
-    return epnsCommWriteProvider.removeDelegate(walletAddress);
+    return userPushSDKInstance.channel.delegate.remove(convertAddressToAddrCaip(walletAddress, chainId));
   };
 
   const navigateToNotifSettings = () => {

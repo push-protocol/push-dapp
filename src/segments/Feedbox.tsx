@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React from "react";
+import React, { useContext } from "react";
 
 // External Packages
 import { useDispatch, useSelector } from "react-redux";
@@ -30,6 +30,7 @@ import { useAccount } from "hooks";
 // Internal Configs
 import { appConfig } from "config";
 import { device } from "config/Globals";
+import { AppContext } from "contexts/AppContext";
 
 // Constants
 const NOTIFICATIONS_PER_PAGE = 10;
@@ -37,6 +38,7 @@ const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
 const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
   const dispatch = useDispatch();
+  const { userPushSDKInstance } = useContext(AppContext);
   const modalRef = React.useRef(null);
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
 
@@ -126,7 +128,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
   }, [allFilter])
 
   const loadNotifications = async () => {
-    if (loading || finishedFetching) return;
+    if (loading || finishedFetching || !userPushSDKInstance) return;
     setLoading(true);
     try {
       // const { count, results } = await PushAPI.fetchNotifications({
@@ -136,10 +138,8 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
       //   chainId,
       //   dev: true,
       // });
-      const results = await PushAPI.user.getFeeds({
-        user: user, // user address in CAIP
+      const results = await userPushSDKInstance.notification.list('INBOX', {
         raw: true,
-        env: appConfig.pushNodesEnv,
         page: page,
         limit: NOTIFICATIONS_PER_PAGE
       });
@@ -159,9 +159,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
     setBgUpdateLoading(true);
     setLoading(true);
     try {
-      const results = await PushAPI.user.getFeeds({
-        user: user, // user address in CAIP
-        env: appConfig.pushNodesEnv,
+      const results = await await userPushSDKInstance.notification.list('INBOX', {
         raw: true,
         page: 1,
         limit: NOTIFICATIONS_PER_PAGE
@@ -201,9 +199,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
   const fetchAllNotif = async () => {
     setLoadFilter(true);
     try {
-      const results = await PushAPI.user.getFeeds({
-        user: user, // user address in CAIP
-        env: appConfig.pushNodesEnv,
+      const results = await userPushSDKInstance.notification.list('INBOX', {
         limit: 100000,
         page: page,
         raw:true
@@ -232,9 +228,10 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
   };
 
   React.useEffect(() => {
+    if (!userPushSDKInstance) return;
     fetchLatestNotifications();
     fetchAllNotif();
-  }, [toggle]);
+  }, [toggle, userPushSDKInstance]);
 
   //function to query more notifications
   const handlePagination = async () => {

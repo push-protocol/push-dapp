@@ -67,7 +67,7 @@ function UserSettings() {
   };
 
   useEffect(() => {
-    if (!account) return;
+    if (!account || !userPushSDKInstance) return;
     (async function () {
       setIsLoading(true);
       if (Object.keys(subscriptionStatus).length === 0) {
@@ -86,7 +86,7 @@ function UserSettings() {
       }
       setIsLoading(false);
     })();
-  }, [account]);
+  }, [account, userPushSDKInstance]);
 
   const navigateToChannels = () => {
     navigate('/channels');

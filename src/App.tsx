@@ -214,12 +214,12 @@ export default function App() {
 
       {isActive && !authError && allowedChain && (
         <>
+          <AppContextProvider>
           <GlobalStyle />
           <InitState />
           <NavigationContextProvider>
             <SpaceContextProvider>
               <SpaceComponentContextProvider spaceUI={spaceUI}>
-            <AppContextProvider>
               <Joyride
                 run={run}
                 steps={steps}
@@ -271,10 +271,10 @@ export default function App() {
                     </SpacesUIProvider>
                 </ContentContainer>
               </ParentContainer>
-            </AppContextProvider>
             </SpaceComponentContextProvider>
             </SpaceContextProvider>
           </NavigationContextProvider>
+          </AppContextProvider>
         </>
       )}
     </ThemeProvider>

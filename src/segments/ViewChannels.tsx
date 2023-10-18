@@ -76,7 +76,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
 
     // fetch more channel information
     setMoreLoading(true);
-    if (search) {
+    if (search && userPushSDKInstance) {
       loadMoreSearchChannels();
       return;
     }
@@ -118,11 +118,10 @@ function ViewChannels({ loadTeaser, playTeaser }) {
 
   const loadMoreSearchChannels = async () => {
     try {
-      const searchChannels = await getChannelsSearch({
-        page: searchPage,
+      const searchChannels = await userPushSDKInstance.channel.search(search, {
         limit: SEARCH_LIMIT,
-        query: search,
-      });
+        page: searchPage
+      }); 
 
       if (searchChannels && searchChannels.length > 0) {
         setChannelToShow([...channelToShow, ...searchChannels] || []);
@@ -148,15 +147,15 @@ function ViewChannels({ loadTeaser, playTeaser }) {
   }, [channels]);
 
   async function searchForChannel() {
+    if (!userPushSDKInstance) return;
     if (loadingChannel) return; //if we are already loading, do nothing
     if (search) {
       setLoadingChannel(true); //begin loading here
       setChannelToShow([]); //maybe remove later
       try {
-        const searchChannels = await getChannelsSearch({
-          page: searchPage,
+        const searchChannels = await userPushSDKInstance.channel.search(search, {
           limit: SEARCH_LIMIT,
-          query: search,
+          page: searchPage
         });
 
         setChannelToShow(searchChannels || []);
@@ -190,10 +189,10 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     return () => {
       clearTimeout(timeout);
     };
-  }, [search]);
+  }, [search, userPushSDKInstance]);
 
   useEffect(() => {
-    if (!account) return;
+    if (!account || !userPushSDKInstance) return;
     (async function () {
       const subscriptionsArr = await userPushSDKInstance.notification.subscriptions();
       const subscriptionsMapping = {};
@@ -205,7 +204,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       dispatch(updateBulkSubscriptions(subscriptionsMapping));
       dispatch(updateBulkUserSettings(userSettings));
     })();
-  }, [account]);
+  }, [account, userPushSDKInstance]);
 
   useEffect(() => {
     const parsedChannel = window.location.href.toString().slice(window.location.href.toString().length - 42);

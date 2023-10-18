@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import Switch from '@material-ui/core/Switch';
@@ -43,6 +43,7 @@ import { appConfig } from 'config';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import APP_PATHS from 'config/AppPaths';
 import Tag from './reusables/labels/Tag';
+import { AppContext } from 'contexts/AppContext';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -122,6 +123,7 @@ function SendNotifications() {
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(425);
   const { account, provider, chainId } = useAccount();
+  const { userPushSDKInstance } = useContext(AppContext);
   const { epnsCommWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const { channelDetails, delegatees, aliasDetails: { aliasEthAddr } } = useSelector((state: any) => state.admin);
   const { CHANNNEL_DEACTIVATED_STATE } = useSelector((state: any) => state.channels);
@@ -396,20 +398,19 @@ function SendNotifications() {
       try {
         // apiResponse?.status === 204, if sent successfully!
 
-        let notifRecipients: string | Array<string>;
+        let notifRecipients: Array<string>;
         if (nfType === '4') {
           notifRecipients = multipleRecipients.map((recipient) => convertAddressToAddrCaip(recipient, chainId));
         } else {
-          notifRecipients = convertAddressToAddrCaip(nfRecipient, chainId);
+          notifRecipients = [convertAddressToAddrCaip(nfRecipient, chainId)];
         }
+        
+        if (nfType === '1') 
+          notifRecipients = ['*'];
 
         const channelAddressInCaip = convertAddressToAddrCaip(channelAddress, chainId);
 
-        const _signer = await provider.getSigner(account);
-        await PushAPI.payloads.sendNotification({
-          signer: _signer,
-          type: parseInt(nfType), // target
-          identityType: 2, // direct payload
+        await userPushSDKInstance.channel.send(notifRecipients, {
           notification: {
             title: asub,
             body: amsg,
@@ -418,12 +419,9 @@ function SendNotifications() {
             title: asub,
             body: amsg,
             cta: acta,
-            img: aimg,
-            index: getIndex(),
+            embed: aimg,
           },
-          recipients: notifRecipients, // recipient address
-          channel: channelAddressInCaip, // your channel address
-          env: appConfig.pushNodesEnv,
+          channel: channelAddressInCaip
         });
         //   console.log(nfRecipient);
         //   postReq("/payloads/add_manual_payload", {

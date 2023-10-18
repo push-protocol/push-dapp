@@ -135,7 +135,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   }, [channelObjectFromHash, channelObjectStartBlock]);
 
   useEffect(async () => {
-    if (!channelObject || !channelObject.channel) return;
+    if (!channelObject || !channelObject.channel || !userPushSDKInstance) return;
 
     setSubscriberCount(channelObject.subscriber_count);
 
@@ -161,7 +161,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       }
       setLoading(false);
     }
-  }, [account, channelObject]);
+  }, [account, channelObject, userPushSDKInstance]);
 
   let isOwner;
   if (!onCoreNetwork) {
