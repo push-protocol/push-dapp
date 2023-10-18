@@ -105,7 +105,7 @@ const UpdateNotifSettingDropdownContainer: React.FC<UpdateNotifSettingDropdownCo
                     axis="x"
                     x={setting.user}
                     onChange={({ x }) => handleSliderChange(index, x)}
-                    xstep={1}
+                    xstep={setting.ticker || 1}
                     xmin={setting.lowerLimit}
                     xmax={setting.upperLimit}
                 />

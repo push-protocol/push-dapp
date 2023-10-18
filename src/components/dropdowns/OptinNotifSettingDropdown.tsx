@@ -103,7 +103,7 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
                     axis="x"
                     x={setting.default}
                     onChange={({ x }) => handleSliderChange(index, x)}
-                    xstep={1}
+                    xstep={setting.ticker || 1}
                     xmin={setting.lowerLimit}
                     xmax={setting.upperLimit}
                 />

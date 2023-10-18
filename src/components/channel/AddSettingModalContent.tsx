@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { useClickAway } from 'react-use';
 import { MdClose } from 'react-icons/md';
+import Slider from 'react-input-slider';
 
 // Internal Components
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
@@ -81,7 +82,12 @@ const AddSettingModalContent = ({
   const [defaultValue, setDefaultValue] = useState<string>(
     settingToEdit && settingToEdit.type === 2 ? settingToEdit.default.toString() : ''
   );
+  const [sliderStep, setSliderStep] = useState<string>(
+    settingToEdit && settingToEdit.type === 2 && settingToEdit.ticker ? settingToEdit.ticker.toString() : '1'
+  );
+  const [sliderPreviewVal, setSliderPreviewVal] = useState<number>();
   const [errorInfo, setErrorInfo] = useState<any>();
+  const previewSliderRef = React.useRef<HTMLDivElement>(null);
 
   const theme = useTheme();
 
@@ -101,6 +107,7 @@ const AddSettingModalContent = ({
         lowerLimit,
         type: isRange ? 2 : 1,
         upperLimit,
+        sliderStep,
       })
     ) {
       const index = settingToEdit ? settingToEdit.index : Math.floor(Math.random() * 1000000);
@@ -113,6 +120,7 @@ const AddSettingModalContent = ({
             index: index,
             lowerLimit: Number(lowerLimit),
             upperLimit: Number(upperLimit),
+            ticker: Number(sliderStep),
           }
         : {
             type: 1,
@@ -125,6 +133,8 @@ const AddSettingModalContent = ({
     }
     setIsLoading(false);
   };
+
+  console.log('typeof Number(sliderPreviewVal) === number', typeof Number(sliderPreviewVal));
 
   return (
     <ModalContainer ref={containerRef}>
@@ -254,17 +264,17 @@ const AddSettingModalContent = ({
             </Item>
             <Item
               direction="column"
-              align="flex-start"
+              align="stretch"
               flex="1"
               self="stretch"
               margin="12px 0px"
             >
               <Label>Default Value</Label>
-              <MaxWidthInput
+              <InputWithError
                 padding="13px 16px"
                 weight="400"
                 type="number"
-                placeholder="e.g. 0"
+                placeholder="e.g. 5"
                 size="15px"
                 resize="none"
                 overflow="hidden"
@@ -285,6 +295,91 @@ const AddSettingModalContent = ({
               />
               <ErrorInfo>{errorInfo?.default}</ErrorInfo>
             </Item>
+            <Item
+              direction="column"
+              align="stretch"
+              flex="1"
+              self="stretch"
+              margin="12px 0px"
+            >
+              <Label>Slider Step Value</Label>
+              <InputWithError
+                padding="13px 16px"
+                weight="400"
+                type="number"
+                placeholder="e.g. 1"
+                size="15px"
+                resize="none"
+                overflow="hidden"
+                line-height="19.5px"
+                margin="8px 0px 0px 0px"
+                border={theme.textAreaBorderColor}
+                focusBorder={theme.textAreaFocusBorder}
+                radius="12px"
+                bg={theme.editChannelInputbg}
+                color={theme.editChannelPrimaryText}
+                value={sliderStep}
+                onChange={(e) => {
+                  setSliderStep(e.target.value);
+                  setErrorInfo((prev) => ({ ...prev, sliderStep: undefined }));
+                  setSliderPreviewVal(lowerLimit === '' ? 0 : Number(lowerLimit));
+                }}
+                autocomplete="off"
+                hasError={errorInfo?.sliderStep ? true : false}
+              />
+              <ErrorInfo>{errorInfo?.sliderStep}</ErrorInfo>
+            </Item>
+            {(lowerLimit !== '' || upperLimit !== '') && (
+              <Item
+                direction="column"
+                align="flex-start"
+                flex="1"
+                self="stretch"
+                margin="12px 0px"
+              >
+                <LabelLight>Preview</LabelLight>
+                <SliderPreviewContainer>
+                  <Label>{lowerLimit}</Label>
+                  <SliderContainer>
+                    <Slider
+                      onDragStart={() => previewSliderRef.current?.style.setProperty('display', 'flex')}
+                      onDragEnd={() => previewSliderRef.current?.style.setProperty('display', 'none')}
+                      axis="x"
+                      styles={{
+                        active: {
+                          backgroundColor: theme.sliderActiveColor,
+                        },
+                        track: {
+                          height: 4,
+                          flex: 1,
+                          backgroundColor: theme.sliderTrackColor,
+                        },
+                        thumb: {
+                          width: 16,
+                          height: 16,
+                        },
+                      }}
+                      xstep={Number(sliderStep)}
+                      xmin={Number(lowerLimit)}
+                      xmax={Number(upperLimit)}
+                      x={sliderPreviewVal}
+                      onChange={({ x }) => {
+                        setSliderPreviewVal(x);
+                        previewSliderRef.current?.style.setProperty(
+                          'left',
+                          `${(x / (Number(upperLimit) - Number(lowerLimit))) * 90}%`
+                        );
+                      }}
+                      disabled={lowerLimit === '' || upperLimit === '' || sliderStep === ''}
+                    />
+                    {!Number.isNaN(Number(sliderPreviewVal)) && (
+                      <PreviewContainer ref={previewSliderRef}>{sliderPreviewVal}</PreviewContainer>
+                    )}
+                  </SliderContainer>
+                  <Label>{upperLimit}</Label>
+                </SliderPreviewContainer>
+              </Item>
+            )}
           </>
         )}
         <ModalConfirmButton
@@ -340,6 +435,10 @@ const Label = styled.div<{ padding?: string }>`
   padding: ${(props) => props.padding || '0px'};
 `;
 
+const LabelLight = styled(Label)`
+  color: ${(props) => props.theme.default.secondaryColor};
+`;
+
 const Description = styled.div`
   font-size: 12px;
   font-weight: 400;
@@ -370,6 +469,42 @@ const ErrorInfo = styled.span`
   text-align: left;
   color: ${(props) => props.theme.nfsError};
   margin-top: 4px;
+`;
+
+const SliderPreviewContainer = styled.div`
+  display: flex;
+  padding: 12px;
+  gap: 12px;
+  margin-top: 8px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  border-radius: 8px;
+  background: rgba(182, 188, 214, 0.12);
+`;
+
+const PreviewContainer = styled.div`
+  display: none;
+  position: absolute;
+  bottom: -48px;
+  border-radius: 4px;
+  border: 1px solid ${(props) => props.theme.default.border};
+  background: ${(props) => props.theme.default.bg};
+  color: ${(props) => props.theme.default.color};
+  width: max-content;
+  padding: 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+`;
+
+const SliderContainer = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
 `;
 
 export default AddSettingModalContent;

@@ -143,7 +143,7 @@ function NotificationSettings() {
         } else if (setting.type === 2) {
           _notifSettings += `${setting.type}-${setting.enabled ? '1' : '0'}-${setting.default}-${setting.lowerLimit}-${
             setting.upperLimit
-          }`;
+          }-${setting.ticker}`;
         }
         _notifDescription += setting.description;
       });
@@ -225,7 +225,8 @@ function NotificationSettings() {
           setting1.default === setting2.default &&
           setting1.enabled === setting2.enabled &&
           setting1.lowerLimit === setting2.lowerLimit &&
-          setting1.upperLimit === setting2.upperLimit;
+          setting1.upperLimit === setting2.upperLimit &&
+          setting1.ticker === setting2.ticker;
       }
     }
     return isUnchanged === false;

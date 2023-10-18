@@ -907,7 +907,7 @@ function SendNotifications() {
                             x={nfSliderValue}
                             axis="x"
                             onChange={({ x }) => setNfSliderValue(x)}
-                            xstep={1}
+                            xstep={channelSettings[nfSettingType - 1]?.ticker || 1}
                             xmin={channelSettings[nfSettingType - 1]?.lowerLimit}
                             xmax={channelSettings[nfSettingType - 1]?.upperLimit}
                           />
