@@ -134,8 +134,6 @@ const AddSettingModalContent = ({
     setIsLoading(false);
   };
 
-  console.log('typeof Number(sliderPreviewVal) === number', typeof Number(sliderPreviewVal));
-
   return (
     <ModalContainer ref={containerRef}>
       <FormSubmision onSubmit={onConfirm}>
@@ -329,7 +327,7 @@ const AddSettingModalContent = ({
               />
               <ErrorInfo>{errorInfo?.sliderStep}</ErrorInfo>
             </Item>
-            {(lowerLimit !== '' || upperLimit !== '') && (
+            {lowerLimit !== '' && upperLimit !== '' && defaultValue !== '' && sliderStep !== '' && (
               <Item
                 direction="column"
                 align="flex-start"
@@ -367,10 +365,9 @@ const AddSettingModalContent = ({
                         setSliderPreviewVal(x);
                         previewSliderRef.current?.style.setProperty(
                           'left',
-                          `${(x / (Number(upperLimit) - Number(lowerLimit))) * 90}%`
+                          `${((Number(x) - Number(lowerLimit)) / (Number(upperLimit) - Number(lowerLimit))) * 90}%`
                         );
                       }}
-                      disabled={lowerLimit === '' || upperLimit === '' || sliderStep === ''}
                     />
                     {!Number.isNaN(Number(sliderPreviewVal)) && (
                       <PreviewContainer ref={previewSliderRef}>{sliderPreviewVal}</PreviewContainer>
