@@ -42,24 +42,29 @@ function UserSettings() {
   const dispatch = useDispatch();
 
   const fetchChannelDetails = async (channel: string) => {
-    const details = await getChannel({ channel });
-    if (details) {
-      const updatedChannelItem: ChannelListItem = {
-        channel,
-        id: details.id,
-        icon: details.icon,
-        name: details.name,
-        channel_settings: details.channel_settings,
-      };
-      return updatedChannelItem;
-    } else return undefined;
+    try {
+      const details = await getChannel({ channel });
+      if (details) {
+        const updatedChannelItem: ChannelListItem = {
+          channel,
+          id: details.id,
+          icon: details.icon,
+          name: details.name,
+          channel_settings: details.channel_settings,
+        };
+        return updatedChannelItem;
+      } else return undefined;
+    } catch {
+      return undefined;
+    }
   };
 
   const fillData = async (details: any) => {
-    const data = await Promise.all(
+    const data = [];
+    await Promise.all(
       Object.keys(details).map(async (channel) => {
         const channelData = await fetchChannelDetails(channel);
-        if (channelData) return channelData;
+        if (channelData) data.push(channelData);
       })
     );
     setChannelList(data);
