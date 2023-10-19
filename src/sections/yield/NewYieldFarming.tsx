@@ -119,35 +119,10 @@ const NewYieldFarming = (
         getPUSHPoolStats();
 
     }, [account]);
-
-    // const {
-    //     isModalOpen: isTransactionModalOpen,
-    //     showModal: openTransactionModal,
-    //     ModalComponent: TransactionModal,
-    // } = useModalBlur();
-
-    // const [currentTransactionNo,setCurrentTransactionNo] = useState(0);
-    // const [totalTransactionNo,setTotalTransactionNo] = useState(0);
-    // const [transactionSteps,setTransactionSteps] = useState(0);
+    
 
     return (
         <>
-
-            {/* <TransactionModal
-                InnerComponent={StepsTransactionModal}
-                InnerComponentProps={{
-                    currentTransactionNo,
-                    totalTransactionNo,
-                    transactionSteps,
-                    setCurrentTransactionNo,
-                    setTotalTransactionNo
-                }}
-                onConfirm={() => { }}
-                modalPadding="0px"
-                modalPosition={MODAL_POSITION.ON_ROOT}
-            /> */}
-
-            {/* <div onClick={openTransactionModal}>Open Modal</div> */}
 
 
             <YieldAnnouncementSection
@@ -167,11 +142,6 @@ const NewYieldFarming = (
                     getUserDataPush={getUserDataPush}
                     PUSHPoolstats={PUSHPoolstats}
                     getPUSHPoolStats={getPUSHPoolStats}
-                    // currentTransactionNo={currentTransactionNo}
-                    // setCurrentTransactionNo={setCurrentTransactionNo}
-                    // setTotalTransactionNo={setTotalTransactionNo}
-                    // openTransactionModal={openTransactionModal}
-                    // setTransactionSteps={setTransactionSteps}
                 />
 
                 <YieldUniswapV3

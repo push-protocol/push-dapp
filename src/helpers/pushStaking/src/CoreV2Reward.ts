@@ -29,12 +29,6 @@ export class CoreV2Reward {
       currentBlockNumber
     );
 
-    //TODO: Change it back
-    // const epoch = await coreV2Contract.lastEpochRelative(
-    //   genesisEpoch,
-    //   currentBlockNumber
-    // )
-    // const currentEpoch = epoch.toNumber();
 
     this.STATE.currentBlockNumber = currentBlockNumber;
     this.STATE.genesisEpoch = genesisEpoch;
@@ -229,20 +223,8 @@ export class CoreV2Reward {
       )
     );
 
-    // const coreV2Contract = this.coreV2Contract;
+    const coreV2Contract = this.coreV2Contract;
 
-    // //TODO: Change here also
-    // const _nextFromEpoch = await coreV2Contract.lastEpochRelative(
-    //   this.STATE.genesisEpoch,
-    //   Math.max(
-    //     this.STATE.userFeesInfo.lastClaimedBlock.toNumber(),
-    //     this.STATE.genesisEpoch
-    //   )
-    // );
-    // const nextFromEpoch = _nextFromEpoch.toNumber();
-
-    // console.log("Last Claimed Block", nextFromEpoch, this.STATE.userFeesInfo.lastClaimedBlock.toNumber(),this.STATE.genesisEpoch);
-  
     if (!(_tillEpoch >= nextFromEpoch)) {
       return Helpers.toBN(0);
     }

@@ -31,18 +31,18 @@ const YieldFarmingModuleV2 = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [newStaking, setNewStaking] = useState(false);
 
-  const { account, chainId, connector} = useWeb3React<ethers.providers.Web3Provider>();
+  const { account, chainId, connector } = useWeb3React<ethers.providers.Web3Provider>();
 
 
-  const handleChainChange = ()=>{
+  const handleChainChange = () => {
 
     const chainIdToPass = appConfig.allowedNetworks[0];
 
-    if(chainId !== 1 && chainId !== 5){
-        handleChangeAllowedNetwork(chainIdToPass, connector?.provider, connector);
+    if (chainId !== 1 && chainId !== 5) {
+      handleChangeAllowedNetwork(chainIdToPass, connector?.provider, connector);
     }
 
-}
+  }
 
   useEffect(() => {
 

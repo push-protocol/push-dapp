@@ -13,12 +13,12 @@ const StepsTransactionModal = ({ onClose, InnerComponentProps }) => {
         currentTransactionNo,
         totalTransactionNo,
         transactionSteps,
-        epochClaimed,
         transactionText,
         setCurrentTransactionNo,
         setTotalTransactionNo,
         setTransactionSteps,
-        claimRewardsPaginated
+        claimRewards,
+        unstakeTokensPaginated,
     } = InnerComponentProps;
 
     const handleClose = () => {
@@ -28,8 +28,13 @@ const StepsTransactionModal = ({ onClose, InnerComponentProps }) => {
 
     const retryClaimingRewards = async () => {
         setTransactionSteps(0);
+        setTotalTransactionNo(0);
         setCurrentTransactionNo(0);
-        claimRewardsPaginated();
+        if(transactionText?.includes('Unstaking')){
+            unstakeTokensPaginated();
+        }else{
+            claimRewards();
+        }
     }
 
     return (

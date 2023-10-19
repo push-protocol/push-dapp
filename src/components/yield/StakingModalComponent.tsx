@@ -99,7 +99,8 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
 
         let tx;
-        const uintMax = bn(2).pow(bn(256)).sub(1);
+        // const uintMax = bn(2).pow(bn(256)).sub(1);
+        const uintMax = ethers.utils.parseUnits(depositAmount.toString(), 18);
 
         if (title === 'Uni-V2') {
             const tokencontractinstance = new ethers.Contract(addresses.uniV2LPToken, abis.uniV2LpToken, signer);
