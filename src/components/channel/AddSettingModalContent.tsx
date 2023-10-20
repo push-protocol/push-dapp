@@ -5,12 +5,12 @@ import React, { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { useClickAway } from 'react-use';
 import { MdClose } from 'react-icons/md';
-import Slider from 'react-input-slider';
 
 // Internal Components
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
 import { ModalInnerComponentType } from 'hooks/useModalBlur';
 import type { ChannelSetting } from '../../helpers/channel/types';
+import InputSlider from 'components/reusables/sliders/InputSlider';
 
 // Internal Configs
 import { device } from 'config/Globals';
@@ -87,7 +87,6 @@ const AddSettingModalContent = ({
   );
   const [sliderPreviewVal, setSliderPreviewVal] = useState<number>();
   const [errorInfo, setErrorInfo] = useState<any>();
-  const previewSliderRef = React.useRef<HTMLDivElement>(null);
 
   const theme = useTheme();
 
@@ -133,6 +132,11 @@ const AddSettingModalContent = ({
     }
     setIsLoading(false);
   };
+
+  const isInvalidNumber = (value: string): boolean => {
+    const regex = /^[0-9]*$/;
+    return value !== '' && !regex.test(value);
+  }
 
   return (
     <ModalContainer ref={containerRef}>
@@ -226,8 +230,9 @@ const AddSettingModalContent = ({
                   color={theme.editChannelPrimaryText}
                   value={lowerLimit}
                   onChange={(e) => {
-                    setLowerLimit(e.target.value);
                     setErrorInfo((prev) => ({ ...prev, lowerLimit: undefined }));
+                    if (isInvalidNumber(e.target.value)) return;
+                    setLowerLimit(e.target.value);
                   }}
                   autocomplete="off"
                   hasError={errorInfo?.lowerLimit ? true : false}
@@ -250,8 +255,9 @@ const AddSettingModalContent = ({
                   color={theme.editChannelPrimaryText}
                   value={upperLimit}
                   onChange={(e) => {
-                    setUpperLimit(e.target.value);
                     setErrorInfo((prev) => ({ ...prev, upperLimit: undefined }));
+                    if (isInvalidNumber(e.target.value)) return;
+                    setUpperLimit(e.target.value);
                   }}
                   autocomplete="off"
                   hasError={errorInfo?.upperLimit ? true : false}
@@ -285,8 +291,10 @@ const AddSettingModalContent = ({
                 color={theme.editChannelPrimaryText}
                 value={defaultValue}
                 onChange={(e) => {
-                  setDefaultValue(e.target.value);
                   setErrorInfo((prev) => ({ ...prev, default: undefined }));
+                  if(isInvalidNumber(e.target.value)) return;
+                  setDefaultValue(e.target.value);
+                  setSliderPreviewVal(Number(e.target.value));
                 }}
                 autocomplete="off"
                 hasError={errorInfo?.default ? true : false}
@@ -318,8 +326,8 @@ const AddSettingModalContent = ({
                 color={theme.editChannelPrimaryText}
                 value={sliderStep}
                 onChange={(e) => {
-                  setSliderStep(e.target.value);
                   setErrorInfo((prev) => ({ ...prev, sliderStep: undefined }));
+                  setSliderStep(e.target.value);
                   setSliderPreviewVal(lowerLimit === '' ? 0 : Number(lowerLimit));
                 }}
                 autocomplete="off"
@@ -338,41 +346,14 @@ const AddSettingModalContent = ({
                 <LabelLight>Preview</LabelLight>
                 <SliderPreviewContainer>
                   <Label>{lowerLimit}</Label>
-                  <SliderContainer>
-                    <Slider
-                      onDragStart={() => previewSliderRef.current?.style.setProperty('display', 'flex')}
-                      onDragEnd={() => previewSliderRef.current?.style.setProperty('display', 'none')}
-                      axis="x"
-                      styles={{
-                        active: {
-                          backgroundColor: theme.sliderActiveColor,
-                        },
-                        track: {
-                          height: 4,
-                          flex: 1,
-                          backgroundColor: theme.sliderTrackColor,
-                        },
-                        thumb: {
-                          width: 16,
-                          height: 16,
-                        },
-                      }}
-                      xstep={Number(sliderStep)}
-                      xmin={Number(lowerLimit)}
-                      xmax={Number(upperLimit)}
-                      x={sliderPreviewVal}
-                      onChange={({ x }) => {
-                        setSliderPreviewVal(x);
-                        previewSliderRef.current?.style.setProperty(
-                          'left',
-                          `${((Number(x) - Number(lowerLimit)) / (Number(upperLimit) - Number(lowerLimit))) * 90}%`
-                        );
-                      }}
-                    />
-                    {!Number.isNaN(Number(sliderPreviewVal)) && (
-                      <PreviewContainer ref={previewSliderRef}>{sliderPreviewVal}</PreviewContainer>
-                    )}
-                  </SliderContainer>
+                  <InputSlider
+                    val={sliderPreviewVal}
+                    min={Number(lowerLimit)}
+                    max={Number(upperLimit)}
+                    step={Number(sliderStep)}
+                    onChange={({ x }) => setSliderPreviewVal(x)}
+                    preview={true}
+                  />
                   <Label>{upperLimit}</Label>
                 </SliderPreviewContainer>
               </Item>
@@ -471,37 +452,14 @@ const ErrorInfo = styled.span`
 const SliderPreviewContainer = styled.div`
   display: flex;
   padding: 12px;
-  gap: 12px;
+  gap: 16px;
   margin-top: 8px;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   align-self: stretch;
   border-radius: 8px;
-  background: rgba(182, 188, 214, 0.12);
-`;
-
-const PreviewContainer = styled.div`
-  display: none;
-  position: absolute;
-  bottom: -48px;
-  border-radius: 4px;
-  border: 1px solid ${(props) => props.theme.default.border};
-  background: ${(props) => props.theme.default.bg};
-  color: ${(props) => props.theme.default.color};
-  width: max-content;
-  padding: 8px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-`;
-
-const SliderContainer = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  position: relative;
+  background: ${(props) => props.theme.nfsTickerPreviewBg};
 `;
 
 export default AddSettingModalContent;
