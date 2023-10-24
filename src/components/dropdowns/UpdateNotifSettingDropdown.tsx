@@ -92,6 +92,7 @@ const UpdateNotifSettingDropdownContainer: React.FC<UpdateNotifSettingDropdownCo
                     max={setting.upperLimit}
                     min={setting.lowerLimit}
                     step={setting.ticker || 1}
+                    defaultVal={setting.default}
                     onChange={({ x }) => handleSliderChange(index, x)}
                 />
                 <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right" margin="0 0 0 16px">

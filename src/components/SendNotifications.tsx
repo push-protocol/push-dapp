@@ -889,6 +889,7 @@ function SendNotifications() {
                             step={channelSettings[nfSettingType - 1]?.ticker || 1}
                             min={channelSettings[nfSettingType - 1]?.lowerLimit}
                             max={channelSettings[nfSettingType - 1]?.upperLimit}
+                            defaultVal={channelSettings[nfSettingType - 1]?.default}
                             val={nfSliderValue}
                           />
                           <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right" margin="0px 0px 0px 16px">{nfSliderValue}</SpanV2>

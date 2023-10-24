@@ -7,6 +7,7 @@ interface InputSliderProps extends Omit<ComponentPropsWithoutRef<'div'>, 'childr
   min: number;
   max: number;
   step: number;
+  defaultVal: number;
   preview?: boolean;
   onChange: (value: { x: number }) => void;
   onDragStart?: (e: React.MouseEvent | React.TouchEvent) => void;
@@ -19,6 +20,7 @@ const InputSlider = ({
   min,
   max,
   step,
+  defaultVal,
   onChange,
   onDragStart,
   onDragEnd,
@@ -46,14 +48,16 @@ const InputSlider = ({
     const { left, width } = containerRef.current.getBoundingClientRect();
     const { clientX } = e instanceof MouseEvent ? e : e.touches[0];
     let x = (clientX - left) / width;
+    const lowerBound = defaultVal - Math.floor((defaultVal - min) / step) * step;
+    const upperBound = defaultVal + Math.floor((max - defaultVal) / step) * step;
 
-    if (x <= 0) x = min;
-    else if (x >= 1) x = max;
+    if (x <= 0) x = lowerBound;
+    else if (x >= 1) x = upperBound;
     else {
-      x = x * (max - min) + min;
-      x = min + Math.round((x - min) / step) * step;
-      if (x < min) x = min;
-      if (x > max) x = max;
+      const stepCount = Math.floor((x * (max - min) + min - defaultVal) / step);
+      x = defaultVal + stepCount * step;
+      if (x < lowerBound) x = lowerBound;
+      if (x > upperBound) x = upperBound;
     }
     const decimalPlaces = (step.toString().split('.')[1] || '').length;
     onChange({ x: Number(x.toFixed(decimalPlaces)) });

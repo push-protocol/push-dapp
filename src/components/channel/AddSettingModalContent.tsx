@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -136,7 +136,21 @@ const AddSettingModalContent = ({
   const isInvalidNumber = (value: string): boolean => {
     const regex = /^[0-9]*$/;
     return value !== '' && !regex.test(value);
-  }
+  };
+
+  const showPreview = useMemo(() => {
+    return (
+      lowerLimit !== '' &&
+      upperLimit !== '' &&
+      defaultValue !== '' &&
+      sliderStep !== '' &&
+      Number(lowerLimit) <= Number(upperLimit) &&
+      Number(sliderStep) > 0 &&
+      Number(sliderStep) <= Number(upperLimit) - Number(lowerLimit) &&
+      Number(defaultValue) >= Number(lowerLimit) &&
+      Number(defaultValue) <= Number(upperLimit)
+    );
+  }, [lowerLimit, upperLimit, defaultValue, sliderStep]);
 
   return (
     <ModalContainer ref={containerRef}>
@@ -292,7 +306,7 @@ const AddSettingModalContent = ({
                 value={defaultValue}
                 onChange={(e) => {
                   setErrorInfo((prev) => ({ ...prev, default: undefined }));
-                  if(isInvalidNumber(e.target.value)) return;
+                  if (isInvalidNumber(e.target.value)) return;
                   setDefaultValue(e.target.value);
                   setSliderPreviewVal(Number(e.target.value));
                 }}
@@ -335,7 +349,7 @@ const AddSettingModalContent = ({
               />
               <ErrorInfo>{errorInfo?.sliderStep}</ErrorInfo>
             </Item>
-            {lowerLimit !== '' && upperLimit !== '' && defaultValue !== '' && sliderStep !== '' && (
+            {showPreview && (
               <Item
                 direction="column"
                 align="flex-start"
@@ -351,6 +365,7 @@ const AddSettingModalContent = ({
                     min={Number(lowerLimit)}
                     max={Number(upperLimit)}
                     step={Number(sliderStep)}
+                    defaultVal={Number(defaultValue)}
                     onChange={({ x }) => setSliderPreviewVal(x)}
                     preview={true}
                   />
