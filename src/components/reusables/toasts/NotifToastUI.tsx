@@ -8,13 +8,14 @@ import { ToastContainer } from 'react-toastify';
 
 // Internal Components
 import { NotificationContext } from "contexts/NotificationContext";
+import { NotificationEvent } from "@pushprotocol/restapi/src/lib/pushstream/pushStreamTypes";
 
 // Interfaces
 interface Props {
   payload: object
 }
 
-const NotifToastUI = ({ payload }) => {
+const NotifToastUI = ({ payload }: { payload: NotificationEvent }) => {
   // get theme
   const theme = useTheme();
 
@@ -27,18 +28,18 @@ const NotifToastUI = ({ payload }) => {
 
   return (
     <NotificationItemExtended
-      key={payload.data.sid} // any unique id
-      notificationTitle={payload.notification.title}
-      notificationBody={payload.notification.body}
+      key={payload.notifID} // any unique id
+      notificationTitle={payload.message.notification.title}
+      notificationBody={payload.message.notification.body}
       cta=''
       // cta={payload.data.cta ? `${window.location.hostname}/#/inbox` : ''}
-      app={payload.data.app}
-      icon={payload.data.icon}
-      image={payload.data.aimg}
+      app={payload.channel.name}
+      icon={payload.channel.icon}
+      image={payload.message.payload.embed}
       url=''
       // url={`${window.location.hostname}:${window.location.port}/#/inbox`}
       theme={theme.scheme ? theme.scheme : 'light'}
-      chainName={payload.data.chainName ? payload.data.chainName : 'ETH_TEST_KOVAN'}
+      chainName={payload.source ? payload.source as any : 'ETH_TEST_GOERLI'}
     />
   )
 }

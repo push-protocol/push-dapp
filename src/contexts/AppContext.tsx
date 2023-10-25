@@ -9,6 +9,7 @@ import { PushAPI } from "@pushprotocol/restapi";
 import { AppContextType, Web3NameListType } from "types/context"
 import { appConfig } from "config";
 import { useAccount } from "hooks";
+import { STREAM } from "@pushprotocol/restapi/src/lib/pushstream/pushStreamTypes";
 
 export const AppContext = createContext<AppContextType | null>(null);
 
@@ -32,7 +33,16 @@ const AppContextProvider=({children})=>{
             try {
             const userInstance = await PushAPI.initialize(librarySigner, {
                 env: appConfig.appEnv, // defaults to staging
-                account: account
+                account: account,
+                streamOptions: {
+                    listen: [STREAM.PROFILE, STREAM.ENCRYPTION, ...Object.values(STREAM)],
+                    connection: {
+                        auto: true,
+                        retries: 3
+                    },
+                    raw: true,
+                    enabled: true
+                }
             });
             
             setUserPushSDKInstance(userInstance);

@@ -37,6 +37,7 @@ import { useAccount } from 'hooks';
 // Internals Configs
 import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config';
 import { AppContext } from 'contexts/AppContext';
+import useSDKStream from 'hooks/useStream';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -52,6 +53,9 @@ const InitState = () => {
     aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified },
   } = useSelector((state: any) => state.admin);
   const { processingState } = useSelector((state: any) => state.channelCreation);
+
+  // enable socket notifications
+  useSDKStream();
 
   const onCoreNetwork: boolean = CORE_CHAIN_ID === chainId;
 
