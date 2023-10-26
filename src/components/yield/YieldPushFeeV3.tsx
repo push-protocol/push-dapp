@@ -142,26 +142,11 @@ const YieldPushFeeV3 = ({
             return;
         }
 
-        let _tillEpoch = 0;
+        let _tillEpoch = 1;
         _tillEpoch = await getLastClaimedBlock(pushCoreV2);
 
         openTransactionModal();
 
-        // Why the below if else statement
-        /**
-         * currentEpoch = 5, _tillEPoch = 2 and batchSize is 4
-         * so currentEpoch-_tillEPoch = 3/4 = 0.7 and Math.floor will give 0 so it is not correct
-         * 
-         * currentEpoch = 10, _tillEPoch = 4 and batchSize is 5
-         * so currentEpoch-_tillEpoch /batchSize = 6/5 = 1.2 and Math.ceil will give 2 then the transactions params are (4+5) for first txn and then again 9 for other transaction 
-         * 
-         * so, The best case is to use 
-         * ceil for currentEpoch-_tillEpoch < batchSize
-         * and 
-         * floor for currentEpoch-_tillEpoch > batchSize  
-         * 
-         * for edge cases.
-        */
         let totalTransactionNumber = 0;
         if (currentEpoch - _tillEpoch < batchSize) {
             totalTransactionNumber = Math.ceil((currentEpoch - _tillEpoch) / batchSize);
@@ -280,13 +265,7 @@ const YieldPushFeeV3 = ({
 
         // Modal for displaying transactions
         openTransactionModal();
-
-        // Calculation for finding totalNumberOf Transactions to be passed on
-        /**
-         * Logic: We need to calculate Rewards first and then unstake
-         * 
-         * Here that problem will not occure because we are passing totalTransaction - 1 for the rewards.
-         */
+        
         const totalTransactionNumber = Math.ceil((currentEpoch - _tillEpoch) / batchSize);
         setTotalTransactionNo(totalTransactionNumber);
 
