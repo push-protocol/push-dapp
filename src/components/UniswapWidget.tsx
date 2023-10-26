@@ -1,6 +1,5 @@
 // React + Web3 Essentials
 import React, { useRef } from 'react';
-import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import { darkTheme, lightTheme, SwapWidget } from '@uniswap/widgets';
@@ -10,6 +9,7 @@ import { useTheme } from 'styled-components';
 
 // Internal Configs
 import { addresses, appConfig } from 'config';
+import { useAccount } from 'hooks';
 
 type UniswapWidgetModalProps = {
   InnerComponentProps: {
@@ -51,7 +51,7 @@ const WidgetCustomTheme = {
 export const UniswapWidgetModal = ({ InnerComponentProps, onClose }: UniswapWidgetModalProps) => {
   const { defaultPushTokenAmount } = InnerComponentProps;
   const theme = useTheme();
-  const { provider } = useWeb3React();
+  const { provider } = useAccount();
 
   const containerRef = useRef(null);
   useClickAway(containerRef, () => {

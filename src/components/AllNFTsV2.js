@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import React from "react";
 
@@ -14,6 +13,7 @@ import {
   ItemH, Section
 } from "primaries/SharedStyling";
 import NFTHelper from "helpers/NFTHelper";
+import { useAccount } from "hooks";
 
 // Internal Configs
 import { abis, addresses, appConfig } from "config";
@@ -21,7 +21,7 @@ import { abis, addresses, appConfig } from "config";
 
 // Create Header
 function AllNFTsV2({ controlAt, setControlAt, setTokenId }) {
-  const { account, chainId, provider } = useWeb3React();
+  const { account, chainId, provider } = useAccount();
 
   const [nftReadProvider, setNftReadProvider] = React.useState(null);
   const [nftWriteProvider, setNftWriteProvider] = React.useState(null);

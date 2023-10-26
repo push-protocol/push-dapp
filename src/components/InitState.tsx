@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useEffect } from 'react';
 
@@ -28,10 +27,12 @@ import {
   setUserChannelDetails,
 } from 'redux/slices/adminSlice';
 import { setProcessingState } from 'redux/slices/channelCreationSlice';
+import { updateBulkChannelSettings } from 'redux/slices/channelSlice';
 import { setPushAdmin } from 'redux/slices/contractSlice';
 import { getChannelsSearch, getUserDelegations } from 'services';
 import * as PushAPI from '@pushprotocol/restapi';
 import { getAliasDetails } from 'services';
+import { useAccount } from 'hooks';
 
 // Internals Configs
 import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config';
@@ -41,7 +42,7 @@ const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 const InitState = () => {
   const dispatch = useDispatch();
-  const { account, provider, chainId } = useWeb3React();
+  const { account, provider, chainId } = useAccount();
   const { epnsReadProvider, epnsWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const {
     channelDetails,
@@ -175,6 +176,12 @@ const InitState = () => {
         }
         const channelInformation = await Promise.all(channelInformationPromise);
         dispatch(setDelegatees(channelInformation));
+        // get channel settings of all the channels
+        const channelSettings = {};
+        for (const channel of channelInformation) {
+          channelSettings[channel.channel] = channel.channel_settings ? JSON.parse(channel.channel_settings) : [];
+        }
+        dispatch(updateBulkChannelSettings(channelSettings));
       } else {
         dispatch(setDelegatees([]));
       }

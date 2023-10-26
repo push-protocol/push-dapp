@@ -39,8 +39,7 @@ const SnapInformationModal = () => {
     });
 
     if (res) {
-      //open a new tab
-      window.open('https://app.push.org/channels', '_blank');
+        window.open("/snap", '_self');
     }
   };
 
@@ -59,7 +58,7 @@ const SnapInformationModal = () => {
         fontSize="22px"
         fontWeight="500"
         letterSpacing="-0.44px"
-        color={theme.modalMessageColor}
+        color={theme.snapPrimaryText}
       >
         Connect to Metamask Push Snap
       </SpanV2>
@@ -137,7 +136,7 @@ const PrimaryText = styled.p`
   font-size: 18px;
   font-weight: 500;
   align-self: baseline;
-  color:${(props)=>props.theme.modalMessageColor};
+  color:${(props)=>props.theme.snapPrimaryText};
 `;
 
 const SecondaryText = styled.p`

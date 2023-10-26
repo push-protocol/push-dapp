@@ -26,7 +26,8 @@ export const config = {
     80001, //for mumbai polygon
     97, // bnb testnet
     420, // optimism goerli testnet
-    1442 // polygon zkevm testnet
+    1442, // polygon zkevm testnet
+    421613 // arbitrum testnet
   ],
 
   /** 
@@ -40,7 +41,8 @@ export const config = {
     80001: "https://polygon-mumbai.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
     97: "https://data-seed-prebsc-1-s1.binance.org:8545",
     420: "https://opt-goerli.g.alchemy.com/v2/98vFj7OCg4vbGKvCDpj6pOAMSBVC7rzm",
-    1442: "https://rpc.public.zkevm-test.net"
+    1442: "https://rpc.public.zkevm-test.net",
+    421613: "https://goerli-rollup.arbitrum.io/rpc"
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
 
@@ -149,5 +151,12 @@ export const CHAIN_DETAILS = {
     chainId: 1442,
     rpcUrl: 'https://rpc.public.zkevm-test.net',
     commAddress: '0x630b152e4185c63D7177c656b56b26f878C61572'
+  },
+  421613: {
+    label: "Arbitrum Testnet",
+    name: "ARBITRUM_TESTNET",
+    chainId: 421613,
+    rpcUrl: '',
+    commAddress: '0x2f6aE0907116A2c50D712e78b48D874fadeB6850'
   }
 }

@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from "@web3-react/core";
 import { ethers } from 'ethers';
 import React from "react";
 
@@ -11,6 +10,7 @@ import { toast } from "react-toastify";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import InfoTooltip from "../primaries/InfoTooltip";
 import { B, Button, H2, H3, Input, Item, ItemH, Span } from '../primaries/SharedStyling';
+import { useAccount } from "hooks";
 
 // Internal Configs
 import { abis, addresses } from "config";
@@ -32,7 +32,7 @@ export default function PoolCard({
   pushPoolStats,
   userData,
 }) {
-  const { active, error, account, provider, chainId } = useWeb3React();
+  const { account, provider } = useAccount();
   const [depositAmountToken, setDepositAmountToken] = React.useState(0);
   const [withdrawAmountToken, setWithdrawAmountToken] = React.useState(0);
   const [harvestEpochValue, setHarvestEpochValue] = React.useState(0);

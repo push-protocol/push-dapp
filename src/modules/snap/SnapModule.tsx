@@ -4,13 +4,13 @@ import React, { useEffect, useState } from 'react';
 // External Packages
 import ReactGA from 'react-ga';
 import styled, { useTheme } from 'styled-components';
-import { useWeb3React } from '@web3-react/core';
 
 // Internal Components
 import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { H2, Image, Item, Section, Span } from '../../primaries/SharedStyling';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import Info from 'segments/Info';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
@@ -29,14 +29,16 @@ const SnapModule = () => {
   const [loading, setLoading] = useState(false);
   const [walletConnected, setWalletConnected] = useState(false);
   const [snapInstalled, setSnapInstalled] = useState(false);
+  const [addedAddress, setAddedAddress] = useState(false);
 
-  const { showMetamaskPushSnap } = React.useContext(AppContext);
+  const { showMetamaskPushSnap, setSnapState } = React.useContext(AppContext);
 
-  const { account, provider } = useWeb3React();
+  const { account, provider } = useAccount();
 
   useEffect(() => {
     getInstalledSnaps();
-  }, [snapInstalled]);
+    getWalletAddresses();
+  }, [account, walletConnected]);
 
   async function getInstalledSnaps() {
     const installedSnaps = await window.ethereum.request({
@@ -51,38 +53,61 @@ const SnapModule = () => {
 
   const defaultSnapOrigin = `npm:@pushprotocol/snap`;
 
-  async function connectSnap (
-    snapId = defaultSnapOrigin,
-    params = {}
-  ){
+  async function getWalletAddresses() {
+    const result = await window.ethereum?.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: defaultSnapOrigin,
+        request: { method: 'pushproto_getaddresses' },
+      },
+    });
+
+    console.log(account);
+    console.log(walletConnected);
+    if (result.includes(account)) {
+      setAddedAddress(true);
+    } else {
+      setAddedAddress(false);
+    }
+  }
+
+  async function connectSnap() {
+    let snapId = defaultSnapOrigin,
+      params = {};
     await window.ethereum?.request({
-      method: "wallet_requestSnaps",
+      method: 'wallet_requestSnaps',
       params: {
         [snapId]: params,
       },
     });
     console.log('Snap Installed');
-  };
+  }
 
-  async function connectToMetaMask(){
-    if(!snapInstalled){
+  async function connectToMetaMask() {
+    setLoading(true);
+    try {
+      if (!snapInstalled) {
         await connectSnap();
         setSnapInstalled(true);
-    }else{
-        setLoading(!loading);
+      } else {
         await addwalletAddress();
-        setLoading(!loading);
         setWalletConnected(true);
+      }
+
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log('Error', error);
     }
   }
 
-  async function getSignature(account: string){
+  async function getSignature(account: string) {
     const signer = provider.getSigner(account);
     const signature = await signer.signMessage(`Add address ${account} to receive notifications through Push Snap`);
     return signature;
   }
 
-  async function addwalletAddress () {
+  async function addwalletAddress() {
     const signatureResult = await getSignature(account);
     if (signatureResult) {
       if (account) {
@@ -101,7 +126,7 @@ const SnapModule = () => {
     } else {
       console.log('Signature Validation Failed');
     }
-  };
+  }
 
   //About Snap Info Modal
   const {
@@ -109,6 +134,13 @@ const SnapModule = () => {
     showModal: showPushSnapAbout,
     ModalComponent: AboutPushSnapModalComponent,
   } = useModalBlur();
+
+  const handleSettingsClick = () => {
+    setSnapState(3);
+    showMetamaskPushSnap();
+  };
+
+  const theme = useTheme();
 
   return (
     <Container>
@@ -140,7 +172,7 @@ const SnapModule = () => {
               <H2V2
                 fontSize="34px"
                 fontWeight="500"
-                color="#1E1E1E"
+                color={theme.snapPrimaryText}
                 letterSpacing="-1.02px"
               >
                 Push Snap
@@ -148,7 +180,7 @@ const SnapModule = () => {
               <SpanV2
                 fontSize="12px"
                 fontWeight="400"
-                color="#657795"
+                color={theme.modalIconColor}
               >
                 powered by MetaMask
               </SpanV2>
@@ -160,14 +192,14 @@ const SnapModule = () => {
                   <SpanV2
                     fontSize="14px"
                     fontWeight="400"
-                    color="#000"
+                    color={theme.snapSecondaryText}
                   >
                     Get started by opting in to channels on Push.{' '}
                   </SpanV2>
                   <SpanV2
                     fontSize="14px"
                     fontWeight="400"
-                    color="#000"
+                    color={theme.snapSecondaryText}
                   >
                     Once you opt-in you will receive notifications on MetaMask.
                   </SpanV2>
@@ -176,7 +208,7 @@ const SnapModule = () => {
                 <SpanV2
                   fontSize="14px"
                   fontWeight="400"
-                  color="#000"
+                  color={theme.snapSecondaryText}
                 >
                   You’re about to install Push Snap which allows you to receive notifications from Push directly on
                   MetaMask!
@@ -185,7 +217,7 @@ const SnapModule = () => {
             </ItemVV2>
           </ItemVV2>
 
-          {walletConnected ? (
+          {walletConnected || addedAddress ? (
             <ItemHV2 gap="8px">
               <Image
                 src={ActiveIcon}
@@ -208,24 +240,25 @@ const SnapModule = () => {
                   spinnerSize={44}
                 />
               ) : (
-                <ConnectButton onClick={()=>connectToMetaMask()}>
+                <ConnectButton onClick={() => connectToMetaMask()}>
                   {!snapInstalled ? 'Install Snap' : 'Connect Using MetaMask '}
                 </ConnectButton>
               )}
             </ItemVV2>
           )}
 
-          {walletConnected ? (
-            <ItemHV2 gap="12px">
-              <SettingsButton onClick={showMetamaskPushSnap}>
+          {walletConnected || addedAddress ? (
+            <ButtonContainer gap="12px" >
+
+              <SettingsButton onClick={handleSettingsClick}>
                 <Gear
                   height="20px"
                   width="20px"
                 />
                 Settings
               </SettingsButton>
-              <FilledButton onClick={() => window.location.href='/channels'}>Get Started</FilledButton>            
-            </ItemHV2>
+              <FilledButton onClick={() => (window.location.href = '/channels')}>Get Started</FilledButton>
+            </ButtonContainer>
           ) : (
             <InfoDiv
               gap="7px"
@@ -236,7 +269,7 @@ const SnapModule = () => {
                 width={16}
               />
               <SpanV2
-                color="#657795"
+                color={theme.modalIconColor}
                 fontSize="14px"
                 fontWeight="400"
               >
@@ -267,7 +300,17 @@ const Container = styled(Section)`
   padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
   position: relative;
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-  
+  @media ${device.laptop} {
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+    width: calc(100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
+  }
+    
+  @media ${device.mobileL} {
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+    width: calc(100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
+  }
 `;
 
 const SubContainer = styled(Section)`
@@ -276,8 +319,12 @@ const SubContainer = styled(Section)`
   padding: 48px 24px;
   border-radius: 32px;
   background: #fff;
+  background: ${(props) => props.theme.default.bg};
   box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.05);
   margin: 24px auto;
+  @media ${device.mobileL} {
+    width: 330px;
+  }
 `;
 
 const SnapButton = styled(ButtonV2)`
@@ -298,6 +345,10 @@ const SnapButton = styled(ButtonV2)`
   @media (max-width: 600px) {
     font-size: 14px;
   }
+
+  
+
+
 `;
 
 const ConnectButton = styled(SnapButton)`
@@ -305,27 +356,41 @@ const ConnectButton = styled(SnapButton)`
   padding: 16px 24px;
   background: #d53a94;
   border: 1px solid #d53a94;
+
+  
 `;
 
 const SettingsButton = styled(SnapButton)`
   flex-direction: row;
-  color: #657795;
+  color: ${(props) => props.theme.default.secondaryColor};
   text-align: center;
   width: 135px;
   padding: 16px 24px;
-  border: 1px solid #bac4d6;
-  background: #fff;
+  border: 1px solid ${(props)=>props.theme.snapBorderColor};
+  background: ${(props) => props.theme.default.bg};
   gap: 4px;
+
+  @media ${device.mobileL} {
+    min-width: 246px;
+  }
 `;
 
 const FilledButton = styled(SnapButton)`
   width: 135px;
   padding: 16px 24px;
   background: #d53a94;
+
+  @media ${device.mobileL} {
+   min-width: 246px;
+  }
 `;
 
 const InfoDiv = styled(ItemHV2)`
   cursor: pointer;
 `;
 
-const ButtonContainer = styled(ItemHV2)``;
+const ButtonContainer = styled(ItemHV2)`
+@media ${device.mobileL} {
+  flex-direction:column;
+}
+`;

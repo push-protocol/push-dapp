@@ -1,6 +1,4 @@
 // React + Web3 Essentials
-import { AbstractConnector } from '@web3-react/abstract-connector';
-import { useWeb3React, Web3ReactHooks } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 
@@ -15,11 +13,10 @@ import * as dotenv from 'dotenv';
 
 // Internal Compoonents
 import InitState from 'components/InitState';
-// import { injected, ledger, walletconnect } from 'connectors';
 import NavigationContextProvider from 'contexts/NavigationContext';
 import AppContextProvider from 'contexts/AppContext';
 import { EnvHelper } from 'helpers/UtilityHelper';
-import { useEagerConnect, useInactiveListener, useSDKSocket } from 'hooks';
+import { useAccount, useInactiveListener, useSDKSocket } from 'hooks';
 import UserJourneySteps from 'segments/userJourneySteps';
 import Header from 'structure/Header';
 import MasterInterfacePage from 'structure/MasterInterfacePage';
@@ -34,17 +31,6 @@ import { resetChannelCreationSlice } from 'redux/slices/channelCreationSlice';
 import { resetAdminSlice } from 'redux/slices/adminSlice';
 import Navigation from 'structure/Navigation';
 import {  ErrorContext } from './contexts/ErrorContext'
-
-import { network, hooks as networkHooks } from './connectors/network';
-import { metaMask, hooks as metaMaskHooks } from './connectors/metaMask';
-import { walletConnectV2, hooks as walletConnectV2Hooks } from './connectors/walletConnectV2';
-
-import { MetaMask } from '@web3-react/metamask';
-import { WalletConnect as WalletConnectV2 } from '@web3-react/walletconnect-v2';
-import { Network } from "@web3-react/network";
-
-
-
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -66,6 +52,7 @@ import {
   SpacesUI,
 } from '@pushprotocol/uiweb';
 import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
+import { useUpdateTheme } from '@web3-onboard/react';
 
 dotenv.config();
 
@@ -84,23 +71,14 @@ export interface IUseSpaceReturnValues {
   SpaceBannerComponent: React.FC<ISpaceBannerProps>;
   CreateSpaceComponent: React.FC<ISpaceCreateWidgetProps>;
 }
-export const connectors: [
-  MetaMask | WalletConnectV2 | Network,
-  Web3ReactHooks,
-][] = [
-  [metaMask, metaMaskHooks],
-  [walletConnectV2, walletConnectV2Hooks],
-  [network, networkHooks]
-]
-
 
 export default function App() {
   const dispatch = useDispatch();
 
-  const { connector, isActive, account, chainId, provider } = useWeb3React<ethers.providers.Web3Provider>();
-  const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
+  const {isActive, account, chainId, provider} = useAccount();
   const [currentTime, setcurrentTime] = React.useState(0);
   const {authError, setAuthError } = useContext(ErrorContext);
+  const updateOnboardTheme = useUpdateTheme();
 
   const { run, stepIndex, tutorialContinous } = useSelector((state: any) => state.userJourney);
   // const location = useLocation();
@@ -116,11 +94,6 @@ export default function App() {
     const now = Date.now() / 1000;
     setcurrentTime(now);
   }, []);
-  React.useEffect(() => {
-    if (activatingConnector && activatingConnector === connector) {
-      setActivatingConnector(undefined);
-    }
-  }, [activatingConnector, connector]);
 
   useEffect(() => {
     if(!account) return;
@@ -132,12 +105,8 @@ export default function App() {
   }, [account]);
 
   // console.log(isActive, chainId, account);
-
-  // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
-  const triedEager = useEagerConnect();
-
-  // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
-  useInactiveListener(!triedEager || !!activatingConnector);
+  // handle logic to reconnect in response to certain events from the provider
+  const { allowedChain } = useInactiveListener();
 
   // Initialize GA
   ReactGA.initialize(appConfig.googleAnalyticsId);
@@ -151,13 +120,20 @@ export default function App() {
   useSDKSocket({ account, chainId, env: appConfig.appEnv});
   
   const toggleDarkMode = () => {
+    const newTheme = !darkMode ? 'dark' : 'light';
+    updateOnboardTheme(newTheme);
+    document.documentElement.setAttribute('theme', newTheme);
     setDarkMode(!darkMode);
   };
 
   React.useEffect(() => {
     const data = localStorage.getItem('theme');
     if (data) {
-      setDarkMode(JSON.parse(data));
+      const isDarkMode = JSON.parse(data);
+      const theme = isDarkMode ? 'dark' : 'light';
+      setDarkMode(isDarkMode);
+      updateOnboardTheme(theme);
+      document.documentElement.setAttribute('theme', theme);
     }
   }, []);
 
@@ -230,13 +206,13 @@ export default function App() {
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
-      {!isActive && (
+      {(!isActive || !allowedChain) && (
         <SectionV2 minHeight="100vh">
           <AppLogin toggleDarkMode={toggleDarkMode} />
         </SectionV2>
       )}
 
-      {isActive && !authError && (
+      {isActive && !authError && allowedChain && (
         <>
           <GlobalStyle />
           <InitState />

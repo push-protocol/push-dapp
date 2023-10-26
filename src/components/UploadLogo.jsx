@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import React, { Fragment , useRef } from "react";
 
@@ -35,7 +34,6 @@ const UploadLogo = ({
   setStepFlow
 }) => {
   const childRef = useRef();
-  const { chainId, account } = useWeb3React();
 
   const handleDragOver = (e) => {
     e.preventDefault();

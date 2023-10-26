@@ -1,7 +1,6 @@
 // React + Web3 Essentials
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import styled from 'styled-components';
@@ -14,6 +13,7 @@ import YieldStatsSection from 'sections/yield/YieldStatsSection';
 import YieldFarmingDataStoreV2 from 'singletons/YieldFarmingDataStoreV2';
 import YieldUniswapV3 from 'components/yield/YieldUniswapV3';
 import YieldPushFeeV3 from 'components/yield/YieldPushFeeV3';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, addresses } from 'config';
@@ -23,8 +23,7 @@ import StepsTransactionModal from 'components/StepsTransactionModal';
 const NewYieldFarming = (
     { setActiveTab }
 ) => {
-
-    const { connector, isActive, account, chainId, provider } = useWeb3React<ethers.providers.Web3Provider>();
+    const { provider, account } = useAccount();
 
     const [pushToken, setPushToken] = useState(null);
     const [staking, setStaking] = useState(null);

@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import React from 'react';
 
 // External Packages
@@ -14,23 +13,19 @@ import styled, { useTheme } from 'styled-components';
 import { postReq } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
-import useModalBlur, {MODAL_POSITION} from 'hooks/useModalBlur';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import { setUserChannelDetails } from 'redux/slices/adminSlice';
 import cubeIcon from '../assets/icons/cube.png';
 import redBellIcon from '../assets/icons/redBellSlash.png';
 import greenBellIcon from '../assets/icons/greenBell.svg';
-import userMinusIcon from '../assets/icons/userCircleMinus.png';
-import userPlusIcon from '../assets/icons/userCirclePlus.png';
-import AddDelegateModalContent from './AddDelegateModalContent';
 import AddSubgraphModalContent from './AddSubgraphModalContent';
 import ChannelDeactivateModalContent from './ChannelDeactivateModalContent';
 import ChannelReactivateModalContent from './ChannelReactivateModalContent';
-import RemoveDelegateModalContent from './RemoveDelegateModalContent';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 
 const ethers = require('ethers');
 
@@ -46,7 +41,7 @@ type ChannelSettingsType = {
 // Create Header
 function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: ChannelSettingsType) {
   const dispatch = useDispatch();
-  const { account, chainId } = useWeb3React();
+  const { account, chainId } = useAccount();
   const { epnsWriteProvider, epnsCommWriteProvider } = useSelector((state: any) => state.contracts);
   const { channelDetails } = useSelector((state: any) => state.admin);
   const { CHANNNEL_DEACTIVATED_STATE, CHANNEL_BLOCKED_STATE } = useSelector((state: any) => state.channels);
@@ -68,16 +63,6 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
     ModalComponent: ReactivateChannelModalComponent,
   } = useModalBlur();
   const {
-    isModalOpen: isAddDelegateModalOpen,
-    showModal: showAddDelegateModal,
-    ModalComponent: AddDelegateModalComponent,
-  } = useModalBlur();
-  const {
-    isModalOpen: isRemoveDelegateModalOpen,
-    showModal: showRemoveDelegateModal,
-    ModalComponent: RemoveDelegateModalComponent,
-  } = useModalBlur();
-  const {
     isModalOpen: isAddSubgraphModalOpen,
     showModal: showAddSubgraphModal,
     ModalComponent: AddSubgraphModalComponent,
@@ -88,8 +73,6 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
     isDropdownOpen &&
     !isDeactivateChannelModalOpen &&
     !isReactivateChannelModalOpen &&
-    !isAddDelegateModalOpen &&
-    !isRemoveDelegateModalOpen &&
     !isAddSubgraphModalOpen;
   useClickAway(DropdownRef, () => closeDropdownCondition && closeDropdown());
 
@@ -157,16 +140,6 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
    */
   const deactivateChannel = () => epnsWriteProvider.deactivateChannel();
 
-  const addDelegateToast = useToast();
-  const addDelegate = async (walletAddress: string) => {
-    return epnsCommWriteProvider.addDelegate(walletAddress);
-  };
-
-  const removeDelegateToast = useToast();
-  const removeDelegate = (walletAddress: string) => {
-    return epnsCommWriteProvider.removeDelegate(walletAddress);
-  };
-
   const addSubgraphToast = useToast();
   const addSubgraphDetails = async (pollTime, subGraphId) => {
     // design not present to show below cases
@@ -220,34 +193,6 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
                 </div>
               </ChannelActionButton>
             )}
-
-            <ChannelActionButton
-              disabled={channelInactive}
-              onClick={() => !channelInactive && showAddDelegateModal()}
-            >
-              <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-                <CustomIcon
-                  src={userPlusIcon}
-                  alt="user-plus"
-                />
-                <div style={{ width: '10px' }} />
-                Add Delegate
-              </div>
-            </ChannelActionButton>
-
-            <ChannelActionButton
-              disabled={channelInactive}
-              onClick={() => !channelInactive && showRemoveDelegateModal()}
-            >
-              <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-                <CustomIcon
-                  src={userMinusIcon}
-                  alt="user-minus"
-                />
-                <div style={{ width: '10px' }} />
-                Remove Delegate
-              </div>
-            </ChannelActionButton>
 
             {onCoreNetwork && (
               <ChannelActionButton
@@ -318,23 +263,6 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
         onConfirm={activateChannel}
         toastObject={reactivateChannelToast}
         modalMargin={isMobile ? '10rem 1rem 0 1rem' : ''}
-        modalPosition={MODAL_POSITION.ON_ROOT}
-      />
-
-      {/* modal to add a delegate */}
-      <AddDelegateModalComponent
-        InnerComponent={AddDelegateModalContent}
-        onConfirm={addDelegate}
-        toastObject={addDelegateToast}
-        modalPosition={MODAL_POSITION.ON_ROOT}
-      />
-
-      {/* modal to remove a delegate */}
-      <RemoveDelegateModalComponent
-        InnerComponent={RemoveDelegateModalContent}
-        onConfirm={removeDelegate}
-        toastObject={removeDelegateToast}
-        InnerComponentProps={{isNotDropdown:false}}
         modalPosition={MODAL_POSITION.ON_ROOT}
       />
 

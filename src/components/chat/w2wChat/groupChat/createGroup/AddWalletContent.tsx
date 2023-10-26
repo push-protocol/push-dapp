@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useContext } from 'react';
 
@@ -30,6 +29,7 @@ import { Context } from 'modules/chat/ChatModule';
 import { AppContext, User } from '../../../../../types/chat';
 import GroupModalHeader from './GroupModalHeader';
 import MemberListContainer from './MemberListContainer';
+import { useAccount } from 'hooks';
 
 export const AddWalletContent = ({
   onSubmit,
@@ -43,12 +43,11 @@ export const AddWalletContent = ({
 }) => {
   const { currentChat }: AppContext = useContext<AppContext>(Context);
   const [searchedUser, setSearchedUser] = React.useState<string>('');
-  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
+  const { account } = useAccount();
   const [filteredUserData, setFilteredUserData] = React.useState<any>(null);
   const [isInValidAddress, setIsInvalidAddress] = React.useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = React.useState<boolean>(false);
   const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
-  // const { library } = useWeb3React();
 
   const theme = useTheme();
   const searchFeedToast = useToast();

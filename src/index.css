@@ -555,3 +555,45 @@ button, a, a:before, a:after {
   height: 100% !important;
   border-radius: 0 !important;
 }
+
+/* style modification for web3 onboard modal UI */
+:root {
+  /* Light Mode */
+  --w3o-background-color: #FFFFFF !important;
+  --w3o-foreground-color: #F8F8F9 !important;
+  --w3o-text-color: #121215 !important;
+  --w3o-border-color: #DEDFE1 !important;
+  --w3o-action-color: #C631C6 !important;
+  --w3o-border-radius: 24px !important;
+  --w3o-font-family: unset !important;
+  --onboard-modal-backdrop:transparent !important;
+  --modal-backdrop:transparent !important;
+}
+
+[theme="dark"] {
+  /* Dark Mode */
+  --w3o-background-color: #121215 !important;
+  --w3o-foreground-color: #25262B !important;
+  --w3o-text-color: #DEDFE1 !important;
+  --w3o-border-color: #25262B !important;
+  --w3o-action-color: #C631C6 !important;
+  --w3o-border-radius: 24px !important;
+  --w3o-font-family: unset !important;
+  --onboard-modal-backdrop:transparent !important;
+  --modal-backdrop:transparent !important;
+}
+
+#onboard-container {
+  position: absolute; 
+  top: 14rem;
+  margin: auto;
+  background-color: transparent; 
+  left: 20px;
+  right: 20px; 
+  margin-left: auto; 
+  margin-right: auto;
+  border-radius: var(--w3o-border-radius);
+  overflow: auto;
+	z-index: 10;
+}
+

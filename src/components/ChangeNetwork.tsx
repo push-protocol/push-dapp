@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { utils } from "ethers";
 import React from "react";
 
@@ -12,13 +11,13 @@ import { useSelector } from 'react-redux';
 import useToast from "hooks/useToast";
 import { Button, Item, Span } from "../primaries/SharedStyling";
 import { aliasChainIdsMapping, CORE_CHAIN_ID, networkName } from "helpers/UtilityHelper";
-import { CHAIN_DETAILS } from 'config';
-import { handleChangeNetwork } from 'helpers/ChainHelper';
+import { appConfig, CHAIN_DETAILS } from 'config';
+import { useAccount } from 'hooks';
 
 const ChangeNetwork = () => {
   const changeNetworkToast = useToast();
   const themes = useTheme();
-  const { connector,chainId, provider } = useWeb3React();
+  const { switchChain } = useAccount();
   const { aliasDetails: {aliasChainId} } = useSelector((state: any) => state.admin);
 
   return (
@@ -53,7 +52,7 @@ const ChangeNetwork = () => {
           color="#fff"
           radius="15px"
           padding="20px 20px"
-          onClick={() => handleChangeNetwork(aliasChainId, connector.provider, connector)}
+          onClick={() => switchChain(aliasChainId)}
         >
           <Span
             color="#fff"

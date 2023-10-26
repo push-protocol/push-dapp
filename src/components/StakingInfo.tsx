@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import React, { Fragment, useEffect, useState } from "react";
 
@@ -12,7 +11,7 @@ import { Button, Item, Span } from "primaries/SharedStyling";
 
 // Internal Configs
 import { abis, addresses, appConfig } from "config";
-import { useAsyncOperation, useDeviceWidthCheck } from "hooks";
+import { useAccount, useAsyncOperation, useDeviceWidthCheck } from "hooks";
 import { device } from "config/Globals";
 import { getPushTokenFromWallet, importPushToken, mintPushToken } from "helpers";
 import { SpanV2 } from "./reusables/SharedStylingV2";
@@ -20,7 +19,7 @@ import LoaderSpinner, { LOADER_TYPE } from "./reusables/loaders/LoaderSpinner";
 
 const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, handleCreateChannel}) => {
   const { loading, error, executeAsyncFunction: executeImportPushTokenFunc } = useAsyncOperation(importPushToken);
-  const { provider, account, connector } = useWeb3React();
+  const { provider, account } = useAccount();
   const [balance,setBalance] = useState(0);
   // const [loading,setLoading] = useState(false);
   const [faucetLoading,setFaucetLoading] = useState(false);
@@ -57,7 +56,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, 
     <Fragment>
       {/* <Content padding="0px 0px 0px 0px"> */}
         <ItemContent>
-          <Item self="center" maxWidth="800px" width="100%" margin="20px 0px 0px 0px">
+          <Item self="center" maxWidth="800px" width="100%" margin="60px 0px 0px 0px">
             <TabSpace>
               <p>
                 Amount for Staking
@@ -116,7 +115,7 @@ const TabSpace = styled.div`
   border-radius: 20px;
   background-color: #f4f5fa;
   align-items: center;
-  transform: translateY(40px);
+  z-index: 1;
 
   @media ${device.tablet} {
     width: 100%;

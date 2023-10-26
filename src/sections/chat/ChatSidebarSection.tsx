@@ -1,6 +1,5 @@
 // React + Web3 Essentials
 import { Web3Provider } from '@ethersproject/providers';
-import { useWeb3React } from '@web3-react/core';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
@@ -75,7 +74,6 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser?.profilePicture);
 
-  const { chainId, account } = useWeb3React<Web3Provider>();
   const [loadingRequests, setLoadingRequests] = useState(true);
   const [showQR, setShowQR] = useState<boolean>(false);
   const containerRef = React.useRef(null);

@@ -11,6 +11,7 @@ const themeLight = {
     secondaryColor: '#657795',
     hover: '#F3F3FF',
     borderColor: '#dfdee9',
+    primaryPushThemeTextColor: '#cf1c84'
   },
 
   // Login Theme
@@ -239,6 +240,14 @@ const themeLight = {
   activeButtonText:'#657795',
   stakingBorder:'#BAC4D6',
   stakingEmptyButtonBG:'#DEDFE1',
+
+  // notif settings modal
+  settingsModalBorderBottomColor: '#D4DCEA',
+  sliderActiveColor: '#CF1C84',
+  sliderTrackColor: '#BAC4D6',
+  settingsModalPrimaryTextColor: '#1E1E1E',
+  settingsModalBorderColor: '#D4DFF2',
+  settingsModalBackground: '#FFF',
   
    //spaces
    spaceHostTextColor: '#1e1e1e',
@@ -263,10 +272,19 @@ const themeLight = {
 
   snapUIBackground:'#F9F9F9',
   snapButtonBackground:'#1E1E1E',
-  snapPrimaryText:'',
+  snapPrimaryText:'#000',
   snapSecondaryText:'#62626a',
   snapBackground:'#F2F2F2',
+  snapBorderColor:'#BAC4D6',
 
+  // Notification Settings
+  nfsError: '#ED5858',
+  nfsDisabled: '#DFDEE9',
+  nfsDisabledText: '#AFB3BF',
+
+  // Send Notification
+  snfBorder: '#BAC4D6',
+  snfToggleBg: '#f4f5fa',
 };
 
 const themeDark = {
@@ -281,6 +299,7 @@ const themeDark = {
     secondaryColor: '#B6BCD6',
     hover: '#00000033',
     borderColor: '#4A4F67',
+    primaryPushThemeTextColor: '#cf1c84'
   },
 
   // Login Theme
@@ -515,6 +534,14 @@ const themeDark = {
   emptyButtonText:'#2D313C',
   emptyButtonBg:'',
 
+  // notif settings modal
+  settingsModalBorderBottomColor: '#4A4F67',
+  sliderActiveColor: '#CF1C84',
+  sliderTrackColor: '#4A4F67',
+  settingsModalPrimaryTextColor: '#fff',
+  settingsModalBorderColor: '#4A4F67',
+  settingsModalBackground: '#2F3137',
+
   //spaces
   spaceHostTextColor: '#ffff',
 
@@ -538,10 +565,19 @@ const themeDark = {
 
   snapUIBackground:'transparent',
   snapButtonBackground:'#404650',
-  snapPrimaryText:'',
-  snapSecondaryText:'#787E99',
+  snapPrimaryText:'#fff',
+  snapSecondaryText:'#B6BCD6',
   snapBackground:'#404650',
+  snapBorderColor:'#787E99',
   
+  // Notification Settings
+  nfsError: '#ED5858',
+  nfsDisabled: '#AFB3BF',
+  nfsDisabledText: '#787E99',
+
+  // Send Notification
+  snfBorder: '#4A4F67',
+  snfToggleBg: '#404650',
 };
 
 module.exports = {
