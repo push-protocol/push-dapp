@@ -174,6 +174,7 @@ const NavigationList = {
       isRoute: true,
       hasMenuLogic: true,
       hidden: false,
+      showNewTag:true,
       headerTag: {
         title: 'Yield Farming V2',
         light: {
@@ -187,7 +188,6 @@ const NavigationList = {
       },
     },
 
-
     receiveNotifs: {
       src: 'navigation/receiveNotifOffIcon.svg',
       activeSrc: 'navigation/receiveNotifOnIcon.svg',
@@ -195,7 +195,8 @@ const NavigationList = {
       name: 'Receive Notifications',
       title: 'Receive Notifications',
       alt: 'Receive Notifications',
-      href: '/receive',
+      href: '',
+      hasOnClickFunction:true,
       newTab: false,
       isRoute: true,
       hasMenuLogic: true,
