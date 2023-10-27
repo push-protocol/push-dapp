@@ -131,25 +131,29 @@ function Header({ isDarkMode, darkModeToggle }) {
   };
 
   const isMobile = useDeviceWidthCheck(600);
+  
+  const isSnapPage = location?.pathname === '/snap';
 
   return (
     <Container direction="row" padding="0px 15px">
       <ItemH justify="flex-start" flex="0">
         <RightBarContainer justify="flex-start" flex="0">
           <RightBarDesktop justify="flex-start" flex="0">
-            <Logo src={!isDarkMode ? 'push.svg' : 'pushDark.svg'} />
+            <a href='/channels'>
+              <Logo src={!isDarkMode ? 'push.svg' : 'pushDark.svg'} />
+            </a>
           </RightBarDesktop>
 
           <LogoMobile justify="flex-start" flex="0">
             <Logo src={!isDarkMode ? 'logo512.png' : 'logo512.png'} />
           </LogoMobile>
         </RightBarContainer>
-        
+
         {/* mobile navbar */}
         {navigationSetup && showNavBar && isActive && !error && (
           <NavMenuContainer ref={navRef} tabletAlign="flex-start">
             <NavMenu>
-              <ChainIndicator isDarkMode={isDarkMode}/>
+              <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
 
               <NavMenuInner tabletAlign="flex-start">
@@ -161,13 +165,13 @@ function Header({ isDarkMode, darkModeToggle }) {
       </ItemH>
 
       <ItemH justify="flex-end">
-        {headerTag && isActive && !error && (
+        {headerTag && isActive && !error && !isSnapPage && (
           <HeaderTag align="flex-start" overflow="hidden">
             <Span
               textTransform="capitalize"
               spacing="-0.02em"
               weight="normal"
-              padding={isMobile ? "8px 7px" : "8px 20px" }
+              padding={isMobile ? "8px 7px" : "8px 20px"}
               className='text'
               color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}>
               {headerTag.title}
@@ -186,26 +190,26 @@ function Header({ isDarkMode, darkModeToggle }) {
           />
         )}
 
-      {isActive && !error && (
-            <RightBarMobile>
-              <Button
-                bg="transparent"
-                padding="5px"
-                radius="4px"
-                onClick={() => {
-                  setShowNavBar(!showNavBar);
-                }}>
-                <AiOutlineMenu size={30} color={theme.headerIconsBg} />
-              </Button>
-            </RightBarMobile>
-          )}
+        {isActive && !error && (
+          <RightBarMobile>
+            <Button
+              bg="transparent"
+              padding="5px"
+              radius="4px"
+              onClick={() => {
+                setShowNavBar(!showNavBar);
+              }}>
+              <AiOutlineMenu size={30} color={theme.headerIconsBg} />
+            </Button>
+          </RightBarMobile>
+        )}
 
         <ItemH justify="flex-end" flex="initial">
           {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>}
           {!isActive && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>}
           {isActive && !showLoginControls && !error && (
             <RightBarDesktop justify="flex-end" flex="initial">
-              <ChainIndicator isDarkMode={isDarkMode}/>
+              <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
             </RightBarDesktop>
           )}{' '}
@@ -246,7 +250,7 @@ const RightBarMobile = styled(ItemH)`
   }
 `;
 
- const LogoMobile = styled(ItemH)`
+const LogoMobile = styled(ItemH)`
     @media (min-width: 993px) {
       display: none;
     }
