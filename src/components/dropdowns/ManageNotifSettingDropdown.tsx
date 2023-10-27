@@ -3,7 +3,7 @@ import React, { useContext, useMemo, useState } from "react";
 
 // External Packages
 import styled, { css, useTheme } from "styled-components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // Internal Components
 import { DropdownBtnHandler } from "./DropdownBtnHandler";
@@ -107,7 +107,9 @@ const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = (o
   } = options;
   const [isOpen, setIsOpen] = useState(false);
   const { chainId } = useAccount();
-  const { userPushSDKInstance } = useContext(AppContext);
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
   const dispatch = useDispatch();
 
   const channelSetting = useMemo(() => {
