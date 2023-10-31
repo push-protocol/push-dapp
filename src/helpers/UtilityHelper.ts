@@ -139,7 +139,8 @@ export const aliasChainIdToChainName={
 export const aliasChainIdsMapping = {
   1: 137,
   42: 80001,
-  5: 80001
+  5: 80001,
+  11155111: 80001
 };
 
 export const NETWORK_DETAILS = {

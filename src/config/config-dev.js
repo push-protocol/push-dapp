@@ -22,7 +22,7 @@ export const config = {
    * Allowed Networks
    */
   allowedNetworks: [
-    5, // for eth goerli
+    // 5, // for eth goerli
     11155111, // for eth sepolia
     80001, //for mumbai polygon
     97, // bnb testnet
@@ -34,8 +34,8 @@ export const config = {
   /** 
    * Core Network Related Data
    */
-  coreContractChain: 5, //the chain id of the network which the core contract relies on
-  coreRPC: 'https://goerli.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
+  coreContractChain: 11155111, //the chain id of the network which the core contract relies on
+  coreRPC: 'https://sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
   mainnetCoreRPC: "https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a",
   mainnetCoreContractChain: 1,
   aliasRPC: {
@@ -120,7 +120,7 @@ export const CHAIN_DETAILS = {
     label: "Ethereum Sepolia",
     name: "ETH_TEST_SEPOLIA",
     chainId: 11155111,
-    rpcUrl: "https://goerli.infura.io/v3/4ff53a5254144d988a8318210b56f47a",
+    rpcUrl: "https://sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7",
     commAddress: "0x28709649Dfda9baDEbb61dBF7a8D199cfC8EcF2e",
     network: "sepolia",
   }, 
