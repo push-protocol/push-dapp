@@ -403,7 +403,7 @@ const getUpdatedGroup = async(groupInfo) => {
 
   return (
     <Container>
-      <ChatUIProvider signer={signerData} env='prod' account={account} pgpPrivateKey={pgpPvtKey}>
+      <ChatUIProvider signer={signerData} env={appConfig?.appEnv} account={account} pgpPrivateKey={pgpPvtKey}>
       <ItemHV2 ref={containerRef}>
         {!isLoading ? (
           <QueryClientProvider client={queryClient}>
