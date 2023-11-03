@@ -118,6 +118,7 @@ const Thumb = styled.div`
   border: 1px solid ${(props) => props.theme.default.border};
   border-radius: 50%;
   user-select: none;
+  cursor: pointer;
   z-index: 1;
   position: absolute;
 `;
