@@ -10,6 +10,7 @@ import notificationReducer from './slices/notificationSlice';
 import canSendNotification from "./slices/sendNotificationSlice";
 import spamReducer from './slices/spamSlice';
 import userJourneyReducer from './slices/userJourneySlice';
+import userReducer from "./slices/userSlice";
 
 const rootReducer = combineReducers({
 	contracts: contractReducer,
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
 	spam: spamReducer,
 	userJourney: userJourneyReducer,
 	canSend:canSendNotification,
+	user: userReducer
 });
 
 const store = configureStore({

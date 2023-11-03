@@ -14,13 +14,13 @@ import { Button } from 'primaries/SharedStyling';
 import { ImageV2 } from 'components/reusables/SharedStylingV2';
 import { getChannel, getUserSubscriptions } from 'services';
 import LoaderSpinner from 'primaries/LoaderSpinner';
-import EmptyNotificationSettings from './EmptyNotificationSettings';
 import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import ManageNotifSettingDropdown from 'components/dropdowns/ManageNotifSettingDropdown';
 
 // Internal Configs
 import { device } from 'config/Globals';
+import EmptyNotificationSettings from 'components/channel/EmptyNotificationSettings';
 
 interface ChannelListItem {
   channel: string;

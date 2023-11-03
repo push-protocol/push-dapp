@@ -19,6 +19,8 @@ import Bell from 'primaries/Bell';
 import Profile from 'primaries/Profile';
 import { NavigationContext } from 'contexts/NavigationContext';
 import { ErrorContext } from 'contexts/ErrorContext';
+import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
+import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg'
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -30,6 +32,7 @@ import ChainIndicator from 'components/ChainIndicator';
 import { UnsupportedChainIdError } from 'connectors/error';
 import APP_PATHS from 'config/AppPaths';
 import { themeDark, themeLight } from 'config/Themization';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 
 // header tags for pages that are not there in navigationList (Sidebar)
 const EXTRA_HEADER_TAGS = {
@@ -100,7 +103,7 @@ function Header({ isDarkMode, darkModeToggle }) {
         if (location.pathname === item.data.href) {
           setHeaderTag(item.data.headerTag);
         } else {
-          if(EXTRA_HEADER_TAGS[location.pathname]) 
+          if (EXTRA_HEADER_TAGS[location.pathname])
             setHeaderTag(EXTRA_HEADER_TAGS[location.pathname]);
         }
       });
@@ -131,7 +134,6 @@ function Header({ isDarkMode, darkModeToggle }) {
   };
 
   const isMobile = useDeviceWidthCheck(600);
-  
   const isSnapPage = location?.pathname === '/snap';
 
   return (
@@ -178,6 +180,15 @@ function Header({ isDarkMode, darkModeToggle }) {
             </Span>
           </HeaderTag>
         )}
+        <SnapSection>
+          <MetamaskLogo width={24} height={22} />
+          <InstallText>
+            <SpanV2 fontSize='12px' fontWeight='400'>Get Notifications directly in MetaMask</SpanV2>
+            <Link href='https://app.push.org/snap' target='_blank'>
+              Install Push Snap <OpenLink />
+            </Link>
+          </InstallText>
+        </SnapSection>
 
         {isActive && !showLoginControls && !error && (
           <DarkModeSwitch
@@ -344,6 +355,38 @@ const DarkMode = styled(Item)`
     display: none;
   }
 `;
+
+const SnapSection = styled.div`
+  width:251px;
+  height:28px;
+  display:flex;
+  flex-direction:row;
+  border-radius: 12px;
+  border: 1px solid #D4DCEA;
+  border: 1px solid ${(props) => props.theme.default.border};
+  background:${(props) => props.theme.default.bg};
+  padding: 12px 16px;
+  align-items: center;
+  gap: 9px;
+`;
+
+const InstallText = styled.div`
+  display:flex;
+  flex-direction:column;
+`
+
+const Link = styled.a`
+  cursor:pointer;
+  font-size:12px;
+  font-weight:400;
+  color:#D53A94;
+  text-align: start;
+  text-decoration:none;
+   &:hover{
+    text-decoration:underline;
+    text-underline-position: under;
+  }
+`
 
 // Export Default
 export default Header;

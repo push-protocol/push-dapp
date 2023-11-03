@@ -4,7 +4,7 @@ import React, { useContext, useState } from "react";
 // External Packages
 import Switch from 'react-switch';
 import styled, { css, useTheme } from "styled-components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // Internal Components
 import { DropdownBtnHandler } from "./DropdownBtnHandler";
@@ -133,7 +133,9 @@ const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const { chainId } = useAccount();
-  const { userPushSDKInstance } = useContext(AppContext);
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
   const dispatch = useDispatch();
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
