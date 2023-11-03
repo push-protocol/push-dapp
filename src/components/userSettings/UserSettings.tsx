@@ -14,13 +14,13 @@ import { Button } from 'primaries/SharedStyling';
 import { ImageV2 } from 'components/reusables/SharedStylingV2';
 import { getChannel, getUserSubscriptions } from 'services';
 import LoaderSpinner from 'primaries/LoaderSpinner';
-import EmptyNotificationSettings from './EmptyNotificationSettings';
 import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import ManageNotifSettingDropdown from 'components/dropdowns/ManageNotifSettingDropdown';
 
 // Internal Configs
 import { device } from 'config/Globals';
+import EmptyNotificationSettings from 'components/channel/EmptyNotificationSettings';
 
 interface ChannelListItem {
   channel: string;
@@ -42,24 +42,29 @@ function UserSettings() {
   const dispatch = useDispatch();
 
   const fetchChannelDetails = async (channel: string) => {
-    const details = await getChannel({ channel });
-    if (details) {
-      const updatedChannelItem: ChannelListItem = {
-        channel,
-        id: details.id,
-        icon: details.icon,
-        name: details.name,
-        channel_settings: details.channel_settings,
-      };
-      return updatedChannelItem;
-    } else return undefined;
+    try {
+      const details = await getChannel({ channel });
+      if (details) {
+        const updatedChannelItem: ChannelListItem = {
+          channel,
+          id: details.id,
+          icon: details.icon,
+          name: details.name,
+          channel_settings: details.channel_settings,
+        };
+        return updatedChannelItem;
+      } else return undefined;
+    } catch {
+      return undefined;
+    }
   };
 
   const fillData = async (details: any) => {
-    const data = await Promise.all(
+    const data = [];
+    await Promise.all(
       Object.keys(details).map(async (channel) => {
         const channelData = await fetchChannelDetails(channel);
-        if (channelData) return channelData;
+        if (channelData) data.push(channelData);
       })
     );
     setChannelList(data);

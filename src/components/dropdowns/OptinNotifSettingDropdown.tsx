@@ -3,12 +3,12 @@ import React, { useContext, useMemo, useState } from "react";
 
 // External Packages
 import Switch from 'react-switch';
-import Slider from 'react-input-slider';
 import styled, { css, useTheme } from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 
 // Internal Components
 import { DropdownBtnHandler } from "./DropdownBtnHandler";
+import InputSlider from "components/reusables/sliders/InputSlider";
 
 // Internal Configs
 import { SpanV2 } from "components/reusables/SharedStylingV2";
@@ -85,29 +85,17 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
             </DropdownSwitchItem>
           {setting.type === 2 && setting.enabled === true && (
             <DropdownSliderItem>
-                <Slider
-                    styles={{
-                        active: {
-                            backgroundColor: theme.sliderActiveColor
-                        },
-                        track: {
-                            height: 4,
-                            width: 250,
-                            backgroundColor: theme.sliderTrackColor
-                        },
-                        thumb: {
-                            width: 16,
-                            height: 16
-                        }
-                        }}
-                    axis="x"
-                    x={setting.default}
+                <InputSlider
+                    max={setting.upperLimit}
+                    min={setting.lowerLimit}
+                    step={setting.ticker || 1}
+                    val={setting.default}
+                    defaultVal={setting.default}
                     onChange={({ x }) => handleSliderChange(index, x)}
-                    xstep={1}
-                    xmin={setting.lowerLimit}
-                    xmax={setting.upperLimit}
                 />
-                <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right">{setting.default}</SpanV2>
+                <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right" margin="0 0 0 16px">
+                    {setting.default}
+                </SpanV2>
             </DropdownSliderItem>
           )}
         </DropdownInnerContainer>

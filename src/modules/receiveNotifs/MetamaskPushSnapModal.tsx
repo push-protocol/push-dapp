@@ -62,7 +62,7 @@ const MetamaskPushSnapModal = ({
 
             {SnapState == 1 && <InstallMetamaskSnapModal setSnapState={setSnapState} setConfigure={setConfigure} configure={configure} />}
             {SnapState == 2 && <SnapInformationModal />}
-            {SnapState == 3 && <MetamaskSnapConfigureModal />}
+            {SnapState == 3 && <MetamaskSnapConfigureModal title={'Settings'}/>}
 
 
         </Container>

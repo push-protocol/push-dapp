@@ -11,6 +11,7 @@ export const isAllFilledAndValid = ({
   type,
   settingName,
   defaultValue,
+  sliderStep,
 }: {
   setErrorInfo: React.Dispatch<
     React.SetStateAction<{
@@ -22,6 +23,7 @@ export const isAllFilledAndValid = ({
   >;
   upperLimit: string;
   lowerLimit: string;
+  sliderStep: string;
   type: ChannelSetting['type'];
   settingName: string;
   defaultValue: string;
@@ -60,7 +62,14 @@ export const isAllFilledAndValid = ({
       }));
       hasError = true;
     }
-    if (!isEmpty(lowerLimit) && !isEmpty(upperLimit) && !isEmpty(defaultValue)) {
+    if (isEmpty(sliderStep)) {
+      setErrorInfo((x) => ({
+        ...x,
+        sliderStep: 'Slider step is required',
+      }));
+      hasError = true;
+    }
+    if (!isEmpty(lowerLimit) && !isEmpty(upperLimit) && !isEmpty(defaultValue) && !isEmpty(sliderStep)) {
       if (Number(lowerLimit) < 0) {
         setErrorInfo((x) => ({
           ...x,
@@ -86,6 +95,20 @@ export const isAllFilledAndValid = ({
         setErrorInfo((x) => ({
           ...x,
           default: 'Default value not in range',
+        }));
+        hasError = true;
+      }
+      if (Number(sliderStep) <= 0) {
+        setErrorInfo((x) => ({
+          ...x,
+          sliderStep: 'Slider step should be greater than 0',
+        }));
+        hasError = true;
+      }
+      if (Number(sliderStep) > Number(upperLimit) - Number(lowerLimit)) {
+        setErrorInfo((x) => ({
+          ...x,
+          sliderStep: 'Slider step should be less than range',
         }));
         hasError = true;
       }
