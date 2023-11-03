@@ -13,6 +13,7 @@ export type ChannelSetting =
     index: number;
     lowerLimit: number;
     upperLimit: number;
+    ticker: number;
   };
 
 export type UserSetting =
@@ -32,5 +33,5 @@ export type UserSetting =
     lowerLimit: number;
     upperLimit: number;
     user: number;
+    ticker: number;
   };
-  

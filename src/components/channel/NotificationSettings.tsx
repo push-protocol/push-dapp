@@ -1,6 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useMemo } from 'react';
-import { ethers } from 'ethers';
+import React, { useContext, useEffect, useMemo } from 'react';
 
 // External Packages
 import 'react-dropdown/style.css';
@@ -19,6 +18,7 @@ import { AddSettingButton } from './ChannelButtons';
 import ChannelInfoList from './ChannelInfoList';
 import DepositFeeFooter from './DepositFeeFooter';
 import { useAccount } from 'hooks';
+import { AppContext } from 'contexts/AppContext';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -26,6 +26,7 @@ import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import { ChannelSetting } from 'helpers/channel/types';
 import { getChannel } from 'services';
 import { updateChannelSetting } from 'redux/slices/channelSlice';
+import { NotificationSetting } from '@pushprotocol/restapi/src/lib/pushNotification/PushNotificationTypes';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -46,6 +47,8 @@ function NotificationSettings() {
   const [settingToEdit, setSettingToEdit] = React.useState<ChannelSetting>(undefined);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoadingSettings, setIsLoadingSettings] = React.useState(true);
+
+  const { userPushSDKInstance } = useContext(AppContext);
 
   const {
     isModalOpen: isAddSettingModalOpen,
@@ -128,36 +131,31 @@ function NotificationSettings() {
     try {
       setIsLoading(true);
 
-      const feesRequiredForEdit = 50;
-      const parsedFees = ethers.utils.parseUnits(feesRequiredForEdit.toString(), 18);
-
       notificationToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
-      const notifOptions = settings.length;
-      let _notifSettings = '';
-      let _notifDescription = '';
-      settings.forEach((setting) => {
-        if (_notifSettings !== '') _notifSettings += '+';
-        if (_notifDescription !== '') _notifDescription += '+';
+      const settingData: NotificationSetting[] = settings.map((setting) => {
         if (setting.type === 1) {
-          _notifSettings += `${setting.type}-${setting.default ? '1' : '0'}`;
-        } else if (setting.type === 2) {
-          _notifSettings += `${setting.type}-${setting.enabled ? '1' : '0'}-${setting.default}-${setting.lowerLimit}-${
-            setting.upperLimit
-          }`;
+          return {
+            type: setting.type,
+            description: setting.description,
+            default: setting.default ? 1 : 0,
+          };
         }
-        _notifDescription += setting.description;
+        if (setting.type === 2) {
+          return {
+            type: setting.type,
+            description: setting.description,
+            default: setting.default,
+            data: {
+              lower: setting.lowerLimit,
+              upper: setting.upperLimit,
+              ticker: setting.ticker,
+              enabled: setting.enabled,
+            },
+          };
+        }
       });
+      await userPushSDKInstance.channel.setting(settingData);
 
-      const tx = await epnsWriteProvider.createChannelSettings(
-        notifOptions,
-        _notifSettings,
-        _notifDescription,
-        parsedFees,
-        { gasLimit: 1000000 }
-      );
-
-      console.log(tx);
-      await tx.wait();
       dispatch(updateChannelSetting({ channelAddress, settings }));
       setIsLoading(false);
 
@@ -172,6 +170,9 @@ function NotificationSettings() {
           />
         ),
       });
+
+      // Go back to channel dashboard
+      setTimeout(() => goBack(), 2000);
     } catch (err) {
       setIsLoading(false);
       if (err.code == 'ACTION_REJECTED') {
@@ -225,7 +226,8 @@ function NotificationSettings() {
           setting1.default === setting2.default &&
           setting1.enabled === setting2.enabled &&
           setting1.lowerLimit === setting2.lowerLimit &&
-          setting1.upperLimit === setting2.upperLimit;
+          setting1.upperLimit === setting2.upperLimit &&
+          setting1.ticker === setting2.ticker;
       }
     }
     return isUnchanged === false;

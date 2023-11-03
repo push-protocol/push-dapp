@@ -88,7 +88,7 @@ const ChannelInfoList = (props: ChannelInfoListProps) => {
                         ) : (
                           <>
                             <NotificationSettingName>{item.description}</NotificationSettingName>
-                            {item.lowerLimit !== undefined && <Tag>Range</Tag>}
+                            {item.type === 2 && <Tag>Range</Tag>}
                           </>
                         )}
                         {props.isAddress && isOwner(props.account, item) && <Tag>Creator</Tag>}
@@ -134,7 +134,7 @@ const DelegatesList = styled.div<{ isLoading: boolean }>`
 
   @media ${device.tablet} {
     flex: 0;
-    padding: ${(props) => (props.isLoading ? '0px' : '0px 16px 10px')};
+    padding: ${(props) => (props.isLoading ? '0px' : '0px 0px 10px')};
   }
 `;
 

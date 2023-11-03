@@ -6,22 +6,16 @@ import Switch from '@material-ui/core/Switch';
 import { CloseIcon } from 'assets/icons';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
-import { BsFillImageFill } from 'react-icons/bs';
-import { FiLink } from 'react-icons/fi';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { useTheme } from 'styled-components';
-import Slider from 'react-input-slider';
 
 // Internal Compoonents
 import * as PushAPI from '@pushprotocol/restapi';
-import { postReq } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { AInlineV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import CryptoHelper from 'helpers/CryptoHelper';
-import { IPFSupload } from 'helpers/IpfsHelper';
 import {
   Button,
   Content,
@@ -37,6 +31,7 @@ import {
 } from 'primaries/SharedStyling';
 import useToast from '../hooks/useToast';
 import PreviewNotif from './PreviewNotif';
+import InputSlider from './reusables/sliders/InputSlider';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -889,29 +884,15 @@ function SendNotifications() {
                           direction="row"
                           width="100%"
                         >
-                          <Slider
-                            styles={{
-                              active: {
-                                backgroundColor: theme.sliderActiveColor
-                              },
-                              track: {
-                                height: 4,
-                                flex: 1,
-                                backgroundColor: theme.sliderTrackColor
-                              },
-                              thumb: {
-                                width: 16,
-                                height: 16
-                              }
-                            }}
-                            x={nfSliderValue}
-                            axis="x"
+                          <InputSlider
                             onChange={({ x }) => setNfSliderValue(x)}
-                            xstep={1}
-                            xmin={channelSettings[nfSettingType - 1]?.lowerLimit}
-                            xmax={channelSettings[nfSettingType - 1]?.upperLimit}
+                            step={channelSettings[nfSettingType - 1]?.ticker || 1}
+                            min={channelSettings[nfSettingType - 1]?.lowerLimit}
+                            max={channelSettings[nfSettingType - 1]?.upperLimit}
+                            defaultVal={channelSettings[nfSettingType - 1]?.default}
+                            val={nfSliderValue}
                           />
-                          <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right" margin="0px 0px 0px 10px">{nfSliderValue}</SpanV2>
+                          <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right" margin="0px 0px 0px 16px">{nfSliderValue}</SpanV2>
                         </Item>
                       </Item>
                     )}

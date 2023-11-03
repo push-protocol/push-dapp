@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -10,6 +10,7 @@ import { MdClose } from 'react-icons/md';
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
 import { ModalInnerComponentType } from 'hooks/useModalBlur';
 import type { ChannelSetting } from '../../helpers/channel/types';
+import InputSlider from 'components/reusables/sliders/InputSlider';
 
 // Internal Configs
 import { device } from 'config/Globals';
@@ -81,6 +82,10 @@ const AddSettingModalContent = ({
   const [defaultValue, setDefaultValue] = useState<string>(
     settingToEdit && settingToEdit.type === 2 ? settingToEdit.default.toString() : ''
   );
+  const [sliderStep, setSliderStep] = useState<string>(
+    settingToEdit && settingToEdit.type === 2 && settingToEdit.ticker ? settingToEdit.ticker.toString() : '1'
+  );
+  const [sliderPreviewVal, setSliderPreviewVal] = useState<number>();
   const [errorInfo, setErrorInfo] = useState<any>();
 
   const theme = useTheme();
@@ -101,6 +106,7 @@ const AddSettingModalContent = ({
         lowerLimit,
         type: isRange ? 2 : 1,
         upperLimit,
+        sliderStep,
       })
     ) {
       const index = settingToEdit ? settingToEdit.index : Math.floor(Math.random() * 1000000);
@@ -113,6 +119,7 @@ const AddSettingModalContent = ({
             index: index,
             lowerLimit: Number(lowerLimit),
             upperLimit: Number(upperLimit),
+            ticker: Number(sliderStep),
           }
         : {
             type: 1,
@@ -125,6 +132,25 @@ const AddSettingModalContent = ({
     }
     setIsLoading(false);
   };
+
+  const isInvalidNumber = (value: string): boolean => {
+    const regex = /^[0-9]*$/;
+    return value !== '' && !regex.test(value);
+  };
+
+  const showPreview = useMemo(() => {
+    return (
+      lowerLimit !== '' &&
+      upperLimit !== '' &&
+      defaultValue !== '' &&
+      sliderStep !== '' &&
+      Number(lowerLimit) <= Number(upperLimit) &&
+      Number(sliderStep) > 0 &&
+      Number(sliderStep) <= Number(upperLimit) - Number(lowerLimit) &&
+      Number(defaultValue) >= Number(lowerLimit) &&
+      Number(defaultValue) <= Number(upperLimit)
+    );
+  }, [lowerLimit, upperLimit, defaultValue, sliderStep]);
 
   return (
     <ModalContainer ref={containerRef}>
@@ -218,8 +244,9 @@ const AddSettingModalContent = ({
                   color={theme.editChannelPrimaryText}
                   value={lowerLimit}
                   onChange={(e) => {
-                    setLowerLimit(e.target.value);
                     setErrorInfo((prev) => ({ ...prev, lowerLimit: undefined }));
+                    if (isInvalidNumber(e.target.value)) return;
+                    setLowerLimit(e.target.value);
                   }}
                   autocomplete="off"
                   hasError={errorInfo?.lowerLimit ? true : false}
@@ -242,8 +269,9 @@ const AddSettingModalContent = ({
                   color={theme.editChannelPrimaryText}
                   value={upperLimit}
                   onChange={(e) => {
-                    setUpperLimit(e.target.value);
                     setErrorInfo((prev) => ({ ...prev, upperLimit: undefined }));
+                    if (isInvalidNumber(e.target.value)) return;
+                    setUpperLimit(e.target.value);
                   }}
                   autocomplete="off"
                   hasError={errorInfo?.upperLimit ? true : false}
@@ -254,17 +282,17 @@ const AddSettingModalContent = ({
             </Item>
             <Item
               direction="column"
-              align="flex-start"
+              align="stretch"
               flex="1"
               self="stretch"
               margin="12px 0px"
             >
               <Label>Default Value</Label>
-              <MaxWidthInput
+              <InputWithError
                 padding="13px 16px"
                 weight="400"
                 type="number"
-                placeholder="e.g. 0"
+                placeholder="e.g. 5"
                 size="15px"
                 resize="none"
                 overflow="hidden"
@@ -277,14 +305,74 @@ const AddSettingModalContent = ({
                 color={theme.editChannelPrimaryText}
                 value={defaultValue}
                 onChange={(e) => {
-                  setDefaultValue(e.target.value);
                   setErrorInfo((prev) => ({ ...prev, default: undefined }));
+                  if (isInvalidNumber(e.target.value)) return;
+                  setDefaultValue(e.target.value);
+                  setSliderPreviewVal(Number(e.target.value));
                 }}
                 autocomplete="off"
                 hasError={errorInfo?.default ? true : false}
               />
               <ErrorInfo>{errorInfo?.default}</ErrorInfo>
             </Item>
+            <Item
+              direction="column"
+              align="stretch"
+              flex="1"
+              self="stretch"
+              margin="12px 0px"
+            >
+              <Label>Slider Step Value</Label>
+              <InputWithError
+                padding="13px 16px"
+                weight="400"
+                type="number"
+                placeholder="e.g. 1"
+                size="15px"
+                resize="none"
+                overflow="hidden"
+                line-height="19.5px"
+                margin="8px 0px 0px 0px"
+                border={theme.textAreaBorderColor}
+                focusBorder={theme.textAreaFocusBorder}
+                radius="12px"
+                bg={theme.editChannelInputbg}
+                color={theme.editChannelPrimaryText}
+                value={sliderStep}
+                onChange={(e) => {
+                  setErrorInfo((prev) => ({ ...prev, sliderStep: undefined }));
+                  setSliderStep(e.target.value);
+                  setSliderPreviewVal(lowerLimit === '' ? 0 : Number(lowerLimit));
+                }}
+                autocomplete="off"
+                hasError={errorInfo?.sliderStep ? true : false}
+              />
+              <ErrorInfo>{errorInfo?.sliderStep}</ErrorInfo>
+            </Item>
+            {showPreview && (
+              <Item
+                direction="column"
+                align="flex-start"
+                flex="1"
+                self="stretch"
+                margin="12px 0px"
+              >
+                <LabelLight>Preview</LabelLight>
+                <SliderPreviewContainer>
+                  <Label>{lowerLimit}</Label>
+                  <InputSlider
+                    val={sliderPreviewVal}
+                    min={Number(lowerLimit)}
+                    max={Number(upperLimit)}
+                    step={Number(sliderStep)}
+                    defaultVal={Number(defaultValue)}
+                    onChange={({ x }) => setSliderPreviewVal(x)}
+                    preview={true}
+                  />
+                  <Label>{upperLimit}</Label>
+                </SliderPreviewContainer>
+              </Item>
+            )}
           </>
         )}
         <ModalConfirmButton
@@ -340,6 +428,10 @@ const Label = styled.div<{ padding?: string }>`
   padding: ${(props) => props.padding || '0px'};
 `;
 
+const LabelLight = styled(Label)`
+  color: ${(props) => props.theme.default.secondaryColor};
+`;
+
 const Description = styled.div`
   font-size: 12px;
   font-weight: 400;
@@ -370,6 +462,19 @@ const ErrorInfo = styled.span`
   text-align: left;
   color: ${(props) => props.theme.nfsError};
   margin-top: 4px;
+`;
+
+const SliderPreviewContainer = styled.div`
+  display: flex;
+  padding: 12px;
+  gap: 16px;
+  margin-top: 8px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  border-radius: 8px;
+  background: ${(props) => props.theme.nfsTickerPreviewBg};
 `;
 
 export default AddSettingModalContent;
