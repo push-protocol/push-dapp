@@ -31,7 +31,6 @@ import {
 } from 'primaries/SharedStyling';
 import useToast from '../hooks/useToast';
 import PreviewNotif from './PreviewNotif';
-import InputSlider from './reusables/sliders/InputSlider';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -117,6 +116,9 @@ function SendNotifications() {
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(425);
   const { account, provider, chainId } = useAccount();
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
   const { epnsCommWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const { channelDetails, delegatees, aliasDetails: { aliasEthAddr } } = useSelector((state: any) => state.admin);
   const { CHANNNEL_DEACTIVATED_STATE } = useSelector((state: any) => state.channels);
@@ -382,20 +384,19 @@ function SendNotifications() {
       try {
         // apiResponse?.status === 204, if sent successfully!
 
-        let notifRecipients: string | Array<string>;
+        let notifRecipients: Array<string>;
         if (nfType === '4') {
           notifRecipients = multipleRecipients.map((recipient) => convertAddressToAddrCaip(recipient, chainId));
         } else {
-          notifRecipients = convertAddressToAddrCaip(nfRecipient, chainId);
+          notifRecipients = [convertAddressToAddrCaip(nfRecipient, chainId)];
         }
+        
+        if (nfType === '1') 
+          notifRecipients = ['*'];
 
         const channelAddressInCaip = convertAddressToAddrCaip(channelAddress, chainId);
 
-        const _signer = await provider.getSigner(account);
-        await PushAPI.payloads.sendNotification({
-          signer: _signer,
-          type: parseInt(nfType), // target
-          identityType: 2, // direct payload
+        await userPushSDKInstance.channel.send(notifRecipients, {
           notification: {
             title: asub,
             body: amsg,
@@ -404,12 +405,10 @@ function SendNotifications() {
             title: asub,
             body: amsg,
             cta: acta,
-            img: aimg,
-            index: nfSettingIndex,
+            embed: aimg,
+            category: nfSettingIndex
           },
-          recipients: notifRecipients, // recipient address
-          channel: channelAddressInCaip, // your channel address
-          env: appConfig.pushNodesEnv,
+          channel: channelAddressInCaip
         });
         //   console.log(nfRecipient);
         //   postReq("/payloads/add_manual_payload", {
