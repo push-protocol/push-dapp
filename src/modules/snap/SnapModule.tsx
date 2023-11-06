@@ -241,7 +241,7 @@ const SnapModule = () => {
                 />
               ) : (
                 <ConnectButton onClick={() => connectToMetaMask()}>
-                  {!snapInstalled ? 'Install Snap' : 'Connect Using MetaMask '}
+                  {!snapInstalled ? 'Connect Snap' : 'Connect Using MetaMask '}
                 </ConnectButton>
               )}
             </ItemVV2>
