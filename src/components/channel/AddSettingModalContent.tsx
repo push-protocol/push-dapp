@@ -134,7 +134,7 @@ const AddSettingModalContent = ({
   };
 
   const isInvalidNumber = (value: string): boolean => {
-    const regex = /^[0-9]*$/;
+    const regex = /^[0-9]+(?:\.[0-9])?$/;
     return value !== '' && !regex.test(value);
   };
 
