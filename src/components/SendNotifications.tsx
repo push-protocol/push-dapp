@@ -141,7 +141,6 @@ function SendNotifications() {
   const [nfInfo, setNFInfo] = useState('');
   const [nfSettingIndex, setNFSettingIndex] = useState('');
   const [delegateeOptions, setDelegateeOptions] = useState([]);
-  const [nfSliderValue, setNfSliderValue] = useState(0);
 
   const channelDetailsFromBackend = useMemo(() => {
     if (delegatees) {

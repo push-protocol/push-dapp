@@ -30,7 +30,7 @@ import { VideoCallContext } from 'contexts/VideoCallContext';
 import { caip10ToWallet } from 'helpers/w2w';
 import * as w2wHelper from 'helpers/w2w/';
 import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
-import { useAccount, useDeviceWidthCheck, useSDKSocket } from 'hooks';
+import { useAccount,useDeviceWidthCheck, useSDKSocket } from 'hooks';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
@@ -43,6 +43,7 @@ import { checkIfIntent, getUpdatedChatAndIntent, getUpdatedGroupInfo } from 'hel
 import { appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { fetchIntent } from 'helpers/w2w/user';
+import { ChatUIProvider } from '@pushprotocol/uiweb';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -58,8 +59,8 @@ export const Context = React.createContext<AppContext | null>(null);
 
 // Create Header
 function Chat({ chatid }) {
-  const { account, chainId } = useAccount();
-  const { getUser, connectedUser, setConnectedUser, blockedLoading, setBlockedLoading, displayQR, setDisplayQR } =
+  const { account, chainId, provider } = useAccount();
+  const { getUser, pgpPvtKey,connectedUser, setConnectedUser, blockedLoading, setBlockedLoading, displayQR, setDisplayQR } =
     useContext(ChatUserContext);
     const { videoCallData } = useContext(VideoCallContext);
 
@@ -77,6 +78,7 @@ function Chat({ chatid }) {
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
+  const [signerData, setSignerData] = useState();
 
   const isMobile = useDeviceWidthCheck(600);
   const queryClient = new QueryClient({});
@@ -274,11 +276,14 @@ const getUpdatedGroup = async(groupInfo) => {
     showModal: showCreateGroupModal,
     ModalComponent: CreateGroupModalComponent,
   } = useModalBlur();
+  // const { pgpPvtKey } = useContext<any>(ChatUserContext);
 
 
   const connectUser = async (): Promise<void> => {
     const caip10:string = w2wHelper.walletToCAIP10({account});
-
+    const signer = await provider.getSigner();
+    setSignerData(signer);
+    console.log(signer, 'kkkk')
     
     if(connectedUser?.wallets?.toLowerCase() !== caip10?.toLowerCase()){
       await getUser();
@@ -392,8 +397,13 @@ const getUpdatedGroup = async(groupInfo) => {
     }
   };
 
+  useEffect(() => {
+    console.log(account, connectedUser?.privateKey, "kkkk")
+  }, [account, connectedUser?.privateKey])
+
   return (
     <Container>
+      <ChatUIProvider signer={signerData} env={appConfig?.appEnv} account={account} pgpPrivateKey={pgpPvtKey}>
       <ItemHV2 ref={containerRef}>
         {!isLoading ? (
           <QueryClientProvider client={queryClient}>
@@ -513,6 +523,7 @@ const getUpdatedGroup = async(groupInfo) => {
           />
         )}
       </ItemHV2>
+      </ChatUIProvider>
     </Container>
   );
 }
