@@ -139,7 +139,7 @@ function SendNotifications() {
   const [nfMedia, setNFMedia] = useState('');
   const [nfMediaEnabled, setNFMediaEnabled] = useState(false);
   const [nfInfo, setNFInfo] = useState('');
-  const [nfSettingType, setNFSettingType] = useState(null);
+  const [nfSettingIndex, setNFSettingIndex] = useState('');
   const [delegateeOptions, setDelegateeOptions] = useState([]);
   const [nfSliderValue, setNfSliderValue] = useState(0);
 
@@ -164,7 +164,7 @@ function SendNotifications() {
   }, [channelDetailsFromBackend]);  
 
   const channelSettingsOptions = useMemo(() => {
-    const defaultOption = { label: 'Default', value: null, isRange: false };
+    const defaultOption = { label: 'Default', value: '', isRange: false };
   
     if (channelSettings) {
       const settingsOptions = channelSettings.map((setting) => ({
@@ -292,14 +292,6 @@ function SendNotifications() {
     return validated;
   };
 
-  const getIndex = () => {
-    if (nfSettingType === null) return undefined;
-    else if (channelSettings[nfSettingType - 1]?.type === 1) 
-      return `${nfSettingType}-1`;
-    else if (channelSettings[nfSettingType - 1]?.type === 2)
-      return `${nfSettingType}-2-${nfSliderValue}`;
-  }
-
   const handleSendMessage = async (e) => {
     // Check everything in order
     e.preventDefault();
@@ -414,7 +406,7 @@ function SendNotifications() {
             body: amsg,
             cta: acta,
             img: aimg,
-            index: getIndex(),
+            index: nfSettingIndex,
           },
           recipients: notifRecipients, // recipient address
           channel: channelAddressInCaip, // your channel address
@@ -858,44 +850,12 @@ function SendNotifications() {
                         <DropdownStyled
                           options={channelSettingsOptions}
                           onChange={(option) => {
-                            setNFSettingType(option.value);
-                            if(channelSettings[option.value - 1]?.type === 2) {
-                              setNfSliderValue(channelSettings[option.value - 1]?.default);
-                            }
+                            setNFSettingIndex(String(option.value));
                           }}
                           value={channelSettingsOptions[0]}
                         />
                       </DropdownStyledParent>
                     </Item>
-                    {nfSettingType !== null && channelSettings[nfSettingType - 1]?.type === 2 && (
-                      <Item
-                        display="flex"
-                        direction="column"
-                        align="flex-start"
-                        flex="1"
-                        self="stretch"
-                        margin="16px 0px 7px 0px"
-                      >
-                        <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px", marginBottom: "7px" }}>
-                          Range Value
-                        </Label>
-                        <Item
-                          display="flex"
-                          direction="row"
-                          width="100%"
-                        >
-                          <InputSlider
-                            onChange={({ x }) => setNfSliderValue(x)}
-                            step={channelSettings[nfSettingType - 1]?.ticker || 1}
-                            min={channelSettings[nfSettingType - 1]?.lowerLimit}
-                            max={channelSettings[nfSettingType - 1]?.upperLimit}
-                            defaultVal={channelSettings[nfSettingType - 1]?.default}
-                            val={nfSliderValue}
-                          />
-                          <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right" margin="0px 0px 0px 16px">{nfSliderValue}</SpanV2>
-                        </Item>
-                      </Item>
-                    )}
                   </>
                 )}
 
