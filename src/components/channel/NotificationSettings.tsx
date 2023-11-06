@@ -48,7 +48,9 @@ function NotificationSettings() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoadingSettings, setIsLoadingSettings] = React.useState(true);
 
-  const { userPushSDKInstance } = useContext(AppContext);
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
 
   const {
     isModalOpen: isAddSettingModalOpen,
@@ -141,6 +143,19 @@ function NotificationSettings() {
           };
         }
         if (setting.type === 2) {
+          console.log(
+            {
+              type: setting.type,
+            description: setting.description,
+            default: setting.default,
+            data: {
+              lower: setting.lowerLimit,
+              upper: setting.upperLimit,
+              ticker: setting.ticker,
+              enabled: setting.enabled,
+            },
+            }
+          )
           return {
             type: setting.type,
             description: setting.description,
