@@ -151,7 +151,7 @@ const PushSnapSettings = () => {
                             />
                         ) : (
                             <ConnectButton onClick={() => connectToMetaMask()}>
-                                {!snapInstalled && 'Install Snap'}
+                                {!snapInstalled && 'Connect Snap'}
                             </ConnectButton>
                         )}
                     </ItemVV2>
