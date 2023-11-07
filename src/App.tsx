@@ -10,6 +10,7 @@ import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
 import ReactGA from 'react-ga';
 import * as dotenv from 'dotenv';
+import { PushAPI } from '@pushprotocol/restapi';
 
 // Internal Compoonents
 import InitState from 'components/InitState';
@@ -31,6 +32,7 @@ import { resetChannelCreationSlice } from 'redux/slices/channelCreationSlice';
 import { resetAdminSlice } from 'redux/slices/adminSlice';
 import Navigation from 'structure/Navigation';
 import {  ErrorContext } from './contexts/ErrorContext'
+import { resetUserSlice, setUserPushSDKInstance } from 'redux/slices/userSlice';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -79,6 +81,9 @@ export default function App() {
   const [currentTime, setcurrentTime] = React.useState(0);
   const {authError, setAuthError } = useContext(ErrorContext);
   const updateOnboardTheme = useUpdateTheme();
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
 
   const { run, stepIndex, tutorialContinous } = useSelector((state: any) => state.userJourney);
   // const location = useLocation();
@@ -102,7 +107,28 @@ export default function App() {
     dispatch(resetCanSendSlice());
     dispatch(resetChannelCreationSlice());
     dispatch(resetAdminSlice());
+    dispatch(resetUserSlice());
   }, [account]);
+
+  useEffect(() => {
+    const librarySigner = provider?.getSigner(account);
+    if(!account || !librarySigner || !appConfig?.appEnv || userPushSDKInstance) return;
+
+    const initializePushSDK = async () => {
+        try {
+          const userInstance = await PushAPI.initialize(librarySigner, {
+              env: appConfig.appEnv, // defaults to staging
+              account: account
+          });
+          
+          dispatch(setUserPushSDKInstance(userInstance));
+        } catch (error) {
+        // Handle initialization error
+        }
+    };
+    
+    initializePushSDK();
+}, [account, provider]);
 
   // console.log(isActive, chainId, account);
   // handle logic to reconnect in response to certain events from the provider

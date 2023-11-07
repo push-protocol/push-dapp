@@ -59,16 +59,13 @@ export function getAddChainParameters(chainId: number): AddEthereumChainParamete
   }
 }
 
-const getInfuraUrlFor = (network: string) =>
-  process.env.infuraKey ? `https://${network}.infura.io/v3/${process.env.infuraKey}` : undefined
-const getAlchemyUrlFor = (network: string) =>
-  process.env.alchemyKey ? `https://${network}.alchemyapi.io/v2/${process.env.alchemyKey}` : undefined
+const getInfuraUrlFor = (network: string) => `https://${network}.infura.io/v3/${appConfig?.infuraAPIKey}`;
 
 type ChainConfig = { [chainId: number]: BasicChainInformation | ExtendedChainInformation }
 
 export const MAINNET_CHAINS: ChainConfig = {
   1: {
-    urls: [getInfuraUrlFor('mainnet'), getAlchemyUrlFor('eth-mainnet'), 'https://cloudflare-eth.com'].filter(Boolean),
+    urls: [getInfuraUrlFor('mainnet')].filter(Boolean),
     nativeCurrency: ETH,
     name: 'Mainnet',
     blockExplorerUrls: ['https://etherscan.io'],

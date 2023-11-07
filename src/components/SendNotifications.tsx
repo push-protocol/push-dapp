@@ -6,22 +6,16 @@ import Switch from '@material-ui/core/Switch';
 import { CloseIcon } from 'assets/icons';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
-import { BsFillImageFill } from 'react-icons/bs';
-import { FiLink } from 'react-icons/fi';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { useTheme } from 'styled-components';
-import Slider from 'react-input-slider';
 
 // Internal Compoonents
 import * as PushAPI from '@pushprotocol/restapi';
-import { postReq } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { AInlineV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import CryptoHelper from 'helpers/CryptoHelper';
-import { IPFSupload } from 'helpers/IpfsHelper';
 import {
   Button,
   Content,
@@ -122,6 +116,9 @@ function SendNotifications() {
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(425);
   const { account, provider, chainId } = useAccount();
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
   const { epnsCommWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const { channelDetails, delegatees, aliasDetails: { aliasEthAddr } } = useSelector((state: any) => state.admin);
   const { CHANNNEL_DEACTIVATED_STATE } = useSelector((state: any) => state.channels);
@@ -144,9 +141,8 @@ function SendNotifications() {
   const [nfMedia, setNFMedia] = useState('');
   const [nfMediaEnabled, setNFMediaEnabled] = useState(false);
   const [nfInfo, setNFInfo] = useState('');
-  const [nfSettingType, setNFSettingType] = useState(null);
+  const [nfSettingIndex, setNFSettingIndex] = useState('');
   const [delegateeOptions, setDelegateeOptions] = useState([]);
-  const [nfSliderValue, setNfSliderValue] = useState(0);
 
   const channelDetailsFromBackend = useMemo(() => {
     if (delegatees) {
@@ -169,7 +165,7 @@ function SendNotifications() {
   }, [channelDetailsFromBackend]);  
 
   const channelSettingsOptions = useMemo(() => {
-    const defaultOption = { label: 'Default', value: null, isRange: false };
+    const defaultOption = { label: 'Default', value: '', isRange: false };
   
     if (channelSettings) {
       const settingsOptions = channelSettings.map((setting) => ({
@@ -297,14 +293,6 @@ function SendNotifications() {
     return validated;
   };
 
-  const getIndex = () => {
-    if (nfSettingType === null) return undefined;
-    else if (channelSettings[nfSettingType - 1]?.type === 1) 
-      return `${nfSettingType}-1`;
-    else if (channelSettings[nfSettingType - 1]?.type === 2)
-      return `${nfSettingType}-2-${nfSliderValue}`;
-  }
-
   const handleSendMessage = async (e) => {
     // Check everything in order
     e.preventDefault();
@@ -396,20 +384,19 @@ function SendNotifications() {
       try {
         // apiResponse?.status === 204, if sent successfully!
 
-        let notifRecipients: string | Array<string>;
+        let notifRecipients: Array<string>;
         if (nfType === '4') {
           notifRecipients = multipleRecipients.map((recipient) => convertAddressToAddrCaip(recipient, chainId));
         } else {
-          notifRecipients = convertAddressToAddrCaip(nfRecipient, chainId);
+          notifRecipients = [convertAddressToAddrCaip(nfRecipient, chainId)];
         }
+        
+        if (nfType === '1') 
+          notifRecipients = ['*'];
 
         const channelAddressInCaip = convertAddressToAddrCaip(channelAddress, chainId);
 
-        const _signer = await provider.getSigner(account);
-        await PushAPI.payloads.sendNotification({
-          signer: _signer,
-          type: parseInt(nfType), // target
-          identityType: 2, // direct payload
+        await userPushSDKInstance.channel.send(notifRecipients, {
           notification: {
             title: asub,
             body: amsg,
@@ -418,12 +405,10 @@ function SendNotifications() {
             title: asub,
             body: amsg,
             cta: acta,
-            img: aimg,
-            index: getIndex(),
+            embed: aimg,
+            category: nfSettingIndex
           },
-          recipients: notifRecipients, // recipient address
-          channel: channelAddressInCaip, // your channel address
-          env: appConfig.pushNodesEnv,
+          channel: channelAddressInCaip
         });
         //   console.log(nfRecipient);
         //   postReq("/payloads/add_manual_payload", {
@@ -863,58 +848,12 @@ function SendNotifications() {
                         <DropdownStyled
                           options={channelSettingsOptions}
                           onChange={(option) => {
-                            setNFSettingType(option.value);
-                            if(channelSettings[option.value - 1]?.type === 2) {
-                              setNfSliderValue(channelSettings[option.value - 1]?.default);
-                            }
+                            setNFSettingIndex(String(option.value));
                           }}
                           value={channelSettingsOptions[0]}
                         />
                       </DropdownStyledParent>
                     </Item>
-                    {nfSettingType !== null && channelSettings[nfSettingType - 1]?.type === 2 && (
-                      <Item
-                        display="flex"
-                        direction="column"
-                        align="flex-start"
-                        flex="1"
-                        self="stretch"
-                        margin="16px 0px 7px 0px"
-                      >
-                        <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px", marginBottom: "7px" }}>
-                          Range Value
-                        </Label>
-                        <Item
-                          display="flex"
-                          direction="row"
-                          width="100%"
-                        >
-                          <Slider
-                            styles={{
-                              active: {
-                                backgroundColor: theme.sliderActiveColor
-                              },
-                              track: {
-                                height: 4,
-                                flex: 1,
-                                backgroundColor: theme.sliderTrackColor
-                              },
-                              thumb: {
-                                width: 16,
-                                height: 16
-                              }
-                            }}
-                            x={nfSliderValue}
-                            axis="x"
-                            onChange={({ x }) => setNfSliderValue(x)}
-                            xstep={1}
-                            xmin={channelSettings[nfSettingType - 1]?.lowerLimit}
-                            xmax={channelSettings[nfSettingType - 1]?.upperLimit}
-                          />
-                          <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right" margin="0px 0px 0px 10px">{nfSliderValue}</SpanV2>
-                        </Item>
-                      </Item>
-                    )}
                   </>
                 )}
 

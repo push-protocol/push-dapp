@@ -14,7 +14,6 @@ import { Button } from 'primaries/SharedStyling';
 import { ImageV2 } from 'components/reusables/SharedStylingV2';
 import { getChannel, getUserSubscriptions } from 'services';
 import LoaderSpinner from 'primaries/LoaderSpinner';
-import EmptyNotificationSettings from '../channel/EmptyNotificationSettings';
 import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import ManageNotifSettingDropdown from 'components/dropdowns/ManageNotifSettingDropdown';
@@ -23,10 +22,84 @@ import ManageNotifSettingDropdown from 'components/dropdowns/ManageNotifSettingD
 import { device } from 'config/Globals';
 import ChannelListSettings from 'components/channel/ChannelListSettings';
 import PushSnapSettings from 'components/MetamaskSnap/PushSnapSettings';
+import EmptyNotificationSettings from 'components/channel/EmptyNotificationSettings';
+
+interface ChannelListItem {
+  channel: string;
+  icon: string;
+  name: string;
+  id: number;
+  channel_settings: string;
+}
 
 function UserSettings() {
+  const { account, chainId } = useAccount();
+  const { subscriptionStatus, userSettings: currentUserSettings } = useSelector((state: any) => state.channels);
   const [selectedOption, setSelectedOption] = useState(0);
   
+  const [channelList, setChannelList] = useState<ChannelListItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
+  const fetchChannelDetails = async (channel: string) => {
+    try {
+      const details = await getChannel({ channel });
+      if (details) {
+        const updatedChannelItem: ChannelListItem = {
+          channel,
+          id: details.id,
+          icon: details.icon,
+          name: details.name,
+          channel_settings: details.channel_settings,
+        };
+        return updatedChannelItem;
+      } else return undefined;
+    } catch {
+      return undefined;
+    }
+  };
+
+  const fillData = async (details: any) => {
+    const data = [];
+    await Promise.all(
+      Object.keys(details).map(async (channel) => {
+        const channelData = await fetchChannelDetails(channel);
+        if (channelData) data.push(channelData);
+      })
+    );
+    setChannelList(data);
+  };
+
+  useEffect(() => {
+    if (!account) return;
+    (async function () {
+      setIsLoading(true);
+      if (Object.keys(subscriptionStatus).length === 0) {
+        const userCaipAddress = convertAddressToAddrCaip(account, chainId);
+        const subscriptionsArr = await getUserSubscriptions({ userCaipAddress });
+        const subscriptionsMapping = {};
+        const userSettings = {};
+        subscriptionsArr.map(({ channel, user_settings }) => {
+          subscriptionsMapping[channel] = true;
+          userSettings[channel] = user_settings ? JSON.parse(user_settings) : null;
+        });
+        dispatch(updateBulkSubscriptions(subscriptionsMapping));
+        dispatch(updateBulkUserSettings(userSettings));
+        await fillData(subscriptionsMapping);
+      } else {
+        await fillData(subscriptionStatus);
+      }
+      setIsLoading(false);
+    })();
+  }, [account]);
+
+  const navigateToChannels = () => {
+    navigate('/channels');
+  };
+
   const selectOptions = [
     {
       value: 0,
