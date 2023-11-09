@@ -18,6 +18,8 @@ import { Item } from 'components/SharedStyling';
 import { FormSubmision, Input, Span } from 'primaries/SharedStyling';
 import { IOSSwitch } from 'components/SendNotifications';
 import { isAllFilledAndValid } from 'helpers/channel/InputValidation';
+import RangeSlider from 'components/reusables/sliders/RangeSlider';
+import Checkbox from 'components/reusables/checkbox/Checkbox';
 
 const ToggleItem = ({ checked, onChange, label, description }) => {
   return (
@@ -79,13 +81,27 @@ const AddSettingModalContent = ({
   const [upperLimit, setUpperLimit] = useState<string>(
     settingToEdit && settingToEdit.type === 2 ? settingToEdit.upperLimit.toString() : ''
   );
-  const [defaultValue, setDefaultValue] = useState<string>(
-    settingToEdit && settingToEdit.type === 2 ? settingToEdit.default.toString() : ''
-  );
   const [sliderStep, setSliderStep] = useState<string>(
     settingToEdit && settingToEdit.type === 2 && settingToEdit.ticker ? settingToEdit.ticker.toString() : '1'
   );
+
+  const [enableMultiRange, setEnableMultiRange] = useState<boolean>(false);
+
+  // for single value slider
+  const [defaultValue, setDefaultValue] = useState<string>(
+    settingToEdit && settingToEdit.type === 2 ? settingToEdit.default.toString() : ''
+  );
   const [sliderPreviewVal, setSliderPreviewVal] = useState<number>();
+
+  // for range slider
+  const [defaultStartValue, setDefaultStartValue] = useState<string>(
+    settingToEdit && settingToEdit.type === 3 ? settingToEdit.defaultStartVal.toString() : ''
+  );
+  const [defaultEndValue, setDefaultEndValue] = useState<string>(
+    settingToEdit && settingToEdit.type === 3 ? settingToEdit.defaultEndVal.toString() : ''
+  );
+  const [sliderPreviewStartVal, setSliderPreviewStartVal] = useState<number>();
+  const [sliderPreviewEndVal, setSliderPreviewEndVal] = useState<number>();
   const [errorInfo, setErrorInfo] = useState<any>();
 
   const theme = useTheme();
@@ -142,15 +158,21 @@ const AddSettingModalContent = ({
     return (
       lowerLimit !== '' &&
       upperLimit !== '' &&
-      defaultValue !== '' &&
+      (enableMultiRange ? (defaultStartValue !== '' && defaultEndValue !== '') : defaultValue !== '') &&
       sliderStep !== '' &&
       Number(lowerLimit) <= Number(upperLimit) &&
       Number(sliderStep) > 0 &&
       Number(sliderStep) <= Number(upperLimit) - Number(lowerLimit) &&
-      Number(defaultValue) >= Number(lowerLimit) &&
-      Number(defaultValue) <= Number(upperLimit)
+      (enableMultiRange ? 
+        (Number(defaultStartValue) >= Number(lowerLimit) &&
+        Number(defaultEndValue) <= Number(upperLimit) &&
+        Number(defaultEndValue) > Number(defaultStartValue))
+        :
+        (Number(defaultValue) >= Number(lowerLimit) &&
+        Number(defaultValue) <= Number(upperLimit))
+      )
     );
-  }, [lowerLimit, upperLimit, defaultValue, sliderStep]);
+  }, [lowerLimit, upperLimit, defaultValue, sliderStep, defaultStartValue, defaultEndValue]);
 
   return (
     <ModalContainer ref={containerRef}>
@@ -281,40 +303,113 @@ const AddSettingModalContent = ({
               <ErrorInfo>{errorInfo?.upperLimit}</ErrorInfo>
             </Item>
             <Item
-              direction="column"
-              align="stretch"
+              direction="row"
+              align="flex-start"
               flex="1"
               self="stretch"
               margin="12px 0px"
             >
-              <Label>Default Value</Label>
-              <InputWithError
-                padding="13px 16px"
-                weight="400"
-                type="number"
-                placeholder="e.g. 5"
-                size="15px"
-                resize="none"
-                overflow="hidden"
-                line-height="19.5px"
-                margin="8px 0px 0px 0px"
-                border={theme.textAreaBorderColor}
-                focusBorder={theme.textAreaFocusBorder}
-                radius="12px"
-                bg={theme.editChannelInputbg}
-                color={theme.editChannelPrimaryText}
-                value={defaultValue}
-                onChange={(e) => {
-                  setErrorInfo((prev) => ({ ...prev, default: undefined }));
-                  if (isInvalidNumber(e.target.value)) return;
-                  setDefaultValue(e.target.value);
-                  setSliderPreviewVal(Number(e.target.value));
-                }}
-                autocomplete="off"
-                hasError={errorInfo?.default ? true : false}
-              />
-              <ErrorInfo>{errorInfo?.default}</ErrorInfo>
+              <Checkbox checked={enableMultiRange} onChange={() => setEnableMultiRange(!enableMultiRange)}/>
+              <Item align="left" margin="0px 0px 0px 4px">
+                <Label>Enable Multi Range Slider</Label>
+                <Description>User can select a range of values in the slider</Description>
+              </Item>
             </Item>
+            {!enableMultiRange &&
+              <Item
+                direction="column"
+                align="stretch"
+                flex="1"
+                self="stretch"
+                margin="12px 0px"
+              >
+                <Label>Default Value</Label>
+                <InputWithError
+                  padding="13px 16px"
+                  weight="400"
+                  type="number"
+                  placeholder="e.g. 5"
+                  size="15px"
+                  resize="none"
+                  overflow="hidden"
+                  line-height="19.5px"
+                  margin="8px 0px 0px 0px"
+                  border={theme.textAreaBorderColor}
+                  focusBorder={theme.textAreaFocusBorder}
+                  radius="12px"
+                  bg={theme.editChannelInputbg}
+                  color={theme.editChannelPrimaryText}
+                  value={defaultValue}
+                  onChange={(e) => {
+                    setErrorInfo((prev) => ({ ...prev, default: undefined }));
+                    if (isInvalidNumber(e.target.value)) return;
+                    setDefaultValue(e.target.value);
+                    setSliderPreviewVal(Number(e.target.value));
+                  }}
+                  autocomplete="off"
+                  hasError={errorInfo?.default ? true : false}
+                />
+                <ErrorInfo>{errorInfo?.default}</ErrorInfo>
+              </Item>
+            }
+            {enableMultiRange &&
+              <Item
+                direction="column"
+                align="flex-start"
+                flex="1"
+                self="stretch"
+                margin="12px 0px"
+              >
+                <Label>Default Values</Label>
+                <Item direction="row">
+                  <MaxWidthInput
+                    padding="13px 16px"
+                    weight="400"
+                    type="number"
+                    placeholder="e.g. 5"
+                    size="15px"
+                    resize="none"
+                    overflow="hidden"
+                    line-height="19.5px"
+                    margin="8px 0px 0px 0px"
+                    border={theme.textAreaBorderColor}
+                    focusBorder={theme.textAreaFocusBorder}
+                    radius="12px"
+                    bg={theme.editChannelInputbg}
+                    color={theme.editChannelPrimaryText}
+                    value={defaultStartValue}
+                    onChange={(e) => {
+                      setDefaultStartValue(e.target.value);
+                      setSliderPreviewStartVal(Number(e.target.value));
+                    }}
+                    autocomplete="off"
+                  />
+                  <Label padding="0px 16px">to</Label>
+                  <MaxWidthInput
+                    padding="13px 16px"
+                    weight="400"
+                    type="number"
+                    placeholder="e.g. 8"
+                    size="15px"
+                    resize="none"
+                    overflow="hidden"
+                    line-height="19.5px"
+                    margin="8px 0px 0px 0px"
+                    border={theme.textAreaBorderColor}
+                    focusBorder={theme.textAreaFocusBorder}
+                    radius="12px"
+                    bg={theme.editChannelInputbg}
+                    color={theme.editChannelPrimaryText}
+                    value={defaultEndValue}
+                    onChange={(e) => {
+                      setDefaultEndValue(e.target.value);
+                      setSliderPreviewEndVal(Number(e.target.value));
+                    }}
+                    autocomplete="off"
+                  />
+                </Item> 
+              </Item>
+            }
             <Item
               direction="column"
               align="stretch"
@@ -358,7 +453,8 @@ const AddSettingModalContent = ({
                 margin="12px 0px"
               >
                 <LabelLight>Preview</LabelLight>
-                <SliderPreviewContainer>
+                {!enableMultiRange &&
+                  <SliderPreviewContainer>
                   <Label>{lowerLimit}</Label>
                   <InputSlider
                     val={sliderPreviewVal}
@@ -370,7 +466,29 @@ const AddSettingModalContent = ({
                     preview={true}
                   />
                   <Label>{upperLimit}</Label>
+                  </SliderPreviewContainer>
+                }
+
+                {enableMultiRange &&
+                  <SliderPreviewContainer>
+                  <Label>{lowerLimit}</Label>
+                  <RangeSlider
+                    startVal={sliderPreviewStartVal}
+                    endVal={sliderPreviewEndVal}
+                    min={Number(lowerLimit)}
+                    max={Number(upperLimit)}
+                    step={Number(sliderStep)}
+                    defaultStartVal={Number(defaultStartValue)}
+                    defaultEndVal={Number(defaultEndValue)}
+                    onChange={({ startVal, endVal }) => {
+                      setSliderPreviewStartVal(startVal)
+                      setSliderPreviewEndVal(endVal)
+                    }}
+                    preview={true}
+                  />
+                  <Label>{upperLimit}</Label>
                 </SliderPreviewContainer>
+                }
               </Item>
             )}
           </>
