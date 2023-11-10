@@ -75,11 +75,11 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
             ) : (
               <ItemBody>
                 <AnchorLink
-                  href="https://chaindrop.org/?chainid=5&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                  href="https://chaindrop.org/?chainid=11155111&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
                   target="_blank"
                 >
                   <NumberIcon>1</NumberIcon>
-                  <PoolShare>Goerli ETH Faucet</PoolShare>
+                  <PoolShare>Sepolia ETH Faucet</PoolShare>
                 </AnchorLink>
                 <Minter
                   onClick={async () => {

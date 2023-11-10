@@ -14,7 +14,7 @@ const YieldFarmChainError = () => {
 
         const chainIdToPass = appConfig.allowedNetworks[0];
 
-        if (currentChainId !== 1 && currentChainId !== 5) {
+        if (currentChainId !== 1 && currentChainId !== 11155111) {
             console.log("Current Chain ID ", currentChainId);
             console.log("Chain Id to pass", chainIdToPass);
             switchChain(appConfig.coreContractChain);
