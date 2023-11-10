@@ -14,7 +14,18 @@ export type ChannelSetting =
     lowerLimit: number;
     upperLimit: number;
     ticker: number;
-  };
+  }
+| {
+  type: 3; // Range
+  defaultStartVal: number;
+  defaultEndVal: number;
+  enabled: boolean;
+  description: string;
+  index: number;
+  lowerLimit: number;
+  upperLimit: number;
+  ticker: number;
+};;
 
 export type UserSetting =
 | {

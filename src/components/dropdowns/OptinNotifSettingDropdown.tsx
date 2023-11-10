@@ -22,6 +22,7 @@ import { notifChannelSettingFormatString, userSettingsFromDefaultChannelSetting 
 import { AppContext } from "contexts/AppContext";
 import LoaderSpinner, { LOADER_TYPE } from "components/reusables/loaders/LoaderSpinner";
 import { updateSubscriptionStatus, updateUserSetting } from "redux/slices/channelSlice";
+import RangeSlider from "components/reusables/sliders/RangeSlider";
 
 interface OptinNotifSettingDropdownProps {
   children: React.ReactNode;
@@ -95,6 +96,23 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
                 />
                 <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right" margin="0 0 0 16px">
                     {setting.default}
+                </SpanV2>
+            </DropdownSliderItem>
+          )}
+          {setting.type === 3 && setting.enabled === true && (
+            <DropdownSliderItem>
+                <RangeSlider
+                    max={setting.upperLimit}
+                    min={setting.lowerLimit}
+                    step={setting.ticker || 1}
+                    startVal={setting.defaultStartVal}
+                    endVal={setting.defaultEndVal}
+                    defaultStartVal={setting.defaultStartVal}
+                    defaultEndVal={setting.defaultEndVal}
+                    onChange={({ x }) => handleSliderChange(index, x)}
+                />
+                <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right" margin="0 0 0 16px">
+                    {setting.defaultStartVal} - {setting.defaultEndVal}
                 </SpanV2>
             </DropdownSliderItem>
           )}
