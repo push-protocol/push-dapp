@@ -79,8 +79,8 @@ export const config = {
  */
 export const addresses = {
   ceaErc20: "0xc1C0472c0C80bCcDC7F5D01A376Bd97a734B8815",
-  epnscore: "0x68a401dE9a6fcBEf0e616bCC6654B49dA379DAb7",
-  epnsEthComm: "0x28709649Dfda9baDEbb61dBF7a8D199cfC8EcF2e", 
+  epnscore: "0x5AB1520E2bd519BDab2e1347EEe81C00a77f4946",
+  epnsEthComm: "0x9dDCD7ed7151afab43044E4D694FA064742C428c", 
   epnsPolyComm: "0xAf55BE8e6b0d6107891bA76eADeEa032ef8A4504", // the ploygon comm contract
   pushToken: "0x37c779a1564DCc0e3914aB130e0e787d93e21804", //address for push token
   aDai: "0x31f30d9A5627eAfeC4433Ae2886Cf6cc3D25E772",
