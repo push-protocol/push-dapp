@@ -232,7 +232,8 @@ export const LOGO_FROM_CHAIN_ID: {
   1442: "PolygonZkEVM.svg",
   1101: "PolygonZkEVM.svg",
   42161: "Arbitrum.svg",
-  421613: "Arbitrum.svg"
+  421613: "Arbitrum.svg",
+  11155111: "Ethereum.svg"
 }
 
 export type getAliasResponseType = {
