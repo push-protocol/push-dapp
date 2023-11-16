@@ -163,6 +163,7 @@ export const ButtonV2 = styled.button`
 export const SpanV2 = styled.span`
   align-self: ${(props) => props.alignSelf || 'auto'};
   background: ${(props) => props.background || 'transparent'};
+  cursor: ${(props) => props.cursor || 'default'};
   border-radius: ${(props) => props.borderRadius || 'initial'};
   bottom: ${(props) => props.bottom || 'auto'};
   color: ${(props) => props.color || 'inherit'};
