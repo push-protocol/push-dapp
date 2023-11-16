@@ -425,7 +425,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                     fontWeight="400"
                     style={{ color: `${theme.modalDescriptionTextColor}` }}
                   >
-                    {shortenText(currentChat?.groupInformation?.chatId,isMobile?10:20,isMobile?10:20)}
+                    {shortenText(currentChat?.groupInformation?.chatId,8,8)}
                   </SpanV2>
                   {!!copyText && (
                     <SpanV2
