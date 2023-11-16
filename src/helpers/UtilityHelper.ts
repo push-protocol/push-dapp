@@ -101,6 +101,7 @@ export const EnvHelper = {
 export const networkName = {
   42: 'Ethereum Kovan',
   5: "Ethereum Goerli",
+  11155111: "Ethereum Sepolia",
   1: 'Ethereum Mainnet',
   137: 'Polygon Mainnet',
   80001: 'Polygon Mumbai',
@@ -116,6 +117,7 @@ export const networkName = {
 
 export const chainNameBackendStandard = {
   5: "ETH_TEST_GOERLI",
+  11155111: "ETH_TEST_SEPOLIA",
   1: 'ETH_MAINNET',
   137: 'POLYGON_MAINNET',
   80001: 'POLYGON_TEST_MUMBAI',
@@ -137,7 +139,8 @@ export const aliasChainIdToChainName={
 export const aliasChainIdsMapping = {
   1: 137,
   42: 80001,
-  5: 80001
+  5: 80001,
+  11155111: 80001
 };
 
 export const NETWORK_DETAILS = {
@@ -229,7 +232,8 @@ export const LOGO_FROM_CHAIN_ID: {
   1442: "PolygonZkEVM.svg",
   1101: "PolygonZkEVM.svg",
   42161: "Arbitrum.svg",
-  421613: "Arbitrum.svg"
+  421613: "Arbitrum.svg",
+  11155111: "Ethereum.svg"
 }
 
 export type getAliasResponseType = {
