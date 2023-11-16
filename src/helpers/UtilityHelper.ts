@@ -314,4 +314,16 @@ export const getWeb3Name=({isGroup, address, web3NameList})=>{
   return web3Name;
 }
 
+export const copyToClipboard = (val:string) => {
+  if (navigator && navigator.clipboard) {
+    navigator.clipboard.writeText(val);
+  } else {
+    const el = document.createElement('textarea');
+    el.value = val;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+  }
+};
 export default UtilityHelper;
