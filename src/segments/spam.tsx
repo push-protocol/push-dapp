@@ -88,6 +88,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     POLYGON_TEST_MUMBAI: 80001,
     ETH_TEST_KOVAN: 42,
     ETH_TEST_GOERLI: 5,
+    ETH_TEST_SEPOLIA: 11155111,
     POLYGON_MAINNET: 137,
     ETH_MAINNET: 1
   };

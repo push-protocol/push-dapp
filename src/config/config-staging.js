@@ -23,7 +23,8 @@ export const config = {
    */
   allowedNetworks: [
     // 42, //for kovan
-    5, // for goerli
+    // 5, // for goerli
+    11155111, // for eth sepolia
     80001, //for mumbai polygon
     97, // bnb testnet
     420, // optimism goerli testnet
@@ -34,8 +35,8 @@ export const config = {
   /** 
    * Core Network Related Data
    */
-  coreContractChain: 5, //the chain id of the network which the core contract relies on
-  coreRPC: 'https://goerli.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
+  coreContractChain: 11155111, //the chain id of the network which the core contract relies on
+  coreRPC: 'https://sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
   mainnetCoreRPC: "https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a",
   mainnetCoreContractChain: 1,
   aliasRPC: {
@@ -79,15 +80,15 @@ export const config = {
  */
 export const addresses = {
   ceaErc20: "0xc1C0472c0C80bCcDC7F5D01A376Bd97a734B8815",
-  epnscore: "0xd4E3ceC407cD36d9e3767cD189ccCaFBF549202C",
-  epnsEthComm: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa", // the core contract
+  epnscore: "0x9d65129223451fbd58fc299c635cd919baf2564c",
+  epnsEthComm: "0x0c34d54a09cfe75bccd878a469206ae77e0fe6e7", // the core contract
   epnsPolyComm: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa", // the ploygon comm contract
-  pushToken: "0x2b9bE9259a4F5Ba6344c1b1c07911539642a2D33", //address for push token
+  pushToken: "0x37c779a1564DCc0e3914aB130e0e787d93e21804", //address for push token
   aDai: "0x31f30d9A5627eAfeC4433Ae2886Cf6cc3D25E772",
   // staking: "0xAECb9074e222e8F06f8034140A3F86610E4d3c3E", // deprecated staking addresses
   // yieldFarmPUSH: "0xb41cd6760d3b1d0d216851f63fda9573b04dd46e",
   // yieldFarmLP: "0x604f629A6b5E85805D57f39493BBC2856cE8A540",
-  epnsToken: "0x2b9bE9259a4F5Ba6344c1b1c07911539642a2D33",
+  epnsToken: "0x37c779a1564DCc0e3914aB130e0e787d93e21804",
   epnsLPToken: "0x1f094Bd8c260D0C3fC79157096015990885af4d2",
   uniV2LPToken:"0x698839247E5b83572fFF6ccdcf386CC37e60bEf5",// for new staking V2 Contract on staging
   rockstar: "0x3f8C2152b79276b78315CAF66cCF951780580A8a",
@@ -108,20 +109,20 @@ export const addresses = {
   //For Yield Farm V2
   stakingV2:"0xA99dE35dce05f59fF87ae393a7576B8Ce5881416",
   yieldFarmLP: "0xeE543C5bC1b6EB647CfC23fe95D3C5877945Ad21",
-  pushCoreV2: "0xd4E3ceC407cD36d9e3767cD189ccCaFBF549202C",//not upgraded
+  pushCoreV2: "0x9d65129223451fbd58fc299c635cd919baf2564c",//not upgraded
   uniV2LPToken: "0x698839247E5b83572fFF6ccdcf386CC37e60bEf5",
-  pushToken: "0x2b9bE9259a4F5Ba6344c1b1c07911539642a2D33",
+  pushToken: "0x37c779a1564DCc0e3914aB130e0e787d93e21804",
 
 }
 
 export const CHAIN_DETAILS = {
-  5: {
-    label: "Ethereum Goerli",
-    name: "ETH_TEST_GOERLI",
-    chainId: 5,
-    rpcUrl: "https://goerli.infura.io/v3/4ff53a5254144d988a8318210b56f47a",
-    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa",
-    network: "goerli",
+  11155111: {
+    label: "Ethereum Sepolia",
+    name: "ETH_TEST_SEPOLIA",
+    chainId: 11155111,
+    rpcUrl: "https://sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7",
+    commAddress: "0x0c34d54a09cfe75bccd878a469206ae77e0fe6e7",
+    network: "sepolia",
   }, 
   80001: {
     label: "Polygon Mumbai",

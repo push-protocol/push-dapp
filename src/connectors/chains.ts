@@ -109,10 +109,16 @@ export const MAINNET_CHAINS: ChainConfig = {
 }
 
 export const TESTNET_CHAINS: ChainConfig = {
-  5: {
-    urls: [getInfuraUrlFor('goerli')].filter(Boolean),
+  // 5: {
+  //   urls: [getInfuraUrlFor('goerli')].filter(Boolean),
+  //   nativeCurrency: ETH,
+  //   name: 'Görli',
+  // },
+  11155111: {
+    urls: [getInfuraUrlFor('sepolia')].filter(Boolean),
     nativeCurrency: ETH,
-    name: 'Görli',
+    name: 'Sepolia',
+    blockExplorerUrls: ['https://sepolia.etherscan.io'],
   },
   420: {
     urls: [getInfuraUrlFor('optimism-goerli'), 'https://goerli.optimism.io'].filter(Boolean),
