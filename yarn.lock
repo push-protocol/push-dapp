@@ -5444,7 +5444,7 @@ __metadata:
     "@pushprotocol/ledgerlive": latest
     "@pushprotocol/restapi": 1.4.38
     "@pushprotocol/socket": 0.5.3
-    "@pushprotocol/uiweb": 1.1.17
+    "@pushprotocol/uiweb": 1.1.19
     "@reduxjs/toolkit": ^1.7.1
     "@testing-library/dom": ^6.12.2
     "@testing-library/jest-dom": ^4.2.4
@@ -5706,9 +5706,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:1.1.17":
-  version: 1.1.17
-  resolution: "@pushprotocol/uiweb@npm:1.1.17"
+"@pushprotocol/uiweb@npm:1.1.19":
+  version: 1.1.19
+  resolution: "@pushprotocol/uiweb@npm:1.1.19"
   dependencies:
     "@livekit/components-react": ^1.2.2
     "@livekit/components-styles": ^1.0.6
@@ -5740,7 +5740,7 @@ __metadata:
     axios: ^0.27.2
     react: ">=16.8.0"
     styled-components: ^6.0.8
-  checksum: 1aaaccb386750a49b57247a16c224052356a41ca599daa46f71d462d00c4ea93be531636e31557d5810fec7869892e0bac188849f7360fe625095ee98282afbb
+  checksum: 1180e8a37039825f5bfd518b1e7675b3bc2a95b7a511cddb22d0390cf742cfb7589dc28b59fc82bfc8f43ed1da9324374653275d0a5f88452b8b2fa83dd607df
   languageName: node
   linkType: hard
 
