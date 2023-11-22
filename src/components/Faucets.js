@@ -23,11 +23,11 @@ const Faucets = () => {
 
   const dropdownValues = [
     {
-      id: "5",
-      value: "Goerli",
-      title: "Goerli Faucet",
+      id: "11155111",
+      value: "Sepolia",
+      title: "Sepolia Faucet",
       function: () => {},
-      link: "https://goerlifaucet.com/",
+      link: "https://sepoliafaucet.com/",
     },
     {
       id: "80001",
