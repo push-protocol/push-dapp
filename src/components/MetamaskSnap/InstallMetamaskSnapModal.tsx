@@ -10,6 +10,7 @@ import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Button } from 'components/SharedStyling';
 import Metamask from 'assets/PushSnaps/metamasksnap.svg';
 import PushIcon from 'assets/PushSnaps/PushIcon.svg';
+import VersoIcon from 'assets/PushSnaps/VersoIcon.svg';
 import AppStoreQRCode from 'assets/PushSnaps/AppStoreQRCode.svg';
 import PlayStoreQRCode from 'assets/PushSnaps/PlayStoreQRCode.svg';
 import AppleIcon from 'assets/PushSnaps/AppleIcon.svg';
@@ -90,6 +91,29 @@ const InstallMetamaskSnapModal = ({
                     </SpanV2>
                 </SnapInner>
                 <InstallButton>Install</InstallButton>
+            </SnapContainer>
+            <SnapContainer>
+                <SnapInner>
+                    <Logo
+                        src={VersoIcon}
+                        alt="Verso Icon"
+                    />
+                    <SpanV2
+                        fontSize="16px"
+                        fontWeight="400"
+                        color={theme.modalMessageColor}
+                    >
+                        Verso Wallet
+                    </SpanV2>
+                </SnapInner>
+                <SnapInner>
+                    <a href="https://apps.apple.com/ng/app/verso-wallet-crypto-nft/id1539304605" target="_blank">
+                        <AppstoreInstallBtn><Image src={AppleIcon} width="16px" height="20px" alt='App store' /></AppstoreInstallBtn>
+                    </a>
+                    <a href="https://play.google.com/store/apps/details?id=com.btuprotocol.btu_wallet" target="_blank">
+                        <AppstoreInstallBtn><Image src={PlayStore} width="16px" height="20px" alt='Play store' /></AppstoreInstallBtn>
+                    </a>
+                </SnapInner>
             </SnapContainer>
 
             <ItemHV2 gap='14px'>
@@ -179,19 +203,26 @@ const Image = styled.img`
 `
 
 const InstallButton = styled(Button)`
-  width: fit-content;
-  min-width:102px;
-  background: #D53A94;
-  color: #fff;
-  z-Index:0;
-  font-family: 'Strawford';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: normal;
-  border-radius: 8px;
-  padding: 14px 16px;
-  
+    width: fit-content;
+    min-width:102px;
+    background: #D53A94;
+    color: #fff;
+    z-Index:0;
+    font-family: 'Strawford';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: normal;
+    border-radius: 8px;
+    padding: 14px 16px;
+`;
+
+const AppstoreInstallBtn = styled(InstallButton)`
+    background: #000;
+    min-width: 0;
+    margin-left: 6px;
+    height: 36px;
+    width: 36px;
 `;
 
 const QRCodeContainer = styled(ItemVV2)`
