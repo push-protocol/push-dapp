@@ -62,8 +62,9 @@ const ChainIndicator = ({ isDarkMode }) => {
           >
             <CurrentChainInfo>
               <Image
-                src={`./svg/${networkName[currentChainId]?.split(' ')[0]}.svg`}
-                width="28px"
+                src={`./svg/${LOGO_FROM_CHAIN_ID[currentChainId]}`}
+                width="24px"
+                height="24px"
               />
               {/* will be shown only on mob devices */}
               <ChainName color={theme.chainIndicatorHeadingMobile}>{networkName[currentChainId]}</ChainName>
