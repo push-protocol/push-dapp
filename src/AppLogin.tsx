@@ -121,9 +121,11 @@ useEffect(() => {
           {theme.scheme == 'dark' && <PushLogoDark />}
         </ItemVV2>
 
-        {modalHeight !== 0 && <ItemVV2 margin={`${modalHeight + 20}px 0 0 0`} flex="initial" maxWidth="920px">
+        {modalHeight !== 0 && 
+        <ItemVV2 margin={`${modalHeight + 20}px 0 0 0`} flex="initial" maxWidth="920px">
+          
           {/* TOS and PRIVACY */}
-          <SpanV2 fontSize="14px" padding="15px 15px" color={theme.default.color} lineHeight="140%">
+          <SpanV2 fontSize="14px" padding="5px 5px" color={theme.default.color} lineHeight="140%">
             By connecting your wallet, <b>You agree</b> to our{' '}
             <AInlineV2 href="https://epns.io/tos" target="_blank">
               Terms of Service
@@ -134,15 +136,12 @@ useEffect(() => {
             </AInlineV2>
             .
           </SpanV2>
-          {/* Chainsafe Audit and Discord */}
-          <SpanV2 fontSize="14px" padding="0px 20px 10px 20px" lineHeight="140%" color={theme.default.color}>
-            Note: The Push Protocol has been under development for 2+ years now. It has successfully completed its security audits of {' '}
-            <AInlineV2 href="https://github.com/ChainSafe/audits/blob/main/EPNS/epns-protocol-10-2021.pdf" target="_blank">
-              version 1 
-            </AInlineV2>{' '}
-            and {' '}
-            <AInlineV2 href="https://github.com/ChainSafe/audits/blob/main/EPNS/epns-protocol-11-2022.pdf" target="_blank">
-              version 1.5
+
+        <ItemVV2 margin="10px 0 0 0" flex="initial" maxWidth="920px">
+          <SpanV2 fontSize="14px" padding="0px 15px" lineHeight="140%" color={theme.default.color}>
+            Note: The Push Protocol has been under development for 2+ years now. It has successfully completed its latest security audits of {' '}
+            <AInlineV2 href="https://github.com/ChainSafe/audits/blob/main/EPNS/epns-protocol-05-2023.pdf" target="_blank">
+              Push Core V2 
             </AInlineV2>{' '}
             smart contracts by Chainsafe. However, always DYOR and anticipate UI bugs or improvements. You can use our {' '}
             <AInlineV2 href="https://zv9atndluia.typeform.com/to/KW3gwclM" target="_blank">
@@ -154,7 +153,9 @@ useEffect(() => {
             </AInlineV2>
             .
           </SpanV2>
-        </ItemVV2>}
+        </ItemVV2>
+        </ItemVV2>
+        }
       </ItemVV2>
     </Container>
   );
