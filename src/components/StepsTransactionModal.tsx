@@ -90,9 +90,9 @@ const StepsTransactionModal = ({ onClose, InnerComponentProps }) => {
                                 <H2V2 fontSize='28px' fontWeight='500' letterSpacing='-0.84px'>
                                     Transaction Error
                                 </H2V2>
-                                <H2V2 fontSize='18px' fontWeight='400' color='#657795'>
+                                {/* <H2V2 fontSize='18px' fontWeight='400' color='#657795'>
                                     User denied the transaction signature.
-                                </H2V2>
+                                </H2V2> */}
                             </ItemVV2>
 
                             <ItemVV2>
