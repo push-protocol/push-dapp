@@ -108,10 +108,10 @@ const InstallMetamaskSnapModal = ({
                 </SnapInner>
                 <SnapInner>
                     <a href="https://apps.apple.com/ng/app/verso-wallet-crypto-nft/id1539304605" target="_blank">
-                        <AppstoreInstallBtn><Image src={AppleIcon} alt='App store' /></AppstoreInstallBtn>
+                        <AppstoreInstallBtn><Image src={AppleIcon} width="16px" height="20px" alt='App store' /></AppstoreInstallBtn>
                     </a>
                     <a href="https://play.google.com/store/apps/details?id=com.btuprotocol.btu_wallet" target="_blank">
-                        <AppstoreInstallBtn><Image src={PlayStore} alt='Play store' /></AppstoreInstallBtn>
+                        <AppstoreInstallBtn><Image src={PlayStore} width="16px" height="20px" alt='Play store' /></AppstoreInstallBtn>
                     </a>
                 </SnapInner>
             </SnapContainer>
@@ -221,6 +221,8 @@ const AppstoreInstallBtn = styled(InstallButton)`
     background: #000;
     min-width: 0;
     margin-left: 6px;
+    height: 36px;
+    width: 36px;
 `;
 
 const QRCodeContainer = styled(ItemVV2)`
