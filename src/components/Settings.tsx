@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import React from "react";
 
 // External Packages

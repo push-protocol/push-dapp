@@ -10,14 +10,13 @@ import SpaceDark from 'assets/spaces/space-dark.svg';
 import { ReactComponent as AddSpace } from 'assets/spaces/add-space.svg';
 import { Image } from 'components/SharedStyling';
 import { ImageV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
-import { useWeb3React } from '@web3-react/core';
 import { shortenText } from 'helpers/UtilityHelper';
 import { SpaceContext } from 'contexts/SpaceContext';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { device } from 'config/Globals';
 import { useNavigate } from 'react-router-dom';
 import { SpaceComponentContext } from 'contexts/SpaceComponentsContext';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import useMediaQuery from 'hooks/useMediaQuery';
 import { appConfig } from 'config';
 
@@ -28,7 +27,7 @@ import * as PushAPI from '@pushprotocol/restapi';
 
 const SpaceFeedSection = ({ spaceid }) => {
   const { SpaceFeedComponent, SpaceInvitesComponent, CreateSpaceComponent } = useContext(SpaceComponentContext);
-  const { account } = useWeb3React();
+  const { account } = useAccount();
   const { spaceId ,setSpaceId, spaceInvites } = useContext(SpaceContext);
   const { connectedUser } = useContext(ChatUserContext);
   const theme = useTheme();

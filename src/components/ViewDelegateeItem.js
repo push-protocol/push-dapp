@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import React from "react";
 
 // External Packages
@@ -20,6 +19,7 @@ import { toolingPostReq } from "../api/index";
 import { createTransactionObject } from '../helpers/GaslessHelper';
 import { executeDelegateTx } from '../helpers/WithGasHelper';
 import { Anchor, Image, Item, ItemBreak, ItemH, Span } from '../primaries/SharedStyling';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, addresses } from "config";
@@ -38,7 +38,7 @@ export const ERROR_TOAST_DEFAULTS = {
 
 
 function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalance,setGaslessInfo, theme }) {
-  const { account } = useWeb3React();
+  const { account } = useAccount();
   const [loading, setLoading] = React.useState(true);
   const [txLoading, setTxLoading] = React.useState(false);
   const [txInProgress, setTxInProgress] = React.useState(false);

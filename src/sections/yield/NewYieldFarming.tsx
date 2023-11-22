@@ -1,7 +1,6 @@
 // React + Web3 Essentials
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import styled from 'styled-components';
@@ -14,15 +13,17 @@ import YieldStatsSection from 'sections/yield/YieldStatsSection';
 import YieldFarmingDataStoreV2 from 'singletons/YieldFarmingDataStoreV2';
 import YieldUniswapV3 from 'components/yield/YieldUniswapV3';
 import YieldPushFeeV3 from 'components/yield/YieldPushFeeV3';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, addresses } from 'config';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+import StepsTransactionModal from 'components/StepsTransactionModal';
 
 const NewYieldFarming = (
     { setActiveTab }
 ) => {
-
-    const { connector, isActive, account, chainId, provider } = useWeb3React<ethers.providers.Web3Provider>();
+    const { provider, account } = useAccount();
 
     const [pushToken, setPushToken] = useState(null);
     const [staking, setStaking] = useState(null);
@@ -59,7 +60,7 @@ const NewYieldFarming = (
     }, [yieldFarmingLP]);
 
     const getUserDataPush = React.useCallback(async () => {
-        const [pushPoolStats,userDataPush] = await YieldFarmingDataStoreV2.instance.getUserDataPUSH(provider);
+        const [pushPoolStats, userDataPush] = await YieldFarmingDataStoreV2.instance.getUserDataPUSH(provider);
 
         setPUSHPoolStats({ ...pushPoolStats });
         setUserDataPush({ ...userDataPush });
@@ -117,18 +118,19 @@ const NewYieldFarming = (
         getPUSHPoolStats();
 
     }, [account]);
-
-
+    
 
     return (
         <>
+
+
             <YieldAnnouncementSection
                 logo={"announcement"}
                 title={"New V2 Pools are now Live! Stake or migrate now."}
                 body={"Users who were part of the previous Push staking program, need to migrate to new pools to continue earning rewards. Click"}
                 setActiveTab={setActiveTab}
             />
-            <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} setPoolStats={setPoolStats}/>
+            <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} setPoolStats={setPoolStats} />
             <YieldPushPriceSection
                 poolStats={poolStats}
             />

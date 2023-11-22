@@ -1,6 +1,5 @@
 // React + Web3 Essentials
 import React, { useContext } from 'react';
-import { useWeb3React } from '@web3-react/core';
 
 // External packages
 import Stack from '@mui/material/Stack';
@@ -15,10 +14,11 @@ import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { shortenText } from 'helpers/UtilityHelper';
 import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
+import { useAccount } from 'hooks';
 
 const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
   const { web3NameList }:AppContextType=useContext(AppContext);
-  const { account }=useWeb3React()
+  const { account } = useAccount()
 
   // theme context
   const theme = useTheme();

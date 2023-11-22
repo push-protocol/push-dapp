@@ -1,6 +1,5 @@
 
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from "ethers";
 import React from "react";
 
@@ -19,10 +18,11 @@ import { Item, ItemH } from '../primaries/SharedStyling';
 
 // Internal Configs
 import { abis, addresses, appConfig } from "config";
+import { useAccount } from 'hooks';
 
 // Create Header
 function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
-  const { account, provider, chainId } = useWeb3React();
+  const { account, provider, chainId } = useAccount();
 
   const [NFTRewardsV2Contract, setNFTRewardsV2Contract] = React.useState(null);
   const [loading, setLoading] = React.useState(true);

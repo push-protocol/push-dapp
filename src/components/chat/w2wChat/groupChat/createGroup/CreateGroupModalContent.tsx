@@ -1,6 +1,5 @@
 // React + Web3 Essentials
 import React, { useContext } from 'react';
-import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
@@ -23,8 +22,11 @@ import { AppContext, Feeds } from 'types/chat';
 import { Context } from 'modules/chat/ChatModule';
 import { fetchInbox } from 'helpers/w2w/user';
 import { profilePicture } from 'config/W2WConfig';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { device } from 'config/Globals';
+import { CreateGroupModal } from "@pushprotocol/uiweb";
+import { ChatUIProvider } from '@pushprotocol/uiweb';
+
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const [createGroupState, setCreateGroupState] = React.useState<number>(1);
@@ -36,11 +38,12 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [memberList, setMemberList] = React.useState<any>([]);
   const { connectedUser, setConnectedUser ,  createUserIfNecessary} = useContext(ChatUserContext);
-  const {provider } = useWeb3React<ethers.providers.Web3Provider>();
+  const {provider } = useAccount();
   const themes = useTheme();
   const createGroupToast = useToast();
   const isMobile = useDeviceWidthCheck(600);
 
+  
   const handlePrevious = () => {
     setCreateGroupState(1);
   };
@@ -134,34 +137,8 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   };
   return (
     <ThemeProvider theme={themes}>
-      <ModalContainer createGroupState={createGroupState}>
-        
-        {createGroupState == 1 && (
-          <GroupDetailsContent
-            groupNameData={groupNameData}
-            groupDescriptionData={groupDescriptionData}
-            groupImageData={groupImageData}
-            groupTypeObject={groupTypeObject}
-            handleGroupNameData={setGroupNameData}
-            handleGroupDescriptionData={setGroupDescriptionData}
-            handleGroupImageData={setGroupImageData}
-            handleGroupTypeObject={setGroupTypeObject}
-            handleCreateGroupState={setCreateGroupState}
-            handlePrevious={handlePrevious}
-            handleClose={handleClose}
-          />
-        )}
-        {createGroupState == 2 && (
-          <AddWalletContent
-            onSubmit={handleCreateGroup}
-            memberList={memberList}
-            handleMemberList={setMemberList}
-            isLoading={isLoading}
-            handlePrevious={handlePrevious}
-            handleClose={handleClose}
-            title={"Create Group"}
-          />
-        )}
+      <ModalContainer>
+        <CreateGroupModal onClose={() => handleClose()} />
       </ModalContainer>
     </ThemeProvider>
   );

@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useRef, useState } from 'react';
 
@@ -11,6 +10,7 @@ import styled, { ThemeProvider, useTheme } from 'styled-components';
 import { postReq } from "../api";
 import { Button, H2, H3, Input, Item, Span } from '../primaries/SharedStyling';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { useAccount } from "hooks";
 
 // Internal Configs
 import { abis, CHAIN_DETAILS } from "config";
@@ -21,7 +21,7 @@ export default function AliasVerificationModal({
   verificationStatus,
   aliasEthAccount,
 }) {
-  const { account, provider } = useWeb3React();
+  const { account, provider } = useAccount();
   const signer = provider.getSigner(account);
 
   const themes = useTheme();

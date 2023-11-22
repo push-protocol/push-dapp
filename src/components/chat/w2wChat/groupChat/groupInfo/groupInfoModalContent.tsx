@@ -1,6 +1,5 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
@@ -30,7 +29,7 @@ import {
 import { getDefaultFeed } from '../../../../../helpers/w2w/user';
 import { Feeds } from '../../../../../types/chat';
 import { DropdownValueType } from '../../../../Dropdown';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { PendingMembers } from './PendingMembers';
 
 //Internal Configs
@@ -38,11 +37,13 @@ import useToast from 'hooks/useToast';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { AddWalletContent } from '../createGroup/AddWalletContent';
 import GroupModalHeader from '../createGroup/GroupModalHeader';
+import { copyToClipboard, shortenText } from 'helpers/UtilityHelper';
 
 export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const { currentChat, setChat, inbox, receivedIntents }: AppContext = useContext<AppContext>(Context);
   const { connectedUser } = useContext(ChatUserContext);
-  const { account } = useWeb3React<ethers.providers.Web3Provider>();
+  const [copyText, setCopyText] = useState<string>('');
+  const { account } = useAccount();
   const groupInfoToast = useToast();
   const [selectedMemeberAddress, setSelectedMemeberAddress] = React.useState<string | null>(null);
   const [showAddMoreWalletModal, setShowAddMoreWalletModal] = React.useState<boolean>(false);
@@ -51,7 +52,9 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const [memberList, setMemberList] = React.useState<any>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const groupCreator = currentChat?.groupInformation?.groupCreator;
-  const membersExceptGroupCreator = currentChat?.groupInformation?.members.filter((x) => x.wallet?.toLowerCase() !== groupCreator?.toLowerCase());
+  const membersExceptGroupCreator = currentChat?.groupInformation?.members.filter(
+    (x) => x.wallet?.toLowerCase() !== groupCreator?.toLowerCase()
+  );
   const groupMembers = [...membersExceptGroupCreator, ...currentChat?.groupInformation?.pendingMembers];
 
   const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
@@ -389,7 +392,57 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                   </SpanV2>
                 </ItemVV2>
               </InfoContainer>
-
+              <DescriptionContainer
+                alignItems="flex-start"
+                margin="0px 0px 18px 0px"
+              >
+                <SpanV2
+                  fontSize="18px"
+                  fontWeight={500}
+                  margin="0px 0px 5px 0px"
+                  color={theme.modalProfileTextColor}
+                >
+                  Chat ID
+                </SpanV2>
+                <ItemHV2
+                 
+                  alignSelf="start"
+                  onClick={() => {
+                    copyToClipboard(currentChat?.groupInformation?.chatId);
+                    setCopyText('copied');
+                  }}
+                  onMouseEnter={() => {
+                    setCopyText('click to copy');
+                  }}
+                  onMouseLeave={() => {
+                    setCopyText('');
+                  }}
+                >
+                  <SpanV2
+                  
+                   textAlign="start"
+                    fontSize="18px"
+                    fontWeight="400"
+                    style={{ color: `${theme.modalDescriptionTextColor}` }}
+                  >
+                    {shortenText(currentChat?.groupInformation?.chatId,8,8)}
+                  </SpanV2>
+                  {!!copyText && (
+                    <SpanV2
+                      cursor="pointer"
+                      position="relative"
+                      padding="2px 10px"
+                      style={{ color: `${theme.modalDescriptionTextColor}` }}
+                      fontSize="16px"
+                      fontWeight="400"
+                      // background={theme.backgroundColor?.modalHoverBackground}
+                      borderRadius="16px"
+                    >
+                      {copyText}
+                    </SpanV2>
+                  )}
+                </ItemHV2>
+              </DescriptionContainer>
               <DescriptionContainer
                 alignItems="flex-start"
                 margin="0px 0px 18px 0px"
@@ -569,7 +622,7 @@ const AddWalletContainer = styled(ItemHV2)`
   padding: 15px 24px;
   margin-bottom: 15px;
   cursor: pointer;
-  @media(max-width:480px){
+  @media (max-width: 480px) {
     min-width: 300px;
     max-width: 300px;
   }

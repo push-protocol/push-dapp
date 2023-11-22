@@ -6,13 +6,12 @@ import { useNavigate } from 'react-router-dom';
 
 // Internal Compoonents
 import { SpaceContext } from 'contexts/SpaceContext';
-import { useWeb3React } from '@web3-react/core';
 import { SpaceComponentContext } from 'contexts/SpaceComponentsContext';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 
 export const SpaceWidgetSection = () => {
   const { SpaceWidgetComponent } = useContext(SpaceComponentContext);
-  const { account } = useWeb3React();
+  const { account } = useAccount();
   const { spaceId, setSpaceId } = useContext(SpaceContext);
   const [width, setWidth] = useState<string>('400');
   const [zIndex, setZIndex] = useState<string>('1000');

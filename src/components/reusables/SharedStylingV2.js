@@ -163,6 +163,7 @@ export const ButtonV2 = styled.button`
 export const SpanV2 = styled.span`
   align-self: ${(props) => props.alignSelf || 'auto'};
   background: ${(props) => props.background || 'transparent'};
+  cursor: ${(props) => props.cursor || 'default'};
   border-radius: ${(props) => props.borderRadius || 'initial'};
   bottom: ${(props) => props.bottom || 'auto'};
   color: ${(props) => props.color || 'inherit'};
@@ -201,6 +202,8 @@ export const ImageV2 = styled.img`
 
 export const AInlineV2 = styled.a`
   background: transparent;
+  font-size: ${(props) => props.fontSize || 'inherit'};
+  font-weight: ${(props) => props.fontWeight || '300'};
   color: ${(props) => props.color || '#e1087f'};
   display: inline;
   letter-spacing: inherit;

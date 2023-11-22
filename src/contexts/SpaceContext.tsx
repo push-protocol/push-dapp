@@ -1,6 +1,5 @@
 // React + Web3 Essentials
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 
 // External imports
@@ -8,6 +7,7 @@ import * as PushAPI from '@pushprotocol/restapi';
 
 // Internal Components imports
 import { appConfig } from 'config';
+import { useAccount } from 'hooks';
 
 export const SpaceContext = createContext({
   spaceId: null,
@@ -18,7 +18,7 @@ export const SpaceContext = createContext({
 const SpaceContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   const [spaceId, setSpaceId] = useState<string | undefined>(null);
   const [spaceInvites, setSpaceInvites] = useState<number>(0);
-  const { account } = useWeb3React<ethers.providers.Web3Provider>();
+  const { account } = useAccount();
 
   const getSpaceInvitesCount = async () => {
     const feed = await PushAPI.space.requests({

@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 
 // Internal Components
@@ -14,6 +13,7 @@ import { shortenText } from 'helpers/UtilityHelper';
 import Dropdown from 'components/Dropdown';
 import { caip10ToWallet } from '../../../../../helpers/w2w';
 import { device } from 'config/Globals';
+import { useAccount } from 'hooks';
 
 export const ProfileCard = ({
   key,
@@ -24,7 +24,7 @@ export const ProfileCard = ({
   dropdownRef,
 }) => {
   const theme = useTheme();
-  const { account } = useWeb3React<ethers.providers.Web3Provider>();
+  const { account } = useAccount();
 
   const [dropdownHeight, setDropdownHeight] = useState(0);
 

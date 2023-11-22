@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useState } from 'react';
 
@@ -14,6 +13,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import AirdropHelper from 'helpers/AirdropHelper';
 import { A, B, Button, Content, H2, H3, Item, Para, Section, Span } from 'primaries/SharedStyling';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
@@ -23,7 +23,7 @@ import GLOBALS, { device, globalsMargin } from 'config/Globals';
 const AirdropModule = () => {
   const theme = useTheme();
 
-  const { account, provider, chainId } = useWeb3React();
+  const { account, provider, chainId } = useAccount();
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const [controlAt, setControlAt] = React.useState(0);

@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
@@ -23,6 +22,7 @@ import {
   setDeveloperOpen,
   setTutorialContinous,
 } from '../redux/slices/userJourneySlice';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -42,7 +42,7 @@ function Navigation() {
   const { navigationSetup, setNavigationSetup } = useContext(NavigationContext);
 
   const CORE_CHAIN_ID = appConfig.coreContractChain;
-  const { account, chainId } = useWeb3React();
+  const { account, chainId } = useAccount();
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
 
   const theme = useTheme();

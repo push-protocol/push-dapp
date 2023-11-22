@@ -1,11 +1,6 @@
 import React, { useContext, useRef } from 'react';
 
 // React + Web3 Essentials
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
-// import {
-//   NoEthereumProviderError,
-//   UserRejectedRequestError as UserRejectedRequestErrorInjected,
-// } from '@web3-react/injected-connector';
 import { ethers } from 'ethers';
 
 // External Packages
@@ -23,15 +18,47 @@ import NavigationButton from 'components/NavigationButton';
 import Bell from 'primaries/Bell';
 import Profile from 'primaries/Profile';
 import { NavigationContext } from 'contexts/NavigationContext';
+import { ErrorContext } from 'contexts/ErrorContext';
+import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
+import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg'
 
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 import { useClickAway } from 'react-use';
 import MobileNavigation from './MobileNavigation';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import ChainIndicator from 'components/ChainIndicator';
-import { handleChangeNetwork } from 'helpers/ChainHelper';
+import { UnsupportedChainIdError } from 'connectors/error';
+import APP_PATHS from 'config/AppPaths';
+import { themeDark, themeLight } from 'config/Themization';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+
+// header tags for pages that are not there in navigationList (Sidebar)
+const EXTRA_HEADER_TAGS = {
+  [APP_PATHS.UserSettings]: {
+    title: 'Settings',
+    light: {
+      bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+      fg: themeLight.headerTagFg,
+    },
+    dark: {
+      bg: themeDark.headerTagBg,
+      fg: themeDark.headerTagFg,
+    },
+  },
+  [APP_PATHS.ChannelSettings]: {
+    title: 'Notification Settings',
+    light: {
+      bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+      fg: themeLight.headerTagFg,
+    },
+    dark: {
+      bg: themeDark.headerTagBg,
+      fg: themeDark.headerTagFg,
+    },
+  }
+}
 
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
@@ -39,12 +66,11 @@ function Header({ isDarkMode, darkModeToggle }) {
   const theme = useTheme();
   const navRef = useRef()
 
-  // Get Web3 Context
-  // const context = useWeb3React<Web3Provider>()
-
   const { navigationSetup } = useContext(NavigationContext);
 
-  const { isActive, error,library, chainId } = useWeb3React();
+  // Get 
+  const { isActive, switchChain } = useAccount();
+  const { authError: error } = useContext(ErrorContext);
 
   const [showLoginControls, setShowLoginControls] = React.useState(false);
 
@@ -76,6 +102,9 @@ function Header({ isDarkMode, darkModeToggle }) {
         const item = navigationSetup.navigation[key];
         if (location.pathname === item.data.href) {
           setHeaderTag(item.data.headerTag);
+        } else {
+          if (EXTRA_HEADER_TAGS[location.pathname])
+            setHeaderTag(EXTRA_HEADER_TAGS[location.pathname]);
         }
       });
     }
@@ -87,17 +116,13 @@ function Header({ isDarkMode, darkModeToggle }) {
 
   // handle error functions
   function getErrorMessage(error: Error) {
-    if (error instanceof NoEthereumProviderError) {
-      return 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile';
-    } else if (error instanceof UnsupportedChainIdError) {
-      handleChangeNetwork(chainId,library.provider);
+    if (error instanceof UnsupportedChainIdError) {
+      switchChain(appConfig.coreContractChain);
       if (appConfig.coreContractChain === 42)
         return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network';
-      else if (appConfig.coreContractChain === 5)
-        return 'Unsupported Network, please connect to the Ethereum Goerli, Polygon Mumbai, BNB testnet, Optimism Goerli or Polygon zkEVM testnet';
-      else return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB, or Polygon zkEVM Mainnet';
-    // } else if (error instanceof UserRejectedRequestErrorInjected) {
-    //   return 'Please authorize this website to access the dApp';
+      else if (appConfig.coreContractChain === 11155111)
+        return 'Unsupported Network, please connect to the Ethereum Sepolia, Polygon Mumbai, BNB testnet, Optimism Goerli, Arbitrum testnet or Polygon zkEVM testnet';
+      else return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB, Optimism, Arbitrum or Polygon zkEVM Mainnet';
     } else {
       console.error(error);
       return 'An unknown error occurred. Check the console for more details';
@@ -109,26 +134,28 @@ function Header({ isDarkMode, darkModeToggle }) {
   };
 
   const isMobile = useDeviceWidthCheck(600);
-  
+  const isSnapPage = location?.pathname === '/snap';
 
   return (
     <Container direction="row" padding="0px 15px">
       <ItemH justify="flex-start" flex="0">
         <RightBarContainer justify="flex-start" flex="0">
           <RightBarDesktop justify="flex-start" flex="0">
-            <Logo src={!isDarkMode ? 'push.svg' : 'pushDark.svg'} />
+            <a href='/channels'>
+              <Logo src={!isDarkMode ? 'push.svg' : 'pushDark.svg'} />
+            </a>
           </RightBarDesktop>
 
           <LogoMobile justify="flex-start" flex="0">
             <Logo src={!isDarkMode ? 'logo512.png' : 'logo512.png'} />
           </LogoMobile>
         </RightBarContainer>
-        
+
         {/* mobile navbar */}
         {navigationSetup && showNavBar && isActive && !error && (
           <NavMenuContainer ref={navRef} tabletAlign="flex-start">
             <NavMenu>
-              <ChainIndicator isDarkMode={isDarkMode}/>
+              <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
 
               <NavMenuInner tabletAlign="flex-start">
@@ -140,19 +167,28 @@ function Header({ isDarkMode, darkModeToggle }) {
       </ItemH>
 
       <ItemH justify="flex-end">
-        {headerTag && isActive && !error && (
+        {headerTag && isActive && !error && !isSnapPage && (
           <HeaderTag align="flex-start" overflow="hidden">
             <Span
               textTransform="capitalize"
               spacing="-0.02em"
               weight="normal"
-              padding={isMobile ? "8px 7px" : "8px 20px" }
+              padding={isMobile ? "8px 7px" : "8px 20px"}
               className='text'
               color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}>
               {headerTag.title}
             </Span>
           </HeaderTag>
         )}
+        <SnapSection>
+          <MetamaskLogo width={24} height={22} />
+          <InstallText>
+            <SpanV2 fontSize='12px' fontWeight='400'>Get Notifications directly in MetaMask</SpanV2>
+            <Link href='https://app.push.org/snap' target='_blank'>
+              Install Push Snap <OpenLink />
+            </Link>
+          </InstallText>
+        </SnapSection>
 
         {isActive && !showLoginControls && !error && (
           <DarkModeSwitch
@@ -165,26 +201,26 @@ function Header({ isDarkMode, darkModeToggle }) {
           />
         )}
 
-      {isActive && !error && (
-            <RightBarMobile>
-              <Button
-                bg="transparent"
-                padding="5px"
-                radius="4px"
-                onClick={() => {
-                  setShowNavBar(!showNavBar);
-                }}>
-                <AiOutlineMenu size={30} color={theme.headerIconsBg} />
-              </Button>
-            </RightBarMobile>
-          )}
+        {isActive && !error && (
+          <RightBarMobile>
+            <Button
+              bg="transparent"
+              padding="5px"
+              radius="4px"
+              onClick={() => {
+                setShowNavBar(!showNavBar);
+              }}>
+              <AiOutlineMenu size={30} color={theme.headerIconsBg} />
+            </Button>
+          </RightBarMobile>
+        )}
 
         <ItemH justify="flex-end" flex="initial">
           {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>}
           {!isActive && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>}
           {isActive && !showLoginControls && !error && (
             <RightBarDesktop justify="flex-end" flex="initial">
-              <ChainIndicator isDarkMode={isDarkMode}/>
+              <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
             </RightBarDesktop>
           )}{' '}
@@ -225,7 +261,7 @@ const RightBarMobile = styled(ItemH)`
   }
 `;
 
- const LogoMobile = styled(ItemH)`
+const LogoMobile = styled(ItemH)`
     @media (min-width: 993px) {
       display: none;
     }
@@ -319,6 +355,38 @@ const DarkMode = styled(Item)`
     display: none;
   }
 `;
+
+const SnapSection = styled.div`
+  width:251px;
+  height:28px;
+  display:flex;
+  flex-direction:row;
+  border-radius: 12px;
+  border: 1px solid #D4DCEA;
+  border: 1px solid ${(props) => props.theme.default.border};
+  background:${(props) => props.theme.default.bg};
+  padding: 12px 16px;
+  align-items: center;
+  gap: 9px;
+`;
+
+const InstallText = styled.div`
+  display:flex;
+  flex-direction:column;
+`
+
+const Link = styled.a`
+  cursor:pointer;
+  font-size:12px;
+  font-weight:400;
+  color:#D53A94;
+  text-align: start;
+  text-decoration:none;
+   &:hover{
+    text-decoration:underline;
+    text-underline-position: under;
+  }
+`
 
 // Export Default
 export default Header;

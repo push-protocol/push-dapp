@@ -1,6 +1,7 @@
 // React + Web3 Essentials
 import useModalBlur from "hooks/useModalBlur";
-import React,{createContext,useState} from "react"
+import React,{createContext, useState} from "react";
+
 
 // Internal Components
 import { AppContextType, Web3NameListType } from "types/context"

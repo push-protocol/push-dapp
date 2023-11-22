@@ -1,5 +1,4 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useRef, useState } from 'react';
 
 // External Packages
@@ -13,13 +12,14 @@ import Faucets from 'components/Faucets';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import ViewChannelItem from 'components/ViewChannelItem';
 import UtilityHelper, { MaskedAliasChannels, MaskedChannels } from 'helpers/UtilityHelper';
-import { incrementPage, setChannelMeta, updateBulkSubscriptions } from 'redux/slices/channelSlice';
+import { incrementPage, setChannelMeta, updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
 import { incrementStepIndex } from 'redux/slices/userJourneySlice';
 import DisplayNotice from '../primaries/DisplayNotice';
 import { Item, ItemH } from '../primaries/SharedStyling';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import ChainsSelect from 'components/ChainsSelect';
 import { getChannels, getChannelsSearch, getUserSubscriptions } from 'services'; // Api Services
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -42,7 +42,7 @@ const SEARCH_LIMIT = 10;
 function ViewChannels({ loadTeaser, playTeaser }) {
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { account, chainId } = useWeb3React();
+  const { account, chainId } = useAccount();
   const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
   const { run, stepIndex } = useSelector((state: any) => state.userJourney);
 
@@ -62,6 +62,11 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     setLoading(!channels.length); //if there are no channels initially then, set the loader
     fetchInitialsChannelMeta();
   }, [account, chainId]);
+
+  useEffect(() => {
+    setChannelsNetworkId(chainId);
+    fetchInitialsChannelMeta();
+  }, [chainId]);
 
   // to update a page
   const updateCurrentPage = () => {
@@ -191,8 +196,13 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       const userCaipAddress = convertAddressToAddrCaip(account, chainId);
       const subscriptionsArr = await getUserSubscriptions({ userCaipAddress });
       const subscriptionsMapping = {};
-      subscriptionsArr.map(({ channel }) => (subscriptionsMapping[channel] = true));
+      const userSettings = {};
+      subscriptionsArr.map(({ channel, user_settings }) => {
+        subscriptionsMapping[channel] = true;
+        userSettings[channel] = user_settings ? JSON.parse(user_settings) : null;
+      });
       dispatch(updateBulkSubscriptions(subscriptionsMapping));
+      dispatch(updateBulkUserSettings(userSettings));
     })();
   }, [account]);
 
@@ -222,7 +232,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                   setSearch(e.target.value);
                 }}
                 className="input"
-                placeholder={`Search by Name or ${account.slice(0, 6)}`}
+                placeholder={`Search by Name or ${account?.slice(0, 6)}`}
               />
               <Item
                 position="absolute"

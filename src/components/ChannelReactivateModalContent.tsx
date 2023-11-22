@@ -1,7 +1,6 @@
 // React + Web3 Essentials
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import moment from 'moment';
@@ -17,7 +16,7 @@ import { setUserChannelDetails } from 'redux/slices/adminSlice';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { H2V2, ItemHV2, ItemVV2 } from './reusables/SharedStylingV2';
 import { addresses, appConfig } from 'config';
-import { useDeviceWidthCheck } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import Globals, { device } from 'config/Globals';
 import FaucetInfo from './FaucetInfo';
 import { approvePushToken, getPushTokenApprovalAmount, mintPushToken } from 'helpers';
@@ -30,7 +29,7 @@ const DATE_FORMAT = 'DD MMM, YYYY';
 const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: ModalInnerComponentType) => {
   const themes = useTheme();
 
-  const { chainId, account, provider } = useWeb3React();
+  const { chainId, account, provider } = useAccount();
   const dispatch = useDispatch();
 
   const {
@@ -531,7 +530,7 @@ const Footer = styled(ItemHV2)`
   align-content: space-between;
   justify-content: space-between;
   grid-gap: 40px;
-  transform: translateY(40px);
+  z-index: 1;
 
   @media (max-width: 600px) {
     padding: 16px;

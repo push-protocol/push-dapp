@@ -1,3 +1,5 @@
+import { PushAPI } from "@pushprotocol/restapi";
+
 export interface Web3NameListType {
   [key: string]: string;
 }

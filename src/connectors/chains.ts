@@ -1,17 +1,19 @@
 import type { AddEthereumChainParameter } from '@web3-react/types';
-import { useWeb3React } from '@web3-react/core';
+import { Chain, ChainWithDecimalId } from '@web3-onboard/common';
+import { appConfig } from 'config';
+import { ethers } from 'ethers';
 
 const ETH: AddEthereumChainParameter['nativeCurrency'] = {
   name: 'Ether',
   symbol: 'ETH',
   decimals: 18,
-}
+};
 
 const MATIC: AddEthereumChainParameter['nativeCurrency'] = {
   name: 'Matic',
   symbol: 'MATIC',
   decimals: 18,
-}
+};
 
 const CELO: AddEthereumChainParameter['nativeCurrency'] = {
   name: 'Celo',
@@ -19,9 +21,16 @@ const CELO: AddEthereumChainParameter['nativeCurrency'] = {
   decimals: 18,
 }
 
+const BNB: AddEthereumChainParameter['nativeCurrency'] = {
+  name: 'Binance Coin',
+  symbol: 'BNB',
+  decimals: 18,
+}
+
 interface BasicChainInformation {
   urls: string[]
   name: string
+  nativeCurrency: AddEthereumChainParameter['nativeCurrency']
 }
 
 interface ExtendedChainInformation extends BasicChainInformation {
@@ -50,17 +59,28 @@ export function getAddChainParameters(chainId: number): AddEthereumChainParamete
   }
 }
 
-const getInfuraUrlFor = (network: string) =>
-  process.env.infuraKey ? `https://${network}.infura.io/v3/${process.env.infuraKey}` : undefined
-const getAlchemyUrlFor = (network: string) =>
-  process.env.alchemyKey ? `https://${network}.alchemyapi.io/v2/${process.env.alchemyKey}` : undefined
+const getInfuraUrlFor = (network: string) => `https://${network}.infura.io/v3/${appConfig?.infuraAPIKey}`;
 
 type ChainConfig = { [chainId: number]: BasicChainInformation | ExtendedChainInformation }
 
 export const MAINNET_CHAINS: ChainConfig = {
   1: {
-    urls: [getInfuraUrlFor('mainnet'), getAlchemyUrlFor('eth-mainnet'), 'https://cloudflare-eth.com'].filter(Boolean),
+    urls: [getInfuraUrlFor('mainnet')].filter(Boolean),
+    nativeCurrency: ETH,
     name: 'Mainnet',
+    blockExplorerUrls: ['https://etherscan.io'],
+  },
+  56: {
+    urls: ['https://bsc-dataseed.binance.org/'],
+    nativeCurrency: BNB,
+    name: 'BNB Mainnet',
+    blockExplorerUrls: ['https://bscscan.com'],
+  }, 
+  1101: {
+    urls: ['https://rpc.polygon-zkevm.gateway.fm'],
+    nativeCurrency: MATIC,
+    name: 'Polygon zkEVM Mainnet',
+    blockExplorerUrls: ['https://zkevm.polygonscan.com/'],
   },
   10: {
     urls: [getInfuraUrlFor('optimism-mainnet'), 'https://mainnet.optimism.io'].filter(Boolean),
@@ -89,9 +109,16 @@ export const MAINNET_CHAINS: ChainConfig = {
 }
 
 export const TESTNET_CHAINS: ChainConfig = {
-  5: {
-    urls: [getInfuraUrlFor('goerli')].filter(Boolean),
-    name: 'Görli',
+  // 5: {
+  //   urls: [getInfuraUrlFor('goerli')].filter(Boolean),
+  //   nativeCurrency: ETH,
+  //   name: 'Görli',
+  // },
+  11155111: {
+    urls: [getInfuraUrlFor('sepolia')].filter(Boolean),
+    nativeCurrency: ETH,
+    name: 'Sepolia',
+    blockExplorerUrls: ['https://sepolia.etherscan.io'],
   },
   420: {
     urls: [getInfuraUrlFor('optimism-goerli'), 'https://goerli.optimism.io'].filter(Boolean),
@@ -116,7 +143,19 @@ export const TESTNET_CHAINS: ChainConfig = {
     name: 'Celo Alfajores',
     nativeCurrency: CELO,
     blockExplorerUrls: ['https://alfajores-blockscout.celo-testnet.org'],
+  },  
+  97: {
+    name: "BNB Testnet",
+    urls: ["https://data-seed-prebsc-1-s1.binance.org:8545"],
+    nativeCurrency: BNB,
+    blockExplorerUrls: [],
   },
+  1442: {
+    name: "Polygon zkEVM Testnet",
+    urls: ['https://rpc.public.zkevm-test.net'],
+    nativeCurrency: MATIC,
+    blockExplorerUrls: [],
+  }
 }
 
 export const CHAINS: ChainConfig = {
@@ -135,20 +174,18 @@ export const URLS: { [chainId: number]: string[] } = Object.keys(CHAINS).reduce<
     return accumulator
   },
   {}
-)
+);
 
-export function useSwitchChain() {
-  const { connector } = useWeb3React();
-
-  const switchChain = async (desiredChain: number) => {
-    if (connector instanceof WalletConnect || connector instanceof Network) {
-      await connector.activate(desiredChain === -1 ? undefined : desiredChain);
-    } else {
-      await connector.activate(desiredChain === -1 ? undefined : getAddChainParameters(desiredChain));
-    }
-  };
-
-  return switchChain;
-}
-
-
+export const getWeb3OnboardChains = (): (Chain | ChainWithDecimalId)[] => {
+  const web3OnboardChains: (Chain | ChainWithDecimalId)[] = [];
+  appConfig.allowedNetworks.forEach((chainId: number) => {
+    const details = CHAINS[chainId];
+    web3OnboardChains.push({
+      id: ethers.utils.hexValue(chainId),
+      label: details.name,
+      rpcUrl: details.urls[0],
+      token: details.nativeCurrency.symbol,
+    });
+  });
+  return web3OnboardChains;
+};

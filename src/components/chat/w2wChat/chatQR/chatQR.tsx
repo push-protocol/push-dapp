@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { QRCodeCanvas } from "qrcode.react";
 import CryptoHelper from 'helpers/CryptoHelper';
 import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { useWeb3React } from "@web3-react/core";
 import styled, { useTheme } from "styled-components";
 import { AiOutlineClose, AiOutlineQrcode } from "react-icons/ai";
 import { H2V2, ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
@@ -12,6 +11,7 @@ import GLOBALS, { device } from "config/Globals";
 import BlurBG from "components/reusables/blurs/BlurBG";
 import { ChatUserContext } from "contexts/ChatUserContext";
 import chatBoxImage from "../../../../assets/chat/chatBox.svg";
+import { useAccount } from "hooks";
 
 const ChatQR = ({
     type = LOADER_TYPE.STANDALONE,
@@ -20,7 +20,7 @@ const ChatQR = ({
     width = 'auto'
 }) => {
     const theme = useTheme();
-    const { account } = useWeb3React();
+    const { account } = useAccount();
     const { createUserIfNecessary, displayQR, setDisplayQR, pgpPvtKey, connectedPeerID } = useContext(ChatUserContext);
     const [myPeer, myPeerID] = usePeer();
     const [qrCodeText, setQrCodeText] = useState('');

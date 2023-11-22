@@ -12,6 +12,7 @@ import SpamBox from 'segments/spam';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import APP_PATHS from 'config/AppPaths';
 
 const InboxComponent = ({isSpam}) => {
   const [showInbox, setShowInbox] = useState(!isSpam);
@@ -34,10 +35,10 @@ const InboxComponent = ({isSpam}) => {
     <Container>
       <NavBoxHolder>
         <NavHolder>
-          <NavTitleButton isActive={showInbox} onClick={()=>handleToggle('/inbox')}>
+          <NavTitleButton isActive={showInbox} onClick={()=>handleToggle(APP_PATHS.Inbox)}>
             Inbox
           </NavTitleButton>
-          <NavTitleButton isActive={!showInbox} onClick={()=>handleToggle('/spam')}>
+          <NavTitleButton isActive={!showInbox} onClick={()=>handleToggle(APP_PATHS.Spam)}>
             Spam
           </NavTitleButton>
         </NavHolder>
