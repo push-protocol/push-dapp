@@ -379,7 +379,7 @@ const SnapSection = styled.div`
   gap: 9px;
   @media (max-width:600px){
     width:auto;
-    padding: 7px 14px;
+    padding: 12px 14px;
   }
 `;
 
