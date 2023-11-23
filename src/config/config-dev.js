@@ -102,7 +102,8 @@ export const addresses = {
 
   // For Sepolia
   pushToken: "0x37c779a1564DCc0e3914aB130e0e787d93e21804",
-  pushCoreV2: "0x8a965286c0752DFE821868312025091f60BD902A",
+  // pushCoreV2: "0x8a965286c0752DFE821868312025091f60BD902A", // 15 min epoch
+  pushCoreV2: "0x5AB1520E2bd519BDab2e1347EEe81C00a77f4946", //21 days epoch
   uniV2LPToken: "0x2333609Cc527a9309Cdad16E0742a3C6DC1C551b",
   uniswapV2Router02: "0xC532a74256D3Db42D0Bf7a0400fEFDbad7694008", 
   WETHAddress: "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9", 
@@ -113,8 +114,8 @@ export const addresses = {
   // yieldFarmLP: "0x22C1dBC8975c23De9e2219C0fC3E03b404577512",
 
   //For 21 days Epoch
-  stakingV2: "0x84ff55592307fc495e9be7324e0f38507af94267",
-  yieldFarmLP: "0x76a1d7f1136015f4f0858cc4c260b319d8a3a549",
+  stakingV2: "0xFf13FBc1dE7FBF300059FE56495c82bBa2F986c6",
+  yieldFarmLP: "0xAB531bD9D39c492a05de65Eee85F6C712c05ea0b",
 
 
 
