@@ -72,15 +72,20 @@ function MasterInterfacePage() {
   const [loadTeaserVideo, setLoadTeaserVideo] = React.useState(null);
   const location = useLocation();
 
-  const { MetamaskPushSnapModalComponent }:AppContextType = React.useContext(AppContext);
+  const { MetamaskPushSnapModalComponent }: AppContextType = React.useContext(AppContext);
 
   const { showMetamaskPushSnap } = React.useContext(AppContext);
 
-  React.useEffect(()=>{
-    if(location.hash == '#receive-notifications'){
+  React.useEffect(() => {
+    if (location.pathname === '/receive' && location.hash !== '#receive-notifications') {
+      history.pushState(null, '', '/receive#receive-notifications');
       showMetamaskPushSnap();
     }
-  },[location])
+
+    if (location.hash == '#receive-notifications') {
+      showMetamaskPushSnap();
+    }
+  }, [location])
 
   // Render
   return (
