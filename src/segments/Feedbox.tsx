@@ -25,7 +25,7 @@ import {
 import DisplayNotice from "../primaries/DisplayNotice";
 import NotificationToast from "../primaries/NotificationToast";
 import { ScrollItem } from "./ViewChannels";
-import { useAccount } from "hooks";
+import { useAccount, useDeviceWidthCheck } from "hooks";
 import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
 import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
 import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg'
@@ -344,6 +344,7 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
       }
     }
   };
+
   // Render
   return (
     <ThemeProvider theme={themes}>
@@ -364,16 +365,19 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
 
         <ScrollItem>
           {showSnapInfo && (
-            <SnapSection>
-              <MetamaskLogo />
-              <InstallText justifyContent='space-between'>
-                <SpanV2 fontSize='14px' fontWeight='400'>Get Notifications directly in MetaMask using Push Snap.</SpanV2>
-                <InstallPushSnap onClick={navigateToSnaps} >Install Push Snap <OpenLink /> </InstallPushSnap>
-              </InstallText>
-              <Close style={{ cursor: 'pointer' }} onClick={() => {
-                setShowSnapInfo(false);
-              }} width={12} height={12} />
-            </SnapSection>
+            <>
+              <SnapSection flexWrap='nowrap'>
+                <MetamaskLogo />
+                <InstallText  justifyContent='space-between'>
+                  <SpanV2 fontSize='14px' fontWeight='400'>Get Notifications directly in MetaMask using Push Snap.</SpanV2>
+                  <InstallPushSnap onClick={navigateToSnaps} >Install Push Snap <OpenLink /> </InstallPushSnap>
+                </InstallText>
+                <CloseButton onClick={() => {
+                  setShowSnapInfo(false);
+                }}/>
+              </SnapSection>
+
+            </>
           )}
 
           {((!run && !notifications.length) ||
@@ -532,10 +536,11 @@ const SnapSection = styled(ItemHV2)`
 
   @media ${device.tablet} {
     gap: 9px;  
+    margin-right:10px;
   }
 
-  @media ${device.mobileL} {
-    max-height:28px;  
+  @media (max-width:525px) {
+    max-height:50px;
   }
 `
 
@@ -543,8 +548,19 @@ const InstallText = styled(ItemHV2)`
   @media ${device.tablet} {
     flex-direction:column;  
     align-items: baseline;
+    display: block;
+    align-self: auto;
   }
   
+`
+
+const CloseButton = styled(Close)`
+  cursor:pointer;
+  height:20px;
+  width:20px;
+  
+
+
 `
 
 const InstallPushSnap = styled(SpanV2)`
