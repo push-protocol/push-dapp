@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 // External Packages
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-import * as PushAPI from '@pushprotocol/restapi';
+import { VideoCallStatus } from '@pushprotocol/restapi';
 import 'font-awesome/css/font-awesome.min.css';
 import { CID } from 'ipfs-http-client';
 import { BsDashLg } from 'react-icons/bs';
@@ -97,7 +97,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
   const groupInfoRef = useRef<HTMLInputElement>(null);
-  const { connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
+  const { connectedUser, setConnectedUser, createUserIfNecessary, pushUser } = useContext(ChatUserContext);
   const { videoObject } = useContext(VideoCallContext);
 
   const listInnerRef = useRef<HTMLDivElement>(null);
@@ -174,37 +174,25 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     if (wasLastListPresentProp && !lastThreadHashFetchedProp) return;
     setChatsLoading(true);
     // scrollToNext();
-    const { chatsResponse, lastThreadHash, lastListPresent } = await getChats({
+    const { chatsResponse, lastListPresent } = await getChats({
       account,
-      pgpPrivateKey: connectedUser.privateKey,
+     pushUser,
       chatId: currentChat?.did || currentChat?.groupInformation?.chatId,
-      threadHash: lastThreadHashFetchedProp!,
       limit: chatsFetchedLimit,
     });
 
+    console.log("my chat" ,chatsResponse);
     // remove this custom decryption after SDK issue is resolved in future
-    const promiseArrToDecryptMsg = [];
-    chatsResponse.forEach((chat) =>
-      promiseArrToDecryptMsg.push(
-        w2wHelper.decryptMessages({
-          savedMsg: chat,
-          connectedUser,
-          account,
-          currentChat,
-          inbox,
-        })
-      )
-    );
-    const decryptedMsgArr = await Promise.all(promiseArrToDecryptMsg);
-    decryptedMsgArr.sort((a, b) => {
-      return a.timestamp! > b.timestamp! ? 1 : -1;
-    });
+    
+    
 
-    setMessages([...decryptedMsgArr, ...messagesProp]);
-    setLastThreadHashFetched(lastThreadHash);
+    setMessages([...chatsResponse]);
+    // setLastThreadHashFetched(lastThreadHash);
     setWasLastListPresent(lastListPresent);
     setChatsLoading(false);
   };
+
+
 
   useEffect(() => {
     setWasLastListPresent(false);
@@ -241,7 +229,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   };
 
   const fetchInboxApi = async (): Promise<Feeds> => {
-    const inboxes: Feeds[] = await fetchInbox({connectedUser});
+    const inboxes: Feeds[] = await fetchInbox({connectedUser, pushUser});
     setInbox(inboxes);
     return inboxes?.find((x) => x.wallets.split(':')[1]?.toLowerCase() === currentChat.wallets.split(':')[1]?.toLowerCase());
   };
@@ -261,14 +249,11 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
         createdUser = await createUserIfNecessary();
       }
       const signer = await provider.getSigner();
+      let receiverAddress= isGroup ? currentChat.groupInformation?.chatId : currentChat?.wallets
 
-      const sendResponse = await PushAPI.chat.send({
-        messageContent: message,
-        messageType: messageType,
-        receiverAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat?.wallets,
-        signer: signer!,
-        pgpPrivateKey: connectedUser?.privateKey || createdUser?.privateKey,
-        env: appConfig.appEnv,
+      const sendResponse = await pushUser.chat.send(receiverAddress,{
+        content:message,
+        type: messageType,
       });
 
       if (typeof sendResponse !== 'string') {
@@ -313,11 +298,12 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     setLoading(true);
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(':')[1];
-    let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: true, pgpPrivateKey:connectedUser.privateKey });
+    let intents = await pushUser.chat.list('REQUESTS')
     setReceivedIntents(intents);
     setLoading(false);
   }
 
+  console.log("requestsss" , receivedIntents);
   async function ApproveIntent(status: string): Promise<void> {
     setMessageBeingSent(true);
     let updatedIntent: any;
@@ -326,14 +312,9 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       if (!connectedUser.publicKey) {
         createdUser = await createUserIfNecessary();
       }
-      const signer = await provider.getSigner();
-      updatedIntent = await PushAPI.chat.approve({
-        status: 'Approved',
-        signer: signer!,
-        senderAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat.intentSentBy,
-        pgpPrivateKey: connectedUser?.privateKey || createdUser?.privateKey,
-        env: appConfig.appEnv,
-      });
+      let senderAddress= isGroup ? currentChat.groupInformation?.chatId : currentChat.intentSentBy,
+
+      updatedIntent = await pushUser.chat.accept(senderAddress);
 
       let activeChat = currentChat;
       activeChat.intent = updatedIntent.data;
@@ -388,17 +369,14 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
         !currentChat.intent?.toLowerCase().includes(currentChat.wallets.split(':')[1]?.toLowerCase())
       ) {
         let createdUser;
-        if (!connectedUser.publicKey) {
+        if (!connectedUser.privateKey) {
           createdUser = await createUserIfNecessary();
         }
-        const signer = await provider.getSigner();
-        const sendResponse = await PushAPI.chat.send({
-          messageContent: message,
-          messageType: messageType,
-          receiverAddress: currentChat?.wallets.split(':')[1],
-          signer: signer!,
-          pgpPrivateKey: connectedUser.privateKey || createdUser?.privateKey,
-          env: appConfig.appEnv,
+        let receiverAddress= currentChat?.wallets.split(':')[1]
+
+        const sendResponse = await pushUser.chat.send(receiverAddress,{
+          content: message,
+          type: messageType,
         });
 
         if (typeof sendResponse !== 'string') {
@@ -406,6 +384,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
            sendResponse.messageContent = message;
            setNewMessage('');
            let result = await fetchInboxApi();
+           console.log("newww", result)
            result.msg.messageContent = message;
            setChat(result);
            chatBoxToast.showMessageToast({
@@ -457,7 +436,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       return produce(oldData, (draft) => {
         draft.local.address = account;
         draft.incoming[0].address = caip10ToWallet(currentChat.wallets.toString());
-        draft.incoming[0].status = PushAPI.VideoCallStatus.INITIALIZED;
+        draft.incoming[0].status = VideoCallStatus.INITIALIZED;
         draft.meta.chatId = currentChat.chatId;
       });
     });
@@ -711,6 +690,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
                       messageContent: getIntentMessage(currentChat, isGroup),
                       messageType: 'Intent',
                     }}
+                    pushUser={pushUser}
                     caip10={walletToCAIP10({ account: account! })}
                     messageBeingSent={messageBeingSent}
                     ApproveIntent={() => ApproveIntent('Approved')}

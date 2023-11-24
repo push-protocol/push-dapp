@@ -100,8 +100,11 @@ function Chat({ chatid }) {
       getUpdatedGroup(socketData.groupInformationSinceLastConnection);
     }
   },[socketData.groupInformationSinceLastConnection])
+  console.log("current chat", currentChat);
+ 
 
   const getUpdatedChats = async(chat) => {
+    console.log("somechat", chat);
     if((currentChat.did?.toLowerCase() === chat.fromCAIP10?.toLowerCase()) || currentChat?.groupInformation?.chatId === chat.toCAIP10){
     const decryptedChat:MessageIPFS = await w2wHelper.decryptMessages({
       savedMsg: chat,
@@ -138,6 +141,7 @@ function Chat({ chatid }) {
         recipient: caip10ToWallet(message?.fromCAIP10),
         env: appConfig.appEnv
       });
+      console.log("",fetchedChat);
       if(checkIfIntent({chat:fetchedChat, account})){
         setReceivedIntents(prev=> [fetchedChat, ...prev]);
         
@@ -208,6 +212,8 @@ const getUpdatedGroup = async(groupInfo) => {
       setInbox(prev=>[fetchedChat,...prev])
     }  
   }
+
+  console.log("fettt", receivedIntents);
     // let isInInbox = false;
     // const updatedInbox = inbox.map(feed => {
     //   if(feed?.groupInformation?.chatId === groupInfo.chatId){

@@ -1,5 +1,6 @@
-import * as PushAPI from "@pushprotocol/restapi";
+// import * as PushAPI from "@pushprotocol/restapi";
 import { ProgressHookType } from "@pushprotocol/restapi";
+import { useEffect } from "react";
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { appConfig } from 'config';
 import { ethers } from 'ethers';
@@ -7,13 +8,41 @@ import * as w2wHelper from 'helpers/w2w';
 import { useAccount } from "hooks";
 import React, { createContext, useState } from 'react';
 import { BlockedLoadingI, ConnectedUser, User } from 'types/chat';
-
+import { PushAPI } from "@pushprotocol/restapi";
+import { ENV } from "@pushprotocol/restapi/src/lib/constants";
 export const ChatUserContext = createContext({})
 
 //this context is global and it is called in APP.tsx
 const ChatUserContextProvider = (props) => {
   const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
   const { account, provider } = useAccount();
+  const [pushUser, setPushUser] = useState<PushAPI | null>(null);
+  const [signerValue, setSignerValue] = useState<any>()
+
+
+  useEffect(() => {
+    (async () => {
+      if(account) {
+       
+        const signer = await provider.getSigner();
+        setSignerValue(signer);
+    }
+    })();
+  },[account])
+
+ useEffect(() => {
+  (
+    async() =>{
+      if(Object.keys(signerValue || {}).length && account){
+    const pushUser = await PushAPI.initialize(signerValue!, {env: ENV.PROD , account});
+          setPushUser(pushUser)
+  }
+    }
+  )()
+
+ },[signerValue, account])
+
+console.log("the user" ,pushUser);
 
   //this blocked loading is a modal which shows during the PGP keys generation time
   const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
@@ -46,6 +75,9 @@ const ChatUserContextProvider = (props) => {
       progress: 0
     };
 
+    console.log(onboardingProgress)
+
+    console.log("decrypting..." ,progressHook);
     if (progressHook) {
       switch (progressHook.progressId) {
         case "PUSH-CREATE-01":
@@ -127,10 +159,9 @@ const ChatUserContextProvider = (props) => {
   const getUser = async () => {
     console.log("getUser");
     const caip10: string = w2wHelper.walletToCAIP10({ account });
-    const user: User = await PushAPI.user.get({ 
-      account: caip10,
-      env: appConfig.appEnv
-    });
+    
+    const user: User = await pushUser?.info()
+    console.log(user);
     let connectedUser: ConnectedUser;
 
     // TODO: Change this to do verification on ceramic to validate if did is valid
@@ -144,16 +175,16 @@ const ChatUserContextProvider = (props) => {
         throw Error('Invalid user');
       }
       const _signer = await provider.getSigner();
-      const privateKeyArmored = await PushAPI.chat.decryptPGPKey({
-        encryptedPGPPrivateKey: user.encryptedPrivateKey,
-        signer: _signer,
-        env: appConfig.appEnv,
-        toUpgrade: true,
-        progressHook: onboardingProgressReformatter
-      });
+      // const privateKeyArmored = await pushUser.chat.decryptPGPKey({
+      //   encryptedPGPPrivateKey: user.encryptedPrivateKey,
+      //   signer: _signer,
+      //   env: appConfig.appEnv,
+      //   toUpgrade: true,
+      //   progressHook: onboardingProgressReformatter
+      // });
 
-      setPgpPvtKey(privateKeyArmored);
-      connectedUser = { ...user, privateKey: privateKeyArmored };
+      // setPgpPvtKey(privateKeyArmored);
+      connectedUser = { ...user };
     } else {
       connectedUser = {
         // We only need to provide this information when it's a new user
@@ -171,37 +202,40 @@ const ChatUserContextProvider = (props) => {
         sigType: '',
         signature: '',
         linkedListHash: '',
-        privateKey: '',
+        // privateKey: '',
       };
     }
 
     setConnectedUser(connectedUser);
   };
 
+ (async() => {
+  console.log("inffffooo" , await pushUser?.info())
+ })()
+
+
   const createUserIfNecessary = async (): Promise<ConnectedUser> => {
     try {
       const signer = await provider.getSigner();
-      await PushAPI.user.create({ 
-        account: account,
-        env: appConfig.appEnv,
-        signer: signer,
+      const user = await PushAPI.initialize(signer, {
+        env: ENV.PROD, 
+        account:account,
+        autoUpgrade: true,
         progressHook: onboardingProgressReformatter
-      });
-      const createdUser = await PushAPI.user.get({
-        account: account,
-        env: appConfig.appEnv
-      });
-      const pvtkey = await PushAPI.chat.decryptPGPKey({
-        encryptedPGPPrivateKey: createdUser.encryptedPrivateKey,
-        signer: signer,
-        env: appConfig.appEnv,
-        toUpgrade: true,
-        progressHook: onboardingProgressReformatter
-      });
+      })
+      const createdUser = await user.info();
 
-      const createdConnectedUser = { ...createdUser, privateKey: pvtkey };
+      // const pvtkey = await PushAPI.chat.decryptPGPKey({
+      //   encryptedPGPPrivateKey: createdUser.encryptedPrivateKey,
+      //   signer: signer,
+      //   env: appConfig.appEnv,
+        // autoUpgrade: true,
+        // progressHook: onboardingProgressReformatter
+      // });
+
+      const createdConnectedUser = { ...createdUser };
       setConnectedUser(createdConnectedUser);
-      setPgpPvtKey(pvtkey);
+      // setPgpPvtKey(pvtkey);
 
       return createdConnectedUser ;
     } catch (e) {
@@ -212,6 +246,7 @@ const ChatUserContextProvider = (props) => {
   return (
     <ChatUserContext.Provider value={{ 
       getUser, 
+      pushUser,
       connectedUser, 
       setConnectedUser, 
       blockedLoading,

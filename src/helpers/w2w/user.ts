@@ -1,10 +1,10 @@
-import * as PushAPI from '@pushprotocol/restapi';
+import {PushAPI} from '@pushprotocol/restapi';
 import { profilePicture } from 'config/W2WConfig';
 import * as w2wHelper from 'helpers/w2w/';
+
 import { ConnectedUser, Feeds, IGroup, MessageIPFS, User } from 'types/chat';
 import { walletToCAIP10 } from '.';
 import { appConfig } from '../../config';
-import { decrypt, message } from 'openpgp';
 
 export function checkConnectedUser(connectedUser: ConnectedUser): boolean {
   if (
@@ -100,26 +100,25 @@ export const getDefaultFeed = async ({
   userData,
   inbox,
   intents,
+  pushUser
 }: {
   walletAddress?: string;
   userData?: User;
   inbox: Feeds[];
   intents: Feeds[];
+  pushUser?: any
 }): Promise<Feeds> => {
   
   const user =
     userData ??
-    (await PushAPI.user.get({
-      account: walletAddress!,
-      env: appConfig.appEnv,
-    }));
+    (await pushUser.chat.list("CHATS"))
     let feed:Feeds;
-    const inboxUser = inbox.filter((inb) => inb.did?.toLowerCase() === user.did?.toLowerCase());
+    const inboxUser = inbox?.filter((inb) => inb.did?.toLowerCase() === user.did?.toLowerCase());
 
-    const intentUser = intents.filter((userExist) => userExist.did?.toLowerCase() === user.did?.toLowerCase());
-    if (inboxUser.length) {
+    const intentUser = intents?.filter((userExist) => userExist.did?.toLowerCase() === user.did?.toLowerCase());
+    if (inboxUser?.length) {
       feed = inboxUser[0];
-    } else if(intentUser.length){
+    } else if(intentUser?.length){
       feed = intentUser[0];
     }
     else {
@@ -139,12 +138,12 @@ export const getDefaultGroupFeed = async ({
 }): Promise<{feed:Feeds,isNew:boolean}> => {
     let isNew:boolean = false;
     let feed:Feeds;
-    const inboxGroup = inbox.filter((inb) => inb?.groupInformation?.chatId === groupData.chatId);
+    const inboxGroup = inbox?.filter((inb) => inb?.groupInformation?.chatId === groupData.chatId);
 
-    const intentGroup = intents.filter((int) =>int?.groupInformation?.chatId === groupData.chatId);
-    if (inboxGroup.length) {
+    const intentGroup = intents?.filter((int) =>int?.groupInformation?.chatId === groupData.chatId);
+    if (inboxGroup?.length) {
       feed = inboxGroup[0];
-    } else if(intentGroup.length){
+    } else if(intentGroup?.length){
       feed = intentGroup[0];
     }
     else {
@@ -188,13 +187,15 @@ export const getDefaultFeedObject = ({user,groupInformation}:{user?:User,groupIn
 
 
 
-export const fetchInbox = async ({connectedUser, page, limit}:{connectedUser:any, page?:number, limit?:number}):Promise<Feeds[]>=> {
-  let inboxes:Feeds[] = await PushAPI.chat.chats({ account: connectedUser.wallets!, env: appConfig.appEnv, toDecrypt: true, pgpPrivateKey: connectedUser.privateKey, page, limit});
+export const fetchInbox = async ({connectedUser, pushUser, page, limit}:{connectedUser?:any, pushUser: PushAPI, page?:number, limit?:number}):Promise<Feeds[]>=> {
+  let inboxes:Feeds[] = await pushUser?.chat?.list("CHATS", {page, limit});
+  console.log("my inboaxes", inboxes)
   return inboxes
 };
 
-export const fetchIntent = async ({connectedUser, page, limit}:{connectedUser:any, page?:number, limit?:number}): Promise<Feeds[]> => {
-  let intents = await PushAPI.chat.requests({account:connectedUser.wallets.split(':')[1], env:appConfig.appEnv, toDecrypt: true, pgpPrivateKey: connectedUser.privateKey, page, limit});
+export const fetchIntent = async ({connectedUser, pushUser, page, limit}:{connectedUser:any, pushUser: PushAPI , page?:number, limit?:number}): Promise<Feeds[]> => {
+  let intents = await pushUser?.chat?.list("REQUESTS", {page, limit});
+  console.log("my intens", intents)
   return intents;
 };
 
@@ -203,8 +204,9 @@ export const getUpdatedChatAndIntent= async ({chatList,message,connectedUser,acc
   let decryptedChat:MessageIPFS;
 
   //change to common decryption for getUpdatedInbox and getUpdatedChats using filter
-  const updatedFeed = chatList.filter(feed=>(feed.did?.toLowerCase() === message.fromCAIP10?.toLowerCase()) || (feed?.groupInformation?.chatId === message.toCAIP10));
-  if(updatedFeed.length && checkInbox){
+  const updatedFeed = chatList?.filter(feed=>(feed.did?.toLowerCase() === message.fromCAIP10?.toLowerCase()) || (feed?.groupInformation?.chatId === message.toCAIP10));
+  console.log("seeee",updatedFeed)
+  if(updatedFeed?.length && checkInbox){
     decryptedChat = await w2wHelper.decryptMessages({
       savedMsg: message,
       connectedUser,

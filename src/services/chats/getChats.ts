@@ -1,11 +1,12 @@
 import { MessageIPFSWithCID } from "types/chat";
-import * as PushAPI from "@pushprotocol/restapi";
+import {PushAPI} from "@pushprotocol/restapi";
 import { appConfig } from "config";
 
 // Types
 type GetChatsPropsType = {
-  account: string;
-  pgpPrivateKey: string;
+  account?: string;
+  pgpPrivateKey?: string;
+  pushUser: PushAPI;
   chatId: string;
   limit: number;
   threadHash?: string;
@@ -13,7 +14,7 @@ type GetChatsPropsType = {
 
 type GetChatsResponseType = {
   chatsResponse: MessageIPFSWithCID[];
-  lastThreadHash: string | null;
+  lastThreadHash?: string | null;
   lastListPresent: boolean;
 };
 
@@ -24,32 +25,20 @@ export const getChats = async (
     account,
     pgpPrivateKey,
     chatId,
+    pushUser,
     threadHash = null,
     limit = 15,
   } = options || {};
-  let threadhash: any = threadHash;
-  if (!threadhash) {
-    threadhash = await PushAPI.chat.conversationHash({
-      account: account,
-      conversationId: chatId,
-      env: appConfig.appEnv,
-    });
-    threadhash = threadhash.threadHash;
-  }
+  
 
-  if (threadhash) {
-    const chats = await PushAPI.chat.history({
-      account: account,
-      pgpPrivateKey: pgpPrivateKey,
-      threadhash: threadhash,
-      toDecrypt:false,
-      limit: limit,
-      env: appConfig.appEnv,
-    });
+  const chats = await pushUser.chat.history(chatId,{ 
+    limit: limit,
+  });
+
+  console.log("from the here", chats);
 
     const lastThreadHash = chats[chats.length - 1]?.link;
     const lastListPresent = chats.length > 0 ? true : false;
     return { chatsResponse: chats, lastThreadHash, lastListPresent };
-  }
-  return { chatsResponse: [], lastThreadHash: null, lastListPresent: false };
+  
 };

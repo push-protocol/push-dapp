@@ -7,7 +7,7 @@ import { TwitterTweetEmbed } from 'react-twitter-embed';
 import styled from 'styled-components';
 
 // Internal Components
-import * as PushAPI from '@pushprotocol/restapi';
+import {PushAPI} from '@pushprotocol/restapi';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
@@ -35,9 +35,10 @@ interface ChatProps {
   messageBeingSent: boolean;
   ApproveIntent?: Function;
   isGroup?: boolean;
+  pushUser: PushAPI;
 }
 
-export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, isGroup }: ChatProps) {
+export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, isGroup, pushUser }: ChatProps) {
   const { currentChat }: ContextType = useContext<ContextType>(Context);
   const { web3NameList }: AppContextType = useContext(AppContext);
   const [showImageModal, setShowImageModal] = useState<boolean>(false);
@@ -63,8 +64,8 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
       setProfilePicture(member.image);
     } else {
       // console.log(msg)
-      let user = await PushAPI.user.get({ account: msg.fromCAIP10, env: appConfig.appEnv });
-      setProfilePicture(user.profilePicture);
+      let user = await pushUser.info();
+      setProfilePicture(user.profile.picture);
     }
   };
 

@@ -5,7 +5,7 @@ import React, { useContext } from 'react';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 import { useClickAway } from 'react-use';
 import { ethers } from 'ethers';
-import * as PushAPI from '@pushprotocol/restapi';
+import { PushAPI} from '@pushprotocol/restapi';
 
 // Internal Components
 import { ModalInnerComponentType } from 'hooks/useModalBlur';
@@ -37,7 +37,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const [groupTypeObject, setGroupTypeObject] = React.useState<any>();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [memberList, setMemberList] = React.useState<any>([]);
-  const { connectedUser, setConnectedUser ,  createUserIfNecessary} = useContext(ChatUserContext);
+  const { connectedUser, setConnectedUser , pushUser,  createUserIfNecessary} = useContext(ChatUserContext);
   const {provider } = useAccount();
   const themes = useTheme();
   const createGroupToast = useToast();
@@ -65,19 +65,17 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
           createdUser = await createUserIfNecessary();
         }
         const signer = await provider.getSigner();
-        const createGroupRes = await PushAPI.chat.createGroup({
-          groupName: groupNameData,
-          groupDescription: groupDescriptionData,
+        const createGroupRes = await pushUser.chat.group.create(groupNameData,{
+
+          description: groupDescriptionData,
           members: memberWalletList,
-          groupImage: groupImageData ?? profilePicture,
+          image: groupImageData ?? profilePicture,
           admins: adminWalletList,
-          isPublic: groupTypeObject.groupTypeData == 'public' ? true : false,
+          private: groupTypeObject.groupTypeData == 'public' ? false : true,
           signer: signer!,
-          pgpPrivateKey: connectedUser?.privateKey || createdUser?.privateKey,
-          env: appConfig.appEnv,
         });
         if (typeof createGroupRes !== 'string') {
-          const inboxes: Feeds[] = await fetchInbox({connectedUser});
+          const inboxes: Feeds[] = await fetchInbox({connectedUser, pushUser});
           setInbox(inboxes);
           createGroupToast.showMessageToast({
             toastTitle: 'Success',

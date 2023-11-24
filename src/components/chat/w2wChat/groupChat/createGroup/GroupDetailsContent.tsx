@@ -5,7 +5,7 @@ import React from 'react';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 import * as PushAPI from '@pushprotocol/restapi';
 import { MdError } from 'react-icons/md';
-
+import {Moda}
 // Internal Components
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -19,7 +19,7 @@ import { device } from 'config/Globals';
 import GroupModalHeader from './GroupModalHeader';
 import AutoImageClipper from 'primaries/AutoImageClipper';
 import useToast from 'hooks/useToast';
-
+import { CreateGroupModal } from '@pushprotocol/uiweb';
 export const GroupDetailsContent = ({
   groupNameData,
   groupDescriptionData,
@@ -78,31 +78,7 @@ export const GroupDetailsContent = ({
   };
 
   const handleValidation = async () => {
-    try {
-      const getGroupResponse = await PushAPI.chat.getGroupByName({ groupName: groupNameData, env: appConfig.appEnv });
-      if (typeof getGroupResponse !== 'string') {
-        setErrorInfo((x) => ({
-          ...x,
-          name: 'Group Name should be unique! Please retry!',
-        }));
-
-        return false;
-      }
-    } catch (e) { 
-      groupDetailToast.showMessageToast({
-        toastTitle: 'Error',
-        toastMessage: 'Error in finding group name',
-        toastType: 'ERROR',
-        getToastIcon: (size) => (
-          <MdError
-            size={size}
-            color="red"
-          />
-        ),
-      });
-
-    }
-
+   
     if (!isLengthValid(groupNameData, 50)) {
       setErrorInfo((x) => ({
         ...x,

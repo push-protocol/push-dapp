@@ -1,3 +1,4 @@
+import { IMessageIPFS } from "@pushprotocol/restapi"
 export interface MessageIPFS {
     fromCAIP10: string
     toCAIP10: string
@@ -35,7 +36,7 @@ export interface User {
 }
   
 export interface ConnectedUser extends User {
-    privateKey: string | null;
+    privateKey?: string | null;
 }
 export interface Member {
     wallet: string;
@@ -77,7 +78,7 @@ export interface ChatMetaI {
 
 export interface Feeds {
     chatId?: string;
-    msg: MessageIPFS;
+    msg: IMessageIPFS;
     did: string;
     wallets: string;
     profilePicture: string | null;

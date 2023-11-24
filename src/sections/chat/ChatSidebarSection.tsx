@@ -6,9 +6,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AiOutlineQrcode } from 'react-icons/ai';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
-
+import { CreateGroupModal } from '@pushprotocol/uiweb';
 // Internal Compoonents
-import * as PushAPI from "@pushprotocol/restapi";
 import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
 import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
 import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
@@ -69,13 +68,14 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
 
   const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-22T00:00:00.000"), 90);
 
-  const { connectedUser, displayQR, setDisplayQR } = useContext(ChatUserContext);
+  const { connectedUser, displayQR, setDisplayQR, pushUser } = useContext(ChatUserContext);
 
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser?.profilePicture);
 
   const [loadingRequests, setLoadingRequests] = useState(true);
   const [showQR, setShowQR] = useState<boolean>(false);
+  const [showGroupModal, setShowGroupModal]  = useState<boolean>(false);
   const containerRef = React.useRef(null);
 
   const updateProfile = (image: string) => {
@@ -97,7 +97,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   useClickAway(containerRef, () => closeQRDropdown())
 
   const fetchIntentApi = async (): Promise<Feeds[]> => {
-    const intents = await fetchIntent({connectedUser});
+    const intents = await fetchIntent({connectedUser, pushUser});
     if (JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
       setReceivedIntents(intents);
       setLoadingRequests(false);
@@ -162,7 +162,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
                 >
                   Requests
                 </SpanV2>
-                {!loadingRequests && receivedIntents.length > 0 && (
+                {!loadingRequests && receivedIntents?.length > 0 && (
                   <SpanV2
                     background={GLOBALS.COLORS.PRIMARY_PINK}
                     color={GLOBALS.COLORS.WHITE}
@@ -171,7 +171,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
                     fontSize="12px"
                     borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
                   >
-                    {receivedIntents.length}
+                    {receivedIntents?.length}
                   </SpanV2>
                 )}
               </ItemHV2>
@@ -188,13 +188,13 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
         onClick={closeQRDropdown}
       >
         {activeTab == 0 && <SearchBar />}
-        {activeTab == 0 && filteredUserData.length == 0 && (
+        {activeTab == 0 && filteredUserData?.length == 0 && (
           <CreateGroupContainer
             // justifyContent="flex-start"
             flex="none"
             padding="20px 10px 24px 10px"
             borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
-            onClick={() => showCreateGroupModal()}
+            onClick={()=>setShowGroupModal(true)}
             background="transparent"
             hover={theme.chat.snapFocusBg}
             hoverBackground="transparent"
@@ -219,8 +219,11 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
             {isNewTagVisible && <NewTag />}
           </CreateGroupContainer>
         )}
+        {
+          showGroupModal && <CreateGroupModal onClose={()=>setShowGroupModal(false)}/>
+        }
 
-        {activeTab == 0 && filteredUserData.length == 0 && (
+        {activeTab == 0 && filteredUserData?.length == 0 && (
           <MessageFeed
             hasUserBeenSearched={false}
             filteredUserData={[]}

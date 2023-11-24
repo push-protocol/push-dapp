@@ -1,18 +1,30 @@
 import { appConfig } from 'config';
 import { walletToCAIP10 } from '.';
 import { ConnectedUser, Feeds, Member, User } from '../../types/chat';
-import * as PushAPI from "@pushprotocol/restapi";
+import {PushAPI }from "@pushprotocol/restapi";
 import { GroupDTO } from '@pushprotocol/restapi';
 import { findObject } from 'helpers/UtilityHelper';
 import * as w2wChatHelper from 'helpers/w2w';
+import { useContext } from 'react';
 
 
 type UpdateGroupType = {
+  pushUser:PushAPI,
   currentChat:Feeds,
   connectedUser:ConnectedUser,
   adminList:Array<string>,
   memeberList:Array<string>,
 }
+
+type updateGroupMembers = {
+  pushUser:PushAPI,
+  chatId: string,
+  currentChat:Feeds,
+  role:"ADMIN" | "MEMBER",
+  adminList?:Array<string>,
+  memeberList?:Array<string>,
+}
+
 
 export const checkIfGroup = (feed: Feeds): boolean => {
   if (feed?.hasOwnProperty('groupInformation') && feed?.groupInformation ) return true;
@@ -109,22 +121,40 @@ export const getUpdatedMemberList = (feed:Feeds,walletAddress:string): Array<str
   return convertToWalletAddressList([...members,...feed?.groupInformation?.pendingMembers]);
 }
 
+export const updateGroupMembers = async(options: updateGroupMembers) => {
+  const {chatId, memeberList, role, pushUser, currentChat, adminList} =options;
 
+  // userAlice.chat.group.update(chatid, {options?})
+const updatedGroupMember = await pushUser.chat.group.add(chatId, {
+  role: role,
+  accounts: memeberList || adminList
+});
+
+let updatedCurrentChat = null;
+  console.log(currentChat);
+  if(typeof updatedGroupMember !== 'string')
+  {
+    updatedCurrentChat = currentChat;
+    updatedCurrentChat.groupInformation = updatedGroupMember;
+  }
+  return {updatedGroupMember,updatedCurrentChat};
+}
 
 export const updateGroup = async(options:UpdateGroupType) => {
-  const { currentChat, connectedUser,adminList,memeberList } = options;
-  const updateResponse = await PushAPI.chat.updateGroup({
-    chatId: currentChat?.groupInformation?.chatId,
-    groupName: currentChat?.groupInformation?.groupName,
-    groupDescription: currentChat?.groupInformation?.groupDescription,
-    groupImage: currentChat?.groupInformation?.groupImage,
+  const { currentChat, connectedUser,adminList,memeberList, pushUser } = options;
+  let chatId= currentChat?.groupInformation?.chatId
+  const updateResponse = await pushUser.chat.group.update(chatId,{
+    
+    name: currentChat?.groupInformation?.groupName,
+    description: currentChat?.groupInformation?.groupDescription,
+    image: currentChat?.groupInformation?.groupImage,
     members: memeberList,
     admins: adminList,
     account: connectedUser?.wallets,
-    pgpPrivateKey: connectedUser?.privateKey,
-    env: appConfig.appEnv,
+   
   });
   let updatedCurrentChat = null;
+  console.log(currentChat);
   if(typeof updateResponse !== 'string')
   {
     updatedCurrentChat = currentChat;

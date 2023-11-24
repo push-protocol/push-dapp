@@ -41,7 +41,7 @@ import { copyToClipboard, shortenText } from 'helpers/UtilityHelper';
 
 export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const { currentChat, setChat, inbox, receivedIntents }: AppContext = useContext<AppContext>(Context);
-  const { connectedUser } = useContext(ChatUserContext);
+  const { connectedUser, pushUser } = useContext(ChatUserContext);
   const [copyText, setCopyText] = useState<string>('');
   const { account } = useAccount();
   const groupInfoToast = useToast();
@@ -81,6 +81,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
     const newAdminList = getUpdatedAdminList(currentChat?.groupInformation, selectedMemeberAddress, false);
     try {
       const { updateResponse, updatedCurrentChat } = await updateGroup({
+        pushUser,
         currentChat,
         connectedUser,
         adminList: newAdminList,
@@ -229,8 +230,10 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
     try {
       setIsLoading(true);
       const { updateResponse, updatedCurrentChat } = await updateGroup({
+
         currentChat,
         connectedUser,
+        pushUser,
         adminList,
         memeberList: members,
       });

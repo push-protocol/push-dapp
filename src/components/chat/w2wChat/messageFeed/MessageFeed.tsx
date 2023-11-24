@@ -5,7 +5,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { MdError } from 'react-icons/md';
 import styled, { useTheme } from 'styled-components';
 import { Waypoint } from 'react-waypoint';
-
+import { ConnectedUser } from 'types/chat';
 // Internal Components
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -34,7 +34,7 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
 
   const { setChat, setInbox, currentChat, receivedIntents, setActiveTab, activeTab, inbox, setHasUserBeenSearched, filteredUserData, setFilteredUserData }: AppContext = useContext<AppContext>(Context);
 
-  const { connectedUser } = useContext(ChatUserContext);
+  const { connectedUser, pushUser } = useContext(ChatUserContext);
 
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
@@ -48,24 +48,23 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const messageFeedToast = useToast();
 
   const onFeedClick = (feed:Feeds,i:number):void => {
-    if((receivedIntents?.filter((userExist) => userExist.did && props?.filteredUserData[0]?.did && userExist.did?.toLowerCase() === props?.filteredUserData[0]?.did?.toLowerCase()))
-.length)
+    if((receivedIntents?.filter((userExist) => userExist.did && props?.filteredUserData[0]?.did && userExist.did?.toLowerCase() === props?.filteredUserData[0]?.did?.toLowerCase()))?.length)
     {
       setActiveTab(1);
     }
     setChat(feed);
     setSelectedChatSnap(i);
     setHasUserBeenSearched(false);
-    filteredUserData.length>0 ? setFilteredUserData([]):null;
+    filteredUserData?.length>0 ? setFilteredUserData([]):null;
   }
   
   const fetchInboxApi = async ({limit}): Promise<Feeds[]> => {
     try {
-      const inboxes:Feeds[] = await fetchInbox({connectedUser, limit});
+      const inboxes:Feeds[] = await fetchInbox({connectedUser, pushUser, limit});
       if(inboxes?.length>10 && inboxes?.length===feeds?.length){
         setIsFetchingDone(true);
       }
-      else if(inboxes.length<10){
+      else if(inboxes?.length<10){
         setIsFetchingDone(true);
       }
       if (JSON.stringify(inbox) !== JSON.stringify(inboxes)){
@@ -83,6 +82,7 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
       setShowError(false);
       return inboxes;
     } catch (e) {
+      console.log("checkkk" ,e)
       if (!showError) {
         messageFeedToast.showMessageToast({
           toastTitle: 'Error',
@@ -128,8 +128,8 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
       updateInbox({chatLimit:limit});
     } else {
       const searchFn = async (): Promise<void> => {
-        if (props.filteredUserData.length) {
-          if (Object(props.filteredUserData[0]).wallets?.toLowerCase() === walletToCAIP10({ account })?.toLowerCase()) {
+        if (props.filteredUserData?.length) {
+          if (Object(props.filteredUserData[0])?.wallets?.toLowerCase() === walletToCAIP10({ account })?.toLowerCase()) {
             messageFeedToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: "You can't send intent to yourself",
@@ -151,7 +151,7 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
               ({feed,isNew} = await getDefaultGroupFeed({groupData:searchedData as IGroup,inbox,intents:receivedIntents}));
             }
             else {
-              feed = await getDefaultFeed({userData:searchedData as User,inbox,intents:receivedIntents});
+              feed = await getDefaultFeed({userData:searchedData as User, pushUser,  inbox,intents:receivedIntents});
             }
             if(isNew && !feed?.groupInformation?.isPublic)
             {

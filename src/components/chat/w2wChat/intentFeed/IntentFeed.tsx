@@ -27,7 +27,7 @@ const IntentFeed = ({isLoading}): JSX.Element => {
     receivedIntents,
     setReceivedIntents
   }: AppContext = useContext<AppContext>(Context);
-  const { connectedUser} = useContext(ChatUserContext);
+  const { connectedUser, pushUser} = useContext(ChatUserContext);
   const [selectedIntentSnap, setSelectedIntentSnap] = useState<number>();
   const { chainId, account } = useAccount();
   const [limit, setLimit] = useState<number>(10);
@@ -38,7 +38,7 @@ const IntentFeed = ({isLoading}): JSX.Element => {
   const updateIntents=async({chatLimit}:{chatLimit?:number})=>{
     try{
     setIntentLoading(true)
-    const intents=await fetchIntent({connectedUser, limit})
+    const intents=await fetchIntent({connectedUser,pushUser, limit:chatLimit, page:1})
     if(intents?.length>10 && receivedIntents?.length === intents?.length){
       setIsFetchingDone(true);
     }
@@ -64,7 +64,8 @@ const IntentFeed = ({isLoading}): JSX.Element => {
   const showWayPoint = (index: any) => {
     return Number(index) === receivedIntents?.length - 1 && !intentLoading && !bgUpdateLoading;
   };
-
+// console.log("in", receivedIntents);
+  // console
   return (
     <>
       <SpanV2
