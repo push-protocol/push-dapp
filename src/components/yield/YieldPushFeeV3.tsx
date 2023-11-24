@@ -131,12 +131,11 @@ const YieldPushFeeV3 = ({
 
         var signer = provider.getSigner(account);
         let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
-        
+
         const currentEpoch = PUSHPoolstats?.currentEpochNumber;
         const batchSize = 14;
-       
+
         const isAddressDelegate = await checkDelegateAddress(pushCoreV2);
-        setTxInProgressClaimRewards(false);
         if (!isAddressDelegate) {
             return;
         }
@@ -145,17 +144,17 @@ const YieldPushFeeV3 = ({
         _tillEpoch = await getLastClaimedBlock(pushCoreV2);
 
         openTransactionModal();
+        setTxInProgressClaimRewards(false);
 
         let totalTransactionNumber = 0;
+        //!TODO Verify Again. Edge Cases
         if (currentEpoch - _tillEpoch < batchSize) {
             totalTransactionNumber = Math.ceil((currentEpoch - _tillEpoch) / batchSize);
         } else {
-            totalTransactionNumber = Math.floor((currentEpoch - _tillEpoch) / batchSize);
+            totalTransactionNumber = Math.ceil((currentEpoch - _tillEpoch) / batchSize);
         }
 
         setTotalTransactionNo(totalTransactionNumber);
-
-        console.log("Total transaction number", totalTransactionNumber, _tillEpoch, currentEpoch);
 
         if (totalTransactionNumber == 0) {
             return;
@@ -217,6 +216,12 @@ const YieldPushFeeV3 = ({
 
             }).catch((error) => {
                 console.log("Error in claiming the reward", error);
+                pushFeeToast.showMessageToast({
+                    toastTitle: 'Error',
+                    toastMessage: `Transaction failed! ${error.reason}`,
+                    toastType: 'ERROR',
+                    getToastIcon: (size) => <MdError size={size} color="red" />,
+                });
                 setTransactionText('');
                 setTxInProgressWithdraw(false);
                 getUserDataPush();
@@ -247,8 +252,6 @@ const YieldPushFeeV3 = ({
 
         // Checking if the address is delegated or not
         const isAddressDelegate = await checkDelegateAddress(pushCoreV2);
-
-        console.log("Is Address delegate", isAddressDelegate);
         setTxInProgressClaimRewards(false);
         if (!isAddressDelegate) {
             return;
@@ -260,15 +263,24 @@ const YieldPushFeeV3 = ({
         let _tillEpoch = 0;
         _tillEpoch = await getLastClaimedBlock(pushCoreV2);
 
-        console.log("Last Claimed Block", _tillEpoch, currentEpoch);
+        // Case -: When the user has just claimed reward and then trying to unstake 
+        if (_tillEpoch >= currentEpoch - 1) {
+            setTxInProgressWithdraw(false);
+            setUnstakeErrorMessage("PUSH cannot be unstaked until current epoch is over.");
+            pushFeeToast.showMessageToast({
+                toastTitle: 'Unstaking Error',
+                toastMessage: `You cannot unstake until Current Epoch gets over.`,
+                toastType: 'ERROR',
+                getToastIcon: (size) => <MdError size={size} color="red" />,
+            });
+            return;
+        }
 
         // Modal for displaying transactions
         openTransactionModal();
-        
+
         const totalTransactionNumber = Math.ceil((currentEpoch - _tillEpoch) / batchSize);
         setTotalTransactionNo(totalTransactionNumber);
-
-        console.log("Totlal transaction Number", totalTransactionNumber, _tillEpoch)
 
         if (totalTransactionNumber > 1) {
             await RewardsPaginated(totalTransactionNumber - 1, _tillEpoch, pushCoreV2, batchSize);
@@ -316,7 +328,7 @@ const YieldPushFeeV3 = ({
             console.log("Error: ", err)
             const unstakeErrorMessage = err.reason.includes("PushCoreV2::unstake:");
             const harvestErrorMessage = err.reason.includes("PushCoreV2::harvestPaginated:");
-            if(unstakeErrorMessage || harvestErrorMessage){
+            if (unstakeErrorMessage || harvestErrorMessage) {
                 setUnstakeErrorMessage("PUSH cannot be unstaked until current epoch is over.");
             } else {
                 let errorMessage = err.reason.slice(err.reason.indexOf('::') + 1);
@@ -355,8 +367,6 @@ const YieldPushFeeV3 = ({
         showModal: openTransactionModal,
         ModalComponent: TransactionModal,
     } = useModalBlur();
-
-
 
     return (
         <Container>
@@ -608,7 +618,7 @@ const YieldPushFeeV3 = ({
                                     ButtonTitle={"Unstake PUSH"}
                                 />
                                 :
-                                formatTokens(userDataPush?.userStaked) === 0 || unstakeErrorMessage !== null ?
+                                formatTokens(userDataPush?.userStaked) == 0 || unstakeErrorMessage !== null ?
                                     <ErrorToolTip
                                         ToolTipTitle={unstakeErrorMessage ? unstakeErrorMessage : "Nothing to unstake, Stake First"}
                                         ButtonTitle={"Unstake PUSH"}
