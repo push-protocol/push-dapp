@@ -281,6 +281,7 @@ const themeLight = {
   nfsError: '#ED5858',
   nfsDisabled: '#DFDEE9',
   nfsDisabledText: '#AFB3BF',
+  nfsTickerPreviewBg: 'rgba(182, 188, 214, 0.12)',
 
   // Send Notification
   snfBorder: '#BAC4D6',
@@ -574,6 +575,7 @@ const themeDark = {
   nfsError: '#ED5858',
   nfsDisabled: '#AFB3BF',
   nfsDisabledText: '#787E99',
+  nfsTickerPreviewBg: 'rgba(182, 188, 214, 0.12)',
 
   // Send Notification
   snfBorder: '#4A4F67',

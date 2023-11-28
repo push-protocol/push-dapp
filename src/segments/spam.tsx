@@ -41,7 +41,9 @@ const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
 const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const dispatch = useDispatch();
-  const { userPushSDKInstance } = useContext(AppContext);
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });   
   const modalRef = React.useRef(null);
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
   const { account, chainId, provider } = useAccount();
@@ -90,6 +92,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     POLYGON_TEST_MUMBAI: 80001,
     ETH_TEST_KOVAN: 42,
     ETH_TEST_GOERLI: 5,
+    ETH_TEST_SEPOLIA: 11155111,
     POLYGON_MAINNET: 137,
     ETH_MAINNET: 1
   };

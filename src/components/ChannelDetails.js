@@ -45,8 +45,9 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
     aliasDetails: { isAliasVerified, aliasAddrFromContract },
   } = useSelector((state) => state.admin);
   const { channelSettings } = useSelector((state) => state.channels); 
-  const { userPushSDKInstance } = useContext(AppContext);
-
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  }); 
   const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector((state) => state.channels);
   const { processingState } = useSelector((state) => state.channelCreation);
   const [verifyingChannel, setVerifyingChannel] = React.useState([]);

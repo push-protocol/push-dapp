@@ -20,6 +20,10 @@ export const useAccount = () => {
     return wallet && wallet.accounts.length > 0 ? true : false
   }, [wallet]);
 
+  const account = useMemo(() => {
+    return wallet && wallet.accounts.length > 0 ? ethers.utils.getAddress(wallet.accounts[0].address) : undefined;
+  }, [wallet]);
+
   return {
     wallet,
     connecting,
@@ -29,7 +33,7 @@ export const useAccount = () => {
     setWalletModules,
     setPrimaryWallet,
     provider,
-    account: wallet && wallet.accounts.length > 0 ? ethers.utils.getAddress(wallet.accounts[0].address) : undefined,
+    account: account,
     chainId: connectedChain ? Number(connectedChain.id) : undefined,
     isActive,
     setChain,

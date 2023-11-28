@@ -20,12 +20,14 @@ import { useAccount } from 'hooks';
 import { device } from 'config/Globals';
 
 
-const MetamaskSnapConfigureModal = () => {
+const MetamaskSnapConfigureModal = ({
+  title
+}) => {
   const [walletAddresses, setWalletAddresses] = useState([]);
   const [addresses, setAddresses] = useState([]);
   const [searchedUser, setSearchedUser] = useState('');
   const [showRemove, setShowRemove] = useState();
-  const[toggleStatus, setToggleStatus] = useState(0);
+  const [toggleStatus, setToggleStatus] = useState(0);
   const theme = useTheme();
 
   const defaultSnapOrigin = 'npm:@pushprotocol/snap';
@@ -92,14 +94,14 @@ const MetamaskSnapConfigureModal = () => {
         request: { method: 'pushproto_togglepopup' },
       },
     });
-    if(toggleStatus<40){
+    if (toggleStatus < 40) {
       setToggleStatus(42);
-    }else{
+    } else {
       setToggleStatus(0);
     }
   };
 
-  const removeWalletAddresses = async (walletSelected:string) => {
+  const removeWalletAddresses = async (walletSelected: string) => {
     const signatureResult = await getSignature(2);
     if (signatureResult) {
       if (walletSelected) {
@@ -137,7 +139,7 @@ const MetamaskSnapConfigureModal = () => {
     setWalletSelected(null);
     setShowRemove(null);
   });
-  
+
   const [walletSelected, setWalletSelected] = useState();
 
   const handleWalletSelect = (address) => {
@@ -150,8 +152,9 @@ const MetamaskSnapConfigureModal = () => {
         fontSize="22px"
         fontWeight="500"
         color={theme.modalMessageColor}
+        alignSelf={title === 'Push Snap Settings' ? 'baseline' : 'center'}
       >
-        Settings
+        {title}   
       </SpanV2>
 
       <ItemVV2
@@ -176,7 +179,7 @@ const MetamaskSnapConfigureModal = () => {
         >
           <FilledButton
             onClick={addWalletAddresses}
-            // onClick={addAddresses}
+          // onClick={addAddresses}
           >Add</FilledButton>
           <EnptyButton onClick={getWalletAddresses}>Show All</EnptyButton>
         </ItemHV2>
@@ -188,12 +191,12 @@ const MetamaskSnapConfigureModal = () => {
         {addresses?.map((wallet) => (
           <AddressesSubContainer>
             <SpanV2 fontSize='15px' fontWeight='500' color={walletSelected === wallet ? '#D53A94' : theme.default.color}>{shortenText(wallet, 8)}</SpanV2>
-            <MoreOptions onClick={() => handleWalletSelect(wallet)} color={theme.default.color}/>
+            <MoreOptions onClick={() => handleWalletSelect(wallet)} color={theme.default.color} />
 
             {walletSelected === wallet && <RemoveDiv >
-                <MinusCircle />
-                <SpanV2 fontSize='16px' fontWeight='400' color='#657795' onClick={()=>removeWalletAddresses(walletSelected)}>Remove</SpanV2>
-              </RemoveDiv>
+              <MinusCircle />
+              <SpanV2 fontSize='16px' fontWeight='400' color='#657795' onClick={() => removeWalletAddresses(walletSelected)}>Remove</SpanV2>
+            </RemoveDiv>
             }
           </AddressesSubContainer>
         ))}
@@ -203,7 +206,7 @@ const MetamaskSnapConfigureModal = () => {
       <ItemVV2
         alignItems="flex-start"
         margin="24px 0 0 0"
-        
+
       >
         <ItemHV2 justifyContent='flex-start'>
           <PrimaryText>
@@ -220,7 +223,7 @@ const MetamaskSnapConfigureModal = () => {
         >
           <Switch
             onChange={handleChange}
-            checked={toggleStatus>40}
+            checked={toggleStatus > 40}
             className="react-switch"
             uncheckedIcon={false}
             checkedIcon={false}
@@ -233,7 +236,7 @@ const MetamaskSnapConfigureModal = () => {
             fontWeight="500"
             color={theme.modalMessageColor}
           >
-            {toggleStatus>40 ? 'On' : 'Off'}
+            {toggleStatus > 40 ? 'On' : 'Off'}
           </SpanV2>
         </ItemHV2>
       </ItemVV2>
@@ -304,7 +307,7 @@ const PrimaryText = styled.p`
   font-size: 18px;
   font-weight: 500;
   align-self: baseline;
-  color:${(props)=>props.theme.modalMessageColor};
+  color:${(props) => props.theme.modalMessageColor};
 `;
 
 const SecondaryText = styled.p`
@@ -313,7 +316,7 @@ const SecondaryText = styled.p`
   font-weight: 400;
   line-height: 24px;
   text-align: left;
-  color:${(props)=>props.theme.snapSecondaryText};
+  color:${(props) => props.theme.snapSecondaryText};
 `;
 
 const ToolTipText = styled.p`
@@ -348,12 +351,12 @@ const FilledButton = styled(SnapButton)`
 
 const EnptyButton = styled(SnapButton)`
   flex-direction: row;
-  color: ${(props)=>props.theme.default.secondaryColor};
+  color: ${(props) => props.theme.default.secondaryColor};
   text-align: center;
   width:auto;
   padding: 16px 24px;
   border: 1px solid #bac4d6;
-  background: ${(props)=>props.theme.default.bg};
+  background: ${(props) => props.theme.default.bg};
   gap: 4px;
 `
 
@@ -429,7 +432,7 @@ const AddressesSubContainer = styled(ItemHV2)`
   max-height: 42px;
   padding: 13px 16px;
   border-radius: 12px;
-  background: ${(props)=>props.theme.snapBackground};
+  background: ${(props) => props.theme.snapBackground};
   justify-content: space-between;
 `
 

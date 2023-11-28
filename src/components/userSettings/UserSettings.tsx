@@ -13,14 +13,15 @@ import { useAccount } from 'hooks';
 import { Button } from 'primaries/SharedStyling';
 import { ImageV2 } from 'components/reusables/SharedStylingV2';
 import LoaderSpinner from 'primaries/LoaderSpinner';
-import EmptyNotificationSettings from './EmptyNotificationSettings';
 import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import ManageNotifSettingDropdown from 'components/dropdowns/ManageNotifSettingDropdown';
 
 // Internal Configs
 import { device } from 'config/Globals';
-import { AppContext } from 'contexts/AppContext';
+import ChannelListSettings from 'components/channel/ChannelListSettings';
+import PushSnapSettings from 'components/MetamaskSnap/PushSnapSettings';
+import EmptyNotificationSettings from 'components/channel/EmptyNotificationSettings';
 
 interface ChannelListItem {
   channel: string;
@@ -32,9 +33,12 @@ interface ChannelListItem {
 
 function UserSettings() {
   const { account, chainId } = useAccount();
-  const { userPushSDKInstance } = useContext(AppContext);
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });  
   const { subscriptionStatus, userSettings: currentUserSettings } = useSelector((state: any) => state.channels);
   const [selectedOption, setSelectedOption] = useState(0);
+  
   const [channelList, setChannelList] = useState<ChannelListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -57,10 +61,11 @@ function UserSettings() {
   };
 
   const fillData = async (details: any) => {
-    const data = await Promise.all(
+    const data = [];
+    await Promise.all(
       Object.keys(details).map(async (channel) => {
         const channelData = await fetchChannelDetails(channel);
-        if (channelData) return channelData;
+        if (channelData) data.push(channelData);
       })
     );
     setChannelList(data);
@@ -96,12 +101,16 @@ function UserSettings() {
     {
       value: 0,
       label: 'Notification Settings',
+      title:'Notification Settings'
     },
+    {
+      value: 1,
+      label: 'Push Snap',
+      title: ''
+    }
   ];
 
-  const userSettings = useMemo(() => {
-    return cloneDeep(currentUserSettings);
-  }, [currentUserSettings]);
+
 
   return (
     <Container>
@@ -121,56 +130,11 @@ function UserSettings() {
         </SelectSection>
         <ChannelWrapper>
           <ChannelContainer>
-            <SectionTitle>{selectOptions[selectedOption].label}</SectionTitle>
-            <>
-              {isLoading ? (
-                <CenterContainer>
-                  <LoaderSpinner />
-                </CenterContainer>
-              ) : (
-                <>
-                  {channelList.length > 0 ? (
-                    channelList.map((channel, index) => (
-                      <>
-                        {channel && (
-                          <>
-                            <SettingsListItem key={channel.id}>
-                              <SettingsListRow>
-                                <Icon src={channel.icon} />
-                                <ChannelName>{channel.name}</ChannelName>
-                              </SettingsListRow>
-                              <ManageNotifSettingDropdown
-                                userSetting={userSettings[channel.channel]}
-                                centerOnMobile={false}
-                                channelDetail={channel}
-                                onSuccessOptout={() => {
-                                  setChannelList((prevChannelList) =>
-                                    prevChannelList.filter((item) => item?.id !== channel.id)
-                                  );
-                                }}
-                              >
-                                <MoreButtonUI />
-                              </ManageNotifSettingDropdown>
-                            </SettingsListItem>
-                            {index !== channelList.length - 1 && <HR />}
-                          </>
-                        )}
-                      </>
-                    ))
-                  ) : (
-                    <CenterContainer>
-                      <EmptyNotificationSettings
-                        title="No Channel Opt-ins"
-                        description="Opt-in channels to manage your notification preferences"
-                        buttonTitle="Go to Channels"
-                        onClick={navigateToChannels}
-                        showTopBorder={false}
-                      />
-                    </CenterContainer>
-                  )}
-                </>
-              )}
-            </>
+            {selectOptions[selectedOption]?.title && <SectionTitle>{selectOptions[selectedOption]?.title}</SectionTitle>}
+            
+            {selectedOption === 0 && <ChannelListSettings />}
+            {selectedOption === 1 && <PushSnapSettings />}
+
           </ChannelContainer>
         </ChannelWrapper>
       </Wrapper>
@@ -242,7 +206,7 @@ const SelectSection = styled.div`
   }
 `;
 
-const SelectListOption = styled(Button)<{ isSelected: boolean }>`
+const SelectListOption = styled(Button) <{ isSelected: boolean }>`
   background-color: ${(props) => (props.isSelected ? props.theme.default.secondaryBg : 'transparent')};
   color: ${(props) => props.theme.default.secondaryColor};
   border-radius: 12px;

@@ -33,7 +33,7 @@ const YieldFarmingModuleV2 = () => {
   const { account, chainId, switchChain} = useAccount();
 
 
-  const handleChainChange = ()=>{
+  const handleChainChange = () => {
 
     const chainIdToPass = appConfig.allowedNetworks[0];
 
@@ -41,11 +41,11 @@ const YieldFarmingModuleV2 = () => {
       switchChain(chainIdToPass);
     }
 
-}
+  }
 
   useEffect(() => {
 
-    if (chainId !== 1 && chainId !== 5) {
+    if (chainId !== 1 && chainId !== 11155111) {
       displayNonEthChainModal();
       handleChainChange();
     }

@@ -6,6 +6,7 @@ import { VideoCallContext } from 'contexts/VideoCallContext';
 import { ADDITIONAL_META_TYPE } from '@pushprotocol/restapi/src/lib/payloads';
 import { PushAPI, VideoCallStatus } from '@pushprotocol/restapi';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
+import { useSelector } from 'react-redux';
 
 const eventlistener = async (
     pushAPI: PushAPI,
@@ -22,7 +23,9 @@ const eventlistener = async (
 
 const useSDKStream = () => {
     const { account } = useAccount();
-    const { userPushSDKInstance } = useContext(AppContext);
+    const { userPushSDKInstance } = useSelector((state: any) => {
+        return state.user;
+    }); 
     const [stream, setStream] = useState(null);
     const { incomingCall, connectWrapper, requestWrapper, acceptRequestWrapper, isVideoCallInitiator } =
         useContext(VideoCallContext);

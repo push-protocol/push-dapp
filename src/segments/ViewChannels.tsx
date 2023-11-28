@@ -43,7 +43,9 @@ const SEARCH_LIMIT = 10;
 function ViewChannels({ loadTeaser, playTeaser }) {
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { userPushSDKInstance } = useContext(AppContext);
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  }); 
   const { account, chainId } = useAccount();
   const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
   const { run, stepIndex } = useSelector((state: any) => state.userJourney);

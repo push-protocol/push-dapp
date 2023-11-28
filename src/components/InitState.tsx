@@ -45,7 +45,9 @@ const CORE_CHAIN_ID = appConfig.coreContractChain;
 const InitState = () => {
   const dispatch = useDispatch();
   const { account, provider, chainId } = useAccount();
-  const { userPushSDKInstance } = useContext(AppContext);
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });   
   const { epnsReadProvider, epnsWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const {
     channelDetails,

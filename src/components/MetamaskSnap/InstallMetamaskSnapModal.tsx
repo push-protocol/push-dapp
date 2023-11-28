@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 
 // External Packages
-import styled,{useTheme} from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import { A } from 'primaries/SharedStyling';
@@ -10,10 +10,12 @@ import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Button } from 'components/SharedStyling';
 import Metamask from 'assets/PushSnaps/metamasksnap.svg';
 import PushIcon from 'assets/PushSnaps/PushIcon.svg';
+import VersoIcon from 'assets/PushSnaps/VersoIcon.svg';
 import AppStoreQRCode from 'assets/PushSnaps/AppStoreQRCode.svg';
 import PlayStoreQRCode from 'assets/PushSnaps/PlayStoreQRCode.svg';
 import AppleIcon from 'assets/PushSnaps/AppleIcon.svg';
 import PlayStore from 'assets/PushSnaps/PlayStore.svg';
+import { useNavigate } from 'react-router-dom';
 
 
 const InstallMetamaskSnapModal = ({
@@ -40,6 +42,8 @@ const InstallMetamaskSnapModal = ({
         )
     }
 
+    const navigate = useNavigate();
+
     return (
         <ItemVV2 margin='30px 0 20px 0' gap='14px'>
             <SnapContainer>
@@ -58,8 +62,11 @@ const InstallMetamaskSnapModal = ({
                 </SnapInner>
                 {
                     configure ? (
-                        <InstallButton onClick={() => setSnapState(3)}>
-                            Settings
+                        <InstallButton onClick={() => {
+                            setSnapState(3)
+                            navigate('/snap')
+                        }}>
+                            Configure
                         </InstallButton>
                     ) : (
                         <InstallButton onClick={() => setSnapState(2)}>
@@ -84,6 +91,29 @@ const InstallMetamaskSnapModal = ({
                     </SpanV2>
                 </SnapInner>
                 <InstallButton>Install</InstallButton>
+            </SnapContainer>
+            <SnapContainer>
+                <SnapInner>
+                    <Logo
+                        src={VersoIcon}
+                        alt="Verso Icon"
+                    />
+                    <SpanV2
+                        fontSize="16px"
+                        fontWeight="400"
+                        color={theme.modalMessageColor}
+                    >
+                        Verso Wallet
+                    </SpanV2>
+                </SnapInner>
+                <SnapInner>
+                    <a href="https://apps.apple.com/ng/app/verso-wallet-crypto-nft/id1539304605" target="_blank">
+                        <AppstoreInstallBtn><Image src={AppleIcon} width="16px" height="20px" alt='App store' /></AppstoreInstallBtn>
+                    </a>
+                    <a href="https://play.google.com/store/apps/details?id=com.btuprotocol.btu_wallet" target="_blank">
+                        <AppstoreInstallBtn><Image src={PlayStore} width="16px" height="20px" alt='Play store' /></AppstoreInstallBtn>
+                    </a>
+                </SnapInner>
             </SnapContainer>
 
             <ItemHV2 gap='14px'>
@@ -154,9 +184,9 @@ export default InstallMetamaskSnapModal;
 const SnapContainer = styled(ItemHV2)`
     border-radius: 14px;
     padding:7px 14px;
-    background:${(props)=>props.theme.snapUIBackground};
+    background:${(props) => props.theme.snapUIBackground};
     justify-content:space-between;
-    border: 1px solid ${(props)=>props.theme.default.border};
+    border: 1px solid ${(props) => props.theme.default.border};
 `
 
 const SnapInner = styled.div`
@@ -173,26 +203,33 @@ const Image = styled.img`
 `
 
 const InstallButton = styled(Button)`
-  width: fit-content;
-  min-width:102px;
-  background: #D53A94;
-  color: #fff;
-  z-Index:0;
-  font-family: 'Strawford';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: normal;
-  border-radius: 8px;
-  padding: 14px 16px;
-  
+    width: fit-content;
+    min-width:102px;
+    background: #D53A94;
+    color: #fff;
+    z-Index:0;
+    font-family: 'Strawford';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: normal;
+    border-radius: 8px;
+    padding: 14px 16px;
+`;
+
+const AppstoreInstallBtn = styled(InstallButton)`
+    background: #000;
+    min-width: 0;
+    margin-left: 6px;
+    height: 36px;
+    width: 36px;
 `;
 
 const QRCodeContainer = styled(ItemVV2)`
     border-radius: 14px;
     padding:7px 14px;
-    background:${(props)=>props.theme.snapUIBackground};
-    border: 1px solid ${(props)=>props.theme.default.border};
+    background:${(props) => props.theme.snapUIBackground};
+    border: 1px solid ${(props) => props.theme.default.border};
     padding-bottom:15px;
     gap:4px;
     &:hover{
@@ -204,7 +241,7 @@ const QRCodeContainer = styled(ItemVV2)`
 const DownloadContainer = styled.div`
     display:flex;
     border-radius: 8px;
-    background: ${(props)=>props.theme.snapButtonBackground};
+    background: ${(props) => props.theme.snapButtonBackground};
     padding: 4px 11px;
     gap: 8px;
     height:36px;

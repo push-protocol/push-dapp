@@ -29,6 +29,7 @@ export class CoreV2Reward {
       currentBlockNumber
     );
 
+
     this.STATE.currentBlockNumber = currentBlockNumber;
     this.STATE.genesisEpoch = genesisEpoch;
     this.STATE.currentEpoch = currentEpoch;
@@ -222,6 +223,8 @@ export class CoreV2Reward {
       )
     );
 
+    const coreV2Contract = this.coreV2Contract;
+
     if (!(_tillEpoch >= nextFromEpoch)) {
       return Helpers.toBN(0);
     }
@@ -231,6 +234,7 @@ export class CoreV2Reward {
       const claimableReward = this.calculateEpochRewards(i);
       rewards = rewards.add(claimableReward);
     }
+
 
     return rewards;
   }

@@ -17,6 +17,8 @@ import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, addresses } from 'config';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+import StepsTransactionModal from 'components/StepsTransactionModal';
 
 const NewYieldFarming = (
     { setActiveTab }
@@ -58,7 +60,7 @@ const NewYieldFarming = (
     }, [yieldFarmingLP]);
 
     const getUserDataPush = React.useCallback(async () => {
-        const [pushPoolStats,userDataPush] = await YieldFarmingDataStoreV2.instance.getUserDataPUSH(provider);
+        const [pushPoolStats, userDataPush] = await YieldFarmingDataStoreV2.instance.getUserDataPUSH(provider);
 
         setPUSHPoolStats({ ...pushPoolStats });
         setUserDataPush({ ...userDataPush });
@@ -116,18 +118,19 @@ const NewYieldFarming = (
         getPUSHPoolStats();
 
     }, [account]);
-
-
+    
 
     return (
         <>
+
+
             <YieldAnnouncementSection
                 logo={"announcement"}
                 title={"New V2 Pools are now Live! Stake or migrate now."}
                 body={"Users who were part of the previous Push staking program, need to migrate to new pools to continue earning rewards. Click"}
                 setActiveTab={setActiveTab}
             />
-            <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} setPoolStats={setPoolStats}/>
+            <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} setPoolStats={setPoolStats} />
             <YieldPushPriceSection
                 poolStats={poolStats}
             />

@@ -5,7 +5,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 // Internal Compoonents
-import UserSettings from 'components/channel/UserSettings';
+import UserSettings from 'components/userSettings/UserSettings';
+
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';

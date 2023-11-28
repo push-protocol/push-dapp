@@ -48,8 +48,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const themes = useTheme();
 
   const { run, stepIndex } = useSelector((state) => state.userJourney);
-  const { userPushSDKInstance } = useContext(AppContext);
-
+  const { userPushSDKInstance } = useSelector((state) => {
+    return state.user;
+  }); 
   const { epnsReadProvider, epnsWriteProvider, epnsCommReadProvider, pushAdminAddress, ZERO_ADDRESS } = useSelector(
     (state) => state.contracts
   );
