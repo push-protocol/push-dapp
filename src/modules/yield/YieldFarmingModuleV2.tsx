@@ -45,7 +45,7 @@ const YieldFarmingModuleV2 = () => {
 
   useEffect(() => {
 
-    if (chainId !== 1 && chainId !== 5) {
+    if (chainId !== 1 && chainId !== 11155111) {
       displayNonEthChainModal();
       handleChainChange();
     }

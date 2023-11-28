@@ -76,7 +76,7 @@ export function useResolveWeb3Name(address?: string) {
              
            
           } catch (e) {
-            console.error('Error fetching web3 name from indexDB', e);
+            // console.error('Error fetching web3 name from indexDB', e);
           }
         }
       }

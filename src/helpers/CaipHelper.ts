@@ -1,7 +1,7 @@
 // Internal Configs
 import { appConfig } from '../config';
 
-export const Eip155EnabledIds: Array<Number> = [1, 56, 137, 10, 1101, 42161, 5, 97, 80001, 420, 1442, 421613];
+export const Eip155EnabledIds: Array<Number> = [1, 56, 137, 10, 1101, 42161, 11155111, 97, 80001, 420, 1442, 421613];
 
 // Types
 type CAIPProps = {

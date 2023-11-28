@@ -120,8 +120,8 @@ function Header({ isDarkMode, darkModeToggle }) {
       switchChain(appConfig.coreContractChain);
       if (appConfig.coreContractChain === 42)
         return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network';
-      else if (appConfig.coreContractChain === 5)
-        return 'Unsupported Network, please connect to the Ethereum Goerli, Polygon Mumbai, BNB testnet, Optimism Goerli, Arbitrum testnet or Polygon zkEVM testnet';
+      else if (appConfig.coreContractChain === 11155111)
+        return 'Unsupported Network, please connect to the Ethereum Sepolia, Polygon Mumbai, BNB testnet, Optimism Goerli, Arbitrum testnet or Polygon zkEVM testnet';
       else return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB, Optimism, Arbitrum or Polygon zkEVM Mainnet';
     } else {
       console.error(error);
@@ -134,7 +134,22 @@ function Header({ isDarkMode, darkModeToggle }) {
   };
 
   const isMobile = useDeviceWidthCheck(600);
+  const showSnapMobile = useDeviceWidthCheck(600);
   const isSnapPage = location?.pathname === '/snap';
+
+  const SnapHeader = () => {
+    return (
+      <SnapSection>
+        <MetamaskLogo width={24} height={22} />
+        <InstallText>
+          <SpanV2 fontSize='12px' fontWeight='400'>Get Notifications directly in MetaMask</SpanV2>
+          <Link href='https://app.push.org/snap' target='_blank'>
+            Install Push Snap <OpenLink />
+          </Link>
+        </InstallText>
+      </SnapSection>
+    )
+  }
 
   return (
     <Container direction="row" padding="0px 15px">
@@ -155,10 +170,12 @@ function Header({ isDarkMode, darkModeToggle }) {
         {navigationSetup && showNavBar && isActive && !error && (
           <NavMenuContainer ref={navRef} tabletAlign="flex-start">
             <NavMenu>
+           {showSnapMobile && <SnapHeader/>}
               <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
 
               <NavMenuInner tabletAlign="flex-start">
+
                 <MobileNavigation showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
               </NavMenuInner>
             </NavMenu>
@@ -180,15 +197,7 @@ function Header({ isDarkMode, darkModeToggle }) {
             </Span>
           </HeaderTag>
         )}
-        <SnapSection>
-          <MetamaskLogo width={24} height={22} />
-          <InstallText>
-            <SpanV2 fontSize='12px' fontWeight='400'>Get Notifications directly in MetaMask</SpanV2>
-            <Link href='https://app.push.org/snap' target='_blank'>
-              Install Push Snap <OpenLink />
-            </Link>
-          </InstallText>
-        </SnapSection>
+      {!showSnapMobile && <SnapHeader/>}
 
         {isActive && !showLoginControls && !error && (
           <DarkModeSwitch
@@ -368,11 +377,21 @@ const SnapSection = styled.div`
   padding: 12px 16px;
   align-items: center;
   gap: 9px;
+  @media (max-width:600px){
+    width:auto;
+    padding: 12px 14px;
+  }
 `;
 
 const InstallText = styled.div`
   display:flex;
   flex-direction:column;
+
+  @media (max-width:600px){
+    display:block;
+    width:auto;
+  }
+  
 `
 
 const Link = styled.a`
@@ -382,6 +401,11 @@ const Link = styled.a`
   color:#D53A94;
   text-align: start;
   text-decoration:none;
+  
+  @media (max-width:600px){
+    margin-left:5px;
+  }
+
    &:hover{
     text-decoration:underline;
     text-underline-position: under;
