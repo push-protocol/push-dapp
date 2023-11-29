@@ -95,10 +95,10 @@ const AddSettingModalContent = ({
 
   // for range slider
   const [defaultStartValue, setDefaultStartValue] = useState<string>(
-    settingToEdit && settingToEdit.type === 3 ? settingToEdit.defaultStartVal.toString() : ''
+    settingToEdit && settingToEdit.type === 3 ? settingToEdit.default.lower.toString() : ''
   );
   const [defaultEndValue, setDefaultEndValue] = useState<string>(
-    settingToEdit && settingToEdit.type === 3 ? settingToEdit.defaultEndVal.toString() : ''
+    settingToEdit && settingToEdit.type === 3 ? settingToEdit.default.upper.toString() : ''
   );
   const [sliderPreviewStartVal, setSliderPreviewStartVal] = useState<number>();
   const [sliderPreviewEndVal, setSliderPreviewEndVal] = useState<number>();
@@ -117,17 +117,33 @@ const AddSettingModalContent = ({
     if (
       isAllFilledAndValid({
         setErrorInfo,
-        defaultValue,
+        defaultValue: enableMultiRange ? { lower: defaultStartValue, upper: defaultEndValue } : defaultValue,
         settingName,
         lowerLimit,
-        type: isRange ? 2 : 1,
+        type: isRange ? (enableMultiRange ? 3 : 2) : 1,
         upperLimit,
         sliderStep,
       })
     ) {
       const index = settingToEdit ? settingToEdit.index : Math.floor(Math.random() * 1000000);
       const settingData: ChannelSetting = isRange
-        ? {
+        ? enableMultiRange 
+          ? 
+          {
+            type: 3,
+            default: {
+              lower: Number(defaultStartValue),
+              upper: Number(defaultEndValue)
+            },
+            enabled: isDefault,
+            description: settingName,
+            index: index,
+            lowerLimit: Number(lowerLimit),
+            upperLimit: Number(upperLimit),
+            ticker: Number(sliderStep),
+          } 
+          : 
+          {
             type: 2,
             default: Number(defaultValue),
             enabled: isDefault,
@@ -379,10 +395,13 @@ const AddSettingModalContent = ({
                     color={theme.editChannelPrimaryText}
                     value={defaultStartValue}
                     onChange={(e) => {
+                      setErrorInfo((prev) => ({ ...prev, defaultStart: undefined }));
+                      if (isInvalidNumber(e.target.value)) return;
                       setDefaultStartValue(e.target.value);
                       setSliderPreviewStartVal(Number(e.target.value));
                     }}
                     autocomplete="off"
+                    hasError={errorInfo?.defaultStart ? true : false}
                   />
                   <Label padding="0px 16px">to</Label>
                   <MaxWidthInput
@@ -402,12 +421,16 @@ const AddSettingModalContent = ({
                     color={theme.editChannelPrimaryText}
                     value={defaultEndValue}
                     onChange={(e) => {
+                      setErrorInfo((prev) => ({ ...prev, defaultEnd: undefined }));
+                      if (isInvalidNumber(e.target.value)) return;
                       setDefaultEndValue(e.target.value);
                       setSliderPreviewEndVal(Number(e.target.value));
                     }}
                     autocomplete="off"
+                    hasError={errorInfo?.defaultEnd ? true : false}
                   />
                 </Item> 
+                <ErrorInfo>{errorInfo?.defaultStart || errorInfo?.defaultEnd}</ErrorInfo>
               </Item>
             }
             <Item

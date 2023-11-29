@@ -89,6 +89,7 @@ const ChannelInfoList = (props: ChannelInfoListProps) => {
                           <>
                             <NotificationSettingName>{item.description}</NotificationSettingName>
                             {item.type === 2 && <Tag>Range</Tag>}
+                            {item.type === 3 && <Tag>Multi-Range</Tag>}
                           </>
                         )}
                         {props.isAddress && isOwner(props.account, item) && <Tag>Creator</Tag>}
