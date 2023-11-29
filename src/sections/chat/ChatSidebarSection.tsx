@@ -97,7 +97,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   useClickAway(containerRef, () => closeQRDropdown())
 
   const fetchIntentApi = async (): Promise<Feeds[]> => {
-    const intents = await fetchIntent({connectedUser});
+    const intents = await fetchIntent({connectedUser, limit: 11});
     if (JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
       setReceivedIntents(intents);
       setLoadingRequests(false);
@@ -171,7 +171,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
                     fontSize="12px"
                     borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
                   >
-                    {receivedIntents.length}
+                    {receivedIntents.length > 10 ? '10+' : receivedIntents.length}
                   </SpanV2>
                 )}
               </ItemHV2>
