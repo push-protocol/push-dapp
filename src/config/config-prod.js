@@ -69,7 +69,7 @@ export const config = {
     ios: 'https://apps.apple.com/app/ethereum-push-service-epns/id1528614910',
     android: 'https://play.google.com/store/apps/details?id=io.epns.epns',
     extension: 'https://chrome.google.com/webstore/detail/epns-protocol-beta/lbdcbpaldalgiieffakjhiccoeebchmg',
-    howto: 'https://docs.epns.io',
+    howto: 'https://push.org/docs',
   },
 };
 
