@@ -196,7 +196,7 @@ const AddSettingModalContent = ({
         Number(defaultValue) <= Number(upperLimit))
       )
     );
-  }, [lowerLimit, upperLimit, defaultValue, sliderStep, defaultStartValue, defaultEndValue]);
+  }, [lowerLimit, upperLimit, defaultValue, sliderStep, defaultStartValue, defaultEndValue, enableMultiRange]);
 
   return (
     <ModalContainer ref={containerRef}>
