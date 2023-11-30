@@ -140,7 +140,7 @@ const RangeSlider = ({
   }
 
   useEffect(() => {
-    if (thumbStartRef.current && inactiveLeftRef.current) {
+    if (thumbStartRef.current && inactiveLeftRef.current && thumbEndRef.current && activeRef.current && inactiveRightRef.current) {
       thumbStartRef.current.style.left = `${((startVal - min) / (max - min)) * 98}%`;
       inactiveLeftRef.current.style.width = `${((startVal - min) / (max - min)) * 100}%`;
       activeRef.current.style.width = `${((endVal - startVal) / (max - min)) * 100}%`;

@@ -71,27 +71,31 @@ const AddSettingModalContent = ({
   const [settingName, setSettingName] = useState(settingToEdit ? settingToEdit.description : '');
   const [isDefault, setIsDefault] = useState<boolean>(
     settingToEdit
-      ? (settingToEdit.type === 1 && settingToEdit.default) || (settingToEdit.type === 2 && settingToEdit.enabled)
+      ? (settingToEdit.type === 1 && settingToEdit.default) || (settingToEdit.type === 2 && settingToEdit.enabled) || (settingToEdit.type === 3 && settingToEdit.enabled)
       : true
   );
-  const [isRange, setIsRange] = useState<boolean>(settingToEdit && settingToEdit.type === 2 ? true : false);
+  const [isRange, setIsRange] = useState<boolean>(settingToEdit && (settingToEdit.type === 2 || settingToEdit.type === 3) ? true : false);
   const [lowerLimit, setLowerLimit] = useState<string>(
-    settingToEdit && settingToEdit.type === 2 ? settingToEdit.lowerLimit.toString() : ''
+    settingToEdit && (settingToEdit.type === 2 || settingToEdit.type === 3) ? settingToEdit.lowerLimit.toString() : ''
   );
   const [upperLimit, setUpperLimit] = useState<string>(
-    settingToEdit && settingToEdit.type === 2 ? settingToEdit.upperLimit.toString() : ''
+    settingToEdit && (settingToEdit.type === 2 || settingToEdit.type === 3) ? settingToEdit.upperLimit.toString() : ''
   );
   const [sliderStep, setSliderStep] = useState<string>(
-    settingToEdit && settingToEdit.type === 2 && settingToEdit.ticker ? settingToEdit.ticker.toString() : '1'
+    settingToEdit && (settingToEdit.type === 2 || settingToEdit.type === 3) && settingToEdit.ticker ? settingToEdit.ticker.toString() : '1'
   );
 
-  const [enableMultiRange, setEnableMultiRange] = useState<boolean>(false);
+  const [enableMultiRange, setEnableMultiRange] = useState<boolean>(
+    settingToEdit && settingToEdit.type === 3 ? true : false
+  );
 
   // for single value slider
   const [defaultValue, setDefaultValue] = useState<string>(
     settingToEdit && settingToEdit.type === 2 ? settingToEdit.default.toString() : ''
   );
-  const [sliderPreviewVal, setSliderPreviewVal] = useState<number>();
+  const [sliderPreviewVal, setSliderPreviewVal] = useState<number>(
+    settingToEdit && settingToEdit.type === 2 ? settingToEdit.default : 0
+  );
 
   // for range slider
   const [defaultStartValue, setDefaultStartValue] = useState<string>(
@@ -100,8 +104,12 @@ const AddSettingModalContent = ({
   const [defaultEndValue, setDefaultEndValue] = useState<string>(
     settingToEdit && settingToEdit.type === 3 ? settingToEdit.default.upper.toString() : ''
   );
-  const [sliderPreviewStartVal, setSliderPreviewStartVal] = useState<number>();
-  const [sliderPreviewEndVal, setSliderPreviewEndVal] = useState<number>();
+  const [sliderPreviewStartVal, setSliderPreviewStartVal] = useState<number>(
+    settingToEdit && settingToEdit.type === 3 ? settingToEdit.default.lower : 0
+  );
+  const [sliderPreviewEndVal, setSliderPreviewEndVal] = useState<number>(
+    settingToEdit && settingToEdit.type === 3 ? settingToEdit.default.upper : 0
+  );
   const [errorInfo, setErrorInfo] = useState<any>();
 
   const theme = useTheme();
