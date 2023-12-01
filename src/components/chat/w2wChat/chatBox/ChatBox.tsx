@@ -15,7 +15,7 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 import { produce } from 'immer';
-
+import { ChatViewList, MessageInput } from '@pushprotocol/uiweb';
 // Internal Components
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
@@ -99,7 +99,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const groupInfoRef = useRef<HTMLInputElement>(null);
   const { connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
   const { videoObject } = useContext(VideoCallContext);
-
+  const [chatId, setChatId] = useState<string>("");
   const listInnerRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -126,6 +126,11 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   }
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    let chatid= currentChat?.did || currentChat?.groupInformation?.chatId
+    setChatId(chatid);
+  },[currentChat, account])
 
   useEffect(() => {
     // if ens is resolved, update browse to match ens name is it doesn't match
@@ -443,6 +448,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     }
   };
 
+  console.log("current id", chatId)
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
       return;
@@ -645,87 +651,35 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
           >
             {/* style={{overflow: "scroll",backgroundColor:'red'}} */}
             {/* <CustomScrollContent initialScrollBehavior="smooth"> */}
-            {Loading ? (
-              <SpinnerWrapper>
-                <LoaderSpinner
-                  type={LOADER_TYPE.SEAMLESS}
-                  spinnerSize={40}
-                />
-              </SpinnerWrapper>
-            ) : (
+            
               <>
-                {chatsLoading && (
-                  <SpinnerWrapper height="35px">
-                    <LoaderSpinner
-                      type={LOADER_TYPE.SEAMLESS}
-                      spinnerSize={40}
-                    />
-                  </SpinnerWrapper>
-                )}
+              
                 <div ref={topRef}>
-                  {messages?.map((msg, i) => {
-                    //const isLast = i === messages.length - 1
-                    //const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
-
-                    showTime = false;
-                    if (i >= 0) {
-                      const duration = new Date(messages[i]?.timestamp);
-                      const dateString = duration.toDateString();
-                      if (dateString !== time || i === 0) {
-                        showTime = true;
-                        time = dateString;
-                      }
-                    }
-                    return (
-                      <div key={i}>
-                        {!showTime ? null : (
-                          <HeaderMessage
-                            index={i}
-                            time={time}
-                            isGroup={isGroup}
-                          />
-                        )}
-                          <Chats
-                            msg={
-                              (!currentChat?.groupInformation?.isPublic && checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser, isGroup }))
-                                ? ''
-                                : msg
-                            }
-                            caip10={walletToCAIP10({ account: account! })}
-                            messageBeingSent={messageBeingSent}
-                            isGroup={isGroup}
-                          />
-                        
-                      </div>
-                    );
-                  })}
+                 
+           <ChatContainer>
+                <ChatViewList chatId={chatId} limit={10}/>
+                
+          </ChatContainer>
                 </div>
-                <HeaderMessage
-                  messages={messages}
-                  isGroup={isGroup}
-                />
+               
                 {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser, isGroup }) && (
-                  <Chats
-                    msg={{
-                      ...messages[0],
-                      messageContent: getIntentMessage(currentChat, isGroup),
-                      messageType: 'Intent',
-                    }}
-                    caip10={walletToCAIP10({ account: account! })}
-                    messageBeingSent={messageBeingSent}
-                    ApproveIntent={() => ApproveIntent('Approved')}
-                    isGroup={isGroup}
-                  />
+                  <ChatContainer>
+                     <ChatViewList chatId={chatId}/>
+                  </ChatContainer>
+                 
                 )}
               </>
-            )}
+       
             {/* </CustomScrollContent> */}
-            <div ref={bottomRef}></div>
-          </MessageContainer>
-
+          
+           
+            </MessageContainer>
           {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser,isGroup }) ? null : (
             <>
-              <Typebar
+            <MessageInputWrapper >
+          <MessageInput chatId={chatId} />
+        </MessageInputWrapper>
+              {/* <Typebar
                 messageBeingSent={messageBeingSent}
                 setNewMessage={setNewMessage}
                 newMessage={newMessage}
@@ -736,7 +690,8 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
                 setSnackbarText={setSnackbarText}
                 isJoinGroup = {(!checkIfChatExist({ chats:inbox, currentChat, connectedUser,isGroup }) && isGroup)}
                 approveIntent= {ApproveIntent}
-              />
+              /> */}
+              
             </>
           )}
         </>
@@ -750,7 +705,33 @@ const SpinnerWrapper = styled.div`
   margin-top: 20px;
   height: ${(props) => props.height || '90px'};
 `;
+const MessageInputWrapper = styled.div`
 
+  width: 98%;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 8px;
+  
+  z-index: 99;
+  
+ 
+`
+const ChatContainer = styled.div`
+  overflow-x : hidden;
+  align-items: unset;
+  display: block;
+  justify-content: flex-start;
+  position: absolute;
+  top: 20px;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  margin: 0;
+  width: 100%;
+  
+ 
+`
 const MessageContainer = styled(ItemVV2)`
   align-items: unset;
   display: block;
