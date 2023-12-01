@@ -656,20 +656,22 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
               
                 <div ref={topRef}>
                  
-           
+           <ChatContainer>
                 <ChatViewList chatId={chatId} limit={10}/>
                 
-          
+          </ChatContainer>
                 </div>
                
                 {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser, isGroup }) && (
+                  <ChatContainer>
+                     <ChatViewList chatId={chatId}/>
+                  </ChatContainer>
                  
-                  <ChatViewList chatId={chatId}/>
                 )}
               </>
        
             {/* </CustomScrollContent> */}
-            <div ref={bottomRef}></div>
+          
            
             </MessageContainer>
           {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser,isGroup }) ? null : (
@@ -704,10 +706,31 @@ const SpinnerWrapper = styled.div`
   height: ${(props) => props.height || '90px'};
 `;
 const MessageInputWrapper = styled.div`
-  margin-top: auto;
-  margin-botton: 0;
-  width: 100%;
+
+  width: 98%;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 8px;
+  
   z-index: 99;
+  
+ 
+`
+const ChatContainer = styled.div`
+  overflow-x : hidden;
+  align-items: unset;
+  display: block;
+  justify-content: flex-start;
+  position: absolute;
+  top: 20px;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  margin: 0;
+  width: 100%;
+  
+ 
 `
 const MessageContainer = styled(ItemVV2)`
   align-items: unset;

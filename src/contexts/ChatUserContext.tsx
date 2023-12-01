@@ -15,6 +15,8 @@ const ChatUserContextProvider = (props) => {
   const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
   const { account, provider } = useAccount();
 
+
+ 
   //this blocked loading is a modal which shows during the PGP keys generation time
   const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
     enabled: false,
