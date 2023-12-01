@@ -18,7 +18,6 @@ type UpdateGroupType = {
 
 type updateGroupMembers = {
   pushUser:PushAPI,
-  chatId: string,
   currentChat:Feeds,
   role:"ADMIN" | "MEMBER",
   adminList?:Array<string>,
@@ -84,7 +83,7 @@ export const getChatsnapMessage = (feed: Feeds, account: string, isIntent?: bool
   }
 
   return {
-    type: feed.msg.messageType,
+    type: feed.msg?.messageType,
     message: feed.msg.messageContent,
   };
 };
@@ -122,22 +121,32 @@ export const getUpdatedMemberList = (feed:Feeds,walletAddress:string): Array<str
 }
 
 export const updateGroupMembers = async(options: updateGroupMembers) => {
-  const {chatId, memeberList, role, pushUser, currentChat, adminList} =options;
-
+  const { memeberList, role, pushUser, currentChat, adminList} =options;
+  let chatId= currentChat?.groupInformation?.chatId
   // userAlice.chat.group.update(chatid, {options?})
-const updatedGroupMember = await pushUser.chat.group.add(chatId, {
+try {
+  console.log("startingggggg")
+const updateResponse = await pushUser.chat.group.add(chatId, {
   role: role,
-  accounts: memeberList || adminList
+  accounts: memeberList
 });
+
+console.log("i is updated", updateResponse);
 
 let updatedCurrentChat = null;
   console.log(currentChat);
-  if(typeof updatedGroupMember !== 'string')
+  if(typeof updateResponse !== 'string')
   {
     updatedCurrentChat = currentChat;
-    updatedCurrentChat.groupInformation = updatedGroupMember;
+    updatedCurrentChat.groupInformation = updateResponse;
   }
-  return {updatedGroupMember,updatedCurrentChat};
+  return {updateResponse,updatedCurrentChat};
+} catch (error) {
+  console.log("err", error.message);
+
+  return;
+}
+  
 }
 
 export const updateGroup = async(options:UpdateGroupType) => {

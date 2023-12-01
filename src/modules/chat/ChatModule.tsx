@@ -2,7 +2,7 @@
 import { ethers } from 'ethers';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-
+import { ChatViewList } from '@pushprotocol/uiweb';
 // External Packages
 import * as PushAPI from "@pushprotocol/restapi";
 import ReactGA from 'react-ga';

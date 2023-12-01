@@ -2,7 +2,7 @@
 import { ethers } from 'ethers';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import { ChatViewList, MessageInput } from '@pushprotocol/uiweb';
 // External Packages
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
@@ -99,7 +99,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const groupInfoRef = useRef<HTMLInputElement>(null);
   const { connectedUser, setConnectedUser, createUserIfNecessary, pushUser } = useContext(ChatUserContext);
   const { videoObject } = useContext(VideoCallContext);
-
+  const [chatId, setChatId] = useState("");
   const listInnerRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -114,6 +114,17 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
 
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
+
+  useEffect(() => {
+    if(currentChat?.groupInformation){
+      setChatId(currentChat?.groupInformation?.chatId)
+    }else{
+      setChatId(currentChat?.did);
+    }
+   
+
+    
+  },[currentChat])
   //resolve web3 names
   useResolveWeb3Name(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
 
@@ -228,6 +239,12 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     if (currentChat?.wallets) return caip10ToWallet(currentChat?.wallets?.split(',')[0].toString());
   };
 
+  useEffect(() => {
+    const test = async () => {
+       console.log("my userr", await pushUser.chat.list("CHATS"))
+    }
+   test();
+  },[pushUser])
   const fetchInboxApi = async (): Promise<Feeds> => {
     const inboxes: Feeds[] = await fetchInbox({connectedUser, pushUser});
     setInbox(inboxes);
@@ -624,88 +641,33 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
           >
             {/* style={{overflow: "scroll",backgroundColor:'red'}} */}
             {/* <CustomScrollContent initialScrollBehavior="smooth"> */}
-            {Loading ? (
-              <SpinnerWrapper>
-                <LoaderSpinner
-                  type={LOADER_TYPE.SEAMLESS}
-                  spinnerSize={40}
-                />
-              </SpinnerWrapper>
-            ) : (
-              <>
-                {chatsLoading && (
-                  <SpinnerWrapper height="35px">
-                    <LoaderSpinner
-                      type={LOADER_TYPE.SEAMLESS}
-                      spinnerSize={40}
-                    />
-                  </SpinnerWrapper>
-                )}
+            <>
                 <div ref={topRef}>
-                  {messages?.map((msg, i) => {
-                    //const isLast = i === messages.length - 1
-                    //const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
-
-                    showTime = false;
-                    if (i >= 0) {
-                      const duration = new Date(messages[i]?.timestamp);
-                      const dateString = duration.toDateString();
-                      if (dateString !== time || i === 0) {
-                        showTime = true;
-                        time = dateString;
-                      }
-                    }
-                    return (
-                      <div key={i}>
-                        {!showTime ? null : (
-                          <HeaderMessage
-                            index={i}
-                            time={time}
-                            isGroup={isGroup}
-                          />
-                        )}
-                          <Chats
-                            msg={
-                              (!currentChat?.groupInformation?.isPublic && checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser, isGroup }))
-                                ? ''
-                                : msg
-                            }
-                            caip10={walletToCAIP10({ account: account! })}
-                            messageBeingSent={messageBeingSent}
-                            isGroup={isGroup}
-                          />
-                        
-                      </div>
-                    );
-                  })}
+                <ChatViewList chatId={chatId} limit={10}/>
+                
                 </div>
-                <HeaderMessage
-                  messages={messages}
-                  isGroup={isGroup}
-                />
+               
                 {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser, isGroup }) && (
-                  <Chats
-                    msg={{
-                      ...messages[0],
-                      messageContent: getIntentMessage(currentChat, isGroup),
-                      messageType: 'Intent',
-                    }}
-                    pushUser={pushUser}
-                    caip10={walletToCAIP10({ account: account! })}
-                    messageBeingSent={messageBeingSent}
-                    ApproveIntent={() => ApproveIntent('Approved')}
-                    isGroup={isGroup}
-                  />
+                  <ChatViewList chatId={chatId} limit={10}/>
                 )}
               </>
-            )}
+           
             {/* </CustomScrollContent> */}
             <div ref={bottomRef}></div>
           </MessageContainer>
 
-          {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser,isGroup }) ? null : (
+          {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser,isGroup }) ?  
+          <MessageInputWrapper >
+          <MessageInput chatId={chatId} />
+        </MessageInputWrapper>
+          : (
             <>
-              <Typebar
+         
+<MessageInputWrapper >
+  <MessageInput chatId={chatId} />
+</MessageInputWrapper>
+            
+              {/* <Typebar
                 messageBeingSent={messageBeingSent}
                 setNewMessage={setNewMessage}
                 newMessage={newMessage}
@@ -716,7 +678,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
                 setSnackbarText={setSnackbarText}
                 isJoinGroup = {(!checkIfChatExist({ chats:inbox, currentChat, connectedUser,isGroup }) && isGroup)}
                 approveIntent= {ApproveIntent}
-              />
+              /> */}
             </>
           )}
         </>
@@ -730,6 +692,13 @@ const SpinnerWrapper = styled.div`
   margin-top: 20px;
   height: ${(props) => props.height || '90px'};
 `;
+
+const MessageInputWrapper = styled.div`
+  margin-top: auto;
+  margin-botton: 0;
+  width: 100%;
+  z-index: 99;
+`
 
 const MessageContainer = styled(ItemVV2)`
   align-items: unset;

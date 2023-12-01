@@ -25,6 +25,7 @@ import {
   getUpdatedAdminList,
   getUpdatedMemberList,
   updateGroup,
+  updateGroupMembers
 } from '../../../../../helpers/w2w/groupChat';
 import { getDefaultFeed } from '../../../../../helpers/w2w/user';
 import { Feeds } from '../../../../../types/chat';
@@ -72,6 +73,8 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
     setSelectedMemeberAddress(null);
     handleClose();
   };
+
+  console.log("valueee", memberList)
 
   const makeGroupAdmin = async () => {
     const groupMemberList = convertToWalletAddressList([
@@ -121,6 +124,8 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
     setSelectedMemeberAddress(null);
   };
 
+
+
   const dismissGroupAdmin = async () => {
     const groupMemberList = convertToWalletAddressList([
       ...currentChat?.groupInformation?.members,
@@ -130,6 +135,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
     try {
       const { updateResponse, updatedCurrentChat } = await updateGroup({
         currentChat,
+        pushUser,
         connectedUser,
         adminList: newAdminList,
         memeberList: groupMemberList,
@@ -174,6 +180,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
     try {
       const { updateResponse, updatedCurrentChat } = await updateGroup({
         currentChat,
+        pushUser,
         connectedUser,
         adminList,
         memeberList: updatedMemberList,
@@ -212,6 +219,69 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
     }
     setSelectedMemeberAddress(null);
   };
+
+  const updateMembers = async () => {
+    const newMembersToAdd = memberList.map((member) => member.wallets);
+    console.log(newMembersToAdd);
+    try {
+      setIsLoading(true);
+      const { updateResponse, updatedCurrentChat } = await updateGroupMembers({
+      role: "MEMBER",
+      currentChat,
+      pushUser,
+      memeberList: newMembersToAdd
+
+    })
+
+    console.log("checking the responseee",updateResponse);
+
+    if (typeof updateResponse !== 'string') {
+        setSelectedMemeberAddress(null);
+        if (updatedCurrentChat) setChat(updatedCurrentChat);
+      } else {
+        groupInfoToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: updateResponse,
+          toastType: 'ERROR',
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
+        });
+        setSelectedMemeberAddress(null);
+      }
+      setIsLoading(false);
+      groupInfoToast.showMessageToast({
+        toastTitle: 'Success',
+        toastMessage: 'Group Invitation sent',
+        toastType: 'SUCCESS',
+        getToastIcon: (size) => (
+          <MdCheckCircle
+            size={size}
+            color="green"
+          />
+        ),
+      });
+      handleClose();
+    } catch (error) {
+      setIsLoading(false);
+      console.log('Error', error);
+      groupInfoToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: error.message,
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+    }
+    setIsLoading(false);
+  }
 
   const addMembers = async () => {
     //Already Present Members and PendingMembers
@@ -550,7 +620,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
 
         {showAddMoreWalletModal && (
           <AddWalletContent
-            onSubmit={addMembers}
+            onSubmit={updateMembers}
             isLoading={isLoading}
             memberList={memberList}
             handleMemberList={setMemberList}
