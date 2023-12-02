@@ -209,8 +209,8 @@ export const AddWalletContent = ({
               fontSize="14px"
             >
               {groupMembers
-                ? `0${memberList?.length + groupMembers?.length} / 09 Members`
-                : `0${memberList?.length} / 09 Members`}
+                ? `0${memberList?.length + groupMembers?.length} / 5000 Members`
+                : `0${memberList?.length} / 5000 Members`}
             </SpanV2>
           </LabelContainer>
           <SearchBarContent onSubmit={handleSearch}>
