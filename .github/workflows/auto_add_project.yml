@@ -1,4 +1,4 @@
-name: All add open issues to Push Project Tracker
+name: Auto-add issues to org project
 
 on:
   issues:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   add-to-project:
-    name: Auto add issues to Project
+    name: Auto-add issues to org project
     runs-on: ubuntu-latest
     steps:
       - uses: actions/add-to-project@v0.5.0
