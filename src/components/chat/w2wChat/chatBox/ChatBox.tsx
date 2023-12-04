@@ -60,7 +60,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
-  const { currentChat, viewChatBox, receivedIntents, activeTab, setMessages, setChat }: ContextType =
+  const { currentChat, viewChatBox, receivedIntents, activeTab, setChat }: ContextType =
     useContext<ContextType>(Context);
   const { web3NameList }: AppContextType = useContext(AppContext);
 
@@ -74,7 +74,6 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const groupInfoRef = useRef<HTMLInputElement>(null);
   const { connectedUser } = useContext(ChatUserContext);
   const { videoObject } = useContext(VideoCallContext);
-  const [chatId, setChatId] = useState<string>('');
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);
 
@@ -94,11 +93,6 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const location = useLocation();
 
   useEffect(() => {
-    let chatid = currentChat?.did || currentChat?.groupInformation?.chatId;
-    setChatId(chatid);
-  }, [currentChat, account]);
-
-  useEffect(() => {
     // if ens is resolved, update browse to match ens name is it doesn't match
     if (ensName && location.pathname !== `/chat/${ensName}`) {
       // lastly, set navigation for dynamic linking
@@ -106,88 +100,15 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     }
   }, [ensName]);
 
-  // const onScroll = async () => {
-  //   if (listInnerRef.current) {
-  //     const { scrollTop } = listInnerRef.current;
-  //     if (scrollTop === 0) {
-  //       // This will be triggered after hitting the first element.
-  //       // pagination
-  //       // addDom();
-
-  //       //scroll item
-  //       // let content = document.getElementById('loop');
-  //       let content = listInnerRef.current;
-  //       let curScrollPos = content.scrollTop;
-  //       let oldScroll = content.scrollHeight - content.clientHeight;
-
-  //       await getChatCall();
-
-  //       let newScroll = content.scrollHeight - content.clientHeight;
-  //       content.scrollTop = curScrollPos + (newScroll - oldScroll);
-  //     }
-  //   }
-  // };
-
-  // const scrollToBottom = (behavior) => {
-  //   bottomRef?.current?.scrollIntoView(!behavior ? true : { behavior: 'smooth' });
-  // };
-
-  // useEffect(() => {
-  //   if (messages.length <= chatsFetchedLimit) scrollToBottom(null);
-  // }, [messages]);
-
-  // const getChatCall = async (
-  //   wasLastListPresentProp = wasLastListPresent,
-  //   messagesProp = messages,
-  //   lastThreadHashFetchedProp = lastThreadHashFetched
-  // ) => {
-  //   if (!connectedUser) return;
-  //   if (wasLastListPresentProp && !lastThreadHashFetchedProp) return;
-  //   setChatsLoading(true);
-  //   // scrollToNext();
-  //   const { chatsResponse, lastThreadHash, lastListPresent } = await getChats({
-  //     account,
-  //     pgpPrivateKey: connectedUser.privateKey,
-  //     chatId: currentChat?.did || currentChat?.groupInformation?.chatId,
-  //     threadHash: lastThreadHashFetchedProp!,
-  //     limit: chatsFetchedLimit,
-  //   });
-
-  //   // remove this custom decryption after SDK issue is resolved in future
-  //   const promiseArrToDecryptMsg = [];
-  //   chatsResponse.forEach((chat) =>
-  //     promiseArrToDecryptMsg.push(
-  //       w2wHelper.decryptMessages({
-  //         savedMsg: chat,
-  //         connectedUser,
-  //         account,
-  //         currentChat,
-  //         inbox,
-  //       })
-  //     )
-  //   );
-  //   const decryptedMsgArr = await Promise.all(promiseArrToDecryptMsg);
-  //   decryptedMsgArr.sort((a, b) => {
-  //     return a.timestamp! > b.timestamp! ? 1 : -1;
-  //   });
-
-  //   setMessages([...decryptedMsgArr, ...messagesProp]);
-  //   setLastThreadHashFetched(lastThreadHash);
-  //   setWasLastListPresent(lastListPresent);
-  //   setChatsLoading(false);
-  // };
-
   useEffect(() => {
     setIsGroup(false);
     setShowGroupInfo(false);
-    setMessages([]);
 
     if (currentChat) {
       setIsGroup(checkIfGroup(currentChat));
       // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
       // even though the user was still on the same chat.
       const image = getGroupImage(currentChat);
-      // getChatCall(false, [], null);
       try {
         CID.parse(image); // Will throw exception if invalid CID
         setImageSource(INFURA_URL + `${image}`);
@@ -407,52 +328,21 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             )}
           </ItemHV2>
 
-          <MessageContainer
-          // ref={listInnerRef}
-          // onScroll={onScroll}
-          >
-            {/* style={{overflow: "scroll",backgroundColor:'red'}} */}
-            {/* <CustomScrollContent initialScrollBehavior="smooth"> */}
-
-            <>
-              {/* <div ref={topRef}> */}
-
-              {/* <ChatContainer> */}
+          <MessageContainer>
+            {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
               <ChatViewList
-                chatId={chatId}
+                chatId={currentChat?.did || currentChat?.groupInformation?.chatId}
                 limit={10}
               />
-
-              {/* </ChatContainer> */}
-              {/* </div> */}
-
-              {/* {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser, isGroup }) && (
-                  <ChatContainer>
-                     <ChatViewList chatId={chatId}/>
-                  </ChatContainer>
-                 
-                )} */}
-            </>
-
-            {/* </CustomScrollContent> */}
+            )}
           </MessageContainer>
           {checkIfChatExist({ chats: receivedIntents, currentChat, connectedUser, isGroup }) ? null : (
             <>
               <MessageInputWrapper>
-                <MessageInput chatId={chatId} />
+                {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
+                  <MessageInput chatId={currentChat?.did || currentChat?.groupInformation?.chatId} />
+                )}
               </MessageInputWrapper>
-              {/* <Typebar
-                messageBeingSent={messageBeingSent}
-                setNewMessage={setNewMessage}
-                newMessage={newMessage}
-                sendMessage={sendMessage}
-                isGroup={isGroup}
-                sendIntent={sendIntent}
-                setOpenSuccessSnackBar={setOpenSuccessSnackBar}
-                setSnackbarText={setSnackbarText}
-                isJoinGroup = {(!checkIfChatExist({ chats:inbox, currentChat, connectedUser,isGroup }) && isGroup)}
-                approveIntent= {ApproveIntent}
-              /> */}
             </>
           )}
         </>
@@ -494,7 +384,7 @@ const MessageContainer = styled(ItemVV2)`
   flex-direction: column;
   justify-content: flex-start;
   position: absolute;
-  padding:40px 20px;
+  padding: 40px 20px;
   top: 40px;
   // bottom: 150px;
   // left: 0;
