@@ -22,7 +22,7 @@ import { AppContextType } from 'types/context';
 
 // Create Header
 const Profile = ({ isDarkMode }) => {
-  const { web3NameList }:AppContextType=useContext(AppContext);
+  const { web3NameList, setReadOnlyWallet, readOnlyWallet }: AppContextType = useContext(AppContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
@@ -43,21 +43,21 @@ const Profile = ({ isDarkMode }) => {
       id: 'walletAddress',
       value: account,
       title: account,
-      function: ()=>{},
+      function: () => { },
       invertedIcon: './copy.svg',
     },
     {
       id: 'userSettings',
       value: '',
       title: 'Settings',
-      function: ()=>{},
+      function: () => { },
       to: APP_PATHS.UserSettings,
       invertedIcon: 'svg/setting.svg'
     },
     {
       id: 'prodDapp',
       value: '',
-      function: ()=>{},
+      function: () => { },
       link: `https://${envUtil.prod}`,
       title: 'Production dapp',
       invertedIcon: './prod.svg',
@@ -66,7 +66,11 @@ const Profile = ({ isDarkMode }) => {
       id: 'disconnect',
       value: '',
       function: async () => {
-        await disconnect(wallet);
+        if (readOnlyWallet) {
+          setReadOnlyWallet();
+        } else {
+          await disconnect(wallet);
+        }
       },
       title: 'Logout',
       invertedIcon: './logout.svg',
@@ -83,8 +87,8 @@ const Profile = ({ isDarkMode }) => {
       {account && account !== '' && !authError && (
         <Body>
           <Wallet
-            bg={theme.profileBG}
-            color={theme.profileText}
+            bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
+            color='#FFF'
             isDarkMode={isDarkMode}
             onClick={() => setShowDropdown(!showDropdown)}
             ref={toggleArrowRef}

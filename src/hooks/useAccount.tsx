@@ -1,8 +1,13 @@
 import { useConnectWallet, useSetChain } from '@web3-onboard/react';
+import { appConfig } from 'config';
+import { AppContext } from 'contexts/AppContext';
 import { ethers } from 'ethers';
-import { useMemo } from 'react';
+import { useContext, useMemo, useState } from 'react';
 
 export const useAccount = () => {
+
+  const { readOnlyWallet } = useContext(AppContext);
+
   const [{ wallet, connecting }, connect, disconnect, updateBalances, setWalletModules, setPrimaryWallet] =
     useConnectWallet();
 
@@ -13,19 +18,26 @@ export const useAccount = () => {
   };
 
   const provider = useMemo(() => {
-    return wallet ? new ethers.providers.Web3Provider(wallet.provider, 'any') : undefined;
+    return wallet ? new ethers.providers.Web3Provider(wallet.provider, 'any') : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
   }, [wallet]);
 
   const isActive = useMemo(() => {
-    return wallet && wallet.accounts.length > 0 ? true : false
-  }, [wallet]);
+    
+    if (readOnlyWallet) {
+      return true;
+    } else {
+      return wallet && wallet.accounts.length > 0 ? true : false
+    }
+
+
+  }, [wallet, readOnlyWallet]);
 
   const account = useMemo(() => {
     return wallet && wallet.accounts.length > 0 ? ethers.utils.getAddress(wallet.accounts[0].address) : undefined;
   }, [wallet]);
 
   return {
-    wallet,
+    wallet: wallet ? wallet : readOnlyWallet,
     connecting,
     connect,
     disconnect,
@@ -33,8 +45,9 @@ export const useAccount = () => {
     setWalletModules,
     setPrimaryWallet,
     provider,
-    account: account,
-    chainId: connectedChain ? Number(connectedChain.id) : undefined,
+    // account: account ? account : '0xf9dF4b44Bb6BAf88074bb97C654bec0e4f137fE6',
+    account: account ? account : readOnlyWallet,
+    chainId: connectedChain ? Number(connectedChain.id) : readOnlyWallet ?  appConfig.coreContractChain : undefined,
     isActive,
     setChain,
     switchChain,

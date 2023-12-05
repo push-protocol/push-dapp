@@ -17,7 +17,7 @@ import * as serviceWorker from "./serviceWorker";
 import ChatUserContextProvider from './contexts/ChatUserContext';
 import { VideoCallContextProvider } from './contexts/VideoCallContext';
 import ErrorContextProvider from './contexts/ErrorContext';
-
+import AppContextProvider from './contexts/AppContext';
 
 
 // Internal Configs
@@ -52,6 +52,7 @@ ReactDOM.render(
     <Provider store={store}>
       <ApolloProvider client={client}>
         <Web3OnboardProvider web3Onboard={web3Onboard}>
+        <AppContextProvider>
           <ErrorContextProvider>
           <ChatUserContextProvider>
             <VideoCallContextProvider>
@@ -59,6 +60,7 @@ ReactDOM.render(
             </VideoCallContextProvider>
           </ChatUserContextProvider>
           </ErrorContextProvider>
+          </AppContextProvider>
         </Web3OnboardProvider>
       </ApolloProvider>
     </Provider>

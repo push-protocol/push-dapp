@@ -69,7 +69,7 @@ function Header({ isDarkMode, darkModeToggle }) {
   const { navigationSetup } = useContext(NavigationContext);
 
   // Get 
-  const { isActive, switchChain } = useAccount();
+  const { isActive, switchChain, connect, wallet } = useAccount();
   const { authError: error } = useContext(ErrorContext);
 
   const [showLoginControls, setShowLoginControls] = React.useState(false);
@@ -133,6 +133,12 @@ function Header({ isDarkMode, darkModeToggle }) {
     setShowLoginControls(!showLoginControls);
   };
 
+  const handleConnectWallet = () => {
+    const onboardModal = document.getElementById("onboard-container");
+    onboardModal.style.display = 'block';
+    connect();
+  }
+
   const isMobile = useDeviceWidthCheck(600);
   const showSnapMobile = useDeviceWidthCheck(600);
   const isSnapPage = location?.pathname === '/snap';
@@ -170,7 +176,7 @@ function Header({ isDarkMode, darkModeToggle }) {
         {navigationSetup && showNavBar && isActive && !error && (
           <NavMenuContainer ref={navRef} tabletAlign="flex-start">
             <NavMenu>
-           {showSnapMobile && <SnapHeader/>}
+              {showSnapMobile && <SnapHeader />}
               <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
 
@@ -197,7 +203,9 @@ function Header({ isDarkMode, darkModeToggle }) {
             </Span>
           </HeaderTag>
         )}
-      {!showSnapMobile && <SnapHeader/>}
+        {/* {!showSnapMobile && <SnapHeader />} */}
+
+        {wallet ? <div onClick={handleConnectWallet}> Connect Wallet </div> : <div>Disconnect wallet</div>}
 
         {isActive && !showLoginControls && !error && (
           <DarkModeSwitch
@@ -226,13 +234,19 @@ function Header({ isDarkMode, darkModeToggle }) {
 
         <ItemH justify="flex-end" flex="initial">
           {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>}
-          {!isActive && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>}
-          {isActive && !showLoginControls && !error && (
+          {/* {!isActive && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>} */}
+          {!!error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>}
+          {/* {isActive && !showLoginControls && !error && (
             <RightBarDesktop justify="flex-end" flex="initial">
               <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
             </RightBarDesktop>
-          )}{' '}
+          )}{' '} */}
+
+          <RightBarDesktop justify="flex-end" flex="initial">
+            <ChainIndicator isDarkMode={isDarkMode} />
+            <Profile isDarkMode={isDarkMode} />
+          </RightBarDesktop>
         </ItemH>
       </ItemH>
     </Container>
