@@ -135,22 +135,27 @@ export const updateGroup = async(options:UpdateGroupType) => {
 
 
 export const rearrangeMembers = (currentChat,connectedUser) => {
-  currentChat?.groupInformation?.members.sort(x => (x?.isAdmin) ? -1 : 1);
-  currentChat?.groupInformation?.members.some(
-    (member, idx) =>
-      member?.wallet?.toLowerCase() == currentChat?.groupInformation?.groupCreator?.toLowerCase() &&
-      currentChat?.groupInformation?.members.unshift(
-        currentChat?.groupInformation?.members.splice(idx, 1)[0]
-      )
-  );
-  currentChat?.groupInformation?.members.some(
-    (member, idx) =>
-      member?.wallet?.toLowerCase() == connectedUser.wallets?.toLowerCase() &&
-      currentChat?.groupInformation?.members.unshift(
-        currentChat?.groupInformation?.members.splice(idx, 1)[0]
-      )
-  );
-  return currentChat;
+  console.log(currentChat)
+  if(currentChat){
+    currentChat?.groupInformation?.members.sort(x => (x?.isAdmin) ? -1 : 1);
+    currentChat?.groupInformation?.members.some(
+      (member, idx) =>
+        member?.wallet?.toLowerCase() == currentChat?.groupInformation?.groupCreator?.toLowerCase() &&
+        currentChat?.groupInformation?.members.unshift(
+          currentChat?.groupInformation?.members.splice(idx, 1)[0]
+        )
+    );
+    currentChat?.groupInformation?.members.some(
+      (member, idx) =>
+        member?.wallet?.toLowerCase() == connectedUser.wallets?.toLowerCase() &&
+        currentChat?.groupInformation?.members.unshift(
+          currentChat?.groupInformation?.members.splice(idx, 1)[0]
+        )
+    );
+    return currentChat;
+  }
+  return;
+
 }
 
 export const MemberAlreadyPresent = (member:any,groupMembers:any)=>{

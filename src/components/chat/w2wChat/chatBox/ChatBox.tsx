@@ -10,7 +10,7 @@ import * as PushAPI from '@pushprotocol/restapi';
 import 'font-awesome/css/font-awesome.min.css';
 import { CID } from 'ipfs-http-client';
 import { BsDashLg } from 'react-icons/bs';
-import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
+import { MdOutlineArrowBackIos } from 'react-icons/md';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
@@ -22,40 +22,31 @@ import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg'
 import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import videoCallIcon from 'assets/icons/videoCallIcon.svg';
-import LoaderSpinner, { LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { Content } from 'components/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
-import * as w2wHelper from 'helpers/w2w/';
-import {
-  checkIfChatExist,
-  fetchInbox
-} from 'helpers/w2w/user';
+import { checkIfChatExist } from 'helpers/w2w/user';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext as ContextType, Feeds, MessageIPFS } from 'types/chat';
+import { AppContext as ContextType } from 'types/chat';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
-import { caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w';
-import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpers/w2w/groupChat';
-import { MessagetypeType } from '../../../../types/chat';
-import Chats from '../chats/Chats';
-import Typebar from '../TypeBar/Typebar';
-import { HeaderMessage } from './HeaderMessage';
+import { caip10ToWallet } from '../../../../helpers/w2w';
+import { checkIfGroup, getGroupImage } from '../../../../helpers/w2w/groupChat';
+
 import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
 
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
-import { getChats } from 'services';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
-const chatsFetchedLimit = 15;
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return (
@@ -69,48 +60,22 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
-  const {
-    currentChat,
-    viewChatBox,
-    receivedIntents,
-    inbox,
-    messages,
-    activeTab,
-    setActiveTab,
-    setMessages,
-    setChat,
-    setInbox,
-    setHasUserBeenSearched,
-    setReceivedIntents,
-    setBlockedLoading,
-  }: ContextType = useContext<ContextType>(Context);
-  const { web3NameList }:AppContextType=useContext(AppContext);
-  const [chatMeta, setChatMeta] = useState(null);
+  const { currentChat, viewChatBox, receivedIntents, activeTab, setChat }: ContextType =
+    useContext<ContextType>(Context);
+  const { web3NameList }: AppContextType = useContext(AppContext);
 
-  const [newMessage, setNewMessage] = useState<string>('');
-  const { chainId, account, provider } = useAccount();
+  const { account } = useAccount();
   const [Loading, setLoading] = useState<boolean>(true);
-  const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false);
   const [imageSource, setImageSource] = useState<string>('');
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
   const [SnackbarText, setSnackbarText] = useState<string>('');
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
   const groupInfoRef = useRef<HTMLInputElement>(null);
-  const { connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
+  const { connectedUser } = useContext(ChatUserContext);
   const { videoObject } = useContext(VideoCallContext);
-  const [chatId, setChatId] = useState<string>("");
-  const listInnerRef = useRef<HTMLDivElement>(null);
-  const topRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
-  const [chatsLoading, setChatsLoading] = useState<boolean>(true);
-  const [lastThreadHashFetched, setLastThreadHashFetched] = useState<string | null>(null);
-  const [wasLastListPresent, setWasLastListPresent] = useState<boolean>(false);
-  const chatBoxToast = useToast();
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);
-  let showTime = false;
-  let time = '';
 
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
@@ -118,19 +83,14 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   useResolveWeb3Name(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
 
   // get web3 name
-  let ensName=''
-  if(!isGroup && currentChat?.wallets?.split(',')[0].toString()){
+  let ensName = '';
+  if (!isGroup && currentChat?.wallets?.split(',')[0].toString()) {
     const walletLowercase = caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase();
     const checksumWallet = ethers.utils.getAddress(walletLowercase);
     ensName = web3NameList[checksumWallet];
   }
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    let chatid= currentChat?.did || currentChat?.groupInformation?.chatId
-    setChatId(chatid);
-  },[currentChat, account])
 
   useEffect(() => {
     // if ens is resolved, update browse to match ens name is it doesn't match
@@ -140,90 +100,15 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     }
   }, [ensName]);
 
-  const onScroll = async () => {
-    if (listInnerRef.current) {
-      const { scrollTop } = listInnerRef.current;
-      if (scrollTop === 0) {
-        // This will be triggered after hitting the first element.
-        // pagination
-        // addDom();
-
-        //scroll item
-        // let content = document.getElementById('loop');
-        let content = listInnerRef.current;
-        let curScrollPos = content.scrollTop;
-        let oldScroll = content.scrollHeight - content.clientHeight;
-
-        await getChatCall();
-
-        let newScroll = content.scrollHeight - content.clientHeight;
-        content.scrollTop = curScrollPos + (newScroll - oldScroll);
-      }
-    }
-  };
-
-  const scrollToBottom = (behavior) => {
-    bottomRef?.current?.scrollIntoView(!behavior ? true : { behavior: 'smooth' });
-  };
-
   useEffect(() => {
-    if (messages.length <= chatsFetchedLimit) scrollToBottom(null);
-  }, [messages]);
-
-  const getChatCall = async (
-    wasLastListPresentProp = wasLastListPresent,
-    messagesProp = messages,
-    lastThreadHashFetchedProp = lastThreadHashFetched
-  ) => {
-    if (!connectedUser) return;
-    if (wasLastListPresentProp && !lastThreadHashFetchedProp) return;
-    setChatsLoading(true);
-    // scrollToNext();
-    const { chatsResponse, lastThreadHash, lastListPresent } = await getChats({
-      account,
-      pgpPrivateKey: connectedUser.privateKey,
-      chatId: currentChat?.did || currentChat?.groupInformation?.chatId,
-      threadHash: lastThreadHashFetchedProp!,
-      limit: chatsFetchedLimit,
-    });
-
-    // remove this custom decryption after SDK issue is resolved in future
-    const promiseArrToDecryptMsg = [];
-    chatsResponse.forEach((chat) =>
-      promiseArrToDecryptMsg.push(
-        w2wHelper.decryptMessages({
-          savedMsg: chat,
-          connectedUser,
-          account,
-          currentChat,
-          inbox,
-        })
-      )
-    );
-    const decryptedMsgArr = await Promise.all(promiseArrToDecryptMsg);
-    decryptedMsgArr.sort((a, b) => {
-      return a.timestamp! > b.timestamp! ? 1 : -1;
-    });
-
-    setMessages([...decryptedMsgArr, ...messagesProp]);
-    setLastThreadHashFetched(lastThreadHash);
-    setWasLastListPresent(lastListPresent);
-    setChatsLoading(false);
-  };
-
-  useEffect(() => {
-    setWasLastListPresent(false);
-    setLastThreadHashFetched(null);
     setIsGroup(false);
     setShowGroupInfo(false);
-    setMessages([]);
 
     if (currentChat) {
       setIsGroup(checkIfGroup(currentChat));
       // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
       // even though the user was still on the same chat.
       const image = getGroupImage(currentChat);
-      getChatCall(false, [], null);
       try {
         CID.parse(image); // Will throw exception if invalid CID
         setImageSource(INFURA_URL + `${image}`);
@@ -245,210 +130,6 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     if (currentChat?.wallets) return caip10ToWallet(currentChat?.wallets?.split(',')[0].toString());
   };
 
-  const fetchInboxApi = async (): Promise<Feeds> => {
-    const inboxes: Feeds[] = await fetchInbox({connectedUser});
-    setInbox(inboxes);
-    return inboxes?.find((x) => x.wallets.split(':')[1]?.toLowerCase() === currentChat.wallets.split(':')[1]?.toLowerCase());
-  };
-
-  const sendMessage = async ({
-    message,
-    messageType,
-  }: {
-    message: string;
-    messageType: MessagetypeType;
-  }): Promise<void> => {
-    setMessageBeingSent(true);
-
-    try {
-      let createdUser;
-      if (!connectedUser.publicKey) {
-        createdUser = await createUserIfNecessary();
-      }
-      const signer = await provider.getSigner();
-
-      const sendResponse = await PushAPI.chat.send({
-        messageContent: message,
-        messageType: messageType,
-        receiverAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat?.wallets,
-        signer: signer!,
-        pgpPrivateKey: connectedUser?.privateKey || createdUser?.privateKey,
-        env: appConfig.appEnv,
-      });
-
-      if (typeof sendResponse !== 'string') {
-        sendResponse.messageContent = message;
-        const updatedCurrentChat = currentChat;
-        updatedCurrentChat.msg = sendResponse;
-        setChat(updatedCurrentChat);
-        setNewMessage('');
-        setMessages([...messages, sendResponse]);
-
-        setTimeout(() => {
-          setMessageBeingSent(false);
-        }, 1)
-      }
-
-    } catch (error) {
-      chatBoxToast.showMessageToast({
-        toastTitle: 'Error',
-        toastMessage: 'Cannot send Message, Try again later',
-        toastType: 'ERROR',
-        getToastIcon: (size) => (
-          <MdError
-            size={size}
-            color="red"
-          />
-        ),
-      });
-
-      setMessageBeingSent(false);
-    }
-  };
-
-  useEffect(() => {
-    if (messageBeingSent == false) {
-      setTimeout(() => {
-        scrollToBottom(null);
-      }, 10);
-    }
-  }, [messageBeingSent]);
-
-  async function resolveThreadhash(): Promise<void> {
-    setLoading(true);
-    // If the user is not registered in the protocol yet, his did will be his wallet address
-    const didOrWallet: string = connectedUser.wallets.split(':')[1];
-    let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: true, pgpPrivateKey:connectedUser.privateKey });
-    setReceivedIntents(intents);
-    setLoading(false);
-  }
-
-  async function ApproveIntent(status: string): Promise<void> {
-    setMessageBeingSent(true);
-    let updatedIntent: any;
-    try {
-      let createdUser;
-      if (!connectedUser.publicKey) {
-        createdUser = await createUserIfNecessary();
-      }
-      const signer = await provider.getSigner();
-      updatedIntent = await PushAPI.chat.approve({
-        status: 'Approved',
-        signer: signer!,
-        senderAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat.intentSentBy,
-        pgpPrivateKey: connectedUser?.privateKey || createdUser?.privateKey,
-        env: appConfig.appEnv,
-      });
-
-      let activeChat = currentChat;
-      activeChat.intent = updatedIntent.data;
-      setChat(activeChat);
-
-      // displaying toast according to status
-      if (status === 'Approved') {
-        chatBoxToast.showMessageToast({
-          toastTitle: 'Success',
-          toastMessage: 'Request approved',
-          toastType: 'SUCCESS',
-          getToastIcon: (size) => (
-            <MdCheckCircle
-              size={size}
-              color="green"
-            />
-          ),
-        });
-      }
-
-      setActiveTab(0);
-      await resolveThreadhash();
-      setMessageBeingSent(false);
-    } catch (error) {
-      chatBoxToast.showMessageToast({
-        toastTitle: 'Error',
-        toastMessage: 'Cannot approve intent, Try again later',
-        toastType: 'ERROR',
-        getToastIcon: (size) => (
-          <MdError
-            size={size}
-            color="red"
-          />
-        ),
-      });
-    }
-  }
-
-  const sendIntent = async ({
-    message,
-    messageType,
-  }: {
-    message: string;
-    messageType: MessagetypeType;
-  }): Promise<void> => {
-    let user;
-    try {
-      setMessageBeingSent(true);
-      if (
-        currentChat.intent === null ||
-        currentChat.intent === '' ||
-        !currentChat.intent?.toLowerCase().includes(currentChat.wallets.split(':')[1]?.toLowerCase())
-      ) {
-        let createdUser;
-        if (!connectedUser.publicKey) {
-          createdUser = await createUserIfNecessary();
-        }
-        const signer = await provider.getSigner();
-        const sendResponse = await PushAPI.chat.send({
-          messageContent: message,
-          messageType: messageType,
-          receiverAddress: currentChat?.wallets.split(':')[1],
-          signer: signer!,
-          pgpPrivateKey: connectedUser.privateKey || createdUser?.privateKey,
-          env: appConfig.appEnv,
-        });
-
-        if (typeof sendResponse !== 'string') {
-           // We store the message in state decrypted so we display to the user the intent message
-           sendResponse.messageContent = message;
-           setNewMessage('');
-           let result = await fetchInboxApi();
-           result.msg.messageContent = message;
-           setChat(result);
-           chatBoxToast.showMessageToast({
-             toastTitle: 'Success',
-             toastMessage: 'Chat Request Sent',
-             toastType: 'SUCCESS',
-             getToastIcon: (size) => (
-               <MdCheckCircle
-                 size={size}
-                 color="green"
-               />
-             ),
-           });
-          setMessageBeingSent(false);
-        }
-      }
-
-      setHasUserBeenSearched(false);
-      setActiveTab(0);
-    } catch (error) {
-      chatBoxToast.showMessageToast({
-        toastTitle: 'Error',
-        toastMessage: 'Cannot send request, Try again later',
-        toastType: 'ERROR',
-        getToastIcon: (size) => (
-          <MdError
-            size={size}
-            color="red"
-          />
-        ),
-      });
-      setMessageBeingSent(false);
-    } finally {
-      setMessageBeingSent(false);
-    }
-  };
-
-  console.log("current id", chatId)
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
       return;
@@ -457,8 +138,6 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   };
 
   const startVideoCallHandler = async () => {
-    console.log("CURRENT CHAT", currentChat);
-
     videoObject?.setData((oldData) => {
       return produce(oldData, (draft) => {
         draft.local.address = account;
@@ -468,7 +147,6 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       });
     });
   };
-
 
   const InfoMessages = [
     { id: 1, content: 'You can send up to 10 group requests in alpha' },
@@ -610,21 +288,26 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             </SpanV2>
 
             {/* Video call button */}
-           {!isGroup &&  <Tooltip
-              tooltipContent="Video call"
-              placementProps={{
-                bottom: '1.4rem',
-                transform: 'translateX(-92%)',
-                borderRadius: '12px 12px 2px 12px',
-                width: '75px',
-                padding: "0.3rem 0.8rem 0.25rem 0.8rem"
-              }}
-              wrapperProps={{ width: 'fit-content', minWidth: 'fit-content' }}
-            >
-              <VideoCallButton onClick={startVideoCallHandler}>
-                <ImageV2 cursor="pointer" src={videoCallIcon} />
-              </VideoCallButton>
-            </Tooltip>}
+            {!isGroup && (
+              <Tooltip
+                tooltipContent="Video call"
+                placementProps={{
+                  bottom: '1.4rem',
+                  transform: 'translateX(-92%)',
+                  borderRadius: '12px 12px 2px 12px',
+                  width: '75px',
+                  padding: '0.3rem 0.8rem 0.25rem 0.8rem',
+                }}
+                wrapperProps={{ width: 'fit-content', minWidth: 'fit-content' }}
+              >
+                <VideoCallButton onClick={startVideoCallHandler}>
+                  <ImageV2
+                    cursor="pointer"
+                    src={videoCallIcon}
+                  />
+                </VideoCallButton>
+              </Tooltip>
+            )}
 
             {currentChat.groupInformation && (
               <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
@@ -645,53 +328,21 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             )}
           </ItemHV2>
 
-          <MessageContainer
-            ref={listInnerRef}
-            onScroll={onScroll}
-          >
-            {/* style={{overflow: "scroll",backgroundColor:'red'}} */}
-            {/* <CustomScrollContent initialScrollBehavior="smooth"> */}
-            
-              <>
-              
-                <div ref={topRef}>
-                 
-           <ChatContainer>
-                <ChatViewList chatId={chatId} limit={10}/>
-                
-          </ChatContainer>
-                </div>
-               
-                {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser, isGroup }) && (
-                  <ChatContainer>
-                     <ChatViewList chatId={chatId}/>
-                  </ChatContainer>
-                 
-                )}
-              </>
-       
-            {/* </CustomScrollContent> */}
-          
-           
-            </MessageContainer>
-          {checkIfChatExist({ chats:receivedIntents, currentChat, connectedUser,isGroup }) ? null : (
+          <MessageContainer>
+            {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
+              <ChatViewList
+                chatId={currentChat?.did || currentChat?.groupInformation?.chatId}
+                limit={10}
+              />
+            )}
+          </MessageContainer>
+          {checkIfChatExist({ chats: receivedIntents, currentChat, connectedUser, isGroup }) ? null : (
             <>
-            <MessageInputWrapper >
-          <MessageInput chatId={chatId} />
-        </MessageInputWrapper>
-              {/* <Typebar
-                messageBeingSent={messageBeingSent}
-                setNewMessage={setNewMessage}
-                newMessage={newMessage}
-                sendMessage={sendMessage}
-                isGroup={isGroup}
-                sendIntent={sendIntent}
-                setOpenSuccessSnackBar={setOpenSuccessSnackBar}
-                setSnackbarText={setSnackbarText}
-                isJoinGroup = {(!checkIfChatExist({ chats:inbox, currentChat, connectedUser,isGroup }) && isGroup)}
-                approveIntent= {ApproveIntent}
-              /> */}
-              
+              <MessageInputWrapper>
+                {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
+                  <MessageInput chatId={currentChat?.did || currentChat?.groupInformation?.chatId} />
+                )}
+              </MessageInputWrapper>
             </>
           )}
         </>
@@ -706,19 +357,16 @@ const SpinnerWrapper = styled.div`
   height: ${(props) => props.height || '90px'};
 `;
 const MessageInputWrapper = styled.div`
-
   width: 98%;
   display: flex;
   justify-content: center;
   position: absolute;
   bottom: 8px;
-  
+
   z-index: 99;
-  
- 
-`
+`;
 const ChatContainer = styled.div`
-  overflow-x : hidden;
+  overflow-x: hidden;
   align-items: unset;
   display: block;
   justify-content: flex-start;
@@ -729,60 +377,61 @@ const ChatContainer = styled.div`
   right: 0;
   margin: 0;
   width: 100%;
-  
- 
-`
+`;
 const MessageContainer = styled(ItemVV2)`
-  align-items: unset;
-  display: block;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   position: absolute;
-  top: 65px;
-  bottom: 66px;
-  left: 0;
-  right: 0;
-  margin: 0;
-  width: 100%;
-  height: calc(100% - 140px);
-  overflow-x: none;
-  overflow-y: scroll;
+  padding: 40px 20px;
+  top: 40px;
+  // bottom: 150px;
+  // left: 0;
+  // right: 0;
+  // margin: 0;
+  width: 95%;
+  height: 80%;
+  // max-height: 20%;
+  overflow-x: hidden;
+  // overflow-y: scroll;
   // background: red;
 
-  &::-webkit-scrollbar-track {
-    background-color: ${(props) => props.theme.scrollBg};
-    border-radius: 10px;
-  }
+  // &::-webkit-scrollbar-track {
+  //   background-color: ${(props) => props.theme.scrollBg};
+  //   border-radius: 10px;
+  // }
 
-  &::-webkit-scrollbar {
-    background-color: ${(props) => props.theme.scrollBg};
-    width: 5px;
-  }
+  // &::-webkit-scrollbar {
+  //   background-color: ${(props) => props.theme.scrollBg};
+  //   width: 5px;
+  // }
 
-  @media (max-width: 768px) {
-    padding: 0px 0px 0px 0px;
+  // @media (max-width: 768px) {
+  //   padding: 0px 0px 0px 0px;
 
-    &::-webkit-scrollbar-track {
-      background-color: none;
-      border-radius: 9px;
-    }
+  //   &::-webkit-scrollbar-track {
+  //     background-color: none;
+  //     border-radius: 9px;
+  //   }
 
-    &::-webkit-scrollbar {
-      background-color: none;
-      width: 4px;
-    }
-  }
+  //   &::-webkit-scrollbar {
+  //     background-color: none;
+  //     width: 4px;
+  //   }
+  // }
 
-  &::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background-image: -webkit-gradient(
-      linear,
-      left top,
-      left bottom,
-      color-stop(0.44, #cf1c84),
-      color-stop(0.72, #cf1c84),
-      color-stop(0.86, #cf1c84)
-    );
-  }
+  // &::-webkit-scrollbar-thumb {
+  //   border-radius: 10px;
+  //   background-image: -webkit-gradient(
+  //     linear,
+  //     left top,
+  //     left bottom,
+  //     color-stop(0.44, #cf1c84),
+  //     color-stop(0.72, #cf1c84),
+  //     color-stop(0.86, #cf1c84)
+  //   );
+  // }
 `;
 
 const GroupInfo = styled(ItemHV2)`
