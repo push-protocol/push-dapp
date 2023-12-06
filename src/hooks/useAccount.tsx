@@ -54,7 +54,7 @@ export const useAccount = () => {
     setWalletModules,
     setPrimaryWallet,
     provider,
-    account,
+    account : account ? account : readOnlyWallet,
     chainId,
     isActive,
     setChain,

@@ -148,10 +148,29 @@ const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({
     setIsOpen(false);
   };
 
+  const {handleConnectWallet} = useContext(AppContext);
+
   const subscribeToast = useToast();
   const saveUserSettingHandler = async ({ userSettings, setLoading }: { userSettings?: UserSetting[], setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const setLoadingFunc = setLoading || (() => {});
     const saveOnSuccessSettingFunc = onSuccessSave || (() => {});
+    
+    if (!userPushSDKInstance.signer) {
+      subscribeToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: `You need to connect your wallet. Please Connect your wallet.`,
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+      handleConnectWallet();
+      return;
+    }
+    
     setLoadingFunc(true);
 
     try {
