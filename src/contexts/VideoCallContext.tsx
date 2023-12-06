@@ -10,6 +10,7 @@ import { initVideoCallData } from '@pushprotocol/restapi/src/lib/video';
 import { ChatUserContext } from './ChatUserContext';
 import { User } from 'types/chat';
 import { useAccount } from 'hooks';
+import { GlobalContext } from './GlobalContext';
 
 interface RequestWrapperOptionsType {
   senderAddress: string;
@@ -41,6 +42,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   const [incomingCallUserData, setIncomingCallUserData] = useState<User | null>(null);
   const { chainId, account, provider } = useAccount();
   const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
+  const { readOnlyWallet } = useContext(GlobalContext);
 
   const [data, setData] = useState<PushAPI.VideoCallData>(initVideoCallData);
 
@@ -56,6 +58,9 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   }, [data.incoming[0].status]);
 
   useEffect(() => {
+    // if the wallet is read only, we don't need to create a video object
+    if(readOnlyWallet) return;
+
     if (!provider || !account || !connectedUser) return null;
 
     (async () => {

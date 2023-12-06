@@ -15,6 +15,7 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 import { produce } from 'immer';
+import { useSelector } from 'react-redux';
 
 // Internal Components
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
@@ -99,6 +100,9 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const groupInfoRef = useRef<HTMLInputElement>(null);
   const { connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
   const { videoObject } = useContext(VideoCallContext);
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
 
   const listInnerRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
@@ -285,9 +289,12 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       }
 
     } catch (error) {
+      const errorMessage = !userPushSDKInstance.signer
+        ? 'Cannot send Message, You need to connect your wallet'
+        : 'Cannot send Message, Try again later';
       chatBoxToast.showMessageToast({
         toastTitle: 'Error',
-        toastMessage: 'Cannot send Message, Try again later',
+        toastMessage: errorMessage,
         toastType: 'ERROR',
         getToastIcon: (size) => (
           <MdError
@@ -426,9 +433,12 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       setHasUserBeenSearched(false);
       setActiveTab(0);
     } catch (error) {
+      const errorMessage = !userPushSDKInstance.signer
+        ? 'Cannot send request, You need to connect your wallet'
+        : 'Cannot send request, Try again later';
       chatBoxToast.showMessageToast({
         toastTitle: 'Error',
-        toastMessage: 'Cannot send request, Try again later',
+        toastMessage: errorMessage,
         toastType: 'ERROR',
         getToastIcon: (size) => (
           <MdError
@@ -452,6 +462,19 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
 
   const startVideoCallHandler = async () => {
     console.log("CURRENT CHAT", currentChat);
+    if(!userPushSDKInstance.signer) {
+      chatBoxToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: 'Cannot start a video call, You need to connect your wallet',
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+    }
 
     videoObject?.setData((oldData) => {
       return produce(oldData, (draft) => {

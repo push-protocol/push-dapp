@@ -6,6 +6,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AiOutlineQrcode } from 'react-icons/ai';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
+import { useSelector } from 'react-redux';
+import { MdError } from 'react-icons/md';
 
 // Internal Compoonents
 import * as PushAPI from "@pushprotocol/restapi";
@@ -24,13 +26,13 @@ import * as w2wHelper from 'helpers/w2w/';
 import { checkConnectedUser } from 'helpers/w2w/user';
 import { Context } from 'modules/chat/ChatModule';
 import { Feeds } from 'types/chat';
+import useToast from 'hooks/useToast';
 
 
 // Internal Configs
 import NewTag from 'components/NewTag';
 import GLOBALS from 'config/Globals';
 import { appConfig } from '../../config';
-
 
 
 
@@ -74,6 +76,12 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser?.profilePicture);
 
+  const sidebarToast = useToast();
+
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
+
   const [loadingRequests, setLoadingRequests] = useState(true);
   const [showQR, setShowQR] = useState<boolean>(false);
   const containerRef = React.useRef(null);
@@ -106,7 +114,41 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
     return intents;
   };
 
+  const handleQRDisplay = () => {
+    if(!userPushSDKInstance.signer) {
+      sidebarToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: 'Cannot link mobile app. You need to connect your wallet',
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+      return;
+    }
+    setDisplayQR(!displayQR);
+  };
 
+  const handleCreateGroup = () => {
+    if(!userPushSDKInstance.signer) {
+      sidebarToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: 'Cannot create group. You need to connect your wallet',
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+      return;
+    }
+    showCreateGroupModal();
+  };
 
   // RENDER
   return (
@@ -194,7 +236,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
             flex="none"
             padding="20px 10px 24px 10px"
             borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
-            onClick={() => showCreateGroupModal()}
+            onClick={handleCreateGroup}
             background="transparent"
             hover={theme.chat.snapFocusBg}
             hoverBackground="transparent"
@@ -242,7 +284,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
 
       {showQR ? (
         <QRCodeContainer
-          onClick={() => setDisplayQR(!displayQR)}
+          onClick={handleQRDisplay}
           style={{
             background: theme.default.bg,
             borderColor: theme.LinkMobileAppBorder,
