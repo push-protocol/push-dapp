@@ -20,11 +20,12 @@ import { AppContext } from 'contexts/AppContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { AppContextType } from 'types/context';
 import { GlobalContext, GlobalContextType } from 'contexts/GlobalContext';
+import { SpanV2 } from 'components/reusables/SharedStylingV2.js';
 
 // Create Header
 const Profile = ({ isDarkMode }) => {
   const { web3NameList }: AppContextType = useContext(AppContext);
-  const {setReadOnlyWallet, readOnlyWallet}:GlobalContextType = useContext(GlobalContext);
+  const { setReadOnlyWallet, readOnlyWallet, getMode }: GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
@@ -102,10 +103,11 @@ const Profile = ({ isDarkMode }) => {
                 spinnerColor="#FFF"
               />
             ) : web3Name ? (
-              <>{web3Name}</>
+              <>{web3Name} {getMode}</>
             ) : (
-              <>{shortenText(account, 6)}</>
+              <>{shortenText(account, 5)}</>
             )}
+            <SpanV2 fontWeight='600' margin='0 0 0 2px'>{getMode}</SpanV2>
             <ToggleArrowImg filter={isDarkMode ? theme.snackbarBorderIcon : 'brightness(0) invert(1)'}>
               <img
                 alt="arrow"
@@ -154,7 +156,7 @@ const Body = styled.div`
 `;
 
 const Wallet = styled.div`
-  width: 210px;
+  // width: 210px;
   margin: 0px 10px;
   box-sizing: border-box;
   padding: 4px 16px;

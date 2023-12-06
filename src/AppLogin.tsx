@@ -38,9 +38,9 @@ const AppLogin = ({ toggleDarkMode }) => {
   ReactGA.pageview('/login');
 
   // Web3 React logic
-  const { isActive, connect,wallet } = useAccount();
-  const {  web3NameList } = useContext(AppContext);
-  const {setReadOnlyWallet, readOnlyWallet,setIsGuestMode} = useContext(GlobalContext); 
+  const { isActive, connect, wallet } = useAccount();
+  const { web3NameList } = useContext(AppContext);
+  const { setReadOnlyWallet, readOnlyWallet, setMode } = useContext(GlobalContext);
   const { authError, setAuthError } = useContext(ErrorContext);
   const [errorMessage, setErrorMessage] = React.useState(undefined);
   const [modalHeight, setModalHeight] = React.useState(0);
@@ -71,7 +71,7 @@ const AppLogin = ({ toggleDarkMode }) => {
     try {
       setAuthError(undefined);
       setTimeout(() => {
-        if(!readOnlyWallet){
+        if (!readOnlyWallet) {
           connect();
           setModalHeight(undefined);
           setModalWidth(undefined);
@@ -83,20 +83,20 @@ const AppLogin = ({ toggleDarkMode }) => {
             setModalWidth(onboardModal.offsetWidth);
           });
 
-          if(!readOnlyWallet){
+          if (!readOnlyWallet) {
             onboardModal.style.display = 'block';
             observer.observe(onboardModal);
-          }else{
+          } else {
             onboardModal.style.display = 'none';
             observer.unobserve(onboardModal);
             observer.disconnect();
           }
-         
+
         }, 500)
       }, 500);
     }
     catch (error) {
-      console.log("Error !!!!! >>>>>>>",error);
+      console.log("Error !!!!! >>>>>>>", error);
       setAuthError(error);
     }
     return () => {
@@ -104,7 +104,7 @@ const AppLogin = ({ toggleDarkMode }) => {
     }
   }, [isActive]);
 
-  const handleConnectWallet = ()=>{
+  const handleConnectWallet = () => {
     connect();
   }
 
@@ -120,14 +120,15 @@ const AppLogin = ({ toggleDarkMode }) => {
     if (walletAddress) {
       const isWallet = ethers.utils.isAddress(walletAddress);
       if (isWallet) {
+        setMode('(Read Only)')
         setReadOnlyWallet(walletAddress);
       }
     }
   }
 
-  const initiateGuestModa = ()=>{
+  const initiateGuestModa = () => {
     const guestModeAddress = '0x0000000000000000000000000000000000000000';
-    setIsGuestMode(true);
+    setMode('(Guest Mode)');
     setReadOnlyWallet(guestModeAddress);
   }
 
