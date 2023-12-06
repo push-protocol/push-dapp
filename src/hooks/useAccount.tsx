@@ -37,7 +37,7 @@ export const useAccount = () => {
       return ethers.utils.getAddress(wallet.accounts[0].address);
     }
     return readOnlyWallet;
-  }, [wallet, readOnlyWallet]);
+  }, [wallet]);
 
   const chainId = useMemo(() => {
     if(connectedChain) return Number(connectedChain.id);
