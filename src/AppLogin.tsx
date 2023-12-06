@@ -31,7 +31,7 @@ import { Button, Input, Span } from 'primaries/SharedStyling';
 import { AppContext } from 'contexts/AppContext';
 import { ethers } from 'ethers';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
-import { GlobalContext } from 'contexts/GlobalContext';
+import { GlobalContext, ReadOnlyWalletMode } from 'contexts/GlobalContext';
 
 const AppLogin = ({ toggleDarkMode }) => {
   // React GA Analytics
@@ -40,7 +40,7 @@ const AppLogin = ({ toggleDarkMode }) => {
   // Web3 React logic
   const { isActive, connect, wallet } = useAccount();
   const { web3NameList } = useContext(AppContext);
-  const { setReadOnlyWallet, readOnlyWallet, setMode } = useContext(GlobalContext);
+  const { setReadOnlyWallet, readOnlyWallet, setReadOnlyWalletMode } = useContext(GlobalContext);
   const { authError, setAuthError } = useContext(ErrorContext);
   const [errorMessage, setErrorMessage] = React.useState(undefined);
   const [modalHeight, setModalHeight] = React.useState(0);
@@ -120,7 +120,7 @@ const AppLogin = ({ toggleDarkMode }) => {
     if (walletAddress) {
       const isWallet = ethers.utils.isAddress(walletAddress);
       if (isWallet) {
-        setMode('(Read Only)')
+        setReadOnlyWalletMode(ReadOnlyWalletMode.READ_ONLY_MODE);
         setReadOnlyWallet(walletAddress);
       }
     }
@@ -128,7 +128,7 @@ const AppLogin = ({ toggleDarkMode }) => {
 
   const initiateGuestModa = () => {
     const guestModeAddress = '0x0000000000000000000000000000000000000000';
-    setMode('(Guest Mode)');
+    setReadOnlyWalletMode(ReadOnlyWalletMode.GUEST_MODE);
     setReadOnlyWallet(guestModeAddress);
   }
 

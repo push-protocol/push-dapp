@@ -161,11 +161,11 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
         channelAddress = channelDetail.alias_address;
       }
 
-      subscribeToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
-
       if (!userPushSDKInstance.signer) {
         handleConnectWallet();
       }
+
+      subscribeToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
       await userPushSDKInstance.notification.subscribe(convertAddressToAddrCaip(channelAddress, chainId), {
         settings: notifChannelSettingFormatString({ settings: channelSettings }),

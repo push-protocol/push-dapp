@@ -16,7 +16,7 @@ export const AppContext = createContext<AppContextType | null>(null);
 
 const AppContextProvider = ({ children }) => {
     const { connect, provider, account, wallet, connecting } = useAccount();
-    const { readOnlyWallet, setReadOnlyWallet, setMode } = useContext(GlobalContext);
+    const { readOnlyWallet } = useContext(GlobalContext);
 
     const [web3NameList, setWeb3NameList] = useState<Web3NameListType>({});
 
@@ -48,7 +48,6 @@ const AppContextProvider = ({ children }) => {
 
     const initializePushSDK = async () => {
         console.log("Initialising Push Sdk")
-        setMode('');
         let userInstance;
         try {
             const librarySigner = provider?.getSigner(account);
