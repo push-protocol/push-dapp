@@ -1,13 +1,12 @@
 import { useConnectWallet, useSetChain } from '@web3-onboard/react';
 import { appConfig } from 'config';
-import { AppContext } from 'contexts/AppContext';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { ethers } from 'ethers';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useMemo } from 'react';
 
 export const useAccount = () => {
 
-  const { readOnlyWallet } = useContext(GlobalContext);
+  const { readOnlyWallet, setReadOnlyWalletMode, setReadOnlyWallet } = useContext(GlobalContext);
 
   const [{ wallet, connecting }, connect, disconnect, updateBalances, setWalletModules, setPrimaryWallet] =
     useConnectWallet();
@@ -32,7 +31,12 @@ export const useAccount = () => {
   }, [wallet, readOnlyWallet]);
 
   const account = useMemo(() => {
-    return wallet && wallet.accounts.length > 0 ? ethers.utils.getAddress(wallet.accounts[0].address) : undefined;
+    if(wallet && wallet.accounts.length > 0) {
+      setReadOnlyWallet(undefined);
+      setReadOnlyWalletMode(undefined);
+      return ethers.utils.getAddress(wallet.accounts[0].address);
+    }
+    return undefined;
   }, [wallet]);
 
   return {
