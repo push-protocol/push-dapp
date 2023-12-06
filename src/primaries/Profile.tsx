@@ -19,10 +19,12 @@ import APP_PATHS from 'config/AppPaths';
 import { AppContext } from 'contexts/AppContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { AppContextType } from 'types/context';
+import { GlobalContext, GlobalContextType } from 'contexts/GlobalContext';
 
 // Create Header
 const Profile = ({ isDarkMode }) => {
-  const { web3NameList, setReadOnlyWallet, readOnlyWallet }: AppContextType = useContext(AppContext);
+  const { web3NameList }: AppContextType = useContext(AppContext);
+  const {setReadOnlyWallet, readOnlyWallet}:GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);

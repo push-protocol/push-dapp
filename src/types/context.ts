@@ -12,6 +12,5 @@ export interface AppContextType {
   SnapState: number;
   setSnapState: any;
   initializePushSDK: any;
-  readOnlyWallet: any;
-  setReadOnlyWallet: any;
+  handleConnectWallet:any;
 }

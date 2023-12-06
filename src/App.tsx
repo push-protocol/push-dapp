@@ -55,6 +55,7 @@ import {
 } from '@pushprotocol/uiweb';
 import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
 import { useUpdateTheme } from '@web3-onboard/react';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 dotenv.config();
 
@@ -76,7 +77,7 @@ export interface IUseSpaceReturnValues {
 
 export default function App() {
   const dispatch = useDispatch();
-  const {setReadOnlyWallet,readOnlyWallet} = useContext(AppContext);
+  const {setReadOnlyWallet,readOnlyWallet} = useContext(GlobalContext);
 
   const { isActive, account, chainId, provider } = useAccount();
   const [currentTime, setcurrentTime] = React.useState(0);
@@ -111,29 +112,6 @@ export default function App() {
     dispatch(resetUserSlice());
   }, [account]);
 
-  useEffect(() => {
-    const librarySigner = provider?.getSigner(account);
-    if (!account || !librarySigner || !appConfig?.appEnv || userPushSDKInstance) return;
-
-    const initializePushSDK = async () => {
-      try {
-        const userInstance = await PushAPI.initialize(librarySigner, {
-           env: appConfig.appEnv,  // defaults to staging
-            account: ''
-        });
-        // const userInstance = await PushAPI.initialize({
-        //   account: `0x0000000000000000000000000000000000000000`,
-        //   env: appConfig.appEnv,
-        // });
-
-        dispatch(setUserPushSDKInstance(userInstance));
-      } catch (error) {
-        // Handle initialization error
-      }
-    };
-
-    initializePushSDK();
-  }, [account, provider]);
 
   // console.log(isActive, chainId, account);
   // handle logic to reconnect in response to certain events from the provider

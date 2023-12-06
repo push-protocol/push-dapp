@@ -33,6 +33,7 @@ import { UnsupportedChainIdError } from 'connectors/error';
 import APP_PATHS from 'config/AppPaths';
 import { themeDark, themeLight } from 'config/Themization';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { AppContext } from 'contexts/AppContext';
 
 // header tags for pages that are not there in navigationList (Sidebar)
 const EXTRA_HEADER_TAGS = {
@@ -133,11 +134,8 @@ function Header({ isDarkMode, darkModeToggle }) {
     setShowLoginControls(!showLoginControls);
   };
 
-  const handleConnectWallet = () => {
-    const onboardModal = document.getElementById("onboard-container");
-    onboardModal.style.display = 'block';
-    connect();
-  }
+  const {handleConnectWallet} = useContext(AppContext);
+  
 
   const isMobile = useDeviceWidthCheck(600);
   const showSnapMobile = useDeviceWidthCheck(600);
@@ -205,7 +203,7 @@ function Header({ isDarkMode, darkModeToggle }) {
         )}
         {/* {!showSnapMobile && <SnapHeader />} */}
 
-        {wallet ? <div onClick={handleConnectWallet}> Connect Wallet </div> : <div>Disconnect wallet</div>}
+        <div onClick={handleConnectWallet}> Connect Wallet </div> 
 
         {isActive && !showLoginControls && !error && (
           <DarkModeSwitch
