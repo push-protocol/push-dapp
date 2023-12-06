@@ -36,8 +36,14 @@ export const useAccount = () => {
       setReadOnlyWalletMode(undefined);
       return ethers.utils.getAddress(wallet.accounts[0].address);
     }
-    return undefined;
+    return readOnlyWallet;
   }, [wallet]);
+
+  const chainId = useMemo(() => {
+    if(connectedChain) return Number(connectedChain.id);
+    if(readOnlyWallet) return appConfig.coreContractChain;
+    return undefined;
+  }, [connectedChain, readOnlyWallet]);
 
   return {
     wallet: wallet ? wallet : readOnlyWallet,
@@ -48,8 +54,8 @@ export const useAccount = () => {
     setWalletModules,
     setPrimaryWallet,
     provider,
-    account: account ? account : readOnlyWallet,
-    chainId: connectedChain ? Number(connectedChain.id) : readOnlyWallet ?  appConfig.coreContractChain : undefined,
+    account,
+    chainId,
     isActive,
     setChain,
     switchChain,
