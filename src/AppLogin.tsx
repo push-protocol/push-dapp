@@ -31,14 +31,16 @@ import { Button, Input, Span } from 'primaries/SharedStyling';
 import { AppContext } from 'contexts/AppContext';
 import { ethers } from 'ethers';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
+import { GlobalContext, ReadOnlyWalletMode } from 'contexts/GlobalContext';
 
 const AppLogin = ({ toggleDarkMode }) => {
   // React GA Analytics
   ReactGA.pageview('/login');
 
   // Web3 React logic
-  const { isActive, connect,wallet } = useAccount();
-  const { setReadOnlyWallet, readOnlyWallet, web3NameList } = useContext(AppContext);
+  const { isActive, connect, wallet } = useAccount();
+  const { web3NameList } = useContext(AppContext);
+  const { setReadOnlyWallet, readOnlyWallet, setReadOnlyWalletMode } = useContext(GlobalContext);
   const { authError, setAuthError } = useContext(ErrorContext);
   const [errorMessage, setErrorMessage] = React.useState(undefined);
   const [modalHeight, setModalHeight] = React.useState(0);
@@ -69,8 +71,10 @@ const AppLogin = ({ toggleDarkMode }) => {
     try {
       setAuthError(undefined);
       setTimeout(() => {
-        if(!readOnlyWallet){
+        if (!readOnlyWallet) {
           connect();
+          setModalHeight(undefined);
+          setModalWidth(undefined);
         }
         setTimeout(() => {
           const onboardModal = document.getElementById("onboard-container");
@@ -79,20 +83,20 @@ const AppLogin = ({ toggleDarkMode }) => {
             setModalWidth(onboardModal.offsetWidth);
           });
 
-          if(!readOnlyWallet){
+          if (!readOnlyWallet) {
             onboardModal.style.display = 'block';
             observer.observe(onboardModal);
-          }else{
+          } else {
             onboardModal.style.display = 'none';
             observer.unobserve(onboardModal);
             observer.disconnect();
           }
-         
+
         }, 500)
       }, 500);
     }
     catch (error) {
-      console.log("Error !!!!! >>>>>>>",error);
+      console.log("Error !!!!! >>>>>>>", error);
       setAuthError(error);
     }
     return () => {
@@ -100,7 +104,7 @@ const AppLogin = ({ toggleDarkMode }) => {
     }
   }, [isActive]);
 
-  const handleConnectWallet = ()=>{
+  const handleConnectWallet = () => {
     connect();
   }
 
@@ -116,13 +120,15 @@ const AppLogin = ({ toggleDarkMode }) => {
     if (walletAddress) {
       const isWallet = ethers.utils.isAddress(walletAddress);
       if (isWallet) {
+        setReadOnlyWalletMode(ReadOnlyWalletMode.READ_ONLY_MODE);
         setReadOnlyWallet(walletAddress);
       }
     }
   }
 
-  const initiateGuestModa = ()=>{
+  const initiateGuestModa = () => {
     const guestModeAddress = '0x0000000000000000000000000000000000000000';
+    setReadOnlyWalletMode(ReadOnlyWalletMode.GUEST_MODE);
     setReadOnlyWallet(guestModeAddress);
   }
 
