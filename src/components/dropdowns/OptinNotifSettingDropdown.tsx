@@ -153,16 +153,29 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
 
   const optInHandler = async ({ channelSettings, setLoading }: { channelSettings?: ChannelSetting[], setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const setLoadingFunc = setLoading || (options && options.setLoading) || (() => { });
+   
+    if (!userPushSDKInstance.signer) {
+      subscribeToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: `You need to connect your wallet. Please Connect your wallet.`,
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+      handleConnectWallet();
+      return;
+    }
+   
     setLoadingFunc(true);
 
     try {
       let channelAddress = channelDetail.channel;
       if (!onCoreNetwork) {
         channelAddress = channelDetail.alias_address;
-      }
-
-      if (!userPushSDKInstance.signer) {
-        handleConnectWallet();
       }
 
       subscribeToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
@@ -205,13 +218,9 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
 
 
     } catch (err) {
-      let errorMessage = err.message;
-      if(!userPushSDKInstance.signer){
-        errorMessage = 'You need to connect your wallet.'
-      }
       subscribeToast.showMessageToast({
         toastTitle: 'Error',
-        toastMessage: `There was an error opting into channel ( ${errorMessage} )`,
+        toastMessage: `There was an error opting into channel ( ${err.message} )`,
         toastType: 'ERROR',
         getToastIcon: (size) => (
           <MdError

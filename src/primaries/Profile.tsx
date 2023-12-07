@@ -25,7 +25,7 @@ import { SpanV2 } from 'components/reusables/SharedStylingV2.js';
 // Create Header
 const Profile = ({ isDarkMode }) => {
   const { web3NameList }: AppContextType = useContext(AppContext);
-  const { setReadOnlyWallet, readOnlyWallet, readOnlyWalletMode }: GlobalContextType = useContext(GlobalContext);
+  const { setReadOnlyWallet, readOnlyWallet, getMode }: GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
@@ -103,11 +103,11 @@ const Profile = ({ isDarkMode }) => {
                 spinnerColor="#FFF"
               />
             ) : web3Name ? (
-              <>{web3Name} {readOnlyWalletMode}</>
+              <>{web3Name} {getMode}</>
             ) : (
               <>{shortenText(account, 5)}</>
             )}
-            <SpanV2 fontWeight='600' margin='0 0 0 2px'>{readOnlyWalletMode}</SpanV2>
+            <SpanV2 fontWeight='600' margin='0 0 0 2px'>{getMode}</SpanV2>
             <ToggleArrowImg filter={isDarkMode ? theme.snackbarBorderIcon : 'brightness(0) invert(1)'}>
               <img
                 alt="arrow"

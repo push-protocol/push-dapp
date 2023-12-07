@@ -134,9 +134,6 @@ function Header({ isDarkMode, darkModeToggle }) {
     setShowLoginControls(!showLoginControls);
   };
 
-  const {handleConnectWallet} = useContext(AppContext);
-  
-
   const isMobile = useDeviceWidthCheck(600);
   const showSnapMobile = useDeviceWidthCheck(600);
   const isSnapPage = location?.pathname === '/snap';
@@ -201,9 +198,8 @@ function Header({ isDarkMode, darkModeToggle }) {
             </Span>
           </HeaderTag>
         )}
-        {/* {!showSnapMobile && <SnapHeader />} */}
+        {!showSnapMobile && <SnapHeader />}
 
-        <div onClick={handleConnectWallet}> Connect Wallet </div> 
 
         {isActive && !showLoginControls && !error && (
           <DarkModeSwitch
