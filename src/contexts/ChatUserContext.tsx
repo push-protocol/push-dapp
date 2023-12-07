@@ -143,7 +143,8 @@ const ChatUserContextProvider = (props) => {
     }
 
     // new user might not have a private key
-    if (user && user.encryptedPrivateKey) {
+    // user is not in read only mode
+    if (user && user.encryptedPrivateKey && userPushSDKInstance.signer) {
       if (user.wallets.includes(',') || !user.wallets?.toLowerCase().includes(caip10?.toLowerCase())) {
         throw Error('Invalid user');
       }

@@ -33,6 +33,7 @@ import useToast from 'hooks/useToast';
 import NewTag from 'components/NewTag';
 import GLOBALS from 'config/Globals';
 import { appConfig } from '../../config';
+import { AppContext } from 'contexts/AppContext';
 
 
 
@@ -74,6 +75,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   const { connectedUser, displayQR, setDisplayQR } = useContext(ChatUserContext);
 
   const { activeTab, setActiveTab } = useContext(Context);
+  const { handleConnectWallet } = useContext(AppContext);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser?.profilePicture);
 
   const sidebarToast = useToast();
@@ -105,7 +107,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   useClickAway(containerRef, () => closeQRDropdown())
 
   const fetchIntentApi = async (): Promise<Feeds[]> => {
-    const intents = await fetchIntent({connectedUser});
+    const intents = await fetchIntent({connectedUser, toDecrypt: !!userPushSDKInstance.signer});
     if (JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
       setReceivedIntents(intents);
       setLoadingRequests(false);
@@ -116,6 +118,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
 
   const handleQRDisplay = () => {
     if(!userPushSDKInstance.signer) {
+      handleConnectWallet();
       sidebarToast.showMessageToast({
         toastTitle: 'Error',
         toastMessage: 'Cannot link mobile app. You need to connect your wallet',
@@ -134,6 +137,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
 
   const handleCreateGroup = () => {
     if(!userPushSDKInstance.signer) {
+      handleConnectWallet();
       sidebarToast.showMessageToast({
         toastTitle: 'Error',
         toastMessage: 'Cannot create group. You need to connect your wallet',
