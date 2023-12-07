@@ -27,6 +27,7 @@ import LoaderSpinner, {
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { VideoCallContext } from 'contexts/VideoCallContext';
+import { GlobalContext } from 'contexts/GlobalContext';
 import { caip10ToWallet } from 'helpers/w2w';
 import * as w2wHelper from 'helpers/w2w/';
 import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
@@ -62,7 +63,8 @@ function Chat({ chatid }) {
   const { account, chainId, provider } = useAccount();
   const { getUser, pgpPvtKey,connectedUser, setConnectedUser, blockedLoading, setBlockedLoading, displayQR, setDisplayQR } =
     useContext(ChatUserContext);
-    const { videoCallData } = useContext(VideoCallContext);
+  const { readOnlyWallet } = useContext(GlobalContext);
+  const { videoCallData } = useContext(VideoCallContext);
 
   const theme = useTheme();
 
@@ -133,7 +135,7 @@ function Chat({ chatid }) {
     if(!isListUpdated){
       const fetchedChat = await PushAPI.chat.chat({
         account: account,
-        toDecrypt: true,
+        toDecrypt: !readOnlyWallet,
         pgpPrivateKey: connectedUser?.privateKey,
         recipient: caip10ToWallet(message?.fromCAIP10),
         env: appConfig.appEnv
@@ -196,7 +198,7 @@ const getUpdatedGroup = async(groupInfo) => {
   if(!isGroupUpdated){
     const fetchedChat = await PushAPI.chat.chat({
       account: account,
-      toDecrypt: true,
+      toDecrypt: !readOnlyWallet,
       pgpPrivateKey: connectedUser?.privateKey,
       recipient: groupInfo?.chatId,
       env: appConfig.appEnv

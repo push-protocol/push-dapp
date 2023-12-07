@@ -15,6 +15,7 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 import { produce } from 'immer';
+import { useSelector } from 'react-redux';
 
 // Internal Components
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
@@ -84,7 +85,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     setReceivedIntents,
     setBlockedLoading,
   }: ContextType = useContext<ContextType>(Context);
-  const { web3NameList }:AppContextType=useContext(AppContext);
+  const { web3NameList, handleConnectWallet }:AppContextType=useContext(AppContext);
   const [chatMeta, setChatMeta] = useState(null);
 
   const [newMessage, setNewMessage] = useState<string>('');
@@ -99,6 +100,9 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const groupInfoRef = useRef<HTMLInputElement>(null);
   const { connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
   const { videoObject } = useContext(VideoCallContext);
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
 
   const listInnerRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
@@ -241,7 +245,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   };
 
   const fetchInboxApi = async (): Promise<Feeds> => {
-    const inboxes: Feeds[] = await fetchInbox({connectedUser});
+    const inboxes: Feeds[] = await fetchInbox({connectedUser, toDecrypt: !!userPushSDKInstance.signer});
     setInbox(inboxes);
     return inboxes?.find((x) => x.wallets.split(':')[1]?.toLowerCase() === currentChat.wallets.split(':')[1]?.toLowerCase());
   };
@@ -285,9 +289,13 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       }
 
     } catch (error) {
+      const errorMessage = !userPushSDKInstance.signer
+        ? 'Cannot send Message, You need to connect your wallet'
+        : 'Cannot send Message, Try again later';
+      if(!userPushSDKInstance.signer) handleConnectWallet();
       chatBoxToast.showMessageToast({
         toastTitle: 'Error',
-        toastMessage: 'Cannot send Message, Try again later',
+        toastMessage: errorMessage,
         toastType: 'ERROR',
         getToastIcon: (size) => (
           <MdError
@@ -313,7 +321,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     setLoading(true);
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(':')[1];
-    let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: true, pgpPrivateKey:connectedUser.privateKey });
+    let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: !!userPushSDKInstance.signer, pgpPrivateKey:connectedUser.privateKey });
     setReceivedIntents(intents);
     setLoading(false);
   }
@@ -326,10 +334,25 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       if (!connectedUser.publicKey) {
         createdUser = await createUserIfNecessary();
       }
-      const signer = await provider.getSigner();
+      if(!userPushSDKInstance.signer) {
+        handleConnectWallet();
+        chatBoxToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: 'Cannot approve intent, You need to connect your wallet',
+          toastType: 'ERROR',
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
+        });
+        setMessageBeingSent(false);
+        return;
+      }
       updatedIntent = await PushAPI.chat.approve({
         status: 'Approved',
-        signer: signer!,
+        signer: userPushSDKInstance.signer!,
         senderAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat.intentSentBy,
         pgpPrivateKey: connectedUser?.privateKey || createdUser?.privateKey,
         env: appConfig.appEnv,
@@ -382,6 +405,22 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     let user;
     try {
       setMessageBeingSent(true);
+      if(!userPushSDKInstance.signer) {
+        handleConnectWallet();
+        chatBoxToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: 'Cannot send intent, You need to connect your wallet',
+          toastType: 'ERROR',
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
+        });
+        setMessageBeingSent(false);
+        return;
+      }
       if (
         currentChat.intent === null ||
         currentChat.intent === '' ||
@@ -426,9 +465,13 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
       setHasUserBeenSearched(false);
       setActiveTab(0);
     } catch (error) {
+      const errorMessage = !userPushSDKInstance.signer
+        ? 'Cannot send request, You need to connect your wallet'
+        : 'Cannot send request, Try again later';
+      if(!userPushSDKInstance.signer) handleConnectWallet();
       chatBoxToast.showMessageToast({
         toastTitle: 'Error',
-        toastMessage: 'Cannot send request, Try again later',
+        toastMessage: errorMessage,
         toastType: 'ERROR',
         getToastIcon: (size) => (
           <MdError
@@ -452,6 +495,20 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
 
   const startVideoCallHandler = async () => {
     console.log("CURRENT CHAT", currentChat);
+    if(!userPushSDKInstance.signer) {
+      handleConnectWallet();
+      chatBoxToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: 'Cannot start a video call, You need to connect your wallet',
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+    }
 
     videoObject?.setData((oldData) => {
       return produce(oldData, (draft) => {

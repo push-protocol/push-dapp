@@ -6,6 +6,7 @@ import { ethers } from 'ethers';
 // External Packages
 import styled, { useTheme } from 'styled-components';
 import { Waypoint } from 'react-waypoint';
+import { useSelector } from 'react-redux';
 
 // Internal Components
 import ChatSnap from "components/chat/chatsnap/ChatSnap";
@@ -35,10 +36,14 @@ const IntentFeed = ({isLoading}): JSX.Element => {
   const [isFetchingDone,setIsFetchingDone] = useState<boolean>(false)
   const [intentLoading,setIntentLoading] = useState<boolean>(false);
 
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
+
   const updateIntents=async({chatLimit}:{chatLimit?:number})=>{
     try{
     setIntentLoading(true)
-    const intents=await fetchIntent({connectedUser, limit})
+    const intents=await fetchIntent({connectedUser, limit, toDecrypt: !!userPushSDKInstance.signer})
     if(intents?.length>10 && receivedIntents?.length === intents?.length){
       setIsFetchingDone(true);
     }
