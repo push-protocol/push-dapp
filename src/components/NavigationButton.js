@@ -21,7 +21,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
   const theme = useTheme();
 
-  const { showMetamaskPushSnap } = React.useContext(AppContext);
+  const { showMetamaskPushSnap, handleConnectWallet } = React.useContext(AppContext);
   const { readOnlyWallet, mode } = React.useContext(GlobalContext);
 
   const navigationToast = useToast(5000);
@@ -60,6 +60,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
   }
 
   const showNavError = () => {
+    handleConnectWallet();
     navigationToast.showMessageToast({
       toastMessage: `${data.name} is not available in ${mode.slice(1, -1)}`,
       toastTitle: 'Please connect your wallet',
