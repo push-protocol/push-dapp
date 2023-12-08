@@ -6,7 +6,6 @@ import styled, { ThemeProvider, useTheme } from 'styled-components';
 import { useClickAway } from 'react-use';
 import { ethers } from 'ethers';
 import * as PushAPI from '@pushprotocol/restapi';
-import { useSelector } from 'react-redux';
 
 // Internal Components
 import { ModalInnerComponentType } from 'hooks/useModalBlur';
@@ -44,9 +43,6 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const createGroupToast = useToast();
   const isMobile = useDeviceWidthCheck(600);
 
-  const { userPushSDKInstance } = useSelector((state: any) => {
-    return state.user;
-  });
   
   const handlePrevious = () => {
     setCreateGroupState(1);
@@ -81,7 +77,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
           env: appConfig.appEnv,
         });
         if (typeof createGroupRes !== 'string') {
-          const inboxes: Feeds[] = await fetchInbox({connectedUser, toDecrypt: !!userPushSDKInstance.signer});
+          const inboxes: Feeds[] = await fetchInbox({connectedUser});
           setInbox(inboxes);
           createGroupToast.showMessageToast({
             toastTitle: 'Success',
