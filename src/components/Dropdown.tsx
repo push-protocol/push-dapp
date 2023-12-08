@@ -33,7 +33,7 @@ type DropdownProps = {
 function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: DropdownProps) {
 
   const theme = useTheme();
-  const {getMode} = useContext(GlobalContext);
+  const {mode} = useContext(GlobalContext);
 
   const getTextColor = (dropdownValue:DropdownValueType) => {
     return dropdownValue.textColor ? dropdownValue.textColor:textColor? textColor : theme.snackbarBorderText;
@@ -75,11 +75,11 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
               spacing="1px"
               width="max-content"
             >
-              <DesktopAddress>{dropdownValue?.title} <SpanV2 fontWeight='600' margin='0 0 0 2px'>{getMode}</SpanV2></DesktopAddress> 
+              <DesktopAddress>{dropdownValue?.title} <SpanV2 fontWeight='600' margin='0 0 0 2px'>{mode}</SpanV2></DesktopAddress> 
               
               <MobileAddress>
                 {shortenText(dropdownValue?.title,3)} 
-                <SpanV2 fontWeight='600' margin='0 0 0 2px'>{getMode}</SpanV2>
+                <SpanV2 fontWeight='600' margin='0 0 0 2px'>{mode}</SpanV2>
               </MobileAddress>
             </Span>
             {dropdownValue?.invertedIcon && (

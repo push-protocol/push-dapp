@@ -1,34 +1,35 @@
-import { createContext, useState } from "react";
-import { useSelector } from "react-redux";
+import { createContext, useState } from 'react';
+
+export enum ReadOnlyWalletMode {
+  READ_ONLY_MODE = '(Read Only)',
+  GUEST_MODE = '(Guest Mode)',
+}
 
 export type GlobalContextType = {
-    readOnlyWallet:any,
-    setReadOnlyWallet:any,
-    setMode:(getMode:string)=>void,
-    getMode:string
-}
+  readOnlyWallet: string;
+  setReadOnlyWallet: React.Dispatch<React.SetStateAction<string>>;
+  mode: ReadOnlyWalletMode;
+  setMode: React.Dispatch<React.SetStateAction<ReadOnlyWalletMode>>;
+};
 
 export const GlobalContext = createContext<GlobalContextType | null>(null);
 
-const GlobalContextProvider = ({children})=>{
+const GlobalContextProvider = ({ children }) => {
+  const [readOnlyWallet, setReadOnlyWallet] = useState<string>();
+  const [mode, setMode] = useState<ReadOnlyWalletMode>();
 
-    const { userPushSDKInstance } = useSelector((state: any) => {
-        return state.user;
-      });
-
-    const [readOnlyWallet, setReadOnlyWallet] = useState<string>();
-    const [getMode,setMode] = useState<string>('');
-
-    return(
-        <GlobalContext.Provider value={{
-            setReadOnlyWallet,
-            readOnlyWallet,
-            setMode,
-            getMode
-        }}>
-            {children}
-        </GlobalContext.Provider>
-    )
-}
+  return (
+    <GlobalContext.Provider
+      value={{
+        setReadOnlyWallet,
+        readOnlyWallet,
+        mode,
+        setMode,
+      }}
+    >
+      {children}
+    </GlobalContext.Provider>
+  );
+};
 
 export default GlobalContextProvider;

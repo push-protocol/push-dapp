@@ -6,7 +6,7 @@ import { useContext, useMemo } from 'react';
 
 export const useAccount = () => {
 
-  const { readOnlyWallet, setReadOnlyWalletMode, setReadOnlyWallet } = useContext(GlobalContext);
+  const { readOnlyWallet, setMode, setReadOnlyWallet } = useContext(GlobalContext);
 
   const [{ wallet, connecting }, connect, disconnect, updateBalances, setWalletModules, setPrimaryWallet] =
     useConnectWallet();
@@ -33,7 +33,7 @@ export const useAccount = () => {
   const account = useMemo(() => {
     if(wallet && wallet.accounts.length > 0) {
       setReadOnlyWallet(undefined);
-      setReadOnlyWalletMode(undefined);
+      setMode(undefined);
       return ethers.utils.getAddress(wallet.accounts[0].address);
     }
     return readOnlyWallet;
