@@ -18,7 +18,7 @@ import {
   SpanV2
 } from 'components/reusables/SharedStylingV2';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
-import styled, { useTheme } from 'styled-components';
+import styled, { keyframes, useTheme } from 'styled-components';
 import { ReactComponent as PushLogoDark } from './assets/pushDark.svg';
 import { ReactComponent as PushLogoLight } from './assets/pushLight.svg';
 import { ErrorContext } from './contexts/ErrorContext';
@@ -104,9 +104,12 @@ const AppLogin = ({ toggleDarkMode }) => {
     }
   }, [isActive]);
 
-  const handleConnectWallet = () => {
-    connect();
-  }
+  useEffect(() => {
+    if (!isActive) {
+      // Show the modal again if user is not connected but closes the modal
+      setTimeout(() => connect(), 500);
+    }
+  }, [modalHeight]);
 
   const [walletAddress, setWalletAddress] = useState();
 
@@ -218,7 +221,7 @@ const AppLogin = ({ toggleDarkMode }) => {
         </ItemVV2>
 
         {modalHeight !== 0 &&
-          <ItemVV2 margin={`${modalHeight + 20}px 0 0 0`} flex="initial" maxWidth="920px">
+          <BottomContainer margin={`${modalHeight + 20}px 0 0 0`} flex="initial" maxWidth="920px">
 
             <RenderGuestMode />
 
@@ -252,7 +255,7 @@ const AppLogin = ({ toggleDarkMode }) => {
                 .
               </SpanV2>
             </ItemVV2>
-          </ItemVV2>
+          </BottomContainer>
         }
       </ItemVV2>
     </Container>
@@ -360,4 +363,17 @@ const EmptyButton = styled(ButtonV2)`
     }
     
     
-`
+`;
+
+const fadeInAnimation = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const BottomContainer = styled(ItemVV2)`
+  animation: ${fadeInAnimation} 0.5s ease-in-out;
+`;
