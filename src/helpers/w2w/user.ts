@@ -188,13 +188,13 @@ export const getDefaultFeedObject = ({user,groupInformation}:{user?:User,groupIn
 
 
 
-export const fetchInbox = async ({connectedUser, page, limit, toDecrypt}:{connectedUser:any, page?:number, limit?:number, toDecrypt?: boolean}):Promise<Feeds[]>=> {
-  let inboxes:Feeds[] = await PushAPI.chat.chats({ account: connectedUser.wallets!, env: appConfig.appEnv, toDecrypt, pgpPrivateKey: connectedUser.privateKey, page, limit});
+export const fetchInbox = async ({connectedUser, page, limit}:{connectedUser:any, page?:number, limit?:number}):Promise<Feeds[]>=> {
+  let inboxes:Feeds[] = await PushAPI.chat.chats({ account: connectedUser.wallets!, env: appConfig.appEnv, toDecrypt: true, pgpPrivateKey: connectedUser.privateKey, page, limit});
   return inboxes
 };
 
-export const fetchIntent = async ({connectedUser, page, limit, toDecrypt}:{connectedUser:any, page?:number, limit?:number, toDecrypt?: boolean}): Promise<Feeds[]> => {
-  let intents = await PushAPI.chat.requests({account:connectedUser.wallets.split(':')[1], env:appConfig.appEnv, toDecrypt, pgpPrivateKey: connectedUser.privateKey, page, limit});
+export const fetchIntent = async ({connectedUser, page, limit}:{connectedUser:any, page?:number, limit?:number}): Promise<Feeds[]> => {
+  let intents = await PushAPI.chat.requests({account:connectedUser.wallets.split(':')[1], env:appConfig.appEnv, toDecrypt: true, pgpPrivateKey: connectedUser.privateKey, page, limit});
   return intents;
 };
 

@@ -55,7 +55,6 @@ import {
 } from '@pushprotocol/uiweb';
 import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
 import { useUpdateTheme } from '@web3-onboard/react';
-import { GlobalContext } from 'contexts/GlobalContext';
 
 dotenv.config();
 
@@ -77,7 +76,6 @@ export interface IUseSpaceReturnValues {
 
 export default function App() {
   const dispatch = useDispatch();
-  const {setReadOnlyWallet,readOnlyWallet} = useContext(GlobalContext);
 
   const { isActive, account, chainId, provider } = useAccount();
   const [currentTime, setcurrentTime] = React.useState(0);

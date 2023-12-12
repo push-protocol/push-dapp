@@ -5,7 +5,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { MdError } from 'react-icons/md';
 import styled, { useTheme } from 'styled-components';
 import { Waypoint } from 'react-waypoint';
-import { useSelector } from 'react-redux';
 
 // Internal Components
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
@@ -48,10 +47,6 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const [isFetchingDone,setIsFetchingDone]=useState<boolean>(false)
   const messageFeedToast = useToast();
 
-  const { userPushSDKInstance } = useSelector((state: any) => {
-    return state.user;
-  });
-
   const onFeedClick = (feed:Feeds,i:number):void => {
     if((receivedIntents?.filter((userExist) => userExist.did && props?.filteredUserData[0]?.did && userExist.did?.toLowerCase() === props?.filteredUserData[0]?.did?.toLowerCase()))
 .length)
@@ -66,7 +61,7 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   
   const fetchInboxApi = async ({limit}): Promise<Feeds[]> => {
     try {
-      const inboxes:Feeds[] = await fetchInbox({connectedUser, limit, toDecrypt: !!userPushSDKInstance.signer});
+      const inboxes:Feeds[] = await fetchInbox({connectedUser, limit});
       if(inboxes?.length>10 && inboxes?.length===feeds?.length){
         setIsFetchingDone(true);
       }

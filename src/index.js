@@ -52,17 +52,17 @@ ReactDOM.render(
     <Provider store={store}>
       <ApolloProvider client={client}>
         <GlobalContextProvider>
-          <Web3OnboardProvider web3Onboard={web3Onboard}>
-            <AppContextProvider>
-              <ErrorContextProvider>
-                <ChatUserContextProvider>
-                  <VideoCallContextProvider>
-                    <App />
-                  </VideoCallContextProvider>
-                </ChatUserContextProvider>
-              </ErrorContextProvider>
-            </AppContextProvider>
-          </Web3OnboardProvider>
+        <Web3OnboardProvider web3Onboard={web3Onboard}>
+          <AppContextProvider>
+            <ErrorContextProvider>
+              <ChatUserContextProvider>
+                <VideoCallContextProvider>
+                  <App />
+                </VideoCallContextProvider>
+              </ChatUserContextProvider>
+            </ErrorContextProvider>
+          </AppContextProvider>
+        </Web3OnboardProvider>
         </GlobalContextProvider>
       </ApolloProvider>
     </Provider>

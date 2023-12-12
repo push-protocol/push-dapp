@@ -18,7 +18,7 @@ import {
   SpanV2
 } from 'components/reusables/SharedStylingV2';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
-import styled, { useTheme } from 'styled-components';
+import styled, { keyframes, useTheme } from 'styled-components';
 import { ReactComponent as PushLogoDark } from './assets/pushDark.svg';
 import { ReactComponent as PushLogoLight } from './assets/pushLight.svg';
 import { ErrorContext } from './contexts/ErrorContext';
@@ -73,8 +73,8 @@ const AppLogin = ({ toggleDarkMode }) => {
       setTimeout(() => {
         if (!readOnlyWallet) {
           connect();
-          setModalHeight(undefined);
-          setModalWidth(undefined);
+          setModalHeight(0);
+          setModalWidth(0);
         }
         setTimeout(() => {
           const onboardModal = document.getElementById("onboard-container");
@@ -104,9 +104,12 @@ const AppLogin = ({ toggleDarkMode }) => {
     }
   }, [isActive]);
 
-  const handleConnectWallet = () => {
-    connect();
-  }
+  useEffect(() => {
+    if (!isActive) {
+      // Show the modal again if user is not connected but closes the modal
+      setTimeout(() => connect(), 500);
+    }
+  }, [modalHeight]);
 
   const [walletAddress, setWalletAddress] = useState();
 
@@ -217,43 +220,43 @@ const AppLogin = ({ toggleDarkMode }) => {
           {theme.scheme == 'dark' && <PushLogoDark />}
         </ItemVV2>
 
-        {/* {modalHeight !== 0 && */}
-        <ItemVV2 margin={`${modalHeight + 20}px 0 0 0`} flex="initial" maxWidth="920px">
+        {modalHeight !== 0 &&
+          <BottomContainer margin={`${modalHeight + 20}px 0 0 0`} flex="initial" maxWidth="920px">
 
-          <RenderGuestMode />
+            <RenderGuestMode />
 
-          {/* TOS and PRIVACY */}
-          <SpanV2 fontSize="14px" padding="5px 5px" color={theme.default.color} lineHeight="140%">
-            By connecting your wallet, <b>You agree</b> to our{' '}
-            <AInlineV2 href="https://epns.io/tos" target="_blank">
-              Terms of Service
-            </AInlineV2>{' '}
-            and our{' '}
-            <AInlineV2 href="https://epns.io/privacy" target="_blank">
-              Privacy Policy
-            </AInlineV2>
-            .
-          </SpanV2>
-
-          <ItemVV2 margin="10px 0 0 0" flex="initial" maxWidth="920px">
-            <SpanV2 fontSize="14px" padding="0px 15px" lineHeight="140%" color={theme.default.color}>
-              Note: The Push Protocol has been under development for 2+ years now. It has successfully completed its latest security audits of {' '}
-              <AInlineV2 href="https://github.com/ChainSafe/audits/blob/main/EPNS/epns-protocol-05-2023.pdf" target="_blank">
-                Push Core V2
+            {/* TOS and PRIVACY */}
+            <SpanV2 fontSize="14px" padding="20px 5px 5px 5px" color={theme.default.color} lineHeight="140%">
+              By connecting your wallet, <b>You agree</b> to our{' '}
+              <AInlineV2 href="https://epns.io/tos" target="_blank">
+                Terms of Service
               </AInlineV2>{' '}
-              smart contracts by Chainsafe. However, always DYOR and anticipate UI bugs or improvements. You can use our {' '}
-              <AInlineV2 href="https://zv9atndluia.typeform.com/to/KW3gwclM" target="_blank">
-                Bug Bounty Form
-              </AInlineV2>{' '}
-              to report bugs or communicate with us on our {' '}
-              <AInlineV2 href="https://discord.com/invite/pushprotocol" target="_blank">
-                Discord
+              and our{' '}
+              <AInlineV2 href="https://epns.io/privacy" target="_blank">
+                Privacy Policy
               </AInlineV2>
               .
             </SpanV2>
-          </ItemVV2>
-        </ItemVV2>
-        {/* } */}
+
+            <ItemVV2 margin="10px 0 0 0" flex="initial" maxWidth="920px">
+              <SpanV2 fontSize="14px" padding="0px 15px" lineHeight="140%" color={theme.default.color}>
+                Note: The Push Protocol has been under development for 2+ years now. It has successfully completed its latest security audits of {' '}
+                <AInlineV2 href="https://github.com/ChainSafe/audits/blob/main/EPNS/epns-protocol-05-2023.pdf" target="_blank">
+                  Push Core V2
+                </AInlineV2>{' '}
+                smart contracts by Chainsafe. However, always DYOR and anticipate UI bugs or improvements. You can use our {' '}
+                <AInlineV2 href="https://zv9atndluia.typeform.com/to/KW3gwclM" target="_blank">
+                  Bug Bounty Form
+                </AInlineV2>{' '}
+                to report bugs or communicate with us on our {' '}
+                <AInlineV2 href="https://discord.com/invite/pushprotocol" target="_blank">
+                  Discord
+                </AInlineV2>
+                .
+              </SpanV2>
+            </ItemVV2>
+          </BottomContainer>
+        }
       </ItemVV2>
     </Container>
   );
@@ -360,4 +363,17 @@ const EmptyButton = styled(ButtonV2)`
     }
     
     
-`
+`;
+
+const fadeInAnimation = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const BottomContainer = styled(ItemVV2)`
+  animation: ${fadeInAnimation} 0.5s ease-in-out;
+`;
