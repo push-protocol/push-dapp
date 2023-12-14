@@ -332,7 +332,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
           <MessageContainer>
             {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
               <ChatViewList
-                chatId={currentChat?.did.includes(":nft:") ? currentChat?.did.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0] : currentChat?.did || currentChat?.groupInformation?.chatId}
+                chatId={(currentChat?.did?.includes(":nft:") ? currentChat?.did.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0] : currentChat?.did) || currentChat?.groupInformation?.chatId}
                 limit={10}
               />
             )}
@@ -341,7 +341,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             <>
               <MessageInputWrapper>
                 {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
-                  <MessageInput chatId={currentChat?.did.includes(":nft:") ? currentChat?.did.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0] : currentChat?.did || currentChat?.groupInformation?.chatId} />
+                  <MessageInput chatId={currentChat?.did?.includes(":nft:") ? currentChat?.did.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0] : currentChat?.did || currentChat?.groupInformation?.chatId} />
                 )}
               </MessageInputWrapper>
             </>
