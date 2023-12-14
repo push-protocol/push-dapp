@@ -33,7 +33,6 @@
     "@mui/icons-material": "^5.8.4",
     "@mui/lab": "^5.0.0-alpha.72",
     "@mui/material": "^5.5.0",
-    "@pushprotocol/ledgerlive": "latest",
     "@pushprotocol/restapi": "1.4.44",
     "@pushprotocol/socket": "0.5.3",
     "@pushprotocol/uiweb": "1.1.22",

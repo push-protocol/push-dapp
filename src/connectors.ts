@@ -2,7 +2,6 @@
 // // import { InjectedConnector } from '@web3-react/injected-connector';
 // import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 // import { WalletConnect as WalletConnectV2 } from '@web3-react/walletconnect-v2';
-// import { LedgerHQFrameConnector } from '@pushprotocol/ledgerlive';
 // import { LedgerConnector } from '@web3-react/ledger-connector';
 // import { TrezorConnector } from '@web3-react/trezor-connector';
 // import { initializeConnector } from '@web3-react/core';
@@ -24,9 +23,6 @@
 // RPC_URLS = Object.assign(RPC_URLS, appConfig.aliasRPC);
 
 // // export const injected = new InjectedConnector({ supportedChainIds: SUPPORTED_CHAIN_IDS });
-
-// // Only receive messages from platform.apps.ledger.com
-// export const ledgerLiveConnector = new LedgerHQFrameConnector();
 
 // const [mainnet, ...optionalChains] = Object.keys(CHAIN_DETAILS).map(Number);
 
