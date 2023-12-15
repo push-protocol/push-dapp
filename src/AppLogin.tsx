@@ -61,7 +61,6 @@ const AppLogin = ({ toggleDarkMode }) => {
 
   useEffect(() => {
     if (!authError) return;
-    console.log("Asdasdasd112312312132")
 
     handleErrorMessage(authError);
   }, [authError]);
@@ -70,30 +69,25 @@ const AppLogin = ({ toggleDarkMode }) => {
     let observer: ResizeObserver | undefined;
     try {
       setAuthError(undefined);
-      setTimeout(() => {
-        if (!readOnlyWallet) {
-          connect();
-          setModalHeight(0);
-          setModalWidth(0);
-        }
-        setTimeout(() => {
-          const onboardModal = document.getElementById("onboard-container");
-          const observer = new ResizeObserver(() => {
-            setModalHeight(onboardModal.offsetHeight);
-            setModalWidth(onboardModal.offsetWidth);
-          });
+      var onboardModal = document.getElementById("onboard-container");
+      const observer = new ResizeObserver(() => {
+        setModalHeight(onboardModal.offsetHeight);
+        setModalWidth(onboardModal.offsetWidth);
+      });
+      if (!readOnlyWallet) {
+        onboardModal.style.display = 'block';
+        observer.observe(onboardModal);
+      } else {
+        onboardModal.style.display = 'none';
+        observer.unobserve(onboardModal);
+        observer.disconnect();
+      }
 
-          if (!readOnlyWallet) {
-            onboardModal.style.display = 'block';
-            observer.observe(onboardModal);
-          } else {
-            onboardModal.style.display = 'none';
-            observer.unobserve(onboardModal);
-            observer.disconnect();
-          }
-
-        }, 500)
-      }, 500);
+      if(!readOnlyWallet) {
+        connect();
+        setModalHeight(0);
+        setModalWidth(0);
+      }
     }
     catch (error) {
       console.log("Error !!!!! >>>>>>>", error);
