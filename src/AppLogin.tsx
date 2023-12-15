@@ -69,7 +69,7 @@ const AppLogin = ({ toggleDarkMode }) => {
     let observer: ResizeObserver | undefined;
     try {
       setAuthError(undefined);
-      var onboardModal = document.getElementById("onboard-container");
+      const onboardModal = document.getElementById("onboard-container");
       const observer = new ResizeObserver(() => {
         setModalHeight(onboardModal.offsetHeight);
         setModalWidth(onboardModal.offsetWidth);
@@ -113,12 +113,18 @@ const AppLogin = ({ toggleDarkMode }) => {
     setWalletAddress(walletAddress);
   }
 
+  const hideOnboardModal = () => {
+    const onboardModal = document.getElementById("onboard-container");
+    onboardModal.style.display = 'none';
+  }
+
   const initiateReadOnlyMode = () => {
     if (walletAddress) {
       const isWallet = ethers.utils.isAddress(walletAddress);
       if (isWallet) {
         setMode(ReadOnlyWalletMode.READ_ONLY_MODE)
         setReadOnlyWallet(walletAddress);
+        hideOnboardModal();
       }
     }
   }
@@ -127,6 +133,7 @@ const AppLogin = ({ toggleDarkMode }) => {
     const guestModeAddress = '0x0000000000000000000000000000000000000000';
     setMode(ReadOnlyWalletMode.GUEST_MODE);
     setReadOnlyWallet(guestModeAddress);
+    hideOnboardModal();
   }
 
   const RenderGuestMode = () => {
