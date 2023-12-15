@@ -103,7 +103,7 @@ const Profile = ({ isDarkMode }) => {
                 spinnerColor="#FFF"
               />
             ) : web3Name ? (
-              <>{web3Name} {mode}</>
+              <>{web3Name}</>
             ) : (
               <>{shortenText(account, 5)}</>
             )}
