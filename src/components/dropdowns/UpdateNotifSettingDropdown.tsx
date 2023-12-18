@@ -156,17 +156,6 @@ const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({
     const saveOnSuccessSettingFunc = onSuccessSave || (() => {});
     
     if (!userPushSDKInstance.signer) {
-      subscribeToast.showMessageToast({
-        toastTitle: 'Error',
-        toastMessage: `You need to connect your wallet. Please Connect your wallet.`,
-        toastType: 'ERROR',
-        getToastIcon: (size) => (
-          <MdError
-            size={size}
-            color="red"
-          />
-        ),
-      });
       handleConnectWallet();
       return;
     }

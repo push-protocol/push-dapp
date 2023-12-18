@@ -9,14 +9,17 @@ import { AppContextType, Web3NameListType } from "types/context"
 import { useAccount } from "hooks";
 import { appConfig } from "config";
 import { useDispatch } from "react-redux";
+import { MdError } from "react-icons/md";
 import { setUserPushSDKInstance } from "redux/slices/userSlice";
 import { GlobalContext } from "./GlobalContext";
+import useToast from "hooks/useToast";
 
 export const AppContext = createContext<AppContextType | null>(null);
 
 const AppContextProvider = ({ children }) => {
     const { connect, provider, account, wallet, connecting } = useAccount();
     const { readOnlyWallet } = useContext(GlobalContext);
+    const web3onboardToast = useToast();
 
     const [web3NameList, setWeb3NameList] = useState<Web3NameListType>({});
 
@@ -29,7 +32,16 @@ const AppContextProvider = ({ children }) => {
 
     const dispatch = useDispatch();
 
-    const handleConnectWallet = () => {
+    const handleConnectWallet = (showToast = false, toastMessage?: string) => {
+        if(showToast) {
+            web3onboardToast.showMessageToast({
+                toastMessage: toastMessage || "Please connect your wallet to continue",
+                toastTitle: "Connect Wallet",
+                toastType: "ERROR",
+                getToastIcon: (size) => <MdError size={size} color="red" />,
+            });
+        }
+
         const onboardModal = document.getElementById("onboard-container");
         onboardModal.style.display = 'block';
         // Open the onboard modal

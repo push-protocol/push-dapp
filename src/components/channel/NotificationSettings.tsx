@@ -134,12 +134,6 @@ function NotificationSettings() {
     try {
 
       if (!userPushSDKInstance.signer) {
-        notificationToast.showMessageToast({
-          toastTitle: 'Error',
-          toastMessage: 'Your wallet is not connected.Please Connect.',
-          toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />,
-        });
         handleConnectWallet();
         return;
       }

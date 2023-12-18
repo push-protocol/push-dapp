@@ -300,12 +300,6 @@ const {handleConnectWallet} = useContext(AppContext);
     console.log("User push sdk instance",userPushSDKInstance);
 
     if (!userPushSDKInstance.signer) {
-      notificationToast.showMessageToast({
-        toastTitle: 'Error',
-        toastMessage: 'Your wallet is not connected.Please Connect.',
-        toastType: 'ERROR',
-        getToastIcon: (size) => <MdError size={size} color="red" />,
-      });
       handleConnectWallet();
       return;
     }

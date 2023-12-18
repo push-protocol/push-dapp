@@ -155,17 +155,6 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
     const setLoadingFunc = setLoading || (options && options.setLoading) || (() => { });
    
     if (!userPushSDKInstance.signer) {
-      subscribeToast.showMessageToast({
-        toastTitle: 'Error',
-        toastMessage: `You need to connect your wallet. Please Connect your wallet.`,
-        toastType: 'ERROR',
-        getToastIcon: (size) => (
-          <MdError
-            size={size}
-            color="red"
-          />
-        ),
-      });
       handleConnectWallet();
       return;
     }

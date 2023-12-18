@@ -95,12 +95,6 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
     const approveDeposit = async () => {
         if(!userPushSDKInstance.signer) {
-            toastObject.showMessageToast({
-                toastTitle: 'Error',
-                toastMessage: `Please connect your wallet`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => <MdError size={size} color="red" />,
-            });
             handleConnectWallet();
             return;
         }
@@ -176,12 +170,6 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
     const depositAmountTokenFarmSingleTx = async () => {
         if(!userPushSDKInstance.signer) {
-            toastObject.showMessageToast({
-                toastTitle: 'Error',
-                toastMessage: `Please connect your wallet`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => <MdError size={size} color="red" />,
-            });
             handleConnectWallet();
             return;
         }
