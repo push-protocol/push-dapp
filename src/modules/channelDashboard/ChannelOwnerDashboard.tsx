@@ -25,6 +25,7 @@ import { appConfig } from "config";
 import { Button } from "components/SharedStyling";
 import EditChannel from "modules/editChannel/EditChannel";
 import useModalBlur from "hooks/useModalBlur";
+import { AppContext } from "contexts/AppContext";
 
 // Constants
 // interval after which alias details api will be called, in seconds
@@ -40,6 +41,11 @@ const ChannelOwnerDashboard = () => {
   const { channelDetails, delegatees, aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified, aliasAddrFromContract } } = useSelector((state: any) => state.admin);
   const { processingState } = useSelector((state: any) => state.channelCreation);
   const { epnsWriteProvider } = useSelector((state: any) => state.contracts);
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
+  const {handleConnectWallet} = React.useContext(AppContext);
+
 
   const isChannelDetails = (channelDetails && channelDetails !== 'unfetched');
 
@@ -143,6 +149,16 @@ const ChannelOwnerDashboard = () => {
   }
 
   const showEditChannel = () => {
+    if (!userPushSDKInstance.signer) {
+      destroyChannelToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: 'Please Connect your wallet',
+        toastType: 'ERROR',
+        getToastIcon: (size) => <MdError size={size} color="red" />,
+      });
+      handleConnectWallet();
+      return;
+    }
     setEditChannel(true);
   }
 

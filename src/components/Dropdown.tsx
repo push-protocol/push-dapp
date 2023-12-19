@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { shortenText } from 'helpers/UtilityHelper';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 // External Packages
@@ -8,6 +8,8 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { A, Image, ItemH, Span } from '../primaries/SharedStyling';
+import { GlobalContext } from 'contexts/GlobalContext';
+import { SpanV2 } from './reusables/SharedStylingV2';
 
 export type DropdownValueType = {
   id: number|string,
@@ -31,6 +33,7 @@ type DropdownProps = {
 function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: DropdownProps) {
 
   const theme = useTheme();
+  const {mode} = useContext(GlobalContext);
 
   const getTextColor = (dropdownValue:DropdownValueType) => {
     return dropdownValue.textColor ? dropdownValue.textColor:textColor? textColor : theme.snackbarBorderText;
@@ -72,9 +75,11 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
               spacing="1px"
               width="max-content"
             >
-              <DesktopAddress>{dropdownValue?.title}</DesktopAddress>
+              <DesktopAddress>{dropdownValue?.title} <SpanV2 fontWeight='600' margin='0 0 0 2px'>{mode}</SpanV2></DesktopAddress> 
+              
               <MobileAddress>
-                {shortenText(dropdownValue?.title,6)}
+                {shortenText(dropdownValue?.title,3)} 
+                <SpanV2 fontWeight='600' margin='0 0 0 2px'>{mode}</SpanV2>
               </MobileAddress>
             </Span>
             {dropdownValue?.invertedIcon && (
@@ -181,6 +186,7 @@ const SpanAddress = styled(Span)`
   width: max-content;
 `;
 const MobileAddress = styled(SpanAddress)`
+margin: 11px 0px 11px 2px;
   @media (min-width: 993px) {
     display: none;
   }

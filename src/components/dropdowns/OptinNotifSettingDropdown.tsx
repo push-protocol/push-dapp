@@ -31,7 +31,7 @@ interface OptinNotifSettingDropdownProps {
 }
 
 interface OptinNotifSettingDropdownContainerProps {
-  settings: ChannelSetting[]; 
+  settings: ChannelSetting[];
   optInHandler: (options: { channelSettings?: ChannelSetting[], setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => Promise<void>;
 }
 
@@ -49,7 +49,7 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
 
   const handleSwitchChange = (index: number) => {
     const updatedSettings = [...modifiedSettings];
-    if(updatedSettings[index].type === 1) {
+    if (updatedSettings[index].type === 1) {
       // Type 1
       // Use a type guard to narrow the type to ChannelSetting of type 1
       const setting = updatedSettings[index] as ChannelSetting & { type: 1 };
@@ -66,55 +66,55 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
   return (
     <DropdownOuterContainer>
       {modifiedSettings.map((setting, index) => (
-        <DropdownInnerContainer 
-            key={index}
-            hasBottomBorder={index !== settings.length - 1}
+        <DropdownInnerContainer
+          key={index}
+          hasBottomBorder={index !== settings.length - 1}
         >
-            <DropdownSwitchItem>
-                <SpanV2 color={theme.settingsModalPrimaryTextColor} fontSize="15px" fontWeight='500' textAlign="left">{setting.description}</SpanV2>
-                <Switch 
-                    onChange={() => handleSwitchChange(index)} checked={setting.type === 1 ? setting.default : setting.enabled} 
-                    checkedIcon={false}
-                    uncheckedIcon={false}
-                    onColor="#D53A94"
-                    offColor="#A0A3B1"
-                    height={16}
-                    width={32}
-                    handleDiameter={12}
-                />
-            </DropdownSwitchItem>
+          <DropdownSwitchItem>
+            <SpanV2 color={theme.settingsModalPrimaryTextColor} fontSize="15px" fontWeight='500' textAlign="left">{setting.description}</SpanV2>
+            <Switch
+              onChange={() => handleSwitchChange(index)} checked={setting.type === 1 ? setting.default : setting.enabled}
+              checkedIcon={false}
+              uncheckedIcon={false}
+              onColor="#D53A94"
+              offColor="#A0A3B1"
+              height={16}
+              width={32}
+              handleDiameter={12}
+            />
+          </DropdownSwitchItem>
           {setting.type === 2 && setting.enabled === true && (
             <DropdownSliderItem>
-                <InputSlider
-                    max={setting.upperLimit}
-                    min={setting.lowerLimit}
-                    step={setting.ticker || 1}
-                    val={setting.default}
-                    defaultVal={setting.default}
-                    onChange={({ x }) => handleSliderChange(index, x)}
-                />
-                <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right" margin="0 0 0 16px">
-                    {setting.default}
-                </SpanV2>
+              <InputSlider
+                max={setting.upperLimit}
+                min={setting.lowerLimit}
+                step={setting.ticker || 1}
+                val={setting.default}
+                defaultVal={setting.default}
+                onChange={({ x }) => handleSliderChange(index, x)}
+              />
+              <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right" margin="0 0 0 16px">
+                {setting.default}
+              </SpanV2>
             </DropdownSliderItem>
           )}
         </DropdownInnerContainer>
       ))}
-        <DropdownSubmitItem>
-            <SpanV2 color={theme.textcolor} fontSize="15px" fontWeight='500' textAlign="left">You will receive all important updates from this channel.</SpanV2>
-            <DropdownSubmitButton 
-              onClick={() => optInHandler({ channelSettings: modifiedSettings, setLoading: setTxInProgress })}
-            >
-              {txInProgress &&
-                <LoaderSpinner
-                  type={LOADER_TYPE.SEAMLESS}
-                  spinnerSize={16}
-                  spinnerColor="#FFF"
-                />
-              }
-              {!txInProgress && <ActionTitle hideIt={txInProgress}>Opt-in</ActionTitle>}
-            </DropdownSubmitButton>
-        </DropdownSubmitItem>
+      <DropdownSubmitItem>
+        <SpanV2 color={theme.textcolor} fontSize="15px" fontWeight='500' textAlign="left">You will receive all important updates from this channel.</SpanV2>
+        <DropdownSubmitButton
+          onClick={() => optInHandler({ channelSettings: modifiedSettings, setLoading: setTxInProgress })}
+        >
+          {txInProgress &&
+            <LoaderSpinner
+              type={LOADER_TYPE.SEAMLESS}
+              spinnerSize={16}
+              spinnerColor="#FFF"
+            />
+          }
+          {!txInProgress && <ActionTitle hideIt={txInProgress}>Opt-in</ActionTitle>}
+        </DropdownSubmitButton>
+      </DropdownSubmitItem>
     </DropdownOuterContainer>
   );
 };
@@ -130,10 +130,12 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
+  const { handleConnectWallet } = useContext(AppContext);
+
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const channelSetting = useMemo(() => {
-    if(channelDetail && channelDetail?.channel_settings) {
+    if (channelDetail && channelDetail?.channel_settings) {
       return JSON.parse(channelDetail?.channel_settings);
     }
     return null;
@@ -148,8 +150,26 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
   };
 
   const subscribeToast = useToast();
+
   const optInHandler = async ({ channelSettings, setLoading }: { channelSettings?: ChannelSetting[], setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => {
-    const setLoadingFunc = setLoading || (options && options.setLoading) || (() => {});
+    const setLoadingFunc = setLoading || (options && options.setLoading) || (() => { });
+   
+    if (!userPushSDKInstance.signer) {
+      subscribeToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: `You need to connect your wallet. Please Connect your wallet.`,
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+      handleConnectWallet();
+      return;
+    }
+   
     setLoadingFunc(true);
 
     try {
@@ -166,7 +186,7 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
         onSuccess: () => {
           onSuccessOptin();
           dispatch(updateSubscriptionStatus({ channelAddress, status: true }));
-          dispatch(updateUserSetting({ channelAddress, settings: userSettingsFromDefaultChannelSetting({ channelSetting: channelSettings })}));
+          dispatch(updateUserSetting({ channelAddress, settings: userSettingsFromDefaultChannelSetting({ channelSetting: channelSettings }) }));
 
           subscribeToast.showMessageToast({
             toastTitle: 'Success',
@@ -195,6 +215,8 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
           });
         },
       });
+
+
     } catch (err) {
       subscribeToast.showMessageToast({
         toastTitle: 'Error',
@@ -216,7 +238,7 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
 
   // render
   return (
-      (channelSetting && channelSetting.length) ? 
+    (channelSetting && channelSetting.length) ?
       <DropdownBtnHandler
         centerOnMobile={true}
         showDropdown={isOpen}
@@ -227,11 +249,11 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
       >
         {children}
       </DropdownBtnHandler>
-        :
-        <SpanV2 onClick={optInHandler}>
-          {children}
-        </SpanV2>
-      
+      :
+      <SpanV2 onClick={optInHandler}>
+        {children}
+      </SpanV2>
+
   );
 }
 
@@ -248,8 +270,8 @@ const DropdownInnerContainer = styled.div<{ hasBottomBorder: boolean }>`
     min-width: 250px;
 
     ${(props) =>
-        props.hasBottomBorder &&
-        css`
+    props.hasBottomBorder &&
+    css`
             border-bottom: 1px solid ${(props) => props.theme.settingsModalBorderBottomColor};
         `}
 `;
