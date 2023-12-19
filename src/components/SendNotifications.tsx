@@ -297,7 +297,6 @@ const {handleConnectWallet} = useContext(AppContext);
   const handleSendMessage = async (e) => {
     // Check everything in order
     e.preventDefault();
-    console.log("User push sdk instance",userPushSDKInstance);
 
     if (!userPushSDKInstance.signer) {
       notificationToast.showMessageToast({
