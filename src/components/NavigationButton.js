@@ -59,6 +59,10 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
     RouteLogic = ProtectedRoute;
   }
 
+  const handleDisallowedNav = () => {
+    handleConnectWallet();
+  }
+
   return (
     <>
       {data.loading && (
@@ -88,7 +92,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
           margin={definedMargin}
           bg={bg}
           active={active?1:0}
-          onClick={disallowNavigation && handleConnectWallet}
+          onClick={disallowNavigation && handleDisallowedNav}
           className={data?.name?.toLowerCase()}>
           {data.iconFactory ? (
             <ItemHV2 justifyContent="flex-start" padding="0 2rem">
