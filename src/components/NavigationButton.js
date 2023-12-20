@@ -59,18 +59,8 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
     RouteLogic = ProtectedRoute;
   }
 
-  const showNavError = () => {
+  const handleDisallowedNav = () => {
     handleConnectWallet();
-    navigationToast.showMessageToast({
-      toastMessage: `${data.name} is not available in ${mode.slice(1, -1)}`,
-      toastTitle: 'Please connect your wallet',
-      toastType: 'ERROR',
-      getToastIcon: () => 
-        <MdError 
-          color='red'
-          size={24}
-        />
-    });
   }
 
   return (
@@ -102,7 +92,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
           margin={definedMargin}
           bg={bg}
           active={active?1:0}
-          onClick={disallowNavigation && showNavError}
+          onClick={disallowNavigation && handleDisallowedNav}
           className={data?.name?.toLowerCase()}>
           {data.iconFactory ? (
             <ItemHV2 justifyContent="flex-start" padding="0 2rem">

@@ -241,12 +241,6 @@ function CreateChannelModule() {
     // e.preventDefault();
 
     if (!userPushSDKInstance.signer) {
-      channelToast.showMessageToast({
-        toastTitle: 'Error',
-        toastMessage: 'Please Connect your wallet',
-        toastType: 'ERROR',
-        getToastIcon: (size) => <MdError size={size} color="red" />,
-      });
       handleConnectWallet();
       return;
     }

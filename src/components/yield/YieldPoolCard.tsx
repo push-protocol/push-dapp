@@ -56,12 +56,6 @@ const YieldPoolCard = ({
 
     const massClaimRewardsTokensAll = async () => {
         if(!userPushSDKInstance.signer) {
-            yieldFarmToast.showMessageToast({
-                toastTitle: 'Error',
-                toastMessage: `Please connect your wallet`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => <MdError size={size} color="red" />,
-            });
             handleConnectWallet();
             return;
         }
@@ -145,12 +139,6 @@ const YieldPoolCard = ({
 
     const withdrawTokens = async () => {
         if(!userPushSDKInstance.signer) {
-            yieldFarmToast.showMessageToast({
-                toastTitle: 'Error',
-                toastMessage: `Please connect your wallet`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => <MdError size={size} color="red" />,
-            });
             handleConnectWallet();
             return;
         }
@@ -227,12 +215,6 @@ const YieldPoolCard = ({
 
     const migrateToNewPool = async () => {
         if(!userPushSDKInstance.signer) {
-            yieldFarmToast.showMessageToast({
-                toastTitle: 'Error',
-                toastMessage: `Please connect your wallet`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => <MdError size={size} color="red" />,
-            });
             handleConnectWallet();
             return;
         }
@@ -462,12 +444,6 @@ const YieldPoolCard = ({
 
     const depositLpToken = async (tx, withdrawAmount, totalTxnSteps) => {
         if(!userPushSDKInstance.signer) {
-            yieldFarmToast.showMessageToast({
-                toastTitle: 'Error',
-                toastMessage: `Please connect your wallet`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => <MdError size={size} color="red" />,
-            });
             handleConnectWallet();
             return;
         }
@@ -523,12 +499,6 @@ const YieldPoolCard = ({
 
     const depositPushToken = async (tx, withdrawAmount, totalTxnSteps) => {
         if(!userPushSDKInstance.signer) {
-            yieldFarmToast.showMessageToast({
-                toastTitle: 'Error',
-                toastMessage: `Please connect your wallet`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => <MdError size={size} color="red" />,
-            });
             handleConnectWallet();
             return;
         }

@@ -80,12 +80,6 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
 
   const handleDelegateModal = () => {
     if (!userPushSDKInstance.signer) {
-      addDelegateToast.showMessageToast({
-        toastTitle: 'Error',
-        toastMessage: 'Your wallet is not connected.Please Connect.',
-        toastType: 'ERROR',
-        getToastIcon: (size) => <MdError size={size} color="red" />,
-      });
       handleConnectWallet();
       return;
     }
@@ -170,12 +164,6 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
   const navigateToNotifSettings = () => {
 
     if (!userPushSDKInstance.signer) {
-      addDelegateToast.showMessageToast({
-        toastTitle: 'Error',
-        toastMessage: 'Your wallet is not connected.Please Connect.',
-        toastType: 'ERROR',
-        getToastIcon: (size) => <MdError size={size} color="red" />,
-      });
       handleConnectWallet();
       return;
     }

@@ -129,12 +129,6 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
   const toggleChannelActivationState = () => {
     if (isChannelBlocked) return;
     if (!userPushSDKInstance.signer) {
-      userSignerToast.showMessageToast({
-        toastTitle: 'Error',
-        toastMessage: 'Please Connect your wallet',
-        toastType: 'ERROR',
-        getToastIcon: (size) => <MdError size={size} color="red" />,
-      });
       handleConnectWallet();
       return;
     }

@@ -10,14 +10,12 @@ import BlurBGClouds from 'components/reusables/blurs/BlurBGClouds';
 import {
   AInlineV2,
   ButtonV2,
-  H2V2,
-  ImageV2,
   ItemHV2,
   ItemVV2,
   SectionV2,
   SpanV2
 } from 'components/reusables/SharedStylingV2';
-import { useAccount, useDeviceWidthCheck } from 'hooks';
+import { useAccount } from 'hooks';
 import styled, { keyframes, useTheme } from 'styled-components';
 import { ReactComponent as PushLogoDark } from './assets/pushDark.svg';
 import { ReactComponent as PushLogoLight } from './assets/pushLight.svg';
@@ -27,10 +25,9 @@ import { ReactComponent as InfoLogo } from "./assets/inforWithoutBG.svg";
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
 import { H2 } from 'components/SharedStyling';
-import { Button, Input, Span } from 'primaries/SharedStyling';
+import { Input, Span } from 'primaries/SharedStyling';
 import { AppContext } from 'contexts/AppContext';
 import { ethers } from 'ethers';
-import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { GlobalContext, ReadOnlyWalletMode } from 'contexts/GlobalContext';
 
 const AppLogin = ({ toggleDarkMode }) => {
@@ -44,15 +41,9 @@ const AppLogin = ({ toggleDarkMode }) => {
   const { authError, setAuthError } = useContext(ErrorContext);
   const [errorMessage, setErrorMessage] = React.useState(undefined);
   const [modalHeight, setModalHeight] = React.useState(0);
-  const [modalWidth, setModalWidth] = React.useState(0);
-
-  const isMobile = useDeviceWidthCheck(600);
 
   // theme context
   const theme = useTheme();
-
-  // SET LOADING
-  const [loading, setLoading] = useState(true);
 
   // handle error functions
   function handleErrorMessage(error: Error) {
@@ -67,12 +58,12 @@ const AppLogin = ({ toggleDarkMode }) => {
 
   useEffect(() => {
     let observer: ResizeObserver | undefined;
+    let onboardModal: HTMLElement;
     try {
       setAuthError(undefined);
-      const onboardModal = document.getElementById("onboard-container");
-      const observer = new ResizeObserver(() => {
+      onboardModal = document.getElementById("onboard-container");
+      observer = new ResizeObserver(() => {
         setModalHeight(onboardModal.offsetHeight);
-        setModalWidth(onboardModal.offsetWidth);
       });
       if (!readOnlyWallet) {
         onboardModal.style.display = 'block';
@@ -86,7 +77,6 @@ const AppLogin = ({ toggleDarkMode }) => {
       if(!readOnlyWallet) {
         connect();
         setModalHeight(0);
-        setModalWidth(0);
       }
     }
     catch (error) {
@@ -94,6 +84,7 @@ const AppLogin = ({ toggleDarkMode }) => {
       setAuthError(error);
     }
     return () => {
+      onboardModal && observer?.unobserve(onboardModal);
       observer?.disconnect();
     }
   }, [isActive]);

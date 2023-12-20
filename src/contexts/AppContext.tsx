@@ -9,14 +9,17 @@ import { AppContextType, Web3NameListType } from "types/context"
 import { useAccount } from "hooks";
 import { appConfig } from "config";
 import { useDispatch } from "react-redux";
+import { MdError } from "react-icons/md";
 import { setUserPushSDKInstance } from "redux/slices/userSlice";
 import { GlobalContext } from "./GlobalContext";
+import useToast from "hooks/useToast";
 
 export const AppContext = createContext<AppContextType | null>(null);
 
 const AppContextProvider = ({ children }) => {
     const { connect, provider, account, wallet, connecting } = useAccount();
     const { readOnlyWallet } = useContext(GlobalContext);
+    const web3onboardToast = useToast();
 
     const [web3NameList, setWeb3NameList] = useState<Web3NameListType>({});
 
@@ -29,37 +32,43 @@ const AppContextProvider = ({ children }) => {
 
     const dispatch = useDispatch();
 
-    const handleConnectWallet = () => {
+    const handleConnectWallet = (showToast = false, toastMessage?: string) => {
+        if(showToast) {
+            web3onboardToast.showMessageToast({
+                toastMessage: toastMessage || "Please connect your wallet to continue",
+                toastTitle: "Connect Wallet",
+                toastType: "ERROR",
+                getToastIcon: (size) => <MdError size={size} color="red" />,
+            });
+        }
+
         const onboardModal = document.getElementById("onboard-container");
         onboardModal.style.display = 'block';
         // Open the onboard modal
         connect();
 
-        // Create an observer instance and apply custom styles to the divElement once it is found
-        const observer = new MutationObserver(function (mutations) {
-            mutations.forEach(function (mutation) {
-                if (mutation.addedNodes && mutation.addedNodes.length > 0) {
-                    // Check if the divElement now exists in the DOM
-                    const sectionElement = document.querySelector('onboard-v2')?.shadowRoot?.querySelector('.svelte-baitaa');
-                    const divElement = sectionElement?.querySelector('div');
-                    if (divElement) {
-                        // Disconnect the observer once the divElement is found
-                        observer.disconnect();
-                        // Apply custom styles
-                        divElement.style.position = 'fixed';
-                        divElement.style.top = '0px';
-                        divElement.style.right = '0px';
-                        divElement.style.height = '100vh';
-                        divElement.style.left = '0px';
-                        divElement.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
-                        divElement.style.backdropFilter = 'blur(5px)';
-                    }
-                }
-            });
+        // Create a resize observer to detect when the onboard modal is rendered
+        const observer = new ResizeObserver(() => {
+            const sectionElement = document.querySelector('onboard-v2')?.shadowRoot?.querySelector('.svelte-baitaa');
+            const divElement = sectionElement?.querySelector('div');
+            if (divElement) {
+                // Disconnect the observer once the divElement is found
+                observer.unobserve(onboardModal);
+                observer.disconnect();
+
+                // Apply custom styles
+                divElement.style.position = 'fixed';
+                divElement.style.top = '0px';
+                divElement.style.right = '0px';
+                divElement.style.height = '100vh';
+                divElement.style.left = '0px';
+                divElement.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+                divElement.style.backdropFilter = 'blur(5px)';
+            }
         });
 
         // Start observing the DOM for changes
-        observer.observe(document.body, { childList: true, subtree: true });
+        observer.observe(onboardModal);
     }
 
     const initialisePushSdkGuestMode = async () => {
