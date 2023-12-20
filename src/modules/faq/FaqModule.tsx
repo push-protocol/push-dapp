@@ -71,7 +71,7 @@ function FaqModule() {
               {showAnswers[1] && (
                 <Answer>
                   <Span>
-                    Any user or protocol that activates itself as a service to send notifications is a Channel.
+                  If you're a protocol or company seeking to share updates with your users, you can use this service. Users have the option to opt in to receive these updates.
                   </Span>
                 </Answer>
               )}
@@ -89,16 +89,10 @@ function FaqModule() {
 
               {showAnswers[2] && (
                 <Answer>
-                  <Span>Not at all</Span>
+                 
                   <Span>
-                    Channel creation is only important for any protocol or service that wants to trigger notifications
-                    for its users. If you are a user who is only interested in receiving notifications and being up to
-                    the minute with the Web3 world, channel creation is not at all required for you.
+                  Channel creation is not mandatory. It's primarily essential for protocols or services aiming to send notifications to their users. As a user focused solely on staying updated with the Web3 world and receiving notifications, creating a channel is unnecessary for you.
                   </Span>
-
-                  {/* <Span>
-                      Channel creation is only important for any protocol or service that wants to trigger notifications for its users. If you are a user who is only interested in receiving notifications and being up to the minute with the Web3 world, channel creation is not at all required for you.
-                    </Span> */}
                 </Answer>
               )}
             </QnAItem>
@@ -116,8 +110,7 @@ function FaqModule() {
               {showAnswers[3] && (
                 <Answer>
                   <Span>
-                    Every Channel in the View Channels section comes with an opt-in button. Once you click on it and
-                    sign the transaction, you will be subscribed to that channel & receive its notifications.
+                  To join a Channel, head to the Channels section on the left. There, you'll find various protocols or dapps listed. Simply click 'Opt-In' next to the one you're interested in, and by signing a transaction, you'll start receiving the latest updates and notifications.
                   </Span>
                 </Answer>
               )}
@@ -136,8 +129,7 @@ function FaqModule() {
               {showAnswers[4] && (
                 <Answer>
                   <Span>
-                    NOPE. Subscribing to a channel is a Gasless action. All you need to do is sign the transaction and
-                    that’s it.
+                  Opting into a Channel doesn't involve gas fees. Subscribing to a channel is gasless—all you need to do is sign a transaction to be opted in.
                   </Span>
                 </Answer>
               )}
@@ -156,11 +148,10 @@ function FaqModule() {
               {showAnswers[5] && (
                 <Answer>
                   <Span>
-                    Nope. We have gasless mechanisms for most of the things in the Dapp. Therefore, an average joe
-                    doesn’t need any ether to use our dapp.
+                  You don't need Ether to engage with the DApp. Our gasless mechanisms enable most operations without requiring Ether. For everyday users, there's no need for Ether to use our DApp. 
                   </Span>
 
-                  <Span>ETH or Funds are only required when a Channel is to be created.</Span>
+                  <Span>Ether or funds become necessary only when creating a Channel..</Span>
                 </Answer>
               )}
             </QnAItem>
@@ -204,6 +195,64 @@ function FaqModule() {
                 </Answer>
               )}
             </QnAItem>
+
+            <QnAItem>
+              <Question
+                onClick={() => {
+                  toggleShowAnswer(7);
+                }}
+                hover="#e20880">
+                <Span color={theme.color}>What are Spaces?</Span>
+                <BsChevronExpand size={20} color={'#ddd'} />
+              </Question>
+
+              {showAnswers[7] && (
+                <Answer>
+                  <Span>
+                  Spaces are live audio chat rooms on our Dapp, enabling real-time conversations among users. 
+                  </Span>
+                </Answer>
+              )}
+            </QnAItem>
+
+            <QnAItem>
+              <Question
+                onClick={() => {
+                  toggleShowAnswer(8);
+                }}
+                hover="#e20880">
+                <Span color={theme.color}> How do I create a space? </Span>
+                <BsChevronExpand size={20} color={'#ddd'} />
+              </Question>
+
+              {showAnswers[8] && (
+                <Answer>
+                  <Span>
+                  To create a space, click on Spaces on the left side and select "Create Your Space." From there, you can add the users you wish to invite to join the space.
+                  </Span>
+                </Answer>
+              )}
+            </QnAItem>
+
+            <QnAItem>
+              <Question
+                onClick={() => {
+                  toggleShowAnswer(9);
+                }}
+                hover="#e20880">
+                <Span color={theme.color}> Does creating a Space require gas fees? </Span>
+                <BsChevronExpand size={20} color={'#ddd'} />
+              </Question>
+
+              {showAnswers[9] && (
+                <Answer>
+                  <Span>
+                  Creating or joining a Space does not require any gas fees. Users can seamlessly create or join Spaces without any gas fees.
+                  </Span>
+                </Answer>
+              )}
+            </QnAItem>
+
           </ItemVV2>
         </ItemVV2>
 
@@ -226,14 +275,14 @@ function FaqModule() {
             <QnAItem>
               <Question
                 onClick={() => {
-                  toggleShowAnswer(7);
+                  toggleShowAnswer(10);
                 }}
                 hover="#e20880">
                 <Span color={theme.color}>How do I create a Channel?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
 
-              {showAnswers[7] && (
+              {showAnswers[10] && (
                 <Answer>
                   <Span>
                     Easiest way to create a channel is from our{' '}
@@ -255,14 +304,14 @@ function FaqModule() {
             <QnAItem>
               <Question
                 onClick={() => {
-                  toggleShowAnswer(8);
+                  toggleShowAnswer(11);
                 }}
                 hover="#e20880">
                 <Span color={theme.color}>What are the different types of Notifications?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
 
-              {showAnswers[8] && (
+              {showAnswers[11] && (
                 <Answer>
                   <Span>The 3 main types of notifications right now:</Span>
                   <Span>
@@ -281,16 +330,22 @@ function FaqModule() {
             <QnAItem>
               <Question
                 onClick={() => {
-                  toggleShowAnswer(9);
+                  toggleShowAnswer(12);
                 }}
                 hover="#e20880">
                 <Span color={theme.color}>How do I send notifications?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
 
-              {showAnswers[9] && (
+              {showAnswers[12] && (
                 <Answer>
-                  <Span>Sending a notification is possible from the DAPP, Back-end as well as Smart Contracts.</Span>
+                  <Span>
+                    You can send a notification through various methods: </Span>
+<ul>
+    <li>Using the DAPP</li>
+    <li>Via the Back-end</li>
+    <li>Utilizing Smart Contracts</li>
+</ul>
                 </Answer>
               )}
             </QnAItem>
@@ -298,14 +353,14 @@ function FaqModule() {
             <QnAItem>
               <Question
                 onClick={() => {
-                  toggleShowAnswer(10);
+                  toggleShowAnswer(13);
                 }}
                 hover="#e20880">
                 <Span color={theme.color}>How do I use Backend-Sdk and Showrunners?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
 
-              {showAnswers[10] && (
+              {showAnswers[13] && (
                 <Answer>
                   <Span>
                     Push (EPNS) Documentation hub contains in-depth details on how to use our{' '}
@@ -329,14 +384,14 @@ function FaqModule() {
             <QnAItem>
               <Question
                 onClick={() => {
-                  toggleShowAnswer(11);
+                  toggleShowAnswer(14);
                 }}
                 hover="#e20880">
                 <Span color={theme.color}>How do I use the Front-SDK?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
 
-              {showAnswers[11] && (
+              {showAnswers[14] && (
                 <Answer>
                   <Span>
                     Push (EPNS) Documentation hub contains in-depth details on how to use our{' '}
@@ -354,19 +409,88 @@ function FaqModule() {
             <QnAItem>
               <Question
                 onClick={() => {
-                  toggleShowAnswer(12);
+                  toggleShowAnswer(15);
                 }}
                 hover="#e20880">
                 <Span color={theme.color}>Where can I find Developer Documentations?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
 
-              {showAnswers[12] && (
+              {showAnswers[15] && (
                 <Answer>
                   <Span>
                     All of our documentation can be found in our{' '}
                     <AMod target="_blank" href="https://docs.push.org/">
                       Push (EPNS) Documentation HUB
+                    </AMod>
+                    .
+                  </Span>
+                </Answer>
+              )}
+            </QnAItem>
+
+            <QnAItem>
+              <Question
+                onClick={() => {
+                  toggleShowAnswer(16);
+                }}
+                hover="#e20880">
+                <Span color={theme.color}> How do I integrate Chat? </Span>
+                <BsChevronExpand size={20} color={'#ddd'} />
+              </Question>
+
+              {showAnswers[16] && (
+                <Answer>
+                  <Span>
+                  You can integrate chat functionality by following the instructions outlined in this documentation: {" "}
+                    <AMod target="_blank" href="https://push.org/docs/chat">
+                      Push (EPNS) Documentation for Chat
+                    </AMod>
+                    .
+                  </Span>
+                </Answer>
+              )}
+            </QnAItem>
+
+            <QnAItem>
+              <Question
+                onClick={() => {
+                  toggleShowAnswer(17);
+                }}
+                hover="#e20880">
+                <Span color={theme.color}> How do I integrate Video? </Span>
+                <BsChevronExpand size={20} color={'#ddd'} />
+              </Question>
+
+              {showAnswers[17] && (
+                <Answer>
+                  <Span>
+                  You can integrate chat functionality by following the instructions outlined in this documentation: {" "}
+                    <AMod target="_blank" href="https://push.org/docs/video">
+                      Push (EPNS) Documentation for Chat
+                    </AMod>
+                    .
+                  </Span>
+                </Answer>
+              )}
+            </QnAItem>
+
+            <QnAItem>
+              <Question
+                onClick={() => {
+                  toggleShowAnswer(18);
+                }}
+                hover="#e20880">
+                <Span color={theme.color}> How do I integrate Video? </Span>
+                <BsChevronExpand size={20} color={'#ddd'} />
+              </Question>
+
+              {showAnswers[18] && (
+                <Answer>
+                  <Span>
+                  You can integrate chat functionality by following the instructions outlined in this documentation: {" "}
+                    <AMod target="_blank" href="https://push.org/docs/chat">
+                      Push (EPNS) Documentation for Chat
                     </AMod>
                     .
                   </Span>
