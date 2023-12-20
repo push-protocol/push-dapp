@@ -35,7 +35,7 @@
     "@mui/material": "^5.5.0",
     "@pushprotocol/restapi": "1.4.45",
     "@pushprotocol/socket": "0.5.3",
-    "@pushprotocol/uiweb": "1.1.22",
+    "@pushprotocol/uiweb": "1.1.23",
     "@reduxjs/toolkit": "^1.7.1",
     "@testing-library/dom": "^9.0.1",
     "@testing-library/jest-dom": "^4.2.4",
