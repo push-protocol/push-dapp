@@ -392,6 +392,21 @@ const MessageContainer = styled(ItemVV2)`
   // margin: 0;
   width: 95%;
   height: 80%;
+  @media (max-height: 750px) {
+    height: 75%;
+  }
+  @media (max-height: 650px) {
+    height: 70%;
+  }
+  @media (max-height: 550px) {
+    height: 63%;
+  }
+  @media (max-height: 450px) {
+    height: 55%;
+  }
+  @media (max-height: 400px) {
+    height: 45%;
+  }
   // max-height: 20%;
   overflow-x: hidden;
   // overflow-y: scroll;
