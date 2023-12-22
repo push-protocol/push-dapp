@@ -74,7 +74,7 @@ const AppLogin = ({ toggleDarkMode }) => {
         observer.disconnect();
       }
 
-      if(!readOnlyWallet) {
+      if (!readOnlyWallet) {
         connect();
         setModalHeight(0);
       }
@@ -130,14 +130,19 @@ const AppLogin = ({ toggleDarkMode }) => {
   const RenderGuestMode = () => {
     return (
       <div style={{ maxWidth: '768px' }}>
-        <GuestContainer padding='24px' gap='13px' background={theme.modalSearchBarBackground} borderRadius='24px'>
-          <ItemHV2 justifyContent='flex-start' gap='2px'>
+        <GuestContainer padding='12px 12px 12px 24px' gap='13px' background={theme.modalSearchBarBackground} borderRadius='24px'>
+          {/* <ItemHV2 justifyContent='flex-start' gap='2px'>
             <H2 margin='0px' size='20px' weight='500' color={theme.default.secondaryColor}>Read-Only Mode</H2>
             <InfoLogo width='20px' height='20px' />
-          </ItemHV2>
+          </ItemHV2> */}
+
           <InputContainer>
 
-            <Input
+          <SpanV2 color={theme.default.secondaryColor} textAlign='start' flex='1'>
+            You can explore Push without connecting your wallet. You will have a chance to connect your wallet later.
+          </SpanV2>
+
+            {/* <Input
               autoFocus
               required
               maxlength="40"
@@ -154,12 +159,12 @@ const AppLogin = ({ toggleDarkMode }) => {
               placeholder='Enter wallet address'
               value={walletAddress}
               onChange={(e) => { handleReadOnlyWallet(e) }}
-            />
+            /> */}
 
 
             <ButtonsContainer>
-              <FilledButton onClick={initiateReadOnlyMode}>Read Only Mode</FilledButton>
-              <Span color={theme.default.color}>Or</Span>
+              {/* <FilledButton onClick={initiateReadOnlyMode}>Read Only Mode</FilledButton>
+              <Span color={theme.default.color}>Or</Span> */}
               <EmptyButton onClick={initiateGuestModa}>Continue as Guest</EmptyButton>
             </ButtonsContainer>
           </InputContainer>
@@ -278,7 +283,7 @@ const GuestContainer = styled(ItemVV2)`
 `
 
 const InputContainer = styled(ItemHV2)`
-  gap:8px;
+  gap:13px;
   @media ${device.mobileL} {
     flex-direction:column;
     gap:14px;
@@ -334,7 +339,7 @@ const EmptyButton = styled(ButtonV2)`
     padding: 13px 0px;
     background:${(props) => props.theme.modalSearchBarBackground};
     color:#657795;
-    width:175px;
+    width:190px;
     border-radius: 15px;
     & > div{
         display:block;
