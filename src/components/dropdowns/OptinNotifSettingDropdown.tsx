@@ -22,6 +22,7 @@ import { notifChannelSettingFormatString, userSettingsFromDefaultChannelSetting 
 import { AppContext } from "contexts/AppContext";
 import LoaderSpinner, { LOADER_TYPE } from "components/reusables/loaders/LoaderSpinner";
 import { updateSubscriptionStatus, updateUserSetting } from "redux/slices/channelSlice";
+import RangeSlider from "components/reusables/sliders/RangeSlider";
 
 interface OptinNotifSettingDropdownProps {
   children: React.ReactNode;
@@ -41,7 +42,7 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
 
   const theme = useTheme();
 
-  const handleSliderChange = (index: number, value: number) => {
+  const handleSliderChange = (index: number, value: number | { lower: number, upper: number }) => {
     const updatedSettings = [...modifiedSettings];
     updatedSettings[index].default = value;
     setModifiedSettings(updatedSettings);
@@ -83,19 +84,36 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
                     handleDiameter={12}
                 />
             </DropdownSwitchItem>
-          {setting.type === 2 && setting.enabled === true && (
-            <DropdownSliderItem>
+            {setting.type === 2 && setting.enabled === true && (
+              <DropdownSliderItem>
+                <SpanV2 color={theme.fontColor} fontSize="18px" fontWeight='600' alignSelf="flex-start">
+                    {setting.default}
+                </SpanV2>
                 <InputSlider
+                    val={setting.default}
                     max={setting.upperLimit}
                     min={setting.lowerLimit}
                     step={setting.ticker || 1}
-                    val={setting.default}
                     defaultVal={setting.default}
                     onChange={({ x }) => handleSliderChange(index, x)}
                 />
-                <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right" margin="0 0 0 16px">
-                    {setting.default}
-                </SpanV2>
+              </DropdownSliderItem>
+            )}
+          {setting.type === 3 && setting.enabled === true && (
+            <DropdownSliderItem>
+              <SpanV2 color={theme.fontColor} fontSize="18px" fontWeight='600' alignSelf="flex-start">
+                  {setting.default.lower} - {setting.default.upper}
+              </SpanV2>
+              <RangeSlider
+                  startVal={setting.default.lower}
+                  endVal={setting.default.upper}
+                  max={setting.upperLimit}
+                  min={setting.lowerLimit}
+                  step={setting.ticker || 1}
+                  defaultStartVal={setting.default.lower}
+                  defaultEndVal={setting.default.upper}
+                  onChange={({ startVal, endVal }) => handleSliderChange(index, {lower: startVal, upper: endVal})}
+              />
             </DropdownSliderItem>
           )}
         </DropdownInnerContainer>
@@ -258,14 +276,14 @@ const DropdownSwitchItem = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center; 
-    padding: 10px 0px;
+    padding: 12px 0px;
 `;
 
 const DropdownSubmitItem = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center; 
-    padding: 10px 0px;
+    padding: 12px 0px;
 `;
 
 const DropdownSubmitButton = styled.button`
@@ -311,9 +329,10 @@ const DropdownSubmitButton = styled.button`
 
 const DropdownSliderItem = styled.div`
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 13px;
     align-items: center; 
-    padding-bottom: 10px;
+    padding-bottom: 12px;
 `;
 
 const ActionTitle = styled.span<{ hideIt: boolean }>`

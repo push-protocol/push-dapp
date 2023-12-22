@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 // Internal Components
 import { DropdownBtnHandler } from "./DropdownBtnHandler";
 import InputSlider from "components/reusables/sliders/InputSlider";
+import RangeSlider from "components/reusables/sliders/RangeSlider";
 
 // Internal Configs
 import { SpanV2 } from "components/reusables/SharedStylingV2";
@@ -43,7 +44,7 @@ const UpdateNotifSettingDropdownContainer: React.FC<UpdateNotifSettingDropdownCo
 
   const theme = useTheme();
 
-  const handleSliderChange = (index: number, value: number) => {
+  const handleSliderChange = (index: number, value: number | {lower: number, upper: number}) => {
     const updatedSettings = [...modifiedSettings];
     updatedSettings[index].user = value;
     setModifiedSettings(updatedSettings);
@@ -56,10 +57,15 @@ const UpdateNotifSettingDropdownContainer: React.FC<UpdateNotifSettingDropdownCo
       // Use a type guard to narrow the type to UserSetting of type 1
       const setting = updatedSettings[index] as UserSetting & { type: 1 };
       setting.user = !setting.user;
-    } else {
+    } else if (updatedSettings[index].type === 2) {
       // Type 2
       // Use a type guard to narrow the type to UserSetting of type 2
       const setting = updatedSettings[index] as UserSetting & { type: 2 };
+      setting.enabled = !setting.enabled;
+    } else {
+      // Type 3
+      // Use a type guard to narrow the type to UserSetting of type 2
+      const setting = updatedSettings[index] as UserSetting & { type: 3 };
       setting.enabled = !setting.enabled;
     }
     setModifiedSettings(updatedSettings);
@@ -87,17 +93,34 @@ const UpdateNotifSettingDropdownContainer: React.FC<UpdateNotifSettingDropdownCo
             </DropdownSwitchItem>
           {setting.type === 2 && setting.enabled === true && (
             <DropdownSliderItem>
-                <InputSlider
-                    val={setting.user}
-                    max={setting.upperLimit}
-                    min={setting.lowerLimit}
-                    step={setting.ticker || 1}
-                    defaultVal={setting.default}
-                    onChange={({ x }) => handleSliderChange(index, x)}
-                />
-                <SpanV2 color={theme.fontColor} fontSize="16px" fontWeight='500' textAlign="right" margin="0 0 0 16px">
-                    {setting.user}
-                </SpanV2>
+              <SpanV2 color={theme.fontColor} fontSize="18px" fontWeight='600' alignSelf="flex-start">
+                  {setting.user || setting.default}
+              </SpanV2>
+              <InputSlider
+                  val={setting.user}
+                  max={setting.upperLimit}
+                  min={setting.lowerLimit}
+                  step={setting.ticker || 1}
+                  defaultVal={setting.default}
+                  onChange={({ x }) => handleSliderChange(index, x)}
+              />
+            </DropdownSliderItem>
+          )}
+          {setting.type === 3 && setting.enabled === true && (
+            <DropdownSliderItem>
+              <SpanV2 color={theme.fontColor} fontSize="18px" fontWeight='600' alignSelf="flex-start">
+                  {setting.user.lower || setting.default.lower} - {setting.user.upper || setting.default.upper}
+              </SpanV2>
+              <RangeSlider
+                  startVal={setting.user.lower || setting.default.lower}
+                  endVal={setting.user.upper || setting.default.upper}
+                  max={setting.upperLimit}
+                  min={setting.lowerLimit}
+                  step={setting.ticker || 1}
+                  defaultStartVal={setting.default.lower}
+                  defaultEndVal={setting.default.upper}
+                  onChange={({ startVal, endVal }) => handleSliderChange(index, {lower: startVal, upper: endVal})}
+              />
             </DropdownSliderItem>
           )}
         </DropdownInnerContainer>
@@ -258,14 +281,14 @@ const DropdownSwitchItem = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center; 
-    padding: 10px 0px;
+    padding: 12px 0px;
 `;
 
 const DropdownSubmitItem = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center; 
-    padding: 10px 0px;
+    padding: 12px 0px;
 `;
 
 const DropdownSubmitButton = styled.button`
@@ -311,9 +334,10 @@ const DropdownSubmitButton = styled.button`
 
 const DropdownSliderItem = styled.div`
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 13px;
     align-items: center; 
-    padding-bottom: 10px;
+    padding-bottom: 12px;
 `;
 
 const ActionTitle = styled.span<{ hideIt: boolean }>`

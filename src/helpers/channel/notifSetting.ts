@@ -6,8 +6,8 @@ export const notifChannelSettingFormatString = ({ settings }: { settings: Channe
     let _notifSettings = [];
     settings && settings.forEach((setting) => 
         isSettingType1(setting) 
-            ? _notifSettings.push({ enabled: setting.default }) 
-            : _notifSettings.push({ value: setting.default, enabled: (setting as ChannelSetting & { type: 2 }).enabled }));
+            ? _notifSettings.push({ enabled: (setting as ChannelSetting & { type: 1 }).default }) 
+            : _notifSettings.push({ value: (setting as ChannelSetting & { type: 2 }).default , enabled: (setting as ChannelSetting & { type: 2 }).enabled }));
     return _notifSettings;
 }
 
