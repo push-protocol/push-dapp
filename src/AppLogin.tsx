@@ -130,7 +130,7 @@ const AppLogin = ({ toggleDarkMode }) => {
   const RenderGuestMode = () => {
     return (
       <div style={{ maxWidth: '768px' }}>
-        <GuestContainer padding='24px' gap='13px' background={theme.modalSearchBarBackground} borderRadius='24px'>
+        <GuestContainer padding='12px 12px 12px 24px' gap='13px' background={theme.modalSearchBarBackground} borderRadius='24px'>
           {/* <ItemHV2 justifyContent='flex-start' gap='2px'>
             <H2 margin='0px' size='20px' weight='500' color={theme.default.secondaryColor}>Read-Only Mode</H2>
             <InfoLogo width='20px' height='20px' />
@@ -283,7 +283,7 @@ const GuestContainer = styled(ItemVV2)`
 `
 
 const InputContainer = styled(ItemHV2)`
-  gap:8px;
+  gap:13px;
   @media ${device.mobileL} {
     flex-direction:column;
     gap:14px;
@@ -339,7 +339,7 @@ const EmptyButton = styled(ButtonV2)`
     padding: 13px 0px;
     background:${(props) => props.theme.modalSearchBarBackground};
     color:#657795;
-    width:175px;
+    width:190px;
     border-radius: 15px;
     & > div{
         display:block;
