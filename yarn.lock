@@ -4476,15 +4476,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/iframe-provider@npm:^0.4.2":
-  version: 0.4.3
-  resolution: "@ledgerhq/iframe-provider@npm:0.4.3"
-  dependencies:
-    eventemitter3: ^4.0.0
-  checksum: 7dd6cd241c532993c9d37e788ce8b756580d277624fffec220372d6693366527206743985b14e66fe14bc1d843dbf17ef084ea4725501fa408e91bed66ff80f2
-  languageName: node
-  linkType: hard
-
 "@leichtgewicht/ip-codec@npm:^2.0.1":
   version: 2.0.4
   resolution: "@leichtgewicht/ip-codec@npm:2.0.4"
@@ -5441,10 +5432,9 @@ __metadata:
     "@mui/icons-material": ^5.8.4
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
-    "@pushprotocol/ledgerlive": latest
-    "@pushprotocol/restapi": 1.4.41
+    "@pushprotocol/restapi": 1.4.45
     "@pushprotocol/socket": 0.5.3
-    "@pushprotocol/uiweb": 1.1.19
+    "@pushprotocol/uiweb": 1.1.23
     "@reduxjs/toolkit": ^1.7.1
     "@testing-library/dom": ^6.12.2
     "@testing-library/jest-dom": ^4.2.4
@@ -5631,21 +5621,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/ledgerlive@npm:latest":
-  version: 0.0.1
-  resolution: "@pushprotocol/ledgerlive@npm:0.0.1"
-  dependencies:
-    "@ledgerhq/iframe-provider": ^0.4.2
-    "@web3-react/abstract-connector": ^6.0.7
-    tiny-invariant: ^1.2.0
-    tslib: ^2.3.0
-  checksum: 3600e1e8faedec80a3f76d3f224d3cf2ac5daf1e80a270a80ad73187cae2e00251e33f019b9675515250ffa2eef0231a3b76b83cebb6b87af00299e59961e581
-  languageName: node
-  linkType: hard
-
-"@pushprotocol/restapi@npm:1.4.41":
-  version: 1.4.41
-  resolution: "@pushprotocol/restapi@npm:1.4.41"
+"@pushprotocol/restapi@npm:1.4.45":
+  version: 1.4.45
+  resolution: "@pushprotocol/restapi@npm:1.4.45"
   dependencies:
     "@ambire/signature-validator": ^1.3.1
     "@metamask/eth-sig-util": ^5.0.2
@@ -5666,7 +5644,7 @@ __metadata:
     viem: ^1.3.0
   peerDependencies:
     ethers: ^5.6.8
-  checksum: bdf64d7d7d89d820f6bfb292c5ec3c8bf999d03dd560e4497977e910deed72ee3ea29c72c9193b37034b990fb2d901b75246829313368aa0c3634faec317802b
+  checksum: 08324581fdad86fca1dc6e947263468ed010f0d1ca95d58ffeee97b4d00e64e31dec182c5cde8c3f2c3fbddec6e64e2178c2bf6b6d675919de1d51a449757216
   languageName: node
   linkType: hard
 
@@ -5706,9 +5684,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:1.1.19":
-  version: 1.1.19
-  resolution: "@pushprotocol/uiweb@npm:1.1.19"
+"@pushprotocol/uiweb@npm:1.1.23":
+  version: 1.1.23
+  resolution: "@pushprotocol/uiweb@npm:1.1.23"
   dependencies:
     "@livekit/components-react": ^1.2.2
     "@livekit/components-styles": ^1.0.6
@@ -5740,7 +5718,7 @@ __metadata:
     axios: ^0.27.2
     react: ">=16.8.0"
     styled-components: ^6.0.8
-  checksum: 1180e8a37039825f5bfd518b1e7675b3bc2a95b7a511cddb22d0390cf742cfb7589dc28b59fc82bfc8f43ed1da9324374653275d0a5f88452b8b2fa83dd607df
+  checksum: 7113c048b5185643c3d6f6f44aedc74023496daf4beafad2379e6d48aa6295c5c939b15ba9b81a17f765cbafc49648688e63d668a1416b6ec593763f7ff68bd7
   languageName: node
   linkType: hard
 

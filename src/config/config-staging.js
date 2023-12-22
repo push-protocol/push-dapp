@@ -36,7 +36,7 @@ export const config = {
    * Core Network Related Data
    */
   coreContractChain: 11155111, //the chain id of the network which the core contract relies on
-  coreRPC: 'https://sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
+  coreRPC: 'https://sepolia.infura.io/v3/49f638cc25a94ddb86b7aefd612f11ab',
   mainnetCoreRPC: "https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a",
   mainnetCoreContractChain: 1,
   aliasRPC: {
@@ -71,7 +71,7 @@ export const config = {
     ios: 'https://discord.gg/pushprotocol',
     android: 'https://play.google.com/store/apps/details?gl=US&hl=en&id=io.epns.epnsstaging',
     extension: 'https://chrome.google.com/webstore/detail/epns-staging-protocol-alp/bjiennpmhdcandkpigcploafccldlakj',
-    howto: 'https://docs.epns.io',
+    howto: 'https://push.org/docs',
   },
 }
 

@@ -43,7 +43,7 @@ import { checkIfIntent, getUpdatedChatAndIntent, getUpdatedGroupInfo } from 'hel
 import { appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { fetchIntent } from 'helpers/w2w/user';
-import { ChatUIProvider } from '@pushprotocol/uiweb';
+import { ChatUIProvider, IGroup } from '@pushprotocol/uiweb';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -68,7 +68,6 @@ function Chat({ chatid }) {
 
   const [viewChatBox, setViewChatBox] = useState<boolean>(false);
   const [currentChat, setCurrentChat] = useState<Feeds>();
-  const [messages, setMessages] = useState<MessageIPFSWithCID[]>([]);
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
@@ -90,7 +89,6 @@ function Chat({ chatid }) {
   useEffect(()=>{
     if(connectedUser && socketData.messagesSinceLastConnection && ((w2wHelper.caip10ToWallet(socketData.messagesSinceLastConnection.fromCAIP10)).toLowerCase() !== account.toLowerCase())){
       if(currentChat)
-        getUpdatedChats(socketData.messagesSinceLastConnection);
       getUpdatedInbox(socketData.messagesSinceLastConnection)
     }
   },[socketData.messagesSinceLastConnection])
@@ -101,30 +99,17 @@ function Chat({ chatid }) {
     }
   },[socketData.groupInformationSinceLastConnection])
 
-  const getUpdatedChats = async(chat) => {
-    if((currentChat.did?.toLowerCase() === chat.fromCAIP10?.toLowerCase()) || currentChat?.groupInformation?.chatId === chat.toCAIP10){
-    const decryptedChat:MessageIPFS = await w2wHelper.decryptMessages({
-      savedMsg: chat,
-      connectedUser,
-      account,
-      currentChat,
-      inbox
-    });
-    setMessages([...messages,{...decryptedChat,cid:socketData.messagesSinceLastConnection.cid}]);
-    }
-  }
+ 
 
   const getUpdatedInbox = async(message) => {
     let isListUpdated=false;
     const {updatedInbox,isInboxUpdated}=await getUpdatedChatAndIntent({chatList:inbox,message,connectedUser,account,checkInbox:true});
-    // console.log("feed isChatList updated?",isInboxUpdated)
     if(isInboxUpdated){
       isListUpdated=true;
       setInbox(updatedInbox);
     }
     else{
       const {updatedIntents,isIntentsUpdated}=await getUpdatedChatAndIntent({chatList:receivedIntents,message,connectedUser,account,checkInbox:false});
-      // console.log("intent isChatList updated?",isIntentsUpdated)
       if(isIntentsUpdated){
         isListUpdated=true;
         setReceivedIntents(updatedIntents);
@@ -139,7 +124,7 @@ function Chat({ chatid }) {
         env: appConfig.appEnv
       });
       if(checkIfIntent({chat:fetchedChat, account})){
-        setReceivedIntents(prev=> [fetchedChat, ...prev]);
+        setReceivedIntents(prev=> [fetchedChat , ...prev]);
         
       }
       else{
@@ -147,36 +132,7 @@ function Chat({ chatid }) {
       }
       
     }
-  //   let isInInbox = false;
-  //   let decryptedChat:MessageIPFS;
-
-  //   //change to common decryption for getUpdatedInbox and getUpdatedChats using filter
-  //   const updatedFeed = inbox.filter(feed=>(feed.did?.toLowerCase() === message.fromCAIP10?.toLowerCase()) || (feed?.groupInformation?.chatId === message.toCAIP10));
-  //  if(updatedFeed.length){
-  //    decryptedChat = await w2wHelper.decryptMessages({
-  //     savedMsg: message,
-  //     connectedUser,
-  //     account,
-  //     currentChat:updatedFeed[0],
-  //     inbox
-  //   });
-  // }
-  //   const updatedInbox = inbox.map(feed => {
-  //     if((feed.did?.toLowerCase() === message.fromCAIP10?.toLowerCase()) || feed?.groupInformation?.chatId === message.toCAIP10){
-  //       feed.msg = decryptedChat;
-  //       isInInbox = true;
-  //     }
-  //     return feed;
-  //   });
-  //   if(isInInbox){
-
-  //   setInbox(updatedInbox);
-  //   }
-  //   else if(!isInInbox){
-  //     //update msg for already received intents
-  //     const intents = await fetchIntent({connectedUser});
-  //     setReceivedIntents(intents);
-  //   }
+  
   }
 
 const getUpdatedGroup = async(groupInfo) => {
@@ -208,21 +164,7 @@ const getUpdatedGroup = async(groupInfo) => {
       setInbox(prev=>[fetchedChat,...prev])
     }  
   }
-    // let isInInbox = false;
-    // const updatedInbox = inbox.map(feed => {
-    //   if(feed?.groupInformation?.chatId === groupInfo.chatId){
-    //     feed.groupInformation = groupInfo;
-    //     isInInbox = true;
-    //   }
-    //   return feed;
-    // });
-    // if(isInInbox){
-    // setInbox(updatedInbox);
-    // }
-    // else {
-    //   const intents = await fetchIntent({connectedUser});
-    //   setReceivedIntents(intents);
-    // }
+  
   }
 
   // React GA Analytics
@@ -283,7 +225,6 @@ const getUpdatedGroup = async(groupInfo) => {
     const caip10:string = w2wHelper.walletToCAIP10({account});
     const signer = await provider.getSigner();
     setSignerData(signer);
-    console.log(signer, 'kkkk')
     
     if(connectedUser?.wallets?.toLowerCase() !== caip10?.toLowerCase()){
       await getUser();
@@ -398,7 +339,6 @@ const getUpdatedGroup = async(groupInfo) => {
   };
 
   useEffect(() => {
-    console.log(account, connectedUser?.privateKey, "kkkk")
   }, [account, connectedUser?.privateKey])
 
   return (
@@ -415,8 +355,6 @@ const getUpdatedGroup = async(groupInfo) => {
                 viewChatBox,
                 setChat,
                 intents,
-                messages,
-                setMessages,
                 setIntents,
                 inbox,
                 setInbox,
