@@ -74,7 +74,7 @@ const AppLogin = ({ toggleDarkMode }) => {
         observer.disconnect();
       }
 
-      if(!readOnlyWallet) {
+      if (!readOnlyWallet) {
         connect();
         setModalHeight(0);
       }
@@ -131,13 +131,18 @@ const AppLogin = ({ toggleDarkMode }) => {
     return (
       <div style={{ maxWidth: '768px' }}>
         <GuestContainer padding='24px' gap='13px' background={theme.modalSearchBarBackground} borderRadius='24px'>
-          <ItemHV2 justifyContent='flex-start' gap='2px'>
+          {/* <ItemHV2 justifyContent='flex-start' gap='2px'>
             <H2 margin='0px' size='20px' weight='500' color={theme.default.secondaryColor}>Read-Only Mode</H2>
             <InfoLogo width='20px' height='20px' />
-          </ItemHV2>
+          </ItemHV2> */}
+
           <InputContainer>
 
-            <Input
+          <SpanV2 color={theme.default.secondaryColor} textAlign='start' flex='1'>
+            You can explore Push without connecting your wallet. You will have a chance to connect your wallet later.
+          </SpanV2>
+
+            {/* <Input
               autoFocus
               required
               maxlength="40"
@@ -154,12 +159,12 @@ const AppLogin = ({ toggleDarkMode }) => {
               placeholder='Enter wallet address'
               value={walletAddress}
               onChange={(e) => { handleReadOnlyWallet(e) }}
-            />
+            /> */}
 
 
             <ButtonsContainer>
-              <FilledButton onClick={initiateReadOnlyMode}>Read Only Mode</FilledButton>
-              <Span color={theme.default.color}>Or</Span>
+              {/* <FilledButton onClick={initiateReadOnlyMode}>Read Only Mode</FilledButton>
+              <Span color={theme.default.color}>Or</Span> */}
               <EmptyButton onClick={initiateGuestModa}>Continue as Guest</EmptyButton>
             </ButtonsContainer>
           </InputContainer>
