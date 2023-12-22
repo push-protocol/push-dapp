@@ -111,6 +111,7 @@ const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = (o
     return state.user;
   });
   const dispatch = useDispatch();
+  const {handleConnectWallet} = useContext(AppContext);
 
   const channelSetting = useMemo(() => {
     if(channelDetail && channelDetail?.channel_settings) {
@@ -132,6 +133,18 @@ const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = (o
   const unsubscribeToast = useToast();
   const optOutHandler = async ({ setLoading }: { setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const setLoadingFunc = setLoading || (() => {});
+
+    if (!userPushSDKInstance.signer) {
+      unsubscribeToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: 'Your wallet is not connected.Please Connect.',
+        toastType: 'ERROR',
+        getToastIcon: (size) => <MdError size={size} color="red" />,
+      });
+      handleConnectWallet();
+      return;
+    }
+
     setLoadingFunc(true);
 
     try {

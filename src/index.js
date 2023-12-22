@@ -17,8 +17,8 @@ import * as serviceWorker from "./serviceWorker";
 import ChatUserContextProvider from './contexts/ChatUserContext';
 import { VideoCallContextProvider } from './contexts/VideoCallContext';
 import ErrorContextProvider from './contexts/ErrorContext';
-
-
+import AppContextProvider from './contexts/AppContext';
+import GlobalContextProvider from './contexts/GlobalContext';
 
 // Internal Configs
 import * as dotenv from "dotenv";
@@ -51,15 +51,19 @@ ReactDOM.render(
   <BrowserRouter basename={process.env.PUBLIC_URL}>
     <Provider store={store}>
       <ApolloProvider client={client}>
+        <GlobalContextProvider>
         <Web3OnboardProvider web3Onboard={web3Onboard}>
-          <ErrorContextProvider>
-          <ChatUserContextProvider>
-            <VideoCallContextProvider>
-              <App />
-            </VideoCallContextProvider>
-          </ChatUserContextProvider>
-          </ErrorContextProvider>
+          <AppContextProvider>
+            <ErrorContextProvider>
+              <ChatUserContextProvider>
+                <VideoCallContextProvider>
+                  <App />
+                </VideoCallContextProvider>
+              </ChatUserContextProvider>
+            </ErrorContextProvider>
+          </AppContextProvider>
         </Web3OnboardProvider>
+        </GlobalContextProvider>
       </ApolloProvider>
     </Provider>
   </BrowserRouter>,

@@ -15,7 +15,7 @@ import { PushAPI } from '@pushprotocol/restapi';
 // Internal Compoonents
 import InitState from 'components/InitState';
 import NavigationContextProvider from 'contexts/NavigationContext';
-import AppContextProvider from 'contexts/AppContext';
+import AppContextProvider, { AppContext } from 'contexts/AppContext';
 import { EnvHelper } from 'helpers/UtilityHelper';
 import { useAccount, useInactiveListener, useSDKSocket } from 'hooks';
 import UserJourneySteps from 'segments/userJourneySteps';
@@ -31,7 +31,7 @@ import { resetCanSendSlice } from 'redux/slices/sendNotificationSlice';
 import { resetChannelCreationSlice } from 'redux/slices/channelCreationSlice';
 import { resetAdminSlice } from 'redux/slices/adminSlice';
 import Navigation from 'structure/Navigation';
-import {  ErrorContext } from './contexts/ErrorContext'
+import { ErrorContext } from './contexts/ErrorContext'
 import { resetUserSlice, setUserPushSDKInstance } from 'redux/slices/userSlice';
 
 // Internal Configs
@@ -43,7 +43,7 @@ import { ChatUserContext } from 'contexts/ChatUserContext';
 // space imports
 import SpaceContextProvider, { SpaceContext } from 'contexts/SpaceContext';
 import { SpacesUIProvider } from '@pushprotocol/uiweb';
-import { darkTheme,lightTheme } from 'config/spaceTheme';
+import { darkTheme, lightTheme } from 'config/spaceTheme';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 import {
   ISpaceBannerProps,
@@ -77,9 +77,9 @@ export interface IUseSpaceReturnValues {
 export default function App() {
   const dispatch = useDispatch();
 
-  const {isActive, account, chainId, provider} = useAccount();
+  const { isActive, account, chainId, provider } = useAccount();
   const [currentTime, setcurrentTime] = React.useState(0);
-  const {authError, setAuthError } = useContext(ErrorContext);
+  const { authError, setAuthError } = useContext(ErrorContext);
   const updateOnboardTheme = useUpdateTheme();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -101,7 +101,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if(!account) return;
+    if (!account) return;
     dispatch(resetSpamSlice());
     dispatch(resetNotificationsSlice());
     dispatch(resetCanSendSlice());
@@ -110,25 +110,6 @@ export default function App() {
     dispatch(resetUserSlice());
   }, [account]);
 
-  useEffect(() => {
-    const librarySigner = provider?.getSigner(account);
-    if(!account || !librarySigner || !appConfig?.appEnv || userPushSDKInstance) return;
-
-    const initializePushSDK = async () => {
-        try {
-          const userInstance = await PushAPI.initialize(librarySigner, {
-              env: appConfig.appEnv, // defaults to staging
-              account: account
-          });
-          
-          dispatch(setUserPushSDKInstance(userInstance));
-        } catch (error) {
-        // Handle initialization error
-        }
-    };
-    
-    initializePushSDK();
-}, [account, provider]);
 
   // console.log(isActive, chainId, account);
   // handle logic to reconnect in response to certain events from the provider
@@ -143,8 +124,8 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
 
   // enable socket notifications
-  useSDKSocket({ account, chainId, env: appConfig.appEnv});
-  
+  useSDKSocket({ account, chainId, env: appConfig.appEnv });
+
   const toggleDarkMode = () => {
     const newTheme = !darkMode ? 'dark' : 'light';
     updateOnboardTheme(newTheme);
@@ -230,6 +211,7 @@ export default function App() {
   const location = useLocation();
   const isSnapPage = location?.pathname === '/snap';
 
+
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
       {(!isActive || !allowedChain) && (
@@ -238,71 +220,74 @@ export default function App() {
         </SectionV2>
       )}
 
-      {isActive && !authError && allowedChain && (
+
+      {isActive && !authError  && (
         <>
           <GlobalStyle />
           <InitState />
           <NavigationContextProvider>
             <SpaceContextProvider>
               <SpaceComponentContextProvider spaceUI={spaceUI}>
-            <AppContextProvider>
-              <Joyride
-                run={run}
-                steps={steps}
-                continuous={tutorialContinous}
-                stepIndex={stepIndex}
-                // hideFooter={true}
-                // primaryProps={false}
-                hideBackButton={true}
-                hideCloseButton={false}
-                disableScrolling={true}
-                disableScrollParentFix={true}
-                // disableFlip={true}
-                // showNextButton={false}
-                showSkipButton={false}
-                disableOverlayClose={true}
-                callback={handleJoyrideCallback}
-                styles={{
-                  options: {
-                    arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-                    backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-                    overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
-                    primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
-                    textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
-                    zIndex: 1000,
-                  },
-                }}
-              />
-
-              <HeaderContainer>
-                <Header
-                  isDarkMode={darkMode}
-                  darkModeToggle={toggleDarkMode}
+                {/* <AppContextProvider> */}
+                <Joyride
+                  run={run}
+                  steps={steps}
+                  continuous={tutorialContinous}
+                  stepIndex={stepIndex}
+                  // hideFooter={true}
+                  // primaryProps={false}
+                  hideBackButton={true}
+                  hideCloseButton={false}
+                  disableScrolling={true}
+                  disableScrollParentFix={true}
+                  // disableFlip={true}
+                  // showNextButton={false}
+                  showSkipButton={false}
+                  disableOverlayClose={true}
+                  callback={handleJoyrideCallback}
+                  styles={{
+                    options: {
+                      arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                      backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                      overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
+                      primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
+                      textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
+                      zIndex: 1000,
+                    },
+                  }}
                 />
-              </HeaderContainer>
 
-              <ParentContainer
-                bg={darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG}
-                headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
-              >
-                {!isSnapPage && <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                  <Navigation />
-                </LeftBarContainer>}
+                <HeaderContainer>
+                  <Header
+                    isDarkMode={darkMode}
+                    darkModeToggle={toggleDarkMode}
+                  />
+                </HeaderContainer>
 
-                <ContentContainer leftBarWidth={isSnapPage ? 0 : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                   {/* Shared among all pages, load universal things here */}
-                   <SpacesUIProvider spaceUI={spaceUI} theme={darkMode ? darkTheme : lightTheme}>
+                <ParentContainer
+                  bg={darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG}
+                  headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
+                >
+                  {!isSnapPage && <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                    <Navigation />
+                  </LeftBarContainer>}
+
+                  <ContentContainer leftBarWidth={isSnapPage ? 0 : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                    {/* Shared among all pages, load universal things here */}
+                    <SpacesUIProvider spaceUI={spaceUI} theme={darkMode ? darkTheme : lightTheme}>
                       <MasterInterfacePage />
                       <SpaceWidgetSection />
                     </SpacesUIProvider>
-                </ContentContainer>
-              </ParentContainer>
-            </AppContextProvider>
-            </SpaceComponentContextProvider>
+                  </ContentContainer>
+                </ParentContainer>
+                {/* </AppContextProvider> */}
+              </SpaceComponentContextProvider>
             </SpaceContextProvider>
           </NavigationContextProvider>
         </>
       )}
+
+     
     </ThemeProvider>
   );
 }
