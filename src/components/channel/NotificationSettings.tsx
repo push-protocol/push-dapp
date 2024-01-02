@@ -149,7 +149,32 @@ function NotificationSettings() {
             default: setting.default ? 1 : 0,
           };
         }
-        if (setting.type === 2) {
+        else if (setting.type === 2) {
+          console.log(
+            {
+              type: setting.type,
+            description: setting.description,
+            default: setting.default,
+            data: {
+              lower: setting.lowerLimit,
+              upper: setting.upperLimit,
+              ticker: setting.ticker,
+              enabled: setting.enabled,
+            },
+            }
+          )
+          return {
+            type: setting.type,
+            description: setting.description,
+            default: setting.default,
+            data: {
+              lower: setting.lowerLimit,
+              upper: setting.upperLimit,
+              ticker: setting.ticker,
+              enabled: setting.enabled,
+            },
+          };
+        } else if (setting.type === 3) {
           console.log(
             {
               type: setting.type,
@@ -176,6 +201,7 @@ function NotificationSettings() {
           };
         }
       });
+      console.log(settingData);
       await userPushSDKInstance.channel.setting(settingData);
 
       dispatch(updateChannelSetting({ channelAddress, settings }));

@@ -26,12 +26,11 @@ export const isAllFilledAndValid = ({
   sliderStep: string;
   type: ChannelSetting['type'];
   settingName: string;
-  defaultValue: string;
+  defaultValue: string | { lower: string, upper: string };
 }): boolean => {
   setErrorInfo(undefined);
 
   let hasError = false;
-
   if (isEmpty(settingName)) {
     setErrorInfo((x) => ({
       ...x,
@@ -40,7 +39,7 @@ export const isAllFilledAndValid = ({
     hasError = true;
   }
 
-  if (type === 2) {
+  if (type === 2 || type === 3) {
     if (isEmpty(lowerLimit)) {
       setErrorInfo((x) => ({
         ...x,
@@ -55,11 +54,25 @@ export const isAllFilledAndValid = ({
       }));
       hasError = true;
     }
-    if (isEmpty(defaultValue)) {
-      setErrorInfo((x) => ({
-        ...x,
-        default: 'Default value is required',
-      }));
+    if ((typeof defaultValue === "string" ? isEmpty(defaultValue) : (isEmpty(defaultValue.lower) || isEmpty(defaultValue.upper)))) {
+      if (typeof defaultValue === "string") {
+        setErrorInfo((x) => ({
+          ...x,
+          default: 'Default value is required',
+        }));
+      }
+      else {
+        if (isEmpty(defaultValue.lower)) 
+          setErrorInfo((x) => ({
+            ...x,
+            defaultStart: 'Default start value is required',
+          }));
+        if (isEmpty(defaultValue.upper)) 
+          setErrorInfo((x) => ({
+            ...x,
+            defaultEnd: 'Default end value is required',
+          }));
+      }
       hasError = true;
     }
     if (isEmpty(sliderStep)) {
@@ -69,7 +82,7 @@ export const isAllFilledAndValid = ({
       }));
       hasError = true;
     }
-    if (!isEmpty(lowerLimit) && !isEmpty(upperLimit) && !isEmpty(defaultValue) && !isEmpty(sliderStep)) {
+    if (!isEmpty(lowerLimit) && !isEmpty(upperLimit) && !isEmpty(sliderStep)) {
       if (Number(lowerLimit) < 0) {
         setErrorInfo((x) => ({
           ...x,
@@ -91,12 +104,29 @@ export const isAllFilledAndValid = ({
         }));
         hasError = true;
       }
-      if (Number(defaultValue) < Number(lowerLimit) || Number(defaultValue) > Number(upperLimit)) {
-        setErrorInfo((x) => ({
-          ...x,
-          default: 'Default value not in range',
-        }));
-        hasError = true;
+      if (typeof defaultValue === "string") {
+        if (Number(defaultValue) < Number(lowerLimit) || Number(defaultValue) > Number(upperLimit)) {
+          setErrorInfo((x) => ({
+            ...x,
+            default: 'Default value not in range',
+          }));
+          hasError = true;
+        }
+      } else {
+        if (Number(defaultValue.lower) < Number(lowerLimit) || Number(defaultValue.lower) > Number(upperLimit)) {
+          setErrorInfo((x) => ({
+            ...x,
+            defaultStart: 'Default value not in range',
+          }));
+          hasError = true;
+        } 
+        if (Number(defaultValue.upper) < Number(lowerLimit) || Number(defaultValue.upper) > Number(upperLimit) || Number(defaultValue.lower) > Number(defaultValue.upper)) {
+          setErrorInfo((x) => ({
+            ...x,
+            defaultEnd: 'Default value not in range',
+          }));
+          hasError = true;
+        } 
       }
       if (Number(sliderStep) <= 0) {
         setErrorInfo((x) => ({

@@ -11,6 +11,7 @@ import { Button } from 'components/SharedStyling';
 import Metamask from 'assets/PushSnaps/metamasksnap.svg';
 import PushIcon from 'assets/PushSnaps/PushIcon.svg';
 import VersoIcon from 'assets/PushSnaps/VersoIcon.svg';
+import UDIcon from 'assets/PushSnaps/UDIcon.svg';
 import AppStoreQRCode from 'assets/PushSnaps/AppStoreQRCode.svg';
 import PlayStoreQRCode from 'assets/PushSnaps/PlayStoreQRCode.svg';
 import AppleIcon from 'assets/PushSnaps/AppleIcon.svg';
@@ -111,6 +112,29 @@ const InstallMetamaskSnapModal = ({
                         <AppstoreInstallBtn><Image src={AppleIcon} width="16px" height="20px" alt='App store' /></AppstoreInstallBtn>
                     </a>
                     <a href="https://play.google.com/store/apps/details?id=com.btuprotocol.btu_wallet" target="_blank">
+                        <AppstoreInstallBtn><Image src={PlayStore} width="16px" height="20px" alt='Play store' /></AppstoreInstallBtn>
+                    </a>
+                </SnapInner>
+            </SnapContainer>
+            <SnapContainer>
+                <SnapInner>
+                    <Logo
+                        src={UDIcon}
+                        alt="UD Icon"
+                    />
+                    <SpanV2
+                        fontSize="16px"
+                        fontWeight="400"
+                        color={theme.modalMessageColor}
+                    >
+                        Unstoppable Domains
+                    </SpanV2>
+                </SnapInner>
+                <SnapInner>
+                    <a href="https://apps.apple.com/nz/app/unstoppable-domains/id1544748602" target="_blank">
+                        <AppstoreInstallBtn><Image src={AppleIcon} width="16px" height="20px" alt='App store' /></AppstoreInstallBtn>
+                    </a>
+                    <a href="https://play.google.com/store/apps/details?id=com.unstoppabledomains.manager&hl=en&gl=US" target="_blank">
                         <AppstoreInstallBtn><Image src={PlayStore} width="16px" height="20px" alt='Play store' /></AppstoreInstallBtn>
                     </a>
                 </SnapInner>

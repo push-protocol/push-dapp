@@ -22,58 +22,11 @@ function ReceiveNotifsModule() {
   // get theme
   const theme = useTheme();
 
-  //notification modal
-  // const {
-  //   isModalOpen: isMetamaskPushSnapOpen,
-  //   showModal: showMetamaskPushSnap,
-  //   ModalComponent: MetamaskPushSnapModalComponent,
-  // } = useModalBlur();
-
-  // React.useEffect(()=>{
-  //   showMetamaskPushSnap();
-  // },[])
-
-  // React.useEffect(()=>{
-  //   showMetamaskPushSnap();
-  // },[])
-
   // Render
   return (
     <Container>
-
-      {/* <MetamaskPushSnapModalComponent
-        InnerComponent={MetamaskPushSnapModal}
-        modalPadding='0px'
-        // InnerComponentProps={}
-        modalPosition={MODAL_POSITION.ON_PARENT}
-      /> */}
-
-
-
       <ItemVV2 alignItems="stretch">
-        <ItemVV2 align="stretch" justify="flex-start" margin="0px 0px 40px 0px">
-          <H2>
-            <Span weight="400" size="32px" color={theme.color}>
-              Receive Notifications
-            </Span>
-          </H2>
-          <Span
-            color={theme.default.secondaryColor}
-            weight="400"
-            size="16px"
-            textTransform="none"
-            textAlign="center"
-            spacing="0.03em"
-            margin="0px 0px"
-          >
-            The following frontends enables receiving push alerts for your wallet. More coming soon!
-          </Span>
-        </ItemVV2>
-
-        <Item align="stretch" justify="flex-start" margin="0px 0px 20px 0px">
-          <Info />
-        </Item>
-
+        <MetamaskPushSnapModal onClose={() => {}} closeEnabled={false} />
       </ItemVV2>
     </Container>
   );
@@ -91,7 +44,7 @@ const Container = styled(Section)`
 	flex: initial;
 	justify-content: center;
   max-width: 1200px;
-  width: calc(100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG});
+  width: auto;
   padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
 	position: relative;
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
@@ -99,13 +52,11 @@ const Container = styled(Section)`
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
     padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
-    width: calc(100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
   }
 
   @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
     padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
-    width: calc(100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
   }
 `;
 

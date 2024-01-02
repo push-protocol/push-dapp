@@ -17,7 +17,11 @@ import GLOBALS, { device, globalsMargin } from "config/Globals";
 import { useLocation } from 'react-router-dom';
 
 const MetamaskPushSnapModal = ({
-    onClose
+    onClose,
+    closeEnabled = true
+}: {
+    onClose: () => void,
+    closeEnabled?: boolean
 }) => {
     const theme = useTheme();
     const location = useLocation();
@@ -54,10 +58,12 @@ const MetamaskPushSnapModal = ({
                 >
                     Receive Notifications
                 </SpanV2>}
-                <Close
-                    onClick={handleCloseModal}
-                    style={{ cursor: 'pointer' }}
-                />
+                {closeEnabled && 
+                    <Close
+                        onClick={handleCloseModal}
+                        style={{ cursor: 'pointer' }}
+                    />
+                }
             </ItemHV2>
 
             {SnapState == 1 && <InstallMetamaskSnapModal setSnapState={setSnapState} setConfigure={setConfigure} configure={configure} />}

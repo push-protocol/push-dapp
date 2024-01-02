@@ -15,7 +15,7 @@ import GLOBALS from 'config/Globals';
 const ChatBoxSection = ({ showGroupInfoModal }) => {
   // RENDER
   return (
-    <ItemVV2 justifyContent="stretch">
+    <ItemVV2 justifyContent="center" >
       <ChatBox
         showGroupInfoModal={showGroupInfoModal}
       />
