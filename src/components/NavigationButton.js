@@ -4,21 +4,27 @@ import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 
 // External Packages
 import styled, { css, useTheme } from 'styled-components';
+import { MdError } from 'react-icons/md';
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { Anchor, Image, ItemH, RouterLink, Span } from 'primaries/SharedStyling';
 import { ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
+import useToast from 'hooks/useToast';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
 import { AppContext } from 'contexts/AppContext';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 // Create Header
 function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
   const theme = useTheme();
 
-  const { showMetamaskPushSnap } = React.useContext(AppContext);
+  const { showMetamaskPushSnap, handleConnectWallet } = React.useContext(AppContext);
+  const { readOnlyWallet, mode } = React.useContext(GlobalContext);
+
+  const navigationToast = useToast(5000);
 
   let SelectedIcon;
   let RouteLogic;
@@ -47,8 +53,15 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
   } else {
     RouteLogic = Anchor;
   }
+  // Don't navigate to these routes if user is using a read-only wallet
+  const disallowNavigation = readOnlyWallet && (data.allowReadOnly !== undefined && data.allowReadOnly === false);
+  if (disallowNavigation) { 
+    RouteLogic = ProtectedRoute;
+  }
 
-
+  const handleDisallowedNav = () => {
+    handleConnectWallet();
+  }
 
   return (
     <>
@@ -79,6 +92,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
           margin={definedMargin}
           bg={bg}
           active={active?1:0}
+          onClick={disallowNavigation && handleDisallowedNav}
           className={data?.name?.toLowerCase()}>
           {data.iconFactory ? (
             <ItemHV2 justifyContent="flex-start" padding="0 2rem">
@@ -208,7 +222,9 @@ const NewTag = styled(SpanV2)`
   border-radius: 6px;
   height: 17px;
   width:fit-content;
-`
+`;
+
+const ProtectedRoute = styled(SpanV2)``;
 
 // Export Default
 export default NavigationButton;

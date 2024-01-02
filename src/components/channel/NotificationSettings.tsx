@@ -47,6 +47,7 @@ function NotificationSettings() {
   const [settingToEdit, setSettingToEdit] = React.useState<ChannelSetting>(undefined);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoadingSettings, setIsLoadingSettings] = React.useState(true);
+  const {handleConnectWallet} = useContext(AppContext);
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -131,6 +132,12 @@ function NotificationSettings() {
 
   const saveSettings = async () => {
     try {
+
+      if (!userPushSDKInstance.signer) {
+        handleConnectWallet();
+        return;
+      }
+
       setIsLoading(true);
 
       notificationToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });

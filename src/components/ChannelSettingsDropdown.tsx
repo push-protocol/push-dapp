@@ -8,6 +8,7 @@ import { toast as toaster } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
+import { MdError } from 'react-icons/md';
 
 // Internal Compoonents
 import { postReq } from 'api';
@@ -26,6 +27,7 @@ import ChannelReactivateModalContent from './ChannelReactivateModalContent';
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
+import { AppContext } from 'contexts/AppContext';
 
 const ethers = require('ethers');
 
@@ -45,6 +47,10 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
   const { epnsWriteProvider, epnsCommWriteProvider } = useSelector((state: any) => state.contracts);
   const { channelDetails } = useSelector((state: any) => state.admin);
   const { CHANNNEL_DEACTIVATED_STATE, CHANNEL_BLOCKED_STATE } = useSelector((state: any) => state.channels);
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
+  const {handleConnectWallet} = React.useContext(AppContext);
 
   const theme = useTheme();
   const { channelState } = channelDetails;
@@ -119,8 +125,13 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
     setPoolContrib(+EPNSCoreHelper.formatBigNumberToMetric(channelDetails.poolContribution, true));
   }, [account, channelDetails.poolContribution]);
 
+  const userSignerToast = useToast();
   const toggleChannelActivationState = () => {
     if (isChannelBlocked) return;
+    if (!userPushSDKInstance.signer) {
+      handleConnectWallet();
+      return;
+    }
     if (isChannelDeactivated) {
       showReactivateChannelModal();
     } else {
@@ -225,8 +236,8 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
                     {isChannelBlocked
                       ? 'Channel Blocked'
                       : isChannelDeactivated
-                      ? 'Activate Channel'
-                      : 'Deactivate Channel'}
+                        ? 'Activate Channel'
+                        : 'Deactivate Channel'}
                   </div>
                 </ActivateChannelContainer>
               </ChannelActionButton>

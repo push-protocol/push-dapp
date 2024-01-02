@@ -171,10 +171,18 @@ const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({
     setIsOpen(false);
   };
 
+  const {handleConnectWallet} = useContext(AppContext);
+
   const subscribeToast = useToast();
   const saveUserSettingHandler = async ({ userSettings, setLoading }: { userSettings?: UserSetting[], setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const setLoadingFunc = setLoading || (() => {});
     const saveOnSuccessSettingFunc = onSuccessSave || (() => {});
+    
+    if (!userPushSDKInstance.signer) {
+      handleConnectWallet();
+      return;
+    }
+    
     setLoadingFunc(true);
 
     try {

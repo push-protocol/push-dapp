@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import Switch from '@material-ui/core/Switch';
@@ -37,6 +37,7 @@ import { appConfig } from 'config';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import APP_PATHS from 'config/AppPaths';
 import Tag from './reusables/labels/Tag';
+import { AppContext } from 'contexts/AppContext';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -126,7 +127,7 @@ function SendNotifications() {
     return state.canSend;
   });
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
-
+const {handleConnectWallet} = useContext(AppContext);
   const [nfProcessing, setNFProcessing] = useState(0);
   const [channelAddress, setChannelAddress] = useState('');
   const [nfRecipient, setNFRecipient] = useState(account);
@@ -301,6 +302,11 @@ function SendNotifications() {
   const handleSendMessage = async (e) => {
     // Check everything in order
     e.preventDefault();
+
+    if (!userPushSDKInstance.signer) {
+      handleConnectWallet();
+      return;
+    }
 
     notificationToast.showLoaderToast({
       loaderMessage: 'Preparing Notification',

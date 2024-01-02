@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React, { useEffect, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 
 // External Packages
 import moment from 'moment';
@@ -23,6 +23,7 @@ import { Button, Item } from 'components/SharedStyling';
 import ChannelInfoHeader from './channel/ChannelInfoHeader';
 import ChannelInfoList from './channel/ChannelInfoList';
 import RedCircleSvg from '../assets/RedCircle.svg';
+import { MdCheckCircle, MdError } from 'react-icons/md';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -32,6 +33,7 @@ import { getDateFromTimestamp, nextDaysDateFromTimestamp, timeRemaining } from '
 import APP_PATHS from 'config/AppPaths';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import { getChannelDelegates } from 'services';
+import { AppContext } from 'contexts/AppContext';
 
 
 const DATE_FORMAT = 'DD MMM, YYYY';
@@ -44,8 +46,11 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
     canVerify,
     aliasDetails: { isAliasVerified, aliasAddrFromContract },
   } = useSelector((state) => state.admin);
-  const { channelSettings } = useSelector((state) => state.channels); 
-
+  const { channelSettings } = useSelector((state) => state.channels);
+  const { userPushSDKInstance } = useSelector((state) => {
+    return state.user;
+  });
+  const {handleConnectWallet} = useContext(AppContext);
   const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector((state) => state.channels);
   const { processingState } = useSelector((state) => state.channelCreation);
   const [verifyingChannel, setVerifyingChannel] = React.useState([]);
@@ -72,6 +77,15 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
   } = useModalBlur();
 
   const addDelegateToast = useToast();
+
+  const handleDelegateModal = () => {
+    if (!userPushSDKInstance.signer) {
+      handleConnectWallet();
+      return;
+    }
+    showAddDelegateModal();
+  }
+
   const addDelegate = async (walletAddress) => {
     return epnsCommWriteProvider.addDelegate(walletAddress);
   };
@@ -148,6 +162,12 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
   };
 
   const navigateToNotifSettings = () => {
+
+    if (!userPushSDKInstance.signer) {
+      handleConnectWallet();
+      return;
+    }
+
     navigate(APP_PATHS.ChannelSettings);
   };
 
@@ -343,7 +363,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
               <ChannelInfoHeader
                 title="Channel Delegates"
                 description="Delegates can send notifications on behalf of the channel"
-                Button={<AddDelegateButton onClick={() => showAddDelegateModal()} />}
+                Button={<AddDelegateButton onClick={handleDelegateModal} />}
               />
               <ChannelInfoList
                 account={account}
