@@ -1,0 +1,13 @@
+<svg width="32" height="33" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="GasPump" clip-path="url(#clip0_21762_34044)">
+<path id="Vector" d="M7 27.25V7.25C7 6.71957 7.21071 6.21086 7.58579 5.83579C7.96086 5.46071 8.46957 5.25 9 5.25H19C19.5304 5.25 20.0391 5.46071 20.4142 5.83579C20.7893 6.21086 21 6.71957 21 7.25V27.25" stroke="#D53A94" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M4 27.25H24" stroke="#D53A94" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_3" d="M21 14.25H24C24.5304 14.25 25.0391 14.4607 25.4142 14.8358C25.7893 15.2109 26 15.7196 26 16.25V21.25C26 21.7804 26.2107 22.2891 26.5858 22.6642C26.9609 23.0393 27.4696 23.25 28 23.25C28.5304 23.25 29.0391 23.0393 29.4142 22.6642C29.7893 22.2891 30 21.7804 30 21.25V11.0787C30 10.8159 29.9483 10.5557 29.8477 10.3129C29.7471 10.0701 29.5996 9.84952 29.4137 9.66375L27 7.25" stroke="#D53A94" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_4" d="M17 14.25H11" stroke="#D53A94" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_21762_34044">
+<rect width="32" height="32" fill="white" transform="translate(0 0.25)"/>
+</clipPath>
+</defs>
+</svg>
