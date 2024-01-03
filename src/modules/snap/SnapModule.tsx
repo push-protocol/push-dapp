@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 // External Packages
 import ReactGA from 'react-ga';
 import styled, { useTheme } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 // Internal Components
 import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -25,7 +26,6 @@ import BellRinging from 'assets/PushSnaps/BellRinging.svg';
 import GasPump from 'assets/PushSnaps/GasPump.svg';
 import AboutSnapModal from './AboutSnapModal';
 import { ReactComponent as Gear } from 'assets/PushSnaps/Gear.svg';
-import { useNavigate } from 'react-router-dom';
 
 
 const SnapModule = () => {
