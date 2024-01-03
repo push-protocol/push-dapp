@@ -25,6 +25,7 @@ import BellRinging from 'assets/PushSnaps/BellRinging.svg';
 import GasPump from 'assets/PushSnaps/GasPump.svg';
 import AboutSnapModal from './AboutSnapModal';
 import { ReactComponent as Gear } from 'assets/PushSnaps/Gear.svg';
+import { useNavigate } from 'react-router-dom';
 
 
 const SnapModule = () => {
@@ -143,7 +144,7 @@ const SnapModule = () => {
   };
 
   const theme = useTheme();
-
+  const navigate = useNavigate();
   return (
     <Container>
       <AboutPushSnapModalComponent
@@ -204,7 +205,7 @@ const SnapModule = () => {
                       <ItemVV2 margin="0 0 0 16px">
                         <PrimaryText>Subscribe for Notifications</PrimaryText>
                         <SecondaryText>Subscribe to protocols that you want notification from, they are called {" "}
-                          <ChannelSpan onClick={() => (window.location.href = '/channels')}>channels.</ChannelSpan>
+                          <ChannelSpan onClick={() => navigate('/channels')}>channels.</ChannelSpan>
                         </SecondaryText>
                       </ItemVV2>
                     </ItemHV2>
