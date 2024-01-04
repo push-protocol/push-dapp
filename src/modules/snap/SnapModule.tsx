@@ -3,29 +3,29 @@ import React, { useEffect, useState } from 'react';
 
 // External Packages
 import ReactGA from 'react-ga';
-import styled, { useTheme } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { H2, Image, Item, Section, Span } from '../../primaries/SharedStyling';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import Info from 'segments/Info';
-import { useAccount } from 'hooks';
 import { AppContext } from 'contexts/AppContext';
+import { useAccount } from 'hooks';
+import Info from 'segments/Info';
+import { H2, Image, Item, Section, Span } from '../../primaries/SharedStyling';
 
 // Internal Configs
-import GLOBALS, { device, globalsMargin } from 'config/Globals';
-import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
-import SnapExample from 'assets/PushSnaps/SnapExample.svg';
-import InfoLogo from 'assets/PushSnaps/spam-icon.svg';
-import PushMetamaskLogo from 'assets/PushSnaps/PushMetamaskLogo.svg';
 import ActiveIcon from 'assets/PushSnaps/ActiveIcon.svg';
-import NotificationLogo from 'assets/PushSnaps/Notification.svg';
 import BellRinging from 'assets/PushSnaps/BellRinging.svg';
 import GasPump from 'assets/PushSnaps/GasPump.svg';
-import AboutSnapModal from './AboutSnapModal';
 import { ReactComponent as Gear } from 'assets/PushSnaps/Gear.svg';
+import NotificationLogo from 'assets/PushSnaps/Notification.svg';
+import PushMetamaskLogo from 'assets/PushSnaps/PushMetamaskLogo.svg';
+import SnapExample from 'assets/PushSnaps/SnapExample.svg';
+import InfoLogo from 'assets/PushSnaps/spam-icon.svg';
+import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+import AboutSnapModal from './AboutSnapModal';
 
 
 const SnapModule = () => {
@@ -204,8 +204,8 @@ const SnapModule = () => {
                       />
                       <ItemVV2 margin="0 0 0 16px">
                         <PrimaryText>Subscribe for Notifications</PrimaryText>
-                        <SecondaryText>Subscribe to protocols that you want notification from, they are called {" "}
-                          <ChannelSpan onClick={() => navigate('/channels')}>channels.</ChannelSpan>
+                        <SecondaryText>Subscribe to protocols that you want notification from. You can see all {" "}
+                          <ChannelSpan onClick={() => navigate('/channels')}>protocol channels and subscribe to them from here.</ChannelSpan>
                         </SecondaryText>
                       </ItemVV2>
                     </ItemHV2>
@@ -218,7 +218,7 @@ const SnapModule = () => {
                       />
                       <ItemVV2 margin="0 0 0 16px">
                         <PrimaryText>Gasless Opt-ins</PrimaryText>
-                        <SecondaryText>Subscribing/Opting-in is gasless and completely free.</SecondaryText>
+                        <SecondaryText>Subscribing / Opting-in to a channel is gasless and completely free.</SecondaryText>
                       </ItemVV2>
                     </ItemHV2>
 
@@ -306,6 +306,7 @@ const SnapModule = () => {
               </SpanV2>
             </InfoDiv>
           )}
+
         </ItemVV2>
       </SubContainer>
     </Container>

@@ -5,15 +5,15 @@ import React, { useEffect, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { Button } from 'components/SharedStyling';
-import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
 import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
+import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
 import InstallMetamaskSnapModal from 'components/MetamaskSnap/InstallMetamaskSnapModal';
-import SnapInformationModal from 'components/MetamaskSnap/SnapInformationModal';
 import MetamaskSnapConfigureModal from 'components/MetamaskSnap/MetamaskSnapConfigureModal';
-import { AppContext } from 'contexts/AppContext';
+import SnapInformationModal from 'components/MetamaskSnap/SnapInformationModal';
+import { Button } from 'components/SharedStyling';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import GLOBALS, { device, globalsMargin } from "config/Globals";
+import { AppContext } from 'contexts/AppContext';
 import { useLocation } from 'react-router-dom';
 
 const MetamaskPushSnapModal = ({
