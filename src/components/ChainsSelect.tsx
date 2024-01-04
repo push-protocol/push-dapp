@@ -50,7 +50,7 @@ const ChainsSelect = ({channelsNetworkId, setChannelsNetworkId}) => {
         <ItemH padding="0 8px 0 0">
           <Image src={`./svg/${LOGO_FROM_CHAIN_ID[channelsNetworkId]}`} alt="active chain" width="32px" height="32px" />
         </ItemH>
-         <Item width="max-content" className="text">{CHAIN_DETAILS[channelsNetworkId].label}</Item>
+         <Item width="max-content" className="text">{CHAIN_DETAILS[channelsNetworkId]?.label}</Item>
         <ToggleArrowImg>
           <img
             alt="arrow"

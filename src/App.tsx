@@ -222,7 +222,7 @@ export default function App() {
         )}
 
 
-        {isActive && !authError  && (
+        {isActive && !authError && allowedChain && (
           <>
             <GlobalStyle />
             <InitState />
