@@ -29,7 +29,8 @@ export const config = {
     97, // bnb testnet
     420, // optimism goerli testnet
     1442, // polygon zkevm testnet
-    421613 // arbitrum testnet
+    421613, // arbitrum testnet
+    123 // fuse testnet
   ],
 
   /** 
@@ -158,6 +159,13 @@ export const CHAIN_DETAILS = {
     name: "ARBITRUM_TESTNET",
     chainId: 421613,
     rpcUrl: '',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa'
+  },
+  123: {
+    label: "Fuse Testnet",
+    name: "FUSE_TESTNET",
+    chainId: 123,
+    rpcUrl: 'https://rpc.fusespark.io',
     commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa'
   }
 }

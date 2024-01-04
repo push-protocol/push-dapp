@@ -51,6 +51,10 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
     421613: {
       label: "Goerli ArbETH",
       url: "https://faucet.quicknode.com/arbitrum/goerli"
+    },
+    123: {
+      label: "Fuse SPARK",
+      url: "https://chaindrop.org/?chainid=123&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
     }
   }
 

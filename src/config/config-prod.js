@@ -27,7 +27,8 @@ export const config = {
     56, // for bnb mainnet
     // 10, // for optimism mainnet
     42161, // arbitrum mainnet
-    1101 // polygon zkevm mainnet
+    1101, // polygon zkevm mainnet
+    122 // fuse mainnet
   ],
 
   /**
@@ -157,5 +158,12 @@ export const CHAIN_DETAILS = {
     chainId: 42161,
     rpcUrl: 'https://arb1.arbitrum.io/rpc',
     commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa'
-  }
+  },
+  122: {
+    label: "Fuse Mainnet",
+    name: "FUSE_MAINNET",
+    chainId: 122,
+    rpcUrl: 'https://rpc.fuse.io',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa'
+  },
 }
