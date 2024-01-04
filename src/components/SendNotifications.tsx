@@ -170,7 +170,12 @@ function SendNotifications() {
     if (channelSettings) {
       const settingsOptions = channelSettings.map((setting) => ({
         label:
-          setting.type === 2 ? (
+          setting.type === 3 ? (
+            <DropdownLabel>
+              <div>{setting.description}</div>
+              <Tag>Multi-Range</Tag>
+            </DropdownLabel>
+          ) : setting.type === 2 ? (
             <DropdownLabel>
               <div>{setting.description}</div>
               <Tag>Range</Tag>

@@ -334,7 +334,7 @@ function CreateChannelModule() {
       }
 
       const tx = await contract.createChannelWithPUSH(channelType, identityBytes, fees, timestampIfTimebound, {
-        gasLimit: 1000000,
+        gasLimit: 600000,
       });
 
       console.log(tx);
