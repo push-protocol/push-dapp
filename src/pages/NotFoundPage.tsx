@@ -1,6 +1,12 @@
-import React from 'react';
+// React + Web3 Essentials
+import React from "react";
+import { Link } from 'react-router-dom';
+
+// External Packages
 import styled from 'styled-components';
-import GLOBALS from 'config/Globals';
+
+// Internal Configs
+import GLOBALS from "config/Globals";
 
 const NotFoundPage: React.FC = () => {
   return (
@@ -8,7 +14,7 @@ const NotFoundPage: React.FC = () => {
       <NotFoundContent>
         <NotFoundTitle> Page Not Found</NotFoundTitle>
         <NotFoundText>The page you are looking for doesn't exist or has been moved.</NotFoundText>
-        <HomeLink href="/">Go to Home</HomeLink>
+        <HomeLink to="/channels">Go to Home</HomeLink>
       </NotFoundContent>
     </NotFoundContainer>
   );
@@ -45,7 +51,7 @@ const NotFoundText = styled.p`
   margin-bottom: 1.5rem;
 `;
 
-const HomeLink = styled.a`
+const HomeLink = styled(Link)`
   color: ${(props) => props.theme.default.link};
   font-size: 1rem;
   text-decoration: none;
