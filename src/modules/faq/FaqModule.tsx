@@ -489,7 +489,7 @@ function FaqModule() {
                 }}
                 hover="#e20880"
               >
-                <Span color={theme.color}>How do I use the Front-SDK?</Span>
+                <Span color={theme.color}>How do I use the Frontend-SDK?</Span>
                 <BsChevronExpand
                   size={20}
                   color={'#ddd'}
@@ -504,7 +504,7 @@ function FaqModule() {
                       target="_blank"
                       href="https://push.org/docs/hackers/push-sdk/"
                     >
-                      Front-end SDK
+                      Frontend SDK
                     </AMod>
                     .
                   </Span>
