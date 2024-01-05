@@ -3,27 +3,30 @@ import React, { useEffect, useState } from 'react';
 
 // External Packages
 import ReactGA from 'react-ga';
+import { useNavigate } from 'react-router-dom';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { H2, Image, Item, Section, Span } from '../../primaries/SharedStyling';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import Info from 'segments/Info';
+import { AppContext } from 'contexts/AppContext';
 import { useAccount } from 'hooks';
+import Info from 'segments/Info';
+import { H2, Image, Item, Section, Span } from '../../primaries/SharedStyling';
 
 // Internal Configs
-import GLOBALS, { device, globalsMargin } from 'config/Globals';
-import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+import ActiveIcon from 'assets/PushSnaps/ActiveIcon.svg';
+import BellRinging from 'assets/PushSnaps/BellRinging.svg';
+import GasPump from 'assets/PushSnaps/GasPump.svg';
+import { ReactComponent as Gear } from 'assets/PushSnaps/Gear.svg';
+import NotificationLogo from 'assets/PushSnaps/Notification.svg';
+import PushMetamaskLogo from 'assets/PushSnaps/PushMetamaskLogo.svg';
 import SnapExample from 'assets/PushSnaps/SnapExample.svg';
 import InfoLogo from 'assets/PushSnaps/spam-icon.svg';
-import PushMetamaskLogo from 'assets/PushSnaps/PushMetamaskLogo.svg';
-import ActiveIcon from 'assets/PushSnaps/ActiveIcon.svg';
-import { ReactComponent as Gear } from 'assets/PushSnaps/Gear.svg';
-
-import PushSnapModal from './PushSnapModal';
+import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import AboutSnapModal from './AboutSnapModal';
-import { AppContext } from 'contexts/AppContext';
+
 
 const SnapModule = () => {
   const [loading, setLoading] = useState(false);
@@ -141,7 +144,7 @@ const SnapModule = () => {
   };
 
   const theme = useTheme();
-
+  const navigate = useNavigate();
   return (
     <Container>
       <AboutPushSnapModalComponent
@@ -187,22 +190,50 @@ const SnapModule = () => {
             </ItemVV2>
 
             <ItemVV2>
-              {walletConnected ? (
+              {walletConnected || addedAddress ? (
                 <>
-                  <SpanV2
-                    fontSize="14px"
-                    fontWeight="400"
-                    color={theme.snapSecondaryText}
+                  <ItemVV2
+                    gap="24px"
+                    margin="12px 0"
                   >
-                    Get started by opting in to channels on Push.{' '}
-                  </SpanV2>
-                  <SpanV2
-                    fontSize="14px"
-                    fontWeight="400"
-                    color={theme.snapSecondaryText}
-                  >
-                    Once you opt-in you will receive notifications on MetaMask.
-                  </SpanV2>
+                    <ItemHV2 alignItems="baseline">
+                      <Image
+                        src={BellRinging}
+                        height="32px"
+                        width="auto"
+                      />
+                      <ItemVV2 margin="0 0 0 16px">
+                        <PrimaryText>Subscribe for Notifications</PrimaryText>
+                        <SecondaryText>Subscribe to protocols that you want notification from. You can see all {" "}
+                          <ChannelSpan onClick={() => navigate('/channels')}>protocol channels and subscribe to them from here.</ChannelSpan>
+                        </SecondaryText>
+                      </ItemVV2>
+                    </ItemHV2>
+
+                    <ItemHV2 alignItems="baseline">
+                      <Image
+                        src={GasPump}
+                        height="32px"
+                        width="auto"
+                      />
+                      <ItemVV2 margin="0 0 0 16px">
+                        <PrimaryText>Gasless Opt-ins</PrimaryText>
+                        <SecondaryText>Subscribing / Opting-in to a channel is gasless and completely free.</SecondaryText>
+                      </ItemVV2>
+                    </ItemHV2>
+
+                    <ItemHV2 alignItems="baseline">
+                      <Image
+                        src={NotificationLogo}
+                        height="32px"
+                        width="auto"
+                      />
+                      <ItemVV2 margin="0 0 0 16px">
+                        <PrimaryText>Notifications directly in MetaMask</PrimaryText>
+                        <SecondaryText>Once subscribed, the channels can send you notifications directly in your MetaMask.</SecondaryText>
+                      </ItemVV2>
+                    </ItemHV2>
+                  </ItemVV2>
                 </>
               ) : (
                 <SpanV2
@@ -249,7 +280,6 @@ const SnapModule = () => {
 
           {walletConnected || addedAddress ? (
             <ButtonContainer gap="12px" >
-
               <SettingsButton onClick={handleSettingsClick}>
                 <Gear
                   height="20px"
@@ -257,7 +287,6 @@ const SnapModule = () => {
                 />
                 Settings
               </SettingsButton>
-              <FilledButton onClick={() => (window.location.href = '/channels')}>Get Started</FilledButton>
             </ButtonContainer>
           ) : (
             <InfoDiv
@@ -277,6 +306,7 @@ const SnapModule = () => {
               </SpanV2>
             </InfoDiv>
           )}
+
         </ItemVV2>
       </SubContainer>
     </Container>
@@ -316,7 +346,7 @@ const Container = styled(Section)`
 const SubContainer = styled(Section)`
   width: 438px;
   height: 423px;
-  padding: 48px 24px;
+  padding: 24px;
   border-radius: 32px;
   background: #fff;
   background: ${(props) => props.theme.default.bg};
@@ -364,9 +394,9 @@ const SettingsButton = styled(SnapButton)`
   flex-direction: row;
   color: ${(props) => props.theme.default.secondaryColor};
   text-align: center;
-  width: 135px;
+  width: 279px;
   padding: 16px 24px;
-  border: 1px solid ${(props)=>props.theme.snapBorderColor};
+  border: 1px solid ${(props) => props.theme.snapBorderColor};
   background: ${(props) => props.theme.default.bg};
   gap: 4px;
 
@@ -374,6 +404,33 @@ const SettingsButton = styled(SnapButton)`
     min-width: 246px;
   }
 `;
+
+const PrimaryText = styled.p`
+  margin: 0px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px; 
+  align-self: baseline;
+  color:${(props) => props.theme.snapPrimaryText};
+`;
+
+const SecondaryText = styled.p`
+  margin: 0px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color:${(props) => props.theme.snapSecondaryText};
+  text-align: left;
+`;
+
+const ChannelSpan = styled(SpanV2)`
+  font-weight: 500;
+  color:#D53A94;
+  cursor:pointer;
+  &:hover{
+    text-decoration:underline;
+  }
+`
 
 const FilledButton = styled(SnapButton)`
   width: 135px;
