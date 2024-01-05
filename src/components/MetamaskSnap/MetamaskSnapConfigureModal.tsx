@@ -34,24 +34,26 @@ const MetamaskSnapConfigureModal = ({
 
   const { chainId, account, provider } = useAccount();
 
-  useEffect(async () => {
-    const res = await window.ethereum?.request({
-      method: 'wallet_invokeSnap',
-      params: {
-        snapId: defaultSnapOrigin,
-        request: {
-          method: 'pushproto_gettogglestatus',
-          params: { address: searchedUser },
+  useEffect(() => {
+    (async function () {
+      const res = await window.ethereum?.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: defaultSnapOrigin,
+          request: {
+            method: 'pushproto_gettogglestatus',
+            params: { address: searchedUser },
+          },
         },
-      },
-    });
-    console.log('res', res);
-    setToggleStatus(res);
-  }, [toggleStatus])
-
+      });
+      console.log('res', res);
+      setToggleStatus(res);
+    })();
+  }, [toggleStatus]);
+  
   useEffect(() => {
     getWalletAddresses();
-  });
+  }, []);
 
   async function getSignature(mode: number) {
     if (mode == 1) {
