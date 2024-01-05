@@ -40,6 +40,7 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
   const [stopApi, setStopApi] = useState<boolean>(true);
   const [selectedChatSnap, setSelectedChatSnap] = useState<number>();
+  const [page, setPage] = useState<number>(1);
   const { chainId, account } = useAccount();
   const [showError, setShowError] = useState<boolean>(false);
   const [bgUpdateLoading,setBgUpdateLoading]=useState<boolean>(false);
@@ -59,9 +60,9 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
     filteredUserData.length>0 ? setFilteredUserData([]):null;
   }
   
-  const fetchInboxApi = async ({limit}): Promise<Feeds[]> => {
+  const fetchInboxApi = async ({limit, page}): Promise<Feeds[]> => {
     try {
-      const inboxes:Feeds[] = await fetchInbox({connectedUser, limit});
+      const inboxes:Feeds[] = await fetchInbox({connectedUser, limit, page});
       if(inboxes?.length>10 && inboxes?.length===feeds?.length){
         setIsFetchingDone(true);
       }
@@ -69,7 +70,6 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
         setIsFetchingDone(true);
       }
       if (JSON.stringify(inbox) !== JSON.stringify(inboxes)){
-        setFeeds(inboxes);
         setInbox(inboxes);
         if(checkIfGroup(currentChat)){
        
@@ -103,12 +103,12 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
     }
   };
 
-  const updateInbox = async ({chatLimit}:{chatLimit?:number}): Promise<void> => {
-    await fetchInboxApi({limit:chatLimit});
+  const updateInbox = async ({chatLimit, page}:{chatLimit?:number, page?: number}): Promise<void> => {
+    await fetchInboxApi({limit: chatLimit,page});
   };
 
   useEffect(() => {
-    setFeeds(inbox);  
+    setFeeds(prevInbox=>[...prevInbox,...inbox]);
   },[inbox]);
 
   useEffect(() => {
@@ -125,7 +125,8 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
 
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
-      updateInbox({chatLimit:limit});
+      // need to see what it was being used for
+      // updateInbox({chatLimit:limit});
     } else {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
@@ -209,9 +210,10 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   }, [props.hasUserBeenSearched, props.filteredUserData]);
 
   const handlePagination = async () => {
-    setLimit(prevLimit=>prevLimit+10);
+    setPage(prevPage=>prevPage+1);
+    // setLimit(prevLimit=>prevLimit+10);
     setBgUpdateLoading(true);
-    await updateInbox({chatLimit:limit+10});
+    await updateInbox({page});
     setBgUpdateLoading(false);
   };
 

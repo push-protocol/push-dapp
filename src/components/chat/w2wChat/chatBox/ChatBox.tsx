@@ -85,7 +85,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   // get web3 name
   let ensName = '';
   if (!isGroup && currentChat?.wallets?.split(',')[0].toString()) {
-    const walletLowercase = caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase();
+    const walletLowercase = currentChat.wallets.includes(':nft') ? caip10ToWallet(currentChat?.wallets.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0].toString().toLowerCase()) : caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase();
     const checksumWallet = ethers.utils.getAddress(walletLowercase);
     ensName = web3NameList[checksumWallet];
   }
@@ -106,6 +106,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
 
     if (currentChat) {
       setIsGroup(checkIfGroup(currentChat));
+      console.log('currentChat', checkIfGroup(currentChat), isGroup);
       // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
       // even though the user was still on the same chat.
       const image = getGroupImage(currentChat);
@@ -120,14 +121,14 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   }, [currentChat]);
 
   const getDisplayName = () => {
-    if (ensName) return `${ensName} (${caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())})`;
+    if (ensName) return `${ensName} (${currentChat.wallets.includes(':nft') ? caip10ToWallet(currentChat?.wallets.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0].toString().toLowerCase()) : caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase()})`;
     if (isGroup)
       return isMobile
         ? currentChat?.groupInformation?.groupName.length > 25
           ? currentChat?.groupInformation?.groupName?.slice(0, 25) + '...'
           : currentChat?.groupInformation?.groupName
         : currentChat?.groupInformation?.groupName;
-    if (currentChat?.wallets) return caip10ToWallet(currentChat?.wallets?.split(',')[0].toString());
+    if (currentChat?.wallets) return caip10ToWallet(currentChat.wallets.includes(':nft') ? currentChat?.wallets.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0].toString().toLowerCase() : currentChat?.wallets?.split(',')[0].toString()?.toLowerCase());
   };
 
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
@@ -274,7 +275,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
           <MessageContainer>
             {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
               <ChatViewList
-                chatId={currentChat?.did || currentChat?.groupInformation?.chatId}
+                chatId={(currentChat?.did?.includes(":nft:") ? currentChat?.did.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0] : currentChat?.did) || currentChat?.groupInformation?.chatId}
                 limit={10}
               />
             )}
@@ -283,7 +284,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             <>
               <MessageInputWrapper>
                 {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
-                  <MessageInput chatId={currentChat?.did || currentChat?.groupInformation?.chatId} />
+                  <MessageInput chatId={currentChat?.did?.includes(":nft:") ? currentChat?.did.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0] : currentChat?.did || currentChat?.groupInformation?.chatId} />
                 )}
               </MessageInputWrapper>
             </>
