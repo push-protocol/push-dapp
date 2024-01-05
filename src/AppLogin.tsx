@@ -138,7 +138,7 @@ const AppLogin = ({ toggleDarkMode }) => {
 
           <InputContainer>
 
-          <SpanV2 color={theme.default.secondaryColor} textAlign='start' flex='1'>
+          <SpanV2 color={theme.nav.color} textAlign='start' flex='1'>
             You can explore Push without connecting your wallet. You will have a chance to connect your wallet later.
           </SpanV2>
 
