@@ -4,6 +4,12 @@ import React, { useEffect, useState } from 'react';
 // External Packages
 import ReactGA from 'react-ga';
 import styled, { useTheme } from 'styled-components';
+import * as PushAPI from "@pushprotocol/restapi";
+import { appConfig } from 'config';
+import * as w2wHelper from 'helpers/w2w';
+import { ethers } from "ethers";
+
+
 
 // Internal Components
 import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -106,6 +112,29 @@ const SnapModule = () => {
     const signature = await signer.signMessage(`Add address ${account} to receive notifications through Push Snap`);
     return signature;
   }
+
+ 
+  const getDecryptedPGPKey = async () => {
+    const pvt =
+    "5b1c32040fad747da544476076de2997bbb06c39353d96a4d72b1db3e60bcc82";
+  const signer = new ethers.Wallet(pvt);
+    const caip10: string = w2wHelper.walletToCAIP10({ account });
+    const user = await PushAPI.user.get({ 
+      account: caip10,
+      env: appConfig.appEnv
+    });
+
+    const pvtkey = await PushAPI.chat.decryptPGPKey({
+      encryptedPGPPrivateKey: user.encryptedPrivateKey,
+      signer: signer,
+      env: appConfig.appEnv
+    });
+
+  }
+
+
+  
+
 
   async function addwalletAddress() {
     const signatureResult = await getSignature(account);
