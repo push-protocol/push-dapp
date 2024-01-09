@@ -45,7 +45,7 @@ const MetamaskSnapConfigureModal = ({
         },
       },
     });
-    console.log('res', res);
+    console.debug('res', res);
     setToggleStatus(res);
   }, [toggleStatus])
 
@@ -63,7 +63,7 @@ const MetamaskSnapConfigureModal = ({
   }
 
   const addWalletAddresses = async () => {
-    console.log('searchedUser', searchedUser);
+    console.debug('searchedUser', searchedUser);
     const signatureResult = await getSignature(1);
     if (signatureResult) {
       if (searchedUser) {
@@ -77,10 +77,10 @@ const MetamaskSnapConfigureModal = ({
             },
           },
         });
-        console.log('Added', searchedUser);
+        console.debug('Added', searchedUser);
       }
     } else {
-      console.log('Signature Validation Failed');
+      console.error('Signature Validation Failed');
     }
   };
 
@@ -117,7 +117,7 @@ const MetamaskSnapConfigureModal = ({
         });
       }
     } else {
-      console.log('Signature Validation Failed');
+      console.error('Signature Validation Failed');
     }
   };
 
@@ -129,13 +129,13 @@ const MetamaskSnapConfigureModal = ({
         request: { method: 'pushproto_getaddresses' },
       },
     });
-    console.log('result', result);
+    console.debug('result', result);
     setAddresses(result);
   }
 
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => {
-    console.log('Set show to be null');
+    console.warn('Set show to be null');
     setWalletSelected(null);
     setShowRemove(null);
   });

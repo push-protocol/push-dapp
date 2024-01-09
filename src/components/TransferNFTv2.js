@@ -49,8 +49,8 @@ function TransferNFTv2({ tokenId }) {
       const signerInstance = new ethers.Contract(addresses.rockstarV2, abis.rockstarV2, signer)
       var txPromise = nftWriteProvider['safeTransferFrom(address,address,uint256)'](account, toAddress, tokenId);
       const tx = await txPromise;
-      console.log(tx);
-      console.log("waiting for tx to finish");
+      console.debug(tx);
+      console.info("waiting for tx to finish");
       setProcessingInfo("Waiting for Transfer tx to finish...");
       await provider.waitForTransaction(tx.hash);
       setProcessingInfo("Transfer successfull! ");

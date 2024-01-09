@@ -52,8 +52,8 @@ function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
       sendWithTxPromise = await NFTRewardsContract.claimReward(tokenId)
       const tx = await sendWithTxPromise;
 
-      console.log(tx);
-      console.log("waiting for tx to finish");
+      console.debug(tx);
+      console.info("waiting for tx to finish");
       let txToast = toast.dark(<LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />, {
         position: "bottom-right",
         autoClose: false,

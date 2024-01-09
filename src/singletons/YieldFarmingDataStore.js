@@ -77,7 +77,7 @@ export default class YieldFarmingDataStore {
         pushPrice = pushPriceAmounts[pushPriceAmounts.length - 1].toNumber() / 1000000;
       }
 
-      console.log('Push PRice', pushPrice);
+      console.debug('Push PRice', pushPrice);
 
       const pushAmountReserve = tokenBNtoNumber(await this.state.pushToken.balanceOf(addresses.uniV2LPToken))
       const wethAmountReserve = tokenBNtoNumber(await this.state.pushToken.attach(addresses.WETHAddress).balanceOf(addresses.uniV2LPToken)) // Using pushToken instance for WETH instance
@@ -90,7 +90,7 @@ export default class YieldFarmingDataStore {
         ethPrice = ethPriceAmounts[ethPriceAmounts.length -1].toNumber()/1000000;
       }
 
-      console.log('Eth Price', ethPrice);
+      console.debug('Eth Price', ethPrice);
 
       const uniTotalSupply = tokenBNtoNumber(await this.state.pushToken.attach(addresses.uniV2LPToken).totalSupply()) // Using pushToken instance for Uni-V2 instance
       const uniLpPrice = ((pushAmountReserve * pushPrice) + (wethAmountReserve * ethPrice)) / uniTotalSupply

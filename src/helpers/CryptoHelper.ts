@@ -28,12 +28,12 @@ interface IOutputMessagePayloadType {
 
 const CryptoHelper = {
   getPublicKey: async function (account: string): Promise<string> {
-    console.log('Fetching Public Key');
+    console.debug('Fetching Public Key');
     const keyB64: any = await window.ethereum.request({
       method: 'eth_getEncryptionPublicKey',
       params: [account], // you must have access to the specified account
     });
-    console.log(`Public Key: ${keyB64}`);
+    console.debug(`Public Key: ${keyB64}`);
     return keyB64;
   },
   // To Encrypt with AES
@@ -187,7 +187,7 @@ const CryptoHelper = {
   // Testing of Encryption and Decryption from Public to Private key
   encryptionDecryptionPublicToPrivateTest: async function (privateKey: string) {
     const startTime: Date = new Date();
-    console.log('[ENCRYPTION / DECRYPTION TEST STARTED] - ' + startTime);
+    console.debug('[ENCRYPTION / DECRYPTION TEST STARTED] - ' + startTime);
 
     const publicKey: string = EthCrypto.publicKeyByPrivateKey(privateKey);
     const compressedKey: string = EthCrypto.publicKey.compress(publicKey); // is String
@@ -198,17 +198,17 @@ const CryptoHelper = {
 
     const msgToEncrypt: string = 'PartialStringAS';
     const msg: any = await this.encryptWithPublicKey(msgToEncrypt, compressedKey);
-    console.log('Encryped Message With compressed public key:' + msg);
+    console.debug('Encryped Message With compressed public key:' + msg);
 
     const encryptionTime: number = new Date().getTime() - startTime.getTime();
-    console.log('[ENCRYPTION / DECRYPTION ENCRYPTION DONE] - ' + encryptionTime / 1000 + ' secs');
+    console.debug('[ENCRYPTION / DECRYPTION ENCRYPTION DONE] - ' + encryptionTime / 1000 + ' secs');
 
     // Decrypt this message
     const decryptMsg: string = await this.decryptWithPrivateKey(msg, privateKey);
-    console.log("[ENCRYPTION / DECRYPTION DECRYPTED MESSAGE] - '" + decryptMsg + "'");
+    console.debug("[ENCRYPTION / DECRYPTION DECRYPTED MESSAGE] - '" + decryptMsg + "'");
 
     const decryptionTime: number = new Date().getTime() - startTime.getTime() - encryptionTime;
-    console.log('[ENCRYPTION / DECRYPTION DECRYPTION DONE] - ' + decryptionTime / 1000 + ' secs');
+    console.debug('[ENCRYPTION / DECRYPTION DECRYPTION DONE] - ' + decryptionTime / 1000 + ' secs');
   },
   // To output messge payload if required
   outputMsgPayload: async function ({
@@ -220,34 +220,34 @@ const CryptoHelper = {
     pkey,
   }: IOutputMessagePayloadType) {
     // Output AES
-    console.log('[AES ENCRYTED FORMAT (' + new Date() + ')');
-    console.log('---------------------');
-    console.log('secret --> ');
+    console.info('[AES ENCRYTED FORMAT (' + new Date() + ')');
+    console.info('---------------------');
+    console.info('secret --> ');
     const secretEncrypted = await this.encryptWithECIES(secret, pkey);
     const asubE = this.encryptWithAES(subject, secret);
     const amsgE = this.encryptWithAES(message, secret);
     const actaE = this.encryptWithAES(calltoaction, secret);
     const aimgE = this.encryptWithAES(imageurl, secret);
 
-    console.log(secretEncrypted);
-    console.log('asub --> ');
-    console.log(asubE);
-    console.log('amsg --> ');
-    console.log(amsgE);
-    console.log('acta --> ');
-    console.log(actaE);
-    console.log('aimg --> ');
-    console.log(aimgE);
-    console.log('decrypted secret --> ');
-    console.log(await this.decryptWithECIES(secretEncrypted, pkey));
-    console.log('decrypted asub --> ');
-    console.log(this.decryptWithAES(asubE, secret));
-    console.log('decrypted amsg --> ');
-    console.log(this.decryptWithAES(amsgE, secret));
-    console.log('decrypted acta --> ');
-    console.log(this.decryptWithAES(actaE, secret));
-    console.log('decrypted aimg --> ');
-    console.log(this.decryptWithAES(aimgE, secret));
+    console.debug(secretEncrypted);
+    console.debug('asub --> ');
+    console.debug(asubE);
+    console.debug('amsg --> ');
+    console.debug(amsgE);
+    console.debug('acta --> ');
+    console.debug(actaE);
+    console.debug('aimg --> ');
+    console.debug(aimgE);
+    console.debug('decrypted secret --> ');
+    console.debug(await this.decryptWithECIES(secretEncrypted, pkey));
+    console.debug('decrypted asub --> ');
+    console.debug(this.decryptWithAES(asubE, secret));
+    console.debug('decrypted amsg --> ');
+    console.debug(this.decryptWithAES(amsgE, secret));
+    console.debug('decrypted acta --> ');
+    console.debug(this.decryptWithAES(actaE, secret));
+    console.debug('decrypted aimg --> ');
+    console.debug(this.decryptWithAES(aimgE, secret));
   },
   makeid: function (length: number): string {
     var result: string = '[' + new Date().toISOString() + '] ';

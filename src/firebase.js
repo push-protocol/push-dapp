@@ -31,7 +31,7 @@ export const getPushToken = async () => {
     return token;
   } catch (err) {
     console.log('\n\n\n\n')
-    console.log("An error occurred while retrieving token. ", err);
+    console.error("An error occurred while retrieving token. ", err);
     console.log('\n\n\n\n')
   }
 };
@@ -60,6 +60,6 @@ export const browserFunction = async(account)=>{
       localStorage.setItem(CACHEPREFIX, 'response'); //temp to prevent more than 1 account to register
     }
   }catch(e){
-    console.log("Error setting up the browser notification",e);
+    console.error("Error setting up the browser notification",e);
   }
 }

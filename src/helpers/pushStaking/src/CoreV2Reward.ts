@@ -91,7 +91,7 @@ export class CoreV2Reward {
     const _currentEpoch = this.STATE.currentEpoch;
 
     // Setting up Epoch Based Rewards
-    console.log(
+    console.debug(
       "\n\nDoing with: _currentEpoch, _lastEpochInitiliazed",
       _currentEpoch,
       _lastEpochInitiliazed,

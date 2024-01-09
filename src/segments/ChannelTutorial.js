@@ -56,11 +56,11 @@ const ChannelTutorial = ({ addr, bgColor, loadTeaser, playTeaser }) => {
       flex="initial"
       onMouseEnter={() => {
         setShowTuts(true);
-        console.log("enter")
+        console.debug("enter")
       }}
       onMouseLeave={() => {
         setShowTuts(false);
-        console.log("exit")
+        console.debug("exit")
       }}
       zIndex="9"
     >

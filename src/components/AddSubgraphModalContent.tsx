@@ -71,7 +71,7 @@ const AddSubgraphModalContent = ({ onClose, onConfirm: addSubgraph, toastObject 
 
     addSubgraph(pollTime, subgraphId)
       .then(async (tx) => {
-        console.log(tx);
+        console.debug(tx);
         toastObject.showMessageToast({
           toastTitle: 'Subgraph Added',
           toastMessage: 'Subgraph has been added successfully',
@@ -86,7 +86,7 @@ const AddSubgraphModalContent = ({ onClose, onConfirm: addSubgraph, toastObject 
         onClose();
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
 
         toastObject.showMessageToast({
           toastTitle: 'Transaction Failed',
