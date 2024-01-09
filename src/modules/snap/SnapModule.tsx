@@ -309,6 +309,14 @@ const SnapModule = () => {
 
         </ItemVV2>
       </SubContainer>
+
+      <ItemVV2>
+        <SpanV2 fontSize='14px' fontWeight='400' color='#657795'>Have a question? Check out our {" "}
+          <SpanV2 fontWeight='500' cursor='pointer' onClick={()=>navigate("/snap/faq")}>FAQs </SpanV2>
+          or {" "}
+          <SpanV2 fontWeight='500' cursor='pointer' onClick={()=>navigate("/snap/knowledge")}>Knowledgebase.</SpanV2>
+        </SpanV2>
+      </ItemVV2>
     </Container>
   );
 };

@@ -65,6 +65,8 @@ import { AppContextType } from 'types/context';
 import MetamaskPushSnapModal from 'modules/receiveNotifs/MetamaskPushSnapModal';
 import { MODAL_POSITION } from 'hooks/useModalBlur';
 import APP_PATHS from 'config/AppPaths';
+import SnapFAQPage from 'pages/SnapFAQPage';
+import SnapKnowledgePage from 'pages/SnapKnowledgePage';
 
 // Create Header
 function MasterInterfacePage() {
@@ -150,9 +152,20 @@ function MasterInterfacePage() {
               path={APP_PATHS.Govern}
               element={<GovPage />}
             />
+
             <Route
               path={APP_PATHS.Snap}
               element={<SnapPage />}
+            />
+
+            <Route
+              path={`${APP_PATHS.Snap}/faq`}
+              element={<SnapFAQPage />}
+            />
+
+            <Route
+              path={`${APP_PATHS.Snap}/knowledge`}
+              element={<SnapKnowledgePage />}
             />
 
             {/* <Route path="yield" element={<YieldFarmingPage />} /> */}
