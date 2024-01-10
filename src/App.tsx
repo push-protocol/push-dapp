@@ -229,9 +229,6 @@ export default function App() {
 
   const location = useLocation();
   const isSnapPage = location?.pathname.includes('/snap');
-  console.log("Location",location?.pathname,typeof(location?.pathname))
-  console.log("containsSnap",isSnapPage)
-
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
