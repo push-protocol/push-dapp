@@ -13,8 +13,6 @@ import { AppContext } from 'contexts/AppContext';
 import { useAccount } from 'hooks';
 import Info from 'segments/Info';
 import { H2, Image, Item, Section, Span } from '../../primaries/SharedStyling';
-
-// Internal Configs
 import ActiveIcon from 'assets/PushSnaps/ActiveIcon.svg';
 import BellRinging from 'assets/PushSnaps/BellRinging.svg';
 import GasPump from 'assets/PushSnaps/GasPump.svg';
@@ -23,9 +21,11 @@ import NotificationLogo from 'assets/PushSnaps/Notification.svg';
 import PushMetamaskLogo from 'assets/PushSnaps/PushMetamaskLogo.svg';
 import SnapExample from 'assets/PushSnaps/SnapExample.svg';
 import InfoLogo from 'assets/PushSnaps/spam-icon.svg';
+import AboutSnapModal from './AboutSnapModal';
+
+// Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
-import AboutSnapModal from './AboutSnapModal';
 
 
 const SnapModule = () => {

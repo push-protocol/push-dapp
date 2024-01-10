@@ -20,9 +20,7 @@ import { useAccount } from 'hooks';
 import { device } from 'config/Globals';
 
 
-const MetamaskSnapConfigureModal = ({
-  title
-}) => {
+const PushSnapConfigureModal = () => {
   const [walletAddresses, setWalletAddresses] = useState([]);
   const [addresses, setAddresses] = useState([]);
   const [searchedUser, setSearchedUser] = useState('');
@@ -141,7 +139,6 @@ const MetamaskSnapConfigureModal = ({
 
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => {
-    console.log('Set show to be null');
     setWalletSelected(null);
     setShowRemove(null);
   });
@@ -154,14 +151,7 @@ const MetamaskSnapConfigureModal = ({
 
   return (
     <Container >
-      <SpanV2
-        fontSize="22px"
-        fontWeight="500"
-        color={theme.modalMessageColor}
-        alignSelf={title === 'Push Snap Settings' ? 'baseline' : 'center'}
-      >
-        {title}   
-      </SpanV2>
+      
 
       <ItemVV2
         alignItems="baseline"
@@ -249,7 +239,7 @@ const MetamaskSnapConfigureModal = ({
   );
 };
 
-export default MetamaskSnapConfigureModal;
+export default PushSnapConfigureModal;
 
 const InfoToolTip = () => {
 

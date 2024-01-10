@@ -3,6 +3,8 @@ import React, { useEffect } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+
 
 // Internal Compoonents
 import { A } from 'primaries/SharedStyling';
@@ -16,10 +18,9 @@ import AppStoreQRCode from 'assets/PushSnaps/AppStoreQRCode.svg';
 import PlayStoreQRCode from 'assets/PushSnaps/PlayStoreQRCode.svg';
 import AppleIcon from 'assets/PushSnaps/AppleIcon.svg';
 import PlayStore from 'assets/PushSnaps/PlayStore.svg';
-import { useNavigate } from 'react-router-dom';
 
 
-const InstallMetamaskSnapModal = ({
+const InstallPushSnapModal = ({
     setSnapState,
     configure,
     setConfigure
@@ -65,7 +66,7 @@ const InstallMetamaskSnapModal = ({
                     configure ? (
                         <InstallButton onClick={() => {
                             setSnapState(3)
-                            navigate('/snap')
+                            // navigate('/snap')
                         }}>
                             Configure
                         </InstallButton>
@@ -91,7 +92,9 @@ const InstallMetamaskSnapModal = ({
                         Push Browser Extension
                     </SpanV2>
                 </SnapInner>
-                <InstallButton>Install</InstallButton>
+                <a href='https://chromewebstore.google.com/detail/push-protocol-alpha/lbdcbpaldalgiieffakjhiccoeebchmg' target='_blank'>
+                    <InstallButton>Install</InstallButton>
+                </a>
             </SnapContainer>
             <SnapContainer>
                 <SnapInner>
@@ -203,7 +206,7 @@ const InstallMetamaskSnapModal = ({
     );
 };
 
-export default InstallMetamaskSnapModal;
+export default InstallPushSnapModal;
 
 const SnapContainer = styled(ItemHV2)`
     border-radius: 14px;

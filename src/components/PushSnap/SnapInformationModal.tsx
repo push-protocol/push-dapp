@@ -3,6 +3,7 @@ import React from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 // Internal Compoonents
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -14,8 +15,11 @@ import WalletLogo from 'assets/PushSnaps/Wallet.svg';
 import NotificationLogo from 'assets/PushSnaps/Notification.svg';
 import Metamask from 'assets/PushSnaps/metamasksnap.svg';
 
-const SnapInformationModal = () => {
+const SnapInformationModal = ({
+  handleCloseModal
+}) => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const defaultSnapOrigin = 'npm:@pushprotocol/snap';
 
@@ -29,18 +33,22 @@ const SnapInformationModal = () => {
   };
 
   const installSnap = async () => {
-    await connectSnap();
-    const res = await window.ethereum?.request({
-      method: 'wallet_invokeSnap',
-      params: {
-        snapId: defaultSnapOrigin,
-        request: { method: 'pushproto_welcome' },
-      },
-    });
 
-    if (res) {
-        window.open("/snap", '_self');
-    }
+    handleCloseModal();
+    navigate('/snap');
+
+    // await connectSnap();
+    // const res = await window.ethereum?.request({
+    //   method: 'wallet_invokeSnap',
+    //   params: {
+    //     snapId: defaultSnapOrigin,
+    //     request: { method: 'pushproto_welcome' },
+    //   },
+    // });
+
+    // if (res) {
+    //     window.open("/snap", '_self');
+    // }
   };
 
   return (
