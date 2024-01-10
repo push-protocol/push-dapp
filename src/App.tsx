@@ -95,22 +95,6 @@ export default function App() {
   //   document.title = title;
   // }, [title]);
 
-  const toggleConsole = (enabled: boolean) => {
-    if (!enabled) {
-      console.log = console.warn = console.error = console.info = function () { };
-    } else {
-      console.log = console.warn = console.info = console.error = console.log;
-    }
-  }
-
-  useEffect(() => {
-    if (appConfig.appEnv === 'prod') {
-      toggleConsole(false);
-    } else {
-      toggleConsole(true);
-    }
-  }, [appConfig.appEnv])
-
   React.useEffect(() => {
     const now = Date.now() / 1000;
     setcurrentTime(now);
