@@ -7,7 +7,11 @@ import styled, { useTheme } from 'styled-components';
 import * as PushAPI from "@pushprotocol/restapi";
 import { appConfig } from 'config';
 import * as w2wHelper from 'helpers/w2w';
-import { ethers } from "ethers";
+import { ENV } from "@pushprotocol/restapi/src/lib/constants";
+import { ethers } from "ethers"
+
+import * as openpgp from "openpgp";
+
 
 
 
@@ -36,6 +40,8 @@ const SnapModule = () => {
   const [walletConnected, setWalletConnected] = useState(false);
   const [snapInstalled, setSnapInstalled] = useState(false);
   const [addedAddress, setAddedAddress] = useState(false);
+  const [pt, setPtk] = useState(false);
+
 
   const { showMetamaskPushSnap, setSnapState } = React.useContext(AppContext);
 
@@ -44,6 +50,7 @@ const SnapModule = () => {
   useEffect(() => {
     getInstalledSnaps();
     getWalletAddresses();
+    getDecryptedPGPKey();
   }, [account, walletConnected]);
 
   async function getInstalledSnaps() {
@@ -57,7 +64,7 @@ const SnapModule = () => {
     });
   }
 
-  const defaultSnapOrigin = `npm:@pushprotocol/snap`;
+  const defaultSnapOrigin = `local:http://localhost:8080`;
 
   async function getWalletAddresses() {
     const result = await window.ethereum?.request({
@@ -97,6 +104,7 @@ const SnapModule = () => {
         setSnapInstalled(true);
       } else {
         await addwalletAddress();
+        await getDecryptedPGPKey();
         setWalletConnected(true);
       }
 
@@ -113,24 +121,52 @@ const SnapModule = () => {
     return signature;
   }
 
- 
   const getDecryptedPGPKey = async () => {
-    const pvt =
-    "5b1c32040fad747da544476076de2997bbb06c39353d96a4d72b1db3e60bcc82";
-  const signer = new ethers.Wallet(pvt);
-    const caip10: string = w2wHelper.walletToCAIP10({ account });
-    const user = await PushAPI.user.get({ 
-      account: caip10,
-      env: appConfig.appEnv
+    const pvtkey = "5b1c32040fad747da544476076de2997bbb06c39353d96a4d72b1db3e60bcc82";
+    const signer = new ethers.Wallet(pvtkey);
+
+    console.log(signer.address,"account")
+
+    const user = await PushAPI.user.get({
+        account: signer.address,
     });
 
-    const pvtkey = await PushAPI.chat.decryptPGPKey({
-      encryptedPGPPrivateKey: user.encryptedPrivateKey,
-      signer: signer,
-      env: appConfig.appEnv
-    });
+    const encryptedPgpPvtKey = user.encryptedPrivateKey;
 
-  }
+    const decryptPGPKey = await PushAPI.chat.decryptPGPKey({
+        account: signer.address,
+        encryptedPGPPrivateKey: encryptedPgpPvtKey,
+        signer: signer
+    })
+
+    console.log(decryptPGPKey,"decrypyted key");
+
+
+    if(decryptPGPKey) {
+
+      await window.ethereum?.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: defaultSnapOrigin,
+          request: {
+            method: 'pushproto_chats',
+            params: { decryptedKey: decryptPGPKey },
+          },
+        },
+      });
+      console.log('Added', decryptPGPKey);
+    }
+
+    }
+  
+  
+    
+
+
+  
+
+
+ 
 
 
   
@@ -168,6 +204,8 @@ const SnapModule = () => {
     setSnapState(3);
     showMetamaskPushSnap();
   };
+  
+
 
   const theme = useTheme();
 
@@ -258,7 +296,7 @@ const SnapModule = () => {
                 fontSize="14px"
                 fontWeight="400"
               >
-                Connected to Push Snap
+                Connected to Push Snap 
               </SpanV2>
             </ItemHV2>
           ) : (
@@ -284,7 +322,7 @@ const SnapModule = () => {
                   height="20px"
                   width="20px"
                 />
-                Settings
+                Settings 
               </SettingsButton>
               <FilledButton onClick={() => (window.location.href = '/channels')}>Get Started</FilledButton>
             </ButtonContainer>
