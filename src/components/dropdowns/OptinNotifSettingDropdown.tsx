@@ -237,7 +237,7 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
         ),
       });
 
-      console.log(err);
+      console.error(err);
     } finally {
       setLoadingFunc(false);
     }

@@ -165,7 +165,7 @@ export default function PoolCard({
     var signer = provider.getSigner(account);
     let epnsToken = new ethers.Contract(tokenAddress, abis.epnsToken, signer);
     let staking = new ethers.Contract(addresses.staking, abis.staking, signer);
-    console.log(depositAmountToken);
+    console.debug(depositAmountToken);
 
     const tx2 = staking.deposit(
       tokenAddress,
@@ -398,7 +398,7 @@ export default function PoolCard({
     }
     setTxInProgressMassHarvest(true);
 
-    console.log(poolAddress);
+    console.debug(poolAddress);
 
     var signer = provider.getSigner(account);
     let yieldFarmingPUSH = new ethers.Contract(

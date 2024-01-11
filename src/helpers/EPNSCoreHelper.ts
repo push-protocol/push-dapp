@@ -37,11 +37,11 @@ const EPNSCoreHelper = {
       contract
         .governance()
         .then((response: any) => {
-          if (enableLogs) console.log('getOwnerInfo() --> %o', response);
+          if (enableLogs) console.debug('getOwnerInfo() --> %o', response);
           resolve(response);
         })
         .catch((err: any) => {
-          console.log('!!!Error, getOwnerInfo() --> %o', err);
+          console.error('!!!Error, getOwnerInfo() --> %o', err);
           reject(err);
         });
     });
@@ -60,7 +60,7 @@ const EPNSCoreHelper = {
         let prettyVotingPower: string = votingPower.toString();
         return rawFormat ? votingPower : prettyVotingPower;
       } catch (err) {
-        console.log('🚀 ~ file: ViewDelegateeItem.js ~ line 47 ~ getVotingPower ~ err', err);
+        console.error('🚀 ~ file: ViewDelegateeItem.js ~ line 47 ~ getVotingPower ~ err', err);
       }
     }
     return '0.000';
@@ -77,11 +77,11 @@ const EPNSCoreHelper = {
           const mappings = { ...response };
           mappings.addr = user;
 
-          if (enableLogs) console.log('getUserInfo() --> %o', mappings);
+          if (enableLogs) console.debug('getUserInfo() --> %o', mappings);
           resolve(mappings);
         })
         .catch((err: any) => {
-          console.log('!!!Error, getUserInfo() --> %o', err);
+          console.error('!!!Error, getUserInfo() --> %o', err);
           reject(err);
         });
     });
@@ -97,7 +97,7 @@ const EPNSCoreHelper = {
           resolve(response.toString());
         })
         .catch((err: any) => {
-          console.log('!!!Error, getChannelAddressFromID() --> %o', err);
+          console.error('!!!Error, getChannelAddressFromID() --> %o', err);
           reject(err);
         });
     });
@@ -115,11 +115,11 @@ const EPNSCoreHelper = {
           const mappings = { ...response };
           mappings.addr = channel;
 
-          if (enableLogs) console.log('getChannelInfo() --> %o', mappings);
+          if (enableLogs) console.debug('getChannelInfo() --> %o', mappings);
           resolve(mappings);
         })
         .catch((err: any) => {
-          console.log('!!!Error, getChannelInfo() --> %o', err);
+          console.error('!!!Error, getChannelInfo() --> %o', err);
           reject(err);
         });
     });
@@ -151,20 +151,20 @@ const EPNSCoreHelper = {
           }
           let filteredResponse: string;
 
-          if (enableLogs) console.log('getChannelEvent() --> Finding: %s in | %o |', channel, response);
+          if (enableLogs) console.debug('getChannelEvent() --> Finding: %s in | %o |', channel, response);
 
           response.forEach(function (item: any) {
             if (item.args.channel.toString() == channel.toString()) {
-              if (enableLogs) console.log('getChannelEvent() --> Selected Channel %o: ', item);
+              if (enableLogs) console.debug('getChannelEvent() --> Selected Channel %o: ', item);
               filteredResponse = ethers.utils.toUtf8String(item.args.identity);
             }
           });
 
-          if (enableLogs) console.log('getChannelEvent() --> Filtered Channel: %o', filteredResponse!);
+          if (enableLogs) console.debug('getChannelEvent() --> Filtered Channel: %o', filteredResponse!);
           resolve(filteredResponse!);
         })
         .catch((err: any) => {
-          console.log('!!!Error, getChannelEvent() --> %o', err);
+          console.error('!!!Error, getChannelEvent() --> %o', err);
           reject(err);
         });
     });
@@ -188,11 +188,11 @@ const EPNSCoreHelper = {
         fetch(url)
           .then((response) => response.json())
           .then((response) => {
-            if (enableLogs) console.log('getJsonFileFromIdentity() --> %o', response);
+            if (enableLogs) console.debug('getJsonFileFromIdentity() --> %o', response);
             resolve(response);
           })
           .catch((err) => {
-            console.log('!!!Error, getJsonFileFromIdentity() --> %o', err);
+            console.error('!!!Error, getJsonFileFromIdentity() --> %o', err);
             reject(err);
           });
       }
@@ -242,11 +242,11 @@ const EPNSCoreHelper = {
           // return EPNSCoreHelper.getJsonFileFromIdentity(response, channel)
         })
         .then((response: any) => {
-          if (enableLogs) console.log('getChannelJsonFromChannelAddress() --> %o', response);
+          if (enableLogs) console.debug('getChannelJsonFromChannelAddress() --> %o', response);
           resolve(response);
         })
         .catch((err: any) => {
-          console.log('!!!Error, getChannelJsonFromChannelAddress() --> %o', err);
+          console.error('!!!Error, getChannelJsonFromChannelAddress() --> %o', err);
           reject(err);
         });
     });
@@ -275,11 +275,11 @@ const EPNSCoreHelper = {
           // return EPNSCoreHelper.getJsonFileFromIdentity(response, channel)
         })
         .then((response: any) => {
-          if (enableLogs) console.log('getChannelJsonFromChannelAddress() --> %o', response);
+          if (enableLogs) console.debug('getChannelJsonFromChannelAddress() --> %o', response);
           resolve(response);
         })
         .catch((err: any) => {
-          console.log('!!!Error, getChannelJsonFromChannelAddress() --> %o', err);
+          console.error('!!!Error, getChannelJsonFromChannelAddress() --> %o', err);
           reject(err);
         });
     });
@@ -295,11 +295,11 @@ const EPNSCoreHelper = {
       //   .then(response => EPNSCoreHelper.getChannelJsonFromChannelAddress(user, contract))
       EPNSCoreHelper.getChannelJsonFromChannelAddress(user, contract)
         .then((response: any) => {
-          if (enableLogs) console.log('getChannelJsonFromUserAddress() --> %o', response);
+          if (enableLogs) console.debug('getChannelJsonFromUserAddress() --> %o', response);
           resolve(response);
         })
         .catch((err: any) => {
-          console.log('!!!Error, getChannelJsonFromUserAddress() --> %o', err);
+          console.error('!!!Error, getChannelJsonFromUserAddress() --> %o', err);
           reject(err);
         });
     });
@@ -313,11 +313,11 @@ const EPNSCoreHelper = {
       contract
         .channelsCount()
         .then((response: any) => {
-          if (enableLogs) console.log('getTotalNumberOfChannels() --> %o', response.toNumber());
+          if (enableLogs) console.debug('getTotalNumberOfChannels() --> %o', response.toNumber());
           resolve(response.toNumber());
         })
         .catch((err: any) => {
-          console.log('!!!Error, getTotalNumberOfChannels() --> %o', err);
+          console.error('!!!Error, getTotalNumberOfChannels() --> %o', err);
           reject(err);
         });
     });
@@ -359,17 +359,17 @@ const EPNSCoreHelper = {
               .then((response) => EPNSCoreHelper.getChannelInfo(response, contract))
               .then((response) => {
                 if (enableLogs)
-                  console.log('getChannelsMetaLatestToOldest(%d, %d) --> %o', channelID, numChannels, channelsInfo);
+                  console.debug('getChannelsMetaLatestToOldest(%d, %d) --> %o', channelID, numChannels, channelsInfo);
                 channelsInfo = [response, ...channelsInfo];
               })
-              .catch((err) => console.log('Error in channel: %d | skipping...', channelID));
+              .catch((err) => console.error('Error in channel: %d | skipping...', channelID));
           });
 
           // wait until all promises are resolved
           await Promise.all(promises);
 
           if (enableLogs)
-            console.log(
+            console.debug(
               'getChannelsMetaLatestToOldest(Index: %d, Number: %d) --> %o',
               atIndex,
               numChannels,
@@ -378,7 +378,7 @@ const EPNSCoreHelper = {
           resolve(channelsInfo);
         })
         .catch((err) => {
-          console.log('!!!Error, getChannelsMetaLatestToOldest() --> %o', err);
+          console.error('!!!Error, getChannelsMetaLatestToOldest() --> %o', err);
           reject(err);
         });
     });
@@ -390,11 +390,11 @@ const EPNSCoreHelper = {
       contract
         .usersCount()
         .then((response: any) => {
-          console.log('getTotalNumberOfUsers() --> %o', response.toNumber());
+          console.debug('getTotalNumberOfUsers() --> %o', response.toNumber());
           resolve(response.toNumber());
         })
         .catch((err: any) => {
-          console.log('!!!Error, getTotalNumberOfUsers() --> %o', err);
+          console.error('!!!Error, getTotalNumberOfUsers() --> %o', err);
           reject(err);
         });
     });
@@ -415,8 +415,8 @@ const EPNSCoreHelper = {
             }
           });
 
-          if (enableLogs) console.log('Public Key Registry Response: ' + response);
-          if (enableLogs) console.log('Public Key Registry Filtered: ' + filteredResponse);
+          if (enableLogs) console.debug('Public Key Registry Response: ' + response);
+          if (enableLogs) console.debug('Public Key Registry Filtered: ' + filteredResponse);
 
           if (!filteredResponse || filteredResponse.length == 0) {
             resolve(null);
@@ -425,7 +425,7 @@ const EPNSCoreHelper = {
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
           reject(err);
         });
     });
@@ -441,7 +441,7 @@ const EPNSCoreHelper = {
           resolve(response);
         })
         .catch((err: any) => {
-          console.log('!!!Error, getSubscribedStatus() --> %o', err);
+          console.error('!!!Error, getSubscribedStatus() --> %o', err);
           reject(err);
         });
     });
@@ -453,11 +453,11 @@ const EPNSCoreHelper = {
       contract.users[user]
         .subscribedCount()
         .then((response: any) => {
-          console.log('getTotalSubscribedChannels() --> %o', response.toNumber());
+          console.debug('getTotalSubscribedChannels() --> %o', response.toNumber());
           resolve(response.toNumber());
         })
         .catch((err: any) => {
-          console.log('!!!Error, getTotalSubscribedChannels() --> %o', err);
+          console.error('!!!Error, getTotalSubscribedChannels() --> %o', err);
           reject(err);
         });
     });
@@ -475,20 +475,20 @@ const EPNSCoreHelper = {
             contract
               .calcAllChannelsRatio(user, block)
               .then((response: any) => {
-                if (enableLogs) console.log('calcAllChannelsRatio() --> %o', response);
+                if (enableLogs) console.debug('calcAllChannelsRatio() --> %o', response);
                 resolve(response);
               })
               .catch((err: any) => {
-                console.log('!!!Error, calcAllChannelsRatio() --> %o', err);
+                console.error('!!!Error, calcAllChannelsRatio() --> %o', err);
                 reject(err);
               });
           } else {
-            if (enableLogs) console.log('!!!Warning, calcAllChannelsRatio() --> User not activated');
+            if (enableLogs) console.warn('!!!Warning, calcAllChannelsRatio() --> User not activated');
             reject('User not activated');
           }
         })
         .catch((err: any) => {
-          console.log('!!!Error, calcAllChannelsRatio() --> %o', err);
+          console.error('!!!Error, calcAllChannelsRatio() --> %o', err);
           reject(err);
         });
     });
@@ -501,11 +501,11 @@ const EPNSCoreHelper = {
       contract
         .poolFunds()
         .then((response: any) => {
-          if (enableLogs) console.log('getPoolFunds() --> %o', response);
+          if (enableLogs) console.debug('getPoolFunds() --> %o', response);
           resolve(response);
         })
         .catch((err: any) => {
-          console.log('!!!Error, getPoolFunds() --> %o', err);
+          console.error('!!!Error, getPoolFunds() --> %o', err);
           reject(err);
         });
     });
@@ -521,7 +521,7 @@ const EPNSCoreHelper = {
       bignumber = bignumber.toNumber();
       return EPNSCoreHelper.metricFormatter(bignumber, 2);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       return '---';
     }
   },

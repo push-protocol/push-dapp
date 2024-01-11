@@ -128,7 +128,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       }
       setMoreLoading(false);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -163,7 +163,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
         }
         setLoadingChannel(false);
       } catch (err) {
-        console.log(err);
+        console.error(err);
         // if there's an error search for three times before giving up and displaying the normal channels
         if (trialCount < SEARCH_TRIAL_LIMIT) {
           setTrialCount((t) => t + 1);

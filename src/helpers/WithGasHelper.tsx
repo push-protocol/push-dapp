@@ -19,7 +19,7 @@ export const executeDelegateTx = async ({
   provider,
   LoaderToast,
 }: IExecuteDelegateTxProps): Promise<void> => {
-  console.log('delegateeAddress', delegateeAddress);
+  console.debug('delegateeAddress', delegateeAddress);
   let sendWithTxPromise: any;
   sendWithTxPromise = epnsToken.delegate(delegateeAddress);
   sendWithTxPromise

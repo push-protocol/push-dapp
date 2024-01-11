@@ -472,7 +472,7 @@ const {handleConnectWallet} = useContext(AppContext);
           getToastIcon: (size) => <MdError size={size} color="red" />,
         });
         setNFProcessing(0);
-        console.log(err);
+        console.error(err);
       }
     }
   };
@@ -606,7 +606,7 @@ const {handleConnectWallet} = useContext(AppContext);
                         options={NFTypes}
                         onChange={(option) => {
                           setNFType(option.value);
-                          console.log(option);
+                          console.debug(option);
                         }}
                         value={nfType}
                       />
@@ -720,8 +720,8 @@ const {handleConnectWallet} = useContext(AppContext);
                         onKeyPress={handleSubsetInputChange}
                         onChange={(e) => {
                           const text = e.target.value.trim();
-                          console.log(text);
-                          console.log(tempRecipeint);
+                          console.debug(text);
+                          console.debug(tempRecipeint);
                           // if (!LIMITER_KEYS.includes(text) && text.length > 0 ) {
                           setTempRecipient(e.target.value);
                           // }

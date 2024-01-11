@@ -2,18 +2,18 @@
 import React, { useEffect, useState } from 'react';
 
 // External Packages
-import styled, { useTheme } from 'styled-components';
+import { AiOutlineMore } from 'react-icons/ai';
 import Switch from 'react-switch';
 import { useClickAway } from 'react-use';
-import { AiOutlineMore } from 'react-icons/ai';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
+import { ReactComponent as MinusCircle } from 'assets/PushSnaps/MinusCircle.svg';
+import InfoImage from "assets/info.svg";
+import { Button } from 'components/SharedStyling';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
-import { Button } from 'components/SharedStyling';
-import InfoImage from "assets/info.svg";
 import { shortenText } from 'helpers/UtilityHelper';
-import { ReactComponent as MinusCircle } from 'assets/PushSnaps/MinusCircle.svg';
 import { useAccount } from 'hooks';
 
 // Internal Configs
@@ -34,20 +34,26 @@ const MetamaskSnapConfigureModal = ({
 
   const { chainId, account, provider } = useAccount();
 
-  useEffect(async () => {
-    const res = await window.ethereum?.request({
-      method: 'wallet_invokeSnap',
-      params: {
-        snapId: defaultSnapOrigin,
-        request: {
-          method: 'pushproto_gettogglestatus',
-          params: { address: searchedUser },
+  useEffect(() => {
+    (async function () {
+      const res = await window.ethereum?.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: defaultSnapOrigin,
+          request: {
+            method: 'pushproto_gettogglestatus',
+            params: { address: searchedUser },
+          },
         },
-      },
-    });
-    console.log('res', res);
-    setToggleStatus(res);
-  }, [toggleStatus])
+      });
+      console.log('res', res);
+      setToggleStatus(res);
+    })();
+  }, [toggleStatus]);
+  
+  useEffect(() => {
+    getWalletAddresses();
+  }, []);
 
   async function getSignature(mode: number) {
     if (mode == 1) {
@@ -63,7 +69,7 @@ const MetamaskSnapConfigureModal = ({
   }
 
   const addWalletAddresses = async () => {
-    console.log('searchedUser', searchedUser);
+    console.debug('searchedUser', searchedUser);
     const signatureResult = await getSignature(1);
     if (signatureResult) {
       if (searchedUser) {
@@ -77,10 +83,10 @@ const MetamaskSnapConfigureModal = ({
             },
           },
         });
-        console.log('Added', searchedUser);
+        console.debug('Added', searchedUser);
       }
     } else {
-      console.log('Signature Validation Failed');
+      console.error('Signature Validation Failed');
     }
   };
 
@@ -117,7 +123,7 @@ const MetamaskSnapConfigureModal = ({
         });
       }
     } else {
-      console.log('Signature Validation Failed');
+      console.error('Signature Validation Failed');
     }
   };
 
@@ -129,13 +135,13 @@ const MetamaskSnapConfigureModal = ({
         request: { method: 'pushproto_getaddresses' },
       },
     });
-    console.log('result', result);
+    console.debug('result', result);
     setAddresses(result);
   }
 
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => {
-    console.log('Set show to be null');
+    console.warn('Set show to be null');
     setWalletSelected(null);
     setShowRemove(null);
   });
@@ -181,7 +187,6 @@ const MetamaskSnapConfigureModal = ({
             onClick={addWalletAddresses}
           // onClick={addAddresses}
           >Add</FilledButton>
-          <EnptyButton onClick={getWalletAddresses}>Show All</EnptyButton>
         </ItemHV2>
       </ItemVV2>
 

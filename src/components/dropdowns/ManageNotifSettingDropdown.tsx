@@ -197,7 +197,7 @@ const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = (o
         ),
       });
 
-      console.log(err);
+      console.error(err);
     } finally {
       setLoadingFunc(false);
     }

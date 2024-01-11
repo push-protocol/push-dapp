@@ -41,8 +41,8 @@ const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
 
     onConfirm()
       .then(async (tx: any) => {
-        console.log(tx);
-        console.log('Transaction Sent!');
+        console.debug(tx);
+        console.info('Transaction Sent!');
 
         toastObject.showMessageToast({
           toastTitle: 'Channel Deactivated',
@@ -57,7 +57,7 @@ const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
         });
 
         await tx.wait(1);
-        console.log('Transaction Mined!');
+        console.info('Transaction Mined!');
         dispatch(
           setUserChannelDetails({
             ...channelDetails,
@@ -69,8 +69,8 @@ const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
         onClose();
       })
       .catch((err: any) => {
-        console.log('!!!Error deactivateChannel() --> %o', err);
-        console.log({
+        console.error('!!!Error deactivateChannel() --> %o', err);
+        console.error({
           err,
         });
 

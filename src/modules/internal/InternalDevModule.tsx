@@ -521,7 +521,7 @@ const InternalDevModule = () => {
           borderRadius="15px"
           padding="20px 20px"
           onClick={() => {
-            console.log('Nothing Should Be Clickable');
+            console.warn('Nothing Should Be Clickable');
           }}
         >
           <SpanV2>Try to Trigger</SpanV2>
@@ -568,7 +568,7 @@ const InternalDevModule = () => {
           borderRadius="15px"
           padding="20px 20px"
           onClick={() => {
-            console.log('This should be clickable');
+            console.info('This should be clickable');
           }}
         >
           <SpanV2>Try to Trigger</SpanV2>

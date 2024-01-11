@@ -241,7 +241,7 @@ const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({
         ),
       });
 
-      console.log(err);
+      console.error(err);
     } finally {
       setLoadingFunc(false);
     }

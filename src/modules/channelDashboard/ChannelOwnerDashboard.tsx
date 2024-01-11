@@ -117,8 +117,8 @@ const ChannelOwnerDashboard = () => {
         gasLimit: 1000000,
       });
 
-      console.log(tx);
-      console.log('Check: ' + account);
+      console.debug(tx);
+      console.debug('Check: ' + account);
       await tx.wait();
       destroyChannelToast.showMessageToast({
         toastTitle: 'Success',
@@ -128,7 +128,7 @@ const ChannelOwnerDashboard = () => {
       });
       dispatch(setUserChannelDetails(null));
     } catch (err) {
-      console.log(err);
+      console.error(err);
       if (err.code == "ACTION_REJECTED") {
         // EIP-1193 userRejectedRequest error
         destroyChannelToast.showMessageToast({

@@ -34,7 +34,7 @@ function TransferNFT({ tokenId }) {
 
   const handleTransferNFT = async (e) => {
     if (nftWriteProvider) {
-      console.log("🚀 ~ file: TransferNFT.js ~ line 64 ~ handleTransferNFT ~ nftWriteProvider", nftWriteProvider)
+      console.info("🚀 ~ file: TransferNFT.js ~ line 64 ~ handleTransferNFT ~ nftWriteProvider", nftWriteProvider)
       e.preventDefault();
 
       if (isEmpty(toAddress)) {
@@ -49,8 +49,8 @@ function TransferNFT({ tokenId }) {
       const signerInstance = new ethers.Contract(addresses.rockstar, abis.rockstar, signer)
       var txPromise = nftWriteProvider['safeTransferFrom(address,address,uint256)'](account, toAddress, tokenId);
       const tx = await txPromise;
-      console.log(tx);
-      console.log("waiting for tx to finish");
+      console.debug(tx);
+      console.info("waiting for tx to finish");
       setProcessingInfo("Waiting for Transfer tx to finish...");
       await provider.waitForTransaction(tx.hash);
       setProcessingInfo("Transfer successfull! ");

@@ -191,7 +191,7 @@ const YieldPoolCard = ({
 
                 getUserData();
             } catch (e) {
-                console.log("Error", e);
+                console.error("Error", e);
                 yieldFarmToast.showMessageToast({
                     toastTitle: 'Error',
                     toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
@@ -355,7 +355,7 @@ const YieldPoolCard = ({
                             depositPushToken(tx, withdrawAmount, totalTxnSteps);
 
                         }).catch((err) => {
-                            console.log("Error in approving 2", err);
+                            console.error("Error in approving 2", err);
                             yieldFarmToast.showMessageToast({
                                 toastTitle: 'Error',
                                 toastMessage: `Transaction Failed! Could Not Approve`,
@@ -411,7 +411,7 @@ const YieldPoolCard = ({
 
 
                         }).catch((err) => {
-                            console.log("Error in approving", err);
+                            console.error("Error in approving", err);
                             yieldFarmToast.showMessageToast({
                                 toastTitle: 'Error',
                                 toastMessage: `Transaction Failed! Could Not Approve`,
@@ -427,7 +427,7 @@ const YieldPoolCard = ({
                 }
             })
             .catch((err) => {
-                console.log("Error in withdrawing: ", err);
+                console.error("Error in withdrawing: ", err);
                 yieldFarmToast.showMessageToast({
                     toastTitle: 'Error',
                     toastMessage: `Transaction Failed! Could Not Withdraw!`,
@@ -483,7 +483,7 @@ const YieldPoolCard = ({
             setActiveTab(0);
 
         }).catch((error) => {
-            console.log("Error in depositing: ", error);
+            console.error("Error in depositing: ", error);
             yieldFarmToast.showMessageToast({
                 toastTitle: 'Error',
                 toastMessage: `Transaction Failed! Could Not Deposit the Amount`,
@@ -536,7 +536,7 @@ const YieldPoolCard = ({
             setActiveTab(0);//This moves back the UI to YieldFarming V2
 
         }).catch((error) => {
-            console.log("Error in depositing: ", error);
+            console.error("Error in depositing: ", error);
             yieldFarmToast.showMessageToast({
                 toastTitle: 'Error',
                 toastMessage: `Transaction Failed! Could Not Deposit Push Token`,

@@ -96,7 +96,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       const channelJson = await ChannelsDataStore.instance.getChannelJsonStartBlockAsync(channelObject.channel);
       return channelJson;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -201,8 +201,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     epnsWriteProvider
       .verifyChannel(channelObject.channel)
       .then(async (tx) => {
-        console.log(tx);
-        console.log('Transaction Sent!');
+        console.debug(tx);
+        console.info('Transaction Sent!');
 
         generalToast.showMessageToast({
           toastTitle: 'Success',
@@ -217,11 +217,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         });
 
         await tx.wait(1);
-        console.log('Transaction Mined!');
+        console.info('Transaction Mined!');
         setIsVerified(true);
       })
       .catch((err) => {
-        console.log('!!!Error verifyChannel() --> %o', err);
+        console.error('!!!Error verifyChannel() --> %o', err);
         generalToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: `There was an error verifying the channel`,
@@ -244,8 +244,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     epnsWriteProvider
       .unverifyChannel(channelObject.channel)
       .then(async (tx) => {
-        console.log(tx);
-        console.log('Transaction Sent!');
+        console.debug(tx);
+        console.info('Transaction Sent!');
 
         generalToast.showMessageToast({
           toastTitle: 'Success',
@@ -260,11 +260,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         });
 
         await tx.wait(1);
-        console.log('Transaction Mined!');
+        console.info('Transaction Mined!');
         setIsVerified(false);
       })
       .catch((err) => {
-        console.log('!!!Error handleSendMessage() --> %o', err);
+        console.error('!!!Error handleSendMessage() --> %o', err);
         generalToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: `There was an error unverifying the channel`,
@@ -285,8 +285,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     epnsWriteProvider
       .blockChannel(channelObject.channel)
       .then(async (tx) => {
-        console.log(tx);
-        console.log('Transaction Sent!');
+        console.debug(tx);
+        console.info('Transaction Sent!');
 
         generalToast.showMessageToast({
           toastTitle: 'Success',
@@ -301,10 +301,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         });
 
         await tx.wait(1);
-        console.log('Transaction Mined!');
+        console.info('Transaction Mined!');
       })
       .catch((err) => {
-        console.log('!!!Error handleSendMessage() --> %o', err);
+        console.error('!!!Error handleSendMessage() --> %o', err);
         generalToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: `There was an error blocking the channel`,

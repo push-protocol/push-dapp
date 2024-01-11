@@ -267,7 +267,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
       handleClose();
     } catch (error) {
       setIsLoading(false);
-      console.log('Error', error);
+      console.error('Error', error);
       groupInfoToast.showMessageToast({
         toastTitle: 'Error',
         toastMessage: error.message,
