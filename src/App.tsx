@@ -3,58 +3,59 @@ import { ethers } from 'ethers';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
+import { PushAPI } from '@pushprotocol/restapi';
+import * as dotenv from 'dotenv';
+import ReactGA from 'react-ga';
 import Joyride, { CallBackProps } from 'react-joyride';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
-import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
-import ReactGA from 'react-ga';
-import * as dotenv from 'dotenv';
-import { PushAPI } from '@pushprotocol/restapi';
+import styled, { ThemeProvider } from 'styled-components';
+
+import { createGlobalStyle } from 'styled-components';
 
 // Internal Compoonents
 import InitState from 'components/InitState';
-import NavigationContextProvider from 'contexts/NavigationContext';
 import AppContextProvider from 'contexts/AppContext';
+import NavigationContextProvider from 'contexts/NavigationContext';
 import { EnvHelper } from 'helpers/UtilityHelper';
 import { useAccount, useInactiveListener, useSDKSocket } from 'hooks';
+import { resetAdminSlice } from 'redux/slices/adminSlice';
+import { resetChannelCreationSlice } from 'redux/slices/channelCreationSlice';
+import { resetNotificationsSlice } from 'redux/slices/notificationSlice';
+import { resetCanSendSlice } from 'redux/slices/sendNotificationSlice';
+import { resetSpamSlice } from 'redux/slices/spamSlice';
+import { resetUserSlice, setUserPushSDKInstance } from 'redux/slices/userSlice';
 import UserJourneySteps from 'segments/userJourneySteps';
 import Header from 'structure/Header';
 import MasterInterfacePage from 'structure/MasterInterfacePage';
+import Navigation from 'structure/Navigation';
 import AppLogin from './AppLogin';
 import { SectionV2 } from './components/reusables/SharedStylingV2';
+import { ErrorContext } from './contexts/ErrorContext';
 import { A, B, C, H2, Image, Item, ItemH, P, Span } from './primaries/SharedStyling';
 import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJourneySlice';
-import { resetSpamSlice } from 'redux/slices/spamSlice';
-import { resetNotificationsSlice } from 'redux/slices/notificationSlice';
-import { resetCanSendSlice } from 'redux/slices/sendNotificationSlice';
-import { resetChannelCreationSlice } from 'redux/slices/channelCreationSlice';
-import { resetAdminSlice } from 'redux/slices/adminSlice';
-import Navigation from 'structure/Navigation';
-import { ErrorContext } from './contexts/ErrorContext'
-import { resetUserSlice, setUserPushSDKInstance } from 'redux/slices/userSlice';
 
 // Internal Configs
 import { appConfig } from 'config';
-import { themeDark, themeLight } from 'config/Themization';
 import GLOBALS from 'config/Globals';
+import { themeDark, themeLight } from 'config/Themization';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 
 // space imports
-import SpaceContextProvider, { SpaceContext } from 'contexts/SpaceContext';
-import { SpacesUIProvider } from '@pushprotocol/uiweb';
-import { darkTheme, lightTheme } from 'config/spaceTheme';
-import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 import {
   ISpaceBannerProps,
   ISpaceCreateWidgetProps,
   ISpaceFeedProps,
   ISpaceInvitesProps,
   ISpaceWidgetProps,
-  SpacesUI,
+  SpacesUI, SpacesUIProvider
 } from '@pushprotocol/uiweb';
-import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
 import { useUpdateTheme } from '@web3-onboard/react';
+import { darkTheme, lightTheme } from 'config/spaceTheme';
+import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
+import SpaceContextProvider, { SpaceContext } from 'contexts/SpaceContext';
+import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 
 dotenv.config();
 
@@ -74,6 +75,49 @@ export interface IUseSpaceReturnValues {
   CreateSpaceComponent: React.FC<ISpaceCreateWidgetProps>;
 }
 
+// Extend the console
+const extendConsole = () => {
+  "use strict";
+  try {
+    var disabledConsoles = {};
+    console.enable = function (level, enabled) {
+      if (window.console === "undefined" || !window.console || window.console === null) {
+        window.console = {};
+      }
+      if (window.console[level] === "undefined" || !window.console[level] || window.console[level] === null) {
+        window.console[level] = function () { };
+      }
+      if (enabled) {
+        if (disabledConsoles[level]) {
+          window.console[level] = disabledConsoles[level];
+        }
+      } else {
+        disabledConsoles[level] = window.console[level];
+        window.console[level] = function () { };
+      }
+    };
+  } catch (e) {
+    console.error("Extended console() threw an error!");
+    console.debug(e);
+  }
+}
+
+// extend console
+extendConsole();
+
+// Disable consolve
+if (appConfig?.appEnv === "prod" || appConfig?.appEnv === "staging") {
+  console.enable("debug", false);
+  console.enable("log", false);
+  console.enable("info", false);
+
+  // disable console.warn in prod
+  if (appConfig?.appEnv === "prod") {
+    console.enable("warn", false);
+  }
+}
+
+// Provess App
 export default function App() {
   const dispatch = useDispatch();
 

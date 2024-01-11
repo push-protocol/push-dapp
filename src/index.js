@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { Web3OnboardProvider } from '@web3-onboard/react'
+import { Web3OnboardProvider } from '@web3-onboard/react';
 import { ethers } from "ethers";
 import React, { useEffect } from "react";
 
@@ -10,14 +10,14 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
 // Internal Components
+import { appConfig } from 'config';
 import App from "./App";
+import ChatUserContextProvider from './contexts/ChatUserContext';
+import ErrorContextProvider from './contexts/ErrorContext';
+import { VideoCallContextProvider } from './contexts/VideoCallContext';
 import "./index.css";
 import store from "./redux/store";
 import * as serviceWorker from "./serviceWorker";
-import ChatUserContextProvider from './contexts/ChatUserContext';
-import { VideoCallContextProvider } from './contexts/VideoCallContext';
-import ErrorContextProvider from './contexts/ErrorContext';
-import { appConfig } from 'config';
 
 // Internal Configs
 import * as dotenv from "dotenv";
@@ -30,44 +30,6 @@ const client = new ApolloClient({
   uri: "https://api.thegraph.com/subgraphs/name/epnsproject/epnsstaging",
   cache: new InMemoryCache(),
 });
-
-const extendConsole = () => {
-  "use strict";
-  try {
-    var disabledConsoles = {};
-    console.enable = function (level, enabled) {
-      if (window.console === "undefined" || !window.console || window.console === null) {
-        window.console = {};
-      }
-      if (window.console[level] === "undefined" || !window.console[level] || window.console[level] === null) {
-        window.console[level] = function () { };
-      }
-      if (enabled) {
-        if (disabledConsoles[level]) {
-          window.console[level] = disabledConsoles[level];
-        }
-      } else {
-        disabledConsoles[level] = window.console[level];
-        window.console[level] = function () { };
-      }
-    };
-  } catch (e) {
-    console.error("Extended console() threw an error!");
-    console.debug(e);
-  }
-}
-
-const ExtendedConsoleComponent = () => {
-  useEffect(() => {
-    if(appConfig.appEnv === "prod") {
-      extendConsole();
-      console.enable("log", false);
-      console.enable("info", false);
-    }
-  }
-    , [appConfig.appEnv]);
-    return null;
-}
 
 /**
  * A utility function used to get the provider
@@ -97,7 +59,6 @@ ReactDOM.render(
             </ChatUserContextProvider>
           </ErrorContextProvider>
         </Web3OnboardProvider>
-        <ExtendedConsoleComponent />
       </ApolloProvider>
     </Provider>
   </BrowserRouter>,
