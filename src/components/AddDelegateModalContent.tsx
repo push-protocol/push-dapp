@@ -34,7 +34,7 @@ const AddDelegateModalContent = ({ onConfirm: addDelegate, onClose, toastObject 
     const delegateAddress = delegateAddressInputRef?.current?.value;
     addDelegate(delegateAddress)
       .then(async (tx) => {
-        console.log(tx);
+        console.debug(tx);
 
         toastObject.showMessageToast({
           toastTitle: 'Delegate Added',
@@ -50,7 +50,7 @@ const AddDelegateModalContent = ({ onConfirm: addDelegate, onClose, toastObject 
         onClose();
       })
       .catch((err) => {
-        console.log({ err });
+        console.error({ err });
 
         toastObject.showMessageToast({
           toastTitle: 'Transaction Failed',

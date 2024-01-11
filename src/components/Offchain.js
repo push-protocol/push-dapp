@@ -98,13 +98,13 @@ const payload = {
 }
 
 const message = payload.data
-console.log(message)
+console.debug(message)
 wallet._signTypedData(domain, type, message).then(res => {
-  console.log("Signature", res)
-  console.log("Length %s", res.length)
+  console.debug("Signature", res)
+  console.debug("Length %s", res.length)
   const recovered = recoverTypedSignature_v4({
     data: typedData,
     sig: res,
   })
-  console.log("Recovered Account", recovered)
+  console.debug("Recovered Account", recovered)
 })

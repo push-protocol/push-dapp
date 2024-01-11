@@ -165,7 +165,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
 
       return epnsWriteProvider.addSubGraph(identityBytes);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 

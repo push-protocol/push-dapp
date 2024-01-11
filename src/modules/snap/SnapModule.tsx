@@ -69,8 +69,8 @@ const SnapModule = ({
       },
     });
 
-    console.log(account);
-    console.log(walletConnected);
+    console.debug(account);
+    console.debug(walletConnected);
     if (result.includes(account)) {
       setAddedAddress(true);
     } else {
@@ -87,7 +87,7 @@ const SnapModule = ({
         [snapId]: params,
       },
     });
-    console.log('Snap Installed');
+    console.info('Snap Installed');
   }
 
   async function connectToMetaMask() {
@@ -104,7 +104,7 @@ const SnapModule = ({
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log('Error', error);
+      console.error('Error', error);
     }
   }
 
@@ -128,10 +128,10 @@ const SnapModule = ({
             },
           },
         });
-        console.log('Added', account);
+        console.debug('Added', account);
       }
     } else {
-      console.log('Signature Validation Failed');
+      console.error('Signature Validation Failed');
     }
   }
 

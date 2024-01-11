@@ -21,14 +21,14 @@
 
     // Only proceed if image is equal to or less than 128
     if (dimensions.width > 128 || dimensions.height > 128) {
-      console.log('Image size check failed... returning');
+      console.error('Image size check failed... returning');
       return {
         success: 0,
         info: 'Image size check failed, Image should be 128X128PX',
       };
     }
 
-    console.log("Image verification",base64Data.charAt(0));
+    console.debug("Image verification",base64Data.charAt(0));
     if (base64Data.charAt(0) === '/') {
       return {
         success: 1,

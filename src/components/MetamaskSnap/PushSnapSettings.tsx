@@ -28,7 +28,7 @@ const PushSnapSettings = () => {
         const installedSnaps = await window.ethereum.request({
             method: 'wallet_getSnaps',
         });
-        console.log("Snaps installed", installedSnaps);
+        console.debug("Snaps installed", installedSnaps);
         Object.keys(installedSnaps).forEach((snap) => {
             if (snap == 'npm:@pushprotocol/snap') {
                 setSnapInstalled(true);
@@ -44,8 +44,8 @@ const PushSnapSettings = () => {
             },
         });
 
-        console.log(account);
-        console.log(walletConnected);
+        console.debug(account);
+        console.debug(walletConnected);
         if (result.includes(account)) {
             setAddedAddress(true);
         } else {
@@ -69,7 +69,7 @@ const PushSnapSettings = () => {
                 [snapId]: params,
             },
         });
-        console.log('Snap Installed');
+        console.info('Snap Installed');
     }
 
     async function connectToMetaMask() {
@@ -82,11 +82,11 @@ const PushSnapSettings = () => {
             setLoading(false);
         } catch (error) {
             setLoading(false);
-            console.log('Error', error);
+            console.error('Error', error);
         }
     }
 
-    console.log("snapInstalled", snapInstalled);
+    console.info("snapInstalled", snapInstalled);
 
     const InstallSnap = () => {
         const {

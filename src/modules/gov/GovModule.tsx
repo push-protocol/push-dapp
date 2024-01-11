@@ -88,13 +88,13 @@ const GovModule = () => {
 
   React.useEffect(() => {
     toolingPostReq('/gov/prev_delegation', { walletAddress: account }).then((res) => {
-      console.log('result', res.data.user);
+      console.debug('result', res.data.user);
       setGaslessInfo(res.data.user);
     });
   }, []);
 
   React.useEffect(() => {
-    console.log(account);
+    console.debug(account);
     if (!!(provider && account)) {
       let signer = provider.getSigner(account);
       setSignerObject(signer);
@@ -178,7 +178,7 @@ const GovModule = () => {
       const votingPower = await EPNSCoreHelper.getVotingPower(address, epnsToken, true);
       setNewDelegateeVotingPower(votingPower);
     } catch (err) {
-      console.log('🚀 ~ file: Delegate.tsx ~ line 86 ~ getVotingPower ~ err', err);
+      console.error('🚀 ~ file: Delegate.tsx ~ line 86 ~ getVotingPower ~ err', err);
     }
   };
 
@@ -217,13 +217,13 @@ const GovModule = () => {
 
     const isAddress = await isValidAddress(newDelegatee);
     const delegateeAddress = await newDelegatee;
-    console.log(isAddress);
+    console.debug(isAddress);
     if (!isAddress) {
       setTxInProgress(false);
       return;
     }
-    console.log('balance', tokenBalance);
-    console.log('transaction mode', transactionMode);
+    console.debug('balance', tokenBalance);
+    console.debug('transaction mode', transactionMode);
 
     if (tokenBalance == 0) {
       toast.dark('No PUSH to Delegate!', {
@@ -258,7 +258,7 @@ const GovModule = () => {
       setTxInProgress(false);
       return;
     }
-    console.log(newDelegatee,'lets see');
+    console.debug(newDelegatee,'lets see');
     await createTransactionObject({
       delegateeAddress,
       account,
@@ -270,7 +270,7 @@ const GovModule = () => {
     });
     toolingPostReq('/gov/prev_delegation', { walletAddress: account })
       .then((res) => {
-        console.log('result', res.data.user);
+        console.debug('result', res.data.user);
         setGaslessInfo(res.data.user);
         // toast.dark("Successfully Fetched Prev Delegation Data", {
         //   position: "bottom-right",

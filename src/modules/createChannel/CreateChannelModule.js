@@ -273,11 +273,11 @@ function CreateChannelModule() {
       }),
     };
 
-    console.log(input);
+    console.debug(input);
 
     input = JSON.stringify(input);
     setProgress(0);
-    console.log(`input is ${input}`);
+    console.debug(`input is ${input}`);
     // const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
 
     setProcessingInfo('Loading...');
@@ -286,7 +286,7 @@ function CreateChannelModule() {
 
     // var storagePointer = (storagePointer = await ipfs.add(input));
     let storagePointer = await IPFSupload(input);
-    console.log('IPFS storagePointer:', storagePointer);
+    console.debug('IPFS storagePointer:', storagePointer);
     // setProcessingInfo("Payload Uploaded, Approval to transfer DAI...");
     //console.log(await ipfs.cat(storagePointer));
     
@@ -299,7 +299,7 @@ function CreateChannelModule() {
     // Send Transaction
     // First Approve DAI
     var signer = provider.getSigner(account);
-    console.log(signer);
+    console.debug(signer);
 
     let pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
 
@@ -311,8 +311,8 @@ function CreateChannelModule() {
         var sendTransactionPromise = pushTokenContract.approve(addresses.epnscore, fees);
         const tx = await sendTransactionPromise;
 
-        console.log(tx);
-        console.log('waiting for tx to finish');
+        console.debug(tx);
+        console.debug('waiting for tx to finish');
         setProgress(30);
 
         await provider.waitForTransaction(tx.hash);
@@ -337,8 +337,8 @@ function CreateChannelModule() {
         gasLimit: 600000,
       });
 
-      console.log(tx);
-      console.log('Check: ' + account);
+      console.debug(tx);
+      console.debug('Check: ' + account);
       let txCheck = await provider.waitForTransaction(tx.hash);
 
       if (txCheck.status === 0) {
@@ -393,8 +393,8 @@ function CreateChannelModule() {
           getToastIcon: (size) => <MdError size={size} color="red" />,
         });
 
-        console.log('Error --> %o', err);
-        console.log({ err });
+        console.error('Error --> %o', err);
+        console.error({ err });
         setProcessing(3);
         setProgress(0);
         setProgressInfo('There was an error in creating the Channel');
@@ -405,12 +405,12 @@ function CreateChannelModule() {
 
   useEffect(() => {
     if (croppedImage) {
-      console.log("Image cropped",croppedImage);
+      console.debug("Image cropped",croppedImage);
       toDataURL(croppedImage, function (dataUrl) {
         const response = handleLogoSizeLimitation(dataUrl);
-        console.log("response",response);
+        console.debug("response",response);
         if (response.success) {
-          console.log("Cropped Image....",croppedImage);
+          console.debug("Cropped Image....",croppedImage);
           setChannelFile(croppedImage);
         }
       });

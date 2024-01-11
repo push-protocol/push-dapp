@@ -135,7 +135,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                 setDepositApprove(true);
 
             } catch (e) {
-                console.log("Error", e);
+                console.error("Error", e);
                 toastObject.showMessageToast({
                     toastTitle: 'Error',
                     toastMessage: `User denied message signature.`,
@@ -146,7 +146,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                 setTxInProgressApprDep(false);
             }
         }).catch((err) => {
-            console.log("Error", err);
+            console.error("Error", err);
             toastObject.showMessageToast({
                 toastTitle: 'Error',
                 toastMessage: `User denied message signature`,
@@ -223,7 +223,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                     handleClose();
 
                 } catch (e) {
-                    console.log("Error", e)
+                    console.error("Error", e)
                     toastObject.showMessageToast({
                         toastTitle: 'Error',
                         toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
@@ -235,7 +235,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                 }
             })
             .catch((err) => {
-                console.log("Error in depositing", err)
+                console.error("Error in depositing", err)
                 err.reason = err.reason.slice(err.reason.indexOf('::') + 1);
                 toastObject.showMessageToast({
                     toastTitle: 'Error',

@@ -106,7 +106,7 @@ const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
         contractAddress: addresses.epnscore,
         amount: 50 - pushApprovalAmount,
       });
-      console.log('response', response);
+      console.debug('response', response);
       if (response) {
         setPushApprovalAmount(50);
         setPushDeposited(true);
@@ -124,7 +124,7 @@ const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
         setIsLoading(false);
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       if (err.code == 'ACTION_REJECTED') {
         // EIP-1193 userRejectedRequest error
         toastObject.showMessageToast({
@@ -151,8 +151,8 @@ const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
           ),
         });
 
-        console.log('Error --> %o', err);
-        console.log({ err });
+        console.error('Error --> %o', err);
+        console.error({ err });
       }
     }
     setIsLoading(false);
@@ -177,7 +177,7 @@ const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
       });
       await tx.wait();
 
-      console.log('Transaction Mined!');
+      console.info('Transaction Mined!');
       toastObject.showMessageToast({
         toastTitle: 'Channel Reactivated',
         toastMessage: 'Channel has been reactivated. You can now send notifications from it',
@@ -200,7 +200,7 @@ const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
       onClose();
       setIsLoading(false);
     } catch (err: any) {
-      console.log('Error reactivateChannel', { err });
+      console.error('Error reactivateChannel', { err });
       toastObject.showMessageToast({
         toastTitle: 'Transaction Failed',
         toastMessage: 'Channel reactivation failed.',

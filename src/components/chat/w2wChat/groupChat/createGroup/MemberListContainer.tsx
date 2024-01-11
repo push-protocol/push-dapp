@@ -69,9 +69,9 @@ const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList,
     //   console.log("error", error.message);
     // }
     const containerHeight = document.getElementById(id)?.getBoundingClientRect();
-    console.log("height", containerHeight);
+    console.debug("height", containerHeight);
     setDropdownHeight(containerHeight?.top);
-    console.log("height", dropdownHeight);
+    console.debug("height", dropdownHeight);
   };
 
   return (

@@ -135,7 +135,7 @@ export const updateGroup = async(options:UpdateGroupType) => {
 
 
 export const rearrangeMembers = (currentChat,connectedUser) => {
-  console.log(currentChat)
+  console.info(currentChat)
   if(currentChat){
     currentChat?.groupInformation?.members.sort(x => (x?.isAdmin) ? -1 : 1);
     currentChat?.groupInformation?.members.some(

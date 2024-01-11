@@ -143,7 +143,7 @@ function NotificationSettings() {
           };
         }
         else if (setting.type === 2) {
-          console.log(
+          console.info(
             {
               type: setting.type,
             description: setting.description,
@@ -168,7 +168,7 @@ function NotificationSettings() {
             },
           };
         } else if (setting.type === 3) {
-          console.log(
+          console.info(
             {
               type: setting.type,
             description: setting.description,
@@ -194,7 +194,7 @@ function NotificationSettings() {
           };
         }
       });
-      console.log(settingData);
+      console.info(settingData);
       await userPushSDKInstance.channel.setting(settingData);
 
       dispatch(updateChannelSetting({ channelAddress, settings }));
@@ -241,7 +241,7 @@ function NotificationSettings() {
             />
           ),
         });
-        console.log('Error --> %o', err);
+        console.error('Error --> %o', err);
       }
     }
   };
