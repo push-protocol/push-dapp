@@ -11,10 +11,14 @@ import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/S
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { AppContext } from 'contexts/AppContext';
 import { useAccount } from 'hooks';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import Info from 'segments/Info';
 import { H2, Image, Item, Section, Span } from '../../primaries/SharedStyling';
+import SnapFAQModal from 'components/MetamaskSnap/SnapFAQModal';
+import SnapKnowledgeModal from 'components/MetamaskSnap/SnapKnowledgeModal';
 
 // Internal Configs
+import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import ActiveIcon from 'assets/PushSnaps/ActiveIcon.svg';
 import BellRinging from 'assets/PushSnaps/BellRinging.svg';
 import GasPump from 'assets/PushSnaps/GasPump.svg';
@@ -23,12 +27,12 @@ import NotificationLogo from 'assets/PushSnaps/Notification.svg';
 import PushMetamaskLogo from 'assets/PushSnaps/PushMetamaskLogo.svg';
 import SnapExample from 'assets/PushSnaps/SnapExample.svg';
 import InfoLogo from 'assets/PushSnaps/spam-icon.svg';
-import GLOBALS, { device, globalsMargin } from 'config/Globals';
-import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import AboutSnapModal from './AboutSnapModal';
 
 
-const SnapModule = () => {
+const SnapModule = ({
+  route
+}) => {
   const [loading, setLoading] = useState(false);
   const [walletConnected, setWalletConnected] = useState(false);
   const [snapInstalled, setSnapInstalled] = useState(false);
@@ -138,6 +142,18 @@ const SnapModule = () => {
     ModalComponent: AboutPushSnapModalComponent,
   } = useModalBlur();
 
+  const {
+    isModalOpen: isSnapFAQModalOpen,
+    showModal: showSnapFAQModal,
+    ModalComponent: PushSnapFAQModalComponent,
+  } = useModalBlur();
+
+  const {
+    isModalOpen: isSnapKnowledgeModalOpen,
+    showModal: showSnapKnowledgeModal,
+    ModalComponent: SnapKnowledgeModalComponent,
+  } = useModalBlur();
+
   const handleSettingsClick = () => {
     setSnapState(3);
     showMetamaskPushSnap();
@@ -145,171 +161,209 @@ const SnapModule = () => {
 
   const theme = useTheme();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (route == 'faq') {
+      showSnapFAQModal();
+    }
+
+    if(route == 'knowledge'){
+      showSnapKnowledgeModal();
+    }
+
+  }, [route])
+
   return (
-    <Container>
-      <AboutPushSnapModalComponent
-        InnerComponent={AboutSnapModal}
-        modalPadding="0px"
-        // InnerComponentProps={}
-        modalPosition={MODAL_POSITION.ON_PARENT}
-      />
+    <>
+      <Container>
+        <AboutPushSnapModalComponent
+          InnerComponent={AboutSnapModal}
+          modalPadding="0px"
+          // InnerComponentProps={}
+          modalPosition={MODAL_POSITION.ON_PARENT}
+        />
 
-      <Image
-        src={PushMetamaskLogo}
-        width="152px"
-        height="55px"
-      />
+        <PushSnapFAQModalComponent
+          InnerComponent={SnapFAQModal}
+          modalPadding="0px"
+          // InnerComponentProps={}
+          modalPosition={MODAL_POSITION.ON_PARENT}
+        />
 
-      <SubContainer>
-        <ItemVV2>
-          <Image
-            src={SnapExample}
-            width="276px"
-            height="202px"
-          />
-        </ItemVV2>
+        <SnapKnowledgeModalComponent
+          InnerComponent={SnapKnowledgeModal}
+          modalPadding="0px"
+          // InnerComponentProps={}
+          modalPosition={MODAL_POSITION.ON_PARENT}
+        />
 
-        <ItemVV2 gap="24px">
-          <ItemVV2 gap="12px">
-            <ItemVV2>
-              <H2V2
-                fontSize="34px"
-                fontWeight="500"
-                color={theme.snapPrimaryText}
-                letterSpacing="-1.02px"
-              >
-                Push Snap
-              </H2V2>
-              <SpanV2
-                fontSize="12px"
-                fontWeight="400"
-                color={theme.modalIconColor}
-              >
-                powered by MetaMask
-              </SpanV2>
-            </ItemVV2>
+        <Image
+          src={PushMetamaskLogo}
+          width="152px"
+          height="55px"
+        />
 
-            <ItemVV2>
-              {walletConnected || addedAddress ? (
-                <>
-                  <ItemVV2
-                    gap="24px"
-                    margin="12px 0"
-                  >
-                    <ItemHV2 alignItems="baseline">
-                      <Image
-                        src={BellRinging}
-                        height="32px"
-                        width="auto"
-                      />
-                      <ItemVV2 margin="0 0 0 16px">
-                        <PrimaryText>Subscribe for Notifications</PrimaryText>
-                        <SecondaryText>Subscribe to protocols that you want notification from. You can see all {" "}
-                          <ChannelSpan onClick={() => navigate('/channels')}>protocol channels and subscribe to them from here.</ChannelSpan>
-                        </SecondaryText>
-                      </ItemVV2>
-                    </ItemHV2>
-
-                    <ItemHV2 alignItems="baseline">
-                      <Image
-                        src={GasPump}
-                        height="32px"
-                        width="auto"
-                      />
-                      <ItemVV2 margin="0 0 0 16px">
-                        <PrimaryText>Gasless Opt-ins</PrimaryText>
-                        <SecondaryText>Subscribing / Opting-in to a channel is gasless and completely free.</SecondaryText>
-                      </ItemVV2>
-                    </ItemHV2>
-
-                    <ItemHV2 alignItems="baseline">
-                      <Image
-                        src={NotificationLogo}
-                        height="32px"
-                        width="auto"
-                      />
-                      <ItemVV2 margin="0 0 0 16px">
-                        <PrimaryText>Notifications directly in MetaMask</PrimaryText>
-                        <SecondaryText>Once subscribed, the channels can send you notifications directly in your MetaMask.</SecondaryText>
-                      </ItemVV2>
-                    </ItemHV2>
-                  </ItemVV2>
-                </>
-              ) : (
-                <SpanV2
-                  fontSize="14px"
-                  fontWeight="400"
-                  color={theme.snapSecondaryText}
-                >
-                  You’re about to install Push Snap which allows you to receive notifications from Push directly on
-                  MetaMask!
-                </SpanV2>
-              )}
-            </ItemVV2>
+        <SubContainer>
+          <ItemVV2>
+            <Image
+              src={SnapExample}
+              width="276px"
+              height="202px"
+            />
           </ItemVV2>
 
-          {walletConnected || addedAddress ? (
-            <ItemHV2 gap="8px">
-              <Image
-                src={ActiveIcon}
-                width="10px"
-                height="10px"
-              />
-              <SpanV2
-                color="#657795"
-                fontSize="14px"
-                fontWeight="400"
-              >
-                Connected to Push Snap
-              </SpanV2>
-            </ItemHV2>
-          ) : (
-            <ItemVV2>
-              {loading ? (
-                <LoaderSpinner
-                  type={LOADER_TYPE.SEAMLESS}
-                  spinnerSize={44}
-                />
-              ) : (
-                <ConnectButton onClick={() => connectToMetaMask()}>
-                  {!snapInstalled ? 'Connect Snap' : 'Connect Using MetaMask '}
-                </ConnectButton>
-              )}
+          <ItemVV2 gap="24px">
+            <ItemVV2 gap="12px">
+              <ItemVV2>
+                <H2V2
+                  fontSize="34px"
+                  fontWeight="500"
+                  color={theme.snapPrimaryText}
+                  letterSpacing="-1.02px"
+                >
+                  Push Snap
+                </H2V2>
+                <SpanV2
+                  fontSize="12px"
+                  fontWeight="400"
+                  color={theme.modalIconColor}
+                >
+                  powered by MetaMask
+                </SpanV2>
+              </ItemVV2>
+
+              <ItemVV2>
+                {walletConnected || addedAddress ? (
+                  <>
+                    <ItemVV2
+                      gap="24px"
+                      margin="12px 0"
+                    >
+                      <ItemHV2 alignItems="baseline">
+                        <Image
+                          src={BellRinging}
+                          height="32px"
+                          width="auto"
+                        />
+                        <ItemVV2 margin="0 0 0 16px">
+                          <PrimaryText>Subscribe for Notifications</PrimaryText>
+                          <SecondaryText>Subscribe to protocols that you want notification from. You can see all {" "}
+                            <ChannelSpan onClick={() => navigate('/channels')}>protocol channels and subscribe to them from here.</ChannelSpan>
+                          </SecondaryText>
+                        </ItemVV2>
+                      </ItemHV2>
+
+                      <ItemHV2 alignItems="baseline">
+                        <Image
+                          src={GasPump}
+                          height="32px"
+                          width="auto"
+                        />
+                        <ItemVV2 margin="0 0 0 16px">
+                          <PrimaryText>Gasless Opt-ins</PrimaryText>
+                          <SecondaryText>Subscribing / Opting-in to a channel is gasless and completely free.</SecondaryText>
+                        </ItemVV2>
+                      </ItemHV2>
+
+                      <ItemHV2 alignItems="baseline">
+                        <Image
+                          src={NotificationLogo}
+                          height="32px"
+                          width="auto"
+                        />
+                        <ItemVV2 margin="0 0 0 16px">
+                          <PrimaryText>Notifications directly in MetaMask</PrimaryText>
+                          <SecondaryText>Once subscribed, the channels can send you notifications directly in your MetaMask.</SecondaryText>
+                        </ItemVV2>
+                      </ItemHV2>
+                    </ItemVV2>
+                  </>
+                ) : (
+                  <SpanV2
+                    fontSize="14px"
+                    fontWeight="400"
+                    color={theme.snapSecondaryText}
+                  >
+                    You’re about to install Push Snap which allows you to receive notifications from Push directly on
+                    MetaMask!
+                  </SpanV2>
+                )}
+              </ItemVV2>
             </ItemVV2>
-          )}
 
-          {walletConnected || addedAddress ? (
-            <ButtonContainer gap="12px" >
-              <SettingsButton onClick={handleSettingsClick}>
-                <Gear
-                  height="20px"
-                  width="20px"
+            {walletConnected || addedAddress ? (
+              <ItemHV2 gap="8px">
+                <Image
+                  src={ActiveIcon}
+                  width="10px"
+                  height="10px"
                 />
-                Settings
-              </SettingsButton>
-            </ButtonContainer>
-          ) : (
-            <InfoDiv
-              gap="7px"
-              onClick={showPushSnapAbout}
-            >
-              <Image
-                src={InfoLogo}
-                width={16}
-              />
-              <SpanV2
-                color={theme.modalIconColor}
-                fontSize="14px"
-                fontWeight="400"
-              >
-                About this Snap
-              </SpanV2>
-            </InfoDiv>
-          )}
+                <SpanV2
+                  color="#657795"
+                  fontSize="14px"
+                  fontWeight="400"
+                >
+                  Connected to Push Snap
+                </SpanV2>
+              </ItemHV2>
+            ) : (
+              <ItemVV2>
+                {loading ? (
+                  <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={44}
+                  />
+                ) : (
+                  <ConnectButton onClick={() => connectToMetaMask()}>
+                    {!snapInstalled ? 'Connect Snap' : 'Connect Using MetaMask '}
+                  </ConnectButton>
+                )}
+              </ItemVV2>
+            )}
 
+            {walletConnected || addedAddress ? (
+              <ButtonContainer gap="12px" >
+                <SettingsButton onClick={handleSettingsClick}>
+                  <Gear
+                    height="20px"
+                    width="20px"
+                  />
+                  Settings
+                </SettingsButton>
+              </ButtonContainer>
+            ) : (
+              <InfoDiv
+                gap="7px"
+                onClick={showPushSnapAbout}
+              >
+                <Image
+                  src={InfoLogo}
+                  width={16}
+                />
+                <SpanV2
+                  color={theme.modalIconColor}
+                  fontSize="14px"
+                  fontWeight="400"
+                >
+                  About this Snap
+                </SpanV2>
+              </InfoDiv>
+            )}
+
+
+
+          </ItemVV2>
+        </SubContainer>
+        <ItemVV2 flex='none'>
+          <SpanV2 fontSize='14px' fontWeight='400' color='#657795'>Have a question? Check out our {" "}
+            <SpanV2 fontWeight='500' cursor='pointer' onClick={()=>navigate("/snap/faq")}>FAQs </SpanV2>
+            or {" "}
+            <SpanV2 fontWeight='500' cursor='pointer' onClick={()=>navigate("/snap/knowledge")}>Knowledgebase.</SpanV2>
+          </SpanV2>
         </ItemVV2>
-      </SubContainer>
-    </Container>
+      </Container>
+
+    </>
   );
 };
 
