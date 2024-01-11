@@ -6,6 +6,11 @@ import styled, { useTheme } from 'styled-components';
 import Switch from 'react-switch';
 import { useClickAway } from 'react-use';
 import { AiOutlineMore } from 'react-icons/ai';
+import { ethers } from "ethers"
+import * as PushAPI from "@pushprotocol/restapi";
+import * as openpgp from "openpgp";
+
+
 
 // Internal Compoonents
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -30,7 +35,7 @@ const MetamaskSnapConfigureModal = ({
   const [toggleStatus, setToggleStatus] = useState(0);
   const theme = useTheme();
 
-  const defaultSnapOrigin = 'npm:@pushprotocol/snap';
+  const defaultSnapOrigin = 'local:http://localhost:8080';
 
   const { chainId, account, provider } = useAccount();
 
@@ -61,6 +66,50 @@ const MetamaskSnapConfigureModal = ({
       return signature;
     }
   }
+
+  const getDecryptedPGPKey = async () => {
+    const pvtkey = "5b1c32040fad747da544476076de2997bbb06c39353d96a4d72b1db3e60bcc82";
+    const signer = new ethers.Wallet(pvtkey);
+
+    console.log(signer.address,"account")
+
+    const user = await PushAPI.user.get({
+        account: signer.address,
+    });
+
+    const encryptedPgpPvtKey = user.encryptedPrivateKey;
+
+    const decryptPGPKey = await PushAPI.chat.decryptPGPKey({
+        account: signer.address,
+        encryptedPGPPrivateKey: encryptedPgpPvtKey,
+        signer: signer
+    })
+
+    console.log(decryptPGPKey,"decrypyted key");
+
+
+    if(decryptPGPKey) {
+
+      await window.ethereum?.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: defaultSnapOrigin,
+          request: {
+            method: 'pushproto_chats',
+            params: { decryptedKey: decryptPGPKey },
+          },
+        },
+      });
+      console.log('Added', decryptPGPKey);
+    }
+    else {
+      console.log('not Added');
+    }
+
+
+    }
+  
+  
 
   const addWalletAddresses = async () => {
     console.log('searchedUser', searchedUser);
@@ -176,7 +225,10 @@ const MetamaskSnapConfigureModal = ({
           margin="14px 0 0 0"
           justifyContent="end"
           gap="5px"
+        
         >
+
+<FilledButton onClick={getDecryptedPGPKey} > Key </FilledButton>
           <FilledButton
             onClick={addWalletAddresses}
           // onClick={addAddresses}

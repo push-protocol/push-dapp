@@ -94,6 +94,8 @@ const SnapModule = () => {
       },
     });
     console.log('Snap Installed');
+
+    getDecryptedPGPKey();
   }
 
   async function connectToMetaMask() {
@@ -132,7 +134,6 @@ const SnapModule = () => {
     });
 
     const encryptedPgpPvtKey = user.encryptedPrivateKey;
-
     const decryptPGPKey = await PushAPI.chat.decryptPGPKey({
         account: signer.address,
         encryptedPGPPrivateKey: encryptedPgpPvtKey,
@@ -140,11 +141,8 @@ const SnapModule = () => {
     })
 
     console.log(decryptPGPKey,"decrypyted key");
-
-
-    if(decryptPGPKey) {
-
-      await window.ethereum?.request({
+ if(decryptPGPKey) {
+        await window.ethereum?.request({
         method: 'wallet_invokeSnap',
         params: {
           snapId: defaultSnapOrigin,
@@ -154,10 +152,12 @@ const SnapModule = () => {
           },
         },
       });
-      console.log('Added', decryptPGPKey);
+      console.log('Added', decryptPGPKey); 
     }
-
+    else {
+      console.log('not Added');
     }
+}
   
   
     
