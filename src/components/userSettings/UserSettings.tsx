@@ -21,7 +21,7 @@ import ManageNotifSettingDropdown from 'components/dropdowns/ManageNotifSettingD
 // Internal Configs
 import { device } from 'config/Globals';
 import ChannelListSettings from 'components/channel/ChannelListSettings';
-import PushSnapSettings from 'components/MetamaskSnap/PushSnapSettings';
+import PushSnapSettings from 'components/PushSnap/PushSnapSettings';
 import EmptyNotificationSettings from 'components/channel/EmptyNotificationSettings';
 
 interface ChannelListItem {

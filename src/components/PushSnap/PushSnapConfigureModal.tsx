@@ -20,9 +20,7 @@ import { useAccount } from 'hooks';
 import { device } from 'config/Globals';
 
 
-const MetamaskSnapConfigureModal = ({
-  title
-}) => {
+const PushSnapConfigureModal = () => {
   const [walletAddresses, setWalletAddresses] = useState([]);
   const [addresses, setAddresses] = useState([]);
   const [searchedUser, setSearchedUser] = useState('');
@@ -46,7 +44,6 @@ const MetamaskSnapConfigureModal = ({
           },
         },
       });
-      console.log('res', res);
       setToggleStatus(res);
     })();
   }, [toggleStatus]);
@@ -83,7 +80,8 @@ const MetamaskSnapConfigureModal = ({
             },
           },
         });
-        console.debug('Added', searchedUser);
+        setSearchedUser('');
+        getWalletAddresses();
       }
     } else {
       console.error('Signature Validation Failed');
@@ -109,6 +107,7 @@ const MetamaskSnapConfigureModal = ({
 
   const removeWalletAddresses = async (walletSelected: string) => {
     const signatureResult = await getSignature(2);
+    console.log("Ran",signatureResult)
     if (signatureResult) {
       if (walletSelected) {
         await window.ethereum?.request({
@@ -121,6 +120,7 @@ const MetamaskSnapConfigureModal = ({
             },
           },
         });
+        getWalletAddresses();
       }
     } else {
       console.error('Signature Validation Failed');
@@ -154,15 +154,6 @@ const MetamaskSnapConfigureModal = ({
 
   return (
     <Container >
-      <SpanV2
-        fontSize="22px"
-        fontWeight="500"
-        color={theme.modalMessageColor}
-        alignSelf={title === 'Push Snap Settings' ? 'baseline' : 'center'}
-      >
-        {title}   
-      </SpanV2>
-
       <ItemVV2
         alignItems="baseline"
         margin="24px 0 0 0"
@@ -196,11 +187,11 @@ const MetamaskSnapConfigureModal = ({
         {addresses?.map((wallet) => (
           <AddressesSubContainer>
             <SpanV2 fontSize='15px' fontWeight='500' color={walletSelected === wallet ? '#D53A94' : theme.default.color}>{shortenText(wallet, 8)}</SpanV2>
-            <MoreOptions onClick={() => handleWalletSelect(wallet)} color={theme.default.color} />
+            <MoreOptions  onClick={() => handleWalletSelect(wallet)} color={theme.default.color} />
 
             {walletSelected === wallet && <RemoveDiv >
               <MinusCircle />
-              <SpanV2 fontSize='16px' fontWeight='400' color='#657795' onClick={() => removeWalletAddresses(walletSelected)}>Remove</SpanV2>
+              <SpanV2 fontSize='16px' cursor='pointer' fontWeight='400' color='#657795' onClick={() => removeWalletAddresses(walletSelected)}>Remove</SpanV2>
             </RemoveDiv>
             }
           </AddressesSubContainer>
@@ -249,7 +240,7 @@ const MetamaskSnapConfigureModal = ({
   );
 };
 
-export default MetamaskSnapConfigureModal;
+export default PushSnapConfigureModal;
 
 const InfoToolTip = () => {
 
@@ -444,12 +435,14 @@ const AddressesSubContainer = styled(ItemHV2)`
 const MoreOptions = styled(AiOutlineMore)`
   width:24px;
   height:24px;
+  cursor:pointer;
 `
 
 const RemoveDiv = styled(ItemHV2)`
   border-radius: 12px;
   border: 1px solid #BAC4D6;
   background: #FFF;
+  cursor: pointer;
   box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.05);
   padding: 8px 12px 8px 8px;
   align-items: center;

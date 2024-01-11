@@ -3,18 +3,20 @@ import React, { useEffect, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
+import { useLocation } from 'react-router-dom';
 
 // Internal Compoonents
+import InstallPushSnapModal from 'components/PushSnap/InstallPushSnapModal';
+import PushSnapConfigureModal from 'components/PushSnap/PushSnapConfigureModal';
+import SnapInformationModal from 'components/PushSnap/SnapInformationModal';
+import { Button } from 'components/SharedStyling';
 import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
-import InstallMetamaskSnapModal from 'components/MetamaskSnap/InstallMetamaskSnapModal';
-import MetamaskSnapConfigureModal from 'components/MetamaskSnap/MetamaskSnapConfigureModal';
-import SnapInformationModal from 'components/MetamaskSnap/SnapInformationModal';
-import { Button } from 'components/SharedStyling';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import GLOBALS, { device, globalsMargin } from "config/Globals";
+
+// Internal Configs
 import { AppContext } from 'contexts/AppContext';
-import { useLocation } from 'react-router-dom';
+
 
 const MetamaskPushSnapModal = ({
     onClose,
@@ -35,20 +37,22 @@ const MetamaskPushSnapModal = ({
         var uri = window.location.toString();
 
         if (uri.indexOf("#") > 0) {
-            var clean_uri = uri.substring(0,uri.indexOf("#"));
+            var clean_uri = uri.substring(0, uri.indexOf("#"));
 
-            window.history.replaceState({},document.title, clean_uri);
+            window.history.replaceState({}, document.title, clean_uri);
         }
 
         setSnapState(1);
         onClose();
     }
 
+    const isSnapRoute = location?.pathname === '/snap';
+
     return (
         <Container padding="20px 15px" >
             <ItemHV2 justifyContent='space-between'>
 
-                {SnapState !== 1 && <Back width='24px' cursor='pointer' onClick={() => setSnapState(1)} />}
+                {(SnapState !== 1 && !isSnapRoute) && <Back width='24px' cursor='pointer' onClick={() => setSnapState(1)} />}
 
                 {SnapState === 1 && <SpanV2
                     fontWeight="500"
@@ -58,7 +62,16 @@ const MetamaskPushSnapModal = ({
                 >
                     Receive Notifications
                 </SpanV2>}
-                {closeEnabled && 
+                {SnapState === 3 && <SpanV2
+                    fontWeight="500"
+                    fontSize="22px"
+                    color={theme.modalMessageColor}
+                    flex="1"
+                >
+                    Settings
+                </SpanV2>}
+
+                {closeEnabled &&
                     <Close
                         onClick={handleCloseModal}
                         style={{ cursor: 'pointer' }}
@@ -66,9 +79,9 @@ const MetamaskPushSnapModal = ({
                 }
             </ItemHV2>
 
-            {SnapState == 1 && <InstallMetamaskSnapModal setSnapState={setSnapState} setConfigure={setConfigure} configure={configure} />}
-            {SnapState == 2 && <SnapInformationModal />}
-            {SnapState == 3 && <MetamaskSnapConfigureModal title={'Settings'}/>}
+            {SnapState == 1 && <InstallPushSnapModal setSnapState={setSnapState} setConfigure={setConfigure} configure={configure} />}
+            {SnapState == 2 && <SnapInformationModal handleCloseModal={handleCloseModal} />}
+            {SnapState == 3 && <PushSnapConfigureModal/>}
 
 
         </Container>

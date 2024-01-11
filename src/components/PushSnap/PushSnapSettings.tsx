@@ -8,7 +8,7 @@ import { device } from 'config/Globals';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import InfoLogo from 'assets/PushSnaps/spam-icon.svg';
 import { useAccount } from 'hooks';
-import MetamaskSnapConfigureModal from './MetamaskSnapConfigureModal';
+import PushSnapConfigureModal from './PushSnapConfigureModal';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import AboutSnapModal from 'modules/snap/AboutSnapModal';
 
@@ -182,7 +182,18 @@ const PushSnapSettings = () => {
     return (
         <>
             {!snapInstalled ? <InstallSnap /> : (
-                <MetamaskSnapConfigureModal title={'Push Snap Settings'}/>
+                <>
+                <SpanV2
+                    fontWeight="500"
+                    fontSize="22px"
+                    color={theme.modalMessageColor}
+                    flex="1"
+                    padding='0px 0px 0px 9px'
+                >
+                    Push Snap Settings
+                </SpanV2>
+                <PushSnapConfigureModal/>
+                </>
             )}
 
         </>

@@ -7,7 +7,6 @@ import styled from 'styled-components';
 
 // Internal Components
 import { SectionV2 } from 'components/reusables/SharedStylingV2';
-import ReceiveNotifsModule from "modules/receiveNotifs/ReceiveNotifsModule";
 
 // Internal Configs
 import GLOBALS from "config/Globals";
