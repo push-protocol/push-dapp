@@ -71,6 +71,7 @@ const NavigationList = {
       isRoute: true,
       hasMenuLogic: true,
       hidden: false,
+      allowReadOnly: false,
       headerTag: {
         title: 'Chat',
         light: {
@@ -95,6 +96,7 @@ const NavigationList = {
       isRoute: true,
       hasMenuLogic: true,
       hidden: false,
+      allowReadOnly: false,
       headerTag: {
         title: 'Spaces',
         light: {

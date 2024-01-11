@@ -1,15 +1,12 @@
 // React + Web3 Essentials
-import { ethers } from 'ethers';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
-import { PushAPI } from '@pushprotocol/restapi';
 import * as dotenv from 'dotenv';
 import ReactGA from 'react-ga';
 import Joyride, { CallBackProps } from 'react-joyride';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import styled, { ThemeProvider } from 'styled-components';
 
 import { createGlobalStyle } from 'styled-components';
@@ -18,14 +15,13 @@ import { createGlobalStyle } from 'styled-components';
 import InitState from 'components/InitState';
 import AppContextProvider from 'contexts/AppContext';
 import NavigationContextProvider from 'contexts/NavigationContext';
-import { EnvHelper } from 'helpers/UtilityHelper';
 import { useAccount, useInactiveListener, useSDKSocket } from 'hooks';
 import { resetAdminSlice } from 'redux/slices/adminSlice';
 import { resetChannelCreationSlice } from 'redux/slices/channelCreationSlice';
 import { resetNotificationsSlice } from 'redux/slices/notificationSlice';
 import { resetCanSendSlice } from 'redux/slices/sendNotificationSlice';
 import { resetSpamSlice } from 'redux/slices/spamSlice';
-import { resetUserSlice, setUserPushSDKInstance } from 'redux/slices/userSlice';
+import { resetUserSlice } from 'redux/slices/userSlice';
 import UserJourneySteps from 'segments/userJourneySteps';
 import Header from 'structure/Header';
 import MasterInterfacePage from 'structure/MasterInterfacePage';
@@ -33,7 +29,6 @@ import Navigation from 'structure/Navigation';
 import AppLogin from './AppLogin';
 import { SectionV2 } from './components/reusables/SharedStylingV2';
 import { ErrorContext } from './contexts/ErrorContext';
-import { A, B, C, H2, Image, Item, ItemH, P, Span } from './primaries/SharedStyling';
 import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJourneySlice';
 
 // Internal Configs
@@ -54,7 +49,7 @@ import {
 import { useUpdateTheme } from '@web3-onboard/react';
 import { darkTheme, lightTheme } from 'config/spaceTheme';
 import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
-import SpaceContextProvider, { SpaceContext } from 'contexts/SpaceContext';
+import SpaceContextProvider from 'contexts/SpaceContext';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 
 dotenv.config();
@@ -154,25 +149,6 @@ export default function App() {
     dispatch(resetUserSlice());
   }, [account]);
 
-  useEffect(() => {
-    const librarySigner = provider?.getSigner(account);
-    if (!account || !librarySigner || !appConfig?.appEnv || userPushSDKInstance) return;
-
-    const initializePushSDK = async () => {
-      try {
-        const userInstance = await PushAPI.initialize(librarySigner, {
-          env: appConfig.appEnv, // defaults to staging
-          account: account
-        });
-
-        dispatch(setUserPushSDKInstance(userInstance));
-      } catch (error) {
-        // Handle initialization error
-      }
-    };
-
-    initializePushSDK();
-  }, [account, provider]);
 
   // console.log(isActive, chainId, account);
   // handle logic to reconnect in response to certain events from the provider
@@ -274,22 +250,24 @@ export default function App() {
   const location = useLocation();
   const isSnapPage = location?.pathname.includes('/snap');
 
+
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
-      {(!isActive || !allowedChain) && (
-        <SectionV2 minHeight="100vh">
-          <AppLogin toggleDarkMode={toggleDarkMode} />
-        </SectionV2>
-      )}
+      <AppContextProvider>
+        {(!isActive || !allowedChain) && (
+          <SectionV2 minHeight="100vh">
+            <AppLogin toggleDarkMode={toggleDarkMode} />
+          </SectionV2>
+        )}
 
-      {isActive && !authError && allowedChain && (
-        <>
-          <GlobalStyle />
-          <InitState />
-          <NavigationContextProvider>
-            <SpaceContextProvider>
-              <SpaceComponentContextProvider spaceUI={spaceUI}>
-                <AppContextProvider>
+
+        {isActive && !authError && allowedChain && (
+          <>
+            <GlobalStyle />
+            <InitState />
+            <NavigationContextProvider>
+              <SpaceContextProvider>
+                <SpaceComponentContextProvider spaceUI={spaceUI}>
                   <Joyride
                     run={run}
                     steps={steps}
@@ -341,12 +319,13 @@ export default function App() {
                       </SpacesUIProvider>
                     </ContentContainer>
                   </ParentContainer>
-                </AppContextProvider>
-              </SpaceComponentContextProvider>
-            </SpaceContextProvider>
-          </NavigationContextProvider>
-        </>
-      )}
+                </SpaceComponentContextProvider>
+              </SpaceContextProvider>
+            </NavigationContextProvider>
+          </>
+        )}
+      
+      </AppContextProvider>
     </ThemeProvider>
   );
 }

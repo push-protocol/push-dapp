@@ -10,6 +10,7 @@ import styled from 'styled-components';
 
 // Internal Components
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import ConnectedWalletRoute from '../components/ConnectedWalletRoute';
 import { Anchor, Item } from '../primaries/SharedStyling';
 const AirdropPage = lazy(() => import('pages/AirdropPage'));
 const ChannelDashboardPage = lazy(() => import('pages/ChannelDashboardPage'));
@@ -98,31 +99,15 @@ function MasterInterfacePage() {
           }
         >
           <Routes>
-            <Route
-              path={APP_PATHS.Inbox}
-              element={<InboxPage />}
-            />
-            <Route
-              path={APP_PATHS.Spam}
-              element={<InboxPage />}
-            />
-            <Route
-              path={`${APP_PATHS.Chat}/:chatid`}
-              element={<ChatPage />}
-            />
-            <Route
-              path={APP_PATHS.Chat}
-              element={<ChatPage />}
-            />
-            <Route
-              path={`${APP_PATHS.Spaces}/:spaceid`}
-              element={<SpacePage />}
-            />
-            <Route
-              path={APP_PATHS.Spaces}
-              element={<SpacePage />}
-            />
-            {/* <Route path="chat-new" element={<NewChatPage />} /> */}
+            <Route path={APP_PATHS.Inbox} element={<InboxPage />} />
+            <Route path={APP_PATHS.Spam} element={<InboxPage />} />
+            <Route element={<ConnectedWalletRoute />}>
+              <Route path={`${APP_PATHS.Chat}/:chatid`} element={<ChatPage />} />
+              <Route path={APP_PATHS.Chat} element={<ChatPage />} />
+              <Route path={`${APP_PATHS.Spaces}/:spaceid`} element={<SpacePage />} />
+              <Route path={APP_PATHS.Spaces} element={<SpacePage />} />
+              {/* <Route path="chat-new" element={<NewChatPage />} /> */}
+            </Route>
 
             <Route
               path={APP_PATHS.Channels}

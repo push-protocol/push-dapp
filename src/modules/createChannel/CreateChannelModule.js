@@ -7,6 +7,7 @@ import 'react-dropdown/style.css';
 import 'react-dropzone-uploader/dist/styles.css';
 import { MdCallMade, MdError } from 'react-icons/md';
 import styled, { css, ThemeProvider, useTheme } from 'styled-components';
+import { useSelector } from 'react-redux';
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -27,6 +28,8 @@ import { useAccount } from 'hooks';
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
 import { handleLogoSizeLimitation, toDataURL } from 'helpers/LogoSizeHelper';
+import { AppContext } from 'contexts/AppContext';
+
 
 // Constants
 const minStakeFees = 50;
@@ -36,6 +39,11 @@ const CORE_CHAIN_ID = appConfig.coreContractChain;
 // Create Header
 function CreateChannelModule() {
   const { account, provider, chainId } = useAccount();
+  const { userPushSDKInstance } = useSelector((state) => {
+    return state.user;
+  });
+  const {handleConnectWallet} = React.useContext(AppContext);
+
   const theme = useTheme();
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const [processing, setProcessing] = React.useState(0);
@@ -64,6 +72,8 @@ function CreateChannelModule() {
   const [progressInfo, setProgressInfo] = React.useState('');
   const [logoInfo, setLogoInfo] = React.useState('');
   const [errorInfo, setErrorInfo] = React.useState({name: '',description: '', address: '', url: ''});
+
+ 
 
   //image upload states
   const [view, setView] = useState(false);
@@ -229,6 +239,11 @@ function CreateChannelModule() {
     // skip this for now
     
     // e.preventDefault();
+
+    if (!userPushSDKInstance.signer) {
+      handleConnectWallet();
+      return;
+    }
 
     if (!isAllFilledAndValid()) {
       channelToast.showMessageToast({

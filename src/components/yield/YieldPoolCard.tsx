@@ -1,10 +1,11 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
 import { MdCheckCircle, MdError, MdWarning } from 'react-icons/md';
+import { useSelector } from 'react-redux';
 
 // Internal Compoonents
 import useToast from 'hooks/useToast';
@@ -16,6 +17,7 @@ import { Button, Span } from 'primaries/SharedStyling';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';
 import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, Skeleton, SkeletonLine, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { AppContext } from 'contexts/AppContext';
 
 // Internal Configs
 import { abis, addresses } from 'config';
@@ -41,6 +43,11 @@ const YieldPoolCard = ({
     const [unstakeErrorMessage, setUnstakeErrorMessage] = useState(null);
     const [withdrawErrorMessage, setWithdrawErrorMessage] = useState(null);
 
+    const { userPushSDKInstance } = useSelector((state: any) => {
+        return state.user;
+    });
+    const { handleConnectWallet } = useContext(AppContext);
+
     const [filled, setFilled] = useState(0);
 
     const yieldFarmToast = useToast();
@@ -48,6 +55,11 @@ const YieldPoolCard = ({
     const theme = useTheme();
 
     const massClaimRewardsTokensAll = async () => {
+        if(!userPushSDKInstance.signer) {
+            handleConnectWallet();
+            return;
+        }
+
         if (txInProgressClaimRewards) {
             return;
         }
@@ -126,6 +138,11 @@ const YieldPoolCard = ({
     };
 
     const withdrawTokens = async () => {
+        if(!userPushSDKInstance.signer) {
+            handleConnectWallet();
+            return;
+        }
+
         if (txInProgressWithdraw) {
             return;
         }
@@ -197,6 +214,11 @@ const YieldPoolCard = ({
     };
 
     const migrateToNewPool = async () => {
+        if(!userPushSDKInstance.signer) {
+            handleConnectWallet();
+            return;
+        }
+
         if (txInProgressMigrate) {
             return;
         }
@@ -421,6 +443,11 @@ const YieldPoolCard = ({
 
 
     const depositLpToken = async (tx, withdrawAmount, totalTxnSteps) => {
+        if(!userPushSDKInstance.signer) {
+            handleConnectWallet();
+            return;
+        }
+
         var signer = provider.getSigner(account);
         var stakingV2 = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
 
@@ -471,6 +498,10 @@ const YieldPoolCard = ({
     }
 
     const depositPushToken = async (tx, withdrawAmount, totalTxnSteps) => {
+        if(!userPushSDKInstance.signer) {
+            handleConnectWallet();
+            return;
+        }
 
         var signer = provider.getSigner(account);
         let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);

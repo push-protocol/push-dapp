@@ -10,7 +10,6 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
 // Internal Components
-import { appConfig } from 'config';
 import App from "./App";
 import ChatUserContextProvider from './contexts/ChatUserContext';
 import ErrorContextProvider from './contexts/ErrorContext';
@@ -18,6 +17,7 @@ import { VideoCallContextProvider } from './contexts/VideoCallContext';
 import "./index.css";
 import store from "./redux/store";
 import * as serviceWorker from "./serviceWorker";
+import GlobalContextProvider from './contexts/GlobalContext';
 
 // Internal Configs
 import * as dotenv from "dotenv";
@@ -50,15 +50,17 @@ ReactDOM.render(
   <BrowserRouter basename={process.env.PUBLIC_URL}>
     <Provider store={store}>
       <ApolloProvider client={client}>
-        <Web3OnboardProvider web3Onboard={web3Onboard}>
-          <ErrorContextProvider>
-            <ChatUserContextProvider>
-              <VideoCallContextProvider>
-                <App />
-              </VideoCallContextProvider>
-            </ChatUserContextProvider>
-          </ErrorContextProvider>
-        </Web3OnboardProvider>
+        <GlobalContextProvider>
+          <Web3OnboardProvider web3Onboard={web3Onboard}>
+              <ErrorContextProvider>
+                <ChatUserContextProvider>
+                  <VideoCallContextProvider>
+                    <App />
+                  </VideoCallContextProvider>
+                </ChatUserContextProvider>
+              </ErrorContextProvider>
+          </Web3OnboardProvider>
+        </GlobalContextProvider>
       </ApolloProvider>
     </Provider>
   </BrowserRouter>,
