@@ -7,12 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { AppContext } from 'contexts/AppContext';
-import { useAccount } from 'hooks';
-import Info from 'segments/Info';
-import { H2, Image, Item, Section, Span } from '../../primaries/SharedStyling';
 import ActiveIcon from 'assets/PushSnaps/ActiveIcon.svg';
 import BellRinging from 'assets/PushSnaps/BellRinging.svg';
 import GasPump from 'assets/PushSnaps/GasPump.svg';
@@ -21,6 +15,12 @@ import NotificationLogo from 'assets/PushSnaps/Notification.svg';
 import PushMetamaskLogo from 'assets/PushSnaps/PushMetamaskLogo.svg';
 import SnapExample from 'assets/PushSnaps/SnapExample.svg';
 import InfoLogo from 'assets/PushSnaps/spam-icon.svg';
+import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { AppContext } from 'contexts/AppContext';
+import { useAccount } from 'hooks';
+import Info from 'segments/Info';
+import { H2, Image, Item, Section, Span } from '../../primaries/SharedStyling';
 import AboutSnapModal from './AboutSnapModal';
 
 // Internal Configs
@@ -263,18 +263,32 @@ const SnapModule = () => {
               </SpanV2>
             </ItemHV2>
           ) : (
-            <ItemVV2>
-              {loading ? (
-                <LoaderSpinner
-                  type={LOADER_TYPE.SEAMLESS}
-                  spinnerSize={44}
-                />
-              ) : (
-                <ConnectButton onClick={() => connectToMetaMask()}>
-                  {!snapInstalled ? 'Connect Snap' : 'Connect Using MetaMask'}
-                </ConnectButton>
-              )}
-            </ItemVV2>
+            <ItemHV2 gap="16px">
+              <ItemVV2>
+                {loading && !snapInstalled ? (
+                  <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={44}
+                  />
+                ) : (
+                  <ConnectButton disabled={!snapInstalled ? false : true} onClick={() => connectToMetaMask()} >
+                    {!snapInstalled ? 'Step 1: Install Snap' : 'Step 1: Completed'}
+                  </ConnectButton>
+                )}
+              </ItemVV2>
+              <ItemVV2>
+                {loading && snapInstalled ? (
+                  <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={44}
+                  />
+                ) : (
+                  <ConnectButton disabled={snapInstalled ? false : true} signOnMM={snapInstalled ? true : false} onClick={() => connectToMetaMask()} >
+                    Step 2: Sign In with Metamask 🦊
+                  </ConnectButton>
+                )}
+              </ItemVV2>
+            </ItemHV2>
           )}
 
           {walletConnected || addedAddress ? (
@@ -381,12 +395,13 @@ const SnapButton = styled(ButtonV2)`
 `;
 
 const ConnectButton = styled(SnapButton)`
-  min-width: 230px;
+  min-width: 280px;
   padding: 16px 24px;
-  background: #d53a94;
-  border: 1px solid #d53a94;
-
-  
+  background: ${props => props.signOnMM ? '#222222' : '#d53a94'};
+  border: ${props => props.signOnMM ? '1px solid #2a2a2a' : '1px solid #d53a94'};
+  opacity: ${props => props.disabled ? '0.5' : '1'};
+  pointer-events: ${props => props.disabled ? 'none' : 'auto'};
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
 `;
 
 const SettingsButton = styled(SnapButton)`
