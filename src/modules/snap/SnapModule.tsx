@@ -38,10 +38,13 @@ const SnapModule = () => {
 
   const { account, provider } = useAccount();
 
+  const theme = useTheme();
+  const navigate = useNavigate();
+
   useEffect(() => {
     getInstalledSnaps();
     getWalletAddresses();
-  }, [account, walletConnected]);
+  }, [account, walletConnected, snapInstalled]);
 
   async function getInstalledSnaps() {
     const installedSnaps = await window.ethereum.request({
@@ -65,10 +68,9 @@ const SnapModule = () => {
       },
     });
 
-    console.log(account);
-    console.log(walletConnected);
     if (result.includes(account)) {
       setAddedAddress(true);
+      setWalletConnected(true);
     } else {
       setAddedAddress(false);
     }
@@ -142,9 +144,6 @@ const SnapModule = () => {
     setSnapState(3);
     showMetamaskPushSnap();
   };
-
-  const theme = useTheme();
-  const navigate = useNavigate();
   return (
     <Container>
       <AboutPushSnapModalComponent
