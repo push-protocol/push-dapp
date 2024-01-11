@@ -16,7 +16,7 @@ function ComingSoonPage(props) {
       <Section style={{ minHeight: '60vh' }}>
         <Content padding="0px 20px 0px">
           <Item align="center">
-            {console.log(props.theme)}
+            {console.info(props.theme)}
             <Heading color="#333" spacing="0.05em" size="4rem" weight={700}>
               Coming soon.
             </Heading>

@@ -69,7 +69,7 @@ const DepositFeeFooter = ({ title, description, onCancel, disabled, onClick, fee
         contractAddress: addresses.epnscore,
         amount: feeRequired - pushApprovalAmount,
       });
-      console.log('response', response);
+      console.debug('response', response);
       if (response) {
         setIsLoading(false);
         setPushApprovalAmount(feeRequired);
@@ -87,7 +87,7 @@ const DepositFeeFooter = ({ title, description, onCancel, disabled, onClick, fee
         });
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       if (err.code == 'ACTION_REJECTED') {
         // EIP-1193 userRejectedRequest error
         depositFeeToast.showMessageToast({
@@ -114,8 +114,8 @@ const DepositFeeFooter = ({ title, description, onCancel, disabled, onClick, fee
           ),
         });
 
-        console.log('Error --> %o', err);
-        console.log({ err });
+        console.error('Error --> %o', err);
+        console.error({ err });
       }
     }
     setIsLoading(false);

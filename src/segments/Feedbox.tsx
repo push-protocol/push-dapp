@@ -126,7 +126,7 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
       const newNotifs = filterNotif
       setAllFilter(newNotifs)
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
       setLoading(false);
       setBgUpdateLoading(false);
@@ -162,7 +162,7 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -204,7 +204,7 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
       setBgUpdateLoading(false);
       setLoading(false);
@@ -238,7 +238,7 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
       })
       setNotif(parsedResponse);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
       setLoadFilter(false);
     }

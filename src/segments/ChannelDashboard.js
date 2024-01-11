@@ -62,7 +62,7 @@ function ChannelDashboard() {
       let k = await EPNSCoreHelper.getPublicKey(recipient, contract);
 
       let publickey = k.toString().substring(2);
-      console.log('This is public Key: ' + publickey);
+      console.debug('This is public Key: ' + publickey);
 
       secretEncrypted = await CryptoHelper.encryptWithECIES(secret, publickey);
       esub = CryptoHelper.encryptWithAES(sub, secret);
@@ -87,9 +87,9 @@ function ChannelDashboard() {
     });
     const ipfs = require('nano-ipfs-store').at('https://ipfs.infura.io:5001');
 
-    console.log('sending payload');
+    console.debug('sending payload');
     const cid = await ipfs.add(input);
-    console.log('IPFS cid:', cid);
+    console.debug('IPFS cid:', cid);
     //console.log(await ipfs.cat(cid));
 
     // Send Transaction
@@ -97,8 +97,8 @@ function ChannelDashboard() {
     var anotherSendTxPromise = contract.sendMessage(recipient, type, cid, 1);
 
     anotherSendTxPromise.then(function (tx) {
-      console.log(tx);
-      console.log('Check: ' + account);
+      console.debug(tx);
+      console.debug('Check: ' + account);
     });
   };
 

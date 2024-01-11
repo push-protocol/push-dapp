@@ -19,10 +19,13 @@ import APP_PATHS from 'config/AppPaths';
 import { AppContext } from 'contexts/AppContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { AppContextType } from 'types/context';
+import { GlobalContext, GlobalContextType } from 'contexts/GlobalContext';
+import { SpanV2 } from 'components/reusables/SharedStylingV2.js';
 
 // Create Header
 const Profile = ({ isDarkMode }) => {
-  const { web3NameList }:AppContextType=useContext(AppContext);
+  const { web3NameList }: AppContextType = useContext(AppContext);
+  const { setReadOnlyWallet, readOnlyWallet, mode }: GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
@@ -43,21 +46,21 @@ const Profile = ({ isDarkMode }) => {
       id: 'walletAddress',
       value: account,
       title: account,
-      function: ()=>{},
+      function: () => { },
       invertedIcon: './copy.svg',
     },
     {
       id: 'userSettings',
       value: '',
       title: 'Settings',
-      function: ()=>{},
+      function: () => { },
       to: APP_PATHS.UserSettings,
       invertedIcon: 'svg/setting.svg'
     },
     {
       id: 'prodDapp',
       value: '',
-      function: ()=>{},
+      function: () => { },
       link: `https://${envUtil.prod}`,
       title: 'Production dapp',
       invertedIcon: './prod.svg',
@@ -66,7 +69,11 @@ const Profile = ({ isDarkMode }) => {
       id: 'disconnect',
       value: '',
       function: async () => {
-        await disconnect(wallet);
+        if (readOnlyWallet) {
+          setReadOnlyWallet();
+        } else {
+          await disconnect(wallet);
+        }
       },
       title: 'Logout',
       invertedIcon: './logout.svg',
@@ -83,8 +90,8 @@ const Profile = ({ isDarkMode }) => {
       {account && account !== '' && !authError && (
         <Body>
           <Wallet
-            bg={theme.profileBG}
-            color={theme.profileText}
+            bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
+            color='#FFF'
             isDarkMode={isDarkMode}
             onClick={() => setShowDropdown(!showDropdown)}
             ref={toggleArrowRef}
@@ -98,8 +105,9 @@ const Profile = ({ isDarkMode }) => {
             ) : web3Name ? (
               <>{web3Name}</>
             ) : (
-              <>{shortenText(account, 6)}</>
+              <>{shortenText(account, 5)}</>
             )}
+            <SpanV2 fontWeight='600' margin='0 0 0 2px'>{mode}</SpanV2>
             <ToggleArrowImg filter={isDarkMode ? theme.snackbarBorderIcon : 'brightness(0) invert(1)'}>
               <img
                 alt="arrow"
@@ -148,7 +156,7 @@ const Body = styled.div`
 `;
 
 const Wallet = styled.div`
-  width: 210px;
+  // width: 210px;
   margin: 0px 10px;
   box-sizing: border-box;
   padding: 4px 16px;

@@ -134,7 +134,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   };
 
   React.useEffect(() => {
-    console.log(filteredNotifications, allFilter);
+    console.debug(filteredNotifications, allFilter);
     setFilteredNotifications(allFilter);
   }, [allFilter]);
 
@@ -175,7 +175,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -228,7 +228,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
       setBgUpdateLoading(false);
       setLoading(false);
@@ -270,7 +270,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
         return { ...elem };
       });
       parsedResponse = await Promise.all(parsedResponsePromise);
-      console.log(parsedResponse);
+      console.debug(parsedResponse);
       let res = parsedResponse.filter((notif) => !isSubscribedFn(notif['channel']));
       dispatch(
         updateTopNotifications({
@@ -280,7 +280,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
       );
       setNotif(res);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
       setBgUpdateLoading(false);
       setLoading(false);
@@ -352,12 +352,12 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     // }
 
     if (!address) return;
-    console.log(address);
+    console.debug(address);
     subscribeToast.showLoaderToast({loaderMessage: "Waiting for Confirmation..."});
-    console.log(provider, account);
+    console.debug(provider, account);
     const _signer = await provider.getSigner(account);
-    console.log(_signer);
-    console.log({
+    console.debug(_signer);
+    console.debug({
       signer: _signer,
       channelAddress: convertAddressToAddrCaip(channelAddress, nameToId[blockchain]), // channel address in CAIP
       userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP

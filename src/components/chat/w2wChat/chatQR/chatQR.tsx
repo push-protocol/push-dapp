@@ -77,7 +77,7 @@ const ChatQR = ({
                 conn.send({ encryptedPgpKey: encryptedKey });
             });
         } catch (error) {
-            console.log("got error", error);
+            console.error("got error", error);
         }
     }, [connectedPeerID.peerID]);
 

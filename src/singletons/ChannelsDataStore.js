@@ -291,11 +291,11 @@ export default class ChannelsDataStore {
             this.state.channelsCount = response;
 
             if (enableLogs)
-              console.log("getChannelsCountAsync() --> %o", response);
+              console.debug("getChannelsCountAsync() --> %o", response);
             resolve(this.state.channelsCount);
           })
           .catch((err) => {
-            console.log("!!!Error, getChannelsCountAsync() --> %o", err);
+            console.error("!!!Error, getChannelsCountAsync() --> %o", err);
             reject(err);
           });
       } else {
@@ -309,14 +309,14 @@ export default class ChannelsDataStore {
       this.getChannelsCountAsync()
         .then((response) => {
           this.state.channelsCount = response + incrementCount;
-          console.log(
+          console.debug(
             "incrementChannelsCountAsync() --> %d",
             this.state.channelsCount
           );
           resolve(this.state.channelsCount);
         })
         .catch((err) => {
-          console.log("!!!Error, incrementChannelsCountAsync() --> %o", err);
+          console.error("!!!Error, incrementChannelsCountAsync() --> %o", err);
           reject(err);
         });
     });
@@ -394,14 +394,14 @@ export default class ChannelsDataStore {
             };
           }
           if (enableLogs)
-            console.log("getChannelDetailsFromAddress() --> %o", response);
+            console.debug("getChannelDetailsFromAddress() --> %o", response);
           if (response === "channel not found" || !response) {
             output = { alias_address: null, isAliasVerified: null };
           }
           resolve(output);
         })
         .catch((err) => {
-          console.log("!!!Error, getChannelDetailsFromAddress() --> %o", err);
+          console.error("!!!Error, getChannelDetailsFromAddress() --> %o", err);
           reject(err);
         });
     });
@@ -433,14 +433,14 @@ export default class ChannelsDataStore {
       for (let i = startIndex; i < stopIndex; i++) {
         channelIDs.push(i);
       }
-      console.log({ channelIDs });
+      console.debug({ channelIDs });
 
       const promises = channelIDs.map(async (channelID) => {
         // Match the cache
         return this.getChannelMetaAsync(channelID)
           .then((response) => response)
           .catch((err) =>
-            console.log(
+            console.error(
               "!!!Error (but skipping), getChannelMetaAsync() --> %o",
               err
             )
@@ -460,7 +460,7 @@ export default class ChannelsDataStore {
   getChannelMetaAsync = async (channelID) => {
     return new Promise(async (resolve, reject) => {
       if (this.state.channelsMeta[channelID]) {
-        console.log(
+        console.debug(
           "getChannelMetaAsync() [CACHED] --> %o",
           this.state.channelsMeta[channelID]
         );
@@ -487,7 +487,7 @@ export default class ChannelsDataStore {
             );
           })
           .catch((err) => {
-            console.log("!!!Error, getChannelMetaAsync() --> %o", err);
+            console.error("!!!Error, getChannelMetaAsync() --> %o", err);
             reject(err);
           });
       }
@@ -500,7 +500,7 @@ export default class ChannelsDataStore {
       if (this.state.channelsMeta[channelAddress]) {
         const channelID = this.state.channelsMeta[channelAddress];
 
-        console.log(
+        console.debug(
           "getChannelMetaViaAddressAsync() [CACHED] --> %o",
           this.state.channelsMeta[channelID]
         );
@@ -517,7 +517,7 @@ export default class ChannelsDataStore {
             resolve(response);
           })
           .catch((err) => {
-            console.log(
+            console.error(
               "!!!Error, getChannelMetaViaAddressAsync() --> %o",
               err
             );
@@ -546,7 +546,7 @@ export default class ChannelsDataStore {
         return subs;
       })
       .catch((err) => {
-        console.log(`getChannelSubscribers => ${err.message}`);
+        console.error(`getChannelSubscribers => ${err.message}`);
         return [];
       });
   };
@@ -570,7 +570,7 @@ export default class ChannelsDataStore {
         return subs.length;
       })
       .catch((err) => {
-        console.log(`getChannelSubscribersCount => ${err.message}`);
+        console.error(`getChannelSubscribersCount => ${err.message}`);
         return [];
       });
   };
@@ -592,14 +592,14 @@ export default class ChannelsDataStore {
             return response;
           });
 
-          console.log(
+          console.debug(
             "getChannelJsonAsync() [Address: %s] --> %o",
             getChannelJson
           );
           this.state.channelsJson[channelAddress] = getChannelJson;
           resolve(getChannelJson);
         } catch (err) {
-          console.log("!!!Error, getChannelJsonAsync() --> %o", err);
+          console.error("!!!Error, getChannelJsonAsync() --> %o", err);
           reject(err);
         }
       }
@@ -621,14 +621,14 @@ export default class ChannelsDataStore {
             return response;
           });
 
-          console.log(
+          console.debug(
             "getChannelJsonStartBlockAsync() [Address: %s] --> %o",
             getChannelJson
           );
           this.state.channelJsonStartBlock[channelAddress] = getChannelJson;
           resolve(getChannelJson);
         } catch (err) {
-          console.log("!!!Error, getChannelJsonStartBlockAsync() --> %o", err);
+          console.error("!!!Error, getChannelJsonStartBlockAsync() --> %o", err);
           reject(err);
         }
       }

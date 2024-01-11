@@ -11,13 +11,16 @@ import { SectionV2 } from 'components/reusables/SharedStylingV2';
 // Internal Configs
 import GLOBALS from "config/Globals";
 import SnapModule from "modules/snap/SnapModule";
+import { useParams } from "react-router-dom";
 
 // Other Information section
 const SnapPage = () => {
+  const {route} = useParams();
+
   // RENDER
   return (
     <Container>
-        <SnapModule/>
+        <SnapModule route={route}/>
     </Container>
   );
 }

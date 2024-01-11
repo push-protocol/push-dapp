@@ -1,8 +1,13 @@
 import { useConnectWallet, useSetChain } from '@web3-onboard/react';
+import { appConfig } from 'config';
+import { GlobalContext } from 'contexts/GlobalContext';
 import { ethers } from 'ethers';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 
 export const useAccount = () => {
+
+  const { readOnlyWallet, setMode, setReadOnlyWallet } = useContext(GlobalContext);
+
   const [{ wallet, connecting }, connect, disconnect, updateBalances, setWalletModules, setPrimaryWallet] =
     useConnectWallet();
 
@@ -13,19 +18,35 @@ export const useAccount = () => {
   };
 
   const provider = useMemo(() => {
-    return wallet ? new ethers.providers.Web3Provider(wallet.provider, 'any') : undefined;
+    return wallet ? new ethers.providers.Web3Provider(wallet.provider, 'any') : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
   }, [wallet]);
 
   const isActive = useMemo(() => {
-    return wallet && wallet.accounts.length > 0 ? true : false
-  }, [wallet]);
+    if (readOnlyWallet) {
+      return true;
+    } else {
+      return wallet && wallet.accounts.length > 0 ? true : false
+    }
+
+  }, [wallet, readOnlyWallet]);
 
   const account = useMemo(() => {
-    return wallet && wallet.accounts.length > 0 ? ethers.utils.getAddress(wallet.accounts[0].address) : undefined;
-  }, [wallet]);
+    if(wallet && wallet.accounts.length > 0) {
+      setReadOnlyWallet(undefined);
+      setMode(undefined);
+      return ethers.utils.getAddress(wallet.accounts[0].address);
+    }
+    return readOnlyWallet;
+  }, [wallet, readOnlyWallet]);
+
+  const chainId = useMemo(() => {
+    if(connectedChain) return Number(connectedChain.id);
+    if(readOnlyWallet) return appConfig.coreContractChain;
+    return undefined;
+  }, [connectedChain, readOnlyWallet]);
 
   return {
-    wallet,
+    wallet: wallet ? wallet : readOnlyWallet,
     connecting,
     connect,
     disconnect,
@@ -33,8 +54,8 @@ export const useAccount = () => {
     setWalletModules,
     setPrimaryWallet,
     provider,
-    account: account,
-    chainId: connectedChain ? Number(connectedChain.id) : undefined,
+    account : account ? account : readOnlyWallet,
+    chainId,
     isActive,
     setChain,
     switchChain,

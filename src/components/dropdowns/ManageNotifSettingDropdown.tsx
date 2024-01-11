@@ -111,6 +111,7 @@ const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = (o
     return state.user;
   });
   const dispatch = useDispatch();
+  const {handleConnectWallet} = useContext(AppContext);
 
   const channelSetting = useMemo(() => {
     if(channelDetail && channelDetail?.channel_settings) {
@@ -132,6 +133,12 @@ const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = (o
   const unsubscribeToast = useToast();
   const optOutHandler = async ({ setLoading }: { setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const setLoadingFunc = setLoading || (() => {});
+
+    if (!userPushSDKInstance.signer) {
+      handleConnectWallet();
+      return;
+    }
+
     setLoadingFunc(true);
 
     try {
@@ -190,7 +197,7 @@ const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = (o
         ),
       });
 
-      console.log(err);
+      console.error(err);
     } finally {
       setLoadingFunc(false);
     }

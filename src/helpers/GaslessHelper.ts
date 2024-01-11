@@ -63,7 +63,7 @@ export const createTransactionObject = async ({
   provider,
   setTxLoading,
 }: ICreateTransactionObjectProps): Promise<any> => {
-  console.log('🚀 ~ file: ViewDelegateeItem.js ~ line 63 ~ createTransactionObject ~ delegateeAddress', delegateeAddress);
+  console.debug('🚀 ~ file: ViewDelegateeItem.js ~ line 63 ~ createTransactionObject ~ delegateeAddress', delegateeAddress);
   const contractName: string = await epnsToken.name();
   const nonce: any = await epnsToken.nonces(account);
   const chainId: number = appConfig.coreContractChain;
@@ -71,7 +71,7 @@ export const createTransactionObject = async ({
   const now: Date = new Date();
   const secondsSinceEpoch: number = Math.round(now.getTime() / 1000);
   const expiry: string = (secondsSinceEpoch + 10800).toString();
-  console.log(expiry);
+  console.debug(expiry);
 
   const domain = {
     name: contractName,
@@ -130,7 +130,7 @@ export const createTransactionObject = async ({
       setTxLoading(false);
     }
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     toast.dark(e.message, {
       position: 'bottom-right',
       ...ERROR_TOAST_DEFAULTS,
@@ -146,7 +146,7 @@ const callDelegateAPI = async ({
   expiry,
   account,
 }: ICallDelegateAPIProps): Promise<void> => {
-  console.log(
+  console.debug(
     `🚀 ~ file: PushGovernance.tsx ~ line 271 ~ callDelegateAPI ~ signature obj delegator: ${account} signature: ${signature} delegatee: ${delegatee} nonce: ${nonce} expiry: ${expiry}  `
   );
   await toolingPostReq('/gov/gasless_delegate', {

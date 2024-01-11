@@ -97,7 +97,7 @@ export const viewData = async (db: IDBDatabase, key: string, dbName: string, ind
       return resolve(query.result);
     };
     query.onerror = (e: any) => {
-      console.log(e.target.errorCode, dbName);
+      console.error(e.target.errorCode, dbName);
       reject(e.target.errorCode);
     };
   });

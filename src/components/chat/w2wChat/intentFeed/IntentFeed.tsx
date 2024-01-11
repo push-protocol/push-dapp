@@ -49,7 +49,7 @@ const IntentFeed = ({isLoading}): JSX.Element => {
     setIntentLoading(false);
     }
     catch(e){
-      console.log("Error occured",e.message);
+      console.error("Error occured",e.message);
       setIntentLoading(false)
     }
   }

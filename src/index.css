@@ -566,8 +566,11 @@ button, a, a:before, a:after {
   --w3o-action-color: #C631C6 !important;
   --w3o-border-radius: 24px !important;
   --w3o-font-family: unset !important;
-  --onboard-modal-backdrop:transparent !important;
-  --modal-backdrop:transparent !important;
+  --onboard-modal-backdrop: transparent !important;
+  --modal-backdrop: transparent !important;
+
+  /* Wallet connect modal z-index */
+  --wcm-z-index: 99999 !important;
 }
 
 [theme="dark"] {
@@ -579,8 +582,8 @@ button, a, a:before, a:after {
   --w3o-action-color: #C631C6 !important;
   --w3o-border-radius: 24px !important;
   --w3o-font-family: unset !important;
-  --onboard-modal-backdrop:transparent !important;
-  --modal-backdrop:transparent !important;
+  --onboard-modal-backdrop: transparent !important;
+  --modal-backdrop: transparent !important;
 }
 
 #onboard-container {
@@ -594,6 +597,6 @@ button, a, a:before, a:after {
   margin-right: auto;
   border-radius: var(--w3o-border-radius);
   overflow: auto;
-	z-index: 10;
+	z-index: 99999;
 }
 

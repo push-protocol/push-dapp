@@ -33,6 +33,7 @@ import { UnsupportedChainIdError } from 'connectors/error';
 import APP_PATHS from 'config/AppPaths';
 import { themeDark, themeLight } from 'config/Themization';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { AppContext } from 'contexts/AppContext';
 
 // header tags for pages that are not there in navigationList (Sidebar)
 const EXTRA_HEADER_TAGS = {
@@ -69,7 +70,7 @@ function Header({ isDarkMode, darkModeToggle }) {
   const { navigationSetup } = useContext(NavigationContext);
 
   // Get 
-  const { isActive, switchChain } = useAccount();
+  const { isActive, switchChain, connect, wallet } = useAccount();
   const { authError: error } = useContext(ErrorContext);
 
   const [showLoginControls, setShowLoginControls] = React.useState(false);
@@ -170,7 +171,7 @@ function Header({ isDarkMode, darkModeToggle }) {
         {navigationSetup && showNavBar && isActive && !error && (
           <NavMenuContainer ref={navRef} tabletAlign="flex-start">
             <NavMenu>
-           {showSnapMobile && <SnapHeader/>}
+              {showSnapMobile && <SnapHeader />}
               <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
 
@@ -197,7 +198,8 @@ function Header({ isDarkMode, darkModeToggle }) {
             </Span>
           </HeaderTag>
         )}
-      {!showSnapMobile && <SnapHeader/>}
+        {!showSnapMobile && <SnapHeader />}
+
 
         {isActive && !showLoginControls && !error && (
           <DarkModeSwitch
@@ -226,13 +228,19 @@ function Header({ isDarkMode, darkModeToggle }) {
 
         <ItemH justify="flex-end" flex="initial">
           {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>}
-          {!isActive && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>}
-          {isActive && !showLoginControls && !error && (
+          {/* {!isActive && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>} */}
+          {!!error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>}
+          {/* {isActive && !showLoginControls && !error && (
             <RightBarDesktop justify="flex-end" flex="initial">
               <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
             </RightBarDesktop>
-          )}{' '}
+          )}{' '} */}
+
+          <RightBarDesktop justify="flex-end" flex="initial">
+            <ChainIndicator isDarkMode={isDarkMode} />
+            <Profile isDarkMode={isDarkMode} />
+          </RightBarDesktop>
         </ItemH>
       </ItemH>
     </Container>

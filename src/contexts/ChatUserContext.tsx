@@ -127,7 +127,7 @@ const ChatUserContextProvider = (props) => {
   };
 
   const getUser = async () => {
-    console.log("getUser");
+    console.debug("getUser");
     const caip10: string = w2wHelper.walletToCAIP10({ account });
     const user: User = await PushAPI.user.get({ 
       account: caip10,
@@ -207,7 +207,7 @@ const ChatUserContextProvider = (props) => {
 
       return createdConnectedUser ;
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 

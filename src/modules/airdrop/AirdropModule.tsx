@@ -51,7 +51,7 @@ const AirdropModule = () => {
   React.useEffect(() => {
     if (!!(provider && account)) {
       let signer = provider.getSigner(account);
-      console.log(abis.distributor);
+      console.debug(abis.distributor);
       const signerInstance = new ethers.Contract(addresses.distributor, abis.distributor, signer);
       setDistributorContract(signerInstance);
       // const NFTRewardsInstance = new ethers.Contract(addresses.NFTRewards, abis.NFTRewards, signer);
@@ -79,8 +79,8 @@ const AirdropModule = () => {
       let sendWithTxPromise;
       sendWithTxPromise = await distributorContract.claim(user.index, user.account, user.amount, user.proof);
       const tx = await sendWithTxPromise;
-      console.log(tx);
-      console.log('waiting for tx to finish');
+      console.debug(tx);
+      console.debug('waiting for tx to finish');
       let txToast = toast.dark(<LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />, {
         position: 'bottom-right',
         autoClose: false,

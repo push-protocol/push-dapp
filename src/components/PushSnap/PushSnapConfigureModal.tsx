@@ -66,6 +66,7 @@ const PushSnapConfigureModal = () => {
   }
 
   const addWalletAddresses = async () => {
+    console.debug('searchedUser', searchedUser);
     const signatureResult = await getSignature(1);
     if (signatureResult) {
       if (searchedUser) {
@@ -83,7 +84,7 @@ const PushSnapConfigureModal = () => {
         getWalletAddresses();
       }
     } else {
-      console.log('Signature Validation Failed');
+      console.error('Signature Validation Failed');
     }
   };
 
@@ -122,7 +123,7 @@ const PushSnapConfigureModal = () => {
         getWalletAddresses();
       }
     } else {
-      console.log('Signature Validation Failed');
+      console.error('Signature Validation Failed');
     }
   };
 
@@ -134,11 +135,13 @@ const PushSnapConfigureModal = () => {
         request: { method: 'pushproto_getaddresses' },
       },
     });
+    console.debug('result', result);
     setAddresses(result);
   }
 
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => {
+    console.warn('Set show to be null');
     setWalletSelected(null);
     setShowRemove(null);
   });

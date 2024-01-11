@@ -181,7 +181,7 @@ function Navigation() {
         transformedList[identifier].data.drilldown = drilldownModified;
       }
     });
-    if (identity === 2) console.log(transformedList);
+    if (identity === 2) console.debug(transformedList);
     return transformedList;
   };
 

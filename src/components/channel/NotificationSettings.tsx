@@ -47,6 +47,7 @@ function NotificationSettings() {
   const [settingToEdit, setSettingToEdit] = React.useState<ChannelSetting>(undefined);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoadingSettings, setIsLoadingSettings] = React.useState(true);
+  const {handleConnectWallet} = useContext(AppContext);
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -131,6 +132,12 @@ function NotificationSettings() {
 
   const saveSettings = async () => {
     try {
+
+      if (!userPushSDKInstance.signer) {
+        handleConnectWallet();
+        return;
+      }
+
       setIsLoading(true);
 
       notificationToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
@@ -143,7 +150,7 @@ function NotificationSettings() {
           };
         }
         else if (setting.type === 2) {
-          console.log(
+          console.info(
             {
               type: setting.type,
             description: setting.description,
@@ -168,7 +175,7 @@ function NotificationSettings() {
             },
           };
         } else if (setting.type === 3) {
-          console.log(
+          console.info(
             {
               type: setting.type,
             description: setting.description,
@@ -194,7 +201,7 @@ function NotificationSettings() {
           };
         }
       });
-      console.log(settingData);
+      console.info(settingData);
       await userPushSDKInstance.channel.setting(settingData);
 
       dispatch(updateChannelSetting({ channelAddress, settings }));
@@ -241,7 +248,7 @@ function NotificationSettings() {
             />
           ),
         });
-        console.log('Error --> %o', err);
+        console.error('Error --> %o', err);
       }
     }
   };

@@ -34,7 +34,7 @@ function CreateChannel() {
   });
 
   // called every time a file's `status` changes
-  const handleChangeStatus = ({ meta, file }, status) => { console.log(status, meta, file) }
+  const handleChangeStatus = ({ meta, file }, status) => { console.debug(status, meta, file) }
 
   const onDropHandler=(files) =>{
     //   var file = files[0]
@@ -52,18 +52,18 @@ function CreateChannel() {
   const handleSubmit = (files, allFiles) => {
     setUploadDone(true);
 
-    console.log(files.map(f => f.meta))
+    console.debug(files.map(f => f.meta))
     allFiles.forEach(f => {
       var file = f.file;
       var reader = new FileReader();
       reader.readAsDataURL(file);
-      console.log(f.file);
+      console.debug(f.file);
       reader.onloadend = function (e) {
-        console.log(reader.result);
+        console.debug(reader.result);
         setFile(reader.result);
       }
     })
-    console.log("andle Submit");
+    console.debug("handle Submit");
   }
 
   const handleCreateChannel = async () => {
@@ -71,10 +71,10 @@ function CreateChannel() {
     // skip this for now
     setProcessing(true);
 
-    console.log(file);
-    console.log(name);
-    console.log(desc);
-    console.log(url);
+    console.debug(file);
+    console.debug(name);
+    console.debug(desc);
+    console.debug(url);
 
     const input = JSON.stringify(
       {
@@ -86,9 +86,9 @@ function CreateChannel() {
     )
     const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
 
-    console.log("sending payload");
+    console.debug("sending payload");
     const cid = await ipfs.add(input);
-    console.log("IPFS cid:", cid);
+    console.debug("IPFS cid:", cid);
     //console.log(await ipfs.cat(cid));
 
     // Send Transaction
@@ -104,16 +104,16 @@ function CreateChannel() {
     var sendTransactionPromise = daiContract.approve(addresses.epnscore, fees);
     const tx = await sendTransactionPromise;
 
-    console.log(tx);
-    console.log("waiting for tx to finish");
+    console.debug(tx);
+    console.debug("waiting for tx to finish");
     await provider.waitForTransaction(tx.hash);
 
     let contract = new ethers.Contract(addresses.epnscore, abis.epnscore, signer);
     var anotherSendTxPromise = contract.createChannelWithFees(cid);
 
     anotherSendTxPromise.then(function(tx) {
-      console.log(tx);
-      console.log("Check: " + account);
+      console.debug(tx);
+      console.debug("Check: " + account);
 
     });
   }
