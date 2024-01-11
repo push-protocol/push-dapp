@@ -46,6 +46,10 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
 
   // get ens name from context
   if(!isGroup){
+    if (username?.includes(':nft')) {
+      // to match "eip155:" followed by any chainId and replace it with "eip155:" and split the string at ':nft' and keep the part before it
+      username = username.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0];
+    }
     const walletLowercase = caip10ToWallet(username)?.toLowerCase();
     const checksumWallet = ethers.utils.getAddress(walletLowercase);
     ensName = web3NameList[checksumWallet];

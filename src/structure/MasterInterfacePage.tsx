@@ -150,10 +150,20 @@ function MasterInterfacePage() {
               path={APP_PATHS.Govern}
               element={<GovPage />}
             />
+
+            {/* Instead of 3 pages for Snap. It will only be 1. */}
+
             <Route
               path={APP_PATHS.Snap}
               element={<SnapPage />}
             />
+
+            <Route
+              path={`${APP_PATHS.Snap}/:route`}
+              element={<SnapPage />}
+            />
+
+           
 
             {/* <Route path="yield" element={<YieldFarmingPage />} /> */}
             <Route

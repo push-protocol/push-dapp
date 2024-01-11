@@ -15,7 +15,7 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 import { produce } from 'immer';
-import { ChatViewList, MessageInput } from '@pushprotocol/uiweb';
+import { ChatProfile, ChatViewList, MessageInput } from '@pushprotocol/uiweb';
 // Internal Components
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
@@ -85,7 +85,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   // get web3 name
   let ensName = '';
   if (!isGroup && currentChat?.wallets?.split(',')[0].toString()) {
-    const walletLowercase = caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase();
+    const walletLowercase = currentChat.wallets.includes(':nft') ? caip10ToWallet(currentChat?.wallets.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0].toString().toLowerCase()) : caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase();
     const checksumWallet = ethers.utils.getAddress(walletLowercase);
     ensName = web3NameList[checksumWallet];
   }
@@ -106,6 +106,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
 
     if (currentChat) {
       setIsGroup(checkIfGroup(currentChat));
+      console.log('currentChat', checkIfGroup(currentChat), isGroup);
       // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
       // even though the user was still on the same chat.
       const image = getGroupImage(currentChat);
@@ -120,14 +121,14 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   }, [currentChat]);
 
   const getDisplayName = () => {
-    if (ensName) return `${ensName} (${caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())})`;
+    if (ensName) return `${ensName} (${currentChat.wallets.includes(':nft') ? caip10ToWallet(currentChat?.wallets.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0].toString().toLowerCase()) : caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase()})`;
     if (isGroup)
       return isMobile
         ? currentChat?.groupInformation?.groupName.length > 25
           ? currentChat?.groupInformation?.groupName?.slice(0, 25) + '...'
           : currentChat?.groupInformation?.groupName
         : currentChat?.groupInformation?.groupName;
-    if (currentChat?.wallets) return caip10ToWallet(currentChat?.wallets?.split(',')[0].toString());
+    if (currentChat?.wallets) return caip10ToWallet(currentChat.wallets.includes(':nft') ? currentChat?.wallets.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0].toString().toLowerCase() : currentChat?.wallets?.split(',')[0].toString()?.toLowerCase());
   };
 
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
@@ -248,48 +249,9 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             background={theme.default.bg}
             padding="6px"
             fontWeight="500"
-            zIndex="1"
           >
-            <ItemHV2
-              height="48px"
-              flex="initial"
-            >
-              <TabletBackButton
-                margin="0px 5px 0px 0px"
-                color={theme.default.secondaryColor}
-                background="transparent"
-                hover="transparent"
-                hoverBackground="transparent"
-                onClick={() => {
-                  setChat(null);
-                }}
-              >
-                <MdOutlineArrowBackIos size={24} />
-              </TabletBackButton>
-
-              <ImageV2
-                height="48px"
-                width="48px"
-                alt="Profile Picture"
-                src={imageSource}
-                borderRadius="100%"
-                overflow="hidden"
-                objectFit="cover"
-              />
-            </ItemHV2>
-
-            <SpanV2
-              flex="1"
-              margin="5px 10px"
-              fontWeight="400"
-              textAlign="start"
-            >
-              {getDisplayName()}
-            </SpanV2>
-
-            {/* Video call button */}
-            {!isGroup && (
-              <Tooltip
+            {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
+              <ChatProfile component={<Tooltip
                 tooltipContent="Video call"
                 placementProps={{
                   bottom: '1.4rem',
@@ -306,32 +268,14 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
                     src={videoCallIcon}
                   />
                 </VideoCallButton>
-              </Tooltip>
-            )}
-
-            {currentChat.groupInformation && (
-              <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
-                <ItemHV2 padding="0px 11px 0px 0px">{theme.scheme == 'light' ? <More /> : <MoreDark />}</ItemHV2>
-                {showGroupInfo && (
-                  <GroupInfo
-                    onClick={() => {
-                      showGroupInfoModal();
-                      setShowGroupInfo(false);
-                    }}
-                    ref={groupInfoRef}
-                  >
-                    <ItemVV2 maxWidth="32px">{theme.scheme == 'light' ? <Info /> : <InfoDark />}</ItemVV2>
-                    <SpanV2 color={theme.default.secondaryColor}>Group Info</SpanV2>
-                  </GroupInfo>
-                )}
-              </MoreOptions>
+              </Tooltip>} style="Info" chatId={(currentChat?.did?.includes(":") ? currentChat?.did.split(":")[1] : currentChat?.did) || currentChat?.groupInformation?.chatId} />
             )}
           </ItemHV2>
 
           <MessageContainer>
             {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
               <ChatViewList
-                chatId={currentChat?.did || currentChat?.groupInformation?.chatId}
+                chatId={(currentChat?.did?.includes(":nft:") ? currentChat?.did.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0] : currentChat?.did) || currentChat?.groupInformation?.chatId}
                 limit={10}
               />
             )}
@@ -340,7 +284,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             <>
               <MessageInputWrapper>
                 {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
-                  <MessageInput chatId={currentChat?.did || currentChat?.groupInformation?.chatId} />
+                  <MessageInput chatId={currentChat?.did?.includes(":nft:") ? currentChat?.did.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0] : currentChat?.did || currentChat?.groupInformation?.chatId} />
                 )}
               </MessageInputWrapper>
             </>
@@ -392,6 +336,21 @@ const MessageContainer = styled(ItemVV2)`
   // margin: 0;
   width: 95%;
   height: 80%;
+  @media (max-height: 750px) {
+    height: 75%;
+  }
+  @media (max-height: 650px) {
+    height: 70%;
+  }
+  @media (max-height: 550px) {
+    height: 63%;
+  }
+  @media (max-height: 450px) {
+    height: 55%;
+  }
+  @media (max-height: 400px) {
+    height: 45%;
+  }
   // max-height: 20%;
   overflow-x: hidden;
   // overflow-y: scroll;
@@ -626,7 +585,6 @@ const VideoCallButton = styled(ButtonV2)`
   max-width: 1.75rem;
   min-width: 1.75rem;
   background: none;
-  margin-right: 2rem;
 `;
 
 export default ChatBox;

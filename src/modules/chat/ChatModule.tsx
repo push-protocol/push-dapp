@@ -284,9 +284,13 @@ const getUpdatedGroup = async(groupInfo) => {
     }
 
     // check if this is eip155: which is considered default and therefore remove it
-    if (chatid.startsWith('eip155:')) {
+    if (chatid.startsWith('eip155:') && !chatid.includes(':nft')) {
       chatid = chatid.replace('eip155:', '');
       isWallet = true;
+    }
+
+    if (chatid.includes(':nft')) {
+      chatid = chatid.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0];
     }
 
     // check if this is eip155: which is considered default and therefore remove it
@@ -321,6 +325,7 @@ const getUpdatedGroup = async(groupInfo) => {
 
       // check and set to wallet or chat id
       let chatid = feed.did;
+      console.log("chatiddd",chatid);
       if (!chatid) {
         // check group information
         if (feed.groupInformation) {

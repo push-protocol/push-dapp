@@ -272,7 +272,7 @@ export default function App() {
   // const { spaceUI } = useSpaceComponents();
 
   const location = useLocation();
-  const isSnapPage = location?.pathname === '/snap';
+  const isSnapPage = location?.pathname.includes('/snap');
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
