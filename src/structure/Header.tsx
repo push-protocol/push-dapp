@@ -145,7 +145,6 @@ function Header({ isDarkMode, darkModeToggle }) {
       method: 'wallet_getSnaps',
     });
     Object.keys(installedSnaps).forEach((snap) => {
-      console.log("Snap", installedSnaps);
       if (snap == 'npm:@pushprotocol/snap') {
         setSnapInstalled(true);
       }
