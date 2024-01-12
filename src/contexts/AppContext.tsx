@@ -79,8 +79,6 @@ const AppContextProvider = ({ children }) => {
             account: readOnlyWallet,
             env: appConfig.appEnv,
         });
-        console.log("User Instance in guest mode", userInstance);
-
         dispatch(setUserPushSDKInstance(userInstance));
     }
 
@@ -93,8 +91,6 @@ const AppContextProvider = ({ children }) => {
                 env: appConfig.appEnv,  // defaults to staging
                 account: account
             });
-
-            console.log("User Instance", userInstance);
 
             dispatch(setUserPushSDKInstance(userInstance));
         } catch (error) {
