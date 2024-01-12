@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 
 // React + Web3 Essentials
 import { ethers } from 'ethers';
@@ -21,6 +21,7 @@ import { NavigationContext } from 'contexts/NavigationContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
 import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg'
+import { AppContext } from 'contexts/AppContext';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -33,7 +34,6 @@ import { UnsupportedChainIdError } from 'connectors/error';
 import APP_PATHS from 'config/AppPaths';
 import { themeDark, themeLight } from 'config/Themization';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { AppContext } from 'contexts/AppContext';
 
 // header tags for pages that are not there in navigationList (Sidebar)
 const EXTRA_HEADER_TAGS = {
@@ -68,8 +68,7 @@ function Header({ isDarkMode, darkModeToggle }) {
   const navRef = useRef()
 
   const { navigationSetup } = useContext(NavigationContext);
-
-  // Get 
+  const {  setSnapInstalled, snapInstalled } = React.useContext(AppContext);
   const { isActive, switchChain, connect, wallet } = useAccount();
   const { authError: error } = useContext(ErrorContext);
 
@@ -83,6 +82,9 @@ function Header({ isDarkMode, darkModeToggle }) {
 
   // Get Location
   const location = useLocation();
+
+  // const [snapInstalled, setSnapInstalled] = React.useState(false);
+
 
   React.useEffect(() => {
     // runs when navigation setup is updated, will run on init
@@ -137,6 +139,22 @@ function Header({ isDarkMode, darkModeToggle }) {
   const isMobile = useDeviceWidthCheck(600);
   const showSnapMobile = useDeviceWidthCheck(600);
   const isSnapPage = location?.pathname === '/snap';
+
+  const isSnapInstalled = async () => {
+    const installedSnaps = await window.ethereum.request({
+      method: 'wallet_getSnaps',
+    });
+    Object.keys(installedSnaps).forEach((snap) => {
+      console.log("Snap", installedSnaps);
+      if (snap == 'npm:@pushprotocol/snap') {
+        setSnapInstalled(true);
+      }
+    });
+  }
+
+  useEffect(() => {
+    isSnapInstalled();
+  }, [])
 
   const SnapHeader = () => {
     return (
@@ -198,7 +216,7 @@ function Header({ isDarkMode, darkModeToggle }) {
             </Span>
           </HeaderTag>
         )}
-        {!showSnapMobile && <SnapHeader />}
+        {!showSnapMobile && !snapInstalled && <SnapHeader />}
 
 
         {isActive && !showLoginControls && !error && (

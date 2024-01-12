@@ -23,6 +23,8 @@ const AppContextProvider = ({ children }) => {
 
     const [web3NameList, setWeb3NameList] = useState<Web3NameListType>({});
 
+    const [snapInstalled, setSnapInstalled] = useState(false);
+
     const [SnapState, setSnapState] = useState(1);
     const {
         isModalOpen: isMetamaskPushSnapOpen,
@@ -120,7 +122,9 @@ const AppContextProvider = ({ children }) => {
             setSnapState,
             initializePushSDK,
             SnapState,
-            handleConnectWallet
+            handleConnectWallet,
+            setSnapInstalled,
+            snapInstalled
         }}>
             {children}
         </AppContext.Provider>
