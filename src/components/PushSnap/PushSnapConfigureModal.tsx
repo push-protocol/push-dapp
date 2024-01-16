@@ -2,27 +2,25 @@
 import React, { useEffect, useState } from 'react';
 
 // External Packages
-import styled, { useTheme } from 'styled-components';
+import { AiOutlineMore } from 'react-icons/ai';
 import Switch from 'react-switch';
 import { useClickAway } from 'react-use';
-import { AiOutlineMore } from 'react-icons/ai';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
+import { ReactComponent as MinusCircle } from 'assets/PushSnaps/MinusCircle.svg';
+import InfoImage from "assets/info.svg";
+import { Button } from 'components/SharedStyling';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
-import { Button } from 'components/SharedStyling';
-import InfoImage from "assets/info.svg";
 import { shortenText } from 'helpers/UtilityHelper';
-import { ReactComponent as MinusCircle } from 'assets/PushSnaps/MinusCircle.svg';
 import { useAccount } from 'hooks';
 
 // Internal Configs
 import { device } from 'config/Globals';
 
 
-const MetamaskSnapConfigureModal = ({
-  title
-}) => {
+const PushSnapConfigureModal = () => {
   const [walletAddresses, setWalletAddresses] = useState([]);
   const [addresses, setAddresses] = useState([]);
   const [searchedUser, setSearchedUser] = useState('');
@@ -34,20 +32,25 @@ const MetamaskSnapConfigureModal = ({
 
   const { chainId, account, provider } = useAccount();
 
-  useEffect(async () => {
-    const res = await window.ethereum?.request({
-      method: 'wallet_invokeSnap',
-      params: {
-        snapId: defaultSnapOrigin,
-        request: {
-          method: 'pushproto_gettogglestatus',
-          params: { address: searchedUser },
+  useEffect(() => {
+    (async function () {
+      const res = await window.ethereum?.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: defaultSnapOrigin,
+          request: {
+            method: 'pushproto_gettogglestatus',
+            params: { address: searchedUser },
+          },
         },
-      },
-    });
-    console.log('res', res);
-    setToggleStatus(res);
-  }, [toggleStatus])
+      });
+      setToggleStatus(res);
+    })();
+  }, [toggleStatus]);
+  
+  useEffect(() => {
+    getWalletAddresses();
+  }, []);
 
   async function getSignature(mode: number) {
     if (mode == 1) {
@@ -63,7 +66,7 @@ const MetamaskSnapConfigureModal = ({
   }
 
   const addWalletAddresses = async () => {
-    console.log('searchedUser', searchedUser);
+    console.debug('searchedUser', searchedUser);
     const signatureResult = await getSignature(1);
     if (signatureResult) {
       if (searchedUser) {
@@ -77,10 +80,11 @@ const MetamaskSnapConfigureModal = ({
             },
           },
         });
-        console.log('Added', searchedUser);
+        setSearchedUser('');
+        getWalletAddresses();
       }
     } else {
-      console.log('Signature Validation Failed');
+      console.error('Signature Validation Failed');
     }
   };
 
@@ -103,6 +107,7 @@ const MetamaskSnapConfigureModal = ({
 
   const removeWalletAddresses = async (walletSelected: string) => {
     const signatureResult = await getSignature(2);
+    console.log("Ran",signatureResult)
     if (signatureResult) {
       if (walletSelected) {
         await window.ethereum?.request({
@@ -115,9 +120,10 @@ const MetamaskSnapConfigureModal = ({
             },
           },
         });
+        getWalletAddresses();
       }
     } else {
-      console.log('Signature Validation Failed');
+      console.error('Signature Validation Failed');
     }
   };
 
@@ -129,13 +135,13 @@ const MetamaskSnapConfigureModal = ({
         request: { method: 'pushproto_getaddresses' },
       },
     });
-    console.log('result', result);
+    console.debug('result', result);
     setAddresses(result);
   }
 
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => {
-    console.log('Set show to be null');
+    console.warn('Set show to be null');
     setWalletSelected(null);
     setShowRemove(null);
   });
@@ -148,15 +154,6 @@ const MetamaskSnapConfigureModal = ({
 
   return (
     <Container >
-      <SpanV2
-        fontSize="22px"
-        fontWeight="500"
-        color={theme.modalMessageColor}
-        alignSelf={title === 'Push Snap Settings' ? 'baseline' : 'center'}
-      >
-        {title}   
-      </SpanV2>
-
       <ItemVV2
         alignItems="baseline"
         margin="24px 0 0 0"
@@ -181,7 +178,6 @@ const MetamaskSnapConfigureModal = ({
             onClick={addWalletAddresses}
           // onClick={addAddresses}
           >Add</FilledButton>
-          <EnptyButton onClick={getWalletAddresses}>Show All</EnptyButton>
         </ItemHV2>
       </ItemVV2>
 
@@ -191,11 +187,11 @@ const MetamaskSnapConfigureModal = ({
         {addresses?.map((wallet) => (
           <AddressesSubContainer>
             <SpanV2 fontSize='15px' fontWeight='500' color={walletSelected === wallet ? '#D53A94' : theme.default.color}>{shortenText(wallet, 8)}</SpanV2>
-            <MoreOptions onClick={() => handleWalletSelect(wallet)} color={theme.default.color} />
+            <MoreOptions  onClick={() => handleWalletSelect(wallet)} color={theme.default.color} />
 
             {walletSelected === wallet && <RemoveDiv >
               <MinusCircle />
-              <SpanV2 fontSize='16px' fontWeight='400' color='#657795' onClick={() => removeWalletAddresses(walletSelected)}>Remove</SpanV2>
+              <SpanV2 fontSize='16px' cursor='pointer' fontWeight='400' color='#657795' onClick={() => removeWalletAddresses(walletSelected)}>Remove</SpanV2>
             </RemoveDiv>
             }
           </AddressesSubContainer>
@@ -244,7 +240,7 @@ const MetamaskSnapConfigureModal = ({
   );
 };
 
-export default MetamaskSnapConfigureModal;
+export default PushSnapConfigureModal;
 
 const InfoToolTip = () => {
 
@@ -439,12 +435,14 @@ const AddressesSubContainer = styled(ItemHV2)`
 const MoreOptions = styled(AiOutlineMore)`
   width:24px;
   height:24px;
+  cursor:pointer;
 `
 
 const RemoveDiv = styled(ItemHV2)`
   border-radius: 12px;
   border: 1px solid #BAC4D6;
   background: #FFF;
+  cursor: pointer;
   box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.05);
   padding: 8px 12px 8px 8px;
   align-items: center;

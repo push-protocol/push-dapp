@@ -55,7 +55,7 @@ export default function AliasVerificationModal({
       );
       anotherSendTxPromise
         .then(async (tx) => {
-          console.log(tx);
+          console.debug(tx);
           setLoading("Transaction Sent! It usually takes 5mins to verify.");
 
           await tx.wait(1);

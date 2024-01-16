@@ -127,7 +127,7 @@ const InboxModule = ({isSpam}) => {
         dispatch(setPushAdmin(response));
       })
       .catch((err) => {
-        console.log({ err });
+        console.error({ err });
       });
 
     // Push (EPNS) Read Provider Set

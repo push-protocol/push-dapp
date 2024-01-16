@@ -35,7 +35,7 @@ const useStyles = makeStyles({
 
 const Search = (): JSX.Element => {
   const handleSearch = (event: React.SyntheticEvent): void => {
-    console.log(event.target)
+    console.debug(event.target)
   }
   return <Input type="text" onChange={(e): void => handleSearch(e)} placeholder="Search Web3 domain or 0x123..." />
 }

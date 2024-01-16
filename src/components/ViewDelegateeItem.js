@@ -109,7 +109,7 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
     await createTransactionObject({delegateeAddress,account,epnsToken,addresses,signerObject,provider,setTxLoading});
     setTxInProgress(false);
     toolingPostReq('/gov/prev_delegation',{"walletAddress": account}).then(res=>{
-      console.log("result",res.data.user)
+      console.debug("result",res.data.user)
       setGaslessInfo(res.data.user);
       // toast.dark("Successfully Fetched Prev Delegation Data", {
       //   position: "bottom-right",

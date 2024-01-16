@@ -10,6 +10,7 @@ import styled from 'styled-components';
 
 // Internal Components
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import ConnectedWalletRoute from '../components/ConnectedWalletRoute';
 import { Anchor, Item } from '../primaries/SharedStyling';
 const AirdropPage = lazy(() => import('pages/AirdropPage'));
 const ChannelDashboardPage = lazy(() => import('pages/ChannelDashboardPage'));
@@ -22,6 +23,7 @@ const InboxPage = lazy(() => import('pages/InboxPage'));
 const InternalDevPage = lazy(() => import('pages/InternalDevPage'));
 const NFTPage = lazy(() => import('pages/NFTPage'));
 const NotAvailablePage = lazy(() => import('pages/NotAvailablePage'));
+const NotFoundPage = lazy(() => import('pages/NotFoundPage'));
 const ReceiveNotifsPage = lazy(() => import('pages/ReceiveNotifsPage'));
 const NotifSettingsPage = lazy(() => import('pages/NotifSettingsPage'));
 const SendNotifsPage = lazy(() => import('pages/SendNotifsPage'));
@@ -72,59 +74,135 @@ function MasterInterfacePage() {
   const [loadTeaserVideo, setLoadTeaserVideo] = React.useState(null);
   const location = useLocation();
 
-  const { MetamaskPushSnapModalComponent }:AppContextType = React.useContext(AppContext);
+  const { MetamaskPushSnapModalComponent }: AppContextType = React.useContext(AppContext);
 
   const { showMetamaskPushSnap } = React.useContext(AppContext);
 
-  React.useEffect(()=>{
-    if(location.hash == '#receive-notifications'){
+  React.useEffect(() => {
+    if (location.hash == '#receive-notifications') {
       showMetamaskPushSnap();
     }
-  },[location])
+  }, [location]);
 
   // Render
   return (
     <Container>
       <Interface location={location.pathname}>
-        <Suspense fallback={
-          <ItemVV2>
-            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
-          </ItemVV2>
-        }
+        <Suspense
+          fallback={
+            <ItemVV2>
+              <LoaderSpinner
+                type={LOADER_TYPE.SEAMLESS}
+                spinnerSize={24}
+              />
+            </ItemVV2>
+          }
         >
           <Routes>
             <Route path={APP_PATHS.Inbox} element={<InboxPage />} />
             <Route path={APP_PATHS.Spam} element={<InboxPage />} />
-            <Route path={`${APP_PATHS.Chat}/:chatid`} element={<ChatPage />} />
-            <Route path={APP_PATHS.Chat} element={<ChatPage />} />
-            <Route path={`${APP_PATHS.Spaces}/:spaceid`} element={<SpacePage />} />
-            <Route path={APP_PATHS.Spaces} element={<SpacePage />} />
-            {/* <Route path="chat-new" element={<NewChatPage />} /> */}
+            <Route element={<ConnectedWalletRoute />}>
+              <Route path={`${APP_PATHS.Chat}/:chatid`} element={<ChatPage />} />
+              <Route path={APP_PATHS.Chat} element={<ChatPage />} />
+              <Route path={`${APP_PATHS.Spaces}/:spaceid`} element={<SpacePage />} />
+              <Route path={APP_PATHS.Spaces} element={<SpacePage />} />
+              {/* <Route path="chat-new" element={<NewChatPage />} /> */}
+            </Route>
 
             <Route
               path={APP_PATHS.Channels}
-              element={<ChannelsPage loadTeaser={setLoadTeaserVideo} playTeaser={setPlayTeaserVideo} />}
+              element={
+                <ChannelsPage
+                  loadTeaser={setLoadTeaserVideo}
+                  playTeaser={setPlayTeaserVideo}
+                />
+              }
             />
-            <Route path={APP_PATHS.Dashboard} element={<ChannelDashboardPage />} />
-            <Route path={APP_PATHS.Send} element={<SendNotifsPage />} />
-            <Route path={APP_PATHS.Receive} element={<ReceiveNotifsPage />} />
+            <Route
+              path={APP_PATHS.Dashboard}
+              element={<ChannelDashboardPage />}
+            />
+            <Route
+              path={APP_PATHS.Send}
+              element={<SendNotifsPage />}
+            />
+            <Route
+              path={APP_PATHS.Receive}
+              element={<ReceiveNotifsPage />}
+            />
 
-            <Route path={APP_PATHS.Govern} element={<GovPage />} />
-            <Route path={APP_PATHS.Snap} element={<SnapPage />} />
+            <Route
+              path={APP_PATHS.Govern}
+              element={<GovPage />}
+            />
+
+            {/* Instead of 3 pages for Snap. It will only be 1. */}
+
+            <Route
+              path={APP_PATHS.Snap}
+              element={<SnapPage />}
+            />
+
+            <Route
+              path={`${APP_PATHS.Snap}/:route`}
+              element={<SnapPage />}
+            />
+
+           
 
             {/* <Route path="yield" element={<YieldFarmingPage />} /> */}
-            <Route path={APP_PATHS.YieldV2} element={<YieldFarmingV2Page />} />
-            <Route path={APP_PATHS.Rockstar} element={<NFTPage />} />
-            <Route path={APP_PATHS.Gratitude} element={<AirdropPage />} />
-            <Route path={APP_PATHS.LiveWalkthrough} element={<TutorialPage />} />
-            <Route path={APP_PATHS.ComingSoon} element={<ComingSoonPage />} />
-            <Route path={APP_PATHS.NotAvailable} element={<NotAvailablePage />} />
-            <Route path={APP_PATHS.FAQ} element={<FAQPage />} />
-            <Route path={APP_PATHS.Internal} element={<InternalDevPage />} />
-            <Route path="/" element={<Navigate to={APP_PATHS.Channels} />} />
-            <Route path={APP_PATHS.Support} element={<SupportPage />} />
-            <Route path={APP_PATHS.UserSettings} element={<UserSettingsPage />} />
-            <Route path={APP_PATHS.ChannelSettings} element={<NotifSettingsPage />} />
+            <Route
+              path={APP_PATHS.YieldV2}
+              element={<YieldFarmingV2Page />}
+            />
+            <Route
+              path={APP_PATHS.Rockstar}
+              element={<NFTPage />}
+            />
+            <Route
+              path={APP_PATHS.Gratitude}
+              element={<AirdropPage />}
+            />
+            <Route
+              path={APP_PATHS.LiveWalkthrough}
+              element={<TutorialPage />}
+            />
+            <Route
+              path={APP_PATHS.ComingSoon}
+              element={<ComingSoonPage />}
+            />
+            <Route
+              path={APP_PATHS.NotAvailable}
+              element={<NotAvailablePage />}
+            />
+            <Route
+              path={APP_PATHS.FAQ}
+              element={<FAQPage />}
+            />
+            <Route
+              path={APP_PATHS.Internal}
+              element={<InternalDevPage />}
+            />
+            <Route
+              path="/"
+              element={<Navigate to={APP_PATHS.Channels} />}
+            />
+            <Route
+              path={APP_PATHS.Support}
+              element={<SupportPage />}
+            />
+            <Route
+              path={APP_PATHS.UserSettings}
+              element={<UserSettingsPage />}
+            />
+            <Route
+              path={APP_PATHS.ChannelSettings}
+              element={<NotifSettingsPage />}
+            />
+            <Route
+              path="*"
+              element={<NotFoundPage />}
+            />
           </Routes>
         </Suspense>
       </Interface>
@@ -142,9 +220,9 @@ function MasterInterfacePage() {
 
       {/* Modal displaying ReceiveNotifications */}
       <MetamaskPushSnapModalComponent
-        id='receive-notifications'
+        id="receive-notifications"
         InnerComponent={MetamaskPushSnapModal}
-        modalPadding='0px'
+        modalPadding="0px"
         modalPosition={MODAL_POSITION.ON_ROOT}
       />
 
@@ -157,7 +235,8 @@ function MasterInterfacePage() {
             onClick={(e) => {
               e.preventDefault();
               setPlayTeaserVideo(!playTeaserVideo);
-            }}>
+            }}
+          >
             <PreviewContent className="contentBox">
               <PreviewClose
                 href="#"
@@ -167,8 +246,12 @@ function MasterInterfacePage() {
                 onClick={(e) => {
                   e.preventDefault();
                   setPlayTeaserVideo(!playTeaserVideo);
-                }}>
-                <VscClose size={40} color="#fff" />
+                }}
+              >
+                <VscClose
+                  size={40}
+                  color="#fff"
+                />
               </PreviewClose>
               <Preview>
                 <div className="videoWrapper">
@@ -176,7 +259,8 @@ function MasterInterfacePage() {
                     src={loadTeaserVideo}
                     frameborder="0"
                     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                    allowfullscreen
+                  ></iframe>
                 </div>
               </Preview>
             </PreviewContent>

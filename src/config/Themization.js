@@ -174,9 +174,9 @@ const themeLight = {
   toastTextColor: '#000',
   toastBorderColor: '#F4F3FF',
   toastShadowColor: '#ccc',
+
   toastSuccessBackground: 'linear-gradient(90.15deg, #30CC8B -125.65%, #30CC8B -125.63%, #F3FFF9 42.81%)',
   toastErrorBackground: 'linear-gradient(90.15deg, #FF2070 -125.65%, #FF2D79 -125.63%, #FFF9FB 42.81%)',
-
   // Profile
   profileBG: 'linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%)',
   profileText: '#fff',

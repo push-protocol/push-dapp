@@ -116,7 +116,7 @@ export default function EditChannel({
         contractAddress: addresses.epnscore,
         amount: (feesRequiredForEdit - pushApprovalAmount)
       });
-      console.log("response", response)
+      console.debug("response", response)
       if (response) {
         setIsLoading(false);
         setPushApprovalAmount(feesRequiredForEdit);
@@ -134,7 +134,7 @@ export default function EditChannel({
         });
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       if (err.code == "ACTION_REJECTED") {
         // EIP-1193 userRejectedRequest error
         editChannelToast.showMessageToast({
@@ -151,8 +151,8 @@ export default function EditChannel({
           getToastIcon: (size) => <MdError size={size} color="red" />,
         });
 
-        console.log('Error --> %o', err);
-        console.log({ err });
+        console.error('Error --> %o', err);
+        console.error({ err });
       }
     }
     setIsLoading(false);
@@ -259,9 +259,9 @@ export default function EditChannel({
       });
 
 
-      console.log(input);
+      console.debug(input);
       const storagePointer = await IPFSupload(input);
-      console.log('IPFS storagePointer:', storagePointer);
+      console.debug('IPFS storagePointer:', storagePointer);
 
       const identity = '1+' + storagePointer; // IPFS Storage Type and HASH
       const newIdentityBytes = ethers.utils.toUtf8Bytes(identity);
@@ -272,7 +272,7 @@ export default function EditChannel({
         gasLimit: 1000000
       })
 
-      console.log(tx);
+      console.debug(tx);
       await tx.wait();
       setIsLoading(false);
 
@@ -291,7 +291,7 @@ export default function EditChannel({
       }, 2000);
     } catch (err) {
       setIsLoading(false);
-      console.log(err.message);
+      console.error(err.message);
 
       if (err.code == "ACTION_REJECTED") {
         // EIP-1193 userRejectedRequest error
@@ -308,8 +308,8 @@ export default function EditChannel({
           toastType: 'ERROR',
           getToastIcon: (size) => <MdError size={size} color="red" />,
         });
-        console.log('Error --> %o', err);
-        console.log({ err });
+        console.error('Error --> %o', err);
+        console.error({ err });
       }
     }
   }
@@ -321,12 +321,12 @@ export default function EditChannel({
 
   useEffect(() => {
     if (croppedImage) {
-      console.log("Image cropped", croppedImage);
+      console.debug("Image cropped", croppedImage);
       toDataURL(croppedImage, function (dataUrl) {
         const response = handleLogoSizeLimitation(dataUrl);
-        console.log("response", response);
+        console.debug("response", response);
         if (response.success) {
-          console.log("Cropped Image....", croppedImage);
+          console.debug("Cropped Image....", croppedImage);
           setChannelFile(croppedImage);
         }
       });

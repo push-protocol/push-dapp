@@ -8,7 +8,7 @@ import { device } from 'config/Globals';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import InfoLogo from 'assets/PushSnaps/spam-icon.svg';
 import { useAccount } from 'hooks';
-import MetamaskSnapConfigureModal from './MetamaskSnapConfigureModal';
+import PushSnapConfigureModal from './PushSnapConfigureModal';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import AboutSnapModal from 'modules/snap/AboutSnapModal';
 
@@ -28,7 +28,7 @@ const PushSnapSettings = () => {
         const installedSnaps = await window.ethereum.request({
             method: 'wallet_getSnaps',
         });
-        console.log("Snaps installed", installedSnaps);
+        console.debug("Snaps installed", installedSnaps);
         Object.keys(installedSnaps).forEach((snap) => {
             if (snap == 'npm:@pushprotocol/snap') {
                 setSnapInstalled(true);
@@ -44,8 +44,8 @@ const PushSnapSettings = () => {
             },
         });
 
-        console.log(account);
-        console.log(walletConnected);
+        console.debug(account);
+        console.debug(walletConnected);
         if (result.includes(account)) {
             setAddedAddress(true);
         } else {
@@ -69,7 +69,7 @@ const PushSnapSettings = () => {
                 [snapId]: params,
             },
         });
-        console.log('Snap Installed');
+        console.info('Snap Installed');
     }
 
     async function connectToMetaMask() {
@@ -82,11 +82,11 @@ const PushSnapSettings = () => {
             setLoading(false);
         } catch (error) {
             setLoading(false);
-            console.log('Error', error);
+            console.error('Error', error);
         }
     }
 
-    console.log("snapInstalled", snapInstalled);
+    console.info("snapInstalled", snapInstalled);
 
     const InstallSnap = () => {
         const {
@@ -182,7 +182,18 @@ const PushSnapSettings = () => {
     return (
         <>
             {!snapInstalled ? <InstallSnap /> : (
-                <MetamaskSnapConfigureModal title={'Push Snap Settings'}/>
+                <>
+                <SpanV2
+                    fontWeight="500"
+                    fontSize="22px"
+                    color={theme.modalMessageColor}
+                    flex="1"
+                    padding='0px 0px 0px 9px'
+                >
+                    Push Snap Settings
+                </SpanV2>
+                <PushSnapConfigureModal/>
+                </>
             )}
 
         </>

@@ -30,7 +30,7 @@ export const ProfileCard = ({
 
   const handleHeight = (id) => {
     const containerHeight = document.getElementById(id)?.getBoundingClientRect();
-    console.log("height", containerHeight);
+    console.info("height", containerHeight);
     setDropdownHeight(containerHeight?.top);
   };
 

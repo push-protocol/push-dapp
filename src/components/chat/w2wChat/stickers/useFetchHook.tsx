@@ -20,7 +20,7 @@ export function useFetch<T>(
         setError(false)
       })
       .catch(err => {
-        console.log(err)
+        console.error(err)
         setData(null)
         setLoading(false)
         setError(true)

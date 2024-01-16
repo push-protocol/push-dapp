@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import Switch from '@material-ui/core/Switch';
@@ -37,6 +37,7 @@ import { appConfig } from 'config';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import APP_PATHS from 'config/AppPaths';
 import Tag from './reusables/labels/Tag';
+import { AppContext } from 'contexts/AppContext';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -126,7 +127,7 @@ function SendNotifications() {
     return state.canSend;
   });
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
-
+const {handleConnectWallet} = useContext(AppContext);
   const [nfProcessing, setNFProcessing] = useState(0);
   const [channelAddress, setChannelAddress] = useState('');
   const [nfRecipient, setNFRecipient] = useState(account);
@@ -302,6 +303,11 @@ function SendNotifications() {
     // Check everything in order
     e.preventDefault();
 
+    if (!userPushSDKInstance.signer) {
+      handleConnectWallet();
+      return;
+    }
+
     notificationToast.showLoaderToast({
       loaderMessage: 'Preparing Notification',
     });
@@ -466,7 +472,7 @@ function SendNotifications() {
           getToastIcon: (size) => <MdError size={size} color="red" />,
         });
         setNFProcessing(0);
-        console.log(err);
+        console.error(err);
       }
     }
   };
@@ -600,7 +606,7 @@ function SendNotifications() {
                         options={NFTypes}
                         onChange={(option) => {
                           setNFType(option.value);
-                          console.log(option);
+                          console.debug(option);
                         }}
                         value={nfType}
                       />
@@ -714,8 +720,8 @@ function SendNotifications() {
                         onKeyPress={handleSubsetInputChange}
                         onChange={(e) => {
                           const text = e.target.value.trim();
-                          console.log(text);
-                          console.log(tempRecipeint);
+                          console.debug(text);
+                          console.debug(tempRecipeint);
                           // if (!LIMITER_KEYS.includes(text) && text.length > 0 ) {
                           setTempRecipient(e.target.value);
                           // }

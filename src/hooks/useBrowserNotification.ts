@@ -27,9 +27,9 @@ export function useBrowserNotification(account){
             position: "top-right"
           });
         } else {
-          console.log('\n\n\n\n\n')
-          console.log("revieced push notification")
-          console.log('\n\n\n\n\n')
+          console.info('\n\n\n\n\n')
+          console.info("revieced push notification")
+          console.info('\n\n\n\n\n')
           const notificationTitle = payload.notification.title;
           const notificationOptions = {
             title: payload.data.app,
@@ -42,7 +42,7 @@ export function useBrowserNotification(account){
           };
           var notification = new Notification(notificationTitle, notificationOptions);
         }
-      }).catch(err => console.log('failed: ', err))
+      }).catch(err => console.error('failed: ', err))
         .finally(() => setTriggerNotification(!triggerNotification)); //retrigger the listener after it has been used once
     }, [triggerNotification]);
   }

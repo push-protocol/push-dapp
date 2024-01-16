@@ -83,7 +83,7 @@ const YieldPushFeeV3 = ({
                 });
                 return true;
             } catch (error) {
-                console.log("Error in delegating", error)
+                console.error("Error in delegating", error)
                 pushFeeToast.showMessageToast({
                     toastTitle: 'Error',
                     toastMessage: `Transaction failed! ${error.reason}`,
@@ -209,13 +209,13 @@ const YieldPushFeeV3 = ({
                     setCurrentTransactionNo(transactionNumber);
 
                 } catch (error) {
-                    console.log("Error in the transaction", tx);
+                    console.error("Error in the transaction", tx);
                     return;
                 }
 
 
             }).catch((error) => {
-                console.log("Error in claiming the reward", error);
+                console.error("Error in claiming the reward", error);
                 pushFeeToast.showMessageToast({
                     toastTitle: 'Error',
                     toastMessage: `Transaction failed! ${error.reason}`,
@@ -313,7 +313,7 @@ const YieldPushFeeV3 = ({
                 setCurrentTransactionNo(0);
 
             } catch (e) {
-                console.log("Error", e)
+                console.error("Error", e)
                 pushFeeToast.showMessageToast({
                     toastTitle: 'Error',
                     toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
@@ -325,7 +325,7 @@ const YieldPushFeeV3 = ({
 
             }
         }).catch((err) => {
-            console.log("Error: ", err)
+            console.error("Error: ", err)
             const unstakeErrorMessage = err.reason.includes("PushCoreV2::unstake:");
             const harvestErrorMessage = err.reason.includes("PushCoreV2::harvestPaginated:");
             if (unstakeErrorMessage || harvestErrorMessage) {

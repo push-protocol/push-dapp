@@ -1,60 +1,56 @@
 // React + Web3 Essentials
-import { ethers } from 'ethers';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
+import * as dotenv from 'dotenv';
+import ReactGA from 'react-ga';
 import Joyride, { CallBackProps } from 'react-joyride';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { DarkModeSwitch } from 'react-toggle-dark-mode';
-import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
-import ReactGA from 'react-ga';
-import * as dotenv from 'dotenv';
-import { PushAPI } from '@pushprotocol/restapi';
+import styled, { ThemeProvider } from 'styled-components';
+
+import { createGlobalStyle } from 'styled-components';
 
 // Internal Compoonents
 import InitState from 'components/InitState';
-import NavigationContextProvider from 'contexts/NavigationContext';
 import AppContextProvider from 'contexts/AppContext';
-import { EnvHelper } from 'helpers/UtilityHelper';
+import NavigationContextProvider from 'contexts/NavigationContext';
 import { useAccount, useInactiveListener, useSDKSocket } from 'hooks';
+import { resetAdminSlice } from 'redux/slices/adminSlice';
+import { resetChannelCreationSlice } from 'redux/slices/channelCreationSlice';
+import { resetNotificationsSlice } from 'redux/slices/notificationSlice';
+import { resetCanSendSlice } from 'redux/slices/sendNotificationSlice';
+import { resetSpamSlice } from 'redux/slices/spamSlice';
+import { resetUserSlice } from 'redux/slices/userSlice';
 import UserJourneySteps from 'segments/userJourneySteps';
 import Header from 'structure/Header';
 import MasterInterfacePage from 'structure/MasterInterfacePage';
+import Navigation from 'structure/Navigation';
 import AppLogin from './AppLogin';
 import { SectionV2 } from './components/reusables/SharedStylingV2';
-import { A, B, C, H2, Image, Item, ItemH, P, Span } from './primaries/SharedStyling';
+import { ErrorContext } from './contexts/ErrorContext';
 import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJourneySlice';
-import { resetSpamSlice } from 'redux/slices/spamSlice';
-import { resetNotificationsSlice } from 'redux/slices/notificationSlice';
-import { resetCanSendSlice } from 'redux/slices/sendNotificationSlice';
-import { resetChannelCreationSlice } from 'redux/slices/channelCreationSlice';
-import { resetAdminSlice } from 'redux/slices/adminSlice';
-import Navigation from 'structure/Navigation';
-import {  ErrorContext } from './contexts/ErrorContext'
-import { resetUserSlice, setUserPushSDKInstance } from 'redux/slices/userSlice';
 
 // Internal Configs
 import { appConfig } from 'config';
-import { themeDark, themeLight } from 'config/Themization';
 import GLOBALS from 'config/Globals';
+import { themeDark, themeLight } from 'config/Themization';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 
 // space imports
-import SpaceContextProvider, { SpaceContext } from 'contexts/SpaceContext';
-import { SpacesUIProvider } from '@pushprotocol/uiweb';
-import { darkTheme,lightTheme } from 'config/spaceTheme';
-import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 import {
   ISpaceBannerProps,
   ISpaceCreateWidgetProps,
   ISpaceFeedProps,
   ISpaceInvitesProps,
   ISpaceWidgetProps,
-  SpacesUI,
+  SpacesUI, SpacesUIProvider
 } from '@pushprotocol/uiweb';
-import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
 import { useUpdateTheme } from '@web3-onboard/react';
+import { darkTheme, lightTheme } from 'config/spaceTheme';
+import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
+import SpaceContextProvider from 'contexts/SpaceContext';
+import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 
 dotenv.config();
 
@@ -74,12 +70,55 @@ export interface IUseSpaceReturnValues {
   CreateSpaceComponent: React.FC<ISpaceCreateWidgetProps>;
 }
 
+// Extend the console
+const extendConsole = () => {
+  "use strict";
+  try {
+    var disabledConsoles = {};
+    console.enable = function (level, enabled) {
+      if (window.console === "undefined" || !window.console || window.console === null) {
+        window.console = {};
+      }
+      if (window.console[level] === "undefined" || !window.console[level] || window.console[level] === null) {
+        window.console[level] = function () { };
+      }
+      if (enabled) {
+        if (disabledConsoles[level]) {
+          window.console[level] = disabledConsoles[level];
+        }
+      } else {
+        disabledConsoles[level] = window.console[level];
+        window.console[level] = function () { };
+      }
+    };
+  } catch (e) {
+    console.error("Extended console() threw an error!");
+    console.debug(e);
+  }
+}
+
+// extend console
+extendConsole();
+
+// Disable consolve
+if (appConfig?.appEnv === "prod" || appConfig?.appEnv === "staging") {
+  console.enable("debug", false);
+  console.enable("log", false);
+  console.enable("info", false);
+
+  // disable console.warn in prod
+  if (appConfig?.appEnv === "prod") {
+    console.enable("warn", false);
+  }
+}
+
+// Provess App
 export default function App() {
   const dispatch = useDispatch();
 
-  const {isActive, account, chainId, provider} = useAccount();
+  const { isActive, account, chainId, provider } = useAccount();
   const [currentTime, setcurrentTime] = React.useState(0);
-  const {authError, setAuthError } = useContext(ErrorContext);
+  const { authError, setAuthError } = useContext(ErrorContext);
   const updateOnboardTheme = useUpdateTheme();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -101,7 +140,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if(!account) return;
+    if (!account) return;
     dispatch(resetSpamSlice());
     dispatch(resetNotificationsSlice());
     dispatch(resetCanSendSlice());
@@ -110,25 +149,6 @@ export default function App() {
     dispatch(resetUserSlice());
   }, [account]);
 
-  useEffect(() => {
-    const librarySigner = provider?.getSigner(account);
-    if(!account || !librarySigner || !appConfig?.appEnv || userPushSDKInstance) return;
-
-    const initializePushSDK = async () => {
-        try {
-          const userInstance = await PushAPI.initialize(librarySigner, {
-              env: appConfig.appEnv, // defaults to staging
-              account: account
-          });
-          
-          dispatch(setUserPushSDKInstance(userInstance));
-        } catch (error) {
-        // Handle initialization error
-        }
-    };
-    
-    initializePushSDK();
-}, [account, provider]);
 
   // console.log(isActive, chainId, account);
   // handle logic to reconnect in response to certain events from the provider
@@ -143,8 +163,8 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
 
   // enable socket notifications
-  useSDKSocket({ account, chainId, env: appConfig.appEnv});
-  
+  useSDKSocket({ account, chainId, env: appConfig.appEnv });
+
   const toggleDarkMode = () => {
     const newTheme = !darkMode ? 'dark' : 'light';
     updateOnboardTheme(newTheme);
@@ -228,81 +248,84 @@ export default function App() {
   // const { spaceUI } = useSpaceComponents();
 
   const location = useLocation();
-  const isSnapPage = location?.pathname === '/snap';
+  const isSnapPage = location?.pathname.includes('/snap');
+
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
-      {(!isActive || !allowedChain) && (
-        <SectionV2 minHeight="100vh">
-          <AppLogin toggleDarkMode={toggleDarkMode} />
-        </SectionV2>
-      )}
+      <AppContextProvider>
+        {(!isActive || !allowedChain) && (
+          <SectionV2 minHeight="100vh">
+            <AppLogin toggleDarkMode={toggleDarkMode} />
+          </SectionV2>
+        )}
 
-      {isActive && !authError && allowedChain && (
-        <>
-          <GlobalStyle />
-          <InitState />
-          <NavigationContextProvider>
-            <SpaceContextProvider>
-              <SpaceComponentContextProvider spaceUI={spaceUI}>
-            <AppContextProvider>
-              <Joyride
-                run={run}
-                steps={steps}
-                continuous={tutorialContinous}
-                stepIndex={stepIndex}
-                // hideFooter={true}
-                // primaryProps={false}
-                hideBackButton={true}
-                hideCloseButton={false}
-                disableScrolling={true}
-                disableScrollParentFix={true}
-                // disableFlip={true}
-                // showNextButton={false}
-                showSkipButton={false}
-                disableOverlayClose={true}
-                callback={handleJoyrideCallback}
-                styles={{
-                  options: {
-                    arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-                    backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-                    overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
-                    primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
-                    textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
-                    zIndex: 1000,
-                  },
-                }}
-              />
 
-              <HeaderContainer>
-                <Header
-                  isDarkMode={darkMode}
-                  darkModeToggle={toggleDarkMode}
-                />
-              </HeaderContainer>
+        {isActive && !authError && allowedChain && (
+          <>
+            <GlobalStyle />
+            <InitState />
+            <NavigationContextProvider>
+              <SpaceContextProvider>
+                <SpaceComponentContextProvider spaceUI={spaceUI}>
+                  <Joyride
+                    run={run}
+                    steps={steps}
+                    continuous={tutorialContinous}
+                    stepIndex={stepIndex}
+                    // hideFooter={true}
+                    // primaryProps={false}
+                    hideBackButton={true}
+                    hideCloseButton={false}
+                    disableScrolling={true}
+                    disableScrollParentFix={true}
+                    // disableFlip={true}
+                    // showNextButton={false}
+                    showSkipButton={false}
+                    disableOverlayClose={true}
+                    callback={handleJoyrideCallback}
+                    styles={{
+                      options: {
+                        arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                        backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                        overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
+                        primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
+                        textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
+                        zIndex: 1000,
+                      },
+                    }}
+                  />
 
-              <ParentContainer
-                bg={darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG}
-                headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
-              >
-                {!isSnapPage && <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                  <Navigation />
-                </LeftBarContainer>}
+                  <HeaderContainer>
+                    <Header
+                      isDarkMode={darkMode}
+                      darkModeToggle={toggleDarkMode}
+                    />
+                  </HeaderContainer>
 
-                <ContentContainer leftBarWidth={isSnapPage ? 0 : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                   {/* Shared among all pages, load universal things here */}
-                   <SpacesUIProvider spaceUI={spaceUI} theme={darkMode ? darkTheme : lightTheme}>
-                      <MasterInterfacePage />
-                      <SpaceWidgetSection />
-                    </SpacesUIProvider>
-                </ContentContainer>
-              </ParentContainer>
-            </AppContextProvider>
-            </SpaceComponentContextProvider>
-            </SpaceContextProvider>
-          </NavigationContextProvider>
-        </>
-      )}
+                  <ParentContainer
+                    bg={darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG}
+                    headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
+                  >
+                    {!isSnapPage && <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                      <Navigation />
+                    </LeftBarContainer>}
+
+                    <ContentContainer leftBarWidth={isSnapPage ? 0 : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                      {/* Shared among all pages, load universal things here */}
+                      <SpacesUIProvider spaceUI={spaceUI} theme={darkMode ? darkTheme : lightTheme}>
+                        <MasterInterfacePage />
+                        <SpaceWidgetSection />
+                      </SpacesUIProvider>
+                    </ContentContainer>
+                  </ParentContainer>
+                </SpaceComponentContextProvider>
+              </SpaceContextProvider>
+            </NavigationContextProvider>
+          </>
+        )}
+      
+      </AppContextProvider>
     </ThemeProvider>
   );
 }

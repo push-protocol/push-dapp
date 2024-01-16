@@ -35,7 +35,7 @@ export const contractSlice = createSlice({
         },
         updateTopNotifications: (state, action) => {
             state.notifications = [...action.payload.notifs, ...state.notifications.slice(action.payload.pageSize)];
-            console.log({sn: state.notifications});
+            console.debug({sn: state.notifications});
         }
     }
 });

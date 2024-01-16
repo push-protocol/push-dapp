@@ -2,13 +2,13 @@ import { useClickAway } from 'react-use';
 import { Input, Span } from 'primaries/SharedStyling';
 
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
 import { MdCheckCircle, MdError } from 'react-icons/md';
-
+import { useSelector } from 'react-redux';
 
 // Internal Compoonents
 import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
@@ -16,6 +16,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { bn, bnToInt, formatTokens } from 'helpers/StakingHelper';
 import { P } from 'components/SharedStyling';
 import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { AppContext } from 'contexts/AppContext';
 
 // Internal Configs
 import { abis, addresses } from 'config';
@@ -41,6 +42,11 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
     const [txInProgressDep, setTxInProgressDep] = React.useState(false);
 
     const [txnMessage, setTxnMessage] = useState(null);
+
+    const { userPushSDKInstance } = useSelector((state: any) => {
+        return state.user;
+    });
+    const { handleConnectWallet } = useContext(AppContext);
 
     const [depositAmount, setDepositAmount] = useState(0);
 
@@ -88,6 +94,11 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
     }, [])
 
     const approveDeposit = async () => {
+        if(!userPushSDKInstance.signer) {
+            handleConnectWallet();
+            return;
+        }
+
         if (depositApproved || txInProgressApprDep) {
             return
         }
@@ -135,7 +146,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                 setDepositApprove(true);
 
             } catch (e) {
-                console.log("Error", e);
+                console.error("Error", e);
                 toastObject.showMessageToast({
                     toastTitle: 'Error',
                     toastMessage: `User denied message signature.`,
@@ -146,7 +157,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                 setTxInProgressApprDep(false);
             }
         }).catch((err) => {
-            console.log("Error", err);
+            console.error("Error", err);
             toastObject.showMessageToast({
                 toastTitle: 'Error',
                 toastMessage: `User denied message signature`,
@@ -158,6 +169,11 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
     }
 
     const depositAmountTokenFarmSingleTx = async () => {
+        if(!userPushSDKInstance.signer) {
+            handleConnectWallet();
+            return;
+        }
+
         if (txInProgressDep || !depositApproved) {
             return
         }
@@ -223,7 +239,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                     handleClose();
 
                 } catch (e) {
-                    console.log("Error", e)
+                    console.error("Error", e)
                     toastObject.showMessageToast({
                         toastTitle: 'Error',
                         toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
@@ -235,7 +251,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
                 }
             })
             .catch((err) => {
-                console.log("Error in depositing", err)
+                console.error("Error in depositing", err)
                 err.reason = err.reason.slice(err.reason.indexOf('::') + 1);
                 toastObject.showMessageToast({
                     toastTitle: 'Error',

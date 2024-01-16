@@ -94,7 +94,7 @@ const YieldUniswapV3 = ({
                 getLpPoolStats();
                 getUserDataLP();
             } catch (e) {
-                console.log("Error", e);
+                console.error("Error", e);
                 uniswapV2Toast.showMessageToast({
                     toastTitle: 'Error',
                     toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
@@ -126,7 +126,7 @@ const YieldUniswapV3 = ({
             return;
         }
 
-        console.log("Lp POOL stats", lpPoolStats)
+        console.debug("Lp POOL stats", lpPoolStats)
 
         if (!lpPoolStats.currentEpochLP || lpPoolStats.currentEpochLP == 1) {
             uniswapV2Toast.showMessageToast({

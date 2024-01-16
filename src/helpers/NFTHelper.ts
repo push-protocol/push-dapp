@@ -16,11 +16,11 @@ const NFTHelper = {
         contract
           .balanceOf(user)
           .then((response: any) => {
-            if (enableLogs) console.log('getNFTBalance() --> %o', response);
+            if (enableLogs) console.debug('getNFTBalance() --> %o', response);
             resolve(response.toNumber());
           })
           .catch((err: any) => {
-            console.log('!!!Error, getNFTBalance() --> %o', err);
+            console.error('!!!Error, getNFTBalance() --> %o', err);
             reject(err);
           });
       }
@@ -34,11 +34,11 @@ const NFTHelper = {
       contract
         .totalSupply()
         .then((response: any) => {
-          if (enableLogs) console.log('getNFTBalance() --> %o', response);
+          if (enableLogs) console.debug('getNFTBalance() --> %o', response);
           resolve(response.toNumber());
         })
         .catch((err: any) => {
-          console.log('!!!Error, getNFTBalance() --> %o', err);
+          console.error('!!!Error, getNFTBalance() --> %o', err);
           reject(err);
         });
     });
@@ -51,11 +51,11 @@ const NFTHelper = {
       contract
         .ownerOf(tokenId)
         .then((response: any) => {
-          if (enableLogs) console.log('getOwnerOfTokenId() --> %o', response);
+          if (enableLogs) console.debug('getOwnerOfTokenId() --> %o', response);
           resolve(response);
         })
         .catch((err: any) => {
-          console.log('!!!Error, getOwnerOfTokenId() --> %o', err);
+          console.error('!!!Error, getOwnerOfTokenId() --> %o', err);
           reject(err);
         });
     });
@@ -68,11 +68,11 @@ const NFTHelper = {
       contract
         .tokenOfOwnerByIndex(user, index)
         .then((response: any) => {
-          if (enableLogs) console.log('getTokenOfOwnerByIndex() --> %o', response);
+          if (enableLogs) console.debug('getTokenOfOwnerByIndex() --> %o', response);
           resolve(response.toNumber());
         })
         .catch((err: any) => {
-          console.log('!!!Error, getTokenOfOwnerByIndex() --> %o', err);
+          console.error('!!!Error, getTokenOfOwnerByIndex() --> %o', err);
           reject(err);
         });
     });
@@ -85,11 +85,11 @@ const NFTHelper = {
       contract
         .tokenByIndex(index)
         .then((response: any) => {
-          if (enableLogs) console.log('getTokenByIndex() --> %o', response);
+          if (enableLogs) console.debug('getTokenByIndex() --> %o', response);
           resolve(response.toNumber());
         })
         .catch((err: any) => {
-          console.log('!!!Error, getTokenByIndex() --> %o', err);
+          console.error('!!!Error, getTokenByIndex() --> %o', err);
           reject(err);
         });
     });
@@ -102,11 +102,11 @@ const NFTHelper = {
       contract
         .tokenURI(tokenId)
         .then((response: any) => {
-          if (enableLogs) console.log('getTokenMetadata() --> %o', response);
+          if (enableLogs) console.debug('getTokenMetadata() --> %o', response);
           resolve(response);
         })
         .catch((err: any) => {
-          console.log('!!!Error, getTokenMetadata() --> %o', err);
+          console.error('!!!Error, getTokenMetadata() --> %o', err);
           reject(err);
         });
     });
@@ -131,7 +131,7 @@ const NFTHelper = {
               NFTHelper.getTokenOfOwnerByIndex(owner, i, nftContract).then(async (tokenId) => {
                 await NFTHelper.getClaimable({ tokenId, contract: rewardsContract })
                   .then(async (claimable) => {
-                    console.log('🚀 ~ file: NFTHelper.js ~ line 102 ~ .then ~ claimable', claimable);
+                    console.debug('🚀 ~ file: NFTHelper.js ~ line 102 ~ .then ~ claimable', claimable);
 
                     await NFTHelper.getTokenMetadata({ tokenId, contract: nftContract }).then(async (metadata) => {
                       if (tokenId != null && metadata != null && claimable != null)
@@ -139,7 +139,7 @@ const NFTHelper = {
                     });
                   })
                   .catch((err) => {
-                    console.log('!!!Error, getClaimable() --> %o', err);
+                    console.error('!!!Error, getClaimable() --> %o', err);
                     reject(err);
                   });
               })
@@ -147,11 +147,11 @@ const NFTHelper = {
           }
           // // wait until all promises are resolved
           await Promise.all(promises);
-          console.log('🚀 ~ file: NFTHelper.js ~ line 83 ~ .then ~ NFTDetails', NFTDetails);
+          console.debug('🚀 ~ file: NFTHelper.js ~ line 83 ~ .then ~ NFTDetails', NFTDetails);
           resolve(NFTDetails);
         })
         .catch((err) => {
-          console.log('!!!Error, getTokenMetadatasOfOwner() --> %o', err);
+          console.error('!!!Error, getTokenMetadatasOfOwner() --> %o', err);
           reject(err);
         });
     });
@@ -180,33 +180,33 @@ const NFTHelper = {
                                 NFTDetails.push({ id: tokenId, metadata, owner, claimable });
                             })
                             .catch((err) => {
-                              console.log('!!!Error, getAllTokenDatas::getOwnerOfTokenId() --> %o', err);
+                              console.error('!!!Error, getAllTokenDatas::getOwnerOfTokenId() --> %o', err);
                               reject(err);
                             });
                         })
                         .catch((err) => {
-                          console.log('!!!Error, getAllTokenDatas::getTokenMetadata() --> %o', err);
+                          console.error('!!!Error, getAllTokenDatas::getTokenMetadata() --> %o', err);
                           reject(err);
                         });
                     })
                     .catch((err) => {
-                      console.log('!!!Error, getAllTokenDatas::getClaimable() --> %o', err);
+                      console.error('!!!Error, getAllTokenDatas::getClaimable() --> %o', err);
                       reject(err);
                     });
                 })
                 .catch((err) => {
-                  console.log('!!!Error, getAllTokenDatas::getTokenByIndex() --> %o', err);
+                  console.error('!!!Error, getAllTokenDatas::getTokenByIndex() --> %o', err);
                   reject(err);
                 })
             );
           }
           // // wait until all promises are resolved
           await Promise.all(promises);
-          console.log('🚀 ~ file: NFTHelper.js ~ line 83 ~ .then ~ NFTDetails', NFTDetails);
+          console.debug('🚀 ~ file: NFTHelper.js ~ line 83 ~ .then ~ NFTDetails', NFTDetails);
           resolve(NFTDetails);
         })
         .catch((err) => {
-          console.log('!!!Error, getAllTokenDatas() --> %o', err);
+          console.error('!!!Error, getAllTokenDatas() --> %o', err);
           reject(err);
         });
     });
@@ -227,7 +227,7 @@ const NFTHelper = {
           });
         })
         .catch((err: any) => {
-          console.log('!!!Error, getTokenData() --> %o', err);
+          console.error('!!!Error, getTokenData() --> %o', err);
           reject(err);
         });
     });
@@ -240,18 +240,18 @@ const NFTHelper = {
       contract
         .safeTransferFrom(from, to, tokenId)
         .then((response: any) => {
-          if (enableLogs) console.log('transferNFT() --> %o', response);
+          if (enableLogs) console.debug('transferNFT() --> %o', response);
           resolve(response);
         })
         .catch((err: any) => {
-          console.log('!!!Error, transferNFT() --> %o', err);
+          console.error('!!!Error, transferNFT() --> %o', err);
           reject(err);
         });
     });
   },
 
   getClaimable: async ({ tokenId, contract }: ITokenFunctionProps): Promise<any> => {
-    console.log(tokenId, contract);
+    console.debug(tokenId, contract);
 
     const enableLogs: number = 0;
 
@@ -260,11 +260,11 @@ const NFTHelper = {
         contract
           .getClaimRewardStatus(tokenId)
           .then((response: any) => {
-            if (enableLogs) console.log('getClaimable() --> %o', response);
+            if (enableLogs) console.debug('getClaimable() --> %o', response);
             resolve(response);
           })
           .catch((err: any) => {
-            console.log('!!!Error, getClaimable() --> %o', err);
+            console.error('!!!Error, getClaimable() --> %o', err);
             reject(err);
           });
       }

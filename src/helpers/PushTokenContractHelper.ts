@@ -20,7 +20,7 @@ export const getPushTokenApprovalAmount = async ({
     const allowanceAmountStr = ethers.utils.formatEther(allowanceAmount.toString());
     return allowanceAmountStr;
   } catch (err) {
-    console.log(err.message);
+    console.error(err.message);
   }
 };
 
@@ -41,7 +41,7 @@ export const getHasEnoughPushToken = async ({
     const ownedPushTokenNum = +ethers.utils.formatEther(ownedPushToken.toString());
     return ownedPushTokenNum>=noOfPushTokensToCheck;
   } catch (err) {
-    console.log(err.message);
+    console.error(err.message);
   }
 };
 
@@ -61,7 +61,7 @@ export const getPushTokenFromWallet = async({
   const ownedPushTokenNum = +ethers.utils.formatEther(ownedPushToken.toString());
   return ownedPushTokenNum;
   } catch (err) {
-    console.log(err.message);
+    console.error(err.message);
   }
 
   
@@ -81,7 +81,7 @@ export const approvePushToken = async ({ signer, contractAddress, amount }: Push
     await tx.wait();
     return true;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw err;
     // return false;
   }
@@ -109,7 +109,7 @@ export const importPushToken = async ({ provider }: ImportPushTokenType): Promis
     })
     return true;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw err;
   }
 }
@@ -123,23 +123,23 @@ export const mintPushToken = async ({noOfTokens, provider, account}:MintPushToke
   try {
     var signer = provider.getSigner(account);
     let pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
-    console.log({
+    console.info({
       pushTokenContract,
     });
-    console.log(1);
+    console.info(1);
     let pushTokenAmount = noOfTokens;
     const amount = ethers.utils.parseUnits(pushTokenAmount.toString(), 18);
-    console.log(amount);
+    console.info(amount);
     var mintTransactionPromise = pushTokenContract.mint(amount);
-    console.log(3);
+    console.info(3);
     const tx = await mintTransactionPromise;
-    console.log(tx);
+    console.info(tx);
     await provider.waitForTransaction(tx.hash);
-    console.log(4);
+    console.info(4);
 
-    console.log("Transaction Completed");
+    console.info("Transaction Completed");
     return (noOfTokens);
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }

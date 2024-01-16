@@ -48,7 +48,7 @@ export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHoo
           // currently for video calls only
           if (payload?.data?.additionalMeta?.type === `${ADDITIONAL_META_TYPE.PUSH_VIDEO}+1`) {
             const videoCallMetaData = JSON.parse(payload.data.additionalMeta.data);
-            console.log('RECIEVED VIDEO DATA', videoCallMetaData);
+            console.debug('RECIEVED VIDEO DATA', videoCallMetaData);
 
             if (videoCallMetaData.status === VideoCallStatus.INITIALIZED) {
               incomingCall(videoCallMetaData);
@@ -100,7 +100,7 @@ export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHoo
       /**
        * We receive a group creation or updated event.
        */
-      console.log(groupInfo);
+      console.info(groupInfo);
       setGroupInformationSinceLastConnection(groupInfo);
     });
   };

@@ -90,7 +90,7 @@ const InitState = () => {
         dispatch(setPushAdmin(response));
       })
       .catch((err) => {
-        console.log({ err });
+        console.error({ err });
       });
 
     // Push (EPNS) Read Provider Set
@@ -127,7 +127,7 @@ const InitState = () => {
         dispatch(setCanVerify(Boolean(verificationStatus)));
       })
       .catch((err) => {
-        console.log('There was an error [checkUserForChannelOwnership]:', err.message);
+        console.error('There was an error [checkUserForChannelOwnership]:', err.message);
         dispatch(setUserChannelDetails(null));
         dispatch(setProcessingState(0));
       });
@@ -186,7 +186,7 @@ const InitState = () => {
         dispatch(setDelegatees([]));
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
