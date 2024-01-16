@@ -329,7 +329,7 @@ export default function App() {
                         onMouseLeave={() => setIsHovered(false)}
                         leftBarWidth={sidebarCollapse ? GLOBALS.CONSTANTS.COLLAPSABLE_LEFT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}
                       >
-                        <Navigation sidebarCollapse={sidebarCollapse} collapseSidebar={collapseSidebar} />
+                        <Navigation sidebarCollapse={sidebarCollapse} />
                         {isHovered &&
                           <CollapsableArrow
                             bg={darkMode ? themeDark.collapsaBg : themeLight.collapsaBg}

@@ -34,7 +34,6 @@ import navigationList from 'config/NavigationList';
 // Create Header
 function Navigation({
   sidebarCollapse,
-  collapseSidebar
 }) {
   const {
     channelDetails,
@@ -543,7 +542,6 @@ function Navigation({
         </Item>
       )}
 
-      {/* <NavigationContainer> */}
         {navigationSetup && Object.keys(navigationSetup).length > 0 && (
           <>
             <Primary>
@@ -641,11 +639,7 @@ function Navigation({
             </Footer>
           </>
         )}
-      {/* </NavigationContainer> */}
-
-      {/* <CollapsableArrow style={{ left: sidebarCollapse ? GLOBALS.CONSTANTS.COLLAPSABLE_LEFT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH }} onClick={collapseSidebar}>
-        {sidebarCollapse ? <IoIosArrowDropright size='inherit' /> : <IoIosArrowDropleft size='inherit' />}
-      </CollapsableArrow> */}
+      
 
     </Container>
 

@@ -167,7 +167,7 @@ const NavigationList = {
 
     yieldv2: {
       src: 'navigation/YieldFarmingOff.svg',
-      activeSrc: 'navigation/incentivesOnIcon.svg',
+      activeSrc: 'navigation/YieldFarmingOn.svg',
       iconFactory: null,
       name: 'Yield Farming V2',
       title: 'Yield Farming V2',
