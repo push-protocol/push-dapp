@@ -91,8 +91,6 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   }
   const navigate = useNavigate();
   const location = useLocation();
-console.log("current theme", theme.scheme)
-console.log(theme.scheme == "dark" ? darkChatTheme : lightChatTheme)
   useEffect(() => {
     // if ens is resolved, update browse to match ens name is it doesn't match
     if (ensName && location.pathname !== `/chat/${ensName}`) {
