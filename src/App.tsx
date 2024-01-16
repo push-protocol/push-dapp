@@ -8,7 +8,6 @@ import Joyride, { CallBackProps } from 'react-joyride';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
-
 import { createGlobalStyle } from 'styled-components';
 
 // Internal Compoonents
@@ -30,6 +29,8 @@ import AppLogin from './AppLogin';
 import { SectionV2 } from './components/reusables/SharedStylingV2';
 import { ErrorContext } from './contexts/ErrorContext';
 import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJourneySlice';
+import { ReactComponent as CollapseSidebar } from './assets/collapseSidebar.svg';
+import { ReactComponent as ExpandSidebar } from './assets/expandSidebar.svg';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -250,6 +251,21 @@ export default function App() {
   const location = useLocation();
   const isSnapPage = location?.pathname.includes('/snap');
 
+  // const [sidebarWidth,setSidebarWidth] = React.useState(260);
+  const [sidebarCollapse, setSidebarCollapse] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const collapseSidebar = () => {
+    if (sidebarCollapse) {
+      setSidebarCollapse(false)
+    } else {
+      setSidebarCollapse(true);
+      setIsHovered(false);
+    }
+  }
+
+
+  console.log("Is Hovered", isHovered, sidebarCollapse);
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
@@ -307,11 +323,24 @@ export default function App() {
                     bg={darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG}
                     headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
                   >
-                    {!isSnapPage && <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                      <Navigation />
-                    </LeftBarContainer>}
+                    {!isSnapPage &&
+                      <LeftBarContainer
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
+                        leftBarWidth={sidebarCollapse ? GLOBALS.CONSTANTS.COLLAPSABLE_LEFT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}
+                      >
+                        <Navigation sidebarCollapse={sidebarCollapse} collapseSidebar={collapseSidebar} />
+                        {isHovered &&
+                          <CollapsableArrow
+                            bg={darkMode ? themeDark.collapsaBg : themeLight.collapsaBg}
+                            strokeColor={darkMode ? themeDark.strokeColor : themeLight.strokeColor}
+                            left={sidebarCollapse ? GLOBALS.CONSTANTS.COLLAPSABLE_LEFT_BAR_WIDTH - 20 : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH - 30} onClick={collapseSidebar}
+                          >
+                            {sidebarCollapse ? <ExpandSidebar /> : <CollapseSidebar />}
+                          </CollapsableArrow>}
+                      </LeftBarContainer>}
 
-                    <ContentContainer leftBarWidth={isSnapPage ? 0 : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                    <ContentContainer leftBarWidth={sidebarCollapse ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
                       {/* Shared among all pages, load universal things here */}
                       <SpacesUIProvider spaceUI={spaceUI} theme={darkMode ? darkTheme : lightTheme}>
                         <MasterInterfacePage />
@@ -324,7 +353,7 @@ export default function App() {
             </NavigationContextProvider>
           </>
         )}
-      
+
       </AppContextProvider>
     </ThemeProvider>
   );
@@ -362,6 +391,7 @@ const LeftBarContainer = styled.div`
   bottom: 0;
   width: ${(props) => props.leftBarWidth}px;
   position: fixed;
+  // transition: all 2s;
 
   @media (max-width: 992px) {
     display: none;
@@ -371,6 +401,7 @@ const LeftBarContainer = styled.div`
 const ContentContainer = styled.div`
   display: flex;
   flex: 1;
+  // transition: width 2s;
   align-self: center;
   width: calc(100% - ${(props) => props.leftBarWidth}px);
   margin: 0px 0px 0px ${(props) => props.leftBarWidth}px;
@@ -415,3 +446,32 @@ const ProviderImage = styled.img`
   max-height: 69px;
   padding-bottom: 18px;
 `;
+
+const CollapsableArrow = styled.div`
+  border-radius: 10px;
+  background: ${(props) => props.bg};
+  position:fixed;
+  top:50%;
+  left: ${(props) => props.left}px;
+  z-index:10;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  opacity:0.8;
+
+  &:hover{
+    opacity:1
+  }
+
+  svg{
+    path{
+      stroke-width: 2px;
+      stroke: ${(props) => props.strokeColor};
+    }
+  }
+
+
+`

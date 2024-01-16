@@ -166,7 +166,7 @@ const NavigationList = {
   third: {
 
     yieldv2: {
-      src: 'navigation/incentivesOffIcon.svg',
+      src: 'navigation/YieldFarmingOff.svg',
       activeSrc: 'navigation/incentivesOnIcon.svg',
       iconFactory: null,
       name: 'Yield Farming V2',

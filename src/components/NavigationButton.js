@@ -18,7 +18,7 @@ import { AppContext } from 'contexts/AppContext';
 import { GlobalContext } from 'contexts/GlobalContext';
 
 // Create Header
-function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
+function NavigationButton({ item, data, sectionID, active, bg = 'none',sidebarCollapse = false }) {
   const theme = useTheme();
 
   const { showMetamaskPushSnap, handleConnectWallet } = React.useContext(AppContext);
@@ -63,6 +63,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
     handleConnectWallet();
   }
 
+
   return (
     <>
       {data.loading && (
@@ -88,7 +89,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
           disabled={data.disabled}
           radius="16px"
           align="stretch"
-          padding="12px"
+          padding="12px 10px"
           margin={definedMargin}
           bg={bg}
           active={active?1:0}
@@ -116,7 +117,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
                 />
               )}
 
-              <Span
+              {!sidebarCollapse && <Span
                 flex="1"
                 weight={!active ? '300' : '600'}
                 spacing="0"
@@ -125,9 +126,9 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
                 onClick={data?.hasOnClickFunction && showMetamaskPushSnap}
                 size="16px">
                 {data.name}
-              </Span>
+              </Span>}
 
-              {data?.showNewTag && (
+              {data?.showNewTag && !sidebarCollapse && (
                 <NewTag>New</NewTag>
               )}
 

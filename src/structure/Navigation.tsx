@@ -6,6 +6,8 @@ import { FaDiscord, FaGithub, FaMedium, FaTelegramPlane, FaTwitter } from 'react
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import styled, { css, useTheme } from 'styled-components';
+import { IoIosArrowDropright } from "react-icons/io";
+import { IoIosArrowDropleft } from "react-icons/io";
 
 // Internal Compoonents
 import { postReq } from 'api';
@@ -30,7 +32,10 @@ import GLOBALS from 'config/Globals';
 import navigationList from 'config/NavigationList';
 
 // Create Header
-function Navigation() {
+function Navigation({
+  sidebarCollapse,
+  collapseSidebar
+}) {
   const {
     channelDetails,
     delegatees,
@@ -381,7 +386,6 @@ function Navigation() {
     }
     let rendered = Object.keys(items).map(function (key) {
       const section = items[key];
-      // console.log(section)
       const data = section.data;
       const uid = section.data.uid;
       // if(uid === 2 ){
@@ -415,7 +419,7 @@ function Navigation() {
                   mutateTransformedList(section, true);
                 }}
                 id={data.id}>
-                <NavigationButton item={section} data={data} sectionID={sectionID} active={section.active} bg={!section.active ? 'transparent' : theme.nav.activeColor} />
+                <NavigationButton item={section} data={data} sectionID={sectionID} active={section.active} bg={!section.active ? 'transparent' : theme.nav.activeColor} sidebarCollapse={sidebarCollapse} />
               </SectionInnerGroupContainer>
             </Item>
           ) : (
@@ -452,7 +456,7 @@ function Navigation() {
                   }
                 }}>
                 <NavigationButton item={section} data={data} sectionID={sectionID} active={section.active}
-                  bg={!section.active ? 'transparent' : theme.nav.activeColor} />
+                  bg={!section.active ? 'transparent' : theme.nav.activeColor} sidebarCollapse={sidebarCollapse} />
               </SectionInnerGroupContainer>
 
               {/* { 
@@ -520,7 +524,7 @@ function Navigation() {
                   // mutateTransformedList(item)
                 }}>
                 <NavigationButton item={item} data={data} sectionID={sectionID} active={item.active}
-                  bg={!item.active ? 'transparent' : theme.nav.activeColor} />
+                  bg={!item.active ? 'transparent' : theme.nav.activeColor} sidebarCollapse={sidebarCollapse} />
               </SectionInnerItemContainer>
             </SectionItem>
           );
@@ -538,28 +542,31 @@ function Navigation() {
           <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
         </Item>
       )}
-      {navigationSetup && Object.keys(navigationSetup).length > 0 && (
-        <>
-          <Primary>
-            {renderMainItems(navigationSetup.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)}
 
-            <Span
-              textTransform="uppercase"
-              weight="700"
-              size="11px"
-              margin="20px 0px 0px 0px"
-              padding="15px 30px"
-              color="#575D73"
-              spacing="0.16em">
-              Developers
-            </Span>
-            {renderMainItems(navigationSetup.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY)}
-          </Primary>
-          <Footer justify="flex-end" align="stretch">
-            {renderMainItems(navigationSetup.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD)}
+      {/* <NavigationContainer> */}
+        {navigationSetup && Object.keys(navigationSetup).length > 0 && (
+          <>
+            <Primary>
+              {renderMainItems(navigationSetup.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)}
 
-            {/* Put social */}
-            {/* <ItemH
+              <Span
+                textTransform="uppercase"
+                weight="700"
+                size="11px"
+                margin="20px 0px 0px 0px"
+                padding="15px 30px"
+                color="#575D73"
+                spacing="0.16em">
+                {sidebarCollapse ? 'Devs' : 'Developers'}
+              </Span>
+              {renderMainItems(navigationSetup.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY)}
+            </Primary>
+
+            <Footer justify="flex-end" align="stretch">
+              {renderMainItems(navigationSetup.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD)}
+
+              {/* Put social */}
+              {/* <ItemH
                 flex="initial"
                 padding="10px"
                 radius="0px 12px 0px 0px"
@@ -631,10 +638,17 @@ function Navigation() {
                   <FaGithub size={15} color={"#fff"}/>
                 </Anchor>
               </ItemH> */}
-          </Footer>
-        </>
-      )}
+            </Footer>
+          </>
+        )}
+      {/* </NavigationContainer> */}
+
+      {/* <CollapsableArrow style={{ left: sidebarCollapse ? GLOBALS.CONSTANTS.COLLAPSABLE_LEFT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH }} onClick={collapseSidebar}>
+        {sidebarCollapse ? <IoIosArrowDropright size='inherit' /> : <IoIosArrowDropleft size='inherit' />}
+      </CollapsableArrow> */}
+
     </Container>
+
   );
 }
 
@@ -645,6 +659,11 @@ const Container = styled(Section)`
   height: calc(100% - ${(props) => props.headerHeight}px);
   margin: ${(props) => props.headerHeight}px 0px 0px 0px;
 `;
+
+const NavigationContainer = styled.div`
+  display:flex;
+  flex-direction:column;
+`
 
 const Primary = styled(Item)`
   flex-direction: column;
@@ -711,7 +730,7 @@ const PrimarySectionGroup = styled(Item)`
   ${(props) =>
     !props.opened &&
     css`
-      margin-top: -100%;
+      margin-top: -200%;
     `};
 `;
 
@@ -728,6 +747,13 @@ const Secondary = styled(Item)`
 const SecondarySection = styled(InheritedSection)``;
 
 const Social = styled(Item)``;
+
+const CollapsableArrow = styled.div`
+  // transition: all 2s;
+  z-index:10;
+  width:2rem;
+  height:2rem;
+`
 
 // Export Default
 export default Navigation;

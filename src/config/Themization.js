@@ -286,6 +286,10 @@ const themeLight = {
   // Send Notification
   snfBorder: '#BAC4D6',
   snfToggleBg: '#f4f5fa',
+
+  //collapsable sidebar
+  collapsaBg:'#575d737f',
+  strokeColor:'#FFF'
 };
 
 const themeDark = {
@@ -580,6 +584,10 @@ const themeDark = {
   // Send Notification
   snfBorder: '#4A4F67',
   snfToggleBg: '#404650',
+
+   //collapsable sidebar
+   collapsaBg:'#0000004c',
+   strokeColor:'#575D73'
 };
 
 module.exports = {
