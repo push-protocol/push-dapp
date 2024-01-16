@@ -169,7 +169,7 @@ const InitState = () => {
           channelInformationPromise = [...delegateeList].map(({ channel }) => {
             return getAliasDetails({account,chainId}).then(
               (data) => PushAPI.channels.getChannel({
-              channel: convertAddressToAddrCaip(data.channel, appConfig.coreContractChain),
+              channel: convertAddressToAddrCaip(channel, appConfig.coreContractChain),
               env: appConfig.appEnv
             }));
           });
