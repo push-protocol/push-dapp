@@ -28,7 +28,7 @@ export const config = {
     // 10, // for optimism mainnet
     42161, // arbitrum mainnet
     1101, // polygon zkevm mainnet
-    122 // fuse mainnet
+    // 122 // fuse mainnet
   ],
 
   /**

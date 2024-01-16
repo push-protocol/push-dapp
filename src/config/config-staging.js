@@ -30,7 +30,7 @@ export const config = {
     420, // optimism goerli testnet
     1442, // polygon zkevm testnet
     421613, // arbitrum testnet
-    123 // fuse testnet
+    // 123 // fuse testnet
   ],
 
   /** 
