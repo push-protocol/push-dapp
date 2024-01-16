@@ -6,8 +6,6 @@ import { FaDiscord, FaGithub, FaMedium, FaTelegramPlane, FaTwitter } from 'react
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import styled, { css, useTheme } from 'styled-components';
-import { IoIosArrowDropright } from "react-icons/io";
-import { IoIosArrowDropleft } from "react-icons/io";
 
 // Internal Compoonents
 import { postReq } from 'api';

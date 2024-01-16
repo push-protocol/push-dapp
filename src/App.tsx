@@ -121,6 +121,8 @@ export default function App() {
   const [currentTime, setcurrentTime] = React.useState(0);
   const { authError, setAuthError } = useContext(ErrorContext);
   const updateOnboardTheme = useUpdateTheme();
+  const [sidebarCollapse, setSidebarCollapse] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
@@ -251,10 +253,7 @@ export default function App() {
   const location = useLocation();
   const isSnapPage = location?.pathname.includes('/snap');
 
-  // const [sidebarWidth,setSidebarWidth] = React.useState(260);
-  const [sidebarCollapse, setSidebarCollapse] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-
+  
   const collapseSidebar = () => {
     if (sidebarCollapse) {
       setSidebarCollapse(false)
@@ -264,8 +263,6 @@ export default function App() {
     }
   }
 
-
-  console.log("Is Hovered", isHovered, sidebarCollapse);
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
@@ -338,7 +335,8 @@ export default function App() {
                           >
                             {sidebarCollapse ? <ExpandSidebar /> : <CollapseSidebar />}
                           </CollapsableArrow>}
-                      </LeftBarContainer>}
+                      </LeftBarContainer>
+                    }
 
                     <ContentContainer leftBarWidth={sidebarCollapse ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
                       {/* Shared among all pages, load universal things here */}
