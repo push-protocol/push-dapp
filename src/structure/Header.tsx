@@ -2,38 +2,39 @@ import React, { useContext, useEffect, useRef } from 'react';
 
 // React + Web3 Essentials
 import { ethers } from 'ethers';
+import { Link } from 'react-router-dom';
 
 // External Packages
+import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
 import { useLocation } from 'react-router-dom';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
-import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
 import styled, { css, useTheme } from 'styled-components';
 
 // Internal Components
+import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg';
+import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
+import MobileNavButton from 'components/MobileNavButton';
+import NavigationButton from 'components/NavigationButton';
+import { AppContext } from 'contexts/AppContext';
+import { ErrorContext } from 'contexts/ErrorContext';
+import { NavigationContext } from 'contexts/NavigationContext';
+import Bell from 'primaries/Bell';
+import Profile from 'primaries/Profile';
 import { Button, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
 import { ReactComponent as EPNSLogoDark } from './assets/epnsDark.svg';
 import { ReactComponent as EPNSLogoLight } from './assets/epnsLight.svg';
-import MobileNavButton from 'components/MobileNavButton';
-import NavigationButton from 'components/NavigationButton';
-import Bell from 'primaries/Bell';
-import Profile from 'primaries/Profile';
-import { NavigationContext } from 'contexts/NavigationContext';
-import { ErrorContext } from 'contexts/ErrorContext';
-import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
-import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg'
-import { AppContext } from 'contexts/AppContext';
 
 // Internal Configs
+import ChainIndicator from 'components/ChainIndicator';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { appConfig } from 'config';
+import APP_PATHS from 'config/AppPaths';
 import GLOBALS from 'config/Globals';
+import { themeDark, themeLight } from 'config/Themization';
+import { UnsupportedChainIdError } from 'connectors/error';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { useClickAway } from 'react-use';
 import MobileNavigation from './MobileNavigation';
-import { useAccount, useDeviceWidthCheck } from 'hooks';
-import ChainIndicator from 'components/ChainIndicator';
-import { UnsupportedChainIdError } from 'connectors/error';
-import APP_PATHS from 'config/AppPaths';
-import { themeDark, themeLight } from 'config/Themization';
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 
 // header tags for pages that are not there in navigationList (Sidebar)
 const EXTRA_HEADER_TAGS = {
@@ -161,9 +162,9 @@ function Header({ isDarkMode, darkModeToggle }) {
         <MetamaskLogo width={24} height={22} />
         <InstallText>
           <SpanV2 fontSize='12px' fontWeight='400'>Get Notifications directly in MetaMask</SpanV2>
-          <Link href='https://app.push.org/snap' target='_blank'>
+          <StyledLink to='/snap'>
             Install Push Snap <OpenLink />
-          </Link>
+          </StyledLink>
         </InstallText>
       </SnapSection>
     )
@@ -419,7 +420,8 @@ const InstallText = styled.div`
   
 `
 
-const Link = styled.a`
+
+const StyledLink = styled(Link)`
   cursor:pointer;
   font-size:12px;
   font-weight:400;
