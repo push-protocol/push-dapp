@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { Suspense, useContext, useEffect, useRef } from 'react';
 
 // React + Web3 Essentials
 import { ethers } from 'ethers';
@@ -15,6 +15,8 @@ import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg';
 import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
 import MobileNavButton from 'components/MobileNavButton';
 import NavigationButton from 'components/NavigationButton';
+import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { AppContext } from 'contexts/AppContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { NavigationContext } from 'contexts/NavigationContext';
@@ -216,8 +218,11 @@ function Header({ isDarkMode, darkModeToggle }) {
             </Span>
           </HeaderTag>
         )}
-        {!showSnapMobile && !snapInstalled && <SnapHeader />}
 
+        <Suspense fallback={<Spinner size={24} color={GLOBALS.COLORS.PRIMARY_PINK} type={LOADER_SPINNER_TYPE.PROCESSING}/>}>
+          {!showSnapMobile && !snapInstalled && <SnapHeader />}
+        </Suspense>
+        
 
         {isActive && !showLoginControls && !error && (
           <DarkModeSwitch
