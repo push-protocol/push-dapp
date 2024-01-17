@@ -43,7 +43,7 @@ import { checkIfIntent, getUpdatedChatAndIntent, getUpdatedGroupInfo } from 'hel
 import { appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { fetchIntent } from 'helpers/w2w/user';
-import { ChatUIProvider, IGroup } from '@pushprotocol/uiweb';
+import { ChatUIProvider, IGroup, darkChatTheme } from '@pushprotocol/uiweb';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -348,7 +348,7 @@ const getUpdatedGroup = async(groupInfo) => {
 
   return (
     <Container>
-      <ChatUIProvider signer={signerData} env={appConfig?.appEnv} account={account} pgpPrivateKey={pgpPvtKey}>
+      <ChatUIProvider theme={theme.scheme === "dark" && darkChatTheme} signer={signerData} env={appConfig?.appEnv} account={account} pgpPrivateKey={pgpPvtKey}>
       <ItemHV2 ref={containerRef}>
         {!isLoading ? (
           <QueryClientProvider client={queryClient}>

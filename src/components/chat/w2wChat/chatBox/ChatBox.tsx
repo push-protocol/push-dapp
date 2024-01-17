@@ -15,7 +15,7 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 import { produce } from 'immer';
-import { ChatProfile, ChatViewList, MessageInput, ChatUIProvider, darkChatTheme, lightChatTheme } from '@pushprotocol/uiweb';
+import { ChatProfile, ChatViewList, MessageInput } from '@pushprotocol/uiweb';
 // Internal Components
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
@@ -76,6 +76,8 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const { videoObject } = useContext(VideoCallContext);
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);
+
+
 
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
@@ -165,6 +167,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     { id: 7, content: 'Access to more chat requests and messages will be added in the near future' },
   ];
 
+
   return (
     <Container>
       {!viewChatBox ? (
@@ -221,7 +224,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
         </WelcomeItem>
       ) : (
         <>
-<ChatUIProvider theme={theme.scheme === "dark" && darkChatTheme}>
+
           <Snackbar
             open={openReprovalSnackbar}
             autoHideDuration={10000}
@@ -294,7 +297,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
               </MessageInputWrapper>
             </>
           )}
-       </ChatUIProvider>
+
         </>
       )}
     </Container>
