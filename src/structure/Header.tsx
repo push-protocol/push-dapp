@@ -1,39 +1,42 @@
-import React, { useContext, useRef } from 'react';
+import React, { Suspense, useContext, useEffect, useRef } from 'react';
 
 // React + Web3 Essentials
 import { ethers } from 'ethers';
+import { Link } from 'react-router-dom';
 
 // External Packages
+import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
 import { useLocation } from 'react-router-dom';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
-import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
 import styled, { css, useTheme } from 'styled-components';
 
 // Internal Components
+import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg';
+import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
+import MobileNavButton from 'components/MobileNavButton';
+import NavigationButton from 'components/NavigationButton';
+import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import Spinner from 'components/reusables/spinners/SpinnerUnit';
+import { AppContext } from 'contexts/AppContext';
+import { ErrorContext } from 'contexts/ErrorContext';
+import { NavigationContext } from 'contexts/NavigationContext';
+import Bell from 'primaries/Bell';
+import Profile from 'primaries/Profile';
 import { Button, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
 import { ReactComponent as EPNSLogoDark } from './assets/epnsDark.svg';
 import { ReactComponent as EPNSLogoLight } from './assets/epnsLight.svg';
-import MobileNavButton from 'components/MobileNavButton';
-import NavigationButton from 'components/NavigationButton';
-import Bell from 'primaries/Bell';
-import Profile from 'primaries/Profile';
-import { NavigationContext } from 'contexts/NavigationContext';
-import { ErrorContext } from 'contexts/ErrorContext';
-import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
-import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg'
 
 // Internal Configs
+import ChainIndicator from 'components/ChainIndicator';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { appConfig } from 'config';
+import APP_PATHS from 'config/AppPaths';
 import GLOBALS from 'config/Globals';
+import { themeDark, themeLight } from 'config/Themization';
+import { UnsupportedChainIdError } from 'connectors/error';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { useClickAway } from 'react-use';
 import MobileNavigation from './MobileNavigation';
-import { useAccount, useDeviceWidthCheck } from 'hooks';
-import ChainIndicator from 'components/ChainIndicator';
-import { UnsupportedChainIdError } from 'connectors/error';
-import APP_PATHS from 'config/AppPaths';
-import { themeDark, themeLight } from 'config/Themization';
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { AppContext } from 'contexts/AppContext';
 
 // header tags for pages that are not there in navigationList (Sidebar)
 const EXTRA_HEADER_TAGS = {
@@ -68,8 +71,7 @@ function Header({ isDarkMode, darkModeToggle }) {
   const navRef = useRef()
 
   const { navigationSetup } = useContext(NavigationContext);
-
-  // Get 
+  const {  setSnapInstalled, snapInstalled } = React.useContext(AppContext);
   const { isActive, switchChain, connect, wallet } = useAccount();
   const { authError: error } = useContext(ErrorContext);
 
@@ -83,6 +85,9 @@ function Header({ isDarkMode, darkModeToggle }) {
 
   // Get Location
   const location = useLocation();
+
+  // const [snapInstalled, setSnapInstalled] = React.useState(false);
+
 
   React.useEffect(() => {
     // runs when navigation setup is updated, will run on init
@@ -138,15 +143,30 @@ function Header({ isDarkMode, darkModeToggle }) {
   const showSnapMobile = useDeviceWidthCheck(600);
   const isSnapPage = location?.pathname === '/snap';
 
+  const isSnapInstalled = async () => {
+    const installedSnaps = await window.ethereum.request({
+      method: 'wallet_getSnaps',
+    });
+    Object.keys(installedSnaps).forEach((snap) => {
+      if (snap == 'npm:@pushprotocol/snap') {
+        setSnapInstalled(true);
+      }
+    });
+  }
+
+  useEffect(() => {
+    isSnapInstalled();
+  }, [])
+
   const SnapHeader = () => {
     return (
       <SnapSection>
         <MetamaskLogo width={24} height={22} />
         <InstallText>
           <SpanV2 fontSize='12px' fontWeight='400'>Get Notifications directly in MetaMask</SpanV2>
-          <Link href='https://app.push.org/snap' target='_blank'>
+          <StyledLink to='/snap'>
             Install Push Snap <OpenLink />
-          </Link>
+          </StyledLink>
         </InstallText>
       </SnapSection>
     )
@@ -198,8 +218,11 @@ function Header({ isDarkMode, darkModeToggle }) {
             </Span>
           </HeaderTag>
         )}
-        {!showSnapMobile && <SnapHeader />}
 
+        <Suspense fallback={<Spinner size={24} color={GLOBALS.COLORS.PRIMARY_PINK} type={LOADER_SPINNER_TYPE.PROCESSING}/>}>
+          {!showSnapMobile && !snapInstalled && <SnapHeader />}
+        </Suspense>
+        
 
         {isActive && !showLoginControls && !error && (
           <DarkModeSwitch
@@ -402,7 +425,8 @@ const InstallText = styled.div`
   
 `
 
-const Link = styled.a`
+
+const StyledLink = styled(Link)`
   cursor:pointer;
   font-size:12px;
   font-weight:400;

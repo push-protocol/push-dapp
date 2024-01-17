@@ -35,10 +35,9 @@ const SnapModule = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [walletConnected, setWalletConnected] = useState(false);
-  const [snapInstalled, setSnapInstalled] = useState(false);
   const [addedAddress, setAddedAddress] = useState(false);
 
-  const { showMetamaskPushSnap, setSnapState } = React.useContext(AppContext);
+  const { showMetamaskPushSnap, setSnapState, setSnapInstalled, snapInstalled } = React.useContext(AppContext);
 
   const { account, provider } = useAccount();
 
@@ -168,7 +167,7 @@ const SnapModule = ({
       showSnapFAQModal();
     }
 
-    if(route == 'knowledge'){
+    if (route == 'knowledge') {
       showSnapKnowledgeModal();
     }
 
@@ -305,32 +304,32 @@ const SnapModule = ({
                   fontWeight="400"
                 >
                   Connected to Push Snap
-              </SpanV2>
-            </ItemHV2>
-          ) : (
-            <ItemVV2 gap="16px">
-              {loading && !snapInstalled ? (
-                <LoaderSpinner
-                  type={LOADER_TYPE.SEAMLESS}
-                  spinnerSize={44}
-                />
-              ) : (
-                <ConnectButton disabled={!snapInstalled ? false : true} onClick={() => connectToMetaMask()} >
-                  {!snapInstalled ? 'Step 1: Install Snap' : 'Step 1: Completed'}
-                </ConnectButton>
-              )}
-              {loading && snapInstalled ? (
-                <LoaderSpinner
-                  type={LOADER_TYPE.SEAMLESS}
-                  spinnerSize={44}
-                />
-              ) : (
-                <ConnectButton disabled={snapInstalled ? false : true} signOnMM={snapInstalled ? true : false} onClick={() => connectToMetaMask()} >
-                  Step 2: Sign In with Metamask 🦊
-                </ConnectButton>
-              )}
-            </ItemVV2>
-          )}
+                </SpanV2>
+              </ItemHV2>
+            ) : (
+              <ItemVV2 gap="16px">
+                {loading && !snapInstalled ? (
+                  <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={44}
+                  />
+                ) : (
+                  <ConnectButton disabled={!snapInstalled ? false : true} onClick={() => connectToMetaMask()} >
+                    {!snapInstalled ? 'Step 1: Install Snap' : 'Step 1: Completed'}
+                  </ConnectButton>
+                )}
+                {loading && snapInstalled ? (
+                  <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={44}
+                  />
+                ) : (
+                  <ConnectButton disabled={snapInstalled ? false : true} signOnMM={snapInstalled ? true : false} onClick={() => connectToMetaMask()} >
+                    Step 2: Sign In with Metamask 🦊
+                  </ConnectButton>
+                )}
+              </ItemVV2>
+            )}
 
             {walletConnected || addedAddress ? (
               <ButtonContainer gap="12px" >
@@ -367,9 +366,9 @@ const SnapModule = ({
         </SubContainer>
         <ItemVV2 flex='none'>
           <SpanV2 fontSize='14px' fontWeight='400' color='#657795'>Have a question? Check out our {" "}
-            <SpanV2 fontWeight='500' cursor='pointer' onClick={()=>navigate("/snap/faq")}>FAQs </SpanV2>
+            <SpanV2 fontWeight='500' cursor='pointer' onClick={() => navigate("/snap/faq")}>FAQs </SpanV2>
             or {" "}
-            <SpanV2 fontWeight='500' cursor='pointer' onClick={()=>navigate("/snap/knowledge")}>Knowledgebase.</SpanV2>
+            <SpanV2 fontWeight='500' cursor='pointer' onClick={() => navigate("/snap/knowledge")}>Knowledgebase.</SpanV2>
           </SpanV2>
         </ItemVV2>
       </Container>

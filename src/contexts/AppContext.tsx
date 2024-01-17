@@ -23,6 +23,8 @@ const AppContextProvider = ({ children }) => {
 
     const [web3NameList, setWeb3NameList] = useState<Web3NameListType>({});
 
+    const [snapInstalled, setSnapInstalled] = useState(false);
+
     const [SnapState, setSnapState] = useState(1);
     const {
         isModalOpen: isMetamaskPushSnapOpen,
@@ -77,8 +79,6 @@ const AppContextProvider = ({ children }) => {
             account: readOnlyWallet,
             env: appConfig.appEnv,
         });
-        console.log("User Instance in guest mode", userInstance);
-
         dispatch(setUserPushSDKInstance(userInstance));
     }
 
@@ -91,8 +91,6 @@ const AppContextProvider = ({ children }) => {
                 env: appConfig.appEnv,  // defaults to staging
                 account: account
             });
-
-            console.log("User Instance", userInstance);
 
             dispatch(setUserPushSDKInstance(userInstance));
         } catch (error) {
@@ -120,7 +118,9 @@ const AppContextProvider = ({ children }) => {
             setSnapState,
             initializePushSDK,
             SnapState,
-            handleConnectWallet
+            handleConnectWallet,
+            setSnapInstalled,
+            snapInstalled
         }}>
             {children}
         </AppContext.Provider>

@@ -12,6 +12,8 @@ export interface AppContextType {
   SnapState: number;
   setSnapState: any;
   initializePushSDK: any;
+  snapInstalled: boolean;
+  setSnapInstalled: (snapInstalled:boolean) => void;
   handleConnectWallet: (
     showToast?: boolean,
     toastMessage?: string
