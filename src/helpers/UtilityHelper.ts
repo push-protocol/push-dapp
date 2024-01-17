@@ -11,7 +11,7 @@ import { appConfig } from '../config';
 // Utility Helper Functions
 const UtilityHelper = {
   isMainnet: (chainId: number):boolean => {
-    if (chainId === 1 || chainId === 137 || chainId === 56 || chainId === 1101 || chainId === 10 || chainId === 42161) {
+    if (chainId === 1 || chainId === 137 || chainId === 56 || chainId === 1101 || chainId === 10 || chainId === 42161 || chainId === 122) {
       return true;
     }
     return false;
@@ -50,7 +50,9 @@ export const MaskedAliasChannels:{
   1442: {},
   1101: {},
   42161: {},
-  421613: {}
+  421613: {},
+  122: {},
+  123: {}
  }
 
  export const findObject = (data: any,parentArray: any[],property: string ): boolean => {
@@ -112,7 +114,9 @@ export const networkName = {
   1442: "Polygon zkEVM Testnet",
   1101: "Polygon zkEVM Mainnet",
   42161: "ArbitrumOne Mainnet",
-  421613: "Arbitrum Testnet"
+  421613: "Arbitrum Testnet",
+  122: "Fuse Mainnet",
+  123: "Fuse Testnet"
 };
 
 export const chainNameBackendStandard = {
@@ -133,7 +137,9 @@ export const aliasChainIdToChainName={
   42161: 'ARBITRUMONE',
   421613: 'ARBITRUMONE',
   1101: "POLYGONZKEVM",
-  1442: "POLYGONZKEVM"
+  1442: "POLYGONZKEVM",
+  122: "FUSE",
+  123: "FUSE"
 }
 
 export const aliasChainIdsMapping = {
@@ -203,7 +209,7 @@ export const NETWORK_DETAILS = {
   ARBITRUM_TESTNET: {
     chainId: utils.hexValue(421613),
     chainName: 'Arbitrum Testnet',
-    nativeCurrency: {name: 'ETH', symbol: 'ETH', decimals: 18},
+    nativeCurrency: {name: 'AGOR', symbol: 'AGOR', decimals: 18},
     rpcUrls: ['https://goerli-rollup.arbitrum.io/rpc'],
     blockExplorerUrls: ['https://testnet.arbiscan.io/']
   },
@@ -213,6 +219,20 @@ export const NETWORK_DETAILS = {
     nativeCurrency: {name: 'ETH', symbol: 'ETH', decimals: 18},
     rpcUrls: ['https://arb1.arbitrum.io/rpc'],
     blockExplorerUrls: ['https://arbiscan.io/']
+  },
+  FUSE_TESTNET: {
+    chainId: utils.hexValue(123),
+    chainName: 'Fuse Testnet',
+    nativeCurrency: {name: 'SPARK', symbol: 'SPARK', decimals: 18},
+    rpcUrls: ['https://rpc.fusespark.io'],
+    blockExplorerUrls: ['	https://explorer.fusespark.io/']
+  },
+  FUSE_MAINNET: {
+    chainId: utils.hexValue(122),
+    chainName: 'Fuse Mainnet',
+    nativeCurrency: {name: 'Fuse', symbol: 'Fuse', decimals: 18},
+    rpcUrls: ['https://rpc.fuse.io'],
+    blockExplorerUrls: ['	https://explorer.fuse.io/']
   }
 };
 
@@ -233,7 +253,9 @@ export const LOGO_FROM_CHAIN_ID: {
   1101: "PolygonZkEVM.svg",
   42161: "Arbitrum.svg",
   421613: "Arbitrum.svg",
-  11155111: "Ethereum.svg"
+  11155111: "Ethereum.svg",
+  122: "Fuse.svg",
+  123: "Fuse.svg"
 }
 
 export type getAliasResponseType = {

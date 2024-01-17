@@ -27,6 +27,18 @@ const BNB: AddEthereumChainParameter['nativeCurrency'] = {
   decimals: 18,
 }
 
+const FUSE: AddEthereumChainParameter['nativeCurrency'] = {
+  name: 'Fuse',
+  symbol: 'FUSE',
+  decimals: 18,
+}
+
+const SPARK: AddEthereumChainParameter['nativeCurrency'] = {
+  name: 'Spark',
+  symbol: 'SPARK',
+  decimals: 18,
+}
+
 interface BasicChainInformation {
   urls: string[]
   name: string
@@ -106,6 +118,12 @@ export const MAINNET_CHAINS: ChainConfig = {
     nativeCurrency: CELO,
     blockExplorerUrls: ['https://explorer.celo.org'],
   },
+  122: {
+    urls: ['https://rpc.fuse.io'],
+    name: "Fuse Mainnet",
+    nativeCurrency: FUSE,
+    blockExplorerUrls: ['https://explorer.fuse.io/']
+  }
 }
 
 export const TESTNET_CHAINS: ChainConfig = {
@@ -155,6 +173,12 @@ export const TESTNET_CHAINS: ChainConfig = {
     urls: ['https://rpc.public.zkevm-test.net'],
     nativeCurrency: MATIC,
     blockExplorerUrls: [],
+  },
+  123: {
+    name: "Fuse Testnet",
+    urls: ['https://rpc.fusespark.io'],
+    nativeCurrency: SPARK,
+    blockExplorerUrls: ['https://explorer.fusespark.io/'],
   }
 }
 

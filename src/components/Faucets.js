@@ -63,6 +63,13 @@ const Faucets = () => {
       title: "Arbitrum Testnet Faucet",
       function: () => {},
       link: "https://faucet.quicknode.com/arbitrum/goerli"
+    },
+    {
+      id: "123",
+      value: "Fuse",
+      title: "Fuse Sparknet Faucet",
+      function: () => {},
+      link: "https://chaindrop.org/?chainid=123&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
     }
   ];
 
