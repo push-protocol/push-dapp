@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React from 'react';
+import React, { useContext } from 'react';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,6 +33,7 @@ import { useAccount } from 'hooks';
 // Internal Configs
 import { appConfig } from "config";
 import { device } from 'config/Globals';
+import { AppContext } from 'contexts/AppContext';
 
 // Constants
 const NOTIFICATIONS_PER_PAGE = 10;
@@ -40,6 +41,9 @@ const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
 const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const dispatch = useDispatch();
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });   
   const modalRef = React.useRef(null);
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
   const { account, chainId, provider } = useAccount();
@@ -139,15 +143,12 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   }, [allFilter]);
 
   const loadNotifications = async () => {
-    if (loading || finishedFetching || run) return;
+    if (loading || finishedFetching || run || !userPushSDKInstance) return;
     setLoading(true);
     try {
-      const results = await PushAPI.user.getFeeds({
-        user: user,
+      const results = await userPushSDKInstance.notification.list('SPAM', {
         limit: NOTIFICATIONS_PER_PAGE,
         page: page,
-        env: appConfig.pushNodesEnv,
-        spam: true,
         raw: true
       });
       let parsedResponse = PushAPI.utils.parseApiResponse(results);
@@ -187,12 +188,9 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     setLoading(true);
 
     try {
-      const results = await PushAPI.user.getFeeds({
-        user: user,
+      const results = await userPushSDKInstance.notification.list('SPAM', {
         limit: NOTIFICATIONS_PER_PAGE,
         page: 1,
-        env: appConfig.pushNodesEnv,
-        spam: true,
         raw: true
       });
       if (!notifications.length) {
@@ -238,12 +236,9 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const fetchAllNotif = async () => {
     setLoadFilter(true);
     try {
-      const results = await PushAPI.user.getFeeds({
-        user: user,
+      const results = await userPushSDKInstance.notification.list('SPAM', {
         limit: 100000,
         page: 1,
-        env: appConfig.pushNodesEnv,
-        spam: true,
         raw: true
       });
 
@@ -289,9 +284,10 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   };
 
   React.useEffect(() => {
+    if (!userPushSDKInstance) return;
     fetchLatestNotifications();
     fetchAllNotif();
-  }, []);
+  }, [userPushSDKInstance]);
 
   React.useEffect(() => {
     if (epnsCommReadProvider) {

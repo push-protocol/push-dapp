@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
@@ -12,7 +12,6 @@ import { cloneDeep } from 'lodash';
 import { useAccount } from 'hooks';
 import { Button } from 'primaries/SharedStyling';
 import { ImageV2 } from 'components/reusables/SharedStylingV2';
-import { getChannel, getUserSubscriptions } from 'services';
 import LoaderSpinner from 'primaries/LoaderSpinner';
 import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
@@ -34,6 +33,9 @@ interface ChannelListItem {
 
 function UserSettings() {
   const { account, chainId } = useAccount();
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });  
   const { subscriptionStatus, userSettings: currentUserSettings } = useSelector((state: any) => state.channels);
   const [selectedOption, setSelectedOption] = useState(0);
   
@@ -45,21 +47,17 @@ function UserSettings() {
   const dispatch = useDispatch();
 
   const fetchChannelDetails = async (channel: string) => {
-    try {
-      const details = await getChannel({ channel });
-      if (details) {
-        const updatedChannelItem: ChannelListItem = {
-          channel,
-          id: details.id,
-          icon: details.icon,
-          name: details.name,
-          channel_settings: details.channel_settings,
-        };
-        return updatedChannelItem;
-      } else return undefined;
-    } catch {
-      return undefined;
-    }
+    const details = await userPushSDKInstance.channel.info(channel);
+    if (details) {
+      const updatedChannelItem: ChannelListItem = {
+        channel,
+        id: details.id,
+        icon: details.icon,
+        name: details.name,
+        channel_settings: details.channel_settings,
+      };
+      return updatedChannelItem;
+    } else return undefined;
   };
 
   const fillData = async (details: any) => {
@@ -74,12 +72,11 @@ function UserSettings() {
   };
 
   useEffect(() => {
-    if (!account) return;
+    if (!account || !userPushSDKInstance) return;
     (async function () {
       setIsLoading(true);
       if (Object.keys(subscriptionStatus).length === 0) {
-        const userCaipAddress = convertAddressToAddrCaip(account, chainId);
-        const subscriptionsArr = await getUserSubscriptions({ userCaipAddress });
+        const subscriptionsArr = await userPushSDKInstance.notification.subscriptions();
         const subscriptionsMapping = {};
         const userSettings = {};
         subscriptionsArr.map(({ channel, user_settings }) => {
@@ -94,7 +91,7 @@ function UserSettings() {
       }
       setIsLoading(false);
     })();
-  }, [account]);
+  }, [account, userPushSDKInstance]);
 
   const navigateToChannels = () => {
     navigate('/channels');
