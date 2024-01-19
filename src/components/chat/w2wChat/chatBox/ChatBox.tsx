@@ -77,6 +77,8 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);
 
+
+
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
   //resolve web3 names
@@ -91,7 +93,6 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   }
   const navigate = useNavigate();
   const location = useLocation();
-
   useEffect(() => {
     // if ens is resolved, update browse to match ens name is it doesn't match
     if (ensName && location.pathname !== `/chat/${ensName}`) {
@@ -166,6 +167,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     { id: 7, content: 'Access to more chat requests and messages will be added in the near future' },
   ];
 
+
   return (
     <Container>
       {!viewChatBox ? (
@@ -222,6 +224,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
         </WelcomeItem>
       ) : (
         <>
+
           <Snackbar
             open={openReprovalSnackbar}
             autoHideDuration={10000}
@@ -251,6 +254,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             fontWeight="500"
           >
             {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
+            
               <ChatProfile component={<Tooltip
                 tooltipContent="Video call"
                 placementProps={{
@@ -269,6 +273,8 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
                   />
                 </VideoCallButton>
               </Tooltip>} style="Info" chatId={(currentChat?.did?.includes(":") ? currentChat?.did.split(":")[1] : currentChat?.did) || currentChat?.groupInformation?.chatId} />
+
+             
             )}
           </ItemHV2>
 
@@ -284,11 +290,14 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             <>
               <MessageInputWrapper>
                 {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
-                  <MessageInput chatId={currentChat?.did?.includes(":nft:") ? currentChat?.did.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0] : currentChat?.did || currentChat?.groupInformation?.chatId} />
+            
+                 <MessageInput chatId={currentChat?.did?.includes(":nft:") ? currentChat?.did.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0] : currentChat?.did || currentChat?.groupInformation?.chatId} />
+                
                 )}
               </MessageInputWrapper>
             </>
           )}
+
         </>
       )}
     </Container>
@@ -306,9 +315,9 @@ const MessageInputWrapper = styled.div`
   justify-content: center;
   position: absolute;
   bottom: 8px;
-
   z-index: 99;
 `;
+
 const ChatContainer = styled.div`
   overflow-x: hidden;
   align-items: unset;
@@ -330,10 +339,6 @@ const MessageContainer = styled(ItemVV2)`
   position: absolute;
   padding: 40px 20px;
   top: 40px;
-  // bottom: 150px;
-  // left: 0;
-  // right: 0;
-  // margin: 0;
   width: 95%;
   height: 80%;
   @media (max-height: 750px) {
@@ -351,46 +356,8 @@ const MessageContainer = styled(ItemVV2)`
   @media (max-height: 400px) {
     height: 45%;
   }
-  // max-height: 20%;
-  overflow-x: hidden;
-  // overflow-y: scroll;
-  // background: red;
 
-  // &::-webkit-scrollbar-track {
-  //   background-color: ${(props) => props.theme.scrollBg};
-  //   border-radius: 10px;
-  // }
 
-  // &::-webkit-scrollbar {
-  //   background-color: ${(props) => props.theme.scrollBg};
-  //   width: 5px;
-  // }
-
-  // @media (max-width: 768px) {
-  //   padding: 0px 0px 0px 0px;
-
-  //   &::-webkit-scrollbar-track {
-  //     background-color: none;
-  //     border-radius: 9px;
-  //   }
-
-  //   &::-webkit-scrollbar {
-  //     background-color: none;
-  //     width: 4px;
-  //   }
-  // }
-
-  // &::-webkit-scrollbar-thumb {
-  //   border-radius: 10px;
-  //   background-image: -webkit-gradient(
-  //     linear,
-  //     left top,
-  //     left bottom,
-  //     color-stop(0.44, #cf1c84),
-  //     color-stop(0.72, #cf1c84),
-  //     color-stop(0.86, #cf1c84)
-  //   );
-  // }
 `;
 
 const GroupInfo = styled(ItemHV2)`
