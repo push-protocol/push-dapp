@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,7 +18,7 @@ import DisplayNotice from '../primaries/DisplayNotice';
 import { Item, ItemH } from '../primaries/SharedStyling';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import ChainsSelect from 'components/ChainsSelect';
-import { getChannels, getChannelsSearch, getUserSubscriptions } from 'services'; // Api Services
+import { getChannels, getChannelsSearch } from 'services'; // Api Services
 import { useAccount } from 'hooks';
 
 // Internal Configs
@@ -26,6 +26,7 @@ import { appConfig } from 'config';
 import InfoImage from "../assets/info.svg";
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import UpdateChannelTooltipContent from 'components/UpdateChannelTooltipContent';
+import { AppContext } from 'contexts/AppContext';
 
 // import Tooltip from './reusables/tooltip/Tooltip';
 // import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
@@ -42,6 +43,9 @@ const SEARCH_LIMIT = 10;
 function ViewChannels({ loadTeaser, playTeaser }) {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  }); 
   const { account, chainId } = useAccount();
   const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
   const { run, stepIndex } = useSelector((state: any) => state.userJourney);
@@ -74,7 +78,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
 
     // fetch more channel information
     setMoreLoading(true);
-    if (search) {
+    if (search && userPushSDKInstance) {
       loadMoreSearchChannels();
       return;
     }
@@ -116,11 +120,10 @@ function ViewChannels({ loadTeaser, playTeaser }) {
 
   const loadMoreSearchChannels = async () => {
     try {
-      const searchChannels = await getChannelsSearch({
-        page: searchPage,
+      const searchChannels = await userPushSDKInstance.channel.search(search, {
         limit: SEARCH_LIMIT,
-        query: search,
-      });
+        page: searchPage
+      }); 
 
       if (searchChannels && searchChannels.length > 0) {
         setChannelToShow([...channelToShow, ...searchChannels] || []);
@@ -146,15 +149,15 @@ function ViewChannels({ loadTeaser, playTeaser }) {
   }, [channels]);
 
   async function searchForChannel() {
+    if (!userPushSDKInstance) return;
     if (loadingChannel) return; //if we are already loading, do nothing
     if (search) {
       setLoadingChannel(true); //begin loading here
       setChannelToShow([]); //maybe remove later
       try {
-        const searchChannels = await getChannelsSearch({
-          page: searchPage,
+        const searchChannels = await userPushSDKInstance.channel.search(search, {
           limit: SEARCH_LIMIT,
-          query: search,
+          page: searchPage
         });
 
         setChannelToShow(searchChannels || []);
@@ -188,13 +191,12 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     return () => {
       clearTimeout(timeout);
     };
-  }, [search]);
+  }, [search, userPushSDKInstance]);
 
   useEffect(() => {
-    if (!account) return;
+    if (!account || !userPushSDKInstance) return;
     (async function () {
-      const userCaipAddress = convertAddressToAddrCaip(account, chainId);
-      const subscriptionsArr = await getUserSubscriptions({ userCaipAddress });
+      const subscriptionsArr = await userPushSDKInstance.notification.subscriptions();
       const subscriptionsMapping = {};
       const userSettings = {};
       subscriptionsArr.map(({ channel, user_settings }) => {
@@ -204,7 +206,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       dispatch(updateBulkSubscriptions(subscriptionsMapping));
       dispatch(updateBulkUserSettings(userSettings));
     })();
-  }, [account]);
+  }, [account, userPushSDKInstance]);
 
   useEffect(() => {
     const parsedChannel = window.location.href.toString().slice(window.location.href.toString().length - 42);

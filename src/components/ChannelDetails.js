@@ -32,7 +32,6 @@ import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
 import { getDateFromTimestamp, nextDaysDateFromTimestamp, timeRemaining } from 'helpers/TimerHelper';
 import APP_PATHS from 'config/AppPaths';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import { getChannelDelegates } from 'services';
 import { AppContext } from 'contexts/AppContext';
 
 
@@ -87,7 +86,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
   }
 
   const addDelegate = async (walletAddress) => {
-    return epnsCommWriteProvider.addDelegate(walletAddress);
+    return userPushSDKInstance.channel.delegate.add(convertAddressToAddrCaip(walletAddress, chainId));
   };
 
   // BEGIN CHANGE
@@ -144,7 +143,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
       (async () => {
         try {
           const channelAddressinCAIP = convertAddressToAddrCaip(account, chainId);
-          const channelDelegates = await getChannelDelegates({ channelCaipAddress: channelAddressinCAIP });
+          const channelDelegates = await userPushSDKInstance.channel.delegate.get(channelAddressinCAIP);
           if (channelDelegates) {
             const delegateeList = channelDelegates.map((delegate) => delegate);
             delegateeList.unshift(account);
@@ -158,7 +157,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
   }, [account]);
 
   const removeDelegate = (walletAddress) => {
-    return epnsCommWriteProvider.removeDelegate(walletAddress);
+    return userPushSDKInstance.channel.delegate.remove(convertAddressToAddrCaip(walletAddress, chainId));
   };
 
   const navigateToNotifSettings = () => {

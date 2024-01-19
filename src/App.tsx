@@ -161,10 +161,7 @@ export default function App() {
 
   // Initialize Theme
   const [darkMode, setDarkMode] = useState(false);
-
-  // enable socket notifications
-  useSDKSocket({ account, chainId, env: appConfig.appEnv });
-
+  
   const toggleDarkMode = () => {
     const newTheme = !darkMode ? 'dark' : 'light';
     updateOnboardTheme(newTheme);

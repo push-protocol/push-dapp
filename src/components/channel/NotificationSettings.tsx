@@ -70,7 +70,7 @@ function NotificationSettings() {
       setIsLoading(true);
       if (!account) return;
       try {
-        const channelDetails = await getChannel({ channel: account });
+        const channelDetails = await userPushSDKInstance.channel.info(account);
         if (!channelDetails) redirectBack();
       } catch {
         redirectBack();

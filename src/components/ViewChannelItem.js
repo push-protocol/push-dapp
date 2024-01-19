@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 
 // External Packages
 import Skeleton from '@yisheng90/react-loading';
@@ -39,6 +39,7 @@ import { useAccount, useDeviceWidthCheck } from 'hooks';
 import ManageNotifSettingDropdown from './dropdowns/ManageNotifSettingDropdown';
 import OptinNotifSettingDropdown from './dropdowns/OptinNotifSettingDropdown';
 import { ImageV2 } from './reusables/SharedStylingV2';
+import { AppContext } from 'contexts/AppContext';
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -47,7 +48,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const themes = useTheme();
 
   const { run, stepIndex } = useSelector((state) => state.userJourney);
-
+  const { userPushSDKInstance } = useSelector((state) => {
+    return state.user;
+  }); 
   const { epnsReadProvider, epnsWriteProvider, epnsCommReadProvider, pushAdminAddress, ZERO_ADDRESS } = useSelector(
     (state) => state.contracts
   );
@@ -133,7 +136,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   }, [channelObjectFromHash, channelObjectStartBlock]);
 
   useEffect(async () => {
-    if (!channelObject || !channelObject.channel) return;
+    if (!channelObject || !channelObject.channel || !userPushSDKInstance) return;
 
     setSubscriberCount(channelObject.subscriber_count);
 
@@ -148,10 +151,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       if (channelsCache[verifierAddress]) {
         setVerifierDetails(channelsCache[verifierAddress]);
       } else {
-        const verifierAddrDetails = await PushAPI.channels.getChannel({
-          channel: convertAddressToAddrCaip(verifierAddress, appConfig.coreContractChain),
-          env: appConfig.appEnv,
-        });
+        const verifierAddrDetails = await userPushSDKInstance.channel.info(convertAddressToAddrCaip(verifierAddress, appConfig.coreContractChain))
         dispatch(
           cacheChannelInfo({
             address: verifierAddress,
@@ -162,7 +162,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       }
       setLoading(false);
     }
-  }, [account, channelObject]);
+  }, [account, channelObject, userPushSDKInstance]);
 
   let isOwner;
   if (!onCoreNetwork) {
