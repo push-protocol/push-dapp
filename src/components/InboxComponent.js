@@ -14,8 +14,6 @@ import SpamBox from 'segments/spam';
 import GLOBALS from 'config/Globals';
 import APP_PATHS from 'config/AppPaths';
 
-//style
-
 const InboxComponent = ({isSpam}) => {
   const [showInbox, setShowInbox] = useState(!isSpam);
   const [showFilter, setShowFilter] = useState(false);
