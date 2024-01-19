@@ -14,6 +14,8 @@ import SpamBox from 'segments/spam';
 import GLOBALS from 'config/Globals';
 import APP_PATHS from 'config/AppPaths';
 
+//style
+
 const InboxComponent = ({isSpam}) => {
   const [showInbox, setShowInbox] = useState(!isSpam);
   const [showFilter, setShowFilter] = useState(false);
@@ -161,9 +163,9 @@ const SearchBar = styled.input`
   padding-left: 50px;
   border-radius: 99px;
   border: none;
-  background: #F4F5FA;
-  // background: ${(props) => props.theme.viewChannelSearchBg};
-  // color: ${(props) => props.theme.viewChannelSearchText};
+  border-color: ${(props) => props.theme.viewChannelSearchBg};
+  background: ${(props) => props.theme.viewChannelSearchBg};
+  color: ${(props) => props.theme.viewChannelSearchText};
   color: #657795;
 
   box-sizing: border-box;
