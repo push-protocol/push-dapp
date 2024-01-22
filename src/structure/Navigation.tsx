@@ -23,11 +23,14 @@ import {
   setTutorialContinous,
 } from '../redux/slices/userJourneySlice';
 import { useAccount } from 'hooks';
+import { ReactComponent as ExpandSidebar } from 'assets/expandSidebar.svg';
+import { ReactComponent as CollapseSidebar } from 'assets/collapseSidebar.svg';
 
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 import navigationList from 'config/NavigationList';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 // Create Header
 function Navigation() {
@@ -40,6 +43,7 @@ function Navigation() {
   const { processingState } = useSelector((state: any) => state.channelCreation);
   const { run, stepIndex, isCommunicateOpen, isDeveloperOpen } = useSelector((state: any) => state.userJourney);
   const { navigationSetup, setNavigationSetup } = useContext(NavigationContext);
+  const { sidebarCollapsed, setSidebarCollapsed } = useContext(GlobalContext);
 
   const CORE_CHAIN_ID = appConfig.coreContractChain;
   const { account, chainId } = useAccount();
@@ -399,7 +403,7 @@ function Navigation() {
       let innerRendered = (
         <Section key={key} flex="1" align="stretch" size={fontSize}>
           {secondaryButton ? (
-            <Item padding="5px 10px" flexBasis="100%" align="stretch" direction="row" overflow="hidden">
+            <Item padding="5px 10px" flexBasis="100%" direction="row" overflow="hidden">
               {section.hasItems
                 ? renderChildItems(data.drilldown, section.opened, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)
                 : null}
@@ -411,12 +415,23 @@ function Navigation() {
                 refresh={refresh}
                 // margintop="15px"
                 onClick={() => {
-                  // console.log(`Clicked secondary button`);
                   mutateTransformedList(section, true);
                 }}
                 id={data.id}>
                 <NavigationButton item={section} data={data} sectionID={sectionID} active={section.active} bg={!section.active ? 'transparent' : theme.nav.activeColor} />
+
               </SectionInnerGroupContainer>
+
+              {data.name == "More" && <CollapsableArrow
+                sidebarCollapsed={sidebarCollapsed}
+                // bg={darkMode ? themeDark.collapsaBg : themeLight.collapsaBg}
+                // bg='#575d737f'
+                // strokeColor={darkMode ? themeDark.strokeColor : themeLight.strokeColor}
+                // left={sidebarCollapse ? GLOBALS.CONSTANTS.COLLAPSABLE_LEFT_BAR_WIDTH - 20 : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH - 30} 
+                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              >
+                {sidebarCollapsed ? <ExpandSidebar /> : <CollapseSidebar />}
+              </CollapsableArrow>}
             </Item>
           ) : (
             <Item padding="5px 10px" flexBasis="100%" align="stretch" direction="row" overflow="hidden">
@@ -548,10 +563,10 @@ function Navigation() {
               weight="700"
               size="11px"
               margin="20px 0px 0px 0px"
-              padding="15px 30px"
+              padding={sidebarCollapsed ? "15px 30px" : "15px 30px"}
               color="#575D73"
               spacing="0.16em">
-              Developers
+              {sidebarCollapsed ? 'Devs' : 'Developers'}
             </Span>
             {renderMainItems(navigationSetup.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY)}
           </Primary>
@@ -711,7 +726,7 @@ const PrimarySectionGroup = styled(Item)`
   ${(props) =>
     !props.opened &&
     css`
-      margin-top: -100%;
+      margin-top: -200%;
     `};
 `;
 
@@ -728,6 +743,33 @@ const Secondary = styled(Item)`
 const SecondarySection = styled(InheritedSection)``;
 
 const Social = styled(Item)``;
+
+const CollapsableArrow = styled.div`
+  border-radius: 10px;
+  background: ${(props) => props.theme.collapsaBg};
+  z-index:10;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  opacity:0.8;
+  margin:${(props)=>props.sidebarCollapsed ? '12px 0 0 0' : '0 0 0 16px'};
+
+  &:hover{
+    opacity:1
+  }
+
+  svg{
+    path{
+      stroke-width: 2px;
+      stroke: ${(props)=>props.theme.strokeColor};
+    }
+  }
+
+
+`
 
 // Export Default
 export default Navigation;

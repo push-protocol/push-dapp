@@ -10,6 +10,8 @@ export type GlobalContextType = {
   setReadOnlyWallet: React.Dispatch<React.SetStateAction<string>>;
   mode: ReadOnlyWalletMode;
   setMode: React.Dispatch<React.SetStateAction<ReadOnlyWalletMode>>;
+  sidebarCollapsed:boolean;
+  setSidebarCollapsed:React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const GlobalContext = createContext<GlobalContextType | null>(null);
@@ -17,6 +19,7 @@ export const GlobalContext = createContext<GlobalContextType | null>(null);
 const GlobalContextProvider = ({ children }) => {
   const [readOnlyWallet, setReadOnlyWallet] = useState<string>();
   const [mode, setMode] = useState<ReadOnlyWalletMode>();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
 
   return (
     <GlobalContext.Provider
@@ -25,6 +28,8 @@ const GlobalContextProvider = ({ children }) => {
         readOnlyWallet,
         mode,
         setMode,
+        sidebarCollapsed,
+        setSidebarCollapsed
       }}
     >
       {children}

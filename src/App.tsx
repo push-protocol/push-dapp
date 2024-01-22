@@ -36,6 +36,7 @@ import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 import { themeDark, themeLight } from 'config/Themization';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 // space imports
 import {
@@ -119,6 +120,8 @@ export default function App() {
   const { isActive, account, chainId, provider } = useAccount();
   const [currentTime, setcurrentTime] = React.useState(0);
   const { authError, setAuthError } = useContext(ErrorContext);
+  const { sidebarCollapsed, setSidebarCollapsed } = React.useContext(GlobalContext);
+
   const updateOnboardTheme = useUpdateTheme();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -161,7 +164,6 @@ export default function App() {
 
   // Initialize Theme
   const [darkMode, setDarkMode] = useState(false);
-  
   const toggleDarkMode = () => {
     const newTheme = !darkMode ? 'dark' : 'light';
     updateOnboardTheme(newTheme);
@@ -304,11 +306,13 @@ export default function App() {
                     bg={darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG}
                     headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
                   >
-                    {!isSnapPage && <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                      <Navigation />
-                    </LeftBarContainer>}
+                    {!isSnapPage &&
+                      <LeftBarContainer leftBarWidth={sidebarCollapsed ? GLOBALS.CONSTANTS.COLLAPSABLE_LEFT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                        <Navigation />
+                      </LeftBarContainer>
+                    }
 
-                    <ContentContainer leftBarWidth={isSnapPage ? 0 : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                    <ContentContainer leftBarWidth={sidebarCollapsed ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
                       {/* Shared among all pages, load universal things here */}
                       <SpacesUIProvider spaceUI={spaceUI} theme={darkMode ? darkTheme : lightTheme}>
                         <MasterInterfacePage />
@@ -321,7 +325,7 @@ export default function App() {
             </NavigationContextProvider>
           </>
         )}
-      
+
       </AppContextProvider>
     </ThemeProvider>
   );
