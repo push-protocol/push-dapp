@@ -180,10 +180,18 @@ export default function App() {
       updateOnboardTheme(theme);
       document.documentElement.setAttribute('theme', theme);
     }
+
+    const SidebarCollapsable = localStorage.getItem('SidebarCollapsed');
+    if (SidebarCollapsable) {
+      const isSidebarCollapsed = JSON.parse(SidebarCollapsable);
+      setSidebarCollapsed(isSidebarCollapsed)
+    }
+
   }, []);
 
   React.useEffect(() => {
     localStorage.setItem('theme', JSON.stringify(darkMode));
+    localStorage.setItem('SidebarCollapsed', JSON.stringify(sidebarCollapsed));
   });
 
   React.useEffect(() => {
