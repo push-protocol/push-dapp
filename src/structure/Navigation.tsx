@@ -401,9 +401,9 @@ function Navigation() {
       //   dispatch(setDeveloperOpen(false))
       // }
       let innerRendered = (
-        <Section key={key} flex="1" align="stretch" size={fontSize}>
+        <Section key={key} flex="1" align="stretch" size={fontSize} wrap='nowrap'>
           {secondaryButton ? (
-            <Item padding="5px 10px" flexBasis="100%" direction="row" overflow="hidden">
+            <Item padding="0px 14px" flexBasis="100%" direction="row" overflow="hidden">
               {section.hasItems
                 ? renderChildItems(data.drilldown, section.opened, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)
                 : null}
@@ -424,17 +424,13 @@ function Navigation() {
 
               {data.name == "More" && <CollapsableArrow
                 sidebarCollapsed={sidebarCollapsed}
-                // bg={darkMode ? themeDark.collapsaBg : themeLight.collapsaBg}
-                // bg='#575d737f'
-                // strokeColor={darkMode ? themeDark.strokeColor : themeLight.strokeColor}
-                // left={sidebarCollapse ? GLOBALS.CONSTANTS.COLLAPSABLE_LEFT_BAR_WIDTH - 20 : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH - 30} 
                 onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
               >
                 {sidebarCollapsed ? <ExpandSidebar /> : <CollapseSidebar />}
               </CollapsableArrow>}
             </Item>
           ) : (
-            <Item padding="5px 10px" flexBasis="100%" align="stretch" direction="row" overflow="hidden">
+            <Item padding="0px 14px" flexBasis="100%" align="stretch" direction="row" overflow="hidden">
               <SectionInnerGroupContainer
                 flex="1"
                 align="stretch"
@@ -563,7 +559,7 @@ function Navigation() {
               weight="700"
               size="11px"
               margin="20px 0px 0px 0px"
-              padding={sidebarCollapsed ? "15px 30px" : "15px 30px"}
+              padding={sidebarCollapsed ? "15px 25px" : "15px 30px"}
               color="#575D73"
               spacing="0.16em">
               {sidebarCollapsed ? 'Devs' : 'Developers'}
@@ -668,6 +664,7 @@ const Primary = styled(Item)`
   justify-content: flex-start;
   background: '#fff';
   overflow-y: scroll;
+  gap:10px;
   &::-webkit-scrollbar-track {
     border-radius: 10px;
   }
@@ -685,7 +682,7 @@ const Primary = styled(Item)`
       color-stop(0.86, #35a1f3)
     );
   }
-  padding: 0px 0px 20px 0px;
+  padding: 5px 0px 20px 0px;
 `;
 
 const InheritedSection = styled(Item)`
@@ -726,7 +723,7 @@ const PrimarySectionGroup = styled(Item)`
   ${(props) =>
     !props.opened &&
     css`
-      margin-top: -200%;
+      margin-top: -210%;
     `};
 `;
 
@@ -734,6 +731,11 @@ const PrimarySectionItem = styled(Item)``;
 
 const Footer = styled(Item)`
   z-index: 3;
+  gap:10px;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  padding:0 6px 0 0;
+
 `;
 
 const Secondary = styled(Item)`
