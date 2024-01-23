@@ -134,9 +134,6 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
                   <NewTag>New</NewTag>
                 )}
 
-                {item.hasItems && !item.opened && !sidebarCollapsed &&  <BiChevronDown color={theme.nav.color} />}
-
-                {item.hasItems && item.opened && !sidebarCollapsed && <BiChevronUp color={theme.nav.color} />}
               </ItemH>
             )}
           </RouteLogic>
