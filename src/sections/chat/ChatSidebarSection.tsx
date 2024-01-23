@@ -9,19 +9,19 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import * as PushAPI from "@pushprotocol/restapi";
+import { ChatPreviewList } from "@pushprotocol/uiweb";
 import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
 import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
 import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
 import MessageFeed from 'components/chat/w2wChat/messageFeed/MessageFeed';
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
-import { fetchIntent } from 'helpers/w2w/user';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import StyleHelper from 'helpers/StyleHelper';
 import { getIsNewTagVisible } from 'helpers/TimerHelper';
 import * as w2wHelper from 'helpers/w2w/';
-import { checkConnectedUser } from 'helpers/w2w/user';
+import { checkConnectedUser, fetchIntent } from 'helpers/w2w/user';
 import { Context } from 'modules/chat/ChatModule';
 import { Feeds } from 'types/chat';
 
@@ -110,75 +110,78 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
 
   // RENDER
   return (
-    <ItemVV2 ref={containerRef} >
+    <ItemVV2 
+      ref={containerRef} 
+      justifyContent="flex-start"
+      width="100%"
+    >
       {/* Header */}
-      {activeTab == 0 || activeTab == 1 ? (
-        <ItemVV2
-          flex="initial"
-        >
-          <ItemHV2 >
-            {/* Set active and onCLick to customize tab */}
-            <TabButton
-              active={activeTab == 0 ? true : false}
-              background="transparent"
-              hoverBackground="transparent"
-              color={theme.default.color}
-              flex="1"
-              padding="10px 10px 20px 10px"
-              onClick={() => {
-                setActiveTab(0);
-              }}
+      <ItemVV2
+        flex="initial"
+        width="100%"
+      >
+        <ItemHV2>
+          {/* Set active and onCLick to customize tab */}
+          <TabButton
+            active={activeTab == 0 ? true : false}
+            background="transparent"
+            hoverBackground="transparent"
+            color={theme.default.color}
+            flex="1"
+            padding="10px 10px 20px 10px"
+            onClick={() => {
+              setActiveTab(0);
+            }}
+          >
+            <SpanV2
+              fontSize="16px"
+              fontWeight="400"
+              color={activeTab === 0 ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
+            >
+              Chats
+            </SpanV2>
+          </TabButton>
+
+          <TabButton
+            active={activeTab == 1 ? true : false}
+            background="transparent"
+            hoverBackground="transparent"
+            color={theme.default.color}
+            flex="1"
+            padding="10px 10px 20px 10px"
+            onClick={() => {
+              setActiveTab(1);
+            }}
+          >
+            <ItemHV2
+              alignItems="center"
+            // ref={containerRef}
             >
               <SpanV2
+                flex="initial"
                 fontSize="16px"
                 fontWeight="400"
-                color={activeTab === 0 ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
+                color={activeTab === 1 ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
+                margin="0px 4px"
               >
-                Chats
+                Requests
               </SpanV2>
-            </TabButton>
-
-            <TabButton
-              active={activeTab == 1 ? true : false}
-              background="transparent"
-              hoverBackground="transparent"
-              color={theme.default.color}
-              flex="1"
-              padding="10px 10px 20px 10px"
-              onClick={() => {
-                setActiveTab(1);
-              }}
-            >
-              <ItemHV2
-                alignItems="center"
-              // ref={containerRef}
-              >
+              {!loadingRequests && receivedIntents.length > 0 && (
                 <SpanV2
-                  flex="initial"
-                  fontSize="16px"
-                  fontWeight="400"
-                  color={activeTab === 1 ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
+                  background={GLOBALS.COLORS.PRIMARY_PINK}
+                  color={GLOBALS.COLORS.WHITE}
+                  padding="2px 8px"
                   margin="0px 4px"
+                  fontSize="12px"
+                  borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
                 >
-                  Requests
+                  {receivedIntents.length}
                 </SpanV2>
-                {!loadingRequests && receivedIntents.length > 0 && (
-                  <SpanV2
-                    background={GLOBALS.COLORS.PRIMARY_PINK}
-                    color={GLOBALS.COLORS.WHITE}
-                    padding="2px 8px"
-                    margin="0px 4px"
-                    fontSize="12px"
-                    borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
-                  >
-                    {receivedIntents.length}
-                  </SpanV2>
-                )}
-              </ItemHV2>
-            </TabButton>
-          </ItemHV2>
-        </ItemVV2>
-      ) : null}
+              )}
+            </ItemHV2>
+          </TabButton>
+        </ItemHV2>
+      </ItemVV2>
 
       {/* Main Content */}
       <ItemVV2
@@ -186,6 +189,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
         alignItems="stretch"
         // ref={containerRef}
         onClick={closeQRDropdown}
+        width="100%"
       >
         {activeTab == 0 && <SearchBar />}
         {activeTab == 0 && filteredUserData.length == 0 && (
@@ -220,26 +224,55 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
           </CreateGroupContainer>
         )}
 
-        {activeTab == 0 && filteredUserData.length == 0 && (
-          <MessageFeed
-            hasUserBeenSearched={false}
-            filteredUserData={[]}
-            isInvalidAddress={false}
-            automatedSearch={false}
+        {/* Set Chats */}
+        <ItemVV2
+          justifyContent="flex-start"
+          flexWrap="nowrap"
+          width="100%"
+          flex="1 1 1px"
+          style={{ display: activeTab == 0 && filteredUserData.length == 0 ? 'flex' : 'none' }}
+          overflow="scroll"
+        >
+          <ChatPreviewList
+            listType="CHATS"
+            onChatSelected={(chatid) => { console.log("Chat id: ", chatid) }}
+            onUnreadCountChange={(count) => { console.log("Count is: ", count) }}
           />
+        </ItemVV2>
 
-        )}
-        {activeTab == 1 && (
-          <>
-            <IntentFeed isLoading={loadingRequests} />
-          </>
-        )}
+        {/* Set Requests */}
+        <ItemVV2
+          justifyContent="flex-start"
+          flexWrap="nowrap"
+          width="100%"
+          style={{ display: activeTab == 1 ? 'flex' : 'none' }}
+        >
+          <ChatPreviewList
+            listType="REQUESTS"
+            onChatSelected={(chatid) => { console.log("Chat id: ", chatid) }}
+            onUnreadCountChange={(count) => { console.log("Count is: ", count) }}
+          />
+        </ItemVV2>
+
+        {/* Set Search */}
+        <ItemVV2
+          justifyContent="flex-start"
+          flexWrap="nowrap"
+          width="100%"
+          style={{ display: activeTab == 1 ? 'flex' : 'none' }}
+        >
+          <ChatPreviewList
+            listType="SEARCH"
+            onChatSelected={(chatid) => { console.log("Chat id: ", chatid) }}
+            onUnreadCountChange={(count) => { console.log("Count is: ", count) }}
+          />
+        </ItemVV2>
+          
         {activeTab == 3 && <SearchBar autofilled={null} />}
         {activeTab == 4 && <SearchBar autofilled={autofilledSearch} />}
       </ItemVV2>
 
       {/* Footer */}
-
       {showQR ? (
         <QRCodeContainer
           onClick={() => setDisplayQR(!displayQR)}

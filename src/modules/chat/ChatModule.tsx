@@ -18,32 +18,32 @@ import ChatQR from 'components/chat/w2wChat/chatQR/chatQR';
 import MobileView from 'components/chat/w2wChat/chatQR/mobileView';
 import { CreateGroupModalContent } from 'components/chat/w2wChat/groupChat/createGroup/CreateGroupModalContent';
 import { GroupInfoModalContent } from 'components/chat/w2wChat/groupChat/groupInfo/groupInfoModalContent';
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import LoaderSpinner, {
   LOADER_OVERLAY,
   LOADER_SPINNER_TYPE,
   LOADER_TYPE,
   PROGRESS_POSITIONING
 } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { caip10ToWallet } from 'helpers/w2w';
 import * as w2wHelper from 'helpers/w2w/';
 import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
-import { useAccount,useDeviceWidthCheck, useSDKSocket } from 'hooks';
+import { checkIfIntent, getUpdatedChatAndIntent, getUpdatedGroupInfo } from 'helpers/w2w/user';
+import { useAccount, useDeviceWidthCheck, useSDKSocket } from 'hooks';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection from 'sections/video/VideoCallSection';
 import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
-import { checkIfIntent, getUpdatedChatAndIntent, getUpdatedGroupInfo } from 'helpers/w2w/user';
 
 // Internal Configs
+import { ChatUIProvider, darkChatTheme } from '@pushprotocol/uiweb';
 import { appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { fetchIntent } from 'helpers/w2w/user';
-import { ChatUIProvider, IGroup, darkChatTheme } from '@pushprotocol/uiweb';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
