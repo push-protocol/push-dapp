@@ -183,7 +183,7 @@ function ChannelDashboardPage() {
 // Define height: inherit to cover entire height
 const Container = styled(Section)`
   align-items: center;
-  align-self: stretch;
+  align-self: center;
   background: ${(props) => props.theme.default.bg};
   border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
   box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
@@ -191,7 +191,7 @@ const Container = styled(Section)`
   flex-direction: column;
   flex: initial;
   justify-content: center;
-  // max-width: 1200px;
+  max-width: 1200px;
   width: calc(100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT});
   position: relative;
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};

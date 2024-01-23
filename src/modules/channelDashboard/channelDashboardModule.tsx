@@ -14,7 +14,6 @@ import ChannelOwnerDashboard from './ChannelOwnerDashboard';
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
-import { GlobalContext } from 'contexts/GlobalContext';
 
 // Constants
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain; //chainId of network which we have deployed the core contract on
@@ -28,7 +27,6 @@ function ChannelDashboardModule() {
   // toast related section
   const [toast, showToast] = React.useState(null);
   const clearToast = () => showToast(null);
-  const { sidebarCollapsed } = React.useContext(GlobalContext);
 
   //clear toast variable after it is shown
   React.useEffect(() => {
@@ -36,10 +34,10 @@ function ChannelDashboardModule() {
       clearToast();
     }
   }, [toast]);
-
+  
   // Render
   return (
-    <Container isSidebarCollapsed={sidebarCollapsed}>
+    <Container>
       {adminStatusLoaded ? <ChannelOwnerDashboard /> : <ChannelLoading />}
       {toast && <NotificationToast notification={toast} clearToast={clearToast} />}
     </Container>
@@ -49,7 +47,7 @@ function ChannelDashboardModule() {
 // css style
 const Container = styled(Section)`
   align-items: center;
-  align-self: ${(props) => props.isSidebarCollapsed ? 'stretch' : 'center'};
+  align-self: center;
   background: ${(props) => props.theme.default.bg};
   border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
   box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
@@ -57,20 +55,11 @@ const Container = styled(Section)`
   flex-direction: column;
   flex: initial;
   justify-content: center;
-  max-width: ${(props) => props.isSidebarCollapsed ? 'auto' : '1200px'};
-  // width: calc(
-  //   100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT} -
-  //     ${GLOBALS.ADJUSTMENTS.PADDING.HUGE} - ${GLOBALS.ADJUSTMENTS.PADDING.HUGE}
-  // );
-
-  width:${(props) => props.isSidebarCollapsed ? `calc(
-    100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${'0px'} -
-      ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
-  );`: `calc(
+  max-width: 1200px;
+  width: calc(
     100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT} -
       ${GLOBALS.ADJUSTMENTS.PADDING.HUGE} - ${GLOBALS.ADJUSTMENTS.PADDING.HUGE}
-  );`}
-
+  );
   padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
   position: relative;
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
