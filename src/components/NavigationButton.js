@@ -119,6 +119,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
 
                 {!sidebarCollapsed && <Span
                   flex="1"
+                  cursor="pointer"
                   weight={!active ? '300' : '600'}
                   spacing="0"
                   margin="0 5px"

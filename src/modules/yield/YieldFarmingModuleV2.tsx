@@ -10,6 +10,7 @@ import { ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/Shared
 import DeprecatedYieldFarming from 'sections/yield/DeprecatedYieldFarming';
 import NewYieldFarming from 'sections/yield/NewYieldFarming';
 import { useAccount } from 'hooks';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
@@ -31,6 +32,7 @@ const YieldFarmingModuleV2 = () => {
   const [newStaking, setNewStaking] = useState(false);
 
   const { account, chainId, switchChain} = useAccount();
+  const { sidebarCollapsed } = React.useContext(GlobalContext);
 
 
   const handleChainChange = () => {
@@ -60,7 +62,7 @@ const YieldFarmingModuleV2 = () => {
 
   // Render
   return (
-    <Container>
+    <Container isSidebarCollapsed={sidebarCollapsed}>
 
       <NonEthChainModal
         InnerComponent={YieldFarmChainError}
@@ -101,7 +103,7 @@ export default YieldFarmingModuleV2;
 // css styles
 const Container = styled(SectionV2)`
 	align-items: stretch;
-	align-self: center;
+	align-self: stretch;
   flex: 1;
 	background: ${(props) => props.theme.default.bg};
 	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
@@ -113,10 +115,17 @@ const Container = styled(SectionV2)`
 	position: relative;
   overflow: hidden;
   box-sizing: border-box;
-  width: calc(
+  // width: calc(
+  //   100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT} -
+  //     ${GLOBALS.ADJUSTMENTS.PADDING.BIG} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG}
+  // );
+
+  width:${(props)=>props.isSidebarCollapsed ? `auto`: `calc(
     100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT} -
       ${GLOBALS.ADJUSTMENTS.PADDING.BIG} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG}
-  );
+  )`};
+
+
   gap: 16px;
   padding: 24px;
 

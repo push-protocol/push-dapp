@@ -401,9 +401,9 @@ function Navigation() {
       //   dispatch(setDeveloperOpen(false))
       // }
       let innerRendered = (
-        <Section key={key} flex="1" align="stretch" size={fontSize} wrap='nowrap'>
+        <Section key={key} flex="1" align="stretch" size={fontSize} wrap='nowrap' margin='0 10px'>
           {secondaryButton ? (
-            <Item padding="0px 14px" flexBasis="100%" direction="row" overflow="hidden">
+            <Item flexBasis="100%" direction="row" overflow="hidden">
               {section.hasItems
                 ? renderChildItems(data.drilldown, section.opened, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)
                 : null}
@@ -430,7 +430,7 @@ function Navigation() {
               </CollapsableArrow>}
             </Item>
           ) : (
-            <Item padding="0px 14px" flexBasis="100%" align="stretch" direction="row" overflow="hidden">
+            <Item flexBasis="100%" align="stretch" direction="row" overflow="hidden">
               <SectionInnerGroupContainer
                 flex="1"
                 align="stretch"
@@ -682,7 +682,7 @@ const Primary = styled(Item)`
       color-stop(0.86, #35a1f3)
     );
   }
-  padding: 5px 0px 20px 0px;
+  padding: 10px 0px 20px 0px;
 `;
 
 const InheritedSection = styled(Item)`
@@ -734,7 +734,7 @@ const Footer = styled(Item)`
   gap:10px;
   align-items: stretch;
   flex-wrap: nowrap;
-  padding:0 6px 0 0;
+  padding:0 6px 10px 0;
 
 `;
 
@@ -757,7 +757,7 @@ const CollapsableArrow = styled.div`
   align-items: center;
   cursor: pointer;
   opacity:0.8;
-  margin:${(props)=>props.sidebarCollapsed ? '12px 0 0 0' : '0 0 0 16px'};
+  margin:${(props)=>props.sidebarCollapsed ? '8px 0 0 0' : '0 0 0 16px'};
 
   &:hover{
     opacity:1
