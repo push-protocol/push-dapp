@@ -880,22 +880,24 @@ We invite you to explore, contribute, and help us build the future of web3 commu
 
 ### 🖥 Installation
 
-1. Clone the push-dapp repository:
+1. Fork the original repository.
+
+2. Clone the push-dapp repository:
 ```sh
-git clone https://github.com/ethereum-push-notification-service/push-dapp.git
+git clone https://github.com/your-username/push-dapp
 ```
 
-2. Change to the project directory:
+3. Change to the project directory:
 ```sh
 cd push-dapp
 ```
 
-3. Install the dependencies:
+4. Install the dependencies:
 ```sh
 yarn install
 ```
 
-4. View on Localhost by:
+5. View on Localhost by:
 
 ```sh
 yarn start
