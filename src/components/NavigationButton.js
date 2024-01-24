@@ -119,6 +119,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
 
                 {!sidebarCollapsed && <Span
                   flex="1"
+                  cursor="pointer"
                   weight={!active ? '300' : '600'}
                   spacing="0"
                   margin="0 5px"
@@ -133,9 +134,6 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
                   <NewTag>New</NewTag>
                 )}
 
-                {item.hasItems && !item.opened && !sidebarCollapsed &&  <BiChevronDown color={theme.nav.color} />}
-
-                {item.hasItems && item.opened && !sidebarCollapsed && <BiChevronUp color={theme.nav.color} />}
               </ItemH>
             )}
           </RouteLogic>

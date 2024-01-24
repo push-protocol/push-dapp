@@ -98,7 +98,7 @@ const Container = styled.div`
   overflow: hidden;
   box-sizing: border-box;
   // padding: 13px 13px 13px 0px;
-  margin: 0px 0px 17px 0px;
+  margin: 0px 0px 17px 14px;
 
   // margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
   max-height: calc(
