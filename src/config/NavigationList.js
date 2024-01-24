@@ -177,7 +177,7 @@ const NavigationList = {
       isRoute: true,
       hasMenuLogic: true,
       hidden: false,
-      showNewTag:false,
+      showNewTag: false,
       headerTag: {
         title: 'Yield Farming V2',
         light: {
