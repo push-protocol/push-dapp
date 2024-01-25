@@ -32,21 +32,21 @@ const PushSnapConfigureModal = () => {
 
   const { chainId, account, provider } = useAccount();
 
-  useEffect(() => {
-    (async function () {
-      const res = await window.ethereum?.request({
-        method: 'wallet_invokeSnap',
-        params: {
-          snapId: defaultSnapOrigin,
-          request: {
-            method: 'pushproto_gettogglestatus',
-            params: { address: searchedUser },
-          },
-        },
-      });
-      setToggleStatus(res);
-    })();
-  }, [toggleStatus]);
+  // useEffect(() => {
+  //   (async function () {
+  //     const res = await window.ethereum?.request({
+  //       method: 'wallet_invokeSnap',
+  //       params: {
+  //         snapId: defaultSnapOrigin,
+  //         request: {
+  //           method: 'pushproto_gettogglestatus',
+  //           params: { address: searchedUser },
+  //         },
+  //       },
+  //     });
+  //     setToggleStatus(res);
+  //   })();
+  // }, [toggleStatus]);
   
   useEffect(() => {
     getWalletAddresses();
@@ -199,7 +199,7 @@ const PushSnapConfigureModal = () => {
       </AddressesContainer>
 
 
-      <ItemVV2
+      {/* <ItemVV2
         alignItems="flex-start"
         margin="24px 0 0 0"
 
@@ -235,7 +235,7 @@ const PushSnapConfigureModal = () => {
             {toggleStatus > 40 ? 'On' : 'Off'}
           </SpanV2>
         </ItemHV2>
-      </ItemVV2>
+      </ItemVV2> */}
     </Container >
   );
 };
