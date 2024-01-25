@@ -475,8 +475,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                         tooltipContent={
                           <VerifiedTooltipContent
                             height={tooltTipHeight}
-                            verifierIcon={verifierDetails.icon}
-                            verifierName={verifierDetails.name}
+                            verifierIcon={verifierDetails?.icon}
+                            verifierName={verifierDetails?.name}
                           />
                         }
                       >
@@ -635,8 +635,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                         tooltipContent={
                           <VerifiedTooltipContent
                             height={tooltTipHeight}
-                            verifierIcon={verifierDetails.icon}
-                            verifierName={verifierDetails.name}
+                            verifierIcon={verifierDetails?.icon}
+                            verifierName={verifierDetails?.name}
                           />
                         }
                       >

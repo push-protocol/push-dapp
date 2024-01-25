@@ -43,7 +43,7 @@ import { checkIfIntent, getUpdatedChatAndIntent, getUpdatedGroupInfo } from 'hel
 import { appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { fetchIntent } from 'helpers/w2w/user';
-import { ChatUIProvider, IGroup, darkChatTheme } from '@pushprotocol/uiweb';
+import { ChatUIProvider, darkChatTheme  } from '@pushprotocol/uiweb';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
