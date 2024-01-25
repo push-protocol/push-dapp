@@ -1,10 +1,10 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 // External Packages
-import * as PushAPI from "@pushprotocol/restapi";
+import * as PushAPI from '@pushprotocol/restapi';
 import ReactGA from 'react-ga';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -23,7 +23,7 @@ import LoaderSpinner, {
   LOADER_OVERLAY,
   LOADER_SPINNER_TYPE,
   LOADER_TYPE,
-  PROGRESS_POSITIONING
+  PROGRESS_POSITIONING,
 } from 'components/reusables/loaders/LoaderSpinner';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { VideoCallContext } from 'contexts/VideoCallContext';
@@ -60,14 +60,24 @@ export const Context = React.createContext<AppContext | null>(null);
 // Create Header
 function Chat({ chatid }) {
   const { account, chainId, provider } = useAccount();
-  const { getUser, pgpPvtKey,connectedUser, setConnectedUser, blockedLoading, setBlockedLoading, displayQR, setDisplayQR } =
-    useContext(ChatUserContext);
-    const { videoCallData } = useContext(VideoCallContext);
+  const {
+    getUser,
+    pgpPvtKey,
+    connectedUser,
+    setConnectedUser,
+    blockedLoading,
+    setBlockedLoading,
+    displayQR,
+    setDisplayQR,
+  } = useContext(ChatUserContext);
+  const { videoCallData } = useContext(VideoCallContext);
 
   const theme = useTheme();
 
   const [viewChatBox, setViewChatBox] = useState<boolean>(false);
   const [currentChat, setCurrentChat] = useState<Feeds>();
+  const [selectedChatId, setSelectedChatId] = useState<string>();
+
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
@@ -84,93 +94,107 @@ function Chat({ chatid }) {
 
   const containerRef = React.useRef(null);
 
-  const socketData = useSDKSocket({ account, chainId, env: appConfig.appEnv,socketType: 'chat' });
+  const socketData = useSDKSocket({ account, chainId, env: appConfig.appEnv, socketType: 'chat' });
 
-  useEffect(()=>{
-    if(connectedUser && socketData.messagesSinceLastConnection && ((w2wHelper.caip10ToWallet(socketData.messagesSinceLastConnection.fromCAIP10)).toLowerCase() !== account.toLowerCase())){
-      if(currentChat)
-      getUpdatedInbox(socketData.messagesSinceLastConnection)
+  useEffect(() => {
+    if (
+      connectedUser &&
+      socketData.messagesSinceLastConnection &&
+      w2wHelper.caip10ToWallet(socketData.messagesSinceLastConnection.fromCAIP10).toLowerCase() !==
+        account.toLowerCase()
+    ) {
+      if (currentChat) getUpdatedInbox(socketData.messagesSinceLastConnection);
     }
-  },[socketData.messagesSinceLastConnection])
+  }, [socketData.messagesSinceLastConnection]);
 
-  useEffect(()=>{
-    if(connectedUser && socketData.groupInformationSinceLastConnection) {
+  useEffect(() => {
+    if (connectedUser && socketData.groupInformationSinceLastConnection) {
       getUpdatedGroup(socketData.groupInformationSinceLastConnection);
     }
-  },[socketData.groupInformationSinceLastConnection])
+  }, [socketData.groupInformationSinceLastConnection]);
 
- 
-
-  const getUpdatedInbox = async(message) => {
-    let isListUpdated=false;
-    const {updatedInbox,isInboxUpdated}=await getUpdatedChatAndIntent({chatList:inbox,message,connectedUser,account,checkInbox:true});
-    if(isInboxUpdated){
-      isListUpdated=true;
+  const getUpdatedInbox = async (message) => {
+    let isListUpdated = false;
+    const { updatedInbox, isInboxUpdated } = await getUpdatedChatAndIntent({
+      chatList: inbox,
+      message,
+      connectedUser,
+      account,
+      checkInbox: true,
+    });
+    if (isInboxUpdated) {
+      isListUpdated = true;
       setInbox(updatedInbox);
-    }
-    else{
-      const {updatedIntents,isIntentsUpdated}=await getUpdatedChatAndIntent({chatList:receivedIntents,message,connectedUser,account,checkInbox:false});
-      if(isIntentsUpdated){
-        isListUpdated=true;
+    } else {
+      const { updatedIntents, isIntentsUpdated } = await getUpdatedChatAndIntent({
+        chatList: receivedIntents,
+        message,
+        connectedUser,
+        account,
+        checkInbox: false,
+      });
+      if (isIntentsUpdated) {
+        isListUpdated = true;
         setReceivedIntents(updatedIntents);
       }
     }
-    if(!isListUpdated){
+    if (!isListUpdated) {
       const fetchedChat = await PushAPI.chat.chat({
         account: account,
         toDecrypt: true,
         pgpPrivateKey: connectedUser?.privateKey,
         recipient: caip10ToWallet(message?.fromCAIP10),
-        env: appConfig.appEnv
+        env: appConfig.appEnv,
       });
-      if(checkIfIntent({chat:fetchedChat, account})){
-        setReceivedIntents(prev=> [fetchedChat , ...prev]);
-        
+      if (checkIfIntent({ chat: fetchedChat, account })) {
+        setReceivedIntents((prev) => [fetchedChat, ...prev]);
+      } else {
+        setInbox((prev) => [fetchedChat, ...prev]);
       }
-      else{
-        setInbox(prev=>[fetchedChat,...prev])
-      }
-      
     }
-  
-  }
+  };
 
-const getUpdatedGroup = async(groupInfo) => {
-  let isGroupUpdated=false;
-  const {updatedInbox, isInboxUpdated} = await getUpdatedGroupInfo({chatList:inbox, groupInfo, checkInbox:true});
-  if(isInboxUpdated){
-    setInbox(updatedInbox);
-    isGroupUpdated=true;
-  }
-  else{
-    const {updatedIntents, isIntentsUpdated} = await getUpdatedGroupInfo({chatList:intents, groupInfo,checkInbox:false})
-    if(isIntentsUpdated){
-      setReceivedIntents(updatedIntents);
-      isGroupUpdated=true;
-    }
-  }
-  if(!isGroupUpdated){
-    const fetchedChat = await PushAPI.chat.chat({
-      account: account,
-      toDecrypt: true,
-      pgpPrivateKey: connectedUser?.privateKey,
-      recipient: groupInfo?.chatId,
-      env: appConfig.appEnv
+  const getUpdatedGroup = async (groupInfo) => {
+    let isGroupUpdated = false;
+    const { updatedInbox, isInboxUpdated } = await getUpdatedGroupInfo({
+      chatList: inbox,
+      groupInfo,
+      checkInbox: true,
     });
-    if(checkIfIntent({chat:fetchedChat, account})){
-      setReceivedIntents(prev=> [fetchedChat, ...prev]);   
+    if (isInboxUpdated) {
+      setInbox(updatedInbox);
+      isGroupUpdated = true;
+    } else {
+      const { updatedIntents, isIntentsUpdated } = await getUpdatedGroupInfo({
+        chatList: intents,
+        groupInfo,
+        checkInbox: false,
+      });
+      if (isIntentsUpdated) {
+        setReceivedIntents(updatedIntents);
+        isGroupUpdated = true;
+      }
     }
-    else{
-      setInbox(prev=>[fetchedChat,...prev])
-    }  
-  }
-  
-  }
+    if (!isGroupUpdated) {
+      const fetchedChat = await PushAPI.chat.chat({
+        account: account,
+        toDecrypt: true,
+        pgpPrivateKey: connectedUser?.privateKey,
+        recipient: groupInfo?.chatId,
+        env: appConfig.appEnv,
+      });
+      if (checkIfIntent({ chat: fetchedChat, account })) {
+        setReceivedIntents((prev) => [fetchedChat, ...prev]);
+      } else {
+        setInbox((prev) => [fetchedChat, ...prev]);
+      }
+    }
+  };
 
   // React GA Analytics
   ReactGA.pageview('/chat');
 
-  useEffect(()=>{
+  useEffect(() => {
     setChat(null);
     setInbox([]);
     setReceivedIntents([]);
@@ -178,7 +202,7 @@ const getUpdatedGroup = async(groupInfo) => {
     setViewChatBox(false);
     setIsLoading(true);
     setConnectedUser(null);
-  },[account])
+  }, [account]);
 
   // Rest of the loading logic
   useEffect(() => {
@@ -188,15 +212,15 @@ const getUpdatedGroup = async(groupInfo) => {
     }
   }, [connectedUser]);
 
-  useEffect(()=>{
-    if(currentChat?.threadhash==null){
-      for(let i=0;i<inbox?.length;i++){
-        if(inbox[i]?.wallets===currentChat?.wallets){
+  useEffect(() => {
+    if (currentChat?.threadhash == null) {
+      for (let i = 0; i < inbox?.length; i++) {
+        if (inbox[i]?.wallets === currentChat?.wallets) {
           setChat(inbox[i]);
         }
       }
     }
-  },[inbox])
+  }, [inbox]);
 
   const closeQRModal = () => {
     setDisplayQR(false);
@@ -220,20 +244,18 @@ const getUpdatedGroup = async(groupInfo) => {
   } = useModalBlur();
   // const { pgpPvtKey } = useContext<any>(ChatUserContext);
 
-
   const connectUser = async (): Promise<void> => {
-    const caip10:string = w2wHelper.walletToCAIP10({account});
+    const caip10: string = w2wHelper.walletToCAIP10({ account });
     const signer = await provider.getSigner();
     setSignerData(signer);
-    
-    if(connectedUser?.wallets?.toLowerCase() !== caip10?.toLowerCase()){
+
+    if (connectedUser?.wallets?.toLowerCase() !== caip10?.toLowerCase()) {
       await getUser();
     }
 
-
     setBlockedLoading({
       enabled: false,
-      title: "Push Profile Setup Complete",
+      title: 'Push Profile Setup Complete',
       spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
       progressEnabled: false,
       progress: 100,
@@ -245,7 +267,7 @@ const getUpdatedGroup = async(groupInfo) => {
       // reformat chatid first
       chatid = reformatChatId(chatid);
 
-      if(connectedUser?.wallets?.toLowerCase() === caip10?.toLowerCase()){
+      if (connectedUser?.wallets?.toLowerCase() === caip10?.toLowerCase()) {
         // dynamic url
         setCurrentTab(4);
       }
@@ -312,160 +334,176 @@ const getUpdatedGroup = async(groupInfo) => {
     }
 
     return chatid;
-  }
+  };
 
   let navigate = useNavigate();
   const setChat = (feed: Feeds): void => {
     if (feed) {
       setViewChatBox(true);
-      if(checkIfGroup(feed))
-      {
-        rearrangeMembers(feed,connectedUser);
+      if (checkIfGroup(feed)) {
+        rearrangeMembers(feed, connectedUser);
       }
 
       // check and set to wallet or chat id
       let chatid = feed.did;
-      console.log("chatiddd",chatid);
+      console.log('chatiddd', chatid);
       if (!chatid) {
         // check group information
         if (feed.groupInformation) {
           chatid = feed.groupInformation.chatId;
         }
       }
-      chatid = reformatChatId(chatid);
+      // chatid = reformatChatId(chatid);
       setCurrentChat(feed);
 
       // lastly, set navigation for dynamic linking
-      navigate(`/chat/${chatid}`);
+      // navigate(`/chat/${chatid}`);
     } else {
       setViewChatBox(false);
-      navigate(`/chat`);
+      // navigate(`/chat`);
     }
   };
 
   useEffect(() => {
-  }, [account, connectedUser?.privateKey])
+    let formattedchatId = selectedChatId;
+    if (formattedchatId) {
+      formattedchatId = reformatChatId(formattedchatId);
+      navigate(`/chat/${formattedchatId}`);
+    }
+    else navigate(`/chat`);
+  }, [selectedChatId]);
+
+  useEffect(() => {}, [account, connectedUser?.privateKey]);
 
   return (
     <Container>
-      <ChatUIProvider theme={theme.scheme === "dark" && darkChatTheme} signer={signerData} env={appConfig?.appEnv} account={account} pgpPrivateKey={pgpPvtKey}>
-      <ItemHV2 ref={containerRef}>
-        {!isLoading ? (
-          <QueryClientProvider client={queryClient}>
-            <Context.Provider
-              value={{
-                currentChat,
-                receivedIntents,
-                setReceivedIntents,
-                viewChatBox,
-                setChat,
-                intents,
-                setIntents,
-                inbox,
-                setInbox,
-                hasUserBeenSearched,
-                setHasUserBeenSearched,
-                loadingMessage,
-                setLoadingMessage,
-                setBlockedLoading,
-                activeTab,
-                setActiveTab,
-                userShouldBeSearched,
-                setUserShouldBeSearched,
-                filteredUserData,
-                setFilteredUserData,
-              }}
-            >
-              <ChatSidebarContainer
-                flex="1"
-                maxWidth="310px"
-                minWidth="280px"
-                padding="10px 10px 10px 20px"
-                boxSizing="border-box"
-                background={theme.default.bg}
-                chatActive={viewChatBox}
+      <ChatUIProvider
+        theme={theme.scheme === 'dark' && darkChatTheme}
+        signer={signerData}
+        env={appConfig?.appEnv}
+        account={account}
+        pgpPrivateKey={pgpPvtKey}
+      >
+        <ItemHV2 ref={containerRef}>
+          {!isLoading ? (
+            <QueryClientProvider client={queryClient}>
+              <Context.Provider
+                value={{
+                  currentChat,
+                  selectedChatId,
+                  setSelectedChatId,
+                  receivedIntents,
+                  setReceivedIntents,
+                  viewChatBox,
+                  setChat,
+                  intents,
+                  setIntents,
+                  inbox,
+                  setInbox,
+                  hasUserBeenSearched,
+                  setHasUserBeenSearched,
+                  loadingMessage,
+                  setLoadingMessage,
+                  setBlockedLoading,
+                  activeTab,
+                  setActiveTab,
+                  userShouldBeSearched,
+                  setUserShouldBeSearched,
+                  filteredUserData,
+                  setFilteredUserData,
+                }}
               >
-                <ChatSidebarSection showCreateGroupModal={showCreateGroupModal} autofilledSearch={chatid} />
-              </ChatSidebarContainer>
-              <ChatContainer
-                padding="10px 10px 10px 10px"
-                chatActive={viewChatBox}
-              >
-                <ChatBoxSection showGroupInfoModal={showGroupInfoModal}/>
-              </ChatContainer>
-              <GroupInfoModalComponent
-                InnerComponent={GroupInfoModalContent}
-                onConfirm={() => {}}
-                toastObject={groupInfoToast}
-                modalPadding="0px"
-                modalPosition={MODAL_POSITION.ON_PARENT}
-                />
-              <CreateGroupModalComponent
-                InnerComponent={CreateGroupModalContent}
-                toastObject={createGroupToast}
-                modalPadding="0px"
-                modalPosition={MODAL_POSITION.ON_PARENT}
-              />
-
-               {/* Video Call Section */}
-              {videoCallData.incoming[0].status > 0 && (
-              <VideoCallSection />
-              )}
-
-              {displayQR && !isMobile && (
-                <>
-                  <ChatQR
-                    type={LOADER_TYPE.STANDALONE}
-                    overlay={LOADER_OVERLAY.ONTOP}
-                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
-                    width="75%"
+                <ChatSidebarContainer
+                  flex="1"
+                  maxWidth="310px"
+                  minWidth="280px"
+                  padding="10px 10px 10px 20px"
+                  boxSizing="border-box"
+                  background={theme.default.bg}
+                  chatActive={viewChatBox}
+                >
+                  <ChatSidebarSection
+                    showCreateGroupModal={showCreateGroupModal}
+                    autofilledSearch={chatid}
                   />
+                </ChatSidebarContainer>
+                <ChatContainer
+                  padding="10px 10px 10px 10px"
+                  chatActive={viewChatBox}
+                >
+                  <ChatBoxSection showGroupInfoModal={showGroupInfoModal} />
+                </ChatContainer>
+                <GroupInfoModalComponent
+                  InnerComponent={GroupInfoModalContent}
+                  onConfirm={() => {}}
+                  toastObject={groupInfoToast}
+                  modalPadding="0px"
+                  modalPosition={MODAL_POSITION.ON_PARENT}
+                />
+                <CreateGroupModalComponent
+                  InnerComponent={CreateGroupModalContent}
+                  toastObject={createGroupToast}
+                  modalPadding="0px"
+                  modalPosition={MODAL_POSITION.ON_PARENT}
+                />
 
-                  {/* <MobileView
+                {/* Video Call Section */}
+                {videoCallData.incoming[0].status > 0 && <VideoCallSection />}
+
+                {displayQR && !isMobile && (
+                  <>
+                    <ChatQR
+                      type={LOADER_TYPE.STANDALONE}
+                      overlay={LOADER_OVERLAY.ONTOP}
+                      blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+                      width="75%"
+                    />
+
+                    {/* <MobileView
                     type={LOADER_TYPE.STANDALONE}
                     overlay={LOADER_OVERLAY.ONTOP}
                     blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
                     width="75%"
                   /> */}
-                </>
-              )}
+                  </>
+                )}
 
-              {displayQR && isMobile && (
-                <>
-                  <MobileView
-                    type={LOADER_TYPE.STANDALONE}
-                    overlay={LOADER_OVERLAY.ONTOP}
-                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
-                    width="75%"
-                  />
-                </>
-              )}
-            </Context.Provider>
-            {/* The rest of your application */}
-            <ReactQueryDevtools initialIsOpen={false} />
-          </QueryClientProvider>
-        ) : (
-          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
-        )}
+                {displayQR && isMobile && (
+                  <>
+                    <MobileView
+                      type={LOADER_TYPE.STANDALONE}
+                      overlay={LOADER_OVERLAY.ONTOP}
+                      blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+                      width="75%"
+                    />
+                  </>
+                )}
+              </Context.Provider>
+              {/* The rest of your application */}
+              <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
+          ) : (
+            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
+          )}
 
-        {/* This always needs to be last */}
-        {blockedLoading.enabled && (
-          <LoaderSpinner
-            type={LOADER_TYPE.STANDALONE}
-            overlay={LOADER_OVERLAY.ONTOP}
-            blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
-            title={blockedLoading.title}
-            width="50%"
-            spinnerEnabled={blockedLoading.spinnerEnabled}
-            spinnerSize={blockedLoading.spinnerSize}
-            spinnerType={blockedLoading.spinnerType}
-            progressEnabled={blockedLoading.progressEnabled}
-            progressPositioning={PROGRESS_POSITIONING.BOTTOM}
-            progress={blockedLoading.progress}
-            progressNotice={blockedLoading.progressNotice}
-          />
-        )}
-      </ItemHV2>
+          {/* This always needs to be last */}
+          {blockedLoading.enabled && (
+            <LoaderSpinner
+              type={LOADER_TYPE.STANDALONE}
+              overlay={LOADER_OVERLAY.ONTOP}
+              blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+              title={blockedLoading.title}
+              width="50%"
+              spinnerEnabled={blockedLoading.spinnerEnabled}
+              spinnerSize={blockedLoading.spinnerSize}
+              spinnerType={blockedLoading.spinnerType}
+              progressEnabled={blockedLoading.progressEnabled}
+              progressPositioning={PROGRESS_POSITIONING.BOTTOM}
+              progress={blockedLoading.progress}
+              progressNotice={blockedLoading.progressNotice}
+            />
+          )}
+        </ItemHV2>
       </ChatUIProvider>
     </Container>
   );
@@ -495,15 +533,15 @@ const Container = styled.div`
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
     height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${
-      globalsMargin.MINI_MODULES.TABLET.BOTTOM
-    });
+  globalsMargin.MINI_MODULES.TABLET.BOTTOM
+});
   }
 
   @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
     height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${
-      globalsMargin.MINI_MODULES.MOBILE.BOTTOM
-    });
+  globalsMargin.MINI_MODULES.MOBILE.BOTTOM
+});
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 `;
 

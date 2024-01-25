@@ -112,6 +112,8 @@ export interface BlockedLoadingI {
 
 export interface AppContext {
   currentChat: Feeds;
+  selectedChatId: string | undefined;
+  setSelectedChatId:(chatId: string | undefined) => void;
   viewChatBox: boolean;
   receivedIntents: Feeds[];
   setReceivedIntents: (rIntent: Feeds[]) => void;

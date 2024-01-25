@@ -60,7 +60,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
-  const { currentChat, viewChatBox, receivedIntents, activeTab, setChat }: ContextType =
+  const { currentChat, viewChatBox, receivedIntents, activeTab, setChat, selectedChatId }: ContextType =
     useContext<ContextType>(Context);
   const { web3NameList }: AppContextType = useContext(AppContext);
 
@@ -77,8 +77,6 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);
 
-
-
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
   //resolve web3 names
@@ -87,7 +85,15 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   // get web3 name
   let ensName = '';
   if (!isGroup && currentChat?.wallets?.split(',')[0].toString()) {
-    const walletLowercase = currentChat.wallets.includes(':nft') ? caip10ToWallet(currentChat?.wallets.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0].toString().toLowerCase()) : caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase();
+    const walletLowercase = currentChat.wallets.includes(':nft')
+      ? caip10ToWallet(
+          currentChat?.wallets
+            .replace(/eip155:\d+:/, 'eip155:')
+            .split(':nft')[0]
+            .toString()
+            .toLowerCase()
+        )
+      : caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase();
     const checksumWallet = ethers.utils.getAddress(walletLowercase);
     ensName = web3NameList[checksumWallet];
   }
@@ -107,7 +113,6 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
 
     if (currentChat) {
       setIsGroup(checkIfGroup(currentChat));
-      console.log('currentChat', checkIfGroup(currentChat), isGroup);
       // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
       // even though the user was still on the same chat.
       const image = getGroupImage(currentChat);
@@ -121,17 +126,17 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     if (Loading) setLoading(false);
   }, [currentChat]);
 
-  const getDisplayName = () => {
-    if (ensName) return `${ensName} (${currentChat.wallets.includes(':nft') ? caip10ToWallet(currentChat?.wallets.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0].toString().toLowerCase()) : caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase()})`;
-    if (isGroup)
-      return isMobile
-        ? currentChat?.groupInformation?.groupName.length > 25
-          ? currentChat?.groupInformation?.groupName?.slice(0, 25) + '...'
-          : currentChat?.groupInformation?.groupName
-        : currentChat?.groupInformation?.groupName;
-    if (currentChat?.wallets) return caip10ToWallet(currentChat.wallets.includes(':nft') ? currentChat?.wallets.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0].toString().toLowerCase() : currentChat?.wallets?.split(',')[0].toString()?.toLowerCase());
+  const getChatId = () => {
+    let chatId = selectedChatId || currentChat?.did;
+    if(chatId){
+      return (chatId?.includes(':nft:')
+        ? chatId.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0]
+        : chatId) ;
+    }
+    return chatId;
+  
+    
   };
-
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
       return;
@@ -167,10 +172,9 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     { id: 7, content: 'Access to more chat requests and messages will be added in the near future' },
   ];
 
-
   return (
     <Container>
-      {!viewChatBox ? (
+      {(!viewChatBox && !getChatId() )? (
         <WelcomeItem gap="25px">
           {activeTab == 4 && (
             <LoaderSpinner
@@ -224,7 +228,6 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
         </WelcomeItem>
       ) : (
         <>
-
           <Snackbar
             open={openReprovalSnackbar}
             autoHideDuration={10000}
@@ -254,34 +257,40 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             fontWeight="500"
           >
             {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
-            
-              <ChatProfile component={<Tooltip
-                tooltipContent="Video call"
-                placementProps={{
-                  bottom: '1.4rem',
-                  transform: 'translateX(-92%)',
-                  borderRadius: '12px 12px 2px 12px',
-                  width: '75px',
-                  padding: '0.3rem 0.8rem 0.25rem 0.8rem',
-                }}
-                wrapperProps={{ width: 'fit-content', minWidth: 'fit-content' }}
-              >
-                <VideoCallButton onClick={startVideoCallHandler}>
-                  <ImageV2
-                    cursor="pointer"
-                    src={videoCallIcon}
-                  />
-                </VideoCallButton>
-              </Tooltip>} style="Info" chatId={(currentChat?.did?.includes(":") ? currentChat?.did.split(":")[1] : currentChat?.did) || currentChat?.groupInformation?.chatId} />
-
-             
+              <ChatProfile
+                component={
+                  <Tooltip
+                    tooltipContent="Video call"
+                    placementProps={{
+                      bottom: '1.4rem',
+                      transform: 'translateX(-92%)',
+                      borderRadius: '12px 12px 2px 12px',
+                      width: '75px',
+                      padding: '0.3rem 0.8rem 0.25rem 0.8rem',
+                    }}
+                    wrapperProps={{ width: 'fit-content', minWidth: 'fit-content' }}
+                  >
+                    <VideoCallButton onClick={startVideoCallHandler}>
+                      <ImageV2
+                        cursor="pointer"
+                        src={videoCallIcon}
+                      />
+                    </VideoCallButton>
+                  </Tooltip>
+                }
+                style="Info"
+                chatId={
+                  (currentChat?.did?.includes(':') ? currentChat?.did.split(':')[1] : currentChat?.did) ||
+                  currentChat?.groupInformation?.chatId
+                }
+              />
             )}
           </ItemHV2>
 
           <MessageContainer>
-            {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
+            {(getChatId()) && (
               <ChatViewList
-                chatId={(currentChat?.did?.includes(":nft:") ? currentChat?.did.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0] : currentChat?.did) || currentChat?.groupInformation?.chatId}
+                chatId={getChatId()}
                 limit={10}
               />
             )}
@@ -289,15 +298,16 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
           {checkIfChatExist({ chats: receivedIntents, currentChat, connectedUser, isGroup }) ? null : (
             <>
               <MessageInputWrapper>
-                {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
-            
-                 <MessageInput chatId={currentChat?.did?.includes(":nft:") ? currentChat?.did.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0] : currentChat?.did || currentChat?.groupInformation?.chatId} />
-                
+                {getChatId() && (
+                  <MessageInput
+                    chatId={
+                      getChatId()
+                    }
+                  />
                 )}
               </MessageInputWrapper>
             </>
           )}
-
         </>
       )}
     </Container>
@@ -356,8 +366,6 @@ const MessageContainer = styled(ItemVV2)`
   @media (max-height: 400px) {
     height: 45%;
   }
-
-
 `;
 
 const GroupInfo = styled(ItemHV2)`
