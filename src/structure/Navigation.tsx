@@ -443,7 +443,9 @@ function Navigation() {
 
                 }}
                 tooltipContent={
-                  <div>Minimize Sidebar</div>
+                  <div>
+                    {sidebarCollapsed ? 'Expand Sidebar' : 'Minimize Sidebar'}
+                  </div>
                 }
               >
                 <CollapsableArrow
