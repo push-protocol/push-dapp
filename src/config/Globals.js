@@ -73,7 +73,7 @@ export const globalsMargin = {
       RIGHT: '0px',
       BOTTOM: '0px',
       // LEFT: '18px', //prev margin of module
-      LEFT: '14px', // new margin of the module
+      LEFT: '0px', // new margin of the module
     },
     TABLET: {
       TOP: '0px',

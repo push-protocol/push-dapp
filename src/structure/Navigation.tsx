@@ -25,6 +25,7 @@ import {
 import { useAccount } from 'hooks';
 import { ReactComponent as ExpandSidebar } from 'assets/expandSidebar.svg';
 import { ReactComponent as CollapseSidebar } from 'assets/collapseSidebar.svg';
+import Tooltip from 'components/reusables/tooltip/Tooltip';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -401,7 +402,7 @@ function Navigation() {
       //   dispatch(setDeveloperOpen(false))
       // }
       let innerRendered = (
-        <Section key={key} flex="1" align="stretch" size={fontSize} wrap='nowrap' margin='0 10px'>
+        <Section key={key} flex="1" align="stretch" size={fontSize} wrap='nowrap' margin='0 5px 0 10px'>
           {secondaryButton ? (
             <Item flexBasis="100%" direction="row" overflow="hidden">
               {section.hasItems
@@ -422,12 +423,37 @@ function Navigation() {
 
               </SectionInnerGroupContainer>
 
-              {data.name == "More" && <CollapsableArrow
-                sidebarCollapsed={sidebarCollapsed}
-                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              {data.name == "More" && <Tooltip
+                wrapperProps={{
+                  width: '100%',
+                  maxWidth: 'fit-content',
+                  minWidth: 'fit-content',
+                }}
+                placementProps={{
+                  width: 'fit-content',
+                  zIndex: '100',
+                  position: 'fixed',
+                  bottom: sidebarCollapsed ? '7px' : '1rem',
+                  left: sidebarCollapsed ? '6rem' : '16rem',
+                  padding: '6px 10px',
+                  background: '#000',
+                  borderRadius: '2px 8px 8px 8px',
+                  fontSize: '13px',
+                  fontWeight: '400'
+
+                }}
+                tooltipContent={
+                  <div>Minimize Sidebar</div>
+                }
               >
-                {sidebarCollapsed ? <ExpandSidebar /> : <CollapseSidebar />}
-              </CollapsableArrow>}
+                <CollapsableArrow
+                  sidebarCollapsed={sidebarCollapsed}
+                  onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                >
+                  {sidebarCollapsed ? <ExpandSidebar /> : <CollapseSidebar />}
+                </CollapsableArrow>
+              </Tooltip>}
+
             </Item>
           ) : (
             <Item flexBasis="100%" align="stretch" direction="row" overflow="hidden">
@@ -476,8 +502,9 @@ function Navigation() {
                         : null
                       } */}
             </Item>
-          )}
-        </Section>
+          )
+          }
+        </Section >
       );
 
       return innerRendered;
@@ -677,9 +704,9 @@ const Primary = styled(Item)`
       linear,
       left top,
       left bottom,
-      color-stop(0.44, #35c5f3),
-      color-stop(0.72, #35b0f3),
-      color-stop(0.86, #35a1f3)
+      color-stop(0.44,  #CF1C84),
+      color-stop(0.72, #CF1C84),
+      color-stop(0.86, #CF1C84)
     );
   }
   padding: 10px 0px 20px 0px;
@@ -757,7 +784,7 @@ const CollapsableArrow = styled.div`
   align-items: center;
   cursor: pointer;
   opacity:0.8;
-  margin:${(props)=>props.sidebarCollapsed ? '8px 0 0 0' : '0 0 0 16px'};
+  margin:${(props) => props.sidebarCollapsed ? '8px 0 0 0' : '0 0 0 16px'};
 
   &:hover{
     opacity:1
@@ -766,7 +793,7 @@ const CollapsableArrow = styled.div`
   svg{
     path{
       stroke-width: 2px;
-      stroke: ${(props)=>props.theme.strokeColor};
+      stroke: ${(props) => props.theme.strokeColor};
     }
   }
 
