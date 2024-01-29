@@ -305,6 +305,10 @@ function Chat({ chatid }) {
       return chatid;
     }
 
+      // check if .wallet is at the end, then skip anything else
+      if (chatid.endsWith('.wallet')) {
+        return chatid;
+      }
     // check if this is eip155: which is considered default and therefore remove it
     if (chatid.startsWith('eip155:') && !chatid.includes(':nft')) {
       chatid = chatid.replace('eip155:', '');
