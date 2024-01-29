@@ -45,13 +45,7 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
 
   useEffect(() => {
     if (autofilled && !userShouldBeSearched) {
-      // automate search
-      // setSearchedUser(autofilled);
-
-      // const event = new KeyboardEvent('keypress', {
-      //   key: 'enter',
-      // });
-      // console.log("in search")
+  
       if (autofilled.includes('chatid')) {
         setSearchedUser(autofilled);
       } else {

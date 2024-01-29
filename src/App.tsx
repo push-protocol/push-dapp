@@ -101,16 +101,16 @@ const extendConsole = () => {
 extendConsole();
 
 // Disable consolve
-if (appConfig?.appEnv === "prod" || appConfig?.appEnv === "staging") {
-  console.enable("debug", false);
-  console.enable("log", false);
-  console.enable("info", false);
+// if (appConfig?.appEnv === "prod" || appConfig?.appEnv === "staging") {
+//   console.enable("debug", false);
+//   console.enable("log", false);
+//   console.enable("info", false);
 
-  // disable console.warn in prod
-  if (appConfig?.appEnv === "prod") {
-    console.enable("warn", false);
-  }
-}
+//   // disable console.warn in prod
+//   if (appConfig?.appEnv === "prod") {
+//     console.enable("warn", false);
+//   }
+// }
 
 // Provess App
 export default function App() {

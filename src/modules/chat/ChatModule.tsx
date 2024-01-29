@@ -346,7 +346,6 @@ function Chat({ chatid }) {
 
       // check and set to wallet or chat id
       let chatid = feed.did;
-      console.log('chatiddd', chatid);
       if (!chatid) {
         // check group information
         if (feed.groupInformation) {
@@ -354,7 +353,7 @@ function Chat({ chatid }) {
         }
       }
       // chatid = reformatChatId(chatid);
-      setCurrentChat(feed);
+      // setCurrentChat(feed);
 
       // lastly, set navigation for dynamic linking
       // navigate(`/chat/${chatid}`);
@@ -365,7 +364,8 @@ function Chat({ chatid }) {
   };
 
   useEffect(() => {
-    let formattedchatId = selectedChatId;
+    let formattedchatId = selectedChatId || chatid;
+   
     if (formattedchatId) {
       formattedchatId = reformatChatId(formattedchatId);
       navigate(`/chat/${formattedchatId}`);

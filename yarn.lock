@@ -5434,7 +5434,7 @@ __metadata:
     "@mui/material": ^5.5.0
     "@pushprotocol/restapi": 0.0.1-alpha.64
     "@pushprotocol/socket": 0.5.3
-    "@pushprotocol/uiweb": 0.0.1-alpha.38
+    "@pushprotocol/uiweb": 0.0.1-alpha.40
     "@reduxjs/toolkit": ^1.7.1
     "@testing-library/dom": ^6.12.2
     "@testing-library/jest-dom": ^4.2.4
@@ -5671,9 +5671,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:0.0.1-alpha.38":
-  version: 0.0.1-alpha.38
-  resolution: "@pushprotocol/uiweb@npm:0.0.1-alpha.38"
+"@pushprotocol/uiweb@npm:0.0.1-alpha.40":
+  version: 0.0.1-alpha.40
+  resolution: "@pushprotocol/uiweb@npm:0.0.1-alpha.40"
   dependencies:
     "@livekit/components-react": ^1.2.2
     "@livekit/components-styles": ^1.0.6
@@ -5705,7 +5705,7 @@ __metadata:
     axios: ^0.27.2
     react: ">=16.8.0"
     styled-components: ^6.0.8
-  checksum: 90915312c748229b7e15eb4f50c5f09c1ca99e496ed605b8d9b0e8d41cebf3ecfcac38b0a95bd2a2dca008526e6120d944d38a9123f36d89e0a52f4ff8ba9b83
+  checksum: 1ea38d19feb26103a6d7e39e9d1473a51e7830b10de322bf65962bd557443e594c35a944468618703e1944714ad9a3e3bd05b3e2046fd60e0aa007db1940babe
   languageName: node
   linkType: hard
 

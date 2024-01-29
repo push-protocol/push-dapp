@@ -25,6 +25,8 @@ import { Feeds } from 'types/chat';
 import NewTag from 'components/NewTag';
 import GLOBALS from 'config/Globals';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ethers } from 'ethers';
+import { caip10ToWallet } from 'helpers/w2w';
 
 
 const createGroupOnMouseEnter = [
@@ -77,31 +79,24 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   const containerRef = React.useRef(null);
 
 
-  // const getRequests = async (): Promise<void> => {
-  //   await fetchIntentApi();
-  //   setLoadingRequests(false);
-  // };
-  // useEffect(() => {
-  //   // This will run when the page first loads
-  //   getRequests();
-  // }, []);
-
   const closeQRDropdown = () => {
     setShowQR(false);
   };
   useClickAway(containerRef, () => closeQRDropdown());
 
-  // const fetchIntentApi = async (): Promise<Feeds[]> => {
-  //   const intents = await fetchIntent({ connectedUser });
-  //   if (JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
-  //     setReceivedIntents(intents);
-  //     setLoadingRequests(false);
-  //   }
-  //   setLoadingRequests(false);
-  //   return intents;
-  // };
+ 
+  const formatChatParticipant = async(chatParticipant:string,chatId:string) =>{
+    let formattedChatParticipant = chatParticipant;
+    if (!formattedChatParticipant.includes('.')) {
+       if (!await ethers.utils.isAddress(caip10ToWallet(formattedChatParticipant)))
+       formattedChatParticipant = chatId;
 
-  console.debug(requestChatList);
+    }
+    return formattedChatParticipant;
+   
+  }
+
+
 
   // RENDER
   return (
@@ -244,7 +239,8 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
         >
           <ChatPreviewList
             listType="CHATS"
-            onChatSelected={(chatid) => setSelectedChatId(chatid)}
+            onChatSelected={async(chatid,chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant,chatid))}
+
             onUnreadCountChange={(count) => {
               console.log('Count is: ', count);
             }}
@@ -260,7 +256,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
         >
           <ChatPreviewList
             listType="REQUESTS"
-            onChatSelected={(chatid) => setSelectedChatId(chatid)}
+            onChatSelected={async(chatid,chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant,chatid))}
             onUnreadCountChange={(count) => {
               console.log('Count is: ', count);
             }}
@@ -296,7 +292,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
             <ChatPreviewList
               listType="SEARCH"
               searchParamter={searchedUser || ''}
-              onChatSelected={(chatid) => setSelectedChatId(chatid)}
+              onChatSelected={async(chatid,chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant,chatid))}
               onUnreadCountChange={(count) => {
                 console.log('Count is: ', count);
               }}
