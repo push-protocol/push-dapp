@@ -9,7 +9,7 @@ import { MdError } from 'react-icons/md';
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { Anchor, Image, ItemH, RouterLink, Span } from 'primaries/SharedStyling';
-import { ItemVV2, SpanV2,ItemHV2 } from './reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
 import useToast from 'hooks/useToast';
 
 // Internal Configs

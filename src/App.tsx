@@ -102,7 +102,7 @@ const extendConsole = () => {
 extendConsole();
 
 // Disable consolve
-if (appConfig?.appEnv === "prod" || appConfig?.appEnv === "staging") {
+if (appConfig?.appEnv === "prod") {
   console.enable("debug", false);
   console.enable("log", false);
   console.enable("info", false);
