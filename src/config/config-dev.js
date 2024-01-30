@@ -84,6 +84,7 @@ export const addresses = {
   epnsEthComm: "0x9dDCD7ed7151afab43044E4D694FA064742C428c", 
   epnsPolyComm: "0xAf55BE8e6b0d6107891bA76eADeEa032ef8A4504", // the ploygon comm contract
   pushToken: "0x37c779a1564DCc0e3914aB130e0e787d93e21804", //address for push token
+  pushChannelAdmin: "0xfA47d7EaEC85eE8db2cBFF7d18AC407d1A556Dc2",
   aDai: "0x31f30d9A5627eAfeC4433Ae2886Cf6cc3D25E772",
   epnsToken: "0x37c779a1564DCc0e3914aB130e0e787d93e21804",
   epnsLPToken: "0x1f094Bd8c260D0C3fC79157096015990885af4d2",

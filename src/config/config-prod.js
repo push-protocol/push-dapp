@@ -83,6 +83,7 @@ export const addresses = {
   epnsEthComm: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa', // mainnet address eth comm
   epnsPolyComm: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa', // mainnet address polygon comm
   pushToken: '0xf418588522d5dd018b425E472991E52EBBeEEEEE', // mainnet address
+  pushChannelAdmin: "0xB88460Bb2696CAb9D66013A05dFF29a28330689D", // mainnet push core admin
   aDai: '0xcB1Fe6F440c49E9290c3eb7f158534c2dC374201', // mainnet address
   staking: '0xB72ff1e675117beDefF05a7D0a472c3844cfec85', // mainnet address
   yieldFarmPUSH: '0x6019B84E2eE9EB62BC42E32AB6375A7095886366', // mainnet address
