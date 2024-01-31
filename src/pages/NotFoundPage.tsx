@@ -14,11 +14,10 @@ const NotFoundPage: React.FC = () => {
     <NotFoundContainer>
       <PageNotFoundWrapper>
         <PageNotFoundImg src={ErrorGraphic} alt="Page not found" />
-         {/* <ErrorGraphic /> */}
-         <PageNotFoundSubContainer>
-  <OopsTitle>Oops...</OopsTitle>
-  <PageNotFoundText>The page you're trying to reach doesn't exist.</PageNotFoundText>
-</PageNotFoundSubContainer>
+        <PageNotFoundSubContainer>
+          <OopsTitle>Oops...</OopsTitle>
+          <PageNotFoundText>The page you're trying to reach doesn't exist.</PageNotFoundText>
+        </PageNotFoundSubContainer>
         <PageNotFoundButton onClick={() => navigate("/channels")}>Go to Home</PageNotFoundButton>
       </PageNotFoundWrapper>
     </NotFoundContainer>
@@ -71,14 +70,6 @@ const PageNotFoundImg = styled.img`
     height: 205.79px;
     border-radius: 16px;
     margin: 0 auto;
-`;
-
-const PageNotFoundTitle = styled.h1`
-    font-size: 48px;
-    font-weight: 500;
-    margin: 0;
-    text-align: center;
-    color: black;
 `;
 
 const PageNotFoundText = styled.p`
