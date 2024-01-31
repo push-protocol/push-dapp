@@ -45,7 +45,7 @@ export const DropdownBtnHandler: React.FC<DropdownBtnHandlerProps> = ({
   );
 };
 
-const Container = styled.button`
+const Container = styled.span`
   position:relative;
   margin: 0;
   padding: 0;

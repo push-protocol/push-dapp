@@ -282,6 +282,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
           <MessageContainer>
             {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
               <ChatViewList
+              key={currentChat?.did}
                 chatId={(currentChat?.did?.includes(":nft:") ? currentChat?.did.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0] : currentChat?.did) || currentChat?.groupInformation?.chatId}
                 limit={10}
               />
