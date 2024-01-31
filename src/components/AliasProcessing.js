@@ -10,12 +10,12 @@ import { Section } from "../primaries/SharedStyling";
 import AliasSetup from "./AliasSetup";
 import ChangeNetwork from "./ChangeNetwork";
 import VerifyAlias from "./VerifyAlias";
-
+import { SectionV2 } from "./reusables/SharedStylingV2";
 const AliasProcessing = ({ aliasEthAccount, setAliasVerified }) => {
   const { processingState } = useSelector((state) => state.channelCreation);
 
   return (
-    <Section>
+    <SectionV2>
       <ItemHere>
         <Tab type={processingState >= 1 ? "active" : "inactive"} active={processingState == 1 ? 'active' : 'inactive'}>
           <div>Waiting for Setup</div>
@@ -40,7 +40,7 @@ const AliasProcessing = ({ aliasEthAccount, setAliasVerified }) => {
           setAliasVerified={setAliasVerified}
         />
       )}
-    </Section>
+    </SectionV2>
   );
 };
 

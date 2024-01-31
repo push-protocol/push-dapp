@@ -28,7 +28,7 @@ import { ReactComponent as EPNSLogoLight } from './assets/epnsLight.svg';
 
 // Internal Configs
 import ChainIndicator from 'components/ChainIndicator';
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2, SpanV2, ButtonV2 } from 'components/reusables/SharedStylingV2';
 import { appConfig } from 'config';
 import APP_PATHS from 'config/AppPaths';
 import GLOBALS from 'config/Globals';
@@ -174,7 +174,7 @@ function Header({ isDarkMode, darkModeToggle }) {
 
   return (
     <Container direction="row" padding="0px 15px">
-      <ItemH justify="flex-start" flex="0">
+      <ItemHV2 justifyContent="flex-start" flex="0">
         <RightBarContainer justify="flex-start" flex="0">
           <RightBarDesktop justify="flex-start" flex="0">
             <a href='/channels'>
@@ -202,20 +202,20 @@ function Header({ isDarkMode, darkModeToggle }) {
             </NavMenu>
           </NavMenuContainer>
         )}
-      </ItemH>
+      </ItemHV2>
 
-      <ItemH justify="flex-end">
+      <ItemHV2 justifyContent="flex-end">
         {headerTag && isActive && !error && !isSnapPage && (
           <HeaderTag align="flex-start" overflow="hidden">
-            <Span
+            <SpanV2
               textTransform="capitalize"
-              spacing="-0.02em"
-              weight="normal"
+              letterSpacing="-0.02em"
+              fontWeight="normal"
               padding={isMobile ? "8px 7px" : "8px 20px"}
               className='text'
               color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}>
               {headerTag.title}
-            </Span>
+            </SpanV2>
           </HeaderTag>
         )}
 
@@ -237,19 +237,19 @@ function Header({ isDarkMode, darkModeToggle }) {
 
         {isActive && !error && (
           <RightBarMobile>
-            <Button
-              bg="transparent"
+            <ButtonV2
+              background="transparent"
               padding="5px"
-              radius="4px"
+              borderRadius="4px"
               onClick={() => {
                 setShowNavBar(!showNavBar);
               }}>
               <AiOutlineMenu size={30} color={theme.headerIconsBg} />
-            </Button>
+            </ButtonV2>
           </RightBarMobile>
         )}
 
-        <ItemH justify="flex-end" flex="initial">
+        <ItemHV2 justifyContent="flex-end" flex="initial">
           {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>}
           {/* {!isActive && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>} */}
           {!!error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>}
@@ -264,8 +264,8 @@ function Header({ isDarkMode, darkModeToggle }) {
             <ChainIndicator isDarkMode={isDarkMode} />
             <Profile isDarkMode={isDarkMode} />
           </RightBarDesktop>
-        </ItemH>
-      </ItemH>
+        </ItemHV2>
+      </ItemHV2>
     </Container>
   );
 }
