@@ -9,6 +9,7 @@ import styled, { ThemeProvider, useTheme } from 'styled-components';
 // Internal Components
 import { postReq } from "../api";
 import { Button, H2, H3, Input, Item, Span } from '../primaries/SharedStyling';
+import { SpanV2, ButtonV2 } from "./reusables/SharedStylingV2";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { useAccount } from "hooks";
 
@@ -94,9 +95,10 @@ export default function AliasVerificationModal({
                 <AliasModal ref={modalRef}>
                     <Item align="flex-start">
                         <H2 textTransform="uppercase" spacing="0.1em">
-                            <Span weight="200" color={themes.color}> Verify</Span><Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">
+                            <SpanV2 fontWeight="200" color={themes.color}> Verify</SpanV2>
+                            <SpanV2 background="#674c9f" color="#fff" fontWeight="600" padding="0px 8px">
                                 Alias
-                            </Span>
+                            </SpanV2>
                         </H2>
                         {
                             verificationStatus === null ?
@@ -127,11 +129,11 @@ export default function AliasVerificationModal({
                                     </Item>
                                 )}
                                 <Item margin="15px 0px 0px 0px" flex="1" self="stretch" align="stretch">
-                                    <Button
-                                        bg='#e20880'
+                                    <ButtonV2
+                                        background='#e20880'
                                         color='#fff'
                                         flex="1"
-                                        radius="0px"
+                                        borderRadius="0px"
                                         padding="20px 10px"
                                         disabled={mainAddress.length !== 42 || loading !== ''}
                                         onClick={checkAlias}
@@ -143,7 +145,7 @@ export default function AliasVerificationModal({
                                             size="0.8em" spacing="0.2em"
                                             value={loading ? loading : "Verify Alias"}
                                         />
-                                    </Button>
+                                    </ButtonV2>
                                 </Item>
                             </>
                         )
