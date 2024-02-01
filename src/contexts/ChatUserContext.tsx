@@ -6,6 +6,7 @@ import { ethers } from 'ethers';
 import * as w2wHelper from 'helpers/w2w';
 import { useAccount } from "hooks";
 import React, { createContext, useState } from 'react';
+import { useSelector } from "react-redux";
 import { BlockedLoadingI, ConnectedUser, User } from 'types/chat';
 
 export const ChatUserContext = createContext({})
@@ -15,8 +16,10 @@ const ChatUserContextProvider = (props) => {
   const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
   const { account, provider } = useAccount();
 
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  }); 
 
- 
   //this blocked loading is a modal which shows during the PGP keys generation time
   const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
     enabled: false,
@@ -129,10 +132,7 @@ const ChatUserContextProvider = (props) => {
   const getUser = async () => {
     console.debug("getUser");
     const caip10: string = w2wHelper.walletToCAIP10({ account });
-    const user: User = await PushAPI.user.get({ 
-      account: caip10,
-      env: appConfig.appEnv
-    });
+    const user = await userPushSDKInstance.info();
     let connectedUser: ConnectedUser;
 
     // TODO: Change this to do verification on ceramic to validate if did is valid
@@ -145,15 +145,7 @@ const ChatUserContextProvider = (props) => {
       if (user.wallets.includes(',') || !user.wallets?.toLowerCase().includes(caip10?.toLowerCase())) {
         throw Error('Invalid user');
       }
-      const _signer = await provider.getSigner();
-      const privateKeyArmored = await PushAPI.chat.decryptPGPKey({
-        encryptedPGPPrivateKey: user.encryptedPrivateKey,
-        signer: _signer,
-        env: appConfig.appEnv,
-        toUpgrade: true,
-        progressHook: onboardingProgressReformatter
-      });
-
+      const privateKeyArmored = userPushSDKInstance.decryptedPgpPvtKey;
       setPgpPvtKey(privateKeyArmored);
       connectedUser = { ...user, privateKey: privateKeyArmored };
     } else {
