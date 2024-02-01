@@ -44,6 +44,7 @@ import { ChatUIProvider, darkChatTheme } from '@pushprotocol/uiweb';
 import { appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { fetchIntent } from 'helpers/w2w/user';
+import { ChatUIProvider, darkChatTheme  } from '@pushprotocol/uiweb';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',

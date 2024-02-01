@@ -1,8 +1,13 @@
 # Contributing
 
+At Push Protocol, we believe in the power of community and collaboration. We're excited to invite developers, writers, and tech enthusiasts to contribute to the Push Dapp. Contributing to Push is not just about code; it's an opportunity to learn, share knowledge, and be part of an innovative community. Here's your guide to making your first, but hopefully not last, contribution!
+
 ## Repo Setup
+
+### Fork the original repository and then follow these steps:
+
 ```
-git clone https://github.com/ethereum-push-notification-service/push-dapp
+git clone https://github.com/your-username/push-dapp
 
 cd push-dapp
 ```
