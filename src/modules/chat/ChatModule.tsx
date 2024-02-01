@@ -371,14 +371,18 @@ function Chat({ chatid }) {
     let formattedchatId = selectedChatId || chatid;
    
     if (formattedchatId) {
+      setViewChatBox(true);
       formattedchatId = reformatChatId(formattedchatId);
       navigate(`/chat/${formattedchatId}`);
     }
-    else navigate(`/chat`);
+    else 
+    {
+      setViewChatBox(false);
+      navigate(`/chat`);
+    }
   }, [selectedChatId]);
 
   useEffect(() => {}, [account, connectedUser?.privateKey]);
-
   return (
     <Container>
       <ChatUIProvider
@@ -399,6 +403,7 @@ function Chat({ chatid }) {
                   receivedIntents,
                   setReceivedIntents,
                   viewChatBox,
+                  setViewChatBox,
                   setChat,
                   intents,
                   setIntents,

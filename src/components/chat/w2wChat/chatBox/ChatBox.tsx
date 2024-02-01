@@ -15,7 +15,7 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 import { produce } from 'immer';
-import { ChatProfile, ChatViewList, MessageInput } from '@pushprotocol/uiweb';
+import { ChatProfile, ChatViewList, MessageInput, UserProfile } from '@pushprotocol/uiweb';
 // Internal Components
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
@@ -60,7 +60,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
-  const { currentChat, viewChatBox, receivedIntents, activeTab, setChat, selectedChatId }: ContextType =
+  const { currentChat, viewChatBox, receivedIntents, activeTab,setViewChatBox, setChat, selectedChatId }: ContextType =
     useContext<ContextType>(Context);
   const { web3NameList }: AppContextType = useContext(AppContext);
 
@@ -256,9 +256,17 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             padding="6px"
             fontWeight="500"
           >
-            {(!!currentChat || !!Object.keys(currentChat || {}).length) && (
+            
+            {getChatId() && (
               <ChatProfile
-                component={
+                chatProfileLeftHelperComponent = {
+                  isMobile?
+                  <SpanV2 onClick={()=>setViewChatBox(false)}>
+                  <MdOutlineArrowBackIos />
+                  </SpanV2>
+                  :null
+                }
+                chatProfileRightHelperComponent={
                   <Tooltip
                     tooltipContent="Video call"
                     placementProps={{
@@ -278,11 +286,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
                     </VideoCallButton>
                   </Tooltip>
                 }
-                style="Info"
-                chatId={
-                  (currentChat?.did?.includes(':') ? currentChat?.did.split(':')[1] : currentChat?.did) ||
-                  currentChat?.groupInformation?.chatId
-                }
+                chatId={getChatId()}
               />
             )}
           </ItemHV2>
@@ -325,7 +329,7 @@ const MessageInputWrapper = styled.div`
   justify-content: center;
   position: absolute;
   bottom: 8px;
-  z-index: 99;
+
 `;
 
 const ChatContainer = styled.div`

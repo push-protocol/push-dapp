@@ -8,7 +8,7 @@ import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ChatPreviewList } from '@pushprotocol/uiweb';
+import { ChatPreviewList,UserProfile } from '@pushprotocol/uiweb';
 import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
 import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
 import ProfileHeader from 'components/chat/w2wChat/profile';
@@ -95,7 +95,6 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
     return formattedChatParticipant;
    
   }
-
 
 
   // RENDER
@@ -242,7 +241,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
             onChatSelected={async(chatid,chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant,chatid))}
 
             onUnreadCountChange={(count) => {
-              console.log('Count is: ', count);
+             // console.log('Count is: ', count);
             }}
           />
         </ItemVV2>
@@ -258,7 +257,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
             listType="REQUESTS"
             onChatSelected={async(chatid,chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant,chatid))}
             onUnreadCountChange={(count) => {
-              console.log('Count is: ', count);
+             // console.log('Count is: ', count);
             }}
             onLoading={(loadingData) => setRequestLoadingData(loadingData)}
             onPaging={(chats) => setRequestChatList(chats)}
@@ -294,7 +293,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
               searchParamter={searchedUser || ''}
               onChatSelected={async(chatid,chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant,chatid))}
               onUnreadCountChange={(count) => {
-                console.log('Count is: ', count);
+               // console.log('Count is: ', count);
               }}
             />
           </ItemVV2>
@@ -319,12 +318,13 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
         </QRCodeContainer>
       ) : null}
 
-      <ProfileContainer borderTop={`1px solid ${theme.default.secondaryBg}`}>
-        <ProfileHeader
+      <ProfileContainer zIndex='10'  borderTop={`1px solid ${theme.default.secondaryBg}` }>
+        {/* <ProfileHeader
           setActiveTab={setActiveTab}
           setShowQR={setShowQR}
           showQR={showQR}
-        />
+        /> */}
+        <UserProfile/>
       </ProfileContainer>
     </ItemVV2>
   );
@@ -339,8 +339,7 @@ const TabButton = styled(ButtonV2)`
 const ProfileContainer = styled(ItemHV2)`
   flex: initial;
   justify-content: space-between;
-  margin: 15px 0px 5px 0px;
-  padding: 14px 10px 0px 10px;
+  // padding: 14px 10px 0px 10px;
   border-top: ${(props) => props.borderTop};
 `;
 

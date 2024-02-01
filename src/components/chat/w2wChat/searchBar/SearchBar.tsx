@@ -47,7 +47,7 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
     if (autofilled && !userShouldBeSearched) {
   
       if (autofilled.includes('chatid')) {
-        setSearchedUser(autofilled);
+        setSearchedUser(autofilled.split(':')[1]);
       } else {
         setSearchedUser(autofilled);
       }
@@ -58,6 +58,7 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
 
   const onChangeSearchBox = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     let searchAddress = event.target.value;
+
     if (searchAddress === '') {
       clearInput();
     } else {
@@ -66,6 +67,7 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
   };
 
   const submitSearch = (): void => {
+
     setActiveTab(3);
   };
 
