@@ -70,6 +70,13 @@ const Faucets = () => {
       title: "Fuse Sparknet Faucet",
       function: () => {},
       link: "https://chaindrop.org/?chainid=123&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    },
+    {
+      id: "8082",
+      value: "Shardeum",
+      title: "Shardeum Testnet",
+      function: () => {},
+      link: "https://chaindrop.org/?chainid=8082&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
     }
   ];
 

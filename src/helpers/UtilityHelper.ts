@@ -52,7 +52,8 @@ export const MaskedAliasChannels:{
   42161: {},
   421613: {},
   122: {},
-  123: {}
+  123: {},
+  8082: {}
  }
 
  export const findObject = (data: any,parentArray: any[],property: string ): boolean => {
@@ -116,7 +117,8 @@ export const networkName = {
   42161: "ArbitrumOne Mainnet",
   421613: "Arbitrum Testnet",
   122: "Fuse Mainnet",
-  123: "Fuse Testnet"
+  123: "Fuse Testnet",
+  8082: "Shardeum Testnet"
 };
 
 export const chainNameBackendStandard = {
@@ -139,7 +141,8 @@ export const aliasChainIdToChainName={
   1101: "POLYGONZKEVM",
   1442: "POLYGONZKEVM",
   122: "FUSE",
-  123: "FUSE"
+  123: "FUSE",
+  8082: "SHARDEUM"
 }
 
 export const aliasChainIdsMapping = {
@@ -233,6 +236,13 @@ export const NETWORK_DETAILS = {
     nativeCurrency: {name: 'Fuse', symbol: 'Fuse', decimals: 18},
     rpcUrls: ['https://rpc.fuse.io'],
     blockExplorerUrls: ['	https://explorer.fuse.io/']
+  },
+  SHARDEUM_TESTNET: {
+    chainId: utils.hexValue(8082),
+    chainName: 'Shardeum Testnet',
+    nativeCurrency: {name: 'SHM', symbol: 'SHM', decimals: 18},
+    rpcUrls: ['https://sphinx.shardeum.org/'],
+    blockExplorerUrls: ['https://explorer-sphinx.shardeum.org/']
   }
 };
 
@@ -255,7 +265,8 @@ export const LOGO_FROM_CHAIN_ID: {
   421613: "Arbitrum.svg",
   11155111: "Ethereum.svg",
   122: "Fuse.svg",
-  123: "Fuse.svg"
+  123: "Fuse.svg",
+  8082: "Shardeum.svg"
 }
 
 export type getAliasResponseType = {
