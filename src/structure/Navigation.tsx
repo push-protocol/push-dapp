@@ -28,6 +28,7 @@ import { useAccount } from 'hooks';
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 import navigationList from 'config/NavigationList';
+import { SpanV2 } from 'components/reusables/SharedStylingV2';
 
 // Create Header
 function Navigation() {
@@ -543,16 +544,16 @@ function Navigation() {
           <Primary>
             {renderMainItems(navigationSetup.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)}
 
-            <Span
+            <SpanV2
               textTransform="uppercase"
-              weight="700"
-              size="11px"
+              fontWeight="700"
+              fontSize ="11px"
               margin="20px 0px 0px 0px"
               padding="15px 30px"
               color="#575D73"
-              spacing="0.16em">
+              letterSpacing="0.16em">
               Developers
-            </Span>
+            </SpanV2>
             {renderMainItems(navigationSetup.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY)}
           </Primary>
           <Footer justify="flex-end" align="stretch">
