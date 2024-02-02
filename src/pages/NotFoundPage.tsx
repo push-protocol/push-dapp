@@ -30,10 +30,8 @@ const NotFoundContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: calc(60vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px);
+  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px);
   width: 80%;
-  background: ${(props) => props.theme.default.bg};
-  box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
   border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
   padding: 20px;
   box-sizing: border-box;
