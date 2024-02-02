@@ -23,11 +23,15 @@ import {
   setTutorialContinous,
 } from '../redux/slices/userJourneySlice';
 import { useAccount } from 'hooks';
+import { ReactComponent as ExpandSidebar } from 'assets/expandSidebar.svg';
+import { ReactComponent as CollapseSidebar } from 'assets/collapseSidebar.svg';
+import Tooltip from 'components/reusables/tooltip/Tooltip';
 
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 import navigationList from 'config/NavigationList';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 // Create Header
 function Navigation() {
@@ -40,6 +44,7 @@ function Navigation() {
   const { processingState } = useSelector((state: any) => state.channelCreation);
   const { run, stepIndex, isCommunicateOpen, isDeveloperOpen } = useSelector((state: any) => state.userJourney);
   const { navigationSetup, setNavigationSetup } = useContext(NavigationContext);
+  const { sidebarCollapsed, setSidebarCollapsed } = useContext(GlobalContext);
 
   const CORE_CHAIN_ID = appConfig.coreContractChain;
   const { account, chainId } = useAccount();
@@ -397,9 +402,9 @@ function Navigation() {
       //   dispatch(setDeveloperOpen(false))
       // }
       let innerRendered = (
-        <Section key={key} flex="1" align="stretch" size={fontSize}>
+        <Section key={key} flex="1" align="stretch" size={fontSize} wrap='nowrap' margin='0 5px 0 10px'>
           {secondaryButton ? (
-            <Item padding="5px 10px" flexBasis="100%" align="stretch" direction="row" overflow="hidden">
+            <Item flexBasis="100%" direction="row" overflow="hidden">
               {section.hasItems
                 ? renderChildItems(data.drilldown, section.opened, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)
                 : null}
@@ -411,15 +416,49 @@ function Navigation() {
                 refresh={refresh}
                 // margintop="15px"
                 onClick={() => {
-                  // console.log(`Clicked secondary button`);
                   mutateTransformedList(section, true);
                 }}
                 id={data.id}>
                 <NavigationButton item={section} data={data} sectionID={sectionID} active={section.active} bg={!section.active ? 'transparent' : theme.nav.activeColor} />
+
               </SectionInnerGroupContainer>
+
+              {data.name == "More" && <Tooltip
+                wrapperProps={{
+                  width: '100%',
+                  maxWidth: 'fit-content',
+                  minWidth: 'fit-content',
+                }}
+                placementProps={{
+                  width: 'fit-content',
+                  zIndex: '100',
+                  position: 'fixed',
+                  bottom: sidebarCollapsed ? '7px' : '1rem',
+                  left: sidebarCollapsed ? '6rem' : '16rem',
+                  padding: '6px 10px',
+                  background: '#000',
+                  borderRadius: '2px 8px 8px 8px',
+                  fontSize: '13px',
+                  fontWeight: '400'
+
+                }}
+                tooltipContent={
+                  <div>
+                    {sidebarCollapsed ? 'Expand Sidebar' : 'Minimize Sidebar'}
+                  </div>
+                }
+              >
+                <CollapsableArrow
+                  sidebarCollapsed={sidebarCollapsed}
+                  onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                >
+                  {sidebarCollapsed ? <ExpandSidebar /> : <CollapseSidebar />}
+                </CollapsableArrow>
+              </Tooltip>}
+
             </Item>
           ) : (
-            <Item padding="5px 10px" flexBasis="100%" align="stretch" direction="row" overflow="hidden">
+            <Item flexBasis="100%" align="stretch" direction="row" overflow="hidden">
               <SectionInnerGroupContainer
                 flex="1"
                 align="stretch"
@@ -465,8 +504,9 @@ function Navigation() {
                         : null
                       } */}
             </Item>
-          )}
-        </Section>
+          )
+          }
+        </Section >
       );
 
       return innerRendered;
@@ -548,10 +588,10 @@ function Navigation() {
               weight="700"
               size="11px"
               margin="20px 0px 0px 0px"
-              padding="15px 30px"
+              padding={sidebarCollapsed ? "15px 25px" : "15px 30px"}
               color="#575D73"
               spacing="0.16em">
-              Developers
+              {sidebarCollapsed ? 'Devs' : 'Developers'}
             </Span>
             {renderMainItems(navigationSetup.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY)}
           </Primary>
@@ -653,6 +693,7 @@ const Primary = styled(Item)`
   justify-content: flex-start;
   background: '#fff';
   overflow-y: scroll;
+  gap:10px;
   &::-webkit-scrollbar-track {
     border-radius: 10px;
   }
@@ -665,12 +706,12 @@ const Primary = styled(Item)`
       linear,
       left top,
       left bottom,
-      color-stop(0.44, #35c5f3),
-      color-stop(0.72, #35b0f3),
-      color-stop(0.86, #35a1f3)
+      color-stop(0.44,  #CF1C84),
+      color-stop(0.72, #CF1C84),
+      color-stop(0.86, #CF1C84)
     );
   }
-  padding: 0px 0px 20px 0px;
+  padding: 10px 0px 20px 0px;
 `;
 
 const InheritedSection = styled(Item)`
@@ -711,7 +752,7 @@ const PrimarySectionGroup = styled(Item)`
   ${(props) =>
     !props.opened &&
     css`
-      margin-top: -100%;
+      margin-top: -210%;
     `};
 `;
 
@@ -719,6 +760,11 @@ const PrimarySectionItem = styled(Item)``;
 
 const Footer = styled(Item)`
   z-index: 3;
+  gap:10px;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  padding:0 6px 10px 0;
+
 `;
 
 const Secondary = styled(Item)`
@@ -728,6 +774,33 @@ const Secondary = styled(Item)`
 const SecondarySection = styled(InheritedSection)``;
 
 const Social = styled(Item)``;
+
+const CollapsableArrow = styled.div`
+  border-radius: 10px;
+  background: ${(props) => props.theme.collapsaBg};
+  z-index:10;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  opacity:0.8;
+  margin:${(props) => props.sidebarCollapsed ? '8px 0 0 0' : '0 0 0 16px'};
+
+  &:hover{
+    opacity:1
+  }
+
+  svg{
+    path{
+      stroke-width: 2px;
+      stroke: ${(props) => props.theme.strokeColor};
+    }
+  }
+
+
+`
 
 // Export Default
 export default Navigation;

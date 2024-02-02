@@ -9,7 +9,7 @@ import { MdError } from 'react-icons/md';
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { Anchor, Image, ItemH, RouterLink, Span } from 'primaries/SharedStyling';
-import { ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
 import useToast from 'hooks/useToast';
 
 // Internal Configs
@@ -22,7 +22,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
   const theme = useTheme();
 
   const { showMetamaskPushSnap, handleConnectWallet } = React.useContext(AppContext);
-  const { readOnlyWallet, mode } = React.useContext(GlobalContext);
+  const { readOnlyWallet, mode, sidebarCollapsed } = React.useContext(GlobalContext);
 
   const navigationToast = useToast(5000);
 
@@ -55,7 +55,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
   }
   // Don't navigate to these routes if user is using a read-only wallet
   const disallowNavigation = readOnlyWallet && (data.allowReadOnly !== undefined && data.allowReadOnly === false);
-  if (disallowNavigation) { 
+  if (disallowNavigation) {
     RouteLogic = ProtectedRoute;
   }
 
@@ -77,66 +77,66 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
       )}
 
       {!data.loading && !data.hidden && (
-        <RouteLogic
-          style={{ display: data.name === 'Hide' ? 'none' : 'block' }}
-          flex="1"
-          title={`${data.title}`}
-          to={`${data.href ? data.href : '#'}`}
-          href={`${data.href ? data.href : '#'}`}
-          alt={`${data.alt}`}
-          target={data.isRoute ? null : data.newTab ? '_blank' : 'self'}
-          disabled={data.disabled}
-          radius="16px"
-          align="stretch"
-          padding="12px"
-          margin={definedMargin}
-          bg={bg}
-          active={active?1:0}
-          onClick={disallowNavigation && handleDisallowedNav}
-          className={data?.name?.toLowerCase()}>
-          {data.iconFactory ? (
-            <ItemHV2 justifyContent="flex-start" padding="0 2rem">
-              {data.iconFactory}
-            </ItemHV2>
-          ) : (
-            <ItemH align="center">
-              {!active ? (
-                <SelectedIcon
-                  src={require(`../assets/${data.src}`)}
+          <RouteLogic
+            style={{ display: data.name === 'Hide' ? 'none' : 'block' }}
+            flex="1"
+            title={`${data.title}`}
+            to={`${data.href ? data.href : '#'}`}
+            href={`${data.href ? data.href : '#'}`}
+            alt={`${data.alt}`}
+            target={data.isRoute ? null : data.newTab ? '_blank' : 'self'}
+            disabled={data.disabled}
+            radius="16px"
+            align="stretch"
+            padding="10px"
+            margin={definedMargin}
+            bg={bg}
+            active={active ? 1 : 0}
+            onClick={disallowNavigation && handleDisallowedNav}
+            className={data?.name?.toLowerCase()}
+          >
+            {data.iconFactory ? (
+              <ItemHV2 justifyContent="flex-start" padding="0 2rem">
+                {data.iconFactory}
+              </ItemHV2>
+            ) : (
+              <ItemH align="center">
+                {!active ? (
+                  <SelectedIcon
+                    src={require(`../assets/${data.src}`)}
+                    margin="0 5px"
+                    alt={`${data.alt}`}
+                    active={active ? 1 : 0}
+                  />
+                ) : (
+                  <SelectedIcon
+                    src={require(`../assets/${data.activeSrc}`)}
+                    margin="0 5px"
+                    alt={`${data.alt}`}
+                    active={active ? 1 : 0}
+                  />
+                )}
+
+                {!sidebarCollapsed && <Span
+                  flex="1"
+                  cursor="pointer"
+                  weight={!active ? '300' : '600'}
+                  spacing="0"
                   margin="0 5px"
-                  alt={`${data.alt}`}
-                  active={active?1:0}
-                />
-              ) : (
-                <SelectedIcon
-                  src={require(`../assets/${data.activeSrc}`)}
-                  margin="0 5px"
-                  alt={`${data.alt}`}
-                  active={active?1:0}
-                />
-              )}
+                  color={theme.nav.color}
+                  onClick={data?.hasOnClickFunction && showMetamaskPushSnap}
+                  size="16px"
+                >
+                  {data.name}
+                </Span>}
 
-              <Span
-                flex="1"
-                weight={!active ? '300' : '600'}
-                spacing="0"
-                margin="0 5px"
-                color={theme.nav.color}
-                onClick={data?.hasOnClickFunction && showMetamaskPushSnap}
-                size="16px">
-                {data.name}
-              </Span>
+                {data?.showNewTag && !sidebarCollapsed && (
+                  <NewTag>New</NewTag>
+                )}
 
-              {data?.showNewTag && (
-                <NewTag>New</NewTag>
-              )}
-
-              {item.hasItems && !item.opened && <BiChevronDown color={theme.nav.color} />}
-
-              {item.hasItems && item.opened && <BiChevronUp color={theme.nav.color} />}
-            </ItemH>
-          )}
-        </RouteLogic>
+              </ItemH>
+            )}
+          </RouteLogic>
       )}
     </>
   );

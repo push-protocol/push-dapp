@@ -51,7 +51,8 @@ export const globalsMargin = {
       TOP: '0px',
       RIGHT: '30px',
       BOTTOM: '48px',
-      LEFT: '30px',
+      // LEFT: '30px', //prev margin of module
+      LEFT: '14px', //new margin of module
     },
     TABLET: {
       TOP: '0px',
@@ -71,7 +72,8 @@ export const globalsMargin = {
       TOP: '0px',
       RIGHT: '0px',
       BOTTOM: '0px',
-      LEFT: '18px',
+      // LEFT: '18px', //prev margin of module
+      LEFT: '0px', // new margin of the module
     },
     TABLET: {
       TOP: '0px',
@@ -100,7 +102,9 @@ export default {
 
   CONSTANTS: {
     HEADER_HEIGHT: 70,
-    LEFT_BAR_WIDTH: 260,
+    LEFT_BAR_WIDTH: 250,
+    COLLAPSABLE_LEFT_BAR_WIDTH:90,
+    COLLAPSABLE_RIGHT_BAR_WIDTH:90,
 
     NAVBAR_SECTIONS: {
       PRIMARY: 1,
