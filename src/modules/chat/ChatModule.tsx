@@ -25,7 +25,6 @@ import LoaderSpinner, {
   PROGRESS_POSITIONING
 } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { caip10ToWallet } from 'helpers/w2w';
 import * as w2wHelper from 'helpers/w2w/';
@@ -36,7 +35,7 @@ import useToast from 'hooks/useToast';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection from 'sections/video/VideoCallSection';
-import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
+import { ChatUserAppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
 import { checkIfIntent, getUpdatedChatAndIntent, getUpdatedGroupInfo } from 'helpers/w2w/user';
 
 // Internal Configs
@@ -45,6 +44,7 @@ import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { fetchIntent } from 'helpers/w2w/user';
 import { ChatUIProvider, darkChatTheme } from '@pushprotocol/uiweb';
 import { useSelector } from 'react-redux';
+import { AppContext } from 'contexts/AppContext';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -56,18 +56,27 @@ export const ToastPosition: ToastOptions = {
   progress: 0,
 };
 
-export const Context = React.createContext<AppContext | null>(null);
+export const Context = React.createContext<ChatUserAppContext | null>(null);
 
 // Create Header
 function Chat({ chatid }) {
   const { account, chainId, provider } = useAccount();
-  const { getUser, pgpPvtKey, connectedUser, setConnectedUser, blockedLoading, setBlockedLoading, displayQR, setDisplayQR } =
-    useContext(ChatUserContext);
   const { videoCallData } = useContext(VideoCallContext);
+
+  const {
+    blockedLoading,
+    setBlockedLoading,
+    getUser,
+    pgpPvtKey,
+    connectedUser,
+    setConnectedUser,
+    displayQR,
+    setDisplayQR
+  } = useContext(AppContext);
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
-  }); 
+  });
 
   const theme = useTheme();
 
@@ -191,7 +200,7 @@ function Chat({ chatid }) {
       setConnectedUser(connectedUser);
       connectUser();
     }
-  }, [connectedUser,userPushSDKInstance]);
+  }, [connectedUser, userPushSDKInstance]);
 
   useEffect(() => {
     if (currentChat?.threadhash == null) {
@@ -223,7 +232,6 @@ function Chat({ chatid }) {
     showModal: showCreateGroupModal,
     ModalComponent: CreateGroupModalComponent,
   } = useModalBlur();
-  // const { pgpPvtKey } = useContext<any>(ChatUserContext);
 
 
   const connectUser = async (): Promise<void> => {
@@ -350,6 +358,8 @@ function Chat({ chatid }) {
   useEffect(() => {
   }, [account, connectedUser?.privateKey])
 
+  console.log("BlockedLoading >>>>", blockedLoading);
+
   return (
     <Container>
       <ChatUIProvider
@@ -458,8 +468,9 @@ function Chat({ chatid }) {
             <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
           )}
 
+          {/* This can be removed because now Push user has been shifted to AppContext */}
           {/* This always needs to be last */}
-          {blockedLoading.enabled && (
+          {/* {blockedLoading.enabled && (
             <LoaderSpinner
               type={LOADER_TYPE.STANDALONE}
               overlay={LOADER_OVERLAY.ONTOP}
@@ -474,7 +485,7 @@ function Chat({ chatid }) {
               progress={blockedLoading.progress}
               progressNotice={blockedLoading.progressNotice}
             />
-          )}
+          )} */}
         </ItemHV2>
       </ChatUIProvider>
     </Container>

@@ -14,11 +14,10 @@ import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import { GroupDetailsContent } from './GroupDetailsContent';
 import { AddWalletContent } from './AddWalletContent';
 import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { ChatUserContext } from '../../../../../contexts/ChatUserContext';
 import { appConfig } from '../../../../../config';
 import useToast from 'hooks/useToast';
 import { MdCheckCircle, MdError } from 'react-icons/md';
-import { AppContext, Feeds } from 'types/chat';
+import { ChatUserAppContext, Feeds } from 'types/chat';
 import { Context } from 'modules/chat/ChatModule';
 import { fetchInbox } from 'helpers/w2w/user';
 import { profilePicture } from 'config/W2WConfig';
@@ -26,18 +25,19 @@ import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { device } from 'config/Globals';
 import { CreateGroupModal } from "@pushprotocol/uiweb";
 import { ChatUIProvider } from '@pushprotocol/uiweb';
+import { AppContext } from 'contexts/AppContext';
 
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const [createGroupState, setCreateGroupState] = React.useState<number>(1);
-  const { setInbox }: AppContext = useContext<AppContext>(Context);
+  const { setInbox }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
   const [groupNameData, setGroupNameData] = React.useState<string>('');
   const [groupDescriptionData, setGroupDescriptionData] = React.useState<string>('');
   const [groupImageData, setGroupImageData] = React.useState<string>(null);
   const [groupTypeObject, setGroupTypeObject] = React.useState<any>();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [memberList, setMemberList] = React.useState<any>([]);
-  const { connectedUser, setConnectedUser ,  createUserIfNecessary} = useContext(ChatUserContext);
+  const { connectedUser, setConnectedUser, createUserIfNecessary } = useContext(AppContext);
   const {provider } = useAccount();
   const themes = useTheme();
   const createGroupToast = useToast();

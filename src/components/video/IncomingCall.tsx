@@ -10,7 +10,6 @@ import * as PushAPI  from '@pushprotocol/restapi'
 // Internal Components
 import { ItemHV2, SectionV2 } from 'components/reusables/SharedStylingV2';
 import { VideoCallContext } from 'contexts/VideoCallContext';
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import { useDeviceWidthCheck } from 'hooks';
 import endCallIcon from '../../assets/icons/end-call-icon.svg';
 import pickCallIcon from '../../assets/icons/pick-call-icon.svg';
@@ -23,9 +22,10 @@ import VideoPlayer from './VideoPlayer';
 import { device } from 'config/Globals';
 import { VideoCallStatus } from '@pushprotocol/restapi';
 import { appConfig } from 'config';
+import { AppContext } from 'contexts/AppContext';
 
 const IncomingCall = () => {
-  const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
+  const { connectedUser, createUserIfNecessary } = useContext(AppContext);
   const { videoCallData, acceptRequestWrapper, disconnectWrapper, setIsCallAccepted, isCallAccepted,setIncomingCallUserData,incomingCallUserData } = useContext(VideoCallContext);
   const [isIncomingCallMinimized, setIsIncomingCallMinimized] = useState(false);
 

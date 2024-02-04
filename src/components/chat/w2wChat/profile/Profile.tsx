@@ -8,7 +8,6 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import { AiOutlineMore } from 'react-icons/ai';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { shortenText } from 'helpers/UtilityHelper';
@@ -17,13 +16,11 @@ import { AppContextType } from 'types/context';
 import { useAccount } from 'hooks';
 
 const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
-  const { web3NameList }:AppContextType=useContext(AppContext);
+  const { web3NameList,connectedUser }:AppContextType=useContext(AppContext);
   const { account } = useAccount()
 
   // theme context
   const theme = useTheme();
-
-  const {connectedUser} = useContext(ChatUserContext);
 
   // resolve web3 name
   useResolveWeb3Name(account);

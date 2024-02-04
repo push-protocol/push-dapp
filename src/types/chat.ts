@@ -1,3 +1,5 @@
+import { BlockedLoadingI } from "./context"
+
 export interface MessageIPFS {
     fromCAIP10: string
     toCAIP10: string
@@ -97,20 +99,7 @@ export interface TwitterFeedReturnType{
     messageType:string;
 }
 
-
-export interface BlockedLoadingI {
-    enabled: boolean;
-    title: string;
-    spinnerEnabled?: boolean;
-    spinnerSize?: number;
-    spinnerType?: number;
-    progressEnabled?: boolean;
-    progress?: number;
-    progressNotice?: string;
-}
-
-
-export interface AppContext {
+export interface ChatUserAppContext {
   currentChat: Feeds;
   viewChatBox: boolean;
   receivedIntents: Feeds[];

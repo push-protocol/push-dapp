@@ -26,7 +26,6 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { Content } from 'components/SharedStyling';
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import { checkIfChatExist } from 'helpers/w2w/user';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
@@ -72,7 +71,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
   const groupInfoRef = useRef<HTMLInputElement>(null);
-  const { connectedUser } = useContext(ChatUserContext);
+  const { connectedUser } = useContext(AppContext);
   const { videoObject } = useContext(VideoCallContext);
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);

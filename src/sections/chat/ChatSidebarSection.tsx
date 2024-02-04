@@ -17,7 +17,6 @@ import ProfileHeader from 'components/chat/w2wChat/profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { fetchIntent } from 'helpers/w2w/user';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import StyleHelper from 'helpers/StyleHelper';
 import { getIsNewTagVisible } from 'helpers/TimerHelper';
 import * as w2wHelper from 'helpers/w2w/';
@@ -30,6 +29,7 @@ import { Feeds } from 'types/chat';
 import NewTag from 'components/NewTag';
 import GLOBALS from 'config/Globals';
 import { appConfig } from '../../config';
+import { AppContext } from 'contexts/AppContext';
 
 
 
@@ -69,7 +69,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
 
   const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-22T00:00:00.000"), 90);
 
-  const { connectedUser, displayQR, setDisplayQR } = useContext(ChatUserContext);
+  const { connectedUser, displayQR, setDisplayQR } = useContext(AppContext);
 
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser?.profilePicture);

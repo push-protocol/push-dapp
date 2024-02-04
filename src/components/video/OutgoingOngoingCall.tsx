@@ -15,7 +15,7 @@ import UserInfo from 'components/video/UserInfo';
 import VideoPlayer from 'components/video/VideoPlayer';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { useDeviceWidthCheck } from 'hooks';
-import { BlockedLoadingI } from 'types/chat';
+import { BlockedLoadingI } from 'types/context';
 import audioIcon from '../../assets/icons/audio-icon.svg';
 import audioOffIcon from '../../assets/icons/audio-off-icon.svg';
 import endCallIcon from '../../assets/icons/end-call-icon.svg';
@@ -25,7 +25,7 @@ import CallButton from './CallButton';
 import MediaToggleButton from './MediaToggleButton';
 import { VideoCallStatus } from '@pushprotocol/restapi';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext } from 'types/chat';
+import { ChatUserAppContext } from 'types/chat';
 import { OnConnectingVideoCall } from './OnConnectingVideoCall';
 
 // Internal Configs
@@ -69,7 +69,7 @@ const OutgoingOngoingCall = ({ blockedLoading }: OutgoingOngoingCallType) => {
     isCallAccepted,
   } = useContext(VideoCallContext);
   const isImmersive = useDeviceWidthCheck(425) && videoCallData.incoming[0].status === VideoCallStatus.INITIALIZED;
-  const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const { currentChat }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
 
   return (
     <Container>

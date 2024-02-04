@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import styled from 'styled-components';
 
 // Internal Components
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE, PROGRESS_POSITIONING } from 'components/reusables/loaders/LoaderSpinner';
 import ConnectedWalletRoute from '../components/ConnectedWalletRoute';
 import { Anchor, Item } from '../primaries/SharedStyling';
 const AirdropPage = lazy(() => import('pages/AirdropPage'));
@@ -74,7 +74,7 @@ function MasterInterfacePage() {
   const [loadTeaserVideo, setLoadTeaserVideo] = React.useState(null);
   const location = useLocation();
 
-  const { MetamaskPushSnapModalComponent }: AppContextType = React.useContext(AppContext);
+  const { MetamaskPushSnapModalComponent, blockedLoading }: AppContextType = React.useContext(AppContext);
 
   const { showMetamaskPushSnap } = React.useContext(AppContext);
 
@@ -148,7 +148,7 @@ function MasterInterfacePage() {
               element={<SnapPage />}
             />
 
-           
+
 
             {/* <Route path="yield" element={<YieldFarmingPage />} /> */}
             <Route
@@ -225,6 +225,23 @@ function MasterInterfacePage() {
         modalPadding="0px"
         modalPosition={MODAL_POSITION.ON_ROOT}
       />
+
+      {blockedLoading.enabled && (
+        <LoaderSpinner
+          type={LOADER_TYPE.STANDALONE}
+          overlay={LOADER_OVERLAY.ONTOP}
+          blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+          title={blockedLoading.title}
+          width="50%"
+          spinnerEnabled={blockedLoading.spinnerEnabled}
+          spinnerSize={blockedLoading.spinnerSize}
+          spinnerType={blockedLoading.spinnerType}
+          progressEnabled={blockedLoading.progressEnabled}
+          progressPositioning={PROGRESS_POSITIONING.BOTTOM}
+          progress={blockedLoading.progress}
+          progressNotice={blockedLoading.progressNotice}
+        />
+      )}
 
       {/* To play youtube video from anywhere */}
       {playTeaserVideo && (

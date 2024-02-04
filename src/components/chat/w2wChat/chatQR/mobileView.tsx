@@ -2,11 +2,11 @@ import BlurBG from 'components/reusables/blurs/BlurBG';
 import { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import GLOBALS, { device } from 'config/Globals';
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import React, { useContext } from 'react';
 import { AiOutlineClose, AiOutlineMore } from 'react-icons/ai';
 import styled, { useTheme } from 'styled-components';
 import backgroundImage from "../../../../assets/chat/QRBackground.svg";
+import { AppContext } from 'contexts/AppContext';
 
 const MobileView = ({
     type = LOADER_TYPE.STANDALONE,
@@ -15,7 +15,13 @@ const MobileView = ({
     width = 'auto'
 }) => {
 
-    const { createUserIfNecessary, displayQR, setDisplayQR, pgpPvtKey, connectedPeerID } = useContext(ChatUserContext);
+    const {
+        pgpPvtKey,
+        connectedPeerID, 
+        displayQR, 
+        setDisplayQR, 
+        createUserIfNecessary  
+    } = useContext(AppContext);
     const theme = useTheme();
 
     return (
