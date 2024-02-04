@@ -8,7 +8,7 @@ import styled, { useTheme } from 'styled-components';
 import { Image, Item, ItemH } from '../primaries/SharedStyling';
 import { useClickAway } from "hooks/useClickAway";
 import Dropdown from "./Dropdown";
-
+import { ImageV2, ItemHV2 } from "./reusables/SharedStylingV2";
 // Internal Configs
 import { appConfig, CHAIN_DETAILS } from "config";
 import { LOGO_FROM_CHAIN_ID } from "helpers/UtilityHelper";
@@ -47,9 +47,9 @@ const ChainsSelect = ({channelsNetworkId, setChannelsNetworkId}) => {
   return (
     <Container>
       <Faucet color={theme.viewChannelSearchText} onClick={() => setShowDropdown(!showDropdown)} ref={toggleArrowRef}>
-        <ItemH padding="0 8px 0 0">
-          <Image src={`./svg/${LOGO_FROM_CHAIN_ID[channelsNetworkId]}`} alt="active chain" width="32px" height="32px" />
-        </ItemH>
+        <ItemHV2 padding="0 8px 0 0">
+          <ImageV2 src={`./svg/${LOGO_FROM_CHAIN_ID[channelsNetworkId]}`} alt="active chain" width="32px" height="32px" />
+        </ItemHV2>
          <Item width="max-content" className="text">{CHAIN_DETAILS[channelsNetworkId]?.label}</Item>
         <ToggleArrowImg>
           <img

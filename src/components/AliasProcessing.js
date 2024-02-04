@@ -15,7 +15,7 @@ const AliasProcessing = ({ aliasEthAccount, setAliasVerified }) => {
   const { processingState } = useSelector((state) => state.channelCreation);
 
   return (
-    <SectionV2>
+    <SectionV2 alignItems="initial">
       <ItemHere>
         <Tab type={processingState >= 1 ? "active" : "inactive"} active={processingState == 1 ? 'active' : 'inactive'}>
           <div>Waiting for Setup</div>

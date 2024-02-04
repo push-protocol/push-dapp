@@ -7,7 +7,7 @@ import styled from "styled-components";
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemVV2 } from "components/reusables/SharedStylingV2";
+import { ItemVV2, ItemHV2, SectionV2 } from "components/reusables/SharedStylingV2";
 import ViewNFTV2Item from "components/ViewNFTsV2Item";
 import {
   ItemH, Section
@@ -94,7 +94,7 @@ function AllNFTsV2({ controlAt, setControlAt, setTokenId }) {
   };
 
   return (
-    <Section align="center">
+    <SectionV2 alignItems="center">
       {loading && (
         <ItemVV2 padding="50px 20px 20px 20px">
           <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
@@ -102,7 +102,7 @@ function AllNFTsV2({ controlAt, setControlAt, setTokenId }) {
       )}
 
       {!loading && NFTObjects.length != 0 && (
-        <ItemH id="scrollstyle-secondary" margin="20px 0 0 0">
+        <ItemHV2 id="scrollstyle-secondary" margin="20px 0 0 0">
           {Object.keys(NFTObjects).map((index) => {
             if (NFTObjects) {
               return (
@@ -118,9 +118,9 @@ function AllNFTsV2({ controlAt, setControlAt, setTokenId }) {
               );
             }
           })}
-        </ItemH>
+        </ItemHV2>
       )}
-    </Section>
+    </SectionV2>
   );
 }
 

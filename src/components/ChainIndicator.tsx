@@ -12,9 +12,8 @@ import { LOGO_FROM_CHAIN_ID, networkName } from 'helpers/UtilityHelper';
 import { appConfig } from 'config/index.js';
 import { useClickAway } from 'hooks/useClickAway';
 import { useAccount } from 'hooks';
-
 // Internal Configs
-import { SpanV2 } from './reusables/SharedStylingV2';
+import { SpanV2, ItemHV2, ImageV2 } from './reusables/SharedStylingV2';
 import { ErrorContext } from 'contexts/ErrorContext';
 
 const ChainIndicator = ({ isDarkMode }) => {
@@ -61,7 +60,7 @@ const ChainIndicator = ({ isDarkMode }) => {
             ref={toggleArrowRef}
           >
             <CurrentChainInfo>
-              <Image
+              <ImageV2
                 src={`./svg/${LOGO_FROM_CHAIN_ID[currentChainId]}`}
                 width="24px"
                 height="24px"
@@ -170,7 +169,7 @@ const CurrentChain = styled(SpanV2)`
   }
 `;
 
-const CurrentChainInfo = styled(ItemH)`
+const CurrentChainInfo = styled(ItemHV2)`
   justify-content: flex-start;
   flex-wrap: nowrap;
   padding: 2px;

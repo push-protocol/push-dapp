@@ -19,7 +19,7 @@ import {
 } from 'primaries/SharedStyling';
 import '../modules/createChannel/createChannel.css';
 import { useDeviceWidthCheck } from 'hooks';
-import { ItemHV2 } from './reusables/SharedStylingV2';
+import { ItemHV2, ButtonV2, SectionV2, SpanV2 } from './reusables/SharedStylingV2';
 import Toggle from './reusables/toggle/Toggle';
 import Tooltip from "./reusables/tooltip/Tooltip"
 import { device } from 'config/Globals';
@@ -81,7 +81,7 @@ const ChannelInfo = ({
 
 
   return (
-    <Section>
+    <SectionV2 alignItems="initial">
       <MainContainer>
         <Item
           flex="1"
@@ -227,13 +227,13 @@ const ChannelInfo = ({
                 setChannelAlias(e.target.value);
               }}
             />
-            <Span
-              size="13px"
+            <SpanV2
+              fontSize="13px"
               margin="7px 0px 0px 0px"
               color={theme.default.secondaryColor}
             >
               Make sure you own this address as verification will take place.
-            </Span>
+            </SpanV2>
             {errorInfo?.address && (<ErrorMessage message = {errorInfo?.address} />)}
           </Item>
         ) : null}
@@ -256,14 +256,14 @@ const ChannelInfo = ({
             justify="space-between"
           >
             <Label style={{ color: theme.color }}>Channel Description</Label>
-            <Span
+            <SpanV2
               color={theme.default.secondaryColor}
-              size="13px"
+              fontSize="13px"
               margin="0px 10px 0px 0px"
-              weight="700"
+              fontWeight="700"
             >
               {250 - channelInfo.length}
-            </Span>
+            </SpanV2>
           </Item>
           <TextField
             required
@@ -282,13 +282,13 @@ const ChannelInfo = ({
             }}
             autocomplete="off"
           />
-          <Span
-            size="13px"
+          <SpanV2
+            fontSize="13px"
             margin="7px 0px 0px 0px"
             color={theme.default.secondaryColor}
           >
             Brief description of your channel.
-          </Span>
+          </SpanV2>
         </Item>
         {errorInfo?.description && (<ErrorMessage message = {errorInfo?.description} />)}
 
@@ -326,12 +326,12 @@ const ChannelInfo = ({
           align="stretch"
           margin="70px auto 50px auto"
         >
-          <Button
-            bg={disabled ? '#F4DCEA' : '#CF1C84'}
+          <ButtonV2
+            background={disabled ? '#F4DCEA' : '#CF1C84'}
             color={disabled ? '#CF1C84' : '#fff'}
             // disabled={disabled}
             flex="1"
-            radius="15px"
+            borderRadius="15px"
             padding="20px 10px"
             onClick={() => {
               if (!isAllFilledAndValid()) return;
@@ -340,19 +340,19 @@ const ChannelInfo = ({
               setStepFlow(1);
             }}
           >
-            <Span
+            <SpanV2
               color={disabled ? '#CF1C84' : '#fff'}
-              weight="600"
+              fontWeight="600"
               textTransform="none"
-              line="22px"
-              size="16px"
+              lineHeight="22px"
+              fontSize="16px"
             >
               Next
-            </Span>
-          </Button>
+            </SpanV2>
+          </ButtonV2>
         </Item>
       </MainContainer>
-    </Section>
+    </SectionV2>
   );
 };
 

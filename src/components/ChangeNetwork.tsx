@@ -13,7 +13,7 @@ import { Button, Item, Span } from "../primaries/SharedStyling";
 import { aliasChainIdsMapping, CORE_CHAIN_ID, networkName } from "helpers/UtilityHelper";
 import { appConfig, CHAIN_DETAILS } from 'config';
 import { useAccount } from 'hooks';
-
+import { ButtonV2, SpanV2 } from "./reusables/SharedStylingV2";
 const ChangeNetwork = () => {
   const changeNetworkToast = useToast();
   const themes = useTheme();
@@ -27,19 +27,19 @@ const ChangeNetwork = () => {
       display="flex"
       direction="column"
     >
-      <Span
+      <SpanV2
         textAlign="center"
         margin="30px 0px 0px 0px"
         color={themes.color}
-        size="16px"
+        fontSize ="16px"
         textTransform="none"
-        weight="500"
-        line="24px"
+        fontWeight="500"
+        lineHeight="24px"
       >
         Change your wallet network to <TextPink>{CHAIN_DETAILS[aliasChainId]?.label}</TextPink> to
         start <br></br>
         verifying your Channel Alias.
-      </Span>
+      </SpanV2>
 
       <Item
         width="12.2em"
@@ -47,23 +47,23 @@ const ChangeNetwork = () => {
         align="center"
         margin="100px auto 50px auto"
       >
-        <Button
-          bg="#e20880"
+        <ButtonV2
+          background="#e20880"
           color="#fff"
-          radius="15px"
+          borderRadius="15px"
           padding="20px 20px"
           onClick={() => switchChain(aliasChainId)}
         >
-          <Span
+          <SpanV2
             color="#fff"
-            weight="600"
+            fontWeight="600"
             textTransform="none"
-            line="22px"
-            size="16px"
+            lineHeight="22px"
+            fontSize="16px"
           >
             Change Network
-          </Span>
-        </Button>
+          </SpanV2>
+        </ButtonV2>
       </Item>
     </Item>
   );

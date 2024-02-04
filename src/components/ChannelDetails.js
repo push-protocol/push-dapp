@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { MdRemoveCircleOutline } from 'react-icons/md';
 
 // Internal Compoonents
-import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2, SectionV2 } from 'components/reusables/SharedStylingV2';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import ChannelSettings from './ChannelSettings';
@@ -324,7 +324,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
 
       {processingState === 0 && (
         <ItemVV2>
-          <Section>
+          <SectionV2 alignItems="initial">
             <DelegateContainer
               flex="5"
               minWidth="280px"
@@ -348,8 +348,8 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
                 emptyListButtonTitle='Add Setting'
               />
             </DelegateContainer>
-          </Section>
-          <Section>
+          </SectionV2>
+          <SectionV2>
             <DelegateContainer
               flex="5"
               minWidth="280px"
@@ -378,7 +378,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
                 ]}
               />
             </DelegateContainer>
-          </Section>
+          </SectionV2>
         </ItemVV2>
       )}
       {/* modal to add a delegate */}
