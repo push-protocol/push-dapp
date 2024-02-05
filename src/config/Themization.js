@@ -233,13 +233,13 @@ const themeLight = {
   //staking
   stakingPrimaryText: '#333333',
   stakingSecondaryText: '#000000',
-  stakingUserDetails:'rgba(87, 93, 115, 0.8)',
-  emptyButtonText:'#9D9FA6',
-  disabledButtonText:'#9D9FA6',
-  disableButtonBg:'#DEDFE1',
-  activeButtonText:'#657795',
-  stakingBorder:'#BAC4D6',
-  stakingEmptyButtonBG:'#DEDFE1',
+  stakingUserDetails: 'rgba(87, 93, 115, 0.8)',
+  emptyButtonText: '#9D9FA6',
+  disabledButtonText: '#9D9FA6',
+  disableButtonBg: '#DEDFE1',
+  activeButtonText: '#657795',
+  stakingBorder: '#BAC4D6',
+  stakingEmptyButtonBG: '#DEDFE1',
 
   // notif settings modal
   settingsModalBorderBottomColor: '#D4DCEA',
@@ -248,9 +248,9 @@ const themeLight = {
   settingsModalPrimaryTextColor: '#1E1E1E',
   settingsModalBorderColor: '#D4DFF2',
   settingsModalBackground: '#FFF',
-  
-   //spaces
-   spaceHostTextColor: '#1e1e1e',
+
+  //spaces
+  spaceHostTextColor: '#1e1e1e',
 
   spaceTheme: {
     titleBg: 'linear-gradient(45deg, #E165EC 0.01%, #A483ED 100%)',//not changed
@@ -270,12 +270,12 @@ const themeLight = {
     iconColorPrimary: '#82828A',
   },
 
-  snapUIBackground:'#F9F9F9',
-  snapButtonBackground:'#1E1E1E',
-  snapPrimaryText:'#000',
-  snapSecondaryText:'#62626a',
-  snapBackground:'#F2F2F2',
-  snapBorderColor:'#BAC4D6',
+  snapUIBackground: '#F9F9F9',
+  snapButtonBackground: '#1E1E1E',
+  snapPrimaryText: '#000',
+  snapSecondaryText: '#62626a',
+  snapBackground: '#F2F2F2',
+  snapBorderColor: '#BAC4D6',
 
   // Notification Settings
   nfsError: '#ED5858',
@@ -286,6 +286,10 @@ const themeLight = {
   // Send Notification
   snfBorder: '#BAC4D6',
   snfToggleBg: '#f4f5fa',
+
+  //collapsable sidebar
+  collapsaBg: '#575d737f',
+  strokeColor: '#FFF'
 };
 
 const themeDark = {
@@ -526,14 +530,14 @@ const themeDark = {
   //staking
   stakingPrimaryText: '#B6BCD6',
   stakingSecondaryText: '#F4F5FA',
-  stakingUserDetails:'#787E99',
-  stakingBorder:'#4A4F67',
-  stakingEmptyButtonBG:'#404550',
-  disabledButtonText:'#2D313C',
-  disableButtonBg:'#404550',
-  activeButtonText:'#B6BCD6',
-  emptyButtonText:'#2D313C',
-  emptyButtonBg:'',
+  stakingUserDetails: '#787E99',
+  stakingBorder: '#4A4F67',
+  stakingEmptyButtonBG: '#404550',
+  disabledButtonText: '#2D313C',
+  disableButtonBg: '#404550',
+  activeButtonText: '#B6BCD6',
+  emptyButtonText: '#2D313C',
+  emptyButtonBg: '',
 
   // notif settings modal
   settingsModalBorderBottomColor: '#4A4F67',
@@ -564,13 +568,13 @@ const themeDark = {
     iconColorPrimary: '#71717A',
   },
 
-  snapUIBackground:'transparent',
-  snapButtonBackground:'#404650',
-  snapPrimaryText:'#fff',
-  snapSecondaryText:'#B6BCD6',
-  snapBackground:'#404650',
-  snapBorderColor:'#787E99',
-  
+  snapUIBackground: 'transparent',
+  snapButtonBackground: '#404650',
+  snapPrimaryText: '#fff',
+  snapSecondaryText: '#B6BCD6',
+  snapBackground: '#404650',
+  snapBorderColor: '#787E99',
+
   // Notification Settings
   nfsError: '#ED5858',
   nfsDisabled: '#AFB3BF',
@@ -580,6 +584,10 @@ const themeDark = {
   // Send Notification
   snfBorder: '#4A4F67',
   snfToggleBg: '#404650',
+
+  //collapsable sidebar
+  collapsaBg: '#0000004c',
+  strokeColor: '#575D73'
 };
 
 module.exports = {
