@@ -14,7 +14,8 @@ import NavigationButton from 'components/NavigationButton';
 import { NavigationLoaderButton } from 'components/NavigationLoaderButton';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { NavigationContext } from 'contexts/NavigationContext';
-import { AnchorLink as Anchor, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
+import { AnchorLink as Anchor, Item } from 'primaries/SharedStyling';
+import { SectionV2 } from 'components/reusables/SharedStylingV2';
 import { SEND_NOTIFICATION_STATES, setCanSend } from 'redux/slices/sendNotificationSlice';
 import {
   incrementStepIndex,
@@ -398,12 +399,13 @@ function Navigation() {
       //   dispatch(setDeveloperOpen(false))
       // }
       let innerRendered = (
-        <Section key={key} flex="1" align="stretch" size={fontSize}>
+        <SectionV2 key={key} flex="1"  alignItems="stretch" fontSize={fontSize}>
           {secondaryButton ? (
             <Item padding="5px 10px" flexBasis="100%" align="stretch" direction="row" overflow="hidden">
               {section.hasItems
                 ? renderChildItems(data.drilldown, section.opened, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)
                 : null}
+           
 
               <SectionInnerGroupContainer
                 flex="1"
@@ -467,7 +469,7 @@ function Navigation() {
                       } */}
             </Item>
           )}
-        </Section>
+        </SectionV2>
       );
 
       return innerRendered;
@@ -545,6 +547,7 @@ function Navigation() {
             {renderMainItems(navigationSetup.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)}
 
             <SpanV2
+              textAlign ="initial"
               textTransform="uppercase"
               fontWeight="700"
               fontSize ="11px"
@@ -557,6 +560,7 @@ function Navigation() {
             {renderMainItems(navigationSetup.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY)}
           </Primary>
           <Footer justify="flex-end" align="stretch">
+         
             {renderMainItems(navigationSetup.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD)}
 
             {/* Put social */}
@@ -640,7 +644,8 @@ function Navigation() {
 }
 
 // CSS Styles
-const Container = styled(Section)`
+const Container = styled(SectionV2)`
+  align-items: initial;
   background: ${(props) => props.theme.nav.bg};
   flex: 1;
   height: calc(100% - ${(props) => props.headerHeight}px);
