@@ -31,9 +31,7 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
 
 
-  // if (autofilled) {
-  //   console.debug('Search is autofilled:', autofilled);
-  // }
+
 
   useEffect(() => {
     if (searchedUser !== '' && userShouldBeSearched) {
@@ -120,9 +118,10 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
           alignItems="stretch"
           display={activeTab == 4 ? 'none' : 'flex'}
         >
-          <SearchBarContent onSubmit={submitSearch}>
+
             <Input
               type="text"
+              onKeyUp={(e)=> e.key === 'Enter'? submitSearch():null}
               value={searchedUser}
               onChange={onChangeSearchBox}
               placeholder="Search Web3 domain or 0x123..."
@@ -157,12 +156,12 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
               )}
               {!isLoadingSearch && (
                 <SearchIcon
+                
                   style={{ cursor: 'pointer' }}
                   onClick={submitSearch}
                 />
               )}
             </ItemVV2>
-          </SearchBarContent>
         </ItemVV2>
 
         {activeTab !== 3 && activeTab !== 4 && (
@@ -191,17 +190,13 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
   );
 };
 
-const SearchBarContent = styled.form`
-  position: relative;
-  display: flex;
-  flex: 1;
-`;
+
 
 const Input = styled.input`
   box-sizing: border-box;
   display: flex;
   flex: 1;
-  width: 0;
+  width: 100%;
   height: 48px;
   padding: 13px 60px 13px 21px;
   margin: 10px 0px 17px 0px;

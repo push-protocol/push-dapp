@@ -255,7 +255,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
         >
           <ChatPreviewList
             listType="REQUESTS"
-            onChatSelected={async(chatid,chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant,chatid))}
+            onChatSelected={async(chatid,chatParticipant) => {console.log(chatParticipant);setSelectedChatId(await formatChatParticipant(chatParticipant,chatid))}}
             onUnreadCountChange={(count) => {
              // console.log('Count is: ', count);
             }}
@@ -281,7 +281,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
           />
         )}
         {/* Set Search */}
-        {searchedUser && (
+        {searchedUser && (activeTab === 3 || activeTab === 4)  && (
           <ItemVV2
             justifyContent="flex-start"
             flexWrap="nowrap"
