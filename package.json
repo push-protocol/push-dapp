@@ -33,7 +33,7 @@
     "@mui/icons-material": "^5.8.4",
     "@mui/lab": "^5.0.0-alpha.72",
     "@mui/material": "^5.5.0",
-    "@pushprotocol/restapi": "1.6.1",
+    "@pushprotocol/restapi": "1.6.6",
     "@pushprotocol/socket": "0.5.3",
     "@pushprotocol/uiweb": "1.2.4",
     "@reduxjs/toolkit": "^1.7.1",

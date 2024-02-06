@@ -5432,7 +5432,7 @@ __metadata:
     "@mui/icons-material": ^5.8.4
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
-    "@pushprotocol/restapi": 1.6.1
+    "@pushprotocol/restapi": 1.6.6
     "@pushprotocol/socket": 0.5.3
     "@pushprotocol/uiweb": 1.2.4
     "@reduxjs/toolkit": ^1.7.1
@@ -5621,9 +5621,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:1.6.1":
-  version: 1.6.1
-  resolution: "@pushprotocol/restapi@npm:1.6.1"
+"@pushprotocol/restapi@npm:1.6.6":
+  version: 1.6.6
+  resolution: "@pushprotocol/restapi@npm:1.6.6"
   dependencies:
     "@ambire/signature-validator": ^1.3.1
     "@metamask/eth-sig-util": ^5.0.2
@@ -5633,6 +5633,7 @@ __metadata:
     immer: ^10.0.2
     joi: ^17.9.2
     livepeer: ^2.5.8
+    lru-cache: ^10.1.0
     openpgp: ^5.5.0
     simple-peer: ^9.11.1
     socket.io-client: ^4.7.2
@@ -5643,7 +5644,7 @@ __metadata:
     viem: ^1.20.3
   peerDependencies:
     ethers: ^5.0.0 || ^6.0.0
-  checksum: 504fb963c9e608f6932e00a60c55db233184d9f82869b9b15097b31ece5d7eef32894b9919fafdecf1beb3cbe6770a475fc7236285008aff433c7e988b34f325
+  checksum: 1bd7c5ed6b5eeb423f962accf2c0e95750bfdefa0fc653e6b4d85b2616d70ee51bb7c43a696dfc9b9042924cfe716f0fe5675a3b92f9a8aee0301b2467e17296
   languageName: node
   linkType: hard
 
@@ -21012,6 +21013,13 @@ __metadata:
   version: 3.0.0
   resolution: "lowercase-keys@npm:3.0.0"
   checksum: 67a3f81409af969bc0c4ca0e76cd7d16adb1e25aa1c197229587eaf8671275c8c067cd421795dbca4c81be0098e4c426a086a05e30de8a9c587b7a13c0c7ccc5
+  languageName: node
+  linkType: hard
+
+"lru-cache@npm:^10.1.0":
+  version: 10.2.0
+  resolution: "lru-cache@npm:10.2.0"
+  checksum: eee7ddda4a7475deac51ac81d7dd78709095c6fa46e8350dc2d22462559a1faa3b81ed931d5464b13d48cbd7e08b46100b6f768c76833912bc444b99c37e25db
   languageName: node
   linkType: hard
 
