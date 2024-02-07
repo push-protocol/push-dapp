@@ -255,7 +255,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             background={theme.default.bg}
             padding="6px"
             fontWeight="500"
-            zIndex="99999"
+            zIndex="1"
           >
             
             {getChatId() && (

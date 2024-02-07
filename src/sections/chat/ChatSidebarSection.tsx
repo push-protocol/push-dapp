@@ -232,6 +232,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
           justifyContent="flex-start"
           flexWrap="nowrap"
           width="100%"
+          height="100%"
           flex="1 1 1px"
           style={{ display: activeTab == 0 ? 'flex' : 'none' }}
           overflow="scroll"
@@ -251,6 +252,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
           justifyContent="flex-start"
           flexWrap="nowrap"
           width="100%"
+          height="100%"
           style={{ display: activeTab == 1 ? 'flex' : 'none' }}
         >
           <ChatPreviewList
