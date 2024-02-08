@@ -11,7 +11,7 @@ import { appConfig } from "config";
 import { useDispatch, useSelector } from "react-redux";
 import { MdError } from "react-icons/md";
 import { setUserPushSDKInstance } from "redux/slices/userSlice";
-import { GlobalContext } from "./GlobalContext";
+import { GlobalContext, ReadOnlyWalletMode } from "./GlobalContext";
 import useToast from "hooks/useToast";
 import { LOADER_SPINNER_TYPE } from "components/reusables/loaders/LoaderSpinner";
 import { ConnectedUser } from "types/chat";
@@ -22,8 +22,8 @@ export const AppContext = createContext<AppContextType | null>(null);
 
 const AppContextProvider = ({ children }) => {
     const { connect, provider, account, wallet, connecting } = useAccount();
-    const { readOnlyWallet } = useContext(GlobalContext);
     const web3onboardToast = useToast();
+    const { setReadOnlyWallet, readOnlyWallet, setMode } = useContext(GlobalContext);
 
     const [web3NameList, setWeb3NameList] = useState<Web3NameListType>({});
     const [snapInstalled, setSnapInstalled] = useState(false);
@@ -146,22 +146,38 @@ const AppContextProvider = ({ children }) => {
                     onboardingProgress.enabled = false;
                     onboardingProgress.hookInfo.progressTitle = "Push Profile Unlocked";
                     break;
-                case "PUSH-UPGRADE-01":
-                    onboardingProgress.hookInfo.progressTitle = "1/4 - Profile Generation";
-                    onboardingProgress.progress = 35;
-                    break;
+                // case "PUSH-UPGRADE-01":
+                //     onboardingProgress.hookInfo.progressTitle = "1/4 - Profile Generation";
+                //     onboardingProgress.progress = 35;
+                //     break;
                 case "PUSH-UPGRADE-02":
-                    onboardingProgress.hookInfo.progressTitle = "2/4 - Decrypting Old Profile";
-                    onboardingProgress.progress = 50;
+                    onboardingProgress.hookInfo.progressTitle = "1/5 - Profile Generation";
+                    onboardingProgress.progress = 15;
                     break;
-                case "PUSH-UPGRADE-03":
-                    onboardingProgress.hookInfo.progressTitle = "3/4 - New Profile Encryption";
+                case "PUSH-AUTH-UPDATE-01":
+                    onboardingProgress.hookInfo.progressTitle = "2/5 - Decrypting Old Profile";
+                    onboardingProgress.progress = 30;
+                    break;
+                case "PUSH-AUTH-UPDATE-02":
+                    onboardingProgress.hookInfo.progressTitle = "3/5 - New Profile Encryption";
+                    onboardingProgress.progress = 45;
+                    break;
+                case "PUSH-AUTH-UPDATE-03":
+                    onboardingProgress.hookInfo.progressTitle = "4/5 - Profile Sync";
+                    onboardingProgress.progress = 60;
+                    break;
+                case "PUSH-AUTH-UPDATE-04":
+                    onboardingProgress.hookInfo.progressTitle = "5/5 - Upgradation Complete";
                     onboardingProgress.progress = 75;
                     break;
-                case "PUSH-UPGRADE-04":
-                    onboardingProgress.hookInfo.progressTitle = "4/4 - Profile Sync";
-                    onboardingProgress.progress = 90;
-                    break;
+                // case "PUSH-UPGRADE-03":
+                //     onboardingProgress.hookInfo.progressTitle = "3/4 - New Profile Encryption";
+                //     onboardingProgress.progress = 75;
+                //     break;
+                // case "PUSH-UPGRADE-04":
+                //     onboardingProgress.hookInfo.progressTitle = "4/4 - Profile Sync";
+                //     onboardingProgress.progress = 90;
+                //     break;
                 case "PUSH-UPGRADE-05":
                     onboardingProgress.hookInfo.progressTitle = "Push Profile Upgraded";
                     onboardingProgress.progress = 99;
@@ -196,7 +212,7 @@ const AppContextProvider = ({ children }) => {
     };
 
     const initializePushSDK = async () => {
-        console.log("Initialising Push Sdk")
+        console.log("Initialising Push Sdk");
         let userInstance;
         try {
             const librarySigner = provider?.getSigner(account);
@@ -227,6 +243,7 @@ const AppContextProvider = ({ children }) => {
         console.debug("getUser");
         const caip10: string = w2wHelper.walletToCAIP10({ account });
         const user = await userPushSDKInstance.info();
+        console.log("User push sdk instance", userPushSDKInstance, user);
         let connectedUser: ConnectedUser;
 
         // TODO: Change this to do verification on ceramic to validate if did is valid
@@ -243,6 +260,7 @@ const AppContextProvider = ({ children }) => {
             setPgpPvtKey(privateKeyArmored);
             connectedUser = { ...user, privateKey: privateKeyArmored };
         } else {
+            //TODO: This will not be needed now because push user is created and info has user and user.encryptedPrivateKey both
             connectedUser = {
                 // We only need to provide this information when it's a new user
                 name: 'john-snow',
