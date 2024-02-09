@@ -370,8 +370,8 @@ const LeftBarContainer = styled.div`
   top: 0;
   bottom: 0;
   width: ${(props) => props.leftBarWidth}px;
-  // position: fixed;
-  position: absolute;
+  position: fixed;
+  // position: absolute;
 
   @media (max-width: 992px) {
     display: none;
