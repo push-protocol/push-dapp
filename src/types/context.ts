@@ -11,6 +11,7 @@ export interface onboardingProgressI {
   hookInfo: ProgressHookType;
   spinnerType: number;
   progress: number;
+  errorMessage?:string;
 }
 
 export interface BlockedLoadingI {
@@ -22,6 +23,7 @@ export interface BlockedLoadingI {
   progressEnabled?: boolean;
   progress?: number;
   progressNotice?: string;
+  errorMessage?:string;
 }
 
 export interface LocalPeerType {

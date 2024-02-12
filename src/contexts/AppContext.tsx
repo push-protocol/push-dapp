@@ -114,7 +114,8 @@ const AppContextProvider = ({ children }) => {
             enabled: true,
             hookInfo: progressHook,
             spinnerType: LOADER_SPINNER_TYPE.PROCESSING,
-            progress: 0
+            progress: 0,
+            errorMessage:''
         };
 
         if (progressHook) {
@@ -183,14 +184,17 @@ const AppContextProvider = ({ children }) => {
                     onboardingProgress.progress = 99;
                     break;
                 case "PUSH-ERROR-00":
+                    onboardingProgress.errorMessage="User Rejected Signature";
                     onboardingProgress.hookInfo.progressTitle = "User Rejected Signature";
                     onboardingProgress.spinnerType = LOADER_SPINNER_TYPE.ERROR;
                     break;
                 case "PUSH-ERROR-01":
+                    onboardingProgress.errorMessage="Upgrade Failed";
                     onboardingProgress.hookInfo.progressTitle = "Upgrade Failed";
                     onboardingProgress.spinnerType = LOADER_SPINNER_TYPE.ERROR;
                     break;
                 case "PUSH-ERROR-02":
+                    onboardingProgress.errorMessage="Decrypting Keys Failed";
                     onboardingProgress.hookInfo.progressTitle = "Decrypting Keys Failed";
                     onboardingProgress.spinnerType = LOADER_SPINNER_TYPE.ERROR;
                     break;
@@ -207,6 +211,7 @@ const AppContextProvider = ({ children }) => {
             progressEnabled: onboardingProgress.progress ? true : false,
             progress: onboardingProgress.progress,
             progressNotice: onboardingProgress.hookInfo.progressInfo,
+            errorMessage:onboardingProgress.errorMessage,
         });
 
     };

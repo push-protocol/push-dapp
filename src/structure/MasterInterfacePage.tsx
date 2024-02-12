@@ -4,9 +4,11 @@ import React, { lazy, Suspense } from 'react';
 // External Packages
 import { VscClose } from 'react-icons/vsc';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled from 'styled-components';
+import { MdError } from 'react-icons/md';
+import useToast from 'hooks/useToast';
 
 // Internal Components
 import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE, PROGRESS_POSITIONING } from 'components/reusables/loaders/LoaderSpinner';
@@ -83,6 +85,7 @@ function MasterInterfacePage() {
       showMetamaskPushSnap();
     }
   }, [location]);
+  const blockedLoadingToast = useToast();
 
   // Render
   return (
@@ -225,6 +228,20 @@ function MasterInterfacePage() {
         modalPadding="0px"
         modalPosition={MODAL_POSITION.ON_ROOT}
       />
+
+      {blockedLoading.errorMessage && (
+        blockedLoadingToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: blockedLoading.errorMessage,
+          toastType: 'ERROR',
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
+        })
+      )}
 
       {blockedLoading.enabled && (
         <LoaderSpinner

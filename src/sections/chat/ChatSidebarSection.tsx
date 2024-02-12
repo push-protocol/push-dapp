@@ -6,9 +6,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AiOutlineQrcode } from 'react-icons/ai';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
+import { useSelector } from 'react-redux';
+import { ethers } from 'ethers';
 
 // Internal Compoonents
-import { ChatPreviewList,UserProfile } from '@pushprotocol/uiweb';
+import { ChatPreviewList, UserProfile } from '@pushprotocol/uiweb';
 import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
 import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
 import ProfileHeader from 'components/chat/w2wChat/profile';
@@ -19,15 +21,14 @@ import { getIsNewTagVisible } from 'helpers/TimerHelper';
 import { fetchIntent } from 'helpers/w2w/user';
 import { Context } from 'modules/chat/ChatModule';
 import { Feeds } from 'types/chat';
+import { caip10ToWallet } from 'helpers/w2w';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { AppContext } from 'contexts/AppContext';
+import NewTag from 'components/NewTag';
 
 // Internal Configs
-import NewTag from 'components/NewTag';
 import GLOBALS from 'config/Globals';
 import { appConfig } from '../../config';
-import { AppContext } from 'contexts/AppContext';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { caip10ToWallet } from 'helpers/w2w';
-import { ethers } from 'ethers';
 
 
 const createGroupOnMouseEnter = [
@@ -56,7 +57,7 @@ const createGroupOnMouseLeave = [
   },
 ];
 
-type loadingData = {loading:boolean,preload:boolean,paging:boolean,finished:boolean};
+type loadingData = { loading: boolean, preload: boolean, paging: boolean, finished: boolean };
 
 // Chat Sections
 // Divided into two, left and right
@@ -64,37 +65,52 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   // theme context
   const theme = useTheme();
 
-  const {  setSelectedChatId } = useContext(Context);
+  const { setSelectedChatId } = useContext(Context);
 
   const isNewTagVisible = getIsNewTagVisible(new Date('2023-02-22T00:00:00.000'), 90);
 
-  const { connectedUser, displayQR, setDisplayQR } = useContext(AppContext);
+  const { connectedUser, displayQR, setDisplayQR, initializePushSDK } = useContext(AppContext);
   const [searchedUser, setSearchedUser] = useState<string>('');
 
   const { activeTab, setActiveTab } = useContext(Context);
-  const [requestChatList,setRequestChatList] = useState<ChatPreviewList>([]);
-  const [requestLoadingData,setRequestLoadingData] = useState<loadingData>();
+  const [requestChatList, setRequestChatList] = useState<ChatPreviewList>([]);
+  const [requestLoadingData, setRequestLoadingData] = useState<loadingData>();
 
   const [loadingRequests, setLoadingRequests] = useState(true);
   const [showQR, setShowQR] = useState<boolean>(false);
   const containerRef = React.useRef(null);
 
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
 
   const closeQRDropdown = () => {
     setShowQR(false);
   };
   useClickAway(containerRef, () => closeQRDropdown());
 
- 
-  const formatChatParticipant = async(chatParticipant:string,chatId:string) =>{
+  const formatChatParticipant = async (chatParticipant: string, chatId: string) => {
     let formattedChatParticipant = chatParticipant;
-    if (!formattedChatParticipant.includes('.')) {
-       if (!await ethers.utils.isAddress(caip10ToWallet(formattedChatParticipant)))
-       formattedChatParticipant = chatId;
 
+    //Checking if the user has signed the message or not
+    if (userPushSDKInstance.decryptedPgpPvtKey) {
+      if (!formattedChatParticipant.includes('.')) {
+        if (!await ethers.utils.isAddress(caip10ToWallet(formattedChatParticipant)))
+          formattedChatParticipant = chatId;
+      }
+      return formattedChatParticipant;
+    } else {
+      await initializePushSDK();
+      return null;
     }
-    return formattedChatParticipant;
-   
+  }
+
+  const handleCreateGroup = async () => {
+    if (userPushSDKInstance.decryptedPgpPvtKey) {
+      showCreateGroupModal();
+    } else {
+      await initializePushSDK();
+    }
   }
 
 
@@ -146,7 +162,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
             >
               <ItemHV2
                 alignItems="center"
-                // ref={containerRef}
+              // ref={containerRef}
               >
                 <SpanV2
                   flex="initial"
@@ -157,28 +173,28 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
                 >
                   Requests
                 </SpanV2>
-                {(requestLoadingData && requestLoadingData?.loading ) &&(
-                   <LoaderSpinner
-                   type={LOADER_TYPE.SEAMLESS}
-                   width="auto"
-                   spinnerSize={20}
-                   spinnerColor={GLOBALS.COLORS.PRIMARY_PINK}
-                 />
+                {(requestLoadingData && requestLoadingData?.loading) && (
+                  <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    width="auto"
+                    spinnerSize={20}
+                    spinnerColor={GLOBALS.COLORS.PRIMARY_PINK}
+                  />
                 )}
 
-                {(requestLoadingData && !requestLoadingData?.loading )&& 
-                requestChatList.length > 0 && (
-                  <SpanV2
-                    background={GLOBALS.COLORS.PRIMARY_PINK}
-                    color={GLOBALS.COLORS.WHITE}
-                    padding="2px 8px"
-                    margin="0px 4px"
-                    fontSize="12px"
-                    borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
-                  >
-                    {requestChatList.length}
-                  </SpanV2>
-                )}
+                {(requestLoadingData && !requestLoadingData?.loading) &&
+                  requestChatList.length > 0 && (
+                    <SpanV2
+                      background={GLOBALS.COLORS.PRIMARY_PINK}
+                      color={GLOBALS.COLORS.WHITE}
+                      padding="2px 8px"
+                      margin="0px 4px"
+                      fontSize="12px"
+                      borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
+                    >
+                      {requestChatList.length}
+                    </SpanV2>
+                  )}
               </ItemHV2>
             </TabButton>
           </ItemHV2>
@@ -206,7 +222,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
             flex="none"
             padding="20px 10px 24px 10px"
             borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
-            onClick={() => showCreateGroupModal()}
+            onClick={handleCreateGroup}
             background="transparent"
             hover={theme.chat.snapFocusBg}
             hoverBackground="transparent"
@@ -240,10 +256,10 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
         >
           <ChatPreviewList
             listType="CHATS"
-            onChatSelected={async(chatid,chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant,chatid))}
+            onChatSelected={async (chatid, chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant, chatid))}
 
             onUnreadCountChange={(count) => {
-             // console.log('Count is: ', count);
+              // console.log('Count is: ', count);
             }}
           />
         </ItemVV2>
@@ -258,14 +274,14 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
         >
           <ChatPreviewList
             listType="REQUESTS"
-            onChatSelected={async(chatid,chatParticipant) => {console.log(chatParticipant);setSelectedChatId(await formatChatParticipant(chatParticipant,chatid))}}
+            onChatSelected={async (chatid, chatParticipant) => { console.log(chatParticipant); setSelectedChatId(await formatChatParticipant(chatParticipant, chatid)) }}
             onUnreadCountChange={(count) => {
-             // console.log('Count is: ', count);
+              // console.log('Count is: ', count);
             }}
             onLoading={(loadingData) => setRequestLoadingData(loadingData)}
             onPaging={(chats) => setRequestChatList(chats)}
             onPreload={(chats) => setRequestChatList(chats)}
-            
+
           />
         </ItemVV2>
 
@@ -284,7 +300,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
           />
         )}
         {/* Set Search */}
-        {searchedUser && (activeTab === 3 || activeTab === 4)  && (
+        {searchedUser && (activeTab === 3 || activeTab === 4) && (
           <ItemVV2
             justifyContent="flex-start"
             flexWrap="nowrap"
@@ -294,15 +310,15 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
             <ChatPreviewList
               listType="SEARCH"
               searchParamter={searchedUser || ''}
-              onChatSelected={async(chatid,chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant,chatid))}
+              onChatSelected={async (chatid, chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant, chatid))}
               onUnreadCountChange={(count) => {
-               // console.log('Count is: ', count);
+                // console.log('Count is: ', count);
               }}
             />
           </ItemVV2>
         )}
 
-      
+
       </ItemVV2>
 
       {/* Footer */}
@@ -321,13 +337,13 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
         </QRCodeContainer>
       ) : null}
 
-      <ProfileContainer zIndex='10'  borderTop={`1px solid ${theme.default.secondaryBg}` }>
+      <ProfileContainer zIndex='10' borderTop={`1px solid ${theme.default.secondaryBg}`}>
         {/* <ProfileHeader
           setActiveTab={setActiveTab}
           setShowQR={setShowQR}
           showQR={showQR}
         /> */}
-        <UserProfile/>
+        <UserProfile />
       </ProfileContainer>
     </ItemVV2>
   );
