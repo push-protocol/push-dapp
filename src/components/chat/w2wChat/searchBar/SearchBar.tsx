@@ -1,63 +1,41 @@
 // React + Web3 Essentials
-import { Web3Provider } from '@ethersproject/providers';
-import { ethers } from 'ethers';
+
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@mui/icons-material/Add';
-import { MdError } from 'react-icons/md';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import * as PushAPI from "@pushprotocol/restapi";
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { appConfig } from 'config';
-import { findObject } from 'helpers/UtilityHelper';
-import * as w2wChatHelper from 'helpers/w2w';
-import { displayDefaultUser } from 'helpers/w2w/user';
-import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
-import { getGroup } from 'services/chats/getGroup';
-import { getGroupbyChatId } from 'services/chats/getGroupByChatId';
-import { getGroupByName } from 'services/chats/getGroupByName';
-import { AppContext, IGroup, User } from 'types/chat';
+import { AppContext } from 'types/chat';
 import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
-import MessageFeed from '../messageFeed/MessageFeed';
-import { getUdResolver } from 'helpers/w2w/udResolver';
 
-const SearchBar = ({ autofilled }) => {
+
+const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
   // get theme
   const theme = useTheme();
 
   const {
-    hasUserBeenSearched,
     setHasUserBeenSearched,
     activeTab,
     setActiveTab,
     userShouldBeSearched,
     setUserShouldBeSearched,
-    filteredUserData,
-    setFilteredUserData,
-    inbox,
   }: AppContext = useContext<AppContext>(Context);
-  const [searchedUser, setSearchedUser] = useState<string>('');
-  const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
+
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
-  const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
-  const udResolver = getUdResolver();
-  const searchFeedToast = useToast();
 
 
-  if (autofilled) {
-    // console.log("Search is autofilled:", autofilled);
-  }
+
 
   useEffect(() => {
     if (searchedUser !== '' && userShouldBeSearched) {
-      handleSearch();
+      setSearchedUser(searchedUser);
       setUserShouldBeSearched(false);
     }
     return () => setUserShouldBeSearched(false);
@@ -65,39 +43,20 @@ const SearchBar = ({ autofilled }) => {
 
   useEffect(() => {
     if (autofilled && !userShouldBeSearched) {
-      // automate search
-      // setSearchedUser(autofilled);
-
-      // const event = new KeyboardEvent('keypress', {
-      //   key: 'enter',
-      // });
-      // console.log("in search")
-      submitSearch(null, autofilled);
+  
+      if (autofilled.includes('chatid')) {
+        setSearchedUser(autofilled.split(':')[1]);
+      } else {
+        setSearchedUser(autofilled);
+      }
+      submitSearch();
     }
   }, [userShouldBeSearched, autofilled]);
 
-  useEffect(() => {
-    if (isInValidAddress) {
-      searchFeedToast.showMessageToast({
-        toastTitle: 'Error',
-        toastMessage: 'Invalid Search',
-        toastType: 'ERROR',
-        getToastIcon: (size) => (
-          <MdError
-            size={size}
-            color="red"
-          />
-        ),
-      });
-
-      if (activeTab == 4) {
-        setActiveTab(0);
-      }
-    }
-  }, [isInValidAddress]);
 
   const onChangeSearchBox = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     let searchAddress = event.target.value;
+
     if (searchAddress === '') {
       clearInput();
     } else {
@@ -105,150 +64,13 @@ const SearchBar = ({ autofilled }) => {
     }
   };
 
-  const submitSearch = (event: React.FormEvent | null, autoSearch: string = null): void => {
-    if (autoSearch) {
-      //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
-      if (autoSearch.includes('chatid')) {
-        handleSearch(autoSearch.split(':')[1]);
-      }
-      else {
-        handleSearch(autoSearch);
-      }
+  const submitSearch = (): void => {
 
-    } else {
-      //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
-      event.preventDefault();
-      handleSearch();
-    }
-
+    setActiveTab(3);
   };
 
-  const setInvalidSearch = () => {
-    setIsInvalidAddress(true);
-    setFilteredUserData([]);
-    setHasUserBeenSearched(true);
-  }
-  const handleSearch = async (autoSearch: string = null): Promise<void> => {
-    let searchText = autoSearch ? autoSearch : searchedUser;
-    setIsInvalidAddress(false);
-
-    if (!ethers.utils.isAddress(searchText)) {
-      setIsLoadingSearch(true);
-      let address: string;
-      let group: IGroup;
-
-      if (searchText.includes('.')) {
-        try {
-          // address = await provider.resolveName(searchText);
-          // if (!address) {
-          //   address = await library.resolveName(searchText);
-          // }
-
-          address =
-            (await provider.resolveName(searchText)) ||
-            // (await library.resolveName(searchText)) ||
-            (await udResolver.owner(searchText));
-
-
-        } catch (err) {
-          setInvalidSearch();
-        }
-      }
-      else {
-        group = await getGroup(searchText, setInvalidSearch);
-      }
-
-      // this ensures address are checksummed
-
-      if (address) {
-        address = ethers.utils.getAddress(address?.toLowerCase());
-        handleUserSearch({ userSearchData: address });
-      } else if (group) {
-        handleUserSearch({ groupSearchData: group });
-      }
-      else if (!group && !address) {
-        setInvalidSearch();
-      }
-    } else {
-      await handleUserSearch({ userSearchData: searchText });
-    }
-    setIsLoadingSearch(false);
-  };
-
-  //this function needs some optimisation
-  const handleUserSearch = async ({ userSearchData, groupSearchData }: { userSearchData?: string, groupSearchData?: IGroup }): Promise<void> => {
-    setIsLoadingSearch(true);
-    let filteredData: User;
-    setHasUserBeenSearched(true);
-
-    if (userSearchData) {
-      const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData });
-      filteredData = await PushAPI.user.get({
-        account: caip10,
-        env: appConfig.appEnv
-      });
-      // Checking whether user already present in contact list
-      let isUserConnected = findObject(filteredData, inbox, 'did');
-
-      if (filteredData !== null && isUserConnected) {
-        if (activeTab !== 0) {
-          setUserShouldBeSearched(true);
-          if (autofilled) {
-            setActiveTab(4);
-          } else {
-            setActiveTab(0);
-          }
-        }
-        setFilteredUserData([filteredData]);
-        setSearchedUser('');
-      } else if (ethers.utils.isAddress(userSearchData)) {
-        setUserShouldBeSearched(true);
-        if (autofilled) {
-          setActiveTab(4);
-        } else {
-          setActiveTab(3);
-        }
-        const displayUser = displayDefaultUser({ caip10 });
-        setFilteredUserData([displayUser]);
-        setSearchedUser('');
-      } else {
-        setIsInvalidAddress(true);
-        setFilteredUserData([]);
-      }
-      // User is not in the protocol. Create new user
-    } else {
-      if (groupSearchData) {
-        const isGroupInInbox = inbox.find((inb) => inb?.groupInformation?.chatId === groupSearchData.chatId);
-        if (isGroupInInbox) {
-          if (activeTab != 0) {
-            setUserShouldBeSearched(true);
-            //check if in inbox
-            if (autofilled) {
-              setActiveTab(4);
-            } else {
-              setActiveTab(3);
-            }
-          }
-        } else {
-          setUserShouldBeSearched(true);
-          //check if in inbox
-          if (autofilled) {
-            setActiveTab(4);
-          } else {
-            setActiveTab(3);
-          }
-        }
-        setFilteredUserData([groupSearchData]);
-        setSearchedUser('');
-      } else {
-        setIsInvalidAddress(true);
-        setFilteredUserData([]);
-      }
-    }
-  };
 
   const clearInput = (): void => {
-    setFilteredUserData([]);
     setSearchedUser('');
     setHasUserBeenSearched(false);
     setIsLoadingSearch(false);
@@ -296,9 +118,10 @@ const SearchBar = ({ autofilled }) => {
           alignItems="stretch"
           display={activeTab == 4 ? 'none' : 'flex'}
         >
-          <SearchBarContent onSubmit={submitSearch}>
+
             <Input
               type="text"
+              onKeyUp={(e)=> e.key === 'Enter'? submitSearch():null}
               value={searchedUser}
               onChange={onChangeSearchBox}
               placeholder="Search Web3 domain or 0x123..."
@@ -333,12 +156,12 @@ const SearchBar = ({ autofilled }) => {
               )}
               {!isLoadingSearch && (
                 <SearchIcon
+                
                   style={{ cursor: 'pointer' }}
                   onClick={submitSearch}
                 />
               )}
             </ItemVV2>
-          </SearchBarContent>
         </ItemVV2>
 
         {activeTab !== 3 && activeTab !== 4 && (
@@ -363,43 +186,17 @@ const SearchBar = ({ autofilled }) => {
           </ItemVV2>
         )}
       </ItemHV2>
-
-      {isLoadingSearch ? (
-        <ItemVV2
-          flex="initial"
-          margin={activeTab == 4 ? '10px' : '0px'}
-          alignItems="center"
-        >
-          <LoaderSpinner
-            type={LOADER_TYPE.SEAMLESS}
-            spinnerSize={40}
-          />
-        </ItemVV2>
-      ) : (
-        filteredUserData.length > 0 && (
-          <MessageFeed
-            hasUserBeenSearched={activeTab !== 3 && activeTab !== 4 ? hasUserBeenSearched : true}
-            filteredUserData={filteredUserData}
-            isInvalidAddress={isInValidAddress}
-            automatedSearch={autofilled ? true : false}
-          />
-        )
-      )}
     </ItemVV2>
   );
 };
 
-const SearchBarContent = styled.form`
-  position: relative;
-  display: flex;
-  flex: 1;
-`;
+
 
 const Input = styled.input`
   box-sizing: border-box;
   display: flex;
   flex: 1;
-  width: 0;
+  width: 100%;
   height: 48px;
   padding: 13px 60px 13px 21px;
   margin: 10px 0px 17px 0px;

@@ -35,6 +35,7 @@ import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJour
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 import { themeDark, themeLight } from 'config/Themization';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 // space imports
 import {
@@ -100,7 +101,8 @@ const extendConsole = () => {
 extendConsole();
 
 // Disable consolve
-if (appConfig?.appEnv === "prod" || appConfig?.appEnv === "staging") {
+
+if (appConfig?.appEnv === "prod") {
   console.enable("debug", false);
   console.enable("log", false);
   console.enable("info", false);
@@ -111,6 +113,7 @@ if (appConfig?.appEnv === "prod" || appConfig?.appEnv === "staging") {
   }
 }
 
+
 // Provess App
 export default function App() {
   const dispatch = useDispatch();
@@ -119,6 +122,8 @@ export default function App() {
   const [currentTime, setcurrentTime] = React.useState(0);
   const { authError, setAuthError } = useContext(ErrorContext);
   const { pgpPvtKey } = useContext<any>(AppContext);
+  const { sidebarCollapsed, setSidebarCollapsed } = React.useContext(GlobalContext);
+
   const updateOnboardTheme = useUpdateTheme();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -161,7 +166,6 @@ export default function App() {
 
   // Initialize Theme
   const [darkMode, setDarkMode] = useState(false);
-  
   const toggleDarkMode = () => {
     const newTheme = !darkMode ? 'dark' : 'light';
     updateOnboardTheme(newTheme);
@@ -178,10 +182,18 @@ export default function App() {
       updateOnboardTheme(theme);
       document.documentElement.setAttribute('theme', theme);
     }
+
+    const SidebarCollapsable = localStorage.getItem('SidebarCollapsed');
+    if (SidebarCollapsable) {
+      const isSidebarCollapsed = JSON.parse(SidebarCollapsable);
+      setSidebarCollapsed(isSidebarCollapsed)
+    }
+
   }, []);
 
   React.useEffect(() => {
     localStorage.setItem('theme', JSON.stringify(darkMode));
+    localStorage.setItem('SidebarCollapsed', JSON.stringify(sidebarCollapsed));
   });
 
   React.useEffect(() => {
@@ -301,11 +313,13 @@ export default function App() {
                     bg={darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG}
                     headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
                   >
-                    {!isSnapPage && <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                      <Navigation />
-                    </LeftBarContainer>}
+                    {!isSnapPage &&
+                      <LeftBarContainer leftBarWidth={sidebarCollapsed ? GLOBALS.CONSTANTS.COLLAPSABLE_LEFT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                        <Navigation />
+                      </LeftBarContainer>
+                    }
 
-                    <ContentContainer leftBarWidth={isSnapPage ? 0 : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                    <ContentContainer leftBarWidth={sidebarCollapsed ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
                       {/* Shared among all pages, load universal things here */}
                       <SpacesUIProvider spaceUI={spaceUI} theme={darkMode ? darkTheme : lightTheme}>
                         <MasterInterfacePage />
@@ -353,7 +367,8 @@ const LeftBarContainer = styled.div`
   top: 0;
   bottom: 0;
   width: ${(props) => props.leftBarWidth}px;
-  position: fixed;
+  // position: fixed;
+  position: absolute;
 
   @media (max-width: 992px) {
     display: none;

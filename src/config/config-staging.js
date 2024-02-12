@@ -86,6 +86,7 @@ export const addresses = {
   epnsPolyComm: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa", // the ploygon comm contract
   pushToken: "0x37c779a1564DCc0e3914aB130e0e787d93e21804", //address for push token
   aDai: "0x31f30d9A5627eAfeC4433Ae2886Cf6cc3D25E772",
+  pushChannelAdmin: "0x0c97B7B7D14FBBfe726bF85c992db02E8E7D0fC6",
   // staking: "0xAECb9074e222e8F06f8034140A3F86610E4d3c3E", // deprecated staking addresses
   // yieldFarmPUSH: "0xb41cd6760d3b1d0d216851f63fda9573b04dd46e",
   // yieldFarmLP: "0x604f629A6b5E85805D57f39493BBC2856cE8A540",

@@ -101,7 +101,10 @@ export interface TwitterFeedReturnType{
 
 export interface ChatUserAppContext {
   currentChat: Feeds;
+  selectedChatId: string | undefined;
+  setSelectedChatId:(chatId: string | undefined) => void;
   viewChatBox: boolean;
+  setViewChatBox:(chatId: boolean) => void;
   receivedIntents: Feeds[];
   setReceivedIntents: (rIntent: Feeds[]) => void;
   setChat: (feed: Feeds) => void;
