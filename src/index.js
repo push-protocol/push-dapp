@@ -11,7 +11,6 @@ import { BrowserRouter } from "react-router-dom";
 
 // Internal Components
 import App from "./App";
-import ChatUserContextProvider from './contexts/ChatUserContext';
 import ErrorContextProvider from './contexts/ErrorContext';
 import { VideoCallContextProvider } from './contexts/VideoCallContext';
 import "./index.css";
@@ -22,6 +21,7 @@ import GlobalContextProvider from './contexts/GlobalContext';
 // Internal Configs
 import * as dotenv from "dotenv";
 import { web3Onboard } from './connectors/web3Onboard';
+import AppContextProvider from './contexts/AppContext';
 
 // enable environmental variables across the entire application
 dotenv.config();
@@ -52,13 +52,13 @@ ReactDOM.render(
       <ApolloProvider client={client}>
         <GlobalContextProvider>
           <Web3OnboardProvider web3Onboard={web3Onboard}>
-              <ErrorContextProvider>
-                <ChatUserContextProvider>
+            <ErrorContextProvider>
+                <AppContextProvider>
                   <VideoCallContextProvider>
                     <App />
                   </VideoCallContextProvider>
-                </ChatUserContextProvider>
-              </ErrorContextProvider>
+                </AppContextProvider>
+            </ErrorContextProvider>
           </Web3OnboardProvider>
         </GlobalContextProvider>
       </ApolloProvider>

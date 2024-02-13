@@ -9,9 +9,9 @@ import { AiOutlineClose, AiOutlineQrcode } from "react-icons/ai";
 import { H2V2, ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
 import GLOBALS, { device } from "config/Globals";
 import BlurBG from "components/reusables/blurs/BlurBG";
-import { ChatUserContext } from "contexts/ChatUserContext";
 import chatBoxImage from "../../../../assets/chat/chatBox.svg";
 import { useAccount } from "hooks";
+import { AppContext } from "contexts/AppContext";
 
 const ChatQR = ({
     type = LOADER_TYPE.STANDALONE,
@@ -21,7 +21,7 @@ const ChatQR = ({
 }) => {
     const theme = useTheme();
     const { account } = useAccount();
-    const { createUserIfNecessary, displayQR, setDisplayQR, pgpPvtKey, connectedPeerID } = useContext(ChatUserContext);
+    const { pgpPvtKey,connectedPeerID,displayQR, setDisplayQR, createUserIfNecessary } = useContext(AppContext);
     const [myPeer, myPeerID] = usePeer();
     const [qrCodeText, setQrCodeText] = useState('');
     const [loading, setLoading] = useState(true);

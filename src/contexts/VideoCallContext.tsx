@@ -7,9 +7,9 @@ import { VideoCallStatus } from '@pushprotocol/restapi';
 
 import { appConfig } from 'config';
 import { initVideoCallData } from '@pushprotocol/restapi/src/lib/video';
-import { ChatUserContext } from './ChatUserContext';
 import { User } from 'types/chat';
 import { useAccount } from 'hooks';
+import { AppContext } from './AppContext';
 
 interface RequestWrapperOptionsType {
   senderAddress: string;
@@ -40,7 +40,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   const [isCallAccepted, setIsCallAccepted] = useState(false);
   const [incomingCallUserData, setIncomingCallUserData] = useState<User | null>(null);
   const { chainId, account, provider } = useAccount();
-  const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
+  const { connectedUser, createUserIfNecessary} = useContext(AppContext);
 
   const [data, setData] = useState<PushAPI.VideoCallData>(initVideoCallData);
 

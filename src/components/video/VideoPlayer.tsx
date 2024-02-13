@@ -9,10 +9,9 @@ import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedSt
 import { device } from 'config/Globals';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { VideoCallStatus } from '@pushprotocol/restapi';
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext } from 'types/chat';
-import { AppContext as MainContext } from 'contexts/AppContext';
+import { ChatUserAppContext } from 'types/chat';
+import { AppContext, AppContext as MainContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
 import { shortenText } from 'helpers/UtilityHelper';
 import Lock from 'assets/chat/group-chat/lockdark.svg'
@@ -26,8 +25,8 @@ const VideoPlayer = ({ localVideoStyles, incoming }: VideoPlayerType) => {
   const localVideoRef = useRef(null);
   const incomingVideoRef = useRef(null);
   const { videoCallData, isCallAccepted } = useContext(VideoCallContext);
-  const { connectedUser } = useContext(ChatUserContext);
-  const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const { connectedUser } = useContext(AppContext);
+  const { currentChat }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
   const { web3NameList }: AppContextType = React.useContext(MainContext);
   const web3Name = web3NameList[videoCallData.incoming[0].address];
   const theme = useTheme();

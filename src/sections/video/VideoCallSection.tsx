@@ -6,15 +6,15 @@ import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner'
 import IncomingCall from 'components/video/IncomingCall';
 import OutgoingOngoingCall from 'components/video/OutgoingOngoingCall';
 import { VideoCallContext } from 'contexts/VideoCallContext';
-import { BlockedLoadingI } from 'types/chat';
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import { VideoCallStatus } from '@pushprotocol/restapi';
+import { AppContext } from 'contexts/AppContext';
+import { BlockedLoadingI } from 'types/context';
 
 // Create Video Call
 const VideoCallSection = () => {
   const { videoCallData, createWrapper, requestWrapper, acceptRequestWrapper, disconnectWrapper, isCallAccepted } =
     useContext(VideoCallContext);
-  const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
+  const { connectedUser, createUserIfNecessary } = useContext(AppContext);
 
   const [isLoading, setLoading] = useState(true);
   const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({

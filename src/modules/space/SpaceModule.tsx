@@ -12,7 +12,6 @@ import styled from 'styled-components';
 import GLOBALS, { device, globalsMargin } from '../../config/Globals';
 import * as w2wHelper from 'helpers/w2w/';
 // import { SpaceGlobalContext, SpaceLocalContext, SpaceLocalContextProvider } from 'contexts';
-// import { ChatUserContext } from 'contexts/ChatUserContext';
 // import { getSpaceRequests, getSpaces } from 'services/space';
 // import { getSpaceRequestsFromIndexedDB, getSpacesFromIndexedDB } from 'helpers/space';
 // import { SpaceInfoModalContent } from 'components/space/spaceModals/spaceInfoModal';
@@ -24,7 +23,6 @@ import * as w2wHelper from 'helpers/w2w/';
 // import { useDeviceWidthCheck } from 'hooks/useDeviceWidthCheck';
 
 import SpaceFeedSection from 'sections/space/SpaceFeedSection';
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import { appConfig } from 'config';
 import * as PushAPI from '@pushprotocol/restapi';
 import { ConnectedUser, User } from 'types/chat';
@@ -34,14 +32,16 @@ import { Item } from 'primaries/SharedStyling';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { useAccount, useSDKSocket } from 'hooks';
 import { SpaceContext } from 'contexts/SpaceContext';
+import { AppContext } from 'contexts/AppContext';
 
 export const SpaceModule = ({ spaceid }) => {
   const { account, chainId } = useAccount();
-  const { pgpPvtKey, getUser, setPgpPvtKey, connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
 
   const [isLoading, setIsLoading] = useState(true);
 
-  useSDKSocket({ account, chainId, env: appConfig.appEnv});
+  const { getUser, connectedUser, setConnectedUser, pgpPvtKey, setPgpPvtKey, createUserIfNecessary } = useContext(AppContext);
+
+  useSDKSocket({ account, chainId, env: appConfig.appEnv });
 
   useEffect(() => {
     setIsLoading(true);
@@ -70,13 +70,13 @@ export const SpaceModule = ({ spaceid }) => {
   return (
     <Container>
 
-      {isLoading ? 
+      {isLoading ?
         <CenterContainer>
-        <ItemVV2>
-           <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
-        </ItemVV2>
-      </CenterContainer>
-     : <SpaceFeedSection spaceid={spaceid} />} 
+          <ItemVV2>
+            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
+          </ItemVV2>
+        </CenterContainer>
+        : <SpaceFeedSection spaceid={spaceid} />}
     </Container>
   );
 };

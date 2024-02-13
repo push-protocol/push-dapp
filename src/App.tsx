@@ -13,7 +13,7 @@ import { createGlobalStyle } from 'styled-components';
 
 // Internal Compoonents
 import InitState from 'components/InitState';
-import AppContextProvider from 'contexts/AppContext';
+import AppContextProvider, { AppContext } from 'contexts/AppContext';
 import NavigationContextProvider from 'contexts/NavigationContext';
 import { useAccount, useInactiveListener, useSDKSocket } from 'hooks';
 import { resetAdminSlice } from 'redux/slices/adminSlice';
@@ -35,7 +35,6 @@ import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJour
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 import { themeDark, themeLight } from 'config/Themization';
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import { GlobalContext } from 'contexts/GlobalContext';
 
 // space imports
@@ -113,6 +112,7 @@ if (appConfig?.appEnv === "prod") {
   }
 }
 
+
 // Provess App
 export default function App() {
   const dispatch = useDispatch();
@@ -120,6 +120,7 @@ export default function App() {
   const { isActive, account, chainId, provider } = useAccount();
   const [currentTime, setcurrentTime] = React.useState(0);
   const { authError, setAuthError } = useContext(ErrorContext);
+  const { pgpPvtKey } = useContext<any>(AppContext);
   const { sidebarCollapsed, setSidebarCollapsed } = React.useContext(GlobalContext);
 
   const updateOnboardTheme = useUpdateTheme();
@@ -241,8 +242,6 @@ export default function App() {
   };
 
   const librarySigner = provider?.getSigner(account);
-  const { pgpPvtKey } = useContext<any>(ChatUserContext);
-
 
   const spaceUI = useMemo(() => new SpacesUI({
     account: account,
@@ -260,7 +259,6 @@ export default function App() {
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
-      <AppContextProvider>
         {(!isActive || !allowedChain) && (
           <SectionV2 minHeight="100vh">
             <AppLogin toggleDarkMode={toggleDarkMode} />
@@ -333,8 +331,6 @@ export default function App() {
             </NavigationContextProvider>
           </>
         )}
-
-      </AppContextProvider>
     </ThemeProvider>
   );
 }

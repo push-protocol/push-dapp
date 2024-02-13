@@ -12,7 +12,6 @@ import { Image } from 'components/SharedStyling';
 import { ImageV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
 import { SpaceContext } from 'contexts/SpaceContext';
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import { device } from 'config/Globals';
 import { useNavigate } from 'react-router-dom';
 import { SpaceComponentContext } from 'contexts/SpaceComponentsContext';
@@ -23,13 +22,14 @@ import { appConfig } from 'config';
 
 // External imports
 import * as PushAPI from '@pushprotocol/restapi';
+import { AppContext } from 'contexts/AppContext';
 
 
 const SpaceFeedSection = ({ spaceid }) => {
   const { SpaceFeedComponent, SpaceInvitesComponent, CreateSpaceComponent } = useContext(SpaceComponentContext);
   const { account } = useAccount();
   const { spaceId ,setSpaceId, spaceInvites } = useContext(SpaceContext);
-  const { connectedUser } = useContext(ChatUserContext);
+  const { connectedUser } = useContext(AppContext);
   const theme = useTheme();
 
   const isMobile = useMediaQuery(device.mobileL);
