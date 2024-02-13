@@ -166,8 +166,8 @@ const NavigationList = {
   third: {
 
     yieldv2: {
-      src: 'navigation/incentivesOffIcon.svg',
-      activeSrc: 'navigation/incentivesOnIcon.svg',
+      src: 'navigation/YieldFarmingOff.svg',
+      activeSrc: 'navigation/YieldFarmingOn.svg',
       iconFactory: null,
       name: 'Yield Farming V2',
       title: 'Yield Farming V2',
@@ -177,7 +177,7 @@ const NavigationList = {
       isRoute: true,
       hasMenuLogic: true,
       hidden: false,
-      showNewTag:true,
+      showNewTag: false,
       headerTag: {
         title: 'Yield Farming V2',
         light: {

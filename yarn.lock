@@ -5432,9 +5432,9 @@ __metadata:
     "@mui/icons-material": ^5.8.4
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
-    "@pushprotocol/restapi": 1.6.1
+    "@pushprotocol/restapi": 0.0.1-alpha.64
     "@pushprotocol/socket": 0.5.3
-    "@pushprotocol/uiweb": 1.2.5
+    "@pushprotocol/uiweb": 0.0.1-alpha.41
     "@reduxjs/toolkit": ^1.7.1
     "@testing-library/dom": ^6.12.2
     "@testing-library/jest-dom": ^4.2.4
@@ -5621,9 +5621,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:1.6.1":
-  version: 1.6.1
-  resolution: "@pushprotocol/restapi@npm:1.6.1"
+"@pushprotocol/restapi@npm:0.0.1-alpha.64":
+  version: 0.0.1-alpha.64
+  resolution: "@pushprotocol/restapi@npm:0.0.1-alpha.64"
   dependencies:
     "@ambire/signature-validator": ^1.3.1
     "@metamask/eth-sig-util": ^5.0.2
@@ -5633,6 +5633,7 @@ __metadata:
     immer: ^10.0.2
     joi: ^17.9.2
     livepeer: ^2.5.8
+    lru-cache: ^10.1.0
     openpgp: ^5.5.0
     simple-peer: ^9.11.1
     socket.io-client: ^4.7.2
@@ -5643,7 +5644,7 @@ __metadata:
     viem: ^1.20.3
   peerDependencies:
     ethers: ^5.0.0 || ^6.0.0
-  checksum: 504fb963c9e608f6932e00a60c55db233184d9f82869b9b15097b31ece5d7eef32894b9919fafdecf1beb3cbe6770a475fc7236285008aff433c7e988b34f325
+  checksum: 6c62724de1522572de2dfc62212f7a461f8b92b4c8f32097d8a1cea527bda4e3d00b65ada8b2adb2a466d7615af7eb8092b28defed7dc06293a25ea3b9713503
   languageName: node
   linkType: hard
 
@@ -5671,9 +5672,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:1.2.5":
-  version: 1.2.5
-  resolution: "@pushprotocol/uiweb@npm:1.2.5"
+"@pushprotocol/uiweb@npm:0.0.1-alpha.41":
+  version: 0.0.1-alpha.41
+  resolution: "@pushprotocol/uiweb@npm:0.0.1-alpha.41"
   dependencies:
     "@livekit/components-react": ^1.2.2
     "@livekit/components-styles": ^1.0.6
@@ -5705,7 +5706,7 @@ __metadata:
     axios: ^0.27.2
     react: ">=16.8.0"
     styled-components: ^6.0.8
-  checksum: 76d609fdfc2311d2093d8d8a28c3f761c6ac2d60cca5115c78e5541d595061883c53a658fd9c2d311ea6e0a2d512fd98e37af927c2632120bd67daddddabf83b
+  checksum: bbd07715409e0d22b17f825124202772f65169bbeec4c4b05cc4e5b9020e129957f78b3031549ec5c638046247375fecd8b3653c1dbc039363293763b4d7ba51
   languageName: node
   linkType: hard
 
@@ -21012,6 +21013,13 @@ __metadata:
   version: 3.0.0
   resolution: "lowercase-keys@npm:3.0.0"
   checksum: 67a3f81409af969bc0c4ca0e76cd7d16adb1e25aa1c197229587eaf8671275c8c067cd421795dbca4c81be0098e4c426a086a05e30de8a9c587b7a13c0c7ccc5
+  languageName: node
+  linkType: hard
+
+"lru-cache@npm:^10.1.0":
+  version: 10.2.0
+  resolution: "lru-cache@npm:10.2.0"
+  checksum: eee7ddda4a7475deac51ac81d7dd78709095c6fa46e8350dc2d22462559a1faa3b81ed931d5464b13d48cbd7e08b46100b6f768c76833912bc444b99c37e25db
   languageName: node
   linkType: hard
 

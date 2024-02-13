@@ -1,8 +1,9 @@
 // React + Web3 Essentials
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
+import { useSelector } from 'react-redux';
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -19,18 +20,22 @@ import APP_PATHS from 'config/AppPaths';
 import { AppContext } from 'contexts/AppContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { AppContextType } from 'types/context';
-import { GlobalContext, GlobalContextType } from 'contexts/GlobalContext';
+import { GlobalContext, GlobalContextType, ReadOnlyWalletMode } from 'contexts/GlobalContext';
 import { SpanV2 } from 'components/reusables/SharedStylingV2.js';
 
 // Create Header
 const Profile = ({ isDarkMode }) => {
   const { web3NameList }: AppContextType = useContext(AppContext);
-  const { setReadOnlyWallet, readOnlyWallet, mode }: GlobalContextType = useContext(GlobalContext);
+  const { setReadOnlyWallet, readOnlyWallet, mode,setMode }: GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
   const modalRef = React.useRef(null);
   const { account, disconnect, wallet } = useAccount();
+
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
 
   // resolve web3 name
   useResolveWeb3Name(account);
@@ -107,7 +112,7 @@ const Profile = ({ isDarkMode }) => {
             ) : (
               <>{shortenText(account, 5)}</>
             )}
-            <SpanV2 fontWeight='600' margin='0 0 0 2px'>{mode}</SpanV2>
+            <SpanV2 fontWeight='600' margin='0 0 0 2px'>{mode ? mode : userPushSDKInstance?.readMode && ReadOnlyWalletMode.READ_ONLY_MODE }</SpanV2>
             <ToggleArrowImg filter={isDarkMode ? theme.snackbarBorderIcon : 'brightness(0) invert(1)'}>
               <img
                 alt="arrow"

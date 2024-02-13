@@ -348,4 +348,10 @@ export const copyToClipboard = (val:string) => {
     document.body.removeChild(el);
   }
 };
+
+export const isAddressEqual = (address1: string, address2: string): boolean => {
+  if (address1 && address2 && address1.toLowerCase() == address2.toLowerCase()) return true;
+  return false;
+}
+
 export default UtilityHelper;

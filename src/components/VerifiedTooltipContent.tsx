@@ -9,11 +9,11 @@ type VerifiedTooltipContentType = {
 };
 
 const VerifiedTooltipContent = ({ verifierIcon, verifierName, height }: VerifiedTooltipContentType) => {
-  const displayedVerifierName = verifierName.length > 15 ? verifierName.substring(0, 15) + '...' : verifierName;
+  const displayedVerifierName = verifierName?.length > 15 ? verifierName.substring(0, 15) + '...' : verifierName;
   return (
     <Container
       style={{
-        width: 212 + displayedVerifierName.length*2 + 'px',
+        width: 212 + (displayedVerifierName && displayedVerifierName.length*2) + 'px',
         borderRadius: height < 160 ? '0.125rem 1rem 1rem 1rem' : '1rem 1rem 1rem 0.125rem',
       }}
     >

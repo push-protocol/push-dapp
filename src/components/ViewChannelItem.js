@@ -25,11 +25,11 @@ import { addNewWelcomeNotif, incrementStepIndex } from 'redux/slices/userJourney
 import ChannelTutorial, { isChannelTutorialized } from 'segments/ChannelTutorial';
 import NotificationToast from '../primaries/NotificationToast';
 import { Image, ItemH, Span } from '../primaries/SharedStyling';
-import { LOGO_FROM_CHAIN_ID, MaskedAliasChannels, shortenText } from 'helpers/UtilityHelper';
+import { isAddressEqual, LOGO_FROM_CHAIN_ID, MaskedAliasChannels, shortenText } from 'helpers/UtilityHelper';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 
 // Internal Configs
-import { appConfig, CHAIN_DETAILS } from 'config';
+import { addresses, appConfig, CHAIN_DETAILS } from 'config';
 import Tooltip from './reusables/tooltip/Tooltip';
 import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
 import InfoImage from '../assets/info.svg';
@@ -143,25 +143,39 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     if (!channelObject.verified_status) {
       setLoading(false);
     } else {
-      let verifierAddress = null;
-      await epnsReadProvider.channels(channelObject.channel).then((response) => {
+      try {
+        let verifierAddress = null;
+        const response = await epnsReadProvider.channels(channelObject.channel);
         verifierAddress = response.verifiedBy;
-      });
-
-      if (channelsCache[verifierAddress]) {
-        setVerifierDetails(channelsCache[verifierAddress]);
-      } else {
-        const verifierAddrDetails = await userPushSDKInstance.channel.info(convertAddressToAddrCaip(verifierAddress, appConfig.coreContractChain))
-        dispatch(
-          cacheChannelInfo({
-            address: verifierAddress,
-            meta: verifierAddrDetails,
-          })
-        );
-        setVerifierDetails(verifierAddrDetails);
+    
+        if (channelsCache[verifierAddress]) {
+          setVerifierDetails(channelsCache[verifierAddress]);
+        } else {
+          let verifierAddrDetails = {};
+          if (isAddressEqual(addresses?.pushChannelAdmin, verifierAddress)) {
+            verifierAddrDetails = {
+              name: "Push Admin",
+              icon: "./logo192.png"
+            };
+          } else {
+            verifierAddrDetails = await userPushSDKInstance.channel.info(convertAddressToAddrCaip(verifierAddress, appConfig.coreContractChain));
+          }
+    
+          dispatch(
+            cacheChannelInfo({
+              address: verifierAddress,
+              meta: verifierAddrDetails,
+            })
+          );
+          setVerifierDetails(verifierAddrDetails);
+        }
+      } catch (error) {
+        console.error("Error fetching channel information:", error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
+    
   }, [account, channelObject, userPushSDKInstance]);
 
   let isOwner;

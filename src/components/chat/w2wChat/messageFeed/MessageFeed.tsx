@@ -10,15 +10,15 @@ import { Waypoint } from 'react-waypoint';
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
 import { fetchInbox, getDefaultGroupFeed } from 'helpers/w2w/user';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext, Feeds, IGroup, User } from 'types/chat';
+import { ChatUserAppContext, Feeds, IGroup, User } from 'types/chat';
 import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../../../helpers/w2w/groupChat';
 import { getDefaultFeed } from '../../../../helpers/w2w/user';
 import { useAccount } from 'hooks';
+import { AppContext } from 'contexts/AppContext';
 
 // Internal Configs
 
@@ -32,9 +32,9 @@ interface MessageFeedPropsI {
 const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, setInbox, currentChat, receivedIntents, setActiveTab, activeTab, inbox, setHasUserBeenSearched, filteredUserData, setFilteredUserData }: AppContext = useContext<AppContext>(Context);
+  const { setChat, setInbox, currentChat, receivedIntents, setActiveTab, activeTab, inbox, setHasUserBeenSearched, filteredUserData, setFilteredUserData }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
 
-  const { connectedUser } = useContext(ChatUserContext);
+  const { connectedUser } = useContext(AppContext);
 
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);

@@ -10,16 +10,16 @@ import styled, { useTheme } from 'styled-components';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext } from 'types/chat';
+import { ChatUserAppContext } from 'types/chat';
 import { FileMessageContent } from './Files/Files';
 import GifPicker from './Gifs/GifPicker';
 
 // Internal configs
 import { appConfig } from 'config';
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import { caip10ToWallet } from 'helpers/w2w';
 import { MessagetypeType } from '../../../../types/chat';
 import {filterXSS} from 'xss'
+import { AppContext } from 'contexts/AppContext';
 
 
 interface ITypeBar {
@@ -48,8 +48,8 @@ const Typebar = ({
   setSnackbarText,
   approveIntent,
 }: ITypeBar) => {
-  const { currentChat, activeTab, setChat }: AppContext = useContext<AppContext>(Context);
-  const {connectedUser} = useContext(ChatUserContext);
+  const { currentChat, activeTab, setChat }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
+  const {connectedUser} = useContext(AppContext);
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);

@@ -14,10 +14,9 @@ import AddAdmin from 'assets/chat/group-chat/addadmin.svg';
 import DismissAdmin from 'assets/chat/group-chat/dismissadmin.svg';
 import Remove from 'assets/chat/group-chat/remove.svg';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { AppContext } from 'types/chat';
+import { ChatUserAppContext } from 'types/chat';
 import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import { ProfileCard } from './ProfileCard';
 import {
   convertToWalletAddressList,
@@ -38,10 +37,11 @@ import { MdCheckCircle, MdError } from 'react-icons/md';
 import { AddWalletContent } from '../createGroup/AddWalletContent';
 import GroupModalHeader from '../createGroup/GroupModalHeader';
 import { copyToClipboard, shortenText } from 'helpers/UtilityHelper';
+import { AppContext } from 'contexts/AppContext';
 
 export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
-  const { currentChat, setChat, inbox, receivedIntents }: AppContext = useContext<AppContext>(Context);
-  const { connectedUser } = useContext(ChatUserContext);
+  const { currentChat, setChat, inbox, receivedIntents }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
+  const { connectedUser } = useContext(AppContext);
   const [copyText, setCopyText] = useState<string>('');
   const { account } = useAccount();
   const groupInfoToast = useToast();

@@ -12,11 +12,11 @@ import ChatSnap from "components/chat/chatsnap/ChatSnap";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext, Feeds } from 'types/chat';
+import { ChatUserAppContext, Feeds } from 'types/chat';
 import { checkIfGroup, getChatsnapMessage, getGroupImage,getName,  } from 'helpers/w2w/groupChat';
 import { fetchIntent } from 'helpers/w2w/user';
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import { useAccount } from 'hooks';
+import { AppContext } from 'contexts/AppContext';
 
 
 
@@ -26,8 +26,8 @@ const IntentFeed = ({isLoading}): JSX.Element => {
     setChat,
     receivedIntents,
     setReceivedIntents
-  }: AppContext = useContext<AppContext>(Context);
-  const { connectedUser} = useContext(ChatUserContext);
+  }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
+  const { connectedUser} = useContext(AppContext);
   const [selectedIntentSnap, setSelectedIntentSnap] = useState<number>();
   const { chainId, account } = useAccount();
   const [limit, setLimit] = useState<number>(10);
