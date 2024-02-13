@@ -101,7 +101,6 @@ const extendConsole = () => {
 extendConsole();
 
 // Disable consolve
-
 if (appConfig?.appEnv === "prod") {
   console.enable("debug", false);
   console.enable("log", false);
