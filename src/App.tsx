@@ -101,6 +101,7 @@ const extendConsole = () => {
 extendConsole();
 
 // Disable consolve
+
 if (appConfig?.appEnv === "prod") {
   console.enable("debug", false);
   console.enable("log", false);
@@ -259,78 +260,81 @@ export default function App() {
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
-        {(!isActive || !allowedChain) && (
-          <SectionV2 minHeight="100vh">
-            <AppLogin toggleDarkMode={toggleDarkMode} />
-          </SectionV2>
-        )}
+      {/* {(!isActive || !allowedChain) && (
+        <SectionV2 minHeight="100vh">
+          <AppLogin toggleDarkMode={toggleDarkMode} />
+        </SectionV2>
+      )} */}
+
+      <>
+        <GlobalStyle />
+        <InitState />
+        <NavigationContextProvider>
+          <SpaceContextProvider>
+            <SpaceComponentContextProvider spaceUI={spaceUI}>
+              <Joyride
+                run={run}
+                steps={steps}
+                continuous={tutorialContinous}
+                stepIndex={stepIndex}
+                // hideFooter={true}
+                // primaryProps={false}
+                hideBackButton={true}
+                hideCloseButton={false}
+                disableScrolling={true}
+                disableScrollParentFix={true}
+                // disableFlip={true}
+                // showNextButton={false}
+                showSkipButton={false}
+                disableOverlayClose={true}
+                callback={handleJoyrideCallback}
+                styles={{
+                  options: {
+                    arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                    backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                    overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
+                    primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
+                    textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
+                    zIndex: 1000,
+                  },
+                }}
+              />
+
+              <HeaderContainer>
+                <Header
+                  isDarkMode={darkMode}
+                  darkModeToggle={toggleDarkMode}
+                />
+              </HeaderContainer>
+
+              <ParentContainer
+                bg={darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG}
+                headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
+              >
+                {!isSnapPage &&
+                  <LeftBarContainer leftBarWidth={sidebarCollapsed ? GLOBALS.CONSTANTS.COLLAPSABLE_LEFT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                    <Navigation />
+                  </LeftBarContainer>
+                }
+
+                <ContentContainer leftBarWidth={sidebarCollapsed ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                  {/* Shared among all pages, load universal things here */}
+                  <SpacesUIProvider spaceUI={spaceUI} theme={darkMode ? darkTheme : lightTheme}>
+                    <MasterInterfacePage />
+                    <SpaceWidgetSection />
+                  </SpacesUIProvider>
+                </ContentContainer>
+              </ParentContainer>
+            </SpaceComponentContextProvider>
+          </SpaceContextProvider>
+        </NavigationContextProvider>
+
+      </>
 
 
-        {isActive && !authError && allowedChain && (
-          <>
-            <GlobalStyle />
-            <InitState />
-            <NavigationContextProvider>
-              <SpaceContextProvider>
-                <SpaceComponentContextProvider spaceUI={spaceUI}>
-                  <Joyride
-                    run={run}
-                    steps={steps}
-                    continuous={tutorialContinous}
-                    stepIndex={stepIndex}
-                    // hideFooter={true}
-                    // primaryProps={false}
-                    hideBackButton={true}
-                    hideCloseButton={false}
-                    disableScrolling={true}
-                    disableScrollParentFix={true}
-                    // disableFlip={true}
-                    // showNextButton={false}
-                    showSkipButton={false}
-                    disableOverlayClose={true}
-                    callback={handleJoyrideCallback}
-                    styles={{
-                      options: {
-                        arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-                        backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-                        overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
-                        primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
-                        textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
-                        zIndex: 1000,
-                      },
-                    }}
-                  />
 
-                  <HeaderContainer>
-                    <Header
-                      isDarkMode={darkMode}
-                      darkModeToggle={toggleDarkMode}
-                    />
-                  </HeaderContainer>
 
-                  <ParentContainer
-                    bg={darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG}
-                    headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
-                  >
-                    {!isSnapPage &&
-                      <LeftBarContainer leftBarWidth={sidebarCollapsed ? GLOBALS.CONSTANTS.COLLAPSABLE_LEFT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                        <Navigation />
-                      </LeftBarContainer>
-                    }
 
-                    <ContentContainer leftBarWidth={sidebarCollapsed ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                      {/* Shared among all pages, load universal things here */}
-                      <SpacesUIProvider spaceUI={spaceUI} theme={darkMode ? darkTheme : lightTheme}>
-                        <MasterInterfacePage />
-                        <SpaceWidgetSection />
-                      </SpacesUIProvider>
-                    </ContentContainer>
-                  </ParentContainer>
-                </SpaceComponentContextProvider>
-              </SpaceContextProvider>
-            </NavigationContextProvider>
-          </>
-        )}
     </ThemeProvider>
   );
 }
