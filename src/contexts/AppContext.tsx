@@ -100,7 +100,7 @@ const AppContextProvider = ({ children }) => {
     const initialisePushSdkGuestMode = async () => {
         let userInstance;
         userInstance = await PushAPI.initialize({
-            account: readOnlyWallet,
+            account: '0x0000000000000000000000000000000000000000',
             env: appConfig.appEnv,
         });
         dispatch(setUserPushSDKInstance(userInstance));
@@ -217,7 +217,6 @@ const AppContextProvider = ({ children }) => {
     };
 
     const initializePushSDK = async () => {
-        console.log("Initialising Push Sdk");
         let userInstance;
         try {
             const librarySigner = provider?.getSigner(account);
@@ -245,10 +244,8 @@ const AppContextProvider = ({ children }) => {
     };
 
     const getUser = async () => {
-        console.debug("getUser");
         const caip10: string = w2wHelper.walletToCAIP10({ account });
         const user = await userPushSDKInstance.info();
-        console.log("User push sdk instance", userPushSDKInstance, user);
         let connectedUser: ConnectedUser;
 
         // TODO: Change this to do verification on ceramic to validate if did is valid
@@ -291,7 +288,7 @@ const AppContextProvider = ({ children }) => {
 
     useEffect(() => {
         const librarySigner = provider?.getSigner(account);
-        if (!account || !appConfig?.appEnv) return;
+        // if (!account || !appConfig?.appEnv) return;
         if (wallet?.accounts?.length > 0) {
             initializePushSDK();
         } else {

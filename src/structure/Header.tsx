@@ -25,6 +25,7 @@ import Profile from 'primaries/Profile';
 import { Button, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
 import { ReactComponent as EPNSLogoDark } from './assets/epnsDark.svg';
 import { ReactComponent as EPNSLogoLight } from './assets/epnsLight.svg';
+import { GlobalContext, ReadOnlyWalletMode } from 'contexts/GlobalContext';
 
 // Internal Configs
 import ChainIndicator from 'components/ChainIndicator';
@@ -71,7 +72,8 @@ function Header({ isDarkMode, darkModeToggle }) {
   const navRef = useRef()
 
   const { navigationSetup } = useContext(NavigationContext);
-  const {  setSnapInstalled, snapInstalled } = React.useContext(AppContext);
+  const { setSnapInstalled, snapInstalled } = React.useContext(AppContext);
+  const { mode } = React.useContext(GlobalContext);
   const { isActive, switchChain, connect, wallet } = useAccount();
   const { authError: error } = useContext(ErrorContext);
 
@@ -205,7 +207,7 @@ function Header({ isDarkMode, darkModeToggle }) {
       </ItemH>
 
       <ItemH justify="flex-end">
-        {headerTag && isActive && !error && !isSnapPage && (
+        {headerTag && !error && !isSnapPage && (
           <HeaderTag align="flex-start" overflow="hidden">
             <Span
               textTransform="capitalize"
@@ -219,10 +221,10 @@ function Header({ isDarkMode, darkModeToggle }) {
           </HeaderTag>
         )}
 
-        <Suspense fallback={<Spinner size={24} color={GLOBALS.COLORS.PRIMARY_PINK} type={LOADER_SPINNER_TYPE.PROCESSING}/>}>
+        <Suspense fallback={<Spinner size={24} color={GLOBALS.COLORS.PRIMARY_PINK} type={LOADER_SPINNER_TYPE.PROCESSING} />}>
           {!showSnapMobile && !snapInstalled && <SnapHeader />}
         </Suspense>
-        
+
 
         {isActive && !showLoginControls && !error && (
           <DarkModeSwitch
@@ -261,7 +263,8 @@ function Header({ isDarkMode, darkModeToggle }) {
           )}{' '} */}
 
           <RightBarDesktop justify="flex-end" flex="initial">
-            <ChainIndicator isDarkMode={isDarkMode} />
+            {/* //TODO: The chain Indicator should be removed in guest mode */}
+            {mode !== ReadOnlyWalletMode.GUEST_MODE && <ChainIndicator isDarkMode={isDarkMode} />}
             <Profile isDarkMode={isDarkMode} />
           </RightBarDesktop>
         </ItemH>

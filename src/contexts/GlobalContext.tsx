@@ -17,8 +17,8 @@ export type GlobalContextType = {
 export const GlobalContext = createContext<GlobalContextType | null>(null);
 
 const GlobalContextProvider = ({ children }) => {
-  const [readOnlyWallet, setReadOnlyWallet] = useState<string>();
-  const [mode, setMode] = useState<ReadOnlyWalletMode>();
+  const [readOnlyWallet, setReadOnlyWallet] = useState<string>('0x0000000000000000000000000000000000000000');
+  const [mode, setMode] = useState<ReadOnlyWalletMode>(ReadOnlyWalletMode.GUEST_MODE);
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
 
   return (

@@ -34,7 +34,7 @@ export const web3Onboard = Onboard({
     disableClose: false,
   },
   containerElements: {
-    connectModal: "#onboard-container"
+    // connectModal: "#onboard-container"
   },
   wallets: [injected, walletConnect, coinbase],
   chains: chains,

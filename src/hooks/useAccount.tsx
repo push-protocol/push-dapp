@@ -42,7 +42,7 @@ export const useAccount = () => {
   const chainId = useMemo(() => {
     if(connectedChain) return Number(connectedChain.id);
     if(readOnlyWallet) return appConfig.coreContractChain;
-    return undefined;
+    return appConfig.coreContractChain;
   }, [connectedChain, readOnlyWallet]);
 
   return {
