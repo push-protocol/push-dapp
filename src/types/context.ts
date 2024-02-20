@@ -60,4 +60,5 @@ export interface AppContextType {
   displayQR: boolean;
   setDisplayQR: (displayQR: boolean) => void;
   createUserIfNecessary: () => Promise<ConnectedUser>;
+  initialisePushSdkReadMode:()=>Promise<void>;
 }

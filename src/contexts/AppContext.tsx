@@ -55,7 +55,7 @@ const AppContextProvider = ({ children }) => {
 
     const dispatch = useDispatch();
 
-    const handleConnectWallet = (showToast = false, toastMessage?: string) => {
+    const handleConnectWallet = async (showToast = false, toastMessage?: string) => {
         if (showToast) {
             web3onboardToast.showMessageToast({
                 toastMessage: toastMessage || "Please connect your wallet to continue",
@@ -65,33 +65,13 @@ const AppContextProvider = ({ children }) => {
             });
         }
 
-        const onboardModal = document.getElementById("onboard-container");
-        onboardModal.style.display = 'block';
-        // Open the onboard modal
-        connect();
 
-        // Create a resize observer to detect when the onboard modal is rendered
-        const observer = new ResizeObserver(() => {
-            const sectionElement = document.querySelector('onboard-v2')?.shadowRoot?.querySelector('.svelte-baitaa');
-            const divElement = sectionElement?.querySelector('div');
-            if (divElement) {
-                // Disconnect the observer once the divElement is found
-                observer.unobserve(onboardModal);
-                observer.disconnect();
+        if (wallet?.accounts?.length > 0) {
+            await initializePushSDK();
+        } else {
+            connect();
+        }
 
-                // Apply custom styles
-                divElement.style.position = 'fixed';
-                divElement.style.top = '0px';
-                divElement.style.right = '0px';
-                divElement.style.height = '100vh';
-                divElement.style.left = '0px';
-                divElement.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
-                divElement.style.backdropFilter = 'blur(5px)';
-            }
-        });
-
-        // Start observing the DOM for changes
-        observer.observe(onboardModal);
     }
 
 
@@ -362,7 +342,8 @@ const AppContextProvider = ({ children }) => {
             setConnectedPeerID,
             displayQR,
             setDisplayQR,
-            createUserIfNecessary
+            createUserIfNecessary,
+            initialisePushSdkReadMode
         }}>
             {children}
         </AppContext.Provider>
