@@ -9,7 +9,7 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import { ReactComponent as MinusCircle } from 'assets/PushSnaps/MinusCircle.svg';
-import InfoImage from "assets/info.svg";
+import InfoImage from 'assets/info.svg';
 import { Button } from 'components/SharedStyling';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
@@ -18,7 +18,6 @@ import { useAccount } from 'hooks';
 
 // Internal Configs
 import { device } from 'config/Globals';
-
 
 const PushSnapConfigureModal = () => {
   const [walletAddresses, setWalletAddresses] = useState([]);
@@ -47,7 +46,7 @@ const PushSnapConfigureModal = () => {
       setToggleStatus(res);
     })();
   }, [toggleStatus]);
-  
+
   useEffect(() => {
     getWalletAddresses();
   }, []);
@@ -55,12 +54,16 @@ const PushSnapConfigureModal = () => {
   async function getSignature(mode: number) {
     if (mode == 1) {
       const signer = provider.getSigner(account);
-      const signature = await signer.signMessage(`Add address ${account} to receive notifications via Push Snap in MetaMask`);
+      const signature = await signer.signMessage(
+        `Add address ${account} to receive notifications via Push Snap in MetaMask`
+      );
       return signature;
     }
     if (mode == 2) {
       const signer = provider.getSigner(account);
-      const signature = await signer.signMessage(`Remove address ${account} to stop receive notifications via Push Snap in MetaMask`);
+      const signature = await signer.signMessage(
+        `Remove address ${account} to stop receive notifications via Push Snap in MetaMask`
+      );
       return signature;
     }
   }
@@ -107,7 +110,7 @@ const PushSnapConfigureModal = () => {
 
   const removeWalletAddresses = async (walletSelected: string) => {
     const signatureResult = await getSignature(2);
-    console.log("Ran",signatureResult)
+    console.log('Ran', signatureResult);
     if (signatureResult) {
       if (walletSelected) {
         await window.ethereum?.request({
@@ -137,7 +140,7 @@ const PushSnapConfigureModal = () => {
     });
     console.debug('result', result);
     setAddresses(result);
-  }
+  };
 
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => {
@@ -150,14 +153,16 @@ const PushSnapConfigureModal = () => {
 
   const handleWalletSelect = (address) => {
     setWalletSelected(address);
-  }
+  };
 
   return (
-    <Container >
-      <ItemVV2
+    <Container>
+      <ItemHV2
         alignItems="baseline"
         margin="24px 0 0 0"
-        padding='0 9px 0 0'
+        padding="0 9px 0 0"
+        Gap="8px"
+        justifyContent="flex-start"
       >
         <PrimaryText>Notification Address</PrimaryText>
         <SecondaryText>Add or remove wallet address to receive notifications</SecondaryText>
@@ -169,54 +174,56 @@ const PushSnapConfigureModal = () => {
           }}
           placeholder="0x123 .... 4567"
         />
-        <ItemHV2
-          margin="14px 0 0 0"
-          justifyContent="end"
-          gap="5px"
-        >
-          <FilledButton
-            onClick={addWalletAddresses}
+
+        <FilledButton
+          onClick={addWalletAddresses}
           // onClick={addAddresses}
-          >Add</FilledButton>
-        </ItemHV2>
-      </ItemVV2>
-
-
+        >
+          Add
+        </FilledButton>
+      </ItemHV2>
 
       <AddressesContainer ref={containerRef}>
         {addresses?.map((wallet) => (
           <AddressesSubContainer>
-            <SpanV2 fontSize='15px' fontWeight='500' color={walletSelected === wallet ? '#D53A94' : theme.default.color}>{shortenText(wallet, 8)}</SpanV2>
-            <MoreOptions  onClick={() => handleWalletSelect(wallet)} color={theme.default.color} />
+            <SpanV2
+              fontSize="15px"
+              fontWeight="500"
+              color={walletSelected === wallet ? '#D53A94' : theme.default.color}
+            >
+              {shortenText(wallet, 8)}
+            </SpanV2>
+            <MoreOptions
+              onClick={() => handleWalletSelect(wallet)}
+              color={theme.default.color}
+            />
 
-            {walletSelected === wallet && <RemoveDiv >
-              <MinusCircle />
-              <SpanV2 fontSize='16px' cursor='pointer' fontWeight='400' color='#657795' onClick={() => removeWalletAddresses(walletSelected)}>Remove</SpanV2>
-            </RemoveDiv>
-            }
+            {walletSelected === wallet && (
+              <RemoveDiv>
+                <MinusCircle />
+                <SpanV2
+                  fontSize="16px"
+                  cursor="pointer"
+                  fontWeight="400"
+                  color="#657795"
+                  onClick={() => removeWalletAddresses(walletSelected)}
+                >
+                  Remove
+                </SpanV2>
+              </RemoveDiv>
+            )}
           </AddressesSubContainer>
         ))}
       </AddressesContainer>
 
-
-      <ItemVV2
-        alignItems="flex-start"
+      <ItemHV2
+        alignItems="space-between"
         margin="24px 0 0 0"
-
       >
-        <ItemHV2 justifyContent='flex-start'>
-          <PrimaryText>
-            Snooze Notification Pop-ups
-          </PrimaryText>
-
-          <InfoToolTip />
+        <ItemHV2 justifyContent="flex-start">
+          <PrimaryText>Snooze Notifications</PrimaryText>{' '}
         </ItemHV2>
-
-        <ItemHV2
-          justifyContent="flex-start"
-          margin="15px 0 0 0"
-          gap="8px"
-        >
+        <ItemHV2 margin="0 0 0 160px">
           <Switch
             onChange={handleChange}
             checked={toggleStatus > 40}
@@ -235,16 +242,20 @@ const PushSnapConfigureModal = () => {
             {toggleStatus > 40 ? 'On' : 'Off'}
           </SpanV2>
         </ItemHV2>
-      </ItemVV2>
-    </Container >
+
+        <ItemHV2 justifyContent="flex-start">
+          <SecondaryText>
+            When snooze is enabled, you won't receive notifications for <br /> a specified period of time.
+          </SecondaryText>
+        </ItemHV2>
+      </ItemHV2>
+    </Container>
   );
 };
 
 export default PushSnapConfigureModal;
 
 const InfoToolTip = () => {
-
-
   return (
     <Tooltip
       wrapperProps={{
@@ -255,7 +266,7 @@ const InfoToolTip = () => {
       }}
       placementProps={{
         background: 'none',
-        bottom: "20px",
+        bottom: '20px',
         // top: '20px',
         // right: "-175px",
         left: '5px',
@@ -266,36 +277,33 @@ const InfoToolTip = () => {
         </ToolTipContainer>
       }
     >
-      <ItemVV2 margin='0 0 0 5px'>
+      <ItemVV2 margin="0 0 0 5px">
         <ImageInfo src={InfoImage} />
       </ItemVV2>
     </Tooltip>
-
-  )
-}
+  );
+};
 
 const Container = styled(ItemVV2)`
   padding: 0px 0px 12px 9px;
 `;
 
 const ToolTipContainer = styled(ItemVV2)`
-box-sizing: border-box;
-width: 18.75rem;
-// height: 7.5rem;
-// max-height: 7.5rem;
-background: ${(props) => props.theme.default.bg};
-border-radius: 1rem 1rem 1rem 0.125rem;
-justify-content: flex-start;
-border: 1px solid rgba(173, 176, 190, 0.2);
-align-items: flex-start;
-padding: 0.75rem 0.25rem 0.75rem 1rem;
-box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  width: 18.75rem;
+  // height: 7.5rem;
+  // max-height: 7.5rem;
+  background: ${(props) => props.theme.default.bg};
+  border-radius: 1rem 1rem 1rem 0.125rem;
+  justify-content: flex-start;
+  border: 1px solid rgba(173, 176, 190, 0.2);
+  align-items: flex-start;
+  padding: 0.75rem 0.25rem 0.75rem 1rem;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
 
-@media (max-width:400px){
-  width:16.75rem;
-}
-
-
+  @media (max-width: 400px) {
+    width: 16.75rem;
+  }
 `;
 
 const PrimaryText = styled.p`
@@ -303,16 +311,19 @@ const PrimaryText = styled.p`
   font-size: 18px;
   font-weight: 500;
   align-self: baseline;
-  color:${(props) => props.theme.modalMessageColor};
+  color: ${(props) => props.theme.modalMessageColor};
 `;
 
 const SecondaryText = styled.p`
   margin: 0px;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 400;
   line-height: 24px;
   text-align: left;
-  color:${(props) => props.theme.snapSecondaryText};
+  overflow: hidden;
+  text-overflow: ellipsis; // Show ellipsis (...) when text overflows
+
+  color: ${(props) => props.theme.snapSecondaryText};
 `;
 
 const ToolTipText = styled.p`
@@ -323,25 +334,27 @@ const ToolTipText = styled.p`
   color: #62626a;
   color: ${(props) => props.theme.modalMessageColor};
   text-align: left;
-`
+`;
 
 const SnapButton = styled(Button)`
-align-self: end;
-height: 36px;
-z-index: 0;
-font-family: 'Strawford';
-font-style: normal;
-font-weight: 500;
-font-size: 14px;
-line-height: normal;
-border-radius: 8px;
-`
+  align-self: end;
+  height: 36px;
+  z-index: 0;
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: normal;
+  border-radius: 8px;
+`;
 
 const FilledButton = styled(SnapButton)`
   min-width: 79px;
   padding: 14px;
   background: #d53a94;
-  width: fit-content;
+  width: 79px;
+  height: 48px;
+  radius: 12px;
   color: #fff;
 `;
 
@@ -349,12 +362,12 @@ const EnptyButton = styled(SnapButton)`
   flex-direction: row;
   color: ${(props) => props.theme.default.secondaryColor};
   text-align: center;
-  width:auto;
+  width: auto;
   padding: 16px 24px;
   border: 1px solid #bac4d6;
   background: ${(props) => props.theme.default.bg};
   gap: 4px;
-`
+`;
 
 const ImageInfo = styled.img`
   margin-right: 5px;
@@ -369,10 +382,10 @@ const Input = styled.input`
   box-sizing: border-box;
   display: flex;
   flex: 1;
-  width: 100%;
+  width: 240px;
   height: 48px;
-  padding: 13px 16px;
-  margin: 10px 0px 0px;
+  padding: 13px 16px 13px 16px;
+  margin: 10px 3px 0px;
   background: ${(props) => props.theme.modalSearchBarBackground};
 
   border-radius: 12px;
@@ -394,15 +407,15 @@ const Input = styled.input`
 `;
 
 const AddressesContainer = styled.div`
-  display:flex;
-  flex-direction:column;
+  display: flex;
+  flex-direction: column;
   width: -webkit-fill-available;
   overflow-y: scroll;
   gap: 8px;
-  margin:8px 0 0 0;
+  margin: 8px 0 0 0;
   max-height: 250px;
   flex-wrap: nowrap;
-  padding:5px 5px 5px 0;
+  padding: 5px 5px 5px 0;
   &::-webkit-scrollbar-track {
     border-radius: 10px;
   }
@@ -422,7 +435,7 @@ const AddressesContainer = styled.div`
       color-stop(0.86, #cf1c84)
     );
   }
-`
+`;
 
 const AddressesSubContainer = styled(ItemHV2)`
   max-height: 42px;
@@ -430,18 +443,18 @@ const AddressesSubContainer = styled(ItemHV2)`
   border-radius: 12px;
   background: ${(props) => props.theme.snapBackground};
   justify-content: space-between;
-`
+`;
 
 const MoreOptions = styled(AiOutlineMore)`
-  width:24px;
-  height:24px;
-  cursor:pointer;
-`
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+`;
 
 const RemoveDiv = styled(ItemHV2)`
   border-radius: 12px;
-  border: 1px solid #BAC4D6;
-  background: #FFF;
+  border: 1px solid #bac4d6;
+  background: #fff;
   cursor: pointer;
   box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.05);
   padding: 8px 12px 8px 8px;
@@ -450,4 +463,4 @@ const RemoveDiv = styled(ItemHV2)`
   position: absolute;
   right: 0;
   top: 3px;
-`
+`;
