@@ -45,7 +45,6 @@ const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues })=>{
             >
               <MobileAddress>
                 {shortenText(dropdownValue?.title,3)}
-                <SpanV2 fontWeight='600' margin='0 0 0 2px'>{mode}</SpanV2>
               </MobileAddress>
             </Span>
            {dropdownValue?.invertedIcon && <Image

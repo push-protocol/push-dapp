@@ -252,9 +252,9 @@ function Header({ isDarkMode, darkModeToggle }) {
         )}
 
         <ItemH justify="flex-end" flex="initial">
-          {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>}
+          {/* {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>} */}
           {/* {!isActive && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>} */}
-          {!!error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>}
+          {/* {!!error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>} */}
           {/* {isActive && !showLoginControls && !error && (
             <RightBarDesktop justify="flex-end" flex="initial">
               <ChainIndicator isDarkMode={isDarkMode} />
@@ -264,7 +264,7 @@ function Header({ isDarkMode, darkModeToggle }) {
 
           <RightBarDesktop justify="flex-end" flex="initial">
             {/* //TODO: The chain Indicator should be removed in guest mode */}
-            {mode !== ReadOnlyWalletMode.GUEST_MODE && <ChainIndicator isDarkMode={isDarkMode} />}
+            {wallet?.accounts?.length > 0 && <ChainIndicator isDarkMode={isDarkMode} />}
             <Profile isDarkMode={isDarkMode} />
           </RightBarDesktop>
         </ItemH>

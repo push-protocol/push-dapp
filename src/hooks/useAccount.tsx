@@ -32,11 +32,10 @@ export const useAccount = () => {
 
   const account = useMemo(() => {
     if(wallet && wallet.accounts.length > 0) {
-      setReadOnlyWallet(undefined);
-      setMode(undefined);
       return ethers.utils.getAddress(wallet.accounts[0].address);
+    }else{
+      return readOnlyWallet;
     }
-    return readOnlyWallet;
   }, [wallet, readOnlyWallet]);
 
   const chainId = useMemo(() => {
@@ -54,7 +53,7 @@ export const useAccount = () => {
     setWalletModules,
     setPrimaryWallet,
     provider,
-    account : account ? account : readOnlyWallet,
+    account : account,
     chainId,
     isActive,
     setChain,

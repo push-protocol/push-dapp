@@ -74,13 +74,9 @@ const Profile = ({ isDarkMode }) => {
       id: 'disconnect',
       value: '',
       function: async () => {
-        if (readOnlyWallet) {
-          setReadOnlyWallet('0x0000000000000000000000000000000000000000');
-        } else {
-          await disconnect(wallet);
-          setMode(ReadOnlyWalletMode.GUEST_MODE);
-          setReadOnlyWallet('0x0000000000000000000000000000000000000000');
-        }
+        await disconnect(wallet);
+        setMode(ReadOnlyWalletMode.GUEST_MODE);
+        setReadOnlyWallet('0x0000000000000000000000000000000000000000');
       },
       title: 'Logout',
       invertedIcon: './logout.svg',
@@ -103,7 +99,7 @@ const Profile = ({ isDarkMode }) => {
       {account && account != '' && !authError ? (
         <Body>
 
-          {mode === ReadOnlyWalletMode.GUEST_MODE ? (
+          {!(wallet?.accounts?.length > 0) ? (
             <Wallet
               bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
               color='#FFF'
@@ -132,7 +128,7 @@ const Profile = ({ isDarkMode }) => {
                 ) : (
                   <>{shortenText(account, 5)}</>
                 )}
-                <SpanV2 fontWeight='600' margin='0 0 0 2px'>{mode ? mode : userPushSDKInstance?.readMode && ReadOnlyWalletMode.READ_ONLY_MODE}</SpanV2>
+                <SpanV2 fontWeight='600' margin='0 0 0 2px'>{!(wallet?.accounts?.length > 0) ? ReadOnlyWalletMode.GUEST_MODE : userPushSDKInstance?.readMode && ReadOnlyWalletMode.READ_ONLY_MODE}</SpanV2>
                 <ToggleArrowImg filter={isDarkMode ? theme.snackbarBorderIcon : 'brightness(0) invert(1)'}>
                   <img
                     alt="arrow"

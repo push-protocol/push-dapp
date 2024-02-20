@@ -30,6 +30,7 @@ import NewTag from 'components/NewTag';
 import GLOBALS from 'config/Globals';
 import { appConfig } from '../../config';
 import { useAccount } from 'hooks';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 
 const createGroupOnMouseEnter = [
@@ -67,6 +68,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   const theme = useTheme();
 
   const { setSelectedChatId } = useContext(Context);
+  const { setMode } = useContext(GlobalContext);
 
   const isNewTagVisible = getIsNewTagVisible(new Date('2023-02-22T00:00:00.000'), 90);
 
