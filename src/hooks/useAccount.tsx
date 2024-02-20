@@ -1,6 +1,6 @@
 import { useConnectWallet, useSetChain } from '@web3-onboard/react';
 import { appConfig } from 'config';
-import { GlobalContext } from 'contexts/GlobalContext';
+import { GlobalContext, ReadOnlyWalletMode } from 'contexts/GlobalContext';
 import { ethers } from 'ethers';
 import { useContext, useMemo } from 'react';
 

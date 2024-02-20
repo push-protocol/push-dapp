@@ -75,9 +75,11 @@ const Profile = ({ isDarkMode }) => {
       value: '',
       function: async () => {
         if (readOnlyWallet) {
-          setReadOnlyWallet('');
+          setReadOnlyWallet('0x0000000000000000000000000000000000000000');
         } else {
           await disconnect(wallet);
+          setMode(ReadOnlyWalletMode.GUEST_MODE);
+          setReadOnlyWallet('0x0000000000000000000000000000000000000000');
         }
       },
       title: 'Logout',

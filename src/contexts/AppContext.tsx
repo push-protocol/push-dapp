@@ -23,7 +23,6 @@ export const AppContext = createContext<AppContextType | null>(null);
 const AppContextProvider = ({ children }) => {
     const { connect, provider, account, wallet, connecting } = useAccount();
     const web3onboardToast = useToast();
-    const { setReadOnlyWallet, readOnlyWallet, setMode } = useContext(GlobalContext);
 
     const [web3NameList, setWeb3NameList] = useState<Web3NameListType>({});
     const [snapInstalled, setSnapInstalled] = useState(false);
@@ -98,10 +97,21 @@ const AppContextProvider = ({ children }) => {
 
 
     const initialisePushSdkGuestMode = async () => {
+        console.log("Initialising Push SDK Guest Mode");
         let userInstance;
         userInstance = await PushAPI.initialize({
             account: '0x0000000000000000000000000000000000000000',
             env: appConfig.appEnv,
+        });
+        dispatch(setUserPushSDKInstance(userInstance));
+    }
+
+    const initialisePushSdkReadMode = async () => {
+        console.log("Initialising Push SDK Read Mode");
+        let userInstance;
+        userInstance = await PushAPI.initialize({
+            env: appConfig.appEnv,
+            account: account,
         });
         dispatch(setUserPushSDKInstance(userInstance));
     }
@@ -220,8 +230,8 @@ const AppContextProvider = ({ children }) => {
         let userInstance;
         try {
             const librarySigner = provider?.getSigner(account);
-            userInstance = await PushAPI.initialize(librarySigner, {
-                env: appConfig.appEnv,  // defaults to staging
+            userInstance = await PushAPI.initialize(librarySigner!,{
+                env: appConfig.appEnv,
                 account: account,
                 progressHook: onboardingProgressReformatter,
             });
@@ -290,7 +300,7 @@ const AppContextProvider = ({ children }) => {
         const librarySigner = provider?.getSigner(account);
         // if (!account || !appConfig?.appEnv) return;
         if (wallet?.accounts?.length > 0) {
-            initializePushSDK();
+            initialisePushSdkReadMode();
         } else {
             initialisePushSdkGuestMode();
         }
