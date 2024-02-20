@@ -29,6 +29,7 @@ import NewTag from 'components/NewTag';
 // Internal Configs
 import GLOBALS from 'config/Globals';
 import { appConfig } from '../../config';
+import { useAccount } from 'hooks';
 
 
 const createGroupOnMouseEnter = [
@@ -69,7 +70,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
 
   const isNewTagVisible = getIsNewTagVisible(new Date('2023-02-22T00:00:00.000'), 90);
 
-  const { connectedUser, displayQR, setDisplayQR, initializePushSDK } = useContext(AppContext);
+  const { connectedUser, displayQR, setDisplayQR, initializePushSDK, handleConnectWallet } = useContext(AppContext);
   const [searchedUser, setSearchedUser] = useState<string>('');
 
   const { activeTab, setActiveTab } = useContext(Context);
@@ -100,8 +101,12 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
       }
       return formattedChatParticipant;
     } else {
-      await initializePushSDK();
-      return null;
+      if (userPushSDKInstance.account === '0x0000000000000000000000000000000000000000') {
+        handleConnectWallet();
+      } else if (userPushSDKInstance.signer === undefined || userPushSDKInstance.decryptedPgpPvtKey === undefined) {
+        await initializePushSDK();
+        return null;
+      }
     }
   }
 
@@ -109,7 +114,14 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
     if (userPushSDKInstance.decryptedPgpPvtKey) {
       showCreateGroupModal();
     } else {
-      await initializePushSDK();
+      if (userPushSDKInstance.account === '0x0000000000000000000000000000000000000000') {
+        handleConnectWallet();
+      } else {
+        if (userPushSDKInstance.signer === undefined) {
+          await initializePushSDK();
+          return null;
+        }
+      }
     }
   }
 

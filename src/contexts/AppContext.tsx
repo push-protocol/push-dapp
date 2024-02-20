@@ -5,7 +5,7 @@ import { ProgressHookType, PushAPI } from '@pushprotocol/restapi';
 
 
 // Internal Components
-import { AppContextType, BlockedLoadingI, ConnectedPeerIDType, LocalPeerType, Web3NameListType, onboardingProgressI } from "types/context"
+import { AppContextType, BlockedLoadingI, ConnectedPeerIDType, LocalPeerType, onboardingProgressI, Web3NameListType } from "types/context"
 import { useAccount } from "hooks";
 import { appConfig } from "config";
 import { useDispatch, useSelector } from "react-redux";
@@ -125,7 +125,7 @@ const AppContextProvider = ({ children }) => {
             hookInfo: progressHook,
             spinnerType: LOADER_SPINNER_TYPE.PROCESSING,
             progress: 0,
-            errorMessage:''
+            errorMessage: ''
         };
 
         if (progressHook) {
@@ -194,17 +194,17 @@ const AppContextProvider = ({ children }) => {
                     onboardingProgress.progress = 99;
                     break;
                 case "PUSH-ERROR-00":
-                    onboardingProgress.errorMessage="User Rejected Signature";
+                    onboardingProgress.errorMessage = "User Rejected Signature";
                     onboardingProgress.hookInfo.progressTitle = "User Rejected Signature";
                     onboardingProgress.spinnerType = LOADER_SPINNER_TYPE.ERROR;
                     break;
                 case "PUSH-ERROR-01":
-                    onboardingProgress.errorMessage="Upgrade Failed";
+                    onboardingProgress.errorMessage = "Upgrade Failed";
                     onboardingProgress.hookInfo.progressTitle = "Upgrade Failed";
                     onboardingProgress.spinnerType = LOADER_SPINNER_TYPE.ERROR;
                     break;
                 case "PUSH-ERROR-02":
-                    onboardingProgress.errorMessage="Decrypting Keys Failed";
+                    onboardingProgress.errorMessage = "Decrypting Keys Failed";
                     onboardingProgress.hookInfo.progressTitle = "Decrypting Keys Failed";
                     onboardingProgress.spinnerType = LOADER_SPINNER_TYPE.ERROR;
                     break;
@@ -221,7 +221,7 @@ const AppContextProvider = ({ children }) => {
             progressEnabled: onboardingProgress.progress ? true : false,
             progress: onboardingProgress.progress,
             progressNotice: onboardingProgress.hookInfo.progressInfo,
-            errorMessage:onboardingProgress.errorMessage,
+            errorMessage: onboardingProgress.errorMessage,
         });
 
     };
@@ -230,7 +230,7 @@ const AppContextProvider = ({ children }) => {
         let userInstance;
         try {
             const librarySigner = provider?.getSigner(account);
-            userInstance = await PushAPI.initialize(librarySigner!,{
+            userInstance = await PushAPI.initialize(librarySigner!, {
                 env: appConfig.appEnv,
                 account: account,
                 progressHook: onboardingProgressReformatter,

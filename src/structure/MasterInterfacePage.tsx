@@ -4,7 +4,7 @@ import React, { lazy, Suspense } from 'react';
 // External Packages
 import { VscClose } from 'react-icons/vsc';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled from 'styled-components';
 import { MdError } from 'react-icons/md';
@@ -104,13 +104,13 @@ function MasterInterfacePage() {
           <Routes>
             <Route path={APP_PATHS.Inbox} element={<InboxPage />} />
             <Route path={APP_PATHS.Spam} element={<InboxPage />} />
-            <Route element={<ConnectedWalletRoute />}>
+            {/* <Route element={<ConnectedWalletRoute />}> */}
               <Route path={`${APP_PATHS.Chat}/:chatid`} element={<ChatPage />} />
               <Route path={APP_PATHS.Chat} element={<ChatPage />} />
               <Route path={`${APP_PATHS.Spaces}/:spaceid`} element={<SpacePage />} />
               <Route path={APP_PATHS.Spaces} element={<SpacePage />} />
               {/* <Route path="chat-new" element={<NewChatPage />} /> */}
-            </Route>
+            {/* </Route> */}
 
             <Route
               path={APP_PATHS.Channels}
