@@ -15,20 +15,18 @@ import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { shortenText } from 'helpers/UtilityHelper';
 import { useAccount } from 'hooks';
-import { AppContext } from 'contexts/AppContext';
 
 // Internal Configs
 import { device } from 'config/Globals';
-import EnableSnoozeModal from './EnableSnoozeModal';
 
-const PushSnapConfigureModal = () => {
+const EnableSnoozeModal = () => {
   const [walletAddresses, setWalletAddresses] = useState([]);
   const [addresses, setAddresses] = useState([]);
   const [searchedUser, setSearchedUser] = useState('');
+  const [snoozeDuration, setSnoozeDuration] = useState('');
+  const [snooze, setSnooze] = useState('');
   const [showRemove, setShowRemove] = useState();
   const [toggleStatus, setToggleStatus] = useState(0);
-  const { setSnapState, SnapState } = React.useContext(AppContext);
-
   const theme = useTheme();
 
   const defaultSnapOrigin = 'npm:@pushprotocol/snap';
@@ -96,13 +94,28 @@ const PushSnapConfigureModal = () => {
   };
 
   const [checked, setChecked] = useState(false);
-
   const handleChange = async (nextChecked) => {
     setChecked(nextChecked);
-
+    const duration = parseInt(snoozeDuration);
+    if (duration >= 1 && duration <= 72) {
+      console.log(
+        await window.ethereum?.request({
+          method: 'wallet_invokeSnap',
+          params: {
+            snapId: defaultSnapOrigin,
+            request: {
+              method: 'pushproto_setsnoozeduration',
+              params: { snoozeDuration: snoozeDuration },
+            },
+          },
+        })
+      );
+    } else {
+      // Display an error message if the input is invalid
+      console.error('Invalid input. Please enter a number between 1 and 72.');
+    }
     if (toggleStatus < 40) {
       setToggleStatus(42);
-      setSnapState(4); // This sets the state to show the EnableSnoozeModal
     } else {
       setToggleStatus(0);
     }
@@ -164,138 +177,38 @@ const PushSnapConfigureModal = () => {
         Gap="8px"
         justifyContent="flex-start"
       >
-        <PrimaryText>Notification Address</PrimaryText>
-        <SecondaryText>Add or remove wallet address to receive notifications</SecondaryText>
+        <PrimaryText>Set Snooze Duration</PrimaryText>
+        <SecondaryText>
+          How long would you like to snooze notifications? You can snooze for 1 to 72 hours.
+        </SecondaryText>
         <Input
           type="text"
-          value={searchedUser}
+          value={snoozeDuration}
           onChange={(e) => {
-            setSearchedUser(e.target.value);
-          }}
-          placeholder="0x123 .... 4567"
-        />
+            const duration = parseInt(snoozeDuration);
 
-        <FilledButton
-          onClick={addWalletAddresses}
-        >
-          Add
-        </FilledButton>
+            duration < 1 || duration > 72
+              ? alert('Invalid. Enter a number between 1 & 72')
+              : setSnoozeDuration(e.target.value);
+          }}
+          placeholder="Snooze duration in Hours (e.g. 6)"
+        />
       </ItemHV2>
 
-      <AddressesContainer ref={containerRef}>
-        {addresses?.map((wallet) => (
-          <AddressesSubContainer>
-            <SpanV2
-              fontSize="15px"
-              fontWeight="500"
-              color={walletSelected === wallet ? '#D53A94' : theme.default.color}
-            >
-              {shortenText(wallet, 8)}
-            </SpanV2>
-            <MoreOptions
-              onClick={() => handleWalletSelect(wallet)}
-              color={theme.default.color}
-            />
-
-            {walletSelected === wallet && (
-              <RemoveDiv>
-                <MinusCircle />
-                <SpanV2
-                  fontSize="16px"
-                  cursor="pointer"
-                  fontWeight="400"
-                  color="#657795"
-                  onClick={() => removeWalletAddresses(walletSelected)}
-                >
-                  Remove
-                </SpanV2>
-              </RemoveDiv>
-            )}
-          </AddressesSubContainer>
-        ))}
-      </AddressesContainer>
-
       <ItemHV2
-        alignItems="space-between"
+        //   justifyContent="place-content-center"
+
         margin="24px 0 0 0"
       >
-        <ItemHV2 justifyContent="flex-start">
-          <PrimaryText>Snooze Notifications</PrimaryText>{' '}
-        </ItemHV2>
-        <ItemHV2 margin="0 0 0 160px">
-          <Switch
-            onChange={handleChange}
-            checked={toggleStatus > 40}
-            className="react-switch"
-            uncheckedIcon={false}
-            checkedIcon={false}
-            height={23}
-            onColor="#D53A94"
-            width={44}
-          />
-          <SpanV2
-            fontSize="18px"
-            fontWeight="500"
-            color={theme.modalMessageColor}
-          >
-            {toggleStatus > 40 ? (
-              <>
-                <ItemHV2
-                  alignItems="flex-start space-between"
-                  margin="24px 0 0 0"
-                >
-                  <ItemHV2 justifyContent="flex-start">
-                    <PrimaryText>Snooze Duration</PrimaryText>{' '}
-                  </ItemHV2>
-                  <ItemHV2 margin="0 0 0 160px">hours</ItemHV2>
-                </ItemHV2>
-              </>
-            ) : (
-              'Off'
-            )}
-          </SpanV2>
-        </ItemHV2>
+        <EnptyButton>Cancel </EnptyButton>
 
-        <ItemHV2 justifyContent="flex-start">
-          <SecondaryText>
-            When snooze is enabled, you won't receive notifications for <br /> a specified period of time.
-          </SecondaryText>
-        </ItemHV2>
+        <FilledButton onClick={handleChange}> Enable Snooze </FilledButton>
       </ItemHV2>
     </Container>
   );
 };
 
-export default PushSnapConfigureModal;
-
-const InfoToolTip = () => {
-  return (
-    <Tooltip
-      wrapperProps={{
-        width: 'fit-content',
-        maxWidth: 'fit-content',
-        minWidth: 'fit-content',
-        // zIndex: "10",
-      }}
-      placementProps={{
-        background: 'none',
-        bottom: '20px',
-        // top: '20px',
-        // right: "-175px",
-        left: '5px',
-      }}
-      tooltipContent={
-        <ToolTipContainer>
-          <ToolTipText>Toggle popups in case of frequent incoming notifications</ToolTipText>
-        </ToolTipContainer>
-      }
-    >
-      <ItemVV2 margin="0 0 0 5px">
-        <ImageInfo src={InfoImage} />
-      </ItemVV2>
-    </Tooltip>
-  );
-};
+export default EnableSnoozeModal;
 
 const Container = styled(ItemVV2)`
   padding: 0px 0px 12px 9px;
@@ -365,18 +278,22 @@ const FilledButton = styled(SnapButton)`
   min-width: 79px;
   padding: 14px;
   background: #d53a94;
-  width: 79px;
+  width: 148px;
   height: 48px;
   radius: 12px;
+  padding: 0px 24px 0px 24px;
   color: #fff;
+  white-space: nowrap;
 `;
 
 const EnptyButton = styled(SnapButton)`
   flex-direction: row;
-  color: ${(props) => props.theme.default.secondaryColor};
+  color: black;
   text-align: center;
-  width: auto;
-  padding: 16px 24px;
+  width: 96px;
+  height: 48px;
+  padding: 0px 24px 0px 24px;
+  margin-right: 8px;
   border: 1px solid #bac4d6;
   background: ${(props) => props.theme.default.bg};
   gap: 4px;
