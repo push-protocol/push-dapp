@@ -175,11 +175,7 @@ const PushSnapConfigureModal = () => {
           placeholder="0x123 .... 4567"
         />
 
-        <FilledButton
-          onClick={addWalletAddresses}
-        >
-          Add
-        </FilledButton>
+        <FilledButton onClick={addWalletAddresses}>Add</FilledButton>
       </ItemHV2>
 
       <AddressesContainer ref={containerRef}>
@@ -219,42 +215,35 @@ const PushSnapConfigureModal = () => {
         alignItems="space-between"
         margin="24px 0 0 0"
       >
-        <ItemHV2 justifyContent="flex-start">
-          <PrimaryText>Snooze Notifications</PrimaryText>{' '}
-        </ItemHV2>
-        <ItemHV2 margin="0 0 0 160px">
-          <Switch
+       
+        <ItemHV2
+        alignItems="baseline"
+        margin="0 0 0 0"
+        padding="0 9px 0 0"
+        Gap="8px"
+        justifyContent="flex-start space-between"
+      >
+       
+            <ItemHV2 justifyContent="flex-start">
+              {' '}  <PrimaryText>Snooze Notifications</PrimaryText>{' '}  
+            </ItemHV2>
+
+            <ItemHV2 justifyContent="flex-end">
+              {' '}
+              <Switch
             onChange={handleChange}
-            checked={toggleStatus > 40}
+            checked={SnapState === 6}
             className="react-switch"
             uncheckedIcon={false}
             checkedIcon={false}
             height={23}
             onColor="#D53A94"
             width={44}
+            margin="0 0 0 0"
           />
-          <SpanV2
-            fontSize="18px"
-            fontWeight="500"
-            color={theme.modalMessageColor}
-          >
-            {toggleStatus > 40 ? (
-              <>
-                <ItemHV2
-                  alignItems="flex-start space-between"
-                  margin="24px 0 0 0"
-                >
-                  <ItemHV2 justifyContent="flex-start">
-                    <PrimaryText>Snooze Duration</PrimaryText>{' '}
-                  </ItemHV2>
-                  <ItemHV2 margin="0 0 0 160px">hours</ItemHV2>
-                </ItemHV2>
-              </>
-            ) : (
-              'Off'
-            )}
-          </SpanV2>
-        </ItemHV2>
+            </ItemHV2>
+         
+      </ItemHV2>
 
         <ItemHV2 justifyContent="flex-start">
           <SecondaryText>
@@ -262,40 +251,35 @@ const PushSnapConfigureModal = () => {
           </SecondaryText>
         </ItemHV2>
       </ItemHV2>
+
+      <ItemHV2
+        alignItems="baseline"
+        margin="24px 0 0 0"
+        padding="0 9px 0 0"
+        Gap="8px"
+        justifyContent="flex-start space-between"
+      >
+        {SnapState == 6 ? (
+          <>
+            <ItemHV2 justifyContent="flex-start">
+              {' '}
+              <PrimaryText>Snooze Duration</PrimaryText>{' '}
+            </ItemHV2>
+
+            <ItemHV2 justifyContent="flex-end">
+              {' '}
+              <SecondaryText> hours</SecondaryText>
+            </ItemHV2>
+          </>
+        ) : (
+          ''
+        )}
+      </ItemHV2>
     </Container>
   );
 };
 
 export default PushSnapConfigureModal;
-
-const InfoToolTip = () => {
-  return (
-    <Tooltip
-      wrapperProps={{
-        width: 'fit-content',
-        maxWidth: 'fit-content',
-        minWidth: 'fit-content',
-        // zIndex: "10",
-      }}
-      placementProps={{
-        background: 'none',
-        bottom: '20px',
-        // top: '20px',
-        // right: "-175px",
-        left: '5px',
-      }}
-      tooltipContent={
-        <ToolTipContainer>
-          <ToolTipText>Toggle popups in case of frequent incoming notifications</ToolTipText>
-        </ToolTipContainer>
-      }
-    >
-      <ItemVV2 margin="0 0 0 5px">
-        <ImageInfo src={InfoImage} />
-      </ItemVV2>
-    </Tooltip>
-  );
-};
 
 const Container = styled(ItemVV2)`
   padding: 0px 0px 12px 9px;

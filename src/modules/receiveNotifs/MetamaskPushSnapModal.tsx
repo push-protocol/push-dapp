@@ -91,6 +91,11 @@ const MetamaskPushSnapModal = ({ onClose, closeEnabled = true }: { onClose: () =
       {SnapState == 2 && <SnapInformationModal handleCloseModal={handleCloseModal} />}
       {SnapState == 3 && <PushSnapConfigureModal />}
       {SnapState == 4 && <EnableSnoozeModal setSnapState={setSnapState} />}
+      {SnapState == 6 && <PushSnapConfigureModal />}
+
+
+    
+      
     </Container>
   );
 };

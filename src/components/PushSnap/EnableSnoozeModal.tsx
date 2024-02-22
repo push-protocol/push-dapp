@@ -18,10 +18,13 @@ import { useAccount } from 'hooks';
 
 // Internal Configs
 import { device } from 'config/Globals';
+import { AppContext } from 'contexts/AppContext';
+
 
 const EnableSnoozeModal = () => {
   const [walletAddresses, setWalletAddresses] = useState([]);
   const [addresses, setAddresses] = useState([]);
+  const { setSnapState, SnapState } = React.useContext(AppContext);
   const [searchedUser, setSearchedUser] = useState('');
   const [snoozeDuration, setSnoozeDuration] = useState('');
   const [snooze, setSnooze] = useState('');
@@ -70,46 +73,31 @@ const EnableSnoozeModal = () => {
     }
   }
 
-  const addWalletAddresses = async () => {
-    console.debug('searchedUser', searchedUser);
-    const signatureResult = await getSignature(1);
-    if (signatureResult) {
-      if (searchedUser) {
-        await window.ethereum?.request({
-          method: 'wallet_invokeSnap',
-          params: {
-            snapId: defaultSnapOrigin,
-            request: {
-              method: 'pushproto_addaddress',
-              params: { address: searchedUser },
-            },
-          },
-        });
-        setSearchedUser('');
-        getWalletAddresses();
-      }
-    } else {
-      console.error('Signature Validation Failed');
-    }
-  };
+ 
 
   const [checked, setChecked] = useState(false);
   const handleChange = async (nextChecked) => {
     setChecked(nextChecked);
+    
     const duration = parseInt(snoozeDuration);
+    
     if (duration >= 1 && duration <= 72) {
       console.log(
-        await window.ethereum?.request({
-          method: 'wallet_invokeSnap',
-          params: {
-            snapId: defaultSnapOrigin,
-            request: {
-              method: 'pushproto_setsnoozeduration',
-              params: { snoozeDuration: snoozeDuration },
-            },
-          },
-        })
+        // await window.ethereum?.request({
+        //   method: 'wallet_invokeSnap',
+        //   params: {
+        //     snapId: defaultSnapOrigin,
+        //     request: {
+        //       method: 'pushproto_setsnoozeduration',
+        //       params: { snoozeDuration: snoozeDuration },
+        //     },
+        //   },
+        // })
       );
+
+      setSnapState(6);
+      
+      
     } else {
       // Display an error message if the input is invalid
       console.error('Invalid input. Please enter a number between 1 and 72.');
