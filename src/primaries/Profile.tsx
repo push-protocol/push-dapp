@@ -25,13 +25,13 @@ import { SpanV2 } from 'components/reusables/SharedStylingV2.js';
 
 // Create Header
 const Profile = ({ isDarkMode }) => {
-  const { web3NameList }: AppContextType = useContext(AppContext);
-  const { setReadOnlyWallet, readOnlyWallet, mode,setMode }: GlobalContextType = useContext(GlobalContext);
+  const { web3NameList,initialisePushSdkReadMode,handleConnectWallet }: AppContextType = useContext(AppContext);
+  const { setReadOnlyWallet, readOnlyWallet, mode, setMode }: GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
   const modalRef = React.useRef(null);
-  const { account, disconnect, wallet } = useAccount();
+  const { account, disconnect, wallet, connect } = useAccount();
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -74,11 +74,9 @@ const Profile = ({ isDarkMode }) => {
       id: 'disconnect',
       value: '',
       function: async () => {
-        if (readOnlyWallet) {
-          setReadOnlyWallet();
-        } else {
-          await disconnect(wallet);
-        }
+        await disconnect(wallet);
+        setMode(ReadOnlyWalletMode.GUEST_MODE);
+        setReadOnlyWallet('0x0000000000000000000000000000000000000000');
       },
       title: 'Logout',
       invertedIcon: './logout.svg',
@@ -89,61 +87,86 @@ const Profile = ({ isDarkMode }) => {
     setShowDropdown(false);
   });
 
+  
   // to create blockies
   return (
     <>
-      {account && account !== '' && !authError && (
+
+      {account && account != '' && !authError ? (
         <Body>
-          <Wallet
-            bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
-            color='#FFF'
-            isDarkMode={isDarkMode}
-            onClick={() => setShowDropdown(!showDropdown)}
-            ref={toggleArrowRef}
-          >
-            {web3Name === null ? (
-              <LoaderSpinner
-                type={LOADER_TYPE.SEAMLESS}
-                spinnerSize={20}
-                spinnerColor="#FFF"
-              />
-            ) : web3Name ? (
-              <>{web3Name}</>
-            ) : (
-              <>{shortenText(account, 5)}</>
-            )}
-            <SpanV2 fontWeight='600' margin='0 0 0 2px'>{mode ? mode : userPushSDKInstance?.readMode && ReadOnlyWalletMode.READ_ONLY_MODE }</SpanV2>
-            <ToggleArrowImg filter={isDarkMode ? theme.snackbarBorderIcon : 'brightness(0) invert(1)'}>
-              <img
-                alt="arrow"
-                className={`${showDropdown ? 'down' : 'up'}`}
-                src="/svg/arrow.svg"
-              />
-            </ToggleArrowImg>
-          </Wallet>
-          {showDropdown && (
-            <Item
-              position="absolute"
-              top="3.6rem"
-              right="-0.5rem"
-              ref={dropdownRef}
+
+          {!(wallet?.accounts?.length > 0) ? (
+            <Wallet
+              bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
+              color='#FFF'
+              isDarkMode={isDarkMode}
+              onClick={()=>handleConnectWallet()}
             >
-              <DropdownItem
-                align="flex-start"
-                ref={dropdownRef}
+              Connect Wallet
+            </Wallet>
+          ) : (
+            <>
+              <Wallet
+                bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
+                color='#FFF'
+                isDarkMode={isDarkMode}
+                onClick={() => setShowDropdown(!showDropdown)}
+                ref={toggleArrowRef}
               >
-                <Dropdown dropdownValues={dropdownValues} />
-              </DropdownItem>
-              <ItemModal ref={modalRef}>
-                <ProfileModal
-                  showDropdown={showDropdown}
-                  setShowDropdown={setShowDropdown}
-                  dropdownValues={dropdownValues}
-                />
-              </ItemModal>
-            </Item>
+                {web3Name === null ? (
+                  <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={20}
+                    spinnerColor="#FFF"
+                  />
+                ) : web3Name ? (
+                  <>{web3Name}</>
+                ) : (
+                  <>{shortenText(account, 5)}</>
+                )}
+                <SpanV2 fontWeight='600' margin='0 0 0 2px'>{!(wallet?.accounts?.length > 0) ? ReadOnlyWalletMode.GUEST_MODE : userPushSDKInstance?.readMode && ReadOnlyWalletMode.READ_ONLY_MODE}</SpanV2>
+                <ToggleArrowImg filter={isDarkMode ? theme.snackbarBorderIcon : 'brightness(0) invert(1)'}>
+                  <img
+                    alt="arrow"
+                    className={`${showDropdown ? 'down' : 'up'}`}
+                    src="/svg/arrow.svg"
+                  />
+                </ToggleArrowImg>
+              </Wallet>
+              {showDropdown && (
+                <Item
+                  position="absolute"
+                  top="3.6rem"
+                  right="-0.5rem"
+                  ref={dropdownRef}
+                >
+                  <DropdownItem
+                    align="flex-start"
+                    ref={dropdownRef}
+                  >
+                    <Dropdown dropdownValues={dropdownValues} />
+                  </DropdownItem>
+                  <ItemModal ref={modalRef}>
+                    <ProfileModal
+                      showDropdown={showDropdown}
+                      setShowDropdown={setShowDropdown}
+                      dropdownValues={dropdownValues}
+                    />
+                  </ItemModal>
+                </Item>
+              )}
+            </>
           )}
         </Body>
+      ) : (
+        <Wallet
+          bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
+          color='#FFF'
+          isDarkMode={isDarkMode}
+          onClick={()=>handleConnectWallet()}
+        >
+          Connect Wallet
+        </Wallet>
       )}
     </>
   );

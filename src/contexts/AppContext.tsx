@@ -5,7 +5,7 @@ import { ProgressHookType, PushAPI } from '@pushprotocol/restapi';
 
 
 // Internal Components
-import { AppContextType, BlockedLoadingI, ConnectedPeerIDType, LocalPeerType, Web3NameListType, onboardingProgressI } from "types/context"
+import { AppContextType, BlockedLoadingI, ConnectedPeerIDType, LocalPeerType, onboardingProgressI, Web3NameListType } from "types/context"
 import { useAccount } from "hooks";
 import { appConfig } from "config";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,7 +23,6 @@ export const AppContext = createContext<AppContextType | null>(null);
 const AppContextProvider = ({ children }) => {
     const { connect, provider, account, wallet, connecting } = useAccount();
     const web3onboardToast = useToast();
-    const { setReadOnlyWallet, readOnlyWallet, setMode } = useContext(GlobalContext);
 
     const [web3NameList, setWeb3NameList] = useState<Web3NameListType>({});
     const [snapInstalled, setSnapInstalled] = useState(false);
@@ -56,7 +55,7 @@ const AppContextProvider = ({ children }) => {
 
     const dispatch = useDispatch();
 
-    const handleConnectWallet = (showToast = false, toastMessage?: string) => {
+    const handleConnectWallet = async (showToast = false, toastMessage?: string) => {
         if (showToast) {
             web3onboardToast.showMessageToast({
                 toastMessage: toastMessage || "Please connect your wallet to continue",
@@ -66,42 +65,33 @@ const AppContextProvider = ({ children }) => {
             });
         }
 
-        const onboardModal = document.getElementById("onboard-container");
-        onboardModal.style.display = 'block';
-        // Open the onboard modal
-        connect();
 
-        // Create a resize observer to detect when the onboard modal is rendered
-        const observer = new ResizeObserver(() => {
-            const sectionElement = document.querySelector('onboard-v2')?.shadowRoot?.querySelector('.svelte-baitaa');
-            const divElement = sectionElement?.querySelector('div');
-            if (divElement) {
-                // Disconnect the observer once the divElement is found
-                observer.unobserve(onboardModal);
-                observer.disconnect();
+        if (wallet?.accounts?.length > 0) {
+            await initializePushSDK();
+        } else {
+            connect();
+        }
 
-                // Apply custom styles
-                divElement.style.position = 'fixed';
-                divElement.style.top = '0px';
-                divElement.style.right = '0px';
-                divElement.style.height = '100vh';
-                divElement.style.left = '0px';
-                divElement.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
-                divElement.style.backdropFilter = 'blur(5px)';
-            }
-        });
-
-        // Start observing the DOM for changes
-        observer.observe(onboardModal);
     }
 
 
 
     const initialisePushSdkGuestMode = async () => {
+        console.log("Initialising Push SDK Guest Mode");
         let userInstance;
         userInstance = await PushAPI.initialize({
-            account: readOnlyWallet,
+            account: '0x0000000000000000000000000000000000000000',
             env: appConfig.appEnv,
+        });
+        dispatch(setUserPushSDKInstance(userInstance));
+    }
+
+    const initialisePushSdkReadMode = async () => {
+        console.log("Initialising Push SDK Read Mode");
+        let userInstance;
+        userInstance = await PushAPI.initialize({
+            env: appConfig.appEnv,
+            account: account,
         });
         dispatch(setUserPushSDKInstance(userInstance));
     }
@@ -115,7 +105,7 @@ const AppContextProvider = ({ children }) => {
             hookInfo: progressHook,
             spinnerType: LOADER_SPINNER_TYPE.PROCESSING,
             progress: 0,
-            errorMessage:''
+            errorMessage: ''
         };
 
         if (progressHook) {
@@ -184,17 +174,17 @@ const AppContextProvider = ({ children }) => {
                     onboardingProgress.progress = 99;
                     break;
                 case "PUSH-ERROR-00":
-                    onboardingProgress.errorMessage="User Rejected Signature";
+                    onboardingProgress.errorMessage = "User Rejected Signature";
                     onboardingProgress.hookInfo.progressTitle = "User Rejected Signature";
                     onboardingProgress.spinnerType = LOADER_SPINNER_TYPE.ERROR;
                     break;
                 case "PUSH-ERROR-01":
-                    onboardingProgress.errorMessage="Upgrade Failed";
+                    onboardingProgress.errorMessage = "Upgrade Failed";
                     onboardingProgress.hookInfo.progressTitle = "Upgrade Failed";
                     onboardingProgress.spinnerType = LOADER_SPINNER_TYPE.ERROR;
                     break;
                 case "PUSH-ERROR-02":
-                    onboardingProgress.errorMessage="Decrypting Keys Failed";
+                    onboardingProgress.errorMessage = "Decrypting Keys Failed";
                     onboardingProgress.hookInfo.progressTitle = "Decrypting Keys Failed";
                     onboardingProgress.spinnerType = LOADER_SPINNER_TYPE.ERROR;
                     break;
@@ -211,18 +201,17 @@ const AppContextProvider = ({ children }) => {
             progressEnabled: onboardingProgress.progress ? true : false,
             progress: onboardingProgress.progress,
             progressNotice: onboardingProgress.hookInfo.progressInfo,
-            errorMessage:onboardingProgress.errorMessage,
+            errorMessage: onboardingProgress.errorMessage,
         });
 
     };
 
     const initializePushSDK = async () => {
-        console.log("Initialising Push Sdk");
         let userInstance;
         try {
             const librarySigner = provider?.getSigner(account);
-            userInstance = await PushAPI.initialize(librarySigner, {
-                env: appConfig.appEnv,  // defaults to staging
+            userInstance = await PushAPI.initialize(librarySigner!, {
+                env: appConfig.appEnv,
                 account: account,
                 progressHook: onboardingProgressReformatter,
             });
@@ -245,10 +234,8 @@ const AppContextProvider = ({ children }) => {
     };
 
     const getUser = async () => {
-        console.debug("getUser");
         const caip10: string = w2wHelper.walletToCAIP10({ account });
         const user = await userPushSDKInstance.info();
-        console.log("User push sdk instance", userPushSDKInstance, user);
         let connectedUser: ConnectedUser;
 
         // TODO: Change this to do verification on ceramic to validate if did is valid
@@ -291,9 +278,9 @@ const AppContextProvider = ({ children }) => {
 
     useEffect(() => {
         const librarySigner = provider?.getSigner(account);
-        if (!account || !appConfig?.appEnv) return;
+        // if (!account || !appConfig?.appEnv) return;
         if (wallet?.accounts?.length > 0) {
-            initializePushSDK();
+            initialisePushSdkReadMode();
         } else {
             initialisePushSdkGuestMode();
         }
@@ -355,7 +342,8 @@ const AppContextProvider = ({ children }) => {
             setConnectedPeerID,
             displayQR,
             setDisplayQR,
-            createUserIfNecessary
+            createUserIfNecessary,
+            initialisePushSdkReadMode
         }}>
             {children}
         </AppContext.Provider>

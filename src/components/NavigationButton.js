@@ -92,7 +92,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
             margin={definedMargin}
             bg={bg}
             active={active ? 1 : 0}
-            onClick={disallowNavigation && handleDisallowedNav}
+            // onClick={disallowNavigation && handleDisallowedNav}
             className={data?.name?.toLowerCase()}
           >
             {data.iconFactory ? (

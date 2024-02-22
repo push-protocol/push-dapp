@@ -44,6 +44,7 @@ import { checkIfIntent, getUpdatedChatAndIntent, getUpdatedGroupInfo } from 'hel
 import { ChatUIProvider, darkChatTheme } from '@pushprotocol/uiweb';
 import { appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -59,7 +60,7 @@ export const Context = React.createContext<ChatUserAppContext | null>(null);
 
 // Create Header
 function Chat({ chatid }) {
-  const { account, chainId, provider } = useAccount();
+  const { account, chainId, provider,wallet } = useAccount();
   const { videoCallData } = useContext(VideoCallContext);
 
   const {
@@ -93,6 +94,7 @@ function Chat({ chatid }) {
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
   const [signerData, setSignerData] = useState();
+  const { readOnlyWallet } = React.useContext(GlobalContext);
 
   const isMobile = useDeviceWidthCheck(600);
   const queryClient = new QueryClient({});
@@ -393,7 +395,7 @@ function Chat({ chatid }) {
         theme={theme.scheme === 'dark' && darkChatTheme}
         // signer={signerData}
         env={appConfig?.appEnv}
-        account={account}
+        account={wallet?.accounts?.length > 0 ? account: readOnlyWallet}
         pgpPrivateKey={pgpPvtKey}
         user={userPushSDKInstance}
       >

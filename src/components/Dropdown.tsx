@@ -75,11 +75,10 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
               spacing="1px"
               width="max-content"
             >
-              <DesktopAddress>{dropdownValue?.title} <SpanV2 fontWeight='600' margin='0 0 0 2px'>{mode}</SpanV2></DesktopAddress> 
+              <DesktopAddress>{dropdownValue?.title}</DesktopAddress> 
               
               <MobileAddress>
                 {shortenText(dropdownValue?.title,3)} 
-                <SpanV2 fontWeight='600' margin='0 0 0 2px'>{mode}</SpanV2>
               </MobileAddress>
             </Span>
             {dropdownValue?.invertedIcon && (
