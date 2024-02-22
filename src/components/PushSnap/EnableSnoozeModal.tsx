@@ -20,13 +20,13 @@ import { useAccount } from 'hooks';
 import { device } from 'config/Globals';
 import { AppContext } from 'contexts/AppContext';
 
-
 const EnableSnoozeModal = () => {
   const [walletAddresses, setWalletAddresses] = useState([]);
   const [addresses, setAddresses] = useState([]);
   const { setSnapState, SnapState } = React.useContext(AppContext);
   const [searchedUser, setSearchedUser] = useState('');
-  const [snoozeDuration, setSnoozeDuration] = useState('');
+  const { snoozeDuration, setSnoozeDuration } = React.useContext(AppContext);
+  const { snoozeStartTime, setSnoozeStartTime } = React.useContext(AppContext);
   const [snooze, setSnooze] = useState('');
   const [showRemove, setShowRemove] = useState();
   const [toggleStatus, setToggleStatus] = useState(0);
@@ -56,48 +56,29 @@ const EnableSnoozeModal = () => {
     getWalletAddresses();
   }, []);
 
-  async function getSignature(mode: number) {
-    if (mode == 1) {
-      const signer = provider.getSigner(account);
-      const signature = await signer.signMessage(
-        `Add address ${account} to receive notifications via Push Snap in MetaMask`
-      );
-      return signature;
-    }
-    if (mode == 2) {
-      const signer = provider.getSigner(account);
-      const signature = await signer.signMessage(
-        `Remove address ${account} to stop receive notifications via Push Snap in MetaMask`
-      );
-      return signature;
-    }
-  }
-
- 
-
   const [checked, setChecked] = useState(false);
   const handleChange = async (nextChecked) => {
     setChecked(nextChecked);
-    
+
     const duration = parseInt(snoozeDuration);
-    
+
     if (duration >= 1 && duration <= 72) {
       console.log(
-        // await window.ethereum?.request({
-        //   method: 'wallet_invokeSnap',
-        //   params: {
-        //     snapId: defaultSnapOrigin,
-        //     request: {
-        //       method: 'pushproto_setsnoozeduration',
-        //       params: { snoozeDuration: snoozeDuration },
-        //     },
-        //   },
-        // })
+        await window.ethereum?.request({
+          method: 'wallet_invokeSnap',
+          params: {
+            snapId: defaultSnapOrigin,
+            request: {
+              method: 'pushproto_setsnoozeduration',
+              params: { snoozeDuration: snoozeDuration },
+            },
+          },
+        })
+
       );
 
       setSnapState(6);
-      
-      
+      setSnoozeStartTime(new Date());
     } else {
       // Display an error message if the input is invalid
       console.error('Invalid input. Please enter a number between 1 and 72.');
@@ -109,26 +90,18 @@ const EnableSnoozeModal = () => {
     }
   };
 
-  const removeWalletAddresses = async (walletSelected: string) => {
-    const signatureResult = await getSignature(2);
-    console.log('Ran', signatureResult);
-    if (signatureResult) {
-      if (walletSelected) {
-        await window.ethereum?.request({
-          method: 'wallet_invokeSnap',
-          params: {
-            snapId: defaultSnapOrigin,
-            request: {
-              method: 'pushproto_removeaddress',
-              params: { address: walletSelected },
-            },
+  const disableSnooze = async () => {
+    console.log(
+      await window.ethereum?.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: defaultSnapOrigin,
+          request: {
+            method: 'pushproto_disablesnooze',
           },
-        });
-        getWalletAddresses();
-      }
-    } else {
-      console.error('Signature Validation Failed');
-    }
+        },
+      })
+    );
   };
 
   const getWalletAddresses = async () => {
@@ -177,7 +150,7 @@ const EnableSnoozeModal = () => {
 
             duration < 1 || duration > 72
               ? alert('Invalid. Enter a number between 1 & 72')
-              : setSnoozeDuration(e.target.value);
+              : setSnoozeDuration(e.target.value) ;
           }}
           placeholder="Snooze duration in Hours (e.g. 6)"
         />
@@ -188,7 +161,7 @@ const EnableSnoozeModal = () => {
 
         margin="24px 0 0 0"
       >
-        <EnptyButton>Cancel </EnptyButton>
+        <EnptyButton onClick={disableSnooze}>Cancel </EnptyButton>
 
         <FilledButton onClick={handleChange}> Enable Snooze </FilledButton>
       </ItemHV2>
@@ -200,24 +173,6 @@ export default EnableSnoozeModal;
 
 const Container = styled(ItemVV2)`
   padding: 0px 0px 12px 9px;
-`;
-
-const ToolTipContainer = styled(ItemVV2)`
-  box-sizing: border-box;
-  width: 18.75rem;
-  // height: 7.5rem;
-  // max-height: 7.5rem;
-  background: ${(props) => props.theme.default.bg};
-  border-radius: 1rem 1rem 1rem 0.125rem;
-  justify-content: flex-start;
-  border: 1px solid rgba(173, 176, 190, 0.2);
-  align-items: flex-start;
-  padding: 0.75rem 0.25rem 0.75rem 1rem;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
-
-  @media (max-width: 400px) {
-    width: 16.75rem;
-  }
 `;
 
 const PrimaryText = styled.p`
@@ -322,63 +277,4 @@ const Input = styled.input`
   @media ${device.mobileL} {
     min-width: 300px;
   }
-`;
-
-const AddressesContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: -webkit-fill-available;
-  overflow-y: scroll;
-  gap: 8px;
-  margin: 8px 0 0 0;
-  max-height: 250px;
-  flex-wrap: nowrap;
-  padding: 5px 5px 5px 0;
-  &::-webkit-scrollbar-track {
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background-image: -webkit-gradient(
-      linear,
-      left top,
-      left bottom,
-      color-stop(0.44, #cf1c84),
-      color-stop(0.72, #cf1c84),
-      color-stop(0.86, #cf1c84)
-    );
-  }
-`;
-
-const AddressesSubContainer = styled(ItemHV2)`
-  max-height: 42px;
-  padding: 13px 16px;
-  border-radius: 12px;
-  background: ${(props) => props.theme.snapBackground};
-  justify-content: space-between;
-`;
-
-const MoreOptions = styled(AiOutlineMore)`
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-`;
-
-const RemoveDiv = styled(ItemHV2)`
-  border-radius: 12px;
-  border: 1px solid #bac4d6;
-  background: #fff;
-  cursor: pointer;
-  box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.05);
-  padding: 8px 12px 8px 8px;
-  align-items: center;
-  gap: 9px;
-  position: absolute;
-  right: 0;
-  top: 3px;
 `;

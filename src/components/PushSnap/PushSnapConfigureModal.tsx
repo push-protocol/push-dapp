@@ -28,6 +28,10 @@ const PushSnapConfigureModal = () => {
   const [showRemove, setShowRemove] = useState();
   const [toggleStatus, setToggleStatus] = useState(0);
   const { setSnapState, SnapState } = React.useContext(AppContext);
+  const { snoozeDuration, setSnoozeDuration, snoozeStartTime } = React.useContext(AppContext);
+  const [remainingTime, setRemainingTime] = useState<number>();
+
+  console.log('snoozeDuration', snoozeDuration);
 
   const theme = useTheme();
 
@@ -54,6 +58,37 @@ const PushSnapConfigureModal = () => {
   useEffect(() => {
     getWalletAddresses();
   }, []);
+
+  const formatTime = (milliseconds) => {
+    let remaining = milliseconds / 1000;
+    const hours = Math.floor(remaining / 3600);
+    remaining %= 3600;
+    const minutes = Math.floor(remaining / 60);
+    const seconds = Math.floor(remaining % 60);
+
+    const padWithZero = (number) => {
+      const string = number.toString();
+      return string.length < 2 ? '0' + string : string;
+    };
+
+    return `${padWithZero(hours)}:${padWithZero(minutes)}:${padWithZero(seconds)}`;
+  };
+
+  useEffect(() => {
+    if (!snoozeStartTime) return;
+    console.log('snoozeStartTime', snoozeStartTime);
+
+    const intervalId = setInterval(() => {
+      const now = new Date();
+      const endTime = new Date(snoozeStartTime.getTime() + snoozeDuration * 60 * 60 * 1000);
+      const timeLeft = endTime.getTime() - now.getTime();
+      setRemainingTime(Math.max(0, timeLeft));
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [snoozeDuration, snoozeStartTime]);
+
+  console.log('remainingTime', formatTime(remainingTime));
 
   async function getSignature(mode: number) {
     if (mode == 1) {
@@ -215,35 +250,33 @@ const PushSnapConfigureModal = () => {
         alignItems="space-between"
         margin="24px 0 0 0"
       >
-       
         <ItemHV2
-        alignItems="baseline"
-        margin="0 0 0 0"
-        padding="0 9px 0 0"
-        Gap="8px"
-        justifyContent="flex-start space-between"
-      >
-       
-            <ItemHV2 justifyContent="flex-start">
-              {' '}  <PrimaryText>Snooze Notifications</PrimaryText>{' '}  
-            </ItemHV2>
+          alignItems="baseline"
+          margin="0 0 0 0"
+          padding="0 9px 0 0"
+          Gap="8px"
+          justifyContent="flex-start space-between"
+        >
+          <ItemHV2 justifyContent="flex-start">
+            {' '}
+            <PrimaryText>Snooze Notifications</PrimaryText>{' '}
+          </ItemHV2>
 
-            <ItemHV2 justifyContent="flex-end">
-              {' '}
-              <Switch
-            onChange={handleChange}
-            checked={SnapState === 6}
-            className="react-switch"
-            uncheckedIcon={false}
-            checkedIcon={false}
-            height={23}
-            onColor="#D53A94"
-            width={44}
-            margin="0 0 0 0"
-          />
-            </ItemHV2>
-         
-      </ItemHV2>
+          <ItemHV2 justifyContent="flex-end">
+            {' '}
+            <Switch
+              onChange={handleChange}
+              checked={SnapState === 6}
+              className="react-switch"
+              uncheckedIcon={false}
+              checkedIcon={false}
+              height={23}
+              onColor="#D53A94"
+              width={44}
+              margin="0 0 0 0"
+            />
+          </ItemHV2>
+        </ItemHV2>
 
         <ItemHV2 justifyContent="flex-start">
           <SecondaryText>
@@ -268,7 +301,7 @@ const PushSnapConfigureModal = () => {
 
             <ItemHV2 justifyContent="flex-end">
               {' '}
-              <SecondaryText> hours</SecondaryText>
+              <SecondaryText> {formatTime(remainingTime)} hours</SecondaryText>
             </ItemHV2>
           </>
         ) : (
