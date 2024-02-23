@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { ethers } from 'ethers';
 
 // Internal Compoonents
-import { ChatPreviewList, UserProfile } from '@pushprotocol/uiweb';
+import { ChatPreview, ChatPreviewList, UserProfile } from '@pushprotocol/uiweb';
 import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
 import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
 import ProfileHeader from 'components/chat/w2wChat/profile';
@@ -66,6 +66,7 @@ type loadingData = { loading: boolean, preload: boolean, paging: boolean, finish
 const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   // theme context
   const theme = useTheme();
+  const {wallet} = useAccount();
 
   const { setSelectedChatId } = useContext(Context);
   const { setMode } = useContext(GlobalContext);
@@ -126,6 +127,42 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
       }
     }
   }
+
+  const RecommendedChatData = [
+    {
+      "chatId": "4ac5ab85c9c3d57adbdf2dba79357e56b2f9ef0256befe750d9f93af78d2ca68",
+      "chatPic": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAxElEQVR4AcXBsU1DUQyG0S/WW4EGMQETMIRX8BxpXFpCLMACXuGOlC5DhNZKcaUnBP85l8+P7wcntBc7sZIzDDFDzBA7eNJeTLGSKVZyRnsxxUomQ8wQM8SO9uI/tReTIWaIGWJHrGRqL6b2Yrq/fbHzcruyEyuZDDFDzBA7eBIr2Wm/shMrOcMQM8QMsaO9mGIlf6m9mAwxQ8wQO2IlU3vxG+3FTqxkMsQMMUPs8l6vDzZiJVN7sRMrmdqLHUPMEDPEfgBK0S/MKDp40gAAAABJRU5ErkJggg==",
+      "chatParticipant": "eip155:0xf8250D363BD1F25f52F10C21188fe82c68C049c4",
+      "chatGroup": false,
+      "chatTimestamp": 1705100044656,
+      "chatMsg": {
+        "messageType": "Text",
+        "messageContent": "Hi! Stay tuned, while BRB IRL dev tour has wrapped up, We still have BRB Online with challenges from global projects that still needs to be solved: https://push.org/brb"
+      }
+    },
+    {
+      "chatId": "4ac5ab85c9c3d57adbdf2dba79357e56b2f9ef0256befe750d9f93af78d2ca68",
+      "chatPic": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAxElEQVR4AcXBsU1DUQyG0S/WW4EGMQETMIRX8BxpXFpCLMACXuGOlC5DhNZKcaUnBP85l8+P7wcntBc7sZIzDDFDzBA7eNJeTLGSKVZyRnsxxUomQ8wQM8SO9uI/tReTIWaIGWJHrGRqL6b2Yrq/fbHzcruyEyuZDDFDzBA7eBIr2Wm/shMrOcMQM8QMsaO9mGIlf6m9mAwxQ8wQO2IlU3vxG+3FTqxkMsQMMUPs8l6vDzZiJVN7sRMrmdqLHUPMEDPEfgBK0S/MKDp40gAAAABJRU5ErkJggg==",
+      "chatParticipant": "eip155:0xf8250D363BD1F25f52F10C21188fe82c68C049c4",
+      "chatGroup": false,
+      "chatTimestamp": 1705100044656,
+      "chatMsg": {
+        "messageType": "Text",
+        "messageContent": "Hi! Stay tuned, while BRB IRL dev tour has wrapped up, We still have BRB Online with challenges from global projects that still needs to be solved: https://push.org/brb"
+      }
+    },
+    {
+      "chatId": "4ac5ab85c9c3d57adbdf2dba79357e56b2f9ef0256befe750d9f93af78d2ca68",
+      "chatPic": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAxElEQVR4AcXBsU1DUQyG0S/WW4EGMQETMIRX8BxpXFpCLMACXuGOlC5DhNZKcaUnBP85l8+P7wcntBc7sZIzDDFDzBA7eNJeTLGSKVZyRnsxxUomQ8wQM8SO9uI/tReTIWaIGWJHrGRqL6b2Yrq/fbHzcruyEyuZDDFDzBA7eBIr2Wm/shMrOcMQM8QMsaO9mGIlf6m9mAwxQ8wQO2IlU3vxG+3FTqxkMsQMMUPs8l6vDzZiJVN7sRMrmdqLHUPMEDPEfgBK0S/MKDp40gAAAABJRU5ErkJggg==",
+      "chatParticipant": "eip155:0xf8250D363BD1F25f52F10C21188fe82c68C049c4",
+      "chatGroup": false,
+      "chatTimestamp": 1705100044656,
+      "chatMsg": {
+        "messageType": "Text",
+        "messageContent": "Hi! Stay tuned, while BRB IRL dev tour has wrapped up, We still have BRB Online with challenges from global projects that still needs to be solved: https://push.org/brb"
+      }
+    }
+  ]
 
 
   // RENDER
@@ -268,9 +305,25 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
           style={{ display: activeTab == 0 ? 'flex' : 'none' }}
           overflow="scroll"
         >
+
+          {!(wallet?.accounts?.length > 0) && RecommendedChatData.map((recommendedChat) => (
+            <ChatPreview
+              chatPreviewPayload={
+                recommendedChat
+              }
+              badge={{ count: 2 }}
+              selected={false}
+              setSelected={console.log("Selected")}
+              // setSelected={setSelectedChatId(recommendedChat.chatId)}
+            />
+          ))}
+
+
+
+
           <ChatPreviewList
             listType="CHATS"
-            onChatSelected={async (chatid, chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant, chatid))}
+            onChatSelected={async (chatid, chatParticipant) => { console.log(chatParticipant, chatid); setSelectedChatId(await formatChatParticipant(chatParticipant, chatid)) }}
 
             onUnreadCountChange={(count) => {
               // console.log('Count is: ', count);

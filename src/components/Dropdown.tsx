@@ -26,11 +26,12 @@ type DropdownProps = {
   textColor?: string;
   iconFilter?: string;
   hoverBGColor?: string;
+  setShowDropdown?:any;
 };
 
 
 // Create Dropdown
-function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: DropdownProps) {
+function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor,setShowDropdown }: DropdownProps) {
 
   const theme = useTheme();
   const {mode} = useContext(GlobalContext);
@@ -52,6 +53,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
       document.body.removeChild(el);
     }
   };
+
   return (
     <>
       {dropdownValues.map((dropdownValue) =>
@@ -64,7 +66,9 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
             margin="0px 0 8px 0"
             width="max-content"
             style={{cursor: "pointer"}}
-            onClick={() => dropdownValue?.function()}
+            onClick={() => {
+              dropdownValue?.function()
+            }}
           >
             <Span
               margin="11px 22px 11px 2px"

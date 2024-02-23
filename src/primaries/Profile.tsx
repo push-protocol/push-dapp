@@ -43,7 +43,7 @@ const Profile = ({ isDarkMode }) => {
 
   // Get theme
   const theme = useTheme();
-  const [showDropdown, setShowDropdown] = React.useState(false);
+  const [showDropdown, setShowDropdown] = React.useState<boolean>(false);
   useClickAway(modalRef, dropdownRef, () => showDropdown && setShowDropdown(false));
 
   const dropdownValues = [
@@ -77,6 +77,7 @@ const Profile = ({ isDarkMode }) => {
         await disconnect(wallet);
         setMode(ReadOnlyWalletMode.GUEST_MODE);
         setReadOnlyWallet('0x0000000000000000000000000000000000000000');
+        setShowDropdown(false);
       },
       title: 'Logout',
       invertedIcon: './logout.svg',
@@ -144,7 +145,7 @@ const Profile = ({ isDarkMode }) => {
                     align="flex-start"
                     ref={dropdownRef}
                   >
-                    <Dropdown dropdownValues={dropdownValues} />
+                    <Dropdown dropdownValues={dropdownValues} setShowDropdown={setShowDropdown}/>
                   </DropdownItem>
                   <ItemModal ref={modalRef}>
                     <ProfileModal
