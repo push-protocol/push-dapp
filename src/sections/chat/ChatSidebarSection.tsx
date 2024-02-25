@@ -3,34 +3,35 @@ import { Web3Provider } from '@ethersproject/providers';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
+import { ethers } from 'ethers';
 import { AiOutlineQrcode } from 'react-icons/ai';
+import { useSelector } from 'react-redux';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
-import { useSelector } from 'react-redux';
-import { ethers } from 'ethers';
 
 // Internal Compoonents
 import { ChatPreview, ChatPreviewList, UserProfile } from '@pushprotocol/uiweb';
 import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
 import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
+import NewTag from 'components/NewTag';
+import Recommended from 'components/chat/recommended/Recommended';
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { AppContext } from 'contexts/AppContext';
 import StyleHelper from 'helpers/StyleHelper';
 import { getIsNewTagVisible } from 'helpers/TimerHelper';
+import { caip10ToWallet } from 'helpers/w2w';
 import { fetchIntent } from 'helpers/w2w/user';
 import { Context } from 'modules/chat/ChatModule';
 import { Feeds } from 'types/chat';
-import { caip10ToWallet } from 'helpers/w2w';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { AppContext } from 'contexts/AppContext';
-import NewTag from 'components/NewTag';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
-import { appConfig } from '../../config';
-import { useAccount } from 'hooks';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { useAccount } from 'hooks';
+import { appConfig } from '../../config';
 
 
 const createGroupOnMouseEnter = [
@@ -83,6 +84,9 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   const [loadingRequests, setLoadingRequests] = useState(true);
   const [showQR, setShowQR] = useState<boolean>(false);
   const containerRef = React.useRef(null);
+
+  // set recommended chats
+  const [showRecommended, setShowRecommended] = useState(false);
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -305,30 +309,30 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
           style={{ display: activeTab == 0 ? 'flex' : 'none' }}
           overflow="scroll"
         >
-
-          {!(wallet?.accounts?.length > 0) && RecommendedChatData.map((recommendedChat) => (
-            <ChatPreview
-              chatPreviewPayload={
-                recommendedChat
-              }
-              badge={{ count: 2 }}
-              selected={false}
-              setSelected={console.log("Selected")}
-              // setSelected={setSelectedChatId(recommendedChat.chatId)}
+          {/* Only show recommended chats if there are no chats */}
+          {showRecommended && 
+            <Recommended 
+              bg="#f5f5f5"
+              onChatSelected={async (chatid, chatParticipant) => { console.log(chatParticipant); setSelectedChatId(await formatChatParticipant(chatParticipant, chatid)) }}
             />
-          ))}
+          }
 
+          {/* Only show recommended chats if there are no chats */}
+          {!showRecommended && 
+            <ChatPreviewList
+              listType="CHATS"
+              onChatSelected={async (chatid, chatParticipant) => { console.log(chatParticipant, chatid); setSelectedChatId(await formatChatParticipant(chatParticipant, chatid)) }}
 
-
-
-          <ChatPreviewList
-            listType="CHATS"
-            onChatSelected={async (chatid, chatParticipant) => { console.log(chatParticipant, chatid); setSelectedChatId(await formatChatParticipant(chatParticipant, chatid)) }}
-
-            onUnreadCountChange={(count) => {
-              // console.log('Count is: ', count);
-            }}
-          />
+              onUnreadCountChange={(count) => {
+                // console.log('Count is: ', count);
+              }}
+              onPreload={(chats) => {
+                if (chats.length == 0) {
+                  setShowRecommended(true);
+                }
+              }}
+            />
+          }
         </ItemVV2>
 
         {/* Set Requests */}
