@@ -171,22 +171,16 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
 
   const optInHandler = async ({ channelSettings, setLoading }: { channelSettings?: ChannelSetting[], setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const setLoadingFunc = setLoading || (options && options.setLoading) || (() => { });
+    setLoadingFunc(true);
 
     let userPushInstance = userPushSDKInstance;
-
-    console.log("User Push Instance >>>>>",userPushInstance);
-
     if (!userPushInstance.signer) {
       userPushInstance = await handleConnectWallet();
-      console.log("Res >>>>>>> ",userPushInstance);
       if (!userPushInstance) {
+        setLoadingFunc(false);
         return;
       }
     }
-
-    console.log("User Push",userPushInstance);
-
-    setLoadingFunc(true);
 
     try {
       let channelAddress = channelDetail.channel;

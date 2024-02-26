@@ -65,7 +65,6 @@ const AppContextProvider = ({ children }) => {
             });
         }
 
-
         if (wallet?.accounts?.length > 0) {
             console.log('Wallet connected',wallet);
             const userPushInstance = await initializePushSDK();
@@ -212,20 +211,16 @@ const AppContextProvider = ({ children }) => {
 
     };
 
-    const initializePushSDK = async (address?:string) => {
+    const initializePushSDK = async () => {
         let userInstance;
         try {
-            console.log("Addresss >>>>>>",address,account);
             const librarySigner = provider?.getSigner(account);
             userInstance = await PushAPI.initialize(librarySigner!, {
                 env: appConfig.appEnv,
-                account: address ? address : account,
+                account: account,
                 progressHook: onboardingProgressReformatter,
             });
-
             console.log("User Push SDK instance in App Context >>",userInstance);
-            
-
             if (userInstance) {
                 setBlockedLoading({
                     enabled: false,

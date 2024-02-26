@@ -177,22 +177,17 @@ const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({
   const saveUserSettingHandler = async ({ userSettings, setLoading }: { userSettings?: UserSetting[], setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const setLoadingFunc = setLoading || (() => {});
     const saveOnSuccessSettingFunc = onSuccessSave || (() => {});
-    
-    let userPushInstance = userPushSDKInstance;
+    setLoadingFunc(true);
 
-    console.log("User Push Instance >>>>>",userPushInstance);
+    let userPushInstance = userPushSDKInstance;
 
     if (!userPushInstance.signer) {
       userPushInstance = await handleConnectWallet();
-      console.log("Res >>>>>>> ",userPushInstance);
       if (!userPushInstance) {
+        setLoadingFunc(false);
         return;
       }
     }
-
-    console.log("User Push",userPushInstance);
-    
-    setLoadingFunc(true);
 
     try {
       let channelAddress = channelDetail.channel;
