@@ -191,7 +191,8 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     return () => {
       clearTimeout(timeout);
     };
-  }, [search, userPushSDKInstance]);
+    // userPushSDKInstance should not be used as dependency here.
+  }, [search]);
 
   useEffect(() => {
     if (!account || !userPushSDKInstance) return;

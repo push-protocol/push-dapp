@@ -19,6 +19,7 @@ import { Item } from "primaries/SharedStyling";
 import {
   addPaginatedNotifications,
   incrementPage,
+  resetNotificationsSlice,
   setFinishedFetching,
   updateTopNotifications
 } from "redux/slices/notificationSlice";
@@ -29,6 +30,7 @@ import { useAccount, useDeviceWidthCheck } from "hooks";
 import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
 import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
 import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg'
+import { GlobalContext } from "contexts/GlobalContext";
 
 // Internal Configs
 import { appConfig } from "config";
@@ -71,6 +73,7 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const [loadFilter, setLoadFilter] = React.useState(false);
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const {readOnlyWallet } = useContext(GlobalContext);
 
   const [showSnapInfo, setShowSnapInfo] = React.useState(true);
 
@@ -173,11 +176,13 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
     setBgUpdateLoading(true);
     setLoading(true);
     try {
+      console.log("User Push sdk instance in fetch latest notifications",userPushSDKInstance);
       const results = await await userPushSDKInstance.notification.list('INBOX', {
         raw: true,
         page: 1,
         limit: NOTIFICATIONS_PER_PAGE
       });
+      console.log("REsults >>>>",results);
       if (!notifications.length) {
         dispatch(incrementPage());
       }
@@ -242,7 +247,8 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
   };
 
   React.useEffect(() => {
-    if (!userPushSDKInstance) return;
+    console.log("User Push sdk instance",userPushSDKInstance,readOnlyWallet);
+    if (userPushSDKInstance?.account == readOnlyWallet) return;
     fetchLatestNotifications();
     fetchAllNotif();
   }, [toggle, userPushSDKInstance]);

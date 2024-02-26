@@ -71,48 +71,48 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
           key={index}
           hasBottomBorder={index !== settings.length - 1}
         >
-            <DropdownSwitchItem>
-                <SpanV2 color={theme.settingsModalPrimaryTextColor} fontSize="15px" fontWeight='500' textAlign="left">{setting.description}</SpanV2>
-                <Switch 
-                    onChange={() => handleSwitchChange(index)} checked={setting.type === 1 ? setting.default : setting.enabled} 
-                    checkedIcon={false}
-                    uncheckedIcon={false}
-                    onColor="#D53A94"
-                    offColor="#A0A3B1"
-                    height={16}
-                    width={32}
-                    handleDiameter={12}
-                />
-            </DropdownSwitchItem>
-            {setting.type === 2 && setting.enabled === true && (
-              <DropdownSliderItem>
-                <SpanV2 color={theme.fontColor} fontSize="18px" fontWeight='600' alignSelf="flex-start">
-                    {setting.default}
-                </SpanV2>
-                <InputSlider
-                    val={setting.default}
-                    max={setting.upperLimit}
-                    min={setting.lowerLimit}
-                    step={setting.ticker || 1}
-                    defaultVal={setting.default}
-                    onChange={({ x }) => handleSliderChange(index, x)}
-                />
-              </DropdownSliderItem>
-            )}
+          <DropdownSwitchItem>
+            <SpanV2 color={theme.settingsModalPrimaryTextColor} fontSize="15px" fontWeight='500' textAlign="left">{setting.description}</SpanV2>
+            <Switch
+              onChange={() => handleSwitchChange(index)} checked={setting.type === 1 ? setting.default : setting.enabled}
+              checkedIcon={false}
+              uncheckedIcon={false}
+              onColor="#D53A94"
+              offColor="#A0A3B1"
+              height={16}
+              width={32}
+              handleDiameter={12}
+            />
+          </DropdownSwitchItem>
+          {setting.type === 2 && setting.enabled === true && (
+            <DropdownSliderItem>
+              <SpanV2 color={theme.fontColor} fontSize="18px" fontWeight='600' alignSelf="flex-start">
+                {setting.default}
+              </SpanV2>
+              <InputSlider
+                val={setting.default}
+                max={setting.upperLimit}
+                min={setting.lowerLimit}
+                step={setting.ticker || 1}
+                defaultVal={setting.default}
+                onChange={({ x }) => handleSliderChange(index, x)}
+              />
+            </DropdownSliderItem>
+          )}
           {setting.type === 3 && setting.enabled === true && (
             <DropdownSliderItem>
               <SpanV2 color={theme.fontColor} fontSize="18px" fontWeight='600' alignSelf="flex-start">
-                  {setting.default.lower} - {setting.default.upper}
+                {setting.default.lower} - {setting.default.upper}
               </SpanV2>
               <RangeSlider
-                  startVal={setting.default.lower}
-                  endVal={setting.default.upper}
-                  max={setting.upperLimit}
-                  min={setting.lowerLimit}
-                  step={setting.ticker || 1}
-                  defaultStartVal={setting.default.lower}
-                  defaultEndVal={setting.default.upper}
-                  onChange={({ startVal, endVal }) => handleSliderChange(index, {lower: startVal, upper: endVal})}
+                startVal={setting.default.lower}
+                endVal={setting.default.upper}
+                max={setting.upperLimit}
+                min={setting.lowerLimit}
+                step={setting.ticker || 1}
+                defaultStartVal={setting.default.lower}
+                defaultEndVal={setting.default.upper}
+                onChange={({ startVal, endVal }) => handleSliderChange(index, { lower: startVal, upper: endVal })}
               />
             </DropdownSliderItem>
           )}
@@ -171,12 +171,21 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
 
   const optInHandler = async ({ channelSettings, setLoading }: { channelSettings?: ChannelSetting[], setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const setLoadingFunc = setLoading || (options && options.setLoading) || (() => { });
-   
-    if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
-      return;
+
+    let userPushInstance = userPushSDKInstance;
+
+    console.log("User Push Instance >>>>>",userPushInstance);
+
+    if (!userPushInstance.signer) {
+      userPushInstance = await handleConnectWallet();
+      console.log("Res >>>>>>> ",userPushInstance);
+      if (!userPushInstance) {
+        return;
+      }
     }
-   
+
+    console.log("User Push",userPushInstance);
+
     setLoadingFunc(true);
 
     try {
@@ -187,7 +196,7 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
 
       subscribeToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
-      await userPushSDKInstance.notification.subscribe(convertAddressToAddrCaip(channelAddress, chainId), {
+      await userPushInstance.notification.subscribe(convertAddressToAddrCaip(channelAddress, chainId), {
         settings: notifChannelSettingFormatString({ settings: channelSettings }),
         // settings: [],
         onSuccess: () => {

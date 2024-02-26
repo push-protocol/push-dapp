@@ -178,10 +178,19 @@ const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({
     const setLoadingFunc = setLoading || (() => {});
     const saveOnSuccessSettingFunc = onSuccessSave || (() => {});
     
-    if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
-      return;
+    let userPushInstance = userPushSDKInstance;
+
+    console.log("User Push Instance >>>>>",userPushInstance);
+
+    if (!userPushInstance.signer) {
+      userPushInstance = await handleConnectWallet();
+      console.log("Res >>>>>>> ",userPushInstance);
+      if (!userPushInstance) {
+        return;
+      }
     }
+
+    console.log("User Push",userPushInstance);
     
     setLoadingFunc(true);
 
@@ -193,7 +202,7 @@ const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({
 
       subscribeToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
-      await userPushSDKInstance.notification.subscribe(convertAddressToAddrCaip(channelAddress, chainId), {
+      await userPushInstance.notification.subscribe(convertAddressToAddrCaip(channelAddress, chainId), {
         settings: notifUserSettingFormatString({ settings: userSettings }),
         // settings: [],
         onSuccess: () => {

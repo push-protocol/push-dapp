@@ -67,9 +67,14 @@ const AppContextProvider = ({ children }) => {
 
 
         if (wallet?.accounts?.length > 0) {
-            await initializePushSDK();
+            console.log('Wallet connected',wallet);
+            const userPushInstance = await initializePushSDK();
+            return userPushInstance;
         } else {
-            connect();
+            const walletConnected = await connect();
+            console.log("Wallet connected",walletConnected); 
+            return null;
+
         }
 
     }
@@ -80,20 +85,21 @@ const AppContextProvider = ({ children }) => {
         console.log("Initialising Push SDK Guest Mode");
         let userInstance;
         userInstance = await PushAPI.initialize({
-            account: '0x0000000000000000000000000000000000000000',
+            account: '0x0000000000000000000000000000000000000001',
             env: appConfig.appEnv,
         });
         dispatch(setUserPushSDKInstance(userInstance));
     }
 
     const initialisePushSdkReadMode = async () => {
-        console.log("Initialising Push SDK Read Mode");
         let userInstance;
         userInstance = await PushAPI.initialize({
             env: appConfig.appEnv,
             account: account,
         });
+        console.log("User Instance in read Mode",userInstance);
         dispatch(setUserPushSDKInstance(userInstance));
+        return userInstance;
     }
 
 
@@ -206,15 +212,19 @@ const AppContextProvider = ({ children }) => {
 
     };
 
-    const initializePushSDK = async () => {
+    const initializePushSDK = async (address?:string) => {
         let userInstance;
         try {
+            console.log("Addresss >>>>>>",address,account);
             const librarySigner = provider?.getSigner(account);
             userInstance = await PushAPI.initialize(librarySigner!, {
                 env: appConfig.appEnv,
-                account: account,
+                account: address ? address : account,
                 progressHook: onboardingProgressReformatter,
             });
+
+            console.log("User Push SDK instance in App Context >>",userInstance);
+            
 
             if (userInstance) {
                 setBlockedLoading({
@@ -227,9 +237,11 @@ const AppContextProvider = ({ children }) => {
             }
 
             dispatch(setUserPushSDKInstance(userInstance));
+            return userInstance;
         } catch (error) {
             // Handle initialization error
             console.log("Errror !!!!!", error);
+            return null;
         }
     };
 

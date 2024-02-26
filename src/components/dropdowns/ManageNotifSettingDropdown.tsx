@@ -134,10 +134,19 @@ const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = (o
   const optOutHandler = async ({ setLoading }: { setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const setLoadingFunc = setLoading || (() => {});
 
-    if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
-      return;
+    let userPushInstance = userPushSDKInstance;
+
+    console.log("User Push Instance >>>>>",userPushInstance);
+
+    if (!userPushInstance.signer) {
+      userPushInstance = await handleConnectWallet();
+      console.log("Res >>>>>>> ",userPushInstance);
+      if (!userPushInstance) {
+        return;
+      }
     }
+
+    console.log("User Push",userPushInstance);
 
     setLoadingFunc(true);
 
@@ -149,7 +158,7 @@ const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = (o
 
       unsubscribeToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
-      await userPushSDKInstance.notification.unsubscribe(convertAddressToAddrCaip(channelAddress, chainId), {
+      await userPushInstance.notification.unsubscribe(convertAddressToAddrCaip(channelAddress, chainId), {
         onSuccess: () => {
           onSuccessOptout();
           dispatch(updateSubscriptionStatus({ channelAddress: channelAddress, status: false }));
