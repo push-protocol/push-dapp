@@ -16,7 +16,6 @@ import GLOBALS from "config/Globals";
 // Other Information section
 const ChannelsPage = ({ loadTeaser, playTeaser, channelID }) => {
   let { channelid } = useParams();
-  console.log("Channel ID:", channelid)
   const calculatedChannelID = channelid ? channelid : channelID;
 
   // RENDER

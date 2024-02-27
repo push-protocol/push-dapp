@@ -270,7 +270,7 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
       )}
 
 
-      <ScrollItem id="scroll">
+      <ScrollItem id="scroll" minimal={minimal}>
         {/* render all channels depending on if we are searching or not */}
         <div>
           {(search ? channelToShow : channels).map(
@@ -316,7 +316,7 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
         {/* display loader if pagination is loading next batch of channelTotalList */}
         {((moreLoading && channels.length) || loading || loadingChannel) && (
           <CenterContainer>
-            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
+            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={minimal ? 24 : 42} />
           </CenterContainer>
         )}
       </ScrollItem>
@@ -438,7 +438,7 @@ const ScrollItem = styled(Item)`
   flex-wrap: nowrap;
 
   flex: 1;
-  padding: 0px 20px 10px 20px;
+  padding: ${props => props.minimal ? "20px 10px" : "0px 20px 10px 20px"};
   overflow-y: auto;
 
   &::-webkit-scrollbar-track {
@@ -452,7 +452,7 @@ const ScrollItem = styled(Item)`
   }
 
   @media (max-width: 768px) {
-    padding: 0px 0px 0px 0px;
+    padding: ${props => props.minimal ? "10px 5px" : "0px"};
 
     &::-webkit-scrollbar-track {
       background-color: none;

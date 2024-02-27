@@ -122,7 +122,11 @@ function MasterInterfacePage() {
 
   const ChannelsProfilePage = () => {
     const channelid = searchParams.get('channel');
-    console.log("I am here");
+    
+    if (channelid) {
+      navigate(`${APP_PATHS.Channels}/${channelid}`);
+    }
+
     return <ChannelsPage 
       loadTeaser={setLoadTeaserVideo}
       playTeaser={setPlayTeaserVideo}
@@ -160,11 +164,6 @@ function MasterInterfacePage() {
             {/* </Route> */}
 
             {/* Enable Channel specific routes */}
-            {/* <Route 
-              path={`${APP_PATHS.Channels}/:channel`} 
-              element={<ChannelsProfilePage />} 
-            /> */}
-
             <Route 
               path={`${APP_PATHS.Channels}/:channelid`} 
               element={<ChannelsPage

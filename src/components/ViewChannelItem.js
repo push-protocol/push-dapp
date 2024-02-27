@@ -415,7 +415,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
         <ChannelLogoContainer>
           <ChannelLogo minimal={minimal}>
             <ChannelLogoOuter>
-              <ChannelLogoInner>
+              <ChannelLogoInner minimal={minimal}>
                 {loading ? (
                   <Skeleton
                     color={themes.interfaceSkeleton}
@@ -427,145 +427,147 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
               </ChannelLogoInner>
             </ChannelLogoOuter>
           </ChannelLogo>
-
-          <ChannelTitle>
-            {loading ? (
-              <Skeleton
-                color={themes.interfaceSkeleton}
-                width="50%"
-                height={24}
-              />
-            ) : (
-              <ChannelTitleLink>
-                <ChannelTitleSpan>
-                  <Span>
-                    {showChannelChangedWarning && (
-                      <Tooltip
-                        wrapperProps={{
-                          width: 'fit-content',
-                          maxWidth: 'fit-content',
-                          minWidth: 'fit-content',
-                          // zIndex: "10",
-                        }}
-                        placementProps={
-                          tooltTipHeight < 250
-                            ? {
-                                background: 'none',
-                                // bottom: "25px",
-                                top: '20px',
-                                // right: "-175px",
-                                left: mobileToolTip ? '-100px' : '5px',
-                              }
-                            : {
-                                background: 'none',
-                                bottom: '25px',
-                                // top: "20px",
-                                // right: "-175px",
-                                left: mobileToolTip ? '-100px' : '5px',
-                              }
-                        }
-                        tooltipContent={
-                          <UpdateChannelTooltipContent
-                            height={tooltTipHeight}
-                            channelName={channelObjectStartBlock.name}
-                            channelDescription={channelObjectStartBlock.info}
-                            channelLogoSrc={channelObjectStartBlock.icon}
-                          />
-                        }
-                      >
-                        <div
-                          onMouseEnter={() => {
-                            handleHeight(channelObject.channel);
+          
+          {!minimal && 
+            <ChannelTitle>
+              {loading ? (
+                <Skeleton
+                  color={themes.interfaceSkeleton}
+                  width="50%"
+                  height={24}
+                />
+              ) : (
+                <ChannelTitleLink>
+                  <ChannelTitleSpan>
+                    <Span>
+                      {showChannelChangedWarning && (
+                        <Tooltip
+                          wrapperProps={{
+                            width: 'fit-content',
+                            maxWidth: 'fit-content',
+                            minWidth: 'fit-content',
+                            // zIndex: "10",
                           }}
+                          placementProps={
+                            tooltTipHeight < 250
+                              ? {
+                                  background: 'none',
+                                  // bottom: "25px",
+                                  top: '20px',
+                                  // right: "-175px",
+                                  left: mobileToolTip ? '-100px' : '5px',
+                                }
+                              : {
+                                  background: 'none',
+                                  bottom: '25px',
+                                  // top: "20px",
+                                  // right: "-175px",
+                                  left: mobileToolTip ? '-100px' : '5px',
+                                }
+                          }
+                          tooltipContent={
+                            <UpdateChannelTooltipContent
+                              height={tooltTipHeight}
+                              channelName={channelObjectStartBlock.name}
+                              channelDescription={channelObjectStartBlock.info}
+                              channelLogoSrc={channelObjectStartBlock.icon}
+                            />
+                          }
                         >
-                          <ImageInfo src={InfoImage} />
-                        </div>
-                      </Tooltip>
-                    )}
-
-                    <Span onClick={() => correctChannelTitleLink()}>{channelObject.name}</Span>
-                  </Span>
-
-                  {isVerified == 1 && (
-                    <Span
-                      margin="3px 5px 0px"
-                      style={{ display: 'flex' }}
-                    >
-                      <Tooltip
-                        // tooltip should be disabled if the verifier details are falsy
-                        // isDisabled={!verifierDetails}
-                        wrapperProps={{
-                          width: 'fit-content',
-                          maxWidth: 'fit-content',
-                          minWidth: 'fit-content',
-                        }}
-                        placementProps={
-                          tooltTipHeight < 160
-                            ? {
-                                background: 'none',
-                                top: '20px', // for lower displaying
-                                left: '7px',
-                              }
-                            : {
-                                background: 'none',
-                                bottom: '28px', // above display
-                                left: '7px',
-                              }
-                        }
-                        tooltipContent={
-                          <VerifiedTooltipContent
-                            height={tooltTipHeight}
-                            verifierIcon={verifierDetails?.icon}
-                            verifierName={verifierDetails?.name}
-                          />
-                        }
-                      >
-                        {/* TODO: HAS TO BE CHANGED TO A i icon */}
-                        <div
-                          style={{ cursor: 'pointer' }}
-                          onMouseEnter={() => {
-                            handleHeight(channelObject.channel);
-                          }}
-                        >
-                          <GoVerified
-                            size={18}
-                            color={themes.viewChannelVerifiedBadge}
-                          />
-                        </div>
-                      </Tooltip>
-
-                      {channelObject && channelObject?.channel && (
-                        <Span padding="0 0 0 5px">
-                          <Image
-                            src={`./svg/Ethereum.svg`}
-                            alt="Ethereum"
-                            width="20px"
-                            height="20px"
-                          />
-                        </Span>
+                          <div
+                            onMouseEnter={() => {
+                              handleHeight(channelObject.channel);
+                            }}
+                          >
+                            <ImageInfo src={InfoImage} />
+                          </div>
+                        </Tooltip>
                       )}
-                      {channelObject &&
-                        channelObject?.alias_address != null &&
-                        channelObject?.alias_address != 'NULL' &&
-                        appConfig.allowedNetworks.includes(+channelObject?.alias_blockchain_id) &&
-                        !MaskedAliasChannels[+channelObject?.alias_blockchain_id][channelObject?.channel] && (
+
+                      <Span onClick={() => correctChannelTitleLink()}>{channelObject.name}</Span>
+                    </Span>
+
+                    {isVerified == 1 && (
+                      <Span
+                        margin="3px 5px 0px"
+                        style={{ display: 'flex' }}
+                      >
+                        <Tooltip
+                          // tooltip should be disabled if the verifier details are falsy
+                          // isDisabled={!verifierDetails}
+                          wrapperProps={{
+                            width: 'fit-content',
+                            maxWidth: 'fit-content',
+                            minWidth: 'fit-content',
+                          }}
+                          placementProps={
+                            tooltTipHeight < 160
+                              ? {
+                                  background: 'none',
+                                  top: '20px', // for lower displaying
+                                  left: '7px',
+                                }
+                              : {
+                                  background: 'none',
+                                  bottom: '28px', // above display
+                                  left: '7px',
+                                }
+                          }
+                          tooltipContent={
+                            <VerifiedTooltipContent
+                              height={tooltTipHeight}
+                              verifierIcon={verifierDetails?.icon}
+                              verifierName={verifierDetails?.name}
+                            />
+                          }
+                        >
+                          {/* TODO: HAS TO BE CHANGED TO A i icon */}
+                          <div
+                            style={{ cursor: 'pointer' }}
+                            onMouseEnter={() => {
+                              handleHeight(channelObject.channel);
+                            }}
+                          >
+                            <GoVerified
+                              size={18}
+                              color={themes.viewChannelVerifiedBadge}
+                            />
+                          </div>
+                        </Tooltip>
+
+                        {channelObject && channelObject?.channel && (
                           <Span padding="0 0 0 5px">
                             <Image
-                              src={`./svg/${
-                                CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]
-                              }.svg`}
-                              alt="Polygon"
+                              src={`./svg/Ethereum.svg`}
+                              alt="Ethereum"
                               width="20px"
                               height="20px"
                             />
                           </Span>
                         )}
-                    </Span>
-                  )}
-                </ChannelTitleSpan>
-              </ChannelTitleLink>
-            )}
-          </ChannelTitle>
+                        {channelObject &&
+                          channelObject?.alias_address != null &&
+                          channelObject?.alias_address != 'NULL' &&
+                          appConfig.allowedNetworks.includes(+channelObject?.alias_blockchain_id) &&
+                          !MaskedAliasChannels[+channelObject?.alias_blockchain_id][channelObject?.channel] && (
+                            <Span padding="0 0 0 5px">
+                              <Image
+                                src={`./svg/${
+                                  CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]
+                                }.svg`}
+                                alt="Polygon"
+                                width="20px"
+                                height="20px"
+                              />
+                            </Span>
+                          )}
+                      </Span>
+                    )}
+                  </ChannelTitleSpan>
+                </ChannelTitleLink>
+              )}
+            </ChannelTitle>
+          }
         </ChannelLogoContainer>
       )}
 
@@ -1038,14 +1040,11 @@ const ChannelLogoInner = styled.div`
   right: 0;
   bottom: 0;
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: ${(props) => props.minimal ? '10px' : '20px'};
   display: flex;
   justify-content: center;
   align-items: center;
-  @media (max-width: 600px) {
-    width: 78px;
-    height: 78px;
-  }
+
 `;
 
 const ChannelLogoOuter = styled.div`
@@ -1056,10 +1055,10 @@ const ChannelLogoOuter = styled.div`
 
 const ChannelLogo = styled(ButtonV2)`
   max-width: 100px;
-  min-width: 32px;
+  min-width: 48px;
   flex: 1;
   margin: 5px;
-  padding: 10px;
+  padding: ${props => props.minimal ? "5px" : "10px"};
   border: 1px solid ${(props) => props.theme.viewChannelIconBorder};
   background: transparent;
   overflow: hidden;
@@ -1068,10 +1067,11 @@ const ChannelLogo = styled(ButtonV2)`
   flex-direction: column;
   justify-content: center;
   align-self: flex-start;
+
   @media (max-width: 768px) {
     align-self: center;
-    min-width: 100px;
-    min-height: 100px;
+    min-width: ${props => props.minimal ? "48px" : "100px"};
+    max-width: ${props => props.minimal ? "48px" : "100px"};
   }
 
   @media (max-width: 600px) {
