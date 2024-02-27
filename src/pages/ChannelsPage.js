@@ -1,7 +1,8 @@
 // React + Web3 Essentials
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 
 // External Packages
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 // Internal Components
@@ -9,14 +10,19 @@ import { SectionV2 } from 'components/reusables/SharedStylingV2';
 import ChannelsModule from "modules/channels/ChannelsModule";
 
 // Internal Configs
+import APP_PATHS from "config/AppPaths";
 import GLOBALS from "config/Globals";
 
 // Other Information section
-const ChannelsPage = ({ loadTeaser, playTeaser }) => {
+const ChannelsPage = ({ loadTeaser, playTeaser, channelID }) => {
+  let { channelid } = useParams();
+  console.log("Channel ID:", channelid)
+  const calculatedChannelID = channelid ? channelid : channelID;
+
   // RENDER
   return (
     <Container>
-      <ChannelsModule loadTeaser={loadTeaser} playTeaser={playTeaser} />
+      <ChannelsModule channelID={calculatedChannelID} loadTeaser={loadTeaser} playTeaser={playTeaser} />
     </Container>
   );
 }

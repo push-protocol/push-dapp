@@ -2,31 +2,31 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
+import { AiOutlineSearch } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
 import styled, { useTheme } from 'styled-components';
-import { AiOutlineSearch } from 'react-icons/ai';
 
 // Internal Compoonents
+import ChainsSelect from 'components/ChainsSelect';
 import Faucets from 'components/Faucets';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import ViewChannelItem from 'components/ViewChannelItem';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import UtilityHelper, { MaskedAliasChannels, MaskedChannels } from 'helpers/UtilityHelper';
+import { useAccount } from 'hooks';
 import { incrementPage, setChannelMeta, updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
 import { incrementStepIndex } from 'redux/slices/userJourneySlice';
+import { getChannels, getChannelsSearch } from 'services'; // Api Services
 import DisplayNotice from '../primaries/DisplayNotice';
 import { Item, ItemH } from '../primaries/SharedStyling';
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import ChainsSelect from 'components/ChainsSelect';
-import { getChannels, getChannelsSearch } from 'services'; // Api Services
-import { useAccount } from 'hooks';
 
 // Internal Configs
-import { appConfig } from 'config';
-import InfoImage from "../assets/info.svg";
-import Tooltip from 'components/reusables/tooltip/Tooltip';
 import UpdateChannelTooltipContent from 'components/UpdateChannelTooltipContent';
+import Tooltip from 'components/reusables/tooltip/Tooltip';
+import { appConfig } from 'config';
 import { AppContext } from 'contexts/AppContext';
+import InfoImage from "../assets/info.svg";
 
 // import Tooltip from './reusables/tooltip/Tooltip';
 // import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
@@ -40,7 +40,7 @@ const SEARCH_DELAY = 1500;
 const SEARCH_LIMIT = 10;
 
 // Create Header
-function ViewChannels({ loadTeaser, playTeaser }) {
+function ViewChannels({ loadTeaser, playTeaser, minimal }) {
   const theme = useTheme();
   const dispatch = useDispatch();
   const { userPushSDKInstance } = useSelector((state: any) => {
@@ -208,19 +208,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     })();
   }, [account, userPushSDKInstance]);
 
-  useEffect(() => {
-    const parsedChannel = window.location.href.toString().slice(window.location.href.toString().length - 42);
-    if (!ADDRESS_REGEX.test(parsedChannel)) return;
-    setTimeout(() => {
-      setSearch(parsedChannel);
-    }, SEARCH_DELAY);
-  }, []);
-
   return (
-    <Container>
-
-
-      {!loading && (
+    <Container minimal={minimal}>
+      {!loading && !minimal && (
         <ItemBar>
           <ItemHBar>
             <SearchContainer
@@ -302,10 +292,10 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                         (channelsNetworkId == channel.alias_blockchain_id &&
                           !MaskedAliasChannels[channelsNetworkId][channel.channel])) && (
                         <ViewChannelItem
-
                           channelObjectProp={channel}
                           loadTeaser={loadTeaser}
                           playTeaser={playTeaser}
+                          minimal={minimal}
                         />
                       )}
                   </ViewChannelItems>
@@ -409,7 +399,7 @@ const ItemBar = styled.div`
 
 const Container = styled.div`
   display: flex;
-  flex: 1;
+  flex: ${props => props.minimal ? 0 : 1};
   flex-direction: column;
   font-weight: 200;
   align-content: center;

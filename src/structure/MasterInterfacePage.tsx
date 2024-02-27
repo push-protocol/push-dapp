@@ -2,13 +2,13 @@
 import React, { lazy, Suspense } from 'react';
 
 // External Packages
+import useToast from 'hooks/useToast';
+import { MdError } from 'react-icons/md';
 import { VscClose } from 'react-icons/vsc';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, redirect, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled from 'styled-components';
-import { MdError } from 'react-icons/md';
-import useToast from 'hooks/useToast';
 
 // Internal Components
 import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE, PROGRESS_POSITIONING } from 'components/reusables/loaders/LoaderSpinner';
@@ -57,24 +57,30 @@ const UserSettingsPage = lazy(() => import('pages/UserSettingsPage'));
 
 // Internal Configs
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import APP_PATHS from 'config/AppPaths';
 import GLOBALS from 'config/Globals';
+import { AppContext } from 'contexts/AppContext';
 import { ethers } from 'ethers';
 import CryptoHelper from 'helpers/CryptoHelper';
 import * as w2wHelper from 'helpers/w2w';
-import { ConnectedUser, Feeds, User } from 'types/chat';
-import SnapPage from 'pages/SnapPage';
-import { AppContext } from 'contexts/AppContext';
-import { AppContextType } from 'types/context';
-import MetamaskPushSnapModal from 'modules/receiveNotifs/MetamaskPushSnapModal';
 import { MODAL_POSITION } from 'hooks/useModalBlur';
-import APP_PATHS from 'config/AppPaths';
+import MetamaskPushSnapModal from 'modules/receiveNotifs/MetamaskPushSnapModal';
+import SnapPage from 'pages/SnapPage';
+import { ConnectedUser, Feeds, User } from 'types/chat';
+import { AppContextType } from 'types/context';
 
 // Create Header
 function MasterInterfacePage() {
+  // Get search params
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  // get location
+  const location = useLocation();
+  const { hash, pathname, search } = location;
+
   // Master Interface controls settings
   const [playTeaserVideo, setPlayTeaserVideo] = React.useState(false);
   const [loadTeaserVideo, setLoadTeaserVideo] = React.useState(null);
-  const location = useLocation();
 
   const { MetamaskPushSnapModalComponent, blockedLoading }: AppContextType = React.useContext(AppContext);
 
@@ -85,6 +91,46 @@ function MasterInterfacePage() {
       showMetamaskPushSnap();
     }
   }, [location]);
+
+  // Check location and change it if search param is present
+  // Get nativage from useNavigate
+  const navigate = useNavigate();
+
+  // if (searchParams.get('channel')) {
+  //   if (channelid !== searchParams.get('channel')) {
+  //     channelid = searchParams.get('channel');
+  //     console.log('channel search', searchParams.get('channel'));
+  //     navigate(`/chek`, { replace: true, relative: true });
+  //   }
+  // }
+  
+
+  // // For redirecting if required
+  // React.useEffect(() => {
+  //   const checkAndRedirect = () => {
+  //     if (location.pathname === APP_PATHS.Channels && searchParams.get('channel')) {
+  //       const navigate = useNavigate();
+  
+  //       const channelId = searchParams.get('channel');
+  //       console.log('redirecting to channel', `${APP_PATHS.Channels}/${channelId}`);
+  //       navigate({ pathname: `${APP_PATHS.Channels}/${channelId}` });
+  //     }
+  //   }
+
+  //   checkAndRedirect();
+  // }, []);
+
+  const ChannelsProfilePage = () => {
+    const channelid = searchParams.get('channel');
+    console.log("I am here");
+    return <ChannelsPage 
+      loadTeaser={setLoadTeaserVideo}
+      playTeaser={setPlayTeaserVideo}
+      channelID = {channelid}
+    />;
+  };
+
+  // For toast
   const blockedLoadingToast = useToast();
 
   // Render
@@ -104,23 +150,35 @@ function MasterInterfacePage() {
           <Routes>
             <Route path={APP_PATHS.Inbox} element={<InboxPage />} />
             <Route path={APP_PATHS.Spam} element={<InboxPage />} />
+
             {/* <Route element={<ConnectedWalletRoute />}> */}
-              <Route path={`${APP_PATHS.Chat}/:chatid`} element={<ChatPage />} />
-              <Route path={APP_PATHS.Chat} element={<ChatPage />} />
-              <Route path={`${APP_PATHS.Spaces}/:spaceid`} element={<SpacePage />} />
-              <Route path={APP_PATHS.Spaces} element={<SpacePage />} />
-              {/* <Route path="chat-new" element={<NewChatPage />} /> */}
+            <Route path={`${APP_PATHS.Chat}/:chatid`} element={<ChatPage />} />
+            <Route path={APP_PATHS.Chat} element={<ChatPage />} />
+            <Route path={`${APP_PATHS.Spaces}/:spaceid`} element={<SpacePage />} />
+            <Route path={APP_PATHS.Spaces} element={<SpacePage />} />
+            {/* <Route path="chat-new" element={<NewChatPage />} /> */}
             {/* </Route> */}
+
+            {/* Enable Channel specific routes */}
+            {/* <Route 
+              path={`${APP_PATHS.Channels}/:channel`} 
+              element={<ChannelsProfilePage />} 
+            /> */}
+
+            <Route 
+              path={`${APP_PATHS.Channels}/:channelid`} 
+              element={<ChannelsPage
+                loadTeaser={setLoadTeaserVideo}
+                playTeaser={setPlayTeaserVideo}
+                channelID={null}
+              />} 
+            />
 
             <Route
               path={APP_PATHS.Channels}
-              element={
-                <ChannelsPage
-                  loadTeaser={setLoadTeaserVideo}
-                  playTeaser={setPlayTeaserVideo}
-                />
-              }
+              element={<ChannelsProfilePage />} 
             />
+
             <Route
               path={APP_PATHS.Dashboard}
               element={<ChannelDashboardPage />}
