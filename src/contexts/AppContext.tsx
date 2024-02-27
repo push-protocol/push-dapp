@@ -66,12 +66,10 @@ const AppContextProvider = ({ children }) => {
         }
 
         if (wallet?.accounts?.length > 0) {
-            console.log('Wallet connected',wallet);
             const userPushInstance = await initializePushSDK();
             return userPushInstance;
         } else {
             const walletConnected = await connect();
-            console.log("Wallet connected",walletConnected); 
             return null;
 
         }
@@ -81,7 +79,6 @@ const AppContextProvider = ({ children }) => {
 
 
     const initialisePushSdkGuestMode = async () => {
-        console.log("Initialising Push SDK Guest Mode");
         let userInstance;
         userInstance = await PushAPI.initialize({
             account: '0x0000000000000000000000000000000000000001',
@@ -96,7 +93,6 @@ const AppContextProvider = ({ children }) => {
             env: appConfig.appEnv,
             account: account,
         });
-        console.log("User Instance in read Mode",userInstance);
         dispatch(setUserPushSDKInstance(userInstance));
         return userInstance;
     }
@@ -220,7 +216,6 @@ const AppContextProvider = ({ children }) => {
                 account: account,
                 progressHook: onboardingProgressReformatter,
             });
-            console.log("User Push SDK instance in App Context >>",userInstance);
             if (userInstance) {
                 setBlockedLoading({
                     enabled: false,

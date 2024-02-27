@@ -176,13 +176,11 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
     setBgUpdateLoading(true);
     setLoading(true);
     try {
-      console.log("User Push sdk instance in fetch latest notifications",userPushSDKInstance);
       const results = await await userPushSDKInstance.notification.list('INBOX', {
         raw: true,
         page: 1,
         limit: NOTIFICATIONS_PER_PAGE
       });
-      console.log("REsults >>>>",results);
       if (!notifications.length) {
         dispatch(incrementPage());
       }
@@ -247,7 +245,6 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
   };
 
   React.useEffect(() => {
-    console.log("User Push sdk instance",userPushSDKInstance,readOnlyWallet);
     if (userPushSDKInstance?.account == readOnlyWallet) return;
     fetchLatestNotifications();
     fetchAllNotif();
