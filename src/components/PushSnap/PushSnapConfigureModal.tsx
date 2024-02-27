@@ -28,8 +28,12 @@ const PushSnapConfigureModal = () => {
   const [showRemove, setShowRemove] = useState();
   const [toggleStatus, setToggleStatus] = useState(0);
   const { setSnapState, SnapState } = React.useContext(AppContext);
-  const { snoozeDuration, setSnoozeDuration, snoozeStartTime } = React.useContext(AppContext);
+  const { snoozeDuration, setSnoozeDuration, setSnoozeStartTime, snoozeStartTime } = React.useContext(AppContext);
   const [remainingTime, setRemainingTime] = useState<number>();
+
+  useEffect(() => {
+    setChecked(SnapState === 6);
+  }, [SnapState]);
 
   console.log('snoozeDuration', snoozeDuration);
 
@@ -71,7 +75,21 @@ const PushSnapConfigureModal = () => {
       return string.length < 2 ? '0' + string : string;
     };
 
-    return `${padWithZero(hours)}:${padWithZero(minutes)}:${padWithZero(seconds)}`;
+    return `${padWithZero(hours)}`;
+  };
+
+  const disableSnooze = async () => {
+    console.log(
+      await window.ethereum?.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: defaultSnapOrigin,
+          request: {
+            method: 'pushproto_disablesnooze',
+          },
+        },
+      })
+    );
   };
 
   useEffect(() => {
@@ -135,11 +153,18 @@ const PushSnapConfigureModal = () => {
   const handleChange = async (nextChecked) => {
     setChecked(nextChecked);
 
-    if (toggleStatus < 40) {
-      setToggleStatus(42);
-      setSnapState(4); // This sets the state to show the EnableSnoozeModal
+    // When the switch is turned on
+    if (nextChecked) {
+      if (toggleStatus < 40) {
+        setToggleStatus(42);
+        setSnapState(4); // Enable snooze or show the EnableSnoozeModal
+      }
     } else {
+      // When the switch is turned off
       setToggleStatus(0);
+      disableSnooze();
+      setSnoozeDuration(0); 
+      setSnoozeStartTime(null); // Reset snooze start time
     }
   };
 
@@ -266,14 +291,14 @@ const PushSnapConfigureModal = () => {
             {' '}
             <Switch
               onChange={handleChange}
-              checked={SnapState === 6}
+              checked={checked} // Controlled by the component's state
               className="react-switch"
               uncheckedIcon={false}
               checkedIcon={false}
               height={23}
               onColor="#D53A94"
               width={44}
-              margin="0 0 0 0"
+              disabled={SnapState !== 6}
             />
           </ItemHV2>
         </ItemHV2>
