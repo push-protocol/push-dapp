@@ -74,7 +74,6 @@ const EnableSnoozeModal = () => {
             },
           },
         })
-
       );
 
       setSnapState(6);
@@ -123,6 +122,10 @@ const EnableSnoozeModal = () => {
     setShowRemove(null);
   });
 
+  const handleCancel = async () => {
+    setSnapState(3); // go back to step one
+  };
+
   const [walletSelected, setWalletSelected] = useState();
 
   const handleWalletSelect = (address) => {
@@ -150,7 +153,7 @@ const EnableSnoozeModal = () => {
 
             duration < 1 || duration > 72
               ? alert('Invalid. Enter a number between 1 & 72')
-              : setSnoozeDuration(e.target.value) ;
+              : setSnoozeDuration(e.target.value);
           }}
           placeholder="Snooze duration in Hours (e.g. 6)"
         />
@@ -161,7 +164,7 @@ const EnableSnoozeModal = () => {
 
         margin="24px 0 0 0"
       >
-        <EnptyButton onClick={disableSnooze}>Cancel </EnptyButton>
+        <EnptyButton onClick={handleCancel}>Cancel </EnptyButton>
 
         <FilledButton onClick={handleChange}> Enable Snooze </FilledButton>
       </ItemHV2>

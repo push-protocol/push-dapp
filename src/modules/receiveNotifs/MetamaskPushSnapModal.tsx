@@ -13,6 +13,8 @@ import { Button } from 'components/SharedStyling';
 import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import ArrowLeft from 'assets/chat/arrowleft.svg';
+import { ImageV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import { AppContext } from 'contexts/AppContext';
@@ -39,6 +41,10 @@ const MetamaskPushSnapModal = ({ onClose, closeEnabled = true }: { onClose: () =
     onClose();
   };
 
+  const handleChange = () => {
+    setSnapState(6);
+  };
+
   const isSnapRoute = location?.pathname === '/snap';
 
   return (
@@ -62,6 +68,17 @@ const MetamaskPushSnapModal = ({ onClose, closeEnabled = true }: { onClose: () =
             Receive Notifications
           </SpanV2>
         )}
+        {SnapState == 3 && (
+          <ImageV2
+            src={ArrowLeft}
+            height="22px"
+            width="22px"
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              setSnapState(1);
+            }}
+          />
+        )}
         {SnapState === 3 && (
           <SpanV2
             fontWeight="500"
@@ -71,6 +88,17 @@ const MetamaskPushSnapModal = ({ onClose, closeEnabled = true }: { onClose: () =
           >
             Settings
           </SpanV2>
+        )}
+        {SnapState == 4 && (
+          <ImageV2
+            src={ArrowLeft}
+            height="22px"
+            width="22px"
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              setSnapState(3);
+            }}
+          />
         )}
 
         {closeEnabled && (
@@ -92,10 +120,6 @@ const MetamaskPushSnapModal = ({ onClose, closeEnabled = true }: { onClose: () =
       {SnapState == 3 && <PushSnapConfigureModal />}
       {SnapState == 4 && <EnableSnoozeModal setSnapState={setSnapState} />}
       {SnapState == 6 && <PushSnapConfigureModal />}
-
-
-    
-      
     </Container>
   );
 };
