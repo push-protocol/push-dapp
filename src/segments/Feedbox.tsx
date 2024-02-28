@@ -47,7 +47,7 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const dispatch = useDispatch();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
-  });  
+  });
   const modalRef = React.useRef(null);
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
 
@@ -172,7 +172,7 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
     }
   };
   const fetchLatestNotifications = async () => {
-    if (loading || bgUpdateLoading) return;
+    // if (loading || bgUpdateLoading) return;
     setBgUpdateLoading(true);
     setLoading(true);
     try {
@@ -245,7 +245,7 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
   };
 
   React.useEffect(() => {
-    if (userPushSDKInstance?.account == readOnlyWallet) return;
+    if (userPushSDKInstance?.account == readOnlyWallet || !userPushSDKInstance) return;
     fetchLatestNotifications();
     fetchAllNotif();
   }, [toggle, userPushSDKInstance]);
@@ -369,13 +369,13 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
             <>
               <SnapSection flexWrap='nowrap'>
                 <MetamaskLogo />
-                <InstallText  justifyContent='space-between'>
+                <InstallText justifyContent='space-between'>
                   <SpanV2 fontSize='14px' fontWeight='400'>Get Notifications directly in MetaMask using Push Snap.</SpanV2>
                   <InstallPushSnap onClick={navigateToSnaps} >Install Push Snap <OpenLink /> </InstallPushSnap>
                 </InstallText>
                 <CloseButton onClick={() => {
                   setShowSnapInfo(false);
-                }}/>
+                }} />
               </SnapSection>
 
             </>

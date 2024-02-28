@@ -175,8 +175,8 @@ const AppContextProvider = ({ children }) => {
                     onboardingProgress.progress = 99;
                     break;
                 case "PUSH-ERROR-00":
-                    onboardingProgress.errorMessage = "User Rejected Signature";
-                    onboardingProgress.hookInfo.progressTitle = "User Rejected Signature";
+                    onboardingProgress.errorMessage = "The sign in was rejected by the user. You can still continue in read-only mode.";
+                    onboardingProgress.hookInfo.progressTitle = "Profile Unlock Unsuccessful";
                     onboardingProgress.spinnerType = LOADER_SPINNER_TYPE.ERROR;
                     break;
                 case "PUSH-ERROR-01":

@@ -177,6 +177,8 @@ const themeLight = {
 
   toastSuccessBackground: 'linear-gradient(90.15deg, #30CC8B -125.65%, #30CC8B -125.63%, #F3FFF9 42.81%)',
   toastErrorBackground: 'linear-gradient(90.15deg, #FF2070 -125.65%, #FF2D79 -125.63%, #FFF9FB 42.81%)',
+  toastWarningBackground:'linear-gradient(90deg, #FFF2D1 0%, rgba(255, 255, 255, 0.00) 100%)',
+
   // Profile
   profileBG: 'linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%)',
   profileText: '#fff',
@@ -471,6 +473,8 @@ const themeDark = {
   toastShadowColor: '#00000010',
   toastSuccessBackground: 'linear-gradient(90.15deg, #30CC8B -125.65%, #30CC8B -125.63%, #2F3137 42.81%)',
   toastErrorBackground: 'linear-gradient(89.96deg, #FF2070 -101.85%, #2F3137 51.33%)',
+  toastWarningBackground:'linear-gradient(90deg, #66562D 0.03%, #2F3137 74.67%)',
+
 
   //Profile
   profileBG: '#2F3137',

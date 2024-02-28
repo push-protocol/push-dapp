@@ -8,6 +8,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled from 'styled-components';
 import { MdError } from 'react-icons/md';
+import { MdWarning } from "react-icons/md";
+
 import useToast from 'hooks/useToast';
 
 // Internal Components
@@ -231,13 +233,13 @@ function MasterInterfacePage() {
 
       {blockedLoading.errorMessage && (
         blockedLoadingToast.showMessageToast({
-          toastTitle: 'Error',
+          toastTitle: blockedLoading.title,
           toastMessage: blockedLoading.errorMessage,
-          toastType: 'ERROR',
+          toastType: 'WARNING',
           getToastIcon: (size) => (
-            <MdError
+            <MdWarning
               size={size}
-              color="red"
+              color="#E2B71D"
             />
           ),
         })
