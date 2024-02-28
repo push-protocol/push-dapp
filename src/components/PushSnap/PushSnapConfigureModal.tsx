@@ -63,6 +63,17 @@ const PushSnapConfigureModal = () => {
     getWalletAddresses();
   }, []);
 
+  const getSnoozeDuration = async () => {
+    const result = await window.ethereum?.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: defaultSnapOrigin,
+        request: { method: 'pushproto_getsnoozeinfo' },
+      },
+    });
+    console.debug('result', result);
+  };
+
   const formatTime = (milliseconds) => {
     let remaining = milliseconds / 1000;
     const hours = Math.floor(remaining / 3600);
@@ -152,6 +163,7 @@ const PushSnapConfigureModal = () => {
 
   const handleChange = async (nextChecked) => {
     setChecked(nextChecked);
+    getSnoozeDuration();
 
     // When the switch is turned on
     if (nextChecked) {
@@ -163,7 +175,6 @@ const PushSnapConfigureModal = () => {
       // When the switch is turned off
       setToggleStatus(0);
       disableSnooze();
-      setSnoozeDuration(0); 
       setSnoozeStartTime(null); // Reset snooze start time
     }
   };
@@ -298,7 +309,6 @@ const PushSnapConfigureModal = () => {
               height={23}
               onColor="#D53A94"
               width={44}
-              disabled={SnapState !== 6}
             />
           </ItemHV2>
         </ItemHV2>
