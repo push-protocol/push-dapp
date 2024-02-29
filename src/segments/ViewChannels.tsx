@@ -65,7 +65,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
   useEffect(() => {
     setLoading(!channels.length); //if there are no channels initially then, set the loader
     fetchInitialsChannelMeta();
-  }, [account, chainId]);
+  }, [account, chainId,userPushSDKInstance]);
 
   useEffect(() => {
     setChannelsNetworkId(chainId);

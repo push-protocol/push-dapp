@@ -67,6 +67,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   // theme context
   const theme = useTheme();
 
+  const {readOnlyWallet} = useContext(GlobalContext);
   const { setSelectedChatId } = useContext(Context);
   const { setMode } = useContext(GlobalContext);
 
@@ -103,7 +104,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
       }
       return formattedChatParticipant;
     } else {
-      if (userPushSDKInstance.account === '0x0000000000000000000000000000000000000001') {
+      if (userPushSDKInstance.account === readOnlyWallet) {
         handleConnectWallet();
       } else if (userPushSDKInstance.signer === undefined || userPushSDKInstance.decryptedPgpPvtKey === undefined) {
         await initializePushSDK();
@@ -116,7 +117,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
     if (userPushSDKInstance.decryptedPgpPvtKey) {
       showCreateGroupModal();
     } else {
-      if (userPushSDKInstance.account === '0x0000000000000000000000000000000000000001') {
+      if (userPushSDKInstance.account === readOnlyWallet) {
         handleConnectWallet();
       } else {
         if (userPushSDKInstance.signer === undefined) {
