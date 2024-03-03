@@ -1,19 +1,23 @@
 // React + Web3 Essentials
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // External Packages
+import { NotificationItem } from "@pushprotocol/uiweb";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from 'react-router-dom';
 import { useClickAway } from "react-use";
-import styled from "styled-components";
+import styled, { ThemeProvider, useTheme } from "styled-components";
 
 // Internal Compoonents
-import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
+import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import ChannelLoading from "components/ChannelLoading";
-import { ScrollItem } from "./ViewChannels";
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 // Internal Configs
-import { ItemHV2, SpanV2 } from "components/reusables/SharedStylingV2";
+import { latest } from "@pushprotocol/restapi/src/lib/chat";
+import { ItemVV2, SpanV2 } from "components/reusables/SharedStylingV2";
 import { appConfig } from "config";
+import APP_PATHS from "config/AppPaths";
 import { device } from "config/Globals";
 
 // Constants
@@ -26,20 +30,93 @@ const ChannelProfile = ({ channelID }) => {
     return state.user;
   });
   const modalRef = React.useRef(null);
-  useClickAway(modalRef, () => showFilter && setShowFilter(false));
 
-  // toast related section
-  const [loading, setLoading] = React.useState(false);
+  // get theme
+  const themes = useTheme();
+
+  // loading
+  const [loading, setLoading] = useState(true);
+  const [notifications, setNotifications] = useState([]);
+  
+  // Setup navigation
+  const navigate = useNavigate();
+
+  // load notifications
+  useEffect(() => {
+    if (userPushSDKInstance) {
+      setLoading(true);
+      userPushSDKInstance.channel.notifications(channelID, {
+          page: 1,
+          limit: NOTIFICATIONS_PER_PAGE,
+        }).then((response) => {
+          setNotifications(response.feeds);
+          setLoading(false);
+
+          // ENABLE PAGINATION HERE
+        }).catch((err) => { 
+          // ENABLE NO NOTIFICATION FOUND HERE
+      });
+    };
+    return () => {
+      setNotifications([]);
+      setLoading(true);
+    }
+  }, [channelID]);
 
   // Render
   return (
-    <Container>
-      <ChannelLoading />
-      
-      <ScrollItem>
-        
-      </ScrollItem>
-    </Container>
+    <ThemeProvider theme={themes}>
+      <Container>
+        <ItemVV2
+          flex="initial"
+          alignSelf="flex-start"
+          padding="0px 0px 20px 0px"
+        >
+          <SpanV2
+            alignSelf="flex-start"
+          >
+            <Back 
+              onClick={() => {
+                navigate(APP_PATHS.Channels);
+              }}
+            />
+          </SpanV2>
+          <SpanV2>
+            Channel Profile Here
+          </SpanV2>
+        </ItemVV2>
+
+        <ScrollItem>
+          {loading && 
+            <LoaderSpinner
+              type={LOADER_TYPE.SEAMLESS}
+              spinnerSize={40}
+            />
+          }
+          
+          {notifications.map((item, index) => {
+            const payload = item.payload;
+
+            // render the notification item
+            return (
+              <NotifsOuter key={`${item.payload_id}`}>
+                <NotificationItem
+                  notificationTitle={payload.notification.title}
+                  notificationBody={payload.notification.body}
+                  cta={payload.data.acta}
+                  app={payload.data.app}
+                  icon={payload.data.icon}
+                  image={payload.data.aimg}
+                  theme={themes.scheme}
+                  chainName={item.source}
+                  url={payload.data.url}
+                />
+              </NotifsOuter>
+            );
+          })}
+        </ScrollItem>
+      </Container>
+    </ThemeProvider>
   );
 }
 
@@ -48,86 +125,64 @@ const Container = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  height: 85%;
   align-content: center;
   align-items: center;
   justify-content: center;
   font-weight: 200;
-  margin: 0 0 0 10px;
+  margin: 20px 0px 0px 20px;
 `;
 
 const NotifsOuter = styled.div`
-  margin: 25px 0px;
+
 `;
 
-const Notifs = styled.div`
-  align-self: stretch;
-  flex: 1;
-`;
-
-const Toaster = styled.div`
+const ScrollItem = styled(ItemVV2)`
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin: 0px 10px;
-`;
+  align-self: stretch;
+  align-items: stretch;
+  justify-content: stretch;
+  flex-wrap: nowrap;
 
-const ToasterMsg = styled.div`
-  margin: 0px 10px;
-`;
+  flex: 1;
+  padding: 0px 20px 10px 0px;
+  overflow-y: auto;
 
-const SnapSection = styled(ItemHV2)`
-  max-height:28px;
-  margin-top:20px;
-  border-radius: 12px;
-  border: 1px solid #D4DCEA;
-  background: #FFF;
-  border: 1px solid ${(props) => props.theme.default.border};
-  background:${(props) => props.theme.default.bg};
-  padding: 12px 16px;
-  align-items: center;
-  gap: 16px;
-
-  @media ${device.tablet} {
-    gap: 9px;  
-    margin-right:10px;
+  &::-webkit-scrollbar-track {
+    background-color: ${(props) => props.theme.scrollBg};
+    border-radius: 10px;
   }
 
-  @media (max-width:525px) {
-    max-height:50px;
+  &::-webkit-scrollbar {
+    background-color: ${(props) => props.theme.scrollBg};
+    width: 6px;
   }
-`
 
-const InstallText = styled(ItemHV2)`
-  @media ${device.tablet} {
-    flex-direction:column;  
-    align-items: baseline;
-    display: block;
-    align-self: auto;
-  }
+  @media (max-width: 768px) {
+    padding: 0px;
+
+    &::-webkit-scrollbar-track {
+      background-color: none;
+      border-radius: 9px;
+    }
   
-`
-
-const CloseButton = styled(Close)`
-  cursor:pointer;
-  height:20px;
-  width:20px;
-  
-
-
-`
-
-const InstallPushSnap = styled(SpanV2)`
-  cursor:pointer;
-  font-size:14px;
-  font-weight:500;
-  color:#D53A94;
-
-  &:hover{
-    text-decoration:underline;
-    text-underline-position: under;
+    &::-webkit-scrollbar {
+      background-color: none;
+      width: 4px;
+    }
   }
-`
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0.44,  #CF1C84),
+      color-stop(0.72, #CF1C84),
+      color-stop(0.86, #CF1C84)
+    );
+  }
+`;
 
 // Export Default
 export default ChannelProfile;

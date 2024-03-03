@@ -348,12 +348,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
   };
 
   const copyToClipboard = (address) => {
-    let hostname = window.location.hostname;
-    // if we are on localhost, attach the port
-    if (hostname === 'localhost') {
-      hostname = hostname + ':3000';
-    }
-    const url = `${hostname}/channels?channel=${address}`;
+    const url = generateChannelProfileLink(address, true);
+
     // fallback for non navigator browser support
     if (navigator && navigator.clipboard) {
       navigator.clipboard.writeText(url);
@@ -377,7 +373,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
         hostname = hostname + ':3000';
       }
 
-      url = `${hostname}/${url}`;
+      url = `${hostname}${url}`;
     }
 
     return url;
@@ -484,7 +480,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
                         </Tooltip>
                       )}
 
-                      <Span onClick={() => correctChannelTitleLink()}>{channelObject.name}</Span>
+                      <Span onClick={() => navigate(generateChannelProfileLink(channelObject.channel, false))}>{channelObject.name}</Span>
                     </Span>
 
                     {isVerified == 1 && (
@@ -576,7 +572,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
           <ChannelLogo 
             minimal={minimal}
             onClick={() => {
-              console.log(generateChannelProfileLink(channelObject.channel, false));
               navigate(generateChannelProfileLink(channelObject.channel, false))
             }}
           >
@@ -654,7 +649,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
                       </Tooltip>
                     )}
 
-                    <Span onClick={() => correctChannelTitleLink()}>{channelObject.name}</Span>
+                    <Span onClick={() => navigate(generateChannelProfileLink(channelObject.channel, false))}>{channelObject.name}</Span>
 
                     
                     {isVerified == 1 && (
