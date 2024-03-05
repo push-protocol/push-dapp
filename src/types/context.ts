@@ -46,6 +46,7 @@ export interface AppContextType {
   snapInstalled: boolean;
   setSnapInstalled: (snapInstalled: boolean) => void;
   handleConnectWallet: (showToast?: boolean, toastMessage?: string) => any;
+  connectWallet: (showToast?: boolean, toastMessage?: string) => any;
   setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
   blockedLoading: BlockedLoadingI;
   getUser: () => Promise<void>;

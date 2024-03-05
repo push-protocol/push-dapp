@@ -128,7 +128,7 @@ const Profile = ({ isDarkMode }) => {
                 ) : (
                   <>{shortenText(account, 5)}</>
                 )}
-                <SpanV2 fontWeight='600' margin='0 0 0 2px'>{!(wallet?.accounts?.length > 0) ? ReadOnlyWalletMode.GUEST_MODE : userPushSDKInstance?.readMode && ReadOnlyWalletMode.READ_ONLY_MODE}</SpanV2>
+                {/* <SpanV2 fontWeight='600' margin='0 0 0 2px'>{!(wallet?.accounts?.length > 0) ? ReadOnlyWalletMode.GUEST_MODE : userPushSDKInstance?.readMode && ReadOnlyWalletMode.READ_ONLY_MODE}</SpanV2> */}
                 <ToggleArrowImg filter={isDarkMode ? theme.snackbarBorderIcon : 'brightness(0) invert(1)'}>
                   <img
                     alt="arrow"

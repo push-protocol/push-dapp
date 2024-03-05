@@ -1,5 +1,7 @@
 // React + Web3 Essentials
 import React, { useContext, useMemo, useState } from "react";
+import * as PushAPI from "@pushprotocol/restapi";
+import { ethers } from "ethers";
 
 // External Packages
 import Switch from 'react-switch';
@@ -141,14 +143,14 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
 const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (options) => {
   const { children, channelDetail, setLoading, onSuccessOptin } = options;
 
-  const { chainId } = useAccount();
+  const { chainId, provider, account, wallet } = useAccount();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const { handleConnectWallet } = useContext(AppContext);
+  const { handleConnectWallet, connectWallet } = useContext(AppContext);
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
@@ -174,13 +176,24 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
     setLoadingFunc(true);
 
     let userPushInstance = userPushSDKInstance;
-    if (!userPushInstance.signer) {
-      userPushInstance = await handleConnectWallet();
-      if (!userPushInstance) {
-        setLoadingFunc(false);
-        return;
-      }
+    // if (!userPushInstance.signer) {
+    //   userPushInstance = await handleConnectWallet();
+    //   if (!userPushInstance) {
+    //     setLoadingFunc(false);
+    //     return;
+    //   }
+    // }
+
+    let walletAddress = account;
+    let web3Provider = provider;
+
+    if(!(wallet?.accounts?.length > 0)){
+      const connectedWallet = await connectWallet();
+      walletAddress = connectedWallet.accounts[0].address;
+      web3Provider = new ethers.providers.Web3Provider(connectedWallet.provider, 'any')
     }
+
+
 
     try {
       let channelAddress = channelDetail.channel;
@@ -190,11 +203,13 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
 
       subscribeToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
-      await userPushInstance.notification.subscribe(convertAddressToAddrCaip(channelAddress, chainId), {
-        settings: notifChannelSettingFormatString({ settings: channelSettings }),
-        // settings: [],
+      const _signer = await web3Provider?.getSigner(walletAddress);
+
+      await PushAPI.channels.subscribe({
+        signer: _signer,
+        channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
+        userAddress: convertAddressToAddrCaip(walletAddress, chainId), // user address in CAIP
         onSuccess: () => {
-          onSuccessOptin();
           dispatch(updateSubscriptionStatus({ channelAddress, status: true }));
           dispatch(updateUserSetting({ channelAddress, settings: userSettingsFromDefaultChannelSetting({ channelSetting: channelSettings }) }));
 
@@ -224,7 +239,44 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
             ),
           });
         },
+        env: appConfig.pushNodesEnv,
       });
+
+      // await PUSHAPI.channels.subscribe(convertAddressToAddrCaip(channelAddress, chainId), {
+      //   settings: notifChannelSettingFormatString({ settings: channelSettings }),
+      //   // settings: [],
+      //   onSuccess: () => {
+      //     onSuccessOptin();
+      //     dispatch(updateSubscriptionStatus({ channelAddress, status: true }));
+      //     dispatch(updateUserSetting({ channelAddress, settings: userSettingsFromDefaultChannelSetting({ channelSetting: channelSettings }) }));
+
+      //     subscribeToast.showMessageToast({
+      //       toastTitle: 'Success',
+      //       toastMessage: 'Successfully opted into channel !',
+      //       toastType: 'SUCCESS',
+      //       getToastIcon: (size) => (
+      //         <MdCheckCircle
+      //           size={size}
+      //           color="green"
+      //         />
+      //       ),
+      //     });
+      //   },
+      //   onError: () => {
+      //     console.error('opt in error');
+      //     subscribeToast.showMessageToast({
+      //       toastTitle: 'Error',
+      //       toastMessage: `There was an error opting into channel`,
+      //       toastType: 'ERROR',
+      //       getToastIcon: (size) => (
+      //         <MdError
+      //           size={size}
+      //           color="red"
+      //         />
+      //       ),
+      //     });
+      //   },
+      // });
 
 
     } catch (err) {

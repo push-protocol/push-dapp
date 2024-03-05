@@ -57,6 +57,23 @@ const AppContextProvider = ({ children }) => {
 
     const dispatch = useDispatch();
 
+    const connectWallet = async (showToast = false, toastMessage?: string) =>{
+        if (showToast) {
+            web3onboardToast.showMessageToast({
+                toastMessage: toastMessage || "Please connect your wallet to continue",
+                toastTitle: "Connect Wallet",
+                toastType: "ERROR",
+                getToastIcon: (size) => <MdError size={size} color="red" />,
+            });
+        }
+
+        if (!(wallet?.accounts?.length > 0)) {
+            const walletConnected = await connect();
+            return walletConnected[0];
+        }
+
+    }
+
     const handleConnectWallet = async (showToast = false, toastMessage?: string) => {
         if (showToast) {
             web3onboardToast.showMessageToast({
@@ -343,6 +360,7 @@ const AppContextProvider = ({ children }) => {
             initializePushSDK,
             SnapState,
             handleConnectWallet,
+            connectWallet,
             setSnapInstalled,
             snapInstalled,
             setBlockedLoading,
