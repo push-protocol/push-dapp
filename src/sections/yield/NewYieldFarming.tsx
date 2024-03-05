@@ -136,12 +136,12 @@ const NewYieldFarming = (
             />
             <V3Container>
 
-                <YieldPushFeeV3
+                {/* <YieldPushFeeV3
                     userDataPush={userDataPush}
                     getUserDataPush={getUserDataPush}
                     PUSHPoolstats={PUSHPoolstats}
                     getPUSHPoolStats={getPUSHPoolStats}
-                />
+                /> */}
 
                 <YieldUniswapV3
                     lpPoolStats={lpPoolStats}
@@ -149,9 +149,7 @@ const NewYieldFarming = (
                     getLpPoolStats={getLpPoolStats}
                     getUserDataLP={getUserDataLP}
                 />
-
-
-
+                
             </V3Container>
 
         </>
