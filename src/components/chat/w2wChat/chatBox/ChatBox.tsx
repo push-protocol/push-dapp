@@ -33,7 +33,7 @@ import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext as ContextType } from 'types/chat';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
-import { caip10ToWallet } from '../../../../helpers/w2w';
+import { caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w';
 import { checkIfGroup, getGroupImage } from '../../../../helpers/w2w/groupChat';
 
 import { AppContext } from 'contexts/AppContext';
@@ -81,30 +81,10 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   //resolve web3 names
   useResolveWeb3Name(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
 
-  // get web3 name
-  let ensName = '';
-  if (!isGroup && currentChat?.wallets?.split(',')[0].toString()) {
-    const walletLowercase = currentChat.wallets.includes(':nft')
-      ? caip10ToWallet(
-          currentChat?.wallets
-            .replace(/eip155:\d+:/, 'eip155:')
-            .split(':nft')[0]
-            .toString()
-            .toLowerCase()
-        )
-      : caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase();
-    const checksumWallet = ethers.utils.getAddress(walletLowercase);
-    ensName = web3NameList[checksumWallet];
-  }
+
   const navigate = useNavigate();
   const location = useLocation();
-  useEffect(() => {
-    // if ens is resolved, update browse to match ens name is it doesn't match
-    if (ensName && location.pathname !== `/chat/${ensName}`) {
-      // lastly, set navigation for dynamic linking
-      navigate(`/chat/${ensName}`, { replace: true });
-    }
-  }, [ensName]);
+
 
   useEffect(() => {
     setIsGroup(false);
@@ -136,6 +116,30 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   
     
   };
+    // get web3 name
+    console.debug(getChatId())
+    let ensName = '';
+    if (!isGroup && (getChatId())) {
+      const walletLowercase = getChatId().includes(':nft')
+        ? caip10ToWallet(
+            (getChatId())
+              .replace(/eip155:\d+:/, 'eip155:')
+              .split(':nft')[0]
+              .toString()
+              .toLowerCase()
+          )
+        : caip10ToWallet(getChatId())?.toLowerCase();
+        console.debug(walletLowercase)
+      const checksumWallet = ethers.utils.getAddress(walletLowercase);
+      ensName = web3NameList[checksumWallet];
+    }
+    useEffect(() => {
+      // if ens is resolved, update browse to match ens name is it doesn't match
+      if (ensName && location.pathname !== `/chat/${ensName}`) {
+        // lastly, set navigation for dynamic linking
+        navigate(`/chat/${ensName}`, { replace: true });
+      }
+    }, [ensName]);
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
       return;
@@ -147,9 +151,9 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     videoObject?.setData((oldData) => {
       return produce(oldData, (draft) => {
         draft.local.address = account;
-        draft.incoming[0].address = caip10ToWallet(currentChat.wallets.toString());
+        draft.incoming[0].address = caip10ToWallet((getChatId()).toString());
         draft.incoming[0].status = PushAPI.VideoCallStatus.INITIALIZED;
-        draft.meta.chatId = currentChat.chatId;
+        // draft.meta.chatId = currentChat.chatId;
       });
     });
   };
