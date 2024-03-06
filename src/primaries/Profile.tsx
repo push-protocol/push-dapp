@@ -25,7 +25,7 @@ import { SpanV2 } from 'components/reusables/SharedStylingV2.js';
 
 // Create Header
 const Profile = ({ isDarkMode }) => {
-  const { web3NameList,initialisePushSdkReadMode,handleConnectWallet }: AppContextType = useContext(AppContext);
+  const { web3NameList,initialisePushSdkReadMode }: AppContextType = useContext(AppContext);
   const { setReadOnlyWallet, readOnlyWallet, mode, setMode }: GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
@@ -76,7 +76,7 @@ const Profile = ({ isDarkMode }) => {
       function: async () => {
         await disconnect(wallet);
         setMode(ReadOnlyWalletMode.GUEST_MODE);
-        setReadOnlyWallet('0x0000000000000000000000000000000000000000');
+        setReadOnlyWallet('0x0000000000000000000000000000000000000001');
       },
       title: 'Logout',
       invertedIcon: './logout.svg',
@@ -86,6 +86,10 @@ const Profile = ({ isDarkMode }) => {
   useClickAway(toggleArrowRef, dropdownRef, () => {
     setShowDropdown(false);
   });
+
+  const ConnectWallet = ()=>{
+    connect();
+  }
 
   
   // to create blockies
@@ -100,7 +104,7 @@ const Profile = ({ isDarkMode }) => {
               bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
               color='#FFF'
               isDarkMode={isDarkMode}
-              onClick={()=>handleConnectWallet()}
+              onClick={()=>ConnectWallet()}
             >
               Connect Wallet
             </Wallet>
@@ -124,7 +128,7 @@ const Profile = ({ isDarkMode }) => {
                 ) : (
                   <>{shortenText(account, 5)}</>
                 )}
-                <SpanV2 fontWeight='600' margin='0 0 0 2px'>{!(wallet?.accounts?.length > 0) ? ReadOnlyWalletMode.GUEST_MODE : userPushSDKInstance?.readMode && ReadOnlyWalletMode.READ_ONLY_MODE}</SpanV2>
+                {/* <SpanV2 fontWeight='600' margin='0 0 0 2px'>{!(wallet?.accounts?.length > 0) ? ReadOnlyWalletMode.GUEST_MODE : userPushSDKInstance?.readMode && ReadOnlyWalletMode.READ_ONLY_MODE}</SpanV2> */}
                 <ToggleArrowImg filter={isDarkMode ? theme.snackbarBorderIcon : 'brightness(0) invert(1)'}>
                   <img
                     alt="arrow"
@@ -163,7 +167,7 @@ const Profile = ({ isDarkMode }) => {
           bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
           color='#FFF'
           isDarkMode={isDarkMode}
-          onClick={()=>handleConnectWallet()}
+          onClick={()=>ConnectWallet()}
         >
           Connect Wallet
         </Wallet>

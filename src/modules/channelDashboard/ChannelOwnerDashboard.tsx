@@ -149,10 +149,10 @@ const ChannelOwnerDashboard = () => {
   }
 
   const showEditChannel = () => {
-    if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
-      return;
-    }
+    // if (!userPushSDKInstance.signer) {
+    //   handleConnectWallet();
+    //   return;
+    // }
     setEditChannel(true);
   }
 

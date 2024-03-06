@@ -2,7 +2,7 @@
 import useModalBlur from "hooks/useModalBlur";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { ProgressHookType, PushAPI } from '@pushprotocol/restapi';
-
+import { ethers } from "ethers";
 
 // Internal Components
 import { AppContextType, BlockedLoadingI, ConnectedPeerIDType, LocalPeerType, onboardingProgressI, Web3NameListType } from "types/context"
@@ -23,6 +23,8 @@ export const AppContext = createContext<AppContextType | null>(null);
 const AppContextProvider = ({ children }) => {
     const { connect, provider, account, wallet, connecting } = useAccount();
     const web3onboardToast = useToast();
+
+    const { readOnlyWallet } = useContext(GlobalContext);
 
     const [web3NameList, setWeb3NameList] = useState<Web3NameListType>({});
     const [snapInstalled, setSnapInstalled] = useState(false);
@@ -55,6 +57,23 @@ const AppContextProvider = ({ children }) => {
 
     const dispatch = useDispatch();
 
+    const connectWallet = async (showToast = false, toastMessage?: string) =>{
+        if (showToast) {
+            web3onboardToast.showMessageToast({
+                toastMessage: toastMessage || "Please connect your wallet to continue",
+                toastTitle: "Connect Wallet",
+                toastType: "ERROR",
+                getToastIcon: (size) => <MdError size={size} color="red" />,
+            });
+        }
+
+        if (!(wallet?.accounts?.length > 0)) {
+            const walletConnected = await connect();
+            return walletConnected[0];
+        }
+
+    }
+
     const handleConnectWallet = async (showToast = false, toastMessage?: string) => {
         if (showToast) {
             web3onboardToast.showMessageToast({
@@ -65,11 +84,17 @@ const AppContextProvider = ({ children }) => {
             });
         }
 
-
         if (wallet?.accounts?.length > 0) {
-            await initializePushSDK();
+            const userPushInstance = await initializePushSDK();
+            return userPushInstance;
         } else {
-            connect();
+            const walletConnected = await connect();
+            if (walletConnected) {
+                const userPushInstance = await initializePushSDK(walletConnected[0]);
+                return userPushInstance;
+            } else {
+                return null;
+            }
         }
 
     }
@@ -77,23 +102,22 @@ const AppContextProvider = ({ children }) => {
 
 
     const initialisePushSdkGuestMode = async () => {
-        console.log("Initialising Push SDK Guest Mode");
         let userInstance;
         userInstance = await PushAPI.initialize({
-            account: '0x0000000000000000000000000000000000000000',
+            account: readOnlyWallet,
             env: appConfig.appEnv,
         });
         dispatch(setUserPushSDKInstance(userInstance));
     }
 
     const initialisePushSdkReadMode = async () => {
-        console.log("Initialising Push SDK Read Mode");
         let userInstance;
         userInstance = await PushAPI.initialize({
             env: appConfig.appEnv,
             account: account,
         });
         dispatch(setUserPushSDKInstance(userInstance));
+        return userInstance;
     }
 
 
@@ -174,8 +198,8 @@ const AppContextProvider = ({ children }) => {
                     onboardingProgress.progress = 99;
                     break;
                 case "PUSH-ERROR-00":
-                    onboardingProgress.errorMessage = "User Rejected Signature";
-                    onboardingProgress.hookInfo.progressTitle = "User Rejected Signature";
+                    onboardingProgress.errorMessage = "The sign in was rejected by the user. You can still continue in read-only mode.";
+                    onboardingProgress.hookInfo.progressTitle = "Profile Unlock Unsuccessful";
                     onboardingProgress.spinnerType = LOADER_SPINNER_TYPE.ERROR;
                     break;
                 case "PUSH-ERROR-01":
@@ -206,16 +230,23 @@ const AppContextProvider = ({ children }) => {
 
     };
 
-    const initializePushSDK = async () => {
+    const initializePushSDK = async (wallet?: any) => {
         let userInstance;
         try {
-            const librarySigner = provider?.getSigner(account);
+
+            let web3Provider = provider;
+            let currentAddress = wallet ? wallet.accounts[0].address : account;
+
+            if (wallet) {
+                web3Provider = new ethers.providers.Web3Provider(wallet.provider, 'any')
+            }
+
+            const librarySigner = web3Provider?.getSigner(currentAddress);
             userInstance = await PushAPI.initialize(librarySigner!, {
                 env: appConfig.appEnv,
-                account: account,
+                account: currentAddress,
                 progressHook: onboardingProgressReformatter,
             });
-
             if (userInstance) {
                 setBlockedLoading({
                     enabled: false,
@@ -227,9 +258,11 @@ const AppContextProvider = ({ children }) => {
             }
 
             dispatch(setUserPushSDKInstance(userInstance));
+            return userInstance;
         } catch (error) {
             // Handle initialization error
             console.log("Errror !!!!!", error);
+            return null;
         }
     };
 
@@ -284,7 +317,7 @@ const AppContextProvider = ({ children }) => {
         } else {
             initialisePushSdkGuestMode();
         }
-    }, [account, provider, wallet]);
+    }, [account]);
 
     const createUserIfNecessary = async (): Promise<ConnectedUser> => {
         try {
@@ -327,6 +360,7 @@ const AppContextProvider = ({ children }) => {
             initializePushSDK,
             SnapState,
             handleConnectWallet,
+            connectWallet,
             setSnapInstalled,
             snapInstalled,
             setBlockedLoading,

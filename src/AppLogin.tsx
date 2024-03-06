@@ -121,7 +121,7 @@ const AppLogin = ({ toggleDarkMode }) => {
   }
 
   const initiateGuestModa = () => {
-    const guestModeAddress = '0x0000000000000000000000000000000000000000';
+    const guestModeAddress = '0x0000000000000000000000000000000000000001';
     setMode(ReadOnlyWalletMode.GUEST_MODE);
     setReadOnlyWallet(guestModeAddress);
     hideOnboardModal();
