@@ -9,88 +9,44 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import { ReactComponent as MinusCircle } from 'assets/PushSnaps/MinusCircle.svg';
-import InfoImage from 'assets/info.svg';
 import { Button } from 'components/SharedStyling';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { shortenText } from 'helpers/UtilityHelper';
 import { useAccount } from 'hooks';
 import { AppContext } from 'contexts/AppContext';
 
 // Internal Configs
 import { device } from 'config/Globals';
-import EnableSnoozeModal from './EnableSnoozeModal';
+import { SnoozeDurationType } from 'types';
+import { updateSnoozeDuration } from 'helpers';
+import { defaultSnapOrigin } from 'config';
 
-const PushSnapConfigureModal = () => {
-  const [walletAddresses, setWalletAddresses] = useState([]);
+const PushSnapConfigureModal = ({
+  snoozeDuration, setSnoozeDuration
+}: 
+  {snoozeDuration: SnoozeDurationType, setSnoozeDuration: (snoozeDuration: SnoozeDurationType) => void}
+) => {
   const [addresses, setAddresses] = useState([]);
   const [searchedUser, setSearchedUser] = useState('');
-  const [showRemove, setShowRemove] = useState();
-  const [toggleStatus, setToggleStatus] = useState(0);
   const { setSnapState, SnapState } = React.useContext(AppContext);
-  const { snoozeDuration, setSnoozeDuration, setSnoozeStartTime, snoozeStartTime } = React.useContext(AppContext);
-  const [remainingTime, setRemainingTime] = useState<number>();
 
   useEffect(() => {
     setChecked(SnapState === 6);
   }, [SnapState]);
 
-  console.log('snoozeDuration', snoozeDuration);
-
   const theme = useTheme();
-
-  const defaultSnapOrigin = 'npm:@pushprotocol/snap';
 
   const { chainId, account, provider } = useAccount();
 
   useEffect(() => {
-    (async function () {
-      const res = await window.ethereum?.request({
-        method: 'wallet_invokeSnap',
-        params: {
-          snapId: defaultSnapOrigin,
-          request: {
-            method: 'pushproto_gettogglestatus',
-            params: { address: searchedUser },
-          },
-        },
-      });
-      setToggleStatus(res);
+    (async function() {
+      getWalletAddresses();
+      await updateSnoozeDuration(setSnoozeDuration);
     })();
-  }, [toggleStatus]);
-
-  useEffect(() => {
-    getWalletAddresses();
   }, []);
 
-  const getSnoozeDuration = async () => {
-    const result = await window.ethereum?.request({
-      method: 'wallet_invokeSnap',
-      params: {
-        snapId: defaultSnapOrigin,
-        request: { method: 'pushproto_getsnoozeinfo' },
-      },
-    });
-    console.debug('result', result);
-  };
-
-  const formatTime = (milliseconds) => {
-    let remaining = milliseconds / 1000;
-    const hours = Math.floor(remaining / 3600);
-    remaining %= 3600;
-    const minutes = Math.floor(remaining / 60);
-    const seconds = Math.floor(remaining % 60);
-
-    const padWithZero = (number) => {
-      const string = number.toString();
-      return string.length < 2 ? '0' + string : string;
-    };
-
-    return `${padWithZero(hours)}`;
-  };
 
   const disableSnooze = async () => {
-    console.log(
       await window.ethereum?.request({
         method: 'wallet_invokeSnap',
         params: {
@@ -100,24 +56,7 @@ const PushSnapConfigureModal = () => {
           },
         },
       })
-    );
   };
-
-  useEffect(() => {
-    if (!snoozeStartTime) return;
-    console.log('snoozeStartTime', snoozeStartTime);
-
-    const intervalId = setInterval(() => {
-      const now = new Date();
-      const endTime = new Date(snoozeStartTime.getTime() + snoozeDuration * 60 * 60 * 1000);
-      const timeLeft = endTime.getTime() - now.getTime();
-      setRemainingTime(Math.max(0, timeLeft));
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, [snoozeDuration, snoozeStartTime]);
-
-  console.log('remainingTime', formatTime(remainingTime));
 
   async function getSignature(mode: number) {
     if (mode == 1) {
@@ -137,7 +76,6 @@ const PushSnapConfigureModal = () => {
   }
 
   const addWalletAddresses = async () => {
-    console.debug('searchedUser', searchedUser);
     const signatureResult = await getSignature(1);
     if (signatureResult) {
       if (searchedUser) {
@@ -161,27 +99,24 @@ const PushSnapConfigureModal = () => {
 
   const [checked, setChecked] = useState(false);
 
+  useEffect(() => {
+    setChecked(snoozeDuration.enabled);
+  }, [snoozeDuration]);
+
   const handleChange = async (nextChecked) => {
     setChecked(nextChecked);
-    getSnoozeDuration();
 
     // When the switch is turned on
     if (nextChecked) {
-      if (toggleStatus < 40) {
-        setToggleStatus(42);
         setSnapState(4); // Enable snooze or show the EnableSnoozeModal
-      }
     } else {
-      // When the switch is turned off
-      setToggleStatus(0);
-      disableSnooze();
-      setSnoozeStartTime(null); // Reset snooze start time
+      await disableSnooze();
     }
+    await updateSnoozeDuration(setSnoozeDuration);
   };
 
   const removeWalletAddresses = async (walletSelected: string) => {
     const signatureResult = await getSignature(2);
-    console.log('Ran', signatureResult);
     if (signatureResult) {
       if (walletSelected) {
         await window.ethereum?.request({
@@ -215,9 +150,7 @@ const PushSnapConfigureModal = () => {
 
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => {
-    console.warn('Set show to be null');
     setWalletSelected(null);
-    setShowRemove(null);
   });
 
   const [walletSelected, setWalletSelected] = useState();
@@ -251,7 +184,7 @@ const PushSnapConfigureModal = () => {
 
       <AddressesContainer ref={containerRef}>
         {addresses?.map((wallet) => (
-          <AddressesSubContainer>
+          <AddressesSubContainer key={wallet}>
             <SpanV2
               fontSize="15px"
               fontWeight="500"
@@ -327,7 +260,7 @@ const PushSnapConfigureModal = () => {
         Gap="8px"
         justifyContent="flex-start space-between"
       >
-        {SnapState == 6 ? (
+        {snoozeDuration.enabled == true ? (
           <>
             <ItemHV2 justifyContent="flex-start">
               {' '}
@@ -336,7 +269,7 @@ const PushSnapConfigureModal = () => {
 
             <ItemHV2 justifyContent="flex-end">
               {' '}
-              <SecondaryText> {formatTime(remainingTime)} hours</SecondaryText>
+              <SecondaryText> {snoozeDuration.hrsLeft} hours</SecondaryText>
             </ItemHV2>
           </>
         ) : (

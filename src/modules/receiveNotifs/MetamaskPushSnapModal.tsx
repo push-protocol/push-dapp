@@ -19,12 +19,17 @@ import { ImageV2 } from 'components/reusables/SharedStylingV2';
 // Internal Configs
 import { AppContext } from 'contexts/AppContext';
 import EnableSnoozeModal from 'components/PushSnap/EnableSnoozeModal';
+import { SnoozeDurationType } from 'types';
 
 const MetamaskPushSnapModal = ({ onClose, closeEnabled = true }: { onClose: () => void; closeEnabled?: boolean }) => {
   const theme = useTheme();
   const location = useLocation();
 
   const [configure, setConfigure] = useState(false);
+  const [snoozeDuration, setSnoozeDuration] = useState<SnoozeDurationType>({
+    enabled: false,
+    hrsLeft: 0
+  });
 
   const { setSnapState, SnapState } = React.useContext(AppContext);
 
@@ -41,22 +46,11 @@ const MetamaskPushSnapModal = ({ onClose, closeEnabled = true }: { onClose: () =
     onClose();
   };
 
-  const handleChange = () => {
-    setSnapState(6);
-  };
-
   const isSnapRoute = location?.pathname === '/snap';
 
   return (
     <Container padding="20px 15px">
       <ItemHV2 justifyContent="space-between">
-        {SnapState !== 1 && !isSnapRoute && (
-          <Back
-            width="24px"
-            cursor="pointer"
-            onClick={() => setSnapState(1)}
-          />
-        )}
 
         {SnapState === 1 && (
           <SpanV2
@@ -68,7 +62,7 @@ const MetamaskPushSnapModal = ({ onClose, closeEnabled = true }: { onClose: () =
             Receive Notifications
           </SpanV2>
         )}
-        {SnapState == 3 && (
+        {(SnapState == 3 || SnapState == 2) && (
           <ImageV2
             src={ArrowLeft}
             height="22px"
@@ -117,9 +111,8 @@ const MetamaskPushSnapModal = ({ onClose, closeEnabled = true }: { onClose: () =
         />
       )}
       {SnapState == 2 && <SnapInformationModal handleCloseModal={handleCloseModal} />}
-      {SnapState == 3 && <PushSnapConfigureModal />}
-      {SnapState == 4 && <EnableSnoozeModal setSnapState={setSnapState} />}
-      {SnapState == 6 && <PushSnapConfigureModal />}
+      {SnapState == 3 && <PushSnapConfigureModal snoozeDuration={snoozeDuration} setSnoozeDuration={setSnoozeDuration} />}
+      {SnapState == 4 && <EnableSnoozeModal setSnoozeDuration={setSnoozeDuration} />}
     </Container>
   );
 };

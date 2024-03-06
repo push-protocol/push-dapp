@@ -1,135 +1,54 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 // External Packages
-import { AiOutlineMore } from 'react-icons/ai';
-import Switch from 'react-switch';
-import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ReactComponent as MinusCircle } from 'assets/PushSnaps/MinusCircle.svg';
-import InfoImage from 'assets/info.svg';
-import { Button } from 'components/SharedStyling';
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import Tooltip from 'components/reusables/tooltip/Tooltip';
-import { shortenText } from 'helpers/UtilityHelper';
-import { useAccount } from 'hooks';
+import { ItemHV2, ItemVV2, ButtonV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import { device } from 'config/Globals';
 import { AppContext } from 'contexts/AppContext';
+import { SnoozeDurationType } from 'types';
+import { updateSnoozeDuration } from 'helpers';
+import { defaultSnapOrigin } from 'config';
 
-const EnableSnoozeModal = () => {
-  const [walletAddresses, setWalletAddresses] = useState([]);
-  const [addresses, setAddresses] = useState([]);
-  const { setSnapState, SnapState } = React.useContext(AppContext);
-  const [searchedUser, setSearchedUser] = useState('');
-  const { snoozeDuration, setSnoozeDuration } = React.useContext(AppContext);
-  const { snoozeStartTime, setSnoozeStartTime } = React.useContext(AppContext);
-  const [snooze, setSnooze] = useState('');
-  const [showRemove, setShowRemove] = useState();
-  const [toggleStatus, setToggleStatus] = useState(0);
+const EnableSnoozeModal = ({
+  setSnoozeDuration
+}: 
+  {setSnoozeDuration: (snoozeDuration: SnoozeDurationType) => void}
+) => {
+  const { setSnapState } = React.useContext(AppContext);
   const theme = useTheme();
 
-  const defaultSnapOrigin = 'npm:@pushprotocol/snap';
+  const [snoozeDurationInput, setSnoozeDurationInput] = useState<number>(1);
 
-  const { chainId, account, provider } = useAccount();
-
-  useEffect(() => {
-    (async function () {
-      const res = await window.ethereum?.request({
-        method: 'wallet_invokeSnap',
-        params: {
-          snapId: defaultSnapOrigin,
-          request: {
-            method: 'pushproto_gettogglestatus',
-            params: { address: searchedUser },
-          },
-        },
-      });
-      setToggleStatus(res);
-    })();
-  }, [toggleStatus]);
-
-  useEffect(() => {
-    getWalletAddresses();
-  }, []);
-
-  const [checked, setChecked] = useState(false);
-  const handleChange = async (nextChecked) => {
-    setChecked(nextChecked);
-
-    const duration = parseInt(snoozeDuration);
+  const handleChange = async () => {
+    const duration = snoozeDurationInput;
 
     if (duration >= 1 && duration <= 72) {
-      console.log(
         await window.ethereum?.request({
           method: 'wallet_invokeSnap',
           params: {
             snapId: defaultSnapOrigin,
             request: {
               method: 'pushproto_setsnoozeduration',
-              params: { snoozeDuration: snoozeDuration },
+              params: { snoozeDuration: snoozeDurationInput.toString()},
             },
           },
         })
-      );
 
-      setSnapState(6);
-      setSnoozeStartTime(new Date());
+      setSnapState(3);
     } else {
       // Display an error message if the input is invalid
       console.error('Invalid input. Please enter a number between 1 and 72.');
     }
-    if (toggleStatus < 40) {
-      setToggleStatus(42);
-    } else {
-      setToggleStatus(0);
-    }
+    await updateSnoozeDuration(setSnoozeDuration);
   };
-
-  const disableSnooze = async () => {
-    console.log(
-      await window.ethereum?.request({
-        method: 'wallet_invokeSnap',
-        params: {
-          snapId: defaultSnapOrigin,
-          request: {
-            method: 'pushproto_disablesnooze',
-          },
-        },
-      })
-    );
-  };
-
-  const getWalletAddresses = async () => {
-    const result = await window.ethereum?.request({
-      method: 'wallet_invokeSnap',
-      params: {
-        snapId: defaultSnapOrigin,
-        request: { method: 'pushproto_getaddresses' },
-      },
-    });
-    console.debug('result', result);
-    setAddresses(result);
-  };
-
-  const containerRef = React.useRef(null);
-  useClickAway(containerRef, () => {
-    console.warn('Set show to be null');
-    setWalletSelected(null);
-    setShowRemove(null);
-  });
 
   const handleCancel = async () => {
     setSnapState(3); // go back to step one
-  };
-
-  const [walletSelected, setWalletSelected] = useState();
-
-  const handleWalletSelect = (address) => {
-    setWalletSelected(address);
   };
 
   return (
@@ -146,22 +65,22 @@ const EnableSnoozeModal = () => {
           How long would you like to snooze notifications? You can snooze for 1 to 72 hours.
         </SecondaryText>
         <Input
-          type="text"
-          value={snoozeDuration}
+          type="number"
+          min="1"
+          max="72"
+          value={snoozeDurationInput}
           onChange={(e) => {
-            const duration = parseInt(snoozeDuration);
-
-            duration < 1 || duration > 72
-              ? alert('Invalid. Enter a number between 1 & 72')
-              : setSnoozeDuration(e.target.value);
+            const duration = parseInt(e.target.value);
+            if (!isNaN(duration) && duration >= 1 && duration <= 72) {
+              setSnoozeDurationInput(duration);
+            }
           }}
           placeholder="Snooze duration in Hours (e.g. 6)"
         />
+
       </ItemHV2>
 
       <ItemHV2
-        //   justifyContent="place-content-center"
-
         margin="24px 0 0 0"
       >
         <EnptyButton onClick={handleCancel}>Cancel </EnptyButton>
@@ -198,17 +117,7 @@ const SecondaryText = styled.p`
   color: ${(props) => props.theme.snapSecondaryText};
 `;
 
-const ToolTipText = styled.p`
-  margin: 0px;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 24px;
-  color: #62626a;
-  color: ${(props) => props.theme.modalMessageColor};
-  text-align: left;
-`;
-
-const SnapButton = styled(Button)`
+const SnapButton = styled(ButtonV2)`
   align-self: end;
   height: 36px;
   z-index: 0;
@@ -224,7 +133,6 @@ const FilledButton = styled(SnapButton)`
   min-width: 79px;
   padding: 14px;
   background: #d53a94;
-  width: 148px;
   height: 48px;
   radius: 12px;
   padding: 0px 24px 0px 24px;
@@ -234,24 +142,14 @@ const FilledButton = styled(SnapButton)`
 
 const EnptyButton = styled(SnapButton)`
   flex-direction: row;
-  color: black;
   text-align: center;
-  width: 96px;
   height: 48px;
   padding: 0px 24px 0px 24px;
   margin-right: 8px;
   border: 1px solid #bac4d6;
+  color: ${(props) => props.theme.default.color};
   background: ${(props) => props.theme.default.bg};
   gap: 4px;
-`;
-
-const ImageInfo = styled.img`
-  margin-right: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  align-self: center;
-  cursor: pointer;
 `;
 
 const Input = styled.input`
