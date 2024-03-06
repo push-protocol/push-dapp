@@ -303,9 +303,12 @@ const {handleConnectWallet} = useContext(AppContext);
     // Check everything in order
     e.preventDefault();
 
-    if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
-      return;
+    let userPushInstance = userPushSDKInstance;
+    if (!userPushInstance.signer) {
+      userPushInstance = await handleConnectWallet();
+      if (!userPushInstance) {
+        return;
+      }
     }
 
     notificationToast.showLoaderToast({
@@ -407,7 +410,7 @@ const {handleConnectWallet} = useContext(AppContext);
 
         const channelAddressInCaip = convertAddressToAddrCaip(channelAddress, chainId);
 
-        await userPushSDKInstance.channel.send(notifRecipients, {
+        await userPushInstance.channel.send(notifRecipients, {
           notification: {
             title: asub,
             body: amsg,

@@ -56,7 +56,7 @@ export type ShowMessageToastType = ({
 }: {
   toastTitle: string;
   toastMessage: string;
-  toastType: 'SUCCESS' | 'ERROR';
+  toastType: 'SUCCESS' | 'ERROR' | 'WARNING';
   getToastIcon?: (size: number) => JSX.Element;
 }) => void;
 
@@ -100,7 +100,7 @@ const useToast = (
   };
 
   const showMessageToast: ShowMessageToastType = ({ toastTitle, toastMessage, toastType, getToastIcon }) => {
-    
+
     const toastUI = (
       <Toast>
         <ToastIcon>{getToastIcon ? getToastIcon(30) : ''}</ToastIcon>
@@ -123,6 +123,21 @@ const useToast = (
       </Toast>
     );
 
+    let backgroundColor;
+    switch (toastType) {
+      case 'SUCCESS':
+        backgroundColor = themes.toastSuccessBackground;
+        break;
+      case 'ERROR':
+        backgroundColor = themes.toastErrorBackground;
+        break;
+      case 'WARNING':
+        backgroundColor = themes.toastWarningBackground; // Assuming you have a warning background color defined
+        break;
+      default:
+        backgroundColor = 'defaultBackgroundColor'; // Fallback color
+    }
+
     const toastRenderParams = {
       position,
       hideProgressBar: true,
@@ -134,7 +149,7 @@ const useToast = (
       closeButton: CloseButton,
       autoClose: autoClose,
       style: {
-        background: toastType === 'SUCCESS' ? themes.toastSuccessBackground : themes.toastErrorBackground,
+        background: backgroundColor,
         boxShadow: `10px 10px 10px ${themes.toastShadowColor}`,
         borderRadius: '20px',
         margin: isMobile ? '20px' : '0px',
