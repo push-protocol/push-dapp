@@ -173,6 +173,7 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
             height="48px"
             top="10px"
             right="0px"
+            zIndex="1"
           >
             <ButtonV2
               alignSelf="stretch"
@@ -181,6 +182,7 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
               borderRadius="50%"
               onClick={() => setActiveTab(3)}
             >
+           
               <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }} />
             </ButtonV2>
           </ItemVV2>

@@ -25,7 +25,7 @@ import { SpanV2 } from 'components/reusables/SharedStylingV2.js';
 
 // Create Header
 const Profile = ({ isDarkMode }) => {
-  const { web3NameList,initialisePushSdkReadMode }: AppContextType = useContext(AppContext);
+  const { web3NameList,initialisePushSdkReadMode,handleConnectWallet }: AppContextType = useContext(AppContext);
   const { setReadOnlyWallet, readOnlyWallet, mode, setMode }: GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);

@@ -24,8 +24,6 @@ const AppContextProvider = ({ children }) => {
     const { connect, provider, account, wallet, connecting } = useAccount();
     const web3onboardToast = useToast();
 
-    const { readOnlyWallet } = useContext(GlobalContext);
-
     const [web3NameList, setWeb3NameList] = useState<Web3NameListType>({});
     const [snapInstalled, setSnapInstalled] = useState(false);
 
@@ -102,9 +100,10 @@ const AppContextProvider = ({ children }) => {
 
 
     const initialisePushSdkGuestMode = async () => {
+        console.log("Initialising Push SDK Guest Mode");
         let userInstance;
         userInstance = await PushAPI.initialize({
-            account: readOnlyWallet,
+            account: '0x0000000000000000000000000000000000000000',
             env: appConfig.appEnv,
         });
         dispatch(setUserPushSDKInstance(userInstance));
