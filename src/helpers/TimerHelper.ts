@@ -43,3 +43,22 @@ export const convertTimestampToDateDayTime = (time: Date):string => {
   }
   return `${time.getDate()}/${time.getMonth() + 1}/${time.getFullYear() % 100}`;
 };
+
+export const hoursLeftToTimestamp = (futureTimestamp: number) => {
+  // Get the current timestamp
+  const currentTimestamp = Date.now();
+  
+  // Calculate the difference between the future timestamp and the current timestamp
+  const timeDifference = futureTimestamp - currentTimestamp;
+  
+  // If the difference is negative, it means the future timestamp is in the past
+  if (timeDifference < 0) {
+    return 0; // Return 0 hours left
+  }
+  
+  // Convert the time difference from milliseconds to hours
+  const hoursLeft = Math.ceil(timeDifference / (1000 * 60 * 60));
+  
+  // Return the number of hours left
+  return hoursLeft;
+}
