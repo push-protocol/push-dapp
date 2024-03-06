@@ -53,8 +53,6 @@ const AppContextProvider = ({ children }) => {
   });
 
   const [SnapState, setSnapState] = useState<number>(1);
-  const [snoozeDuration, setSnoozeDuration] = useState<number>();
-  const [snoozeStartTime, setSnoozeStartTime] = useState<Date | null>(null);
   const {
     isModalOpen: isMetamaskPushSnapOpen,
     showModal: showMetamaskPushSnap,
@@ -344,10 +342,6 @@ const AppContextProvider = ({ children }) => {
         MetamaskPushSnapModalComponent,
         showMetamaskPushSnap,
         setSnapState,
-        snoozeDuration,
-        setSnoozeDuration,
-        snoozeStartTime,
-        setSnoozeStartTime,
         initializePushSDK,
         SnapState,
         handleConnectWallet,

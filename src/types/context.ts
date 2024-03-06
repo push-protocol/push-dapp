@@ -42,10 +42,6 @@ export interface AppContextType {
   showMetamaskPushSnap: () => void;
   SnapState: number;
   setSnapState: (SnapState: number) => void;
-  snoozeDuration: number; 
-  setSnoozeDuration: (duration: number) => void;
-  snoozeStartTime: Date | null;
-  setSnoozeStartTime: (startTime: Date | null) => void;
   initializePushSDK: () => Promise<void>;
   snapInstalled: boolean;
   setSnapInstalled: (snapInstalled: boolean) => void;
