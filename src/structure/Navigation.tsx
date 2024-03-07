@@ -431,7 +431,7 @@ function Navigation() {
                 }}
                 placementProps={{
                   width: 'fit-content',
-                  zIndex: '100',
+                  zIndex: '1',
                   position: 'fixed',
                   bottom: sidebarCollapsed ? '7px' : '1rem',
                   left: sidebarCollapsed ? '6rem' : '16rem',

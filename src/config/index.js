@@ -30,3 +30,5 @@ const appConfig = { ...dynamicConfig, ...generalConfig };
 
 // export it out
 export { appConfig, addresses, abis, CHAIN_DETAILS };
+
+export const defaultSnapOrigin = 'npm:@pushprotocol/snap';

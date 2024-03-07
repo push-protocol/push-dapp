@@ -162,6 +162,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
               hoverBackground="transparent"
               color={theme.default.color}
               flex="1"
+              zIndex="1"
               padding="10px 10px 20px 10px"
               onClick={() => {
                 setActiveTab(0);
@@ -181,6 +182,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
               background="transparent"
               hoverBackground="transparent"
               color={theme.default.color}
+              zIndex="1"
               flex="1"
               padding="10px 10px 20px 10px"
               onClick={() => {
@@ -241,6 +243,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
             autofilled={undefined}
             searchedUser={searchedUser}
             setSearchedUser={setSearchedUser}
+            
           />
         )}
         {activeTab == 0 && (
@@ -248,6 +251,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
             // justifyContent="flex-start"
             flex="none"
             padding="20px 10px 24px 10px"
+            zIndex="1"
             borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
             onClick={handleCreateGroup}
             background="transparent"
@@ -380,7 +384,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
         </QRCodeContainer>
       ) : null}
 
-      <ProfileContainer zIndex='10' borderTop={`1px solid ${theme.default.secondaryBg}`}>
+      <ProfileContainer zIndex='1' borderTop={`1px solid ${theme.default.secondaryBg}`}>
         {/* <ProfileHeader
           setActiveTab={setActiveTab}
           setShowQR={setShowQR}

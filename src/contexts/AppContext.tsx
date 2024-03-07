@@ -94,7 +94,6 @@ const AppContextProvider = ({ children }) => {
             return userPushInstance;
         } else {
             const walletConnected = await connect();
-            console.log("Wallet Connected >>>",walletConnected);
             if (walletConnected.length > 0) {
                 const userPushInstance = await initializePushSDK(walletConnected[0]);
                 return userPushInstance;
@@ -117,7 +116,6 @@ const AppContextProvider = ({ children }) => {
     }
 
     const initialisePushSdkReadMode = async () => {
-        console.log("Initialising Push SDK Read Mode")
         let userInstance;
         userInstance = await PushAPI.initialize({
             env: appConfig.appEnv,
