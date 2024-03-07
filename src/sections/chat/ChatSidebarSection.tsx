@@ -3,34 +3,35 @@ import { Web3Provider } from '@ethersproject/providers';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import { AiOutlineQrcode } from 'react-icons/ai';
-import { useClickAway } from 'react-use';
-import styled, { useTheme } from 'styled-components';
-import { useSelector } from 'react-redux';
 import { ethers } from 'ethers';
+import { useClickAway } from 'react-use';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { AiOutlineQrcode } from 'react-icons/ai';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ChatPreviewList, UserProfile } from '@pushprotocol/uiweb';
+import { Feeds } from 'types/chat';
+import NewTag from 'components/NewTag';
+import StyleHelper from 'helpers/StyleHelper';
+import { fetchIntent } from 'helpers/w2w/user';
+import { AppContext } from 'contexts/AppContext';
+import { Context } from 'modules/chat/ChatModule';
+import { getIsNewTagVisible } from 'helpers/TimerHelper';
+import ProfileHeader from 'components/chat/w2wChat/profile';
+import { caip10ToWallet, reformatChatId } from 'helpers/w2w';
+import Recommended from 'components/chat/recommended/Recommended';
+import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
+import { ChatPreview, ChatPreviewList, UserProfile } from '@pushprotocol/uiweb';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
 import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
-import ProfileHeader from 'components/chat/w2wChat/profile';
-import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
-import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import StyleHelper from 'helpers/StyleHelper';
-import { getIsNewTagVisible } from 'helpers/TimerHelper';
-import { fetchIntent } from 'helpers/w2w/user';
-import { Context } from 'modules/chat/ChatModule';
-import { Feeds } from 'types/chat';
-import { caip10ToWallet, reformatChatId } from 'helpers/w2w';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { AppContext } from 'contexts/AppContext';
-import NewTag from 'components/NewTag';
 
 // Internal Configs
+import { useAccount } from 'hooks';
 import GLOBALS from 'config/Globals';
 import { appConfig } from '../../config';
-import { useAccount } from 'hooks';
 import { GlobalContext } from 'contexts/GlobalContext';
 
 
@@ -67,16 +68,15 @@ type loadingData = { loading: boolean, preload: boolean, paging: boolean, finish
 const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   // theme context
   const theme = useTheme();
+  const { wallet } = useAccount();
 
-  const {readOnlyWallet} = useContext(GlobalContext);
+  const { readOnlyWallet } = useContext(GlobalContext);
   const { setSelectedChatId } = useContext(Context);
   const { setMode } = useContext(GlobalContext);
 
-  const {wallet} = useAccount();
-
   const isNewTagVisible = getIsNewTagVisible(new Date('2023-02-22T00:00:00.000'), 90);
 
-  const { connectedUser, displayQR, setDisplayQR, initializePushSDK, handleConnectWallet,connectWallet } = useContext(AppContext);
+  const { connectedUser, displayQR, setDisplayQR, initializePushSDK, handleConnectWallet, connectWallet } = useContext(AppContext);
   const [searchedUser, setSearchedUser] = useState<string>('');
 
   const { activeTab, setActiveTab } = useContext(Context);
@@ -86,6 +86,9 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   const [loadingRequests, setLoadingRequests] = useState(true);
   const [showQR, setShowQR] = useState<boolean>(false);
   const containerRef = React.useRef(null);
+
+  // set recommended chats
+  const [showRecommended, setShowRecommended] = useState(false);
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -100,12 +103,6 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
 
   const formatChatParticipant = async (chatParticipant: string, chatId: string) => {
     let formattedChatParticipant = chatParticipant;
-
-   
-    //TODO: Check if the user has wallet connected or not if not then connect their wallet.
-    // when wallet gets connected then the dapp reloads, so when searched and then clicked on the chat for selecting navigate to chat/id.
-
-
     let userPushInstance = userPushSDKInstance;
 
     if (!formattedChatParticipant.includes('.')) {
@@ -114,39 +111,19 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
     }
     let formattedchatId = reformatChatId(formattedChatParticipant);
 
-    console.log("Wallet in Chatsidebar ",wallet);
+    //If no PGP keys then connect the wallet.
+    if (!userPushInstance.decryptedPgpPvtKey) {
+      userPushInstance = await handleConnectWallet();
 
-    // When the user has not connected their wallet, i.e, they try chat in guest mode
-    if(!(wallet?.accounts?.length > 0)) {
-      
-      let walletConnected = await connectWallet();
-
-      console.log("User Push Instance in Chat sidebar",walletConnected);
-
-      if(walletConnected){
+      if (userPushInstance && userPushInstance.decryptedPgpPvtKey) {
         navigate(`/chat/${formattedchatId}`);
-        // return formattedChatParticipant;
-      }
-
-    }else{
-      console.log("When wallet is connected then we have to do this",userPushInstance);
-
-      if(!userPushInstance.decryptedPgpPvtKey){
-        userPushInstance = await handleConnectWallet();
-      }
-
-      console.log("User Push Instance in Chat sidebar 2",userPushInstance);
-
-      if(userPushInstance.decryptedPgpPvtKey){
         return formattedChatParticipant;
       }
-
-
+    }else{
+      navigate(`/chat/${formattedchatId}`);
+      return formattedChatParticipant;
     }
 
-   
-
-    
   }
 
   const handleCreateGroup = async () => {
@@ -163,7 +140,6 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
       }
     }
   }
-
 
   // RENDER
   return (
@@ -305,14 +281,30 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
           style={{ display: activeTab == 0 ? 'flex' : 'none' }}
           overflow="scroll"
         >
-          <ChatPreviewList
-            listType="CHATS"
-            onChatSelected={async (chatid, chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant, chatid))}
+          {/* Only show recommended chats if there are no chats */}
+          {showRecommended &&
+            <Recommended
+              bg="#f5f5f5"
+              onChatSelected={async (chatid, chatParticipant) => { console.log(chatParticipant); setSelectedChatId(await formatChatParticipant(chatParticipant, chatid)) }}
+            />
+          }
 
-            onUnreadCountChange={(count) => {
-              // console.log('Count is: ', count);
-            }}
-          />
+          {/* Only show recommended chats if there are no chats */}
+          {!showRecommended &&
+            <ChatPreviewList
+              listType="CHATS"
+              onChatSelected={async (chatid, chatParticipant) => { console.log(chatParticipant, chatid); setSelectedChatId(await formatChatParticipant(chatParticipant, chatid)) }}
+
+              onUnreadCountChange={(count) => {
+                // console.log('Count is: ', count);
+              }}
+              onPreload={(chats) => {
+                if (chats.length == 0) {
+                  setShowRecommended(true);
+                }
+              }}
+            />
+          }
         </ItemVV2>
 
         {/* Set Requests */}

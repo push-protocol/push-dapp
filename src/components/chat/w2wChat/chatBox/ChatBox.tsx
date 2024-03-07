@@ -7,25 +7,28 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import * as PushAPI from '@pushprotocol/restapi';
+import { ChatProfile, ChatViewList, MessageInput, UserProfile } from '@pushprotocol/uiweb';
 import 'font-awesome/css/font-awesome.min.css';
+import { produce } from 'immer';
 import { CID } from 'ipfs-http-client';
 import { BsDashLg } from 'react-icons/bs';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
-import { produce } from 'immer';
-import { ChatProfile, ChatViewList, MessageInput, UserProfile } from '@pushprotocol/uiweb';
+import { useSelector } from 'react-redux';
+
 // Internal Components
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
 import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import videoCallIcon from 'assets/icons/videoCallIcon.svg';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { Content } from 'components/SharedStyling';
+import Recommended from 'components/chat/recommended/Recommended';
+import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { checkIfChatExist } from 'helpers/w2w/user';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
@@ -59,9 +62,13 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
-  const { currentChat, viewChatBox, receivedIntents, activeTab,setViewChatBox, setChat, selectedChatId }: ContextType =
+  const { currentChat, viewChatBox, receivedIntents, activeTab, setViewChatBox, setChat, selectedChatId }: ContextType =
     useContext<ContextType>(Context);
   const { web3NameList }: AppContextType = useContext(AppContext);
+
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
 
   const { account } = useAccount();
   const [Loading, setLoading] = useState<boolean>(true);
@@ -86,12 +93,12 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   if (!isGroup && currentChat?.wallets?.split(',')[0].toString()) {
     const walletLowercase = currentChat.wallets.includes(':nft')
       ? caip10ToWallet(
-          currentChat?.wallets
-            .replace(/eip155:\d+:/, 'eip155:')
-            .split(':nft')[0]
-            .toString()
-            .toLowerCase()
-        )
+        currentChat?.wallets
+          .replace(/eip155:\d+:/, 'eip155:')
+          .split(':nft')[0]
+          .toString()
+          .toLowerCase()
+      )
       : caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase();
     const checksumWallet = ethers.utils.getAddress(walletLowercase);
     ensName = web3NameList[checksumWallet];
@@ -128,15 +135,14 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const getChatId = () => {
     let chatId = selectedChatId || currentChat?.did;
 
-    console.log("Chat Id in ChatBox >>>>>>>",chatId);
 
-    if(chatId){
+    if (chatId) {
       return (chatId?.includes(':nft:')
         ? chatId.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0]
-        : chatId) ;
+        : chatId);
     }
     return chatId;
-    
+
   };
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
@@ -157,23 +163,12 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   };
 
   const InfoMessages = [
-    { id: 1, content: 'You can send up to 10 group requests in alpha' },
-    // { id: 2, content: 'You can send a chat request to anyone including non-whitelisted users' },
-    // { id: 3, content: 'You can chat with non-whitelisted users but they cannot send a chat request to anyone.' },
-    {
-      id: 4,
-      content: 'You will have access to 1000 latest messages. Encryption is enabled after a chat request is accepted',
-    },
-    { id: 5, content: 'Messages will only be encrypted if the receiver has encryption keys' },
-    // {
-    //   id: 6,
-    //   content:
-    //     'Due to certain limitations Push Chat does not support Ledger Wallet yet. We are working on adding support.',
-    // },
-    { id: 7, content: 'Access to more chat requests and messages will be added in the near future' },
+    { id: 1, content: 'Say Hi to your wallet friends!' },
+    { id: 2, content: 'Or join groups of your favorite projects and chat with other members.' },
+    { id: 3, content: 'Or create your own gated groups based on your requirements' },
+    { id: 4, content: 'And experience the future of Web3 communication!' },
   ];
 
-  console.log("viewChatBox >>>>><<<<<<<<<>>>>>>>><<<<<<<",viewChatBox,getChatId());
 
   return (
     <Container>
@@ -218,6 +213,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
                 </Atag>
 
                 <ItemBody>
+                  <Recommended bg="#e2078021" onChatSelected={(chatId, chatParticipant) => setChat(chatId, chatParticipant)} />
                   {InfoMessages.map((item) => (
                     <WelcomeContent key={item.id}>
                       <BsDashLg className="icon" />
@@ -260,15 +256,14 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             fontWeight="500"
             zIndex="1"
           >
-            
             {getChatId() && (
               <ChatProfile
-                chatProfileLeftHelperComponent = {
-                  isMobile?
-                  <SpanV2 onClick={()=>setViewChatBox(false)}>
-                  <MdOutlineArrowBackIos />
-                  </SpanV2>
-                  :null
+                chatProfileLeftHelperComponent={
+                  isMobile ?
+                    <SpanV2 onClick={() => setViewChatBox(false)}>
+                      <MdOutlineArrowBackIos />
+                    </SpanV2>
+                    : null
                 }
                 chatProfileRightHelperComponent={
                   <Tooltip
@@ -318,7 +313,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
           )}
         </>
       )}
-    </Container>
+    </Container >
   );
 };
 
@@ -414,7 +409,8 @@ const Container = styled(Content)`
 `;
 
 const WelcomeItem = styled(ItemVV2)`
-  width: 369px;
+  width: 420px;
+  min-width: 300px;
   display: flex;
   justify-content: center;
   margin: auto auto;
@@ -442,6 +438,8 @@ const WelcomeContent = styled.div`
 `;
 
 const ItemBody = styled.div`
+  padding: 0px 20px;
+
   @media (min-width: 768px) and (max-height: 1080px) {
     overflow-y: scroll;
     height: 300px;

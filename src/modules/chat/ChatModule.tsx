@@ -378,8 +378,6 @@ function Chat({ chatid }) {
 
     let formattedchatId = selectedChatId || chatid;
 
-    console.log("Formatted Chat Id: " + formattedchatId);
-
     if (formattedchatId) {
       formattedchatId = reformatChatId(formattedchatId);
       // navigate(`/chat/${formattedchatId}`);
@@ -392,14 +390,13 @@ function Chat({ chatid }) {
 
   useEffect(() => { }, [account, connectedUser?.privateKey]);
 
-  console.log("userPushSDKInstance in Chat Module <<<>>>><<<>>>",userPushSDKInstance);
   return (
     <Container>
       <ChatUIProvider
         theme={theme.scheme === 'dark' && darkChatTheme}
         // signer={signerData}
         env={appConfig?.appEnv}
-        account={wallet?.accounts?.length > 0 ? account : readOnlyWallet}
+        account={account}
         pgpPrivateKey={pgpPvtKey}
         user={userPushSDKInstance}
       >
