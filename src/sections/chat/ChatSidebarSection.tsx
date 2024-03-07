@@ -8,6 +8,7 @@ import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 import { useSelector } from 'react-redux';
 import { ethers } from 'ethers';
+import { useNavigate } from 'react-router-dom';
 
 // Internal Compoonents
 import { ChatPreviewList, UserProfile } from '@pushprotocol/uiweb';
@@ -21,7 +22,7 @@ import { getIsNewTagVisible } from 'helpers/TimerHelper';
 import { fetchIntent } from 'helpers/w2w/user';
 import { Context } from 'modules/chat/ChatModule';
 import { Feeds } from 'types/chat';
-import { caip10ToWallet } from 'helpers/w2w';
+import { caip10ToWallet, reformatChatId } from 'helpers/w2w';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { AppContext } from 'contexts/AppContext';
 import NewTag from 'components/NewTag';
@@ -71,9 +72,11 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   const { setSelectedChatId } = useContext(Context);
   const { setMode } = useContext(GlobalContext);
 
+  const {wallet} = useAccount();
+
   const isNewTagVisible = getIsNewTagVisible(new Date('2023-02-22T00:00:00.000'), 90);
 
-  const { connectedUser, displayQR, setDisplayQR, initializePushSDK, handleConnectWallet } = useContext(AppContext);
+  const { connectedUser, displayQR, setDisplayQR, initializePushSDK, handleConnectWallet,connectWallet } = useContext(AppContext);
   const [searchedUser, setSearchedUser] = useState<string>('');
 
   const { activeTab, setActiveTab } = useContext(Context);
@@ -93,24 +96,57 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   };
   useClickAway(containerRef, () => closeQRDropdown());
 
+  let navigate = useNavigate();
+
   const formatChatParticipant = async (chatParticipant: string, chatId: string) => {
     let formattedChatParticipant = chatParticipant;
 
-    //Checking if the user has signed the message or not
-    if (userPushSDKInstance.decryptedPgpPvtKey) {
-      if (!formattedChatParticipant.includes('.')) {
-        if (!await ethers.utils.isAddress(caip10ToWallet(formattedChatParticipant)))
-          formattedChatParticipant = chatId;
-      }
-      return formattedChatParticipant;
-    } else {
-      if (userPushSDKInstance.account === readOnlyWallet) {
-        handleConnectWallet();
-      } else if (userPushSDKInstance.signer === undefined || userPushSDKInstance.decryptedPgpPvtKey === undefined) {
-        await initializePushSDK();
-        return null;
-      }
+   
+    //TODO: Check if the user has wallet connected or not if not then connect their wallet.
+    // when wallet gets connected then the dapp reloads, so when searched and then clicked on the chat for selecting navigate to chat/id.
+
+
+    let userPushInstance = userPushSDKInstance;
+
+    if (!formattedChatParticipant.includes('.')) {
+      if (!await ethers.utils.isAddress(caip10ToWallet(formattedChatParticipant)))
+        formattedChatParticipant = chatId;
     }
+    let formattedchatId = reformatChatId(formattedChatParticipant);
+
+    console.log("Wallet in Chatsidebar ",wallet);
+
+    // When the user has not connected their wallet, i.e, they try chat in guest mode
+    if(!(wallet?.accounts?.length > 0)) {
+      
+      let walletConnected = await connectWallet();
+
+      console.log("User Push Instance in Chat sidebar",walletConnected);
+
+      if(walletConnected){
+        navigate(`/chat/${formattedchatId}`);
+        // return formattedChatParticipant;
+      }
+
+    }else{
+      console.log("When wallet is connected then we have to do this",userPushInstance);
+
+      if(!userPushInstance.decryptedPgpPvtKey){
+        userPushInstance = await handleConnectWallet();
+      }
+
+      console.log("User Push Instance in Chat sidebar 2",userPushInstance);
+
+      if(userPushInstance.decryptedPgpPvtKey){
+        return formattedChatParticipant;
+      }
+
+
+    }
+
+   
+
+    
   }
 
   const handleCreateGroup = async () => {

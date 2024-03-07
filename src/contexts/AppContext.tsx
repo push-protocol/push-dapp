@@ -69,7 +69,12 @@ const AppContextProvider = ({ children }) => {
 
         if (!(wallet?.accounts?.length > 0)) {
             const walletConnected = await connect();
-            return walletConnected[0];
+            console.log("Wallet Connected >>>",walletConnected);
+            if (walletConnected.length > 0) {
+                return walletConnected[0];
+            }else{
+                return null;
+            }
         }
 
     }
@@ -89,7 +94,8 @@ const AppContextProvider = ({ children }) => {
             return userPushInstance;
         } else {
             const walletConnected = await connect();
-            if (walletConnected) {
+            console.log("Wallet Connected >>>",walletConnected);
+            if (walletConnected.length > 0) {
                 const userPushInstance = await initializePushSDK(walletConnected[0]);
                 return userPushInstance;
             } else {
@@ -111,6 +117,7 @@ const AppContextProvider = ({ children }) => {
     }
 
     const initialisePushSdkReadMode = async () => {
+        console.log("Initialising Push SDK Read Mode")
         let userInstance;
         userInstance = await PushAPI.initialize({
             env: appConfig.appEnv,
@@ -232,6 +239,7 @@ const AppContextProvider = ({ children }) => {
 
     const initializePushSDK = async (wallet?: any) => {
         let userInstance;
+        console.log("Initialising Push General Mode");
         try {
 
             let web3Provider = provider;

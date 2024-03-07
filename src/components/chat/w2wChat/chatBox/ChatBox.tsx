@@ -127,13 +127,15 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
 
   const getChatId = () => {
     let chatId = selectedChatId || currentChat?.did;
+
+    console.log("Chat Id in ChatBox >>>>>>>",chatId);
+
     if(chatId){
       return (chatId?.includes(':nft:')
         ? chatId.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0]
         : chatId) ;
     }
     return chatId;
-  
     
   };
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
@@ -171,9 +173,11 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
     { id: 7, content: 'Access to more chat requests and messages will be added in the near future' },
   ];
 
+  console.log("viewChatBox >>>>><<<<<<<<<>>>>>>>><<<<<<<",viewChatBox,getChatId());
+
   return (
     <Container>
-      {(!viewChatBox && !getChatId() )? (
+      {(!viewChatBox || !getChatId()) ? (
         <WelcomeItem gap="25px">
           {activeTab == 4 && (
             <LoaderSpinner

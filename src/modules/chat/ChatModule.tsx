@@ -60,7 +60,7 @@ export const Context = React.createContext<ChatUserAppContext | null>(null);
 
 // Create Header
 function Chat({ chatid }) {
-  const { account, chainId, provider,wallet } = useAccount();
+  const { account, chainId, provider, wallet } = useAccount();
   const { videoCallData } = useContext(VideoCallContext);
 
   const {
@@ -71,7 +71,8 @@ function Chat({ chatid }) {
     connectedUser,
     setConnectedUser,
     displayQR,
-    setDisplayQR
+    setDisplayQR,
+    handleConnectWallet
   } = useContext(AppContext);
 
   const { userPushSDKInstance } = useSelector((state: any) => {
@@ -108,7 +109,7 @@ function Chat({ chatid }) {
       connectedUser &&
       socketData.messagesSinceLastConnection &&
       w2wHelper.caip10ToWallet(socketData.messagesSinceLastConnection.fromCAIP10).toLowerCase() !==
-        account.toLowerCase()
+      account.toLowerCase()
     ) {
       if (currentChat) getUpdatedInbox(socketData.messagesSinceLastConnection);
     }
@@ -311,10 +312,10 @@ function Chat({ chatid }) {
       return chatid;
     }
 
-      // check if .wallet is at the end, then skip anything else
-      if (chatid.endsWith('.wallet')) {
-        return chatid;
-      }
+    // check if .wallet is at the end, then skip anything else
+    if (chatid.endsWith('.wallet')) {
+      return chatid;
+    }
     // check if this is eip155: which is considered default and therefore remove it
     if (chatid.startsWith('eip155:') && !chatid.includes(':nft')) {
       chatid = chatid.replace('eip155:', '');
@@ -374,28 +375,31 @@ function Chat({ chatid }) {
   };
 
   useEffect(() => {
+
     let formattedchatId = selectedChatId || chatid;
-   
+
+    console.log("Formatted Chat Id: " + formattedchatId);
+
     if (formattedchatId) {
-      setViewChatBox(true);
       formattedchatId = reformatChatId(formattedchatId);
-      navigate(`/chat/${formattedchatId}`);
-    }
-    else 
-    {
+      // navigate(`/chat/${formattedchatId}`);
+      setViewChatBox(true);
+    } else {
       setViewChatBox(false);
       navigate(`/chat`);
     }
   }, [selectedChatId]);
 
-  useEffect(() => {}, [account, connectedUser?.privateKey]);
+  useEffect(() => { }, [account, connectedUser?.privateKey]);
+
+  console.log("userPushSDKInstance in Chat Module <<<>>>><<<>>>",userPushSDKInstance);
   return (
     <Container>
       <ChatUIProvider
         theme={theme.scheme === 'dark' && darkChatTheme}
         // signer={signerData}
         env={appConfig?.appEnv}
-        account={wallet?.accounts?.length > 0 ? account: readOnlyWallet}
+        account={wallet?.accounts?.length > 0 ? account : readOnlyWallet}
         pgpPrivateKey={pgpPvtKey}
         user={userPushSDKInstance}
       >
@@ -451,7 +455,7 @@ function Chat({ chatid }) {
                 </ChatContainer>
                 <GroupInfoModalComponent
                   InnerComponent={GroupInfoModalContent}
-                  onConfirm={() => {}}
+                  onConfirm={() => { }}
                   toastObject={groupInfoToast}
                   modalPadding="0px"
                   modalPosition={MODAL_POSITION.ON_PARENT}
@@ -547,16 +551,14 @@ const Container = styled.div`
   
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${
-  globalsMargin.MINI_MODULES.TABLET.BOTTOM
-});
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${globalsMargin.MINI_MODULES.TABLET.BOTTOM
+  });
   }
 
   @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${
-  globalsMargin.MINI_MODULES.MOBILE.BOTTOM
-});
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${globalsMargin.MINI_MODULES.MOBILE.BOTTOM
+  });
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 `;
 
