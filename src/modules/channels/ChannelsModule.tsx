@@ -1,26 +1,41 @@
 // React + Web3 Essentials
-import React from "react";
-import ReactGA from "react-ga";;
+import React, { useEffect } from "react";
+import ReactGA from "react-ga";
 
 // External Packages
 import styled from "styled-components";
 
 // Internal Components
+import ChannelProfile from "segments/ChannelProfile";
 import ViewChannels from "segments/ViewChannels";
     
 // Internal Configs
-import GLOBALS, { device, globalsMargin } from "config/Globals";
 import APP_PATHS from "config/AppPaths";
+import GLOBALS, { device, globalsMargin } from "config/Globals";
+
+export enum ChannelTYPE {
+  CHANNEL = 'Channel',
+  CHANNEL_PROFILE = 'Profile',
+}
 
 // Create Channels Module
-const ChannelsModule = ({ loadTeaser, playTeaser }) => {
+const ChannelsModule = ({ channelID, loadTeaser, playTeaser }) => {
   ReactGA.pageview(APP_PATHS.Channels);
 
   // Render
   return (
     <Container>
       <Interface>
-        <ViewChannels loadTeaser={loadTeaser} playTeaser={playTeaser} />
+        <ViewChannels loadTeaser={loadTeaser} playTeaser={playTeaser} minimal={channelID ? true : false} />
+        {channelID && 
+          <ChannelProfile 
+          channelID={channelID} 
+          loadTeaser={loadTeaser} 
+          playTeaser={playTeaser} 
+          minimal={false}
+          profileType={ChannelTYPE.CHANNEL_PROFILE}
+          />
+        }
       </Interface>
     </Container>
   );
