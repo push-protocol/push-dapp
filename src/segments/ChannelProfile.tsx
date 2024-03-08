@@ -94,7 +94,7 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
         <ItemVV2
           flex="initial"
           alignSelf="flex-start"
-          padding="0px 0px 20px 0px"
+          padding="0px"
         >
           <SpanV2
             alignSelf="flex-start"
@@ -108,8 +108,6 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
         </ItemVV2>
 
         {/* New Channel Profile Component */}
-        {/* {!loading && channelDetails && <ChannelProfileComponent channelID={channelID} channelDetails={channelDetails} />} */}
-
         {channelDetails && !loading &&
           <ViewChannelItem
             channelObjectProp={channelDetails}
@@ -120,7 +118,7 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
           />
         }
 
-
+        {/* Show Latest Notifications of the Channel */}
         <TextContainer>
           <SpanV2
             fontSize="20px"
@@ -128,7 +126,11 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
           >
             Recent Notifications
           </SpanV2>
+          <Notice>
+            Showing preview of the latest non-encrypted notifications sent by the channel.
+          </Notice>
         </TextContainer>
+
         
         <ScrollItem>
           {loadingNotifs &&
@@ -174,6 +176,10 @@ const Container = styled.div`
   justify-content: center;
   font-weight: 200;
   margin: 20px 0px 0px 20px;
+
+  @media (max-width: 768px) {
+    margin: 20px 10px 0px 10px;
+  }
 `;
 
 const NotifsOuter = styled.div`
@@ -202,7 +208,7 @@ const ScrollItem = styled(ItemVV2)`
   }
 
   @media (max-width: 768px) {
-    padding: 0px;
+    padding: 0px 20px;
 
     &::-webkit-scrollbar-track {
       background-color: none;
@@ -234,6 +240,10 @@ const TextContainer = styled(ItemVV2)`
   padding: 10px;
   align-items:baseline;
   margin:7px 20px 24px 5px;
+`
+
+const Notice = styled(SpanV2)`
+  font-size: 0.8em;
 `
 
 // Export Default

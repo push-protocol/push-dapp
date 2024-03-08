@@ -1020,7 +1020,7 @@ const ColumnFlex = styled(FlexBox)`
 const Container = styled.div`
   // flex: 1;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   border: ${(props) => props.profileType == 'Profile' ? 'none' : `1px solid ${(props) => props.minimal ? 'transparent' : props.theme.default.border}`};
   border-bottom: none;
   border-left: none;
