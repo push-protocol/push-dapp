@@ -13,6 +13,11 @@ import ViewChannels from "segments/ViewChannels";
 import APP_PATHS from "config/AppPaths";
 import GLOBALS, { device, globalsMargin } from "config/Globals";
 
+export enum ChannelTYPE {
+  CHANNEL = 'Channel',
+  CHANNEL_PROFILE = 'Profile',
+}
+
 // Create Channels Module
 const ChannelsModule = ({ channelID, loadTeaser, playTeaser }) => {
   ReactGA.pageview(APP_PATHS.Channels);
@@ -23,7 +28,13 @@ const ChannelsModule = ({ channelID, loadTeaser, playTeaser }) => {
       <Interface>
         <ViewChannels loadTeaser={loadTeaser} playTeaser={playTeaser} minimal={channelID ? true : false} />
         {channelID && 
-          <ChannelProfile channelID={channelID} />
+          <ChannelProfile 
+          channelID={channelID} 
+          loadTeaser={loadTeaser} 
+          playTeaser={playTeaser} 
+          minimal={false}
+          profileType={ChannelTYPE.CHANNEL_PROFILE}
+          />
         }
       </Interface>
     </Container>
