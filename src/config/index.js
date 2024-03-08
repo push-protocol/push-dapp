@@ -12,7 +12,7 @@ if (process.env.REACT_APP_DEPLOY_ENV == 'PROD') {
 } else if (process.env.REACT_APP_DEPLOY_ENV == 'W2W') {
   appendName = 'staging';
 } else if (process.env.REACT_APP_DEPLOY_ENV == 'ALPHA') {
-  appendName = 'staging';
+  appendName = 'prod';
 } else {
   throw new Error('⚠️  Provide proper REACT_APP_DEPLOY_ENV in .env ⚠️');
 }
@@ -29,4 +29,5 @@ const abis = require('./config-general').abis;
 const appConfig = { ...dynamicConfig, ...generalConfig };
 
 // export it out
-export { appConfig, addresses, abis, CHAIN_DETAILS };
+export { CHAIN_DETAILS, abis, addresses, appConfig };
+

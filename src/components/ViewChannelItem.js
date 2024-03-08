@@ -48,7 +48,7 @@ import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
 import VerifiedTooltipContent from "./VerifiedTooltipContent";
 
 // Create Header
-function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal }) {
+function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, profileType }) {
   const dispatch = useDispatch();
 
   const themes = useTheme();
@@ -56,7 +56,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
   const { run, stepIndex } = useSelector((state) => state.userJourney);
   const { userPushSDKInstance } = useSelector((state) => {
     return state.user;
-  }); 
+  });
   const { epnsReadProvider, epnsWriteProvider, epnsCommReadProvider, pushAdminAddress, ZERO_ADDRESS } = useSelector(
     (state) => state.contracts
   );
@@ -99,6 +99,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
     setSubscribed(subscriptionStatus[channelObject.channel]);
   }, [subscriptionStatus]);
 
+  // console.log("Channel Object >>>>>",channelObject);
+
   useEffect(() => {
     setIsPushAdmin(pushAdminAddress == account);
   }, [pushAdminAddress, account]);
@@ -106,6 +108,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
   const fetchChannelJsonWithBlock = async () => {
     try {
       const channelJson = await ChannelsDataStore.instance.getChannelJsonStartBlockAsync(channelObject.channel);
+      // console.log("Channel JSON !!!!!",channelJson);
       return channelJson;
     } catch (err) {
       console.error(err);
@@ -118,6 +121,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
     const IPFS_GATEWAY = IPFSGateway;
     const url = IPFS_GATEWAY + channelObject.ipfshash;
     const response = await axios.get(url);
+
+    // console.log("Response >>>>>",response);
 
     if (response.data) setChannelObjectFromHash(response.data);
     if (response.data.icon) setChannelIcon(response.data.icon);
@@ -156,7 +161,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
         let verifierAddress = null;
         const response = await epnsReadProvider.channels(channelObject.channel);
         verifierAddress = response.verifiedBy;
-    
+
         if (channelsCache[verifierAddress]) {
           setVerifierDetails(channelsCache[verifierAddress]);
         } else {
@@ -169,7 +174,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
           } else {
             verifierAddrDetails = await userPushSDKInstance.channel.info(convertAddressToAddrCaip(verifierAddress, appConfig.coreContractChain));
           }
-    
+
           dispatch(
             cacheChannelInfo({
               address: verifierAddress,
@@ -184,7 +189,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
         setLoading(false);
       }
     }
-    
+
   }, [account, channelObject, userPushSDKInstance]);
 
   let isOwner;
@@ -406,6 +411,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
       key={channelObject.channel}
       id={channelObject.channel}
       minimal={minimal}
+      profileType={profileType}
     >
       {isMobile && (
         <ChannelLogoContainer>
@@ -423,8 +429,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
               </ChannelLogoInner>
             </ChannelLogoOuter>
           </ChannelLogo>
-          
-          {!minimal && 
+
+          {!minimal &&
             <ChannelTitle>
               {loading ? (
                 <Skeleton
@@ -447,19 +453,19 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
                           placementProps={
                             tooltTipHeight < 250
                               ? {
-                                  background: 'none',
-                                  // bottom: "25px",
-                                  top: '20px',
-                                  // right: "-175px",
-                                  left: mobileToolTip ? '-100px' : '5px',
-                                }
+                                background: 'none',
+                                // bottom: "25px",
+                                top: '20px',
+                                // right: "-175px",
+                                left: mobileToolTip ? '-100px' : '5px',
+                              }
                               : {
-                                  background: 'none',
-                                  bottom: '25px',
-                                  // top: "20px",
-                                  // right: "-175px",
-                                  left: mobileToolTip ? '-100px' : '5px',
-                                }
+                                background: 'none',
+                                bottom: '25px',
+                                // top: "20px",
+                                // right: "-175px",
+                                left: mobileToolTip ? '-100px' : '5px',
+                              }
                           }
                           tooltipContent={
                             <UpdateChannelTooltipContent
@@ -499,15 +505,15 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
                           placementProps={
                             tooltTipHeight < 160
                               ? {
-                                  background: 'none',
-                                  top: '20px', // for lower displaying
-                                  left: '7px',
-                                }
+                                background: 'none',
+                                top: '20px', // for lower displaying
+                                left: '7px',
+                              }
                               : {
-                                  background: 'none',
-                                  bottom: '28px', // above display
-                                  left: '7px',
-                                }
+                                background: 'none',
+                                bottom: '28px', // above display
+                                left: '7px',
+                              }
                           }
                           tooltipContent={
                             <VerifiedTooltipContent
@@ -548,9 +554,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
                           !MaskedAliasChannels[+channelObject?.alias_blockchain_id][channelObject?.channel] && (
                             <Span padding="0 0 0 5px">
                               <Image
-                                src={`./svg/${
-                                  CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]
-                                }.svg`}
+                                src={`./svg/${CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]
+                                  }.svg`}
                                 alt="Polygon"
                                 width="20px"
                                 height="20px"
@@ -569,7 +574,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
 
       {!isMobile && (
         <>
-          <ChannelLogo 
+          <ChannelLogo
             minimal={minimal}
             onClick={() => {
               navigate(generateChannelProfileLink(channelObject.channel, false))
@@ -591,7 +596,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
         </>
       )}
 
-      {!minimal && 
+      {!minimal &&
         <ChannelInfo>
           {!isMobile && (
             <ChannelTitle>
@@ -615,19 +620,19 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
                         placementProps={
                           tooltTipHeight < 250
                             ? {
-                                background: 'none',
-                                // bottom: "25px",
-                                top: '20px',
-                                // right: "-175px",
-                                left: '5px',
-                              }
+                              background: 'none',
+                              // bottom: "25px",
+                              top: '20px',
+                              // right: "-175px",
+                              left: '5px',
+                            }
                             : {
-                                background: 'none',
-                                bottom: '25px',
-                                // top: "20px",
-                                // right: "-175px",
-                                left: '5px',
-                              }
+                              background: 'none',
+                              bottom: '25px',
+                              // top: "20px",
+                              // right: "-175px",
+                              left: '5px',
+                            }
                         }
                         tooltipContent={
                           <UpdateChannelTooltipContent
@@ -651,12 +656,12 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
 
                     <Span onClick={() => navigate(generateChannelProfileLink(channelObject.channel, false))}>{channelObject.name}</Span>
 
-                    
+
                     {isVerified == 1 && (
                       <Span
-                      margin="3px 5px 0px"
-                      style={{ display: 'flex' }}
-                    >
+                        margin="3px 5px 0px"
+                        style={{ display: 'flex' }}
+                      >
                         <Tooltip
                           wrapperProps={{
                             width: 'fit-content',
@@ -666,15 +671,15 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
                           placementProps={
                             tooltTipHeight < 160
                               ? {
-                                  background: 'none',
-                                  top: '20px', // for lower displaying
-                                  left: '7px',
-                                }
+                                background: 'none',
+                                top: '20px', // for lower displaying
+                                left: '7px',
+                              }
                               : {
-                                  background: 'none',
-                                  bottom: '28px', // above display
-                                  left: '7px',
-                                }
+                                background: 'none',
+                                bottom: '28px', // above display
+                                left: '7px',
+                              }
                           }
                           tooltipContent={
                             <VerifiedTooltipContent
@@ -769,7 +774,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
               <ChannelDescLabel>{channelObject.info}</ChannelDescLabel>
             )}
           </ChannelDesc>
-          
+
           <ChannelMeta>
             {loading ? (
               <>
@@ -845,7 +850,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
                 <Skeleton color={themes.interfaceSkeleton} />
               </SkeletonButton>
             )}
-            {!loading && isPushAdmin && (
+            {!loading && isPushAdmin && (profileType == "Channel") && (
               <SubscribeButton
                 onClick={blockChannel}
                 disabled={bLoading}
@@ -862,7 +867,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
                 <ActionTitle hideit={bLoading}>Block channel</ActionTitle>
               </SubscribeButton>
             )}
-            {!loading && (isPushAdmin || canVerify) && !isVerified && (
+            {!loading && (isPushAdmin || canVerify) && !isVerified && (profileType == "Channel") && (
               <SubscribeButton
                 onClick={verifyChannel}
                 disabled={vLoading}
@@ -879,7 +884,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
                 <ActionTitle hideit={vLoading}>Verify Channel</ActionTitle>
               </SubscribeButton>
             )}
-            {!loading && (isPushAdmin || canUnverify) && isVerified && (
+            {!loading && (isPushAdmin || canUnverify) && isVerified && (profileType == "Channel") && (
               <UnsubscribeButton
                 onClick={unverifyChannel}
                 disabled={vLoading}
@@ -898,10 +903,21 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
             )}
             {!loading && !subscribed && (
               <>
-                {isOwner && <OwnerButton disabled>Owner</OwnerButton>}
+                {/* {isOwner && <OwnerButton disabled>Owner</OwnerButton>} */}
+                {isOwner && (
+                  <>
+                    {(profileType == "Profile") ? (
+                      <DashboardButton onClick={()=>navigate("/dashboard")}>
+                        Go To Dashboard
+                      </DashboardButton>
+                    ) : (
+                      <OwnerButton disabled>Owner</OwnerButton>
+                    )}
+                  </>
+                )}
                 {!isOwner && (
-                  <OptinNotifSettingDropdown 
-                    channelDetail={channelObject} 
+                  <OptinNotifSettingDropdown
+                    channelDetail={channelObject}
                     setLoading={setTxInProgress}
                     onSuccessOptin={() => {
                       setSubscribed(true);
@@ -909,7 +925,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
                     }}
                   >
                     <SubscribeButton
-                      onClick={() => {}}
+                      onClick={() => { }}
                       disabled={txInProgress}
                       className="optin"
                     >
@@ -930,9 +946,21 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
             )}
             {!loading && subscribed && (
               <>
-                {isOwner && <OwnerButton disabled>Owner</OwnerButton>}
+                {/* {isOwner && <OwnerButton disabled>Owner</OwnerButton>} */}
+                {isOwner && (
+                  <>
+                    {(profileType == "Profile") ? (
+                      <DashboardButton onClick={()=>navigate("/dashboard")}>
+                        Go To Dashboard
+                      </DashboardButton>
+                    ) : (
+                      <OwnerButton disabled>Owner</OwnerButton>
+                    )}
+                  </>
+                )}
+
                 {!isOwner && (
-                  <ManageNotifSettingDropdown 
+                  <ManageNotifSettingDropdown
                     centerOnMobile={true}
                     channelDetail={channelObject}
                     setSubscribed={setSubscribed}
@@ -944,7 +972,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal })
                     }}
                   >
                     <UnsubscribeButton
-                      onClick={() => {}}
+                      onClick={() => { }}
                       disabled={txInProgress}
                     >
                       {txInProgress && (
@@ -990,17 +1018,16 @@ const ColumnFlex = styled(FlexBox)`
 `;
 // css styles
 const Container = styled.div`
-  flex: 1;
+  // flex: 1;
   display: flex;
-  flex-wrap: wrap;
-  border: 1px solid ${(props) => props.minimal ? 'transparent' : props.theme.default.border};
+  flex-wrap: nowrap;
+  border: ${(props) => props.profileType == 'Profile' ? 'none' : `1px solid ${(props) => props.minimal ? 'transparent' : props.theme.default.border}`};
   border-bottom: none;
   border-left: none;
   border-right: none;
   margin: 0px 5px;
   justify-content: center;
   padding: ${(props) => props.minimal ? '5px 0px' : '25px 10px'};
-
   align-self: stretch;
   @media (max-width: 768px) {
     display: flex;
@@ -1411,6 +1438,14 @@ const OwnerButton = styled(ChannelActionButton)`
   min-height: 36px;
   min-width: 108px;
 `;
+
+const DashboardButton = styled(ChannelActionButton)`
+  background: #e20880;
+  border-radius: 8px;
+  padding: 7px 14px;
+  min-height: 36px;
+  min-width: max-content;
+`
 
 const Toaster = styled.div`
   display: flex;

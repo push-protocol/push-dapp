@@ -406,6 +406,10 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   max-height: 100vh;
+
+  @media (max-width: 768px) {
+    display: ${props => props.minimal ? 'none' : 'flex'};
+  }
 `;
 
 const ContainerInfo = styled.div`
