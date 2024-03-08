@@ -347,7 +347,7 @@ const HeaderContainer = styled.header`
   width: 100%;
   position: fixed;
   top: 0;
-  z-index: 99999;
+  z-index: 999;
 `;
 
 const ParentContainer = styled.div`
@@ -370,8 +370,8 @@ const LeftBarContainer = styled.div`
   top: 0;
   bottom: 0;
   width: ${(props) => props.leftBarWidth}px;
-  // position: fixed;
-  position: absolute;
+  position: fixed;
+  // position: absolute;
 
   @media (max-width: 992px) {
     display: none;

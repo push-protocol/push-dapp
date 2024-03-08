@@ -65,7 +65,7 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
   useEffect(() => {
     setLoading(!channels.length); //if there are no channels initially then, set the loader
     fetchInitialsChannelMeta();
-  }, [account, chainId]);
+  }, [account, chainId,userPushSDKInstance]);
 
   useEffect(() => {
     setChannelsNetworkId(chainId);
@@ -191,7 +191,8 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
     return () => {
       clearTimeout(timeout);
     };
-  }, [search, userPushSDKInstance]);
+    // userPushSDKInstance should not be used as dependency here.
+  }, [search]);
 
   useEffect(() => {
     if (!account || !userPushSDKInstance) return;

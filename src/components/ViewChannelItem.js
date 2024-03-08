@@ -1336,7 +1336,7 @@ const ChannelActions = styled.div`
   justify-content: center;
   // justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap:24px;
   @media (max-width: 768px) {
     align-self: center;
   }
