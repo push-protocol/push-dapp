@@ -19,12 +19,17 @@ import { ItemVV2, SpanV2 } from "components/reusables/SharedStylingV2";
 import { appConfig } from "config";
 import APP_PATHS from "config/AppPaths";
 import { device } from "config/Globals";
+import ChannelProfileComponent from "components/channel/ChannelProfileComponent";
+import ChannelsDataStore from "singletons/ChannelsDataStore";
+import ViewChannelItem from "components/ViewChannelItem";
+
+
 
 // Constants
 const NOTIFICATIONS_PER_PAGE = 20;
 
 // Create Header
-const ChannelProfile = ({ channelID }) => {
+const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileType }) => {
   const dispatch = useDispatch();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -37,24 +42,41 @@ const ChannelProfile = ({ channelID }) => {
   // loading
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
-  
+  const [channelDetails, setChannelDetails] = useState(null);
   // Setup navigation
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setChannelDetails(null)
+    if (userPushSDKInstance) {
+      setLoading(true);
+      (async () => {
+        try {
+          const channelBasedOnChannelID = await userPushSDKInstance.channel.info(channelID);
+          setChannelDetails(channelBasedOnChannelID);
+          setLoading(false);
+        } catch (error) {
+          console.log("Error", error);
+        }
+      })()
+    }
+
+  }, [channelID, userPushSDKInstance])
 
   // load notifications
   useEffect(() => {
     if (userPushSDKInstance) {
       setLoading(true);
       userPushSDKInstance.channel.notifications(channelID, {
-          page: 1,
-          limit: NOTIFICATIONS_PER_PAGE,
-        }).then((response) => {
-          setNotifications(response.feeds);
-          setLoading(false);
+        page: 1,
+        limit: NOTIFICATIONS_PER_PAGE,
+      }).then((response) => {
+        setNotifications(response.feeds);
+        setLoading(false);
 
-          // ENABLE PAGINATION HERE
-        }).catch((err) => { 
-          // ENABLE NO NOTIFICATION FOUND HERE
+        // ENABLE PAGINATION HERE
+      }).catch((err) => {
+        // ENABLE NO NOTIFICATION FOUND HERE
       });
     };
     return () => {
@@ -75,25 +97,45 @@ const ChannelProfile = ({ channelID }) => {
           <SpanV2
             alignSelf="flex-start"
           >
-            <Back 
+            <Back
               onClick={() => {
                 navigate(APP_PATHS.Channels);
               }}
             />
           </SpanV2>
-          <SpanV2>
-            Channel Profile Here
-          </SpanV2>
         </ItemVV2>
 
+        {/* New Channel Profile Component */}
+        {/* {!loading && channelDetails && <ChannelProfileComponent channelID={channelID} channelDetails={channelDetails} />} */}
+
+        {channelDetails && !loading &&
+          <ViewChannelItem
+            channelObjectProp={channelDetails}
+            loadTeaser={loadTeaser}
+            playTeaser={playTeaser}
+            minimal={minimal}
+            profileType={profileType}
+          />
+        }
+
+
+        {!loading && <TextContainer>
+          <SpanV2
+            fontSize="20px"
+            fontWeight="500"
+          >
+            Recent Notifications
+          </SpanV2>
+        </TextContainer>
+        }
         <ScrollItem>
-          {loading && 
+          {loading &&
             <LoaderSpinner
               type={LOADER_TYPE.SEAMLESS}
               spinnerSize={40}
             />
           }
-          
+
           {notifications.map((item, index) => {
             const payload = item.payload;
 
@@ -183,6 +225,14 @@ const ScrollItem = styled(ItemVV2)`
     );
   }
 `;
+
+const TextContainer = styled(ItemVV2)`
+  flex:0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+  padding: 10px;
+  align-items:baseline;
+  margin:7px 20px 24px 5px;
+`
 
 // Export Default
 export default ChannelProfile;
