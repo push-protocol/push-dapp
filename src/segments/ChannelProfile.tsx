@@ -15,13 +15,13 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 
 // Internal Configs
 import { latest } from "@pushprotocol/restapi/src/lib/chat";
+import ViewChannelItem from "components/ViewChannelItem";
+import ChannelProfileComponent from "components/channel/ChannelProfileComponent";
 import { ItemVV2, SpanV2 } from "components/reusables/SharedStylingV2";
 import { appConfig } from "config";
 import APP_PATHS from "config/AppPaths";
 import { device } from "config/Globals";
-import ChannelProfileComponent from "components/channel/ChannelProfileComponent";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
-import ViewChannelItem from "components/ViewChannelItem";
 
 
 
@@ -41,6 +41,8 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
 
   // loading
   const [loading, setLoading] = useState(true);
+  const [loadingNotifs, setLoadingNotifs] = useState(true);
+  
   const [notifications, setNotifications] = useState([]);
   const [channelDetails, setChannelDetails] = useState(null);
   // Setup navigation
@@ -72,7 +74,7 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
         limit: NOTIFICATIONS_PER_PAGE,
       }).then((response) => {
         setNotifications(response.feeds);
-        setLoading(false);
+        setLoadingNotifs(false);
 
         // ENABLE PAGINATION HERE
       }).catch((err) => {
@@ -81,7 +83,7 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
     };
     return () => {
       setNotifications([]);
-      setLoading(true);
+      setLoadingNotifs(true);
     }
   }, [channelID]);
 
@@ -119,7 +121,7 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
         }
 
 
-        {!loading && <TextContainer>
+        <TextContainer>
           <SpanV2
             fontSize="20px"
             fontWeight="500"
@@ -127,9 +129,9 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
             Recent Notifications
           </SpanV2>
         </TextContainer>
-        }
+        
         <ScrollItem>
-          {loading &&
+          {loadingNotifs &&
             <LoaderSpinner
               type={LOADER_TYPE.SEAMLESS}
               spinnerSize={40}
