@@ -4,35 +4,35 @@ import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import { ethers } from 'ethers';
-import { useClickAway } from 'react-use';
+import { AiOutlineQrcode } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { AiOutlineQrcode } from 'react-icons/ai';
+import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { Feeds } from 'types/chat';
-import NewTag from 'components/NewTag';
-import StyleHelper from 'helpers/StyleHelper';
-import { fetchIntent } from 'helpers/w2w/user';
-import { AppContext } from 'contexts/AppContext';
-import { Context } from 'modules/chat/ChatModule';
-import { getIsNewTagVisible } from 'helpers/TimerHelper';
-import ProfileHeader from 'components/chat/w2wChat/profile';
-import { caip10ToWallet, reformatChatId } from 'helpers/w2w';
-import Recommended from 'components/chat/recommended/Recommended';
-import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { ChatPreview, ChatPreviewList, UserProfile } from '@pushprotocol/uiweb';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
 import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
+import NewTag from 'components/NewTag';
+import Recommended from 'components/chat/recommended/Recommended';
+import ProfileHeader from 'components/chat/w2wChat/profile';
+import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
+import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { AppContext } from 'contexts/AppContext';
+import StyleHelper from 'helpers/StyleHelper';
+import { getIsNewTagVisible } from 'helpers/TimerHelper';
+import { caip10ToWallet, reformatChatId } from 'helpers/w2w';
+import { fetchIntent } from 'helpers/w2w/user';
+import { Context } from 'modules/chat/ChatModule';
+import { Feeds } from 'types/chat';
 
 // Internal Configs
-import { useAccount } from 'hooks';
 import GLOBALS from 'config/Globals';
-import { appConfig } from '../../config';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { useAccount } from 'hooks';
+import { appConfig } from '../../config';
 
 
 const createGroupOnMouseEnter = [

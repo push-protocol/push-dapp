@@ -5405,9 +5405,9 @@ __metadata:
     "@mui/icons-material": ^5.8.4
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
-    "@pushprotocol/restapi": 0.0.1-alpha.71
+    "@pushprotocol/restapi": 1.6.12-alpha.1
     "@pushprotocol/socket": 0.5.3
-    "@pushprotocol/uiweb": 1.3.1-alpha.7
+    "@pushprotocol/uiweb": 1.3.1-alpha.8
     "@reduxjs/toolkit": ^1.7.1
     "@testing-library/dom": ^6.12.2
     "@testing-library/jest-dom": ^4.2.4
@@ -5594,9 +5594,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:0.0.1-alpha.71":
-  version: 0.0.1-alpha.71
-  resolution: "@pushprotocol/restapi@npm:0.0.1-alpha.71"
+"@pushprotocol/restapi@npm:1.6.12-alpha.1":
+  version: 1.6.12-alpha.1
+  resolution: "@pushprotocol/restapi@npm:1.6.12-alpha.1"
   dependencies:
     "@metamask/eth-sig-util": ^5.0.2
     axios: ^0.27.2
@@ -5619,7 +5619,7 @@ __metadata:
   peerDependenciesMeta:
     ethers:
       optional: true
-  checksum: f54952b8d5eeb6bfad61af52b5d25a5989e9075d3640800cd3042f56c411659ee3add38d673df1497479d3a7fb7500db7789fa9b4e696a0544b556345cd950f7
+  checksum: 0ea3c7199091682a33dbed717946de1a4394c3e3e3b62af5fcae211ec80df2f097a420966f7e940058dac4b24cb02e5c0b7615be22aaaa24ed62d8da9c5fb432
   languageName: node
   linkType: hard
 
@@ -5647,9 +5647,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:1.3.1-alpha.7":
-  version: 1.3.1-alpha.7
-  resolution: "@pushprotocol/uiweb@npm:1.3.1-alpha.7"
+"@pushprotocol/uiweb@npm:1.3.1-alpha.8":
+  version: 1.3.1-alpha.8
+  resolution: "@pushprotocol/uiweb@npm:1.3.1-alpha.8"
   dependencies:
     "@livekit/components-react": ^1.2.2
     "@livekit/components-styles": ^1.0.6
@@ -5682,7 +5682,7 @@ __metadata:
     react: ">=16.8.0"
     styled-components: ^6.0.8
     viem: ^1.3.0
-  checksum: 5b5a667799185aa6c9fdfff9e498e8d90fb905bf0596a377f2f131b1eaff84ff1684a7d3a8b0842f92436bd096f8353f6f4976191bd360a25c686ff79b88a6c6
+  checksum: 25cf0f2f0990ac99e598c90bd602031f1f8dd299b674d50ea32c46fe39a6939dd912d08a5040056cf5583d7fcd33c96f966827c8ca9dfd6e1f088376d24cc200
   languageName: node
   linkType: hard
 

@@ -1,21 +1,21 @@
 // React + Web3 Essentials
-import useModalBlur from "hooks/useModalBlur";
-import React, { createContext, useContext, useEffect, useState } from "react";
 import { ProgressHookType, PushAPI } from '@pushprotocol/restapi';
 import { ethers } from "ethers";
+import useModalBlur from "hooks/useModalBlur";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 // Internal Components
-import { AppContextType, BlockedLoadingI, ConnectedPeerIDType, LocalPeerType, onboardingProgressI, Web3NameListType } from "types/context"
-import { useAccount } from "hooks";
-import { appConfig } from "config";
-import { useDispatch, useSelector } from "react-redux";
-import { MdError } from "react-icons/md";
-import { setUserPushSDKInstance } from "redux/slices/userSlice";
-import { GlobalContext, ReadOnlyWalletMode } from "./GlobalContext";
-import useToast from "hooks/useToast";
 import { LOADER_SPINNER_TYPE } from "components/reusables/loaders/LoaderSpinner";
-import { ConnectedUser } from "types/chat";
+import { appConfig } from "config";
 import * as w2wHelper from 'helpers/w2w';
+import { useAccount } from "hooks";
+import useToast from "hooks/useToast";
+import { MdError } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserPushSDKInstance } from "redux/slices/userSlice";
+import { ConnectedUser } from "types/chat";
+import { AppContextType, BlockedLoadingI, ConnectedPeerIDType, LocalPeerType, onboardingProgressI, Web3NameListType } from "types/context";
+import { GlobalContext, ReadOnlyWalletMode } from "./GlobalContext";
 
 
 export const AppContext = createContext<AppContextType | null>(null);
