@@ -438,6 +438,7 @@ const WelcomeContent = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  align-self: flex-start;
 
   .icon {
     transform: rotate(-60deg);

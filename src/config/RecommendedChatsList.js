@@ -27,20 +27,20 @@ const RecommendedChatLists = [
       }
     }
   },
-  {
-    "chatParticipantAlias": "eip155:0x99A08ac6254dcf7ccc37CeC662aeba8eFA666666",
-    "payload": {
-      "chatId": "4ac5ab85c9c3d57adbdf2dba79357e56b2f9ef0256befe750d9f93af78d2ca68",
-      "chatPic": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAxElEQVR4AcXBsU1DUQyG0S/WW4EGMQETMIRX8BxpXFpCLMACXuGOlC5DhNZKcaUnBP85l8+P7wcntBc7sZIzDDFDzBA7eNJeTLGSKVZyRnsxxUomQ8wQM8SO9uI/tReTIWaIGWJHrGRqL6b2Yrq/fbHzcruyEyuZDDFDzBA7eBIr2Wm/shMrOcMQM8QMsaO9mGIlf6m9mAwxQ8wQO2IlU3vxG+3FTqxkMsQMMUPs8l6vDzZiJVN7sRMrmdqLHUPMEDPEfgBK0S/MKDp40gAAAABJRU5ErkJggg==",
-      "chatParticipant": "eip155:0xf8250D363BD1F25f52F10C21188fe82c68C049c4",
-      "chatGroup": true,
-      "chatTimestamp": null,
-      "chatMsg": {
-        "messageType": "Text",
-        "messageContent": "Hi! Stay tuned, while BRB IRL dev tour has wrapped up, We still have BRB Online with challenges from global projects that still needs to be solved: https://push.org/brb"
-      }
-    }
-  }
+  // {
+  //   "chatParticipantAlias": "eip155:0x99A08ac6254dcf7ccc37CeC662aeba8eFA666666",
+  //   "payload": {
+  //     "chatId": "4ac5ab85c9c3d57adbdf2dba79357e56b2f9ef0256befe750d9f93af78d2ca68",
+  //     "chatPic": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAxElEQVR4AcXBsU1DUQyG0S/WW4EGMQETMIRX8BxpXFpCLMACXuGOlC5DhNZKcaUnBP85l8+P7wcntBc7sZIzDDFDzBA7eNJeTLGSKVZyRnsxxUomQ8wQM8SO9uI/tReTIWaIGWJHrGRqL6b2Yrq/fbHzcruyEyuZDDFDzBA7eBIr2Wm/shMrOcMQM8QMsaO9mGIlf6m9mAwxQ8wQO2IlU3vxG+3FTqxkMsQMMUPs8l6vDzZiJVN7sRMrmdqLHUPMEDPEfgBK0S/MKDp40gAAAABJRU5ErkJggg==",
+  //     "chatParticipant": "eip155:0xf8250D363BD1F25f52F10C21188fe82c68C049c4",
+  //     "chatGroup": true,
+  //     "chatTimestamp": null,
+  //     "chatMsg": {
+  //       "messageType": "Text",
+  //       "messageContent": "Hi! Stay tuned, while BRB IRL dev tour has wrapped up, We still have BRB Online with challenges from global projects that still needs to be solved: https://push.org/brb"
+  //     }
+  //   }
+  // }
 ]
 
 export default RecommendedChatLists;
