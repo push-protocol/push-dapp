@@ -3,34 +3,36 @@ import { Web3Provider } from '@ethersproject/providers';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
+import { ethers } from 'ethers';
 import { AiOutlineQrcode } from 'react-icons/ai';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
-import { useSelector } from 'react-redux';
-import { ethers } from 'ethers';
 
 // Internal Compoonents
-import { ChatPreviewList, UserProfile } from '@pushprotocol/uiweb';
+import { ChatPreview, ChatPreviewList, UserProfile } from '@pushprotocol/uiweb';
 import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
 import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
+import NewTag from 'components/NewTag';
+import Recommended from 'components/chat/recommended/Recommended';
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { AppContext } from 'contexts/AppContext';
 import StyleHelper from 'helpers/StyleHelper';
 import { getIsNewTagVisible } from 'helpers/TimerHelper';
+import { caip10ToWallet, reformatChatId } from 'helpers/w2w';
 import { fetchIntent } from 'helpers/w2w/user';
 import { Context } from 'modules/chat/ChatModule';
 import { Feeds } from 'types/chat';
-import { caip10ToWallet } from 'helpers/w2w';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { AppContext } from 'contexts/AppContext';
-import NewTag from 'components/NewTag';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
-import { appConfig } from '../../config';
-import { useAccount } from 'hooks';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { useAccount } from 'hooks';
+import { appConfig } from '../../config';
 
 
 const createGroupOnMouseEnter = [
@@ -63,17 +65,18 @@ type loadingData = { loading: boolean, preload: boolean, paging: boolean, finish
 
 // Chat Sections
 // Divided into two, left and right
-const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
+const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerChatParticipant }) => {
   // theme context
   const theme = useTheme();
+  const { wallet } = useAccount();
 
-  const {readOnlyWallet} = useContext(GlobalContext);
+  const { readOnlyWallet } = useContext(GlobalContext);
   const { setSelectedChatId } = useContext(Context);
   const { setMode } = useContext(GlobalContext);
 
   const isNewTagVisible = getIsNewTagVisible(new Date('2023-02-22T00:00:00.000'), 90);
 
-  const { connectedUser, displayQR, setDisplayQR, initializePushSDK, handleConnectWallet } = useContext(AppContext);
+  const { connectedUser, displayQR, setDisplayQR, initializePushSDK, handleConnectWallet, connectWallet } = useContext(AppContext);
   const [searchedUser, setSearchedUser] = useState<string>('');
 
   const { activeTab, setActiveTab } = useContext(Context);
@@ -84,6 +87,9 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   const [showQR, setShowQR] = useState<boolean>(false);
   const containerRef = React.useRef(null);
 
+  // set recommended chats
+  const [showRecommended, setShowRecommended] = useState(false);
+
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
@@ -93,25 +99,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   };
   useClickAway(containerRef, () => closeQRDropdown());
 
-  const formatChatParticipant = async (chatParticipant: string, chatId: string) => {
-    let formattedChatParticipant = chatParticipant;
-
-    //Checking if the user has signed the message or not
-    if (userPushSDKInstance.decryptedPgpPvtKey) {
-      if (!formattedChatParticipant.includes('.')) {
-        if (!await ethers.utils.isAddress(caip10ToWallet(formattedChatParticipant)))
-          formattedChatParticipant = chatId;
-      }
-      return formattedChatParticipant;
-    } else {
-      if (userPushSDKInstance.account === readOnlyWallet) {
-        handleConnectWallet();
-      } else if (userPushSDKInstance.signer === undefined || userPushSDKInstance.decryptedPgpPvtKey === undefined) {
-        await initializePushSDK();
-        return null;
-      }
-    }
-  }
+  let navigate = useNavigate();
 
   const handleCreateGroup = async () => {
     if (userPushSDKInstance.decryptedPgpPvtKey) {
@@ -127,7 +115,6 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
       }
     }
   }
-
 
   // RENDER
   return (
@@ -273,14 +260,30 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
           style={{ display: activeTab == 0 ? 'flex' : 'none' }}
           overflow="scroll"
         >
-          <ChatPreviewList
-            listType="CHATS"
-            onChatSelected={async (chatid, chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant, chatid))}
+          {/* Only show recommended chats if there are no chats */}
+          {showRecommended &&
+            <Recommended
+              bg="#f5f5f5"
+              onChatSelected={async (chatid, chatParticipant) => { setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid)) }}
+            />
+          }
 
-            onUnreadCountChange={(count) => {
-              // console.log('Count is: ', count);
-            }}
-          />
+          {/* Only show recommended chats if there are no chats */}
+          {!showRecommended &&
+            <ChatPreviewList
+              listType="CHATS"
+              onChatSelected={async (chatid, chatParticipant) => { setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid)) }}
+
+              onUnreadCountChange={(count) => {
+                // console.log('Count is: ', count);
+              }}
+              onPreload={(chats) => {
+                if (chats.length == 0) {
+                  setShowRecommended(true);
+                }
+              }}
+            />
+          }
         </ItemVV2>
 
         {/* Set Requests */}
@@ -293,7 +296,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
         >
           <ChatPreviewList
             listType="REQUESTS"
-            onChatSelected={async (chatid, chatParticipant) => { console.log(chatParticipant); setSelectedChatId(await formatChatParticipant(chatParticipant, chatid)) }}
+            onChatSelected={async (chatid, chatParticipant) => { setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid)) }}
             onUnreadCountChange={(count) => {
               // console.log('Count is: ', count);
             }}
@@ -329,7 +332,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
             <ChatPreviewList
               listType="SEARCH"
               searchParamter={searchedUser || ''}
-              onChatSelected={async (chatid, chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant, chatid))}
+              onChatSelected={async (chatid, chatParticipant) => setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid))}
               onUnreadCountChange={(count) => {
                 // console.log('Count is: ', count);
               }}

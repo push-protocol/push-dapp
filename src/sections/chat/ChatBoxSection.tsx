@@ -12,12 +12,13 @@ import GLOBALS from 'config/Globals';
 
 // Chat Sections
 // Divided into two, left and right
-const ChatBoxSection = ({ showGroupInfoModal }) => {
+const ChatBoxSection = ({ showGroupInfoModal, triggerChatParticipant }) => {
   // RENDER
   return (
     <ItemVV2 justifyContent="center" >
       <ChatBox
         showGroupInfoModal={showGroupInfoModal}
+        triggerChatParticipant={triggerChatParticipant}
       />
     </ItemVV2>
   );
