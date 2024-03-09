@@ -65,7 +65,7 @@ type loadingData = { loading: boolean, preload: boolean, paging: boolean, finish
 
 // Chat Sections
 // Divided into two, left and right
-const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
+const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerChatParticipant }) => {
   // theme context
   const theme = useTheme();
   const { wallet } = useAccount();
@@ -100,31 +100,6 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   useClickAway(containerRef, () => closeQRDropdown());
 
   let navigate = useNavigate();
-
-  const formatChatParticipant = async (chatParticipant: string, chatId: string) => {
-    let formattedChatParticipant = chatParticipant;
-    let userPushInstance = userPushSDKInstance;
-
-    if (!formattedChatParticipant.includes('.')) {
-      if (!await ethers.utils.isAddress(caip10ToWallet(formattedChatParticipant)))
-        formattedChatParticipant = chatId;
-    }
-    let formattedchatId = reformatChatId(formattedChatParticipant);
-
-    //If no PGP keys then connect the wallet.
-    if (!userPushInstance.decryptedPgpPvtKey) {
-      userPushInstance = await handleConnectWallet();
-
-      if (userPushInstance && userPushInstance.decryptedPgpPvtKey) {
-        navigate(`/chat/${formattedchatId}`);
-        return formattedChatParticipant;
-      }
-    }else{
-      navigate(`/chat/${formattedchatId}`);
-      return formattedChatParticipant;
-    }
-
-  }
 
   const handleCreateGroup = async () => {
     if (userPushSDKInstance.decryptedPgpPvtKey) {
@@ -289,7 +264,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
           {showRecommended &&
             <Recommended
               bg="#f5f5f5"
-              onChatSelected={async (chatid, chatParticipant) => { console.log(chatParticipant); setSelectedChatId(await formatChatParticipant(chatParticipant, chatid)) }}
+              onChatSelected={async (chatid, chatParticipant) => { setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid)) }}
             />
           }
 
@@ -297,7 +272,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
           {!showRecommended &&
             <ChatPreviewList
               listType="CHATS"
-              onChatSelected={async (chatid, chatParticipant) => { console.log(chatParticipant, chatid); setSelectedChatId(await formatChatParticipant(chatParticipant, chatid)) }}
+              onChatSelected={async (chatid, chatParticipant) => { setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid)) }}
 
               onUnreadCountChange={(count) => {
                 // console.log('Count is: ', count);
@@ -321,7 +296,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
         >
           <ChatPreviewList
             listType="REQUESTS"
-            onChatSelected={async (chatid, chatParticipant) => { console.log(chatParticipant); setSelectedChatId(await formatChatParticipant(chatParticipant, chatid)) }}
+            onChatSelected={async (chatid, chatParticipant) => { setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid)) }}
             onUnreadCountChange={(count) => {
               // console.log('Count is: ', count);
             }}
@@ -357,7 +332,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
             <ChatPreviewList
               listType="SEARCH"
               searchParamter={searchedUser || ''}
-              onChatSelected={async (chatid, chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant, chatid))}
+              onChatSelected={async (chatid, chatParticipant) => setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid))}
               onUnreadCountChange={(count) => {
                 // console.log('Count is: ', count);
               }}

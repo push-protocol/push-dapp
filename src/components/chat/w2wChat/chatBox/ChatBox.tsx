@@ -13,10 +13,10 @@ import { produce } from 'immer';
 import { CID } from 'ipfs-http-client';
 import { BsDashLg } from 'react-icons/bs';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
+import { useSelector } from 'react-redux';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
-import { useSelector } from 'react-redux';
 
 // Internal Components
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
@@ -61,10 +61,11 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
   );
 });
 
-const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
+const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element => {
   const { currentChat, viewChatBox, receivedIntents, activeTab, setViewChatBox, setChat, selectedChatId }: ContextType =
     useContext<ContextType>(Context);
   const { web3NameList }: AppContextType = useContext(AppContext);
+  const { setSelectedChatId } = useContext(Context);
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -213,13 +214,17 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
                 </Atag>
 
                 <ItemBody>
-                  <Recommended bg="#e2078021" onChatSelected={(chatId, chatParticipant) => setChat(chatId, chatParticipant)} />
-                  {InfoMessages.map((item) => (
-                    <WelcomeContent key={item.id}>
-                      <BsDashLg className="icon" />
-                      <TextInfo>{item.content}</TextInfo>
-                    </WelcomeContent>
-                  ))}
+                  <Recommended bg="#e2078021" onChatSelected={async (chatId, chatParticipant) => setSelectedChatId(await triggerChatParticipant(chatParticipant, chatId))} />
+                  
+                  <WelcomePoints>
+                    {InfoMessages.map((item) => (
+                      <WelcomeContent key={item.id}>
+                        <BsDashLg className="icon" />
+                        <TextInfo>{item.content}</TextInfo>
+                      </WelcomeContent>
+                    ))}
+                  </WelcomePoints>
+                  
                 </ItemBody>
               </WelcomeInfo>
             </>
@@ -408,6 +413,11 @@ const Container = styled(Content)`
   position: relative;
 `;
 
+const WelcomePoints = styled(ItemVV2)`
+  margin: 20px 0px 0px 0px;
+  gap: 10px;
+`
+
 const WelcomeItem = styled(ItemVV2)`
   width: 420px;
   min-width: 300px;
@@ -424,12 +434,11 @@ const WelcomeItem = styled(ItemVV2)`
 `;
 
 const WelcomeContent = styled.div`
-  width: 304px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin: 10px auto;
+
   .icon {
     transform: rotate(-60deg);
     color: #d53893;
@@ -462,7 +471,6 @@ const TextInfo = styled.div`
   font-size: 15px;
   line-height: 130%;
   color: ${(props) => props.theme.default.secondaryColor};
-  width: 274px;
 `;
 
 const WelcomeMainText = styled(SpanV2)`

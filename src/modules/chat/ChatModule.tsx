@@ -8,14 +8,13 @@ import * as PushAPI from '@pushprotocol/restapi';
 import ReactGA from 'react-ga';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { useSelector } from 'react-redux';
 import { ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
-import { useSelector } from 'react-redux';
 
 // Internal Compoonents
-import { AppContext } from 'contexts/AppContext';
 import ChatQR from 'components/chat/w2wChat/chatQR/chatQR';
 import MobileView from 'components/chat/w2wChat/chatQR/mobileView';
 import { CreateGroupModalContent } from 'components/chat/w2wChat/groupChat/createGroup/CreateGroupModalContent';
@@ -27,10 +26,12 @@ import LoaderSpinner, {
   LOADER_TYPE,
   PROGRESS_POSITIONING,
 } from 'components/reusables/loaders/LoaderSpinner';
+import { AppContext } from 'contexts/AppContext';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { caip10ToWallet } from 'helpers/w2w';
 import * as w2wHelper from 'helpers/w2w/';
 import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
+import { checkIfIntent, getUpdatedChatAndIntent, getUpdatedGroupInfo } from 'helpers/w2w/user';
 import { useAccount, useDeviceWidthCheck, useSDKSocket } from 'hooks';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
@@ -38,7 +39,6 @@ import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection from 'sections/video/VideoCallSection';
 import { ChatUserAppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
-import { checkIfIntent, getUpdatedChatAndIntent, getUpdatedGroupInfo } from 'helpers/w2w/user';
 
 // Internal Configs
 import { ChatUIProvider, darkChatTheme } from '@pushprotocol/uiweb';
@@ -103,6 +103,31 @@ function Chat({ chatid }) {
   const containerRef = React.useRef(null);
 
   const socketData = useSDKSocket({ account, chainId, env: appConfig.appEnv, socketType: 'chat' });
+
+  // trigger chat participant open
+  const triggerChatParticipant = async (chatParticipant: string, chatId: string) => {
+    let formattedChatParticipant = chatParticipant;
+    let userPushInstance = userPushSDKInstance;
+
+    if (!formattedChatParticipant.includes('.')) {
+      if (!await ethers.utils.isAddress(caip10ToWallet(formattedChatParticipant)))
+        formattedChatParticipant = chatId;
+    }
+    let formattedchatId = reformatChatId(formattedChatParticipant);
+
+    //If no PGP keys then connect the wallet.
+    if (!userPushInstance.decryptedPgpPvtKey) {
+      userPushInstance = await handleConnectWallet();
+
+      if (userPushInstance && userPushInstance.decryptedPgpPvtKey) {
+        navigate(`/chat/${formattedchatId}`);
+        return formattedChatParticipant;
+      }
+    }else{
+      navigate(`/chat/${formattedchatId}`);
+      return formattedChatParticipant;
+    }
+  }
 
   useEffect(() => {
     if (
@@ -442,13 +467,17 @@ function Chat({ chatid }) {
                   <ChatSidebarSection
                     showCreateGroupModal={showCreateGroupModal}
                     autofilledSearch={chatid}
+                    triggerChatParticipant={triggerChatParticipant}
                   />
                 </ChatSidebarContainer>
                 <ChatContainer
                   padding="10px 10px 10px 10px"
                   chatActive={viewChatBox}
                 >
-                  <ChatBoxSection showGroupInfoModal={showGroupInfoModal} />
+                  <ChatBoxSection 
+                    showGroupInfoModal={showGroupInfoModal}
+                    triggerChatParticipant={triggerChatParticipant}
+                  />
                 </ChatContainer>
                 <GroupInfoModalComponent
                   InnerComponent={GroupInfoModalContent}
