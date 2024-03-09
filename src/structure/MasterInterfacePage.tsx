@@ -3,14 +3,12 @@ import React, { lazy, Suspense } from 'react';
 
 // External Packages
 import useToast from 'hooks/useToast';
-import { MdError, MdError, MdWarning } from 'react-icons/md';
+import { MdError, MdWarning } from 'react-icons/md';
 import { VscClose } from 'react-icons/vsc';
 import { Navigate, redirect, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled from 'styled-components';
-
-import useToast from 'hooks/useToast';
 
 // Internal Components
 import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE, PROGRESS_POSITIONING } from 'components/reusables/loaders/LoaderSpinner';
