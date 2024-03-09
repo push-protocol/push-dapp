@@ -1,21 +1,21 @@
 // React + Web3 Essentials
-import useModalBlur from "hooks/useModalBlur";
-import React, { createContext, useContext, useEffect, useState } from "react";
 import { ProgressHookType, PushAPI } from '@pushprotocol/restapi';
 import { ethers } from "ethers";
+import useModalBlur from "hooks/useModalBlur";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 // Internal Components
-import { AppContextType, BlockedLoadingI, ConnectedPeerIDType, LocalPeerType, onboardingProgressI, Web3NameListType } from "types/context"
-import { useAccount } from "hooks";
-import { appConfig } from "config";
-import { useDispatch, useSelector } from "react-redux";
-import { MdError } from "react-icons/md";
-import { setUserPushSDKInstance } from "redux/slices/userSlice";
-import { GlobalContext, ReadOnlyWalletMode } from "./GlobalContext";
-import useToast from "hooks/useToast";
 import { LOADER_SPINNER_TYPE } from "components/reusables/loaders/LoaderSpinner";
-import { ConnectedUser } from "types/chat";
+import { appConfig } from "config";
 import * as w2wHelper from 'helpers/w2w';
+import { useAccount } from "hooks";
+import useToast from "hooks/useToast";
+import { MdError } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserPushSDKInstance } from "redux/slices/userSlice";
+import { ConnectedUser } from "types/chat";
+import { AppContextType, BlockedLoadingI, ConnectedPeerIDType, LocalPeerType, onboardingProgressI, Web3NameListType } from "types/context";
+import { GlobalContext, ReadOnlyWalletMode } from "./GlobalContext";
 
 
 export const AppContext = createContext<AppContextType | null>(null);
@@ -23,6 +23,8 @@ export const AppContext = createContext<AppContextType | null>(null);
 const AppContextProvider = ({ children }) => {
     const { connect, provider, account, wallet, connecting } = useAccount();
     const web3onboardToast = useToast();
+
+    const { readOnlyWallet } = useContext(GlobalContext);
 
     const [web3NameList, setWeb3NameList] = useState<Web3NameListType>({});
     const [snapInstalled, setSnapInstalled] = useState(false);
@@ -67,7 +69,12 @@ const AppContextProvider = ({ children }) => {
 
         if (!(wallet?.accounts?.length > 0)) {
             const walletConnected = await connect();
-            return walletConnected[0];
+            console.log("Wallet Connected >>>",walletConnected);
+            if (walletConnected.length > 0) {
+                return walletConnected[0];
+            }else{
+                return null;
+            }
         }
 
     }
@@ -87,7 +94,7 @@ const AppContextProvider = ({ children }) => {
             return userPushInstance;
         } else {
             const walletConnected = await connect();
-            if (walletConnected) {
+            if (walletConnected.length > 0) {
                 const userPushInstance = await initializePushSDK(walletConnected[0]);
                 return userPushInstance;
             } else {
@@ -100,10 +107,9 @@ const AppContextProvider = ({ children }) => {
 
 
     const initialisePushSdkGuestMode = async () => {
-        console.log("Initialising Push SDK Guest Mode");
         let userInstance;
         userInstance = await PushAPI.initialize({
-            account: '0x0000000000000000000000000000000000000000',
+            account: readOnlyWallet,
             env: appConfig.appEnv,
         });
         dispatch(setUserPushSDKInstance(userInstance));
@@ -231,6 +237,7 @@ const AppContextProvider = ({ children }) => {
 
     const initializePushSDK = async (wallet?: any) => {
         let userInstance;
+        console.log("Initialising Push General Mode");
         try {
 
             let web3Provider = provider;

@@ -91,7 +91,11 @@ const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues })=>{
                 size="16px"
                 cursor="pointer"
                 width="max-content"
-                onClick={() => dropdownValue?.function()}
+                onClick={() => {
+                setShowDropdown(false);
+                  dropdownValue?.function()
+                
+                }}
               >
                 {dropdownValue.title}
               </Span>

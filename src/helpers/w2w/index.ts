@@ -1,4 +1,5 @@
 // Internal Components
+import { ethers } from 'ethers';
 import { ConnectedUser, Feeds, MessageIPFSWithCID } from '../../types/chat';
 import * as AES from './aes';
 import * as Ceramic from './ceramic';
@@ -175,4 +176,52 @@ export default {
   PGP: PGP,
   DID: DIDHelper,
   Ceramic: Ceramic,
+};
+
+export const reformatChatId = (chatid: string): string => {
+  let isWallet = false;
+
+  // check if chatid: is appened, then skip anything else
+  if (chatid.startsWith('chatid:')) {
+    return chatid;
+  }
+
+  // check if .eth is at the end, then skip anything else
+  if (chatid.endsWith('.eth')) {
+    return chatid;
+  }
+
+  // check if .wallet is at the end, then skip anything else
+  if (chatid.endsWith('.wallet')) {
+    return chatid;
+  }
+  // check if this is eip155: which is considered default and therefore remove it
+  if (chatid.startsWith('eip155:') && !chatid.includes(':nft')) {
+    chatid = chatid.replace('eip155:', '');
+    isWallet = true;
+  }
+
+  if (chatid.includes(':nft')) {
+    chatid = chatid.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0];
+  }
+
+  // check if this is eip155: which is considered default and therefore remove it
+  if (chatid.startsWith('eip155:')) {
+    chatid = chatid.replace('eip155:', '');
+    isWallet = true;
+  }
+
+  // check if this is an account address or not and based on that take appropriate action
+  if (!isWallet && ethers.utils.isAddress(chatid)) {
+    isWallet = true;
+  }
+
+  // if all checks fail then this is probably a chat id
+  // WARNING: THIS WILL FAIL WITH NON-EVMS, NEED NODES TO INDICATE CHATID:
+  if (!isWallet) {
+    // append chatid:
+    chatid = `chatid:${chatid}`;
+  }
+
+  return chatid;
 };
