@@ -11,32 +11,29 @@ import styled, { ThemeProvider, useTheme } from "styled-components";
 // Internal Compoonents
 import * as PushAPI from "@pushprotocol/restapi";
 import { NotificationItem } from "@pushprotocol/uiweb";
+import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
+import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg';
+import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import SearchFilter from "components/SearchFilter";
+import { GlobalContext } from "contexts/GlobalContext";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import CryptoHelper from "helpers/CryptoHelper";
+import { useAccount  } from "hooks";
 import { Item } from "primaries/SharedStyling";
 import {
   addPaginatedNotifications,
   incrementPage,
-  resetNotificationsSlice,
   setFinishedFetching,
   updateTopNotifications
 } from "redux/slices/notificationSlice";
 import DisplayNotice from "../primaries/DisplayNotice";
 import NotificationToast from "../primaries/NotificationToast";
 import { ScrollItem } from "./ViewChannels";
-import { useAccount, useDeviceWidthCheck } from "hooks";
-import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
-import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
-import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg'
-import { GlobalContext } from "contexts/GlobalContext";
 
 // Internal Configs
-import { appConfig } from "config";
-import { device } from "config/Globals";
 import { ItemHV2, SpanV2 } from "components/reusables/SharedStylingV2";
-import { Image } from "components/SharedStyling";
+import { device } from "config/Globals";
 import { useNavigate } from "react-router-dom";
 
 // Constants
@@ -148,13 +145,6 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
     if (loading || finishedFetching || !userPushSDKInstance) return;
     setLoading(true);
     try {
-      // const { count, results } = await PushAPI.fetchNotifications({
-      //   user: account,
-      //   pageSize: NOTIFICATIONS_PER_PAGE,
-      //   page,
-      //   chainId,
-      //   dev: true,
-      // });
       const results = await userPushSDKInstance.notification.list('INBOX', {
         raw: true,
         page: page,

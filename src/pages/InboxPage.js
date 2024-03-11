@@ -1,6 +1,6 @@
 // React + Web3 Essentials
-import React, { useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import React from "react";
+import { useLocation, } from "react-router-dom";
 
 // External Packages
 import styled from 'styled-components';
@@ -10,7 +10,6 @@ import { SectionV2 } from 'components/reusables/SharedStylingV2';
 import InboxModule from "modules/inbox/InboxModule";
 
 // Internal Configs
-import GLOBALS from "config/Globals";
 
 // Other Information section
 const InboxPage = () => {

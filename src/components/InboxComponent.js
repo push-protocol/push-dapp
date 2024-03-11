@@ -11,7 +11,6 @@ import Feedbox from 'segments/Feedbox';
 import SpamBox from 'segments/spam';
 
 // Internal Configs
-import GLOBALS from 'config/Globals';
 import APP_PATHS from 'config/AppPaths';
 
 const InboxComponent = ({isSpam}) => {

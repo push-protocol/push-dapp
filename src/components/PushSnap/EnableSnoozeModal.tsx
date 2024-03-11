@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ItemHV2, ItemVV2, ButtonV2 } from 'components/reusables/SharedStylingV2';
+import { ButtonV2,ItemHV2, ItemVV2,  } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import { device } from 'config/Globals';
