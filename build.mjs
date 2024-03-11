@@ -192,11 +192,11 @@ const changeENV = async (appEnv) => {
           value = await doSyncPrompt(rl, `${envSampleObject[envVar]} >`);
 
           if (value.trim().length == 0) {
-            LoggerInstance.error("  Incorrect Entry, Field can't be empty");
+            console.log(chalk.bgRed.black("  Incorrect Entry, Field can't be empty"));
           }
         }
 
-        LoggerInstance.saved(`  [Saved] ${envVar}=${value}`);
+        console.log(chalk.bgBlack.white(`  [Saved] ${envVar}=${value}`));
         moddedLine = `${envVar}=${value}${comment}`;
 
         fileModified = true;

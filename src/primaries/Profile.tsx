@@ -2,30 +2,30 @@
 import React, { useContext, useEffect, useRef } from 'react';
 
 // External Packages
-import styled, { useTheme } from 'styled-components';
 import { useSelector } from 'react-redux';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { Item } from './SharedStyling.js';
-import { envUtil, shortenText } from 'helpers/UtilityHelper';
 import ProfileModal from 'components/ProfileModal';
-import Dropdown from '../components/Dropdown';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { envUtil, shortenText } from 'helpers/UtilityHelper';
+import { useAccount } from 'hooks';
 import { useClickAway } from 'hooks/useClickAway';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
-import { useAccount } from 'hooks';
+import Dropdown from '../components/Dropdown';
+import { Item } from './SharedStyling.js';
 
 // Internal Configs
+import { SpanV2 } from 'components/reusables/SharedStylingV2.js';
 import APP_PATHS from 'config/AppPaths';
 import { AppContext } from 'contexts/AppContext';
 import { ErrorContext } from 'contexts/ErrorContext';
-import { AppContextType } from 'types/context';
 import { GlobalContext, GlobalContextType, ReadOnlyWalletMode } from 'contexts/GlobalContext';
-import { SpanV2 } from 'components/reusables/SharedStylingV2.js';
+import { AppContextType } from 'types/context';
 
 // Create Header
 const Profile = ({ isDarkMode }) => {
-  const { web3NameList,initialisePushSdkReadMode,handleConnectWallet }: AppContextType = useContext(AppContext);
+  const { web3NameList,initialisePushSdkReadMode }: AppContextType = useContext(AppContext);
   const { setReadOnlyWallet, readOnlyWallet, mode, setMode }: GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
@@ -43,7 +43,7 @@ const Profile = ({ isDarkMode }) => {
 
   // Get theme
   const theme = useTheme();
-  const [showDropdown, setShowDropdown] = React.useState(false);
+  const [showDropdown, setShowDropdown] = React.useState<boolean>(false);
   useClickAway(modalRef, dropdownRef, () => showDropdown && setShowDropdown(false));
 
   const dropdownValues = [
@@ -77,6 +77,7 @@ const Profile = ({ isDarkMode }) => {
         await disconnect(wallet);
         setMode(ReadOnlyWalletMode.GUEST_MODE);
         setReadOnlyWallet('0x0000000000000000000000000000000000000001');
+        setShowDropdown(false);
       },
       title: 'Logout',
       invertedIcon: './logout.svg',
@@ -148,7 +149,7 @@ const Profile = ({ isDarkMode }) => {
                     align="flex-start"
                     ref={dropdownRef}
                   >
-                    <Dropdown dropdownValues={dropdownValues} />
+                    <Dropdown dropdownValues={dropdownValues} setShowDropdown={setShowDropdown}/>
                   </DropdownItem>
                   <ItemModal ref={modalRef}>
                     <ProfileModal

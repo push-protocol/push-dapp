@@ -8,11 +8,11 @@ import styled, { useTheme } from 'styled-components';
 import { ButtonV2,ItemHV2, ItemVV2,  } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
+import { defaultSnapOrigin } from 'config';
 import { device } from 'config/Globals';
 import { AppContext } from 'contexts/AppContext';
-import { SnoozeDurationType } from 'types';
 import { updateSnoozeDuration } from 'helpers';
-import { defaultSnapOrigin } from 'config';
+import { SnoozeDurationType } from 'types';
 
 const EnableSnoozeModal = ({
   setSnoozeDuration
