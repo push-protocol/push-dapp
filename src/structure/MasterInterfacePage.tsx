@@ -36,6 +36,7 @@ const TutorialPage = lazy(() => import('pages/TutorialPage'));
 // const YieldFarmingPage = lazy(() => import('pages/YieldFarmingPage'));
 const YieldFarmingV2Page = lazy(() => import('pages/YieldFarmingPageV2'));
 const UserSettingsPage = lazy(() => import('pages/UserSettingsPage'));
+const ClaimGalxePage = lazy(() => import('pages/ClaimGalxePage'));
 
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
@@ -250,6 +251,10 @@ function MasterInterfacePage() {
             <Route
               path={APP_PATHS.Support}
               element={<SupportPage />}
+            />
+            <Route
+              path={APP_PATHS.ClaimGalxe}
+              element={<ClaimGalxePage />}
             />
             <Route
               path={APP_PATHS.UserSettings}

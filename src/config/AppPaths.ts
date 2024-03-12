@@ -21,6 +21,7 @@ enum APP_PATHS {
     Support = '/support',
     UserSettings = '/user/settings',
     ChannelSettings = '/channel/settings',
+    ClaimGalxe = 'claim/galxe'
 }
   
 export default APP_PATHS;
