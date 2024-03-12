@@ -288,8 +288,8 @@ const SubmitButton = styled.button`
   width: 15rem;
   padding: 16px 32px;
   border-radius: 15px;
-  background: ${(props) => (props.disabled ? '#383A40' : '#cf1c84')};
-  color: ${(props) => (props.disabled ? '#BEC8D8' : '#fff')};
+  background: ${(props) => (props.disabled ? props.theme.btn.disabledBg : '#cf1c84')};
+  color: ${(props) => (props.disabled ? props.theme.btn.disabledColor : '#fff')};
   cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
 
   align-self: flex-start;
