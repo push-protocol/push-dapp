@@ -14,7 +14,12 @@ import ViewChannelItem from 'components/ViewChannelItem';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import UtilityHelper, { MaskedAliasChannels, MaskedChannels } from 'helpers/UtilityHelper';
 import { useAccount } from 'hooks';
-import { incrementPage, setChannelMeta, updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
+import {
+  incrementPage,
+  setChannelMeta,
+  updateBulkSubscriptions,
+  updateBulkUserSettings,
+} from 'redux/slices/channelSlice';
 import { incrementStepIndex } from 'redux/slices/userJourneySlice';
 import DisplayNotice from '../primaries/DisplayNotice';
 import { Item } from '../primaries/SharedStyling';
@@ -36,7 +41,7 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
   const dispatch = useDispatch();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
-  }); 
+  });
   const { account, chainId } = useAccount();
   const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
   const { run, stepIndex } = useSelector((state: any) => state.userJourney);
@@ -79,35 +84,40 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
 
   // to fetch initial channels and logged in user data
   const fetchInitialsChannelMeta = async () => {
-
-    let options = {
-      page: Math.ceil(channelsVisited / CHANNELS_PER_PAGE) || 1,
-      limit: CHANNELS_PER_PAGE, 
+    try {
+      let options = {
+        page: Math.ceil(channelsVisited / CHANNELS_PER_PAGE) || 1,
+        limit: CHANNELS_PER_PAGE,
+      };
+      const channelsMeta = await userPushSDKInstance.channel.list({ options });
+      dispatch(incrementPage());
+      if (!channels.length) {
+        dispatch(setChannelMeta(channelsMeta?.channels));
+      }
+      // increases the step once the channel are loaded
+      if (run && stepIndex === 3) {
+        dispatch(incrementStepIndex());
+        dispatch(incrementStepIndex());
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
     }
-    const  channelsMeta = await userPushSDKInstance.channel.list({options})
-    dispatch(incrementPage());
-    if (!channels.length) {
-      dispatch(setChannelMeta(channelsMeta?.channels));
-    }
-
-    // increases the step once the channel are loaded
-    if (run && stepIndex === 3) {
-      dispatch(incrementStepIndex());
-      dispatch(incrementStepIndex());
-    }
-
-    setLoading(false);
   };
 
   // load more channels when we get to the bottom of the page
   const loadMoreChannelMeta = async (newPageNumber: any) => {
     const startingPoint = newPageNumber * CHANNELS_PER_PAGE;
-    const moreChannels= await userPushSDKInstance.channel.list({
-      page: Math.ceil(startingPoint / CHANNELS_PER_PAGE) || 1,
-      limit: CHANNELS_PER_PAGE
-    })
-    dispatch(setChannelMeta([...channels, ...moreChannels?.channels]));
-    setMoreLoading(false);
+    try {
+      const moreChannels = await userPushSDKInstance.channel.list({
+        page: Math.ceil(startingPoint / CHANNELS_PER_PAGE) || 1,
+        limit: CHANNELS_PER_PAGE,
+      });
+      dispatch(setChannelMeta([...channels, ...moreChannels?.channels]));
+      setMoreLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const loadMoreSearchChannels = async () => {
