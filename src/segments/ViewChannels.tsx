@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 
 // External Packages
 import { AiOutlineSearch } from 'react-icons/ai';
@@ -12,24 +12,20 @@ import ChainsSelect from 'components/ChainsSelect';
 import Faucets from 'components/Faucets';
 import ViewChannelItem from 'components/ViewChannelItem';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import UtilityHelper, { MaskedAliasChannels, MaskedChannels } from 'helpers/UtilityHelper';
 import { useAccount } from 'hooks';
-import { incrementPage, setChannelMeta, updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
+import {
+  incrementPage,
+  setChannelMeta,
+  updateBulkSubscriptions,
+  updateBulkUserSettings,
+} from 'redux/slices/channelSlice';
 import { incrementStepIndex } from 'redux/slices/userJourneySlice';
-import { getChannels, getChannelsSearch } from 'services'; // Api Services
 import DisplayNotice from '../primaries/DisplayNotice';
-import { Item, ItemH } from '../primaries/SharedStyling';
+import { Item } from '../primaries/SharedStyling';
 
 // Internal Configs
-import UpdateChannelTooltipContent from 'components/UpdateChannelTooltipContent';
-import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { appConfig } from 'config';
-import { AppContext } from 'contexts/AppContext';
-import InfoImage from "../assets/info.svg";
-
-// import Tooltip from './reusables/tooltip/Tooltip';
-// import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
 
 // Constants
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
@@ -45,7 +41,7 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
   const dispatch = useDispatch();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
-  }); 
+  });
   const { account, chainId } = useAccount();
   const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
   const { run, stepIndex } = useSelector((state: any) => state.userJourney);
@@ -88,34 +84,40 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
 
   // to fetch initial channels and logged in user data
   const fetchInitialsChannelMeta = async () => {
-    // fetch the meta of the first `CHANNELS_PER_PAGE` channels
-    const channelsMeta = await getChannels({
-      page: Math.ceil(channelsVisited / CHANNELS_PER_PAGE) || 1,
-      limit: CHANNELS_PER_PAGE,
-    });
-    dispatch(incrementPage());
-    if (!channels.length) {
-      dispatch(setChannelMeta(channelsMeta));
+    try {
+      let options = {
+        page: Math.ceil(channelsVisited / CHANNELS_PER_PAGE) || 1,
+        limit: CHANNELS_PER_PAGE,
+      };
+      const channelsMeta = await userPushSDKInstance.channel.list({ options });
+      dispatch(incrementPage());
+      if (!channels.length) {
+        dispatch(setChannelMeta(channelsMeta?.channels));
+      }
+      // increases the step once the channel are loaded
+      if (run && stepIndex === 3) {
+        dispatch(incrementStepIndex());
+        dispatch(incrementStepIndex());
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
     }
-
-    // increases the step once the channel are loaded
-    if (run && stepIndex === 3) {
-      dispatch(incrementStepIndex());
-      dispatch(incrementStepIndex());
-    }
-
-    setLoading(false);
   };
 
   // load more channels when we get to the bottom of the page
   const loadMoreChannelMeta = async (newPageNumber: any) => {
     const startingPoint = newPageNumber * CHANNELS_PER_PAGE;
-    const moreChannels = await getChannels({
-      page: Math.ceil(startingPoint / CHANNELS_PER_PAGE) || 1,
-      limit: CHANNELS_PER_PAGE,
-    });
-    dispatch(setChannelMeta([...channels, ...moreChannels]));
-    setMoreLoading(false);
+    try {
+      const moreChannels = await userPushSDKInstance.channel.list({
+        page: Math.ceil(startingPoint / CHANNELS_PER_PAGE) || 1,
+        limit: CHANNELS_PER_PAGE,
+      });
+      dispatch(setChannelMeta([...channels, ...moreChannels?.channels]));
+      setMoreLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const loadMoreSearchChannels = async () => {
