@@ -121,7 +121,7 @@ export const addresses = {
 
 
 
-  alphaAccessNft: "0x26a9b36E37F87b64194D16c273Cd489a14814671"
+  alphaAccessNft: "0x39f77Db4d5d3e85c213233D5Af02C46a85Cf1Db4"
 
 
 }

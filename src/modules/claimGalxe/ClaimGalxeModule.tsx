@@ -78,7 +78,7 @@ const ClaimGalxeModule = () => {
         });
       } else {
         setSubmitbtnInfo({
-          btnText: 'Claim Reward',
+          btnText: 'Claim NFT',
           enabled: true,
           info: '',
         });
@@ -96,17 +96,6 @@ const ClaimGalxeModule = () => {
     if (nftRevealContract && account) {
       try {
         if (!onPolygonChain) {
-          txToast.showMessageToast({
-            toastTitle: 'Error',
-            toastMessage: 'Switch to Polygon Chain to claim your reward!',
-            toastType: 'ERROR',
-            getToastIcon: (size) => (
-              <MdError
-                size={size}
-                color="red"
-              />
-            ),
-          });
           switchChain(isProdEnv ? 137 : 80001);
           return;
         }
