@@ -15,12 +15,12 @@ import AlphaAccessNFTHelper from 'helpers/AlphaAccessNftHelper';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 // Internal Configs
-import { abis, addresses } from 'config';
+import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 const ClaimGalxeModule = () => {
   const theme = useTheme();
-  const { account, wallet, connect, provider } = useAccount();
+  const { account, wallet, connect, provider, chainId, switchChain } = useAccount();
   const [submitbtnInfo, setSubmitbtnInfo] = useState<{
     btnText: string;
     enabled: boolean;
@@ -33,13 +33,27 @@ const ClaimGalxeModule = () => {
   const [nftRevealContract, setNftRevealContract] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const onPolygonChain = chainId === 137 || chainId === 80001;
+  const isProdEnv = appConfig?.appEnv === 'prod';
+
+  const polygonChainProvider = onPolygonChain
+    ? provider
+    : isProdEnv
+    ? new ethers.providers.JsonRpcProvider(CHAIN_DETAILS[137].rpcUrl)
+    : new ethers.providers.JsonRpcProvider(CHAIN_DETAILS[80001].rpcUrl);
+
+  useEffect(() => {
+    if (!onPolygonChain) {
+      switchChain(isProdEnv ? 137 : 80001);
+    }
+  }, [chainId]);
+
   // Transaction Toast
   const txToast = useToast(5000);
 
   useEffect(() => {
     if (!!(provider && wallet && wallet?.accounts?.length && account)) {
-      let signer = provider.getSigner(account);
-      console.debug(abis.distributor);
+      let signer = onPolygonChain ? provider.getSigner(account) : polygonChainProvider;
       const signerInstance = new ethers.Contract(addresses.alphaAccessNft, abis.pushReveal, signer);
       setNftRevealContract(signerInstance);
     }
@@ -87,6 +101,21 @@ const ClaimGalxeModule = () => {
   const mintNft = async () => {
     if (nftRevealContract && account) {
       try {
+        if (!onPolygonChain) {
+          txToast.showMessageToast({
+            toastTitle: 'Error',
+            toastMessage: 'Switch to Polygon Chain to claim your reward!',
+            toastType: 'ERROR',
+            getToastIcon: (size) => (
+              <MdError
+                size={size}
+                color="red"
+              />
+            ),
+          });
+          switchChain(isProdEnv ? 137 : 80001);
+          return;
+        }
         setLoading(true);
         const proof = await AlphaAccessNFTHelper.getProof(account);
         txToast.showLoaderToast({
@@ -97,9 +126,6 @@ const ClaimGalxeModule = () => {
         console.debug(tx);
         console.debug('waiting for tx to finish');
 
-        txToast.showLoaderToast({
-          loaderMessage: 'Transaction being mined!',
-        });
         await provider.waitForTransaction(tx.hash);
 
         txToast.showMessageToast({
