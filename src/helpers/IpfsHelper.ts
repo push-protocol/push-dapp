@@ -10,7 +10,7 @@ import { appConfig } from '../config';
 
 // Constants
 export const productionIpfsGateway: string = 'https://push.infura-ipfs.io/ipfs/';
-export const developmentIpfsGateway: string = 'https://push.infura-ipfs.io/ipfs/';
+export const developmentIpfsGateway: string = 'https://epns-testing.infura-ipfs.io/ipfs/';
 
 export const IPFSGateway = EnvHelper.isProduction() ? productionIpfsGateway : developmentIpfsGateway;
 
