@@ -42,12 +42,6 @@ const ClaimGalxeModule = () => {
     ? new ethers.providers.JsonRpcProvider(CHAIN_DETAILS[137].rpcUrl)
     : new ethers.providers.JsonRpcProvider(CHAIN_DETAILS[80001].rpcUrl);
 
-  useEffect(() => {
-    if (!onPolygonChain) {
-      switchChain(isProdEnv ? 137 : 80001);
-    }
-  }, [chainId]);
-
   // Transaction Toast
   const txToast = useToast(5000);
 
