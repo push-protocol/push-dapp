@@ -43,6 +43,11 @@ const themeLight = {
     gifContainerBg: '#F7F8FF',
   },
 
+  btn: {
+    disabledBg: "#E0E3E7",
+    disabledColor: "#BEC8D8"
+  },
+
   // Default Background Theme
   defaultBG: '#FFFFFF',
 
@@ -336,6 +341,11 @@ const themeDark = {
     sendMesageBg: '#404650',
     sendMessageFontColor: '#B6BCD6',
     gifContainerBg: '#282A2E',
+  },
+
+  btn: {
+    disabledBg: "#383A40",
+    disabledColor: "#545F74"
   },
 
   // Header Theme
