@@ -115,6 +115,7 @@ export const addresses = {
   uniV2LPToken: "0x698839247E5b83572fFF6ccdcf386CC37e60bEf5",
   pushToken: "0x37c779a1564DCc0e3914aB130e0e787d93e21804",
 
+  alphaAccessNft: "0x39f77Db4d5d3e85c213233D5Af02C46a85Cf1Db4"
 }
 
 export const CHAIN_DETAILS = {

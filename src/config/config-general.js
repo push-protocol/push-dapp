@@ -28,6 +28,7 @@ import pushTokenAbi from "./abis/pushToken.json";
 import stakingV2Abi from "./abis/StakingV2.json"; // for new staking V2 Contract on staging
 import uniV2LpTokenAbi from "./abis/UniV2LPToken.json";// for new staking V2 Contract on staging
 import PushCoreV2 from "./abis/PushCoreV2.json";
+import PushRevealAbi from "./abis/PushReveal.json";
 
 export const abis = {
   erc20: erc20Abi,
@@ -50,4 +51,5 @@ export const abis = {
   stakingV2: stakingV2Abi,
   uniV2LpToken:uniV2LpTokenAbi,
   pushCoreV2:PushCoreV2,
+  pushReveal: PushRevealAbi
 };

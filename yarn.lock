@@ -2705,7 +2705,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ethereumjs/util@npm:^8.0.6":
+"@ethereumjs/util@npm:^8.0.6, @ethereumjs/util@npm:^8.1.0":
   version: 8.1.0
   resolution: "@ethereumjs/util@npm:8.1.0"
   dependencies:
@@ -5174,6 +5174,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@noble/curves@npm:1.3.0, @noble/curves@npm:~1.3.0":
+  version: 1.3.0
+  resolution: "@noble/curves@npm:1.3.0"
+  dependencies:
+    "@noble/hashes": 1.3.3
+  checksum: b65342ee66c4a440eee2978524412eabba9a9efdd16d6370e15218c6a7d80bddf35e66bb57ed52c0dfd32cb9a717b439ab3a72db618f1a0066dfebe3fd12a421
+  languageName: node
+  linkType: hard
+
 "@noble/hashes@npm:1.3.1, @noble/hashes@npm:~1.3.0, @noble/hashes@npm:~1.3.1":
   version: 1.3.1
   resolution: "@noble/hashes@npm:1.3.1"
@@ -5185,6 +5194,13 @@ __metadata:
   version: 1.3.2
   resolution: "@noble/hashes@npm:1.3.2"
   checksum: fe23536b436539d13f90e4b9be843cc63b1b17666a07634a2b1259dded6f490be3d050249e6af98076ea8f2ea0d56f578773c2197f2aa0eeaa5fba5bc18ba474
+  languageName: node
+  linkType: hard
+
+"@noble/hashes@npm:1.3.3":
+  version: 1.3.3
+  resolution: "@noble/hashes@npm:1.3.3"
+  checksum: 8a6496d1c0c64797339bc694ad06cdfaa0f9e56cd0c3f68ae3666cfb153a791a55deb0af9c653c7ed2db64d537aa3e3054629740d2f2338bb1dcb7ab60cd205b
   languageName: node
   linkType: hard
 
@@ -5462,6 +5478,7 @@ __metadata:
     ipfs-http-client: ^57.0.3
     jotai: ^2.0.3
     jotai-immer: ^0.2.0
+    merkletreejs: ^0.3.11
     moment: ^2.29.1
     nano-ipfs-store: 0.1.3
     openpgp: ^5.5.0
@@ -6466,6 +6483,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@scure/base@npm:~1.1.4":
+  version: 1.1.5
+  resolution: "@scure/base@npm:1.1.5"
+  checksum: 9e9ee6088cb3aa0fb91f5a48497d26682c7829df3019b1251d088d166d7a8c0f941c68aaa8e7b96bbad20c71eb210397cb1099062cde3e29d4bad6b975c18519
+  languageName: node
+  linkType: hard
+
 "@scure/bip32@npm:1.3.1":
   version: 1.3.1
   resolution: "@scure/bip32@npm:1.3.1"
@@ -6488,6 +6512,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@scure/bip32@npm:1.3.3":
+  version: 1.3.3
+  resolution: "@scure/bip32@npm:1.3.3"
+  dependencies:
+    "@noble/curves": ~1.3.0
+    "@noble/hashes": ~1.3.2
+    "@scure/base": ~1.1.4
+  checksum: f939ca733972622fcc1e61d4fdf170a0ad294b24ddb7ed7cdd4c467e1ef283b970154cb101cf5f1a7b64cf5337e917ad31135911dfc36b1d76625320167df2fa
+  languageName: node
+  linkType: hard
+
 "@scure/bip39@npm:1.2.1":
   version: 1.2.1
   resolution: "@scure/bip39@npm:1.2.1"
@@ -6495,6 +6530,16 @@ __metadata:
     "@noble/hashes": ~1.3.0
     "@scure/base": ~1.1.0
   checksum: c5bd6f1328fdbeae2dcdd891825b1610225310e5e62a4942714db51066866e4f7bef242c7b06a1b9dcc8043a4a13412cf5c5df76d3b10aa9e36b82e9b6e3eeaa
+  languageName: node
+  linkType: hard
+
+"@scure/bip39@npm:1.2.2":
+  version: 1.2.2
+  resolution: "@scure/bip39@npm:1.2.2"
+  dependencies:
+    "@noble/hashes": ~1.3.2
+    "@scure/base": ~1.1.4
+  checksum: cb99505e6d2deef8e55e81df8c563ce8dbfdf1595596dc912bceadcf366c91b05a98130e928ecb090df74efdb20150b64acc4be55bc42768cab4d39a2833d234
   languageName: node
   linkType: hard
 
@@ -11027,7 +11072,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bignumber.js@npm:^9.1.0":
+"bignumber.js@npm:^9.0.1, bignumber.js@npm:^9.1.0":
   version: 9.1.2
   resolution: "bignumber.js@npm:9.1.2"
   checksum: 582c03af77ec9cb0ebd682a373ee6c66475db94a4325f92299621d544aa4bd45cb45fd60001610e94aef8ae98a0905fa538241d9638d4422d57abbeeac6fadaf
@@ -11569,6 +11614,13 @@ __metadata:
   version: 1.1.2
   resolution: "buffer-from@npm:1.1.2"
   checksum: 0448524a562b37d4d7ed9efd91685a5b77a50672c556ea254ac9a6d30e3403a517d8981f10e565db24e8339413b43c97ca2951f10e399c6125a0d8911f5679bb
+  languageName: node
+  linkType: hard
+
+"buffer-reverse@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "buffer-reverse@npm:1.0.1"
+  checksum: e350872a89b17af0a7e1bd7a73239a535164f3f010b0800add44f2e52bd0511548dc5b96c20309effba969868c385023d2d02a0add6155f6a76da7b3073b77bd
   languageName: node
   linkType: hard
 
@@ -12758,6 +12810,13 @@ __metadata:
   version: 4.1.1
   resolution: "crypto-js@npm:4.1.1"
   checksum: b3747c12ee3a7632fab3b3e171ea50f78b182545f0714f6d3e7e2858385f0f4101a15f2517e033802ce9d12ba50a391575ff4638c9de3dd9b2c4bc47768d5425
+  languageName: node
+  linkType: hard
+
+"crypto-js@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "crypto-js@npm:4.2.0"
+  checksum: f051666dbc077c8324777f44fbd3aaea2986f198fe85092535130d17026c7c2ccf2d23ee5b29b36f7a4a07312db2fae23c9094b644cc35f7858b1b4fcaf27774
   languageName: node
   linkType: hard
 
@@ -15361,6 +15420,18 @@ __metadata:
     "@scure/bip32": 1.3.1
     "@scure/bip39": 1.2.1
   checksum: 2e8f7b8cc90232ae838ab6a8167708e8362621404d26e79b5d9e762c7b53d699f7520aff358d9254de658fcd54d2d0af168ff909943259ed27dc4cef2736410c
+  languageName: node
+  linkType: hard
+
+"ethereum-cryptography@npm:^2.1.2":
+  version: 2.1.3
+  resolution: "ethereum-cryptography@npm:2.1.3"
+  dependencies:
+    "@noble/curves": 1.3.0
+    "@noble/hashes": 1.3.3
+    "@scure/bip32": 1.3.3
+    "@scure/bip39": 1.2.2
+  checksum: 7f9c14f868a588641179cace3eb86c332c4743290865db699870710253cabc4dc74bd4bce5e7bc6db667482e032e94d6f79521219eb6be5dc422059d279a27b7
   languageName: node
   linkType: hard
 
@@ -21072,6 +21143,19 @@ __metadata:
   version: 1.4.1
   resolution: "merge2@npm:1.4.1"
   checksum: 7268db63ed5169466540b6fb947aec313200bcf6d40c5ab722c22e242f651994619bcd85601602972d3c85bd2cc45a358a4c61937e9f11a061919a1da569b0c2
+  languageName: node
+  linkType: hard
+
+"merkletreejs@npm:^0.3.11":
+  version: 0.3.11
+  resolution: "merkletreejs@npm:0.3.11"
+  dependencies:
+    bignumber.js: ^9.0.1
+    buffer-reverse: ^1.0.1
+    crypto-js: ^4.2.0
+    treeify: ^1.1.0
+    web3-utils: ^1.3.4
+  checksum: 93edb8ec66aa6c9f59aa0902e675590e3791692893bb3e8c1018f758367ded1bf7d6b1057ccde3729b283ca946a316838a631a922960b76889b3be528c43ef4e
   languageName: node
   linkType: hard
 
@@ -28602,6 +28686,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"treeify@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "treeify@npm:1.1.0"
+  checksum: aa00dded220c1dd052573bd6fc2c52862f09870851a284f0d3650d72bf913ba9b4f6b824f4f1ab81899bae29375f4266b07fe47cbf82343a1efa13cc09ce87af
+  languageName: node
+  linkType: hard
+
 "trim-repeated@npm:^1.0.0":
   version: 1.0.0
   resolution: "trim-repeated@npm:1.0.0"
@@ -29819,6 +29910,22 @@ __metadata:
     randombytes: ^2.1.0
     utf8: 3.0.0
   checksum: 3c794a7fcef9387b96e8fcd847fbf286862f0540ab6656063cdb69830ddd7141d955f5e52c049e3d5f28373311934d19f75199f42604741400af72e2348a26f6
+  languageName: node
+  linkType: hard
+
+"web3-utils@npm:^1.3.4":
+  version: 1.10.4
+  resolution: "web3-utils@npm:1.10.4"
+  dependencies:
+    "@ethereumjs/util": ^8.1.0
+    bn.js: ^5.2.1
+    ethereum-bloom-filters: ^1.0.6
+    ethereum-cryptography: ^2.1.2
+    ethjs-unit: 0.1.6
+    number-to-bn: 1.7.0
+    randombytes: ^2.1.0
+    utf8: 3.0.0
+  checksum: a1535817a4653f1b5cc868aa19305158122379078a41e13642e1ba64803f6f8e5dd2fb8c45c033612b8f52dde42d8008afce85296c0608276fe1513dece66a49
   languageName: node
   linkType: hard
 
