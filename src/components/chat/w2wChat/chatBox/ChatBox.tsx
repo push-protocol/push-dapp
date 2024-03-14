@@ -153,7 +153,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
         draft.local.address = account;
         draft.incoming[0].address = caip10ToWallet((getChatId()).toString());
         draft.incoming[0].status = PushAPI.VideoCallStatus.INITIALIZED;
-        // draft.meta.chatId = currentChat.chatId;
+        draft.meta.chatId = getChatId();
       });
     });
   };
