@@ -118,7 +118,7 @@ const NewYieldFarming = (
         getPUSHPoolStats();
 
     }, [account]);
-    
+
 
     return (
         <>
@@ -130,18 +130,22 @@ const NewYieldFarming = (
                 body={"Users who were part of the previous Push staking program, need to migrate to new pools to continue earning rewards. Click"}
                 setActiveTab={setActiveTab}
             />
-            <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} setPoolStats={setPoolStats} />
+            <YieldStatsSection
+                getLpPoolStats={getLpPoolStats}
+                poolStats={poolStats}
+                setPoolStats={setPoolStats}
+            />
             <YieldPushPriceSection
                 poolStats={poolStats}
             />
             <V3Container>
 
-                {/* <YieldPushFeeV3
+                <YieldPushFeeV3
                     userDataPush={userDataPush}
                     getUserDataPush={getUserDataPush}
                     PUSHPoolstats={PUSHPoolstats}
                     getPUSHPoolStats={getPUSHPoolStats}
-                /> */}
+                />
 
                 <YieldUniswapV3
                     lpPoolStats={lpPoolStats}
@@ -149,7 +153,7 @@ const NewYieldFarming = (
                     getLpPoolStats={getLpPoolStats}
                     getUserDataLP={getUserDataLP}
                 />
-                
+
             </V3Container>
 
         </>

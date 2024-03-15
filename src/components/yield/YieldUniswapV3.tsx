@@ -33,7 +33,7 @@ const YieldUniswapV3 = ({
     getLpPoolStats,
     getUserDataLP
 }) => {
-    const { account, provider } = useAccount();
+    const { account, provider, wallet, connect } = useAccount();
 
     const [txInProgressWithdraw, setTxInProgressWithdraw] = React.useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
@@ -45,83 +45,76 @@ const YieldUniswapV3 = ({
     const theme = useTheme();
 
     const withdrawAmountTokenFarmAutomatic = async () => {
-        const withdrawAmount = formatTokens(userDataLP?.epochStakeNext);
+        if (txInProgressWithdraw) {
+            return;
+        }
+
+        setTxInProgressWithdraw(true);
+        const withdrawAmount = formatTokens(userDataLP.epochStakeNext);
+
         if (withdrawAmount == 0) {
+            setUnstakeErrorMessage("Nothing to unstake. You need to stake first");
+            setTxInProgressWithdraw(false);
+            return;
+        }
+
+        var signer = provider.getSigner(account);
+        let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
+
+        const amounttowithdraw = await staking.balanceOf(
+            account,
+            addresses.uniV2LPToken
+        )
+
+        const tx = staking.withdraw(
+            addresses.uniV2LPToken,
+            ethers.BigNumber.from(withdrawAmount).mul(
+                ethers.BigNumber.from(10).pow(18)
+            )
+        );
+
+        tx.then(async (tx) => {
+            uniswapV2Toast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
+
+            try {
+                await provider.waitForTransaction(tx.hash);
+                uniswapV2Toast.showMessageToast({
+                    toastTitle: 'Success',
+                    toastMessage: 'Transaction Completed!',
+                    toastType: 'SUCCESS',
+                    getToastIcon: (size) => (
+                        <MdCheckCircle
+                            size={size}
+                            color="green"
+                        />
+                    ),
+                });
+
+                setTxInProgressWithdraw(false);
+
+                getLpPoolStats();
+                getUserDataLP();
+            } catch (e) {
+                console.error("Error", e);
+                uniswapV2Toast.showMessageToast({
+                    toastTitle: 'Error',
+                    toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
+                    toastType: 'ERROR',
+                    getToastIcon: (size) => <MdError size={size} color="red" />,
+                });
+
+                setTxInProgressWithdraw(false);
+            }
+        }).catch((err) => {
             uniswapV2Toast.showMessageToast({
                 toastTitle: 'Error',
-                toastMessage: 'Nothing To unstake. You need to stake first',
+                toastMessage: `Transaction Cancelled!`,
                 toastType: 'ERROR',
                 getToastIcon: (size) => <MdError size={size} color="red" />,
             });
-            return;
-        } else {
-            showUnstakingModal();
-        }
 
-
-        // if (txInProgressWithdraw) {
-        //     return;
-        // }
-
-        // setTxInProgressWithdraw(true);
-
-        // var signer = provider.getSigner(account);
-        // let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
-
-        // const amounttowithdraw = await staking.balanceOf(
-        //     account,
-        //     addresses.uniV2LPToken
-        // )
-
-        // const tx = staking.withdraw(
-        //     addresses.uniV2LPToken,
-        //     ethers.BigNumber.from(withdrawAmount).mul(
-        //         ethers.BigNumber.from(10).pow(18)
-        //     )
-        // );
-
-        // tx.then(async (tx) => {
-        //     uniswapV2Toast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
-
-        //     try {
-        //         await provider.waitForTransaction(tx.hash);
-        //         uniswapV2Toast.showMessageToast({
-        //             toastTitle: 'Success',
-        //             toastMessage: 'Transaction Completed!',
-        //             toastType: 'SUCCESS',
-        //             getToastIcon: (size) => (
-        //                 <MdCheckCircle
-        //                     size={size}
-        //                     color="green"
-        //                 />
-        //             ),
-        //         });
-
-        //         setTxInProgressWithdraw(false);
-
-        //         getLpPoolStats();
-        //         getUserDataLP();
-        //     } catch (e) {
-        //         console.error("Error", e);
-        //         uniswapV2Toast.showMessageToast({
-        //             toastTitle: 'Error',
-        //             toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
-        //             toastType: 'ERROR',
-        //             getToastIcon: (size) => <MdError size={size} color="red" />,
-        //         });
-
-        //         setTxInProgressWithdraw(false);
-        //     }
-        // }).catch((err) => {
-        //     uniswapV2Toast.showMessageToast({
-        //         toastTitle: 'Error',
-        //         toastMessage: `Transaction Cancelled!`,
-        //         toastType: 'ERROR',
-        //         getToastIcon: (size) => <MdError size={size} color="red" />,
-        //     });
-
-        //     setTxInProgressWithdraw(false);
-        // });
+            setTxInProgressWithdraw(false);
+        });
     };
 
     const massClaimRewardsTokensAll = async () => {
@@ -205,7 +198,11 @@ const YieldUniswapV3 = ({
 
     const handleStakingModal = () => {
         if (lpPoolStats?.currentEpochLP.toNumber() + 1 <= lpPoolStats?.totalEpochLP.toNumber()) {
-            showStakingModal();
+            if (wallet.accounts.length > 0) {
+                showStakingModal();
+            } else {
+                connect();
+            }
         } else {
             uniswapV2Toast.showMessageToast({
                 toastTitle: 'Error',
@@ -424,6 +421,21 @@ const YieldUniswapV3 = ({
                             </DataTitle>
                             <DataValue> {numberWithCommas(userDataLP?.totalAvailableReward)} PUSH</DataValue>
                         </ItemHV2>
+                        <ItemHV2 justifyContent="space-between" margin={isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
+                            <DataTitle>
+                                Lock-Up Period
+                                <InfoSpan>
+                                    <StakingToolTip
+                                        ToolTipTitle={"Lock Up Period"}
+                                        ToolTipBody={"The staked amount will be locked until this time period"}
+                                    >
+                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                    </StakingToolTip>
+                                </InfoSpan>
+
+                            </DataTitle>
+                            <DataValue> None </DataValue>
+                        </ItemHV2>
                     </ItemVV2>
                 ) : (
                     <Skeleton
@@ -432,6 +444,10 @@ const YieldUniswapV3 = ({
                         maxWidth=' -webkit-fill-available'
                         borderRadius='5px'
                     >
+                        <ItemHV2 justifyContent='space-between' margin='0 0 23px 0'>
+                            <SkeletonLine height='12px' width='164px' ></SkeletonLine>
+                            <SkeletonLine height='12px' width='72px'></SkeletonLine>
+                        </ItemHV2>
                         <ItemHV2 justifyContent='space-between' margin='0 0 23px 0'>
                             <SkeletonLine height='12px' width='164px' ></SkeletonLine>
                             <SkeletonLine height='12px' width='72px'></SkeletonLine>
@@ -462,22 +478,11 @@ const YieldUniswapV3 = ({
                             <FilledButton
                                 onClick={() => {
                                     handleStakingModal();
-                                }}>Stake $UNI-V2 LP Tokens</FilledButton>
+                                }}>Stake $UNI-V2 LP </FilledButton>
                         </ItemHV2>
                         <ButtonsContainer>
 
-                            <EmptyButton
-                                border={`1px solid ${theme.activeButtonText}`}
-                                background={'transparent'}
-                                color={theme.activeButtonText}
-                                cursor='pointer'
-                                onClick={withdrawAmountTokenFarmAutomatic}
-                                style={{ margin: "0px 10px 0px 0px" }}
-                            >
-                                Unstake Uni-V2
-                            </EmptyButton>
-
-                            {/* {formatTokens(userDataLP?.epochStakeNext) === "0" ?
+                            {formatTokens(userDataLP?.epochStakeNext) === "0" ?
                                 <StakingToolTip
                                     error={true}
                                     ToolTipTitle={"Nothing to unstake! Stake First."}
@@ -514,7 +519,7 @@ const YieldUniswapV3 = ({
                                     }
                                 </EmptyButton>
 
-                            } */}
+                            }
 
                             {userDataLP?.totalAvailableReward === "0.00" ?
                                 <StakingToolTip

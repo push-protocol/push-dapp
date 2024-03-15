@@ -120,8 +120,8 @@ export const addresses = {
   yieldFarmLP: "0xAB531bD9D39c492a05de65Eee85F6C712c05ea0b",
 
 
+  // pushCoreV2: "0x3eE2954dDdb0894e3DDff3FC104C243649C18eD8", // 15 min epoch
 
-  
 
 
 }

@@ -24,87 +24,20 @@ const UnstakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) 
 
     const {
         title,
-        amounttowithdraw,
+        userData,
         getUserData,
         getPoolStats,
+        PoolStats,
+        withdrawTokens,
+        unstakeErrorMessage
     } = InnerComponentProps;
 
-    const withdrawAmount = formatTokens(amounttowithdraw);
+    const withdrawAmount = formatTokens(userData?.userStaked);
 
     const theme = useTheme();
     const { account, provider } = useAccount();
     const [amount, setAmount] = useState(withdrawAmount);
     const [txInProgressWithdraw, setTxInProgressWithdraw] = React.useState(false);
-
-    const withdrawTokens = async () => {
-        if (txInProgressWithdraw) {
-            return;
-        }
-
-        setTxInProgressWithdraw(true);
-        var signer = provider.getSigner(account);
-        let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
-
-        const amounttowithdraw = await staking.balanceOf(
-            account,
-            addresses.uniV2LPToken
-        )
-
-        console.log("amounttowithdraw", amounttowithdraw);
-
-        const tx = staking.withdraw(
-            addresses.uniV2LPToken,
-            ethers.BigNumber.from(withdrawAmount).mul(
-                ethers.BigNumber.from(10).pow(18)
-            )
-        );
-
-        tx.then(async (tx) => {
-            toastObject.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
-
-            try {
-                await provider.waitForTransaction(tx.hash);
-                toastObject.showMessageToast({
-                    toastTitle: 'Success',
-                    toastMessage: 'Transaction Completed!',
-                    toastType: 'SUCCESS',
-                    getToastIcon: (size) => (
-                        <MdCheckCircle
-                            size={size}
-                            color="green"
-                        />
-                    ),
-                });
-
-                setTxInProgressWithdraw(false);
-                getUserData();
-                getPoolStats();
-                handleClose();
-               
-            } catch (e) {
-                console.error("Error", e);
-                toastObject.showMessageToast({
-                    toastTitle: 'Error',
-                    toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
-                    toastType: 'ERROR',
-                    getToastIcon: (size) => <MdError size={size} color="red" />,
-                });
-
-                setTxInProgressWithdraw(false);
-            }
-        }).catch((err) => {
-            toastObject.showMessageToast({
-                toastTitle: 'Error',
-                toastMessage: `Transaction Cancelled!`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => <MdError size={size} color="red" />,
-            });
-
-            setTxInProgressWithdraw(false);
-        });
-
-
-    }
 
     const handleClose = () => {
         onClose();
@@ -165,13 +98,15 @@ const UnstakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) 
                 >
                     {txInProgressWithdraw ?
                         (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor='#FFF' title='Unstaking' titleColor='#FFF' />) :
-                        "Unstake $UNI-V2"
+                        "Withdraw"
                     }
                 </FilledButton>
             </ItemHV2>
 
             <WarningText>
-                You must wait until the current epoch is over to unstake funds.
+                {/* You must wait until the current epoch is over to unstake funds. */}
+
+                {unstakeErrorMessage}
             </WarningText>
 
         </Container>
