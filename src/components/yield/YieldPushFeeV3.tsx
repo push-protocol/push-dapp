@@ -376,7 +376,6 @@ const YieldPushFeeV3 = ({
 
     const handleUnstakingModal = () => {
         if (wallet?.accounts?.length > 0) {
-            // showUnstakingModal();
             unstakeTokensPaginated();
         } else {
             connect();

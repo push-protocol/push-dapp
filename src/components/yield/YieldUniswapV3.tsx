@@ -221,12 +221,6 @@ const YieldUniswapV3 = ({
         ModalComponent: StakingComponent,
     } = useModalBlur();
 
-    const {
-        isModalOpen: isUnstakingModalOpen,
-        showModal: showUnstakingModal,
-        ModalComponent: UnstakingComponent,
-    } = useModalBlur();
-
     const stakingModalToast = useToast();
     const unstakingModalToast = useToast();
     const isMobile = useDeviceWidthCheck(600);
@@ -244,18 +238,6 @@ const YieldUniswapV3 = ({
                     setWithdrawErrorMessage: setWithdrawErrorMessage,
                 }}
                 toastObject={stakingModalToast}
-                modalPosition={MODAL_POSITION.ON_PARENT}
-            />
-
-            <UnstakingComponent
-                InnerComponent={UnstakingModalComponent}
-                InnerComponentProps={{
-                    title: 'Uni-V2',
-                    amounttowithdraw: userDataLP?.epochStakeNext,
-                    getUserData: getUserDataLP,
-                    getPoolStats: getLpPoolStats,
-                }}
-                toastObject={unstakingModalToast}
                 modalPosition={MODAL_POSITION.ON_PARENT}
             />
 
