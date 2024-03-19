@@ -402,9 +402,20 @@ function Navigation() {
       //   dispatch(setDeveloperOpen(false))
       // }
       let innerRendered = (
-        <Section key={key} flex="1" align="stretch" size={fontSize} wrap='nowrap' margin='0 5px 0 10px'>
+        <Section
+          key={key}
+          flex="1"
+          align="stretch"
+          size={fontSize}
+          wrap="nowrap"
+          margin="0 5px 0 10px"
+        >
           {secondaryButton ? (
-            <Item flexBasis="100%" direction="row" overflow="hidden">
+            <Item
+              flexBasis="100%"
+              direction="row"
+              overflow="hidden"
+            >
               {section.hasItems
                 ? renderChildItems(data.drilldown, section.opened, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)
                 : null}
@@ -418,47 +429,54 @@ function Navigation() {
                 onClick={() => {
                   mutateTransformedList(section, true);
                 }}
-                id={data.id}>
-                <NavigationButton item={section} data={data} sectionID={sectionID} active={section.active} bg={!section.active ? 'transparent' : theme.nav.activeColor} />
-
+                id={data.id}
+              >
+                <NavigationButton
+                  item={section}
+                  data={data}
+                  sectionID={sectionID}
+                  active={section.active}
+                  bg={!section.active ? 'transparent' : theme.nav.activeColor}
+                />
               </SectionInnerGroupContainer>
 
-              {data.name == "More" && <Tooltip
-                wrapperProps={{
-                  width: '100%',
-                  maxWidth: 'fit-content',
-                  minWidth: 'fit-content',
-                }}
-                placementProps={{
-                  width: 'fit-content',
-                  zIndex: '1',
-                  position: 'fixed',
-                  bottom: sidebarCollapsed ? '7px' : '1rem',
-                  left: sidebarCollapsed ? '6rem' : '16rem',
-                  padding: '6px 10px',
-                  background: '#000',
-                  borderRadius: '2px 8px 8px 8px',
-                  fontSize: '13px',
-                  fontWeight: '400'
-
-                }}
-                tooltipContent={
-                  <div>
-                    {sidebarCollapsed ? 'Expand Sidebar' : 'Minimize Sidebar'}
-                  </div>
-                }
-              >
-                <CollapsableArrow
-                  sidebarCollapsed={sidebarCollapsed}
-                  onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              {data.name == 'More' && (
+                <Tooltip
+                  wrapperProps={{
+                    width: '100%',
+                    maxWidth: 'fit-content',
+                    minWidth: 'fit-content',
+                  }}
+                  placementProps={{
+                    width: 'fit-content',
+                    zIndex: '1',
+                    position: 'fixed',
+                    bottom: sidebarCollapsed ? '7px' : '1rem',
+                    left: sidebarCollapsed ? '6rem' : '16rem',
+                    padding: '6px 10px',
+                    background: '#000',
+                    borderRadius: '2px 8px 8px 8px',
+                    fontSize: '13px',
+                    fontWeight: '400',
+                  }}
+                  tooltipContent={<div>{sidebarCollapsed ? 'Expand Sidebar' : 'Minimize Sidebar'}</div>}
                 >
-                  {sidebarCollapsed ? <ExpandSidebar /> : <CollapseSidebar />}
-                </CollapsableArrow>
-              </Tooltip>}
-
+                  <CollapsableArrow
+                    sidebarCollapsed={sidebarCollapsed}
+                    onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                  >
+                    {sidebarCollapsed ? <ExpandSidebar /> : <CollapseSidebar />}
+                  </CollapsableArrow>
+                </Tooltip>
+              )}
             </Item>
           ) : (
-            <Item flexBasis="100%" align="stretch" direction="row" overflow="hidden">
+            <Item
+              flexBasis="100%"
+              align="stretch"
+              direction="row"
+              overflow="hidden"
+            >
               <SectionInnerGroupContainer
                 flex="1"
                 align="stretch"
@@ -489,9 +507,15 @@ function Navigation() {
                       // if (stepIndex === 1 && uid === 2)dispatch(setTutorialContinous(true));
                     }, 500);
                   }
-                }}>
-                <NavigationButton item={section} data={data} sectionID={sectionID} active={section.active}
-                  bg={!section.active ? 'transparent' : theme.nav.activeColor} />
+                }}
+              >
+                <NavigationButton
+                  item={section}
+                  data={data}
+                  sectionID={sectionID}
+                  active={section.active}
+                  bg={!section.active ? 'transparent' : theme.nav.activeColor}
+                />
               </SectionInnerGroupContainer>
 
               {/* { 
@@ -504,9 +528,8 @@ function Navigation() {
                         : null
                       } */}
             </Item>
-          )
-          }
-        </Section >
+          )}
+        </Section>
       );
 
       return innerRendered;
@@ -531,12 +554,22 @@ function Navigation() {
     }
 
     let rendered = (
-      <SectionGroup align="stretch" margin="10px 0px" opened={opened} refresh={refresh}>
+      <SectionGroup
+        align="stretch"
+        margin="10px 0px"
+        opened={opened}
+        refresh={refresh}
+      >
         {Object.keys(drilldown).map(function (key) {
           const item = drilldown[key];
           const data = item.data;
           return (
-            <SectionItem key={key} flex="1" align="stretch" size="small">
+            <SectionItem
+              key={key}
+              flex="1"
+              align="stretch"
+              size="small"
+            >
               <SectionInnerItemContainer
                 flex="1"
                 align="stretch"
@@ -558,9 +591,15 @@ function Navigation() {
                   }
                   // console.log(`Clicked  button`);
                   // mutateTransformedList(item)
-                }}>
-                <NavigationButton item={item} data={data} sectionID={sectionID} active={item.active}
-                  bg={!item.active ? 'transparent' : theme.nav.activeColor} />
+                }}
+              >
+                <NavigationButton
+                  item={item}
+                  data={data}
+                  sectionID={sectionID}
+                  active={item.active}
+                  bg={!item.active ? 'transparent' : theme.nav.activeColor}
+                />
               </SectionInnerItemContainer>
             </SectionItem>
           );
@@ -572,10 +611,19 @@ function Navigation() {
   };
 
   return (
-    <Container direction="column" headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
+    <Container
+      direction="column"
+      headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
+    >
       {!navigationSetup && (
-        <Item padding="20px" justify="flex-start">
-          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
+        <Item
+          padding="20px"
+          justify="flex-start"
+        >
+          <LoaderSpinner
+            type={LOADER_TYPE.SEAMLESS}
+            spinnerSize={24}
+          />
         </Item>
       )}
       {navigationSetup && Object.keys(navigationSetup).length > 0 && (
@@ -588,14 +636,18 @@ function Navigation() {
               weight="700"
               size="11px"
               margin="20px 0px 0px 0px"
-              padding={sidebarCollapsed ? "15px 25px" : "15px 30px"}
+              padding={sidebarCollapsed ? '15px 25px' : '15px 30px'}
               color="#575D73"
-              spacing="0.16em">
+              spacing="0.16em"
+            >
               {sidebarCollapsed ? 'Devs' : 'Developers'}
             </Span>
             {renderMainItems(navigationSetup.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY)}
           </Primary>
-          <Footer justify="flex-end" align="stretch">
+          <Footer
+            justify="flex-end"
+            align="stretch"
+          >
             {renderMainItems(navigationSetup.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD)}
 
             {/* Put social */}
@@ -693,7 +745,7 @@ const Primary = styled(Item)`
   justify-content: flex-start;
   background: '#fff';
   overflow-y: scroll;
-  gap:10px;
+  gap: 10px;
   &::-webkit-scrollbar-track {
     border-radius: 10px;
   }
@@ -706,9 +758,9 @@ const Primary = styled(Item)`
       linear,
       left top,
       left bottom,
-      color-stop(0.44,  #CF1C84),
-      color-stop(0.72, #CF1C84),
-      color-stop(0.86, #CF1C84)
+      color-stop(0.44, #cf1c84),
+      color-stop(0.72, #cf1c84),
+      color-stop(0.86, #cf1c84)
     );
   }
   padding: 10px 0px 20px 0px;
@@ -760,11 +812,10 @@ const PrimarySectionItem = styled(Item)``;
 
 const Footer = styled(Item)`
   z-index: 3;
-  gap:10px;
+  gap: 10px;
   align-items: stretch;
   flex-wrap: nowrap;
-  padding:0 6px 10px 0;
-
+  padding: 0 6px 10px 0;
 `;
 
 const Secondary = styled(Item)`
@@ -778,29 +829,27 @@ const Social = styled(Item)``;
 const CollapsableArrow = styled.div`
   border-radius: 10px;
   background: ${(props) => props.theme.collapsaBg};
-  z-index:10;
+  z-index: 10;
   width: 30px;
   height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  opacity:0.8;
-  margin:${(props) => props.sidebarCollapsed ? '8px 0 0 0' : '0 0 0 16px'};
+  opacity: 0.8;
+  margin: ${(props) => (props.sidebarCollapsed ? '8px 0 0 0' : '0 0 0 16px')};
 
-  &:hover{
-    opacity:1
+  &:hover {
+    opacity: 1;
   }
 
-  svg{
-    path{
+  svg {
+    path {
       stroke-width: 2px;
-      stroke: ${(props) => props.theme.strokeColor};
+      stroke: ${(props) => props.theme.svgStrokeColor};
     }
   }
-
-
-`
+`;
 
 // Export Default
 export default Navigation;
