@@ -10,6 +10,7 @@ import { initVideoCallData } from '@pushprotocol/restapi/src/lib/video';
 import { User } from 'types/chat';
 import { useAccount } from 'hooks';
 import { AppContext } from './AppContext';
+import { useSelector } from 'react-redux';
 
 interface RequestWrapperOptionsType {
   senderAddress: string;
@@ -40,7 +41,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   const [isCallAccepted, setIsCallAccepted] = useState(false);
   const [incomingCallUserData, setIncomingCallUserData] = useState<User | null>(null);
   const { chainId, account, provider } = useAccount();
-  const { connectedUser, createUserIfNecessary} = useContext(AppContext);
+  const { connectedUser, createUserIfNecessary } = useContext(AppContext);
 
   const [data, setData] = useState<PushAPI.VideoCallData>(initVideoCallData);
 
@@ -55,23 +56,32 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     };
   }, [data.incoming[0].status]);
 
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
+
   useEffect(() => {
+
     if (!provider || !account || !connectedUser) return null;
 
     (async () => {
       let createdUser;
+
+      const response = await userPushSDKInstance.encryption.info();
+
       if (!connectedUser.publicKey) {
         createdUser = await createUserIfNecessary();
       }
+      
       videoObjectRef.current = new PushAPI.video.Video({
         signer: provider.getSigner(account),
         chainId,
-        pgpPrivateKey: connectedUser.privateKey || createdUser?.privateKey,
+        pgpPrivateKey: response.decryptedPgpPrivateKey || createdUser?.privateKey,
         env: appConfig.appEnv,
         setData,
       });
     })();
-  }, [connectedUser, provider, account]);
+  }, [connectedUser, provider, account, userPushSDKInstance]);
 
   // wrapper methods over the class methods
 
@@ -157,7 +167,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         isVideoCallInitiator:
           data.incoming[0].status !== PushAPI.VideoCallStatus.UNINITIALIZED
             ? videoObjectRef.current?.isInitiator
-            : () => {},
+            : () => { },
         videoObject: videoObjectRef.current,
       }}
     >
