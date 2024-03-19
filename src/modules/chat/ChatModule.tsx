@@ -41,10 +41,11 @@ import VideoCallSection from 'sections/video/VideoCallSection';
 import { ChatUserAppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
 
 // Internal Configs
-import { ChatUIProvider, darkChatTheme } from '@pushprotocol/uiweb';
+import { ChatUIProvider, UserProfile, darkChatTheme } from '@pushprotocol/uiweb';
 import { appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { GlobalContext } from 'contexts/GlobalContext';
+import UnlockProfile from 'components/chat/unlockProfile/UnlockProfile';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -72,7 +73,7 @@ function Chat({ chatid }) {
     setConnectedUser,
     displayQR,
     setDisplayQR,
-    handleConnectWallet
+    handleConnectWallet,
   } = useContext(AppContext);
 
   const { userPushSDKInstance } = useSelector((state: any) => {
@@ -110,31 +111,28 @@ function Chat({ chatid }) {
     let userPushInstance = userPushSDKInstance;
 
     if (!formattedChatParticipant.includes('.')) {
-      if (!await ethers.utils.isAddress(caip10ToWallet(formattedChatParticipant)))
-        formattedChatParticipant = chatId;
+      if (!(await ethers.utils.isAddress(caip10ToWallet(formattedChatParticipant)))) formattedChatParticipant = chatId;
     }
     let formattedchatId = reformatChatId(formattedChatParticipant);
 
     //If no PGP keys then connect the wallet.
-    if (!userPushInstance.decryptedPgpPvtKey) {
-      userPushInstance = await handleConnectWallet();
-
-      if (userPushInstance && userPushInstance.decryptedPgpPvtKey) {
+    if (!userPushInstance.readmode()) {
+      if (userPushInstance && !userPushInstance.readmode()) {
         navigate(`/chat/${formattedchatId}`);
         return formattedChatParticipant;
       }
-    }else{
+    } else {
       navigate(`/chat/${formattedchatId}`);
       return formattedChatParticipant;
     }
-  }
+  };
 
   useEffect(() => {
     if (
       connectedUser &&
       socketData.messagesSinceLastConnection &&
       w2wHelper.caip10ToWallet(socketData.messagesSinceLastConnection.fromCAIP10).toLowerCase() !==
-      account.toLowerCase()
+        account.toLowerCase()
     ) {
       if (currentChat) getUpdatedInbox(socketData.messagesSinceLastConnection);
     }
@@ -268,6 +266,11 @@ function Chat({ chatid }) {
     ModalComponent: GroupInfoModalComponent,
   } = useModalBlur();
 
+  const {
+    isModalOpen: isUnlockProfileOpen,
+    showModal: showModal,
+    ModalComponent: UnlockProfileModalComponent,
+  } = useModalBlur();
   const createGroupToast = useToast();
 
   const {
@@ -398,9 +401,11 @@ function Chat({ chatid }) {
       // navigate(`/chat`);
     }
   };
+  useEffect(() => {
+    if (userPushSDKInstance?.readmode()) showModal();
+  }, [userPushSDKInstance]);
 
   useEffect(() => {
-
     let formattedchatId = selectedChatId || chatid;
 
     if (formattedchatId) {
@@ -413,7 +418,7 @@ function Chat({ chatid }) {
     }
   }, [selectedChatId]);
 
-  useEffect(() => { }, [account, connectedUser?.privateKey]);
+  useEffect(() => {}, [account, connectedUser?.privateKey]);
 
   return (
     <Container>
@@ -474,14 +479,23 @@ function Chat({ chatid }) {
                   padding="10px 10px 10px 10px"
                   chatActive={viewChatBox}
                 >
-                  <ChatBoxSection 
+                  <ChatBoxSection
                     showGroupInfoModal={showGroupInfoModal}
                     triggerChatParticipant={triggerChatParticipant}
                   />
                 </ChatContainer>
+                {userPushSDKInstance && userPushSDKInstance?.readmode() && (
+                  <UnlockProfileModalComponent
+                    InnerComponent={UnlockProfile}
+                    onConfirm={() => {}}
+                    toastObject={groupInfoToast}
+                    modalPadding="0px"
+                    modalPosition={MODAL_POSITION.ON_PARENT}
+                  />
+                )}
                 <GroupInfoModalComponent
                   InnerComponent={GroupInfoModalContent}
-                  onConfirm={() => { }}
+                  onConfirm={() => {}}
                   toastObject={groupInfoToast}
                   modalPadding="0px"
                   modalPosition={MODAL_POSITION.ON_PARENT}
@@ -572,19 +586,22 @@ const Container = styled.div`
   box-sizing: border-box;
 
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
-  });
+  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${
+  globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
+});
   
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${globalsMargin.MINI_MODULES.TABLET.BOTTOM
-  });
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${
+  globalsMargin.MINI_MODULES.TABLET.BOTTOM
+});
   }
 
   @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${globalsMargin.MINI_MODULES.MOBILE.BOTTOM
-  });
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${
+  globalsMargin.MINI_MODULES.MOBILE.BOTTOM
+});
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 `;
 

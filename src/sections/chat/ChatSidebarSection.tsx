@@ -34,7 +34,6 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { useAccount } from 'hooks';
 import { appConfig } from '../../config';
 
-
 const createGroupOnMouseEnter = [
   {
     name: 'create-group-fill-icon',
@@ -61,7 +60,7 @@ const createGroupOnMouseLeave = [
   },
 ];
 
-type loadingData = { loading: boolean, preload: boolean, paging: boolean, finished: boolean };
+type loadingData = { loading: boolean; preload: boolean; paging: boolean; finished: boolean };
 
 // Chat Sections
 // Divided into two, left and right
@@ -76,7 +75,8 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
 
   const isNewTagVisible = getIsNewTagVisible(new Date('2023-02-22T00:00:00.000'), 90);
 
-  const { connectedUser, displayQR, setDisplayQR, initializePushSDK, handleConnectWallet, connectWallet } = useContext(AppContext);
+  const { connectedUser, displayQR, setDisplayQR, initializePushSDK, handleConnectWallet, connectWallet } =
+    useContext(AppContext);
   const [searchedUser, setSearchedUser] = useState<string>('');
 
   const { activeTab, setActiveTab } = useContext(Context);
@@ -102,7 +102,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
   let navigate = useNavigate();
 
   const handleCreateGroup = async () => {
-    if (userPushSDKInstance.decryptedPgpPvtKey) {
+    if (!userPushSDKInstance.readmode()) {
       showCreateGroupModal();
     } else {
       if (userPushSDKInstance.account === readOnlyWallet) {
@@ -114,7 +114,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
         }
       }
     }
-  }
+  };
 
   // RENDER
   return (
@@ -159,14 +159,14 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
               color={theme.default.color}
               zIndex="1"
               flex="1"
-              padding="10px 10px 20px 10px"
+              padding="10px 10px 8px 10px"
               onClick={() => {
                 setActiveTab(1);
               }}
             >
               <ItemHV2
                 alignItems="center"
-              // ref={containerRef}
+                // ref={containerRef}
               >
                 <SpanV2
                   flex="initial"
@@ -177,7 +177,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
                 >
                   Requests
                 </SpanV2>
-                {(requestLoadingData && requestLoadingData?.loading) && (
+                {requestLoadingData && requestLoadingData?.loading && (
                   <LoaderSpinner
                     type={LOADER_TYPE.SEAMLESS}
                     width="auto"
@@ -186,19 +186,18 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
                   />
                 )}
 
-                {(requestLoadingData && !requestLoadingData?.loading) &&
-                  requestChatList.length > 0 && (
-                    <SpanV2
-                      background={GLOBALS.COLORS.PRIMARY_PINK}
-                      color={GLOBALS.COLORS.WHITE}
-                      padding="2px 8px"
-                      margin="0px 4px"
-                      fontSize="12px"
-                      borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
-                    >
-                      {requestChatList.length}
-                    </SpanV2>
-                  )}
+                {requestLoadingData && !requestLoadingData?.loading && requestChatList.length > 0 && (
+                  <SpanV2
+                    background={GLOBALS.COLORS.PRIMARY_PINK}
+                    color={GLOBALS.COLORS.WHITE}
+                    padding="2px 8px"
+                    margin="0px 4px"
+                    fontSize="12px"
+                    borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
+                  >
+                    {requestChatList.length}
+                  </SpanV2>
+                )}
               </ItemHV2>
             </TabButton>
           </ItemHV2>
@@ -218,36 +217,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
             autofilled={undefined}
             searchedUser={searchedUser}
             setSearchedUser={setSearchedUser}
-            
           />
-        )}
-        {activeTab == 0 && (
-          <CreateGroupContainer
-            // justifyContent="flex-start"
-            flex="none"
-            padding="20px 10px 24px 10px"
-            zIndex="1"
-            borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
-            onClick={handleCreateGroup}
-            background="transparent"
-            hover={theme.chat.snapFocusBg}
-            hoverBackground="transparent"
-            onMouseEnter={() => StyleHelper.changeStyle(createGroupOnMouseEnter)}
-            onMouseLeave={() => StyleHelper.changeStyle(createGroupOnMouseLeave)}
-          >
-            <CreateGroupIcon id="create-group-icon" />
-            <CreateGroupFillIcon id="create-group-fill-icon" />
-            <SpanV2
-              margin="0 8px"
-              fontSize="16px"
-              fontWeight="500"
-              letterSpacing="-0.019em"
-              color={theme.default.secondaryColor}
-            >
-              Create Group
-            </SpanV2>
-            {isNewTagVisible && <NewTag />}
-          </CreateGroupContainer>
         )}
 
         {/* Set Chats */}
@@ -261,19 +231,22 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
           overflow="scroll"
         >
           {/* Only show recommended chats if there are no chats */}
-          {showRecommended &&
+          {showRecommended && (
             <Recommended
               bg="#f5f5f5"
-              onChatSelected={async (chatid, chatParticipant) => { setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid)) }}
+              onChatSelected={async (chatid, chatParticipant) => {
+                setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid));
+              }}
             />
-          }
+          )}
 
           {/* Only show recommended chats if there are no chats */}
-          {!showRecommended &&
+          {!showRecommended && (
             <ChatPreviewList
               listType="CHATS"
-              onChatSelected={async (chatid, chatParticipant) => { setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid)) }}
-
+              onChatSelected={async (chatid, chatParticipant) => {
+                setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid));
+              }}
               onUnreadCountChange={(count) => {
                 // console.log('Count is: ', count);
               }}
@@ -283,7 +256,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
                 }
               }}
             />
-          }
+          )}
         </ItemVV2>
 
         {/* Set Requests */}
@@ -296,14 +269,15 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
         >
           <ChatPreviewList
             listType="REQUESTS"
-            onChatSelected={async (chatid, chatParticipant) => { setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid)) }}
+            onChatSelected={async (chatid, chatParticipant) => {
+              setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid));
+            }}
             onUnreadCountChange={(count) => {
               // console.log('Count is: ', count);
             }}
             onLoading={(loadingData) => setRequestLoadingData(loadingData)}
             onPaging={(chats) => setRequestChatList(chats)}
             onPreload={(chats) => setRequestChatList(chats)}
-
           />
         </ItemVV2>
 
@@ -332,15 +306,43 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
             <ChatPreviewList
               listType="SEARCH"
               searchParamter={searchedUser || ''}
-              onChatSelected={async (chatid, chatParticipant) => setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid))}
+              onChatSelected={async (chatid, chatParticipant) =>
+                setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid))
+              }
               onUnreadCountChange={(count) => {
                 // console.log('Count is: ', count);
               }}
             />
           </ItemVV2>
         )}
-
-
+        {activeTab == 3 && (
+          <CreateGroupContainer
+            // justifyContent="flex-start"
+            flex="none"
+            padding="20px 10px 24px 10px"
+            zIndex="1"
+            borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
+            onClick={handleCreateGroup}
+            background="transparent"
+            hover={theme.chat.snapFocusBg}
+            hoverBackground="transparent"
+            onMouseEnter={() => StyleHelper.changeStyle(createGroupOnMouseEnter)}
+            onMouseLeave={() => StyleHelper.changeStyle(createGroupOnMouseLeave)}
+          >
+            <CreateGroupIcon id="create-group-icon" />
+            <CreateGroupFillIcon id="create-group-fill-icon" />
+            <SpanV2
+              margin="0 8px"
+              fontSize="16px"
+              fontWeight="500"
+              letterSpacing="-0.019em"
+              color={theme.default.secondaryColor}
+            >
+              Create Group
+            </SpanV2>
+            {isNewTagVisible && <NewTag />}
+          </CreateGroupContainer>
+        )}
       </ItemVV2>
 
       {/* Footer */}
@@ -359,7 +361,10 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
         </QRCodeContainer>
       ) : null}
 
-      <ProfileContainer zIndex='1' borderTop={`1px solid ${theme.default.secondaryBg}`}>
+      <ProfileContainer
+        zIndex="1"
+        borderTop={`1px solid ${theme.default.secondaryBg}`}
+      >
         {/* <ProfileHeader
           setActiveTab={setActiveTab}
           setShowQR={setShowQR}
