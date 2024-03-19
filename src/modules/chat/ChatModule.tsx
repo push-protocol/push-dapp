@@ -590,7 +590,6 @@ const Container = styled.div`
 `;
 
 const ChatSidebarContainer = styled(ItemVV2)`
-  z-index: 10;
   @media ${device.tablet} {
     position: absolute;
     top: 0;

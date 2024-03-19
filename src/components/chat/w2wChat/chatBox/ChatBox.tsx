@@ -94,12 +94,12 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
   if (!isGroup && currentChat?.wallets?.split(',')[0].toString()) {
     const walletLowercase = currentChat.wallets.includes(':nft')
       ? caip10ToWallet(
-        currentChat?.wallets
-          .replace(/eip155:\d+:/, 'eip155:')
-          .split(':nft')[0]
-          .toString()
-          .toLowerCase()
-      )
+          currentChat?.wallets
+            .replace(/eip155:\d+:/, 'eip155:')
+            .split(':nft')[0]
+            .toString()
+            .toLowerCase()
+        )
       : caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase();
     const checksumWallet = ethers.utils.getAddress(walletLowercase);
     ensName = web3NameList[checksumWallet];
@@ -136,14 +136,10 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
   const getChatId = () => {
     let chatId = selectedChatId || currentChat?.did;
 
-
     if (chatId) {
-      return (chatId?.includes(':nft:')
-        ? chatId.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0]
-        : chatId);
+      return chatId?.includes(':nft:') ? chatId.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0] : chatId;
     }
     return chatId;
-
   };
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
@@ -170,10 +166,9 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
     { id: 4, content: 'And experience the future of Web3 communication!' },
   ];
 
-
   return (
     <Container>
-      {(!viewChatBox || !getChatId()) ? (
+      {!viewChatBox || !getChatId() ? (
         <WelcomeItem gap="25px">
           {activeTab == 4 && (
             <LoaderSpinner
@@ -214,8 +209,13 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
                 </Atag>
 
                 <ItemBody>
-                  <Recommended bg="#e2078021" onChatSelected={async (chatId, chatParticipant) => setSelectedChatId(await triggerChatParticipant(chatParticipant, chatId))} />
-                  
+                  <Recommended
+                    bg="#e2078021"
+                    onChatSelected={async (chatId, chatParticipant) =>
+                      setSelectedChatId(await triggerChatParticipant(chatParticipant, chatId))
+                    }
+                  />
+
                   <WelcomePoints>
                     {InfoMessages.map((item) => (
                       <WelcomeContent key={item.id}>
@@ -224,7 +224,6 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
                       </WelcomeContent>
                     ))}
                   </WelcomePoints>
-                  
                 </ItemBody>
               </WelcomeInfo>
             </>
@@ -259,16 +258,15 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
             background={theme.default.bg}
             padding="6px"
             fontWeight="500"
-            zIndex="1"
           >
             {getChatId() && (
               <ChatProfile
                 chatProfileLeftHelperComponent={
-                  isMobile ?
+                  isMobile ? (
                     <SpanV2 onClick={() => setViewChatBox(false)}>
                       <MdOutlineArrowBackIos />
                     </SpanV2>
-                    : null
+                  ) : null
                 }
                 chatProfileRightHelperComponent={
                   <Tooltip
@@ -296,7 +294,7 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
           </ItemHV2>
 
           <MessageContainer>
-            {(getChatId()) && (
+            {getChatId() && (
               <ChatViewList
                 chatId={getChatId()}
                 limit={10}
@@ -305,20 +303,12 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
           </MessageContainer>
           {checkIfChatExist({ chats: receivedIntents, currentChat, connectedUser, isGroup }) ? null : (
             <>
-              <MessageInputWrapper>
-                {getChatId() && (
-                  <MessageInput
-                    chatId={
-                      getChatId()
-                    }
-                  />
-                )}
-              </MessageInputWrapper>
+              <MessageInputWrapper>{getChatId() && <MessageInput chatId={getChatId()} />}</MessageInputWrapper>
             </>
           )}
         </>
       )}
-    </Container >
+    </Container>
   );
 };
 
@@ -333,7 +323,6 @@ const MessageInputWrapper = styled.div`
   justify-content: center;
   position: absolute;
   bottom: 8px;
-
 `;
 
 const ChatContainer = styled.div`
@@ -355,8 +344,8 @@ const MessageContainer = styled(ItemVV2)`
   flex-direction: column;
   justify-content: flex-start;
   position: absolute;
-  padding: 40px 20px;
-  top: 40px;
+  padding: 0 20px 40px 20px;
+  top: 80px;
   width: 95%;
   height: 80%;
   @media (max-height: 750px) {
@@ -416,7 +405,7 @@ const Container = styled(Content)`
 const WelcomePoints = styled(ItemVV2)`
   margin: 20px 0px 0px 0px;
   gap: 10px;
-`
+`;
 
 const WelcomeItem = styled(ItemVV2)`
   width: 420px;
