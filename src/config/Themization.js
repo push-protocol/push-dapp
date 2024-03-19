@@ -11,7 +11,7 @@ const themeLight = {
     secondaryColor: '#657795',
     hover: '#F3F3FF',
     borderColor: '#dfdee9',
-    primaryPushThemeTextColor: '#cf1c84'
+    primaryPushThemeTextColor: '#cf1c84',
   },
 
   // Login Theme
@@ -44,8 +44,8 @@ const themeLight = {
   },
 
   btn: {
-    disabledBg: "#E0E3E7",
-    disabledColor: "#BEC8D8"
+    disabledBg: '#E0E3E7',
+    disabledColor: '#BEC8D8',
   },
 
   // Default Background Theme
@@ -182,7 +182,7 @@ const themeLight = {
 
   toastSuccessBackground: 'linear-gradient(90.15deg, #30CC8B -125.65%, #30CC8B -125.63%, #F3FFF9 42.81%)',
   toastErrorBackground: 'linear-gradient(90.15deg, #FF2070 -125.65%, #FF2D79 -125.63%, #FFF9FB 42.81%)',
-  toastWarningBackground:'linear-gradient(90deg, #FFF2D1 0%, rgba(255, 255, 255, 0.00) 100%)',
+  toastWarningBackground: 'linear-gradient(90deg, #FFF2D1 0%, rgba(255, 255, 255, 0.00) 100%)',
 
   // Profile
   profileBG: 'linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%)',
@@ -260,13 +260,13 @@ const themeLight = {
   spaceHostTextColor: '#1e1e1e',
 
   spaceTheme: {
-    titleBg: 'linear-gradient(45deg, #E165EC 0.01%, #A483ED 100%)',//not changed
+    titleBg: 'linear-gradient(45deg, #E165EC 0.01%, #A483ED 100%)', //not changed
     titleTextColor: '#FFFFFF',
     bgColorPrimary: 'red',
     bgColorSecondary: '#F7F1FB',
     textColorPrimary: '#000',
     textColorSecondary: '#657795',
-    textGradient: 'linear-gradient(45deg, #B6A0F5, #F46EF6, #FFDED3, #FFCFC5)',//not changed
+    textGradient: 'linear-gradient(45deg, #B6A0F5, #F46EF6, #FFDED3, #FFCFC5)', //not changed
     btnColorPrimary: '#D53A94',
     btnOutline: '#D53A94',
     borderColor: '#FFFF',
@@ -296,7 +296,7 @@ const themeLight = {
 
   //collapsable sidebar
   collapsaBg: '#575d737f',
-  strokeColor: '#FFF'
+  svgStrokeColor: '#FFF',
 };
 
 const themeDark = {
@@ -311,7 +311,7 @@ const themeDark = {
     secondaryColor: '#B6BCD6',
     hover: '#00000033',
     borderColor: '#4A4F67',
-    primaryPushThemeTextColor: '#cf1c84'
+    primaryPushThemeTextColor: '#cf1c84',
   },
 
   // Login Theme
@@ -344,8 +344,8 @@ const themeDark = {
   },
 
   btn: {
-    disabledBg: "#383A40",
-    disabledColor: "#545F74"
+    disabledBg: '#383A40',
+    disabledColor: '#545F74',
   },
 
   // Header Theme
@@ -483,8 +483,7 @@ const themeDark = {
   toastShadowColor: '#00000010',
   toastSuccessBackground: 'linear-gradient(90.15deg, #30CC8B -125.65%, #30CC8B -125.63%, #2F3137 42.81%)',
   toastErrorBackground: 'linear-gradient(89.96deg, #FF2070 -101.85%, #2F3137 51.33%)',
-  toastWarningBackground:'linear-gradient(90deg, #66562D 0.03%, #2F3137 74.67%)',
-
+  toastWarningBackground: 'linear-gradient(90deg, #66562D 0.03%, #2F3137 74.67%)',
 
   //Profile
   profileBG: '#2F3137',
@@ -601,7 +600,7 @@ const themeDark = {
 
   //collapsable sidebar
   collapsaBg: '#0000004c',
-  strokeColor: '#575D73'
+  svgStrokeColor: '#575D73',
 };
 
 module.exports = {

@@ -1,5 +1,5 @@
-import { MerkleTree } from "merkletreejs";
-import { ethers } from "ethers";
+import { MerkleTree } from 'merkletreejs';
+import { ethers } from 'ethers';
 
 // Internal Configs
 import whitelistAddressesList from 'config/alphaAccessNft/whitelist.json';
@@ -22,12 +22,12 @@ const AlphaAccessNFTHelper: AlphaAccessNFTHelper = {
 
   async getProof(userWalletAddress: string): Promise<string[]> {
     let proof: string[] = [];
-
-    if (whitelistAddressesList.includes(userWalletAddress)) {
+    const userAddress = userWalletAddress.toLowerCase();
+    if (whitelistAddressesList.includes(userAddress)) {
       const { keccak256 } = ethers.utils;
       let leaves = whitelistAddressesList.map((addr) => keccak256(addr));
       const merkleTree = new MerkleTree(leaves, keccak256, { sortPairs: true });
-      let hashedAddress = keccak256(userWalletAddress);
+      let hashedAddress = keccak256(userAddress);
       proof = merkleTree.getHexProof(hashedAddress);
     }
     return proof;
@@ -35,9 +35,10 @@ const AlphaAccessNFTHelper: AlphaAccessNFTHelper = {
 
   async verify(userWalletAddress: string): Promise<boolean> {
     const { keccak256 } = ethers.utils;
+    const userAddress = userWalletAddress.toLowerCase();
     let leaves = whitelistAddressesList.map((addr) => keccak256(addr));
     const merkleTree = new MerkleTree(leaves, keccak256, { sortPairs: true });
-    let hashedAddress = keccak256(userWalletAddress);
+    let hashedAddress = keccak256(userAddress);
     const merkleRootHash = merkleTree.getHexRoot();
     let proof = merkleTree.getHexProof(hashedAddress);
 
