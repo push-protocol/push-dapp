@@ -68,7 +68,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   const theme = useTheme();
 
   const {readOnlyWallet} = useContext(GlobalContext);
-  const { setSelectedChatId } = useContext(Context);
+  const { setSelectedChat } = useContext(Context);
   const { setMode } = useContext(GlobalContext);
 
   const isNewTagVisible = getIsNewTagVisible(new Date('2023-02-22T00:00:00.000'), 90);
@@ -275,7 +275,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
         >
           <ChatPreviewList
             listType="CHATS"
-            onChatSelected={async (chatid, chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant, chatid))}
+            onChatSelected={async (chatid, chatParticipant) =>setSelectedChat({chatId:chatid,recipient:await formatChatParticipant(chatParticipant, chatid)}) }
 
             onUnreadCountChange={(count) => {
               // console.log('Count is: ', count);
@@ -293,7 +293,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
         >
           <ChatPreviewList
             listType="REQUESTS"
-            onChatSelected={async (chatid, chatParticipant) => { console.log(chatParticipant); setSelectedChatId(await formatChatParticipant(chatParticipant, chatid)) }}
+            onChatSelected={async (chatid, chatParticipant) => { console.log(chatParticipant); setSelectedChat({chatId:chatid,recipient:await formatChatParticipant(chatParticipant, chatid)}) }}
             onUnreadCountChange={(count) => {
               // console.log('Count is: ', count);
             }}
@@ -329,7 +329,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
             <ChatPreviewList
               listType="SEARCH"
               searchParamter={searchedUser || ''}
-              onChatSelected={async (chatid, chatParticipant) => setSelectedChatId(await formatChatParticipant(chatParticipant, chatid))}
+              onChatSelected={async (chatid, chatParticipant) => setSelectedChat({chatId:chatid,recipient:await formatChatParticipant(chatParticipant, chatid)}) }
               onUnreadCountChange={(count) => {
                 // console.log('Count is: ', count);
               }}

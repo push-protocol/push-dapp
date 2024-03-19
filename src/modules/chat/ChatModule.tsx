@@ -37,7 +37,7 @@ import useToast from 'hooks/useToast';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection from 'sections/video/VideoCallSection';
-import { ChatUserAppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
+import { ChatUserAppContext, Feeds, MessageIPFS, MessageIPFSWithCID, SelectedchatType, User, VideoCallInfoI } from 'types/chat';
 import { checkIfIntent, getUpdatedChatAndIntent, getUpdatedGroupInfo } from 'helpers/w2w/user';
 
 // Internal Configs
@@ -82,7 +82,7 @@ function Chat({ chatid }) {
 
   const [viewChatBox, setViewChatBox] = useState<boolean>(false);
   const [currentChat, setCurrentChat] = useState<Feeds>();
-  const [selectedChatId, setSelectedChatId] = useState<string>();
+  const [selectedChat, setSelectedChat] = useState<SelectedchatType>();
 
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -374,7 +374,7 @@ function Chat({ chatid }) {
   };
 
   useEffect(() => {
-    let formattedchatId = selectedChatId || chatid;
+    let formattedchatId = selectedChat?.recipient || chatid;
    
     if (formattedchatId) {
       setViewChatBox(true);
@@ -386,7 +386,7 @@ function Chat({ chatid }) {
       setViewChatBox(false);
       navigate(`/chat`);
     }
-  }, [selectedChatId]);
+  }, [selectedChat]);
 
   useEffect(() => {}, [account, connectedUser?.privateKey]);
   return (
@@ -405,8 +405,8 @@ function Chat({ chatid }) {
               <Context.Provider
                 value={{
                   currentChat,
-                  selectedChatId,
-                  setSelectedChatId,
+                  selectedChat,
+                  setSelectedChat,
                   receivedIntents,
                   setReceivedIntents,
                   viewChatBox,

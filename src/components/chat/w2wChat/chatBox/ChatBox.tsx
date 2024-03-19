@@ -59,7 +59,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
-  const { currentChat, viewChatBox, receivedIntents, activeTab,setViewChatBox, setChat, selectedChatId }: ContextType =
+  const { currentChat, viewChatBox, receivedIntents, activeTab,setViewChatBox, setChat, selectedChat }: ContextType =
     useContext<ContextType>(Context);
   const { web3NameList }: AppContextType = useContext(AppContext);
 
@@ -106,7 +106,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   }, [currentChat]);
 
   const getChatId = () => {
-    let chatId = selectedChatId || currentChat?.did;
+    let chatId = selectedChat?.recipient || currentChat?.did;
     if(chatId){
       return (chatId?.includes(':nft:')
         ? chatId.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0]
@@ -153,7 +153,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
         draft.local.address = account;
         draft.incoming[0].address = caip10ToWallet((getChatId()).toString());
         draft.incoming[0].status = PushAPI.VideoCallStatus.INITIALIZED;
-        // draft.meta.chatId = currentChat.chatId;
+        draft.meta.chatId = selectedChat.chatId;
       });
     });
   };

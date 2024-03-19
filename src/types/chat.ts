@@ -99,10 +99,13 @@ export interface TwitterFeedReturnType{
     messageType:string;
 }
 
+export interface SelectedchatType {
+  chatId: string | undefined;recipient:string|undefined
+}
 export interface ChatUserAppContext {
   currentChat: Feeds;
-  selectedChatId: string | undefined;
-  setSelectedChatId:(chatId: string | undefined) => void;
+  selectedChat: SelectedchatType;
+  setSelectedChat:(chat:SelectedchatType) => void;
   viewChatBox: boolean;
   setViewChatBox:(chatId: boolean) => void;
   receivedIntents: Feeds[];
