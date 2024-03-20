@@ -41,7 +41,7 @@ import VideoCallSection from 'sections/video/VideoCallSection';
 import { ChatUserAppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
 
 // Internal Configs
-import { ChatUIProvider, UserProfile, darkChatTheme } from '@pushprotocol/uiweb';
+import { ChatUIProvider,darkChatTheme, UserProfile } from '@pushprotocol/uiweb';
 import { appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { GlobalContext } from 'contexts/GlobalContext';
