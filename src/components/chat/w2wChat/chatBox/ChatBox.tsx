@@ -150,7 +150,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const startVideoCallHandler = async () => {
     videoObject?.setData((oldData) => {
       return produce(oldData, (draft) => {
-        draft.local.address = account;
+        draft.local.address = caip10ToWallet(account);
         draft.incoming[0].address = caip10ToWallet((getChatId()).toString());
         draft.incoming[0].status = PushAPI.VideoCallStatus.INITIALIZED;
         draft.meta.chatId = selectedChat.chatId;
