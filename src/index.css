@@ -567,6 +567,7 @@ button, a, a:before, a:after {
   --w3o-border-radius: 24px !important;
   --w3o-font-family: unset !important;
   --onboard-modal-backdrop: transparent !important;
+  --onboard-modal-z-index:999999 !important;
   --modal-backdrop: transparent !important;
 
   /* Wallet connect modal z-index */
@@ -583,6 +584,7 @@ button, a, a:before, a:after {
   --w3o-border-radius: 24px !important;
   --w3o-font-family: unset !important;
   --onboard-modal-backdrop: transparent !important;
+  --onboard-modal-z-index:999999 !important;
   --modal-backdrop: transparent !important;
 }
 
@@ -597,6 +599,6 @@ button, a, a:before, a:after {
   margin-right: auto;
   border-radius: var(--w3o-border-radius);
   overflow: auto;
-	z-index: 99999;
+	z-index: 9999999;
 }
 

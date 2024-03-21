@@ -34,8 +34,8 @@ export type ModalType = {
 
 export const MODAL_POSITION = {
   ON_ROOT: 1,
-  ON_PARENT: 2
-}
+  ON_PARENT: 2,
+};
 
 const useModalBlur = () => {
   const [open, setOpen] = React.useState(false);
@@ -49,7 +49,6 @@ const useModalBlur = () => {
         document.body.style.overflow = 'hidden';
       }
       document.body.style.paddingRight = '1rem';
-
     } else {
       document.body.style.overflow = 'unset';
       document.body.style.paddingRight = '0px';

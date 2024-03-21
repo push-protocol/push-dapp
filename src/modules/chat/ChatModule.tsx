@@ -41,10 +41,11 @@ import VideoCallSection from 'sections/video/VideoCallSection';
 import { ChatUserAppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
 
 // Internal Configs
-import { ChatUIProvider, darkChatTheme } from '@pushprotocol/uiweb';
+import { ChatUIProvider,darkChatTheme, UserProfile } from '@pushprotocol/uiweb';
 import { appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { GlobalContext } from 'contexts/GlobalContext';
+import UnlockProfile from 'components/chat/unlockProfile/UnlockProfile';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -115,10 +116,8 @@ function Chat({ chatid }) {
     let formattedchatId = reformatChatId(formattedChatParticipant);
 
     //If no PGP keys then connect the wallet.
-    if (!userPushInstance.decryptedPgpPvtKey) {
-      userPushInstance = await handleConnectWallet();
-
-      if (userPushInstance && userPushInstance.decryptedPgpPvtKey) {
+    if (!userPushInstance.readmode()) {
+      if (userPushInstance && !userPushInstance.readmode()) {
         navigate(`/chat/${formattedchatId}`);
         return formattedChatParticipant;
       }
@@ -267,6 +266,11 @@ function Chat({ chatid }) {
     ModalComponent: GroupInfoModalComponent,
   } = useModalBlur();
 
+  const {
+    isModalOpen: isUnlockProfileOpen,
+    showModal: showModal,
+    ModalComponent: UnlockProfileModalComponent,
+  } = useModalBlur();
   const createGroupToast = useToast();
 
   const {
@@ -397,6 +401,9 @@ function Chat({ chatid }) {
       // navigate(`/chat`);
     }
   };
+  useEffect(() => {
+    if (userPushSDKInstance?.readmode()) showModal();
+  }, [userPushSDKInstance]);
 
   useEffect(() => {
     let formattedchatId = selectedChatId || chatid;
@@ -477,6 +484,15 @@ function Chat({ chatid }) {
                     triggerChatParticipant={triggerChatParticipant}
                   />
                 </ChatContainer>
+                {userPushSDKInstance && userPushSDKInstance?.readmode() && (
+                  <UnlockProfileModalComponent
+                    InnerComponent={UnlockProfile}
+                    onConfirm={() => {}}
+                    toastObject={groupInfoToast}
+                    modalPadding="0px"
+                    modalPosition={MODAL_POSITION.ON_PARENT}
+                  />
+                )}
                 <GroupInfoModalComponent
                   InnerComponent={GroupInfoModalContent}
                   onConfirm={() => {}}

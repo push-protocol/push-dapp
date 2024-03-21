@@ -44,7 +44,8 @@ import {
   ISpaceFeedProps,
   ISpaceInvitesProps,
   ISpaceWidgetProps,
-  SpacesUI, SpacesUIProvider
+  SpacesUI,
+  SpacesUIProvider,
 } from '@pushprotocol/uiweb';
 import { useUpdateTheme } from '@web3-onboard/react';
 import { darkTheme, lightTheme } from 'config/spaceTheme';
@@ -72,15 +73,15 @@ export interface IUseSpaceReturnValues {
 
 // Extend the console
 const extendConsole = () => {
-  "use strict";
+  'use strict';
   try {
     var disabledConsoles = {};
     console.enable = function (level, enabled) {
-      if (window.console === "undefined" || !window.console || window.console === null) {
+      if (window.console === 'undefined' || !window.console || window.console === null) {
         window.console = {};
       }
-      if (window.console[level] === "undefined" || !window.console[level] || window.console[level] === null) {
-        window.console[level] = function () { };
+      if (window.console[level] === 'undefined' || !window.console[level] || window.console[level] === null) {
+        window.console[level] = function () {};
       }
       if (enabled) {
         if (disabledConsoles[level]) {
@@ -88,28 +89,28 @@ const extendConsole = () => {
         }
       } else {
         disabledConsoles[level] = window.console[level];
-        window.console[level] = function () { };
+        window.console[level] = function () {};
       }
     };
   } catch (e) {
-    console.error("Extended console() threw an error!");
+    console.error('Extended console() threw an error!');
     console.debug(e);
   }
-}
+};
 
 // extend console
 extendConsole();
 
 // Disable console but not on localhost
-if (location.hostname !== "localhost" && location.hostname !== "127.0.0.1") {
-  if (appConfig?.appEnv === "prod") {
-    console.enable("debug", false);
-    console.enable("log", false);
-    console.enable("info", false);
-  
+if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+  if (appConfig?.appEnv === 'prod') {
+    console.enable('debug', false);
+    console.enable('log', false);
+    console.enable('info', false);
+
     // disable console.warn in prod
-    if (appConfig?.appEnv === "prod") {
-      console.enable("warn", false);
+    if (appConfig?.appEnv === 'prod') {
+      console.enable('warn', false);
     }
   }
 }
@@ -154,7 +155,6 @@ export default function App() {
     dispatch(resetUserSlice());
   }, [account]);
 
-
   // console.log(isActive, chainId, account);
   // handle logic to reconnect in response to certain events from the provider
   const { allowedChain } = useInactiveListener();
@@ -186,9 +186,8 @@ export default function App() {
     const SidebarCollapsable = localStorage.getItem('SidebarCollapsed');
     if (SidebarCollapsable) {
       const isSidebarCollapsed = JSON.parse(SidebarCollapsable);
-      setSidebarCollapsed(isSidebarCollapsed)
+      setSidebarCollapsed(isSidebarCollapsed);
     }
-
   }, []);
 
   React.useEffect(() => {
@@ -202,17 +201,17 @@ export default function App() {
 
   React.useEffect(() => {
     window?.Olvy?.init({
-      organisation: "epns",
-      target: "#olvy-target",
-      type: "sidebar",
+      organisation: 'epns',
+      target: '#olvy-target',
+      type: 'sidebar',
       view: {
         showSearch: false,
         compact: false,
         showHeader: true, // only applies when widget type is embed. you cannot hide header for modal and sidebar widgets
         showUnreadIndicator: true,
-        unreadIndicatorColor: "#cc1919",
-        unreadIndicatorPosition: "top-right"
-      }
+        unreadIndicatorColor: '#cc1919',
+        unreadIndicatorPosition: 'top-right',
+      },
     });
     return function cleanup() {
       window?.Olvy?.teardown();
@@ -244,19 +243,21 @@ export default function App() {
 
   const librarySigner = provider?.getSigner(account);
 
-  const spaceUI = useMemo(() => new SpacesUI({
-    account: account,
-    signer: librarySigner,
-    pgpPrivateKey: pgpPvtKey,
-    env: appConfig?.appEnv,
-  }), [account, librarySigner, pgpPvtKey, appConfig?.appEnv]);
-
+  const spaceUI = useMemo(
+    () =>
+      new SpacesUI({
+        account: account,
+        signer: librarySigner,
+        pgpPrivateKey: pgpPvtKey,
+        env: appConfig?.appEnv,
+      }),
+    [account, librarySigner, pgpPvtKey, appConfig?.appEnv]
+  );
 
   // const { spaceUI } = useSpaceComponents();
 
   const location = useLocation();
   const isSnapPage = location?.pathname.includes('/snap');
-
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
@@ -308,18 +309,31 @@ export default function App() {
               </HeaderContainer>
 
               <ParentContainer
-                bg={darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG}
+                bg={
+                  darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG
+                }
                 headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
               >
-                {!isSnapPage &&
-                  <LeftBarContainer leftBarWidth={sidebarCollapsed ? GLOBALS.CONSTANTS.COLLAPSABLE_LEFT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                {!isSnapPage && (
+                  <LeftBarContainer
+                    leftBarWidth={
+                      sidebarCollapsed ? GLOBALS.CONSTANTS.COLLAPSABLE_LEFT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH
+                    }
+                  >
                     <Navigation />
                   </LeftBarContainer>
-                }
+                )}
 
-                <ContentContainer leftBarWidth={sidebarCollapsed ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                <ContentContainer
+                  leftBarWidth={
+                    sidebarCollapsed ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH
+                  }
+                >
                   {/* Shared among all pages, load universal things here */}
-                  <SpacesUIProvider spaceUI={spaceUI} theme={darkMode ? darkTheme : lightTheme}>
+                  <SpacesUIProvider
+                    spaceUI={spaceUI}
+                    theme={darkMode ? darkTheme : lightTheme}
+                  >
                     <MasterInterfacePage />
                     <SpaceWidgetSection />
                   </SpacesUIProvider>
@@ -328,13 +342,7 @@ export default function App() {
             </SpaceComponentContextProvider>
           </SpaceContextProvider>
         </NavigationContextProvider>
-
       </>
-
-
-
-
-
     </ThemeProvider>
   );
 }
