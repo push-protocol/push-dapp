@@ -72,7 +72,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
   const groupInfoRef = useRef<HTMLInputElement>(null);
   const { connectedUser } = useContext(AppContext);
-  const { videoObject } = useContext(VideoCallContext);
+  const { videoObjectRef } = useContext(VideoCallContext);
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);
 
@@ -148,7 +148,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   };
 
   const startVideoCallHandler = async () => {
-    videoObject?.setData((oldData) => {
+    videoObjectRef.current?.setData((oldData) => {
       return produce(oldData, (draft) => {
         draft.local.address = caip10ToWallet(account);
         draft.incoming[0].address = caip10ToWallet((getChatId()).toString());
