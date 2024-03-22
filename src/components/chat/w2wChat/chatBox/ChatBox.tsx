@@ -344,10 +344,11 @@ const MessageContainer = styled(ItemVV2)`
   flex-direction: column;
   justify-content: flex-start;
   position: absolute;
-  padding: 0 20px 40px 20px;
-  top: 80px;
-  width: 95%;
-  height: 80%;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0px 20px 160px 20px;
+  top: 90px;
+  height: 100%;
   @media (max-height: 750px) {
     height: 75%;
   }

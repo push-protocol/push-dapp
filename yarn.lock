@@ -5421,9 +5421,9 @@ __metadata:
     "@mui/icons-material": ^5.8.4
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
-    "@pushprotocol/restapi": 1.7.2
+    "@pushprotocol/restapi": 0.0.1-alpha.75
     "@pushprotocol/socket": 0.5.3
-    "@pushprotocol/uiweb": 1.2.7
+    "@pushprotocol/uiweb": 1.3.1-alpha.11
     "@reduxjs/toolkit": ^1.7.1
     "@testing-library/dom": ^6.12.2
     "@testing-library/jest-dom": ^4.2.4
@@ -5611,9 +5611,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:1.7.2":
-  version: 1.7.2
-  resolution: "@pushprotocol/restapi@npm:1.7.2"
+"@pushprotocol/restapi@npm:0.0.1-alpha.75":
+  version: 0.0.1-alpha.75
+  resolution: "@pushprotocol/restapi@npm:0.0.1-alpha.75"
   dependencies:
     "@metamask/eth-sig-util": ^5.0.2
     axios: ^0.27.2
@@ -5636,7 +5636,7 @@ __metadata:
   peerDependenciesMeta:
     ethers:
       optional: true
-  checksum: 345e4ddc88e5ef5062fdd570b326c6d6becb8eb25120c615bd6e677d14418b952558e9064fe13a14c2e3fd40daa2bf4b84c0c71e0c4b69ccdb6c24c52d6ff9bf
+  checksum: 74b84f3b2bbd1d15291a4b802c51430ab1a3f133fdcd105da8676c3f514d7d376fc78d3e1353097c913e6a30b1e62a8c229146f098723ab2684d32a371a4697e
   languageName: node
   linkType: hard
 
@@ -5664,9 +5664,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:1.2.7":
-  version: 1.2.7
-  resolution: "@pushprotocol/uiweb@npm:1.2.7"
+"@pushprotocol/uiweb@npm:1.3.1-alpha.11":
+  version: 1.3.1-alpha.11
+  resolution: "@pushprotocol/uiweb@npm:1.3.1-alpha.11"
   dependencies:
     "@livekit/components-react": ^1.2.2
     "@livekit/components-styles": ^1.0.6
@@ -5699,7 +5699,7 @@ __metadata:
     react: ">=16.8.0"
     styled-components: ^6.0.8
     viem: ^1.3.0
-  checksum: 9134c4033b8422db6b087c41713ea5fd8f80176008e541451e2f7a9714d1d504584159bf630039bbd24954670b6c33a7ac6a17637a05ed33eac749b58277b3ca
+  checksum: 3c6f297267cb73ac7730b766b6dfad8245d57a75c4957ae584997dd3e716cc6236c53143327d2be951df126af43de78aecff6731bd9d8a0a777aebf9001c0c51
   languageName: node
   linkType: hard
 
