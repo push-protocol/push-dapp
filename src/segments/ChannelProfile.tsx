@@ -1,30 +1,30 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 // External Packages
-import { NotificationItem } from "@pushprotocol/uiweb";
-import { useDispatch, useSelector } from "react-redux";
+import { NotificationItem } from '@pushprotocol/uiweb';
+import { useDeviceWidthCheck } from 'hooks';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useClickAway } from "react-use";
-import styled, { ThemeProvider, useTheme } from "styled-components";
-import { addPaginatedNotifications, setFinishedFetching } from "redux/slices/notificationSlice";
-import { useDeviceWidthCheck } from "hooks";
+import { useClickAway } from 'react-use';
+import { addPaginatedNotifications, setFinishedFetching } from 'redux/slices/notificationSlice';
+import styled, { ThemeProvider, useTheme } from 'styled-components';
 
 // Internal Compoonents
 import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
-import ChannelLoading from "components/ChannelLoading";
+import ChannelLoading from 'components/ChannelLoading';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import DisplayNotice from "primaries/DisplayNotice";
+import DisplayNotice from 'primaries/DisplayNotice';
 
 // Internal Configs
-import { latest } from "@pushprotocol/restapi/src/lib/chat";
-import ViewChannelItem from "components/ViewChannelItem";
-import ChannelProfileComponent from "components/channel/ChannelProfileComponent";
-import { ItemVV2, SpanV2 } from "components/reusables/SharedStylingV2";
-import { appConfig } from "config";
-import APP_PATHS from "config/AppPaths";
-import { device } from "config/Globals";
-import ChannelsDataStore from "singletons/ChannelsDataStore";
+import { latest } from '@pushprotocol/restapi/src/lib/chat';
+import ViewChannelItem from 'components/ViewChannelItem';
+import ChannelProfileComponent from 'components/channel/ChannelProfileComponent';
+import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { appConfig } from 'config';
+import APP_PATHS from 'config/AppPaths';
+import { device } from 'config/Globals';
+import ChannelsDataStore from 'singletons/ChannelsDataStore';
 
 // Constants
 const NOTIFICATIONS_PER_PAGE = 20;
@@ -49,7 +49,7 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
   const navigate = useNavigate();
 
   useEffect(() => {
-    setChannelDetails(null)
+    setChannelDetails(null);
     if (userPushSDKInstance) {
       setLoading(true);
       (async () => {
@@ -58,40 +58,42 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
           setChannelDetails(channelBasedOnChannelID);
           setLoading(false);
         } catch (error) {
-          console.log("Error", error);
+          console.log('Error', error);
           setLoading(false);
         }
-      })()
+      })();
     }
-
-  }, [channelID, userPushSDKInstance])
+  }, [channelID, userPushSDKInstance]);
 
   // load notifications
   useEffect(() => {
     if (userPushSDKInstance) {
       setLoading(true);
-      userPushSDKInstance.channel.notifications(channelID, {
-        page: 1,
-        limit: NOTIFICATIONS_PER_PAGE,
-      }).then((response) => {
-        setNotifications(response.feeds);
-        setLoadingNotifs(false);
+      userPushSDKInstance.channel
+        .notifications(channelID, {
+          page: 1,
+          limit: NOTIFICATIONS_PER_PAGE,
+        })
+        .then((response) => {
+          setNotifications(response.feeds);
+          setLoadingNotifs(false);
 
-        // ENABLE PAGINATION HERE
-        dispatch(addPaginatedNotifications(response.feeds));
-        if (response.feeds.length === 0) {
-          dispatch(setFinishedFetching());
-        }
-      }).catch((err) => {
-        // ENABLE NO NOTIFICATION FOUND HERE
-        console.error("Error >>>>", err);
-        setLoadingNotifs(false);
-      });
-    };
+          // ENABLE PAGINATION HERE
+          dispatch(addPaginatedNotifications(response.feeds));
+          if (response.feeds.length === 0) {
+            dispatch(setFinishedFetching());
+          }
+        })
+        .catch((err) => {
+          // ENABLE NO NOTIFICATION FOUND HERE
+          console.error('Error >>>>', err);
+          setLoadingNotifs(false);
+        });
+    }
     return () => {
       setNotifications([]);
       setLoadingNotifs(true);
-    }
+    };
   }, [channelID, userPushSDKInstance]);
 
   const isMobile = useDeviceWidthCheck(768);
@@ -104,9 +106,7 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
           alignSelf="flex-start"
           padding="0px"
         >
-          <SpanV2
-            alignSelf="flex-start"
-          >
+          <SpanV2 alignSelf="flex-start">
             <Back
               onClick={() => {
                 navigate(APP_PATHS.Channels);
@@ -117,7 +117,7 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
 
         {!isMobile && (
           <>
-            {channelDetails && !loading &&
+            {channelDetails && !loading && (
               <ViewChannelItem
                 channelObjectProp={channelDetails}
                 loadTeaser={loadTeaser}
@@ -125,7 +125,7 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
                 minimal={minimal}
                 profileType={profileType}
               />
-            }
+            )}
 
             {/* Show Latest Notifications of the Channel */}
             {!loading && (
@@ -136,25 +136,21 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
                 >
                   Recent Notifications
                 </SpanV2>
-                <Notice>
-                  Showing preview of the latest non-encrypted notifications sent by the channel.
-                </Notice>
+                <Notice>Showing preview of the latest non-encrypted notifications sent by the channel.</Notice>
               </TextContainer>
             )}
 
             <ScrollItem>
-              {loadingNotifs &&
+              {loadingNotifs && (
                 <LoaderSpinner
                   type={LOADER_TYPE.SEAMLESS}
                   spinnerSize={40}
                 />
-              }
+              )}
 
               {!notifications.length && !loadingNotifs && (
-                <div style={{ textAlign: "center" }}>
-                  <DisplayNotice
-                    title="You currently have no notifications, try subscribing to some channels."
-                  />
+                <div style={{ textAlign: 'center' }}>
+                  <DisplayNotice title="You currently have no notifications, try subscribing to some channels." />
                 </div>
               )}
 
@@ -165,8 +161,8 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
                 return (
                   <NotifsOuter key={`${item.payload_id}`}>
                     <NotificationItem
-                      notificationTitle={payload.notification.title}
-                      notificationBody={payload.notification.body}
+                      notificationTitle={payload.data.asub}
+                      notificationBody={payload.data.amsg}
                       cta={payload.data.acta}
                       app={payload.data.app}
                       icon={payload.data.icon}
@@ -184,9 +180,8 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
 
         {isMobile && (
           <ScrollItem>
-
             {/* New Channel Profile Component */}
-            {channelDetails && !loading &&
+            {channelDetails && !loading && (
               <ViewChannelItem
                 channelObjectProp={channelDetails}
                 loadTeaser={loadTeaser}
@@ -194,7 +189,7 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
                 minimal={minimal}
                 profileType={profileType}
               />
-            }
+            )}
 
             {/* Show Latest Notifications of the Channel */}
             {!loading && (
@@ -205,28 +200,25 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
                 >
                   Recent Notifications
                 </SpanV2>
-                <Notice>
-                  Showing preview of the latest non-encrypted notifications sent by the channel.
-                </Notice>
+                <Notice>Showing preview of the latest non-encrypted notifications sent by the channel.</Notice>
               </TextContainer>
             )}
 
-            {loadingNotifs &&
+            {loadingNotifs && (
               <LoaderSpinner
                 type={LOADER_TYPE.SEAMLESS}
                 spinnerSize={40}
               />
-            }
+            )}
 
             {notifications.map((item, index) => {
               const payload = item.payload;
-
               // render the notification item
               return (
                 <NotifsOuter key={`${item.payload_id}`}>
                   <NotificationItem
-                    notificationTitle={payload.notification.title}
-                    notificationBody={payload.notification.body}
+                    notificationTitle={payload.data.title}
+                    notificationBody={payload.data.body}
                     cta={payload.data.acta}
                     app={payload.data.app}
                     icon={payload.data.icon}
@@ -243,7 +235,7 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
       </Container>
     </ThemeProvider>
   );
-}
+};
 
 // css styles
 const Container = styled.div`
@@ -261,9 +253,7 @@ const Container = styled.div`
   }
 `;
 
-const NotifsOuter = styled.div`
-
-`;
+const NotifsOuter = styled.div``;
 
 const ScrollItem = styled(ItemVV2)`
   display: flex;
@@ -293,7 +283,7 @@ const ScrollItem = styled(ItemVV2)`
       background-color: none;
       border-radius: 9px;
     }
-  
+
     &::-webkit-scrollbar {
       background-color: none;
       width: 4px;
@@ -306,24 +296,24 @@ const ScrollItem = styled(ItemVV2)`
       linear,
       left top,
       left bottom,
-      color-stop(0.44,  #CF1C84),
-      color-stop(0.72, #CF1C84),
-      color-stop(0.86, #CF1C84)
+      color-stop(0.44, #cf1c84),
+      color-stop(0.72, #cf1c84),
+      color-stop(0.86, #cf1c84)
     );
   }
 `;
 
 const TextContainer = styled(ItemVV2)`
-  flex:0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+  flex: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 10px;
-  align-items:baseline;
-  margin:7px 20px 24px 5px;
-`
+  align-items: baseline;
+  margin: 7px 20px 24px 5px;
+`;
 
 const Notice = styled(SpanV2)`
   font-size: 0.8em;
-`
+`;
 
 // Export Default
 export default ChannelProfile;
