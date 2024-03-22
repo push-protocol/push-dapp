@@ -965,7 +965,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                 )}
               </>
             )}
-            {!loading && subscribed && (
+            {!loading && subscribed && isChannelActive !== 0 && (
               <>
                 {/* {isOwner && <OwnerButton disabled>Owner</OwnerButton>} */}
                 {isOwner && (
