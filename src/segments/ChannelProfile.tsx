@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 
 // External Packages
 import { NotificationItem } from '@pushprotocol/uiweb';
-import { useDeviceWidthCheck } from 'hooks';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useClickAway } from 'react-use';
@@ -14,6 +13,7 @@ import styled, { ThemeProvider, useTheme } from 'styled-components';
 import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import ChannelLoading from 'components/ChannelLoading';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { useAccount } from 'hooks';
 import DisplayNotice from 'primaries/DisplayNotice';
 
 // Internal Configs
@@ -45,6 +45,10 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
   const [loadingNotifs, setLoadingNotifs] = useState(true);
   const [notifications, setNotifications] = useState([]);
   const [channelDetails, setChannelDetails] = useState(null);
+
+  // get signer
+  const { account, provider } = useAccount();
+
   // Setup navigation
   const navigate = useNavigate();
 
@@ -96,144 +100,94 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
     };
   }, [channelID, userPushSDKInstance]);
 
-  const isMobile = useDeviceWidthCheck(768);
   // Render
   return (
-    <ThemeProvider theme={themes}>
-      <Container>
-        <ItemVV2
-          flex="initial"
-          alignSelf="flex-start"
-          padding="0px"
-        >
-          <SpanV2 alignSelf="flex-start">
-            <Back
-              onClick={() => {
-                navigate(APP_PATHS.Channels);
-              }}
+    <Container>
+      <BackContainer
+        flex="initial"
+        alignItems="flex-start"
+        padding="0px"
+      >
+        <Back
+          onClick={() => {
+            navigate(APP_PATHS.Channels);
+          }}
+        />
+      </BackContainer>
+
+      <>
+        {channelDetails && !loading && (
+          <ViewChannelItem
+            channelObjectProp={channelDetails}
+            loadTeaser={loadTeaser}
+            playTeaser={playTeaser}
+            minimal={minimal}
+            profileType={profileType}
+          />
+        )}
+
+        {/* Show Latest Notifications of the Channel */}
+        {!loading && (
+          <TextContainer>
+            <SpanV2
+              fontSize="20px"
+              fontWeight="500"
+              color={themes.color}
+            >
+              Recent Notifications
+            </SpanV2>
+            <Notice color={themes.color}>
+              Showing preview of the latest non-encrypted notifications sent by the channel.
+            </Notice>
+          </TextContainer>
+        )}
+
+        <NotificationItems>
+          {loadingNotifs && (
+            <LoaderSpinner
+              type={LOADER_TYPE.SEAMLESS}
+              spinnerSize={40}
             />
-          </SpanV2>
-        </ItemVV2>
+          )}
 
-        {!isMobile && (
-          <>
-            {channelDetails && !loading && (
-              <ViewChannelItem
-                channelObjectProp={channelDetails}
-                loadTeaser={loadTeaser}
-                playTeaser={playTeaser}
-                minimal={minimal}
-                profileType={profileType}
-              />
-            )}
+          {!notifications.length && !loadingNotifs && (
+            <div style={{ textAlign: 'center' }}>
+              <DisplayNotice title="You currently have no notifications, try subscribing to some channels." />
+            </div>
+          )}
 
-            {/* Show Latest Notifications of the Channel */}
-            {!loading && (
-              <TextContainer>
-                <SpanV2
-                  fontSize="20px"
-                  fontWeight="500"
-                >
-                  Recent Notifications
-                </SpanV2>
-                <Notice>Showing preview of the latest non-encrypted notifications sent by the channel.</Notice>
-              </TextContainer>
-            )}
+          {notifications.map((item, index) => {
+            const payload = item.payload;
 
-            <ScrollItem>
-              {loadingNotifs && (
-                <LoaderSpinner
-                  type={LOADER_TYPE.SEAMLESS}
-                  spinnerSize={40}
+            // render the notification item
+            return (
+              <NotifsOuter key={`${item.payload_id}`}>
+                <NotificationItem
+                  notificationTitle={payload.data.asub}
+                  notificationBody={payload.data.amsg}
+                  cta={payload.data.acta}
+                  app={payload.data.app}
+                  icon={payload.data.icon}
+                  image={payload.data.aimg}
+                  theme={themes.scheme}
+                  chainName={item.source}
+                  url={payload.data.url}
                 />
-              )}
+              </NotifsOuter>
+            );
+          })}
+        </NotificationItems>
+      </>
 
-              {!notifications.length && !loadingNotifs && (
-                <div style={{ textAlign: 'center' }}>
-                  <DisplayNotice title="You currently have no notifications, try subscribing to some channels." />
-                </div>
-              )}
-
-              {notifications.map((item, index) => {
-                const payload = item.payload;
-
-                // render the notification item
-                return (
-                  <NotifsOuter key={`${item.payload_id}`}>
-                    <NotificationItem
-                      notificationTitle={payload.data.asub}
-                      notificationBody={payload.data.amsg}
-                      cta={payload.data.acta}
-                      app={payload.data.app}
-                      icon={payload.data.icon}
-                      image={payload.data.aimg}
-                      theme={themes.scheme}
-                      chainName={item.source}
-                      url={payload.data.url}
-                    />
-                  </NotifsOuter>
-                );
-              })}
-            </ScrollItem>
-          </>
-        )}
-
-        {isMobile && (
-          <ScrollItem>
-            {/* New Channel Profile Component */}
-            {channelDetails && !loading && (
-              <ViewChannelItem
-                channelObjectProp={channelDetails}
-                loadTeaser={loadTeaser}
-                playTeaser={playTeaser}
-                minimal={minimal}
-                profileType={profileType}
-              />
-            )}
-
-            {/* Show Latest Notifications of the Channel */}
-            {!loading && (
-              <TextContainer>
-                <SpanV2
-                  fontSize="20px"
-                  fontWeight="500"
-                >
-                  Recent Notifications
-                </SpanV2>
-                <Notice>Showing preview of the latest non-encrypted notifications sent by the channel.</Notice>
-              </TextContainer>
-            )}
-
-            {loadingNotifs && (
-              <LoaderSpinner
-                type={LOADER_TYPE.SEAMLESS}
-                spinnerSize={40}
-              />
-            )}
-
-            {notifications.map((item, index) => {
-              const payload = item.payload;
-              // render the notification item
-              return (
-                <NotifsOuter key={`${item.payload_id}`}>
-                  <NotificationItem
-                    notificationTitle={payload.data.title}
-                    notificationBody={payload.data.body}
-                    cta={payload.data.acta}
-                    app={payload.data.app}
-                    icon={payload.data.icon}
-                    image={payload.data.aimg}
-                    theme={themes.scheme}
-                    chainName={item.source}
-                    url={payload.data.url}
-                  />
-                </NotifsOuter>
-              );
-            })}
-          </ScrollItem>
-        )}
-      </Container>
-    </ThemeProvider>
+      {/* Add Support chat */}
+      {/* {!loadingNotifs && (
+          <SupportChat
+            supportAddress={channelID} //support address, this belongs to you
+            account={account} //signer
+            env="prod" // can be "prod" or "staging"
+          />
+        )} */}
+    </Container>
   );
 };
 
@@ -244,18 +198,31 @@ const Container = styled.div`
   flex-direction: column;
   align-content: center;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   font-weight: 200;
   margin: 20px 0px 0px 20px;
 
-  @media (max-width: 768px) {
+  @media ${device.tablet} {
+    overflow-y: auto;
     margin: 20px 10px 0px 10px;
+  }
+`;
+
+const BackContainer = styled(ItemVV2)`
+  @media ${device.tablet} {
+    position: absolute;
+    z-index: 1;
+    padding: 10px;
+    backdrop-filter: blur(4px);
+    top: 0;
+    left: 0;
+    right: 0;
   }
 `;
 
 const NotifsOuter = styled.div``;
 
-const ScrollItem = styled(ItemVV2)`
+const NotificationItems = styled(ItemVV2)`
   display: flex;
   align-self: stretch;
   align-items: stretch;
@@ -276,8 +243,9 @@ const ScrollItem = styled(ItemVV2)`
     width: 6px;
   }
 
-  @media (max-width: 768px) {
+  @media ${device.tablet} {
     padding: 0px 20px;
+    overflow-y: visible;
 
     &::-webkit-scrollbar-track {
       background-color: none;
