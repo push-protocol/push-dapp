@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ReactGA from "react-ga";
 
 // External Packages
@@ -8,7 +8,7 @@ import styled from "styled-components";
 // Internal Components
 import ChannelProfile from "segments/ChannelProfile";
 import ViewChannels from "segments/ViewChannels";
-    
+
 // Internal Configs
 import APP_PATHS from "config/AppPaths";
 import GLOBALS, { device, globalsMargin } from "config/Globals";
@@ -26,14 +26,18 @@ const ChannelsModule = ({ channelID, loadTeaser, playTeaser }) => {
   return (
     <Container>
       <Interface>
-        <ViewChannels loadTeaser={loadTeaser} playTeaser={playTeaser} minimal={channelID ? true : false} />
-        {channelID && 
-          <ChannelProfile 
-          channelID={channelID} 
-          loadTeaser={loadTeaser} 
-          playTeaser={playTeaser} 
-          minimal={false}
-          profileType={ChannelTYPE.CHANNEL_PROFILE}
+        <ViewChannels
+          loadTeaser={loadTeaser}
+          playTeaser={playTeaser}
+          minimal={channelID ? true : false}
+        />
+        {channelID &&
+          <ChannelProfile
+            channelID={channelID}
+            loadTeaser={loadTeaser}
+            playTeaser={playTeaser}
+            minimal={false}
+            profileType={ChannelTYPE.CHANNEL_PROFILE}
           />
         }
       </Interface>
