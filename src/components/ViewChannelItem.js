@@ -936,7 +936,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                     )}
                   </>
                 )}
-                {!isOwner && (
+                {!isOwner && isChannelActive !== 0 && (
                   <OptinNotifSettingDropdown
                     channelDetail={channelObject}
                     setLoading={setTxInProgress}
