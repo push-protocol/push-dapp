@@ -9,46 +9,43 @@ import { useSelector } from 'react-redux';
 
 // Internal Components
 import { A, Image, ItemH, Span } from '../primaries/SharedStyling';
-import { GlobalContext,ReadOnlyWalletMode } from 'contexts/GlobalContext';
-import { SpanV2 } from './reusables/SharedStylingV2';
+import { GlobalContext, ReadOnlyWalletMode } from 'contexts/GlobalContext';
+import { ImageV2, ItemHV2, SpanV2 } from './reusables/SharedStylingV2';
 import { useAccount } from 'hooks';
 
 export type DropdownValueType = {
-  id: number|string,
-  value?: string,
-  title: string,
-  icon: string,
-  textColor?: string,
-  function: () => void,
+  id: number | string;
+  value?: string;
+  title: string;
+  icon: string;
+  textColor?: string;
+  function: () => void;
   to?: string; // Add the 'to' property for navigation
-}
+};
 
 type DropdownProps = {
   dropdownValues: any[];
   textColor?: string;
   iconFilter?: string;
   hoverBGColor?: string;
-  setShowDropdown?:any;
+  setShowDropdown?: any;
 };
 
-
 // Create Dropdown
-function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor,setShowDropdown }: DropdownProps) {
-
+function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor, setShowDropdown }: DropdownProps) {
   const theme = useTheme();
-  const {mode} = useContext(GlobalContext);
+  const { mode } = useContext(GlobalContext);
   const { wallet } = useAccount();
 
-  const getTextColor = (dropdownValue:DropdownValueType) => {
-    return dropdownValue.textColor ? dropdownValue.textColor:textColor? textColor : theme.snackbarBorderText;
-  }
+  const getTextColor = (dropdownValue: DropdownValueType) => {
+    return dropdownValue.textColor ? dropdownValue.textColor : textColor ? textColor : theme.snackbarBorderText;
+  };
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
 
- 
-  const copyToClipboard = (address:string) => {
+  const copyToClipboard = (address: string) => {
     if (navigator && navigator.clipboard) {
       navigator.clipboard.writeText(address);
     } else {
@@ -65,38 +62,42 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor,setShowD
     <>
       {dropdownValues.map((dropdownValue) =>
         dropdownValue.id === 'walletAddress' ? (
-          <ItemH
-            bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
-            radius="17px"
+          <ItemHV2
+            background="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
+            borderRadius="17px"
             padding="2px 12px"
-            wrap="nowrap"
+            flexWrap="nowrap"
             margin="0px 0 8px 0"
             width="max-content"
-            style={{cursor: "pointer"}}
+            style={{ cursor: 'pointer' }}
             onClick={() => {
-              dropdownValue?.function()
+              dropdownValue?.function();
             }}
           >
-            <Span
+            <SpanV2
               margin="11px 22px 11px 2px"
-              weight="400"
-              size="14px"
+              font-weight="400"
+              fontSize="14px"
               textTransform="uppercase"
               color="#fff"
-              spacing="1px"
-              width="max-content"
+              letterSpacing="1px"
+              max-width="max-content"
             >
-              <DesktopAddress>{dropdownValue?.title}</DesktopAddress> 
-              
-              <MobileAddress>
-                {shortenText(dropdownValue?.title,3)} 
-              </MobileAddress>
+              <DesktopAddress>{dropdownValue?.title}</DesktopAddress>
 
-              <SpanV2 fontWeight='600' margin='0 0 0 2px'>{!(wallet?.accounts?.length > 0) ? ReadOnlyWalletMode.GUEST_MODE : userPushSDKInstance?.readMode && ReadOnlyWalletMode.READ_ONLY_MODE}</SpanV2>
+              <MobileAddress>{shortenText(dropdownValue?.title, 3)}</MobileAddress>
 
-            </Span>
+              <SpanV2
+                fontWeight="600"
+                margin="0 0 0 2px"
+              >
+                {!(wallet?.accounts?.length > 0)
+                  ? ReadOnlyWalletMode.GUEST_MODE
+                  : userPushSDKInstance?.readMode && ReadOnlyWalletMode.READ_ONLY_MODE}
+              </SpanV2>
+            </SpanV2>
             {dropdownValue?.invertedIcon && (
-              <Image
+              <ImageV2
                 src={dropdownValue?.invertedIcon}
                 alt="icon"
                 width="auto"
@@ -108,7 +109,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor,setShowD
               />
             )}
             {dropdownValue?.icon && (
-              <Image
+              <ImageV2
                 src={dropdownValue?.icon}
                 alt="icon"
                 width="auto"
@@ -118,11 +119,14 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor,setShowD
                 }}
               />
             )}
-          </ItemH>
+          </ItemHV2>
         ) : (
-          <DropdownItemContainer hoverBGColor={hoverBGColor} onClick={() => dropdownValue?.function()}>
+          <DropdownItemContainer
+            hoverBGColor={hoverBGColor}
+            onClick={() => dropdownValue?.function()}
+          >
             {dropdownValue?.invertedIcon && (
-              <Image
+              <ImageV2
                 src={dropdownValue.invertedIcon}
                 alt="icon"
                 width="max-content"
@@ -131,7 +135,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor,setShowD
               />
             )}
             {dropdownValue?.icon && (
-              <Image
+              <ImageV2
                 src={dropdownValue.icon}
                 alt="icon"
                 width="24px"
@@ -139,8 +143,8 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor,setShowD
               />
             )}
             {!dropdownValue?.to && !dropdownValue?.link && dropdownValue?.function && (
-              <Span
-                width="max-content"
+              <SpanV2
+                max-width="max-content"
                 color={getTextColor(dropdownValue)}
                 margin="8px 10px"
                 weight="400"
@@ -148,12 +152,15 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor,setShowD
                 cursor="pointer"
               >
                 {dropdownValue.title}
-              </Span>
+              </SpanV2>
             )}
             {dropdownValue?.to && (
-              <Link to={dropdownValue.to} style={{ textDecoration: 'none' }}>
+              <Link
+                to={dropdownValue.to}
+                style={{ textDecoration: 'none' }}
+              >
                 {/* You can customize the Link as needed */}
-                <Span
+                <SpanV2
                   width="max-content"
                   color={getTextColor(dropdownValue)}
                   margin="8px 10px"
@@ -162,7 +169,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor,setShowD
                   cursor="pointer"
                 >
                   {dropdownValue.title}
-                </Span>
+                </SpanV2>
               </Link>
             )}
             {dropdownValue?.link && (
@@ -199,7 +206,7 @@ const SpanAddress = styled(Span)`
   width: max-content;
 `;
 const MobileAddress = styled(SpanAddress)`
-margin: 11px 0px 11px 2px;
+  margin: 11px 0px 11px 2px;
   @media (min-width: 993px) {
     display: none;
   }
@@ -210,7 +217,7 @@ const DesktopAddress = styled(SpanAddress)`
   }
 `;
 
-const DropdownItemContainer = styled(ItemH)`
+const DropdownItemContainer = styled(ItemHV2)`
   width: 12.5rem;
   justify-content: flex-start;
   flex-wrap: nowrap;
@@ -219,6 +226,7 @@ const DropdownItemContainer = styled(ItemH)`
   border-radius: 12px;
   cursor: pointer;
   text-align: left;
+  background:"red"
 
   &:hover {
     background-color: ${(props) => props.hoverBGColor || 'none'};
