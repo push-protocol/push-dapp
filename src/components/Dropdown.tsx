@@ -8,7 +8,7 @@ import styled, { useTheme } from 'styled-components';
 import { useSelector } from 'react-redux';
 
 // Internal Components
-import { A, Image, ItemH, Span } from '../primaries/SharedStyling';
+import { A } from '../primaries/SharedStyling';
 import { GlobalContext, ReadOnlyWalletMode } from 'contexts/GlobalContext';
 import { ImageV2, ItemHV2, SpanV2 } from './reusables/SharedStylingV2';
 import { useAccount } from 'hooks';
@@ -196,7 +196,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor, setShow
 }
 
 // css styles
-const SpanAddress = styled(Span)`
+const SpanAddress = styled(SpanV2)`
   margin: 11px 11px 11px 2px;
   font-weight: 400;
   size: 14px;
