@@ -1,37 +1,45 @@
 // React + Web3 Essentials
-import React from "react";
+import React from 'react';
 
 // External Packages
-import { useSelector } from "react-redux";
-import styled, { css } from "styled-components";
+import { useSelector } from 'react-redux';
+import styled, { css } from 'styled-components';
 
 // Internal Components
-import { Section } from "../primaries/SharedStyling";
-import AliasSetup from "./AliasSetup";
-import ChangeNetwork from "./ChangeNetwork";
-import VerifyAlias from "./VerifyAlias";
+import AliasSetup from './AliasSetup';
+import ChangeNetwork from './ChangeNetwork';
+import { SectionV2 } from './reusables/SharedStylingV2';
+import VerifyAlias from './VerifyAlias';
 
 const AliasProcessing = ({ aliasEthAccount, setAliasVerified }) => {
   const { processingState } = useSelector((state) => state.channelCreation);
 
   return (
-    <Section>
+    <SectionV2>
       <ItemHere>
-        <Tab type={processingState >= 1 ? "active" : "inactive"} active={processingState == 1 ? 'active' : 'inactive'}>
+        <Tab
+          type={processingState >= 1 ? 'active' : 'inactive'}
+          active={processingState == 1 ? 'active' : 'inactive'}
+        >
           <div>Waiting for Setup</div>
-          <Step type={processingState >= 1 ? "active" : "inactive"} />
+          <Step type={processingState >= 1 ? 'active' : 'inactive'} />
         </Tab>
-        <Tab type={processingState >= 2 ? "active" : "inactive"} active={processingState == 2 ? 'active' : 'inactive'}>
+        <Tab
+          type={processingState >= 2 ? 'active' : 'inactive'}
+          active={processingState == 2 ? 'active' : 'inactive'}
+        >
           <div>Change Network</div>
-          <Step type={processingState >= 2 ? "active" : "inactive"} />
+          <Step type={processingState >= 2 ? 'active' : 'inactive'} />
         </Tab>
-        <Tab type={processingState >= 3 ? "active" : "inactive"} active={processingState == 3 ? 'active' : 'inactive'}>
+        <Tab
+          type={processingState >= 3 ? 'active' : 'inactive'}
+          active={processingState == 3 ? 'active' : 'inactive'}
+        >
           <div>Verify Alias Network</div>
-          <Step type={processingState >= 3 ? "active" : "inactive"} />
+          <Step type={processingState >= 3 ? 'active' : 'inactive'} />
         </Tab>
         <Line />
       </ItemHere>
-
       {processingState === 1 && <AliasSetup />}
       {processingState === 2 && <ChangeNetwork />}
       {processingState === 3 && (
@@ -40,7 +48,7 @@ const AliasProcessing = ({ aliasEthAccount, setAliasVerified }) => {
           setAliasVerified={setAliasVerified}
         />
       )}
-    </Section>
+    </SectionV2>
   );
 };
 
@@ -67,7 +75,7 @@ const Step = styled.div`
   border-radius: 13px;
 
   ${({ type }) =>
-    type === "active" &&
+    type === 'active' &&
     css`
       background: #e20880;
     `};
@@ -113,8 +121,8 @@ const Tab = styled.div`
     css`
       color: #e20880;
       @media (max-width: 768px) {
-          width: 100%;
-    }
+        width: 100%;
+      }
     `};
 
   ${({ active }) =>
@@ -122,21 +130,21 @@ const Tab = styled.div`
     css`
       color: #e20880;
       @media (max-width: 768px) {
-          width: 100%;
-    }
+        width: 100%;
+      }
     `};
 
-    ${({ active }) =>
+  ${({ active }) =>
     active === 'inactive' &&
     css`
-    @media (max-width: 768px) {
-      width: 40%;
+      @media (max-width: 768px) {
+        width: 40%;
         div {
           font-size: 0px;
-            @media (max-width: 768px) {
-            }
+          @media (max-width: 768px) {
+          }
         }
-    }
+      }
     `};
 `;
 

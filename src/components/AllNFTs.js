@@ -1,21 +1,19 @@
 // React + Web3 Essentials
-import { ethers } from "ethers";
-import React from "react";
+import { ethers } from 'ethers';
+import React from 'react';
 
 // External Packages
 import styled from 'styled-components';
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemVV2 } from "components/reusables/SharedStylingV2";
-import ViewNFTItem from "components/ViewNFTItem";
-import { ItemH, Section } from 'primaries/SharedStyling';
+import { ItemHV2, ItemVV2, SectionV2 } from 'components/reusables/SharedStylingV2';
+import ViewNFTItem from 'components/ViewNFTItem';
 import NFTHelper from 'helpers/NFTHelper';
 import { useAccount } from 'hooks';
 
 // Internal Configs
-import { abis, addresses, appConfig } from "config";
-
+import { abis, addresses, appConfig } from 'config';
 
 // Create Header
 function AllNFTs({ controlAt, setControlAt, setTokenId }) {
@@ -30,9 +28,7 @@ function AllNFTs({ controlAt, setControlAt, setTokenId }) {
 
   const onMainnetCore = chainId === appConfig.mainnetCoreContractChain;
 
-  const mainnetCoreProvider = onMainnetCore
-    ? provider
-    : new ethers.providers.JsonRpcProvider(appConfig.mainnetCoreRPC)
+  const mainnetCoreProvider = onMainnetCore ? provider : new ethers.providers.JsonRpcProvider(appConfig.mainnetCoreRPC);
 
   React.useEffect(() => {
     if (!!(mainnetCoreProvider && account)) {
@@ -57,23 +53,26 @@ function AllNFTs({ controlAt, setControlAt, setTokenId }) {
     let totalSupply = await NFTHelper.getTotalSupply(nftReadProvider);
     setLoading(false);
     for (let i = 0; i < totalSupply; i++) {
-      let tokenId = await NFTHelper.getTokenByIndex(i, nftReadProvider)
-      let NFTObject = await NFTHelper.getTokenData(tokenId, nftReadProvider, NFTRewardsContract)
-      await setNFTObjects(prev => [...prev, NFTObject])
+      let tokenId = await NFTHelper.getTokenByIndex(i, nftReadProvider);
+      let NFTObject = await NFTHelper.getTokenData(tokenId, nftReadProvider, NFTRewardsContract);
+      await setNFTObjects((prev) => [...prev, NFTObject]);
     }
-  }
+  };
 
   return (
-    <Section align="center">
-      {loading &&
+    <SectionV2 align="center">
+      {loading && (
         <ItemVV2 padding="50px 20px 20px 20px">
           <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
         </ItemVV2>
-      }
+      )}
 
-      {!loading && NFTObjects.length != 0 &&
-        <ItemH id="scrollstyle-secondary" margin="20px 0 0 0">
-          {Object.keys(NFTObjects).map(index => {
+      {!loading && NFTObjects.length != 0 && (
+        <ItemHV2
+          id="scrollstyle-secondary"
+          margin="20px 0 0 0"
+        >
+          {Object.keys(NFTObjects).map((index) => {
             if (NFTObjects) {
               return (
                 <>
@@ -90,16 +89,16 @@ function AllNFTs({ controlAt, setControlAt, setTokenId }) {
               );
             }
           })}
-        </ItemH>
-      }
-    </Section>
+        </ItemHV2>
+      )}
+    </SectionV2>
   );
 }
 
 // css styles
 const ContainerInfo = styled.div`
   padding: 20px;
-`
+`;
 
 // Export Default
 export default AllNFTs;
