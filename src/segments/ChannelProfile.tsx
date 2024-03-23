@@ -79,12 +79,13 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
           limit: NOTIFICATIONS_PER_PAGE,
         })
         .then((response) => {
-          setNotifications(response.feeds);
+          console.log(response);
+          setNotifications(response.notifications);
           setLoadingNotifs(false);
 
           // ENABLE PAGINATION HERE
-          dispatch(addPaginatedNotifications(response.feeds));
-          if (response.feeds.length === 0) {
+          dispatch(addPaginatedNotifications(response.notifications));
+          if (response.notifications.length === 0) {
             dispatch(setFinishedFetching());
           }
         })
@@ -157,21 +158,21 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
           )}
 
           {notifications.map((item, index) => {
-            const payload = item.payload;
+            const payload = item.message.payload;
 
             // render the notification item
             return (
               <NotifsOuter key={`${item.payload_id}`}>
                 <NotificationItem
-                  notificationTitle={payload.data.asub}
-                  notificationBody={payload.data.amsg}
-                  cta={payload.data.acta}
-                  app={payload.data.app}
-                  icon={payload.data.icon}
-                  image={payload.data.aimg}
-                  theme={themes.scheme}
+                  notificationTitle={payload.title}
+                  notificationBody={payload.body}
+                  cta={payload.cta}
+                  image={payload.embed}
+                  app={item.channel.name}
+                  icon={item.channel.icon}
+                  url={item.channel.url}
                   chainName={item.source}
-                  url={payload.data.url}
+                  theme={themes.scheme}
                 />
               </NotifsOuter>
             );
