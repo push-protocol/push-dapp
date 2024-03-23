@@ -3,18 +3,45 @@ const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 const smp = new SpeedMeasurePlugin();
-const path = require('path');
-const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
+
+const fs = require('fs'); // Adjusted to CommonJS
+
+// for local sdk linking
+let path = '';
+let ModuleScopePlugin = '';
+
+// to read and modify webpack config based on local sdk linking or production
+let localSDKLinking = false;
+const envpath = `./.localsdk.env`;
+
+if (fs.existsSync(envpath)) {
+  const { parse } = require('envfile'); // Adjusted to CommonJS
+
+  const envData = fs.readFileSync(envpath, 'utf8');
+  const envObject = parse(envData);
+
+  if (envObject['ENFORCE_WEBPACK_LOCAL'] === 'TRUE') {
+    localSDKLinking = true;
+    console.log('ENABLING LOCAL SDK MODE');
+  }
+}
+
+if (localSDKLinking) {
+  path = require('path');
+  ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
+}
 
 module.exports = {
   webpack: (config, env) => {
-    // DEV LOCAL SDK MODE, DO NOT DELETE
-    config.resolve.plugins = config.resolve.plugins.filter((plugin) => !(plugin instanceof ModuleScopePlugin));
-    config.resolve.alias = {
-      react: path.resolve('./node_modules/react'),
-      'react-dom': path.resolve('./node_modules/react-dom'),
-    };
-    // DEV LOCAL SDK MODE, DO NOT DELETE
+    // DEV LOCAL SDK MODE STUFF
+    if (localSDKLinking) {
+      config.resolve.plugins = config.resolve.plugins.filter((plugin) => !(plugin instanceof ModuleScopePlugin));
+      config.resolve.alias = {
+        react: path.resolve('./node_modules/react'),
+        'react-dom': path.resolve('./node_modules/react-dom'),
+      };
+    }
+
     // do stuff with the webpack config...
     config.resolve.fallback = {
       assert: require.resolve('assert'),
