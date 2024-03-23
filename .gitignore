@@ -384,6 +384,7 @@ celerybeat-schedule
 env/
 venv/
 ENV/
+.localsdk.env
 
 # Spyder project settings
 .spyderproject

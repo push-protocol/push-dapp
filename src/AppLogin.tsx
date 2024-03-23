@@ -6,7 +6,6 @@ import ReactGA from 'react-ga';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
 // Internal Compoonents
-import BlurBGClouds from 'components/reusables/blurs/BlurBGClouds';
 import {
   AInlineV2,
   ButtonV2,
@@ -15,20 +14,21 @@ import {
   SectionV2,
   SpanV2
 } from 'components/reusables/SharedStylingV2';
+import BlurBGClouds from 'components/reusables/blurs/BlurBGClouds';
 import { useAccount } from 'hooks';
 import styled, { keyframes, useTheme } from 'styled-components';
+import { ReactComponent as InfoLogo } from "./assets/inforWithoutBG.svg";
 import { ReactComponent as PushLogoDark } from './assets/pushDark.svg';
 import { ReactComponent as PushLogoLight } from './assets/pushLight.svg';
 import { ErrorContext } from './contexts/ErrorContext';
-import { ReactComponent as InfoLogo } from "./assets/inforWithoutBG.svg";
 
 // Internal Configs
-import GLOBALS, { device } from 'config/Globals';
 import { H2 } from 'components/SharedStyling';
-import { Input, Span } from 'primaries/SharedStyling';
+import GLOBALS, { device } from 'config/Globals';
 import { AppContext } from 'contexts/AppContext';
-import { ethers } from 'ethers';
 import { GlobalContext, ReadOnlyWalletMode } from 'contexts/GlobalContext';
+import { ethers } from 'ethers';
+import { Input, Span } from 'primaries/SharedStyling';
 
 const AppLogin = ({ toggleDarkMode }) => {
   // React GA Analytics
