@@ -22,7 +22,6 @@ if (fs.existsSync(envpath)) {
 
   if (envObject['ENFORCE_WEBPACK_LOCAL'] === 'TRUE') {
     localSDKLinking = true;
-    console.log('ENABLING LOCAL SDK MODE');
   }
 }
 

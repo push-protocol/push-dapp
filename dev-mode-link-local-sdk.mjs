@@ -142,20 +142,12 @@ const verifyLocalSDKENV = async (sdkENV, restorePackageValue) => {
 
       // check if key matched STORAGE_KEY, if so override those values
       envParamOverridden = false;
-      if (restorePackageValue && !envParamOverridden && envVar === packageJSONWatcher.STORAGE_KEY) {
+      if (!envParamOverridden && envVar === packageJSONWatcher.STORAGE_KEY) {
         // only restore if the value is not '*' and the sdkENV is localsdk
-        if (sdkENV === 'localsdk' && restorePackageValue !== '*') {
+        if (restorePackageValue && sdkENV === 'localsdk' && restorePackageValue !== '*') {
           moddedLine = `${envVar}=${restorePackageValue}${comment}`;
           console.log(chalk.dim(`   -- LOCAL SDK ENV MODIFIED: ${moddedLine}`));
           fileModified = true;
-          envParamOverridden = true;
-        }
-
-        // if sdkENV is prodsdk, remove the value but filemodified is false
-        if (sdkENV === 'prodsdk') {
-          moddedLine = `${envVar}=${''}${comment}`;
-          console.log(chalk.dim(`   -- LOCAL SDK ENV MODIFIED: ${moddedLine}`));
-          fileModified = false;
           envParamOverridden = true;
         }
       }
@@ -213,7 +205,11 @@ const verifyLocalSDKENV = async (sdkENV, restorePackageValue) => {
     console.log(chalk.green.bold(' -- -- -- --  -- -- -- --  -- -- -- --'));
     console.log(chalk.green.bold(' CONTENT OF .LOCALSDK.ENV FILE CHANGED '));
     console.log(chalk.green.bold(' -- -- -- --  -- -- -- --  -- -- -- --'));
-    console.log(chalk.green('👍 LOCAL SDK ENV modified for local sdk deployment'));
+    if (sdkENV === 'localsdk') {
+      console.log(chalk.green('👍 LOCAL SDK ENV modified for local sdk deployment'));
+    } else if (sdkENV === 'prodsdk') {
+      console.log(chalk.green('👍 package.json modified for production sdk deployment'));
+    }
   } else {
     console.log(chalk.green.dim('  -- LOCAL SDK ENV file verified and unchanged!'));
   }
@@ -261,8 +257,12 @@ const cleanupAndBuild = async (sdkENV) => {
 
   // remove node_modules
   if (fs.existsSync('./node_modules')) {
-    fs.rmdirSync('./node_modules', { recursive: true });
-    console.log(chalk.green('  -- node_modules removed'));
+    try {
+      await fs.promises.rm('./node_modules', { recursive: true });
+      console.log(chalk.green('  -- node_modules removed'));
+    } catch (err) {
+      console.error(chalk.red(`Error removing node_modules: ${err}`));
+    }
   }
 
   // clear yarn cache
@@ -283,6 +283,7 @@ const cleanupAndBuild = async (sdkENV) => {
     console.log(chalk.green('  -- @pushprotocol/uiweb removed from dependencies'));
   }
 
+  // Mostly not needed
   // unlink @pushprotocol/uiweb
   console.log(chalk.green.dim('  -- Unlinking @pushprotocol/uiweb...'));
   const yarnUnlink = spawn('yarn', ['unlink', '@pushprotocol/uiweb'], {
@@ -351,6 +352,16 @@ const cleanupAndBuild = async (sdkENV) => {
     packageJSON.dependencies['@pushprotocol/uiweb'] = version;
     fs.writeFileSync('./package.json', JSON.stringify(packageJSON, null, 2));
     console.log(chalk.green(`  -- @pushprotocol/uiweb added to dependencies with ${version} from .localsdk.env`));
+  }
+
+  // remove yarn cache
+  if (fs.existsSync('./.yarn/cache')) {
+    try {
+      await fs.promises.rm('./.yarn/cache', { recursive: true });
+      console.log(chalk.green('  -- yarn cache removed'));
+    } catch (err) {
+      console.error(chalk.red(`Error removing yarn cache: ${err}`));
+    }
   }
 
   // reinstall by running yarn install
