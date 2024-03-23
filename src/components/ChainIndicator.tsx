@@ -7,20 +7,20 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import Dropdown, { DropdownValueType } from './Dropdown';
-import { H3, Image, Item, ItemH } from './SharedStyling.js';
+import { H3 } from './SharedStyling.js';
 import { LOGO_FROM_CHAIN_ID, networkName } from 'helpers/UtilityHelper';
 import { appConfig } from 'config/index.js';
 import { useClickAway } from 'hooks/useClickAway';
 import { useAccount } from 'hooks';
 
 // Internal Configs
-import { SpanV2 } from './reusables/SharedStylingV2';
+import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
 import { ErrorContext } from 'contexts/ErrorContext';
 
 const ChainIndicator = ({ isDarkMode }) => {
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
-  const { account, chainId:currentChainId, switchChain} = useAccount();
+  const { account, chainId: currentChainId, switchChain } = useAccount();
   const theme = useTheme();
   const { authError, setAuthError } = useContext(ErrorContext);
 
@@ -61,7 +61,7 @@ const ChainIndicator = ({ isDarkMode }) => {
             ref={toggleArrowRef}
           >
             <CurrentChainInfo>
-              <Image
+              <ImageV2
                 src={`./svg/${LOGO_FROM_CHAIN_ID[currentChainId]}`}
                 width="24px"
                 height="24px"
@@ -80,7 +80,7 @@ const ChainIndicator = ({ isDarkMode }) => {
           {showDropdown && (
             <DropdownItem
               ref={dropdownRef}
-              bg={theme.chainIndicatorDropdownBG}
+              background={theme.chainIndicatorDropdownBG}
               border={`1px solid ${theme.chainIndicatorBorderColor}`}
               radius="24px"
               align="flex-start"
@@ -170,7 +170,7 @@ const CurrentChain = styled(SpanV2)`
   }
 `;
 
-const CurrentChainInfo = styled(ItemH)`
+const CurrentChainInfo = styled(ItemHV2)`
   justify-content: flex-start;
   flex-wrap: nowrap;
   padding: 2px;
@@ -212,7 +212,7 @@ const ToggleArrowImg = styled.div`
   }
 `;
 
-const DropdownItem = styled(Item)`
+const DropdownItem = styled(ItemVV2)`
   background: ${(props) => props.bg};
   border: 1px solid ${(props) => props.border};
   border-radius: 16px;

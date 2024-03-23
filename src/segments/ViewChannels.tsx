@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, {useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // External Packages
 import { AiOutlineSearch } from 'react-icons/ai';
@@ -26,6 +26,7 @@ import { Item } from '../primaries/SharedStyling';
 
 // Internal Configs
 import { appConfig } from 'config';
+import { ItemHV2 } from 'components/reusables/SharedStylingV2';
 
 // Constants
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
@@ -61,7 +62,7 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
   useEffect(() => {
     setLoading(!channels.length); //if there are no channels initially then, set the loader
     fetchInitialsChannelMeta();
-  }, [account, chainId,userPushSDKInstance]);
+  }, [account, chainId, userPushSDKInstance]);
 
   useEffect(() => {
     setChannelsNetworkId(chainId);
@@ -124,8 +125,8 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
     try {
       const searchChannels = await userPushSDKInstance.channel.search(search, {
         limit: SEARCH_LIMIT,
-        page: searchPage
-      }); 
+        page: searchPage,
+      });
 
       if (searchChannels && searchChannels.length > 0) {
         setChannelToShow([...channelToShow, ...searchChannels] || []);
@@ -159,7 +160,7 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
       try {
         const searchChannels = await userPushSDKInstance.channel.search(search, {
           limit: SEARCH_LIMIT,
-          page: searchPage
+          page: searchPage,
         });
 
         setChannelToShow(searchChannels || []);
@@ -216,9 +217,7 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
       {!loading && !minimal && (
         <ItemBar>
           <ItemHBar>
-            <SearchContainer
-              flex="1"
-            >
+            <SearchContainer flex="1">
               <SearchBar
                 type="text"
                 value={search}
@@ -229,7 +228,7 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
                 className="input"
                 placeholder={`Search by Name or ${account?.slice(0, 6)}`}
               />
-              <Item
+              <ItemHV2
                 position="absolute"
                 top="0"
                 bottom="0"
@@ -239,41 +238,41 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
                   size={20}
                   style={{ color: '#657795' }}
                 />
-              </Item>
+              </ItemHV2>
             </SearchContainer>
-            
+
             {UtilityHelper.isMainnet(chainId) && (
-              <Item flex="1">
-              <ChainsSelect
-                channelsNetworkId={channelsNetworkId}
-                setChannelsNetworkId={setChannelsNetworkId}
-              />
-            </Item>
-            )}
-
-          </ItemHBar>
-
-          <FaucetBar>
-            {appConfig.allowedNetworks.length > 1 && !UtilityHelper.isMainnet(chainId) && (
-              <Item flex="1">
+              <ItemHV2
+                flex="1"
+                style={{ background: 'red' }}
+              >
                 <ChainsSelect
                   channelsNetworkId={channelsNetworkId}
                   setChannelsNetworkId={setChannelsNetworkId}
                 />
-              </Item>
+              </ItemHV2>
+            )}
+          </ItemHBar>
+
+          <FaucetBar>
+            {appConfig.allowedNetworks.length > 1 && !UtilityHelper.isMainnet(chainId) && (
+              <ItemHV2 flex="1">
+                <ChainsSelect
+                  channelsNetworkId={channelsNetworkId}
+                  setChannelsNetworkId={setChannelsNetworkId}
+                />
+              </ItemHV2>
             )}
 
             {!UtilityHelper.isMainnet(chainId) && <Faucets />}
-
-
           </FaucetBar>
-
-
         </ItemBar>
       )}
 
-
-      <ScrollItem id="scroll" minimal={minimal}>
+      <ScrollItem
+        id="scroll"
+        minimal={minimal}
+      >
         {/* render all channels depending on if we are searching or not */}
         <div>
           {(search ? channelToShow : channels).map(
@@ -287,10 +286,10 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
                     // }}
                     key={channel.channel}
                     self="stretch"
-                  // id={channel.channel}
+                    // id={channel.channel}
                   >
-
-                    {!MaskedChannels[channel.channel] && channel &&
+                    {!MaskedChannels[channel.channel] &&
+                      channel &&
                       (channelsNetworkId == appConfig.coreContractChain ||
                         (channelsNetworkId == channel.alias_blockchain_id &&
                           !MaskedAliasChannels[channelsNetworkId][channel.channel])) && (
@@ -319,7 +318,10 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
         {/* display loader if pagination is loading next batch of channelTotalList */}
         {((moreLoading && channels.length) || loading || loadingChannel) && (
           <CenterContainer>
-            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={minimal ? 24 : 42} />
+            <LoaderSpinner
+              type={LOADER_TYPE.SEAMLESS}
+              spinnerSize={minimal ? 24 : 42}
+            />
           </CenterContainer>
         )}
       </ScrollItem>
@@ -360,7 +362,7 @@ const SearchBar = styled.input`
 
 const ItemHBar = styled.div`
   // width: 100%;
-  width:-webkit-fill-available;
+  width: -webkit-fill-available;
   padding: 10px 0px;
   display: flex;
   flex-direction: row important!;
@@ -372,10 +374,10 @@ const ItemHBar = styled.div`
 
 const FaucetBar = styled.div`
   display: flex;
-  
+
   @media (max-width: 768px) {
     flex-direction: row-reverse;
-    padding-right: 10px; 
+    padding-right: 10px;
   }
 `;
 
@@ -383,14 +385,14 @@ const ImageInfo = styled.img`
   margin-right: 5px;
   display: flex;
   justify-content: center;
-    align-items: center;
-    align-self: center;
+  align-items: center;
+  align-self: center;
 `;
 
 const ItemBar = styled.div`
   padding: 5px 15px 10px 20px;
   // width: 100%;
-  width:-webkit-fill-available;
+  width: -webkit-fill-available;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
@@ -402,7 +404,7 @@ const ItemBar = styled.div`
 
 const Container = styled.div`
   display: flex;
-  flex: ${props => props.minimal ? 0 : 1};
+  flex: ${(props) => (props.minimal ? 0 : 1)};
   flex-direction: column;
   font-weight: 200;
   align-content: center;
@@ -411,7 +413,7 @@ const Container = styled.div`
   max-height: 100vh;
 
   @media (max-width: 768px) {
-    display: ${props => props.minimal ? 'none' : 'flex'};
+    display: ${(props) => (props.minimal ? 'none' : 'flex')};
   }
 `;
 
@@ -437,7 +439,7 @@ const CenterContainer = styled(ContainerInfo)`
   align-self: center;
 `;
 
-const ScrollItem = styled(Item)`
+const ScrollItem = styled(ItemHV2)`
   display: flex;
   align-self: stretch;
   align-items: stretch;
@@ -445,7 +447,7 @@ const ScrollItem = styled(Item)`
   flex-wrap: nowrap;
 
   flex: 1;
-  padding: ${props => props.minimal ? "20px 10px" : "0px 20px 10px 20px"};
+  padding: ${(props) => (props.minimal ? '20px 10px' : '0px 20px 10px 20px')};
   overflow-y: auto;
 
   &::-webkit-scrollbar-track {
@@ -459,20 +461,18 @@ const ScrollItem = styled(Item)`
   }
 
   @media (max-width: 768px) {
-    padding: ${props => props.minimal ? "10px 5px" : "0px"};
+    padding: ${(props) => (props.minimal ? '10px 5px' : '0px')};
 
     &::-webkit-scrollbar-track {
       background-color: none;
       border-radius: 9px;
     }
-  
+
     &::-webkit-scrollbar {
       background-color: none;
       width: 4px;
     }
   }
-
-
 
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
@@ -480,9 +480,9 @@ const ScrollItem = styled(Item)`
       linear,
       left top,
       left bottom,
-      color-stop(0.44,  #CF1C84),
-      color-stop(0.72, #CF1C84),
-      color-stop(0.86, #CF1C84)
+      color-stop(0.44, #cf1c84),
+      color-stop(0.72, #cf1c84),
+      color-stop(0.86, #cf1c84)
     );
   }
 `;

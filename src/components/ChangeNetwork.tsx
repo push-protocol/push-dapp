@@ -1,33 +1,31 @@
 // React + Web3 Essentials
-import { utils } from "ethers";
-import React from "react";
 
 // External Packages
-import { MdCheckCircle, MdError } from "react-icons/md";
-import styled, { useTheme } from "styled-components";
 import { useSelector } from 'react-redux';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import useToast from "hooks/useToast";
-import { Button, Item, Span } from "../primaries/SharedStyling";
-import { aliasChainIdsMapping, CORE_CHAIN_ID, networkName } from "helpers/UtilityHelper";
-import { appConfig, CHAIN_DETAILS } from 'config';
+import { CHAIN_DETAILS } from 'config';
 import { useAccount } from 'hooks';
+import useToast from 'hooks/useToast';
+import { ButtonV2, ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
 
 const ChangeNetwork = () => {
   const changeNetworkToast = useToast();
   const themes = useTheme();
   const { switchChain } = useAccount();
-  const { aliasDetails: {aliasChainId} } = useSelector((state: any) => state.admin);
+  const {
+    aliasDetails: { aliasChainId },
+  } = useSelector((state: any) => state.admin);
 
   return (
-    <Item
+    <ItemVV2
       margin="15px 20px 15px 20px"
       flex="1"
       display="flex"
       direction="column"
     >
-      <Span
+      <SpanV2
         textAlign="center"
         margin="30px 0px 0px 0px"
         color={themes.color}
@@ -36,36 +34,35 @@ const ChangeNetwork = () => {
         weight="500"
         line="24px"
       >
-        Change your wallet network to <TextPink>{CHAIN_DETAILS[aliasChainId]?.label}</TextPink> to
-        start <br></br>
+        Change your wallet network to <TextPink>{CHAIN_DETAILS[aliasChainId]?.label}</TextPink> to start <br></br>
         verifying your Channel Alias.
-      </Span>
+      </SpanV2>
 
-      <Item
+      <ItemVV2
         width="12.2em"
         self="center"
-        align="center"
+        alignItems="center"
         margin="100px auto 50px auto"
       >
-        <Button
-          bg="#e20880"
+        <ButtonV2
+          background="#e20880"
           color="#fff"
-          radius="15px"
+          borderRadius="15px"
           padding="20px 20px"
           onClick={() => switchChain(aliasChainId)}
         >
-          <Span
+          <SpanV2
             color="#fff"
-            weight="600"
+            fontWeight="600"
             textTransform="none"
-            line="22px"
+            lineHeight="22px"
             size="16px"
           >
             Change Network
-          </Span>
-        </Button>
-      </Item>
-    </Item>
+          </SpanV2>
+        </ButtonV2>
+      </ItemVV2>
+    </ItemVV2>
   );
 };
 
