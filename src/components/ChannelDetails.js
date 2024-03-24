@@ -10,16 +10,14 @@ import { useNavigate } from 'react-router-dom';
 import { MdRemoveCircleOutline } from 'react-icons/md';
 
 // Internal Compoonents
-import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import ChannelSettings from './ChannelSettings';
-import { Section } from 'primaries/SharedStyling';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import AddDelegateModalContent from './AddDelegateModalContent';
 import { AddDelegateButton, ManageSettingsButton } from './channel/ChannelButtons';
-import { Button, Item } from 'components/SharedStyling';
 import ChannelInfoHeader from './channel/ChannelInfoHeader';
 import ChannelInfoList from './channel/ChannelInfoList';
 import RedCircleSvg from '../assets/RedCircle.svg';
@@ -33,7 +31,6 @@ import { getDateFromTimestamp, nextDaysDateFromTimestamp, timeRemaining } from '
 import APP_PATHS from 'config/AppPaths';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import { AppContext } from 'contexts/AppContext';
-
 
 const DATE_FORMAT = 'DD MMM, YYYY';
 
@@ -82,7 +79,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
       await handleConnectWallet();
     }
     showAddDelegateModal();
-  }
+  };
 
   const addDelegate = async (walletAddress) => {
     return userPushSDKInstance.channel.delegate.add(convertAddressToAddrCaip(walletAddress, chainId));
@@ -325,7 +322,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
 
       {processingState === 0 && (
         <ItemVV2>
-          <Section>
+          <SectionV2>
             <DelegateContainer
               flex="5"
               minWidth="280px"
@@ -346,11 +343,11 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
                 items={channelSettings[account]}
                 isLoading={false}
                 onClickEmptyListButton={navigateToNotifSettings}
-                emptyListButtonTitle='Add Setting'
+                emptyListButtonTitle="Add Setting"
               />
             </DelegateContainer>
-          </Section>
-          <Section>
+          </SectionV2>
+          <SectionV2>
             <DelegateContainer
               flex="5"
               minWidth="280px"
@@ -379,7 +376,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
                 ]}
               />
             </DelegateContainer>
-          </Section>
+          </SectionV2>
         </ItemVV2>
       )}
       {/* modal to add a delegate */}
@@ -608,7 +605,7 @@ const SectionDes = styled.div`
   }
 `;
 
-const SubmitButton = styled(Button)`
+const SubmitButton = styled(ButtonV2)`
   width: fit-content;
   background: #d53a94;
   color: #fff;
@@ -623,7 +620,7 @@ const SubmitButton = styled(Button)`
   padding: 10px 16px;
 `;
 
-const DelegateContainer = styled(Item)`
+const DelegateContainer = styled(ItemVV2)`
   flex: 5;
   min-width: 280px;
   align-self: stretch;

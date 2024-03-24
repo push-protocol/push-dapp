@@ -22,11 +22,10 @@ import {
 } from 'redux/slices/channelSlice';
 import { incrementStepIndex } from 'redux/slices/userJourneySlice';
 import DisplayNotice from '../primaries/DisplayNotice';
-import { Item } from '../primaries/SharedStyling';
 
 // Internal Configs
 import { appConfig } from 'config';
-import { ItemHV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 
 // Constants
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
@@ -242,10 +241,7 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
             </SearchContainer>
 
             {UtilityHelper.isMainnet(chainId) && (
-              <ItemHV2
-                flex="1"
-                style={{ background: 'red' }}
-              >
+              <ItemHV2 flex="1">
                 <ChainsSelect
                   channelsNetworkId={channelsNetworkId}
                   setChannelsNetworkId={setChannelsNetworkId}
@@ -439,7 +435,7 @@ const CenterContainer = styled(ContainerInfo)`
   align-self: center;
 `;
 
-const ScrollItem = styled(ItemHV2)`
+const ScrollItem = styled(ItemVV2)`
   display: flex;
   align-self: stretch;
   align-items: stretch;
@@ -487,7 +483,7 @@ const ScrollItem = styled(ItemHV2)`
   }
 `;
 
-const SearchContainer = styled(Item)`
+const SearchContainer = styled(ItemVV2)`
   width: 100%;
   margin-right: 10px;
 `;

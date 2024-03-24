@@ -8,7 +8,6 @@ import styled from 'styled-components';
 // Internal Compoonents
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import ChannelSettingsDropdown from './ChannelSettingsDropdown';
-import { Button } from './SharedStyling';
 import { useTheme } from '@emotion/react';
 
 export default function ChannelSettings() {
@@ -25,14 +24,20 @@ export default function ChannelSettings() {
   };
 
   return (
-    <ItemHV2 flex="0" ref={DropdownRef}>
-      <Settings active={isDropdownOpen} onClick={toggleDropdownHandler} />
+    <ItemHV2
+      flex="0"
+      ref={DropdownRef}
+    >
+      <Settings
+        active={isDropdownOpen}
+        onClick={toggleDropdownHandler}
+      />
       {isDropdownOpen && (
-          <ChannelSettingsDropdown
-            DropdownRef={DropdownRef}
-            isDropdownOpen={isDropdownOpen}
-            closeDropdown={closeDropdownHandler}
-          />
+        <ChannelSettingsDropdown
+          DropdownRef={DropdownRef}
+          isDropdownOpen={isDropdownOpen}
+          closeDropdown={closeDropdownHandler}
+        />
       )}
     </ItemHV2>
   );
@@ -59,27 +64,9 @@ const Settings = styled(AiOutlineEllipsis)`
   width: 40px;
   height: 36px;
   border: 1px solid;
-  border-color: ${(props)=>props.theme.default.borderColor};
+  border-color: ${(props) => props.theme.default.borderColor};
   border-radius: 8px;
   cursor: pointer;
   transition: 400ms;
   transform: ${(props) => (props.active ? 'rotateZ(90deg)' : 'none')};
-`;
-
-const SubmitButton = styled(Button)`
-  width: 7rem;
-  background: #cf1c84;
-  color: #fff;
-  z-Index:0;
-  font-family: 'Strawford';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 17px;
-  margin-right: 20px;
-  border-radius: 8px;
-  padding: 11px 10px;
-  @media (min-width:600px) and (max-width:700px){
-    margin-right: 9px;
-  }
 `;
