@@ -30,6 +30,7 @@ import AppLogin from './AppLogin';
 import { SectionV2 } from './components/reusables/SharedStylingV2';
 import { ErrorContext } from './contexts/ErrorContext';
 import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJourneySlice';
+import { useBrowserNotification } from 'hooks/useBrowserNotification';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -144,6 +145,8 @@ export default function App() {
     const now = Date.now() / 1000;
     setcurrentTime(now);
   }, []);
+
+  useBrowserNotification();
 
   useEffect(() => {
     if (!account) return;

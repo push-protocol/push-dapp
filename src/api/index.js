@@ -1,12 +1,13 @@
 // External Packages
-import axios from "axios";
+import axios from 'axios';
 
 // Internal Configs
-import { appConfig } from "config";
+import { appConfig } from 'config';
 
 // Constants
-const BASE_URL = appConfig.apiUrl
-const TOOLING_BASE_URL = appConfig.toolingApiUrl
+const BASE_URL = appConfig.apiUrl;
+const TOOLING_BASE_URL = appConfig.toolingApiUrl;
+const DELIVERY_NODE_BASE_URL = appConfig.deliveryNodeApiUrl;
 
 /**
  * A function used to make get requests throughout the entire application
@@ -14,13 +15,13 @@ const TOOLING_BASE_URL = appConfig.toolingApiUrl
  * @returns {Promise}
  */
 export const getReq = async (path) => {
-    try {
-      const response = await axios.get(BASE_URL + path);
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  };
+  try {
+    const response = await axios.get(BASE_URL + path);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 
 /**
  * A function used to make post requests to the backend
@@ -55,5 +56,18 @@ export const toolingPostReq = async (path, obj) => {
   }
 };
 
-export * from './ipfs';
+export const deliveryNodePostReq = async (path, obj) => {
+  try {
+    const response = await axios.post(DELIVERY_NODE_BASE_URL + path, obj, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error(error.response.data);
+    throw error.response.data;
+  }
+};
 
+export * from './ipfs';

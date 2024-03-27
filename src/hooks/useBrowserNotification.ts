@@ -1,35 +1,33 @@
 // React + Web3 Essentials
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import { toast } from "react-toastify";
+import { useAccount } from './useAccount';
+import { GlobalContext } from 'contexts/GlobalContext';
 
-export function useBrowserNotification(account){
-    const [triggerNotification, setTriggerNotification] = useState(false);
-     
-    useEffect(() => {
-      if (!("serviceWorker" in navigator)) return
-      if (!account) return;
-      (async function () {
-        const {browserFunction} = require('firebase')
-        await browserFunction(account);
-      })();
-    }, [account]);
-  
-    useEffect(() => {
-      if (!("serviceWorker" in navigator)) return
-      const {onMessageListener} = require("firebase")
-      onMessageListener().then(payload => {
-        if (!("Notification" in window)) {
-          toast.dark(`${payload.notification.body} from: ${payload.notification.title}`, {
-            type: toast.TYPE.DARK,
-            autoClose: 5000,
-            position: "top-right"
-          });
+export function useBrowserNotification() {
+  const { account } = useAccount();
+  const { readOnlyWallet } = useContext(GlobalContext);
+  const [triggerNotification, setTriggerNotification] = useState(false);
+
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return;
+    if (!account || account == readOnlyWallet) return;
+    (async function () {
+      const { browserFunction } = require('firebase');
+      await browserFunction(account);
+    })();
+  }, [account]);
+
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return;
+    const { onMessageListener } = require('firebase');
+    onMessageListener()
+      .then((payload) => {
+        if (!('Notification' in window)) {
+          // useStream handles this case of showing in page notif (if showing notifs is not allowed)
         } else {
-          console.info('\n\n\n\n\n')
-          console.info("revieced push notification")
-          console.info('\n\n\n\n\n')
+          console.info('received push notification');
           const notificationTitle = payload.notification.title;
           const notificationOptions = {
             title: payload.data.app,
@@ -42,7 +40,8 @@ export function useBrowserNotification(account){
           };
           var notification = new Notification(notificationTitle, notificationOptions);
         }
-      }).catch(err => console.error('failed: ', err))
-        .finally(() => setTriggerNotification(!triggerNotification)); //retrigger the listener after it has been used once
-    }, [triggerNotification]);
-  }
+      })
+      .catch((err) => console.error('failed: ', err))
+      .finally(() => setTriggerNotification(!triggerNotification)); //retrigger the listener after it has been used once
+  }, [triggerNotification]);
+}
