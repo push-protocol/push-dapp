@@ -164,10 +164,10 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
               alignSelf="stretch"
               background="#D53893"
               hoverBackground="transparent"
-              borderRadius="50%"
+              borderRadius="32px 32px 32px 4px"
               onClick={() => setActiveTab(3)}
             >
-              <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }} />
+              <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer', }} />
             </ButtonV2>
           </ItemVV2>
         )}
