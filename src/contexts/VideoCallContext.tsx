@@ -168,7 +168,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
           data.incoming[0].status !== PushAPI.VideoCallStatus.UNINITIALIZED
             ? videoObjectRef.current?.isInitiator
             : () => { },
-        videoObject: videoObjectRef.current,
+        videoObjectRef,
       }}
     >
       {children}
