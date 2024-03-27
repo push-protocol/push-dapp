@@ -89,10 +89,7 @@ function MyNFTs({ controlAt, setControlAt, setTokenId }) {
       )}
 
       {!loading && NFTObjects.length != 0 && (
-        <ItemHV2
-          margin="20px 0 0 0"
-          style={{ background: 'red' }}
-        >
+        <ItemHV2 margin="20px 0 0 0">
           {Object.keys(NFTObjects).map((index) => {
             if (NFTObjects) {
               return (
