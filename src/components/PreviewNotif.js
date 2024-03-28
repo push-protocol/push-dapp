@@ -1,16 +1,16 @@
 // React + Web3 Essentials
-import React from "react";
+import React from 'react';
 
 // External Packages
-import { useSelector } from "react-redux";
-import styled, { useTheme } from "styled-components";
+import { useSelector } from 'react-redux';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { NotificationItem } from "@pushprotocol/uiweb";
-import { H2, Item, Span } from "../primaries/SharedStyling";
-import { chainNameBackendStandard } from "helpers/UtilityHelper";
+import { NotificationItem } from '@pushprotocol/uiweb';
+import { chainNameBackendStandard } from 'helpers/UtilityHelper';
 import { appConfig } from 'config';
-import { useAccount } from "hooks";
+import { useAccount } from 'hooks';
+import { ItemHV2, SpanV2 } from './reusables/SharedStylingV2';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -45,17 +45,20 @@ export default function PreviewNotif({ details }) {
 
   return (
     <PreviewSpace>
-      <Item align="flex-start" margin="30px 0px 10px 0px">
-        <Span
-          weight="700"
-          size="12px"
+      <ItemHV2
+        align="flex-start"
+        margin="30px 0px 10px 0px"
+      >
+        <SpanV2
+          fontWeight="700"
+          fontSize="12px"
           spacing="0.2em"
           color="#575D73"
           // style={{ color: theme.color }}
         >
           PREVIEW NOTIFICATION
-        </Span>
-      </Item>
+        </SpanV2>
+      </ItemHV2>
       <NotifItem test={details} />
     </PreviewSpace>
   );
