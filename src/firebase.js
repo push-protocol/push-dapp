@@ -31,6 +31,7 @@ export const getPushToken = async () => {
     return token;
   } catch (err) {
     console.error('An error occurred while retrieving token. ', err);
+    throw err;
   }
 };
 
