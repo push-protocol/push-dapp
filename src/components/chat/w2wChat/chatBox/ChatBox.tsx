@@ -19,14 +19,14 @@ import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
+import CommunityGroup from 'assets/chat/CommunityGroup.svg';
+import IntroChat from 'assets/chat/IntroChat.svg';
+import TokenGated from 'assets/chat/TokenGated.svg';
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
 import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import { ReactComponent as HandwaveIcon } from 'assets/chat/handwave.svg';
-import IntroChat from 'assets/chat/IntroChat.svg';
-import CommunityGroup from 'assets/chat/CommunityGroup.svg';
-import TokenGated from 'assets/chat/TokenGated.svg';
 import videoCallIcon from 'assets/icons/videoCallIcon.svg';
 import { Content } from 'components/SharedStyling';
 import Recommended from 'components/chat/recommended/Recommended';
@@ -98,12 +98,12 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
   if (!isGroup && currentChat?.wallets?.split(',')[0].toString()) {
     const walletLowercase = currentChat.wallets.includes(':nft')
       ? caip10ToWallet(
-        currentChat?.wallets
-          .replace(/eip155:\d+:/, 'eip155:')
-          .split(':nft')[0]
-          .toString()
-          .toLowerCase()
-      )
+          currentChat?.wallets
+            .replace(/eip155:\d+:/, 'eip155:')
+            .split(':nft')[0]
+            .toString()
+            .toLowerCase()
+        )
       : caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())?.toLowerCase();
     const checksumWallet = ethers.utils.getAddress(walletLowercase);
     ensName = web3NameList[checksumWallet];
@@ -168,21 +168,21 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
       id: 1,
       image: IntroChat,
       heading: 'Message any wallet',
-      subHeading: 'Chat, react, share and connect with your web3 friends.'
+      subHeading: 'Chat, react, share and connect with your web3 friends.',
     },
     {
       id: 2,
       image: CommunityGroup,
       heading: 'Discover Communities',
-      subHeading: 'Explore your favorite communities and chat with other members.'
+      subHeading: 'Explore your favorite communities and chat with other members.',
     },
     {
       id: 3,
       image: TokenGated,
       heading: 'Create Token Gated Groups',
-      subHeading: 'Create your own gated groups and kickstart vibrant communities.'
-    }
-  ]
+      subHeading: 'Create your own gated groups and kickstart vibrant communities.',
+    },
+  ];
 
   return (
     <Container>
@@ -197,16 +197,18 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
 
           {activeTab != 4 && (
             <>
-
               <WelcomeContainer>
-                <ItemHV2 gap='5px'>
+                <ItemHV2 gap="5px">
                   <WelcomeText>Say</WelcomeText>
-                  <HandwaveIcon size='32px' />
+                  <HandwaveIcon size="32px" />
                   <WelcomeText>to Push Chat!</WelcomeText>
                 </ItemHV2>
-                <ItemVV2 gap='24px'>
+                <ItemVV2 gap="24px">
                   {InfoMessages.map((item) => (
-                    <ItemHV2 key={item.id} gap='12px'>
+                    <ItemHV2
+                      key={item.id}
+                      gap="12px"
+                    >
                       <ImageV2
                         src={item.image}
                         alt="wave"
@@ -214,9 +216,24 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
                         width="auto"
                         verticalAlign="middle"
                       />
-                      <ItemVV2 alignItems='baseline'>
-                        <SpanV2 fontSize='17px' color={theme.default.color} fontWeight='500' lineHeight='22px' >{item.heading}</SpanV2>
-                        <SpanV2 fontSize='15px' color={theme.default.secondaryColor} fontWeight='400' lineHeight='19px' textAlign='left'>{item.subHeading}</SpanV2>
+                      <ItemVV2 alignItems="baseline">
+                        <SpanV2
+                          fontSize="17px"
+                          color={theme.default.color}
+                          fontWeight="500"
+                          lineHeight="22px"
+                        >
+                          {item.heading}
+                        </SpanV2>
+                        <SpanV2
+                          fontSize="15px"
+                          color={theme.default.secondaryColor}
+                          fontWeight="400"
+                          lineHeight="19px"
+                          textAlign="left"
+                        >
+                          {item.subHeading}
+                        </SpanV2>
                       </ItemVV2>
                     </ItemHV2>
                   ))}
@@ -412,17 +429,19 @@ const WelcomePoints = styled(ItemVV2)`
 `;
 
 const WelcomeItem = styled(ItemVV2)`
-  width: 420px;
+  max-width: 420px;
   min-width: 300px;
   display: flex;
   justify-content: center;
   margin: auto auto;
-  @media (max-width: 768px) {
-    width: auto;
+
+  @media ${device.laptop} {
+    max-width: 90%;
+    min-width: 80%;
   }
 
-  @media (min-width: 1000px) and (max-width: 1060px) {
-    width: 95%;
+  @media ${device.tablet} {
+    width: auto;
   }
 `;
 
@@ -499,7 +518,7 @@ const WelcomeText = styled(SpanV2)`
   text-align: center;
   // width: 100%;
   color: ${(props) => props.theme.default.color};
-  letter-spacing:  -0.72px;
+  letter-spacing: -0.72px;
   line-height: 141%; /* 33.84px */
   @media (max-width: 768px) {
     display: none;
@@ -527,7 +546,7 @@ const WelcomeContainer = styled(ItemVV2)`
   @media (max-width: 768px) {
     display: none;
   }
-`
+`;
 
 const Atag = styled.a`
   font-weight: 500;
