@@ -39,11 +39,15 @@ const Recommended = ({ bg, onChatSelected }) => {
     >
       {recommendedChatsList.map((item, index) => {
         return (
-          <ChatPreview 
-            key={index} 
+          <ChatPreview
+            key={index}
             chatPreviewPayload={item.payload}
             selected={item.payload.chatId === chatId ? true : false}
-            setSelected={(chatId, chatParticipant) => {const chatParticipantRemapped = getChatParticipant(chatParticipant); setChatId(chatId); onChatSelected(chatId, chatParticipantRemapped)}}
+            setSelected={(chatId, chatParticipant) => {
+              const chatParticipantRemapped = getChatParticipant(chatParticipant);
+              setChatId(chatId);
+              onChatSelected(chatId, chatParticipantRemapped)
+            }}
           />
         )
       })}

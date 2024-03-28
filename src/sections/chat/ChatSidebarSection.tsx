@@ -14,6 +14,7 @@ import styled, { useTheme } from 'styled-components';
 import { ChatPreview, ChatPreviewList, UserProfile } from '@pushprotocol/uiweb';
 import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
 import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
+import { ReactComponent as BlankChat } from 'assets/chat/BlankChat.svg';
 import NewTag from 'components/NewTag';
 import Recommended from 'components/chat/recommended/Recommended';
 import ProfileHeader from 'components/chat/w2wChat/profile';
@@ -159,14 +160,14 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
               color={theme.default.color}
               zIndex="1"
               flex="1"
-              padding="10px 10px 8px 10px"
+              padding="10px 10px 20px 10px"
               onClick={() => {
                 setActiveTab(1);
               }}
             >
               <ItemHV2
                 alignItems="center"
-                // ref={containerRef}
+              // ref={containerRef}
               >
                 <SpanV2
                   flex="initial"
@@ -232,12 +233,25 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
         >
           {/* Only show recommended chats if there are no chats */}
           {showRecommended && (
-            <Recommended
-              bg="#f5f5f5"
-              onChatSelected={async (chatid, chatParticipant) => {
-                setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid));
-              }}
-            />
+            <>
+              {/* <Recommended
+                bg="#f5f5f5"
+                onChatSelected={async (chatid, chatParticipant) => {
+                  setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid));
+                }}
+              /> */}
+
+              <ItemVV2>
+                <BlankChat />
+                <SpanV2 fontSize='17px' color={theme.default.color} fontWeight='500' lineHeight='150%'>
+                  No conversations, yet.
+                </SpanV2>
+                <SpanV2 fontSize='15px' color={theme.default.secondaryColor} fontWeight='400' lineHeight='130%' padding='0px 25px'>
+                  Get started by searching for an address or group name.
+                </SpanV2>
+              </ItemVV2>
+
+            </>
           )}
 
           {/* Only show recommended chats if there are no chats */}
