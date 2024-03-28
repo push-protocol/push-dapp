@@ -8,8 +8,7 @@ import { useSelector } from 'react-redux';
 import { CHAIN_DETAILS } from 'config';
 
 // Internal Components
-import { H3 } from '../primaries/SharedStyling';
-import { ItemHV2, ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
+import { H2V2, ItemHV2, ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
 
 const AliasSetup = () => {
   const themes = useTheme();
@@ -56,15 +55,15 @@ const AliasSetup = () => {
           height={13}
           width={4}
         />
-        <H3
+        <H2V2
           margin="auto 15px"
           textTransform="none"
           color={themes.color}
-          size="16px"
-          weight="600"
+          fontSize="16px"
+          fontWeight="600"
         >
           Processing
-        </H3>
+        </H2V2>
       </ItemHV2>
     </ItemVV2>
   );

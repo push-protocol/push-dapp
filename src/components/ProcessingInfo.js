@@ -1,38 +1,35 @@
 // React + Web3 Essentials
-import React from "react";
+import React from 'react';
 
 // External Packages
-import LinearProgress from "@mui/material/LinearProgress";
-import styled, { css, useTheme } from "styled-components";
-import FadeLoader from "react-spinners/FadeLoader";
+import LinearProgress from '@mui/material/LinearProgress';
+import styled, { css, useTheme } from 'styled-components';
+import FadeLoader from 'react-spinners/FadeLoader';
 
 // Internal Components
-import { H3, Item, Section } from "primaries/SharedStyling";
+import { H2V2, ItemVV2, SectionV2 } from './reusables/SharedStylingV2';
 
 // Internal Configs
-import { themeDark } from "config/Themization";
+import { themeDark } from 'config/Themization';
 
 const ProcessingInfo = ({ progress, processingInfo, progressInfo }) => {
   const themes = useTheme();
 
   return (
-    <Section>
+    <SectionV2>
       <TabSpace>
-        <ItemSpace>
-        {progressInfo}
-        </ItemSpace>
+        <ItemSpace>{progressInfo}</ItemSpace>
       </TabSpace>
-
 
       <LinearProgress
         sx={{
-          width: "30em",
-          margin: "50px auto",
-          color: "#cf1c84",
-          height: "6px",
-          borderRadius: "20px",
-          ["@media (max-width:600px)"]: {
-            width: "100%",
+          width: '30em',
+          margin: '50px auto',
+          color: '#cf1c84',
+          height: '6px',
+          borderRadius: '20px',
+          ['@media (max-width:600px)']: {
+            width: '100%',
           },
         }}
         color="inherit"
@@ -40,19 +37,29 @@ const ProcessingInfo = ({ progress, processingInfo, progressInfo }) => {
         value={progress}
       />
 
-      <Item display="flex" direction="row" align="center" margin="0px 0px">
-        <FadeLoader color="#cf1c84" loading={true} height={13} width={2.5} />
-        <H3
+      <ItemVV2
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
+        margin="0px 0px"
+      >
+        <FadeLoader
+          color="#cf1c84"
+          loading={true}
+          height={13}
+          width={2.5}
+        />
+        <H2V2
           margin="auto 15px"
           textTransform="none"
           color={themes.color}
-          size="16px"
-          weight="500"
+          fontSize="16px"
+          fontWeight="500"
         >
           {processingInfo}
-        </H3>
-      </Item>
-    </Section>
+        </H2V2>
+      </ItemVV2>
+    </SectionV2>
   );
 };
 
@@ -71,7 +78,6 @@ const TabSpace = styled.div`
   line-height: 24px;
   font-size: 18px;
   font-weight: 500;
-
 
   @media (max-width: 768px) {
     min-width: 100%;
@@ -95,6 +101,6 @@ const ItemSpace = styled.div`
   @media (min-width: 768px) and (max-width: 1700px) {
     padding: 10px 40px;
   }
-`
+`;
 
 export default ProcessingInfo;
