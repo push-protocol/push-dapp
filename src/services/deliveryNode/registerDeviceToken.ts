@@ -11,7 +11,6 @@ type Props = {
 
 export const registerDeviceToken = async ({ token, account }: Props) => {
   const reqEndpoint = deliveryNodeServiceEndpoints.registerDeviceToken();
-  console.log(reqEndpoint);
   try {
     const data = {
       wallet: convertAddressToPartialCaip(account.toLowerCase()),

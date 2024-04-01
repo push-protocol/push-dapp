@@ -27,12 +27,11 @@ export function useBrowserNotification() {
         if (!('Notification' in window)) {
           // useStream handles this case of showing in page notif (if showing notifs is not allowed)
         } else {
-          console.info('received push notification');
           const notificationTitle = payload.notification.title;
           const notificationOptions = {
-            title: payload.data.app,
-            body: payload.notification.body,
-            image: payload.data.aimg,
+            title: payload?.notification?.title,
+            body: payload?.notification?.body,
+            image: payload?.data?.aimg,
             icon: payload?.data?.icon,
             data: {
               url: payload?.data?.acta || payload?.data?.url,
