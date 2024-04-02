@@ -119,11 +119,8 @@ export const addresses = {
   stakingV2: "0xFf13FBc1dE7FBF300059FE56495c82bBa2F986c6",
   yieldFarmLP: "0xAB531bD9D39c492a05de65Eee85F6C712c05ea0b",
 
-
-
+  // pushCoreV2: "0x3eE2954dDdb0894e3DDff3FC104C243649C18eD8", // 15 min epoch
   alphaAccessNft: "0x39f77Db4d5d3e85c213233D5Af02C46a85Cf1Db4"
-
-
 }
 
 export const CHAIN_DETAILS = {
