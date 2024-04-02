@@ -285,7 +285,7 @@ const AppContextProvider = ({ children }) => {
 
   const getUser = async () => {
     const caip10: string = w2wHelper.walletToCAIP10({ account });
-    const user = await userPushSDKInstance.info();
+    const user = await userPushSDKInstance?.info();
     let connectedUser: ConnectedUser;
 
     // TODO: Change this to do verification on ceramic to validate if did is valid
