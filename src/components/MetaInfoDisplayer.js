@@ -8,8 +8,30 @@ import styled from 'styled-components';
 import { A, Item, ItemH, Span } from '../primaries/SharedStyling';
 import { Device } from "assets/Device";
 
+interface MetaInfoDisplayProps {
+  externalIcon?: React.ReactNode; // Optional because it's checked before usage
+  internalIcon?: React.ReactNode; // Optional for the same reason
+  text: string;
+  bgColor: string;
+  color: string;
+  onClick?: React.MouseEventHandler<HTMLDivElement>; // Optional based on conditional use
+  onMouseEnter?: React.MouseEventHandler<HTMLDivElement>; // Optional based on conditional use
+  onMouseLeave?: React.MouseEventHandler<HTMLDivElement>; // Optional based on conditional use
+  padding: string;
+}
+
 // Faucet URLs
-function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, onMouseEnter, onMouseLeave, padding, color }) {
+function MetaInfoDisplay({ 
+  externalIcon = null, 
+  internalIcon = null, 
+  text, 
+  bgColor, 
+  onClick = () => {}, 
+  onMouseEnter =  () => {}, 
+  onMouseLeave =  () => {}, 
+  padding, 
+  color 
+}) {
 
   // render
   return (

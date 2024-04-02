@@ -1,20 +1,23 @@
 // React + Web3 Essentials
-import React from "react";
+import React from 'react';
 
 // External Packages
-import styled from "styled-components";
+import styled from 'styled-components';
 
 // Internal components
-import SpamBox from "segments/spam";
+import SpamBox from 'segments/Spam';
 
 // Create Header
 function Spambox(props) {
-
   // Render
   return (
     <FullWidth>
-      <SpamBox showFilter={props.showFilter} setShowFilter={props.setShowFilter} search={props.search}
-          setSearch={props.setSearch} />
+      <SpamBox
+        showFilter={props.showFilter}
+        setShowFilter={props.setShowFilter}
+        search={props.search}
+        setSearch={props.setSearch}
+      />
     </FullWidth>
   );
 }

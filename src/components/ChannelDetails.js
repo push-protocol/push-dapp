@@ -49,7 +49,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
   const { userPushSDKInstance } = useSelector((state) => {
     return state.user;
   });
-  const {handleConnectWallet} = useContext(AppContext);
+  const { handleConnectWallet } = useContext(AppContext);
   const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector((state) => state.channels);
   const { processingState } = useSelector((state) => state.channelCreation);
   const [verifyingChannel, setVerifyingChannel] = React.useState([]);
@@ -77,10 +77,9 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
 
   const addDelegateToast = useToast();
 
-  const handleDelegateModal = () => {
+  const handleDelegateModal = async () => {
     if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
-      return;
+      await handleConnectWallet();
     }
     showAddDelegateModal();
   }
@@ -156,17 +155,19 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
     }
   }, [account]);
 
-  const removeDelegate = (walletAddress) => {
-    return userPushSDKInstance.channel.delegate.remove(convertAddressToAddrCaip(walletAddress, chainId));
+  const removeDelegate = async (walletAddress) => {
+    let userPushInstance = userPushSDKInstance;
+    if (!userPushInstance.signer) {
+      userPushInstance = await handleConnectWallet();
+      if (!userPushInstance) {
+        return;
+      }
+    }
+
+    return userPushInstance.channel.delegate.remove(convertAddressToAddrCaip(walletAddress, chainId));
   };
 
   const navigateToNotifSettings = () => {
-
-    if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
-      return;
-    }
-
     navigate(APP_PATHS.ChannelSettings);
   };
 

@@ -7,32 +7,39 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import * as PushAPI from '@pushprotocol/restapi';
+import { ChatProfile, ChatViewList, MessageInput, UserProfile } from '@pushprotocol/uiweb';
 import 'font-awesome/css/font-awesome.min.css';
+import { produce } from 'immer';
 import { CID } from 'ipfs-http-client';
 import { BsDashLg } from 'react-icons/bs';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
+import { useSelector } from 'react-redux';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
-import { produce } from 'immer';
-import { ChatProfile, ChatViewList, MessageInput, UserProfile } from '@pushprotocol/uiweb';
+
 // Internal Components
+import CommunityGroup from 'assets/chat/CommunityGroup.svg';
+import IntroChat from 'assets/chat/IntroChat.svg';
+import TokenGated from 'assets/chat/TokenGated.svg';
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
 import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
+import { ReactComponent as HandwaveIcon } from 'assets/chat/handwave.svg';
 import videoCallIcon from 'assets/icons/videoCallIcon.svg';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { Content } from 'components/SharedStyling';
+import Recommended from 'components/chat/recommended/Recommended';
+import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { checkIfChatExist } from 'helpers/w2w/user';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext as ContextType } from 'types/chat';
-import HandwaveIcon from '../../../../assets/chat/handwave.svg';
+// import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet } from '../../../../helpers/w2w';
 import { checkIfGroup, getGroupImage } from '../../../../helpers/w2w/groupChat';
 
@@ -58,10 +65,15 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
   );
 });
 
-const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
-  const { currentChat, viewChatBox, receivedIntents, activeTab,setViewChatBox, setChat, selectedChatId }: ContextType =
+const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element => {
+  const { currentChat, viewChatBox, receivedIntents, activeTab, setViewChatBox, setChat, selectedChatId }: ContextType =
     useContext<ContextType>(Context);
   const { web3NameList }: AppContextType = useContext(AppContext);
+  const { setSelectedChatId } = useContext(Context);
+
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
 
   const { account } = useAccount();
   const [Loading, setLoading] = useState<boolean>(true);
@@ -127,14 +139,11 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
 
   const getChatId = () => {
     let chatId = selectedChatId || currentChat?.did;
-    if(chatId){
-      return (chatId?.includes(':nft:')
-        ? chatId.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0]
-        : chatId) ;
+
+    if (chatId) {
+      return chatId?.includes(':nft:') ? chatId.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0] : chatId;
     }
     return chatId;
-  
-    
   };
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
@@ -155,25 +164,29 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
   };
 
   const InfoMessages = [
-    { id: 1, content: 'You can send up to 10 group requests in alpha' },
-    // { id: 2, content: 'You can send a chat request to anyone including non-whitelisted users' },
-    // { id: 3, content: 'You can chat with non-whitelisted users but they cannot send a chat request to anyone.' },
     {
-      id: 4,
-      content: 'You will have access to 1000 latest messages. Encryption is enabled after a chat request is accepted',
+      id: 1,
+      image: IntroChat,
+      heading: 'Message any wallet',
+      subHeading: 'Chat, react, share and connect with your web3 friends.',
     },
-    { id: 5, content: 'Messages will only be encrypted if the receiver has encryption keys' },
-    // {
-    //   id: 6,
-    //   content:
-    //     'Due to certain limitations Push Chat does not support Ledger Wallet yet. We are working on adding support.',
-    // },
-    { id: 7, content: 'Access to more chat requests and messages will be added in the near future' },
+    {
+      id: 2,
+      image: CommunityGroup,
+      heading: 'Discover Communities',
+      subHeading: 'Explore your favorite communities and chat with other members.',
+    },
+    {
+      id: 3,
+      image: TokenGated,
+      heading: 'Create Token Gated Groups',
+      subHeading: 'Create your own gated groups and kickstart vibrant communities.',
+    },
   ];
 
   return (
     <Container>
-      {(!viewChatBox && !getChatId() )? (
+      {!viewChatBox || !getChatId() ? (
         <WelcomeItem gap="25px">
           {activeTab == 4 && (
             <LoaderSpinner
@@ -184,44 +197,55 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
 
           {activeTab != 4 && (
             <>
-              <WelcomeMainText theme={theme}>
-                <WelcomeText>Say</WelcomeText>
-                <ImageV2
-                  src={HandwaveIcon}
-                  alt="wave"
-                  display="inline"
-                  width="auto"
-                  verticalAlign="middle"
-                  margin="0 13px"
-                />
-                <WelcomeText>to Push Chat</WelcomeText>
-              </WelcomeMainText>
-
-              <WelcomeInfo>
-                <SpanV2
-                  fontWeight="500"
-                  fontSize="15px"
-                  lineHeight="130%"
-                >
-                  Push Chat is in alpha and things might break.
-                </SpanV2>
-
-                <Atag
-                  href={'https://discord.gg/pushprotocol'}
-                  target="_blank"
-                >
-                  We would love to hear your feedback
-                </Atag>
-
-                <ItemBody>
+              <WelcomeContainer>
+                <ItemHV2 gap="5px">
+                  <WelcomeText>Say</WelcomeText>
+                  <HandwaveIcon size="32px" />
+                  <WelcomeText>to Push Chat!</WelcomeText>
+                </ItemHV2>
+                <ItemVV2 gap="24px">
                   {InfoMessages.map((item) => (
-                    <WelcomeContent key={item.id}>
-                      <BsDashLg className="icon" />
-                      <TextInfo>{item.content}</TextInfo>
-                    </WelcomeContent>
+                    <ItemHV2
+                      key={item.id}
+                      gap="12px"
+                    >
+                      <ImageV2
+                        src={item.image}
+                        alt="wave"
+                        display="inline"
+                        width="auto"
+                        verticalAlign="middle"
+                      />
+                      <ItemVV2 alignItems="baseline">
+                        <SpanV2
+                          fontSize="17px"
+                          color={theme.default.color}
+                          fontWeight="500"
+                          lineHeight="22px"
+                        >
+                          {item.heading}
+                        </SpanV2>
+                        <SpanV2
+                          fontSize="15px"
+                          color={theme.default.secondaryColor}
+                          fontWeight="400"
+                          lineHeight="19px"
+                          textAlign="left"
+                        >
+                          {item.subHeading}
+                        </SpanV2>
+                      </ItemVV2>
+                    </ItemHV2>
                   ))}
-                </ItemBody>
-              </WelcomeInfo>
+                </ItemVV2>
+              </WelcomeContainer>
+
+              <Recommended
+                bg={theme.default.bg}
+                onChatSelected={async (chatId, chatParticipant) =>
+                  setSelectedChatId(await triggerChatParticipant(chatParticipant, chatId))
+                }
+              />
             </>
           )}
         </WelcomeItem>
@@ -254,17 +278,15 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
             background={theme.default.bg}
             padding="6px"
             fontWeight="500"
-            zIndex="1"
           >
-            
             {getChatId() && (
               <ChatProfile
-                chatProfileLeftHelperComponent = {
-                  isMobile?
-                  <SpanV2 onClick={()=>setViewChatBox(false)}>
-                  <MdOutlineArrowBackIos />
-                  </SpanV2>
-                  :null
+                chatProfileLeftHelperComponent={
+                  isMobile ? (
+                    <SpanV2 onClick={() => setViewChatBox(false)}>
+                      <MdOutlineArrowBackIos />
+                    </SpanV2>
+                  ) : null
                 }
                 chatProfileRightHelperComponent={
                   <Tooltip
@@ -292,7 +314,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
           </ItemHV2>
 
           <MessageContainer>
-            {(getChatId()) && (
+            {getChatId() && (
               <ChatViewList
                 chatId={getChatId()}
                 limit={10}
@@ -301,15 +323,7 @@ const ChatBox = ({ showGroupInfoModal }): JSX.Element => {
           </MessageContainer>
           {checkIfChatExist({ chats: receivedIntents, currentChat, connectedUser, isGroup }) ? null : (
             <>
-              <MessageInputWrapper>
-                {getChatId() && (
-                  <MessageInput
-                    chatId={
-                      getChatId()
-                    }
-                  />
-                )}
-              </MessageInputWrapper>
+              <MessageInputWrapper>{getChatId() && <MessageInput chatId={getChatId()} />}</MessageInputWrapper>
             </>
           )}
         </>
@@ -329,7 +343,6 @@ const MessageInputWrapper = styled.div`
   justify-content: center;
   position: absolute;
   bottom: 8px;
-
 `;
 
 const ChatContainer = styled.div`
@@ -351,10 +364,11 @@ const MessageContainer = styled(ItemVV2)`
   flex-direction: column;
   justify-content: flex-start;
   position: absolute;
-  padding: 40px 20px;
-  top: 40px;
-  width: 95%;
-  height: 80%;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0px 20px 160px 20px;
+  top: 90px;
+  height: 100%;
   @media (max-height: 750px) {
     height: 75%;
   }
@@ -409,27 +423,35 @@ const Container = styled(Content)`
   position: relative;
 `;
 
+const WelcomePoints = styled(ItemVV2)`
+  margin: 20px 0px 0px 0px;
+  gap: 10px;
+`;
+
 const WelcomeItem = styled(ItemVV2)`
-  width: 369px;
+  max-width: 420px;
+  min-width: 300px;
   display: flex;
   justify-content: center;
   margin: auto auto;
-  @media (max-width: 768px) {
-    width: auto;
+
+  @media ${device.laptop} {
+    max-width: 90%;
+    min-width: 80%;
   }
 
-  @media (min-width: 1000px) and (max-width: 1060px) {
-    width: 95%;
+  @media ${device.tablet} {
+    width: auto;
   }
 `;
 
 const WelcomeContent = styled.div`
-  width: 304px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin: 10px auto;
+  align-self: flex-start;
+
   .icon {
     transform: rotate(-60deg);
     color: #d53893;
@@ -438,6 +460,8 @@ const WelcomeContent = styled.div`
 `;
 
 const ItemBody = styled.div`
+  padding: 0px 20px;
+
   @media (min-width: 768px) and (max-height: 1080px) {
     overflow-y: scroll;
     height: 300px;
@@ -460,7 +484,6 @@ const TextInfo = styled.div`
   font-size: 15px;
   line-height: 130%;
   color: ${(props) => props.theme.default.secondaryColor};
-  width: 274px;
 `;
 
 const WelcomeMainText = styled(SpanV2)`
@@ -490,12 +513,13 @@ const WelcomeMainText = styled(SpanV2)`
 `;
 
 const WelcomeText = styled(SpanV2)`
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 500;
   text-align: center;
-  width: 100%;
+  // width: 100%;
   color: ${(props) => props.theme.default.color};
-  letter-spacing: -0.03em;
+  letter-spacing: -0.72px;
+  line-height: 141%; /* 33.84px */
   @media (max-width: 768px) {
     display: none;
   }
@@ -508,6 +532,17 @@ const WelcomeInfo = styled.div`
   width: 100%;
   padding: 30px 0;
   border-radius: 28px;
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const WelcomeContainer = styled(ItemVV2)`
+  background: ${(props) => props.theme.default.bg};
+  padding: 24px;
+  gap: 24px;
+  flex: none;
+  border-radius: 4px 24px 24px 24px;
   @media (max-width: 768px) {
     display: none;
   }

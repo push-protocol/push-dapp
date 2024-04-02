@@ -1,5 +1,7 @@
 // React + Web3 Essentials
 import React, { useContext, useMemo, useState } from "react";
+import * as PushAPI from "@pushprotocol/restapi";
+import { ethers } from "ethers";
 
 // External Packages
 import Switch from 'react-switch';
@@ -71,48 +73,48 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
           key={index}
           hasBottomBorder={index !== settings.length - 1}
         >
-            <DropdownSwitchItem>
-                <SpanV2 color={theme.settingsModalPrimaryTextColor} fontSize="15px" fontWeight='500' textAlign="left">{setting.description}</SpanV2>
-                <Switch 
-                    onChange={() => handleSwitchChange(index)} checked={setting.type === 1 ? setting.default : setting.enabled} 
-                    checkedIcon={false}
-                    uncheckedIcon={false}
-                    onColor="#D53A94"
-                    offColor="#A0A3B1"
-                    height={16}
-                    width={32}
-                    handleDiameter={12}
-                />
-            </DropdownSwitchItem>
-            {setting.type === 2 && setting.enabled === true && (
-              <DropdownSliderItem>
-                <SpanV2 color={theme.fontColor} fontSize="18px" fontWeight='600' alignSelf="flex-start">
-                    {setting.default}
-                </SpanV2>
-                <InputSlider
-                    val={setting.default}
-                    max={setting.upperLimit}
-                    min={setting.lowerLimit}
-                    step={setting.ticker || 1}
-                    defaultVal={setting.default}
-                    onChange={({ x }) => handleSliderChange(index, x)}
-                />
-              </DropdownSliderItem>
-            )}
+          <DropdownSwitchItem>
+            <SpanV2 color={theme.settingsModalPrimaryTextColor} fontSize="15px" fontWeight='500' textAlign="left">{setting.description}</SpanV2>
+            <Switch
+              onChange={() => handleSwitchChange(index)} checked={setting.type === 1 ? setting.default : setting.enabled}
+              checkedIcon={false}
+              uncheckedIcon={false}
+              onColor="#D53A94"
+              offColor="#A0A3B1"
+              height={16}
+              width={32}
+              handleDiameter={12}
+            />
+          </DropdownSwitchItem>
+          {setting.type === 2 && setting.enabled === true && (
+            <DropdownSliderItem>
+              <SpanV2 color={theme.fontColor} fontSize="18px" fontWeight='600' alignSelf="flex-start">
+                {setting.default}
+              </SpanV2>
+              <InputSlider
+                val={setting.default}
+                max={setting.upperLimit}
+                min={setting.lowerLimit}
+                step={setting.ticker || 1}
+                defaultVal={setting.default}
+                onChange={({ x }) => handleSliderChange(index, x)}
+              />
+            </DropdownSliderItem>
+          )}
           {setting.type === 3 && setting.enabled === true && (
             <DropdownSliderItem>
               <SpanV2 color={theme.fontColor} fontSize="18px" fontWeight='600' alignSelf="flex-start">
-                  {setting.default.lower} - {setting.default.upper}
+                {setting.default.lower} - {setting.default.upper}
               </SpanV2>
               <RangeSlider
-                  startVal={setting.default.lower}
-                  endVal={setting.default.upper}
-                  max={setting.upperLimit}
-                  min={setting.lowerLimit}
-                  step={setting.ticker || 1}
-                  defaultStartVal={setting.default.lower}
-                  defaultEndVal={setting.default.upper}
-                  onChange={({ startVal, endVal }) => handleSliderChange(index, {lower: startVal, upper: endVal})}
+                startVal={setting.default.lower}
+                endVal={setting.default.upper}
+                max={setting.upperLimit}
+                min={setting.lowerLimit}
+                step={setting.ticker || 1}
+                defaultStartVal={setting.default.lower}
+                defaultEndVal={setting.default.upper}
+                onChange={({ startVal, endVal }) => handleSliderChange(index, { lower: startVal, upper: endVal })}
               />
             </DropdownSliderItem>
           )}
@@ -141,14 +143,14 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
 const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (options) => {
   const { children, channelDetail, setLoading, onSuccessOptin } = options;
 
-  const { chainId } = useAccount();
+  const { chainId, provider, account, wallet } = useAccount();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const { handleConnectWallet } = useContext(AppContext);
+  const { handleConnectWallet, connectWallet } = useContext(AppContext);
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
@@ -171,13 +173,27 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
 
   const optInHandler = async ({ channelSettings, setLoading }: { channelSettings?: ChannelSetting[], setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const setLoadingFunc = setLoading || (options && options.setLoading) || (() => { });
-   
-    if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
-      return;
-    }
-   
     setLoadingFunc(true);
+
+    let userPushInstance = userPushSDKInstance;
+    // if (!userPushInstance.signer) {
+    //   userPushInstance = await handleConnectWallet();
+    //   if (!userPushInstance) {
+    //     setLoadingFunc(false);
+    //     return;
+    //   }
+    // }
+
+    let walletAddress = account;
+    let web3Provider = provider;
+
+    if(!(wallet?.accounts?.length > 0)){
+      const connectedWallet = await connectWallet();
+      walletAddress = connectedWallet.accounts[0].address;
+      web3Provider = new ethers.providers.Web3Provider(connectedWallet.provider, 'any')
+    }
+
+
 
     try {
       let channelAddress = channelDetail.channel;
@@ -187,11 +203,13 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
 
       subscribeToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
-      await userPushSDKInstance.notification.subscribe(convertAddressToAddrCaip(channelAddress, chainId), {
-        settings: notifChannelSettingFormatString({ settings: channelSettings }),
-        // settings: [],
+      const _signer = await web3Provider?.getSigner(walletAddress);
+
+      await PushAPI.channels.subscribe({
+        signer: _signer,
+        channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
+        userAddress: convertAddressToAddrCaip(walletAddress, chainId), // user address in CAIP
         onSuccess: () => {
-          onSuccessOptin();
           dispatch(updateSubscriptionStatus({ channelAddress, status: true }));
           dispatch(updateUserSetting({ channelAddress, settings: userSettingsFromDefaultChannelSetting({ channelSetting: channelSettings }) }));
 
@@ -221,7 +239,44 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
             ),
           });
         },
+        env: appConfig.pushNodesEnv,
       });
+
+      // await PUSHAPI.channels.subscribe(convertAddressToAddrCaip(channelAddress, chainId), {
+      //   settings: notifChannelSettingFormatString({ settings: channelSettings }),
+      //   // settings: [],
+      //   onSuccess: () => {
+      //     onSuccessOptin();
+      //     dispatch(updateSubscriptionStatus({ channelAddress, status: true }));
+      //     dispatch(updateUserSetting({ channelAddress, settings: userSettingsFromDefaultChannelSetting({ channelSetting: channelSettings }) }));
+
+      //     subscribeToast.showMessageToast({
+      //       toastTitle: 'Success',
+      //       toastMessage: 'Successfully opted into channel !',
+      //       toastType: 'SUCCESS',
+      //       getToastIcon: (size) => (
+      //         <MdCheckCircle
+      //           size={size}
+      //           color="green"
+      //         />
+      //       ),
+      //     });
+      //   },
+      //   onError: () => {
+      //     console.error('opt in error');
+      //     subscribeToast.showMessageToast({
+      //       toastTitle: 'Error',
+      //       toastMessage: `There was an error opting into channel`,
+      //       toastType: 'ERROR',
+      //       getToastIcon: (size) => (
+      //         <MdError
+      //           size={size}
+      //           color="red"
+      //         />
+      //       ),
+      //     });
+      //   },
+      // });
 
 
     } catch (err) {

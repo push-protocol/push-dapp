@@ -128,10 +128,10 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
   const userSignerToast = useToast();
   const toggleChannelActivationState = () => {
     if (isChannelBlocked) return;
-    if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
-      return;
-    }
+    // if (!userPushSDKInstance.signer) {
+    //   handleConnectWallet();
+    //   return;
+    // }
     if (isChannelDeactivated) {
       showReactivateChannelModal();
     } else {

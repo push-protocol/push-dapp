@@ -5,11 +5,13 @@ import { Link } from 'react-router-dom';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
+import { useSelector } from 'react-redux';
 
 // Internal Components
 import { A, Image, ItemH, Span } from '../primaries/SharedStyling';
-import { GlobalContext } from 'contexts/GlobalContext';
+import { GlobalContext,ReadOnlyWalletMode } from 'contexts/GlobalContext';
 import { SpanV2 } from './reusables/SharedStylingV2';
+import { useAccount } from 'hooks';
 
 export type DropdownValueType = {
   id: number|string,
@@ -26,18 +28,24 @@ type DropdownProps = {
   textColor?: string;
   iconFilter?: string;
   hoverBGColor?: string;
+  setShowDropdown?:any;
 };
 
 
 // Create Dropdown
-function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: DropdownProps) {
+function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor,setShowDropdown }: DropdownProps) {
 
   const theme = useTheme();
   const {mode} = useContext(GlobalContext);
+  const { wallet } = useAccount();
 
   const getTextColor = (dropdownValue:DropdownValueType) => {
     return dropdownValue.textColor ? dropdownValue.textColor:textColor? textColor : theme.snackbarBorderText;
   }
+
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
 
  
   const copyToClipboard = (address:string) => {
@@ -52,6 +60,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
       document.body.removeChild(el);
     }
   };
+
   return (
     <>
       {dropdownValues.map((dropdownValue) =>
@@ -64,7 +73,9 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
             margin="0px 0 8px 0"
             width="max-content"
             style={{cursor: "pointer"}}
-            onClick={() => dropdownValue?.function()}
+            onClick={() => {
+              dropdownValue?.function()
+            }}
           >
             <Span
               margin="11px 22px 11px 2px"
@@ -80,6 +91,9 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
               <MobileAddress>
                 {shortenText(dropdownValue?.title,3)} 
               </MobileAddress>
+
+              <SpanV2 fontWeight='600' margin='0 0 0 2px'>{!(wallet?.accounts?.length > 0) ? ReadOnlyWalletMode.GUEST_MODE : userPushSDKInstance?.readMode && ReadOnlyWalletMode.READ_ONLY_MODE}</SpanV2>
+
             </Span>
             {dropdownValue?.invertedIcon && (
               <Image
@@ -176,7 +190,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
 
 // css styles
 const SpanAddress = styled(Span)`
-  margin: 11px 22px 11px 2px;
+  margin: 11px 11px 11px 2px;
   font-weight: 400;
   size: 14px;
   text-transform: uppercase;

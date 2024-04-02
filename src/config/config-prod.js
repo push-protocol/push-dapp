@@ -111,7 +111,7 @@ export const addresses = {
   uniV2LPToken: "0xaf31fd9c3b0350424bf96e551d2d1264d8466205",//same as epnsLPToken
   pushCoreV2: "0x66329Fdd4042928BfCAB60b179e1538D56eeeeeE",//not upgraded 
 
-
+  alphaAccessNft: "0x87d34d40EFaF2d594A7eD9B1126F15Cb3fc721ef"
 
 };
 

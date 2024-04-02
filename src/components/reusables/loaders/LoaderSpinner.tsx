@@ -69,7 +69,7 @@ const LoaderSpinner = ({
   progressColor = GLOBALS.COLORS.PRIMARY_PINK,
   progressVerticalGap = '40px',
   progress = 0,
-  progressNotice = null
+  progressNotice = null,
 }: LoaderSpinnerPropsI) => {
   const theme = useTheme();
 
@@ -82,13 +82,13 @@ const LoaderSpinner = ({
       right="0"
       bottom="0"
       left="0"
-      zIndex="1000"
+      zIndex="99999999"
     >
       {overlay === LOADER_OVERLAY.ONTOP && <BlurBG blur={blur} />}
 
       <ItemVV2
         flex="initial"
-        flexDirection={progressPositioning == PROGRESS_POSITIONING.TOP ? "column" : "column-reverse"}
+        flexDirection={progressPositioning == PROGRESS_POSITIONING.TOP ? 'column' : 'column-reverse'}
         alignSelf={type == LOADER_TYPE.SEAMLESS ? 'auto' : 'center'}
         width={type == LOADER_TYPE.STANDALONE_MINIMAL ? 'auto' : width}
         padding={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
@@ -97,20 +97,16 @@ const LoaderSpinner = ({
         background={type == LOADER_TYPE.SEAMLESS ? 'initial' : theme.default.bg}
       >
         {progressEnabled && (
-          <ItemVV2
-            flexDirection={progressPositioning == PROGRESS_POSITIONING.TOP ? "column" : "column-reverse"}
-          >
+          <ItemVV2 flexDirection={progressPositioning == PROGRESS_POSITIONING.TOP ? 'column' : 'column-reverse'}>
             <ProgressBar
               percent={progress}
               color={progressColor}
               notice={progressNotice}
-              noticePositioning={progressPositioning == PROGRESS_POSITIONING.TOP ? NOTICE_POSITIONING.BOTTOM : NOTICE_POSITIONING.TOP}
+              noticePositioning={
+                progressPositioning == PROGRESS_POSITIONING.TOP ? NOTICE_POSITIONING.BOTTOM : NOTICE_POSITIONING.TOP
+              }
             />
-            {(title || spinnerEnabled) && 
-              <ItemVV2 
-                margin={`0 0 ${progressVerticalGap} 0`}>  
-              </ItemVV2>
-            }
+            {(title || spinnerEnabled) && <ItemVV2 margin={`0 0 ${progressVerticalGap} 0`}></ItemVV2>}
           </ItemVV2>
         )}
 
@@ -125,9 +121,9 @@ const LoaderSpinner = ({
 
           {title && (
             <SpanV2
-              padding={titleColor ? "0 0 0 10px" : "10px"}
+              padding={titleColor ? '0 0 0 10px' : '10px'}
               fontWeight="500"
-              color={titleColor??theme.default.color}
+              color={titleColor ?? theme.default.color}
             >
               {title}
             </SpanV2>

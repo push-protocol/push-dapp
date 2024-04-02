@@ -1,35 +1,32 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // External Packages
+import { AiOutlineSearch } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
 import styled, { useTheme } from 'styled-components';
-import { AiOutlineSearch } from 'react-icons/ai';
 
 // Internal Compoonents
+import ChainsSelect from 'components/ChainsSelect';
 import Faucets from 'components/Faucets';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import ViewChannelItem from 'components/ViewChannelItem';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import UtilityHelper, { MaskedAliasChannels, MaskedChannels } from 'helpers/UtilityHelper';
-import { incrementPage, setChannelMeta, updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
+import { useAccount } from 'hooks';
+import {
+  incrementPage,
+  setChannelMeta,
+  updateBulkSubscriptions,
+  updateBulkUserSettings,
+} from 'redux/slices/channelSlice';
 import { incrementStepIndex } from 'redux/slices/userJourneySlice';
 import DisplayNotice from '../primaries/DisplayNotice';
-import { Item, ItemH } from '../primaries/SharedStyling';
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import ChainsSelect from 'components/ChainsSelect';
-import { getChannels, getChannelsSearch } from 'services'; // Api Services
-import { useAccount } from 'hooks';
+import { Item } from '../primaries/SharedStyling';
+import { ChannelTYPE } from 'modules/channels/ChannelsModule';
 
 // Internal Configs
 import { appConfig } from 'config';
-import InfoImage from "../assets/info.svg";
-import Tooltip from 'components/reusables/tooltip/Tooltip';
-import UpdateChannelTooltipContent from 'components/UpdateChannelTooltipContent';
-import { AppContext } from 'contexts/AppContext';
-
-// import Tooltip from './reusables/tooltip/Tooltip';
-// import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
 
 // Constants
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
@@ -40,12 +37,12 @@ const SEARCH_DELAY = 1500;
 const SEARCH_LIMIT = 10;
 
 // Create Header
-function ViewChannels({ loadTeaser, playTeaser }) {
+function ViewChannels({ loadTeaser, playTeaser, minimal }) {
   const theme = useTheme();
   const dispatch = useDispatch();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
-  }); 
+  });
   const { account, chainId } = useAccount();
   const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
   const { run, stepIndex } = useSelector((state: any) => state.userJourney);
@@ -64,12 +61,16 @@ function ViewChannels({ loadTeaser, playTeaser }) {
   // fetch channel data if we are just getting to this pae
   useEffect(() => {
     setLoading(!channels.length); //if there are no channels initially then, set the loader
-    fetchInitialsChannelMeta();
-  }, [account, chainId]);
+    if (userPushSDKInstance) {
+      fetchInitialsChannelMeta();
+    }
+  }, [account, chainId, userPushSDKInstance]);
 
   useEffect(() => {
     setChannelsNetworkId(chainId);
-    fetchInitialsChannelMeta();
+    if (userPushSDKInstance) {
+      fetchInitialsChannelMeta();
+    }
   }, [chainId]);
 
   // to update a page
@@ -88,34 +89,40 @@ function ViewChannels({ loadTeaser, playTeaser }) {
 
   // to fetch initial channels and logged in user data
   const fetchInitialsChannelMeta = async () => {
-    // fetch the meta of the first `CHANNELS_PER_PAGE` channels
-    const channelsMeta = await getChannels({
-      page: Math.ceil(channelsVisited / CHANNELS_PER_PAGE) || 1,
-      limit: CHANNELS_PER_PAGE,
-    });
-    dispatch(incrementPage());
-    if (!channels.length) {
-      dispatch(setChannelMeta(channelsMeta));
+    try {
+      let options = {
+        page: Math.ceil(channelsVisited / CHANNELS_PER_PAGE) || 1,
+        limit: CHANNELS_PER_PAGE,
+      };
+      if (!channels.length) {
+        const channelsMeta = await userPushSDKInstance.channel.list({ options });
+        dispatch(incrementPage());
+        dispatch(setChannelMeta(channelsMeta?.channels));
+      }
+      // increases the step once the channel are loaded
+      if (run && stepIndex === 3) {
+        dispatch(incrementStepIndex());
+        dispatch(incrementStepIndex());
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
     }
-
-    // increases the step once the channel are loaded
-    if (run && stepIndex === 3) {
-      dispatch(incrementStepIndex());
-      dispatch(incrementStepIndex());
-    }
-
-    setLoading(false);
   };
 
   // load more channels when we get to the bottom of the page
   const loadMoreChannelMeta = async (newPageNumber: any) => {
     const startingPoint = newPageNumber * CHANNELS_PER_PAGE;
-    const moreChannels = await getChannels({
-      page: Math.ceil(startingPoint / CHANNELS_PER_PAGE) || 1,
-      limit: CHANNELS_PER_PAGE,
-    });
-    dispatch(setChannelMeta([...channels, ...moreChannels]));
-    setMoreLoading(false);
+    try {
+      const moreChannels = await userPushSDKInstance.channel.list({
+        page: Math.ceil(startingPoint / CHANNELS_PER_PAGE) || 1,
+        limit: CHANNELS_PER_PAGE,
+      });
+      dispatch(setChannelMeta([...channels, ...moreChannels?.channels]));
+      setMoreLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const loadMoreSearchChannels = async () => {
@@ -123,7 +130,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       const searchChannels = await userPushSDKInstance.channel.search(search, {
         limit: SEARCH_LIMIT,
         page: searchPage
-      }); 
+      });
 
       if (searchChannels && searchChannels.length > 0) {
         setChannelToShow([...channelToShow, ...searchChannels] || []);
@@ -191,7 +198,8 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     return () => {
       clearTimeout(timeout);
     };
-  }, [search, userPushSDKInstance]);
+    // userPushSDKInstance should not be used as dependency here.
+  }, [search]);
 
   useEffect(() => {
     if (!account || !userPushSDKInstance) return;
@@ -208,19 +216,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     })();
   }, [account, userPushSDKInstance]);
 
-  useEffect(() => {
-    const parsedChannel = window.location.href.toString().slice(window.location.href.toString().length - 42);
-    if (!ADDRESS_REGEX.test(parsedChannel)) return;
-    setTimeout(() => {
-      setSearch(parsedChannel);
-    }, SEARCH_DELAY);
-  }, []);
-
   return (
-    <Container>
-
-
-      {!loading && (
+    <Container minimal={minimal}>
+      {!loading && !minimal && (
         <ItemBar>
           <ItemHBar>
             <SearchContainer
@@ -248,14 +246,14 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                 />
               </Item>
             </SearchContainer>
-            
+
             {UtilityHelper.isMainnet(chainId) && (
               <Item flex="1">
-              <ChainsSelect
-                channelsNetworkId={channelsNetworkId}
-                setChannelsNetworkId={setChannelsNetworkId}
-              />
-            </Item>
+                <ChainsSelect
+                  channelsNetworkId={channelsNetworkId}
+                  setChannelsNetworkId={setChannelsNetworkId}
+                />
+              </Item>
             )}
 
           </ItemHBar>
@@ -280,7 +278,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       )}
 
 
-      <ScrollItem id="scroll">
+      <ScrollItem id="scroll" minimal={minimal}>
         {/* render all channels depending on if we are searching or not */}
         <div>
           {(search ? channelToShow : channels).map(
@@ -302,10 +300,11 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                         (channelsNetworkId == channel.alias_blockchain_id &&
                           !MaskedAliasChannels[channelsNetworkId][channel.channel])) && (
                         <ViewChannelItem
-
                           channelObjectProp={channel}
                           loadTeaser={loadTeaser}
                           playTeaser={playTeaser}
+                          minimal={minimal}
+                          profileType={ChannelTYPE.CHANNEL}
                         />
                       )}
                   </ViewChannelItems>
@@ -326,7 +325,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
         {/* display loader if pagination is loading next batch of channelTotalList */}
         {((moreLoading && channels.length) || loading || loadingChannel) && (
           <CenterContainer>
-            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
+            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={minimal ? 24 : 42} />
           </CenterContainer>
         )}
       </ScrollItem>
@@ -409,13 +408,17 @@ const ItemBar = styled.div`
 
 const Container = styled.div`
   display: flex;
-  flex: 1;
+  flex: ${props => props.minimal ? 0 : 1};
   flex-direction: column;
   font-weight: 200;
   align-content: center;
   align-items: center;
   justify-content: center;
   max-height: 100vh;
+
+  @media (max-width: 768px) {
+    display: ${props => props.minimal ? 'none' : 'flex'};
+  }
 `;
 
 const ContainerInfo = styled.div`
@@ -448,7 +451,7 @@ const ScrollItem = styled(Item)`
   flex-wrap: nowrap;
 
   flex: 1;
-  padding: 0px 20px 10px 20px;
+  padding: ${props => props.minimal ? "20px 10px" : "0px 20px 10px 20px"};
   overflow-y: auto;
 
   &::-webkit-scrollbar-track {
@@ -462,7 +465,7 @@ const ScrollItem = styled(Item)`
   }
 
   @media (max-width: 768px) {
-    padding: 0px 0px 0px 0px;
+    padding: ${props => props.minimal ? "10px 5px" : "0px"};
 
     &::-webkit-scrollbar-track {
       background-color: none;

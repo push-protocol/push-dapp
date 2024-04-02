@@ -47,7 +47,7 @@ function NotificationSettings() {
   const [settingToEdit, setSettingToEdit] = React.useState<ChannelSetting>(undefined);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoadingSettings, setIsLoadingSettings] = React.useState(true);
-  const {handleConnectWallet} = useContext(AppContext);
+  const { handleConnectWallet } = useContext(AppContext);
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -133,12 +133,17 @@ function NotificationSettings() {
   const saveSettings = async () => {
     try {
 
-      if (!userPushSDKInstance.signer) {
-        handleConnectWallet();
-        return;
+      setIsLoading(true);
+
+      let userPushInstance = userPushSDKInstance;
+      if (!userPushInstance.signer) {
+        userPushInstance = await handleConnectWallet();
+        if (!userPushInstance) {
+          setIsLoading(false);
+          return;
+        }
       }
 
-      setIsLoading(true);
 
       notificationToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
       const settingData: NotificationSetting[] = settings.map((setting) => {
@@ -153,14 +158,14 @@ function NotificationSettings() {
           console.info(
             {
               type: setting.type,
-            description: setting.description,
-            default: setting.default,
-            data: {
-              lower: setting.lowerLimit,
-              upper: setting.upperLimit,
-              ticker: setting.ticker,
-              enabled: setting.enabled,
-            },
+              description: setting.description,
+              default: setting.default,
+              data: {
+                lower: setting.lowerLimit,
+                upper: setting.upperLimit,
+                ticker: setting.ticker,
+                enabled: setting.enabled,
+              },
             }
           )
           return {
@@ -178,14 +183,14 @@ function NotificationSettings() {
           console.info(
             {
               type: setting.type,
-            description: setting.description,
-            default: setting.default,
-            data: {
-              lower: setting.lowerLimit,
-              upper: setting.upperLimit,
-              ticker: setting.ticker,
-              enabled: setting.enabled,
-            },
+              description: setting.description,
+              default: setting.default,
+              data: {
+                lower: setting.lowerLimit,
+                upper: setting.upperLimit,
+                ticker: setting.ticker,
+                enabled: setting.enabled,
+              },
             }
           )
           return {
@@ -202,7 +207,7 @@ function NotificationSettings() {
         }
       });
       console.info(settingData);
-      await userPushSDKInstance.channel.setting(settingData);
+      await userPushInstance.channel.setting(settingData);
 
       dispatch(updateChannelSetting({ channelAddress, settings }));
       setIsLoading(false);
