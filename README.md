@@ -903,10 +903,10 @@ yarn install
 yarn start
 ```
 
-### Note 
+### Note
 ```sh
 Make sure to have the generate the `.env` file from the .env.sample file.
-You can set up on different environments depending on the REACT_APP_DEPLOY_ENV variable(DEV or STAGING or PROD). 
+You can set up on different environments depending on the VITE_APP_DEPLOY_ENV variable(DEV or STAGING or PROD).
 ```
 
 
@@ -921,7 +921,7 @@ You can set up on different environments depending on the REACT_APP_DEPLOY_ENV v
 
 ## Contributing
 
-Push Protocol is an open source Project. We firmly believe in a completely transparent development process and value any contributions. We would love to have you as a member of the community, whether you are assisting us in bug fixes, suggesting new features, enhancing our documentation, or simply spreading the word. 
+Push Protocol is an open source Project. We firmly believe in a completely transparent development process and value any contributions. We would love to have you as a member of the community, whether you are assisting us in bug fixes, suggesting new features, enhancing our documentation, or simply spreading the word.
 
 - Bug Report: Please create a bug report if you encounter any errors or problems while utilising the Push Protocol.
 - Feature Request: Please submit a feature request if you have an idea or discover a capability that would make development simpler and more reliable.
@@ -959,5 +959,5 @@ Open up localhost:3000 by
 yarn start
 ```
 Make sure to have the generate the `.env` file from the .env.sample file.
-You can set up on different environments depending on the REACT_APP_DEPLOY_ENV variable(DEV or STAGING or PROD).  -->
+You can set up on different environments depending on the VITE_APP_DEPLOY_ENV variable(DEV or STAGING or PROD).  -->
 

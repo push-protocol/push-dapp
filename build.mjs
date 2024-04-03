@@ -5,44 +5,44 @@ import readline from 'readline';
 
 const envPresets = {
   alpha: {
-    REACT_APP_DEPLOY_ENV: 'ALPHA',
-    REACT_APP_PUBLIC_URL: 'https://alpha.push.org/',
+    VITE_APP_DEPLOY_ENV: 'ALPHA',
+    VITE_APP_PUBLIC_URL: 'https://alpha.push.org/',
   },
   w2w: {
-    REACT_APP_DEPLOY_ENV: 'W2W',
-    REACT_APP_PUBLIC_URL: 'https://w2w.push.org/',
+    VITE_APP_DEPLOY_ENV: 'W2W',
+    VITE_APP_PUBLIC_URL: 'https://w2w.push.org/',
   },
   dev: {
-    REACT_APP_DEPLOY_ENV: 'DEV',
-    REACT_APP_PUBLIC_URL: 'https://dev.push.org/',
+    VITE_APP_DEPLOY_ENV: 'DEV',
+    VITE_APP_PUBLIC_URL: 'https://dev.push.org/',
   },
   staging: {
-    REACT_APP_DEPLOY_ENV: 'STAGING',
-    REACT_APP_PUBLIC_URL: 'https://staging.push.org/',
+    VITE_APP_DEPLOY_ENV: 'STAGING',
+    VITE_APP_PUBLIC_URL: 'https://staging.push.org/',
   },
   prod: {
-    REACT_APP_DEPLOY_ENV: 'PROD',
-    REACT_APP_PUBLIC_URL: 'https://app.push.org/',
+    VITE_APP_DEPLOY_ENV: 'PROD',
+    VITE_APP_PUBLIC_URL: 'https://app.push.org/',
   },
   // alpha: {
-  //   REACT_APP_DEPLOY_ENV: 'ALPHA',
-  //   REACT_APP_PUBLIC_URL: 'https://alpha.epns.io/',
+  //   VITE_APP_DEPLOY_ENV: 'ALPHA',
+  //   VITE_APP_PUBLIC_URL: 'https://alpha.epns.io/',
   // },
   // w2w: {
-  //   REACT_APP_DEPLOY_ENV: 'W2W',
-  //   REACT_APP_PUBLIC_URL: 'https://w2w.epns.io/',
+  //   VITE_APP_DEPLOY_ENV: 'W2W',
+  //   VITE_APP_PUBLIC_URL: 'https://w2w.epns.io/',
   // },
   // dev: {
-  //   REACT_APP_DEPLOY_ENV: 'DEV',
-  //   REACT_APP_PUBLIC_URL: 'https://dev.epns.io/',
+  //   VITE_APP_DEPLOY_ENV: 'DEV',
+  //   VITE_APP_PUBLIC_URL: 'https://dev.epns.io/',
   // },
   // staging: {
-  //   REACT_APP_DEPLOY_ENV: 'STAGING',
-  //   REACT_APP_PUBLIC_URL: 'https://staging.epns.io/',
+  //   VITE_APP_DEPLOY_ENV: 'STAGING',
+  //   VITE_APP_PUBLIC_URL: 'https://staging.epns.io/',
   // },
   // prod: {
-  //   REACT_APP_DEPLOY_ENV: 'PROD',
-  //   REACT_APP_PUBLIC_URL: 'https://app.epns.io/',
+  //   VITE_APP_DEPLOY_ENV: 'PROD',
+  //   VITE_APP_PUBLIC_URL: 'https://app.epns.io/',
   // },
 };
 
