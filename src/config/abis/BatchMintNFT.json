@@ -1,0 +1,53 @@
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "recipients",
+        "type": "address[]"
+      },
+      {
+        "internalType": "string[]",
+        "name": "metadatas",
+        "type": "string[]"
+      },
+      {
+        "internalType": "uint8",
+        "name": "startpos",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "num",
+        "type": "uint8"
+      }
+    ],
+    "name": "produceNFTs",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "revokeOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

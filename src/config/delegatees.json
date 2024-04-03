@@ -1,0 +1,125 @@
+{
+    "delegatee01":{
+        "name": "Auryn Macmillan",
+        "wallet": "auryn.eth",
+        "url": "https://twitter.com/auryn_macmillan",
+        "pic": "auryn",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/3"
+    },
+    "delegatee02":{
+        "name": "Luka Sučić",
+        "wallet": "lukaskywalker.eth",
+        "url": "https://twitter.com/beler",
+        "pic": "beler",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/4"
+    },
+    "delegatee03":{
+        "name": "DefiDad",
+        "wallet": "defidad.eth",
+        "url": "https://twitter.com/DeFi_Dad",
+        "pic": "defi_dad",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/7"
+    },
+    "delegatee04":{
+        "name": "Anton Mozgovoy",
+        "wallet": "mozgovoy.eth",
+        "url": "https://twitter.com/mozgovoy_anton",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/8"
+    },
+    "delegatee06":{
+        "name": "Vijay Gir",
+        "wallet": "0x4498e30066c3188eA5B8908780A7A576e21f3eE3",
+        "url": "https://twitter.com/imvijaygir",
+        "pic": "imvijaygir",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/10"
+    },
+    "delegatee07":{
+        "name": "Robin Roy",
+        "wallet": "0x73eEf70d9B803f0066a1569393d6299369fA3C87",
+        "url": "https://twitter.com/robin_rrtx",
+        "pic": "robin_rrtx",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/11"
+    },
+    "delegatee08":{
+        "name": "Jaf",
+        "wallet": "mrjaf.eth",
+        "url": "https://twitter.com/jafetsc",
+        "pic": "jaf",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/12"
+    },
+    "delegatee09":{
+        "name": "Lubna Mohsin",
+        "wallet": "0x836ccDEF1F4d2eFF9402DedF3B4beF69dD13764e",
+        "url": "https://twitter.com/MrsMoo40402659",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/15"
+    },
+    "delegatee10":{
+        "name": "Aiswarya Walter",
+        "wallet": "0x1c8c125C1Eac1C8d450979cbf0146985D75df55A",
+        "url": "https://twitter.com/miss__walter",
+        "pic": "aiswarya",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/17"
+    },
+    "delegatee11":{
+        "name": "Vamoose",
+        "wallet": "0xeB901cFD3b214247a460861F65502E7332c8aF06",
+        "url": "https://twitter.com/learn4life6",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/19"
+    },
+    "delegatee12":{
+        "name": "Zaryab Afser",
+        "wallet": "0x554d29160f779Adf0a4328597cD33Ea1Df4D9Ee9",
+        "url": "https://twitter.com/Zaryab84339098",
+        "pic": "zaryab",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/21"
+    },
+    "delegatee13":{
+        "name": "Ashis Kumar Pradhan",
+        "wallet": "0x5913760160d245d0C9A05a8a956012694281bEE3",
+        "url": "https://twitter.com/AshisKu88733868",
+        "pic": "ashis",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/22"
+    },
+    "delegatee14":{
+        "name": "Krishnanand V P",
+        "wallet": "0x3cc04C46426C7504b59060981e6b5aD7D848E119",
+        "url": "https://twitter.com/incrypto32",
+        "pic": "krishna",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/25"
+    },
+    "delegatee15":{
+        "name": "Pranshu Rastogi",
+        "wallet": "0xcB034160f7B45E41E6015ECEA09F31A66C144422",
+        "url": "https://twitter.com/pranshu3196",
+        "pic": "pranshu",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/26"
+    },
+    "delegatee16":{
+        "name": "Ray",
+        "wallet": "0x8edF4866E26bb82d288845bF55f15370bb4e6027",
+        "url": "https://twitter.com/Rayomand14",
+        "pic": "ray",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/13"
+    },
+    "delegatee17":{
+        "name": "Alexander",
+        "wallet": "0xC076FE76E995cC6FFF0F1e58fcA10Dbb8Fc5581F",
+        "url": "https://twitter.com/xand6r",
+        "pic": "alex",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/20"
+    },
+    "delegatee18":{
+        "name": "Ashwani Mittal",
+        "wallet": "0x767631aB6d49C41414C318a0E3DB215d36B965Ab",
+        "url": "https://twitter.com/mittalashwani1",
+        "pic": "ashwani",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/24"
+    },
+    "delegatee19":{
+        "name": "Jude Dike",
+        "wallet": "dumebi.eth",
+        "url": "https://twitter.com/bigbrutha_",
+        "pic": "jude",
+        "forum": "https://gov.epns.io/t/epns-push-delegatee-nominations/21/33"
+    }
+}

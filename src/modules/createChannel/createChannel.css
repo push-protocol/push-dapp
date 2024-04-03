@@ -1,0 +1,105 @@
+.kITDl{
+    color: black !important;
+}
+
+.select__option:hover{
+    color: white;
+}
+
+.select__option:focus{
+    color: white;
+}
+
+.iImage:hover{
+    cursor: pointer;
+}
+
+.css-1t4u32w-control:hover{
+    border:none !important;
+}
+.css-1t4u32w-control:focus{
+    border: none !important;
+    box-shadow: none !important;
+}
+.css-1t4u32w-control{
+    border: none !important;
+    height: 59px;
+}
+
+
+.css-b62m3t-container{
+    width: 100% !important;
+    border: 1px solid black !important;
+
+}
+
+.css-b62m3t-container:focus{
+    box-shadow: 0 0 0px white !important;
+    border: none !important;
+}
+
+.css-1psg5m7-control{
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.css-319lph-ValueContainer{
+    margin-top: 5px; 
+}
+
+.css-1hb7zxy-IndicatorsContainer{
+    margin-top: 5px;
+}
+
+.iImage{
+    filter: invert(100%) sepia(0%) saturate(2%) hue-rotate(59deg) brightness(105%) contrast(101%);
+}
+
+.test {
+    display:none;
+  }
+.mainDiv {
+display:inline-block;
+}
+.imgSpan{
+    position: absolute;
+    top: 29px;
+    right: 46px;
+    background: linear-gradient(90deg, #E20880 0%, #674C9F 52.75%, #35C5F3 100%);
+    border-radius: 100%;
+    padding: -1px;
+    height: 100%;
+    z-index: 10;
+    size: 0.8em;
+}
+.imgSpan:hover .test {
+display:block;
+}
+
+.imgSpan:hover::after {
+position: absolute;
+content: attr(data-tooltip);
+right: 0.5em;
+bottom: 2em;
+background-color: #333;
+color: white;
+padding: .5em;
+font-size: .75em;
+width: 300px;
+height: 50px;
+z-index: 10;
+}
+
+.css-6j8wv5-Input{
+    height: 46px !important;
+}
+/* .css-b62m3t-container{
+    width: 50% !important;
+} */
+
+
+/* .kITDl:hover{
+    color: white !important;
+}
+
+ */

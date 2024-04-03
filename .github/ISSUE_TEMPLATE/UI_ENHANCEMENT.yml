@@ -1,0 +1,76 @@
+name: "🎨 UI/UX Enhancement"
+description: Suggest a UI/UX enhancement to make us look better.
+title: "🎨 [UI/UX Enhancement] - <title>"
+labels: [
+  "ui enhancement"
+]
+body:
+  - type: textarea
+    id: expected-ui
+    attributes:
+      label: "Expected UI"
+      description: Please describe the UI you are expecting
+      placeholder: Short and explicit description of your desired UI...
+    validations:
+      required: false
+  - type: textarea
+    id: current-ui
+    attributes:
+      label: "Current UI"
+      description: Please describe the current UI
+      placeholder: What is the current UI behaviour?...
+    validations:
+      required: false
+  - type: input
+    id: figma-url
+    attributes:
+      label: "Figma Design if available"
+      description: Please enter figma designs url, if available
+      placeholder: Figma Link
+    validations:
+      required: false
+  - type: textarea
+    id: reprod
+    attributes:
+      label: "Steps to Reproduce"
+      description: Please enter an explicit description of your issue
+      value: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See UI
+      render: bash
+    validations:
+      required: false
+  - type: textarea
+    id: expected-screenshot
+    attributes:
+      label: "Expected UI Screenshots"
+      description: If applicable, add screenshots to help explain your enhancement.
+      value: |
+        ![DESCRIPTION](LINK.png)
+      render: bash
+    validations:
+      required: false
+  - type: textarea
+    id: current-screenshot
+    attributes:
+      label: "Current UI Screenshots"
+      description: If applicable, add screenshots to help explain your enhancement.
+      value: |
+        ![DESCRIPTION](LINK.png)
+      render: bash
+    validations:
+      required: false
+  - type: dropdown
+    id: dapp-env
+    attributes:
+      label: "Dapp Env"
+      description: What is the impacted DApp environment ?
+      multiple: true
+      options:
+        - Prod (app.push.org)
+        - Staging (staging.push.org)
+        - Dev (dev.push.org)
+    validations:
+      required: true
