@@ -21,7 +21,7 @@ import styled, { useTheme } from 'styled-components';
 import CommunityGroup from 'assets/chat/CommunityGroup.svg?react';
 import IntroChat from 'assets/chat/IntroChat.svg?react';
 import TokenGated from 'assets/chat/TokenGated.svg?react';
-import HandwaveIcon from 'assets/chat/handwave.svg?react?react';
+import HandwaveIcon from 'assets/chat/handwave.svg?react';
 import videoCallIcon from 'assets/icons/videoCallIcon.svg?react';
 import { Content } from 'components/SharedStyling';
 import Recommended from 'components/chat/recommended/Recommended';
