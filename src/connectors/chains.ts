@@ -39,6 +39,12 @@ const SPARK: AddEthereumChainParameter['nativeCurrency'] = {
   decimals: 18,
 }
 
+const SHM: AddEthereumChainParameter['nativeCurrency'] = {
+  name: 'SHM',
+  symbol: 'SHM',
+  decimals: 18,
+}
+
 interface BasicChainInformation {
   urls: string[]
   name: string
@@ -179,6 +185,12 @@ export const TESTNET_CHAINS: ChainConfig = {
     urls: ['https://rpc.fusespark.io'],
     nativeCurrency: SPARK,
     blockExplorerUrls: ['https://explorer.fusespark.io/'],
+  },
+  8082: {
+    name: "Shardeum Testnet",
+    urls: ['https://sphinx.shardeum.org/'],
+    nativeCurrency: SHM,
+    blockExplorerUrls: ['https://explorer-sphinx.shardeum.org/'],
   }
 }
 

@@ -29,7 +29,8 @@ export const config = {
     420, // optimism goerli testnet
     1442, // polygon zkevm testnet
     421613, // arbitrum testnet
-    123 // fuse testnet
+    123, // fuse testnet
+    8082 // shardeum testnet
   ],
 
   /** 
@@ -174,5 +175,12 @@ export const CHAIN_DETAILS = {
     chainId: 123,
     rpcUrl: 'https://rpc.fusespark.io',
     commAddress: '0x7eBb54D86CF928115965DB596a3E600404dD8039'
+  },
+  8082: {
+    label: "Shardeum Testnet",
+    name: "SHARDEUM_TESTNET",
+    chainId: 8082,
+    rpcUrl: 'https://sphinx.shardeum.org/',
+    commAddress: '0x9cb3bd7550b5c92baa056fc0f08132f49508145f'
   }
 }
