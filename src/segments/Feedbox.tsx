@@ -15,7 +15,6 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import SearchFilter from 'components/SearchFilter';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import CryptoHelper from 'helpers/CryptoHelper';
-import { Item } from 'primaries/SharedStyling';
 import {
   addPaginatedNotifications,
   incrementPage,
@@ -36,7 +35,6 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { appConfig } from 'config';
 import { device } from 'config/Globals';
 import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { Image } from 'components/SharedStyling';
 import { useNavigate } from 'react-router-dom';
 
 // Constants
@@ -380,9 +378,9 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
           {notifications && (
             <Notifs id="scrollstyle-secondary">
               {bgUpdateLoading && (
-                <Item padding="10px 20px">
+                <ItemHV2 padding="10px 20px">
                   <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
-                </Item>
+                </ItemHV2>
               )}
               {run &&
                 welcomeNotifs.map((oneNotification, index) => {
@@ -431,9 +429,9 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
               })}
 
               {loading && !bgUpdateLoading && (
-                <Item padding="10px 20px">
+                <ItemHV2 padding="10px 20px">
                   <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
-                </Item>
+                </ItemHV2>
               )}
             </Notifs>
           )}

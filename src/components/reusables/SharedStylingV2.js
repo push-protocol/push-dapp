@@ -210,6 +210,8 @@ export const AInlineV2 = styled.a`
   padding: 0px;
   text-transform: initial;
   cursor: ${(props) => props.cursor || 'default'};
+  text-decoration: ${(props) => props.textDecoration || 'none'};
+  margin: ${(props) => props.margin || 0};
 `;
 
 export const Skeleton = styled.div`

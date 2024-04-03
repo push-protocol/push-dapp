@@ -8,9 +8,8 @@ import styled, { useTheme } from 'styled-components';
 import { useSelector } from 'react-redux';
 
 // Internal Components
-import { A } from '../primaries/SharedStyling';
 import { GlobalContext, ReadOnlyWalletMode } from 'contexts/GlobalContext';
-import { ImageV2, ItemHV2, SpanV2 } from './reusables/SharedStylingV2';
+import { AInlineV2, ImageV2, ItemHV2, SpanV2 } from './reusables/SharedStylingV2';
 import { useAccount } from 'hooks';
 
 export type DropdownValueType = {
@@ -173,20 +172,19 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor, setShow
               </Link>
             )}
             {dropdownValue?.link && (
-              <A
+              <AInlineV2
                 width="max-content"
                 href={dropdownValue?.link}
                 target="_blank"
                 rel="nofollow"
                 margin="8px 10px"
-                weight="400"
-                size="16px"
-                width="max-content"
+                fontWeight="400"
+                fontSize="16px"
                 color={getTextColor(dropdownValue)}
                 hoverBG="transparent"
               >
                 {dropdownValue.title}
-              </A>
+              </AInlineV2>
             )}
           </DropdownItemContainer>
         )
@@ -226,7 +224,6 @@ const DropdownItemContainer = styled(ItemHV2)`
   border-radius: 12px;
   cursor: pointer;
   text-align: left;
-  background:"red"
 
   &:hover {
     background-color: ${(props) => props.hoverBGColor || 'none'};

@@ -9,13 +9,12 @@ import styled, { useTheme } from 'styled-components';
 // Internal Components
 import SnapFAQModal from 'components/PushSnap/SnapFAQModal';
 import SnapKnowledgeModal from 'components/PushSnap/SnapKnowledgeModal';
-import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { AppContext } from 'contexts/AppContext';
 import { useAccount } from 'hooks';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import Info from 'segments/Info';
-import { H2, Image, Item, Section, Span } from '../../primaries/SharedStyling';
 
 // Internal Configs
 import ActiveIcon from 'assets/PushSnaps/ActiveIcon.svg';
@@ -29,10 +28,7 @@ import InfoLogo from 'assets/PushSnaps/spam-icon.svg';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import AboutSnapModal from './AboutSnapModal';
 
-
-const SnapModule = ({
-  route
-}) => {
+const SnapModule = ({ route }) => {
   const [loading, setLoading] = useState(false);
   const [walletConnected, setWalletConnected] = useState(false);
   const [addedAddress, setAddedAddress] = useState(false);
@@ -170,8 +166,7 @@ const SnapModule = ({
     if (route == 'knowledge') {
       showSnapKnowledgeModal();
     }
-
-  }, [route])
+  }, [route]);
 
   return (
     <>
@@ -197,7 +192,7 @@ const SnapModule = ({
           modalPosition={MODAL_POSITION.ON_PARENT}
         />
 
-        <Image
+        <ImageV2
           src={PushMetamaskLogo}
           width="152px"
           height="55px"
@@ -205,7 +200,7 @@ const SnapModule = ({
 
         <SubContainer>
           <ItemVV2>
-            <Image
+            <ImageV2
               src={SnapExample}
               width="276px"
               height="202px"
@@ -240,40 +235,47 @@ const SnapModule = ({
                       margin="12px 0"
                     >
                       <ItemHV2 alignItems="baseline">
-                        <Image
+                        <ImageV2
                           src={BellRinging}
                           height="32px"
                           width="auto"
                         />
                         <ItemVV2 margin="0 0 0 16px">
                           <PrimaryText>Subscribe for Notifications</PrimaryText>
-                          <SecondaryText>Subscribe to protocols that you want notification from. You can see all {" "}
-                            <ChannelSpan onClick={() => navigate('/channels')}>protocol channels and subscribe to them from here.</ChannelSpan>
+                          <SecondaryText>
+                            Subscribe to protocols that you want notification from. You can see all{' '}
+                            <ChannelSpan onClick={() => navigate('/channels')}>
+                              protocol channels and subscribe to them from here.
+                            </ChannelSpan>
                           </SecondaryText>
                         </ItemVV2>
                       </ItemHV2>
 
                       <ItemHV2 alignItems="baseline">
-                        <Image
+                        <ImageV2
                           src={GasPump}
                           height="32px"
                           width="auto"
                         />
                         <ItemVV2 margin="0 0 0 16px">
                           <PrimaryText>Gasless Opt-ins</PrimaryText>
-                          <SecondaryText>Subscribing / Opting-in to a channel is gasless and completely free.</SecondaryText>
+                          <SecondaryText>
+                            Subscribing / Opting-in to a channel is gasless and completely free.
+                          </SecondaryText>
                         </ItemVV2>
                       </ItemHV2>
 
                       <ItemHV2 alignItems="baseline">
-                        <Image
+                        <ImageV2
                           src={NotificationLogo}
                           height="32px"
                           width="auto"
                         />
                         <ItemVV2 margin="0 0 0 16px">
                           <PrimaryText>Notifications directly in MetaMask</PrimaryText>
-                          <SecondaryText>Once subscribed, the channels can send you notifications directly in your MetaMask.</SecondaryText>
+                          <SecondaryText>
+                            Once subscribed, the channels can send you notifications directly in your MetaMask.
+                          </SecondaryText>
                         </ItemVV2>
                       </ItemHV2>
                     </ItemVV2>
@@ -293,7 +295,7 @@ const SnapModule = ({
 
             {walletConnected || addedAddress ? (
               <ItemHV2 gap="8px">
-                <Image
+                <ImageV2
                   src={ActiveIcon}
                   width="10px"
                   height="10px"
@@ -314,7 +316,10 @@ const SnapModule = ({
                     spinnerSize={44}
                   />
                 ) : (
-                  <ConnectButton disabled={!snapInstalled ? false : true} onClick={() => connectToMetaMask()} >
+                  <ConnectButton
+                    disabled={!snapInstalled ? false : true}
+                    onClick={() => connectToMetaMask()}
+                  >
                     {!snapInstalled ? 'Step 1: Install Snap' : 'Step 1: Completed'}
                   </ConnectButton>
                 )}
@@ -324,7 +329,11 @@ const SnapModule = ({
                     spinnerSize={44}
                   />
                 ) : (
-                  <ConnectButton disabled={snapInstalled ? false : true} signOnMM={snapInstalled ? true : false} onClick={() => connectToMetaMask()} >
+                  <ConnectButton
+                    disabled={snapInstalled ? false : true}
+                    signOnMM={snapInstalled ? true : false}
+                    onClick={() => connectToMetaMask()}
+                  >
                     Step 2: Sign In with Metamask 🦊
                   </ConnectButton>
                 )}
@@ -332,7 +341,7 @@ const SnapModule = ({
             )}
 
             {walletConnected || addedAddress ? (
-              <ButtonContainer gap="12px" >
+              <ButtonContainer gap="12px">
                 <SettingsButton onClick={handleSettingsClick}>
                   <Gear
                     height="20px"
@@ -346,7 +355,7 @@ const SnapModule = ({
                 gap="7px"
                 onClick={showPushSnapAbout}
               >
-                <Image
+                <ImageV2
                   src={InfoLogo}
                   width={16}
                 />
@@ -359,27 +368,40 @@ const SnapModule = ({
                 </SpanV2>
               </InfoDiv>
             )}
-
-
-
           </ItemVV2>
         </SubContainer>
-        <ItemVV2 flex='none'>
-          <SpanV2 fontSize='14px' fontWeight='400' color='#657795'>Have a question? Check out our {" "}
-            <SpanV2 fontWeight='500' cursor='pointer' onClick={() => navigate("/snap/faq")}>FAQs </SpanV2>
-            or {" "}
-            <SpanV2 fontWeight='500' cursor='pointer' onClick={() => navigate("/snap/knowledge")}>Knowledgebase.</SpanV2>
+        <ItemVV2 flex="none">
+          <SpanV2
+            fontSize="14px"
+            fontWeight="400"
+            color="#657795"
+          >
+            Have a question? Check out our{' '}
+            <SpanV2
+              fontWeight="500"
+              cursor="pointer"
+              onClick={() => navigate('/snap/faq')}
+            >
+              FAQs{' '}
+            </SpanV2>
+            or{' '}
+            <SpanV2
+              fontWeight="500"
+              cursor="pointer"
+              onClick={() => navigate('/snap/knowledge')}
+            >
+              Knowledgebase.
+            </SpanV2>
           </SpanV2>
         </ItemVV2>
       </Container>
-
     </>
   );
 };
 
 export default SnapModule;
 
-const Container = styled(Section)`
+const Container = styled(SectionV2)`
   align-items: center;
   align-self: center;
   display: flex;
@@ -397,17 +419,23 @@ const Container = styled(Section)`
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
     padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
-    width: calc(100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
+    width: calc(
+      100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} -
+        ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
+    );
   }
-    
+
   @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
     padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
-    width: calc(100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
+    width: calc(
+      100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} -
+        ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
+    );
   }
 `;
 
-const SubContainer = styled(Section)`
+const SubContainer = styled(SectionV2)`
   width: 438px;
   height: 423px;
   padding: 24px;
@@ -445,19 +473,19 @@ const Steps = styled(ItemVV2)`
   flex-wrap: wrap;
 
   &::after {
-    content: "";
+    content: '';
     width: 100%;
   }
-`
+`;
 
 const ConnectButton = styled(SnapButton)`
   min-width: 280px;
   padding: 16px 24px;
-  background: ${props => props.signOnMM ? '#222222' : '#d53a94'};
-  border: ${props => props.signOnMM ? '1px solid #2a2a2a' : '1px solid #d53a94'};
-  opacity: ${props => props.disabled ? '0.5' : '1'};
-  pointer-events: ${props => props.disabled ? 'none' : 'auto'};
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  background: ${(props) => (props.signOnMM ? '#222222' : '#d53a94')};
+  border: ${(props) => (props.signOnMM ? '1px solid #2a2a2a' : '1px solid #d53a94')};
+  opacity: ${(props) => (props.disabled ? '0.5' : '1')};
+  pointer-events: ${(props) => (props.disabled ? 'none' : 'auto')};
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
 `;
 
 const SettingsButton = styled(SnapButton)`
@@ -479,9 +507,9 @@ const PrimaryText = styled.p`
   margin: 0px;
   font-size: 18px;
   font-weight: 500;
-  line-height: 24px; 
+  line-height: 24px;
   align-self: baseline;
-  color:${(props) => props.theme.snapPrimaryText};
+  color: ${(props) => props.theme.snapPrimaryText};
 `;
 
 const SecondaryText = styled.p`
@@ -489,18 +517,18 @@ const SecondaryText = styled.p`
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  color:${(props) => props.theme.snapSecondaryText};
+  color: ${(props) => props.theme.snapSecondaryText};
   text-align: left;
 `;
 
 const ChannelSpan = styled(SpanV2)`
   font-weight: 500;
-  color:#D53A94;
-  cursor:pointer;
-  &:hover{
-    text-decoration:underline;
+  color: #d53a94;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
   }
-`
+`;
 
 const FilledButton = styled(SnapButton)`
   width: 135px;
@@ -508,7 +536,7 @@ const FilledButton = styled(SnapButton)`
   background: #d53a94;
 
   @media ${device.mobileL} {
-   min-width: 246px;
+    min-width: 246px;
   }
 `;
 
@@ -517,7 +545,7 @@ const InfoDiv = styled(ItemHV2)`
 `;
 
 const ButtonContainer = styled(ItemHV2)`
-@media ${device.mobileL} {
-  flex-direction:column;
-}
+  @media ${device.mobileL} {
+    flex-direction: column;
+  }
 `;

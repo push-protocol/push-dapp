@@ -14,7 +14,6 @@ import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
 import GLOBALS from 'config/Globals';
 import { nothing } from 'immer';
 import { AppContext } from 'contexts/AppContext';
-import { Span } from './SharedStyling';
 
 // Create Header
 function MobileNavButton({ item, data, sectionID, active, bg = 'none', showNavBar, setShowNavBar }) {
@@ -117,18 +116,19 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none', showNavBa
                 />
               )}
 
-              <Span
+              <SpanV2
                 flex="1"
-                weight={!active ? '300' : '600'}
-                spacing="0"
+                fontWeight={!active ? '300' : '600'}
+                letterSpacing="0"
                 margin="0 10px"
                 color={theme.nav.color}
                 onClick={data?.hasOnClickFunction && showMetamaskPushSnap}
                 minWidth="100px"
-                size="17px"
+                fontSize="17px"
+                textAlign="left"
               >
                 {data.name}
-              </Span>
+              </SpanV2>
 
               {data?.showNewTag && <NewTag>New</NewTag>}
 

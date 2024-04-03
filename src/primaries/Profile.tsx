@@ -13,10 +13,9 @@ import { useAccount } from 'hooks';
 import { useClickAway } from 'hooks/useClickAway';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import Dropdown from '../components/Dropdown';
-import { Item } from './SharedStyling.js';
 
 // Internal Configs
-import { SpanV2 } from 'components/reusables/SharedStylingV2.js';
+import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2.js';
 import APP_PATHS from 'config/AppPaths';
 import { AppContext } from 'contexts/AppContext';
 import { ErrorContext } from 'contexts/ErrorContext';
@@ -25,7 +24,7 @@ import { AppContextType } from 'types/context';
 
 // Create Header
 const Profile = ({ isDarkMode }) => {
-  const { web3NameList,initialisePushSdkReadMode }: AppContextType = useContext(AppContext);
+  const { web3NameList, initialisePushSdkReadMode }: AppContextType = useContext(AppContext);
   const { setReadOnlyWallet, readOnlyWallet, mode, setMode }: GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
@@ -39,7 +38,7 @@ const Profile = ({ isDarkMode }) => {
 
   // resolve web3 name
   useResolveWeb3Name(account);
-  const web3Name = web3NameList[account]
+  const web3Name = web3NameList[account];
 
   // Get theme
   const theme = useTheme();
@@ -51,21 +50,21 @@ const Profile = ({ isDarkMode }) => {
       id: 'walletAddress',
       value: account,
       title: account,
-      function: () => { },
+      function: () => {},
       invertedIcon: './copy.svg',
     },
     {
       id: 'userSettings',
       value: '',
       title: 'Settings',
-      function: () => { },
+      function: () => {},
       to: APP_PATHS.UserSettings,
-      invertedIcon: 'svg/setting.svg'
+      invertedIcon: 'svg/setting.svg',
     },
     {
       id: 'prodDapp',
       value: '',
-      function: () => { },
+      function: () => {},
       link: `https://${envUtil.prod}`,
       title: 'Production dapp',
       invertedIcon: './prod.svg',
@@ -88,24 +87,21 @@ const Profile = ({ isDarkMode }) => {
     setShowDropdown(false);
   });
 
-  const ConnectWallet = ()=>{
+  const ConnectWallet = () => {
     connect();
-  }
+  };
 
-  
   // to create blockies
   return (
     <>
-
       {account && account != '' && !authError ? (
         <Body>
-
           {!(wallet?.accounts?.length > 0) ? (
             <Wallet
               bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
-              color='#FFF'
+              color="#FFF"
               isDarkMode={isDarkMode}
-              onClick={()=>ConnectWallet()}
+              onClick={() => ConnectWallet()}
             >
               Connect Wallet
             </Wallet>
@@ -113,7 +109,7 @@ const Profile = ({ isDarkMode }) => {
             <>
               <Wallet
                 bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
-                color='#FFF'
+                color="#FFF"
                 isDarkMode={isDarkMode}
                 onClick={() => setShowDropdown(!showDropdown)}
                 ref={toggleArrowRef}
@@ -139,7 +135,7 @@ const Profile = ({ isDarkMode }) => {
                 </ToggleArrowImg>
               </Wallet>
               {showDropdown && (
-                <Item
+                <ItemVV2
                   position="absolute"
                   top="3.6rem"
                   right="-0.5rem"
@@ -149,7 +145,10 @@ const Profile = ({ isDarkMode }) => {
                     align="flex-start"
                     ref={dropdownRef}
                   >
-                    <Dropdown dropdownValues={dropdownValues} setShowDropdown={setShowDropdown}/>
+                    <Dropdown
+                      dropdownValues={dropdownValues}
+                      setShowDropdown={setShowDropdown}
+                    />
                   </DropdownItem>
                   <ItemModal ref={modalRef}>
                     <ProfileModal
@@ -158,7 +157,7 @@ const Profile = ({ isDarkMode }) => {
                       dropdownValues={dropdownValues}
                     />
                   </ItemModal>
-                </Item>
+                </ItemVV2>
               )}
             </>
           )}
@@ -166,9 +165,9 @@ const Profile = ({ isDarkMode }) => {
       ) : (
         <Wallet
           bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
-          color='#FFF'
+          color="#FFF"
           isDarkMode={isDarkMode}
-          onClick={()=>ConnectWallet()}
+          onClick={() => ConnectWallet()}
         >
           Connect Wallet
         </Wallet>
@@ -208,7 +207,7 @@ const Wallet = styled.div`
     box-sizing: border-box;
     justify-content: space-between;
     border-radius: 13px;
-    background: linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%);
+    background: linear-gradient(87.17deg, #b6a0f5 0%, #f46ef7 57.29%, #ff95d5 100%);
     margin: 0px 0px;
   }
 
@@ -248,7 +247,7 @@ const ToggleArrowImg = styled.div`
   }
 `;
 
-const DropdownItem = styled(Item)`
+const DropdownItem = styled(ItemVV2)`
   background: ${(props) => props.theme.header.bg};
   border: 1px solid ${(props) => props.theme.snackbarBorderColor};
   border-radius: 24px;
