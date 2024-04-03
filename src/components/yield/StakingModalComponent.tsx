@@ -94,11 +94,6 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
     }, [])
 
     const approveDeposit = async () => {
-        if(!userPushSDKInstance.signer) {
-            handleConnectWallet();
-            return;
-        }
-
         if (depositApproved || txInProgressApprDep) {
             return
         }
@@ -169,11 +164,6 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
     }
 
     const depositAmountTokenFarmSingleTx = async () => {
-        if(!userPushSDKInstance.signer) {
-            handleConnectWallet();
-            return;
-        }
-
         if (txInProgressDep || !depositApproved) {
             return
         }
@@ -278,6 +268,13 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
     const setDepositAmountMax = (tokenAmount) => {
         setDepositAmount(parseInt(tokenAmount.toString().replace(/\D/, '')) || 0)
+
+        if (approvedToken >= parseInt(tokenAmount.toString().replace(/\D/, '')) || 0) {
+            setDepositApprove(true);
+        }
+        else {
+            setDepositApprove(false);
+        }
     }
 
 

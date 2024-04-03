@@ -1,49 +1,45 @@
 // React + Web3 Essentials
-import React, { useContext } from "react";
+import React, { useContext } from 'react';
 
 // External Packages
-import { useDispatch, useSelector } from "react-redux";
-import { toast as toaster } from "react-toastify";
-import { useClickAway } from "react-use";
-import { Waypoint } from "react-waypoint";
-import styled, { ThemeProvider, useTheme } from "styled-components";
+import { useDispatch, useSelector } from 'react-redux';
+import { toast as toaster } from 'react-toastify';
+import { useClickAway } from 'react-use';
+import { Waypoint } from 'react-waypoint';
+import styled, { ThemeProvider, useTheme } from 'styled-components';
 
 // Internal Compoonents
-import * as PushAPI from "@pushprotocol/restapi";
-import { NotificationItem } from "@pushprotocol/uiweb";
+import * as PushAPI from '@pushprotocol/restapi';
+import { NotificationItem } from '@pushprotocol/uiweb';
+import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
+import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg';
+import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import SearchFilter from "components/SearchFilter";
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
-import CryptoHelper from "helpers/CryptoHelper";
-import { Item } from "primaries/SharedStyling";
+import SearchFilter from 'components/SearchFilter';
+import { GlobalContext } from 'contexts/GlobalContext';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import CryptoHelper from 'helpers/CryptoHelper';
+import { useAccount } from 'hooks';
+import { Item } from 'primaries/SharedStyling';
 import {
   addPaginatedNotifications,
   incrementPage,
-  resetNotificationsSlice,
   setFinishedFetching,
-  updateTopNotifications
-} from "redux/slices/notificationSlice";
-import DisplayNotice from "../primaries/DisplayNotice";
-import NotificationToast from "../primaries/NotificationToast";
-import { ScrollItem } from "./ViewChannels";
-import { useAccount, useDeviceWidthCheck } from "hooks";
-import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
-import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
-import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg'
-import { GlobalContext } from "contexts/GlobalContext";
+  updateTopNotifications,
+} from 'redux/slices/notificationSlice';
+import DisplayNotice from '../primaries/DisplayNotice';
+import NotificationToast from '../primaries/NotificationToast';
 
 // Internal Configs
-import { appConfig } from "config";
-import { device } from "config/Globals";
-import { ItemHV2, SpanV2 } from "components/reusables/SharedStylingV2";
-import { Image } from "components/SharedStyling";
-import { useNavigate } from "react-router-dom";
+import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { device } from 'config/Globals';
+import { useNavigate } from 'react-router-dom';
 
 // Constants
 const NOTIFICATIONS_PER_PAGE = 10;
 
 // Create Header
-const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
+const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const dispatch = useDispatch();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -52,12 +48,10 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
 
   const { account, provider, chainId } = useAccount();
-  const { notifications, page, finishedFetching, toggle } = useSelector(
-    (state: any) => state.notifications
-  );
+  const { notifications, page, finishedFetching, toggle } = useSelector((state: any) => state.notifications);
 
   const themes = useTheme();
-  let user = convertAddressToAddrCaip(account, chainId)
+  let user = convertAddressToAddrCaip(account, chainId);
 
   // toast related section
   const [toast, showToast] = React.useState(null);
@@ -73,7 +67,7 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const [loadFilter, setLoadFilter] = React.useState(false);
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const {readOnlyWallet } = useContext(GlobalContext);
+  const { readOnlyWallet } = useContext(GlobalContext);
 
   const [showSnapInfo, setShowSnapInfo] = React.useState(true);
 
@@ -86,7 +80,7 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
     <Toaster>
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
-  )
+  );
 
   //clear toast variable after it is shown
   React.useEffect(() => {
@@ -108,7 +102,7 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
     setFilter(true);
     var Filter = {
       channels: channels,
-      date: { lowDate: startDate, highDate: endDate }
+      date: { lowDate: startDate, highDate: endDate },
     };
     if (channels.length == 0) delete Filter.channels;
 
@@ -120,45 +114,38 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
         const matches = notif.message.match(/\[timestamp:(.*?)\]/);
         if (matches) {
           timestamp = matches[1];
-        }
-        else timestamp = notif.epoch;
+        } else timestamp = notif.epoch;
         if (
-          ((Filter.channels === undefined ? true : (Filter.channels.includes(notif.channel))) &&
-            timestamp >= startDate && timestamp <= endDate
-            && (query === "" || notif.message.toLowerCase().includes(query.toLowerCase())))
+          (Filter.channels === undefined ? true : Filter.channels.includes(notif.channel)) &&
+          timestamp >= startDate &&
+          timestamp <= endDate &&
+          (query === '' || notif.message.toLowerCase().includes(query.toLowerCase()))
         )
           filterNotif.push(notif);
       }
-      const newNotifs = filterNotif
-      setAllFilter(newNotifs)
+      const newNotifs = filterNotif;
+      setAllFilter(newNotifs);
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
       setBgUpdateLoading(false);
     }
-  }
+  };
 
   React.useEffect(() => {
     // console.log(allFilter)
-    setFilteredNotifications(allFilter)
-  }, [allFilter])
+    setFilteredNotifications(allFilter);
+  }, [allFilter]);
 
   const loadNotifications = async () => {
     if (loading || finishedFetching || !userPushSDKInstance) return;
     setLoading(true);
     try {
-      // const { count, results } = await PushAPI.fetchNotifications({
-      //   user: account,
-      //   pageSize: NOTIFICATIONS_PER_PAGE,
-      //   page,
-      //   chainId,
-      //   dev: true,
-      // });
       const results = await userPushSDKInstance.notification.list('INBOX', {
         raw: true,
         page: page,
-        limit: NOTIFICATIONS_PER_PAGE
+        limit: NOTIFICATIONS_PER_PAGE,
       });
       const parsedResponse = PushAPI.utils.parseApiResponse(results);
       dispatch(addPaginatedNotifications(parsedResponse));
@@ -176,10 +163,10 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
     setBgUpdateLoading(true);
     setLoading(true);
     try {
-      const results = await await userPushSDKInstance.notification.list('INBOX', {
+      const results = await userPushSDKInstance.notification.list('INBOX', {
         raw: true,
         page: 1,
-        limit: NOTIFICATIONS_PER_PAGE
+        limit: NOTIFICATIONS_PER_PAGE,
       });
       if (!notifications.length) {
         dispatch(incrementPage());
@@ -187,15 +174,15 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
       const parsedResponse = PushAPI.utils.parseApiResponse(results);
       const map1 = new Map();
       const map2 = new Map();
-      results.forEach(each => {
+      results.forEach((each) => {
         map1.set(each.payload.data.sid, each.epoch);
         map2.set(each.payload.data.sid, each.sender);
-      })
-      parsedResponse.forEach(each => {
+      });
+      parsedResponse.forEach((each) => {
         each['date'] = map1.get(each.sid);
-        each['epoch'] = (new Date(each['date']).getTime() / 1000);
+        each['epoch'] = new Date(each['date']).getTime() / 1000;
         each['channel'] = map2.get(each.sid);
-      })
+      });
       dispatch(
         updateTopNotifications({
           notifs: parsedResponse,
@@ -219,7 +206,7 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
       const results = await userPushSDKInstance.notification.list('INBOX', {
         limit: 100000,
         page: page,
-        raw: true
+        raw: true,
       });
       if (!notifications.length) {
         dispatch(incrementPage());
@@ -227,15 +214,15 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
       const parsedResponse = PushAPI.utils.parseApiResponse(results);
       const map1 = new Map();
       const map2 = new Map();
-      results.forEach(each => {
+      results.forEach((each) => {
         map1.set(each.payload.data.sid, each.epoch);
         map2.set(each.payload.data.sid, each.sender);
-      })
-      parsedResponse.forEach(each => {
+      });
+      parsedResponse.forEach((each) => {
         each['date'] = map1.get(each.sid);
-        each['epoch'] = (new Date(each['date']).getTime() / 1000);
+        each['epoch'] = new Date(each['date']).getTime() / 1000;
         each['channel'] = map2.get(each.sid);
-      })
+      });
       setNotif(parsedResponse);
     } catch (err) {
       console.error(err);
@@ -254,8 +241,7 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const handlePagination = async () => {
     if (filter) {
       setLimit(limit + 10);
-    }
-    else {
+    } else {
       loadNotifications();
       dispatch(incrementPage());
     }
@@ -263,18 +249,10 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
 
   const showWayPoint = (index: any) => {
     if (!filter) {
-      return (
-        Number(index) === notifications.length - 1 &&
-        !finishedFetching &&
-        !bgUpdateLoading
-      );
+      return Number(index) === notifications.length - 1 && !finishedFetching && !bgUpdateLoading;
+    } else {
+      return Number(index) === limit - 1;
     }
-    else {
-      return (
-        Number(index) === limit - 1
-      );
-    }
-
   };
 
   const onDecrypt = async ({ secret, title, message, image, cta }) => {
@@ -299,49 +277,40 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
       if (error.code === 4001) {
         // EIP-1193 userRejectedRequest error
         console.error(error);
-        txToast = toaster.dark(
-          <NormalToast msg="User denied message decryption" />,
-          {
-            position: "bottom-right",
-            type: toaster.TYPE.ERROR,
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          }
-        );
+        txToast = toaster.dark(<NormalToast msg="User denied message decryption" />, {
+          position: 'bottom-right',
+          type: toaster.TYPE.ERROR,
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else if (error.code === -32601) {
         console.error(error);
-        txToast = toaster.dark(
-          <NormalToast msg="Your wallet doesn't support message decryption." />,
-          {
-            position: "bottom-right",
-            type: toaster.TYPE.ERROR,
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          }
-        );
+        txToast = toaster.dark(<NormalToast msg="Your wallet doesn't support message decryption." />, {
+          position: 'bottom-right',
+          type: toaster.TYPE.ERROR,
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
         console.error(error);
-        txToast = toaster.dark(
-          <NormalToast msg="There was an error in message decryption" />,
-          {
-            position: "bottom-right",
-            type: toaster.TYPE.ERROR,
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          }
-        );
+        txToast = toaster.dark(<NormalToast msg="There was an error in message decryption" />, {
+          position: 'bottom-right',
+          type: toaster.TYPE.ERROR,
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     }
   };
@@ -367,17 +336,25 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
         <ScrollItem>
           {showSnapInfo && (
             <>
-              <SnapSection flexWrap='nowrap'>
+              <SnapSection flexWrap="nowrap">
                 <MetamaskLogo />
-                <InstallText justifyContent='space-between'>
-                  <SpanV2 fontSize='14px' fontWeight='400'>Get Notifications directly in MetaMask using Push Snap.</SpanV2>
-                  <InstallPushSnap onClick={navigateToSnaps} >Install Push Snap <OpenLink /> </InstallPushSnap>
+                <InstallText justifyContent="space-between">
+                  <SpanV2
+                    fontSize="14px"
+                    fontWeight="400"
+                  >
+                    Get Notifications directly in MetaMask using Push Snap.
+                  </SpanV2>
+                  <InstallPushSnap onClick={navigateToSnaps}>
+                    Install Push Snap <OpenLink />{' '}
+                  </InstallPushSnap>
                 </InstallText>
-                <CloseButton onClick={() => {
-                  setShowSnapInfo(false);
-                }} />
+                <CloseButton
+                  onClick={() => {
+                    setShowSnapInfo(false);
+                  }}
+                />
               </SnapSection>
-
             </>
           )}
 
@@ -385,10 +362,8 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
             (!run && filter && !filteredNotifications.length) ||
             (run && !welcomeNotifs.length)) &&
             !loading && (
-              <div style={{ textAlign: "center" }}>
-                <DisplayNotice
-                  title="You currently have no notifications, try subscribing to some channels."
-                />
+              <div style={{ textAlign: 'center' }}>
+                <DisplayNotice title="You currently have no notifications, try subscribing to some channels." />
               </div>
             )}
           {notifications && (
@@ -400,16 +375,7 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
               )}
               {run &&
                 welcomeNotifs.map((oneNotification, index) => {
-                  const {
-                    cta,
-                    title,
-                    message,
-                    app,
-                    icon,
-                    image,
-                    blockchain,
-                    url
-                  } = oneNotification;
+                  const { cta, title, message, app, icon, image, blockchain, url } = oneNotification;
 
                   // render the notification item
                   return (
@@ -428,29 +394,14 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
                     </NotifsOuter>
                   );
                 })}
-              {(filter
-                ? filteredNotifications
-                : notifications
-              ).map((oneNotification, index) => {
-                const {
-                  cta,
-                  title,
-                  message,
-                  app,
-                  icon,
-                  image,
-                  secret,
-                  notification,
-                  blockchain,
-                  url
-                } = oneNotification;
+              {(filter ? filteredNotifications : notifications).map((oneNotification, index) => {
+                const { cta, title, message, app, icon, image, secret, notification, blockchain, url } =
+                  oneNotification;
                 if (run) return;
                 // render the notification item
                 return (
                   <NotifsOuter key={index}>
-                    {showWayPoint(index) && (
-                      <Waypoint onEnter={() => handlePagination()} />
-                    )}
+                    {showWayPoint(index) && <Waypoint onEnter={() => handlePagination()} />}
                     <NotificationItem
                       notificationTitle={title}
                       notificationBody={message}
@@ -458,10 +409,8 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
                       app={app}
                       icon={icon}
                       image={image}
-                      isSecret={secret != ""}
-                      decryptFn={() =>
-                        onDecrypt({ secret, title, message, image, cta })
-                      }
+                      isSecret={secret != ''}
+                      decryptFn={() => onDecrypt({ secret, title, message, image, cta })}
                       chainName={blockchain}
                       theme={themes.scheme}
                       url={url}
@@ -479,13 +428,16 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
           )}
 
           {toast && (
-            <NotificationToast notification={toast} clearToast={clearToast} />
+            <NotificationToast
+              notification={toast}
+              clearToast={clearToast}
+            />
           )}
         </ScrollItem>
       </Container>
     </ThemeProvider>
   );
-}
+};
 
 // css styles
 const Container = styled.div`
@@ -524,57 +476,100 @@ const ToasterMsg = styled.div`
 `;
 
 const SnapSection = styled(ItemHV2)`
-  max-height:28px;
-  margin-top:20px;
+  max-height: 28px;
+  margin-top: 20px;
   border-radius: 12px;
-  border: 1px solid #D4DCEA;
-  background: #FFF;
+  border: 1px solid #d4dcea;
+  background: #fff;
   border: 1px solid ${(props) => props.theme.default.border};
-  background:${(props) => props.theme.default.bg};
+  background: ${(props) => props.theme.default.bg};
   padding: 12px 16px;
   align-items: center;
   gap: 16px;
 
   @media ${device.tablet} {
-    gap: 9px;  
-    margin-right:10px;
+    gap: 9px;
+    margin-right: 10px;
   }
 
-  @media (max-width:525px) {
-    max-height:50px;
+  @media (max-width: 525px) {
+    max-height: 50px;
   }
-`
+`;
 
 const InstallText = styled(ItemHV2)`
   @media ${device.tablet} {
-    flex-direction:column;  
+    flex-direction: column;
     align-items: baseline;
     display: block;
     align-self: auto;
   }
-  
-`
+`;
 
 const CloseButton = styled(Close)`
-  cursor:pointer;
-  height:20px;
-  width:20px;
-  
-
-
-`
+  cursor: pointer;
+  height: 20px;
+  width: 20px;
+`;
 
 const InstallPushSnap = styled(SpanV2)`
-  cursor:pointer;
-  font-size:14px;
-  font-weight:500;
-  color:#D53A94;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #d53a94;
 
-  &:hover{
-    text-decoration:underline;
+  &:hover {
+    text-decoration: underline;
     text-underline-position: under;
   }
-`
+`;
+const ScrollItem = styled(Item)`
+  display: flex;
+  align-self: stretch;
+  align-items: stretch;
+  justify-content: stretch;
+  flex-wrap: nowrap;
+
+  flex: 1;
+  padding: ${(props) => (props.minimal ? '20px 10px' : '0px 20px 10px 20px')};
+  overflow-y: auto;
+
+  &::-webkit-scrollbar-track {
+    background-color: ${(props) => props.theme.scrollBg};
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: ${(props) => props.theme.scrollBg};
+    width: 6px;
+  }
+
+  @media (max-width: 768px) {
+    padding: ${(props) => (props.minimal ? '10px 5px' : '0px')};
+
+    &::-webkit-scrollbar-track {
+      background-color: none;
+      border-radius: 9px;
+    }
+
+    &::-webkit-scrollbar {
+      background-color: none;
+      width: 4px;
+    }
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0.44, #cf1c84),
+      color-stop(0.72, #cf1c84),
+      color-stop(0.86, #cf1c84)
+    );
+  }
+`;
 
 // Export Default
-export default Feedbox;
+export default Inbox;

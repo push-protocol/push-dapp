@@ -25,6 +25,7 @@ import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { device } from 'config/Globals';
 import { useClickAway } from 'react-use';
 import StepsTransactionModal from 'components/StepsTransactionModal';
+import UnstakingModalComponent from './UnstakingModalComponent';
 
 const YieldPushFeeV3 = ({
     userDataPush,
@@ -32,7 +33,7 @@ const YieldPushFeeV3 = ({
     PUSHPoolstats,
     getPUSHPoolStats,
 }) => {
-    const { account, provider } = useAccount();
+    const { account, provider, wallet, connect } = useAccount();
 
     const [txInProgressWithdraw, setTxInProgressWithdraw] = useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
@@ -100,6 +101,7 @@ const YieldPushFeeV3 = ({
 
     }
 
+    // Check the last Claimed Block of the user
     const getLastClaimedBlock = async (pushCoreV2) => {
         const userFeesInfo = await pushCoreV2.userFeesInfo(account);
         const lastClaimedBlock = userFeesInfo.lastClaimedBlock;
@@ -115,6 +117,7 @@ const YieldPushFeeV3 = ({
         }
     }
 
+    // Claim the rewards.
     const claimRewards = async () => {
         if (txInProgressClaimRewards) {
             return;
@@ -169,6 +172,7 @@ const YieldPushFeeV3 = ({
 
     };
 
+    // This is paginated way of claiming the reward.
     const RewardsPaginated = async (totalTransactionNumber, _tillEpoch, pushCoreV2, batchSize) => {
 
         const currentEpoch = PUSHPoolstats?.currentEpochNumber;
@@ -215,7 +219,8 @@ const YieldPushFeeV3 = ({
 
 
             }).catch((error) => {
-                console.error("Error in claiming the reward", error);
+                console.error("Error in claiming the reward:", error);
+                setUnstakeErrorMessage(error.reason);
                 pushFeeToast.showMessageToast({
                     toastTitle: 'Error',
                     toastMessage: `Transaction failed! ${error.reason}`,
@@ -233,6 +238,7 @@ const YieldPushFeeV3 = ({
         }
     }
 
+    // Withdraw the tokens in Paginated way
     const unstakeTokensPaginated = async () => {
         if (txInProgressWithdraw) {
             return;
@@ -263,21 +269,17 @@ const YieldPushFeeV3 = ({
         let _tillEpoch = 0;
         _tillEpoch = await getLastClaimedBlock(pushCoreV2);
 
+        // Modal for displaying transactions
+        openTransactionModal();
+
         // Case -: When the user has just claimed reward and then trying to unstake 
         if (_tillEpoch >= currentEpoch - 1) {
             setTxInProgressWithdraw(false);
-            setUnstakeErrorMessage("PUSH cannot be unstaked until current epoch is over.");
-            pushFeeToast.showMessageToast({
-                toastTitle: 'Unstaking Error',
-                toastMessage: `You cannot unstake until Current Epoch gets over.`,
-                toastType: 'ERROR',
-                getToastIcon: (size) => <MdError size={size} color="red" />,
-            });
+            setUnstakeErrorMessage("Unable to unstake tokens. The lock-in period has been reset due to claiming rewards. Please wait until the new lock-in period expires to unstake your tokens.")
+            setTotalTransactionNo(1);
+            setTransactionSteps(3); // no retry button
             return;
         }
-
-        // Modal for displaying transactions
-        openTransactionModal();
 
         const totalTransactionNumber = Math.ceil((currentEpoch - _tillEpoch) / batchSize);
         setTotalTransactionNo(totalTransactionNumber);
@@ -292,47 +294,37 @@ const YieldPushFeeV3 = ({
         tx.then(async (tx) => {
             pushFeeToast.showLoaderToast({ loaderMessage: 'Unstaking! Waiting for Confirmation...' });
 
-            try {
-                await provider.waitForTransaction(tx.hash);
-                pushFeeToast.showMessageToast({
-                    toastTitle: 'Success',
-                    toastMessage: 'Transaction Completed!',
-                    toastType: 'SUCCESS',
-                    getToastIcon: (size) => (
-                        <MdCheckCircle
-                            size={size}
-                            color="green"
-                        />
-                    ),
-                });
+            await provider.waitForTransaction(tx.hash);
+            pushFeeToast.showMessageToast({
+                toastTitle: 'Success',
+                toastMessage: 'Transaction Completed!',
+                toastType: 'SUCCESS',
+                getToastIcon: (size) => (
+                    <MdCheckCircle
+                        size={size}
+                        color="green"
+                    />
+                ),
+            });
 
-                getPUSHPoolStats();
-                getUserDataPush();
-                setTxInProgressWithdraw(false);
-                setTransactionSteps(2);
-                setCurrentTransactionNo(0);
+            getPUSHPoolStats();
+            getUserDataPush();
+            setTxInProgressWithdraw(false);
+            setTransactionSteps(2);
+            setCurrentTransactionNo(0);
 
-            } catch (e) {
-                console.error("Error", e)
-                pushFeeToast.showMessageToast({
-                    toastTitle: 'Error',
-                    toastMessage: `Transaction Failed! (" +${e.name}+ ")`,
-                    toastType: 'ERROR',
-                    getToastIcon: (size) => <MdError size={size} color="red" />,
-                });
-                setTransactionText('');
-                setTxInProgressWithdraw(false);
-
-            }
         }).catch((err) => {
-            console.error("Error: ", err)
+            console.error("Error in Unstaking Tokens: ", err);
             const unstakeErrorMessage = err.reason.includes("PushCoreV2::unstake:");
             const harvestErrorMessage = err.reason.includes("PushCoreV2::harvestPaginated:");
             if (unstakeErrorMessage || harvestErrorMessage) {
-                setUnstakeErrorMessage("PUSH cannot be unstaked until current epoch is over.");
+                setTransactionSteps(3); // no retry button if their is any error.
+                setUnstakeErrorMessage("Unable to unstake tokens. Please wait until the lock-in period expires to unstake your tokens.");
             } else {
+                setTransactionSteps(1); //retry button when the user rejects the transaction.
                 let errorMessage = err.reason.slice(err.reason.indexOf('::') + 1);
                 errorMessage = errorMessage.replace('unstake:', '');
+                setUnstakeErrorMessage(errorMessage);
                 pushFeeToast.showMessageToast({
                     toastTitle: 'Error',
                     toastMessage: `${errorMessage}`,
@@ -342,7 +334,6 @@ const YieldPushFeeV3 = ({
             }
             setTxInProgressWithdraw(false);
             getUserDataPush();
-            setTransactionSteps(1);
             setCurrentTransactionNo(0);
         });
     };
@@ -359,14 +350,37 @@ const YieldPushFeeV3 = ({
         ModalComponent: StakingComponent,
     } = useModalBlur();
 
+    // const {
+    //     isModalOpen: isUnstakingModalOpen,
+    //     showModal: showUnstakingModal,
+    //     ModalComponent: UnstakingComponent,
+    // } = useModalBlur();
+
     const stakingModalToast = useToast();
     const isMobile = useDeviceWidthCheck(600);
+    const unstakingModalToast = useToast();
 
     const {
         isModalOpen: isTransactionModalOpen,
         showModal: openTransactionModal,
         ModalComponent: TransactionModal,
     } = useModalBlur();
+
+    const handleStakingModal = () => {
+        if (wallet.accounts.length > 0) {
+            showStakingModal();
+        } else {
+            connect();
+        }
+    }
+
+    const handleUnstakingModal = () => {
+        if (wallet?.accounts?.length > 0) {
+            unstakeTokensPaginated();
+        } else {
+            connect();
+        }
+    }
 
     return (
         <Container>
@@ -384,6 +398,22 @@ const YieldPushFeeV3 = ({
                 modalPosition={MODAL_POSITION.ON_PARENT}
             />
 
+
+            {/* <UnstakingComponent
+                InnerComponent={UnstakingModalComponent}
+                InnerComponentProps={{
+                    title: 'PUSH',
+                    userData:userDataPush,
+                    getUserData: getUserDataPush,
+                    getPoolStats: getPUSHPoolStats,
+                    PoolStats:PUSHPoolstats,
+                    unstakeErrorMessage:unstakeErrorMessage,
+                    withdrawTokens:unstakeTokensPaginated
+                }}
+                toastObject={unstakingModalToast}
+                modalPosition={MODAL_POSITION.ON_PARENT}
+            /> */}
+
             <TransactionModal
                 InnerComponent={StepsTransactionModal}
                 InnerComponentProps={{
@@ -391,11 +421,13 @@ const YieldPushFeeV3 = ({
                     totalTransactionNo,
                     transactionSteps,
                     transactionText,
+                    unstakeErrorMessage,
                     setCurrentTransactionNo,
                     setTotalTransactionNo,
                     setTransactionSteps,
                     claimRewards,
                     unstakeTokensPaginated,
+                    setUnstakeErrorMessage
                 }}
                 onConfirm={() => { }}
                 modalPadding="0px"
@@ -571,6 +603,22 @@ const YieldPushFeeV3 = ({
                             </DataTitle>
                             <DataValue> {numberWithCommas((userDataPush?.availableRewards).toFixed(2))} PUSH</DataValue>
                         </ItemHV2>
+
+                        <ItemHV2 justifyContent="space-between" margin={isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
+                            <DataTitle>
+                                Lock-Up Period
+                                <InfoSpan>
+                                    <StakingToolTip
+                                        ToolTipTitle={"Lock Up Period"}
+                                        ToolTipBody={"The staked amount will be locked until this time period from the time you stake."}
+                                    >
+                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                    </StakingToolTip>
+                                </InfoSpan>
+
+                            </DataTitle>
+                            <DataValue> 21 days</DataValue>
+                        </ItemHV2>
                     </ItemVV2>
                 ) : (
                     <Skeleton
@@ -579,6 +627,10 @@ const YieldPushFeeV3 = ({
                         maxWidth=' -webkit-fill-available'
                         borderRadius='5px'
                     >
+                        <ItemHV2 justifyContent='space-between' margin='0 0 23px 0'>
+                            <SkeletonLine height='12px' width='164px' ></SkeletonLine>
+                            <SkeletonLine height='12px' width='72px'></SkeletonLine>
+                        </ItemHV2>
                         <ItemHV2 justifyContent='space-between' margin='0 0 23px 0'>
                             <SkeletonLine height='12px' width='164px' ></SkeletonLine>
                             <SkeletonLine height='12px' width='72px'></SkeletonLine>
@@ -608,11 +660,24 @@ const YieldPushFeeV3 = ({
                 {userDataPush ? (
                     <>
                         <ItemHV2>
-                            <FilledButton onClick={showStakingModal}> Stake $PUSH</FilledButton>
+                            <FilledButton onClick={handleStakingModal}> Stake $PUSH</FilledButton>
                         </ItemHV2>
                         <ButtonsContainer>
+                            <EmptyButton
+                                border={`1px solid ${theme.activeButtonText}`}
+                                background={'transparent'}
+                                color={theme.activeButtonText}
+                                cursor='pointer'
+                                onClick={handleUnstakingModal}
+                                style={{ margin: "0px 10px 0px 0px" }}
+                            >
+                                {txInProgressWithdraw ?
+                                    (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor={theme.activeButtonText} title='Unstaking' titleColor={theme.activeButtonText} />) :
+                                    "Unstake $PUSH"
+                                }
+                            </EmptyButton>
 
-                            {PUSHPoolstats?.currentEpochNumber <= 2 ?
+                            {/* {PUSHPoolstats?.currentEpochNumber <= 2 ?
                                 <ErrorToolTip
                                     ToolTipTitle={"You can unstake once epoch 2 ends."}
                                     ButtonTitle={"Unstake PUSH"}
@@ -638,7 +703,7 @@ const YieldPushFeeV3 = ({
                                         }
                                     </EmptyButton>
 
-                            }
+                            } */}
 
                             {userDataPush?.availableRewards === 0.00 ?
                                 <StakingToolTip

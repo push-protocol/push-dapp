@@ -116,11 +116,12 @@ export const addresses = {
   // yieldFarmLP: "0x22C1dBC8975c23De9e2219C0fC3E03b404577512",
 
   //For 21 days Epoch
-  stakingV2: '0xFf13FBc1dE7FBF300059FE56495c82bBa2F986c6',
-  yieldFarmLP: '0xAB531bD9D39c492a05de65Eee85F6C712c05ea0b',
+  stakingV2: "0xFf13FBc1dE7FBF300059FE56495c82bBa2F986c6",
+  yieldFarmLP: "0xAB531bD9D39c492a05de65Eee85F6C712c05ea0b",
 
-  alphaAccessNft: '0x39f77Db4d5d3e85c213233D5Af02C46a85Cf1Db4',
-};
+  // pushCoreV2: "0x3eE2954dDdb0894e3DDff3FC104C243649C18eD8", // 15 min epoch
+  alphaAccessNft: "0x39f77Db4d5d3e85c213233D5Af02C46a85Cf1Db4"
+}
 
 export const CHAIN_DETAILS = {
   11155111: {

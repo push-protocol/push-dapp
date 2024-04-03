@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ButtonV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { ButtonV2,ItemHV2, ItemVV2,  } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import { defaultSnapOrigin } from 'config';

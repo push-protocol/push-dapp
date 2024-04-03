@@ -19,10 +19,14 @@ import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
+import CommunityGroup from 'assets/chat/CommunityGroup.svg';
+import IntroChat from 'assets/chat/IntroChat.svg';
+import TokenGated from 'assets/chat/TokenGated.svg';
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
 import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
+import { ReactComponent as HandwaveIcon } from 'assets/chat/handwave.svg';
 import videoCallIcon from 'assets/icons/videoCallIcon.svg';
 import { Content } from 'components/SharedStyling';
 import Recommended from 'components/chat/recommended/Recommended';
@@ -35,7 +39,7 @@ import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext as ContextType } from 'types/chat';
-import HandwaveIcon from '../../../../assets/chat/handwave.svg';
+// import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet } from '../../../../helpers/w2w';
 import { checkIfGroup, getGroupImage } from '../../../../helpers/w2w/groupChat';
 
@@ -160,10 +164,24 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
   };
 
   const InfoMessages = [
-    { id: 1, content: 'Say Hi to your wallet friends!' },
-    { id: 2, content: 'Or join groups of your favorite projects and chat with other members.' },
-    { id: 3, content: 'Or create your own gated groups based on your requirements' },
-    { id: 4, content: 'And experience the future of Web3 communication!' },
+    {
+      id: 1,
+      image: IntroChat,
+      heading: 'Message any wallet',
+      subHeading: 'Chat, react, share and connect with your web3 friends.',
+    },
+    {
+      id: 2,
+      image: CommunityGroup,
+      heading: 'Discover Communities',
+      subHeading: 'Explore your favorite communities and chat with other members.',
+    },
+    {
+      id: 3,
+      image: TokenGated,
+      heading: 'Create Token Gated Groups',
+      subHeading: 'Create your own gated groups and kickstart vibrant communities.',
+    },
   ];
 
   return (
@@ -179,53 +197,55 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
 
           {activeTab != 4 && (
             <>
-              <WelcomeMainText theme={theme}>
-                <WelcomeText>Say</WelcomeText>
-                <ImageV2
-                  src={HandwaveIcon}
-                  alt="wave"
-                  display="inline"
-                  width="auto"
-                  verticalAlign="middle"
-                  margin="0 13px"
-                />
-                <WelcomeText>to Push Chat</WelcomeText>
-              </WelcomeMainText>
+              <WelcomeContainer>
+                <ItemHV2 gap="5px">
+                  <WelcomeText>Say</WelcomeText>
+                  <HandwaveIcon size="32px" />
+                  <WelcomeText>to Push Chat!</WelcomeText>
+                </ItemHV2>
+                <ItemVV2 gap="24px">
+                  {InfoMessages.map((item) => (
+                    <ItemHV2
+                      key={item.id}
+                      gap="12px"
+                    >
+                      <ImageV2
+                        src={item.image}
+                        alt="wave"
+                        display="inline"
+                        width="auto"
+                        verticalAlign="middle"
+                      />
+                      <ItemVV2 alignItems="baseline">
+                        <SpanV2
+                          fontSize="17px"
+                          color={theme.default.color}
+                          fontWeight="500"
+                          lineHeight="22px"
+                        >
+                          {item.heading}
+                        </SpanV2>
+                        <SpanV2
+                          fontSize="15px"
+                          color={theme.default.secondaryColor}
+                          fontWeight="400"
+                          lineHeight="19px"
+                          textAlign="left"
+                        >
+                          {item.subHeading}
+                        </SpanV2>
+                      </ItemVV2>
+                    </ItemHV2>
+                  ))}
+                </ItemVV2>
+              </WelcomeContainer>
 
-              <WelcomeInfo>
-                <SpanV2
-                  fontWeight="500"
-                  fontSize="15px"
-                  lineHeight="130%"
-                >
-                  Push Chat is in alpha and things might break.
-                </SpanV2>
-
-                <Atag
-                  href={'https://discord.gg/pushprotocol'}
-                  target="_blank"
-                >
-                  We would love to hear your feedback
-                </Atag>
-
-                <ItemBody>
-                  <Recommended
-                    bg="#e2078021"
-                    onChatSelected={async (chatId, chatParticipant) =>
-                      setSelectedChatId(await triggerChatParticipant(chatParticipant, chatId))
-                    }
-                  />
-
-                  <WelcomePoints>
-                    {InfoMessages.map((item) => (
-                      <WelcomeContent key={item.id}>
-                        <BsDashLg className="icon" />
-                        <TextInfo>{item.content}</TextInfo>
-                      </WelcomeContent>
-                    ))}
-                  </WelcomePoints>
-                </ItemBody>
-              </WelcomeInfo>
+              <Recommended
+                bg={theme.default.bg}
+                onChatSelected={async (chatId, chatParticipant) =>
+                  setSelectedChatId(await triggerChatParticipant(chatParticipant, chatId))
+                }
+              />
             </>
           )}
         </WelcomeItem>
@@ -409,17 +429,19 @@ const WelcomePoints = styled(ItemVV2)`
 `;
 
 const WelcomeItem = styled(ItemVV2)`
-  width: 420px;
+  max-width: 420px;
   min-width: 300px;
   display: flex;
   justify-content: center;
   margin: auto auto;
-  @media (max-width: 768px) {
-    width: auto;
+
+  @media ${device.laptop} {
+    max-width: 90%;
+    min-width: 80%;
   }
 
-  @media (min-width: 1000px) and (max-width: 1060px) {
-    width: 95%;
+  @media ${device.tablet} {
+    width: auto;
   }
 `;
 
@@ -491,12 +513,13 @@ const WelcomeMainText = styled(SpanV2)`
 `;
 
 const WelcomeText = styled(SpanV2)`
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 500;
   text-align: center;
-  width: 100%;
+  // width: 100%;
   color: ${(props) => props.theme.default.color};
-  letter-spacing: -0.03em;
+  letter-spacing: -0.72px;
+  line-height: 141%; /* 33.84px */
   @media (max-width: 768px) {
     display: none;
   }
@@ -509,6 +532,17 @@ const WelcomeInfo = styled.div`
   width: 100%;
   padding: 30px 0;
   border-radius: 28px;
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const WelcomeContainer = styled(ItemVV2)`
+  background: ${(props) => props.theme.default.bg};
+  padding: 24px;
+  gap: 24px;
+  flex: none;
+  border-radius: 4px 24px 24px 24px;
   @media (max-width: 768px) {
     display: none;
   }

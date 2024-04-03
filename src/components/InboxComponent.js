@@ -7,14 +7,13 @@ import { FiSearch, FiSliders } from 'react-icons/fi';
 
 // Internal Components
 import { Item } from 'primaries/SharedStyling';
-import Feedbox from 'segments/Feedbox';
-import SpamBox from 'segments/spam';
+import Inbox from 'segments/Inbox';
+import SpamBox from 'segments/Spam';
 
 // Internal Configs
-import GLOBALS from 'config/Globals';
 import APP_PATHS from 'config/AppPaths';
 
-const InboxComponent = ({isSpam}) => {
+const InboxComponent = ({ isSpam }) => {
   const [showInbox, setShowInbox] = useState(!isSpam);
   const [showFilter, setShowFilter] = useState(false);
   const [search, setSearch] = useState('');
@@ -28,17 +27,23 @@ const InboxComponent = ({isSpam}) => {
     toggleShowInbox();
     setShowFilter(false);
     setSearch('');
-    navigate(path)
+    navigate(path);
   };
 
   return (
     <Container>
       <NavBoxHolder>
         <NavHolder>
-          <NavTitleButton isActive={showInbox} onClick={()=>handleToggle(APP_PATHS.Inbox)}>
+          <NavTitleButton
+            isActive={showInbox}
+            onClick={() => handleToggle(APP_PATHS.Inbox)}
+          >
             Inbox
           </NavTitleButton>
-          <NavTitleButton isActive={!showInbox} onClick={()=>handleToggle(APP_PATHS.Spam)}>
+          <NavTitleButton
+            isActive={!showInbox}
+            onClick={() => handleToggle(APP_PATHS.Spam)}
+          >
             Spam
           </NavTitleButton>
         </NavHolder>
@@ -52,19 +57,46 @@ const InboxComponent = ({isSpam}) => {
               setSearch(e.target.value);
             }}
           />
-          <ItemIcon position="absolute" top="0" bottom="0" left="22px">
-            <FiSearch size={18} style={{ color: '#657795' }} />
+          <ItemIcon
+            position="absolute"
+            top="0"
+            bottom="0"
+            left="22px"
+          >
+            <FiSearch
+              size={18}
+              style={{ color: '#657795' }}
+            />
           </ItemIcon>
 
-          <ItemIconRotate position="absolute" top="0" bottom="0" right="22px" onClick={toggleShowFilter}>
-            <FiSliders size={18} style={{ color: '#657795' }} />
+          <ItemIconRotate
+            position="absolute"
+            top="0"
+            bottom="0"
+            right="22px"
+            onClick={toggleShowFilter}
+          >
+            <FiSliders
+              size={18}
+              style={{ color: '#657795' }}
+            />
           </ItemIconRotate>
         </SearchContainer>
       </NavBoxHolder>
       {showInbox ? (
-        <Feedbox showFilter={showFilter} setShowFilter={setShowFilter} search={search} setSearch={setSearch} />
-        ) : (
-        <SpamBox showFilter={showFilter} setShowFilter={setShowFilter} search={search} setSearch={setSearch} />
+        <Inbox
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
+          search={search}
+          setSearch={setSearch}
+        />
+      ) : (
+        <SpamBox
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
+          search={search}
+          setSearch={setSearch}
+        />
       )}
     </Container>
   );
@@ -97,7 +129,7 @@ const NavBoxHolder = styled.div`
     bottom: 0;
     width: 100%;
     content: '';
-    background-color: ${props => props.theme.default.border};
+    background-color: ${(props) => props.theme.default.border};
   }
 `;
 
@@ -169,11 +201,11 @@ const SearchBar = styled.input`
   font-size: 16px;
   line-height: 150%;
 
-  input[type="reset"] {
+  input[type='reset'] {
     display: none;
   }
   &::placeholder {
-  color: #657795;
+    color: #657795;
   }
   &:hover,
   &:active,

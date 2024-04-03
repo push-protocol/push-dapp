@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import { spawn } from 'child_process';
 import { parse } from 'envfile';
 import fs from 'fs';
+import path from 'path';
 import readline from 'readline';
 
 // import package json
@@ -305,6 +306,10 @@ const cleanupAndBuild = async (sdkENV) => {
 
   // if env is localsdk -> Add @pushprotocol/uiweb (*) to dependencies and then link -p
   if (sdkENV === 'localsdk') {
+    // link local sdk
+    const envData = fs.readFileSync('./.localsdk.env', 'utf8');
+    const envObject = parse(envData);
+
     // add dependency
     packageJSON.dependencies['@pushprotocol/uiweb'] = '*';
     fs.writeFileSync('./package.json', JSON.stringify(packageJSON, null, 2));
@@ -324,9 +329,6 @@ const cleanupAndBuild = async (sdkENV) => {
     }
 
     // link local sdk
-    const envData = fs.readFileSync('./.localsdk.env', 'utf8');
-    const envObject = parse(envData);
-
     console.log(chalk.green.dim('  -- Linking local @pushprotocol/uiweb...'));
     const yarnkLink = spawn('yarn', ['link -p', envObject['LOCAL_PUSH_SDK_UIWEB_ABS_PATH']], {
       stdio: 'inherit',
