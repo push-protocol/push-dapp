@@ -27,10 +27,16 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
   useEffect(() => {
     // Dynamically import the icon and activeIcon when the component mounts
     const importIcons = async () => {
+      // Ignore to suppress warning since data.src already contains file extension, and 
+      // vite shows warning if extension isn't present in dynamic import
+      const iconModulePromise = import(/* @vite-ignore */ `../assets/${data.src}`);
+      const activeIconModulePromise = import(/* @vite-ignore */ `../assets/${data.activeSrc}`);
+
       const [iconModule, activeIconModule] = await Promise.all([
-        import(`../assets/${data.src}`),
-        import(`../assets/${data.activeSrc}`),
+        iconModulePromise,
+        activeIconModulePromise,
       ]);
+      
       setIcon(iconModule.default);
       setActiveIcon(activeIconModule.default);
     };
