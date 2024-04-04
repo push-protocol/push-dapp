@@ -11,37 +11,35 @@ import styled, { ThemeProvider, useTheme } from 'styled-components';
 // Internal Compoonents
 import * as PushAPI from '@pushprotocol/restapi';
 import { NotificationItem } from '@pushprotocol/uiweb';
+import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
+import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg';
+import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import SearchFilter from 'components/SearchFilter';
+import { GlobalContext } from 'contexts/GlobalContext';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import CryptoHelper from 'helpers/CryptoHelper';
+import { useAccount } from 'hooks';
+import { Item } from 'primaries/SharedStyling';
 import {
   addPaginatedNotifications,
   incrementPage,
-  resetNotificationsSlice,
   setFinishedFetching,
   updateTopNotifications,
 } from 'redux/slices/notificationSlice';
 import DisplayNotice from '../primaries/DisplayNotice';
 import NotificationToast from '../primaries/NotificationToast';
-import { ScrollItem } from './ViewChannels';
-import { useAccount, useDeviceWidthCheck } from 'hooks';
-import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
-import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
-import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg';
-import { GlobalContext } from 'contexts/GlobalContext';
 
 // Internal Configs
-import { appConfig } from 'config';
-import { device } from 'config/Globals';
 import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { device } from 'config/Globals';
 import { useNavigate } from 'react-router-dom';
 
 // Constants
 const NOTIFICATIONS_PER_PAGE = 10;
 
 // Create Header
-const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
+const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const dispatch = useDispatch();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -144,13 +142,6 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
     if (loading || finishedFetching || !userPushSDKInstance) return;
     setLoading(true);
     try {
-      // const { count, results } = await PushAPI.fetchNotifications({
-      //   user: account,
-      //   pageSize: NOTIFICATIONS_PER_PAGE,
-      //   page,
-      //   chainId,
-      //   dev: true,
-      // });
       const results = await userPushSDKInstance.notification.list('INBOX', {
         raw: true,
         page: page,
@@ -172,7 +163,7 @@ const Feedbox = ({ showFilter, setShowFilter, search, setSearch }) => {
     setBgUpdateLoading(true);
     setLoading(true);
     try {
-      const results = await await userPushSDKInstance.notification.list('INBOX', {
+      const results = await userPushSDKInstance.notification.list('INBOX', {
         raw: true,
         page: 1,
         limit: NOTIFICATIONS_PER_PAGE,
@@ -532,6 +523,53 @@ const InstallPushSnap = styled(SpanV2)`
     text-underline-position: under;
   }
 `;
+const ScrollItem = styled(Item)`
+  display: flex;
+  align-self: stretch;
+  align-items: stretch;
+  justify-content: stretch;
+  flex-wrap: nowrap;
+
+  flex: 1;
+  padding: ${(props) => (props.minimal ? '20px 10px' : '0px 20px 10px 20px')};
+  overflow-y: auto;
+
+  &::-webkit-scrollbar-track {
+    background-color: ${(props) => props.theme.scrollBg};
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: ${(props) => props.theme.scrollBg};
+    width: 6px;
+  }
+
+  @media (max-width: 768px) {
+    padding: ${(props) => (props.minimal ? '10px 5px' : '0px')};
+
+    &::-webkit-scrollbar-track {
+      background-color: none;
+      border-radius: 9px;
+    }
+
+    &::-webkit-scrollbar {
+      background-color: none;
+      width: 4px;
+    }
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0.44, #cf1c84),
+      color-stop(0.72, #cf1c84),
+      color-stop(0.86, #cf1c84)
+    );
+  }
+`;
 
 // Export Default
-export default Feedbox;
+export default Inbox;

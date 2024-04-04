@@ -295,34 +295,6 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     }
   }, [epnsCommReadProvider, account]);
 
-  // const fetchAliasAddress = async (channelAddress) => {
-  //   if (channelAddress === null) return;
-  //   const userAddressInCaip = convertAddressToAddrCaip(channelAddress, chainId);
-  //   const ethAlias = await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
-  //     let aliasAccount;
-  //     if (data) {
-  //       aliasAccount = data.alias_address;
-  //     }
-  //     return aliasAccount;
-  //   });
-
-  //   return ethAlias;
-  // };
-
-  // const fetchEthAddress = async (channelAddress) => {
-  //   if (channelAddress === null) return;
-  //   const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
-  //   const aliasEth = await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
-  //     let ethAccount;
-  //     if (data) {
-  //       ethAccount = data.channel;
-  //     }
-  //     return ethAccount;
-  //   });
-
-  //   return aliasEth;
-  // };
-
   //function to query more notifications
   const handlePagination = async () => {
     loadNotifications();
@@ -337,15 +309,6 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const onSubscribeToChannel = async (channelAddress, blockchain) => {
     if (!channelAddress) return;
     let address = channelAddress;
-
-    // const nameToObj = nameToId;
-    // if (chainId !== nameToObj[blockchain]) {
-    //   if (!onCoreNetwork) {
-    //     address = await fetchAliasAddress(channelAddress);
-    //   } else {
-    //     address = await fetchEthAddress(channelAddress);
-    //   }
-    // }
 
     if (!address) return;
     console.debug(address);

@@ -22,6 +22,8 @@ import {
 } from 'redux/slices/channelSlice';
 import { incrementStepIndex } from 'redux/slices/userJourneySlice';
 import DisplayNotice from '../primaries/DisplayNotice';
+import { Item } from '../primaries/SharedStyling';
+import { ChannelTYPE } from 'modules/channels/ChannelsModule';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -60,12 +62,16 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
   // fetch channel data if we are just getting to this pae
   useEffect(() => {
     setLoading(!channels.length); //if there are no channels initially then, set the loader
-    fetchInitialsChannelMeta();
+    if (userPushSDKInstance) {
+      fetchInitialsChannelMeta();
+    }
   }, [account, chainId, userPushSDKInstance]);
 
   useEffect(() => {
     setChannelsNetworkId(chainId);
-    fetchInitialsChannelMeta();
+    if (userPushSDKInstance) {
+      fetchInitialsChannelMeta();
+    }
   }, [chainId]);
 
   // to update a page
@@ -89,9 +95,9 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
         page: Math.ceil(channelsVisited / CHANNELS_PER_PAGE) || 1,
         limit: CHANNELS_PER_PAGE,
       };
-      const channelsMeta = await userPushSDKInstance.channel.list({ options });
-      dispatch(incrementPage());
       if (!channels.length) {
+        const channelsMeta = await userPushSDKInstance.channel.list({ options });
+        dispatch(incrementPage());
         dispatch(setChannelMeta(channelsMeta?.channels));
       }
       // increases the step once the channel are loaded
@@ -294,6 +300,7 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
                           loadTeaser={loadTeaser}
                           playTeaser={playTeaser}
                           minimal={minimal}
+                          profileType={ChannelTYPE.CHANNEL}
                         />
                       )}
                   </ViewChannelItems>

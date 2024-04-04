@@ -22,6 +22,7 @@ import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, Skeleton, Skeleto
 // Internal Configs
 import { abis, addresses } from 'config';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
+import UnstakingModalComponent from './UnstakingModalComponent';
 
 
 const bn = function (number, defaultValue = null) { if (number == null) { if (defaultValue == null) { return null } number = defaultValue } return ethers.BigNumber.from(number) }
@@ -32,7 +33,7 @@ const YieldUniswapV3 = ({
     getLpPoolStats,
     getUserDataLP
 }) => {
-    const { account, provider } = useAccount();
+    const { account, provider, wallet, connect } = useAccount();
 
     const [txInProgressWithdraw, setTxInProgressWithdraw] = React.useState(false);
     const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
@@ -197,7 +198,11 @@ const YieldUniswapV3 = ({
 
     const handleStakingModal = () => {
         if (lpPoolStats?.currentEpochLP.toNumber() + 1 <= lpPoolStats?.totalEpochLP.toNumber()) {
-            showStakingModal();
+            if (wallet.accounts.length > 0) {
+                showStakingModal();
+            } else {
+                connect();
+            }
         } else {
             uniswapV2Toast.showMessageToast({
                 toastTitle: 'Error',
@@ -217,6 +222,7 @@ const YieldUniswapV3 = ({
     } = useModalBlur();
 
     const stakingModalToast = useToast();
+    const unstakingModalToast = useToast();
     const isMobile = useDeviceWidthCheck(600);
 
     return (
@@ -241,7 +247,7 @@ const YieldUniswapV3 = ({
                     <>
                         <Heading >Uniswap V2 LP Staking Pool</Heading>
                         <SecondaryText>
-                            Current APR <SpanV2 color="#D53A94" fontWeight="600">&gt;{numberWithCommas(lpPoolStats?.stakingAPR)}%</SpanV2> 
+                            Current APR <SpanV2 color="#D53A94" fontWeight="600">&gt;{numberWithCommas(lpPoolStats?.stakingAPR)}%</SpanV2>
                         </SecondaryText>
                     </>
                 ) : (
@@ -263,7 +269,7 @@ const YieldUniswapV3 = ({
                     border={`1px solid ${theme.stakingBorder}`}
                     borderRadius="16px"
                 >
-                    <ItemVV2 margin={isMobile ?"0px 6px 0 0 " :"0px 18px 0px 0px"} padding={isMobile  ? " 7px" : "10px"}>
+                    <ItemVV2 margin={isMobile ? "0px 6px 0 0 " : "0px 18px 0px 0px"} padding={isMobile ? " 7px" : "10px"}>
                         {lpPoolStats ? (
                             <>
                                 <SecondaryText>Current Reward</SecondaryText>
@@ -288,7 +294,7 @@ const YieldUniswapV3 = ({
 
                     <Line width="10px" height="100%"></Line>
 
-                    <ItemVV2 margin={isMobile ? "0 0 0 6px" : "0 0 0 18px"} padding={isMobile  ? " 7px" : "10px"}>
+                    <ItemVV2 margin={isMobile ? "0 0 0 6px" : "0 0 0 18px"} padding={isMobile ? " 7px" : "10px"}>
                         {lpPoolStats ? (
                             <>
                                 <SecondaryText>Total Staked</SecondaryText>
@@ -341,7 +347,7 @@ const YieldUniswapV3 = ({
                 {/* Deposit Cash Data */}
                 {userDataLP ? (
                     <ItemVV2>
-                        <ItemHV2 justifyContent="space-between" margin={ isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
+                        <ItemHV2 justifyContent="space-between" margin={isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                             <DataTitle>
                                 User Deposit
                                 <InfoSpan>
@@ -355,7 +361,7 @@ const YieldUniswapV3 = ({
                             </DataTitle>
                             <DataValue>{formatTokens(userDataLP?.epochStakeNext)} UNI-V2</DataValue>
                         </ItemHV2>
-                        <ItemHV2 justifyContent="space-between" margin={ isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
+                        <ItemHV2 justifyContent="space-between" margin={isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                             <DataTitle>
                                 Rewards Claimed
                                 <InfoSpan>
@@ -369,7 +375,7 @@ const YieldUniswapV3 = ({
                             </DataTitle>
                             <DataValue> {numberWithCommas((userDataLP?.totalAccumulatedReward - userDataLP?.totalAvailableReward).toFixed(2))} PUSH</DataValue>
                         </ItemHV2>
-                        <ItemHV2 justifyContent="space-between" margin={ isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
+                        <ItemHV2 justifyContent="space-between" margin={isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                             <DataTitle>
                                 Current Epoch Reward
                                 <InfoSpan>
@@ -383,7 +389,7 @@ const YieldUniswapV3 = ({
                             </DataTitle>
                             <DataValue> {numberWithCommas(userDataLP?.potentialUserReward)} PUSH</DataValue>
                         </ItemHV2>
-                        <ItemHV2 justifyContent="space-between" margin={ isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
+                        <ItemHV2 justifyContent="space-between" margin={isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
                             <DataTitle>
                                 Available for Claiming
                                 <InfoSpan>
@@ -397,6 +403,21 @@ const YieldUniswapV3 = ({
                             </DataTitle>
                             <DataValue> {numberWithCommas(userDataLP?.totalAvailableReward)} PUSH</DataValue>
                         </ItemHV2>
+                        <ItemHV2 justifyContent="space-between" margin={isMobile ? "0px 0px 12px 0px" : "0px 13px 12px 13px"}>
+                            <DataTitle>
+                                Lock-Up Period
+                                <InfoSpan>
+                                    <StakingToolTip
+                                        ToolTipTitle={"Lock Up Period"}
+                                        ToolTipBody={"The staked amount will be locked until this time period"}
+                                    >
+                                        <ImageV2 src={InfoLogo} alt="Info-Logo" width="16px" style={{ cursor: 'pointer' }} />
+                                    </StakingToolTip>
+                                </InfoSpan>
+
+                            </DataTitle>
+                            <DataValue> None </DataValue>
+                        </ItemHV2>
                     </ItemVV2>
                 ) : (
                     <Skeleton
@@ -405,6 +426,10 @@ const YieldUniswapV3 = ({
                         maxWidth=' -webkit-fill-available'
                         borderRadius='5px'
                     >
+                        <ItemHV2 justifyContent='space-between' margin='0 0 23px 0'>
+                            <SkeletonLine height='12px' width='164px' ></SkeletonLine>
+                            <SkeletonLine height='12px' width='72px'></SkeletonLine>
+                        </ItemHV2>
                         <ItemHV2 justifyContent='space-between' margin='0 0 23px 0'>
                             <SkeletonLine height='12px' width='164px' ></SkeletonLine>
                             <SkeletonLine height='12px' width='72px'></SkeletonLine>
@@ -428,14 +453,14 @@ const YieldUniswapV3 = ({
             </ItemVV2>
 
             {/* Bottom Section */}
-            <ItemVV2 padding={ isMobile ? "0px " : "0px 14px"} margin="24px 0px 24px 0px">
+            <ItemVV2 padding={isMobile ? "0px " : "0px 14px"} margin="24px 0px 24px 0px">
                 {userDataLP ? (
                     <>
                         <ItemHV2>
                             <FilledButton
                                 onClick={() => {
                                     handleStakingModal();
-                                }}>Stake $UNI-V2 LP Tokens</FilledButton>
+                                }}>Stake $UNI-V2 LP </FilledButton>
                         </ItemHV2>
                         <ButtonsContainer>
 
@@ -471,7 +496,7 @@ const YieldUniswapV3 = ({
                                     style={{ margin: "0px 10px 0px 0px" }}
                                 >
                                     {txInProgressWithdraw ?
-                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26}  spinnerColor={theme.activeButtonText} title='Unstaking' titleColor={theme.activeButtonText}/>) :
+                                        (<LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={26} spinnerColor={theme.activeButtonText} title='Unstaking' titleColor={theme.activeButtonText} />) :
                                         "Unstake $UNI-V2"
                                     }
                                 </EmptyButton>

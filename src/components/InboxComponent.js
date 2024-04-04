@@ -6,11 +6,11 @@ import styled, { useTheme } from 'styled-components';
 import { FiSearch, FiSliders } from 'react-icons/fi';
 
 // Internal Components
-import Feedbox from 'segments/Feedbox';
-import SpamBox from 'segments/spam';
+import { Item } from 'primaries/SharedStyling';
+import Inbox from 'segments/Inbox';
+import SpamBox from 'segments/Spam';
 
 // Internal Configs
-import GLOBALS from 'config/Globals';
 import APP_PATHS from 'config/AppPaths';
 import { ItemVV2 } from './reusables/SharedStylingV2';
 
@@ -85,7 +85,7 @@ const InboxComponent = ({ isSpam }) => {
         </SearchContainer>
       </NavBoxHolder>
       {showInbox ? (
-        <Feedbox
+        <Inbox
           showFilter={showFilter}
           setShowFilter={setShowFilter}
           search={search}

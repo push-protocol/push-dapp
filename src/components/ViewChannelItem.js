@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import Skeleton from '@yisheng90/react-loading';
@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast as toaster } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { css, useTheme } from 'styled-components';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 
 // Internal Compoonents
 import * as PushAPI from '@pushprotocol/restapi';
@@ -20,6 +21,7 @@ import { Device } from 'assets/Device';
 import MetaInfoDisplayer from 'components/MetaInfoDisplayer';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import RedCircleSvg from '../assets/RedCircle.svg';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import { isAddressEqual, LOGO_FROM_CHAIN_ID, MaskedAliasChannels, shortenText } from 'helpers/UtilityHelper';
 import useToast from 'hooks/useToast';
@@ -28,14 +30,7 @@ import { addNewWelcomeNotif, incrementStepIndex } from 'redux/slices/userJourney
 import ChannelTutorial, { isChannelTutorialized } from 'segments/ChannelTutorial';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import NotificationToast from '../primaries/NotificationToast';
-
-// Internal Configs
-import { Button } from '@mui/material';
-import { addresses, appConfig, CHAIN_DETAILS } from 'config';
-import APP_PATHS from 'config/AppPaths';
-import { AppContext } from 'contexts/AppContext';
-import { IPFSGateway } from 'helpers/IpfsHelper';
-import { useAccount, useDeviceWidthCheck } from 'hooks';
+import { Image, ItemH, Span } from '../primaries/SharedStyling';
 import InfoImage from '../assets/info.svg';
 import ManageNotifSettingDropdown from './dropdowns/ManageNotifSettingDropdown';
 import OptinNotifSettingDropdown from './dropdowns/OptinNotifSettingDropdown';
@@ -43,6 +38,11 @@ import { ImageV2 } from './reusables/SharedStylingV2';
 import Tooltip from './reusables/tooltip/Tooltip';
 import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
 import VerifiedTooltipContent from './VerifiedTooltipContent';
+
+// Internal Configs
+import { addresses, appConfig, CHAIN_DETAILS } from 'config';
+import APP_PATHS from 'config/AppPaths';
+import { IPFSGateway } from 'helpers/IpfsHelper';
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, profileType }) {
@@ -57,20 +57,22 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
   const { epnsReadProvider, epnsWriteProvider, epnsCommReadProvider, pushAdminAddress, ZERO_ADDRESS } = useSelector(
     (state) => state.contracts
   );
-  const { canVerify } = useSelector((state) => state.admin);
+  const { canVerify, channelDetails, coreChannelAdmin } = useSelector((state) => state.admin);
   const {
     channelsCache,
     CHANNEL_BLACKLIST,
+    CHANNEL_ACTIVE_STATE,
     subscriptionStatus,
     userSettings: currentUserSettings,
   } = useSelector((state) => state.channels);
+
   const { account, provider, chainId } = useAccount();
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const [channelObject, setChannelObject] = React.useState(channelObjectProp);
   const [subscribed, setSubscribed] = React.useState(false);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
   const [subscriberCount, setSubscriberCount] = React.useState(0);
   const [isPushAdmin, setIsPushAdmin] = React.useState(false);
   const [vLoading, setvLoading] = React.useState(false);
@@ -88,6 +90,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
   const isBlocked = channelObject.blocked;
   const isMobile = useDeviceWidthCheck(600);
   const mobileToolTip = useDeviceWidthCheck(500);
+  const isChannelActive = channelObject.activation_status;
 
   // Setup navigation
   const navigate = useNavigate();
@@ -100,8 +103,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
   useEffect(() => {
     setSubscribed(subscriptionStatus[channelObject.channel]);
   }, [subscriptionStatus]);
-
-  // console.log("Channel Object >>>>>",channelObject);
 
   useEffect(() => {
     setIsPushAdmin(pushAdminAddress == account);
@@ -123,8 +124,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
     const IPFS_GATEWAY = IPFSGateway;
     const url = IPFS_GATEWAY + channelObject.ipfshash;
     const response = await axios.get(url);
-
-    // console.log("Response >>>>>",response);
 
     if (response.data) setChannelObjectFromHash(response.data);
     if (response.data.icon) setChannelIcon(response.data.icon);
@@ -414,7 +413,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
       key={channelObject.channel}
       id={channelObject.channel}
       minimal={minimal}
-      profileType={profileType}
       border={profileType == 'Profile' ? 'none' : `1px solid ${minimal ? 'transparent' : themes.default.border}`}
     >
       {isMobile && (
@@ -834,6 +832,20 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                     }}
                   />
 
+                  {profileType === 'Profile' && (
+                    <ChanneStateText active={isChannelActive}>
+                      {isChannelActive === 0 && (
+                        <ImageV2
+                          width="12px"
+                          src={RedCircleSvg}
+                          margin="0 5px 2px 0px"
+                          height="30px"
+                        />
+                      )}
+                      {isChannelActive === 1 ? 'Active' : 'Deactivated'}
+                    </ChanneStateText>
+                  )}
+
                   {isChannelTutorialized(channelObject.channel) && (
                     <ChannelTutorial
                       addr={channelObject.channel}
@@ -911,7 +923,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
             )}
             {!loading && !subscribed && (
               <>
-                {/* {isOwner && <OwnerButton disabled>Owner</OwnerButton>} */}
                 {isOwner && (
                   <>
                     {profileType == 'Profile' ? (
@@ -921,7 +932,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                     )}
                   </>
                 )}
-                {!isOwner && (
+                {!isOwner && isChannelActive !== 0 && (
                   <OptinNotifSettingDropdown
                     channelDetail={channelObject}
                     setLoading={setTxInProgress}
@@ -950,7 +961,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                 )}
               </>
             )}
-            {!loading && subscribed && (
+            {!loading && subscribed && isChannelActive !== 0 && (
               <>
                 {/* {isOwner && <OwnerButton disabled>Owner</OwnerButton>} */}
                 {isOwner && (
@@ -1097,6 +1108,7 @@ const ChannelLogo = styled(ButtonV2)`
     align-self: center;
     min-width: ${(props) => (props.minimal ? '48px' : '100px')};
     max-width: ${(props) => (props.minimal ? '48px' : '100px')};
+    min-height: ${(props) => (props.minimal ? '48px' : '100px')};
   }
 
   @media (max-width: 600px) {
@@ -1418,6 +1430,7 @@ const SkeletonButton = styled.div`
 
 const SubscribeButton = styled(ChannelActionButton)`
   background: #e20880;
+  color: #fff;
   border-radius: 8px;
   padding: 0px;
   min-height: 36px;
@@ -1459,6 +1472,41 @@ const Toaster = styled.div`
 
 const ToasterMsg = styled.div`
   margin: 0px 10px;
+`;
+
+const StateText = styled.div`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 150%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 2px 8px;
+  border-radius: 25px;
+  height: 26px;
+  background-color: pink;
+  font-family: Strawford, Source Sans Pro;
+`;
+
+const ChanneStateText = styled(StateText)`
+  color: #2dbd81;
+  color: ${(props) => (props.active ? '#2DBD81' : '#E93636')};
+  background-color: ${(props) => (props.active ? '#c6efd1' : '#FFD8D8')};
+  margin-left: 10px;
+  ${(props) =>
+    props.active &&
+    `
+        &::before {
+            width:16px;
+            height:16px;
+            background: #2DBD81;
+            border-radius: 50%;
+            content: "";
+            display: inline-flex;
+            align-items: center;
+            margin-right: 6px;
+        }
+    `}
 `;
 
 // Export Default

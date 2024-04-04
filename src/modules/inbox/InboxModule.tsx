@@ -6,16 +6,14 @@ import React from 'react';
 import ReactGA from 'react-ga';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast as toaster } from 'react-toastify';
-import styled, { ThemeProvider, useTheme } from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { postReq } from 'api';
 import InboxComponent from 'components/InboxComponent';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import NotificationToast from 'primaries/NotificationToast';
 import { Section } from 'primaries/SharedStyling';
 import { setCommunicatorReadProvider, setCoreReadProvider, setPushAdmin } from 'redux/slices/contractSlice';
-import Feedbox from 'segments/Feedbox';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import UsersDataStore from 'singletons/UsersDataStore';
 import { useAccount } from 'hooks';
@@ -42,7 +40,6 @@ const InboxModule = ({isSpam}) => {
   const clearToast = () => showToast(null);
 
   // whether secret notif are enabled
-  const [enabledSecretNotif, setEnabledSecretNotif] = React.useState(false);
 
   const themes = useTheme();
   const onCoreNetwork = ALLOWED_CORE_NETWORK === chainId;
@@ -55,22 +52,6 @@ const InboxModule = ({isSpam}) => {
   }, [toast]);
   // toast related section
 
-  // React.useEffect(() => {
-  //   const fetchEncryptionKey = async () => {
-  //     // get public key from Backend API
-  //     let encryptionKey = await postReq('/encryption_key/get_encryption_key', {
-  //       address: account,
-  //       op: 'read',
-  //     }).then((res) => {
-  //       return res.data?.encryption_key;
-  //     });
-
-  //     if (encryptionKey != null) {
-  //       setEnabledSecretNotif(true);
-  //     }
-  //   };
-  //   fetchEncryptionKey();
-  // }, [enabledSecretNotif]);
 
   React.useEffect(() => {
     if(!chainId) return;
@@ -138,176 +119,11 @@ const InboxModule = ({isSpam}) => {
     }
   }, [epnsReadProvider, epnsCommReadProvider]);
 
-  // const registerPubKey = async (encryptionPublicKey) => {
-  //   let txToast;
-  //   try {
-  //     const type = {
-  //       Register: [
-  //         { name: 'user', type: 'address' },
-  //         { name: 'encryptionKey', type: 'string' },
-  //         { name: 'action', type: 'string' },
-  //       ],
-  //     };
-
-  //     const message = {
-  //       user: account,
-  //       encryptionKey: encryptionPublicKey,
-  //       action: 'Register',
-  //     };
-
-  //     let EPNS_DOMAIN = {
-  //       name: 'EPNS COMM V1',
-  //       chainId: chainId,
-  //       verifyingContract: epnsCommReadProvider?.address,
-  //     };
-
-  //     // loader toast
-  //     txToast = toaster.dark(<LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />, {
-  //       position: 'bottom-right',
-  //       autoClose: false,
-  //       hideProgressBar: true,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //     });
-
-  //     const signature = await library.getSigner(account)._signTypedData(EPNS_DOMAIN, type, message);
-
-  //     const objPayload = {
-  //       address: account,
-  //       encryptionKey: encryptionPublicKey,
-  //       signature,
-  //       message,
-  //       op: 'write',
-  //       chainId,
-  //       contractAddress: epnsCommReadProvider.address,
-  //     };
-
-  //     const result = await postReq('/encryption_key/register', objPayload);
-  //     console.log(result);
-
-  //     toaster.update(txToast, {
-  //       render: 'Successfully enabled secret notifications !',
-  //       type: toaster.TYPE.SUCCESS,
-  //       autoClose: 5000,
-  //     });
-
-  //     setEnabledSecretNotif(true);
-  //   } catch (err) {
-  //     if (err.code === 4001) {
-  //       // EIP-1193 userRejectedRequest error
-  //       toaster.update(txToast, {
-  //         render: 'User denied message signature.',
-  //         type: toaster.TYPE.ERROR,
-  //         autoClose: 5000,
-  //       });
-  //     } else {
-  //       toaster.update(txToast, {
-  //         render: 'There was an error registering the public key',
-  //         type: toaster.TYPE.ERROR,
-  //         autoClose: 5000,
-  //       });
-  //       console.log(err);
-  //     }
-  //   }
-  // };
-
-  // const enableSecretNotif = async () => {
-  //   let txToast;
-  //   if (enabledSecretNotif) {
-  //     txToast = toaster.dark(<NormalToast msg="Secret Notifications are already enabled." />, {
-  //       position: 'bottom-right',
-  //       type: toaster.TYPE.SUCCESS,
-  //       autoClose: 3000,
-  //       hideProgressBar: true,
-  //       closeOnClick: true,
-  //       pauseOnHover: true,
-  //       draggable: true,
-  //       progress: undefined,
-  //     });
-  //     return;
-  //   }
-  //   if (!epnsCommReadProvider?.address) return;
-  //   let encryptionPublicKey;
-  //   await library.provider
-  //     .request({
-  //       method: 'eth_getEncryptionPublicKey',
-  //       params: [account], // you must have access to the specified account
-  //     })
-  //     .then((result) => {
-  //       encryptionPublicKey = result;
-  //       registerPubKey(encryptionPublicKey);
-  //       console.log(result);
-  //     })
-  //     .catch((error) => {
-  //       if (error.code === 4001) {
-  //         // EIP-1193 userRejectedRequest error
-  //         console.log('User Rejected the Request to the Key');
-  //         txToast = toaster.dark(<NormalToast msg="User denied message EncryptionPublicKey" />, {
-  //           position: 'bottom-right',
-  //           type: toaster.TYPE.ERROR,
-  //           autoClose: 5000,
-  //           hideProgressBar: true,
-  //           closeOnClick: true,
-  //           pauseOnHover: true,
-  //           draggable: true,
-  //           progress: undefined,
-  //         });
-  //       } else if (error.code === -32601) {
-  //         console.error(error);
-  //         txToast = toaster.dark(<NormalToast msg="Your wallet doesn't support providing public encryption key." />, {
-  //           position: 'bottom-right',
-  //           type: toaster.TYPE.ERROR,
-  //           autoClose: 5000,
-  //           hideProgressBar: true,
-  //           closeOnClick: true,
-  //           pauseOnHover: true,
-  //           draggable: true,
-  //           progress: undefined,
-  //         });
-  //       } else {
-  //         console.error(error);
-  //         txToast = toaster.dark(<NormalToast msg="There was an error getting public encryption key." />, {
-  //           position: 'bottom-right',
-  //           type: toaster.TYPE.ERROR,
-  //           autoClose: 5000,
-  //           hideProgressBar: true,
-  //           closeOnClick: true,
-  //           pauseOnHover: true,
-  //           draggable: true,
-  //           progress: undefined,
-  //         });
-  //       }
-  //     });
-  // };
 
   // Render
   return (
     <Container>
       <Interface>
-        {/* <Item>
-          <Item margin="16px 20px 0px 0px" self="self-end">
-          <Button
-          padding="12px"
-          direction="row"
-          border={`1px solid ${themes.faucetBorder}`}
-          bg={
-            themes.scheme === "light"
-            ? GLOBALS.COLORS.GRADIENT_PRIMARY
-            : GLOBALS.COLORS.GRADIENT_SECONDARY
-          }
-          radius="50px"
-          onClick={enableSecretNotif}
-          disabled={enabledSecretNotif}
-          >
-          <span style={{ color: "#fff" }}>
-          {enabledSecretNotif ? 'Secret Notifications are enabled' : 'Enable Secret Notifications'}
-          </span>
-          <></>
-          </Button>
-          </Item>
-        </Item> */}
         <div className="joyride"></div>
         <InboxComponent isSpam={isSpam}/>
         {/* <Feedbox /> */}
