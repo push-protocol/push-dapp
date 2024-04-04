@@ -15,11 +15,12 @@ import { NotificationItem } from '@pushprotocol/uiweb';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import CryptoHelper from 'helpers/CryptoHelper';
+import { Item } from 'primaries/SharedStyling';
 import {
   addPaginatedNotifications,
   incrementPage,
   setFinishedFetching,
-  updateTopNotifications,
+  updateTopNotifications
 } from 'redux/slices/spamSlice';
 import SearchFilter from '../components/SearchFilter';
 import DisplayNotice from '../primaries/DisplayNotice';
@@ -35,6 +36,7 @@ import { device } from 'config/Globals';
 import { AppContext } from 'contexts/AppContext';
 import { ItemHV2 } from 'components/reusables/SharedStylingV2';
 
+
 // Constants
 const NOTIFICATIONS_PER_PAGE = 10;
 
@@ -43,7 +45,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const dispatch = useDispatch();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
-  });
+  });   
   const modalRef = React.useRef(null);
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
   const { account, chainId, provider } = useAccount();
@@ -94,7 +96,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     ETH_TEST_GOERLI: 5,
     ETH_TEST_SEPOLIA: 11155111,
     POLYGON_MAINNET: 137,
-    ETH_MAINNET: 1,
+    ETH_MAINNET: 1
   };
 
   const reset = () => setFilter(false);
@@ -270,7 +272,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
       dispatch(
         updateTopNotifications({
           notifs: res,
-          pageSize: NOTIFICATIONS_PER_PAGE,
+          pageSize: NOTIFICATIONS_PER_PAGE
         })
       );
       setNotif(res);
@@ -337,6 +339,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
             />
           ),
         });
+
         dispatch(updateSubscriptionStatus({ channelAddress: channelAddress, status: true }));
       },
       onError: (err) => {

@@ -16,9 +16,12 @@ import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner'
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { AppContext } from 'contexts/AppContext';
 import { ErrorContext } from 'contexts/ErrorContext';
-import { GlobalContext } from 'contexts/GlobalContext';
+import { GlobalContext, ReadOnlyWalletMode } from 'contexts/GlobalContext';
 import { NavigationContext } from 'contexts/NavigationContext';
 import Profile from 'primaries/Profile';
+import { Button, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
+import { ReactComponent as EPNSLogoDark } from './assets/epnsDark.svg';
+import { ReactComponent as EPNSLogoLight } from './assets/epnsLight.svg';
 
 // Internal Configs
 import ChainIndicator from 'components/ChainIndicator';
