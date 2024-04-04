@@ -44,11 +44,6 @@ import { addresses, appConfig, CHAIN_DETAILS } from 'config';
 import APP_PATHS from 'config/AppPaths';
 import { IPFSGateway } from 'helpers/IpfsHelper';
 
-// Internal Configs
-import { addresses, appConfig, CHAIN_DETAILS } from 'config';
-import APP_PATHS from "config/AppPaths";
-import { IPFSGateway } from 'helpers/IpfsHelper';
-
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, profileType }) {
   const dispatch = useDispatch();
@@ -70,7 +65,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
     subscriptionStatus,
     userSettings: currentUserSettings,
   } = useSelector((state) => state.channels);
- 
+
   const { account, provider, chainId } = useAccount();
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
@@ -412,7 +407,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
     setToolTipheight(containerHeight?.top);
   };
 
-
   // render
   return (
     <Container
@@ -498,7 +492,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                         {channelObject.name}
                       </SpanV2>
                     </SpanV2>
-
 
                     {isVerified == 1 && (
                       <SpanV2
@@ -669,7 +662,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                     <SpanV2 onClick={() => navigate(generateChannelProfileLink(channelObject.channel, false))}>
                       {channelObject.name}
                     </SpanV2>
-
 
                     {isVerified == 1 && (
                       <SpanV2
@@ -879,7 +871,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
               </SkeletonButton>
             )}
             {!loading && isPushAdmin && profileType == 'Channel' && (
-
               <SubscribeButton
                 onClick={blockChannel}
                 disabled={bLoading}
@@ -936,8 +927,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                   <>
                     {profileType == 'Profile' ? (
                       <DashboardButton onClick={() => navigate('/dashboard')}>Go To Dashboard</DashboardButton>
-                    {(profileType == "Profile") ? (
-          
                     ) : (
                       <OwnerButton disabled>Owner</OwnerButton>
                     )}
@@ -978,7 +967,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                 {isOwner && (
                   <>
                     {profileType == 'Profile' ? (
-                      <DashboardButton onClick={() => navigate('/dashboard')}>Go To Dashboard</DashboardButton>                 
+                      <DashboardButton onClick={() => navigate('/dashboard')}>Go To Dashboard</DashboardButton>
                     ) : (
                       <OwnerButton disabled>Owner</OwnerButton>
                     )}
