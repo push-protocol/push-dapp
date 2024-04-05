@@ -82,12 +82,6 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
           console.log(response);
           setNotifications(response.notifications);
           setLoadingNotifs(false);
-
-          // ENABLE PAGINATION HERE
-          dispatch(addPaginatedNotifications(response.notifications));
-          if (response.notifications.length === 0) {
-            dispatch(setFinishedFetching());
-          }
         })
         .catch((err) => {
           // ENABLE NO NOTIFICATION FOUND HERE
