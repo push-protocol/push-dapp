@@ -6,8 +6,7 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import InfoLogo from "../../assets/inforWithoutBG.svg?react";
-import { Button } from 'primaries/SharedStyling';
+import InfoLogo from "../../assets/inforWithoutBG.svg";
 import { MdWarning } from 'react-icons/md';
 
 const YieldPushFeeV2 = () => {

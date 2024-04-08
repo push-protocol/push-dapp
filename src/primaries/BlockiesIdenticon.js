@@ -9,7 +9,7 @@
 import React from 'react';
 
 // Internal Components
-import blockies from "./blockies";
+import blockies from "./blockies.js";
 
 export default class BlockiesIdenticon extends React.Component {
   constructor(props) {

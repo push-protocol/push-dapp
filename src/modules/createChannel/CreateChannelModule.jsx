@@ -429,8 +429,6 @@ function CreateChannelModule() {
           setChannelFile(croppedImage);
         }
       });
-    } else {
-      return 'Nothing';
     }
   }, [croppedImage]);
 

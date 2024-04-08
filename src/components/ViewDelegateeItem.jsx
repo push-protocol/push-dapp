@@ -49,6 +49,7 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
   const [imageSrcSet, setImageSrcSet] = useState(null);
 
   useEffect(() => {
+    if (!delegateeObject.pic) return;
     const importImages = async () => {
       try {
         const [imageModule, image2xModule, image3xModule] = await Promise.all([

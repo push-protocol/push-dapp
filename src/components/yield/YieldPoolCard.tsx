@@ -11,8 +11,7 @@ import { useSelector } from 'react-redux';
 import useToast from 'hooks/useToast';
 import { B } from 'components/SharedStyling';
 import StakingToolTip from './StakingToolTip';
-import InfoLogo from "../../assets/inforWithoutBG.svg?react";
-import ErrorLogo from "../../assets/errorLogo.svg?react"
+import InfoLogo from "../../assets/inforWithoutBG.svg";
 import { Button, Span } from 'primaries/SharedStyling';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';

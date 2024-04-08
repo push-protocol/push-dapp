@@ -9,7 +9,7 @@ import { MdCheckCircle, MdError } from 'react-icons/md';
 // Internal Compoonents
 import useToast from 'hooks/useToast';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
-import InfoLogo from "../../assets/inforWithoutBG.svg?react";
+import InfoLogo from "../../assets/inforWithoutBG.svg";
 import { B, Button } from 'primaries/SharedStyling';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';

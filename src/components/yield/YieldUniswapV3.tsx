@@ -10,11 +10,10 @@ import { MdCheckCircle, MdError } from 'react-icons/md';
 // Internal Compoonents
 import useToast from 'hooks/useToast';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
-import InfoLogo from "../../assets/inforWithoutBG.svg?react";
+import InfoLogo from "../../assets/inforWithoutBG.svg";
 import { B, Button } from 'primaries/SharedStyling';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';
-import ErrorLogo from "../../assets/errorLogo.svg?react"
 import StakingToolTip from './StakingToolTip';
 import StakingModalComponent from './StakingModalComponent';
 import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, Skeleton, SkeletonLine, SpanV2 } from 'components/reusables/SharedStylingV2';
