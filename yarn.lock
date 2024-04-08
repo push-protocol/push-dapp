@@ -5945,9 +5945,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:0.0.1-alpha.75":
-  version: 0.0.1-alpha.75
-  resolution: "@pushprotocol/restapi@npm:0.0.1-alpha.75"
+"@pushprotocol/restapi@npm:0.0.1-alpha.77":
+  version: 0.0.1-alpha.77
+  resolution: "@pushprotocol/restapi@npm:0.0.1-alpha.77"
   dependencies:
     "@metamask/eth-sig-util": ^5.0.2
     axios: ^0.27.2
@@ -5970,7 +5970,7 @@ __metadata:
   peerDependenciesMeta:
     ethers:
       optional: true
-  checksum: 74b84f3b2bbd1d15291a4b802c51430ab1a3f133fdcd105da8676c3f514d7d376fc78d3e1353097c913e6a30b1e62a8c229146f098723ab2684d32a371a4697e
+  checksum: a5aca0b92a87a851154d4577ccd201d07941de1417a538b6b42559d09d434d87684b20e66787561d16e426b92856cfd5b39f563d35b9e46db8e4b0de79634dba
   languageName: node
   linkType: hard
 
@@ -5986,9 +5986,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:1.3.1-alpha.11":
-  version: 1.3.1-alpha.11
-  resolution: "@pushprotocol/uiweb@npm:1.3.1-alpha.11"
+"@pushprotocol/uiweb@npm:1.3.1-alpha.14":
+  version: 1.3.1-alpha.14
+  resolution: "@pushprotocol/uiweb@npm:1.3.1-alpha.14"
   dependencies:
     "@livekit/components-react": ^1.2.2
     "@livekit/components-styles": ^1.0.6
@@ -6021,7 +6021,7 @@ __metadata:
     react: ">=16.8.0"
     styled-components: ^6.0.8
     viem: ^1.3.0
-  checksum: 3c6f297267cb73ac7730b766b6dfad8245d57a75c4957ae584997dd3e716cc6236c53143327d2be951df126af43de78aecff6731bd9d8a0a777aebf9001c0c51
+  checksum: 06e87a356d5c8caec9f2c2619240ae43c5681961b96302c6174eed502ca1e668977e0f658d93e86918e25310384e6e60342631fb74a58e2844d934e62bb12894
   languageName: node
   linkType: hard
 
@@ -9355,18 +9355,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-onboard/injected-wallets@npm:2.10.12":
-  version: 2.10.12
-  resolution: "@web3-onboard/injected-wallets@npm:2.10.12"
-  dependencies:
-    "@web3-onboard/common": ^2.3.3
-    joi: 17.9.1
-    lodash.uniqby: ^4.7.0
-  checksum: 5cfb9b1615a45acf4c03b53c064efb1ba2a5ed836234419e4cf57766e8ebf19f2f34b8e4aec1755df231b967b44471417ca1d2c2bddb05e83c2d1e232f9e77ca
-  languageName: node
-  linkType: hard
-
-"@web3-onboard/injected-wallets@npm:^2.10.5":
+"@web3-onboard/injected-wallets@npm:2.10.13, @web3-onboard/injected-wallets@npm:^2.10.5":
   version: 2.10.13
   resolution: "@web3-onboard/injected-wallets@npm:2.10.13"
   dependencies:
@@ -25038,9 +25027,9 @@ __metadata:
     "@mui/icons-material": ^5.8.4
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
-    "@pushprotocol/restapi": 0.0.1-alpha.75
+    "@pushprotocol/restapi": 0.0.1-alpha.77
     "@pushprotocol/socket": 0.5.3
-    "@pushprotocol/uiweb": 1.3.1-alpha.11
+    "@pushprotocol/uiweb": 1.3.1-alpha.14
     "@reduxjs/toolkit": ^1.7.1
     "@testing-library/dom": ^6.12.2
     "@testing-library/jest-dom": ^4.2.4
@@ -25056,7 +25045,7 @@ __metadata:
     "@unstoppabledomains/resolution": 8.5.0
     "@web3-onboard/coinbase": ^2.2.5
     "@web3-onboard/core": 2.21.3
-    "@web3-onboard/injected-wallets": 2.10.12
+    "@web3-onboard/injected-wallets": 2.10.13
     "@web3-onboard/react": ^2.8.9
     "@web3-onboard/walletconnect": 2.5.4
     "@yisheng90/react-loading": 1.2.3
