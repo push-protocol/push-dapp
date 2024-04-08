@@ -2,20 +2,6 @@
   "name": "pushdapp",
   "version": "0.6.6",
   "homepage": "https://app.push.org",
-  "browserslist": {
-    "production": [
-      "chrome >= 67",
-      "edge >= 79",
-      "firefox >= 68",
-      "opera >= 54",
-      "safari >= 14"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -54,6 +40,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "@uniswap/widgets": "^2.47.3",
     "@unstoppabledomains/resolution": "8.5.0",
     "@web3-onboard/coinbase": "^2.2.5",
     "@web3-onboard/core": "2.21.3",
@@ -166,6 +153,7 @@
     "vite-plugin-node-polyfills": "^0.21.0",
     "vite-plugin-require": "^1.1.14",
     "vite-plugin-svgr": "^4.2.0",
+    "vite-plugin-top-level-await": "^1.4.1",
     "vite-tsconfig-paths": "^4.3.2"
   },
   "packageManager": "yarn@3.4.1"

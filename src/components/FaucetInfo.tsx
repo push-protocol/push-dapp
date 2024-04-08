@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 // Internal Components
 import { ButtonV2, ImageV2, SpanV2 } from './reusables/SharedStylingV2';
-import swapIcon from '../assets/icons/swapIcon.svg?react';
+import swapIcon from '../assets/icons/swapIcon.svg';
 import { useAccount } from 'hooks';
 
 // Internal Configs

@@ -2,8 +2,8 @@
 import React, { useRef } from 'react';
 
 // External Packages
-// import { darkTheme, lightTheme, SwapWidget } from '@uniswap/widgets';
-// import '@uniswap/widgets/fonts.css';
+import { darkTheme, lightTheme, SwapWidget } from '@uniswap/widgets';
+import '@uniswap/widgets/fonts.css';
 import { useClickAway } from 'react-use';
 import { useTheme } from 'styled-components';
 
@@ -26,7 +26,7 @@ const jsonRpcUrlMap = {
 
 const WidgetCustomTheme = {
   light: {
-    // ...lightTheme,
+    ...lightTheme,
     accent: '#D53994',
     accentSoft: '#F4DCEA',
     active: '#D53994',
@@ -35,7 +35,7 @@ const WidgetCustomTheme = {
     error: '#E93535',
   },
   dark: {
-    // ...darkTheme,
+    ...darkTheme,
     accent: '#D53994',
     accentSoft: '#282A2E',
     container: '#000000',
@@ -64,7 +64,7 @@ export const UniswapWidgetModal = ({ InnerComponentProps, onClose }: UniswapWidg
       ref={containerRef}
     >
       {/* HERE */}
-      {/* <SwapWidget
+      <SwapWidget
         width={360}
         tokenList={ONE_INCH_TOKEN_LIST}
         defaultOutputTokenAddress={addresses.pushToken}
@@ -72,7 +72,7 @@ export const UniswapWidgetModal = ({ InnerComponentProps, onClose }: UniswapWidg
         theme={WidgetCustomTheme[theme.scheme]}
         jsonRpcUrlMap={jsonRpcUrlMap}
         provider={provider}
-      /> */}
+      />
     </div>
   );
 };

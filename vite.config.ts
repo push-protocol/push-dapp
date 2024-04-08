@@ -4,10 +4,20 @@ import viteTsconfigPaths from "vite-tsconfig-paths";
 import svgr from "vite-plugin-svgr";
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import vitePluginRequire from "vite-plugin-require";
+import topLevelAwait from 'vite-plugin-top-level-await';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  resolve: {
+    alias: {
+      // Define aliases for specific libraries (@uniswap/widgets is importing it with '~' and vite can't resolve it)
+      '~@fontsource/ibm-plex-mono': '@fontsource/ibm-plex-mono',
+      '~@fontsource/inter': '@fontsource/inter',
+      // Add more aliases as needed
+    }
+ },
   plugins: [
+    topLevelAwait(),
     react(),
     svgr(),
     viteTsconfigPaths({
