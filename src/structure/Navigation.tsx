@@ -71,8 +71,8 @@ function Navigation() {
 
       if (channelDetails !== 'unfetched' && channelDetails != null) {
         newNavSetup.secondary[0].data.name = channelDetails.name;
-        newNavSetup.secondary[0].data.src = 'navigation/homeOffIcon.svg';
-        newNavSetup.secondary[0].data.activeSrc = 'navigation/homeOnIcon.svg';
+        newNavSetup.secondary[0].data.src = 'homeOffIcon';
+        newNavSetup.secondary[0].data.activeSrc = 'homeOnIcon';
         newNavSetup.secondary[0].data.hidden = false;
         newNavSetup.secondary[0].data.loading = false;
       } else {

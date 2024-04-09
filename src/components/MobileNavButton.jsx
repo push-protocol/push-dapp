@@ -10,10 +10,13 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { Anchor, Image, ItemH, RouterLink, Span } from 'primaries/SharedStyling';
 import { ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
 
+// Internal Assets
+import { navigationIcons } from 'assets/navigation';
+
 // Internal Configs
 import GLOBALS from 'config/Globals';
-import { nothing } from 'immer';
 import { AppContext } from 'contexts/AppContext';
+import { nothing } from 'immer';
 
 // Create Header
 function MobileNavButton({ item, data, sectionID, active, bg = 'none', showNavBar, setShowNavBar }) {
@@ -24,23 +27,8 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none', showNavBa
   const { showMetamaskPushSnap } = useContext(AppContext);
 
   useEffect(() => {
-    // Dynamically import the icon and activeIcon when the component mounts
-    const importIcons = async () => {
-      // Ignore to suppress warning since data.src already contains file extension, and 
-      // vite shows warning if extension isn't present in dynamic import
-      const iconModulePromise = import(/* @vite-ignore */ `../assets/${data.src}`);
-      const activeIconModulePromise = import(/* @vite-ignore */ `../assets/${data.activeSrc}`);
-
-      const [iconModule, activeIconModule] = await Promise.all([
-        iconModulePromise,
-        activeIconModulePromise,
-      ]);
-
-      setIcon(iconModule.default);
-      setActiveIcon(activeIconModule.default);
-    };
-
-    importIcons();
+    setIcon(navigationIcons[data.src]);
+    setActiveIcon(navigationIcons[data.activeSrc]);
   }, [data.src, data.activeSrc]);
 
 

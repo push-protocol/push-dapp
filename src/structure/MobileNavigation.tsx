@@ -15,6 +15,7 @@ import { NavigationLoaderButton } from 'components/NavigationLoaderButton';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import navigationList from 'config/NavigationList';
 import { NavigationContext } from 'contexts/NavigationContext';
+import { useAccount } from 'hooks';
 import { AnchorLink as Anchor, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
 import { SEND_NOTIFICATION_STATES, setCanSend } from 'redux/slices/sendNotificationSlice';
 import {
@@ -23,12 +24,11 @@ import {
   setDeveloperOpen,
   setTutorialContinous,
 } from '../redux/slices/userJourneySlice';
-import { useAccount } from 'hooks';
 
 // Internal Configs
-import { appConfig } from 'config/index.js';
-import GLOBALS from 'config/Globals';
 import MobileNavButton from 'components/MobileNavButton';
+import GLOBALS from 'config/Globals';
+import { appConfig } from 'config/index.js';
 
 // Create Header
 function MobileNavigation({showNavBar,setShowNavBar}) {
@@ -67,8 +67,8 @@ function MobileNavigation({showNavBar,setShowNavBar}) {
 
       if (channelDetails !== 'unfetched' && channelDetails != null) {
         newNavSetup.secondary[0].data.name = channelDetails.name;
-        newNavSetup.secondary[0].data.src = 'navigation/homeOffIcon.svg';
-        newNavSetup.secondary[0].data.activeSrc = 'navigation/homeOnIcon.svg';
+        newNavSetup.secondary[0].data.src = 'homeOffIcon';
+        newNavSetup.secondary[0].data.activeSrc = 'homeOnIcon';
         newNavSetup.secondary[0].data.hidden = false;
         newNavSetup.secondary[0].data.loading = false;
       } else {
