@@ -10,7 +10,7 @@
     "start:sdk:local:forcecleanup": "node dev-mode-link-local-sdk.mjs localsdk forcecleanup start",
     "start:sdk:local:nocleanup": "node dev-mode-link-local-sdk.mjs localsdk nocleanup start",
     "reset:sdk:prod": "node dev-mode-link-local-sdk.mjs prodsdk forcecleanup nostart",
-    "build": "node dev-mode-link-local-sdk.mjs prodsdk cleanup nostart && vite build",
+    "build": "NODE_OPTIONS=--max-old-space-size=8192 node dev-mode-link-local-sdk.mjs prodsdk cleanup nostart && vite build",
     "test": "vite test",
     "deploy:alpha": "node build.mjs alpha && yarn build && echo 'alpha.push.org' > ./build/CNAME && gh-pages -d build -r https://github.com/push-protocol/push-dapp-alpha-deployment",
     "deploy:w2w": "node build.mjs w2w && yarn build && echo 'w2w.push.org' > ./build/CNAME && gh-pages -d build -r https://github.com/push-protocol/push-dapp-w2w-deployment",
