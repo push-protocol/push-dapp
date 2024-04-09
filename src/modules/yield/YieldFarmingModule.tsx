@@ -49,20 +49,20 @@ function YieldFarmingModule() {
   });
 
   const getPoolStats = React.useCallback(async () => {
-    const poolStats = await DepYieldFarmingDataStore.instance.getPoolStats();
+    const poolStats = await DepYieldFarmingDataStore.getInstance().getPoolStats();
 
     setPoolStats({ ...poolStats });
   }, [epnsToken, staking, yieldFarmingPUSH, yieldFarmingLP, uniswapV2Router02]);
 
   const getPUSHPoolStats = React.useCallback(async () => {
-    const pushPoolStats = await DepYieldFarmingDataStore.instance.getPUSHPoolStats();
+    const pushPoolStats = await DepYieldFarmingDataStore.getInstance().getPUSHPoolStats();
 
     setPushPoolStats({ ...pushPoolStats });
   }, [epnsToken, staking, yieldFarmingPUSH, yieldFarmingLP, uniswapV2Router02]);
 
   const getLPPoolStats = React.useCallback(
     async (poolStats) => {
-      const lpPoolStats = await DepYieldFarmingDataStore.instance.getLPPoolStats(poolStats);
+      const lpPoolStats = await DepYieldFarmingDataStore.getInstance().getLPPoolStats(poolStats);
 
       setLpPoolStats({ ...lpPoolStats });
     },
@@ -70,13 +70,13 @@ function YieldFarmingModule() {
   );
 
   const getUserDataPUSH = React.useCallback(async () => {
-    const userDataPUSH = await DepYieldFarmingDataStore.instance.getUserData(yieldFarmingPUSH);
+    const userDataPUSH = await DepYieldFarmingDataStore.getInstance().getUserData(yieldFarmingPUSH);
 
     setUserDataPUSH({ ...userDataPUSH });
   }, [yieldFarmingPUSH]);
 
   const getUserDataLP = React.useCallback(async () => {
-    const userDataLP = await DepYieldFarmingDataStore.instance.getUserData(yieldFarmingLP);
+    const userDataLP = await DepYieldFarmingDataStore.getInstance().getUserData(yieldFarmingLP);
 
     setUserDataLP({ ...userDataLP });
   }, [yieldFarmingLP]);
@@ -150,7 +150,7 @@ function YieldFarmingModule() {
   React.useEffect(() => {
     if (epnsToken != null && staking != null && yieldFarmingPUSH != null) {
       // Instantiate Data Stores
-      DepYieldFarmingDataStore.instance.init(
+      DepYieldFarmingDataStore.getInstance().init(
         account,
         epnsToken,
         staking,
@@ -161,7 +161,7 @@ function YieldFarmingModule() {
 
       getPoolStats();
 
-      // setpoolStats(DepYieldFarmingDataStore.instance.state);
+      // setpoolStats(DepYieldFarmingDataStore.getInstance().state);
     }
   }, [getPoolStats]);
 

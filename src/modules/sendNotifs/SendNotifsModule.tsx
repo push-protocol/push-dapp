@@ -94,7 +94,7 @@ function ChannelDashboardPage() {
   //         const channelInformationPromise = [
   //           ...new Set([account, ...delegators.channelOwners]), //make the accounts unique
   //         ].map((channelAddress) => {
-  //           return ChannelsDataStore.instance
+  //           return ChannelsDataStore.getInstance()
   //             .getChannelJsonAsync(channelAddress)
   //             .then((res) => ({ ...res, address: channelAddress }))
   //             .catch(() => false);
@@ -127,7 +127,7 @@ function ChannelDashboardPage() {
   //       // if channel admin, then get if the channel is verified or not, then also fetch more details about the channel
   //       const verificationStatus = await epnsWriteProvider.getChannelVerfication(ownerAccount);
   //       const channelJson = await epnsWriteProvider.channels(ownerAccount);
-  //       // const channelSubscribers = await ChannelsDataStore.instance.getChannelSubscribers(account);
+  //       // const channelSubscribers = await ChannelsDataStore.getInstance().getChannelSubscribers(account);
   //       dispatch(
   //         setUserChannelDetails({
   //           ...response,

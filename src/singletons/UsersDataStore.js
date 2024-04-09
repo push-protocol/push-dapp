@@ -11,7 +11,15 @@ export const UserEvents = {
 }
 
 export default class UsersDataStore {
-    static instance = UsersDataStore.instance || new UsersDataStore();
+    static instance = null;
+
+  // Singleton getter
+  static getInstance() {
+      if (!UsersDataStore.instance) {
+        UsersDataStore.instance = new UsersDataStore();
+      }
+      return UsersDataStore.instance;
+  }
 
     state = {
       usersCount: -1,

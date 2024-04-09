@@ -104,8 +104,8 @@ const InitState = () => {
     // Push (EPNS) Read Provider Set
     if (epnsReadProvider != null && epnsCommReadProvider != null) {
       // Instantiate Data Stores
-      UsersDataStore.instance.init(account, epnsReadProvider, epnsCommReadProvider);
-      ChannelsDataStore.instance.init(account, epnsReadProvider, epnsCommReadProvider, chainId);
+      UsersDataStore.getInstance().init(account, epnsReadProvider, epnsCommReadProvider);
+      ChannelsDataStore.getInstance().init(account, epnsReadProvider, epnsCommReadProvider, chainId);
     }
   }, [epnsReadProvider, epnsCommReadProvider, epnsWriteProvider]);
 
@@ -211,7 +211,7 @@ const InitState = () => {
   };
 
   const checkUserForAlias = async () => {
-    let { aliasAddress = null, isAliasVerified = null } = await ChannelsDataStore.instance.getChannelDetailsFromAddress(
+    let { aliasAddress = null, isAliasVerified = null } = await ChannelsDataStore.getInstance().getChannelDetailsFromAddress(
       account
     );
     if (aliasAddress == 'NULL') aliasAddress = null;

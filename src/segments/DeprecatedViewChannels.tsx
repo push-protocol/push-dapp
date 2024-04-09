@@ -61,7 +61,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
   // to fetch initial channels and logged in user data
   const fetchInitialsChannelMeta = async () => {
     // fetch the meta of the first `CHANNELS_PER_PAGE` channels
-    const channelsMeta = await ChannelsDataStore.instance.getChannelFromApi(
+    const channelsMeta = await ChannelsDataStore.getInstance().getChannelFromApi(
       channelsVisited,
       CHANNELS_PER_PAGE
     );
@@ -75,7 +75,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
   // load more channels when we get to the bottom of the page
   const loadMoreChannelMeta = async (newPageNumber: any) => {
     const startingPoint = newPageNumber * CHANNELS_PER_PAGE;
-    const moreChannels = await ChannelsDataStore.instance.getChannelFromApi(
+    const moreChannels = await ChannelsDataStore.getInstance().getChannelFromApi(
       startingPoint,
       CHANNELS_PER_PAGE
     );

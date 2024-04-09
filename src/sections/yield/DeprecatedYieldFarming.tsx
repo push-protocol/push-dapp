@@ -40,32 +40,32 @@ const DeprecatedYieldFarming = ({
     const library = provider?.getSigner(account);
 
     const getDepPoolStats = React.useCallback(async () => {
-        const poolStats = await YieldFarmingDataStore.instance.getPoolStats();
+        const poolStats = await YieldFarmingDataStore.getInstance().getPoolStats();
 
         setDepPoolStats({ ...poolStats });
     }, [pushToken, depStaking, depYieldFarmLP, depYieldFarmPUSH, uniswapV2Router02]);
 
     const getDepPUSHPoolStats = React.useCallback(async () => {
-        const pushPoolStats = await YieldFarmingDataStore.instance.getPUSHPoolStats();
+        const pushPoolStats = await YieldFarmingDataStore.getInstance().getPUSHPoolStats();
 
         setDepPushPoolStats({ ...pushPoolStats });
     }, [pushToken, depStaking, depYieldFarmLP, depYieldFarmPUSH, uniswapV2Router02]);
 
     const getDepLPPoolStats = React.useCallback(
         async (poolStats) => {
-            const lpPoolStats = await YieldFarmingDataStore.instance.getLPPoolStats(poolStats);
+            const lpPoolStats = await YieldFarmingDataStore.getInstance().getLPPoolStats(poolStats);
 
             setDepLpPoolStats({ ...lpPoolStats });
         }, [pushToken, depStaking, depYieldFarmLP, depYieldFarmPUSH, uniswapV2Router02]);
 
     const getDepUserDataPUSH = React.useCallback(async () => {
-        const userDataPUSH = await YieldFarmingDataStore.instance.getUserData(depYieldFarmPUSH);
+        const userDataPUSH = await YieldFarmingDataStore.getInstance().getUserData(depYieldFarmPUSH);
 
         setDepUserDataPUSH({ ...userDataPUSH });
     }, [depYieldFarmPUSH]);
 
     const getDepUserDataLP = React.useCallback(async () => {
-        const userDataLP = await YieldFarmingDataStore.instance.getUserData(depYieldFarmLP);
+        const userDataLP = await YieldFarmingDataStore.getInstance().getUserData(depYieldFarmLP);
 
         setDepUserDataLP({ ...userDataLP });
     }, [depYieldFarmLP]);
@@ -107,7 +107,7 @@ const DeprecatedYieldFarming = ({
     React.useEffect(() => {
         if (pushToken != null && depStaking != null && depYieldFarmPUSH != null) {
             // Instantiate Data Stores
-            YieldFarmingDataStore.instance.init(
+            YieldFarmingDataStore.getInstance().init(
                 account,
                 pushToken,
                 depStaking,

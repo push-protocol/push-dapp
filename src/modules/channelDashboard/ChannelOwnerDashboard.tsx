@@ -76,7 +76,7 @@ const ChannelOwnerDashboard = () => {
   }, [channelDetails, aliasAddrFromContract]);
 
   const fetchChannelDetails = async (address: string) => {
-    let { aliasAddress = null, isAliasVerified = null } = await ChannelsDataStore.instance.getChannelDetailsFromAddress(address);
+    let { aliasAddress = null, isAliasVerified = null } = await ChannelsDataStore.getInstance().getChannelDetailsFromAddress(address);
     if (aliasAddress == "NULL") aliasAddress = null;
 
     return { aliasAddress: aliasAddress, aliasVerified: isAliasVerified };

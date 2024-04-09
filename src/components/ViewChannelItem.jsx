@@ -106,7 +106,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
 
   const fetchChannelJsonWithBlock = async () => {
     try {
-      const channelJson = await ChannelsDataStore.instance.getChannelJsonStartBlockAsync(channelObject.channel);
+      const channelJson = await ChannelsDataStore.getInstance().getChannelJsonStartBlockAsync(channelObject.channel);
       // console.log("Channel JSON !!!!!",channelJson);
       return channelJson;
     } catch (err) {

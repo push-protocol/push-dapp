@@ -109,7 +109,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
   React.useEffect(() => {
     if (!channelDetails || !canVerify) return;
     (async function () {
-      let channelJson = await ChannelsDataStore.instance.getChannelJsonAsync(channelDetails.verifiedBy);
+      let channelJson = await ChannelsDataStore.getInstance().getChannelJsonAsync(channelDetails.verifiedBy);
       setVerifyingChannel(channelJson);
     })();
   }, [channelDetails, canVerify]);

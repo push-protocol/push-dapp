@@ -24,8 +24,15 @@ const tokenBNtoNumber = (tokenBn) => {
 const bnToInt = function (bnAmount) { return parseInt(bnAmount.div(bn(10).pow(18))) }
 
 export default class DepYieldFarmingDataStore {
-  static instance =
-  DepYieldFarmingDataStore.instance || new DepYieldFarmingDataStore();
+  static instance = null;
+
+    // Singleton getter
+    static getInstance() {
+        if (!DepYieldFarmingDataStore.instance) {
+          DepYieldFarmingDataStore.instance = new DepYieldFarmingDataStore();
+        }
+        return DepYieldFarmingDataStore.instance;
+    }
 
   state = {
     account: null,

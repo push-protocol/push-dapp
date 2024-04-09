@@ -40,27 +40,27 @@ const NewYieldFarming = (
     const library = provider?.getSigner(account);
 
     const getLpPoolStats = React.useCallback(async () => {
-        const poolStats = await YieldFarmingDataStoreV2.instance.getPoolStats(provider);
-        const lpPoolStats = await YieldFarmingDataStoreV2.instance.getLPPoolStats(poolStats);
+        const poolStats = await YieldFarmingDataStoreV2.getInstance().getPoolStats(provider);
+        const lpPoolStats = await YieldFarmingDataStoreV2.getInstance().getLPPoolStats(poolStats);
 
         setPoolStats({ ...poolStats });
         setLpPoolStats({ ...lpPoolStats });
     }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
 
     const getPUSHPoolStats = React.useCallback(async () => {
-        // const pushPoolStats = await YieldFarmingDataStoreV2.instance.getPUSHPoolStats(provider);
+        // const pushPoolStats = await YieldFarmingDataStoreV2.getInstance().getPUSHPoolStats(provider);
 
         // setPUSHPoolStats({ ...pushPoolStats });
     }, []);
 
     const getUserDataLP = React.useCallback(async () => {
-        const userDataLP = await YieldFarmingDataStoreV2.instance.getUserDataLP();
+        const userDataLP = await YieldFarmingDataStoreV2.getInstance().getUserDataLP();
 
         setUserDataLP({ ...userDataLP });
     }, [yieldFarmingLP]);
 
     const getUserDataPush = React.useCallback(async () => {
-        const [pushPoolStats, userDataPush] = await YieldFarmingDataStoreV2.instance.getUserDataPUSH(provider);
+        const [pushPoolStats, userDataPush] = await YieldFarmingDataStoreV2.getInstance().getUserDataPUSH(provider);
 
         setPUSHPoolStats({ ...pushPoolStats });
         setUserDataPush({ ...userDataPush });
@@ -103,7 +103,7 @@ const NewYieldFarming = (
             setUniswapV2Router02Instance(uniswapV2Router02Instance);
         }
 
-        YieldFarmingDataStoreV2.instance.init(
+        YieldFarmingDataStoreV2.getInstance().init(
             account,
             staking,
             pushToken,

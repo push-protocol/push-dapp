@@ -19,7 +19,15 @@ export const ChannelEvents = {
 };
 
 export default class ChannelsDataStore {
-  static instance = ChannelsDataStore.instance || new ChannelsDataStore();
+  static instance = null;
+
+  // Singleton getter
+  static getInstance() {
+      if (!ChannelsDataStore.instance) {
+        ChannelsDataStore.instance = new ChannelsDataStore();
+      }
+      return ChannelsDataStore.instance;
+  }
 
   state = {
     channelsCount: -1,
