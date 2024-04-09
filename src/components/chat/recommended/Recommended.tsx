@@ -1,9 +1,9 @@
 // React + Web3 Essentials
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 // External Packages
 import { ChatPreview } from '@pushprotocol/uiweb';
-import styled, { css, useTheme } from 'styled-components';
+import styled from 'styled-components';
 
 // Internal Compoonents
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
@@ -30,13 +30,11 @@ const Recommended = ({ bg, onChatSelected }) => {
     }
 
     return chatParticipantAlias;
-  }
+  };
 
   // RENDER
   return (
-    <Container
-      bg={bg}
-    >
+    <Container bg={bg}>
       {recommendedChatsList.map((item, index) => {
         return (
           <ChatPreview
@@ -46,26 +44,26 @@ const Recommended = ({ bg, onChatSelected }) => {
             setSelected={(chatId, chatParticipant) => {
               const chatParticipantRemapped = getChatParticipant(chatParticipant);
               setChatId(chatId);
-              onChatSelected(chatId, chatParticipantRemapped)
+              onChatSelected(chatId, chatParticipantRemapped);
             }}
           />
-        )
+        );
       })}
     </Container>
   );
-}
+};
 export default Recommended;
 
 // css styles
 const Container = styled(ItemVV2)`
   flex: initial;
   flex-wrap: nowrap;
-  background: ${props => props.bg || 'transparent'};
+  background: ${(props) => props.bg || 'transparent'};
   border-radius: 24px;
   padding: 10px;
 
   &:before {
-    content: "RECOMMENDED";
+    content: 'RECOMMENDED';
     font-size: 12px;
     font-weight: 600;
     margin-bottom: 10px;
@@ -75,4 +73,4 @@ const Container = styled(ItemVV2)`
     align-self: flex-start;
     padding: 5px 10px 0px 10px;
   }
-`
+`;

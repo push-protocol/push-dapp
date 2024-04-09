@@ -10,15 +10,19 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { Anchor, Image, ItemH, RouterLink, Span } from 'primaries/SharedStyling';
 import { ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
 
-// Internal Assets
-import { navigationIcons } from 'assets/navigation';
-
 // Internal Configs
 import GLOBALS from 'config/Globals';
 import { AppContext } from 'contexts/AppContext';
 import { nothing } from 'immer';
 
-// Create Header
+// Assets
+import { navigationIcons } from 'assets/navigation';
+
+// Interface
+
+// Constants
+
+// Main Component
 function MobileNavButton({ item, data, sectionID, active, bg = 'none', showNavBar, setShowNavBar }) {
   const theme = useTheme();
   const [icon, setIcon] = useState(null);
@@ -30,7 +34,6 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none', showNavBa
     setIcon(navigationIcons[data.src]);
     setActiveIcon(navigationIcons[data.activeSrc]);
   }, [data.src, data.activeSrc]);
-
 
   let SelectedIcon;
   let RouteLogic;
@@ -63,7 +66,10 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none', showNavBa
   return (
     <>
       {data.loading && (
-        <ItemVV2 alignSelf="flex-start" padding="0px 15px">
+        <ItemVV2
+          alignSelf="flex-start"
+          padding="0px 15px"
+        >
           <LoaderSpinner
             type={LOADER_TYPE.SEAMLESS}
             completed={false}
@@ -76,7 +82,7 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none', showNavBa
       {!data.loading && !data.hidden && (
         <RouteLogic
           style={{ display: data.name === 'Hide' ? 'none' : 'block' }}
-          flex='1'
+          flex="1"
           title={`${data.title}`}
           to={`${data.href ? data.href : '#'}`}
           href={`${data.href ? data.href : '#'}`}
@@ -86,21 +92,24 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none', showNavBa
           radius="16px"
           align="stretch"
           margin={definedMargin}
-          padding='10px 15px 10px 0px'
+          padding="10px 15px 10px 0px"
           bg={bg}
           hover={'transparent'}
           hoverBG={'transparent'}
           onClick={() => {
             if (item.data.drilldown) {
               return nothing;
-            }
-            else {
+            } else {
               setShowNavBar(!showNavBar);
             }
           }}
-          className={data?.name?.toLowerCase()}>
+          className={data?.name?.toLowerCase()}
+        >
           {data.iconFactory ? (
-            <ItemHV2 justifyContent="flex-start" padding="0 0rem">
+            <ItemHV2
+              justifyContent="flex-start"
+              padding="0 0rem"
+            >
               {data.iconFactory}
             </ItemHV2>
           ) : (
@@ -128,14 +137,13 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none', showNavBa
                 margin="0 10px"
                 color={theme.nav.color}
                 onClick={data?.hasOnClickFunction && showMetamaskPushSnap}
-                minWidth='100px'
-                size="17px">
+                minWidth="100px"
+                size="17px"
+              >
                 {data.name}
               </Span>
 
-              {data?.showNewTag && (
-                <NewTag>New</NewTag>
-              )}
+              {data?.showNewTag && <NewTag>New</NewTag>}
 
               {item.hasItems && !item.opened && <BiChevronDown color={theme.nav.color} />}
 
@@ -155,7 +163,7 @@ const InheritedSectionGroupIcon = styled(Image)`
   margin: 0 5px;
 
   @media (max-width: 992px) {
-      margin: 0px 0px;
+    margin: 0px 0px;
   }
 
   ${(props) =>
@@ -172,7 +180,7 @@ const InheritedSectionItemIcon = styled(Image)`
 
   @media (max-width: 992px) {
     margin: 0px 0px;
-}
+  }
 
   ${(props) =>
     props.active &&
@@ -195,18 +203,18 @@ const LeftBarSecondaryItemIcon = styled(InheritedSectionItemIcon)``;
 const NewTag = styled(SpanV2)`
   font-weight: 600;
   font-size: 12px;
-  letter-spacing:0;
+  letter-spacing: 0;
   line-height: 140%;
   display: flex;
   align-items: center;
-  color: #D53A94;
-  margin-left:10px;
+  color: #d53a94;
+  margin-left: 10px;
   padding: 2px 6px;
-  background: #F3D7FA;
+  background: #f3d7fa;
   border-radius: 6px;
   height: 17px;
-  width:fit-content;
-`
+  width: fit-content;
+`;
 
 // Export Default
 export default MobileNavButton;

@@ -8,14 +8,18 @@ import styled, { css, useTheme } from 'styled-components';
 // Internal Components
 import { Anchor, Image, ItemH, RouterLink, Span } from 'primaries/SharedStyling';
 
-// Internal Assets
-import { navigationIcons } from 'assets/navigation';
-
 // Internal Configs
 import GLOBALS from 'config/Globals';
 import { themeDark } from 'config/Themization';
 
-// Create Header
+// Assets
+import { navigationIcons } from 'assets/navigation';
+
+// Interface
+
+// Constants
+
+// Main Component
 function NavButton({ item, data, sectionID, active }) {
   const theme = useTheme();
   const [icon, setIcon] = useState(null);
@@ -74,9 +78,19 @@ function NavButton({ item, data, sectionID, active }) {
     >
       <ItemH align="center">
         {!active ? (
-          <SelectedIcon src={icon} margin="0 5px" alt={`${data.alt}`} active={active} />
+          <SelectedIcon
+            src={icon}
+            margin="0 5px"
+            alt={`${data.alt}`}
+            active={active}
+          />
         ) : (
-          <SelectedIcon src={activeIcon} margin="0 5px" alt={`${data.alt}`} active={active} />
+          <SelectedIcon
+            src={activeIcon}
+            margin="0 5px"
+            alt={`${data.alt}`}
+            active={active}
+          />
         )}
 
         <Span

@@ -41,11 +41,11 @@ import VideoCallSection from 'sections/video/VideoCallSection';
 import { ChatUserAppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
 
 // Internal Configs
-import { ChatUIProvider,darkChatTheme, UserProfile } from '@pushprotocol/uiweb';
-import { appConfig } from 'config/index.js';
-import GLOBALS, { device, globalsMargin } from 'config/Globals';
-import { GlobalContext } from 'contexts/GlobalContext';
+import { ChatUIProvider, UserProfile, darkChatTheme } from '@pushprotocol/uiweb';
 import UnlockProfile from 'components/chat/unlockProfile/UnlockProfile';
+import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import { appConfig } from 'config/index.js';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -484,7 +484,7 @@ function Chat({ chatid }) {
                     triggerChatParticipant={triggerChatParticipant}
                   />
                 </ChatContainer>
-                {userPushSDKInstance && userPushSDKInstance?.readmode() && (
+                {/* {userPushSDKInstance && userPushSDKInstance?.readmode() && (
                   <UnlockProfileModalComponent
                     InnerComponent={UnlockProfile}
                     onConfirm={() => {}}
@@ -492,7 +492,7 @@ function Chat({ chatid }) {
                     modalPadding="0px"
                     modalPosition={MODAL_POSITION.ON_PARENT}
                   />
-                )}
+                )} */}
                 <GroupInfoModalComponent
                   InnerComponent={GroupInfoModalContent}
                   onConfirm={() => {}}

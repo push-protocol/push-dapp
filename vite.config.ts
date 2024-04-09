@@ -1,16 +1,16 @@
-import react from "@vitejs/plugin-react";
+import react from '@vitejs/plugin-react';
 import { parse } from 'envfile';
 import fs from 'fs';
 import path from 'path';
-import { defineConfig } from "vite";
+import { defineConfig } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import vitePluginRequire from "vite-plugin-require";
-import svgr from "vite-plugin-svgr";
+import vitePluginRequire from 'vite-plugin-require';
+import svgr from 'vite-plugin-svgr';
 import topLevelAwait from 'vite-plugin-top-level-await';
-import viteTsconfigPaths from "vite-tsconfig-paths";
+import viteTsconfigPaths from 'vite-tsconfig-paths';
 
 // for local sdk linking
-let addedAlias = {}
+let addedAlias = {};
 
 // to read and modify webpack config based on local sdk linking or production
 let localSDKLinking = false;
@@ -28,7 +28,7 @@ if (fs.existsSync(envpath)) {
 if (localSDKLinking) {
   addedAlias = {
     // Use absolute paths for aliases
-    'react': path.resolve(__dirname, './node_modules/react'),
+    react: path.resolve(__dirname, './node_modules/react'),
     'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
     'react/jsx-runtime': path.resolve(__dirname, './node_modules/react/jsx-runtime'),
     'react-icons': path.resolve(__dirname, './node_modules/react-icons'),
@@ -42,7 +42,7 @@ if (localSDKLinking) {
     '@livepeer/react': path.resolve(__dirname, './node_modules/@livepeer/react'),
     '@livekit/components-react': path.resolve(__dirname, './node_modules/@livekit/components-react'),
     'livekit-client': path.resolve(__dirname, './node_modules/livekit-client'),
-  }
+  };
 }
 
 // https://vitejs.dev/config/
@@ -53,15 +53,15 @@ export default defineConfig({
       '~@fontsource/ibm-plex-mono': '@fontsource/ibm-plex-mono',
       '~@fontsource/inter': '@fontsource/inter',
       // Add more aliases as needed
-      ...addedAlias
-    }
+      ...addedAlias,
+    },
   },
   plugins: [
     topLevelAwait(),
     react(),
     svgr(),
     viteTsconfigPaths({
-      root: "..",
+      root: '..',
     }),
     nodePolyfills(),
     vitePluginRequire.default(),
@@ -77,9 +77,9 @@ export default defineConfig({
     port: 3000,
   },
   build: {
-    outDir: "build",
+    outDir: 'build',
     commonjsOptions: {
-      transformMixedEsModules: true
-    }
-  }
+      transformMixedEsModules: true,
+    },
+  },
 });
