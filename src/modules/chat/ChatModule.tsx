@@ -484,7 +484,7 @@ function Chat({ chatid }) {
                     triggerChatParticipant={triggerChatParticipant}
                   />
                 </ChatContainer>
-                {/* {userPushSDKInstance && userPushSDKInstance?.readmode() && (
+                {userPushSDKInstance && userPushSDKInstance?.readmode() && (
                   <UnlockProfileModalComponent
                     InnerComponent={UnlockProfile}
                     onConfirm={() => {}}
@@ -492,7 +492,7 @@ function Chat({ chatid }) {
                     modalPadding="0px"
                     modalPosition={MODAL_POSITION.ON_PARENT}
                   />
-                )} */}
+                )}
                 <GroupInfoModalComponent
                   InnerComponent={GroupInfoModalContent}
                   onConfirm={() => {}}
