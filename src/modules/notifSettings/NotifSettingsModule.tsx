@@ -11,7 +11,7 @@ import NotificationSettings from 'components/channel/NotificationSettings';
 import { Section } from 'primaries/SharedStyling';
 
 // Internal Configs
-import { appConfig } from 'config';
+import { appConfig } from 'config/index.js';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 // Constants

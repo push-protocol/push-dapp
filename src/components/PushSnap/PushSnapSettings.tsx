@@ -3,10 +3,10 @@ import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/S
 import SnapModule from 'modules/snap/SnapModule';
 import React, { useEffect, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
-import SnapExample from 'assets/PushSnaps/SnapExample.svg';
+import SnapExample from 'assets/pushSnaps/SnapExample.svg?react';
 import { device } from 'config/Globals';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import InfoLogo from 'assets/PushSnaps/spam-icon.svg';
+import InfoLogo from 'assets/pushSnaps/spam-icon.svg?react';
 import { useAccount } from 'hooks';
 import PushSnapConfigureModal from './PushSnapConfigureModal';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';

@@ -5,20 +5,20 @@ import React, { useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ButtonV2,ItemHV2, ItemVV2,  } from 'components/reusables/SharedStylingV2';
+import { ButtonV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
-import { defaultSnapOrigin } from 'config';
+import { defaultSnapOrigin } from 'config/index.js';
 import { device } from 'config/Globals';
 import { AppContext } from 'contexts/AppContext';
 import { updateSnoozeDuration } from 'helpers';
 import { SnoozeDurationType } from 'types';
 
 const EnableSnoozeModal = ({
-  setSnoozeDuration
-}: 
-  {setSnoozeDuration: (snoozeDuration: SnoozeDurationType) => void}
-) => {
+  setSnoozeDuration,
+}: {
+  setSnoozeDuration: (snoozeDuration: SnoozeDurationType) => void;
+}) => {
   const { setSnapState } = React.useContext(AppContext);
   const theme = useTheme();
 
@@ -28,16 +28,16 @@ const EnableSnoozeModal = ({
     const duration = snoozeDurationInput;
 
     if (duration >= 1 && duration <= 72) {
-        await window.ethereum?.request({
-          method: 'wallet_invokeSnap',
-          params: {
-            snapId: defaultSnapOrigin,
-            request: {
-              method: 'pushproto_setsnoozeduration',
-              params: { snoozeDuration: snoozeDurationInput.toString()},
-            },
+      await window.ethereum?.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: defaultSnapOrigin,
+          request: {
+            method: 'pushproto_setsnoozeduration',
+            params: { snoozeDuration: snoozeDurationInput.toString() },
           },
-        })
+        },
+      });
 
       setSnapState(3);
     } else {
@@ -77,12 +77,9 @@ const EnableSnoozeModal = ({
           }}
           placeholder="Snooze duration in Hours (e.g. 6)"
         />
-
       </ItemHV2>
 
-      <ItemHV2
-        margin="24px 0 0 0"
-      >
+      <ItemHV2 margin="24px 0 0 0">
         <EnptyButton onClick={handleCancel}>Cancel </EnptyButton>
 
         <FilledButton onClick={handleChange}> Enable Snooze </FilledButton>

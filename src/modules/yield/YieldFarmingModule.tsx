@@ -4,7 +4,7 @@ import React from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
-import { CiWarning } from "react-icons/ci";
+import { CiWarning } from 'react-icons/ci';
 
 // Internal Compoonents
 import PoolCard from 'components/PoolCard';
@@ -14,14 +14,14 @@ import { Content, Item, ItemH, Section, Span } from '../../primaries/SharedStyli
 import { useAccount } from 'hooks';
 
 // Internal Configs
-import { abis, addresses, appConfig } from 'config';
+import { abis, addresses, appConfig } from 'config/index.js';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { H2V2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { AInlineV2 } from 'components/reusables/SharedStylingV2';
 
 // Create Header
 function YieldFarmingModule() {
-  const {account, provider, chainId } = useAccount();
+  const { account, provider, chainId } = useAccount();
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const themes = useTheme();
@@ -40,7 +40,6 @@ function YieldFarmingModule() {
   const [yieldFarmingLP, setYieldFarmingLP] = React.useState(null);
   const [uniswapV2Router02, setUniswapV2Router02] = React.useState(null);
 
-
   React.useEffect(() => {
     if (!onCoreNetwork) {
       const url = window.location.origin;
@@ -49,20 +48,20 @@ function YieldFarmingModule() {
   });
 
   const getPoolStats = React.useCallback(async () => {
-    const poolStats = await DepYieldFarmingDataStore.instance.getPoolStats();
+    const poolStats = await DepYieldFarmingDataStore.getInstance().getPoolStats();
 
     setPoolStats({ ...poolStats });
   }, [epnsToken, staking, yieldFarmingPUSH, yieldFarmingLP, uniswapV2Router02]);
 
   const getPUSHPoolStats = React.useCallback(async () => {
-    const pushPoolStats = await DepYieldFarmingDataStore.instance.getPUSHPoolStats();
+    const pushPoolStats = await DepYieldFarmingDataStore.getInstance().getPUSHPoolStats();
 
     setPushPoolStats({ ...pushPoolStats });
   }, [epnsToken, staking, yieldFarmingPUSH, yieldFarmingLP, uniswapV2Router02]);
 
   const getLPPoolStats = React.useCallback(
     async (poolStats) => {
-      const lpPoolStats = await DepYieldFarmingDataStore.instance.getLPPoolStats(poolStats);
+      const lpPoolStats = await DepYieldFarmingDataStore.getInstance().getLPPoolStats(poolStats);
 
       setLpPoolStats({ ...lpPoolStats });
     },
@@ -70,13 +69,13 @@ function YieldFarmingModule() {
   );
 
   const getUserDataPUSH = React.useCallback(async () => {
-    const userDataPUSH = await DepYieldFarmingDataStore.instance.getUserData(yieldFarmingPUSH);
+    const userDataPUSH = await DepYieldFarmingDataStore.getInstance().getUserData(yieldFarmingPUSH);
 
     setUserDataPUSH({ ...userDataPUSH });
   }, [yieldFarmingPUSH]);
 
   const getUserDataLP = React.useCallback(async () => {
-    const userDataLP = await DepYieldFarmingDataStore.instance.getUserData(yieldFarmingLP);
+    const userDataLP = await DepYieldFarmingDataStore.getInstance().getUserData(yieldFarmingLP);
 
     setUserDataLP({ ...userDataLP });
   }, [yieldFarmingLP]);
@@ -150,7 +149,7 @@ function YieldFarmingModule() {
   React.useEffect(() => {
     if (epnsToken != null && staking != null && yieldFarmingPUSH != null) {
       // Instantiate Data Stores
-      DepYieldFarmingDataStore.instance.init(
+      DepYieldFarmingDataStore.getInstance().init(
         account,
         epnsToken,
         staking,
@@ -161,7 +160,7 @@ function YieldFarmingModule() {
 
       getPoolStats();
 
-      // setpoolStats(DepYieldFarmingDataStore.instance.state);
+      // setpoolStats(DepYieldFarmingDataStore.getInstance().state);
     }
   }, [getPoolStats]);
 
@@ -197,19 +196,26 @@ function YieldFarmingModule() {
           color="#fff"
           textAlign="left"
         >
-          <ItemHV2 style={{marginBottom: "0.6rem"}} justifyContent="flex-start">
+          <ItemHV2
+            style={{ marginBottom: '0.6rem' }}
+            justifyContent="flex-start"
+          >
             {/* <CiWarning size={23} /> */}
             <H2V2
               color="#fff"
               fontSize="1.5rem"
               fontWeight={700}
-              style={{marginLeft:"0.3rem"}}
+              style={{ marginLeft: '0.3rem' }}
             >
               REWARDS PROGRAM WILL BE EXTENDED BY 84 WEEKS!!
             </H2V2>
           </ItemHV2>
           The Push DAO has approved the extension of the Rewards Program for 84 more weeks! More info
-          <AInlineV2 style={{color: "white", marginLeft: "4px"}} href="https://medium.com/push-protocol/push-dao-extends-liquidity-rewards-program-26008926b05a" target='_blank'>
+          <AInlineV2
+            style={{ color: 'white', marginLeft: '4px' }}
+            href="https://medium.com/push-protocol/push-dao-extends-liquidity-rewards-program-26008926b05a"
+            target="_blank"
+          >
             here
           </AInlineV2>
         </SpanV2>
@@ -234,12 +240,14 @@ function YieldFarmingModule() {
                   <StatsContent>
                     <StatsInnerTitle>
                       {
-                      // TODO fix the calculation
-                      numberWithCommas(
-                        Math.min(
-                          formatTokens(poolStats.pushRewardsDistributed),
-                          formatTokens(poolStats.totalDistributedAmount)
-                        ))}
+                        // TODO fix the calculation
+                        numberWithCommas(
+                          Math.min(
+                            formatTokens(poolStats.pushRewardsDistributed),
+                            formatTokens(poolStats.totalDistributedAmount)
+                          )
+                        )
+                      }
                     </StatsInnerTitle>
                     <StatsInnerSub>
                       out of {numberWithCommas(formatTokens(poolStats.totalDistributedAmount))}

@@ -1,4 +1,5 @@
 {
+  "editor.wordWrap": "on",
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },

@@ -6,7 +6,7 @@ import { ethers } from 'ethers';
 import * as PushAPI from '@pushprotocol/restapi';
 
 // Internal Components imports
-import { appConfig } from 'config';
+import { appConfig } from 'config/index.js';
 import { useAccount } from 'hooks';
 
 export const SpaceContext = createContext({
@@ -25,15 +25,16 @@ const SpaceContextProvider: React.FC<React.ReactNode> = ({ children }) => {
       account,
       env: appConfig.appEnv,
     });
-    return feed?.length
-  }
+    return feed?.length;
+  };
 
-  useEffect(async() => {
+  useEffect(() => {
     if (!account) return;
 
-    const count = await getSpaceInvitesCount();
-    setSpaceInvites(count);
-
+    (async function () {
+      const count = await getSpaceInvitesCount();
+      setSpaceInvites(count);
+    })();
   }, [account]);
 
   return <SpaceContext.Provider value={{ spaceId, setSpaceId, spaceInvites }}>{children}</SpaceContext.Provider>;

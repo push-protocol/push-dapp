@@ -2,7 +2,7 @@
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
-import * as PushAPI from "@pushprotocol/restapi";
+import * as PushAPI from '@pushprotocol/restapi';
 import Picker from 'emoji-picker-react';
 import styled, { useTheme } from 'styled-components';
 
@@ -15,25 +15,24 @@ import { FileMessageContent } from './Files/Files';
 import GifPicker from './Gifs/GifPicker';
 
 // Internal configs
-import { appConfig } from 'config';
+import { appConfig } from 'config/index.js';
 import { caip10ToWallet } from 'helpers/w2w';
 import { MessagetypeType } from '../../../../types/chat';
-import {filterXSS} from 'xss'
+import { filterXSS } from 'xss';
 import { AppContext } from 'contexts/AppContext';
-
 
 interface ITypeBar {
   isGroup: boolean;
   messageBeingSent: boolean;
   newMessage: string;
   setNewMessage: (newMessage: string) => void;
-  sendMessage: ({ message, messageType }: { message: string; messageType: MessagetypeType}) => void;
+  sendMessage: ({ message, messageType }: { message: string; messageType: MessagetypeType }) => void;
   sendIntent: ({ message, messageType }: { message: string; messageType: MessagetypeType }) => void;
   setOpenSuccessSnackBar: (openReprovalSnackbar: boolean) => void;
   openReprovalSnackbar?: boolean;
-  isJoinGroup?:boolean;
+  isJoinGroup?: boolean;
   setSnackbarText: (SnackbarText: string) => void;
-  approveIntent: (status:string) => void;
+  approveIntent: (status: string) => void;
 }
 
 const Typebar = ({
@@ -49,7 +48,7 @@ const Typebar = ({
   approveIntent,
 }: ITypeBar) => {
   const { currentChat, activeTab, setChat }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
-  const {connectedUser} = useContext(AppContext);
+  const { connectedUser } = useContext(AppContext);
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -109,12 +108,10 @@ const Typebar = ({
         message: url,
         messageType: 'GIF',
       });
-     
     } else {
       sendIntent({ message: url, messageType: 'GIF' });
     }
   };
-
 
   const uploadFile = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
     const file: File = e.target.files?.[0];
@@ -138,16 +135,14 @@ const Typebar = ({
             type: file.type,
             size: file.size,
           };
-             //  FILTERXSS is a module used to filter input from users to prevent XSS attacks, this data from the file is already encoded, filter xss is used incase to filter out any malicious scripts or any corrupt file of sorts
+          //  FILTERXSS is a module used to filter input from users to prevent XSS attacks, this data from the file is already encoded, filter xss is used incase to filter out any malicious scripts or any corrupt file of sorts
           if (currentChat.threadhash || isGroup) {
-
             sendMessage({
               message: filterXSS(JSON.stringify(fileMessageContent)),
               messageType,
             });
           } else {
             sendIntent({ message: filterXSS(JSON.stringify(fileMessageContent)), messageType: messageType });
-
           }
           setFileUploading(false);
         };
@@ -157,11 +152,13 @@ const Typebar = ({
     }
   };
 
-// let stat = `<img src='???' onerror="alert('XSS')" />`
-
+  // let stat = `<img src='???' onerror="alert('XSS')" />`
 
   return (
-    <TypeBarContainer background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg} isJoinGroup={isJoinGroup}>
+    <TypeBarContainer
+      background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg}
+      isJoinGroup={isJoinGroup}
+    >
       {messageBeingSent ? (
         <SpinnerContainer>
           <ItemHV2
@@ -181,17 +178,19 @@ const Typebar = ({
         </SpinnerContainer>
       ) : (
         <>
-         {!isJoinGroup && <Icon
-            onClick={(): void => setShowEmojis(!showEmojis)}
-            filter={theme.snackbarBorderIcon}
-          >
-            <img
-              src="/svg/chats/smiley.svg"
-              height="24px"
-              width="24px"
-              alt=""
-            />
-          </Icon>}
+          {!isJoinGroup && (
+            <Icon
+              onClick={(): void => setShowEmojis(!showEmojis)}
+              filter={theme.snackbarBorderIcon}
+            >
+              <img
+                src="/svg/chats/smiley.svg"
+                height="24px"
+                width="24px"
+                alt=""
+              />
+            </Icon>
+          )}
           {showEmojis && (
             <Picker
               onEmojiClick={addEmoji}
@@ -204,10 +203,10 @@ const Typebar = ({
               }}
             />
           )}
-          
-            {isJoinGroup ? 
+
+          {isJoinGroup ? (
             <SpanV2>You need to join the group in order to send a message</SpanV2>
-            :
+          ) : (
             <TextInput
               placeholder="Type your message..."
               onKeyDown={handleKeyPress}
@@ -216,88 +215,97 @@ const Typebar = ({
               rows={1}
               ref={textAreaRef}
               autoFocus="autoFocus"
-            />}
-            
-          
+            />
+          )}
 
-         {!isJoinGroup? <>
-            <GifDiv>
+          {!isJoinGroup ? (
+            <>
+              <GifDiv>
+                <label>
+                  {isGifPickerOpened && (
+                    <GifPicker
+                      setIsOpened={setIsGifPickerOpened}
+                      isOpen={isGifPickerOpened}
+                      onSelect={sendGif}
+                    />
+                  )}
+                  <Icon
+                    onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}
+                    filter={theme.snackbarBorderIcon}
+                  >
+                    <img
+                      src="/svg/chats/gif.svg"
+                      height="18px"
+                      width="22px"
+                      alt=""
+                    />
+                  </Icon>
+                </label>
+              </GifDiv>
               <label>
-                {isGifPickerOpened && (
-                  <GifPicker
-                    setIsOpened={setIsGifPickerOpened}
-                    isOpen={isGifPickerOpened}
-                    onSelect={sendGif}
-                  />
-                )}
-                <Icon
-                  onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}
-                  filter={theme.snackbarBorderIcon}
-                >
+                <Icon filter={theme.snackbarBorderIcon}>
                   <img
-                    src="/svg/chats/gif.svg"
-                    height="18px"
-                    width="22px"
+                    src="/svg/chats/attachment.svg"
+                    height="24px"
+                    width="20px"
                     alt=""
                   />
                 </Icon>
-              </label>
-            </GifDiv>
-            <label>
-              <Icon filter={theme.snackbarBorderIcon}>
-                <img
-                  src="/svg/chats/attachment.svg"
-                  height="24px"
-                  width="20px"
-                  alt=""
-                />
-              </Icon>
-              <FileInput type="file"
+                <FileInput
+                  type="file"
                   ref={fileInputRef}
-                  onChange={uploadFile} />
-              {/* <FileInput 
+                  onChange={uploadFile}
+                />
+                {/* <FileInput 
                 type="file"
                 ref={fileInputRef}
                 onChange={uploadFile}
               /> */}
-            </label>
+              </label>
 
-            {filesUploading ? (
-              <div className="imageloader">
-                <LoaderSpinner
-                  type={LOADER_TYPE.SEAMLESS}
-                  spinnerSize={20}
-                />
-              </div>
-            ) : (
-              <>
-                <Icon onClick={handleSubmit}>
-                  <img
-                    src={`/svg/chats/send${isDarkMode ? '_dark' : ''}.svg`}
-                    height="27px"
-                    width="27px"
-                    alt=""
+              {filesUploading ? (
+                <div className="imageloader">
+                  <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={20}
                   />
-                </Icon>
-              </>
-            )}
-          </>:
-          <>
-         <ButtonV2
-          background={'#F4DCEA'}
-          color={'#CF1C84'}
-          flex="initial"
-          width="160px"
-          borderRadius="12px"
-          padding="15px 8px"
-          // onClick={() => {
-          //   approveIntent('Approved')
-          // }}
-          disabled={true}
-        >
-          <SpanV2 fontWeight="500" fontSize = "17px">Join Group</SpanV2>
-        </ButtonV2>
-          </>}
+                </div>
+              ) : (
+                <>
+                  <Icon onClick={handleSubmit}>
+                    <img
+                      src={`/svg/chats/send${isDarkMode ? '_dark' : ''}.svg`}
+                      height="27px"
+                      width="27px"
+                      alt=""
+                    />
+                  </Icon>
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              <ButtonV2
+                background={'#F4DCEA'}
+                color={'#CF1C84'}
+                flex="initial"
+                width="160px"
+                borderRadius="12px"
+                padding="15px 8px"
+                // onClick={() => {
+                //   approveIntent('Approved')
+                // }}
+                disabled={true}
+              >
+                <SpanV2
+                  fontWeight="500"
+                  fontSize="17px"
+                >
+                  Join Group
+                </SpanV2>
+              </ButtonV2>
+            </>
+          )}
         </>
       )}
     </TypeBarContainer>
@@ -317,7 +325,7 @@ const TypeBarContainer = styled.div`
   right: 9px;
 
   height: auto;
-  padding: ${(props) => props.isJoinGroup?"6px 6px 6px 26px":"13px 16px"};
+  padding: ${(props) => (props.isJoinGroup ? '6px 6px 6px 26px' : '13px 16px')};
   border-radius: 13px;
   background: ${(props) => (props.background ? props.background : props.theme.chat.sendMesageBg)};
 `;
@@ -342,7 +350,7 @@ const TextInput = styled.textarea`
   min-height: 25px;
   max-height: 75px;
   outline: none;
-  box-sizing:border-box;
+  box-sizing: border-box;
   padding-top: 3px;
   border: none;
   resize: none;

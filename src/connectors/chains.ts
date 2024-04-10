@@ -1,6 +1,6 @@
 import type { AddEthereumChainParameter } from '@web3-react/types';
 import { Chain, ChainWithDecimalId } from '@web3-onboard/common';
-import { appConfig } from 'config';
+import { appConfig } from 'config/index.js';
 import { ethers } from 'ethers';
 
 const ETH: AddEthereumChainParameter['nativeCurrency'] = {
@@ -19,45 +19,45 @@ const CELO: AddEthereumChainParameter['nativeCurrency'] = {
   name: 'Celo',
   symbol: 'CELO',
   decimals: 18,
-}
+};
 
 const BNB: AddEthereumChainParameter['nativeCurrency'] = {
   name: 'Binance Coin',
   symbol: 'BNB',
   decimals: 18,
-}
+};
 
 const FUSE: AddEthereumChainParameter['nativeCurrency'] = {
   name: 'Fuse',
   symbol: 'FUSE',
   decimals: 18,
-}
+};
 
 const SPARK: AddEthereumChainParameter['nativeCurrency'] = {
   name: 'Spark',
   symbol: 'SPARK',
   decimals: 18,
-}
+};
 
 interface BasicChainInformation {
-  urls: string[]
-  name: string
-  nativeCurrency: AddEthereumChainParameter['nativeCurrency']
+  urls: string[];
+  name: string;
+  nativeCurrency: AddEthereumChainParameter['nativeCurrency'];
 }
 
 interface ExtendedChainInformation extends BasicChainInformation {
-  nativeCurrency: AddEthereumChainParameter['nativeCurrency']
-  blockExplorerUrls: AddEthereumChainParameter['blockExplorerUrls']
+  nativeCurrency: AddEthereumChainParameter['nativeCurrency'];
+  blockExplorerUrls: AddEthereumChainParameter['blockExplorerUrls'];
 }
 
 function isExtendedChainInformation(
   chainInformation: BasicChainInformation | ExtendedChainInformation
 ): chainInformation is ExtendedChainInformation {
-  return !!(chainInformation as ExtendedChainInformation).nativeCurrency
+  return !!(chainInformation as ExtendedChainInformation).nativeCurrency;
 }
 
 export function getAddChainParameters(chainId: number): AddEthereumChainParameter | number {
-  const chainInformation = CHAINS[chainId]
+  const chainInformation = CHAINS[chainId];
   if (isExtendedChainInformation(chainInformation)) {
     return {
       chainId,
@@ -65,15 +65,15 @@ export function getAddChainParameters(chainId: number): AddEthereumChainParamete
       nativeCurrency: chainInformation.nativeCurrency,
       rpcUrls: chainInformation.urls,
       blockExplorerUrls: chainInformation.blockExplorerUrls,
-    }
+    };
   } else {
-    return chainId
+    return chainId;
   }
 }
 
 const getInfuraUrlFor = (network: string) => `https://${network}.infura.io/v3/${appConfig?.infuraAPIKey}`;
 
-type ChainConfig = { [chainId: number]: BasicChainInformation | ExtendedChainInformation }
+type ChainConfig = { [chainId: number]: BasicChainInformation | ExtendedChainInformation };
 
 export const MAINNET_CHAINS: ChainConfig = {
   1: {
@@ -87,7 +87,7 @@ export const MAINNET_CHAINS: ChainConfig = {
     nativeCurrency: BNB,
     name: 'BNB Mainnet',
     blockExplorerUrls: ['https://bscscan.com'],
-  }, 
+  },
   1101: {
     urls: ['https://rpc.polygon-zkevm.gateway.fm'],
     nativeCurrency: MATIC,
@@ -120,11 +120,11 @@ export const MAINNET_CHAINS: ChainConfig = {
   },
   122: {
     urls: ['https://rpc.fuse.io'],
-    name: "Fuse Mainnet",
+    name: 'Fuse Mainnet',
     nativeCurrency: FUSE,
-    blockExplorerUrls: ['https://explorer.fuse.io/']
-  }
-}
+    blockExplorerUrls: ['https://explorer.fuse.io/'],
+  },
+};
 
 export const TESTNET_CHAINS: ChainConfig = {
   // 5: {
@@ -161,41 +161,41 @@ export const TESTNET_CHAINS: ChainConfig = {
     name: 'Celo Alfajores',
     nativeCurrency: CELO,
     blockExplorerUrls: ['https://alfajores-blockscout.celo-testnet.org'],
-  },  
+  },
   97: {
-    name: "BNB Testnet",
-    urls: ["https://data-seed-prebsc-1-s1.binance.org:8545"],
+    name: 'BNB Testnet',
+    urls: ['https://data-seed-prebsc-1-s1.binance.org:8545'],
     nativeCurrency: BNB,
     blockExplorerUrls: [],
   },
   1442: {
-    name: "Polygon zkEVM Testnet",
+    name: 'Polygon zkEVM Testnet',
     urls: ['https://rpc.public.zkevm-test.net'],
     nativeCurrency: MATIC,
     blockExplorerUrls: [],
   },
   123: {
-    name: "Fuse Testnet",
+    name: 'Fuse Testnet',
     urls: ['https://rpc.fusespark.io'],
     nativeCurrency: SPARK,
     blockExplorerUrls: ['https://explorer.fusespark.io/'],
-  }
-}
+  },
+};
 
 export const CHAINS: ChainConfig = {
   ...MAINNET_CHAINS,
   ...TESTNET_CHAINS,
-}
+};
 
 export const URLS: { [chainId: number]: string[] } = Object.keys(CHAINS).reduce<{ [chainId: number]: string[] }>(
   (accumulator, chainId) => {
-    const validURLs: string[] = CHAINS[Number(chainId)].urls
+    const validURLs: string[] = CHAINS[Number(chainId)].urls;
 
     if (validURLs.length) {
-      accumulator[Number(chainId)] = validURLs
+      accumulator[Number(chainId)] = validURLs;
     }
 
-    return accumulator
+    return accumulator;
   },
   {}
 );

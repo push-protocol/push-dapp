@@ -11,6 +11,7 @@ import packageJSON from './package.json' assert { type: 'json' };
 const packageJSONWatcher = {
   STORAGE_KEY: 'STORAGE_FOR_RESTORING_PACKAGE_JSON',
   WATCH: ['@pushprotocol/uiweb'],
+  LOCAL_PACKAGES_REQ: ['@livepeer/react@^2.9.2', '@livekit/components-react@^1.5.3', 'livekit-client@^1.15.13'],
 };
 
 const envPresets = {
@@ -254,7 +255,7 @@ const derivePackageJSONValue = (key, storageValue) => {
 };
 
 const cleanupAndBuild = async (sdkENV) => {
-  console.log(chalk.green.dim('  -- Cleaning up node_modules, yarn cache, packages and linking local SDK...'));
+  console.log(chalk.green.dim(`  -- Cleaning up node_modules, yarn cache, packages and ${sdkENV === 'localsdk' ? 'linking' : 'unlinking'} local SDK...`));
 
   // remove node_modules
   if (fs.existsSync('./node_modules')) {
@@ -304,6 +305,20 @@ const cleanupAndBuild = async (sdkENV) => {
     console.log(chalk.green('  -- @pushprotocol/uiweb removed from resolutions'));
   }
 
+  // remove manual dependencies for uiweb
+  // ----
+  packageJSONWatcher.LOCAL_PACKAGES_REQ.forEach((item) => {
+    // Split the item at '@' but ignore the first '@' if it's at the beginning
+    const splitIndex = item.indexOf('@', 1); // Start searching from index 1
+    const key = item.substring(0, splitIndex);
+
+    delete packageJSON.dependencies[key];
+  });
+  fs.writeFileSync('./package.json', JSON.stringify(packageJSON, null, 2));
+  console.log(chalk.green(`  -- Manual dependencies removed to package.json: ${packageJSONWatcher.LOCAL_PACKAGES_REQ.join(', ')}`));
+  // ----
+  // adjust this as needed
+
   // if env is localsdk -> Add @pushprotocol/uiweb (*) to dependencies and then link -p
   if (sdkENV === 'localsdk') {
     // link local sdk
@@ -314,6 +329,21 @@ const cleanupAndBuild = async (sdkENV) => {
     packageJSON.dependencies['@pushprotocol/uiweb'] = '*';
     fs.writeFileSync('./package.json', JSON.stringify(packageJSON, null, 2));
     console.log(chalk.green('  -- @pushprotocol/uiweb (*) added to dependencies'));
+
+    // add manual dependencies for uiweb
+    // ----
+    packageJSONWatcher.LOCAL_PACKAGES_REQ.forEach((item) => {
+      // Split the item at '@' but ignore the first '@' if it's at the beginning
+      const splitIndex = item.indexOf('@', 1); // Start searching from index 1
+      const key = item.substring(0, splitIndex);
+      const value = item.substring(splitIndex + 1);
+      
+      packageJSON.dependencies[key] = value;
+    });
+    fs.writeFileSync('./package.json', JSON.stringify(packageJSON, null, 2));
+    console.log(chalk.green(`  -- Manual dependencies added to package.json: ${packageJSONWatcher.LOCAL_PACKAGES_REQ.join(', ')}`));
+    // ----
+    // adjust this as needed
 
     // Check for yarn.lock in the specified directory
     const sdkPath = envObject['LOCAL_PUSH_SDK_UIWEB_ABS_PATH'];
@@ -378,7 +408,7 @@ const cleanupAndBuild = async (sdkENV) => {
 const startdApp = async (sdkENV) => {
   if (sdkENV === 'localsdk') {
     console.log(chalk.green.bold(' ✅ Starting dApp with preserved symlinks...'));
-    const startdApp = spawn('node', ['--preserve-symlinks', 'node_modules/react-app-rewired/scripts/start.js'], {
+    const startdApp = spawn('node', ['--preserve-symlinks', 'node_modules/vite/bin/vite.js'], {
       stdio: 'inherit',
       shell: true,
     });

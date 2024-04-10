@@ -6,8 +6,8 @@ import styled, { useTheme } from 'styled-components';
 import { ethers } from 'ethers';
 
 // Internal Components
-import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
-import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
+import MoreDark from 'assets/chat/group-chat/moredark.svg?react';
+import MoreLight from 'assets/chat/group-chat/more.svg?react';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
 import Dropdown from 'components/Dropdown';
@@ -30,12 +30,16 @@ export const ProfileCard = ({
 
   const handleHeight = (id) => {
     const containerHeight = document.getElementById(id)?.getBoundingClientRect();
-    console.info("height", containerHeight);
+    console.info('height', containerHeight);
     setDropdownHeight(containerHeight?.top);
   };
 
   return (
-    <ProfileCardItem background={member.wallet === selectedMemeberAddress ? theme.chat.snapFocusBg : ''} id={member.wallet} key={key}>
+    <ProfileCardItem
+      background={member.wallet === selectedMemeberAddress ? theme.chat.snapFocusBg : ''}
+      id={member.wallet}
+      key={key}
+    >
       <ItemHV2 justifyContent="flex-start">
         <ItemVV2
           height="48px"
@@ -77,7 +81,7 @@ export const ProfileCard = ({
             padding="0 20px 0 0"
             onClick={() => {
               handleHeight(member.wallet);
-              setSelectedMemeberAddress(member?.wallet)
+              setSelectedMemeberAddress(member?.wallet);
             }}
             style={{ cursor: 'pointer' }}
           >
@@ -88,7 +92,8 @@ export const ProfileCard = ({
       {selectedMemeberAddress?.toLowerCase() == member?.wallet?.toLowerCase() && (
         <DropdownContainer
           style={{ top: dropdownHeight > 570 ? '-70%' : '70%' }}
-          ref={dropdownRef}>
+          ref={dropdownRef}
+        >
           <Dropdown
             dropdownValues={dropdownValues}
             hoverBGColor={theme.chat.snapFocusBg}
@@ -116,12 +121,12 @@ const ProfileCardItem = styled(ItemHV2)`
 const DropdownContainer = styled(ItemVV2)`
   position: absolute;
   // left: 85.5%;
-  left:48%;
+  left: 48%;
   top: 69%;
   border-radius: 16px;
   padding: 14px 8px;
   background: ${(props) => props.theme.modalContentBackground};
-  border:1px solid ${(props) => props.theme.modalBorderColor};
+  border: 1px solid ${(props) => props.theme.modalBorderColor};
   z-index: 11;
   @media ${device.mobileL} {
     left: 27%;
@@ -129,7 +134,7 @@ const DropdownContainer = styled(ItemVV2)`
   @media (min-width: 426px) and (max-width: 1150px) {
     left: 48%;
   }
-  @media (max-width: 480px){
+  @media (max-width: 480px) {
     left: 25%;
   }
 `;

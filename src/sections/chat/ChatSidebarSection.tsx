@@ -12,9 +12,9 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import { ChatPreview, ChatPreviewList, UserProfile } from '@pushprotocol/uiweb';
-import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
-import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
-import { ReactComponent as BlankChat } from 'assets/chat/BlankChat.svg';
+import CreateGroupIcon from 'assets/chat/group-chat/creategroup.svg?react';
+import CreateGroupFillIcon from 'assets/chat/group-chat/creategroupfill.svg?react';
+import BlankChat from 'assets/chat/BlankChat.svg?react';
 import NewTag from 'components/NewTag';
 import Recommended from 'components/chat/recommended/Recommended';
 import ProfileHeader from 'components/chat/w2wChat/profile';
@@ -33,7 +33,7 @@ import { Feeds } from 'types/chat';
 import GLOBALS from 'config/Globals';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { useAccount } from 'hooks';
-import { appConfig } from '../../config';
+import { appConfig } from '../../config/index.js';
 
 const createGroupOnMouseEnter = [
   {
@@ -285,8 +285,6 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
 
         {/* Set Requests */}
         <ItemVV2
-          flex="1 1 1px"
-          overflow="scroll"
           justifyContent="flex-start"
           flexWrap="nowrap"
           width="100%"

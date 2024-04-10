@@ -35,10 +35,10 @@ function UserSettings() {
   const { account, chainId } = useAccount();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
-  });  
+  });
   const { subscriptionStatus, userSettings: currentUserSettings } = useSelector((state: any) => state.channels);
   const [selectedOption, setSelectedOption] = useState(0);
-  
+
   const [channelList, setChannelList] = useState<ChannelListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -101,16 +101,14 @@ function UserSettings() {
     {
       value: 0,
       label: 'Notification Settings',
-      title:'Notification Settings'
+      title: 'Notification Settings',
     },
     {
       value: 1,
       label: 'Push Snap',
-      title: ''
-    }
+      title: '',
+    },
   ];
-
-
 
   return (
     <Container>
@@ -130,11 +128,12 @@ function UserSettings() {
         </SelectSection>
         <ChannelWrapper>
           <ChannelContainer>
-            {selectOptions[selectedOption]?.title && <SectionTitle>{selectOptions[selectedOption]?.title}</SectionTitle>}
-            
+            {selectOptions[selectedOption]?.title && (
+              <SectionTitle>{selectOptions[selectedOption]?.title}</SectionTitle>
+            )}
+
             {selectedOption === 0 && <ChannelListSettings />}
             {selectedOption === 1 && <PushSnapSettings />}
-
           </ChannelContainer>
         </ChannelWrapper>
       </Wrapper>
@@ -206,7 +205,7 @@ const SelectSection = styled.div`
   }
 `;
 
-const SelectListOption = styled(Button) <{ isSelected: boolean }>`
+const SelectListOption = styled(Button)<{ isSelected: boolean }>`
   background-color: ${(props) => (props.isSelected ? props.theme.default.secondaryBg : 'transparent')};
   color: ${(props) => props.theme.default.secondaryColor};
   border-radius: 12px;

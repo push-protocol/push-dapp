@@ -2,7 +2,7 @@
 import { ethers } from 'ethers';
 
 // Internal Configs
-import { addresses, appConfig } from 'config';
+import { addresses, appConfig } from 'config/index.js';
 
 import {getUserPushStakingInfo} from 'helpers/pushStaking'
 
@@ -35,7 +35,15 @@ const bnToInt = function (bnAmount) {
 };
 
 export default class YieldFarmingDataStoreV2 {
-  static instance = YieldFarmingDataStoreV2.instance || new YieldFarmingDataStoreV2();
+  static instance = null;
+
+    // Singleton getter
+    static getInstance() {
+        if (!YieldFarmingDataStoreV2.instance) {
+          YieldFarmingDataStoreV2.instance = new YieldFarmingDataStoreV2();
+        }
+        return YieldFarmingDataStoreV2.instance;
+    }
 
   state = {
     account: null,

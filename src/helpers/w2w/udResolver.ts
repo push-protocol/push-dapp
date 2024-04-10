@@ -1,6 +1,6 @@
 import Resolution from '@unstoppabledomains/resolution';
 import { ethers } from 'ethers';
-import { appConfig, CHAIN_DETAILS } from 'config';
+import { appConfig, CHAIN_DETAILS } from 'config/index.js';
 
 export const getUdResolver = (): Resolution => {
   // ToDo: Enable for sepolia chainId once UD supports it
@@ -11,7 +11,7 @@ export const getUdResolver = (): Resolution => {
     uns: {
       locations: {
         Layer1: {
-          network: "mainnet", // add config for sepolia once it's supported by UD
+          network: 'mainnet', // add config for sepolia once it's supported by UD
           provider: new ethers.providers.InfuraProvider(l1ChainId, appConfig.infuraAPIKey),
         },
         Layer2: {

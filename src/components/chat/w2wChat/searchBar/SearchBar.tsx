@@ -8,7 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
+import SearchIcon from 'assets/chat/search.svg?react';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Context } from 'modules/chat/ChatModule';
@@ -167,7 +167,7 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
               borderRadius="32px 32px 32px 4px"
               onClick={() => setActiveTab(3)}
             >
-              <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer', }} />
+              <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }} />
             </ButtonV2>
           </ItemVV2>
         )}

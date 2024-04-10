@@ -603,7 +603,4 @@ const themeDark = {
   svgStrokeColor: '#575D73',
 };
 
-module.exports = {
-  themeLight: themeLight,
-  themeDark: themeDark,
-};
+export { themeLight, themeDark };

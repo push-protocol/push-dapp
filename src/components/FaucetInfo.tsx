@@ -7,7 +7,7 @@ import swapIcon from '../assets/icons/swapIcon.svg';
 import { useAccount } from 'hooks';
 
 // Internal Configs
-import { appConfig } from 'config';
+import { appConfig } from 'config/index.js';
 import { device } from 'config/Globals';
 import { useEffect, useState } from 'react';
 import { getHasEnoughPushToken } from 'helpers';

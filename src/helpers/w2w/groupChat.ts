@@ -1,21 +1,20 @@
-import { appConfig } from 'config';
+import { appConfig } from 'config/index.js';
 import { walletToCAIP10 } from '.';
 import { ConnectedUser, Feeds, Member, User } from '../../types/chat';
-import * as PushAPI from "@pushprotocol/restapi";
+import * as PushAPI from '@pushprotocol/restapi';
 import { GroupDTO } from '@pushprotocol/restapi';
 import { findObject } from 'helpers/UtilityHelper';
 import * as w2wChatHelper from 'helpers/w2w';
 
-
 type UpdateGroupType = {
-  currentChat:Feeds,
-  connectedUser:ConnectedUser,
-  adminList:Array<string>,
-  memeberList:Array<string>,
-}
+  currentChat: Feeds;
+  connectedUser: ConnectedUser;
+  adminList: Array<string>;
+  memeberList: Array<string>;
+};
 
 export const checkIfGroup = (feed: Feeds): boolean => {
-  if (feed?.hasOwnProperty('groupInformation') && feed?.groupInformation ) return true;
+  if (feed?.hasOwnProperty('groupInformation') && feed?.groupInformation) return true;
   return false;
 };
 
@@ -24,16 +23,13 @@ export const getGroupImage = (feed: Feeds): string => {
   else return feed?.profilePicture!;
 };
 
-export const getMemberDetails = (feed:Feeds,walletAddress:string) => {
+export const getMemberDetails = (feed: Feeds, walletAddress: string) => {
+  const senderProfile = feed?.groupInformation?.members?.filter(
+    (chat) => chat?.wallet?.toLowerCase() == walletAddress?.toLowerCase()
+  )!;
 
-    const senderProfile = feed?.groupInformation?.members?.filter((chat) => chat?.wallet?.toLowerCase() == walletAddress?.toLowerCase())!;
-
-
-    return senderProfile? senderProfile[0]: null;
-
+  return senderProfile ? senderProfile[0] : null;
 };
-
-
 
 export const getName = (feed: Feeds): string => {
   if (checkIfGroup(feed)) return feed?.groupInformation?.groupName!;
@@ -42,7 +38,6 @@ export const getName = (feed: Feeds): string => {
 
 export const getChatsnapMessage = (feed: Feeds, account: string, isIntent?: boolean) => {
   if (checkIfGroup(feed) && !feed.msg.messageContent) {
-
     if (feed?.groupInformation?.groupCreator === walletToCAIP10({ account })) {
       return {
         type: 'Text',
@@ -83,11 +78,15 @@ export const getIntentMessage = (feed: Feeds, isGroup: boolean) => {
   return 'Please accept to enable push chat from this wallet';
 };
 
-export const convertToWalletAddressList = (memberList:Member[]) => {
+export const convertToWalletAddressList = (memberList: Member[]) => {
   return memberList?.map((member) => member.wallet);
 };
 
-export const getUpdatedAdminList = (groupInformation: GroupDTO, walletAddress: string, toRemove: boolean): Array<string> => {
+export const getUpdatedAdminList = (
+  groupInformation: GroupDTO,
+  walletAddress: string,
+  toRemove: boolean
+): Array<string> => {
   const groupAdminList = getAdminList(groupInformation);
   if (!toRemove) {
     return [...groupAdminList, walletAddress];
@@ -98,21 +97,25 @@ export const getUpdatedAdminList = (groupInformation: GroupDTO, walletAddress: s
 };
 
 export const getAdminList = (groupInformation: GroupDTO): Array<string> => {
-  const adminsFromMembers = convertToWalletAddressList(groupInformation?.members.filter((admin) => admin.isAdmin == true));
-    const adminsFromPendingMembers = convertToWalletAddressList(groupInformation?.pendingMembers.filter((admin) => admin.isAdmin == true));
-    const adminList = [...adminsFromMembers,...adminsFromPendingMembers];
-    return adminList
+  const adminsFromMembers = convertToWalletAddressList(
+    groupInformation?.members.filter((admin) => admin.isAdmin == true)
+  );
+  const adminsFromPendingMembers = convertToWalletAddressList(
+    groupInformation?.pendingMembers.filter((admin) => admin.isAdmin == true)
+  );
+  const adminList = [...adminsFromMembers, ...adminsFromPendingMembers];
+  return adminList;
 };
 
-export const getUpdatedMemberList = (feed:Feeds,walletAddress:string): Array<string> =>{
-  const members = feed?.groupInformation?.members?.filter((i) => i.wallet?.toLowerCase() !== walletAddress?.toLowerCase());
-  return convertToWalletAddressList([...members,...feed?.groupInformation?.pendingMembers]);
-}
+export const getUpdatedMemberList = (feed: Feeds, walletAddress: string): Array<string> => {
+  const members = feed?.groupInformation?.members?.filter(
+    (i) => i.wallet?.toLowerCase() !== walletAddress?.toLowerCase()
+  );
+  return convertToWalletAddressList([...members, ...feed?.groupInformation?.pendingMembers]);
+};
 
-
-
-export const updateGroup = async(options:UpdateGroupType) => {
-  const { currentChat, connectedUser,adminList,memeberList } = options;
+export const updateGroup = async (options: UpdateGroupType) => {
+  const { currentChat, connectedUser, adminList, memeberList } = options;
   const updateResponse = await PushAPI.chat.updateGroup({
     chatId: currentChat?.groupInformation?.chatId,
     groupName: currentChat?.groupInformation?.groupName,
@@ -125,71 +128,64 @@ export const updateGroup = async(options:UpdateGroupType) => {
     env: appConfig.appEnv,
   });
   let updatedCurrentChat = null;
-  if(typeof updateResponse !== 'string')
-  {
+  if (typeof updateResponse !== 'string') {
     updatedCurrentChat = currentChat;
     updatedCurrentChat.groupInformation = updateResponse;
   }
-  return {updateResponse,updatedCurrentChat};
-}
+  return { updateResponse, updatedCurrentChat };
+};
 
-
-export const rearrangeMembers = (currentChat,connectedUser) => {
-  console.info(currentChat)
-  if(currentChat){
-    currentChat?.groupInformation?.members.sort(x => (x?.isAdmin) ? -1 : 1);
+export const rearrangeMembers = (currentChat, connectedUser) => {
+  console.info(currentChat);
+  if (currentChat) {
+    currentChat?.groupInformation?.members.sort((x) => (x?.isAdmin ? -1 : 1));
     currentChat?.groupInformation?.members.some(
       (member, idx) =>
         member?.wallet?.toLowerCase() == currentChat?.groupInformation?.groupCreator?.toLowerCase() &&
-        currentChat?.groupInformation?.members.unshift(
-          currentChat?.groupInformation?.members.splice(idx, 1)[0]
-        )
+        currentChat?.groupInformation?.members.unshift(currentChat?.groupInformation?.members.splice(idx, 1)[0])
     );
     currentChat?.groupInformation?.members.some(
       (member, idx) =>
         member?.wallet?.toLowerCase() == connectedUser.wallets?.toLowerCase() &&
-        currentChat?.groupInformation?.members.unshift(
-          currentChat?.groupInformation?.members.splice(idx, 1)[0]
-        )
+        currentChat?.groupInformation?.members.unshift(currentChat?.groupInformation?.members.splice(idx, 1)[0])
     );
     return currentChat;
   }
   return;
+};
 
-}
-
-export const MemberAlreadyPresent = (member:any,groupMembers:any)=>{
-  const memberCheck = groupMembers?.find((x)=>x.wallet?.toLowerCase() == member.wallets?.toLowerCase());
-  if(memberCheck){
+export const MemberAlreadyPresent = (member: any, groupMembers: any) => {
+  const memberCheck = groupMembers?.find((x) => x.wallet?.toLowerCase() == member.wallets?.toLowerCase());
+  if (memberCheck) {
     return true;
   }
   return false;
-}
+};
 
-export const addWalletValidation = (member:User,memberList:any,groupMembers:any,account) : string  =>{
+export const addWalletValidation = (member: User, memberList: any, groupMembers: any, account): string => {
   const checkIfMemberisAlreadyPresent = MemberAlreadyPresent(member, groupMembers);
 
   let errorMessage = '';
 
-    if (checkIfMemberisAlreadyPresent) {
-      errorMessage = "This Member is Already present in the group"
-    }
+  if (checkIfMemberisAlreadyPresent) {
+    errorMessage = 'This Member is Already present in the group';
+  }
 
-    if (memberList?.length + groupMembers?.length >= 9) {
-      errorMessage = 'No More Addresses can be added'
-    }
+  if (memberList?.length + groupMembers?.length >= 9) {
+    errorMessage = 'No More Addresses can be added';
+  }
 
-    if (memberList?.length >= 9) {
-      errorMessage = 'No More Addresses can be added'
-    }
+  if (memberList?.length >= 9) {
+    errorMessage = 'No More Addresses can be added';
+  }
 
-    if (findObject(member, memberList, 'wallets')) {
-      errorMessage = 'Address is already added'
-    }
+  if (findObject(member, memberList, 'wallets')) {
+    errorMessage = 'Address is already added';
+  }
 
-    if (member?.wallets?.toLowerCase() === w2wChatHelper.walletToCAIP10({ account })?.toLowerCase()) {
-      errorMessage = 'Group Creator cannot be added as Member'
-    }
+  if (member?.wallets?.toLowerCase() === w2wChatHelper.walletToCAIP10({ account })?.toLowerCase()) {
+    errorMessage = 'Group Creator cannot be added as Member';
+  }
 
-    return errorMessage;
-}
+  return errorMessage;
+};

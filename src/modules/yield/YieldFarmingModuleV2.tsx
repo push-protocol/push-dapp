@@ -12,7 +12,7 @@ import NewYieldFarming from 'sections/yield/NewYieldFarming';
 import { useAccount } from 'hooks';
 
 // Internal Configs
-import { abis, addresses, appConfig } from 'config';
+import { abis, addresses, appConfig } from 'config/index.js';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { ethers } from 'ethers';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
@@ -20,7 +20,6 @@ import YieldFarmChainError from 'components/YieldFarmChainError';
 
 // Constants
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
-
 
 // Create Inbox Module
 const YieldFarmingModuleV2 = () => {
@@ -30,27 +29,22 @@ const YieldFarmingModuleV2 = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [newStaking, setNewStaking] = useState(false);
 
-  const { account, chainId, switchChain} = useAccount();
-
+  const { account, chainId, switchChain } = useAccount();
 
   const handleChainChange = () => {
-
     const chainIdToPass = appConfig.allowedNetworks[0];
 
-    if(chainId !== 1 && chainId !== 5){
+    if (chainId !== 1 && chainId !== 5) {
       switchChain(chainIdToPass);
     }
-
-  }
+  };
 
   useEffect(() => {
-
     if (chainId !== 1 && chainId !== 11155111) {
       displayNonEthChainModal();
       handleChainChange();
     }
-
-  }, [chainId])
+  }, [chainId]);
 
   const {
     isModalOpen: isNonEthChainModalOpen,
@@ -61,38 +55,36 @@ const YieldFarmingModuleV2 = () => {
   // Render
   return (
     <Container>
-
       <NonEthChainModal
         InnerComponent={YieldFarmChainError}
-        onConfirm={() => { }}
+        onConfirm={() => {}}
         modalPadding="0px"
         modalPosition={MODAL_POSITION.ON_PARENT}
-
       />
 
-      <TabContainer >
+      <TabContainer>
         <Tabs
           isActive={!activeTab}
           onClick={() => {
-            setNewStaking(true)
-            setActiveTab(0)
-          }
-
-          }>Yield Farming V2</Tabs>
+            setNewStaking(true);
+            setActiveTab(0);
+          }}
+        >
+          Yield Farming V2
+        </Tabs>
         <Tabs
           isActive={activeTab}
           onClick={() => {
-            setNewStaking(false)
-            setActiveTab(1)
-          }
-
-          }>Yield Farming V1 <Deprecated>Deprecated</Deprecated>
+            setNewStaking(false);
+            setActiveTab(1);
+          }}
+        >
+          Yield Farming V1 <Deprecated>Deprecated</Deprecated>
         </Tabs>
       </TabContainer>
 
       {activeTab === 0 && <NewYieldFarming setActiveTab={setActiveTab} />}
       {activeTab === 1 && <DeprecatedYieldFarming setActiveTab={setActiveTab} />}
-
     </Container>
   );
 };
@@ -143,7 +135,7 @@ const Container = styled(SectionV2)`
 `;
 
 const TabContainer = styled(ItemHV2)`
-  justify-content:flex-start;
+  justify-content: flex-start;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -157,26 +149,26 @@ const TabContainer = styled(ItemHV2)`
     bottom: 0px;
     width: 100%;
     content: '';
-    background-color: ${props => props.theme.default.border};
+    background-color: ${(props) => props.theme.default.border};
   }
-`
+`;
 
 const Tabs = styled.div`
-  cursor:pointer;
+  cursor: pointer;
   // padding: 0 25px;
   width: 250px;
   justify-content: center;
-  display:flex;
+  display: flex;
   height: 25px;
   line-height: 141%;
   text-align: center;
   position: relative;
   color: ${(props) => (props.isActive ? '#CF1C84' : props.theme.color)};
 
-  @media (max-width:638px){
-    width:150px;
-    flex:1;
-    flex-direction:column;
+  @media (max-width: 638px) {
+    width: 150px;
+    flex: 1;
+    flex-direction: column;
     align-items: baseline;
   }
 
@@ -192,12 +184,8 @@ const Tabs = styled.div`
         background-color: #CF1C84;
         z-index: 1;
         
-    }`
-  }
-  
- 
-
-`
+    }`}
+`;
 
 const Deprecated = styled(SpanV2)`
   font-weight: 600;
@@ -205,11 +193,11 @@ const Deprecated = styled(SpanV2)`
   line-height: 140%;
   display: flex;
   align-items: center;
-  color: #D53A94;
-  margin-left:10px;
+  color: #d53a94;
+  margin-left: 10px;
   padding: 2px 6px;
-  background: #F3D7FA;
+  background: #f3d7fa;
   border-radius: 6px;
   height: 17px;
-  width:fit-content;
-`
+  width: fit-content;
+`;

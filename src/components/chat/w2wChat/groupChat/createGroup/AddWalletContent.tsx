@@ -7,13 +7,13 @@ import { MdError } from 'react-icons/md';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 
 // Internal Components
-import * as PushAPI from "@pushprotocol/restapi";
-import { ReactComponent as AddDark } from 'assets/chat/group-chat/adddark.svg';
-import { ReactComponent as AddLight } from 'assets/chat/group-chat/addlight.svg';
-import { ReactComponent as Clear } from 'assets/chat/group-chat/close.svg';
-import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
-import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
-import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
+import * as PushAPI from '@pushprotocol/restapi';
+import AddDark from 'assets/chat/group-chat/adddark.svg?react';
+import AddLight from 'assets/chat/group-chat/addlight.svg?react';
+import Clear from 'assets/chat/group-chat/close.svg?react';
+import MoreLight from 'assets/chat/group-chat/more.svg?react';
+import MoreDark from 'assets/chat/group-chat/moredark.svg?react';
+import SearchIcon from 'assets/chat/search.svg?react';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wChatHelper from 'helpers/w2w';
@@ -22,7 +22,7 @@ import useToast from 'hooks/useToast';
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
 
 // Internal configs
-import { appConfig } from 'config';
+import { appConfig } from 'config/index.js';
 import { device } from 'config/Globals';
 import { addWalletValidation, MemberAlreadyPresent } from 'helpers/w2w/groupChat';
 import { Context } from 'modules/chat/ChatModule';
@@ -102,38 +102,35 @@ export const AddWalletContent = ({
     }
   };
 
-
-
   const handleUserSearch = async (userSearchData: string): Promise<void> => {
-    try{
+    try {
       const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData });
       let filteredData: User;
 
-    if (userSearchData.length) {
-      filteredData = await PushAPI.user.get({ 
-        account: caip10,
-        env: appConfig.appEnv
-      });
+      if (userSearchData.length) {
+        filteredData = await PushAPI.user.get({
+          account: caip10,
+          env: appConfig.appEnv,
+        });
 
-      if (filteredData !== null) {  
-        setFilteredUserData(filteredData);
-      }
-      // User is not in the protocol. Create new user
-      else {
-        if (ethers.utils.isAddress(userSearchData)) {
-          const displayUser = displayDefaultUser({ caip10 });
-          setFilteredUserData(displayUser);
-        } else {
-          setIsInvalidAddress(true);
-          setFilteredUserData(null);
+        if (filteredData !== null) {
+          setFilteredUserData(filteredData);
         }
+        // User is not in the protocol. Create new user
+        else {
+          if (ethers.utils.isAddress(userSearchData)) {
+            const displayUser = displayDefaultUser({ caip10 });
+            setFilteredUserData(displayUser);
+          } else {
+            setIsInvalidAddress(true);
+            setFilteredUserData(null);
+          }
+        }
+      } else {
+        setFilteredUserData(null);
       }
-    } else {
-      setFilteredUserData(null);
-    }
-    setIsLoadingSearch(false);
-    }
-    catch(error){
+      setIsLoadingSearch(false);
+    } catch (error) {
       searchFeedToast.showMessageToast({
         toastTitle: 'Error',
         toastMessage: 'Unsuccesful search, Try again',
@@ -251,10 +248,10 @@ export const AddWalletContent = ({
         ) : isLoadingSearch ? (
           <ItemHV2 margin="0px 0px 34px 0px">
             <LoaderSpinner
-            type={LOADER_TYPE.SEAMLESS}
-            width="auto"
-            spinnerSize={40}
-          />
+              type={LOADER_TYPE.SEAMLESS}
+              width="auto"
+              spinnerSize={40}
+            />
           </ItemHV2>
         ) : null}
 

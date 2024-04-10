@@ -11,9 +11,9 @@ import styled, { ThemeProvider, useTheme } from 'styled-components';
 // Internal Compoonents
 import * as PushAPI from '@pushprotocol/restapi';
 import { NotificationItem } from '@pushprotocol/uiweb';
-import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
-import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg';
-import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
+import Close from 'assets/chat/group-chat/close.svg?react';
+import OpenLink from 'assets/pushSnaps/GoToImage.svg?react';
+import MetamaskLogo from 'assets/pushSnaps/metamasksnap.svg?react';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import SearchFilter from 'components/SearchFilter';
 import { GlobalContext } from 'contexts/GlobalContext';

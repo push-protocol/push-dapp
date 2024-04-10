@@ -31,20 +31,25 @@ const UserJourneySteps = ({ darkMode }) => {
           <H3
             size="x-large"
             margin="5px 0px 15px 0px"
-            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}>
+            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
+          >
             Let's begin our journey!
           </H3>
 
           <Item
             color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
             size="normal"
-            align="stretch">
+            align="stretch"
+          >
             <Span color="inherit">
-              <B>Push (EPNS)</B>, the native web3 communication layer enables open communication tied to wallet address from
-              any supported dApps, protocol or web3 projects.
+              <B>Push (EPNS)</B>, the native web3 communication layer enables open communication tied to wallet address
+              from any supported dApps, protocol or web3 projects.
             </Span>
 
-            <Span color="inherit" margin="20px 0px 0px 0px">
+            <Span
+              color="inherit"
+              margin="20px 0px 0px 0px"
+            >
               To get started, follow the icon{' '}
               <BeaconExample>
                 <BeaconExamplePulse />
@@ -53,7 +58,11 @@ const UserJourneySteps = ({ darkMode }) => {
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH
+            self="stretch"
+            items="stretch"
+            margin="10px -10px -10px -10px"
+          >
             <Button
               flex="1"
               margin="10px 10px"
@@ -62,7 +71,8 @@ const UserJourneySteps = ({ darkMode }) => {
               onClick={() => {
                 if (isCommunicateOpen) dispatch(incrementStepIndex());
                 dispatch(incrementStepIndex());
-              }}>
+              }}
+            >
               Next
             </Button>
           </ItemH>
@@ -83,7 +93,8 @@ const UserJourneySteps = ({ darkMode }) => {
         <Item
           color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
           size="normal"
-          align="stretch">
+          align="stretch"
+        >
           <Span color="inherit">
             Communicate tab holds all your communication including notifications! Click to expand it.
           </Span>
@@ -114,7 +125,8 @@ const UserJourneySteps = ({ darkMode }) => {
         <Item
           color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
           size="normal"
-          align="stretch">
+          align="stretch"
+        >
           <Span color="inherit">
             Channels are services that want to send notifications to your wallet address. Let's check them out!
           </Span>
@@ -145,7 +157,8 @@ const UserJourneySteps = ({ darkMode }) => {
         <Item
           color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
           size="normal"
-          align="stretch">
+          align="stretch"
+        >
           <Span color="inherit">
             This is the Channels Page. Please wait while we load channels from Push (EPNS) protocol.
           </Span>
@@ -178,31 +191,43 @@ const UserJourneySteps = ({ darkMode }) => {
           <H3
             size="x-large"
             margin="5px 0px 15px 0px"
-            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}>
+            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
+          >
             Let's opt-in!
           </H3>
 
           <Item
             color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
             size="normal"
-            align="stretch">
+            align="stretch"
+          >
             <Span color="inherit">
-              <B>Push (EPNS)</B> is a user centric protocol which means that you need to gaslessly (for free) opt-in to a
-              channel to enable them to send notifs to your wallet!
+              <B>Push (EPNS)</B> is a user centric protocol which means that you need to gaslessly (for free) opt-in to
+              a channel to enable them to send notifs to your wallet!
             </Span>
 
-            <Span color="inherit" margin="20px 0px 0px 0px">
+            <Span
+              color="inherit"
+              margin="20px 0px 0px 0px"
+            >
               You can opt-in in any number of channels as you want. Opt-in in at least one of the channels to proceed to
               the next step.
             </Span>
 
-            <Span color="inherit" margin="20px 0px 0px 0px">
+            <Span
+              color="inherit"
+              margin="20px 0px 0px 0px"
+            >
               Opt-in will open Metamask popup, in which you have to sign the transaction (which is free), and voila,
               you've all set to receive notifs!
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH
+            self="stretch"
+            items="stretch"
+            margin="10px -10px -10px -10px"
+          >
             <Button
               flex="1"
               margin="10px 10px"
@@ -211,7 +236,8 @@ const UserJourneySteps = ({ darkMode }) => {
               onClick={() => {
                 // dispatch(setTutorialContinous(false));
                 dispatch(incrementStepIndex());
-              }}>
+              }}
+            >
               Next
             </Button>
           </ItemH>
@@ -235,7 +261,8 @@ const UserJourneySteps = ({ darkMode }) => {
         <Item
           color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
           size="normal"
-          align="stretch">
+          align="stretch"
+        >
           <Span color="inherit">Click on inbox tab from sidebar to proceed forward!</Span>
         </Item>
       ),
@@ -264,26 +291,35 @@ const UserJourneySteps = ({ darkMode }) => {
           <H3
             size="x-large"
             margin="5px 0px 15px 0px"
-            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}>
+            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
+          >
             Inbox tab!
           </H3>
 
           <Item
             color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
             size="normal"
-            align="stretch">
+            align="stretch"
+          >
             <Span color="inherit">
               All notifications coming from an opted in channel lands in your inbox. It might be empty right now but if
               you have opted in to a channel, it will blossom soon!
             </Span>
 
-            <Span color="inherit" margin="20px 0px 0px 0px">
+            <Span
+              color="inherit"
+              margin="20px 0px 0px 0px"
+            >
               But wait, that's not all, notifications are tied to your user wallet which means any crypto frontend or
               wallet can display it! More on this later!!
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH
+            self="stretch"
+            items="stretch"
+            margin="10px -10px -10px -10px"
+          >
             <Button
               flex="1"
               margin="10px 10px"
@@ -291,7 +327,8 @@ const UserJourneySteps = ({ darkMode }) => {
               color={darkMode ? themeDark.dynamicTutsButtonColor : themeLight.dynamicTutsButtonColor}
               onClick={() => {
                 dispatch(incrementStepIndex());
-              }}>
+              }}
+            >
               Next
             </Button>
           </ItemH>
@@ -311,7 +348,8 @@ const UserJourneySteps = ({ darkMode }) => {
         <Item
           color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
           size="normal"
-          align="stretch">
+          align="stretch"
+        >
           <Span color="inherit">Click on spam tab from sidebar to see how spam works!</Span>
         </Item>
       ),
@@ -339,21 +377,27 @@ const UserJourneySteps = ({ darkMode }) => {
           <H3
             size="x-large"
             margin="5px 0px 15px 0px"
-            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}>
+            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
+          >
             Spam tab!
           </H3>
 
           <Item
             color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
             size="normal"
-            align="stretch">
+            align="stretch"
+          >
             <Span color="inherit">
               Spam notifications are notifs sent from a channel to your wallet address which you haven't opted in for
               yet, they might be spammy or a channel might have something important to communicate!
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH
+            self="stretch"
+            items="stretch"
+            margin="10px -10px -10px -10px"
+          >
             <Button
               flex="1"
               margin="10px 10px"
@@ -361,7 +405,8 @@ const UserJourneySteps = ({ darkMode }) => {
               color={darkMode ? themeDark.dynamicTutsButtonColor : themeLight.dynamicTutsButtonColor}
               onClick={() => {
                 dispatch(incrementStepIndex());
-              }}>
+              }}
+            >
               Next
             </Button>
           </ItemH>
@@ -379,7 +424,8 @@ const UserJourneySteps = ({ darkMode }) => {
         <Item
           color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
           size="normal"
-          align="stretch">
+          align="stretch"
+        >
           <Span color="inherit">
             Receive Notifs tab contains all crypto frontends that have adopted Push (EPNS) protocol for communication!
             click on it to check the options out!
@@ -411,26 +457,35 @@ const UserJourneySteps = ({ darkMode }) => {
           <H3
             size="x-large"
             margin="5px 0px 15px 0px"
-            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}>
+            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
+          >
             Receive Notifs tab!
           </H3>
 
           <Item
             color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
             size="normal"
-            align="stretch">
+            align="stretch"
+          >
             <Span color="inherit">
               Push (EPNS) is an open communication network which means any crypto wallet can push notifs to your wallet
               address!
             </Span>
 
-            <Span color="inherit" margin="20px 0px 0px 0px">
+            <Span
+              color="inherit"
+              margin="20px 0px 0px 0px"
+            >
               Let's check out few options that are available currently! Keep an eye out for here for your favorite
               wallet to debut here soon!
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH
+            self="stretch"
+            items="stretch"
+            margin="10px -10px -10px -10px"
+          >
             <Button
               flex="1"
               margin="10px 10px"
@@ -439,7 +494,8 @@ const UserJourneySteps = ({ darkMode }) => {
               onClick={() => {
                 dispatch(incrementStepIndex());
                 dispatch(setTutorialContinous(true));
-              }}>
+              }}
+            >
               Next
             </Button>
           </ItemH>
@@ -459,29 +515,36 @@ const UserJourneySteps = ({ darkMode }) => {
           <H3
             size="x-large"
             margin="5px 0px 15px 0px"
-            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}>
+            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
+          >
             Push (EPNS) Browser Extension
           </H3>
 
           <Item
             color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
             size="normal"
-            align="stretch">
+            align="stretch"
+          >
             <Span color="inherit">
               Install the Push (EPNS) chrome extension to enable your browser to send notifications about your web3
               activities!
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH
+            self="stretch"
+            items="stretch"
+            margin="10px -10px -10px -10px"
+          >
             <Button
               flex="1"
               margin="10px 10px"
               bg={darkMode ? themeDark.dynamicTutsButtonBg : themeLight.dynamicTutsButtonBg}
               color={darkMode ? themeDark.dynamicTutsButtonColor : themeLight.dynamicTutsButtonColor}
               onClick={() => {
-                window.open(`${process.env.REACT_APP_BROWSER_EXTENSION_URL}`, '_blank');
-              }}>
+                window.open(`${import.meta.env.VITE_APP_BROWSER_EXTENSION_URL}`, '_blank');
+              }}
+            >
               Download
             </Button>
 
@@ -492,7 +555,8 @@ const UserJourneySteps = ({ darkMode }) => {
               color={darkMode ? themeDark.dynamicTutsButtonColor : themeLight.dynamicTutsButtonColor}
               onClick={() => {
                 dispatch(incrementStepIndex());
-              }}>
+              }}
+            >
               Next
             </Button>
           </ItemH>
@@ -512,28 +576,35 @@ const UserJourneySteps = ({ darkMode }) => {
           <H3
             size="x-large"
             margin="5px 0px 15px 0px"
-            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}>
+            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
+          >
             Push (EPNS) iOS App
           </H3>
 
           <Item
             color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
             size="normal"
-            align="stretch">
+            align="stretch"
+          >
             <Span color="inherit">
               Install the Push (EPNS) iOS app to enable push notifications directly to your iOS (Apple) devices!
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH
+            self="stretch"
+            items="stretch"
+            margin="10px -10px -10px -10px"
+          >
             <Button
               flex="1"
               margin="10px 10px"
               bg={darkMode ? themeDark.dynamicTutsButtonBg : themeLight.dynamicTutsButtonBg}
               color={darkMode ? themeDark.dynamicTutsButtonColor : themeLight.dynamicTutsButtonColor}
               onClick={() => {
-                window.open(`${process.env.REACT_APP_IOS_STAGING_DAPP_URL}`, '_blank');
-              }}>
+                window.open(`${import.meta.env.VITE_APP_IOS_STAGING_DAPP_URL}`, '_blank');
+              }}
+            >
               iOS App
             </Button>
 
@@ -544,7 +615,8 @@ const UserJourneySteps = ({ darkMode }) => {
               color={darkMode ? themeDark.dynamicTutsButtonColor : themeLight.dynamicTutsButtonColor}
               onClick={() => {
                 dispatch(incrementStepIndex());
-              }}>
+              }}
+            >
               Next
             </Button>
           </ItemH>
@@ -564,28 +636,35 @@ const UserJourneySteps = ({ darkMode }) => {
           <H3
             size="x-large"
             margin="5px 0px 15px 0px"
-            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}>
+            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
+          >
             Push (EPNS) Android App
           </H3>
 
           <Item
             color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
             size="normal"
-            align="stretch">
+            align="stretch"
+          >
             <Span color="inherit">
               Install the Push (EPNS) Android app to enable push notifications directly to your android devices!
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH
+            self="stretch"
+            items="stretch"
+            margin="10px -10px -10px -10px"
+          >
             <Button
               flex="1"
               margin="10px 10px"
               bg={darkMode ? themeDark.dynamicTutsButtonBg : themeLight.dynamicTutsButtonBg}
               color={darkMode ? themeDark.dynamicTutsButtonColor : themeLight.dynamicTutsButtonColor}
               onClick={() => {
-                window.open(`${process.env.REACT_APP_ANDROID_STAGING_DAPP_URL}`, '_blank');
-              }}>
+                window.open(`${import.meta.env.VITE_APP_ANDROID_STAGING_DAPP_URL}`, '_blank');
+              }}
+            >
               Android App
             </Button>
 
@@ -596,7 +675,8 @@ const UserJourneySteps = ({ darkMode }) => {
               color={darkMode ? themeDark.dynamicTutsButtonColor : themeLight.dynamicTutsButtonColor}
               onClick={() => {
                 dispatch(incrementStepIndex());
-              }}>
+              }}
+            >
               Next
             </Button>
           </ItemH>
@@ -616,23 +696,32 @@ const UserJourneySteps = ({ darkMode }) => {
           <H3
             size="x-large"
             margin="5px 0px 15px 0px"
-            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}>
+            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
+          >
             Tutorial Completed 🎉🎉
           </H3>
 
           <Item
             color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
             size="normal"
-            align="stretch">
+            align="stretch"
+          >
             <Span color="inherit">Hurray! You finished the tutorial!</Span>
 
-            <Span color="inherit" margin="20px 0px 0px 0px">
+            <Span
+              color="inherit"
+              margin="20px 0px 0px 0px"
+            >
               Congratulations, Now that you are a pro! Go ahead and spread the web3 gospel and notifs saga out to the
               world!
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH
+            self="stretch"
+            items="stretch"
+            margin="10px -10px -10px -10px"
+          >
             <Button
               flex="1"
               margin="10px 10px"
@@ -643,7 +732,8 @@ const UserJourneySteps = ({ darkMode }) => {
 
                 if (isDeveloperOpen) dispatch(incrementStepIndex());
                 dispatch(incrementStepIndex());
-              }}>
+              }}
+            >
               Next (For Devs)
             </Button>
 
@@ -657,7 +747,8 @@ const UserJourneySteps = ({ darkMode }) => {
                 dispatch(setIndex(0));
                 dispatch(setWelcomeNotifsEmpty());
                 dispatch(setRun(false));
-              }}>
+              }}
+            >
               Finish
             </Button>
           </ItemH>
@@ -677,7 +768,8 @@ const UserJourneySteps = ({ darkMode }) => {
         <Item
           color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
           size="normal"
-          align="stretch">
+          align="stretch"
+        >
           <Span color="inherit">
             Hello Web3 Devs! All resources for developers are hidden inside this tab! let's expand it to continue!
           </Span>
@@ -709,20 +801,26 @@ const UserJourneySteps = ({ darkMode }) => {
           <H3
             size="x-large"
             margin="5px 0px 15px 0px"
-            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}>
+            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
+          >
             Developer Tab
           </H3>
 
           <Item
             color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
             size="normal"
-            align="stretch">
+            align="stretch"
+          >
             <Span color="inherit">
               Hello Web3 Devs! This tab contains everything you need to get started with creating your own channel!
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH
+            self="stretch"
+            items="stretch"
+            margin="10px -10px -10px -10px"
+          >
             <Button
               flex="1"
               margin="10px 10px"
@@ -730,7 +828,8 @@ const UserJourneySteps = ({ darkMode }) => {
               color={darkMode ? themeDark.dynamicTutsButtonColor : themeLight.dynamicTutsButtonColor}
               onClick={() => {
                 dispatch(incrementStepIndex());
-              }}>
+              }}
+            >
               Next
             </Button>
           </ItemH>
@@ -752,26 +851,35 @@ const UserJourneySteps = ({ darkMode }) => {
           <H3
             size="x-large"
             margin="5px 0px 15px 0px"
-            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}>
+            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
+          >
             Create Channel Tab
           </H3>
 
           <Item
             color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
             size="normal"
-            align="stretch">
+            align="stretch"
+          >
             <Span color="inherit">
               Creating the channel is the first step to sending notifications via your dApp, smart contract or backend!
               Just fill in the required details to get started.
             </Span>
 
-            <Span color="inherit" margin="20px 0px 0px 0px">
+            <Span
+              color="inherit"
+              margin="20px 0px 0px 0px"
+            >
               Creating a channel on mainnet does have it's activation fee (one time fee) though it is recommended to
               start on testnet first to get the hang of it.
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH
+            self="stretch"
+            items="stretch"
+            margin="10px -10px -10px -10px"
+          >
             <Button
               flex="1"
               margin="10px 10px"
@@ -779,7 +887,8 @@ const UserJourneySteps = ({ darkMode }) => {
               color={darkMode ? themeDark.dynamicTutsButtonColor : themeLight.dynamicTutsButtonColor}
               onClick={() => {
                 dispatch(incrementStepIndex());
-              }}>
+              }}
+            >
               Next
             </Button>
           </ItemH>
@@ -799,30 +908,42 @@ const UserJourneySteps = ({ darkMode }) => {
           <H3
             size="x-large"
             margin="5px 0px 15px 0px"
-            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}>
+            color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
+          >
             Developer Documentation
           </H3>
 
           <Item
             color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
             size="normal"
-            align="stretch">
+            align="stretch"
+          >
             <Span color="inherit">
               Of course, even before creating the channel, maybe the best place to start developing on Push (EPNS)
               protocol is to follow the developer docs.
             </Span>
 
-            <Span color="inherit" margin="20px 0px 0px 0px">
+            <Span
+              color="inherit"
+              margin="20px 0px 0px 0px"
+            >
               Please find the link to developer docs below (or you can just click the Developer's guide tab). As always,
               feel free to reach out to us either on{' '}
-              <A href="https://discord.gg/YVPB99F9W5" target="_blank">
+              <A
+                href="https://discord.gg/YVPB99F9W5"
+                target="_blank"
+              >
                 discord
               </A>{' '}
               or a channel of your choice!
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH
+            self="stretch"
+            items="stretch"
+            margin="10px -10px -10px -10px"
+          >
             <Button
               flex="1"
               margin="10px 10px"
@@ -834,7 +955,8 @@ const UserJourneySteps = ({ darkMode }) => {
                 dispatch(setRun(false));
                 dispatch(setIndex(0));
                 dispatch(setWelcomeNotifsEmpty());
-              }}>
+              }}
+            >
               Developer Docs
             </Button>
           </ItemH>

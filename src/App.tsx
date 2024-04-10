@@ -32,7 +32,7 @@ import { ErrorContext } from './contexts/ErrorContext';
 import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJourneySlice';
 
 // Internal Configs
-import { appConfig } from 'config';
+import { appConfig } from 'config/index.js';
 import GLOBALS from 'config/Globals';
 import { themeDark, themeLight } from 'config/Themization';
 import { GlobalContext } from 'contexts/GlobalContext';

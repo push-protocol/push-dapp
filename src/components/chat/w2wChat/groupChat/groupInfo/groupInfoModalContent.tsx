@@ -7,12 +7,12 @@ import { useClickAway } from 'react-use';
 
 // Internal Components
 import { ModalInnerComponentType } from 'hooks/useModal';
-import { ReactComponent as Lock } from 'assets/chat/group-chat/lockdark.svg';
-import { ReactComponent as AddMember } from 'assets/chat/group-chat/addicon.svg';
-import Message from 'assets/chat/group-chat/chat.svg';
-import AddAdmin from 'assets/chat/group-chat/addadmin.svg';
-import DismissAdmin from 'assets/chat/group-chat/dismissadmin.svg';
-import Remove from 'assets/chat/group-chat/remove.svg';
+import Lock from 'assets/chat/group-chat/lockdark.svg?react';
+import AddMember from 'assets/chat/group-chat/addicon.svg?react';
+import Message from 'assets/chat/group-chat/chat.svg?react';
+import AddAdmin from 'assets/chat/group-chat/addadmin.svg?react';
+import DismissAdmin from 'assets/chat/group-chat/dismissadmin.svg?react';
+import Remove from 'assets/chat/group-chat/remove.svg?react';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ChatUserAppContext } from 'types/chat';
 import { caip10ToWallet } from 'helpers/w2w';
@@ -405,7 +405,6 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                   Chat ID
                 </SpanV2>
                 <ItemHV2
-                 
                   alignSelf="start"
                   onClick={() => {
                     copyToClipboard(currentChat?.groupInformation?.chatId);
@@ -419,13 +418,12 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                   }}
                 >
                   <SpanV2
-                  
-                   textAlign="start"
+                    textAlign="start"
                     fontSize="18px"
                     fontWeight="400"
                     style={{ color: `${theme.modalDescriptionTextColor}` }}
                   >
-                    {shortenText(currentChat?.groupInformation?.chatId,8,8)}
+                    {shortenText(currentChat?.groupInformation?.chatId, 8, 8)}
                   </SpanV2>
                   {!!copyText && (
                     <SpanV2

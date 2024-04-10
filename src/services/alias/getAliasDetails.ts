@@ -1,6 +1,6 @@
 // Internal Components
 import * as PushAPI from '@pushprotocol/restapi';
-import { appConfig } from 'config';
+import { appConfig } from 'config/index.js';
 import { aliasChainIdToChainName } from 'helpers/UtilityHelper';
 
 type Props = {

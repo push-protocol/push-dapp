@@ -8,7 +8,7 @@ import { useClickAway } from 'react-use';
 import { useTheme } from 'styled-components';
 
 // Internal Configs
-import { addresses, appConfig } from 'config';
+import { addresses, appConfig } from 'config/index.js';
 import { useAccount } from 'hooks';
 
 type UniswapWidgetModalProps = {

@@ -1,29 +1,36 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable no-undef */
 // load the appropriate config as per the server state
 let appendName = 'prod';
 
-if (process.env.REACT_APP_DEPLOY_ENV == 'PROD') {
+if (import.meta.env.VITE_APP_DEPLOY_ENV == 'PROD') {
   appendName = 'prod';
-} else if (process.env.REACT_APP_DEPLOY_ENV == 'STAGING') {
+} else if (import.meta.env.VITE_APP_DEPLOY_ENV == 'STAGING') {
   appendName = 'staging';
-} else if (process.env.REACT_APP_DEPLOY_ENV == 'DEV') {
+} else if (import.meta.env.VITE_APP_DEPLOY_ENV == 'DEV') {
   appendName = 'dev';
-} else if (process.env.REACT_APP_DEPLOY_ENV == 'LOCALHOST') {
+} else if (import.meta.env.VITE_APP_DEPLOY_ENV == 'LOCALHOST') {
   appendName = 'localhost';
-} else if (process.env.REACT_APP_DEPLOY_ENV == 'W2W') {
+} else if (import.meta.env.VITE_APP_DEPLOY_ENV == 'W2W') {
   appendName = 'staging';
-} else if (process.env.REACT_APP_DEPLOY_ENV == 'ALPHA') {
+} else if (import.meta.env.VITE_APP_DEPLOY_ENV == 'ALPHA') {
   appendName = 'prod';
 } else {
-  throw new Error('⚠️  Provide proper REACT_APP_DEPLOY_ENV in .env ⚠️');
+  throw new Error('⚠️  Provide proper VITE_APP_DEPLOY_ENV in .env ⚠️');
 }
 
 // dynamic import
-const dynamicConfig = require(`./config-${appendName}`).config;
-const addresses = require(`./config-${appendName}`).addresses;
-const CHAIN_DETAILS = require(`./config-${appendName}`).CHAIN_DETAILS;
+const dynamicConfigModule = await import(`./config-${appendName}.js`);
+const dynamicConfig = dynamicConfigModule.config;
+const addressesModule = await import(`./config-${appendName}.js`);
+const addresses = addressesModule.addresses;
+const CHAIN_DETAILSMODULE = await import(`./config-${appendName}.js`);
+const CHAIN_DETAILS = CHAIN_DETAILSMODULE.CHAIN_DETAILS;
 
-const generalConfig = require('./config-general').config;
-const abis = require('./config-general').abis;
+const generalConfigModule = await import('./config-general');
+const generalConfig = generalConfigModule.config;
+const abisModule = await import('./config-general');
+const abis = abisModule.abis;
 
 // combine config
 const appConfig = { ...dynamicConfig, ...generalConfig };

@@ -15,7 +15,7 @@ import AlphaAccessNFTHelper from 'helpers/AlphaAccessNftHelper';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 // Internal Configs
-import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config';
+import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config/index.js';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 const ClaimGalxeModule = () => {

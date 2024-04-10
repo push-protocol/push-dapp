@@ -5,7 +5,7 @@ import { produce } from 'immer';
 import * as PushAPI from '@pushprotocol/restapi';
 import { VideoCallStatus } from '@pushprotocol/restapi';
 
-import { appConfig } from 'config';
+import { appConfig } from 'config/index.js';
 import { initVideoCallData } from '@pushprotocol/restapi/src/lib/video';
 import { User } from 'types/chat';
 import { useAccount } from 'hooks';
@@ -40,7 +40,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   const [isCallAccepted, setIsCallAccepted] = useState(false);
   const [incomingCallUserData, setIncomingCallUserData] = useState<User | null>(null);
   const { chainId, account, provider } = useAccount();
-  const { connectedUser, createUserIfNecessary} = useContext(AppContext);
+  const { connectedUser, createUserIfNecessary } = useContext(AppContext);
 
   const [data, setData] = useState<PushAPI.VideoCallData>(initVideoCallData);
 
@@ -56,7 +56,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   }, [data.incoming[0].status]);
 
   useEffect(() => {
-    if (!provider || !account || !connectedUser) return null;
+    if (!provider || !account || !connectedUser) return;
 
     (async () => {
       let createdUser;
@@ -95,7 +95,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     chatId,
     signalData,
   }: AcceptRequestWrapperOptionsType): void => {
-    videoObjectRef.current.acceptRequest({
+    videoObjectRef.current?.acceptRequest({
       signalData: signalData ? signalData : data.meta.initiator.signal,
       senderAddress,
       recipientAddress,

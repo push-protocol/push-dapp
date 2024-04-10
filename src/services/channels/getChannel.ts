@@ -2,7 +2,7 @@
 import * as PushAPI from '@pushprotocol/restapi';
 
 // Internal Configs
-import { appConfig } from 'config';
+import { appConfig } from 'config/index.js';
 
 // Types
 type Props = {

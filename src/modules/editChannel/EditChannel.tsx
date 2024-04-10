@@ -7,13 +7,13 @@ import { useSelector } from 'react-redux';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import FaucetInfo from 'components/FaucetInfo';
 
 // Internal Configs
-import { addresses, appConfig } from "config";
-import GLOBALS, { device } from "config/Globals";
+import { addresses, appConfig } from 'config/index.js';
+import GLOBALS, { device } from 'config/Globals';
 import { Button } from '../../components/SharedStyling';
 import EditChannelForms from './EditChannelForms';
 import useToast from 'hooks/useToast';
@@ -36,18 +36,16 @@ export default function EditChannel({
   closeEditChannel,
   UploadLogoComponent,
   displayUplaodLogoModal,
-  isUploadLogoModalOpen
+  isUploadLogoModalOpen,
 }) {
   const { chainId, account, provider } = useAccount();
   const {
     channelDetails,
     canVerify,
-    aliasDetails: { isAliasVerified, aliasAddrFromContract }
+    aliasDetails: { isAliasVerified, aliasAddrFromContract },
   } = useSelector((state) => state.admin);
 
-  const { epnsReadProvider, epnsWriteProvider } = useSelector(
-    (state) => state.contracts
-  );
+  const { epnsReadProvider, epnsWriteProvider } = useSelector((state) => state.contracts);
   const theme = useTheme();
 
   // it can be fetched from contract for dynamic, but making it const will be fast
@@ -64,8 +62,12 @@ export default function EditChannel({
   const [imageType, setImageType] = useState(null);
   const [pushDeposited, setPushDeposited] = useState(false);
 
-  const [errorInfo, setErrorInfo] = useState<{ name: string, description: string, address: string, url: string }>({ name: '', description: '', address: '', url: '' });
-
+  const [errorInfo, setErrorInfo] = useState<{ name: string; description: string; address: string; url: string }>({
+    name: '',
+    description: '',
+    address: '',
+    url: '',
+  });
 
   const [isLoading, setIsLoading] = useState(false);
   const [feesRequiredForEdit, setFeesRequiredForEdit] = useState(0);
@@ -73,7 +75,6 @@ export default function EditChannel({
 
   const [showUploadLogoModal, setShowUploadLogoModal] = useState(false);
   const editChannelToast = useToast();
-
 
   useEffect(() => {
     if (!account) return;
@@ -91,17 +92,16 @@ export default function EditChannel({
       const pushTokenApprovalAmount = await getPushTokenApprovalAmount({
         address: account,
         provider: provider,
-        contractAddress: addresses.epnscore
+        contractAddress: addresses.epnscore,
       });
       setPushApprovalAmount(parseInt(pushTokenApprovalAmount));
       const amountToBeDeposit = parseInt(pushTokenApprovalAmount);
 
-      if ((amountToBeDeposit >= feesRequiredForEdit) && (amountToBeDeposit != 0)) {
+      if (amountToBeDeposit >= feesRequiredForEdit && amountToBeDeposit != 0) {
         setPushDeposited(true);
       } else {
         setPushDeposited(false);
       }
-
     })();
   }, [account, provider]);
 
@@ -114,9 +114,9 @@ export default function EditChannel({
       const response = await approvePushToken({
         signer,
         contractAddress: addresses.epnscore,
-        amount: (feesRequiredForEdit - pushApprovalAmount)
+        amount: feesRequiredForEdit - pushApprovalAmount,
       });
-      console.debug("response", response)
+      console.debug('response', response);
       if (response) {
         setIsLoading(false);
         setPushApprovalAmount(feesRequiredForEdit);
@@ -135,20 +135,30 @@ export default function EditChannel({
       }
     } catch (err) {
       console.error(err);
-      if (err.code == "ACTION_REJECTED") {
+      if (err.code == 'ACTION_REJECTED') {
         // EIP-1193 userRejectedRequest error
         editChannelToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: `User denied message signature.`,
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />,
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
         });
       } else {
         editChannelToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: `There was an error in approving PUSH Token`,
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />,
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
         });
 
         console.error('Error --> %o', err);
@@ -156,51 +166,49 @@ export default function EditChannel({
       }
     }
     setIsLoading(false);
-  }
+  };
 
   const closeUploadModal = () => {
     setShowUploadLogoModal(false);
-  }
+  };
 
   const isMobile = useDeviceWidthCheck(600);
 
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => {
-    closeUploadModal()
+    closeUploadModal();
   });
 
   const isAllFilledAndValid = (): boolean => {
     setErrorInfo('');
 
     if (isEmpty(channelName) || isEmpty(channelInfo) || isEmpty(channelURL)) {
-      if (
-        isEmpty(channelName)
-      ) {
-        setErrorInfo(x => ({
+      if (isEmpty(channelName)) {
+        setErrorInfo((x) => ({
           ...x,
           name: 'Please, enter the channel name.',
         }));
       }
 
       if (isEmpty(channelInfo)) {
-        setErrorInfo(x => ({
+        setErrorInfo((x) => ({
           ...x,
           description: 'Please, enter the channel description',
         }));
       }
 
       if (isEmpty(channelURL)) {
-        setErrorInfo(x => ({
+        setErrorInfo((x) => ({
           ...x,
           url: 'Please, enter the channel url',
         }));
       }
 
-      return false
+      return false;
     }
 
     if (!isLengthValid(channelName, 125)) {
-      setErrorInfo(x => ({
+      setErrorInfo((x) => ({
         ...x,
         name: 'Channel Name should not exceed 125 characters! Please retry!',
       }));
@@ -208,14 +216,14 @@ export default function EditChannel({
       return false;
     }
     if (!isLengthValid(channelURL, 125)) {
-      setErrorInfo(x => ({
+      setErrorInfo((x) => ({
         ...x,
         url: 'Channel Url should not exceed 125 characters! Please retry!',
       }));
       return false;
     }
     if (!isValidUrl(channelURL)) {
-      setErrorInfo(x => ({
+      setErrorInfo((x) => ({
         ...x,
         url: 'Channel URL is invalid! Please enter a valid url!',
       }));
@@ -226,11 +234,9 @@ export default function EditChannel({
   };
 
   const isDetailsAltered = (): boolean => {
-
-    if (channelName !== channelDetails?.name
-      ||
-      channelInfo !== channelDetails?.info
-      ||
+    if (
+      channelName !== channelDetails?.name ||
+      channelInfo !== channelDetails?.info ||
       channelURL !== channelDetails?.url ||
       channelFile !== channelDetails?.icon
     ) {
@@ -238,12 +244,10 @@ export default function EditChannel({
     } else {
       return true;
     }
-
-  }
+  };
 
   const editChannel = async (e) => {
     try {
-
       if (!isAllFilledAndValid()) return;
 
       setIsLoading(true);
@@ -252,12 +256,13 @@ export default function EditChannel({
         info: channelInfo,
         url: channelURL,
         icon: channelFile,
-        aliasDetails: channelDetails['aliasDetails'] || getCAIPObj({
-          chainId: parseInt(channelDetails['chain_id']),
-          address: channelDetails['address'],
-        }),
+        aliasDetails:
+          channelDetails['aliasDetails'] ||
+          getCAIPObj({
+            chainId: parseInt(channelDetails['chain_id']),
+            address: channelDetails['address'],
+          }),
       });
-
 
       console.debug(input);
       const storagePointer = await IPFSupload(input);
@@ -269,8 +274,8 @@ export default function EditChannel({
 
       editChannelToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
       const tx = await epnsWriteProvider.updateChannelMeta(account, newIdentityBytes, parsedFees, {
-        gasLimit: 1000000
-      })
+        gasLimit: 1000000,
+      });
 
       console.debug(tx);
       await tx.wait();
@@ -280,11 +285,12 @@ export default function EditChannel({
         toastTitle: 'Success',
         toastMessage: `Channel Updated Successfully`,
         toastType: 'SUCCESS',
-        getToastIcon: (size) =>
+        getToastIcon: (size) => (
           <MdCheckCircle
             size={size}
             color="green"
-          />,
+          />
+        ),
       });
       setTimeout(() => {
         window.location.reload();
@@ -293,26 +299,36 @@ export default function EditChannel({
       setIsLoading(false);
       console.error(err.message);
 
-      if (err.code == "ACTION_REJECTED") {
+      if (err.code == 'ACTION_REJECTED') {
         // EIP-1193 userRejectedRequest error
         editChannelToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: `User denied message signature.`,
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />,
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
         });
       } else {
         editChannelToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: `There was an error in updating channel Details`,
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />,
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
         });
         console.error('Error --> %o', err);
         console.error({ err });
       }
     }
-  }
+  };
 
   // mint PUSH token
   const mintPushTokenHandler = async (noOfTokens: number) => {
@@ -321,12 +337,12 @@ export default function EditChannel({
 
   useEffect(() => {
     if (croppedImage) {
-      console.debug("Image cropped", croppedImage);
+      console.debug('Image cropped', croppedImage);
       toDataURL(croppedImage, function (dataUrl) {
         const response = handleLogoSizeLimitation(dataUrl);
-        console.debug("response", response);
+        console.debug('response', response);
         if (response.success) {
-          console.debug("Cropped Image....", croppedImage);
+          console.debug('Cropped Image....', croppedImage);
           setChannelFile(croppedImage);
         }
       });
@@ -335,7 +351,6 @@ export default function EditChannel({
 
   return (
     <EditChannelContainer ref={containerRef}>
-
       {/* Modal to upload Logo */}
       <UploadLogoComponent
         InnerComponent={uploadLogoModal}
@@ -350,19 +365,22 @@ export default function EditChannel({
           imageType,
           setImageType,
           errorInfo,
-          setErrorInfo
+          setErrorInfo,
         }}
         modalPosition={MODAL_POSITION.ON_PARENT}
       />
 
       <EditableContainer>
-
-        <AdaptiveMobileItemHV22 >
+        <AdaptiveMobileItemHV22>
           <ImageSection src={channelLogo}></ImageSection>
-          <UploadButton onClick={() => {
-            displayUplaodLogoModal()
-            setShowUploadLogoModal(true)
-          }}>Upload Logo</UploadButton>
+          <UploadButton
+            onClick={() => {
+              displayUplaodLogoModal();
+              setShowUploadLogoModal(true);
+            }}
+          >
+            Upload Logo
+          </UploadButton>
         </AdaptiveMobileItemHV22>
 
         {!isMobile && <VerticalLine></VerticalLine>}
@@ -379,9 +397,7 @@ export default function EditChannel({
           errorInfo={errorInfo}
           setErrorInfo={setErrorInfo}
         />
-
       </EditableContainer>
-
 
       {/* This is Footer container that is present over the buttons */}
       <Footer>
@@ -389,16 +405,16 @@ export default function EditChannel({
           <FooterPrimaryText>Channel edit fee</FooterPrimaryText>
           <FooterSecondaryText>Editing channel details requires fees to be deposited</FooterSecondaryText>
         </div>
-        <ItemHV2
-          flex="0"
-        >
+        <ItemHV2 flex="0">
           {pushDeposited ? <TickImage src={VerifyLogo} /> : null}
-          <EditFee>
-            {feesRequiredForEdit} PUSH
-          </EditFee>
+          <EditFee>{feesRequiredForEdit} PUSH</EditFee>
         </ItemHV2>
       </Footer>
-      <FaucetInfo noOfPushTokensToCheck={feesRequiredForEdit} containerProps={{ width: "100%" }} onMintPushToken={mintPushTokenHandler} />
+      <FaucetInfo
+        noOfPushTokensToCheck={feesRequiredForEdit}
+        containerProps={{ width: '100%' }}
+        onMintPushToken={mintPushTokenHandler}
+      />
 
       {isLoading ? (
         <>
@@ -409,98 +425,87 @@ export default function EditChannel({
               color={GLOBALS.COLORS.PRIMARY_PINK}
               type={LOADER_SPINNER_TYPE.PROCESSING}
             />
-            <TransactionText>
-              Verifying Transaction
-            </TransactionText>
-
+            <TransactionText>Verifying Transaction</TransactionText>
           </VerifyingContainer>
         </>
       ) : (
         <>
           {/* This below is Footer Buttons i.e, Cancel and save changes */}
           <ButtonContainer>
-            <CancelButtons onClick={closeEditChannel}>
-              Cancel
-            </CancelButtons>
+            <CancelButtons onClick={closeEditChannel}>Cancel</CancelButtons>
 
-            {(pushApprovalAmount >= feesRequiredForEdit) ? (
+            {pushApprovalAmount >= feesRequiredForEdit ? (
               <FooterButtons
                 disabled={isDetailsAltered()}
-                style={{ background: isDetailsAltered() ? " #F4DCEA" : "#CF1C84" }}
-                onClick={editChannel}>
+                style={{ background: isDetailsAltered() ? ' #F4DCEA' : '#CF1C84' }}
+                onClick={editChannel}
+              >
                 Save Changes
-              </FooterButtons>)
-              : (
-                <FooterButtons onClick={depositPush} >
-                  Approve PUSH
-                </FooterButtons>
-              )}
-
+              </FooterButtons>
+            ) : (
+              <FooterButtons onClick={depositPush}>Approve PUSH</FooterButtons>
+            )}
           </ButtonContainer>
         </>
       )}
-
     </EditChannelContainer>
   );
 }
 
 const EditChannelContainer = styled(ItemVV2)`
- padding: 0px;
-  @media (min-width:1140px){
+  padding: 0px;
+  @media (min-width: 1140px) {
     padding: 15px 50px 0px 50px;
   }
 `;
 
-
 const EditableContainer = styled(ItemVV2)`
-  flex-direction:row;
+  flex-direction: row;
   margin-bottom: 10px;
-  @media (max-width:600px){
+  @media (max-width: 600px) {
     flex-direction: column;
   }
-  @media(max-width:425px){
-    margin-bottom:40px;
+  @media (max-width: 425px) {
+    margin-bottom: 40px;
   }
-
-`
+`;
 
 const UploadButton = styled(Button)`
-    border-radius: 8px;
-    background:${(props) => props.theme.logoBtnBg};
-    color:${(props) => props.theme.logoBtnColor};
-    font-family: 'Strawford';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 17px;
-    padding:10px 12px;
+  border-radius: 8px;
+  background: ${(props) => props.theme.logoBtnBg};
+  color: ${(props) => props.theme.logoBtnColor};
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  padding: 10px 12px;
+`;
 
-`
-
-const TickImage = styled.img``
+const TickImage = styled.img``;
 
 const AdaptiveMobileItemHV22 = styled(ItemHV2)`
-  flex:0;
-    align-items: center;
-    align-self: baseline;
-    justify-content: center;
+  flex: 0;
+  align-items: center;
+  align-self: baseline;
+  justify-content: center;
 
   @media (max-width: 767px) {
     justify-content: center;
     flex-direction: column;
   }
 
-  @media (max-width: 600px){
-    width:100%;
+  @media (max-width: 600px) {
+    width: 100%;
     justify-content: center;
     flex-direction: column;
   }
-`
+`;
 
 const ImageSection = styled.img`
   width: 128px;
   height: 128px;
-  margin-bottom:20px;
+  margin-bottom: 20px;
   border-radius: 32px;
   @media ${device.mobileL} {
     width: 90px;
@@ -512,42 +517,40 @@ const ImageSection = styled.img`
 
 const VerticalLine = styled.div`
   height: 21.5rem;
-  width:2px;
-  background:${(props) => props.theme.verticalLineColor};
+  width: 2px;
+  background: ${(props) => props.theme.verticalLineColor};
   margin: 0px 68px;
-  @media (min-width:993px) and (max-width:1240px) {
-    margin:0px 68px;
+  @media (min-width: 993px) and (max-width: 1240px) {
+    margin: 0px 68px;
   }
-  @media (min-width:600px) and (max-width:768px){
-    margin:0px 68px;
+  @media (min-width: 600px) and (max-width: 768px) {
+    margin: 0px 68px;
   }
 `;
 
 const Footer = styled(ItemVV2)`
-    background: ${(props) => props.theme.editFooterBg};
-    border-radius: 20px;
-    padding: 23px 32px;
-    display: grid;
-    grid-auto-flow: column;
-    align-content: space-between;
-    justify-content: space-between;
-    grid-gap: 40px;
-    margin-top:35px;
-    z-index: 1;
+  background: ${(props) => props.theme.editFooterBg};
+  border-radius: 20px;
+  padding: 23px 32px;
+  display: grid;
+  grid-auto-flow: column;
+  align-content: space-between;
+  justify-content: space-between;
+  grid-gap: 40px;
+  margin-top: 35px;
+  z-index: 1;
 
-    @media (max-width:600px){
-      padding: 16px;
-    }
-
-
-  @media (max-width:425px){
-    margin:0px;
+  @media (max-width: 600px) {
+    padding: 16px;
   }
-  
+
+  @media (max-width: 425px) {
+    margin: 0px;
+  }
 `;
 
 const FooterPrimaryText = styled.p`
-  margin:0px;
+  margin: 0px;
   color: ${(props) => props.theme.editChannelPrimaryText};
   font-family: 'Strawford';
   font-style: normal;
@@ -557,28 +560,27 @@ const FooterPrimaryText = styled.p`
 `;
 
 const FooterSecondaryText = styled.p`
-font-size: 12px;
-margin:0px;
-font-weight: 400;
-line-height: 130%;
-color: ${(props) => props.theme.editChannelSecondaryText};
-`
+  font-size: 12px;
+  margin: 0px;
+  font-weight: 400;
+  line-height: 130%;
+  color: ${(props) => props.theme.editChannelSecondaryText};
+`;
 
 const EditFee = styled.p`
-  margin:0px 0px 0px 5px;
-  color: #D53893;
+  margin: 0px 0px 0px 5px;
+  color: #d53893;
   font-family: 'Strawford';
   font-style: normal;
   font-weight: 500;
   font-size: 20px;
   line-height: 24px;
-`
+`;
 
 const VerifyingContainer = styled(ItemVV2)`
-  flex-direction:row;
-  margin-top:33px;
-
-`
+  flex-direction: row;
+  margin-top: 33px;
+`;
 
 const TransactionText = styled.p`
   font-family: 'Strawford';
@@ -588,18 +590,17 @@ const TransactionText = styled.p`
   line-height: 22px;
   display: flex;
   align-items: center;
-  margin-left:12px;
+  margin-left: 12px;
   color: ${(props) => props.theme.editChannelPrimaryText};
-`
+`;
 
 //Footer Button's CSS
 const ButtonContainer = styled(ItemHV2)`
-    justify-content: end;
-    margin-top:35px;
-    @media (max-width:425px){
-        flex-direction:column-reverse;
-    }
-
+  justify-content: end;
+  margin-top: 35px;
+  @media (max-width: 425px) {
+    flex-direction: column-reverse;
+  }
 `;
 
 const FooterButtons = styled(Button)`
@@ -612,19 +613,19 @@ const FooterButtons = styled(Button)`
   border-radius: 15px;
   align-items: center;
   text-align: center;
-  background: #CF1C84;
-  color:#fff;
+  background: #cf1c84;
+  color: #fff;
   padding: 16px 27px;
   width: 12rem;
 
-  @media (min-width:425px) and (max-width:600px) {
-      font-size: 15px;
-      padding: 12px 12px;
-      width: 8rem;
+  @media (min-width: 425px) and (max-width: 600px) {
+    font-size: 15px;
+    padding: 12px 12px;
+    width: 8rem;
   }
 
-  @media (max-width:425px){
-      width: -webkit-fill-available;
+  @media (max-width: 425px) {
+    width: -webkit-fill-available;
   }
 `;
 
@@ -649,6 +650,4 @@ const CancelButtons = styled(FooterButtons)`
     &:after{
         background:white;
     }
-`
-
-
+`;

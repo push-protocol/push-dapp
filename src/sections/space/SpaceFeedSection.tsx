@@ -7,7 +7,7 @@ import styled, { useTheme } from 'styled-components';
 // Internal Components
 import SpaceIcon from 'assets/spaces/Space-icon.svg';
 import SpaceDark from 'assets/spaces/space-dark.svg';
-import { ReactComponent as AddSpace } from 'assets/spaces/add-space.svg';
+import AddSpace from 'assets/spaces/add-space.svg?react';
 import { Image } from 'components/SharedStyling';
 import { ImageV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
@@ -17,18 +17,16 @@ import { useNavigate } from 'react-router-dom';
 import { SpaceComponentContext } from 'contexts/SpaceComponentsContext';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import useMediaQuery from 'hooks/useMediaQuery';
-import { appConfig } from 'config';
-
+import { appConfig } from 'config/index.js';
 
 // External imports
 import * as PushAPI from '@pushprotocol/restapi';
 import { AppContext } from 'contexts/AppContext';
 
-
 const SpaceFeedSection = ({ spaceid }) => {
   const { SpaceFeedComponent, SpaceInvitesComponent, CreateSpaceComponent } = useContext(SpaceComponentContext);
   const { account } = useAccount();
-  const { spaceId ,setSpaceId, spaceInvites } = useContext(SpaceContext);
+  const { spaceId, setSpaceId, spaceInvites } = useContext(SpaceContext);
   const { connectedUser } = useContext(AppContext);
   const theme = useTheme();
 
@@ -49,7 +47,7 @@ const SpaceFeedSection = ({ spaceid }) => {
   };
 
   // crossChecking this
-  
+
   // React.useEffect(() => {
   //   (async () => {
   //     const feed = await PushAPI.space.requests({
@@ -59,7 +57,6 @@ const SpaceFeedSection = ({ spaceid }) => {
   //     // setSpaceInvites(feed?.length);
   //   })();
   // }, [spaceId]);
-
 
   return (
     <SpaceCard>
@@ -158,9 +155,9 @@ const SpaceUser = styled.div`
 
 const CreateDiv = styled.div`
   margin: 0px 14px 0px auto;
-  
-  @media ${device.mobileL}{
-    padding-top:5px;
+
+  @media ${device.mobileL} {
+    padding-top: 5px;
   }
 `;
 const Badge = styled.div`

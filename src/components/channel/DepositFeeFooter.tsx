@@ -17,9 +17,9 @@ import GLOBALS, { device } from 'config/Globals';
 import { Button } from '../SharedStyling';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
-import VerifyLogo from '../../assets/Vector.svg';
+import VerifyLogo from '../../assets/Vector.svg?react';
 import { approvePushToken, getPushTokenApprovalAmount, mintPushToken } from 'helpers';
-import { addresses } from 'config';
+import { addresses } from 'config/index.js';
 
 interface DepositFeeFooterProps {
   title: string;
@@ -297,10 +297,9 @@ const CancelButtons = styled(FooterButtons)`
   margin-right: 14px;
   background: ${(props) => props.theme.default.bg};
   color: ${(props) => props.theme.logoBtnColor};
-  border: 1px solid ${(props) =>
-    props.theme.scheme === 'light'
-      ? props.theme.default.primaryPushThemeTextColor
-      : props.theme.default.borderColor};
+  border: 1px solid
+    ${(props) =>
+      props.theme.scheme === 'light' ? props.theme.default.primaryPushThemeTextColor : props.theme.default.borderColor};
 
   @media ${device.mobileL} {
     margin-right: 0px;

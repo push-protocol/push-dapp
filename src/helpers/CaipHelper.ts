@@ -1,7 +1,9 @@
 // Internal Configs
-import { appConfig } from '../config';
+import { appConfig } from '../config/index.js';
 
-export const Eip155EnabledIds: Array<Number> = [1, 56, 137, 10, 1101, 42161, 11155111, 97, 80001, 420, 1442, 421613, 122, 123];
+export const Eip155EnabledIds: Array<Number> = [
+  1, 56, 137, 10, 1101, 42161, 11155111, 97, 80001, 420, 1442, 421613, 122, 123,
+];
 
 // Types
 type CAIPProps = {
@@ -32,10 +34,7 @@ export const getCAIP = (chainId: number): string | null => {
   }
 };
 
-export const convertAddressToAddrCaip = (
-  userAddress: string,
-  chainId: number
-): string => {
+export const convertAddressToAddrCaip = (userAddress: string, chainId: number): string => {
   return `eip155:${chainId}:${userAddress}`;
 };
 

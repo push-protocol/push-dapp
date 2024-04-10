@@ -4,17 +4,11 @@ import React, { useContext } from 'react';
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 import { useClickAway } from 'react-use';
-import { ethers } from 'ethers';
 import * as PushAPI from '@pushprotocol/restapi';
 
 // Internal Components
 import { ModalInnerComponentType } from 'hooks/useModalBlur';
-import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
-import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
-import { GroupDetailsContent } from './GroupDetailsContent';
-import { AddWalletContent } from './AddWalletContent';
-import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { appConfig } from '../../../../../config';
+import { appConfig } from '../../../../../config/index.js';
 import useToast from 'hooks/useToast';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { ChatUserAppContext, Feeds } from 'types/chat';
@@ -23,10 +17,8 @@ import { fetchInbox } from 'helpers/w2w/user';
 import { profilePicture } from 'config/W2WConfig';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { device } from 'config/Globals';
-import { CreateGroupModal } from "@pushprotocol/uiweb";
-import { ChatUIProvider } from '@pushprotocol/uiweb';
+import { CreateGroupModal } from '@pushprotocol/uiweb';
 import { AppContext } from 'contexts/AppContext';
-
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const [createGroupState, setCreateGroupState] = React.useState<number>(1);
@@ -38,12 +30,11 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [memberList, setMemberList] = React.useState<any>([]);
   const { connectedUser, setConnectedUser, createUserIfNecessary } = useContext(AppContext);
-  const {provider } = useAccount();
+  const { provider } = useAccount();
   const themes = useTheme();
   const createGroupToast = useToast();
   const isMobile = useDeviceWidthCheck(600);
 
-  
   const handlePrevious = () => {
     setCreateGroupState(1);
   };
@@ -54,14 +45,13 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => handleClose());
   const handleCreateGroup = async (): Promise<any> => {
-
     if (memberList.length >= 2) {
       setIsLoading(true);
       try {
         const memberWalletList = memberList.filter((member) => !member.isAdmin).map((member) => member.wallets);
-        const adminWalletList = memberList.filter(member => member.isAdmin).map((member) => member.wallets);
+        const adminWalletList = memberList.filter((member) => member.isAdmin).map((member) => member.wallets);
         let createdUser;
-        if(!connectedUser.publicKey){
+        if (!connectedUser.publicKey) {
           createdUser = await createUserIfNecessary();
         }
         const signer = await provider.getSigner();
@@ -77,7 +67,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
           env: appConfig.appEnv,
         });
         if (typeof createGroupRes !== 'string') {
-          const inboxes: Feeds[] = await fetchInbox({connectedUser});
+          const inboxes: Feeds[] = await fetchInbox({ connectedUser });
           setInbox(inboxes);
           createGroupToast.showMessageToast({
             toastTitle: 'Success',

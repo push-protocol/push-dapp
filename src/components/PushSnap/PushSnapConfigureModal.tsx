@@ -8,7 +8,7 @@ import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ReactComponent as MinusCircle } from 'assets/PushSnaps/MinusCircle.svg';
+import MinusCircle from 'assets/pushSnaps/MinusCircle.svg?react';
 import { Button } from 'components/SharedStyling';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
@@ -19,13 +19,15 @@ import { AppContext } from 'contexts/AppContext';
 import { device } from 'config/Globals';
 import { SnoozeDurationType } from 'types';
 import { updateSnoozeDuration } from 'helpers';
-import { defaultSnapOrigin } from 'config';
+import { defaultSnapOrigin } from 'config/index.js';
 
 const PushSnapConfigureModal = ({
-  snoozeDuration, setSnoozeDuration
-}: 
-  {snoozeDuration: SnoozeDurationType, setSnoozeDuration: (snoozeDuration: SnoozeDurationType) => void}
-) => {
+  snoozeDuration,
+  setSnoozeDuration,
+}: {
+  snoozeDuration: SnoozeDurationType;
+  setSnoozeDuration: (snoozeDuration: SnoozeDurationType) => void;
+}) => {
   const [addresses, setAddresses] = useState([]);
   const [searchedUser, setSearchedUser] = useState('');
   const { setSnapState, SnapState } = React.useContext(AppContext);
@@ -39,23 +41,22 @@ const PushSnapConfigureModal = ({
   const { chainId, account, provider } = useAccount();
 
   useEffect(() => {
-    (async function() {
+    (async function () {
       getWalletAddresses();
       await updateSnoozeDuration(setSnoozeDuration);
     })();
   }, []);
 
-
   const disableSnooze = async () => {
-      await window.ethereum?.request({
-        method: 'wallet_invokeSnap',
-        params: {
-          snapId: defaultSnapOrigin,
-          request: {
-            method: 'pushproto_disablesnooze',
-          },
+    await window.ethereum?.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: defaultSnapOrigin,
+        request: {
+          method: 'pushproto_disablesnooze',
         },
-      })
+      },
+    });
   };
 
   async function getSignature(mode: number) {
@@ -108,7 +109,7 @@ const PushSnapConfigureModal = ({
 
     // When the switch is turned on
     if (nextChecked) {
-        setSnapState(4); // Enable snooze or show the EnableSnoozeModal
+      setSnapState(4); // Enable snooze or show the EnableSnoozeModal
     } else {
       await disableSnooze();
     }

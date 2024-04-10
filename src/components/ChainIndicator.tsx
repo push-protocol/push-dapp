@@ -10,17 +10,17 @@ import Dropdown, { DropdownValueType } from './Dropdown';
 import { H3, Image, Item, ItemH } from './SharedStyling.js';
 import { LOGO_FROM_CHAIN_ID, networkName } from 'helpers/UtilityHelper';
 import { appConfig } from 'config/index.js';
-import { useClickAway } from 'hooks/useClickAway';
 import { useAccount } from 'hooks';
 
 // Internal Configs
 import { SpanV2 } from './reusables/SharedStylingV2';
 import { ErrorContext } from 'contexts/ErrorContext';
+import { useClickAway } from 'hooks/useClickAway.js';
 
 const ChainIndicator = ({ isDarkMode }) => {
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
-  const { account, chainId:currentChainId, switchChain} = useAccount();
+  const { account, chainId: currentChainId, switchChain } = useAccount();
   const theme = useTheme();
   const { authError, setAuthError } = useContext(ErrorContext);
 
@@ -62,7 +62,7 @@ const ChainIndicator = ({ isDarkMode }) => {
           >
             <CurrentChainInfo>
               <Image
-                src={`./svg/${LOGO_FROM_CHAIN_ID[currentChainId]}`}
+                src={`/svg/${LOGO_FROM_CHAIN_ID[currentChainId]}`}
                 width="24px"
                 height="24px"
               />

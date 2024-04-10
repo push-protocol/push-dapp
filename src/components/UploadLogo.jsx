@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { ethers } from "ethers";
-import React, { Fragment , useRef } from "react";
+import React, { useRef } from "react";
 
 // External Packages
 import styled from "styled-components";
@@ -13,10 +13,9 @@ import ImageClipper from "primaries/ImageClipper";
 import {
   Button, Content, FormSubmision, H3, Input, Item, Section, Span
 } from "primaries/SharedStyling";
-import { ReactComponent as ImageIcon } from "../assets/Image.svg";
 
 // Internal Configs
-import { abis, addresses } from "config";
+import { abis, addresses } from "config/index.js";
 
 
 const UploadLogo = ({

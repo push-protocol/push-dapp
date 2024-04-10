@@ -3,7 +3,7 @@ import { profilePicture } from 'config/W2WConfig';
 import * as w2wHelper from 'helpers/w2w/';
 import { ConnectedUser, Feeds, IGroup, MessageIPFS, User } from 'types/chat';
 import { walletToCAIP10 } from '.';
-import { appConfig } from '../../config';
+import { appConfig } from '../../config/index.js';
 import { decrypt, message } from 'openpgp';
 import { getGroup } from 'services/chats/getGroup';
 

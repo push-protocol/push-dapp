@@ -41,11 +41,11 @@ import VideoCallSection from 'sections/video/VideoCallSection';
 import { ChatUserAppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
 
 // Internal Configs
-import { ChatUIProvider, darkChatTheme, UserProfile } from '@pushprotocol/uiweb';
-import { appConfig } from 'config';
-import GLOBALS, { device, globalsMargin } from 'config/Globals';
-import { GlobalContext } from 'contexts/GlobalContext';
+import { ChatUIProvider, UserProfile, darkChatTheme } from '@pushprotocol/uiweb';
 import UnlockProfile from 'components/chat/unlockProfile/UnlockProfile';
+import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import { appConfig } from 'config/index.js';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -96,11 +96,14 @@ function Chat({ chatid }) {
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
   const [signerData, setSignerData] = useState();
+  const { readOnlyWallet } = React.useContext(GlobalContext);
 
   const isMobile = useDeviceWidthCheck(600);
   const queryClient = new QueryClient({});
 
   const containerRef = React.useRef(null);
+
+  const socketData = useSDKSocket({ account, chainId, env: appConfig.appEnv, socketType: 'chat' });
 
   // trigger chat participant open
   const triggerChatParticipant = async (chatParticipant: string, chatId: string) => {
@@ -124,6 +127,101 @@ function Chat({ chatid }) {
     }
   };
 
+  useEffect(() => {
+    if (
+      connectedUser &&
+      socketData.messagesSinceLastConnection &&
+      w2wHelper.caip10ToWallet(socketData.messagesSinceLastConnection.fromCAIP10).toLowerCase() !==
+        account.toLowerCase()
+    ) {
+      if (currentChat) getUpdatedInbox(socketData.messagesSinceLastConnection);
+    }
+  }, [socketData.messagesSinceLastConnection]);
+
+  useEffect(() => {
+    if (connectedUser && socketData.groupInformationSinceLastConnection) {
+      getUpdatedGroup(socketData.groupInformationSinceLastConnection);
+    }
+  }, [socketData.groupInformationSinceLastConnection]);
+
+  const getUpdatedInbox = async (message) => {
+    let isListUpdated = false;
+    const { updatedInbox, isInboxUpdated } = await getUpdatedChatAndIntent({
+      chatList: inbox,
+      message,
+      connectedUser,
+      account,
+      checkInbox: true,
+    });
+    if (isInboxUpdated) {
+      isListUpdated = true;
+      setInbox(updatedInbox);
+    } else {
+      const { updatedIntents, isIntentsUpdated } = await getUpdatedChatAndIntent({
+        chatList: receivedIntents,
+        message,
+        connectedUser,
+        account,
+        checkInbox: false,
+      });
+      if (isIntentsUpdated) {
+        isListUpdated = true;
+        setReceivedIntents(updatedIntents);
+      }
+    }
+    if (!isListUpdated) {
+      const fetchedChat = await PushAPI.chat.chat({
+        account: account,
+        toDecrypt: true,
+        pgpPrivateKey: connectedUser?.privateKey,
+        recipient: caip10ToWallet(message?.fromCAIP10),
+        env: appConfig.appEnv,
+      });
+      if (checkIfIntent({ chat: fetchedChat, account })) {
+        setReceivedIntents((prev) => [fetchedChat, ...prev]);
+      } else {
+        setInbox((prev) => [fetchedChat, ...prev]);
+      }
+    }
+  };
+
+  const getUpdatedGroup = async (groupInfo) => {
+    let isGroupUpdated = false;
+    const { updatedInbox, isInboxUpdated } = await getUpdatedGroupInfo({
+      chatList: inbox,
+      groupInfo,
+      checkInbox: true,
+    });
+    if (isInboxUpdated) {
+      setInbox(updatedInbox);
+      isGroupUpdated = true;
+    } else {
+      const { updatedIntents, isIntentsUpdated } = await getUpdatedGroupInfo({
+        chatList: intents,
+        groupInfo,
+        checkInbox: false,
+      });
+      if (isIntentsUpdated) {
+        setReceivedIntents(updatedIntents);
+        isGroupUpdated = true;
+      }
+    }
+    if (!isGroupUpdated) {
+      const fetchedChat = await PushAPI.chat.chat({
+        account: account,
+        toDecrypt: true,
+        pgpPrivateKey: connectedUser?.privateKey,
+        recipient: groupInfo?.chatId,
+        env: appConfig.appEnv,
+      });
+      if (checkIfIntent({ chat: fetchedChat, account })) {
+        setReceivedIntents((prev) => [fetchedChat, ...prev]);
+      } else {
+        setInbox((prev) => [fetchedChat, ...prev]);
+      }
+    }
+  };
+
   // React GA Analytics
   ReactGA.pageview('/chat');
 
@@ -139,7 +237,7 @@ function Chat({ chatid }) {
 
   // Rest of the loading logic
   useEffect(() => {
-    if (isLoading && userPushSDKInstance) {
+    if (isLoading) {
       setConnectedUser(connectedUser);
       connectUser();
     }
@@ -321,7 +419,6 @@ function Chat({ chatid }) {
   }, [selectedChatId]);
 
   useEffect(() => {}, [account, connectedUser?.privateKey]);
-  console.debug(userPushSDKInstance, 'user in chat module');
   return (
     <Container>
       <ChatUIProvider

@@ -9,8 +9,8 @@ import APP_PATHS from './AppPaths';
 const NavigationList = {
   primary: {
     inbox: {
-      src: 'navigation/inboxOffIcon.svg',
-      activeSrc: 'navigation/inboxOnIcon.svg',
+      src: 'inboxOffIcon',
+      activeSrc: 'inboxOnIcon',
       iconFactory: null,
       name: 'Inbox',
       title: 'Inbox',
@@ -34,8 +34,8 @@ const NavigationList = {
       },
     },
     channels: {
-      src: 'navigation/channelsOffIcon.svg',
-      activeSrc: 'navigation/channelsOnIcon.svg',
+      src: 'channelsOffIcon',
+      activeSrc: 'channelsOnIcon',
       iconFactory: null,
       name: 'Channels',
       title: 'Browse Channels',
@@ -60,8 +60,8 @@ const NavigationList = {
       },
     },
     chat: {
-      src: 'navigation/chatOffIcon.svg',
-      activeSrc: 'navigation/chatOnIcon.svg',
+      src: 'chatOffIcon',
+      activeSrc: 'chatOnIcon',
       iconFactory: null,
       name: 'Chat',
       title: 'Chat',
@@ -85,8 +85,8 @@ const NavigationList = {
       },
     },
     spaces: {
-      src: 'navigation/spaceOffIcon.svg',
-      activeSrc: 'navigation/spaceOnIcon.svg',
+      src: 'spaceOffIcon',
+      activeSrc: 'spaceOnIcon',
       iconFactory: null,
       name: 'Spaces',
       title: 'Spaces',
@@ -113,8 +113,8 @@ const NavigationList = {
   secondary: {
     createChannel: {
       uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.CREATE_CHANNEL,
-      src: 'navigation/createChannelIcon.svg',
-      activeSrc: 'navigation/createChannelIcon.svg',
+      src: 'createChannelIcon',
+      activeSrc: 'createChannelIcon',
       iconFactory: null,
       name: 'Create Channel',
       title: 'Create Channel',
@@ -139,8 +139,8 @@ const NavigationList = {
     },
     sendNotifs: {
       uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.SEND_NOTIFS,
-      src: 'navigation/sendNotifOffIcon.svg',
-      activeSrc: 'navigation/sendNotifOnIcon.svg',
+      src: 'sendNotifOffIcon',
+      activeSrc: 'sendNotifOnIcon',
       iconFactory: null,
       name: 'Send Notifications',
       title: 'Send Notifications',
@@ -164,10 +164,9 @@ const NavigationList = {
     },
   },
   third: {
-
     yieldv2: {
-      src: 'navigation/YieldFarmingOff.svg',
-      activeSrc: 'navigation/YieldFarmingOn.svg',
+      src: 'YieldFarmingOff',
+      activeSrc: 'YieldFarmingOn',
       iconFactory: null,
       name: 'Yield Farming V2',
       title: 'Yield Farming V2',
@@ -192,14 +191,14 @@ const NavigationList = {
     },
 
     receiveNotifs: {
-      src: 'navigation/receiveNotifOffIcon.svg',
-      activeSrc: 'navigation/receiveNotifOnIcon.svg',
+      src: 'receiveNotifOffIcon',
+      activeSrc: 'receiveNotifOnIcon',
       iconFactory: null,
       name: 'Receive Notifications',
       title: 'Receive Notifications',
       alt: 'Receive Notifications',
       href: '#receive-notifications',
-      hasOnClickFunction:true,
+      hasOnClickFunction: true,
       newTab: false,
       isRoute: true,
       hasMenuLogic: true,
@@ -217,8 +216,8 @@ const NavigationList = {
       },
     },
     // latestOlvy: {
-    //   src: 'navigation/olvyIcon.svg',
-    //   activeSrc: 'navigation/olvyIcon.svg',
+    //   src: 'olvyIcon',
+    //   activeSrc: 'olvyIcon',
     //   iconFactory: null,
     //   name: 'Latest',
     //   title: 'Latest',
@@ -241,8 +240,8 @@ const NavigationList = {
     // },
     governance: {
       uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.GOVERNANCE,
-      src: 'navigation/govOffIcon.svg',
-      activeSrc: 'navigation/govOnIcon.svg',
+      src: 'govOffIcon',
+      activeSrc: 'govOnIcon',
       iconFactory: null,
       name: 'Governance',
       title: 'Governance',
@@ -265,14 +264,9 @@ const NavigationList = {
       },
     },
 
-    
-
-
-
-
     // incentives: {
-    //   src: 'navigation/incentivesOffIcon.svg',
-    //   activeSrc: 'navigation/incentivesOnIcon.svg',
+    //   src: 'incentivesOffIcon',
+    //   activeSrc: 'incentivesOnIcon',
     //   iconFactory: null,
     //   name: 'Incentives',
     //   title: 'Check Incentives Tab',
@@ -284,8 +278,8 @@ const NavigationList = {
     //   hasMenuLogic: true,
     //   drilldown: {
     //     // yield: {
-    //     //   src: 'navigation/yieldIcon.svg',
-    //     //   activeSrc: 'navigation/yieldIcon.svg',
+    //     //   src: 'yieldIcon',
+    //     //   activeSrc: 'yieldIcon',
     //     //   iconFactory: null,
     //     //   name: 'Yield Farming',
     //     //   title: 'Yield Farming',
@@ -308,8 +302,8 @@ const NavigationList = {
     //     //   },
     //     // },
     //     yieldv2: {
-    //       src: 'navigation/yieldIcon.svg',
-    //       activeSrc: 'navigation/yieldIcon.svg',
+    //       src: 'yieldIcon',
+    //       activeSrc: 'yieldIcon',
     //       iconFactory: null,
     //       name: 'Yield Farming V2',
     //       title: 'Yield Farming V2',
@@ -332,8 +326,8 @@ const NavigationList = {
     //       },
     //     },
     //     rockstars: {
-    //       src: 'navigation/rockstarsIcon.svg',
-    //       activeSrc: 'navigation/rockstarsIcon.svg',
+    //       src: 'rockstarsIcon',
+    //       activeSrc: 'rockstarsIcon',
     //       iconFactory: null,
     //       name: 'Rockstars of Push (EPNS)',
     //       title: 'Check Rockstars of Push (EPNS)',
@@ -356,8 +350,8 @@ const NavigationList = {
     //       },
     //     },
     //     airdrop: {
-    //       src: 'navigation/airdropIcon.svg',
-    //       activeSrc: 'navigation/airdropIcon.svg',
+    //       src: 'airdropIcon',
+    //       activeSrc: 'airdropIcon',
     //       iconFactory: null,
     //       name: 'Gratitude Drops',
     //       title: 'Check Gratitude Drop',
@@ -382,8 +376,8 @@ const NavigationList = {
     //   },
     // },
     more: {
-      src: 'navigation/moreOffIcon.svg',
-      activeSrc: 'navigation/moreOnIcon.svg',
+      src: 'moreOffIcon',
+      activeSrc: 'moreOnIcon',
       iconFactory: null,
       name: 'More',
       title: 'More',
@@ -395,8 +389,8 @@ const NavigationList = {
       hasMenuLogic: true,
       drilldown: {
         faq: {
-          src: 'navigation/faqIcon.svg',
-          activeSrc: 'navigation/faqIcon.svg',
+          src: 'faqIcon',
+          activeSrc: 'faqIcon',
           iconFactory: null,
           name: 'FAQs',
           title: 'Checkout Frequently Asked Questions',
@@ -419,8 +413,8 @@ const NavigationList = {
           },
         },
         // livewalkthrough: {
-        //   src: 'navigation/walkthroughIcon.svg',
-        //   activeSrc: 'navigation/walkthroughIcon.svg',
+        //   src: 'walkthroughIcon',
+        //   activeSrc: 'walkthroughIcon',
         //   iconFactory: null,
         //   name: 'Live Walkthrough',
         //   title: 'Live Walkthrough',
@@ -443,8 +437,8 @@ const NavigationList = {
         //   },
         // },
         support: {
-          src: 'navigation/supportIcon.svg',
-          activeSrc: 'navigation/supportIcon.svg',
+          src: 'supportIcon',
+          activeSrc: 'supportIcon',
           iconFactory: null,
           name: 'Support',
           title: 'Open a support ticket',
@@ -463,10 +457,10 @@ const NavigationList = {
 
 // // remove secret feature
 // if (
-  // window.location.hostname == 'app.epns.io' ||
-  // window.location.hostname == 'staging.epns.io' ||
-  // window.location.hostname == 'app.push.org' ||
-  // window.location.hostname == 'staging.push.org'
+// window.location.hostname == 'app.epns.io' ||
+// window.location.hostname == 'staging.epns.io' ||
+// window.location.hostname == 'app.push.org' ||
+// window.location.hostname == 'staging.push.org'
 // ) {
 //   delete NavigationList.primary.chat;
 // }

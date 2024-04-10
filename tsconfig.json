@@ -1,40 +1,37 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ESNext",
+    "useDefineForClassFields": true,
     "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
     ],
-    "allowJs": true,
+    "module": "ESNext",
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": false,
-    "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
-    "moduleResolution": "node",
+    "allowJs": true,
+    "baseUrl": "./src",
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    // "jsx": "react", // From w2w
-    // "baseUrl": "src",
-    // "noImplicitAny": false,
-    // "checkJs": false,
-    // "noFallthroughCasesInSwitch": true // from w2w ends
-    "jsx": "preserve",
-    "baseUrl": "src",
-    "noImplicitAny": false,
-    "checkJs": false
+    "jsx": "react-jsx",
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
   },
   "include": [
-    "next-env.d.ts",
-    "src/config/custom.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "src/segments/ViewChannels.jsx",
-    "src/components/SearchFilter.jsx",
-    "src/components/chat/w2wChat/indexeddb.js", 
-    "src/contexts/VideoCallContext.js"  
-, "src/helpers/WithGasHelper.tsx"  ]
+    "src",
+    "index.tsx",
+    "src/vite-env.d.ts"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }

@@ -10,7 +10,7 @@ import { addPaginatedNotifications, setFinishedFetching } from 'redux/slices/not
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
+import Back from 'assets/chat/arrowleft.svg?react';
 import ChannelLoading from 'components/ChannelLoading';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { useAccount } from 'hooks';
@@ -21,7 +21,7 @@ import { latest } from '@pushprotocol/restapi/src/lib/chat';
 import ViewChannelItem from 'components/ViewChannelItem';
 import ChannelProfileComponent from 'components/channel/ChannelProfileComponent';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { appConfig } from 'config';
+import { appConfig } from 'config/index.js';
 import APP_PATHS from 'config/AppPaths';
 import { device } from 'config/Globals';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
@@ -82,6 +82,12 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
           console.log(response);
           setNotifications(response.notifications);
           setLoadingNotifs(false);
+
+          // ENABLE PAGINATION HERE
+          dispatch(addPaginatedNotifications(response.notifications));
+          if (response.notifications.length === 0) {
+            dispatch(setFinishedFetching());
+          }
         })
         .catch((err) => {
           // ENABLE NO NOTIFICATION FOUND HERE

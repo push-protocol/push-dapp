@@ -1,31 +1,37 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 // External Packages
-import { useDispatch, useSelector } from "react-redux";
-import styled, { useTheme } from "styled-components";
+import { useDispatch, useSelector } from 'react-redux';
+import styled, { useTheme } from 'styled-components';
 import { MdError } from 'react-icons/md';
 
 // Internal Compoonents
-import AliasProcessing from "components/AliasProcessing";
-import ChannelDetails from "components/ChannelDetails";
-import ChannelLoading from "components/ChannelLoading";
-import ChannelSettings from "components/ChannelSettings";
-import CreateChannelModule from "../createChannel/CreateChannelModule";
-import { ButtonV2, ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
-import { getAliasFromChannelDetails } from "helpers/UtilityHelper";
-import { useAccount, useDeviceWidthCheck } from "hooks";
-import { setAliasAddress, setAliasAddressFromContract, setAliasChainId, setAliasVerified, setUserChannelDetails } from "redux/slices/adminSlice";
-import { setProcessingState } from "redux/slices/channelCreationSlice";
-import ChannelsDataStore from "singletons/ChannelsDataStore";
-import useToast from "hooks/useToast";
+import AliasProcessing from 'components/AliasProcessing';
+import ChannelDetails from 'components/ChannelDetails';
+import ChannelLoading from 'components/ChannelLoading';
+import ChannelSettings from 'components/ChannelSettings';
+import CreateChannelModule from '../createChannel/CreateChannelModule';
+import { ButtonV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { getAliasFromChannelDetails } from 'helpers/UtilityHelper';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
+import {
+  setAliasAddress,
+  setAliasAddressFromContract,
+  setAliasChainId,
+  setAliasVerified,
+  setUserChannelDetails,
+} from 'redux/slices/adminSlice';
+import { setProcessingState } from 'redux/slices/channelCreationSlice';
+import ChannelsDataStore from 'singletons/ChannelsDataStore';
+import useToast from 'hooks/useToast';
 
 // Internal Configs
-import { appConfig } from "config";
-import { Button } from "components/SharedStyling";
-import EditChannel from "modules/editChannel/EditChannel";
-import useModalBlur from "hooks/useModalBlur";
-import { AppContext } from "contexts/AppContext";
+import { appConfig } from 'config/index.js';
+import { Button } from 'components/SharedStyling';
+import EditChannel from 'modules/editChannel/EditChannel';
+import useModalBlur from 'hooks/useModalBlur';
+import { AppContext } from 'contexts/AppContext';
 
 // Constants
 // interval after which alias details api will be called, in seconds
@@ -38,16 +44,19 @@ let intervalID = null;
 const ChannelOwnerDashboard = () => {
   const theme = useTheme();
   const { account, chainId } = useAccount();
-  const { channelDetails, delegatees, aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified, aliasAddrFromContract } } = useSelector((state: any) => state.admin);
+  const {
+    channelDetails,
+    delegatees,
+    aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified, aliasAddrFromContract },
+  } = useSelector((state: any) => state.admin);
   const { processingState } = useSelector((state: any) => state.channelCreation);
   const { epnsWriteProvider } = useSelector((state: any) => state.contracts);
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
-  const {handleConnectWallet} = React.useContext(AppContext);
+  const { handleConnectWallet } = React.useContext(AppContext);
 
-
-  const isChannelDetails = (channelDetails && channelDetails !== 'unfetched');
+  const isChannelDetails = channelDetails && channelDetails !== 'unfetched';
 
   const destroyChannelToast = useToast();
 
@@ -76,11 +85,12 @@ const ChannelOwnerDashboard = () => {
   }, [channelDetails, aliasAddrFromContract]);
 
   const fetchChannelDetails = async (address: string) => {
-    let { aliasAddress = null, isAliasVerified = null } = await ChannelsDataStore.instance.getChannelDetailsFromAddress(address);
-    if (aliasAddress == "NULL") aliasAddress = null;
+    let { aliasAddress = null, isAliasVerified = null } =
+      await ChannelsDataStore.getInstance().getChannelDetailsFromAddress(address);
+    if (aliasAddress == 'NULL') aliasAddress = null;
 
     return { aliasAddress: aliasAddress, aliasVerified: isAliasVerified };
-  }
+  };
 
   React.useEffect(() => {
     if (!onCoreNetwork || !aliasAddrFromContract || processingState === 0) return;
@@ -99,8 +109,7 @@ const ChannelOwnerDashboard = () => {
           dispatch(setAliasVerified(false));
         }
       } else {
-        if (processingState != 0 && processingState != 1)
-          dispatch(setProcessingState(1));
+        if (processingState != 0 && processingState != 1) dispatch(setProcessingState(1));
         // setChannelDetailsLoading(false);
       }
     }, ALIAS_API_CALL_INTERVAL * 1000);
@@ -124,29 +133,44 @@ const ChannelOwnerDashboard = () => {
         toastTitle: 'Success',
         toastMessage: `Successfully deleted the channel`,
         toastType: 'SUCCESS',
-        getToastIcon: (size) => <MdError size={size} color="green" />,
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="green"
+          />
+        ),
       });
       dispatch(setUserChannelDetails(null));
     } catch (err) {
       console.error(err);
-      if (err.code == "ACTION_REJECTED") {
+      if (err.code == 'ACTION_REJECTED') {
         // EIP-1193 userRejectedRequest error
         destroyChannelToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: `User denied message signature.`,
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />,
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
         });
       } else {
         destroyChannelToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: `There was an error in deleting the channel`,
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />,
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
         });
       }
     }
-  }
+  };
 
   const showEditChannel = () => {
     // if (!userPushSDKInstance.signer) {
@@ -154,11 +178,11 @@ const ChannelOwnerDashboard = () => {
     //   return;
     // }
     setEditChannel(true);
-  }
+  };
 
   const closeEditChannel = () => {
     setEditChannel(false);
-  }
+  };
 
   //here the useModal hook is used to display Upload Logo Modal
   const {
@@ -169,80 +193,95 @@ const ChannelOwnerDashboard = () => {
 
   return (
     <ItemHV2>
-      {((channelDetails === 'unfetched') || processingState === null) &&
-        <ChannelLoading />
-      }
+      {(channelDetails === 'unfetched' || processingState === null) && <ChannelLoading />}
 
-      {channelDetails !== 'unfetched' &&
-        <ItemVV2 justifyContent={processingState === 0 && "flex-start"} height="fit-content">
+      {channelDetails !== 'unfetched' && (
+        <ItemVV2
+          justifyContent={processingState === 0 && 'flex-start'}
+          height="fit-content"
+        >
           {/* display the create channel page if there are no details */}
-          {!channelDetails && processingState === 0 &&
-            <CreateChannelModule />
-          }
+          {!channelDetails && processingState === 0 && <CreateChannelModule />}
 
-          {isChannelDetails && processingState !== null &&
-            (
-              <>
-                {editChannel ? (
-                  <EditChannel
-                    closeEditChannel={closeEditChannel}
-                    UploadLogoComponent={UploadLogoComponent}
-                    displayUplaodLogoModal={displayUplaodLogoModal}
-                    isUploadLogoModalOpen={isUploadLogoModalOpen}
-                  />
-                ) : (
-                  <>
-                    {channelDetails && !isMobile &&
-                      <ItemHV2 position="absolute" top="0" right="0" zIndex="1">
-                        {!isChannelExpired && onCoreNetwork && <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>}
-                        {!isChannelExpired && <ChannelSettings />}
-                        {isChannelExpired && onCoreNetwork &&
-                          <DestroyChannelBtn
-                            onClick={destroyChannel}
-                            background="#E93636"
-                            color="#fff"
-                            height="36px"
-                            width="123px"
-                            borderRadius="8px"
-                            fontSize="14px"
-                          >
-                            Delete Channel
-                          </DestroyChannelBtn>
-                        }
-                      </ItemHV2>
-                    }
-                    {channelDetails ? <ChannelDetails isChannelExpired={isChannelExpired} setIsChannelExpired={setIsChannelExpired} showEditChannel={showEditChannel} destroyChannel={destroyChannel} /> : ""}
-                  </>
-                )}
-              </>
-            )
-          }
+          {isChannelDetails && processingState !== null && (
+            <>
+              {editChannel ? (
+                <EditChannel
+                  closeEditChannel={closeEditChannel}
+                  UploadLogoComponent={UploadLogoComponent}
+                  displayUplaodLogoModal={displayUplaodLogoModal}
+                  isUploadLogoModalOpen={isUploadLogoModalOpen}
+                />
+              ) : (
+                <>
+                  {channelDetails && !isMobile && (
+                    <ItemHV2
+                      position="absolute"
+                      top="0"
+                      right="0"
+                      zIndex="1"
+                    >
+                      {!isChannelExpired && onCoreNetwork && (
+                        <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>
+                      )}
+                      {!isChannelExpired && <ChannelSettings />}
+                      {isChannelExpired && onCoreNetwork && (
+                        <DestroyChannelBtn
+                          onClick={destroyChannel}
+                          background="#E93636"
+                          color="#fff"
+                          height="36px"
+                          width="123px"
+                          borderRadius="8px"
+                          fontSize="14px"
+                        >
+                          Delete Channel
+                        </DestroyChannelBtn>
+                      )}
+                    </ItemHV2>
+                  )}
+                  {channelDetails ? (
+                    <ChannelDetails
+                      isChannelExpired={isChannelExpired}
+                      setIsChannelExpired={setIsChannelExpired}
+                      showEditChannel={showEditChannel}
+                      destroyChannel={destroyChannel}
+                    />
+                  ) : (
+                    ''
+                  )}
+                </>
+              )}
+            </>
+          )}
 
           {/* processing box */}
           {processingState !== 0 && processingState !== null && isChannelDetails && !editChannel && (
             <>
-              <AliasProcessing aliasEthAccount={aliasEthAddr} setAliasVerified={setAliasVerified} />
+              <AliasProcessing
+                aliasEthAccount={aliasEthAddr}
+                setAliasVerified={setAliasVerified}
+              />
             </>
           )}
         </ItemVV2>
-      }
-
+      )}
     </ItemHV2>
   );
-}
+};
 
 export default ChannelOwnerDashboard;
 
 const DestroyChannelBtn = styled(ButtonV2)`
-  height: ${props => (props.height || "100%")};
-  width: ${props => (props.width || "100%")}`;
-
+  height: ${(props) => props.height || '100%'};
+  width: ${(props) => props.width || '100%'};
+`;
 
 const SubmitButton = styled(Button)`
   width: 7rem;
   background: #cf1c84;
   color: #fff;
-  z-Index:0;
+  z-index: 0;
   font-family: 'Strawford';
   font-style: normal;
   font-weight: 500;
@@ -251,7 +290,7 @@ const SubmitButton = styled(Button)`
   margin-right: 20px;
   border-radius: 8px;
   padding: 11px 10px;
-  @media (min-width:600px) and (max-width:700px){
+  @media (min-width: 600px) and (max-width: 700px) {
     margin-right: 9px;
   }
 `;

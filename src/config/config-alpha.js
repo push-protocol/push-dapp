@@ -15,8 +15,8 @@ export const config = {
   w2wApiUrl: 'https://backend.epns.io/apis',
   toolingApiUrl: 'https://tooling.epns.io/apis',
 
-  ipfsInfuraAPIKey: process.env.REACT_APP_IPFS_INFURA_API_KEY || '22rfiNb1J645FdehoqbKMpLbF6V',
-  ipfsInfuraAPISecret: process.env.REACT_APP_IPFS_INFURA_API_SECRET || 'a757597f020425c3ae532e6be84de552',
+  ipfsInfuraAPIKey: import.meta.env.VITE_APP_IPFS_INFURA_API_KEY || '22rfiNb1J645FdehoqbKMpLbF6V',
+  ipfsInfuraAPISecret: import.meta.env.VITE_APP_IPFS_INFURA_API_SECRET || 'a757597f020425c3ae532e6be84de552',
 
   /**
    * Allowed Networks
@@ -39,10 +39,10 @@ export const config = {
   mainnetCoreRPC: 'https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
   mainnetCoreContractChain: 1,
   aliasRPC: {
-    137: "https://polygon-mainnet.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
-    56: "https://bsc-dataseed.binance.org/",
-    10: "https://opt-mainnet.g.alchemy.com/v2/JYW0UaSC5Zd0hrI6vE2K9VN1wJupoY5B",
-    42161: "https://arb1.arbitrum.io/rpc",
+    137: 'https://polygon-mainnet.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9',
+    56: 'https://bsc-dataseed.binance.org/',
+    10: 'https://opt-mainnet.g.alchemy.com/v2/JYW0UaSC5Zd0hrI6vE2K9VN1wJupoY5B',
+    42161: 'https://arb1.arbitrum.io/rpc',
     1101: 'https://rpc.polygon-zkevm.gateway.fm',
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
@@ -83,7 +83,7 @@ export const addresses = {
   epnsEthComm: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa', // mainnet address eth comm
   epnsPolyComm: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa', // mainnet address polygon comm
   pushToken: '0xf418588522d5dd018b425E472991E52EBBeEEEEE', // mainnet address
-  pushChannelAdmin: "0x65193c896eC400f731712D4f71046CeDd11Bff27", // mainnet push core admin
+  pushChannelAdmin: '0x65193c896eC400f731712D4f71046CeDd11Bff27', // mainnet push core admin
   aDai: '0xcB1Fe6F440c49E9290c3eb7f158534c2dC374201', // mainnet address
   staking: '0xB72ff1e675117beDefF05a7D0a472c3844cfec85', // mainnet address
   yieldFarmPUSH: '0x6019B84E2eE9EB62BC42E32AB6375A7095886366', // mainnet address
@@ -101,70 +101,67 @@ export const addresses = {
   NFTRewardsV2: '0xdc66567a990B7fa10730459537620857c9e03287', //mainnet address
 
   //For Yield Farm V1(Deprecated)
-  staking: "0xB72ff1e675117beDefF05a7D0a472c3844cfec85", // deprecated staking mainnet addresses
-  depYieldFarmPUSH: "0x6019B84E2eE9EB62BC42E32AB6375A7095886366", // deprecated YieldFarmPUSH mainnet address
-  depYieldFarmLP:"0xbB2A70e67770D0A7F5f42d883C5BBE9b85e0DcD6",// deprecated YieldFarmLP mainnet addresses 
+  staking: '0xB72ff1e675117beDefF05a7D0a472c3844cfec85', // deprecated staking mainnet addresses
+  depYieldFarmPUSH: '0x6019B84E2eE9EB62BC42E32AB6375A7095886366', // deprecated YieldFarmPUSH mainnet address
+  depYieldFarmLP: '0xbB2A70e67770D0A7F5f42d883C5BBE9b85e0DcD6', // deprecated YieldFarmLP mainnet addresses
 
   //For Yield Farm V2
-  stakingV2:"0x9D2513F5b539DC774C66b28ACEc94e4bD00105C2",//mainnet address
-  yieldFarmLP: "0x9af118D9fA1eFEa5b5a792847554960217DEdb04",//mainnet address
-  uniV2LPToken: "0xaf31fd9c3b0350424bf96e551d2d1264d8466205",//same as epnsLPToken
-  pushCoreV2: "0x66329Fdd4042928BfCAB60b179e1538D56eeeeeE",//not upgraded 
-
-
-
+  stakingV2: '0x9D2513F5b539DC774C66b28ACEc94e4bD00105C2', //mainnet address
+  yieldFarmLP: '0x9af118D9fA1eFEa5b5a792847554960217DEdb04', //mainnet address
+  uniV2LPToken: '0xaf31fd9c3b0350424bf96e551d2d1264d8466205', //same as epnsLPToken
+  pushCoreV2: '0x66329Fdd4042928BfCAB60b179e1538D56eeeeeE', //not upgraded
 };
 
 export const CHAIN_DETAILS = {
   1: {
-    label: "Ethereum Mainnet",
-    name: "ETH_MAINNET",
+    label: 'Ethereum Mainnet',
+    name: 'ETH_MAINNET',
     chainId: 1,
-    rpcUrl: "https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a",
-    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa",
-    network: "mainnet",
-  }, 
+    rpcUrl: 'https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
+    network: 'mainnet',
+  },
   137: {
-    label: "Polygon Mainnet",
-    name: "POLYGON_MAINNET",
+    label: 'Polygon Mainnet',
+    name: 'POLYGON_MAINNET',
     chainId: 137,
-    rpcUrl: "https://polygon-mainnet.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
-    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa",
-    network: "polygon-mainnet",
+    rpcUrl: 'https://polygon-mainnet.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
+    network: 'polygon-mainnet',
   },
   56: {
-    label: "BNB Mainnet",
-    name: "BNB_MAINNET",
+    label: 'BNB Mainnet',
+    name: 'BNB_MAINNET',
     chainId: 56,
-    rpcUrl: "https://bsc-dataseed.binance.org/",
-    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
+    rpcUrl: 'https://bsc-dataseed.binance.org/',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
   },
   10: {
-    label: "Optimism Mainnet",
-    name: "OPTIMISM_MAINNET",
+    label: 'Optimism Mainnet',
+    name: 'OPTIMISM_MAINNET',
     chainId: 10,
     rpcUrl: 'https://opt-mainnet.g.alchemy.com/v2/JYW0UaSC5Zd0hrI6vE2K9VN1wJupoY5B',
-    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa'
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
   },
   1101: {
-    label: "Polygon zkEVM Mainnet",
-    name: "POLYGON_ZK_EVM_MAINNET",
+    label: 'Polygon zkEVM Mainnet',
+    name: 'POLYGON_ZK_EVM_MAINNET',
     chainId: 1101,
     rpcUrl: 'https://rpc.polygon-zkevm.gateway.fm',
-    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa'
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
   },
   42161: {
-    label: "Arbitrum Mainnet",
-    name: "ARBITRUMONE_MAINNET",
+    label: 'Arbitrum Mainnet',
+    name: 'ARBITRUMONE_MAINNET',
     chainId: 42161,
     rpcUrl: 'https://arb1.arbitrum.io/rpc',
-    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa'
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
   },
   122: {
-    label: "Fuse Mainnet",
-    name: "FUSE_MAINNET",
+    label: 'Fuse Mainnet',
+    name: 'FUSE_MAINNET',
     chainId: 122,
     rpcUrl: 'https://rpc.fuse.io',
-    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa'
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
   },
-}
+};
