@@ -39,14 +39,15 @@ export const SpaceModule = ({ spaceid }) => {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const { getUser, connectedUser, setConnectedUser, pgpPvtKey, setPgpPvtKey, createUserIfNecessary } = useContext(AppContext);
+  const { getUser, connectedUser, setConnectedUser, pgpPvtKey, setPgpPvtKey, createUserIfNecessary } =
+    useContext(AppContext);
 
   useSDKSocket({ account, chainId, env: appConfig.appEnv });
 
   useEffect(() => {
     setIsLoading(true);
     setConnectedUser(null);
-  }, [account])
+  }, [account]);
 
   useEffect(() => {
     if (isLoading) {
@@ -63,20 +64,23 @@ export const SpaceModule = ({ spaceid }) => {
     }
 
     setIsLoading(false);
-
   };
 
   // RENDER
   return (
     <Container>
-
-      {isLoading ?
+      {isLoading ? (
         <CenterContainer>
           <ItemVV2>
-            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
+            <LoaderSpinner
+              type={LOADER_TYPE.SEAMLESS}
+              spinnerSize={24}
+            />
           </ItemVV2>
         </CenterContainer>
-        : <SpaceFeedSection spaceid={spaceid} />}
+      ) : (
+        <SpaceFeedSection spaceid={spaceid} />
+      )}
     </Container>
   );
 };
@@ -105,8 +109,6 @@ const Container = styled.div`
     100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} -
       ${globalsMargin.MINI_MODULES.DESKTOP.BOTTOM}
   );
-
-
 
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};

@@ -18,11 +18,11 @@ const SpacePage = () => {
   let { spaceid } = useParams();
   // RENDER
   return (
-      <Container>
-        <SpaceModule spaceid={spaceid}/>
-      </Container>
+    <Container>
+      <SpaceModule spaceid={spaceid} />
+    </Container>
   );
-}
+};
 export default SpacePage;
 
 // This defines the page settings, toggle align-self to center if not covering entire stuff, align-items to place them at center

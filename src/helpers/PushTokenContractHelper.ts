@@ -15,7 +15,7 @@ export const getPushTokenApprovalAmount = async ({
 }: PushTokenApprovalAmountType): Promise<string> => {
   try {
     const pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, provider);
-    
+
     const allowanceAmount: BigNumber = await pushTokenContract.allowance(address, contractAddress);
     const allowanceAmountStr = ethers.utils.formatEther(allowanceAmount.toString());
     return allowanceAmountStr;
@@ -36,10 +36,10 @@ export const getHasEnoughPushToken = async ({
 }: HasEnoughPushToken): Promise<boolean> => {
   try {
     const pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, provider);
-    
+
     const ownedPushToken: BigNumber = await pushTokenContract.balanceOf(address);
     const ownedPushTokenNum = +ethers.utils.formatEther(ownedPushToken.toString());
-    return ownedPushTokenNum>=noOfPushTokensToCheck;
+    return ownedPushTokenNum >= noOfPushTokensToCheck;
   } catch (err) {
     console.error(err.message);
   }
@@ -50,22 +50,17 @@ type PushTokenFromWallet = {
   provider: Provider;
 };
 
-export const getPushTokenFromWallet = async({
-  address,
-  provider,
-}: PushTokenFromWallet ): Promise<number> =>{
+export const getPushTokenFromWallet = async ({ address, provider }: PushTokenFromWallet): Promise<number> => {
   try {
     const pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, provider);
-    
-  const ownedPushToken: BigNumber = await pushTokenContract.balanceOf(address);
-  const ownedPushTokenNum = +ethers.utils.formatEther(ownedPushToken.toString());
-  return ownedPushTokenNum;
+
+    const ownedPushToken: BigNumber = await pushTokenContract.balanceOf(address);
+    const ownedPushTokenNum = +ethers.utils.formatEther(ownedPushToken.toString());
+    return ownedPushTokenNum;
   } catch (err) {
     console.error(err.message);
   }
-
-  
-}
+};
 
 type PushTokenApproveType = {
   signer: Signer;
@@ -88,12 +83,12 @@ export const approvePushToken = async ({ signer, contractAddress, amount }: Push
 };
 
 type ImportPushTokenType = {
-  provider: any
-}
-export const importPushToken = async ({ provider }: ImportPushTokenType): Promise<boolean> =>{
+  provider: any;
+};
+export const importPushToken = async ({ provider }: ImportPushTokenType): Promise<boolean> => {
   try {
-    const name = "Ethereum Push Notification Service";
-    const symbol = "PUSH";
+    const name = 'Ethereum Push Notification Service';
+    const symbol = 'PUSH';
     const decimals = 18;
 
     await provider.request({
@@ -103,23 +98,23 @@ export const importPushToken = async ({ provider }: ImportPushTokenType): Promis
         options: {
           address: addresses.pushToken,
           symbol: symbol,
-          decimals: decimals
+          decimals: decimals,
         },
       },
-    })
+    });
     return true;
   } catch (err) {
     console.error(err);
     throw err;
   }
-}
+};
 
 type MintPushTokenType = {
-  noOfTokens: number,
-  provider: any,
-  account: any,
-}
-export const mintPushToken = async ({noOfTokens, provider, account}:MintPushTokenType)=>{
+  noOfTokens: number;
+  provider: any;
+  account: any;
+};
+export const mintPushToken = async ({ noOfTokens, provider, account }: MintPushTokenType) => {
   try {
     var signer = provider.getSigner(account);
     let pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
@@ -137,9 +132,9 @@ export const mintPushToken = async ({noOfTokens, provider, account}:MintPushToke
     await provider.waitForTransaction(tx.hash);
     console.info(4);
 
-    console.info("Transaction Completed");
-    return (noOfTokens);
+    console.info('Transaction Completed');
+    return noOfTokens;
   } catch (err) {
     console.error(err);
   }
-}
+};

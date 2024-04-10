@@ -26,7 +26,7 @@ import { appConfig } from 'config/index.js';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { AppContext } from 'contexts/AppContext';
 
-import {ethers} from 'ethers';
+import { ethers } from 'ethers';
 
 const MIN_STAKE_FEES = 50;
 const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
@@ -47,7 +47,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
-  const {handleConnectWallet} = React.useContext(AppContext);
+  const { handleConnectWallet } = React.useContext(AppContext);
 
   const theme = useTheme();
   const { channelState } = channelDetails;
@@ -73,10 +73,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
 
   // for closing the ChannelSettings Dropdown upon outside click
   const closeDropdownCondition =
-    isDropdownOpen &&
-    !isDeactivateChannelModalOpen &&
-    !isReactivateChannelModalOpen &&
-    !isAddSubgraphModalOpen;
+    isDropdownOpen && !isDeactivateChannelModalOpen && !isReactivateChannelModalOpen && !isAddSubgraphModalOpen;
   useClickAway(DropdownRef, () => closeDropdownCondition && closeDropdown());
 
   const [loading, setLoading] = React.useState(false);
@@ -233,8 +230,8 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
                     {isChannelBlocked
                       ? 'Channel Blocked'
                       : isChannelDeactivated
-                        ? 'Activate Channel'
-                        : 'Deactivate Channel'}
+                      ? 'Activate Channel'
+                      : 'Deactivate Channel'}
                   </div>
                 </ActivateChannelContainer>
               </ChannelActionButton>

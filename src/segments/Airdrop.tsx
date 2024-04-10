@@ -67,15 +67,21 @@ function Airdrop() {
       const tx = await sendWithTxPromise;
       console.debug(tx);
       console.debug('waiting for tx to finish');
-      let txToast = toast.dark(<LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />, {
-        position: 'bottom-right',
-        autoClose: false,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      let txToast = toast.dark(
+        <LoaderToast
+          msg="Waiting for Confirmation..."
+          color="#35c5f3"
+        />,
+        {
+          position: 'bottom-right',
+          autoClose: false,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
       try {
         await provider.waitForTransaction(tx.hash);
 
@@ -102,7 +108,10 @@ function Airdrop() {
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} />
+      <LoaderSpinner
+        type={LOADER_TYPE.SEAMLESS}
+        spinnerSize={30}
+      />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
@@ -112,8 +121,16 @@ function Airdrop() {
       <Section margin="20px">
         <Content padding="0px 20px 0px">
           <Item align="flex-start">
-            <H2 textTransform="uppercase" spacing="0.1em">
-              <Span bg="#35c5f3" color="#fff" weight="600" padding="0px 8px">
+            <H2
+              textTransform="uppercase"
+              spacing="0.1em"
+            >
+              <Span
+                bg="#35c5f3"
+                color="#fff"
+                weight="600"
+                padding="0px 8px"
+              >
                 Gratitude
               </Span>
               <Span weight="200"> Drop!</Span>
@@ -136,14 +153,23 @@ function Airdrop() {
             </Para>
             <Para margin="10px 0px 0px 20px">
               - Used our dApp on or before <B>20th March, 2021</B>:{' '}
-              <AMod href="https://app.push.org" target="_blank" title="Visit our dApp">
+              <AMod
+                href="https://app.push.org"
+                target="_blank"
+                title="Visit our dApp"
+              >
                 Push (EPNS) dApp
               </AMod>
             </Para>
           </Item>
 
           <Item padding="40px 0px 20px 0px">
-            {loading && <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />}
+            {loading && (
+              <LoaderSpinner
+                type={LOADER_TYPE.SEAMLESS}
+                spinnerSize={40}
+              />
+            )}
 
             {!loading && controlAt == 0 && (
               <>
@@ -151,17 +177,24 @@ function Airdrop() {
                   <EpicButton
                     onClick={() => {
                       handleClaim(user);
-                    }}>
+                    }}
+                  >
                     Claim $PUSH Tokens
                   </EpicButton>
                 )}
                 {user.verified && !user.claimable && (
-                  <EpicButton theme="claimed" disabled={true}>
+                  <EpicButton
+                    theme="claimed"
+                    disabled={true}
+                  >
                     $PUSH Tokens Claimed
                   </EpicButton>
                 )}
                 {!user.verified && (
-                  <EpicButton theme="noteligible" disabled={true}>
+                  <EpicButton
+                    theme="noteligible"
+                    disabled={true}
+                  >
                     Not eligible for Gratitude Drop
                   </EpicButton>
                 )}
@@ -172,19 +205,33 @@ function Airdrop() {
       </Section>
 
       {/* FAQs */}
-      <Section theme="#fcfcfc" padding="0px 0px 0px 0px">
+      <Section
+        theme="#fcfcfc"
+        padding="0px 0px 0px 0px"
+      >
         <Content className="contentBox">
-          <Item align="stretch" justify="flex-start" margin="-10px 20px 0px 20px">
+          <Item
+            align="stretch"
+            justify="flex-start"
+            margin="-10px 20px 0px 20px"
+          >
             {/* Question */}
-            <Item align="stretch" margin="0px 0px 0px 0px">
+            <Item
+              align="stretch"
+              margin="0px 0px 0px 0px"
+            >
               <QnAItem>
                 <Question
                   onClick={() => {
                     toggleShowAnswer(1);
                   }}
-                  hover="#e20880">
+                  hover="#e20880"
+                >
                   <Span>What is $PUSH contract address?</Span>
-                  <BsChevronExpand size={20} color={'#ddd'} />
+                  <BsChevronExpand
+                    size={20}
+                    color={'#ddd'}
+                  />
                 </Question>
 
                 {showAnswers[1] && (
@@ -201,22 +248,27 @@ function Airdrop() {
                   onClick={() => {
                     toggleShowAnswer(2);
                   }}
-                  hover="#e20880">
+                  hover="#e20880"
+                >
                   <Span>What is Push (EPNS)?</Span>
-                  <BsChevronExpand size={20} color={'#ddd'} />
+                  <BsChevronExpand
+                    size={20}
+                    color={'#ddd'}
+                  />
                 </Question>
 
                 {showAnswers[2] && (
                   <Answer>
                     <Span>
-                      Push (previously EPNS) is a decentralized protocol allowing web3 users to
-                      receive notifications for on-chain or off-chain activity.
+                      Push (previously EPNS) is a decentralized protocol allowing web3 users to receive notifications
+                      for on-chain or off-chain activity.
                     </Span>
 
                     <Span>
-                      Push (previously EPNS) allows Web3 actors (users, dapps, service providers) to create notifications that are
-                      triggered if and when a smart contract reaches certain conditions. Other Web3 participants can
-                      search, browse, and subscribe to specific notifications and more confidently interact with dapps.
+                      Push (previously EPNS) allows Web3 actors (users, dapps, service providers) to create
+                      notifications that are triggered if and when a smart contract reaches certain conditions. Other
+                      Web3 participants can search, browse, and subscribe to specific notifications and more confidently
+                      interact with dapps.
                     </Span>
                   </Answer>
                 )}
@@ -227,9 +279,13 @@ function Airdrop() {
                   onClick={() => {
                     toggleShowAnswer(3);
                   }}
-                  hover="#e20880">
+                  hover="#e20880"
+                >
                   <Span>Why are push notifications important for Web3?</Span>
-                  <BsChevronExpand size={20} color={'#ddd'} />
+                  <BsChevronExpand
+                    size={20}
+                    color={'#ddd'}
+                  />
                 </Question>
 
                 {showAnswers[3] && (
@@ -270,27 +326,40 @@ function Airdrop() {
                   onClick={() => {
                     toggleShowAnswer(4);
                   }}
-                  hover="#e20880">
+                  hover="#e20880"
+                >
                   <Span>How can I keep up with Push (EPNS)?</Span>
-                  <BsChevronExpand size={20} color={'#ddd'} />
+                  <BsChevronExpand
+                    size={20}
+                    color={'#ddd'}
+                  />
                 </Question>
 
                 {showAnswers[4] && (
                   <Answer>
                     <Span>
                       Join our{' '}
-                      <AMod href="https://t.me/epnsproject" target="_blank" title="Join our Push (EPNS)'s Telegram channel">
+                      <AMod
+                        href="https://t.me/epnsproject"
+                        target="_blank"
+                        title="Join our Push (EPNS)'s Telegram channel"
+                      >
                         Telegram
                       </AMod>
                       , follow us on{' '}
                       <AMod
                         href="https://twitter.com/epnsproject"
                         target="_blank"
-                        title="Join our Push (EPNS)'s Twitter channel">
+                        title="Join our Push (EPNS)'s Twitter channel"
+                      >
                         Twitter
                       </AMod>
                       , and sign up for our 5 minute{' '}
-                      <AMod href="https://epns.substack.com/" target="_blank" title="Join our Push (EPNS)'s Twitter channel">
+                      <AMod
+                        href="https://epns.substack.com/"
+                        target="_blank"
+                        title="Join our Push (EPNS)'s Twitter channel"
+                      >
                         weekly product updates
                       </AMod>
                       .

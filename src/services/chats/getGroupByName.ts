@@ -1,14 +1,12 @@
-import * as PushAPI from "@pushprotocol/restapi";
-import { appConfig } from "config/index.js";
-import { IGroup } from "types/chat";
+import * as PushAPI from '@pushprotocol/restapi';
+import { appConfig } from 'config/index.js';
+import { IGroup } from 'types/chat';
 
-export const getGroupByName = async (groupName:string): Promise<IGroup> => {
-  try{
-  const getGroupResponse = await PushAPI.chat.getGroupByName({ groupName: groupName, env: appConfig.appEnv });
-  return getGroupResponse;
-  }
-  catch(e){
+export const getGroupByName = async (groupName: string): Promise<IGroup> => {
+  try {
+    const getGroupResponse = await PushAPI.chat.getGroupByName({ groupName: groupName, env: appConfig.appEnv });
+    return getGroupResponse;
+  } catch (e) {
     throw new Error(e.message);
   }
-
 };

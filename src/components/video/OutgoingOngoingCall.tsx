@@ -61,13 +61,8 @@ const callControlsImmersiveStyles = {
 };
 
 const OutgoingOngoingCall = ({ blockedLoading }: OutgoingOngoingCallType) => {
-  const {
-    videoCallData,
-    disconnectWrapper,
-    toggleVideoWrapper,
-    toggleAudioWrapper,
-    isCallAccepted,
-  } = useContext(VideoCallContext);
+  const { videoCallData, disconnectWrapper, toggleVideoWrapper, toggleAudioWrapper, isCallAccepted } =
+    useContext(VideoCallContext);
   const isImmersive = useDeviceWidthCheck(425) && videoCallData.incoming[0].status === VideoCallStatus.INITIALIZED;
   const { currentChat }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
 
@@ -75,7 +70,7 @@ const OutgoingOngoingCall = ({ blockedLoading }: OutgoingOngoingCallType) => {
     <Container>
       {/* <EndToEnd /> */}
       {isCallAccepted ? (
-        <OnConnectingVideoCall/>
+        <OnConnectingVideoCall />
       ) : (
         <>
           {/* remote user info */}

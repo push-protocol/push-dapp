@@ -2,7 +2,7 @@
 import walletConnectModule, { WalletConnectOptions } from '@web3-onboard/walletconnect';
 
 // Internal Packages
-import { appConfig } from "config/index.js";
+import { appConfig } from 'config/index.js';
 
 require('dotenv').config();
 
@@ -20,6 +20,6 @@ const wcV2InitOptions: WalletConnectOptions = {
    */
   optionalChains: appConfig.allowedNetworks,
   version: 2,
-}
+};
 
 export const walletConnect = walletConnectModule(wcV2InitOptions);

@@ -297,10 +297,9 @@ const CancelButtons = styled(FooterButtons)`
   margin-right: 14px;
   background: ${(props) => props.theme.default.bg};
   color: ${(props) => props.theme.logoBtnColor};
-  border: 1px solid ${(props) =>
-    props.theme.scheme === 'light'
-      ? props.theme.default.primaryPushThemeTextColor
-      : props.theme.default.borderColor};
+  border: 1px solid
+    ${(props) =>
+      props.theme.scheme === 'light' ? props.theme.default.primaryPushThemeTextColor : props.theme.default.borderColor};
 
   @media ${device.mobileL} {
     margin-right: 0px;

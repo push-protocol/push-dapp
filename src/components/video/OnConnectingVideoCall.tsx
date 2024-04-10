@@ -18,7 +18,7 @@ export const OnConnectingVideoCall = () => {
   const { web3NameList }: AppContextType = React.useContext(AppContext);
   const web3Name = web3NameList[videoCallData.incoming[0].address];
   const shortnedAddress = shortenText(videoCallData.incoming[0].address, 5);
-  const theme=useTheme();
+  const theme = useTheme();
 
   return (
     <ConnectingContainer>
@@ -34,7 +34,14 @@ export const OnConnectingVideoCall = () => {
           objectFit="cover"
         />
       </PfpContainer>
-      <SpanV2 fontSize="16px" fontWeight="500" color={theme.default.secondaryColor} margin="8px 0px 0px">Connecting...</SpanV2>
+      <SpanV2
+        fontSize="16px"
+        fontWeight="500"
+        color={theme.default.secondaryColor}
+        margin="8px 0px 0px"
+      >
+        Connecting...
+      </SpanV2>
       <NameBadgeContainer>
         <NameBadge>{web3Name ? web3Name : shortnedAddress}</NameBadge>
       </NameBadgeContainer>
@@ -87,7 +94,7 @@ const EncryptionMessage = styled.div`
   max-height: 37px;
   position: absolute;
   top: 24px;
-  @media ${device.mobileL}{
+  @media ${device.mobileL} {
     font-size: 12px;
   }
 `;

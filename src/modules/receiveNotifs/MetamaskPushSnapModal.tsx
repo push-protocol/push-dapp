@@ -26,7 +26,7 @@ const MetamaskPushSnapModal = ({ onClose, closeEnabled = true }: { onClose: () =
   const [configure, setConfigure] = useState(false);
   const [snoozeDuration, setSnoozeDuration] = useState<SnoozeDurationType>({
     enabled: false,
-    hrsLeft: 0
+    hrsLeft: 0,
   });
 
   const { setSnapState, SnapState } = React.useContext(AppContext);
@@ -49,7 +49,6 @@ const MetamaskPushSnapModal = ({ onClose, closeEnabled = true }: { onClose: () =
   return (
     <Container padding="20px 15px">
       <ItemHV2 justifyContent="space-between">
-
         {SnapState === 1 && (
           <SpanV2
             fontWeight="500"
@@ -109,7 +108,12 @@ const MetamaskPushSnapModal = ({ onClose, closeEnabled = true }: { onClose: () =
         />
       )}
       {SnapState == 2 && <SnapInformationModal handleCloseModal={handleCloseModal} />}
-      {SnapState == 3 && <PushSnapConfigureModal snoozeDuration={snoozeDuration} setSnoozeDuration={setSnoozeDuration} />}
+      {SnapState == 3 && (
+        <PushSnapConfigureModal
+          snoozeDuration={snoozeDuration}
+          setSnoozeDuration={setSnoozeDuration}
+        />
+      )}
       {SnapState == 4 && <EnableSnoozeModal setSnoozeDuration={setSnoozeDuration} />}
     </Container>
   );

@@ -1,4 +1,12 @@
 {
   "editor.wordWrap": "on",
-  "editor.formatOnSave": true
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "eslint.enable": false,
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
 }

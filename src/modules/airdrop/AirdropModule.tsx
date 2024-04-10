@@ -81,15 +81,21 @@ const AirdropModule = () => {
       const tx = await sendWithTxPromise;
       console.debug(tx);
       console.debug('waiting for tx to finish');
-      let txToast = toast.dark(<LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />, {
-        position: 'bottom-right',
-        autoClose: false,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      let txToast = toast.dark(
+        <LoaderToast
+          msg="Waiting for Confirmation..."
+          color="#35c5f3"
+        />,
+        {
+          position: 'bottom-right',
+          autoClose: false,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
       try {
         await provider.waitForTransaction(tx.hash);
 
@@ -116,7 +122,11 @@ const AirdropModule = () => {
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} spinnerColor={color} />
+      <LoaderSpinner
+        type={LOADER_TYPE.SEAMLESS}
+        spinnerSize={30}
+        spinnerColor={color}
+      />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
@@ -125,9 +135,17 @@ const AirdropModule = () => {
 
   return (
     <Container>
-      <ItemVV2 alignSelf="stretch" justifyContent="flex-start" margin="0 0 40px 0">
+      <ItemVV2
+        alignSelf="stretch"
+        justifyContent="flex-start"
+        margin="0 0 40px 0"
+      >
         <H2>
-          <Span weight="400" size="32px" color={theme.color}>
+          <Span
+            weight="400"
+            size="32px"
+            color={theme.color}
+          >
             Gratitude Drop
           </Span>
         </H2>
@@ -138,23 +156,40 @@ const AirdropModule = () => {
           textTransform="none"
           textAlign="center"
           spacing="0.03em"
-          margin="0px 0px">
+          margin="0px 0px"
+        >
           We would never be here without you! Thanks for the PUSH!!!
         </Span>
       </ItemVV2>
 
-      <Item align="flex-start" padding="20px 0px">
-        <Para margin="10px 0px 0px 0px" color={theme.color}>
+      <Item
+        align="flex-start"
+        padding="20px 0px"
+      >
+        <Para
+          margin="10px 0px 0px 0px"
+          color={theme.color}
+        >
           Thanks for the ton of support, feedback, encouragement and helping us out in every step! As a small token of
           our gratitude, we are dropping <B color={theme.color}>1200 $PUSH</B> to anyone who:
         </Para>
 
-        <Para margin="20px 0px 0px 20px" color={theme.color}>
+        <Para
+          margin="20px 0px 0px 20px"
+          color={theme.color}
+        >
           - Donated to us on <B color={theme.color}>Gitcoin grants round 6 or 7</B>
         </Para>
-        <Para margin="10px 0px 0px 20px" color={theme.color}>
+        <Para
+          margin="10px 0px 0px 20px"
+          color={theme.color}
+        >
           - Used our dApp on or before <B color={theme.color}>20th March, 2021</B>:{' '}
-          <AMod href="https://app.push.org" target="_blank" title="Visit our dApp">
+          <AMod
+            href="https://app.push.org"
+            target="_blank"
+            title="Visit our dApp"
+          >
             Push (EPNS) dApp
           </AMod>
         </Para>
@@ -169,17 +204,24 @@ const AirdropModule = () => {
               <EpicButton
                 onClick={() => {
                   handleClaim(user);
-                }}>
+                }}
+              >
                 Claim $PUSH Tokens
               </EpicButton>
             )}
             {user.verified && !user.claimable && (
-              <EpicButton theme="claimed" disabled={true}>
+              <EpicButton
+                theme="claimed"
+                disabled={true}
+              >
                 $PUSH Tokens Claimed
               </EpicButton>
             )}
             {!user.verified && (
-              <EpicButton theme="noteligible" disabled={true}>
+              <EpicButton
+                theme="noteligible"
+                disabled={true}
+              >
                 Not eligible for Gratitude Drop
               </EpicButton>
             )}
@@ -188,17 +230,29 @@ const AirdropModule = () => {
       </Item>
 
       {/* FAQs */}
-      <Item self="stretch" align="stretch" justify="flex-start" margin="40px 0px 20px 0px">
+      <Item
+        self="stretch"
+        align="stretch"
+        justify="flex-start"
+        margin="40px 0px 20px 0px"
+      >
         {/* Question */}
-        <Item align="stretch" margin="0px 0px 0px 0px">
+        <Item
+          align="stretch"
+          margin="0px 0px 0px 0px"
+        >
           <QnAItem>
             <Question
               onClick={() => {
                 toggleShowAnswer(1);
               }}
-              hover="#e20880">
+              hover="#e20880"
+            >
               <Span color={theme.color}>What is $PUSH contract address?</Span>
-              <BsChevronExpand size={20} color={'#ddd'} />
+              <BsChevronExpand
+                size={20}
+                color={'#ddd'}
+              />
             </Question>
 
             {showAnswers[1] && (
@@ -215,16 +269,20 @@ const AirdropModule = () => {
               onClick={() => {
                 toggleShowAnswer(2);
               }}
-              hover="#e20880">
+              hover="#e20880"
+            >
               <Span color={theme.color}>What is Push (EPNS)?</Span>
-              <BsChevronExpand size={20} color={'#ddd'} />
+              <BsChevronExpand
+                size={20}
+                color={'#ddd'}
+              />
             </Question>
 
             {showAnswers[2] && (
               <Answer>
                 <Span>
-                  Push (previously EPNS) is a decentralized protocol allowing web3 users to
-                  receive notifications for on-chain or off-chain activity.
+                  Push (previously EPNS) is a decentralized protocol allowing web3 users to receive notifications for
+                  on-chain or off-chain activity.
                 </Span>
 
                 <Span>
@@ -241,9 +299,13 @@ const AirdropModule = () => {
               onClick={() => {
                 toggleShowAnswer(3);
               }}
-              hover="#e20880">
+              hover="#e20880"
+            >
               <Span color={theme.color}>Why are push notifications important for Web3?</Span>
-              <BsChevronExpand size={20} color={'#ddd'} />
+              <BsChevronExpand
+                size={20}
+                color={'#ddd'}
+              />
             </Question>
 
             {showAnswers[3] && (
@@ -284,9 +346,13 @@ const AirdropModule = () => {
               onClick={() => {
                 toggleShowAnswer(4);
               }}
-              hover="#e20880">
+              hover="#e20880"
+            >
               <Span color={theme.color}>How can I keep up with Push (EPNS)?</Span>
-              <BsChevronExpand size={20} color={'#ddd'} />
+              <BsChevronExpand
+                size={20}
+                color={'#ddd'}
+              />
             </Question>
 
             {showAnswers[4] && (
@@ -296,15 +362,24 @@ const AirdropModule = () => {
                   <AMod
                     href="https://discord.gg/pushprotocol"
                     target="_blank"
-                    title="Join our Push (EPNS)'s Telegram channel">
+                    title="Join our Push (EPNS)'s Telegram channel"
+                  >
                     Discord
                   </AMod>
                   , follow us on{' '}
-                  <AMod href="https://twitter.com/epnsproject" target="_blank" title="Join our Push (EPNS)'s Twitter channel">
+                  <AMod
+                    href="https://twitter.com/epnsproject"
+                    target="_blank"
+                    title="Join our Push (EPNS)'s Twitter channel"
+                  >
                     Twitter
                   </AMod>
                   , and sign up for our 5 minute{' '}
-                  <AMod href="https://epns.substack.com/" target="_blank" title="Join our Push (EPNS)'s Twitter channel">
+                  <AMod
+                    href="https://epns.substack.com/"
+                    target="_blank"
+                    title="Join our Push (EPNS)'s Twitter channel"
+                  >
                     weekly product updates
                   </AMod>
                   .

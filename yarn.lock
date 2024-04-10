@@ -2683,25 +2683,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gilbarbara/helpers@npm:^0.9.2":
-  version: 0.9.2
-  resolution: "@gilbarbara/helpers@npm:0.9.2"
-  dependencies:
-    "@gilbarbara/types": ^0.2.2
-    is-lite: ^1.2.1
-  checksum: b6f92e5425bc39a6a7443ef4cc3be356c98e43fff003365f11441ff2564fb6c8db156a09bbccb6c9af47056e00db859ad7236cb1f3c27bbde31970fa01ff6f82
-  languageName: node
-  linkType: hard
-
-"@gilbarbara/types@npm:^0.2.2":
-  version: 0.2.2
-  resolution: "@gilbarbara/types@npm:0.2.2"
-  dependencies:
-    type-fest: ^4.1.0
-  checksum: 0c348410efa59a653f0f4f9342950fce08bd86ccc600488fe81ae20b5c040675637569fa9eef9c36d9ed62932c2fa7a996a7ca54b5d40ecbf9738876e269d9d4
-  languageName: node
-  linkType: hard
-
 "@graphql-typed-document-node/core@npm:^3.1.1":
   version: 3.2.0
   resolution: "@graphql-typed-document-node/core@npm:3.2.0"
@@ -3852,7 +3833,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noble/hashes@npm:^1.3.1":
+"@noble/hashes@npm:^1.3.1, @noble/hashes@npm:^1.4.0":
   version: 1.4.0
   resolution: "@noble/hashes@npm:1.4.0"
   checksum: 8ba816ae26c90764b8c42493eea383716396096c5f7ba6bea559993194f49d80a73c081f315f4c367e51bd2d5891700bcdfa816b421d24ab45b41cb03e4f3342
@@ -4234,9 +4215,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:0.0.1-alpha.75":
-  version: 0.0.1-alpha.75
-  resolution: "@pushprotocol/restapi@npm:0.0.1-alpha.75"
+"@pushprotocol/restapi@npm:0.0.1-alpha.77":
+  version: 0.0.1-alpha.77
+  resolution: "@pushprotocol/restapi@npm:0.0.1-alpha.77"
   dependencies:
     "@metamask/eth-sig-util": ^5.0.2
     axios: ^0.27.2
@@ -4259,7 +4240,7 @@ __metadata:
   peerDependenciesMeta:
     ethers:
       optional: true
-  checksum: 74b84f3b2bbd1d15291a4b802c51430ab1a3f133fdcd105da8676c3f514d7d376fc78d3e1353097c913e6a30b1e62a8c229146f098723ab2684d32a371a4697e
+  checksum: a5aca0b92a87a851154d4577ccd201d07941de1417a538b6b42559d09d434d87684b20e66787561d16e426b92856cfd5b39f563d35b9e46db8e4b0de79634dba
   languageName: node
   linkType: hard
 
@@ -6378,11 +6359,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:>=13.7.0":
-  version: 20.12.6
-  resolution: "@types/node@npm:20.12.6"
+  version: 20.12.7
+  resolution: "@types/node@npm:20.12.7"
   dependencies:
     undici-types: ~5.26.4
-  checksum: d16272276349244b1b6f15b0a23ce380efe3dfe46ace1ae37d58e791a8e53d832a2dc72d1afe01d7e5bb0ec1fba70ddd58b1da87921ec913e600331b3b906be9
+  checksum: 7cc979f7e2ca9a339ec71318c3901b9978555257929ef3666987f3e447123bc6dc92afcc89f6347e09e07d602fde7d51bcddea626c23aa2bb74aeaacfd1e1686
   languageName: node
   linkType: hard
 
@@ -7558,7 +7539,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-onboard/core@npm:2.21.4, @web3-onboard/core@npm:^2.21.1, @web3-onboard/core@npm:^2.21.4":
+"@web3-onboard/core@npm:2.21.4":
   version: 2.21.4
   resolution: "@web3-onboard/core@npm:2.21.4"
   dependencies:
@@ -7579,7 +7560,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-onboard/injected-wallets@npm:2.10.14, @web3-onboard/injected-wallets@npm:^2.10.5":
+"@web3-onboard/core@npm:^2.21.1, @web3-onboard/core@npm:^2.21.5":
+  version: 2.21.5
+  resolution: "@web3-onboard/core@npm:2.21.5"
+  dependencies:
+    "@web3-onboard/common": ^2.3.4
+    bignumber.js: ^9.0.0
+    bnc-sdk: ^4.6.7
+    bowser: ^2.11.0
+    ethers: 5.5.3
+    eventemitter3: ^4.0.7
+    joi: 17.9.1
+    lodash.merge: ^4.6.2
+    lodash.partition: ^4.6.0
+    nanoid: ^4.0.0
+    rxjs: ^7.5.5
+    svelte: ^3.49.0
+    svelte-i18n: ^3.3.13
+  checksum: d35902006feee37919b9cb499a995d528528f1b3f170dd34aab4e40f3dfbcd6e5d9a0f90adb6521a523702ffb49dd6e63dbc6c124e20da7e5e1427fc7d86889f
+  languageName: node
+  linkType: hard
+
+"@web3-onboard/injected-wallets@npm:2.10.14":
   version: 2.10.14
   resolution: "@web3-onboard/injected-wallets@npm:2.10.14"
   dependencies:
@@ -7590,16 +7592,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-onboard/react@npm:^2.8.9":
-  version: 2.8.15
-  resolution: "@web3-onboard/react@npm:2.8.15"
+"@web3-onboard/injected-wallets@npm:^2.10.5":
+  version: 2.10.15
+  resolution: "@web3-onboard/injected-wallets@npm:2.10.15"
   dependencies:
     "@web3-onboard/common": ^2.3.3
-    "@web3-onboard/core": ^2.21.4
+    joi: 17.9.1
+    lodash.uniqby: ^4.7.0
+  checksum: 0c04aecce9c2cd9dd510018e936633b974b36688b20ae3d58109ec404fdd4f15debf2b0fc55a279cc6bed8c28101450b6dda039e2c3d9872e7e621352b420337
+  languageName: node
+  linkType: hard
+
+"@web3-onboard/react@npm:^2.8.9":
+  version: 2.8.16
+  resolution: "@web3-onboard/react@npm:2.8.16"
+  dependencies:
+    "@web3-onboard/common": ^2.3.3
+    "@web3-onboard/core": ^2.21.5
     use-sync-external-store: 1.0.0
   peerDependencies:
     react: ">=16.8"
-  checksum: 309031da8ac6c4143dc844bb26c02c501b022710f106f0c1399921fa2c606d3d2432c3fcf913e68daba15bb67eb6c5ad2c032a181eafd0d64accd296250f55c8
+  checksum: bad55abf123c5296261e09084bb1ae1dfab89d7b5b46c777fc8b5bde5aaf5aabd37f0fe62e47346a494c56ae31c1fadbaa71dde0800ff1ee19bb5567747acc3b
   languageName: node
   linkType: hard
 
@@ -11258,9 +11271,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.3.585, electron-to-chromium@npm:^1.4.668":
-  version: 1.4.730
-  resolution: "electron-to-chromium@npm:1.4.730"
-  checksum: c2eec8a367e86655076ba0b3bf59f2134ee347ebe3dbf8648a766c3773eb2fb7027c49f1342b82b0606b415cc72597e5c4576166eb348a0c30536e74c8f4df8c
+  version: 1.4.731
+  resolution: "electron-to-chromium@npm:1.4.731"
+  checksum: f5ec068ae0616e2c3b68d66ce253a673de65b22ab3bea7e70dc16db7b7c683ca65f7d5c3b7276dd1f837a9c513ef435a53475b69a5df5eb581736d69b713ba3e
   languageName: node
   linkType: hard
 
@@ -12238,11 +12251,11 @@ __metadata:
   linkType: hard
 
 "ethereum-bloom-filters@npm:^1.0.6":
-  version: 1.0.10
-  resolution: "ethereum-bloom-filters@npm:1.0.10"
+  version: 1.1.0
+  resolution: "ethereum-bloom-filters@npm:1.1.0"
   dependencies:
-    js-sha3: ^0.8.0
-  checksum: 4019cc6f9274ae271a52959194a72f6e9b013366f168f922dc3b349319faf7426bf1010125ee0676b4f75714fe4a440edd4e7e62342c121a046409f4cd4c0af9
+    "@noble/hashes": ^1.4.0
+  checksum: 9565cd1e2002509852a05461cc93ee6874e8f961e0f66929cfc34d05f6f451fcfa4df287f8735ee184e4ba5f6e63a76a3c69bbeda5dda5bdf486f68fb9fa61f3
   languageName: node
   linkType: hard
 
@@ -18825,9 +18838,9 @@ __metadata:
   linkType: hard
 
 "preact@npm:^10.16.0":
-  version: 10.20.1
-  resolution: "preact@npm:10.20.1"
-  checksum: af5ed9bdf44bfa5487479c09fa971a32902987f277c74d6244f9d9466ccd5c1efd3a0949e7dc2227177623878b1adafcc5c50cee6617a84f72d1cebe55ff76ba
+  version: 10.20.2
+  resolution: "preact@npm:10.20.2"
+  checksum: 497c755065cdaf9d687e38c1cfaf935e20e98cc95a4b8c977a538dc74d41133a13ebed26d34001d11fa08b7d6811de28add74e94a3404bf35b222aa5e966fd1b
   languageName: node
   linkType: hard
 
@@ -19189,7 +19202,7 @@ __metadata:
     "@mui/icons-material": ^5.8.4
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
-    "@pushprotocol/restapi": 0.0.1-alpha.75
+    "@pushprotocol/restapi": 0.0.1-alpha.77
     "@pushprotocol/socket": 0.5.3
     "@pushprotocol/uiweb": latest
     "@reduxjs/toolkit": ^1.7.1
@@ -19792,11 +19805,10 @@ __metadata:
   linkType: hard
 
 "react-joyride@npm:^2.4.0":
-  version: 2.8.0
-  resolution: "react-joyride@npm:2.8.0"
+  version: 2.8.1
+  resolution: "react-joyride@npm:2.8.1"
   dependencies:
     "@gilbarbara/deep-equal": ^0.3.1
-    "@gilbarbara/helpers": ^0.9.2
     deep-diff: ^1.0.2
     deepmerge: ^4.3.1
     is-lite: ^1.2.1
@@ -19806,11 +19818,11 @@ __metadata:
     scroll: ^3.0.1
     scrollparent: ^2.1.0
     tree-changes: ^0.11.2
-    type-fest: ^4.12.0
+    type-fest: ^4.15.0
   peerDependencies:
     react: 15 - 18
     react-dom: 15 - 18
-  checksum: b514fca2f3dad79dc7b3f2802b0f8c16230102a196b7734430682ee263a73c3fab2d4e8ebd2763f9638d8150decd474cbacb3b2644883049dc2f8df5bc88012c
+  checksum: 555394e3f9f2cd91602a8f639c28a9f881d2c8ea82ad93054fb9548cf407da3e17c23e4fc44bca04b4d0acd9955cb3886a61c5f4ebdcee6c512737272a27b38e
   languageName: node
   linkType: hard
 
@@ -21461,12 +21473,12 @@ __metadata:
   linkType: hard
 
 "socks@npm:^2.7.1":
-  version: 2.8.1
-  resolution: "socks@npm:2.8.1"
+  version: 2.8.3
+  resolution: "socks@npm:2.8.3"
   dependencies:
     ip-address: ^9.0.5
     smart-buffer: ^4.2.0
-  checksum: 29586d42e9c36c5016632b2bcb6595e3adfbcb694b3a652c51bc8741b079c5ec37bdd5675a1a89a1620078c8137208294991fabb50786f92d47759a725b2b62e
+  checksum: 7a6b7f6eedf7482b9e4597d9a20e09505824208006ea8f2c49b71657427f3c137ca2ae662089baa73e1971c62322d535d9d0cf1c9235cf6f55e315c18203eadd
   languageName: node
   linkType: hard
 
@@ -22623,7 +22635,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^4.1.0, type-fest@npm:^4.12.0":
+"type-fest@npm:^4.15.0":
   version: 4.15.0
   resolution: "type-fest@npm:4.15.0"
   checksum: 8da2b8c4556a6bbafd79c0d50b4f3ba6526942aead9c1687038980276eee72b95a1d195bc6f1408e0ebf96ebfbe9d33436b506b35ed4b68f14f8b3ff56753850

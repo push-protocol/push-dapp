@@ -5,7 +5,7 @@ import React, { useContext, useEffect, useState } from 'react';
 // import { MdClear } from 'react-icons/md';
 import { BsChevronDown } from 'react-icons/bs';
 import styled from 'styled-components';
-import * as PushAPI  from '@pushprotocol/restapi'
+import * as PushAPI from '@pushprotocol/restapi';
 
 // Internal Components
 import { ItemHV2, SectionV2 } from 'components/reusables/SharedStylingV2';
@@ -26,19 +26,27 @@ import { AppContext } from 'contexts/AppContext';
 
 const IncomingCall = () => {
   const { connectedUser, createUserIfNecessary } = useContext(AppContext);
-  const { videoCallData, acceptRequestWrapper, disconnectWrapper, setIsCallAccepted, isCallAccepted,setIncomingCallUserData,incomingCallUserData } = useContext(VideoCallContext);
+  const {
+    videoCallData,
+    acceptRequestWrapper,
+    disconnectWrapper,
+    setIsCallAccepted,
+    isCallAccepted,
+    setIncomingCallUserData,
+    incomingCallUserData,
+  } = useContext(VideoCallContext);
   const [isIncomingCallMinimized, setIsIncomingCallMinimized] = useState(false);
 
   // for conditional css
   const isMobile = useDeviceWidthCheck(425);
   const isLaptopS = useDeviceWidthCheck(1025) && !isMobile;
 
-  useEffect(()=>{
-    (async()=>{
-      const userData = await PushAPI.user.get({account:videoCallData.incoming[0].address,env:appConfig.appEnv});
+  useEffect(() => {
+    (async () => {
+      const userData = await PushAPI.user.get({ account: videoCallData.incoming[0].address, env: appConfig.appEnv });
       setIncomingCallUserData(userData);
-    })()
-  },[])
+    })();
+  }, []);
 
   const minimizeCallHandler = () => {
     setIsIncomingCallMinimized(true);
@@ -61,63 +69,64 @@ const IncomingCall = () => {
 
   return (
     <>
-    {
-      !isCallAccepted &&<Container>
-      <IncomingCallModalContent isIncomingCallMinimized={isIncomingCallMinimized}>
-        {!isIncomingCallMinimized && (
-          <CrossIconContainer>
-            <CrossIcon onClick={minimizeCallHandler} />
-          </CrossIconContainer>
-        )}
+      {!isCallAccepted && (
+        <Container>
+          <IncomingCallModalContent isIncomingCallMinimized={isIncomingCallMinimized}>
+            {!isIncomingCallMinimized && (
+              <CrossIconContainer>
+                <CrossIcon onClick={minimizeCallHandler} />
+              </CrossIconContainer>
+            )}
 
-        {/* remote user info */}
-        {videoCallData.incoming[0].status !== VideoCallStatus.CONNECTED && (
-          <UserInfo
-            // TODO: make this dynamic with remote user's info
-            pfp={incomingCallUserData?.profilePicture}
-            username={""}
-            address={`${videoCallData.incoming[0].address}`}
-            status="Incoming Video Call"
-            containerStyles={{ margin: isMobile ? '2.5% 0 4% 2%' : '2.5% auto' }}
-            source="minimized"
-          />
-        )}
+            {/* remote user info */}
+            {videoCallData.incoming[0].status !== VideoCallStatus.CONNECTED && (
+              <UserInfo
+                // TODO: make this dynamic with remote user's info
+                pfp={incomingCallUserData?.profilePicture}
+                username={''}
+                address={`${videoCallData.incoming[0].address}`}
+                status="Incoming Video Call"
+                containerStyles={{ margin: isMobile ? '2.5% 0 4% 2%' : '2.5% auto' }}
+                source="minimized"
+              />
+            )}
 
-        {!isIncomingCallMinimized && (
-          <VideoPlayer
-            incoming={true}
-            localVideoStyles={{
-              height: '35vh',
-              maxHeight: '35vh',
-              borderRadius: '24px',
-              width: '90%',
-              margin: '2% auto',
-            }}
-          />
-        )}
+            {!isIncomingCallMinimized && (
+              <VideoPlayer
+                incoming={true}
+                localVideoStyles={{
+                  height: '35vh',
+                  maxHeight: '35vh',
+                  borderRadius: '24px',
+                  width: '90%',
+                  margin: '2% auto',
+                }}
+              />
+            )}
 
-        {/* display video call controls */}
-        <VideoCallControlsContainer style={{ margin: `5% ${isIncomingCallMinimized && !isLaptopS ? '2%' : 'auto'}` }}>
-          <CallButton
-            buttonStyles={{ background: '#08e673' }}
-            iconSrc={pickCallIcon}
-            onClick={answerCallHandler}
-          />
-          <CallButton
-            buttonStyles={{
-              background: '#e60808',
-              width: isMobile ? '34px' : '46px',
-              maxWidth: isMobile ? '34px' : '46px',
-            }}
-            iconSrc={endCallIcon}
-            onClick={disconnectWrapper}
-          />
-        </VideoCallControlsContainer>
-      </IncomingCallModalContent>
-    </Container>
-    }
+            {/* display video call controls */}
+            <VideoCallControlsContainer
+              style={{ margin: `5% ${isIncomingCallMinimized && !isLaptopS ? '2%' : 'auto'}` }}
+            >
+              <CallButton
+                buttonStyles={{ background: '#08e673' }}
+                iconSrc={pickCallIcon}
+                onClick={answerCallHandler}
+              />
+              <CallButton
+                buttonStyles={{
+                  background: '#e60808',
+                  width: isMobile ? '34px' : '46px',
+                  maxWidth: isMobile ? '34px' : '46px',
+                }}
+                iconSrc={endCallIcon}
+                onClick={disconnectWrapper}
+              />
+            </VideoCallControlsContainer>
+          </IncomingCallModalContent>
+        </Container>
+      )}
     </>
-    
   );
 };
 

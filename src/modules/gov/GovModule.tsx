@@ -42,7 +42,7 @@ const GovModule = () => {
   // setup theme (styled components)
   const theme = useTheme();
 
-  const { web3NameList }:AppContextType = React.useContext(AppContext);
+  const { web3NameList }: AppContextType = React.useContext(AppContext);
   const { account, provider, chainId } = useAccount();
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
@@ -258,7 +258,7 @@ const GovModule = () => {
       setTxInProgress(false);
       return;
     }
-    console.debug(newDelegatee,'lets see');
+    console.debug(newDelegatee, 'lets see');
     await createTransactionObject({
       delegateeAddress,
       account,

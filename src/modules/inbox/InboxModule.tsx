@@ -27,9 +27,9 @@ import APP_PATHS from 'config/AppPaths';
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
 
 // Create Inbox Module
-const InboxModule = ({isSpam}) => {
+const InboxModule = ({ isSpam }) => {
   // React GA Analytics
-  ReactGA.pageview(APP_PATHS.Inbox)
+  ReactGA.pageview(APP_PATHS.Inbox);
 
   const dispatch = useDispatch();
   const { account, chainId, provider } = useAccount();
@@ -52,9 +52,8 @@ const InboxModule = ({isSpam}) => {
   }, [toast]);
   // toast related section
 
-
   React.useEffect(() => {
-    if(!chainId) return;
+    if (!chainId) return;
     (async function init() {
       const coreProvider = onCoreNetwork ? provider : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
 
@@ -71,7 +70,11 @@ const InboxModule = ({isSpam}) => {
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} spinnerColor={color} />
+      <LoaderSpinner
+        type={LOADER_TYPE.SEAMLESS}
+        spinnerSize={30}
+        spinnerColor={color}
+      />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
@@ -84,15 +87,21 @@ const InboxModule = ({isSpam}) => {
 
   // notification toast
   let notificationToast = () =>
-    toaster.dark(<LoaderToast msg="Preparing Notification" color="#fff" />, {
-      position: 'bottom-right',
-      autoClose: false,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+    toaster.dark(
+      <LoaderToast
+        msg="Preparing Notification"
+        color="#fff"
+      />,
+      {
+        position: 'bottom-right',
+        autoClose: false,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      }
+    );
 
   /**
    * When we instantiate the contract instances, fetch basic information about the user
@@ -119,15 +128,19 @@ const InboxModule = ({isSpam}) => {
     }
   }, [epnsReadProvider, epnsCommReadProvider]);
 
-
   // Render
   return (
     <Container>
       <Interface>
         <div className="joyride"></div>
-        <InboxComponent isSpam={isSpam}/>
+        <InboxComponent isSpam={isSpam} />
         {/* <Feedbox /> */}
-        {toast && <NotificationToast notification={toast} clearToast={clearToast} />}
+        {toast && (
+          <NotificationToast
+            notification={toast}
+            clearToast={clearToast}
+          />
+        )}
       </Interface>
     </Container>
   );
@@ -162,7 +175,8 @@ const Container = styled(Section)`
       100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.TABLET.TOP} -
         ${globalsMargin.BIG_MODULES.TABLET.BOTTOM}
     );
-    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}
+      ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
   }
 
   @media ${device.mobileL} {
@@ -172,7 +186,7 @@ const Container = styled(Section)`
         ${globalsMargin.BIG_MODULES.MOBILE.BOTTOM}
     );
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
-    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  0 0;
+    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} 0 0;
   }
 `;
 

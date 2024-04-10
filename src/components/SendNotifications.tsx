@@ -27,7 +27,7 @@ import {
   ItemH,
   Section,
   Span,
-  TextField
+  TextField,
 } from 'primaries/SharedStyling';
 import useToast from '../hooks/useToast';
 import PreviewNotif from './PreviewNotif';
@@ -100,8 +100,8 @@ export const IOSSwitch = styled(Switch).attrs(() => ({
 
 type NFTOptions = {
   value: string;
-  label: string; 
-}
+  label: string;
+};
 
 // Set Notification Form Type | 0 is reserved for protocol storage
 const NFTypes: NFTOptions[] = [
@@ -121,13 +121,17 @@ function SendNotifications() {
     return state.user;
   });
   const { epnsCommWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
-  const { channelDetails, delegatees, aliasDetails: { aliasEthAddr } } = useSelector((state: any) => state.admin);
+  const {
+    channelDetails,
+    delegatees,
+    aliasDetails: { aliasEthAddr },
+  } = useSelector((state: any) => state.admin);
   const { CHANNNEL_DEACTIVATED_STATE } = useSelector((state: any) => state.channels);
   const { canSend } = useSelector((state: any) => {
     return state.canSend;
   });
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
-const {handleConnectWallet} = useContext(AppContext);
+  const { handleConnectWallet } = useContext(AppContext);
   const [nfProcessing, setNFProcessing] = useState(0);
   const [channelAddress, setChannelAddress] = useState('');
   const [nfRecipient, setNFRecipient] = useState(account);
@@ -147,7 +151,7 @@ const {handleConnectWallet} = useContext(AppContext);
 
   const channelDetailsFromBackend = useMemo(() => {
     if (delegatees) {
-      return delegatees.find(delegatee => delegatee.channel === channelAddress);
+      return delegatees.find((delegatee) => delegatee.channel === channelAddress);
     }
     // Return a default value or handle the case when delegatees is not defined.
     return null; // or some other default value
@@ -156,18 +160,18 @@ const {handleConnectWallet} = useContext(AppContext);
   const channelSettings = useMemo(() => {
     if (channelDetailsFromBackend) {
       const { channel_settings } = channelDetailsFromBackend;
-  
+
       if (channel_settings !== null) {
         return JSON.parse(channel_settings);
       }
     }
     // Return a default value or handle the case when channelDetailsFromBackend is not defined.
     return null; // or some other default value
-  }, [channelDetailsFromBackend]);  
+  }, [channelDetailsFromBackend]);
 
   const channelSettingsOptions = useMemo(() => {
     const defaultOption = { label: 'Default', value: '', isRange: false };
-  
+
     if (channelSettings) {
       const settingsOptions = channelSettings.map((setting) => ({
         label:
@@ -187,20 +191,20 @@ const {handleConnectWallet} = useContext(AppContext);
         value: setting.index,
         isRange: setting.type === 2,
       }));
-  
+
       return [defaultOption, ...settingsOptions];
     }
     // If channelSettings is not defined, just return the default option.
     return [defaultOption];
-  }, [channelSettings]);  
+  }, [channelSettings]);
 
   const openManageSettings = () => {
     const newPageUrl = APP_PATHS.ChannelSettings;
-  
+
     // Use window.open() to open the URL in a new tab
     window.open(newPageUrl, '_blank');
-  }
-  
+  };
+
   useEffect(() => {
     if (canSend !== 1) {
       const url = window.location.origin;
@@ -226,14 +230,18 @@ const {handleConnectWallet} = useContext(AppContext);
     } else {
       setDelegateeOptions(
         delegatees.map((oneDelegatee: any) => ({
-          value: (onCoreNetwork ? oneDelegatee.channel: oneDelegatee.alias_address),
+          value: onCoreNetwork ? oneDelegatee.channel : oneDelegatee.alias_address,
           label: (
             <CustomDropdownItem>
-              <img src={oneDelegatee.icon} alt="" />
+              <img
+                src={oneDelegatee.icon}
+                alt=""
+              />
               <div
                 style={{
                   letterSpacing: '0',
-                }}>
+                }}
+              >
                 {oneDelegatee.name}
               </div>
             </CustomDropdownItem>
@@ -241,7 +249,7 @@ const {handleConnectWallet} = useContext(AppContext);
         }))
       );
       // default the channel address to the first one on the list which should be that of the user if they have a channel
-      if(onCoreNetwork) setChannelAddress(delegatees[0].channel);
+      if (onCoreNetwork) setChannelAddress(delegatees[0].channel);
       else setChannelAddress(delegatees[0].alias_address);
     }
   }, [delegatees, account]);
@@ -292,7 +300,12 @@ const {handleConnectWallet} = useContext(AppContext);
         toastTitle: 'Error',
         toastMessage: 'Please enter at least two recipients in order to use subset notifications type',
         toastType: 'ERROR',
-        getToastIcon: (size) => <MdError size={size} color="red" />,
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
       });
       validated = false;
     }
@@ -349,7 +362,12 @@ const {handleConnectWallet} = useContext(AppContext);
           toastTitle: 'Error',
           toastMessage: 'Incorrect Payload',
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />,
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
         });
 
         return;
@@ -363,7 +381,12 @@ const {handleConnectWallet} = useContext(AppContext);
           toastTitle: 'Error',
           toastMessage: 'Incorrect Payload',
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />,
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
         });
         return;
       }
@@ -376,7 +399,12 @@ const {handleConnectWallet} = useContext(AppContext);
           toastTitle: 'Error',
           toastMessage: 'Incorrect Payload',
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />,
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
         });
         return;
       }
@@ -389,7 +417,12 @@ const {handleConnectWallet} = useContext(AppContext);
           toastTitle: 'Error',
           toastMessage: 'Incorrect Payload',
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />,
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
         });
         return;
       }
@@ -404,9 +437,8 @@ const {handleConnectWallet} = useContext(AppContext);
         } else {
           notifRecipients = [convertAddressToAddrCaip(nfRecipient, chainId)];
         }
-        
-        if (nfType === '1') 
-          notifRecipients = ['*'];
+
+        if (nfType === '1') notifRecipients = ['*'];
 
         const channelAddressInCaip = convertAddressToAddrCaip(channelAddress, chainId);
 
@@ -420,9 +452,9 @@ const {handleConnectWallet} = useContext(AppContext);
             body: amsg,
             cta: acta,
             embed: aimg,
-            category: nfSettingIndex
+            category: nfSettingIndex,
           },
-          channel: channelAddressInCaip
+          channel: channelAddressInCaip,
         });
         //   console.log(nfRecipient);
         //   postReq("/payloads/add_manual_payload", {
@@ -439,7 +471,12 @@ const {handleConnectWallet} = useContext(AppContext);
           toastTitle: 'Success',
           toastMessage: 'Notification Sent',
           toastType: 'SUCCESS',
-          getToastIcon: (size) => <MdCheckCircle size={size} color="green" />,
+          getToastIcon: (size) => (
+            <MdCheckCircle
+              size={size}
+              color="green"
+            />
+          ),
         });
 
         setNFProcessing(2);
@@ -450,21 +487,26 @@ const {handleConnectWallet} = useContext(AppContext);
           toastTitle: 'Success',
           toastMessage: 'Notification Sent',
           toastType: 'SUCCESS',
-          getToastIcon: (size) => <MdCheckCircle size={size} color="green" />,
+          getToastIcon: (size) => (
+            <MdCheckCircle
+              size={size}
+              color="green"
+            />
+          ),
         });
         //       console.log(res);
         //   });
 
         // reseting the notif states
-        setNFType("1");
-        setNFMsg("");
+        setNFType('1');
+        setNFMsg('');
         setNFSubEnabled(false);
-        setNFSub("");
+        setNFSub('');
         setNFCTAEnabled(false);
-        setNFCTA("");
+        setNFCTA('');
         setNFMediaEnabled(false);
-        setNFMedia("");
-        setNFInfo("");
+        setNFMedia('');
+        setNFInfo('');
       } catch (err) {
         setNFInfo('Send Notification Failed, please try again');
 
@@ -472,7 +514,12 @@ const {handleConnectWallet} = useContext(AppContext);
           toastTitle: 'Error',
           toastMessage: 'Sending Notification Failed: ' + err,
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />,
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
         });
         setNFProcessing(0);
         console.error(err);
@@ -491,7 +538,10 @@ const {handleConnectWallet} = useContext(AppContext);
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} />
+      <LoaderSpinner
+        type={LOADER_TYPE.SEAMLESS}
+        spinnerSize={30}
+      />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
@@ -501,26 +551,28 @@ const {handleConnectWallet} = useContext(AppContext);
   return (
     <Container>
       <Body>
-        <Content padding={isMobile ? "0px 0px 0px" : "10px 20px 10px"}>
+        <Content padding={isMobile ? '0px 0px 0px' : '10px 20px 10px'}>
           <Item align="center">
             <H2
               textTransform="none"
-              weight={isMobile ? "500" : "400"}
-              size={isMobile ? "25px" : "32px"}
+              weight={isMobile ? '500' : '400'}
+              size={isMobile ? '25px' : '32px'}
               color={theme.color}
               textAlign="center"
-              margin={isMobile ? "0px 0px" : "20px 0px"}
-              style={{ width: '100%' }}>
+              margin={isMobile ? '0px 0px' : '20px 0px'}
+              style={{ width: '100%' }}
+            >
               Send Notification
             </H2>
             <Span
               color={theme.default.secondaryColor}
-              weight={isMobile ? "300" : "400"}
+              weight={isMobile ? '300' : '400'}
               size="14px"
               textTransform="none"
               spacing="0.03em"
-              margin={isMobile ? "10px 0px" : "0px 0px"}
-              textAlign="center">
+              margin={isMobile ? '10px 0px' : '0px 0px'}
+              textAlign="center"
+            >
               Push (EPNS) makes it extremely easy to open and maintain a genuine channel of communication with your
               users.
             </Span>
@@ -565,19 +617,28 @@ const {handleConnectWallet} = useContext(AppContext);
                 margin="0px"
                 size="1.1rem"
                 width="100%"
-                onSubmit={handleSendMessage}>
-                <Item flex="1" self="stretch" align="stretch" width="100%">
+                onSubmit={handleSendMessage}
+              >
+                <Item
+                  flex="1"
+                  self="stretch"
+                  align="stretch"
+                  width="100%"
+                >
                   {!cannotDisplayDelegatees && (
-                    <Item flex="1" justify="flex-start" align="stretch">
+                    <Item
+                      flex="1"
+                      justify="flex-start"
+                      align="stretch"
+                    >
                       <DropdownStyledParent>
                         <DropdownStyled
                           options={delegateeOptions}
                           onChange={(option: any) => {
-                            if(option.value == aliasEthAddr) {
+                            if (option.value == aliasEthAddr) {
                               setChannelAddress(account);
                               setNFRecipient(account);
-                            }
-                            else {
+                            } else {
                               setChannelAddress(option.value);
                               setNFRecipient(option.value);
                             }
@@ -627,86 +688,75 @@ const {handleConnectWallet} = useContext(AppContext);
                     <ToggleOptionContainer>
                       <ToggleOption>
                         <Span
-                          weight={isMobile ? "500" : "600"}
+                          weight={isMobile ? '500' : '600'}
                           textTransform="none"
-                          size={isMobile ? "15px" : "14px"}
+                          size={isMobile ? '15px' : '14px'}
                           color={theme.default.color}
                           padding="5px 15px"
-                          radius="30px">
+                          radius="30px"
+                        >
                           Title
                         </Span>
-                        <IOSSwitch checked={nfSubEnabled} onChange={() => setNFSubEnabled(!nfSubEnabled)} />
+                        <IOSSwitch
+                          checked={nfSubEnabled}
+                          onChange={() => setNFSubEnabled(!nfSubEnabled)}
+                        />
                       </ToggleOption>
 
                       <ToggleOption>
                         <Span
-                          weight={isMobile ? "500" : "600"}
+                          weight={isMobile ? '500' : '600'}
                           textTransform="none"
-                          size={isMobile ? "15px" : "14px"}
+                          size={isMobile ? '15px' : '14px'}
                           color={theme.default.color}
                           padding="5px 15px"
-                          radius="30px">
+                          radius="30px"
+                        >
                           Media URL
                         </Span>
-                        <IOSSwitch checked={nfMediaEnabled} onChange={() => setNFMediaEnabled(!nfMediaEnabled)} />
+                        <IOSSwitch
+                          checked={nfMediaEnabled}
+                          onChange={() => setNFMediaEnabled(!nfMediaEnabled)}
+                        />
                       </ToggleOption>
 
                       <ToggleOption>
                         <Span
-                         weight={isMobile ? "500" : "600"}
-                         textTransform="none"
-                         size={isMobile ? "15px" : "14px"}
+                          weight={isMobile ? '500' : '600'}
+                          textTransform="none"
+                          size={isMobile ? '15px' : '14px'}
                           color={theme.default.color}
                           padding="5px 15px"
-                          radius="30px">
+                          radius="30px"
+                        >
                           CTA Link
                         </Span>
-                        <IOSSwitch checked={nfCTAEnabled} onChange={() => setNFCTAEnabled(!nfCTAEnabled)} />
+                        <IOSSwitch
+                          checked={nfCTAEnabled}
+                          onChange={() => setNFCTAEnabled(!nfCTAEnabled)}
+                        />
                       </ToggleOption>
                     </ToggleOptionContainer>
                   )}
-                
 
-                {(nfType === '2' || nfType === '3' || nfType === '5') && (
-                  <Item margin="15px 0px" flex="1" self="stretch" align="stretch" width="100%">
-                    <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>Recipient Wallet Address</Label>
-                    <Input
-                      maxlength="40"
+                  {(nfType === '2' || nfType === '3' || nfType === '5') && (
+                    <Item
+                      margin="15px 0px"
                       flex="1"
-                      padding="12px"
-                      weight="400"
-                      size="16px"
-                      color={theme.default.color}
-                      bg={theme.default.bg}
-                      height="25px"
-                      margin="7px 0px 0px 0px"
-                      border={`1px solid ${theme.snfBorder}`}
-                      focusBorder="1px solid #657795"
-                      radius="12px"
-                      value={nfRecipient}
-                      onChange={(e) => {
-                        setNFRecipient(e.target.value);
-                      }}
-                    />
-                  </Item>
-                )}
-
-                {nfType === '4' && (
-                  <>
-                    <MultiRecipientsContainer>
-                      {multipleRecipients.map((oneRecipient) => (
-                        <span key={oneRecipient}>
-                          {oneRecipient}
-                          <i onClick={() => removeRecipient(oneRecipient)}>
-                            <CloseIcon />
-                          </i>
-                        </span>
-                      ))}
-                    </MultiRecipientsContainer>
-                    <Item margin="15px 0px" flex="1" self="stretch" align="stretch" width="100%">
-                      <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>Enter Recipients Wallet Addresses</Label>
+                      self="stretch"
+                      align="stretch"
+                      width="100%"
+                    >
+                      <Label
+                        style={{
+                          color: theme.color,
+                          fontWeight: isMobile ? '500' : '600',
+                          fontSize: isMobile ? '15px' : '14px',
+                        }}
+                      >
+                        Recipient Wallet Address
+                      </Label>
                       <Input
-                        required={multipleRecipients.length === 0}
                         maxlength="40"
                         flex="1"
                         padding="12px"
@@ -719,121 +769,85 @@ const {handleConnectWallet} = useContext(AppContext);
                         border={`1px solid ${theme.snfBorder}`}
                         focusBorder="1px solid #657795"
                         radius="12px"
-                        value={tempRecipeint}
-                        onKeyPress={handleSubsetInputChange}
+                        value={nfRecipient}
                         onChange={(e) => {
-                          const text = e.target.value.trim();
-                          console.debug(text);
-                          console.debug(tempRecipeint);
-                          // if (!LIMITER_KEYS.includes(text) && text.length > 0 ) {
-                          setTempRecipient(e.target.value);
-                          // }
+                          setNFRecipient(e.target.value);
                         }}
                       />
-                      <Span size="13px" margin="7px 0px 0px 0px" color={theme.default.secondaryColor}>
-                        Enter recipients wallet addresses separated by a comma or by pressing the enter key
-                      </Span>
                     </Item>
-                  </>
-                )}
+                  )}
 
-                {nfType && nfSubEnabled && (
-                  <Item margin="15px 0px" flex="1" self="stretch" align="stretch" width="100%">
+                  {nfType === '4' && (
+                    <>
+                      <MultiRecipientsContainer>
+                        {multipleRecipients.map((oneRecipient) => (
+                          <span key={oneRecipient}>
+                            {oneRecipient}
+                            <i onClick={() => removeRecipient(oneRecipient)}>
+                              <CloseIcon />
+                            </i>
+                          </span>
+                        ))}
+                      </MultiRecipientsContainer>
+                      <Item
+                        margin="15px 0px"
+                        flex="1"
+                        self="stretch"
+                        align="stretch"
+                        width="100%"
+                      >
+                        <Label
+                          style={{
+                            color: theme.color,
+                            fontWeight: isMobile ? '500' : '600',
+                            fontSize: isMobile ? '15px' : '14px',
+                          }}
+                        >
+                          Enter Recipients Wallet Addresses
+                        </Label>
+                        <Input
+                          required={multipleRecipients.length === 0}
+                          maxlength="40"
+                          flex="1"
+                          padding="12px"
+                          weight="400"
+                          size="16px"
+                          color={theme.default.color}
+                          bg={theme.default.bg}
+                          height="25px"
+                          margin="7px 0px 0px 0px"
+                          border={`1px solid ${theme.snfBorder}`}
+                          focusBorder="1px solid #657795"
+                          radius="12px"
+                          value={tempRecipeint}
+                          onKeyPress={handleSubsetInputChange}
+                          onChange={(e) => {
+                            const text = e.target.value.trim();
+                            console.debug(text);
+                            console.debug(tempRecipeint);
+                            // if (!LIMITER_KEYS.includes(text) && text.length > 0 ) {
+                            setTempRecipient(e.target.value);
+                            // }
+                          }}
+                        />
+                        <Span
+                          size="13px"
+                          margin="7px 0px 0px 0px"
+                          color={theme.default.secondaryColor}
+                        >
+                          Enter recipients wallet addresses separated by a comma or by pressing the enter key
+                        </Span>
+                      </Item>
+                    </>
+                  )}
 
+                  {nfType && nfSubEnabled && (
                     <Item
-                      display="flex"
-                      direction="row"
-                      align="center"
+                      margin="15px 0px"
                       flex="1"
                       self="stretch"
-                      justify="space-between"
-                    >
-                      <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>
-                        Notification Title
-                      </Label>
-                      <Span
-                        color={theme.default.secondaryColor}
-                        size="13px"
-                        margin="0px 10px 0px 0px"
-                        weight="700"
-                      >
-                        {80 - nfSub.length}
-                      </Span>
-                    </Item>
-                    <Input
-                      maxlength="40"
-                      flex="1"
-                      padding="12px"
-                      weight="400"
-                      size="16px"
-                      color={theme.default.color}
-                      bg={theme.default.bg}
-                      height="25px"
-                      margin="7px 0px 0px 0px"
-                      border={`1px solid ${theme.snfBorder}`}
-                      focusBorder="1px solid #657795"
-                      radius="12px"
-                      value={nfSub}
-                      onChange={(e) => {
-                        setNFSub(e.target.value.slice(0,80));
-                      }}
-                    />
-                  </Item>
-                )}
-
-                {nfType && (
-                  <Item margin="15px 0px" flex="1" self="stretch" align="stretch" width="100%">
-
-                    <Item
-                      display="flex"
-                      direction="row"
-                      align="center"
-                      flex="1"
-                      self="stretch"
-                      justify="space-between"
-                    >
-                      <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>
-                      Notification Message
-                      </Label>
-                      <Span
-                        color={theme.default.secondaryColor}
-                        size="13px"
-                        margin="0px 10px 0px 0px"
-                        weight="700"
-                      >
-                        {500 - nfMsg.length}
-                      </Span>
-                    </Item>
-                    <TextField
-                      // placeholder="Your Channel's Short Description (250 Characters)"
-                      rows="4"
-                      maxlength="250"
-                      padding="12px"
-                      weight="400"
-                      margin="7px 0px 0px 0px"
-                      border={`1px solid ${theme.snfBorder}`}
-                      focusBorder="1px solid #657795"
-                      radius="12px"
-                      color={theme.default.color}
-                      bg={theme.default.bg}
-                      overflow="auto"
-                      value={nfMsg}
-                      onChange={(e) => {
-                        setNFMsg(e.target.value.slice(0, 500));
-                      }}
-                      autocomplete="off"
-                    />
-                  </Item>
-                )}
-
-                {nfType && (
-                  <>
-                    <Item
-                      flex="1"
-                      justify="flex-start"
                       align="stretch"
-                      margin="30px 0px 15px 0px"
-                      //   minWidth="280px"
+                      width="100%"
                     >
                       <Item
                         display="flex"
@@ -842,89 +856,241 @@ const {handleConnectWallet} = useContext(AppContext);
                         flex="1"
                         self="stretch"
                         justify="space-between"
-                        margin="0px 0px 7px 0px"
                       >
-                        <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>
-                          Notification Setting Type
-                        </Label>
-                        <AInlineV2
-                          color={theme.default.primaryPushThemeTextColor}
-                          fontSize="13px"
-                          margin="0px 10px 0px 0px"
-                          fontWeight="600"
-                          onClick={openManageSettings}
-                          cursor="pointer"
-                        >
-                          Manage Settings
-                        </AInlineV2>
-                      </Item>
-                      <DropdownStyledParent>
-                        <DropdownStyled
-                          options={channelSettingsOptions}
-                          onChange={(option) => {
-                            setNFSettingIndex(String(option.value));
+                        <Label
+                          style={{
+                            color: theme.color,
+                            fontWeight: isMobile ? '500' : '600',
+                            fontSize: isMobile ? '15px' : '14px',
                           }}
-                          value={channelSettingsOptions[0]}
-                        />
-                      </DropdownStyledParent>
+                        >
+                          Notification Title
+                        </Label>
+                        <Span
+                          color={theme.default.secondaryColor}
+                          size="13px"
+                          margin="0px 10px 0px 0px"
+                          weight="700"
+                        >
+                          {80 - nfSub.length}
+                        </Span>
+                      </Item>
+                      <Input
+                        maxlength="40"
+                        flex="1"
+                        padding="12px"
+                        weight="400"
+                        size="16px"
+                        color={theme.default.color}
+                        bg={theme.default.bg}
+                        height="25px"
+                        margin="7px 0px 0px 0px"
+                        border={`1px solid ${theme.snfBorder}`}
+                        focusBorder="1px solid #657795"
+                        radius="12px"
+                        value={nfSub}
+                        onChange={(e) => {
+                          setNFSub(e.target.value.slice(0, 80));
+                        }}
+                      />
                     </Item>
-                  </>
-                )}
+                  )}
 
-                {nfType && nfMediaEnabled && (
-                  <Item margin="15px 0" flex="1" self="stretch" align="stretch" width="100%">
-                    <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>Media URL</Label>
-                    <Input
-                      maxlength="40"
+                  {nfType && (
+                    <Item
+                      margin="15px 0px"
                       flex="1"
-                      padding="12px"
-                      weight="400"
-                      size="16px"
-                      color={theme.default.color}
-                      bg={theme.default.bg}
-                      height="25px"
-                      margin="7px 0px 0px 0px"
-                      border={`1px solid ${theme.snfBorder}`}
-                      focusBorder="1px solid #657795"
-                      radius="12px"
-                      value={nfMedia}
-                      onChange={(e) => {
-                        setNFMedia(e.target.value);
-                      }}
-                    />
-                  </Item>
-                )}
+                      self="stretch"
+                      align="stretch"
+                      width="100%"
+                    >
+                      <Item
+                        display="flex"
+                        direction="row"
+                        align="center"
+                        flex="1"
+                        self="stretch"
+                        justify="space-between"
+                      >
+                        <Label
+                          style={{
+                            color: theme.color,
+                            fontWeight: isMobile ? '500' : '600',
+                            fontSize: isMobile ? '15px' : '14px',
+                          }}
+                        >
+                          Notification Message
+                        </Label>
+                        <Span
+                          color={theme.default.secondaryColor}
+                          size="13px"
+                          margin="0px 10px 0px 0px"
+                          weight="700"
+                        >
+                          {500 - nfMsg.length}
+                        </Span>
+                      </Item>
+                      <TextField
+                        // placeholder="Your Channel's Short Description (250 Characters)"
+                        rows="4"
+                        maxlength="250"
+                        padding="12px"
+                        weight="400"
+                        margin="7px 0px 0px 0px"
+                        border={`1px solid ${theme.snfBorder}`}
+                        focusBorder="1px solid #657795"
+                        radius="12px"
+                        color={theme.default.color}
+                        bg={theme.default.bg}
+                        overflow="auto"
+                        value={nfMsg}
+                        onChange={(e) => {
+                          setNFMsg(e.target.value.slice(0, 500));
+                        }}
+                        autocomplete="off"
+                      />
+                    </Item>
+                  )}
 
-                {nfType && nfCTAEnabled && (
-                  <Item margin="15px 0" flex="1" self="stretch" align="stretch" width="100%">
-                    <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>CTA Link</Label>
+                  {nfType && (
+                    <>
+                      <Item
+                        flex="1"
+                        justify="flex-start"
+                        align="stretch"
+                        margin="30px 0px 15px 0px"
+                        //   minWidth="280px"
+                      >
+                        <Item
+                          display="flex"
+                          direction="row"
+                          align="center"
+                          flex="1"
+                          self="stretch"
+                          justify="space-between"
+                          margin="0px 0px 7px 0px"
+                        >
+                          <Label
+                            style={{
+                              color: theme.color,
+                              fontWeight: isMobile ? '500' : '600',
+                              fontSize: isMobile ? '15px' : '14px',
+                            }}
+                          >
+                            Notification Setting Type
+                          </Label>
+                          <AInlineV2
+                            color={theme.default.primaryPushThemeTextColor}
+                            fontSize="13px"
+                            margin="0px 10px 0px 0px"
+                            fontWeight="600"
+                            onClick={openManageSettings}
+                            cursor="pointer"
+                          >
+                            Manage Settings
+                          </AInlineV2>
+                        </Item>
+                        <DropdownStyledParent>
+                          <DropdownStyled
+                            options={channelSettingsOptions}
+                            onChange={(option) => {
+                              setNFSettingIndex(String(option.value));
+                            }}
+                            value={channelSettingsOptions[0]}
+                          />
+                        </DropdownStyledParent>
+                      </Item>
+                    </>
+                  )}
 
-                    <Input
-                      maxlength="40"
+                  {nfType && nfMediaEnabled && (
+                    <Item
+                      margin="15px 0"
                       flex="1"
-                      padding="12px"
-                      weight="400"
-                      size="16px"
-                      color={theme.default.color}
-                      bg={theme.default.bg}
-                      height="25px"
-                      margin="7px 0px 0px 0px"
-                      border={`1px solid ${theme.snfBorder}`}
-                      radius="12px"
-                      focusBorder="1px solid #657795"
-                      value={nfCTA}
-                      onChange={(e) => {
-                        setNFCTA(e.target.value);
-                      }}
-                    />
-                  </Item>
-                )}
+                      self="stretch"
+                      align="stretch"
+                      width="100%"
+                    >
+                      <Label
+                        style={{
+                          color: theme.color,
+                          fontWeight: isMobile ? '500' : '600',
+                          fontSize: isMobile ? '15px' : '14px',
+                        }}
+                      >
+                        Media URL
+                      </Label>
+                      <Input
+                        maxlength="40"
+                        flex="1"
+                        padding="12px"
+                        weight="400"
+                        size="16px"
+                        color={theme.default.color}
+                        bg={theme.default.bg}
+                        height="25px"
+                        margin="7px 0px 0px 0px"
+                        border={`1px solid ${theme.snfBorder}`}
+                        focusBorder="1px solid #657795"
+                        radius="12px"
+                        value={nfMedia}
+                        onChange={(e) => {
+                          setNFMedia(e.target.value);
+                        }}
+                      />
+                    </Item>
+                  )}
 
-                {nfInfo && nfProcessing != 1 && (
-                  <Item margin="30px 0px 0px 0px" width="100%" padding="1.5rem 0" radius="12px" bg="#F5F5FA">
-                    <div style={{ color: '#CF1C84', fontSize: '0.875rem', textAlign: 'center' }}>{nfInfo}</div>
-                  </Item>
-                )}
+                  {nfType && nfCTAEnabled && (
+                    <Item
+                      margin="15px 0"
+                      flex="1"
+                      self="stretch"
+                      align="stretch"
+                      width="100%"
+                    >
+                      <Label
+                        style={{
+                          color: theme.color,
+                          fontWeight: isMobile ? '500' : '600',
+                          fontSize: isMobile ? '15px' : '14px',
+                        }}
+                      >
+                        CTA Link
+                      </Label>
+
+                      <Input
+                        maxlength="40"
+                        flex="1"
+                        padding="12px"
+                        weight="400"
+                        size="16px"
+                        color={theme.default.color}
+                        bg={theme.default.bg}
+                        height="25px"
+                        margin="7px 0px 0px 0px"
+                        border={`1px solid ${theme.snfBorder}`}
+                        radius="12px"
+                        focusBorder="1px solid #657795"
+                        value={nfCTA}
+                        onChange={(e) => {
+                          setNFCTA(e.target.value);
+                        }}
+                      />
+                    </Item>
+                  )}
+
+                  {nfInfo && nfProcessing != 1 && (
+                    <Item
+                      margin="30px 0px 0px 0px"
+                      width="100%"
+                      padding="1.5rem 0"
+                      radius="12px"
+                      bg="#F5F5FA"
+                    >
+                      <div style={{ color: '#CF1C84', fontSize: '0.875rem', textAlign: 'center' }}>{nfInfo}</div>
+                    </Item>
+                  )}
                 </Item>
 
                 {showPreview && (
@@ -943,7 +1109,11 @@ const {handleConnectWallet} = useContext(AppContext);
                 {nfType && (
                   <SubmitButton disabled={nfProcessing == 1 ? true : false}>
                     {nfProcessing == 1 && (
-                      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} spinnerColor="#FFF" />
+                      <LoaderSpinner
+                        type={LOADER_TYPE.SEAMLESS}
+                        spinnerSize={24}
+                        spinnerColor="#FFF"
+                      />
                     )}
                     {nfProcessing != 1 && (
                       <Input
@@ -1199,7 +1369,7 @@ const ToggleOptionContainer = styled(ItemH)`
   @media (max-width: 640px) {
     flex-direction: column;
     align-items: center;
-    margin-top:24px;
+    margin-top: 24px;
   }
 `;
 
@@ -1216,7 +1386,7 @@ const ToggleOption = styled(ItemH)`
   justify-content: space-between;
   @media (max-width: 640px) {
     width: 100%;
-    margin:5px 0px;
+    margin: 5px 0px;
   }
 `;
 

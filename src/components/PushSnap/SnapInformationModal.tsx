@@ -15,9 +15,7 @@ import WalletLogo from 'assets/pushSnaps/Wallet.svg?react';
 import NotificationLogo from 'assets/pushSnaps/Notification.svg?react';
 import Metamask from 'assets/pushSnaps/metamasksnap.svg?react';
 
-const SnapInformationModal = ({
-  handleCloseModal
-}) => {
+const SnapInformationModal = ({ handleCloseModal }) => {
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -33,7 +31,6 @@ const SnapInformationModal = ({
   };
 
   const installSnap = async () => {
-
     handleCloseModal();
     navigate('/snap');
 
@@ -110,7 +107,7 @@ const SnapInformationModal = ({
       </ItemVV2>
 
       <ItemVV2>
-        <InstallButton onClick={()=>installSnap()}>
+        <InstallButton onClick={() => installSnap()}>
           <Image
             src={Metamask}
             width="15px"
@@ -144,7 +141,7 @@ const PrimaryText = styled.p`
   font-size: 18px;
   font-weight: 500;
   align-self: baseline;
-  color:${(props)=>props.theme.snapPrimaryText};
+  color: ${(props) => props.theme.snapPrimaryText};
 `;
 
 const SecondaryText = styled.p`
@@ -152,7 +149,7 @@ const SecondaryText = styled.p`
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  color:${(props)=>props.theme.snapSecondaryText};
+  color: ${(props) => props.theme.snapSecondaryText};
   text-align: left;
 `;
 

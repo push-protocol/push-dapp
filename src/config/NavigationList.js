@@ -164,7 +164,6 @@ const NavigationList = {
     },
   },
   third: {
-
     yieldv2: {
       src: 'YieldFarmingOff',
       activeSrc: 'YieldFarmingOn',
@@ -199,7 +198,7 @@ const NavigationList = {
       title: 'Receive Notifications',
       alt: 'Receive Notifications',
       href: '#receive-notifications',
-      hasOnClickFunction:true,
+      hasOnClickFunction: true,
       newTab: false,
       isRoute: true,
       hasMenuLogic: true,
@@ -264,11 +263,6 @@ const NavigationList = {
         },
       },
     },
-
-    
-
-
-
 
     // incentives: {
     //   src: 'incentivesOffIcon',
@@ -463,10 +457,10 @@ const NavigationList = {
 
 // // remove secret feature
 // if (
-  // window.location.hostname == 'app.epns.io' ||
-  // window.location.hostname == 'staging.epns.io' ||
-  // window.location.hostname == 'app.push.org' ||
-  // window.location.hostname == 'staging.push.org'
+// window.location.hostname == 'app.epns.io' ||
+// window.location.hostname == 'staging.epns.io' ||
+// window.location.hostname == 'app.push.org' ||
+// window.location.hostname == 'staging.push.org'
 // ) {
 //   delete NavigationList.primary.chat;
 // }

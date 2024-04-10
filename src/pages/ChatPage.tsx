@@ -15,14 +15,14 @@ import GLOBALS from 'config/Globals';
 // Chat page
 const ChatPage = () => {
   let { chatid } = useParams();
-  
+
   // RENDER
   return (
     <Container>
-      <ChatModule chatid={chatid}/>
+      <ChatModule chatid={chatid} />
     </Container>
   );
-}
+};
 export default ChatPage;
 
 // This defines the page settings, toggle align-self to center if not covering entire stuff, align-items to place them at center

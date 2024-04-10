@@ -92,39 +92,38 @@ const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
 
   return (
     <ThemeProvider theme={themes}>
-        <ModalContainer ref={containerRef}>
-          {isLoading ? (
-            <VerifyingContainer>
-              <Spinner
-                size={42}
-                color={GLOBALS.COLORS.PRIMARY_PINK}
-                type={LOADER_SPINNER_TYPE.PROCESSING}
+      <ModalContainer ref={containerRef}>
+        {isLoading ? (
+          <VerifyingContainer>
+            <Spinner
+              size={42}
+              color={GLOBALS.COLORS.PRIMARY_PINK}
+              type={LOADER_SPINNER_TYPE.PROCESSING}
+            />
+            <TransactionText>Verifying</TransactionText>
+          </VerifyingContainer>
+        ) : (
+          <>
+            <ModalMessage
+              style={{
+                color: themes.modalMessageColor,
+              }}
+            >
+              Are you sure you want to deactivate the channel? You will no longer be able to send notifications from it.
+            </ModalMessage>
+            <ButtonContainer>
+              <CloseButtonSVG
+                src={CloseButtonSvg}
+                onClick={handleClose}
               />
-              <TransactionText>Verifying</TransactionText>
-            </VerifyingContainer>
-          ) : (
-            <>
-              <ModalMessage
-                style={{
-                  color: themes.modalMessageColor,
-                }}
-              >
-                Are you sure you want to deactivate the channel? You will no longer be able to send notifications from
-                it.
-              </ModalMessage>
-              <ButtonContainer>
-                <CloseButtonSVG
-                  src={CloseButtonSvg}
-                  onClick={handleClose}
-                />
 
-                <BellIconContainer onClick={handleConfirm}>
-                  <BellIconImage src={BellIconSvg} />
-                </BellIconContainer>
-              </ButtonContainer>
-            </>
-          )}
-        </ModalContainer>
+              <BellIconContainer onClick={handleConfirm}>
+                <BellIconImage src={BellIconSvg} />
+              </BellIconContainer>
+            </ButtonContainer>
+          </>
+        )}
+      </ModalContainer>
     </ThemeProvider>
   );
 };

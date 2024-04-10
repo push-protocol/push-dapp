@@ -1,5 +1,5 @@
 // // React + Web3 Essentials
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react';
 
 // // Internal Components
 import { useAccount } from './useAccount';
@@ -17,19 +17,20 @@ export function useInactiveListener() {
       return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network';
     else if (appConfig.coreContractChain === 11155111)
       return 'Unsupported Network, please connect to the Ethereum Sepolia, Polygon Mumbai, BNB testnet, Optimism Goerli, Arbitrum testnet or Polygon zkEVM testnet';
-    else return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB, Optimism, Arbitrum or Polygon zkEVM Mainnet';
-  }
+    else
+      return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB, Optimism, Arbitrum or Polygon zkEVM Mainnet';
+  };
 
   useEffect(() => {
-    if(wallet && chainId) {
-      if(!appConfig.allowedNetworks.includes(chainId)) {
+    if (wallet && chainId) {
+      if (!appConfig.allowedNetworks.includes(chainId)) {
         setAllowedChain(false);
         setAuthError(new UnsupportedChainIdError(getErrorMessage()));
-        switchChain(appConfig.coreContractChain).then(success => {
-          if(!success) disconnect(wallet);
-        })
+        switchChain(appConfig.coreContractChain).then((success) => {
+          if (!success) disconnect(wallet);
+        });
       } else {
-        if(authError) setAuthError(undefined);
+        if (authError) setAuthError(undefined);
         setAllowedChain(true);
       }
     }

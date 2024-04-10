@@ -13,141 +13,132 @@ import { AiOutlineMore } from 'react-icons/ai';
 import EmptyNotificationSettings from './EmptyNotificationSettings';
 import LoaderSpinner from 'primaries/LoaderSpinner';
 
-
-
-
 interface ChannelListItem {
-    channel: string;
-    icon: string;
-    name: string;
-    id: number;
-    channel_settings: string;
+  channel: string;
+  icon: string;
+  name: string;
+  id: number;
+  channel_settings: string;
 }
 
 const ChannelListSettings = () => {
-    const { account, chainId } = useAccount();
-    const { subscriptionStatus, userSettings: currentUserSettings } = useSelector((state: any) => state.channels);
-    const [channelList, setChannelList] = useState<ChannelListItem[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+  const { account, chainId } = useAccount();
+  const { subscriptionStatus, userSettings: currentUserSettings } = useSelector((state: any) => state.channels);
+  const [channelList, setChannelList] = useState<ChannelListItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    const navigateToChannels = () => {
-        navigate('/channels');
-    };
+  const navigateToChannels = () => {
+    navigate('/channels');
+  };
 
-    const fetchChannelDetails = async (channel: string) => {
-        const details = await getChannel({ channel });
-        if (details) {
-            const updatedChannelItem: ChannelListItem = {
-                channel,
-                id: details.id,
-                icon: details.icon,
-                name: details.name,
-                channel_settings: details.channel_settings,
-            };
-            return updatedChannelItem;
-        } else return undefined;
-    };
+  const fetchChannelDetails = async (channel: string) => {
+    const details = await getChannel({ channel });
+    if (details) {
+      const updatedChannelItem: ChannelListItem = {
+        channel,
+        id: details.id,
+        icon: details.icon,
+        name: details.name,
+        channel_settings: details.channel_settings,
+      };
+      return updatedChannelItem;
+    } else return undefined;
+  };
 
-    const fillData = async (details: any) => {
-        const data = await Promise.all(
-            Object.keys(details).map(async (channel) => {
-                const channelData = await fetchChannelDetails(channel);
-                if (channelData) return channelData;
-            })
-        );
-        setChannelList(data);
-    };
-
-    useEffect(() => {
-        if (!account) return;
-        (async function () {
-            setIsLoading(true);
-            if (Object.keys(subscriptionStatus).length === 0) {
-                const userCaipAddress = convertAddressToAddrCaip(account, chainId);
-                const subscriptionsArr = await getUserSubscriptions({ userCaipAddress });
-                const subscriptionsMapping = {};
-                const userSettings = {};
-                subscriptionsArr.map(({ channel, user_settings }) => {
-                    subscriptionsMapping[channel] = true;
-                    userSettings[channel] = user_settings ? JSON.parse(user_settings) : null;
-                });
-                dispatch(updateBulkSubscriptions(subscriptionsMapping));
-                dispatch(updateBulkUserSettings(userSettings));
-                await fillData(subscriptionsMapping);
-            } else {
-                await fillData(subscriptionStatus);
-            }
-            setIsLoading(false);
-        })();
-    }, [account]);
-
-    const userSettings = useMemo(() => {
-        return cloneDeep(currentUserSettings);
-    }, [currentUserSettings]);
-
-
-    return (
-        <>
-
-            {isLoading ? (
-                <>
-                <CenterContainer>
-                    <LoaderSpinner />
-                </CenterContainer>
-
-                </>
-            ) : (
-                <>
-                    {channelList.length > 0 ? (
-                        channelList.map((channel, index) => (
-                            <>
-                                {channel && (
-                                    <>
-                                        <SettingsListItem key={channel.id}>
-                                            <SettingsListRow>
-                                                <Icon src={channel.icon} />
-                                                <ChannelName>{channel.name}</ChannelName>
-                                            </SettingsListRow>
-                                            <ManageNotifSettingDropdown
-                                                userSetting={userSettings[channel.channel]}
-                                                centerOnMobile={false}
-                                                channelDetail={channel}
-                                                onSuccessOptout={() => {
-                                                    setChannelList((prevChannelList) =>
-                                                        prevChannelList.filter((item) => item?.id !== channel.id)
-                                                    );
-                                                }}
-                                            >
-                                                <MoreButtonUI />
-                                            </ManageNotifSettingDropdown>
-                                        </SettingsListItem>
-                                        {index !== channelList.length - 1 && <HR />}
-                                    </>
-                                )}
-                            </>
-                        ))
-                    ) : (
-                        <CenterContainer>
-                            <EmptyNotificationSettings
-                                title="No Channel Opt-ins"
-                                description="Opt-in channels to manage your notification preferences"
-                                buttonTitle="Go to Channels"
-                                onClick={navigateToChannels}
-                                showTopBorder={false}
-                            />
-                        </CenterContainer>
-                    )}
-                </>
-            )}
-
-
-
-        </>
+  const fillData = async (details: any) => {
+    const data = await Promise.all(
+      Object.keys(details).map(async (channel) => {
+        const channelData = await fetchChannelDetails(channel);
+        if (channelData) return channelData;
+      })
     );
+    setChannelList(data);
+  };
+
+  useEffect(() => {
+    if (!account) return;
+    (async function () {
+      setIsLoading(true);
+      if (Object.keys(subscriptionStatus).length === 0) {
+        const userCaipAddress = convertAddressToAddrCaip(account, chainId);
+        const subscriptionsArr = await getUserSubscriptions({ userCaipAddress });
+        const subscriptionsMapping = {};
+        const userSettings = {};
+        subscriptionsArr.map(({ channel, user_settings }) => {
+          subscriptionsMapping[channel] = true;
+          userSettings[channel] = user_settings ? JSON.parse(user_settings) : null;
+        });
+        dispatch(updateBulkSubscriptions(subscriptionsMapping));
+        dispatch(updateBulkUserSettings(userSettings));
+        await fillData(subscriptionsMapping);
+      } else {
+        await fillData(subscriptionStatus);
+      }
+      setIsLoading(false);
+    })();
+  }, [account]);
+
+  const userSettings = useMemo(() => {
+    return cloneDeep(currentUserSettings);
+  }, [currentUserSettings]);
+
+  return (
+    <>
+      {isLoading ? (
+        <>
+          <CenterContainer>
+            <LoaderSpinner />
+          </CenterContainer>
+        </>
+      ) : (
+        <>
+          {channelList.length > 0 ? (
+            channelList.map((channel, index) => (
+              <>
+                {channel && (
+                  <>
+                    <SettingsListItem key={channel.id}>
+                      <SettingsListRow>
+                        <Icon src={channel.icon} />
+                        <ChannelName>{channel.name}</ChannelName>
+                      </SettingsListRow>
+                      <ManageNotifSettingDropdown
+                        userSetting={userSettings[channel.channel]}
+                        centerOnMobile={false}
+                        channelDetail={channel}
+                        onSuccessOptout={() => {
+                          setChannelList((prevChannelList) =>
+                            prevChannelList.filter((item) => item?.id !== channel.id)
+                          );
+                        }}
+                      >
+                        <MoreButtonUI />
+                      </ManageNotifSettingDropdown>
+                    </SettingsListItem>
+                    {index !== channelList.length - 1 && <HR />}
+                  </>
+                )}
+              </>
+            ))
+          ) : (
+            <CenterContainer>
+              <EmptyNotificationSettings
+                title="No Channel Opt-ins"
+                description="Opt-in channels to manage your notification preferences"
+                buttonTitle="Go to Channels"
+                onClick={navigateToChannels}
+                showTopBorder={false}
+              />
+            </CenterContainer>
+          )}
+        </>
+      )}
+    </>
+  );
 };
 
 export default ChannelListSettings;

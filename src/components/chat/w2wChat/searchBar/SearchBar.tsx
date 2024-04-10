@@ -167,7 +167,7 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
               borderRadius="32px 32px 32px 4px"
               onClick={() => setActiveTab(3)}
             >
-              <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer', }} />
+              <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }} />
             </ButtonV2>
           </ItemVV2>
         )}

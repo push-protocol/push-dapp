@@ -12,9 +12,7 @@ import GLOBALS from 'config/Globals';
 import { ethers } from 'ethers';
 import { useDeviceWidthCheck } from 'hooks';
 
-const YieldPushPriceSection = ({
-  poolStats
-}) => {
+const YieldPushPriceSection = ({ poolStats }) => {
   function numberWithCommas(x) {
     return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
@@ -27,40 +25,49 @@ const YieldPushPriceSection = ({
       {poolStats ? (
         <>
           <H2V2ThemeColor
-            fontSize={isMobile ? "16px" : "18px"}
+            fontSize={isMobile ? '16px' : '18px'}
             textAlign="left"
             fontWeight={600}
           >
             Push Price
           </H2V2ThemeColor>
-          <ItemHV2 gap="5px" justifyContent="flex-end">
+          <ItemHV2
+            gap="5px"
+            justifyContent="flex-end"
+          >
             <H2V2ThemeColor
-              fontSize={ isMobile ? "18px " : "24px"}
+              fontSize={isMobile ? '18px ' : '24px'}
               textAlign="left"
               fontWeight={600}
             >
-              $
-              {/* 0.34 */}
+              ${/* 0.34 */}
               {numberWithCommas(poolStats?.pushPrice.toFixed(2))}
             </H2V2ThemeColor>
             <ImageV2
               width="25px"
-              height={isMobile ? "20px" : "27px"}
+              height={isMobile ? '20px' : '27px'}
               src="svg/uniswapLogo.svg"
               alt="Uniswap Logo"
             />
           </ItemHV2>
         </>
       ) : (
-        <SkeletonContainer
-        >
-          <SkeletonLine height='12px' width='135px' margin='10px 0 10px 0' ></SkeletonLine>
-          <SkeletonLine height='12px' width='135px' margin='10px 0 10px 0' ></SkeletonLine>
+        <SkeletonContainer>
+          <SkeletonLine
+            height="12px"
+            width="135px"
+            margin="10px 0 10px 0"
+          ></SkeletonLine>
+          <SkeletonLine
+            height="12px"
+            width="135px"
+            margin="10px 0 10px 0"
+          ></SkeletonLine>
         </SkeletonContainer>
       )}
     </ItemHV2Modified>
   );
-}
+};
 
 export default YieldPushPriceSection;
 
@@ -71,15 +78,13 @@ const ItemHV2Modified = styled(ItemHV2)`
   align-items: center;
   padding: 8px 24px;
 
-  border: 1px solid #BAC4D6;
+  border: 1px solid #bac4d6;
   border-color: ${(props) => props.theme.default.borderColor};
   border-radius: 14px;
 
-  @media (max-width:600px){
+  @media (max-width: 600px) {
     padding: 7px 14px;
   }
-
-
 `;
 
 const H2V2ThemeColor = styled(H2V2)`
@@ -87,13 +92,13 @@ const H2V2ThemeColor = styled(H2V2)`
 `;
 
 const SkeletonContainer = styled(Skeleton)`
-    // width:150px;
-    z-index:1;
-    align-items:baseline;
-    max-width:-webkit-fill-available;
-    border-radius: 5px;
-    gap:5px;
-    flex-direction: row;
-    justify-content: inherit;
-    flex: 1;
-`
+  // width:150px;
+  z-index: 1;
+  align-items: baseline;
+  max-width: -webkit-fill-available;
+  border-radius: 5px;
+  gap: 5px;
+  flex-direction: row;
+  justify-content: inherit;
+  flex: 1;
+`;

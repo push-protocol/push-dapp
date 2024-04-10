@@ -405,7 +405,6 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                   Chat ID
                 </SpanV2>
                 <ItemHV2
-                 
                   alignSelf="start"
                   onClick={() => {
                     copyToClipboard(currentChat?.groupInformation?.chatId);
@@ -419,13 +418,12 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                   }}
                 >
                   <SpanV2
-                  
-                   textAlign="start"
+                    textAlign="start"
                     fontSize="18px"
                     fontWeight="400"
                     style={{ color: `${theme.modalDescriptionTextColor}` }}
                   >
-                    {shortenText(currentChat?.groupInformation?.chatId,8,8)}
+                    {shortenText(currentChat?.groupInformation?.chatId, 8, 8)}
                   </SpanV2>
                   {!!copyText && (
                     <SpanV2

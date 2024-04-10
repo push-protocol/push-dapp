@@ -4,7 +4,7 @@ import React from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
-import { CiWarning } from "react-icons/ci";
+import { CiWarning } from 'react-icons/ci';
 
 // Internal Compoonents
 import PoolCard from 'components/PoolCard';
@@ -21,7 +21,7 @@ import { AInlineV2 } from 'components/reusables/SharedStylingV2';
 
 // Create Header
 function YieldFarmingModule() {
-  const {account, provider, chainId } = useAccount();
+  const { account, provider, chainId } = useAccount();
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const themes = useTheme();
@@ -39,7 +39,6 @@ function YieldFarmingModule() {
   const [yieldFarmingPUSH, setYieldFarmingPUSH] = React.useState(null);
   const [yieldFarmingLP, setYieldFarmingLP] = React.useState(null);
   const [uniswapV2Router02, setUniswapV2Router02] = React.useState(null);
-
 
   React.useEffect(() => {
     if (!onCoreNetwork) {
@@ -197,19 +196,26 @@ function YieldFarmingModule() {
           color="#fff"
           textAlign="left"
         >
-          <ItemHV2 style={{marginBottom: "0.6rem"}} justifyContent="flex-start">
+          <ItemHV2
+            style={{ marginBottom: '0.6rem' }}
+            justifyContent="flex-start"
+          >
             {/* <CiWarning size={23} /> */}
             <H2V2
               color="#fff"
               fontSize="1.5rem"
               fontWeight={700}
-              style={{marginLeft:"0.3rem"}}
+              style={{ marginLeft: '0.3rem' }}
             >
               REWARDS PROGRAM WILL BE EXTENDED BY 84 WEEKS!!
             </H2V2>
           </ItemHV2>
           The Push DAO has approved the extension of the Rewards Program for 84 more weeks! More info
-          <AInlineV2 style={{color: "white", marginLeft: "4px"}} href="https://medium.com/push-protocol/push-dao-extends-liquidity-rewards-program-26008926b05a" target='_blank'>
+          <AInlineV2
+            style={{ color: 'white', marginLeft: '4px' }}
+            href="https://medium.com/push-protocol/push-dao-extends-liquidity-rewards-program-26008926b05a"
+            target="_blank"
+          >
             here
           </AInlineV2>
         </SpanV2>
@@ -234,12 +240,14 @@ function YieldFarmingModule() {
                   <StatsContent>
                     <StatsInnerTitle>
                       {
-                      // TODO fix the calculation
-                      numberWithCommas(
-                        Math.min(
-                          formatTokens(poolStats.pushRewardsDistributed),
-                          formatTokens(poolStats.totalDistributedAmount)
-                        ))}
+                        // TODO fix the calculation
+                        numberWithCommas(
+                          Math.min(
+                            formatTokens(poolStats.pushRewardsDistributed),
+                            formatTokens(poolStats.totalDistributedAmount)
+                          )
+                        )
+                      }
                     </StatsInnerTitle>
                     <StatsInnerSub>
                       out of {numberWithCommas(formatTokens(poolStats.totalDistributedAmount))}

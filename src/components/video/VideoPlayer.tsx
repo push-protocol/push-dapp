@@ -14,7 +14,7 @@ import { ChatUserAppContext } from 'types/chat';
 import { AppContext, AppContext as MainContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
 import { shortenText } from 'helpers/UtilityHelper';
-import Lock from 'assets/chat/group-chat/lockdark.svg?react'
+import Lock from 'assets/chat/group-chat/lockdark.svg?react';
 
 type VideoPlayerType = {
   localVideoStyles?: {};
@@ -71,17 +71,16 @@ const VideoPlayer = ({ localVideoStyles, incoming }: VideoPlayerType) => {
           }
           style={localVideoStyles}
         >
-          
-            <LocalVideo
-              ref={localVideoRef}
-              muted
-              className={
-                videoCallData.incoming[0].status === VideoCallStatus.CONNECTED
-                  ? 'connectionAccepted'
-                  : 'connectionNotAccepted'
-              }
-            />
-          
+          <LocalVideo
+            ref={localVideoRef}
+            muted
+            className={
+              videoCallData.incoming[0].status === VideoCallStatus.CONNECTED
+                ? 'connectionAccepted'
+                : 'connectionNotAccepted'
+            }
+          />
+
           {!videoCallData.local.stream.getVideoTracks()[0].enabled ? (
             <VideoDisabledContainer>
               <PfpContainerMini>

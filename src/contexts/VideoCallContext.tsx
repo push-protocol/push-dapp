@@ -40,7 +40,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   const [isCallAccepted, setIsCallAccepted] = useState(false);
   const [incomingCallUserData, setIncomingCallUserData] = useState<User | null>(null);
   const { chainId, account, provider } = useAccount();
-  const { connectedUser, createUserIfNecessary} = useContext(AppContext);
+  const { connectedUser, createUserIfNecessary } = useContext(AppContext);
 
   const [data, setData] = useState<PushAPI.VideoCallData>(initVideoCallData);
 
@@ -102,7 +102,6 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
       chatId,
     });
   };
-  
 
   const connectWrapper = (videoCallMetaData: VideoCallMetaDataType) => {
     videoObjectRef.current.connect({

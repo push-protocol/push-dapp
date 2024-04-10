@@ -20,148 +20,138 @@ import { abis, addresses } from 'config/index.js';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import StepsTransactionModal from 'components/StepsTransactionModal';
 
-const NewYieldFarming = (
-    { setActiveTab }
-) => {
-    const { provider, account } = useAccount();
+const NewYieldFarming = ({ setActiveTab }) => {
+  const { provider, account } = useAccount();
 
-    const [pushToken, setPushToken] = useState(null);
-    const [staking, setStaking] = useState(null);
-    const [yieldFarmingLP, setYieldFarmingLP] = useState(null);
-    const [pushCoreV2, setPushCoreV2] = useState(null);
-    const [uniswapV2Router02Instance, setUniswapV2Router02Instance] = useState(null);
+  const [pushToken, setPushToken] = useState(null);
+  const [staking, setStaking] = useState(null);
+  const [yieldFarmingLP, setYieldFarmingLP] = useState(null);
+  const [pushCoreV2, setPushCoreV2] = useState(null);
+  const [uniswapV2Router02Instance, setUniswapV2Router02Instance] = useState(null);
 
-    const [poolStats, setPoolStats] = useState(null);
-    const [lpPoolStats, setLpPoolStats] = useState(null);
-    const [userDataLP, setUserDataLP] = useState(null);
-    const [userDataPush, setUserDataPush] = useState(null);
-    const [PUSHPoolstats, setPUSHPoolStats] = useState(null);
+  const [poolStats, setPoolStats] = useState(null);
+  const [lpPoolStats, setLpPoolStats] = useState(null);
+  const [userDataLP, setUserDataLP] = useState(null);
+  const [userDataPush, setUserDataPush] = useState(null);
+  const [PUSHPoolstats, setPUSHPoolStats] = useState(null);
 
-    const library = provider?.getSigner(account);
+  const library = provider?.getSigner(account);
 
-    const getLpPoolStats = React.useCallback(async () => {
-        const poolStats = await YieldFarmingDataStoreV2.getInstance().getPoolStats(provider);
-        const lpPoolStats = await YieldFarmingDataStoreV2.getInstance().getLPPoolStats(poolStats);
+  const getLpPoolStats = React.useCallback(async () => {
+    const poolStats = await YieldFarmingDataStoreV2.getInstance().getPoolStats(provider);
+    const lpPoolStats = await YieldFarmingDataStoreV2.getInstance().getLPPoolStats(poolStats);
 
-        setPoolStats({ ...poolStats });
-        setLpPoolStats({ ...lpPoolStats });
-    }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
+    setPoolStats({ ...poolStats });
+    setLpPoolStats({ ...lpPoolStats });
+  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
 
-    const getPUSHPoolStats = React.useCallback(async () => {
-        // const pushPoolStats = await YieldFarmingDataStoreV2.getInstance().getPUSHPoolStats(provider);
+  const getPUSHPoolStats = React.useCallback(async () => {
+    // const pushPoolStats = await YieldFarmingDataStoreV2.getInstance().getPUSHPoolStats(provider);
+    // setPUSHPoolStats({ ...pushPoolStats });
+  }, []);
 
-        // setPUSHPoolStats({ ...pushPoolStats });
-    }, []);
+  const getUserDataLP = React.useCallback(async () => {
+    const userDataLP = await YieldFarmingDataStoreV2.getInstance().getUserDataLP();
 
-    const getUserDataLP = React.useCallback(async () => {
-        const userDataLP = await YieldFarmingDataStoreV2.getInstance().getUserDataLP();
+    setUserDataLP({ ...userDataLP });
+  }, [yieldFarmingLP]);
 
-        setUserDataLP({ ...userDataLP });
-    }, [yieldFarmingLP]);
+  const getUserDataPush = React.useCallback(async () => {
+    const [pushPoolStats, userDataPush] = await YieldFarmingDataStoreV2.getInstance().getUserDataPUSH(provider);
 
-    const getUserDataPush = React.useCallback(async () => {
-        const [pushPoolStats, userDataPush] = await YieldFarmingDataStoreV2.getInstance().getUserDataPUSH(provider);
+    setPUSHPoolStats({ ...pushPoolStats });
+    setUserDataPush({ ...userDataPush });
+  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
 
-        setPUSHPoolStats({ ...pushPoolStats });
-        setUserDataPush({ ...userDataPush });
-    }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
+  //initiate the YieldFarmV2 data store here
+  React.useEffect(() => {
+    setLpPoolStats(null);
+    setUserDataLP(null);
+    setPUSHPoolStats(null);
+    setUserDataPush(null);
 
-    //initiate the YieldFarmV2 data store here
-    React.useEffect(() => {
+    let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, library);
+    let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, library);
+    let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, library);
+    let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, library);
+    let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, library);
 
-        setLpPoolStats(null);
-        setUserDataLP(null);
-        setPUSHPoolStats(null);
-        setUserDataPush(null);
+    setStaking(staking);
+    setPushToken(pushToken);
+    setPushCoreV2(pushCoreV2);
+    setYieldFarmingLP(yieldFarmingLP);
+    setUniswapV2Router02Instance(uniswapV2Router02Instance);
 
+    if (!!(library && account)) {
+      var signer = provider?.getSigner(account);
 
-        let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, library);
-        let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, library);
-        let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, library);
-        let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, library);
-        let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, library);
+      let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
+      let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
+      let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
+      let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, signer);
+      let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, signer);
 
-        setStaking(staking);
-        setPushToken(pushToken);
-        setPushCoreV2(pushCoreV2);
-        setYieldFarmingLP(yieldFarmingLP);
-        setUniswapV2Router02Instance(uniswapV2Router02Instance);
+      setStaking(staking);
+      setPushToken(pushToken);
+      setPushCoreV2(pushCoreV2);
+      setYieldFarmingLP(yieldFarmingLP);
+      setUniswapV2Router02Instance(uniswapV2Router02Instance);
+    }
 
-        if (!!(library && account)) {
-            var signer = provider?.getSigner(account);
-
-            let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, signer);
-            let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
-            let pushCoreV2 = new ethers.Contract(addresses.pushCoreV2, abis.pushCoreV2, signer);
-            let yieldFarmingLP = new ethers.Contract(addresses.yieldFarmLP, abis.yieldFarming, signer);
-            let uniswapV2Router02Instance = new ethers.Contract(addresses.uniswapV2Router02, abis.uniswapV2Router02, signer);
-
-            setStaking(staking);
-            setPushToken(pushToken);
-            setPushCoreV2(pushCoreV2);
-            setYieldFarmingLP(yieldFarmingLP);
-            setUniswapV2Router02Instance(uniswapV2Router02Instance);
-        }
-
-        YieldFarmingDataStoreV2.getInstance().init(
-            account,
-            staking,
-            pushToken,
-            pushCoreV2,
-            yieldFarmingLP,
-            uniswapV2Router02Instance
-        );
-
-        getLpPoolStats();
-        getUserDataLP();
-        getUserDataPush();
-        getPUSHPoolStats();
-
-    }, [account]);
-    
-
-    return (
-        <>
-
-
-            <YieldAnnouncementSection
-                logo={"announcement"}
-                title={"New V2 Pools are now Live! Stake or migrate now."}
-                body={"Users who were part of the previous Push staking program, need to migrate to new pools to continue earning rewards. Click"}
-                setActiveTab={setActiveTab}
-            />
-            <YieldStatsSection getLpPoolStats={getLpPoolStats} poolStats={poolStats} setPoolStats={setPoolStats} />
-            <YieldPushPriceSection
-                poolStats={poolStats}
-            />
-            <V3Container>
-
-                <YieldPushFeeV3
-                    userDataPush={userDataPush}
-                    getUserDataPush={getUserDataPush}
-                    PUSHPoolstats={PUSHPoolstats}
-                    getPUSHPoolStats={getPUSHPoolStats}
-                />
-
-                <YieldUniswapV3
-                    lpPoolStats={lpPoolStats}
-                    userDataLP={userDataLP}
-                    getLpPoolStats={getLpPoolStats}
-                    getUserDataLP={getUserDataLP}
-                />
-
-
-
-            </V3Container>
-
-        </>
+    YieldFarmingDataStoreV2.getInstance().init(
+      account,
+      staking,
+      pushToken,
+      pushCoreV2,
+      yieldFarmingLP,
+      uniswapV2Router02Instance
     );
+
+    getLpPoolStats();
+    getUserDataLP();
+    getUserDataPush();
+    getPUSHPoolStats();
+  }, [account]);
+
+  return (
+    <>
+      <YieldAnnouncementSection
+        logo={'announcement'}
+        title={'New V2 Pools are now Live! Stake or migrate now.'}
+        body={
+          'Users who were part of the previous Push staking program, need to migrate to new pools to continue earning rewards. Click'
+        }
+        setActiveTab={setActiveTab}
+      />
+      <YieldStatsSection
+        getLpPoolStats={getLpPoolStats}
+        poolStats={poolStats}
+        setPoolStats={setPoolStats}
+      />
+      <YieldPushPriceSection poolStats={poolStats} />
+      <V3Container>
+        <YieldPushFeeV3
+          userDataPush={userDataPush}
+          getUserDataPush={getUserDataPush}
+          PUSHPoolstats={PUSHPoolstats}
+          getPUSHPoolStats={getPUSHPoolStats}
+        />
+
+        <YieldUniswapV3
+          lpPoolStats={lpPoolStats}
+          userDataLP={userDataLP}
+          getLpPoolStats={getLpPoolStats}
+          getUserDataLP={getUserDataLP}
+        />
+      </V3Container>
+    </>
+  );
 };
 
 export default NewYieldFarming;
 
 const V3Container = styled(ItemHV2)`
-  @media (max-width:1300px){
-    flex-direction:column;
+  @media (max-width: 1300px) {
+    flex-direction: column;
   }
-`
+`;

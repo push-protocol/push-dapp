@@ -2,19 +2,19 @@
 import React from 'react';
 
 // External Packages
-import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import { Waypoint } from "react-waypoint";
+import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { Waypoint } from 'react-waypoint';
 import queryString from 'query-string';
 
 // Internal Components
-import DisplayNotice from "components/DisplayNotice";
-import Faucets from "components/Faucets";
-import ViewChannelItem from "components/ViewChannelItem";
-import { incrementPage, setChannelMeta } from "redux/slices/channelSlice";
-import ChannelsDataStore from "singletons/ChannelsDataStore";
-import { postReq } from "api";
-import { useAccount } from "hooks";
+import DisplayNotice from 'components/DisplayNotice';
+import Faucets from 'components/Faucets';
+import ViewChannelItem from 'components/ViewChannelItem';
+import { incrementPage, setChannelMeta } from 'redux/slices/channelSlice';
+import ChannelsDataStore from 'singletons/ChannelsDataStore';
+import { postReq } from 'api';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 
@@ -29,13 +29,11 @@ const SEARCH_DELAY = 1500;
 function ViewChannels({ loadTeaser, playTeaser }) {
   const dispatch = useDispatch();
   const { account, chainId } = useAccount();
-  const { channels, page, ZERO_ADDRESS } = useSelector(
-    (state: any) => state.channels
-  );
+  const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
 
   const [loading, setLoading] = React.useState(false);
   const [moreLoading, setMoreLoading] = React.useState(false);
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = React.useState('');
   const [channelToShow, setChannelToShow] = React.useState([]);
   const [loadingChannel, setLoadingChannel] = React.useState(false);
   const [trialCount, setTrialCount] = React.useState(0);
@@ -61,11 +59,8 @@ function ViewChannels({ loadTeaser, playTeaser }) {
   // to fetch initial channels and logged in user data
   const fetchInitialsChannelMeta = async () => {
     // fetch the meta of the first `CHANNELS_PER_PAGE` channels
-    const channelsMeta = await ChannelsDataStore.getInstance().getChannelFromApi(
-      channelsVisited,
-      CHANNELS_PER_PAGE
-    );
-    dispatch(incrementPage())
+    const channelsMeta = await ChannelsDataStore.getInstance().getChannelFromApi(channelsVisited, CHANNELS_PER_PAGE);
+    dispatch(incrementPage());
     if (!channels.length) {
       dispatch(setChannelMeta(channelsMeta));
     }
@@ -75,10 +70,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
   // load more channels when we get to the bottom of the page
   const loadMoreChannelMeta = async (newPageNumber: any) => {
     const startingPoint = newPageNumber * CHANNELS_PER_PAGE;
-    const moreChannels = await ChannelsDataStore.getInstance().getChannelFromApi(
-      startingPoint,
-      CHANNELS_PER_PAGE
-    );
+    const moreChannels = await ChannelsDataStore.getInstance().getChannelFromApi(startingPoint, CHANNELS_PER_PAGE);
     dispatch(setChannelMeta([...channels, ...moreChannels]));
     setMoreLoading(false);
   };
@@ -95,17 +87,16 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     setChannelToShow(channels);
   }, [channels]);
 
-
   function searchForChannel() {
     if (loadingChannel) return; //if we are already loading, do nothing
     if (search) {
       setLoadingChannel(true); //begin loading here
       setChannelToShow([]); //maybe remove later
-      postReq("/channels/search", {
+      postReq('/channels/search', {
         query: search,
-        op: "read",
-        page : 1,
-        pageSize : 1000
+        op: 'read',
+        page: 1,
+        pageSize: 1000,
       })
         .then((data) => {
           setChannelToShow(data.data.channels || []);
@@ -138,31 +129,29 @@ function ViewChannels({ loadTeaser, playTeaser }) {
   }, [search]);
 
   React.useEffect(() => {
-    const parsedChannel = String(queryString.parse(window.location.search).channel)
-    if(!ADDRESS_REGEX.test(parsedChannel)) return;
+    const parsedChannel = String(queryString.parse(window.location.search).channel);
+    if (!ADDRESS_REGEX.test(parsedChannel)) return;
     setTimeout(() => {
       setSearch(parsedChannel);
-    }, SEARCH_DELAY)
-  }, [])
+    }, SEARCH_DELAY);
+  }, []);
 
   return (
     <>
       <Container>
         {!loading && channels.length == 0 ? (
           <ContainerInfo>
-            <DisplayNotice
-              title="That's weird, No Channels in Push (EPNS)... world is ending... right?"
-            />
+            <DisplayNotice title="That's weird, No Channels in Push (EPNS)... world is ending... right?" />
           </ContainerInfo>
         ) : (
           <Items
             id="scrollstyle-secondary"
-            style={{ position: "relative", padding: "0 1rem" }}
+            style={{ position: 'relative', padding: '0 1rem' }}
           >
             {!loading && (
-              <Header style={{ minHeight: "140px" }}>
-                  {/* if on mainnet then occupy full width*/}
-                <InputWrapper style={{width: isMainnet ? "100%" : "50%"}}>
+              <Header style={{ minHeight: '140px' }}>
+                {/* if on mainnet then occupy full width*/}
+                <InputWrapper style={{ width: isMainnet ? '100%' : '50%' }}>
                   <SearchBar
                     type="text"
                     value={search}
@@ -170,9 +159,12 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                     className="input"
                     placeholder="Search By Name/Address"
                   />
-                  <SearchIconImage src='/searchicon.svg' alt="" />
+                  <SearchIconImage
+                    src="/searchicon.svg"
+                    alt=""
+                  />
                 </InputWrapper>
-                {!isMainnet && <Faucets chainId={chainId} />} 
+                {!isMainnet && <Faucets chainId={chainId} />}
                 {/* only display faucets on mainnet */}
               </Header>
             )}
@@ -181,35 +173,33 @@ function ViewChannels({ loadTeaser, playTeaser }) {
             {(search ? channelToShow : channels).map(
               (channel: any, index: any) =>
                 channel &&
-              channel.addr !== ZERO_ADDRESS && (
-                <>
-                  <div key={channel.addr}>
-                    <ViewChannelItem channelObjectProp={channel} loadTeaser={loadTeaser} playTeaser={playTeaser}/>
-                  </div>
-                  {showWayPoint(index) && (
-                    //@ts-ignore
-                    <Waypoint onEnter={updateCurrentPage} />
-                  )}
-                </>
-              )
+                channel.addr !== ZERO_ADDRESS && (
+                  <>
+                    <div key={channel.addr}>
+                      <ViewChannelItem
+                        channelObjectProp={channel}
+                        loadTeaser={loadTeaser}
+                        playTeaser={playTeaser}
+                      />
+                    </div>
+                    {showWayPoint(index) && (
+                      //@ts-ignore
+                      <Waypoint onEnter={updateCurrentPage} />
+                    )}
+                  </>
+                )
             )}
             {/* render all channels depending on if we are searching or not */}
 
             {/* if we are in search mode and there are no channels then display error message */}
             {search && !channelToShow?.length && !loadingChannel && (
               <CenteredContainerInfo>
-                <DisplayNotice
-                  title="No channels match your query, please search for another name/address"
-                />
+                <DisplayNotice title="No channels match your query, please search for another name/address" />
               </CenteredContainerInfo>
             )}
             {/* display loader if pagination is loading next batch of channelTotalList */}
-            {((moreLoading && channels.length) ||
-              loading ||
-              loadingChannel) && (
-              <CenterContainer>
-                {/* <Loader type="Oval" color="#35c5f3" height={40} width={40} /> */}
-              </CenterContainer>
+            {((moreLoading && channels.length) || loading || loadingChannel) && (
+              <CenterContainer>{/* <Loader type="Oval" color="#35c5f3" height={40} width={40} /> */}</CenterContainer>
             )}
           </Items>
         )}
@@ -226,7 +216,7 @@ const Header = styled.div`
   position: -webkit-sticky;
   position: sticky;
   background: inherit;
-  
+
   top: 0px;
   z-index: 2;
   background: #fafafa;
@@ -259,7 +249,7 @@ const SearchBar = styled.input`
   text-transform: capitalize;
   font-size: 16px;
 
-  input[type="reset"] {
+  input[type='reset'] {
     display: none;
   }
   &::placeholder {

@@ -31,10 +31,10 @@ export const GroupDetailsContent = ({
   handleGroupTypeObject,
   handleCreateGroupState,
   handlePrevious,
-  handleClose
+  handleClose,
 }) => {
   const [imageSrc, setImageSrc] = React.useState();
-  const [isImageUploaded, setIsImageUploaded] = React.useState<boolean>(false)
+  const [isImageUploaded, setIsImageUploaded] = React.useState<boolean>(false);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const fileUploadInputRef = React.useRef<HTMLInputElement>();
   const [errorInfo, setErrorInfo] = React.useState<{ name: string; description: string }>({
@@ -58,10 +58,10 @@ export const GroupDetailsContent = ({
   ];
 
   const themes = useTheme();
-  const groupDetailToast=useToast();
+  const groupDetailToast = useToast();
 
   const handleFile = async (e) => {
-    setIsImageUploaded(true)
+    setIsImageUploaded(true);
     handleGroupImageData(undefined);
 
     //you can carry out any file validations here...
@@ -73,7 +73,7 @@ export const GroupDetailsContent = ({
         setImageSrc(reader.result);
       };
     } else {
-      return "Nothing....";
+      return 'Nothing....';
     }
   };
 
@@ -88,7 +88,7 @@ export const GroupDetailsContent = ({
 
         return false;
       }
-    } catch (e) { 
+    } catch (e) {
       groupDetailToast.showMessageToast({
         toastTitle: 'Error',
         toastMessage: 'Error in finding group name',
@@ -100,7 +100,6 @@ export const GroupDetailsContent = ({
           />
         ),
       });
-
     }
 
     if (!isLengthValid(groupNameData, 50)) {
@@ -136,20 +135,15 @@ export const GroupDetailsContent = ({
 
   return (
     <ThemeProvider theme={themes}>
-
-
       <GroupModalHeader
         handleClose={handleClose}
-        title={"Create Group"}
+        title={'Create Group'}
       />
-
-
 
       <Container>
         <GroupIconContainer onClick={handleUpload}>
-          {isImageUploaded
-            ? groupImageData
-              ?
+          {isImageUploaded ? (
+            groupImageData ? (
               <ItemVV2
                 maxWidth="128px"
                 height="128px"
@@ -161,16 +155,17 @@ export const GroupDetailsContent = ({
                   style={{ objectFit: 'contain' }}
                 />
               </ItemVV2>
-              :
+            ) : (
               <AutoImageClipper
                 imageSrc={imageSrc}
                 onImageCropped={(croppedImage) => handleGroupImageData(croppedImage)}
               />
-            : themes.scheme == 'light' ? (
-              <AddGroupIcon />
-            ) : (
-              <AddGroupIconDark />
-            )}
+            )
+          ) : themes.scheme == 'light' ? (
+            <AddGroupIcon />
+          ) : (
+            <AddGroupIconDark />
+          )}
           <FileInput
             type="file"
             ref={fileUploadInputRef}
@@ -272,7 +267,7 @@ export const GroupDetailsContent = ({
 };
 
 const Container = styled.div`
-  display:flex;
+  display: flex;
   flex-direction: column;
   padding: 42px 22px 0px 26px;
   overflow-y: auto;
@@ -282,20 +277,20 @@ const Container = styled.div`
   }
   &&::-webkit-scrollbar-thumb {
     background: #d53a94;
-    border-bottom:200px solid transparent;
-    background-clip:padding-box;
+    border-bottom: 200px solid transparent;
+    background-clip: padding-box;
   }
   @media ${device.mobileL} {
     padding: 42px 18px 42px 26px;
     &&::-webkit-scrollbar-thumb {
-      border-bottom:400px solid transparent;
+      border-bottom: 400px solid transparent;
     }
   }
 `;
 
 const GroupIconContainer = styled.div`
-  min-width:128px;
-  min-height:128px;
+  min-width: 128px;
+  min-height: 128px;
   width: fit-content;
   display: flex;
   justify-content: center;

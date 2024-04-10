@@ -8,31 +8,34 @@ import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 
 // Interfaces
 interface BlurBGPropsI {
-  blur: number,
+  blur: number;
   zIndex: number | string;
-  additionalStyles?: {}
+  additionalStyles?: {};
 }
 
 // Create Blur BG
-const BlurBG = ({ blur = 5, zIndex = "auto", additionalStyles = {} }: BlurBGPropsI) => {
+const BlurBG = ({ blur = 5, zIndex = 'auto', additionalStyles = {} }: BlurBGPropsI) => {
   return (
     <>
-      {blur > 0 &&
+      {blur > 0 && (
         <Blurry
           position="absolute"
-          top="0" bottom="0" left="0" right="0"
+          top="0"
+          bottom="0"
+          left="0"
+          right="0"
           overflow="hidden"
           blur={blur}
           zIndex={zIndex}
           style={additionalStyles}
         />
-      }
+      )}
     </>
   );
-}
+};
 export default BlurBG;
 
 const Blurry = styled(ItemVV2)`
-  backdrop-filter: blur(${props => props.blur || '10'}px);
-  z-index: ${props => props.zIndex}
-`
+  backdrop-filter: blur(${(props) => props.blur || '10'}px);
+  z-index: ${(props) => props.zIndex};
+`;

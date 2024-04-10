@@ -20,7 +20,7 @@ import { useClickAway } from 'hooks/useClickAway.js';
 const ChainIndicator = ({ isDarkMode }) => {
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
-  const { account, chainId:currentChainId, switchChain} = useAccount();
+  const { account, chainId: currentChainId, switchChain } = useAccount();
   const theme = useTheme();
   const { authError, setAuthError } = useContext(ErrorContext);
 

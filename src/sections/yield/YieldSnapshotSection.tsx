@@ -19,7 +19,6 @@ import { abis, addresses } from 'config/index.js';
 import YieldFarmingDataStore from 'singletons/YieldFarmingDataStore';
 import YieldPoolCard from 'components/yield/YieldPoolCard';
 
-
 // Chat Sections
 // Divided into two, left and right
 const YieldSnapshotSection = ({
@@ -32,9 +31,8 @@ const YieldSnapshotSection = ({
   getLpPoolStats,
   getUserDataLP,
   getPUSHPoolStats,
-  loadingPushComponent
+  loadingPushComponent,
 }) => {
-
   // RENDER
   return (
     <>
@@ -56,11 +54,9 @@ const YieldSnapshotSection = ({
           loadingPushComponent={loadingPushComponent}
         />
       </V3Container>
-
-      
     </>
   );
-}
+};
 export default YieldSnapshotSection;
 
 const V3Container = styled(ItemHV2)`
@@ -75,7 +71,7 @@ const V3Container = styled(ItemHV2)`
   //   width: 100%;
   // }
 
-  @media (max-width:900px){
-    flex-direction:column;
+  @media (max-width: 900px) {
+    flex-direction: column;
   }
-`
+`;

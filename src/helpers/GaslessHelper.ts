@@ -63,7 +63,10 @@ export const createTransactionObject = async ({
   provider,
   setTxLoading,
 }: ICreateTransactionObjectProps): Promise<any> => {
-  console.debug('🚀 ~ file: ViewDelegateeItem.js ~ line 63 ~ createTransactionObject ~ delegateeAddress', delegateeAddress);
+  console.debug(
+    '🚀 ~ file: ViewDelegateeItem.js ~ line 63 ~ createTransactionObject ~ delegateeAddress',
+    delegateeAddress
+  );
   const contractName: string = await epnsToken.name();
   const nonce: any = await epnsToken.nonces(account);
   const chainId: number = appConfig.coreContractChain;

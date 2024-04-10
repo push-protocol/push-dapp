@@ -7,7 +7,7 @@ import { MdError } from 'react-icons/md';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 
 // Internal Components
-import * as PushAPI from "@pushprotocol/restapi";
+import * as PushAPI from '@pushprotocol/restapi';
 import AddDark from 'assets/chat/group-chat/adddark.svg?react';
 import AddLight from 'assets/chat/group-chat/addlight.svg?react';
 import Clear from 'assets/chat/group-chat/close.svg?react';
@@ -102,38 +102,35 @@ export const AddWalletContent = ({
     }
   };
 
-
-
   const handleUserSearch = async (userSearchData: string): Promise<void> => {
-    try{
+    try {
       const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData });
       let filteredData: User;
 
-    if (userSearchData.length) {
-      filteredData = await PushAPI.user.get({ 
-        account: caip10,
-        env: appConfig.appEnv
-      });
+      if (userSearchData.length) {
+        filteredData = await PushAPI.user.get({
+          account: caip10,
+          env: appConfig.appEnv,
+        });
 
-      if (filteredData !== null) {  
-        setFilteredUserData(filteredData);
-      }
-      // User is not in the protocol. Create new user
-      else {
-        if (ethers.utils.isAddress(userSearchData)) {
-          const displayUser = displayDefaultUser({ caip10 });
-          setFilteredUserData(displayUser);
-        } else {
-          setIsInvalidAddress(true);
-          setFilteredUserData(null);
+        if (filteredData !== null) {
+          setFilteredUserData(filteredData);
         }
+        // User is not in the protocol. Create new user
+        else {
+          if (ethers.utils.isAddress(userSearchData)) {
+            const displayUser = displayDefaultUser({ caip10 });
+            setFilteredUserData(displayUser);
+          } else {
+            setIsInvalidAddress(true);
+            setFilteredUserData(null);
+          }
+        }
+      } else {
+        setFilteredUserData(null);
       }
-    } else {
-      setFilteredUserData(null);
-    }
-    setIsLoadingSearch(false);
-    }
-    catch(error){
+      setIsLoadingSearch(false);
+    } catch (error) {
       searchFeedToast.showMessageToast({
         toastTitle: 'Error',
         toastMessage: 'Unsuccesful search, Try again',
@@ -251,10 +248,10 @@ export const AddWalletContent = ({
         ) : isLoadingSearch ? (
           <ItemHV2 margin="0px 0px 34px 0px">
             <LoaderSpinner
-            type={LOADER_TYPE.SEAMLESS}
-            width="auto"
-            spinnerSize={40}
-          />
+              type={LOADER_TYPE.SEAMLESS}
+              width="auto"
+              spinnerSize={40}
+            />
           </ItemHV2>
         ) : null}
 

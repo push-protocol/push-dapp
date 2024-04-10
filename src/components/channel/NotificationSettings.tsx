@@ -132,7 +132,6 @@ function NotificationSettings() {
 
   const saveSettings = async () => {
     try {
-
       setIsLoading(true);
 
       let userPushInstance = userPushSDKInstance;
@@ -144,7 +143,6 @@ function NotificationSettings() {
         }
       }
 
-
       notificationToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
       const settingData: NotificationSetting[] = settings.map((setting) => {
         if (setting.type === 1) {
@@ -153,21 +151,18 @@ function NotificationSettings() {
             description: setting.description,
             default: setting.default ? 1 : 0,
           };
-        }
-        else if (setting.type === 2) {
-          console.info(
-            {
-              type: setting.type,
-              description: setting.description,
-              default: setting.default,
-              data: {
-                lower: setting.lowerLimit,
-                upper: setting.upperLimit,
-                ticker: setting.ticker,
-                enabled: setting.enabled,
-              },
-            }
-          )
+        } else if (setting.type === 2) {
+          console.info({
+            type: setting.type,
+            description: setting.description,
+            default: setting.default,
+            data: {
+              lower: setting.lowerLimit,
+              upper: setting.upperLimit,
+              ticker: setting.ticker,
+              enabled: setting.enabled,
+            },
+          });
           return {
             type: setting.type,
             description: setting.description,
@@ -180,19 +175,17 @@ function NotificationSettings() {
             },
           };
         } else if (setting.type === 3) {
-          console.info(
-            {
-              type: setting.type,
-              description: setting.description,
-              default: setting.default,
-              data: {
-                lower: setting.lowerLimit,
-                upper: setting.upperLimit,
-                ticker: setting.ticker,
-                enabled: setting.enabled,
-              },
-            }
-          )
+          console.info({
+            type: setting.type,
+            description: setting.description,
+            default: setting.default,
+            data: {
+              lower: setting.lowerLimit,
+              upper: setting.upperLimit,
+              ticker: setting.ticker,
+              enabled: setting.enabled,
+            },
+          });
           return {
             type: setting.type,
             description: setting.description,

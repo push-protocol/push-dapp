@@ -17,9 +17,8 @@ import { fetchInbox } from 'helpers/w2w/user';
 import { profilePicture } from 'config/W2WConfig';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { device } from 'config/Globals';
-import { CreateGroupModal } from "@pushprotocol/uiweb";
+import { CreateGroupModal } from '@pushprotocol/uiweb';
 import { AppContext } from 'contexts/AppContext';
-
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const [createGroupState, setCreateGroupState] = React.useState<number>(1);
@@ -31,12 +30,11 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [memberList, setMemberList] = React.useState<any>([]);
   const { connectedUser, setConnectedUser, createUserIfNecessary } = useContext(AppContext);
-  const {provider } = useAccount();
+  const { provider } = useAccount();
   const themes = useTheme();
   const createGroupToast = useToast();
   const isMobile = useDeviceWidthCheck(600);
 
-  
   const handlePrevious = () => {
     setCreateGroupState(1);
   };
@@ -47,14 +45,13 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => handleClose());
   const handleCreateGroup = async (): Promise<any> => {
-
     if (memberList.length >= 2) {
       setIsLoading(true);
       try {
         const memberWalletList = memberList.filter((member) => !member.isAdmin).map((member) => member.wallets);
-        const adminWalletList = memberList.filter(member => member.isAdmin).map((member) => member.wallets);
+        const adminWalletList = memberList.filter((member) => member.isAdmin).map((member) => member.wallets);
         let createdUser;
-        if(!connectedUser.publicKey){
+        if (!connectedUser.publicKey) {
           createdUser = await createUserIfNecessary();
         }
         const signer = await provider.getSigner();
@@ -70,7 +67,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
           env: appConfig.appEnv,
         });
         if (typeof createGroupRes !== 'string') {
-          const inboxes: Feeds[] = await fetchInbox({connectedUser});
+          const inboxes: Feeds[] = await fetchInbox({ connectedUser });
           setInbox(inboxes);
           createGroupToast.showMessageToast({
             toastTitle: 'Success',

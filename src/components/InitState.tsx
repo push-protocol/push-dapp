@@ -47,7 +47,7 @@ const InitState = () => {
   const { account, provider, chainId } = useAccount();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
-  });   
+  });
   const { epnsReadProvider, epnsWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const {
     channelDetails,
@@ -163,14 +163,15 @@ const InitState = () => {
       }
       if (delegateeList.length > 0) {
         let channelInformationPromise;
-        if(onCoreNetwork) {
+        if (onCoreNetwork) {
           channelInformationPromise = [...delegateeList].map(({ channel }) => {
-            return userPushSDKInstance.channel.info(convertAddressToAddrCaip(channel, chainId))
+            return userPushSDKInstance.channel.info(convertAddressToAddrCaip(channel, chainId));
           });
         } else {
           channelInformationPromise = [...delegateeList].map(({ channel }) => {
-            return getAliasDetails({account,chainId}).then(
-              (data) => userPushSDKInstance.channel.info(convertAddressToAddrCaip(data.channel, appConfig.coreContractChain)))
+            return getAliasDetails({ account, chainId }).then((data) =>
+              userPushSDKInstance.channel.info(convertAddressToAddrCaip(data.channel, appConfig.coreContractChain))
+            );
           });
         }
         const channelInformation = await Promise.all(channelInformationPromise);
@@ -198,7 +199,7 @@ const InitState = () => {
 
   // get core address of alias
   const checkUserForEthAlias = async () => {
-    const { aliasEth, aliasVerified } = await getAliasDetails({account,chainId}).then((data) => {
+    const { aliasEth, aliasVerified } = await getAliasDetails({ account, chainId }).then((data) => {
       if (data) {
         dispatch(setAliasEthAddress(data.channel));
         dispatch(setCoreChannelAdmin(data.channel));
@@ -211,9 +212,8 @@ const InitState = () => {
   };
 
   const checkUserForAlias = async () => {
-    let { aliasAddress = null, isAliasVerified = null } = await ChannelsDataStore.getInstance().getChannelDetailsFromAddress(
-      account
-    );
+    let { aliasAddress = null, isAliasVerified = null } =
+      await ChannelsDataStore.getInstance().getChannelDetailsFromAddress(account);
     if (aliasAddress == 'NULL') aliasAddress = null;
 
     if (aliasAddress) {
@@ -233,7 +233,14 @@ const InitState = () => {
   };
 
   useEffect(() => {
-    if (!epnsReadProvider || !epnsCommReadProvider || channelDetails !== 'unfetched' || !account || !userPushSDKInstance) return;
+    if (
+      !epnsReadProvider ||
+      !epnsCommReadProvider ||
+      channelDetails !== 'unfetched' ||
+      !account ||
+      !userPushSDKInstance
+    )
+      return;
 
     (async function () {
       if (onCoreNetwork) {
@@ -245,10 +252,10 @@ const InitState = () => {
         if (aliasEth) {
           // await checkUserForChannelOwnership(aliasEth);
           const channelDetail = await userPushSDKInstance.channel.info(aliasEth);
-          if(channelDetail != "channel not found" && channelDetail) {
+          if (channelDetail != 'channel not found' && channelDetail) {
             dispatch(setUserChannelDetails(channelDetail));
             const channelDetailsFromContract = await epnsReadProvider.channels(aliasEth);
-            dispatch(setUserChannelDetails({...channelDetail, ...channelDetailsFromContract}));
+            dispatch(setUserChannelDetails({ ...channelDetail, ...channelDetailsFromContract }));
           }
           if (!aliasVerified) {
             dispatch(setProcessingState(3));

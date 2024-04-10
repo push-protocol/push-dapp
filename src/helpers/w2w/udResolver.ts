@@ -11,7 +11,7 @@ export const getUdResolver = (): Resolution => {
     uns: {
       locations: {
         Layer1: {
-          network: "mainnet", // add config for sepolia once it's supported by UD
+          network: 'mainnet', // add config for sepolia once it's supported by UD
           provider: new ethers.providers.InfuraProvider(l1ChainId, appConfig.infuraAPIKey),
         },
         Layer2: {

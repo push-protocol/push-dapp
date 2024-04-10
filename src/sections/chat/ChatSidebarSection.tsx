@@ -167,7 +167,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
             >
               <ItemHV2
                 alignItems="center"
-              // ref={containerRef}
+                // ref={containerRef}
               >
                 <SpanV2
                   flex="initial"
@@ -243,14 +243,24 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
 
               <ItemVV2>
                 <BlankChat />
-                <SpanV2 fontSize='17px' color={theme.default.color} fontWeight='500' lineHeight='150%'>
+                <SpanV2
+                  fontSize="17px"
+                  color={theme.default.color}
+                  fontWeight="500"
+                  lineHeight="150%"
+                >
                   No conversations, yet.
                 </SpanV2>
-                <SpanV2 fontSize='15px' color={theme.default.secondaryColor} fontWeight='400' lineHeight='130%' padding='0px 25px'>
+                <SpanV2
+                  fontSize="15px"
+                  color={theme.default.secondaryColor}
+                  fontWeight="400"
+                  lineHeight="130%"
+                  padding="0px 25px"
+                >
                   Get started by searching for an address or group name.
                 </SpanV2>
               </ItemVV2>
-
             </>
           )}
 

@@ -25,8 +25,8 @@ const SpaceContextProvider: React.FC<React.ReactNode> = ({ children }) => {
       account,
       env: appConfig.appEnv,
     });
-    return feed?.length
-  }
+    return feed?.length;
+  };
 
   useEffect(() => {
     if (!account) return;
@@ -34,7 +34,7 @@ const SpaceContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     (async function () {
       const count = await getSpaceInvitesCount();
       setSpaceInvites(count);
-    })()
+    })();
   }, [account]);
 
   return <SpaceContext.Provider value={{ spaceId, setSpaceId, spaceInvites }}>{children}</SpaceContext.Provider>;
