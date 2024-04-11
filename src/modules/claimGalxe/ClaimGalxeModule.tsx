@@ -33,14 +33,14 @@ const ClaimGalxeModule = () => {
   const [nftRevealContract, setNftRevealContract] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const onPolygonChain = chainId === 137 || chainId === 80001;
+  const onPolygonChain = chainId === 137 || chainId === 80002;
   const isProdEnv = appConfig?.appEnv === 'prod';
 
   const polygonChainProvider = onPolygonChain
     ? provider
     : isProdEnv
     ? new ethers.providers.JsonRpcProvider(CHAIN_DETAILS[137].rpcUrl)
-    : new ethers.providers.JsonRpcProvider(CHAIN_DETAILS[80001].rpcUrl);
+    : new ethers.providers.JsonRpcProvider(CHAIN_DETAILS[80002].rpcUrl);
 
   // Transaction Toast
   const txToast = useToast(5000);
@@ -96,7 +96,7 @@ const ClaimGalxeModule = () => {
     if (nftRevealContract && account) {
       try {
         if (!onPolygonChain) {
-          switchChain(isProdEnv ? 137 : 80001);
+          switchChain(isProdEnv ? 137 : 80002);
           return;
         }
         setLoading(true);

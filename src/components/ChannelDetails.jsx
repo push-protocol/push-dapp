@@ -89,7 +89,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
   };
 
   // BEGIN CHANGE
-  // Added this inline if-else condition because of a bug that when connecting to Mumbai, the channelDetails.expiryType is undefined, so the toString() is throwing an exception
+  // Added this inline if-else condition because of a bug that when connecting to amoy, the channelDetails.expiryType is undefined, so the toString() is throwing an exception
   const channelExpiryDate = channelDetails.expiryTime
     ? getDateFromTimestamp(channelDetails.expiryTime?.toString() * 1000)
     : '';

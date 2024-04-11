@@ -6,7 +6,7 @@ export const getUdResolver = (): Resolution => {
   // ToDo: Enable for sepolia chainId once UD supports it
   // const l1ChainId = appConfig.allowedNetworks.includes(1) ? 1 : 11155111;
   const l1ChainId = 1;
-  const l2ChainId = appConfig.allowedNetworks.includes(137) ? 137 : 80001;
+  const l2ChainId = appConfig.allowedNetworks.includes(137) ? 137 : 80002;
   return Resolution.fromEthersProvider({
     uns: {
       locations: {

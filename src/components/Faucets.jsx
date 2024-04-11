@@ -30,9 +30,9 @@ const Faucets = () => {
       link: "https://sepoliafaucet.com/",
     },
     {
-      id: "80001",
+      id: "80002",
       value: "Polygon",
-      title: "Mumbai Faucet",
+      title: "Amoy Faucet",
       function: () => {},
       link: "https://faucet.polygon.technology/",
     },
@@ -44,11 +44,11 @@ const Faucets = () => {
       link: "https://testnet.bnbchain.org/faucet-smart",
     },
     {
-      id: "420",
+      id: "11155420",
       value: "Optimism",
-      title: "Optimism Goerli Faucet",
+      title: "Optimism Sepolia Faucet",
       function: () => {},
-      link: "https://faucet.quicknode.com/optimism/goerli",
+      link: "https://faucet.quicknode.com/optimism/sepolia",
     },
     {
       id: "1442",
@@ -58,11 +58,11 @@ const Faucets = () => {
       link: "https://public.zkevm-test.net/"
     },
     {
-      id: "421613",
+      id: "421614",
       value: "Arbitrum",
       title: "Arbitrum Testnet Faucet",
       function: () => {},
-      link: "https://faucet.quicknode.com/arbitrum/goerli"
+      link: "https://faucet.quicknode.com/arbitrum/sepolia"
     },
     {
       id: "123",

@@ -89,7 +89,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   }, [toast]);
 
   const nameToId = {
-    POLYGON_TEST_MUMBAI: 80001,
+    POLYGON_TEST_AMOY: 80002,
     ETH_TEST_KOVAN: 42,
     ETH_TEST_GOERLI: 5,
     ETH_TEST_SEPOLIA: 11155111,
