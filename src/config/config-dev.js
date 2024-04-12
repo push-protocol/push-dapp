@@ -24,11 +24,11 @@ export const config = {
   allowedNetworks: [
     // 5, // for eth goerli
     11155111, // for eth sepolia
-    80001, //for mumbai polygon
+    80002, //for amoy polygon
     97, // bnb testnet
-    420, // optimism goerli testnet
+    11155420, // optimism sepolia testnet
     1442, // polygon zkevm testnet
-    421613, // arbitrum testnet
+    421614, // arbitrum testnet
     123, // fuse testnet
   ],
 
@@ -40,11 +40,11 @@ export const config = {
   mainnetCoreRPC: 'https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
   mainnetCoreContractChain: 1,
   aliasRPC: {
-    80001: 'https://polygon-mumbai.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9',
+    80002: 'https://polygon-amoy.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
     97: 'https://data-seed-prebsc-1-s1.binance.org:8545',
-    420: 'https://opt-goerli.g.alchemy.com/v2/98vFj7OCg4vbGKvCDpj6pOAMSBVC7rzm',
+    11155420: 'https://optimism-sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
     1442: 'https://rpc.public.zkevm-test.net',
-    421613: 'https://goerli-rollup.arbitrum.io/rpc',
+    421614: 'https://arbitrum-sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
 
@@ -131,13 +131,13 @@ export const CHAIN_DETAILS = {
     commAddress: '0x28709649Dfda9baDEbb61dBF7a8D199cfC8EcF2e',
     network: 'sepolia',
   },
-  80001: {
-    label: 'Polygon Mumbai',
-    name: 'POLYGON_TEST_MUMBAI',
-    chainId: 80001,
-    rpcUrl: 'https://polygon-mumbai.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9',
-    commAddress: '0xAf55BE8e6b0d6107891bA76eADeEa032ef8A4504',
-    network: 'polygon-mumbai',
+  80002: {
+    label: 'Polygon Amoy',
+    name: 'POLYGON_TEST_AMOY',
+    chainId: 80002,
+    rpcUrl: 'https://polygon-amoy.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
+    commAddress: '0x9cb3bd7550b5c92baa056fc0f08132f49508145f',
+    network: 'polygon-amoy',
   },
   97: {
     label: 'BNB Testnet',
@@ -146,12 +146,12 @@ export const CHAIN_DETAILS = {
     rpcUrl: 'https://data-seed-prebsc-1-s1.binance.org:8545',
     commAddress: '0x4132061E3349ff36cFfCadA460E10Bd4f31F7ea8',
   },
-  420: {
-    label: 'Optimism Goerli',
+  11155420: {
+    label: 'Optimism Sepolia',
     name: 'OPTIMISM_TESTNET',
-    chainId: 420,
-    rpcUrl: 'https://opt-goerli.g.alchemy.com/v2/98vFj7OCg4vbGKvCDpj6pOAMSBVC7rzm',
-    commAddress: '0x4305D572F2bf38Fc2AE8D0172055b1EFd18F57a6',
+    chainId: 11155420,
+    rpcUrl: 'https://optimism-sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
+    commAddress: '0x754787358fac861ef904c92d54f7adb659779317',
   },
   1442: {
     label: 'Polygon zkEVM Testnet',
@@ -160,12 +160,12 @@ export const CHAIN_DETAILS = {
     rpcUrl: 'https://rpc.public.zkevm-test.net',
     commAddress: '0x630b152e4185c63D7177c656b56b26f878C61572',
   },
-  421613: {
+  421614: {
     label: 'Arbitrum Testnet',
     name: 'ARBITRUM_TESTNET',
-    chainId: 421613,
-    rpcUrl: '',
-    commAddress: '0x2f6aE0907116A2c50D712e78b48D874fadeB6850',
+    chainId: 421614,
+    rpcUrl: 'https://arbitrum-sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
+    commAddress: '0x754787358fac861ef904c92d54f7adb659779317',
   },
   123: {
     label: 'Fuse Testnet',

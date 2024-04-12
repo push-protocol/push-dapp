@@ -32,25 +32,25 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   const mainAddress = aliasEthAccount;
 
   const Faucets = {
-    80001: {
-      label: "Mumbai MATIC",
+    80002: {
+      label: "Amoy MATIC",
       url: "https://faucet.polygon.technology/"
     },
     97: {
       label: "Testnet BNB",
       url: "https://testnet.bnbchain.org/faucet-smart"
     },
-    420: {
-      label: "Goerli OpETH",
-      url: "https://faucet.quicknode.com/optimism/goerli"
+    11155420: {
+      label: "Sepolia OpETH",
+      url: "https://faucet.quicknode.com/optimism/sepolia"
     },
     1442: {
       label: "Polygon zkEVM ETH",
       url: "https://public.zkevm-test.net/"
     },
-    421613: {
-      label: "Goerli ArbETH",
-      url: "https://faucet.quicknode.com/arbitrum/goerli"
+    421614: {
+      label: "Sepolia ArbETH",
+      url: "https://faucet.quicknode.com/arbitrum/sepolia"
     },
     123: {
       label: "Fuse SPARK",

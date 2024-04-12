@@ -60,14 +60,14 @@ const EXTRA_HEADER_TAGS = {
       bg: themeDark.headerTagBg,
       fg: themeDark.headerTagFg,
     },
-  }
-}
+  },
+};
 
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
   // Get theme
   const theme = useTheme();
-  const navRef = useRef()
+  const navRef = useRef();
 
   const { navigationSetup } = useContext(NavigationContext);
   const { setSnapInstalled, snapInstalled } = React.useContext(AppContext);
@@ -87,7 +87,6 @@ function Header({ isDarkMode, darkModeToggle }) {
   const location = useLocation();
 
   // const [snapInstalled, setSnapInstalled] = React.useState(false);
-
 
   React.useEffect(() => {
     // runs when navigation setup is updated, will run on init
@@ -109,8 +108,7 @@ function Header({ isDarkMode, darkModeToggle }) {
         if (location.pathname === item.data.href) {
           setHeaderTag(item.data.headerTag);
         } else {
-          if (EXTRA_HEADER_TAGS[location.pathname])
-            setHeaderTag(EXTRA_HEADER_TAGS[location.pathname]);
+          if (EXTRA_HEADER_TAGS[location.pathname]) setHeaderTag(EXTRA_HEADER_TAGS[location.pathname]);
         }
       });
     }
@@ -125,10 +123,11 @@ function Header({ isDarkMode, darkModeToggle }) {
     if (error instanceof UnsupportedChainIdError) {
       switchChain(appConfig.coreContractChain);
       if (appConfig.coreContractChain === 42)
-        return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network';
+        return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Amoy network';
       else if (appConfig.coreContractChain === 11155111)
-        return 'Unsupported Network, please connect to the Ethereum Sepolia, Polygon Mumbai, BNB testnet, Optimism Goerli, Arbitrum testnet or Polygon zkEVM testnet';
-      else return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB, Optimism, Arbitrum or Polygon zkEVM Mainnet';
+        return 'Unsupported Network, please connect to the Ethereum Sepolia, Polygon Amoy, BNB testnet, Optimism Sepolia, Arbitrum Sepolia or Polygon zkEVM testnet';
+      else
+        return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB, Optimism, Arbitrum or Polygon zkEVM Mainnet';
     } else {
       console.error(error);
       return 'An unknown error occurred. Check the console for more details';
@@ -152,52 +151,80 @@ function Header({ isDarkMode, darkModeToggle }) {
         setSnapInstalled(true);
       }
     });
-  }
+  };
 
   useEffect(() => {
     isSnapInstalled();
-  }, [])
+  }, []);
 
   const SnapHeader = () => {
     return (
       <SnapSection>
-        <MetamaskLogo width={24} height={22} />
+        <MetamaskLogo
+          width={24}
+          height={22}
+        />
         <InstallText>
-          <SpanV2 fontSize='12px' fontWeight='400'>Get Notifications directly in MetaMask</SpanV2>
-          <StyledLink to='/snap'>
+          <SpanV2
+            fontSize="12px"
+            fontWeight="400"
+          >
+            Get Notifications directly in MetaMask
+          </SpanV2>
+          <StyledLink to="/snap">
             Install Push Snap <OpenLink />
           </StyledLink>
         </InstallText>
       </SnapSection>
-    )
-  }
+    );
+  };
 
   return (
-    <Container direction="row" padding="0px 15px">
-      <ItemH justify="flex-start" flex="0">
-        <RightBarContainer justify="flex-start" flex="0">
-          <RightBarDesktop justify="flex-start" flex="0">
-            <a href='/channels'>
+    <Container
+      direction="row"
+      padding="0px 15px"
+    >
+      <ItemH
+        justify="flex-start"
+        flex="0"
+      >
+        <RightBarContainer
+          justify="flex-start"
+          flex="0"
+        >
+          <RightBarDesktop
+            justify="flex-start"
+            flex="0"
+          >
+            <a href="/channels">
               <Logo src={!isDarkMode ? PushLogoLight : PushLogoDark} />
             </a>
           </RightBarDesktop>
 
-          <LogoMobile justify="flex-start" flex="0">
+          <LogoMobile
+            justify="flex-start"
+            flex="0"
+          >
             <Logo src={!isDarkMode ? 'logo512.png' : 'logo512.png'} />
           </LogoMobile>
         </RightBarContainer>
 
         {/* mobile navbar */}
         {navigationSetup && showNavBar && isActive && !error && (
-          <NavMenuContainer ref={navRef} tabletAlign="flex-start">
+          <NavMenuContainer
+            ref={navRef}
+            tabletAlign="flex-start"
+          >
             <NavMenu>
               {showSnapMobile && <SnapHeader />}
               <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
 
               <NavMenuInner tabletAlign="flex-start">
-
-                <MobileNavigation showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
+                <MobileNavigation
+                  showNavBar={showNavBar}
+                  setShowNavBar={setShowNavBar}
+                />
               </NavMenuInner>
             </NavMenu>
           </NavMenuContainer>
@@ -206,23 +233,34 @@ function Header({ isDarkMode, darkModeToggle }) {
 
       <ItemH justify="flex-end">
         {headerTag && !error && !isSnapPage && (
-          <HeaderTag align="flex-start" overflow="hidden">
+          <HeaderTag
+            align="flex-start"
+            overflow="hidden"
+          >
             <Span
               textTransform="capitalize"
               spacing="-0.02em"
               weight="normal"
-              padding={isMobile ? "8px 7px" : "8px 20px"}
-              className='text'
-              color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}>
+              padding={isMobile ? '8px 7px' : '8px 20px'}
+              className="text"
+              color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}
+            >
               {headerTag.title}
             </Span>
           </HeaderTag>
         )}
 
-        <Suspense fallback={<Spinner size={24} color={GLOBALS.COLORS.PRIMARY_PINK} type={LOADER_SPINNER_TYPE.PROCESSING} />}>
+        <Suspense
+          fallback={
+            <Spinner
+              size={24}
+              color={GLOBALS.COLORS.PRIMARY_PINK}
+              type={LOADER_SPINNER_TYPE.PROCESSING}
+            />
+          }
+        >
           {!showSnapMobile && !snapInstalled && <SnapHeader />}
         </Suspense>
-
 
         {isActive && !showLoginControls && !error && (
           <DarkModeSwitch
@@ -243,13 +281,20 @@ function Header({ isDarkMode, darkModeToggle }) {
               radius="4px"
               onClick={() => {
                 setShowNavBar(!showNavBar);
-              }}>
-              <AiOutlineMenu size={30} color={theme.headerIconsBg} />
+              }}
+            >
+              <AiOutlineMenu
+                size={30}
+                color={theme.headerIconsBg}
+              />
             </Button>
           </RightBarMobile>
         )}
 
-        <ItemH justify="flex-end" flex="initial">
+        <ItemH
+          justify="flex-end"
+          flex="initial"
+        >
           {/* {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>} */}
           {/* {!isActive && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>} */}
           {/* {!!error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>} */}
@@ -260,7 +305,10 @@ function Header({ isDarkMode, darkModeToggle }) {
             </RightBarDesktop>
           )}{' '} */}
 
-          <RightBarDesktop justify="flex-end" flex="initial">
+          <RightBarDesktop
+            justify="flex-end"
+            flex="initial"
+          >
             {/* //TODO: The chain Indicator should be removed in guest mode */}
             {wallet?.accounts?.length > 0 && <ChainIndicator isDarkMode={isDarkMode} />}
             <Profile isDarkMode={isDarkMode} />
@@ -303,10 +351,10 @@ const RightBarMobile = styled(ItemH)`
 `;
 
 const LogoMobile = styled(ItemH)`
-    @media (min-width: 993px) {
-      display: none;
-    }
- `
+  @media (min-width: 993px) {
+    display: none;
+  }
+`;
 
 const NavMenuContainer = styled(Item)`
   position: fixed;
@@ -323,11 +371,10 @@ const NavMenuContainer = styled(Item)`
   backdrop-filter: blur(30px);
   z-index: 11;
   width: 250px;
-  box-shadow: 0 0 0 10000px rgba(0,0,0,0.9);
+  box-shadow: 0 0 0 10000px rgba(0, 0, 0, 0.9);
   padding: 30px 30px;
-  
 
-  @media (min-width: 993px){
+  @media (min-width: 993px) {
     display: none;
   }
 `;
@@ -375,17 +422,17 @@ const ThirdTheme = styled(Notice)`
 const HeaderTag = styled(Item)`
   flex: 1;
   margin: 0px 5px;
-   @media (min-width: 993px) {
+  @media (min-width: 993px) {
     margin: 5px 10px;
   }
 
   @media (max-width: 993px) {
     margin: 5px 0px;
   }
-  .text{
+  .text {
     font-size: 24px;
-    
-    @media (max-width: 993px){
+
+    @media (max-width: 993px) {
       font-size: 20px;
     }
   }
@@ -398,52 +445,50 @@ const DarkMode = styled(Item)`
 `;
 
 const SnapSection = styled.div`
-  width:251px;
-  height:28px;
-  display:flex;
-  flex-direction:row;
+  width: 251px;
+  height: 28px;
+  display: flex;
+  flex-direction: row;
   border-radius: 12px;
-  border: 1px solid #D4DCEA;
+  border: 1px solid #d4dcea;
   border: 1px solid ${(props) => props.theme.default.border};
-  background:${(props) => props.theme.default.bg};
+  background: ${(props) => props.theme.default.bg};
   padding: 12px 16px;
   align-items: center;
   gap: 9px;
-  @media (max-width:600px){
-    width:auto;
+  @media (max-width: 600px) {
+    width: auto;
     padding: 12px 14px;
   }
 `;
 
 const InstallText = styled.div`
-  display:flex;
-  flex-direction:column;
+  display: flex;
+  flex-direction: column;
 
-  @media (max-width:600px){
-    display:block;
-    width:auto;
+  @media (max-width: 600px) {
+    display: block;
+    width: auto;
   }
-  
-`
-
+`;
 
 const StyledLink = styled(Link)`
-  cursor:pointer;
-  font-size:12px;
-  font-weight:400;
-  color:#D53A94;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 400;
+  color: #d53a94;
   text-align: start;
-  text-decoration:none;
-  
-  @media (max-width:600px){
-    margin-left:5px;
+  text-decoration: none;
+
+  @media (max-width: 600px) {
+    margin-left: 5px;
   }
 
-   &:hover{
-    text-decoration:underline;
+  &:hover {
+    text-decoration: underline;
     text-underline-position: under;
   }
-`
+`;
 
 // Export Default
 export default Header;

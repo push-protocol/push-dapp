@@ -4215,9 +4215,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:0.0.1-alpha.77":
-  version: 0.0.1-alpha.77
-  resolution: "@pushprotocol/restapi@npm:0.0.1-alpha.77"
+"@pushprotocol/restapi@npm:0.0.1-alpha.78":
+  version: 0.0.1-alpha.78
+  resolution: "@pushprotocol/restapi@npm:0.0.1-alpha.78"
   dependencies:
     "@metamask/eth-sig-util": ^5.0.2
     axios: ^0.27.2
@@ -4240,7 +4240,7 @@ __metadata:
   peerDependenciesMeta:
     ethers:
       optional: true
-  checksum: a5aca0b92a87a851154d4577ccd201d07941de1417a538b6b42559d09d434d87684b20e66787561d16e426b92856cfd5b39f563d35b9e46db8e4b0de79634dba
+  checksum: 10ab283ec990cf8db06c04dd53b0485583506d3bb858744433807b117468d11955581b9797dac5a00f6bbe30fddfab8b17fa018ca8fb1e36dc36aa44676e7b8e
   languageName: node
   linkType: hard
 
@@ -4256,9 +4256,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:latest":
-  version: 1.2.7
-  resolution: "@pushprotocol/uiweb@npm:1.2.7"
+"@pushprotocol/uiweb@npm:1.3.1-alpha.16":
+  version: 1.3.1-alpha.16
+  resolution: "@pushprotocol/uiweb@npm:1.3.1-alpha.16"
   dependencies:
     "@livekit/components-react": ^1.2.2
     "@livekit/components-styles": ^1.0.6
@@ -4291,7 +4291,7 @@ __metadata:
     react: ">=16.8.0"
     styled-components: ^6.0.8
     viem: ^1.3.0
-  checksum: 9134c4033b8422db6b087c41713ea5fd8f80176008e541451e2f7a9714d1d504584159bf630039bbd24954670b6c33a7ac6a17637a05ed33eac749b58277b3ca
+  checksum: 67a2dc547d58decda56af4a0e1db54c01fe185a1664bdb7be6ce689eda3de33d971ea19ba3eeb785efc6f7cd7a81a799947f61ecbf1637598a56f67a2d13bd4a
   languageName: node
   linkType: hard
 
@@ -19202,9 +19202,9 @@ __metadata:
     "@mui/icons-material": ^5.8.4
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
-    "@pushprotocol/restapi": 0.0.1-alpha.77
+    "@pushprotocol/restapi": 0.0.1-alpha.78
     "@pushprotocol/socket": 0.5.3
-    "@pushprotocol/uiweb": latest
+    "@pushprotocol/uiweb": 1.3.1-alpha.16
     "@reduxjs/toolkit": ^1.7.1
     "@testing-library/dom": ^9.0.1
     "@testing-library/jest-dom": ^4.2.4

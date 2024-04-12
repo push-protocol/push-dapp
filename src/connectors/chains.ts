@@ -138,23 +138,23 @@ export const TESTNET_CHAINS: ChainConfig = {
     name: 'Sepolia',
     blockExplorerUrls: ['https://sepolia.etherscan.io'],
   },
-  420: {
-    urls: [getInfuraUrlFor('optimism-goerli'), 'https://goerli.optimism.io'].filter(Boolean),
-    name: 'Optimism Goerli',
+  11155420: {
+    urls: [getInfuraUrlFor('optimism-sepolia'), 'https://sepolia.optimism.io'].filter(Boolean),
+    name: 'Optimism Sepolia',
     nativeCurrency: ETH,
-    blockExplorerUrls: ['https://goerli-explorer.optimism.io'],
+    blockExplorerUrls: ['https://sepolia-optimistic.etherscan.io'],
   },
-  421613: {
-    urls: [getInfuraUrlFor('arbitrum-goerli'), 'https://goerli-rollup.arbitrum.io/rpc'].filter(Boolean),
-    name: 'Arbitrum Goerli',
+  421614: {
+    urls: [getInfuraUrlFor('arbitrum-sepolia'), 'https://sepolia-rollup.arbitrum.io/rpc'].filter(Boolean),
+    name: 'Arbitrum Sepolia',
     nativeCurrency: ETH,
-    blockExplorerUrls: ['https://testnet.arbiscan.io'],
+    blockExplorerUrls: ['https://sepolia.arbiscan.io/'],
   },
-  80001: {
-    urls: [getInfuraUrlFor('polygon-mumbai')].filter(Boolean),
-    name: 'Polygon Mumbai',
+  80002: {
+    urls: [getInfuraUrlFor('polygon-amoy')].filter(Boolean),
+    name: 'Polygon Amoy',
     nativeCurrency: MATIC,
-    blockExplorerUrls: ['https://mumbai.polygonscan.com'],
+    blockExplorerUrls: ['https://www.oklink.com/amoy'],
   },
   44787: {
     urls: ['https://alfajores-forno.celo-testnet.org'],
