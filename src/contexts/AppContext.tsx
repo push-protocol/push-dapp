@@ -129,12 +129,27 @@ const AppContextProvider = ({ children }) => {
   };
 
   const initialisePushSdkReadMode = async () => {
+
+    const DecryptedPGPKeys = localStorage.getItem(account);
     let userInstance;
-    userInstance = await PushAPI.initialize({
-      env: appConfig.appEnv,
-      account: account,
-      alpha: { feature: ['SCALABILITY_V2'] },
-    });
+
+    if (DecryptedPGPKeys) {
+      const librarySigner = provider?.getSigner(account);
+      userInstance = await PushAPI.initialize(librarySigner, {
+        decryptedPGPPrivateKey: DecryptedPGPKeys,
+        env: appConfig.appEnv,
+        account: account,
+        alpha: { feature: ['SCALABILITY_V2'] },
+      });
+    } else {
+      userInstance = await PushAPI.initialize({
+        env: appConfig.appEnv,
+        account: account,
+        alpha: { feature: ['SCALABILITY_V2'] },
+      });
+    }
+
+    console.log("User Push Instance >>>>>", userInstance);
     dispatch(setUserPushSDKInstance(userInstance));
     return userInstance;
   };

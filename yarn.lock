@@ -4215,9 +4215,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:0.0.1-alpha.77":
-  version: 0.0.1-alpha.77
-  resolution: "@pushprotocol/restapi@npm:0.0.1-alpha.77"
+"@pushprotocol/restapi@file:/Users/abhish3k/Desktop/Push Protocol/push-sdk/dist/packages/restapi::locator=pushdapp%40workspace%3A.":
+  version: 0.0.1-alpha.74
+  resolution: "@pushprotocol/restapi@file:/Users/abhish3k/Desktop/Push Protocol/push-sdk/dist/packages/restapi#/Users/abhish3k/Desktop/Push Protocol/push-sdk/dist/packages/restapi::hash=cfb995&locator=pushdapp%40workspace%3A."
   dependencies:
     "@metamask/eth-sig-util": ^5.0.2
     axios: ^0.27.2
@@ -4240,7 +4240,7 @@ __metadata:
   peerDependenciesMeta:
     ethers:
       optional: true
-  checksum: a5aca0b92a87a851154d4577ccd201d07941de1417a538b6b42559d09d434d87684b20e66787561d16e426b92856cfd5b39f563d35b9e46db8e4b0de79634dba
+  checksum: 8f5222cab52d60dcfbc690a14ae7d6ad3e6e1a3a54c65fa674229aab5a56ffc468437ffba3b04cf43a2440bb3491ad98a4d9b838797e892988140c9b0dc73c56
   languageName: node
   linkType: hard
 
@@ -19202,7 +19202,7 @@ __metadata:
     "@mui/icons-material": ^5.8.4
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
-    "@pushprotocol/restapi": 0.0.1-alpha.77
+    "@pushprotocol/restapi": /Users/abhish3k/Desktop/Push Protocol/push-sdk/dist/packages/restapi
     "@pushprotocol/socket": 0.5.3
     "@pushprotocol/uiweb": latest
     "@reduxjs/toolkit": ^1.7.1

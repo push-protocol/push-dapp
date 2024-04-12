@@ -1,13 +1,36 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 
-import { ButtonV2, ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { AppContext } from 'contexts/AppContext';
 import UnlockLogo from '../../../assets/chat/unlock.svg';
+import { useAccount } from 'hooks';
 
 const UnlockProfile = () => {
   const theme = useTheme();
   const { handleConnectWallet } = useContext(AppContext);
+
+  const { account } = useAccount();
+
+  const [rememberMe, setRememberMe] = useState(false);
+
+  const handleRememberMeChange = (event) => {
+    setRememberMe(event.target.checked);
+  };
+
+
+
+  const handleChatprofileUnlock = async () => {
+    const user = await handleConnectWallet();
+
+    if (rememberMe) {
+      if (!user.readmode()) {
+        localStorage.setItem(user.account, user.decryptedPgpPvtKey);
+      }
+    }
+
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <ModalContainer>
@@ -43,10 +66,24 @@ const UnlockProfile = () => {
             color="#fff"
             borderRadius="16px"
             width="100%"
-            onClick={async () => await handleConnectWallet()}
+            onClick={handleChatprofileUnlock}
           >
             Unlock Profile
           </ButtonV2>
+
+          <ItemHV2 gap='10px'>
+            <CustomCheckbox
+              checked={rememberMe}
+              onChange={handleRememberMeChange}
+            />
+            {/* <StyledCheckbox
+              type="checkbox"
+              id="rememberMe"
+              checked={rememberMe}
+              onChange={handleRememberMeChange}
+            /> */}
+            <SpanV2 fontSize='14px' fontWeight='500' lineHeight='130%'>Remember Me</SpanV2>
+          </ItemHV2>
         </ItemVV2>
       </ModalContainer>
     </ThemeProvider>
@@ -63,6 +100,16 @@ const ModalContainer = styled.div`
   background: ${(props) => props.theme.default.bg};
   align-items: flex-start;
   overflow: hidden;
+`;
+
+const CustomCheckbox = styled.input.attrs({ type: 'checkbox' })`
+  accent-color: #D53A94; /* Changes the checkbox color */
+  &:checked {
+    background-color: #D53A94;
+  }
+  cursor: pointer;
+  width:18px;
+  height:18px;
 `;
 
 export default UnlockProfile;
