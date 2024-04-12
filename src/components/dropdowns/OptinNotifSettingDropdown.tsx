@@ -1,7 +1,5 @@
 // React + Web3 Essentials
 import React, { useContext, useMemo, useState } from 'react';
-import * as PushAPI from '@pushprotocol/restapi';
-import { ethers } from 'ethers';
 
 // External Packages
 import Switch from 'react-switch';
@@ -71,7 +69,7 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
     }
     setModifiedSettings(updatedSettings);
   };
-
+  console.log('channel settings', modifiedSettings);
   return (
     <DropdownOuterContainer>
       {modifiedSettings.map((setting, index) => (
@@ -114,7 +112,7 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
                 val={setting.default}
                 max={setting.upperLimit}
                 min={setting.lowerLimit}
-                step={setting.ticker || 1}
+                step={setting.ticker ?? 1}
                 defaultVal={setting.default}
                 onChange={({ x }) => handleSliderChange(index, x)}
               />
@@ -135,7 +133,7 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
                 endVal={setting.default.upper}
                 max={setting.upperLimit}
                 min={setting.lowerLimit}
-                step={setting.ticker || 1}
+                step={setting.ticker ?? 1}
                 defaultStartVal={setting.default.lower}
                 defaultEndVal={setting.default.upper}
                 onChange={({ startVal, endVal }) => handleSliderChange(index, { lower: startVal, upper: endVal })}
@@ -174,14 +172,14 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
 const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (options) => {
   const { children, channelDetail, setLoading, onSuccessOptin } = options;
 
-  const { chainId, provider, account, wallet } = useAccount();
+  const { chainId } = useAccount();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const { handleConnectWallet, connectWallet } = useContext(AppContext);
+  const { handleConnectWallet } = useContext(AppContext);
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
@@ -213,21 +211,13 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
     setLoadingFunc(true);
 
     let userPushInstance = userPushSDKInstance;
-    // if (!userPushInstance.signer) {
-    //   userPushInstance = await handleConnectWallet();
-    //   if (!userPushInstance) {
-    //     setLoadingFunc(false);
-    //     return;
-    //   }
-    // }
 
-    let walletAddress = account;
-    let web3Provider = provider;
-
-    if (!(wallet?.accounts?.length > 0)) {
-      const connectedWallet = await connectWallet();
-      walletAddress = connectedWallet.accounts[0].address;
-      web3Provider = new ethers.providers.Web3Provider(connectedWallet.provider, 'any');
+    if (!userPushInstance.signer) {
+      userPushInstance = await handleConnectWallet();
+      if (!userPushInstance) {
+        setLoadingFunc(false);
+        return;
+      }
     }
 
     try {
@@ -238,85 +228,49 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
 
       subscribeToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
-      const _signer = await web3Provider?.getSigner(walletAddress);
+      await userPushInstance.notification.subscribe(
+        convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
+        {
+          settings: notifChannelSettingFormatString({ settings: channelSettings }),
+          onSuccess: () => {
+            onSuccessOptin();
+            dispatch(updateSubscriptionStatus({ channelAddress, status: true }));
+            dispatch(
+              updateUserSetting({
+                channelAddress,
+                settings: userSettingsFromDefaultChannelSetting({ channelSetting: channelSettings }),
+              })
+            );
 
-      await PushAPI.channels.subscribe({
-        signer: _signer,
-        channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
-        userAddress: convertAddressToAddrCaip(walletAddress, chainId), // user address in CAIP
-        onSuccess: () => {
-          dispatch(updateSubscriptionStatus({ channelAddress, status: true }));
-          dispatch(
-            updateUserSetting({
-              channelAddress,
-              settings: userSettingsFromDefaultChannelSetting({ channelSetting: channelSettings }),
-            })
-          );
-
-          subscribeToast.showMessageToast({
-            toastTitle: 'Success',
-            toastMessage: 'Successfully opted into channel !',
-            toastType: 'SUCCESS',
-            getToastIcon: (size) => (
-              <MdCheckCircle
-                size={size}
-                color="green"
-              />
-            ),
-          });
-        },
-        onError: () => {
-          console.error('opt in error');
-          subscribeToast.showMessageToast({
-            toastTitle: 'Error',
-            toastMessage: `There was an error opting into channel`,
-            toastType: 'ERROR',
-            getToastIcon: (size) => (
-              <MdError
-                size={size}
-                color="red"
-              />
-            ),
-          });
-        },
-        env: appConfig.pushNodesEnv,
-      });
-
-      // await PUSHAPI.channels.subscribe(convertAddressToAddrCaip(channelAddress, chainId), {
-      //   settings: notifChannelSettingFormatString({ settings: channelSettings }),
-      //   // settings: [],
-      //   onSuccess: () => {
-      //     onSuccessOptin();
-      //     dispatch(updateSubscriptionStatus({ channelAddress, status: true }));
-      //     dispatch(updateUserSetting({ channelAddress, settings: userSettingsFromDefaultChannelSetting({ channelSetting: channelSettings }) }));
-
-      //     subscribeToast.showMessageToast({
-      //       toastTitle: 'Success',
-      //       toastMessage: 'Successfully opted into channel !',
-      //       toastType: 'SUCCESS',
-      //       getToastIcon: (size) => (
-      //         <MdCheckCircle
-      //           size={size}
-      //           color="green"
-      //         />
-      //       ),
-      //     });
-      //   },
-      //   onError: () => {
-      //     console.error('opt in error');
-      //     subscribeToast.showMessageToast({
-      //       toastTitle: 'Error',
-      //       toastMessage: `There was an error opting into channel`,
-      //       toastType: 'ERROR',
-      //       getToastIcon: (size) => (
-      //         <MdError
-      //           size={size}
-      //           color="red"
-      //         />
-      //       ),
-      //     });
-      //   },
-      // });
+            subscribeToast.showMessageToast({
+              toastTitle: 'Success',
+              toastMessage: 'Successfully opted into channel !',
+              toastType: 'SUCCESS',
+              getToastIcon: (size) => (
+                <MdCheckCircle
+                  size={size}
+                  color="green"
+                />
+              ),
+            });
+          },
+          onError: () => {
+            console.error('opt in error');
+            subscribeToast.showMessageToast({
+              toastTitle: 'Error',
+              toastMessage: `There was an error opting into channel`,
+              toastType: 'ERROR',
+              getToastIcon: (size) => (
+                <MdError
+                  size={size}
+                  color="red"
+                />
+              ),
+            });
+          },
+          env: appConfig.pushNodesEnv,
+        }
+      );
     } catch (err) {
       subscribeToast.showMessageToast({
         toastTitle: 'Error',

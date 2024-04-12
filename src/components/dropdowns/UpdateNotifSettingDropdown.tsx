@@ -113,13 +113,13 @@ const UpdateNotifSettingDropdownContainer: React.FC<UpdateNotifSettingDropdownCo
                 fontWeight="600"
                 alignSelf="flex-start"
               >
-                {setting.user || setting.default}
+                {setting.user ?? setting.default}
               </SpanV2>
               <InputSlider
                 val={setting.user}
                 max={setting.upperLimit}
                 min={setting.lowerLimit}
-                step={setting.ticker || 1}
+                step={setting.ticker ?? 1}
                 defaultVal={setting.default}
                 onChange={({ x }) => handleSliderChange(index, x)}
               />
@@ -133,14 +133,14 @@ const UpdateNotifSettingDropdownContainer: React.FC<UpdateNotifSettingDropdownCo
                 fontWeight="600"
                 alignSelf="flex-start"
               >
-                {setting.user.lower || setting.default.lower} - {setting.user.upper || setting.default.upper}
+                {setting.user.lower ?? setting.default.lower} - {setting.user.upper ?? setting.default.upper}
               </SpanV2>
               <RangeSlider
-                startVal={setting.user.lower || setting.default.lower}
-                endVal={setting.user.upper || setting.default.upper}
+                startVal={setting.user.lower ?? setting.default.lower}
+                endVal={setting.user.upper ?? setting.default.upper}
                 max={setting.upperLimit}
                 min={setting.lowerLimit}
-                step={setting.ticker || 1}
+                step={setting.ticker ?? 1}
                 defaultStartVal={setting.default.lower}
                 defaultEndVal={setting.default.upper}
                 onChange={({ startVal, endVal }) => handleSliderChange(index, { lower: startVal, upper: endVal })}
@@ -287,7 +287,7 @@ const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({
       setLoadingFunc(false);
     }
   };
-
+  console.log('user settings', userSetting, channelSetting);
   // render
   return (
     <DropdownBtnHandler
