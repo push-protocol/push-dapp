@@ -287,7 +287,7 @@ const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({
       setLoadingFunc(false);
     }
   };
-  console.log('user settings', userSetting, channelSetting);
+ 
   // render
   return (
     <DropdownBtnHandler
