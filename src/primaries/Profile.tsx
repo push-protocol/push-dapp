@@ -39,7 +39,7 @@ const Profile = ({ isDarkMode }) => {
 
   // resolve web3 name
   useResolveWeb3Name(account);
-  const web3Name = web3NameList[account]
+  const web3Name = web3NameList[account];
 
   // Get theme
   const theme = useTheme();
@@ -51,21 +51,21 @@ const Profile = ({ isDarkMode }) => {
       id: 'walletAddress',
       value: account,
       title: account,
-      function: () => { },
+      function: () => {},
       invertedIcon: './copy.svg',
     },
     {
       id: 'userSettings',
       value: '',
       title: 'Settings',
-      function: () => { },
+      function: () => {},
       to: APP_PATHS.UserSettings,
-      invertedIcon: 'svg/setting.svg'
+      invertedIcon: 'svg/setting.svg',
     },
     {
       id: 'prodDapp',
       value: '',
-      function: () => { },
+      function: () => {},
       link: `https://${envUtil.prod}`,
       title: 'Production dapp',
       invertedIcon: './prod.svg',
@@ -74,6 +74,7 @@ const Profile = ({ isDarkMode }) => {
       id: 'disconnect',
       value: '',
       function: async () => {
+        localStorage.removeItem(wallet.accounts[0]);
         await disconnect(wallet);
         setMode(ReadOnlyWalletMode.GUEST_MODE);
         setReadOnlyWallet('0x0000000000000000000000000000000000000001');
@@ -90,19 +91,17 @@ const Profile = ({ isDarkMode }) => {
 
   const ConnectWallet = () => {
     connect();
-  }
+  };
 
   // to create blockies
   return (
     <>
-
       {account && account != '' && !authError ? (
         <Body>
-
           {!(wallet?.accounts?.length > 0) ? (
             <Wallet
               bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
-              color='#FFF'
+              color="#FFF"
               isDarkMode={isDarkMode}
               onClick={() => ConnectWallet()}
             >
@@ -112,7 +111,7 @@ const Profile = ({ isDarkMode }) => {
             <>
               <Wallet
                 bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
-                color='#FFF'
+                color="#FFF"
                 isDarkMode={isDarkMode}
                 onClick={() => setShowDropdown(!showDropdown)}
                 ref={toggleArrowRef}
@@ -148,7 +147,10 @@ const Profile = ({ isDarkMode }) => {
                     align="flex-start"
                     ref={dropdownRef}
                   >
-                    <Dropdown dropdownValues={dropdownValues} setShowDropdown={setShowDropdown} />
+                    <Dropdown
+                      dropdownValues={dropdownValues}
+                      setShowDropdown={setShowDropdown}
+                    />
                   </DropdownItem>
                   <ItemModal ref={modalRef}>
                     <ProfileModal
@@ -165,7 +167,7 @@ const Profile = ({ isDarkMode }) => {
       ) : (
         <Wallet
           bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
-          color='#FFF'
+          color="#FFF"
           isDarkMode={isDarkMode}
           onClick={() => ConnectWallet()}
         >
@@ -207,7 +209,7 @@ const Wallet = styled.div`
     box-sizing: border-box;
     justify-content: space-between;
     border-radius: 13px;
-    background: linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%);
+    background: linear-gradient(87.17deg, #b6a0f5 0%, #f46ef7 57.29%, #ff95d5 100%);
     margin: 0px 0px;
   }
 
