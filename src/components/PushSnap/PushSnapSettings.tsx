@@ -1,16 +1,16 @@
+import SnapExample from 'assets/snap/SnapExample.svg?react';
+import InfoLogo from 'assets/snap/spam-icon.svg?react';
 import { Image, Section } from 'components/SharedStyling';
 import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { device } from 'config/Globals';
+import { useAccount } from 'hooks';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+import AboutSnapModal from 'modules/snap/AboutSnapModal';
 import SnapModule from 'modules/snap/SnapModule';
 import React, { useEffect, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
-import SnapExample from 'assets/pushSnaps/SnapExample.svg?react';
-import { device } from 'config/Globals';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import InfoLogo from 'assets/pushSnaps/spam-icon.svg?react';
-import { useAccount } from 'hooks';
 import PushSnapConfigureModal from './PushSnapConfigureModal';
-import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
-import AboutSnapModal from 'modules/snap/AboutSnapModal';
 
 const PushSnapSettings = () => {
   const { account, provider } = useAccount();

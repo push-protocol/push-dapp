@@ -18,14 +18,14 @@ import Info from 'segments/Info';
 import { H2, Image, Item, Section, Span } from '../../primaries/SharedStyling';
 
 // Internal Configs
-import ActiveIcon from 'assets/pushSnaps/ActiveIcon.svg';
-import BellRinging from 'assets/pushSnaps/BellRinging.svg';
-import GasPump from 'assets/pushSnaps/GasPump.svg';
-import GearIcon from 'assets/pushSnaps/GearIcon.svg?react';
-import NotificationLogo from 'assets/pushSnaps/Notification.svg';
-import PushMetamaskLogo from 'assets/pushSnaps/PushMetamaskLogo.svg';
-import SnapExample from 'assets/pushSnaps/SnapExample.svg';
-import InfoLogo from 'assets/pushSnaps/spam-icon.svg';
+import ActiveIcon from 'assets/snap/ActiveIcon.svg';
+import BellRinging from 'assets/snap/BellRinging.svg';
+import GasPump from 'assets/snap/GasPump.svg';
+import GearIcon from 'assets/snap/GearIcon.svg?react';
+import NotificationLogo from 'assets/snap/Notification.svg';
+import PushMetamaskLogo from 'assets/snap/PushMetamaskLogo.svg';
+import SnapExample from 'assets/snap/SnapExample.svg';
+import InfoLogo from 'assets/snap/spam-icon.svg';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import AboutSnapModal from './AboutSnapModal';
 

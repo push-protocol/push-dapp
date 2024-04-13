@@ -12,9 +12,9 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import { ChatPreview, ChatPreviewList, UserProfile } from '@pushprotocol/uiweb';
+import BlankChat from 'assets/chat/BlankChat.svg?react';
 import CreateGroupIcon from 'assets/chat/group-chat/creategroup.svg?react';
 import CreateGroupFillIcon from 'assets/chat/group-chat/creategroupfill.svg?react';
-import BlankChat from 'assets/chat/BlankChat.svg?react';
 import NewTag from 'components/NewTag';
 import Recommended from 'components/chat/recommended/Recommended';
 import ProfileHeader from 'components/chat/w2wChat/profile';
@@ -65,7 +65,7 @@ type loadingData = { loading: boolean; preload: boolean; paging: boolean; finish
 
 // Chat Sections
 // Divided into two, left and right
-const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerChatParticipant }) => {
+const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   // theme context
   const theme = useTheme();
   const { wallet } = useAccount();
@@ -268,9 +268,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
           {!showRecommended && (
             <ChatPreviewList
               listType="CHATS"
-              onChatSelected={async (chatid, chatParticipant) => {
-                setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid));
-              }}
+              onChatSelected={(chatid) => setSelectedChatId(chatid)}
               onUnreadCountChange={(count) => {
                 // console.log('Count is: ', count);
               }}
@@ -293,9 +291,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
         >
           <ChatPreviewList
             listType="REQUESTS"
-            onChatSelected={async (chatid, chatParticipant) => {
-              setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid));
-            }}
+            onChatSelected={(chatid) => setSelectedChatId(chatid)}
             onUnreadCountChange={(count) => {
               // console.log('Count is: ', count);
             }}
@@ -330,9 +326,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
             <ChatPreviewList
               listType="SEARCH"
               searchParamter={searchedUser || ''}
-              onChatSelected={async (chatid, chatParticipant) =>
-                setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid))
-              }
+              onChatSelected={(chatid) => setSelectedChatId(chatid)}
               onUnreadCountChange={(count) => {
                 // console.log('Count is: ', count);
               }}
@@ -346,7 +340,9 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
             padding="20px 10px 24px 10px"
             zIndex="1"
             borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
-            onClick={handleCreateGroup}
+            onClick={() => {
+              showCreateGroupModal();
+            }}
             background="transparent"
             hover={theme.chat.snapFocusBg}
             hoverBackground="transparent"

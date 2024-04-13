@@ -8,18 +8,18 @@ import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import MinusCircle from 'assets/pushSnaps/MinusCircle.svg?react';
+import MinusCircle from 'assets/snap/MinusCircle.svg?react';
 import { Button } from 'components/SharedStyling';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { AppContext } from 'contexts/AppContext';
 import { shortenText } from 'helpers/UtilityHelper';
 import { useAccount } from 'hooks';
-import { AppContext } from 'contexts/AppContext';
 
 // Internal Configs
 import { device } from 'config/Globals';
-import { SnoozeDurationType } from 'types';
-import { updateSnoozeDuration } from 'helpers';
 import { defaultSnapOrigin } from 'config/index.js';
+import { updateSnoozeDuration } from 'helpers';
+import { SnoozeDurationType } from 'types';
 
 const PushSnapConfigureModal = ({
   snoozeDuration,
