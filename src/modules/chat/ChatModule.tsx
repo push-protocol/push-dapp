@@ -312,9 +312,9 @@ function Chat({ chatid }) {
                   chatActive={isUserChatting && userPushSDKInstance && !userPushSDKInstance?.readmode()}
                 >
                   <ChatSidebarSection
+                    key={userPushSDKInstance.uid}
                     showCreateGroupModal={showCreateGroupModal}
-                    autofilledSearch={chatid}
-                    triggerChatParticipant={triggerChatParticipant}
+                    setSelectedChatId={setSelectedChatId}
                   />
                 </ChatSidebarContainer>
               )}

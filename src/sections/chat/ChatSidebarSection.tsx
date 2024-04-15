@@ -65,40 +65,30 @@ type loadingData = { loading: boolean; preload: boolean; paging: boolean; finish
 
 // Chat Sections
 // Divided into two, left and right
-const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
+const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
   // theme context
   const theme = useTheme();
-  const { wallet } = useAccount();
-
-  const { readOnlyWallet } = useContext(GlobalContext);
-  const { setSelectedChatId } = useContext(Context);
-  const { setMode } = useContext(GlobalContext);
 
   const isNewTagVisible = getIsNewTagVisible(new Date('2023-02-22T00:00:00.000'), 90);
 
-  const { connectedUser, displayQR, setDisplayQR, initializePushSDK, handleConnectWallet, connectWallet } =
-    useContext(AppContext);
   const [searchedUser, setSearchedUser] = useState<string>('');
 
   const { activeTab, setActiveTab } = useContext(Context);
   const [requestChatList, setRequestChatList] = useState<ChatPreviewList>([]);
   const [requestLoadingData, setRequestLoadingData] = useState<loadingData>();
 
-  const [loadingRequests, setLoadingRequests] = useState(true);
-  const [showQR, setShowQR] = useState<boolean>(false);
   const containerRef = React.useRef(null);
 
-  // set recommended chats
-  const [showRecommended, setShowRecommended] = useState(false);
+  // Manage refresh and chats tab
+  const [primaryChatLoading, setPrimaryChatLoading] = useState({
+    showConvoPrompt: false,
+    showRefreshPrompt: true,
+    chatRenderKey: [...Array(24)].map(() => ((Math.random() * 36) | 0).toString(36)).join(''),
+  });
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
-
-  const closeQRDropdown = () => {
-    setShowQR(false);
-  };
-  useClickAway(containerRef, () => closeQRDropdown());
 
   let navigate = useNavigate();
 
@@ -209,8 +199,6 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
       <ItemVV2
         justifyContent="flex-start"
         alignItems="stretch"
-        // ref={containerRef}
-        onClick={closeQRDropdown}
         width="100%"
       >
         {activeTab == 0 && (
@@ -223,26 +211,23 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
 
         {/* Set Chats */}
         <ItemVV2
-          justifyContent="flex-start"
           flexWrap="nowrap"
           width="100%"
           height="100%"
           flex="1 1 1px"
           style={{ display: activeTab == 0 ? 'flex' : 'none' }}
           overflow="scroll"
+          justifyContent="center"
         >
           {/* Only show recommended chats if there are no chats */}
-          {showRecommended && (
-            <>
-              {/* <Recommended
-                bg="#f5f5f5"
-                onChatSelected={async (chatid, chatParticipant) => {
-                  setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid));
-                }}
-              /> */}
+          {primaryChatLoading.showConvoPrompt && (
+            <ItemVV2
+              flex="initial"
+              gap="10px"
+            >
+              <BlankChat />
 
-              <ItemVV2>
-                <BlankChat />
+              <ItemHV2>
                 <SpanV2
                   fontSize="17px"
                   color={theme.default.color}
@@ -256,29 +241,59 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
                   color={theme.default.secondaryColor}
                   fontWeight="400"
                   lineHeight="130%"
-                  padding="0px 25px"
+                  padding="0px 25px 10px 25px"
                 >
                   Get started by searching for an address or group name.
                 </SpanV2>
-              </ItemVV2>
-            </>
+
+                {/* // Only show refresh prompt if there are no chats */}
+                {primaryChatLoading.showRefreshPrompt && (
+                  <ButtonV2
+                    flex="initial"
+                    padding="8px 12px"
+                    background="#D53A94"
+                    color="#fff"
+                    borderRadius="16px"
+                    onClick={() => {
+                      setPrimaryChatLoading({
+                        ...primaryChatLoading,
+                        showConvoPrompt: false,
+                        chatRenderKey: [...Array(24)].map(() => ((Math.random() * 36) | 0).toString(36)).join(''),
+                      });
+                    }}
+                  >
+                    Refresh
+                  </ButtonV2>
+                )}
+              </ItemHV2>
+            </ItemVV2>
           )}
 
-          {/* Only show recommended chats if there are no chats */}
-          {!showRecommended && (
+          {/* Show no conversations if no chats are loaded */}
+          <ItemVV2
+            justifyContent="flex-start"
+            style={{ display: primaryChatLoading.showConvoPrompt ? 'none' : 'flex' }}
+            height="100%"
+            overflow="scroll"
+          >
             <ChatPreviewList
+              key={primaryChatLoading.chatRenderKey}
               listType="CHATS"
               onChatSelected={(chatid) => setSelectedChatId(chatid)}
               onUnreadCountChange={(count) => {
                 // console.log('Count is: ', count);
               }}
               onPreload={(chats) => {
-                if (chats.length == 0) {
-                  setShowRecommended(true);
+                if (chats.length > 0) {
+                  setPrimaryChatLoading({ ...primaryChatLoading, showConvoPrompt: false });
+                }
+
+                if (chats.length === 0) {
+                  setPrimaryChatLoading({ ...primaryChatLoading, showConvoPrompt: true });
                 }
               }}
             />
-          )}
+          </ItemVV2>
         </ItemVV2>
 
         {/* Set Requests */}
@@ -308,15 +323,9 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
             setSearchedUser={setSearchedUser}
           />
         )}
-        {activeTab == 4 && (
-          <SearchBar
-            autofilled={autofilledSearch}
-            searchedUser={searchedUser}
-            setSearchedUser={setSearchedUser}
-          />
-        )}
+
         {/* Set Search */}
-        {searchedUser && (activeTab === 3 || activeTab === 4) && (
+        {searchedUser && activeTab == 3 && (
           <ItemVV2
             justifyContent="flex-start"
             flexWrap="nowrap"
@@ -333,6 +342,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
             />
           </ItemVV2>
         )}
+
         {activeTab == 3 && (
           <CreateGroupContainer
             // justifyContent="flex-start"
@@ -366,30 +376,10 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
       </ItemVV2>
 
       {/* Footer */}
-      {showQR ? (
-        <QRCodeContainer
-          onClick={() => setDisplayQR(!displayQR)}
-          style={{
-            background: theme.default.bg,
-            borderColor: theme.LinkMobileAppBorder,
-            // color:theme.chat.sendMessageFontColor
-            color: theme.textcolor,
-          }}
-        >
-          <QROutline />
-          <TextQR>Link Mobile App</TextQR>
-        </QRCodeContainer>
-      ) : null}
-
       <ProfileContainer
         zIndex="1"
         borderTop={`1px solid ${theme.default.secondaryBg}`}
       >
-        {/* <ProfileHeader
-          setActiveTab={setActiveTab}
-          setShowQR={setShowQR}
-          showQR={showQR}
-        /> */}
         <UserProfile />
       </ProfileContainer>
     </ItemVV2>

@@ -129,12 +129,15 @@ const AppContextProvider = ({ children }) => {
   };
 
   const initialisePushSdkReadMode = async () => {
-    let userInstance;
-    userInstance = await PushAPI.initialize({
+    const decryptedPGPKeys = localStorage.getItem(account);
+    const userInstance = await PushAPI.initialize(decryptedPGPKeys ? provider?.getSigner(account) : null, {
+      decryptedPGPPrivateKey: decryptedPGPKeys ? decryptedPGPKeys : null,
       env: appConfig.appEnv,
       account: account,
       alpha: { feature: ['SCALABILITY_V2'] },
     });
+
+    console.debug('src::contexts::AppContext::remebering user instance', userInstance);
     dispatch(setUserPushSDKInstance(userInstance));
     return userInstance;
   };
@@ -258,12 +261,25 @@ const AppContextProvider = ({ children }) => {
       }
 
       const librarySigner = web3Provider?.getSigner(currentAddress);
-      userInstance = await PushAPI.initialize(librarySigner!, {
-        env: appConfig.appEnv,
-        account: currentAddress,
-        progressHook: onboardingProgressReformatter,
-        alpha: { feature: ['SCALABILITY_V2'] },
-      });
+      const decryptedPGPKeys = localStorage.getItem(currentAddress);
+
+      if (decryptedPGPKeys) {
+        userInstance = await PushAPI.initialize(librarySigner!, {
+          decryptedPGPPrivateKey: decryptedPGPKeys,
+          env: appConfig.appEnv,
+          account: currentAddress,
+          progressHook: onboardingProgressReformatter,
+          alpha: { feature: ['SCALABILITY_V2'] },
+        });
+      } else {
+        userInstance = await PushAPI.initialize(librarySigner!, {
+          env: appConfig.appEnv,
+          account: currentAddress,
+          progressHook: onboardingProgressReformatter,
+          alpha: { feature: ['SCALABILITY_V2'] },
+        });
+      }
+
       if (userInstance) {
         setBlockedLoading({
           enabled: false,

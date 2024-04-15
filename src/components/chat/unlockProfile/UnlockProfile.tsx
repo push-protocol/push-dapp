@@ -1,13 +1,14 @@
 // React + Web3 Essentials
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 
 // External Packages
 import { useSelector } from 'react-redux';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ButtonV2, ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { AppContext } from 'contexts/AppContext';
+import { useAccount } from 'hooks';
 
 // Internal Configs
 import { device } from 'config/Globals';
@@ -41,6 +42,25 @@ const UnlockProfile = ({
 }: IntroContainerProps) => {
   const theme = useTheme();
   const { handleConnectWallet } = useContext(AppContext);
+
+  const { account } = useAccount();
+
+  const [rememberMe, setRememberMe] = useState(true);
+
+  const handleRememberMeChange = (event) => {
+    setRememberMe(event.target.checked);
+  };
+
+  const handleChatprofileUnlock = async () => {
+    const user = await handleConnectWallet();
+
+    if (rememberMe) {
+      if (!user.readmode()) {
+        localStorage.setItem(user.account, user.decryptedPgpPvtKey);
+      }
+    }
+  };
+
   return (
     <Container className={type}>
       <ImageV2
@@ -68,17 +88,29 @@ const UnlockProfile = ({
         >
           {body}
         </SpanV2>
+        <ButtonV2
+          padding="14px 20px"
+          background="#D53A94"
+          color="#fff"
+          borderRadius="16px"
+          onClick={handleChatprofileUnlock}
+        >
+          Unlock Profile
+        </ButtonV2>
+        <ItemHV2 gap="10px">
+          <CustomCheckbox
+            checked={rememberMe}
+            onChange={handleRememberMeChange}
+          />
+          <SpanV2
+            fontSize="14px"
+            fontWeight="500"
+            lineHeight="130%"
+          >
+            Remember Me
+          </SpanV2>
+        </ItemHV2>
       </ItemVV2>
-      <ButtonV2
-        flex="initial"
-        padding="14px 20px"
-        background="#D53A94"
-        color="#fff"
-        borderRadius="16px"
-        onClick={async () => await handleConnectWallet()}
-      >
-        Unlock Profile
-      </ButtonV2>
     </Container>
   );
 };
@@ -116,6 +148,16 @@ const Container = styled(ItemVV2)`
     background: ${(props) => props.theme.chat.modalBg};
     opacity: 0.8;
   }
+`;
+
+const CustomCheckbox = styled.input.attrs({ type: 'checkbox' })`
+  accent-color: #d53a94; /* Changes the checkbox color */
+  &:checked {
+    background-color: #d53a94;
+  }
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
 `;
 
 export default UnlockProfile;
