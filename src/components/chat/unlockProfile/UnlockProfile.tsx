@@ -52,13 +52,7 @@ const UnlockProfile = ({
   };
 
   const handleChatprofileUnlock = async () => {
-    const user = await handleConnectWallet();
-
-    if (rememberMe) {
-      if (!user.readmode()) {
-        localStorage.setItem(user.account, user.decryptedPgpPvtKey);
-      }
-    }
+    await handleConnectWallet({ remember: rememberMe });
   };
 
   return (

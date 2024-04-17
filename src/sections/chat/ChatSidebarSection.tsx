@@ -92,20 +92,20 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
 
   let navigate = useNavigate();
 
-  const handleCreateGroup = async () => {
-    if (!userPushSDKInstance.readmode()) {
-      showCreateGroupModal();
-    } else {
-      if (userPushSDKInstance.account === readOnlyWallet) {
-        handleConnectWallet();
-      } else {
-        if (userPushSDKInstance.signer === undefined) {
-          await initializePushSDK();
-          return null;
-        }
-      }
-    }
-  };
+  // const handleCreateGroup = async () => {
+  //   if (!userPushSDKInstance.readmode()) {
+  //     showCreateGroupModal();
+  //   } else {
+  //     if (userPushSDKInstance.account === readOnlyWallet) {
+  //       handleConnectWallet();
+  //     } else {
+  //       if (userPushSDKInstance.signer === undefined) {
+  //         await initializePushSDK();
+  //         return null;
+  //       }
+  //     }
+  //   }
+  // };
 
   // RENDER
   return (

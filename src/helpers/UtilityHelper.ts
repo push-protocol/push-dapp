@@ -357,4 +357,8 @@ export const isAddressEqual = (address1: string, address2: string): boolean => {
   return false;
 };
 
+export const toChecksumAddress = (address: string): string => {
+  return utils.getAddress(address);
+};
+
 export default UtilityHelper;
