@@ -28,7 +28,7 @@ export const config = {
     80002, //for amoy polygon
     97, // bnb testnet
     11155420, // optimism sepolia testnet
-    1442, // polygon zkevm testnet
+    2442, // polygon zkevm cardona testnet
     421614, // arbitrum testnet
     123, // fuse testnet
   ],
@@ -44,7 +44,7 @@ export const config = {
     80002: 'https://polygon-amoy.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
     97: 'https://data-seed-prebsc-1-s1.binance.org:8545',
     11155420: 'https://optimism-sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
-    1442: 'https://rpc.public.zkevm-test.net',
+    2442: 'https://rpc.cardona.zkevm-rpc.com',
     421614: 'https://arbitrum-sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
@@ -149,12 +149,12 @@ export const CHAIN_DETAILS = {
     rpcUrl: 'https://optimism-sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
     commAddress: '0x9Dc25996ba72A2FD7E64e7a674232a683f406F1A',
   },
-  1442: {
+  2442: {
     label: 'Polygon zkEVM Testnet',
     name: 'POLYGON_ZK_EVM_TESTNET',
-    chainId: 1442,
-    rpcUrl: 'https://rpc.public.zkevm-test.net',
-    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
+    chainId: 2442,
+    rpcUrl: 'https://rpc.cardona.zkevm-rpc.com',
+    commAddress: '0x6e489b7af21ceb969f49a90e481274966ce9d74d',
   },
   421614: {
     label: 'Arbitrum Testnet',
