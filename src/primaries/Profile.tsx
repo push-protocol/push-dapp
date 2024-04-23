@@ -25,7 +25,7 @@ import { AppContextType } from 'types/context';
 
 // Create Header
 const Profile = ({ isDarkMode }) => {
-  const { web3NameList,initialisePushSdkReadMode }: AppContextType = useContext(AppContext);
+  const { web3NameList, initialisePushSdkReadMode }: AppContextType = useContext(AppContext);
   const { setReadOnlyWallet, readOnlyWallet, mode, setMode }: GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
@@ -44,7 +44,7 @@ const Profile = ({ isDarkMode }) => {
   // Get theme
   const theme = useTheme();
   const [showDropdown, setShowDropdown] = React.useState<boolean>(false);
-  useClickAway(modalRef, dropdownRef, () => showDropdown && setShowDropdown(false));
+  // useClickAway(modalRef, dropdownRef, () => showDropdown && setShowDropdown(false));
 
   const dropdownValues = [
     {
@@ -88,11 +88,11 @@ const Profile = ({ isDarkMode }) => {
     setShowDropdown(false);
   });
 
-  const ConnectWallet = ()=>{
+  const ConnectWallet = () => {
     connect();
   }
 
-  
+
   // to create blockies
   return (
     <>
@@ -105,7 +105,7 @@ const Profile = ({ isDarkMode }) => {
               bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
               color='#FFF'
               isDarkMode={isDarkMode}
-              onClick={()=>ConnectWallet()}
+              onClick={() => ConnectWallet()}
             >
               Connect Wallet
             </Wallet>
@@ -149,7 +149,7 @@ const Profile = ({ isDarkMode }) => {
                     align="flex-start"
                     ref={dropdownRef}
                   >
-                    <Dropdown dropdownValues={dropdownValues} setShowDropdown={setShowDropdown}/>
+                    <Dropdown dropdownValues={dropdownValues} setShowDropdown={setShowDropdown} />
                   </DropdownItem>
                   <ItemModal ref={modalRef}>
                     <ProfileModal
@@ -168,7 +168,7 @@ const Profile = ({ isDarkMode }) => {
           bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
           color='#FFF'
           isDarkMode={isDarkMode}
-          onClick={()=>ConnectWallet()}
+          onClick={() => ConnectWallet()}
         >
           Connect Wallet
         </Wallet>

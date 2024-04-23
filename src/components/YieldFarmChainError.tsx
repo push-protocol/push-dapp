@@ -1,23 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Close from 'assets/chat/group-chat/close.svg?react';
 import { ButtonV2, ItemHV2, ItemVV2 } from './reusables/SharedStylingV2';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { ethers } from 'ethers';
 import { appConfig } from 'config/index.js';
 import { useAccount } from 'hooks';
 
-const YieldFarmChainError = () => {
+const YieldFarmChainError = ({ onClose }) => {
   const { account, chainId: currentChainId, switchChain } = useAccount();
+
+  const theme = useTheme();
 
   const handleChainChange = () => {
     const chainIdToPass = appConfig.allowedNetworks[0];
 
     if (currentChainId !== 1 && currentChainId !== 11155111) {
-      console.debug('Current Chain ID ', currentChainId);
-      console.debug('Chain Id to pass', chainIdToPass);
+      console.info('Current Chain ID ', currentChainId);
+      console.info('Chain Id to pass', chainIdToPass);
       switchChain(appConfig.coreContractChain);
     }
   };
+
+  useEffect(() => {
+    if (currentChainId === 1 || currentChainId === 11155111) {
+      onClose();
+    }
+  }, [currentChainId])
+
 
   return (
     <Container>
@@ -56,10 +65,11 @@ const BodyContainer = styled(ItemVV2)`
 const PrimaryText = styled.div`
   font-size: 28px;
   font-weight: 500;
+  color: ${(props) => props.theme.stakingSecondaryText};
 `;
 
 const SecondaryText = styled.div`
-  color: #657795;
+  color: ${(props) => props.theme.activeButtonText};
   text-align: center;
   font-size: 18px;
   font-weight: 400;

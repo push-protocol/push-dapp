@@ -21,7 +21,7 @@ import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import StepsTransactionModal from 'components/StepsTransactionModal';
 
 const NewYieldFarming = ({ setActiveTab }) => {
-  const { provider, account } = useAccount();
+  const { provider, account, chainId } = useAccount();
 
   const [pushToken, setPushToken] = useState(null);
   const [staking, setStaking] = useState(null);
@@ -37,11 +37,16 @@ const NewYieldFarming = ({ setActiveTab }) => {
 
   const library = provider?.getSigner(account);
 
+  const getPoolStats = React.useCallback(async () => {
+    const poolStats = await YieldFarmingDataStoreV2.getInstance().getPoolStats(provider);
+    setPoolStats({ ...poolStats });
+  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
+
+
   const getLpPoolStats = React.useCallback(async () => {
     const poolStats = await YieldFarmingDataStoreV2.getInstance().getPoolStats(provider);
     const lpPoolStats = await YieldFarmingDataStoreV2.getInstance().getLPPoolStats(poolStats);
 
-    setPoolStats({ ...poolStats });
     setLpPoolStats({ ...lpPoolStats });
   }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
 
@@ -65,6 +70,11 @@ const NewYieldFarming = ({ setActiveTab }) => {
 
   //initiate the YieldFarmV2 data store here
   React.useEffect(() => {
+
+    if (chainId !== 1 && chainId !== 11155111) {
+      return;
+    }
+
     setLpPoolStats(null);
     setUserDataLP(null);
     setPUSHPoolStats(null);
@@ -98,6 +108,7 @@ const NewYieldFarming = ({ setActiveTab }) => {
       setUniswapV2Router02Instance(uniswapV2Router02Instance);
     }
 
+
     YieldFarmingDataStoreV2.getInstance().init(
       account,
       staking,
@@ -107,11 +118,18 @@ const NewYieldFarming = ({ setActiveTab }) => {
       uniswapV2Router02Instance
     );
 
-    getLpPoolStats();
-    getUserDataLP();
-    getUserDataPush();
-    getPUSHPoolStats();
-  }, [account]);
+
+    getPoolStats();
+
+    if (account !== '0x0000000000000000000000000000000000000001') {
+      getUserDataPush();
+      getUserDataLP();
+      getLpPoolStats();
+    }
+
+
+
+  }, [account, chainId]);
 
   return (
     <>
