@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
@@ -17,11 +17,12 @@ import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, addresses } from 'config/index.js';
-import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
-import StepsTransactionModal from 'components/StepsTransactionModal';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 const NewYieldFarming = ({ setActiveTab }) => {
   const { provider, account, chainId } = useAccount();
+
+  const { readOnlyWallet } = useContext(GlobalContext);
 
   const [pushToken, setPushToken] = useState(null);
   const [staking, setStaking] = useState(null);
@@ -121,7 +122,7 @@ const NewYieldFarming = ({ setActiveTab }) => {
 
     getPoolStats();
 
-    if (account !== '0x0000000000000000000000000000000000000001') {
+    if (account !== readOnlyWallet) {
       getUserDataPush();
       getUserDataLP();
       getLpPoolStats();
