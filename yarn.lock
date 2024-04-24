@@ -4215,9 +4215,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:1.7.8":
-  version: 1.7.8
-  resolution: "@pushprotocol/restapi@npm:1.7.8"
+"@pushprotocol/restapi@npm:1.7.9":
+  version: 1.7.9
+  resolution: "@pushprotocol/restapi@npm:1.7.9"
   dependencies:
     "@metamask/eth-sig-util": ^5.0.2
     axios: ^0.27.2
@@ -4240,7 +4240,7 @@ __metadata:
   peerDependenciesMeta:
     ethers:
       optional: true
-  checksum: d87c74d7629dd35d94d30126e3dd9668987bf18d1bb09c8d2e2e128d3fd370f1a317e51a091dcb5506ed3ddc5019181a7389ea3572451eabb05eccfddd2a70ef
+  checksum: 98f24a5affa1ea841ea312b39363df5ac128333c68a66eca58044fe87f38b10e175a8793933405ebc8aa9dd9779392239d69548075e1f2eadc81136f44ffe349
   languageName: node
   linkType: hard
 
@@ -19171,7 +19171,7 @@ __metadata:
     "@mui/icons-material": ^5.8.4
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
-    "@pushprotocol/restapi": 1.7.8
+    "@pushprotocol/restapi": 1.7.9
     "@pushprotocol/socket": 0.5.3
     "@pushprotocol/uiweb": "*"
     "@reduxjs/toolkit": ^1.7.1

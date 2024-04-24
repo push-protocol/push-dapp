@@ -68,6 +68,7 @@ const ChatSection = ({ chatId, setChatId, loggedIn }) => {
               isConnected={false}
               autoConnect={false}
               messageInput={loggedIn ? true : false}
+              supressToast={true}
               verificationFailModalPosition={MODAL_POSITION_TYPE.RELATIVE}
               chatProfileLeftHelperComponent={
                 isTablet ? (
