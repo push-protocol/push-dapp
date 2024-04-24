@@ -51,11 +51,11 @@ const Faucets = () => {
       link: "https://faucet.quicknode.com/optimism/sepolia",
     },
     {
-      id: "1442",
+      id: "2442",
       value: "Polygon zkEVM",
       title: "Polygon zkEVM Bridge",
       function: () => {},
-      link: "https://public.zkevm-test.net/"
+      link: "https://faucet.polygon.technology/"
     },
     {
       id: "421614",
