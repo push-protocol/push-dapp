@@ -22,13 +22,11 @@ import { GlobalContext } from 'contexts/GlobalContext';
 const NewYieldFarming = ({ setActiveTab }) => {
   const { provider, account, chainId } = useAccount();
 
-  const { readOnlyWallet } = useContext(GlobalContext);
-
-  const [pushToken, setPushToken] = useState(null);
-  const [staking, setStaking] = useState(null);
-  const [yieldFarmingLP, setYieldFarmingLP] = useState(null);
-  const [pushCoreV2, setPushCoreV2] = useState(null);
-  const [uniswapV2Router02Instance, setUniswapV2Router02Instance] = useState(null);
+  const [pushToken, setPushToken] = useState<ethers.Contract>();
+  const [staking, setStaking] = useState<ethers.Contract>();
+  const [yieldFarmingLP, setYieldFarmingLP] = useState<ethers.Contract>();
+  const [pushCoreV2, setPushCoreV2] = useState<ethers.Contract>();
+  const [uniswapV2Router02Instance, setUniswapV2Router02Instance] = useState<ethers.Contract>();
 
   const [poolStats, setPoolStats] = useState(null);
   const [lpPoolStats, setLpPoolStats] = useState(null);
@@ -40,8 +38,9 @@ const NewYieldFarming = ({ setActiveTab }) => {
 
   const getPoolStats = React.useCallback(async () => {
     const poolStats = await YieldFarmingDataStoreV2.getInstance().getPoolStats(provider);
+
     setPoolStats({ ...poolStats });
-  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
+  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance, provider]);
 
 
   const getLpPoolStats = React.useCallback(async () => {
@@ -49,7 +48,7 @@ const NewYieldFarming = ({ setActiveTab }) => {
     const lpPoolStats = await YieldFarmingDataStoreV2.getInstance().getLPPoolStats(poolStats);
 
     setLpPoolStats({ ...lpPoolStats });
-  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
+  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance, provider]);
 
   const getPUSHPoolStats = React.useCallback(async () => {
     // const pushPoolStats = await YieldFarmingDataStoreV2.getInstance().getPUSHPoolStats(provider);
@@ -60,14 +59,14 @@ const NewYieldFarming = ({ setActiveTab }) => {
     const userDataLP = await YieldFarmingDataStoreV2.getInstance().getUserDataLP();
 
     setUserDataLP({ ...userDataLP });
-  }, [yieldFarmingLP]);
+  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
 
   const getUserDataPush = React.useCallback(async () => {
     const [pushPoolStats, userDataPush] = await YieldFarmingDataStoreV2.getInstance().getUserDataPUSH(provider);
 
     setPUSHPoolStats({ ...pushPoolStats });
     setUserDataPush({ ...userDataPush });
-  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
+  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance, provider]);
 
   //initiate the YieldFarmV2 data store here
   React.useEffect(() => {
@@ -119,16 +118,10 @@ const NewYieldFarming = ({ setActiveTab }) => {
       uniswapV2Router02Instance
     );
 
-
     getPoolStats();
-
-    if (account !== readOnlyWallet) {
-      getUserDataPush();
-      getUserDataLP();
-      getLpPoolStats();
-    }
-
-
+    getUserDataLP();
+    getLpPoolStats();
+    getUserDataPush();
 
   }, [account, chainId]);
 
