@@ -4215,9 +4215,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:1.7.9":
-  version: 1.7.9
-  resolution: "@pushprotocol/restapi@npm:1.7.9"
+"@pushprotocol/restapi@npm:1.6.12-alpha.2":
+  version: 1.6.12-alpha.2
+  resolution: "@pushprotocol/restapi@npm:1.6.12-alpha.2"
   dependencies:
     "@metamask/eth-sig-util": ^5.0.2
     axios: ^0.27.2
@@ -4240,7 +4240,7 @@ __metadata:
   peerDependenciesMeta:
     ethers:
       optional: true
-  checksum: 98f24a5affa1ea841ea312b39363df5ac128333c68a66eca58044fe87f38b10e175a8793933405ebc8aa9dd9779392239d69548075e1f2eadc81136f44ffe349
+  checksum: 2a3a6dd67e11bf03bae1eb9fc0c289f20383a43e191912173379f16b40e6f1e7503694b3680bb17bb92ebb6bcf346458b048b94b026fc2a8d9ad05b4ec5afb57
   languageName: node
   linkType: hard
 
@@ -4271,6 +4271,8 @@ __metadata:
     "@web3-onboard/react": ^2.8.9
     "@web3-onboard/walletconnect": ^2.4.6
     "@web3-react/injected-connector": ^6.0.7
+    animejs: ^2.2.0
+    classnames: ^2.2.5
     date-fns: ^2.28.0
     emoji-picker-react: ^4.4.9
     ethers: ^5.6.8
@@ -4278,6 +4280,7 @@ __metadata:
     html-react-parser: ^1.4.13
     livekit-client: ^1.13.3
     moment: ^2.29.4
+    raf: ^3.4.0
     react-easy-crop: ^4.1.4
     react-icons: ^4.10.1
     react-image-file-resizer: ^0.4.7
@@ -8164,6 +8167,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"animejs@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "animejs@npm:2.2.0"
+  checksum: a95d6964a0af4fb1ad500deea11a3e984d0b5ea253cd99f4c07706db666d0784c67fb5e7e36f84aea58b1c2a1d8e3958f03ba9f31998f79d86f492edc909f1ba
+  languageName: node
+  linkType: hard
+
 "ansi-regex@npm:^4.0.0":
   version: 4.1.1
   resolution: "ansi-regex@npm:4.1.1"
@@ -9731,7 +9741,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"classnames@npm:^2.2.3":
+"classnames@npm:^2.2.3, classnames@npm:^2.2.5":
   version: 2.5.1
   resolution: "classnames@npm:2.5.1"
   checksum: da424a8a6f3a96a2e87d01a432ba19315503294ac7e025f9fece656db6b6a0f7b5003bb1fbb51cbb0d9624d964f1b9bb35a51c73af9b2434c7b292c42231c1e5
@@ -19171,7 +19181,7 @@ __metadata:
     "@mui/icons-material": ^5.8.4
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
-    "@pushprotocol/restapi": 1.7.9
+    "@pushprotocol/restapi": 1.6.12-alpha.2
     "@pushprotocol/socket": 0.5.3
     "@pushprotocol/uiweb": "*"
     "@reduxjs/toolkit": ^1.7.1
@@ -19197,6 +19207,7 @@ __metadata:
     "@web3-onboard/react": ^2.8.9
     "@web3-onboard/walletconnect": 2.5.4
     "@yisheng90/react-loading": 1.2.3
+    animejs: ^2.2.0
     assert: 2.0.0
     babel-plugin-styled-components: 1.10.7
     blockies: 0.0.2
@@ -19205,6 +19216,7 @@ __metadata:
     browserslist: 4.14.6
     buffer: 6.0.3
     chalk: 5.0.1
+    classnames: ^2.2.5
     compressorjs: ^1.2.1
     constants-browserify: 1.0.0
     crypto-browserify: ^3.12.0
@@ -19242,6 +19254,7 @@ __metadata:
     postcss-normalize: 10.0.1
     process: 0.11.10
     qrcode.react: ^3.1.0
+    raf: ^3.4.0
     react: ^18.2.0
     react-animation: 1.2.2
     react-animations: 1.0.0
@@ -19420,6 +19433,15 @@ __metadata:
   version: 1.1.2
   resolution: "radix3@npm:1.1.2"
   checksum: c4d49a3f603b5b7b7704dd907383c8884d12064d6d475f7ca8b05ecc7604d3bd73524b55e0fbcca0f7c9da3a2e9b473a6b4fbc0b639c29c2b0e85020ebda67d3
+  languageName: node
+  linkType: hard
+
+"raf@npm:^3.4.0":
+  version: 3.4.1
+  resolution: "raf@npm:3.4.1"
+  dependencies:
+    performance-now: ^2.1.0
+  checksum: 50ba284e481c8185dbcf45fc4618ba3aec580bb50c9121385d5698cb6012fe516d2015b1df6dd407a7b7c58d44be8086108236affbce1861edd6b44637c8cd52
   languageName: node
   linkType: hard
 

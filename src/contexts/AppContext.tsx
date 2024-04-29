@@ -340,6 +340,13 @@ const AppContextProvider = ({ children }) => {
           onboardingProgress.hookInfo.progressTitle = 'Push Profile Upgraded';
           onboardingProgress.progress = 99;
           break;
+        case 'PUSH-PROFILE-UPDATE-01':
+          onboardingProgress.hookInfo.progressTitle = 'Updating User Profile';
+          break;
+        case 'PUSH-PROFILE-UPDATE-02':
+          onboardingProgress.enabled = false;
+          onboardingProgress.hookInfo.progressTitle = 'User Profile Updated';
+          break;
         case 'PUSH-ERROR-00':
           onboardingProgress.errorMessage =
             'The sign in was rejected by the user. You can still continue in read-only mode.';

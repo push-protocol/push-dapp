@@ -175,13 +175,14 @@ function Chat({ chatid }) {
       await getUser();
     }
 
-    setBlockedLoading({
-      enabled: false,
-      title: 'Push Profile Setup Complete',
-      spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
-      progressEnabled: false,
-      progress: 100,
-    });
+    // This is probably not needed anymore
+    // setBlockedLoading({
+    //   enabled: false,
+    //   title: 'Push Profile Setup Complete',
+    //   spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
+    //   progressEnabled: false,
+    //   progress: 100,
+    // });
 
     setIsLoading(false);
   };
@@ -310,6 +311,7 @@ function Chat({ chatid }) {
                   boxSizing="border-box"
                   background={theme.default.bg}
                   chatActive={isUserChatting && userPushSDKInstance && !userPushSDKInstance?.readmode()}
+                  zIndex="0"
                 >
                   <ChatSidebarSection
                     key={userPushSDKInstance.uid}
@@ -370,8 +372,8 @@ function Chat({ chatid }) {
           </QueryClientProvider>
         )}
 
-        {/* This always needs to be last */}
-        {blockedLoading.enabled && (
+        {/* This always needs to be last, is not required as login handled by the dapp */}
+        {/* {blockedLoading.enabled && (
           <LoaderSpinner
             type={LOADER_TYPE.STANDALONE}
             overlay={LOADER_OVERLAY.ONTOP}
@@ -386,7 +388,7 @@ function Chat({ chatid }) {
             progress={blockedLoading.progress}
             progressNotice={blockedLoading.progressNotice}
           />
-        )}
+        )} */}
       </ItemHV2>
     </Container>
   );

@@ -45,7 +45,8 @@ const UnlockProfile = ({
 
   const { account } = useAccount();
 
-  const [rememberMe, setRememberMe] = useState(true);
+  // Ensures if profile is stored then true is returned else false
+  const [rememberMe, setRememberMe] = useState(localStorage.getItem(account) ? true : false);
 
   const handleRememberMeChange = (event) => {
     setRememberMe(event.target.checked);

@@ -275,12 +275,12 @@ export default function App() {
         <InitState />
         <NavigationContextProvider>
           <ChatUIProvider
-            theme={darkMode && darkChatTheme}
-            // // signer={signerData}
-            // env={appConfig?.appEnv}
-            // account={account}
-            // pgpPrivateKey={pgpPvtKey}
             user={userPushSDKInstance}
+            theme={darkMode && darkChatTheme}
+            debug={true}
+            uiConfig={{
+              suppressToast: false,
+            }}
           >
             <SpaceContextProvider>
               <SpaceComponentContextProvider spaceUI={spaceUI}>

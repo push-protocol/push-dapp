@@ -11,7 +11,7 @@ import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ChatPreview, ChatPreviewList, UserProfile } from '@pushprotocol/uiweb';
+import { ChatPreviewList, UserProfile } from '@pushprotocol/uiweb';
 import BlankChat from 'assets/chat/BlankChat.svg?react';
 import CreateGroupIcon from 'assets/chat/group-chat/creategroup.svg?react';
 import CreateGroupFillIcon from 'assets/chat/group-chat/creategroupfill.svg?react';
@@ -71,11 +71,15 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
 
   const isNewTagVisible = getIsNewTagVisible(new Date('2023-02-22T00:00:00.000'), 90);
 
+  // For searching user
   const [searchedUser, setSearchedUser] = useState<string>('');
 
+  // For keeping active tab
   const { activeTab, setActiveTab } = useContext(Context);
-  const [requestChatList, setRequestChatList] = useState<ChatPreviewList>([]);
-  const [requestLoadingData, setRequestLoadingData] = useState<loadingData>();
+
+  // For storing number of request chat count, -1 is uninitialized
+  const [numberOfChatReqs, setNumberOfChatReqs] = useState<number>(-1);
+  const [requestLoadingData, setRequestLoadingData] = useState<loadingData | null>(null);
 
   const containerRef = React.useRef(null);
 
@@ -168,16 +172,14 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
                 >
                   Requests
                 </SpanV2>
-                {requestLoadingData && requestLoadingData?.loading && (
+                {numberOfChatReqs === -1 || requestLoadingData?.loading ? (
                   <LoaderSpinner
                     type={LOADER_TYPE.SEAMLESS}
                     width="auto"
                     spinnerSize={20}
                     spinnerColor={GLOBALS.COLORS.PRIMARY_PINK}
                   />
-                )}
-
-                {requestLoadingData && !requestLoadingData?.loading && requestChatList.length > 0 && (
+                ) : numberOfChatReqs > 0 ? (
                   <SpanV2
                     background={GLOBALS.COLORS.PRIMARY_PINK}
                     color={GLOBALS.COLORS.WHITE}
@@ -186,9 +188,9 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
                     fontSize="12px"
                     borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
                   >
-                    {requestChatList.length}
+                    {numberOfChatReqs}
                   </SpanV2>
-                )}
+                ) : null}
               </ItemHV2>
             </TabButton>
           </ItemHV2>
@@ -281,14 +283,22 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
               listType="CHATS"
               onChatSelected={(chatid) => setSelectedChatId(chatid)}
               onUnreadCountChange={(count) => {
-                // console.log('Count is: ', count);
+                // console.debug('Count is: ', count);
+              }}
+              onLoading={(status) => {
+                console.debug(
+                  `src::sections::chat::ChatSidebarSection::onLoading::chats: loading ${new Date().toISOString()}`,
+                  status
+                );
+
+                if (status.loading && !status.paging) {
+                  setPrimaryChatLoading({ ...primaryChatLoading, showConvoPrompt: false });
+                }
               }}
               onPreload={(chats) => {
                 if (chats.length > 0) {
                   setPrimaryChatLoading({ ...primaryChatLoading, showConvoPrompt: false });
-                }
-
-                if (chats.length === 0) {
+                } else if (chats.length === 0) {
                   setPrimaryChatLoading({ ...primaryChatLoading, showConvoPrompt: true });
                 }
               }}
@@ -308,11 +318,19 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
             listType="REQUESTS"
             onChatSelected={(chatid) => setSelectedChatId(chatid)}
             onUnreadCountChange={(count) => {
-              // console.log('Count is: ', count);
+              // if we want to tap all unread messages
             }}
-            onLoading={(loadingData) => setRequestLoadingData(loadingData)}
-            onPaging={(chats) => setRequestChatList(chats)}
-            onPreload={(chats) => setRequestChatList(chats)}
+            onChatsCountChange={(count) => {
+              console.debug('src::sections::chat::ChatSidebarSection::onChatsCountChage::requests: count is: ', count);
+              setNumberOfChatReqs(count);
+            }}
+            onLoading={(loadingData) => {
+              console.debug(
+                `src::sections::chat::ChatSidebarSection::onLoading::requests: loading ${new Date().toISOString()}`,
+                loadingData
+              );
+              setRequestLoadingData(loadingData);
+            }}
           />
         </ItemVV2>
 
@@ -336,9 +354,6 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
               listType="SEARCH"
               searchParamter={searchedUser || ''}
               onChatSelected={(chatid) => setSelectedChatId(chatid)}
-              onUnreadCountChange={(count) => {
-                // console.log('Count is: ', count);
-              }}
             />
           </ItemVV2>
         )}
@@ -380,7 +395,17 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
         zIndex="1"
         borderTop={`1px solid ${theme.default.secondaryBg}`}
       >
-        <UserProfile />
+        <UserProfile
+          onUserProfileUpdateModalOpen={(open: boolean) => {
+            console.log(
+              'src::sections::chat::ChatSidebarSection::onUserProfileUpdateModalOpen::profile: open is: ',
+              open
+            );
+          }}
+          // onUserProfileUpdate={(profile: any) => {
+          //   console.log('src::sections::chat::ChatSidebarSection::onUserProfileUpdate::profile: profile is: ', profile);
+          // }}
+        />
       </ProfileContainer>
     </ItemVV2>
   );
