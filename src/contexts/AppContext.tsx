@@ -144,13 +144,13 @@ const AppContextProvider = ({ children }) => {
   };
 
   // Store PGP key in local storage
-  const storePGPKeyForUser = async (account: string, pgpPvtKey: string) => {
+  const storePGPKeyForUser = (account: string, pgpPvtKey: string) => {
     const key = getUniquePGPKey(account);
     localStorage.setItem(key, pgpPvtKey);
   };
 
   // Retrieve PGP key from local storage
-  const retrieveUserPGPKeyFromStorage = async (account: string) => {
+  const retrieveUserPGPKeyFromStorage = (account: string) => {
     const key = getUniquePGPKey(account);
     const value = localStorage.getItem(key);
 
@@ -168,7 +168,9 @@ const AppContextProvider = ({ children }) => {
   };
 
   // Check if the string is a PGP key
-  const isPGPKey = (str: string) => {
+  const isPGPKey = (str: string | null) => {
+    if (!str) return false;
+
     const pgpPublicKeyRegex = /-----BEGIN PGP PUBLIC KEY BLOCK-----[\s\S]*-----END PGP PUBLIC KEY BLOCK-----/;
     const pgpPrivateKeyRegex = /-----BEGIN PGP PRIVATE KEY BLOCK-----[\s\S]*-----END PGP PRIVATE KEY BLOCK-----/;
 
