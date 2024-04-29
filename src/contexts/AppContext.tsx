@@ -133,7 +133,7 @@ const AppContextProvider = ({ children }) => {
 
     if (remember) {
       if (!user.readmode()) {
-        localStorage.setItem(user.account, user.decryptedPgpPvtKey);
+        storePGPKeyForUser(user.account, user.decryptedPgpPvtKey);
       }
     }
 
@@ -141,6 +141,38 @@ const AppContextProvider = ({ children }) => {
     shouldInitializeRef.current = true; // Directly modify the ref to disable useEffect execution
 
     return user;
+  };
+
+  // Store PGP key in local storage
+  const storePGPKeyForUser = async (account: string, pgpPvtKey: string) => {
+    const key = getUniquePGPKey(account);
+    localStorage.setItem(key, pgpPvtKey);
+  };
+
+  // Retrieve PGP key from local storage
+  const retrieveUserPGPKeyFromStorage = async (account: string) => {
+    const key = getUniquePGPKey(account);
+    const value = localStorage.getItem(key);
+
+    if (isPGPKey(value)) {
+      return value;
+    }
+
+    return null;
+  };
+
+  // Append unique key for PGP key
+  const getUniquePGPKey = (account: string) => {
+    const uniqueKey = `push-user-${account}-pgp`;
+    return uniqueKey;
+  };
+
+  // Check if the string is a PGP key
+  const isPGPKey = (str: string) => {
+    const pgpPublicKeyRegex = /-----BEGIN PGP PUBLIC KEY BLOCK-----[\s\S]*-----END PGP PUBLIC KEY BLOCK-----/;
+    const pgpPrivateKeyRegex = /-----BEGIN PGP PRIVATE KEY BLOCK-----[\s\S]*-----END PGP PRIVATE KEY BLOCK-----/;
+
+    return pgpPublicKeyRegex.test(str) || pgpPrivateKeyRegex.test(str);
   };
 
   const shouldCreateNewPushUser = async (checksumAddr: string, signer: any) => {
@@ -171,7 +203,7 @@ const AppContextProvider = ({ children }) => {
     // traceStackCalls(); // Incase we want to see what function called this
 
     // get decrypted pgp keys from local storage
-    const decryptedPGPKeys = localStorage.getItem(account);
+    const decryptedPGPKeys = retrieveUserPGPKeyFromStorage(account);
 
     // Return if new push user is not necessary
     if (!shouldCreateNewPushUser(account, decryptedPGPKeys ? provider?.getSigner(account) : null))
@@ -214,7 +246,7 @@ const AppContextProvider = ({ children }) => {
       }
 
       const librarySigner = web3Provider?.getSigner(currentAddress);
-      const decryptedPGPKeys = localStorage.getItem(currentAddress);
+      const decryptedPGPKeys = retrieveUserPGPKeyFromStorage(currentAddress);
 
       if (decryptedPGPKeys) {
         userInstance = await PushAPI.initialize(librarySigner!, {
