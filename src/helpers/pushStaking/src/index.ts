@@ -14,20 +14,13 @@ export const getUserPushStakingInfo = async (
   const avilableRewardHelper = new CoreV2Reward(coreV2Contract, userAddress);
   const userRewardInfoHelper = new CoreV2Reward(coreV2Contract, userAddress);
 
-  let totalStaked = coreV2Contract.totalStakedAmount();
-  let claimedR = coreV2Contract.usersRewardsClaimed(userAddress);
-
-  const [availableRewards, userFeeInfo, totalStakedAmount, claimedReward] = await Promise.all([
+  const [availableRewards, userFeeInfo] = await Promise.all([
     avilableRewardHelper.estimateHarvestAll(),
     userRewardInfoHelper.getUserPotentialEpochReward(),
-    totalStaked,
-    claimedR,
   ]);
 
   return {
     availableRewards,
-    totalStakedAmount,
-    claimedReward,
     ...userFeeInfo,
   };
 };
