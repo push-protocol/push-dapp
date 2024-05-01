@@ -323,14 +323,26 @@ export default class YieldFarmingDataStoreV2 {
         const pushCoreV2 = this.state.pushCoreV2;
 
         let {
-          epochRewards,
-          currentEpochNumber,
-          userStaked,
-          potentialReward,
-          availableRewards,
-          totalStakedAmount,
-          claimedReward,
-        } = await getUserPushStakingInfo(provider, this.state.account, addresses.pushCoreV2);
+          epochRewards = bn(0), //BN
+          currentEpochNumber = 0,//BN
+          userStaked = bn(0),//BN
+          potentialReward = bn(0),//BN
+          availableRewards = bn(0),//BN
+        } = {};
+
+        ({ epochRewards, currentEpochNumber } = await getUserPushStakingInfo(provider, this.state.account, addresses.pushCoreV2));
+
+        //these values changes if the account changes.
+        if (this.state.account !== '0x0000000000000000000000000000000000000001') {
+          ({
+            userStaked,
+            potentialReward,
+            availableRewards
+          } = await getUserPushStakingInfo(provider, this.state.account, addresses.pushCoreV2));
+        }
+
+        const totalStakedAmount = await pushCoreV2.totalStakedAmount();
+        let claimedReward = await pushCoreV2.usersRewardsClaimed(this.state.account);
 
         claimedReward = tokenBNtoNumber(claimedReward);
 
