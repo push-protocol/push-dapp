@@ -84,10 +84,10 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
           setLoadingNotifs(false);
 
           // ENABLE PAGINATION HERE
-          dispatch(addPaginatedNotifications(response.notifications));
-          if (response.notifications.length === 0) {
-            dispatch(setFinishedFetching());
-          }
+          // dispatch(addPaginatedNotifications(response.notifications));
+          // if (response.notifications.length === 0) {
+          //   dispatch(setFinishedFetching());
+          // }
         })
         .catch((err) => {
           // ENABLE NO NOTIFICATION FOUND HERE

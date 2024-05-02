@@ -57,6 +57,7 @@ export default defineConfig({
       '~@fontsource/inter': '@fontsource/inter',
       // Add more aliases as needed
       ...addedAlias,
+      jsbi: path.resolve(__dirname, 'node_modules/jsbi'),
     },
   },
   plugins: [
@@ -81,6 +82,7 @@ export default defineConfig({
   },
   build: {
     outDir: 'build',
+    sourcemap: false,
     commonjsOptions: {
       transformMixedEsModules: true,
     },
