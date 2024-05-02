@@ -95,15 +95,7 @@ const AppContextProvider = ({ children }) => {
   };
 
   // TODO: Change function name to handleConnectWalletAndUser
-  const handleConnectWallet = async ({
-    remember = false,
-    showToast = false,
-    toastMessage,
-  }: {
-    remember?: boolean;
-    showToast?: boolean;
-    toastMessage?: string;
-  }) => {
+  const handleConnectWallet = async ({ remember = false, showToast = false, toastMessage = undefined } = {}) => {
     shouldInitializeRef.current = false; // Directly modify the ref to disable useEffect execution
 
     if (showToast) {
