@@ -11,8 +11,11 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import styled from 'styled-components';
 
 // Internal Components
-import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE, PROGRESS_POSITIONING } from 'components/reusables/loaders/LoaderSpinner';
-import ConnectedWalletRoute from '../components/ConnectedWalletRoute';
+import LoaderSpinner, {
+  LOADER_OVERLAY,
+  LOADER_TYPE,
+  PROGRESS_POSITIONING,
+} from 'components/reusables/loaders/LoaderSpinner';
 import { Anchor, Item } from '../primaries/SharedStyling';
 const AirdropPage = lazy(() => import('pages/AirdropPage'));
 const ChannelDashboardPage = lazy(() => import('pages/ChannelDashboardPage'));
@@ -74,7 +77,7 @@ import { AppContextType } from 'types/context';
 function MasterInterfacePage() {
   // Get search params
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   // get location
   const location = useLocation();
   const { hash, pathname, search } = location;
@@ -104,14 +107,13 @@ function MasterInterfacePage() {
   //     navigate(`/chek`, { replace: true, relative: true });
   //   }
   // }
-  
 
   // // For redirecting if required
   // React.useEffect(() => {
   //   const checkAndRedirect = () => {
   //     if (location.pathname === APP_PATHS.Channels && searchParams.get('channel')) {
   //       const navigate = useNavigate();
-  
+
   //       const channelId = searchParams.get('channel');
   //       console.log('redirecting to channel', `${APP_PATHS.Channels}/${channelId}`);
   //       navigate({ pathname: `${APP_PATHS.Channels}/${channelId}` });
@@ -123,16 +125,18 @@ function MasterInterfacePage() {
 
   const ChannelsProfilePage = () => {
     const channelid = searchParams.get('channel');
-    
+
     if (channelid) {
       navigate(`${APP_PATHS.Channels}/${channelid}`);
     }
 
-    return <ChannelsPage 
-      loadTeaser={setLoadTeaserVideo}
-      playTeaser={setPlayTeaserVideo}
-      channelID = {channelid}
-    />;
+    return (
+      <ChannelsPage
+        loadTeaser={setLoadTeaserVideo}
+        playTeaser={setPlayTeaserVideo}
+        channelID={channelid}
+      />
+    );
   };
 
   // For toast
@@ -153,30 +157,49 @@ function MasterInterfacePage() {
           }
         >
           <Routes>
-            <Route path={APP_PATHS.Inbox} element={<InboxPage />} />
-            <Route path={APP_PATHS.Spam} element={<InboxPage />} />
+            <Route
+              path={APP_PATHS.Inbox}
+              element={<InboxPage />}
+            />
+            <Route
+              path={APP_PATHS.Spam}
+              element={<InboxPage />}
+            />
 
-            {/* <Route element={<ConnectedWalletRoute />}> */}
-            <Route path={`${APP_PATHS.Chat}/:chatid`} element={<ChatPage />} />
-            <Route path={APP_PATHS.Chat} element={<ChatPage />} />
-            <Route path={`${APP_PATHS.Spaces}/:spaceid`} element={<SpacePage />} />
-            <Route path={APP_PATHS.Spaces} element={<SpacePage />} />
+            <Route
+              path={`${APP_PATHS.Chat}/:chatid`}
+              element={<ChatPage />}
+            />
+            <Route
+              path={APP_PATHS.Chat}
+              element={<ChatPage />}
+            />
+            <Route
+              path={`${APP_PATHS.Spaces}/:spaceid`}
+              element={<SpacePage />}
+            />
+            <Route
+              path={APP_PATHS.Spaces}
+              element={<SpacePage />}
+            />
             {/* <Route path="chat-new" element={<NewChatPage />} /> */}
             {/* </Route> */}
 
             {/* Enable Channel specific routes */}
-            <Route 
-              path={`${APP_PATHS.Channels}/:channelid`} 
-              element={<ChannelsPage
-                loadTeaser={setLoadTeaserVideo}
-                playTeaser={setPlayTeaserVideo}
-                channelID={null}
-              />} 
+            <Route
+              path={`${APP_PATHS.Channels}/:channelid`}
+              element={
+                <ChannelsPage
+                  loadTeaser={setLoadTeaserVideo}
+                  playTeaser={setPlayTeaserVideo}
+                  channelID={null}
+                />
+              }
             />
 
             <Route
               path={APP_PATHS.Channels}
-              element={<ChannelsProfilePage />} 
+              element={<ChannelsProfilePage />}
             />
 
             <Route
@@ -208,8 +231,6 @@ function MasterInterfacePage() {
               path={`${APP_PATHS.Snap}/:route`}
               element={<SnapPage />}
             />
-
-
 
             {/* <Route path="yield" element={<YieldFarmingPage />} /> */}
             <Route
@@ -291,7 +312,7 @@ function MasterInterfacePage() {
         modalPosition={MODAL_POSITION.ON_ROOT}
       />
 
-      {blockedLoading.errorMessage && (
+      {blockedLoading.errorMessage &&
         blockedLoadingToast.showMessageToast({
           toastTitle: blockedLoading.title,
           toastMessage: blockedLoading.errorMessage,
@@ -302,8 +323,7 @@ function MasterInterfacePage() {
               color="#E2B71D"
             />
           ),
-        })
-      )}
+        })}
 
       {blockedLoading.enabled && (
         <LoaderSpinner
