@@ -53,7 +53,7 @@
     "@web3-onboard/core": "2.21.6",
     "@web3-onboard/injected-wallets": "2.10.16",
     "@web3-onboard/react": "^2.8.9",
-    "@web3-onboard/walletconnect": "2.5.5",
+    "@web3-onboard/walletconnect": "2.4.6",
     "@yisheng90/react-loading": "1.2.3",
     "assert": "2.0.0",
     "babel-plugin-styled-components": "1.10.7",
