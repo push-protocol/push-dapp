@@ -84,31 +84,32 @@ const NavigationList = {
         },
       },
     },
-    spaces: {
-      src: 'spaceOffIcon',
-      activeSrc: 'spaceOnIcon',
-      iconFactory: null,
-      name: 'Spaces',
-      title: 'Spaces',
-      alt: 'Open Spaces',
-      href: APP_PATHS.Spaces,
-      newTab: false,
-      isRoute: true,
-      hasMenuLogic: true,
-      hidden: false,
-      // allowReadOnly: false,
-      headerTag: {
-        title: 'Spaces',
-        light: {
-          bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-          fg: themeLight.headerTagFg,
-        },
-        dark: {
-          bg: themeDark.headerTagBg,
-          fg: themeDark.headerTagFg,
-        },
-      },
-    },
+    // Disable spaces for now
+    // spaces: {
+    //   src: 'spaceOffIcon',
+    //   activeSrc: 'spaceOnIcon',
+    //   iconFactory: null,
+    //   name: 'Spaces',
+    //   title: 'Spaces',
+    //   alt: 'Open Spaces',
+    //   href: APP_PATHS.Spaces,
+    //   newTab: false,
+    //   isRoute: true,
+    //   hasMenuLogic: true,
+    //   hidden: false,
+    //   // allowReadOnly: false,
+    //   headerTag: {
+    //     title: 'Spaces',
+    //     light: {
+    //       bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+    //       fg: themeLight.headerTagFg,
+    //     },
+    //     dark: {
+    //       bg: themeDark.headerTagBg,
+    //       fg: themeDark.headerTagFg,
+    //     },
+    //   },
+    // },
   },
   secondary: {
     createChannel: {
