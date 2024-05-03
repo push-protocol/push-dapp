@@ -7232,7 +7232,36 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/ethereum-provider@npm:^2.10.1, @walletconnect/ethereum-provider@npm:^2.12.2":
+"@walletconnect/encoding@npm:^1.0.1, @walletconnect/encoding@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@walletconnect/encoding@npm:1.0.2"
+  dependencies:
+    is-typedarray: 1.0.0
+    tslib: 1.14.1
+    typedarray-to-buffer: 3.1.5
+  checksum: 648029d6a04e0e3675e1220b87c982e5d69764873e30a45a7c57f18223cd7c13e6758138d4644fd05d8fa03bd438fafb0a0ebc6ae168ed6f4a9bf1f93de1b82f
+  languageName: node
+  linkType: hard
+
+"@walletconnect/environment@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@walletconnect/environment@npm:1.0.1"
+  dependencies:
+    "@walletconnect/jsonrpc-http-connection": ^1.0.7
+    "@walletconnect/jsonrpc-provider": ^1.0.13
+    "@walletconnect/jsonrpc-types": ^1.0.3
+    "@walletconnect/jsonrpc-utils": ^1.0.8
+    "@walletconnect/modal": ^2.6.2
+    "@walletconnect/sign-client": 2.12.2
+    "@walletconnect/types": 2.12.2
+    "@walletconnect/universal-provider": 2.12.2
+    "@walletconnect/utils": 2.12.2
+    events: ^3.3.0
+  checksum: 367e2eee79f2dacdb8f95368d4812615a9546c3954ff4dd66fbd757751bd40ab3720243b2f3184a61d1ea87596f1971ca9b190432416a276e4349a4378ce232f
+  languageName: node
+  linkType: hard
+
+"@walletconnect/ethereum-provider@npm:^2.10.0, @walletconnect/ethereum-provider@npm:^2.10.1, @walletconnect/ethereum-provider@npm:^2.12.2":
   version: 2.12.2
   resolution: "@walletconnect/ethereum-provider@npm:2.12.2"
   dependencies:
@@ -7353,6 +7382,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@walletconnect/mobile-registry@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "@walletconnect/mobile-registry@npm:1.4.0"
+  checksum: 06f18842e68f88e71e87f36daea143684afc49551974cf359fb55cc731e9b4fc0bce762d87b79b268e529def889e82fc2fbc2bc12d6a28a04ed0d6a060188020
+  languageName: node
+  linkType: hard
+
+"@walletconnect/modal-core@npm:2.6.1":
+  version: 2.6.1
+  resolution: "@walletconnect/modal-core@npm:2.6.1"
+  dependencies:
+    valtio: 1.11.0
+  checksum: 3c1dcb865cc0737bb0e77b7103bde7167e64a8790c628427814b825dafa133c7cb3baf5184314de35a2dbd743a3b0978ef4abc86c3bb63d051f8368e3bdba67a
+  languageName: node
+  linkType: hard
+
 "@walletconnect/modal-core@npm:2.6.2":
   version: 2.6.2
   resolution: "@walletconnect/modal-core@npm:2.6.2"
@@ -7453,6 +7498,13 @@ __metadata:
     "@walletconnect/logger": ^2.0.1
     events: ^3.3.0
   checksum: 1df0c5c8c00f64d86c9f14bd4592b17f7b1fa6e2bda7c3539fb0e45d6057ec7176e3a6bf342d0bfd231741cb4addd187fed3217b9b36dad5206727e337c858b4
+  languageName: node
+  linkType: hard
+
+"@walletconnect/types@npm:^1.8.0":
+  version: 1.8.0
+  resolution: "@walletconnect/types@npm:1.8.0"
+  checksum: 194d615888068030183489222641332987846aa5c6bcf0a62fa60ca7a282b9f94932c49fcd2b293a859e98624fe3e7a2d3c5fb66545fe30d3391e7ac91a99e34
   languageName: node
   linkType: hard
 
@@ -7580,7 +7632,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-onboard/walletconnect@npm:2.5.5, @web3-onboard/walletconnect@npm:^2.4.6":
+"@web3-onboard/walletconnect@npm:2.4.6":
+  version: 2.4.6
+  resolution: "@web3-onboard/walletconnect@npm:2.4.6"
+  dependencies:
+    "@ethersproject/providers": 5.5.0
+    "@walletconnect/client": ^1.8.0
+    "@walletconnect/ethereum-provider": ^2.10.0
+    "@walletconnect/modal": 2.6.1
+    "@walletconnect/qrcode-modal": ^1.8.0
+    "@web3-onboard/common": ^2.3.3
+    joi: 17.9.1
+    rxjs: ^7.5.2
+  checksum: 90b80a6354af785705aeb27b98172b80bf20f57ff4b6fced0c90d1596e23923dbc6cf7b5ab80ec2417cae1dc48ead6241b1fd338f2af5c11a0d3fcb03dbe8f75
+  languageName: node
+  linkType: hard
+
+"@web3-onboard/walletconnect@npm:^2.4.6":
   version: 2.5.5
   resolution: "@web3-onboard/walletconnect@npm:2.5.5"
   dependencies:
@@ -19220,7 +19288,7 @@ __metadata:
     "@web3-onboard/core": 2.21.6
     "@web3-onboard/injected-wallets": 2.10.16
     "@web3-onboard/react": ^2.8.9
-    "@web3-onboard/walletconnect": 2.5.5
+    "@web3-onboard/walletconnect": 2.4.6
     "@yisheng90/react-loading": 1.2.3
     assert: 2.0.0
     babel-plugin-styled-components: 1.10.7
