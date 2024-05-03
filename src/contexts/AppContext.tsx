@@ -155,7 +155,8 @@ const AppContextProvider = ({ children }) => {
 
   // Append unique key for PGP key
   const getUniquePGPKey = (account: string) => {
-    const uniqueKey = `push-user-${account}-pgp`;
+    let address = w2wHelper.walletToCAIP10({ account });
+    const uniqueKey = `push-user-${address}-pgp`;
     return uniqueKey;
   };
 
@@ -189,6 +190,7 @@ const AppContextProvider = ({ children }) => {
       env: appConfig.appEnv,
       alpha: { feature: ['SCALABILITY_V2'] },
     });
+
     console.debug('src::contexts::AppContext::initializePushSdkGuestMode::User Instance Initialized', userInstance);
     dispatch(setUserPushSDKInstance(userInstance));
   };
