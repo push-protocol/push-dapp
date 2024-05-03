@@ -3109,7 +3109,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@livekit/components-react@npm:^1.2.2, @livekit/components-react@npm:^1.5.3":
+"@livekit/components-react@npm:^1.2.2":
   version: 1.5.3
   resolution: "@livekit/components-react@npm:1.5.3"
   dependencies:
@@ -3168,7 +3168,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@livepeer/react@npm:^2.6.0, @livepeer/react@npm:^2.9.2":
+"@livepeer/react@npm:^2.6.0":
   version: 2.9.2
   resolution: "@livepeer/react@npm:2.9.2"
   dependencies:
@@ -4242,9 +4242,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@portal:/Users/abhish3k/Desktop/push_protocol/push-sdk/dist/packages/uiweb::locator=pushdapp%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@pushprotocol/uiweb@portal:/Users/abhish3k/Desktop/push_protocol/push-sdk/dist/packages/uiweb::locator=pushdapp%40workspace%3A."
+"@pushprotocol/uiweb@npm:1.2.11":
+  version: 1.2.11
+  resolution: "@pushprotocol/uiweb@npm:1.2.11"
   dependencies:
     "@livekit/components-react": ^1.2.2
     "@livekit/components-styles": ^1.0.6
@@ -4281,8 +4281,9 @@ __metadata:
     react-dom: 17.0.2
     styled-components: ^6.0.8
     viem: ^1.3.0
+  checksum: 06ee50a07e991a6a913c6930b58826a8715b2e36873f97635651fa8d85c0aeef234d50679a373f2201cbacaf6ebc7dd5e5ed1ce1afbea13b9fb4e9e447dd838b
   languageName: node
-  linkType: soft
+  linkType: hard
 
 "@radix-ui/number@npm:1.0.1":
   version: 1.0.1
@@ -11255,9 +11256,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.3.585, electron-to-chromium@npm:^1.4.668":
-  version: 1.4.754
-  resolution: "electron-to-chromium@npm:1.4.754"
-  checksum: e4a49f2a4e2d51a659596d31d748280b59cbcd3af2cbdf5cf30f0bdc1fb981c426522470826b153a94ae8e58baea7d2a1c8bd77c6c85839bac2a4efc9ecb7b2e
+  version: 1.4.755
+  resolution: "electron-to-chromium@npm:1.4.755"
+  checksum: fd6195494386d2eaa14f76631d753236e001ddefb57b5595610ed9da4f3b849e4946bbdcce0432715dc8ebd100785561507474936fbca39f7d7466ade9f32f89
   languageName: node
   linkType: hard
 
@@ -16099,7 +16100,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"livekit-client@npm:^1.13.3, livekit-client@npm:^1.15.13":
+"livekit-client@npm:^1.13.3":
   version: 1.15.13
   resolution: "livekit-client@npm:1.15.13"
   dependencies:
@@ -19189,8 +19190,6 @@ __metadata:
     "@firebase/app": ^0.7.24
     "@firebase/messaging": ^0.9.13
     "@fontsource/ibm-plex-mono": ^5.0.12
-    "@livekit/components-react": ^1.5.3
-    "@livepeer/react": ^2.9.2
     "@material-ui/core": 4.11.0
     "@material-ui/icons": ^4.11.3
     "@metamask/eth-sig-util": ^4.0.0
@@ -19199,7 +19198,7 @@ __metadata:
     "@mui/material": ^5.5.0
     "@pushprotocol/restapi": 1.7.13
     "@pushprotocol/socket": 0.5.3
-    "@pushprotocol/uiweb": "*"
+    "@pushprotocol/uiweb": 1.2.11
     "@reduxjs/toolkit": ^1.7.1
     "@testing-library/dom": ^9.0.1
     "@testing-library/jest-dom": ^4.2.4
@@ -19223,7 +19222,6 @@ __metadata:
     "@web3-onboard/react": ^2.8.9
     "@web3-onboard/walletconnect": 2.5.5
     "@yisheng90/react-loading": 1.2.3
-    animejs: ^2.2.0
     assert: 2.0.0
     babel-plugin-styled-components: 1.10.7
     blockies: 0.0.2
@@ -19232,7 +19230,6 @@ __metadata:
     browserslist: 4.14.6
     buffer: 6.0.3
     chalk: 5.0.1
-    classnames: ^2.2.5
     compressorjs: ^1.2.1
     constants-browserify: 1.0.0
     crypto-browserify: ^3.12.0
@@ -19259,7 +19256,6 @@ __metadata:
     jotai: ^2.0.3
     jotai-immer: ^0.2.0
     jsbi: 3.2.1
-    livekit-client: ^1.15.13
     merkletreejs: ^0.3.11
     moment: 2.30.1
     nano-ipfs-store: 0.1.3
@@ -19271,7 +19267,6 @@ __metadata:
     postcss-normalize: 10.0.1
     process: 0.11.10
     qrcode.react: ^3.1.0
-    raf: ^3.4.0
     react: ^18.2.0
     react-animation: 1.2.2
     react-animations: 1.0.0

@@ -190,7 +190,7 @@ const AppContextProvider = ({ children }) => {
       env: appConfig.appEnv,
       alpha: { feature: ['SCALABILITY_V2'] },
     });
-    console.log("User Isntance >>", userInstance);
+
     console.debug('src::contexts::AppContext::initializePushSdkGuestMode::User Instance Initialized', userInstance);
     dispatch(setUserPushSDKInstance(userInstance));
   };
@@ -452,13 +452,10 @@ const AppContextProvider = ({ children }) => {
 
   // Connect wallet and try to initialize push sdk
   useEffect(() => {
-    console.log("Account >>>", account);
     // return if this ref is marke false
     if (!shouldInitializeRef.current) return;
 
     const initialize = async () => {
-
-      console.log("wallet >>>", wallet);
       // const librarySigner = await provider?.getSigner(account); // If you need to use librarySigner in async operations
       // if (!account || !appConfig?.appEnv) return;
       if (wallet?.accounts?.length > 0) {
