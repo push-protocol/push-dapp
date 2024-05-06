@@ -1,7 +1,7 @@
 // Internal Components
-import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
-import { getReq, postReq } from 'api';
 import * as PushAPI from '@pushprotocol/restapi';
+import { getReq, postReq } from 'api';
+import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 
 // Internal Configs
 import { appConfig } from 'config/index.js';
@@ -325,17 +325,14 @@ export default class ChannelsDataStore {
   //   });
   // };
   // Helper to get Channel Alias from Channel's address
-  getChannelDetailsFromAddress = async (channel) => {
+  getChannelDetailsFromAddress = async (channel, userPushSDKInstance) => {
     if (channel === null) return;
     const enableLogs = 0;
 
     return new Promise((resolve, reject) => {
       // To get channel info from a channel address
-      PushAPI.channels
-        .getChannel({
-          channel: channel,
-          env: appConfig.appEnv,
-        })
+      userPushSDKInstance.channel
+        .info()
         .then((response) => {
           let output;
           if (response && response != 'channel not found') {

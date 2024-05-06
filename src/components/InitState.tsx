@@ -6,17 +6,11 @@ import React, { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // Internal Components
-import ChannelsDataStore from 'singletons/ChannelsDataStore';
-import UsersDataStore from 'singletons/UsersDataStore';
-import {
-  setCommunicatorReadProvider,
-  setCommunicatorWriteProvider,
-  setCoreReadProvider,
-  setCoreWriteProvider,
-} from 'redux/slices/contractSlice';
+import * as PushAPI from '@pushprotocol/restapi';
 import { getReq } from 'api';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
+import { useAccount } from 'hooks';
 import {
   setAliasAddress,
   setAliasEthAddress,
@@ -28,11 +22,16 @@ import {
 } from 'redux/slices/adminSlice';
 import { setProcessingState } from 'redux/slices/channelCreationSlice';
 import { updateBulkChannelSettings } from 'redux/slices/channelSlice';
-import { setPushAdmin } from 'redux/slices/contractSlice';
-import { getUserDelegations } from 'services';
-import * as PushAPI from '@pushprotocol/restapi';
-import { getAliasDetails } from 'services';
-import { useAccount } from 'hooks';
+import {
+  setCommunicatorReadProvider,
+  setCommunicatorWriteProvider,
+  setCoreReadProvider,
+  setCoreWriteProvider,
+  setPushAdmin,
+} from 'redux/slices/contractSlice';
+import { getAliasDetails, getUserDelegations } from 'services';
+import ChannelsDataStore from 'singletons/ChannelsDataStore';
+import UsersDataStore from 'singletons/UsersDataStore';
 
 // Internals Configs
 import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config/index.js';
@@ -110,11 +109,12 @@ const InitState = () => {
   }, [epnsReadProvider, epnsCommReadProvider, epnsWriteProvider]);
 
   // Check if a user is a channel or not
-  const checkUserForChannelOwnership = async (channelAddress: string) => {
+  const checkUserForChannelOwnership = async (channelAddress: string, pushUser: any) => {
     if (!channelAddress) return;
     // Check if account is admin or not and handle accordingly
     const ownerAccount = channelAddress;
-    return EPNSCoreHelper.getChannelJsonFromUserAddress(ownerAccount, epnsReadProvider)
+    return pushUser.channel
+      .info()
       .then(async (response) => {
         // if channel admin, then get if the channel is verified or not, then also fetch more details about the channel
         const verificationStatus = await epnsWriteProvider.getChannelVerfication(ownerAccount);
@@ -211,9 +211,9 @@ const InitState = () => {
     return { aliasEth, aliasVerified };
   };
 
-  const checkUserForAlias = async () => {
+  const checkUserForAlias = async (account, userPushSDKInstance) => {
     let { aliasAddress = null, isAliasVerified = null } =
-      await ChannelsDataStore.getInstance().getChannelDetailsFromAddress(account);
+      await ChannelsDataStore.getInstance().getChannelDetailsFromAddress(account, userPushSDKInstance);
     if (aliasAddress == 'NULL') aliasAddress = null;
 
     if (aliasAddress) {
@@ -244,8 +244,8 @@ const InitState = () => {
 
     (async function () {
       if (onCoreNetwork) {
-        checkUserForChannelOwnership(account).then(async () => {
-          await checkUserForAlias();
+        checkUserForChannelOwnership(account, userPushSDKInstance).then(async () => {
+          await checkUserForAlias(account, userPushSDKInstance);
         });
       } else {
         const { aliasEth, aliasVerified } = await checkUserForEthAlias();
