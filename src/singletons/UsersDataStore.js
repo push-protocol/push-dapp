@@ -1,5 +1,4 @@
 // Internal Components
-import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 
 // STATIC SINGLETON
 export const UserEvents = {
@@ -43,11 +42,6 @@ export default class UsersDataStore {
     this.state.epnsReadProvider = epnsReadProvider;
     this.state.epnsCommReadProvider = epnsCommReadProvider;
     this.initUsersListenersAsync();
-
-    // next get store user count & user meta
-    this.getOwnerMetaAsync();
-    this.getUsersCountAsync();
-    this.getUserMetaAsync();
   };
 
   // RESET LISTENERS
@@ -147,89 +141,5 @@ export default class UsersDataStore {
     if (this.state.callbacks[callbackType][callbackID]) {
       this.state.callbacks[callbackType][callbackID] = null;
     }
-  };
-
-  // GET OWNER META
-  getOwnerMetaAsync = async () => {
-    const enableLogs = 0;
-
-    return new Promise((resolve, reject) => {
-      if (this.state.ownerMeta) {
-        if (enableLogs) console.debug('getOwnerMetaAsync() [CACHED] --> %o', this.state.ownerMeta);
-        resolve(this.state.ownerMeta);
-      } else {
-        EPNSCoreHelper.getOwnerInfo(this.state.epnsReadProvider)
-          .then((response) => {
-            this.state.ownerMeta = response;
-
-            if (enableLogs) console.debug('getOwnerMetaAsync() --> %o', response);
-            resolve(this.state.ownerMeta);
-          })
-          .catch((err) => {
-            console.error('!!!Error, getOwnerMetaAsync() --> %o', err);
-            reject(err);
-          });
-      }
-    });
-  };
-
-  // USERS COUNT
-  getUsersCountAsync = async () => {
-    return new Promise(async (resolve, reject) => {
-      if (this.state.channelsCount == -1) {
-        // Count not set, get and set it first
-        const count = EPNSCoreHelper.getTotalNumberOfUsers(this.state.epnsReadProvider)
-          .then((response) => {
-            this.state.usersCount = response;
-            console.debug('getUsersCountAsync() --> %o', response);
-            resolve(this.state.usersCount);
-          })
-          .catch((err) => {
-            console.error('!!!Error, getUsersCountAsync() --> %o', err);
-            reject(err);
-          });
-      } else {
-        resolve(this.state.usersCount);
-      }
-    });
-  };
-
-  incrementUsersCountAsync = async (incrementCount) => {
-    return new Promise((resolve, reject) => {
-      this.getUsersCountAsync()
-        .then((response) => {
-          this.state.usersCount = response + incrementCount;
-          console.error('incrementChannelsCountAsync() --> %d', this.state.usersCount);
-          resolve(this.state.usersCount);
-        })
-        .catch((err) => {
-          console.error('!!!Error, getUsersCountAsync() --> %o', err);
-          reject(err);
-        });
-    });
-  };
-
-  // GET USER META
-  getUserMetaAsync = async () => {
-    const enableLogs = 0;
-
-    return new Promise((resolve, reject) => {
-      if (this.state.userMeta) {
-        if (enableLogs) console.debug('getUserMetaAsync() [CACHED] --> %o', this.state.userMeta);
-        resolve(this.state.userMeta);
-      } else {
-        EPNSCoreHelper.getUserInfo(this.state.account, this.state.epnsCommReadProvider)
-          .then((response) => {
-            this.state.userMeta = response;
-
-            if (enableLogs) console.debug('getUserMetaAsync() --> %o', this.state.userMeta);
-            resolve(this.state.userMeta);
-          })
-          .catch((err) => {
-            console.error('!!!Error, getUserMetaAsync() --> %o', err);
-            reject(err);
-          });
-      }
-    });
   };
 }
