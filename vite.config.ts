@@ -65,7 +65,7 @@ export default defineConfig({
     react(),
     svgr(),
     viteTsconfigPaths({
-      root: '..',
+      root: './',
     }),
     nodePolyfills(),
     vitePluginRequire.default(),
