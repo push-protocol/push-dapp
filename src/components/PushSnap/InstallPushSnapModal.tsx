@@ -2,21 +2,21 @@
 import React, { useEffect } from 'react';
 
 // External Packages
-import styled, { useTheme } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { A } from 'primaries/SharedStyling';
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import AppStoreQRCode from 'assets/snap/AppStoreQRCode.svg';
+import AppleIcon from 'assets/snap/AppleIcon.svg';
+import PlayStore from 'assets/snap/PlayStore.svg';
+import PlayStoreQRCode from 'assets/snap/PlayStoreQRCode.svg';
+import PushIcon from 'assets/snap/PushIcon.svg';
+import UDIcon from 'assets/snap/UDIcon.svg';
+import VersoIcon from 'assets/snap/VersoIcon.svg';
+import Metamask from 'assets/snap/metamasksnap.svg';
 import { Button } from 'components/SharedStyling';
-import Metamask from 'assets/pushSnaps/metamasksnap.svg';
-import PushIcon from 'assets/pushSnaps/PushIcon.svg';
-import VersoIcon from 'assets/pushSnaps/VersoIcon.svg';
-import UDIcon from 'assets/pushSnaps/UDIcon.svg';
-import AppStoreQRCode from 'assets/pushSnaps/AppStoreQRCode.svg';
-import PlayStoreQRCode from 'assets/pushSnaps/PlayStoreQRCode.svg';
-import AppleIcon from 'assets/pushSnaps/AppleIcon.svg';
-import PlayStore from 'assets/pushSnaps/PlayStore.svg';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { A } from 'primaries/SharedStyling';
 
 const InstallPushSnapModal = ({ setSnapState, configure, setConfigure }) => {
   const theme = useTheme();

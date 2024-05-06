@@ -9,8 +9,8 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import SearchIcon from 'assets/chat/search.svg?react';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext } from 'types/chat';
 import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
@@ -92,7 +92,7 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
             color="#D53893"
             margin="0px 0px 0px 7px"
           >
-            {activeTab == 3 ? 'New Chat' : 'All Chats'}
+            Back
           </SpanV2>
         </ItemHV2>
       )}

@@ -53,6 +53,7 @@ export const ItemHV2 = styled.div`
   min-width: ${(props) => props.minWidth || 'auto'};
   overflow: ${(props) => props.overflow || 'initial'};
   overflow-wrap: ${(props) => props.overflowWrap || 'anywhere'};
+  box-sizing: ${(props) => props.boxSizing || 'border-box'};
   padding: ${(props) => props.padding || '0px'};
   position: ${(props) => props.position || 'relative'};
   right: ${(props) => props.right || 'auto'};
@@ -198,6 +199,7 @@ export const ImageV2 = styled.img`
   filter: ${(props) => props.filter || 'none'};
   alt: ${(props) => props.alt || 'Image'};
   object-fit: ${(props) => props.objectFit || 'fill'};
+  z-index: ${(props) => props.zIndex || 'auto'};
 `;
 
 export const AInlineV2 = styled.a`
@@ -209,8 +211,7 @@ export const AInlineV2 = styled.a`
   letter-spacing: inherit;
   padding: 0px;
   text-transform: initial;
-  cursor:${(props)=>props.cursor || 'default'};
-
+  cursor: ${(props) => props.cursor || 'default'};
 `;
 
 export const Skeleton = styled.div`

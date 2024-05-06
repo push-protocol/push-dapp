@@ -37,7 +37,10 @@ const themeLight = {
   // Chat Theme
   chat: {
     snapFocusBg: '#F4F5FA',
-    chatboxBg: 'linear-gradient(179.97deg, #EEF5FF 0.02%, #ECE9FA 123.25%)',
+    chatBg: '#EEF4FD',
+    primaryBg: '#FFFFFF',
+    modulesBg: '#FFFFFF',
+    modalBg: '#FFFFFF',
     sendMesageBg: 'white',
     sendMessageFontColor: 'black',
     gifContainerBg: '#F7F8FF',
@@ -337,7 +340,10 @@ const themeDark = {
   // Chat Theme
   chat: {
     snapFocusBg: '#404650',
-    chatboxBg: '#282A2E',
+    chatBg: '#282A2E',
+    primaryBg: '#2F3137',
+    modulesBg: '#404550',
+    modalBg: '#2F3137',
     sendMesageBg: '#404650',
     sendMessageFontColor: '#B6BCD6',
     gifContainerBg: '#282A2E',
@@ -603,4 +609,4 @@ const themeDark = {
   svgStrokeColor: '#575D73',
 };
 
-export { themeLight, themeDark };
+export { themeDark, themeLight };

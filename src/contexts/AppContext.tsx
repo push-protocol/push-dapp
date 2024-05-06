@@ -1,12 +1,14 @@
 // React + Web3 Essentials
-import { ProgressHookType, PushAPI } from '@pushprotocol/restapi';
+import { CONSTANTS, ProgressHookType, PushAPI } from '@pushprotocol/restapi';
 import { ethers } from 'ethers';
 import useModalBlur from 'hooks/useModalBlur';
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 // Internal Components
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { appConfig } from 'config/index.js';
+import { traceStackCalls } from 'helpers/DebugHelper';
+import { toChecksumAddress } from 'helpers/UtilityHelper';
 import * as w2wHelper from 'helpers/w2w';
 import { useAccount } from 'hooks';
 import useToast from 'hooks/useToast';
@@ -19,14 +21,17 @@ import {
   BlockedLoadingI,
   ConnectedPeerIDType,
   LocalPeerType,
-  onboardingProgressI,
   Web3NameListType,
+  onboardingProgressI,
 } from 'types/context';
 import { GlobalContext, ReadOnlyWalletMode } from './GlobalContext';
 
 export const AppContext = createContext<AppContextType | null>(null);
 
 const AppContextProvider = ({ children }) => {
+  // To ensure intialize via [account] is not run on certain logic points
+  const shouldInitializeRef = useRef(true); // Using a ref to control useEffect execution
+
   const { connect, provider, account, wallet, connecting } = useAccount();
   const web3onboardToast = useToast();
 
@@ -80,7 +85,7 @@ const AppContextProvider = ({ children }) => {
 
     if (!(wallet?.accounts?.length > 0)) {
       const walletConnected = await connect();
-      console.log('Wallet Connected >>>', walletConnected);
+      console.debug('src::contexts::AppContext::connectWallet::WalletConnected', walletConnected);
       if (walletConnected.length > 0) {
         return walletConnected[0];
       } else {
@@ -89,7 +94,10 @@ const AppContextProvider = ({ children }) => {
     }
   };
 
-  const handleConnectWallet = async (showToast = false, toastMessage?: string) => {
+  // TODO: Change function name to handleConnectWalletAndUser
+  const handleConnectWallet = async ({ remember = false, showToast = false, toastMessage = undefined } = {}) => {
+    shouldInitializeRef.current = false; // Directly modify the ref to disable useEffect execution
+
     if (showToast) {
       web3onboardToast.showMessageToast({
         toastMessage: toastMessage || 'Please connect your wallet to continue',
@@ -104,39 +112,185 @@ const AppContextProvider = ({ children }) => {
       });
     }
 
+    let user;
+
     if (wallet?.accounts?.length > 0) {
-      const userPushInstance = await initializePushSDK();
-      return userPushInstance;
+      user = await initializePushSDK();
     } else {
       const walletConnected = await connect();
       if (walletConnected.length > 0) {
-        const userPushInstance = await initializePushSDK(walletConnected[0]);
-        return userPushInstance;
-      } else {
-        return null;
+        user = await initializePushSDK(walletConnected[0]);
       }
     }
+
+    if (remember) {
+      if (!user.readmode()) {
+        storePGPKeyForUser(user.account, user.decryptedPgpPvtKey);
+      }
+    }
+
+    // reset the ref to true
+    shouldInitializeRef.current = true; // Directly modify the ref to disable useEffect execution
+
+    return user;
   };
 
-  const initialisePushSdkGuestMode = async () => {
+  // Store PGP key in local storage
+  const storePGPKeyForUser = (account: string, pgpPvtKey: string) => {
+    const key = getUniquePGPKey(account);
+    localStorage.setItem(key, pgpPvtKey);
+  };
+
+  // Retrieve PGP key from local storage
+  const retrieveUserPGPKeyFromStorage = (account: string) => {
+    const key = getUniquePGPKey(account);
+    const value = localStorage.getItem(key);
+
+    if (isPGPKey(value)) {
+      return value;
+    }
+
+    return null;
+  };
+
+  // Append unique key for PGP key
+  const getUniquePGPKey = (account: string) => {
+    let address = w2wHelper.walletToCAIP10({ account });
+    const uniqueKey = `push-user-${address}-pgp`;
+    return uniqueKey;
+  };
+
+  // Check if the string is a PGP key
+  const isPGPKey = (str: string | null) => {
+    if (!str) return false;
+
+    const pgpPublicKeyRegex = /-----BEGIN PGP PUBLIC KEY BLOCK-----[\s\S]*-----END PGP PUBLIC KEY BLOCK-----/;
+    const pgpPrivateKeyRegex = /-----BEGIN PGP PRIVATE KEY BLOCK-----[\s\S]*-----END PGP PRIVATE KEY BLOCK-----/;
+
+    return pgpPublicKeyRegex.test(str) || pgpPrivateKeyRegex.test(str);
+  };
+
+  const shouldCreateNewPushUser = async (checksumAddr: string, signer: any) => {
+    // check if push sdk is already initialized with same account
+    return !(
+      userPushSDKInstance?.account === checksumAddr &&
+      userPushSDKInstance?.env === appConfig.appEnv &&
+      userPushSDKInstance?.signer === signer &&
+      !userPushSDKInstance.readmode()
+    );
+  };
+
+  const initializePushSdkGuestMode = async () => {
+    // Return if new push user is not necessary
+    if (!shouldCreateNewPushUser(readOnlyWallet, null)) return userPushSDKInstance;
+
     let userInstance;
     userInstance = await PushAPI.initialize({
       account: readOnlyWallet,
       env: appConfig.appEnv,
       alpha: { feature: ['SCALABILITY_V2'] },
     });
+
+    console.debug('src::contexts::AppContext::initializePushSdkGuestMode::User Instance Initialized', userInstance);
     dispatch(setUserPushSDKInstance(userInstance));
   };
 
-  const initialisePushSdkReadMode = async () => {
-    let userInstance;
-    userInstance = await PushAPI.initialize({
+  const initializePushSdkReadMode = async () => {
+    // traceStackCalls(); // Incase we want to see what function called this
+
+    // get decrypted pgp keys from local storage
+    const decryptedPGPKeys = retrieveUserPGPKeyFromStorage(account);
+
+    // Return if new push user is not necessary
+    if (!shouldCreateNewPushUser(account, decryptedPGPKeys ? provider?.getSigner(account) : null))
+      return userPushSDKInstance;
+
+    // call initializePushSDK if decryptedPGPKeys is not null
+    if (decryptedPGPKeys) {
+      console.debug('src::contexts::AppContext::initializePushSdkReadMode::Called initializePushSDK()');
+      return initializePushSDK();
+    }
+
+    // else initialize push sdk in read mode
+    const userInstance = await PushAPI.initialize(null, {
+      decryptedPGPPrivateKey: null,
       env: appConfig.appEnv,
       account: account,
       alpha: { feature: ['SCALABILITY_V2'] },
     });
+
+    console.debug('src::contexts::AppContext::initializePushSdkReadMode::User Instance Initialized', userInstance);
     dispatch(setUserPushSDKInstance(userInstance));
     return userInstance;
+  };
+
+  const initializePushSDK = async (wallet?: any) => {
+    // convert address to checksum
+    let currentAddress = toChecksumAddress(wallet ? wallet.accounts[0].address : account);
+
+    // Return if new push user is not necessary
+    if (!shouldCreateNewPushUser(currentAddress, provider?.getSigner(currentAddress))) return userPushSDKInstance;
+
+    traceStackCalls();
+    let userInstance;
+
+    try {
+      let web3Provider = provider;
+
+      if (wallet) {
+        web3Provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
+      }
+
+      const librarySigner = web3Provider?.getSigner(currentAddress);
+      const decryptedPGPKeys = retrieveUserPGPKeyFromStorage(currentAddress);
+
+      if (decryptedPGPKeys) {
+        userInstance = await PushAPI.initialize(librarySigner!, {
+          decryptedPGPPrivateKey: decryptedPGPKeys,
+          env: appConfig.appEnv,
+          account: currentAddress,
+          progressHook: onboardingProgressReformatter,
+          alpha: { feature: ['SCALABILITY_V2'] },
+        });
+      } else {
+        userInstance = await PushAPI.initialize(librarySigner!, {
+          env: appConfig.appEnv,
+          account: currentAddress,
+          progressHook: onboardingProgressReformatter,
+          alpha: { feature: ['SCALABILITY_V2'] },
+        });
+      }
+
+      // connect stream as well
+      await setupStream(userInstance);
+
+      console.debug('src::contexts::AppContext::initializePushSDK::User Intance Initialized', userInstance);
+      dispatch(setUserPushSDKInstance(userInstance));
+      return userInstance;
+    } catch (error) {
+      // Handle initialization error
+      console.error('src::contexts::AppContext::initializePushSDK::Error', error);
+      return null;
+    }
+  };
+
+  const setupStream = async (userInstance: any) => {
+    // Connect stream as well
+    const stream = await userInstance.initStream([
+      CONSTANTS.STREAM.CONNECT,
+      CONSTANTS.STREAM.DISCONNECT,
+      CONSTANTS.STREAM.CHAT,
+      CONSTANTS.STREAM.CHAT_OPS,
+      CONSTANTS.STREAM.NOTIF,
+      CONSTANTS.STREAM.VIDEO,
+    ]);
+
+    stream.on(CONSTANTS.STREAM.CONNECT, () => {
+      console.debug('src::contexts::AppContext::setupStream::CONNECT::');
+    });
+
+    await stream.connect();
+    console.debug('src::contexts::AppContext::setupStream::User Intance Stream Connected', userInstance);
   };
 
   // To reformat errors
@@ -214,6 +368,13 @@ const AppContextProvider = ({ children }) => {
           onboardingProgress.hookInfo.progressTitle = 'Push Profile Upgraded';
           onboardingProgress.progress = 99;
           break;
+        case 'PUSH-PROFILE-UPDATE-01':
+          onboardingProgress.hookInfo.progressTitle = 'Updating User Profile';
+          break;
+        case 'PUSH-PROFILE-UPDATE-02':
+          onboardingProgress.enabled = false;
+          onboardingProgress.hookInfo.progressTitle = 'User Profile Updated';
+          break;
         case 'PUSH-ERROR-00':
           onboardingProgress.errorMessage =
             'The sign in was rejected by the user. You can still continue in read-only mode.';
@@ -246,46 +407,9 @@ const AppContextProvider = ({ children }) => {
     });
   };
 
-  const initializePushSDK = async (wallet?: any) => {
-    let userInstance;
-    console.log('Initialising Push General Mode');
-    try {
-      let web3Provider = provider;
-      let currentAddress = wallet ? wallet.accounts[0].address : account;
-
-      if (wallet) {
-        web3Provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
-      }
-
-      const librarySigner = web3Provider?.getSigner(currentAddress);
-      userInstance = await PushAPI.initialize(librarySigner!, {
-        env: appConfig.appEnv,
-        account: currentAddress,
-        progressHook: onboardingProgressReformatter,
-        alpha: { feature: ['SCALABILITY_V2'] },
-      });
-      if (userInstance) {
-        setBlockedLoading({
-          enabled: false,
-          title: 'Push Profile Setup Complete',
-          spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
-          progressEnabled: false,
-          progress: 100,
-        });
-      }
-
-      dispatch(setUserPushSDKInstance(userInstance));
-      return userInstance;
-    } catch (error) {
-      // Handle initialization error
-      console.log('Errror !!!!!', error);
-      return null;
-    }
-  };
-
   const getUser = async () => {
     const caip10: string = w2wHelper.walletToCAIP10({ account });
-    const user = await userPushSDKInstance.info();
+    const user = userPushSDKInstance ? await userPushSDKInstance.info() : null;
     let connectedUser: ConnectedUser;
 
     // TODO: Change this to do verification on ceramic to validate if did is valid
@@ -326,14 +450,21 @@ const AppContextProvider = ({ children }) => {
     setConnectedUser(connectedUser);
   };
 
+  // Connect wallet and try to initialize push sdk
   useEffect(() => {
-    const librarySigner = provider?.getSigner(account);
-    // if (!account || !appConfig?.appEnv) return;
-    if (wallet?.accounts?.length > 0) {
-      initialisePushSdkReadMode();
-    } else {
-      initialisePushSdkGuestMode();
-    }
+    // return if this ref is marke false
+    if (!shouldInitializeRef.current) return;
+
+    const initialize = async () => {
+      // const librarySigner = await provider?.getSigner(account); // If you need to use librarySigner in async operations
+      // if (!account || !appConfig?.appEnv) return;
+      if (wallet?.accounts?.length > 0) {
+        await initializePushSdkReadMode();
+      } else {
+        await initializePushSdkGuestMode();
+      }
+    };
+    initialize();
   }, [account]);
 
   const createUserIfNecessary = async (): Promise<ConnectedUser> => {
@@ -395,7 +526,7 @@ const AppContextProvider = ({ children }) => {
         displayQR,
         setDisplayQR,
         createUserIfNecessary,
-        initialisePushSdkReadMode,
+        initializePushSdkReadMode,
       }}
     >
       {children}

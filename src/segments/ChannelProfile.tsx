@@ -21,9 +21,9 @@ import { latest } from '@pushprotocol/restapi/src/lib/chat';
 import ViewChannelItem from 'components/ViewChannelItem';
 import ChannelProfileComponent from 'components/channel/ChannelProfileComponent';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { appConfig } from 'config/index.js';
 import APP_PATHS from 'config/AppPaths';
 import { device } from 'config/Globals';
+import { appConfig } from 'config/index.js';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 
 // Constants
@@ -84,10 +84,10 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
           setLoadingNotifs(false);
 
           // ENABLE PAGINATION HERE
-          dispatch(addPaginatedNotifications(response.notifications));
-          if (response.notifications.length === 0) {
-            dispatch(setFinishedFetching());
-          }
+          // dispatch(addPaginatedNotifications(response.notifications));
+          // if (response.notifications.length === 0) {
+          //   dispatch(setFinishedFetching());
+          // }
         })
         .catch((err) => {
           // ENABLE NO NOTIFICATION FOUND HERE

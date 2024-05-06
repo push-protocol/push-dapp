@@ -16,6 +16,7 @@ import LoaderSpinner, {
   LOADER_TYPE,
   PROGRESS_POSITIONING,
 } from 'components/reusables/loaders/LoaderSpinner';
+import ConnectedWalletRoute from '../components/ConnectedWalletRoute';
 import { Anchor, Item } from '../primaries/SharedStyling';
 const AirdropPage = lazy(() => import('pages/AirdropPage'));
 const ChannelDashboardPage = lazy(() => import('pages/ChannelDashboardPage'));
@@ -166,6 +167,7 @@ function MasterInterfacePage() {
               element={<InboxPage />}
             />
 
+            {/* <Route element={<ConnectedWalletRoute />}> */}
             <Route
               path={`${APP_PATHS.Chat}/:chatid`}
               element={<ChatPage />}
