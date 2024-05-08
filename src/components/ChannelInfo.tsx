@@ -135,13 +135,13 @@ const ChannelInfo = ({
                     }
               }
             >
-               <TimeBoundToggleContainer> 
-              <ItemHV2 style={{ justifyContent: 'flex-start', maxWidth: '100%' }}>
+              <TimeBoundToggleContainer>
+                <ItemHV2 style={{ justifyContent: 'flex-start', maxWidth: '100%' }}>
                   <Label style={{ color: theme.color }}>Time Bound</Label>
                   {isNewTagVisible && <NewTag />}
-                </ItemHV2> 
-              {/* Toggle should be off only when channelExpiryDate is undefined */}
-               <Toggle
+                </ItemHV2>
+                {/* Toggle should be off only when channelExpiryDate is undefined */}
+                <Toggle
                   isToggleOn={channelExpiryDate !== undefined}
                   onToggle={() => {
                     if (channelExpiryDate === undefined) {
@@ -151,8 +151,8 @@ const ChannelInfo = ({
                     // turn off the toggle
                     setChannelExpiryDate(undefined);
                   }}
-                /> 
-               </TimeBoundToggleContainer> 
+                />
+              </TimeBoundToggleContainer>
             </Tooltip>
           </TopInnerContainer>
         </Item>
