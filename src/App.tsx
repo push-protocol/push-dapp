@@ -262,6 +262,8 @@ export default function App() {
   const location = useLocation();
   const isSnapPage = location?.pathname.includes('/snap');
 
+  const pushsdkDebug = true;
+
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
       {/* {(!isActive || !allowedChain) && (
@@ -277,7 +279,7 @@ export default function App() {
           <ChatUIProvider
             user={userPushSDKInstance}
             theme={darkMode && darkChatTheme}
-            debug={true}
+            debug={appConfig?.appEnv === 'prod' ? false : pushsdkDebug}
             uiConfig={{
               suppressToast: false,
             }}
