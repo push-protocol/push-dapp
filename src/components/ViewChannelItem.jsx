@@ -18,6 +18,7 @@ import styled, { css, useTheme } from 'styled-components';
 // Internal Compoonents
 import * as PushAPI from '@pushprotocol/restapi';
 import { Device } from 'assets/Device';
+import AllowNotificationModal from './channel/AllowNotificationModal';
 import MetaInfoDisplayer from 'components/MetaInfoDisplayer';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2 } from 'components/reusables/SharedStylingV2';
@@ -43,6 +44,8 @@ import VerifiedTooltipContent from './VerifiedTooltipContent';
 import APP_PATHS from 'config/AppPaths';
 import { addresses, appConfig, CHAIN_DETAILS } from 'config/index.js';
 import { IPFSGateway } from 'helpers/IpfsHelper';
+import { checkPermission } from 'helpers/channel/allowNotification';
+import { NOTIF_PERMISSION_STATUS } from 'helpers/channel/types';
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, profileType }) {
@@ -85,6 +88,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
   const [channelObjectFromHash, setChannelObjectFromHash] = React.useState({});
   const [channelObjectStartBlock, setChannelObjectStartBlock] = React.useState({});
   const [showChannelChangedWarning, setShowChannelChangedWarning] = React.useState(false);
+  const [showAllowNotification, setShowAllowNotification] = useState(false);
+
+
   const isVerified = channelObject.verified_status;
   const isBlocked = channelObject.blocked;
   const isMobile = useDeviceWidthCheck(600);
@@ -102,6 +108,13 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
   useEffect(() => {
     setSubscribed(subscriptionStatus[channelObject.channel]);
   }, [subscriptionStatus]);
+
+  useEffect(() => {
+    if (showAllowNotification)
+      setTimeout(() => {
+        setShowAllowNotification(false);
+      }, 10000);
+  }, [showAllowNotification]);
 
   useEffect(() => {
     setIsPushAdmin(pushAdminAddress == account);
@@ -399,6 +412,20 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
     setToolTipheight(containerHeight?.top);
   };
 
+  const onAllowModalOpen = () => {
+    if (checkPermission() === NOTIF_PERMISSION_STATUS.PENDING) {
+      const lastTime = localStorage.getItem('allow_notif_modal');
+      let today = new Date().getTime() + (1 * 24 * 60 * 60 * 1000);
+      if (lastTime && lastTime >= today) {
+        setShowAllowNotification(true);
+      }
+      else {
+        localStorage.setItem('allow_notif_modal', today);
+      }
+    }
+
+  }
+
   // render
   return (
     <Container
@@ -447,19 +474,19 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                           placementProps={
                             tooltTipHeight < 250
                               ? {
-                                  background: 'none',
-                                  // bottom: "25px",
-                                  top: '20px',
-                                  // right: "-175px",
-                                  left: mobileToolTip ? '-100px' : '5px',
-                                }
+                                background: 'none',
+                                // bottom: "25px",
+                                top: '20px',
+                                // right: "-175px",
+                                left: mobileToolTip ? '-100px' : '5px',
+                              }
                               : {
-                                  background: 'none',
-                                  bottom: '25px',
-                                  // top: "20px",
-                                  // right: "-175px",
-                                  left: mobileToolTip ? '-100px' : '5px',
-                                }
+                                background: 'none',
+                                bottom: '25px',
+                                // top: "20px",
+                                // right: "-175px",
+                                left: mobileToolTip ? '-100px' : '5px',
+                              }
                           }
                           tooltipContent={
                             <UpdateChannelTooltipContent
@@ -505,15 +532,15 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                           placementProps={
                             tooltTipHeight < 160
                               ? {
-                                  background: 'none',
-                                  top: '20px', // for lower displaying
-                                  left: '7px',
-                                }
+                                background: 'none',
+                                top: '20px', // for lower displaying
+                                left: '7px',
+                              }
                               : {
-                                  background: 'none',
-                                  bottom: '28px', // above display
-                                  left: '7px',
-                                }
+                                background: 'none',
+                                bottom: '28px', // above display
+                                left: '7px',
+                              }
                           }
                           tooltipContent={
                             <VerifiedTooltipContent
@@ -554,9 +581,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                           !MaskedAliasChannels[+channelObject?.alias_blockchain_id][channelObject?.channel] && (
                             <Span padding="0 0 0 5px">
                               <Image
-                                src={`./svg/${
-                                  CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]
-                                }.svg`}
+                                src={`./svg/${CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]
+                                  }.svg`}
                                 alt="Polygon"
                                 width="20px"
                                 height="20px"
@@ -621,19 +647,19 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                         placementProps={
                           tooltTipHeight < 250
                             ? {
-                                background: 'none',
-                                // bottom: "25px",
-                                top: '20px',
-                                // right: "-175px",
-                                left: '5px',
-                              }
+                              background: 'none',
+                              // bottom: "25px",
+                              top: '20px',
+                              // right: "-175px",
+                              left: '5px',
+                            }
                             : {
-                                background: 'none',
-                                bottom: '25px',
-                                // top: "20px",
-                                // right: "-175px",
-                                left: '5px',
-                              }
+                              background: 'none',
+                              bottom: '25px',
+                              // top: "20px",
+                              // right: "-175px",
+                              left: '5px',
+                            }
                         }
                         tooltipContent={
                           <UpdateChannelTooltipContent
@@ -677,15 +703,15 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                           placementProps={
                             tooltTipHeight < 160
                               ? {
-                                  background: 'none',
-                                  top: '20px', // for lower displaying
-                                  left: '7px',
-                                }
+                                background: 'none',
+                                top: '20px', // for lower displaying
+                                left: '7px',
+                              }
                               : {
-                                  background: 'none',
-                                  bottom: '28px', // above display
-                                  left: '7px',
-                                }
+                                background: 'none',
+                                bottom: '28px', // above display
+                                left: '7px',
+                              }
                           }
                           tooltipContent={
                             <VerifiedTooltipContent
@@ -938,12 +964,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                     channelDetail={channelObject}
                     setLoading={setTxInProgress}
                     onSuccessOptin={() => {
-                      setSubscribed(true);
-                      setSubscriberCount((prevSubscriberCount) => prevSubscriberCount + 1);
+                      onAllowModalOpen();
                     }}
                   >
                     <SubscribeButton
-                      onClick={() => {}}
+                      onClick={() => { }}
                       disabled={txInProgress}
                       className="optin"
                     >
@@ -988,7 +1013,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                     }}
                   >
                     <UnsubscribeButton
-                      onClick={() => {}}
+                      onClick={() => { }}
                       disabled={txInProgress}
                     >
                       {txInProgress && (
@@ -1021,6 +1046,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
           clearToast={clearToast}
         />
       )}
+      {/* modal to allow notification */}
+      {showAllowNotification &&
+        <AllowNotificationModal onModalClose={() => setShowAllowNotification(false)} />
+      }
     </Container>
   );
 }
