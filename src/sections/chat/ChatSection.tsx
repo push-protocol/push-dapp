@@ -18,6 +18,7 @@ import { device } from 'config/Globals';
 
 // Assets
 import Back from 'assets/chat/backchat.svg?react';
+import UnlockProfileComponent from 'components/chat/unlockProfile/UnlockProfileComponent';
 
 // Interface
 interface IntroContainerProps {
@@ -88,9 +89,8 @@ const ChatSection = ({ chatId, setChatId, loggedIn }) => {
 
             {/* Render unlock profile here if user is not logged in and chat instance is loaded */}
             {userPushSDKInstance && userPushSDKInstance?.readmode() && chatId && (
-              <UnlockProfile
-                type={UNLOCK_PROFILE_TYPE.BOTTOM_BAR}
-                body="Unlock profile to read and send messages. Sign with your wallet to continue."
+              <UnlockProfileComponent
+                type={UNLOCK_PROFILE_TYPE.MODAL}
               />
             )}
           </ChatViewContainer>
@@ -111,9 +111,8 @@ const ChatSection = ({ chatId, setChatId, loggedIn }) => {
 
             {/* Render unlock profile here if user is not logged in and chat isntance is not loaded */}
             {userPushSDKInstance && userPushSDKInstance?.readmode() && !chatId && (
-              <UnlockProfile
+              <UnlockProfileComponent
                 type={UNLOCK_PROFILE_TYPE.BOTTOM_BAR}
-                body="Unlock profile to read and send messages. Sign with your wallet to continue."
               />
             )}
           </IntroContainer>
@@ -129,7 +128,7 @@ const ChatViewContainer = styled(ItemVV2)`
   height: inherit;
 `;
 
-const IntroContainer = styled(ItemVV2)<IntroContainerProps>`
+const IntroContainer = styled(ItemVV2) <IntroContainerProps>`
   flex: 1;
   height: inherit;
   background: ${(props) => props.bg || 'transparent'};

@@ -51,21 +51,21 @@ const Profile = ({ isDarkMode }) => {
       id: 'walletAddress',
       value: account,
       title: account,
-      function: () => {},
+      function: () => { },
       invertedIcon: './copy.svg',
     },
     {
       id: 'userSettings',
       value: '',
       title: 'Settings',
-      function: () => {},
+      function: () => { },
       to: APP_PATHS.UserSettings,
       invertedIcon: 'svg/setting.svg',
     },
     {
       id: 'prodDapp',
       value: '',
-      function: () => {},
+      function: () => { },
       link: `https://${envUtil.prod}`,
       title: 'Production dapp',
       invertedIcon: './prod.svg',
@@ -74,7 +74,8 @@ const Profile = ({ isDarkMode }) => {
       id: 'disconnect',
       value: '',
       function: async () => {
-        localStorage.removeItem(userPushSDKInstance.account);
+        const keyFormat = `push-user-${userPushSDKInstance.account}-pgp`;
+        localStorage.removeItem(keyFormat);
         await disconnect(wallet);
         setMode(ReadOnlyWalletMode.GUEST_MODE);
         setReadOnlyWallet('0x0000000000000000000000000000000000000001');

@@ -300,6 +300,10 @@ const themeLight = {
   //collapsable sidebar
   collapsaBg: '#575d737f',
   svgStrokeColor: '#FFF',
+
+  //Connect Wallet and Push user Flow Modal
+  userSecText: '#8C93A0',
+  disabledBtnColor: '#C5C8CD',
 };
 
 const themeDark = {
@@ -607,6 +611,10 @@ const themeDark = {
   //collapsable sidebar
   collapsaBg: '#0000004c',
   svgStrokeColor: '#575D73',
+
+  //Connect Wallet and Push user Flow Modal
+  userSecText: '#484D58',
+  disabledBtnColor: '#484D58',
 };
 
 export { themeDark, themeLight };
