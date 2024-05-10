@@ -406,7 +406,7 @@ const AppContextProvider = ({ children }) => {
     } else {
     }
 
-    // // This is a new user
+    // This is a new user
     setBlockedLoading({
       enabled: onboardingProgress.enabled,
       title: onboardingProgress.hookInfo.progressTitle,
