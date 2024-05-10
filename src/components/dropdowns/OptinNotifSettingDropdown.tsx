@@ -252,6 +252,7 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
               settings: userSettingsFromDefaultChannelSetting({ channelSetting: channelSettings }),
             })
           );
+          onSuccessOptin();
 
           subscribeToast.showMessageToast({
             toastTitle: 'Success',
