@@ -39,6 +39,9 @@ if (localSDKLinking) {
     'emoji-picker-react': path.resolve(__dirname, './node_modules/emoji-picker-react'),
     'gif-picker-react': path.resolve(__dirname, './node_modules/gif-picker-react'),
     '@unstoppabledomains/resolution': path.resolve(__dirname, './node_modules/@unstoppabledomains/resolution'),
+    animejs: path.resolve(__dirname, './node_modules/animejs'),
+    raf: path.resolve(__dirname, './node_modules/raf'),
+    classnames: path.resolve(__dirname, './node_modules/classnames'),
     '@livepeer/react': path.resolve(__dirname, './node_modules/@livepeer/react'),
     '@livekit/components-react': path.resolve(__dirname, './node_modules/@livekit/components-react'),
     'livekit-client': path.resolve(__dirname, './node_modules/livekit-client'),
@@ -62,7 +65,7 @@ export default defineConfig({
     react(),
     svgr(),
     viteTsconfigPaths({
-      root: '..',
+      root: './',
     }),
     nodePolyfills(),
     vitePluginRequire.default(),
@@ -79,6 +82,7 @@ export default defineConfig({
   },
   build: {
     outDir: 'build',
+    sourcemap: false,
     commonjsOptions: {
       transformMixedEsModules: true,
     },

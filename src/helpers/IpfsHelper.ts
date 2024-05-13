@@ -2,7 +2,6 @@
 import { create } from 'ipfs-http-client';
 
 // Internal Components
-import { ipfsUpload } from '../services/ipfs';
 import { EnvHelper } from './UtilityHelper';
 
 // Internal Configs

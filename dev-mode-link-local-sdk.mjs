@@ -11,7 +11,14 @@ import packageJSON from './package.json' assert { type: 'json' };
 const packageJSONWatcher = {
   STORAGE_KEY: 'STORAGE_FOR_RESTORING_PACKAGE_JSON',
   WATCH: ['@pushprotocol/uiweb'],
-  LOCAL_PACKAGES_REQ: ['@livepeer/react@^2.9.2', '@livekit/components-react@^1.5.3', 'livekit-client@^1.15.13'],
+  LOCAL_PACKAGES_REQ: [
+    'animejs@^2.2.0',
+    'classnames@^2.2.5',
+    'raf@^3.4.0',
+    '@livepeer/react@^2.9.2',
+    '@livekit/components-react@^1.5.3',
+    'livekit-client@^1.15.13',
+  ],
 };
 
 const envPresets = {
@@ -255,7 +262,13 @@ const derivePackageJSONValue = (key, storageValue) => {
 };
 
 const cleanupAndBuild = async (sdkENV) => {
-  console.log(chalk.green.dim(`  -- Cleaning up node_modules, yarn cache, packages and ${sdkENV === 'localsdk' ? 'linking' : 'unlinking'} local SDK...`));
+  console.log(
+    chalk.green.dim(
+      `  -- Cleaning up node_modules, yarn cache, packages and ${
+        sdkENV === 'localsdk' ? 'linking' : 'unlinking'
+      } local SDK...`
+    )
+  );
 
   // remove node_modules
   if (fs.existsSync('./node_modules')) {
@@ -315,7 +328,9 @@ const cleanupAndBuild = async (sdkENV) => {
     delete packageJSON.dependencies[key];
   });
   fs.writeFileSync('./package.json', JSON.stringify(packageJSON, null, 2));
-  console.log(chalk.green(`  -- Manual dependencies removed to package.json: ${packageJSONWatcher.LOCAL_PACKAGES_REQ.join(', ')}`));
+  console.log(
+    chalk.green(`  -- Manual dependencies removed to package.json: ${packageJSONWatcher.LOCAL_PACKAGES_REQ.join(', ')}`)
+  );
   // ----
   // adjust this as needed
 
@@ -337,11 +352,13 @@ const cleanupAndBuild = async (sdkENV) => {
       const splitIndex = item.indexOf('@', 1); // Start searching from index 1
       const key = item.substring(0, splitIndex);
       const value = item.substring(splitIndex + 1);
-      
+
       packageJSON.dependencies[key] = value;
     });
     fs.writeFileSync('./package.json', JSON.stringify(packageJSON, null, 2));
-    console.log(chalk.green(`  -- Manual dependencies added to package.json: ${packageJSONWatcher.LOCAL_PACKAGES_REQ.join(', ')}`));
+    console.log(
+      chalk.green(`  -- Manual dependencies added to package.json: ${packageJSONWatcher.LOCAL_PACKAGES_REQ.join(', ')}`)
+    );
     // ----
     // adjust this as needed
 

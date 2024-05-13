@@ -8,10 +8,10 @@ import { useNavigate } from 'react-router-dom';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
+import DownArrow from 'assets/snap/DownArrow.svg?react';
+import UpArrow from 'assets/snap/UpArrow.svg?react';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Item, Section, Span } from '../../primaries/SharedStyling';
-import UpArrow from 'assets/pushSnaps/UpArrow.svg?react';
-import DownArrow from 'assets/pushSnaps/DownArrow.svg?react';
 
 // Internal Configs
 import Close from 'assets/chat/group-chat/close.svg?react';

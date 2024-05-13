@@ -4,36 +4,35 @@ import React, { useContext, useEffect, useMemo } from 'react';
 
 // External Packages
 import moment from 'moment';
-import { useSelector } from 'react-redux';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { MdRemoveCircleOutline } from 'react-icons/md';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
 // Internal Compoonents
+import { Button, Item } from 'components/SharedStyling';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
-import ChannelsDataStore from 'singletons/ChannelsDataStore';
-import ChannelSettings from './ChannelSettings';
-import { Section } from 'primaries/SharedStyling';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
+import { Section } from 'primaries/SharedStyling';
+import { MdCheckCircle, MdError } from 'react-icons/md';
+import ChannelsDataStore from 'singletons/ChannelsDataStore';
+import RedCircleSvg from '../assets/RedCircle.svg?react';
 import AddDelegateModalContent from './AddDelegateModalContent';
+import ChannelSettings from './ChannelSettings';
 import { AddDelegateButton, ManageSettingsButton } from './channel/ChannelButtons';
-import { Button, Item } from 'components/SharedStyling';
 import ChannelInfoHeader from './channel/ChannelInfoHeader';
 import ChannelInfoList from './channel/ChannelInfoList';
-import RedCircleSvg from '../assets/RedCircle.svg?react';
-import { MdCheckCircle, MdError } from 'react-icons/md';
 
 // Internal Configs
-import { appConfig } from 'config/index.js';
-import { device } from 'config/Globals';
-import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
-import { getDateFromTimestamp, nextDaysDateFromTimestamp, timeRemaining } from 'helpers/TimerHelper';
 import APP_PATHS from 'config/AppPaths';
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { device } from 'config/Globals';
+import { appConfig } from 'config/index.js';
 import { AppContext } from 'contexts/AppContext';
-
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { getDateFromTimestamp, nextDaysDateFromTimestamp, timeRemaining } from 'helpers/TimerHelper';
+import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
 
 const DATE_FORMAT = 'DD MMM, YYYY';
 
@@ -82,7 +81,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
       await handleConnectWallet();
     }
     showAddDelegateModal();
-  }
+  };
 
   const addDelegate = async (walletAddress) => {
     return userPushSDKInstance.channel.delegate.add(convertAddressToAddrCaip(walletAddress, chainId));
@@ -346,7 +345,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
                 items={channelSettings[account]}
                 isLoading={false}
                 onClickEmptyListButton={navigateToNotifSettings}
-                emptyListButtonTitle='Add Setting'
+                emptyListButtonTitle="Add Setting"
               />
             </DelegateContainer>
           </Section>

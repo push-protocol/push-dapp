@@ -53,7 +53,7 @@ export const MaskedAliasChannels: {
   97: {},
   10: {},
   11155420: {},
-  1442: {},
+  2442: {},
   1101: {},
   42161: {},
   421614: {},
@@ -115,7 +115,7 @@ export const networkName = {
   56: 'BNB Mainnet',
   11155420: 'Optimism Sepolia',
   10: 'Optimism Mainnet',
-  1442: 'Polygon zkEVM Testnet',
+  2442: 'Polygon zkEVM Testnet',
   1101: 'Polygon zkEVM Mainnet',
   42161: 'ArbitrumOne Mainnet',
   421614: 'Arbitrum Testnet',
@@ -141,7 +141,7 @@ export const aliasChainIdToChainName = {
   42161: 'ARBITRUMONE',
   421614: 'ARBITRUMONE',
   1101: 'POLYGONZKEVM',
-  1442: 'POLYGONZKEVM',
+  2442: 'POLYGONZKEVM',
   122: 'FUSE',
   123: 'FUSE',
 };
@@ -197,11 +197,11 @@ export const NETWORK_DETAILS = {
     blockExplorerUrls: ['https://optimistic.etherscan.io/'],
   },
   POLYGON_ZK_EVM_TESTNET: {
-    chainId: utils.hexValue(1442),
+    chainId: utils.hexValue(2442),
     chainName: 'Polygon zkEVM Testnet',
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
-    rpcUrls: ['https://rpc.public.zkevm-test.net'],
-    blockExplorerUrls: ['https://testnet-zkevm.polygonscan.com'],
+    rpcUrls: ['https://rpc.cardona.zkevm-rpc.com'],
+    blockExplorerUrls: ['https://cardona-zkevm.polygonscan.com/'],
   },
   POLYGON_ZK_EVM_MAINNET: {
     chainId: utils.hexValue(1101),
@@ -253,7 +253,7 @@ export const LOGO_FROM_CHAIN_ID: {
   56: 'BNB.svg',
   11155420: 'Optimism.svg',
   10: 'Optimism.svg',
-  1442: 'PolygonZkEVM.svg',
+  2442: 'PolygonZkEVM.svg',
   1101: 'PolygonZkEVM.svg',
   42161: 'Arbitrum.svg',
   421614: 'Arbitrum.svg',
@@ -355,6 +355,10 @@ export const copyToClipboard = (val: string) => {
 export const isAddressEqual = (address1: string, address2: string): boolean => {
   if (address1 && address2 && address1.toLowerCase() == address2.toLowerCase()) return true;
   return false;
+};
+
+export const toChecksumAddress = (address: string): string => {
+  return utils.getAddress(address);
 };
 
 export default UtilityHelper;

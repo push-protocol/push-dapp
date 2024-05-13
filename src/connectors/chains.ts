@@ -168,11 +168,11 @@ export const TESTNET_CHAINS: ChainConfig = {
     nativeCurrency: BNB,
     blockExplorerUrls: [],
   },
-  1442: {
+  2442: {
     name: 'Polygon zkEVM Testnet',
-    urls: ['https://rpc.public.zkevm-test.net'],
+    urls: ['https://rpc.cardona.zkevm-rpc.com'],
     nativeCurrency: MATIC,
-    blockExplorerUrls: [],
+    blockExplorerUrls: ['https://cardona-zkevm.polygonscan.com/'],
   },
   123: {
     name: 'Fuse Testnet',

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
 
+import { ChatUIProvider, darkChatTheme } from '@pushprotocol/uiweb';
 import { createGlobalStyle } from 'styled-components';
 
 // Internal Compoonents
@@ -32,9 +33,9 @@ import { ErrorContext } from './contexts/ErrorContext';
 import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJourneySlice';
 
 // Internal Configs
-import { appConfig } from 'config/index.js';
 import GLOBALS from 'config/Globals';
 import { themeDark, themeLight } from 'config/Themization';
+import { appConfig } from 'config/index.js';
 import { GlobalContext } from 'contexts/GlobalContext';
 
 // space imports
@@ -117,6 +118,13 @@ if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
 
 // Provess App
 export default function App() {
+  // Initialize GA
+  useEffect(() => {
+    ReactGA.initialize(appConfig.googleAnalyticsId);
+    ReactGA.pageview('/login');
+  }, []);
+  // Initialize GA
+
   const dispatch = useDispatch();
 
   const { isActive, account, chainId, provider } = useAccount();
@@ -158,11 +166,6 @@ export default function App() {
   // console.log(isActive, chainId, account);
   // handle logic to reconnect in response to certain events from the provider
   const { allowedChain } = useInactiveListener();
-
-  // Initialize GA
-  ReactGA.initialize(appConfig.googleAnalyticsId);
-  ReactGA.pageview('/login');
-  // Initialize GA
 
   // Initialize Theme
   const [darkMode, setDarkMode] = useState(false);
@@ -271,76 +274,89 @@ export default function App() {
         <GlobalStyle />
         <InitState />
         <NavigationContextProvider>
-          <SpaceContextProvider>
-            <SpaceComponentContextProvider spaceUI={spaceUI}>
-              <Joyride
-                run={run}
-                steps={steps}
-                continuous={tutorialContinous}
-                stepIndex={stepIndex}
-                // hideFooter={true}
-                // primaryProps={false}
-                hideBackButton={true}
-                hideCloseButton={false}
-                disableScrolling={true}
-                disableScrollParentFix={true}
-                // disableFlip={true}
-                // showNextButton={false}
-                showSkipButton={false}
-                disableOverlayClose={true}
-                callback={handleJoyrideCallback}
-                styles={{
-                  options: {
-                    arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-                    backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-                    overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
-                    primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
-                    textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
-                    zIndex: 1000,
-                  },
-                }}
-              />
-
-              <HeaderContainer>
-                <Header
-                  isDarkMode={darkMode}
-                  darkModeToggle={toggleDarkMode}
+          <ChatUIProvider
+            user={userPushSDKInstance}
+            theme={darkMode && darkChatTheme}
+            debug={true}
+            uiConfig={{
+              suppressToast: false,
+            }}
+          >
+            <SpaceContextProvider>
+              <SpaceComponentContextProvider spaceUI={spaceUI}>
+                <Joyride
+                  run={run}
+                  steps={steps}
+                  continuous={tutorialContinous}
+                  stepIndex={stepIndex}
+                  // hideFooter={true}
+                  // primaryProps={false}
+                  hideBackButton={true}
+                  hideCloseButton={false}
+                  disableScrolling={true}
+                  disableScrollParentFix={true}
+                  // disableFlip={true}
+                  // showNextButton={false}
+                  showSkipButton={false}
+                  disableOverlayClose={true}
+                  callback={handleJoyrideCallback}
+                  styles={{
+                    options: {
+                      arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                      backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                      overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
+                      primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
+                      textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
+                      zIndex: 1000,
+                    },
+                  }}
                 />
-              </HeaderContainer>
 
-              <ParentContainer
-                bg={
-                  darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG
-                }
-                headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
-              >
-                {!isSnapPage && (
-                  <LeftBarContainer
+                <HeaderContainer>
+                  <Header
+                    isDarkMode={darkMode}
+                    darkModeToggle={toggleDarkMode}
+                  />
+                </HeaderContainer>
+
+                <ParentContainer
+                  bg={
+                    darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG
+                  }
+                  headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
+                >
+                  {!isSnapPage && (
+                    <LeftBarContainer
+                      leftBarWidth={
+                        sidebarCollapsed
+                          ? GLOBALS.CONSTANTS.COLLAPSABLE_LEFT_BAR_WIDTH
+                          : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH
+                      }
+                    >
+                      <Navigation />
+                    </LeftBarContainer>
+                  )}
+
+                  <ContentContainer
                     leftBarWidth={
-                      sidebarCollapsed ? GLOBALS.CONSTANTS.COLLAPSABLE_LEFT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH
+                      sidebarCollapsed
+                        ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH
+                        : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH
                     }
                   >
-                    <Navigation />
-                  </LeftBarContainer>
-                )}
-
-                <ContentContainer
-                  leftBarWidth={
-                    sidebarCollapsed ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH
-                  }
-                >
-                  {/* Shared among all pages, load universal things here */}
-                  <SpacesUIProvider
-                    spaceUI={spaceUI}
-                    theme={darkMode ? darkTheme : lightTheme}
-                  >
-                    <MasterInterfacePage />
-                    <SpaceWidgetSection />
-                  </SpacesUIProvider>
-                </ContentContainer>
-              </ParentContainer>
-            </SpaceComponentContextProvider>
-          </SpaceContextProvider>
+                    {/* Shared among all pages, load universal things here */}
+                    <SpacesUIProvider
+                      spaceUI={spaceUI}
+                      theme={darkMode ? darkTheme : lightTheme}
+                    >
+                      <MasterInterfacePage />
+                      <SpaceWidgetSection />
+                    </SpacesUIProvider>
+                  </ContentContainer>
+                </ParentContainer>
+              </SpaceComponentContextProvider>
+            </SpaceContextProvider>
+          </ChatUIProvider>
         </NavigationContextProvider>
       </>
     </ThemeProvider>

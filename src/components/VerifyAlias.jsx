@@ -44,9 +44,9 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
       label: "Sepolia OpETH",
       url: "https://faucet.quicknode.com/optimism/sepolia"
     },
-    1442: {
+    2442: {
       label: "Polygon zkEVM ETH",
-      url: "https://public.zkevm-test.net/"
+      url: "https://faucet.polygon.technology/"
     },
     421614: {
       label: "Sepolia ArbETH",

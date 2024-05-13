@@ -72,14 +72,11 @@ export default Intro;
 
 // css styles
 const Container = styled(ItemVV2)`
-  background: ${(props) => props.theme.default.bg};
+  background: ${(props) => props.theme.chat.modulesBg || 'transparent'};
   padding: 24px;
   gap: 24px;
   flex: none;
   border-radius: 4px 24px 24px 24px;
-  @media (max-width: 768px) {
-    display: none;
-  }
 `;
 
 const WelcomeText = styled(SpanV2)`
@@ -89,8 +86,4 @@ const WelcomeText = styled(SpanV2)`
   color: ${(props) => props.theme.default.color};
   letter-spacing: -0.72px;
   line-height: 141%;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
 `;

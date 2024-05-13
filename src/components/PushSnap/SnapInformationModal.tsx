@@ -2,18 +2,18 @@
 import React from 'react';
 
 // External Packages
-import styled, { useTheme } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { Button } from 'components/SharedStyling';
-import PushLogoLight from 'assets/pushLight.svg?react';
 import PushLogoDark from 'assets/pushDark.svg?react';
-import HandTap from 'assets/pushSnaps/HandTap.svg?react';
-import WalletLogo from 'assets/pushSnaps/Wallet.svg?react';
-import NotificationLogo from 'assets/pushSnaps/Notification.svg?react';
-import Metamask from 'assets/pushSnaps/metamasksnap.svg?react';
+import PushLogoLight from 'assets/pushLight.svg?react';
+import HandTap from 'assets/snap/HandTap.svg?react';
+import NotificationLogo from 'assets/snap/Notification.svg?react';
+import WalletLogo from 'assets/snap/Wallet.svg?react';
+import Metamask from 'assets/snap/metamasksnap.svg?react';
+import { Button } from 'components/SharedStyling';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 
 const SnapInformationModal = ({ handleCloseModal }) => {
   const theme = useTheme();

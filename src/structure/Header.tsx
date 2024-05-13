@@ -11,8 +11,8 @@ import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import styled, { css, useTheme } from 'styled-components';
 
 // Internal Components
-import OpenLink from 'assets/pushSnaps/GoToImage.svg?react';
-import MetamaskLogo from 'assets/pushSnaps/metamasksnap.svg?react';
+import OpenLink from 'assets/snap/GoToImage.svg?react';
+import MetamaskLogo from 'assets/snap/metamasksnap.svg?react';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { AppContext } from 'contexts/AppContext';
@@ -28,10 +28,10 @@ import PushLogoLight from '../assets/pushLight.svg';
 // Internal Configs
 import ChainIndicator from 'components/ChainIndicator';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { appConfig } from 'config/index.js';
 import APP_PATHS from 'config/AppPaths';
 import GLOBALS from 'config/Globals';
 import { themeDark, themeLight } from 'config/Themization';
+import { appConfig } from 'config/index.js';
 import { UnsupportedChainIdError } from 'connectors/error';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { useClickAway } from 'react-use';
