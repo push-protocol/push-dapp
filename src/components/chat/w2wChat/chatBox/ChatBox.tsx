@@ -7,13 +7,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import * as PushAPI from '@pushprotocol/restapi';
-import { ChatProfile, ChatViewList, MessageInput, UserProfile } from '@pushprotocol/uiweb';
-import 'font-awesome/css/font-awesome.min.css';
+import { ChatProfile, ChatViewList, MessageInput } from '@pushprotocol/uiweb';
 import { produce } from 'immer';
 import { CID } from 'ipfs-http-client';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import { useSelector } from 'react-redux';
-import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 

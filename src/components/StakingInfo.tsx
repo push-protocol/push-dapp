@@ -1,6 +1,5 @@
 // React + Web3 Essentials
-import { ethers } from 'ethers';
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
@@ -10,7 +9,6 @@ import FaucetInfo from './FaucetInfo';
 import { Button, Item, Span } from 'primaries/SharedStyling';
 
 // Internal Configs
-import { abis, addresses, appConfig } from 'config/index.js';
 import { useAccount, useAsyncOperation, useDeviceWidthCheck } from 'hooks';
 import { device } from 'config/Globals';
 import { getPushTokenFromWallet, importPushToken, mintPushToken } from 'helpers';
