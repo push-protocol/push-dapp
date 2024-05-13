@@ -264,8 +264,6 @@ function Chat({ chatid }) {
     }
   }, [selectedChatId]);
 
-  useEffect(() => { }, [account, connectedUser?.privateKey]);
-
   return (
     <Container>
       <ItemHV2
