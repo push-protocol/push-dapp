@@ -104,6 +104,7 @@ function Chat({ chatid }) {
   const [intents, setIntents] = useState<Feeds[]>([]);
   const [inbox, setInbox] = useState<Feeds[]>([]);
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
+  // TODO: Add proper types and lean the logic
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
@@ -305,7 +306,7 @@ function Chat({ chatid }) {
                   flex="1"
                   maxWidth="310px"
                   minWidth="280px"
-                  padding="10px 10px 10px 20px"
+                  padding="0px"
                   boxSizing="border-box"
                   background={theme.default.bg}
                   chatActive={isUserChatting && userPushSDKInstance && !userPushSDKInstance?.readmode()}
