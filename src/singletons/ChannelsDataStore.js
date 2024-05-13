@@ -1,7 +1,7 @@
 // Internal Components
-import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
-import { getReq, postReq } from 'api';
 import * as PushAPI from '@pushprotocol/restapi';
+import { getReq, postReq } from 'api';
+import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 
 // Internal Configs
 import { appConfig } from 'config/index.js';
@@ -62,7 +62,6 @@ export default class ChannelsDataStore {
     this.initChannelsListenersAsync();
 
     // next get store channels count
-    this.getChannelsCountAsync();
   };
 
   // RESET LISTENERS
@@ -275,44 +274,6 @@ export default class ChannelsDataStore {
     }
   };
 
-  // CHANNELS COUNT
-  getChannelsCountAsync = async () => {
-    const enableLogs = 0;
-
-    return new Promise(async (resolve, reject) => {
-      if (this.state.channelsCount == -1) {
-        // Count not set, get and set it first
-        const count = EPNSCoreHelper.getTotalNumberOfChannels(this.state.epnsReadProvider)
-          .then((response) => {
-            this.state.channelsCount = response;
-
-            if (enableLogs) console.debug('getChannelsCountAsync() --> %o', response);
-            resolve(this.state.channelsCount);
-          })
-          .catch((err) => {
-            console.error('!!!Error, getChannelsCountAsync() --> %o', err);
-            reject(err);
-          });
-      } else {
-        resolve(this.state.channelsCount);
-      }
-    });
-  };
-
-  incrementChannelsCountAsync = async (incrementCount) => {
-    return new Promise((resolve, reject) => {
-      this.getChannelsCountAsync()
-        .then((response) => {
-          this.state.channelsCount = response + incrementCount;
-          console.debug('incrementChannelsCountAsync() --> %d', this.state.channelsCount);
-          resolve(this.state.channelsCount);
-        })
-        .catch((err) => {
-          console.error('!!!Error, incrementChannelsCountAsync() --> %o', err);
-          reject(err);
-        });
-    });
-  };
   /**
    * Get paginated channel information
    * @param {Number} startIndex the number of channels viewed so far e.g 50
@@ -364,17 +325,14 @@ export default class ChannelsDataStore {
   //   });
   // };
   // Helper to get Channel Alias from Channel's address
-  getChannelDetailsFromAddress = async (channel) => {
+  getChannelDetailsFromAddress = async (channel, userPushSDKInstance) => {
     if (channel === null) return;
     const enableLogs = 0;
 
     return new Promise((resolve, reject) => {
       // To get channel info from a channel address
-      PushAPI.channels
-        .getChannel({
-          channel: channel,
-          env: appConfig.appEnv,
-        })
+      userPushSDKInstance.channel
+        .info()
         .then((response) => {
           let output;
           if (response && response != 'channel not found') {
@@ -394,99 +352,6 @@ export default class ChannelsDataStore {
           console.error('!!!Error, getChannelDetailsFromAddress() --> %o', err);
           reject(err);
         });
-    });
-  };
-  // CHANNELS META FUNCTIONS
-  // To get channels meta
-  // get channels meta in a paginated format
-  // by passing in the starting index and the number of items per page
-  getChannelsMetaAsync = async (startIndex, pageCount) => {
-    this.getChannelFromApi(startIndex, pageCount, this.state.account, this.state.chainId);
-    return new Promise(async (resolve, reject) => {
-      // get total number of channels
-      const channelsCount = await this.getChannelsCountAsync();
-      let stopIndex = startIndex + pageCount;
-
-      // if the stop index is -1 then get all channels
-      if (stopIndex == -1 || stopIndex > channelsCount) {
-        stopIndex = channelsCount;
-      }
-
-      // initialise an array with the values from 0 to the length of the number of channels
-      let channelIDs = [];
-
-      for (let i = startIndex; i < stopIndex; i++) {
-        channelIDs.push(i);
-      }
-      console.debug({ channelIDs });
-
-      const promises = channelIDs.map(async (channelID) => {
-        // Match the cache
-        return this.getChannelMetaAsync(channelID)
-          .then((response) => response)
-          .catch((err) => console.error('!!!Error (but skipping), getChannelMetaAsync() --> %o', err));
-      });
-
-      // wait until all promises are resolved
-      const channelMetaData = await Promise.all(promises);
-
-      // return channels meta
-      // console.log("getChannelsMetaAsync(From %d to %d) --> %o", startIndex, stopIndex, channelMetaData);
-      resolve(channelMetaData);
-    });
-  };
-
-  // To get a single channel meta via id
-  getChannelMetaAsync = async (channelID) => {
-    return new Promise(async (resolve, reject) => {
-      if (this.state.channelsMeta[channelID]) {
-        console.debug('getChannelMetaAsync() [CACHED] --> %o', this.state.channelsMeta[channelID]);
-        resolve(this.state.channelsMeta[channelID]);
-      } else {
-        let channelAddress;
-
-        await EPNSCoreHelper.getChannelAddressFromID(channelID, this.state.epnsReadProvider)
-          .then(async (response) => {
-            channelAddress = response;
-            await this.getChannelMetaViaAddressAsync(channelAddress).then((response) => {
-              // update the channel cache before resolving
-              this.state.channelsMeta[channelID] = response;
-              this.state.channelsMeta[channelAddress] = channelID;
-
-              // resolve
-              // console.log("getChannelMetaAsync() [Address: %s] --> %o", channelAddress, response);
-              resolve(response);
-            });
-          })
-          .catch((err) => {
-            console.error('!!!Error, getChannelMetaAsync() --> %o', err);
-            reject(err);
-          });
-      }
-    });
-  };
-
-  // To get a single channel meta via address
-  getChannelMetaViaAddressAsync = async (channelAddress) => {
-    return new Promise(async (resolve, reject) => {
-      if (this.state.channelsMeta[channelAddress]) {
-        const channelID = this.state.channelsMeta[channelAddress];
-
-        console.debug('getChannelMetaViaAddressAsync() [CACHED] --> %o', this.state.channelsMeta[channelID]);
-        resolve(this.state.channelsMeta[channelID]);
-      } else {
-        // Can't cache this :(, no way to know channel id
-        await EPNSCoreHelper.getChannelInfo(channelAddress, this.state.epnsReadProvider)
-          .then((response) => {
-            // resolve
-            // console.log("getChannelMetaViaAddressAsync() [Address: %s] --> %o", channelAddress, response);
-            resolve(response);
-          })
-          .catch((err) => {
-            console.error('!!!Error, getChannelMetaViaAddressAsync() --> %o', err);
-            reject(err);
-          });
-      }
     });
   };
 

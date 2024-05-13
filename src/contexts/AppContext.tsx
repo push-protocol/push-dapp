@@ -250,6 +250,7 @@ const AppContextProvider = ({ children }) => {
       const librarySigner = web3Provider?.getSigner(currentAddress);
       const decryptedPGPKeys = retrieveUserPGPKeyFromStorage(currentAddress);
 
+
       if (decryptedPGPKeys) {
         userInstance = await PushAPI.initialize(librarySigner!, {
           decryptedPGPPrivateKey: decryptedPGPKeys,
@@ -267,10 +268,20 @@ const AppContextProvider = ({ children }) => {
         });
       }
 
+
       // connect stream as well
       await setupStream(userInstance);
 
       console.debug('src::contexts::AppContext::initializePushSDK::User Intance Initialized', userInstance);
+      if (userInstance) {
+        setBlockedLoading({
+          enabled: false,
+          title: 'Push Profile Setup Complete',
+          spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
+          progressEnabled: false,
+          progress: 100,
+        });
+      }
       dispatch(setUserPushSDKInstance(userInstance));
       return userInstance;
     } catch (error) {

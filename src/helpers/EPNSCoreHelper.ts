@@ -28,24 +28,6 @@ const EPNSCoreHelper = {
     return gasPriceInUsd;
   },
 
-  // To get owner info
-  getOwnerInfo: async (contract: ethers.Contract): Promise<any> => {
-    const enableLogs: number = 0;
-
-    return new Promise((resolve, reject) => {
-      // Get User Info from Push (EPNS) Core
-      contract
-        .governance()
-        .then((response: any) => {
-          if (enableLogs) console.debug('getOwnerInfo() --> %o', response);
-          resolve(response);
-        })
-        .catch((err: any) => {
-          console.error('!!!Error, getOwnerInfo() --> %o', err);
-          reject(err);
-        });
-    });
-  },
   getVotingPower: async (
     delegateeAddress: string,
     contract: ethers.Contract,
@@ -65,43 +47,7 @@ const EPNSCoreHelper = {
     }
     return '0.000';
   },
-  // To get user info
-  getUserInfo: async (user: string, contract: ethers.Contract): Promise<any> => {
-    const enableLogs: number = 0;
 
-    return new Promise((resolve, reject) => {
-      // Get User Info from Push (EPNS) Core
-      contract
-        .users(user)
-        .then((response: any) => {
-          const mappings = { ...response };
-          mappings.addr = user;
-
-          if (enableLogs) console.debug('getUserInfo() --> %o', mappings);
-          resolve(mappings);
-        })
-        .catch((err: any) => {
-          console.error('!!!Error, getUserInfo() --> %o', err);
-          reject(err);
-        });
-    });
-  },
-  // To retrieve a channel address from it's id
-  getChannelAddressFromID: async (channelID: string, contract: ethers.Contract): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      // To get channel info from a channel address
-      contract
-        .channelById(channelID)
-        .then((response: any) => {
-          // console.log("getChannelAddressFromID() --> %o", response.toString());
-          resolve(response.toString());
-        })
-        .catch((err: any) => {
-          console.error('!!!Error, getChannelAddressFromID() --> %o', err);
-          reject(err);
-        });
-    });
-  },
   // To retrieve a channel's Info from channel address
   getChannelInfo: async (channel: string, contract: ethers.Contract): Promise<any> => {
     if (channel === null) return;
@@ -383,53 +329,7 @@ const EPNSCoreHelper = {
         });
     });
   },
-  // Get Total Number of Users
-  getTotalNumberOfUsers: async (contract: ethers.Contract): Promise<number> => {
-    return new Promise((resolve, reject) => {
-      // Get User Info from Push (EPNS) Core
-      contract
-        .usersCount()
-        .then((response: any) => {
-          console.debug('getTotalNumberOfUsers() --> %o', response.toNumber());
-          resolve(response.toNumber());
-        })
-        .catch((err: any) => {
-          console.error('!!!Error, getTotalNumberOfUsers() --> %o', err);
-          reject(err);
-        });
-    });
-  },
-  // To retrieve public key of a user
-  getPublicKey: async (address: string, contract: ethers.Contract): Promise<string | null> => {
-    const enableLogs: number = 0;
 
-    return new Promise((resolve, reject) => {
-      // To get channel ipfs hash from channel info
-      let filteredResponse: any;
-      contract
-        .queryFilter('PublicKeyRegistered')
-        .then((response) => {
-          response.forEach(function (item) {
-            if (item.args[0] == address) {
-              filteredResponse = item;
-            }
-          });
-
-          if (enableLogs) console.debug('Public Key Registry Response: ' + response);
-          if (enableLogs) console.debug('Public Key Registry Filtered: ' + filteredResponse);
-
-          if (!filteredResponse || filteredResponse.length == 0) {
-            resolve(null);
-          } else {
-            resolve(filteredResponse.args[1]);
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-          reject(err);
-        });
-    });
-  },
   // Get Total Subsbribed Channels
   getSubscribedStatus: async (user: string, channel: string, contract: ethers.Contract): Promise<number> => {
     return new Promise((resolve, reject) => {
