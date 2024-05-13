@@ -41,7 +41,6 @@ const Recommended = ({ bg, onChatSelected }) => {
             key={index}
             chatPreviewPayload={item.payload}
             selected={item.payload.chatId === chatId ? true : false}
-            background={'transparent'}
             setSelected={(chatId, chatParticipant) => {
               const chatParticipantRemapped = getChatParticipant(chatParticipant);
               setChatId(chatId);
