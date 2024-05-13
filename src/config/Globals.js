@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 // Define Size and Device
-const size = {
+export const size = {
   mobileS: '320px',
   mobileM: '375px',
   mobileL: '425px',
@@ -103,8 +103,8 @@ export default {
   CONSTANTS: {
     HEADER_HEIGHT: 70,
     LEFT_BAR_WIDTH: 250,
-    COLLAPSABLE_LEFT_BAR_WIDTH:90,
-    COLLAPSABLE_RIGHT_BAR_WIDTH:90,
+    COLLAPSABLE_LEFT_BAR_WIDTH: 90,
+    COLLAPSABLE_RIGHT_BAR_WIDTH: 90,
 
     NAVBAR_SECTIONS: {
       PRIMARY: 1,
