@@ -24,8 +24,8 @@ import { GlobalContext, GlobalContextType, ReadOnlyWalletMode } from 'contexts/G
 import { AppContextType } from 'types/context';
 
 // Create Header
-const Profile = ({ isDarkMode }) => {
-  const { web3NameList, initializePushSdkReadMode }: AppContextType = useContext(AppContext);
+const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
+  const { web3NameList, initializePushSdkReadMode, removePGPKeyForUser }: AppContextType = useContext(AppContext);
   const { setReadOnlyWallet, readOnlyWallet, mode, setMode }: GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
@@ -51,21 +51,21 @@ const Profile = ({ isDarkMode }) => {
       id: 'walletAddress',
       value: account,
       title: account,
-      function: () => {},
+      function: () => { },
       invertedIcon: './copy.svg',
     },
     {
       id: 'userSettings',
       value: '',
       title: 'Settings',
-      function: () => {},
+      function: () => { },
       to: APP_PATHS.UserSettings,
       invertedIcon: 'svg/setting.svg',
     },
     {
       id: 'prodDapp',
       value: '',
-      function: () => {},
+      function: () => { },
       link: `https://${envUtil.prod}`,
       title: 'Production dapp',
       invertedIcon: './prod.svg',
@@ -74,7 +74,7 @@ const Profile = ({ isDarkMode }) => {
       id: 'disconnect',
       value: '',
       function: async () => {
-        localStorage.removeItem(userPushSDKInstance.account);
+        removePGPKeyForUser(userPushSDKInstance.account);
         await disconnect(wallet);
         setMode(ReadOnlyWalletMode.GUEST_MODE);
         setReadOnlyWallet('0x0000000000000000000000000000000000000001');

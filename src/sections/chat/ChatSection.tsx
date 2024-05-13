@@ -18,6 +18,7 @@ import { device } from 'config/Globals';
 
 // Assets
 import Back from 'assets/chat/backchat.svg?react';
+import UnlockProfileWrapper from 'components/chat/unlockProfile/UnlockProfileWrapper';
 
 // Interface
 interface IntroContainerProps {
@@ -88,10 +89,7 @@ const ChatSection = ({ chatId, setChatId, loggedIn }) => {
 
             {/* Render unlock profile here if user is not logged in and chat instance is loaded */}
             {userPushSDKInstance && userPushSDKInstance?.readmode() && chatId && (
-              <UnlockProfile
-                type={UNLOCK_PROFILE_TYPE.BOTTOM_BAR}
-                body="Unlock profile to read and send messages. Sign with your wallet to continue."
-              />
+              <UnlockProfileWrapper type={UNLOCK_PROFILE_TYPE.BOTTOM_BAR} />
             )}
           </ChatViewContainer>
         )}
@@ -111,10 +109,7 @@ const ChatSection = ({ chatId, setChatId, loggedIn }) => {
 
             {/* Render unlock profile here if user is not logged in and chat isntance is not loaded */}
             {userPushSDKInstance && userPushSDKInstance?.readmode() && !chatId && (
-              <UnlockProfile
-                type={UNLOCK_PROFILE_TYPE.BOTTOM_BAR}
-                body="Unlock profile to read and send messages. Sign with your wallet to continue."
-              />
+              <UnlockProfileWrapper type={UNLOCK_PROFILE_TYPE.BOTTOM_BAR} />
             )}
           </IntroContainer>
         )}
