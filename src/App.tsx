@@ -14,9 +14,9 @@ import { createGlobalStyle } from 'styled-components';
 
 // Internal Compoonents
 import InitState from 'components/InitState';
-import AppContextProvider, { AppContext } from 'contexts/AppContext';
+import { AppContext } from 'contexts/AppContext';
 import NavigationContextProvider from 'contexts/NavigationContext';
-import { useAccount, useInactiveListener, useSDKSocket } from 'hooks';
+import { useAccount, useInactiveListener } from 'hooks';
 import { resetAdminSlice } from 'redux/slices/adminSlice';
 import { resetChannelCreationSlice } from 'redux/slices/channelCreationSlice';
 import { resetNotificationsSlice } from 'redux/slices/notificationSlice';
@@ -27,8 +27,6 @@ import UserJourneySteps from 'segments/userJourneySteps';
 import Header from 'structure/Header';
 import MasterInterfacePage from 'structure/MasterInterfacePage';
 import Navigation from 'structure/Navigation';
-import AppLogin from './AppLogin';
-import { SectionV2 } from './components/reusables/SharedStylingV2';
 import { ErrorContext } from './contexts/ErrorContext';
 import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJourneySlice';
 
