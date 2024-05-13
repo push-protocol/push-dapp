@@ -34,6 +34,8 @@ const bnToInt = function (bnAmount) {
   return parseInt(bnAmount.div(bn(10).pow(18)));
 };
 
+const guestWalletAddress = '0x0000000000000000000000000000000000000001';
+
 export default class YieldFarmingDataStoreV2 {
   static instance = null;
 
@@ -333,7 +335,7 @@ export default class YieldFarmingDataStoreV2 {
         ({ epochRewards, currentEpochNumber } = await getUserPushStakingInfo(provider, this.state.account, addresses.pushCoreV2));
 
         //these values changes if the account changes.
-        if (this.state.account !== '0x0000000000000000000000000000000000000001') {
+        if (this.state.account !== guestWalletAddress) {
           ({
             userStaked,
             potentialReward,

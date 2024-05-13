@@ -16,7 +16,7 @@ import YieldPushFeeV3 from 'components/yield/YieldPushFeeV3';
 import { useAccount } from 'hooks';
 
 // Internal Configs
-import { abis, addresses } from 'config/index.js';
+import { abis, addresses, appConfig } from 'config/index.js';
 import { GlobalContext } from 'contexts/GlobalContext';
 
 const NewYieldFarming = ({ setActiveTab }) => {
@@ -71,7 +71,7 @@ const NewYieldFarming = ({ setActiveTab }) => {
   //initiate the YieldFarmV2 data store here
   React.useEffect(() => {
 
-    if (chainId !== 1 && chainId !== 11155111) {
+    if (chainId !== appConfig.coreContractChain && chainId !== appConfig.mainnetCoreContractChain) {
       return;
     }
 

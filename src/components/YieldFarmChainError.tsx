@@ -22,7 +22,7 @@ const YieldFarmChainError = ({ onClose }) => {
   };
 
   useEffect(() => {
-    if (currentChainId === 1 || currentChainId === 11155111) {
+    if (currentChainId === appConfig.coreContractChain || currentChainId === appConfig.mainnetCoreContractChain) {
       onClose();
     }
   }, [currentChainId])
