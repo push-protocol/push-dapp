@@ -40,6 +40,7 @@ if (localSDKLinking) {
     'gif-picker-react': path.resolve(__dirname, './node_modules/gif-picker-react'),
     '@unstoppabledomains/resolution': path.resolve(__dirname, './node_modules/@unstoppabledomains/resolution'),
     'react-player': path.resolve(__dirname, './node_modules/react-player'),
+    'react-code-blocks': path.resolve(__dirname, './node_modules/react-code-blocks'),
     animejs: path.resolve(__dirname, './node_modules/animejs'),
     raf: path.resolve(__dirname, './node_modules/raf'),
     classnames: path.resolve(__dirname, './node_modules/classnames'),

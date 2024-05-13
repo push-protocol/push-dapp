@@ -307,7 +307,7 @@ function Chat({ chatid }) {
                   flex="1"
                   maxWidth="310px"
                   minWidth="280px"
-                  padding="10px 10px 10px 20px"
+                  padding="0px"
                   boxSizing="border-box"
                   background={theme.default.bg}
                   chatActive={isUserChatting && userPushSDKInstance && !userPushSDKInstance?.readmode()}

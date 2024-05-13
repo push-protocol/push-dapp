@@ -16,6 +16,7 @@ const packageJSONWatcher = {
     'classnames@^2.2.5',
     'raf@^3.4.0',
     'protobufjs@^7.2.6',
+    'react-code-blocks@^0.1.6',
     '@livepeer/react@^2.9.2',
     '@livekit/components-react@^1.5.3',
     'livekit-client@^1.15.13',

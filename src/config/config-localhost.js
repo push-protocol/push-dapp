@@ -9,6 +9,7 @@ export const config = {
    * API Calls Related
    */
   appEnv: 'dev',
+  actualEnv: 'localhost', // helps in deciding some text, links, etc, DO NOT CHANGE
 
   pushNodeApiVersion: 1,
   apiUrl: 'http://localhost:4000/apis',

@@ -279,7 +279,7 @@ export default function App() {
           <ChatUIProvider
             user={userPushSDKInstance}
             theme={darkMode && darkChatTheme}
-            debug={appConfig?.appEnv === 'prod' ? false : pushsdkDebug}
+            debug={pushsdkDebug}
             uiConfig={{
               suppressToast: false,
             }}
