@@ -135,6 +135,12 @@ const AppContextProvider = ({ children }) => {
     return user;
   };
 
+  // Remove PGP key from local storage
+  const removePGPKeyForUser = (account: string) => {
+    const key = getUniquePGPKey(account);
+    localStorage.removeItem(key);
+  };
+
   // Store PGP key in local storage
   const storePGPKeyForUser = (account: string, pgpPvtKey: string) => {
     const key = getUniquePGPKey(account);
@@ -527,6 +533,8 @@ const AppContextProvider = ({ children }) => {
         setDisplayQR,
         createUserIfNecessary,
         initializePushSdkReadMode,
+        removePGPKeyForUser,
+        storePGPKeyForUser,
       }}
     >
       {children}

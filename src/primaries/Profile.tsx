@@ -24,8 +24,8 @@ import { GlobalContext, GlobalContextType, ReadOnlyWalletMode } from 'contexts/G
 import { AppContextType } from 'types/context';
 
 // Create Header
-const Profile = ({ isDarkMode }) => {
-  const { web3NameList, initializePushSdkReadMode }: AppContextType = useContext(AppContext);
+const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
+  const { web3NameList, initializePushSdkReadMode, removePGPKeyForUser }: AppContextType = useContext(AppContext);
   const { setReadOnlyWallet, readOnlyWallet, mode, setMode }: GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
@@ -74,8 +74,7 @@ const Profile = ({ isDarkMode }) => {
       id: 'disconnect',
       value: '',
       function: async () => {
-        const keyFormat = `push-user-${userPushSDKInstance.account}-pgp`;
-        localStorage.removeItem(keyFormat);
+        removePGPKeyForUser(userPushSDKInstance.account);
         await disconnect(wallet);
         setMode(ReadOnlyWalletMode.GUEST_MODE);
         setReadOnlyWallet('0x0000000000000000000000000000000000000001');

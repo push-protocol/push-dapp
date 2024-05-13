@@ -14,9 +14,9 @@ import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { device, size } from 'config/Globals';
 
 // Assets
+import Tooltip from 'components/reusables/tooltip/Tooltip';
 import UnlockLogo from '../../../assets/chat/unlock.svg';
 import Wallet from '../../../assets/chat/wallet.svg';
-import Tooltip from 'components/reusables/tooltip/Tooltip';
 
 // Constants
 export enum UNLOCK_PROFILE_TYPE {
@@ -105,7 +105,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
               fontSize={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? '16px' : '18px'}
               fontWeight="400"
               lineHeight="22.4px"
-              color={theme.userSecText}
+              color={theme.default.secondaryColor}
             >
               {activeStatus.body}
             </SpanV2>
@@ -122,12 +122,25 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
             flex="none"
             flexDirection={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? 'column' : 'row'}
           >
-            <StepsLeftDesign background="#D53A94">1</StepsLeftDesign>
+            <StepsLeftDesign
+              background={theme.btn.primaryBg}
+              color={theme.btn.primaryColor}
+            >
+              1
+            </StepsLeftDesign>
             <HorizontalBar
               activeState={activeStatus.status}
+              theme={theme}
               type={type}
             ></HorizontalBar>
-            <StepsLeftDesign background={activeStatus.status !== PROFILESTATE.CONNECT_WALLET ? '#D53A94' : '#C2C7CF'}>
+            <StepsLeftDesign
+              background={
+                activeStatus.status !== PROFILESTATE.CONNECT_WALLET ? theme.btn.primaryBg : theme.btn.disabledBg
+              }
+              color={
+                activeStatus.status !== PROFILESTATE.CONNECT_WALLET ? theme.btn.primaryColor : theme.btn.disabledColor
+              }
+            >
               2
             </StepsLeftDesign>
           </ItemHV2>
@@ -197,21 +210,21 @@ const RenderToolTip = ({ children, type }) => {
       placementProps={
         type === UNLOCK_PROFILE_TYPE.MODAL
           ? {
-            background: 'black',
-            width: '220px',
-            padding: '8px 12px',
-            top: '10px',
-            left: '60px',
-            borderRadius: '4px 12px 12px 12px',
-          }
+              background: 'black',
+              width: '220px',
+              padding: '8px 12px',
+              top: '10px',
+              left: '60px',
+              borderRadius: '4px 12px 12px 12px',
+            }
           : {
-            background: 'black',
-            width: '120px',
-            padding: '8px 12px',
-            bottom: '0px',
-            right: '-30px',
-            borderRadius: '12px 12px 12px 4px',
-          }
+              background: 'black',
+              width: '120px',
+              padding: '8px 12px',
+              bottom: '0px',
+              right: '-30px',
+              borderRadius: '12px 12px 12px 4px',
+            }
       }
       tooltipContent={
         <SpanV2
@@ -264,11 +277,10 @@ const CustomCheckbox = styled.input.attrs({ type: 'checkbox' })`
 `;
 
 const StepsLeftDesign = styled(SpanV2)`
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   line-height: 130%;
   border-radius: 22px;
-  color: #fff;
   width: 6px;
   height: 6px;
   display: flex;
@@ -281,7 +293,9 @@ const HorizontalBar = styled.div`
   width: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '2px' : '150px')};
   height: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '40px' : '3px')};
   background: ${(props) =>
-    props.activeState === PROFILESTATE.CONNECT_WALLET ? 'linear-gradient(to right,#D53A94, #C2C7CF)' : '#D53A94'};
+    props.activeState === PROFILESTATE.CONNECT_WALLET
+      ? `linear-gradient(to right, ${props.theme.btn.primaryBg}, ${props.theme.btn.disabledBg})`
+      : props.theme.btn.primaryBg};
 
   @media ${device.tablet} {
     width: 2px;
@@ -298,9 +312,11 @@ const DefaultButton = styled(ButtonV2)`
   font-style: normal;
   font-weight: 500;
   line-height: 16px;
-  background:${(props) => props.activeStatus === props.status ? '#D53A94' : props.theme.disabledBtnColor}; 
-  color:${(props) => props.activeStatus === props.status ? '#FFF' : '#C5C8CD'}; 
-  cursor:${(props) => props.activeStatus !== props.status ? 'not-allowed' : 'pointer'}; 
-  `;
+  background: ${(props) =>
+    props.activeStatus === props.status ? props.theme.btn.primaryBg : props.theme.btn.disabledBg};
+  color: ${(props) =>
+    props.activeStatus === props.status ? props.theme.btn.primaryColor : props.theme.btn.disabledColor};
+  cursor: ${(props) => (props.activeStatus !== props.status ? 'not-allowed' : 'pointer')};
+`;
 
 export default UnlockProfile;

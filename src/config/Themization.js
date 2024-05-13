@@ -47,6 +47,8 @@ const themeLight = {
   },
 
   btn: {
+    primaryBg: '#D53A94',
+    primaryColor: '#FFF',
     disabledBg: '#E0E3E7',
     disabledColor: '#BEC8D8',
   },
@@ -354,6 +356,8 @@ const themeDark = {
   },
 
   btn: {
+    primaryBg: '#D53A94',
+    primaryColor: '#FFF',
     disabledBg: '#383A40',
     disabledColor: '#545F74',
   },

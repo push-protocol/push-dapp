@@ -4,7 +4,6 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import UnlockProfile from './UnlockProfile';
 
-
 export enum UNLOCK_PROFILE_TYPE {
   BOTTOM_BAR = 'bottombar',
   MODAL = 'modal',
@@ -18,10 +17,7 @@ const DEFAULT_PROPS = {
   type: UNLOCK_PROFILE_TYPE.MODAL,
 };
 
-const UnlockProfileComponent = ({
-  type = DEFAULT_PROPS.type,
-}: IntroContainerProps) => {
-
+const UnlockProfileWrapper = ({ type = DEFAULT_PROPS.type }: IntroContainerProps) => {
   const {
     isModalOpen: isProfileModalOpen,
     showModal: showProfileModal,
@@ -29,12 +25,10 @@ const UnlockProfileComponent = ({
   } = useModalBlur();
 
   useEffect(() => {
-
     if (type === UNLOCK_PROFILE_TYPE.MODAL) {
       showProfileModal();
     }
-
-  }, [type])
+  }, [type]);
 
   if (type === UNLOCK_PROFILE_TYPE.MODAL) {
     return (
@@ -43,20 +37,20 @@ const UnlockProfileComponent = ({
         InnerComponentProps={{
           type,
         }}
-        modalRadius='24px'
+        modalRadius="24px"
         modalBorder={false}
       />
-    )
+    );
   } else {
     return (
       <Container className={type}>
         <UnlockProfile InnerComponentProps={{ type }} />
       </Container>
-    )
+    );
   }
 };
 
-export default UnlockProfileComponent;
+export default UnlockProfileWrapper;
 
 const Container = styled(ItemVV2)`
   flex: initial;
@@ -64,7 +58,7 @@ const Container = styled(ItemVV2)`
   padding: 24px;
   align-items: center;
   // overflow: hidden;
-  // backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 
   &.bottombar {
     flex: initial;
@@ -87,6 +81,6 @@ const Container = styled(ItemVV2)`
     bottom: 0;
     right: 0;
     background: ${(props) => props.theme.chat.modalBg};
-    // opacity: 0.8;
+    opacity: 0.75;
   }
 `;
