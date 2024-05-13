@@ -303,7 +303,7 @@ const themeLight = {
 
   //Connect Wallet and Push user Flow Modal
   userSecText: '#8C93A0',
-  disabledBtnColor: '#C5C8CD',
+  disabledBtnColor: '#E5E5E5',
 };
 
 const themeDark = {

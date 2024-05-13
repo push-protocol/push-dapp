@@ -43,6 +43,8 @@ const UnlockProfileComponent = ({
         InnerComponentProps={{
           type,
         }}
+        modalRadius='24px'
+        modalBorder={false}
       />
     )
   } else {
@@ -62,7 +64,7 @@ const Container = styled(ItemVV2)`
   padding: 24px;
   align-items: center;
   // overflow: hidden;
-  backdrop-filter: blur(8px);
+  // backdrop-filter: blur(8px);
 
   &.bottombar {
     flex: initial;
@@ -85,6 +87,6 @@ const Container = styled(ItemVV2)`
     bottom: 0;
     right: 0;
     background: ${(props) => props.theme.chat.modalBg};
-    opacity: 0.8;
+    // opacity: 0.8;
   }
 `;
