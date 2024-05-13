@@ -89,7 +89,7 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
     setShowDropdown(false);
   });
 
-  const ConnectWallet = () => {
+  const handleConnectWallet = () => {
     connect();
   };
 
@@ -103,7 +103,7 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
               bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
               color="#FFF"
               isDarkMode={isDarkMode}
-              onClick={() => ConnectWallet()}
+              onClick={() => handleConnectWallet()}
             >
               Connect Wallet
             </Wallet>
@@ -169,7 +169,7 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
           bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
           color="#FFF"
           isDarkMode={isDarkMode}
-          onClick={() => ConnectWallet()}
+          onClick={() => handleConnectWallet()}
         >
           Connect Wallet
         </Wallet>
