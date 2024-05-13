@@ -112,7 +112,7 @@ const ChatSection = ({ chatId, setChatId, loggedIn }) => {
             {/* Render unlock profile here if user is not logged in and chat isntance is not loaded */}
             {userPushSDKInstance && userPushSDKInstance?.readmode() && !chatId && (
               <UnlockProfileComponent
-                type={UNLOCK_PROFILE_TYPE.MODAL}
+                type={UNLOCK_PROFILE_TYPE.BOTTOM_BAR}
               />
             )}
           </IntroContainer>
