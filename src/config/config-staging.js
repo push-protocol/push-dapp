@@ -9,7 +9,6 @@ export const config = {
    * API Calls Related
    */
   appEnv: 'staging', // helps in deciding some text, links, etc, DO NOT CHANGE
-  actualEnv: 'staging', // helps in deciding some text, links, etc, DO NOT CHANGE
 
   pushNodeApiVersion: 1,
   apiUrl: 'https://backend-staging.epns.io/apis',

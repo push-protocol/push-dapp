@@ -9,7 +9,6 @@ export const config = {
    * API Calls Related
    */
   appEnv: 'prod', // helps in deciding some text, links, etc, DO NOT CHANGE
-  actualEnv: 'alpha', // helps in deciding some text, links, etc, DO NOT CHANGE
 
   pushNodeApiVersion: 1,
   apiUrl: 'https://backend.epns.io/apis',

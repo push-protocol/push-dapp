@@ -184,7 +184,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
                   >
                     Requests
                   </SpanV2>
-                  {numberOfChatReqs === -1 || requestLoadingData?.loading ? (
+                  {numberOfChatReqs < 0 || requestLoadingData?.loading ? (
                     <LoaderSpinner
                       type={LOADER_TYPE.SEAMLESS}
                       width="auto"
@@ -210,6 +210,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
         )}
 
         {/* Or Render Search or adding of dm / group */}
+        {/* TODO: Add Proper Types */}
         {activeTab == 0 && (
           <SearchBar
             autofilled={undefined}
@@ -218,6 +219,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
           />
         )}
 
+        {/* TODO: Add Proper Types */}
         {activeTab == 3 && (
           <>
             <SearchBar
