@@ -1,3 +1,4 @@
+import cpus from 'cpus';
 import react from '@vitejs/plugin-react';
 import { parse } from 'envfile';
 import fs from 'fs';
@@ -51,6 +52,22 @@ if (localSDKLinking) {
   };
 }
 
+function differMuiSourcemapsPlugins() {
+  const muiPackages = ['@mui/material', '@emotion/styled', '@emotion/react'];
+
+  return {
+    name: 'differ-mui-sourcemap',
+    transform(code: string, id: string) {
+      if (muiPackages.some((pkg) => id.includes(pkg))) {
+        return {
+          code: code,
+          map: null,
+        };
+      }
+    },
+  };
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
@@ -72,6 +89,7 @@ export default defineConfig({
     }),
     nodePolyfills(),
     vitePluginRequire.default(),
+    differMuiSourcemapsPlugins(),
   ],
   define: {
     global: 'globalThis',
@@ -88,6 +106,21 @@ export default defineConfig({
     sourcemap: false,
     commonjsOptions: {
       transformMixedEsModules: true,
+    },
+    rollupOptions: {
+      maxParallelFileOps: Math.max(1, cpus().length - 1),
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+        },
+        sourcemapIgnoreList: (relativeSourcePath) => {
+          const normalizedPath = path.normalize(relativeSourcePath);
+          return normalizedPath.includes('node_modules');
+        },
+      },
+      cache: false,
     },
   },
 });
