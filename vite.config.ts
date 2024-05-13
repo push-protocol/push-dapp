@@ -67,7 +67,23 @@ function differMuiSourcemapsPlugins() {
     },
   };
 }
-
+interface SourcemapExclude {
+  excludeNodeModules?: boolean;
+}
+export function sourcemapExclude(opts?: SourcemapExclude) {
+  return {
+    name: 'sourcemap-exclude',
+    transform(code: string, id: string) {
+      if (opts?.excludeNodeModules && id.includes('node_modules')) {
+        return {
+          code,
+          // https://github.com/rollup/rollup/blob/master/docs/plugin-development/index.md#source-code-transformations
+          map: { mappings: '' },
+        };
+      }
+    },
+  };
+}
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
@@ -90,6 +106,7 @@ export default defineConfig({
     nodePolyfills(),
     vitePluginRequire.default(),
     differMuiSourcemapsPlugins(),
+    sourcemapExclude({ excludeNodeModules: true }),
   ],
   define: {
     global: 'globalThis',
