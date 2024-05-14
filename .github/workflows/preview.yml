@@ -13,7 +13,7 @@ on:
 concurrency: preview-${{ github.ref }}
 
 jobs:
-  build:
+  deploy-preview:
     runs-on: ubuntu-latest
 
     steps:
