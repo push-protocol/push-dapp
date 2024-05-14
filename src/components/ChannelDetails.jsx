@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React, { useContext, useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import moment from 'moment';
@@ -51,8 +51,8 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
   const { handleConnectWallet } = useContext(AppContext);
   const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector((state) => state.channels);
   const { processingState } = useSelector((state) => state.channelCreation);
-  const [verifyingChannel, setVerifyingChannel] = React.useState([]);
-  const [creationDate, setCreationDate] = React.useState('');
+  const [verifyingChannel, setVerifyingChannel] = useState([]);
+  const [creationDate, setCreationDate] = useState('');
   let { channelState } = channelDetails;
   if (!channelState) channelState = channelDetails['activation_status'];
   const channelIsActive = channelState === CHANNEL_ACTIVE_STATE;
@@ -62,8 +62,8 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const isMobile = useDeviceWidthCheck(600);
 
-  const [delegateeList, setDelegateeList] = React.useState([account]);
-  const [channelAddress, setChannelAddress] = React.useState(undefined);
+  const [delegateeList, setDelegateeList] = useState([account]);
+  const [channelAddress, setChannelAddress] = useState(undefined);
   const { epnsCommWriteProvider } = useSelector((state) => state.contracts);
 
   const navigate = useNavigate();
@@ -105,7 +105,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
     if (!isChannelNotExpired) setIsChannelExpired(true);
   }, [isChannelNotExpired]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!channelDetails || !canVerify) return;
     (async function () {
       let channelJson = await ChannelsDataStore.getInstance().getChannelJsonAsync(channelDetails.verifiedBy);
@@ -113,7 +113,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
     })();
   }, [channelDetails, canVerify]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!channelDetails || !onCoreNetwork) return;
     (async function () {
       const bn = channelDetails.channelStartBlock.toString();
@@ -125,7 +125,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
     })();
   }, [channelDetails]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!account) return;
     if (!delegatees || !delegatees.length) {
       setChannelAddress(account);

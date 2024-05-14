@@ -1,8 +1,7 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import { useSelector } from 'react-redux';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents

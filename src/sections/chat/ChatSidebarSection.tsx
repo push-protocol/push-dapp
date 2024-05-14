@@ -1,13 +1,8 @@
 // React + Web3 Essentials
-import { Web3Provider } from '@ethersproject/providers';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useState, useRef } from 'react';
 
 // External Packages
-import { ethers } from 'ethers';
 import { AiOutlineQrcode } from 'react-icons/ai';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
@@ -16,24 +11,15 @@ import BlankChat from 'assets/chat/BlankChat.svg?react';
 import CreateGroupIcon from 'assets/chat/group-chat/creategroup.svg?react';
 import CreateGroupFillIcon from 'assets/chat/group-chat/creategroupfill.svg?react';
 import NewTag from 'components/NewTag';
-import Recommended from 'components/chat/recommended/Recommended';
-import ProfileHeader from 'components/chat/w2wChat/profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { AppContext } from 'contexts/AppContext';
 import StyleHelper from 'helpers/StyleHelper';
 import { getIsNewTagVisible } from 'helpers/TimerHelper';
-import { caip10ToWallet, reformatChatId } from 'helpers/w2w';
-import { fetchIntent } from 'helpers/w2w/user';
 import { Context } from 'modules/chat/ChatModule';
-import { Feeds } from 'types/chat';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
-import { GlobalContext } from 'contexts/GlobalContext';
-import { useAccount } from 'hooks';
-import { appConfig } from '../../config/index.js';
 
 const createGroupOnMouseEnter = [
   {
@@ -81,7 +67,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
   const [numberOfChatReqs, setNumberOfChatReqs] = useState<number>(-1);
   const [requestLoadingData, setRequestLoadingData] = useState<loadingData | null>(null);
 
-  const containerRef = React.useRef(null);
+  const containerRef = useRef(null);
 
   // Manage refresh and chats tab
   const [primaryChatLoading, setPrimaryChatLoading] = useState({
@@ -89,12 +75,6 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
     showRefreshPrompt: true,
     chatRenderKey: [...Array(24)].map(() => ((Math.random() * 36) | 0).toString(36)).join(''),
   });
-
-  const { userPushSDKInstance } = useSelector((state: any) => {
-    return state.user;
-  });
-
-  let navigate = useNavigate();
 
   // const handleCreateGroup = async () => {
   //   if (!userPushSDKInstance.readmode()) {

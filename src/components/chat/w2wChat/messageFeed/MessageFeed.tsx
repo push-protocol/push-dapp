@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import { MdError } from 'react-icons/md';
@@ -49,13 +49,12 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
 
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
-  const [stopApi, setStopApi] = useState<boolean>(true);
   const [selectedChatSnap, setSelectedChatSnap] = useState<number>();
   const [page, setPage] = useState<number>(1);
-  const { chainId, account } = useAccount();
+  const { account } = useAccount();
   const [showError, setShowError] = useState<boolean>(false);
   const [bgUpdateLoading, setBgUpdateLoading] = useState<boolean>(false);
-  const [limit, setLimit] = React.useState(10);
+  const [limit] = React.useState(10);
   const [isFetchingDone, setIsFetchingDone] = useState<boolean>(false);
   const messageFeedToast = useToast();
 

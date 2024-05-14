@@ -1,7 +1,7 @@
 // @ts-nocheck
 // React + Web3 Essentials
 import { appConfig, CHAIN_DETAILS } from 'config/index.js';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // External Packages
 import Dropdown from 'react-dropdown';

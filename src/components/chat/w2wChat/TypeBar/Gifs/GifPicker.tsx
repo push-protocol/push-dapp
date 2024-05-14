@@ -1,12 +1,12 @@
 // React + Web3 Essentials
-import React, { FC, useRef, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
 
 // Internal Components
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemVV2 } from "components/reusables/SharedStylingV2";
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { useFetch } from '../../stickers/useFetchHook';
 import { useClickAway } from 'hooks/useClickAway';
 
@@ -24,7 +24,7 @@ const GifPicker: FC<GifPickerProps> = ({ setIsOpened, isOpen, onSelect }) => {
   const [searchInputValue, setSearchInputValue] = useState('');
   const timeOutRef = useRef<any>(null);
 
-  useClickAway(timeOutRef,null,() => {
+  useClickAway(timeOutRef, null, () => {
     setIsOpened(!isOpen);
   });
 
@@ -39,51 +39,57 @@ const GifPicker: FC<GifPickerProps> = ({ setIsOpened, isOpen, onSelect }) => {
   );
 
   return (
-        <OuterContainer ref={timeOutRef}>
-          <SearchContainer>
-            <Search>
-              <SearchInputContainer>
-                <SearchInput
-                  onChange={(e) => {
-                    if (timeOutRef.current) clearTimeout(timeOutRef.current);
-                    timeOutRef.current = setTimeout(() => {
-                      setSearchInputValue(e.target.value);
-                    }, 500);
-                  }}
-                  type="text"
-                  placeholder="Search..."
-                />
-              </SearchInputContainer>
-              <SearchIconContainer>
-                <SearchIcon className="fa fa-search" aria-hidden="true" />
-              </SearchIconContainer>
-            </Search>
-          </SearchContainer>
+    <OuterContainer ref={timeOutRef}>
+      <SearchContainer>
+        <Search>
+          <SearchInputContainer>
+            <SearchInput
+              onChange={(e) => {
+                if (timeOutRef.current) clearTimeout(timeOutRef.current);
+                timeOutRef.current = setTimeout(() => {
+                  setSearchInputValue(e.target.value);
+                }, 500);
+              }}
+              type="text"
+              placeholder="Search..."
+            />
+          </SearchInputContainer>
+          <SearchIconContainer>
+            <SearchIcon
+              className="fa fa-search"
+              aria-hidden="true"
+            />
+          </SearchIconContainer>
+        </Search>
+      </SearchContainer>
 
-          {loading ? (
-            <ItemVV2>
-              <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
-            </ItemVV2>
-          ) : error ? (
-            <div className="flex flex-grow flex-col items-center justify-center">
-              <p className="text-center">Sorry... Giphy has limited the request</p>
-            </div>
-          ) : (
-            <GifPickerContainer>
-              {(data as any).data?.map((item: any) => (
-                <GifPickerImage
-                  key={item.id}
-                  onClick={() => {
-                    onSelect(item?.images?.original?.url);
-                    setIsOpened(!isOpen);
-                  }}
-                  src={item?.images?.original?.url}
-                  alt=""
-                />
-              ))}
-            </GifPickerContainer>
-          )}
-        </OuterContainer>
+      {loading ? (
+        <ItemVV2>
+          <LoaderSpinner
+            type={LOADER_TYPE.SEAMLESS}
+            spinnerSize={40}
+          />
+        </ItemVV2>
+      ) : error ? (
+        <div className="flex flex-grow flex-col items-center justify-center">
+          <p className="text-center">Sorry... Giphy has limited the request</p>
+        </div>
+      ) : (
+        <GifPickerContainer>
+          {(data as any).data?.map((item: any) => (
+            <GifPickerImage
+              key={item.id}
+              onClick={() => {
+                onSelect(item?.images?.original?.url);
+                setIsOpened(!isOpen);
+              }}
+              src={item?.images?.original?.url}
+              alt=""
+            />
+          ))}
+        </GifPickerContainer>
+      )}
+    </OuterContainer>
   );
 };
 
@@ -100,13 +106,13 @@ const OuterContainer = styled.div`
   right: 8rem;
   flex-direction: column;
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-`
+`;
 
 const SearchContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-`
+`;
 
 const Search = styled.div`
   display: flex;
@@ -117,11 +123,11 @@ const Search = styled.div`
   margin-top: 10px;
   border-radius: 20px;
   background-color: rgb(116, 115, 115);
-`
+`;
 
 const SearchInputContainer = styled.div`
   width: 85%;
-`
+`;
 
 const SearchInput = styled.input`
   background: transparent;
@@ -132,18 +138,18 @@ const SearchInput = styled.input`
   &::placeholder {
     color: white;
   }
-`
+`;
 
 const SearchIconContainer = styled.div`
   width: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
-`
+`;
 
 const SearchIcon = styled.i`
   align-items: flex-start;
-`
+`;
 
 const GifPickerContainer = styled.div`
   display: flex;
@@ -169,7 +175,7 @@ const GifPickerContainer = styled.div`
     background: #ca599b;
     border-radius: 10px;
   }
-`
+`;
 
 const GifPickerImage = styled.img`
   flex: 1;
@@ -179,6 +185,6 @@ const GifPickerImage = styled.img`
   padding: 5px;
   height: 50%;
   object-fit: cover;
-`
+`;
 
 export default GifPicker;

@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // External Packages
 import { toast } from 'react-toastify';
@@ -18,7 +18,7 @@ import { ButtonV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/Share
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
-import { DemoModalContent} from './DemoModalContent';
+import { DemoModalContent } from './DemoModalContent';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
@@ -110,11 +110,7 @@ const InternalDevModule = () => {
     ModalComponent: LocalScreenDemoModalComponent,
   } = useModalBlur();
 
-  const {
-    isModalOpen: isFullScreenDemoModalOpen,
-    showModal: showFullScreenDemoModal,
-    ModalComponent: FullScreenDemoModalComponent,
-  } = useModalBlur();
+  const { showModal: showFullScreenDemoModal, ModalComponent: FullScreenDemoModalComponent } = useModalBlur();
 
   return (
     <Container>
@@ -126,21 +122,21 @@ const InternalDevModule = () => {
           flex="initial"
           borderRadius="15px"
           padding="20px 20px"
-          onClick={ showFullScreenDemoModal}
+          onClick={showFullScreenDemoModal}
         >
           <SpanV2>Show Full Screen Modal</SpanV2>
         </ButtonV2>
         <FullScreenDemoModalComponent
           InnerComponent={DemoModalContent}
-          modalPadding='0px'
-          InnerComponentProps={{heading:'Full Screen Modal'}}
+          modalPadding="0px"
+          InnerComponentProps={{ heading: 'Full Screen Modal' }}
           modalPosition={MODAL_POSITION.ON_ROOT}
         />
-     </IndividualComps>
+      </IndividualComps>
 
-     {/* Local Screen useModalBlur Component */}
-     <IndividualComps caption="hooks/useModalBlur  isFullScreen={false}">
-      {isLocalScreenDemoModalOpen && <SpanV2 color={theme.default.color}>{randomText.slice(0,70)}</SpanV2>}
+      {/* Local Screen useModalBlur Component */}
+      <IndividualComps caption="hooks/useModalBlur  isFullScreen={false}">
+        {isLocalScreenDemoModalOpen && <SpanV2 color={theme.default.color}>{randomText.slice(0, 70)}</SpanV2>}
         <ButtonV2
           background="#e20880"
           color="#fff"
@@ -153,13 +149,13 @@ const InternalDevModule = () => {
         </ButtonV2>
         <LocalScreenDemoModalComponent
           InnerComponent={DemoModalContent}
-          modalPadding='0px'
-          InnerComponentProps={{heading:'Local Modal'}}
+          modalPadding="0px"
+          InnerComponentProps={{ heading: 'Local Modal' }}
           modalPosition={MODAL_POSITION.ON_PARENT}
         />
-     </IndividualComps>
+      </IndividualComps>
 
-     {/* Progess Bar Component */}
+      {/* Progess Bar Component */}
       <IndividualComps caption="components/reusables/progress/ProgressBarUnit">
         <ProgressBar
           percent={progress}
@@ -604,7 +600,6 @@ const Container = styled(SectionV2)`
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
   }
 `;
-
 
 const IndividualComps = styled(ItemVV2)`
   border-radius: 32px;

@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 
 // External Packages
 import 'react-dropdown/style.css';
@@ -40,18 +40,18 @@ function CreateChannelModule() {
   const { userPushSDKInstance } = useSelector((state) => {
     return state.user;
   });
-  const { handleConnectWallet } = React.useContext(AppContext);
+  const { handleConnectWallet } = useContext(AppContext);
 
   const theme = useTheme();
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
-  const [processing, setProcessing] = React.useState(0);
-  const [processingInfo, setProcessingInfo] = React.useState('');
+  const [processing, setProcessing] = useState(0);
+  const [processingInfo, setProcessingInfo] = useState('');
 
-  const [uploadDone, setUploadDone] = React.useState(false);
-  const [stakeFeesChoosen, setStakeFeesChoosen] = React.useState(false);
-  const [channelInfoDone, setChannelInfoDone] = React.useState(false);
-  const [chainDetails, setChainDetails] = React.useState(CORE_CHAIN_ID);
-  const [channelName, setChannelName] = React.useState('');
+  const [uploadDone, setUploadDone] = useState(false);
+  const [stakeFeesChoosen, setStakeFeesChoosen] = useState(false);
+  const [channelInfoDone, setChannelInfoDone] = useState(false);
+  const [chainDetails, setChainDetails] = useState(CORE_CHAIN_ID);
+  const [channelName, setChannelName] = useState('');
   /* 
     if channelExpiryDate is undefined -> channel is not time bound 
     if channelExpiryDate is null -> channel is time bound but user hasnt entered the date
@@ -59,17 +59,17 @@ function CreateChannelModule() {
     if channelExpiryDate is a date string -> channel is time bound and user has entered the date
   */
   const [channelExpiryDate, setChannelExpiryDate] = useState(undefined);
-  const [channelAlias, setChannelAlias] = React.useState('');
-  const [channelInfo, setChannelInfo] = React.useState('');
-  const [channelURL, setChannelURL] = React.useState('');
-  const [channelFile, setChannelFile] = React.useState(undefined);
-  const [channelStakeFees, setChannelStakeFees] = React.useState(minStakeFees);
+  const [channelAlias, setChannelAlias] = useState('');
+  const [channelInfo, setChannelInfo] = useState('');
+  const [channelURL, setChannelURL] = useState('');
+  const [channelFile, setChannelFile] = useState(undefined);
+  const [channelStakeFees, setChannelStakeFees] = useState(minStakeFees);
   const [pushTokenAmountVal, setPushTokenAmountVal] = useState('');
   const [txStatus, setTxStatus] = useState(2);
-  const [progress, setProgress] = React.useState(0);
-  const [progressInfo, setProgressInfo] = React.useState('');
-  const [logoInfo, setLogoInfo] = React.useState('');
-  const [errorInfo, setErrorInfo] = React.useState({ name: '', description: '', address: '', url: '' });
+  const [progress, setProgress] = useState(0);
+  const [progressInfo, setProgressInfo] = useState('');
+  const [logoInfo, setLogoInfo] = useState('');
+  const [errorInfo, setErrorInfo] = useState({ name: '', description: '', address: '', url: '' });
 
   //image upload states
   const [view, setView] = useState(false);
@@ -77,11 +77,11 @@ function CreateChannelModule() {
   const [imageType, setImageType] = useState(null);
   const [croppedImage, setCroppedImage] = useState(undefined);
 
-  const [stepFlow, setStepFlow] = React.useState(0);
+  const [stepFlow, setStepFlow] = useState(0);
   const channelToast = useToast();
 
   //checking DAI for user
-  React.useEffect(() => {
+  useEffect(() => {
     if (!onCoreNetwork) return;
     const checkPushTokenApprovalFunc = async () => {
       let checkPushTokenApprovedAmount = new ethers.Contract(addresses.pushToken, abis.pushToken, provider);
@@ -95,7 +95,7 @@ function CreateChannelModule() {
   }, []);
 
   // timer
-  // React.useEffect(() => {
+  //  useEffect(() => {
   //   const timer = setInterval(() => {
   //     setProgress((oldProgress) => {
   //       if (oldProgress === 100) {

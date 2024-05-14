@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState, FC, ReactNode } from 'react';
 import { produce } from 'immer';
 
 import { VideoCallStatus, video as pushVideo, VideoCallData } from '@pushprotocol/restapi';
@@ -33,7 +33,7 @@ interface VideoCallMetaDataType {
 
 const VideoCallContext = createContext(null);
 
-const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
+const VideoCallContextProvider: FC<ReactNode> = ({ children }) => {
   const videoObjectRef = useRef(null);
   const [isCallConnected, setIsCallConnected] = useState(false);
   const [isCallAccepted, setIsCallAccepted] = useState(false);

@@ -2,7 +2,7 @@ import { useClickAway } from 'react-use';
 import { Input, Span } from 'primaries/SharedStyling';
 
 // React + Web3 Essentials
-import React, { useContext, useState } from 'react';
+import { useContext, useState, useRef, useEffect } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 // Internal Compoonents
 import Close from 'assets/chat/group-chat/close.svg?react';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { bn, bnToInt, formatTokens } from 'helpers/StakingHelper';
+import { bnToInt, formatTokens } from 'helpers/StakingHelper';
 import { P } from 'components/SharedStyling';
 import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { AppContext } from 'contexts/AppContext';
@@ -29,10 +29,10 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
   const [maxAmount, setMaxAmount] = useState(0);
   const [approvedToken, setApprovedToken] = useState(0);
-  const [depositApproved, setDepositApprove] = React.useState(false);
+  const [depositApproved, setDepositApprove] = useState(false);
 
-  const [txInProgressApprDep, setTxInProgressApprDep] = React.useState(false);
-  const [txInProgressDep, setTxInProgressDep] = React.useState(false);
+  const [txInProgressApprDep, setTxInProgressApprDep] = useState(false);
+  const [txInProgressDep, setTxInProgressDep] = useState(false);
 
   const [txnMessage, setTxnMessage] = useState(null);
 
@@ -49,7 +49,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
     onClose();
   };
   const theme = useTheme();
-  const containerRef = React.useRef(null);
+  const containerRef = useRef(null);
   useClickAway(containerRef, () => handleClose());
 
   const fillMax = async () => {
@@ -79,7 +79,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
     setTxInProgressApprDep(false);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     fillMax();
     checkApprDeposit();
   }, []);

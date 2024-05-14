@@ -1,6 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useRef } from 'react';
-import { ethers } from 'ethers';
+import { useContext, useRef, useState, useEffect } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -24,10 +23,10 @@ const ChainIndicator = ({ isDarkMode }) => {
   const theme = useTheme();
   const { authError, setAuthError } = useContext(ErrorContext);
 
-  const [showDropdown, setShowDropdown] = React.useState<boolean>(false);
-  const [dropdownValues, setDropdownValues] = React.useState<DropdownValueType[]>([]);
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const [dropdownValues, setDropdownValues] = useState<DropdownValueType[]>([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const dropdown: DropdownValueType[] = [];
     appConfig.allowedNetworks.map((chainId: number) => {
       const chainName = networkName[chainId];

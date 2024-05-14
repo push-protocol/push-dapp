@@ -1,6 +1,3 @@
-// React + Web3 Essentials
-import React from 'react';
-
 // External Packages
 import styled from 'styled-components';
 
@@ -8,8 +5,7 @@ import styled from 'styled-components';
 import { H2V2, ImageV2, ItemHV2, Skeleton, SkeletonLine } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
-import GLOBALS from 'config/Globals';
-import { ethers } from 'ethers';
+
 import { useDeviceWidthCheck } from 'hooks';
 
 const YieldPushPriceSection = ({ poolStats }) => {

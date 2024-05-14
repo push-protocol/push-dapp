@@ -1,8 +1,8 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import { useState, useContext } from 'react';
 
 // External Packages
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 
 // Internal Compoonents
 import { ButtonV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
@@ -19,8 +19,7 @@ const EnableSnoozeModal = ({
 }: {
   setSnoozeDuration: (snoozeDuration: SnoozeDurationType) => void;
 }) => {
-  const { setSnapState } = React.useContext(AppContext);
-  const theme = useTheme();
+  const { setSnapState } = useContext(AppContext);
 
   const [snoozeDurationInput, setSnoozeDurationInput] = useState<number>(1);
 

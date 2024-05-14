@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState, forwardRef, SyntheticEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 // External Packages
@@ -11,7 +11,6 @@ import { ChatProfile, ChatViewList, MessageInput } from '@pushprotocol/uiweb';
 import { produce } from 'immer';
 import { CID } from 'ipfs-http-client';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
-import { useSelector } from 'react-redux';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
@@ -43,7 +42,7 @@ import { VideoCallContext } from 'contexts/VideoCallContext';
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
 
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
+const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return (
     <MuiAlert
       elevation={6}
@@ -54,21 +53,17 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
   );
 });
 
-const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element => {
-  const { currentChat, viewChatBox, receivedIntents, activeTab, setViewChatBox, setChat, selectedChatId }: ContextType =
+const ChatBox = ({ triggerChatParticipant }): JSX.Element => {
+  const { currentChat, viewChatBox, receivedIntents, activeTab, setViewChatBox, selectedChatId }: ContextType =
     useContext<ContextType>(Context);
   const { web3NameList }: AppContextType = useContext(AppContext);
   const { setSelectedChatId } = useContext(Context);
-
-  const { userPushSDKInstance } = useSelector((state: any) => {
-    return state.user;
-  });
 
   const { account } = useAccount();
   const [Loading, setLoading] = useState<boolean>(true);
   const [imageSource, setImageSource] = useState<string>('');
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
-  const [SnackbarText, setSnackbarText] = useState<string>('');
+  const [SnackbarText] = useState<string>('');
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
   const groupInfoRef = useRef<HTMLInputElement>(null);
@@ -134,7 +129,7 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
     }
     return chatId;
   };
-  const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
+  const handleCloseSuccessSnackbar = (event?: SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
       return;
     }

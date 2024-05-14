@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 
 // External Packages
 import { NotificationItem } from '@pushprotocol/uiweb';
@@ -17,7 +17,7 @@ const NotifToastUI = ({ payload }: { payload: NotificationEvent }) => {
   // get notification context and set it
   const { notificationReceived, setNotificationRecieved } = useContext(NotificationContext);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setNotificationRecieved(notificationReceived + 1);
   }, []);
 
