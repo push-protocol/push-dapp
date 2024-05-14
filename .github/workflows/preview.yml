@@ -19,7 +19,7 @@ jobs:
     steps:
       # Check out the repository
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       # Install dependencies and build project
       - name: Install dependencies and build
