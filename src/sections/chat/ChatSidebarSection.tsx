@@ -11,7 +11,7 @@ import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ChatPreviewList, UserProfile } from '@pushprotocol/uiweb';
+import { ChatPreviewList, ChatPreviewSearchList, UserProfile } from '@pushprotocol/uiweb';
 import BlankChat from 'assets/chat/BlankChat.svg?react';
 import CreateGroupIcon from 'assets/chat/group-chat/creategroup.svg?react';
 import CreateGroupFillIcon from 'assets/chat/group-chat/creategroupfill.svg?react';
@@ -228,34 +228,36 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
               setSearchedUser={setSearchedUser}
             />
 
-            <CreateGroupContainer
-              // justifyContent="flex-start"
-              flex="none"
-              padding="20px 10px 24px 10px"
-              zIndex="1"
-              borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
-              onClick={() => {
-                showCreateGroupModal();
-              }}
-              background="transparent"
-              hover={theme.chat.snapFocusBg}
-              hoverBackground="transparent"
-              onMouseEnter={() => StyleHelper.changeStyle(createGroupOnMouseEnter)}
-              onMouseLeave={() => StyleHelper.changeStyle(createGroupOnMouseLeave)}
-            >
-              <CreateGroupIcon id="create-group-icon" />
-              <CreateGroupFillIcon id="create-group-fill-icon" />
-              <SpanV2
-                margin="0 8px"
-                fontSize="16px"
-                fontWeight="500"
-                letterSpacing="-0.019em"
-                color={theme.default.secondaryColor}
+            {!searchedUser && (
+              <CreateGroupContainer
+                // justifyContent="flex-start"
+                flex="none"
+                padding="20px 10px 24px 10px"
+                zIndex="1"
+                borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
+                onClick={() => {
+                  showCreateGroupModal();
+                }}
+                background="transparent"
+                hover={theme.chat.snapFocusBg}
+                hoverBackground="transparent"
+                onMouseEnter={() => StyleHelper.changeStyle(createGroupOnMouseEnter)}
+                onMouseLeave={() => StyleHelper.changeStyle(createGroupOnMouseLeave)}
               >
-                Create Group
-              </SpanV2>
-              {isNewTagVisible && <NewTag />}
-            </CreateGroupContainer>
+                <CreateGroupIcon id="create-group-icon" />
+                <CreateGroupFillIcon id="create-group-fill-icon" />
+                <SpanV2
+                  margin="0 8px"
+                  fontSize="16px"
+                  fontWeight="500"
+                  letterSpacing="-0.019em"
+                  color={theme.default.secondaryColor}
+                >
+                  Create Group
+                </SpanV2>
+                {isNewTagVisible && <NewTag />}
+              </CreateGroupContainer>
+            )}
           </>
         )}
       </ItemVV2>
@@ -272,10 +274,10 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
           height="100%"
           flex="1 1 1px"
           style={{ display: activeTab == 0 ? 'flex' : 'none' }}
-          overflow="scroll"
+          overflow="hidden auto"
           justifyContent="center"
         >
-          {/* Only show recommended chats if there are no chats */}
+          {/* Only show convo prompt if there are no chats */}
           {primaryChatLoading.showConvoPrompt && (
             <ItemVV2
               flex="initial"
@@ -330,7 +332,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
             justifyContent="flex-start"
             style={{ display: primaryChatLoading.showConvoPrompt ? 'none' : 'flex' }}
             height="100%"
-            overflow="scroll"
+            overflow="hidden auto"
           >
             <ChatPreviewList
               key={primaryChatLoading.chatRenderKey}
@@ -366,6 +368,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
           flexWrap="nowrap"
           width="100%"
           height="100%"
+          overflow="hidden auto"
           style={{ display: activeTab == 1 ? 'flex' : 'none' }}
         >
           <ChatPreviewList
@@ -394,10 +397,10 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
             justifyContent="flex-start"
             flexWrap="nowrap"
             width="100%"
-            style={{ display: activeTab == 3 || activeTab == 4 ? 'flex' : 'none' }}
+            overflow="hidden auto"
+            style={{ display: activeTab == 3 ? 'flex' : 'none' }}
           >
-            <ChatPreviewList
-              listType="SEARCH"
+            <ChatPreviewSearchList
               searchParamter={searchedUser || ''}
               onChatSelected={(chatid) => setSelectedChatId(chatid)}
             />
