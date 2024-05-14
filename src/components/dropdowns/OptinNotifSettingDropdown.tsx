@@ -20,7 +20,7 @@ import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import useToast from 'hooks/useToast';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { ChannelSetting } from 'helpers/channel/types';
-import { notifChannelSettingFormatString, userSettingsFromDefaultChannelSetting } from 'helpers/channel/notifSetting';
+import { UserSettingType, getMinimalUserSetting, notifChannelSettingFormatString, userSettingsFromDefaultChannelSetting } from 'helpers/channel/notifSetting';
 import { AppContext } from 'contexts/AppContext';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { updateSubscriptionStatus, updateUserSetting } from 'redux/slices/channelSlice';
@@ -206,10 +206,10 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
     channelSettings,
     setLoading,
   }: {
-    channelSettings?: ChannelSetting[];
+    channelSettings: ChannelSetting[];
     setLoading?: React.Dispatch<React.SetStateAction<boolean>>;
   }) => {
-    const setLoadingFunc = setLoading || (options && options.setLoading) || (() => {});
+    const setLoadingFunc = setLoading || (options && options.setLoading) || (() => { });
     setLoadingFunc(true);
 
     let userPushInstance = userPushSDKInstance;
@@ -240,10 +240,15 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
 
       const _signer = await web3Provider?.getSigner(walletAddress);
 
-      await PushAPI.channels.subscribe({
+      const notifSettings: UserSettingType[] = notifChannelSettingFormatString({ settings: channelSettings });
+
+      const settingsToSubscribe = getMinimalUserSetting(notifSettings);
+
+      await PushAPI.channels.subscribeV2({
         signer: _signer,
         channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
         userAddress: convertAddressToAddrCaip(walletAddress, chainId), // user address in CAIP
+        settings: settingsToSubscribe,
         onSuccess: () => {
           dispatch(updateSubscriptionStatus({ channelAddress, status: true }));
           dispatch(
