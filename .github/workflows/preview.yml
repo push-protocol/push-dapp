@@ -14,7 +14,7 @@ concurrency: preview-${{ github.ref }}
 
 jobs:
   deploy-preview:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       # Check out the repository
@@ -51,8 +51,8 @@ jobs:
           curl -d "{\"body\":\"${COMMENT}\"}" -H "Content-Type: application/json" -X POST "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
 
   cleanup:
-    needs: build
-    runs-on: ubuntu-latest
+    needs: deploy-preview
+    runs-on: ubuntu-20.04
     if: github.event_name == 'pull_request' && (github.event.action == 'closed' || github.event.action == 'merged')
 
     steps:
