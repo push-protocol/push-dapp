@@ -35,12 +35,13 @@ jobs:
       # - name: Move build to PR preview folder
       #   run: mv build/* pr-preview/${{ github.event.pull_request.number }}
 
-      # # Deploy to GitHub Pages
-      # - name: Deploy to GitHub Pages
-      #   uses: JamesIves/github-pages-deploy-action@v4
-      #   with:
-      #     folder: pr-preview/${{ github.event.pull_request.number }} # Folder to deploy
-      #     clean: true # Clear existing files before deploy
+      # Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: pr-preview/${{ github.event.pull_request.number }} # Folder to deploy
+          clean: true # Clear existing files before deploy
+
 
       # # Comment the deployment URL on the PR
       # - name: Comment PR with deployment URL
