@@ -39,3 +39,5 @@ const appConfig = { ...dynamicConfig, ...generalConfig };
 export { CHAIN_DETAILS, abis, addresses, appConfig };
 
 export const defaultSnapOrigin = 'npm:@pushprotocol/snap';
+
+export const ALLOW_NOTIF_MODAL = 'ALLOW_NOTIF_MODAL';

@@ -66,8 +66,4 @@ export type UserSetting =
       ticker: number;
     };
 
-export enum NOTIF_PERMISSION_STATUS {
-  'GRANTED' = 'granted',
-  'DENIED' = 'denied',
-  'PENDING' = 'pending',
-}
+export type NotificationPermissionStatus = 'granted' | 'denied' | 'pending' | 'notValid';

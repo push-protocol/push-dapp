@@ -42,10 +42,9 @@ import VerifiedTooltipContent from './VerifiedTooltipContent';
 
 // Internal Configs
 import APP_PATHS from 'config/AppPaths';
-import { addresses, appConfig, CHAIN_DETAILS } from 'config/index.js';
+import { addresses, appConfig, CHAIN_DETAILS, ALLOW_NOTIF_MODAL } from 'config/index.js';
 import { IPFSGateway } from 'helpers/IpfsHelper';
 import { checkPermission } from 'helpers/channel/allowNotification';
-import { NOTIF_PERMISSION_STATUS } from 'helpers/channel/types';
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, profileType }) {
@@ -413,15 +412,24 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
   };
 
   const onAllowModalOpen = () => {
-    if (checkPermission() === NOTIF_PERMISSION_STATUS.PENDING) {
-      const lastTime = localStorage.getItem('allow_notif_modal');
+    /* checks if the user doesnot have
+     permission set, then opens the modal only if 
+    the modal was last opened 24 hours before
+    */
+    if (checkPermission() === 'pending') {
+      let lastTime = localStorage.getItem(ALLOW_NOTIF_MODAL);
       let today = new Date().getTime() + (1 * 24 * 60 * 60 * 1000);
-      if (lastTime && lastTime >= today) {
-        setShowAllowNotification(true);
+      if (lastTime) {
+        lastTime = parseInt(lastTime);
+        if (lastTime >= today) {
+          setShowAllowNotification(true);
+        }
       }
       else {
-        localStorage.setItem('allow_notif_modal', today);
+        setShowAllowNotification(true);
       }
+      //sets the recent opened time in localstorage.
+      localStorage.setItem(ALLOW_NOTIF_MODAL, today);
     }
 
   }
