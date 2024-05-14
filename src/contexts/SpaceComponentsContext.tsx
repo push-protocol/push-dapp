@@ -1,12 +1,5 @@
 // React + Web3 Essentials
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { ethers } from 'ethers';
-
-// External imports
-import * as PushAPI from '@pushprotocol/restapi';
-
-// Internal Components imports
-import { appConfig } from 'config/index.js';
+import React, { createContext } from 'react';
 
 import {
   ISpaceBannerProps,

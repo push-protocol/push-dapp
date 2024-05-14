@@ -9,7 +9,6 @@ import { convertAddressToAddrCaip } from '../helpers/CaipHelper';
 import { VideoCallStatus } from '@pushprotocol/restapi';
 import { ADDITIONAL_META_TYPE } from '@pushprotocol/restapi/src/lib/payloads/constants';
 import { ENV } from '@pushprotocol/restapi/src/lib/constants';
-import { SpaceContext } from 'contexts/SpaceContext';
 
 // Types
 export type SDKSocketHookOptions = {
@@ -75,11 +74,12 @@ export const useSDKSocket = ({ account, env, chainId, socketType }: SDKSocketHoo
                 retry: true,
               });
             }
-          } else if(
-            payload?.data?.additionalMeta?.data === "PUSH SPACE META MESSAGE" ||  payload?.data?.additionalMeta?.type === `${ADDITIONAL_META_TYPE.PUSH_SPACE}+1`){
+          } else if (
+            payload?.data?.additionalMeta?.data === 'PUSH SPACE META MESSAGE' ||
+            payload?.data?.additionalMeta?.type === `${ADDITIONAL_META_TYPE.PUSH_SPACE}+1`
+          ) {
             // uiweb will handle this
-          }
-          else {
+          } else {
             showNotifcationToast(payload);
           }
         }

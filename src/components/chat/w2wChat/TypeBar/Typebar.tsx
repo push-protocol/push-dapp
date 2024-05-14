@@ -1,8 +1,7 @@
 // React + Web3 Essentials
-import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
-import * as PushAPI from '@pushprotocol/restapi';
 import Picker from 'emoji-picker-react';
 import styled, { useTheme } from 'styled-components';
 
@@ -15,11 +14,8 @@ import { FileMessageContent } from './Files/Files';
 import GifPicker from './Gifs/GifPicker';
 
 // Internal configs
-import { appConfig } from 'config/index.js';
-import { caip10ToWallet } from 'helpers/w2w';
 import { MessagetypeType } from '../../../../types/chat';
 import { filterXSS } from 'xss';
-import { AppContext } from 'contexts/AppContext';
 
 interface ITypeBar {
   isGroup: boolean;
@@ -45,10 +41,8 @@ const Typebar = ({
   isJoinGroup,
   setOpenSuccessSnackBar,
   setSnackbarText,
-  approveIntent,
 }: ITypeBar) => {
-  const { currentChat, activeTab, setChat }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
-  const { connectedUser } = useContext(AppContext);
+  const { currentChat }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);

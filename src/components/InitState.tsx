@@ -1,15 +1,12 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React, { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
 
 // Internal Components
-import * as PushAPI from '@pushprotocol/restapi';
-import { getReq } from 'api';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 import { useAccount } from 'hooks';
 import {
   setAliasAddress,
@@ -35,7 +32,6 @@ import UsersDataStore from 'singletons/UsersDataStore';
 
 // Internals Configs
 import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config/index.js';
-import { AppContext } from 'contexts/AppContext';
 import useSDKStream from 'hooks/useStream';
 
 // Constants

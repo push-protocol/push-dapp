@@ -12,16 +12,16 @@ import ErrorContextProvider from './contexts/ErrorContext';
 import { VideoCallContextProvider } from './contexts/VideoCallContext';
 import './index.css';
 import store from './redux/store';
-import * as serviceWorker from './serviceWorker';
+import { unregister as unregisterServiceWorker } from './serviceWorker';
 import GlobalContextProvider from './contexts/GlobalContext';
 
 // Internal Configs
-import * as dotenv from 'dotenv';
+import { config as dotEnvConfig } from 'dotenv';
 import { web3Onboard } from './connectors/web3Onboard';
 import AppContextProvider from './contexts/AppContext';
 
 // enable environmental variables across the entire application
-dotenv.config();
+dotEnvConfig();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <BrowserRouter basename={import.meta.env.PUBLIC_URL}>
@@ -44,4 +44,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+unregisterServiceWorker();

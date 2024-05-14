@@ -2,7 +2,7 @@
 import { CONSTANTS, ProgressHookType, PushAPI } from '@pushprotocol/restapi';
 import { ethers } from 'ethers';
 import useModalBlur from 'hooks/useModalBlur';
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 // Internal Components
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -24,7 +24,7 @@ import {
   Web3NameListType,
   onboardingProgressI,
 } from 'types/context';
-import { GlobalContext, ReadOnlyWalletMode } from './GlobalContext';
+import { GlobalContext } from './GlobalContext';
 
 export const AppContext = createContext<AppContextType | null>(null);
 
@@ -250,7 +250,6 @@ const AppContextProvider = ({ children }) => {
       const librarySigner = web3Provider?.getSigner(currentAddress);
       const decryptedPGPKeys = retrieveUserPGPKeyFromStorage(currentAddress);
 
-
       if (decryptedPGPKeys) {
         userInstance = await PushAPI.initialize(librarySigner!, {
           decryptedPGPPrivateKey: decryptedPGPKeys,
@@ -267,7 +266,6 @@ const AppContextProvider = ({ children }) => {
           alpha: { feature: ['SCALABILITY_V2'] },
         });
       }
-
 
       // connect stream as well
       await setupStream(userInstance);

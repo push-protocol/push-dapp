@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import 'react-dropdown/style.css';
@@ -24,7 +24,6 @@ import { AppContext } from 'contexts/AppContext';
 import { appConfig } from 'config/index.js';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import { ChannelSetting } from 'helpers/channel/types';
-import { getChannel } from 'services';
 import { updateChannelSetting } from 'redux/slices/channelSlice';
 import { NotificationSetting } from '@pushprotocol/restapi/src/lib/pushNotification/PushNotificationTypes';
 
@@ -34,7 +33,6 @@ const CORE_CHAIN_ID = appConfig.coreContractChain;
 function NotificationSettings() {
   const { account, chainId } = useAccount();
   const { coreChannelAdmin, delegatees } = useSelector((state: any) => state.admin);
-  const { epnsWriteProvider } = useSelector((state: any) => state.contracts);
   const { channelSettings } = useSelector((state: any) => state.channels);
 
   const dispatch = useDispatch();
@@ -42,11 +40,11 @@ function NotificationSettings() {
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const EDIT_SETTING_FEE = 50;
 
-  const [channelAddress, setChannelAddress] = React.useState('');
-  const [settings, setSettings] = React.useState<ChannelSetting[]>([]);
-  const [settingToEdit, setSettingToEdit] = React.useState<ChannelSetting>(undefined);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [isLoadingSettings, setIsLoadingSettings] = React.useState(true);
+  const [channelAddress, setChannelAddress] = useState('');
+  const [settings, setSettings] = useState<ChannelSetting[]>([]);
+  const [settingToEdit, setSettingToEdit] = useState<ChannelSetting>();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingSettings, setIsLoadingSettings] = useState(true);
   const { handleConnectWallet } = useContext(AppContext);
 
   const { userPushSDKInstance } = useSelector((state: any) => {

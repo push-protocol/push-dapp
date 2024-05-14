@@ -1,5 +1,4 @@
-import { ProgressHookType, PushAPI } from '@pushprotocol/restapi';
-import { ModalType } from 'hooks/useModal';
+import { ProgressHookType } from '@pushprotocol/restapi';
 import { ConnectedUser } from './chat';
 
 export interface Web3NameListType {

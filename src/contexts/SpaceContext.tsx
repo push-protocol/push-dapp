@@ -1,6 +1,5 @@
 // React + Web3 Essentials
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { ethers } from 'ethers';
+import React, { createContext, useEffect, useState } from 'react';
 
 // External imports
 import * as PushAPI from '@pushprotocol/restapi';
