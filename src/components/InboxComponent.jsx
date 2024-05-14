@@ -47,7 +47,7 @@ const InboxComponent = ({ isSpam }) => {
             Spam
           </NavTitleButton>
         </NavHolder>
-        <SearchContainer>
+        {/* <SearchContainer>
           <SearchBar
             type="text"
             className="input"
@@ -81,7 +81,7 @@ const InboxComponent = ({ isSpam }) => {
               style={{ color: '#657795' }}
             />
           </ItemIconRotate>
-        </SearchContainer>
+        </SearchContainer> */}
       </NavBoxHolder>
       {showInbox ? (
         <Inbox
