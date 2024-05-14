@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 // External Packages
 import { useTheme } from 'styled-components';
@@ -19,6 +19,15 @@ import { useAccount } from 'hooks';
 import { abis, appConfig, CHAIN_DETAILS } from 'config/index.js';
 import GLOBALS from 'config/Globals';
 
+type FaucetType = {
+  label: string;
+  url: string;
+};
+
+type FaucetsInfo = {
+  [key: number]: FaucetType;
+};
+
 const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   const theme = useTheme();
   const { account, provider, chainId } = useAccount();
@@ -31,7 +40,7 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   const [success, setSuccess] = useState(false);
   const mainAddress = aliasEthAccount;
 
-  const Faucets = {
+  const Faucets: FaucetsInfo = {
     80002: {
       label: 'Amoy MATIC',
       url: 'https://faucet.polygon.technology/',
@@ -55,6 +64,10 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
     123: {
       label: 'Fuse SPARK',
       url: 'https://chaindrop.org/?chainid=123&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+    },
+    111557560: {
+      label: 'Cyber ETH',
+      url: 'https://cyber-testnet.testnets.rollbridge.app/',
     },
   };
 

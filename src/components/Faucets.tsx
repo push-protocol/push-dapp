@@ -1,13 +1,21 @@
 // React + Web3 Essentials
-import { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { useClickAway } from 'hooks/useClickAway';
-import { Image, Item, ItemH } from '../primaries/SharedStyling';
+import { Image, Item } from '../primaries/SharedStyling';
 import Dropdown from './Dropdown';
+
+type FaucetListType = {
+  id: string;
+  value: string;
+  title: string;
+  function: VoidFunction;
+  link: string;
+};
 
 // Faucet URLs
 const Faucets = () => {
@@ -15,13 +23,13 @@ const Faucets = () => {
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
 
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [showDropdown, setShowDropdown] = React.useState(false);
 
   useClickAway(toggleArrowRef, dropdownRef, () => {
     setShowDropdown(false);
   });
 
-  const dropdownValues = [
+  const faucetList: FaucetListType[] = [
     {
       id: '11155111',
       value: 'Sepolia',
@@ -71,6 +79,13 @@ const Faucets = () => {
       function: () => {},
       link: 'https://chaindrop.org/?chainid=123&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
     },
+    {
+      id: '111557560',
+      value: 'Cyber',
+      title: 'Cyber Faucet',
+      function: () => {},
+      link: 'https://cyber-testnet.testnets.rollbridge.app/',
+    },
   ];
 
   // render
@@ -111,7 +126,7 @@ const Faucets = () => {
           zIndex="10"
           right="-0.5rem"
         >
-          <Dropdown dropdownValues={dropdownValues} />
+          <Dropdown dropdownValues={faucetList} />
         </Item>
       )}
     </Container>

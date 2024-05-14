@@ -124,6 +124,12 @@ export const MAINNET_CHAINS: ChainConfig = {
     nativeCurrency: FUSE,
     blockExplorerUrls: ['https://explorer.fuse.io/'],
   },
+  7560: {
+    name: 'Cyber Mainnet',
+    urls: ['https://cyber.alt.technology/'],
+    nativeCurrency: ETH,
+    blockExplorerUrls: ['https://cyberscan.co/'],
+  },
 };
 
 export const TESTNET_CHAINS: ChainConfig = {
@@ -179,6 +185,12 @@ export const TESTNET_CHAINS: ChainConfig = {
     urls: ['https://rpc.fusespark.io'],
     nativeCurrency: SPARK,
     blockExplorerUrls: ['https://explorer.fusespark.io/'],
+  },
+  111557560: {
+    name: 'Cyber Testnet',
+    urls: ['https://cyber-testnet.alt.technology/'],
+    nativeCurrency: ETH,
+    blockExplorerUrls: ['https://testnet.cyberscan.co/'],
   },
 };
 
