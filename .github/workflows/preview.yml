@@ -8,7 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    concurrency: 2
 
     steps:
       # Check out the repository
