@@ -14,7 +14,7 @@ concurrency: preview-${{ github.ref }}
 
 jobs:
   deploy-preview:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       # Check out the repository
       - name: Checkout code
@@ -28,31 +28,31 @@ jobs:
           yarn build:pr:preview
 
       # Create folder for PR preview
-      - name: Create PR preview folder
-        run: mkdir -p pr-preview/${{ github.event.pull_request.number }}
+      # - name: Create PR preview folder
+      #   run: mkdir -p pr-preview/${{ github.event.pull_request.number }}
 
-      # Move build files to PR preview folder
-      - name: Move build to PR preview folder
-        run: mv build/* pr-preview/${{ github.event.pull_request.number }}
+      # # Move build files to PR preview folder
+      # - name: Move build to PR preview folder
+      #   run: mv build/* pr-preview/${{ github.event.pull_request.number }}
 
-      # Deploy to GitHub Pages
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: pr-preview/${{ github.event.pull_request.number }} # Folder to deploy
-          clean: true # Clear existing files before deploy
+      # # Deploy to GitHub Pages
+      # - name: Deploy to GitHub Pages
+      #   uses: JamesIves/github-pages-deploy-action@v4
+      #   with:
+      #     folder: pr-preview/${{ github.event.pull_request.number }} # Folder to deploy
+      #     clean: true # Clear existing files before deploy
 
-      # Comment the deployment URL on the PR
-      - name: Comment PR with deployment URL
-        run: |
-          COMMENT="Preview URL: https://${{ github.repository_owner }}.github.io/${{ github.repository_name }}/pr-preview/${{ github.event.pull_request.number }}"
-          echo "${COMMENT}" > comment.txt
-          cat comment.txt
-          curl -d "{\"body\":\"${COMMENT}\"}" -H "Content-Type: application/json" -X POST "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
+      # # Comment the deployment URL on the PR
+      # - name: Comment PR with deployment URL
+      #   run: |
+      #     COMMENT="Preview URL: https://${{ github.repository_owner }}.github.io/${{ github.repository_name }}/pr-preview/${{ github.event.pull_request.number }}"
+      #     echo "${COMMENT}" > comment.txt
+      #     cat comment.txt
+      #     curl -d "{\"body\":\"${COMMENT}\"}" -H "Content-Type: application/json" -X POST "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
 
   # cleanup:
   #   needs: deploy-preview
-  #   runs-on: ubuntu-20.04
+  #   runs-on: ubuntu-latest
   #   if: github.event_name == 'pull_request' && (github.event.action == 'closed' || github.event.action == 'merged')
 
   #   steps:
