@@ -51,7 +51,7 @@ const GovModule = () => {
 
   const [txInProgress, setTxInProgress] = useState(false);
   const [controlAt, setControlAt] = useState(0);
-  const [setDelegateesObject] = useState({});
+  const [delegateesObject, setDelegateesObject] = useState({});
   const [pushDelegatees, setPushDelegatees] = useState([]);
   const [pushNominees, setPushNominees] = useState([]);
   const [epnsToken, setEpnsToken] = useState(null);

@@ -223,7 +223,6 @@ const UploadLogo = ({
                     textTransform="none"
                     color="#fff"
                     weight="600"
-                    textTransform="none"
                     line="22px"
                     size="16px"
                     type="submit"
