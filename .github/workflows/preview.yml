@@ -33,6 +33,7 @@ jobs:
       - name: Delete Preview
       - uses: rossjrw/pr-preview-action@v1.4.7
         if: github.event.action == "closed" && !github.event.pull_request.merged
+        un: echo "Deleting preview"
         with:
           source-dir: ./build/
           action: remove
