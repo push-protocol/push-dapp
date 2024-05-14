@@ -30,8 +30,10 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: pr-preview/${{ github.event.pull_request.number }} # Folder to deploy
-          clean: true # Clear existing files before deploy
+          folder: build
+          branch: gh-pages
+          target-folder: pr-preview/${{ github.event.pull_request.number }}
+          clean: true
 
       # Comment the deployment URL on the PR
       - name: Comment PR with deployment URL
