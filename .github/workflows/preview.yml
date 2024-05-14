@@ -50,12 +50,12 @@ jobs:
           cat comment.txt
           curl -d "{\"body\":\"${COMMENT}\"}" -H "Content-Type: application/json" -X POST "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
 
-  cleanup:
-    needs: deploy-preview
-    runs-on: ubuntu-20.04
-    if: github.event_name == 'pull_request' && (github.event.action == 'closed' || github.event.action == 'merged')
+  # cleanup:
+  #   needs: deploy-preview
+  #   runs-on: ubuntu-20.04
+  #   if: github.event_name == 'pull_request' && (github.event.action == 'closed' || github.event.action == 'merged')
 
-    steps:
-      # Delete the deployment folder for the PR
-      - name: Delete PR preview folder
-        run: rm -rf pr-preview/${{ github.event.pull_request.number }}
+  #   steps:
+  #     # Delete the deployment folder for the PR
+  #     - name: Delete PR preview folder
+  #       run: rm -rf pr-preview/${{ github.event.pull_request.number }}
