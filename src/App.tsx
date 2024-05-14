@@ -82,7 +82,7 @@ const extendConsole = () => {
         window.console = {};
       }
       if (window.console[level] === 'undefined' || !window.console[level] || window.console[level] === null) {
-        window.console[level] = function () { };
+        window.console[level] = function () {};
       }
       if (enabled) {
         if (disabledConsoles[level]) {
@@ -90,7 +90,7 @@ const extendConsole = () => {
         }
       } else {
         disabledConsoles[level] = window.console[level];
-        window.console[level] = function () { };
+        window.console[level] = function () {};
       }
     };
   } catch (e) {
@@ -377,7 +377,7 @@ const HeaderContainer = styled.header`
 const ParentContainer = styled.div`
   flex-wrap: wrap;
   position: relative;
-  z-index:0;
+  z-index: 0;
   display: flex;
   flex-direction: row;
   justify-content: center;
