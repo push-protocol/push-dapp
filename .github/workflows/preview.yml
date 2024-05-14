@@ -2,9 +2,13 @@ name: PR Deploy Preview
 
 on:
   pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
     branches:
       - main
-
 jobs:
   build:
     runs-on: ubuntu-latest
