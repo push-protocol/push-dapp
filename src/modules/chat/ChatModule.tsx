@@ -4,6 +4,7 @@ import { useContext, useEffect, useState, useRef, createContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 // External Packages
+import { CONSTANTS } from '@pushprotocol/restapi';
 import ReactGA from 'react-ga';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -193,10 +194,12 @@ function Chat({ chatid }) {
 
   let navigate = useNavigate();
 
+  // For setting Push SDK
   useEffect(() => {
     if (userPushSDKInstance?.readmode()) showModal();
   }, [userPushSDKInstance]);
 
+  // For setting selected chat id
   useEffect(() => {
     let formattedchatId = selectedChatId || chatid;
 
@@ -207,6 +210,19 @@ function Chat({ chatid }) {
       navigate(`/chat`);
     }
   }, [selectedChatId]);
+
+  // Handle group creation stream
+  if (userPushSDKInstance && !userPushSDKInstance.readmode() && userPushSDKInstance.stream) {
+    userPushSDKInstance.stream?.on(CONSTANTS.STREAM.CHAT_OPS, (chatops: any) => {
+      if (chatops.event === 'chat.group.create') {
+        // Change Tab to 0 aka Chats
+        setActiveTab(0);
+
+        // Set selected chat id to the group created
+        setSelectedChatId(chatops.chatId);
+      }
+    });
+  }
 
   return (
     <Container>
@@ -349,7 +365,7 @@ const Container = styled.div`
 	flex: initial;
 	justify-content: center;
 	position: relative;
-  // overflow: hidden;
+  overflow: hidden;
   box-sizing: border-box;
 
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};

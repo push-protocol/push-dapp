@@ -15,6 +15,10 @@ import { Context } from 'modules/chat/ChatModule';
 import { AppContext } from 'types/chat';
 import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
 
+interface InputProps {
+  typed: boolean;
+}
+
 const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
   // get theme
   const theme = useTheme();
@@ -109,20 +113,18 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
             type="text"
             onKeyUp={(e) => (e.key === 'Enter' ? submitSearch() : null)}
             value={searchedUser}
+            typed={!!searchedUser}
             onChange={onChangeSearchBox}
             placeholder="Search Web3 domain or 0x123..."
           />
           {searchedUser.length > 0 && (
-            <ItemVV2
-              position="absolute"
-              alignItems="flex-end"
+            <CloseIconButton
               width="24px"
               height="24px"
-              top="22px"
-              right="34px"
+              onClick={clearInput}
             >
-              <CloseIcon onClick={clearInput} />
-            </ItemVV2>
+              <CloseIconStyled theme={theme} />
+            </CloseIconButton>
           )}
           <ItemVV2
             position="absolute"
@@ -140,11 +142,18 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
                 spinnerColor={theme.default.secondaryColor}
               />
             )}
-            {!isLoadingSearch && (
-              <SearchIcon
-                style={{ cursor: 'pointer' }}
-                onClick={submitSearch}
-              />
+            {!searchedUser && (
+              <ItemVV2
+                alignItems="center"
+                justifyContent="center"
+                background={theme.chat.snapFocusBg}
+                padding="4px"
+              >
+                <SearchIcon
+                  style={{ cursor: 'pointer' }}
+                  onClick={submitSearch}
+                />
+              </ItemVV2>
             )}
           </ItemVV2>
         </ItemVV2>
@@ -176,13 +185,13 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
   );
 };
 
-const Input = styled.input`
+const Input = styled.input<InputProps>`
   box-sizing: border-box;
   display: flex;
   flex: 1;
   width: 100%;
   height: 48px;
-  padding: 13px 60px 13px 21px;
+  padding: ${(props) => (props.typed ? '13px 42px 13px 21px' : '13px 21px 13px 21px')};
   margin: 10px 0px 10px 0px;
   border-radius: 99px;
   border: 1px solid transparent !important;
@@ -211,3 +220,15 @@ const Input = styled.input`
 `;
 
 export default SearchBar;
+
+const CloseIconButton = styled(ButtonV2)`
+  position: absolute;
+  cursor: pointer;
+  background: transparent;
+  top: 22px;
+  right: 14px;
+`;
+
+const CloseIconStyled = styled(CloseIcon)`
+  color: ${(props) => props.theme.default.color || '#000'};
+`;
