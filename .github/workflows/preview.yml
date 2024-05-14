@@ -1,0 +1,37 @@
+# .github/workflows/preview.yml
+name: Deploy PR previews
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+
+concurrency: preview-${{ github.ref }}
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install and Build
+        if: github.event.action != 'closed' # You might want to skip the build if the PR has been closed
+        run: |
+          yarn install
+          yarn build:pr:preview
+
+      - name: Deploy preview
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./build/
+
+      - name: Delete Preview
+      - uses: rossjrw/pr-preview-action@v1
+        if: github.event.action == "closed" && !github.event.pull_request.merged
+        with:
+          source-dir: ./build/
+          action: remove
