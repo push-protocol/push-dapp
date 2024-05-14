@@ -15,7 +15,6 @@ concurrency: preview-${{ github.ref }}
 jobs:
   deploy-preview:
     runs-on: ubuntu-20.04
-
     steps:
       # Check out the repository
       - name: Checkout code
@@ -23,6 +22,7 @@ jobs:
 
       # Install dependencies and build project
       - name: Install dependencies and build
+        if: github.event.action != 'closed' # You might want to skip the build if the PR has been closed
         run: |
           yarn install
           yarn build:pr:preview
