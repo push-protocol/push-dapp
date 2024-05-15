@@ -15,6 +15,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: Install and Build
         if: github.event.action != 'closed' # You might want to skip the build if the PR has been closed
         env:
@@ -22,12 +23,19 @@ jobs:
           VITE_APP_DEPLOY_ENV: ${{ secrets.VITE_APP_DEPLOY_ENV }}
           VITE_APP_PUBLIC_URL: ${{ secrets.VITE_APP_PUBLIC_URL }}
           VITE_APP_WALLETCONNECT_PROJECT_ID: ${{ secrets.VITE_APP_WALLETCONNECT_PROJECT_ID }}
+
           ESLINT_NO_DEV_ERRORS: ${{ secrets.ESLINT_NO_DEV_ERRORS }}
           DISABLE_ESLINT_PLUGIN: ${{ secrets.DISABLE_ESLINT_PLUGIN }}
+          TSC_COMPILE_ON_ERROR: ${{ secrets.TSC_COMPILE_ON_ERROR }}
+
           GENERATE_SOURCEMAP: ${{ secrets.GENERATE_SOURCEMAP }}
+
+          PR_PREVIEW_BASE: ${{ github.event.pull_request.number }}
+
         run: |
           yarn install
           yarn build:pr:preview
+
       - name: Deploy preview
         uses: rossjrw/pr-preview-action@v1.4.7
         with:

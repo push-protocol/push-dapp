@@ -83,6 +83,7 @@ export default defineConfig({
     // this sets a default port to 3000
     port: 3000,
   },
+  base: process.env.PR_PREVIEW_BASE ? `/push-dapp/pr-preview/pr-${process.env.PR_PREVIEW_BASE}` : './',
   build: {
     outDir: 'build',
     sourcemap: false,
