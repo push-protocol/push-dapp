@@ -45,7 +45,6 @@ jobs:
           curl -d "{\"body\":\"${COMMENT}\"}" -H "Content-Type: application/json" -X POST "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
 
   cleanup:
-    needs: deploy-preview
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && (github.event.action == 'closed' || github.event.action == 'merged')
 
