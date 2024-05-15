@@ -30,7 +30,7 @@ jobs:
 
           GENERATE_SOURCEMAP: ${{ secrets.GENERATE_SOURCEMAP }}
 
-          PR_PREVIEW_BASE: ${{ github.event.pull_request.number }}
+          VITE_PR_PREVIEW_BASE: ${{ github.event.pull_request.number }}
 
         run: |
           yarn install
