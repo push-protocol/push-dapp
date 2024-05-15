@@ -122,6 +122,9 @@ export default ChatSection;
 const ChatViewContainer = styled(ItemVV2)`
   flex: 4;
   height: inherit;
+  max-width: 100%;
+  width: auto;
+  overflow: hidden;
 `;
 
 const IntroContainer = styled(ItemVV2)<IntroContainerProps>`
