@@ -8,6 +8,7 @@ import vitePluginRequire from 'vite-plugin-require';
 import svgr from 'vite-plugin-svgr';
 import topLevelAwait from 'vite-plugin-top-level-await';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
+import { getPreviewBasePath } from './basePath';
 
 // for local sdk linking
 let addedAlias = {};
@@ -88,7 +89,7 @@ export default defineConfig({
     // this sets a default port to 3000
     port: 3000,
   },
-  base: getPreviewURL() || './',
+  base: getPreviewBasePath() || undefined,
   build: {
     outDir: 'build',
     sourcemap: false,
