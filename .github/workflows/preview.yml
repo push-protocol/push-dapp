@@ -49,6 +49,11 @@ jobs:
     if: github.event_name == 'pull_request' && (github.event.action == 'closed' || github.event.action == 'merged')
 
     steps:
+      # Checkout to the gh-pages branch
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
       # Delete the deployment folder for the PR
       - name: Delete PR preview folder
         run: rm -rf pr-preview/${{ github.event.pull_request.number }}
