@@ -44,6 +44,7 @@ const GovModule = () => {
 
   const { web3NameList }: AppContextType = useContext(AppContext);
   const { account, provider, chainId } = useAccount();
+
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const [dashboardLoading, setDashboardLoading] = useState(true);
