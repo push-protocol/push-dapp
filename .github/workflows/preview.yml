@@ -16,6 +16,13 @@ jobs:
       - name: Set up environment variables
         run: |
           echo "VITE_PR_PREVIEW_BASE=pr-${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+          echo "VITE_APP_NODE_ENV=production" >> $GITHUB_ENV
+          echo "VITE_APP_DEPLOY_ENV=DEV" >> $GITHUB_ENV
+          echo "VITE_APP_PUBLIC_URL=https://dev.push.org/" >> $GITHUB_ENV
+          echo "ESLINT_NO_DEV_ERRORS=true" >> $GITHUB_ENV
+          echo "TSC_COMPILE_ON_ERROR=true" >> $GITHUB_ENV
+          echo "DISABLE_ESLINT_PLUGIN=true" >> $GITHUB_ENV
+          echo "GENERATE_SOURCEMAP=true" >> $GITHUB_ENV
 
       - name: Checkout
         uses: actions/checkout@v3
@@ -23,16 +30,7 @@ jobs:
       - name: Install and Build
         if: github.event.action != 'closed' # You might want to skip the build if the PR has been closed
         env:
-          VITE_APP_NODE_ENV: ${{ secrets.VITE_APP_NODE_ENV }}
-          VITE_APP_DEPLOY_ENV: ${{ secrets.VITE_APP_DEPLOY_ENV }}
-          VITE_APP_PUBLIC_URL: ${{ secrets.VITE_APP_PUBLIC_URL }}
           VITE_APP_WALLETCONNECT_PROJECT_ID: ${{ secrets.VITE_APP_WALLETCONNECT_PROJECT_ID }}
-
-          ESLINT_NO_DEV_ERRORS: ${{ secrets.ESLINT_NO_DEV_ERRORS }}
-          DISABLE_ESLINT_PLUGIN: ${{ secrets.DISABLE_ESLINT_PLUGIN }}
-          TSC_COMPILE_ON_ERROR: ${{ secrets.TSC_COMPILE_ON_ERROR }}
-
-          GENERATE_SOURCEMAP: ${{ secrets.GENERATE_SOURCEMAP }}
 
         run: |
           yarn install
