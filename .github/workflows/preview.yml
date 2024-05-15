@@ -13,6 +13,10 @@ jobs:
   deploy-preview:
     runs-on: ubuntu-20.04
     steps:
+      - name: Set up environment variables
+        run: |
+          echo "VITE_PR_PREVIEW_BASE=pr-${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -29,8 +33,6 @@ jobs:
           TSC_COMPILE_ON_ERROR: ${{ secrets.TSC_COMPILE_ON_ERROR }}
 
           GENERATE_SOURCEMAP: ${{ secrets.GENERATE_SOURCEMAP }}
-
-          VITE_PR_PREVIEW_BASE: ${{ github.event.pull_request.number }}
 
         run: |
           yarn install
