@@ -53,17 +53,17 @@ const ModalContainer = styled(ItemVV2)`
   z-index: 100000;
 `;
 
-const ModalContent = styled(ItemHV2)`
-  align-items: flex-start;
-  width: 100vw;
-  height: 100vh;
-`;
-
 const ModalClose = styled.div`
   display: flex;
   align-items: flex-start;
   padding-right: 20px;
   margin-top: 30px;
+`;
+
+const ModalContent = styled(ItemHV2)`
+  align-items: flex-start;
+  width: 100vw;
+  height: 100vh;
 `;
 
 const ModalCloseIcon = styled.i`
