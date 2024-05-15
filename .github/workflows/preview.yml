@@ -16,7 +16,6 @@ jobs:
   deploy-preview:
     runs-on: ubuntu-latest
 
-    if: github.event.action != 'closed'
     steps:
       # Check out the repository
       - name: Checkout code
@@ -30,8 +29,14 @@ jobs:
 
       # Deploy to GitHub Pages
       - uses: rossjrw/pr-preview-action@v1
+        if: github.event.action=='opened'|| github.event.action=='reopened'|| github.event.action=='synchronize'
         with:
-          source-dir: .
+          source-dir: ./build/
+          action: deploy
           preview-branch: gh-pages
           umbrella-dir: pr-preview
-          action: auto
+      - uses: rossjrw/pr-preview-action@v1
+        if: github.event.action == 'closed' || github.event.pull_request.merged
+        with:
+          source-dir: ./build/
+          action: remove
