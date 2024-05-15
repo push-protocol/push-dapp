@@ -51,6 +51,9 @@ if (localSDKLinking) {
   };
 }
 
+export const getPreviewURL = () =>
+  process.env.PR_PREVIEW_BASE ? `/push-dapp/pr-preview/pr-${process.env.PR_PREVIEW_BASE}` : undefined;
+
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
@@ -83,7 +86,7 @@ export default defineConfig({
     // this sets a default port to 3000
     port: 3000,
   },
-  base: process.env.PR_PREVIEW_BASE ? `/push-dapp/pr-preview/pr-${process.env.PR_PREVIEW_BASE}` : './',
+  base: getPreviewURL(),
   build: {
     outDir: 'build',
     sourcemap: false,

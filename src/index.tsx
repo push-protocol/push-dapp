@@ -19,12 +19,15 @@ import GlobalContextProvider from './contexts/GlobalContext';
 import { config as dotEnvConfig } from 'dotenv';
 import { web3Onboard } from './connectors/web3Onboard';
 import AppContextProvider from './contexts/AppContext';
+import { getPreviewURL } from '../vite.config';
 
 // enable environmental variables across the entire application
 dotEnvConfig();
 
+const getBaseName = () => getPreviewURL() || import.meta.env.PUBLIC_URL;
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <BrowserRouter basename={import.meta.env.PUBLIC_URL}>
+  <BrowserRouter basename={getBaseName()}>
     <Provider store={store}>
       <GlobalContextProvider>
         <Web3OnboardProvider web3Onboard={web3Onboard}>
