@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     concurrency: 2
 
+    if: github.event.action != 'closed'
     steps:
       # Check out the repository
       - name: Checkout code
@@ -38,7 +39,7 @@ jobs:
       # Comment the deployment URL on the PR
       - name: Comment PR with deployment URL
         run: |
-          COMMENT="Preview URL: https://${{ github.repository_owner }}.github.io/${{ github.repository_name }}/pr-preview/${{ github.event.pull_request.number }}"
+          COMMENT="Preview URL: https://${{ github.repository_owner }}.github.io/${{ github.repository_name }}pr-preview/${{ github.event.pull_request.number }}"
           echo "${COMMENT}" > comment.txt
           cat comment.txt
           curl -d "{\"body\":\"${COMMENT}\"}" -H "Content-Type: application/json" -X POST "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
