@@ -48,7 +48,6 @@ const GovModule = () => {
 
   const [dashboardLoading, setDashboardLoading] = useState(true);
   const [delegateesLoading, setDelegateesLoading] = useState(true);
-
   const [txInProgress, setTxInProgress] = useState(false);
   const [controlAt, setControlAt] = useState(0);
   const [delegateesObject, setDelegateesObject] = useState({});
