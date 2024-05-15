@@ -1,5 +1,4 @@
-name: Deploy PR Preview
-
+name: Deploy PR previews
 on:
   pull_request:
     types:
@@ -9,35 +8,19 @@ on:
       - closed
     branches:
       - main
-
 concurrency: preview-${{ github.ref }}
-
 jobs:
   deploy-preview:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
-      # Check out the repository
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
-
-      # Install dependencies and build project
-      - name: Install dependencies and build
-        if: github.event.action=='opened'|| github.event.action=='reopened'|| github.event.action=='synchronize'
+      - name: Install and Build
+        if: github.event.action != 'closed' # You might want to skip the build if the PR has been closed
         run: |
           yarn install
           yarn build:pr:preview
-
-      # Deploy to GitHub Pages
       - name: Deploy preview
-        if: github.event.action=='opened'|| github.event.action=='reopened'|| github.event.action=='synchronize'
         uses: rossjrw/pr-preview-action@v1.4.7
         with:
           source-dir: ./build/
-          action: deploy
-
-      # - name: Delete preview
-      #   if: github.event.action == 'closed' || github.event.pull_request.merged
-      #   uses: rossjrw/pr-preview-action@v1.4.7
-      #   with:
-      #     source-dir: ./build/
-      #     action: remove
