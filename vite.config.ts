@@ -83,7 +83,6 @@ export default defineConfig({
     // this sets a default port to 3000
     port: 3000,
   },
-  base: './',
   build: {
     outDir: 'build',
     sourcemap: false,
