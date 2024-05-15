@@ -25,7 +25,7 @@ import { getPreviewURL } from '../vite.config';
 dotEnvConfig();
 
 const getBaseName = () => getPreviewURL() || import.meta.env.PUBLIC_URL;
-
+console.log('-<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', getPreviewURL(), import.meta.env.PUBLIC_URL);
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <BrowserRouter basename={getBaseName()}>
     <Provider store={store}>
