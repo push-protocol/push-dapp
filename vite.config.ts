@@ -54,6 +54,8 @@ if (localSDKLinking) {
 export const getPreviewURL = () =>
   process.env.PR_PREVIEW_BASE ? `/push-dapp/pr-preview/pr-${process.env.PR_PREVIEW_BASE}` : undefined;
 
+console.log('PREVIEW BASE=>>>>>>>>>>>>>>>>>>>>>>>', getPreviewURL());
+
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {

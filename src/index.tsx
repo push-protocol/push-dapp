@@ -19,15 +19,14 @@ import GlobalContextProvider from './contexts/GlobalContext';
 import { config as dotEnvConfig } from 'dotenv';
 import { web3Onboard } from './connectors/web3Onboard';
 import AppContextProvider from './contexts/AppContext';
-//import { getPreviewURL } from '../vite.config';
+import { getPreviewURL } from '../vite.config';
 
 // enable environmental variables across the entire application
 dotEnvConfig();
 
 const publicURL = import.meta.env.PUBLIC_URL;
 
-const getBaseName = () =>
-  process.env.PR_PREVIEW_BASE ? `/push-dapp/pr-preview/pr-${process.env.PR_PREVIEW_BASE}` : publicURL;
+const getBaseName = () => getPreviewURL() || publicURL;
 console.log(getBaseName());
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <BrowserRouter basename={getBaseName()}>
