@@ -10,10 +10,11 @@ on:
     branches:
       - main
 
+concurrency: preview-${{ github.ref }}
+
 jobs:
   deploy-preview:
     runs-on: ubuntu-latest
-    concurrency: 2
 
     if: github.event.action != 'closed'
     steps:
@@ -28,31 +29,9 @@ jobs:
           yarn build:pr:preview
 
       # Deploy to GitHub Pages
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - uses: rossjrw/pr-preview-action@v1
         with:
-          folder: build
-          branch: gh-pages
-          target-folder: pr-preview/${{ github.event.pull_request.number }}
-
-      # Comment the deployment URL on the PR
-      - name: Comment PR with deployment URL
-        run: |
-          COMMENT="Preview URL: https://${{ github.repository_owner }}.github.io/${{ github.repository_name }}pr-preview/${{ github.event.pull_request.number }}"
-          echo "${COMMENT}" > comment.txt
-          cat comment.txt
-          curl -d "{\"body\":\"${COMMENT}\"}" -H "Content-Type: application/json" -X POST "${{ github.api_url }}/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
-
-  cleanup:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && (github.event.action == 'closed' || github.event.action == 'merged')
-
-    steps:
-      # Checkout to the gh-pages branch
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          ref: gh-pages
-      # Delete the deployment folder for the PR
-      - name: Delete PR preview folder
-        run: rm -rf pr-preview/${{ github.event.pull_request.number }}
+          source-dir: .
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          action: auto
