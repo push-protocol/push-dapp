@@ -7,7 +7,7 @@ on:
       - synchronize
       - closed
     branches:
-      - main
+      - temp/deployment-preview
 concurrency: preview-${{ github.ref }}
 jobs:
   deploy-preview:
