@@ -24,7 +24,9 @@ import { getPreviewURL } from '../vite.config';
 // enable environmental variables across the entire application
 dotEnvConfig();
 
-const getBaseName = () => getPreviewURL() || import.meta.env.PUBLIC_URL;
+const publicURL = import.meta.env.PUBLIC_URL;
+
+const getBaseName = () => getPreviewURL() || publicURL;
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <BrowserRouter basename={getBaseName()}>
