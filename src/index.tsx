@@ -28,7 +28,7 @@ const publicURL = import.meta.env.PUBLIC_URL;
 
 const getBaseName = () =>
   process.env.PR_PREVIEW_BASE ? `/push-dapp/pr-preview/pr-${process.env.PR_PREVIEW_BASE}` : publicURL;
-
+console.log(getBaseName());
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <BrowserRouter basename={getBaseName()}>
     <Provider store={store}>
