@@ -276,7 +276,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
           alignSelf="center"
           display="flex"
         >
-          {!isChannelExpired && onCoreNetwork && <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>}
+          {!isChannelExpired && onCoreNetwork && <SubmitButton onClick={showEditChannel}>Edit Channel Detail</SubmitButton>}
           {!isChannelExpired && <ChannelSettings />}
           {isChannelExpired && onCoreNetwork && (
             <DestroyChannelBtn
