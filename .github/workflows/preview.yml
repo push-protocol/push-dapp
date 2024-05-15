@@ -28,12 +28,12 @@ jobs:
           yarn build:pr:preview
 
       # Deploy to GitHub Pages
-      - uses: rossjrw/pr-preview-action@v1
+      - uses: rossjrw/pr-preview-action@v1.4.7
         if: github.event.action=='opened'|| github.event.action=='reopened'|| github.event.action=='synchronize'
         with:
           source-dir: ./build/
           action: deploy
-      - uses: rossjrw/pr-preview-action@v1
+      - uses: rossjrw/pr-preview-action@v1.4.7
         if: github.event.action == 'closed' || github.event.pull_request.merged
         with:
           source-dir: ./build/
