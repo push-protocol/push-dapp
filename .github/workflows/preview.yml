@@ -15,7 +15,6 @@ concurrency: preview-${{ github.ref }}
 jobs:
   deploy-preview:
     runs-on: ubuntu-latest
-
     steps:
       # Check out the repository
       - name: Checkout code
@@ -23,18 +22,22 @@ jobs:
 
       # Install dependencies and build project
       - name: Install dependencies and build
+        if: github.event.action=='opened'|| github.event.action=='reopened'|| github.event.action=='synchronize'
         run: |
           yarn install
           yarn build:pr:preview
 
       # Deploy to GitHub Pages
-      - uses: rossjrw/pr-preview-action@v1.4.7
+      - name: Deploy preview
         if: github.event.action=='opened'|| github.event.action=='reopened'|| github.event.action=='synchronize'
+        uses: rossjrw/pr-preview-action@v1.4.7
         with:
           source-dir: ./build/
           action: deploy
-      - uses: rossjrw/pr-preview-action@v1.4.7
+
+      - name: Delete preview
         if: github.event.action == 'closed' || github.event.pull_request.merged
+        uses: rossjrw/pr-preview-action@v1.4.7
         with:
           source-dir: ./build/
           action: remove
