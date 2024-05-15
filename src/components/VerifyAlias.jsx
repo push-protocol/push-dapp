@@ -55,6 +55,10 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
     123: {
       label: "Fuse SPARK",
       url: "https://chaindrop.org/?chainid=123&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    },
+    111557560: {
+      label: "Cyber ETH",
+      url: "https://cyber-testnet.testnets.rollbridge.app/"
     }
   }
 
