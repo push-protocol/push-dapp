@@ -34,7 +34,6 @@ jobs:
           folder: build
           branch: gh-pages
           target-folder: pr-preview/${{ github.event.pull_request.number }}
-          clean: true
 
       # Comment the deployment URL on the PR
       - name: Comment PR with deployment URL
