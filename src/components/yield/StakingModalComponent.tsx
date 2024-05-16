@@ -303,7 +303,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
         <ItemHV2
           width="-webkit-fill-available"
           background={theme.default.bg}
-          height="35px"
+          height="60px"
           padding={isMobile ? '8px' : '14px'}
           borderRadius="12px"
           border={`1px solid ${theme.modalBorderColor}`}
