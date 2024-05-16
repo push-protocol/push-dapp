@@ -17,7 +17,16 @@ import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, appConfig, CHAIN_DETAILS } from 'config/index.js';
-import GLOBALS from "config/Globals";
+import GLOBALS from 'config/Globals';
+
+type FaucetType = {
+  label: string;
+  url: string;
+};
+
+type FaucetsInfo = {
+  [key: number]: FaucetType;
+};
 
 const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   const theme = useTheme();
@@ -31,32 +40,36 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   const [success, setSuccess] = useState(false);
   const mainAddress = aliasEthAccount;
 
-  const Faucets = {
+  const Faucets: FaucetsInfo = {
     80002: {
-      label: "Amoy MATIC",
-      url: "https://faucet.polygon.technology/"
+      label: 'Amoy MATIC',
+      url: 'https://faucet.polygon.technology/',
     },
     97: {
-      label: "Testnet BNB",
-      url: "https://testnet.bnbchain.org/faucet-smart"
+      label: 'Testnet BNB',
+      url: 'https://testnet.bnbchain.org/faucet-smart',
     },
     11155420: {
-      label: "Sepolia OpETH",
-      url: "https://faucet.quicknode.com/optimism/sepolia"
+      label: 'Sepolia OpETH',
+      url: 'https://faucet.quicknode.com/optimism/sepolia',
     },
     2442: {
-      label: "Polygon zkEVM ETH",
-      url: "https://faucet.polygon.technology/"
+      label: 'Polygon zkEVM ETH',
+      url: 'https://faucet.polygon.technology/',
     },
     421614: {
-      label: "Sepolia ArbETH",
-      url: "https://faucet.quicknode.com/arbitrum/sepolia"
+      label: 'Sepolia ArbETH',
+      url: 'https://faucet.quicknode.com/arbitrum/sepolia',
     },
     123: {
-      label: "Fuse SPARK",
-      url: "https://chaindrop.org/?chainid=123&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-    }
-  }
+      label: 'Fuse SPARK',
+      url: 'https://chaindrop.org/?chainid=123&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+    },
+    111557560: {
+      label: 'Cyber ETH',
+      url: 'https://cyber-testnet.testnets.rollbridge.app/',
+    },
+  };
 
   const checkAlias = async () => {
     if (mainAddress == aliasEthAccount) {
@@ -65,7 +78,7 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   };
 
   const checkAliasVerification = async () => {
-    const { aliasVerified } = await getAliasDetails({account,chainId}).then(( data ) => {
+    const { aliasVerified } = await getAliasDetails({ account, chainId }).then((data) => {
       if (data) {
         dispatch(setAliasVerified(data.is_alias_verified));
         return { aliasVerified: data['is_alias_verified'] };
@@ -112,7 +125,12 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   };
 
   return (
-    <Item margin="15px 20px 15px 20px" flex="1" display="flex" direction="column">
+    <Item
+      margin="15px 20px 15px 20px"
+      flex="1"
+      display="flex"
+      direction="column"
+    >
       <SpanV2
         textAlign="center"
         margin="60px 0px 0px 0px"
@@ -149,7 +167,10 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
           color={theme.default.secondaryColor}
         >
           You will need{' '}
-          <A href={Faucets[chainId].url} target="_blank">
+          <A
+            href={Faucets[chainId].url}
+            target="_blank"
+          >
             {Faucets[chainId].label}
           </A>{' '}
           to proceed.
@@ -158,17 +179,51 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
 
       {!success &&
         (loading ? (
-          <Item display="flex" direction="row" align="center" margin="60px 0px 0px 0px">
-            <FadeLoader color="#cf1c84" loading={true} height={13} width={4} />
+          <Item
+            display="flex"
+            direction="row"
+            align="center"
+            margin="60px 0px 0px 0px"
+          >
+            <FadeLoader
+              color="#cf1c84"
+              loading={true}
+              height={13}
+              width={4}
+            />
 
-            <Span color={theme.color} weight="600" textTransform="none" line="22px" size="16px" margin="0px 10px">
+            <Span
+              color={theme.color}
+              weight="600"
+              textTransform="none"
+              line="22px"
+              size="16px"
+              margin="0px 10px"
+            >
               {loading}
             </Span>
           </Item>
         ) : (
-          <Item width="15em" self="center" align="center" margin="60px auto 0px auto">
-            <Button bg="#e20880" color="#fff" radius="15px" padding="20px 10px" onClick={checkAlias}>
-              <Span color="#fff" weight="600" textTransform="none" line="22px" size="16px">
+          <Item
+            width="15em"
+            self="center"
+            align="center"
+            margin="60px auto 0px auto"
+          >
+            <Button
+              bg="#e20880"
+              color="#fff"
+              radius="15px"
+              padding="20px 10px"
+              onClick={checkAlias}
+            >
+              <Span
+                color="#fff"
+                weight="600"
+                textTransform="none"
+                line="22px"
+                size="16px"
+              >
                 Verify Alias Address
               </Span>
             </Button>
@@ -176,9 +231,24 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
         ))}
 
       {success && (
-        <Item display="flex" direction="row" align="center" margin="60px 0px 0px 0px">
-          <BsFillCheckCircleFill color="#30CC8B" size={30} />
-          <Span color={theme.color} weight="600" textTransform="none" line="22px" size="16px" margin="0px 10px">
+        <Item
+          display="flex"
+          direction="row"
+          align="center"
+          margin="60px 0px 0px 0px"
+        >
+          <BsFillCheckCircleFill
+            color="#30CC8B"
+            size={30}
+          />
+          <Span
+            color={theme.color}
+            weight="600"
+            textTransform="none"
+            line="22px"
+            size="16px"
+            margin="0px 10px"
+          >
             Verification Complete
           </Span>
         </Item>
