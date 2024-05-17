@@ -40,3 +40,9 @@ jobs:
         uses: rossjrw/pr-preview-action@v1.4.7
         with:
           source-dir: ./build/
+
+      - uses: rossjrw/pr-preview-action@v1.4.7
+        if: github.event.action == 'closed' && !github.event.pull_request.merged
+        with:
+          source-dir: ./build/
+          action: remove
