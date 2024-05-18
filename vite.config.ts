@@ -8,6 +8,7 @@ import vitePluginRequire from 'vite-plugin-require';
 import svgr from 'vite-plugin-svgr';
 import topLevelAwait from 'vite-plugin-top-level-await';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
+// @ts-expect-error
 import { getPreviewBasePath } from './basePath';
 
 // for local sdk linking

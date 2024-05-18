@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { parse } from 'envfile';
 import fs from 'fs';
 import readline from 'readline';
-import { getPreviewBasePath } from './basePath';
+import { getPreviewBasePath } from './basePath.js';
 
 const envPresets = {
   alpha: {
