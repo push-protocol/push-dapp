@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 
 // External Packages
 import { Provider } from 'react-redux';
-import { BrowserRouter, HashRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 // Internal Components
 import App from './App';
@@ -28,10 +28,8 @@ const publicURL = import.meta.env.PUBLIC_URL;
 
 const previewBasePath = getPreviewBasePath();
 
-const Router = previewBasePath ? HashRouter : BrowserRouter;
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <Router basename={previewBasePath || publicURL}>
+  <BrowserRouter basename={previewBasePath || publicURL}>
     <Provider store={store}>
       <GlobalContextProvider>
         <Web3OnboardProvider web3Onboard={web3Onboard}>
@@ -45,7 +43,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         </Web3OnboardProvider>
       </GlobalContextProvider>
     </Provider>
-  </Router>
+  </BrowserRouter>
 );
 
 // If you want your app to work offline and load faster, you can change
