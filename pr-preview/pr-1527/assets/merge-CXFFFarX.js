@@ -1,1 +1,0 @@
-import{gt as r,gu as e,gv as m,gw as o,gx as u,gy as _,__tla as h}from"./index-BaCfblWO.js";let g,c=Promise.all([(()=>{try{return h}catch{}})()]).then(async()=>{g=function(){for(var t=[],a=0;a<arguments.length;a++)t[a]=arguments[a];var n=r(t),l=e(t,1/0),s=t;return s.length?s.length===1?o(s[0]):u(l)(_(s,n)):m}});export{c as __tla,g as m};
