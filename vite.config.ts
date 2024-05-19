@@ -85,7 +85,7 @@ export default defineConfig({
     // this sets a default port to 3000
     port: 3000,
   },
-  base: `/push-dapp/pr-preview/${import.meta.env.VITE_PR_PREVIEW_BASE}` || undefined,
+  base: `/push-dapp/pr-preview/${process.env.VITE_PR_PREVIEW_BASE}` || undefined,
   build: {
     outDir: 'build',
     sourcemap: false,
