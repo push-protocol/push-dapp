@@ -29,7 +29,7 @@ const publicURL = import.meta.env.PUBLIC_URL;
 const previewBasePath = getPreviewBasePath();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <BrowserRouter basename={previewBasePath || publicURL}>
+  <BrowserRouter basename={`/push-dapp/pr-preview/${process.env.VITE_PR_PREVIEW_BASE}` || publicURL}>
     <Provider store={store}>
       <GlobalContextProvider>
         <Web3OnboardProvider web3Onboard={web3Onboard}>
