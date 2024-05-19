@@ -22,33 +22,27 @@
       // https://username.github.io/repo-name/one/two?a=b&c=d#qwe becomes
       // https://username.github.io/repo-name/?/one/two&a=b~and~c=d#qwe
       // Otherwise, leave pathSegmentsToKeep as 0.
-      var pathSegmentsToKeep = 0;
-
-      var l = window.location;
-      var isProduction = l.hostname === 'app.push.org';
-      var prPreviewBase = '/push-dapp/pr-preview/';
-
-      // Handle GitHub Pages preview builds
-      var match = l.pathname.match(/\/push-dapp\/pr-preview\/pr-(\d+)\//);
+      var match = window.location.pathname.match(/\/push-dapp\/pr-preview\/pr-(\d+)\//);
       var prNumber = match ? match[1] : '';
-      var newBase = prPreviewBase + prNumber;
 
-      l.replace(
-        l.protocol +
+      if (prNumber) {
+        // Redirect for PR preview builds
+        var newUrl =
+          window.location.protocol +
           '//' +
-          l.hostname +
-          (l.port ? ':' + l.port : '') +
-          l.pathname
-            .split('/')
-            .slice(0, 1 + pathSegmentsToKeep)
-            .join('/') +
-          '/?/' +
-          newBase +
-          '/' +
-          l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-          l.hash
-      );
+          window.location.hostname +
+          (window.location.port ? ':' + window.location.port : '') +
+          '/push-dapp/pr-preview/pr-' +
+          prNumber +
+          window.location.pathname.replace('/push-dapp/pr-preview/pr-' + prNumber, '') +
+          window.location.search +
+          window.location.hash;
+
+        window.location.replace(newUrl);
+      } else {
+        // If no PR number is found, fallback to a safe redirect or show an error message
+        window.location.replace('/push-dapp/');
+      }
     </script>
   </head>
   <body></body>
