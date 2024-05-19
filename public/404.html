@@ -29,7 +29,7 @@
       var prPreviewBase = '/push-dapp/pr-preview/';
 
       // Handle GitHub Pages preview builds
-      var match = l.pathname.match(/\/push-dapp\/pr-preview\/([^/]+)\//);
+      var match = l.pathname.match(/\/push-dapp\/pr-preview\/pr-(\d+)\//);
       var prNumber = match ? match[1] : '';
       var newBase = prPreviewBase + prNumber;
 
