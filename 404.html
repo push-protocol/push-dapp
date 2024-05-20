@@ -23,9 +23,12 @@
       // https://username.github.io/repo-name/?/one/two&a=b~and~c=d#qwe
       // Otherwise, leave pathSegmentsToKeep as 0.
 
-      var pathSegmentsToKeep = 0;
-
       var l = window.location;
+
+      // Determine the pathSegmentsToKeep dynamically
+      // For your case, if the URL contains '/pr-preview/', set pathSegmentsToKeep to 4
+      var pathSegmentsToKeep = l.pathname.includes('/pr-preview/') ? 4 : 0;
+
       var newUrl =
         l.protocol +
         '//' +
