@@ -23,7 +23,7 @@ const AutoImageClipper = (props) => {
   const [crop, setCrop] = useState<CropType>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState<number>(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<CroppedAreaPixels>(null);
-  const [setCroppedImage] = useState<string>(null);
+  const [croppedImage, setCroppedImage] = useState<string>(null);
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
