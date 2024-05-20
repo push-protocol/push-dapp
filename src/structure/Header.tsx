@@ -195,9 +195,9 @@ function Header({ isDarkMode, darkModeToggle }) {
             justify="flex-start"
             flex="0"
           >
-            <a href="/channels">
+            <Link to="/channels">
               <Logo src={!isDarkMode ? PushLogoLight : PushLogoDark} />
-            </a>
+            </Link>
           </RightBarDesktop>
 
           <LogoMobile
