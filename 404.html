@@ -26,9 +26,7 @@
       var l = window.location;
 
       var pathSegmentsToKeep = l.pathname.includes('/pr-preview/') ? 3 : 0;
-
-      // Check if the URL has already been transformed
-      if (!l.search.includes('?/')) {
+      
         var newUrl =
           l.protocol +
           '//' +
@@ -48,7 +46,7 @@
           l.hash;
 
         l.replace(newUrl);
-      }
+      
     </script>
   </head>
   <body></body>
