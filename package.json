@@ -1,7 +1,7 @@
 {
   "name": "pushdapp",
   "version": "0.6.6",
-  "homepage": "https://push-protocol.github.io/push-dapp/pr-preview/pr-1527/",
+  "homepage": "https://app.push.org",
   "type": "module",
   "scripts": {
     "dev": "vite",
