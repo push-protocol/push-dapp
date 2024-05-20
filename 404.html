@@ -23,31 +23,30 @@
       // https://username.github.io/repo-name/?/one/two&a=b~and~c=d#qwe
       // Otherwise, leave pathSegmentsToKeep as 0.
 
-      var l = window.location;
-
-      // Determine the pathSegmentsToKeep dynamically
-      // For your case, if the URL contains '/pr-preview/', set pathSegmentsToKeep to 4
       var pathSegmentsToKeep = l.pathname.includes('/pr-preview/') ? 4 : 0;
 
-      var newUrl =
-        l.protocol +
-        '//' +
-        l.hostname +
-        (l.port ? ':' + l.port : '') +
-        l.pathname
-          .split('/')
-          .slice(0, 1 + pathSegmentsToKeep)
-          .join('/') +
-        '/?/' +
-        l.pathname
-          .split('/')
-          .slice(1 + pathSegmentsToKeep)
-          .join('/')
-          .replace(/&/g, '~and~') +
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash;
+      // Check if the URL has already been transformed
+      if (!l.search.includes('?/')) {
+        var newUrl =
+          l.protocol +
+          '//' +
+          l.hostname +
+          (l.port ? ':' + l.port : '') +
+          l.pathname
+            .split('/')
+            .slice(0, 1 + pathSegmentsToKeep)
+            .join('/') +
+          '/?/' +
+          l.pathname
+            .split('/')
+            .slice(1 + pathSegmentsToKeep)
+            .join('/')
+            .replace(/&/g, '~and~') +
+          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+          l.hash;
 
-      l.replace(newUrl);
+        l.replace(newUrl);
+      }
     </script>
   </head>
   <body></body>
