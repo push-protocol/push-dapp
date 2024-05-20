@@ -16,7 +16,7 @@ import { createGlobalStyle } from 'styled-components';
 import InitState from 'components/InitState';
 import { AppContext } from 'contexts/AppContext';
 import NavigationContextProvider from 'contexts/NavigationContext';
-import { useAccount } from 'hooks';
+import { useAccount, useInactiveListener } from 'hooks';
 import { resetAdminSlice } from 'redux/slices/adminSlice';
 import { resetChannelCreationSlice } from 'redux/slices/channelCreationSlice';
 import { resetNotificationsSlice } from 'redux/slices/notificationSlice';
@@ -135,6 +135,7 @@ export default function App() {
     return state.user;
   });
 
+  useInactiveListener();
   const { run, stepIndex, tutorialContinous } = useSelector((state: any) => state.userJourney);
   // const location = useLocation();
   // Build takes care of this now
