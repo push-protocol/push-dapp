@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState, useRef } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -71,10 +71,14 @@ const AddSettingModalContent = ({
   const [settingName, setSettingName] = useState(settingToEdit ? settingToEdit.description : '');
   const [isDefault, setIsDefault] = useState<boolean>(
     settingToEdit
-      ? (settingToEdit.type === 1 && settingToEdit.default) || (settingToEdit.type === 2 && settingToEdit.enabled) || (settingToEdit.type === 3 && settingToEdit.enabled)
+      ? (settingToEdit.type === 1 && settingToEdit.default) ||
+          (settingToEdit.type === 2 && settingToEdit.enabled) ||
+          (settingToEdit.type === 3 && settingToEdit.enabled)
       : true
   );
-  const [isRange, setIsRange] = useState<boolean>(settingToEdit && (settingToEdit.type === 2 || settingToEdit.type === 3) ? true : false);
+  const [isRange, setIsRange] = useState<boolean>(
+    settingToEdit && (settingToEdit.type === 2 || settingToEdit.type === 3) ? true : false
+  );
   const [lowerLimit, setLowerLimit] = useState<string>(
     settingToEdit && (settingToEdit.type === 2 || settingToEdit.type === 3) ? settingToEdit.lowerLimit.toString() : ''
   );
@@ -82,7 +86,9 @@ const AddSettingModalContent = ({
     settingToEdit && (settingToEdit.type === 2 || settingToEdit.type === 3) ? settingToEdit.upperLimit.toString() : ''
   );
   const [sliderStep, setSliderStep] = useState<string>(
-    settingToEdit && (settingToEdit.type === 2 || settingToEdit.type === 3) && settingToEdit.ticker ? settingToEdit.ticker.toString() : '1'
+    settingToEdit && (settingToEdit.type === 2 || settingToEdit.type === 3) && settingToEdit.ticker
+      ? settingToEdit.ticker.toString()
+      : '1'
   );
 
   const [enableMultiRange, setEnableMultiRange] = useState<boolean>(
@@ -116,7 +122,7 @@ const AddSettingModalContent = ({
 
   const handleClose = () => !isLoading && onClose();
 
-  const containerRef = React.useRef(null);
+  const containerRef = useRef(null);
   useClickAway(containerRef, () => handleClose());
 
   const onConfirm = (event) => {
@@ -135,32 +141,30 @@ const AddSettingModalContent = ({
     ) {
       const index = settingToEdit ? settingToEdit.index : Math.floor(Math.random() * 1000000);
       const settingData: ChannelSetting = isRange
-        ? enableMultiRange 
-          ? 
-          {
-            type: 3,
-            default: {
-              lower: Number(defaultStartValue),
-              upper: Number(defaultEndValue)
-            },
-            enabled: isDefault,
-            description: settingName,
-            index: index,
-            lowerLimit: Number(lowerLimit),
-            upperLimit: Number(upperLimit),
-            ticker: Number(sliderStep),
-          } 
-          : 
-          {
-            type: 2,
-            default: Number(defaultValue),
-            enabled: isDefault,
-            description: settingName,
-            index: index,
-            lowerLimit: Number(lowerLimit),
-            upperLimit: Number(upperLimit),
-            ticker: Number(sliderStep),
-          }
+        ? enableMultiRange
+          ? {
+              type: 3,
+              default: {
+                lower: Number(defaultStartValue),
+                upper: Number(defaultEndValue),
+              },
+              enabled: isDefault,
+              description: settingName,
+              index: index,
+              lowerLimit: Number(lowerLimit),
+              upperLimit: Number(upperLimit),
+              ticker: Number(sliderStep),
+            }
+          : {
+              type: 2,
+              default: Number(defaultValue),
+              enabled: isDefault,
+              description: settingName,
+              index: index,
+              lowerLimit: Number(lowerLimit),
+              upperLimit: Number(upperLimit),
+              ticker: Number(sliderStep),
+            }
         : {
             type: 1,
             default: isDefault,
@@ -182,19 +186,16 @@ const AddSettingModalContent = ({
     return (
       lowerLimit !== '' &&
       upperLimit !== '' &&
-      (enableMultiRange ? (defaultStartValue !== '' && defaultEndValue !== '') : defaultValue !== '') &&
+      (enableMultiRange ? defaultStartValue !== '' && defaultEndValue !== '' : defaultValue !== '') &&
       sliderStep !== '' &&
       Number(lowerLimit) <= Number(upperLimit) &&
       Number(sliderStep) > 0 &&
       Number(sliderStep) <= Number(upperLimit) - Number(lowerLimit) &&
-      (enableMultiRange ? 
-        (Number(defaultStartValue) >= Number(lowerLimit) &&
-        Number(defaultEndValue) <= Number(upperLimit) &&
-        Number(defaultEndValue) > Number(defaultStartValue))
-        :
-        (Number(defaultValue) >= Number(lowerLimit) &&
-        Number(defaultValue) <= Number(upperLimit))
-      )
+      (enableMultiRange
+        ? Number(defaultStartValue) >= Number(lowerLimit) &&
+          Number(defaultEndValue) <= Number(upperLimit) &&
+          Number(defaultEndValue) > Number(defaultStartValue)
+        : Number(defaultValue) >= Number(lowerLimit) && Number(defaultValue) <= Number(upperLimit))
     );
   }, [lowerLimit, upperLimit, defaultValue, sliderStep, defaultStartValue, defaultEndValue, enableMultiRange]);
 
@@ -333,13 +334,19 @@ const AddSettingModalContent = ({
               self="stretch"
               margin="12px 0px"
             >
-              <Checkbox checked={enableMultiRange} onChange={() => setEnableMultiRange(!enableMultiRange)}/>
-              <Item align="left" margin="0px 0px 0px 4px">
+              <Checkbox
+                checked={enableMultiRange}
+                onChange={() => setEnableMultiRange(!enableMultiRange)}
+              />
+              <Item
+                align="left"
+                margin="0px 0px 0px 4px"
+              >
                 <Label>Enable Multi Range Slider</Label>
                 <Description>User can select a range of values in the slider</Description>
               </Item>
             </Item>
-            {!enableMultiRange &&
+            {!enableMultiRange && (
               <Item
                 direction="column"
                 align="stretch"
@@ -375,8 +382,8 @@ const AddSettingModalContent = ({
                 />
                 <ErrorInfo>{errorInfo?.default}</ErrorInfo>
               </Item>
-            }
-            {enableMultiRange &&
+            )}
+            {enableMultiRange && (
               <Item
                 direction="column"
                 align="flex-start"
@@ -437,10 +444,10 @@ const AddSettingModalContent = ({
                     autocomplete="off"
                     hasError={errorInfo?.defaultEnd ? true : false}
                   />
-                </Item> 
+                </Item>
                 <ErrorInfo>{errorInfo?.defaultStart || errorInfo?.defaultEnd}</ErrorInfo>
               </Item>
-            }
+            )}
             <Item
               direction="column"
               align="stretch"
@@ -484,42 +491,42 @@ const AddSettingModalContent = ({
                 margin="12px 0px"
               >
                 <LabelLight>Preview</LabelLight>
-                {!enableMultiRange &&
+                {!enableMultiRange && (
                   <SliderPreviewContainer>
-                  <Label>{lowerLimit}</Label>
-                  <InputSlider
-                    val={sliderPreviewVal}
-                    min={Number(lowerLimit)}
-                    max={Number(upperLimit)}
-                    step={Number(sliderStep)}
-                    defaultVal={Number(defaultValue)}
-                    onChange={({ x }) => setSliderPreviewVal(x)}
-                    preview={true}
-                  />
-                  <Label>{upperLimit}</Label>
+                    <Label>{lowerLimit}</Label>
+                    <InputSlider
+                      val={sliderPreviewVal}
+                      min={Number(lowerLimit)}
+                      max={Number(upperLimit)}
+                      step={Number(sliderStep)}
+                      defaultVal={Number(defaultValue)}
+                      onChange={({ x }) => setSliderPreviewVal(x)}
+                      preview={true}
+                    />
+                    <Label>{upperLimit}</Label>
                   </SliderPreviewContainer>
-                }
+                )}
 
-                {enableMultiRange &&
+                {enableMultiRange && (
                   <SliderPreviewContainer>
-                  <Label>{lowerLimit}</Label>
-                  <RangeSlider
-                    startVal={sliderPreviewStartVal}
-                    endVal={sliderPreviewEndVal}
-                    min={Number(lowerLimit)}
-                    max={Number(upperLimit)}
-                    step={Number(sliderStep)}
-                    defaultStartVal={Number(defaultStartValue)}
-                    defaultEndVal={Number(defaultEndValue)}
-                    onChange={({ startVal, endVal }) => {
-                      setSliderPreviewStartVal(startVal)
-                      setSliderPreviewEndVal(endVal)
-                    }}
-                    preview={true}
-                  />
-                  <Label>{upperLimit}</Label>
-                </SliderPreviewContainer>
-                }
+                    <Label>{lowerLimit}</Label>
+                    <RangeSlider
+                      startVal={sliderPreviewStartVal}
+                      endVal={sliderPreviewEndVal}
+                      min={Number(lowerLimit)}
+                      max={Number(upperLimit)}
+                      step={Number(sliderStep)}
+                      defaultStartVal={Number(defaultStartValue)}
+                      defaultEndVal={Number(defaultEndValue)}
+                      onChange={({ startVal, endVal }) => {
+                        setSliderPreviewStartVal(startVal);
+                        setSliderPreviewEndVal(endVal);
+                      }}
+                      preview={true}
+                    />
+                    <Label>{upperLimit}</Label>
+                  </SliderPreviewContainer>
+                )}
               </Item>
             )}
           </>

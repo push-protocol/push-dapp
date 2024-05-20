@@ -1,29 +1,21 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import { FaDiscord, FaGithub, FaMedium, FaTelegramPlane, FaTwitter } from 'react-icons/fa';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import styled, { css, useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { postReq } from 'api';
-import NavButton from 'components/NavButton';
-import NavigationButton from 'components/NavigationButton';
-import { NavigationLoaderButton } from 'components/NavigationLoaderButton';
+
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import navigationList from 'config/NavigationList';
 import { NavigationContext } from 'contexts/NavigationContext';
 import { useAccount } from 'hooks';
-import { AnchorLink as Anchor, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
+import { Item, Span } from 'primaries/SharedStyling';
 import { SEND_NOTIFICATION_STATES, setCanSend } from 'redux/slices/sendNotificationSlice';
-import {
-  incrementStepIndex,
-  setCommunicateOpen,
-  setDeveloperOpen,
-  setTutorialContinous,
-} from '../redux/slices/userJourneySlice';
+import { incrementStepIndex, setTutorialContinous } from '../redux/slices/userJourneySlice';
 
 // Internal Configs
 import MobileNavButton from 'components/MobileNavButton';
@@ -31,7 +23,7 @@ import GLOBALS from 'config/Globals';
 import { appConfig } from 'config/index.js';
 
 // Create Header
-function MobileNavigation({showNavBar,setShowNavBar}) {
+function MobileNavigation({ showNavBar, setShowNavBar }) {
   const {
     channelDetails,
     delegatees,
@@ -187,7 +179,7 @@ function MobileNavigation({showNavBar,setShowNavBar}) {
   };
 
   // Location has changed, reflect it accordingly
-  React.useEffect(() => {
+  useEffect(() => {
     if (navigationSetup) {
       // loop and find the item in question
       Object.entries(navigationSetup).forEach(([key, value]) => {
@@ -398,9 +390,20 @@ function MobileNavigation({showNavBar,setShowNavBar}) {
       //   dispatch(setDeveloperOpen(false))
       // }
       let innerRendered = (
-        <Section key={key} flex="1" align="stretch" size={fontSize}>
+        <Section
+          key={key}
+          flex="1"
+          align="stretch"
+          size={fontSize}
+        >
           {secondaryButton ? (
-            <Item padding="5px 0px" flexBasis="100%" align="stretch" direction="row" overflow="hidden">
+            <Item
+              padding="5px 0px"
+              flexBasis="100%"
+              align="stretch"
+              direction="row"
+              overflow="hidden"
+            >
               {section.hasItems
                 ? renderChildItems(data.drilldown, section.opened, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)
                 : null}
@@ -415,13 +418,27 @@ function MobileNavigation({showNavBar,setShowNavBar}) {
                   // console.log(`Clicked secondary button`);
                   mutateTransformedList(section, true);
                 }}
-                id={data.id}>
-                <MobileNavButton item={section} data={data} sectionID={sectionID} active={section.active} bg='transparent' showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
-               
+                id={data.id}
+              >
+                <MobileNavButton
+                  item={section}
+                  data={data}
+                  sectionID={sectionID}
+                  active={section.active}
+                  bg="transparent"
+                  showNavBar={showNavBar}
+                  setShowNavBar={setShowNavBar}
+                />
               </SectionInnerGroupContainer>
             </Item>
           ) : (
-            <Item padding="5px 0px" flexBasis="100%" align="stretch" direction="row" overflow="hidden">
+            <Item
+              padding="5px 0px"
+              flexBasis="100%"
+              align="stretch"
+              direction="row"
+              overflow="hidden"
+            >
               <SectionInnerGroupContainer
                 flex="1"
                 align="stretch"
@@ -452,9 +469,17 @@ function MobileNavigation({showNavBar,setShowNavBar}) {
                       // if (stepIndex === 1 && uid === 2)dispatch(setTutorialContinous(true));
                     }, 500);
                   }
-                }}>
-                <MobileNavButton item={section} data={data} sectionID={sectionID} active={section.active} showNavBar={showNavBar} setShowNavBar={setShowNavBar}
-                  bg='transparent' />
+                }}
+              >
+                <MobileNavButton
+                  item={section}
+                  data={data}
+                  sectionID={sectionID}
+                  active={section.active}
+                  showNavBar={showNavBar}
+                  setShowNavBar={setShowNavBar}
+                  bg="transparent"
+                />
               </SectionInnerGroupContainer>
 
               {/* { 
@@ -493,16 +518,26 @@ function MobileNavigation({showNavBar,setShowNavBar}) {
     }
 
     let rendered = (
-      <SectionGroup align="stretch" margin="5px 0px" opened={opened} refresh={refresh}>
+      <SectionGroup
+        align="stretch"
+        margin="5px 0px"
+        opened={opened}
+        refresh={refresh}
+      >
         {Object.keys(drilldown).map(function (key) {
           const item = drilldown[key];
           const data = item.data;
           return (
-            <SectionItem key={key} flex="1" align="stretch" size="small">
+            <SectionItem
+              key={key}
+              flex="1"
+              align="stretch"
+              size="small"
+            >
               <SectionInnerItemContainer
                 flex="1"
                 align="stretch"
-                padding='0px 20px'
+                padding="0px 20px"
                 zIndex={1}
                 refresh={refresh}
                 onClick={() => {
@@ -521,9 +556,17 @@ function MobileNavigation({showNavBar,setShowNavBar}) {
                   }
                   // console.log(`Clicked  button`);
                   // mutateTransformedList(item)
-                }}>
-                <MobileNavButton item={item} data={data} sectionID={sectionID} active={item.active} showNavBar={showNavBar} setShowNavBar={setShowNavBar}
-                  bg='transparent' />
+                }}
+              >
+                <MobileNavButton
+                  item={item}
+                  data={data}
+                  sectionID={sectionID}
+                  active={item.active}
+                  showNavBar={showNavBar}
+                  setShowNavBar={setShowNavBar}
+                  bg="transparent"
+                />
               </SectionInnerItemContainer>
             </SectionItem>
           );
@@ -535,28 +578,41 @@ function MobileNavigation({showNavBar,setShowNavBar}) {
   };
 
   return (
-    <Item direction="column" align='flex-start'>
+    <Item
+      direction="column"
+      align="flex-start"
+    >
       {!navigationSetup && (
-        <Item padding="20px" justify="flex-start">
-          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
+        <Item
+          padding="20px"
+          justify="flex-start"
+        >
+          <LoaderSpinner
+            type={LOADER_TYPE.SEAMLESS}
+            spinnerSize={24}
+          />
         </Item>
       )}
       {navigationSetup && Object.keys(navigationSetup).length > 0 && (
         <>
-            {renderMainItems(navigationSetup.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)}
+          {renderMainItems(navigationSetup.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)}
 
-            <Span
-              textTransform="uppercase"
-              weight="700"
-              size="11px"
-              margin="20px 0px 0px 0px"
-              padding="15px 0px"
-              color="#575D73"
-              spacing="0.16em">
-              Developers
-            </Span>
-            {renderMainItems(navigationSetup.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY)}
-          <Footer justify="flex-start" align="stretch">
+          <Span
+            textTransform="uppercase"
+            weight="700"
+            size="11px"
+            margin="20px 0px 0px 0px"
+            padding="15px 0px"
+            color="#575D73"
+            spacing="0.16em"
+          >
+            Developers
+          </Span>
+          {renderMainItems(navigationSetup.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY)}
+          <Footer
+            justify="flex-start"
+            align="stretch"
+          >
             {renderMainItems(navigationSetup.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD)}
           </Footer>
         </>

@@ -1,0 +1,48 @@
+name: Deploy PR previews
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+    branches:
+      - main
+concurrency: preview-${{ github.ref }}
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Set up environment variables
+        run: |
+          echo "VITE_PR_PREVIEW_BASE=pr-${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+          echo "VITE_APP_NODE_ENV=production" >> $GITHUB_ENV
+          echo "VITE_APP_DEPLOY_ENV=PREVIEW" >> $GITHUB_ENV
+          echo "VITE_APP_PUBLIC_URL=https://push-protocol.github.io/" >> $GITHUB_ENV
+          echo "ESLINT_NO_DEV_ERRORS=true" >> $GITHUB_ENV
+          echo "TSC_COMPILE_ON_ERROR=true" >> $GITHUB_ENV
+          echo "DISABLE_ESLINT_PLUGIN=true" >> $GITHUB_ENV
+          echo "GENERATE_SOURCEMAP=true" >> $GITHUB_ENV
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install and Build
+        if: github.event.action != 'closed' # You might want to skip the build if the PR has been closed
+        env:
+          VITE_APP_WALLETCONNECT_PROJECT_ID: ${{ secrets.VITE_APP_WALLETCONNECT_PROJECT_ID }}
+
+        run: |
+          yarn install
+          yarn build:pr:preview
+
+      - name: Deploy preview
+        uses: rossjrw/pr-preview-action@v1.4.7
+        with:
+          source-dir: ./build/
+
+      - uses: rossjrw/pr-preview-action@v1.4.7
+        if: github.event.action == 'closed' && !github.event.pull_request.merged
+        with:
+          source-dir: ./build/
+          action: remove

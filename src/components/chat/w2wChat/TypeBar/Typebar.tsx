@@ -1,8 +1,7 @@
 // React + Web3 Essentials
-import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
-import * as PushAPI from '@pushprotocol/restapi';
 import Picker from 'emoji-picker-react';
 import styled, { useTheme } from 'styled-components';
 
@@ -15,11 +14,9 @@ import { FileMessageContent } from './Files/Files';
 import GifPicker from './Gifs/GifPicker';
 
 // Internal configs
-import { appConfig } from 'config/index.js';
-import { caip10ToWallet } from 'helpers/w2w';
 import { MessagetypeType } from '../../../../types/chat';
 import { filterXSS } from 'xss';
-import { AppContext } from 'contexts/AppContext';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 interface ITypeBar {
   isGroup: boolean;
@@ -45,10 +42,8 @@ const Typebar = ({
   isJoinGroup,
   setOpenSuccessSnackBar,
   setSnackbarText,
-  approveIntent,
 }: ITypeBar) => {
-  const { currentChat, activeTab, setChat }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
-  const { connectedUser } = useContext(AppContext);
+  const { currentChat }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -184,7 +179,7 @@ const Typebar = ({
               filter={theme.snackbarBorderIcon}
             >
               <img
-                src="/svg/chats/smiley.svg"
+                src={getPublicAssetPath('svg/chats/smiley.svg')}
                 height="24px"
                 width="24px"
                 alt=""
@@ -234,7 +229,7 @@ const Typebar = ({
                     filter={theme.snackbarBorderIcon}
                   >
                     <img
-                      src="/svg/chats/gif.svg"
+                      src={getPublicAssetPath('svg/chats/gif.svg')}
                       height="18px"
                       width="22px"
                       alt=""
@@ -245,7 +240,7 @@ const Typebar = ({
               <label>
                 <Icon filter={theme.snackbarBorderIcon}>
                   <img
-                    src="/svg/chats/attachment.svg"
+                    src={getPublicAssetPath('svg/chats/attachment.svg')}
                     height="24px"
                     width="20px"
                     alt=""
@@ -274,7 +269,7 @@ const Typebar = ({
                 <>
                   <Icon onClick={handleSubmit}>
                     <img
-                      src={`/svg/chats/send${isDarkMode ? '_dark' : ''}.svg`}
+                      src={getPublicAssetPath(`svg/chats/send${isDarkMode ? '_dark' : ''}.svg`)}
                       height="27px"
                       width="27px"
                       alt=""

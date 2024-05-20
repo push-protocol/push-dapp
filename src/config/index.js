@@ -9,6 +9,8 @@ if (import.meta.env.VITE_APP_DEPLOY_ENV == 'PROD') {
   appendName = 'staging';
 } else if (import.meta.env.VITE_APP_DEPLOY_ENV == 'DEV') {
   appendName = 'dev';
+} else if (import.meta.env.VITE_APP_DEPLOY_ENV == 'PREVIEW') {
+  appendName = 'dev';
 } else if (import.meta.env.VITE_APP_DEPLOY_ENV == 'LOCALHOST') {
   appendName = 'localhost';
 } else if (import.meta.env.VITE_APP_DEPLOY_ENV == 'W2W') {

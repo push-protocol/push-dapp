@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 
 // External Packages
 import { darkTheme, lightTheme, SwapWidget } from '@uniswap/widgets';

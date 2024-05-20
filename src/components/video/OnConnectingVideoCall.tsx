@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -15,7 +15,7 @@ import { device } from 'config/Globals';
 
 export const OnConnectingVideoCall = () => {
   const { videoCallData, incomingCallUserData } = useContext(VideoCallContext);
-  const { web3NameList }: AppContextType = React.useContext(AppContext);
+  const { web3NameList }: AppContextType = useContext(AppContext);
   const web3Name = web3NameList[videoCallData.incoming[0].address];
   const shortnedAddress = shortenText(videoCallData.incoming[0].address, 5);
   const theme = useTheme();

@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
@@ -26,7 +26,7 @@ const DeprecatedYieldFarming = ({ setActiveTab }) => {
   const [depStaking, setDepStaking] = useState(null);
   const [depYieldFarmLP, setDepYieldFarmLP] = useState(null);
   const [depYieldFarmPUSH, setDepYieldFarmPUSH] = useState(null);
-  const [uniswapV2Router02, setUniswapV2Router02] = React.useState(null);
+  const [uniswapV2Router02, setUniswapV2Router02] = useState(null);
 
   const [depPoolStats, setDepPoolStats] = useState(null);
   const [depPushPoolStats, setDepPushPoolStats] = useState(null);
@@ -37,19 +37,19 @@ const DeprecatedYieldFarming = ({ setActiveTab }) => {
 
   const library = provider?.getSigner(account);
 
-  const getDepPoolStats = React.useCallback(async () => {
+  const getDepPoolStats = useCallback(async () => {
     const poolStats = await YieldFarmingDataStore.getInstance().getPoolStats();
 
     setDepPoolStats({ ...poolStats });
   }, [pushToken, depStaking, depYieldFarmLP, depYieldFarmPUSH, uniswapV2Router02]);
 
-  const getDepPUSHPoolStats = React.useCallback(async () => {
+  const getDepPUSHPoolStats = useCallback(async () => {
     const pushPoolStats = await YieldFarmingDataStore.getInstance().getPUSHPoolStats();
 
     setDepPushPoolStats({ ...pushPoolStats });
   }, [pushToken, depStaking, depYieldFarmLP, depYieldFarmPUSH, uniswapV2Router02]);
 
-  const getDepLPPoolStats = React.useCallback(
+  const getDepLPPoolStats = useCallback(
     async (poolStats) => {
       const lpPoolStats = await YieldFarmingDataStore.getInstance().getLPPoolStats(poolStats);
 
@@ -58,19 +58,19 @@ const DeprecatedYieldFarming = ({ setActiveTab }) => {
     [pushToken, depStaking, depYieldFarmLP, depYieldFarmPUSH, uniswapV2Router02]
   );
 
-  const getDepUserDataPUSH = React.useCallback(async () => {
+  const getDepUserDataPUSH = useCallback(async () => {
     const userDataPUSH = await YieldFarmingDataStore.getInstance().getUserData(depYieldFarmPUSH);
 
     setDepUserDataPUSH({ ...userDataPUSH });
   }, [depYieldFarmPUSH]);
 
-  const getDepUserDataLP = React.useCallback(async () => {
+  const getDepUserDataLP = useCallback(async () => {
     const userDataLP = await YieldFarmingDataStore.getInstance().getUserData(depYieldFarmLP);
 
     setDepUserDataLP({ ...userDataLP });
   }, [depYieldFarmLP]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     let pushToken = new ethers.Contract(addresses.pushToken, abis.pushToken, library);
 
     let staking = new ethers.Contract(addresses.staking, abis.staking, library);
@@ -102,7 +102,7 @@ const DeprecatedYieldFarming = ({ setActiveTab }) => {
     }
   }, [account]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (pushToken != null && depStaking != null && depYieldFarmPUSH != null) {
       // Instantiate Data Stores
       YieldFarmingDataStore.getInstance().init(
@@ -118,7 +118,7 @@ const DeprecatedYieldFarming = ({ setActiveTab }) => {
     }
   }, [getDepPoolStats]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (depPoolStats) {
       syncData(depPoolStats);
     }

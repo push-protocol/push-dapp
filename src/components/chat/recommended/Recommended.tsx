@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 // External Packages
 import { ChatPreview } from '@pushprotocol/uiweb';

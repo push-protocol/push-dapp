@@ -1,31 +1,22 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import { FaDiscord, FaGithub, FaMedium, FaTelegramPlane, FaTwitter } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import styled, { css, useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { postReq } from 'api';
 import CollapseSidebar from 'assets/collapseSidebar.svg?react';
 import ExpandSidebar from 'assets/expandSidebar.svg?react';
-import NavButton from 'components/NavButton';
 import NavigationButton from 'components/NavigationButton';
-import { NavigationLoaderButton } from 'components/NavigationLoaderButton';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { NavigationContext } from 'contexts/NavigationContext';
 import { useAccount } from 'hooks';
-import { AnchorLink as Anchor, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
+import { Item, Section, Span } from 'primaries/SharedStyling';
 import { SEND_NOTIFICATION_STATES, setCanSend } from 'redux/slices/sendNotificationSlice';
-import {
-  incrementStepIndex,
-  setCommunicateOpen,
-  setDeveloperOpen,
-  setTutorialContinous,
-} from '../redux/slices/userJourneySlice';
+import { incrementStepIndex, setTutorialContinous } from '../redux/slices/userJourneySlice';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -191,7 +182,7 @@ function Navigation() {
   };
 
   // Location has changed, reflect it accordingly
-  React.useEffect(() => {
+  useEffect(() => {
     if (navigationSetup) {
       // loop and find the item in question
       Object.entries(navigationSetup).forEach(([key, value]) => {

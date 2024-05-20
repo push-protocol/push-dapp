@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useMemo, useState } from 'react';
+import { useContext, useMemo, useState, ReactNode, FC, Dispatch, SetStateAction } from 'react';
 import * as PushAPI from '@pushprotocol/restapi';
 import { ethers } from 'ethers';
 
@@ -20,14 +20,14 @@ import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import useToast from 'hooks/useToast';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { ChannelSetting } from 'helpers/channel/types';
-import { notifChannelSettingFormatString, userSettingsFromDefaultChannelSetting } from 'helpers/channel/notifSetting';
+import { userSettingsFromDefaultChannelSetting } from 'helpers/channel/notifSetting';
 import { AppContext } from 'contexts/AppContext';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { updateSubscriptionStatus, updateUserSetting } from 'redux/slices/channelSlice';
 import RangeSlider from 'components/reusables/sliders/RangeSlider';
 
 interface OptinNotifSettingDropdownProps {
-  children: React.ReactNode;
+  children: ReactNode;
   channelDetail: any;
   setLoading: (loading: boolean) => {};
   onSuccessOptin: () => {};
@@ -37,11 +37,11 @@ interface OptinNotifSettingDropdownContainerProps {
   settings: ChannelSetting[];
   optInHandler: (options: {
     channelSettings?: ChannelSetting[];
-    setLoading?: React.Dispatch<React.SetStateAction<boolean>>;
+    setLoading?: Dispatch<SetStateAction<boolean>>;
   }) => Promise<void>;
 }
 
-const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownContainerProps> = ({
+const OptinNotifSettingDropdownContainer: FC<OptinNotifSettingDropdownContainerProps> = ({
   settings,
   optInHandler,
 }) => {
@@ -171,7 +171,7 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
 };
 
 // Faucet URLs
-const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (options) => {
+const OptinNotifSettingDropdown: FC<OptinNotifSettingDropdownProps> = (options) => {
   const { children, channelDetail, setLoading, onSuccessOptin } = options;
 
   const { chainId, provider, account, wallet } = useAccount();
@@ -207,7 +207,7 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
     setLoading,
   }: {
     channelSettings?: ChannelSetting[];
-    setLoading?: React.Dispatch<React.SetStateAction<boolean>>;
+    setLoading?: Dispatch<SetStateAction<boolean>>;
   }) => {
     const setLoadingFunc = setLoading || (options && options.setLoading) || (() => {});
     setLoadingFunc(true);

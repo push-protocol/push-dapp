@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -12,6 +12,7 @@ import Dropdown from './Dropdown';
 // Internal Configs
 import { appConfig, CHAIN_DETAILS } from 'config/index.js';
 import { LOGO_FROM_CHAIN_ID } from 'helpers/UtilityHelper';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 // Faucet URLs
 const ChainsSelect = ({ channelsNetworkId, setChannelsNetworkId }) => {
@@ -33,7 +34,7 @@ const ChainsSelect = ({ channelsNetworkId, setChannelsNetworkId }) => {
         id: chainId,
         value: CHAIN_DETAILS[chainId].label,
         title: CHAIN_DETAILS[chainId].label,
-        icon: `./svg/${LOGO_FROM_CHAIN_ID[chainId]}`,
+        icon: getPublicAssetPath(`svg/${LOGO_FROM_CHAIN_ID[chainId]}`),
         function: () => {
           setChannelsNetworkId(chainId);
           setShowDropdown(false);
@@ -53,7 +54,7 @@ const ChainsSelect = ({ channelsNetworkId, setChannelsNetworkId }) => {
       >
         <ItemH padding="0 8px 0 0">
           <Image
-            src={`./svg/${LOGO_FROM_CHAIN_ID[channelsNetworkId]}`}
+            src={getPublicAssetPath(`svg/${LOGO_FROM_CHAIN_ID[channelsNetworkId]}`)}
             alt="active chain"
             width="32px"
             height="32px"
@@ -69,7 +70,7 @@ const ChainsSelect = ({ channelsNetworkId, setChannelsNetworkId }) => {
           <img
             alt="arrow"
             className={`${showDropdown ? 'down' : 'up'}`}
-            src="/svg/arrow.svg"
+            src={getPublicAssetPath('svg/arrow.svg')}
           />
         </ToggleArrowImg>
       </Faucet>

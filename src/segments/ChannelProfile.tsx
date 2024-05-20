@@ -1,41 +1,31 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // External Packages
 import { NotificationItem } from '@pushprotocol/uiweb';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useClickAway } from 'react-use';
-import { addPaginatedNotifications, setFinishedFetching } from 'redux/slices/notificationSlice';
-import styled, { ThemeProvider, useTheme } from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import Back from 'assets/chat/arrowleft.svg?react';
-import ChannelLoading from 'components/ChannelLoading';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { useAccount } from 'hooks';
 import DisplayNotice from 'primaries/DisplayNotice';
 
 // Internal Configs
-import { latest } from '@pushprotocol/restapi/src/lib/chat';
 import ViewChannelItem from 'components/ViewChannelItem';
-import ChannelProfileComponent from 'components/channel/ChannelProfileComponent';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import APP_PATHS from 'config/AppPaths';
 import { device } from 'config/Globals';
-import { appConfig } from 'config/index.js';
-import ChannelsDataStore from 'singletons/ChannelsDataStore';
 
 // Constants
 const NOTIFICATIONS_PER_PAGE = 20;
 
 // Create Header
 const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileType }) => {
-  const dispatch = useDispatch();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
-  const modalRef = React.useRef(null);
 
   // get theme
   const themes = useTheme();
@@ -45,9 +35,6 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
   const [loadingNotifs, setLoadingNotifs] = useState(true);
   const [notifications, setNotifications] = useState([]);
   const [channelDetails, setChannelDetails] = useState(null);
-
-  // get signer
-  const { account, provider } = useAccount();
 
   // Setup navigation
   const navigate = useNavigate();

@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -17,6 +17,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 // Internal Configs
 import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config/index.js';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 const ClaimGalxeModule = () => {
   const theme = useTheme();
@@ -149,7 +150,7 @@ const ClaimGalxeModule = () => {
       <ClaimInnerContainer>
         <ClaimLeftContainer>
           <GalxeImg
-            src={`./svg/${theme.scheme === 'light' ? 'GalxeLight.svg' : 'GalxeDark.svg'}`}
+            src={getPublicAssetPath(`svg/${theme.scheme === 'light' ? 'GalxeLight.svg' : 'GalxeDark.svg'}`)}
             height="1.5rem"
             width="9rem"
             padding="0 0 1.5rem 0"
@@ -193,8 +194,8 @@ const ClaimGalxeModule = () => {
         </ClaimLeftContainer>
         <AlphaImageContainer>
           <AlphaImageInnerContainer>
-            <AlphaAccessTextImg src={'./svg/AccessNFTText.svg'} />
-            <AlphaAccessImg src={'./svg/AccessNFT.svg'} />
+            <AlphaAccessTextImg src={getPublicAssetPath('svg/AccessNFTText.svg')} />
+            <AlphaAccessImg src={getPublicAssetPath('svg/AccessNFT.svg')} />
           </AlphaImageInnerContainer>
         </AlphaImageContainer>
       </ClaimInnerContainer>

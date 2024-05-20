@@ -1,20 +1,19 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // External Packages
 import ReactGA from 'react-ga';
 import styled from 'styled-components';
 
 // Internal Compoonents
-import { ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import DeprecatedYieldFarming from 'sections/yield/DeprecatedYieldFarming';
 import NewYieldFarming from 'sections/yield/NewYieldFarming';
 import { useAccount } from 'hooks';
 
 // Internal Configs
-import { abis, addresses, appConfig } from 'config/index.js';
+import { appConfig } from 'config/index.js';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
-import { ethers } from 'ethers';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import YieldFarmChainError from 'components/YieldFarmChainError';
 

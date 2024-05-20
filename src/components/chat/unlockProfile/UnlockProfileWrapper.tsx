@@ -1,6 +1,6 @@
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import useModalBlur from 'hooks/useModalBlur';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import UnlockProfile from './UnlockProfile';
 

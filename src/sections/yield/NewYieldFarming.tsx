@@ -1,12 +1,12 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
 import styled from 'styled-components';
 
 // Internal Compoonents
-import { ItemHV2, ItemVV2, SectionV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2 } from 'components/reusables/SharedStylingV2';
 import YieldAnnouncementSection from 'sections/yield/YieldAnnouncementSection';
 import YieldPushPriceSection from 'sections/yield/YieldPushPriceSection';
 import YieldStatsSection from 'sections/yield/YieldStatsSection';
@@ -17,7 +17,6 @@ import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config/index.js';
-import { GlobalContext } from 'contexts/GlobalContext';
 
 const NewYieldFarming = ({ setActiveTab }) => {
   const { provider, account, chainId } = useAccount();
@@ -36,32 +35,31 @@ const NewYieldFarming = ({ setActiveTab }) => {
 
   const library = provider?.getSigner(account);
 
-  const getPoolStats = React.useCallback(async () => {
+  const getPoolStats = useCallback(async () => {
     const poolStats = await YieldFarmingDataStoreV2.getInstance().getPoolStats(provider);
 
     setPoolStats({ ...poolStats });
   }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance, provider]);
 
-
-  const getLpPoolStats = React.useCallback(async () => {
+  const getLpPoolStats = useCallback(async () => {
     const poolStats = await YieldFarmingDataStoreV2.getInstance().getPoolStats(provider);
     const lpPoolStats = await YieldFarmingDataStoreV2.getInstance().getLPPoolStats(poolStats);
 
     setLpPoolStats({ ...lpPoolStats });
   }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance, provider]);
 
-  const getPUSHPoolStats = React.useCallback(async () => {
+  const getPUSHPoolStats = useCallback(async () => {
     // const pushPoolStats = await YieldFarmingDataStoreV2.getInstance().getPUSHPoolStats(provider);
     // setPUSHPoolStats({ ...pushPoolStats });
   }, []);
 
-  const getUserDataLP = React.useCallback(async () => {
+  const getUserDataLP = useCallback(async () => {
     const userDataLP = await YieldFarmingDataStoreV2.getInstance().getUserDataLP();
 
     setUserDataLP({ ...userDataLP });
   }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
 
-  const getUserDataPush = React.useCallback(async () => {
+  const getUserDataPush = useCallback(async () => {
     const [pushPoolStats, userDataPush] = await YieldFarmingDataStoreV2.getInstance().getUserDataPUSH(provider);
 
     setPUSHPoolStats({ ...pushPoolStats });
@@ -69,8 +67,7 @@ const NewYieldFarming = ({ setActiveTab }) => {
   }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance, provider]);
 
   //initiate the YieldFarmV2 data store here
-  React.useEffect(() => {
-
+  useEffect(() => {
     if (chainId !== appConfig.coreContractChain && chainId !== appConfig.mainnetCoreContractChain) {
       return;
     }
@@ -108,7 +105,6 @@ const NewYieldFarming = ({ setActiveTab }) => {
       setUniswapV2Router02Instance(uniswapV2Router02Instance);
     }
 
-
     YieldFarmingDataStoreV2.getInstance().init(
       account,
       staking,
@@ -122,7 +118,6 @@ const NewYieldFarming = ({ setActiveTab }) => {
     getUserDataLP();
     getLpPoolStats();
     getUserDataPush();
-
   }, [account, chainId]);
 
   return (

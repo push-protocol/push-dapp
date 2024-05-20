@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import ReactGA from 'react-ga';
@@ -29,8 +29,8 @@ const AppLogin = ({ toggleDarkMode }) => {
   const { web3NameList } = useContext(AppContext);
   const { setReadOnlyWallet, readOnlyWallet, setMode } = useContext(GlobalContext);
   const { authError, setAuthError } = useContext(ErrorContext);
-  const [errorMessage, setErrorMessage] = React.useState(undefined);
-  const [modalHeight, setModalHeight] = React.useState(0);
+  const [errorMessage, setErrorMessage] = useState(undefined);
+  const [modalHeight, setModalHeight] = useState(0);
 
   // theme context
   const theme = useTheme();

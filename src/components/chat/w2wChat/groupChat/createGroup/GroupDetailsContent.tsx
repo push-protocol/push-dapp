@@ -1,9 +1,9 @@
 // React + Web3 Essentials
-import React from 'react';
+import { useState, useRef } from 'react';
 
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
-import * as PushAPI from '@pushprotocol/restapi';
+import { chat as pushChat } from '@pushprotocol/restapi';
 import { MdError } from 'react-icons/md';
 
 // Internal Components
@@ -33,11 +33,11 @@ export const GroupDetailsContent = ({
   handlePrevious,
   handleClose,
 }) => {
-  const [imageSrc, setImageSrc] = React.useState();
-  const [isImageUploaded, setIsImageUploaded] = React.useState<boolean>(false);
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const fileUploadInputRef = React.useRef<HTMLInputElement>();
-  const [errorInfo, setErrorInfo] = React.useState<{ name: string; description: string }>({
+  const [imageSrc, setImageSrc] = useState();
+  const [isImageUploaded, setIsImageUploaded] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const fileUploadInputRef = useRef<HTMLInputElement>();
+  const [errorInfo, setErrorInfo] = useState<{ name: string; description: string }>({
     name: '',
     description: '',
   });
@@ -79,7 +79,7 @@ export const GroupDetailsContent = ({
 
   const handleValidation = async () => {
     try {
-      const getGroupResponse = await PushAPI.chat.getGroupByName({ groupName: groupNameData, env: appConfig.appEnv });
+      const getGroupResponse = await pushChat.getGroupByName({ groupName: groupNameData, env: appConfig.appEnv });
       if (typeof getGroupResponse !== 'string') {
         setErrorInfo((x) => ({
           ...x,
