@@ -34,6 +34,7 @@ import GLOBALS, { device } from 'config/Globals';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { useAccount } from 'hooks';
 import { appConfig } from '../../config/index.js';
+import RecommendedChatLists from 'config/RecommendedChatsList';
 
 const createGroupOnMouseEnter = [
   {
@@ -380,7 +381,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, chatId, selectedChatId, setS
             onChatsCountChange={(count) => {
               console.debug('src::sections::chat::ChatSidebarSection::onChatsCountChage::requests: count is: ', count);
               // remove request badge update when chatId is Push Bot or actively opened
-              if (chatId == "0x99A08ac6254dcf7ccc37CeC662aeba8eFA666666" || chatId?.split("chatid:")[1] == selectedChatId){
+              if (chatId == RecommendedChatLists[0]?.payload?.chatId || chatId?.split("chatid:")[1] == selectedChatId){
                 setNumberOfChatReqs(null);
               } else {
                 setNumberOfChatReqs(count);
