@@ -110,7 +110,7 @@ const Faucets = () => {
           <img
             alt="arrow"
             className={`${showDropdown ? 'down' : 'up'}`}
-            src={getPublicAssetPath('/svg/arrow.svg')}
+            src={getPublicAssetPath('svg/arrow.svg')}
           />
         </ToggleArrowImg>
       </Faucet>

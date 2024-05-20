@@ -19,6 +19,7 @@ import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../
 import { getDefaultFeed } from '../../../../helpers/w2w/user';
 import { useAccount } from 'hooks';
 import { AppContext } from 'contexts/AppContext';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 // Internal Configs
 
@@ -260,7 +261,8 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
           <>
             {!feeds?.length && !messagesLoading && activeTab !== 3 && activeTab !== 4 ? (
               <EmptyConnection>
-                Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
+                Start a new chat by using the + button{' '}
+                <ArrowBend src={getPublicAssetPath('svg/chats/arrowbendup.svg')} />
               </EmptyConnection>
             ) : (
               feeds.map((feed: Feeds, i) => (

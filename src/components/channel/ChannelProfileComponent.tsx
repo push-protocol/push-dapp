@@ -8,6 +8,7 @@ import { ButtonV2 } from 'components/reusables/SharedStylingV2';
 import { IPFSGateway } from 'helpers/IpfsHelper';
 import axios from 'axios';
 import MetaInfoDisplayer from 'components/MetaInfoDisplayer';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 const ChannelProfileComponent = ({ channelID, channelDetails }) => {
   const themes = useTheme();
@@ -177,7 +178,7 @@ const ChannelProfileComponent = ({ channelID, channelDetails }) => {
                 {channelDetails && channelDetails?.channel && (
                   <Span padding="0 0 0 5px">
                     <Image
-                      src={`./svg/Ethereum.svg`}
+                      src={getPublicAssetPath('svg/Ethereum.svg')}
                       alt="Ethereum"
                       width="20px"
                       height="20px"
@@ -191,7 +192,7 @@ const ChannelProfileComponent = ({ channelID, channelDetails }) => {
                   !MaskedAliasChannels[+channelDetails?.alias_blockchain_id][channelDetails?.channel] && (
                     <Span padding="0 0 0 5px">
                       <Image
-                        src={`./svg/${LOGO_FROM_CHAIN_ID[+channelDetails.alias_blockchain_id]}`}
+                        src={getPublicAssetPath(`svg/${LOGO_FROM_CHAIN_ID[+channelDetails.alias_blockchain_id]}`)}
                         alt="Alias Chain Logo"
                         width="20px"
                         height="20px"
@@ -265,7 +266,7 @@ const ChannelProfileComponent = ({ channelID, channelDetails }) => {
                 <MetaInfoDisplayer
                   externalIcon={
                     <Image
-                      src="./svg/users.svg"
+                      src={getPublicAssetPath('svg/users.svg')}
                       alt="users"
                       width="14px"
                       height="14px"

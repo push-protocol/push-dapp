@@ -16,6 +16,7 @@ import GifPicker from './Gifs/GifPicker';
 // Internal configs
 import { MessagetypeType } from '../../../../types/chat';
 import { filterXSS } from 'xss';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 interface ITypeBar {
   isGroup: boolean;
@@ -178,7 +179,7 @@ const Typebar = ({
               filter={theme.snackbarBorderIcon}
             >
               <img
-                src="/svg/chats/smiley.svg"
+                src={getPublicAssetPath('svg/chats/smiley.svg')}
                 height="24px"
                 width="24px"
                 alt=""
@@ -228,7 +229,7 @@ const Typebar = ({
                     filter={theme.snackbarBorderIcon}
                   >
                     <img
-                      src="/svg/chats/gif.svg"
+                      src={getPublicAssetPath('svg/chats/gif.svg')}
                       height="18px"
                       width="22px"
                       alt=""
@@ -239,7 +240,7 @@ const Typebar = ({
               <label>
                 <Icon filter={theme.snackbarBorderIcon}>
                   <img
-                    src="/svg/chats/attachment.svg"
+                    src={getPublicAssetPath('svg/chats/attachment.svg')}
                     height="24px"
                     width="20px"
                     alt=""
@@ -268,7 +269,7 @@ const Typebar = ({
                 <>
                   <Icon onClick={handleSubmit}>
                     <img
-                      src={`/svg/chats/send${isDarkMode ? '_dark' : ''}.svg`}
+                      src={getPublicAssetPath(`svg/chats/send${isDarkMode ? '_dark' : ''}.svg`)}
                       height="27px"
                       width="27px"
                       alt=""

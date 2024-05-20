@@ -15,6 +15,7 @@ import { useAccount } from 'hooks';
 import { SpanV2 } from './reusables/SharedStylingV2';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { useClickAway } from 'hooks/useClickAway.js';
+import { getPublicAssetPath } from 'helpers/RoutesHelper.js';
 
 const ChainIndicator = ({ isDarkMode }) => {
   const toggleArrowRef = useRef(null);
@@ -34,7 +35,7 @@ const ChainIndicator = ({ isDarkMode }) => {
         id: chainId,
         value: chainName,
         title: chainName,
-        icon: `./svg/${LOGO_FROM_CHAIN_ID[chainId]}`,
+        icon: getPublicAssetPath(`svg/${LOGO_FROM_CHAIN_ID[chainId]}`),
         function: () => {
           switchChain(chainId);
           setShowDropdown(false);
@@ -61,7 +62,7 @@ const ChainIndicator = ({ isDarkMode }) => {
           >
             <CurrentChainInfo>
               <Image
-                src={`/svg/${LOGO_FROM_CHAIN_ID[currentChainId]}`}
+                src={getPublicAssetPath(`svg/${LOGO_FROM_CHAIN_ID[currentChainId]}`)}
                 width="24px"
                 height="24px"
               />
@@ -72,7 +73,7 @@ const ChainIndicator = ({ isDarkMode }) => {
               <img
                 alt="arrow"
                 className={`${showDropdown ? 'down' : 'up'}`}
-                src="/svg/arrow.svg"
+                src={getPublicAssetPath('svg/arrow.svg')}
               />
             </ToggleArrowImg>
           </CurrentChain>

@@ -42,6 +42,7 @@ import VerifiedTooltipContent from './VerifiedTooltipContent';
 import APP_PATHS from 'config/AppPaths';
 import { addresses, appConfig, CHAIN_DETAILS } from 'config/index.js';
 import { IPFSGateway } from 'helpers/IpfsHelper';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, profileType }) {
@@ -539,7 +540,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                         {channelObject && channelObject?.channel && (
                           <Span padding="0 0 0 5px">
                             <Image
-                              src={`./svg/Ethereum.svg`}
+                              src={getPublicAssetPath('svg/Ethereum.svg')}
                               alt="Ethereum"
                               width="20px"
                               height="20px"
@@ -553,9 +554,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                           !MaskedAliasChannels[+channelObject?.alias_blockchain_id][channelObject?.channel] && (
                             <Span padding="0 0 0 5px">
                               <Image
-                                src={`./svg/${
-                                  CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]
-                                }.svg`}
+                                src={getPublicAssetPath(
+                                  `svg/${CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]}.svg`
+                                )}
                                 alt="Polygon"
                                 width="20px"
                                 height="20px"
@@ -712,7 +713,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                     {channelObject && channelObject?.channel && (
                       <Span padding="0 0 0 5px">
                         <Image
-                          src={`./svg/Ethereum.svg`}
+                          src={getPublicAssetPath('svg/Ethereum.svg')}
                           alt="Ethereum"
                           width="20px"
                           height="20px"
@@ -726,7 +727,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                       !MaskedAliasChannels[+channelObject?.alias_blockchain_id][channelObject?.channel] && (
                         <Span padding="0 0 0 5px">
                           <Image
-                            src={`./svg/${LOGO_FROM_CHAIN_ID[+channelObject.alias_blockchain_id]}`}
+                            src={getPublicAssetPath(`svg/${LOGO_FROM_CHAIN_ID[+channelObject.alias_blockchain_id]}`)}
                             alt="Alias Chain Logo"
                             width="20px"
                             height="20px"
@@ -801,7 +802,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                   <MetaInfoDisplayer
                     externalIcon={
                       <Image
-                        src="./svg/users.svg"
+                        src={getPublicAssetPath('svg/users.svg')}
                         alt="users"
                         width="14px"
                         height="14px"
@@ -1002,7 +1003,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                       <ActionTitle hideit={txInProgress}>Manage</ActionTitle>
                       <ImageV2
                         alt="arrow"
-                        src="/svg/arrow.svg"
+                        src={getPublicAssetPath('svg/arrow.svg')}
                         height="10px"
                         width="12px"
                       />

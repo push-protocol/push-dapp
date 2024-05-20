@@ -21,6 +21,7 @@ import { AppContext } from 'contexts/AppContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { GlobalContext, GlobalContextType, ReadOnlyWalletMode } from 'contexts/GlobalContext';
 import { AppContextType } from 'types/context';
+import { getPublicAssetPath } from 'helpers/RoutesHelper.js';
 
 // Create Header
 const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
@@ -131,7 +132,7 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
                   <img
                     alt="arrow"
                     className={`${showDropdown ? 'down' : 'up'}`}
-                    src="/svg/arrow.svg"
+                    src={getPublicAssetPath('svg/arrow.svg')}
                   />
                 </ToggleArrowImg>
               </Wallet>
