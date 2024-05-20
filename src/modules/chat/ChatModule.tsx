@@ -85,7 +85,7 @@ function Chat({ chatid }) {
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
-  const [setSignerData] = useState();
+  const [signerData, setSignerData] = useState();
 
   const isMobile = useDeviceWidthCheck(600);
   const queryClient = new QueryClient({});

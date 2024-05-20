@@ -35,6 +35,7 @@ import { UnsupportedChainIdError } from 'connectors/error';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { useClickAway } from 'react-use';
 import MobileNavigation from './MobileNavigation';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 // header tags for pages that are not there in navigationList (Sidebar)
 const EXTRA_HEADER_TAGS = {
@@ -204,7 +205,7 @@ function Header({ isDarkMode, darkModeToggle }) {
             justify="flex-start"
             flex="0"
           >
-            <Logo src={!isDarkMode ? 'logo512.png' : 'logo512.png'} />
+            <Logo src={!isDarkMode ? getPublicAssetPath('logo512.png') : getPublicAssetPath('logo512.png')} />
           </LogoMobile>
         </RightBarContainer>
 
