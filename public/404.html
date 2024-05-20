@@ -23,6 +23,11 @@
       // https://username.github.io/repo-name/?/one/two&a=b~and~c=d#qwe
       // Otherwise, leave pathSegmentsToKeep as 0.
 
+      // Note:
+      // This file needs to be present in the root of gh-pages branch along side pr-preview folder.
+      // As the preview url has 3 levels of nesting push-dapp/pr-preview/pr-{prNumber}.
+      // So the 404.html file present in the public folder won't work so we need to put this extra 404.html in gh-pages branch root.
+
       var isPrPreview = window.location.pathname.includes('/pr-preview/');
       var pathSegmentsToKeep = isPrPreview ? 3 : 0;
 
