@@ -23,6 +23,8 @@
       // https://username.github.io/repo-name/?/one/two&a=b~and~c=d#qwe
       // Otherwise, leave pathSegmentsToKeep as 0.
 
+      var l = window.location;
+
       var pathSegmentsToKeep = l.pathname.includes('/pr-preview/') ? 4 : 0;
 
       // Check if the URL has already been transformed
