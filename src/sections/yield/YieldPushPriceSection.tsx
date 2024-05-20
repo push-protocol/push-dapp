@@ -7,6 +7,7 @@ import { H2V2, ImageV2, ItemHV2, Skeleton, SkeletonLine } from 'components/reusa
 // Internal Configs
 
 import { useDeviceWidthCheck } from 'hooks';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 const YieldPushPriceSection = ({ poolStats }) => {
   function numberWithCommas(x) {
@@ -42,7 +43,7 @@ const YieldPushPriceSection = ({ poolStats }) => {
             <ImageV2
               width="25px"
               height={isMobile ? '20px' : '27px'}
-              src="svg/uniswapLogo.svg"
+              src={getPublicAssetPath('svg/uniswapLogo.svg')}
               alt="Uniswap Logo"
             />
           </ItemHV2>

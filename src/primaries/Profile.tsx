@@ -52,7 +52,7 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
       value: account,
       title: account,
       function: () => {},
-      invertedIcon: './copy.svg',
+      invertedIcon: getPublicAssetPath('copy.svg'),
     },
     {
       id: 'userSettings',
@@ -60,7 +60,7 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
       title: 'Settings',
       function: () => {},
       to: APP_PATHS.UserSettings,
-      invertedIcon: 'svg/setting.svg',
+      invertedIcon: getPublicAssetPath('svg/setting.svg'),
     },
     {
       id: 'prodDapp',
@@ -68,7 +68,7 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
       function: () => {},
       link: `https://${envUtil.prod}`,
       title: 'Production dapp',
-      invertedIcon: './prod.svg',
+      invertedIcon: getPublicAssetPath('prod.svg'),
     },
     {
       id: 'disconnect',
@@ -81,7 +81,7 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
         setShowDropdown(false);
       },
       title: 'Logout',
-      invertedIcon: './logout.svg',
+      invertedIcon: getPublicAssetPath('logout.svg'),
     },
   ];
 
