@@ -486,11 +486,14 @@ const SnapSection = styled(ItemHV2)`
   padding: 12px 16px;
   align-items: center;
   gap: 16px;
-  max-height: 50px;
 
   @media ${device.tablet} {
     gap: 9px;
     margin-right: 10px;
+  }
+
+  @media (max-width: 525px) {
+    max-height: 50px;
   }
 `;
 
