@@ -474,7 +474,6 @@ const ToasterMsg = styled.div`
 `;
 
 const SnapSection = styled(ItemHV2)`
-  max-height: 28px;
   margin-top: 20px;
   border-radius: 12px;
   border: 1px solid #d4dcea;
@@ -484,6 +483,7 @@ const SnapSection = styled(ItemHV2)`
   padding: 12px 16px;
   align-items: center;
   gap: 16px;
+  box-sizing:content-box;
 
   @media ${device.tablet} {
     gap: 9px;
@@ -491,7 +491,7 @@ const SnapSection = styled(ItemHV2)`
   }
 
   @media (max-width: 525px) {
-    max-height: 50px;
+    padding: 8px 12px;
   }
 `;
 
