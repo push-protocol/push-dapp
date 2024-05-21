@@ -1,6 +1,5 @@
 // React + Web3 Essentials
 import { shortenText } from 'helpers/UtilityHelper';
-import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 // External Packages
@@ -9,7 +8,7 @@ import { useSelector } from 'react-redux';
 
 // Internal Components
 import { A, Image, ItemH, Span } from '../primaries/SharedStyling';
-import { GlobalContext, ReadOnlyWalletMode } from 'contexts/GlobalContext';
+import { ReadOnlyWalletMode } from 'contexts/GlobalContext';
 import { SpanV2 } from './reusables/SharedStylingV2';
 import { useAccount } from 'hooks';
 
@@ -32,9 +31,8 @@ type DropdownProps = {
 };
 
 // Create Dropdown
-function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor, setShowDropdown }: DropdownProps) {
+function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: DropdownProps) {
   const theme = useTheme();
-  const { mode } = useContext(GlobalContext);
   const { wallet } = useAccount();
 
   const getTextColor = (dropdownValue: DropdownValueType) => {

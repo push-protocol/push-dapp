@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 
 // External Packages
 import { AiOutlineMore } from 'react-icons/ai';
@@ -30,7 +30,7 @@ const PushSnapConfigureModal = ({
 }) => {
   const [addresses, setAddresses] = useState([]);
   const [searchedUser, setSearchedUser] = useState('');
-  const { setSnapState, SnapState } = React.useContext(AppContext);
+  const { setSnapState, SnapState } = useContext(AppContext);
 
   useEffect(() => {
     setChecked(SnapState === 6);
@@ -38,7 +38,7 @@ const PushSnapConfigureModal = ({
 
   const theme = useTheme();
 
-  const { chainId, account, provider } = useAccount();
+  const { account, provider } = useAccount();
 
   useEffect(() => {
     (async function () {
@@ -149,7 +149,7 @@ const PushSnapConfigureModal = ({
     setAddresses(result);
   };
 
-  const containerRef = React.useRef(null);
+  const containerRef = useRef(null);
   useClickAway(containerRef, () => {
     setWalletSelected(null);
   });

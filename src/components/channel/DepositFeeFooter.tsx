@@ -1,9 +1,9 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+
 import { MdCheckCircle, MdError } from 'react-icons/md';
 
 // Internal Compoonents

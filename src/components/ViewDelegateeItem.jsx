@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // External Packages
 import Skeleton from '@yisheng90/react-loading';
@@ -14,7 +14,6 @@ import Web3 from 'web3';
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
-import { useAccount } from 'hooks';
 import Blockies from 'primaries/BlockiesIdenticon';
 import { toolingPostReq } from '../api/index';
 import { createTransactionObject } from '../helpers/GaslessHelper';
@@ -38,11 +37,11 @@ export const ERROR_TOAST_DEFAULTS = {
 
 function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalance, setGaslessInfo, theme }) {
   const { account } = useAccount();
-  const [loading, setLoading] = React.useState(true);
-  const [txLoading, setTxLoading] = React.useState(false);
-  const [txInProgress, setTxInProgress] = React.useState(false);
-  const [isBalance, setIsBalance] = React.useState(false);
-  const [transactionMode, setTransactionMode] = React.useState('gasless');
+  const [loading, setLoading] = useState(true);
+  const [txLoading, setTxLoading] = useState(false);
+  const [txInProgress, setTxInProgress] = useState(false);
+  const [isBalance, setIsBalance] = useState(false);
+  const [transactionMode, setTransactionMode] = useState('gasless');
 
   const [imageSrc, setImageSrc] = useState(null);
   const [imageSrcSet, setImageSrcSet] = useState(null);
@@ -71,7 +70,7 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
   var web3 = new Web3(provider);
   var ens = web3.eth.ens;
 
-  React.useEffect(() => {
+  useEffect(() => {
     setLoading(false);
     if (pushBalance !== 0) {
       setIsBalance(true);

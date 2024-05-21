@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 
 // External Packages
@@ -36,8 +36,8 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
     setActiveIcon(navigationIcons[data.activeSrc]);
   }, [data.src, data.activeSrc]);
 
-  const { showMetamaskPushSnap, handleConnectWallet } = React.useContext(AppContext);
-  const { readOnlyWallet, mode, sidebarCollapsed } = React.useContext(GlobalContext);
+  const { showMetamaskPushSnap, handleConnectWallet } = useContext(AppContext);
+  const { readOnlyWallet, mode, sidebarCollapsed } = useContext(GlobalContext);
 
   const navigationToast = useToast(5000);
 

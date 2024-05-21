@@ -1,14 +1,13 @@
+import { useState } from 'react';
 import SnapExample from 'assets/snap/SnapExample.svg?react';
 import InfoLogo from 'assets/snap/spam-icon.svg?react';
 import { Image, Section } from 'components/SharedStyling';
 import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const PushSnapModal = () => {
   const [loading, setLoading] = useState(false);
-  const [walletConnected, setWalletConnected] = useState(false);
 
   const connectToMetamask = () => {
     setLoading(!loading);

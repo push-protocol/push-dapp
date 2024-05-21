@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef, createContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 // External Packages
@@ -11,40 +11,27 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { useSelector } from 'react-redux';
 import { ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import ChatQR from 'components/chat/w2wChat/chatQR/chatQR';
 import MobileView from 'components/chat/w2wChat/chatQR/mobileView';
 import { CreateGroupModalContent } from 'components/chat/w2wChat/groupChat/createGroup/CreateGroupModalContent';
-import { GroupInfoModalContent } from 'components/chat/w2wChat/groupChat/groupInfo/groupInfoModalContent';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
-import LoaderSpinner, {
-  LOADER_OVERLAY,
-  LOADER_SPINNER_TYPE,
-  LOADER_TYPE,
-  PROGRESS_POSITIONING,
-} from 'components/reusables/loaders/LoaderSpinner';
+import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { AppContext } from 'contexts/AppContext';
 import { VideoCallContext } from 'contexts/VideoCallContext';
-import { caip10ToWallet } from 'helpers/w2w';
 import * as w2wHelper from 'helpers/w2w/';
-import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
-import { checkIfIntent, getUpdatedChatAndIntent, getUpdatedGroupInfo } from 'helpers/w2w/user';
-import { useAccount, useDeviceWidthCheck, useSDKSocket } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import ChatSection from 'sections/chat/ChatSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection from 'sections/video/VideoCallSection';
-import { ChatUserAppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
+import { ChatUserAppContext, Feeds, User } from 'types/chat';
 
 // Internal Configs
-import UnlockProfile from 'components/chat/unlockProfile/UnlockProfile';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
-import { appConfig } from 'config/index.js';
-import { GlobalContext } from 'contexts/GlobalContext';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -56,7 +43,7 @@ export const ToastPosition: ToastOptions = {
   progress: 0,
 };
 
-export const Context = React.createContext<ChatUserAppContext | null>(null);
+export const Context = createContext<ChatUserAppContext | null>(null);
 
 // Create Header
 function Chat({ chatid }) {
@@ -72,21 +59,11 @@ function Chat({ chatid }) {
   // Check if the URL ends with '/chat' and does not include a chat ID
   const isUserChatting = pathname.endsWith('/chat') && !pathname.includes('::chatid');
 
-  const { account, chainId, provider, wallet } = useAccount();
+  const { account, provider } = useAccount();
 
   const { videoCallData } = useContext(VideoCallContext);
 
-  const {
-    blockedLoading,
-    setBlockedLoading,
-    getUser,
-    pgpPvtKey,
-    connectedUser,
-    setConnectedUser,
-    displayQR,
-    setDisplayQR,
-    handleConnectWallet,
-  } = useContext(AppContext);
+  const { setBlockedLoading, getUser, connectedUser, setConnectedUser, displayQR } = useContext(AppContext);
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -95,7 +72,7 @@ function Chat({ chatid }) {
   const theme = useTheme();
 
   const [viewChatBox, setViewChatBox] = useState<boolean>(false);
-  const [currentChat, setCurrentChat] = useState<Feeds>();
+  const [currentChat] = useState<Feeds>();
   const [selectedChatId, setSelectedChatId] = useState<string>();
 
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
@@ -109,34 +86,11 @@ function Chat({ chatid }) {
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
   const [signerData, setSignerData] = useState();
-  const { readOnlyWallet } = React.useContext(GlobalContext);
 
   const isMobile = useDeviceWidthCheck(600);
   const queryClient = new QueryClient({});
 
-  const containerRef = React.useRef(null);
-
-  // trigger chat participant open
-  const triggerChatParticipant = async (chatParticipant: string, chatId: string) => {
-    let formattedChatParticipant = chatParticipant;
-    let userPushInstance = userPushSDKInstance;
-
-    if (!formattedChatParticipant.includes('.')) {
-      if (!(await ethers.utils.isAddress(caip10ToWallet(formattedChatParticipant)))) formattedChatParticipant = chatId;
-    }
-    let formattedchatId = reformatChatId(formattedChatParticipant);
-
-    //If no PGP keys then connect the wallet.
-    if (!userPushInstance.readmode()) {
-      if (userPushInstance && !userPushInstance.readmode()) {
-        navigate(`/chat/${formattedchatId}`);
-        return formattedChatParticipant;
-      }
-    } else {
-      navigate(`/chat/${formattedchatId}`);
-      return formattedChatParticipant;
-    }
-  };
+  const containerRef = useRef(null);
 
   useEffect(() => {
     setActiveTab(0);
@@ -152,20 +106,10 @@ function Chat({ chatid }) {
     }
   }, [connectedUser, userPushSDKInstance]);
 
-  const groupInfoToast = useToast();
-
-  const {
-    isModalOpen: isUnlockProfileOpen,
-    showModal: showModal,
-    ModalComponent: UnlockProfileModalComponent,
-  } = useModalBlur();
+  const { showModal: showModal } = useModalBlur();
   const createGroupToast = useToast();
 
-  const {
-    isModalOpen: isCreateGroupModalOpen,
-    showModal: showCreateGroupModal,
-    ModalComponent: CreateGroupModalComponent,
-  } = useModalBlur();
+  const { showModal: showCreateGroupModal, ModalComponent: CreateGroupModalComponent } = useModalBlur();
 
   const connectUser = async (): Promise<void> => {
     const caip10: string = w2wHelper.walletToCAIP10({ account });

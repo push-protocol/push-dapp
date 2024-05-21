@@ -1,11 +1,8 @@
-import React, { useContext } from 'react';
 import styled, { useTheme } from 'styled-components';
 
-import { A, Button, Image, Item, ItemH, Span } from 'primaries/SharedStyling';
+import { A, Button, Image, ItemH, Span } from 'primaries/SharedStyling';
 import { BsXLg } from 'react-icons/bs';
 import { shortenText } from 'helpers/UtilityHelper';
-import { SpanV2 } from './reusables/SharedStylingV2';
-import { GlobalContext } from 'contexts/GlobalContext';
 
 const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues }) => {
   const theme = useTheme();
@@ -14,7 +11,6 @@ const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues }) => {
 
   // to close the modal upon a click on backdrop
   // const containerRef = React.useRef(null);
-  const { mode } = useContext(GlobalContext);
   // useClickAway(containerRef, () => onClose())
 
   return (

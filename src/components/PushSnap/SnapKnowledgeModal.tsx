@@ -1,22 +1,17 @@
-// React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
-
 // External Packages
-import ReactGA from 'react-ga';
 import { useNavigate } from 'react-router-dom';
 
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 
 // Internal Components
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { Section, Span } from '../../primaries/SharedStyling';
+import { Section } from '../../primaries/SharedStyling';
 
 // Internal Configs
 import Close from 'assets/chat/group-chat/close.svg?react';
 import { device } from 'config/Globals';
 
 const SnapKnowledgeModal = ({ onClose }) => {
-  const theme = useTheme();
   const navigate = useNavigate();
 
   const handleKnowledgeModalClose = () => {

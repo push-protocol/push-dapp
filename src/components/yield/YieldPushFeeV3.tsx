@@ -1,19 +1,18 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
-import styled, { css, useTheme } from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 
 // Internal Compoonents
 import useToast from 'hooks/useToast';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import InfoLogo from '../../assets/inforWithoutBG.svg';
-import { B, Button } from 'primaries/SharedStyling';
+import { B } from 'primaries/SharedStyling';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';
-import ErrorLogo from '../../assets/errorLogo.svg?react';
 import StakingToolTip, { StakingToolTipContent } from './StakingToolTip';
 import StakingModalComponent from './StakingModalComponent';
 import {
@@ -40,7 +39,7 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
   const { account, provider } = useAccount();
 
   const [txInProgressWithdraw, setTxInProgressWithdraw] = useState(false);
-  const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
+  const [txInProgressClaimRewards, setTxInProgressClaimRewards] = useState(false);
 
   const [unstakeErrorMessage, setUnstakeErrorMessage] = useState(null);
   const [withdrawErrorMessage, setWithdrawErrorMessage] = useState(null);
@@ -358,7 +357,7 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
     });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     setWithdrawErrorMessage(null);
     setUnstakeErrorMessage(null);
   }, [account]);
@@ -830,7 +829,7 @@ const ToolTipAPR = () => {
   const [isActive, setIsActive] = useState(false);
 
   const handleClose = () => setIsActive(false);
-  const containerRef = React.useRef(null);
+  const containerRef = useRef(null);
   useClickAway(containerRef, () => handleClose());
 
   return (

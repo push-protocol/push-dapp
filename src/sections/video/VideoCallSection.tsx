@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 
 // Internal Components
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -12,18 +12,17 @@ import { BlockedLoadingI } from 'types/context';
 
 // Create Video Call
 const VideoCallSection = () => {
-  const { videoCallData, createWrapper, requestWrapper, acceptRequestWrapper, disconnectWrapper, isCallAccepted } =
-    useContext(VideoCallContext);
+  const { videoCallData, createWrapper, requestWrapper, isCallAccepted } = useContext(VideoCallContext);
   const { connectedUser, createUserIfNecessary } = useContext(AppContext);
 
-  const [isLoading, setLoading] = useState(true);
+  const [setLoading] = useState(true);
   const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
     enabled: false,
     title: null,
   });
 
   // handling a frontend error with resize-observer package
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener('error', function (err) {
       if (err.message === 'ResizeObserver loop limit exceeded') {
         const resizeObserverErrDiv = document.getElementById('webpack-dev-server-client-overlay-div');
@@ -38,7 +37,7 @@ const VideoCallSection = () => {
     });
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const setupStream = async () => {
       setBlockedLoading({
         enabled: true,
@@ -84,7 +83,7 @@ const VideoCallSection = () => {
 
   // Incoming call UI
   if (videoCallData.incoming[0].status === VideoCallStatus.RECEIVED) {
-    return isCallAccepted ? <OutgoingOngoingCall blockedLoading={blockedLoading}/> : <IncomingCall />;
+    return isCallAccepted ? <OutgoingOngoingCall blockedLoading={blockedLoading} /> : <IncomingCall />;
   }
 
   // Outgoing & Ongoing call UI

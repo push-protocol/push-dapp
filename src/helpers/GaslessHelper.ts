@@ -2,7 +2,7 @@
 import { ethers } from 'ethers';
 
 // External Packages
-import { toast, ToastContent, ToastOptions } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 // Internal Components
 import { toolingPostReq } from '../api/index';

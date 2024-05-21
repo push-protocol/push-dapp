@@ -1,6 +1,3 @@
-// React + Web3 Essentials
-import React, { useState } from 'react';
-
 // External Packages
 import styled, { useTheme } from 'styled-components';
 

@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { CSSProperties } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -15,7 +15,7 @@ import { device } from 'config/Globals';
 interface ChannelInfoHeaderProps {
   title: string;
   description: string;
-  Button?: React.ReactNode;
+  Button?: ReactNode;
   style?: CSSProperties;
 }
 

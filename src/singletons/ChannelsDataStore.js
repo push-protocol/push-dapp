@@ -1,5 +1,4 @@
 // Internal Components
-import * as PushAPI from '@pushprotocol/restapi';
 import { getReq, postReq } from 'api';
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 

@@ -1,8 +1,7 @@
 // React + Web3 Essentials
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 // External Packages
-import { useNavigate } from 'react-router-dom';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
@@ -35,8 +34,6 @@ const InstallPushSnapModal = ({ setSnapState, configure, setConfigure }) => {
       }
     });
   }
-
-  const navigate = useNavigate();
 
   return (
     <ItemVV2

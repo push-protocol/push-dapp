@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from 'react';
 import { AppContext } from 'contexts/AppContext';
 import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext as ContextType, MessageIPFS } from 'types/chat';
+import { AppContext as ContextType, AppContext as ContextType, MessageIPFS } from 'types/chat';
 import { AppContextType } from 'types/context';
 
 // Internal Configs

@@ -1,4 +1,5 @@
 // Internal Configs
+import { getPreviewBasePath } from '../../basePath.js';
 import { appConfig } from '../config/index.js';
 
 // Constants
@@ -21,3 +22,6 @@ export const channelsServiceEndpoints = {
 export const ipfsServiceEndpoints = {
   ipfsUpload: (): string => `${ipfsRoute}/upload`,
 };
+
+export const getPublicAssetPath = (path: string) =>
+  getPreviewBasePath() ? `${getPreviewBasePath()}/${path}` : `./${path}`;

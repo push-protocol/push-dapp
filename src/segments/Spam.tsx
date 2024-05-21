@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,7 +33,6 @@ import { useAccount } from 'hooks';
 // Internal Configs
 import { appConfig } from 'config/index.js';
 import { device } from 'config/Globals';
-import { AppContext } from 'contexts/AppContext';
 
 // Constants
 const NOTIFICATIONS_PER_PAGE = 10;
@@ -44,7 +43,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
-  const modalRef = React.useRef(null);
+  const modalRef = useRef(null);
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
   const { account, chainId, provider } = useAccount();
   const { epnsCommReadProvider } = useSelector((state: any) => state.contracts);
@@ -54,7 +53,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   let user = convertAddressToAddrCaip(account, chainId);
 
   // toast related section
-  const [toast, showToast] = React.useState(null);
+  const [toast, showToast] = useState(null);
   const clearToast = () => showToast(null);
 
   const { run } = useSelector((state: any) => state.userJourney);
@@ -65,13 +64,13 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     chainId: chainId,
     verifyingContract: epnsCommReadProvider?.address,
   };
-  const [allNotif, setNotif] = React.useState([]);
-  const [loadFilter, setLoadFilter] = React.useState(false);
-  const [filteredNotifications, setFilteredNotifications] = React.useState([]);
-  const [filter, setFilter] = React.useState(false);
-  const [allFilter, setAllFilter] = React.useState([]);
-  const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const [allNotif, setNotif] = useState([]);
+  const [loadFilter, setLoadFilter] = useState(false);
+  const [filteredNotifications, setFilteredNotifications] = useState([]);
+  const [filter, setFilter] = useState(false);
+  const [allFilter, setAllFilter] = useState([]);
+  const [bgUpdateLoading, setBgUpdateLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
@@ -82,7 +81,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   );
 
   //clear toast variable after it is shown
-  React.useEffect(() => {
+  useEffect(() => {
     if (toast) {
       clearToast();
     }
@@ -137,7 +136,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     setBgUpdateLoading(false);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     console.debug(filteredNotifications, allFilter);
     setFilteredNotifications(allFilter);
   }, [allFilter]);
@@ -283,13 +282,13 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!userPushSDKInstance) return;
     fetchLatestNotifications();
     fetchAllNotif();
   }, [userPushSDKInstance]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (epnsCommReadProvider) {
       loadNotifications();
     }
