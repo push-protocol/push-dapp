@@ -2,7 +2,7 @@
 
 ### Ticket Number
 
-<!-- Please link to the relevant ticket or issue number: -->
+<!-- Link to the relevant ticket or issue number: -->
 
 - [Ticket Number](link-to-ticket)
 
@@ -14,7 +14,7 @@
 
 ### Type of Change
 
-<!-- Please delete options that are not relevant: -->
+<!-- Delete options that are not relevant: -->
 
 - [ ] Bug fix
 - [ ] New feature
@@ -41,11 +41,11 @@
 - [ ] Engineer has tested the changes on their local environment
 - [ ] Engineer has tested the changes on deploy preview
 
-### Screenshots/Video with explanation
+### Screenshots/Video with Explanation
 
 <!-- If applicable, add screenshots to help explain your changes: -->
 
-- **Before:** Explain the previous behaviour
+- **Before:** Explain the previous behavior
 
 - **After:** What's changed now
 
