@@ -39,10 +39,11 @@ import { ImageV2 } from './reusables/SharedStylingV2';
 import Tooltip from './reusables/tooltip/Tooltip';
 import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
 import VerifiedTooltipContent from './VerifiedTooltipContent';
+import { setAllowNotifModalVisibility } from 'redux/slices/modalSlice';
 
 // Internal Configs
 import APP_PATHS from 'config/AppPaths';
-import { addresses, appConfig, CHAIN_DETAILS, ALLOW_NOTIF_MODAL } from 'config/index.js';
+import { addresses, appConfig, CHAIN_DETAILS, ALLOW_NOTIF_MODAL_LAST_TIMESTAMP } from 'config/index.js';
 import { IPFSGateway } from 'helpers/IpfsHelper';
 import { checkPermission } from 'helpers/channel/allowNotification';
 
@@ -60,6 +61,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
     (state) => state.contracts
   );
   const { canVerify, channelDetails, coreChannelAdmin } = useSelector((state) => state.admin);
+  const { isAllowNotifModalVisible } = useSelector((state) => state.modal);
   const {
     channelsCache,
     CHANNEL_BLACKLIST,
@@ -87,7 +89,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
   const [channelObjectFromHash, setChannelObjectFromHash] = React.useState({});
   const [channelObjectStartBlock, setChannelObjectStartBlock] = React.useState({});
   const [showChannelChangedWarning, setShowChannelChangedWarning] = React.useState(false);
-  const [showAllowNotification, setShowAllowNotification] = useState(false);
+  // const [isAllowNotifModalVisible, setAllowNotifModalVisibility] = useState(false);
 
 
   const isVerified = channelObject.verified_status;
@@ -109,11 +111,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
   }, [subscriptionStatus]);
 
   useEffect(() => {
-    if (showAllowNotification)
+    if (isAllowNotifModalVisible)
       setTimeout(() => {
-        setShowAllowNotification(false);
+        dispatch(setAllowNotifModalVisibility({ flag: false }));
       }, 10000);
-  }, [showAllowNotification]);
+  }, [isAllowNotifModalVisible]);
 
   useEffect(() => {
     setIsPushAdmin(pushAdminAddress == account);
@@ -417,19 +419,19 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
     the modal was last opened 24 hours before
     */
     if (checkPermission() === 'pending') {
-      let lastTime = localStorage.getItem(ALLOW_NOTIF_MODAL);
+      let lastTime = localStorage.getItem(ALLOW_NOTIF_MODAL_LAST_TIMESTAMP);
       let today = new Date().getTime() + (1 * 24 * 60 * 60 * 1000);
       if (lastTime) {
         lastTime = parseInt(lastTime);
         if (lastTime >= today) {
-          setShowAllowNotification(true);
+          dispatch(setAllowNotifModalVisibility({ flag: true }));
         }
       }
       else {
-        setShowAllowNotification(true);
+        dispatch(setAllowNotifModalVisibility({ flag: true }));
       }
       //sets the recent opened time in localstorage.
-      localStorage.setItem(ALLOW_NOTIF_MODAL, today);
+      localStorage.setItem(ALLOW_NOTIF_MODAL_LAST_TIMESTAMP, today);
     }
 
   }
@@ -1055,8 +1057,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
         />
       )}
       {/* modal to allow notification */}
-      {showAllowNotification &&
-        <AllowNotificationModal onModalClose={() => setShowAllowNotification(false)} />
+      {isAllowNotifModalVisible &&
+        <AllowNotificationModal onModalClose={() =>
+          dispatch(setAllowNotifModalVisibility({ flag: false }))}
+        />
       }
     </Container>
   );
