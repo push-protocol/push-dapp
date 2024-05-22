@@ -483,7 +483,7 @@ const SnapSection = styled(ItemHV2)`
   padding: 12px 16px;
   align-items: center;
   gap: 16px;
-  box-sizing:content-box;
+  max-height: 50px;
 
   @media ${device.tablet} {
     gap: 9px;
