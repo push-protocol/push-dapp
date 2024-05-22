@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import Switch from '@material-ui/core/Switch';
@@ -12,16 +12,14 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import * as PushAPI from '@pushprotocol/restapi';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { AInlineV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { AInlineV2, SectionV2 } from 'components/reusables/SharedStylingV2';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import {
   Button,
   Content,
   FormSubmision,
   H2,
-  H3,
   Input,
   Item,
   ItemH,

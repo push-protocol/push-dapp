@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithoutRef, useEffect, useRef } from 'react';
+import { ComponentPropsWithoutRef, useEffect, useRef, MouseEvent, TouchEvent } from 'react';
 import styled from 'styled-components';
 
 interface InputSliderProps extends Omit<ComponentPropsWithoutRef<'div'>, 'children' | 'onChange'> {
@@ -10,8 +10,8 @@ interface InputSliderProps extends Omit<ComponentPropsWithoutRef<'div'>, 'childr
   defaultVal: number;
   preview?: boolean;
   onChange: (value: { x: number }) => void;
-  onDragStart?: (e: React.MouseEvent | React.TouchEvent) => void;
-  onDragEnd?: (e: React.MouseEvent | React.TouchEvent) => void;
+  onDragStart?: (e: MouseEvent | TouchEvent) => void;
+  onDragEnd?: (e: MouseEvent | TouchEvent) => void;
 }
 
 const InputSlider = ({
@@ -33,7 +33,7 @@ const InputSlider = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const previewSliderRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
+  const handleMouseDown = (e: MouseEvent | TouchEvent) => {
     if (disabled) return;
     if (onDragStart) onDragStart(e);
     document.addEventListener('mousemove', handleMouseMove);

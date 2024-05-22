@@ -1,4 +1,4 @@
-import React, { ComponentPropsWithoutRef, useEffect, useRef } from 'react';
+import { ComponentPropsWithoutRef, useEffect, useRef, MouseEvent, TouchEvent } from 'react';
 import styled from 'styled-components';
 
 interface RangeSliderProps extends Omit<ComponentPropsWithoutRef<'div'>, 'children' | 'onChange'> {
@@ -11,9 +11,9 @@ interface RangeSliderProps extends Omit<ComponentPropsWithoutRef<'div'>, 'childr
   defaultStartVal: number;
   defaultEndVal: number;
   preview?: boolean;
-  onChange: (value: { startVal: number, endVal: number }) => void;
-  onDragStart?: (e: React.MouseEvent | React.TouchEvent) => void;
-  onDragEnd?: (e: React.MouseEvent | React.TouchEvent) => void;
+  onChange: (value: { startVal: number; endVal: number }) => void;
+  onDragStart?: (e: MouseEvent | TouchEvent) => void;
+  onDragEnd?: (e: MouseEvent | TouchEvent) => void;
 }
 
 const RangeSlider = ({
@@ -40,7 +40,7 @@ const RangeSlider = ({
   const inactiveLeftRef = useRef<HTMLDivElement>(null);
   const inactiveRightRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseDownLeftThumb = (e: React.MouseEvent | React.TouchEvent) => {
+  const handleMouseDownLeftThumb = (e: MouseEvent | TouchEvent) => {
     if (disabled) return;
     if (onDragStart) onDragStart(e);
     // Add event listeners for mousemove and touchmove to track thumb movement
@@ -53,7 +53,7 @@ const RangeSlider = ({
   const handleMouseMoveLeftThumb = (e) => {
     if (disabled) return;
     if (!containerRef.current) return;
-    
+
     const { left, width } = containerRef.current.getBoundingClientRect();
     const { clientX } = e instanceof MouseEvent ? e : e.touches[0];
     let x = (clientX - left) / width;
@@ -72,7 +72,7 @@ const RangeSlider = ({
 
     if (Number(x.toFixed(decimalPlaces)) >= endVal) return;
     onChange({ startVal: Number(x.toFixed(decimalPlaces)), endVal: endVal });
-  };  
+  };
 
   const handleMouseUpLeftThumb = (e) => {
     if (disabled) return;
@@ -84,7 +84,7 @@ const RangeSlider = ({
     document.removeEventListener('touchend', handleMouseUpLeftThumb);
   };
 
-  const handleMouseDownRightThumb = (e: React.MouseEvent | React.TouchEvent) => {
+  const handleMouseDownRightThumb = (e: MouseEvent | TouchEvent) => {
     if (disabled) return;
     if (onDragStart) onDragStart(e);
     // Add event listeners for mousemove and touchmove to track thumb movement
@@ -97,7 +97,7 @@ const RangeSlider = ({
   const handleMouseMoveRightThumb = (e) => {
     if (disabled) return;
     if (!containerRef.current) return;
-    
+
     const { left, width } = containerRef.current.getBoundingClientRect();
     const { clientX } = e instanceof MouseEvent ? e : e.touches[0];
     let x = (clientX - left) / width;
@@ -117,7 +117,7 @@ const RangeSlider = ({
     if (Number(x.toFixed(decimalPlaces)) <= startVal) return;
 
     onChange({ startVal: startVal, endVal: Number(x.toFixed(decimalPlaces)) });
-  };  
+  };
 
   const handleMouseUpRightThumb = (e) => {
     if (disabled) return;
@@ -132,19 +132,25 @@ const RangeSlider = ({
   const showPreview = () => {
     previewSliderStartRef.current?.style.setProperty('display', 'flex');
     previewSliderEndRef.current?.style.setProperty('display', 'flex');
-  }
+  };
 
   const hidePreview = () => {
     previewSliderStartRef.current?.style.setProperty('display', 'none');
     previewSliderEndRef.current?.style.setProperty('display', 'none');
-  }
+  };
 
   useEffect(() => {
-    if (thumbStartRef.current && inactiveLeftRef.current && thumbEndRef.current && activeRef.current && inactiveRightRef.current) {
+    if (
+      thumbStartRef.current &&
+      inactiveLeftRef.current &&
+      thumbEndRef.current &&
+      activeRef.current &&
+      inactiveRightRef.current
+    ) {
       thumbStartRef.current.style.left = `${((startVal - min) / (max - min)) * 98}%`;
       inactiveLeftRef.current.style.width = `${((startVal - min) / (max - min)) * 100}%`;
       activeRef.current.style.width = `${((endVal - startVal) / (max - min)) * 100}%`;
-      thumbEndRef.current.style.left  = `${((endVal - min) / (max - min)) * 95}%`;
+      thumbEndRef.current.style.left = `${((endVal - min) / (max - min)) * 95}%`;
       inactiveRightRef.current.style.width = `${((max - endVal) / (max - min)) * 100}%`;
 
       previewSliderStartRef.current?.style.setProperty(
@@ -168,25 +174,29 @@ const RangeSlider = ({
       {...props}
       {...props}
     >
-        <Inactive ref={inactiveLeftRef} />
-        <Thumb
-            ref={thumbStartRef}
-            onTouchStart={handleMouseDownLeftThumb}
-            onMouseDown={handleMouseDownLeftThumb}
-            onTouchEnd={handleMouseUpLeftThumb}
-            onMouseUp={handleMouseUpLeftThumb}
-        />
-        <Active ref={activeRef} />
-        <Thumb
-            ref={thumbEndRef}
-            onTouchStart={handleMouseDownRightThumb}
-            onMouseDown={handleMouseDownRightThumb}
-            onTouchEnd={handleMouseUpRightThumb}
-            onMouseUp={handleMouseUpRightThumb}
-        />
-        <Inactive ref={inactiveRightRef} />
-        {preview && !Number.isNaN(Number(startVal)) && <PreviewContainer ref={previewSliderStartRef}>{startVal}</PreviewContainer>}
-        {preview && !Number.isNaN(Number(endVal)) && <PreviewContainer ref={previewSliderEndRef}>{endVal}</PreviewContainer>}
+      <Inactive ref={inactiveLeftRef} />
+      <Thumb
+        ref={thumbStartRef}
+        onTouchStart={handleMouseDownLeftThumb}
+        onMouseDown={handleMouseDownLeftThumb}
+        onTouchEnd={handleMouseUpLeftThumb}
+        onMouseUp={handleMouseUpLeftThumb}
+      />
+      <Active ref={activeRef} />
+      <Thumb
+        ref={thumbEndRef}
+        onTouchStart={handleMouseDownRightThumb}
+        onMouseDown={handleMouseDownRightThumb}
+        onTouchEnd={handleMouseUpRightThumb}
+        onMouseUp={handleMouseUpRightThumb}
+      />
+      <Inactive ref={inactiveRightRef} />
+      {preview && !Number.isNaN(Number(startVal)) && (
+        <PreviewContainer ref={previewSliderStartRef}>{startVal}</PreviewContainer>
+      )}
+      {preview && !Number.isNaN(Number(endVal)) && (
+        <PreviewContainer ref={previewSliderEndRef}>{endVal}</PreviewContainer>
+      )}
     </Container>
   );
 };

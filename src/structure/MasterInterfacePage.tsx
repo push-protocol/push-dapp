@@ -1,11 +1,11 @@
 // React + Web3 Essentials
-import React, { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState, useEffect, useContext } from 'react';
 
 // External Packages
 import useToast from 'hooks/useToast';
-import { MdError, MdWarning } from 'react-icons/md';
+import { MdWarning } from 'react-icons/md';
 import { VscClose } from 'react-icons/vsc';
-import { Navigate, redirect, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled from 'styled-components';
@@ -16,7 +16,6 @@ import LoaderSpinner, {
   LOADER_TYPE,
   PROGRESS_POSITIONING,
 } from 'components/reusables/loaders/LoaderSpinner';
-import ConnectedWalletRoute from '../components/ConnectedWalletRoute';
 import { Anchor, Item } from '../primaries/SharedStyling';
 const AirdropPage = lazy(() => import('pages/AirdropPage'));
 const ChannelDashboardPage = lazy(() => import('pages/ChannelDashboardPage'));
@@ -34,7 +33,6 @@ const ReceiveNotifsPage = lazy(() => import('pages/ReceiveNotifsPage'));
 const NotifSettingsPage = lazy(() => import('pages/NotifSettingsPage'));
 const SendNotifsPage = lazy(() => import('pages/SendNotifsPage'));
 const SpacePage = lazy(() => import('pages/SpacePage'));
-const SpamPage = lazy(() => import('pages/SpamPage'));
 const SupportPage = lazy(() => import('pages/SupportPage'));
 const TutorialPage = lazy(() => import('pages/TutorialPage'));
 // const YieldFarmingPage = lazy(() => import('pages/YieldFarmingPage'));
@@ -65,33 +63,28 @@ import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import APP_PATHS from 'config/AppPaths';
 import GLOBALS from 'config/Globals';
 import { AppContext } from 'contexts/AppContext';
-import { ethers } from 'ethers';
-import CryptoHelper from 'helpers/CryptoHelper';
-import * as w2wHelper from 'helpers/w2w';
 import { MODAL_POSITION } from 'hooks/useModalBlur';
 import MetamaskPushSnapModal from 'modules/receiveNotifs/MetamaskPushSnapModal';
 import SnapPage from 'pages/SnapPage';
-import { ConnectedUser, Feeds, User } from 'types/chat';
 import { AppContextType } from 'types/context';
 
 // Create Header
 function MasterInterfacePage() {
   // Get search params
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   // get location
   const location = useLocation();
-  const { hash, pathname, search } = location;
 
   // Master Interface controls settings
-  const [playTeaserVideo, setPlayTeaserVideo] = React.useState(false);
-  const [loadTeaserVideo, setLoadTeaserVideo] = React.useState(null);
+  const [playTeaserVideo, setPlayTeaserVideo] = useState(false);
+  const [loadTeaserVideo, setLoadTeaserVideo] = useState(null);
 
-  const { MetamaskPushSnapModalComponent, blockedLoading }: AppContextType = React.useContext(AppContext);
+  const { MetamaskPushSnapModalComponent, blockedLoading }: AppContextType = useContext(AppContext);
 
-  const { showMetamaskPushSnap } = React.useContext(AppContext);
+  const { showMetamaskPushSnap } = useContext(AppContext);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (location.hash == '#receive-notifications') {
       showMetamaskPushSnap();
     }
@@ -110,7 +103,7 @@ function MasterInterfacePage() {
   // }
 
   // // For redirecting if required
-  // React.useEffect(() => {
+  //  useEffect(() => {
   //   const checkAndRedirect = () => {
   //     if (location.pathname === APP_PATHS.Channels && searchParams.get('channel')) {
   //       const navigate = useNavigate();

@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, ChangeEvent, useState } from 'react';
 
 // External Packages
 import CloseIcon from '@material-ui/icons/Close';
@@ -47,7 +47,7 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
     }
   }, [userShouldBeSearched, autofilled]);
 
-  const onChangeSearchBox = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+  const onChangeSearchBox = async (event: ChangeEvent<HTMLInputElement>): Promise<void> => {
     let searchAddress = event.target.value;
 
     if (searchAddress === '') {

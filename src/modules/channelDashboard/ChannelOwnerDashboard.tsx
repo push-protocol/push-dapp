@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
@@ -54,7 +54,7 @@ const ChannelOwnerDashboard = () => {
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
-  const { handleConnectWallet } = React.useContext(AppContext);
+  const { handleConnectWallet } = useContext(AppContext);
 
   const isChannelDetails = channelDetails && channelDetails !== 'unfetched';
 
@@ -92,7 +92,7 @@ const ChannelOwnerDashboard = () => {
     return { aliasAddress: aliasAddress, aliasVerified: isAliasVerified };
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!onCoreNetwork || !aliasAddrFromContract || processingState === 0) return;
 
     intervalID = setInterval(async () => {

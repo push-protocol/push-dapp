@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React from "react";
+import React from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -7,12 +7,12 @@ import { FaShareSquare, FaYoutube } from 'react-icons/fa';
 
 // Internal Components
 import { Button, Image, Item, ItemH, Span } from 'primaries/SharedStyling';
-import MetaInfoDisplayer from "components/MetaInfoDisplayer";
-import { ImageV2 } from "components/reusables/SharedStylingV2";
+import MetaInfoDisplayer from 'components/MetaInfoDisplayer';
+import { ImageV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
-import channelTuts from "config/channelTuts";
-
+import channelTuts from 'config/channelTuts';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 // Check channel has tutorial
 export const isChannelTutorialized = (addr) => {
@@ -25,7 +25,7 @@ export const isChannelTutorialized = (addr) => {
   });
 
   return keyFound;
-}
+};
 
 // Channel Tutorial
 const ChannelTutorial = ({ addr, bgColor, loadTeaser, playTeaser }) => {
@@ -46,7 +46,7 @@ const ChannelTutorial = ({ addr, bgColor, loadTeaser, playTeaser }) => {
     });
 
     return item;
-  }
+  };
 
   const item = getChannelTutItem(addr);
 
@@ -56,15 +56,15 @@ const ChannelTutorial = ({ addr, bgColor, loadTeaser, playTeaser }) => {
       flex="initial"
       onMouseEnter={() => {
         setShowTuts(true);
-        console.debug("enter")
+        console.debug('enter');
       }}
       onMouseLeave={() => {
         setShowTuts(false);
-        console.debug("exit")
+        console.debug('exit');
       }}
       zIndex="9"
     >
-      {showTuts &&
+      {showTuts && (
         <Item
           position="absolute"
           width="280px"
@@ -76,7 +76,7 @@ const ChannelTutorial = ({ addr, bgColor, loadTeaser, playTeaser }) => {
             padding="10px"
             border={`1px solid ${themes.borderBg}`}
           >
-            {item.userjourneyshort && 
+            {item.userjourneyshort && (
               <Item>
                 <Span
                   bg={themes.viewChannelTutsTitleBg}
@@ -96,17 +96,17 @@ const ChannelTutorial = ({ addr, bgColor, loadTeaser, playTeaser }) => {
                   alt={`${item.alt}`}
                 />
               </Item>
-            }
+            )}
 
             <ItemH
               padding="10px 0px 0px 0px"
               justify="space-between"
               self="stretch"
             >
-              {item.userjourneyyoutube && 
+              {item.userjourneyyoutube && (
                 <Button
                   bg={themes.viewChannelTutsButtonBg}
-                  color='#fff'
+                  color="#fff"
                   radius="4px"
                   padding="5px 10px"
                   onClick={() => {
@@ -118,38 +118,39 @@ const ChannelTutorial = ({ addr, bgColor, loadTeaser, playTeaser }) => {
                   <Span
                     margin="0px 5px 0px 0px"
                     weight="bold"
-                    color='#fff'
+                    color="#fff"
                   >
                     User Journey
                   </Span>
                   <FaYoutube size="20px" />
                 </Button>
-              }
-              
-              {item.article && 
+              )}
+
+              {item.article && (
                 <Button
                   bg={themes.viewChannelTutsButtonBg}
-                  color='#fff'
+                  color="#fff"
                   radius="4px"
                   padding="5px 10px"
                   onClick={() => {
                     setShowTuts(false);
-                    window.open(`${item.article}`, "_blank") //to open new page
+                    window.open(`${item.article}`, '_blank'); //to open new page
                   }}
                 >
                   <FaShareSquare size="20px" />
                 </Button>
-              }
+              )}
             </ItemH>
           </TutsInner>
         </Item>
-      }
+      )}
 
       <MetaInfoDisplayer
         internalIcon={
-          <ImageV2 
-            filter={themes.snackbarBorderIcon} 
-            width="fit-content" src="/svg/view-tutorial-icon.svg"
+          <ImageV2
+            filter={themes.snackbarBorderIcon}
+            width="fit-content"
+            src={getPublicAssetPath('svg/view-tutorial-icon.svg')}
           />
         }
         text="Tutorial"
@@ -159,13 +160,13 @@ const ChannelTutorial = ({ addr, bgColor, loadTeaser, playTeaser }) => {
       />
     </Item>
   );
-}
+};
 
 // CSS STYLES
 const TutsInner = styled(Item)`
   border-radius: 10px;
   box-shadow: 0px 15px 20px -5px rgb(0 0 0 / 10%);
-`
+`;
 
 // Export Default
 export default ChannelTutorial;

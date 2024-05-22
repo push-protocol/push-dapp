@@ -1,19 +1,19 @@
 // React + Web3 Essentials
-import React, { createContext, useState } from 'react';
+import { createContext, useState, FC, ReactNode } from 'react';
 
 export const NotificationContext = createContext({
   notificationReceived: 0,
-  setNotificationRecieved: (value: number) => {}
+  setNotificationRecieved: (value: number) => {},
 });
 
-const NotificationContextProvider:React.FC<React.ReactNode> = ({children}) => {
+const NotificationContextProvider: FC<ReactNode> = ({ children }) => {
   const [notificationReceived, setNotificationRecieved] = useState<number>(0);
-  
+
   return (
     <NotificationContext.Provider value={{ notificationReceived, setNotificationRecieved }}>
       {children}
     </NotificationContext.Provider>
-  )
-}
+  );
+};
 
 export default NotificationContextProvider;

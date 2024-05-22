@@ -1,13 +1,13 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 // External Packages
-import styled from "styled-components";
-import { RiFileCopyFill, RiFileCopyLine } from "react-icons/ri";
+import styled from 'styled-components';
+import { RiFileCopyFill, RiFileCopyLine } from 'react-icons/ri';
 
 // Internal Components
-import { useDeviceWidthCheck } from "hooks";
-import { shortenText } from "helpers/UtilityHelper";
+import { useDeviceWidthCheck } from 'hooks';
+import { shortenText } from 'helpers/UtilityHelper';
 
 const DelegateInfo = ({ delegateAddress, maxWidth }) => {
   const [addressText, setAddressText] = useState(delegateAddress);
@@ -19,7 +19,7 @@ const DelegateInfo = ({ delegateAddress, maxWidth }) => {
       setAddressText(delegateAddress);
     } else {
       // clip address
-      const clippedAddrs = shortenText(delegateAddress,5);
+      const clippedAddrs = shortenText(delegateAddress, 5);
       setAddressText(clippedAddrs);
     }
   }, [isMobile]);
@@ -27,63 +27,66 @@ const DelegateInfo = ({ delegateAddress, maxWidth }) => {
   return (
     <HoverWallet
       onMouseLeave={() => setIsCopied(false)}
-      minWidth={!isMobile ? "350px" : "120px"}
+      minWidth={!isMobile ? '350px' : '120px'}
     >
-      <WalletInfoContent
-        {...{ addressText, isCopied, setIsCopied, delegateAddress }}
-      />
+      <WalletInfoContent {...{ addressText, isCopied, setIsCopied, delegateAddress }} />
     </HoverWallet>
   );
 };
 
-const WalletInfoContent = ({
-  addressText,
-  isCopied,
-  setIsCopied,
-  delegateAddress,
-}) => {
+const WalletInfoContent = ({ addressText, isCopied, setIsCopied, delegateAddress }) => {
   const isMobile = useDeviceWidthCheck(1000);
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseOut = (e) => {
     setIsHovered(false);
-  }
+  };
   const handleMouseOver = (e) => {
     setIsHovered(true);
-  }
+  };
 
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        width: "100%",
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
       }}
       onMouseEnter={handleMouseOver}
       onMouseLeave={handleMouseOut}
     >
       <Address>{shortenText(addressText, 7, 7)}</Address>
-      {isHovered && <ItemHere
-        isMobile={isMobile ? "10px" : "50px"}
-        onClick={() => {
-          navigator.clipboard.writeText(delegateAddress);
-          setIsCopied(true);
-        }}
-      >
-        {isCopied ? (
-          <RiFileCopyFill size={18} color="white" style={{ paddingTop: 6 }} />
-        ) : (
-          <RiFileCopyLine size={18} color="white" style={{ paddingTop: 6 }} />
-        )}
-      </ItemHere>}
+      {isHovered && (
+        <ItemHere
+          isMobile={isMobile ? '10px' : '50px'}
+          onClick={() => {
+            navigator.clipboard.writeText(delegateAddress);
+            setIsCopied(true);
+          }}
+        >
+          {isCopied ? (
+            <RiFileCopyFill
+              size={18}
+              color="white"
+              style={{ paddingTop: 6 }}
+            />
+          ) : (
+            <RiFileCopyLine
+              size={18}
+              color="white"
+              style={{ paddingTop: 6 }}
+            />
+          )}
+        </ItemHere>
+      )}
     </div>
   );
 };
 
 const ItemHere = styled.div`
   cursor: pointer;
-  margin-left: ${(props) => props.isMobile || ""};
+  margin-left: ${(props) => props.isMobile || ''};
 `;
 
 const WalletAddressDisplay = styled.span`
@@ -95,7 +98,7 @@ const WalletAddressDisplay = styled.span`
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  max-width: ${(props) => props.maxWidth || "fit-content"};
+  max-width: ${(props) => props.maxWidth || 'fit-content'};
 
   font-style: normal;
   font-weight: 600;

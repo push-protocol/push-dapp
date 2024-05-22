@@ -1,27 +1,22 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineMore } from 'react-icons/ai';
-import { cloneDeep } from 'lodash';
 
 // Internal Components
 import { useAccount } from 'hooks';
 import { Button } from 'primaries/SharedStyling';
 import { ImageV2 } from 'components/reusables/SharedStylingV2';
-import LoaderSpinner from 'primaries/LoaderSpinner';
 import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import ManageNotifSettingDropdown from 'components/dropdowns/ManageNotifSettingDropdown';
 
 // Internal Configs
 import { device } from 'config/Globals';
 import ChannelListSettings from 'components/channel/ChannelListSettings';
 import PushSnapSettings from 'components/PushSnap/PushSnapSettings';
-import EmptyNotificationSettings from 'components/channel/EmptyNotificationSettings';
 
 interface ChannelListItem {
   channel: string;

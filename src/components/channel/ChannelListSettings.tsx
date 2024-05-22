@@ -1,14 +1,14 @@
 import ManageNotifSettingDropdown from 'components/dropdowns/ManageNotifSettingDropdown';
 import { ImageV2 } from 'components/reusables/SharedStylingV2';
 import { useAccount } from 'hooks';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { getChannel, getUserSubscriptions } from 'services';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import { AiOutlineMore } from 'react-icons/ai';
 import EmptyNotificationSettings from './EmptyNotificationSettings';
 import LoaderSpinner from 'primaries/LoaderSpinner';

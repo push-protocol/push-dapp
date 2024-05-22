@@ -1,15 +1,12 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import Close from 'assets/chat/group-chat/close.svg?react';
-import { ButtonV2, ItemHV2, ItemVV2 } from './reusables/SharedStylingV2';
-import styled, { useTheme } from 'styled-components';
-import { ethers } from 'ethers';
+import { ButtonV2, ItemVV2 } from './reusables/SharedStylingV2';
+import styled from 'styled-components';
 import { appConfig } from 'config/index.js';
 import { useAccount } from 'hooks';
 
 const YieldFarmChainError = ({ onClose }) => {
-  const { account, chainId: currentChainId, switchChain } = useAccount();
-
-  const theme = useTheme();
+  const { chainId: currentChainId, switchChain } = useAccount();
 
   const handleChainChange = () => {
     const chainIdToPass = appConfig.allowedNetworks[0];
@@ -25,8 +22,7 @@ const YieldFarmChainError = ({ onClose }) => {
     if (currentChainId === appConfig.coreContractChain || currentChainId === appConfig.mainnetCoreContractChain) {
       onClose();
     }
-  }, [currentChainId])
-
+  }, [currentChainId]);
 
   return (
     <Container>

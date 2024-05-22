@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useMemo, useState } from 'react';
+import { ReactNode, Dispatch, SetStateAction, FC, useMemo, useState } from 'react';
 
 // External Packages
 import styled, { css, useTheme } from 'styled-components';
@@ -13,7 +13,6 @@ import UpdateNotifSettingDropdown from './UpdateNotifSettingDropdown';
 // Internal Configs
 import { ImageV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { useAccount } from 'hooks';
-import { AppContext } from 'contexts/AppContext';
 import useToast from 'hooks/useToast';
 import { appConfig } from 'config/index.js';
 import { MdCheckCircle, MdError } from 'react-icons/md';
@@ -23,7 +22,7 @@ import { ChannelSetting, UserSetting } from 'helpers/channel/types';
 import { removeUserSetting, updateSubscriptionStatus } from 'redux/slices/channelSlice';
 
 interface ManageNotifSettingDropdownProps {
-  children: React.ReactNode;
+  children: ReactNode;
   centerOnMobile: boolean;
   channelDetail: any;
   userSetting?: UserSetting[];
@@ -35,11 +34,11 @@ interface ManageNotifSettingDropdownContainerProps {
   userSetting?: UserSetting[];
   channelSetting?: ChannelSetting[];
   channelDetail: any;
-  optOutHandler: (options: { setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => Promise<void>;
+  optOutHandler: (options: { setLoading?: Dispatch<SetStateAction<boolean>> }) => Promise<void>;
   closeDropdown: () => void;
 }
 
-const ManageNotifSettingDropdownContainer: React.FC<ManageNotifSettingDropdownContainerProps> = ({
+const ManageNotifSettingDropdownContainer: FC<ManageNotifSettingDropdownContainerProps> = ({
   centerOnMobile,
   optOutHandler,
   channelSetting,
@@ -109,15 +108,14 @@ const ManageNotifSettingDropdownContainer: React.FC<ManageNotifSettingDropdownCo
   );
 };
 
-const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = (options) => {
-  const { children, centerOnMobile, userSetting, channelDetail, onSuccessOptout } = options;
+const ManageNotifSettingDropdown: FC<ManageNotifSettingDropdownProps> = (options) => {
+  const { children, centerOnMobile, userSetting, channelDetail } = options;
   const [isOpen, setIsOpen] = useState(false);
-  const { chainId, provider, account, wallet } = useAccount();
+  const { chainId, provider, account } = useAccount();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
   const dispatch = useDispatch();
-  const { handleConnectWallet, connectWallet } = useContext(AppContext);
 
   const channelSetting = useMemo(() => {
     if (channelDetail && channelDetail?.channel_settings) {
@@ -137,7 +135,7 @@ const ManageNotifSettingDropdown: React.FC<ManageNotifSettingDropdownProps> = (o
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const unsubscribeToast = useToast();
-  const optOutHandler = async ({ setLoading }: { setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => {
+  const optOutHandler = async ({ setLoading }: { setLoading?: Dispatch<SetStateAction<boolean>> }) => {
     const setLoadingFunc = setLoading || (() => {});
     setLoadingFunc(true);
     let userPushInstance = userPushSDKInstance;

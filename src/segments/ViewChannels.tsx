@@ -1,11 +1,11 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // External Packages
 import { AiOutlineSearch } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 
 // Internal Compoonents
 import ChainsSelect from 'components/ChainsSelect';
@@ -38,7 +38,6 @@ const SEARCH_LIMIT = 10;
 
 // Create Header
 function ViewChannels({ loadTeaser, playTeaser, minimal }) {
-  const theme = useTheme();
   const dispatch = useDispatch();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;

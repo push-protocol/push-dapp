@@ -1,8 +1,7 @@
 import { appConfig } from 'config/index.js';
 import { walletToCAIP10 } from '.';
 import { ConnectedUser, Feeds, Member, User } from '../../types/chat';
-import * as PushAPI from '@pushprotocol/restapi';
-import { GroupDTO } from '@pushprotocol/restapi';
+import { GroupDTO, chat as pushChat } from '@pushprotocol/restapi';
 import { findObject } from 'helpers/UtilityHelper';
 import * as w2wChatHelper from 'helpers/w2w';
 
@@ -116,7 +115,7 @@ export const getUpdatedMemberList = (feed: Feeds, walletAddress: string): Array<
 
 export const updateGroup = async (options: UpdateGroupType) => {
   const { currentChat, connectedUser, adminList, memeberList } = options;
-  const updateResponse = await PushAPI.chat.updateGroup({
+  const updateResponse = await pushChat.updateGroup({
     chatId: currentChat?.groupInformation?.chatId,
     groupName: currentChat?.groupInformation?.groupName,
     groupDescription: currentChat?.groupInformation?.groupDescription,
