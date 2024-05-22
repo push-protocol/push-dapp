@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import { useState, useContext } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -29,7 +29,7 @@ const MetamaskPushSnapModal = ({ onClose, closeEnabled = true }: { onClose: () =
     hrsLeft: 0,
   });
 
-  const { setSnapState, SnapState } = React.useContext(AppContext);
+  const { setSnapState, SnapState } = useContext(AppContext);
 
   const handleCloseModal = () => {
     var uri = window.location.toString();

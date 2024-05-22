@@ -1,6 +1,5 @@
 // React + Web3 Essentials
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { ethers } from 'ethers';
+import { createContext, useEffect, useState, FC, ReactNode } from 'react';
 
 // External imports
 import * as PushAPI from '@pushprotocol/restapi';
@@ -15,7 +14,7 @@ export const SpaceContext = createContext({
   spaceInvites: 0,
 });
 
-const SpaceContextProvider: React.FC<React.ReactNode> = ({ children }) => {
+const SpaceContextProvider: FC<ReactNode> = ({ children }) => {
   const [spaceId, setSpaceId] = useState<string | undefined>(null);
   const [spaceInvites, setSpaceInvites] = useState<number>(0);
   const { account } = useAccount();

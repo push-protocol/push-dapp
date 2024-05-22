@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { SectionV2 } from 'components/reusables/SharedStylingV2';
 import GovModule from 'modules/gov/GovModule';
 import styled from 'styled-components';

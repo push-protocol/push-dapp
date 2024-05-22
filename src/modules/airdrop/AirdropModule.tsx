@@ -1,9 +1,8 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // External Packages
-import ReactGA from 'react-ga';
 import { BsChevronExpand } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 import styled, { useTheme } from 'styled-components';
@@ -12,7 +11,7 @@ import styled, { useTheme } from 'styled-components';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import AirdropHelper from 'helpers/AirdropHelper';
-import { A, B, Button, Content, H2, H3, Item, Para, Section, Span } from 'primaries/SharedStyling';
+import { A, B, Button, H2, Item, Para, Section, Span } from 'primaries/SharedStyling';
 import { useAccount } from 'hooks';
 
 // Internal Configs
@@ -26,13 +25,13 @@ const AirdropModule = () => {
   const { account, provider, chainId } = useAccount();
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
-  const [controlAt, setControlAt] = React.useState(0);
-  const [loading, setLoading] = React.useState(true);
-  const [txInProgress, setTxInProgress] = React.useState(false);
-  const [distributorContract, setDistributorContract] = React.useState(null);
-  const [user, setUser] = React.useState(null);
+  const [controlAt] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [setTxInProgress] = useState(false);
+  const [distributorContract, setDistributorContract] = useState(null);
+  const [user, setUser] = useState(null);
 
-  const [showAnswers, setShowAnswers] = React.useState([]);
+  const [showAnswers, setShowAnswers] = useState([]);
 
   const toggleShowAnswer = (id) => {
     let newShowAnswers = [...showAnswers];
@@ -41,14 +40,14 @@ const AirdropModule = () => {
     setShowAnswers(newShowAnswers);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!onCoreNetwork) {
       const url = window.location.origin;
       window.location.replace(`${url}/#/notavailable`);
     }
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!!(provider && account)) {
       let signer = provider.getSigner(account);
       console.debug(abis.distributor);
@@ -59,7 +58,7 @@ const AirdropModule = () => {
     }
   }, [account, provider]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (distributorContract) {
       checkClaim();
     }
@@ -130,8 +129,6 @@ const AirdropModule = () => {
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
-
-  const [darkMode, setDarkMode] = useState(false);
 
   return (
     <Container>

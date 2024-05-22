@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import { parse } from 'envfile';
 import fs from 'fs';
 import readline from 'readline';
+import { getPreviewBasePath } from './basePath.js';
 
 const envPresets = {
   alpha: {
@@ -23,6 +24,10 @@ const envPresets = {
   prod: {
     VITE_APP_DEPLOY_ENV: 'PROD',
     VITE_APP_PUBLIC_URL: 'https://app.push.org/',
+  },
+  preview: {
+    VITE_APP_DEPLOY_ENV: 'PREVIEW',
+    VITE_APP_PUBLIC_URL: `https://push-protocol.github.io${getPreviewBasePath()}`,
   },
   // alpha: {
   //   VITE_APP_DEPLOY_ENV: 'ALPHA',
@@ -48,13 +53,22 @@ const envPresets = {
 
 // Prep for deployment starts everything
 const prepForDeployment = async (appEnv) => {
-  console.log(chalk.green('Starting Custom Deployment Prebuild...' ));
+  console.log(chalk.green('Starting Custom Deployment Prebuild...'));
 
   // Test if app dev is passed, else fail
   let indexAppEnv = appEnv;
-  if (appEnv !== 'dev' && appEnv !== 'staging' && appEnv !== 'prod' && appEnv !== 'w2w' && appEnv !== 'alpha') {
+  if (
+    appEnv !== 'dev' &&
+    appEnv !== 'staging' &&
+    appEnv !== 'prod' &&
+    appEnv !== 'w2w' &&
+    appEnv !== 'alpha' &&
+    appEnv !== 'preview'
+  ) {
     console.log(
-      chalk.red('App Environment not set correctly... can only be dev, staging, prod, alpha or w2w. Please check and retry'), 
+      chalk.red(
+        'App Environment not set correctly... can only be dev, staging, prod, alpha or w2w. Please check and retry'
+      )
     );
     process.exit(1);
   }
@@ -77,6 +91,10 @@ const prepForDeployment = async (appEnv) => {
 
   if (appEnv === 'prod_push') {
     indexAppEnv = 'prod';
+  }
+
+  if (appEnv === 'preview_push') {
+    indexAppEnv = 'preview';
   }
 
   await changeIndexHTML(indexAppEnv);
@@ -104,7 +122,7 @@ const changeIndexHTML = async (appEnv) => {
 
   const sitemaptxtcontent = fs.readFileSync(sitemapreplacepath, 'utf8');
   fs.writeFileSync(sitemappath, sitemaptxtcontent, { flag: 'w' });
-}
+};
 
 const changeENV = async (appEnv) => {
   console.log(chalk.green.dim('  -- Generating custom .env file...'));

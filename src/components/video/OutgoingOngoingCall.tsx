@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
 // External Packages
 import styled from 'styled-components';
@@ -10,7 +10,7 @@ import LoaderSpinner, {
   LOADER_TYPE,
   PROGRESS_POSITIONING,
 } from 'components/reusables/loaders/LoaderSpinner';
-import { ImageV2, ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, SectionV2 } from 'components/reusables/SharedStylingV2';
 import UserInfo from 'components/video/UserInfo';
 import VideoPlayer from 'components/video/VideoPlayer';
 import { VideoCallContext } from 'contexts/VideoCallContext';

@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { FC, useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import * as dotenv from 'dotenv';
@@ -14,9 +14,9 @@ import { createGlobalStyle } from 'styled-components';
 
 // Internal Compoonents
 import InitState from 'components/InitState';
-import AppContextProvider, { AppContext } from 'contexts/AppContext';
+import { AppContext } from 'contexts/AppContext';
 import NavigationContextProvider from 'contexts/NavigationContext';
-import { useAccount, useInactiveListener, useSDKSocket } from 'hooks';
+import { useAccount, useInactiveListener } from 'hooks';
 import { resetAdminSlice } from 'redux/slices/adminSlice';
 import { resetChannelCreationSlice } from 'redux/slices/channelCreationSlice';
 import { resetNotificationsSlice } from 'redux/slices/notificationSlice';
@@ -27,9 +27,6 @@ import UserJourneySteps from 'segments/userJourneySteps';
 import Header from 'structure/Header';
 import MasterInterfacePage from 'structure/MasterInterfacePage';
 import Navigation from 'structure/Navigation';
-import AppLogin from './AppLogin';
-import { SectionV2 } from './components/reusables/SharedStylingV2';
-import { ErrorContext } from './contexts/ErrorContext';
 import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJourneySlice';
 
 // Internal Configs
@@ -65,11 +62,11 @@ const GlobalStyle = createGlobalStyle`
 
 export interface IUseSpaceReturnValues {
   spaceUI: SpacesUI;
-  SpaceInvitesComponent: React.FC<ISpaceInvitesProps>;
-  SpaceWidgetComponent: React.FC<ISpaceWidgetProps>;
-  SpaceFeedComponent: React.FC<ISpaceFeedProps>;
-  SpaceBannerComponent: React.FC<ISpaceBannerProps>;
-  CreateSpaceComponent: React.FC<ISpaceCreateWidgetProps>;
+  SpaceInvitesComponent: FC<ISpaceInvitesProps>;
+  SpaceWidgetComponent: FC<ISpaceWidgetProps>;
+  SpaceFeedComponent: FC<ISpaceFeedProps>;
+  SpaceBannerComponent: FC<ISpaceBannerProps>;
+  CreateSpaceComponent: FC<ISpaceCreateWidgetProps>;
 }
 
 // Extend the console
@@ -127,17 +124,18 @@ export default function App() {
 
   const dispatch = useDispatch();
 
-  const { isActive, account, chainId, provider } = useAccount();
-  const [currentTime, setcurrentTime] = React.useState(0);
-  const { authError, setAuthError } = useContext(ErrorContext);
+  const { isActive, account, provider } = useAccount();
+  const [currentTime, setcurrentTime] = useState(0);
+
   const { pgpPvtKey } = useContext<any>(AppContext);
-  const { sidebarCollapsed, setSidebarCollapsed } = React.useContext(GlobalContext);
+  const { sidebarCollapsed, setSidebarCollapsed } = useContext(GlobalContext);
 
   const updateOnboardTheme = useUpdateTheme();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
 
+  useInactiveListener();
   const { run, stepIndex, tutorialContinous } = useSelector((state: any) => state.userJourney);
   // const location = useLocation();
   // Build takes care of this now
@@ -148,7 +146,7 @@ export default function App() {
   //   document.title = title;
   // }, [title]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const now = Date.now() / 1000;
     setcurrentTime(now);
   }, []);
@@ -163,10 +161,6 @@ export default function App() {
     dispatch(resetUserSlice());
   }, [account]);
 
-  // console.log(isActive, chainId, account);
-  // handle logic to reconnect in response to certain events from the provider
-  const { allowedChain } = useInactiveListener();
-
   // Initialize Theme
   const [darkMode, setDarkMode] = useState(false);
   const toggleDarkMode = () => {
@@ -176,7 +170,7 @@ export default function App() {
     setDarkMode(!darkMode);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const data = localStorage.getItem('theme');
     if (data) {
       const isDarkMode = JSON.parse(data);
@@ -193,16 +187,16 @@ export default function App() {
     }
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     localStorage.setItem('theme', JSON.stringify(darkMode));
     localStorage.setItem('SidebarCollapsed', JSON.stringify(sidebarCollapsed));
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.body.style.backgroundColor = darkMode ? '#000' : '#fff';
   }, [darkMode]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     window?.Olvy?.init({
       organisation: 'epns',
       target: '#olvy-target',
@@ -224,9 +218,7 @@ export default function App() {
   const steps = UserJourneySteps({ darkMode });
 
   const handleJoyrideCallback = (data: CallBackProps) => {
-    // console.log(data)
-    // console.log(STATUS);
-    const { action, lifecycle, status, index } = data;
+    const { action, lifecycle, index } = data;
     if (lifecycle === 'ready') {
       setTimeout(() => {
         document.querySelector('div > section > div').scrollTop = 0;

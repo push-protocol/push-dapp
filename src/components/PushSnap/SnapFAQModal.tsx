@@ -1,8 +1,7 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 // External Packages
-import ReactGA from 'react-ga';
 import { useNavigate } from 'react-router-dom';
 
 import styled, { useTheme } from 'styled-components';

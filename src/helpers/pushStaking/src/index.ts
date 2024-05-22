@@ -1,8 +1,6 @@
 import { ethers } from 'ethers';
-import { PushCoreV2 } from '../types';
 import { CoreV2Reward } from './CoreV2Reward';
 import { Helpers } from './helpers';
-import { Constants } from './constants';
 
 export const getUserPushStakingInfo = async (
   provider: ethers.providers.JsonRpcProvider,

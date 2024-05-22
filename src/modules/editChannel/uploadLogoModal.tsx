@@ -1,33 +1,19 @@
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { Button, Item } from 'components/SharedStyling';
 import ImageClipper from 'primaries/ImageClipper';
-import React, { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
-import { useSelector } from 'react-redux';
 import { useClickAway } from 'react-use';
-import styled, { useTheme } from 'styled-components';
-import { device } from 'config/Globals';
+import styled from 'styled-components';
 
-const uploadLogoModal = ({
-  onClose, InnerComponentProps
-}) => {
-  const {
-    setChannelLogo,
-    channelLogo,
-    croppedImage,
-    setCroppedImage,
-    setChannelFile,
-    imageSrc,
-    setImageSrc,
-    imageType,
-    setImageType
-  } = InnerComponentProps;
+const uploadLogoModal = ({ onClose, InnerComponentProps }) => {
+  const { setChannelLogo, croppedImage, setCroppedImage, imageSrc, setImageSrc, imageType, setImageType } =
+    InnerComponentProps;
 
-  const theme = useTheme();
   const childRef = useRef();
-  const containerRef = React.useRef(null);
+  const containerRef = useRef(null);
   useClickAway(containerRef, () => {
-    onClose()
+    onClose();
   });
 
   const handleDragOver = (e) => {
@@ -39,7 +25,7 @@ const uploadLogoModal = ({
     e.preventDefault();
     e.stopPropagation();
     //let's grab the image file
-    handleFile(e.dataTransfer, "transfer", e);
+    handleFile(e.dataTransfer, 'transfer', e);
   };
 
   const handleFile = async (file, path, e) => {
@@ -54,14 +40,16 @@ const uploadLogoModal = ({
 
       reader.onloadend = function (e) {
         setImageSrc(reader.result);
-        setImageType(file?.files[0]?.type)
+        setImageType(file?.files[0]?.type);
       };
     }
   };
 
   return (
     <Container ref={containerRef}>
-      <ModalNav><CloseButton onClick={onClose} /></ModalNav>
+      <ModalNav>
+        <CloseButton onClick={onClose} />
+      </ModalNav>
 
       <ModalContainer>
         <ModalPrimaryText>Please upload a PNG, JPG. Crop the image to resize to 128px.</ModalPrimaryText>
@@ -72,9 +60,7 @@ const uploadLogoModal = ({
             onDrop={(e) => handleOnDrop(e)}
             className="bordered"
           >
-
             <div className="inner">
-
               <div className="crop-div">
                 {croppedImage ? (
                   <div className="crop-innderdiv">
@@ -92,9 +78,7 @@ const uploadLogoModal = ({
                       className="cropper"
                       imageSrc={imageSrc}
                       imageType={imageType}
-                      onImageCropped={(croppedImage) =>
-                        setCroppedImage(croppedImage)
-                      }
+                      onImageCropped={(croppedImage) => setCroppedImage(croppedImage)}
                       width="128px"
                       height="128px"
                       ref={childRef}
@@ -103,19 +87,20 @@ const uploadLogoModal = ({
                 )}
               </div>
 
-              <DragText >
-                <p className="text-below">
-                  Drag and Drop or
-                </p>
+              <DragText>
+                <p className="text-below">Drag and Drop or</p>
                 <div className="text-div">
-                  <label htmlFor="file-upload" className="labeled">
+                  <label
+                    htmlFor="file-upload"
+                    className="labeled"
+                  >
                     <div>Browse to Choose</div>
                     <input
                       id="file-upload"
                       accept="image/*"
                       name="file-upload"
                       hidden
-                      onChange={(e) => handleFile(e.target, "target", e)}
+                      onChange={(e) => handleFile(e.target, 'target', e)}
                       type="file"
                       className="sr-only"
                       readOnly
@@ -126,18 +111,18 @@ const uploadLogoModal = ({
             </div>
           </div>
           {/* </div> */}
-
         </Space>
-
 
         <ModalFooter>
           {croppedImage ? (
             <>
               <UploadButton
                 onClick={() => {
-                  setChannelLogo(croppedImage)
+                  setChannelLogo(croppedImage);
                   onClose();
-                }}>Upload Image
+                }}
+              >
+                Upload Image
               </UploadButton>
             </>
           ) : (
@@ -145,94 +130,89 @@ const uploadLogoModal = ({
               <CropButton
                 onClick={() => {
                   childRef.current.showCroppedImage();
-                }}>Crop Image</CropButton>
+                }}
+              >
+                Crop Image
+              </CropButton>
             </>
           )}
         </ModalFooter>
-
       </ModalContainer>
-
-
     </Container>
   );
 };
 
 export default uploadLogoModal;
 
-const Container = styled.div`
-`
+const Container = styled.div``;
 
 const ModalContainer = styled.div`
-    display:flex;
-    flex-direction: column;
-    margin: 18px 10px 32px 10px;
-
-`
+  display: flex;
+  flex-direction: column;
+  margin: 18px 10px 32px 10px;
+`;
 
 const ModalPrimaryText = styled.p`
-    margin:0px;
-    font-family: 'Strawford';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 15px;
-    line-height: 140%;
-    text-align: center;
-    color: ${(props) => props.theme.modalTextColor}
-`
+  margin: 0px;
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 140%;
+  text-align: center;
+  color: ${(props) => props.theme.modalTextColor};
+`;
 
 const ModalNav = styled.div`
-    text-align: end;
-    width: 100%;
-`
+  text-align: end;
+  width: 100%;
+`;
 
 const CloseButton = styled(AiOutlineClose)`
-    cursor:pointer;
-    font-size:20px;
-    color: ${(props) => props.theme.modalTextColor};
-
+  cursor: pointer;
+  font-size: 20px;
+  color: ${(props) => props.theme.modalTextColor};
 `;
 
 const DragText = styled(Item)`
-display:flex;
-flex-direction:row;
-align-items:center;
-`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
 
-const ModalFooter = styled(ItemVV2)`
-
-`
+const ModalFooter = styled(ItemVV2)``;
 
 const CropButton = styled(Button)`
-font-family: 'Strawford';
-font-style: normal;
-font-weight: 500;
-font-size: 18px;
-line-height: 22px;
-display: flex;
-border-radius: 15px;
-align-items: center;
-text-align: center;
-background: #CF1C84;
-color:#fff;
-padding: 16px 27px;
-width: 12rem;
-`
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  display: flex;
+  border-radius: 15px;
+  align-items: center;
+  text-align: center;
+  background: #cf1c84;
+  color: #fff;
+  padding: 16px 27px;
+  width: 12rem;
+`;
 
 const UploadButton = styled(Button)`
-font-family: 'Strawford';
-font-style: normal;
-font-weight: 500;
-font-size: 18px;
-line-height: 22px;
-display: flex;
-border-radius: 15px;
-align-items: center;
-text-align: center;
-background: #CF1C84;
-color:#fff;
-padding: 16px 18px;
-width: 12rem;
-`
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  display: flex;
+  border-radius: 15px;
+  align-items: center;
+  text-align: center;
+  background: #cf1c84;
+  color: #fff;
+  padding: 16px 18px;
+  width: 12rem;
+`;
 
 const Space = styled.div`
   width: 100%;
@@ -243,7 +223,7 @@ const Space = styled.div`
   .bordered {
     display: flex;
     justify-content: center;
-    border: 1px dashed #8C99B0;
+    border: 1px dashed #8c99b0;
     align-items: flex-end;
     border-radius: 12px;
     padding: 0px 50px 0px 50px;
@@ -263,21 +243,21 @@ const Space = styled.div`
         justify-content: space-evenly;
         align-items: center;
         margin-right: auto;
-        .crop-innderdiv{
-            width: 100%;
-            background: ${(props) => props.theme.modalImageBgColor};
-            border-radius: 20px;
-            padding: 17px 100px 17px 100px;
-            @media (max-width: 768px) {
-              padding: 17px 2px 17px;
-            }
+        .crop-innderdiv {
+          width: 100%;
+          background: ${(props) => props.theme.modalImageBgColor};
+          border-radius: 20px;
+          padding: 17px 100px 17px 100px;
+          @media (max-width: 768px) {
+            padding: 17px 2px 17px;
+          }
 
-            margin-bottom: 12px;
+          margin-bottom: 12px;
         }
 
         div {
-            height:128px;
-            // width:128px;
+          height: 128px;
+          // width:128px;
           .croppedImage {
             border-radius: 20px;
             // @media (max-width: 768px) {
@@ -329,7 +309,7 @@ const Space = styled.div`
           position: relative;
           cursor: pointer;
           border-radius: 4px;
-          color: #CF1C84;
+          color: #cf1c84;
           &:hover {
             text-decoration: underline;
           }
@@ -340,7 +320,7 @@ const Space = styled.div`
         font-size: 15px;
         line-height: 140%;
         color: ${(props) => props.theme.modalTextColor};
-        margin:0px 0.3rem 0px 0px;
+        margin: 0px 0.3rem 0px 0px;
       }
     }
   }

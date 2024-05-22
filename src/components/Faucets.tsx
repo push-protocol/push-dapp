@@ -8,6 +8,7 @@ import styled, { useTheme } from 'styled-components';
 import { useClickAway } from 'hooks/useClickAway';
 import { Image, Item } from '../primaries/SharedStyling';
 import Dropdown from './Dropdown';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 type FaucetListType = {
   id: string;
@@ -98,7 +99,7 @@ const Faucets = () => {
       >
         <ItemHBar>
           <Image
-            src="./svg/gasPump.svg"
+            src={getPublicAssetPath('svg/gasPump.svg')}
             alt="faucet"
             width="32px"
             height="32px"
@@ -109,7 +110,7 @@ const Faucets = () => {
           <img
             alt="arrow"
             className={`${showDropdown ? 'down' : 'up'}`}
-            src="/svg/arrow.svg"
+            src={getPublicAssetPath('svg/arrow.svg')}
           />
         </ToggleArrowImg>
       </Faucet>

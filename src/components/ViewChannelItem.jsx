@@ -1,11 +1,11 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import Skeleton from '@yisheng90/react-loading';
 import axios from 'axios';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import { GoVerified } from 'react-icons/go';
 import { IoMdPeople } from 'react-icons/io';
 import { MdCheckCircle, MdError } from 'react-icons/md';
@@ -16,7 +16,6 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { css, useTheme } from 'styled-components';
 
 // Internal Compoonents
-import * as PushAPI from '@pushprotocol/restapi';
 import { Device } from 'assets/Device';
 import MetaInfoDisplayer from 'components/MetaInfoDisplayer';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -43,6 +42,7 @@ import VerifiedTooltipContent from './VerifiedTooltipContent';
 import APP_PATHS from 'config/AppPaths';
 import { addresses, appConfig, CHAIN_DETAILS } from 'config/index.js';
 import { IPFSGateway } from 'helpers/IpfsHelper';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, profileType }) {
@@ -70,21 +70,21 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
-  const [channelObject, setChannelObject] = React.useState(channelObjectProp);
-  const [subscribed, setSubscribed] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
-  const [subscriberCount, setSubscriberCount] = React.useState(0);
-  const [isPushAdmin, setIsPushAdmin] = React.useState(false);
-  const [vLoading, setvLoading] = React.useState(false);
-  const [bLoading, setBLoading] = React.useState(false);
-  const [txInProgress, setTxInProgress] = React.useState(false);
-  const [canUnverify, setCanUnverify] = React.useState(false);
-  const [verifierDetails, setVerifierDetails] = React.useState(null);
-  const [copyText, setCopyText] = React.useState(channelObject.channel);
-  const [tooltTipHeight, setToolTipheight] = React.useState(0);
-  const [channelObjectFromHash, setChannelObjectFromHash] = React.useState({});
-  const [channelObjectStartBlock, setChannelObjectStartBlock] = React.useState({});
-  const [showChannelChangedWarning, setShowChannelChangedWarning] = React.useState(false);
+  const [channelObject, setChannelObject] = useState(channelObjectProp);
+  const [subscribed, setSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [subscriberCount, setSubscriberCount] = useState(0);
+  const [isPushAdmin, setIsPushAdmin] = useState(false);
+  const [vLoading, setvLoading] = useState(false);
+  const [bLoading, setBLoading] = useState(false);
+  const [txInProgress, setTxInProgress] = useState(false);
+  const [canUnverify, setCanUnverify] = useState(false);
+  const [verifierDetails, setVerifierDetails] = useState(null);
+  const [copyText, setCopyText] = useState(channelObject.channel);
+  const [tooltTipHeight, setToolTipheight] = useState(0);
+  const [channelObjectFromHash, setChannelObjectFromHash] = useState({});
+  const [channelObjectStartBlock, setChannelObjectStartBlock] = useState({});
+  const [showChannelChangedWarning, setShowChannelChangedWarning] = useState(false);
   const isVerified = channelObject.verified_status;
   const isBlocked = channelObject.blocked;
   const isMobile = useDeviceWidthCheck(600);
@@ -96,7 +96,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
 
   // ------ toast related section
   const isChannelBlacklisted = CHANNEL_BLACKLIST.includes(channelObject.channel);
-  const [toast, showToast] = React.useState(null);
+  const [toast, showToast] = useState(null);
   const clearToast = () => showToast(null);
 
   useEffect(() => {
@@ -194,7 +194,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
   }
 
   //clear toast variable after it is shown
-  React.useEffect(() => {
+  useEffect(() => {
     if (toast) {
       clearToast();
     }
@@ -540,7 +540,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                         {channelObject && channelObject?.channel && (
                           <Span padding="0 0 0 5px">
                             <Image
-                              src={`./svg/Ethereum.svg`}
+                              src={getPublicAssetPath('svg/Ethereum.svg')}
                               alt="Ethereum"
                               width="20px"
                               height="20px"
@@ -554,9 +554,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                           !MaskedAliasChannels[+channelObject?.alias_blockchain_id][channelObject?.channel] && (
                             <Span padding="0 0 0 5px">
                               <Image
-                                src={`./svg/${
-                                  CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]
-                                }.svg`}
+                                src={getPublicAssetPath(
+                                  `svg/${CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]}.svg`
+                                )}
                                 alt="Polygon"
                                 width="20px"
                                 height="20px"
@@ -713,7 +713,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                     {channelObject && channelObject?.channel && (
                       <Span padding="0 0 0 5px">
                         <Image
-                          src={`./svg/Ethereum.svg`}
+                          src={getPublicAssetPath('svg/Ethereum.svg')}
                           alt="Ethereum"
                           width="20px"
                           height="20px"
@@ -727,7 +727,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                       !MaskedAliasChannels[+channelObject?.alias_blockchain_id][channelObject?.channel] && (
                         <Span padding="0 0 0 5px">
                           <Image
-                            src={`./svg/${LOGO_FROM_CHAIN_ID[+channelObject.alias_blockchain_id]}`}
+                            src={getPublicAssetPath(`svg/${LOGO_FROM_CHAIN_ID[+channelObject.alias_blockchain_id]}`)}
                             alt="Alias Chain Logo"
                             width="20px"
                             height="20px"
@@ -802,7 +802,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                   <MetaInfoDisplayer
                     externalIcon={
                       <Image
-                        src="./svg/users.svg"
+                        src={getPublicAssetPath('svg/users.svg')}
                         alt="users"
                         width="14px"
                         height="14px"
@@ -1003,7 +1003,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                       <ActionTitle hideit={txInProgress}>Manage</ActionTitle>
                       <ImageV2
                         alt="arrow"
-                        src="/svg/arrow.svg"
+                        src={getPublicAssetPath('svg/arrow.svg')}
                         height="10px"
                         width="12px"
                       />

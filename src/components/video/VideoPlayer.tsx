@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -27,7 +27,7 @@ const VideoPlayer = ({ localVideoStyles, incoming }: VideoPlayerType) => {
   const { videoCallData, isCallAccepted } = useContext(VideoCallContext);
   const { connectedUser } = useContext(AppContext);
   const { currentChat }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
-  const { web3NameList }: AppContextType = React.useContext(MainContext);
+  const { web3NameList }: AppContextType = useContext(MainContext);
   const web3Name = web3NameList[videoCallData.incoming[0].address];
   const theme = useTheme();
 

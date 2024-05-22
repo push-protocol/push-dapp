@@ -1,16 +1,16 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
-import styled, { css, useTheme } from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 
 // Internal Compoonents
 import useToast from 'hooks/useToast';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import InfoLogo from '../../assets/inforWithoutBG.svg';
-import { B, Button } from 'primaries/SharedStyling';
+import { B } from 'primaries/SharedStyling';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';
 import StakingToolTip from './StakingToolTip';
@@ -44,8 +44,8 @@ const bn = function (number, defaultValue = null) {
 const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP }) => {
   const { account, provider } = useAccount();
 
-  const [txInProgressWithdraw, setTxInProgressWithdraw] = React.useState(false);
-  const [txInProgressClaimRewards, setTxInProgressClaimRewards] = React.useState(false);
+  const [txInProgressWithdraw, setTxInProgressWithdraw] = useState(false);
+  const [txInProgressClaimRewards, setTxInProgressClaimRewards] = useState(false);
 
   const [withdrawErrorMessage, setWithdrawErrorMessage] = useState(null);
   const [unstakeErrorMessage, setUnstakeErrorMessage] = useState(null);
@@ -216,7 +216,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
     });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     setWithdrawErrorMessage(null);
     setUnstakeErrorMessage(null);
   }, [account]);

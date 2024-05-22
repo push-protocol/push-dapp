@@ -1,6 +1,3 @@
-// React + Web3 Essentials
-import React from 'react';
-
 // External Packages
 import styled from 'styled-components';
 
@@ -8,9 +5,9 @@ import styled from 'styled-components';
 import { H2V2, ImageV2, ItemHV2, Skeleton, SkeletonLine } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
-import GLOBALS from 'config/Globals';
-import { ethers } from 'ethers';
+
 import { useDeviceWidthCheck } from 'hooks';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 const YieldPushPriceSection = ({ poolStats }) => {
   function numberWithCommas(x) {
@@ -46,7 +43,7 @@ const YieldPushPriceSection = ({ poolStats }) => {
             <ImageV2
               width="25px"
               height={isMobile ? '20px' : '27px'}
-              src="svg/uniswapLogo.svg"
+              src={getPublicAssetPath('svg/uniswapLogo.svg')}
               alt="Uniswap Logo"
             />
           </ItemHV2>

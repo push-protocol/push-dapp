@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
 import { useAccount } from './useAccount';
-import { AppContext } from 'contexts/AppContext';
 import {
   NotificationEvent,
   NotificationEventType,
@@ -8,18 +7,9 @@ import {
 } from '@pushprotocol/restapi/src/lib/pushstream/pushStreamTypes';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { ADDITIONAL_META_TYPE } from '@pushprotocol/restapi/src/lib/payloads';
-import { PushAPI, VideoCallStatus } from '@pushprotocol/restapi';
+import { VideoCallStatus } from '@pushprotocol/restapi';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
 import { useSelector } from 'react-redux';
-
-const eventlistener = async (pushAPI: PushAPI, eventName: string, triggerFunc: (data) => void): Promise<void> => {
-  pushAPI.stream.on(eventName, (data: any) => {
-    console.log('Stream Event Received', eventName);
-    console.log(data);
-    console.log('\n');
-    triggerFunc(data);
-  });
-};
 
 const useSDKStream = () => {
   const { account } = useAccount();

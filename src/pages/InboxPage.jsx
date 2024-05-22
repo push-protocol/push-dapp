@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
 // External Packages

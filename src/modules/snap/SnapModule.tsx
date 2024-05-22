@@ -1,8 +1,7 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 
 // External Packages
-import ReactGA from 'react-ga';
 import { useNavigate } from 'react-router-dom';
 import styled, { useTheme } from 'styled-components';
 
@@ -14,8 +13,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { AppContext } from 'contexts/AppContext';
 import { useAccount } from 'hooks';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
-import Info from 'segments/Info';
-import { H2, Image, Item, Section, Span } from '../../primaries/SharedStyling';
+import { Image, Section } from '../../primaries/SharedStyling';
 
 // Internal Configs
 import ActiveIcon from 'assets/snap/ActiveIcon.svg';
@@ -34,7 +32,7 @@ const SnapModule = ({ route }) => {
   const [walletConnected, setWalletConnected] = useState(false);
   const [addedAddress, setAddedAddress] = useState(false);
 
-  const { showMetamaskPushSnap, setSnapState, setSnapInstalled, snapInstalled } = React.useContext(AppContext);
+  const { showMetamaskPushSnap, setSnapState, setSnapInstalled, snapInstalled } = useContext(AppContext);
 
   const { account, provider } = useAccount();
 

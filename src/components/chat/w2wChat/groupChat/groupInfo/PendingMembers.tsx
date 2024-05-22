@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -9,6 +9,7 @@ import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedSt
 import { shortenText } from 'helpers/UtilityHelper';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext } from 'types/chat';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 export const PendingMembers = ({ setshowPendingRequests, showPendingRequests }) => {
   const { currentChat }: AppContext = useContext<AppContext>(Context);
@@ -49,7 +50,7 @@ export const PendingMembers = ({ setshowPendingRequests, showPendingRequests }) 
           <img
             alt="arrow"
             className={`${showPendingRequests ? 'down' : 'up'}`}
-            src="/svg/arrow.svg"
+            src={getPublicAssetPath('svg/arrow.svg')}
           />
         </ToggleArrowImg>
       </ItemHV2>

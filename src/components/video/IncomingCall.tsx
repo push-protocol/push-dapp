@@ -1,11 +1,10 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // External Packages
 // import { MdClear } from 'react-icons/md';
 import { BsChevronDown } from 'react-icons/bs';
 import styled from 'styled-components';
-import * as PushAPI from '@pushprotocol/restapi';
 
 // Internal Components
 import { ItemHV2, SectionV2 } from 'components/reusables/SharedStylingV2';
@@ -20,7 +19,7 @@ import VideoPlayer from './VideoPlayer';
 
 // Internal Configs
 import { device } from 'config/Globals';
-import { VideoCallStatus } from '@pushprotocol/restapi';
+import { VideoCallStatus, user as pushUser } from '@pushprotocol/restapi';
 import { appConfig } from 'config/index.js';
 import { AppContext } from 'contexts/AppContext';
 
@@ -43,7 +42,7 @@ const IncomingCall = () => {
 
   useEffect(() => {
     (async () => {
-      const userData = await PushAPI.user.get({ account: videoCallData.incoming[0].address, env: appConfig.appEnv });
+      const userData = await pushUser.get({ account: videoCallData.incoming[0].address, env: appConfig.appEnv });
       setIncomingCallUserData(userData);
     })();
   }, []);
