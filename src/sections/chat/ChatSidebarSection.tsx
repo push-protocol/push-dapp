@@ -20,6 +20,10 @@ import { Context } from 'modules/chat/ChatModule';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
+import { GlobalContext } from 'contexts/GlobalContext';
+import { useAccount } from 'hooks';
+import { appConfig } from '../../config/index.js';
+import RecommendedChatLists from 'config/RecommendedChatsList';
 
 const createGroupOnMouseEnter = [
   {
@@ -51,7 +55,7 @@ type loadingData = { loading: boolean; preload: boolean; paging: boolean; finish
 
 // Chat Sections
 // Divided into two, left and right
-const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
+const ChatSidebarSection = ({ showCreateGroupModal, chatId, selectedChatId, setSelectedChatId }) => {
   // theme context
   const theme = useTheme();
 
@@ -359,7 +363,12 @@ const ChatSidebarSection = ({ showCreateGroupModal, setSelectedChatId }) => {
             }}
             onChatsCountChange={(count) => {
               console.debug('src::sections::chat::ChatSidebarSection::onChatsCountChage::requests: count is: ', count);
-              setNumberOfChatReqs(count);
+              // remove request badge update when chatId is Push Bot or actively opened
+              if (chatId == RecommendedChatLists[0]?.payload?.chatId || chatId?.split("chatid:")[1] == selectedChatId){
+                setNumberOfChatReqs(null);
+              } else {
+                setNumberOfChatReqs(count);
+              }
             }}
             onLoading={(loadingData) => {
               console.debug(

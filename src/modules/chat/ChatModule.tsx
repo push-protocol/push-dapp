@@ -274,6 +274,8 @@ function Chat({ chatid }) {
                   <ChatSidebarSection
                     key={userPushSDKInstance.uid}
                     showCreateGroupModal={showCreateGroupModal}
+                    chatId={chatid}
+                    selectedChatId={selectedChatId}
                     setSelectedChatId={setSelectedChatId}
                   />
                 </ChatSidebarContainer>
