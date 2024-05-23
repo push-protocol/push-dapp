@@ -124,7 +124,7 @@ const AppContextProvider = ({ children }) => {
     }
 
     if (remember) {
-      if (!user.readmode()) {
+      if (user && !user.readmode()) {
         storePGPKeyForUser(user.account, user.decryptedPgpPvtKey);
       }
     }
