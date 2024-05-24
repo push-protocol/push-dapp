@@ -15,7 +15,7 @@ export const notifChannelSettingFormatString = ({ settings }: { settings: Channe
         ? _notifSettings.push({ enabled: (setting as ChannelSetting & { type: 1 }).default })
         : _notifSettings.push({
             value: (setting as ChannelSetting & { type: 2 }).default,
-            enabled: (setting as ChannelSetting & { type: 2 }).enabled,
+            enabled: (setting as ChannelSetting & { type: 2 }).enabled
           })
     );
 
@@ -55,20 +55,21 @@ export const getMinimalUserSetting = (settings: UserSettingType[]) => {
     return null;
   }
 
-  let userSetting = '';
+  // let userSetting = '';
   let numberOfSettings = 0;
-  for (let i = 0; i < settings.length; i++) {
-    const ele = settings[i];
+
+  //TODO: Use array.reduce( preffered) or array.forEach (less preffered) instead of for loop
+  const userSetting = settings.reduce((acc, ele, i) => {
     const enabled = ele.enabled ? 1 : 0;
     if (ele.enabled) numberOfSettings++;
 
     if (Object.keys(ele).includes('value')) {
       // slider type
-      if (typeof ele.value == 'number')
-        userSetting = userSetting + SLIDER_TYPE + SETTING_DELIMITER + enabled + SETTING_DELIMITER + ele.value;
-      else {
-        userSetting =
-          userSetting +
+      if (typeof ele.value === 'number') {
+        acc = acc + SLIDER_TYPE + SETTING_DELIMITER + enabled + SETTING_DELIMITER + ele.value;
+      } else {
+        acc =
+          acc +
           RANGE_TYPE +
           SETTING_DELIMITER +
           enabled +
@@ -79,9 +80,13 @@ export const getMinimalUserSetting = (settings: UserSettingType[]) => {
       }
     } else {
       // boolean type
-      userSetting = userSetting + BOOLEAN_TYPE + SETTING_DELIMITER + enabled;
+      acc = acc + BOOLEAN_TYPE + SETTING_DELIMITER + enabled;
     }
-    if (i != settings.length - 1) userSetting = userSetting + SETTING_SEPARATOR;
-  }
+
+    if (i !== settings.length - 1) acc = acc + SETTING_SEPARATOR;
+
+    return acc;
+  }, '');
+
   return numberOfSettings + SETTING_SEPARATOR + userSetting;
 };
