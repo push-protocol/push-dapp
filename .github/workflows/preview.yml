@@ -41,14 +41,8 @@ jobs:
         with:
           source-dir: ./build/
 
-<<<<<<< HEAD
       - uses: rossjrw/pr-preview-action@v1.4.7
         if: github.event.action == 'closed' && !github.event.pull_request.merged
-=======
-      - name: Delete Preview
-      - uses: rossjrw/pr-preview-action@v1.4.7
-        if: github.event.action == "closed" && !github.event.pull_request.merged
->>>>>>> 0d1d0df1 (updated gaction version)
         with:
           source-dir: ./build/
           action: remove
