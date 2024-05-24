@@ -1,8 +1,5 @@
 import { ItemH } from 'components/SharedStyling';
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import ChannelsDataStore from 'singletons/ChannelsDataStore';
-import styled, { useTheme } from 'styled-components';
+import { useEffect, useState } from 'react';
 import Skeleton from '@yisheng90/react-loading';
 import { Image, Span } from 'primaries/SharedStyling';
 import { appConfig } from 'config/index.js';
@@ -11,17 +8,15 @@ import { ButtonV2 } from 'components/reusables/SharedStylingV2';
 import { IPFSGateway } from 'helpers/IpfsHelper';
 import axios from 'axios';
 import MetaInfoDisplayer from 'components/MetaInfoDisplayer';
-import OptinNotifSettingDropdown from 'components/dropdowns/OptinNotifSettingDropdown';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 const ChannelProfileComponent = ({ channelID, channelDetails }) => {
   const themes = useTheme();
-  const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [channelIcon, setChannelIcon] = React.useState('');
-  const [channelObjectFromHash, setChannelObjectFromHash] = React.useState({});
-  const [copyText, setCopyText] = React.useState(channelDetails?.channel);
-  const [txInProgress, setTxInProgress] = React.useState(false);
+  const [isLoading] = useState(false);
+  const [channelIcon, setChannelIcon] = useState('');
+  const [channelObjectFromHash, setChannelObjectFromHash] = useState({});
+  const [copyText, setCopyText] = useState(channelDetails?.channel);
 
   useEffect(() => {
     // Getting Channel Icon from Channel IPFS Hash
@@ -183,7 +178,7 @@ const ChannelProfileComponent = ({ channelID, channelDetails }) => {
                 {channelDetails && channelDetails?.channel && (
                   <Span padding="0 0 0 5px">
                     <Image
-                      src={`./svg/Ethereum.svg`}
+                      src={getPublicAssetPath('svg/Ethereum.svg')}
                       alt="Ethereum"
                       width="20px"
                       height="20px"
@@ -197,7 +192,7 @@ const ChannelProfileComponent = ({ channelID, channelDetails }) => {
                   !MaskedAliasChannels[+channelDetails?.alias_blockchain_id][channelDetails?.channel] && (
                     <Span padding="0 0 0 5px">
                       <Image
-                        src={`./svg/${LOGO_FROM_CHAIN_ID[+channelDetails.alias_blockchain_id]}`}
+                        src={getPublicAssetPath(`svg/${LOGO_FROM_CHAIN_ID[+channelDetails.alias_blockchain_id]}`)}
                         alt="Alias Chain Logo"
                         width="20px"
                         height="20px"
@@ -271,7 +266,7 @@ const ChannelProfileComponent = ({ channelID, channelDetails }) => {
                 <MetaInfoDisplayer
                   externalIcon={
                     <Image
-                      src="./svg/users.svg"
+                      src={getPublicAssetPath('svg/users.svg')}
                       alt="users"
                       width="14px"
                       height="14px"

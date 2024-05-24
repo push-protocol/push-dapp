@@ -1,9 +1,8 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
-import { ethers } from 'ethers';
 
 // Internal Components
 import MoreDark from 'assets/chat/group-chat/moredark.svg?react';

@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
@@ -38,20 +38,20 @@ const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
     aliasDetails: { isAliasVerified, aliasAddrFromContract },
   } = useSelector((state: any) => state.admin);
   const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector((state: any) => state.channels);
-  const [creationDate, setCreationDate] = React.useState('');
+  const [creationDate, setCreationDate] = useState('');
   let { channelState } = channelDetails;
   if (!channelState) channelState = channelDetails['activation_status'];
   const channelIsActive = channelState === CHANNEL_ACTIVE_STATE;
   const channelIsDeactivated = channelState === CHANNNEL_DEACTIVATED_STATE;
 
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [pushDeposited, setPushDeposited] = useState(false);
   const [pushApprovalAmount, setPushApprovalAmount] = useState(0);
 
   const handleClose = () => !isLoading && onClose();
 
   // to close the modal upon a click on backdrop
-  const containerRef = React.useRef(null);
+  const containerRef = useRef(null);
   useClickAway(containerRef, () => handleClose());
 
   const CORE_CHAIN_ID = appConfig.coreContractChain;

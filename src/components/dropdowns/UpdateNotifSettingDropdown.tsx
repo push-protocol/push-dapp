@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useState } from 'react';
+import { useContext, useState, ReactNode, Dispatch, SetStateAction, FC } from 'react';
 
 // External Packages
 import Switch from 'react-switch';
@@ -25,7 +25,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { updateUserSetting } from 'redux/slices/channelSlice';
 
 interface UpdateNotifSettingDropdownProps {
-  children: React.ReactNode;
+  children: ReactNode;
   centerOnMobile: boolean;
   channelDetail: any;
   channelSetting?: ChannelSetting[];
@@ -37,11 +37,11 @@ interface UpdateNotifSettingDropdownContainerProps {
   settings: UserSetting[];
   saveUserSettingHandler: (options: {
     userSettings?: UserSetting[];
-    setLoading?: React.Dispatch<React.SetStateAction<boolean>>;
+    setLoading?: Dispatch<SetStateAction<boolean>>;
   }) => Promise<void>;
 }
 
-const UpdateNotifSettingDropdownContainer: React.FC<UpdateNotifSettingDropdownContainerProps> = ({
+const UpdateNotifSettingDropdownContainer: FC<UpdateNotifSettingDropdownContainerProps> = ({
   settings,
   saveUserSettingHandler,
 }) => {
@@ -176,7 +176,7 @@ const UpdateNotifSettingDropdownContainer: React.FC<UpdateNotifSettingDropdownCo
 };
 
 // Faucet URLs
-const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({
+const UpdateNotifSettingDropdown: FC<UpdateNotifSettingDropdownProps> = ({
   children,
   centerOnMobile,
   channelDetail,
@@ -210,7 +210,7 @@ const UpdateNotifSettingDropdown: React.FC<UpdateNotifSettingDropdownProps> = ({
     setLoading,
   }: {
     userSettings?: UserSetting[];
-    setLoading?: React.Dispatch<React.SetStateAction<boolean>>;
+    setLoading?: Dispatch<SetStateAction<boolean>>;
   }) => {
     const setLoadingFunc = setLoading || (() => {});
     const saveOnSuccessSettingFunc = onSuccessSave || (() => {});

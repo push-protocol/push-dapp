@@ -1,12 +1,12 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React, { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 // External Packages
 import ReactGA from 'react-ga';
 import { BsChevronExpand } from 'react-icons/bs';
 import { toast } from 'react-toastify';
-import styled, { css, ThemeProvider, useTheme } from 'styled-components';
+import styled, { css, useTheme } from 'styled-components';
 
 // Internal Components
 import { toolingPostReq } from 'api/index';
@@ -15,7 +15,7 @@ import { GAS_LIMIT, PUSH_BALANCE_TRESHOLD } from 'components/ViewDelegateeItem';
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 import Blockies from 'primaries/BlockiesIdenticon';
 import InfoTooltip from 'primaries/InfoTooltip';
-import { A, B, Button, Content, H2, H3, Input, Item, ItemH, LI, Section, Span, UL } from 'primaries/SharedStyling';
+import { A, B, Button, H2, H3, Input, Item, ItemH, LI, Section, Span, UL } from 'primaries/SharedStyling';
 import LoaderSpinner from 'components/reusables/loaders/LoaderSpinner';
 import ViewDelegateeItem from 'components/ViewDelegateeItem';
 import { createTransactionObject } from 'helpers/GaslessHelper';
@@ -42,32 +42,32 @@ const GovModule = () => {
   // setup theme (styled components)
   const theme = useTheme();
 
-  const { web3NameList }: AppContextType = React.useContext(AppContext);
+  const { web3NameList }: AppContextType = useContext(AppContext);
   const { account, provider, chainId } = useAccount();
+
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
-  const [dashboardLoading, setDashboardLoading] = React.useState(true);
-  const [delegateesLoading, setDelegateesLoading] = React.useState(true);
+  const [dashboardLoading, setDashboardLoading] = useState(true);
+  const [delegateesLoading, setDelegateesLoading] = useState(true);
+  const [txInProgress, setTxInProgress] = useState(false);
+  const [controlAt, setControlAt] = useState(0);
+  const [delegateesObject, setDelegateesObject] = useState({});
+  const [pushDelegatees, setPushDelegatees] = useState([]);
+  const [pushNominees, setPushNominees] = useState([]);
+  const [epnsToken, setEpnsToken] = useState(null);
+  const [tokenBalance, setTokenBalance] = useState(null);
+  const [prettyTokenBalance, setPrettyTokenBalance] = useState(null);
 
-  const [txInProgress, setTxInProgress] = React.useState(false);
-  const [controlAt, setControlAt] = React.useState(0);
-  const [delegateesObject, setDelegateesObject] = React.useState({});
-  const [pushDelegatees, setPushDelegatees] = React.useState([]);
-  const [pushNominees, setPushNominees] = React.useState([]);
-  const [epnsToken, setEpnsToken] = React.useState(null);
-  const [tokenBalance, setTokenBalance] = React.useState(null);
-  const [prettyTokenBalance, setPrettyTokenBalance] = React.useState(null);
+  const [showDelegateePrompt, setShowDelegateePrompt] = useState(false);
+  const [delegatee, setDelegatee] = useState(null);
 
-  const [showDelegateePrompt, setShowDelegateePrompt] = React.useState(false);
-  const [delegatee, setDelegatee] = React.useState(null);
-
-  const [showAnswers, setShowAnswers] = React.useState([]);
-  const [selfVotingPower, setSelfVotingPower] = React.useState(null);
-  const [newDelegateeAddress, setNewDelegateeAddress] = React.useState('0x');
-  const [newDelegateeVotingPower, setNewDelegateeVotingPower] = React.useState(null);
-  const [signerObject, setSignerObject] = React.useState(null);
+  const [showAnswers, setShowAnswers] = useState([]);
+  const [selfVotingPower, setSelfVotingPower] = useState(null);
+  const [newDelegateeAddress, setNewDelegateeAddress] = useState('0x');
+  const [newDelegateeVotingPower, setNewDelegateeVotingPower] = useState(null);
+  const [signerObject, setSignerObject] = useState(null);
   const [gaslessInfo, setGaslessInfo] = useState(null);
-  const [transactionMode, setTransactionMode] = React.useState('gasless');
+  const [transactionMode, setTransactionMode] = useState('gasless');
 
   // Resolving web3 names
   useResolveWeb3Name(account);
@@ -79,21 +79,21 @@ const GovModule = () => {
     setShowAnswers(newShowAnswers);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!onCoreNetwork) {
       const url = window.location.origin;
       window.location.replace(`${url}/#/notavailable`);
     }
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     toolingPostReq('/gov/prev_delegation', { walletAddress: account }).then((res) => {
       console.debug('result', res.data.user);
       setGaslessInfo(res.data.user);
     });
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     console.debug(account);
     if (!!(provider && account)) {
       let signer = provider.getSigner(account);
@@ -103,17 +103,17 @@ const GovModule = () => {
     }
   }, [account]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (epnsToken) {
       getMyInfo();
     }
   }, [epnsToken, account, provider, prettyTokenBalance, tokenBalance]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setDashboardLoading(false);
   }, [account]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!epnsToken) return;
     const delegateesList = Object.values(delegateesJSON);
     // write helper function to sort by voting power

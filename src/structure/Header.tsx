@@ -1,14 +1,13 @@
-import React, { Suspense, useContext, useEffect, useRef } from 'react';
+import { Suspense, useContext, useEffect, useRef, useState } from 'react';
 
 // React + Web3 Essentials
-import { ethers } from 'ethers';
 import { Link } from 'react-router-dom';
 
 // External Packages
-import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
+import { AiOutlineMenu } from 'react-icons/ai';
 import { useLocation } from 'react-router-dom';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
-import styled, { css, useTheme } from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import OpenLink from 'assets/snap/GoToImage.svg?react';
@@ -17,9 +16,9 @@ import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner'
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { AppContext } from 'contexts/AppContext';
 import { ErrorContext } from 'contexts/ErrorContext';
-import { GlobalContext, ReadOnlyWalletMode } from 'contexts/GlobalContext';
+import { GlobalContext } from 'contexts/GlobalContext';
 import { NavigationContext } from 'contexts/NavigationContext';
-import Bell from 'primaries/Bell';
+
 import Profile from 'primaries/Profile';
 import { Button, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
 import PushLogoDark from '../assets/pushDark.svg';
@@ -27,7 +26,7 @@ import PushLogoLight from '../assets/pushLight.svg';
 
 // Internal Configs
 import ChainIndicator from 'components/ChainIndicator';
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { SpanV2 } from 'components/reusables/SharedStylingV2';
 import APP_PATHS from 'config/AppPaths';
 import GLOBALS from 'config/Globals';
 import { themeDark, themeLight } from 'config/Themization';
@@ -36,6 +35,7 @@ import { UnsupportedChainIdError } from 'connectors/error';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { useClickAway } from 'react-use';
 import MobileNavigation from './MobileNavigation';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 // header tags for pages that are not there in navigationList (Sidebar)
 const EXTRA_HEADER_TAGS = {
@@ -70,32 +70,32 @@ function Header({ isDarkMode, darkModeToggle }) {
   const navRef = useRef();
 
   const { navigationSetup } = useContext(NavigationContext);
-  const { setSnapInstalled, snapInstalled } = React.useContext(AppContext);
-  const { mode } = React.useContext(GlobalContext);
-  const { isActive, switchChain, connect, wallet } = useAccount();
+  const { setSnapInstalled, snapInstalled } = useContext(AppContext);
+
+  const { isActive, switchChain, wallet } = useAccount();
   const { authError: error } = useContext(ErrorContext);
 
-  const [showLoginControls, setShowLoginControls] = React.useState(false);
+  const [showLoginControls, setShowLoginControls] = useState(false);
 
   // Handle Nav Bar
-  const [showNavBar, setShowNavBar] = React.useState(false);
+  const [showNavBar, setShowNavBar] = useState(false);
 
   // Handle Header Tag
-  const [headerTag, setHeaderTag] = React.useState(null);
+  const [headerTag, setHeaderTag] = useState(null);
 
   // Get Location
   const location = useLocation();
 
-  // const [snapInstalled, setSnapInstalled] = React.useState(false);
+  // const [snapInstalled, setSnapInstalled] =  useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // runs when navigation setup is updated, will run on init
     updateHeaderTag(location);
     // console.log(Object.keys(navigationSetup))
   }, [navigationSetup]);
 
   // Change text based on change of location
-  React.useEffect(() => {
+  useEffect(() => {
     // runs on location, i.e. route, change
     updateHeaderTag(location);
   }, [location]);
@@ -196,16 +196,16 @@ function Header({ isDarkMode, darkModeToggle }) {
             justify="flex-start"
             flex="0"
           >
-            <a href="/channels">
+            <Link to="/channels">
               <Logo src={!isDarkMode ? PushLogoLight : PushLogoDark} />
-            </a>
+            </Link>
           </RightBarDesktop>
 
           <LogoMobile
             justify="flex-start"
             flex="0"
           >
-            <Logo src={!isDarkMode ? 'logo512.png' : 'logo512.png'} />
+            <Logo src={!isDarkMode ? getPublicAssetPath('logo512.png') : getPublicAssetPath('logo512.png')} />
           </LogoMobile>
         </RightBarContainer>
 

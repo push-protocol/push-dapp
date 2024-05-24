@@ -1,19 +1,16 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState, forwardRef, SyntheticEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 // External Packages
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-import * as PushAPI from '@pushprotocol/restapi';
-import { ChatProfile, ChatViewList, MessageInput, UserProfile } from '@pushprotocol/uiweb';
-import 'font-awesome/css/font-awesome.min.css';
+import { VideoCallStatus } from '@pushprotocol/restapi';
+import { ChatProfile, ChatViewList, MessageInput } from '@pushprotocol/uiweb';
 import { produce } from 'immer';
 import { CID } from 'ipfs-http-client';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
-import { useSelector } from 'react-redux';
-import ScrollToBottom from 'react-scroll-to-bottom';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
@@ -35,10 +32,6 @@ import { caip10ToWallet } from '../../../../helpers/w2w';
 import { checkIfGroup, getGroupImage } from '../../../../helpers/w2w/groupChat';
 
 // Assets
-import CommunityGroup from 'assets/chat/CommunityGroup.svg?react';
-import IntroChat from 'assets/chat/IntroChat.svg?react';
-import TokenGated from 'assets/chat/TokenGated.svg?react';
-import HandwaveIcon from 'assets/chat/handwave.svg?react';
 import videoCallIcon from 'assets/icons/videoCallIcon.svg?react';
 
 // Internal Configs
@@ -49,7 +42,7 @@ import { VideoCallContext } from 'contexts/VideoCallContext';
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
 
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
+const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return (
     <MuiAlert
       elevation={6}
@@ -60,21 +53,17 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
   );
 });
 
-const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element => {
-  const { currentChat, viewChatBox, receivedIntents, activeTab, setViewChatBox, setChat, selectedChatId }: ContextType =
+const ChatBox = ({ triggerChatParticipant }): JSX.Element => {
+  const { currentChat, viewChatBox, receivedIntents, activeTab, setViewChatBox, selectedChatId }: ContextType =
     useContext<ContextType>(Context);
   const { web3NameList }: AppContextType = useContext(AppContext);
   const { setSelectedChatId } = useContext(Context);
-
-  const { userPushSDKInstance } = useSelector((state: any) => {
-    return state.user;
-  });
 
   const { account } = useAccount();
   const [Loading, setLoading] = useState<boolean>(true);
   const [imageSource, setImageSource] = useState<string>('');
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
-  const [SnackbarText, setSnackbarText] = useState<string>('');
+  const [SnackbarText] = useState<string>('');
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
   const groupInfoRef = useRef<HTMLInputElement>(null);
@@ -140,7 +129,7 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
     }
     return chatId;
   };
-  const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
+  const handleCloseSuccessSnackbar = (event?: SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
       return;
     }
@@ -152,7 +141,7 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
       return produce(oldData, (draft) => {
         draft.local.address = account;
         draft.incoming[0].address = caip10ToWallet(currentChat.wallets.toString());
-        draft.incoming[0].status = PushAPI.VideoCallStatus.INITIALIZED;
+        draft.incoming[0].status = VideoCallStatus.INITIALIZED;
         draft.meta.chatId = currentChat.chatId;
       });
     });
@@ -265,11 +254,6 @@ const ChatBox = ({ showGroupInfoModal, triggerChatParticipant }): JSX.Element =>
   );
 };
 
-const SpinnerWrapper = styled.div`
-  width: 100%;
-  margin-top: 20px;
-  height: ${(props) => props.height || '90px'};
-`;
 const MessageInputWrapper = styled.div`
   width: 98%;
   display: flex;
@@ -278,19 +262,6 @@ const MessageInputWrapper = styled.div`
   bottom: 8px;
 `;
 
-const ChatContainer = styled.div`
-  overflow-x: hidden;
-  align-items: unset;
-  display: block;
-  justify-content: flex-start;
-  position: absolute;
-  top: 20px;
-  bottom: 0px;
-  left: 0;
-  right: 0;
-  margin: 0;
-  width: 100%;
-`;
 const MessageContainer = styled(ItemVV2)`
   align-items: center;
   display: flex;
@@ -317,29 +288,6 @@ const MessageContainer = styled(ItemVV2)`
   @media (max-height: 400px) {
     height: 45%;
   }
-`;
-
-const GroupInfo = styled(ItemHV2)`
-  position: absolute;
-  top: 32px;
-  right: 15px;
-  width: 200px;
-  border: 1px solid ${(props) => props.theme.default.border};
-  background-color: ${(props) => props.theme.default.bg};
-  border-radius: 12px;
-  justify-content: flex-start;
-  gap: 9px;
-  padding: 8px;
-`;
-
-const MoreOptions = styled.div`
-  position: relative;
-  height: 100%;
-  max-width: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
 `;
 
 const Container = styled(Content)`

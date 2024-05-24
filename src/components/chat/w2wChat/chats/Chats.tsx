@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
@@ -7,7 +7,7 @@ import { TwitterTweetEmbed } from 'react-twitter-embed';
 import styled from 'styled-components';
 
 // Internal Components
-import * as PushAPI from '@pushprotocol/restapi';
+import { user as pushUser } from '@pushprotocol/restapi';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
@@ -63,7 +63,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
       setProfilePicture(member.image);
     } else {
       // console.log(msg)
-      let user = await PushAPI.user.get({ account: msg.fromCAIP10, env: appConfig.appEnv });
+      let user = await pushUser.get({ account: msg.fromCAIP10, env: appConfig.appEnv });
       setProfilePicture(user.profilePicture);
     }
   };

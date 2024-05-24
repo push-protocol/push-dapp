@@ -1,13 +1,13 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React, { useContext } from 'react';
+import { useState, useEffect } from 'react';
 
 // External Packages
 import { MdError } from 'react-icons/md';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 
 // Internal Components
-import * as PushAPI from '@pushprotocol/restapi';
+import { user as pushUser } from '@pushprotocol/restapi';
 import AddDark from 'assets/chat/group-chat/adddark.svg?react';
 import AddLight from 'assets/chat/group-chat/addlight.svg?react';
 import Clear from 'assets/chat/group-chat/close.svg?react';
@@ -24,9 +24,8 @@ import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButt
 // Internal configs
 import { appConfig } from 'config/index.js';
 import { device } from 'config/Globals';
-import { addWalletValidation, MemberAlreadyPresent } from 'helpers/w2w/groupChat';
-import { Context } from 'modules/chat/ChatModule';
-import { AppContext, User } from '../../../../../types/chat';
+import { addWalletValidation } from 'helpers/w2w/groupChat';
+import { User } from '../../../../../types/chat';
 import GroupModalHeader from './GroupModalHeader';
 import MemberListContainer from './MemberListContainer';
 import { useAccount } from 'hooks';
@@ -41,18 +40,17 @@ export const AddWalletContent = ({
   title,
   groupMembers,
 }) => {
-  const { currentChat }: AppContext = useContext<AppContext>(Context);
-  const [searchedUser, setSearchedUser] = React.useState<string>('');
+  const [searchedUser, setSearchedUser] = useState<string>('');
   const { account } = useAccount();
-  const [filteredUserData, setFilteredUserData] = React.useState<any>(null);
-  const [isInValidAddress, setIsInvalidAddress] = React.useState<boolean>(false);
-  const [isLoadingSearch, setIsLoadingSearch] = React.useState<boolean>(false);
+  const [filteredUserData, setFilteredUserData] = useState<any>(null);
+  const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
+  const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
   const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
 
   const theme = useTheme();
   const searchFeedToast = useToast();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isInValidAddress) {
       searchFeedToast.showMessageToast({
         toastTitle: 'Error',
@@ -108,7 +106,7 @@ export const AddWalletContent = ({
       let filteredData: User;
 
       if (userSearchData.length) {
-        filteredData = await PushAPI.user.get({
+        filteredData = await pushUser.get({
           account: caip10,
           env: appConfig.appEnv,
         });

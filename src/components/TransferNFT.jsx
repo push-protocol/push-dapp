@@ -1,9 +1,8 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React from "react";
+import React from 'react';
 
 // External Packages
-import 'react-dropzone-uploader/dist/styles.css';
 import styled, { css } from 'styled-components';
 
 // Internal Compoonents
@@ -12,7 +11,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { useAccount } from 'hooks';
 
 // Internal Configs
-import { abis, addresses } from "config/index.js";
+import { abis, addresses } from 'config/index.js';
 
 // Create Header
 function TransferNFT({ tokenId }) {
@@ -34,47 +33,60 @@ function TransferNFT({ tokenId }) {
 
   const handleTransferNFT = async (e) => {
     if (nftWriteProvider) {
-      console.info("🚀 ~ file: TransferNFT.js ~ line 64 ~ handleTransferNFT ~ nftWriteProvider", nftWriteProvider)
+      console.info('🚀 ~ file: TransferNFT.js ~ line 64 ~ handleTransferNFT ~ nftWriteProvider', nftWriteProvider);
       e.preventDefault();
 
       if (isEmpty(toAddress)) {
         setProcessing(3);
-        setProcessingInfo("Recipient address field is empty! Please retry!");
+        setProcessingInfo('Recipient address field is empty! Please retry!');
 
         return false;
       }
       setProcessing(1);
-      setProcessingInfo("Transferring NFT...")
+      setProcessingInfo('Transferring NFT...');
       let signer = provider.getSigner(account);
-      const signerInstance = new ethers.Contract(addresses.rockstar, abis.rockstar, signer)
+      const signerInstance = new ethers.Contract(addresses.rockstar, abis.rockstar, signer);
       var txPromise = nftWriteProvider['safeTransferFrom(address,address,uint256)'](account, toAddress, tokenId);
       const tx = await txPromise;
       console.debug(tx);
-      console.info("waiting for tx to finish");
-      setProcessingInfo("Waiting for Transfer tx to finish...");
+      console.info('waiting for tx to finish');
+      setProcessingInfo('Waiting for Transfer tx to finish...');
       await provider.waitForTransaction(tx.hash);
-      setProcessingInfo("Transfer successfull! ");
+      setProcessingInfo('Transfer successfull! ');
       setProcessing(3);
     }
-  }
+  };
 
   const isEmpty = (field) => {
     if (field.trim().length == 0) {
       return true;
     }
     return false;
-  }
+  };
 
   return (
     <>
       <Section>
         <Content padding="10px 20px 20px">
           <Item align="flex-start">
-            <H2 textTransform="uppercase" spacing="0.1em">
+            <H2
+              textTransform="uppercase"
+              spacing="0.1em"
+            >
               <Span weight="200">Transfer Your NFT!</Span>
             </H2>
-            <H2 textTransform="uppercase" spacing="0.1em">
-              <Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">Token #{tokenId}</Span>
+            <H2
+              textTransform="uppercase"
+              spacing="0.1em"
+            >
+              <Span
+                bg="#674c9f"
+                color="#fff"
+                weight="600"
+                padding="0px 8px"
+              >
+                Token #{tokenId}
+              </Span>
             </H2>
           </Item>
         </Content>
@@ -90,8 +102,12 @@ function TransferNFT({ tokenId }) {
             size="1.1rem"
             onSubmit={handleTransferNFT}
           >
-
-            <Item margin="-10px 20px 15px 20px" flex="1" self="stretch" align="stretch">
+            <Item
+              margin="-10px 20px 15px 20px"
+              flex="1"
+              self="stretch"
+              align="stretch"
+            >
               <Input
                 required
                 placeholder="Recipient Address"
@@ -102,9 +118,11 @@ function TransferNFT({ tokenId }) {
                 size="1.2em"
                 bg="#fff"
                 value={toAddress}
-                onChange={(e) => { setToAddress(e.target.value) }}
+                onChange={(e) => {
+                  setToAddress(e.target.value);
+                }}
               />
-              {toAddress.trim().length == 0 &&
+              {toAddress.trim().length == 0 && (
                 <Span
                   padding="4px 10px"
                   right="0px"
@@ -117,35 +135,53 @@ function TransferNFT({ tokenId }) {
                 >
                   Recipient Address
                 </Span>
-              }
+              )}
             </Item>
-            <Item margin="15px 0px 0px 0px" flex="1" self="stretch" align="stretch">
+            <Item
+              margin="15px 0px 0px 0px"
+              flex="1"
+              self="stretch"
+              align="stretch"
+            >
               <Button
-                bg='#674c9f'
-                color='#fff'
+                bg="#674c9f"
+                color="#fff"
                 flex="1"
                 radius="0px"
                 padding="20px 10px"
                 disabled={processing == 1 ? true : false}
               >
-                {processing == 1 &&
-                  <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} spinnerColor="#fff" />
-                }
-                {processing != 1 &&
-                  <Input cursor="hand" textTransform="uppercase" color="#fff" weight="400" size="0.8em" spacing="0.2em" type="submit" value="Transfer" />
-                }
+                {processing == 1 && (
+                  <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={24}
+                    spinnerColor="#fff"
+                  />
+                )}
+                {processing != 1 && (
+                  <Input
+                    cursor="hand"
+                    textTransform="uppercase"
+                    color="#fff"
+                    weight="400"
+                    size="0.8em"
+                    spacing="0.2em"
+                    type="submit"
+                    value="Transfer"
+                  />
+                )}
               </Button>
             </Item>
           </FormSubmision>
         </Content>
       </Section>
 
-      {(processing == 1 || processing == 3) &&
+      {(processing == 1 || processing == 3) && (
         <Section>
           <Content padding="0px 0px 0px 0px">
             <Item
               color="#fff"
-              bg={processing == 1 ? "#e1087f" : "#000"}
+              bg={processing == 1 ? '#e1087f' : '#000'}
               padding="10px 15px"
               margin="15px 0px"
             >
@@ -159,10 +195,9 @@ function TransferNFT({ tokenId }) {
                 {processingInfo}
               </Span>
             </Item>
-
           </Content>
         </Section>
-      }
+      )}
     </>
   );
 }

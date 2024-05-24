@@ -1,21 +1,15 @@
 // React + Web3 Essentials
-import React, {
-  forwardRef,
-  Fragment,
-  useCallback,
-  useImperativeHandle,
-  useState,
-} from "react";
+import { forwardRef, Fragment, useCallback, useImperativeHandle, useState } from 'react';
 
 // External Packages
-import Cropper from "react-easy-crop";
-import styledComponents from "styled-components";
+import Cropper from 'react-easy-crop';
+import styledComponents from 'styled-components';
 import Pica from 'pica';
-import Compressor from "compressorjs";
+import Compressor from 'compressorjs';
 
 export function isBrave() {
   if (window.navigator.brave != undefined) {
-    if (window.navigator.brave.isBrave.name == "isBrave") {
+    if (window.navigator.brave.isBrave.name == 'isBrave') {
       return true;
     } else {
       return false;
@@ -27,7 +21,7 @@ export function isBrave() {
 
 const ImageClipper = forwardRef((props, ref) => {
   //   const [imageSrc, setImageSrc] = useState(null);
-  const { imageSrc,imageType, onImageCropped, width,height } = props;
+  const { imageSrc, imageType, onImageCropped, width, height } = props;
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
@@ -45,11 +39,10 @@ const ImageClipper = forwardRef((props, ref) => {
           //because pica has compatiblity issues on brave, we use pica on chrome and comprressorjs on brave after checking if window is opened on brave or chrome.
           const image = isBrave() ? await resizeImageOnBrave(croppedImage) : await resizeImage(clean);
 
-          
           const finalImage = await convertBlobToBase64(image);
           onImageCropped(finalImage);
         } else {
-          return "Nothing";
+          return 'Nothing';
         }
       } catch (e) {
         console.error(e);
@@ -60,26 +53,24 @@ const ImageClipper = forwardRef((props, ref) => {
   async function resizeImage(clean) {
     const pica = Pica();
     let file = await createImage(clean);
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
 
     canvas.height = 128;
     canvas.width = 128;
-    return new Promise(resolve => {
-  
-        resolve(
-          pica
-            .resize(file, canvas, {
-              unsharpAmount: 100,
-              unsharpRadius: 0.7,
-              unsharpThreshold: 2,
+    return new Promise((resolve) => {
+      resolve(
+        pica
+          .resize(file, canvas, {
+            unsharpAmount: 100,
+            unsharpRadius: 0.7,
+            unsharpThreshold: 2,
           })
-          .then(result => pica.toBlob(result, imageType, 1)),
-        );
-  
+          .then((result) => pica.toBlob(result, imageType, 1))
+      );
     });
   }
 
-  async function resizeImageOnBrave(clean){
+  async function resizeImageOnBrave(clean) {
     return new Promise((resolve, reject) => {
       new Compressor(clean, {
         quality: 1,
@@ -88,21 +79,23 @@ const ImageClipper = forwardRef((props, ref) => {
         maxHeight: 128,
         checkOrientation: false,
         success: resolve,
-        error: reject
+        error: reject,
       });
-    })
+    });
   }
 
-  const convertBlobToBase64 = async (blob) => { // blob data
-  return await blobToBase64(blob);
-}
+  const convertBlobToBase64 = async (blob) => {
+    // blob data
+    return await blobToBase64(blob);
+  };
 
-const blobToBase64 = blob => new Promise((resolve, reject) => {
-  const reader = new FileReader();
-  reader.readAsDataURL(blob);
-  reader.onload = () => resolve(reader.result);
-  reader.onerror = error => reject(error);
-});
+  const blobToBase64 = (blob) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
 
   // function toDataURL(url, callback) {
   //   var xhr = new XMLHttpRequest();
@@ -118,14 +111,13 @@ const blobToBase64 = blob => new Promise((resolve, reject) => {
   //   xhr.send();
   // }
 
-
   async function getCroppedImg(imageSrc, pixelCrop) {
     const image = await createImage(imageSrc);
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
     canvas.width = pixelCrop.width;
     canvas.height = pixelCrop.height;
-    const ctx = canvas.getContext("2d");
-    const fileName = "none.jpg";
+    const ctx = canvas.getContext('2d');
+    const fileName = 'none.jpg';
 
     ctx.drawImage(
       image,
@@ -144,25 +136,28 @@ const blobToBase64 = blob => new Promise((resolve, reject) => {
 
     // As a blob
     return new Promise((resolve, reject) => {
-      canvas.toBlob((file) => {
-        //   resolve(URL.createObjectURL(file));
-        resolve(
-          new File([file], fileName, {
-            type: imageType,
-            lastModified: Date.now(),
-          })
-        );
-      },imageType, 1);
+      canvas.toBlob(
+        (file) => {
+          //   resolve(URL.createObjectURL(file));
+          resolve(
+            new File([file], fileName, {
+              type: imageType,
+              lastModified: Date.now(),
+            })
+          );
+        },
+        imageType,
+        1
+      );
     });
   }
-
 
   const createImage = (url) =>
     new Promise((resolve, reject) => {
       const image = new Image();
-      image.addEventListener("load", () => resolve(image));
-      image.addEventListener("error", (error) => reject(error));
-      image.setAttribute("crossOrigin", "anonymous"); // needed to avoid cross-origin issues on CodeSandbox
+      image.addEventListener('load', () => resolve(image));
+      image.addEventListener('error', (error) => reject(error));
+      image.setAttribute('crossOrigin', 'anonymous'); // needed to avoid cross-origin issues on CodeSandbox
       image.src = url;
     });
 
@@ -183,10 +178,10 @@ const blobToBase64 = blob => new Promise((resolve, reject) => {
           // objectFit="vertical-cover"
           style={{
             containerStyle: {
-              width: width ? width : "250px",
-              height: height? height : "250px",
-              position: "relative",
-              borderRadius: "20px",
+              width: width ? width : '250px',
+              height: height ? height : '250px',
+              position: 'relative',
+              borderRadius: '20px',
             },
           }}
         />

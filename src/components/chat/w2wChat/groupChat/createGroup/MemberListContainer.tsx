@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import { useState, useRef } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -34,8 +34,8 @@ const MemberListContainer = ({
   darkIcon,
   memberList,
 }: MemberListContainerType) => {
-  const [selectedWallet, setSelectedWallet] = React.useState<string>(null);
-  const dropdownRef = React.useRef<any>(null);
+  const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
+  const dropdownRef = useRef<any>(null);
   const theme = useTheme();
   const [dropdownHeight, setDropdownHeight] = useState(0);
 

@@ -29,6 +29,7 @@ export const config = {
     42161, // arbitrum mainnet
     1101, // polygon zkevm mainnet
     122, // fuse mainnet
+    7560, // Cyber mainnet
   ],
 
   /**
@@ -164,6 +165,13 @@ export const CHAIN_DETAILS = {
     name: 'FUSE_MAINNET',
     chainId: 122,
     rpcUrl: 'https://rpc.fuse.io',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
+  },
+  7560: {
+    label: 'Cyber Mainnet',
+    name: 'CYBER_MAINNET',
+    chainid: 7560,
+    rpcUrl: 'https://cyber.alt.technology/',
     commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
   },
 };

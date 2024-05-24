@@ -2,7 +2,7 @@
 import { CONSTANTS, ProgressHookType, PushAPI } from '@pushprotocol/restapi';
 import { ethers } from 'ethers';
 import useModalBlur from 'hooks/useModalBlur';
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 // Internal Components
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -24,7 +24,7 @@ import {
   Web3NameListType,
   onboardingProgressI,
 } from 'types/context';
-import { GlobalContext, ReadOnlyWalletMode } from './GlobalContext';
+import { GlobalContext } from './GlobalContext';
 
 export const AppContext = createContext<AppContextType | null>(null);
 
@@ -124,7 +124,7 @@ const AppContextProvider = ({ children }) => {
     }
 
     if (remember) {
-      if (!user.readmode()) {
+      if (user && !user.readmode()) {
         storePGPKeyForUser(user.account, user.decryptedPgpPvtKey);
       }
     }
@@ -133,6 +133,12 @@ const AppContextProvider = ({ children }) => {
     shouldInitializeRef.current = true; // Directly modify the ref to disable useEffect execution
 
     return user;
+  };
+
+  // Remove PGP key from local storage
+  const removePGPKeyForUser = (account: string) => {
+    const key = getUniquePGPKey(account);
+    localStorage.removeItem(key);
   };
 
   // Store PGP key in local storage
@@ -265,6 +271,15 @@ const AppContextProvider = ({ children }) => {
       await setupStream(userInstance);
 
       console.debug('src::contexts::AppContext::initializePushSDK::User Intance Initialized', userInstance);
+      if (userInstance) {
+        setBlockedLoading({
+          enabled: false,
+          title: 'Push Profile Setup Complete',
+          spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
+          progressEnabled: false,
+          progress: 100,
+        });
+      }
       dispatch(setUserPushSDKInstance(userInstance));
       return userInstance;
     } catch (error) {
@@ -527,6 +542,8 @@ const AppContextProvider = ({ children }) => {
         setDisplayQR,
         createUserIfNecessary,
         initializePushSdkReadMode,
+        removePGPKeyForUser,
+        storePGPKeyForUser,
       }}
     >
       {children}

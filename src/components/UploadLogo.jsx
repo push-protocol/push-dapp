@@ -1,22 +1,19 @@
 // React + Web3 Essentials
-import { ethers } from "ethers";
-import React, { useRef } from "react";
+import { ethers } from 'ethers';
+import { useRef } from 'react';
 
 // External Packages
-import styled from "styled-components";
+import styled from 'styled-components';
 import { BsCloudUpload } from 'react-icons/bs';
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import UtilityHelper from 'helpers/UtilityHelper';
-import ImageClipper from "primaries/ImageClipper";
-import {
-  Button, Content, FormSubmision, H3, Input, Item, Section, Span
-} from "primaries/SharedStyling";
+import ImageClipper from 'primaries/ImageClipper';
+import { Button, Content, FormSubmision, H3, Input, Item, Section, Span } from 'primaries/SharedStyling';
 
 // Internal Configs
-import { abis, addresses } from "config/index.js";
-
+import { abis, addresses } from 'config/index.js';
 
 const UploadLogo = ({
   croppedImage,
@@ -30,7 +27,7 @@ const UploadLogo = ({
   setImageType,
   setProcessingInfo,
   logoInfo,
-  setStepFlow
+  setStepFlow,
 }) => {
   const childRef = useRef();
 
@@ -43,7 +40,7 @@ const UploadLogo = ({
     e.preventDefault();
     e.stopPropagation();
     //let's grab the image file
-    handleFile(e.dataTransfer, "transfer");
+    handleFile(e.dataTransfer, 'transfer');
   };
 
   const handleFile = async (file, path) => {
@@ -57,160 +54,186 @@ const UploadLogo = ({
 
       reader.onloadend = function (e) {
         setImageSrc(reader.result);
-        setImageType(file?.files[0]?.type)
+        setImageType(file?.files[0]?.type);
       };
     } else {
-      return "Nothing....";
+      return 'Nothing....';
     }
   };
 
   return (
-      <Body>
-        <Item align="center">
-          <H3 color=" #657795" margin="20px 0px" textTransform="none" weight="300" size="15px" spacing="0.05" textAlign='center'>
-          Please upload a PNG, JPG. Crop the image to resize to 128px.  
-          </H3>
-        </Item>
-        
-          <Space className="">
-            <div>
-              <div
-                onDragOver={(e) => handleDragOver(e)}
-                onDrop={(e) => handleOnDrop(e)}
-                className="bordered"
-              >
-                <div className="inner">
-                  {view ? (
-                    <div className="crop-div">
-                      {croppedImage ? (
-                        <div>
-                          <img
-                            alt="Cropped Img"
-                            src={croppedImage}
-                            className="croppedImage"
-                          />
-                        </div>
-                      ) : (
-                        <ImageClipper
-                          className="cropper"
-                          imageSrc={imageSrc}
-                          imageType={imageType}
-                          onImageCropped={(croppedImage) =>
-                            setCroppedImage(croppedImage)
-                          }
-                          ref={childRef}
-                        />
-                      )}
+    <Body>
+      <Item align="center">
+        <H3
+          color=" #657795"
+          margin="20px 0px"
+          textTransform="none"
+          weight="300"
+          size="15px"
+          spacing="0.05"
+          textAlign="center"
+        >
+          Please upload a PNG, JPG. Crop the image to resize to 128px.
+        </H3>
+      </Item>
+
+      <Space className="">
+        <div>
+          <div
+            onDragOver={(e) => handleDragOver(e)}
+            onDrop={(e) => handleOnDrop(e)}
+            className="bordered"
+          >
+            <div className="inner">
+              {view ? (
+                <div className="crop-div">
+                  {croppedImage ? (
+                    <div>
+                      <img
+                        alt="Cropped Img"
+                        src={croppedImage}
+                        className="croppedImage"
+                      />
                     </div>
                   ) : (
-                    <BsCloudUpload size={100} color='#8C99B0' style={{marginTop:'30px'}} />
-                  )}
-
-                 
-
-                  <Item display="flex" direction="row" align="center">
-                  <p className="text-below">
-                    Drag and Drop or 
-                  </p>
-                  <div className="text-div">
-                    <label htmlFor="file-upload" className="labeled">
-                      <div>Browse to Choose</div>
-                      <input
-                        id="file-upload"
-                        accept="image/*"
-                        name="file-upload"
-                        hidden
-                        onChange={(e) => handleFile(e.target, "target")}
-                        type="file"
-                        className="sr-only"
-                        readOnly
-                      />
-                    </label>
-                  </div>
-                  </Item>
-                </div>
-              </div>
-            </div>
-          </Space>
-
-        {logoInfo?.length > 0 && (<Item 
-            margin="30px 0px 30px 0px"
-            flex="1"
-            padding="10px 5px"
-            radius="10px"
-            bg="#F5F5FA">
-              <div style={{color:'#CF1C84'}}>{logoInfo}</div>
-            </Item>)}
-
-        {view && (!croppedImage ? (
-        <Item width="12.2em" self="stretch" align="stretch" margin="100px auto 50px auto">
-          <Button
-            bg="#e20880"
-            color="#fff"
-            flex="1"
-            radius="15px"
-            padding="20px 10px"
-            onClick={() => {
-              childRef.current.showCroppedImage();
-            }}
-          >
-            <Span
-              color="#fff"
-              weight="600"
-              textTransform="none"
-              line="22px"
-              size="16px"
-            >
-              Crop Image
-            </Span>
-          </Button>
-        </Item>): (
-
-              <FormSubmision
-                flex="1"
-                direction="column"
-                margin="0px"
-                justify="center"
-                size="1.1rem"
-                onSubmit={(e)=>{
-                  e.preventDefault();
-                  setStepFlow(2);
-                }}
-              >
-              <Item
-                width="12.2em" self="stretch" align="stretch" margin="100px auto 50px auto"
-              >
-                <Button
-                  bg="#e20880"
-                  color="#fff"
-                  flex="1"
-                  radius="15px"
-                  padding="20px 10px"
-                  disabled={processing == 1 ? true : false}
-                >
-                  {processing == 1 && (
-                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} spinnerColor="#fff" />
-                  )}
-                  {processing != 1 && (
-                    <Input
-                      cursor="hand"
-                      textTransform="none"
-                      color="#fff"
-                      weight="600"
-                      textTransform="none"
-                      line="22px"
-                      size="16px"
-                      type="submit"
-                      value="Next"
+                    <ImageClipper
+                      className="cropper"
+                      imageSrc={imageSrc}
+                      imageType={imageType}
+                      onImageCropped={(croppedImage) => setCroppedImage(croppedImage)}
+                      ref={childRef}
                     />
                   )}
-                </Button>
+                </div>
+              ) : (
+                <BsCloudUpload
+                  size={100}
+                  color="#8C99B0"
+                  style={{ marginTop: '30px' }}
+                />
+              )}
+
+              <Item
+                display="flex"
+                direction="row"
+                align="center"
+              >
+                <p className="text-below">Drag and Drop or</p>
+                <div className="text-div">
+                  <label
+                    htmlFor="file-upload"
+                    className="labeled"
+                  >
+                    <div>Browse to Choose</div>
+                    <input
+                      id="file-upload"
+                      accept="image/*"
+                      name="file-upload"
+                      hidden
+                      onChange={(e) => handleFile(e.target, 'target')}
+                      type="file"
+                      className="sr-only"
+                      readOnly
+                    />
+                  </label>
+                </div>
               </Item>
-              </FormSubmision> 
+            </div>
+          </div>
+        </div>
+      </Space>
+
+      {logoInfo?.length > 0 && (
+        <Item
+          margin="30px 0px 30px 0px"
+          flex="1"
+          padding="10px 5px"
+          radius="10px"
+          bg="#F5F5FA"
+        >
+          <div style={{ color: '#CF1C84' }}>{logoInfo}</div>
+        </Item>
+      )}
+
+      {view &&
+        (!croppedImage ? (
+          <Item
+            width="12.2em"
+            self="stretch"
+            align="stretch"
+            margin="100px auto 50px auto"
+          >
+            <Button
+              bg="#e20880"
+              color="#fff"
+              flex="1"
+              radius="15px"
+              padding="20px 10px"
+              onClick={() => {
+                childRef.current.showCroppedImage();
+              }}
+            >
+              <Span
+                color="#fff"
+                weight="600"
+                textTransform="none"
+                line="22px"
+                size="16px"
+              >
+                Crop Image
+              </Span>
+            </Button>
+          </Item>
+        ) : (
+          <FormSubmision
+            flex="1"
+            direction="column"
+            margin="0px"
+            justify="center"
+            size="1.1rem"
+            onSubmit={(e) => {
+              e.preventDefault();
+              setStepFlow(2);
+            }}
+          >
+            <Item
+              width="12.2em"
+              self="stretch"
+              align="stretch"
+              margin="100px auto 50px auto"
+            >
+              <Button
+                bg="#e20880"
+                color="#fff"
+                flex="1"
+                radius="15px"
+                padding="20px 10px"
+                disabled={processing == 1 ? true : false}
+              >
+                {processing == 1 && (
+                  <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={24}
+                    spinnerColor="#fff"
+                  />
+                )}
+                {processing != 1 && (
+                  <Input
+                    cursor="hand"
+                    textTransform="none"
+                    color="#fff"
+                    weight="600"
+                    line="22px"
+                    size="16px"
+                    type="submit"
+                    value="Next"
+                  />
+                )}
+              </Button>
+            </Item>
+          </FormSubmision>
         ))}
-
-
-      </Body>
+    </Body>
   );
 };
 
@@ -248,15 +271,15 @@ const ButtonSpace = styled.div`
 
 const Body = styled.div`
   margin: 50px auto 0px auto;
-  width: 55%; 
+  width: 55%;
   @media (max-width: 768px) {
-    min-width: 100%; 
+    min-width: 100%;
     margin: 10px auto 0px auto;
   }
   @media (max-width: 1224px) {
-    width: 75%; 
+    width: 75%;
   }
-`
+`;
 
 const Space = styled.div`
   width: 100%;
@@ -267,11 +290,11 @@ const Space = styled.div`
   .bordered {
     display: flex;
     justify-content: center;
-    border: 1px dashed #8C99B0;
+    border: 1px dashed #8c99b0;
     align-items: flex-end;
     border-radius: 12px;
     padding: 6px;
-    background-color: #F5F5FA;
+    background-color: #f5f5fa;
     margin-top: 10px;
     .inner {
       margin-top: 0.25rem;
@@ -340,7 +363,7 @@ const Space = styled.div`
           position: relative;
           cursor: pointer;
           border-radius: 4px;
-          color: #CF1C84;
+          color: #cf1c84;
           &:hover {
             text-decoration: underline;
           }

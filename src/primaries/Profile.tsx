@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useRef } from 'react';
+import { useContext, useState, useRef } from 'react';
 
 // External Packages
 import { useSelector } from 'react-redux';
@@ -16,21 +16,21 @@ import Dropdown from '../components/Dropdown';
 import { Item } from './SharedStyling.js';
 
 // Internal Configs
-import { SpanV2 } from 'components/reusables/SharedStylingV2.js';
 import APP_PATHS from 'config/AppPaths';
 import { AppContext } from 'contexts/AppContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { GlobalContext, GlobalContextType, ReadOnlyWalletMode } from 'contexts/GlobalContext';
 import { AppContextType } from 'types/context';
+import { getPublicAssetPath } from 'helpers/RoutesHelper.js';
 
 // Create Header
-const Profile = ({ isDarkMode }) => {
-  const { web3NameList, initializePushSdkReadMode }: AppContextType = useContext(AppContext);
-  const { setReadOnlyWallet, readOnlyWallet, mode, setMode }: GlobalContextType = useContext(GlobalContext);
+const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
+  const { web3NameList, removePGPKeyForUser }: AppContextType = useContext(AppContext);
+  const { setReadOnlyWallet, setMode }: GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
-  const modalRef = React.useRef(null);
+  const modalRef = useRef(null);
   const { account, disconnect, wallet, connect } = useAccount();
 
   const { userPushSDKInstance } = useSelector((state: any) => {
@@ -43,7 +43,7 @@ const Profile = ({ isDarkMode }) => {
 
   // Get theme
   const theme = useTheme();
-  const [showDropdown, setShowDropdown] = React.useState<boolean>(false);
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
   // useClickAway(modalRef, dropdownRef, () => showDropdown && setShowDropdown(false));
 
   const dropdownValues = [
@@ -52,7 +52,7 @@ const Profile = ({ isDarkMode }) => {
       value: account,
       title: account,
       function: () => {},
-      invertedIcon: './copy.svg',
+      invertedIcon: getPublicAssetPath('copy.svg'),
     },
     {
       id: 'userSettings',
@@ -60,7 +60,7 @@ const Profile = ({ isDarkMode }) => {
       title: 'Settings',
       function: () => {},
       to: APP_PATHS.UserSettings,
-      invertedIcon: 'svg/setting.svg',
+      invertedIcon: getPublicAssetPath('svg/setting.svg'),
     },
     {
       id: 'prodDapp',
@@ -68,20 +68,20 @@ const Profile = ({ isDarkMode }) => {
       function: () => {},
       link: `https://${envUtil.prod}`,
       title: 'Production dapp',
-      invertedIcon: './prod.svg',
+      invertedIcon: getPublicAssetPath('prod.svg'),
     },
     {
       id: 'disconnect',
       value: '',
       function: async () => {
-        localStorage.removeItem(userPushSDKInstance.account);
+        removePGPKeyForUser(userPushSDKInstance.account);
         await disconnect(wallet);
         setMode(ReadOnlyWalletMode.GUEST_MODE);
         setReadOnlyWallet('0x0000000000000000000000000000000000000001');
         setShowDropdown(false);
       },
       title: 'Logout',
-      invertedIcon: './logout.svg',
+      invertedIcon: getPublicAssetPath('logout.svg'),
     },
   ];
 
@@ -89,7 +89,7 @@ const Profile = ({ isDarkMode }) => {
     setShowDropdown(false);
   });
 
-  const ConnectWallet = () => {
+  const handleConnectWallet = () => {
     connect();
   };
 
@@ -103,7 +103,7 @@ const Profile = ({ isDarkMode }) => {
               bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
               color="#FFF"
               isDarkMode={isDarkMode}
-              onClick={() => ConnectWallet()}
+              onClick={() => handleConnectWallet()}
             >
               Connect Wallet
             </Wallet>
@@ -132,7 +132,7 @@ const Profile = ({ isDarkMode }) => {
                   <img
                     alt="arrow"
                     className={`${showDropdown ? 'down' : 'up'}`}
-                    src="/svg/arrow.svg"
+                    src={getPublicAssetPath('svg/arrow.svg')}
                   />
                 </ToggleArrowImg>
               </Wallet>
@@ -169,7 +169,7 @@ const Profile = ({ isDarkMode }) => {
           bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
           color="#FFF"
           isDarkMode={isDarkMode}
-          onClick={() => ConnectWallet()}
+          onClick={() => handleConnectWallet()}
         >
           Connect Wallet
         </Wallet>

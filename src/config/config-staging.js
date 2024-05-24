@@ -31,13 +31,14 @@ export const config = {
     2442, // polygon zkevm cardona testnet
     421614, // arbitrum testnet
     123, // fuse testnet
+    111557560, // Cyber testnet
   ],
 
   /**
    * Core Network Related Data
    */
   coreContractChain: 11155111, //the chain id of the network which the core contract relies on
-  coreRPC: 'https://sepolia.infura.io/v3/49f638cc25a94ddb86b7aefd612f11ab',
+  coreRPC: 'https://ethereum-sepolia-rpc.publicnode.com',
   mainnetCoreRPC: 'https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
   mainnetCoreContractChain: 1,
   aliasRPC: {
@@ -169,5 +170,12 @@ export const CHAIN_DETAILS = {
     chainId: 123,
     rpcUrl: 'https://rpc.fusespark.io',
     commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
+  },
+  111557560: {
+    label: 'Cyber Testnet',
+    name: 'CYBER_TESTNET',
+    chainid: 111557560,
+    rpcUrl: 'https://cyber-testnet.alt.technology/',
+    commAddress: '0x6e489B7af21cEb969f49A90E481274966ce9D74d',
   },
 };

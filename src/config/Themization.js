@@ -47,6 +47,8 @@ const themeLight = {
   },
 
   btn: {
+    primaryBg: '#D53A94',
+    primaryColor: '#FFF',
     disabledBg: '#E0E3E7',
     disabledColor: '#BEC8D8',
   },
@@ -300,6 +302,10 @@ const themeLight = {
   //collapsable sidebar
   collapsaBg: '#575d737f',
   svgStrokeColor: '#FFF',
+
+  //Connect Wallet and Push user Flow Modal
+  userSecText: '#8C93A0',
+  disabledBtnColor: '#E5E5E5',
 };
 
 const themeDark = {
@@ -350,6 +356,8 @@ const themeDark = {
   },
 
   btn: {
+    primaryBg: '#D53A94',
+    primaryColor: '#FFF',
     disabledBg: '#383A40',
     disabledColor: '#545F74',
   },
@@ -607,6 +615,10 @@ const themeDark = {
   //collapsable sidebar
   collapsaBg: '#0000004c',
   svgStrokeColor: '#575D73',
+
+  //Connect Wallet and Push user Flow Modal
+  userSecText: '#484D58',
+  disabledBtnColor: '#484D58',
 };
 
 export { themeDark, themeLight };
