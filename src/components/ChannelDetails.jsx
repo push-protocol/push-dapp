@@ -141,7 +141,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
       (async () => {
         try {
           const channelAddressinCAIP = convertAddressToAddrCaip(account, chainId);
-          const channelDelegates = await userPushSDKInstance.channel.delegate.get(channelAddressinCAIP);
+          const channelDelegates = await userPushSDKInstance.channel.delegate.get({ channel: channelAddressinCAIP });
           if (channelDelegates) {
             const delegateeList = channelDelegates.map((delegate) => delegate);
             delegateeList.unshift(account);
@@ -152,7 +152,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
         }
       })();
     }
-  }, [account]);
+  }, [account, chainId]);
 
   const removeDelegate = async (walletAddress) => {
     let userPushInstance = userPushSDKInstance;
