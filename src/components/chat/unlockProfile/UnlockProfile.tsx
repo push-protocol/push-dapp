@@ -230,26 +230,44 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
 
       {/* Remember Me Tag */}
       {activeStatus.status === PROFILESTATE.UNLOCK_PROFILE && (
-        <RenderToolTip type={type}>
-          <ItemHV2
-            gap="8px"
-            justifyContent={type === UNLOCK_PROFILE_TYPE.MODAL ? 'center' : 'end'}
-            margin={type === UNLOCK_PROFILE_TYPE.MODAL ? '12px 16px 0 40px' : '12px 16px 0 0px'}
-          >
-            <CustomCheckbox
-              checked={rememberMe}
-              onChange={handleRememberMeChange}
-            />
-            <SpanV2
-              fontSize="14px"
-              fontWeight="500"
-              lineHeight="130%"
-              color={theme.default.color}
+        <>
+          {!isLoading ? (
+            <RenderToolTip type={type}>
+              <ItemHV2
+                gap="8px"
+                justifyContent={type === UNLOCK_PROFILE_TYPE.MODAL ? 'center' : 'end'}
+                margin={type === UNLOCK_PROFILE_TYPE.MODAL ? '12px 16px 0 40px' : '12px 16px 0 0px'}
+              >
+                <CustomCheckbox
+                  checked={rememberMe}
+                  onChange={handleRememberMeChange}
+                />
+                <SpanV2
+                  fontSize="14px"
+                  fontWeight="500"
+                  lineHeight="130%"
+                  color={theme.default.color}
+                >
+                  Remember Me
+                </SpanV2>
+              </ItemHV2>
+
+            </RenderToolTip>
+          ) : (
+            <ItemVV2
+              width="100%"
+              flexDirection={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? 'column' : 'row'}
+              justifyContent={type === UNLOCK_PROFILE_TYPE.MODAL ? 'center' : 'end'}
+              margin={type === UNLOCK_PROFILE_TYPE.MODAL ? '12px 0 0 40px' : '12px 0 0 0px'}
             >
-              Remember Me
-            </SpanV2>
-          </ItemHV2>
-        </RenderToolTip>
+              <SkeletonLine
+                height="20px"
+                width="150px"
+              ></SkeletonLine>
+            </ItemVV2>
+          )}
+
+        </>
       )}
     </Container>
   );
