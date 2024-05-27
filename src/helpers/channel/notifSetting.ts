@@ -55,10 +55,8 @@ export const getMinimalUserSetting = (settings: UserSettingType[]) => {
     return null;
   }
 
-  // let userSetting = '';
   let numberOfSettings = 0;
 
-  //TODO: Use array.reduce( preffered) or array.forEach (less preffered) instead of for loop
   const userSetting = settings.reduce((acc, ele, i) => {
     const enabled = ele.enabled ? 1 : 0;
     if (ele.enabled) numberOfSettings++;
