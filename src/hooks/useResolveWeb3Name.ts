@@ -3,16 +3,17 @@ import { ethers } from 'ethers';
 import { useContext, useEffect, useState } from 'react';
 
 // Internal Components
-import { caip10ToWallet } from 'helpers/w2w';
-import { AppContext as ContextType } from 'types/chat';
-import { Context } from 'modules/chat/ChatModule';
 import { AppContext } from 'contexts/AppContext';
+import { caip10ToWallet } from 'helpers/w2w';
+import { Context } from 'modules/chat/ChatModule';
+import { AppContext as ContextType, MessageIPFS } from 'types/chat';
 import { AppContextType } from 'types/context';
 
 // Internal Configs
-import { appConfig } from '../config/index.js';
 import { getUdResolver } from 'helpers/w2w/udResolver';
+import { appConfig } from '../config/index.js';
 
+// TODO This is causing multiple errors constantly on timeout
 const getEnsName = async (
   provider: ethers.providers.BaseProvider | any,
   checksumWallet: string,
@@ -30,6 +31,7 @@ const getEnsName = async (
   return ensName;
 };
 
+// TODO This is causing multiple errors constantly on timeout
 const getUnstoppableName = async (checksumWallet: string, setWeb3NameList: any) => {
   // Unstoppable Domains resolution library
   const udResolver = getUdResolver();

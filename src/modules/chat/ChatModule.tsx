@@ -211,8 +211,15 @@ function Chat({ chatid }) {
     }
   }, [selectedChatId]);
 
-  // Handle group creation stream
+  // Handle chat accept and group creation stream
   if (userPushSDKInstance && !userPushSDKInstance.readmode() && userPushSDKInstance.stream) {
+    userPushSDKInstance.stream?.on(CONSTANTS.STREAM.CHAT, (chat: any) => {
+      if (chat.event === 'chat.accept') {
+        // Change Tab to 0 aka Chats
+        setActiveTab(0);
+      }
+    });
+
     userPushSDKInstance.stream?.on(CONSTANTS.STREAM.CHAT_OPS, (chatops: any) => {
       if (chatops.event === 'chat.group.create') {
         // Change Tab to 0 aka Chats

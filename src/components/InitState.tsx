@@ -84,6 +84,7 @@ const InitState = () => {
     })();
   }, [account, chainId]);
 
+  // TODO This is causing multiple errors constantly on timeout
   useEffect(() => {
     if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider) return;
     // save push admin to global state

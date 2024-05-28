@@ -14,12 +14,12 @@ import Web3 from 'web3';
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
+import { useAccount } from 'hooks';
 import Blockies from 'primaries/BlockiesIdenticon';
 import { toolingPostReq } from '../api/index';
 import { createTransactionObject } from '../helpers/GaslessHelper';
 import { executeDelegateTx } from '../helpers/WithGasHelper';
 import { Anchor, Image, Item, ItemBreak, ItemH, Span } from '../primaries/SharedStyling';
-import { useAccount } from 'hooks';
 
 // Internal Configs
 import { abis, addresses } from 'config/index.js';
