@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, useEffect, useRef, MouseEvent, TouchEvent } from 'react';
+import React, { ComponentPropsWithoutRef, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 interface RangeSliderProps extends Omit<ComponentPropsWithoutRef<'div'>, 'children' | 'onChange'> {
@@ -11,9 +11,9 @@ interface RangeSliderProps extends Omit<ComponentPropsWithoutRef<'div'>, 'childr
   defaultStartVal: number;
   defaultEndVal: number;
   preview?: boolean;
-  onChange: (value: { startVal: number; endVal: number }) => void;
-  onDragStart?: (e: MouseEvent | TouchEvent) => void;
-  onDragEnd?: (e: MouseEvent | TouchEvent) => void;
+  onChange: (value: { startVal: number, endVal: number }) => void;
+  onDragStart?: (e: React.MouseEvent | React.TouchEvent) => void;
+  onDragEnd?: (e: React.MouseEvent | React.TouchEvent) => void;
 }
 
 const RangeSlider = ({
@@ -40,7 +40,7 @@ const RangeSlider = ({
   const inactiveLeftRef = useRef<HTMLDivElement>(null);
   const inactiveRightRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseDownLeftThumb = (e: MouseEvent | TouchEvent) => {
+  const handleMouseDownLeftThumb = (e: React.MouseEvent | React.TouchEvent) => {
     if (disabled) return;
     if (onDragStart) onDragStart(e);
     // Add event listeners for mousemove and touchmove to track thumb movement
@@ -84,7 +84,7 @@ const RangeSlider = ({
     document.removeEventListener('touchend', handleMouseUpLeftThumb);
   };
 
-  const handleMouseDownRightThumb = (e: MouseEvent | TouchEvent) => {
+  const handleMouseDownRightThumb = (e: React.MouseEvent | React.TouchEvent) => {
     if (disabled) return;
     if (onDragStart) onDragStart(e);
     // Add event listeners for mousemove and touchmove to track thumb movement
@@ -132,21 +132,15 @@ const RangeSlider = ({
   const showPreview = () => {
     previewSliderStartRef.current?.style.setProperty('display', 'flex');
     previewSliderEndRef.current?.style.setProperty('display', 'flex');
-  };
+  }
 
   const hidePreview = () => {
     previewSliderStartRef.current?.style.setProperty('display', 'none');
     previewSliderEndRef.current?.style.setProperty('display', 'none');
-  };
+  }
 
   useEffect(() => {
-    if (
-      thumbStartRef.current &&
-      inactiveLeftRef.current &&
-      thumbEndRef.current &&
-      activeRef.current &&
-      inactiveRightRef.current
-    ) {
+    if (thumbStartRef.current && inactiveLeftRef.current && thumbEndRef.current && activeRef.current && inactiveRightRef.current) {
       thumbStartRef.current.style.left = `${((startVal - min) / (max - min)) * 98}%`;
       inactiveLeftRef.current.style.width = `${((startVal - min) / (max - min)) * 100}%`;
       activeRef.current.style.width = `${((endVal - startVal) / (max - min)) * 100}%`;
@@ -191,12 +185,8 @@ const RangeSlider = ({
         onMouseUp={handleMouseUpRightThumb}
       />
       <Inactive ref={inactiveRightRef} />
-      {preview && !Number.isNaN(Number(startVal)) && (
-        <PreviewContainer ref={previewSliderStartRef}>{startVal}</PreviewContainer>
-      )}
-      {preview && !Number.isNaN(Number(endVal)) && (
-        <PreviewContainer ref={previewSliderEndRef}>{endVal}</PreviewContainer>
-      )}
+      {preview && !Number.isNaN(Number(startVal)) && <PreviewContainer ref={previewSliderStartRef}>{startVal}</PreviewContainer>}
+      {preview && !Number.isNaN(Number(endVal)) && <PreviewContainer ref={previewSliderEndRef}>{endVal}</PreviewContainer>}
     </Container>
   );
 };
