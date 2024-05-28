@@ -11,17 +11,17 @@ import styled, { useTheme } from 'styled-components';
 // Internal Compoonents
 import InboxComponent from 'components/InboxComponent';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { useAccount } from 'hooks';
 import NotificationToast from 'primaries/NotificationToast';
 import { Section } from 'primaries/SharedStyling';
 import { setCommunicatorReadProvider, setCoreReadProvider, setPushAdmin } from 'redux/slices/contractSlice';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import UsersDataStore from 'singletons/UsersDataStore';
-import { useAccount } from 'hooks';
 
 // Internal Configs
-import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config/index.js';
-import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import APP_PATHS from 'config/AppPaths';
+import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import { CHAIN_DETAILS, abis, addresses, appConfig } from 'config/index.js';
 
 // Constants
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
@@ -107,6 +107,7 @@ const InboxModule = ({ isSpam }) => {
    * When we instantiate the contract instances, fetch basic information about the user
    * Corresponding channel owned.
    */
+  // TODO This is causing multiple errors constantly on timeout
   React.useEffect(() => {
     if (!epnsReadProvider || !epnsCommReadProvider) return;
 
