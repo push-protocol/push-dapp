@@ -1,6 +1,7 @@
-import { CSSProperties } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 
 import { ResponsiveProp, SpaceType, ValueOf } from '../Blocks.types';
+import { FlattenSimpleInterpolation } from 'styled-components';
 
 export type BoxResponsiveProps = {
   alignItems?: ResponsiveProp<CSSProperties['alignItems']>;
@@ -27,6 +28,12 @@ export type BoxNonResponsiveProps = {
 };
 
 export type BoxCSSProps = BoxResponsiveProps & BoxNonResponsiveProps;
+
+export type BoxExtraProps = {
+  as?: 'div' | 'span';
+  css?: FlattenSimpleInterpolation;
+  children?: ReactNode;
+};
 
 export type BoxResponsiveCSSProperties =
   | 'align-items'

@@ -13,6 +13,15 @@ export const getCSSValue = (propName: CSSPropName, value: CSSPropValueType | und
   return propName === 'padding' || propName === 'margin' ? `var(--${value})` : value;
 };
 
+/**
+ *
+ * @param data
+ * @returns styled components css
+ *
+ * This function collects css values for different screen sizes
+ * and then combines them into to same media queries classes.
+ *
+ */
 export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
   let initialCSS = '';
   const breakpointData: Record<DeviceSizeName, string> = {
