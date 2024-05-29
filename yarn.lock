@@ -3986,9 +3986,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:1.0.0-exp.6":
-  version: 1.0.0-exp.6
-  resolution: "@pushprotocol/uiweb@npm:1.0.0-exp.6"
+"@pushprotocol/uiweb@npm:1.0.0-exp.9":
+  version: 1.0.0-exp.9
+  resolution: "@pushprotocol/uiweb@npm:1.0.0-exp.9"
   dependencies:
     "@livekit/components-react": "npm:^1.2.2"
     "@livekit/components-styles": "npm:^1.0.6"
@@ -4029,7 +4029,7 @@ __metadata:
     react-dom: 17.0.2
     styled-components: ^6.0.8
     viem: ^1.3.0
-  checksum: 10/fc5a0a2a7d7aa54ccc823d16ecdc7092dbff8d56a581b5cf239fc7e8a9321068f0493aa0b8d4e713446f50825d96791015ec0db63dda69bc89d5e215aafd7a73
+  checksum: 10/cfffb1e82727db12e407ed30088af07b5d9b23beece0bf696244104f22a59801d979bd68cce5da7991600fc612328ebb16ab8403ea716a9770569cc1e7c60c75
   languageName: node
   linkType: hard
 
@@ -17649,11 +17649,7 @@ __metadata:
     "@mui/material": "npm:^5.5.0"
     "@pushprotocol/restapi": "npm:1.7.20"
     "@pushprotocol/socket": "npm:0.5.3"
-<<<<<<< 1580-bug-dapp-sdk-chat-badge
-    "@pushprotocol/uiweb": "npm:1.0.0-exp.6"
-=======
-    "@pushprotocol/uiweb": "npm:1.3.6"
->>>>>>> main
+    "@pushprotocol/uiweb": "npm:1.0.0-exp.9"
     "@reduxjs/toolkit": "npm:^1.7.1"
     "@testing-library/dom": "npm:^9.0.1"
     "@testing-library/jest-dom": "npm:^4.2.4"
