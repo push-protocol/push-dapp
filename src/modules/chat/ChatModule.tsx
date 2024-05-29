@@ -58,7 +58,6 @@ function Chat({ chatid }) {
 
   // Check if the URL ends with '/chat' and does not include a chat ID
   const isUserChatting = pathname.endsWith('/chat') && !pathname.includes('::chatid');
-
   const { account, provider } = useAccount();
 
   const { videoCallData } = useContext(VideoCallContext);
@@ -198,6 +197,11 @@ function Chat({ chatid }) {
   useEffect(() => {
     if (userPushSDKInstance?.readmode()) showModal();
   }, [userPushSDKInstance]);
+
+  // For setting selected chat id to empty string when none of the chat is open
+  useEffect(() => {
+    setSelectedChatId('');
+  }, [pathname]);
 
   // For setting selected chat id
   useEffect(() => {
