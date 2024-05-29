@@ -75,6 +75,7 @@ export default class ChannelsDataStore {
   };
 
   // init LISTENERS
+  // TODO This is causing multiple errors constantly on timeout
   initChannelsListenersAsync = async () => {
     // Add Listeners
     await this.listenForAddChannelAnyAsync();
@@ -324,6 +325,7 @@ export default class ChannelsDataStore {
   //   });
   // };
   // Helper to get Channel Alias from Channel's address
+  // TODO This is causing multiple errors constantly on timeout
   getChannelDetailsFromAddress = async (channel, userPushSDKInstance) => {
     if (channel === null) return;
     const enableLogs = 0;

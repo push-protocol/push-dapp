@@ -67,6 +67,7 @@ import { MODAL_POSITION } from 'hooks/useModalBlur';
 import MetamaskPushSnapModal from 'modules/receiveNotifs/MetamaskPushSnapModal';
 import SnapPage from 'pages/SnapPage';
 import { AppContextType } from 'types/context';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 // Create Header
 function MasterInterfacePage() {
@@ -392,7 +393,8 @@ const Container = styled.div`
   /* padding: ${(props) => props.theme.interfaceTopPadding} 20px 20px 20px; */
   align-items: stretch;
 
-  background-image: url('./svg/${(props) => (props.theme.scheme === 'dark' ? 'dark' : 'light')}bg.svg');
+  background-image: url('${getPublicAssetPath('svg')}/${(props) =>
+    props.theme.scheme === 'dark' ? 'dark' : 'light'}bg.svg');
   background-size: 100% 100%;
 
   position: relative;
