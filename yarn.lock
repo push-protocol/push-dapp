@@ -4009,9 +4009,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:1.0.0-exp.0":
-  version: 1.0.0-exp.0
-  resolution: "@pushprotocol/uiweb@npm:1.0.0-exp.0"
+"@pushprotocol/uiweb@npm:1.6.0-alpha.2":
+  version: 1.6.0-alpha.2
+  resolution: "@pushprotocol/uiweb@npm:1.6.0-alpha.2"
   dependencies:
     "@livekit/components-react": "npm:^1.2.2"
     "@livekit/components-styles": "npm:^1.0.6"
@@ -4052,7 +4052,7 @@ __metadata:
     react-dom: 17.0.2
     styled-components: ^6.0.8
     viem: ^1.3.0
-  checksum: 10/1165c77453a132a2aa51b4084a028c05a0e948f3f86e51aa7ae63c3026ae28cc312cc20260ce811b6c2a186514880070c2664f04be779564e27cf06f71d50fa1
+  checksum: 10/be4976ec6d54adc4f1ea87d3d1513a3ae870d1efd1d7508ba55110982792873d3c6a088dcb07c72c35d284b679e398b3a8a7d78c53b754862e3426ddca3f5aab
   languageName: node
   linkType: hard
 
@@ -17753,7 +17753,7 @@ __metadata:
     "@mui/material": "npm:^5.5.0"
     "@pushprotocol/restapi": "npm:1.7.20"
     "@pushprotocol/socket": "npm:0.5.3"
-    "@pushprotocol/uiweb": "npm:1.0.0-exp.0"
+    "@pushprotocol/uiweb": "npm:1.6.0-alpha.2"
     "@reduxjs/toolkit": "npm:^1.7.1"
     "@testing-library/dom": "npm:^9.0.1"
     "@testing-library/jest-dom": "npm:^4.2.4"
