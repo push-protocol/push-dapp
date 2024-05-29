@@ -2,7 +2,7 @@ import { forwardRef, ReactNode, HTMLAttributes } from 'react';
 import styled from 'styled-components';
 
 import { BoxCSSProps } from './Box.types';
-import { getBoxResponsiveCSS } from './Box.utils';
+import { boxCSSPropsKeys, getBoxResponsiveCSS } from './Box.utils';
 
 export type BoxProps = {
   as?: 'div' | 'span';
@@ -10,7 +10,10 @@ export type BoxProps = {
 } & BoxCSSProps &
   HTMLAttributes<HTMLDivElement>;
 
-const StyledBox = styled.div<BoxProps>`
+const StyledBox = styled.div.withConfig({
+  shouldForwardProp: (prop, defaultValidatorFn) =>
+    !boxCSSPropsKeys.includes(prop as keyof BoxCSSProps) && defaultValidatorFn(prop),
+})<BoxProps>`
   /* Responsive props */
   ${(props) => getBoxResponsiveCSS(props)}
 

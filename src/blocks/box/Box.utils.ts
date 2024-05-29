@@ -1,5 +1,5 @@
 import { getResponsiveCSS } from '../Blocks.utils';
-import { BoxResponsiveCSSPropertiesData, BoxResponsiveProps } from './Box.types';
+import { BoxCSSProps, BoxResponsiveCSSPropertiesData, BoxResponsiveProps } from './Box.types';
 
 const getBoxResponsiveCSSProperties = (props: BoxResponsiveProps): BoxResponsiveCSSPropertiesData[] => [
   { propName: 'align-items', prop: props.alignItems },
@@ -19,3 +19,24 @@ export const getBoxResponsiveCSS = (props: BoxResponsiveProps) => {
   const data = getBoxResponsiveCSSProperties(props);
   return getResponsiveCSS(data);
 };
+
+export const boxCSSPropsKeys: (keyof BoxCSSProps)[] = [
+  'border',
+  'borderRadius',
+  'bg',
+  'color',
+  'cursor',
+  'position',
+  'shadow',
+  'alignItems',
+  'display',
+  'height',
+  'justifyContent',
+  'm',
+  'maxH',
+  'minH',
+  'maxW',
+  'minW',
+  'p',
+  'width',
+];
