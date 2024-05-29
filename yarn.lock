@@ -3524,7 +3524,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@multiformats/multiaddr@npm:^12.0.0, @multiformats/multiaddr@npm:^12.2.1":
+"@multiformats/multiaddr@npm:^12.0.0":
+  version: 12.2.3
+  resolution: "@multiformats/multiaddr@npm:12.2.3"
+  dependencies:
+    "@chainsafe/is-ip": "npm:^2.0.1"
+    "@chainsafe/netmask": "npm:^2.0.0"
+    "@libp2p/interface": "npm:^1.0.0"
+    "@multiformats/dns": "npm:^1.0.3"
+    multiformats: "npm:^13.0.0"
+    uint8-varint: "npm:^2.0.1"
+    uint8arrays: "npm:^5.0.0"
+  checksum: 10/d0bad51375e6f9478a2c2fc0fec8b3a88be9e1ea149b7cc0c6af4c1e311fd2f1c64a6efddfdb1e7d87f49ded0417ed43e83b54260fe4477f2d7622a98c8b0cf6
+  languageName: node
+  linkType: hard
+
+"@multiformats/multiaddr@npm:^12.2.1":
   version: 12.2.1
   resolution: "@multiformats/multiaddr@npm:12.2.1"
   dependencies:
@@ -3953,9 +3968,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:1.7.18":
-  version: 1.7.18
-  resolution: "@pushprotocol/restapi@npm:1.7.18"
+"@pushprotocol/restapi@npm:1.7.20":
+  version: 1.7.20
+  resolution: "@pushprotocol/restapi@npm:1.7.20"
   dependencies:
     "@metamask/eth-sig-util": "npm:^5.0.2"
     axios: "npm:^0.27.2"
@@ -3978,7 +3993,7 @@ __metadata:
   peerDependenciesMeta:
     ethers:
       optional: true
-  checksum: 10/0896567d6664e92b6b42839cde6ed3364a79d047b7324271f3f6309ae792ec8ae718f952901dfe0f3f17075e413b1dcc0e80ecca86377d7cda6c5ce1cd817269
+  checksum: 10/42ca0e0ce0ba2068c330973f0252dd5cb18167d5375cb191371086a0a5be9cf46382c5125503fe4dac1c2d33641b37f43348f160802e3d48cb2eea860b6c856d
   languageName: node
   linkType: hard
 
@@ -7314,7 +7329,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-onboard/injected-wallets@npm:2.10.16, @web3-onboard/injected-wallets@npm:^2.10.5":
+"@web3-onboard/injected-wallets@npm:2.10.16":
   version: 2.10.16
   resolution: "@web3-onboard/injected-wallets@npm:2.10.16"
   dependencies:
@@ -7322,6 +7337,17 @@ __metadata:
     joi: "npm:17.9.1"
     lodash.uniqby: "npm:^4.7.0"
   checksum: 10/8e7084338f17053832b287b5788e6d1e19168e6d63d225073e129b4bdd4e0ca4d6b2cd8ec62379d72ec686529d2ebb407d5a465f794de07e47df5626c1214707
+  languageName: node
+  linkType: hard
+
+"@web3-onboard/injected-wallets@npm:^2.10.5":
+  version: 2.10.17
+  resolution: "@web3-onboard/injected-wallets@npm:2.10.17"
+  dependencies:
+    "@web3-onboard/common": "npm:^2.3.3"
+    joi: "npm:17.9.1"
+    lodash.uniqby: "npm:^4.7.0"
+  checksum: 10/3250254cabe0605c03f125195e463c224c9b4073ed08e6553cdccf4548d6d02d96a291ae9e2a84fc0a0b1005f3c401aed8346122eb194c7b0d91ab5ef0157003
   languageName: node
   linkType: hard
 
@@ -8575,12 +8601,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"braces@npm:^3.0.2, braces@npm:~3.0.2":
+"braces@npm:^3.0.2":
   version: 3.0.2
   resolution: "braces@npm:3.0.2"
   dependencies:
     fill-range: "npm:^7.0.1"
   checksum: 10/966b1fb48d193b9d155f810e5efd1790962f2c4e0829f8440b8ad236ba009222c501f70185ef732fef17a4c490bb33a03b90dab0631feafbdf447da91e8165b1
+  languageName: node
+  linkType: hard
+
+"braces@npm:~3.0.2":
+  version: 3.0.3
+  resolution: "braces@npm:3.0.3"
+  dependencies:
+    fill-range: "npm:^7.1.1"
+  checksum: 10/fad11a0d4697a27162840b02b1fad249c1683cbc510cd5bf1a471f2f8085c046d41094308c577a50a03a579dd99d5a6b3724c4b5e8b14df2c4443844cfcda2c6
   languageName: node
   linkType: hard
 
@@ -10688,14 +10723,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"emoji-picker-react@npm:4.9.2, emoji-picker-react@npm:^4.4.9":
-  version: 4.9.2
-  resolution: "emoji-picker-react@npm:4.9.2"
+"emoji-picker-react@npm:4.9.3, emoji-picker-react@npm:^4.4.9":
+  version: 4.9.3
+  resolution: "emoji-picker-react@npm:4.9.3"
   dependencies:
     flairup: "npm:0.0.38"
   peerDependencies:
     react: ">=16"
-  checksum: 10/b2bdbef2ac17fef79e385ee91322a2781df2bd95b30c6921527321e554d7e9afb48febf6c8732d8c61d398455bd440ff5efaed6ae33d3aa785d74ef0a61e59d5
+  checksum: 10/5491990dc056ef5b8b51d844574349329b85335d57b2cb15a963a24ceb3a3a510b38bab500a79748a35299f1af988871ef8e1d7433c2986bb8ecfa0d699b92b7
   languageName: node
   linkType: hard
 
@@ -12095,6 +12130,15 @@ __metadata:
   dependencies:
     to-regex-range: "npm:^5.0.1"
   checksum: 10/e260f7592fd196b4421504d3597cc76f4a1ca7a9488260d533b611fc3cefd61e9a9be1417cb82d3b01ad9f9c0ff2dbf258e1026d2445e26b0cf5148ff4250429
+  languageName: node
+  linkType: hard
+
+"fill-range@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "fill-range@npm:7.1.1"
+  dependencies:
+    to-regex-range: "npm:^5.0.1"
+  checksum: 10/a7095cb39e5bc32fada2aa7c7249d3f6b01bd1ce461a61b0adabacccabd9198500c6fb1f68a7c851a657e273fce2233ba869638897f3d7ed2e87a2d89b4436ea
   languageName: node
   linkType: hard
 
@@ -15758,7 +15802,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minipass@npm:^5.0.0 || ^6.0.2 || ^7.0.0, minipass@npm:^7.0.2, minipass@npm:^7.0.3, minipass@npm:^7.0.4":
+"minipass@npm:^5.0.0 || ^6.0.2 || ^7.0.0, minipass@npm:^7.0.2, minipass@npm:^7.0.3":
+  version: 7.1.2
+  resolution: "minipass@npm:7.1.2"
+  checksum: 10/c25f0ee8196d8e6036661104bacd743785b2599a21de5c516b32b3fa2b83113ac89a2358465bc04956baab37ffb956ae43be679b2262bf7be15fce467ccd7950
+  languageName: node
+  linkType: hard
+
+"minipass@npm:^7.0.4":
   version: 7.1.1
   resolution: "minipass@npm:7.1.1"
   checksum: 10/6f4f920f1b5ea585d08fa3739b9bd81726cd85a0c972fb371c0fa6c1544d468813fb1694c7bc64ad81f138fd8abf665e2af0f406de9ba5741d8e4a377ed346b1
@@ -17700,7 +17751,7 @@ __metadata:
     "@metamask/eth-sig-util": "npm:^4.0.0"
     "@mui/icons-material": "npm:^5.8.4"
     "@mui/material": "npm:^5.5.0"
-    "@pushprotocol/restapi": "npm:1.7.18"
+    "@pushprotocol/restapi": "npm:1.7.20"
     "@pushprotocol/socket": "npm:0.5.3"
     "@pushprotocol/uiweb": "npm:1.0.0-exp.0"
     "@reduxjs/toolkit": "npm:^1.7.1"
@@ -17739,7 +17790,7 @@ __metadata:
     dompurify: "npm:^3.0.2"
     dotenv: "npm:8.2.0"
     eccrypto: "npm:^1.1.3"
-    emoji-picker-react: "npm:4.9.2"
+    emoji-picker-react: "npm:4.9.3"
     envfile: "npm:6.18.0"
     eslint: "npm:^8.57.0"
     eslint-plugin-react-hooks: "npm:^4.6.0"
