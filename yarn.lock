@@ -7332,7 +7332,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-name-sdk/core@npm:^0.1.15":
+"@web3-name-sdk/core@npm:^0.1.15, @web3-name-sdk/core@npm:^0.1.18":
   version: 0.1.18
   resolution: "@web3-name-sdk/core@npm:0.1.18"
   dependencies:
@@ -17698,6 +17698,7 @@ __metadata:
     "@uniswap/widgets": "npm:^2.47.3"
     "@unstoppabledomains/resolution": "npm:8.5.0"
     "@vitejs/plugin-react": "npm:^4.2.1"
+    "@web3-name-sdk/core": "npm:^0.1.18"
     "@web3-onboard/coinbase": "npm:^2.2.5"
     "@web3-onboard/core": "npm:2.21.6"
     "@web3-onboard/injected-wallets": "npm:2.10.16"
