@@ -78,9 +78,8 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (wallet?.accounts?.length > 0) {
+    if (wallet?.accounts?.length) {
       const decryptedPGPKeys = retrieveUserPGPKeyFromStorage(account);
-      console.log("decryptedPGPKeys", decryptedPGPKeys);
       if (decryptedPGPKeys) {
         setIsLoading(true);
       }

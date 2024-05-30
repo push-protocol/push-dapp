@@ -1,6 +1,6 @@
 import * as w2wHelper from 'helpers/w2w';
 
-export const retrieveUserPGPKeyFromStorage = (account: string) => {
+export const retrieveUserPGPKeyFromStorage = (account: string): string | null => {
   const key = getUniquePGPKey(account);
   const value = localStorage.getItem(key);
 
