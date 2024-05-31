@@ -1,0 +1,5 @@
+import{cQ as o,b4 as a,aV as n,bj as m,__tla as i}from"./index-BT1iobQv.js";import{C as h,__tla as f}from"./ChannelsModule-Cfml_k3U.js";import{__tla as p}from"./DisplayNotice-BBCf6h0w.js";import{__tla as u}from"./Skeleton-C2jbZ3VU.js";import{__tla as y}from"./cloneDeep-CB4k20u7.js";import{__tla as d}from"./index.esm-B3TAltCq.js";import{__tla as x}from"./RedCircle-BGLmuWxS.js";import{__tla as T}from"./ManageNotifSettingDropdown-C4ugcQhy.js";import{__tla as j}from"./RangeSlider-WRNhDaWL.js";let r,b=Promise.all([(()=>{try{return i}catch{}})(),(()=>{try{return f}catch{}})(),(()=>{try{return p}catch{}})(),(()=>{try{return u}catch{}})(),(()=>{try{return y}catch{}})(),(()=>{try{return d}catch{}})(),(()=>{try{return x}catch{}})(),(()=>{try{return T}catch{}})(),(()=>{try{return j}catch{}})()]).then(async()=>{let t;r=({loadTeaser:_,playTeaser:l,channelID:e})=>{let{channelid:c}=o();const s=c||e;return a.jsx(t,{children:a.jsx(h,{channelID:s,loadTeaser:_,playTeaser:l})})},t=n(m)`
+  flex: 1;
+  flex-direction: column;
+  align-self: stretch;
+`});export{b as __tla,r as default};
