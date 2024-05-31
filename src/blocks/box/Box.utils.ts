@@ -4,6 +4,7 @@ import { BoxCSSProps, BoxResponsiveCSSPropertiesData, BoxResponsiveProps } from 
 const getBoxResponsiveCSSProperties = (props: BoxResponsiveProps): BoxResponsiveCSSPropertiesData[] => [
   { propName: 'align-items', prop: props.alignItems },
   { propName: 'display', prop: props.display },
+  { propName: 'flex-direction', prop: props.direction },
   { propName: 'height', prop: props.height },
   { propName: 'justify-content', prop: props.justifyContent },
   { propName: 'margin', prop: props.m },
@@ -30,6 +31,7 @@ export const boxCSSPropsKeys: (keyof BoxCSSProps)[] = [
   'shadow',
   'alignItems',
   'display',
+  'direction',
   'height',
   'justifyContent',
   'm',

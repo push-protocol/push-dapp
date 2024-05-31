@@ -1,16 +1,82 @@
 import { css } from 'styled-components';
-import { DeviceMediaQ, breakpointMap } from './Blocks.constants';
-import { Breakpoint, CSSPropName, CSSPropValueType, DeviceSizeName, ResponsiveCSSPropertyData } from './Blocks.types';
+import { DeviceMediaQ, DeviceSizes, breakpointMap } from './Blocks.constants';
+import {
+  Breakpoint,
+  CSSPropName,
+  CSSPropValueType,
+  DeviceSizeName,
+  PixelValue,
+  ResponsiveCSSPropertyData,
+} from './Blocks.types';
 
-export const createBreakpointCSS = (breakpointData: Record<DeviceSizeName, string>) => {
-  return Object.entries(breakpointData)
-    .filter(([_, css]) => css)
-    .map(([bp, css]) => `@media ${DeviceMediaQ[bp as DeviceSizeName]} { ${css} }`)
-    .join(';');
+/**
+ * @param propName
+ * @param value
+ * @returns value of a CSS property
+ */
+const getCSSValue = (propName: CSSPropName, value: CSSPropValueType | undefined) => {
+  return propName === 'padding' || propName === 'margin' ? `var(--${value})` : value;
 };
 
-export const getCSSValue = (propName: CSSPropName, value: CSSPropValueType | undefined) => {
-  return propName === 'padding' || propName === 'margin' ? `var(--${value})` : value;
+/**
+ * @param pixelStr
+ * @returns numeric values fetched from px values
+ *
+ * Helper function to parse the pixel values from the strings.
+ */
+const parsePixels = (pixelStr: PixelValue) => parseFloat(pixelStr.replace('px', ''));
+
+/**
+ * @param values
+ * @param operation
+ * @returns computed values in px
+ */
+const computePixels = (values: PixelValue[], operation: 'add' | 'sub') =>
+  values.reduce((acc, value) => (operation === 'add' ? acc + parsePixels(value) : acc - parsePixels(value)), 0) + 'px';
+
+/**
+ * @param breakpointData
+ * @returns media query css in string forma for all screen sizes passed on to it
+ *
+ * Separates css for different screen size from all css properties
+ * and combine them into common media queries to avoid applying multiple
+ * media queries for every css property.
+ */
+const createBreakpointCSS = (breakpointData: Record<DeviceSizeName, string>) => {
+  const validBreakpointList = Object.entries(breakpointData).filter(([_, css]) => css);
+
+  if (!validBreakpointList.length) return '';
+
+  const singleDeviceMedia = `@media ${DeviceMediaQ[validBreakpointList[0][0] as DeviceSizeName]} { 
+    ${validBreakpointList[0][1]} 
+  }`;
+
+  if (validBreakpointList.length === 1) {
+    return singleDeviceMedia;
+  } else {
+    return (
+      `${singleDeviceMedia}` +
+      validBreakpointList
+        .map(([_bp, css], index) => {
+          if (!index) {
+            return '';
+          } else {
+            const previousBp = validBreakpointList[index - 1][0] as DeviceSizeName;
+
+            const previousBpWidth = computePixels([DeviceSizes[previousBp], '1px'], 'add');
+
+            const previousBpMediaQ = `@media (min-width: ${previousBpWidth})`;
+
+            const currentBp = _bp as DeviceSizeName;
+
+            const currentBpMediaQ = DeviceMediaQ?.[currentBp] ? `and ${DeviceMediaQ?.[currentBp]}` : '';
+
+            return `${previousBpMediaQ} ${currentBpMediaQ} { ${css} }`;
+          }
+        })
+        .join(';')
+    );
+  }
 };
 
 /**

@@ -11,6 +11,8 @@ export type ResponsiveProp<T> = T | { [key in Breakpoint]?: T };
 
 export type SpaceType = `s${number}`;
 
+export type PixelValue = `${number}px`;
+
 export type ValueOf<T> = T[keyof T];
 
 export type CSSPropName = BoxResponsiveCSSProperties;

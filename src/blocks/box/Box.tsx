@@ -1,11 +1,11 @@
 import { forwardRef } from 'react';
 import styled from 'styled-components';
 
-import { BoxCSSProps, BoxExtraProps } from './Box.types';
+import { BoxCSSProps, BoxComponentProps } from './Box.types';
 import { boxCSSPropsKeys, getBoxResponsiveCSS } from './Box.utils';
 import { BlockWithoutStyleProp } from 'blocks/Blocks.types';
 
-export type BoxProps = BoxCSSProps & BoxExtraProps & BlockWithoutStyleProp<HTMLDivElement>;
+export type BoxProps = BoxCSSProps & BoxComponentProps & BlockWithoutStyleProp<HTMLDivElement>;
 
 const StyledBox = styled.div.withConfig({
   shouldForwardProp: (prop, defaultValidatorFn) =>
@@ -13,9 +13,6 @@ const StyledBox = styled.div.withConfig({
 })<BoxProps>`
   /* Responsive props */
   ${(props) => getBoxResponsiveCSS(props)}
-
-  /* Extra CSS props */
-  ${(props) => props.css || ''}
 
   /* Non-responsive props */
   color: ${(props) => props.color};
@@ -25,6 +22,9 @@ const StyledBox = styled.div.withConfig({
   cursor: ${(props) => props.cursor};
   border: ${(props) => props.border};
   position: ${(props) => props.position};
+
+  /* Extra CSS prop */
+  ${(props) => props.css || ''}
 `;
 
 const Box = forwardRef<HTMLElement, BoxProps>(({ as = 'div', ...props }, ref) => {
