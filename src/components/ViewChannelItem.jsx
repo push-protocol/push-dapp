@@ -16,7 +16,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { css, useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { Device } from 'assets/Device';
+import { DeviceMediaQ } from 'blocks';
 import MetaInfoDisplayer from 'components/MetaInfoDisplayer';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2 } from 'components/reusables/SharedStylingV2';
@@ -1300,7 +1300,7 @@ const Subscribers = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  @media ${Device.laptopL} {
+  @media ${DeviceMediaQ.laptopL} {
     padding-top: 1rem;
   }
 
@@ -1339,7 +1339,7 @@ const LineBreak = styled.div`
   flex-basis: 100%;
   height: 0;
 
-  @media ${Device.tablet} {
+  @media ${DeviceMediaQ.tablet} {
     display: block;
   }
 `;
