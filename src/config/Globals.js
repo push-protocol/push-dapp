@@ -1,5 +1,11 @@
 /* eslint-disable import/no-anonymous-default-export */
 // Define Size and Device
+
+/**
+ * @deprecated
+ *
+ * Please import it from blocks
+ */
 export const size = {
   mobileS: '320px',
   mobileM: '375px',
@@ -10,6 +16,11 @@ export const size = {
   desktop: '2560px',
 };
 
+/**
+ * @deprecated
+ *
+ * Please import it from blocks
+ */
 export const device = {
   mobileS: `(max-width: ${size.mobileS})`,
   mobileM: `(max-width: ${size.mobileM})`,
@@ -157,7 +168,7 @@ export default {
     },
     BLUR: {
       DEFAULT: 5,
-    }
+    },
   },
 
   COLORS: {
