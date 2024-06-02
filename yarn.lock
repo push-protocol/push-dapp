@@ -7332,7 +7332,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-name-sdk/core@npm:^0.1.15":
+"@web3-name-sdk/core@npm:^0.1.15, @web3-name-sdk/core@npm:^0.1.18":
   version: 0.1.18
   resolution: "@web3-name-sdk/core@npm:0.1.18"
   dependencies:

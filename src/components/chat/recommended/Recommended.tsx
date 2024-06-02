@@ -36,7 +36,6 @@ const Recommended = ({ bg, onChatSelected }) => {
   return (
     <Container bg={bg}>
       {recommendedChatsList.map((item, index) => {
-        console.log(item.payload, 'jojojojoj');
         return (
           <ChatPreview
             key={index}
