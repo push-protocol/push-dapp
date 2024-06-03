@@ -27,7 +27,7 @@ export type BlockWithoutStyleProp<T> = Omit<HTMLAttributes<T>, 'style'>;
 export type GlobalColors = Record<keyof typeof Globals.COLORS, string>;
 
 type CamelCase<S extends string> = S extends `${infer P1}_${infer P2}${infer P3}`
-  ? `${Lowercase<P1>}${Capitalize<Lowercase<`${P2}${CamelCase<P3>}`>>}`
+  ? `${Lowercase<P1>}${Capitalize<Lowercase<P2>>}${CamelCase<P3>}`
   : Lowercase<S>;
 
 export type BlocksColorData = {
