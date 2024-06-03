@@ -2,8 +2,6 @@ import { textVariants } from './Text.constants';
 
 export type TextVariants = keyof typeof textVariants;
 
-// export type TypographyColors = keyof typeof COLORS;
-
 export type TextHTMLTags =
   | 'span'
   | 'div'

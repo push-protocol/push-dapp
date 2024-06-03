@@ -33,6 +33,7 @@ import NotificationToast from '../primaries/NotificationToast';
 import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { device } from 'config/Globals';
 import { useNavigate } from 'react-router-dom';
+import { Box, Text } from 'blocks';
 
 // Constants
 const NOTIFICATIONS_PER_PAGE = 10;
@@ -331,6 +332,28 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
           />
         </div>
 
+        <Box
+          color="gradientPrimary"
+          bg="black"
+        >
+          Hello
+        </Box>
+        <Box>
+          <Text
+            variant="bl-bold"
+            color="gradientPrimary"
+          >
+            World
+          </Text>
+        </Box>
+        <Box>
+          <Text
+            variant="bl-bold"
+            color="gradientPrimary"
+          >
+            World
+          </Text>
+        </Box>
         <ScrollItem>
           {showSnapInfo && (
             <>
