@@ -1,6 +1,6 @@
 import { ReactNode, forwardRef } from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
-import { BlocksColors } from '../Blocks.types';
+import { BlockWithoutStyleProp, BlocksColors } from '../Blocks.types';
 import { getBlocksColor } from '../Blocks.utils';
 import { TextAlign, TextHTMLTags, TextTransform, TextVariants } from './Text.types';
 import { getVariantStyles } from './Text.utils';
@@ -28,14 +28,14 @@ export type TextProps = {
   variant?: TextVariants;
   /* Sets the css wrap property to move the text to next line in case of overflow */
   wrap?: boolean;
-} & React.HTMLAttributes<HTMLParagraphElement | HTMLHeadingElement>; //TODO: Change this after box pr is merged
+} & BlockWithoutStyleProp<HTMLParagraphElement | HTMLSpanElement>;
 
 const StyledText = styled.p<TextProps>`
   /* Variant CSS */
   ${({ variant }) => getVariantStyles(variant)}
 
   color: ${({ color }) => getBlocksColor(color)};
-  font-family: 'Strawford', 'Source Sans Pro', Helvetica, sans-serif;
+  font-family: var(--font-family);
   margin: 0px;
   text-align: ${({ align }) => align};
   text-transform: ${({ transform }) => transform};

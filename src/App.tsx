@@ -80,6 +80,8 @@ const GlobalStyle = createGlobalStyle`
     --s15: 60px;
     // TODO: Add more as needed
 
+    /* Font Family */
+    --font-family: 'Strawford', 'Source Sans Pro', Helvetica, sans-serif;
 
     /* Colors */
     ${Object.entries(blocksColors)
