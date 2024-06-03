@@ -1,5 +1,7 @@
 import { ReactNode, forwardRef } from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import { BlocksColors } from '../Blocks.types';
+import { getBlocksColor } from '../Blocks.utils';
 import { TextAlign, TextHTMLTags, TextTransform, TextVariants } from './Text.types';
 import { getVariantStyles } from './Text.utils';
 
@@ -11,7 +13,7 @@ export type TextProps = {
   /* Children pass to the Text component */
   children?: ReactNode;
   /* Sets the css property for text color */
-  color?: string;
+  color?: BlocksColors;
   /* Extra css prop from styled components to apply custom css not supported by Text component */
   css?: FlattenSimpleInterpolation;
   /* For truncating the contents with ... when there's container overflow */
@@ -32,7 +34,7 @@ const StyledText = styled.p<TextProps>`
   /* Variant CSS */
   ${({ variant }) => getVariantStyles(variant)}
 
-  color: ${({ color }) => color};
+  color: ${({ color }) => getBlocksColor(color)};
   font-family: 'Strawford', 'Source Sans Pro', Helvetica, sans-serif;
   margin: 0px;
   text-align: ${({ align }) => align};

@@ -1,6 +1,7 @@
 import { css } from 'styled-components';
 import { DeviceMediaQ, DeviceSizes, breakpointMap } from './Blocks.constants';
 import {
+  BlocksColors,
   Breakpoint,
   CSSPropName,
   CSSPropValueType,
@@ -119,4 +120,16 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
     ${initialCSS}
     ${createBreakpointCSS(breakpointData)}
   `;
+};
+
+/**
+ * @param color
+ * @returns color as a css variable: var(--primary)
+ */
+export const getBlocksColor = (color?: BlocksColors) => {
+  // If color is not given return undefined, to avoid any breakages
+  if (!color) return color;
+
+  // If passed a design system color then use color as a variable
+  return `var(--${color})`;
 };

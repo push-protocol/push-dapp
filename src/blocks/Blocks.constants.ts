@@ -1,4 +1,5 @@
 import { DeviceSizeName, DeviceSize, Breakpoint } from './Blocks.types';
+import { createBlocksColors } from './text/Text.utils';
 
 export const DeviceSizes: Record<DeviceSizeName, DeviceSize> = {
   mobileS: '320px',
@@ -30,3 +31,5 @@ export const breakpointMap: Record<Breakpoint | 'initial', DeviceSizeName | ''> 
   ll: 'laptopL',
   dp: 'desktop',
 };
+
+export const blocksColors = createBlocksColors();
