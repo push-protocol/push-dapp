@@ -132,7 +132,6 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
   };
 
   useEffect(() => {
-    // console.log(allFilter)
     setFilteredNotifications(allFilter);
   }, [allFilter]);
 
@@ -161,6 +160,7 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
     setBgUpdateLoading(true);
     setLoading(true);
     try {
+
       const results = await userPushSDKInstance.notification.list('INBOX', {
         raw: true,
         page: 1,
@@ -206,9 +206,7 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
         page: page,
         raw: true,
       });
-      if (!notifications.length) {
-        dispatch(incrementPage());
-      }
+
       const parsedResponse = pushApiUtils.parseApiResponse(results);
       const map1 = new Map();
       const map2 = new Map();
@@ -241,7 +239,6 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
       setLimit(limit + 10);
     } else {
       loadNotifications();
-      dispatch(incrementPage());
     }
   };
 
