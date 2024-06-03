@@ -1,11 +1,10 @@
 // React + Web3 Essentials
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState, FC, ReactNode } from 'react';
 import { produce } from 'immer';
 
-import * as PushAPI from '@pushprotocol/restapi';
-import { VideoCallStatus } from '@pushprotocol/restapi';
+import { VideoCallStatus, video as pushVideo, VideoCallData } from '@pushprotocol/restapi';
 
-import { appConfig } from 'config';
+import { appConfig } from 'config/index.js';
 import { initVideoCallData } from '@pushprotocol/restapi/src/lib/video';
 import { User } from 'types/chat';
 import { useAccount } from 'hooks';
@@ -34,15 +33,15 @@ interface VideoCallMetaDataType {
 
 const VideoCallContext = createContext(null);
 
-const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
+const VideoCallContextProvider: FC<ReactNode> = ({ children }) => {
   const videoObjectRef = useRef(null);
   const [isCallConnected, setIsCallConnected] = useState(false);
   const [isCallAccepted, setIsCallAccepted] = useState(false);
   const [incomingCallUserData, setIncomingCallUserData] = useState<User | null>(null);
   const { chainId, account, provider } = useAccount();
-  const { connectedUser, createUserIfNecessary} = useContext(AppContext);
+  const { connectedUser, createUserIfNecessary } = useContext(AppContext);
 
-  const [data, setData] = useState<PushAPI.VideoCallData>(initVideoCallData);
+  const [data, setData] = useState<VideoCallData>(initVideoCallData);
 
   useEffect(() => {
     if (data.incoming[0].status === VideoCallStatus.CONNECTED) {
@@ -56,14 +55,14 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
   }, [data.incoming[0].status]);
 
   useEffect(() => {
-    if (!provider || !account || !connectedUser) return null;
+    if (!provider || !account || !connectedUser) return;
 
     (async () => {
       let createdUser;
       if (!connectedUser.publicKey) {
         createdUser = await createUserIfNecessary();
       }
-      videoObjectRef.current = new PushAPI.video.Video({
+      videoObjectRef.current = new pushVideo.Video({
         signer: provider.getSigner(account),
         chainId,
         pgpPrivateKey: connectedUser.privateKey || createdUser?.privateKey,
@@ -95,7 +94,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     chatId,
     signalData,
   }: AcceptRequestWrapperOptionsType): void => {
-    videoObjectRef.current.acceptRequest({
+    videoObjectRef.current?.acceptRequest({
       signalData: signalData ? signalData : data.meta.initiator.signal,
       senderAddress,
       recipientAddress,
@@ -119,7 +118,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
       return produce(oldData, (draft) => {
         draft.local.address = videoCallMetaData.recipientAddress;
         draft.incoming[0].address = videoCallMetaData.senderAddress;
-        draft.incoming[0].status = PushAPI.VideoCallStatus.RECEIVED;
+        draft.incoming[0].status = VideoCallStatus.RECEIVED;
         draft.meta.chatId = videoCallMetaData.chatId;
         draft.meta.initiator.address = videoCallMetaData.senderAddress;
         draft.meta.initiator.signal = videoCallMetaData.signalData;
@@ -155,9 +154,7 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
         setIsCallAccepted,
         setIsCallConnected,
         isVideoCallInitiator:
-          data.incoming[0].status !== PushAPI.VideoCallStatus.UNINITIALIZED
-            ? videoObjectRef.current?.isInitiator
-            : () => {},
+          data.incoming[0].status !== VideoCallStatus.UNINITIALIZED ? videoObjectRef.current?.isInitiator : () => {},
         videoObject: videoObjectRef.current,
       }}
     >

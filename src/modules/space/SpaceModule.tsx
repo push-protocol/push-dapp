@@ -1,37 +1,19 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
 
-// Internal Components
-// import { SpaceBoxSection, SpaceSidebarSection } from 'sections/space';
-// import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
-
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from '../../config/Globals';
 import * as w2wHelper from 'helpers/w2w/';
-// import { SpaceGlobalContext, SpaceLocalContext, SpaceLocalContextProvider } from 'contexts';
-// import { getSpaceRequests, getSpaces } from 'services/space';
-// import { getSpaceRequestsFromIndexedDB, getSpacesFromIndexedDB } from 'helpers/space';
-// import { SpaceInfoModalContent } from 'components/space/spaceModals/spaceInfoModal';
-// import useToast from 'hooks/useToast';
-// import MemberMenuModal from 'components/space/spaceModals/MemberMenu/MemberMenuModal';
-// import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
-// import CreateSpaceModal from 'components/space/spaceModals/createSpaceModals/CreateSpaceModal';
-// import SpaceNotification from 'components/space/spaceNotification/SpaceNotification';
-// import { useDeviceWidthCheck } from 'hooks/useDeviceWidthCheck';
 
 import SpaceFeedSection from 'sections/space/SpaceFeedSection';
-import { appConfig } from 'config';
-import * as PushAPI from '@pushprotocol/restapi';
-import { ConnectedUser, User } from 'types/chat';
+import { appConfig } from 'config/index.js';
 import LoaderSpinner from 'primaries/LoaderSpinner';
-import { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { Item } from 'primaries/SharedStyling';
+import { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { useAccount, useSDKSocket } from 'hooks';
-import { SpaceContext } from 'contexts/SpaceContext';
 import { AppContext } from 'contexts/AppContext';
 
 export const SpaceModule = ({ spaceid }) => {
@@ -39,14 +21,14 @@ export const SpaceModule = ({ spaceid }) => {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const { getUser, connectedUser, setConnectedUser, pgpPvtKey, setPgpPvtKey, createUserIfNecessary } = useContext(AppContext);
+  const { getUser, connectedUser, setConnectedUser } = useContext(AppContext);
 
   useSDKSocket({ account, chainId, env: appConfig.appEnv });
 
   useEffect(() => {
     setIsLoading(true);
     setConnectedUser(null);
-  }, [account])
+  }, [account]);
 
   useEffect(() => {
     if (isLoading) {
@@ -63,20 +45,23 @@ export const SpaceModule = ({ spaceid }) => {
     }
 
     setIsLoading(false);
-
   };
 
   // RENDER
   return (
     <Container>
-
-      {isLoading ?
+      {isLoading ? (
         <CenterContainer>
           <ItemVV2>
-            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
+            <LoaderSpinner
+              type={LOADER_TYPE.SEAMLESS}
+              spinnerSize={24}
+            />
           </ItemVV2>
         </CenterContainer>
-        : <SpaceFeedSection spaceid={spaceid} />}
+      ) : (
+        <SpaceFeedSection spaceid={spaceid} />
+      )}
     </Container>
   );
 };
@@ -105,8 +90,6 @@ const Container = styled.div`
     100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} -
       ${globalsMargin.MINI_MODULES.DESKTOP.BOTTOM}
   );
-
-
 
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};

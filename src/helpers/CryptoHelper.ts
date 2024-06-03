@@ -4,7 +4,7 @@ import { decrypt, encrypt } from 'eccrypto';
 import EthCrypto from 'eth-crypto';
 import { publicKeyConvert } from 'secp256k1-v4';
 
-var CryptoJS = require('crypto-js');
+import CryptoJS from 'crypto-js';
 interface ICipherType {
   iv: string;
   ephemPublicKey: string;
@@ -42,7 +42,7 @@ const CryptoHelper = {
   },
   // To Decrypt with AES
   decryptWithAES: function (message: string, key: string): string {
-    let bytes: any = CryptoJS.AES.decrypt(message, key);
+    const bytes: any = CryptoJS.AES.decrypt(message, key);
     return bytes.toString(CryptoJS.enc.Utf8);
   },
   // To Encrypt Secret with Public key
@@ -250,10 +250,10 @@ const CryptoHelper = {
     console.debug(this.decryptWithAES(aimgE, secret));
   },
   makeid: function (length: number): string {
-    var result: string = '[' + new Date().toISOString() + '] ';
-    var characters: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength: number = characters.length;
-    for (var i = 0; i < length; i++) {
+    let result: string = '[' + new Date().toISOString() + '] ';
+    const characters: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength: number = characters.length;
+    for (let i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;

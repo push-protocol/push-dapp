@@ -37,13 +37,18 @@ const themeLight = {
   // Chat Theme
   chat: {
     snapFocusBg: '#F4F5FA',
-    chatboxBg: 'linear-gradient(179.97deg, #EEF5FF 0.02%, #ECE9FA 123.25%)',
+    chatBg: '#EEF4FD',
+    primaryBg: '#FFFFFF',
+    modulesBg: '#FFFFFF',
+    modalBg: '#FFFFFF',
     sendMesageBg: 'white',
     sendMessageFontColor: 'black',
     gifContainerBg: '#F7F8FF',
   },
 
   btn: {
+    primaryBg: '#D53A94',
+    primaryColor: '#FFF',
     disabledBg: '#E0E3E7',
     disabledColor: '#BEC8D8',
   },
@@ -297,6 +302,10 @@ const themeLight = {
   //collapsable sidebar
   collapsaBg: '#575d737f',
   svgStrokeColor: '#FFF',
+
+  //Connect Wallet and Push user Flow Modal
+  userSecText: '#8C93A0',
+  disabledBtnColor: '#E5E5E5',
 };
 
 const themeDark = {
@@ -337,13 +346,18 @@ const themeDark = {
   // Chat Theme
   chat: {
     snapFocusBg: '#404650',
-    chatboxBg: '#282A2E',
+    chatBg: '#282A2E',
+    primaryBg: '#2F3137',
+    modulesBg: '#404550',
+    modalBg: '#2F3137',
     sendMesageBg: '#404650',
     sendMessageFontColor: '#B6BCD6',
     gifContainerBg: '#282A2E',
   },
 
   btn: {
+    primaryBg: '#D53A94',
+    primaryColor: '#FFF',
     disabledBg: '#383A40',
     disabledColor: '#545F74',
   },
@@ -601,9 +615,10 @@ const themeDark = {
   //collapsable sidebar
   collapsaBg: '#0000004c',
   svgStrokeColor: '#575D73',
+
+  //Connect Wallet and Push user Flow Modal
+  userSecText: '#484D58',
+  disabledBtnColor: '#484D58',
 };
 
-module.exports = {
-  themeLight: themeLight,
-  themeDark: themeDark,
-};
+export { themeDark, themeLight };

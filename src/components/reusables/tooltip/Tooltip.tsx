@@ -52,12 +52,11 @@ const Tooltip: React.FC<TooltipProps> = ({ children, tooltipContent, isDisabled,
       onBlur={isDisabled ? () => { } : hideTip}
     >
       {/* <div> */}
-        {children}
+      {children}
       {/* </div> */}
 
       {!isDisabled && active && <Content id="channel" style={placementProps}>{tooltipContent}</Content>}
     </Wrapper>
-
 
   );
 };
@@ -88,7 +87,7 @@ const Content = styled.div`
   font-weight: 400;
   font-size: 0.9rem;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
-  line-height: 21px;
+  line-height: inherit;
   z-index: 10;
   &::before {
     bottom: 100%;

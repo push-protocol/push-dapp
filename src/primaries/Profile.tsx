@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useRef } from 'react';
+import { useContext, useState, useRef } from 'react';
 
 // External Packages
 import { useSelector } from 'react-redux';
@@ -16,21 +16,21 @@ import Dropdown from '../components/Dropdown';
 import { Item } from './SharedStyling.js';
 
 // Internal Configs
-import { SpanV2 } from 'components/reusables/SharedStylingV2.js';
 import APP_PATHS from 'config/AppPaths';
 import { AppContext } from 'contexts/AppContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { GlobalContext, GlobalContextType, ReadOnlyWalletMode } from 'contexts/GlobalContext';
 import { AppContextType } from 'types/context';
+import { getPublicAssetPath } from 'helpers/RoutesHelper.js';
 
 // Create Header
-const Profile = ({ isDarkMode }) => {
-  const { web3NameList,initialisePushSdkReadMode }: AppContextType = useContext(AppContext);
-  const { setReadOnlyWallet, readOnlyWallet, mode, setMode }: GlobalContextType = useContext(GlobalContext);
+const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
+  const { web3NameList, removePGPKeyForUser }: AppContextType = useContext(AppContext);
+  const { setReadOnlyWallet, setMode }: GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
-  const modalRef = React.useRef(null);
+  const modalRef = useRef(null);
   const { account, disconnect, wallet, connect } = useAccount();
 
   const { userPushSDKInstance } = useSelector((state: any) => {
@@ -39,48 +39,49 @@ const Profile = ({ isDarkMode }) => {
 
   // resolve web3 name
   useResolveWeb3Name(account);
-  const web3Name = web3NameList[account]
+  const web3Name = web3NameList[account];
 
   // Get theme
   const theme = useTheme();
-  const [showDropdown, setShowDropdown] = React.useState<boolean>(false);
-  useClickAway(modalRef, dropdownRef, () => showDropdown && setShowDropdown(false));
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  // useClickAway(modalRef, dropdownRef, () => showDropdown && setShowDropdown(false));
 
   const dropdownValues = [
     {
       id: 'walletAddress',
       value: account,
       title: account,
-      function: () => { },
-      invertedIcon: './copy.svg',
+      function: () => {},
+      invertedIcon: getPublicAssetPath('copy.svg'),
     },
     {
       id: 'userSettings',
       value: '',
       title: 'Settings',
-      function: () => { },
+      function: () => {},
       to: APP_PATHS.UserSettings,
-      invertedIcon: 'svg/setting.svg'
+      invertedIcon: getPublicAssetPath('svg/setting.svg'),
     },
     {
       id: 'prodDapp',
       value: '',
-      function: () => { },
+      function: () => {},
       link: `https://${envUtil.prod}`,
       title: 'Production dapp',
-      invertedIcon: './prod.svg',
+      invertedIcon: getPublicAssetPath('prod.svg'),
     },
     {
       id: 'disconnect',
       value: '',
       function: async () => {
+        removePGPKeyForUser(userPushSDKInstance.account);
         await disconnect(wallet);
         setMode(ReadOnlyWalletMode.GUEST_MODE);
         setReadOnlyWallet('0x0000000000000000000000000000000000000001');
         setShowDropdown(false);
       },
       title: 'Logout',
-      invertedIcon: './logout.svg',
+      invertedIcon: getPublicAssetPath('logout.svg'),
     },
   ];
 
@@ -88,24 +89,21 @@ const Profile = ({ isDarkMode }) => {
     setShowDropdown(false);
   });
 
-  const ConnectWallet = ()=>{
+  const handleConnectWallet = () => {
     connect();
-  }
+  };
 
-  
   // to create blockies
   return (
     <>
-
       {account && account != '' && !authError ? (
         <Body>
-
           {!(wallet?.accounts?.length > 0) ? (
             <Wallet
               bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
-              color='#FFF'
+              color="#FFF"
               isDarkMode={isDarkMode}
-              onClick={()=>ConnectWallet()}
+              onClick={() => handleConnectWallet()}
             >
               Connect Wallet
             </Wallet>
@@ -113,7 +111,7 @@ const Profile = ({ isDarkMode }) => {
             <>
               <Wallet
                 bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
-                color='#FFF'
+                color="#FFF"
                 isDarkMode={isDarkMode}
                 onClick={() => setShowDropdown(!showDropdown)}
                 ref={toggleArrowRef}
@@ -134,7 +132,7 @@ const Profile = ({ isDarkMode }) => {
                   <img
                     alt="arrow"
                     className={`${showDropdown ? 'down' : 'up'}`}
-                    src="/svg/arrow.svg"
+                    src={getPublicAssetPath('svg/arrow.svg')}
                   />
                 </ToggleArrowImg>
               </Wallet>
@@ -149,7 +147,10 @@ const Profile = ({ isDarkMode }) => {
                     align="flex-start"
                     ref={dropdownRef}
                   >
-                    <Dropdown dropdownValues={dropdownValues} setShowDropdown={setShowDropdown}/>
+                    <Dropdown
+                      dropdownValues={dropdownValues}
+                      setShowDropdown={setShowDropdown}
+                    />
                   </DropdownItem>
                   <ItemModal ref={modalRef}>
                     <ProfileModal
@@ -166,9 +167,9 @@ const Profile = ({ isDarkMode }) => {
       ) : (
         <Wallet
           bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
-          color='#FFF'
+          color="#FFF"
           isDarkMode={isDarkMode}
-          onClick={()=>ConnectWallet()}
+          onClick={() => handleConnectWallet()}
         >
           Connect Wallet
         </Wallet>
@@ -208,7 +209,7 @@ const Wallet = styled.div`
     box-sizing: border-box;
     justify-content: space-between;
     border-radius: 13px;
-    background: linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%);
+    background: linear-gradient(87.17deg, #b6a0f5 0%, #f46ef7 57.29%, #ff95d5 100%);
     margin: 0px 0px;
   }
 

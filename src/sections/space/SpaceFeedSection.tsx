@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -7,7 +7,7 @@ import styled, { useTheme } from 'styled-components';
 // Internal Components
 import SpaceIcon from 'assets/spaces/Space-icon.svg';
 import SpaceDark from 'assets/spaces/space-dark.svg';
-import { ReactComponent as AddSpace } from 'assets/spaces/add-space.svg';
+import AddSpace from 'assets/spaces/add-space.svg?react';
 import { Image } from 'components/SharedStyling';
 import { ImageV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
@@ -15,26 +15,21 @@ import { SpaceContext } from 'contexts/SpaceContext';
 import { device } from 'config/Globals';
 import { useNavigate } from 'react-router-dom';
 import { SpaceComponentContext } from 'contexts/SpaceComponentsContext';
-import { useAccount, useDeviceWidthCheck } from 'hooks';
+import { useAccount } from 'hooks';
 import useMediaQuery from 'hooks/useMediaQuery';
-import { appConfig } from 'config';
-
-
 // External imports
-import * as PushAPI from '@pushprotocol/restapi';
 import { AppContext } from 'contexts/AppContext';
-
 
 const SpaceFeedSection = ({ spaceid }) => {
   const { SpaceFeedComponent, SpaceInvitesComponent, CreateSpaceComponent } = useContext(SpaceComponentContext);
   const { account } = useAccount();
-  const { spaceId ,setSpaceId, spaceInvites } = useContext(SpaceContext);
+  const { setSpaceId, spaceInvites } = useContext(SpaceContext);
   const { connectedUser } = useContext(AppContext);
   const theme = useTheme();
 
   const isMobile = useMediaQuery(device.mobileL);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (spaceid) {
       setSpaceId(spaceid);
     }
@@ -47,19 +42,6 @@ const SpaceFeedSection = ({ spaceid }) => {
     // console.log(spaceId);
     navigate(`/spaces/${spaceId}`);
   };
-
-  // crossChecking this
-  
-  // React.useEffect(() => {
-  //   (async () => {
-  //     const feed = await PushAPI.space.requests({
-  //       account,
-  //       env: appConfig.appEnv,
-  //     });
-  //     // setSpaceInvites(feed?.length);
-  //   })();
-  // }, [spaceId]);
-
 
   return (
     <SpaceCard>
@@ -158,9 +140,9 @@ const SpaceUser = styled.div`
 
 const CreateDiv = styled.div`
   margin: 0px 14px 0px auto;
-  
-  @media ${device.mobileL}{
-    padding-top:5px;
+
+  @media ${device.mobileL} {
+    padding-top: 5px;
   }
 `;
 const Badge = styled.div`

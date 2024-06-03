@@ -2,59 +2,73 @@ import chalk from 'chalk';
 import { parse } from 'envfile';
 import fs from 'fs';
 import readline from 'readline';
+import { getPreviewBasePath } from './basePath.js';
 
 const envPresets = {
   alpha: {
-    REACT_APP_DEPLOY_ENV: 'ALPHA',
-    REACT_APP_PUBLIC_URL: 'https://alpha.push.org/',
+    VITE_APP_DEPLOY_ENV: 'ALPHA',
+    VITE_APP_PUBLIC_URL: 'https://alpha.push.org/',
   },
   w2w: {
-    REACT_APP_DEPLOY_ENV: 'W2W',
-    REACT_APP_PUBLIC_URL: 'https://w2w.push.org/',
+    VITE_APP_DEPLOY_ENV: 'W2W',
+    VITE_APP_PUBLIC_URL: 'https://w2w.push.org/',
   },
   dev: {
-    REACT_APP_DEPLOY_ENV: 'DEV',
-    REACT_APP_PUBLIC_URL: 'https://dev.push.org/',
+    VITE_APP_DEPLOY_ENV: 'DEV',
+    VITE_APP_PUBLIC_URL: 'https://dev.push.org/',
   },
   staging: {
-    REACT_APP_DEPLOY_ENV: 'STAGING',
-    REACT_APP_PUBLIC_URL: 'https://staging.push.org/',
+    VITE_APP_DEPLOY_ENV: 'STAGING',
+    VITE_APP_PUBLIC_URL: 'https://staging.push.org/',
   },
   prod: {
-    REACT_APP_DEPLOY_ENV: 'PROD',
-    REACT_APP_PUBLIC_URL: 'https://app.push.org/',
+    VITE_APP_DEPLOY_ENV: 'PROD',
+    VITE_APP_PUBLIC_URL: 'https://app.push.org/',
+  },
+  preview: {
+    VITE_APP_DEPLOY_ENV: 'PREVIEW',
+    VITE_APP_PUBLIC_URL: `https://push-protocol.github.io${getPreviewBasePath()}`,
   },
   // alpha: {
-  //   REACT_APP_DEPLOY_ENV: 'ALPHA',
-  //   REACT_APP_PUBLIC_URL: 'https://alpha.epns.io/',
+  //   VITE_APP_DEPLOY_ENV: 'ALPHA',
+  //   VITE_APP_PUBLIC_URL: 'https://alpha.epns.io/',
   // },
   // w2w: {
-  //   REACT_APP_DEPLOY_ENV: 'W2W',
-  //   REACT_APP_PUBLIC_URL: 'https://w2w.epns.io/',
+  //   VITE_APP_DEPLOY_ENV: 'W2W',
+  //   VITE_APP_PUBLIC_URL: 'https://w2w.epns.io/',
   // },
   // dev: {
-  //   REACT_APP_DEPLOY_ENV: 'DEV',
-  //   REACT_APP_PUBLIC_URL: 'https://dev.epns.io/',
+  //   VITE_APP_DEPLOY_ENV: 'DEV',
+  //   VITE_APP_PUBLIC_URL: 'https://dev.epns.io/',
   // },
   // staging: {
-  //   REACT_APP_DEPLOY_ENV: 'STAGING',
-  //   REACT_APP_PUBLIC_URL: 'https://staging.epns.io/',
+  //   VITE_APP_DEPLOY_ENV: 'STAGING',
+  //   VITE_APP_PUBLIC_URL: 'https://staging.epns.io/',
   // },
   // prod: {
-  //   REACT_APP_DEPLOY_ENV: 'PROD',
-  //   REACT_APP_PUBLIC_URL: 'https://app.epns.io/',
+  //   VITE_APP_DEPLOY_ENV: 'PROD',
+  //   VITE_APP_PUBLIC_URL: 'https://app.epns.io/',
   // },
 };
 
 // Prep for deployment starts everything
 const prepForDeployment = async (appEnv) => {
-  console.log(chalk.green('Starting Custom Deployment Prebuild...' ));
+  console.log(chalk.green('Starting Custom Deployment Prebuild...'));
 
   // Test if app dev is passed, else fail
   let indexAppEnv = appEnv;
-  if (appEnv !== 'dev' && appEnv !== 'staging' && appEnv !== 'prod' && appEnv !== 'w2w' && appEnv !== 'alpha') {
+  if (
+    appEnv !== 'dev' &&
+    appEnv !== 'staging' &&
+    appEnv !== 'prod' &&
+    appEnv !== 'w2w' &&
+    appEnv !== 'alpha' &&
+    appEnv !== 'preview'
+  ) {
     console.log(
-      chalk.red('App Environment not set correctly... can only be dev, staging, prod, alpha or w2w. Please check and retry'), 
+      chalk.red(
+        'App Environment not set correctly... can only be dev, staging, prod, alpha or w2w. Please check and retry'
+      )
     );
     process.exit(1);
   }
@@ -79,13 +93,17 @@ const prepForDeployment = async (appEnv) => {
     indexAppEnv = 'prod';
   }
 
+  if (appEnv === 'preview_push') {
+    indexAppEnv = 'preview';
+  }
+
   await changeIndexHTML(indexAppEnv);
   await changeENV(appEnv);
 };
 
 const changeIndexHTML = async (appEnv) => {
   // Load index.html files
-  const indexpath = `./public/index.html`;
+  const indexpath = `./index.html`;
   const indexreplacepath = `./public/index-${appEnv}.html`;
 
   const indexhtmlcontent = fs.readFileSync(indexreplacepath, 'utf8');
@@ -104,7 +122,7 @@ const changeIndexHTML = async (appEnv) => {
 
   const sitemaptxtcontent = fs.readFileSync(sitemapreplacepath, 'utf8');
   fs.writeFileSync(sitemappath, sitemaptxtcontent, { flag: 'w' });
-}
+};
 
 const changeENV = async (appEnv) => {
   console.log(chalk.green.dim('  -- Generating custom .env file...'));

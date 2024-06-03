@@ -1,33 +1,33 @@
 // React + Web3 Essentials
-import React, { useContext, useMemo, useState } from "react";
-import * as PushAPI from "@pushprotocol/restapi";
-import { ethers } from "ethers";
+import { useContext, useMemo, useState, ReactNode, FC, Dispatch, SetStateAction } from 'react';
+import * as PushAPI from '@pushprotocol/restapi';
+import { ethers } from 'ethers';
 
 // External Packages
 import Switch from 'react-switch';
-import styled, { css, useTheme } from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import styled, { css, useTheme } from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Internal Components
-import { DropdownBtnHandler } from "./DropdownBtnHandler";
-import InputSlider from "components/reusables/sliders/InputSlider";
+import { DropdownBtnHandler } from './DropdownBtnHandler';
+import InputSlider from 'components/reusables/sliders/InputSlider';
 
 // Internal Configs
-import { SpanV2 } from "components/reusables/SharedStylingV2";
-import { useAccount } from "hooks";
-import { appConfig } from "config";
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
-import useToast from "hooks/useToast";
-import { MdCheckCircle, MdError } from "react-icons/md";
-import { ChannelSetting } from "helpers/channel/types";
-import { notifChannelSettingFormatString, userSettingsFromDefaultChannelSetting } from "helpers/channel/notifSetting";
-import { AppContext } from "contexts/AppContext";
-import LoaderSpinner, { LOADER_TYPE } from "components/reusables/loaders/LoaderSpinner";
-import { updateSubscriptionStatus, updateUserSetting } from "redux/slices/channelSlice";
-import RangeSlider from "components/reusables/sliders/RangeSlider";
+import { SpanV2 } from 'components/reusables/SharedStylingV2';
+import { useAccount } from 'hooks';
+import { appConfig } from 'config/index.js';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import useToast from 'hooks/useToast';
+import { MdCheckCircle, MdError } from 'react-icons/md';
+import { ChannelSetting } from 'helpers/channel/types';
+import { UserSettingType, getMinimalUserSetting, notifChannelSettingFormatString, userSettingsFromDefaultChannelSetting } from 'helpers/channel/notifSetting';
+import { AppContext } from 'contexts/AppContext';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { updateSubscriptionStatus, updateUserSetting } from 'redux/slices/channelSlice';
+import RangeSlider from 'components/reusables/sliders/RangeSlider';
 
 interface OptinNotifSettingDropdownProps {
-  children: React.ReactNode;
+  children: ReactNode;
   channelDetail: any;
   setLoading: (loading: boolean) => {};
   onSuccessOptin: () => {};
@@ -35,16 +35,22 @@ interface OptinNotifSettingDropdownProps {
 
 interface OptinNotifSettingDropdownContainerProps {
   settings: ChannelSetting[];
-  optInHandler: (options: { channelSettings?: ChannelSetting[], setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => Promise<void>;
+  optInHandler: (options: {
+    channelSettings?: ChannelSetting[];
+    setLoading?: Dispatch<SetStateAction<boolean>>;
+  }) => Promise<void>;
 }
 
-const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownContainerProps> = ({ settings, optInHandler }) => {
+const OptinNotifSettingDropdownContainer: FC<OptinNotifSettingDropdownContainerProps> = ({
+  settings,
+  optInHandler,
+}) => {
   const [modifiedSettings, setModifiedSettings] = useState([...settings]);
   const [txInProgress, setTxInProgress] = useState(false);
 
   const theme = useTheme();
 
-  const handleSliderChange = (index: number, value: number | { lower: number, upper: number }) => {
+  const handleSliderChange = (index: number, value: number | { lower: number; upper: number }) => {
     const updatedSettings = [...modifiedSettings];
     updatedSettings[index].default = value;
     setModifiedSettings(updatedSettings);
@@ -74,9 +80,17 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
           hasBottomBorder={index !== settings.length - 1}
         >
           <DropdownSwitchItem>
-            <SpanV2 color={theme.settingsModalPrimaryTextColor} fontSize="15px" fontWeight='500' textAlign="left">{setting.description}</SpanV2>
+            <SpanV2
+              color={theme.settingsModalPrimaryTextColor}
+              fontSize="15px"
+              fontWeight="500"
+              textAlign="left"
+            >
+              {setting.description}
+            </SpanV2>
             <Switch
-              onChange={() => handleSwitchChange(index)} checked={setting.type === 1 ? setting.default : setting.enabled}
+              onChange={() => handleSwitchChange(index)}
+              checked={setting.type === 1 ? setting.default : setting.enabled}
               checkedIcon={false}
               uncheckedIcon={false}
               onColor="#D53A94"
@@ -88,7 +102,12 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
           </DropdownSwitchItem>
           {setting.type === 2 && setting.enabled === true && (
             <DropdownSliderItem>
-              <SpanV2 color={theme.fontColor} fontSize="18px" fontWeight='600' alignSelf="flex-start">
+              <SpanV2
+                color={theme.fontColor}
+                fontSize="18px"
+                fontWeight="600"
+                alignSelf="flex-start"
+              >
                 {setting.default}
               </SpanV2>
               <InputSlider
@@ -103,7 +122,12 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
           )}
           {setting.type === 3 && setting.enabled === true && (
             <DropdownSliderItem>
-              <SpanV2 color={theme.fontColor} fontSize="18px" fontWeight='600' alignSelf="flex-start">
+              <SpanV2
+                color={theme.fontColor}
+                fontSize="18px"
+                fontWeight="600"
+                alignSelf="flex-start"
+              >
                 {setting.default.lower} - {setting.default.upper}
               </SpanV2>
               <RangeSlider
@@ -121,17 +145,24 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
         </DropdownInnerContainer>
       ))}
       <DropdownSubmitItem>
-        <SpanV2 color={theme.textcolor} fontSize="15px" fontWeight='500' textAlign="left">You will receive all important updates from this channel.</SpanV2>
+        <SpanV2
+          color={theme.textcolor}
+          fontSize="15px"
+          fontWeight="500"
+          textAlign="left"
+        >
+          You will receive all important updates from this channel.
+        </SpanV2>
         <DropdownSubmitButton
           onClick={() => optInHandler({ channelSettings: modifiedSettings, setLoading: setTxInProgress })}
         >
-          {txInProgress &&
+          {txInProgress && (
             <LoaderSpinner
               type={LOADER_TYPE.SEAMLESS}
               spinnerSize={16}
               spinnerColor="#FFF"
             />
-          }
+          )}
           {!txInProgress && <ActionTitle hideIt={txInProgress}>Opt-in</ActionTitle>}
         </DropdownSubmitButton>
       </DropdownSubmitItem>
@@ -140,7 +171,7 @@ const OptinNotifSettingDropdownContainer: React.FC<OptinNotifSettingDropdownCont
 };
 
 // Faucet URLs
-const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (options) => {
+const OptinNotifSettingDropdown: FC<OptinNotifSettingDropdownProps> = (options) => {
   const { children, channelDetail, setLoading, onSuccessOptin } = options;
 
   const { chainId, provider, account, wallet } = useAccount();
@@ -171,7 +202,13 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
 
   const subscribeToast = useToast();
 
-  const optInHandler = async ({ channelSettings, setLoading }: { channelSettings?: ChannelSetting[], setLoading?: React.Dispatch<React.SetStateAction<boolean>> }) => {
+  const optInHandler = async ({
+    channelSettings,
+    setLoading,
+  }: {
+    channelSettings?: ChannelSetting[];
+    setLoading?: Dispatch<SetStateAction<boolean>>;
+  }) => {
     const setLoadingFunc = setLoading || (options && options.setLoading) || (() => { });
     setLoadingFunc(true);
 
@@ -187,13 +224,11 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
     let walletAddress = account;
     let web3Provider = provider;
 
-    if(!(wallet?.accounts?.length > 0)){
+    if (!(wallet?.accounts?.length > 0)) {
       const connectedWallet = await connectWallet();
       walletAddress = connectedWallet.accounts[0].address;
-      web3Provider = new ethers.providers.Web3Provider(connectedWallet.provider, 'any')
+      web3Provider = new ethers.providers.Web3Provider(connectedWallet.provider, 'any');
     }
-
-
 
     try {
       let channelAddress = channelDetail.channel;
@@ -205,13 +240,23 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
 
       const _signer = await web3Provider?.getSigner(walletAddress);
 
-      await PushAPI.channels.subscribe({
+      const notifSettings: UserSettingType[] = notifChannelSettingFormatString({ settings: channelSettings });
+
+      const settingsToSubscribe = getMinimalUserSetting(notifSettings);
+
+      await PushAPI.channels.subscribeV2({
         signer: _signer,
         channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
         userAddress: convertAddressToAddrCaip(walletAddress, chainId), // user address in CAIP
+        settings: settingsToSubscribe,
         onSuccess: () => {
           dispatch(updateSubscriptionStatus({ channelAddress, status: true }));
-          dispatch(updateUserSetting({ channelAddress, settings: userSettingsFromDefaultChannelSetting({ channelSetting: channelSettings }) }));
+          dispatch(
+            updateUserSetting({
+              channelAddress,
+              settings: userSettingsFromDefaultChannelSetting({ channelSetting: channelSettings }),
+            })
+          );
 
           subscribeToast.showMessageToast({
             toastTitle: 'Success',
@@ -277,8 +322,6 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
       //     });
       //   },
       // });
-
-
     } catch (err) {
       subscribeToast.showMessageToast({
         toastTitle: 'Error',
@@ -299,106 +342,107 @@ const OptinNotifSettingDropdown: React.FC<OptinNotifSettingDropdownProps> = (opt
   };
 
   // render
-  return (
-    (channelSetting && channelSetting.length) ?
-      <DropdownBtnHandler
-        centerOnMobile={true}
-        showDropdown={isOpen}
-        toggleDropdown={toggleDropdown}
-        closeDropdown={closeDropdown}
-        renderDropdownContainer={<OptinNotifSettingDropdownContainer settings={channelSetting} optInHandler={optInHandler} />}
-        containerPadding="0px 16px 16px 16px"
-      >
-        {children}
-      </DropdownBtnHandler>
-      :
-      <SpanV2 onClick={optInHandler}>
-        {children}
-      </SpanV2>
-
+  return channelSetting && channelSetting.length ? (
+    <DropdownBtnHandler
+      centerOnMobile={true}
+      showDropdown={isOpen}
+      toggleDropdown={toggleDropdown}
+      closeDropdown={closeDropdown}
+      renderDropdownContainer={
+        <OptinNotifSettingDropdownContainer
+          settings={channelSetting}
+          optInHandler={optInHandler}
+        />
+      }
+      containerPadding="0px 16px 16px 16px"
+    >
+      {children}
+    </DropdownBtnHandler>
+  ) : (
+    <SpanV2 onClick={optInHandler}>{children}</SpanV2>
   );
-}
+};
 
 // Export Default
 export default OptinNotifSettingDropdown;
 
 const DropdownOuterContainer = styled.div`
-    min-width: 300px;
+  min-width: 300px;
 `;
 
 const DropdownInnerContainer = styled.div<{ hasBottomBorder: boolean }>`
-    display: flex;
-    flex-direction: column;
-    min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  min-width: 250px;
 
-    ${(props) =>
+  ${(props) =>
     props.hasBottomBorder &&
     css`
-            border-bottom: 1px solid ${(props) => props.theme.settingsModalBorderBottomColor};
-        `}
+      border-bottom: 1px solid ${(props) => props.theme.settingsModalBorderBottomColor};
+    `}
 `;
 
 const DropdownSwitchItem = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center; 
-    padding: 12px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0px;
 `;
 
 const DropdownSubmitItem = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center; 
-    padding: 12px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0px;
 `;
 
 const DropdownSubmitButton = styled.button`
-    border: 0;
-    outline: 0;
-    display: flex;
-    align-items: center;
-    min-width: 90px;
-    justify-content: center;
-    margin: 0px 0px 0px 10px;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 400;
-    position: relative;
-    background: #e20880;
-    border-radius: 8px;
-    padding: 9px 20px;
-    &:hover {
-        opacity: 0.9;
-        cursor: pointer;
-        pointer: hand;
-    }
-    &:active {
-        opacity: 0.75;
-        cursor: pointer;
-        pointer: hand;
-    }
-    ${(props) =>
+  border: 0;
+  outline: 0;
+  display: flex;
+  align-items: center;
+  min-width: 90px;
+  justify-content: center;
+  margin: 0px 0px 0px 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 400;
+  position: relative;
+  background: #e20880;
+  border-radius: 8px;
+  padding: 9px 20px;
+  &:hover {
+    opacity: 0.9;
+    cursor: pointer;
+    pointer: hand;
+  }
+  &:active {
+    opacity: 0.75;
+    cursor: pointer;
+    pointer: hand;
+  }
+  ${(props) =>
     props.disabled &&
     css`
-        &:hover {
-            opacity: 1;
-            cursor: default;
-            pointer: default;
-        }
-        &:active {
-            opacity: 1;
-            cursor: default;
-            pointer: default;
-        }
+      &:hover {
+        opacity: 1;
+        cursor: default;
+        pointer: default;
+      }
+      &:active {
+        opacity: 1;
+        cursor: default;
+        pointer: default;
+      }
     `}
-`
+`;
 
 const DropdownSliderItem = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 13px;
-    align-items: center; 
-    padding-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  align-items: center;
+  padding-bottom: 12px;
 `;
 
 const ActionTitle = styled.span<{ hideIt: boolean }>`

@@ -13,7 +13,7 @@ import { Section } from 'primaries/SharedStyling';
 import { useAccount } from 'hooks';
 
 // Internal Configs
-import { appConfig } from 'config';
+import { appConfig } from 'config/index.js';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 // Constants
@@ -52,124 +52,18 @@ function ChannelDashboardPage() {
   }, [toast]);
   // toast related section
 
-  /**
-   * When we instantiate the contract instances, fetch basic information about the user
-   * Corresponding channel owned.
-   */
-  // React.useEffect(() => {
-  //   (async ()=>{
-  //     if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider) return;
-  //     // Reset when account refreshes
-  //     setChannelAdmin(false);
-  //     dispatch(setUserChannelDetails('unfetched'));
-  //     setAdminStatusLoaded(false);
-  //     userClickedAt(INITIAL_OPEN_TAB);
-  //     setChannelJson([]);
-
-  //     // Push (EPNS) Read Provider Set
-  //     if (epnsReadProvider != null && epnsCommReadProvider != null) {
-  //       await checkUserForAlias();
-  //       await checkUserForChannelOwnership();
-  //       fetchDelegators();
-  //     }
-  //   })()
-  // }, [epnsReadProvider, epnsCommReadProvider, epnsWriteProvider]);
-
-  // handle user action at control center
-  // const userClickedAt = (controlIndex) => {
-  //   setControlAt(controlIndex);
-  // };
-
-  // // fetch all the channels who have delegated to this account
-  // const fetchDelegators = () => {
-  //   postReq('/channels/delegatee/getChannels', {
-  //     delegateAddress: account,
-  //     blockchain: blockchainName[chainId],
-  //     op: 'read',
-  //   })
-  //     .then(async ({ data: delegators }) => {
-  //       // if there are actual delegators
-  //       // fetch basic information abouot the channels and store it to state
-  //       if (delegators && delegators.channelOwners) {
-  //         const channelInformationPromise = [
-  //           ...new Set([account, ...delegators.channelOwners]), //make the accounts unique
-  //         ].map((channelAddress) => {
-  //           return ChannelsDataStore.instance
-  //             .getChannelJsonAsync(channelAddress)
-  //             .then((res) => ({ ...res, address: channelAddress }))
-  //             .catch(() => false);
-  //         });
-  //         const channelInformation = await Promise.all(channelInformationPromise);
-  //         dispatch(setDelegatees(channelInformation.filter(Boolean)));
-  //         // fetch the json information about this delegatee channel and add to global state
-  //       } else {
-  //         dispatch(setDelegatees([]));
-  //       }
-  //     })
-  //     .catch(async (err) => {
-  //       console.log({ err });
-  //     });
-  // };
-
-  // Check if a user is a channel or not
-  // const checkUserForChannelOwnership = async () => {
-  //   if (channelDetails != 'unfetched') return;
-  //   if (!onCoreNetwork && aliasEthAccount == null) {
-  //     setChannelAdmin(false);
-  //     setAdminStatusLoaded(true);
-  //     return;
-  //   }
-  //   // Check if account is admin or not and handle accordingly
-  //   const ownerAccount = !onCoreNetwork ? aliasEthAccount : account;
-  //   console.log(ownerAccount);
-  //   EPNSCoreHelper.getChannelJsonFromUserAddress(ownerAccount, epnsReadProvider)
-  //     .then(async (response) => {
-  //       // if channel admin, then get if the channel is verified or not, then also fetch more details about the channel
-  //       const verificationStatus = await epnsWriteProvider.getChannelVerfication(ownerAccount);
-  //       const channelJson = await epnsWriteProvider.channels(ownerAccount);
-  //       // const channelSubscribers = await ChannelsDataStore.instance.getChannelSubscribers(account);
-  //       dispatch(
-  //         setUserChannelDetails({
-  //           ...response,
-  //           ...channelJson,
-  //           // subscribers: channelSubscribers,
-  //         })
-  //       );
-  //       dispatch(setCanVerify(Boolean(verificationStatus)));
-  //       setChannelJson(response);
-  //       setChannelAdmin(true);
-  //       setAdminStatusLoaded(true);
-  //     })
-  //     .catch((err) => {
-  //       console.log('There was an error [checkUserForChannelOwnership]:', err.message);
-  //       setChannelAdmin(false);
-  //       setAdminStatusLoaded(true);
-  //     })
-  //     .finally(() => {
-  //       setAdminStatusLoaded(true);
-  //     });
-  // };
-
-  // Check if a user is a channel or not
-  // const checkUserForAlias = async () => {
-  //   // Check if account is admin or not and handle accordingly
-  //   const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
-  //   await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
-  //     if (data) {
-  //       setAliasEthAccount(data.channel);
-  //       setAliasVerified(data.is_alias_verified);
-  //     }
-  //     return data;
-  //   });
-  // };
-
   // Render
   return (
     <Container>
       {controlAt === 2 && adminStatusLoaded ? (
         <>
           {/* redirect if not admin */}
-          {!channelAdmin && <Navigate replace to="/dashboard" />}
+          {!channelAdmin && (
+            <Navigate
+              replace
+              to="/dashboard"
+            />
+          )}
           {channelAdmin && <SendNotifications />}
         </>
       ) : (
@@ -185,7 +79,8 @@ const Container = styled(Section)`
   align-items: center;
   align-self: center;
   background: ${(props) => props.theme.default.bg};
-  border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+  border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}
+    ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
   box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
   display: flex;
   flex-direction: column;
@@ -207,11 +102,9 @@ const Container = styled(Section)`
       100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} -
         ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
     );
-    min-height: calc(
-      100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.MOBILE.TOP} 
-    );
+    min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.MOBILE.TOP});
     overflow-y: scroll;
-    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  0 0;
+    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} 0 0;
   }
 `;
 

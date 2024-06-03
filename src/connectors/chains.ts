@@ -1,6 +1,6 @@
 import type { AddEthereumChainParameter } from '@web3-react/types';
 import { Chain, ChainWithDecimalId } from '@web3-onboard/common';
-import { appConfig } from 'config';
+import { appConfig } from 'config/index.js';
 import { ethers } from 'ethers';
 
 const ETH: AddEthereumChainParameter['nativeCurrency'] = {
@@ -19,45 +19,45 @@ const CELO: AddEthereumChainParameter['nativeCurrency'] = {
   name: 'Celo',
   symbol: 'CELO',
   decimals: 18,
-}
+};
 
 const BNB: AddEthereumChainParameter['nativeCurrency'] = {
   name: 'Binance Coin',
   symbol: 'BNB',
   decimals: 18,
-}
+};
 
 const FUSE: AddEthereumChainParameter['nativeCurrency'] = {
   name: 'Fuse',
   symbol: 'FUSE',
   decimals: 18,
-}
+};
 
 const SPARK: AddEthereumChainParameter['nativeCurrency'] = {
   name: 'Spark',
   symbol: 'SPARK',
   decimals: 18,
-}
+};
 
 interface BasicChainInformation {
-  urls: string[]
-  name: string
-  nativeCurrency: AddEthereumChainParameter['nativeCurrency']
+  urls: string[];
+  name: string;
+  nativeCurrency: AddEthereumChainParameter['nativeCurrency'];
 }
 
 interface ExtendedChainInformation extends BasicChainInformation {
-  nativeCurrency: AddEthereumChainParameter['nativeCurrency']
-  blockExplorerUrls: AddEthereumChainParameter['blockExplorerUrls']
+  nativeCurrency: AddEthereumChainParameter['nativeCurrency'];
+  blockExplorerUrls: AddEthereumChainParameter['blockExplorerUrls'];
 }
 
 function isExtendedChainInformation(
   chainInformation: BasicChainInformation | ExtendedChainInformation
 ): chainInformation is ExtendedChainInformation {
-  return !!(chainInformation as ExtendedChainInformation).nativeCurrency
+  return !!(chainInformation as ExtendedChainInformation).nativeCurrency;
 }
 
 export function getAddChainParameters(chainId: number): AddEthereumChainParameter | number {
-  const chainInformation = CHAINS[chainId]
+  const chainInformation = CHAINS[chainId];
   if (isExtendedChainInformation(chainInformation)) {
     return {
       chainId,
@@ -65,15 +65,15 @@ export function getAddChainParameters(chainId: number): AddEthereumChainParamete
       nativeCurrency: chainInformation.nativeCurrency,
       rpcUrls: chainInformation.urls,
       blockExplorerUrls: chainInformation.blockExplorerUrls,
-    }
+    };
   } else {
-    return chainId
+    return chainId;
   }
 }
 
 const getInfuraUrlFor = (network: string) => `https://${network}.infura.io/v3/${appConfig?.infuraAPIKey}`;
 
-type ChainConfig = { [chainId: number]: BasicChainInformation | ExtendedChainInformation }
+type ChainConfig = { [chainId: number]: BasicChainInformation | ExtendedChainInformation };
 
 export const MAINNET_CHAINS: ChainConfig = {
   1: {
@@ -87,7 +87,7 @@ export const MAINNET_CHAINS: ChainConfig = {
     nativeCurrency: BNB,
     name: 'BNB Mainnet',
     blockExplorerUrls: ['https://bscscan.com'],
-  }, 
+  },
   1101: {
     urls: ['https://rpc.polygon-zkevm.gateway.fm'],
     nativeCurrency: MATIC,
@@ -120,11 +120,17 @@ export const MAINNET_CHAINS: ChainConfig = {
   },
   122: {
     urls: ['https://rpc.fuse.io'],
-    name: "Fuse Mainnet",
+    name: 'Fuse Mainnet',
     nativeCurrency: FUSE,
-    blockExplorerUrls: ['https://explorer.fuse.io/']
-  }
-}
+    blockExplorerUrls: ['https://explorer.fuse.io/'],
+  },
+  7560: {
+    name: 'Cyber Mainnet',
+    urls: ['https://cyber.alt.technology/'],
+    nativeCurrency: ETH,
+    blockExplorerUrls: ['https://cyberscan.co/'],
+  },
+};
 
 export const TESTNET_CHAINS: ChainConfig = {
   // 5: {
@@ -138,64 +144,70 @@ export const TESTNET_CHAINS: ChainConfig = {
     name: 'Sepolia',
     blockExplorerUrls: ['https://sepolia.etherscan.io'],
   },
-  420: {
-    urls: [getInfuraUrlFor('optimism-goerli'), 'https://goerli.optimism.io'].filter(Boolean),
-    name: 'Optimism Goerli',
+  11155420: {
+    urls: [getInfuraUrlFor('optimism-sepolia'), 'https://sepolia.optimism.io'].filter(Boolean),
+    name: 'Optimism Sepolia',
     nativeCurrency: ETH,
-    blockExplorerUrls: ['https://goerli-explorer.optimism.io'],
+    blockExplorerUrls: ['https://sepolia-optimistic.etherscan.io'],
   },
-  421613: {
-    urls: [getInfuraUrlFor('arbitrum-goerli'), 'https://goerli-rollup.arbitrum.io/rpc'].filter(Boolean),
-    name: 'Arbitrum Goerli',
+  421614: {
+    urls: [getInfuraUrlFor('arbitrum-sepolia'), 'https://sepolia-rollup.arbitrum.io/rpc'].filter(Boolean),
+    name: 'Arbitrum Sepolia',
     nativeCurrency: ETH,
-    blockExplorerUrls: ['https://testnet.arbiscan.io'],
+    blockExplorerUrls: ['https://sepolia.arbiscan.io/'],
   },
-  80001: {
-    urls: [getInfuraUrlFor('polygon-mumbai')].filter(Boolean),
-    name: 'Polygon Mumbai',
+  80002: {
+    urls: [getInfuraUrlFor('polygon-amoy')].filter(Boolean),
+    name: 'Polygon Amoy',
     nativeCurrency: MATIC,
-    blockExplorerUrls: ['https://mumbai.polygonscan.com'],
+    blockExplorerUrls: ['https://www.oklink.com/amoy'],
   },
   44787: {
     urls: ['https://alfajores-forno.celo-testnet.org'],
     name: 'Celo Alfajores',
     nativeCurrency: CELO,
     blockExplorerUrls: ['https://alfajores-blockscout.celo-testnet.org'],
-  },  
+  },
   97: {
-    name: "BNB Testnet",
-    urls: ["https://data-seed-prebsc-1-s1.binance.org:8545"],
+    name: 'BNB Testnet',
+    urls: ['https://data-seed-prebsc-1-s1.binance.org:8545'],
     nativeCurrency: BNB,
     blockExplorerUrls: [],
   },
-  1442: {
-    name: "Polygon zkEVM Testnet",
-    urls: ['https://rpc.public.zkevm-test.net'],
+  2442: {
+    name: 'Polygon zkEVM Testnet',
+    urls: ['https://rpc.cardona.zkevm-rpc.com'],
     nativeCurrency: MATIC,
-    blockExplorerUrls: [],
+    blockExplorerUrls: ['https://cardona-zkevm.polygonscan.com/'],
   },
   123: {
-    name: "Fuse Testnet",
+    name: 'Fuse Testnet',
     urls: ['https://rpc.fusespark.io'],
     nativeCurrency: SPARK,
     blockExplorerUrls: ['https://explorer.fusespark.io/'],
-  }
-}
+  },
+  111557560: {
+    name: 'Cyber Testnet',
+    urls: ['https://cyber-testnet.alt.technology/'],
+    nativeCurrency: ETH,
+    blockExplorerUrls: ['https://testnet.cyberscan.co/'],
+  },
+};
 
 export const CHAINS: ChainConfig = {
   ...MAINNET_CHAINS,
   ...TESTNET_CHAINS,
-}
+};
 
 export const URLS: { [chainId: number]: string[] } = Object.keys(CHAINS).reduce<{ [chainId: number]: string[] }>(
   (accumulator, chainId) => {
-    const validURLs: string[] = CHAINS[Number(chainId)].urls
+    const validURLs: string[] = CHAINS[Number(chainId)].urls;
 
     if (validURLs.length) {
-      accumulator[Number(chainId)] = validURLs
+      accumulator[Number(chainId)] = validURLs;
     }
 
-    return accumulator
+    return accumulator;
   },
   {}
 );

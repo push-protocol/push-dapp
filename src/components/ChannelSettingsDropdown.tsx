@@ -8,28 +8,25 @@ import { toast as toaster } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
-import { MdError } from 'react-icons/md';
 
 // Internal Compoonents
-import { postReq } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
-import { setUserChannelDetails } from 'redux/slices/adminSlice';
 import cubeIcon from '../assets/icons/cube.png';
 import redBellIcon from '../assets/icons/redBellSlash.png';
-import greenBellIcon from '../assets/icons/greenBell.svg';
+import greenBellIcon from '../assets/icons/greenBell.svg?react';
 import AddSubgraphModalContent from './AddSubgraphModalContent';
 import ChannelDeactivateModalContent from './ChannelDeactivateModalContent';
 import ChannelReactivateModalContent from './ChannelReactivateModalContent';
 
 // Internal Configs
-import { abis, addresses, appConfig } from 'config';
+import { appConfig } from 'config/index.js';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { AppContext } from 'contexts/AppContext';
 
-const ethers = require('ethers');
+import { ethers } from 'ethers';
 
 const MIN_STAKE_FEES = 50;
 const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
@@ -50,7 +47,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
-  const {handleConnectWallet} = React.useContext(AppContext);
+  const { handleConnectWallet } = React.useContext(AppContext);
 
   const theme = useTheme();
   const { channelState } = channelDetails;
@@ -76,10 +73,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
 
   // for closing the ChannelSettings Dropdown upon outside click
   const closeDropdownCondition =
-    isDropdownOpen &&
-    !isDeactivateChannelModalOpen &&
-    !isReactivateChannelModalOpen &&
-    !isAddSubgraphModalOpen;
+    isDropdownOpen && !isDeactivateChannelModalOpen && !isReactivateChannelModalOpen && !isAddSubgraphModalOpen;
   useClickAway(DropdownRef, () => closeDropdownCondition && closeDropdown());
 
   const [loading, setLoading] = React.useState(false);
@@ -236,8 +230,8 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
                     {isChannelBlocked
                       ? 'Channel Blocked'
                       : isChannelDeactivated
-                        ? 'Activate Channel'
-                        : 'Deactivate Channel'}
+                      ? 'Activate Channel'
+                      : 'Deactivate Channel'}
                   </div>
                 </ActivateChannelContainer>
               </ChannelActionButton>

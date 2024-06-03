@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 
 // External Packages
 import { darkTheme, lightTheme, SwapWidget } from '@uniswap/widgets';
@@ -8,7 +8,7 @@ import { useClickAway } from 'react-use';
 import { useTheme } from 'styled-components';
 
 // Internal Configs
-import { addresses, appConfig } from 'config';
+import { addresses, appConfig } from 'config/index.js';
 import { useAccount } from 'hooks';
 
 type UniswapWidgetModalProps = {

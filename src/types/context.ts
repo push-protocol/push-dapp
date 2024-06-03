@@ -1,6 +1,5 @@
-import { ProgressHookType, PushAPI } from '@pushprotocol/restapi';
+import { ProgressHookType } from '@pushprotocol/restapi';
 import { ConnectedUser } from './chat';
-import { ModalType } from 'hooks/useModal';
 
 export interface Web3NameListType {
   [key: string]: string;
@@ -11,7 +10,7 @@ export interface onboardingProgressI {
   hookInfo: ProgressHookType;
   spinnerType: number;
   progress: number;
-  errorMessage?:string;
+  errorMessage?: string;
 }
 
 export interface BlockedLoadingI {
@@ -23,7 +22,7 @@ export interface BlockedLoadingI {
   progressEnabled?: boolean;
   progress?: number;
   progressNotice?: string;
-  errorMessage?:string;
+  errorMessage?: string;
 }
 
 export interface LocalPeerType {
@@ -61,5 +60,5 @@ export interface AppContextType {
   displayQR: boolean;
   setDisplayQR: (displayQR: boolean) => void;
   createUserIfNecessary: () => Promise<ConnectedUser>;
-  initialisePushSdkReadMode:()=>Promise<void>;
+  initializePushSdkReadMode: () => Promise<void>;
 }

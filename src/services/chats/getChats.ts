@@ -1,6 +1,6 @@
-import { MessageIPFSWithCID } from "types/chat";
-import * as PushAPI from "@pushprotocol/restapi";
-import { appConfig } from "config";
+import { MessageIPFSWithCID } from 'types/chat';
+import * as PushAPI from '@pushprotocol/restapi';
+import { appConfig } from 'config/index.js';
 
 // Types
 type GetChatsPropsType = {
@@ -17,16 +17,8 @@ type GetChatsResponseType = {
   lastListPresent: boolean;
 };
 
-export const getChats = async (
-  options: GetChatsPropsType
-): Promise<GetChatsResponseType> => {
-  const {
-    account,
-    pgpPrivateKey,
-    chatId,
-    threadHash = null,
-    limit = 15,
-  } = options || {};
+export const getChats = async (options: GetChatsPropsType): Promise<GetChatsResponseType> => {
+  const { account, pgpPrivateKey, chatId, threadHash = null, limit = 15 } = options || {};
   let threadhash: any = threadHash;
   if (!threadhash) {
     threadhash = await PushAPI.chat.conversationHash({
@@ -42,7 +34,7 @@ export const getChats = async (
       account: account,
       pgpPrivateKey: pgpPrivateKey,
       threadhash: threadhash,
-      toDecrypt:false,
+      toDecrypt: false,
       limit: limit,
       env: appConfig.appEnv,
     });

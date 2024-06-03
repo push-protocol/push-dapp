@@ -1,9 +1,8 @@
 // React + Web3 Essentials
-import React, { CSSProperties } from 'react';
+import { CSSProperties } from 'react';
 
 // External Packages
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 
 // Internal Compoonents
 import { Item } from 'primaries/SharedStyling';

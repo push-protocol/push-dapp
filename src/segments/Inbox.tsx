@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,15 +9,14 @@ import { Waypoint } from 'react-waypoint';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 
 // Internal Compoonents
-import * as PushAPI from '@pushprotocol/restapi';
+import { utils as pushApiUtils } from '@pushprotocol/restapi';
 import { NotificationItem } from '@pushprotocol/uiweb';
-import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
-import { ReactComponent as OpenLink } from 'assets/PushSnaps/GoToImage.svg';
-import { ReactComponent as MetamaskLogo } from 'assets/PushSnaps/metamasksnap.svg';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import Close from 'assets/chat/group-chat/close.svg?react';
+import OpenLink from 'assets/snap/GoToImage.svg?react';
+import MetamaskLogo from 'assets/snap/metamasksnap.svg?react';
 import SearchFilter from 'components/SearchFilter';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { GlobalContext } from 'contexts/GlobalContext';
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { useAccount } from 'hooks';
 import { Item } from 'primaries/SharedStyling';
@@ -44,32 +43,31 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
-  const modalRef = React.useRef(null);
+  const modalRef = useRef(null);
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
 
   const { account, provider, chainId } = useAccount();
   const { notifications, page, finishedFetching, toggle } = useSelector((state: any) => state.notifications);
 
   const themes = useTheme();
-  let user = convertAddressToAddrCaip(account, chainId);
 
   // toast related section
-  const [toast, showToast] = React.useState(null);
+  const [toast, showToast] = useState(null);
   const clearToast = () => showToast(null);
 
   const { run, welcomeNotifs } = useSelector((state: any) => state.userJourney);
 
-  const [limit, setLimit] = React.useState(10);
-  const [allNotf, setNotif] = React.useState([]);
-  const [filteredNotifications, setFilteredNotifications] = React.useState([]);
-  const [filter, setFilter] = React.useState(false);
-  const [allFilter, setAllFilter] = React.useState([]);
-  const [loadFilter, setLoadFilter] = React.useState(false);
-  const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const [limit, setLimit] = useState(10);
+  const [allNotf, setNotif] = useState([]);
+  const [filteredNotifications, setFilteredNotifications] = useState([]);
+  const [filter, setFilter] = useState(false);
+  const [allFilter, setAllFilter] = useState([]);
+  const [loadFilter, setLoadFilter] = useState(false);
+  const [bgUpdateLoading, setBgUpdateLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { readOnlyWallet } = useContext(GlobalContext);
 
-  const [showSnapInfo, setShowSnapInfo] = React.useState(true);
+  const [showSnapInfo, setShowSnapInfo] = useState(true);
 
   const navigate = useNavigate();
   const navigateToSnaps = () => {
@@ -83,7 +81,7 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
   );
 
   //clear toast variable after it is shown
-  React.useEffect(() => {
+  useEffect(() => {
     if (toast) {
       clearToast();
     }
@@ -133,7 +131,7 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     // console.log(allFilter)
     setFilteredNotifications(allFilter);
   }, [allFilter]);
@@ -147,7 +145,7 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
         page: page,
         limit: NOTIFICATIONS_PER_PAGE,
       });
-      const parsedResponse = PushAPI.utils.parseApiResponse(results);
+      const parsedResponse = pushApiUtils.parseApiResponse(results);
       dispatch(addPaginatedNotifications(parsedResponse));
       if (parsedResponse.length === 0) {
         dispatch(setFinishedFetching());
@@ -171,7 +169,7 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      const parsedResponse = PushAPI.utils.parseApiResponse(results);
+      const parsedResponse = pushApiUtils.parseApiResponse(results);
       const map1 = new Map();
       const map2 = new Map();
       results.forEach((each) => {
@@ -211,7 +209,7 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      const parsedResponse = PushAPI.utils.parseApiResponse(results);
+      const parsedResponse = pushApiUtils.parseApiResponse(results);
       const map1 = new Map();
       const map2 = new Map();
       results.forEach((each) => {
@@ -231,7 +229,7 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (userPushSDKInstance?.account == readOnlyWallet || !userPushSDKInstance) return;
     fetchLatestNotifications();
     fetchAllNotif();
@@ -476,7 +474,6 @@ const ToasterMsg = styled.div`
 `;
 
 const SnapSection = styled(ItemHV2)`
-  max-height: 28px;
   margin-top: 20px;
   border-radius: 12px;
   border: 1px solid #d4dcea;
@@ -486,6 +483,7 @@ const SnapSection = styled(ItemHV2)`
   padding: 12px 16px;
   align-items: center;
   gap: 16px;
+  max-height: 50px;
 
   @media ${device.tablet} {
     gap: 9px;
@@ -493,7 +491,7 @@ const SnapSection = styled(ItemHV2)`
   }
 
   @media (max-width: 525px) {
-    max-height: 50px;
+    padding: 8px 12px;
   }
 `;
 

@@ -1,18 +1,21 @@
 // React + Web3 Essentials
-import React, { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState, useEffect, useContext } from 'react';
 
 // External Packages
 import useToast from 'hooks/useToast';
-import { MdError, MdWarning } from 'react-icons/md';
+import { MdWarning } from 'react-icons/md';
 import { VscClose } from 'react-icons/vsc';
-import { Navigate, redirect, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled from 'styled-components';
 
 // Internal Components
-import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE, PROGRESS_POSITIONING } from 'components/reusables/loaders/LoaderSpinner';
-import ConnectedWalletRoute from '../components/ConnectedWalletRoute';
+import LoaderSpinner, {
+  LOADER_OVERLAY,
+  LOADER_TYPE,
+  PROGRESS_POSITIONING,
+} from 'components/reusables/loaders/LoaderSpinner';
 import { Anchor, Item } from '../primaries/SharedStyling';
 const AirdropPage = lazy(() => import('pages/AirdropPage'));
 const ChannelDashboardPage = lazy(() => import('pages/ChannelDashboardPage'));
@@ -30,7 +33,6 @@ const ReceiveNotifsPage = lazy(() => import('pages/ReceiveNotifsPage'));
 const NotifSettingsPage = lazy(() => import('pages/NotifSettingsPage'));
 const SendNotifsPage = lazy(() => import('pages/SendNotifsPage'));
 const SpacePage = lazy(() => import('pages/SpacePage'));
-const SpamPage = lazy(() => import('pages/SpamPage'));
 const SupportPage = lazy(() => import('pages/SupportPage'));
 const TutorialPage = lazy(() => import('pages/TutorialPage'));
 // const YieldFarmingPage = lazy(() => import('pages/YieldFarmingPage'));
@@ -61,33 +63,29 @@ import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import APP_PATHS from 'config/AppPaths';
 import GLOBALS from 'config/Globals';
 import { AppContext } from 'contexts/AppContext';
-import { ethers } from 'ethers';
-import CryptoHelper from 'helpers/CryptoHelper';
-import * as w2wHelper from 'helpers/w2w';
 import { MODAL_POSITION } from 'hooks/useModalBlur';
 import MetamaskPushSnapModal from 'modules/receiveNotifs/MetamaskPushSnapModal';
 import SnapPage from 'pages/SnapPage';
-import { ConnectedUser, Feeds, User } from 'types/chat';
 import { AppContextType } from 'types/context';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 // Create Header
 function MasterInterfacePage() {
   // Get search params
-  const [searchParams, setSearchParams] = useSearchParams();
-  
+  const [searchParams] = useSearchParams();
+
   // get location
   const location = useLocation();
-  const { hash, pathname, search } = location;
 
   // Master Interface controls settings
-  const [playTeaserVideo, setPlayTeaserVideo] = React.useState(false);
-  const [loadTeaserVideo, setLoadTeaserVideo] = React.useState(null);
+  const [playTeaserVideo, setPlayTeaserVideo] = useState(false);
+  const [loadTeaserVideo, setLoadTeaserVideo] = useState(null);
 
-  const { MetamaskPushSnapModalComponent, blockedLoading }: AppContextType = React.useContext(AppContext);
+  const { MetamaskPushSnapModalComponent, blockedLoading }: AppContextType = useContext(AppContext);
 
-  const { showMetamaskPushSnap } = React.useContext(AppContext);
+  const { showMetamaskPushSnap } = useContext(AppContext);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (location.hash == '#receive-notifications') {
       showMetamaskPushSnap();
     }
@@ -104,14 +102,13 @@ function MasterInterfacePage() {
   //     navigate(`/chek`, { replace: true, relative: true });
   //   }
   // }
-  
 
   // // For redirecting if required
-  // React.useEffect(() => {
+  //  useEffect(() => {
   //   const checkAndRedirect = () => {
   //     if (location.pathname === APP_PATHS.Channels && searchParams.get('channel')) {
   //       const navigate = useNavigate();
-  
+
   //       const channelId = searchParams.get('channel');
   //       console.log('redirecting to channel', `${APP_PATHS.Channels}/${channelId}`);
   //       navigate({ pathname: `${APP_PATHS.Channels}/${channelId}` });
@@ -123,16 +120,18 @@ function MasterInterfacePage() {
 
   const ChannelsProfilePage = () => {
     const channelid = searchParams.get('channel');
-    
+
     if (channelid) {
       navigate(`${APP_PATHS.Channels}/${channelid}`);
     }
 
-    return <ChannelsPage 
-      loadTeaser={setLoadTeaserVideo}
-      playTeaser={setPlayTeaserVideo}
-      channelID = {channelid}
-    />;
+    return (
+      <ChannelsPage
+        loadTeaser={setLoadTeaserVideo}
+        playTeaser={setPlayTeaserVideo}
+        channelID={channelid}
+      />
+    );
   };
 
   // For toast
@@ -153,30 +152,50 @@ function MasterInterfacePage() {
           }
         >
           <Routes>
-            <Route path={APP_PATHS.Inbox} element={<InboxPage />} />
-            <Route path={APP_PATHS.Spam} element={<InboxPage />} />
+            <Route
+              path={APP_PATHS.Inbox}
+              element={<InboxPage />}
+            />
+            <Route
+              path={APP_PATHS.Spam}
+              element={<InboxPage />}
+            />
 
             {/* <Route element={<ConnectedWalletRoute />}> */}
-            <Route path={`${APP_PATHS.Chat}/:chatid`} element={<ChatPage />} />
-            <Route path={APP_PATHS.Chat} element={<ChatPage />} />
-            <Route path={`${APP_PATHS.Spaces}/:spaceid`} element={<SpacePage />} />
-            <Route path={APP_PATHS.Spaces} element={<SpacePage />} />
+            <Route
+              path={`${APP_PATHS.Chat}/:chatid`}
+              element={<ChatPage />}
+            />
+            <Route
+              path={APP_PATHS.Chat}
+              element={<ChatPage />}
+            />
+            <Route
+              path={`${APP_PATHS.Spaces}/:spaceid`}
+              element={<SpacePage />}
+            />
+            <Route
+              path={APP_PATHS.Spaces}
+              element={<SpacePage />}
+            />
             {/* <Route path="chat-new" element={<NewChatPage />} /> */}
             {/* </Route> */}
 
             {/* Enable Channel specific routes */}
-            <Route 
-              path={`${APP_PATHS.Channels}/:channelid`} 
-              element={<ChannelsPage
-                loadTeaser={setLoadTeaserVideo}
-                playTeaser={setPlayTeaserVideo}
-                channelID={null}
-              />} 
+            <Route
+              path={`${APP_PATHS.Channels}/:channelid`}
+              element={
+                <ChannelsPage
+                  loadTeaser={setLoadTeaserVideo}
+                  playTeaser={setPlayTeaserVideo}
+                  channelID={null}
+                />
+              }
             />
 
             <Route
               path={APP_PATHS.Channels}
-              element={<ChannelsProfilePage />} 
+              element={<ChannelsProfilePage />}
             />
 
             <Route
@@ -208,8 +227,6 @@ function MasterInterfacePage() {
               path={`${APP_PATHS.Snap}/:route`}
               element={<SnapPage />}
             />
-
-
 
             {/* <Route path="yield" element={<YieldFarmingPage />} /> */}
             <Route
@@ -291,7 +308,7 @@ function MasterInterfacePage() {
         modalPosition={MODAL_POSITION.ON_ROOT}
       />
 
-      {blockedLoading.errorMessage && (
+      {blockedLoading.errorMessage &&
         blockedLoadingToast.showMessageToast({
           toastTitle: blockedLoading.title,
           toastMessage: blockedLoading.errorMessage,
@@ -302,8 +319,7 @@ function MasterInterfacePage() {
               color="#E2B71D"
             />
           ),
-        })
-      )}
+        })}
 
       {blockedLoading.enabled && (
         <LoaderSpinner
@@ -377,7 +393,8 @@ const Container = styled.div`
   /* padding: ${(props) => props.theme.interfaceTopPadding} 20px 20px 20px; */
   align-items: stretch;
 
-  background-image: url('./svg/${(props) => (props.theme.scheme === 'dark' ? 'dark' : 'light')}bg.svg');
+  background-image: url('${getPublicAssetPath('svg')}/${(props) =>
+    props.theme.scheme === 'dark' ? 'dark' : 'light'}bg.svg');
   background-size: 100% 100%;
 
   position: relative;

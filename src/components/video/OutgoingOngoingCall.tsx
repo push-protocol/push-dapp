@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
 // External Packages
 import styled from 'styled-components';
@@ -10,17 +10,17 @@ import LoaderSpinner, {
   LOADER_TYPE,
   PROGRESS_POSITIONING,
 } from 'components/reusables/loaders/LoaderSpinner';
-import { ImageV2, ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, SectionV2 } from 'components/reusables/SharedStylingV2';
 import UserInfo from 'components/video/UserInfo';
 import VideoPlayer from 'components/video/VideoPlayer';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { useDeviceWidthCheck } from 'hooks';
 import { BlockedLoadingI } from 'types/context';
-import audioIcon from '../../assets/icons/audio-icon.svg';
-import audioOffIcon from '../../assets/icons/audio-off-icon.svg';
-import endCallIcon from '../../assets/icons/end-call-icon.svg';
-import videoIcon from '../../assets/icons/video-icon.svg';
-import videoOffIcon from '../../assets/icons/video-off-icon.svg';
+import audioIcon from '../../assets/icons/audio-icon.svg?react';
+import audioOffIcon from '../../assets/icons/audio-off-icon.svg?react';
+import endCallIcon from '../../assets/icons/end-call-icon.svg?react';
+import videoIcon from '../../assets/icons/video-icon.svg?react';
+import videoOffIcon from '../../assets/icons/video-off-icon.svg?react';
 import CallButton from './CallButton';
 import MediaToggleButton from './MediaToggleButton';
 import { VideoCallStatus } from '@pushprotocol/restapi';
@@ -61,13 +61,8 @@ const callControlsImmersiveStyles = {
 };
 
 const OutgoingOngoingCall = ({ blockedLoading }: OutgoingOngoingCallType) => {
-  const {
-    videoCallData,
-    disconnectWrapper,
-    toggleVideoWrapper,
-    toggleAudioWrapper,
-    isCallAccepted,
-  } = useContext(VideoCallContext);
+  const { videoCallData, disconnectWrapper, toggleVideoWrapper, toggleAudioWrapper, isCallAccepted } =
+    useContext(VideoCallContext);
   const isImmersive = useDeviceWidthCheck(425) && videoCallData.incoming[0].status === VideoCallStatus.INITIALIZED;
   const { currentChat }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
 
@@ -75,7 +70,7 @@ const OutgoingOngoingCall = ({ blockedLoading }: OutgoingOngoingCallType) => {
     <Container>
       {/* <EndToEnd /> */}
       {isCallAccepted ? (
-        <OnConnectingVideoCall/>
+        <OnConnectingVideoCall />
       ) : (
         <>
           {/* remote user info */}

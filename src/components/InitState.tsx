@@ -1,22 +1,13 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React, { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
 
 // Internal Components
-import ChannelsDataStore from 'singletons/ChannelsDataStore';
-import UsersDataStore from 'singletons/UsersDataStore';
-import {
-  setCommunicatorReadProvider,
-  setCommunicatorWriteProvider,
-  setCoreReadProvider,
-  setCoreWriteProvider,
-} from 'redux/slices/contractSlice';
-import { getReq } from 'api';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
+import { useAccount } from 'hooks';
 import {
   setAliasAddress,
   setAliasEthAddress,
@@ -28,15 +19,19 @@ import {
 } from 'redux/slices/adminSlice';
 import { setProcessingState } from 'redux/slices/channelCreationSlice';
 import { updateBulkChannelSettings } from 'redux/slices/channelSlice';
-import { setPushAdmin } from 'redux/slices/contractSlice';
-import { getUserDelegations } from 'services';
-import * as PushAPI from '@pushprotocol/restapi';
-import { getAliasDetails } from 'services';
-import { useAccount } from 'hooks';
+import {
+  setCommunicatorReadProvider,
+  setCommunicatorWriteProvider,
+  setCoreReadProvider,
+  setCoreWriteProvider,
+  setPushAdmin,
+} from 'redux/slices/contractSlice';
+import { getAliasDetails, getUserDelegations } from 'services';
+import ChannelsDataStore from 'singletons/ChannelsDataStore';
+import UsersDataStore from 'singletons/UsersDataStore';
 
 // Internals Configs
-import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config';
-import { AppContext } from 'contexts/AppContext';
+import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config/index.js';
 import useSDKStream from 'hooks/useStream';
 
 // Constants
@@ -47,7 +42,7 @@ const InitState = () => {
   const { account, provider, chainId } = useAccount();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
-  });   
+  });
   const { epnsReadProvider, epnsWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const {
     channelDetails,
@@ -89,6 +84,7 @@ const InitState = () => {
     })();
   }, [account, chainId]);
 
+  // TODO This is causing multiple errors constantly on timeout
   useEffect(() => {
     if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider) return;
     // save push admin to global state
@@ -104,17 +100,18 @@ const InitState = () => {
     // Push (EPNS) Read Provider Set
     if (epnsReadProvider != null && epnsCommReadProvider != null) {
       // Instantiate Data Stores
-      UsersDataStore.instance.init(account, epnsReadProvider, epnsCommReadProvider);
-      ChannelsDataStore.instance.init(account, epnsReadProvider, epnsCommReadProvider, chainId);
+      UsersDataStore.getInstance().init(account, epnsReadProvider, epnsCommReadProvider);
+      ChannelsDataStore.getInstance().init(account, epnsReadProvider, epnsCommReadProvider, chainId);
     }
   }, [epnsReadProvider, epnsCommReadProvider, epnsWriteProvider]);
 
   // Check if a user is a channel or not
-  const checkUserForChannelOwnership = async (channelAddress: string) => {
+  const checkUserForChannelOwnership = async (channelAddress: string, pushUser: any) => {
     if (!channelAddress) return;
     // Check if account is admin or not and handle accordingly
     const ownerAccount = channelAddress;
-    return EPNSCoreHelper.getChannelJsonFromUserAddress(ownerAccount, epnsReadProvider)
+    return pushUser.channel
+      .info()
       .then(async (response) => {
         // if channel admin, then get if the channel is verified or not, then also fetch more details about the channel
         const verificationStatus = await epnsWriteProvider.getChannelVerfication(ownerAccount);
@@ -163,14 +160,15 @@ const InitState = () => {
       }
       if (delegateeList.length > 0) {
         let channelInformationPromise;
-        if(onCoreNetwork) {
+        if (onCoreNetwork) {
           channelInformationPromise = [...delegateeList].map(({ channel }) => {
-            return userPushSDKInstance.channel.info(convertAddressToAddrCaip(channel, chainId))
+            return userPushSDKInstance.channel.info(convertAddressToAddrCaip(channel, chainId));
           });
         } else {
           channelInformationPromise = [...delegateeList].map(({ channel }) => {
-            return getAliasDetails({account,chainId}).then(
-              (data) => userPushSDKInstance.channel.info(convertAddressToAddrCaip(data.channel, appConfig.coreContractChain)))
+            return getAliasDetails({ account, chainId }).then((data) =>
+              userPushSDKInstance.channel.info(convertAddressToAddrCaip(data.channel, appConfig.coreContractChain))
+            );
           });
         }
         const channelInformation = await Promise.all(channelInformationPromise);
@@ -198,7 +196,7 @@ const InitState = () => {
 
   // get core address of alias
   const checkUserForEthAlias = async () => {
-    const { aliasEth, aliasVerified } = await getAliasDetails({account,chainId}).then((data) => {
+    const { aliasEth, aliasVerified } = await getAliasDetails({ account, chainId }).then((data) => {
       if (data) {
         dispatch(setAliasEthAddress(data.channel));
         dispatch(setCoreChannelAdmin(data.channel));
@@ -210,10 +208,9 @@ const InitState = () => {
     return { aliasEth, aliasVerified };
   };
 
-  const checkUserForAlias = async () => {
-    let { aliasAddress = null, isAliasVerified = null } = await ChannelsDataStore.instance.getChannelDetailsFromAddress(
-      account
-    );
+  const checkUserForAlias = async (account, userPushSDKInstance) => {
+    let { aliasAddress = null, isAliasVerified = null } =
+      await ChannelsDataStore.getInstance().getChannelDetailsFromAddress(account, userPushSDKInstance);
     if (aliasAddress == 'NULL') aliasAddress = null;
 
     if (aliasAddress) {
@@ -233,22 +230,29 @@ const InitState = () => {
   };
 
   useEffect(() => {
-    if (!epnsReadProvider || !epnsCommReadProvider || channelDetails !== 'unfetched' || !account || !userPushSDKInstance) return;
+    if (
+      !epnsReadProvider ||
+      !epnsCommReadProvider ||
+      channelDetails !== 'unfetched' ||
+      !account ||
+      !userPushSDKInstance
+    )
+      return;
 
     (async function () {
       if (onCoreNetwork) {
-        checkUserForChannelOwnership(account).then(async () => {
-          await checkUserForAlias();
+        checkUserForChannelOwnership(account, userPushSDKInstance).then(async () => {
+          await checkUserForAlias(account, userPushSDKInstance);
         });
       } else {
         const { aliasEth, aliasVerified } = await checkUserForEthAlias();
         if (aliasEth) {
           // await checkUserForChannelOwnership(aliasEth);
           const channelDetail = await userPushSDKInstance.channel.info(aliasEth);
-          if(channelDetail != "channel not found" && channelDetail) {
+          if (channelDetail != 'channel not found' && channelDetail) {
             dispatch(setUserChannelDetails(channelDetail));
             const channelDetailsFromContract = await epnsReadProvider.channels(aliasEth);
-            dispatch(setUserChannelDetails({...channelDetail, ...channelDetailsFromContract}));
+            dispatch(setUserChannelDetails({ ...channelDetail, ...channelDetailsFromContract }));
           }
           if (!aliasVerified) {
             dispatch(setProcessingState(3));

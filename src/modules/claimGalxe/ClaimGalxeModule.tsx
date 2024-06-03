@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -15,8 +15,9 @@ import AlphaAccessNFTHelper from 'helpers/AlphaAccessNftHelper';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 // Internal Configs
-import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config';
+import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config/index.js';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 const ClaimGalxeModule = () => {
   const theme = useTheme();
@@ -33,14 +34,14 @@ const ClaimGalxeModule = () => {
   const [nftRevealContract, setNftRevealContract] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const onPolygonChain = chainId === 137 || chainId === 80001;
+  const onPolygonChain = chainId === 137 || chainId === 80002;
   const isProdEnv = appConfig?.appEnv === 'prod';
 
   const polygonChainProvider = onPolygonChain
     ? provider
     : isProdEnv
     ? new ethers.providers.JsonRpcProvider(CHAIN_DETAILS[137].rpcUrl)
-    : new ethers.providers.JsonRpcProvider(CHAIN_DETAILS[80001].rpcUrl);
+    : new ethers.providers.JsonRpcProvider(CHAIN_DETAILS[80002].rpcUrl);
 
   // Transaction Toast
   const txToast = useToast(5000);
@@ -96,7 +97,7 @@ const ClaimGalxeModule = () => {
     if (nftRevealContract && account) {
       try {
         if (!onPolygonChain) {
-          switchChain(isProdEnv ? 137 : 80001);
+          switchChain(isProdEnv ? 137 : 80002);
           return;
         }
         setLoading(true);
@@ -149,7 +150,7 @@ const ClaimGalxeModule = () => {
       <ClaimInnerContainer>
         <ClaimLeftContainer>
           <GalxeImg
-            src={`./svg/${theme.scheme === 'light' ? 'GalxeLight.svg' : 'GalxeDark.svg'}`}
+            src={getPublicAssetPath(`svg/${theme.scheme === 'light' ? 'GalxeLight.svg' : 'GalxeDark.svg'}`)}
             height="1.5rem"
             width="9rem"
             padding="0 0 1.5rem 0"
@@ -193,8 +194,8 @@ const ClaimGalxeModule = () => {
         </ClaimLeftContainer>
         <AlphaImageContainer>
           <AlphaImageInnerContainer>
-            <AlphaAccessTextImg src={'./svg/AccessNFTText.svg'} />
-            <AlphaAccessImg src={'./svg/AccessNFT.svg'} />
+            <AlphaAccessTextImg src={getPublicAssetPath('svg/AccessNFTText.svg')} />
+            <AlphaAccessImg src={getPublicAssetPath('svg/AccessNFT.svg')} />
           </AlphaImageInnerContainer>
         </AlphaImageContainer>
       </ClaimInnerContainer>

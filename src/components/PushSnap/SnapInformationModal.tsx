@@ -2,22 +2,20 @@
 import React from 'react';
 
 // External Packages
-import styled, { useTheme } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import PushLogoDark from 'assets/pushDark.svg?react';
+import PushLogoLight from 'assets/pushLight.svg?react';
+import HandTap from 'assets/snap/HandTap.svg?react';
+import NotificationLogo from 'assets/snap/Notification.svg?react';
+import WalletLogo from 'assets/snap/Wallet.svg?react';
+import Metamask from 'assets/snap/metamasksnap.svg?react';
 import { Button } from 'components/SharedStyling';
-import PushLogoLight from 'assets/pushLight.svg';
-import PushLogoDark from 'assets/pushDark.svg';
-import HandTap from 'assets/PushSnaps/HandTap.svg';
-import WalletLogo from 'assets/PushSnaps/Wallet.svg';
-import NotificationLogo from 'assets/PushSnaps/Notification.svg';
-import Metamask from 'assets/PushSnaps/metamasksnap.svg';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 
-const SnapInformationModal = ({
-  handleCloseModal
-}) => {
+const SnapInformationModal = ({ handleCloseModal }) => {
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -33,7 +31,6 @@ const SnapInformationModal = ({
   };
 
   const installSnap = async () => {
-
     handleCloseModal();
     navigate('/snap');
 
@@ -110,7 +107,7 @@ const SnapInformationModal = ({
       </ItemVV2>
 
       <ItemVV2>
-        <InstallButton onClick={()=>installSnap()}>
+        <InstallButton onClick={() => installSnap()}>
           <Image
             src={Metamask}
             width="15px"
@@ -144,7 +141,7 @@ const PrimaryText = styled.p`
   font-size: 18px;
   font-weight: 500;
   align-self: baseline;
-  color:${(props)=>props.theme.snapPrimaryText};
+  color: ${(props) => props.theme.snapPrimaryText};
 `;
 
 const SecondaryText = styled.p`
@@ -152,7 +149,7 @@ const SecondaryText = styled.p`
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  color:${(props)=>props.theme.snapSecondaryText};
+  color: ${(props) => props.theme.snapSecondaryText};
   text-align: left;
 `;
 

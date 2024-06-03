@@ -1,51 +1,37 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useEffect, useState, useRef, createContext } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // External Packages
-import * as PushAPI from '@pushprotocol/restapi';
+import { CONSTANTS } from '@pushprotocol/restapi';
 import ReactGA from 'react-ga';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { useSelector } from 'react-redux';
 import { ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import ChatQR from 'components/chat/w2wChat/chatQR/chatQR';
 import MobileView from 'components/chat/w2wChat/chatQR/mobileView';
 import { CreateGroupModalContent } from 'components/chat/w2wChat/groupChat/createGroup/CreateGroupModalContent';
-import { GroupInfoModalContent } from 'components/chat/w2wChat/groupChat/groupInfo/groupInfoModalContent';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
-import LoaderSpinner, {
-  LOADER_OVERLAY,
-  LOADER_SPINNER_TYPE,
-  LOADER_TYPE,
-  PROGRESS_POSITIONING,
-} from 'components/reusables/loaders/LoaderSpinner';
+import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { AppContext } from 'contexts/AppContext';
 import { VideoCallContext } from 'contexts/VideoCallContext';
-import { caip10ToWallet } from 'helpers/w2w';
 import * as w2wHelper from 'helpers/w2w/';
-import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
-import { checkIfIntent, getUpdatedChatAndIntent, getUpdatedGroupInfo } from 'helpers/w2w/user';
-import { useAccount, useDeviceWidthCheck, useSDKSocket } from 'hooks';
+import { useAccount, useDeviceWidthCheck } from 'hooks';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
-import ChatBoxSection from 'sections/chat/ChatBoxSection';
+import ChatSection from 'sections/chat/ChatSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection from 'sections/video/VideoCallSection';
-import { ChatUserAppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User, VideoCallInfoI } from 'types/chat';
+import { ChatUserAppContext, Feeds, User } from 'types/chat';
 
 // Internal Configs
-import { ChatUIProvider, darkChatTheme, UserProfile } from '@pushprotocol/uiweb';
-import { appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
-import { GlobalContext } from 'contexts/GlobalContext';
-import UnlockProfile from 'components/chat/unlockProfile/UnlockProfile';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -57,24 +43,26 @@ export const ToastPosition: ToastOptions = {
   progress: 0,
 };
 
-export const Context = React.createContext<ChatUserAppContext | null>(null);
+export const Context = createContext<ChatUserAppContext | null>(null);
 
 // Create Header
 function Chat({ chatid }) {
-  const { account, chainId, provider, wallet } = useAccount();
+  // React GA Analytics
+  useEffect(() => {
+    ReactGA.pageview('/chat');
+  }, []);
+
+  // determine if chat is active
+  const location = useLocation();
+  const pathname = location.pathname;
+
+  // Check if the URL ends with '/chat' and does not include a chat ID
+  const isUserChatting = pathname.endsWith('/chat') && !pathname.includes('::chatid');
+  const { account, provider } = useAccount();
+
   const { videoCallData } = useContext(VideoCallContext);
 
-  const {
-    blockedLoading,
-    setBlockedLoading,
-    getUser,
-    pgpPvtKey,
-    connectedUser,
-    setConnectedUser,
-    displayQR,
-    setDisplayQR,
-    handleConnectWallet,
-  } = useContext(AppContext);
+  const { setBlockedLoading, getUser, connectedUser, setConnectedUser, displayQR } = useContext(AppContext);
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -83,7 +71,7 @@ function Chat({ chatid }) {
   const theme = useTheme();
 
   const [viewChatBox, setViewChatBox] = useState<boolean>(false);
-  const [currentChat, setCurrentChat] = useState<Feeds>();
+  const [currentChat] = useState<Feeds>();
   const [selectedChatId, setSelectedChatId] = useState<string>();
 
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
@@ -92,6 +80,7 @@ function Chat({ chatid }) {
   const [intents, setIntents] = useState<Feeds[]>([]);
   const [inbox, setInbox] = useState<Feeds[]>([]);
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
+  // TODO: Add proper types and lean the logic
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
@@ -100,86 +89,26 @@ function Chat({ chatid }) {
   const isMobile = useDeviceWidthCheck(600);
   const queryClient = new QueryClient({});
 
-  const containerRef = React.useRef(null);
-
-  // trigger chat participant open
-  const triggerChatParticipant = async (chatParticipant: string, chatId: string) => {
-    let formattedChatParticipant = chatParticipant;
-    let userPushInstance = userPushSDKInstance;
-
-    if (!formattedChatParticipant.includes('.')) {
-      if (!(await ethers.utils.isAddress(caip10ToWallet(formattedChatParticipant)))) formattedChatParticipant = chatId;
-    }
-    let formattedchatId = reformatChatId(formattedChatParticipant);
-
-    //If no PGP keys then connect the wallet.
-    if (!userPushInstance.readmode()) {
-      if (userPushInstance && !userPushInstance.readmode()) {
-        navigate(`/chat/${formattedchatId}`);
-        return formattedChatParticipant;
-      }
-    } else {
-      navigate(`/chat/${formattedchatId}`);
-      return formattedChatParticipant;
-    }
-  };
-
-  // React GA Analytics
-  ReactGA.pageview('/chat');
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    setChat(null);
-    setInbox([]);
-    setReceivedIntents([]);
     setActiveTab(0);
-    setViewChatBox(false);
     setIsLoading(true);
     setConnectedUser(null);
   }, [account]);
 
   // Rest of the loading logic
   useEffect(() => {
-    if (isLoading && userPushSDKInstance) {
+    if (isLoading) {
       setConnectedUser(connectedUser);
       connectUser();
     }
   }, [connectedUser, userPushSDKInstance]);
 
-  useEffect(() => {
-    if (currentChat?.threadhash == null) {
-      for (let i = 0; i < inbox?.length; i++) {
-        if (inbox[i]?.wallets === currentChat?.wallets) {
-          setChat(inbox[i]);
-        }
-      }
-    }
-  }, [inbox]);
-
-  const closeQRModal = () => {
-    setDisplayQR(false);
-  };
-  useClickAway(containerRef, () => closeQRModal());
-
-  const groupInfoToast = useToast();
-
-  const {
-    isModalOpen: isGroupInfoModalOpen,
-    showModal: showGroupInfoModal,
-    ModalComponent: GroupInfoModalComponent,
-  } = useModalBlur();
-
-  const {
-    isModalOpen: isUnlockProfileOpen,
-    showModal: showModal,
-    ModalComponent: UnlockProfileModalComponent,
-  } = useModalBlur();
+  const { showModal: showModal } = useModalBlur();
   const createGroupToast = useToast();
 
-  const {
-    isModalOpen: isCreateGroupModalOpen,
-    showModal: showCreateGroupModal,
-    ModalComponent: CreateGroupModalComponent,
-  } = useModalBlur();
+  const { showModal: showCreateGroupModal, ModalComponent: CreateGroupModalComponent } = useModalBlur();
 
   const connectUser = async (): Promise<void> => {
     const caip10: string = w2wHelper.walletToCAIP10({ account });
@@ -190,39 +119,24 @@ function Chat({ chatid }) {
       await getUser();
     }
 
-    setBlockedLoading({
-      enabled: false,
-      title: 'Push Profile Setup Complete',
-      spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
-      progressEnabled: false,
-      progress: 100,
-    });
+    // This is probably not needed anymore
+    // setBlockedLoading({
+    //   enabled: false,
+    //   title: 'Push Profile Setup Complete',
+    //   spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
+    //   progressEnabled: false,
+    //   progress: 100,
+    // });
 
     setIsLoading(false);
-
-    if (chatid) {
-      // reformat chatid first
-      chatid = reformatChatId(chatid);
-
-      if (connectedUser?.wallets?.toLowerCase() === caip10?.toLowerCase()) {
-        // dynamic url
-        setCurrentTab(4);
-      }
-
-      // dynamic url
-      // setCurrentTab(4);
-    }
   };
 
   const setActiveTab = (tab: number): void => {
     if (tab === 1) {
-      if (intents.length) setChat(intents[0]);
-      else setChat(null);
       setCurrentTab(tab);
     } else if (tab === 0) {
       setCurrentTab(tab);
     } else if (tab === 3) {
-      setChat(null);
       setCurrentTab(tab);
     } else if (tab === 4) {
       setCurrentTab(tab);
@@ -278,195 +192,175 @@ function Chat({ chatid }) {
   };
 
   let navigate = useNavigate();
-  const setChat = (feed: Feeds): void => {
-    if (feed) {
-      setViewChatBox(true);
-      if (checkIfGroup(feed)) {
-        rearrangeMembers(feed, connectedUser);
-      }
 
-      // check and set to wallet or chat id
-      let chatid = feed.did;
-      if (!chatid) {
-        // check group information
-        if (feed.groupInformation) {
-          chatid = feed.groupInformation.chatId;
-        }
-      }
-      // chatid = reformatChatId(chatid);
-      // setCurrentChat(feed);
-
-      // lastly, set navigation for dynamic linking
-      // navigate(`/chat/${chatid}`);
-    } else {
-      setViewChatBox(false);
-      // navigate(`/chat`);
-    }
-  };
+  // For setting Push SDK
   useEffect(() => {
     if (userPushSDKInstance?.readmode()) showModal();
   }, [userPushSDKInstance]);
 
+  // For setting selected chat id to empty string when none of the chat is open
+  useEffect(() => {
+    setSelectedChatId('');
+  }, [pathname]);
+
+  // For setting selected chat id
   useEffect(() => {
     let formattedchatId = selectedChatId || chatid;
 
     if (formattedchatId) {
       formattedchatId = reformatChatId(formattedchatId);
-      // navigate(`/chat/${formattedchatId}`);
-      setViewChatBox(true);
+      navigate(`/chat/${formattedchatId}`);
     } else {
-      setViewChatBox(false);
       navigate(`/chat`);
     }
   }, [selectedChatId]);
 
-  useEffect(() => {}, [account, connectedUser?.privateKey]);
-  console.debug(userPushSDKInstance, 'user in chat module');
+  // Handle chat accept and group creation stream
+  if (userPushSDKInstance && !userPushSDKInstance.readmode() && userPushSDKInstance.stream) {
+    userPushSDKInstance.stream?.on(CONSTANTS.STREAM.CHAT, (chat: any) => {
+      if (chat.event === 'chat.accept') {
+        // Change Tab to 0 aka Chats
+        setActiveTab(0);
+      }
+    });
+
+    userPushSDKInstance.stream?.on(CONSTANTS.STREAM.CHAT_OPS, (chatops: any) => {
+      if (chatops.event === 'chat.group.create') {
+        // Change Tab to 0 aka Chats
+        setActiveTab(0);
+
+        // Set selected chat id to the group created
+        setSelectedChatId(chatops.chatId);
+      }
+    });
+  }
+
   return (
     <Container>
-      <ChatUIProvider
-        theme={theme.scheme === 'dark' && darkChatTheme}
-        // signer={signerData}
-        env={appConfig?.appEnv}
-        account={account}
-        pgpPrivateKey={pgpPvtKey}
-        user={userPushSDKInstance}
+      <ItemHV2
+        ref={containerRef}
+        height="inherit"
       >
-        <ItemHV2 ref={containerRef}>
-          {!isLoading ? (
-            <QueryClientProvider client={queryClient}>
-              <Context.Provider
-                value={{
-                  currentChat,
-                  selectedChatId,
-                  setSelectedChatId,
-                  receivedIntents,
-                  setReceivedIntents,
-                  viewChatBox,
-                  setViewChatBox,
-                  setChat,
-                  intents,
-                  setIntents,
-                  inbox,
-                  setInbox,
-                  hasUserBeenSearched,
-                  setHasUserBeenSearched,
-                  loadingMessage,
-                  setLoadingMessage,
-                  setBlockedLoading,
-                  activeTab,
-                  setActiveTab,
-                  userShouldBeSearched,
-                  setUserShouldBeSearched,
-                  filteredUserData,
-                  setFilteredUserData,
-                }}
-              >
+        {isLoading && <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />}
+
+        {!isLoading && (
+          <QueryClientProvider client={queryClient}>
+            <Context.Provider
+              value={{
+                currentChat,
+                selectedChatId,
+                setSelectedChatId,
+                receivedIntents,
+                setReceivedIntents,
+                viewChatBox,
+                setViewChatBox,
+                intents,
+                setIntents,
+                inbox,
+                setInbox,
+                hasUserBeenSearched,
+                setHasUserBeenSearched,
+                loadingMessage,
+                setLoadingMessage,
+                setBlockedLoading,
+                activeTab,
+                setActiveTab,
+                userShouldBeSearched,
+                setUserShouldBeSearched,
+                filteredUserData,
+                setFilteredUserData,
+              }}
+            >
+              {userPushSDKInstance && !userPushSDKInstance?.readmode() && (
                 <ChatSidebarContainer
                   flex="1"
                   maxWidth="310px"
                   minWidth="280px"
-                  padding="10px 10px 10px 20px"
+                  padding="0px"
                   boxSizing="border-box"
                   background={theme.default.bg}
-                  chatActive={viewChatBox}
+                  chatActive={isUserChatting && userPushSDKInstance && !userPushSDKInstance?.readmode()}
+                  zIndex="0"
                 >
                   <ChatSidebarSection
+                    key={userPushSDKInstance.uid}
                     showCreateGroupModal={showCreateGroupModal}
-                    autofilledSearch={chatid}
-                    triggerChatParticipant={triggerChatParticipant}
+                    chatId={chatid}
+                    selectedChatId={selectedChatId}
+                    setSelectedChatId={setSelectedChatId}
                   />
                 </ChatSidebarContainer>
-                <ChatContainer
-                  padding="10px 10px 10px 10px"
-                  chatActive={viewChatBox}
-                >
-                  <ChatBoxSection
-                    showGroupInfoModal={showGroupInfoModal}
-                    triggerChatParticipant={triggerChatParticipant}
-                  />
-                </ChatContainer>
-                {userPushSDKInstance && userPushSDKInstance?.readmode() && (
-                  <UnlockProfileModalComponent
-                    InnerComponent={UnlockProfile}
-                    onConfirm={() => {}}
-                    toastObject={groupInfoToast}
-                    modalPadding="0px"
-                    modalPosition={MODAL_POSITION.ON_PARENT}
-                  />
-                )}
-                <GroupInfoModalComponent
-                  InnerComponent={GroupInfoModalContent}
-                  onConfirm={() => {}}
-                  toastObject={groupInfoToast}
-                  modalPadding="0px"
-                  modalPosition={MODAL_POSITION.ON_PARENT}
+              )}
+
+              <ChatContainer
+                padding="10px 10px 10px 10px"
+                chatActive={isUserChatting && userPushSDKInstance && !userPushSDKInstance?.readmode()}
+                height="inherit"
+              >
+                <ChatSection
+                  chatId={chatid}
+                  setChatId={setSelectedChatId}
+                  loggedIn={userPushSDKInstance && !userPushSDKInstance?.readmode()}
                 />
-                <CreateGroupModalComponent
-                  InnerComponent={CreateGroupModalContent}
-                  toastObject={createGroupToast}
-                  modalPadding="0px"
-                  modalPosition={MODAL_POSITION.ON_PARENT}
-                />
+              </ChatContainer>
 
-                {/* Video Call Section */}
-                {videoCallData.incoming[0].status > 0 && <VideoCallSection />}
+              <CreateGroupModalComponent
+                InnerComponent={CreateGroupModalContent}
+                toastObject={createGroupToast}
+                modalPadding="0px"
+                modalPosition={MODAL_POSITION.ON_PARENT}
+              />
 
-                {displayQR && !isMobile && (
-                  <>
-                    <ChatQR
-                      type={LOADER_TYPE.STANDALONE}
-                      overlay={LOADER_OVERLAY.ONTOP}
-                      blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
-                      width="75%"
-                    />
+              {/* Video Call Section */}
+              {videoCallData.incoming[0].status > 0 && <VideoCallSection />}
 
-                    {/* <MobileView
+              {/* Very Important to not move this, this becomes push profile sign in in the future */}
+              {displayQR && !isMobile && (
+                <>
+                  <ChatQR
                     type={LOADER_TYPE.STANDALONE}
                     overlay={LOADER_OVERLAY.ONTOP}
                     blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
                     width="75%"
-                  /> */}
-                  </>
-                )}
+                  />
+                </>
+              )}
 
-                {displayQR && isMobile && (
-                  <>
-                    <MobileView
-                      type={LOADER_TYPE.STANDALONE}
-                      overlay={LOADER_OVERLAY.ONTOP}
-                      blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
-                      width="75%"
-                    />
-                  </>
-                )}
-              </Context.Provider>
-              {/* The rest of your application */}
-              <ReactQueryDevtools initialIsOpen={false} />
-            </QueryClientProvider>
-          ) : (
-            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
-          )}
+              {/* Very Important to not move this, this becomes push profile sign in in the future */}
+              {displayQR && isMobile && (
+                <>
+                  <MobileView
+                    type={LOADER_TYPE.STANDALONE}
+                    overlay={LOADER_OVERLAY.ONTOP}
+                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+                    width="75%"
+                  />
+                </>
+              )}
+            </Context.Provider>
+            {/* The rest of your application */}
+            <ReactQueryDevtools initialIsOpen={false} />
+          </QueryClientProvider>
+        )}
 
-          {/* This always needs to be last */}
-          {blockedLoading.enabled && (
-            <LoaderSpinner
-              type={LOADER_TYPE.STANDALONE}
-              overlay={LOADER_OVERLAY.ONTOP}
-              blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
-              title={blockedLoading.title}
-              width="50%"
-              spinnerEnabled={blockedLoading.spinnerEnabled}
-              spinnerSize={blockedLoading.spinnerSize}
-              spinnerType={blockedLoading.spinnerType}
-              progressEnabled={blockedLoading.progressEnabled}
-              progressPositioning={PROGRESS_POSITIONING.BOTTOM}
-              progress={blockedLoading.progress}
-              progressNotice={blockedLoading.progressNotice}
-            />
-          )}
-        </ItemHV2>
-      </ChatUIProvider>
+        {/* This always needs to be last, is not required as login handled by the dapp */}
+        {/* {blockedLoading.enabled && (
+          <LoaderSpinner
+            type={LOADER_TYPE.STANDALONE}
+            overlay={LOADER_OVERLAY.ONTOP}
+            blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+            title={blockedLoading.title}
+            width="50%"
+            spinnerEnabled={blockedLoading.spinnerEnabled}
+            spinnerSize={blockedLoading.spinnerSize}
+            spinnerType={blockedLoading.spinnerType}
+            progressEnabled={blockedLoading.progressEnabled}
+            progressPositioning={PROGRESS_POSITIONING.BOTTOM}
+            progress={blockedLoading.progress}
+            progressNotice={blockedLoading.progressNotice}
+          />
+        )} */}
+      </ItemHV2>
     </Container>
   );
 }
@@ -512,10 +406,10 @@ const ChatSidebarContainer = styled(ItemVV2)`
     position: absolute;
     top: 0;
     bottom: 0;
+    left: 0;
     right: 0;
-    width: 95%;
-    margin-right: ${(props) => (props.chatActive ? '20%' : '0%')};
-    opacity: ${(props) => (props.chatActive ? '0' : '1')};
+    margin-right: ${(props) => (props.chatActive ? '0%' : '100%')};
+    opacity: ${(props) => (props.chatActive ? '1' : '0')};
     transition: margin-right 0.25s;
     max-width: initial;
     min-width: auto;
@@ -526,11 +420,12 @@ const ChatSidebarContainer = styled(ItemVV2)`
 const ChatContainer = styled(ItemVV2)`
   @media ${device.tablet} {
     position: absolute;
+    background: ${(props) => props.theme.default.bg || 'transparent'};
     top: 0;
     bottom: 0;
     left: 0;
-    width: 95%;
-    margin-left: ${(props) => (props.chatActive ? '0%' : '100%')};
+    right: 0;
+    margin-left: ${(props) => (props.chatActive ? '100%' : '0%')};
     transition: margin-left 0.25s;
     max-width: initial;
     min-width: auto;

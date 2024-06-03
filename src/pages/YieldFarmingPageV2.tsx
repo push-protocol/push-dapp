@@ -19,7 +19,7 @@ const YieldFarmingPageV2 = () => {
       <YieldFarmingModuleV2 />
     </Container>
   );
-}
+};
 export default YieldFarmingPageV2;
 
 // This defines the page settings, toggle align-self to center if not covering entire stuff, align-items to place them at center

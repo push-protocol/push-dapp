@@ -1,27 +1,22 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineMore } from 'react-icons/ai';
-import { cloneDeep } from 'lodash';
 
 // Internal Components
 import { useAccount } from 'hooks';
 import { Button } from 'primaries/SharedStyling';
 import { ImageV2 } from 'components/reusables/SharedStylingV2';
-import LoaderSpinner from 'primaries/LoaderSpinner';
 import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import ManageNotifSettingDropdown from 'components/dropdowns/ManageNotifSettingDropdown';
 
 // Internal Configs
 import { device } from 'config/Globals';
 import ChannelListSettings from 'components/channel/ChannelListSettings';
 import PushSnapSettings from 'components/PushSnap/PushSnapSettings';
-import EmptyNotificationSettings from 'components/channel/EmptyNotificationSettings';
 
 interface ChannelListItem {
   channel: string;
@@ -35,10 +30,10 @@ function UserSettings() {
   const { account, chainId } = useAccount();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
-  });  
+  });
   const { subscriptionStatus, userSettings: currentUserSettings } = useSelector((state: any) => state.channels);
   const [selectedOption, setSelectedOption] = useState(0);
-  
+
   const [channelList, setChannelList] = useState<ChannelListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -101,16 +96,14 @@ function UserSettings() {
     {
       value: 0,
       label: 'Notification Settings',
-      title:'Notification Settings'
+      title: 'Notification Settings',
     },
     {
       value: 1,
       label: 'Push Snap',
-      title: ''
-    }
+      title: '',
+    },
   ];
-
-
 
   return (
     <Container>
@@ -130,11 +123,12 @@ function UserSettings() {
         </SelectSection>
         <ChannelWrapper>
           <ChannelContainer>
-            {selectOptions[selectedOption]?.title && <SectionTitle>{selectOptions[selectedOption]?.title}</SectionTitle>}
-            
+            {selectOptions[selectedOption]?.title && (
+              <SectionTitle>{selectOptions[selectedOption]?.title}</SectionTitle>
+            )}
+
             {selectedOption === 0 && <ChannelListSettings />}
             {selectedOption === 1 && <PushSnapSettings />}
-
           </ChannelContainer>
         </ChannelWrapper>
       </Wrapper>
@@ -206,7 +200,7 @@ const SelectSection = styled.div`
   }
 `;
 
-const SelectListOption = styled(Button) <{ isSelected: boolean }>`
+const SelectListOption = styled(Button)<{ isSelected: boolean }>`
   background-color: ${(props) => (props.isSelected ? props.theme.default.secondaryBg : 'transparent')};
   color: ${(props) => props.theme.default.secondaryColor};
   border-radius: 12px;

@@ -31,7 +31,7 @@
 // //     new WalletConnectV2({
 // //       actions,
 // //       options: {
-// //         projectId: process.env.PROJECT_ID,
+// //         projectId: import.meta.env.PROJECT_ID,
 // //         showQrModal: true,
 // //         chains: [mainnet],
 // //         optionalChains,
@@ -66,12 +66,12 @@
 // //
 // // export const authereum = new AuthereumConnector({ chainId: 42 })
 // //
-// // export const fortmatic = new FortmaticConnector({ apiKey: process.env.FORTMATIC_API_KEY as string, chainId: 4 })
+// // export const fortmatic = new FortmaticConnector({ apiKey: import.meta.env.FORTMATIC_API_KEY as string, chainId: 4 })
 
 // // export const portis = new PortisConnector({ dAppId: 'cfefa032-9afd-4833-bfb4-2b0cb7ec3413' as string, networks: [CORE_CHAIN_ID] })
 
 // // export const squarelink = new SquarelinkConnector({
-// //   clientId: process.env.SQUARELINK_CLIENT_ID as string,
+// //   clientId: import.meta.env.SQUARELINK_CLIENT_ID as string,
 // //   networks: [1, 100]
 // // })
 

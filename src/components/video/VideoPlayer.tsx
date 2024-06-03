@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -14,7 +14,7 @@ import { ChatUserAppContext } from 'types/chat';
 import { AppContext, AppContext as MainContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
 import { shortenText } from 'helpers/UtilityHelper';
-import Lock from 'assets/chat/group-chat/lockdark.svg'
+import Lock from 'assets/chat/group-chat/lockdark.svg?react';
 
 type VideoPlayerType = {
   localVideoStyles?: {};
@@ -27,7 +27,7 @@ const VideoPlayer = ({ localVideoStyles, incoming }: VideoPlayerType) => {
   const { videoCallData, isCallAccepted } = useContext(VideoCallContext);
   const { connectedUser } = useContext(AppContext);
   const { currentChat }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
-  const { web3NameList }: AppContextType = React.useContext(MainContext);
+  const { web3NameList }: AppContextType = useContext(MainContext);
   const web3Name = web3NameList[videoCallData.incoming[0].address];
   const theme = useTheme();
 
@@ -71,17 +71,16 @@ const VideoPlayer = ({ localVideoStyles, incoming }: VideoPlayerType) => {
           }
           style={localVideoStyles}
         >
-          
-            <LocalVideo
-              ref={localVideoRef}
-              muted
-              className={
-                videoCallData.incoming[0].status === VideoCallStatus.CONNECTED
-                  ? 'connectionAccepted'
-                  : 'connectionNotAccepted'
-              }
-            />
-          
+          <LocalVideo
+            ref={localVideoRef}
+            muted
+            className={
+              videoCallData.incoming[0].status === VideoCallStatus.CONNECTED
+                ? 'connectionAccepted'
+                : 'connectionNotAccepted'
+            }
+          />
+
           {!videoCallData.local.stream.getVideoTracks()[0].enabled ? (
             <VideoDisabledContainer>
               <PfpContainerMini>

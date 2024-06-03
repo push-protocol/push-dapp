@@ -1,39 +1,29 @@
 // React + Web3 Essentials
-import { Web3Provider } from '@ethersproject/providers';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useState, useRef } from 'react';
 
 // External Packages
-import { ethers } from 'ethers';
 import { AiOutlineQrcode } from 'react-icons/ai';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ChatPreview, ChatPreviewList, UserProfile } from '@pushprotocol/uiweb';
-import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
-import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
-import { ReactComponent as BlankChat } from 'assets/chat/BlankChat.svg';
+import { ChatPreviewList, ChatPreviewSearchList, UserProfile } from '@pushprotocol/uiweb';
+import BlankChat from 'assets/chat/BlankChat.svg?react';
+import CreateGroupIcon from 'assets/chat/group-chat/creategroup.svg?react';
+import CreateGroupFillIcon from 'assets/chat/group-chat/creategroupfill.svg?react';
 import NewTag from 'components/NewTag';
-import Recommended from 'components/chat/recommended/Recommended';
-import ProfileHeader from 'components/chat/w2wChat/profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { AppContext } from 'contexts/AppContext';
 import StyleHelper from 'helpers/StyleHelper';
 import { getIsNewTagVisible } from 'helpers/TimerHelper';
-import { caip10ToWallet, reformatChatId } from 'helpers/w2w';
-import { fetchIntent } from 'helpers/w2w/user';
 import { Context } from 'modules/chat/ChatModule';
-import { Feeds } from 'types/chat';
 
 // Internal Configs
-import GLOBALS from 'config/Globals';
+import GLOBALS, { device } from 'config/Globals';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { useAccount } from 'hooks';
-import { appConfig } from '../../config';
+import { appConfig } from '../../config/index.js';
+import RecommendedChatLists from 'config/RecommendedChatsList';
 
 const createGroupOnMouseEnter = [
   {
@@ -65,57 +55,45 @@ type loadingData = { loading: boolean; preload: boolean; paging: boolean; finish
 
 // Chat Sections
 // Divided into two, left and right
-const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerChatParticipant }) => {
+const ChatSidebarSection = ({ showCreateGroupModal, chatId, selectedChatId, setSelectedChatId }) => {
   // theme context
   const theme = useTheme();
-  const { wallet } = useAccount();
-
-  const { readOnlyWallet } = useContext(GlobalContext);
-  const { setSelectedChatId } = useContext(Context);
-  const { setMode } = useContext(GlobalContext);
 
   const isNewTagVisible = getIsNewTagVisible(new Date('2023-02-22T00:00:00.000'), 90);
 
-  const { connectedUser, displayQR, setDisplayQR, initializePushSDK, handleConnectWallet, connectWallet } =
-    useContext(AppContext);
+  // For searching user
   const [searchedUser, setSearchedUser] = useState<string>('');
 
+  // For keeping active tab
   const { activeTab, setActiveTab } = useContext(Context);
-  const [requestChatList, setRequestChatList] = useState<ChatPreviewList>([]);
-  const [requestLoadingData, setRequestLoadingData] = useState<loadingData>();
 
-  const [loadingRequests, setLoadingRequests] = useState(true);
-  const [showQR, setShowQR] = useState<boolean>(false);
-  const containerRef = React.useRef(null);
+  // For storing number of request chat count, -1 is uninitialized
+  const [numberOfChatReqs, setNumberOfChatReqs] = useState<number>(-1);
+  const [requestLoadingData, setRequestLoadingData] = useState<loadingData | null>(null);
 
-  // set recommended chats
-  const [showRecommended, setShowRecommended] = useState(false);
+  const containerRef = useRef(null);
 
-  const { userPushSDKInstance } = useSelector((state: any) => {
-    return state.user;
+  // Manage refresh and chats tab
+  const [primaryChatLoading, setPrimaryChatLoading] = useState({
+    showConvoPrompt: false,
+    showRefreshPrompt: true,
+    chatRenderKey: [...Array(24)].map(() => ((Math.random() * 36) | 0).toString(36)).join(''),
   });
 
-  const closeQRDropdown = () => {
-    setShowQR(false);
-  };
-  useClickAway(containerRef, () => closeQRDropdown());
-
-  let navigate = useNavigate();
-
-  const handleCreateGroup = async () => {
-    if (!userPushSDKInstance.readmode()) {
-      showCreateGroupModal();
-    } else {
-      if (userPushSDKInstance.account === readOnlyWallet) {
-        handleConnectWallet();
-      } else {
-        if (userPushSDKInstance.signer === undefined) {
-          await initializePushSDK();
-          return null;
-        }
-      }
-    }
-  };
+  // const handleCreateGroup = async () => {
+  //   if (!userPushSDKInstance.readmode()) {
+  //     showCreateGroupModal();
+  //   } else {
+  //     if (userPushSDKInstance.account === readOnlyWallet) {
+  //       handleConnectWallet();
+  //     } else {
+  //       if (userPushSDKInstance.signer === undefined) {
+  //         await initializePushSDK();
+  //         return null;
+  //       }
+  //     }
+  //   }
+  // };
 
   // RENDER
   return (
@@ -125,94 +103,98 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
       width="100%"
     >
       {/* Header */}
-      {activeTab !== 3 && activeTab !== 4 && (
-        <ItemVV2
-          flex="initial"
-          width="100%"
-        >
-          <ItemHV2>
-            {/* Set active and onCLick to customize tab */}
-            <TabButton
-              active={activeTab == 0 ? true : false}
-              background="transparent"
-              hoverBackground="transparent"
-              color={theme.default.color}
-              flex="1"
-              zIndex="1"
-              padding="10px 10px 20px 10px"
-              onClick={() => {
-                setActiveTab(0);
-              }}
-            >
-              <SpanV2
-                fontSize="16px"
-                fontWeight="400"
-                color={activeTab === 0 ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
-              >
-                Chats
-              </SpanV2>
-            </TabButton>
-
-            <TabButton
-              active={activeTab == 1 ? true : false}
-              background="transparent"
-              hoverBackground="transparent"
-              color={theme.default.color}
-              zIndex="1"
-              flex="1"
-              padding="10px 10px 20px 10px"
-              onClick={() => {
-                setActiveTab(1);
-              }}
-            >
-              <ItemHV2
-                alignItems="center"
-                // ref={containerRef}
-              >
-                <SpanV2
-                  flex="initial"
-                  fontSize="16px"
-                  fontWeight="400"
-                  color={activeTab === 1 ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
-                  margin="0px 4px"
-                >
-                  Requests
-                </SpanV2>
-                {requestLoadingData && requestLoadingData?.loading && (
-                  <LoaderSpinner
-                    type={LOADER_TYPE.SEAMLESS}
-                    width="auto"
-                    spinnerSize={20}
-                    spinnerColor={GLOBALS.COLORS.PRIMARY_PINK}
-                  />
-                )}
-
-                {requestLoadingData && !requestLoadingData?.loading && requestChatList.length > 0 && (
-                  <SpanV2
-                    background={GLOBALS.COLORS.PRIMARY_PINK}
-                    color={GLOBALS.COLORS.WHITE}
-                    padding="2px 8px"
-                    margin="0px 4px"
-                    fontSize="12px"
-                    borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
-                  >
-                    {requestChatList.length}
-                  </SpanV2>
-                )}
-              </ItemHV2>
-            </TabButton>
-          </ItemHV2>
-        </ItemVV2>
-      )}
-
-      {/* Main Content */}
       <ItemVV2
         justifyContent="flex-start"
-        alignItems="stretch"
-        // ref={containerRef}
-        onClick={closeQRDropdown}
+        padding="20px 10px 0px 20px"
         width="100%"
+        flex="0"
+        zIndex="1"
       >
+        {/* Render Chats and Requests */}
+        {activeTab !== 3 && (
+          <ItemVV2
+            flex="initial"
+            width="100%"
+            padding="0px 0px 10px 0px"
+            minHeight="72px"
+          >
+            <ItemHV2>
+              {/* Set active and onCLick to customize tab */}
+              <TabButton
+                active={activeTab == 0 ? true : false}
+                background="transparent"
+                hoverBackground="transparent"
+                color={theme.default.color}
+                flex="1"
+                zIndex="1"
+                padding="10px 10px 20px 10px"
+                onClick={() => {
+                  setActiveTab(0);
+                }}
+              >
+                <SpanV2
+                  fontSize="16px"
+                  fontWeight="400"
+                  color={activeTab === 0 ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
+                  minHeight="20px"
+                >
+                  Chats
+                </SpanV2>
+              </TabButton>
+
+              <TabButton
+                active={activeTab == 1 ? true : false}
+                background="transparent"
+                hoverBackground="transparent"
+                color={theme.default.color}
+                zIndex="1"
+                flex="1"
+                padding="10px 10px 20px 10px"
+                onClick={() => {
+                  setActiveTab(1);
+                }}
+              >
+                <ItemHV2
+                  alignItems="center"
+                  // ref={containerRef}
+                >
+                  <SpanV2
+                    flex="initial"
+                    fontSize="16px"
+                    fontWeight="400"
+                    color={activeTab === 1 ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
+                    margin="0px 4px"
+                    minHeight="20px"
+                  >
+                    Requests
+                  </SpanV2>
+                  {numberOfChatReqs < 0 || requestLoadingData?.loading ? (
+                    <LoaderSpinner
+                      type={LOADER_TYPE.SEAMLESS}
+                      width="auto"
+                      spinnerSize={20}
+                      spinnerColor={GLOBALS.COLORS.PRIMARY_PINK}
+                    />
+                  ) : numberOfChatReqs > 0 ? (
+                    <SpanV2
+                      background={GLOBALS.COLORS.PRIMARY_PINK}
+                      color={GLOBALS.COLORS.WHITE}
+                      padding="2px 8px"
+                      margin="0px 4px"
+                      fontSize="12px"
+                      borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
+                    >
+                      {numberOfChatReqs}
+                    </SpanV2>
+                  ) : null}
+                </ItemHV2>
+              </TabButton>
+            </ItemHV2>
+          </ItemVV2>
+        )}
+
+        {/* Or Render Search or adding of dm / group */}
+        {/* TODO: Add Proper Types */}
         {activeTab == 0 && (
           <SearchBar
             autofilled={undefined}
@@ -221,28 +203,73 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
           />
         )}
 
+        {/* TODO: Add Proper Types */}
+        {activeTab == 3 && (
+          <>
+            <SearchBar
+              autofilled={null}
+              searchedUser={searchedUser}
+              setSearchedUser={setSearchedUser}
+            />
+
+            {!searchedUser && (
+              <CreateGroupContainer
+                // justifyContent="flex-start"
+                flex="none"
+                padding="20px 10px 24px 10px"
+                zIndex="1"
+                borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
+                onClick={() => {
+                  showCreateGroupModal();
+                }}
+                background="transparent"
+                hover={theme.chat.snapFocusBg}
+                hoverBackground="transparent"
+                onMouseEnter={() => StyleHelper.changeStyle(createGroupOnMouseEnter)}
+                onMouseLeave={() => StyleHelper.changeStyle(createGroupOnMouseLeave)}
+              >
+                <CreateGroupIcon id="create-group-icon" />
+                <CreateGroupFillIcon id="create-group-fill-icon" />
+                <SpanV2
+                  margin="0 8px"
+                  fontSize="16px"
+                  fontWeight="500"
+                  letterSpacing="-0.019em"
+                  color={theme.default.secondaryColor}
+                >
+                  Create Group
+                </SpanV2>
+                {isNewTagVisible && <NewTag />}
+              </CreateGroupContainer>
+            )}
+          </>
+        )}
+      </ItemVV2>
+
+      {/* Main Content */}
+      <MainContent
+        justifyContent="flex-start"
+        alignItems="stretch"
+      >
         {/* Set Chats */}
         <ItemVV2
-          justifyContent="flex-start"
           flexWrap="nowrap"
           width="100%"
           height="100%"
           flex="1 1 1px"
           style={{ display: activeTab == 0 ? 'flex' : 'none' }}
-          overflow="scroll"
+          overflow="hidden auto"
+          justifyContent="center"
         >
-          {/* Only show recommended chats if there are no chats */}
-          {showRecommended && (
-            <>
-              {/* <Recommended
-                bg="#f5f5f5"
-                onChatSelected={async (chatid, chatParticipant) => {
-                  setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid));
-                }}
-              /> */}
+          {/* Only show convo prompt if there are no chats */}
+          {primaryChatLoading.showConvoPrompt && (
+            <ItemVV2
+              flex="initial"
+              gap="10px"
+            >
+              <BlankChat />
 
-              <ItemVV2>
-                <BlankChat />
+              <ItemHV2>
                 <SpanV2
                   fontSize="17px"
                   color={theme.default.color}
@@ -256,147 +283,137 @@ const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch, triggerCha
                   color={theme.default.secondaryColor}
                   fontWeight="400"
                   lineHeight="130%"
-                  padding="0px 25px"
+                  padding="0px 25px 10px 25px"
                 >
                   Get started by searching for an address or group name.
                 </SpanV2>
-              </ItemVV2>
-            </>
+
+                {/* // Only show refresh prompt if there are no chats */}
+                {primaryChatLoading.showRefreshPrompt && (
+                  <ButtonV2
+                    flex="initial"
+                    padding="8px 12px"
+                    background="#D53A94"
+                    color="#fff"
+                    borderRadius="16px"
+                    onClick={() => {
+                      setPrimaryChatLoading({
+                        ...primaryChatLoading,
+                        showConvoPrompt: false,
+                        chatRenderKey: [...Array(24)].map(() => ((Math.random() * 36) | 0).toString(36)).join(''),
+                      });
+                    }}
+                  >
+                    Refresh
+                  </ButtonV2>
+                )}
+              </ItemHV2>
+            </ItemVV2>
           )}
 
-          {/* Only show recommended chats if there are no chats */}
-          {!showRecommended && (
+          {/* Show no conversations if no chats are loaded */}
+          <ChatPreviewListOuter
+            justifyContent="flex-start"
+            style={{ display: primaryChatLoading.showConvoPrompt ? 'none' : 'flex' }}
+            height="100%"
+            overflow="hidden auto"
+          >
             <ChatPreviewList
+              key={primaryChatLoading.chatRenderKey}
               listType="CHATS"
-              onChatSelected={async (chatid, chatParticipant) => {
-                setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid));
-              }}
+              onChatSelected={(chatid) => setSelectedChatId(chatid)}
               onUnreadCountChange={(count) => {
-                // console.log('Count is: ', count);
+                // console.debug('Count is: ', count);
+              }}
+              onLoading={(status) => {
+                console.debug(
+                  `src::sections::chat::ChatSidebarSection::onLoading::chats: loading ${new Date().toISOString()}`,
+                  status
+                );
+
+                if (status.loading && !status.paging) {
+                  setPrimaryChatLoading({ ...primaryChatLoading, showConvoPrompt: false });
+                }
               }}
               onPreload={(chats) => {
-                if (chats.length == 0) {
-                  setShowRecommended(true);
+                if (chats.length > 0) {
+                  setPrimaryChatLoading({ ...primaryChatLoading, showConvoPrompt: false });
+                } else if (chats.length === 0) {
+                  setPrimaryChatLoading({ ...primaryChatLoading, showConvoPrompt: true });
                 }
               }}
             />
-          )}
+          </ChatPreviewListOuter>
         </ItemVV2>
 
         {/* Set Requests */}
-        <ItemVV2
-          flex="1 1 1px"
-          overflow="scroll"
+        <ChatPreviewListOuter
           justifyContent="flex-start"
           flexWrap="nowrap"
           width="100%"
           height="100%"
+          overflow="hidden auto"
           style={{ display: activeTab == 1 ? 'flex' : 'none' }}
         >
           <ChatPreviewList
             listType="REQUESTS"
-            onChatSelected={async (chatid, chatParticipant) => {
-              setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid));
-            }}
+            onChatSelected={(chatid) => setSelectedChatId(chatid)}
             onUnreadCountChange={(count) => {
-              // console.log('Count is: ', count);
+              // if we want to tap all unread messages
             }}
-            onLoading={(loadingData) => setRequestLoadingData(loadingData)}
-            onPaging={(chats) => setRequestChatList(chats)}
-            onPreload={(chats) => setRequestChatList(chats)}
+            onChatsCountChange={(count) => {
+              console.debug('src::sections::chat::ChatSidebarSection::onChatsCountChage::requests: count is: ', count);
+              // remove request badge update when chatId is Push Bot or actively opened
+              if (chatId == RecommendedChatLists[0]?.payload?.chatId || chatId?.split("chatid:")[1] == selectedChatId){
+                setNumberOfChatReqs(null);
+              } else {
+                setNumberOfChatReqs(count);
+              }
+            }}
+            onLoading={(loadingData) => {
+              console.debug(
+                `src::sections::chat::ChatSidebarSection::onLoading::requests: loading ${new Date().toISOString()}`,
+                loadingData
+              );
+              setRequestLoadingData(loadingData);
+            }}
           />
-        </ItemVV2>
+        </ChatPreviewListOuter>
 
-        {activeTab == 3 && (
-          <SearchBar
-            autofilled={null}
-            searchedUser={searchedUser}
-            setSearchedUser={setSearchedUser}
-          />
-        )}
-        {activeTab == 4 && (
-          <SearchBar
-            autofilled={autofilledSearch}
-            searchedUser={searchedUser}
-            setSearchedUser={setSearchedUser}
-          />
-        )}
         {/* Set Search */}
-        {searchedUser && (activeTab === 3 || activeTab === 4) && (
-          <ItemVV2
+        {searchedUser && activeTab == 3 && (
+          <ChatPreviewListOuter
             justifyContent="flex-start"
             flexWrap="nowrap"
             width="100%"
-            style={{ display: activeTab == 3 || activeTab == 4 ? 'flex' : 'none' }}
+            overflow="hidden auto"
+            style={{ display: activeTab == 3 ? 'flex' : 'none' }}
           >
-            <ChatPreviewList
-              listType="SEARCH"
+            <ChatPreviewSearchList
               searchParamter={searchedUser || ''}
-              onChatSelected={async (chatid, chatParticipant) =>
-                setSelectedChatId(await triggerChatParticipant(chatParticipant, chatid))
-              }
-              onUnreadCountChange={(count) => {
-                // console.log('Count is: ', count);
-              }}
+              onChatSelected={(chatid) => setSelectedChatId(chatid)}
             />
-          </ItemVV2>
+          </ChatPreviewListOuter>
         )}
-        {activeTab == 3 && (
-          <CreateGroupContainer
-            // justifyContent="flex-start"
-            flex="none"
-            padding="20px 10px 24px 10px"
-            zIndex="1"
-            borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
-            onClick={handleCreateGroup}
-            background="transparent"
-            hover={theme.chat.snapFocusBg}
-            hoverBackground="transparent"
-            onMouseEnter={() => StyleHelper.changeStyle(createGroupOnMouseEnter)}
-            onMouseLeave={() => StyleHelper.changeStyle(createGroupOnMouseLeave)}
-          >
-            <CreateGroupIcon id="create-group-icon" />
-            <CreateGroupFillIcon id="create-group-fill-icon" />
-            <SpanV2
-              margin="0 8px"
-              fontSize="16px"
-              fontWeight="500"
-              letterSpacing="-0.019em"
-              color={theme.default.secondaryColor}
-            >
-              Create Group
-            </SpanV2>
-            {isNewTagVisible && <NewTag />}
-          </CreateGroupContainer>
-        )}
-      </ItemVV2>
+      </MainContent>
 
       {/* Footer */}
-      {showQR ? (
-        <QRCodeContainer
-          onClick={() => setDisplayQR(!displayQR)}
-          style={{
-            background: theme.default.bg,
-            borderColor: theme.LinkMobileAppBorder,
-            // color:theme.chat.sendMessageFontColor
-            color: theme.textcolor,
-          }}
-        >
-          <QROutline />
-          <TextQR>Link Mobile App</TextQR>
-        </QRCodeContainer>
-      ) : null}
-
       <ProfileContainer
+        padding="0px 0px 0px 10px"
         zIndex="1"
         borderTop={`1px solid ${theme.default.secondaryBg}`}
       >
-        {/* <ProfileHeader
-          setActiveTab={setActiveTab}
-          setShowQR={setShowQR}
-          showQR={showQR}
-        /> */}
-        <UserProfile />
+        <UserProfile
+          onUserProfileUpdateModalOpen={(open: boolean) => {
+            console.log(
+              'src::sections::chat::ChatSidebarSection::onUserProfileUpdateModalOpen::profile: open is: ',
+              open
+            );
+          }}
+          // onUserProfileUpdate={(profile: any) => {
+          //   console.log('src::sections::chat::ChatSidebarSection::onUserProfileUpdate::profile: profile is: ', profile);
+          // }}
+        />
       </ProfileContainer>
     </ItemVV2>
   );
@@ -405,6 +422,8 @@ export default ChatSidebarSection;
 
 const TabButton = styled(ButtonV2)`
   border-bottom: 2px solid ${(props) => (props.active ? GLOBALS.COLORS.PRIMARY_PINK : props.theme.default.secondaryBg)};
+  overflow: hidden;
+  height: 52px;
   pointer: hand;
 `;
 
@@ -461,4 +480,22 @@ const CreateGroupContainer = styled(ButtonV2)`
   flex-direction: row;
   align-self: stretch;
   justify-content: flex-start;
+`;
+
+const MainContent = styled(ItemVV2)`
+  width: 100%;
+  padding: 0px 0px 0px 10px;
+  margin: 0px 0px 0px 10px;
+  flex: 1;
+
+  @media ${device.tablet} {
+    margin: 0px;
+  }
+`;
+
+// Target first div to change style
+const ChatPreviewListOuter = styled(ItemVV2)`
+  > div:first-child {
+    padding-right: 20px;
+  }
 `;

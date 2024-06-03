@@ -1,36 +1,27 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import { FaDiscord, FaGithub, FaMedium, FaTelegramPlane, FaTwitter } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import styled, { css, useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { postReq } from 'api';
-import NavButton from 'components/NavButton';
+import CollapseSidebar from 'assets/collapseSidebar.svg?react';
+import ExpandSidebar from 'assets/expandSidebar.svg?react';
 import NavigationButton from 'components/NavigationButton';
-import { NavigationLoaderButton } from 'components/NavigationLoaderButton';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { NavigationContext } from 'contexts/NavigationContext';
-import { AnchorLink as Anchor, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
-import { SEND_NOTIFICATION_STATES, setCanSend } from 'redux/slices/sendNotificationSlice';
-import {
-  incrementStepIndex,
-  setCommunicateOpen,
-  setDeveloperOpen,
-  setTutorialContinous,
-} from '../redux/slices/userJourneySlice';
-import { useAccount } from 'hooks';
-import { ReactComponent as ExpandSidebar } from 'assets/expandSidebar.svg';
-import { ReactComponent as CollapseSidebar } from 'assets/collapseSidebar.svg';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
+import { NavigationContext } from 'contexts/NavigationContext';
+import { useAccount } from 'hooks';
+import { Item, Section, Span } from 'primaries/SharedStyling';
+import { SEND_NOTIFICATION_STATES, setCanSend } from 'redux/slices/sendNotificationSlice';
+import { incrementStepIndex, setTutorialContinous } from '../redux/slices/userJourneySlice';
 
 // Internal Configs
-import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 import navigationList from 'config/NavigationList';
+import { appConfig } from 'config/index.js';
 import { GlobalContext } from 'contexts/GlobalContext';
 
 // Create Header
@@ -71,8 +62,8 @@ function Navigation() {
 
       if (channelDetails !== 'unfetched' && channelDetails != null) {
         newNavSetup.secondary[0].data.name = channelDetails.name;
-        newNavSetup.secondary[0].data.src = 'navigation/homeOffIcon.svg';
-        newNavSetup.secondary[0].data.activeSrc = 'navigation/homeOnIcon.svg';
+        newNavSetup.secondary[0].data.src = 'homeOffIcon';
+        newNavSetup.secondary[0].data.activeSrc = 'homeOnIcon';
         newNavSetup.secondary[0].data.hidden = false;
         newNavSetup.secondary[0].data.loading = false;
       } else {
@@ -191,7 +182,7 @@ function Navigation() {
   };
 
   // Location has changed, reflect it accordingly
-  React.useEffect(() => {
+  useEffect(() => {
     if (navigationSetup) {
       // loop and find the item in question
       Object.entries(navigationSetup).forEach(([key, value]) => {
@@ -711,7 +702,7 @@ function Navigation() {
                 </Anchor>
                 <Anchor
                   title="Open Github"
-                  href="https://github.com/ethereum-push-notification-service"
+                  href="https://github.com/push-protocol"
                   target="_blank"
                   bg={theme.leftBarSocialIconBg}
                   radius="4px"

@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { ethers } from 'ethers';
+import { useContext, useState, useRef } from 'react';
 
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
@@ -7,12 +6,12 @@ import { useClickAway } from 'react-use';
 
 // Internal Components
 import { ModalInnerComponentType } from 'hooks/useModal';
-import { ReactComponent as Lock } from 'assets/chat/group-chat/lockdark.svg';
-import { ReactComponent as AddMember } from 'assets/chat/group-chat/addicon.svg';
-import Message from 'assets/chat/group-chat/chat.svg';
-import AddAdmin from 'assets/chat/group-chat/addadmin.svg';
-import DismissAdmin from 'assets/chat/group-chat/dismissadmin.svg';
-import Remove from 'assets/chat/group-chat/remove.svg';
+import Lock from 'assets/chat/group-chat/lockdark.svg?react';
+import AddMember from 'assets/chat/group-chat/addicon.svg?react';
+import Message from 'assets/chat/group-chat/chat.svg?react';
+import AddAdmin from 'assets/chat/group-chat/addadmin.svg?react';
+import DismissAdmin from 'assets/chat/group-chat/dismissadmin.svg?react';
+import Remove from 'assets/chat/group-chat/remove.svg?react';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ChatUserAppContext } from 'types/chat';
 import { caip10ToWallet } from 'helpers/w2w';
@@ -45,12 +44,12 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const [copyText, setCopyText] = useState<string>('');
   const { account } = useAccount();
   const groupInfoToast = useToast();
-  const [selectedMemeberAddress, setSelectedMemeberAddress] = React.useState<string | null>(null);
-  const [showAddMoreWalletModal, setShowAddMoreWalletModal] = React.useState<boolean>(false);
-  // const [memberList, setMemberList] = React.useState<any>(currentChat?.groupInformation?.groupMembers);
-  const [showPendingRequests, setshowPendingRequests] = React.useState<boolean>(false);
-  const [memberList, setMemberList] = React.useState<any>([]);
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [selectedMemeberAddress, setSelectedMemeberAddress] = useState<string | null>(null);
+  const [showAddMoreWalletModal, setShowAddMoreWalletModal] = useState<boolean>(false);
+  // const [memberList, setMemberList] =   useState<any>(currentChat?.groupInformation?.groupMembers);
+  const [showPendingRequests, setshowPendingRequests] = useState<boolean>(false);
+  const [memberList, setMemberList] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const groupCreator = currentChat?.groupInformation?.groupCreator;
   const membersExceptGroupCreator = currentChat?.groupInformation?.members.filter(
     (x) => x.wallet?.toLowerCase() !== groupCreator?.toLowerCase()
@@ -60,7 +59,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
     (member) => caip10ToWallet(member?.wallet)?.toLowerCase() === account?.toLowerCase() && member?.isAdmin
   );
-  const dropdownRef = React.useRef<any>(null);
+  const dropdownRef = useRef<any>(null);
   useClickAway(dropdownRef, () => setSelectedMemeberAddress(null));
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);
@@ -309,7 +308,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   };
 
   // to close the modal upon a click on backdrop
-  const containerRef = React.useRef(null);
+  const containerRef = useRef(null);
   useClickAway(containerRef, () => handleClose());
 
   const handlePrevious = () => {
@@ -405,7 +404,6 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                   Chat ID
                 </SpanV2>
                 <ItemHV2
-                 
                   alignSelf="start"
                   onClick={() => {
                     copyToClipboard(currentChat?.groupInformation?.chatId);
@@ -419,13 +417,12 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                   }}
                 >
                   <SpanV2
-                  
-                   textAlign="start"
+                    textAlign="start"
                     fontSize="18px"
                     fontWeight="400"
                     style={{ color: `${theme.modalDescriptionTextColor}` }}
                   >
-                    {shortenText(currentChat?.groupInformation?.chatId,8,8)}
+                    {shortenText(currentChat?.groupInformation?.chatId, 8, 8)}
                   </SpanV2>
                   {!!copyText && (
                     <SpanV2

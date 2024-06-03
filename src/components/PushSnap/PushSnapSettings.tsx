@@ -1,19 +1,18 @@
+import { useState, useEffect } from 'react';
+import SnapExample from 'assets/snap/SnapExample.svg?react';
+import InfoLogo from 'assets/snap/spam-icon.svg?react';
 import { Image, Section } from 'components/SharedStyling';
 import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import SnapModule from 'modules/snap/SnapModule';
-import React, { useEffect, useState } from 'react';
-import styled, { useTheme } from 'styled-components';
-import SnapExample from 'assets/PushSnaps/SnapExample.svg';
-import { device } from 'config/Globals';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import InfoLogo from 'assets/PushSnaps/spam-icon.svg';
+import { device } from 'config/Globals';
 import { useAccount } from 'hooks';
-import PushSnapConfigureModal from './PushSnapConfigureModal';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import AboutSnapModal from 'modules/snap/AboutSnapModal';
+import styled, { useTheme } from 'styled-components';
+import PushSnapConfigureModal from './PushSnapConfigureModal';
 
 const PushSnapSettings = () => {
-  const { account, provider } = useAccount();
+  const { account } = useAccount();
 
   const theme = useTheme();
   const [walletConnected, setWalletConnected] = useState(false);

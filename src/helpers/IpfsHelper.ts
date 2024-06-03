@@ -2,11 +2,10 @@
 import { create } from 'ipfs-http-client';
 
 // Internal Components
-import { ipfsUpload } from '../services/ipfs';
 import { EnvHelper } from './UtilityHelper';
 
 // Internal Configs
-import { appConfig } from '../config';
+import { appConfig } from '../config/index.js';
 
 // Constants
 export const productionIpfsGateway: string = 'https://push.infura-ipfs.io/ipfs/';
@@ -31,7 +30,7 @@ export const IPFSupload = async (input: string): Promise<string> => {
   });
 
   try {
-    const storagePointer = await client.add(bufferInput, {pin: true});
+    const storagePointer = await client.add(bufferInput, { pin: true });
     return storagePointer?.path;
 
     // const pathHash = await ipfsUpload({ input });

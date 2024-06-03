@@ -11,16 +11,19 @@ const BlurBGClouds = () => {
   return (
     <Blurry
       position="absolute"
-      top="0" bottom="0" left="0" right="0"
+      top="0"
+      bottom="0"
+      left="0"
+      right="0"
       overflow="hidden"
     />
   );
-}
+};
 export default BlurBGClouds;
 
 const Blurry = styled(ItemVV2)`
   background: ${(props) => props.theme.login.bg};
-  
+
   &:before {
     content: '';
     position: absolute;
@@ -48,4 +51,4 @@ const Blurry = styled(ItemVV2)`
     aspect-ratio: 1;
     filter: blur(5pc);
   }
-`
+`;

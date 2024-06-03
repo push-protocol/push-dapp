@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import { MdError } from 'react-icons/md';
@@ -10,7 +10,7 @@ import { Waypoint } from 'react-waypoint';
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
+import { walletToCAIP10 } from 'helpers/w2w';
 import { fetchInbox, getDefaultGroupFeed } from 'helpers/w2w/user';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
@@ -19,6 +19,7 @@ import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../
 import { getDefaultFeed } from '../../../../helpers/w2w/user';
 import { useAccount } from 'hooks';
 import { AppContext } from 'contexts/AppContext';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 // Internal Configs
 
@@ -32,52 +33,68 @@ interface MessageFeedPropsI {
 const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, setInbox, currentChat, receivedIntents, setActiveTab, activeTab, inbox, setHasUserBeenSearched, filteredUserData, setFilteredUserData }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
+  const {
+    setChat,
+    setInbox,
+    currentChat,
+    receivedIntents,
+    setActiveTab,
+    activeTab,
+    inbox,
+    setHasUserBeenSearched,
+    filteredUserData,
+    setFilteredUserData,
+  }: ChatUserAppContext = useContext<ChatUserAppContext>(Context);
 
   const { connectedUser } = useContext(AppContext);
 
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
-  const [stopApi, setStopApi] = useState<boolean>(true);
   const [selectedChatSnap, setSelectedChatSnap] = useState<number>();
   const [page, setPage] = useState<number>(1);
-  const { chainId, account } = useAccount();
+  const { account } = useAccount();
   const [showError, setShowError] = useState<boolean>(false);
-  const [bgUpdateLoading,setBgUpdateLoading]=useState<boolean>(false);
-  const [limit, setLimit] = React.useState(10);
-  const [isFetchingDone,setIsFetchingDone]=useState<boolean>(false)
+  const [bgUpdateLoading, setBgUpdateLoading] = useState<boolean>(false);
+  const [limit] = React.useState(10);
+  const [isFetchingDone, setIsFetchingDone] = useState<boolean>(false);
   const messageFeedToast = useToast();
 
-  const onFeedClick = (feed:Feeds,i:number):void => {
-    if((receivedIntents?.filter((userExist) => userExist.did && props?.filteredUserData[0]?.did && userExist.did?.toLowerCase() === props?.filteredUserData[0]?.did?.toLowerCase()))
-.length)
-    {
+  const onFeedClick = (feed: Feeds, i: number): void => {
+    if (
+      (receivedIntents?.filter(
+        (userExist) =>
+          userExist.did &&
+          props?.filteredUserData[0]?.did &&
+          userExist.did?.toLowerCase() === props?.filteredUserData[0]?.did?.toLowerCase()
+      )).length
+    ) {
       setActiveTab(1);
     }
     setChat(feed);
     setSelectedChatSnap(i);
     setHasUserBeenSearched(false);
-    filteredUserData.length>0 ? setFilteredUserData([]):null;
-  }
-  
-  const fetchInboxApi = async ({limit, page}): Promise<Feeds[]> => {
+    filteredUserData.length > 0 ? setFilteredUserData([]) : null;
+  };
+
+  const fetchInboxApi = async ({ limit, page }): Promise<Feeds[]> => {
     try {
-      const inboxes:Feeds[] = await fetchInbox({connectedUser, limit, page});
-      if(inboxes?.length>10 && inboxes?.length===feeds?.length){
+      const inboxes: Feeds[] = await fetchInbox({ connectedUser, limit, page });
+      if (inboxes?.length > 10 && inboxes?.length === feeds?.length) {
+        setIsFetchingDone(true);
+      } else if (inboxes.length < 10) {
         setIsFetchingDone(true);
       }
-      else if(inboxes.length<10){
-        setIsFetchingDone(true);
-      }
-      if (JSON.stringify(inbox) !== JSON.stringify(inboxes)){
+      if (JSON.stringify(inbox) !== JSON.stringify(inboxes)) {
         setInbox(inboxes);
-        if(checkIfGroup(currentChat)){
-       
-          if(currentChat && inboxes[selectedChatSnap] && currentChat?.groupInformation?.members?.length !== inboxes[selectedChatSnap]?.groupInformation?.members?.length)
-          {
+        if (checkIfGroup(currentChat)) {
+          if (
+            currentChat &&
+            inboxes[selectedChatSnap] &&
+            currentChat?.groupInformation?.members?.length !==
+              inboxes[selectedChatSnap]?.groupInformation?.members?.length
+          ) {
             setChat(inboxes[selectedChatSnap]);
           }
-       
         }
       }
       setShowError(false);
@@ -97,31 +114,29 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
         });
       }
       setShowError(true);
-    }
-    finally{
+    } finally {
       setMessagesLoading(false);
     }
   };
 
-  const updateInbox = async ({chatLimit, page}:{chatLimit?:number, page?: number}): Promise<void> => {
-    await fetchInboxApi({limit: chatLimit,page});
+  const updateInbox = async ({ chatLimit, page }: { chatLimit?: number; page?: number }): Promise<void> => {
+    await fetchInboxApi({ limit: chatLimit, page });
   };
 
   useEffect(() => {
-    setFeeds(prevInbox=>[...prevInbox,...inbox]);
-  },[inbox]);
+    setFeeds((prevInbox) => [...prevInbox, ...inbox]);
+  }, [inbox]);
 
   useEffect(() => {
-    if(feeds && feeds.length > 0 && props.automatedSearch) {
+    if (feeds && feeds.length > 0 && props.automatedSearch) {
       onFeedClick(feeds[0], 0);
       setActiveTab(0);
     }
   }, [feeds]);
 
   useEffect(() => {
-    if(!props.hasUserBeenSearched)
-      updateInbox({chatLimit:limit});
-  },[]);
+    if (!props.hasUserBeenSearched) updateInbox({ chatLimit: limit });
+  }, []);
 
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
@@ -147,15 +162,17 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
             // When searching as of now the search will always result in only one user being displayed.
             // There is no multiple users appearing on the sidebar when a search is done. The wallets must match exactly.
             const searchedData: User | IGroup = props.filteredUserData[0];
-            let feed: Feeds,isNew:boolean;
-            if((searchedData as IGroup)?.groupName) {
-              ({feed,isNew} = await getDefaultGroupFeed({groupData:searchedData as IGroup,inbox,intents:receivedIntents}));
+            let feed: Feeds, isNew: boolean;
+            if ((searchedData as IGroup)?.groupName) {
+              ({ feed, isNew } = await getDefaultGroupFeed({
+                groupData: searchedData as IGroup,
+                inbox,
+                intents: receivedIntents,
+              }));
+            } else {
+              feed = await getDefaultFeed({ userData: searchedData as User, inbox, intents: receivedIntents });
             }
-            else {
-              feed = await getDefaultFeed({userData:searchedData as User,inbox,intents:receivedIntents});
-            }
-            if(isNew && !feed?.groupInformation?.isPublic)
-            {
+            if (isNew && !feed?.groupInformation?.isPublic) {
               messageFeedToast.showMessageToast({
                 toastTitle: 'Error',
                 toastMessage: 'Cannot search for private groups now',
@@ -169,13 +186,10 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
               });
               setFilteredUserData([]);
               setActiveTab(0);
-            }
-            else{
+            } else {
               setFeeds([feed]);
             }
-            
           }
-       
         } else {
           if (props.isInvalidAddress) {
             messageFeedToast.showMessageToast({
@@ -194,8 +208,7 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
           // reset if active tab is 4
           if (activeTab == 4) {
             setActiveTab(0);
-          }
-          else {
+          } else {
             setFeeds([]);
           }
         }
@@ -204,16 +217,16 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
       searchFn();
     }
 
-    return ()=>{
+    return () => {
       setMessagesLoading(false);
-    }
+    };
   }, [props.hasUserBeenSearched, props.filteredUserData]);
 
   const handlePagination = async () => {
-    setPage(prevPage=>prevPage+1);
+    setPage((prevPage) => prevPage + 1);
     // setLimit(prevLimit=>prevLimit+10);
     setBgUpdateLoading(true);
-    await updateInbox({page});
+    await updateInbox({ page });
     setBgUpdateLoading(false);
   };
 
@@ -246,9 +259,10 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
           />
         ) : (
           <>
-            {!feeds?.length && !messagesLoading && activeTab!==3 && activeTab!==4 ? (
+            {!feeds?.length && !messagesLoading && activeTab !== 3 && activeTab !== 4 ? (
               <EmptyConnection>
-                Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
+                Start a new chat by using the + button{' '}
+                <ArrowBend src={getPublicAssetPath('svg/chats/arrowbendup.svg')} />
               </EmptyConnection>
             ) : (
               feeds.map((feed: Feeds, i) => (
@@ -258,32 +272,28 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
                   key={`${feed.threadhash}${i}`}
                 >
                   {showWayPoint(i) && !isFetchingDone && <Waypoint onEnter={handlePagination} />}
-                  {
-                    feed?.groupInformation?.groupType !== 'spaces' && (
-                      <ChatSnap
+                  {feed?.groupInformation?.groupType !== 'spaces' && (
+                    <ChatSnap
                       pfp={getGroupImage(feed)}
                       username={getName(feed)}
-                      isGroup = {checkIfGroup(feed)}
-                      chatSnapMsg={getChatsnapMessage(feed,account!,false)}
-                      timestamp={feed.msg.timestamp??feed.intentTimestamp}
+                      isGroup={checkIfGroup(feed)}
+                      chatSnapMsg={getChatsnapMessage(feed, account!, false)}
+                      timestamp={feed.msg.timestamp ?? feed.intentTimestamp}
                       selected={i == selectedChatSnap ? true : false}
-                      onClick={(): void => onFeedClick(feed,i)}
+                      onClick={(): void => onFeedClick(feed, i)}
                     />
-                    )
-                  }
+                  )}
                 </ItemVV2>
               ))
-            ) }
+            )}
           </>
         )}
-        {
-        bgUpdateLoading && (
+        {bgUpdateLoading && (
           <LoaderSpinner
             type={LOADER_TYPE.SEAMLESS}
             spinnerSize={40}
           />
-        )
-      }
+        )}
       </UserChats>
     </ItemVV2>
   );

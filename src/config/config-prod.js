@@ -16,8 +16,8 @@ export const config = {
   toolingApiUrl: 'https://tooling.epns.io/apis',
   deliveryNodeApiUrl: 'https://delivery-prod.epns.io/apis',
 
-  ipfsInfuraAPIKey: process.env.REACT_APP_IPFS_INFURA_API_KEY || '22rfiNb1J645FdehoqbKMpLbF6V',
-  ipfsInfuraAPISecret: process.env.REACT_APP_IPFS_INFURA_API_SECRET || 'a757597f020425c3ae532e6be84de552',
+  ipfsInfuraAPIKey: import.meta.env.VITE_APP_IPFS_INFURA_API_KEY || '2DVyu4GEkiFksOrihKk8NMEWWwY',
+  ipfsInfuraAPISecret: import.meta.env.VITE_APP_IPFS_INFURA_API_SECRET || '8e39eefc3d70b851b47f90611d40cfa5',
 
   /**
    * Allowed Networks
@@ -29,7 +29,8 @@ export const config = {
     // 10, // for optimism mainnet
     42161, // arbitrum mainnet
     1101, // polygon zkevm mainnet
-    // 122 // fuse mainnet
+    122, // fuse mainnet
+    7560, // Cyber mainnet
   ],
 
   /**
@@ -165,6 +166,13 @@ export const CHAIN_DETAILS = {
     name: 'FUSE_MAINNET',
     chainId: 122,
     rpcUrl: 'https://rpc.fuse.io',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
+  },
+  7560: {
+    label: 'Cyber Mainnet',
+    name: 'CYBER_MAINNET',
+    chainid: 7560,
+    rpcUrl: 'https://cyber.alt.technology/',
     commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
   },
 };

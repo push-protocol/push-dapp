@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Internal Configs
-import { appConfig } from 'config';
+import { appConfig } from 'config/index.js';
 
 // Constants
 const BASE_URL = appConfig.apiUrl;

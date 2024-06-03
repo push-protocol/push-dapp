@@ -10,14 +10,13 @@ import UserSettingsModule from 'modules/userSettings/UserSettingsModule';
 
 // Chat page
 const UserSettingsPage = () => {
-  
   // RENDER
   return (
     <Container>
       <UserSettingsModule />
     </Container>
   );
-}
+};
 export default UserSettingsPage;
 
 // This defines the page settings, toggle align-self to center if not covering entire stuff, align-items to place them at center

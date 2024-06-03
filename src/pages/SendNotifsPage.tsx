@@ -1,15 +1,9 @@
-// React + Web3 Essentials
-import React, { useState } from "react";
-
 // External Packages
 import styled from 'styled-components';
 
 // Internal Components
 import { SectionV2 } from 'components/reusables/SharedStylingV2';
-import SendNotifsModule from "modules/sendNotifs/SendNotifsModule";
-
-// Internal Configs
-import GLOBALS from "config/Globals";
+import SendNotifsModule from 'modules/sendNotifs/SendNotifsModule';
 
 // Page structure
 const SendNotifsPage = () => {
@@ -19,7 +13,7 @@ const SendNotifsPage = () => {
       <SendNotifsModule />
     </Container>
   );
-}
+};
 export default SendNotifsPage;
 
 // This defines the page settings, toggle align-self to center if not covering entire stuff, align-items to place them at center

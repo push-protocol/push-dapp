@@ -1,5 +1,6 @@
 // Internal Configs
-import { appConfig } from '../config';
+import { getPreviewBasePath } from '../../basePath.js';
+import { appConfig } from '../config/index.js';
 
 // Constants
 const apiVersion: number = appConfig.pushNodeApiVersion;
@@ -26,3 +27,5 @@ export const ipfsServiceEndpoints = {
 export const deliveryNodeServiceEndpoints = {
   registerDeviceToken: (): string => `${deliveryNodeRoute}/pushtokens/register`,
 };
+export const getPublicAssetPath = (path: string) =>
+  getPreviewBasePath() ? `${getPreviewBasePath()}/${path}` : `./${path}`;

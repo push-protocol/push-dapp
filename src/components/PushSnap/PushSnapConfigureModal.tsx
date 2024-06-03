@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 
 // External Packages
 import { AiOutlineMore } from 'react-icons/ai';
@@ -8,27 +8,29 @@ import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ReactComponent as MinusCircle } from 'assets/PushSnaps/MinusCircle.svg';
+import MinusCircle from 'assets/snap/MinusCircle.svg?react';
 import { Button } from 'components/SharedStyling';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { AppContext } from 'contexts/AppContext';
 import { shortenText } from 'helpers/UtilityHelper';
 import { useAccount } from 'hooks';
-import { AppContext } from 'contexts/AppContext';
 
 // Internal Configs
 import { device } from 'config/Globals';
-import { SnoozeDurationType } from 'types';
+import { defaultSnapOrigin } from 'config/index.js';
 import { updateSnoozeDuration } from 'helpers';
-import { defaultSnapOrigin } from 'config';
+import { SnoozeDurationType } from 'types';
 
 const PushSnapConfigureModal = ({
-  snoozeDuration, setSnoozeDuration
-}: 
-  {snoozeDuration: SnoozeDurationType, setSnoozeDuration: (snoozeDuration: SnoozeDurationType) => void}
-) => {
+  snoozeDuration,
+  setSnoozeDuration,
+}: {
+  snoozeDuration: SnoozeDurationType;
+  setSnoozeDuration: (snoozeDuration: SnoozeDurationType) => void;
+}) => {
   const [addresses, setAddresses] = useState([]);
   const [searchedUser, setSearchedUser] = useState('');
-  const { setSnapState, SnapState } = React.useContext(AppContext);
+  const { setSnapState, SnapState } = useContext(AppContext);
 
   useEffect(() => {
     setChecked(SnapState === 6);
@@ -36,26 +38,25 @@ const PushSnapConfigureModal = ({
 
   const theme = useTheme();
 
-  const { chainId, account, provider } = useAccount();
+  const { account, provider } = useAccount();
 
   useEffect(() => {
-    (async function() {
+    (async function () {
       getWalletAddresses();
       await updateSnoozeDuration(setSnoozeDuration);
     })();
   }, []);
 
-
   const disableSnooze = async () => {
-      await window.ethereum?.request({
-        method: 'wallet_invokeSnap',
-        params: {
-          snapId: defaultSnapOrigin,
-          request: {
-            method: 'pushproto_disablesnooze',
-          },
+    await window.ethereum?.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: defaultSnapOrigin,
+        request: {
+          method: 'pushproto_disablesnooze',
         },
-      })
+      },
+    });
   };
 
   async function getSignature(mode: number) {
@@ -108,7 +109,7 @@ const PushSnapConfigureModal = ({
 
     // When the switch is turned on
     if (nextChecked) {
-        setSnapState(4); // Enable snooze or show the EnableSnoozeModal
+      setSnapState(4); // Enable snooze or show the EnableSnoozeModal
     } else {
       await disableSnooze();
     }
@@ -148,7 +149,7 @@ const PushSnapConfigureModal = ({
     setAddresses(result);
   };
 
-  const containerRef = React.useRef(null);
+  const containerRef = useRef(null);
   useClickAway(containerRef, () => {
     setWalletSelected(null);
   });
