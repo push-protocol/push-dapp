@@ -17,8 +17,8 @@ const StyledBox = styled.div.withConfig({
 
   /* Non-responsive props */
   color: ${(props) => getBlocksColor(props.color)};
-  background-color: ${(props) => getBlocksColor(props.bg)};
-  box-shadow: ${(props) => props.shadow};
+  background-color: ${(props) => getBlocksColor(props.backgroundColor)};
+  box-shadow: ${(props) => props.boxShadow};
   border-radius: ${(props) => props.borderRadius};
   cursor: ${(props) => props.cursor};
   border: ${(props) => props.border};

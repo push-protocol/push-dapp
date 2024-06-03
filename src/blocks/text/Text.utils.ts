@@ -1,7 +1,5 @@
 import { css } from 'styled-components';
-import Globals from 'config/Globals';
 
-import { BlocksColorData, BlocksColors, GlobalColors } from '../Blocks.types';
 import { TextVariants } from './Text.types';
 import { textVariants } from './Text.constants';
 
@@ -24,16 +22,4 @@ export const getVariantStyles = (variantName?: TextVariants) => {
     line-height: ${textVariants['bes-regular'].lineHeight};
     font-weight: ${textVariants['bes-regular'].fontWeight};
   `;
-};
-
-export const createBlocksColors = () => {
-  const globalColors: GlobalColors = Globals.COLORS;
-
-  const appColors = Object.keys(globalColors).reduce((acc: Partial<BlocksColorData>, key) => {
-    const newKey = key.toLowerCase().replace(/_([a-z])/g, (match, letter) => letter.toUpperCase()) as BlocksColors;
-    acc[newKey as keyof BlocksColorData] = globalColors[key as keyof GlobalColors];
-    return acc;
-  }, {});
-
-  return appColors as BlocksColorData;
 };

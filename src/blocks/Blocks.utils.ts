@@ -1,5 +1,5 @@
 import { css } from 'styled-components';
-import { DeviceMediaQ, DeviceSizes, breakpointMap } from './Blocks.constants';
+import { deviceMediaQ, deviceSizes, breakpointMap } from './Blocks.constants';
 import {
   BlocksColors,
   Breakpoint,
@@ -48,7 +48,7 @@ const createBreakpointCSS = (breakpointData: Record<DeviceSizeName, string>) => 
 
   if (!validBreakpointList.length) return '';
 
-  const singleDeviceMedia = `@media ${DeviceMediaQ[validBreakpointList[0][0] as DeviceSizeName]} { 
+  const singleDeviceMedia = `@media ${deviceMediaQ[validBreakpointList[0][0] as DeviceSizeName]} { 
     ${validBreakpointList[0][1]} 
   }`;
 
@@ -64,13 +64,13 @@ const createBreakpointCSS = (breakpointData: Record<DeviceSizeName, string>) => 
           } else {
             const previousBp = validBreakpointList[index - 1][0] as DeviceSizeName;
 
-            const previousBpWidth = computePixels([DeviceSizes[previousBp], '1px'], 'add');
+            const previousBpWidth = computePixels([deviceSizes[previousBp], '1px'], 'add');
 
             const previousBpMediaQ = `@media (min-width: ${previousBpWidth})`;
 
             const currentBp = _bp as DeviceSizeName;
 
-            const currentBpMediaQ = DeviceMediaQ?.[currentBp] ? `and ${DeviceMediaQ?.[currentBp]}` : '';
+            const currentBpMediaQ = deviceMediaQ?.[currentBp] ? `and ${deviceMediaQ?.[currentBp]}` : '';
 
             return `${previousBpMediaQ} ${currentBpMediaQ} { ${css} }`;
           }
