@@ -1,6 +1,11 @@
 import { HTMLAttributes } from 'react';
 import { BoxResponsiveCSSProperties, BoxResponsiveCSSPropertiesData, BoxResponsivePropValues } from './box';
 import { blocksColorsLegacy } from './Blocks.colors';
+import {
+  SkeletonResponsiveCSSProperties,
+  SkeletonResponsiveCSSPropertiesData,
+  SkeletonResponsivePropValues,
+} from './skeleton';
 
 export type DeviceSize = '320px' | '375px' | '425px' | '768px' | '1024px' | '1440px' | '2560px';
 
@@ -16,11 +21,11 @@ export type PixelValue = `${number}px`;
 
 export type ValueOf<T> = T[keyof T];
 
-export type CSSPropName = BoxResponsiveCSSProperties;
+export type CSSPropName = BoxResponsiveCSSProperties | SkeletonResponsiveCSSProperties;
 
-export type CSSPropValueType = BoxResponsivePropValues;
+export type CSSPropValueType = BoxResponsivePropValues | SkeletonResponsivePropValues;
 
-export type ResponsiveCSSPropertyData = BoxResponsiveCSSPropertiesData;
+export type ResponsiveCSSPropertyData = BoxResponsiveCSSPropertiesData | SkeletonResponsiveCSSPropertiesData;
 
 export type BlockWithoutStyleProp<T> = Omit<HTMLAttributes<T>, 'style'>;
 
