@@ -1,6 +1,7 @@
 import { css } from 'styled-components';
-import { DeviceMediaQ, DeviceSizes, breakpointMap } from './Blocks.constants';
+import { deviceMediaQ, deviceSizes, breakpointMap } from './Blocks.constants';
 import {
+  BlocksColors,
   Breakpoint,
   CSSPropName,
   CSSPropValueType,
@@ -47,7 +48,7 @@ const createBreakpointCSS = (breakpointData: Record<DeviceSizeName, string>) => 
 
   if (!validBreakpointList.length) return '';
 
-  const singleDeviceMedia = `@media ${DeviceMediaQ[validBreakpointList[0][0] as DeviceSizeName]} { 
+  const singleDeviceMedia = `@media ${deviceMediaQ[validBreakpointList[0][0] as DeviceSizeName]} { 
     ${validBreakpointList[0][1]} 
   }`;
 
@@ -63,13 +64,13 @@ const createBreakpointCSS = (breakpointData: Record<DeviceSizeName, string>) => 
           } else {
             const previousBp = validBreakpointList[index - 1][0] as DeviceSizeName;
 
-            const previousBpWidth = computePixels([DeviceSizes[previousBp], '1px'], 'add');
+            const previousBpWidth = computePixels([deviceSizes[previousBp], '1px'], 'add');
 
             const previousBpMediaQ = `@media (min-width: ${previousBpWidth})`;
 
             const currentBp = _bp as DeviceSizeName;
 
-            const currentBpMediaQ = DeviceMediaQ?.[currentBp] ? `and ${DeviceMediaQ?.[currentBp]}` : '';
+            const currentBpMediaQ = deviceMediaQ?.[currentBp] ? `and ${deviceMediaQ?.[currentBp]}` : '';
 
             return `${previousBpMediaQ} ${currentBpMediaQ} { ${css} }`;
           }
@@ -119,4 +120,16 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
     ${initialCSS}
     ${createBreakpointCSS(breakpointData)}
   `;
+};
+
+/**
+ * @param color
+ * @returns color as a css variable: var(--primary)
+ */
+export const getBlocksColor = (color?: BlocksColors) => {
+  // If color is not given return undefined, to avoid any breakages
+  if (!color) return color;
+
+  // If passed a design system color then use color as a variable
+  return `var(--${color})`;
 };
