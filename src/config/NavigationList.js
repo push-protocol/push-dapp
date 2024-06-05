@@ -8,6 +8,31 @@ import APP_PATHS from './AppPaths';
 
 const NavigationList = {
   primary: {
+    dashboard: {
+      src: 'homeOffIcon',
+      activeSrc: 'homeOnIcon',
+      iconFactory: null,
+      name: 'Dashboard',
+      title: 'Dashboard',
+      alt: 'Open Inbox',
+      href: APP_PATHS.DAPP_DASHBOARD,
+      newTab: false,
+      isRoute: true,
+      hasMenuLogic: true,
+      loading: false,
+      hidden: false,
+      headerTag: {
+        title: 'Dashboard',
+        light: {
+          bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+          fg: themeLight.headerTagFg,
+        },
+        dark: {
+          bg: themeDark.headerTagBg,
+          fg: themeDark.headerTagFg,
+        },
+      },
+    },
     inbox: {
       src: 'inboxOffIcon',
       activeSrc: 'inboxOnIcon',
