@@ -16,10 +16,8 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { css, useTheme } from 'styled-components';
 
 // Internal Compoonents
-import * as PushAPI from '@pushprotocol/restapi';
-import { Device } from 'assets/Device';
+import { deviceMediaQ } from 'blocks';
 import AllowNotificationModal from './channel/AllowNotificationModal';
-import { DeviceMediaQ } from 'blocks';
 import MetaInfoDisplayer from 'components/MetaInfoDisplayer';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2 } from 'components/reusables/SharedStylingV2';
@@ -76,21 +74,21 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
-  const [channelObject, setChannelObject] = React.useState(channelObjectProp);
-  const [subscribed, setSubscribed] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
-  const [subscriberCount, setSubscriberCount] = React.useState(0);
-  const [isPushAdmin, setIsPushAdmin] = React.useState(false);
-  const [vLoading, setvLoading] = React.useState(false);
-  const [bLoading, setBLoading] = React.useState(false);
-  const [txInProgress, setTxInProgress] = React.useState(false);
-  const [canUnverify, setCanUnverify] = React.useState(false);
-  const [verifierDetails, setVerifierDetails] = React.useState(null);
-  const [copyText, setCopyText] = React.useState(channelObject.channel);
-  const [tooltTipHeight, setToolTipheight] = React.useState(0);
-  const [channelObjectFromHash, setChannelObjectFromHash] = React.useState({});
-  const [channelObjectStartBlock, setChannelObjectStartBlock] = React.useState({});
-  const [showChannelChangedWarning, setShowChannelChangedWarning] = React.useState(false);
+  const [channelObject, setChannelObject] = useState(channelObjectProp);
+  const [subscribed, setSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [subscriberCount, setSubscriberCount] = useState(0);
+  const [isPushAdmin, setIsPushAdmin] = useState(false);
+  const [vLoading, setvLoading] = useState(false);
+  const [bLoading, setBLoading] = useState(false);
+  const [txInProgress, setTxInProgress] = useState(false);
+  const [canUnverify, setCanUnverify] = useState(false);
+  const [verifierDetails, setVerifierDetails] = useState(null);
+  const [copyText, setCopyText] = useState(channelObject.channel);
+  const [tooltTipHeight, setToolTipheight] = useState(0);
+  const [channelObjectFromHash, setChannelObjectFromHash] = useState({});
+  const [channelObjectStartBlock, setChannelObjectStartBlock] = useState({});
+  const [showChannelChangedWarning, setShowChannelChangedWarning] = useState(false);
 
   const isVerified = channelObject.verified_status;
   const isBlocked = channelObject.blocked;
@@ -1342,7 +1340,7 @@ const Subscribers = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  @media ${DeviceMediaQ.laptopL} {
+  @media ${deviceMediaQ.laptopL} {
     padding-top: 1rem;
   }
 
@@ -1381,7 +1379,7 @@ const LineBreak = styled.div`
   flex-basis: 100%;
   height: 0;
 
-  @media ${DeviceMediaQ.tablet} {
+  @media ${deviceMediaQ.tablet} {
     display: block;
   }
 `;

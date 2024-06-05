@@ -8,8 +8,7 @@ export const handleBrowserNotification = (account: string, readOnlyWallet: strin
   if (status === 'notValid') alert('This browser does not support desktop notification');
   else if (status === 'pending') {
     Notification.requestPermission().then(async (permission) => {
-      console.debug('permission', permission);
-      // await browserFunction(account);
+      if (permission === 'granted') await browserFunction(account);
       onSuccess ? onSuccess() : null;
     });
   }

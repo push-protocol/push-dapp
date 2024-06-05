@@ -53,6 +53,8 @@ import { darkTheme, lightTheme } from 'config/spaceTheme';
 import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
 import SpaceContextProvider from 'contexts/SpaceContext';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
+import { blocksColors } from 'blocks';
+import { textVariants } from 'blocks/text/Text.constants';
 
 dotenv.config();
 
@@ -61,6 +63,49 @@ const GlobalStyle = createGlobalStyle`
     background: ${(props) => props.theme.header.bg} !important;
     padding-right: 0 !important;
   }
+  :root{
+    /* Spaces */
+    --s0: 0px;
+    --s1: 4px;
+    --s2: 8px;
+    --s3: 12px;
+    --s4: 16px;
+    --s5: 20px;
+    --s6: 24px;
+    --s7: 28px;
+    --s8: 32px;
+    --s9: 36px;
+    --s10: 40px;
+    --s11: 44px;
+    --s12: 48px;
+    --s13: 52px;
+    --s14: 56px;
+    --s15: 60px;
+    // TODO: Add more as needed
+
+    /* Font Family */
+    --font-family: 'Strawford', 'Source Sans Pro', Helvetica, sans-serif;
+
+    /* Colors */
+    ${Object.entries(blocksColors)
+      .map(([colorName, code]) => `--${colorName}: ${code};`)
+      .join('')}
+  
+    /* Typography Variants */
+    ${Object.entries(textVariants)
+      .map(
+        ([fontVariant, value]) => `
+            --${fontVariant}-font-size: ${value.fontSize};
+            --${fontVariant}-line-height: ${value.lineHeight};
+            --${fontVariant}-font-weight: ${value.fontWeight};
+            ${value.fontStyle ? `--${fontVariant}-font-style: ${value.fontStyle};` : ''}
+            ${value.letterSpacing ? `--${fontVariant}-letter-spacing: ${value.letterSpacing};` : ''}
+            ${value.textTransform ? `--${fontVariant}-text-transform: ${value.textTransform};` : ''}
+          `
+      )
+      .join('')}
+  }
+
 `;
 
 export interface IUseSpaceReturnValues {
@@ -72,35 +117,35 @@ export interface IUseSpaceReturnValues {
   CreateSpaceComponent: React.FC<ISpaceCreateWidgetProps>;
 }
 
-// Extend the console
-const extendConsole = () => {
-  'use strict';
-  try {
-    var disabledConsoles = {};
-    console.enable = function (level, enabled) {
-      if (window.console === 'undefined' || !window.console || window.console === null) {
-        window.console = {};
-      }
-      if (window.console[level] === 'undefined' || !window.console[level] || window.console[level] === null) {
-        window.console[level] = function () {};
-      }
-      if (enabled) {
-        if (disabledConsoles[level]) {
-          window.console[level] = disabledConsoles[level];
-        }
-      } else {
-        disabledConsoles[level] = window.console[level];
-        window.console[level] = function () {};
-      }
-    };
-  } catch (e) {
-    console.error('Extended console() threw an error!');
-    console.debug(e);
-  }
-};
+// // Extend the console
+// const extendConsole = () => {
+//   'use strict';
+//   try {
+//     var disabledConsoles = {};
+//     console.enable = function (level, enabled) {
+//       if (window.console === 'undefined' || !window.console || window.console === null) {
+//         window.console = {};
+//       }
+//       if (window.console[level] === 'undefined' || !window.console[level] || window.console[level] === null) {
+//         window.console[level] = function () {};
+//       }
+//       if (enabled) {
+//         if (disabledConsoles[level]) {
+//           window.console[level] = disabledConsoles[level];
+//         }
+//       } else {
+//         disabledConsoles[level] = window.console[level];
+//         window.console[level] = function () {};
+//       }
+//     };
+//   } catch (e) {
+//     console.error('Extended console() threw an error!');
+//     console.debug(e);
+//   }
+// };
 
-// extend console
-extendConsole();
+// // extend console
+// extendConsole();
 
 // Disable console but not on localhost
 if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
