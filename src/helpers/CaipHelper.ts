@@ -2,7 +2,7 @@
 import { appConfig } from '../config/index.js';
 
 export const Eip155EnabledIds: Array<Number> = [
-  1, 56, 137, 10, 1101, 42161, 11155111, 97, 80002, 11155420, 2442, 421614, 122, 123,
+  1, 56, 137, 10, 1101, 42161, 11155111, 97, 80002, 11155420, 2442, 421614, 122, 123, 111557560, 7560,
 ];
 
 // Types
@@ -36,6 +36,10 @@ export const getCAIP = (chainId: number): string | null => {
 
 export const convertAddressToAddrCaip = (userAddress: string, chainId: number): string => {
   return `eip155:${chainId}:${userAddress}`;
+};
+
+export const convertAddressToPartialCaip = (userAddress: string): string => {
+  return `eip155:${userAddress}`;
 };
 
 export const convertAddrCaipToAddress = (addressInCaip: string): string => {

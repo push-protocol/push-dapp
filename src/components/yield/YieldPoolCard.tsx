@@ -1,10 +1,10 @@
 // React + Web3 Essentials
-import React, { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
-import { MdCheckCircle, MdError, MdWarning } from 'react-icons/md';
+import { MdCheckCircle, MdError } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 
 // Internal Compoonents
@@ -12,7 +12,7 @@ import useToast from 'hooks/useToast';
 import { B } from 'components/SharedStyling';
 import StakingToolTip from './StakingToolTip';
 import InfoLogo from '../../assets/inforWithoutBG.svg';
-import { Button, Span } from 'primaries/SharedStyling';
+import { Span } from 'primaries/SharedStyling';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';
 import {
@@ -43,7 +43,7 @@ const YieldPoolCard = ({
 }: any) => {
   const { account, provider } = useAccount();
 
-  const [txInProgressWithdraw, setTxInProgressWithdraw] = React.useState(false);
+  const [txInProgressWithdraw, setTxInProgressWithdraw] = useState(false);
   const [txInProgressClaimRewards, setTxInProgressClaimRewards] = useState(false);
 
   const [txInProgressMigrate, setTxInProgressMigrate] = useState(false);
@@ -561,7 +561,7 @@ const YieldPoolCard = ({
     });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     setWithdrawErrorMessage(null);
     setUnstakeErrorMessage(null);
   }, [account]);
@@ -613,7 +613,7 @@ const YieldPoolCard = ({
           <ItemVV2
             margin={isMobile ? '0px 6px 0 0 ' : '0px 18px 0px 0px'}
             padding={isMobile ? ' 7px' : '10px'}
-            padding="10px"
+            // padding="10px"
           >
             {PoolStats ? (
               <>
@@ -650,7 +650,7 @@ const YieldPoolCard = ({
           <ItemVV2
             margin={isMobile ? '0px 6px 0 0 ' : '0px 18px 0px 0px'}
             padding={isMobile ? ' 7px' : '10px'}
-            padding="10px"
+            //  padding="10px"
           >
             {PoolStats ? (
               <>

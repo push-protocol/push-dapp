@@ -14,6 +14,7 @@ export const config = {
   apiUrl: 'https://backend-dev.epns.io/apis',
   w2wApiUrl: 'https://backend-dev.epns.io/apis',
   toolingApiUrl: 'https://tooling.epns.io/apis',
+  deliveryNodeApiUrl: 'https://delivery-dev.epns.io/apis',
 
   ipfsInfuraAPIKey: import.meta.env.VITE_APP_IPFS_INFURA_API_KEY || '2DVyu4GEkiFksOrihKk8NMEWWwY',
   ipfsInfuraAPISecret: import.meta.env.VITE_APP_IPFS_INFURA_API_SECRET || '8e39eefc3d70b851b47f90611d40cfa5',
@@ -30,13 +31,14 @@ export const config = {
     2442, // polygon zkevm cardona testnet
     421614, // arbitrum testnet
     123, // fuse testnet
+    111557560, // Cyber testnet
   ],
 
   /**
    * Core Network Related Data
    */
   coreContractChain: 11155111, //the chain id of the network which the core contract relies on
-  coreRPC: 'https://sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
+  coreRPC: 'https://ethereum-sepolia-rpc.publicnode.com',
   mainnetCoreRPC: 'https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
   mainnetCoreContractChain: 1,
   aliasRPC: {
@@ -52,16 +54,15 @@ export const config = {
    * Analaytics + Firebase
    */
   googleAnalyticsId: 'UA-165415629-5',
-  vapidKey: 'BFRmmAEEXOhk31FIsooph5CxlXKh6N0_NocUWHzvtpoUEvqQTwLXu6XtwkrH7ckyr2CvVz1ll-8q4oo6-ZqFJPY',
+  vapidKey: 'BJYsH1MYRqzfuzduyHLNaUfZCYdAahcJXsdWzdTqleWox0vOLaycyVPdy_J9XWzSIKvRu0xkwxo75mhDiVJhNnw',
   firebaseConfig: {
-    apiKey: 'AIzaSyClOk4qP0ttFW-BPnXy7WT920xfdXSbFu8',
-    authDomain: 'epns-internal.firebaseapp.com',
-    databaseURL: 'https://epns-internal.firebaseio.com',
-    projectId: 'epns-internal',
-    storageBucket: 'epns-internal.appspot.com',
-    messagingSenderId: '755180533582',
-    appId: '1:755180533582:web:752ff8db31905506b7d01f',
-    measurementId: 'G-ZJH2T7R9S1',
+    apiKey: 'AIzaSyB4aXx2pJ9T5sw0Q1bba3jI1EAGp0Z5kBI',
+    authDomain: 'push-dev-a6a63.firebaseapp.com',
+    projectId: 'push-dev-a6a63',
+    storageBucket: 'push-dev-a6a63.appspot.com',
+    messagingSenderId: '974364469170',
+    appId: '1:974364469170:web:47fd6304c6cf36b5bfe6ab',
+    measurementId: 'G-5YR8N35DY4',
   },
 
   /**
@@ -173,5 +174,12 @@ export const CHAIN_DETAILS = {
     chainId: 123,
     rpcUrl: 'https://rpc.fusespark.io',
     commAddress: '0x7eBb54D86CF928115965DB596a3E600404dD8039',
+  },
+  111557560: {
+    label: 'Cyber Testnet',
+    name: 'CYBER_TESTNET',
+    chainid: 111557560,
+    rpcUrl: 'https://cyber-testnet.alt.technology/',
+    commAddress: '0x9cb3bd7550B5c92baA056Fc0F08132f49508145F',
   },
 };

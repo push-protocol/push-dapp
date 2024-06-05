@@ -53,7 +53,7 @@ const RangeSlider = ({
   const handleMouseMoveLeftThumb = (e) => {
     if (disabled) return;
     if (!containerRef.current) return;
-    
+
     const { left, width } = containerRef.current.getBoundingClientRect();
     const { clientX } = e instanceof MouseEvent ? e : e.touches[0];
     let x = (clientX - left) / width;
@@ -72,7 +72,7 @@ const RangeSlider = ({
 
     if (Number(x.toFixed(decimalPlaces)) >= endVal) return;
     onChange({ startVal: Number(x.toFixed(decimalPlaces)), endVal: endVal });
-  };  
+  };
 
   const handleMouseUpLeftThumb = (e) => {
     if (disabled) return;
@@ -97,7 +97,7 @@ const RangeSlider = ({
   const handleMouseMoveRightThumb = (e) => {
     if (disabled) return;
     if (!containerRef.current) return;
-    
+
     const { left, width } = containerRef.current.getBoundingClientRect();
     const { clientX } = e instanceof MouseEvent ? e : e.touches[0];
     let x = (clientX - left) / width;
@@ -117,7 +117,7 @@ const RangeSlider = ({
     if (Number(x.toFixed(decimalPlaces)) <= startVal) return;
 
     onChange({ startVal: startVal, endVal: Number(x.toFixed(decimalPlaces)) });
-  };  
+  };
 
   const handleMouseUpRightThumb = (e) => {
     if (disabled) return;
@@ -144,7 +144,7 @@ const RangeSlider = ({
       thumbStartRef.current.style.left = `${((startVal - min) / (max - min)) * 98}%`;
       inactiveLeftRef.current.style.width = `${((startVal - min) / (max - min)) * 100}%`;
       activeRef.current.style.width = `${((endVal - startVal) / (max - min)) * 100}%`;
-      thumbEndRef.current.style.left  = `${((endVal - min) / (max - min)) * 95}%`;
+      thumbEndRef.current.style.left = `${((endVal - min) / (max - min)) * 95}%`;
       inactiveRightRef.current.style.width = `${((max - endVal) / (max - min)) * 100}%`;
 
       previewSliderStartRef.current?.style.setProperty(
@@ -168,25 +168,25 @@ const RangeSlider = ({
       {...props}
       {...props}
     >
-        <Inactive ref={inactiveLeftRef} />
-        <Thumb
-            ref={thumbStartRef}
-            onTouchStart={handleMouseDownLeftThumb}
-            onMouseDown={handleMouseDownLeftThumb}
-            onTouchEnd={handleMouseUpLeftThumb}
-            onMouseUp={handleMouseUpLeftThumb}
-        />
-        <Active ref={activeRef} />
-        <Thumb
-            ref={thumbEndRef}
-            onTouchStart={handleMouseDownRightThumb}
-            onMouseDown={handleMouseDownRightThumb}
-            onTouchEnd={handleMouseUpRightThumb}
-            onMouseUp={handleMouseUpRightThumb}
-        />
-        <Inactive ref={inactiveRightRef} />
-        {preview && !Number.isNaN(Number(startVal)) && <PreviewContainer ref={previewSliderStartRef}>{startVal}</PreviewContainer>}
-        {preview && !Number.isNaN(Number(endVal)) && <PreviewContainer ref={previewSliderEndRef}>{endVal}</PreviewContainer>}
+      <Inactive ref={inactiveLeftRef} />
+      <Thumb
+        ref={thumbStartRef}
+        onTouchStart={handleMouseDownLeftThumb}
+        onMouseDown={handleMouseDownLeftThumb}
+        onTouchEnd={handleMouseUpLeftThumb}
+        onMouseUp={handleMouseUpLeftThumb}
+      />
+      <Active ref={activeRef} />
+      <Thumb
+        ref={thumbEndRef}
+        onTouchStart={handleMouseDownRightThumb}
+        onMouseDown={handleMouseDownRightThumb}
+        onTouchEnd={handleMouseUpRightThumb}
+        onMouseUp={handleMouseUpRightThumb}
+      />
+      <Inactive ref={inactiveRightRef} />
+      {preview && !Number.isNaN(Number(startVal)) && <PreviewContainer ref={previewSliderStartRef}>{startVal}</PreviewContainer>}
+      {preview && !Number.isNaN(Number(endVal)) && <PreviewContainer ref={previewSliderEndRef}>{endVal}</PreviewContainer>}
     </Container>
   );
 };

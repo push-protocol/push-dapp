@@ -30,6 +30,8 @@ export type ModalType = {
   };
   InnerComponentProps?: any;
   modalPosition?: number;
+  modalRadius?: string;
+  modalBorder?: boolean;
 };
 
 export const MODAL_POSITION = {
@@ -71,6 +73,8 @@ const useModalBlur = () => {
     modalPadding,
     modalMargin,
     modalPosition,
+    modalRadius,
+    modalBorder = true,
   }: ModalType) => {
     const themes = useTheme();
 
@@ -102,9 +106,9 @@ const useModalBlur = () => {
               alignSelf="center"
               flex="initial"
               padding={modalPadding ? modalPadding : '1.2% 2%'}
-              borderRadius="16px"
+              borderRadius={modalRadius ? modalRadius : '16px'}
               boxShadow="0px 4px 16px rgba(0, 0, 0, 0.02)"
-              border={`1px solid ${themes.modalBorderColor}`}
+              border={modalBorder && `1px solid ${themes.modalBorderColor}`}
               margin={modalMargin ? modalMargin : '0px'}
             >
               <InnerComponent

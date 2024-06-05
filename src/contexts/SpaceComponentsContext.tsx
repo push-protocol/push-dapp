@@ -1,12 +1,5 @@
 // React + Web3 Essentials
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { ethers } from 'ethers';
-
-// External imports
-import * as PushAPI from '@pushprotocol/restapi';
-
-// Internal Components imports
-import { appConfig } from 'config/index.js';
+import { createContext, FC, ReactNode } from 'react';
 
 import {
   ISpaceBannerProps,
@@ -18,18 +11,18 @@ import {
 } from '@pushprotocol/uiweb';
 
 export interface IUseSpaceReturnValues {
-  SpaceInvitesComponent: React.FC<ISpaceInvitesProps>;
-  SpaceWidgetComponent: React.FC<ISpaceWidgetProps>;
-  SpaceFeedComponent: React.FC<ISpaceFeedProps>;
-  SpaceBannerComponent: React.FC<ISpaceBannerProps>;
-  CreateSpaceComponent: React.FC<ISpaceCreateWidgetProps>;
+  SpaceInvitesComponent: FC<ISpaceInvitesProps>;
+  SpaceWidgetComponent: FC<ISpaceWidgetProps>;
+  SpaceFeedComponent: FC<ISpaceFeedProps>;
+  SpaceBannerComponent: FC<ISpaceBannerProps>;
+  CreateSpaceComponent: FC<ISpaceCreateWidgetProps>;
 }
 
 export const SpaceComponentContext = createContext({});
 
-const SpaceComponentContextProvider: React.FC<{
+const SpaceComponentContextProvider: FC<{
   spaceUI: SpacesUI;
-  children: React.ReactNode;
+  children: ReactNode;
 }> = ({ spaceUI, children }) => {
   return (
     <SpaceComponentContext.Provider

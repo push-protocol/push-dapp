@@ -1,7 +1,6 @@
 // React + Web3 Essentials
 // @ts-ignore
-import React, { useContext, useState } from 'react';
-import { ethers } from 'ethers';
+import { useContext, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';

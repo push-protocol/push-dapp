@@ -1,6 +1,3 @@
-// React + Web3 Essentials
-import React, { useContext, useEffect } from 'react';
-
 // External Packages
 import styled from 'styled-components';
 

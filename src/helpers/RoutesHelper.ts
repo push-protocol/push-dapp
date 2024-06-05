@@ -1,4 +1,5 @@
 // Internal Configs
+import { getPreviewBasePath } from '../../basePath.js';
 import { appConfig } from '../config/index.js';
 
 // Constants
@@ -6,6 +7,7 @@ const apiVersion: number = appConfig.pushNodeApiVersion;
 const channelsRoute: string = `/v${apiVersion}/channels`;
 const usersRoute: string = `/v${apiVersion}/users`;
 const ipfsRoute: string = `/v${apiVersion}/ipfs`;
+const deliveryNodeRoute: string = `/v${apiVersion}`;
 
 export const usersServiceEndpoints = {
   userSubscriptions: (userAddressInCAIP: string): string => `${usersRoute}/${userAddressInCAIP}/subscriptions`,
@@ -21,3 +23,9 @@ export const channelsServiceEndpoints = {
 export const ipfsServiceEndpoints = {
   ipfsUpload: (): string => `${ipfsRoute}/upload`,
 };
+
+export const deliveryNodeServiceEndpoints = {
+  registerDeviceToken: (): string => `${deliveryNodeRoute}/pushtokens/register`,
+};
+export const getPublicAssetPath = (path: string) =>
+  getPreviewBasePath() ? `${getPreviewBasePath()}/${path}` : `./${path}`;

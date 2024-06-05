@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 
 // External Packages
 import { useNavigate } from 'react-router-dom';
@@ -13,17 +13,15 @@ export const SpaceWidgetSection = () => {
   const { SpaceWidgetComponent } = useContext(SpaceComponentContext);
   const { account } = useAccount();
   const { spaceId, setSpaceId } = useContext(SpaceContext);
-  const [width, setWidth] = useState<string>('400');
-  const [zIndex, setZIndex] = useState<string>('1000');
-  const [shareUrl, setShareUrl] = useState<string>('');
+  const [width] = useState<string>('400');
+  const [zIndex] = useState<string>('1000');
   const isMobile = useDeviceWidthCheck(480);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const handleClose = () => {
     setSpaceId(null);
     navigate('/spaces');
   };
-
 
   return (
     <SpaceWidgetComponent

@@ -18,7 +18,8 @@ const UtilityHelper = {
       chainId === 1101 ||
       chainId === 10 ||
       chainId === 42161 ||
-      chainId === 122
+      chainId === 122 ||
+      chainId === 7560
     ) {
       return true;
     }
@@ -59,6 +60,8 @@ export const MaskedAliasChannels: {
   421614: {},
   122: {},
   123: {},
+  111557560: {},
+  7560: {},
 };
 
 export const findObject = (data: any, parentArray: any[], property: string): boolean => {
@@ -121,6 +124,8 @@ export const networkName = {
   421614: 'Arbitrum Testnet',
   122: 'Fuse Mainnet',
   123: 'Fuse Testnet',
+  111557560: 'Cyber Testnet',
+  7560: 'Cyber Mainnet',
 };
 
 export const chainNameBackendStandard = {
@@ -144,6 +149,8 @@ export const aliasChainIdToChainName = {
   2442: 'POLYGONZKEVM',
   122: 'FUSE',
   123: 'FUSE',
+  111557560: 'CYBERCONNECT',
+  7560: 'CYBERCONNECT',
 };
 
 export const aliasChainIdsMapping = {
@@ -238,6 +245,20 @@ export const NETWORK_DETAILS = {
     rpcUrls: ['https://rpc.fuse.io'],
     blockExplorerUrls: ['	https://explorer.fuse.io/'],
   },
+  CYBER_TESTNET: {
+    chainId: utils.hexValue(111557560),
+    chainName: 'Cyber Testnet',
+    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    rpcUrls: ['https://cyber-testnet.alt.technology/'],
+    blockExplorerUrls: [' https://testnet.cyberscan.co/'],
+  },
+  CYBER_MAINNET: {
+    chainId: utils.hexValue(7560),
+    chainName: 'Cyber Mainnet',
+    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    rpcUrls: ['https://cyber.alt.technology/'],
+    blockExplorerUrls: [' https://.cyberscan.co/'],
+  },
 };
 
 export const CORE_CHAIN_ID: number = appConfig.coreContractChain;
@@ -260,6 +281,8 @@ export const LOGO_FROM_CHAIN_ID: {
   11155111: 'Ethereum.svg',
   122: 'Fuse.svg',
   123: 'Fuse.svg',
+  111557560: 'Cyber.svg',
+  7560: 'Cyber.svg',
 };
 
 export type getAliasResponseType = {

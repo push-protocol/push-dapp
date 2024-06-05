@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import SnapExample from 'assets/snap/SnapExample.svg?react';
 import InfoLogo from 'assets/snap/spam-icon.svg?react';
 import { Image, Section } from 'components/SharedStyling';
@@ -7,13 +8,11 @@ import { device } from 'config/Globals';
 import { useAccount } from 'hooks';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import AboutSnapModal from 'modules/snap/AboutSnapModal';
-import SnapModule from 'modules/snap/SnapModule';
-import React, { useEffect, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import PushSnapConfigureModal from './PushSnapConfigureModal';
 
 const PushSnapSettings = () => {
-  const { account, provider } = useAccount();
+  const { account } = useAccount();
 
   const theme = useTheme();
   const [walletConnected, setWalletConnected] = useState(false);

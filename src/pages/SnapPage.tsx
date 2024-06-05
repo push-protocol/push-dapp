@@ -1,15 +1,10 @@
-// React + Web3 Essentials
-import React, { useState } from 'react';
-
 // External Packages
-import ReactGA from 'react-ga';
 import styled from 'styled-components';
 
 // Internal Components
 import { SectionV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
-import GLOBALS from 'config/Globals';
 import SnapModule from 'modules/snap/SnapModule';
 import { useParams } from 'react-router-dom';
 

@@ -1,11 +1,11 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import Skeleton from '@yisheng90/react-loading';
 import axios from 'axios';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import { GoVerified } from 'react-icons/go';
 import { IoMdPeople } from 'react-icons/io';
 import { MdCheckCircle, MdError } from 'react-icons/md';
@@ -19,6 +19,7 @@ import styled, { css, useTheme } from 'styled-components';
 import * as PushAPI from '@pushprotocol/restapi';
 import { Device } from 'assets/Device';
 import AllowNotificationModal from './channel/AllowNotificationModal';
+import { DeviceMediaQ } from 'blocks';
 import MetaInfoDisplayer from 'components/MetaInfoDisplayer';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2 } from 'components/reusables/SharedStylingV2';
@@ -46,6 +47,7 @@ import APP_PATHS from 'config/AppPaths';
 import { addresses, appConfig, CHAIN_DETAILS, ALLOW_NOTIF_MODAL_LAST_TIMESTAMP } from 'config/index.js';
 import { IPFSGateway } from 'helpers/IpfsHelper';
 import { checkPermission } from 'helpers/channel/allowNotification';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, profileType }) {
@@ -89,8 +91,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
   const [channelObjectFromHash, setChannelObjectFromHash] = React.useState({});
   const [channelObjectStartBlock, setChannelObjectStartBlock] = React.useState({});
   const [showChannelChangedWarning, setShowChannelChangedWarning] = React.useState(false);
-  // const [isAllowNotifModalVisible, setAllowNotifModalVisibility] = useState(false);
-
 
   const isVerified = channelObject.verified_status;
   const isBlocked = channelObject.blocked;
@@ -103,7 +103,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
 
   // ------ toast related section
   const isChannelBlacklisted = CHANNEL_BLACKLIST.includes(channelObject.channel);
-  const [toast, showToast] = React.useState(null);
+  const [toast, showToast] = useState(null);
   const clearToast = () => showToast(null);
 
   useEffect(() => {
@@ -208,7 +208,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
   }
 
   //clear toast variable after it is shown
-  React.useEffect(() => {
+  useEffect(() => {
     if (toast) {
       clearToast();
     }
@@ -577,7 +577,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                         {channelObject && channelObject?.channel && (
                           <Span padding="0 0 0 5px">
                             <Image
-                              src={`./svg/Ethereum.svg`}
+                              src={getPublicAssetPath('svg/Ethereum.svg')}
                               alt="Ethereum"
                               width="20px"
                               height="20px"
@@ -591,8 +591,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                           !MaskedAliasChannels[+channelObject?.alias_blockchain_id][channelObject?.channel] && (
                             <Span padding="0 0 0 5px">
                               <Image
-                                src={`./svg/${CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]
-                                  }.svg`}
+                                src={getPublicAssetPath(
+                                  `svg/${CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]}.svg`
+                                )}
                                 alt="Polygon"
                                 width="20px"
                                 height="20px"
@@ -749,7 +750,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                     {channelObject && channelObject?.channel && (
                       <Span padding="0 0 0 5px">
                         <Image
-                          src={`./svg/Ethereum.svg`}
+                          src={getPublicAssetPath('svg/Ethereum.svg')}
                           alt="Ethereum"
                           width="20px"
                           height="20px"
@@ -763,7 +764,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                       !MaskedAliasChannels[+channelObject?.alias_blockchain_id][channelObject?.channel] && (
                         <Span padding="0 0 0 5px">
                           <Image
-                            src={`./svg/${LOGO_FROM_CHAIN_ID[+channelObject.alias_blockchain_id]}`}
+                            src={getPublicAssetPath(`svg/${LOGO_FROM_CHAIN_ID[+channelObject.alias_blockchain_id]}`)}
                             alt="Alias Chain Logo"
                             width="20px"
                             height="20px"
@@ -838,7 +839,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                   <MetaInfoDisplayer
                     externalIcon={
                       <Image
-                        src="./svg/users.svg"
+                        src={getPublicAssetPath('svg/users.svg')}
                         alt="users"
                         width="14px"
                         height="14px"
@@ -1038,7 +1039,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                       <ActionTitle hideit={txInProgress}>Manage</ActionTitle>
                       <ImageV2
                         alt="arrow"
-                        src="/svg/arrow.svg"
+                        src={getPublicAssetPath('svg/arrow.svg')}
                         height="10px"
                         width="12px"
                       />
@@ -1341,7 +1342,7 @@ const Subscribers = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  @media ${Device.laptopL} {
+  @media ${DeviceMediaQ.laptopL} {
     padding-top: 1rem;
   }
 
@@ -1380,7 +1381,7 @@ const LineBreak = styled.div`
   flex-basis: 100%;
   height: 0;
 
-  @media ${Device.tablet} {
+  @media ${DeviceMediaQ.tablet} {
     display: block;
   }
 `;

@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
 // External packages
 import Stack from '@mui/material/Stack';
@@ -15,16 +15,16 @@ import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
 import { useAccount } from 'hooks';
 
-const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
-  const { web3NameList,connectedUser }:AppContextType=useContext(AppContext);
-  const { account } = useAccount()
+const Profile = ({ setActiveTab, showQR, setShowQR }: any): JSX.Element => {
+  const { web3NameList, connectedUser }: AppContextType = useContext(AppContext);
+  const { account } = useAccount();
 
   // theme context
   const theme = useTheme();
 
   // resolve web3 name
   useResolveWeb3Name(account);
-  
+
   const ensName = web3NameList[account];
 
   return (
@@ -52,15 +52,14 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
           size="16px"
           weight="400"
         >
-          {ensName ? ensName : shortenText(account,8,7)}
+          {ensName ? ensName : shortenText(account, 8, 7)}
         </SpanV2>
       </WalletDetailsContainer>
       {/* </Tooltip> */}
 
-      <SettingsWrapper onClick={()=>setShowQR(!showQR)}>
-        <Settings style={{color:theme.default.color}}/>
+      <SettingsWrapper onClick={() => setShowQR(!showQR)}>
+        <Settings style={{ color: theme.default.color }} />
       </SettingsWrapper>
-
 
       {/* <IconButton aria-label="more">
         <MoreVertIcon />
@@ -83,9 +82,7 @@ const DisplayText = styled(Typography)`
   }
 `;
 
-const SettingsWrapper = styled.span`
-`;
-
+const SettingsWrapper = styled.span``;
 
 const Settings = styled(AiOutlineMore)`
   position: relative;

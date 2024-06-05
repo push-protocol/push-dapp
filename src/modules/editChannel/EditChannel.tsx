@@ -1,10 +1,10 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 // External Packages
 import { useSelector } from 'react-redux';
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 
 // Internal Compoonents
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
@@ -12,16 +12,14 @@ import { useAccount, useDeviceWidthCheck } from 'hooks';
 import FaucetInfo from 'components/FaucetInfo';
 
 // Internal Configs
-import { addresses, appConfig } from 'config/index.js';
+import { addresses } from 'config/index.js';
 import GLOBALS, { device } from 'config/Globals';
 import { Button } from '../../components/SharedStyling';
 import EditChannelForms from './EditChannelForms';
 import useToast from 'hooks/useToast';
 import { MODAL_POSITION } from 'hooks/useModalBlur';
 import { useClickAway } from 'react-use';
-import { LOADER_OVERLAY, LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import GLOABALS from 'config/Globals';
-import Spinner from 'components/reusables/spinners/SpinnerUnit';
+import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import VerifyLogo from '../../assets/Vector.svg';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import uploadLogoModal from './uploadLogoModal';
@@ -32,31 +30,24 @@ import { isEmpty } from 'helpers/InputValidation';
 import { isLengthValid, isValidUrl } from 'helpers/ValidationHelper';
 import { handleLogoSizeLimitation, toDataURL } from 'helpers/LogoSizeHelper';
 
-export default function EditChannel({
-  closeEditChannel,
-  UploadLogoComponent,
-  displayUplaodLogoModal,
-  isUploadLogoModalOpen,
-}) {
-  const { chainId, account, provider } = useAccount();
+export default function EditChannel({ closeEditChannel, UploadLogoComponent, displayUplaodLogoModal }) {
+  const { account, provider } = useAccount();
   const {
     channelDetails,
-    canVerify,
     aliasDetails: { isAliasVerified, aliasAddrFromContract },
   } = useSelector((state) => state.admin);
 
   const { epnsReadProvider, epnsWriteProvider } = useSelector((state) => state.contracts);
-  const theme = useTheme();
 
   // it can be fetched from contract for dynamic, but making it const will be fast
   const minFeesForAddChannel = 50;
 
-  const [channelName, setChannelName] = React.useState(channelDetails?.name);
-  const [channelInfo, setChannelInfo] = React.useState(channelDetails?.info);
-  const [channelURL, setChannelURL] = React.useState(channelDetails?.url);
-  const [channelLogo, setChannelLogo] = React.useState(channelDetails?.icon);
-  // const [channelFile, setChannelFile] = React.useState(undefined);
-  const [channelFile, setChannelFile] = React.useState(channelDetails?.icon);
+  const [channelName, setChannelName] = useState(channelDetails?.name);
+  const [channelInfo, setChannelInfo] = useState(channelDetails?.info);
+  const [channelURL, setChannelURL] = useState(channelDetails?.url);
+  const [channelLogo, setChannelLogo] = useState(channelDetails?.icon);
+  // const [channelFile, setChannelFile] =  useState(undefined);
+  const [channelFile, setChannelFile] = useState(channelDetails?.icon);
   const [croppedImage, setCroppedImage] = useState(channelDetails?.icon);
   const [imageSrc, setImageSrc] = useState(croppedImage);
   const [imageType, setImageType] = useState(null);
@@ -174,7 +165,7 @@ export default function EditChannel({
 
   const isMobile = useDeviceWidthCheck(600);
 
-  const containerRef = React.useRef(null);
+  const containerRef = useRef(null);
   useClickAway(containerRef, () => {
     closeUploadModal();
   });

@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 // External Packages
 import { FiSearch, FiSliders } from 'react-icons/fi';
@@ -26,11 +26,7 @@ const InboxComponent = () => {
     setSearch('');
   };
 
-  return (
-    <Container>
-      
-    </Container>
-  );
+  return <Container></Container>;
 };
 
 const Container = styled.div`
@@ -60,7 +56,7 @@ const NavBoxHolder = styled.div`
     bottom: 0;
     width: 100%;
     content: '';
-    background-color: ${props => props.theme.default.border};
+    background-color: ${(props) => props.theme.default.border};
   }
 `;
 
@@ -124,7 +120,7 @@ const SearchBar = styled.input`
   padding-left: 50px;
   border-radius: 99px;
   border: none;
-  background: #F4F5FA;
+  background: #f4f5fa;
   // background: ${(props) => props.theme.viewChannelSearchBg};
   // color: ${(props) => props.theme.viewChannelSearchText};
   color: #657795;
@@ -135,11 +131,11 @@ const SearchBar = styled.input`
   font-size: 16px;
   line-height: 150%;
 
-  input[type="reset"] {
+  input[type='reset'] {
     display: none;
   }
   &::placeholder {
-  color: #657795;
+    color: #657795;
   }
   &:hover,
   &:active,

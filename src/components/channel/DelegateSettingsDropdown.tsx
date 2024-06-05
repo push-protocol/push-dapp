@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useRef, useState } from 'react';
+import { useRef, useState, ReactNode } from 'react';
 
 // External Packages
 import { AiOutlineMore } from 'react-icons/ai';
@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { useClickAway } from 'react-use';
 
 export interface ChannelDropdownOption {
-  icon: React.ReactNode;
+  icon: ReactNode;
   text: string;
   onClick: (item) => void;
 }
@@ -27,7 +27,10 @@ const DelegateSettingsDropdown = ({ options, item }: DelegateSettingsDropdownPro
     <div>
       <MoreButtonUI onClick={() => setIsOpen(true)} />
       {isOpen && (
-        <ListContainer onMouseLeave={() => setIsOpen(false)} ref={dropdownRef}>
+        <ListContainer
+          onMouseLeave={() => setIsOpen(false)}
+          ref={dropdownRef}
+        >
           {options.map(({ icon, onClick, text }, index) => {
             return (
               <OptionButton

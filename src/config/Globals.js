@@ -1,6 +1,12 @@
 /* eslint-disable import/no-anonymous-default-export */
 // Define Size and Device
-const size = {
+
+/**
+ * @deprecated
+ *
+ * Please import it from blocks
+ */
+export const size = {
   mobileS: '320px',
   mobileM: '375px',
   mobileL: '425px',
@@ -10,6 +16,11 @@ const size = {
   desktop: '2560px',
 };
 
+/**
+ * @deprecated
+ *
+ * Please import it from blocks
+ */
 export const device = {
   mobileS: `(max-width: ${size.mobileS})`,
   mobileM: `(max-width: ${size.mobileM})`,
@@ -103,8 +114,8 @@ export default {
   CONSTANTS: {
     HEADER_HEIGHT: 70,
     LEFT_BAR_WIDTH: 250,
-    COLLAPSABLE_LEFT_BAR_WIDTH:90,
-    COLLAPSABLE_RIGHT_BAR_WIDTH:90,
+    COLLAPSABLE_LEFT_BAR_WIDTH: 90,
+    COLLAPSABLE_RIGHT_BAR_WIDTH: 90,
 
     NAVBAR_SECTIONS: {
       PRIMARY: 1,
@@ -157,7 +168,7 @@ export default {
     },
     BLUR: {
       DEFAULT: 5,
-    }
+    },
   },
 
   COLORS: {

@@ -1,12 +1,12 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
 import styled from 'styled-components';
 
 // Internal Compoonents
-import { ItemHV2, ItemVV2, SectionV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2 } from 'components/reusables/SharedStylingV2';
 import YieldAnnouncementSection from 'sections/yield/YieldAnnouncementSection';
 import YieldPushPriceSection from 'sections/yield/YieldPushPriceSection';
 import YieldStatsSection from 'sections/yield/YieldStatsSection';
@@ -16,18 +16,16 @@ import YieldPushFeeV3 from 'components/yield/YieldPushFeeV3';
 import { useAccount } from 'hooks';
 
 // Internal Configs
-import { abis, addresses } from 'config/index.js';
-import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
-import StepsTransactionModal from 'components/StepsTransactionModal';
+import { abis, addresses, appConfig } from 'config/index.js';
 
 const NewYieldFarming = ({ setActiveTab }) => {
-  const { provider, account } = useAccount();
+  const { provider, account, chainId } = useAccount();
 
-  const [pushToken, setPushToken] = useState(null);
-  const [staking, setStaking] = useState(null);
-  const [yieldFarmingLP, setYieldFarmingLP] = useState(null);
-  const [pushCoreV2, setPushCoreV2] = useState(null);
-  const [uniswapV2Router02Instance, setUniswapV2Router02Instance] = useState(null);
+  const [pushToken, setPushToken] = useState<ethers.Contract>();
+  const [staking, setStaking] = useState<ethers.Contract>();
+  const [yieldFarmingLP, setYieldFarmingLP] = useState<ethers.Contract>();
+  const [pushCoreV2, setPushCoreV2] = useState<ethers.Contract>();
+  const [uniswapV2Router02Instance, setUniswapV2Router02Instance] = useState<ethers.Contract>();
 
   const [poolStats, setPoolStats] = useState(null);
   const [lpPoolStats, setLpPoolStats] = useState(null);
@@ -37,34 +35,43 @@ const NewYieldFarming = ({ setActiveTab }) => {
 
   const library = provider?.getSigner(account);
 
-  const getLpPoolStats = React.useCallback(async () => {
+  const getPoolStats = useCallback(async () => {
+    const poolStats = await YieldFarmingDataStoreV2.getInstance().getPoolStats(provider);
+
+    setPoolStats({ ...poolStats });
+  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance, provider]);
+
+  const getLpPoolStats = useCallback(async () => {
     const poolStats = await YieldFarmingDataStoreV2.getInstance().getPoolStats(provider);
     const lpPoolStats = await YieldFarmingDataStoreV2.getInstance().getLPPoolStats(poolStats);
 
-    setPoolStats({ ...poolStats });
     setLpPoolStats({ ...lpPoolStats });
-  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
+  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance, provider]);
 
-  const getPUSHPoolStats = React.useCallback(async () => {
+  const getPUSHPoolStats = useCallback(async () => {
     // const pushPoolStats = await YieldFarmingDataStoreV2.getInstance().getPUSHPoolStats(provider);
     // setPUSHPoolStats({ ...pushPoolStats });
   }, []);
 
-  const getUserDataLP = React.useCallback(async () => {
+  const getUserDataLP = useCallback(async () => {
     const userDataLP = await YieldFarmingDataStoreV2.getInstance().getUserDataLP();
 
     setUserDataLP({ ...userDataLP });
-  }, [yieldFarmingLP]);
+  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
 
-  const getUserDataPush = React.useCallback(async () => {
+  const getUserDataPush = useCallback(async () => {
     const [pushPoolStats, userDataPush] = await YieldFarmingDataStoreV2.getInstance().getUserDataPUSH(provider);
 
     setPUSHPoolStats({ ...pushPoolStats });
     setUserDataPush({ ...userDataPush });
-  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
+  }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance, provider]);
 
   //initiate the YieldFarmV2 data store here
-  React.useEffect(() => {
+  useEffect(() => {
+    if (chainId !== appConfig.coreContractChain && chainId !== appConfig.mainnetCoreContractChain) {
+      return;
+    }
+
     setLpPoolStats(null);
     setUserDataLP(null);
     setPUSHPoolStats(null);
@@ -107,11 +114,11 @@ const NewYieldFarming = ({ setActiveTab }) => {
       uniswapV2Router02Instance
     );
 
-    getLpPoolStats();
+    getPoolStats();
     getUserDataLP();
+    getLpPoolStats();
     getUserDataPush();
-    getPUSHPoolStats();
-  }, [account]);
+  }, [account, chainId]);
 
   return (
     <>

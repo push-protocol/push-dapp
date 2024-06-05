@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import usePeer from 'hooks/usePeer';
-import { useSelector } from 'react-redux';
 import { QRCodeCanvas } from 'qrcode.react';
 import CryptoHelper from 'helpers/CryptoHelper';
 import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import styled, { useTheme } from 'styled-components';
-import { AiOutlineClose, AiOutlineQrcode } from 'react-icons/ai';
-import { H2V2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { AiOutlineClose } from 'react-icons/ai';
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import GLOBALS, { device } from 'config/Globals';
 import BlurBG from 'components/reusables/blurs/BlurBG';
 import chatBoxImage from '../../../../assets/chat/chatBox.svg?react';

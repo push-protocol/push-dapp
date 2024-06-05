@@ -4,7 +4,6 @@ import React from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
-import { CiWarning } from 'react-icons/ci';
 
 // Internal Compoonents
 import PoolCard from 'components/PoolCard';

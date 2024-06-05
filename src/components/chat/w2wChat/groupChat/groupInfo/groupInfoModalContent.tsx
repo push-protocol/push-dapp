@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { ethers } from 'ethers';
+import { useContext, useState, useRef } from 'react';
 
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
@@ -45,12 +44,12 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const [copyText, setCopyText] = useState<string>('');
   const { account } = useAccount();
   const groupInfoToast = useToast();
-  const [selectedMemeberAddress, setSelectedMemeberAddress] = React.useState<string | null>(null);
-  const [showAddMoreWalletModal, setShowAddMoreWalletModal] = React.useState<boolean>(false);
-  // const [memberList, setMemberList] = React.useState<any>(currentChat?.groupInformation?.groupMembers);
-  const [showPendingRequests, setshowPendingRequests] = React.useState<boolean>(false);
-  const [memberList, setMemberList] = React.useState<any>([]);
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [selectedMemeberAddress, setSelectedMemeberAddress] = useState<string | null>(null);
+  const [showAddMoreWalletModal, setShowAddMoreWalletModal] = useState<boolean>(false);
+  // const [memberList, setMemberList] =   useState<any>(currentChat?.groupInformation?.groupMembers);
+  const [showPendingRequests, setshowPendingRequests] = useState<boolean>(false);
+  const [memberList, setMemberList] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const groupCreator = currentChat?.groupInformation?.groupCreator;
   const membersExceptGroupCreator = currentChat?.groupInformation?.members.filter(
     (x) => x.wallet?.toLowerCase() !== groupCreator?.toLowerCase()
@@ -60,7 +59,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
     (member) => caip10ToWallet(member?.wallet)?.toLowerCase() === account?.toLowerCase() && member?.isAdmin
   );
-  const dropdownRef = React.useRef<any>(null);
+  const dropdownRef = useRef<any>(null);
   useClickAway(dropdownRef, () => setSelectedMemeberAddress(null));
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);
@@ -309,7 +308,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   };
 
   // to close the modal upon a click on backdrop
-  const containerRef = React.useRef(null);
+  const containerRef = useRef(null);
   useClickAway(containerRef, () => handleClose());
 
   const handlePrevious = () => {

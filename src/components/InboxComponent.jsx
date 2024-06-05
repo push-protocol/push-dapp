@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -47,7 +47,7 @@ const InboxComponent = ({ isSpam }) => {
             Spam
           </NavTitleButton>
         </NavHolder>
-        <SearchContainer>
+        {/* <SearchContainer>
           <SearchBar
             type="text"
             className="input"
@@ -81,7 +81,7 @@ const InboxComponent = ({ isSpam }) => {
               style={{ color: '#657795' }}
             />
           </ItemIconRotate>
-        </SearchContainer>
+        </SearchContainer> */}
       </NavBoxHolder>
       {showInbox ? (
         <Inbox
