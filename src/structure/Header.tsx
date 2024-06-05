@@ -125,9 +125,9 @@ function Header({ isDarkMode, darkModeToggle }) {
       if (appConfig.coreContractChain === 42)
         return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Amoy network';
       else if (appConfig.coreContractChain === 11155111)
-        return 'Unsupported Network, please connect to the Ethereum Sepolia, Polygon Amoy, BNB testnet, Optimism Sepolia, Arbitrum Sepolia or Polygon zkEVM testnet';
+        return 'Unsupported Network, please connect to the Ethereum Sepolia, Polygon Amoy, BNB testnet, Optimism Sepolia, Arbitrum Sepolia, Base Sepolia or Polygon zkEVM testnet';
       else
-        return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB, Optimism, Arbitrum or Polygon zkEVM Mainnet';
+        return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB, Optimism, Arbitrum, Base or Polygon zkEVM Mainnet';
     } else {
       console.error(error);
       return 'An unknown error occurred. Check the console for more details';
