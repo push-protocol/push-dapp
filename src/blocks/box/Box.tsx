@@ -3,8 +3,8 @@ import styled from 'styled-components';
 
 import { BlockWithoutStyleProp } from '../Blocks.types';
 import { getBlocksColor } from '../Blocks.utils';
-import { BoxCSSProps, BoxComponentProps } from './Box.types';
-import { boxCSSPropsKeys, getBoxResponsiveCSS } from './Box.utils';
+import { BoxCSSProps, BoxComponentProps, boxCSSPropsKeys } from './Box.types';
+import { getBoxResponsiveCSS } from './Box.utils';
 
 export type BoxProps = BoxCSSProps & BoxComponentProps & BlockWithoutStyleProp<HTMLDivElement>;
 

@@ -77,3 +77,25 @@ export type BoxResponsiveCSSProperties =
 export type BoxResponsivePropValues = ValueOf<BoxResponsiveProps>;
 
 export type BoxResponsiveCSSPropertiesData = { propName: BoxResponsiveCSSProperties; prop: BoxResponsivePropValues };
+
+export const boxCSSPropsKeys: (keyof BoxCSSProps)[] = [
+  'border',
+  'borderRadius',
+  'backgroundColor',
+  'color',
+  'cursor',
+  'position',
+  'boxShadow',
+  'alignItems',
+  'display',
+  'flexDirection',
+  'height',
+  'justifyContent',
+  'margin',
+  'maxHeight',
+  'minHeight',
+  'maxWidth',
+  'minWidth',
+  'padding',
+  'width',
+];
