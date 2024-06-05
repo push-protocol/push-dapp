@@ -49,6 +49,7 @@ export const config = {
     11155420: 'https://optimism-sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
     2442: 'https://rpc.cardona.zkevm-rpc.com',
     421614: 'https://arbitrum-sepolia.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
+    // confirm from Nilesh
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
 
