@@ -25,6 +25,7 @@ export function useBrowserNotification() {
     // const { onMessageListener } = require('firebase');
     onMessageListener()
       .then((payload) => {
+        console.debug('payload', payload);
         if (!('Notification' in window)) {
           // useStream handles this case of showing in page notif (if showing notifs is not allowed)
         } else {

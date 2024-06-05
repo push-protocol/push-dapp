@@ -1,9 +1,9 @@
 import { NotificationPermissionStatus } from './types';
 import { browserFunction } from 'firebase';
 
-export const handleBrowserNotification = (account: string, readOnlyWallet: string, onSuccess?: () => void) => {
+export const handleBrowserNotification = (account: string, onSuccess?: () => void) => {
   if (!('serviceWorker' in navigator)) return;
-  if (!account || account == readOnlyWallet) return;
+  if (!account) return;
   const status = checkPermission();
   if (status === 'notValid') alert('This browser does not support desktop notification');
   else if (status === 'pending') {

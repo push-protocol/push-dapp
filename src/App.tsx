@@ -14,6 +14,7 @@ import { createGlobalStyle } from 'styled-components';
 
 // Internal Compoonents
 import InitState from 'components/InitState';
+import { useBrowserNotification } from 'hooks/useBrowserNotification';
 import AppContextProvider, { AppContext } from 'contexts/AppContext';
 import NavigationContextProvider from 'contexts/NavigationContext';
 import { useAccount, useInactiveListener, useSDKSocket } from 'hooks';
@@ -192,7 +193,7 @@ export default function App() {
   //   // This will run when the page first loads and whenever the title changes
   //   document.title = title;
   // }, [title]);
-
+  useBrowserNotification();
   React.useEffect(() => {
     const now = Date.now() / 1000;
     setcurrentTime(now);

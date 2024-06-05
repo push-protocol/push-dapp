@@ -21,6 +21,8 @@ const setLocalToken = (token) => localStorage.setItem(TOKEN_KEY, token);
 export const getPushToken = async () => {
   try {
     let token = getLocalToken(TOKEN_KEY);
+    console.debug(token, 'token');
+    console.debug(appConfig.vapidKey, 'vapidkey');
     if (!token) {
       token = await getToken(messaging, {
         vapidKey: appConfig.vapidKey,
@@ -47,7 +49,7 @@ export const browserFunction = async (account) => {
     const tokenExists = localStorage.getItem(tokenKey) || localStorage.getItem(CACHEPREFIX); //temp to prevent more than 1 account to register
     if (!tokenExists) {
       const response = await getPushToken();
-
+      console.debug(account, 'account');
       await registerDeviceToken({
         token: response,
         account: account,

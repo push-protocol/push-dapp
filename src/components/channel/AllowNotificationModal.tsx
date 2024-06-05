@@ -1,8 +1,12 @@
+import { useContext } from 'react';
+
 // External Packages
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { useAccount } from 'hooks';
+import GlobalContext from 'contexts/GlobalContext';
 
 // Internal Configs
 import { device } from 'config/Globals';
@@ -16,7 +20,7 @@ const AllowNotificationModal: React.FC<AllowNotificationModalProps> = ({
   onModalClose,
 }: AllowNotificationModalProps) => {
   const theme = useTheme();
-
+  const { account } = useAccount();
   return (
     <ModalContainer theme={theme}>
       <ItemVV2 gap="16px">
@@ -53,7 +57,7 @@ const AllowNotificationModal: React.FC<AllowNotificationModalProps> = ({
             color="#fff"
             borderRadius="8px"
             onClick={() => {
-              handleBrowserNotification(onModalClose);
+              handleBrowserNotification(account, onModalClose);
             }}
           >
             Allow
