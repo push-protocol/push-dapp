@@ -14,7 +14,7 @@ const NavigationList = {
       iconFactory: null,
       name: 'Dashboard',
       title: 'Dashboard',
-      alt: 'Open Inbox',
+      alt: 'Open Dashboard',
       href: APP_PATHS.DAPP_DASHBOARD,
       newTab: false,
       isRoute: true,
@@ -33,161 +33,154 @@ const NavigationList = {
         },
       },
     },
-    inbox: {
-      src: 'inboxOffIcon',
-      activeSrc: 'inboxOnIcon',
-      iconFactory: null,
-      name: 'Inbox',
-      title: 'Inbox',
-      alt: 'Open Inbox',
-      href: APP_PATHS.Inbox,
-      newTab: false,
-      isRoute: true,
-      hasMenuLogic: true,
-      loading: false,
-      hidden: false,
-      headerTag: {
-        title: 'Inbox',
-        light: {
-          bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
-          fg: themeLight.headerTagFg,
-        },
-        dark: {
-          bg: themeDark.headerTagBg,
-          fg: themeDark.headerTagFg,
-        },
-      },
-    },
-    channels: {
-      src: 'channelsOffIcon',
-      activeSrc: 'channelsOnIcon',
-      iconFactory: null,
-      name: 'Channels',
-      title: 'Browse Channels',
-      alt: 'Open Channels',
-      href: APP_PATHS.Channels,
-      newTab: false,
-      isRoute: true,
-      hasMenuLogic: true,
-      opened: true,
-      loading: false,
-      hidden: false,
-      headerTag: {
-        title: 'View Channels',
-        light: {
-          bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-          fg: themeLight.headerTagFg,
-        },
-        dark: {
-          bg: themeDark.headerTagBg,
-          fg: themeDark.headerTagFg,
-        },
-      },
-    },
-    chat: {
-      src: 'chatOffIcon',
-      activeSrc: 'chatOnIcon',
-      iconFactory: null,
-      name: 'Chat',
-      title: 'Chat',
-      alt: 'Open Chat',
-      href: APP_PATHS.Chat,
-      newTab: false,
-      isRoute: true,
-      hasMenuLogic: true,
-      hidden: false,
-      // allowReadOnly: false,
-      headerTag: {
-        title: 'Chat',
-        light: {
-          bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-          fg: themeLight.headerTagFg,
-        },
-        dark: {
-          bg: themeDark.headerTagBg,
-          fg: themeDark.headerTagFg,
-        },
-      },
-    },
-    // Disable spaces for now
-    // spaces: {
-    //   src: 'spaceOffIcon',
-    //   activeSrc: 'spaceOnIcon',
-    //   iconFactory: null,
-    //   name: 'Spaces',
-    //   title: 'Spaces',
-    //   alt: 'Open Spaces',
-    //   href: APP_PATHS.Spaces,
-    //   newTab: false,
-    //   isRoute: true,
-    //   hasMenuLogic: true,
-    //   hidden: false,
-    //   // allowReadOnly: false,
-    //   headerTag: {
-    //     title: 'Spaces',
-    //     light: {
-    //       bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-    //       fg: themeLight.headerTagFg,
-    //     },
-    //     dark: {
-    //       bg: themeDark.headerTagBg,
-    //       fg: themeDark.headerTagFg,
-    //     },
-    //   },
-    // },
   },
   secondary: {
-    createChannel: {
-      uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.CREATE_CHANNEL,
-      src: 'createChannelIcon',
-      activeSrc: 'createChannelIcon',
-      iconFactory: null,
-      name: 'Create Channel',
-      title: 'Create Channel',
-      alt: 'Create Channels / Dashboard',
-      href: APP_PATHS.Dashboard,
-      newTab: false,
-      isRoute: true,
-      hasMenuLogic: true,
-      loading: true,
-      hidden: false,
-      headerTag: {
-        title: 'Channel Dashboard',
-        light: {
-          bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-          fg: themeLight.headerTagFg,
-        },
-        dark: {
-          bg: themeDark.headerTagBg,
-          fg: themeDark.headerTagFg,
+    Notifications: {
+      inbox: {
+        src: 'inboxOffIcon',
+        activeSrc: 'inboxOnIcon',
+        iconFactory: null,
+        name: 'Inbox',
+        title: 'Inbox',
+        alt: 'Open Inbox',
+        href: APP_PATHS.Inbox,
+        newTab: false,
+        isRoute: true,
+        hasMenuLogic: true,
+        loading: false,
+        hidden: false,
+        headerTag: {
+          title: 'Inbox',
+          light: {
+            bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+            fg: themeLight.headerTagFg,
+          },
+          dark: {
+            bg: themeDark.headerTagBg,
+            fg: themeDark.headerTagFg,
+          },
         },
       },
+
+      channels: {
+        src: 'channelsOffIcon',
+        activeSrc: 'channelsOnIcon',
+        iconFactory: null,
+        name: 'Channels',
+        title: 'Browse Channels',
+        alt: 'Open Channels',
+        href: APP_PATHS.Channels,
+        newTab: false,
+        isRoute: true,
+        hasMenuLogic: true,
+        opened: true,
+        loading: false,
+        hidden: false,
+        headerTag: {
+          title: 'View Channels',
+          light: {
+            bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+            fg: themeLight.headerTagFg,
+          },
+          dark: {
+            bg: themeDark.headerTagBg,
+            fg: themeDark.headerTagFg,
+          },
+        },
+      },
+
+
     },
-    sendNotifs: {
-      uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.SEND_NOTIFS,
-      src: 'sendNotifOffIcon',
-      activeSrc: 'sendNotifOnIcon',
-      iconFactory: null,
-      name: 'Send Notifications',
-      title: 'Send Notifications',
-      alt: 'Send Notifs',
-      href: APP_PATHS.Send,
-      newTab: false,
-      isRoute: true,
-      hasMenuLogic: true,
-      hidden: true,
-      headerTag: {
+    Messsaging: {
+
+      chat: {
+        src: 'chatOffIcon',
+        activeSrc: 'chatOnIcon',
+        iconFactory: null,
+        name: 'Chat',
+        title: 'Chat',
+        alt: 'Open Chat',
+        href: APP_PATHS.Chat,
+        newTab: false,
+        isRoute: true,
+        hasMenuLogic: true,
+        hidden: false,
+        // allowReadOnly: false,
+        headerTag: {
+          title: 'Chat',
+          light: {
+            bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+            fg: themeLight.headerTagFg,
+          },
+          dark: {
+            bg: themeDark.headerTagBg,
+            fg: themeDark.headerTagFg,
+          },
+        },
+      },
+
+
+
+    },
+    Developers: {
+
+      createChannel: {
+        uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.CREATE_CHANNEL,
+        src: 'createChannelIcon',
+        activeSrc: 'createChannelIcon',
+        iconFactory: null,
+        name: 'Create Channel',
+        title: 'Create Channel',
+        alt: 'Create Channels / Dashboard',
+        href: APP_PATHS.Dashboard,
+        newTab: false,
+        isRoute: true,
+        hasMenuLogic: true,
+        loading: true,
+        hidden: false,
+        headerTag: {
+          title: 'Channel Dashboard',
+          light: {
+            bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+            fg: themeLight.headerTagFg,
+          },
+          dark: {
+            bg: themeDark.headerTagBg,
+            fg: themeDark.headerTagFg,
+          },
+        },
+      },
+
+      sendNotifs: {
+        uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.SEND_NOTIFS,
+        src: 'sendNotifOffIcon',
+        activeSrc: 'sendNotifOnIcon',
+        iconFactory: null,
+        name: 'Send Notifications',
         title: 'Send Notifications',
-        light: {
-          bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-          fg: themeLight.headerTagFg,
-        },
-        dark: {
-          bg: themeDark.headerTagBg,
-          fg: themeDark.headerTagFg,
+        alt: 'Send Notifs',
+        href: APP_PATHS.Send,
+        newTab: false,
+        isRoute: true,
+        hasMenuLogic: true,
+        hidden: true,
+        headerTag: {
+          title: 'Send Notifications',
+          light: {
+            bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+            fg: themeLight.headerTagFg,
+          },
+          dark: {
+            bg: themeDark.headerTagBg,
+            fg: themeDark.headerTagFg,
+          },
         },
       },
-    },
+
+
+
+
+    }
   },
   third: {
     yieldv2: {
@@ -478,8 +471,8 @@ const NavigationList = {
         },
       },
     },
-  },
-};
+  }
+}
 
 // // remove secret feature
 // if (

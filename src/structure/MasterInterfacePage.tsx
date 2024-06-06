@@ -39,7 +39,7 @@ const TutorialPage = lazy(() => import('pages/TutorialPage'));
 const YieldFarmingV2Page = lazy(() => import('pages/YieldFarmingPageV2'));
 const UserSettingsPage = lazy(() => import('pages/UserSettingsPage'));
 const ClaimGalxePage = lazy(() => import('pages/ClaimGalxePage'));
-const Dashboard = lazy(() => import('modules/Dashboard/Dashboard'));
+const Dashboard = lazy(() => import('modules/dashboard/Dashboard'));
 
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';

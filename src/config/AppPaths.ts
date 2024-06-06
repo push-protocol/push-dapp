@@ -1,6 +1,6 @@
 // Define an enum for the paths
 enum APP_PATHS {
-  DAPP_DASHBOARD = '/app/dashboard',
+  DAPP_DASHBOARD = '/welcome',
   Inbox = '/inbox',
   Spam = '/spam',
   Chat = '/chat',
