@@ -1,50 +1,42 @@
-import { forwardRef } from 'react';
+import { type FC } from 'react';
 import styled from 'styled-components';
 
-import { BlockWithoutStyleProp } from 'blocks/Blocks.types';
-import { SkeletonCSSProps, SkeletonComponentProps } from './Skeleton.types';
-import { getSkeletonPulseAnimation, getSkeletonResponsiveCSS, skeletonCSSPropsKeys } from './Skeleton.utils';
-import { getBlocksColor } from 'blocks/Blocks.utils';
-
-export type SkeletonProps = SkeletonCSSProps & SkeletonComponentProps & BlockWithoutStyleProp<HTMLDivElement>;
+import type { SkeletonProps } from './Skeleton.types';
+import { getSkeletonPulseAnimation, getSkeletonResponsiveCSS } from './Skeleton.utils';
+import { skeletonCSSPropsKeys } from './Skeleton.constants';
 
 const StyledSkeleton = styled.div.withConfig({
   shouldForwardProp: (prop, defaultValidatorFn) =>
-    !skeletonCSSPropsKeys.includes(prop as keyof SkeletonCSSProps) && defaultValidatorFn(prop),
+    !skeletonCSSPropsKeys.includes(prop as keyof SkeletonProps) && defaultValidatorFn(prop),
 })<SkeletonProps>`
   /* Responsive props */
   ${(props) => getSkeletonResponsiveCSS(props)}
-
-  /* Non-responsive props */
-  box-shadow: ${({ boxShadow }) => boxShadow};
-  border: ${({ border }) => border};
-  position: ${({ position }) => position};
 
   /* Extra CSS prop */
   ${(props) => props.css || ''}
 
   /* Animation props */
-  animation: ${({ startColor, endColor }) =>
-    getSkeletonPulseAnimation(
-      startColor ? getBlocksColor(startColor) : 'hsl(200, 20%, 80%)',
-      endColor ? getBlocksColor(endColor) : 'hsl(200, 20%, 95%)'
-    )} 1s linear infinite alternate;
+  animation: ${getSkeletonPulseAnimation('hsl(200, 20%, 80%)', 'hsl(200, 20%, 95%)')} 1s linear infinite alternate;
+
+  /* Hide children */
+  & > * {
+    visibility: hidden !important;
+  }
 `;
 
-const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(({ isLoading, children, ...rest }, ref) => {
+const Skeleton: FC<SkeletonProps> = ({ isLoading, children, ...rest }) => {
+  if (!isLoading) return children;
+
   return (
-    <>
-      {isLoading ? (
-        <StyledSkeleton
-          {...rest}
-          ref={ref}
-        />
-      ) : (
-        children
-      )}
-    </>
+    <StyledSkeleton
+      aria-hidden="true"
+      tabIndex={-1}
+      {...rest}
+    >
+      {children}
+    </StyledSkeleton>
   );
-});
+};
 
 Skeleton.displayName = 'Skeleton';
 
