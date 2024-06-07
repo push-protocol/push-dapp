@@ -3,7 +3,7 @@ import styled, { FlattenSimpleInterpolation } from 'styled-components';
 import { getBlocksColor } from '../Blocks.utils';
 import { IconProps } from './Icons.types';
 
-type IconWrapperProps = IconProps & {
+type IconWrapperProps = Omit<IconProps, 'as' | 'ref'> & {
   /* Name of the component to be used as aria-label for accessibility */
   componentName: string;
   /* css prop provided by styled components to provide additional css to icon */
@@ -46,7 +46,6 @@ const IconWrapper: FC<IconWrapperProps> = ({
   const color = (colorProp ? getBlocksColor(colorProp) : 'currentColor') as string;
   const size = sizeProp ? `${sizeProp}px` : autoSize ? '1em' : '16px';
   return (
-    // @ts-expect-error
     <StyledIconWrapper
       aria-hidden="true"
       aria-label={componentName}
