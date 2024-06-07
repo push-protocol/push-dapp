@@ -1,1 +1,0 @@
-import{ho as l,hp as e,hq as o,hr as m,hs as _,ht as g,__tla as u}from"./index-DKAwhGs-.js";let h,c=Promise.all([(()=>{try{return u}catch{}})()]).then(async()=>{h=function(){for(var t=[],a=0;a<arguments.length;a++)t[a]=arguments[a];var n=l(t),r=e(t,1/0),s=t;return s.length?s.length===1?m(s[0]):_(r)(g(s,n)):o}});export{c as __tla,h as m};

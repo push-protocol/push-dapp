@@ -1,0 +1,1 @@
+import{hc as r,hd as e,he as g,hf as m,hg as o,hh as _,__tla as u}from"./index-DxXVDKDy.js";let s,c=Promise.all([(()=>{try{return u}catch{}})()]).then(async()=>{s=function(){for(var a=[],t=0;t<arguments.length;t++)a[t]=arguments[t];var n=r(a),l=e(a,1/0),h=a;return h.length?h.length===1?m(h[0]):o(l)(_(h,n)):g}});export{c as __tla,s as m};
