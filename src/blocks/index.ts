@@ -1,4 +1,5 @@
 export { Box } from './box';
+export { Separator } from './separator';
 export { Text } from './text';
 
 export * from './Blocks.colors';
