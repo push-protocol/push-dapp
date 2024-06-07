@@ -15,7 +15,7 @@ const NavigationList = {
       name: 'Dashboard',
       title: 'Dashboard',
       alt: 'Open Dashboard',
-      href: APP_PATHS.DAPP_DASHBOARD,
+      href: APP_PATHS.WelcomeDashboard,
       newTab: false,
       isRoute: true,
       hasMenuLogic: true,

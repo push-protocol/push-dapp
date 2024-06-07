@@ -1,11 +1,13 @@
-import React from 'react';
+import { FC } from 'react';
+import { Box } from 'blocks';
+export type DashboardProps = {}
 
-const Dashboard = () => {
+const Dashboard: FC<DashboardProps> = () => {
   return (
-    <div>
+    <Box>
       Dashboard
-    </div>
+    </Box>
   );
 };
 
-export default Dashboard;
+export { Dashboard };

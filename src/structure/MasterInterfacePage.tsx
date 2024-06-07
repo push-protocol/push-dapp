@@ -39,7 +39,7 @@ const TutorialPage = lazy(() => import('pages/TutorialPage'));
 const YieldFarmingV2Page = lazy(() => import('pages/YieldFarmingPageV2'));
 const UserSettingsPage = lazy(() => import('pages/UserSettingsPage'));
 const ClaimGalxePage = lazy(() => import('pages/ClaimGalxePage'));
-const Dashboard = lazy(() => import('modules/dashboard/Dashboard'));
+const Dashboard = lazy(() => import('modules/dashboard'));
 
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
@@ -155,7 +155,7 @@ function MasterInterfacePage() {
           <Routes>
 
             <Route
-              path={APP_PATHS.DAPP_DASHBOARD}
+              path={APP_PATHS.WelcomeDashboard}
               element={<Dashboard />}
             />
 
