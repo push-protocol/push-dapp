@@ -6,6 +6,11 @@ import {
   SkeletonResponsiveCSSPropertiesData,
   SkeletonResponsivePropValues,
 } from './skeleton';
+import {
+  SeparatorResponsiveCSSProperties,
+  SeparatorResponsiveCSSPropertiesData,
+  SeparatorResponsivePropValues,
+} from './separator';
 
 export type DeviceSize = '320px' | '375px' | '425px' | '768px' | '1024px' | '1440px' | '2560px';
 
@@ -21,11 +26,17 @@ export type PixelValue = `${number}px`;
 
 export type ValueOf<T> = T[keyof T];
 
-export type CSSPropName = BoxResponsiveCSSProperties | SkeletonResponsiveCSSProperties;
+export type CSSPropName =
+  | BoxResponsiveCSSProperties
+  | SeparatorResponsiveCSSProperties
+  | SkeletonResponsiveCSSProperties;
 
-export type CSSPropValueType = BoxResponsivePropValues | SkeletonResponsivePropValues;
+export type CSSPropValueType = BoxResponsivePropValues | SeparatorResponsivePropValues | SkeletonResponsivePropValues;
 
-export type ResponsiveCSSPropertyData = BoxResponsiveCSSPropertiesData | SkeletonResponsiveCSSPropertiesData;
+export type ResponsiveCSSPropertyData =
+  | BoxResponsiveCSSPropertiesData
+  | SeparatorResponsiveCSSPropertiesData
+  | SkeletonResponsiveCSSPropertiesData;
 
 export type BlockWithoutStyleProp<T> = Omit<HTMLAttributes<T>, 'style'>;
 
