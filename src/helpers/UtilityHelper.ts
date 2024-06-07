@@ -64,7 +64,7 @@ export const MaskedAliasChannels: {
   111557560: {},
   7560: {},
   8453: {},
-  8453: {},
+  84532: {},
 };
 
 export const findObject = (data: any, parentArray: any[], property: string): boolean => {
@@ -156,8 +156,8 @@ export const aliasChainIdToChainName = {
   123: 'FUSE',
   111557560: 'CYBERCONNECT',
   7560: 'CYBERCONNECT',
-  8453: 'BASE', //confirm
-  84532: 'BASE', //confirm
+  8453: 'BASE',
+  84532: 'BASE',
 };
 
 export const aliasChainIdsMapping = {

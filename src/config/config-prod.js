@@ -180,6 +180,6 @@ export const CHAIN_DETAILS = {
     name: 'BASE_MAINNET',
     chainid: 8453,
     rpcUrl: 'https://mainnet.base.org/',
-    // commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
   },
 };
