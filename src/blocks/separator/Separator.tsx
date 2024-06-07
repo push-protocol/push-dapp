@@ -1,16 +1,14 @@
-import React from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
 
-import { SeparatorCSSProps, SeparatorComponentProps, separatorCSSPropsKeys } from './Separator.types';
+import { SeparatorProps } from './Separator.types';
 import { getSeparatorResponsiveCSS } from './Separator.utils';
-import { BlockWithoutStyleProp } from 'blocks/Blocks.types';
+import { separatorRestrictedPropsKeys } from './Separator.constants';
 import { blocksColors } from 'blocks/Blocks.colors';
-
-export type SeparatorProps = SeparatorCSSProps & SeparatorComponentProps & BlockWithoutStyleProp<HTMLDivElement>;
 
 const StyledSeparator = styled.div.withConfig({
   shouldForwardProp: (prop, defaultValidatorFn) =>
-    !separatorCSSPropsKeys.includes(prop as keyof SeparatorCSSProps) && defaultValidatorFn(prop),
+    !separatorRestrictedPropsKeys.includes(prop as keyof SeparatorProps) && defaultValidatorFn(prop),
 })<SeparatorProps>`
   /* Initial values */
   width: ${({ width, orientation }) => width || (orientation === 'horizontal' ? '100%' : '1px')};
@@ -26,7 +24,7 @@ const StyledSeparator = styled.div.withConfig({
   ${({ css }) => css || ''}
 `;
 
-const Separator: React.FC<SeparatorProps> = ({ orientation = 'horizontal', ...rest }) => {
+const Separator: FC<SeparatorProps> = ({ orientation = 'horizontal', ...rest }) => {
   return (
     <StyledSeparator
       role="separator"
