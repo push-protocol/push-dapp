@@ -313,27 +313,37 @@ export type getAliasResponseType = {
   chainId: string | null;
 };
 
+// export const getAliasFromChannelDetails = (channelDetails: Object | null | string): getAliasResponseType => {
+//   if (!channelDetails || channelDetails === 'unfetched') return null;
+
+//   if (channelDetails['aliasDetails']) {
+//     const aliasDetails = channelDetails['aliasDetails'];
+//     const aliasDetail = { chainId: null, address: null };
+//     appConfig.allowedNetworks.forEach((chainID) => {
+//       const caipChainId = convertChainIdToChainCaip(chainID);
+//       if (aliasDetails[caipChainId!]) {
+//         aliasDetail.address = aliasDetails[caipChainId!];
+//         aliasDetail.chainId = chainID;
+//       }
+//     });
+//     if (aliasDetail.address) return aliasDetail;
+//   } else if (channelDetails['address'] != null && channelDetails['address'] != '') {
+//     if (appConfig.allowedNetworks.includes(+channelDetails['chain_id'])) {
+//       return { address: channelDetails['address'], chainId: channelDetails['chain_id'] };
+//     }
+//   }
+
+//   return { address: null, chainId: null };
+// };
+
 export const getAliasFromChannelDetails = (channelDetails: Object | null | string): getAliasResponseType => {
   if (!channelDetails || channelDetails === 'unfetched') return null;
 
-  if (channelDetails['aliasDetails']) {
-    const aliasDetails = channelDetails['aliasDetails'];
-    const aliasDetail = { chainId: null, address: null };
-    appConfig.allowedNetworks.forEach((chainID) => {
-      const caipChainId = convertChainIdToChainCaip(chainID);
-      if (aliasDetails[caipChainId!]) {
-        aliasDetail.address = aliasDetails[caipChainId!];
-        aliasDetail.chainId = chainID;
-      }
-    });
-    if (aliasDetail.address) return aliasDetail;
-  } else if (channelDetails['address'] != null && channelDetails['address'] != '') {
-    if (appConfig.allowedNetworks.includes(+channelDetails['chain_id'])) {
-      return { address: channelDetails['address'], chainId: channelDetails['chain_id'] };
+  if (channelDetails['alias_address'] != null && channelDetails['alias_address'] != '') {
+    if (appConfig.allowedNetworks.includes(+channelDetails['alias_blockchain_id'])) {
+      return { address: channelDetails['alias_address'], chainId: channelDetails['alias_blockchain_id'] };
     }
   }
-
-  return { address: null, chainId: null };
 };
 
 export const CHANNEL_TYPE = {

@@ -4,10 +4,10 @@
  */
 
 // External Packages
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  channelDetails: "unfetched",
+  channelDetails: 'unfetched',
   coreChannelAdmin: null,
   canVerify: false,
   aliasDetails: {
@@ -15,14 +15,14 @@ const initialState = {
     aliasAddrFromContract: null,
     aliasEthAddr: null,
     isAliasVerified: null,
-    aliasChainId: null
+    aliasChainId: null,
   },
   delegatees: null,
   canVerify: false,
 };
 
 export const contractSlice = createSlice({
-  name: "admin",
+  name: 'admin',
   initialState,
   reducers: {
     resetAdminSlice: () => initialState,
@@ -39,19 +39,19 @@ export const contractSlice = createSlice({
       state.delegatees = action.payload;
     },
     setAliasAddress: (state, action) => {
-      state.aliasDetails["aliasAddr"] = action.payload;
+      state.aliasDetails['aliasAddr'] = action.payload;
     },
     setAliasAddressFromContract: (state, action) => {
       state.aliasDetails['aliasAddrFromContract'] = action.payload;
     },
     setAliasEthAddress: (state, action) => {
-      state.aliasDetails["aliasEthAddr"] = action.payload;
+      state.aliasDetails['aliasEthAddr'] = action.payload;
     },
     setAliasChainId: (state, action) => {
-      state.aliasDetails["aliasChainId"] = action.payload;
+      state.aliasDetails['aliasChainId'] = action.payload;
     },
     setAliasVerified: (state, action) => {
-      state.aliasDetails["isAliasVerified"] = action.payload;
+      state.aliasDetails['isAliasVerified'] = action.payload;
     },
   },
 });
@@ -66,7 +66,7 @@ export const {
   setAliasAddress,
   setAliasAddressFromContract,
   setAliasEthAddress,
-  setAliasChainId
+  setAliasChainId,
 } = contractSlice.actions;
 
 export default contractSlice.reducer;

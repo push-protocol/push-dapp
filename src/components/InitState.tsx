@@ -238,7 +238,7 @@ const InitState = () => {
       !userPushSDKInstance
     )
       return;
-
+   
     (async function () {
       if (onCoreNetwork) {
         checkUserForChannelOwnership(account, userPushSDKInstance).then(async () => {
