@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import { BlockWithoutStyleProp } from '../Blocks.types';
 import { getBlocksColor } from '../Blocks.utils';
 import { BoxCSSProps, BoxComponentProps } from './Box.types';
-import { boxCSSPropsKeys, getBoxResponsiveCSS } from './Box.utils';
+import { getBoxResponsiveCSS } from './Box.utils';
+import { boxCSSPropsKeys } from './Box.constants';
 
 export type BoxProps = BoxCSSProps & BoxComponentProps & BlockWithoutStyleProp<HTMLDivElement>;
 
