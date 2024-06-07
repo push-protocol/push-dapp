@@ -313,6 +313,7 @@ export type getAliasResponseType = {
   chainId: string | null;
 };
 
+// check code and verify with sc team or be before removing
 // export const getAliasFromChannelDetails = (channelDetails: Object | null | string): getAliasResponseType => {
 //   if (!channelDetails || channelDetails === 'unfetched') return null;
 
