@@ -39,6 +39,7 @@ const TutorialPage = lazy(() => import('pages/TutorialPage'));
 const YieldFarmingV2Page = lazy(() => import('pages/YieldFarmingPageV2'));
 const UserSettingsPage = lazy(() => import('pages/UserSettingsPage'));
 const ClaimGalxePage = lazy(() => import('pages/ClaimGalxePage'));
+const Dashboard = lazy(() => import('modules/dashboard'));
 
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
@@ -152,6 +153,12 @@ function MasterInterfacePage() {
           }
         >
           <Routes>
+
+            <Route
+              path={APP_PATHS.WelcomeDashboard}
+              element={<Dashboard />}
+            />
+
             <Route
               path={APP_PATHS.Inbox}
               element={<InboxPage />}
@@ -160,6 +167,7 @@ function MasterInterfacePage() {
               path={APP_PATHS.Spam}
               element={<InboxPage />}
             />
+
 
             {/* <Route element={<ConnectedWalletRoute />}> */}
             <Route
