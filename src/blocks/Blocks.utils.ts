@@ -16,7 +16,8 @@ import {
  * @returns value of a CSS property
  */
 const getCSSValue = (propName: CSSPropName, value: CSSPropValueType | undefined) => {
-  return propName === 'padding' || propName === 'margin' ? `var(--${value})` : value;
+  const propsWithCssVariables = ['padding', 'margin', 'border-radius'];
+  return propsWithCssVariables.includes(propName) ? `var(--${value})` : value;
 };
 
 /**

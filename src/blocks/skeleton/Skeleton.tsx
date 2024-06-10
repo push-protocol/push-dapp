@@ -29,8 +29,8 @@ const Skeleton: FC<SkeletonProps> = ({ isLoading, children, ...rest }) => {
 
   return (
     <StyledSkeleton
-      aria-hidden="true"
-      tabIndex={-1}
+      aria-hidden="true" // Hide from screen readers
+      tabIndex={-1} // Remove from tab order
       {...rest}
     >
       {children}

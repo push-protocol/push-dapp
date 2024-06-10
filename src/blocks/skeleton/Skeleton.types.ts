@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import type { BlockWithoutStyleProp, ResponsiveProp, SpaceType, ValueOf } from '../Blocks.types';
+import type { BlockWithoutStyleProp, RadiusType, ResponsiveProp, SpaceType, ValueOf } from '../Blocks.types';
 import type { FlattenSimpleInterpolation } from 'styled-components';
 
 export type SkeletonResponsiveProps = {
@@ -11,7 +11,7 @@ export type SkeletonResponsiveProps = {
   /* Sets width css property */
   width?: ResponsiveProp<string>;
   /* Sets border radius css property */
-  borderRadius?: ResponsiveProp<string>;
+  borderRadius?: ResponsiveProp<RadiusType>;
 };
 
 export type SkeletonProps = SkeletonResponsiveProps & SkeletonComponentProps & BlockWithoutStyleProp<HTMLDivElement>;

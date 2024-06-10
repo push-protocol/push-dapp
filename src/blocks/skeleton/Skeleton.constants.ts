@@ -1,3 +1,3 @@
 import type { SkeletonProps } from './Skeleton.types';
 
-export const skeletonCSSPropsKeys: (keyof SkeletonProps)[] = ['borderRadius', 'height', 'margin', 'width'];
+export const skeletonCSSPropsKeys: (keyof SkeletonProps)[] = ['height', 'width'];
