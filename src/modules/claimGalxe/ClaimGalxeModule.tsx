@@ -238,7 +238,7 @@ const Container = styled(Section)`
     );
   }
 
-  @media ${device.mobileM} {
+  @media ${device.tablet} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
     width: calc(
       100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} -
