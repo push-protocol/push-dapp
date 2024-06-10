@@ -24,13 +24,16 @@ const StyledSkeleton = styled.div.withConfig({
   }
 `;
 
-const Skeleton: FC<SkeletonProps> = ({ isLoading, children, ...rest }) => {
+const Skeleton: FC<SkeletonProps> = ({ borderRadius = 'r2', children, isLoading, ...rest }) => {
   if (!isLoading) return children;
 
   return (
     <StyledSkeleton
-      aria-hidden="true" // Hide from screen readers
-      tabIndex={-1} // Remove from tab order
+      /* This component will be hidden from screen readers */
+      aria-hidden="true"
+      /* The component will not be included in the tab order */
+      tabIndex={-1}
+      borderRadius={borderRadius}
       {...rest}
     >
       {children}
