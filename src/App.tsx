@@ -80,6 +80,20 @@ const GlobalStyle = createGlobalStyle`
     --s15: 60px;
     // TODO: Add more as needed
 
+    /* Border Radius */
+    --r0: 0px;
+    --r1: 4px;
+    --r2: 8px;
+    --r3: 12px;
+    --r4: 16px;
+    --r5: 20px;
+    --r6: 24px;
+    --r7: 28px;
+    --r8: 32px;
+    --r9: 36px;
+    --r10: 40px;
+    // TODO: Add more as needed
+
     /* Font Family */
     --font-family: 'Strawford', 'Source Sans Pro', Helvetica, sans-serif;
 
