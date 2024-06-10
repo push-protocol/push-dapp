@@ -161,7 +161,7 @@ const ClaimGalxeModule = () => {
             fontWeight={600}
             padding="0 0 12px 0"
           >
-            Claim your reward for Decentralize with Push quest
+            Claim your Push Alpha Pass NFT Reward
           </SpanText>
           <SpanText
             fontSize="1rem"
@@ -194,7 +194,6 @@ const ClaimGalxeModule = () => {
         </ClaimLeftContainer>
         <AlphaImageContainer>
           <AlphaImageInnerContainer>
-            <AlphaAccessTextImg src={getPublicAssetPath('svg/AccessNFTText.svg')} />
             <AlphaAccessImg src={getPublicAssetPath('svg/AccessNFT.svg')} />
           </AlphaImageInnerContainer>
         </AlphaImageContainer>
@@ -283,8 +282,6 @@ const AlphaImageInnerContainer = styled(ItemHV2)`
     gap: 2rem;
   }
 `;
-
-const AlphaAccessTextImg = styled(ImageV2)``;
 
 const AlphaAccessImg = styled(ImageV2)`
   padding: 0 12px;
