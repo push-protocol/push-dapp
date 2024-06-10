@@ -1,5 +1,11 @@
-export { Box } from './box';
+export { Box, type BoxProps } from './box';
+export { Button, type ButtonProps } from './button';
+export { Separator, type SeparatorProps } from './separator';
+export { Text, type TextProps } from './text';
 
+export * from './Blocks.colors';
 export * from './Blocks.constants';
 export * from './Blocks.types';
 export * from './Blocks.utils';
+
+export * from './icons';
