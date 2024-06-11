@@ -22,7 +22,7 @@ export type ResponsiveProp<T> = T | { [key in Breakpoint]?: T };
 
 export type RadiusType = `r${number}`;
 
-export type SpaceType = `s${number}`;
+export type SpaceType = `s${number}` | `s${number} s${number}`| `s${number} s${number} s${number} s${number}`;
 
 export type PixelValue = `${number}px`;
 
