@@ -1,6 +1,8 @@
 import { ReactNode, forwardRef } from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
-import { BlockWithoutStyleProp, BlocksColors } from '../Blocks.types';
+
+import { useBlocksTheme } from '../Blocks.hooks';
+import { BlockWithoutStyleProp, BlocksColors, ModeProp, ThemeModeColors } from '../Blocks.types';
 import { getBlocksColor } from '../Blocks.utils';
 import { TextAlign, TextHTMLTags, TextTransform, TextVariants } from './Text.types';
 import { getVariantStyles } from './Text.utils';
@@ -13,7 +15,7 @@ export type TextProps = {
   /* Children pass to the Text component */
   children?: ReactNode;
   /* Sets the css property for text color */
-  color?: BlocksColors;
+  color?: BlocksColors | ThemeModeColors;
   /* Extra css prop from styled components to apply custom css not supported by Text component */
   css?: FlattenSimpleInterpolation;
   /* For truncating the contents with ... when there's container overflow */
@@ -30,11 +32,13 @@ export type TextProps = {
   wrap?: boolean;
 } & BlockWithoutStyleProp<HTMLParagraphElement | HTMLSpanElement>;
 
-const StyledText = styled.p<TextProps>`
+const StyledText = styled.p.withConfig({
+  shouldForwardProp: (prop, defaultValidatorFn) => !['mode'].includes(prop) && defaultValidatorFn(prop),
+})<TextProps & ModeProp>`
   /* Variant CSS */
   ${({ variant }) => getVariantStyles(variant)}
 
-  color: ${({ color }) => getBlocksColor(color)};
+  color: ${({ color, mode }) => getBlocksColor(mode, color)};
   font-family: var(--font-family);
   margin: 0px;
   text-align: ${({ align }) => align};
@@ -76,9 +80,11 @@ const StyledText = styled.p<TextProps>`
 `;
 
 const Text = forwardRef<HTMLElement, TextProps>(({ as = 'p', ...props }, ref) => {
+  const { mode } = useBlocksTheme();
   return (
     <StyledText
       as={as}
+      mode={mode}
       ref={ref}
       {...props}
     />
