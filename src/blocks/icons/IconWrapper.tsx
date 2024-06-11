@@ -1,7 +1,6 @@
 import { FC, ReactNode } from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
 import { useBlocksTheme } from '../Blocks.hooks';
-import { ThemeModeColors } from '../Blocks.types';
 import { getBlocksColor } from '../Blocks.utils';
 import { IconProps } from './Icons.types';
 
@@ -16,7 +15,7 @@ type IconWrapperProps = Omit<IconProps, 'as' | 'ref'> & {
 
 type StyledIconWrapperProps = {
   /* Color to be applied to the svg */
-  color: string | ThemeModeColors;
+  color: string;
   /* css prop provided by styled components to provide additional css to icon */
   css?: FlattenSimpleInterpolation;
   /* Child react nodes rendered by Wrapper */
