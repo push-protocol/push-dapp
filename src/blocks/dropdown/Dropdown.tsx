@@ -1,6 +1,11 @@
 import { ReactNode, forwardRef } from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
+import { blocksColors } from 'blocks/Blocks.colors';
+import { getVariantStyles } from '../text/Text.utils';
+import { getBlocksColor } from 'blocks/Blocks.utils';
+
+
 type DropdownProps = {
   children?: (isOpen: boolean) => ReactNode; // This will be content upon clicking on which the dropdown overlay will open
   placement?: 'bottom' | 'bottomLeft' | 'top' | 'topRight' | 'bottomRight' | 'topLeft';
@@ -9,14 +14,41 @@ type DropdownProps = {
   overlay: ReactNode; // This will be the contents of the dropdown overlay
 };
 
+const StyledDropdown = styled.div<DropdownProps>`
+  /* Variant CSS */
 
-const Dropdown = forwardRef<HTMLElement, DropdownProps>(({ as = 'div', ...props }, ref) => {
+  // color: ${({ color }) => getBlocksColor(color)};
+  // background-color: white;
+  // border: 1px solid #4A4F67;
+  // border-radius: 24px;
+  // padding: 7px 20px 7px 15px;
+  // margin: 0px;
+
+  /* Full width of parent container */
+
+  /* Responsive props */
+
+  /* Extra CSS props */
+  ${(props) => props.css || ''}
+`;
+
+const Dropdown = forwardRef<HTMLElement, DropdownProps>(({ overlay, children, ...props }, ref) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleDropdownVisibleChange = (visible: boolean) => {
+    setIsOpen(visible);
+  }
   return (
     <StyledDropdown
-      // as={as}
       ref={ref}
       {...props}
-    />
+      onVisibleChange={handleDropdownVisibleChange}
+    >
+
+      <span className='menu-icon'>{overlay}</span>
+
+      {children(isOpen)}
+    </StyledDropdown>
   );
 });
 
@@ -24,29 +56,3 @@ Dropdown.displayName = 'Dropdown';
 
 export { Dropdown };
 
-
-const Somecomponent = () => {
-  return (   
-  <Dropdown 
-  // By using this overlay approach we could pass any items in the dropdown
-  overlay={
-    <Menu>
-      <MenuItem
-        icon=""
-        onClick={() => {}}
-        label="Archive" 
-        />
-
-        <MenuItem
-          icon=""
-          onClick={() => {}}
-          label="Delete"
-        />
-        {/* Menu item could be a list item to render an item */}
-      </Menu>
-    }
-    >
-   {(isOpen) => <button>Click Me</button>}
-  </Dropdown>
-  );
-}

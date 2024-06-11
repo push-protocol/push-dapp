@@ -1,10 +1,14 @@
 // External Packages
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { AiFillExclamationCircle } from 'react-icons/ai';
 
 // Internal Components
 import { SectionV2 } from 'components/reusables/SharedStylingV2';
 import ChannelsModule from 'modules/channels/ChannelsModule';
+import { Dropdown } from 'blocks/dropdown/Dropdown';
+import { Menu } from 'blocks/menu/Menu';
+import { MenuItem } from 'blocks/menu/MenuItem';
 
 // Internal Configs
 import APP_PATHS from 'config/AppPaths';
@@ -18,6 +22,74 @@ const ChannelsPage = ({ loadTeaser, playTeaser, channelID }) => {
   // RENDER
   return (
     <Container>
+      <Dropdown
+        overlay={
+          <Menu>
+            <MenuItem
+              icon = {() => (<AiFillExclamationCircle
+                color="red"
+              />)}
+              onClick = {() => {alert('wewe')}}
+              label = "Archive" 
+              />
+            <MenuItem
+              icon = {() => (<AiFillExclamationCircle
+                color="red"
+              />)}
+              onClick={() => {}}
+              label="New Archive" 
+            />
+            <MenuItem
+              icon = {() => (<AiFillExclamationCircle
+                color="red"
+              />)}
+              onClick={() => {}}
+              label="New Test" 
+            />
+            <MenuItem
+              icon = {() => (<AiFillExclamationCircle
+                color="red"
+              />)}
+              onClick={() => {}}
+              label="Delete"
+            />
+      </Menu>
+        }
+      >
+        {/* {(isOpen) = <button>Click me</button>} */}
+      </Dropdown>
+
+
+      {/* <Menu>
+        <MenuItem
+          icon = {() => (<AiFillExclamationCircle
+            color="red"
+          />)}
+          onClick = {() => {alert('wewe')}}
+          label = "Archive" 
+          />
+        <MenuItem
+          icon = {() => (<AiFillExclamationCircle
+            color="red"
+          />)}
+          onClick={() => {}}
+          label="New Archive" 
+        />
+        <MenuItem
+          icon = {() => (<AiFillExclamationCircle
+            color="red"
+          />)}
+          onClick={() => {}}
+          label="New Test" 
+        />
+        <MenuItem
+          icon = {() => (<AiFillExclamationCircle
+            color="red"
+          />)}
+          onClick={() => {}}
+          label="Delete"
+        />
+      </Menu> */}
       <ChannelsModule
         channelID={calculatedChannelID}
         loadTeaser={loadTeaser}

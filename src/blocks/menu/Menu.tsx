@@ -3,24 +3,28 @@ import styled from 'styled-components';
 
 import { MenuProps } from './Menu.types';
 // import { getSeparatorResponsiveCSS } from './Menu.utils';
-// import { separatorRestrictedPropsKeys } from './Menu.constants';
+// import { separatorRestrictedPropsKeys } from './Menu.constants';\
 import { blocksColors } from 'blocks/Blocks.colors';
 import { getVariantStyles } from '../text/Text.utils';
 import { getBlocksColor } from 'blocks/Blocks.utils';
+import { BlockWithoutStyleProp } from 'blocks/Blocks.types';
 
 
+
+// export type MenuProps = MenuCSSProps & MenuComponentProps & BlockWithoutStyleProp<HTMLDivElement>;
 
 const StyledMenu = styled.div<MenuProps>`
   /* Variant CSS */
-  ${({ variant }) => getVariantStyles(variant)}
+  // ${({ variant }) => getVariantStyles(variant)};
 
   // color: ${({ color }) => getBlocksColor(color)};
-  // background-color: ${({ color }) => getBlocksColor(color)};
-  // background-color: {theme.default.secondaryBg}
+  background-color: white;
+  border: 1px solid #4A4F67;
+  border-radius: 24px;
+  padding: 7px 20px 7px 15px;
   margin: 0px;
 
   /* Full width of parent container */
-  width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
 
   /* Responsive props */
 
