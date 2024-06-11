@@ -1,4 +1,4 @@
-import { ModeProp } from 'blocks/Blocks.types';
+import { ModeProp } from '../Blocks.types';
 import { SeparatorProps } from './Separator.types';
 
 export const separatorRestrictedPropsKeys: (keyof SeparatorProps | keyof ModeProp)[] = [

@@ -22,7 +22,7 @@ const getCSSValue = (propName: CSSPropName, value: CSSPropValueType | undefined)
     if (typeof value === 'string') {
       return value.replace(/\b(\w+)\b/g, 'var(--$1)');
     }
-  } else if (propName === 'gap') {
+  } else if (propName === 'gap' || propName === 'border-radius') {
     return `var(--${value})`;
   }
   return value;

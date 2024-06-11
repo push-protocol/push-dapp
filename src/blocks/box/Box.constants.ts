@@ -1,4 +1,4 @@
-import { ModeProp } from 'blocks/Blocks.types';
+import { ModeProp } from '../Blocks.types';
 import { BoxCSSProps } from './Box.types';
 
 export const boxRestrictedCSSPropKeys: (keyof BoxCSSProps | keyof ModeProp)[] = [
