@@ -8,6 +8,8 @@ export type BoxResponsiveProps = {
   alignItems?: ResponsiveProp<CSSProperties['alignItems']>;
   /* Sets flex-direction css property */
   flexDirection?: ResponsiveProp<CSSProperties['flexDirection']>;
+  /* Sets gap between the elements */
+  gap?: ResponsiveProp<SpaceType>;
   /* Sets display css property */
   display?: ResponsiveProp<CSSProperties['display']>;
   /* Sets height css property */
@@ -64,6 +66,7 @@ export type BoxResponsiveCSSProperties =
   | 'align-items'
   | 'display'
   | 'flex-direction'
+  | 'gap'
   | 'height'
   | 'justify-content'
   | 'margin'

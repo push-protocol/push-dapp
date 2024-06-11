@@ -1,6 +1,7 @@
 export { Box, type BoxProps } from './box';
 export { Button, type ButtonProps } from './button';
 export { Separator, type SeparatorProps } from './separator';
+export { Skeleton, type SkeletonProps } from './skeleton';
 export { Text, type TextProps } from './text';
 
 export * from './Blocks.colors';

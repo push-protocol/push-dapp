@@ -5,14 +5,14 @@ import { BlockWithoutStyleProp } from '../Blocks.types';
 import { getBlocksColor } from '../Blocks.utils';
 import { BoxCSSProps, BoxComponentProps } from './Box.types';
 import { getBoxResponsiveCSS } from './Box.utils';
-import { boxCSSPropsKeys } from './Box.constants';
+import { boxRestrictedCSSPropKeys } from './Box.constants';
 
 export type BoxProps = BoxCSSProps & BoxComponentProps & BlockWithoutStyleProp<HTMLDivElement>;
 
 const StyledBox = styled.div.withConfig({
   shouldForwardProp: (prop, defaultValidatorFn) =>
-    !boxCSSPropsKeys.includes(prop as keyof BoxCSSProps) && defaultValidatorFn(prop),
-})<BoxProps>`
+    !boxRestrictedCSSPropKeys.includes(prop as keyof BoxCSSProps) && defaultValidatorFn(prop),
+}) <BoxProps>`
   /* Responsive props */
   ${(props) => getBoxResponsiveCSS(props)}
 

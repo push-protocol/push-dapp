@@ -147,6 +147,15 @@ const ClaimGalxeModule = () => {
 
   return (
     <Container>
+      <ClaimBanner>
+        <ImageV2
+          src={getPublicAssetPath('svg/claim-galxe-banner.svg')}
+          height="18px"
+          width="18px"
+          padding="0 11px 0 0"
+        />
+        ‘Communicate with Push’ contest winners will be able to mint their NFTs soon. Stay tuned...
+      </ClaimBanner>
       <ClaimInnerContainer>
         <ClaimLeftContainer>
           <GalxeImg
@@ -161,7 +170,7 @@ const ClaimGalxeModule = () => {
             fontWeight={600}
             padding="0 0 12px 0"
           >
-            Claim your reward for Decentralize with Push quest
+            Claim your Push Alpha Pass NFT Reward
           </SpanText>
           <SpanText
             fontSize="1rem"
@@ -194,7 +203,6 @@ const ClaimGalxeModule = () => {
         </ClaimLeftContainer>
         <AlphaImageContainer>
           <AlphaImageInnerContainer>
-            <AlphaAccessTextImg src={getPublicAssetPath('svg/AccessNFTText.svg')} />
             <AlphaAccessImg src={getPublicAssetPath('svg/AccessNFT.svg')} />
           </AlphaImageInnerContainer>
         </AlphaImageContainer>
@@ -209,9 +217,6 @@ export default ClaimGalxeModule;
 const Container = styled(Section)`
   align-items: center;
   align-self: center;
-  background: ${(props) => props.theme.default.bg};
-  border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
-  box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
   display: flex;
   flex-direction: column;
   flex: initial;
@@ -233,7 +238,7 @@ const Container = styled(Section)`
     );
   }
 
-  @media ${device.mobileM} {
+  @media ${device.tablet} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
     width: calc(
       100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} -
@@ -242,10 +247,25 @@ const Container = styled(Section)`
   }
 `;
 
+const ClaimBanner = styled.div`
+  background: ${(props) => props.theme.default.bg};
+  border-radius: 20px;
+  margin-bottom: 24px;
+  padding: 16px;
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: row;
+  width: fill-available;
+`;
+
 const ClaimInnerContainer = styled.div`
   display: flex;
   gap: 1rem;
   align-self: flex-start;
+  background: ${(props) => props.theme.default.bg};
+  border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+  overflow: hidden;
   @media ${device.tablet} {
     flex-direction: column-reverse;
   }
@@ -283,8 +303,6 @@ const AlphaImageInnerContainer = styled(ItemHV2)`
     gap: 2rem;
   }
 `;
-
-const AlphaAccessTextImg = styled(ImageV2)``;
 
 const AlphaAccessImg = styled(ImageV2)`
   padding: 0 12px;
