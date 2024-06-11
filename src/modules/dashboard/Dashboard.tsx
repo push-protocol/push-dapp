@@ -5,7 +5,7 @@ export type DashboardProps = {};
 
 const Dashboard: FC<DashboardProps> = () => {
   return (
-    <Box>
+    <Box margin="s6">
       <TrendingRecommended />
     </Box>
   );
