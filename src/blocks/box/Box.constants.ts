@@ -1,6 +1,6 @@
 import { BoxCSSProps } from './Box.types';
 
-export const boxCSSPropsKeys: (keyof BoxCSSProps)[] = [
+export const boxRestrictedCSSPropKeys: (keyof BoxCSSProps)[] = [
   'border',
   'borderRadius',
   'backgroundColor',
@@ -11,6 +11,7 @@ export const boxCSSPropsKeys: (keyof BoxCSSProps)[] = [
   'alignItems',
   'display',
   'flexDirection',
+  'gap',
   'height',
   'justifyContent',
   'margin',
@@ -19,5 +20,5 @@ export const boxCSSPropsKeys: (keyof BoxCSSProps)[] = [
   'maxWidth',
   'minWidth',
   'padding',
-  'width',
+  'width'
 ];

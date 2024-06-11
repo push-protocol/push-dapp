@@ -2,6 +2,9 @@ import { BlocksColorData, BlocksColors, GlobalColors } from './Blocks.types';
 
 const brandColors = {
   /* New brand colors */
+
+  'DARK-WHITE': '#FFFFFFBF',
+
   'GRAY-100': '#F5F6F8',
   'GRAY-200': '#E5E5E5',
   'GRAY-300': '#C5C8CD',
@@ -33,7 +36,7 @@ const brandColors = {
   'RED-700': '#D43B3B',
   'RED-800': '#A40A0A',
   'RED-900': '#670000',
-  'RED-1000': '#400000',
+  'RED-1000': '#400000'
 };
 
 export const blocksColorsLegacy = {
@@ -78,7 +81,7 @@ export const blocksColorsLegacy = {
   LIGHT_MAROON: 'rgba(159.0, 0.0, 0.0, 1.0)',
   LIGHTER_MAROON: 'rgba(129.0, 0.0, 0.0, 1.0)',
 
-  ...brandColors,
+  ...brandColors
 };
 
 const createBlocksColors = () => {

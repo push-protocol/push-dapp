@@ -203,6 +203,7 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
   useEffect(() => {
     if (!account || !userPushSDKInstance) return;
     (async function () {
+      //TODO: Bulk subscriptions are fetched here
       const subscriptionsArr = await userPushSDKInstance.notification.subscriptions();
       const subscriptionsMapping = {};
       const userSettings = {};
@@ -210,7 +211,7 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
         subscriptionsMapping[channel] = true;
         userSettings[channel] = user_settings ? JSON.parse(user_settings) : null;
       });
-      dispatch(updateBulkSubscriptions(subscriptionsMapping));
+      // dispatch(updateBulkSubscriptions(subscriptionsMapping));
       dispatch(updateBulkUserSettings(userSettings));
     })();
   }, [account, userPushSDKInstance]);
@@ -286,7 +287,7 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
                     // }}
                     key={channel.channel}
                     self="stretch"
-                    // id={channel.channel}
+                  // id={channel.channel}
                   >
                     {!MaskedChannels[channel.channel] &&
                       channel &&
