@@ -2,6 +2,11 @@ import { HTMLAttributes } from 'react';
 import { BoxResponsiveCSSProperties, BoxResponsiveCSSPropertiesData, BoxResponsivePropValues } from './box';
 import { blocksColorsLegacy } from './Blocks.colors';
 import {
+  SkeletonResponsiveCSSProperties,
+  SkeletonResponsiveCSSPropertiesData,
+  SkeletonResponsivePropValues,
+} from './skeleton';
+import {
   SeparatorResponsiveCSSProperties,
   SeparatorResponsiveCSSPropertiesData,
   SeparatorResponsivePropValues,
@@ -15,17 +20,25 @@ export type Breakpoint = 'initial' | 'ms' | 'mm' | 'ml' | 'tb' | 'lp' | 'll' | '
 
 export type ResponsiveProp<T> = T | { [key in Breakpoint]?: T };
 
+export type RadiusType = `r${number}`;
+
 export type SpaceType = `s${number}`;
 
 export type PixelValue = `${number}px`;
 
 export type ValueOf<T> = T[keyof T];
 
-export type CSSPropName = BoxResponsiveCSSProperties | SeparatorResponsiveCSSProperties;
+export type CSSPropName =
+  | BoxResponsiveCSSProperties
+  | SeparatorResponsiveCSSProperties
+  | SkeletonResponsiveCSSProperties;
 
-export type CSSPropValueType = BoxResponsivePropValues | SeparatorResponsivePropValues;
+export type CSSPropValueType = BoxResponsivePropValues | SeparatorResponsivePropValues | SkeletonResponsivePropValues;
 
-export type ResponsiveCSSPropertyData = BoxResponsiveCSSPropertiesData | SeparatorResponsiveCSSPropertiesData;
+export type ResponsiveCSSPropertyData =
+  | BoxResponsiveCSSPropertiesData
+  | SeparatorResponsiveCSSPropertiesData
+  | SkeletonResponsiveCSSPropertiesData;
 
 export type BlockWithoutStyleProp<T> = Omit<HTMLAttributes<T>, 'style'>;
 
