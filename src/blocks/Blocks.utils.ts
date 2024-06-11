@@ -7,7 +7,7 @@ import {
   CSSPropValueType,
   DeviceSizeName,
   PixelValue,
-  ResponsiveCSSPropertyData,
+  ResponsiveCSSPropertyData
 } from './Blocks.types';
 
 /**
@@ -16,8 +16,14 @@ import {
  * @returns value of a CSS property
  */
 const getCSSValue = (propName: CSSPropName, value: CSSPropValueType | undefined) => {
-  const propsWithCssVariables = ['padding', 'margin', 'border-radius'];
-  return propsWithCssVariables.includes(propName) ? `var(--${value})` : value;
+  if (propName === 'padding' || propName === 'margin') {
+    if (typeof value === 'string') {
+      return value.replace(/\b(\w+)\b/g, 'var(--$1)');
+    }
+  } else if (propName === 'gap') {
+    return `var(--${value})`;
+  }
+  return value;
 };
 
 /**
@@ -99,7 +105,7 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
     tablet: '',
     laptop: '',
     laptopL: '',
-    desktop: '',
+    desktop: ''
   };
 
   data.forEach(({ prop, propName }) => {
