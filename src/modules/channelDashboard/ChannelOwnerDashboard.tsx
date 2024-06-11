@@ -73,8 +73,9 @@ const ChannelOwnerDashboard = () => {
   useEffect(() => {
     if (!onCoreNetwork || !channelDetails || aliasAddrFromContract || channelDetails === 'unfetched') return;
 
-    const { address: aliasAddress, chainId: aliasChainId } = getAliasFromChannelDetails(channelDetails);
-    if (aliasAddress) {
+    const aliasDetails = getAliasFromChannelDetails(channelDetails);
+    if (aliasDetails) {
+      const { address: aliasAddress, chainId: aliasChainId } = aliasDetails;
       dispatch(setAliasAddressFromContract(aliasAddress));
       dispatch(setAliasChainId(aliasChainId));
       // dispatch(setAliasAddress(aliasAddress));

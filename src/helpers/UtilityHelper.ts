@@ -344,7 +344,8 @@ export const getAliasFromChannelDetails = (channelDetails: Object | null | strin
     if (appConfig.allowedNetworks.includes(+channelDetails['alias_blockchain_id'])) {
       return { address: channelDetails['alias_address'], chainId: channelDetails['alias_blockchain_id'] };
     }
-  } else return { address: null, chainId: null };
+  }
+  return null;
 };
 
 export const CHANNEL_TYPE = {
