@@ -4,10 +4,13 @@ import { useLocation, useParams } from 'react-router-dom';
 
 // External Packages
 import styled from 'styled-components';
+import { AiFillExclamationCircle } from 'react-icons/ai';
 
 // Internal Components
 import { SectionV2 } from 'components/reusables/SharedStylingV2';
 import InboxModule from 'modules/inbox/InboxModule';
+import { Menu } from 'blocks/menu/Menu';
+import { MenuItem } from 'blocks/menu/MenuItem';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -18,6 +21,26 @@ const InboxPage = () => {
   const location = useLocation();
   return (
     <Container>
+      <Menu>
+        <MenuItem
+          icon = {() => (<AiFillExclamationCircle
+            color="pink"
+            size="20"
+          />)}
+          onClick = {() => {}}
+          label = "Archive" 
+          />
+        <MenuItem
+          icon=""
+          onClick={() => {}}
+          label="New Archive" 
+        />
+        <MenuItem
+          icon=""
+          onClick={() => {}}
+          label="Delete"
+        />
+      </Menu>
       <InboxModule isSpam={location.pathname === '/spam' ? true : false} />
     </Container>
   );

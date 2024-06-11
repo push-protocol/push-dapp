@@ -23,3 +23,30 @@ const Dropdown = forwardRef<HTMLElement, DropdownProps>(({ as = 'div', ...props 
 Dropdown.displayName = 'Dropdown';
 
 export { Dropdown };
+
+
+const Somecomponent = () => {
+  return (   
+  <Dropdown 
+  // By using this overlay approach we could pass any items in the dropdown
+  overlay={
+    <Menu>
+      <MenuItem
+        icon=""
+        onClick={() => {}}
+        label="Archive" 
+        />
+
+        <MenuItem
+          icon=""
+          onClick={() => {}}
+          label="Delete"
+        />
+        {/* Menu item could be a list item to render an item */}
+      </Menu>
+    }
+    >
+   {(isOpen) => <button>Click Me</button>}
+  </Dropdown>
+  );
+}

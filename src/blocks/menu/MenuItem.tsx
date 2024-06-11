@@ -4,42 +4,41 @@ import styled from 'styled-components';
 import { MenuProps } from './Menu.types';
 // import { getSeparatorResponsiveCSS } from './Menu.utils';
 // import { separatorRestrictedPropsKeys } from './Menu.constants';
-import { blocksColors } from 'blocks/Blocks.colors';
+// import { blocksColors } from 'blocks/Blocks.colors';
 import { getVariantStyles } from '../text/Text.utils';
-import { getBlocksColor } from 'blocks/Blocks.utils';
+import { getBlocksColor } from '../Blocks.utils';
 
-
-
-const StyledMenu = styled.div<MenuProps>`
+const StyledMenuItem = styled.p<MenuProps>`
   /* Variant CSS */
   ${({ variant }) => getVariantStyles(variant)}
 
-  // color: ${({ color }) => getBlocksColor(color)};
-  // background-color: ${({ color }) => getBlocksColor(color)};
-  // background-color: {theme.default.secondaryBg}
+  color: ${({ color }) => getBlocksColor(color)};
+  background-color: ${({ color }) => getBlocksColor(color)};
   margin: 0px;
 
   /* Full width of parent container */
   width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
-
+  &:not(:last-of-type){
+    border-bottom: 1px solid red;
+  }
   /* Responsive props */
 
   /* Extra CSS props */
   ${(props) => props.css || ''}
 `;
 
-const Menu = forwardRef<HTMLElement, MenuProps>(({ children ,...props }, ref) => {
+const MenuItem = forwardRef<HTMLElement, MenuProps>(({ icon, label, onClick, ...props }, ref) => {
   return (
-    <StyledMenu
-      // as={as}
-      ref={ref}
+    <StyledMenuItem
+      onClick={onClick}
       {...props}
     >
-      {children}
-    </StyledMenu>
+      {icon && icon()}
+      {label}
+    </StyledMenuItem>
   );
 });
 
-Menu.displayName = 'Menu';
+MenuItem.displayName = 'MenuItem';
 
-export { Menu };
+export { MenuItem };

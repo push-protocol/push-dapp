@@ -2,11 +2,7 @@ import { CSSProperties, ReactNode } from 'react';
 import { BlockWithoutStyleProp, ResponsiveProp, SpaceType, ValueOf } from '../Blocks.types';
 import { FlattenSimpleInterpolation } from 'styled-components';
 
-// type HTMLTags = 'div' | 'span';
-
-export type BoxComponentProps = {
-  /* Decides which HTML tag to render inside Box */
-  as?: 'div';
+export type MenuComponentProps = {
   /* Additional prop from styled components to apply custom css to Box */
   css?: FlattenSimpleInterpolation;
   /* Child react nodes rendered by Box */
@@ -15,7 +11,7 @@ export type BoxComponentProps = {
 
 export type MenuProps = MenuResponsiveProps & MenuComponentProps & BlockWithoutStyleProp<HTMLDivElement>;
 
-export type MenuResponsiveCSSProperties = 'height' | 'margin' | 'width';
+// export type MenuResponsiveCSSProperties = 'height' | 'margin' | 'width';
 
 export type MenuResponsivePropValues = ValueOf<MenuResponsiveProps>;
 
