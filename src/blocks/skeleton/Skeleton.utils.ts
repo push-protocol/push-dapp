@@ -1,7 +1,7 @@
 import { CSSProperties } from 'react';
+import { keyframes } from 'styled-components';
 import { getResponsiveCSS } from '../Blocks.utils';
 import type { SkeletonResponsiveProps, SkeletonResponsiveCSSPropertiesData } from './Skeleton.types';
-import { keyframes } from 'styled-components';
 
 const getSkeletonResponsiveCSSProperties = (props: SkeletonResponsiveProps): SkeletonResponsiveCSSPropertiesData[] => [
   { propName: 'height', prop: props.height },

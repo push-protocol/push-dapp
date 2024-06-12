@@ -1,5 +1,6 @@
 import { FC, ReactNode } from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import { useBlocksTheme } from '../Blocks.hooks';
 import { getBlocksColor } from '../Blocks.utils';
 import { IconProps } from './Icons.types';
 
@@ -43,7 +44,8 @@ const IconWrapper: FC<IconWrapperProps> = ({
   size: sizeProp,
   ...restProps
 }) => {
-  const color = (colorProp ? getBlocksColor(colorProp) : 'currentColor') as string;
+  const { mode } = useBlocksTheme();
+  const color = (colorProp ? getBlocksColor(mode, colorProp) : 'currentColor') as string;
   const size = sizeProp ? `${sizeProp}px` : autoSize ? '1em' : '16px';
   return (
     <StyledIconWrapper

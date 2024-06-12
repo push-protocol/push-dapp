@@ -1,6 +1,8 @@
 import { ReactNode, forwardRef } from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
-import { BlockWithoutStyleProp, BlocksColors } from '../Blocks.types';
+
+import { useBlocksTheme } from '../Blocks.hooks';
+import { BlockWithoutStyleProp, BlocksColors, ModeProp, ThemeModeColors } from '../Blocks.types';
 import { getBlocksColor } from '../Blocks.utils';
 import { TextAlign, TextHTMLTags, TextTransform, TextVariants } from './Text.types';
 import { getVariantStyles } from './Text.utils';
@@ -8,12 +10,10 @@ import { getVariantStyles } from './Text.utils';
 export type TextProps = {
   /* Sets the html tag for Text component */
   as?: TextHTMLTags;
-  /* Sets css property for the content alignment */
-  align?: TextAlign;
   /* Children pass to the Text component */
   children?: ReactNode;
   /* Sets the css property for text color */
-  color?: BlocksColors;
+  color?: BlocksColors | ThemeModeColors;
   /* Extra css prop from styled components to apply custom css not supported by Text component */
   css?: FlattenSimpleInterpolation;
   /* For truncating the contents with ... when there's container overflow */
@@ -22,23 +22,27 @@ export type TextProps = {
   fullWidth?: boolean;
   /* To limit the number of lines the Text component will show */
   numberOfLines?: number;
+  /* Sets css property for the content alignment */
+  textAlign?: TextAlign;
   /* Sets the text-transform css property */
-  transform?: TextTransform;
+  textTransform?: TextTransform;
   /* Design system variant of the Text component */
   variant?: TextVariants;
   /* Sets the css wrap property to move the text to next line in case of overflow */
   wrap?: boolean;
 } & BlockWithoutStyleProp<HTMLParagraphElement | HTMLSpanElement>;
 
-const StyledText = styled.p<TextProps>`
+const StyledText = styled.p.withConfig({
+  shouldForwardProp: (prop, defaultValidatorFn) => !['mode'].includes(prop) && defaultValidatorFn(prop),
+})<TextProps & ModeProp>`
   /* Variant CSS */
   ${({ variant }) => getVariantStyles(variant)}
 
-  color: ${({ color }) => getBlocksColor(color)};
+  color: ${({ color, mode }) => getBlocksColor(mode, color)};
   font-family: var(--font-family);
   margin: 0px;
-  text-align: ${({ align }) => align};
-  text-transform: ${({ transform }) => transform};
+  text-align: ${({ textAlign }) => textAlign};
+  text-transform: ${({ textTransform }) => textTransform};
 
   /* Ellipsis for single line overflow */
   ${({ ellipsis }) =>
@@ -76,9 +80,11 @@ const StyledText = styled.p<TextProps>`
 `;
 
 const Text = forwardRef<HTMLElement, TextProps>(({ as = 'p', ...props }, ref) => {
+  const { mode } = useBlocksTheme();
   return (
     <StyledText
       as={as}
+      mode={mode}
       ref={ref}
       {...props}
     />
