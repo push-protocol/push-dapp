@@ -110,8 +110,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
 
   const fetchChannelJsonWithBlock = async () => {
     try {
+      //TODO:here is the data store
       const channelJson = await ChannelsDataStore.getInstance().getChannelJsonStartBlockAsync(channelObject.channel);
-      // console.log("Channel JSON !!!!!",channelJson);
+      console.log("Channel JSON !!!!!", channelJson, channelObject.channel);
       return channelJson;
     } catch (err) {
       console.error(err);
@@ -168,6 +169,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
               verifierAddrDetails = await userPushSDKInstance.channel.info(
                 convertAddressToAddrCaip(verifierAddress, appConfig.coreContractChain)
               );
+              console.log("Verifier Details >>>", verifierAddrDetails);
             }
 
             dispatch(
@@ -399,6 +401,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
     const containerHeight = document.getElementById(channelObject?.channel)?.getBoundingClientRect();
     setToolTipheight(containerHeight?.top);
   };
+
+  console.log("Channel Object >>", channelObject);
 
   // render
   return (

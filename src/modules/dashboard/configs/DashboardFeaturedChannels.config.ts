@@ -1,4 +1,13 @@
-export const FeaturedNotificationChannels = [
+export type FeaturedNotificationChannelsProps = {
+  channelName: string;
+  isVerified: boolean;
+  Chains: string[];
+  subscribersCount: number;
+  channelDescription: string;
+  channelAddress: string;
+};
+
+export const FeaturedNotificationChannels: FeaturedNotificationChannelsProps[] = [
   {
     channelName: 'Push Protocol',
     isVerified: true,

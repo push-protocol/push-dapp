@@ -14,7 +14,7 @@ export const useSmoothCarousel = ({ items, itemsPerPage }: UseSmoothCarouselProp
     setVisibleItems(items.slice(currentIndex, currentIndex + itemsPerPage));
   }, [currentIndex, items, itemsPerPage]);
 
-  const handleNext = () => {
+  const handleNext: () => void = () => {
     if (currentIndex + itemsPerPage < items.length) {
       setCurrentIndex((prevIndex) => prevIndex + itemsPerPage);
       console.log('List Ref >>>', listRef.current?.clientWidth);
@@ -32,7 +32,7 @@ export const useSmoothCarousel = ({ items, itemsPerPage }: UseSmoothCarouselProp
     }
   };
 
-  const handlePrevious = () => {
+  const handlePrevious: () => void = () => {
     if (currentIndex > 0) {
       setCurrentIndex((prevIndex) => Math.max(prevIndex - itemsPerPage, 0));
       console.log('List Ref 3>>>', listRef.current?.clientWidth);
