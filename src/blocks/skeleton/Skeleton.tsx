@@ -1,14 +1,17 @@
 import { type FC } from 'react';
 import styled from 'styled-components';
 
-import type { SkeletonProps } from './Skeleton.types';
+import { useBlocksTheme } from '../Blocks.hooks';
+import { ModeProp } from '../Blocks.types';
+import { SkeletonProps } from './Skeleton.types';
 import { getSkeletonPulseAnimation, getSkeletonResponsiveCSS } from './Skeleton.utils';
 import { skeletonCSSPropsKeys } from './Skeleton.constants';
+import { getBlocksColor } from 'blocks/Blocks.utils';
 
 const StyledSkeleton = styled.div.withConfig({
   shouldForwardProp: (prop, defaultValidatorFn) =>
     !skeletonCSSPropsKeys.includes(prop as keyof SkeletonProps) && defaultValidatorFn(prop),
-})<SkeletonProps>`
+})<SkeletonProps & ModeProp>`
   /* Responsive props */
   ${(props) => getSkeletonResponsiveCSS(props)}
 
@@ -16,7 +19,12 @@ const StyledSkeleton = styled.div.withConfig({
   ${(props) => props.css || ''}
 
   /* Animation props */
-  animation: ${getSkeletonPulseAnimation('hsl(200, 20%, 80%)', 'hsl(200, 20%, 95%)')} 1s linear infinite alternate;
+  animation: ${({ mode }) =>
+    getSkeletonPulseAnimation(
+      getBlocksColor(mode, { dark: 'gray-600', light: 'gray-200' }),
+      getBlocksColor(mode, { dark: 'gray-700', light: 'gray-300' })
+    )}
+    1s infinite alternate-reverse;
 
   /* Hide children */
   & > * {
@@ -25,6 +33,8 @@ const StyledSkeleton = styled.div.withConfig({
 `;
 
 const Skeleton: FC<SkeletonProps> = ({ borderRadius = 'r2', children, isLoading, ...rest }) => {
+  const { mode } = useBlocksTheme();
+
   if (!isLoading) return children;
 
   return (
@@ -34,6 +44,7 @@ const Skeleton: FC<SkeletonProps> = ({ borderRadius = 'r2', children, isLoading,
       /* The component will not be included in the tab order */
       tabIndex={-1}
       borderRadius={borderRadius}
+      mode={mode}
       {...rest}
     >
       {children}

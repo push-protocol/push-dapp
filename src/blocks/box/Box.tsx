@@ -1,7 +1,8 @@
 import { forwardRef } from 'react';
 import styled from 'styled-components';
 
-import { BlockWithoutStyleProp } from '../Blocks.types';
+import { useBlocksTheme } from '../Blocks.hooks';
+import { BlockWithoutStyleProp, ModeProp } from '../Blocks.types';
 import { getBlocksColor } from '../Blocks.utils';
 import { BoxCSSProps, BoxComponentProps } from './Box.types';
 import { getBoxResponsiveCSS } from './Box.utils';
@@ -12,13 +13,13 @@ export type BoxProps = BoxCSSProps & BoxComponentProps & BlockWithoutStyleProp<H
 const StyledBox = styled.div.withConfig({
   shouldForwardProp: (prop, defaultValidatorFn) =>
     !boxRestrictedCSSPropKeys.includes(prop as keyof BoxCSSProps) && defaultValidatorFn(prop),
-}) <BoxProps>`
+})<BoxProps & ModeProp>`
   /* Responsive props */
   ${(props) => getBoxResponsiveCSS(props)}
 
   /* Non-responsive props */
-  color: ${(props) => getBlocksColor(props.color)};
-  background-color: ${(props) => getBlocksColor(props.backgroundColor)};
+  color: ${(props) => getBlocksColor(props.mode, props.color)};
+  background-color: ${(props) => getBlocksColor(props.mode, props.backgroundColor)};
   box-shadow: ${(props) => props.boxShadow};
   border-radius: ${(props) => props.borderRadius};
   cursor: ${(props) => props.cursor};
@@ -30,9 +31,11 @@ const StyledBox = styled.div.withConfig({
 `;
 
 const Box = forwardRef<HTMLElement, BoxProps>(({ as = 'div', ...props }, ref) => {
+  const { mode } = useBlocksTheme();
   return (
     <StyledBox
       as={as}
+      mode={mode}
       ref={ref}
       {...props}
     />

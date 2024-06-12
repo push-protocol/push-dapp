@@ -6,8 +6,10 @@ import {
   CSSPropName,
   CSSPropValueType,
   DeviceSizeName,
+  ThemeModeColors,
   PixelValue,
-  ResponsiveCSSPropertyData
+  ResponsiveCSSPropertyData,
+  ThemeMode,
 } from './Blocks.types';
 
 /**
@@ -20,7 +22,7 @@ const getCSSValue = (propName: CSSPropName, value: CSSPropValueType | undefined)
     if (typeof value === 'string') {
       return value.replace(/\b(\w+)\b/g, 'var(--$1)');
     }
-  } else if (propName === 'gap') {
+  } else if (propName === 'gap' || propName === 'border-radius') {
     return `var(--${value})`;
   }
   return value;
@@ -105,7 +107,7 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
     tablet: '',
     laptop: '',
     laptopL: '',
-    desktop: ''
+    desktop: '',
   };
 
   data.forEach(({ prop, propName }) => {
@@ -133,9 +135,14 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
  * @param color
  * @returns color as a css variable: var(--primary)
  */
-export const getBlocksColor = (color?: BlocksColors) => {
+export const getBlocksColor = (mode: ThemeMode, color?: BlocksColors | ThemeModeColors) => {
   // If color is not given return undefined, to avoid any breakages
   if (!color) return color;
+
+  // Handle the colors for light and dark mode
+  if (typeof color === 'object') {
+    return mode === 'dark' ? `var(--${color.dark})` : `var(--${color.light})`;
+  }
 
   // If passed a design system color then use color as a variable
   return `var(--${color})`;

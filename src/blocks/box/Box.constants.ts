@@ -1,6 +1,7 @@
+import { ModeProp } from '../Blocks.types';
 import { BoxCSSProps } from './Box.types';
 
-export const boxRestrictedCSSPropKeys: (keyof BoxCSSProps)[] = [
+export const boxRestrictedCSSPropKeys: (keyof BoxCSSProps | keyof ModeProp)[] = [
   'border',
   'borderRadius',
   'backgroundColor',
@@ -20,5 +21,6 @@ export const boxRestrictedCSSPropKeys: (keyof BoxCSSProps)[] = [
   'maxWidth',
   'minWidth',
   'padding',
-  'width'
+  'width',
+  'mode',
 ];
