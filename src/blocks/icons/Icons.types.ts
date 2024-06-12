@@ -1,8 +1,8 @@
-import { BlocksColors } from '../Blocks.types';
+import { BlocksColors, ThemeModeColors } from '../Blocks.types';
 
 export type IconProps = {
   /** Set icon fill color from design system */
-  color?: BlocksColors;
+  color?: BlocksColors | ThemeModeColors;
   /** Set width and height of icon in pixels */
   size?: number;
   /** Whether to scale icon according to font-size. Sets width and height to 1em. */
