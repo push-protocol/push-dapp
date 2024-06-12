@@ -2,7 +2,7 @@
 import { FC } from 'react';
 
 // Components
-import { Box, Text } from 'blocks';
+import { Box, IllustrationWrapper, Text } from 'blocks';
 
 export type ChatItemProps = {
   chat: any;
@@ -13,24 +13,31 @@ const ChatItem: FC<ChatItemProps> = ({ chat }) => {
       display="flex"
       justifyContent="space-between"
     >
-      <Box display="flex">
-        <Box
-          width="40px"
-          height="40px"
-        ></Box>
+      <Box
+        display="flex"
+        gap="s3"
+        justifyContent="center"
+      >
+        <IllustrationWrapper
+          height={48}
+          width={48}
+          componentName={chat.chatParticipant}
+          illustration={<img src={chat.chatPic} />}
+        />
         <Box
           display="flex"
           flexDirection="column"
+          justifyContent="center"
         >
           <Text
             variant="h5-semibold"
-            color="gray-1000"
+            color={{ light: 'gray-1000', dark: 'white' }}
           >
             {chat?.chatParticipant}
           </Text>
           <Text
             variant="c-regular"
-            color="gray-600"
+            color={{ light: 'gray-600', dark: 'gray-500' }}
           >
             {chat?.chatMsg?.messageContent}
           </Text>

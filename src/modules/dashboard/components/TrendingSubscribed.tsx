@@ -8,7 +8,6 @@ import { channelListTypeValues } from '../Dashboard.types';
 import { Box, Text } from 'blocks';
 import { TrendingChannelItemList } from './TrendingChannelItemList';
 import { SubscribedChannelItemList } from './SubscribedChannelItemList';
-import { css } from 'styled-components';
 
 const TrendingSubscribed = () => {
   const [selectedListType, setSelectedListType] = useState<(typeof channelListTypeValues)[number]>('trending channels');
@@ -21,7 +20,7 @@ const TrendingSubscribed = () => {
     >
       <Box width="100%">
         <Box
-          backgroundColor="gray-100"
+          backgroundColor={{ light: 'gray-100', dark: 'gray-1000' }}
           cursor="pointer"
           display="flex"
           gap="s2"
@@ -37,13 +36,13 @@ const TrendingSubscribed = () => {
               alignItems="center"
               padding="s2 s3"
               borderRadius="var(--r3)"
-              backgroundColor={selectedListType === listType ? 'white' : 'transparent'}
+              backgroundColor={selectedListType === listType ? { dark: 'gray-800', light: 'white' } : 'transparent'}
               onClick={() => setSelectedListType(listType)}
             >
               <Text
-                color="gray-1000"
+                color={{ light: 'gray-1000', dark: 'white' }}
                 variant="h5-semibold"
-                transform="capitalize"
+                textTransform="capitalize"
               >
                 {listType}
               </Text>
@@ -55,11 +54,8 @@ const TrendingSubscribed = () => {
         display="flex"
         flexDirection="column"
         borderRadius="var(--r6)"
-        border="1px solid #E5E5E5"
+        border={'1px solid #E5E5E5'}
         padding="s0 s4"
-        // css={css`
-        //   gap: 6px;
-        // `}
       >
         {selectedListType === 'trending channels' && <TrendingChannelItemList />}
         {selectedListType === 'subscribed' && <SubscribedChannelItemList />}

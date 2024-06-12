@@ -25,13 +25,13 @@ const ChannelItem: FC<ChannelItemProps> = ({ channelDetails }) => {
         >
           <Text
             variant="h5-semibold"
-            color="gray-1000"
+            color={{ light: 'gray-1000', dark: 'white' }}
           >
             Unstoppable Domains
           </Text>
           <Text
             variant="c-regular"
-            color="gray-600"
+            color={{ light: 'gray-600', dark: 'gray-500' }}
           >
             555 subscribers
           </Text>

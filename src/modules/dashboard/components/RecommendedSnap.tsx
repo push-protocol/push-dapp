@@ -15,7 +15,7 @@ const RecommendedSnap = () => {
       gap="s6"
     >
       <Text
-        color="gray-1000"
+        color={{ light: 'gray-1000', dark: 'white' }}
         variant="h4-bold"
       >
         Recommended Chats
@@ -61,7 +61,7 @@ const RecommendedSnap = () => {
           <Text variant="h5-semibold">Receive Instant Notifications in Metamask with Push Snap.</Text>
         </Box>
         <Button
-          variant="tertiary"
+          variant={'tertiary'}
           size="small"
         >
           Get Push Snap

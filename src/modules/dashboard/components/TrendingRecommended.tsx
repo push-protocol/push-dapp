@@ -11,7 +11,7 @@ export type TrendingRecommendedProps = {};
 const TrendingRecommended: FC<TrendingRecommendedProps> = () => {
   return (
     <Box
-      backgroundColor="white"
+      backgroundColor={{ dark: 'gray-900', light: 'white' }}
       borderRadius="var(--r6)"
       padding="s6"
       display="flex"
