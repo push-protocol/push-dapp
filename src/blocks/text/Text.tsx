@@ -2,7 +2,7 @@ import { ReactNode, forwardRef } from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
 import { useBlocksTheme } from '../Blocks.hooks';
-import { BlockWithoutStyleProp, BlocksColors, ModeProp, ThemeModeColors } from '../Blocks.types';
+import { TransformedHTMLAttributes, BlocksColors, ModeProp, ThemeModeColors } from '../Blocks.types';
 import { getBlocksColor } from '../Blocks.utils';
 import { TextAlign, TextHTMLTags, TextTransform, TextVariants } from './Text.types';
 import { getVariantStyles } from './Text.utils';
@@ -30,7 +30,7 @@ export type TextProps = {
   variant?: TextVariants;
   /* Sets the css wrap property to move the text to next line in case of overflow */
   wrap?: boolean;
-} & BlockWithoutStyleProp<HTMLParagraphElement | HTMLSpanElement>;
+} & TransformedHTMLAttributes<HTMLParagraphElement | HTMLSpanElement>;
 
 const StyledText = styled.p.withConfig({
   shouldForwardProp: (prop, defaultValidatorFn) => !['mode'].includes(prop) && defaultValidatorFn(prop),
