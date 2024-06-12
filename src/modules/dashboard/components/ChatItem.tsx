@@ -1,5 +1,8 @@
-import { Box, Text } from 'blocks';
+// React and other libraries
 import { FC } from 'react';
+
+// Components
+import { Box, Text } from 'blocks';
 
 export type ChatItemProps = {
   chat: any;
@@ -8,7 +11,7 @@ const ChatItem: FC<ChatItemProps> = ({ chat }) => {
   return (
     <Box
       display="flex"
-      flexDirection="column"
+      justifyContent="space-between"
     >
       <Box display="flex">
         <Box
@@ -21,18 +24,22 @@ const ChatItem: FC<ChatItemProps> = ({ chat }) => {
         >
           <Text
             variant="h5-semibold"
-            color="black"
+            color="gray-1000"
           >
-            Unstoppable Domains
+            {chat?.chatParticipant}
           </Text>
           <Text
             variant="c-regular"
             color="gray-600"
           >
-            555 subscribers
+            {chat?.chatMsg?.messageContent}
           </Text>
         </Box>
       </Box>
+      <Box
+        width="40px"
+        height="40px"
+      ></Box>
     </Box>
   );
 };

@@ -1,8 +1,11 @@
-import { FC, useState } from 'react';
-import { Box, Text } from 'blocks';
+// React and other libraries
+import { FC } from 'react';
 
+// Components
+import { Box } from 'blocks';
 import { RecommendedSnap } from './RecommendedSnap';
 import { TrendingSubscribed } from './TrendingSubscribed';
+
 export type TrendingRecommendedProps = {};
 
 const TrendingRecommended: FC<TrendingRecommendedProps> = () => {

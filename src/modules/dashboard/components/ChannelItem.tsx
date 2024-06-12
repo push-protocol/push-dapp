@@ -1,5 +1,8 @@
-import { Box, Text } from 'blocks';
+// React and other libraries
 import { FC } from 'react';
+
+// Components
+import { Box, Separator, Text } from 'blocks';
 
 export type ChannelItemProps = {
   channelDetails: any;
@@ -9,6 +12,7 @@ const ChannelItem: FC<ChannelItemProps> = ({ channelDetails }) => {
     <Box
       display="flex"
       flexDirection="column"
+      margin="s2"
     >
       <Box display="flex">
         <Box
@@ -21,7 +25,7 @@ const ChannelItem: FC<ChannelItemProps> = ({ channelDetails }) => {
         >
           <Text
             variant="h5-semibold"
-            color="black"
+            color="gray-1000"
           >
             Unstoppable Domains
           </Text>

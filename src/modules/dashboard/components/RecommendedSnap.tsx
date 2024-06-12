@@ -1,7 +1,9 @@
-import { ChatPreview } from '@pushprotocol/uiweb';
-import { Box, Text, Button } from 'blocks';
-import RecommendedChatLists from 'config/RecommendedChatsList';
+// Third-party libraries
 import { css } from 'styled-components';
+
+// Components
+import RecommendedChatLists from 'config/RecommendedChatsList';
+import { Box, Text, Button } from 'blocks';
 import { ChatItem } from './ChatItem';
 
 const RecommendedSnap = () => {
@@ -21,29 +23,17 @@ const RecommendedSnap = () => {
       <Box
         display="flex"
         flexDirection="column"
+        gap="s4"
         borderRadius="var(--r6)"
         border="1px solid #E5E5E5"
         padding="s4"
       >
         {RecommendedChatLists.map((item, index) => {
           return (
-            <Box display="flex">
-              <ChatItem
-                key={index}
-                chat={item.payload}
-              />
-              {/* change to different component */}
-              {/* <ChatPreview
-                key={index}
-                chatPreviewPayload={item.payload}
-                // selected={item.payload.chatId === chatId ? true : false}
-                // setSelected={(chatId, chatParticipant) => {
-                //   const chatParticipantRemapped = getChatParticipant(chatParticipant);
-                //   setChatId(chatId);
-                //   onChatSelected(chatId, chatParticipantRemapped);
-                // }}
-              /> */}
-            </Box>
+            <ChatItem
+              key={index}
+              chat={item.payload}
+            />
           );
         })}
       </Box>
@@ -51,7 +41,6 @@ const RecommendedSnap = () => {
         display="flex"
         gap="s3"
         borderRadius="var(--r6)"
-        border="1px solid #E5E5E5"
         padding="s4"
         alignItems="center"
         flexDirection={{ ml: 'column' }}

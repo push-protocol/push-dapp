@@ -1,8 +1,14 @@
-import { Box, Text } from 'blocks';
-import { channelListTypeValues } from '../Dashboard.types';
-import { TrendingChannelItemList } from './TrendingChannelItemList';
+// React and other libraries
 import { useState } from 'react';
+
+// Constants
+import { channelListTypeValues } from '../Dashboard.types';
+
+// Components
+import { Box, Text } from 'blocks';
+import { TrendingChannelItemList } from './TrendingChannelItemList';
 import { SubscribedChannelItemList } from './SubscribedChannelItemList';
+import { css } from 'styled-components';
 
 const TrendingSubscribed = () => {
   const [selectedListType, setSelectedListType] = useState<(typeof channelListTypeValues)[number]>('trending channels');
@@ -11,7 +17,7 @@ const TrendingSubscribed = () => {
       display="flex"
       flexDirection="column"
       width={{ ml: '100%', initial: '50%' }}
-      gap="s4"
+      gap="s3"
     >
       <Box width="100%">
         <Box
@@ -22,18 +28,19 @@ const TrendingSubscribed = () => {
           padding="s1"
           height="fit-content"
           borderRadius="var(--r3)"
-          width={{ ll: '100%', initial: '60%' }}
+          width={{ ll: '100%', initial: '50%' }}
         >
           {channelListTypeValues.map((listType) => (
             <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
               padding="s2 s3"
-              width="100%"
               borderRadius="var(--r3)"
               backgroundColor={selectedListType === listType ? 'white' : 'transparent'}
               onClick={() => setSelectedListType(listType)}
             >
               <Text
-                align="center"
                 color="gray-1000"
                 variant="h5-semibold"
                 transform="capitalize"
@@ -49,8 +56,10 @@ const TrendingSubscribed = () => {
         flexDirection="column"
         borderRadius="var(--r6)"
         border="1px solid #E5E5E5"
-        padding="s4"
-        gap="s3"
+        padding="s0 s4"
+        // css={css`
+        //   gap: 6px;
+        // `}
       >
         {selectedListType === 'trending channels' && <TrendingChannelItemList />}
         {selectedListType === 'subscribed' && <SubscribedChannelItemList />}
