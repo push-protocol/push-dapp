@@ -11,6 +11,7 @@ import {
   ResponsiveCSSPropertyData,
   ThemeMode,
   ThemeModeBorder,
+  BorderValue,
 } from './Blocks.types';
 
 /**
@@ -153,14 +154,15 @@ export const getBlocksColor = (mode: ThemeMode, color?: BlocksColors | ThemeMode
  * @param border
  * @returns border
  */
-export const getBlocksBorder = (mode: ThemeMode, border?: string | ThemeModeBorder) => {
+export const getBlocksBorder = (mode: ThemeMode, border?: BorderValue | ThemeModeBorder) => {
   // If border is not given return undefined, to avoid any breakages
   if (!border) return border;
   // Handle the border for light and dark mode
-  if (typeof border === 'object') {
-    return border[mode];
-  }
+  let borderValues;
+  if (typeof border === 'object') borderValues = border[mode].split(' ');
+  else borderValues = border.split(' ');
 
   // If passed a design system border then use border as a variable
-  return border;
+  borderValues[2] = `var(--${borderValues[2]})`;
+  return borderValues.join(' ');
 };
