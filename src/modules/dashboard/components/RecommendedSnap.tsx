@@ -1,12 +1,18 @@
 // Third-party libraries
+import { useNavigate } from 'react-router-dom';
 import { css } from 'styled-components';
 
 // Components
-import RecommendedChatLists from 'config/RecommendedChatsList';
 import { Box, Text, Button } from 'blocks';
 import { ChatItem } from './ChatItem';
+import { RecommendedChatList } from '../Dashboard.constants';
+import Metamask from 'blocks/illustrations/components/Metamask';
+import { useBlocksTheme } from 'blocks/Blocks.hooks';
 
 const RecommendedSnap = () => {
+  const navigate = useNavigate();
+  const { mode } = useBlocksTheme();
+
   return (
     <Box
       display="flex"
@@ -28,7 +34,7 @@ const RecommendedSnap = () => {
         border="1px solid #E5E5E5"
         padding="s4"
       >
-        {RecommendedChatLists.map((item, index) => {
+        {RecommendedChatList.map((item, index) => {
           return (
             <ChatItem
               key={index}
@@ -52,17 +58,19 @@ const RecommendedSnap = () => {
         <Box
           display="flex"
           flexDirection={{ ml: 'column' }}
-          alignItems={{ ml: 'center' }}
+          alignItems="center"
+          gap="s3"
         >
-          <Box
-            width="42px"
-            height="39px"
-          ></Box>
+          <Metamask />
           <Text variant="h5-semibold">Receive Instant Notifications in Metamask with Push Snap.</Text>
         </Box>
         <Button
-          variant={'tertiary'}
+          variant="tertiary"
+          css={css`
+            background-color: ${mode === 'dark' ? '#484d58' : ''};
+          `}
           size="small"
+          onClick={() => navigate('/snap')}
         >
           Get Push Snap
         </Button>

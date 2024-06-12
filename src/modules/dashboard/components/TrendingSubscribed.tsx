@@ -16,7 +16,7 @@ const TrendingSubscribed = () => {
       display="flex"
       flexDirection="column"
       width={{ ml: '100%', initial: '50%' }}
-      gap="s3"
+      gap="s4"
     >
       <Box width="100%">
         <Box
@@ -26,7 +26,7 @@ const TrendingSubscribed = () => {
           gap="s2"
           padding="s1"
           height="fit-content"
-          borderRadius="var(--r3)"
+          borderRadius="var(--r4)"
           width={{ ll: '100%', initial: '50%' }}
         >
           {channelListTypeValues.map((listType) => (
@@ -35,7 +35,7 @@ const TrendingSubscribed = () => {
               justifyContent="center"
               alignItems="center"
               padding="s2 s3"
-              borderRadius="var(--r3)"
+              borderRadius="var(--r4)"
               backgroundColor={selectedListType === listType ? { dark: 'gray-800', light: 'white' } : 'transparent'}
               onClick={() => setSelectedListType(listType)}
             >
@@ -55,7 +55,8 @@ const TrendingSubscribed = () => {
         flexDirection="column"
         borderRadius="var(--r6)"
         border={'1px solid #E5E5E5'}
-        padding="s0 s4"
+        padding="s2 s4"
+        // gap="s2"
       >
         {selectedListType === 'trending channels' && <TrendingChannelItemList />}
         {selectedListType === 'subscribed' && <SubscribedChannelItemList />}

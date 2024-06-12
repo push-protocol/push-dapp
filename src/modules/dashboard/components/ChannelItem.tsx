@@ -2,17 +2,20 @@
 import { FC } from 'react';
 
 // Components
-import { Box, Separator, Text } from 'blocks';
+import { Box, Button, InboxBell, Skeleton, Text } from 'blocks';
+import { useBlocksTheme } from 'blocks/Blocks.hooks';
+import { css } from 'styled-components';
 
 export type ChannelItemProps = {
   channelDetails: any;
 };
 const ChannelItem: FC<ChannelItemProps> = ({ channelDetails }) => {
+  const { mode } = useBlocksTheme();
   return (
     <Box
       display="flex"
-      flexDirection="column"
-      margin="s2"
+      justifyContent="space-between"
+      margin="s2 s0"
     >
       <Box display="flex">
         <Box
@@ -37,6 +40,14 @@ const ChannelItem: FC<ChannelItemProps> = ({ channelDetails }) => {
           </Text>
         </Box>
       </Box>
+      <Button
+        size="small"
+        iconOnly={<InboxBell />}
+        variant={'tertiary'}
+        css={css`
+          background-color: ${mode === 'dark' ? '#484d58' : ''};
+        `}
+      />
     </Box>
   );
 };

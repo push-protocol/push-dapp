@@ -128,35 +128,35 @@ export interface IUseSpaceReturnValues {
   CreateSpaceComponent: FC<ISpaceCreateWidgetProps>;
 }
 
-// Extend the console
-const extendConsole = () => {
-  'use strict';
-  try {
-    var disabledConsoles = {};
-    console.enable = function (level, enabled) {
-      if (window.console === 'undefined' || !window.console || window.console === null) {
-        window.console = {};
-      }
-      if (window.console[level] === 'undefined' || !window.console[level] || window.console[level] === null) {
-        window.console[level] = function () {};
-      }
-      if (enabled) {
-        if (disabledConsoles[level]) {
-          window.console[level] = disabledConsoles[level];
-        }
-      } else {
-        disabledConsoles[level] = window.console[level];
-        window.console[level] = function () {};
-      }
-    };
-  } catch (e) {
-    console.error('Extended console() threw an error!');
-    console.debug(e);
-  }
-};
+// // Extend the console
+// const extendConsole = () => {
+//   'use strict';
+//   try {
+//     var disabledConsoles = {};
+//     console.enable = function (level, enabled) {
+//       if (window.console === 'undefined' || !window.console || window.console === null) {
+//         window.console = {};
+//       }
+//       if (window.console[level] === 'undefined' || !window.console[level] || window.console[level] === null) {
+//         window.console[level] = function () {};
+//       }
+//       if (enabled) {
+//         if (disabledConsoles[level]) {
+//           window.console[level] = disabledConsoles[level];
+//         }
+//       } else {
+//         disabledConsoles[level] = window.console[level];
+//         window.console[level] = function () {};
+//       }
+//     };
+//   } catch (e) {
+//     console.error('Extended console() threw an error!');
+//     console.debug(e);
+//   }
+// };
 
-// extend console
-extendConsole();
+// // extend console
+// extendConsole();
 
 // Disable console but not on localhost
 if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
@@ -328,7 +328,7 @@ export default function App() {
           <ChatUIProvider
             user={userPushSDKInstance}
             theme={darkMode && darkChatTheme}
-            debug={false}
+            debug={true}
             uiConfig={{
               suppressToast: false,
             }}
