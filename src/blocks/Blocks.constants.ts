@@ -1,6 +1,6 @@
 import { DeviceSizeName, DeviceSize, Breakpoint } from './Blocks.types';
 
-export const DeviceSizes: Record<DeviceSizeName, DeviceSize> = {
+export const deviceSizes: Record<DeviceSizeName, DeviceSize> = {
   mobileS: '320px',
   mobileM: '375px',
   mobileL: '425px',
@@ -10,14 +10,14 @@ export const DeviceSizes: Record<DeviceSizeName, DeviceSize> = {
   desktop: '2560px',
 };
 
-export const DeviceMediaQ: Record<DeviceSizeName, `(max-width: ${DeviceSize})`> = {
-  mobileS: `(max-width: ${DeviceSizes.mobileS})`,
-  mobileM: `(max-width: ${DeviceSizes.mobileM})`,
-  mobileL: `(max-width: ${DeviceSizes.mobileL})`,
-  tablet: `(max-width: ${DeviceSizes.tablet})`,
-  laptop: `(max-width: ${DeviceSizes.laptop})`,
-  laptopL: `(max-width: ${DeviceSizes.laptopL})`,
-  desktop: `(max-width: ${DeviceSizes.desktop})`,
+export const deviceMediaQ: Record<DeviceSizeName, `(max-width: ${DeviceSize})`> = {
+  mobileS: `(max-width: ${deviceSizes.mobileS})`,
+  mobileM: `(max-width: ${deviceSizes.mobileM})`,
+  mobileL: `(max-width: ${deviceSizes.mobileL})`,
+  tablet: `(max-width: ${deviceSizes.tablet})`,
+  laptop: `(max-width: ${deviceSizes.laptop})`,
+  laptopL: `(max-width: ${deviceSizes.laptopL})`,
+  desktop: `(max-width: ${deviceSizes.desktop})`,
 };
 
 export const breakpointMap: Record<Breakpoint | 'initial', DeviceSizeName | ''> = {
