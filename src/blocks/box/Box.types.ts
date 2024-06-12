@@ -1,13 +1,15 @@
 import { CSSProperties, ReactNode } from 'react';
 
-import { ResponsiveProp, SpaceType, ValueOf } from '../Blocks.types';
+import { BlocksColors, ResponsiveProp, SpaceType, ThemeModeColors, ValueOf } from '../Blocks.types';
 import { FlattenSimpleInterpolation } from 'styled-components';
 
 export type BoxResponsiveProps = {
   /* Sets align-items css property */
   alignItems?: ResponsiveProp<CSSProperties['alignItems']>;
   /* Sets flex-direction css property */
-  direction?: ResponsiveProp<CSSProperties['flexDirection']>;
+  flexDirection?: ResponsiveProp<CSSProperties['flexDirection']>;
+  /* Sets gap between the elements */
+  gap?: ResponsiveProp<SpaceType>;
   /* Sets display css property */
   display?: ResponsiveProp<CSSProperties['display']>;
   /* Sets height css property */
@@ -15,17 +17,17 @@ export type BoxResponsiveProps = {
   /* Sets justify-content css property */
   justifyContent?: ResponsiveProp<CSSProperties['justifyContent']>;
   /* Sets margin css property */
-  m?: ResponsiveProp<SpaceType>;
+  margin?: ResponsiveProp<SpaceType>;
   /* Sets max-height css property */
-  maxH?: ResponsiveProp<string>;
+  maxHeight?: ResponsiveProp<string>;
   /* Sets min-height css property */
-  minH?: ResponsiveProp<string>;
+  minHeight?: ResponsiveProp<string>;
   /* Sets max-width css property */
-  maxW?: ResponsiveProp<string>;
+  maxWidth?: ResponsiveProp<string>;
   /* Sets min-width css property */
-  minW?: ResponsiveProp<string>;
+  minWidth?: ResponsiveProp<string>;
   /* Sets padding css property */
-  p?: ResponsiveProp<SpaceType>;
+  padding?: ResponsiveProp<SpaceType>;
   /* Sets width css property */
   width?: ResponsiveProp<string>;
 };
@@ -36,15 +38,15 @@ export type BoxNonResponsiveProps = {
   /* Sets border-radius css property */
   borderRadius?: string;
   /* Sets background-color css property */
-  bg?: ResponsiveProp<string>;
+  backgroundColor?: BlocksColors | ThemeModeColors;
   /* Sets color css property */
-  color?: string;
+  color?: BlocksColors | ThemeModeColors;
   /* Sets cursor css property */
   cursor?: CSSProperties['cursor'];
   /* Sets position css property */
   position?: CSSProperties['position'];
   /* Sets box-shadow css property */
-  shadow?: string;
+  boxShadow?: string;
 };
 
 export type BoxCSSProps = BoxResponsiveProps & BoxNonResponsiveProps;
@@ -64,6 +66,7 @@ export type BoxResponsiveCSSProperties =
   | 'align-items'
   | 'display'
   | 'flex-direction'
+  | 'gap'
   | 'height'
   | 'justify-content'
   | 'margin'

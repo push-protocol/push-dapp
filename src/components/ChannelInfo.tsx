@@ -382,7 +382,6 @@ const Label = styled.div`
 `;
 
 const TimeBoundToggleContainer = styled(ItemHV2)`
-  height: 25px;
   margin-left: 1.3rem;
   padding: 12px 18px;
   cursor: pointer;
