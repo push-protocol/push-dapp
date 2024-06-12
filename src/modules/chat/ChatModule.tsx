@@ -6,8 +6,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 // External Packages
 import { CONSTANTS } from '@pushprotocol/restapi';
 import ReactGA from 'react-ga';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useSelector } from 'react-redux';
 import { ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
