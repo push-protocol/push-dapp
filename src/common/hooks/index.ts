@@ -1,0 +1,1 @@
+export { useSmoothCarousel } from './useSmoothScroll';

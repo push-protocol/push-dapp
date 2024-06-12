@@ -11,9 +11,25 @@ export const FeaturedNotificationChannels = [
     channelName: 'Wallet Tracker',
     isVerified: true,
     Chains: ['Ethereum'],
-    subscribersCount: 78,
+    subscribersCount: 1000,
     channelDescription: 'Monitor your wallet activity. Get notified when you send or receive tokens.',
     channelAddress: '0x0f0aE1ceEBc4b5aB14A47202eD6A52D3ef698b5B'
+  },
+  {
+    channelName: 'Coindesk',
+    isVerified: true,
+    Chains: ['Ethereum'],
+    subscribersCount: 33500,
+    channelDescription: 'Crypto news notifications with analysis and live price updates.',
+    channelAddress: '0xe56f1D3EDFFF1f25855aEF744caFE7991c224FFF'
+  },
+  {
+    channelName: 'Coindesk',
+    isVerified: true,
+    Chains: ['Ethereum'],
+    subscribersCount: 33050,
+    channelDescription: 'Crypto news notifications with analysis and live price updates.',
+    channelAddress: '0xe56f1D3EDFFF1f25855aEF744caFE7991c224FFF'
   },
   {
     channelName: 'Coindesk',
