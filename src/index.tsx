@@ -5,6 +5,8 @@ import ReactDOM from 'react-dom/client';
 // External Packages
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 // Internal Components
 import App from './App';
@@ -27,6 +29,7 @@ dotEnvConfig();
 const publicURL = import.meta.env.PUBLIC_URL;
 
 const previewBasePath = getPreviewBasePath();
+const queryClient = new QueryClient({});
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <BrowserRouter basename={previewBasePath || publicURL}>
@@ -36,7 +39,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <ErrorContextProvider>
             <AppContextProvider>
               <VideoCallContextProvider>
-                <App />
+                <QueryClientProvider client={queryClient}>
+                  <App />
+                  <ReactQueryDevtools initialIsOpen={false} />
+                </QueryClientProvider>
               </VideoCallContextProvider>
             </AppContextProvider>
           </ErrorContextProvider>

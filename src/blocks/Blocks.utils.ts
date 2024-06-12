@@ -9,7 +9,9 @@ import {
   ThemeModeColors,
   PixelValue,
   ResponsiveCSSPropertyData,
-  ThemeMode
+  ThemeMode,
+  ThemeModeBorder,
+  BorderValue
 } from './Blocks.types';
 
 /**
@@ -141,9 +143,26 @@ export const getBlocksColor = (mode: ThemeMode, color?: BlocksColors | ThemeMode
 
   // Handle the colors for light and dark mode
   if (typeof color === 'object') {
-    return mode === 'dark' ? `var(--${color.dark})` : `var(--${color.light})`;
+    return `var(--${color[mode]})`;
   }
 
   // If passed a design system color then use color as a variable
   return `var(--${color})`;
+};
+
+/**
+ * @param border
+ * @returns border
+ */
+export const getBlocksBorder = (mode: ThemeMode, border?: BorderValue | ThemeModeBorder) => {
+  // If border is not given return undefined, to avoid any breakages
+  if (!border) return border;
+  // Handle the border for light and dark mode
+  let borderValues;
+  if (typeof border === 'object') borderValues = border[mode].split(' ');
+  else borderValues = border.split(' ');
+
+  // If passed a design system border then use border as a variable
+  borderValues[2] = `var(--${borderValues[2]})`;
+  return borderValues.join(' ');
 };
