@@ -3,6 +3,9 @@ import { useState } from 'react';
 
 import { css } from 'styled-components';
 
+//Hooks
+import { useAccount } from 'hooks';
+
 // Constants
 import { channelListTypeValues } from '../Dashboard.types';
 
@@ -13,6 +16,7 @@ import { SubscribedChannelItemList } from './SubscribedChannelItemList';
 
 const TrendingSubscribed = () => {
   const [selectedListType, setSelectedListType] = useState<(typeof channelListTypeValues)[number]>('trending channels');
+  const { wallet } = useAccount();
   return (
     <Box
       display="flex"
@@ -30,7 +34,7 @@ const TrendingSubscribed = () => {
           height="fit-content"
           justifyContent="space-between"
           borderRadius="var(--r4)"
-          width={{ lp: 'auto', initial: '50%' }}
+          width={{ lp: 'auto', initial: 'fit-content' }}
         >
           {channelListTypeValues.map((listType) => (
             <Box
@@ -51,7 +55,7 @@ const TrendingSubscribed = () => {
                 variant="h5-semibold"
                 textTransform="capitalize"
               >
-                {listType}
+                {listType === 'subscribed' ? (!wallet?.accounts?.length ? 'hottest channels' : listType) : listType}
               </Text>
             </Box>
           ))}
