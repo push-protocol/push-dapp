@@ -1,5 +1,5 @@
 // Components
-import { Separator } from 'blocks';
+import { Box, Separator } from 'blocks';
 import { ChannelItem } from './ChannelItem';
 import { useGetTrendingChannels } from 'queries/hooks';
 import { TrendingChannelsType } from '../Dashboard.types';
@@ -32,13 +32,13 @@ const TrendingChannelItemList = () => {
   }, [currentData, weekData]);
 
   return trendingChannels.map((channel, index) => (
-    <>
+    <Box>
       <ChannelItem
         key={index}
         channelAddress={channel}
       />
       {index != trendingChannels.length - 1 && <Separator />}
-    </>
+    </Box>
   ));
 };
 

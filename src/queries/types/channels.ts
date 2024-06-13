@@ -28,7 +28,7 @@ export type ChannelDetails = {
   subscriberCount: number;
   icon: string;
   url: string;
-  aliasAddress: string | null;
+  aliasBlockchainId: string | null;
   channelSettings: string;
 };
 export type ChannelDetailsResponse = {

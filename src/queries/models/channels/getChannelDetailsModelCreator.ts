@@ -6,6 +6,6 @@ export const getChannelDetailsModelCreator = (response: ChannelDetailsResponse):
   subscriberCount: response.subscriber_count,
   icon: response.icon,
   url: response.url,
-  aliasAddress: response.alias_address,
+  aliasBlockchainId: response.alias_blockchain_id,
   channelSettings: response.channel_settings,
 });

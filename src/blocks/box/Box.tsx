@@ -23,6 +23,7 @@ const StyledBox = styled.div.withConfig({
   box-shadow: ${(props) => props.boxShadow};
   border-radius: ${(props) => props.borderRadius};
   cursor: ${(props) => props.cursor};
+  overflow: ${(props) => props.overflow};
   border: ${(props) => getBlocksBorder(props.mode, props.border)};
   position: ${(props) => props.position};
 

@@ -2,7 +2,7 @@
 import { FC } from 'react';
 
 // Components
-import { Box, Button, InboxBell, Text } from 'blocks';
+import { Box, Button, InboxBell, Skeleton, Text } from 'blocks';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { css } from 'styled-components';
 import { useGetChannelDetails } from 'queries';
@@ -10,12 +10,14 @@ import { useGetChannelDetails } from 'queries';
 export type ChannelItemProps = {
   channelAddress: string;
   subscribed?: boolean;
+  isLoading?: boolean;
+  isPending?: boolean;
 };
-const ChannelItem: FC<ChannelItemProps> = ({ channelAddress, subscribed = false }) => {
+const ChannelItem: FC<ChannelItemProps> = ({ channelAddress, subscribed = false, isLoading, isPending }) => {
   const { mode } = useBlocksTheme();
   const { data: channelDetails } = useGetChannelDetails(channelAddress);
-
-  return channelDetails ? (
+  console.debug(channelDetails);
+  return (
     <Box
       display="flex"
       justifyContent="space-between"
@@ -25,39 +27,46 @@ const ChannelItem: FC<ChannelItemProps> = ({ channelAddress, subscribed = false 
         display="flex"
         gap="s3"
       >
-        <Box
-          width="40px"
-          height="40px"
-          borderRadius="var(--r3)"
-          css={css`
-            overflow: hidden;
-          `}
-        >
-          <img
-            width="100%"
-            height="100%"
-            src={channelDetails.icon}
-            alt={channelDetails.name}
-          />
-        </Box>
+        <Skeleton isLoading={isLoading || isPending}>
+          <Box
+            width="40px"
+            height="40px"
+            borderRadius="var(--r3)"
+            css={css`
+              overflow: hidden;
+            `}
+          >
+            <img
+              width="100%"
+              height="100%"
+              src={channelDetails?.icon}
+              alt={channelDetails?.name}
+            />
+          </Box>
+        </Skeleton>
         <Box
           display="flex"
           flexDirection="column"
         >
-          <Text
-            variant="h5-semibold"
-            color={{ light: 'gray-1000', dark: 'white' }}
-          >
-            {channelDetails.name}
-          </Text>
-          <Text
-            variant="c-regular"
-            color={{ light: 'gray-600', dark: 'gray-500' }}
-          >
-            {channelDetails.subscriberCount} subscribers
-          </Text>
+          <Skeleton isLoading={isLoading || isPending}>
+            <Text
+              variant="h5-semibold"
+              color={{ light: 'gray-1000', dark: 'white' }}
+            >
+              {channelDetails?.name}
+            </Text>
+          </Skeleton>
+          <Skeleton isLoading={isLoading || isPending}>
+            <Text
+              variant="c-regular"
+              color={{ light: 'gray-600', dark: 'gray-500' }}
+            >
+              {channelDetails?.subscriberCount} subscribers
+            </Text>
+          </Skeleton>
         </Box>
       </Box>
+
       {subscribed && (
         <Button
           size="small"
@@ -69,7 +78,7 @@ const ChannelItem: FC<ChannelItemProps> = ({ channelAddress, subscribed = false 
         />
       )}
     </Box>
-  ) : null;
+  );
 };
 
 export { ChannelItem };
