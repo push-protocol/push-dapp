@@ -29,8 +29,8 @@ import RangeSlider from 'components/reusables/sliders/RangeSlider';
 interface OptinNotifSettingDropdownProps {
   children: ReactNode;
   channelDetail: any;
-  setLoading: (loading: boolean) => {};
-  onSuccessOptin: () => {};
+  setLoading: (loading: boolean) => void;
+  onSuccessOptin: () => void;
 }
 
 interface OptinNotifSettingDropdownContainerProps {

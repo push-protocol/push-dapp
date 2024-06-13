@@ -13,7 +13,7 @@ export type BoxProps = BoxCSSProps & BoxComponentProps & TransformedHTMLAttribut
 const StyledBox = styled.div.withConfig({
   shouldForwardProp: (prop, defaultValidatorFn) =>
     !boxRestrictedCSSPropKeys.includes(prop as keyof BoxCSSProps) && defaultValidatorFn(prop),
-})<BoxProps & ModeProp>`
+}) <BoxProps & ModeProp>`
   /* Responsive props */
   ${(props) => getBoxResponsiveCSS(props)}
 

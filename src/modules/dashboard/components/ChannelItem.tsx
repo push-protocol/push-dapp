@@ -1,22 +1,33 @@
 // React and other libraries
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 // Components
 import { Box, Button, InboxBell, Skeleton, Text } from 'blocks';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { css } from 'styled-components';
 import { useGetChannelDetails } from 'queries';
+import UnsubscribeChannelDropdown from 'common/components/UnsubscribeChannelDropdown';
+import { UserSetting } from '@pushprotocol/restapi';
 
 export type ChannelItemProps = {
   channelAddress: string;
-  subscribed?: boolean;
+  userSetting?: UserSetting[];
+  isSubscribed?: boolean;
+  setSubscribed?: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading?: boolean;
   isPending?: boolean;
 };
-const ChannelItem: FC<ChannelItemProps> = ({ channelAddress, subscribed = false, isLoading, isPending }) => {
+const ChannelItem: FC<ChannelItemProps> = ({
+  channelAddress,
+  userSetting = undefined,
+  isSubscribed = false,
+  setSubscribed,
+  isLoading,
+  isPending,
+}) => {
   const { mode } = useBlocksTheme();
   const { data: channelDetails } = useGetChannelDetails(channelAddress);
-  console.debug(channelDetails);
+  const [subscriberCount, setSubscriberCount] = useState(channelDetails?.subscriber_count || 0);
   return (
     <Box
       display="flex"
@@ -61,21 +72,28 @@ const ChannelItem: FC<ChannelItemProps> = ({ channelAddress, subscribed = false,
               variant="c-regular"
               color={{ light: 'gray-600', dark: 'gray-500' }}
             >
-              {channelDetails?.subscriberCount} subscribers
+              {channelDetails?.subscriber_count} subscribers
             </Text>
           </Skeleton>
         </Box>
       </Box>
 
-      {subscribed && (
-        <Button
-          size="small"
-          iconOnly={<InboxBell />}
-          variant={'tertiary'}
-          css={css`
-            background-color: ${mode === 'dark' ? '#484d58' : ''};
-          `}
-        />
+      {channelDetails && setSubscribed && (
+        <UnsubscribeChannelDropdown
+          channelDetail={channelDetails}
+          setSubscribed={setSubscribed}
+          setSubscriberCount={setSubscriberCount}
+          userSetting={userSetting}
+        >
+          <Button
+            size="small"
+            iconOnly={<InboxBell />}
+            variant={'tertiary'}
+            css={css`
+              background-color: ${mode === 'dark' ? '#484d58' : ''};
+            `}
+          />
+        </UnsubscribeChannelDropdown>
       )}
     </Box>
   );

@@ -4,7 +4,7 @@ import { ChannelItem } from './ChannelItem';
 import { useGetTrendingChannels } from 'queries/hooks';
 import { TrendingChannelsType } from '../Dashboard.types';
 import { TrendingChannelsResponse } from 'queries/types';
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { getTrendingChannelsData } from '../Dashboard.utils';
 
 const TrendingChannelItemList = () => {
@@ -30,7 +30,6 @@ const TrendingChannelItemList = () => {
     const channelsData = getTrendingChannelsData(weekData, currentData);
     setTrendingChannels(channelsData);
   }, [currentData, weekData]);
-
   return trendingChannels.map((channel, index) => (
     <Box>
       <ChannelItem

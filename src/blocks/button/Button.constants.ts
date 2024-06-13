@@ -144,12 +144,12 @@ export const buttonVariantStyles: ButtonVariantStyles = {
       background-color: var(--gray-200);
       color: var(--gray-300);
     }
-  `,
+  `
 };
 
 export const getButtonSizeStyles = ({
   iconOnly,
-  size,
+  size
 }: {
   iconOnly?: boolean;
   size: ButtonSize;
