@@ -22,16 +22,6 @@ export type TrendingChannelsResponse = {
   subscriberAnalytics: [SubscriberAnalytics];
 };
 
-export type ChannelDetails = {
-  id: number;
-  name: string;
-  subscriberCount: number;
-  icon: string;
-  url: string;
-  aliasAddress: string | null;
-  channelSettings: string;
-  info: string;
-};
 export type ChannelDetailsResponse = {
   activation_status: number;
   alias_address: string | null;

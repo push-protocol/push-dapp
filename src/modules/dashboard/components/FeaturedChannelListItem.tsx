@@ -48,7 +48,7 @@ const FeaturedChannelListItem: FC<FeaturedChannelListItemProps> = (props) => {
     if (channelDetails) {
       console.log("Subscribe Count checking", channelDetails, channel.channel);
       setSubscribed(subscriptionStatus[channel.channel]);
-      setSubscriberCount(channelDetails.subscriberCount);
+      setSubscriberCount(channelDetails.subscriber_count);
     }
   }, [subscriptionStatus, channelDetails]);
 
@@ -60,7 +60,6 @@ const FeaturedChannelListItem: FC<FeaturedChannelListItemProps> = (props) => {
 
   return (
     <>
-
       <Box
         display="flex"
         flexDirection="column"
@@ -94,7 +93,7 @@ const FeaturedChannelListItem: FC<FeaturedChannelListItemProps> = (props) => {
 
           </Skeleton>
 
-          {!subscribed && !isLoading && (
+          {!subscribed && !isLoading && channelDetails && (
             <SubscribeChannelDropdown
               channelDetails={channelDetails}
               setLoading={setLoading}
@@ -107,12 +106,12 @@ const FeaturedChannelListItem: FC<FeaturedChannelListItemProps> = (props) => {
             </SubscribeChannelDropdown>
           )}
 
-          {subscribed && !isLoading && (
+          {subscribed && !isLoading && channelDetails && (
             <UnsubscribeChannelDropdown
-              channelDetail={channel}
+              channelDetail={channelDetails}
               setSubscribed={setSubscribed}
               setSubscriberCount={setSubscriberCount}
-              userSetting={userSettings[channel.channel]}
+              userSetting={userSettings[channelDetails.channel]}
             >
               <Button
                 variant="secondary"
@@ -120,40 +119,10 @@ const FeaturedChannelListItem: FC<FeaturedChannelListItemProps> = (props) => {
                 leadingIcon={<NotificationMobile size={20} />}
                 trailingIcon={<CaretDown size={20} />}
               >
-                Unsubscribe
+                Subscribed
               </Button>
             </UnsubscribeChannelDropdown>
           )}
-
-
-          {/* {!subscribed ? (
-            <SubscribeChannelDropdown
-              channelDetails={channelDetails}
-              setLoading={setLoading}
-              setSubscribed={setSubscribed}
-              setSubscriberCount={setSubscriberCount}
-            >
-              <Button disabled={isLoading} variant="tertiary" size="small">
-                Subscribe
-              </Button>
-            </SubscribeChannelDropdown>
-          ) : (
-            <UnsubscribeChannelDropdown
-              channelDetail={channel}
-              setSubscribed={setSubscribed}
-              setSubscriberCount={setSubscriberCount}
-              userSetting={userSettings[channel.channel]}
-            >
-              <Button
-                variant="secondary"
-                size="small"
-                leadingIcon={<NotificationMobile size={20} />}
-                trailingIcon={<CaretDown size={20} />}
-              >
-                Unsubscribe
-              </Button>
-            </UnsubscribeChannelDropdown>
-          )} */}
         </Box>
         <Box display="flex" flexDirection="column" gap="s2">
           <Box display='flex' flexDirection='column' gap='s1' >

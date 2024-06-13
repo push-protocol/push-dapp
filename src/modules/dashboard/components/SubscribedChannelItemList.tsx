@@ -1,19 +1,25 @@
 // Components
-import { Separator } from 'blocks';
+import { Box, Separator } from 'blocks';
 import { ChannelItem } from './ChannelItem';
 import { useGetUserSubscriptions } from 'queries';
+import { useState } from 'react';
 
 const SubscribedChannelItemList = () => {
-  const { data: userSubscriptions } = useGetUserSubscriptions();
+  const { data: userSubscriptions, isLoading, isPending } = useGetUserSubscriptions();
+  const [subscribed, setSubscribed] = useState(true);
   return userSubscriptions?.map((channel, index) => (
-    <>
+    <Box>
       <ChannelItem
         key={index}
-        channelAddress={channel}
-        subscribed
+        channelAddress={channel.channel}
+        userSetting={channel.user_settings}
+        isSubscribed={subscribed}
+        setSubscribed={setSubscribed}
+        isLoading={isLoading}
+        isPending={isPending}
       />
       {index != userSubscriptions.length - 1 && <Separator />}
-    </>
+    </Box>
   ));
 };
 

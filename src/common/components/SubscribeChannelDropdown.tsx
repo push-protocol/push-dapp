@@ -1,10 +1,11 @@
 import OptinNotifSettingDropdown from 'components/dropdowns/OptinNotifSettingDropdown';
 import { ChannelDetailsProps } from 'modules/dashboard/configs/DashboardFeaturedChannels.config';
+import { ChannelDetailsResponse } from 'queries';
 import { FC, ReactNode } from 'react';
 
 interface SubscribeChannelDropdownProps {
   children: ReactNode;
-  channelDetails: ChannelDetailsProps;
+  channelDetails: ChannelDetailsResponse;
   setSubscribed: React.Dispatch<React.SetStateAction<boolean>>;
   setSubscriberCount: React.Dispatch<React.SetStateAction<number>>;
   setLoading: (value: boolean) => void;
@@ -16,7 +17,7 @@ const SubscribeChannelDropdown: FC<SubscribeChannelDropdownProps> = (options) =>
   const handleSubscriberCount = () => {
     setSubscribed(true);
     setSubscriberCount((prevSubscriberCount) => prevSubscriberCount + 1);
-  }
+  };
 
   return (
     <OptinNotifSettingDropdown

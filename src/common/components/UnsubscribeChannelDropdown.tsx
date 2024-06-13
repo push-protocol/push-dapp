@@ -1,21 +1,22 @@
-import ManageNotifSettingDropdown from "components/dropdowns/ManageNotifSettingDropdown";
-import { ChannelDetailsProps } from "modules/dashboard/configs/DashboardFeaturedChannels.config";
-import { FC, ReactNode } from "react";
+import ManageNotifSettingDropdown from 'components/dropdowns/ManageNotifSettingDropdown';
+import { ChannelDetailsProps } from 'modules/dashboard/configs/DashboardFeaturedChannels.config';
+import { FC, ReactNode } from 'react';
 import { UserSetting } from 'helpers/channel/types';
+import { ChannelDetailsResponse } from 'queries';
 
 interface UnsubscribeChannelDropdownProps {
   children: ReactNode;
-  channelDetail: ChannelDetailsProps;
+  channelDetail: ChannelDetailsResponse;
   centeronMobile?: boolean;
   setSubscribed: React.Dispatch<React.SetStateAction<boolean>>;
   setSubscriberCount: React.Dispatch<React.SetStateAction<number>>;
-  userSetting: UserSetting[];
+  userSetting: UserSetting[] | undefined;
 }
 
 const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = (options) => {
   const { children, centeronMobile = false, channelDetail, setSubscribed, setSubscriberCount, userSetting } = options;
 
-  console.log("Center on Mpbile", centeronMobile);
+  console.log('Center on Mpbile', centeronMobile);
 
   return (
     <ManageNotifSettingDropdown
