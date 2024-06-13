@@ -156,21 +156,21 @@ const extendConsole = () => {
 };
 
 // extend console
-extendConsole();
+// extendConsole();
 
 // Disable console but not on localhost
-if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-  if (appConfig?.appEnv === 'prod') {
-    console.enable('debug', false);
-    console.enable('log', false);
-    console.enable('info', false);
+// if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+//   if (appConfig?.appEnv === 'prod') {
+//     console.enable('debug', false);
+//     console.enable('log', false);
+//     console.enable('info', false);
 
-    // disable console.warn in prod
-    if (appConfig?.appEnv === 'prod') {
-      console.enable('warn', false);
-    }
-  }
-}
+//     // disable console.warn in prod
+//     if (appConfig?.appEnv === 'prod') {
+//       console.enable('warn', false);
+//     }
+//   }
+// }
 
 // Provess App
 export default function App() {

@@ -4,36 +4,31 @@ import styled, { FlattenSimpleInterpolation } from 'styled-components';
 import { blocksColors } from 'blocks/Blocks.colors';
 import { getVariantStyles } from '../text/Text.utils';
 import { getBlocksColor } from 'blocks/Blocks.utils';
+import { useBlocksTheme } from 'blocks/Blocks.hooks';
+import { BlockWithoutStyleProp, ModeProp } from 'blocks/Blocks.types';
+import { DropdownProps } from './Dropdown.types'
 
 
-type DropdownProps = {
-  children?: (isOpen: boolean) => ReactNode; // This will be content upon clicking on which the dropdown overlay will open
-  placement?: 'bottom' | 'bottomLeft' | 'top' | 'topRight' | 'bottomRight' | 'topLeft';
-  trigger: 'click' | 'hover'; // on which action to open the dropdown
-  css?: FlattenSimpleInterpolation; // This is used for custom css instead of style prop, check Box/Text component
-  overlay: ReactNode; // This will be the contents of the dropdown overlay
-};
-
-const StyledDropdown = styled.div<DropdownProps>`
-  /* Variant CSS */
-
-  // color: ${({ color }) => getBlocksColor(color)};
-  // background-color: white;
-  // border: 1px solid #4A4F67;
-  // border-radius: 24px;
-  // padding: 7px 20px 7px 15px;
-  // margin: 0px;
-
+const StyledDropdown = styled.div.withConfig({
+  shouldForwardProp: (prop, defaultValidatorFn) => !['mode'].includes(prop) && defaultValidatorFn(prop),
+})<DropdownProps & ModeProp>`
+   min-width: 200px;
+  
   .dropdown-item {
-    background-color: white;
-    border: 1px solid #4A4F67;
+    background-color: ${({ mode }) => getBlocksColor(mode, { light: 'white', dark: 'gray-900' })};
+    border: 1px solid ${({ mode }) => getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
     padding: 10px 15px;
     border-radius: 20px;
-    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
+    min-width: fit-content;
+    max-width: fit-content;
+    box-sizing: border-box;
 
+    &:hover {
+      cursor: pointer;
+    }
 
     span {
       font-size: 15px;
@@ -42,35 +37,52 @@ const StyledDropdown = styled.div<DropdownProps>`
     }
   }
 
-  .menu-item {
-      width: 100%;
+  .menu-overlay {
+    margin-top: 3px;
   }
-
-  /* Full width of parent container */
-
-  /* Responsive props */
 
   /* Extra CSS props */
   ${(props) => props.css || ''}
 `;
 
-const Dropdown = forwardRef<HTMLElement, DropdownProps>(({ overlay, children, ...props }, ref) => {
+const Dropdown = forwardRef<HTMLElement, DropdownProps>(({ overlay, trigger, children, ...props }, ref) => {
+  const { mode } = useBlocksTheme();
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleDropdownVisibleChange = (visible: boolean) => {
-    setIsOpen(visible);
-  }
+  const handleClick = () => {
+    if (trigger === 'click') {
+      setIsOpen(!isOpen);
+    }
+  };
+
+  const handleMouseEnter = () => {
+    if (trigger === 'hover') {
+      setIsOpen(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (trigger === 'hover') {
+      setIsOpen(false);
+    }
+  };
+
+
   return (
     <StyledDropdown
       ref={ref}
+      mode={mode}
+      trigger={trigger}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       {...props}
-      onVisibleChange={handleDropdownVisibleChange}
     >
-      <div className='dropdown-item'>
-          <span>Hey there</span>
+      <div className='dropdown-item' onClick={handleClick}
+      >
+          <span>Actions</span>
       </div>
 
-      <span className='menu-icon'>{overlay}</span>
+      {isOpen && <div className='menu-overlay'>{overlay}</div>}
 
       {/* {children(isOpen)} */}
     </StyledDropdown>

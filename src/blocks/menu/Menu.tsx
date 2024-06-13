@@ -2,41 +2,41 @@ import { FC,forwardRef } from 'react';
 import styled from 'styled-components';
 
 import { MenuProps } from './Menu.types';
-// import { getSeparatorResponsiveCSS } from './Menu.utils';
-// import { separatorRestrictedPropsKeys } from './Menu.constants';\
 import { blocksColors } from 'blocks/Blocks.colors';
 import { getVariantStyles } from '../text/Text.utils';
 import { getBlocksColor } from 'blocks/Blocks.utils';
-import { BlockWithoutStyleProp } from 'blocks/Blocks.types';
+import { BlockWithoutStyleProp, ModeProp } from 'blocks/Blocks.types';
+import { useBlocksTheme } from 'blocks/Blocks.hooks';
 
 
 
-// export type MenuProps = MenuCSSProps & MenuComponentProps & BlockWithoutStyleProp<HTMLDivElement>;
 
-const StyledMenu = styled.div<MenuProps>`
-  /* Variant CSS */
-  // ${({ variant }) => getVariantStyles(variant)};
-
-  // color: ${({ color }) => getBlocksColor(color)};
-  background-color: white;
-  border: 1px solid #4A4F67;
-  border-radius: 24px;
-  padding: 7px 20px 7px 15px;
+const StyledMenu = styled.div.withConfig({
+  shouldForwardProp: (prop, defaultValidatorFn) => !['mode'].includes(prop) && defaultValidatorFn(prop),
+})<MenuProps & ModeProp>`
+  background-color: ${({ mode }) => getBlocksColor(mode, { light: 'white', dark: 'gray-900' })};
+  border: 1px solid ${({ mode }) => getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
+  border-radius: 12px;
+  padding: 8px;
   margin: 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 
   /* Full width of parent container */
-
-  /* Responsive props */
 
   /* Extra CSS props */
   ${(props) => props.css || ''}
 `;
 
 const Menu = forwardRef<HTMLElement, MenuProps>(({ children ,...props }, ref) => {
+  const { mode } = useBlocksTheme();
+
+
   return (
     <StyledMenu
-      // as={as}
       ref={ref}
+      mode={mode}
       {...props}
     >
       {children}
