@@ -98,7 +98,7 @@ const ManageNotifSettingDropdownContainer: FC<ManageNotifSettingDropdownContaine
             <LoaderSpinner
               type={LOADER_TYPE.SEAMLESS}
               spinnerSize={16}
-              spinnerColor="#FFF"
+              spinnerColor="#000"
             />
           )}
           {!txInProgress && <ActionTitle hideIt={txInProgress}>Opt-out</ActionTitle>}
@@ -136,7 +136,7 @@ const ManageNotifSettingDropdown: FC<ManageNotifSettingDropdownProps> = (options
 
   const unsubscribeToast = useToast();
   const optOutHandler = async ({ setLoading }: { setLoading?: Dispatch<SetStateAction<boolean>> }) => {
-    const setLoadingFunc = setLoading || (() => {});
+    const setLoadingFunc = setLoading || (() => { });
     setLoadingFunc(true);
     let userPushInstance = userPushSDKInstance;
 

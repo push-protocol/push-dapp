@@ -402,8 +402,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
     setToolTipheight(containerHeight?.top);
   };
 
-  console.log("Channel Object >>", channelObject);
-
   // render
   return (
     <Container

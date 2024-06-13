@@ -1,7 +1,10 @@
+// React + Web3 Essentials
 import { FC, useState } from 'react';
-import { Add, Box, Button, Dash, HoverableSVG, Text } from 'blocks';
-import IllustrationComponent from './components/IllustrationComponent';
-import FeaturedNotificationComponent from './components/FeaturedNotificationComponent';
+
+// Internal Components
+import { Add, Box, Dash, HoverableSVG, Text } from 'blocks';
+import { IllustrationComponent } from './components/IllustrationComponent';
+import { FeaturedNotificationComponent } from './components/FeaturedNotificationComponent';
 
 
 export type DashboardProps = {}
@@ -11,7 +14,9 @@ const Dashboard: FC<DashboardProps> = () => {
   const [showWelcomeIllustrations, setShowWelcomeIllustrations] = useState(true);
 
   return (
-    <Box height="100vh" padding='s4 s7 s0 s7' >
+    <Box height="100vh"
+      padding='s4 s7 s0 s7'
+    >
 
       <Box flexDirection='row' display='flex' justifyContent='space-between'>
         <Box flexDirection='row' display='flex' gap='s3'>
@@ -33,6 +38,7 @@ const Dashboard: FC<DashboardProps> = () => {
       <FeaturedNotificationComponent />
 
     </Box>
+
   );
 };
 
