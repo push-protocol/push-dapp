@@ -17,7 +17,7 @@ const Dashboard: FC<DashboardProps> = () => {
       flexDirection="column"
       display="flex"
       margin="s4 s6 s4 s6"
-      gap="s6"
+      gap={{ ml: "s6" }}
     >
       <Box
         flexDirection="row"
@@ -38,7 +38,7 @@ const Dashboard: FC<DashboardProps> = () => {
           </Text>
         </Box>
 
-        <Box onClick={() => setShowWelcomeIllustrations(!showWelcomeIllustrations)}>
+        <Box display='flex' alignItems='center' onClick={() => setShowWelcomeIllustrations(!showWelcomeIllustrations)}>
           {showWelcomeIllustrations ? (
             <HoverableSVG
               icon={
@@ -59,6 +59,7 @@ const Dashboard: FC<DashboardProps> = () => {
             ></HoverableSVG>
           )}
         </Box>
+
       </Box>
 
       {showWelcomeIllustrations && <IllustrationComponent />}
