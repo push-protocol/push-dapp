@@ -1,4 +1,4 @@
-import { ReactNode, forwardRef } from 'react';
+import { ReactNode, forwardRef, useState } from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
 import { blocksColors } from 'blocks/Blocks.colors';
@@ -24,6 +24,28 @@ const StyledDropdown = styled.div<DropdownProps>`
   // padding: 7px 20px 7px 15px;
   // margin: 0px;
 
+  .dropdown-item {
+    background-color: white;
+    border: 1px solid #4A4F67;
+    padding: 10px 15px;
+    border-radius: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+
+    span {
+      font-size: 15px;
+      font-weight: 400;
+      color: #657795;
+    }
+  }
+
+  .menu-item {
+      width: 100%;
+  }
+
   /* Full width of parent container */
 
   /* Responsive props */
@@ -44,10 +66,13 @@ const Dropdown = forwardRef<HTMLElement, DropdownProps>(({ overlay, children, ..
       {...props}
       onVisibleChange={handleDropdownVisibleChange}
     >
+      <div className='dropdown-item'>
+          <span>Hey there</span>
+      </div>
 
       <span className='menu-icon'>{overlay}</span>
 
-      {children(isOpen)}
+      {/* {children(isOpen)} */}
     </StyledDropdown>
   );
 });
