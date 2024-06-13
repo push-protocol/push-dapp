@@ -53,7 +53,6 @@ const ChannelsPage = ({ loadTeaser, playTeaser, channelID }) => {
               onClick={() => {}}
               label="Delete"
             />
-            toggleButton
       </Menu>
         }
       >
