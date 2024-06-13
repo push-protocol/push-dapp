@@ -2,12 +2,13 @@
 import { FC } from 'react';
 
 // Components
-import { Box, Button, InboxBell, Skeleton, Text } from 'blocks';
+import { Box, Button, InboxBell, Text } from 'blocks';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { css } from 'styled-components';
+import { TrendingChannelsType } from '../Dashboard.types';
 
 export type ChannelItemProps = {
-  channelDetails: any;
+  channelDetails: TrendingChannelsType & { subscribed?: boolean };
 };
 const ChannelItem: FC<ChannelItemProps> = ({ channelDetails }) => {
   const { mode } = useBlocksTheme();
@@ -17,11 +18,25 @@ const ChannelItem: FC<ChannelItemProps> = ({ channelDetails }) => {
       justifyContent="space-between"
       margin="s2 s0"
     >
-      <Box display="flex">
+      <Box
+        display="flex"
+        gap="s3"
+      >
         <Box
           width="40px"
           height="40px"
-        ></Box>
+          borderRadius="var(--r3)"
+          css={css`
+            overflow: hidden;
+          `}
+        >
+          <img
+            width="100%"
+            height="100%"
+            src={channelDetails.icon}
+            alt={channelDetails.name}
+          />
+        </Box>
         <Box
           display="flex"
           flexDirection="column"
@@ -30,24 +45,26 @@ const ChannelItem: FC<ChannelItemProps> = ({ channelDetails }) => {
             variant="h5-semibold"
             color={{ light: 'gray-1000', dark: 'white' }}
           >
-            Unstoppable Domains
+            {channelDetails.name}
           </Text>
           <Text
             variant="c-regular"
             color={{ light: 'gray-600', dark: 'gray-500' }}
           >
-            555 subscribers
+            {channelDetails.subscriber} subscribers
           </Text>
         </Box>
       </Box>
-      <Button
-        size="small"
-        iconOnly={<InboxBell />}
-        variant={'tertiary'}
-        css={css`
-          background-color: ${mode === 'dark' ? '#484d58' : ''};
-        `}
-      />
+      {channelDetails?.subscribed && (
+        <Button
+          size="small"
+          iconOnly={<InboxBell />}
+          variant={'tertiary'}
+          css={css`
+            background-color: ${mode === 'dark' ? '#484d58' : ''};
+          `}
+        />
+      )}
     </Box>
   );
 };

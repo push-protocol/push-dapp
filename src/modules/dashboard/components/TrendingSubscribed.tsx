@@ -54,7 +54,7 @@ const TrendingSubscribed = () => {
         display="flex"
         flexDirection="column"
         borderRadius="var(--r6)"
-        border={'1px solid #E5E5E5'}
+        border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
         padding="s2 s4"
         // gap="s2"
       >

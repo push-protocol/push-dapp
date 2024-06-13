@@ -1,4 +1,4 @@
-import { BlockWithoutStyleProp, ResponsiveProp, SpaceType, ValueOf } from '../Blocks.types';
+import { TransformedHTMLAttributes, ResponsiveProp, SpaceType, ValueOf } from '../Blocks.types';
 import { FlattenSimpleInterpolation } from 'styled-components';
 
 export type SeparatorResponsiveProps = {
@@ -17,7 +17,9 @@ export type SeparatorComponentProps = {
   orientation?: 'horizontal' | 'vertical';
 };
 
-export type SeparatorProps = SeparatorResponsiveProps & SeparatorComponentProps & BlockWithoutStyleProp<HTMLDivElement>;
+export type SeparatorProps = SeparatorResponsiveProps &
+  SeparatorComponentProps &
+  TransformedHTMLAttributes<HTMLDivElement>;
 
 export type SeparatorResponsiveCSSProperties = 'height' | 'margin' | 'width';
 

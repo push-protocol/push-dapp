@@ -31,7 +31,7 @@ const RecommendedSnap = () => {
         flexDirection="column"
         gap="s4"
         borderRadius="var(--r6)"
-        border="1px solid #E5E5E5"
+        border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
         padding="s4"
       >
         {RecommendedChatList.map((item, index) => {
