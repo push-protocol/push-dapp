@@ -2,17 +2,18 @@
 import { FC, useState } from 'react';
 
 // Components
-import { Box, Button, InboxBell, Skeleton, Text } from 'blocks';
+import { Box, Button, NotificationMobile, Skeleton, Text, TickCircleFilled } from 'blocks';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { css } from 'styled-components';
 import { useGetChannelDetails } from 'queries';
 import UnsubscribeChannelDropdown from 'common/components/UnsubscribeChannelDropdown';
 import { UserSetting } from '@pushprotocol/restapi';
+import TickDecoratedCircleFilled from 'blocks/icons/components/TickDecoratedCircleFilled';
+import Ethereum from 'blocks/illustrations/components/Ethereum';
 
 export type ChannelItemProps = {
   channelAddress: string;
   userSetting?: UserSetting[];
-  isSubscribed?: boolean;
   setSubscribed?: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading?: boolean;
   isPending?: boolean;
@@ -20,7 +21,6 @@ export type ChannelItemProps = {
 const ChannelItem: FC<ChannelItemProps> = ({
   channelAddress,
   userSetting = undefined,
-  isSubscribed = false,
   setSubscribed,
   isLoading,
   isPending,
@@ -28,6 +28,7 @@ const ChannelItem: FC<ChannelItemProps> = ({
   const { mode } = useBlocksTheme();
   const { data: channelDetails } = useGetChannelDetails(channelAddress);
   const [subscriberCount, setSubscriberCount] = useState(channelDetails?.subscriber_count || 0);
+  console.debug(userSetting, 'user');
   return (
     <Box
       display="flex"
@@ -60,12 +61,29 @@ const ChannelItem: FC<ChannelItemProps> = ({
           flexDirection="column"
         >
           <Skeleton isLoading={isLoading || isPending}>
-            <Text
-              variant="h5-semibold"
-              color={{ light: 'gray-1000', dark: 'white' }}
+            <Box
+              display="flex"
+              gap="s1"
+              alignItems="center"
             >
-              {channelDetails?.name}
-            </Text>
+              <Text
+                variant="h5-semibold"
+                color={{ light: 'gray-1000', dark: 'white' }}
+              >
+                {channelDetails?.name}
+              </Text>
+              {channelDetails?.verified_status && (
+                <TickDecoratedCircleFilled color={{ light: 'gray-300', dark: 'gray-700' }} />
+              )}
+              <Ethereum
+                width={16}
+                height={16}
+              />
+              {/* {
+                channelDetails?.alias_blockchain_id && 
+                
+              } */}
+            </Box>
           </Skeleton>
           <Skeleton isLoading={isLoading || isPending}>
             <Text
@@ -87,7 +105,7 @@ const ChannelItem: FC<ChannelItemProps> = ({
         >
           <Button
             size="small"
-            iconOnly={<InboxBell />}
+            iconOnly={<NotificationMobile />}
             variant={'tertiary'}
             css={css`
               background-color: ${mode === 'dark' ? '#484d58' : ''};

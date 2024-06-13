@@ -6,14 +6,15 @@ import { useState } from 'react';
 
 const SubscribedChannelItemList = () => {
   const { data: userSubscriptions, isLoading, isPending } = useGetUserSubscriptions();
+
   const [subscribed, setSubscribed] = useState(true);
+  console.debug(userSubscriptions, 'userSubs');
   return userSubscriptions?.map((channel, index) => (
     <Box>
       <ChannelItem
         key={index}
         channelAddress={channel.channel}
-        userSetting={channel.user_settings}
-        isSubscribed={subscribed}
+        userSetting={JSON.parse(channel.user_settings)}
         setSubscribed={setSubscribed}
         isLoading={isLoading}
         isPending={isPending}
