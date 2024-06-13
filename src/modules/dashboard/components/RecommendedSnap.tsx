@@ -2,12 +2,16 @@
 import { useNavigate } from 'react-router-dom';
 import { css } from 'styled-components';
 
+//Hooks
+import { useBlocksTheme } from 'blocks/Blocks.hooks';
+
+//Constants
+import { RecommendedChatList } from '../Dashboard.constants';
+
 // Components
 import { Box, Text, Button } from 'blocks';
 import { ChatItem } from './ChatItem';
-import { RecommendedChatList } from '../Dashboard.constants';
 import Metamask from 'blocks/illustrations/components/Metamask';
-import { useBlocksTheme } from 'blocks/Blocks.hooks';
 
 const RecommendedSnap = () => {
   const navigate = useNavigate();

@@ -1,13 +1,13 @@
 // React and other libraries
-import React from 'react';
 import { FC, useContext } from 'react';
+
+import { css } from 'styled-components';
 
 // Components
 import { Box, Button, Chat, Text } from 'blocks';
-import { Context } from 'modules/chat/ChatModule';
-import { ChatUserAppContext } from 'types/chat';
-import { css } from 'styled-components';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
+import { ChatUserAppContext } from 'types/chat';
+import { Context } from 'modules/chat/ChatModule';
 
 export type ChatItemProps = {
   chat: any;
@@ -26,12 +26,6 @@ const ChatItem: FC<ChatItemProps> = ({ chat }) => {
         gap="s3"
         justifyContent="center"
       >
-        {/* <IllustrationWrapper
-          height={48}
-          width={48}
-          componentName={chat.chatParticipant}
-          illustration={<img src={chat.chatPic} />}
-        /> */}
         <chat.chatPic />
         <Box
           display="flex"

@@ -1,4 +1,5 @@
 import { PushAPI } from '@pushprotocol/restapi';
+
 import { getChannelDetailsModelCreator } from 'queries/models';
 
 type GetChannelDetailsParams = {

@@ -8,13 +8,14 @@ interface UnsubscribeChannelDropdownProps {
   children: ReactNode;
   channelDetail: ChannelDetailsResponse;
   centeronMobile?: boolean;
-  setSubscribed: React.Dispatch<React.SetStateAction<boolean>>;
-  setSubscriberCount: React.Dispatch<React.SetStateAction<number>>;
+  onSuccess: () => void;
+  // setSubscribed: React.Dispatch<React.SetStateAction<boolean>>;
+  // setSubscriberCount: React.Dispatch<React.SetStateAction<number>>;
   userSetting: UserSetting[] | undefined;
 }
 
 const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = (options) => {
-  const { children, centeronMobile = false, channelDetail, setSubscribed, setSubscriberCount, userSetting } = options;
+  const { children, centeronMobile = false, channelDetail, onSuccess, userSetting } = options;
 
   console.log('Center on Mpbile', centeronMobile);
 
@@ -24,8 +25,7 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = (options
       channelDetail={channelDetail}
       userSetting={userSetting}
       onSuccessOptout={() => {
-        setSubscribed(false);
-        setSubscriberCount((prevSubscriberCount: number) => prevSubscriberCount - 1);
+        onSuccess();
       }}
     >
       {children}

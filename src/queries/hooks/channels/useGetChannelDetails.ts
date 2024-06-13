@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
+import { useSelector } from 'react-redux';
+
 import { channelDetails } from 'queries/queryKeys';
 import { getChannelDetails } from 'queries/services';
-import { useSelector } from 'react-redux';
 
 export const useGetChannelDetails = (address: string) => {
   const { userPushSDKInstance } = useSelector((state: any) => {

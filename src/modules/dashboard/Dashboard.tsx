@@ -14,8 +14,9 @@ const Dashboard: FC<DashboardProps> = () => {
 
   return (
     <Box
-      height="100vh"
-      padding="s4 s7 s0 s7"
+      flexDirection="column"
+      display="flex"
+      margin="s4 s6 s4 s6"
       gap="s6"
     >
       <Box

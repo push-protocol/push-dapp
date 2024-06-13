@@ -73,8 +73,10 @@ const FeaturedChannelListItem: FC<FeaturedChannelListItemProps> = (props) => {
         ) : (
           <UnsubscribeChannelDropdown
             channelDetail={channel}
-            setSubscribed={setSubscribed}
-            setSubscriberCount={setSubscriberCount}
+            onSuccess={() => {
+              setSubscribed(false);
+              setSubscriberCount((prevSubscriberCount: number) => prevSubscriberCount - 1);
+            }}
             userSetting={userSettings[channel.channel]}
           >
             <Button

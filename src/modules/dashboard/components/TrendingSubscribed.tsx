@@ -1,6 +1,8 @@
 // React and other libraries
 import { useState } from 'react';
 
+import { css } from 'styled-components';
+
 // Constants
 import { channelListTypeValues } from '../Dashboard.types';
 
@@ -8,7 +10,6 @@ import { channelListTypeValues } from '../Dashboard.types';
 import { Box, Text } from 'blocks';
 import { TrendingChannelItemList } from './TrendingChannelItemList';
 import { SubscribedChannelItemList } from './SubscribedChannelItemList';
-import { css } from 'styled-components';
 
 const TrendingSubscribed = () => {
   const [selectedListType, setSelectedListType] = useState<(typeof channelListTypeValues)[number]>('trending channels');
@@ -29,7 +30,7 @@ const TrendingSubscribed = () => {
           height="fit-content"
           justifyContent="space-between"
           borderRadius="var(--r4)"
-          width={{ ll: '100%', initial: '50%' }}
+          width={{ lp: 'auto', initial: '50%' }}
         >
           {channelListTypeValues.map((listType) => (
             <Box

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { userSubscriptions } from 'queries/queryKeys';
 import { useSelector } from 'react-redux';
+
+import { userSubscriptions } from 'queries/queryKeys';
 import { getUserSubscriptions } from 'queries/services';
 
 export const useGetUserSubscriptions = () => {
