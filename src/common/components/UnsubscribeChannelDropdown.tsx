@@ -9,8 +9,6 @@ interface UnsubscribeChannelDropdownProps {
   channelDetail: ChannelDetailsResponse;
   centeronMobile?: boolean;
   onSuccess: () => void;
-  // setSubscribed: React.Dispatch<React.SetStateAction<boolean>>;
-  // setSubscriberCount: React.Dispatch<React.SetStateAction<number>>;
   userSetting: UserSetting[] | undefined;
 }
 
