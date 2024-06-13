@@ -271,7 +271,7 @@ function MasterInterfacePage() {
             />
             <Route
               path="/"
-              element={<Navigate to={APP_PATHS.Channels} />}
+              element={<Navigate to={APP_PATHS.WelcomeDashboard} />}
             />
             <Route
               path={APP_PATHS.Support}

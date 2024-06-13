@@ -6,7 +6,7 @@ const Ethereum: FC<IllustrationProps> = (allProps) => {
   const { svgProps: props, ...restProps } = allProps;
   return (
     <IllustrationWrapper
-      componentName="Chat"
+      componentName="Ethereum"
       illustration={
         <svg
           width={restProps?.width ?? '24'}

@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { cloneDeep } from 'lodash';
 
 // Internal Components
-import { Box, Button, CaretDown, HoverableSVG, InboxBell, NotificationMobile, Skeleton, Text } from 'blocks';
+import { Box, Button, CaretDown, NotificationMobile, Skeleton, Text } from 'blocks';
 import SubscribeChannelDropdown from 'common/components/SubscribeChannelDropdown';
 import UnsubscribeChannelDropdown from 'common/components/UnsubscribeChannelDropdown';
 
@@ -14,6 +14,9 @@ import UnsubscribeChannelDropdown from 'common/components/UnsubscribeChannelDrop
 import { ChannelDetailsProps } from '../configs/DashboardFeaturedChannels.config';
 import { useGetChannelDetails } from 'queries';
 import { css } from 'styled-components';
+import Ethereum from 'blocks/illustrations/components/Ethereum';
+import { LOGO_ALIAS_CHAIN } from '../configs/ChainDetails';
+import TickDecoratedCircleFilled from 'blocks/icons/components/TickDecoratedCircleFilled';
 
 type FeaturedChannelListItemProps = {
   channel: ChannelDetailsProps;
@@ -52,11 +55,9 @@ const FeaturedChannelListItem: FC<FeaturedChannelListItemProps> = (props) => {
     }
   }, [subscriptionStatus, channelDetails]);
 
-  // const [isLoading, setIsLoading] = useState(false);
-
   const [loading, setLoading] = useState(false);
 
-
+  const AliasChain = channelDetails?.alias_blockchain_id && LOGO_ALIAS_CHAIN[+channelDetails.alias_blockchain_id];
 
   return (
     <>
@@ -127,10 +128,28 @@ const FeaturedChannelListItem: FC<FeaturedChannelListItemProps> = (props) => {
         <Box display="flex" flexDirection="column" gap="s2">
           <Box display='flex' flexDirection='column' gap='s1' >
             <Skeleton isLoading={isLoading} height='20px'>
-              <Text variant="h5-semibold" color={{ light: 'gray-1000', dark: 'gray-100' }}>
-                {channelDetails?.name}
-              </Text>
+              <Box display='flex' flexDirection='row' gap='s1' alignItems='center'>
+                <Text variant="h5-semibold" color={{ light: 'gray-1000', dark: 'gray-100' }}>
+                  {channelDetails?.name}
+                </Text>
+
+                {!!channelDetails?.verified_status && (
+                  <TickDecoratedCircleFilled color={{ light: 'gray-300', dark: 'gray-700' }} />
+                )}
+
+                <Ethereum
+                  width={16}
+                  height={16}
+                />
+
+                {channelDetails && channelDetails?.alias_address != null &&
+                  channelDetails?.alias_address != 'NULL' && AliasChain && <AliasChain width={16} height={16} />}
+
+              </Box>
             </Skeleton>
+
+
+
             <Skeleton isLoading={isLoading} height='20px'>
               <Text variant="c-regular" color={{ light: 'gray-600', dark: 'gray-500' }}>
                 {formatSubscriberCount(subscriberCount)} subscribers
