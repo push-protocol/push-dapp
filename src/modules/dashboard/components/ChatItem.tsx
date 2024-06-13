@@ -1,19 +1,21 @@
 // React and other libraries
-import { FC, useContext } from 'react';
+import { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { css } from 'styled-components';
 
+//Hooks
+import { useBlocksTheme } from 'blocks/Blocks.hooks';
+
 // Components
 import { Box, Button, Chat, Text } from 'blocks';
-import { useBlocksTheme } from 'blocks/Blocks.hooks';
-import { ChatUserAppContext } from 'types/chat';
-import { Context } from 'modules/chat/ChatModule';
+import { ChatType } from '../Dashboard.types';
 
 export type ChatItemProps = {
-  chat: any;
+  chat: ChatType;
 };
 const ChatItem: FC<ChatItemProps> = ({ chat }) => {
-  // const { setSelectedChatId } = useContext<ChatUserAppContext>(Context);
+  const navigate = useNavigate();
   const { mode } = useBlocksTheme();
   return (
     <Box
@@ -26,7 +28,7 @@ const ChatItem: FC<ChatItemProps> = ({ chat }) => {
         gap="s3"
         justifyContent="center"
       >
-        <chat.chatPic />
+        <chat.payload.chatPic />
         <Box
           display="flex"
           flexDirection="column"
@@ -36,18 +38,18 @@ const ChatItem: FC<ChatItemProps> = ({ chat }) => {
             variant="h5-semibold"
             color={{ light: 'gray-1000', dark: 'white' }}
           >
-            {chat?.chatParticipant}
+            {chat?.payload?.chatParticipant}
           </Text>
           <Text
             variant="c-regular"
             color={{ light: 'gray-600', dark: 'gray-500' }}
           >
-            {chat?.chatMsg?.messageContent}
+            {chat?.payload?.chatMsg?.messageContent}
           </Text>
         </Box>
       </Box>
       <Button
-        // onClick={() => setSelectedChatId(chat.chatId)}
+        onClick={() => navigate(`/chat/${chat?.previewLink}`)}
         size="small"
         iconOnly={<Chat />}
         variant="tertiary"

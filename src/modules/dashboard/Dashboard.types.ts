@@ -1,3 +1,6 @@
+import { IllustrationProps } from 'blocks';
+import { FC } from 'react';
+
 export const channelListTypeValues = ['trending channels', 'subscribed'] as const;
 
 export type TrendingChannelsType = {
@@ -8,4 +11,21 @@ export type TrendingChannelsType = {
   timestamp?: string | Date;
   url?: string;
   trend?: string | number;
+};
+
+export type ChatPayloadType = {
+  chatId: string;
+  chatPic: FC<IllustrationProps>;
+  chatParticipant: string;
+  chatGroup: boolean;
+  chatTimestamp: null;
+  chatMsg: {
+    messageType: string;
+    messageContent: string;
+  };
+};
+export type ChatType = {
+  previewLink: string;
+  chatParticipantAlias: string;
+  payload: ChatPayloadType;
 };

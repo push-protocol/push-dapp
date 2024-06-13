@@ -16,6 +16,7 @@ import Ethereum from 'blocks/illustrations/components/Ethereum';
 
 //Queries
 import { UserSubscriptionsResponse, useGetChannelDetails } from 'queries';
+import { Link } from 'react-router-dom';
 
 export type ChannelItemProps = {
   channelAddress: string;
@@ -69,12 +70,17 @@ const ChannelItem: FC<ChannelItemProps> = ({
               gap="s1"
               alignItems="center"
             >
-              <Text
-                variant="h5-semibold"
-                color={{ light: 'gray-1000', dark: 'white' }}
+              <Link
+                to={`/channels/${channelDetails?.channel}`}
+                style={{ textDecoration: 'none' }}
               >
-                {channelDetails?.name}
-              </Text>
+                <Text
+                  variant="h5-semibold"
+                  color={{ light: 'gray-1000', dark: 'white' }}
+                >
+                  {channelDetails?.name}
+                </Text>
+              </Link>
               {!!channelDetails?.verified_status && (
                 <TickDecoratedCircleFilled color={{ light: 'gray-300', dark: 'gray-700' }} />
               )}

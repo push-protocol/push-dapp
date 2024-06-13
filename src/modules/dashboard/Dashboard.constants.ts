@@ -1,7 +1,9 @@
 import { PushAlpha, PushBot, PushDev } from 'blocks';
+import { ChatType } from './Dashboard.types';
 
-export const RecommendedChatList = [
+export const RecommendedChatList: ChatType[] = [
   {
+    previewLink: 'eip155:0x99A08ac6254dcf7ccc37CeC662aeba8eFA666666',
     chatParticipantAlias: 'eip155:0x99A08ac6254dcf7ccc37CeC662aeba8eFA666666',
     payload: {
       chatId: '0x99A08ac6254dcf7ccc37CeC662aeba8eFA666666',
@@ -16,6 +18,7 @@ export const RecommendedChatList = [
     },
   },
   {
+    previewLink: 'eip155:0x71Ffa5771E8019787190D098586EFe02026a3c8C',
     chatParticipantAlias: 'eip155:0x71Ffa5771E8019787190D098586EFe02026a3c8C',
     payload: {
       chatId: '0x71Ffa5771E8019787190D098586EFe02026a3c8C',
@@ -30,6 +33,8 @@ export const RecommendedChatList = [
     },
   },
   {
+    previewLink: 'chatid:37799f9cb3ffd83eff4d2dc18913a3d9607f9c787a4374a7b3259bda28242cd6',
+
     chatParticipantAlias: 'chatid:37799f9cb3ffd83eff4d2dc18913a3d9607f9c787a4374a7b3259bda28242cd6',
     payload: {
       chatId: '37799f9cb3ffd83eff4d2dc18913a3d9607f9c787a4374a7b3259bda28242cd6',

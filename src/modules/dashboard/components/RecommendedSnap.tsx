@@ -42,7 +42,7 @@ const RecommendedSnap = () => {
           return (
             <ChatItem
               key={index}
-              chat={item.payload}
+              chat={item}
             />
           );
         })}
