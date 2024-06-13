@@ -6,8 +6,7 @@ export interface ChannelDetailsProps {
 export const FeaturedNotificationChannels: ChannelDetailsProps[] = [
   {
     id: 1,
-    // channel: '0xB88460Bb2696CAb9D66013A05dFF29a28330689D'
-    channel: '0xef6426D522CfE5B7Ae5dB05623aB0Ef78023dBe0'
+    channel: '0xB88460Bb2696CAb9D66013A05dFF29a28330689D'
   },
   {
     id: 2,

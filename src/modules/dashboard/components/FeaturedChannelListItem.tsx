@@ -17,6 +17,7 @@ import { css } from 'styled-components';
 import Ethereum from 'blocks/illustrations/components/Ethereum';
 import { LOGO_ALIAS_CHAIN } from '../configs/ChainDetails';
 import TickDecoratedCircleFilled from 'blocks/icons/components/TickDecoratedCircleFilled';
+import { Link } from 'react-router-dom';
 
 type FeaturedChannelListItemProps = {
   channel: ChannelDetailsProps;
@@ -42,14 +43,12 @@ const FeaturedChannelListItem: FC<FeaturedChannelListItemProps> = (props) => {
   };
 
   const { data: channelDetails, isLoading } = useGetChannelDetails(channel.channel);
-  console.log('Channel Details in Featured channels >>>', channelDetails, isLoading);
 
   const [subscribed, setSubscribed] = useState(false);
   const [subscriberCount, setSubscriberCount] = useState(0);
 
   useEffect(() => {
     if (channelDetails) {
-      console.log('Subscribe Count checking', channelDetails, channel.channel);
       setSubscribed(subscriptionStatus[channel.channel]);
       setSubscriberCount(channelDetails.subscriber_count);
     }
@@ -152,13 +151,19 @@ const FeaturedChannelListItem: FC<FeaturedChannelListItemProps> = (props) => {
                 flexDirection="row"
                 gap="s1"
                 alignItems="center"
+
               >
-                <Text
-                  variant="h5-semibold"
-                  color={{ light: 'gray-1000', dark: 'gray-100' }}
+                <Link
+                  to={`/channels/${channelDetails?.channel}`}
+                  style={{ textDecoration: 'none' }}
                 >
-                  {channelDetails?.name}
-                </Text>
+                  <Text
+                    variant="h5-semibold"
+                    color={{ light: 'gray-1000', dark: 'gray-100' }}
+                  >
+                    {channelDetails?.name}
+                  </Text>
+                </Link>
 
                 {!!channelDetails?.verified_status && (
                   <TickDecoratedCircleFilled color={{ light: 'gray-300', dark: 'gray-700' }} />
