@@ -412,7 +412,7 @@ const Interface = styled(Item)`
   flex: 1;
   display: flex;
   align-items: stretch;
-
+  justify-content:flex-start;
   // box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
   // border-radius: 20px;
   // border: 1px solid ${(props) => props.theme.interfaceBorder};

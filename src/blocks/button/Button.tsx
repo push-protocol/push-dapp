@@ -33,6 +33,7 @@ const StyledButton = styled.button<ButtonProps>`
   display: flex;
   font-family: var(--font-family);
   justify-content: center;
+  white-space: nowrap;
 
   /* Common icon css added through CSS class */
   .icon {

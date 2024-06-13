@@ -5,6 +5,7 @@ import { FC, useState } from 'react';
 import { Add, Box, Dash, HoverableSVG, Text } from 'blocks';
 import { IllustrationComponent } from './components/IllustrationComponent';
 import { FeaturedNotificationComponent } from './components/FeaturedNotificationComponent';
+import { TrendingRecommended } from './components/TrendingRecommended';
 
 
 export type DashboardProps = {}
@@ -14,8 +15,11 @@ const Dashboard: FC<DashboardProps> = () => {
   const [showWelcomeIllustrations, setShowWelcomeIllustrations] = useState(true);
 
   return (
-    <Box height="100vh"
+    <Box
+      display='flex'
+      flexDirection='column'
       padding='s4 s7 s0 s7'
+      gap={{ ml: 's6' }}
     >
 
       <Box flexDirection='row' display='flex' justifyContent='space-between'>
@@ -35,7 +39,11 @@ const Dashboard: FC<DashboardProps> = () => {
 
       {showWelcomeIllustrations && (<IllustrationComponent />)}
 
-      <FeaturedNotificationComponent />
+      <Box display='flex' flexDirection='column' gap='s6'>
+        <FeaturedNotificationComponent />
+
+        <TrendingRecommended />
+      </Box>
 
     </Box>
 
@@ -43,4 +51,3 @@ const Dashboard: FC<DashboardProps> = () => {
 };
 
 export { Dashboard };
-
