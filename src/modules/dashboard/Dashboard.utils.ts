@@ -4,7 +4,7 @@ import { TrendingChannelsType } from './Dashboard.types';
 export const getTrendingChannelsData = (
   weekData: TrendingChannelsResponse | undefined,
   currentData: TrendingChannelsResponse | undefined
-) => {
+): Array<string> => {
   let trendingChannelData: TrendingChannelsType[] = [];
   let currentSubscriberData = {};
   let weekBackSubscriberData = {};
@@ -56,5 +56,5 @@ export const getTrendingChannelsData = (
   const filteredChannels = trendingChannelData.filter((channel) => channel.subscriber > 30);
 
   const sortedChannels = filteredChannels?.sort((a, b) => parseFloat(b?.trend) - parseFloat(a?.trend));
-  return sortedChannels.slice(0, 5);
+  return sortedChannels.slice(0, 5).map((item) => item.channel);
 };

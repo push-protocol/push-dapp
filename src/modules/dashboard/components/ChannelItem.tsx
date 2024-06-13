@@ -5,14 +5,17 @@ import { FC } from 'react';
 import { Box, Button, InboxBell, Text } from 'blocks';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { css } from 'styled-components';
-import { TrendingChannelsType } from '../Dashboard.types';
+import { useGetChannelDetails } from 'queries';
 
 export type ChannelItemProps = {
-  channelDetails: TrendingChannelsType & { subscribed?: boolean };
+  channelAddress: string;
+  subscribed?: boolean;
 };
-const ChannelItem: FC<ChannelItemProps> = ({ channelDetails }) => {
+const ChannelItem: FC<ChannelItemProps> = ({ channelAddress, subscribed = false }) => {
   const { mode } = useBlocksTheme();
-  return (
+  const { data: channelDetails } = useGetChannelDetails(channelAddress);
+
+  return channelDetails ? (
     <Box
       display="flex"
       justifyContent="space-between"
@@ -51,11 +54,11 @@ const ChannelItem: FC<ChannelItemProps> = ({ channelDetails }) => {
             variant="c-regular"
             color={{ light: 'gray-600', dark: 'gray-500' }}
           >
-            {channelDetails.subscriber} subscribers
+            {channelDetails.subscriberCount} subscribers
           </Text>
         </Box>
       </Box>
-      {channelDetails?.subscribed && (
+      {subscribed && (
         <Button
           size="small"
           iconOnly={<InboxBell />}
@@ -66,7 +69,7 @@ const ChannelItem: FC<ChannelItemProps> = ({ channelDetails }) => {
         />
       )}
     </Box>
-  );
+  ) : null;
 };
 
 export { ChannelItem };

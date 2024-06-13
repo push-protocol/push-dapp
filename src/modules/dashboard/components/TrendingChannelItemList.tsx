@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { getTrendingChannelsData } from '../Dashboard.utils';
 
 const TrendingChannelItemList = () => {
-  const [trendingChannelsData, setTrendingChannelsData] = useState<TrendingChannelsType[]>([]);
+  const [trendingChannels, setTrendingChannels] = useState<Array<string>>([]);
 
   const startDate = new Date('2022-01-01');
   const firstEndDate = new Date(Date.now()).toISOString().split('T')[0];
@@ -28,17 +28,16 @@ const TrendingChannelItemList = () => {
 
   useEffect(() => {
     const channelsData = getTrendingChannelsData(weekData, currentData);
-    setTrendingChannelsData(channelsData);
+    setTrendingChannels(channelsData);
   }, [currentData, weekData]);
 
-  console.debug(trendingChannelsData, 'trending');
-  return trendingChannelsData.map((channel, index) => (
+  return trendingChannels.map((channel, index) => (
     <>
       <ChannelItem
         key={index}
-        channelDetails={channel}
+        channelAddress={channel}
       />
-      {index != trendingChannelsData.length - 1 && <Separator />}
+      {index != trendingChannels.length - 1 && <Separator />}
     </>
   ));
 };
