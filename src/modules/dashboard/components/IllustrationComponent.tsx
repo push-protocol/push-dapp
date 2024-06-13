@@ -19,7 +19,7 @@ const IllustrationComponent: FC<IllustraionComponentProps> = () => {
     <Box
       display="flex"
       flexDirection={{ tb: 'column', ml: 'column', initial: 'row' }}
-      padding="s8 s6"
+      padding={{ ml: 's0', initial: 's8 s6' }}
       justifyContent="space-between"
       gap={{ tb: 's3', ml: 's3', initial: 's6' }}
     >

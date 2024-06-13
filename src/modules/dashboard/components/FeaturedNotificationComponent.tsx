@@ -62,7 +62,7 @@ const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = ()
   return (
     <Box
       borderRadius="24px"
-      padding="s6"
+      padding={{ ml: 's6 s4', initial: "s6" }}
       display="flex"
       flexDirection="column"
       backgroundColor={{ light: 'dark-white', dark: 'gray-900' }}
@@ -116,23 +116,7 @@ const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = ()
       >
         {visibleItems.map((channel) => {
           return (
-            <>
-              <Box
-                display="flex"
-                flexDirection="column"
-                border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
-                padding="s6"
-                borderRadius="24px"
-                gap="s3"
-                maxWidth="-webkit-fill-available"
-                width={{ tb: '-webkit-fill-available' }}
-                css={css`
-                  flex: 1;
-                `}
-              >
-                <FeaturedChannelListItem channel={channel} />
-              </Box>
-            </>
+            <FeaturedChannelListItem channel={channel} />
           );
         })}
       </Box>

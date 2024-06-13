@@ -63,8 +63,15 @@ const Dashboard: FC<DashboardProps> = () => {
 
       {showWelcomeIllustrations && <IllustrationComponent />}
 
-      <FeaturedNotificationComponent />
-      <TrendingRecommended />
+      <Box
+        display="flex"
+        flexDirection="column"
+        gap="s6"
+      >
+        <FeaturedNotificationComponent />
+
+        <TrendingRecommended />
+      </Box>
     </Box>
   );
 };

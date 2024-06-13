@@ -13,6 +13,7 @@ import { Box, Button, NotificationMobile, Skeleton, Text } from 'blocks';
 import UnsubscribeChannelDropdown from 'common/components/UnsubscribeChannelDropdown';
 import TickDecoratedCircleFilled from 'blocks/icons/components/TickDecoratedCircleFilled';
 import Ethereum from 'blocks/illustrations/components/Ethereum';
+import { LOGO_ALIAS_CHAIN } from '../configs/ChainDetails';
 
 //Queries
 import { UserSubscriptionsResponse, useGetChannelDetails } from 'queries';
@@ -33,8 +34,11 @@ const ChannelItem: FC<ChannelItemProps> = ({
   isListLoading,
 }) => {
   const { mode } = useBlocksTheme();
-  const { data: channelDetails, isLoading: isChannelLoading } = useGetChannelDetails(channelAddress);
 
+  const { data: channelDetails, isLoading: isChannelLoading } = useGetChannelDetails(channelAddress);
+  const AliasChain = channelDetails?.alias_blockchain_id && LOGO_ALIAS_CHAIN[+channelDetails.alias_blockchain_id];
+
+  console.debug(userSetting, 'user');
   return (
     <Skeleton isLoading={isChannelLoading || isListLoading}>
       <Box
@@ -88,10 +92,15 @@ const ChannelItem: FC<ChannelItemProps> = ({
                 width={16}
                 height={16}
               />
-              {/* {
-                channelDetails?.alias_blockchain_id && 
-                
-              } */}
+              {channelDetails &&
+                channelDetails?.alias_address != null &&
+                channelDetails?.alias_address != 'NULL' &&
+                AliasChain && (
+                  <AliasChain
+                    width={16}
+                    height={16}
+                  />
+                )}
             </Box>
             <Text
               variant="c-regular"
