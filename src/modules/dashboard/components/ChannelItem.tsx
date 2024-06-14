@@ -15,6 +15,7 @@ import { LOGO_ALIAS_CHAIN } from '../configs/ChainDetails';
 //Queries
 import { UserSubscriptionsResponse, useGetChannelDetails } from 'queries';
 import { Link } from 'react-router-dom';
+import VerifiedToolTipComponent from './VerifiedToolTipComponent';
 
 export type ChannelItemProps = {
   channelAddress: string;
@@ -80,7 +81,9 @@ const ChannelItem: FC<ChannelItemProps> = ({
                 </Text>
               </Link>
               {!!channelDetails?.verified_status && (
-                <TickDecoratedCircleFilled color={{ light: 'gray-300', dark: 'gray-700' }} />
+                <VerifiedToolTipComponent>
+                  <TickDecoratedCircleFilled color={{ light: 'gray-300', dark: 'gray-700' }} />
+                </VerifiedToolTipComponent>
               )}
               <Ethereum
                 width={16}
