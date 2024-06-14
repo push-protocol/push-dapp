@@ -8,4 +8,4 @@ type GetChannelDetailsParams = {
 };
 
 export const getChannelDetails = ({ userPushSDKInstance, address }: GetChannelDetailsParams) =>
-  userPushSDKInstance.channel.info(address).then((response) => getChannelDetailsModelCreator(response));
+  userPushSDKInstance.channel.info(address).then(getChannelDetailsModelCreator);

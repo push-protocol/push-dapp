@@ -15,6 +15,7 @@ import { formatSubscriberCount } from '../Dashboard.utils';
 import { UserSubscriptionsResponse, useGetChannelDetails, useGetUserSubscriptions } from 'queries';
 
 // Components
+
 import {
   Box,
   Button,
@@ -22,15 +23,16 @@ import {
   Skeleton,
   Text,
   Link,
+  InboxBell,
   TickDecoratedCircleFilled,
   Ethereum,
-  InboxBell,
 } from 'blocks';
-import UnsubscribeChannelDropdown from 'common/components/UnsubscribeChannelDropdown';
-import VerifiedToolTipComponent from './VerifiedToolTipComponent';
+import { VerifiedToolTipComponent } from './VerifiedToolTipComponent';
 import { UserSetting } from 'helpers/channel/types';
-import SubscribeChannelDropdown from 'common/components/SubscribeChannelDropdown';
+
 import { useAccount } from 'hooks';
+import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
+import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannelDropdown';
 
 export type ChannelListItemProps = {
   channelAddress: string;

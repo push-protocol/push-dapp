@@ -6,7 +6,7 @@ const PolygonZK: FC<IllustrationProps> = (allProps) => {
   const { svgProps: props, ...restProps } = allProps;
   return (
     <IllustrationWrapper
-      componentName="Optimisim"
+      componentName="PolygonZK"
       illustration={
         <svg
           width={restProps?.width ?? '24'}

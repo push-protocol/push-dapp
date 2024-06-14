@@ -1,7 +1,11 @@
-import OptinNotifSettingDropdown from 'components/dropdowns/OptinNotifSettingDropdown';
-import { ChannelDetailsProps } from 'modules/dashboard/configs/DashboardFeaturedChannels.config';
-import { ChannelDetailsResponse } from 'queries';
+// React and other libraries
 import { FC, ReactNode } from 'react';
+
+// Utility functions
+import { ChannelDetailsResponse } from 'queries';
+
+// Components
+import OptinNotifSettingDropdown from 'components/dropdowns/OptinNotifSettingDropdown';
 
 interface SubscribeChannelDropdownProps {
   children: ReactNode;
@@ -25,4 +29,4 @@ const SubscribeChannelDropdown: FC<SubscribeChannelDropdownProps> = (options) =>
   );
 };
 
-export default SubscribeChannelDropdown;
+export { SubscribeChannelDropdown };

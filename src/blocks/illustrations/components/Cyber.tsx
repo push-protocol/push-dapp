@@ -6,7 +6,7 @@ const Cyber: FC<IllustrationProps> = (allProps) => {
   const { svgProps: props, ...restProps } = allProps;
   return (
     <IllustrationWrapper
-      componentName="Optimisim"
+      componentName="Cyber"
       illustration={
         <svg
           width={restProps?.width ?? '24'}

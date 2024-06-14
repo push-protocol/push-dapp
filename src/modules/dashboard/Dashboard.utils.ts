@@ -54,7 +54,7 @@ export const getTrendingChannelsData = (
       subscriber: currentSubscriberData[key],
       name: channelDetails[key]?.name || '',
       icon: channelDetails[key]?.icon || '',
-      trend: trend,
+      trend: trend
     });
   }
 

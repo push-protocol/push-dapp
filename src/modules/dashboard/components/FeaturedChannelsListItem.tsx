@@ -1,9 +1,8 @@
 // React + Web3 Essentials
-import { FC, useMemo, useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 
 // Third-party libraries
 import { useSelector } from 'react-redux';
-import { cloneDeep } from 'lodash';
 import { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 
@@ -15,10 +14,10 @@ import { formatSubscriberCount } from '../Dashboard.utils';
 
 // Components
 import { Box, Button, CaretDown, NotificationMobile, Skeleton, Text } from 'blocks';
-import SubscribeChannelDropdown from 'common/components/SubscribeChannelDropdown';
-import UnsubscribeChannelDropdown from 'common/components/UnsubscribeChannelDropdown';
+import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
+import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannelDropdown';
 import TickDecoratedCircleFilled from 'blocks/icons/components/TickDecoratedCircleFilled';
-import VerifiedToolTipComponent from './VerifiedToolTipComponent';
+import { VerifiedToolTipComponent } from './VerifiedToolTipComponent';
 import Ethereum from 'blocks/illustrations/components/Ethereum';
 
 // Internal Configs
@@ -35,11 +34,7 @@ type FeaturedChannelsListItemProps = {
 const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
   const { channel } = props;
 
-  const { subscriptionStatus, userSettings: currentUserSettings } = useSelector((state) => state.channels);
-
-  const userSettings = useMemo(() => {
-    return cloneDeep(currentUserSettings);
-  }, [currentUserSettings]);
+  const { subscriptionStatus, userSettings } = useSelector((state) => state.channels);
 
   const { data: channelDetails, isLoading } = useGetChannelDetails(channel.channel);
 
@@ -54,6 +49,9 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
   }, [subscriptionStatus, channelDetails]);
 
   const AliasChain = channelDetails?.alias_blockchain_id && LOGO_ALIAS_CHAIN[+channelDetails.alias_blockchain_id];
+
+  const hasAliasAddress =
+    channelDetails && channelDetails?.alias_address != null && channelDetails?.alias_address != 'NULL';
 
   return (
     <>
@@ -86,8 +84,8 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
             <SubscribeChannelDropdown
               channelDetails={channelDetails}
               onSuccess={() => {
-                setSubscribed(true);
-                setSubscriberCount((prevSubscriberCount) => prevSubscriberCount + 1);
+                setSubscribed(false);
+                setSubscriberCount((prevSubscriberCount: number) => prevSubscriberCount - 1);
               }}
             >
               <Button
@@ -166,15 +164,12 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
                   height={16}
                 />
 
-                {channelDetails &&
-                  channelDetails?.alias_address != null &&
-                  channelDetails?.alias_address != 'NULL' &&
-                  AliasChain && (
-                    <AliasChain
-                      width={16}
-                      height={16}
-                    />
-                  )}
+                {hasAliasAddress && AliasChain && (
+                  <AliasChain
+                    width={16}
+                    height={16}
+                  />
+                )}
               </Box>
             </Skeleton>
 

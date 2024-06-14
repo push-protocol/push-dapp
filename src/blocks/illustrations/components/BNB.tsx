@@ -6,7 +6,7 @@ const BNB: FC<IllustrationProps> = (allProps) => {
   const { svgProps: props, ...restProps } = allProps;
   return (
     <IllustrationWrapper
-      componentName="Optimisim"
+      componentName="BNB"
       illustration={
         <svg
           width={restProps?.width ?? '24'}

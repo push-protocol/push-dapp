@@ -6,7 +6,7 @@ const Fuse: FC<IllustrationProps> = (allProps) => {
   const { svgProps: props, ...restProps } = allProps;
   return (
     <IllustrationWrapper
-      componentName="Optimisim"
+      componentName="Fuse"
       illustration={
         <svg
           width={restProps?.width ?? '24'}

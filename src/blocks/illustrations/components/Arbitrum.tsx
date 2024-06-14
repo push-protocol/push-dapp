@@ -6,7 +6,7 @@ const Arbitrum: FC<IllustrationProps> = (allProps) => {
   const { svgProps: props, ...restProps } = allProps;
   return (
     <IllustrationWrapper
-      componentName="Optimisim"
+      componentName="Arbitrum"
       illustration={
         <svg
           xmlns="http://www.w3.org/2000/svg"
