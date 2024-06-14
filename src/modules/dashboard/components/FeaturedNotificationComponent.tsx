@@ -30,8 +30,6 @@ const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = ()
   const { account } = useAccount();
   const dispatch = useDispatch();
 
-  const itemsPerPage = 3;
-
   const FeaturedChannelsList = FeaturedNotificationChannelsList[appConfig.appEnv];
 
   const { currentIndex, handleNext, handlePrevious, listRef } = useSmoothHorizontalScroll({
