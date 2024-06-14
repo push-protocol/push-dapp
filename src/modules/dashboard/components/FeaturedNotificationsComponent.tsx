@@ -1,15 +1,16 @@
 // React + Web3 Essentials
 import { FC, useEffect } from 'react';
 
-// External Packages
+// Third-party libraries
 import { useDispatch, useSelector } from 'react-redux';
 import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
 
-// Internal Components
+// Hooks
 import { useAccount } from 'hooks';
+
+// Components
 import { useSmoothHorizontalScroll } from 'common';
-import { useBlocksTheme } from 'blocks/Blocks.hooks';
-import FeaturedChannelListItem from './FeaturedChannelListItem';
+import { FeaturedChannelsListItem } from './FeaturedChannelsListItem';
 import PrevIconSlider from 'blocks/icons/components/PrevIconSlider';
 import NextIconSlider from 'blocks/icons/components/NextIconSlider';
 import { Box, HoverableSVG, Text, Link } from 'blocks';
@@ -18,12 +19,11 @@ import { Box, HoverableSVG, Text, Link } from 'blocks';
 import { FeaturedNotificationChannelsList } from '../configs';
 import { appConfig } from 'config';
 
-export type FeaturedNotificationComponentProps = {};
+export type FeaturedNotificationsComponentProps = {};
 
 const itemsPerPage = 3;
 
-const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = () => {
-  const { mode } = useBlocksTheme();
+const FeaturedNotificationsComponent: FC<FeaturedNotificationsComponentProps> = () => {
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
@@ -68,7 +68,7 @@ const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = ()
       padding={{ ml: 's6 s4', initial: 's6' }}
       display="flex"
       flexDirection="column"
-      backgroundColor={{ light: 'dark-white', dark: 'gray-900' }}
+      backgroundColor={{ light: 'darkWhite', dark: 'gray-900' }}
       gap={{ ml: 's4', initial: 's2' }}
     >
       <Box
@@ -106,13 +106,13 @@ const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = ()
           >
             <HoverableSVG
               onClick={handlePrevious}
-              defaultColor={mode === 'dark' ? 'gray-400' : 'gray-900'}
+              defaultColor={{ light: 'gray-900', dark: 'gray-400' }}
               disabled={currentIndex === 0}
               icon={<PrevIconSlider size={24} />}
             ></HoverableSVG>
             <HoverableSVG
               onClick={handleClick}
-              defaultColor={mode === 'dark' ? 'gray-400' : 'gray-900'}
+              defaultColor={{ light: 'gray-900', dark: 'gray-400' }}
               disabled={currentIndex + itemsPerPage >= FeaturedChannelsList.length}
               icon={<NextIconSlider size={24} />}
             ></HoverableSVG>
@@ -129,11 +129,11 @@ const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = ()
         width={{ initial: 'calc(100vw - 346px)' }}
       >
         {FeaturedChannelsList.map((channel) => {
-          return <FeaturedChannelListItem channel={channel} />;
+          return <FeaturedChannelsListItem channel={channel} />;
         })}
       </Box>
     </Box>
   );
 };
 
-export { FeaturedNotificationComponent };
+export { FeaturedNotificationsComponent };

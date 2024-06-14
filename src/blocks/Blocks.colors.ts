@@ -3,8 +3,6 @@ import { BlocksColorData, BlocksColors, GlobalColors } from './Blocks.types';
 const brandColors = {
   /* New brand colors */
 
-  'DARK-WHITE': '#FFFFFFBF',
-
   'GRAY-100': '#F5F6F8',
   'GRAY-200': '#E5E5E5',
   'GRAY-300': '#C5C8CD',

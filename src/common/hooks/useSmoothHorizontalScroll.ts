@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type UseSmoothHorizontalScrollProps = {
   items: any[];
@@ -8,7 +8,12 @@ type UseSmoothHorizontalScrollProps = {
 
 export const useSmoothHorizontalScroll = ({ items, itemsPerPage, itemGap }: UseSmoothHorizontalScrollProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [visibleItems, setVisibleItems] = useState(items.slice(0, itemsPerPage));
   const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setVisibleItems(items.slice(currentIndex, currentIndex + itemsPerPage));
+  }, [currentIndex, items, itemsPerPage]);
 
   const handleNext = () => {
     if (currentIndex + itemsPerPage < items.length) {
@@ -16,7 +21,7 @@ export const useSmoothHorizontalScroll = ({ items, itemsPerPage, itemGap }: UseS
       if (listRef.current) {
         listRef.current.scrollBy({
           left: listRef.current.clientWidth + itemGap,
-          behavior: 'smooth',
+          behavior: 'smooth'
         });
       }
     } else {
@@ -24,7 +29,7 @@ export const useSmoothHorizontalScroll = ({ items, itemsPerPage, itemGap }: UseS
       if (listRef.current) {
         listRef.current.scrollBy({
           left: listRef.current.clientWidth + itemGap,
-          behavior: 'smooth',
+          behavior: 'smooth'
         });
       }
     }
@@ -36,7 +41,7 @@ export const useSmoothHorizontalScroll = ({ items, itemsPerPage, itemGap }: UseS
       if (listRef.current) {
         listRef.current.scrollBy({
           left: -listRef.current.clientWidth - itemGap,
-          behavior: 'smooth',
+          behavior: 'smooth'
         });
       }
     }
@@ -47,5 +52,6 @@ export const useSmoothHorizontalScroll = ({ items, itemsPerPage, itemGap }: UseS
     handleNext,
     handlePrevious,
     listRef,
+    visibleItems
   };
 };
