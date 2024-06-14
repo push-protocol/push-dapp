@@ -1,30 +1,36 @@
 // React + Web3 Essentials
 import { FC, useMemo, useState, useEffect } from 'react';
 
-// External Packages
+// Third-party libraries
 import { useSelector } from 'react-redux';
 import { cloneDeep } from 'lodash';
+import { css } from 'styled-components';
+import { Link } from 'react-router-dom';
 
-// Internal Components
+//hooks
+import { useGetChannelDetails } from 'queries';
+
+// Components
 import { Box, Button, CaretDown, NotificationMobile, Skeleton, Text } from 'blocks';
 import SubscribeChannelDropdown from 'common/components/SubscribeChannelDropdown';
 import UnsubscribeChannelDropdown from 'common/components/UnsubscribeChannelDropdown';
+import TickDecoratedCircleFilled from 'blocks/icons/components/TickDecoratedCircleFilled';
+import VerifiedToolTipComponent from './VerifiedToolTipComponent';
+import Ethereum from 'blocks/illustrations/components/Ethereum';
 
 // Internal Configs
 import { ChannelDetailsProps } from '../configs/DashboardFeaturedChannels.config';
-import { useGetChannelDetails } from 'queries';
-import { css } from 'styled-components';
-import Ethereum from 'blocks/illustrations/components/Ethereum';
 import { LOGO_ALIAS_CHAIN } from '../configs/ChainDetails';
-import TickDecoratedCircleFilled from 'blocks/icons/components/TickDecoratedCircleFilled';
-import { Link } from 'react-router-dom';
-import VerifiedToolTipComponent from './VerifiedToolTipComponent';
 
-type FeaturedChannelListItemProps = {
+
+// Styles
+import { ImageV3 } from '../Dashboard.styled';
+
+type FeaturedChannelsListItemProps = {
   channel: ChannelDetailsProps;
 };
 
-const FeaturedChannelListItem: FC<FeaturedChannelListItemProps> = (props) => {
+const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
   const { channel } = props;
 
   const { subscriptionStatus, userSettings: currentUserSettings } = useSelector((state) => state.channels);
@@ -78,21 +84,12 @@ const FeaturedChannelListItem: FC<FeaturedChannelListItemProps> = (props) => {
           justifyContent="space-between"
         >
           <Skeleton isLoading={isLoading}>
-            <Box
-              width="40px"
-              height="40px"
-              borderRadius="var(--r3)"
-              css={css`
-                overflow: hidden;
-              `}
-            >
-              <img
-                width="100%"
-                height="100%"
-                src={channelDetails?.iconV2}
-                alt={channelDetails?.name}
-              />
-            </Box>
+            <ImageV3
+              width="52px"
+              height="52px"
+              src={channelDetails?.iconV2}
+              alt={channelDetails?.name}
+            />
           </Skeleton>
 
           {!subscribed && !isLoading && channelDetails && (
@@ -220,4 +217,4 @@ const FeaturedChannelListItem: FC<FeaturedChannelListItemProps> = (props) => {
   );
 };
 
-export default FeaturedChannelListItem;
+export { FeaturedChannelsListItem };
