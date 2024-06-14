@@ -10,6 +10,7 @@ import { ChannelItem } from './ChannelItem';
 
 import { useGetUserSubscriptions } from 'queries';
 import { appConfig } from 'config';
+import { EnvKeys } from '../Dashboard.types';
 
 const SubscribedChannelItemList = () => {
   const { data: userSubscriptions, isLoading, refetch } = useGetUserSubscriptions();
@@ -28,13 +29,13 @@ const SubscribedChannelItemList = () => {
           {index != userSubscriptions.length - 1 && <Separator />}
         </Box>
       ))
-    : HottestChannels[appConfig.appEnv as keyof typeof HottestChannels]?.map((channel, index) => (
+    : HottestChannels[appConfig.appEnv as EnvKeys]?.map((channel, index) => (
         <Box>
           <ChannelItem
             key={index}
             channelAddress={channel}
           />
-          {index != HottestChannels[appConfig.appEnv as keyof typeof HottestChannels].length - 1 && <Separator />}
+          {index != HottestChannels[appConfig.appEnv as EnvKeys].length - 1 && <Separator />}
         </Box>
       ));
 };

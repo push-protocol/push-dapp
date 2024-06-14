@@ -10,24 +10,27 @@ import { getTrendingChannelsData } from '../Dashboard.utils';
 // Components
 import { Box, Separator } from 'blocks';
 import { ChannelItem } from './ChannelItem';
+import { TrendingSource, TrendingStartTime } from '../Dashboard.constants';
+import { appConfig } from 'config';
+import { EnvKeys, SourceKeys } from '../Dashboard.types';
 
 const TrendingChannelItemList = () => {
   const [trendingChannels, setTrendingChannels] = useState<Array<string>>([]);
 
-  const startDate = new Date('2022-01-01');
+  const startDate = new Date(TrendingStartTime[appConfig.appEnv as EnvKeys]);
   const firstEndDate = new Date(Date.now()).toISOString().split('T')[0];
   const secondEndDate = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
   const { data: currentData, isLoading } = useGetTrendingChannels({
     startDate,
     endDate: firstEndDate,
     channel: 'All',
-    source: 'ETH_MAINNET',
+    source: TrendingSource[appConfig.appEnv as EnvKeys],
   });
   const { data: weekData } = useGetTrendingChannels({
     startDate,
     endDate: secondEndDate,
     channel: 'All',
-    source: 'ETH_MAINNET',
+    source: TrendingSource[appConfig.appEnv as EnvKeys],
   });
 
   useEffect(() => {

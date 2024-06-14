@@ -1,8 +1,10 @@
+import { SourceKeys } from 'modules/dashboard/Dashboard.types';
+
 export type TrendingChannelsParams = {
   startDate: Date;
   endDate: string;
   channel: 'All';
-  source: 'ETH_MAINNET';
+  source: SourceKeys;
 };
 
 type TrendingChannelDetails = {

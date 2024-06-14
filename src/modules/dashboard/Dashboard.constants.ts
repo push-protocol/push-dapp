@@ -1,5 +1,5 @@
 import { PushAlpha, PushBot, PushDev } from 'blocks';
-import { ChatType } from './Dashboard.types';
+import { ChatType, EnvKeys, SourceKeys } from './Dashboard.types';
 
 export const RecommendedChatList: ChatType[] = [
   {
@@ -50,7 +50,7 @@ export const RecommendedChatList: ChatType[] = [
   },
 ];
 
-export const HottestChannels = {
+export const HottestChannels: Record<EnvKeys, Array<string>> = {
   prod: [
     '0x90A48D5CF7343B08dA12E067680B4C6dbfE551Be',
     '0xe56f1D3EDFFF1f25855aEF744caFE7991c224FFF',
@@ -73,3 +73,10 @@ export const HottestChannels = {
     '0xD8634C39BBFd4033c0d3289C4515275102423681',
   ],
 };
+
+export const TrendingStartTime: Record<EnvKeys, string> = {
+  prod: '2022-01-01',
+  staging: '2024-06-01',
+  dev: '2024-06-01',
+};
+export const TrendingSource: Record<EnvKeys, SourceKeys> = { prod: 'ETH_MAINNET', staging: 'All', dev: 'All' };
