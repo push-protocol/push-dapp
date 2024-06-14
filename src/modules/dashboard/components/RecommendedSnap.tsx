@@ -2,9 +2,6 @@
 import { useNavigate } from 'react-router-dom';
 import { css } from 'styled-components';
 
-//Hooks
-import { useBlocksTheme } from 'blocks/Blocks.hooks';
-
 //Constants
 import { RecommendedChatList } from '../Dashboard.constants';
 
@@ -15,7 +12,6 @@ import Metamask from 'blocks/illustrations/components/Metamask';
 
 const RecommendedSnap = () => {
   const navigate = useNavigate();
-  const { mode } = useBlocksTheme();
 
   return (
     <Box
@@ -66,13 +62,22 @@ const RecommendedSnap = () => {
           gap="s3"
         >
           <Metamask />
-          <Text variant="h5-semibold">Receive Instant Notifications in Metamask with Push Snap.</Text>
+          <Text
+            variant="h5-semibold"
+            display={{ ml: 'none', dp: 'block' }}
+          >
+            Receive Instant Notifications in Metamask with Push Snap.
+          </Text>
+          <Text
+            variant="h5-semibold"
+            display={{ ml: 'block', dp: 'none' }}
+            textAlign="center"
+          >
+            Receive Instant Notifications in Metamask with Push Snap.
+          </Text>
         </Box>
         <Button
           variant="tertiary"
-          css={css`
-            background-color: ${mode === 'dark' ? '#484d58' : ''};
-          `}
           size="small"
           onClick={() => navigate('/snap')}
         >

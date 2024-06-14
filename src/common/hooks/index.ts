@@ -1,1 +1,1 @@
-export { useSmoothCarousel } from './useSmoothScroll';
+export { useSmoothHorizontalScroll } from './useSmoothHorizontalScroll';

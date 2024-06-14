@@ -10,12 +10,16 @@ type FeaturedChannelListprops = {
 const FeaturedChannelList: FC<FeaturedChannelListprops> = (props) => {
   const { channel } = props;
 
-
   const { data: channelDetails, isLoading } = useGetChannelDetails(channel.channel);
 
   return (
     <>
-      {channelDetails && <FeaturedChannelListItem channelDetails={channelDetails} isLoading={isLoading} />}
+      {channelDetails && (
+        <FeaturedChannelListItem
+          channelDetails={channelDetails}
+          isLoading={isLoading}
+        />
+      )}
     </>
   );
 };

@@ -2,23 +2,24 @@
 import { FC, useEffect } from 'react';
 
 // External Packages
-import { css } from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
 
 // Internal Components
 import { useAccount } from 'hooks';
-import { useSmoothCarousel } from 'common';
+import { useSmoothHorizontalScroll } from 'common';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import FeaturedChannelListItem from './FeaturedChannelListItem';
 import PrevIconSlider from 'blocks/icons/components/PrevIconSlider';
 import NextIconSlider from 'blocks/icons/components/NextIconSlider';
-import { Box, HoverableSVG, Text } from 'blocks';
+import { Box, HoverableSVG, Text, Link } from 'blocks';
 
 // Internal Configs
 import { FeaturedNotificationChannels } from '../configs';
 
-export type FeaturedNotificationComponentProps = {}
+export type FeaturedNotificationComponentProps = {};
+
+const itemsPerPage = 3;
 
 const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = () => {
   const { mode } = useBlocksTheme();
@@ -28,11 +29,10 @@ const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = ()
   const { account } = useAccount();
   const dispatch = useDispatch();
 
-  const itemsPerPage = 3;
-
-  const { currentIndex, handleNext, handlePrevious, listRef, visibleItems } = useSmoothCarousel({
+  const { currentIndex, handleNext, handlePrevious, listRef } = useSmoothHorizontalScroll({
     items: FeaturedNotificationChannels,
-    itemsPerPage
+    itemsPerPage,
+    itemGap: 24, // Gap provided in between the list items
   });
 
   const handleClick: VoidFunction = () => {
@@ -62,7 +62,7 @@ const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = ()
   return (
     <Box
       borderRadius="24px"
-      padding={{ ml: 's6 s4', initial: "s6" }}
+      padding={{ ml: 's6 s4', initial: 's6' }}
       display="flex"
       flexDirection="column"
       backgroundColor={{ light: 'dark-white', dark: 'gray-900' }}
@@ -72,10 +72,12 @@ const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = ()
         display="flex"
         justifyContent="space-between"
         flexDirection={{ tb: 'column' }}
-        gap={{ tb: 's3' }}>
+        gap={{ tb: 's3' }}
+      >
         <Text
           variant="h4-bold"
-          color={{ light: 'black', dark: 'white' }}>
+          color={{ light: 'black', dark: 'white' }}
+        >
           Featured Notification Channels
         </Text>
 
@@ -83,14 +85,22 @@ const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = ()
           display="flex"
           flexDirection="row"
           alignItems="center"
-          gap="s4">
-          <Text
-            variant="h5-semibold"
-            color={{ light: 'black', dark: 'white' }}>
+          gap="s4"
+        >
+          <Link
+            to="/channels"
+            textProps={{
+              variant: 'h5-semibold',
+              color: { light: 'black', dark: 'white' },
+            }}
+          >
             View All
-          </Text>
+          </Link>
 
-          <Box display="flex" flexDirection="row">
+          <Box
+            display="flex"
+            flexDirection="row"
+          >
             <HoverableSVG
               onClick={handlePrevious}
               defaultColor={mode === 'dark' ? 'gray-400' : 'gray-900'}
@@ -112,12 +122,11 @@ const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = ()
         display="flex"
         flexDirection={{ initial: 'row', tb: 'column' }}
         gap="s6"
-        width="100%"
+        overflow="scroll"
+        width={{ initial: 'calc(100vw - 346px)' }}
       >
-        {visibleItems.map((channel) => {
-          return (
-            <FeaturedChannelListItem channel={channel} />
-          );
+        {FeaturedNotificationChannels.map((channel) => {
+          return <FeaturedChannelListItem channel={channel} />;
         })}
       </Box>
     </Box>

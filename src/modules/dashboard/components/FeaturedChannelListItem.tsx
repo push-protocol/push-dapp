@@ -67,10 +67,9 @@ const FeaturedChannelListItem: FC<FeaturedChannelListItemProps> = (props) => {
         padding="s6"
         borderRadius="24px"
         gap="s3"
-        maxWidth="-webkit-fill-available"
-        width={{ tb: '-webkit-fill-available' }}
+        width={{ initial: '27.68%' }}
         css={css`
-          flex: 1;
+          flex-shrink: 0;
         `}
       >
         <Box
@@ -151,7 +150,6 @@ const FeaturedChannelListItem: FC<FeaturedChannelListItemProps> = (props) => {
                 flexDirection="row"
                 gap="s1"
                 alignItems="center"
-
               >
                 <Link
                   to={`/channels/${channelDetails?.channel}`}
@@ -206,6 +204,7 @@ const FeaturedChannelListItem: FC<FeaturedChannelListItemProps> = (props) => {
               <Text
                 variant="bs-regular"
                 color={{ light: 'gray-600', dark: 'gray-500' }}
+                numberOfLines={2}
               >
                 {channelDetails?.info}
               </Text>

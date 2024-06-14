@@ -2,11 +2,6 @@
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { css } from 'styled-components';
-
-//Hooks
-import { useBlocksTheme } from 'blocks/Blocks.hooks';
-
 // Components
 import { Box, Button, Chat, Text } from 'blocks';
 import { ChatType } from '../Dashboard.types';
@@ -16,7 +11,7 @@ export type ChatItemProps = {
 };
 const ChatItem: FC<ChatItemProps> = ({ chat }) => {
   const navigate = useNavigate();
-  const { mode } = useBlocksTheme();
+
   return (
     <Box
       display="flex"
@@ -53,9 +48,6 @@ const ChatItem: FC<ChatItemProps> = ({ chat }) => {
         size="small"
         iconOnly={<Chat />}
         variant="tertiary"
-        css={css`
-          background-color: ${mode === 'dark' ? '#484d58' : ''};
-        `}
       />
     </Box>
   );
