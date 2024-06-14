@@ -7,10 +7,10 @@ import { Box, Button, Chat, Link, Text } from 'blocks';
 //Types
 import { ChatType } from '../Dashboard.types';
 
-export type ChatItemProps = {
+export type RecommendedChatListItemProps = {
   chat: ChatType;
 };
-const ChatItem: FC<ChatItemProps> = ({ chat }) => {
+const RecommendedChatListItem: FC<RecommendedChatListItemProps> = ({ chat }) => {
   return (
     <Box
       display="flex"
@@ -42,7 +42,7 @@ const ChatItem: FC<ChatItemProps> = ({ chat }) => {
           </Text>
         </Box>
       </Box>
-      <Link to={`/chat/${chat?.previewLink}`}>
+      <Link to={`/chat/${chat?.chatParticipantAlias}`}>
         <Button
           size="small"
           iconOnly={<Chat />}
@@ -53,4 +53,4 @@ const ChatItem: FC<ChatItemProps> = ({ chat }) => {
   );
 };
 
-export { ChatItem };
+export { RecommendedChatListItem };

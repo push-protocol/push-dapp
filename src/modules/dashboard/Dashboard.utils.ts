@@ -1,6 +1,12 @@
 import { TrendingChannelsResponse } from 'queries/types';
 import { TrendingChannelsType } from './Dashboard.types';
 
+/**
+ * @param weekData
+ * @param currentData
+ * @returns array of addresses of trending channels
+ * This is a temporary function and should be removed once the trending api is ready
+ */
 export const getTrendingChannelsData = (
   weekData: TrendingChannelsResponse | undefined,
   currentData: TrendingChannelsResponse | undefined
@@ -62,4 +68,14 @@ export const getTrendingChannelsData = (
   });
 
   return sortedChannels.slice(0, 5).map((item) => item.channel);
+};
+
+export const formatSubscriberCount = (count: number) => {
+  if (count >= 1000000) {
+    return (count / 1000000).toFixed(1) + 'M';
+  } else if (count >= 1000) {
+    return (count / 1000).toFixed(1) + 'K';
+  } else {
+    return count;
+  }
 };

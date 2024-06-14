@@ -5,7 +5,7 @@ import { FC, useState } from 'react';
 import { Box } from 'blocks';
 import { DashboardSubHeader } from './components/DashboardSubHeader';
 import { FeaturedNotificationsComponent } from './components/FeaturedNotificationsComponent';
-import { TrendingRecommended } from './components/TrendingRecommended';
+import { ChannelVariantsSection } from './components/ChannelVariantsSection';
 import DashboardHeader from './components/DashboardHeader';
 
 export type DashboardProps = {};
@@ -33,7 +33,7 @@ const Dashboard: FC<DashboardProps> = () => {
         gap="s6"
       >
         <FeaturedNotificationsComponent />
-        <TrendingRecommended />
+        <ChannelVariantsSection />
       </Box>
     </Box>
   );

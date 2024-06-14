@@ -6,24 +6,19 @@ import { FC, ReactNode } from 'react';
 interface SubscribeChannelDropdownProps {
   children: ReactNode;
   channelDetails: ChannelDetailsResponse;
-  setSubscribed: React.Dispatch<React.SetStateAction<boolean>>;
-  setSubscriberCount: React.Dispatch<React.SetStateAction<number>>;
-  setLoading: (value: boolean) => void;
+  onSuccess: () => void;
 }
 
 const SubscribeChannelDropdown: FC<SubscribeChannelDropdownProps> = (options) => {
-  const { children, channelDetails, setLoading, setSubscribed, setSubscriberCount } = options;
-
-  const handleSubscriberCount = () => {
-    setSubscribed(true);
-    setSubscriberCount((prevSubscriberCount) => prevSubscriberCount + 1);
-  };
+  const { children, channelDetails, onSuccess } = options;
 
   return (
     <OptinNotifSettingDropdown
       channelDetail={channelDetails}
-      setLoading={setLoading}
-      onSuccessOptin={handleSubscriberCount}
+      setLoading={() => {
+        //empty function
+      }}
+      onSuccessOptin={() => onSuccess()}
     >
       {children}
     </OptinNotifSettingDropdown>

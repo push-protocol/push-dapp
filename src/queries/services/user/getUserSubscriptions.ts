@@ -1,6 +1,6 @@
 import { PushAPI } from '@pushprotocol/restapi';
 
-import { getUserSubscriptionsModelCreator } from 'queries/models';
+import { getUserSubscriptionsModelCreator } from '../../models';
 
-export const getUserSubscriptions = (userPushSDKInstance: PushAPI) =>
-  userPushSDKInstance.notification.subscriptions().then((response) => getUserSubscriptionsModelCreator(response));
+export const getUserSubscriptions = (userPushSDKInstance: PushAPI, address?: string) =>
+  userPushSDKInstance.notification.subscriptions({ channel: address }).then(getUserSubscriptionsModelCreator);

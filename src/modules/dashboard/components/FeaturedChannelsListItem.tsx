@@ -10,6 +10,9 @@ import { Link } from 'react-router-dom';
 //hooks
 import { useGetChannelDetails } from 'queries';
 
+//Utility functions
+import { formatSubscriberCount } from '../Dashboard.utils';
+
 // Components
 import { Box, Button, CaretDown, NotificationMobile, Skeleton, Text } from 'blocks';
 import SubscribeChannelDropdown from 'common/components/SubscribeChannelDropdown';
@@ -21,7 +24,6 @@ import Ethereum from 'blocks/illustrations/components/Ethereum';
 // Internal Configs
 import { ChannelDetailsProps } from '../configs/DashboardFeaturedChannels.config';
 import { LOGO_ALIAS_CHAIN } from '../configs/ChainDetails';
-
 
 // Styles
 import { ImageV3 } from '../Dashboard.styled';
@@ -39,16 +41,6 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
     return cloneDeep(currentUserSettings);
   }, [currentUserSettings]);
 
-  const formatSubscriberCount = (count: number) => {
-    if (count >= 1000000) {
-      return (count / 1000000).toFixed(1) + 'M';
-    } else if (count >= 1000) {
-      return (count / 1000).toFixed(1) + 'K';
-    } else {
-      return count;
-    }
-  };
-
   const { data: channelDetails, isLoading } = useGetChannelDetails(channel.channel);
 
   const [subscribed, setSubscribed] = useState(false);
@@ -60,8 +52,6 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
       setSubscriberCount(channelDetails.subscriber_count);
     }
   }, [subscriptionStatus, channelDetails]);
-
-  const [loading, setLoading] = useState(false);
 
   const AliasChain = channelDetails?.alias_blockchain_id && LOGO_ALIAS_CHAIN[+channelDetails.alias_blockchain_id];
 
@@ -95,9 +85,10 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
           {!subscribed && !isLoading && channelDetails && (
             <SubscribeChannelDropdown
               channelDetails={channelDetails}
-              setLoading={setLoading}
-              setSubscribed={setSubscribed}
-              setSubscriberCount={setSubscriberCount}
+              onSuccess={() => {
+                setSubscribed(true);
+                setSubscriberCount((prevSubscriberCount) => prevSubscriberCount + 1);
+              }}
             >
               <Button
                 disabled={isLoading}
@@ -162,9 +153,11 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
                 </Link>
 
                 {!!channelDetails?.verified_status && (
-
                   <VerifiedToolTipComponent>
-                    <TickDecoratedCircleFilled size={16} color={{ light: 'gray-300', dark: 'gray-700' }} />
+                    <TickDecoratedCircleFilled
+                      size={16}
+                      color={{ light: 'gray-300', dark: 'gray-700' }}
+                    />
                   </VerifiedToolTipComponent>
                 )}
 

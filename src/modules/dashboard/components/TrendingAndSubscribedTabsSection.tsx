@@ -1,22 +1,24 @@
 // React and other libraries
 import { useState } from 'react';
 
-import { css } from 'styled-components';
-
 //Hooks
 import { useAccount } from 'hooks';
 
 // Constants
-import { channelListTypeValues } from '../Dashboard.types';
+import { DashboardChannelTabType } from '../Dashboard.types';
 
 // Components
 import { Box, Text } from 'blocks';
 import { TrendingChannelsList } from './TrendingChannelsList';
 import { SubscribedChannelsList } from './SubscribedChannelsList';
+import { dahboardChannelTabs } from '../Dashboard.constants';
 
-const TrendingSubscribed = () => {
-  const [selectedListType, setSelectedListType] = useState<(typeof channelListTypeValues)[number]>('trending channels');
+const TrendingAndSubscribedTabsSection = () => {
+  const [selectedChannelTab, setSelectedChannelTab] = useState<DashboardChannelTabType>(dahboardChannelTabs[0]);
   const { wallet } = useAccount();
+  const isWalletConnected = !!wallet?.accounts?.length;
+  console.debug(dahboardChannelTabs);
+  // console.debug(dahboardChannelTabs.map((c) => console.log(c, 'test')));
   return (
     <Box
       display="flex"
@@ -36,26 +38,28 @@ const TrendingSubscribed = () => {
           borderRadius="var(--r4)"
           width={{ lp: 'auto', initial: 'fit-content' }}
         >
-          {channelListTypeValues.map((listType) => (
+          {dahboardChannelTabs?.map((channelTab, index) => (
             <Box
+              key={index}
               display="flex"
               justifyContent="center"
               width={{ ll: '100%' }}
-              css={css`
-                white-space: nowrap;
-              `}
               alignItems="center"
               padding="s2 s3"
               borderRadius="var(--r4)"
-              backgroundColor={selectedListType === listType ? { dark: 'gray-800', light: 'white' } : 'transparent'}
-              onClick={() => setSelectedListType(listType)}
+              backgroundColor={selectedChannelTab === channelTab ? { dark: 'gray-800', light: 'white' } : 'transparent'}
+              onClick={() => setSelectedChannelTab(channelTab)}
             >
               <Text
                 color={{ light: 'gray-1000', dark: 'white' }}
                 variant="h5-semibold"
-                textTransform="capitalize"
+                ellipsis={true}
               >
-                {listType === 'subscribed' ? (!wallet?.accounts?.length ? 'hottest channels' : listType) : listType}
+                {channelTab.value === 'subscribed'
+                  ? isWalletConnected
+                    ? channelTab?.label
+                    : 'Hottest Channels'
+                  : channelTab?.label}
               </Text>
             </Box>
           ))}
@@ -71,11 +75,11 @@ const TrendingSubscribed = () => {
         border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
         padding="s2 s4"
       >
-        {selectedListType === 'trending channels' && <TrendingChannelsList />}
-        {selectedListType === 'subscribed' && <SubscribedChannelsList />}
+        {selectedChannelTab.value === 'trending' && <TrendingChannelsList />}
+        {selectedChannelTab.value === 'subscribed' && <SubscribedChannelsList />}
       </Box>
     </Box>
   );
 };
 
-export { TrendingSubscribed };
+export { TrendingAndSubscribedTabsSection };

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useGetTrendingChannels } from 'queries/hooks';
 
 //Constants
-import { TrendingSource, TrendingStartTime } from '../Dashboard.constants';
+import { trendingSource, trendingStartTime } from '../Dashboard.constants';
 import { appConfig } from 'config';
 
 //Utility functions
@@ -19,34 +19,31 @@ import { ChannelListItem } from './ChannelListItem';
 import { EnvKeys } from '../Dashboard.types';
 
 const TrendingChannelsList = () => {
-  const [trendingChannels, setTrendingChannels] = useState<Array<string>>([]);
-
-  const startDate = new Date(TrendingStartTime[appConfig.appEnv as EnvKeys]);
+  //last 7 days and move to conifg
+  const startDate = new Date(trendingStartTime[appConfig.appEnv as EnvKeys]);
   const firstEndDate = new Date(Date.now()).toISOString().split('T')[0];
   const secondEndDate = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
   const { data: currentData, isLoading } = useGetTrendingChannels({
     startDate,
     endDate: firstEndDate,
     channel: 'All',
-    source: TrendingSource[appConfig.appEnv as EnvKeys],
+    source: trendingSource[appConfig.appEnv as EnvKeys],
   });
   const { data: weekData } = useGetTrendingChannels({
     startDate,
     endDate: secondEndDate,
     channel: 'All',
-    source: TrendingSource[appConfig.appEnv as EnvKeys],
+    source: trendingSource[appConfig.appEnv as EnvKeys],
   });
 
-  useEffect(() => {
-    const channelsData = getTrendingChannelsData(weekData, currentData);
-    setTrendingChannels(channelsData);
-  }, [currentData, weekData]);
-  return trendingChannels?.map((channel, index) => (
+  const trendingChannels = getTrendingChannelsData(weekData, currentData);
+
+  return trendingChannels.map((channel, index) => (
     <Box>
       <ChannelListItem
         key={index}
         channelAddress={channel}
-        isListLoading={isLoading && !trendingChannels.length}
+        isLoading={isLoading && !trendingChannels.length}
       />
       {index != trendingChannels.length - 1 && <Separator />}
     </Box>

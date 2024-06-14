@@ -1,9 +1,13 @@
 import { PushAlpha, PushBot, PushDev } from 'blocks';
-import { ChatType, EnvKeys, SourceKeys } from './Dashboard.types';
+import { ChatType, DashboardChannelTabsType, EnvKeys, SourceKeys } from './Dashboard.types';
 
-export const RecommendedChatList: ChatType[] = [
+export const dahboardChannelTabs: DashboardChannelTabsType = [
+  { label: 'Trending Channels', value: 'trending' },
+  { label: 'Subscribed', value: 'subscribed' },
+];
+
+export const recommendedChatList: ChatType[] = [
   {
-    previewLink: 'eip155:0x99A08ac6254dcf7ccc37CeC662aeba8eFA666666',
     chatParticipantAlias: 'eip155:0x99A08ac6254dcf7ccc37CeC662aeba8eFA666666',
     payload: {
       chatId: '0x99A08ac6254dcf7ccc37CeC662aeba8eFA666666',
@@ -18,7 +22,6 @@ export const RecommendedChatList: ChatType[] = [
     },
   },
   {
-    previewLink: 'eip155:0x71Ffa5771E8019787190D098586EFe02026a3c8C',
     chatParticipantAlias: 'eip155:0x71Ffa5771E8019787190D098586EFe02026a3c8C',
     payload: {
       chatId: '0x71Ffa5771E8019787190D098586EFe02026a3c8C',
@@ -33,8 +36,6 @@ export const RecommendedChatList: ChatType[] = [
     },
   },
   {
-    previewLink: 'chatid:37799f9cb3ffd83eff4d2dc18913a3d9607f9c787a4374a7b3259bda28242cd6',
-
     chatParticipantAlias: 'chatid:37799f9cb3ffd83eff4d2dc18913a3d9607f9c787a4374a7b3259bda28242cd6',
     payload: {
       chatId: '37799f9cb3ffd83eff4d2dc18913a3d9607f9c787a4374a7b3259bda28242cd6',
@@ -50,8 +51,15 @@ export const RecommendedChatList: ChatType[] = [
   },
 ];
 
-export const HottestChannels: Record<EnvKeys, Array<string>> = {
+export const hottestChannels: Record<EnvKeys, Array<string>> = {
   prod: [
+    '0x90A48D5CF7343B08dA12E067680B4C6dbfE551Be',
+    '0xe56f1D3EDFFF1f25855aEF744caFE7991c224FFF',
+    '0x983110309620D911731Ac0932219af06091b6744',
+    '0x8Cd0ad5C55498Aacb72b6689E1da5A284C69c0C7',
+    '0x57cD6665e725232123F5250328E35Db6ABf6d80C',
+  ],
+  alpha: [
     '0x90A48D5CF7343B08dA12E067680B4C6dbfE551Be',
     '0xe56f1D3EDFFF1f25855aEF744caFE7991c224FFF',
     '0x983110309620D911731Ac0932219af06091b6744',
@@ -74,9 +82,15 @@ export const HottestChannels: Record<EnvKeys, Array<string>> = {
   ],
 };
 
-export const TrendingStartTime: Record<EnvKeys, string> = {
+export const trendingStartTime: Record<EnvKeys, string> = {
   prod: '2022-01-01',
+  alpha: '2022-01-01',
   staging: '2024-06-01',
   dev: '2024-06-01',
 };
-export const TrendingSource: Record<EnvKeys, SourceKeys> = { prod: 'ETH_MAINNET', staging: 'All', dev: 'All' };
+export const trendingSource: Record<EnvKeys, SourceKeys> = {
+  prod: 'ETH_MAINNET',
+  alpha: 'ETH_MAINNET',
+  staging: 'All',
+  dev: 'All',
+};

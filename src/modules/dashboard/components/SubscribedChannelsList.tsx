@@ -5,7 +5,7 @@ import { useAccount } from 'hooks';
 import { useGetUserSubscriptions } from 'queries';
 
 //Constants
-import { HottestChannels } from '../Dashboard.constants';
+import { hottestChannels } from '../Dashboard.constants';
 import { appConfig } from 'config';
 
 // Components
@@ -15,6 +15,17 @@ import { ChannelListItem } from './ChannelListItem';
 //Types
 import { EnvKeys } from '../Dashboard.types';
 
+const HottestChannelsList = () => {
+  return hottestChannels[appConfig.appEnv as EnvKeys]?.map((channel, index) => (
+    <Box>
+      <ChannelListItem
+        key={index}
+        channelAddress={channel}
+      />
+      {index != hottestChannels[appConfig.appEnv as EnvKeys].length - 1 && <Separator />}
+    </Box>
+  ));
+};
 const EmptySubscribedChannelsList = () => {
   return (
     <Box
@@ -65,33 +76,24 @@ const SubscribedChannelsList = () => {
   const { data: userSubscriptions, isLoading, refetch } = useGetUserSubscriptions();
 
   const { wallet } = useAccount();
-  return !!wallet?.accounts?.length ? (
+  return wallet?.accounts?.length ? (
     <>
-      {!!userSubscriptions?.length &&
-        userSubscriptions?.map((channel, index) => (
-          <Box>
-            <ChannelListItem
-              key={index}
-              channelAddress={channel.channel}
-              userSetting={JSON.parse(channel.user_settings)}
-              isListLoading={isLoading}
-              refetchUserSubscriptions={refetch}
-            />
-            {index != userSubscriptions.length - 1 && <Separator />}
-          </Box>
-        ))}
+      {userSubscriptions?.map((channel, index) => (
+        <Box>
+          <ChannelListItem
+            key={index}
+            channelAddress={channel.channel}
+            userSetting={JSON.parse(channel.user_settings)}
+            isLoading={isLoading}
+            refetchUserSubscriptions={refetch}
+          />
+          {index != userSubscriptions.length - 1 && <Separator />}
+        </Box>
+      ))}
       {!isLoading && !userSubscriptions?.length && <EmptySubscribedChannelsList />}
     </>
   ) : (
-    HottestChannels[appConfig.appEnv as EnvKeys]?.map((channel, index) => (
-      <Box>
-        <ChannelListItem
-          key={index}
-          channelAddress={channel}
-        />
-        {index != HottestChannels[appConfig.appEnv as EnvKeys].length - 1 && <Separator />}
-      </Box>
-    ))
+    <HottestChannelsList />
   );
 };
 
