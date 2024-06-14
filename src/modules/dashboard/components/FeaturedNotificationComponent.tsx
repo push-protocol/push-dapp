@@ -2,7 +2,6 @@
 import { FC, useEffect } from 'react';
 
 // External Packages
-import { css } from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
 
@@ -16,7 +15,8 @@ import NextIconSlider from 'blocks/icons/components/NextIconSlider';
 import { Box, HoverableSVG, Text } from 'blocks';
 
 // Internal Configs
-import { FeaturedNotificationChannels } from '../configs';
+import { FeaturedNotificationChannelsList } from '../configs';
+import { appConfig } from 'config';
 
 export type FeaturedNotificationComponentProps = {}
 
@@ -30,8 +30,10 @@ const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = ()
 
   const itemsPerPage = 3;
 
+  const FeaturedChannelsList = FeaturedNotificationChannelsList[appConfig.appEnv];
+
   const { currentIndex, handleNext, handlePrevious, listRef, visibleItems } = useSmoothCarousel({
-    items: FeaturedNotificationChannels,
+    items: FeaturedChannelsList,
     itemsPerPage
   });
 
@@ -100,7 +102,7 @@ const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = ()
             <HoverableSVG
               onClick={handleClick}
               defaultColor={mode === 'dark' ? 'gray-400' : 'gray-900'}
-              disabled={currentIndex + itemsPerPage >= FeaturedNotificationChannels.length}
+              disabled={currentIndex + itemsPerPage >= FeaturedChannelsList.length}
               icon={<NextIconSlider size={24} />}
             ></HoverableSVG>
           </Box>
