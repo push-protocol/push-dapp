@@ -1,33 +1,35 @@
-import OptinNotifSettingDropdown from 'components/dropdowns/OptinNotifSettingDropdown';
-import { ChannelDetailsProps } from 'modules/dashboard/configs/DashboardFeaturedChannels.config';
-import { ChannelDetailsResponse } from 'queries';
+// React and other libraries
 import { FC, ReactNode } from 'react';
+
+// Utility functions
+import { ChannelDetailsResponse } from 'queries';
+
+// Components
+import OptinNotifSettingDropdown from 'components/dropdowns/OptinNotifSettingDropdown';
 
 interface SubscribeChannelDropdownProps {
   children: ReactNode;
   channelDetails: ChannelDetailsResponse;
-  setSubscribed: React.Dispatch<React.SetStateAction<boolean>>;
-  setSubscriberCount: React.Dispatch<React.SetStateAction<number>>;
   setLoading: (value: boolean) => void;
+  onSuccess: () => void;
 }
 
-const SubscribeChannelDropdown: FC<SubscribeChannelDropdownProps> = (options) => {
-  const { children, channelDetails, setLoading, setSubscribed, setSubscriberCount } = options;
-
-  const handleSubscriberCount = () => {
-    setSubscribed(true);
-    setSubscriberCount((prevSubscriberCount) => prevSubscriberCount + 1);
-  };
+const SubscribeChannelDropdown: FC<SubscribeChannelDropdownProps> = ({
+  children,
+  channelDetails,
+  setLoading,
+  onSuccess
+}) => {
 
   return (
     <OptinNotifSettingDropdown
       channelDetail={channelDetails}
       setLoading={setLoading}
-      onSuccessOptin={handleSubscriberCount}
+      onSuccessOptin={() => onSuccess()}
     >
       {children}
     </OptinNotifSettingDropdown>
   );
 };
 
-export default SubscribeChannelDropdown;
+export { SubscribeChannelDropdown };

@@ -1,11 +1,5 @@
-import { PushAPI } from '@pushprotocol/restapi';
-
 import { getChannelDetailsModelCreator } from 'queries/models';
-
-type GetChannelDetailsParams = {
-  userPushSDKInstance: PushAPI;
-  address: string;
-};
+import { GetChannelDetailsParams } from 'queries/types';
 
 export const getChannelDetails = ({ userPushSDKInstance, address }: GetChannelDetailsParams) =>
-  userPushSDKInstance.channel.info(address).then((response) => getChannelDetailsModelCreator(response));
+  userPushSDKInstance.channel.info(address).then(getChannelDetailsModelCreator);

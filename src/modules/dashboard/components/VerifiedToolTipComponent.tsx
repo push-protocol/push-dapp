@@ -1,14 +1,17 @@
-import { Box, Text } from "blocks";
-import PushLogo from "blocks/illustrations/components/PushLogo";
-import Tooltip from "components/reusables/tooltip/Tooltip";
+// React and other libraries
 import { FC, ReactNode } from "react";
+
+// Third-party libraries
 import { css } from "styled-components";
 
+// Components
+import { Box, Text } from "blocks";
+import Tooltip from "components/reusables/tooltip/Tooltip";
+import PushLogo from "blocks/illustrations/components/PushLogo";
 
-interface VerifiedToolTipComponentProps {
+type VerifiedToolTipComponentProps = {
   children: ReactNode;
 }
-
 
 const VerifiedToolTipComponent: FC<VerifiedToolTipComponentProps> = (props) => {
   const { children } = props;
@@ -38,12 +41,9 @@ const VerifiedToolTipComponent: FC<VerifiedToolTipComponentProps> = (props) => {
   );
 };
 
-export default VerifiedToolTipComponent;
-
+export { VerifiedToolTipComponent };
 
 const ToolTipContent = () => {
-
-
   return (
     <Box
       backgroundColor='black'

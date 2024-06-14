@@ -1,9 +1,8 @@
 // React + Web3 Essentials
-import { FC, useMemo, useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 
 // Third-party libraries
 import { useSelector } from 'react-redux';
-import { cloneDeep } from 'lodash';
 import { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 
@@ -12,10 +11,10 @@ import { useGetChannelDetails } from 'queries';
 
 // Components
 import { Box, Button, CaretDown, NotificationMobile, Skeleton, Text } from 'blocks';
-import SubscribeChannelDropdown from 'common/components/SubscribeChannelDropdown';
-import UnsubscribeChannelDropdown from 'common/components/UnsubscribeChannelDropdown';
+import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
+import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannelDropdown';
 import TickDecoratedCircleFilled from 'blocks/icons/components/TickDecoratedCircleFilled';
-import VerifiedToolTipComponent from './VerifiedToolTipComponent';
+import { VerifiedToolTipComponent } from './VerifiedToolTipComponent';
 import Ethereum from 'blocks/illustrations/components/Ethereum';
 
 // Internal Configs
@@ -25,6 +24,7 @@ import { LOGO_ALIAS_CHAIN } from '../configs/ChainDetails';
 
 // Styles
 import { ImageV3 } from '../Dashboard.styled';
+import { formatSubscriberCount } from '../Dashboard.utils';
 
 type FeaturedChannelsListItemProps = {
   channel: ChannelDetailsProps;
@@ -33,21 +33,7 @@ type FeaturedChannelsListItemProps = {
 const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
   const { channel } = props;
 
-  const { subscriptionStatus, userSettings: currentUserSettings } = useSelector((state) => state.channels);
-
-  const userSettings = useMemo(() => {
-    return cloneDeep(currentUserSettings);
-  }, [currentUserSettings]);
-
-  const formatSubscriberCount = (count: number) => {
-    if (count >= 1000000) {
-      return (count / 1000000).toFixed(1) + 'M';
-    } else if (count >= 1000) {
-      return (count / 1000).toFixed(1) + 'K';
-    } else {
-      return count;
-    }
-  };
+  const { subscriptionStatus, userSettings } = useSelector((state) => state.channels);
 
   const { data: channelDetails, isLoading } = useGetChannelDetails(channel.channel);
 
@@ -64,6 +50,10 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
   const [loading, setLoading] = useState(false);
 
   const AliasChain = channelDetails?.alias_blockchain_id && LOGO_ALIAS_CHAIN[+channelDetails.alias_blockchain_id];
+
+  const hasAliasAddress = channelDetails &&
+    channelDetails?.alias_address != null &&
+    channelDetails?.alias_address != 'NULL';
 
   return (
     <>
@@ -96,8 +86,10 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
             <SubscribeChannelDropdown
               channelDetails={channelDetails}
               setLoading={setLoading}
-              setSubscribed={setSubscribed}
-              setSubscriberCount={setSubscriberCount}
+              onSuccess={() => {
+                setSubscribed(false);
+                setSubscriberCount((prevSubscriberCount: number) => prevSubscriberCount - 1);
+              }}
             >
               <Button
                 disabled={isLoading}
@@ -173,15 +165,12 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
                   height={16}
                 />
 
-                {channelDetails &&
-                  channelDetails?.alias_address != null &&
-                  channelDetails?.alias_address != 'NULL' &&
-                  AliasChain && (
-                    <AliasChain
-                      width={16}
-                      height={16}
-                    />
-                  )}
+                {hasAliasAddress && AliasChain && (
+                  <AliasChain
+                    width={16}
+                    height={16}
+                  />
+                )}
               </Box>
             </Skeleton>
 

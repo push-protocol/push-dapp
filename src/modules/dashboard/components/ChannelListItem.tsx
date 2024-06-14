@@ -13,8 +13,8 @@ import { UserSubscriptionsResponse, useGetChannelDetails } from 'queries';
 
 // Components
 import { Box, Button, NotificationMobile, Skeleton, Text, Link, TickDecoratedCircleFilled, Ethereum } from 'blocks';
-import UnsubscribeChannelDropdown from 'common/components/UnsubscribeChannelDropdown';
-import VerifiedToolTipComponent from './VerifiedToolTipComponent';
+import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannelDropdown';
+import { VerifiedToolTipComponent } from './VerifiedToolTipComponent';
 import { UserSetting } from 'helpers/channel/types';
 
 export type ChannelListItemProps = {

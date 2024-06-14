@@ -1,3 +1,4 @@
+import { PushAPI } from '@pushprotocol/restapi';
 import { SourceKeys } from 'modules/dashboard/Dashboard.types';
 
 export type TrendingChannelsParams = {
@@ -22,6 +23,11 @@ type SubscriberAnalytics = {
 export type TrendingChannelsResponse = {
   channelDetails: TrendingChannelDetails;
   subscriberAnalytics: [SubscriberAnalytics];
+};
+
+export type GetChannelDetailsParams = {
+  userPushSDKInstance: PushAPI;
+  address: string;
 };
 
 export type ChannelDetailsResponse = {
