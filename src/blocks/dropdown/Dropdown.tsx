@@ -1,19 +1,17 @@
 import { ReactNode, forwardRef, useState } from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
-import { blocksColors } from 'blocks/Blocks.colors';
-import { getVariantStyles } from '../text/Text.utils';
 import { getBlocksColor } from 'blocks/Blocks.utils';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
-import { BlockWithoutStyleProp, ModeProp } from 'blocks/Blocks.types';
-import { DropdownProps } from './Dropdown.types'
-
+import { ModeProp } from 'blocks/Blocks.types';
+import { DropdownProps } from './Dropdown.types';
 
 const StyledDropdown = styled.div.withConfig({
   shouldForwardProp: (prop, defaultValidatorFn) => !['mode'].includes(prop) && defaultValidatorFn(prop),
 })<DropdownProps & ModeProp>`
-   min-width: 200px;
-  
+  position: relative; /* Ensure the dropdown has relative positioning */
+  min-width: 200px;
+
   .dropdown-item {
     background-color: ${({ mode }) => getBlocksColor(mode, { light: 'white', dark: 'gray-900' })};
     border: 1px solid ${({ mode }) => getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
@@ -25,6 +23,7 @@ const StyledDropdown = styled.div.withConfig({
     min-width: fit-content;
     max-width: fit-content;
     box-sizing: border-box;
+    // position: relative;
 
     &:hover {
       cursor: pointer;
@@ -38,14 +37,45 @@ const StyledDropdown = styled.div.withConfig({
   }
 
   .menu-overlay {
+    position: absolute;
+    border-radius: 4px;
     margin-top: 3px;
+    z-index: 1000; /* Ensure it appears above other elements */
+
+     &.top {
+      bottom: calc(100% + 3px);
+    }
+
+    &.topLeft {
+      bottom: calc(100% + 3px);
+      left: calc(-60%);
+    }
+
+    &.topRight {
+      bottom: calc(100% + 3px);
+      right: 0;
+    }
+
+    &.bottom {
+      top: calc(100% + 3px);
+    }
+
+    &.bottomLeft {
+      top: calc(100% + 3px);
+      left: calc(-60%);
+    }
+
+    &.bottomRight {
+      top: calc(100% + 3px);
+      right: 0;
+    }
   }
 
   /* Extra CSS props */
   ${(props) => props.css || ''}
 `;
 
-const Dropdown = forwardRef<HTMLElement, DropdownProps>(({ overlay, trigger, children, ...props }, ref) => {
+const Dropdown = forwardRef<HTMLElement, DropdownProps>(({ overlay, trigger, children, placement = 'bottom', ...props }, ref) => {
   const { mode } = useBlocksTheme();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -67,24 +97,42 @@ const Dropdown = forwardRef<HTMLElement, DropdownProps>(({ overlay, trigger, chi
     }
   };
 
+  const getPlacementClass = () => {
+    switch (placement) {
+      case 'top':
+        return 'top';
+      case 'topLeft':
+        return 'topLeft';
+      case 'topRight':
+        return 'topRight';
+      case 'bottom':
+        return 'bottom';
+      case 'bottomLeft':
+        return 'bottomLeft';
+      case 'bottomRight':
+        return 'bottomRight';
+      default:
+        return 'bottom';
+    }
+  };
 
   return (
     <StyledDropdown
       ref={ref}
       mode={mode}
       trigger={trigger}
+      placement={placement}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       {...props}
     >
-      <div className='dropdown-item' onClick={handleClick}
-      >
-          <span>Actions</span>
+      <div className='dropdown-item' onClick={handleClick}>
+        <span>Actions</span>
       </div>
 
-      {isOpen && <div className='menu-overlay'>{overlay}</div>}
+      {isOpen && <div className={`menu-overlay ${getPlacementClass()}`}>{overlay}</div>}
 
-      {/* {children(isOpen)} */}
+      {children && children(isOpen)}
     </StyledDropdown>
   );
 });
@@ -92,4 +140,3 @@ const Dropdown = forwardRef<HTMLElement, DropdownProps>(({ overlay, trigger, chi
 Dropdown.displayName = 'Dropdown';
 
 export { Dropdown };
-
