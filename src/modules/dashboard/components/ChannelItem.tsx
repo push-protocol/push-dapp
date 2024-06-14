@@ -5,9 +5,6 @@ import { css } from 'styled-components';
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 import { UserSetting } from '@pushprotocol/restapi';
 
-//Hooks
-import { useBlocksTheme } from 'blocks/Blocks.hooks';
-
 // Components
 import { Box, Button, NotificationMobile, Skeleton, Text } from 'blocks';
 import UnsubscribeChannelDropdown from 'common/components/UnsubscribeChannelDropdown';
@@ -33,8 +30,6 @@ const ChannelItem: FC<ChannelItemProps> = ({
   refetchUserSubscriptions,
   isListLoading,
 }) => {
-  const { mode } = useBlocksTheme();
-
   const { data: channelDetails, isLoading: isChannelLoading } = useGetChannelDetails(channelAddress);
   const AliasChain = channelDetails?.alias_blockchain_id && LOGO_ALIAS_CHAIN[+channelDetails.alias_blockchain_id];
 
@@ -120,9 +115,6 @@ const ChannelItem: FC<ChannelItemProps> = ({
               size="small"
               iconOnly={<NotificationMobile />}
               variant={'tertiary'}
-              css={css`
-                background-color: ${mode === 'dark' ? '#484d58' : ''};
-              `}
             />
           </UnsubscribeChannelDropdown>
         )}
