@@ -15,7 +15,8 @@ import NextIconSlider from 'blocks/icons/components/NextIconSlider';
 import { Box, HoverableSVG, Text, Link } from 'blocks';
 
 // Internal Configs
-import { FeaturedNotificationChannels } from '../configs';
+import { FeaturedNotificationChannelsList } from '../configs';
+import { appConfig } from 'config';
 
 export type FeaturedNotificationComponentProps = {};
 
@@ -29,8 +30,12 @@ const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = ()
   const { account } = useAccount();
   const dispatch = useDispatch();
 
+  const itemsPerPage = 3;
+
+  const FeaturedChannelsList = FeaturedNotificationChannelsList[appConfig.appEnv];
+
   const { currentIndex, handleNext, handlePrevious, listRef } = useSmoothHorizontalScroll({
-    items: FeaturedNotificationChannels,
+    items: FeaturedChannelsList,
     itemsPerPage,
     itemGap: 24, // Gap provided in between the list items
   });
@@ -110,7 +115,7 @@ const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = ()
             <HoverableSVG
               onClick={handleClick}
               defaultColor={mode === 'dark' ? 'gray-400' : 'gray-900'}
-              disabled={currentIndex + itemsPerPage >= FeaturedNotificationChannels.length}
+              disabled={currentIndex + itemsPerPage >= FeaturedChannelsList.length}
               icon={<NextIconSlider size={24} />}
             ></HoverableSVG>
           </Box>
@@ -125,7 +130,7 @@ const FeaturedNotificationComponent: FC<FeaturedNotificationComponentProps> = ()
         overflow="scroll"
         width={{ initial: 'calc(100vw - 346px)' }}
       >
-        {FeaturedNotificationChannels.map((channel) => {
+        {FeaturedChannelsList.map((channel) => {
           return <FeaturedChannelListItem channel={channel} />;
         })}
       </Box>

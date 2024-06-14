@@ -38,7 +38,6 @@ const ChannelItem: FC<ChannelItemProps> = ({
   const { data: channelDetails, isLoading: isChannelLoading } = useGetChannelDetails(channelAddress);
   const AliasChain = channelDetails?.alias_blockchain_id && LOGO_ALIAS_CHAIN[+channelDetails.alias_blockchain_id];
 
-  console.debug(userSetting, 'user');
   return (
     <Skeleton isLoading={isChannelLoading || isListLoading}>
       <Box
@@ -61,7 +60,7 @@ const ChannelItem: FC<ChannelItemProps> = ({
             <img
               width="100%"
               height="100%"
-              src={channelDetails?.icon}
+              src={channelDetails?.iconV2}
               alt={channelDetails?.name}
             />
           </Box>

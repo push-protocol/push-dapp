@@ -9,12 +9,12 @@ import { Box, Separator } from 'blocks';
 import { ChannelItem } from './ChannelItem';
 
 import { useGetUserSubscriptions } from 'queries';
+import { appConfig } from 'config';
 
 const SubscribedChannelItemList = () => {
   const { data: userSubscriptions, isLoading, refetch } = useGetUserSubscriptions();
 
   const { wallet } = useAccount();
-
   return !!wallet?.accounts?.length
     ? userSubscriptions?.map((channel, index) => (
         <Box>
@@ -28,13 +28,13 @@ const SubscribedChannelItemList = () => {
           {index != userSubscriptions.length - 1 && <Separator />}
         </Box>
       ))
-    : HottestChannels?.map((channel, index) => (
+    : HottestChannels[appConfig.appEnv as keyof typeof HottestChannels]?.map((channel, index) => (
         <Box>
           <ChannelItem
             key={index}
             channelAddress={channel}
           />
-          {index != HottestChannels.length - 1 && <Separator />}
+          {index != HottestChannels[appConfig.appEnv as keyof typeof HottestChannels].length - 1 && <Separator />}
         </Box>
       ));
 };

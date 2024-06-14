@@ -88,7 +88,7 @@ const FeaturedChannelListItem: FC<FeaturedChannelListItemProps> = (props) => {
               <img
                 width="100%"
                 height="100%"
-                src={channelDetails?.icon}
+                src={channelDetails?.iconV2}
                 alt={channelDetails?.name}
               />
             </Box>

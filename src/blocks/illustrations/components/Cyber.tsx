@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { IllustrationWrapper } from '../IllustrationWrapper';
 import { IllustrationProps } from '../Illustrations.types';
 
-const PolygonZK: FC<IllustrationProps> = (allProps) => {
+const Cyber: FC<IllustrationProps> = (allProps) => {
   const { svgProps: props, ...restProps } = allProps;
   return (
     <IllustrationWrapper
@@ -35,4 +35,4 @@ const PolygonZK: FC<IllustrationProps> = (allProps) => {
   );
 };
 
-export default PolygonZK;
+export default Cyber;
