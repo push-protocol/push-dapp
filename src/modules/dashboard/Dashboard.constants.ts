@@ -1,4 +1,10 @@
+//Config
+import { appConfig } from 'config';
+
+//Components
 import { PushAlpha, PushBot, PushDev } from 'blocks';
+
+//Types
 import { ChatType, DashboardChannelTabsType, EnvKeys, SourceKeys } from './Dashboard.types';
 
 export const dahboardChannelTabs: DashboardChannelTabsType = [
@@ -82,15 +88,15 @@ export const hottestChannels: Record<EnvKeys, Array<string>> = {
   ],
 };
 
-export const trendingStartTime: Record<EnvKeys, string> = {
-  prod: '2022-01-01',
-  alpha: '2022-01-01',
-  staging: '2024-06-01',
-  dev: '2024-06-01',
-};
 export const trendingSource: Record<EnvKeys, SourceKeys> = {
   prod: 'ETH_MAINNET',
   alpha: 'ETH_MAINNET',
   staging: 'All',
   dev: 'All',
 };
+
+//last 7 days and move to conifg
+
+export const firstEndDate = new Date(Date.now()).toISOString().split('T')[0];
+export const secondEndDate = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
+export const startDate = new Date(Date.now() - 14 * 86400000).toISOString().split('T')[0];

@@ -2,7 +2,7 @@ import { PushAPI } from '@pushprotocol/restapi';
 import { SourceKeys } from 'modules/dashboard/Dashboard.types';
 
 export type TrendingChannelsParams = {
-  startDate: Date;
+  startDate: string;
   endDate: string;
   channel: 'All';
   source: SourceKeys;

@@ -54,12 +54,11 @@ export const getTrendingChannelsData = (
       subscriber: currentSubscriberData[key],
       name: channelDetails[key]?.name || '',
       icon: channelDetails[key]?.icon || '',
-      trend: trend
+      trend: trend,
     });
   }
 
   const filteredChannels = trendingChannelData.filter((channel) => channel.subscriber > 30);
-
   // Ensure trend is always parsed safely as a string
   const sortedChannels = filteredChannels.sort((a, b) => {
     const trendA = parseFloat(a.trend as string);
@@ -70,6 +69,10 @@ export const getTrendingChannelsData = (
   return sortedChannels.slice(0, 5).map((item) => item.channel);
 };
 
+/**
+ * @param count
+ * @returns returns formatted number
+ */
 export const formatSubscriberCount = (count: number) => {
   if (count >= 1000000) {
     return (count / 1000000).toFixed(1) + 'M';

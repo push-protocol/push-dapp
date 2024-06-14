@@ -49,7 +49,7 @@ const ChannelListItem: FC<ChannelListItemProps> = ({
   isLoading,
 }) => {
   const { data: channelDetails, isLoading: isChannelLoading } = useGetChannelDetails(channelAddress);
-  const { data: userSubscription, refetch } = useGetUserSubscriptions(channelAddress);
+  const { data: userSubscription, refetch, isLoading: isSubscriptionLoading } = useGetUserSubscriptions(channelAddress);
   const { wallet } = useAccount();
 
   const AliasChain = channelDetails?.alias_blockchain_id && LOGO_ALIAS_CHAIN[+channelDetails.alias_blockchain_id];
@@ -63,7 +63,7 @@ const ChannelListItem: FC<ChannelListItemProps> = ({
   const isSubscribed = userSubscription && userSubscription?.length;
 
   return (
-    <Skeleton isLoading={isChannelLoading || isLoading}>
+    <Skeleton isLoading={isChannelLoading || isLoading || isSubscriptionLoading}>
       <Box
         display="flex"
         justifyContent="space-between"

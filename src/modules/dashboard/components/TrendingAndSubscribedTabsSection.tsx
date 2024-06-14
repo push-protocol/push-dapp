@@ -16,9 +16,9 @@ import { dahboardChannelTabs } from '../Dashboard.constants';
 const TrendingAndSubscribedTabsSection = () => {
   const [selectedChannelTab, setSelectedChannelTab] = useState<DashboardChannelTabType>(dahboardChannelTabs[0]);
   const { wallet } = useAccount();
+
   const isWalletConnected = !!wallet?.accounts?.length;
-  console.debug(dahboardChannelTabs);
-  // console.debug(dahboardChannelTabs.map((c) => console.log(c, 'test')));
+
   return (
     <Box
       display="flex"
