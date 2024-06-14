@@ -4,17 +4,21 @@ import { useEffect, useState } from 'react';
 //Hooks
 import { useGetTrendingChannels } from 'queries/hooks';
 
+//Constants
+import { TrendingSource, TrendingStartTime } from '../Dashboard.constants';
+import { appConfig } from 'config';
+
 //Utility functions
 import { getTrendingChannelsData } from '../Dashboard.utils';
 
 // Components
 import { Box, Separator } from 'blocks';
-import { ChannelItem } from './ChannelItem';
-import { TrendingSource, TrendingStartTime } from '../Dashboard.constants';
-import { appConfig } from 'config';
-import { EnvKeys, SourceKeys } from '../Dashboard.types';
+import { ChannelListItem } from './ChannelListItem';
 
-const TrendingChannelItemList = () => {
+//Types
+import { EnvKeys } from '../Dashboard.types';
+
+const TrendingChannelsList = () => {
   const [trendingChannels, setTrendingChannels] = useState<Array<string>>([]);
 
   const startDate = new Date(TrendingStartTime[appConfig.appEnv as EnvKeys]);
@@ -39,7 +43,7 @@ const TrendingChannelItemList = () => {
   }, [currentData, weekData]);
   return trendingChannels?.map((channel, index) => (
     <Box>
-      <ChannelItem
+      <ChannelListItem
         key={index}
         channelAddress={channel}
         isListLoading={isLoading && !trendingChannels.length}
@@ -49,4 +53,4 @@ const TrendingChannelItemList = () => {
   ));
 };
 
-export { TrendingChannelItemList };
+export { TrendingChannelsList };
