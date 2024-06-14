@@ -29,3 +29,6 @@ export type ChatType = {
   chatParticipantAlias: string;
   payload: ChatPayloadType;
 };
+
+export type EnvKeys = 'prod' | 'staging' | 'dev';
+export type SourceKeys = 'ETH_MAINNET' | 'All';
