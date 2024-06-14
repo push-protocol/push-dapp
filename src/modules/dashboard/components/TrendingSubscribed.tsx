@@ -11,8 +11,8 @@ import { channelListTypeValues } from '../Dashboard.types';
 
 // Components
 import { Box, Text } from 'blocks';
-import { TrendingChannelItemList } from './TrendingChannelItemList';
-import { SubscribedChannelItemList } from './SubscribedChannelItemList';
+import { TrendingChannelsList } from './TrendingChannelsList';
+import { SubscribedChannelsList } from './SubscribedChannelsList';
 
 const TrendingSubscribed = () => {
   const [selectedListType, setSelectedListType] = useState<(typeof channelListTypeValues)[number]>('trending channels');
@@ -71,8 +71,8 @@ const TrendingSubscribed = () => {
         border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
         padding="s2 s4"
       >
-        {selectedListType === 'trending channels' && <TrendingChannelItemList />}
-        {selectedListType === 'subscribed' && <SubscribedChannelItemList />}
+        {selectedListType === 'trending channels' && <TrendingChannelsList />}
+        {selectedListType === 'subscribed' && <SubscribedChannelsList />}
       </Box>
     </Box>
   );

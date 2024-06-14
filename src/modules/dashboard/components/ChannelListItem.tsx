@@ -1,22 +1,23 @@
 // React and other libraries
 import { FC } from 'react';
 
+//Third-party libraries
 import { css } from 'styled-components';
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
-import { UserSetting } from '@pushprotocol/restapi';
 
-// Components
-import { Box, Button, NotificationMobile, Skeleton, Text } from 'blocks';
-import UnsubscribeChannelDropdown from 'common/components/UnsubscribeChannelDropdown';
-import TickDecoratedCircleFilled from 'blocks/icons/components/TickDecoratedCircleFilled';
-import Ethereum from 'blocks/illustrations/components/Ethereum';
+//Configs
 import { LOGO_ALIAS_CHAIN } from '../configs/ChainDetails';
 
-//Queries
+//Hooks
 import { UserSubscriptionsResponse, useGetChannelDetails } from 'queries';
-import { Link } from 'react-router-dom';
 
-export type ChannelItemProps = {
+// Components
+import { Box, Button, NotificationMobile, Skeleton, Text, Link, TickDecoratedCircleFilled, Ethereum } from 'blocks';
+import UnsubscribeChannelDropdown from 'common/components/UnsubscribeChannelDropdown';
+import VerifiedToolTipComponent from './VerifiedToolTipComponent';
+import { UserSetting } from 'helpers/channel/types';
+
+export type ChannelListItemProps = {
   channelAddress: string;
   userSetting?: UserSetting[];
   isListLoading?: boolean;
@@ -24,7 +25,7 @@ export type ChannelItemProps = {
     options?: RefetchOptions | undefined
   ) => Promise<QueryObserverResult<UserSubscriptionsResponse, Error>>;
 };
-const ChannelItem: FC<ChannelItemProps> = ({
+const ChannelListItem: FC<ChannelListItemProps> = ({
   channelAddress,
   userSetting = undefined,
   refetchUserSubscriptions,
@@ -70,17 +71,17 @@ const ChannelItem: FC<ChannelItemProps> = ({
             >
               <Link
                 to={`/channels/${channelDetails?.channel}`}
-                style={{ textDecoration: 'none' }}
+                textProps={{
+                  variant: 'h5-semibold',
+                  color: { light: 'gray-1000', dark: 'white' },
+                }}
               >
-                <Text
-                  variant="h5-semibold"
-                  color={{ light: 'gray-1000', dark: 'white' }}
-                >
-                  {channelDetails?.name}
-                </Text>
+                {channelDetails?.name}
               </Link>
               {!!channelDetails?.verified_status && (
-                <TickDecoratedCircleFilled color={{ light: 'gray-300', dark: 'gray-700' }} />
+                <VerifiedToolTipComponent>
+                  <TickDecoratedCircleFilled color={{ light: 'gray-300', dark: 'gray-700' }} />
+                </VerifiedToolTipComponent>
               )}
               <Ethereum
                 width={16}
@@ -123,4 +124,4 @@ const ChannelItem: FC<ChannelItemProps> = ({
   );
 };
 
-export { ChannelItem };
+export { ChannelListItem };

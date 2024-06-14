@@ -1,17 +1,16 @@
 // React and other libraries
 import { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 // Components
-import { Box, Button, Chat, Text } from 'blocks';
+import { Box, Button, Chat, Link, Text } from 'blocks';
+
+//Types
 import { ChatType } from '../Dashboard.types';
 
 export type ChatItemProps = {
   chat: ChatType;
 };
 const ChatItem: FC<ChatItemProps> = ({ chat }) => {
-  const navigate = useNavigate();
-
   return (
     <Box
       display="flex"
@@ -43,12 +42,13 @@ const ChatItem: FC<ChatItemProps> = ({ chat }) => {
           </Text>
         </Box>
       </Box>
-      <Button
-        onClick={() => navigate(`/chat/${chat?.previewLink}`)}
-        size="small"
-        iconOnly={<Chat />}
-        variant="tertiary"
-      />
+      <Link to={`/chat/${chat?.previewLink}`}>
+        <Button
+          size="small"
+          iconOnly={<Chat />}
+          variant="tertiary"
+        />
+      </Link>
     </Box>
   );
 };

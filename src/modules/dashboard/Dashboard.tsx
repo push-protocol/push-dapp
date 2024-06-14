@@ -1,16 +1,17 @@
-// React + Web3 Essentials
+// React and other libraries
 import { FC, useState } from 'react';
 
-// Internal Components
-import { Add, Box, Dash, HoverableSVG, Text } from 'blocks';
-import { IllustrationComponent } from './components/IllustrationComponent';
-import { FeaturedNotificationComponent } from './components/FeaturedNotificationComponent';
+// Components
+import { Box } from 'blocks';
+import { DashboardSubHeader } from './components/DashboardSubHeader';
+import { FeaturedNotificationsComponent } from './components/FeaturedNotificationsComponent';
 import { TrendingRecommended } from './components/TrendingRecommended';
+import DashboardHeader from './components/DashboardHeader';
 
 export type DashboardProps = {};
 
 const Dashboard: FC<DashboardProps> = () => {
-  const [showWelcomeIllustrations, setShowWelcomeIllustrations] = useState(true);
+  const [showSubHeader, setSubHeaderVisibility] = useState(true);
 
   return (
     <Box
@@ -19,60 +20,19 @@ const Dashboard: FC<DashboardProps> = () => {
       margin="s4 s6 s4 s6"
       gap={{ ml: 's6' }}
     >
-      <Box
-        flexDirection="row"
-        display="flex"
-        justifyContent="space-between"
-      >
-        <Box
-          flexDirection="row"
-          display="flex"
-          gap="s3"
-        >
-          <Text variant="h3-semibold">👋</Text>
-          <Text
-            variant="h3-semibold"
-            color={{ light: 'black', dark: 'white' }}
-          >
-            GM! Welcome to Push.
-          </Text>
-        </Box>
+      <DashboardHeader
+        showSubHeader={showSubHeader}
+        setSubHeaderVisibility={setSubHeaderVisibility}
+      />
 
-        <Box
-          display="flex"
-          alignItems="center"
-          onClick={() => setShowWelcomeIllustrations(!showWelcomeIllustrations)}
-        >
-          {showWelcomeIllustrations ? (
-            <HoverableSVG
-              icon={
-                <Dash
-                  size={20}
-                  color={{ light: 'gray-300', dark: 'gray-700' }}
-                />
-              }
-            ></HoverableSVG>
-          ) : (
-            <HoverableSVG
-              icon={
-                <Add
-                  size={20}
-                  color={{ light: 'gray-300', dark: 'gray-700' }}
-                />
-              }
-            ></HoverableSVG>
-          )}
-        </Box>
-      </Box>
-
-      {showWelcomeIllustrations && <IllustrationComponent />}
+      {showSubHeader && <DashboardSubHeader />}
 
       <Box
         display="flex"
         flexDirection="column"
         gap="s6"
       >
-        <FeaturedNotificationComponent />
+        <FeaturedNotificationsComponent />
         <TrendingRecommended />
       </Box>
     </Box>

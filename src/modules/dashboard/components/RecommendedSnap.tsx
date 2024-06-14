@@ -1,18 +1,14 @@
 // Third-party libraries
-import { useNavigate } from 'react-router-dom';
 import { css } from 'styled-components';
 
 //Constants
 import { RecommendedChatList } from '../Dashboard.constants';
 
 // Components
-import { Box, Text, Button } from 'blocks';
+import { Box, Text, Button, Link, Metamask } from 'blocks';
 import { ChatItem } from './ChatItem';
-import Metamask from 'blocks/illustrations/components/Metamask';
 
 const RecommendedSnap = () => {
-  const navigate = useNavigate();
-
   return (
     <Box
       display="flex"
@@ -76,13 +72,14 @@ const RecommendedSnap = () => {
             Receive Instant Notifications in Metamask with Push Snap.
           </Text>
         </Box>
-        <Button
-          variant="tertiary"
-          size="small"
-          onClick={() => navigate('/snap')}
-        >
-          Get Push Snap
-        </Button>
+        <Link to={'/snap'}>
+          <Button
+            variant="tertiary"
+            size="small"
+          >
+            Get Push Snap
+          </Button>
+        </Link>
       </Box>
     </Box>
   );

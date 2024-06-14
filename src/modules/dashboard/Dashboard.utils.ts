@@ -6,36 +6,35 @@ export const getTrendingChannelsData = (
   currentData: TrendingChannelsResponse | undefined
 ): Array<string> => {
   let trendingChannelData: TrendingChannelsType[] = [];
-  let currentSubscriberData = {};
-  let weekBackSubscriberData = {};
+  let currentSubscriberData: { [key: string]: number } = {};
+  let weekBackSubscriberData: { [key: string]: number } = {};
   const weekChannelDataResponse = weekData?.subscriberAnalytics || [];
   const currentChannelDataResponse = currentData?.subscriberAnalytics || [];
-  const channelDetails = weekData?.channelDetails;
+  const channelDetails = weekData?.channelDetails || {};
 
-  for (let i = 0; i < currentChannelDataResponse?.length; i++) {
+  for (let i = 0; i < currentChannelDataResponse.length; i++) {
     for (let key in currentChannelDataResponse[i]) {
       if (key === 'date') {
         continue;
       } else {
         if (currentSubscriberData[key]) {
-          currentSubscriberData[key] += currentChannelDataResponse[i][key]?.subscriber;
+          currentSubscriberData[key] += currentChannelDataResponse[i][key]?.subscriber || 0;
         } else {
-          currentSubscriberData[key] = 0;
-          currentSubscriberData[key] += currentChannelDataResponse[i][key]?.subscriber;
+          currentSubscriberData[key] = currentChannelDataResponse[i][key]?.subscriber || 0;
         }
       }
     }
   }
-  for (let i = 0; i < weekChannelDataResponse?.length; i++) {
+
+  for (let i = 0; i < weekChannelDataResponse.length; i++) {
     for (let key in weekChannelDataResponse[i]) {
       if (key === 'date') {
         continue;
       } else {
         if (weekBackSubscriberData[key]) {
-          weekBackSubscriberData[key] += weekChannelDataResponse[i][key]?.subscriber;
+          weekBackSubscriberData[key] += weekChannelDataResponse[i][key]?.subscriber || 0;
         } else {
-          weekBackSubscriberData[key] = 0;
-          weekBackSubscriberData[key] += weekChannelDataResponse[i][key]?.subscriber;
+          weekBackSubscriberData[key] = weekChannelDataResponse[i][key]?.subscriber || 0;
         }
       }
     }
@@ -47,14 +46,20 @@ export const getTrendingChannelsData = (
     trendingChannelData.push({
       channel: key,
       subscriber: currentSubscriberData[key],
-      name: channelDetails[key]?.name,
-      icon: channelDetails[key]?.icon,
+      name: channelDetails[key]?.name || '',
+      icon: channelDetails[key]?.icon || '',
       trend: trend,
     });
   }
 
   const filteredChannels = trendingChannelData.filter((channel) => channel.subscriber > 30);
 
-  const sortedChannels = filteredChannels?.sort((a, b) => parseFloat(b?.trend) - parseFloat(a?.trend));
+  // Ensure trend is always parsed safely as a string
+  const sortedChannels = filteredChannels.sort((a, b) => {
+    const trendA = parseFloat(a.trend as string);
+    const trendB = parseFloat(b.trend as string);
+    return trendB - trendA;
+  });
+
   return sortedChannels.slice(0, 5).map((item) => item.channel);
 };
