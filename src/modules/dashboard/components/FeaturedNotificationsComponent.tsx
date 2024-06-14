@@ -18,13 +18,14 @@ import { Box, HoverableSVG, Text, Link } from 'blocks';
 // Internal Configs
 import { FeaturedNotificationChannelsList } from '../configs';
 import { appConfig } from 'config';
+import { UserStoreType } from 'types';
 
 export type FeaturedNotificationsComponentProps = {};
 
 const itemsPerPage = 3;
 
 const FeaturedNotificationsComponent: FC<FeaturedNotificationsComponentProps> = () => {
-  const { userPushSDKInstance } = useSelector((state: any) => {
+  const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
     return state.user;
   });
   const { account } = useAccount();
