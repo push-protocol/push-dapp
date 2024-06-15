@@ -2,11 +2,12 @@
 import { FC } from 'react';
 
 // Components
-import { FeaturedChannelsListItem } from './FeaturedChannelsListItem';
+import { FeaturedNotificationChannelsListItem } from './FeaturedNotificationChannelsListItem';
 import { Box } from 'blocks';
 
 // Internal Configs
 import { FeaturedChannelDetailsProps } from '../configs';
+import { css } from 'styled-components';
 
 type FeaturedNotificationChannelsListProps = {
   listRef: any;
@@ -16,20 +17,25 @@ type FeaturedNotificationChannelsListProps = {
 const FeaturedNotificationChannelsList: FC<FeaturedNotificationChannelsListProps> = ({
   listRef,
   featuredChannelsList,
-}) => (
-  <Box
-    ref={listRef}
-    display="flex"
-    flexDirection={{ initial: 'row', tb: 'column' }}
-    gap="s6"
-    padding="s4 s0"
-    overflow="scroll"
-    width={{ initial: 'calc(100vw - 346px)' }}
-  >
-    {featuredChannelsList.map((channel) => {
-      return <FeaturedChannelsListItem channelAddress={channel.channel} />;
-    })}
-  </Box>
-);
+}) => {
+  return (
+    <Box
+      ref={listRef}
+      display="flex"
+      flexDirection={{ initial: 'row', tb: 'column' }}
+      gap="s6"
+      padding="s4 s0"
+      overflow="scroll"
+      width={{ initial: 'calc(100vw - 346px)', lp: 'calc(100vw - 130px)' }}
+      css={css`
+        overflow-y: hidden;
+      `}
+    >
+      {featuredChannelsList?.map((channel) => {
+        return <FeaturedNotificationChannelsListItem channelAddress={channel.channel} />;
+      })}
+    </Box>
+  );
+};
 
 export { FeaturedNotificationChannelsList };

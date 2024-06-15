@@ -6,19 +6,25 @@ import { useSmoothHorizontalScroll } from 'common';
 import { FeaturedNotificationChannelsList } from './FeaturedNotificationChannelsList';
 import PrevIconSlider from 'blocks/icons/components/PrevIconSlider';
 import NextIconSlider from 'blocks/icons/components/NextIconSlider';
-import { Box, HoverableSVG, Text, Link } from 'blocks';
+import { Box, HoverableSVG, Text, Link, deviceSizes } from 'blocks';
 
 // Internal Configs
-import { FeaturedChannelsList } from '../configs';
+import { FeaturedChannelsList, MobileFeaturedChannelsList } from '../configs';
 import { appConfig } from 'config';
+import { useDeviceWidthCheck } from 'hooks';
+import MobileFeaturedNotificationChannelsList from './MobileFeaturedNotificationChannelsList';
 
 export type FeaturedNotificationsComponentProps = {};
-
-const itemsPerPage = 3;
 
 const FeaturedNotificationsComponent: FC<FeaturedNotificationsComponentProps> = () => {
 
   const UpdatedFeaturedChannelsList = FeaturedChannelsList[appConfig.appEnv];
+  const MobileFeaturedChannelsListItems = MobileFeaturedChannelsList;
+
+  const isTablet = useDeviceWidthCheck(parseInt(deviceSizes.laptop));
+  const isMobile = useDeviceWidthCheck(parseInt(deviceSizes.tablet));
+
+  const itemsPerPage = isMobile ? 1 : isTablet ? 2 : 3;
 
   const { currentIndex, handleNext, handlePrevious, listRef } = useSmoothHorizontalScroll({
     items: UpdatedFeaturedChannelsList,
@@ -88,10 +94,20 @@ const FeaturedNotificationsComponent: FC<FeaturedNotificationsComponentProps> = 
         </Box>
       </Box>
 
-      <FeaturedNotificationChannelsList
+      {!isMobile && <FeaturedNotificationChannelsList
         listRef={listRef}
         featuredChannelsList={UpdatedFeaturedChannelsList}
-      />
+      />}
+
+      {isMobile && (
+        <MobileFeaturedNotificationChannelsList
+          listRef={listRef}
+          featuredChannelsList={MobileFeaturedChannelsListItems}
+        />
+      )}
+
+
+
     </Box>
   );
 };
