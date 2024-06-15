@@ -13,7 +13,7 @@ interface UnsubscribeChannelDropdownProps {
   channelDetail: ChannelDetailsResponse;
   centeronMobile?: boolean;
   onSuccess: () => void;
-  userSetting: UserSetting[] | undefined;
+  userSetting?: UserSetting[] | undefined;
 }
 
 const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({

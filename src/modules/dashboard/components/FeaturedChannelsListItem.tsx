@@ -1,13 +1,13 @@
 // React + Web3 Essentials
-import { FC, useState, useEffect } from 'react';
+import { FC } from 'react';
 
 // Third-party libraries
-import { useSelector } from 'react-redux';
 import { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 
 //hooks
-import { useGetChannelDetails } from 'queries';
+import { useGetChannelDetails, useGetUserSubscriptions } from 'queries';
+import { useAccount } from 'hooks';
 
 //Utility functions
 import { formatSubscriberCount } from '../Dashboard.utils';
@@ -19,39 +19,43 @@ import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannel
 import TickDecoratedCircleFilled from 'blocks/icons/components/TickDecoratedCircleFilled';
 import { VerifiedToolTipComponent } from './VerifiedToolTipComponent';
 import Ethereum from 'blocks/illustrations/components/Ethereum';
+import { UserSetting } from 'helpers/channel/types';
 
 // Internal Configs
-import { ChannelDetailsProps } from '../configs/DashboardFeaturedChannels.config';
 import { LOGO_ALIAS_CHAIN } from '../configs/ChainDetails';
 
 // Styles
 import { ImageV3 } from '../Dashboard.styled';
 
 type FeaturedChannelsListItemProps = {
-  channel: ChannelDetailsProps;
+  channelAddress: string;
 };
 
 const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
-  const { channel } = props;
+  const { channelAddress } = props;
 
-  const { subscriptionStatus, userSettings } = useSelector((state) => state.channels);
+  const { wallet } = useAccount();
+  const isWalletConnected = !!wallet?.accounts?.length;
 
-  const { data: channelDetails, isLoading } = useGetChannelDetails(channel.channel);
+  /* Fetching Channel Details based on Channel Address */
+  const { data: channelDetails, isLoading } = useGetChannelDetails(channelAddress);
 
-  const [subscribed, setSubscribed] = useState(false);
-  const [subscriberCount, setSubscriberCount] = useState(0);
+  /* Fetching User Subscribed Channel Details along with user settings */
+  const { data: userSubscription, refetch, isLoading: isSubscriptionLoading } = useGetUserSubscriptions(channelAddress);
 
-  useEffect(() => {
-    if (channelDetails) {
-      setSubscribed(subscriptionStatus[channel.channel]);
-      setSubscriberCount(channelDetails.subscriber_count);
-    }
-  }, [subscriptionStatus, channelDetails]);
+  if (isWalletConnected) refetch();
+
+  const isSubscribed = userSubscription && userSubscription?.length;
 
   const AliasChain = channelDetails?.alias_blockchain_id && LOGO_ALIAS_CHAIN[+channelDetails.alias_blockchain_id];
 
-  const hasAliasAddress =
-    channelDetails && channelDetails?.alias_address != null && channelDetails?.alias_address != 'NULL';
+  const hasAliasAddress = channelDetails && channelDetails?.alias_address != null && channelDetails?.alias_address != 'NULL';
+
+  let UserSetting: UserSetting[] | undefined = undefined;
+  if (userSubscription && userSubscription.length > 0) {
+    UserSetting = userSubscription && JSON.parse(userSubscription[0].user_settings);
+  }
+
 
   return (
     <>
@@ -80,42 +84,40 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
             />
           </Skeleton>
 
-          {!subscribed && !isLoading && channelDetails && (
-            <SubscribeChannelDropdown
-              channelDetails={channelDetails}
-              onSuccess={() => {
-                setSubscribed(false);
-                setSubscriberCount((prevSubscriberCount: number) => prevSubscriberCount - 1);
-              }}
-            >
-              <Button
-                disabled={isLoading}
-                variant="tertiary"
-                size="small"
+          {!isSubscribed && !isLoading && channelDetails && (
+            <Skeleton isLoading={isSubscriptionLoading} height='40px'>
+              <SubscribeChannelDropdown
+                channelDetails={channelDetails}
+                onSuccess={refetch}
               >
-                Subscribe
-              </Button>
-            </SubscribeChannelDropdown>
+                <Button
+                  disabled={isLoading}
+                  variant="tertiary"
+                  size="small"
+                >
+                  Subscribe
+                </Button>
+              </SubscribeChannelDropdown>
+            </Skeleton>
           )}
 
-          {subscribed && !isLoading && channelDetails && (
-            <UnsubscribeChannelDropdown
-              channelDetail={channelDetails}
-              onSuccess={() => {
-                setSubscribed(false);
-                setSubscriberCount((prevSubscriberCount: number) => prevSubscriberCount - 1);
-              }}
-              userSetting={userSettings[channelDetails.channel]}
-            >
-              <Button
-                variant="secondary"
-                size="small"
-                leadingIcon={<NotificationMobile size={20} />}
-                trailingIcon={<CaretDown size={20} />}
+          {!!isSubscribed && !isLoading && channelDetails && (
+            <Skeleton isLoading={isSubscriptionLoading} height='40px'>
+              <UnsubscribeChannelDropdown
+                channelDetail={channelDetails}
+                onSuccess={refetch}
+                userSetting={UserSetting}
               >
-                Subscribed
-              </Button>
-            </UnsubscribeChannelDropdown>
+                <Button
+                  variant="secondary"
+                  size="small"
+                  leadingIcon={<NotificationMobile size={20} />}
+                  trailingIcon={<CaretDown size={20} />}
+                >
+                  Subscribed
+                </Button>
+              </UnsubscribeChannelDropdown>
+            </Skeleton>
           )}
         </Box>
         <Box
@@ -181,7 +183,7 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
                 variant="c-regular"
                 color={{ light: 'gray-600', dark: 'gray-500' }}
               >
-                {formatSubscriberCount(subscriberCount)} subscribers
+                {formatSubscriberCount(channelDetails?.subscriber_count)} subscribers
               </Text>
             </Skeleton>
           </Box>

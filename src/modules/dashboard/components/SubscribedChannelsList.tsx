@@ -31,6 +31,8 @@ const HottestChannelsList = () => {
 const SubscribedChannelsList = () => {
   const { data: userSubscriptions, isLoading, refetch } = useGetUserSubscriptions();
 
+  console.log("User Subscriptions >>", userSubscriptions);
+
   const { wallet } = useAccount();
   return wallet?.accounts?.length ? (
     <>

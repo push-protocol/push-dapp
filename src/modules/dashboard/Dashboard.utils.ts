@@ -54,7 +54,7 @@ export const getTrendingChannelsData = (
       subscriber: currentSubscriberData[key],
       name: channelDetails[key]?.name || '',
       icon: channelDetails[key]?.icon || '',
-      trend: trend,
+      trend: trend
     });
   }
 
@@ -73,12 +73,16 @@ export const getTrendingChannelsData = (
  * @param count
  * @returns returns formatted number
  */
-export const formatSubscriberCount = (count: number) => {
-  if (count >= 1000000) {
-    return (count / 1000000).toFixed(1) + 'M';
-  } else if (count >= 1000) {
-    return (count / 1000).toFixed(1) + 'K';
+export const formatSubscriberCount = (count?: number) => {
+  if (count) {
+    if (count >= 1000000) {
+      return (count / 1000000).toFixed(1) + 'M';
+    } else if (count >= 1000) {
+      return (count / 1000).toFixed(1) + 'K';
+    } else {
+      return count;
+    }
   } else {
-    return count;
+    return 0;
   }
 };

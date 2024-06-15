@@ -1,9 +1,9 @@
-export interface ChannelDetailsProps {
+export type FeaturedChannelDetailsProps = {
   id: number;
   channel: string;
-}
+};
 
-const DevFeaturedChannelsList: ChannelDetailsProps[] = [
+const DevFeaturedChannelsList: FeaturedChannelDetailsProps[] = [
   {
     id: 1,
     channel: '0x74415Bc4C4Bf4Baecc2DD372426F0a1D016Fa924'
@@ -42,7 +42,7 @@ const DevFeaturedChannelsList: ChannelDetailsProps[] = [
   }
 ];
 
-const StagingFeaturedChannelsList: ChannelDetailsProps[] = [
+const StagingFeaturedChannelsList: FeaturedChannelDetailsProps[] = [
   {
     id: 1,
     channel: '0x74415Bc4C4Bf4Baecc2DD372426F0a1D016Fa924'
@@ -81,7 +81,7 @@ const StagingFeaturedChannelsList: ChannelDetailsProps[] = [
   }
 ];
 
-const ProdFeaturedChannelsList: ChannelDetailsProps[] = [
+const ProdFeaturedChannelsList: FeaturedChannelDetailsProps[] = [
   {
     id: 1,
     channel: '0xB88460Bb2696CAb9D66013A05dFF29a28330689D'
@@ -120,7 +120,7 @@ const ProdFeaturedChannelsList: ChannelDetailsProps[] = [
   }
 ];
 
-const AlphaFeaturedChannelsList: ChannelDetailsProps[] = [
+const AlphaFeaturedChannelsList: FeaturedChannelDetailsProps[] = [
   {
     id: 1,
     channel: '0xB88460Bb2696CAb9D66013A05dFF29a28330689D'
@@ -159,7 +159,7 @@ const AlphaFeaturedChannelsList: ChannelDetailsProps[] = [
   }
 ];
 
-export const FeaturedNotificationChannelsList: {
+export const FeaturedChannelsList: {
   [env: string]: { id: number; channel: string }[];
 } = {
   dev: DevFeaturedChannelsList,
