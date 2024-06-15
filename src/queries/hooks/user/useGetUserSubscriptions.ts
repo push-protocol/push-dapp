@@ -1,13 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
 
-import { userSubscriptions } from 'queries/queryKeys';
-import { getUserSubscriptions } from 'queries/services';
+import { userSubscriptions } from '../../queryKeys';
+import { getUserSubscriptions } from '../../services';
 
-export const useGetUserSubscriptions = () => {
-  const { userPushSDKInstance } = useSelector((state: any) => {
+//Types
+import { UserStoreType } from 'types';
+
+export const useGetUserSubscriptions = (address?: string) => {
+  const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
     return state.user;
   });
-  const query = useQuery({ queryKey: [userSubscriptions], queryFn: () => getUserSubscriptions(userPushSDKInstance) });
+  const query = useQuery({
+    queryKey: [userSubscriptions, address],
+    queryFn: () => getUserSubscriptions(userPushSDKInstance, address),
+  });
   return query;
 };

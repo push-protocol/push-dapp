@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
 //Third-party libraries
 import { css } from 'styled-components';
@@ -8,19 +8,36 @@ import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 //Configs
 import { LOGO_ALIAS_CHAIN } from '../configs/ChainDetails';
 
+//Utility functions
+import { formatSubscriberCount } from '../Dashboard.utils';
+
 //Hooks
-import { UserSubscriptionsResponse, useGetChannelDetails } from 'queries';
+import { UserSubscriptionsResponse, useGetChannelDetails, useGetUserSubscriptions } from 'queries';
 
 // Components
-import { Box, Button, NotificationMobile, Skeleton, Text, Link, TickDecoratedCircleFilled, Ethereum } from 'blocks';
-import UnsubscribeChannelDropdown from 'common/components/UnsubscribeChannelDropdown';
-import VerifiedToolTipComponent from './VerifiedToolTipComponent';
+
+import {
+  Box,
+  Button,
+  NotificationMobile,
+  Skeleton,
+  Text,
+  Link,
+  InboxBell,
+  TickDecoratedCircleFilled,
+  Ethereum,
+} from 'blocks';
+import { VerifiedToolTipComponent } from './VerifiedToolTipComponent';
 import { UserSetting } from 'helpers/channel/types';
+
+import { useAccount } from 'hooks';
+import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
+import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannelDropdown';
 
 export type ChannelListItemProps = {
   channelAddress: string;
   userSetting?: UserSetting[];
-  isListLoading?: boolean;
+  isLoading?: boolean;
   refetchUserSubscriptions?: (
     options?: RefetchOptions | undefined
   ) => Promise<QueryObserverResult<UserSubscriptionsResponse, Error>>;
@@ -29,13 +46,24 @@ const ChannelListItem: FC<ChannelListItemProps> = ({
   channelAddress,
   userSetting = undefined,
   refetchUserSubscriptions,
-  isListLoading,
+  isLoading,
 }) => {
   const { data: channelDetails, isLoading: isChannelLoading } = useGetChannelDetails(channelAddress);
+  const { data: userSubscription, refetch, isLoading: isSubscriptionLoading } = useGetUserSubscriptions(channelAddress);
+  const { wallet } = useAccount();
+
   const AliasChain = channelDetails?.alias_blockchain_id && LOGO_ALIAS_CHAIN[+channelDetails.alias_blockchain_id];
+  const hasAddressAlias =
+    channelDetails?.alias_address != null && channelDetails?.alias_address != 'NULL' && AliasChain;
+
+  const isWalletConnected = !!wallet?.accounts?.length;
+
+  if (isWalletConnected) refetch();
+
+  const isSubscribed = userSubscription && userSubscription?.length;
 
   return (
-    <Skeleton isLoading={isChannelLoading || isListLoading}>
+    <Skeleton isLoading={isChannelLoading || isLoading || isSubscriptionLoading}>
       <Box
         display="flex"
         justifyContent="space-between"
@@ -87,35 +115,45 @@ const ChannelListItem: FC<ChannelListItemProps> = ({
                 width={16}
                 height={16}
               />
-              {channelDetails &&
-                channelDetails?.alias_address != null &&
-                channelDetails?.alias_address != 'NULL' &&
-                AliasChain && (
-                  <AliasChain
-                    width={16}
-                    height={16}
-                  />
-                )}
+              {channelDetails && hasAddressAlias && (
+                <AliasChain
+                  width={16}
+                  height={16}
+                />
+              )}
             </Box>
             <Text
               variant="c-regular"
               color={{ light: 'gray-600', dark: 'gray-500' }}
             >
-              {channelDetails?.subscriber_count} subscribers
+              {formatSubscriberCount(channelDetails?.subscriber_count || 0)} subscribers
             </Text>
           </Box>
         </Box>
 
-        {channelDetails && refetchUserSubscriptions && (
+        {isWalletConnected && channelDetails && !isSubscribed && (
+          <SubscribeChannelDropdown
+            channelDetails={channelDetails}
+            onSuccess={refetch}
+          >
+            <Button
+              size="small"
+              iconOnly={<InboxBell />}
+              variant={'tertiary'}
+            />
+          </SubscribeChannelDropdown>
+        )}
+
+        {isWalletConnected && channelDetails && !!isSubscribed && (
           <UnsubscribeChannelDropdown
             channelDetail={channelDetails}
-            onSuccess={refetchUserSubscriptions}
+            onSuccess={refetchUserSubscriptions ?? refetch}
             userSetting={userSetting}
           >
             <Button
               size="small"
               iconOnly={<NotificationMobile />}
-              variant={'tertiary'}
+              variant={'secondary'}
             />
           </UnsubscribeChannelDropdown>
         )}

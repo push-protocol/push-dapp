@@ -14,6 +14,7 @@ const Metamask: FC<IllustrationProps> = (allProps) => {
           viewBox="0 0 43 41"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          {...props}
         >
           <path
             d="M39.9998 0.674622L23.5776 12.968L26.6208 5.72021L39.9998 0.674622Z"

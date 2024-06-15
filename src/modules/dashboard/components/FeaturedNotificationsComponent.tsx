@@ -1,22 +1,15 @@
 // React + Web3 Essentials
-import { FC, useEffect } from 'react';
-
-// Third-party libraries
-import { useDispatch, useSelector } from 'react-redux';
-import { updateBulkSubscriptions, updateBulkUserSettings } from 'redux/slices/channelSlice';
-
-// Hooks
-import { useAccount } from 'hooks';
+import { FC } from 'react';
 
 // Components
 import { useSmoothHorizontalScroll } from 'common';
-import { FeaturedChannelsListItem } from './FeaturedChannelsListItem';
+import { FeaturedNotificationChannelsList } from './FeaturedNotificationChannelsList';
 import PrevIconSlider from 'blocks/icons/components/PrevIconSlider';
 import NextIconSlider from 'blocks/icons/components/NextIconSlider';
 import { Box, HoverableSVG, Text, Link } from 'blocks';
 
 // Internal Configs
-import { FeaturedNotificationChannelsList } from '../configs';
+import { FeaturedChannelsList } from '../configs';
 import { appConfig } from 'config';
 
 export type FeaturedNotificationsComponentProps = {};
@@ -24,16 +17,11 @@ export type FeaturedNotificationsComponentProps = {};
 const itemsPerPage = 3;
 
 const FeaturedNotificationsComponent: FC<FeaturedNotificationsComponentProps> = () => {
-  const { userPushSDKInstance } = useSelector((state: any) => {
-    return state.user;
-  });
-  const { account } = useAccount();
-  const dispatch = useDispatch();
 
-  const FeaturedChannelsList = FeaturedNotificationChannelsList[appConfig.appEnv];
+  const UpdatedFeaturedChannelsList = FeaturedChannelsList[appConfig.appEnv];
 
   const { currentIndex, handleNext, handlePrevious, listRef } = useSmoothHorizontalScroll({
-    items: FeaturedChannelsList,
+    items: UpdatedFeaturedChannelsList,
     itemsPerPage,
     itemGap: 24, // Gap provided in between the list items
   });
@@ -41,26 +29,6 @@ const FeaturedNotificationsComponent: FC<FeaturedNotificationsComponentProps> = 
   const handleClick: VoidFunction = () => {
     handleNext();
   };
-
-  useEffect(() => {
-    if (!account || !userPushSDKInstance) return;
-    (async function () {
-      const subscriptionsArr: {
-        channel: string;
-        user_settings: string | null;
-      }[] = await userPushSDKInstance.notification.subscriptions();
-      const subscriptionsMapping: { [channel: string]: boolean } = {};
-      const userSettings: { [channel: string]: { [key: string]: any } | null } = {};
-
-      subscriptionsArr.forEach(({ channel, user_settings }) => {
-        subscriptionsMapping[channel] = true;
-        userSettings[channel] = user_settings ? JSON.parse(user_settings) : null;
-      });
-
-      dispatch(updateBulkSubscriptions(subscriptionsMapping));
-      dispatch(updateBulkUserSettings(userSettings));
-    })();
-  }, [account, userPushSDKInstance]);
 
   return (
     <Box
@@ -113,25 +81,17 @@ const FeaturedNotificationsComponent: FC<FeaturedNotificationsComponentProps> = 
             <HoverableSVG
               onClick={handleClick}
               defaultColor={{ light: 'gray-900', dark: 'gray-400' }}
-              disabled={currentIndex + itemsPerPage >= FeaturedChannelsList.length}
+              disabled={currentIndex + itemsPerPage >= UpdatedFeaturedChannelsList.length}
               icon={<NextIconSlider size={24} />}
             ></HoverableSVG>
           </Box>
         </Box>
       </Box>
 
-      <Box
-        ref={listRef}
-        display="flex"
-        flexDirection={{ initial: 'row', tb: 'column' }}
-        gap="s6"
-        overflow="scroll"
-        width={{ initial: 'calc(100vw - 346px)' }}
-      >
-        {FeaturedChannelsList.map((channel) => {
-          return <FeaturedChannelsListItem channel={channel} />;
-        })}
-      </Box>
+      <FeaturedNotificationChannelsList
+        listRef={listRef}
+        featuredChannelsList={UpdatedFeaturedChannelsList}
+      />
     </Box>
   );
 };

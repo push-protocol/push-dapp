@@ -1,8 +1,12 @@
 import { IllustrationProps } from 'blocks';
 import { FC } from 'react';
 
-export const channelListTypeValues = ['trending channels', 'subscribed'] as const;
-
+export type ChannelTabs = 'subscribed' | 'trending' | 'hottest';
+export type DashboardChannelTabType = {
+  label: string;
+  value: ChannelTabs;
+};
+export type DashboardChannelTabsType = Array<DashboardChannelTabType>;
 export type TrendingChannelsType = {
   channel: string;
   icon: string;
@@ -25,10 +29,9 @@ export type ChatPayloadType = {
   };
 };
 export type ChatType = {
-  previewLink: string;
   chatParticipantAlias: string;
   payload: ChatPayloadType;
 };
 
-export type EnvKeys = 'prod' | 'staging' | 'dev';
+export type EnvKeys = 'prod' | 'staging' | 'dev' | 'alpha';
 export type SourceKeys = 'ETH_MAINNET' | 'All';

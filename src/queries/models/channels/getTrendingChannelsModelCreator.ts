@@ -1,4 +1,4 @@
-import { TrendingChannelsResponse } from 'queries/types';
+import { TrendingChannelsResponse } from '../../types';
 
 export const getTrendingChannelsModelCreator = (response: TrendingChannelsResponse): TrendingChannelsResponse => ({
   channelDetails: response.channelDetails,

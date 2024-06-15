@@ -6,7 +6,7 @@ const TickDecoratedCircleFilled: FC<IconProps> = (allProps) => {
   const { svgProps: props, ...restProps } = allProps;
   return (
     <IconWrapper
-      componentName="TickCircleFilled"
+      componentName="TickDecoratedCircleFilled"
       icon={
         <svg
           width="inherit"
@@ -14,6 +14,7 @@ const TickDecoratedCircleFilled: FC<IconProps> = (allProps) => {
           viewBox="0 0 16 16"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          {...props}
         >
           <path
             id="Vector"
