@@ -2,15 +2,16 @@
 import { FC } from 'react';
 
 // Components
-import { FeaturedChannelsListItem } from './FeaturedChannelsListItem';
+import { FeaturedNotificationChannelsListItem } from './FeaturedNotificationChannelsListItem';
 import { Box } from 'blocks';
 
 // Internal Configs
 import { FeaturedChannelDetailsProps } from '../configs';
+import { css } from 'styled-components';
 
 type FeaturedNotificationChannelsListProps = {
   listRef: any;
-  featuredChannelsList: FeaturedChannelDetailsProps[];
+  featuredChannelsList?: FeaturedChannelDetailsProps[];
 }
 
 const FeaturedNotificationChannelsList: FC<FeaturedNotificationChannelsListProps> = ({
@@ -26,10 +27,11 @@ const FeaturedNotificationChannelsList: FC<FeaturedNotificationChannelsListProps
       gap="s6"
       padding='s4 s0'
       overflow="scroll"
-      width={{ initial: 'calc(100vw - 346px)' }}
+      width={{ initial: 'calc(100vw - 346px)', lp: 'calc(100vw - 130px)' }}
+      css={css`overflow-Y:hidden;`}
     >
-      {featuredChannelsList.map((channel) => {
-        return <FeaturedChannelsListItem
+      {featuredChannelsList?.map((channel) => {
+        return <FeaturedNotificationChannelsListItem
           channelAddress={channel.channel}
         />;
       })}

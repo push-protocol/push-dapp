@@ -29,10 +29,11 @@ import { ImageV3 } from '../Dashboard.styled';
 
 type FeaturedChannelsListItemProps = {
   channelAddress: string;
+  isMobile?: boolean;
 };
 
-const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
-  const { channelAddress } = props;
+const FeaturedNotificationChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
+  const { channelAddress, isMobile } = props;
 
   const { wallet } = useAccount();
   const isWalletConnected = !!wallet?.accounts?.length;
@@ -66,7 +67,7 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
         padding="s6"
         borderRadius="24px"
         gap="s3"
-        width={{ initial: '27.68%' }}
+        width={isMobile ? { initial: '50vw', ml: '60vw' } : { initial: '27.68%', lp: '40%' }}
         css={css`
           flex-shrink: 0;
         `}
@@ -207,4 +208,4 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
   );
 };
 
-export { FeaturedChannelsListItem };
+export { FeaturedNotificationChannelsListItem };
