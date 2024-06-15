@@ -109,7 +109,7 @@ const ManageNotifSettingDropdownContainer: FC<ManageNotifSettingDropdownContaine
 };
 
 const ManageNotifSettingDropdown: FC<ManageNotifSettingDropdownProps> = (options) => {
-  const { children, centerOnMobile, userSetting, channelDetail } = options;
+  const { children, centerOnMobile, userSetting, channelDetail, onSuccessOptout } = options;
   const [isOpen, setIsOpen] = useState(false);
   const { chainId, provider, account } = useAccount();
   const { userPushSDKInstance } = useSelector((state: any) => {
@@ -136,7 +136,7 @@ const ManageNotifSettingDropdown: FC<ManageNotifSettingDropdownProps> = (options
 
   const unsubscribeToast = useToast();
   const optOutHandler = async ({ setLoading }: { setLoading?: Dispatch<SetStateAction<boolean>> }) => {
-    const setLoadingFunc = setLoading || (() => { });
+    const setLoadingFunc = setLoading || (() => {});
     setLoadingFunc(true);
     let userPushInstance = userPushSDKInstance;
 
@@ -177,7 +177,7 @@ const ManageNotifSettingDropdown: FC<ManageNotifSettingDropdownProps> = (options
               />
             ),
           });
-
+          onSuccessOptout();
           closeDropdown();
         },
         onError: () => {

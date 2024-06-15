@@ -25,7 +25,6 @@ const EmptyChannelList: FC<EmptyChannelListProps> = ({ heading, subHeading }) =>
         flexDirection="column"
         alignItems="center"
         gap="s1"
-        width={{ initial: '50%', ll: 'auto' }}
       >
         {heading && (
           <Text

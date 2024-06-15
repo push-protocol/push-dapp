@@ -7,11 +7,11 @@ import { ChannelDetailsResponse } from 'queries';
 // Components
 import OptinNotifSettingDropdown from 'components/dropdowns/OptinNotifSettingDropdown';
 
-interface SubscribeChannelDropdownProps {
+export type SubscribeChannelDropdownProps = {
   children: ReactNode;
   channelDetails: ChannelDetailsResponse;
   onSuccess: () => void;
-}
+};
 
 const SubscribeChannelDropdown: FC<SubscribeChannelDropdownProps> = (options) => {
   const { children, channelDetails, onSuccess } = options;
@@ -22,7 +22,7 @@ const SubscribeChannelDropdown: FC<SubscribeChannelDropdownProps> = (options) =>
       setLoading={() => {
         //empty function
       }}
-      onSuccessOptin={() => onSuccess()}
+      onSuccessOptin={onSuccess}
     >
       {children}
     </OptinNotifSettingDropdown>

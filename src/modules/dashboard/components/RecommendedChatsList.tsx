@@ -18,7 +18,7 @@ const RecommendedChatsList = () => {
       {recommendedChatList.map((item, index) => {
         return (
           <RecommendedChatListItem
-            key={index}
+            key={`${index}`}
             chat={item}
           />
         );

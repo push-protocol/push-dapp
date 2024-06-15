@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 
 //Third-party libraries
 import { css } from 'styled-components';
@@ -29,41 +29,53 @@ import {
 } from 'blocks';
 import { VerifiedToolTipComponent } from './VerifiedToolTipComponent';
 import { UserSetting } from 'helpers/channel/types';
-
 import { useAccount } from 'hooks';
 import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
 import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannelDropdown';
 
 export type ChannelListItemProps = {
+  allowSubscribe?: boolean;
   channelAddress: string;
-  userSetting?: UserSetting[];
   isLoading?: boolean;
-  refetchUserSubscriptions?: (
-    options?: RefetchOptions | undefined
-  ) => Promise<QueryObserverResult<UserSubscriptionsResponse, Error>>;
+
+  refetchChannels?:
+    | (() => void)
+    | ((options?: RefetchOptions | undefined) => Promise<QueryObserverResult<UserSubscriptionsResponse, Error>>);
 };
 const ChannelListItem: FC<ChannelListItemProps> = ({
+  allowSubscribe = true,
   channelAddress,
-  userSetting = undefined,
-  refetchUserSubscriptions,
+  refetchChannels,
   isLoading,
 }) => {
   const { data: channelDetails, isLoading: isChannelLoading } = useGetChannelDetails(channelAddress);
-  const { data: userSubscription, refetch, isLoading: isSubscriptionLoading } = useGetUserSubscriptions(channelAddress);
-  const { wallet } = useAccount();
 
-  const AliasChain = channelDetails?.alias_blockchain_id && LOGO_ALIAS_CHAIN[+channelDetails.alias_blockchain_id];
-  const hasAddressAlias =
-    channelDetails?.alias_address != null && channelDetails?.alias_address != 'NULL' && AliasChain;
+  const { wallet } = useAccount();
 
   const isWalletConnected = !!wallet?.accounts?.length;
 
-  if (isWalletConnected) refetch();
+  const {
+    data: userSubscription,
+    refetch: refetchUserSubscription,
+    isLoading: isSubscriptionLoading,
+  } = useGetUserSubscriptions(channelAddress, {
+    enabled: isWalletConnected,
+  });
+
+  const AliasChain = channelDetails?.alias_blockchain_id && LOGO_ALIAS_CHAIN[+channelDetails.alias_blockchain_id];
+
+  const hasAddressAlias =
+    channelDetails?.alias_address != null && channelDetails?.alias_address != 'NULL' && AliasChain;
 
   const isSubscribed = userSubscription && userSubscription?.length;
 
+  const handleRefetch = () => {
+    refetchChannels?.();
+    refetchUserSubscription();
+  };
+
   return (
-    <Skeleton isLoading={isChannelLoading || isLoading || isSubscriptionLoading}>
+    <Skeleton isLoading={isChannelLoading || isLoading}>
       <Box
         display="flex"
         justifyContent="space-between"
@@ -131,32 +143,34 @@ const ChannelListItem: FC<ChannelListItemProps> = ({
           </Box>
         </Box>
 
-        {isWalletConnected && channelDetails && !isSubscribed && (
-          <SubscribeChannelDropdown
-            channelDetails={channelDetails}
-            onSuccess={refetch}
-          >
-            <Button
-              size="small"
-              iconOnly={<InboxBell />}
-              variant={'tertiary'}
-            />
-          </SubscribeChannelDropdown>
-        )}
+        <Skeleton isLoading={isSubscriptionLoading}>
+          {allowSubscribe && channelDetails && !isSubscribed && (
+            <SubscribeChannelDropdown
+              channelDetails={channelDetails}
+              onSuccess={handleRefetch}
+            >
+              <Button
+                size="small"
+                iconOnly={<InboxBell />}
+                variant={'tertiary'}
+              />
+            </SubscribeChannelDropdown>
+          )}
 
-        {isWalletConnected && channelDetails && !!isSubscribed && (
-          <UnsubscribeChannelDropdown
-            channelDetail={channelDetails}
-            onSuccess={refetchUserSubscriptions ?? refetch}
-            userSetting={userSetting}
-          >
-            <Button
-              size="small"
-              iconOnly={<NotificationMobile />}
-              variant={'secondary'}
-            />
-          </UnsubscribeChannelDropdown>
-        )}
+          {allowSubscribe && channelDetails && !!isSubscribed && (
+            <UnsubscribeChannelDropdown
+              channelDetail={channelDetails}
+              onSuccess={handleRefetch}
+              userSetting={JSON.parse(userSubscription[0].user_settings) as UserSetting[]}
+            >
+              <Button
+                size="small"
+                iconOnly={<NotificationMobile />}
+                variant={'secondary'}
+              />
+            </UnsubscribeChannelDropdown>
+          )}
+        </Skeleton>
       </Box>
     </Skeleton>
   );

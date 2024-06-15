@@ -1,6 +1,3 @@
-//Config
-import { appConfig } from 'config';
-
 //Components
 import { PushAlpha, PushBot, PushDev } from 'blocks';
 
@@ -9,6 +6,7 @@ import { ChatType, DashboardChannelTabsType, EnvKeys, SourceKeys } from './Dashb
 
 export const dahboardChannelTabs: DashboardChannelTabsType = [
   { label: 'Trending Channels', value: 'trending' },
+  { label: 'Hottest Channels', value: 'hottest' },
   { label: 'Subscribed', value: 'subscribed' },
 ];
 

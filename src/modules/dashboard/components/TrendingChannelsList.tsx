@@ -19,36 +19,58 @@ import { ChannelListItem } from './ChannelListItem';
 import { EnvKeys } from '../Dashboard.types';
 
 const TrendingChannelsList = () => {
-  const { data: currentData, isLoading } = useGetTrendingChannels({
+  const {
+    data: currentData,
+    isLoading: isLoadingFirstList,
+    isSuccess: isFirstListLoaded,
+    refetch,
+  } = useGetTrendingChannels({
     startDate,
     endDate: firstEndDate,
     channel: 'All',
     source: trendingSource[appConfig.appEnv as EnvKeys],
   });
-  const { data: weekData } = useGetTrendingChannels({
+  const {
+    data: weekData,
+    isLoading: isLoadingSecondList,
+    isSuccess: isSecondListLoaded,
+    refetch: _refetch,
+  } = useGetTrendingChannels({
     startDate,
     endDate: secondEndDate,
     channel: 'All',
     source: trendingSource[appConfig.appEnv as EnvKeys],
   });
 
+  const isLoadingTrendingChannels = isLoadingFirstList || isLoadingSecondList;
+
+  const isSuccess = isFirstListLoaded || isSecondListLoaded;
+
   const trendingChannels = getTrendingChannelsData(weekData, currentData);
+
+  const handleRefetch = () => {
+    refetch();
+    _refetch();
+  };
+
+  // If there are channels then render them else render 5 skeletons
+  const channelList = isLoadingTrendingChannels ? Array(5).fill(0) : trendingChannels;
 
   return (
     <>
-      {!isLoading && !trendingChannels?.length && (
+      {isSuccess && !isLoadingTrendingChannels && !trendingChannels?.length && (
         <EmptyChannelList
-          heading="No Channels Trending"
+          heading="No Trending Channels"
           subHeading="Channels that are trending will show up here."
         />
       )}
 
-      {trendingChannels.map((channel, index) => (
-        <Box>
+      {channelList.map((channel, index) => (
+        <Box key={`${index}`}>
           <ChannelListItem
-            key={index}
             channelAddress={channel}
-            isLoading={isLoading && !trendingChannels.length}
+            isLoading={isLoadingTrendingChannels}
+            refetchChannels={handleRefetch}
           />
           {index != trendingChannels.length - 1 && <Separator />}
         </Box>

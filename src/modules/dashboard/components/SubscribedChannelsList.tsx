@@ -1,62 +1,37 @@
 //Hooks
-import { useAccount } from 'hooks';
-
-//Hooks
 import { useGetUserSubscriptions } from 'queries';
 
-//Constants
-import { hottestChannels } from '../Dashboard.constants';
-import { appConfig } from 'config';
-
 // Components
-import { Box, Button, EmptyInbox, Link, Separator, Text } from 'blocks';
+import { Box, Separator } from 'blocks';
 import { ChannelListItem } from './ChannelListItem';
 
-//Types
-import { EnvKeys } from '../Dashboard.types';
 import { EmptyChannelList } from './EmptyChannelList';
 
-const HottestChannelsList = () => {
-  return hottestChannels[appConfig.appEnv as EnvKeys]?.map((channel, index) => (
-    <Box>
-      <ChannelListItem
-        key={index}
-        channelAddress={channel}
-      />
-      {index != hottestChannels[appConfig.appEnv as EnvKeys].length - 1 && <Separator />}
-    </Box>
-  ));
-};
-
 const SubscribedChannelsList = () => {
-  const { data: userSubscriptions, isLoading, refetch } = useGetUserSubscriptions();
+  const { data: subscribedChannels, isLoading, refetch, isSuccess } = useGetUserSubscriptions();
 
-  console.log("User Subscriptions >>", userSubscriptions);
+  // If there are channels then render them else render 5 skeletons
+  const channelList = isLoading ? Array(5).fill(0) : subscribedChannels;
 
-  const { wallet } = useAccount();
-  return wallet?.accounts?.length ? (
+  return (
     <>
-      {userSubscriptions?.map((channel, index) => (
-        <Box>
-          <ChannelListItem
-            key={index}
-            channelAddress={channel.channel}
-            userSetting={JSON.parse(channel.user_settings)}
-            isLoading={isLoading}
-            refetchUserSubscriptions={refetch}
-          />
-          {index != userSubscriptions.length - 1 && <Separator />}
-        </Box>
-      ))}
-      {!isLoading && !userSubscriptions?.length && (
+      {isSuccess && !isLoading && !subscribedChannels?.length && (
         <EmptyChannelList
           heading="No Channels Subscribed"
           subHeading="Channels that you are subscribed to will show up here."
         />
       )}
+      {channelList?.map((channel, index) => (
+        <Box key={`${index}`}>
+          <ChannelListItem
+            channelAddress={channel.channel}
+            isLoading={isLoading}
+            refetchChannels={refetch}
+          />
+          {index != channelList.length - 1 && <Separator />}
+        </Box>
+      ))}
     </>
-  ) : (
-    <HottestChannelsList />
   );
 };
 

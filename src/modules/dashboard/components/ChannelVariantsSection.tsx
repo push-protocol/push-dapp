@@ -3,8 +3,8 @@ import { FC } from 'react';
 
 // Components
 import { Box } from 'blocks';
+import { ChannelTabsSection } from './ChannelTabsSection';
 import { RecommendedChatAndSnapSection } from './RecommendedChatAndSnapSection';
-import { TrendingAndSubscribedTabsSection } from './TrendingAndSubscribedTabsSection';
 
 export type ChannelVariantsSectionProps = {};
 
@@ -19,7 +19,7 @@ const ChannelVariantsSection: FC<ChannelVariantsSectionProps> = () => {
       flexDirection={{ ml: 'column' }}
       justifyContent="space-between"
     >
-      <TrendingAndSubscribedTabsSection />
+      <ChannelTabsSection />
       <RecommendedChatAndSnapSection />
     </Box>
   );

@@ -8,30 +8,27 @@ import { ChannelDetailsResponse } from 'queries';
 import ManageNotifSettingDropdown from 'components/dropdowns/ManageNotifSettingDropdown';
 import { UserSetting } from 'helpers/channel/types';
 
-interface UnsubscribeChannelDropdownProps {
+export type UnsubscribeChannelDropdownProps = {
   children: ReactNode;
   channelDetail: ChannelDetailsResponse;
   centeronMobile?: boolean;
   onSuccess: () => void;
   userSetting?: UserSetting[] | undefined;
-}
+};
 
 const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
   children,
   centeronMobile = false,
   channelDetail,
   onSuccess,
-  userSetting
+  userSetting,
 }) => {
-
   return (
     <ManageNotifSettingDropdown
       centerOnMobile={centeronMobile}
       channelDetail={channelDetail}
       userSetting={userSetting}
-      onSuccessOptout={() => {
-        onSuccess();
-      }}
+      onSuccessOptout={onSuccess}
     >
       {children}
     </ManageNotifSettingDropdown>

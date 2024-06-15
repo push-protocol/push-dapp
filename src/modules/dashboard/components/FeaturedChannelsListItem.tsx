@@ -41,21 +41,18 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
   const { data: channelDetails, isLoading } = useGetChannelDetails(channelAddress);
 
   /* Fetching User Subscribed Channel Details along with user settings */
-  const { data: userSubscription, refetch, isLoading: isSubscriptionLoading } = useGetUserSubscriptions(channelAddress);
-
-  if (isWalletConnected) refetch();
+  const {
+    data: userSubscription,
+    refetch,
+    isLoading: isSubscriptionLoading,
+  } = useGetUserSubscriptions(channelAddress, { enabled: isWalletConnected });
 
   const isSubscribed = userSubscription && userSubscription?.length;
 
   const AliasChain = channelDetails?.alias_blockchain_id && LOGO_ALIAS_CHAIN[+channelDetails.alias_blockchain_id];
 
-  const hasAliasAddress = channelDetails && channelDetails?.alias_address != null && channelDetails?.alias_address != 'NULL';
-
-  let UserSetting: UserSetting[] | undefined = undefined;
-  if (userSubscription && userSubscription.length > 0) {
-    UserSetting = userSubscription && JSON.parse(userSubscription[0].user_settings);
-  }
-
+  const hasAliasAddress =
+    channelDetails && channelDetails?.alias_address != null && channelDetails?.alias_address != 'NULL';
 
   return (
     <>
@@ -85,7 +82,10 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
           </Skeleton>
 
           {!isSubscribed && !isLoading && channelDetails && (
-            <Skeleton isLoading={isSubscriptionLoading} height='40px'>
+            <Skeleton
+              isLoading={isSubscriptionLoading}
+              height="40px"
+            >
               <SubscribeChannelDropdown
                 channelDetails={channelDetails}
                 onSuccess={refetch}
@@ -102,11 +102,14 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
           )}
 
           {!!isSubscribed && !isLoading && channelDetails && (
-            <Skeleton isLoading={isSubscriptionLoading} height='40px'>
+            <Skeleton
+              isLoading={isSubscriptionLoading}
+              height="40px"
+            >
               <UnsubscribeChannelDropdown
                 channelDetail={channelDetails}
                 onSuccess={refetch}
-                userSetting={UserSetting}
+                userSetting={JSON.parse(userSubscription[0].user_settings) as UserSetting[]}
               >
                 <Button
                   variant="secondary"

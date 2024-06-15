@@ -1,3 +1,4 @@
 export const trendingChannels = 'trendingChannels';
-export const userSubscriptions = 'userSubscriptions';
+export const allUserSubscriptions = 'allUserSubscriptions';
+export const userSubscription = 'userSubscription';
 export const channelDetails = 'channelDetails';
