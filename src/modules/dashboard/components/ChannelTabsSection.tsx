@@ -86,6 +86,7 @@ const ChannelTabsSection = () => {
         overflow="hidden auto"
         borderRadius="var(--r6)"
         minHeight="285px"
+        maxHeight="285px"
         border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
         padding="s2 s4"
       >
