@@ -1,1 +1,0 @@
-import{gr as l,gs as e,gt as m,gu as o,gv as u,gw as _,__tla as h}from"./index-CYtX8f3i.js";let g,c=Promise.all([(()=>{try{return h}catch{}})()]).then(async()=>{g=function(){for(var t=[],a=0;a<arguments.length;a++)t[a]=arguments[a];var n=l(t),r=e(t,1/0),s=t;return s.length?s.length===1?o(s[0]):u(r)(_(s,n)):m}});export{c as __tla,g as m};
