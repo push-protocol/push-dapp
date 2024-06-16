@@ -22,18 +22,18 @@ import Ethereum from 'blocks/illustrations/components/Ethereum';
 import { UserSetting } from 'helpers/channel/types';
 
 // Internal Configs
-import { LOGO_ALIAS_CHAIN } from '../configs/ChainDetails';
+import { LOGO_ALIAS_CHAIN } from '../configs/chainDetails.config';
 
 // Styles
 import { ImageV3 } from '../Dashboard.styled';
 
 type FeaturedChannelsListItemProps = {
   channelAddress: string;
-  isMobile?: boolean;
+  width: string;
 };
 
-const FeaturedNotificationChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
-  const { channelAddress, isMobile } = props;
+const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
+  const { channelAddress, width } = props;
 
   const { wallet } = useAccount();
   const isWalletConnected = !!wallet?.accounts?.length;
@@ -64,7 +64,7 @@ const FeaturedNotificationChannelsListItem: FC<FeaturedChannelsListItemProps> = 
         padding="s6"
         borderRadius="24px"
         gap="s3"
-        width={isMobile ? { initial: '50vw', ml: '60vw' } : { initial: '27.68%', lp: '40%' }}
+        width={{ initial: width }}
         css={css`
           flex-shrink: 0;
         `}
@@ -82,16 +82,17 @@ const FeaturedNotificationChannelsListItem: FC<FeaturedChannelsListItemProps> = 
             />
           </Skeleton>
 
-          {!isSubscribed && !isLoading && channelDetails && (
+          {!isSubscribed && (
             <Skeleton
-              isLoading={isSubscriptionLoading}
+              isLoading={isSubscriptionLoading || isLoading}
               height="40px"
             >
               <SubscribeChannelDropdown
-                channelDetails={channelDetails}
+                channelDetails={channelDetails!}
                 onSuccess={refetch}
               >
                 <Button
+                  id="basic-button"
                   disabled={isLoading}
                   variant="tertiary"
                   size="small"
@@ -102,13 +103,13 @@ const FeaturedNotificationChannelsListItem: FC<FeaturedChannelsListItemProps> = 
             </Skeleton>
           )}
 
-          {!!isSubscribed && !isLoading && channelDetails && (
+          {!!isSubscribed && (
             <Skeleton
-              isLoading={isSubscriptionLoading}
+              isLoading={isSubscriptionLoading || isLoading}
               height="40px"
             >
               <UnsubscribeChannelDropdown
-                channelDetail={channelDetails}
+                channelDetail={channelDetails!}
                 onSuccess={refetch}
                 userSetting={JSON.parse(userSubscription[0].user_settings) as UserSetting[]}
               >
@@ -211,4 +212,4 @@ const FeaturedNotificationChannelsListItem: FC<FeaturedChannelsListItemProps> = 
   );
 };
 
-export { FeaturedNotificationChannelsListItem };
+export { FeaturedChannelsListItem };

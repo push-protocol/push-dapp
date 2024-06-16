@@ -1,1 +1,2 @@
-export * from './DashboardFeaturedChannels.config';
+export * from './chainDetails.config';
+export * from './dashboardFeaturedChannels.config';

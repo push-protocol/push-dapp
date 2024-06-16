@@ -4,7 +4,7 @@ import { FC, useState } from 'react';
 // Components
 import { Box } from 'blocks';
 import { DashboardSubHeader } from './components/DashboardSubHeader';
-import { FeaturedNotificationsComponent } from './components/FeaturedNotificationsComponent';
+import { FeaturedChannels } from './components/FeaturedChannels';
 import { ChannelVariantsSection } from './components/ChannelVariantsSection';
 import DashboardHeader from './components/DashboardHeader';
 
@@ -17,7 +17,7 @@ const Dashboard: FC<DashboardProps> = () => {
     <Box
       flexDirection="column"
       display="flex"
-      margin={{ initial: "s4 s6 s4 s6", ml: 's4' }}
+      margin={{ initial: 's4 s6 s4 s6', ml: 's4' }}
       gap={{ ml: 's6' }}
     >
       <DashboardHeader
@@ -32,7 +32,7 @@ const Dashboard: FC<DashboardProps> = () => {
         flexDirection="column"
         gap="s6"
       >
-        <FeaturedNotificationsComponent />
+        <FeaturedChannels />
         <ChannelVariantsSection />
       </Box>
     </Box>

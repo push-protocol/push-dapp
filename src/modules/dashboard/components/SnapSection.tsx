@@ -3,9 +3,8 @@ import { css } from 'styled-components';
 
 // Components
 import { Box, Text, Button, Link, Metamask } from 'blocks';
-import { RecommendedChatsList } from './RecommendedChatsList';
 
-const Snap = () => {
+const SnapSection = () => {
   return (
     <Box
       display="flex"
@@ -51,24 +50,5 @@ const Snap = () => {
     </Box>
   );
 };
-const RecommendedChatAndSnapSection = () => {
-  return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      width={{ ml: '100%', initial: '50%' }}
-      gap="s6"
-    >
-      <Text
-        color={{ light: 'gray-1000', dark: 'white' }}
-        variant="h4-bold"
-      >
-        Recommended Chats
-      </Text>
-      <RecommendedChatsList />
-      <Snap />
-    </Box>
-  );
-};
 
-export { RecommendedChatAndSnapSection };
+export { SnapSection };

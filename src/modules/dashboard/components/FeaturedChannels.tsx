@@ -3,33 +3,35 @@ import { FC } from 'react';
 
 // Components
 import { useSmoothHorizontalScroll } from 'common';
-import { FeaturedNotificationChannelsList } from './FeaturedNotificationChannelsList';
-import PrevIconSlider from 'blocks/icons/components/PrevIconSlider';
-import NextIconSlider from 'blocks/icons/components/NextIconSlider';
-import { Box, HoverableSVG, Text, Link, deviceSizes } from 'blocks';
+import { useDeviceWidthCheck } from 'hooks';
+import { FeaturedChannelsList } from './FeaturedChannelsList';
+import { FeaturedChannelsMobileViewList } from './FeaturedChannelsMobileViewList';
+import { Box, HoverableSVG, Text, Link, deviceSizes, NextIconSlider, PrevIconSlider } from 'blocks';
 
 // Internal Configs
-import { FeaturedChannelsList, MobileFeaturedChannelsList } from '../configs';
+import { featuredChannelsList, mobileFeaturedChannelsList } from '../configs';
 import { appConfig } from 'config';
-import { useDeviceWidthCheck } from 'hooks';
-import MobileFeaturedNotificationChannelsList from './MobileFeaturedNotificationChannelsList';
 
-export type FeaturedNotificationsComponentProps = {};
+export type FeaturedChannelsProps = {};
 
-const FeaturedNotificationsComponent: FC<FeaturedNotificationsComponentProps> = () => {
+const FeaturedChannels: FC<FeaturedChannelsProps> = () => {
+  const featureChannelsForCurrrentEnv = featuredChannelsList[appConfig.appEnv];
 
-  const UpdatedFeaturedChannelsList = FeaturedChannelsList[appConfig.appEnv];
-  const MobileFeaturedChannelsListItems = MobileFeaturedChannelsList;
-
-  const isTablet = useDeviceWidthCheck(parseInt(deviceSizes.laptop));
-  const isMobile = useDeviceWidthCheck(parseInt(deviceSizes.tablet));
+  const isTablet = useDeviceWidthCheck(parseInt(deviceSizes.tablet));
+  const isMobile = useDeviceWidthCheck(parseInt(deviceSizes.mobileL));
 
   const itemsPerPage = isMobile ? 1 : isTablet ? 2 : 3;
 
+  const showMobileAndTabletView = isMobile || isTablet;
+
+  const applicableFeaturedChannels = showMobileAndTabletView
+    ? mobileFeaturedChannelsList
+    : featureChannelsForCurrrentEnv;
+
   const { currentIndex, handleNext, handlePrevious, listRef } = useSmoothHorizontalScroll({
-    items: UpdatedFeaturedChannelsList,
+    items: applicableFeaturedChannels,
     itemsPerPage,
-    itemGap: 24, // Gap provided in between the list items
+    itemGap: isMobile || isTablet ? 32 : 24, // Gap provided in between the list items
   });
 
   const handleClick: VoidFunction = () => {
@@ -87,29 +89,27 @@ const FeaturedNotificationsComponent: FC<FeaturedNotificationsComponentProps> = 
             <HoverableSVG
               onClick={handleClick}
               defaultColor={{ light: 'gray-900', dark: 'gray-400' }}
-              disabled={currentIndex + itemsPerPage >= UpdatedFeaturedChannelsList.length}
+              disabled={currentIndex + itemsPerPage >= applicableFeaturedChannels.length}
               icon={<NextIconSlider size={24} />}
             ></HoverableSVG>
           </Box>
         </Box>
       </Box>
 
-      {!isMobile && <FeaturedNotificationChannelsList
-        listRef={listRef}
-        featuredChannelsList={UpdatedFeaturedChannelsList}
-      />}
-
-      {isMobile && (
-        <MobileFeaturedNotificationChannelsList
+      {showMobileAndTabletView ? (
+        <FeaturedChannelsMobileViewList
           listRef={listRef}
-          featuredChannelsList={MobileFeaturedChannelsListItems}
+          featuredChannelsList={mobileFeaturedChannelsList}
+        />
+      ) : (
+        <FeaturedChannelsList
+          listRef={listRef}
+          featuredChannelsList={featureChannelsForCurrrentEnv}
+          projectedItemWidth={(listRef?.current?.clientWidth! / itemsPerPage) as number}
         />
       )}
-
-
-
     </Box>
   );
 };
 
-export { FeaturedNotificationsComponent };
+export { FeaturedChannels };

@@ -2,9 +2,10 @@
 import { FC } from 'react';
 
 // Components
-import { Box } from 'blocks';
+import { Box, Text } from 'blocks';
 import { ChannelTabsSection } from './ChannelTabsSection';
-import { RecommendedChatAndSnapSection } from './RecommendedChatAndSnapSection';
+import { SnapSection } from './SnapSection';
+import { RecommendedChatsList } from './RecommendedChatsList';
 
 export type ChannelVariantsSectionProps = {};
 
@@ -20,7 +21,21 @@ const ChannelVariantsSection: FC<ChannelVariantsSectionProps> = () => {
       justifyContent="space-between"
     >
       <ChannelTabsSection />
-      <RecommendedChatAndSnapSection />
+      <Box
+        display="flex"
+        flexDirection="column"
+        width={{ ml: '100%', initial: '50%' }}
+        gap="s6"
+      >
+        <Text
+          color={{ light: 'gray-1000', dark: 'white' }}
+          variant="h4-bold"
+        >
+          Recommended Chats
+        </Text>
+        <RecommendedChatsList />
+        <SnapSection />
+      </Box>
     </Box>
   );
 };
