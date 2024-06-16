@@ -55,6 +55,8 @@ export type BoxNonResponsiveProps = {
   position?: CSSProperties['position'];
   /* Sets box-shadow css property */
   boxShadow?: string;
+  /* Sets overflow css property */
+  overflow?: CSSProperties['overflow'];
 };
 
 export type BoxCSSProps = BoxResponsiveProps & BoxNonResponsiveProps;

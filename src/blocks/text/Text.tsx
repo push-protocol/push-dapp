@@ -4,8 +4,9 @@ import styled, { FlattenSimpleInterpolation } from 'styled-components';
 import { useBlocksTheme } from '../Blocks.hooks';
 import { TransformedHTMLAttributes, BlocksColors, ModeProp, ThemeModeColors } from '../Blocks.types';
 import { getBlocksColor } from '../Blocks.utils';
-import { TextAlign, TextHTMLTags, TextTransform, TextVariants } from './Text.types';
+import { TextAlign, TextHTMLTags, TextResponsiveProps, TextTransform, TextVariants } from './Text.types';
 import { getVariantStyles } from './Text.utils';
+import { getTextResponsiveCSS } from './Text.utils';
 
 export type TextProps = {
   /* Sets the html tag for Text component */
@@ -30,10 +31,11 @@ export type TextProps = {
   variant?: TextVariants;
   /* Sets the css wrap property to move the text to next line in case of overflow */
   wrap?: boolean;
-} & TransformedHTMLAttributes<HTMLParagraphElement | HTMLSpanElement>;
+} & TextResponsiveProps &
+  TransformedHTMLAttributes<HTMLParagraphElement | HTMLSpanElement>;
 
 const StyledText = styled.p.withConfig({
-  shouldForwardProp: (prop, defaultValidatorFn) => !['mode'].includes(prop) && defaultValidatorFn(prop),
+  shouldForwardProp: (prop, defaultValidatorFn) => !['mode', 'color'].includes(prop) && defaultValidatorFn(prop),
 })<TextProps & ModeProp>`
   /* Variant CSS */
   ${({ variant }) => getVariantStyles(variant)}
@@ -74,6 +76,9 @@ const StyledText = styled.p.withConfig({
 
   /* Full width of parent container */
   width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
+
+  /* Responsive props */
+  ${(props) => getTextResponsiveCSS(props)}
 
   /* Extra CSS props */
   ${(props) => props.css || ''}

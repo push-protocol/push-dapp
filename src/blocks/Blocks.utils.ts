@@ -11,7 +11,7 @@ import {
   ResponsiveCSSPropertyData,
   ThemeMode,
   ThemeModeBorder,
-  BorderValue,
+  BorderValue
 } from './Blocks.types';
 
 /**
@@ -109,7 +109,7 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
     tablet: '',
     laptop: '',
     laptopL: '',
-    desktop: '',
+    desktop: ''
   };
 
   data.forEach(({ prop, propName }) => {
