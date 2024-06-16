@@ -1,8 +1,8 @@
-import { FC } from 'react';
-import { FeaturedChannelDetailsProps } from '../configs';
 import { Box } from 'blocks';
-import { FeaturedChannelsListItem } from './FeaturedChannelsListItem';
+import { FC } from 'react';
 import { css } from 'styled-components';
+import { FeaturedChannelDetailsProps } from '../configs';
+import { FeaturedChannelsListItem } from './FeaturedChannelsListItem';
 
 export type FeaturedChannelsMobileViewListProps = {
   listRef: any;
@@ -32,6 +32,7 @@ const FeaturedChannelsMobileViewList: FC<FeaturedChannelsMobileViewListProps> = 
             flexDirection="column"
             gap="s6"
             width={{ mm: 'inherit', ms: 'inherit', ml: 'inherit', tb: '48%' }}
+            overflow="hidden"
             css={css`
               flex-shrink: 0;
             `}

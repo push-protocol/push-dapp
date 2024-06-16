@@ -2,12 +2,12 @@
 import { FC } from 'react';
 
 // Components
-import { FeaturedChannelsListItem } from './FeaturedChannelsListItem';
 import { Box } from 'blocks';
+import { FeaturedChannelsListItem } from './FeaturedChannelsListItem';
 
 // Internal Configs
-import { FeaturedChannelDetailsProps } from '../configs';
 import { css } from 'styled-components';
+import { FeaturedChannelDetailsProps } from '../configs';
 
 export type FeaturedChannelsListProps = {
   listRef: any;
@@ -23,8 +23,7 @@ const FeaturedChannelsList: FC<FeaturedChannelsListProps> = ({ listRef, featured
       flexDirection={{ initial: 'row', tb: 'column' }}
       gap="s6"
       padding="s4 s0"
-      overflow="scroll"
-      width={{ initial: 'calc(100vw - 346px)' }}
+      overflow="hidden"
       css={css`
         overflow-y: scroll;
       `}

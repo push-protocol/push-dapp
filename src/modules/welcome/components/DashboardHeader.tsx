@@ -9,21 +9,19 @@ interface DashboardHeaderProps {
   showSubHeader: boolean;
 }
 
-
-const DashboardHeader: FC<DashboardHeaderProps> = ({
-  setSubHeaderVisibility,
-  showSubHeader
-}) => {
+const DashboardHeader: FC<DashboardHeaderProps> = ({ setSubHeaderVisibility, showSubHeader }) => {
   return (
     <Box
+      justifyContent="space-between"
       flexDirection="row"
       display="flex"
-      justifyContent="space-between"
+      alignSelf="stretch"
       margin={showSubHeader ? 's0' : 's0 s0 s4 s0'}
     >
       <Box
         flexDirection="row"
         display="flex"
+        flex="1"
         gap="s3"
       >
         <Text variant="h3-semibold">👋</Text>
@@ -38,6 +36,7 @@ const DashboardHeader: FC<DashboardHeaderProps> = ({
       <Box
         display="flex"
         alignItems="center"
+        flex="0"
         onClick={() => setSubHeaderVisibility(!showSubHeader)}
       >
         {showSubHeader ? (

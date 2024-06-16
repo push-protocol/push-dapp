@@ -1,5 +1,6 @@
 import { CSSProperties, ReactNode } from 'react';
 
+import { FlattenSimpleInterpolation } from 'styled-components';
 import {
   BlocksColors,
   BorderValue,
@@ -9,11 +10,12 @@ import {
   ThemeModeColors,
   ValueOf,
 } from '../Blocks.types';
-import { FlattenSimpleInterpolation } from 'styled-components';
 
 export type BoxResponsiveProps = {
   /* Sets align-items css property */
   alignItems?: ResponsiveProp<CSSProperties['alignItems']>;
+  /* Sets align-self css property */
+  alignSelf?: ResponsiveProp<CSSProperties['alignSelf']>;
   /* Sets flex-direction css property */
   flexDirection?: ResponsiveProp<CSSProperties['flexDirection']>;
   /* Sets gap between the elements */
@@ -74,7 +76,9 @@ export type BoxComponentProps = {
 
 export type BoxResponsiveCSSProperties =
   | 'align-items'
+  | 'align-self'
   | 'display'
+  | 'flex'
   | 'flex-direction'
   | 'gap'
   | 'height'

@@ -4,21 +4,22 @@ import { FC } from 'react';
 // Components
 import { Box, Text } from 'blocks';
 import { ChannelTabsSection } from './ChannelTabsSection';
-import { SnapSection } from './SnapSection';
 import { RecommendedChatsList } from './RecommendedChatsList';
+import { SnapSection } from './SnapSection';
 
 export type ChannelVariantsSectionProps = {};
 
 const ChannelVariantsSection: FC<ChannelVariantsSectionProps> = () => {
   return (
     <Box
+      display="flex"
       backgroundColor={{ dark: 'gray-900', light: 'white' }}
       borderRadius="var(--r6)"
       padding="s6"
-      display="flex"
       gap="s6"
       flexDirection={{ ml: 'column' }}
       justifyContent="space-between"
+      alignSelf="stretch"
     >
       <ChannelTabsSection />
       <Box

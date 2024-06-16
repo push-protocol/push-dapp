@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { lazy, Suspense, useState, useEffect, useContext } from 'react';
+import { Suspense, lazy, useContext, useEffect, useState } from 'react';
 
 // External Packages
 import useToast from 'hooks/useToast';
@@ -39,7 +39,7 @@ const TutorialPage = lazy(() => import('pages/TutorialPage'));
 const YieldFarmingV2Page = lazy(() => import('pages/YieldFarmingPageV2'));
 const UserSettingsPage = lazy(() => import('pages/UserSettingsPage'));
 const ClaimGalxePage = lazy(() => import('pages/ClaimGalxePage'));
-const Dashboard = lazy(() => import('modules/dashboard'));
+const WelcomePage = lazy(() => import('pages/WelcomePage'));
 
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
@@ -64,11 +64,11 @@ import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import APP_PATHS from 'config/AppPaths';
 import GLOBALS from 'config/Globals';
 import { AppContext } from 'contexts/AppContext';
+import { getPublicAssetPath } from 'helpers/RoutesHelper';
 import { MODAL_POSITION } from 'hooks/useModalBlur';
 import MetamaskPushSnapModal from 'modules/receiveNotifs/MetamaskPushSnapModal';
 import SnapPage from 'pages/SnapPage';
 import { AppContextType } from 'types/context';
-import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 // Create Header
 function MasterInterfacePage() {
@@ -153,10 +153,9 @@ function MasterInterfacePage() {
           }
         >
           <Routes>
-
             <Route
               path={APP_PATHS.WelcomeDashboard}
-              element={<Dashboard />}
+              element={<WelcomePage />}
             />
 
             <Route
@@ -167,7 +166,6 @@ function MasterInterfacePage() {
               path={APP_PATHS.Spam}
               element={<InboxPage />}
             />
-
 
             {/* <Route element={<ConnectedWalletRoute />}> */}
             <Route

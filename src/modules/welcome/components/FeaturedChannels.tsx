@@ -2,15 +2,16 @@
 import { FC } from 'react';
 
 // Components
+import { Box, HoverableSVG, Link, NextIconSlider, PrevIconSlider, Text, deviceSizes } from 'blocks';
 import { useSmoothHorizontalScroll } from 'common';
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { useDeviceWidthCheck } from 'hooks';
 import { FeaturedChannelsList } from './FeaturedChannelsList';
 import { FeaturedChannelsMobileViewList } from './FeaturedChannelsMobileViewList';
-import { Box, HoverableSVG, Text, Link, deviceSizes, NextIconSlider, PrevIconSlider } from 'blocks';
 
 // Internal Configs
-import { featuredChannelsList, mobileFeaturedChannelsList } from '../configs';
 import { appConfig } from 'config';
+import { featuredChannelsList, mobileFeaturedChannelsList } from '../configs';
 
 export type FeaturedChannelsProps = {};
 
@@ -40,12 +41,13 @@ const FeaturedChannels: FC<FeaturedChannelsProps> = () => {
 
   return (
     <Box
-      borderRadius="24px"
-      padding={{ ml: 's6 s4', initial: 's6' }}
+      padding={{ ml: 's6', initial: 's6' }}
       display="flex"
       flexDirection="column"
       backgroundColor={{ light: 'darkWhite', dark: 'gray-900' }}
-      gap={{ ml: 's4', initial: 's2' }}
+      gap={{ ml: 's4 s0', initial: 's2 s0' }}
+      alignSelf="stretch"
+      borderRadius="var(--r6)"
     >
       <Box
         display="flex"
