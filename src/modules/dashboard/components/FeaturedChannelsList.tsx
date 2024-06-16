@@ -26,7 +26,7 @@ const FeaturedChannelsList: FC<FeaturedChannelsListProps> = ({ listRef, featured
       overflow="scroll"
       width={{ initial: 'calc(100vw - 346px)' }}
       css={css`
-        overflow-y: hidden;
+        overflow-y: scroll;
       `}
     >
       {featuredChannelsList?.map((channel) => {
