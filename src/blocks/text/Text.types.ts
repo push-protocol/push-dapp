@@ -1,3 +1,5 @@
+import { CSSProperties } from 'react';
+import { ResponsiveProp, ValueOf } from '../Blocks.types';
 import { textVariants } from './Text.constants';
 
 export type TextVariants = keyof typeof textVariants;
@@ -28,3 +30,14 @@ export type TextHTMLTags =
 export type TextAlign = 'left' | 'center' | 'right';
 
 export type TextTransform = 'lowercase' | 'uppercase' | 'capitalize' | 'inherit';
+
+export type TextResponsiveProps = {
+  /* Used to decide the visibility of text component for different screen sizes */
+  display?: ResponsiveProp<CSSProperties['display']>;
+};
+
+export type TextResponsiveCSSProperties = 'display';
+
+export type TextResponsivePropValues = ValueOf<TextResponsiveProps>;
+
+export type TextResponsiveCSSPropertiesData = { propName: TextResponsiveCSSProperties; prop: TextResponsivePropValues };

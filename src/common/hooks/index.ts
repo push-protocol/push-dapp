@@ -1,0 +1,1 @@
+export { useSmoothHorizontalScroll } from './useSmoothHorizontalScroll';

@@ -22,7 +22,7 @@ export type ResponsiveProp<T> = T | { [key in Breakpoint]?: T };
 
 export type RadiusType = `r${number}`;
 
-export type SpaceType = `s${number}` | `s${number} s${number}`| `s${number} s${number} s${number} s${number}`;
+export type SpaceType = `s${number}` | `s${number} s${number}` | `s${number} s${number} s${number} s${number}`;
 
 export type PixelValue = `${number}px`;
 
@@ -40,7 +40,7 @@ export type ResponsiveCSSPropertyData =
   | SeparatorResponsiveCSSPropertiesData
   | SkeletonResponsiveCSSPropertiesData;
 
-export type BlockWithoutStyleProp<T> = Omit<HTMLAttributes<T>, 'style'>;
+export type TransformedHTMLAttributes<T> = Omit<HTMLAttributes<T>, 'style' | 'color'>;
 
 /* This needs to be removed when the color dependency from Globals.js is removed. */
 export type GlobalColors = Record<keyof typeof blocksColorsLegacy, string>;
@@ -58,5 +58,9 @@ export type BlocksColors = keyof BlocksColorData;
 export type ThemeMode = 'light' | 'dark';
 
 export type ThemeModeColors = Record<ThemeMode, BlocksColors>;
+
+export type BorderValue = `${number}px ${string} ${BlocksColors}`;
+
+export type ThemeModeBorder = Record<ThemeMode, BorderValue>;
 
 export type ModeProp = { mode: ThemeMode };

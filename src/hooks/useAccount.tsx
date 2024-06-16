@@ -46,6 +46,7 @@ export const useAccount = () => {
 
   return {
     wallet: wallet ? wallet : readOnlyWallet,
+    walletAddress: wallet ? wallet.accounts[0]?.address : readOnlyWallet,
     connecting,
     connect,
     disconnect,

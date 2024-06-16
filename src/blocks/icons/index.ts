@@ -53,6 +53,7 @@ export { default as Group } from './components/Group';
 export { default as GroupFilled } from './components/GroupFilled';
 
 export { default as InboxBell } from './components/InboxBell';
+export { default as EmptyInbox } from './components/EmptyInbox';
 export { default as InboxBellFilled } from './components/InboxBellFilled';
 
 export { default as Info } from './components/Info';
@@ -72,6 +73,8 @@ export { default as MoonFilled } from './components/MoonFilled';
 
 export { default as NFTGated } from './components/NFTGated';
 
+export { default as NextIconSlider } from './components/NextIconSlider';
+
 export { default as NotificationMobile } from './components/NotificationMobile';
 
 export { default as OptOut } from './components/OptOut';
@@ -81,6 +84,8 @@ export { default as PlusCircleFilled } from './components/PlusCircleFilled';
 
 export { default as PlusSquare } from './components/PlusSquare';
 export { default as PlusSquareFilled } from './components/PlusSquareFilled';
+
+export { default as PrevIconSlider } from './components/PrevIconSlider';
 
 export { default as Pin } from './components/Pin';
 
@@ -111,6 +116,7 @@ export { default as Swap } from './components/Swap';
 
 export { default as Tick } from './components/Tick';
 export { default as TickCircleFilled } from './components/TickCircleFilled';
+export { default as TickDecoratedCircleFilled } from './components/TickDecoratedCircleFilled';
 
 export { default as UserFilled } from './components/UserFilled';
 

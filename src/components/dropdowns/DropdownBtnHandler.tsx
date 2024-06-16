@@ -73,7 +73,7 @@ const DropdownContainer = styled(ItemHV2)<{ containerPadding?: string; centerOnM
   padding: ${(props) => (props.containerPadding ? props.containerPadding : '7px 14px')};
   position: absolute;
   top: 0rem;
-  z-index: 10;
+  z-index: 10000;
   right: -0.5rem;
 
   @media (max-width: 768px) {
