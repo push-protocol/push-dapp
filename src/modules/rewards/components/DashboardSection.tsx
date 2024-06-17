@@ -55,10 +55,8 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
           flexDirection="column"
           padding="s6"
           borderRadius="var(--r6)"
-          gap="s3" // fix the color and add it to blocks.colors
-          css={css`
-            border: 1px solid #eaebf2;
-          `}
+          gap="s3"
+          border="1px solid gray-200"
         >
           <Text variant="h5-bold">TOTAL POINTS</Text>
           <Box>
@@ -78,10 +76,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
           padding="s6"
           borderRadius="var(--r6)"
           gap="s3"
-          // fix the color and add it to blocks.colors
-          css={css`
-            border: 1px solid #eaebf2;
-          `}
+          border="1px solid gray-200"
         >
           <Text variant="h5-bold">REFFERAL POINTS</Text>
           <Box>

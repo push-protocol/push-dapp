@@ -34,10 +34,7 @@ const RefferalSection: FC<RefferalSectionProps> = () => {
           alignItems="center"
           padding="s3"
           borderRadius="var(--r3)"
-          // Add this color to blocks.color and user border prop
-          css={css`
-            border: 1.5px solid var(--components-input-field-stroke-default, #eaebf2);
-          `}
+          border="1.5px solid gray-200"
         >
           <Text variant="bs-regular">https://app.push.org/ref?123xx</Text>
         </Box>
