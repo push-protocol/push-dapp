@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { css } from 'styled-components';
-import { Box, Button, Text } from 'blocks';
+import { Box, Button, RewardsCircle, Text } from 'blocks';
 
 export type DashboardSectionProps = {
   onGetStarted: () => void;
@@ -29,7 +29,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
           gap="s3"
           display="flex"
         >
-          <Box>img</Box>
+          <RewardsCircle />
           <Box
             display="flex"
             flexDirection="column"

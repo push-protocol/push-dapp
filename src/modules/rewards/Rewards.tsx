@@ -21,6 +21,7 @@ const Rewards: FC<RewardsProps> = () => {
       display="flex"
       margin={{ initial: 's4 s6 s4 s6', ml: 's4' }}
       gap="s6"
+      height="100%"
     >
       <Text variant="h3-bold">Introducing Push Reward Points Program</Text>
       <RewardsTabsContainer
