@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box } from 'blocks';
+import { Box, Text } from 'blocks';
 
 export type RewardsProps = {};
 
@@ -8,10 +8,16 @@ const Rewards: FC<RewardsProps> = () => {
     <Box
       flexDirection="column"
       display="flex"
-      margin={{ initial: 's4 s6 s4 s6', ml: 's4' }}
+      margin={{ initial: 's6 s6 s4 s6', ml: 's4' }}
       gap={{ ml: 's6' }}
+      height="100%"
     >
-      Hello World
+      <Text
+        variant="h3-bold"
+        color={{ light: 'black', dark: 'white' }}
+      >
+        Introducing Push Reward Points Program
+      </Text>
     </Box>
   );
 };
