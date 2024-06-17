@@ -4,7 +4,7 @@ import { FC } from 'react';
 // Components
 import { Box, Text } from 'blocks';
 import { ChannelTabsSection } from './ChannelTabsSection';
-import { SnapSection } from './SnapSection';
+import { RewardsSection } from './RewardsSection';
 import { RecommendedChatsList } from './RecommendedChatsList';
 
 export type ChannelVariantsSectionProps = {};
@@ -34,7 +34,7 @@ const ChannelVariantsSection: FC<ChannelVariantsSectionProps> = () => {
           Recommended Chats
         </Text>
         <RecommendedChatsList />
-        <SnapSection />
+        <RewardsSection />
       </Box>
     </Box>
   );

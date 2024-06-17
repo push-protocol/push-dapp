@@ -2,9 +2,9 @@
 import { css } from 'styled-components';
 
 // Components
-import { Box, Text, Button, Link, Metamask } from 'blocks';
+import { Box, Text, Button, Link, RewardsCircle } from 'blocks';
 
-const SnapSection = () => {
+const RewardsSection = () => {
   return (
     <Box
       display="flex"
@@ -24,31 +24,31 @@ const SnapSection = () => {
         alignItems="center"
         gap="s3"
       >
-        <Metamask />
+        <RewardsCircle />
         <Text
           variant="h5-semibold"
           display={{ ml: 'none', dp: 'block' }}
         >
-          Receive Instant Notifications in Metamask with Push Snap.
+          Complete Tasks on Push. Earn Reward Points.
         </Text>
         <Text
           variant="h5-semibold"
           display={{ ml: 'block', dp: 'none' }}
           textAlign="center"
         >
-          Receive Instant Notifications in Metamask with Push Snap.
+          Complete Tasks on Push. Earn Reward Points.
         </Text>
       </Box>
-      <Link to={'/snap'}>
+      <Link to={'/rewards'}>
         <Button
           variant="tertiary"
           size="small"
         >
-          Get Push Snap
+          Points Dashboard
         </Button>
       </Link>
     </Box>
   );
 };
 
-export { SnapSection };
+export { RewardsSection };
