@@ -170,7 +170,6 @@ export const getButtonSizeStyles = ({
             border-radius: var(--r2);
             gap: var(--s1);
             height: 32px;
-            min-width: 100px;
             padding: var(--s3);
       `}
 
@@ -209,7 +208,6 @@ export const getButtonSizeStyles = ({
             border-radius: var(--r3);
             gap: var(--s1);
             height: 40px;
-            min-width: 100px;
             padding: var(--s3);
       `}
 
@@ -249,7 +247,6 @@ export const getButtonSizeStyles = ({
             border-radius: var(--r3);
             gap: var(--s1);
             height: 48px;
-            min-width: 100px;
             padding: var(--s4);
       `}
 
@@ -288,7 +285,6 @@ export const getButtonSizeStyles = ({
           border-radius: var(--r3);
           gap: var(--s1);
           height: 52px;
-          min-width: 100px;
           padding: var(--s4);
     `}
 

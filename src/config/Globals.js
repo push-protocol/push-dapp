@@ -104,9 +104,11 @@ export default {
 
     NAVBAR_SECTIONS: {
       PRIMARY: 1,
-      SECONDARY: 2,
-      MOBILE: 3,
-      THIRD: 4,
+      NOTIFICATION: 2,
+      MESSAGING: 3,
+      DEVELOPERS: 4,
+      MOBILE: 5,
+      THIRD: 6,
     },
 
     NAVBAR_IDENTIFIERS: {

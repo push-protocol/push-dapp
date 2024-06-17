@@ -1,6 +1,7 @@
 export { Box, type BoxProps } from './box';
 export { Button, type ButtonProps } from './button';
 export { HoverableSVG, type HoverableSVGProps } from './hoverableSVG';
+export { Link, type LinkProps } from './link';
 export { Separator, type SeparatorProps } from './separator';
 export { Skeleton, type SkeletonProps } from './skeleton';
 export { Text, type TextProps } from './text';

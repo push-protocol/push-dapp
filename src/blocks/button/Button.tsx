@@ -1,7 +1,7 @@
 import { ReactNode, forwardRef } from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
 import { getButtonSizeStyles, buttonVariantStyles } from './Button.constants';
-import { BlockWithoutStyleProp } from '../Blocks.types';
+import { TransformedHTMLAttributes } from '../Blocks.types';
 import { ButtonSize, ButtonVariant } from './Button.types';
 
 export type ButtonProps = {
@@ -23,7 +23,7 @@ export type ButtonProps = {
   trailingIcon?: ReactNode;
   /* Sets the variant of the button */
   variant?: ButtonVariant;
-} & BlockWithoutStyleProp<HTMLButtonElement>;
+} & TransformedHTMLAttributes<HTMLButtonElement>;
 
 const StyledButton = styled.button<ButtonProps>`
   /* Common Button CSS */
@@ -33,6 +33,7 @@ const StyledButton = styled.button<ButtonProps>`
   display: flex;
   font-family: var(--font-family);
   justify-content: center;
+  white-space: nowrap;
 
   /* Common icon css added through CSS class */
   .icon {
