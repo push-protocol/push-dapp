@@ -16,6 +16,8 @@ export { default as CaretUp } from './components/CaretUp';
 
 export { default as CameraFilled } from './components/CameraFilled';
 
+export { default as Copy } from './components/Copy';
+
 export { default as Channel } from './components/Channel';
 export { default as ChannelFilled } from './components/ChannelFilled';
 
