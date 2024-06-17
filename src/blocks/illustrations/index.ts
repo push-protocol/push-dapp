@@ -15,3 +15,5 @@ export { default as PushBot } from './components/PushBot';
 export { default as PushDev } from './components/PushDev';
 export { default as Metamask } from './components/Metamask';
 export { default as Ethereum } from './components/Ethereum';
+
+export { default as RewardsCircle } from './components/RewardsCircle';
