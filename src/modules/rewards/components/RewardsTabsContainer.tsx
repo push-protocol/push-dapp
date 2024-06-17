@@ -14,7 +14,7 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handle
   return (
     <Box
       backgroundColor="white"
-      borderRadius="var(--r4)"
+      borderRadius="r4"
       display="flex"
       flexDirection="column"
       padding="s6"

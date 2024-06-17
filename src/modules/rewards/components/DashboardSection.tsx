@@ -15,7 +15,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
     >
       <Text variant="h4-bold">Dashboard</Text>
       <Box
-        borderRadius="var(--r6)"
+        borderRadius="r6"
         display="flex"
         height="108px"
         padding="s0 s6"
@@ -54,7 +54,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
           display="flex"
           flexDirection="column"
           padding="s6"
-          borderRadius="var(--r6)"
+          borderRadius="r6"
           gap="s3"
           border="1px solid gray-200"
         >
@@ -74,7 +74,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
           display="flex"
           flexDirection="column"
           padding="s6"
-          borderRadius="var(--r6)"
+          borderRadius="r6"
           gap="s3"
           border="1px solid gray-200"
         >

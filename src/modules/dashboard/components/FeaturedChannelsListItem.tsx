@@ -62,7 +62,7 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
         flexDirection="column"
         border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
         padding="s6"
-        borderRadius="24px"
+        borderRadius="r6"
         gap="s3"
         width={{ initial: width }}
         css={css`

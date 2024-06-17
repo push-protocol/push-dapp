@@ -50,7 +50,7 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
             width="32px"
             height="32px"
             backgroundColor="black"
-            borderRadius="var(--r10)"
+            borderRadius="r10"
           />
           <Text variant="bm-bold">{address}</Text>
           {/* to be replace by an image */}
@@ -59,7 +59,7 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
               width="24px"
               height="24px"
               backgroundColor="pink-300"
-              borderRadius="var(--r10)"
+              borderRadius="r10"
             />
           )}
         </Box>

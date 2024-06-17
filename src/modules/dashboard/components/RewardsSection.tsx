@@ -9,7 +9,7 @@ const RewardsSection = () => {
     <Box
       display="flex"
       gap="s3"
-      borderRadius="var(--r6)"
+      borderRadius="r6"
       padding="s4"
       alignItems="center"
       flexDirection={{ ml: 'column' }}
