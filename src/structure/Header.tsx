@@ -79,6 +79,8 @@ function Header({ isDarkMode, darkModeToggle }) {
   const location = useLocation();
   const isSnapPage = location?.pathname === '/snap';
 
+  const showRewardsLinkInMobile = useDeviceWidthCheck(600);
+
   useEffect(() => {
     // runs when navigation setup is updated, will run on init
     updateHeaderTag(location);
@@ -158,7 +160,7 @@ function Header({ isDarkMode, darkModeToggle }) {
             tabletAlign="flex-start"
           >
             <NavMenu>
-              <RewardsHeaderLink />
+              {showRewardsLinkInMobile && <RewardsHeaderLink />}
               <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
 
@@ -201,7 +203,7 @@ function Header({ isDarkMode, darkModeToggle }) {
             />
           }
         >
-          <RewardsHeaderLink />
+          {!showRewardsLinkInMobile && <RewardsHeaderLink />}
         </Suspense>
 
         {isActive && !showLoginControls && !error && (
