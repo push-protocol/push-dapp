@@ -9,7 +9,12 @@ const RewardActivitiesSection = () => {
       flexDirection="column"
       gap="s1"
     >
-      <Text variant="h4-bold">Activities</Text>
+      <Text
+        variant="h4-bold"
+        color={{ light: 'gray-1000', dark: 'gray-100' }}
+      >
+        Activities
+      </Text>
 
       <RewardActivitiesList />
     </Box>

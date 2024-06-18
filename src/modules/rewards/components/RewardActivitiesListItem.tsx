@@ -16,7 +16,7 @@ const RewardActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ item }) =
       display="flex"
       flexDirection="row"
       padding="s6"
-      backgroundColor="gray-100"
+      backgroundColor={{ light: 'gray-100', dark: 'gray-1000' }}
       borderRadius="r4"
       alignItems="center"
       justifyContent="space-between"
@@ -27,11 +27,12 @@ const RewardActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ item }) =
         gap="s4"
         alignItems="center"
       >
-        <RewardsCircle />
+        <RewardsCircle color={{ light: 'gray-1000', dark: 'gray-100' }} />
         <Box>
           <Text
             variant="bl-semibold"
-            color="gray-1000"
+            // color="gray-1000"
+            color={{ light: 'gray-1000', dark: 'gray-100' }}
           >
             {item?.title}
           </Text>
@@ -56,7 +57,7 @@ const RewardActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ item }) =
         />
         <Text
           variant="h4-semibold"
-          color="gray-1000"
+          color={{ light: 'gray-1000', dark: 'gray-100' }}
           css={css`
             margin-right: 24px;
           `}
