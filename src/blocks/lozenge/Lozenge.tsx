@@ -21,7 +21,7 @@ export type LozengeProps = {
   variant?: LozengeVariant;
 } & TransformedHTMLAttributes<HTMLDivElement>;
 
-const StyledButton = styled.div<LozengeProps>`
+const StyledLozenge = styled.div<LozengeProps>`
   /* Common Lozenge CSS */
 
   align-items: center;
@@ -53,7 +53,7 @@ const StyledButton = styled.div<LozengeProps>`
 const Lozenge = forwardRef<HTMLDivElement, LozengeProps>(
   ({ variant = 'primary', size = 'small', icon, iconOnly, circular = false, children, ...props }, ref) => {
     return (
-      <StyledButton
+      <StyledLozenge
         circular={circular}
         iconOnly={iconOnly}
         role="div"
@@ -65,7 +65,7 @@ const Lozenge = forwardRef<HTMLDivElement, LozengeProps>(
         {icon && <span className="icon icon-text">{icon}</span>}
         {!iconOnly && children}
         {iconOnly && !children && <span className="icon icon-only">{iconOnly}</span>}
-      </StyledButton>
+      </StyledLozenge>
     );
   }
 );
