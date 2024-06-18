@@ -17,7 +17,6 @@ const override: React.CSSProperties = {
   height: '45px',
 };
 
-
 const LoaderToast = ({ msg, loaderColor, textColor }: LoaderToastType) => (
   <LoaderNotification>
     <FadeLoader
@@ -100,7 +99,6 @@ const useToast = (
   };
 
   const showMessageToast: ShowMessageToastType = ({ toastTitle, toastMessage, toastType, getToastIcon }) => {
-
     const toastUI = (
       <Toast>
         <ToastIcon>{getToastIcon ? getToastIcon(30) : ''}</ToastIcon>
@@ -173,6 +171,7 @@ const useToast = (
   return {
     showLoaderToast,
     showMessageToast,
+    hideToast: () => toast.dismiss(toastId?.current),
   };
 };
 
