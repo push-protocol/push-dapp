@@ -3,6 +3,7 @@ import { CSSProperties, ReactNode } from 'react';
 import {
   BlocksColors,
   BorderValue,
+  RadiusType,
   ResponsiveProp,
   SpaceType,
   ThemeModeBorder,
@@ -44,7 +45,7 @@ export type BoxNonResponsiveProps = {
   /* Sets border css property */
   border?: BorderValue | ThemeModeBorder;
   /* Sets border-radius css property */
-  borderRadius?: string;
+  borderRadius?: RadiusType;
   /* Sets background-color css property */
   backgroundColor?: BlocksColors | ThemeModeColors;
   /* Sets color css property */

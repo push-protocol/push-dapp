@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { css } from 'styled-components';
 import { Box, Button, Copy, Text } from 'blocks';
 
 export type RefferalSectionProps = {};
@@ -11,7 +10,7 @@ const RefferalSection: FC<RefferalSectionProps> = () => {
       flexDirection="column"
       gap="s9"
       padding="s12"
-      borderRadius="var(--s6)"
+      borderRadius="r6"
       backgroundColor="white"
     >
       <Box>
@@ -33,11 +32,8 @@ const RefferalSection: FC<RefferalSectionProps> = () => {
           display="flex"
           alignItems="center"
           padding="s3"
-          borderRadius="var(--r3)"
-          // Add this color to blocks.color and user border prop
-          css={css`
-            border: 1.5px solid var(--components-input-field-stroke-default, #eaebf2);
-          `}
+          borderRadius="r3"
+          border="1.5px solid gray-200"
         >
           <Text variant="bs-regular">https://app.push.org/ref?123xx</Text>
         </Box>
