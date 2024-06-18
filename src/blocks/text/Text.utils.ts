@@ -2,6 +2,8 @@ import { css } from 'styled-components';
 
 import { TextVariants } from './Text.types';
 import { textVariants } from './Text.constants';
+import { getResponsiveCSS } from '../Blocks.utils';
+import { TextResponsiveCSSPropertiesData, TextResponsiveProps } from './Text.types';
 
 export const getVariantStyles = (variantName?: TextVariants) => {
   if (variantName) {
@@ -22,4 +24,13 @@ export const getVariantStyles = (variantName?: TextVariants) => {
     line-height: ${textVariants['bes-regular'].lineHeight};
     font-weight: ${textVariants['bes-regular'].fontWeight};
   `;
+};
+
+const getTextResponsiveCSSProperties = (props: TextResponsiveProps): TextResponsiveCSSPropertiesData[] => [
+  { propName: 'display', prop: props.display },
+];
+
+export const getTextResponsiveCSS = (props: TextResponsiveProps) => {
+  const data = getTextResponsiveCSSProperties(props);
+  return getResponsiveCSS(data);
 };

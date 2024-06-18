@@ -286,7 +286,7 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
                     // }}
                     key={channel.channel}
                     self="stretch"
-                    // id={channel.channel}
+                  // id={channel.channel}
                   >
                     {!MaskedChannels[channel.channel] &&
                       channel &&

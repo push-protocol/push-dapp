@@ -1,6 +1,14 @@
 import { CSSProperties, ReactNode } from 'react';
 
-import { BlocksColors, ResponsiveProp, SpaceType, ThemeModeColors, ValueOf } from '../Blocks.types';
+import {
+  BlocksColors,
+  BorderValue,
+  ResponsiveProp,
+  SpaceType,
+  ThemeModeBorder,
+  ThemeModeColors,
+  ValueOf,
+} from '../Blocks.types';
 import { FlattenSimpleInterpolation } from 'styled-components';
 
 export type BoxResponsiveProps = {
@@ -34,7 +42,7 @@ export type BoxResponsiveProps = {
 
 export type BoxNonResponsiveProps = {
   /* Sets border css property */
-  border?: string;
+  border?: BorderValue | ThemeModeBorder;
   /* Sets border-radius css property */
   borderRadius?: string;
   /* Sets background-color css property */
@@ -47,6 +55,8 @@ export type BoxNonResponsiveProps = {
   position?: CSSProperties['position'];
   /* Sets box-shadow css property */
   boxShadow?: string;
+  /* Sets overflow css property */
+  overflow?: CSSProperties['overflow'];
 };
 
 export type BoxCSSProps = BoxResponsiveProps & BoxNonResponsiveProps;
