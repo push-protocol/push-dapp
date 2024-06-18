@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { IllustrationWrapper } from '../IllustrationWrapper';
 import { IllustrationProps } from '../Illustrations.types';
 
-const Chat: FC<IllustrationProps> = (allProps) => {
+const ChatIllustration: FC<IllustrationProps> = (allProps) => {
   const { svgProps: props, ...restProps } = allProps;
   return (
     <IllustrationWrapper
@@ -100,4 +100,4 @@ const Chat: FC<IllustrationProps> = (allProps) => {
   );
 };
 
-export default Chat;
+export default ChatIllustration;

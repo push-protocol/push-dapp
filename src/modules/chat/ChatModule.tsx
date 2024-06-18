@@ -6,8 +6,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 // External Packages
 import { CONSTANTS } from '@pushprotocol/restapi';
 import ReactGA from 'react-ga';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
 import { useSelector } from 'react-redux';
 import { ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -87,7 +85,6 @@ function Chat({ chatid }) {
   const [signerData, setSignerData] = useState();
 
   const isMobile = useDeviceWidthCheck(600);
-  const queryClient = new QueryClient({});
 
   const containerRef = useRef(null);
 
@@ -244,103 +241,99 @@ function Chat({ chatid }) {
         {isLoading && <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />}
 
         {!isLoading && (
-          <QueryClientProvider client={queryClient}>
-            <Context.Provider
-              value={{
-                currentChat,
-                selectedChatId,
-                setSelectedChatId,
-                receivedIntents,
-                setReceivedIntents,
-                viewChatBox,
-                setViewChatBox,
-                intents,
-                setIntents,
-                inbox,
-                setInbox,
-                hasUserBeenSearched,
-                setHasUserBeenSearched,
-                loadingMessage,
-                setLoadingMessage,
-                setBlockedLoading,
-                activeTab,
-                setActiveTab,
-                userShouldBeSearched,
-                setUserShouldBeSearched,
-                filteredUserData,
-                setFilteredUserData,
-              }}
-            >
-              {userPushSDKInstance && !userPushSDKInstance?.readmode() && (
-                <ChatSidebarContainer
-                  flex="1"
-                  maxWidth="310px"
-                  minWidth="280px"
-                  padding="0px"
-                  boxSizing="border-box"
-                  background={theme.default.bg}
-                  chatActive={isUserChatting && userPushSDKInstance && !userPushSDKInstance?.readmode()}
-                  zIndex="0"
-                >
-                  <ChatSidebarSection
-                    key={userPushSDKInstance.uid}
-                    showCreateGroupModal={showCreateGroupModal}
-                    chatId={chatid}
-                    selectedChatId={selectedChatId}
-                    setSelectedChatId={setSelectedChatId}
-                  />
-                </ChatSidebarContainer>
-              )}
-
-              <ChatContainer
-                padding="10px 10px 10px 10px"
+          <Context.Provider
+            value={{
+              currentChat,
+              selectedChatId,
+              setSelectedChatId,
+              receivedIntents,
+              setReceivedIntents,
+              viewChatBox,
+              setViewChatBox,
+              intents,
+              setIntents,
+              inbox,
+              setInbox,
+              hasUserBeenSearched,
+              setHasUserBeenSearched,
+              loadingMessage,
+              setLoadingMessage,
+              setBlockedLoading,
+              activeTab,
+              setActiveTab,
+              userShouldBeSearched,
+              setUserShouldBeSearched,
+              filteredUserData,
+              setFilteredUserData,
+            }}
+          >
+            {userPushSDKInstance && !userPushSDKInstance?.readmode() && (
+              <ChatSidebarContainer
+                flex="1"
+                maxWidth="310px"
+                minWidth="280px"
+                padding="0px"
+                boxSizing="border-box"
+                background={theme.default.bg}
                 chatActive={isUserChatting && userPushSDKInstance && !userPushSDKInstance?.readmode()}
-                height="inherit"
+                zIndex="0"
               >
-                <ChatSection
+                <ChatSidebarSection
+                  key={userPushSDKInstance.uid}
+                  showCreateGroupModal={showCreateGroupModal}
                   chatId={chatid}
-                  setChatId={setSelectedChatId}
-                  loggedIn={userPushSDKInstance && !userPushSDKInstance?.readmode()}
+                  selectedChatId={selectedChatId}
+                  setSelectedChatId={setSelectedChatId}
                 />
-              </ChatContainer>
+              </ChatSidebarContainer>
+            )}
 
-              <CreateGroupModalComponent
-                InnerComponent={CreateGroupModalContent}
-                toastObject={createGroupToast}
-                modalPadding="0px"
-                modalPosition={MODAL_POSITION.ON_PARENT}
+            <ChatContainer
+              padding="10px 10px 10px 10px"
+              chatActive={isUserChatting && userPushSDKInstance && !userPushSDKInstance?.readmode()}
+              height="inherit"
+            >
+              <ChatSection
+                chatId={chatid}
+                setChatId={setSelectedChatId}
+                loggedIn={userPushSDKInstance && !userPushSDKInstance?.readmode()}
               />
+            </ChatContainer>
 
-              {/* Video Call Section */}
-              {videoCallData.incoming[0].status > 0 && <VideoCallSection />}
+            <CreateGroupModalComponent
+              InnerComponent={CreateGroupModalContent}
+              toastObject={createGroupToast}
+              modalPadding="0px"
+              modalPosition={MODAL_POSITION.ON_PARENT}
+            />
 
-              {/* Very Important to not move this, this becomes push profile sign in in the future */}
-              {displayQR && !isMobile && (
-                <>
-                  <ChatQR
-                    type={LOADER_TYPE.STANDALONE}
-                    overlay={LOADER_OVERLAY.ONTOP}
-                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
-                    width="75%"
-                  />
-                </>
-              )}
+            {/* Video Call Section */}
+            {videoCallData.incoming[0].status > 0 && <VideoCallSection />}
 
-              {/* Very Important to not move this, this becomes push profile sign in in the future */}
-              {displayQR && isMobile && (
-                <>
-                  <MobileView
-                    type={LOADER_TYPE.STANDALONE}
-                    overlay={LOADER_OVERLAY.ONTOP}
-                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
-                    width="75%"
-                  />
-                </>
-              )}
-            </Context.Provider>
-            {/* The rest of your application */}
-            <ReactQueryDevtools initialIsOpen={false} />
-          </QueryClientProvider>
+            {/* Very Important to not move this, this becomes push profile sign in in the future */}
+            {displayQR && !isMobile && (
+              <>
+                <ChatQR
+                  type={LOADER_TYPE.STANDALONE}
+                  overlay={LOADER_OVERLAY.ONTOP}
+                  blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+                  width="75%"
+                />
+              </>
+            )}
+
+            {/* Very Important to not move this, this becomes push profile sign in in the future */}
+            {displayQR && isMobile && (
+              <>
+                <MobileView
+                  type={LOADER_TYPE.STANDALONE}
+                  overlay={LOADER_OVERLAY.ONTOP}
+                  blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+                  width="75%"
+                />
+              </>
+            )}
+          </Context.Provider>
         )}
 
         {/* This always needs to be last, is not required as login handled by the dapp */}

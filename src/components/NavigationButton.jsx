@@ -50,7 +50,15 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
       SelectedIcon = LeftBarPrimaryItemIcon;
       definedMargin = '5px';
       break;
-    case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY:
+    case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.NOTIFICATION:
+      SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
+      definedMargin = item.isSection ? '0px' : '5px';
+      break;
+    case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MESSAGING:
+      SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
+      definedMargin = item.isSection ? '0px' : '5px';
+      break;
+    case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.DEVELOPERS:
       SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
       definedMargin = item.isSection ? '0px' : '5px';
       break;

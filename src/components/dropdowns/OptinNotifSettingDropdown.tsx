@@ -20,7 +20,12 @@ import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import useToast from 'hooks/useToast';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { ChannelSetting } from 'helpers/channel/types';
-import { UserSettingType, getMinimalUserSetting, notifChannelSettingFormatString, userSettingsFromDefaultChannelSetting } from 'helpers/channel/notifSetting';
+import {
+  UserSettingType,
+  getMinimalUserSetting,
+  notifChannelSettingFormatString,
+  userSettingsFromDefaultChannelSetting,
+} from 'helpers/channel/notifSetting';
 import { AppContext } from 'contexts/AppContext';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { updateSubscriptionStatus, updateUserSetting } from 'redux/slices/channelSlice';
@@ -29,8 +34,8 @@ import RangeSlider from 'components/reusables/sliders/RangeSlider';
 interface OptinNotifSettingDropdownProps {
   children: ReactNode;
   channelDetail: any;
-  setLoading: (loading: boolean) => {};
-  onSuccessOptin: () => {};
+  setLoading: (loading: boolean) => void;
+  onSuccessOptin: () => void;
 }
 
 interface OptinNotifSettingDropdownContainerProps {
@@ -209,7 +214,7 @@ const OptinNotifSettingDropdown: FC<OptinNotifSettingDropdownProps> = (options) 
     channelSettings?: ChannelSetting[];
     setLoading?: Dispatch<SetStateAction<boolean>>;
   }) => {
-    const setLoadingFunc = setLoading || (options && options.setLoading) || (() => { });
+    const setLoadingFunc = setLoading || (options && options.setLoading) || (() => {});
     setLoadingFunc(true);
 
     let userPushInstance = userPushSDKInstance;
@@ -269,6 +274,7 @@ const OptinNotifSettingDropdown: FC<OptinNotifSettingDropdownProps> = (options) 
               />
             ),
           });
+          onSuccessOptin?.();
         },
         onError: () => {
           console.error('opt in error');
