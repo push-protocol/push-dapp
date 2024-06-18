@@ -116,6 +116,7 @@ const ClaimGalxeModule = () => {
 
         await provider.waitForTransaction(tx.hash);
 
+        txToast.hideToast();
         showNFTModal();
 
         setSubmitbtnInfo({
