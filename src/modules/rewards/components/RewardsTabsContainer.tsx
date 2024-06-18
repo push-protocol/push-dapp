@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { RewardsTabs } from './RewardsTabs';
 import { RewardsTabs as RewardsTabsType } from '../Rewards.types';
 import { DashboardSection } from './DashboardSection';
+import { LeaderBoardSection } from './LeaderBoardSection';
 
 export type RewardsTabsContainerProps = {
   activeTab: RewardsTabsType;
@@ -13,7 +14,7 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handle
   return (
     <Box
       backgroundColor="white"
-      borderRadius="var(--r4)"
+      borderRadius="r4"
       display="flex"
       flexDirection="column"
       padding="s6"
@@ -27,7 +28,10 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handle
           activeTab={activeTab}
           handleSetActiveTab={handleSetActiveTab}
         />
+
         {activeTab === 'dashboard' && <DashboardSection onGetStarted={() => handleSetActiveTab('activities')} />}
+        {activeTab === 'leaderboard' && <LeaderBoardSection />}
+
       </Box>
     </Box>
   );

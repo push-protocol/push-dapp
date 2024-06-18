@@ -11,7 +11,8 @@ import {
   ResponsiveCSSPropertyData,
   ThemeMode,
   ThemeModeBorder,
-  BorderValue
+  BorderValue,
+  RadiusType,
 } from './Blocks.types';
 
 /**
@@ -109,7 +110,7 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
     tablet: '',
     laptop: '',
     laptopL: '',
-    desktop: ''
+    desktop: '',
   };
 
   data.forEach(({ prop, propName }) => {
@@ -165,4 +166,16 @@ export const getBlocksBorder = (mode: ThemeMode, border?: BorderValue | ThemeMod
   // If passed a design system border then use border as a variable
   borderValues[2] = `var(--${borderValues[2]})`;
   return borderValues.join(' ');
+};
+
+/**
+ * @param radius
+ * @returns
+ */
+export const getBlocksBorderRadius = (radius?: RadiusType) => {
+  // If border-radius is not given return undefined, to avoid any breakages
+  if (!radius) return radius;
+
+  // If passed a design system border-radius then use radius as a variable
+  return `var(--${radius})`;
 };

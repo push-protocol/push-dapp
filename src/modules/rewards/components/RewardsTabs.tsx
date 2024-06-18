@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { css } from 'styled-components';
 import { Box, Text } from 'blocks';
 import { rewardsTabsList } from '../Rewards.constants';
@@ -14,9 +14,8 @@ const RewardsTabs: FC<RewardsTabsProps> = ({ activeTab, handleSetActiveTab }) =>
     <Box
       display="flex"
       gap="s3"
-      // TODO: fix the color
       css={css`
-        border-bottom: 1px solid #eaebf2;
+        border-bottom: 1px solid var(--gray-200);
       `}
     >
       {rewardsTabsList.map((tab) => (
