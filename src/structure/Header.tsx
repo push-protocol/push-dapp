@@ -89,7 +89,6 @@ function Header({ isDarkMode, darkModeToggle }) {
   // Get Location
   const location = useLocation();
   const isSnapPage = location?.pathname === '/snap';
-  const isRewardsPage = location?.pathname === '/rewards';
 
   useEffect(() => {
     // runs when navigation setup is updated, will run on init
@@ -179,11 +178,9 @@ function Header({ isDarkMode, darkModeToggle }) {
             tabletAlign="flex-start"
           >
             <NavMenu>
-              {!isRewardsPage && (
-                <Box display={{ ml: 'block', dp: 'none' }}>
-                  <RewardsHeaderLink />
-                </Box>
-              )}
+              <Box display={{ ml: 'block', dp: 'none' }}>
+                <RewardsHeaderLink />
+              </Box>
               <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
 
@@ -226,11 +223,9 @@ function Header({ isDarkMode, darkModeToggle }) {
             />
           }
         >
-          {!isRewardsPage && (
-            <Box display={{ ml: 'none', dp: 'block' }}>
-              <RewardsHeaderLink />
-            </Box>
-          )}
+          <Box display={{ ml: 'none', dp: 'block' }}>
+            <RewardsHeaderLink />
+          </Box>
         </Suspense>
 
         {isActive && !showLoginControls && !error && (
