@@ -87,6 +87,13 @@ const Faucets = () => {
       function: () => {},
       link: 'https://cyber-testnet.testnets.rollbridge.app/',
     },
+    {
+      id: '59141',
+      value: 'Linea',
+      title: 'Linea Sepolia Faucet',
+      function: () => {},
+      link: 'https://www.infura.io/faucet/linea',
+    },
   ];
 
   // render

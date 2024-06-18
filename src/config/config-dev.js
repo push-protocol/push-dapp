@@ -31,6 +31,7 @@ export const config = {
     421614, // arbitrum testnet
     123, // fuse testnet
     111557560, // Cyber testnet
+    59141, // Linea testnet
   ],
 
   /**
@@ -181,5 +182,12 @@ export const CHAIN_DETAILS = {
     chainid: 111557560,
     rpcUrl: 'https://cyber-testnet.alt.technology/',
     commAddress: '0x9cb3bd7550B5c92baA056Fc0F08132f49508145F',
+  },
+  59141: {
+    label: 'Linea Testnet',
+    name: 'LINEA_TESTNET',
+    chainid: 59141,
+    rpcUrl: 'https://rpc.sepolia.linea.build',
+    commAddress: '0x9cb3bd7550b5c92baa056fc0f08132f49508145f',
   },
 };

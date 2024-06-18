@@ -34,7 +34,7 @@
     "@metamask/eth-sig-util": "^4.0.0",
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.5.0",
-    "@pushprotocol/restapi": "1.7.20",
+    "@pushprotocol/restapi": "1.7.24",
     "@pushprotocol/socket": "0.5.3",
     "@pushprotocol/uiweb": "1.6.0-alpha.4",
     "@reduxjs/toolkit": "^1.7.1",
