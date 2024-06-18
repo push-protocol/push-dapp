@@ -4,15 +4,17 @@ import { useEffect, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
-import { MdCheckCircle, MdError } from 'react-icons/md';
+import { MdError } from 'react-icons/md';
 
 // Internal Compoonents
 import { ImageV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Section } from 'primaries/SharedStyling';
 import { useAccount } from 'hooks';
+import useModalBlur from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import AlphaAccessNFTHelper from 'helpers/AlphaAccessNftHelper';
 import 'react-toastify/dist/ReactToastify.min.css';
+import { NFTSuccessModal } from './NFTSuccessModal';
 
 // Internal Configs
 import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config/index.js';
@@ -33,6 +35,8 @@ const ClaimGalxeModule = () => {
   });
   const [nftRevealContract, setNftRevealContract] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const { isModalOpen: isNFTModalOpen, ModalComponent: NFTModalComponent, showModal: showNFTModal } = useModalBlur();
 
   const onPolygonChain = chainId === 137 || chainId === 80002;
   const isProdEnv = appConfig?.appEnv === 'prod';
@@ -112,17 +116,9 @@ const ClaimGalxeModule = () => {
 
         await provider.waitForTransaction(tx.hash);
 
-        txToast.showMessageToast({
-          toastTitle: 'Success',
-          toastMessage: 'NFT successfully minted!',
-          toastType: 'SUCCESS',
-          getToastIcon: (size) => (
-            <MdCheckCircle
-              size={size}
-              color="green"
-            />
-          ),
-        });
+        txToast.hideToast();
+        showNFTModal();
+
         setSubmitbtnInfo({
           btnText: 'Claimed',
           enabled: false,
@@ -147,6 +143,7 @@ const ClaimGalxeModule = () => {
 
   return (
     <Container>
+      {isNFTModalOpen && <NFTModalComponent InnerComponent={NFTSuccessModal} />}
       <ClaimBanner>
         <ImageV2
           src={getPublicAssetPath('svg/claim-galxe-banner.svg')}
