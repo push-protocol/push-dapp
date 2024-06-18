@@ -1,4 +1,6 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import { Box, Text } from 'blocks';
 import { RefferalSection } from './components/RefferalSection';
 import { useAccount } from 'hooks';
@@ -12,8 +14,15 @@ const Rewards: FC<RewardsProps> = () => {
   const [activeTab, setActiveTab] = useState(rewardsTabsList[0].value);
 
   const { isWalletConnected } = useAccount();
+  const location = useLocation();
+
+  const locationArray = location.pathname.split('/');
 
   const handleSetActiveTab = (tab: RewardsTabs) => setActiveTab(tab);
+
+  useEffect(() => {
+    if (locationArray.length === 3) setActiveTab(locationArray[2] as RewardsTabs);
+  }, [location]);
 
   return (
     <Box

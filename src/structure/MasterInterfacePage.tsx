@@ -87,6 +87,12 @@ function MasterInterfacePage() {
 
   const { showMetamaskPushSnap } = useContext(AppContext);
 
+  const rewardsPagePaths = [
+    APP_PATHS.Rewards,
+    APP_PATHS.RewardsActivities,
+    APP_PATHS.RewardsDashboard,
+    APP_PATHS.RewardsLeaderboard,
+  ];
   useEffect(() => {
     if (location.hash == '#receive-notifications') {
       showMetamaskPushSnap();
@@ -158,10 +164,13 @@ function MasterInterfacePage() {
               path={APP_PATHS.WelcomeDashboard}
               element={<Dashboard />}
             />
-            <Route
-              path={APP_PATHS.Rewards}
-              element={<Rewards />}
-            />
+            {rewardsPagePaths.map((path, index) => (
+              <Route
+                path={path}
+                key={index}
+                element={<Rewards />}
+              />
+            ))}
 
             <Route
               path={APP_PATHS.Inbox}

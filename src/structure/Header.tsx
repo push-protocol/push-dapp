@@ -9,7 +9,7 @@ import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import { RewardsCircle, Box, Link } from 'blocks';
+import { RewardsCircle, Box, Link, Text, Star, Lozenge } from 'blocks';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { ErrorContext } from 'contexts/ErrorContext';
@@ -89,6 +89,7 @@ function Header({ isDarkMode, darkModeToggle }) {
   // Get Location
   const location = useLocation();
   const isSnapPage = location?.pathname === '/snap';
+  const isRewardsPage = location?.pathname === '/rewards';
 
   useEffect(() => {
     // runs when navigation setup is updated, will run on init
@@ -124,10 +125,19 @@ function Header({ isDarkMode, darkModeToggle }) {
 
   const RewardsHeaderLink = () => {
     return (
-      <Box>
+      <Box
+        display="flex"
+        alignItems="center"
+        gap="s2"
+      >
         <Link to="/rewards">
-          <RewardsCircle />
+          <RewardsCircle
+            width={28}
+            height={28}
+          />
         </Link>
+        <Text variant="h4-bold">12,500</Text>
+        <Lozenge icon={<Star />}>NEW</Lozenge>
       </Box>
     );
   };
@@ -169,9 +179,11 @@ function Header({ isDarkMode, darkModeToggle }) {
             tabletAlign="flex-start"
           >
             <NavMenu>
-              <Box display={{ ml: 'block', dp: 'none' }}>
-                <RewardsHeaderLink />
-              </Box>
+              {!isRewardsPage && (
+                <Box display={{ ml: 'block', dp: 'none' }}>
+                  <RewardsHeaderLink />
+                </Box>
+              )}
               <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
 
@@ -214,9 +226,11 @@ function Header({ isDarkMode, darkModeToggle }) {
             />
           }
         >
-          <Box display={{ ml: 'none', dp: 'block' }}>
-            <RewardsHeaderLink />
-          </Box>
+          {!isRewardsPage && (
+            <Box display={{ ml: 'none', dp: 'block' }}>
+              <RewardsHeaderLink />
+            </Box>
+          )}
         </Suspense>
 
         {isActive && !showLoginControls && !error && (

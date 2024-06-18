@@ -27,7 +27,7 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handle
           activeTab={activeTab}
           handleSetActiveTab={handleSetActiveTab}
         />
-        {activeTab === 'dashboard' && <DashboardSection onGetStarted={() => handleSetActiveTab('activites')} />}
+        {activeTab === 'dashboard' && <DashboardSection onGetStarted={() => handleSetActiveTab('activities')} />}
       </Box>
     </Box>
   );
