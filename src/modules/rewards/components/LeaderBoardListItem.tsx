@@ -1,6 +1,11 @@
 import { FC, useState } from 'react';
-import { Box, Text } from 'blocks';
+
 import { css } from 'styled-components';
+
+//Hooks
+import { useBlocksTheme } from 'blocks/Blocks.hooks';
+
+import { Box, Text } from 'blocks';
 
 export type LeaderboardListItemProps = {
   rank: string;
@@ -10,6 +15,8 @@ export type LeaderboardListItemProps = {
 
 const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, points }) => {
   const [isChainVisible, setChainVisibility] = useState(false);
+
+  const { mode } = useBlocksTheme();
 
   const handleShowChain = () => setChainVisibility(true);
 
@@ -23,7 +30,7 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
       alignItems="center"
       cursor="pointer"
       css={css`
-        border-bottom: 1px solid var(--gray-200);
+        border-bottom: 1px solid var(--${mode === 'dark' ? 'gray-800' : 'gray-200'});
       `}
       onMouseEnter={handleShowChain}
       onMouseLeave={handleHideChain}
@@ -38,7 +45,12 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
           justifyContent="center"
           display="flex"
         >
-          <Text variant="bm-bold">{rank}</Text>
+          <Text
+            variant="bm-bold"
+            color={{ light: 'gray-1000', dark: 'gray-100' }}
+          >
+            {rank}
+          </Text>
         </Box>
         <Box
           display="flex"
@@ -52,7 +64,12 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
             backgroundColor="black"
             borderRadius="r10"
           />
-          <Text variant="bm-bold">{address}</Text>
+          <Text
+            variant="bm-bold"
+            color={{ light: 'gray-1000', dark: 'gray-100' }}
+          >
+            {address}
+          </Text>
           {/* to be replace by an image */}
           {isChainVisible && (
             <Box
@@ -70,7 +87,12 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
         display="flex"
         justifyContent="center"
       >
-        <Text variant="bm-bold">{points}</Text>
+        <Text
+          variant="bm-bold"
+          color={{ light: 'gray-1000', dark: 'gray-100' }}
+        >
+          {points}
+        </Text>
       </Box>
     </Box>
   );

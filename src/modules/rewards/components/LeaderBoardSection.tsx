@@ -28,20 +28,20 @@ const LeaderBoardSection: FC<LeaderBoardSectionProps> = () => {
         >
           <Text
             variant="c-bold"
-            color="gray-500"
+            color={{ light: 'gray-500', dark: 'gray-600' }}
           >
             RANK
           </Text>
           <Text
             variant="c-bold"
-            color="gray-500"
+            color={{ light: 'gray-500', dark: 'gray-600' }}
           >
             USER
           </Text>
         </Box>
         <Text
           variant="c-bold"
-          color="gray-500"
+          color={{ light: 'gray-500', dark: 'gray-600' }}
         >
           TOTAL POINTS
         </Text>
