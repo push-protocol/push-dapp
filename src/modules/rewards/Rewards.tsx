@@ -37,7 +37,12 @@ const Rewards: FC<RewardsProps> = () => {
       gap="s6"
       height="100%"
     >
-      <Text variant="h3-bold">Introducing Push Reward Points Program</Text>
+      <Text
+        variant="h3-bold"
+        color={{ light: 'gray-1000', dark: 'gray-100' }}
+      >
+        Introducing Push Reward Points Program
+      </Text>
       <RewardsTabsContainer
         activeTab={activeTab}
         handleSetActiveTab={handleSetActiveTab}

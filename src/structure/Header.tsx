@@ -135,7 +135,12 @@ function Header({ isDarkMode, darkModeToggle }) {
             height={28}
           />
         </Link>
-        <Text variant="h4-bold">12,500</Text>
+        <Text
+          variant="h4-bold"
+          color={{ light: 'gray-1000', dark: 'gray-100' }}
+        >
+          12,500
+        </Text>
         <Lozenge icon={<Star />}>NEW</Lozenge>
       </Box>
     );

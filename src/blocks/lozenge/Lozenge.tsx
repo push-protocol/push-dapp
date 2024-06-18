@@ -1,7 +1,12 @@
 import { ReactNode, forwardRef } from 'react';
+
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
-import { getLozengeSizeStyles, lozengeVariantStyles } from './Lozenge.constants';
-import { TransformedHTMLAttributes } from '../Blocks.types';
+
+import { useBlocksTheme } from 'blocks/Blocks.hooks';
+
+import { getLozengeSizeStyles, getLozengeVariantStyles } from './Lozenge.constants';
+
+import { ModeProp, TransformedHTMLAttributes } from '../Blocks.types';
 import { LozengeSize, LozengeVariant } from './Lozenge.types';
 
 export type LozengeProps = {
@@ -21,7 +26,7 @@ export type LozengeProps = {
   variant?: LozengeVariant;
 } & TransformedHTMLAttributes<HTMLDivElement>;
 
-const StyledLozenge = styled.div<LozengeProps>`
+const StyledLozenge = styled.div<LozengeProps & ModeProp>`
   /* Common Lozenge CSS */
 
   align-items: center;
@@ -38,7 +43,7 @@ const StyledLozenge = styled.div<LozengeProps>`
   }
 
   /* Lozenge variant CSS styles */
-  ${(props) => lozengeVariantStyles[props.variant || 'primary']}
+  ${({ variant, mode }) => getLozengeVariantStyles({ variant: variant || 'primary', mode })}
 
   /* Lozenge and font size CSS styles */
   ${({ iconOnly, size }) => getLozengeSizeStyles({ iconOnly: !!iconOnly, size: size || 'small' })}
@@ -52,12 +57,15 @@ const StyledLozenge = styled.div<LozengeProps>`
 
 const Lozenge = forwardRef<HTMLDivElement, LozengeProps>(
   ({ variant = 'primary', size = 'small', icon, iconOnly, circular = false, children, ...props }, ref) => {
+    const { mode } = useBlocksTheme();
+
     return (
       <StyledLozenge
         circular={circular}
         iconOnly={iconOnly}
         role="div"
         ref={ref}
+        mode={mode}
         size={size}
         variant={variant}
         {...props}

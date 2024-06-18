@@ -1,11 +1,38 @@
 import { FlattenSimpleInterpolation, css } from 'styled-components';
-import { LozengeSize, LozengeVariantStyles } from './Lozenge.types';
+import { LozengeSize, LozengeVariant } from './Lozenge.types';
+import { ThemeMode } from 'blocks/Blocks.types';
 
-export const lozengeVariantStyles: LozengeVariantStyles = {
-  primary: `
-    background-color: var(--pink-200);
-    color: var(--pink-600);
-  `,
+export const getLozengeVariantStyles = ({
+  mode,
+  variant,
+}: {
+  mode?: ThemeMode;
+  variant: LozengeVariant;
+}): FlattenSimpleInterpolation => {
+  if (mode === 'dark') {
+    if (variant === 'primary') {
+      return css`
+        /* Lozenge tag container variant css */
+        background-color: var(--pink-300);
+        color: var(--pink-800);
+        .icon {
+          color: var(--pink-400);
+        }
+      `;
+    }
+    return css``;
+  }
+  if (variant === 'primary') {
+    return css`
+      /* Lozenge tag container variant css */
+      background-color: var(--pink-200);
+      color: var(--pink-600);
+      .icon {
+        color: var(--pink-400);
+      }
+    `;
+  }
+  return css``;
 };
 
 export const getLozengeSizeStyles = ({

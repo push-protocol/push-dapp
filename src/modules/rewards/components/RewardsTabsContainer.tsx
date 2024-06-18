@@ -13,7 +13,7 @@ export type RewardsTabsContainerProps = {
 const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handleSetActiveTab }) => {
   return (
     <Box
-      backgroundColor="white"
+      backgroundColor={{ dark: 'gray-900', light: 'white' }}
       borderRadius="r4"
       display="flex"
       flexDirection="column"
@@ -31,7 +31,6 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handle
 
         {activeTab === 'dashboard' && <DashboardSection onGetStarted={() => handleSetActiveTab('activities')} />}
         {activeTab === 'leaderboard' && <LeaderBoardSection />}
-
       </Box>
     </Box>
   );
