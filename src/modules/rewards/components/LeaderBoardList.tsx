@@ -1,44 +1,38 @@
 // React and other libraries
 import { FC } from 'react';
 
+//Hooks
+import { useGetRewardsLeaderboard } from 'queries';
+
 //Components
 import { LeaderboardListItem } from './LeaderBoardListItem';
-
 import { Box, Skeleton } from 'blocks';
 
-export type LeaderBoardListProps = {};
+//Helpers
+import { caip10ToWallet } from 'helpers/w2w';
 
-const LeaderBoardList: FC<LeaderBoardListProps> = () => (
-  <Box
-    maxHeight="calc(100vh - 356px)"
-    overflow="scroll"
-  >
-    {dummyData.map((item, index) => (
-      <Skeleton
-        isLoading={false}
-        key={`${index}`}
-      >
-        <LeaderboardListItem
-          rank={`${index + 1}`}
-          address={item.wallet}
-          points={item.points}
-        />
-      </Skeleton>
-    ))}
-  </Box>
-);
+const LeaderBoardList: FC = () => {
+  const { data, isLoading } = useGetRewardsLeaderboard();
+  return (
+    <Box
+      maxHeight="calc(100vh - 356px)"
+      overflow="scroll"
+    >
+      {data?.map((item, index) => (
+        <Skeleton
+          isLoading={isLoading}
+          key={index}
+        >
+          <LeaderboardListItem
+            key={index}
+            rank={`${index + 1}`}
+            address={caip10ToWallet(item.userWallet)}
+            points={item.totalPoints}
+          />
+        </Skeleton>
+      ))}
+    </Box>
+  );
+};
 
 export { LeaderBoardList };
-
-const dummyData = [
-  { wallet: 'w2d3f3f23ddsqwdqwdqwd232132321we12s1', points: '12,132' },
-  { wallet: 'w2d3f3f23ddsqwdqwdqwd232132321we12s1', points: '1121' },
-  { wallet: 'w2d3f3f232321we12s1', points: '1232' },
-  { wallet: 'e232weqe2323232323232323232323', points: '12' },
-  { wallet: 'w2d3f3f23ddsqwdqwdqwd232132321we12s1', points: '12,132' },
-  { wallet: 'w2d3f3f23ddsqwdqwdqwd232132321we12s1', points: '12,132' },
-  { wallet: 'w2d3f3f23ddsqwdqwdqwd232132321we12s1', points: '12,132' },
-  { wallet: 'w2d3f3f23ddsqwdqwdqwd232132321we12s1', points: '12,132' },
-  { wallet: 'w2d3f3f23ddsqwdqwdqwd232132321we12s1', points: '12,132' },
-  { wallet: 'w2d3f3f23ddsqwdqwdqwd232132321we12s1', points: '12,132' },
-];

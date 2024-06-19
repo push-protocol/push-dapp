@@ -10,10 +10,13 @@ import { useBlocksTheme } from 'blocks/Blocks.hooks';
 //Components
 import { Box, Text } from 'blocks';
 
+//Utility helper
+import { shortenText } from 'helpers/UtilityHelper';
+
 export type LeaderboardListItemProps = {
   rank: string;
   address: string;
-  points: string;
+  points: number;
 };
 
 const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, points }) => {
@@ -62,9 +65,17 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
           />
           <Text
             variant="bm-bold"
+            display={{ ml: 'none', dp: 'block' }}
             color={{ light: 'gray-1000', dark: 'gray-100' }}
           >
-            {address}
+            {shortenText(address, 10, 10)}
+          </Text>
+          <Text
+            variant="bs-bold"
+            display={{ ml: 'block', dp: 'none' }}
+            color={{ light: 'gray-1000', dark: 'gray-100' }}
+          >
+            {shortenText(address, 10, 10)}
           </Text>
         </Box>
       </Box>
@@ -76,6 +87,14 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
       >
         <Text
           variant="bm-bold"
+          display={{ ml: 'none', dp: 'block' }}
+          color={{ light: 'gray-1000', dark: 'gray-100' }}
+        >
+          {points}
+        </Text>
+        <Text
+          variant="bs-bold"
+          display={{ ml: 'block', dp: 'none' }}
           color={{ light: 'gray-1000', dark: 'gray-100' }}
         >
           {points}
