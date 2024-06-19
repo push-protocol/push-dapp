@@ -1,7 +1,13 @@
 import { FC } from 'react';
+
 import { css } from 'styled-components';
-import { Box, Text } from 'blocks';
+
 import { rewardsTabsList } from '../Rewards.constants';
+
+import { useBlocksTheme } from 'blocks/Blocks.hooks';
+
+import { Box, Text } from 'blocks';
+
 import { RewardsTabs as RewardsTabsType } from '../Rewards.types';
 
 export type RewardsTabsProps = {
@@ -10,12 +16,14 @@ export type RewardsTabsProps = {
 };
 
 const RewardsTabs: FC<RewardsTabsProps> = ({ activeTab, handleSetActiveTab }) => {
+  const { mode } = useBlocksTheme();
   return (
     <Box
       display="flex"
       gap="s3"
+      // TODO: Fix ds-blocks
       css={css`
-        border-bottom: 1px solid var(--gray-200);
+        border-bottom: 1px solid var(--${mode === 'dark' ? 'gray-800' : 'gray-200'});
       `}
     >
       {rewardsTabsList.map((tab) => (
@@ -31,7 +39,7 @@ const RewardsTabs: FC<RewardsTabsProps> = ({ activeTab, handleSetActiveTab }) =>
         >
           <Text
             variant="h5-semibold"
-            color="gray-1000"
+            color={{ light: 'gray-1000', dark: 'gray-200' }}
           >
             {tab.label}
           </Text>

@@ -1,6 +1,14 @@
-import { FC, useState } from 'react';
-import { Box, Text } from 'blocks';
+// React and other libraries
+import { FC } from 'react';
+
+// Third-party libraries
 import { css } from 'styled-components';
+
+//Hooks
+import { useBlocksTheme } from 'blocks/Blocks.hooks';
+
+//Components
+import { Box, Text } from 'blocks';
 
 export type LeaderboardListItemProps = {
   rank: string;
@@ -9,11 +17,7 @@ export type LeaderboardListItemProps = {
 };
 
 const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, points }) => {
-  const [isChainVisible, setChainVisibility] = useState(false);
-
-  const handleShowChain = () => setChainVisibility(true);
-
-  const handleHideChain = () => setChainVisibility(false);
+  const { mode } = useBlocksTheme();
 
   return (
     <Box
@@ -22,11 +26,10 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
       justifyContent="space-between"
       alignItems="center"
       cursor="pointer"
+      // TODO: Fix ds-blocks
       css={css`
-        border-bottom: 1px solid var(--gray-200);
+        border-bottom: 1px solid var(--${mode === 'dark' ? 'gray-800' : 'gray-200'});
       `}
-      onMouseEnter={handleShowChain}
-      onMouseLeave={handleHideChain}
     >
       <Box
         display="flex"
@@ -38,7 +41,12 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
           justifyContent="center"
           display="flex"
         >
-          <Text variant="bm-bold">{rank}</Text>
+          <Text
+            variant="bm-bold"
+            color={{ light: 'gray-1000', dark: 'gray-100' }}
+          >
+            {rank}
+          </Text>
         </Box>
         <Box
           display="flex"
@@ -52,16 +60,12 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
             backgroundColor="black"
             borderRadius="r10"
           />
-          <Text variant="bm-bold">{address}</Text>
-          {/* to be replace by an image */}
-          {isChainVisible && (
-            <Box
-              width="24px"
-              height="24px"
-              backgroundColor="pink-300"
-              borderRadius="r10"
-            />
-          )}
+          <Text
+            variant="bm-bold"
+            color={{ light: 'gray-1000', dark: 'gray-100' }}
+          >
+            {address}
+          </Text>
         </Box>
       </Box>
       <Box
@@ -70,7 +74,12 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
         display="flex"
         justifyContent="center"
       >
-        <Text variant="bm-bold">{points}</Text>
+        <Text
+          variant="bm-bold"
+          color={{ light: 'gray-1000', dark: 'gray-100' }}
+        >
+          {points}
+        </Text>
       </Box>
     </Box>
   );

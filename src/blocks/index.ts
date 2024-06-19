@@ -1,5 +1,6 @@
 export { Box, type BoxProps } from './box';
 export { Button, type ButtonProps } from './button';
+export { Lozenge, type LozengeProps } from './lozenge';
 export { HoverableSVG, type HoverableSVGProps } from './hoverableSVG';
 export { Link, type LinkProps } from './link';
 export { Separator, type SeparatorProps } from './separator';

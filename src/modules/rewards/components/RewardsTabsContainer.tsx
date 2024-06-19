@@ -1,10 +1,14 @@
-import { Box } from 'blocks';
 import { FC } from 'react';
+
+//Components
+import { Box } from 'blocks';
 import { RewardsTabs } from './RewardsTabs';
-import { RewardsTabs as RewardsTabsType } from '../Rewards.types';
 import { DashboardSection } from './DashboardSection';
 import { LeaderBoardSection } from './LeaderBoardSection';
 import { RewardsActivitiesSection } from './RewardsActivitiesSection';
+
+//Types
+import { RewardsTabs as RewardsTabsType } from '../Rewards.types';
 
 export type RewardsTabsContainerProps = {
   activeTab: RewardsTabsType;
@@ -14,7 +18,7 @@ export type RewardsTabsContainerProps = {
 const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handleSetActiveTab }) => {
   return (
     <Box
-      backgroundColor="white"
+      backgroundColor={{ dark: 'gray-900', light: 'white' }}
       borderRadius="r4"
       display="flex"
       flexDirection="column"
@@ -29,6 +33,7 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handle
           activeTab={activeTab}
           handleSetActiveTab={handleSetActiveTab}
         />
+
         {activeTab === 'dashboard' && <DashboardSection onGetStarted={() => handleSetActiveTab('activities')} />}
         {activeTab === 'activities' && <RewardsActivitiesSection />}
         {activeTab === 'leaderboard' && <LeaderBoardSection />}

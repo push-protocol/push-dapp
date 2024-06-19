@@ -70,6 +70,8 @@ import MetamaskPushSnapModal from 'modules/receiveNotifs/MetamaskPushSnapModal';
 import SnapPage from 'pages/SnapPage';
 import { AppContextType } from 'types/context';
 import { getPublicAssetPath } from 'helpers/RoutesHelper';
+import { useBlocksTheme } from 'blocks/Blocks.hooks';
+import { ModeProp } from 'blocks';
 
 // Create Header
 function MasterInterfacePage() {
@@ -86,7 +88,14 @@ function MasterInterfacePage() {
   const { MetamaskPushSnapModalComponent, blockedLoading }: AppContextType = useContext(AppContext);
 
   const { showMetamaskPushSnap } = useContext(AppContext);
+  const { mode } = useBlocksTheme();
 
+  const rewardsPagePaths = [
+    APP_PATHS.Rewards,
+    APP_PATHS.RewardsActivities,
+    APP_PATHS.RewardsDashboard,
+    APP_PATHS.RewardsLeaderboard,
+  ];
   useEffect(() => {
     if (location.hash == '#receive-notifications') {
       showMetamaskPushSnap();
@@ -141,7 +150,7 @@ function MasterInterfacePage() {
 
   // Render
   return (
-    <Container>
+    <Container mode={mode}>
       <Interface location={location.pathname}>
         <Suspense
           fallback={
@@ -158,10 +167,13 @@ function MasterInterfacePage() {
               path={APP_PATHS.WelcomeDashboard}
               element={<Dashboard />}
             />
-            <Route
-              path={APP_PATHS.Rewards}
-              element={<Rewards />}
-            />
+            {rewardsPagePaths.map((path, index) => (
+              <Route
+                path={path}
+                key={index}
+                element={<Rewards />}
+              />
+            ))}
 
             <Route
               path={APP_PATHS.Inbox}
@@ -395,7 +407,7 @@ function MasterInterfacePage() {
 }
 
 // css style
-const Container = styled.div`
+const Container = styled.div<ModeProp>`
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -403,10 +415,7 @@ const Container = styled.div`
   /* Padding to be handled by Modules individually */
   /* padding: ${(props) => props.theme.interfaceTopPadding} 20px 20px 20px; */
   align-items: stretch;
-
-  background-image: url('${getPublicAssetPath('svg')}/${(props) =>
-    props.theme.scheme === 'dark' ? 'dark' : 'light'}bg.svg');
-  background-size: 100% 100%;
+  background-color: ${(props) => (props.mode === 'dark' ? '#17181B' : '#F4F5FA')};
 
   position: relative;
 `;
