@@ -1,13 +1,12 @@
-import { css } from 'styled-components';
 import { Box, Text } from 'blocks';
-import { RewardActivitiesList } from './RewardActivitiesList';
+import { RewardsActivitiesList } from './RewardsActivitiesList';
 
-const RewardActivitiesSection = () => {
+const RewardsActivitiesSection = () => {
   return (
     <Box
       display="flex"
       flexDirection="column"
-      gap="s1"
+      gap="s4"
     >
       <Text
         variant="h4-bold"
@@ -15,10 +14,9 @@ const RewardActivitiesSection = () => {
       >
         Activities
       </Text>
-
-      <RewardActivitiesList />
+      <RewardsActivitiesList />
     </Box>
   );
 };
 
-export { RewardActivitiesSection };
+export { RewardsActivitiesSection };

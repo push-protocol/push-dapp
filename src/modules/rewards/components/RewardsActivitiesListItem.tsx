@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { css } from 'styled-components';
 import { Box, Button, RewardsCircle, Text } from 'blocks';
 
@@ -10,7 +10,13 @@ export type RewardActivitiesListItemProps = {
   disabled?: boolean;
 };
 
-const RewardActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ item }) => {
+const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
+  title,
+  subtitle,
+  points,
+  buttonText,
+  disabled = false,
+}) => {
   return (
     <Box
       display="flex"
@@ -27,20 +33,19 @@ const RewardActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ item }) =
         gap="s4"
         alignItems="center"
       >
-        <RewardsCircle color={{ light: 'gray-1000', dark: 'gray-100' }} />
+        <RewardsCircle />
         <Box>
           <Text
             variant="bl-semibold"
-            // color="gray-1000"
             color={{ light: 'gray-1000', dark: 'gray-100' }}
           >
-            {item?.title}
+            {title}
           </Text>
           <Text
             variant="h5-regular"
             color="gray-500"
           >
-            {item?.subtitle}
+            {subtitle}
           </Text>
         </Box>
       </Box>
@@ -52,8 +57,8 @@ const RewardActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ item }) =
         alignItems="center"
       >
         <RewardsCircle
-          width="32px"
-          height="32px"
+          width={32}
+          height={32}
         />
         <Text
           variant="h4-semibold"
@@ -62,20 +67,21 @@ const RewardActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ item }) =
             margin-right: 24px;
           `}
         >
-          {item?.points?.toLocaleString()} points
+          {points?.toLocaleString()} points
         </Text>
         <Button
-          variant={item?.disabled ? 'disabled' : 'tertiary'}
+          variant="tertiary"
           size="small"
+          disabled={disabled}
           css={css`
             min-width: 100px;
           `}
         >
-          {item?.buttonText}
+          {buttonText}
         </Button>
       </Box>
     </Box>
   );
 };
 
-export { RewardActivitiesListItem };
+export { RewardsActivitiesListItem };
