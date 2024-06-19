@@ -12,12 +12,12 @@ export type RewardsProps = {};
 
 const Rewards: FC<RewardsProps> = () => {
   const [activeTab, setActiveTab] = useState(rewardsTabsList[0].value);
-
   const { isWalletConnected } = useAccount();
   const location = useLocation();
   const navigate = useNavigate();
 
   const locationArray = location.pathname.split('/');
+  const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
 
   const handleSetActiveTab = (tab: RewardsTabs) => {
     setActiveTab(tab);
@@ -41,7 +41,7 @@ const Rewards: FC<RewardsProps> = () => {
         variant="h3-bold"
         color={{ light: 'gray-1000', dark: 'gray-100' }}
       >
-        Introducing Push Reward Points Program
+        {heading}
       </Text>
       <RewardsTabsContainer
         activeTab={activeTab}
