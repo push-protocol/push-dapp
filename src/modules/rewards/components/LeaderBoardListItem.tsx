@@ -1,10 +1,13 @@
-import { FC, useState } from 'react';
+// React and other libraries
+import { FC } from 'react';
 
+// Third-party libraries
 import { css } from 'styled-components';
 
 //Hooks
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 
+//Components
 import { Box, Text } from 'blocks';
 
 export type LeaderboardListItemProps = {
@@ -14,13 +17,7 @@ export type LeaderboardListItemProps = {
 };
 
 const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, points }) => {
-  const [isChainVisible, setChainVisibility] = useState(false);
-
   const { mode } = useBlocksTheme();
-
-  const handleShowChain = () => setChainVisibility(true);
-
-  const handleHideChain = () => setChainVisibility(false);
 
   return (
     <Box
@@ -29,11 +26,10 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
       justifyContent="space-between"
       alignItems="center"
       cursor="pointer"
+      // TODO: Fix ds-blocks
       css={css`
         border-bottom: 1px solid var(--${mode === 'dark' ? 'gray-800' : 'gray-200'});
       `}
-      onMouseEnter={handleShowChain}
-      onMouseLeave={handleHideChain}
     >
       <Box
         display="flex"
@@ -70,15 +66,6 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
           >
             {address}
           </Text>
-          {/* to be replace by an image */}
-          {isChainVisible && (
-            <Box
-              width="24px"
-              height="24px"
-              backgroundColor="pink-300"
-              borderRadius="r10"
-            />
-          )}
         </Box>
       </Box>
       <Box

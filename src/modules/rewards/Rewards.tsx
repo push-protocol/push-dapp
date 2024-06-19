@@ -1,33 +1,20 @@
-import { FC, useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { FC } from 'react';
 
+//Hooks
+import { useAccount } from 'hooks';
+import { useRewardsTabs } from './hooks/useRewardsTabs';
+
+//Components
 import { Box, Text } from 'blocks';
 import { RefferalSection } from './components/RefferalSection';
-import { useAccount } from 'hooks';
 import { RewardsTabsContainer } from './components/RewardsTabsContainer';
-import { rewardsTabsList } from './Rewards.constants';
-import { RewardsTabs } from './Rewards.types';
 
 export type RewardsProps = {};
 
 const Rewards: FC<RewardsProps> = () => {
-  const [activeTab, setActiveTab] = useState(rewardsTabsList[0].value);
   const { isWalletConnected } = useAccount();
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const locationArray = location.pathname.split('/');
+  const { activeTab, handleSetActiveTab } = useRewardsTabs();
   const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
-
-  const handleSetActiveTab = (tab: RewardsTabs) => {
-    setActiveTab(tab);
-    navigate(`/rewards/${tab}`);
-  };
-
-  useEffect(() => {
-    if (locationArray.length === 3) handleSetActiveTab(locationArray[2] as RewardsTabs);
-    else handleSetActiveTab(rewardsTabsList[0].value);
-  }, [location]);
 
   return (
     <Box

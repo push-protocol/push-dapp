@@ -1,6 +1,10 @@
+// React and other libraries
 import { FC } from 'react';
-import { Box, Skeleton } from 'blocks';
+
+//Components
 import { LeaderboardListItem } from './LeaderBoardListItem';
+
+import { Box, Skeleton } from 'blocks';
 
 export type LeaderBoardListProps = {};
 

@@ -1,6 +1,8 @@
 import { FlattenSimpleInterpolation, css } from 'styled-components';
+
+//Types
 import { LozengeSize, LozengeVariant } from './Lozenge.types';
-import { ThemeMode } from 'blocks/Blocks.types';
+import { ThemeMode } from '../Blocks.types';
 
 export const getLozengeVariantStyles = ({
   mode,
@@ -103,14 +105,9 @@ export const getLozengeSizeStyles = ({
     font-weight: 500;
     line-height: 16px;
 
-    .icon-text > span {
+    .icon > span {
       height: 24px;
       width: 24px;
-    }
-
-    .icon-only > span {
-      height: 32px;
-      width: 32px;
     }
   `;
 };

@@ -2,9 +2,7 @@ import { ReactNode, forwardRef } from 'react';
 
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
-import { useBlocksTheme } from 'blocks/Blocks.hooks';
-
-import { getBlocksBorderRadius } from 'blocks/Blocks.utils';
+import { useBlocksTheme } from '../Blocks.hooks';
 
 import { getLozengeSizeStyles, getLozengeVariantStyles } from './Lozenge.constants';
 
@@ -24,7 +22,9 @@ export type LozengeProps = {
   variant?: LozengeVariant;
 } & TransformedHTMLAttributes<HTMLDivElement>;
 
-const StyledLozenge = styled.div<LozengeProps & ModeProp & IconOnlyProp>`
+const StyledLozenge = styled.div.withConfig({
+  shouldForwardProp: (prop, defaultValidatorFn) => !['mode'].includes(prop) && defaultValidatorFn(prop),
+})<LozengeProps & ModeProp & IconOnlyProp>`
   /* Common Lozenge CSS */
 
   align-items: center;
