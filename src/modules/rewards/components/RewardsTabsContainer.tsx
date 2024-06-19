@@ -4,6 +4,7 @@ import { RewardsTabs } from './RewardsTabs';
 import { RewardsTabs as RewardsTabsType } from '../Rewards.types';
 import { DashboardSection } from './DashboardSection';
 import { LeaderBoardSection } from './LeaderBoardSection';
+import { RewardsActivitiesSection } from './RewardsActivitiesSection';
 
 export type RewardsTabsContainerProps = {
   activeTab: RewardsTabsType;
@@ -30,6 +31,7 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handle
         />
 
         {activeTab === 'dashboard' && <DashboardSection onGetStarted={() => handleSetActiveTab('activities')} />}
+        {activeTab === 'activities' && <RewardsActivitiesSection />}
         {activeTab === 'leaderboard' && <LeaderBoardSection />}
       </Box>
     </Box>

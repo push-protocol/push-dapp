@@ -53,5 +53,3 @@ const Rewards: FC<RewardsProps> = () => {
 };
 
 export { Rewards };
-
-// fix the border-radius in box
