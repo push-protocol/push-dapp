@@ -4,20 +4,18 @@ import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 
+import { getBlocksBorderRadius } from 'blocks/Blocks.utils';
+
 import { getLozengeSizeStyles, getLozengeVariantStyles } from './Lozenge.constants';
 
-import { ModeProp, TransformedHTMLAttributes } from '../Blocks.types';
+import { IconOnlyProp, ModeProp, TransformedHTMLAttributes } from '../Blocks.types';
 import { LozengeSize, LozengeVariant } from './Lozenge.types';
 
 export type LozengeProps = {
   /* Child react nodes rendered by Box */
   children?: ReactNode;
-  /* Renders the iconOnly lozenge as circular */
-  circular?: boolean;
   /* Additional prop from styled components to apply custom css to Lozenge */
   css?: FlattenSimpleInterpolation;
-  /* Used to render the lozenge with icon only */
-  iconOnly?: ReactNode;
   /* Render an icon before lozenge contents */
   icon?: ReactNode;
   /* Sets the size of the lozenge */
@@ -26,7 +24,7 @@ export type LozengeProps = {
   variant?: LozengeVariant;
 } & TransformedHTMLAttributes<HTMLDivElement>;
 
-const StyledLozenge = styled.div<LozengeProps & ModeProp>`
+const StyledLozenge = styled.div<LozengeProps & ModeProp & IconOnlyProp>`
   /* Common Lozenge CSS */
 
   align-items: center;
@@ -46,33 +44,29 @@ const StyledLozenge = styled.div<LozengeProps & ModeProp>`
   ${({ variant, mode }) => getLozengeVariantStyles({ variant: variant || 'primary', mode })}
 
   /* Lozenge and font size CSS styles */
-  ${({ iconOnly, size }) => getLozengeSizeStyles({ iconOnly: !!iconOnly, size: size || 'small' })}
-
-  /* Circular CSS for rounded icon only Lozenges */
-  ${({ circular, iconOnly }) => circular && iconOnly && `border-radius: var(--r10)`}
+  ${({ iconOnly, size }) => getLozengeSizeStyles({ iconOnly, size: size || 'small' })}
 
   /* Custom CSS applied via styled component css prop */
   ${(props) => props.css || ''}
 `;
 
 const Lozenge = forwardRef<HTMLDivElement, LozengeProps>(
-  ({ variant = 'primary', size = 'small', icon, iconOnly, circular = false, children, ...props }, ref) => {
+  ({ variant = 'primary', size = 'small', icon, children, ...props }, ref) => {
     const { mode } = useBlocksTheme();
+    const iconOnly = !children;
 
     return (
       <StyledLozenge
-        circular={circular}
-        iconOnly={iconOnly}
         role="div"
+        iconOnly={iconOnly}
         ref={ref}
         mode={mode}
         size={size}
         variant={variant}
         {...props}
       >
-        {icon && <span className="icon icon-text">{icon}</span>}
-        {!iconOnly && children}
-        {iconOnly && !children && <span className="icon icon-only">{iconOnly}</span>}
+        {icon && <span className="icon">{icon}</span>}
+        {children}
       </StyledLozenge>
     );
   }

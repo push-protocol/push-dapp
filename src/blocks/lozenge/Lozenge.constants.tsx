@@ -69,12 +69,7 @@ export const getLozengeSizeStyles = ({
       font-weight: 700;
       line-height: 14px;
 
-      .icon-text > span {
-        height: 8px;
-        width: 8px;
-      }
-
-      .icon-only > span {
+      .icon > span {
         height: 8px;
         width: 8px;
       }

@@ -25,8 +25,8 @@ const Rewards: FC<RewardsProps> = () => {
   };
 
   useEffect(() => {
-    if (locationArray.length === 3) setActiveTab(locationArray[2] as RewardsTabs);
-    else setActiveTab(rewardsTabsList[0].value);
+    if (locationArray.length === 3) handleSetActiveTab(locationArray[2] as RewardsTabs);
+    else handleSetActiveTab(rewardsTabsList[0].value);
   }, [location]);
 
   return (
