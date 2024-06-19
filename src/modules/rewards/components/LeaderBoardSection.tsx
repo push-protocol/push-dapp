@@ -1,6 +1,9 @@
+// React and other libraries
 import { FC } from 'react';
-import { Box, Text } from 'blocks';
+
+//Components
 import { LeaderBoardList } from './LeaderBoardList';
+import { Box, Text } from 'blocks';
 
 export type LeaderBoardSectionProps = {};
 
@@ -10,8 +13,14 @@ const LeaderBoardSection: FC<LeaderBoardSectionProps> = () => {
       display="flex"
       flexDirection="column"
       gap="s4"
+      backgroundColor={{ dark: 'gray-900', light: 'white' }}
     >
-      <Text variant="h4-bold">Leaderboard</Text>
+      <Text
+        variant="h4-bold"
+        color={{ light: 'gray-1000', dark: 'gray-100' }}
+      >
+        Leaderboard
+      </Text>
       <Box
         display="flex"
         justifyContent="space-between"
@@ -22,20 +31,20 @@ const LeaderBoardSection: FC<LeaderBoardSectionProps> = () => {
         >
           <Text
             variant="c-bold"
-            color="gray-500"
+            color={{ light: 'gray-500', dark: 'gray-600' }}
           >
             RANK
           </Text>
           <Text
             variant="c-bold"
-            color="gray-500"
+            color={{ light: 'gray-500', dark: 'gray-600' }}
           >
             USER
           </Text>
         </Box>
         <Text
           variant="c-bold"
-          color="gray-500"
+          color={{ light: 'gray-500', dark: 'gray-600' }}
         >
           TOTAL POINTS
         </Text>

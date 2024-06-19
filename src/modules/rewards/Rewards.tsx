@@ -1,19 +1,20 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
+
+//Hooks
+import { useAccount } from 'hooks';
+import { useRewardsTabs } from './hooks/useRewardsTabs';
+
+//Components
 import { Box, Text } from 'blocks';
 import { RefferalSection } from './components/RefferalSection';
-import { useAccount } from 'hooks';
 import { RewardsTabsContainer } from './components/RewardsTabsContainer';
-import { rewardsTabsList } from './Rewards.constants';
-import { RewardsTabs } from './Rewards.types';
 
 export type RewardsProps = {};
 
 const Rewards: FC<RewardsProps> = () => {
-  const [activeTab, setActiveTab] = useState(rewardsTabsList[0].value);
-
   const { isWalletConnected } = useAccount();
-
-  const handleSetActiveTab = (tab: RewardsTabs) => setActiveTab(tab);
+  const { activeTab, handleSetActiveTab } = useRewardsTabs();
+  const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
 
   return (
     <Box
@@ -27,7 +28,7 @@ const Rewards: FC<RewardsProps> = () => {
         variant="h3-bold"
         color={{ light: 'gray-1000', dark: 'gray-100' }}
       >
-        Introducing Push Reward Points Program
+        {heading}
       </Text>
       <RewardsTabsContainer
         activeTab={activeTab}
