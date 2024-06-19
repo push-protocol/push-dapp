@@ -6,8 +6,8 @@ export const rewardsTabsList: RewardsTabsList = [
     label: 'Dashboard',
   },
   {
-    value: 'activites',
-    label: 'Reward Activites',
+    value: 'activities',
+    label: 'Reward Activities',
   },
   {
     value: 'leaderboard',
