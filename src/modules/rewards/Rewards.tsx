@@ -1,7 +1,6 @@
 import { FC } from 'react';
 
 //Hooks
-import { useAccount } from 'hooks';
 import { useRewardsTabs } from './hooks/useRewardsTabs';
 
 //Components
@@ -12,7 +11,6 @@ import { RewardsTabsContainer } from './components/RewardsTabsContainer';
 export type RewardsProps = {};
 
 const Rewards: FC<RewardsProps> = () => {
-  const { isWalletConnected } = useAccount();
   const { activeTab, handleSetActiveTab } = useRewardsTabs();
   const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
 
@@ -34,7 +32,7 @@ const Rewards: FC<RewardsProps> = () => {
         activeTab={activeTab}
         handleSetActiveTab={handleSetActiveTab}
       />
-      {activeTab === 'dashboard' && isWalletConnected && <RefferalSection />}
+      {activeTab === 'dashboard' && <RefferalSection />}
     </Box>
   );
 };

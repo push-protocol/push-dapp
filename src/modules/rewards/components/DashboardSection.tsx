@@ -1,12 +1,15 @@
 import { FC } from 'react';
 import { css } from 'styled-components';
 import { Box, Button, RewardsCircle, Text } from 'blocks';
+import { useAccount } from 'hooks';
 
 export type DashboardSectionProps = {
   onGetStarted: () => void;
 };
 
 const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
+  const { isWalletConnected } = useAccount();
+
   return (
     <Box
       display="flex"
@@ -78,20 +81,31 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
           >
             TOTAL POINTS
           </Text>
-          <Box>
-            <Text
-              variant="h1-bold"
-              color={{ light: 'gray-1000', dark: 'gray-100' }}
-            >
-              11,500
-            </Text>
-            <Text
-              variant="h5-bold"
-              color="gray-500"
-            >
-              Rank #240
-            </Text>
-          </Box>
+          {isWalletConnected ? (
+            <Box>
+              <Text
+                variant="h1-bold"
+                color={{ light: 'gray-1000', dark: 'gray-100' }}
+              >
+                11,500
+              </Text>
+              <Text
+                variant="h5-bold"
+                color="gray-500"
+              >
+                Rank #240
+              </Text>
+            </Box>
+          ) : (
+            <Box>
+              <Text
+                variant="h1-bold"
+                color={{ light: 'gray-1000', dark: 'gray-100' }}
+              >
+                0
+              </Text>
+            </Box>
+          )}
         </Box>
         <Box
           width="-webkit-fill-available"
@@ -108,20 +122,31 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
           >
             REFFERAL POINTS
           </Text>
-          <Box>
-            <Text
-              variant="h1-bold"
-              color={{ light: 'gray-1000', dark: 'gray-100' }}
-            >
-              10
-            </Text>
-            <Text
-              variant="h5-bold"
-              color="gray-500"
-            >
-              2 Users Invited
-            </Text>
-          </Box>
+          {isWalletConnected ? (
+            <Box>
+              <Text
+                variant="h1-bold"
+                color={{ light: 'gray-1000', dark: 'gray-100' }}
+              >
+                10
+              </Text>
+              <Text
+                variant="h5-bold"
+                color="gray-500"
+              >
+                2 Users Invited
+              </Text>
+            </Box>
+          ) : (
+            <Box>
+              <Text
+                variant="h1-bold"
+                color={{ light: 'gray-1000', dark: 'gray-100' }}
+              >
+                0
+              </Text>
+            </Box>
+          )}
         </Box>
       </Box>
     </Box>
