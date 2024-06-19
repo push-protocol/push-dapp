@@ -13,14 +13,19 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
       flexDirection="column"
       gap="s4"
     >
-      <Text variant="h4-bold">Dashboard</Text>
+      <Text
+        variant="h4-bold"
+        color={{ light: 'gray-1000', dark: 'gray-100' }}
+      >
+        Dashboard
+      </Text>
       <Box
         borderRadius="r6"
         display="flex"
-        height="108px"
-        padding="s0 s6"
+        padding={{ tb: 's4', initial: 's6' }}
         alignItems="center"
         justifyContent="space-between"
+        flexDirection={{ tb: 'column', initial: 'row' }}
         css={css`
           background: radial-gradient(174.95% 108.75% at 64.27% 0%, #debeff 30.74%, #c0fff7 100%);
         `}
@@ -28,19 +33,27 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
         <Box
           gap="s3"
           display="flex"
+          alignItems="center"
         >
           <RewardsCircle />
           <Box
             display="flex"
             flexDirection="column"
           >
-            <Text variant="h4-semibold">Title line 1</Text>
-            <Text variant="bl-regular">Body Text goes here</Text>
+            <Text variant="h4-semibold">Earn Rewards for Exploring!</Text>
+            <Text variant="bl-regular">Discover, participate, and earn rewards with every step you take in Push. </Text>
           </Box>
         </Box>
         <Button
           variant="tertiary"
+          size="small"
           onClick={onGetStarted}
+          css={css`
+            @media (max-width: 768px) {
+              min-width: -webkit-fill-available;
+              margin-top: 16px;
+            }
+          `}
         >
           Get started
         </Button>
@@ -48,6 +61,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
       <Box
         display="flex"
         gap="s6"
+        flexDirection={{ tb: 'column', initial: 'row' }}
       >
         <Box
           width="-webkit-fill-available"
@@ -56,11 +70,21 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
           padding="s6"
           borderRadius="r6"
           gap="s3"
-          border="1px solid gray-200"
+          border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
         >
-          <Text variant="h5-bold">TOTAL POINTS</Text>
+          <Text
+            variant="h5-bold"
+            color={{ light: 'gray-1000', dark: 'gray-100' }}
+          >
+            TOTAL POINTS
+          </Text>
           <Box>
-            <Text variant="h1-bold">11,500</Text>
+            <Text
+              variant="h1-bold"
+              color={{ light: 'gray-1000', dark: 'gray-100' }}
+            >
+              11,500
+            </Text>
             <Text
               variant="h5-bold"
               color="gray-500"
@@ -76,11 +100,21 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
           padding="s6"
           borderRadius="r6"
           gap="s3"
-          border="1px solid gray-200"
+          border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
         >
-          <Text variant="h5-bold">REFFERAL POINTS</Text>
+          <Text
+            variant="h5-bold"
+            color={{ light: 'gray-1000', dark: 'gray-100' }}
+          >
+            REFFERAL POINTS
+          </Text>
           <Box>
-            <Text variant="h1-bold">10</Text>
+            <Text
+              variant="h1-bold"
+              color={{ light: 'gray-1000', dark: 'gray-100' }}
+            >
+              10
+            </Text>
             <Text
               variant="h5-bold"
               color="gray-500"

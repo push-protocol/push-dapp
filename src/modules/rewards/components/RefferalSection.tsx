@@ -11,11 +11,21 @@ const RefferalSection: FC<RefferalSectionProps> = () => {
       gap="s9"
       padding="s12"
       borderRadius="r6"
-      backgroundColor="white"
+      backgroundColor={{ light: 'white', dark: 'gray-900' }}
     >
       <Box>
-        <Text variant="h3-bold">Onboard Users on Push.</Text>
-        <Text variant="h3-bold">Earn Points.</Text>
+        <Text
+          variant="h3-bold"
+          color={{ light: 'gray-1000', dark: 'gray-100' }}
+        >
+          Onboard Users on Push.
+        </Text>
+        <Text
+          variant="h3-bold"
+          color={{ light: 'gray-1000', dark: 'gray-100' }}
+        >
+          Earn Points.
+        </Text>
         <Text
           variant="bm-regular"
           color="gray-500"
@@ -26,16 +36,23 @@ const RefferalSection: FC<RefferalSectionProps> = () => {
       <Box
         display="flex"
         gap="s2"
+        flexDirection={{ tb: 'column', initial: 'row' }}
       >
         <Box
-          width="344px"
+          width={{ tb: '-webkit-fill-available', initial: '344px' }}
           display="flex"
           alignItems="center"
           padding="s3"
           borderRadius="r3"
-          border="1.5px solid gray-200"
+          border={{ light: '1.5px solid gray-200', dark: 'none' }}
+          backgroundColor={{ light: 'transparent', dark: 'gray-800' }}
         >
-          <Text variant="bs-regular">https://app.push.org/ref?123xx</Text>
+          <Text
+            variant="bs-regular"
+            color={{ light: 'gray-1000', dark: 'gray-100' }}
+          >
+            https://app.push.org/ref?123xx
+          </Text>
         </Box>
         <Button leadingIcon={<Copy />}>Copy Link</Button>
       </Box>

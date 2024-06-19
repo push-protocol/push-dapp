@@ -31,7 +31,7 @@ const RewardsTabs: FC<RewardsTabsProps> = ({ activeTab, handleSetActiveTab }) =>
         >
           <Text
             variant="h5-semibold"
-            color="gray-1000"
+            color={{ light: 'gray-1000', dark: 'gray-100' }}
           >
             {tab.label}
           </Text>
