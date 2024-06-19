@@ -22,10 +22,9 @@ export type HoverableSVGProps = {
   margin?: SpaceType;
 } & TransformedHTMLAttributes<HTMLButtonElement>;
 
-
 const StyledButton = styled.button.withConfig({
   shouldForwardProp: (prop, defaultValidatorFn) => !['mode'].includes(prop) && defaultValidatorFn(prop),
-}) <Omit<HoverableSVGProps, 'icon'> & ModeProp>`
+})<Omit<HoverableSVGProps, 'icon'> & ModeProp>`
   display: inline-flex;
   align-items: center;
   justify-content: center;

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { css } from 'styled-components';
-import { Box, Button, RewardsCircle, Text } from 'blocks';
+import { Box, Button, HoverableSVG, RewardsCircle, Refresh, Text } from 'blocks';
 import { useAccount } from 'hooks';
 
 export type DashboardSectionProps = {
@@ -75,12 +75,41 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
           gap="s3"
           border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
         >
-          <Text
-            variant="h5-bold"
-            color={{ light: 'gray-1000', dark: 'gray-100' }}
+          <Box
+            width="-webkit-fill-available"
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
           >
-            TOTAL POINTS
-          </Text>
+            <Text
+              variant="h5-bold"
+              color={{ light: 'gray-1000', dark: 'gray-100' }}
+            >
+              TOTAL POINTS
+            </Text>
+
+            {isWalletConnected && (
+              <Box
+                display="flex"
+                alignItems="center"
+                cursor="pointer"
+              >
+                {/* TODO: Fix ds-blocks - Hover background should be have border radius options for round icons*/}
+                <HoverableSVG
+                  hoverBackground="pink-200"
+                  padding="s1"
+                  icon={<Refresh color="pink-400" />}
+                ></HoverableSVG>
+                <Text
+                  variant="bs-semibold"
+                  color="gray-500"
+                >
+                  Update
+                </Text>
+              </Box>
+            )}
+          </Box>
+
           {isWalletConnected ? (
             <Box>
               <Text
@@ -89,6 +118,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
               >
                 11,500
               </Text>
+
               <Text
                 variant="h5-bold"
                 color="gray-500"
