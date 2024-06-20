@@ -1,11 +1,18 @@
 import { FC } from 'react';
-import { Box, Button, Copy, Text } from 'blocks';
+import { css } from 'styled-components';
+import { Box, Button, Copy, Text, Skeleton } from 'blocks';
 import { useAccount } from 'hooks';
+
+import { useGetUserRewardsDetails } from 'queries';
 
 export type RefferalSectionProps = {};
 
 const RefferalSection: FC<RefferalSectionProps> = () => {
-  const { isWalletConnected, connect } = useAccount();
+  const { isWalletConnected, chainId, account, connect } = useAccount();
+  let walletAddress = 'eip155:' + account;
+  const { data: userDetails, isSuccess, isLoading, isFetching, error } = useGetUserRewardsDetails({ walletAddress });
+
+  const isPending = isLoading || isFetching;
 
   const handleConnectWallet = () => {
     connect();
@@ -40,7 +47,8 @@ const RefferalSection: FC<RefferalSectionProps> = () => {
           Earn +12% of any Points your invites earn, and +2% of any Points your invite’s invites earn.
         </Text>
       </Box>
-      {isWalletConnected && (
+
+      {isWalletConnected && isSuccess && !isPending && (
         <Box
           display="flex"
           gap="s2"
@@ -59,11 +67,24 @@ const RefferalSection: FC<RefferalSectionProps> = () => {
               variant="bs-regular"
               color={{ light: 'gray-1000', dark: 'gray-100' }}
             >
-              https://app.push.org/ref?123xx
+              https://app.push.org/?ref={userDetails?.userId}
             </Text>
           </Box>
           <Button leadingIcon={<Copy />}>Copy Link</Button>
         </Box>
+      )}
+
+      {isWalletConnected && isPending && (
+        <Skeleton
+          isLoading={isPending}
+          height="40px"
+          width={{ tb: '-webkit-fill-available', initial: '344px' }}
+          css={css`
+            margin-top: var(--s6);
+          `}
+        >
+          <Box></Box>
+        </Skeleton>
       )}
 
       {!isWalletConnected && (

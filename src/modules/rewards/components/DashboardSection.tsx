@@ -7,7 +7,6 @@ import { useAccount } from 'hooks';
 import { useGetUserRewardsDetails } from 'queries';
 
 //components
-// import { RefferalSection } from './RefferalSection';
 
 export type DashboardSectionProps = {
   onGetStarted: () => void;
@@ -16,7 +15,6 @@ export type DashboardSectionProps = {
 const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
   const { isWalletConnected, chainId, account } = useAccount();
   let walletAddress = 'eip155:' + account;
-  // let walletAddress = 'eip155:' + '0x1ffb4b94AdaA6A2ef23Cf0b1fe79bBADF31aBc1E';
   const {
     data: userDetails,
     refetch,
@@ -53,7 +51,8 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
           justifyContent="space-between"
           flexDirection={{ tb: 'column', initial: 'row' }}
           css={css`
-            background: radial-gradient(174.95% 108.75% at 64.27% 0%, #debeff 30.74%, #c0fff7 100%);
+            // background: radial-gradient(174.95% 108.75% at 64.27% 0%, #debeff 30.74%, #c0fff7 100%);
+            background: radial-gradient(circle, rgba(222, 190, 255, 1) 0%, rgba(192, 255, 247, 1) 85%);
           `}
         >
           <Box
