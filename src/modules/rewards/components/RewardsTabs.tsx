@@ -17,11 +17,12 @@ const RewardsTabs: FC<RewardsTabsProps> = ({ activeTab, handleSetActiveTab }) =>
       css={css`
         border-bottom: 1px solid var(--gray-200);
       `}
+      justifyContent={{ ml: "space-between", initial: 'flex-start' }}
     >
       {rewardsTabsList.map((tab) => (
         <Box
           key={`${tab.value}`}
-          padding="s0 s4 s4 s4"
+          padding={{ ml: "s0 s0 s3 s0", initial: "s0 s4 s4 s4" }}
           cursor="pointer"
           onClick={() => handleSetActiveTab(tab.value)}
           css={css`
@@ -31,7 +32,7 @@ const RewardsTabs: FC<RewardsTabsProps> = ({ activeTab, handleSetActiveTab }) =>
         >
           <Text
             variant="h5-semibold"
-            color="gray-1000"
+            color={{ light: "gray-1000", dark: 'gray-100' }}
           >
             {tab.label}
           </Text>

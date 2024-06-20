@@ -99,13 +99,13 @@ const GlobalStyle = createGlobalStyle`
 
     /* Colors */
     ${Object.entries(blocksColors)
-      .map(([colorName, code]) => `--${colorName}: ${code};`)
-      .join('')}
+    .map(([colorName, code]) => `--${colorName}: ${code};`)
+    .join('')}
   
     /* Typography Variants */
     ${Object.entries(textVariants)
-      .map(
-        ([fontVariant, value]) => `
+    .map(
+      ([fontVariant, value]) => `
             --${fontVariant}-font-size: ${value.fontSize};
             --${fontVariant}-line-height: ${value.lineHeight};
             --${fontVariant}-font-weight: ${value.fontWeight};
@@ -113,8 +113,8 @@ const GlobalStyle = createGlobalStyle`
             ${value.letterSpacing ? `--${fontVariant}-letter-spacing: ${value.letterSpacing};` : ''}
             ${value.textTransform ? `--${fontVariant}-text-transform: ${value.textTransform};` : ''}
           `
-      )
-      .join('')}
+    )
+    .join('')}
   }
 
 `;
@@ -138,7 +138,7 @@ const extendConsole = () => {
         window.console = {};
       }
       if (window.console[level] === 'undefined' || !window.console[level] || window.console[level] === null) {
-        window.console[level] = function () {};
+        window.console[level] = function () { };
       }
       if (enabled) {
         if (disabledConsoles[level]) {
@@ -146,7 +146,7 @@ const extendConsole = () => {
         }
       } else {
         disabledConsoles[level] = window.console[level];
-        window.console[level] = function () {};
+        window.console[level] = function () { };
       }
     };
   } catch (e) {
@@ -328,7 +328,7 @@ export default function App() {
           <ChatUIProvider
             user={userPushSDKInstance}
             theme={darkMode && darkChatTheme}
-            debug={false}
+            debug={true}
             uiConfig={{
               suppressToast: false,
             }}

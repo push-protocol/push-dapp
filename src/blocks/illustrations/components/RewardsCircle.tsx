@@ -14,6 +14,7 @@ const RewardsCircle: FC<IllustrationProps> = (allProps) => {
           height={restProps.height ?? '48'}
           viewBox="0 0 49 48"
           fill="none"
+          {...props}
         >
           <circle
             cx="24.5"

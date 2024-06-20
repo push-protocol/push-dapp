@@ -14,16 +14,16 @@ export type RewardsTabsContainerProps = {
 const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handleSetActiveTab }) => {
   return (
     <Box
-      backgroundColor="white"
       borderRadius="r4"
       display="flex"
       flexDirection="column"
-      padding="s6"
+      padding={{ ml: "s4 s3", initial: "s6" }}
     >
       <Box
         gap="s6"
         display="flex"
         flexDirection="column"
+        color={{ light: 'gray-900', dark: 'gray-100' }}
       >
         <RewardsTabs
           activeTab={activeTab}
