@@ -32,7 +32,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
       <Box
         display="flex"
         flexDirection={{ ml: 'column', initial: 'row' }}
-        gap="s4"
+        gap="s6"
         css={css`
           flex: 1;
         `}
@@ -55,7 +55,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
               {subtitle}
             </Text>
           </Box>
-          <Box display="flex" flexDirection="row" gap="s2" alignItems="center">
+          <Box display="flex" minWidth='190px' flexDirection="row" gap="s2" alignItems="center">
             <RewardsCircle width={32} height={32} />
             <Text
               variant="h4-semibold"
