@@ -20,7 +20,7 @@ const RewardsCircle: FC<IllustrationProps> = (allProps) => {
             cx="24.5"
             cy="24"
             r="24"
-            fill="#17181B"
+            fill="#202124"
           />
         </svg>
       }

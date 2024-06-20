@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { css } from 'styled-components';
-import { Box, Button, RewardsCircle, Text } from 'blocks';
+import { Box, Button, Lozenge, RewardsCircle, Text } from 'blocks';
 
 export type RewardActivitiesListItemProps = {
   title: string;
@@ -37,6 +37,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
           flex: 1;
         `}
       >
+        {/* Rewards Contents */}
         <Box
           display="flex"
           flexDirection={{ ml: 'column', initial: 'row' }}
@@ -47,15 +48,27 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
             flex: 1;
           `}
         >
+          {/* Rewards Description */}
           <Box display="flex" flexDirection="column">
-            <Text variant="bl-semibold" color={{ light: 'gray-1000', dark: 'gray-100' }}>
-              {title}
-            </Text>
+            <Box
+              display="flex"
+              flexDirection={{ lp: 'column-reverse', initial: 'row' }}
+              gap={{ lp: 's1', initial: 's4' }}
+            >
+              <Text variant="bl-semibold" color={{ light: 'gray-1000', dark: 'gray-100' }}>
+                {title}
+              </Text>
+              <Box display="flex">
+                <Lozenge size="small">Expires in 7 days</Lozenge>
+              </Box>
+            </Box>
             <Text variant="h5-regular" color="gray-500">
               {subtitle}
             </Text>
           </Box>
-          <Box display="flex" minWidth='190px' flexDirection="row" gap="s2" alignItems="center">
+
+          {/* Rewards Points */}
+          <Box display="flex" minWidth="190px" flexDirection="row" gap="s2" alignItems="center">
             <RewardsCircle width={32} height={32} />
             <Text
               variant="h4-semibold"
@@ -69,7 +82,8 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
           </Box>
         </Box>
 
-        <Box display='flex' alignItems='center'>
+        {/* Buttons Logic */}
+        <Box display="flex" alignItems="center">
           <Button
             variant="tertiary"
             size="small"
