@@ -9,7 +9,7 @@ import { useBlocksTheme } from 'blocks/Blocks.hooks';
 
 //Components
 import { Box, Skeleton, Text } from 'blocks';
-import Blockies from 'primaries/BlockiesIdenticon';
+import Blockies from 'components/BlockiesIdenticon';
 
 //Utility helper
 import { shortenText } from 'helpers/UtilityHelper';

@@ -10,6 +10,7 @@ import { Box, Button } from 'blocks';
 
 //Helpers
 import { caip10ToWallet } from 'helpers/w2w';
+import { NullErrorLeaderboardList } from './NullErrorLeaderboardList';
 
 const LeaderBoardList: FC = () => {
   const observer = useRef<IntersectionObserver>();
@@ -17,8 +18,8 @@ const LeaderBoardList: FC = () => {
   const { data, fetchNextPage, hasNextPage, isLoading, isFetching } = useGetRewardsLeaderboard({ pageSize: 2 });
 
   // If there are channels then render them else render 5 skeletons
-  const leaderboardList = isLoading ? Array(5).fill(0) : data?.pages?.flatMap((page) => page) || [];
-
+  // const leaderboardList = isLoading ? Array(5).fill(0) : data?.pages?.flatMap((page) => page) || [];
+  const leaderboardList: ModelledLeaderBoardUser[] = [];
   const lastElementRef = useCallback(
     (node: HTMLElement) => {
       if (isLoading) return;
@@ -41,24 +42,18 @@ const LeaderBoardList: FC = () => {
       maxHeight="calc(100vh - 356px)"
       overflow="scroll"
     >
-      {leaderboardList!.map((item: ModelledLeaderBoardUser, index: number) => (
-        <LeaderboardListItem
-          ref={lastElementRef}
-          key={`${index}`}
-          rank={item.rank}
-          address={caip10ToWallet(item.userWallet)}
-          points={item.totalPoints}
-          isLoading={isLoading}
-        />
-      ))}
-      <Button
-        onClick={() => {
-          console.debug('in next fetch', hasNextPage);
-          fetchNextPage();
-        }}
-      >
-        more
-      </Button>
+      {!leaderboardList.length && <NullErrorLeaderboardList heading="No Users Found" />}
+      {!!leaderboardList.length &&
+        leaderboardList.map((item: ModelledLeaderBoardUser, index: number) => (
+          <LeaderboardListItem
+            ref={lastElementRef}
+            key={`${index}`}
+            rank={item.rank}
+            address={caip10ToWallet(item.userWallet)}
+            points={item.totalPoints}
+            isLoading={isLoading}
+          />
+        ))}
     </Box>
   );
 };
