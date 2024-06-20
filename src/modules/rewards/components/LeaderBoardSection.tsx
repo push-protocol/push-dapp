@@ -1,8 +1,6 @@
 // React and other libraries
 import { FC } from 'react';
 
-//Hooks
-
 //Components
 import { LeaderBoardList } from './LeaderBoardList';
 import { Box, Text } from 'blocks';

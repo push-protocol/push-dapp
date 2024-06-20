@@ -4,4 +4,4 @@ import { rewardsLeaderboard } from '../../queryKeys';
 import { getRewardsLeaderboard } from '../../services';
 
 export const useGetRewardsLeaderboard = () =>
-  useQuery({ queryKey: [rewardsLeaderboard], queryFn: () => getRewardsLeaderboard() });
+  useQuery({ queryKey: [rewardsLeaderboard], queryFn: getRewardsLeaderboard });

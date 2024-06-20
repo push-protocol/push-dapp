@@ -1,4 +1,4 @@
-import { LeaderboardModelledResponse, LeaderboardResponse } from '../../types/rewards';
+import { LeaderboardModelledResponse, LeaderboardResponse } from '../../types';
 
 export const getRewardsLeaderboardModalCreator = (response: LeaderboardResponse): LeaderboardModelledResponse => {
   return response.users.map((user) => ({

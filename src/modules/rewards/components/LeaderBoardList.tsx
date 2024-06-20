@@ -6,30 +6,30 @@ import { useGetRewardsLeaderboard } from 'queries';
 
 //Components
 import { LeaderboardListItem } from './LeaderBoardListItem';
-import { Box, Skeleton } from 'blocks';
+import { Box } from 'blocks';
 
 //Helpers
 import { caip10ToWallet } from 'helpers/w2w';
 
 const LeaderBoardList: FC = () => {
   const { data, isLoading } = useGetRewardsLeaderboard();
+
+  // If there are channels then render them else render 5 skeletons
+  const leaderboardList = isLoading ? Array(5).fill(0) : data;
+
   return (
     <Box
       maxHeight="calc(100vh - 356px)"
       overflow="scroll"
     >
-      {data?.map((item, index) => (
-        <Skeleton
+      {leaderboardList!.map((item, index) => (
+        <LeaderboardListItem
+          key={`${index}`}
+          rank={`${index + 1}`}
+          address={caip10ToWallet(item.userWallet)}
+          points={item.totalPoints}
           isLoading={isLoading}
-          key={index}
-        >
-          <LeaderboardListItem
-            key={index}
-            rank={`${index + 1}`}
-            address={caip10ToWallet(item.userWallet)}
-            points={item.totalPoints}
-          />
-        </Skeleton>
+        />
       ))}
     </Box>
   );

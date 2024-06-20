@@ -1,4 +1,4 @@
-type User = {
+type LeaderBoardUser = {
   userId: string;
   userWallet: string;
   refPrimary: string | null;
@@ -10,14 +10,15 @@ type User = {
   lastUpdated: string;
   pgpPublicKey: string;
 };
-type ModelledUser = {
+
+type ModelledLeaderBoardUser = {
   userId: string;
   userWallet: string;
   totalPoints: number;
 };
 
 export type LeaderboardResponse = {
-  users: Array<User>;
+  users: Array<LeaderBoardUser>;
 };
 
-export type LeaderboardModelledResponse = Array<ModelledUser>;
+export type LeaderboardModelledResponse = Array<ModelledLeaderBoardUser>;
