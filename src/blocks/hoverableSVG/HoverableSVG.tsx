@@ -20,6 +20,8 @@ export type HoverableSVGProps = {
   padding?: SpaceType;
   /* Sets the margin for SVG button container */
   margin?: SpaceType;
+  /* Sets the margin for SVG button container */
+  borderRadius?: SpaceType;
 } & TransformedHTMLAttributes<HTMLButtonElement>;
 
 const StyledButton = styled.button.withConfig({
@@ -30,6 +32,7 @@ const StyledButton = styled.button.withConfig({
   justify-content: center;
   padding: var(--${(props) => props.padding || 's0'});
   margin: var(--${(props) => props.margin || 's0'});
+  border-radius: var(--${(props) => props.borderRadius || 'r0'});
   background-color: ${({ defaultBackground, mode }) => getBlocksColor(mode, defaultBackground) || 'transparent'};
   color: ${({ mode, defaultColor }) => getBlocksColor(mode, defaultColor) || 'inherit'};
   border: none;
@@ -53,6 +56,7 @@ const HoverableSVG: FC<HoverableSVGProps> = ({
   hoverBackground,
   padding,
   margin,
+  borderRadius,
   ...props
 }) => {
   const { mode } = useBlocksTheme();
@@ -65,6 +69,7 @@ const HoverableSVG: FC<HoverableSVGProps> = ({
       hoverBackground={hoverBackground}
       padding={padding}
       margin={margin}
+      borderRadius={borderRadius}
       mode={mode}
       {...props}
     >
