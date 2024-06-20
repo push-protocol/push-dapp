@@ -172,8 +172,6 @@ if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
   }
 }
 
-
-
 // Provess App
 export default function App() {
   // Initialize GA
@@ -281,10 +279,10 @@ export default function App() {
       let vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
     }
-  
+
     setViewportHeight();
     window.addEventListener('resize', setViewportHeight);
-  
+
     return () => {
       window.removeEventListener('resize', setViewportHeight);
     };
@@ -448,17 +446,15 @@ const ParentContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  // flex: 1;
+  flex: 1;
   background: ${(props) => props.bg};
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
   // background: ${(props) => props.bg};
   margin: ${(props) => props.headerHeight}px 0px 0px 0px;
-  // min-height: calc(100vh - ${(props) => props.headerHeight}px);
-  // min-height: calc(var(--vh, 1vh) * 100 - ${(props) => props.headerHeight}px);
-  // max-height: calc(var(--vh, 1vh) * 100 - ${(props) => props.headerHeight}px);
-  max-height: 200px !important;
+  min-height: calc(100dvh - ${(props) => props.headerHeight}px);
+  max-height: calc(100dvh - ${(props) => props.headerHeight}px);
 `;
 
 const LeftBarContainer = styled.div`
@@ -480,9 +476,6 @@ const ContentContainer = styled.div`
   align-self: center;
   width: calc(100% - ${(props) => props.leftBarWidth}px);
   margin: 0px 0px 0px ${(props) => props.leftBarWidth}px;
-
-  max-height: 200px !important;
-
 
   @media (max-width: 992px) {
     margin: 0px;
