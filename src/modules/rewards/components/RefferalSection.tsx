@@ -1,13 +1,19 @@
-import { FC } from 'react';
+import { FC, useRef, useState } from 'react';
 import { css } from 'styled-components';
-import { Box, Button, Copy, Text, Skeleton } from 'blocks';
-import { useAccount } from 'hooks';
 
+//hooks
+import { useAccount } from 'hooks';
 import { useGetUserRewardsDetails } from 'queries';
+
+// components
+import { Box, Button, Copy, Text, Skeleton } from 'blocks';
 
 export type RefferalSectionProps = {};
 
 const RefferalSection: FC<RefferalSectionProps> = () => {
+  const textRef = useRef(null);
+  const [isCopied, setIsCopied] = useState<boolean>(false);
+
   const { isWalletConnected, chainId, account, connect } = useAccount();
   let walletAddress = 'eip155:' + account;
   const { data: userDetails, isSuccess, isLoading, isFetching, error } = useGetUserRewardsDetails({ walletAddress });
@@ -16,6 +22,23 @@ const RefferalSection: FC<RefferalSectionProps> = () => {
 
   const handleConnectWallet = () => {
     connect();
+  };
+
+  const copyToClipboard = () => {
+    if (textRef.current) {
+      const textToCopy = textRef.current.innerText;
+      navigator.clipboard
+        .writeText(textToCopy)
+        .then(() => {
+          setIsCopied(true);
+          setTimeout(() => {
+            setIsCopied(false);
+          }, 2000);
+        })
+        .catch((err) => {
+          console.error('Failed to copy text: ', err);
+        });
+    }
   };
 
   return (
@@ -65,12 +88,18 @@ const RefferalSection: FC<RefferalSectionProps> = () => {
           >
             <Text
               variant="bs-regular"
+              ref={textRef}
               color={{ light: 'gray-1000', dark: 'gray-100' }}
             >
               https://app.push.org/?ref={userDetails?.userId}
             </Text>
           </Box>
-          <Button leadingIcon={<Copy />}>Copy Link</Button>
+          <Button
+            leadingIcon={<Copy />}
+            onClick={copyToClipboard}
+          >
+            {isCopied ? 'Copied' : 'Copy Link'}
+          </Button>
         </Box>
       )}
 

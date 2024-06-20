@@ -1,12 +1,12 @@
 import { FC } from 'react';
 import { css } from 'styled-components';
-import { Box, Button, HoverableSVG, RewardsCircle, Refresh, Skeleton, Text } from 'blocks';
 
 //Hooks
 import { useAccount } from 'hooks';
 import { useGetUserRewardsDetails } from 'queries';
 
 //components
+import { Box, Button, HoverableSVG, RewardsCircle, Refresh, Skeleton, Text } from 'blocks';
 
 export type DashboardSectionProps = {
   onGetStarted: () => void;
@@ -51,7 +51,6 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
           justifyContent="space-between"
           flexDirection={{ tb: 'column', initial: 'row' }}
           css={css`
-            // background: radial-gradient(174.95% 108.75% at 64.27% 0%, #debeff 30.74%, #c0fff7 100%);
             background: radial-gradient(circle, rgba(222, 190, 255, 1) 0%, rgba(192, 255, 247, 1) 85%);
           `}
         >
