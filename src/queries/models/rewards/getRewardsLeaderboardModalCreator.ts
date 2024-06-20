@@ -4,6 +4,7 @@ export const getRewardsLeaderboardModalCreator = (response: LeaderboardResponse)
   return response.users.map((user) => ({
     userId: user.userId,
     userWallet: user.userWallet,
-    totalPoints: user.activityPoints + user.referralPoints, // Calculating total points
+    totalPoints: user.totalPoints,
+    rank: user.rank,
   }));
 };

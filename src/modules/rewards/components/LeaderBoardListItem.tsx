@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC } from 'react';
+import { FC, LegacyRef } from 'react';
 
 // Third-party libraries
 import { css } from 'styled-components';
@@ -9,22 +9,24 @@ import { useBlocksTheme } from 'blocks/Blocks.hooks';
 
 //Components
 import { Box, Skeleton, Text } from 'blocks';
+import Blockies from 'primaries/BlockiesIdenticon';
 
 //Utility helper
 import { shortenText } from 'helpers/UtilityHelper';
 
 export type LeaderboardListItemProps = {
-  rank: string;
+  rank: number;
   address: string;
   points: number;
   isLoading: boolean;
+  ref: LegacyRef<HTMLElement>;
 };
 
-const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, points, isLoading }) => {
+const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, points, isLoading, ref }) => {
   const { mode } = useBlocksTheme();
-
   return (
     <Box
+      ref={ref}
       height="56px"
       display="flex"
       justifyContent="space-between"
@@ -58,13 +60,17 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
             gap="s3"
             alignItems="center"
           >
-            {/* to be replace by an image */}
             <Box
               width="32px"
               height="32px"
-              backgroundColor="black"
               borderRadius="r10"
-            />
+              overflow="hidden"
+            >
+              <Blockies
+                seed={address?.toLowerCase()}
+                opts={{ seed: address?.toLowerCase(), size: 7, scale: 7 }}
+              />
+            </Box>
             <Text
               variant="bm-bold"
               display={{ ml: 'none', dp: 'block' }}
