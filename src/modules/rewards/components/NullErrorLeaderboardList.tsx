@@ -1,5 +1,10 @@
 import { FC } from 'react';
 
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
+
+//Hooks
+import { LeaderboardModelledResponse } from 'queries';
+
 //Components
 import { Box, Button, Refresh, Text, UserSwitch } from 'blocks';
 
@@ -7,14 +12,25 @@ export type NullErrorLeaderboardListProps = {
   heading?: string;
   subHeading?: string;
   error?: boolean;
+  refetchLeaderboard?:
+    | (() => void)
+    | ((options?: RefetchOptions | undefined) => Promise<QueryObserverResult<LeaderboardModelledResponse, Error>>);
 };
-const NullErrorLeaderboardList: FC<NullErrorLeaderboardListProps> = ({ heading, subHeading, error = false }) => {
+const NullErrorLeaderboardList: FC<NullErrorLeaderboardListProps> = ({
+  heading,
+  subHeading,
+  error = false,
+  refetchLeaderboard,
+}) => {
   return (
     <Box
       display="flex"
       flexDirection="column"
       alignItems="center"
+      justifyContent="center"
       gap="s4"
+      padding="s15"
+      height="200px"
     >
       <UserSwitch
         size={48}
@@ -48,6 +64,7 @@ const NullErrorLeaderboardList: FC<NullErrorLeaderboardListProps> = ({ heading, 
 
       {error && (
         <Button
+          onClick={() => refetchLeaderboard?.()}
           variant="tertiary"
           size="small"
           leadingIcon={<Refresh />}

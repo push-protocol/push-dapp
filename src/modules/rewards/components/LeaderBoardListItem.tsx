@@ -67,8 +67,8 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
               overflow="hidden"
             >
               <Blockies
-                seed={address?.toLowerCase()}
-                opts={{ seed: address?.toLowerCase(), size: 7, scale: 7 }}
+              // seed={address?.toLowerCase()}
+              // opts={{ seed: address?.toLowerCase(), size: 7, scale: 7 }}
               />
             </Box>
             <Text
