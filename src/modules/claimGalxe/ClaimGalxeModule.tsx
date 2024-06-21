@@ -151,7 +151,7 @@ const ClaimGalxeModule = () => {
           width="18px"
           padding="0 11px 0 0"
         />
-        ‘Communicate with Push’ contest winners will be able to mint their NFTs soon. Stay tuned...
+        The Alpha Access NFT Claim Window for "Communicate With Push" Galxe contest winners is now officially OPEN! 🎉
       </ClaimBanner>
       <ClaimInnerContainer>
         <ClaimLeftContainer>
