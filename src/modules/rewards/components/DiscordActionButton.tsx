@@ -1,12 +1,12 @@
 import { Box, Button, Skeleton } from 'blocks';
 import APP_PATHS from 'config/AppPaths';
 import { useCreateActivity, useGetUserDiscordDetails, useGetUsersSingleActivity } from 'queries/hooks/rewards';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { css } from 'styled-components';
 import { generateVerificationProof } from '../helpers/generateVerificationProof';
 import { useSelector } from 'react-redux';
 import { UserStoreType } from 'types';
-import axios from 'axios';
+
 import { PushAPI } from '@pushprotocol/restapi';
 import { useNavigate } from 'react-router-dom';
 type Props = {
@@ -18,26 +18,26 @@ const DiscordActionButton: React.FC<Props> = ({ activityTypeId }) => {
       id: '1',
       label: 'Connect',
       onclick: () => handleConnect(),
-      disabled: false
+      disabled: false,
     },
     JOIN: {
       id: '2',
       label: 'Join',
       onclick: () => handleJoin(),
-      disabled: false
+      disabled: false,
     },
     VERIFY: {
       id: '3',
       label: 'Verify',
       onclick: () => handleVerify(userPushSDKInstance),
-      disabled: false
+      disabled: false,
     },
     CLAIMED: {
       id: '4',
       label: 'Claimed',
-      onclick: () => { },
-      disabled: true
-    }
+      onclick: () => {},
+      disabled: true,
+    },
   };
 
   const [activeButtonState, setActiveButtonState] = useState(ButtonState.CONNECT);
@@ -52,14 +52,13 @@ const DiscordActionButton: React.FC<Props> = ({ activityTypeId }) => {
   // const userId = '0d5950a';
 
   //Fetching Activities based on activity Type ID
-  const { data: usersSingleActivity, isLoading, isSuccess, error } = useGetUsersSingleActivity(userId, activityTypeId);
+  const { data: usersSingleActivity, isLoading } = useGetUsersSingleActivity(userId, activityTypeId);
 
   //TODO:handle Logic for reloading and fetching bearer_token from localstorage
   // const access_token = localStorage.getItem('access_token');
   const [token, setToken] = useState<string>();
 
   useEffect(() => {
-    console.log('Users Single Activities', usersSingleActivity);
     // What about null state of the usersSingleActivity or if this API throws an error.
 
     if (usersSingleActivity && usersSingleActivity.status === 'COMPLETED') {
@@ -91,7 +90,6 @@ const DiscordActionButton: React.FC<Props> = ({ activityTypeId }) => {
       const expiresIn = params.get('expires_in');
 
       if (token && expiresIn) {
-        console.log('Token >>>>', token);
         setToken(token);
         setActiveButtonState(ButtonState.VERIFY);
       }
@@ -104,70 +102,65 @@ const DiscordActionButton: React.FC<Props> = ({ activityTypeId }) => {
   const navigate = useNavigate();
 
   const handleJoin = () => {
-    console.log('Join Discord Channel');
     navigate('https://discord.gg/pushprotocol');
   };
 
-  const { data: userDiscordDetails, isLoading: loadingdetails } = useGetUserDiscordDetails(token);
-
-  console.log('userDiscordDetails', userDiscordDetails, loadingdetails, token);
+  const { data: userDiscordDetails } = useGetUserDiscordDetails(token);
 
   //TODO:Post request to the create activity tab
   // const res = usePostCreateActivity();
 
-
   const { mutate: createActivity } = useCreateActivity({
     userId,
     activityTypeId,
-  })
+  });
 
   const handleVerify = async (userPushSDKInstance: PushAPI) => {
     setVerifying(true);
 
-    console.log('access_token>>>>', token, userDiscordDetails);
-    // refetch();
     if (userDiscordDetails && token) {
       const data = {
         discord: userDiscordDetails.global_name,
-        discord_token: token
+        discord_token: token,
       };
-
-      console.log('Data before signing', data, userPushSDKInstance);
 
       const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
-      const body = {
-        pgpPublicKey: userPushSDKInstance.pgpPublicKey,
-        data: data,
-        verificationProof: verificationProof
-      };
-
-      console.log('Body Post >>', body, userId, activityTypeId);
 
       //TODO: Call the mutation here to create the activity.
-      createActivity({
-        userId, activityTypeId,
-        pgpPublicKey: userPushSDKInstance.pgpPublicKey as string,
-        data: data,
-        verificationProof: verificationProof as string
-      }, {
-        onSuccess: (response) => {
-          console.log('Response from create activity', response);
+      createActivity(
+        {
+          userId,
+          activityTypeId,
+          pgpPublicKey: userPushSDKInstance.pgpPublicKey as string,
+          data: data,
+          verificationProof: verificationProof as string,
+        },
+        {
+          onSuccess: (response) => {},
         }
-      });
+      );
     }
 
     setVerifying(false);
   };
 
   return (
-    <Box display="flex" alignItems={{ ml: "flex-start", initial: "center" }} flexDirection='column' minWidth='100px' >
-      <Skeleton isLoading={isLoading} width='100%'>
+    <Box
+      display="flex"
+      alignItems={{ ml: 'flex-start', initial: 'center' }}
+      flexDirection="column"
+      minWidth="100px"
+    >
+      <Skeleton
+        isLoading={isLoading}
+        width="100%"
+      >
         <Button
           variant="tertiary"
           size="small"
           css={css`
-          width: 100%;
-        `}
+            width: 100%;
+          `}
           onClick={activeButtonState.onclick}
           disabled={verifying || activeButtonState.disabled}
         >
