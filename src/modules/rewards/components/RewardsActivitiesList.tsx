@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { useGenerateUserId, useGetRewardsActivities } from 'queries/hooks/rewards';
 import { Activity } from 'queries';
 import * as openpgp from 'openpgp';
+import { ActivityTypeID } from '../Rewards.constants';
 
 export type RewardActivitiesProps = {
 };
@@ -21,6 +22,8 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
 
   const rewardActivities = rewardActivitiesResponse?.activities;
   const allActivities = [...(rewardActivities ?? [])];
+
+  const filteredActivities = allActivities.filter(activity => activity.id !== ActivityTypeID.TWITTER);
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -61,8 +64,6 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
         console.log("User Generated >>", response);
       }
     })
-
-
   }
 
   return (
@@ -71,7 +72,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
       flexDirection="column"
       gap={{ ml: "s4", initial: "s1" }}
     >
-      {allActivities.map((activity: Activity) => (
+      {filteredActivities.map((activity: Activity) => (
         <RewardsActivitiesListItem
           activity={activity}
           loadingActivities={loadingActivities}

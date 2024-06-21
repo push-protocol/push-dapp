@@ -3,8 +3,8 @@ import { css } from 'styled-components';
 import { Box, Lozenge, RewardCoins, RewardsCircle, Skeleton, Text } from 'blocks';
 import { Activity } from 'queries';
 import { ActivityTypeID } from '../Rewards.constants';
-import { DiscordActionButton } from './DiscordActionButton';
 import { TwitterActionButton } from './TwitterActionButton';
+import { DiscordActionButton } from './DiscordActionButton';
 
 export type RewardActivitiesListItemProps = {
   activity: Activity;
@@ -89,7 +89,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
         {/* Buttons Logic */}
         <Box display='flex'>
           {activity.id === ActivityTypeID.DISCORD && <DiscordActionButton activityTypeId={activity.id} />}
-          {activity.id === ActivityTypeID.TWITTER && <TwitterActionButton activityTypeId={activity.id} />}
+          {/* {activity.id === ActivityTypeID.TWITTER && <TwitterActionButton activityTypeId={activity.id} />} */}
         </Box>
       </Box>
     </Box>
