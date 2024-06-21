@@ -1,5 +1,5 @@
-import { ReactNode, forwardRef, useState } from 'react';
-import styled, { FlattenSimpleInterpolation } from 'styled-components';
+import { forwardRef, useState } from 'react';
+import styled from 'styled-components';
 
 import { getBlocksColor } from 'blocks/Blocks.utils';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
@@ -15,7 +15,7 @@ const StyledDropdown = styled.div.withConfig({
     background-color: ${({ mode }) => getBlocksColor(mode, { light: 'white', dark: 'gray-900' })};
     border: 1px solid ${({ mode }) => getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
     padding: 10px 15px;
-    border-radius: 20px;
+    border-radius: var(--r5);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -34,10 +34,10 @@ const StyledDropdown = styled.div.withConfig({
   }
   .menu-overlay {
     position: absolute;
-    border-radius: 4px;
-    margin-top: 3px;
+    border-radius: var(--r1);
+    // margin-top: 3px;
     z-index: 1000; /* Ensure it appears above other elements */
-     &.top {
+    &.top {
       bottom: calc(100% + 3px);
     }
     &.topLeft {
@@ -64,67 +64,72 @@ const StyledDropdown = styled.div.withConfig({
   ${(props) => props.css || ''}
 `;
 
-const Dropdown = forwardRef<HTMLElement, DropdownProps>(({ overlay, trigger, children, placement = 'bottom', ...props }, ref) => {
-  const { mode } = useBlocksTheme();
-  const [isOpen, setIsOpen] = useState(false);
+const Dropdown = forwardRef<HTMLElement, DropdownProps>(
+  ({ overlay, trigger, children, placement = 'bottom', ...props }, ref) => {
+    const { mode } = useBlocksTheme();
+    const [isOpen, setIsOpen] = useState(false);
 
-  const handleClick = () => {
-    if (trigger === 'click') {
-      setIsOpen(!isOpen);
-    }
-  };
+    const handleClick = () => {
+      if (trigger === 'click' || !trigger) {
+        setIsOpen(!isOpen);
+      }
+    };
 
-  const handleMouseEnter = () => {
-    if (trigger === 'hover') {
-      setIsOpen(true);
-    }
-  };
+    const handleMouseEnter = () => {
+      if (trigger === 'hover') {
+        setIsOpen(true);
+      }
+    };
 
-  const handleMouseLeave = () => {
-    if (trigger === 'hover') {
-      setIsOpen(false);
-    }
-  };
+    const handleMouseLeave = () => {
+      if (trigger === 'hover') {
+        setIsOpen(false);
+      }
+    };
 
-  const getPlacementClass = () => {
-    switch (placement) {
-      case 'top':
-        return 'top';
-      case 'topLeft':
-        return 'topLeft';
-      case 'topRight':
-        return 'topRight';
-      case 'bottom':
-        return 'bottom';
-      case 'bottomLeft':
-        return 'bottomLeft';
-      case 'bottomRight':
-        return 'bottomRight';
-      default:
-        return 'bottom';
-    }
-  };
+    const getPlacementClass = () => {
+      switch (placement) {
+        case 'top':
+          return 'top';
+        case 'topLeft':
+          return 'topLeft';
+        case 'topRight':
+          return 'topRight';
+        case 'bottom':
+          return 'bottom';
+        case 'bottomLeft':
+          return 'bottomLeft';
+        case 'bottomRight':
+          return 'bottomRight';
+        default:
+          return 'bottom';
+      }
+    };
 
-  return (
-    <StyledDropdown
-      ref={ref}
-      mode={mode}
-      trigger={trigger}
-      placement={placement}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      {...props}
-    >
-      <div className='dropdown-item' onClick={handleClick}>
-        <span>Actions</span>
-      </div>
+    return (
+      <StyledDropdown
+        ref={ref}
+        mode={mode}
+        trigger={trigger}
+        placement={placement}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        {...props}
+      >
+        <div
+          className="dropdown-item"
+          onClick={handleClick}
+        >
+          <span>Actions</span>
+        </div>
 
-      {isOpen && <div className={`menu-overlay ${getPlacementClass()}`}>{overlay}</div>}
+        {isOpen && <div className={`menu-overlay ${getPlacementClass()}`}>{overlay}</div>}
 
-      {children && children(isOpen)}
-    </StyledDropdown>
-  );
-});
+        {children && children(isOpen)}
+      </StyledDropdown>
+    );
+  }
+);
 
 Dropdown.displayName = 'Dropdown';
 

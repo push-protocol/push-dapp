@@ -5,7 +5,7 @@ export type DropdownProps = {
   children?: (isOpen: boolean) => ReactNode;
   placement?: 'bottom' | 'bottomLeft' | 'top' | 'topRight' | 'bottomRight' | 'topLeft';
   // on which action to open the dropdown
-  trigger: 'click' | 'hover';
+  trigger?: 'click' | 'hover';
   // This is used for custom css instead of style prop, check Box/Text component
   css?: FlattenSimpleInterpolation;
   // This will be the contents of the dropdown overlay

@@ -1,19 +1,16 @@
-import { FC,forwardRef } from 'react';
+import { FC, forwardRef } from 'react';
 import styled from 'styled-components';
 
-import { MenuProps } from './Menu.types';
+import { MenuComponentProps } from './Menu.types';
 import { blocksColors } from 'blocks/Blocks.colors';
 import { getVariantStyles } from '../text/Text.utils';
 import { getBlocksColor } from 'blocks/Blocks.utils';
 import { BlockWithoutStyleProp, ModeProp } from 'blocks/Blocks.types';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 
-
-
-
 const StyledMenu = styled.div.withConfig({
   shouldForwardProp: (prop, defaultValidatorFn) => !['mode'].includes(prop) && defaultValidatorFn(prop),
-})<MenuProps & ModeProp>`
+})<MenuComponentProps & ModeProp>`
   background-color: ${({ mode }) => getBlocksColor(mode, { light: 'white', dark: 'gray-900' })};
   border: 1px solid ${({ mode }) => getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
   border-radius: 12px;
@@ -27,9 +24,8 @@ const StyledMenu = styled.div.withConfig({
   ${(props) => props.css || ''}
 `;
 
-const Menu = forwardRef<HTMLElement, MenuProps>(({ children ,...props }, ref) => {
+const Menu = forwardRef<HTMLElement, MenuProps>(({ children, ...props }, ref) => {
   const { mode } = useBlocksTheme();
-
 
   return (
     <StyledMenu
