@@ -167,7 +167,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
                   variant="h5-bold"
                   color="gray-500"
                 >
-                  Rank #{userDetails?.rank}
+                  Rank #{userDetails?.rank > 0 ? userDetails?.rank : '-'}
                 </Text>
               </Box>
             ) : isWalletConnected && isPending ? (

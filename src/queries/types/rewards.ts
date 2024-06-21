@@ -19,6 +19,15 @@ export type UserRewardsDetailResponse = {
   usersInvited: number;
 };
 
+export type createUserRewardsDetailsProps = {
+  userWallet: string;
+  pgpPublicKey: string;
+  verificationProof: string;
+  refPrimary?: string;
+};
+
+export type createUserRewardsDetailsResponse = {};
+
 type LeaderBoardUser = {
   userId: string;
   userWallet: string;
