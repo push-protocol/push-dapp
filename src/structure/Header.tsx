@@ -141,6 +141,7 @@ function Header({ isDarkMode, darkModeToggle }) {
         alignItems="center"
         gap={{ ml: 's1', dp: 's2' }}
       >
+        {/* icon to be added here */}
         <Link to="/rewards"></Link>
         <Text
           variant="h4-bold"
@@ -156,7 +157,7 @@ function Header({ isDarkMode, darkModeToggle }) {
         >
           {userDetails?.totalPoints}
         </Text>
-        <Lozenge icon={<Star />}>NEW</Lozenge>
+        {userDetails && <Lozenge icon={<Star />}>NEW</Lozenge>}
       </Box>
     );
   };

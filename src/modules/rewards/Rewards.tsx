@@ -71,6 +71,8 @@ const Rewards: FC<RewardsProps> = () => {
       }
     }
 
+    if (!userPushSDKInstance?.pgpPublicKey || !walletAddress || !verificationProof || userDetails?.userId) return;
+
     createUser(
       {
         pgpPublicKey: userPushSDKInstance?.pgpPublicKey,

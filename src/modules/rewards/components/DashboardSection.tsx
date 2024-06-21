@@ -10,6 +10,7 @@ import { walletToCAIP10 } from 'helpers/w2w';
 
 //components
 import { Box, Button, HoverableSVG, RewardsCircle, Refresh, Skeleton, Text } from 'blocks';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 // Styles
 import { ImageV3 } from '../Rewards.styled';
