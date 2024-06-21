@@ -5,6 +5,9 @@ import { css } from 'styled-components';
 import { useAccount } from 'hooks';
 import { useGetUserRewardsDetails } from 'queries';
 
+//helpers
+import { walletToCAIP10 } from 'helpers/w2w';
+
 //components
 import { Box, Button, HoverableSVG, RewardsCircle, Refresh, Skeleton, Text } from 'blocks';
 
@@ -18,7 +21,7 @@ export type DashboardSectionProps = {
 
 const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
   const { isWalletConnected, chainId, account } = useAccount();
-  let walletAddress = 'eip155:' + account;
+  let walletAddress = walletToCAIP10({ account });
   const {
     data: userDetails,
     refetch,
@@ -83,6 +86,8 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
             variant="tertiary"
             size="small"
             onClick={onGetStarted}
+            // minWidth={{ tb: '-webkit-fill-available' }}
+            // margin={{ tb: 's4 s0 s0 s0' }}
             css={css`
               @media (max-width: 768px) {
                 min-width: -webkit-fill-available;
@@ -138,6 +143,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
                   <Text
                     variant="bs-semibold"
                     color="gray-500"
+                    // margin="s0 s0 s0 s2"
                     css={css`
                       margin-left: var(--s2);
                     `}
@@ -169,9 +175,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
                 isLoading={isPending}
                 height="40px"
                 width="100px"
-                css={css`
-                  margin-top: var(--s6);
-                `}
+                margin="s6 s0 s0 s0"
               >
                 <Box></Box>
               </Skeleton>
@@ -220,10 +224,8 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
               <Skeleton
                 isLoading={isPending}
                 height="40px"
+                margin="s6 s0 s0 s0"
                 width="100px"
-                css={css`
-                  margin-top: var(--s6);
-                `}
               >
                 <Box></Box>
               </Skeleton>
@@ -240,8 +242,6 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
           </Box>
         </Box>
       </Box>
-
-      {/* {activeTab === 'dashboard' && <RefferalSection />} */}
     </>
   );
 };

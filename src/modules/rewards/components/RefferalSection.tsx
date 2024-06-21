@@ -5,6 +5,9 @@ import { css } from 'styled-components';
 import { useAccount } from 'hooks';
 import { useGetUserRewardsDetails } from 'queries';
 
+//helpers
+import { walletToCAIP10 } from 'helpers/w2w';
+
 // components
 import { Box, Button, Copy, Text, Skeleton } from 'blocks';
 
@@ -15,7 +18,8 @@ const RefferalSection: FC<RefferalSectionProps> = () => {
   const [isCopied, setIsCopied] = useState<boolean>(false);
 
   const { isWalletConnected, chainId, account, connect } = useAccount();
-  let walletAddress = 'eip155:' + account;
+  let walletAddress = walletToCAIP10({ account });
+
   const { data: userDetails, isSuccess, isLoading, isFetching, error } = useGetUserRewardsDetails({ walletAddress });
 
   const isPending = isLoading || isFetching;

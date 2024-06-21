@@ -2,7 +2,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 import { useBlocksTheme } from '../Blocks.hooks';
 import { BlocksColors, ThemeModeColors, SpaceType, ModeProp, TransformedHTMLAttributes } from '../Blocks.types';
-import { getBlocksColor } from '../Blocks.utils';
+import { getBlocksColor, getBlocksBorderRadius } from '../Blocks.utils';
 export type HoverableSVGProps = {
   /* Icon component */
   icon: React.ReactNode;
@@ -32,7 +32,7 @@ const StyledButton = styled.button.withConfig({
   justify-content: center;
   padding: var(--${(props) => props.padding || 's0'});
   margin: var(--${(props) => props.margin || 's0'});
-  border-radius: var(--${(props) => props.borderRadius || 'r0'});
+  border-radius: ${(props) => getBlocksBorderRadius(props.borderRadius)};
   background-color: ${({ defaultBackground, mode }) => getBlocksColor(mode, defaultBackground) || 'transparent'};
   color: ${({ mode, defaultColor }) => getBlocksColor(mode, defaultColor) || 'inherit'};
   border: none;
