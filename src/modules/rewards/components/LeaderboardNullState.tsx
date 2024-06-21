@@ -8,7 +8,7 @@ import { LeaderboardModelledResponse } from 'queries';
 //Components
 import { Box, Button, Refresh, Text, UserSwitch } from 'blocks';
 
-export type NullErrorLeaderboardListProps = {
+export type LeaderBoardNullStateProps = {
   heading?: string;
   subHeading?: string;
   error?: boolean;
@@ -16,7 +16,7 @@ export type NullErrorLeaderboardListProps = {
     | (() => void)
     | ((options?: RefetchOptions | undefined) => Promise<QueryObserverResult<LeaderboardModelledResponse, Error>>);
 };
-const NullErrorLeaderboardList: FC<NullErrorLeaderboardListProps> = ({
+const LeaderBoardNullState: FC<LeaderBoardNullStateProps> = ({
   heading,
   subHeading,
   error = false,
@@ -76,4 +76,4 @@ const NullErrorLeaderboardList: FC<NullErrorLeaderboardListProps> = ({
   );
 };
 
-export { NullErrorLeaderboardList };
+export { LeaderBoardNullState };

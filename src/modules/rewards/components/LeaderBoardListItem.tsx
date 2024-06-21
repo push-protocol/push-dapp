@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC, LegacyRef, useContext } from 'react';
+import { FC, useContext } from 'react';
 
 // Third-party libraries
 import { css } from 'styled-components';

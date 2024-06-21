@@ -8,44 +8,13 @@ import { useGetRewardsLeaderboard, ModelledLeaderBoardUser } from 'queries';
 //Components
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { LeaderboardListItem } from './LeaderBoardListItem';
-import { Box, Text } from 'blocks';
+import { Box } from 'blocks';
 
 //Helpers
 import { caip10ToWallet } from 'helpers/w2w';
-import { NullErrorLeaderboardList } from './NullErrorLeaderboardList';
+import { LeaderBoardNullState } from './LeaderboardNullState';
+import { LeaderboardListColumns } from './LeaderBpardListColumns';
 
-const LeaderboardListColumns = () => {
-  return (
-    <Box
-      display="flex"
-      justifyContent="space-between"
-    >
-      <Box
-        display="flex"
-        gap="s3"
-      >
-        <Text
-          variant="c-bold"
-          color={{ light: 'gray-500', dark: 'gray-600' }}
-        >
-          RANK
-        </Text>
-        <Text
-          variant="c-bold"
-          color={{ light: 'gray-500', dark: 'gray-600' }}
-        >
-          USER
-        </Text>
-      </Box>
-      <Text
-        variant="c-bold"
-        color={{ light: 'gray-500', dark: 'gray-600' }}
-      >
-        TOTAL POINTS
-      </Text>
-    </Box>
-  );
-};
 const LeaderBoardList: FC = () => {
   const { data, isError, refetch, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
     useGetRewardsLeaderboard({ pageSize: 20 });
@@ -56,7 +25,7 @@ const LeaderBoardList: FC = () => {
   const hasMoreData = !isFetchingNextPage && hasNextPage;
 
   return !leaderboardList.length ? (
-    <NullErrorLeaderboardList
+    <LeaderBoardNullState
       refetchLeaderboard={isError ? refetch : undefined}
       heading="No Users Found"
       error={isError}
