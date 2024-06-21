@@ -52,14 +52,11 @@ export const getLozengeSizeStyles = ({
         ? `
             border-radius: var(--r1);
             gap: var(--s0);
-            height: 20px;
-            width: 20px;
             padding: var(--s1);
         `
         : `
             border-radius: var(--r1);
             gap: var(--s1);
-            height: 20px;
             padding: var(--s1) var(--s2);
       `}
 
@@ -86,14 +83,11 @@ export const getLozengeSizeStyles = ({
       ? `
           border-radius: 15.6px;
           gap: var(--s0);
-          height: 52px;
-          width: 52px;
           padding: 15.6px;
       `
       : `
           border-radius: var(--r3);
           gap: var(--s1);
-          height: 52px;
           padding: var(--s4);
     `}
 

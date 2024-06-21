@@ -4,3 +4,4 @@ export * from './getUsersSingleActivityModelCreator';
 export * from './getUserDiscordDetailsModelCreator';
 export * from './postCreateActivityModelCreator';
 export * from './generateUserIdModelCreator';
+export * from './getRewardsLeaderboardModalCreator';

@@ -4,3 +4,4 @@ export * from './getUsersSIngleActivity';
 export * from './getUserDiscordDetails';
 export * from './postCreateActivity';
 export * from './generateUserId';
+export * from './getRewardsLeaderboard';

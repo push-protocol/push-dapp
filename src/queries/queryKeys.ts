@@ -8,3 +8,4 @@ export const usersSingleActivity = 'usersSingleActivity';
 export const discordDetails = 'discordDetails';
 export const creatingActivity = 'creatingActivity';
 export const generateUserIdByWallet = 'generateUserIdByWallet';
+export const rewardsLeaderboard = 'rewardsLeaderboard';
