@@ -25,7 +25,7 @@ import { UserStoreType } from 'types';
 type Props = {
   userId: string;
   activityTypeId: string;
-  refetchActivity: any;
+  refetchActivity: () => void;
 };
 
 const VerifyButton: React.FC<Props> = ({

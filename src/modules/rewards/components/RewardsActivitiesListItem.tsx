@@ -126,9 +126,6 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
               <ActionButton userId={userId} activityTypeId={activity.id} refetchActivity={refetchActivity} />
             )}
 
-
-
-
           </Box>
         )}
       </Box>

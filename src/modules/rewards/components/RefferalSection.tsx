@@ -95,7 +95,7 @@ const RefferalSection: FC<RefferalSectionProps> = () => {
               ref={textRef}
               color={{ light: 'gray-1000', dark: 'gray-100' }}
             >
-              https://app.push.org/?ref={userDetails?.userId}
+              https://app.push.org/rewards/dashboard?ref={userDetails?.userId}
             </Text>
           </Box>
           <Button

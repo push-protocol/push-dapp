@@ -12,13 +12,15 @@ import { useGetRewardsActivities, useGetUserRewardsDetails } from 'queries/hooks
 import { Box } from 'blocks';
 import { RewardsActivitiesListItem } from './RewardsActivitiesListItem';
 import { ActivityTypeID } from '../Rewards.constants';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-
 
 export type RewardActivitiesProps = {
 };
 
 const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
+
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
 
   const {
     data: rewardActivitiesResponse,
@@ -29,11 +31,6 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
   const allActivities = [...(rewardActivities ?? [])];
 
   const filteredActivities = allActivities.filter(activity => activity.id !== ActivityTypeID.TWITTER.Id);
-
-  const { userPushSDKInstance } = useSelector((state: any) => {
-    return state.user;
-  });
-
 
   //Getting user Id by wallet address
   const walletAddressinCaipFormat = `eip155:${userPushSDKInstance.account}`;
@@ -53,16 +50,12 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
       flexDirection="column"
       gap={{ ml: "s4", initial: "s1" }}
     >
-      {loadingActivities ? <LoaderSpinner spinnerSize={32} type={LOADER_TYPE.SEAMLESS} /> : (
-        <>
-          {userDetails && filteredActivities.map((activity: Activity) => (
-            <RewardsActivitiesListItem
-              userId={userDetails?.userId}
-              activity={activity}
-            />
-          ))}
-        </>
-      )}
+      {userDetails && filteredActivities.map((activity: Activity) => (
+        <RewardsActivitiesListItem
+          userId={userDetails?.userId}
+          activity={activity}
+        />
+      ))}
     </Box>
   );
 };

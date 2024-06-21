@@ -1,19 +1,7 @@
 import axios from 'axios';
 import { postCreateActivityModelCreator } from 'queries/models/rewards';
+import { CreateActivityPayload } from 'queries/types';
 // import { appConfig } from 'config';
-
-type CreateActivityData = {
-  discord: string;
-  discord_token: string;
-};
-
-export type CreateActivityPayload = {
-  userId: string;
-  activityTypeId: string;
-  data: CreateActivityData;
-  verificationProof: string;
-  pgpPublicKey: string;
-};
 
 export const createActivity = (payload: CreateActivityPayload) =>
   axios({

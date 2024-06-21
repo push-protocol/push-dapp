@@ -9,4 +9,6 @@ export const discordDetails = 'discordDetails';
 export const creatingActivity = 'creatingActivity';
 export const generateUserIdByWallet = 'generateUserIdByWallet';
 export const UserRewardsDetails = 'userRewardsDetails';
+export const userRewardsDetails = 'userRewardsDetails';
+export const createUserRewardsDetails = 'createUserRewardsDetails';
 export const rewardsLeaderboard = 'rewardsLeaderboard';

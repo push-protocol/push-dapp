@@ -37,6 +37,18 @@ export type UsersActivity = {
   updatedAt: string; // ISO 8601 date string
 };
 
+type Prop = {
+  [key: string]: string;
+};
+
+export type CreateActivityPayload = {
+  userId: string;
+  activityTypeId: string;
+  data: Prop;
+  verificationProof: string;
+  pgpPublicKey: string;
+};
+
 export type DiscordDetails = {
   id: string;
   username: string;
@@ -73,6 +85,15 @@ export type UserRewardsDetailResponse = {
   pgpPublicKey: string;
   usersInvited: number;
 };
+
+export type createUserRewardsDetailsProps = {
+  userWallet: string;
+  pgpPublicKey: string;
+  verificationProof: string;
+  refPrimary?: string;
+};
+
+export type createUserRewardsDetailsResponse = {};
 
 type LeaderBoardUser = {
   userId: string;

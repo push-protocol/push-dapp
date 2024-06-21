@@ -5,4 +5,5 @@ export * from './getUserDiscordDetails';
 export * from './postCreateActivity';
 export * from './generateUserId';
 export * from './getUserRewardsDetail.ts';
+export * from './createUserRewardsDetail.ts';
 export * from './getRewardsLeaderboard';
