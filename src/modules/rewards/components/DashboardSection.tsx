@@ -8,6 +8,10 @@ import { useGetUserRewardsDetails } from 'queries';
 //components
 import { Box, Button, HoverableSVG, RewardsCircle, Refresh, Skeleton, Text } from 'blocks';
 
+// Styles
+import { ImageV3 } from '../Rewards.styled';
+import DashboardImage from 'assets/rewards/DashboardImage.png';
+
 export type DashboardSectionProps = {
   onGetStarted: () => void;
 };
@@ -59,7 +63,12 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
             display="flex"
             alignItems="center"
           >
-            <RewardsCircle />
+            <ImageV3
+              width="90px"
+              height="auto"
+              src={DashboardImage}
+              alt={'Earn Rewards for Exploring!'}
+            />
             <Box
               display="flex"
               flexDirection="column"
