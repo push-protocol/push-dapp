@@ -17,3 +17,4 @@ export { default as Metamask } from './components/Metamask';
 export { default as Ethereum } from './components/Ethereum';
 
 export { default as RewardsCircle } from './components/RewardsCircle';
+export { default as RewardCoins } from './components/RewardCoins';

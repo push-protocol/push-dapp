@@ -9,7 +9,7 @@ import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import { RewardsCircle, Box, Link, Text, Star, Lozenge } from 'blocks';
+import { RewardsCircle, Box, Link, Text, Star, Lozenge, RewardCoins } from 'blocks';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { ErrorContext } from 'contexts/ErrorContext';
@@ -130,7 +130,11 @@ function Header({ isDarkMode, darkModeToggle }) {
         gap="s2"
       >
         <Link to="/rewards">
-          <RewardsCircle
+          {/* <RewardsCircle
+            width={28}
+            height={28}
+          /> */}
+          <RewardCoins
             width={28}
             height={28}
           />

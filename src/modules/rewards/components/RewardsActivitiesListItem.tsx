@@ -1,21 +1,19 @@
 import { FC } from 'react';
 import { css } from 'styled-components';
-import { Box, Button, Lozenge, RewardsCircle, Text } from 'blocks';
+import { Box, Lozenge, RewardCoins, RewardsCircle, Skeleton, Text } from 'blocks';
+import { Activity } from 'queries';
+import { ActivityTypeID } from '../Rewards.constants';
+import { DiscordActionButton } from './DiscordActionButton';
+import { TwitterActionButton } from './TwitterActionButton';
 
 export type RewardActivitiesListItemProps = {
-  title: string;
-  subtitle?: string;
-  points: number;
-  buttonText: string;
-  disabled?: boolean;
-};
+  activity: Activity;
+  loadingActivities: boolean;
+}
 
 const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
-  title,
-  subtitle,
-  points,
-  buttonText,
-  disabled = false
+  activity,
+  loadingActivities
 }) => {
   return (
     <Box
@@ -36,6 +34,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
         css={css`
           flex: 1;
         `}
+        alignItems={{ ml: 'baseline', initial: 'center' }}
       >
         {/* Rewards Contents */}
         <Box
@@ -55,21 +54,26 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
               flexDirection={{ lp: 'column-reverse', initial: 'row' }}
               gap={{ lp: 's1', initial: 's4' }}
             >
-              <Text variant="bl-semibold" color={{ light: 'gray-1000', dark: 'gray-100' }}>
-                {title}
-              </Text>
-              <Box display="flex">
-                <Lozenge size="small">Expires in 7 days</Lozenge>
-              </Box>
+              <Skeleton isLoading={loadingActivities}>
+                <Text variant="bl-semibold" color={{ light: 'gray-1000', dark: 'gray-100' }}>
+                  {activity.activityTitle}
+                </Text>
+              </Skeleton>
+
+              {!!activity.expiryType && (
+                <Box display="flex">
+                  <Lozenge size="small">Expires in 7 days</Lozenge>
+                </Box>
+              )}
             </Box>
             <Text variant="h5-regular" color="gray-500">
-              {subtitle}
+              {activity.activityDesc}
             </Text>
           </Box>
 
           {/* Rewards Points */}
-          <Box display="flex" minWidth="190px" flexDirection="row" gap="s2" alignItems="center">
-            <RewardsCircle width={32} height={32} />
+          <Box display="flex" minWidth="160px" flexDirection="row" gap="s2" alignItems="center">
+            <RewardCoins width={32} height={32} />
             <Text
               variant="h4-semibold"
               color={{ light: 'gray-1000', dark: 'gray-100' }}
@@ -77,23 +81,15 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
                 margin-right: 24px;
               `}
             >
-              {points?.toLocaleString()} points
+              {activity.points?.toLocaleString()} points
             </Text>
           </Box>
         </Box>
 
         {/* Buttons Logic */}
-        <Box display="flex" alignItems="center">
-          <Button
-            variant="tertiary"
-            size="small"
-            disabled={disabled}
-            css={css`
-              min-width: 100px;
-            `}
-          >
-            {buttonText}
-          </Button>
+        <Box display='flex'>
+          {activity.id === ActivityTypeID.DISCORD && <DiscordActionButton activityTypeId={activity.id} />}
+          {activity.id === ActivityTypeID.TWITTER && <TwitterActionButton activityTypeId={activity.id} />}
         </Box>
       </Box>
     </Box>
