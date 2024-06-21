@@ -62,41 +62,43 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
           `}
         >
           <Box
-            gap="s3"
+            width="-webkit-fill-available"
             display="flex"
-            alignItems="center"
+            flexDirection={{ tb: 'column', initial: 'row' }}
+            gap={{ tb: 's4' }}
+            alignItems={{ tb: 'stretch', initial: 'center' }}
+            justifyContent="space-between"
           >
-            <ImageV3
-              width="90px"
-              height="auto"
-              src={DashboardImage}
-              alt={'Earn Rewards for Exploring!'}
-            />
             <Box
+              gap="s3"
               display="flex"
-              flexDirection="column"
+              alignItems="center"
             >
-              <Text variant="h4-semibold">Earn Rewards for Exploring!</Text>
-              <Text variant="bl-regular">
-                Discover, participate, and earn rewards with every step you take in Push.{' '}
-              </Text>
+              <ImageV3
+                width="90px"
+                height="auto"
+                src={DashboardImage}
+                alt={'Earn Rewards for Exploring!'}
+              />
+              <Box
+                display="flex"
+                flexDirection="column"
+              >
+                <Text variant="h4-semibold">Earn Rewards for Exploring!</Text>
+                <Text variant="bl-regular">
+                  Discover, participate, and earn rewards with every step you take in Push.{' '}
+                </Text>
+              </Box>
             </Box>
+
+            <Button
+              variant="tertiary"
+              size="small"
+              onClick={onGetStarted}
+            >
+              Get started
+            </Button>
           </Box>
-          <Button
-            variant="tertiary"
-            size="small"
-            onClick={onGetStarted}
-            // minWidth={{ tb: '-webkit-fill-available' }}
-            // margin={{ tb: 's4 s0 s0 s0' }}
-            css={css`
-              @media (max-width: 768px) {
-                min-width: -webkit-fill-available;
-                margin-top: 16px;
-              }
-            `}
-          >
-            Get started
-          </Button>
         </Box>
 
         <Box
@@ -140,16 +142,14 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
                     borderRadius="r4"
                     icon={<Refresh color="pink-400" />}
                   ></HoverableSVG>
-                  <Text
-                    variant="bs-semibold"
-                    color="gray-500"
-                    // margin="s0 s0 s0 s2"
-                    css={css`
-                      margin-left: var(--s2);
-                    `}
-                  >
-                    Update
-                  </Text>
+                  <Box margin="s0 s0 s0 s1">
+                    <Text
+                      variant="bs-semibold"
+                      color="gray-500"
+                    >
+                      Update
+                    </Text>
+                  </Box>
                 </Box>
               )}
             </Box>
