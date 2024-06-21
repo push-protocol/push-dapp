@@ -9,7 +9,7 @@ import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import { RewardsCircle, Box, Link, Text, Star, Lozenge } from 'blocks';
+import { Box, Link, Text, Star, Lozenge } from 'blocks';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { ErrorContext } from 'contexts/ErrorContext';
@@ -29,6 +29,10 @@ import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { useClickAway } from 'react-use';
 import MobileNavigation from './MobileNavigation';
 import { getPublicAssetPath } from 'helpers/RoutesHelper';
+import { walletToCAIP10 } from 'helpers/w2w';
+
+// hooks
+import { useGetUserRewardsDetails } from 'queries';
 
 // header tags for pages that are not there in navigationList (Sidebar)
 const REWARDS_HEADER_TAG = {
@@ -79,7 +83,9 @@ function Header({ isDarkMode, darkModeToggle }) {
 
   const { navigationSetup } = useContext(NavigationContext);
 
-  const { isActive, wallet } = useAccount();
+  const { isActive, wallet, account } = useAccount();
+  let walletAddress = walletToCAIP10({ account });
+
   const { authError: error } = useContext(ErrorContext);
 
   const [showLoginControls, setShowLoginControls] = useState(false);
@@ -126,6 +132,8 @@ function Header({ isDarkMode, darkModeToggle }) {
 
   const isMobile = useDeviceWidthCheck(600);
 
+  const { data: userDetails, refetch } = useGetUserRewardsDetails({ walletAddress });
+
   const RewardsHeaderLink = () => {
     return (
       <Box
@@ -133,33 +141,20 @@ function Header({ isDarkMode, darkModeToggle }) {
         alignItems="center"
         gap={{ ml: 's1', dp: 's2' }}
       >
-        <Link to="/rewards">
-          <Box display={{ ml: 'none', dp: 'block' }}>
-            <RewardsCircle
-              width={28}
-              height={28}
-            />
-          </Box>
-          <Box display={{ ml: 'block', dp: 'none' }}>
-            <RewardsCircle
-              width={20}
-              height={20}
-            />
-          </Box>
-        </Link>
+        <Link to="/rewards"></Link>
         <Text
           variant="h4-bold"
           display={{ ml: 'none', dp: 'block' }}
           color={{ light: 'gray-1000', dark: 'gray-100' }}
         >
-          12,500
+          {userDetails?.totalPoints}
         </Text>
         <Text
           variant="h5-bold"
           display={{ ml: 'block', dp: 'none' }}
           color={{ light: 'gray-1000', dark: 'gray-100' }}
         >
-          12,500
+          {userDetails?.totalPoints}
         </Text>
         <Lozenge icon={<Star />}>NEW</Lozenge>
       </Box>
