@@ -31,6 +31,17 @@ import MobileNavigation from './MobileNavigation';
 import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 // header tags for pages that are not there in navigationList (Sidebar)
+const REWARDS_HEADER_TAG = {
+  title: 'Reward Points',
+  light: {
+    bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+    fg: themeLight.headerTagFg,
+  },
+  dark: {
+    bg: themeDark.headerTagBg,
+    fg: themeDark.headerTagFg,
+  },
+};
 const EXTRA_HEADER_TAGS = {
   [APP_PATHS.UserSettings]: {
     title: 'Settings',
@@ -54,17 +65,10 @@ const EXTRA_HEADER_TAGS = {
       fg: themeDark.headerTagFg,
     },
   },
-  [APP_PATHS.Rewards]: {
-    title: 'Reward Points',
-    light: {
-      bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
-      fg: themeLight.headerTagFg,
-    },
-    dark: {
-      bg: themeDark.headerTagBg,
-      fg: themeDark.headerTagFg,
-    },
-  },
+  [APP_PATHS.Rewards]: REWARDS_HEADER_TAG,
+  [APP_PATHS.RewardsActivities]: REWARDS_HEADER_TAG,
+  [APP_PATHS.RewardsDashboard]: REWARDS_HEADER_TAG,
+  [APP_PATHS.RewardsLeaderboard]: REWARDS_HEADER_TAG,
 };
 
 // Create Header
@@ -127,16 +131,32 @@ function Header({ isDarkMode, darkModeToggle }) {
       <Box
         display="flex"
         alignItems="center"
-        gap="s2"
+        gap={{ ml: 's1', dp: 's2' }}
       >
         <Link to="/rewards">
-          <RewardsCircle
-            width={28}
-            height={28}
-          />
+          <Box display={{ ml: 'none', dp: 'block' }}>
+            <RewardsCircle
+              width={28}
+              height={28}
+            />
+          </Box>
+          <Box display={{ ml: 'block', dp: 'none' }}>
+            <RewardsCircle
+              width={20}
+              height={20}
+            />
+          </Box>
         </Link>
         <Text
           variant="h4-bold"
+          display={{ ml: 'none', dp: 'block' }}
+          color={{ light: 'gray-1000', dark: 'gray-100' }}
+        >
+          12,500
+        </Text>
+        <Text
+          variant="h5-bold"
+          display={{ ml: 'block', dp: 'none' }}
           color={{ light: 'gray-1000', dark: 'gray-100' }}
         >
           12,500
@@ -183,9 +203,9 @@ function Header({ isDarkMode, darkModeToggle }) {
             tabletAlign="flex-start"
           >
             <NavMenu>
-              <Box display={{ ml: 'block', dp: 'none' }}>
+              {/* <Box display={{ ml: 'block', dp: 'none' }}>
                 <RewardsHeaderLink />
-              </Box>
+              </Box> */}
               <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
 
@@ -199,93 +219,111 @@ function Header({ isDarkMode, darkModeToggle }) {
           </NavMenuContainer>
         )}
       </ItemH>
-
-      <ItemH justify="flex-end">
-        {headerTag && !error && !isSnapPage && (
-          <HeaderTag
-            align="flex-start"
-            overflow="hidden"
-          >
-            <Span
-              textTransform="capitalize"
-              spacing="-0.02em"
-              weight="normal"
-              padding={isMobile ? '8px 7px' : '8px 20px'}
-              className="text"
-              color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}
+      <Box
+        display="flex"
+        width="100%"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap="s0"
+          alignItems="center"
+        >
+          {headerTag && !error && !isSnapPage && (
+            <HeaderTag
+              align="flex-start"
+              overflow="hidden"
             >
-              {headerTag.title}
-            </Span>
-          </HeaderTag>
-        )}
+              <Span
+                textTransform="capitalize"
+                spacing="-0.02em"
+                weight="normal"
+                // padding={isMobile ? '8px 7px' : '8px 20px'}
+                className="text"
+                color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}
+              >
+                {headerTag.title}
+              </Span>
+            </HeaderTag>
+          )}
 
-        <Suspense
-          fallback={
-            <Spinner
-              size={24}
-              color={GLOBALS.COLORS.PRIMARY_PINK}
-              type={LOADER_SPINNER_TYPE.PROCESSING}
-            />
-          }
+          <Suspense
+            fallback={
+              <Spinner
+                size={24}
+                color={GLOBALS.COLORS.PRIMARY_PINK}
+                type={LOADER_SPINNER_TYPE.PROCESSING}
+              />
+            }
+          >
+            <Box display={{ ml: 'block', dp: 'none' }}>
+              <RewardsHeaderLink />
+            </Box>
+          </Suspense>
+        </Box>
+        <Box
+          display="flex"
+          alignItems="center"
         >
           <Box display={{ ml: 'none', dp: 'block' }}>
             <RewardsHeaderLink />
           </Box>
-        </Suspense>
+          {isActive && !showLoginControls && !error && (
+            <DarkModeSwitch
+              style={{ margin: '0 1rem' }}
+              checked={isDarkMode}
+              onChange={darkModeToggle}
+              size={28}
+              sunColor="#494D5F"
+              moonColor="#787E99"
+            />
+          )}
 
-        {isActive && !showLoginControls && !error && (
-          <DarkModeSwitch
-            style={{ margin: '0 1rem' }}
-            checked={isDarkMode}
-            onChange={darkModeToggle}
-            size={28}
-            sunColor="#494D5F"
-            moonColor="#787E99"
-          />
-        )}
+          {isActive && !error && (
+            <RightBarMobile>
+              <Button
+                bg="transparent"
+                padding="5px"
+                radius="4px"
+                onClick={() => {
+                  setShowNavBar(!showNavBar);
+                }}
+              >
+                <AiOutlineMenu
+                  size={30}
+                  color={theme.headerIconsBg}
+                />
+              </Button>
+            </RightBarMobile>
+          )}
 
-        {isActive && !error && (
-          <RightBarMobile>
-            <Button
-              bg="transparent"
-              padding="5px"
-              radius="4px"
-              onClick={() => {
-                setShowNavBar(!showNavBar);
-              }}
-            >
-              <AiOutlineMenu
-                size={30}
-                color={theme.headerIconsBg}
-              />
-            </Button>
-          </RightBarMobile>
-        )}
-
-        <ItemH
-          justify="flex-end"
-          flex="initial"
-        >
-          {/* {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>} */}
-          {/* {!isActive && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>} */}
-          {/* {!!error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>} */}
-          {/* {isActive && !showLoginControls && !error && (
+          <ItemH
+            justify="flex-end"
+            flex="initial"
+          >
+            {/* {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>} */}
+            {/* {!isActive && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>} */}
+            {/* {!!error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>} */}
+            {/* {isActive && !showLoginControls && !error && (
             <RightBarDesktop justify="flex-end" flex="initial">
               <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
             </RightBarDesktop>
           )}{' '} */}
 
-          <RightBarDesktop
-            justify="flex-end"
-            flex="initial"
-          >
-            {/* //TODO: The chain Indicator should be removed in guest mode */}
-            {wallet?.accounts?.length > 0 && <ChainIndicator isDarkMode={isDarkMode} />}
-            <Profile isDarkMode={isDarkMode} />
-          </RightBarDesktop>
-        </ItemH>
-      </ItemH>
+            <RightBarDesktop
+              justify="flex-end"
+              flex="initial"
+            >
+              {/* //TODO: The chain Indicator should be removed in guest mode */}
+              {wallet?.accounts?.length > 0 && <ChainIndicator isDarkMode={isDarkMode} />}
+              <Profile isDarkMode={isDarkMode} />
+            </RightBarDesktop>
+          </ItemH>
+        </Box>
+      </Box>
     </Container>
   );
 }
@@ -294,9 +332,11 @@ function Header({ isDarkMode, darkModeToggle }) {
 const Container = styled(Section)`
   background: ${(props) => props.theme.header.bg};
   height: ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px;
+  gap: 16px;
   padding: 0 1.5rem;
   @media (max-width: 425px) {
     padding: 0 1rem;
+    gap: 12px;
   }
 `;
 
