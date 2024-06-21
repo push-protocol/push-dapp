@@ -1,10 +1,12 @@
 // React and other libraries
-import { FC, useCallback, useRef } from 'react';
+import { FC } from 'react';
+import InfiniteScroll from 'react-infinite-scroller';
 
 //Hooks
 import { useGetRewardsLeaderboard, ModelledLeaderBoardUser } from 'queries';
 
 //Components
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { LeaderboardListItem } from './LeaderBoardListItem';
 import { Box, Text } from 'blocks';
 
@@ -45,31 +47,13 @@ const LeaderboardListColumns = () => {
   );
 };
 const LeaderBoardList: FC = () => {
-  const observer = useRef<IntersectionObserver>();
-
-  const { data, isError, refetch, fetchNextPage, hasNextPage, isLoading, isFetching } = useGetRewardsLeaderboard({
-    pageSize: 2,
-  });
+  const { data, isError, refetch, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
+    useGetRewardsLeaderboard({ pageSize: 20 });
 
   // If there are channels then render them else render 5 skeletons
-  const leaderboardList = isLoading ? Array(5).fill(0) : data?.pages?.flatMap((page) => page) || [];
+  const leaderboardList = isLoading ? Array(5).fill(0) : data?.pages.flatMap((page) => page.users) || [];
 
-  const lastElementRef = useCallback(
-    (node: HTMLElement) => {
-      if (isLoading) return;
-
-      if (observer.current) observer.current.disconnect();
-
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetching) {
-          fetchNextPage();
-        }
-      });
-
-      if (node) observer.current.observe(node);
-    },
-    [fetchNextPage, hasNextPage, isFetching, isLoading]
-  );
+  const hasMoreData = !isFetchingNextPage && hasNextPage;
 
   return !leaderboardList.length ? (
     <NullErrorLeaderboardList
@@ -87,19 +71,37 @@ const LeaderBoardList: FC = () => {
       >
         <LeaderboardListColumns />
         <Box
-          maxHeight="calc(100vh - 356px)"
-          overflow="scroll"
+          height="calc(100vh - 356px)"
+          overflow="auto"
         >
-          {leaderboardList.map((item: ModelledLeaderBoardUser, index: number) => (
-            <LeaderboardListItem
-              ref={lastElementRef}
-              key={`${index}`}
-              rank={item.rank}
-              address={caip10ToWallet(item.userWallet)}
-              points={item.totalPoints}
-              isLoading={isLoading}
-            />
-          ))}
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={() => fetchNextPage()}
+            hasMore={hasMoreData}
+            loader={
+              <Box
+                margin="s3"
+                key="loader-spinner"
+              >
+                <LoaderSpinner
+                  spinnerSize={24}
+                  type={LOADER_TYPE.SEAMLESS}
+                />
+              </Box>
+            }
+            useWindow={false}
+            threshold={150}
+          >
+            {leaderboardList.map((item: ModelledLeaderBoardUser, index: number) => (
+              <LeaderboardListItem
+                key={`${index}`}
+                rank={item.rank}
+                address={caip10ToWallet(item.userWallet)}
+                points={item.totalPoints}
+                isLoading={isLoading}
+              />
+            ))}
+          </InfiniteScroll>
         </Box>
       </Box>
     )

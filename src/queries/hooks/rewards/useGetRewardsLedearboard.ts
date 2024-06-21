@@ -2,15 +2,22 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { rewardsLeaderboard } from '../../queryKeys';
 import { getRewardsLeaderboard } from '../../services';
-import { GetRewardsLeaderboardParams, LeaderboardResponse } from '../../types';
+import { LeaderboardModelledResponse, LeaderboardParams } from '../../types';
 
-type Page = {
-  data: LeaderboardResponse;
-  nextCursor?: number;
-};
-export const useGetRewardsLeaderboard = ({ pageSize = 10 }: Omit<GetRewardsLeaderboardParams, 'pageParam'>) =>
-  useInfiniteQuery<Page, Error>({
+export const useGetRewardsLeaderboard = ({ order, pageSize }: LeaderboardParams) =>
+  useInfiniteQuery<LeaderboardModelledResponse>({
     queryKey: [rewardsLeaderboard],
-    queryFn: () => getRewardsLeaderboard({ pageSize }),
-    getNextPageParam: (lastPage: Page) => lastPage.nextCursor,
+    initialPageParam: 1,
+    queryFn: ({ pageParam }) =>
+      getRewardsLeaderboard({
+        order,
+        pageSize,
+        pageNumber: pageParam as number,
+      }),
+    getNextPageParam: ({ page, total, pageSize }) => {
+      if (pageSize * page >= total) {
+        return null;
+      }
+      return page + 1;
+    },
   });

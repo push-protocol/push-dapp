@@ -27,10 +27,9 @@ export type LeaderboardListItemProps = {
   address: string;
   points: number;
   isLoading: boolean;
-  ref: LegacyRef<HTMLElement>;
 };
 
-const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, points, isLoading, ref }) => {
+const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, points, isLoading }) => {
   const { mode } = useBlocksTheme();
   const { web3NameList }: AppContextType = useContext(AppContext)!;
 
@@ -41,7 +40,6 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
 
   return (
     <Box
-      ref={ref}
       height="56px"
       display="flex"
       justifyContent="space-between"

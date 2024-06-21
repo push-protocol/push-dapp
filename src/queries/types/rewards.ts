@@ -22,12 +22,20 @@ export type ModelledLeaderBoardUser = {
 
 export type LeaderboardResponse = {
   users: Array<LeaderBoardUser>;
-  nextCursor?: number;
+  page: number;
+  pageSize: number;
+  total: number;
 };
 
-export type LeaderboardModelledResponse = Array<ModelledLeaderBoardUser>;
+export type LeaderboardModelledResponse = {
+  users: Array<ModelledLeaderBoardUser>;
+  page: number;
+  pageSize: number;
+  total: number;
+};
 
-export type GetRewardsLeaderboardParams = {
-  pageParam?: number;
+export type LeaderboardParams = {
+  order?: string;
   pageSize?: number;
+  pageNumber?: number;
 };

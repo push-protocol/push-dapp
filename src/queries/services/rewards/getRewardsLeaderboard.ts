@@ -1,14 +1,18 @@
 import axios from 'axios';
 
 import { getRewardsLeaderboardModalCreator } from '../../models';
-import { GetRewardsLeaderboardParams } from '../../types';
+import { LeaderboardParams } from 'queries/types';
 
 /* this url will change as per the env once the apis are ready */
 const temporaryApi = 'https://us-east1-push-dev-apps.cloudfunctions.net/helloWorld/users/leaderboard';
 
-export const getRewardsLeaderboard = async ({ pageParam = 1, pageSize = 10 }: GetRewardsLeaderboardParams) =>
+export const getRewardsLeaderboard = async ({ order, pageSize, pageNumber }: LeaderboardParams) =>
   axios({
     method: 'GET',
     url: temporaryApi,
-    params: { pageNumber: pageParam, pageSize },
+    params: {
+      order: order || '',
+      pageSize: pageSize || 20,
+      pageNumber: pageNumber || 1,
+    },
   }).then((response) => getRewardsLeaderboardModalCreator(response.data));
