@@ -6237,6 +6237,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-infinite-scroller@npm:^1":
+  version: 1.2.5
+  resolution: "@types/react-infinite-scroller@npm:1.2.5"
+  dependencies:
+    "@types/react": "npm:*"
+  checksum: 10/8b56f63c35802d2593cc25b3ab03bfbeceb2a5379997364fb5cea414cc8690341fbf3902d8fc7a6db43f87c144276009cb4a7f3388f1a52091ac3a4fd7de7d33
+  languageName: node
+  linkType: hard
+
 "@types/react-redux@npm:^7.1.20":
   version: 7.1.33
   resolution: "@types/react-redux@npm:7.1.33"
@@ -17449,7 +17458,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.0.0, prop-types@npm:^15.6.0, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.0.0, prop-types@npm:^15.5.8, prop-types@npm:^15.6.0, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -17668,6 +17677,7 @@ __metadata:
     "@types/openpgp": "npm:^4.4.18"
     "@types/react": "npm:^18.2.66"
     "@types/react-dom": "npm:^18.2.22"
+    "@types/react-infinite-scroller": "npm:^1"
     "@types/styled-components": "npm:5.1.26"
     "@typescript-eslint/eslint-plugin": "npm:^7.2.0"
     "@typescript-eslint/parser": "npm:^7.2.0"
@@ -17726,6 +17736,7 @@ __metadata:
     react-ga: "npm:2.7.0"
     react-icons: "npm:4.12.0"
     react-image-file-resizer: "npm:^0.4.7"
+    react-infinite-scroller: "npm:^1.2.6"
     react-joyride: "npm:^2.4.0"
     react-multi-select-component: "npm:^4.2.3"
     react-player: "npm:^2.16.0"
@@ -18154,6 +18165,17 @@ __metadata:
   version: 0.4.8
   resolution: "react-image-file-resizer@npm:0.4.8"
   checksum: 10/13d01c2dc3f31b6a983b247467761f2e8cfdcb5109153be140df0bf676e7d2c7bb19f1259cbd0fae4d702ee81abfe62bbabf8631598fa5af339fa5babe66ae59
+  languageName: node
+  linkType: hard
+
+"react-infinite-scroller@npm:^1.2.6":
+  version: 1.2.6
+  resolution: "react-infinite-scroller@npm:1.2.6"
+  dependencies:
+    prop-types: "npm:^15.5.8"
+  peerDependencies:
+    react: ^0.14.9 || ^15.3.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: 10/d37d3dfc99029e203631b155cc92181453f14cef1cfbbf9bb05504a67b97eedc0771ca6848d110d846c26e3001981702baefd951bcdcdf9fbec15b5dfb420cad
   languageName: node
   linkType: hard
 

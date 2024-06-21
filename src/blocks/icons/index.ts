@@ -137,3 +137,7 @@ export { default as WaveformFilled } from './components/WaveformFilled';
 
 export { default as YieldFarming } from './components/YieldFarming';
 export { default as YieldFarmingFilled } from './components/YieldFarmingFilled';
+
+export { default as UserSwitch } from './components/UserSwitch';
+
+export { default as Refresh } from './components/Refresh';

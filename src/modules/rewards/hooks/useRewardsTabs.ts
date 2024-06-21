@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-//Constants
+// Constants
 import { rewardsTabsList } from '../Rewards.constants';
 
-//Types
+// Types
 import { RewardsTabs } from '../Rewards.types';
 
 const useRewardsTabs = () => {
@@ -13,17 +13,23 @@ const useRewardsTabs = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const locationArray = location.pathname.split('/');
+  useEffect(() => {
+    const locationArray = location.pathname.split('/');
+    const currentTab = locationArray[2];
+
+    if (currentTab && currentTab !== activeTab) {
+      setActiveTab(currentTab as RewardsTabs);
+    } else if (!currentTab && activeTab !== rewardsTabsList[0].value) {
+      setActiveTab(rewardsTabsList[0].value);
+    }
+  }, [location, activeTab]);
 
   const handleSetActiveTab = (tab: RewardsTabs) => {
-    setActiveTab(tab);
-    navigate(`/rewards/${tab}`);
+    if (tab !== activeTab) {
+      setActiveTab(tab);
+      navigate(`/rewards/${tab}`);
+    }
   };
-
-  useEffect(() => {
-    if (locationArray.length === 3 && locationArray[2]) handleSetActiveTab(locationArray[2] as RewardsTabs);
-    else handleSetActiveTab(rewardsTabsList[0].value);
-  }, [location]);
 
   return { activeTab, handleSetActiveTab };
 };
