@@ -1,18 +1,20 @@
 import { FC, useEffect, useState } from 'react';
 
+//3rd party libraries
+import { useSelector } from 'react-redux';
+
 //Components
 import { Box } from 'blocks';
 import { RewardsTabs } from './RewardsTabs';
 import { DashboardSection } from './DashboardSection';
 import { LeaderBoardSection } from './LeaderBoardSection';
 import { RewardsActivitiesSection } from './RewardsActivitiesSection';
+import UnlockProfileWrapper from 'components/chat/unlockProfile/UnlockProfileWrapper';
+import { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfile';
 
 //Types
 import { RewardsTabs as RewardsTabsType } from '../Rewards.types';
-import { useSelector } from 'react-redux';
 import { UserStoreType } from 'types';
-import UnlockProfileWrapper from 'components/chat/unlockProfile/UnlockProfileWrapper';
-import { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfile';
 
 export type RewardsTabsContainerProps = {
   activeTab: RewardsTabsType;

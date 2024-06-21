@@ -18,3 +18,6 @@ export { default as Ethereum } from './components/Ethereum';
 
 export { default as RewardsCircle } from './components/RewardsCircle';
 export { default as RewardCoins } from './components/RewardCoins';
+
+export { default as Discord } from './components/Discord';
+export { default as Twitter } from './components/Twitter';

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { postCreateActivityModelCreator } from 'queries/models/rewards';
+import { generateUserIdModelCreator } from 'queries/models/rewards';
 // import { appConfig } from 'config';
 
 type GenerateUserIdPayload = {
@@ -21,4 +21,4 @@ export const generateUserId = (payload: GenerateUserIdPayload) =>
     headers: {
       'Content-Type': 'application/json'
     }
-  }).then((response) => postCreateActivityModelCreator(response.data));
+  }).then((response) => generateUserIdModelCreator(response.data));

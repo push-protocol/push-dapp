@@ -1,20 +1,36 @@
+// React and other libraries
 import { FC } from 'react';
+
+// Third-party libraries
 import { css } from 'styled-components';
-import { Box, Lozenge, RewardCoins, RewardsCircle, Skeleton, Text } from 'blocks';
-import { Activity } from 'queries';
+
+//Hooks
+import { Activity, useGetUsersSingleActivity } from 'queries';
+
+//Components
+import { Box, Discord, Lozenge, RewardCoins, Skeleton, Text } from 'blocks';
 import { ActivityTypeID } from '../Rewards.constants';
-import { TwitterActionButton } from './TwitterActionButton';
-import { DiscordActionButton } from './DiscordActionButton';
+import CommonButtonComponent from './CommonButtonComponent';
+import VerifyButton from './VerifyButton';
+import ActionButton from './ActionButton';
 
 export type RewardActivitiesListItemProps = {
+  userId: string;
   activity: Activity;
-  loadingActivities: boolean;
-}
+};
 
-const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
-  activity,
-  loadingActivities
-}) => {
+const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, activity }) => {
+  const { data: usersSingleActivity, isLoading, refetch: refetchActivity } = useGetUsersSingleActivity(
+    userId,
+    activity.id
+  );
+
+  const getUpdatedExpiryTime = (timestamp: number) => {
+    const date = new Date(timestamp * 1000);
+    const days = date.getDate();
+    return days;
+  }
+
   return (
     <Box
       display="flex"
@@ -25,7 +41,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
       alignItems={{ ml: 'flex-start', initial: 'center' }}
       gap="s4"
     >
-      <RewardsCircle />
+      {activity.id === ActivityTypeID.DISCORD.Id && <Discord width={48} height={48} />}
 
       <Box
         display="flex"
@@ -48,13 +64,13 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
           `}
         >
           {/* Rewards Description */}
-          <Box display="flex" flexDirection="column">
+          <Box display="flex" flexDirection="column" gap="s1">
             <Box
               display="flex"
               flexDirection={{ lp: 'column-reverse', initial: 'row' }}
               gap={{ lp: 's1', initial: 's4' }}
             >
-              <Skeleton isLoading={loadingActivities}>
+              <Skeleton isLoading={isLoading}>
                 <Text variant="bl-semibold" color={{ light: 'gray-1000', dark: 'gray-100' }}>
                   {activity.activityTitle}
                 </Text>
@@ -62,35 +78,59 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
 
               {!!activity.expiryType && (
                 <Box display="flex">
-                  <Lozenge size="small">Expires in 7 days</Lozenge>
+                  <Lozenge size="small">Expires in {getUpdatedExpiryTime(activity.expiryType)} days</Lozenge>
                 </Box>
               )}
             </Box>
-            <Text variant="h5-regular" color="gray-500">
-              {activity.activityDesc}
-            </Text>
+            <Skeleton isLoading={isLoading}>
+              <Text variant="h5-regular" color="gray-500">
+                {activity.activityDesc}
+              </Text>
+            </Skeleton>
           </Box>
 
           {/* Rewards Points */}
           <Box display="flex" minWidth="160px" flexDirection="row" gap="s2" alignItems="center">
             <RewardCoins width={32} height={32} />
-            <Text
-              variant="h4-semibold"
-              color={{ light: 'gray-1000', dark: 'gray-100' }}
-              css={css`
-                margin-right: 24px;
-              `}
-            >
-              {activity.points?.toLocaleString()} points
-            </Text>
+            <Skeleton isLoading={isLoading}>
+              <Text
+                variant="h4-semibold"
+                color={{ light: 'gray-1000', dark: 'gray-100' }}
+                css={css`
+                  margin-right: 24px;
+                `}
+              >
+                {activity.points?.toLocaleString()} points
+              </Text>
+            </Skeleton>
           </Box>
         </Box>
 
         {/* Buttons Logic */}
-        <Box display='flex'>
-          {activity.id === ActivityTypeID.DISCORD && <DiscordActionButton activityTypeId={activity.id} />}
-          {/* {activity.id === ActivityTypeID.TWITTER && <TwitterActionButton activityTypeId={activity.id} />} */}
-        </Box>
+        {usersSingleActivity?.status === 'COMPLETED' && (
+
+          <CommonButtonComponent
+            label='Claimed'
+            onClick={() => { }}
+            disabled
+          />
+        )}
+
+        {usersSingleActivity && usersSingleActivity?.status !== 'COMPLETED' && (
+          <Box display="flex">
+            {activity.id === ActivityTypeID.DISCORD.Id && (
+              <VerifyButton userId={userId} activityTypeId={activity.id} refetchActivity={refetchActivity} />
+            )}
+
+            {activity.id !== ActivityTypeID.DISCORD.Id && (
+              <ActionButton userId={userId} activityTypeId={activity.id} refetchActivity={refetchActivity} />
+            )}
+
+
+
+
+          </Box>
+        )}
       </Box>
     </Box>
   );

@@ -1,3 +1,4 @@
+import { Discord, Twitter } from 'blocks';
 import { RewardsTabsList } from './Rewards.types';
 
 export const rewardsTabsList: RewardsTabsList = [
@@ -16,6 +17,12 @@ export const rewardsTabsList: RewardsTabsList = [
 ];
 
 export const ActivityTypeID = {
-  DISCORD: '66728043459873cd345735e3',
-  TWITTER: '66728043459873cd345735e1'
+  DISCORD: {
+    Id: '66728043459873cd345735e3',
+    image: Discord
+  },
+  TWITTER: {
+    Id: '66728043459873cd345735e1',
+    image: Twitter
+  }
 };

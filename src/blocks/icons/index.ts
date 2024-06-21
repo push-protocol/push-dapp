@@ -1,3 +1,4 @@
+import { Refresh } from 'blocks';
 export * from './IconWrapper';
 export * from './Icons.types';
 
@@ -97,6 +98,7 @@ export { default as PrivateChat } from './components/PrivateChat';
 export { default as QRCode } from './components/QRCode';
 
 export { default as ReceiveNotification } from './components/ReceiveNotification';
+export { default as Refresh } from './components/Refresh';
 export { default as ReceiveNotificationFilled } from './components/ReceiveNotificationFilled';
 
 export { default as SealCheck } from './components/SealCheck';
@@ -139,5 +141,3 @@ export { default as YieldFarming } from './components/YieldFarming';
 export { default as YieldFarmingFilled } from './components/YieldFarmingFilled';
 
 export { default as UserSwitch } from './components/UserSwitch';
-
-export { default as Refresh } from './components/Refresh';

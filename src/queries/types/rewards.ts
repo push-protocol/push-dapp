@@ -1,3 +1,5 @@
+import { PushAPI } from '@pushprotocol/restapi';
+
 export type RewardsAcitivitesResponse = {
   activities: Activity[];
   total: number;
@@ -52,6 +54,26 @@ export type DiscordDetails = {
   locale: string;
   premium_type: number;
 };
+
+export type UserRewardsDetailParams = {
+  walletAddress: string;
+};
+
+export type UserRewardsDetailResponse = {
+  userId: string;
+  userWallet: string;
+  refPrimary: string | null;
+  refSecondary: string | null;
+  verificationProof: string;
+  activityPoints: number;
+  referralPoints: number;
+  totalPoints: number;
+  multiplier: number;
+  lastUpdated: string;
+  pgpPublicKey: string;
+  usersInvited: number;
+};
+
 type LeaderBoardUser = {
   userId: string;
   userWallet: string;

@@ -1,11 +1,19 @@
+// React and other libraries
 import { FC } from 'react';
+
+// Third-party libraries
+import { useSelector } from 'react-redux';
+
+//Hooks
+import { Activity } from 'queries';
+import { useGetRewardsActivities, useGetUserRewardsDetails } from 'queries/hooks/rewards';
+
+//Components
 import { Box } from 'blocks';
 import { RewardsActivitiesListItem } from './RewardsActivitiesListItem';
-import { useSelector } from 'react-redux';
-import { useGenerateUserId, useGetRewardsActivities } from 'queries/hooks/rewards';
-import { Activity } from 'queries';
-import * as openpgp from 'openpgp';
 import { ActivityTypeID } from '../Rewards.constants';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+
 
 export type RewardActivitiesProps = {
 };
@@ -15,56 +23,29 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
   const {
     data: rewardActivitiesResponse,
     isLoading: loadingActivities,
-    isSuccess,
-    refetch,
-    error
   } = useGetRewardsActivities();
 
   const rewardActivities = rewardActivitiesResponse?.activities;
   const allActivities = [...(rewardActivities ?? [])];
 
-  const filteredActivities = allActivities.filter(activity => activity.id !== ActivityTypeID.TWITTER);
+  const filteredActivities = allActivities.filter(activity => activity.id !== ActivityTypeID.TWITTER.Id);
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
 
 
-  const { mutate: createUser } = useGenerateUserId();
+  //Getting user Id by wallet address
+  const walletAddressinCaipFormat = `eip155:${userPushSDKInstance.account}`;
 
-  //TODO: Moved this to best place Generating User by Wallet Address
-  const generateUserIdByWalletAddress = async () => {
-    const sigingingMessage = JSON.stringify({
-      userWallet: `eip155:${userPushSDKInstance.account}`,
-    });
+  const {
+    data: userDetails,
+    isLoading,
+    error,
+    isFetching,
+  } = useGetUserRewardsDetails({ walletAddress: walletAddressinCaipFormat });
 
-    console.log("---------------- MEESGAE TO BE SIGNED ----------------");
-    console.log(sigingingMessage);
-
-    const messageObject: openpgp.Message<string> = await openpgp.createMessage({
-      text: sigingingMessage,
-    });
-    const privateKey: openpgp.PrivateKey = await openpgp.readPrivateKey({
-      armoredKey: userPushSDKInstance.decryptedPgpPvtKey,
-    });
-    const verificationProof = await openpgp.sign({
-      message: messageObject,
-      signingKeys: privateKey,
-      detached: true,
-    });
-
-    console.log("Sign", verificationProof);
-
-    createUser({
-      pgpPublicKey: userPushSDKInstance.pgpPublicKey,
-      userWallet: `eip155:${userPushSDKInstance.account}`,
-      verificationProof: verificationProof as string,
-    }, {
-      onSuccess: (response) => {
-        console.log("User Generated >>", response);
-      }
-    })
-  }
+  const isPending = isLoading || isFetching;
 
   return (
     <Box
@@ -72,12 +53,16 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
       flexDirection="column"
       gap={{ ml: "s4", initial: "s1" }}
     >
-      {filteredActivities.map((activity: Activity) => (
-        <RewardsActivitiesListItem
-          activity={activity}
-          loadingActivities={loadingActivities}
-        />
-      ))}
+      {loadingActivities ? <LoaderSpinner spinnerSize={32} type={LOADER_TYPE.SEAMLESS} /> : (
+        <>
+          {userDetails && filteredActivities.map((activity: Activity) => (
+            <RewardsActivitiesListItem
+              userId={userDetails?.userId}
+              activity={activity}
+            />
+          ))}
+        </>
+      )}
     </Box>
   );
 };

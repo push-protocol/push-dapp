@@ -42,7 +42,7 @@ const Rewards: FC<RewardsProps> = () => {
         activeTab={activeTab}
         handleSetActiveTab={handleSetActiveTab}
       />
-      {activeTab === 'dashboard' && isWalletConnected && <RefferalSection />}
+      {activeTab === 'dashboard' && <RefferalSection />}
     </Box>
   );
 };
