@@ -11,7 +11,7 @@ export const getRewardsLeaderboard = async ({ order, pageSize, pageNumber }: Lea
     method: 'GET',
     url: temporaryApi,
     params: {
-      order: order || '',
+      order: order || 'desc',
       pageSize: pageSize || 20,
       pageNumber: pageNumber || 1,
     },
