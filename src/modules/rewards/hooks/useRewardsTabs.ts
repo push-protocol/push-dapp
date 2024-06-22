@@ -9,14 +9,19 @@ import { RewardsTabs } from '../Rewards.types';
 
 const useRewardsTabs = () => {
   const [activeTab, setActiveTab] = useState(rewardsTabsList[0].value);
-
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (location.pathname === '/rewards' || location.pathname === '/rewards/') {
+      setActiveTab('dashboard');
+      navigate(`/rewards/dashboard`);
+    }
+  }, []);
+
+  useEffect(() => {
     const locationArray = location.pathname.split('/');
     const currentTab = locationArray[2];
-
     if (currentTab && currentTab !== activeTab) {
       setActiveTab(currentTab as RewardsTabs);
     } else if (!currentTab && activeTab !== rewardsTabsList[0].value) {
@@ -30,8 +35,6 @@ const useRewardsTabs = () => {
       navigate(`/rewards/${tab}`);
     }
   };
-
   return { activeTab, handleSetActiveTab };
 };
-
 export { useRewardsTabs };

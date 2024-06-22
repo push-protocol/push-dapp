@@ -1,4 +1,7 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
+
+//3rd party libraries
+import { useSelector } from 'react-redux';
 
 //Components
 import { Box } from 'blocks';
@@ -6,9 +9,12 @@ import { RewardsTabs } from './RewardsTabs';
 import { DashboardSection } from './DashboardSection';
 import { LeaderBoardSection } from './LeaderBoardSection';
 import { RewardsActivitiesSection } from './RewardsActivitiesSection';
+import UnlockProfileWrapper from 'components/chat/unlockProfile/UnlockProfileWrapper';
+import { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfile';
 
 //Types
 import { RewardsTabs as RewardsTabsType } from '../Rewards.types';
+import { UserStoreType } from 'types';
 
 export type RewardsTabsContainerProps = {
   activeTab: RewardsTabsType;
@@ -16,18 +22,33 @@ export type RewardsTabsContainerProps = {
 };
 
 const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handleSetActiveTab }) => {
+
+  const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
+    return state.user;
+  });
+
+  const [showConnectModal, setShowConnectModal] = useState(false);
+
+  useEffect(() => {
+    if (activeTab === 'activities' && userPushSDKInstance && userPushSDKInstance.readmode()) {
+      setShowConnectModal(true)
+    }
+  }, [activeTab, userPushSDKInstance])
+
+
   return (
     <Box
       backgroundColor={{ dark: 'gray-900', light: 'white' }}
       borderRadius="r4"
       display="flex"
       flexDirection="column"
-      padding="s6"
+      padding={{ ml: "s4 s3", initial: "s6" }}
     >
       <Box
         gap="s6"
         display="flex"
         flexDirection="column"
+        color={{ light: 'gray-900', dark: 'gray-100' }}
       >
         <RewardsTabs
           activeTab={activeTab}
@@ -35,8 +56,16 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handle
         />
 
         {activeTab === 'dashboard' && <DashboardSection onGetStarted={() => handleSetActiveTab('activities')} />}
-        {activeTab === 'activities' && <RewardsActivitiesSection />}
+        {activeTab === 'activities' && userPushSDKInstance && !userPushSDKInstance.readmode() &&
+          <RewardsActivitiesSection />
+        }
         {activeTab === 'leaderboard' && <LeaderBoardSection />}
+
+        {userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
+          <UnlockProfileWrapper type={UNLOCK_PROFILE_TYPE.MODAL} showConnectModal={showConnectModal} />
+        )}
+
+
       </Box>
     </Box>
   );

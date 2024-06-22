@@ -1,48 +1,55 @@
+// React and other libraries
 import { FC } from 'react';
+
+// Third-party libraries
+import { useSelector } from 'react-redux';
+
+//Hooks
+import { Activity } from 'queries';
+import { useGetRewardsActivities, useGetUserRewardsDetails } from 'queries/hooks/rewards';
+
+//Components
 import { Box } from 'blocks';
 import { RewardsActivitiesListItem } from './RewardsActivitiesListItem';
-
-const rewardsArray = [
-  {
-    title: 'Follow @PushProtocol on X',
-    points: 10000,
-    buttonText: 'Follow',
-  },
-  {
-    title: 'Join Push Discord',
-    points: 10000,
-    buttonText: 'Join Discord',
-  },
-  {
-    title: 'Send 20 Messages using Push Chat',
-    points: 1500,
-    buttonText: 'Claim',
-    disabled: true,
-  },
-  {
-    title: 'Subscribe to 3 Channels on PushX',
-    subtitle: 'Visit app.push.org/channels and opt-in to any 3 channels.',
-    points: 1500,
-    buttonText: 'Follow',
-  },
-];
+import { ActivityTypeID } from '../Rewards.constants';
 
 export type RewardActivitiesProps = {};
 
 const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
+  const { userPushSDKInstance } = useSelector((state: any) => {
+    return state.user;
+  });
+
+  const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities();
+
+  const rewardActivities = rewardActivitiesResponse?.activities;
+  const allActivities = [...(rewardActivities ?? [])];
+
+  const filteredActivities = allActivities.filter((activity) => activity.id !== ActivityTypeID.TWITTER.Id);
+
+  //Getting user Id by wallet address
+  const walletAddressinCaipFormat = `eip155:${userPushSDKInstance.account}`;
+
+  const { data: userDetails, isLoading: isLoadingUserDetails } = useGetUserRewardsDetails({
+    walletAddress: walletAddressinCaipFormat,
+  });
+
+  const isLoading = isLoadingUserDetails || isLoadingActivities;
+
+  // If there are activities then render them else render 5 skeletons
+  const activityList = isLoading ? Array(3).fill(0) : filteredActivities || [];
+
   return (
     <Box
       display="flex"
       flexDirection="column"
-      gap="s1"
+      gap={{ ml: 's4', initial: 's1' }}
     >
-      {rewardsArray.map((item) => (
+      {activityList.map((activity: Activity) => (
         <RewardsActivitiesListItem
-          title={item.title}
-          subtitle={item.subtitle}
-          points={item.points}
-          buttonText={item.buttonText}
-          disabled={item.disabled}
+          userId={userDetails?.userId || ''}
+          activity={activity}
+          isLoadingItem={isLoading}
         />
       ))}
     </Box>

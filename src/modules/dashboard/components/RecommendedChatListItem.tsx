@@ -42,7 +42,10 @@ const RecommendedChatListItem: FC<RecommendedChatListItemProps> = ({ chat }) => 
           </Text>
         </Box>
       </Box>
-      <Link to={`/chat/${chat?.chatParticipantAlias}`}>
+      <Link
+        to={`/chat/${chat?.chatParticipantAlias}`}
+        isText={false}
+      >
         <Button
           size="small"
           iconOnly={<Chat />}
