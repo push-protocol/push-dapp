@@ -25,5 +25,6 @@ export { default as Notification } from './components/Notification';
 export { default as NotificationDark } from './components/NotificationDark';
 
 export { default as RewardCoins } from './components/RewardCoins';
+export { default as ReferralImage } from './components/ReferralImage';
 
 export { default as Twitter } from './components/Twitter';

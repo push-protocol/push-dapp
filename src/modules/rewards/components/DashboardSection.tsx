@@ -68,8 +68,16 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
                 display="flex"
                 flexDirection="column"
               >
-                <Text variant="h4-semibold">Earn Rewards for Exploring!</Text>
-                <Text variant="bl-regular">
+                <Text
+                  variant="h4-semibold"
+                  color="gray-1000"
+                >
+                  Earn Rewards for Exploring!
+                </Text>
+                <Text
+                  variant="bl-regular"
+                  color="gray-1000"
+                >
                   Discover, participate, and earn rewards with every step you take in Push.{' '}
                 </Text>
               </Box>
