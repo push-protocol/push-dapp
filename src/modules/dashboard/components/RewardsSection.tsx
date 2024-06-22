@@ -2,7 +2,7 @@
 import { css } from 'styled-components';
 
 // Components
-import { Box, Text, Button, Link, RewardsCircle } from 'blocks';
+import { Box, Text, Button, Link, Points } from 'blocks';
 
 const RewardsSection = () => {
   return (
@@ -15,7 +15,7 @@ const RewardsSection = () => {
       flexDirection={{ ml: 'column' }}
       justifyContent="space-between"
       css={css`
-        background: radial-gradient(174.95% 108.75% at 64.27% 0%, #f2befb 0%, #ffd7c0 100%);
+        background: radial-gradient(circle, rgba(222, 190, 255, 1) 0%, rgba(192, 255, 247, 1) 85%);
       `}
     >
       <Box
@@ -24,7 +24,7 @@ const RewardsSection = () => {
         alignItems="center"
         gap="s3"
       >
-        <RewardsCircle />
+        <Points svgProps={{ width: 60, height: 56 }} />
         <Text
           variant="h5-semibold"
           display={{ ml: 'none', dp: 'block' }}
@@ -39,7 +39,7 @@ const RewardsSection = () => {
           Complete Tasks on Push. Earn Reward Points.
         </Text>
       </Box>
-      <Link to={'/rewards'}>
+      <Link to={'/rewards/dashboard'}>
         <Button
           variant="tertiary"
           size="small"

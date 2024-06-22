@@ -1,7 +1,14 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 import { useBlocksTheme } from '../Blocks.hooks';
-import { BlocksColors, ThemeModeColors, SpaceType, ModeProp, TransformedHTMLAttributes } from '../Blocks.types';
+import {
+  BlocksColors,
+  ThemeModeColors,
+  SpaceType,
+  ModeProp,
+  TransformedHTMLAttributes,
+  RadiusType,
+} from '../Blocks.types';
 import { getBlocksColor, getBlocksBorderRadius } from '../Blocks.utils';
 export type HoverableSVGProps = {
   /* Icon component */
@@ -21,7 +28,7 @@ export type HoverableSVGProps = {
   /* Sets the margin for SVG button container */
   margin?: SpaceType;
   /* Sets the margin for SVG button container */
-  borderRadius?: SpaceType;
+  borderRadius?: RadiusType;
 } & TransformedHTMLAttributes<HTMLButtonElement>;
 
 const StyledButton = styled.button.withConfig({

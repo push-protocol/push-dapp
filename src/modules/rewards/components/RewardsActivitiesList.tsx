@@ -13,47 +13,43 @@ import { Box } from 'blocks';
 import { RewardsActivitiesListItem } from './RewardsActivitiesListItem';
 import { ActivityTypeID } from '../Rewards.constants';
 
-export type RewardActivitiesProps = {
-};
+export type RewardActivitiesProps = {};
 
 const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
-
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
 
-  const {
-    data: rewardActivitiesResponse,
-    isLoading: loadingActivities,
-  } = useGetRewardsActivities();
+  const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities();
 
   const rewardActivities = rewardActivitiesResponse?.activities;
   const allActivities = [...(rewardActivities ?? [])];
 
-  const filteredActivities = allActivities.filter(activity => activity.id !== ActivityTypeID.TWITTER.Id);
+  const filteredActivities = allActivities.filter((activity) => activity.id !== ActivityTypeID.TWITTER.Id);
 
   //Getting user Id by wallet address
   const walletAddressinCaipFormat = `eip155:${userPushSDKInstance.account}`;
 
-  const {
-    data: userDetails,
-    isLoading,
-    error,
-    isFetching,
-  } = useGetUserRewardsDetails({ walletAddress: walletAddressinCaipFormat });
+  const { data: userDetails, isLoading: isLoadingUserDetails } = useGetUserRewardsDetails({
+    walletAddress: walletAddressinCaipFormat,
+  });
 
-  const isPending = isLoading || isFetching;
+  const isLoading = isLoadingUserDetails || isLoadingActivities;
+
+  // If there are activities then render them else render 5 skeletons
+  const activityList = isLoading ? Array(3).fill(0) : filteredActivities || [];
 
   return (
     <Box
       display="flex"
       flexDirection="column"
-      gap={{ ml: "s4", initial: "s1" }}
+      gap={{ ml: 's4', initial: 's1' }}
     >
-      {userDetails && filteredActivities.map((activity: Activity) => (
+      {activityList.map((activity: Activity) => (
         <RewardsActivitiesListItem
-          userId={userDetails?.userId}
+          userId={userDetails?.userId || ''}
           activity={activity}
+          isLoadingItem={isLoading}
         />
       ))}
     </Box>

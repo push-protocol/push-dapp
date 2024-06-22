@@ -1,9 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
-import { usersSingleActivity } from 'queries/queryKeys';
-import { getUsersSingleActivity } from 'queries/services/rewards';
+import { UseQueryOptions, useQuery } from '@tanstack/react-query';
+import { usersSingleActivity } from '../../queryKeys';
+import { getUsersSingleActivity } from '../../services/rewards';
+import { UsersActivity } from '../../types';
 
-export const useGetUsersSingleActivity = (userId: string, activityId: string) =>
-  useQuery({
+export const useGetUsersSingleActivity = (
+  { userId, activityId }: { userId: string; activityId: string },
+  config?: Partial<UseQueryOptions<UsersActivity>>
+) =>
+  useQuery<UsersActivity>({
     queryKey: [usersSingleActivity, userId, activityId],
-    queryFn: () => getUsersSingleActivity(userId, activityId)
+    queryFn: () => getUsersSingleActivity(userId, activityId),
+    ...config,
   });

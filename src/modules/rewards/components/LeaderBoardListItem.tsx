@@ -3,13 +3,12 @@ import { FC, useContext } from 'react';
 
 // Third-party libraries
 import { css } from 'styled-components';
-
+import BlockiesSvg from 'blockies-react-svg';
 //Hooks
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 
 //Components
 import { Box, Skeleton, Text } from 'blocks';
-import Blockies from 'components/BlockiesIdenticon';
 
 import { AppContext } from 'contexts/AppContext';
 
@@ -79,9 +78,10 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
               borderRadius="r10"
               overflow="hidden"
             >
-              <Blockies
-                seed={address?.toLowerCase()}
-                opts={{ seed: address?.toLowerCase(), size: 8, scale: 4 }}
+              <BlockiesSvg
+                address={address}
+                size={8}
+                scale={4}
               />
             </Box>
             <Text

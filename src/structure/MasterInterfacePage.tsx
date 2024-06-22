@@ -40,7 +40,7 @@ const YieldFarmingV2Page = lazy(() => import('pages/YieldFarmingPageV2'));
 const UserSettingsPage = lazy(() => import('pages/UserSettingsPage'));
 const ClaimGalxePage = lazy(() => import('pages/ClaimGalxePage'));
 const Dashboard = lazy(() => import('modules/dashboard'));
-const Rewards = lazy(() => import('modules/rewards'));
+const Rewards = lazy(() => import('pages/RewardsPage'));
 
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';

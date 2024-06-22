@@ -9,27 +9,16 @@ import { useGetUserRewardsDetails } from 'queries';
 import { walletToCAIP10 } from 'helpers/w2w';
 
 //components
-import { Box, Button, HoverableSVG, RewardsCircle, Refresh, Skeleton, Text } from 'blocks';
-
-// Styles
-import { ImageV3 } from '../Rewards.styled';
-import DashboardImage from 'assets/rewards/DashboardImage.png';
+import { Box, Button, HoverableSVG, Points, Refresh, Skeleton, Text } from 'blocks';
 
 export type DashboardSectionProps = {
   onGetStarted: () => void;
 };
 
 const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
-  const { isWalletConnected, chainId, account } = useAccount();
+  const { isWalletConnected, account } = useAccount();
   let walletAddress = walletToCAIP10({ account });
-  const {
-    data: userDetails,
-    refetch,
-    isSuccess,
-    isLoading,
-    isFetching,
-    error,
-  } = useGetUserRewardsDetails({ walletAddress });
+  const { data: userDetails, refetch, isSuccess, isLoading, isFetching } = useGetUserRewardsDetails({ walletAddress });
 
   const isPending = isLoading || isFetching;
 
@@ -74,12 +63,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
               display="flex"
               alignItems="center"
             >
-              <ImageV3
-                width="90px"
-                height="auto"
-                src={DashboardImage}
-                alt={'Earn Rewards for Exploring!'}
-              />
+              <Points />
               <Box
                 display="flex"
                 flexDirection="column"

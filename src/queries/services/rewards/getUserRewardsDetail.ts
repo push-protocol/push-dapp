@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-import { appConfig } from '../../../config/index';
 import { getUserRewardsDetailModel } from '../../models';
 import { UserRewardsDetailParams } from '../../types/rewards';
 

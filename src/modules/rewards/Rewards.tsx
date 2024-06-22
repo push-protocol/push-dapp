@@ -37,14 +37,7 @@ const Rewards: FC<RewardsProps> = () => {
     return state.user;
   });
 
-  const {
-    data: userDetails,
-    refetch,
-    isSuccess,
-    isLoading,
-    isFetching,
-    error,
-  } = useGetUserRewardsDetails({ walletAddress });
+  const { data: userDetails, refetch } = useGetUserRewardsDetails({ walletAddress });
 
   const dataRef = {
     refPrimary: ref,
@@ -77,7 +70,7 @@ const Rewards: FC<RewardsProps> = () => {
         refPrimary: dataRef.refPrimary,
       },
       {
-        onSuccess: (response) => {
+        onSuccess: () => {
           refetch();
         },
         onError: (err) => {

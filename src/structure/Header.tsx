@@ -9,7 +9,7 @@ import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import { Box, Link, Text, Star, Lozenge } from 'blocks';
+import { Box, Link, Text, Star, Lozenge, RewardCoins } from 'blocks';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { ErrorContext } from 'contexts/ErrorContext';
@@ -75,6 +75,47 @@ const EXTRA_HEADER_TAGS = {
   [APP_PATHS.RewardsLeaderboard]: REWARDS_HEADER_TAG,
 };
 
+const RewardsHeaderLink = ({ walletAddress }: { walletAddress: string }) => {
+  const { data: userDetails } = useGetUserRewardsDetails({ walletAddress });
+  return (
+    <Box
+      display="flex"
+      alignItems="center"
+      gap={{ ml: 's1', dp: 's2' }}
+    >
+      <Link
+        to="/rewards/dashboard"
+        isText={false}
+      >
+        <Box
+          display="flex"
+          gap="s2"
+        >
+          <RewardCoins
+            width={24}
+            height={28}
+          />
+          <Text
+            variant="h4-bold"
+            display={{ ml: 'none', dp: 'block' }}
+            color={{ light: 'gray-1000', dark: 'gray-100' }}
+          >
+            {userDetails?.totalPoints}
+          </Text>
+          <Text
+            variant="h5-bold"
+            display={{ ml: 'block', dp: 'none' }}
+            color={{ light: 'gray-1000', dark: 'gray-100' }}
+          >
+            {userDetails?.totalPoints}
+          </Text>
+          <Lozenge icon={<Star />}>NEW</Lozenge>
+        </Box>
+      </Link>
+    </Box>
+  );
+};
+
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
   // Get theme
@@ -131,35 +172,6 @@ function Header({ isDarkMode, darkModeToggle }) {
   });
 
   const isMobile = useDeviceWidthCheck(600);
-
-  const { data: userDetails, refetch } = useGetUserRewardsDetails({ walletAddress });
-
-  const RewardsHeaderLink = () => {
-    return (
-      <Box
-        display="flex"
-        alignItems="center"
-        gap={{ ml: 's1', dp: 's2' }}
-      >
-        <Link to="/rewards"></Link>
-        <Text
-          variant="h4-bold"
-          display={{ ml: 'none', dp: 'block' }}
-          color={{ light: 'gray-1000', dark: 'gray-100' }}
-        >
-          {userDetails?.totalPoints}
-        </Text>
-        <Text
-          variant="h5-bold"
-          display={{ ml: 'block', dp: 'none' }}
-          color={{ light: 'gray-1000', dark: 'gray-100' }}
-        >
-          {userDetails?.totalPoints}
-        </Text>
-        <Lozenge icon={<Star />}>NEW</Lozenge>
-      </Box>
-    );
-  };
 
   return (
     <Container
@@ -224,7 +236,7 @@ function Header({ isDarkMode, darkModeToggle }) {
           display="flex"
           flexDirection="column"
           gap="s0"
-          alignItems="center"
+          alignItems={{ ml: 'flex-start', initial: 'center' }}
         >
           {headerTag && !error && !isSnapPage && (
             <HeaderTag
@@ -254,7 +266,7 @@ function Header({ isDarkMode, darkModeToggle }) {
             }
           >
             <Box display={{ ml: 'block', dp: 'none' }}>
-              <RewardsHeaderLink />
+              <RewardsHeaderLink walletAddress={walletAddress} />
             </Box>
           </Suspense>
         </Box>
@@ -263,7 +275,7 @@ function Header({ isDarkMode, darkModeToggle }) {
           alignItems="center"
         >
           <Box display={{ ml: 'none', dp: 'block' }}>
-            <RewardsHeaderLink />
+            <RewardsHeaderLink walletAddress={walletAddress} />
           </Box>
           {isActive && !showLoginControls && !error && (
             <DarkModeSwitch

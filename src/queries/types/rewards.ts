@@ -81,6 +81,7 @@ export type UserRewardsDetailResponse = {
   referralPoints: number;
   totalPoints: number;
   multiplier: number;
+  rank: number;
   lastUpdated: string;
   pgpPublicKey: string;
   usersInvited: number;
