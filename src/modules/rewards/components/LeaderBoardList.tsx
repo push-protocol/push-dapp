@@ -13,7 +13,7 @@ import { Box } from 'blocks';
 //Helpers
 import { caip10ToWallet } from 'helpers/w2w';
 import { LeaderBoardNullState } from './LeaderboardNullState';
-import { LeaderboardListColumns } from './LeaderBpardListColumns';
+import { LeaderboardListColumns } from './LeaderBoardListColumns';
 
 const LeaderBoardList: FC = () => {
   const { data, isError, refetch, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
