@@ -11,16 +11,14 @@ import { generateVerificationProof } from '../helpers/generateVerificationProof'
 import { useCreateActivity, useGetUserDiscordDetails } from 'queries';
 
 //Hooks
-import APP_PATHS from 'config/AppPaths';
 import useToast from 'hooks/useToast';
+import { appConfig } from 'config';
 
 //Components
 import CommonButtonComponent from './CommonButtonComponent';
 
 //Types
 import { UserStoreType } from 'types';
-
-
 
 type Props = {
   userId: string;
@@ -41,15 +39,14 @@ const VerifyButton: React.FC<Props> = ({
     return state.user;
   });
 
-  const url = window.location.origin;
   const handleConnect = () => {
-    //TODO:Change this Client Id to the Push's Discord
-    const CLIENT_ID = '1253697881211277333'; //Abhishek's Test Dapp
-    const REDIRECT_URI = `${url}${APP_PATHS.RewardsActivities}`;
+    const CLIENT_ID = appConfig.discord_client_id;
+    const REDIRECT_URI = window.location.href; //it will redirect the user to the current page
     const SCOPE = 'identify email guilds.members.read';
     const AUTH_URL = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token&scope=${SCOPE}`;
 
     window.location.href = AUTH_URL;
+
   };
 
   const handleVerification = () => {
@@ -59,24 +56,6 @@ const VerifyButton: React.FC<Props> = ({
       handleConnect();
     }
   }
-
-
-  useEffect(() => {
-    const hash = window.location.hash;
-    if (hash) {
-      const params = new URLSearchParams(hash.substring(1));
-      const token = params.get('access_token');
-      const expiresIn = params.get('expires_in');
-
-      if (token && expiresIn) {
-        sessionStorage.setItem('access_token', token);
-        sessionStorage.setItem('expires_in', expiresIn);
-        setToken(token);
-      }
-
-      window.history.replaceState({}, '', window.location.pathname);
-    }
-  }, [])
 
   const { data: userDiscordDetails, isLoading } = useGetUserDiscordDetails(token as string);
 

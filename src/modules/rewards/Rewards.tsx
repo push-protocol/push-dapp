@@ -88,6 +88,24 @@ const Rewards: FC<RewardsProps> = () => {
   function useQuery() {
     return new URLSearchParams(useLocation().search);
   }
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const params = new URLSearchParams(hash.substring(1));
+      const token = params.get('access_token');
+      const expiresIn = params.get('expires_in');
+
+      if (token && expiresIn) {
+        sessionStorage.setItem('access_token', token);
+        sessionStorage.setItem('expires_in', expiresIn);
+      }
+
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, [])
+
+
   return (
     <Box
       flexDirection="column"
@@ -113,6 +131,7 @@ const Rewards: FC<RewardsProps> = () => {
       <RewardsTabsContainer
         activeTab={activeTab}
         handleSetActiveTab={handleSetActiveTab}
+        setShowConnectModal={setShowConnectModal}
       />
       {userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
         <UnlockProfileWrapper

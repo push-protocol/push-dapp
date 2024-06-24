@@ -1,5 +1,3 @@
-import { PushAPI } from '@pushprotocol/restapi';
-
 export type RewardsAcitivitesResponse = {
   activities: Activity[];
   total: number;
@@ -15,6 +13,8 @@ export type Activity = {
   points: number;
   multiplier: number;
   expiryType: number;
+  name?: string;
+  JoinURL: string;
 };
 
 export type UsersAllActivitiesResponse = {

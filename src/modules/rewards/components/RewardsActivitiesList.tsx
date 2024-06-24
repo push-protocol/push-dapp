@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 //Hooks
 import { Activity } from 'queries';
 import { useGetRewardsActivities, useGetUserRewardsDetails } from 'queries/hooks/rewards';
+import { useAccount } from 'hooks';
 
 //Components
 import { Box } from 'blocks';
@@ -16,9 +17,7 @@ import { ActivityTypeID } from '../Rewards.constants';
 export type RewardActivitiesProps = {};
 
 const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
-  const { userPushSDKInstance } = useSelector((state: any) => {
-    return state.user;
-  });
+  const { account } = useAccount();
 
   const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities();
 
@@ -28,7 +27,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
   const filteredActivities = allActivities.filter((activity) => activity.id !== ActivityTypeID.TWITTER.Id);
 
   //Getting user Id by wallet address
-  const walletAddressinCaipFormat = `eip155:${userPushSDKInstance.account}`;
+  const walletAddressinCaipFormat = `eip155:${account}`;
 
   const { data: userDetails, isLoading: isLoadingUserDetails } = useGetUserRewardsDetails({
     walletAddress: walletAddressinCaipFormat,

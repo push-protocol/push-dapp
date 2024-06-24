@@ -17,6 +17,7 @@ export const config = {
 
   ipfsInfuraAPIKey: import.meta.env.VITE_APP_IPFS_INFURA_API_KEY || '22rfiNb1J645FdehoqbKMpLbF6V',
   ipfsInfuraAPISecret: import.meta.env.VITE_APP_IPFS_INFURA_API_SECRET || 'a757597f020425c3ae532e6be84de552',
+  discord_client_id: import.meta.env.VITE_APP_DISCORD_CLIENT_ID,
 
   /**
    * Allowed Networks

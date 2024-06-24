@@ -28,3 +28,5 @@ export { default as RewardCoins } from './components/RewardCoins';
 export { default as Referral } from './components/Referral';
 
 export { default as Twitter } from './components/Twitter';
+
+export { default as RewardsDefaults } from './components/PushDefaultRewards';

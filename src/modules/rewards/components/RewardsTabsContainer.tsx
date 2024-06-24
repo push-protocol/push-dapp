@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useEffect } from 'react';
 
 //3rd party libraries
 import { useSelector } from 'react-redux';
@@ -9,8 +9,6 @@ import { RewardsTabs } from './RewardsTabs';
 import { DashboardSection } from './DashboardSection';
 import { LeaderBoardSection } from './LeaderBoardSection';
 import { RewardsActivitiesSection } from './RewardsActivitiesSection';
-import UnlockProfileWrapper from 'components/chat/unlockProfile/UnlockProfileWrapper';
-import { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfile';
 
 //Types
 import { RewardsTabs as RewardsTabsType } from '../Rewards.types';
@@ -19,15 +17,14 @@ import { UserStoreType } from 'types';
 export type RewardsTabsContainerProps = {
   activeTab: RewardsTabsType;
   handleSetActiveTab: (tab: RewardsTabsType) => void;
+  setShowConnectModal: Dispatch<SetStateAction<boolean>>;
 };
 
-const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handleSetActiveTab }) => {
+const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handleSetActiveTab, setShowConnectModal }) => {
 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
     return state.user;
   });
-
-  const [showConnectModal, setShowConnectModal] = useState(false);
 
   useEffect(() => {
     if (activeTab === 'activities' && userPushSDKInstance && userPushSDKInstance.readmode()) {
@@ -60,11 +57,6 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handle
           <RewardsActivitiesSection />
         }
         {activeTab === 'leaderboard' && <LeaderBoardSection />}
-
-        {userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
-          <UnlockProfileWrapper type={UNLOCK_PROFILE_TYPE.MODAL} showConnectModal={showConnectModal} />
-        )}
-
 
       </Box>
     </Box>

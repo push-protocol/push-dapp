@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC } from 'react';
+import React, { FC } from 'react';
 
 // Third-party libraries
 import { css } from 'styled-components';
@@ -8,11 +8,12 @@ import { css } from 'styled-components';
 import { Activity, useGetUsersSingleActivity } from 'queries';
 
 //Components
-import { Box, Discord, Lozenge, RewardCoins, Skeleton, Text } from 'blocks';
+import { Box, Discord, IllustrationProps, Lozenge, RewardCoins, RewardsDefaults, Skeleton, Text, Twitter } from 'blocks';
 import { ActivityTypeID } from '../Rewards.constants';
 import CommonButtonComponent from './CommonButtonComponent';
 import VerifyButton from './VerifyButton';
 import ActionButton from './ActionButton';
+import { Link } from 'react-router-dom';
 
 export type RewardActivitiesListItemProps = {
   userId: string;
@@ -44,12 +45,21 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
         alignItems={{ ml: 'flex-start', initial: 'center' }}
         gap="s4"
       >
-        {activity.id === ActivityTypeID.DISCORD.Id && (
-          <Discord
-            width={48}
-            height={48}
-          />
-        )}
+
+        {activity.name === 'Discord' && <Discord
+          width={48}
+          height={48}
+        />}
+
+        {activity.name === 'Twitter' && <Twitter
+          width={48}
+          height={48}
+        />}
+
+        {activity.name === '' && <RewardsDefaults
+          width={48}
+          height={48}
+        />}
 
         <Box
           display="flex"
@@ -83,12 +93,15 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                 gap={{ lp: 's1', initial: 's4' }}
               >
                 <Skeleton isLoading={isLoading}>
+                  {/* <Link to={activity.JoinURL} target='_blank'> */}
+                  {/* This Link will change to the new icon or illustration that zee will give */}
                   <Text
                     variant="bl-semibold"
                     color={{ light: 'gray-1000', dark: 'gray-100' }}
                   >
                     {activity.activityTitle}
                   </Text>
+                  {/* </Link> */}
                 </Skeleton>
 
                 {!!activity.expiryType && (
@@ -137,7 +150,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
           {usersSingleActivity?.status === 'COMPLETED' && (
             <CommonButtonComponent
               label="Claimed"
-              onClick={() => {}}
+              onClick={() => { }}
               disabled
             />
           )}
