@@ -54,7 +54,7 @@ export const config = {
    * Analaytics + Firebase
    */
   googleAnalyticsId: 'UA-165415629-5',
-  vapidKey: 'BJYsH1MYRqzfuzduyHLNaUfZCYdAahcJXsdWzdTqleWox0vOLaycyVPdy_J9XWzSIKvRu0xkwxo75mhDiVJhNnw',
+  vapidKey: 'BO-oYHtENkaP1nRQMmXAmjbkyWz_4sms1Z5OzE8B7h5gmuXiePvLmbXRiJNA233WtzzEo83yWZAVX1blsJQkNFg',
   firebaseConfig: {
     apiKey: 'AIzaSyB4aXx2pJ9T5sw0Q1bba3jI1EAGp0Z5kBI',
     authDomain: 'push-dev-a6a63.firebaseapp.com',

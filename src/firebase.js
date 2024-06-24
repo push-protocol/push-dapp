@@ -8,7 +8,7 @@ import { registerDeviceToken } from './services';
 // Internal Configs
 import { appConfig } from 'config';
 // Initialize the Firebase app in the service worker by passing the generated config
-var firebaseConfig = { ...appConfig.firebaseConfig };
+var firebaseConfig = { ...appConfig.firebaseConfig, vapidKey: appConfig.vapidKey };
 const TOKEN_KEY = 'EPNS_BASE_PUSH_TOKEN';
 const CACHEPREFIX = 'PUSH_TOKEN_';
 
@@ -21,11 +21,12 @@ const setLocalToken = (token) => localStorage.setItem(TOKEN_KEY, token);
 export const getPushToken = async () => {
   try {
     let token = getLocalToken(TOKEN_KEY);
-    console.debug(token, 'token');
+    console.debug(token, 'serviceWorker' in navigator, 'token');
     console.debug(appConfig.vapidKey, 'vapidkey');
     if (!token) {
       token = await getToken(messaging, {
         vapidKey: appConfig.vapidKey,
+        serviceWorkerRegistration: await navigator.serviceWorker.ready, // Ensure the service worker is ready
       });
       setLocalToken(token);
     }

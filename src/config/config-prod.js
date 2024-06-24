@@ -53,7 +53,7 @@ export const config = {
    * Analaytics + Firebase
    */
   googleAnalyticsId: 'UA-165415629-1',
-  vapidKey: 'BOMOB--KihZkwM8SQ_OrPEsuu8UcSYiRB9AvMjsWil3WJDmxBEcDex8g4d5rFGgA8U-7esfRM5pvR98jaE1nX0M',
+  vapidKey: 'BO-oYHtENkaP1nRQMmXAmjbkyWz_4sms1Z5OzE8B7h5gmuXiePvLmbXRiJNA233WtzzEo83yWZAVX1blsJQkNFg',
   firebaseConfig: {
     apiKey: 'AIzaSyBrzkFPyNmVDFzGY7dKz2HocUO4m-ni-Fc',
     authDomain: 'epns-ethereum-push-service.firebaseapp.com',
