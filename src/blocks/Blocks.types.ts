@@ -59,7 +59,7 @@ export type ThemeMode = 'light' | 'dark';
 
 export type ThemeModeColors = Record<ThemeMode, BlocksColors>;
 
-export type BorderValue = `${number}px ${string} ${BlocksColors}`;
+export type BorderValue = `${number}px ${string} ${BlocksColors}` | 'none';
 
 export type ThemeModeBorder = Record<ThemeMode, BorderValue>;
 
