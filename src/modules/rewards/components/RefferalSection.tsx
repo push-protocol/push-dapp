@@ -9,7 +9,7 @@ import { useGetUserRewardsDetails } from 'queries';
 import { walletToCAIP10 } from 'helpers/w2w';
 
 // components
-import { Box, Button, Copy, Text, ReferralImage, Skeleton } from 'blocks';
+import { Box, Button, Copy, Text, Referral, Skeleton } from 'blocks';
 
 // Styles
 
@@ -141,7 +141,7 @@ const RefferalSection: FC<RefferalSectionProps> = () => {
         )}
       </Box>
       <Box height="auto">
-        <ReferralImage />
+        <Referral />
       </Box>
     </Box>
   );

@@ -2,11 +2,11 @@ import { FC } from 'react';
 import { IllustrationWrapper } from '../IllustrationWrapper';
 import { IllustrationProps } from '../Illustrations.types';
 
-const ReferralImage: FC<IllustrationProps> = (allProps) => {
+const Referral: FC<IllustrationProps> = (allProps) => {
   const { svgProps: props, ...restProps } = allProps;
   return (
     <IllustrationWrapper
-      componentName="ReferralImage"
+      componentName="Referral"
       illustration={
         <svg
           width={props?.width || '230'}
@@ -1131,4 +1131,4 @@ const ReferralImage: FC<IllustrationProps> = (allProps) => {
   );
 };
 
-export default ReferralImage;
+export default Referral;
