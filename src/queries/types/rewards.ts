@@ -68,7 +68,7 @@ export type DiscordDetails = {
 };
 
 export type UserRewardsDetailParams = {
-  walletAddress: string;
+  caip10WalletAddress: string;
 };
 
 export type UserRewardsDetailResponse = {

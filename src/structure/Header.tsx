@@ -75,8 +75,8 @@ const EXTRA_HEADER_TAGS = {
   [APP_PATHS.RewardsLeaderboard]: REWARDS_HEADER_TAG,
 };
 
-const RewardsHeaderLink = ({ walletAddress }: { walletAddress: string }) => {
-  const { data: userDetails } = useGetUserRewardsDetails({ walletAddress });
+const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: string }) => {
+  const { data: userDetails } = useGetUserRewardsDetails({ caip10WalletAddress });
   return (
     <Box
       display="flex"
@@ -125,7 +125,7 @@ function Header({ isDarkMode, darkModeToggle }) {
   const { navigationSetup } = useContext(NavigationContext);
 
   const { isActive, wallet, account } = useAccount();
-  let walletAddress = walletToCAIP10({ account });
+  const caip10WalletAddress = walletToCAIP10({ account });
 
   const { authError: error } = useContext(ErrorContext);
 
@@ -266,7 +266,7 @@ function Header({ isDarkMode, darkModeToggle }) {
             }
           >
             <Box display={{ ml: 'block', dp: 'none' }}>
-              <RewardsHeaderLink walletAddress={walletAddress} />
+              <RewardsHeaderLink caip10WalletAddress={caip10WalletAddress} />
             </Box>
           </Suspense>
         </Box>
@@ -275,7 +275,7 @@ function Header({ isDarkMode, darkModeToggle }) {
           alignItems="center"
         >
           <Box display={{ ml: 'none', dp: 'block' }}>
-            <RewardsHeaderLink walletAddress={walletAddress} />
+            <RewardsHeaderLink caip10WalletAddress={caip10WalletAddress} />
           </Box>
           {isActive && !showLoginControls && !error && (
             <DarkModeSwitch

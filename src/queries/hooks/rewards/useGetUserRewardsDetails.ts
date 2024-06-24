@@ -6,6 +6,6 @@ import { getUserRewardsDetail } from '../../services';
 
 export const useGetUserRewardsDetails = (options: UserRewardsDetailParams) =>
   useQuery({
-    queryKey: [userRewardsDetails, options.walletAddress],
+    queryKey: [userRewardsDetails, options.caip10WalletAddress],
     queryFn: () => getUserRewardsDetail(options),
   });
