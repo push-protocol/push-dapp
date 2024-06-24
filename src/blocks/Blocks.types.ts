@@ -64,5 +64,3 @@ export type BorderValue = `${number}px ${string} ${BlocksColors}`;
 export type ThemeModeBorder = Record<ThemeMode, BorderValue>;
 
 export type ModeProp = { mode: ThemeMode };
-
-export type IconOnlyProp = { iconOnly: boolean };

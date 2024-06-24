@@ -6,7 +6,7 @@ import { useBlocksTheme } from '../Blocks.hooks';
 
 import { getLozengeSizeStyles, getLozengeVariantStyles } from './Lozenge.constants';
 
-import { IconOnlyProp, ModeProp, TransformedHTMLAttributes } from '../Blocks.types';
+import { ModeProp, TransformedHTMLAttributes } from '../Blocks.types';
 import { LozengeSize, LozengeVariant } from './Lozenge.types';
 
 export type LozengeProps = {
@@ -22,9 +22,11 @@ export type LozengeProps = {
   variant?: LozengeVariant;
 } & TransformedHTMLAttributes<HTMLDivElement>;
 
+type StyledLozengeProps = LozengeProps & ModeProp & { iconOnly: boolean };
+
 const StyledLozenge = styled.div.withConfig({
   shouldForwardProp: (prop, defaultValidatorFn) => !['mode'].includes(prop) && defaultValidatorFn(prop),
-})<LozengeProps & ModeProp & IconOnlyProp>`
+})<StyledLozengeProps>`
   /* Common Lozenge CSS */
 
   align-items: center;
