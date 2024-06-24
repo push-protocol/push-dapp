@@ -20,7 +20,7 @@ export type DashboardSectionProps = {
 const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
   const { isWalletConnected, account } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
-  const { data: userDetails, refetch, isSuccess, isLoading } = useGetUserRewardsDetails({ caip10WalletAddress });
+  const { data: userDetails, refetch, isLoading } = useGetUserRewardsDetails({ caip10WalletAddress });
 
   const handleRefetch = () => {
     refetch();
@@ -49,7 +49,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
         >
           <DashboardSectionPoints
             title="Total Points"
-            points={userDetails?.totalPoints ? userDetails.totalPoints : 0}
+            points={userDetails?.totalPoints}
             rank={userDetails?.rank}
             isLoading={isLoading}
             refetch={() => refetch()}
@@ -57,7 +57,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
 
           <DashboardSectionPoints
             title="Referral Points"
-            points={userDetails?.referralPoints ? userDetails.referralPoints : 0}
+            points={userDetails?.referralPoints}
             usersInvited={userDetails?.usersInvited}
             isLoading={isLoading}
           />

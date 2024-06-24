@@ -39,7 +39,7 @@ const RewardsSection = () => {
           Complete Tasks on Push. Earn Reward Points.
         </Text>
       </Box>
-      <Link to={'/rewards/dashboard'}>
+      <Link to={'/points'}>
         <Button
           variant="tertiary"
           size="small"

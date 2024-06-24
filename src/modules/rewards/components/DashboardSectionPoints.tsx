@@ -70,13 +70,23 @@ const DashboardSectionPoints: FC = ({ title, points, rank, usersInvited, refetch
       </Box>
 
       <Box>
-        <Skeleton isLoading={isLoading}>
-          <Text
-            variant="h1-bold"
-            color={{ light: 'gray-1000', dark: 'gray-100' }}
-          >
-            {points}
-          </Text>
+        <Skeleton isLoading={isLoading && isWalletConnected}>
+          {points != null && (
+            <Text
+              variant="h1-bold"
+              color={{ light: 'gray-1000', dark: 'gray-100' }}
+            >
+              {points}
+            </Text>
+          )}
+          {!isWalletConnected && !points && (
+            <Text
+              variant="h1-bold"
+              color={{ light: 'gray-1000', dark: 'gray-100' }}
+            >
+              0
+            </Text>
+          )}
         </Skeleton>
 
         <Skeleton isLoading={isLoading}>

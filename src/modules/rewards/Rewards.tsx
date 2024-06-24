@@ -4,7 +4,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 //Hooks
-import { useGetUserRewardsDetails, useCreateUserRewardsDetails } from 'queries';
+import { useGetUserRewardsDetails, useCreateRewardsUser } from 'queries';
 import { useAccount } from 'hooks';
 import { useRewardsTabs } from './hooks/useRewardsTabs';
 
@@ -49,7 +49,7 @@ const Rewards: FC<RewardsProps> = () => {
     userWallet: caip10WalletAddress,
   };
 
-  const { mutate: createUser } = useCreateUserRewardsDetails();
+  const { mutate: createUser } = useCreateRewardsUser();
 
   const generateUserId = async () => {
     if (!userPushSDKInstance || userDetails?.userId) return;
@@ -58,7 +58,7 @@ const Rewards: FC<RewardsProps> = () => {
     const verificationProof = await generateVerificationProof(userData, userPushSDKInstance);
 
     if (verificationProof == null || verificationProof == undefined) {
-      if (activeTab === 'dashboard' && userPushSDKInstance && userPushSDKInstance.readmode()) {
+      if (activeTab === '' && userPushSDKInstance && userPushSDKInstance.readmode()) {
         setConnectModalVisibility(true);
       }
     }
@@ -84,7 +84,7 @@ const Rewards: FC<RewardsProps> = () => {
   useEffect(() => {
     if (!caip10WalletAddress || !isWalletConnected) return;
     generateUserId();
-  }, [isWalletConnected, caip10WalletAddress, userPushSDKInstance, activeTab]);
+  }, [isWalletConnected, caip10WalletAddress, userPushSDKInstance]);
 
   function useQuery() {
     return new URLSearchParams(useLocation().search);

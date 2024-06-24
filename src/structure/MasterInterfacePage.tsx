@@ -90,12 +90,7 @@ function MasterInterfacePage() {
   const { showMetamaskPushSnap } = useContext(AppContext);
   const { mode } = useBlocksTheme();
 
-  const rewardsPagePaths = [
-    APP_PATHS.Rewards,
-    APP_PATHS.RewardsActivities,
-    APP_PATHS.RewardsDashboard,
-    APP_PATHS.RewardsLeaderboard,
-  ];
+  const rewardsPagePaths = [APP_PATHS.Rewards, APP_PATHS.RewardsActivities, APP_PATHS.RewardsLeaderboard];
   useEffect(() => {
     if (location.hash == '#receive-notifications') {
       showMetamaskPushSnap();

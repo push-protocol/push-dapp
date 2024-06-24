@@ -13,9 +13,9 @@ const useRewardsTabs = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (location.pathname === '/rewards' || location.pathname === '/rewards/') {
-      setActiveTab('dashboard');
-      navigate(`/rewards/dashboard`);
+    if (location.pathname === '/points' || location.pathname === '/points/') {
+      setActiveTab('');
+      navigate(`/points`);
     }
   }, []);
 
@@ -32,7 +32,11 @@ const useRewardsTabs = () => {
   const handleSetActiveTab = (tab: RewardsTabs) => {
     if (tab !== activeTab) {
       setActiveTab(tab);
-      navigate(`/rewards/${tab}`);
+      if (tab == 'dashboard') {
+        navigate(`/points`);
+      } else {
+        navigate(`/points/${tab}`);
+      }
     }
   };
   return { activeTab, handleSetActiveTab };

@@ -71,7 +71,6 @@ const EXTRA_HEADER_TAGS = {
   },
   [APP_PATHS.Rewards]: REWARDS_HEADER_TAG,
   [APP_PATHS.RewardsActivities]: REWARDS_HEADER_TAG,
-  [APP_PATHS.RewardsDashboard]: REWARDS_HEADER_TAG,
   [APP_PATHS.RewardsLeaderboard]: REWARDS_HEADER_TAG,
 };
 
@@ -84,7 +83,7 @@ const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: strin
       gap={{ ml: 's1', dp: 's2' }}
     >
       <Link
-        to="/rewards/dashboard"
+        to="/points"
         isText={false}
       >
         <Box

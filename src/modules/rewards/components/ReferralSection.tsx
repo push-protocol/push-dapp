@@ -11,8 +11,6 @@ import { walletToCAIP10 } from 'helpers/w2w';
 // components
 import { Box, Button, Copy, Text, Referral, Skeleton } from 'blocks';
 
-// Styles
-
 export type ReferralSectionProps = {};
 
 const ReferralSection: FC<RefferralSectionProps> = () => {
@@ -84,7 +82,7 @@ const ReferralSection: FC<RefferralSectionProps> = () => {
                   ref={textRef}
                   color={{ light: 'gray-1000', dark: 'gray-100' }}
                 >
-                  https://app.push.org/rewards/dashboard?ref={userDetails?.userId}
+                  https://app.push.org/points?ref={userDetails?.userId}
                 </Text>
               </Box>
               <Button

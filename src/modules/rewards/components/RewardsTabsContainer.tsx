@@ -20,18 +20,20 @@ export type RewardsTabsContainerProps = {
   setShowConnectModal: Dispatch<SetStateAction<boolean>>;
 };
 
-const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handleSetActiveTab, setShowConnectModal }) => {
-
+const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({
+  activeTab,
+  handleSetActiveTab,
+  setShowConnectModal,
+}) => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
     return state.user;
   });
 
   useEffect(() => {
-    if (activeTab === 'activities' && userPushSDKInstance && userPushSDKInstance.readmode()) {
-      setShowConnectModal(true)
+    if (activeTab === 'activity' && userPushSDKInstance && userPushSDKInstance.readmode()) {
+      setShowConnectModal(true);
     }
-  }, [activeTab, userPushSDKInstance])
-
+  }, [activeTab, userPushSDKInstance]);
 
   return (
     <Box
@@ -39,7 +41,7 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handle
       borderRadius="r4"
       display="flex"
       flexDirection="column"
-      padding={{ ml: "s4 s3", initial: "s6" }}
+      padding={{ ml: 's4 s3', initial: 's6' }}
     >
       <Box
         gap="s6"
@@ -52,12 +54,11 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handle
           handleSetActiveTab={handleSetActiveTab}
         />
 
-        {activeTab === 'dashboard' && <DashboardSection onGetStarted={() => handleSetActiveTab('activities')} />}
-        {activeTab === 'activities' && userPushSDKInstance && !userPushSDKInstance.readmode() &&
+        {activeTab === 'dashboard' && <DashboardSection onGetStarted={() => handleSetActiveTab('activity')} />}
+        {activeTab === 'activity' && userPushSDKInstance && !userPushSDKInstance.readmode() && (
           <RewardsActivitiesSection />
-        }
+        )}
         {activeTab === 'leaderboard' && <LeaderBoardSection />}
-
       </Box>
     </Box>
   );

@@ -25,12 +25,12 @@ const RewardsTabs: FC<RewardsTabsProps> = ({ activeTab, handleSetActiveTab }) =>
       css={css`
         border-bottom: 1px solid var(--${mode === 'dark' ? 'gray-800' : 'gray-200'});
       `}
-      justifyContent={{ ml: "space-between", initial: 'flex-start' }}
+      justifyContent={{ ml: 'space-between', initial: 'flex-start' }}
     >
       {rewardsTabsList.map((tab) => (
         <Box
           key={`${tab.value}`}
-          padding={{ ml: "s0 s0 s3 s0", initial: "s0 s4 s4 s4" }}
+          padding={{ ml: 's0 s0 s3 s0', initial: 's0 s4 s4 s4' }}
           cursor="pointer"
           onClick={() => handleSetActiveTab(tab.value)}
           css={css`

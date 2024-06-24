@@ -5,5 +5,5 @@ export * from './useGetUserDiscordDetails';
 export * from './usePostCreateActivity';
 export * from './useGenerateUserId';
 export * from './useGetUserRewardsDetails';
-export * from './useCreateUserRewardsDetails';
+export * from './useCreateRewardsUser';
 export * from './useGetRewardsLedearboard';
