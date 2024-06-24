@@ -1,15 +1,14 @@
 import { type FC, useRef, useState } from 'react';
 import styled from 'styled-components';
-import type { TooltipContainerProps, TooltipProps } from './Tooltip.types';
-import { fadeInAnimation, fadeOutAnimation, getTooltipPositionalCSS, getTooltipResponsiveCSS } from './Tooltip.utils';
+import * as RadixTooltip from '@radix-ui/react-tooltip';
+import type { TooltipProps } from './Tooltip.types';
+import { getTooltipPositionalCSS, getTooltipResponsiveCSS } from './Tooltip.utils';
 import { getBlocksColor } from 'blocks/Blocks.utils';
-import { useDimensions } from 'hooks/useDimensions';
-
 import { tooltipCSSPropsKeys } from './Tooltip.constants';
+import { useIsVisible } from 'common';
 
-const StyledTooltip = styled.div.withConfig({
-  shouldForwardProp: (prop, defaultValidatorFn) =>
-    !tooltipCSSPropsKeys.includes(prop as keyof TooltipProps) && defaultValidatorFn(prop),
+const RadixTooltipContent = styled(RadixTooltip.Content).withConfig({
+  shouldForwardProp: (prop) => !tooltipCSSPropsKeys.includes(prop as keyof TooltipProps),
 })<TooltipProps>`
   /* Tooltip responsive styles */
   ${(props) => getTooltipResponsiveCSS(props)}
@@ -18,23 +17,11 @@ const StyledTooltip = styled.div.withConfig({
   display: flex;
   flex-direction: column;
   gap: 4px;
-  z-index: 10;
   padding: 8px;
-  position: absolute;
   border-radius: 12px;
   background-color: ${getBlocksColor('light', 'black')};
-  visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
-  animation: ${({ visible }) => (visible ? fadeInAnimation : fadeOutAnimation)} 0.1s ease-in-out;
-
-  /* Tooltip position */
-  ${(props) => getTooltipPositionalCSS(props)}
 
   ${(props) => props.css || ''};
-`;
-
-const TooltipContainer = styled.div<TooltipContainerProps>`
-  position: relative;
-  cursor: ${({ trigger }) => (trigger === 'click' ? 'pointer' : 'default')};
 `;
 
 const TooltipTitle = styled.div`
@@ -54,10 +41,10 @@ const TooltipDescription = styled.div`
 `;
 
 const Tooltip: FC<TooltipProps> = ({
-  tooltipPosition = 'top-right',
   width = 'max-content',
   maxWidth = '171px',
   trigger = 'hover',
+  tooltipPosition = 'bottom-right',
   children,
   description,
   title,
@@ -65,35 +52,51 @@ const Tooltip: FC<TooltipProps> = ({
   ...props
 }) => {
   const [visible, setVisible] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { width: containerWidth, height: containerHeight } = useDimensions(containerRef);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const isInView = useIsVisible(triggerRef);
+
+  const { style, ...cssProps } = getTooltipPositionalCSS(tooltipPosition);
+  const triggerArray = typeof trigger === 'string' ? [trigger] : trigger;
 
   const showTooltip = () => setVisible(true);
   const hideTooltip = () => setVisible(false);
 
   return (
-    <TooltipContainer
-      ref={containerRef}
-      onMouseEnter={trigger === 'hover' ? showTooltip : undefined}
-      onClick={trigger === 'click' ? () => setVisible((prev) => !prev) : undefined}
-      onMouseLeave={hideTooltip}
-      trigger={trigger}
-    >
-      <StyledTooltip
-        {...props}
-        {...{ tooltipPosition, visible, containerWidth, containerHeight, width, maxWidth }}
+    <RadixTooltip.Provider>
+      <RadixTooltip.Root
+        delayDuration={250}
+        open={visible && isInView}
       >
-        {overlay ? (
-          overlay
-        ) : (
-          <>
-            {title && <TooltipTitle>{title}</TooltipTitle>}
-            {description && <TooltipDescription>{description}</TooltipDescription>}
-          </>
-        )}
-      </StyledTooltip>
-      {children}
-    </TooltipContainer>
+        <RadixTooltip.Trigger
+          asChild
+          ref={triggerRef}
+          onMouseEnter={() => triggerArray.includes('hover') && showTooltip()}
+          onMouseLeave={() => triggerArray.includes('hover') && hideTooltip()}
+          onFocus={showTooltip}
+          onBlur={hideTooltip}
+          /* Makes the element focusable to support focus related functions on mobile devices */
+          tabIndex={0}
+        >
+          {children}
+        </RadixTooltip.Trigger>
+        <RadixTooltip.Portal>
+          <RadixTooltipContent
+            {...{ style, width, maxWidth }}
+            {...cssProps}
+            {...props}
+          >
+            {overlay ? (
+              overlay
+            ) : (
+              <>
+                {title && <TooltipTitle>{title}</TooltipTitle>}
+                {description && <TooltipDescription>{description}</TooltipDescription>}
+              </>
+            )}
+          </RadixTooltipContent>
+        </RadixTooltip.Portal>
+      </RadixTooltip.Root>
+    </RadixTooltip.Provider>
   );
 };
 
