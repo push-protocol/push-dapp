@@ -2,49 +2,42 @@ import { type FC, useRef, useState } from 'react';
 import styled from 'styled-components';
 import * as RadixTooltip from '@radix-ui/react-tooltip';
 import type { TooltipProps } from './Tooltip.types';
-import { getTooltipPositionalCSS, getTooltipResponsiveCSS } from './Tooltip.utils';
+import { getTooltipPositionalCSS } from './Tooltip.utils';
 import { getBlocksColor } from 'blocks/Blocks.utils';
 import { tooltipCSSPropsKeys } from './Tooltip.constants';
 import { useIsVisible } from 'common';
+import { Text } from 'blocks/text';
 
 const RadixTooltipContent = styled(RadixTooltip.Content).withConfig({
   shouldForwardProp: (prop) => !tooltipCSSPropsKeys.includes(prop as keyof TooltipProps),
 })<TooltipProps>`
-  /* Tooltip responsive styles */
-  ${(props) => getTooltipResponsiveCSS(props)}
-
   /* Tooltip default styles */
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 8px;
-  border-radius: 12px;
+  gap: var(--s1);
+  padding: var(--s2);
+  border-radius: var(--r3);
+  font-family: var(--font-family);
+  word-wrap: break-word;
+  color: ${getBlocksColor('light', 'white')};
   background-color: ${getBlocksColor('light', 'black')};
+
+  /* Tooltip non-responsive styles */
+  width: ${({ width }) => width};
+  min-width: ${({ minWidth }) => minWidth};
+  max-width: ${({ maxWidth }) => maxWidth};
+  height: ${({ height }) => height};
+  min-height: ${({ minHeight }) => minHeight};
+  max-height: ${({ maxHeight }) => maxHeight};
 
   ${(props) => props.css || ''};
 `;
 
-const TooltipTitle = styled.div`
-  color: ${getBlocksColor('light', 'white')};
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 130%;
-`;
-
-const TooltipDescription = styled.div`
-  color: ${getBlocksColor('light', 'gray-400')};
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-`;
-
 const Tooltip: FC<TooltipProps> = ({
   width = 'max-content',
-  maxWidth = '171px',
+  maxWidth = '274px',
   trigger = 'hover',
-  tooltipPosition = 'bottom-right',
+  tooltipPosition = 'top-right',
   children,
   description,
   title,
@@ -53,13 +46,18 @@ const Tooltip: FC<TooltipProps> = ({
 }) => {
   const [visible, setVisible] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const isInView = useIsVisible(triggerRef);
-
-  const { style, ...cssProps } = getTooltipPositionalCSS(tooltipPosition);
-  const triggerArray = typeof trigger === 'string' ? [trigger] : trigger;
 
   const showTooltip = () => setVisible(true);
   const hideTooltip = () => setVisible(false);
+
+  const onVisibilityChange = (isVisible: boolean) => {
+    if (!isVisible) hideTooltip();
+  };
+
+  const isInView = useIsVisible(triggerRef, onVisibilityChange);
+
+  const { style, ...cssProps } = getTooltipPositionalCSS(tooltipPosition);
+  const triggerArray = typeof trigger === 'string' ? [trigger] : trigger;
 
   return (
     <RadixTooltip.Provider>
@@ -72,6 +70,7 @@ const Tooltip: FC<TooltipProps> = ({
           ref={triggerRef}
           onMouseEnter={() => triggerArray.includes('hover') && showTooltip()}
           onMouseLeave={() => triggerArray.includes('hover') && hideTooltip()}
+          onClick={showTooltip}
           onFocus={showTooltip}
           onBlur={hideTooltip}
           /* Makes the element focusable to support focus related functions on mobile devices */
@@ -81,6 +80,7 @@ const Tooltip: FC<TooltipProps> = ({
         </RadixTooltip.Trigger>
         <RadixTooltip.Portal>
           <RadixTooltipContent
+            sideOffset={8}
             {...{ style, width, maxWidth }}
             {...cssProps}
             {...props}
@@ -89,8 +89,15 @@ const Tooltip: FC<TooltipProps> = ({
               overlay
             ) : (
               <>
-                {title && <TooltipTitle>{title}</TooltipTitle>}
-                {description && <TooltipDescription>{description}</TooltipDescription>}
+                {title && <Text variant="c-semibold">{title}</Text>}
+                {description && (
+                  <Text
+                    variant="c-regular"
+                    color="gray-400"
+                  >
+                    {description}
+                  </Text>
+                )}
               </>
             )}
           </RadixTooltipContent>

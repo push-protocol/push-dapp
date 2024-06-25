@@ -1,24 +1,13 @@
 import { CSSProperties } from 'react';
-import { getResponsiveCSS } from '../Blocks.utils';
-import type { TooltipResponsiveCSSPropertiesData, TooltipResponsiveProps, TooltipPosition } from './Tooltip.types';
-import { Align, Side } from '@radix-ui/react-popper';
-
-const getTooltipResponsiveCSSProperties = (props: TooltipResponsiveProps): TooltipResponsiveCSSPropertiesData[] => [
-  { propName: 'height', prop: props.height },
-  { propName: 'max-height', prop: props.maxHeight },
-  { propName: 'min-height', prop: props.minHeight },
-  { propName: 'max-width', prop: props.maxWidth },
-  { propName: 'min-width', prop: props.minWidth },
-  { propName: 'width', prop: props.width },
-];
-
-export const getTooltipResponsiveCSS = (props: TooltipResponsiveProps) => {
-  const data = getTooltipResponsiveCSSProperties(props);
-  return getResponsiveCSS(data);
-};
+import type { TooltipPosition } from './Tooltip.types';
+import { TooltipContentProps } from '@radix-ui/react-tooltip';
 
 export const getTooltipPositionalCSS = (tooltipPosition: TooltipPosition) => {
-  let style: { align: Align; side: Side; style: CSSProperties } = {
+  let style: {
+    align: TooltipContentProps['align'];
+    side: TooltipContentProps['side'];
+    style: CSSProperties;
+  } = {
     align: 'start',
     side: 'top',
     style: {

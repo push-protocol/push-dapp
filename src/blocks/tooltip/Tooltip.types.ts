@@ -1,24 +1,21 @@
 import type { ReactNode } from 'react';
 
-import type { ResponsiveProp, SpaceType, ValueOf } from '../Blocks.types';
 import type { FlattenSimpleInterpolation } from 'styled-components';
 import type { TooltipContentProps } from '@radix-ui/react-tooltip';
 
-export type TooltipResponsiveProps = {
+export type TooltipNonResponsiveProps = {
   /* Sets height css property */
-  height?: ResponsiveProp<string>;
-  /* Sets margin css property */
-  margin?: ResponsiveProp<SpaceType>;
+  height?: string;
   /* Sets max-height css property */
-  maxHeight?: ResponsiveProp<string>;
+  maxHeight?: string;
   /* Sets min-height css property */
-  minHeight?: ResponsiveProp<string>;
+  minHeight?: string;
   /* Sets max-width css property */
-  maxWidth?: ResponsiveProp<string>;
+  maxWidth?: string;
   /* Sets min-width css property */
-  minWidth?: ResponsiveProp<string>;
+  minWidth?: string;
   /* Sets width css property */
-  width?: ResponsiveProp<string>;
+  width?: string;
 };
 
 export type TooltipPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
@@ -38,28 +35,8 @@ export type TooltipComponentProps = {
   description?: string;
   /* Position of the Tooltip */
   tooltipPosition?: TooltipPosition;
-  /* Boolean value indicating whether Tooltip is visible */
-  visible?: boolean;
-};
-
-export type TooltipContainerProps = {
   /* Trigger for the Tooltip to open */
   trigger?: TooltipTrigger | Array<TooltipTrigger>;
 };
 
-export type TooltipProps = TooltipResponsiveProps & TooltipComponentProps & TooltipContainerProps & TooltipContentProps;
-
-export type TooltipResponsiveCSSProperties =
-  | 'height'
-  | 'max-height'
-  | 'min-height'
-  | 'max-width'
-  | 'min-width'
-  | 'width';
-
-export type TooltipResponsivePropValues = ValueOf<TooltipResponsiveProps>;
-
-export type TooltipResponsiveCSSPropertiesData = {
-  propName: TooltipResponsiveCSSProperties;
-  prop: TooltipResponsivePropValues;
-};
+export type TooltipProps = TooltipNonResponsiveProps & TooltipComponentProps & TooltipContentProps;
