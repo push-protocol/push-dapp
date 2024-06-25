@@ -74,10 +74,11 @@ const Rewards: FC<RewardsProps> = () => {
     handleError(userError, ref);
   }, [caip10WalletAddress, userPushSDKInstance, userError, isWalletConnected]);
 
+  const location = useLocation();
+
   useEffect(() => {
-    const hash = window.location.hash;
-    if (hash) {
-      const params = new URLSearchParams(hash.substring(1));
+    if (location.hash) {
+      const params = new URLSearchParams(location.hash.substring(1));
       const token = params.get('access_token');
       const expiresIn = params.get('expires_in');
 
@@ -86,7 +87,7 @@ const Rewards: FC<RewardsProps> = () => {
         sessionStorage.setItem('expires_in', expiresIn);
       }
 
-      window.history.replaceState({}, '', window.location.pathname);
+      window.history.replaceState({}, '', location.pathname);
     }
   }, []);
 

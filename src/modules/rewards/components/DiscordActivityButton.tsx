@@ -1,43 +1,36 @@
 // React and other libraries
-import React, { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 // Third-party libraries
 import { PushAPI } from '@pushprotocol/restapi';
-import { MdError } from 'react-icons/md';
 import { useSelector } from 'react-redux';
-
-//helpers
-import { generateVerificationProof } from '../helpers/generateVerificationProof';
-import { useCreateActivity, useGetUserDiscordDetails } from 'queries';
-
-//Hooks
-import useToast from 'hooks/useToast';
-import { appConfig } from 'config';
+import { css } from 'styled-components';
 
 //Components
-import CommonButtonComponent from './CommonButtonComponent';
+import { Box, Button, Skeleton } from 'blocks';
+
+//helpers
+import { generateVerificationProof } from '../utils/generateVerificationProof';
+import { useClaimRewardsActivity, useGetUserDiscordDetails } from 'queries';
+
+//Hooks
+import { appConfig } from 'config';
 
 //Types
 import { UserStoreType } from 'types';
 
-type Props = {
+type DiscordActivityButtonProps = {
   userId: string;
   activityTypeId: string;
   refetchActivity: () => void;
+  setErrorMessage: (errorMessage: string) => void;
 };
 
-const VerifyButton: React.FC<Props> = ({
-  userId, activityTypeId, refetchActivity
-}) => {
-
+const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activityTypeId, refetchActivity, setErrorMessage }) => {
   const access_token = sessionStorage.getItem('access_token');
   const [token, setToken] = useState(access_token);
 
-  const rewardsToast = useToast(5000);
-
-  const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
-    return state.user;
-  });
+  const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
   const handleConnect = () => {
     const CLIENT_ID = appConfig.discord_client_id;
@@ -46,28 +39,26 @@ const VerifyButton: React.FC<Props> = ({
     const AUTH_URL = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token&scope=${SCOPE}`;
 
     window.location.href = AUTH_URL;
-
   };
 
   const handleVerification = () => {
+    setErrorMessage('');
     if (token) {
       handleVerify(userPushSDKInstance);
     } else {
       handleConnect();
     }
-  }
+  };
 
-  const { data: userDiscordDetails, isLoading } = useGetUserDiscordDetails(token as string);
+  const { data: userDiscordDetails } = useGetUserDiscordDetails(token as string);
 
   useEffect(() => {
     if (token && userDiscordDetails) {
       handleVerify(userPushSDKInstance);
     }
+  }, [token, userDiscordDetails]);
 
-  }, [token, userDiscordDetails])
-
-
-  const { mutate: createActivity } = useCreateActivity({
+  const { mutate: claimRewardsActivity } = useClaimRewardsActivity({
     userId,
     activityTypeId
   });
@@ -75,7 +66,6 @@ const VerifyButton: React.FC<Props> = ({
   const [verifying, setVerifying] = useState(false);
 
   const handleVerify = async (userPushSDKInstance: PushAPI) => {
-
     if (userDiscordDetails && token) {
       setVerifying(true);
       const data = {
@@ -84,7 +74,7 @@ const VerifyButton: React.FC<Props> = ({
       };
 
       const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
-      createActivity(
+      claimRewardsActivity(
         {
           userId,
           activityTypeId,
@@ -99,20 +89,12 @@ const VerifyButton: React.FC<Props> = ({
               setVerifying(false);
             }
           },
-          onError: (error) => {
+          onError: (error: Error) => {
             console.log('Error in creating activiy', error);
             setVerifying(false);
-            rewardsToast.showMessageToast({
-              toastTitle: 'Error',
-              toastMessage: `${error.response.data.error}`,
-              toastType: 'ERROR',
-              getToastIcon: (size) => (
-                <MdError
-                  size={size}
-                  color="red"
-                />
-              ),
-            });
+            if (error.name) {
+              setErrorMessage(error.response.data.error);
+            }
           }
         }
       );
@@ -120,12 +102,22 @@ const VerifyButton: React.FC<Props> = ({
   };
 
   return (
-    <CommonButtonComponent
-      label='Verify'
-      onClick={handleVerification}
-      isLoading={isLoading || verifying}
-    />
+    <Box display="flex" alignItems={{ ml: 'flex-start', initial: 'center' }} flexDirection="column" minWidth="100px">
+      <Skeleton isLoading={verifying} width="100%">
+        <Button
+          variant="tertiary"
+          size="small"
+          css={css`
+            width: 100%;
+          `}
+          // disabled={disabled}
+          onClick={handleVerification}
+        >
+          Verify
+        </Button>
+      </Skeleton>
+    </Box>
   );
 };
 
-export default VerifyButton;
+export default DiscordActivityButton;

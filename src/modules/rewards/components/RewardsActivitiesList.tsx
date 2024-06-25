@@ -1,18 +1,17 @@
 // React and other libraries
 import { FC } from 'react';
 
-// Third-party libraries
-import { useSelector } from 'react-redux';
-
 //Hooks
 import { Activity } from 'queries';
 import { useGetRewardsActivities, useGetUserRewardsDetails } from 'queries/hooks/rewards';
 import { useAccount } from 'hooks';
 
+//Helpers
+import { walletToCAIP10 } from 'helpers/w2w';
+
 //Components
 import { Box } from 'blocks';
 import { RewardsActivitiesListItem } from './RewardsActivitiesListItem';
-import { ActivityTypeID } from '../Rewards.constants';
 
 export type RewardActivitiesProps = {};
 
@@ -21,16 +20,13 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
 
   const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities();
 
-  const rewardActivities = rewardActivitiesResponse?.activities;
-  const allActivities = [...(rewardActivities ?? [])];
-
-  const filteredActivities = allActivities.filter((activity) => activity.id !== ActivityTypeID.TWITTER.Id);
+  const filteredActivities = (rewardActivitiesResponse?.activities || []).filter((activity) => activity.activityType !== 'follow_push_on_twitter');
 
   //Getting user Id by wallet address
-  const walletAddressinCaipFormat = `eip155:${account}`;
+  const caip10WalletAddress = walletToCAIP10({ account });
 
   const { data: userDetails, isLoading: isLoadingUserDetails } = useGetUserRewardsDetails({
-    walletAddress: walletAddressinCaipFormat,
+    caip10WalletAddress: caip10WalletAddress
   });
 
   const isLoading = isLoadingUserDetails || isLoadingActivities;

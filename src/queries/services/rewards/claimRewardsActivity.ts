@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { postCreateActivityModelCreator } from 'queries/models/rewards';
-import { CreateActivityPayload } from 'queries/types';
+import { claimRewardsActivityModelCreator } from 'queries/models/rewards';
+import { ClaimRewardsActivityProps } from 'queries/types';
 // import { appConfig } from 'config';
 
-export const createActivity = (payload: CreateActivityPayload) =>
+export const claimRewardsActivity = (payload: ClaimRewardsActivityProps) =>
   axios({
     method: 'POST',
     // url: `${appConfig.apiUrl}/activities/all`
@@ -15,4 +15,4 @@ export const createActivity = (payload: CreateActivityPayload) =>
     headers: {
       'Content-Type': 'application/json'
     }
-  }).then((response) => postCreateActivityModelCreator(response.data));
+  }).then((response) => claimRewardsActivityModelCreator(response.data));

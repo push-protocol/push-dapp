@@ -24,9 +24,9 @@ export { default as Metamask } from './components/Metamask';
 export { default as Notification } from './components/Notification';
 export { default as NotificationDark } from './components/NotificationDark';
 
-export { default as RewardCoins } from './components/RewardCoins';
+export { default as RewardsBell } from './components/RewardsBell';
 export { default as Referral } from './components/Referral';
 
 export { default as Twitter } from './components/Twitter';
 
-export { default as RewardsDefaults } from './components/PushDefaultRewards';
+export { default as RewardsActivity } from './components/RewardsActivity';

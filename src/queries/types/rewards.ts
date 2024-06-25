@@ -5,9 +5,12 @@ export type RewardsAcitivitesResponse = {
   size: number;
 };
 
+//TODO: Remove the test expiry type
+export type ActvityType = 'follow_push_on_discord' | 'follow_push_on_twitter' | 'test_expiry_type';
+
 export type Activity = {
   id: string;
-  activityType: string;
+  activityType: ActvityType;
   activityTitle: string;
   activityDesc: string;
   points: number;
@@ -29,7 +32,7 @@ export type UsersActivity = {
   userId: string;
   activityTypeId: string;
   data: { twitter?: string; discord?: string };
-  status: 'COMPLETED';
+  status: 'COMPLETED' | 'PENDING';
   points: number;
   multiplier: number;
   verificationProof: string;
@@ -41,13 +44,15 @@ type Prop = {
   [key: string]: string;
 };
 
-export type CreateActivityPayload = {
+export type ClaimRewardsActivityProps = {
   userId: string;
   activityTypeId: string;
   data: Prop;
   verificationProof: string;
   pgpPublicKey: string;
 };
+
+export type ClaimActivitesResponse = {};
 
 export type DiscordDetails = {
   id: string;

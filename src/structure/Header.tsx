@@ -9,7 +9,7 @@ import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import { Box, Link, Text, Star, Lozenge, RewardCoins } from 'blocks';
+import { Box, Link, Text, Star, Lozenge, RewardsBell } from 'blocks';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { ErrorContext } from 'contexts/ErrorContext';
@@ -92,7 +92,7 @@ const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: strin
           display="flex"
           gap="s2"
         >
-          <RewardCoins
+          <RewardsBell
             width={24}
             height={28}
           />
