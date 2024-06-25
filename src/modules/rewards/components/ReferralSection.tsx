@@ -71,8 +71,8 @@ const ReferralSection: FC<ReferralSectionProps> = () => {
           </Box>
         </Box>
 
-        <Skeleton isLoading={isLoading}>
-          {isWalletConnected && (
+        {isWalletConnected && (
+          <Skeleton isLoading={isLoading}>
             <Box
               display="flex"
               gap="s2"
@@ -102,8 +102,8 @@ const ReferralSection: FC<ReferralSectionProps> = () => {
                 {isCopied ? 'Copied' : 'Copy Link'}
               </Button>
             </Box>
-          )}
-        </Skeleton>
+          </Skeleton>
+        )}
 
         {!isWalletConnected && (
           <Box>

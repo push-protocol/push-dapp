@@ -60,8 +60,8 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
             onClick={refetch}
           >
             <HoverableSVG
-              defaultBackground="pink-200"
-              hoverBackground="pink-200"
+              defaultBackground={{ light: 'pink-200', dark: 'pink-300' }}
+              hoverBackground={{ light: 'pink-200', dark: 'pink-300' }}
               padding="s1"
               borderRadius="r4"
               icon={<Refresh color="pink-400" />}
