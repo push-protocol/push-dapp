@@ -110,7 +110,7 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activit
           css={css`
             width: 100%;
           `}
-          // disabled={disabled}
+          disabled={verifying}
           onClick={handleVerification}
         >
           Verify

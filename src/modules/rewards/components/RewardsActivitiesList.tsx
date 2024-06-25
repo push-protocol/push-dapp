@@ -20,7 +20,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
 
   const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities();
 
-  const filteredActivities = (rewardActivitiesResponse?.activities || []).filter((activity) => activity.activityType !== 'follow_push_on_twitter');
+  const filteredActivities = (rewardActivitiesResponse?.activities || []);
 
   //Getting user Id by wallet address
   const caip10WalletAddress = walletToCAIP10({ account });

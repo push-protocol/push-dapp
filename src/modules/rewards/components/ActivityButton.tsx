@@ -39,6 +39,7 @@ const ActivityButton: FC<ActivityButtonProps> = ({
           userId={userId}
           activityTypeId={activityTypeId}
           refetchActivity={refetchActivity}
+          setErrorMessage={setErrorMessage}
         />
       );
       break;

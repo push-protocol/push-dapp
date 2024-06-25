@@ -14,6 +14,7 @@ import {
   Discord,
   ErrorFilled,
   InfoFilled,
+  Link,
   Lozenge,
   RewardsActivity,
   RewardsBell,
@@ -22,6 +23,7 @@ import {
   Twitter
 } from 'blocks';
 import ActivityButton from './ActivityButton';
+// import { Link } from 'react-router-dom';
 
 export type RewardActivitiesListItemProps = {
   userId: string;
@@ -44,28 +46,53 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
   const [errorMessage, setErrorMessage] = useState('');
 
   const RewardsActivityIcon = (type: ActvityType) => {
-
-    if (type === "follow_push_on_discord") {
-      return <Discord width={48} height={48} />
+    if (type === 'follow_push_on_discord') {
+      return <Discord width={48} height={48} />;
     }
 
     if (type === 'follow_push_on_twitter') {
-      return <Twitter width={48} height={48} />
+      return <Twitter width={48} height={48} />;
     }
 
-    // return <PushDefaultRewards />
-    return <RewardsActivity />
-    // return <Discord />
-  }
+    return <RewardsActivity />;
+  };
+
+  const resolveActivityTitle = (activityTitle: string) => {
+    const regex = /\[([^\]]+)\]\(([^)]+)\)/;
+    const match = activityTitle?.match(regex);
+    if (match) {
+      const preText = activityTitle.substring(0, match.index);
+      const linkedText = match[1];
+      const url = match[2];
+      let postText;
+      if (match.index) {
+        postText = activityTitle.substring(match.index + match[0].length);
+      }
+
+      return (
+        <Box display="flex" gap='s1'>
+          <Text variant="bl-semibold"> {preText}</Text>
+          <Link color='pink-500' to={url} target="_blank" rel="noopener noreferrer">
+            <Text variant="bl-semibold" color='pink-500'>{linkedText}</Text>
+          </Link>
+          <Text variant="bl-semibold"> {postText}</Text>
+        </Box>
+      );
+    }
+    return (
+      <Text variant="bl-semibold" color={{ light: 'gray-1000', dark: 'gray-100' }}>
+        {activityTitle}
+      </Text>
+    );
+  };
 
   return (
-    <Skeleton isLoading={isLoadingItem} height='90px'>
+    <Skeleton isLoading={isLoadingItem} height="90px">
       <Box
-        display='flex'
-        flexDirection='column'
+        display="flex"
+        flexDirection="column"
         borderRadius="r4"
         backgroundColor={{ light: 'gray-100', dark: 'gray-1000' }}
-
       >
         <Box
           display="flex"
@@ -76,7 +103,6 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
           alignItems={{ ml: 'flex-start', initial: 'center' }}
           gap="s4"
         >
-
           {RewardsActivityIcon(activity.activityType)}
 
           <Box
@@ -84,8 +110,8 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
             flexDirection={{ ml: 'column', initial: 'row' }}
             gap="s6"
             css={css`
-            flex: 1;
-          `}
+              flex: 1;
+            `}
             alignItems={{ ml: 'baseline', initial: 'center' }}
           >
             {/* Rewards Contents */}
@@ -96,8 +122,8 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
               alignItems={{ ml: 'flex-start', initial: 'center' }}
               justifyContent="space-between"
               css={css`
-              flex: 1;
-            `}
+                flex: 1;
+              `}
             >
               {/* Rewards Description */}
               <Box display="flex" flexDirection="column" gap="s1">
@@ -108,10 +134,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                 >
                   <Skeleton isLoading={isLoading}>
                     {/* <Link to={activity.JoinURL} target='_blank'> */}
-                    {/* This Link will change to the new icon or illustration that zee will give */}
-                    <Text variant="bl-semibold" color={{ light: 'gray-1000', dark: 'gray-100' }}>
-                      {activity.activityTitle}
-                    </Text>
+                    {resolveActivityTitle(activity.activityTitle)}
                     {/* </Link> */}
                   </Skeleton>
 
@@ -130,14 +153,14 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
 
               {/* Rewards Points */}
               <Box display="flex" minWidth="160px" flexDirection="row" gap="s2" alignItems="center">
-                <Skeleton isLoading={isLoading} height='32px'>
+                <Skeleton isLoading={isLoading} height="32px">
                   <RewardsBell width={32} height={32} />
                   <Text
                     variant="h4-semibold"
                     color={{ light: 'gray-1000', dark: 'gray-100' }}
                     css={css`
-                    margin-right: 24px;
-                  `}
+                      margin-right: 24px;
+                    `}
                   >
                     {activity.points?.toLocaleString()} points
                   </Text>
@@ -145,19 +168,22 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
               </Box>
             </Box>
 
-
-
             {/* Buttons Logic */}
 
             {usersSingleActivity?.status === 'COMPLETED' && (
-              <Box display="flex" alignItems={{ ml: 'flex-start', initial: 'center' }} flexDirection="column" minWidth="100px">
+              <Box
+                display="flex"
+                alignItems={{ ml: 'flex-start', initial: 'center' }}
+                flexDirection="column"
+                minWidth="100px"
+              >
                 <Skeleton width="100%" isLoading={isLoading}>
                   <Button
                     variant="tertiary"
                     size="small"
                     css={css`
-                 width: 100%;
-               `}
+                      width: 100%;
+                    `}
                     disabled={true}
                   >
                     Claimed
@@ -167,84 +193,78 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
             )}
 
             {usersSingleActivity?.status === 'PENDING' && (
-              <Box display="flex" alignItems={{ ml: 'flex-start', initial: 'center' }} flexDirection="column" minWidth="100px">
+              <Box
+                display="flex"
+                alignItems={{ ml: 'flex-start', initial: 'center' }}
+                flexDirection="column"
+                minWidth="100px"
+              >
                 <Skeleton width="100%" isLoading={isLoading}>
                   <Button
                     variant="tertiary"
                     size="small"
                     css={css`
-                 width: 100%;
-               `}
+                      width: 100%;
+                    `}
                     disabled={true}
                   >
-                    Pending Verification
+                    Pending
                   </Button>
                 </Skeleton>
               </Box>
             )}
 
-            {usersSingleActivity && usersSingleActivity?.status !== 'COMPLETED' && (
-              <Box display="flex">
-
-                <ActivityButton
-                  userId={userId}
-                  activityTypeId={activity.id}
-                  activityType={activity.activityType}
-                  refetchActivity={refetchActivity}
-                  setErrorMessage={setErrorMessage}
-                />
-
-              </Box>
-            )}
+            {usersSingleActivity &&
+              usersSingleActivity?.status !== 'COMPLETED' &&
+              usersSingleActivity?.status !== 'PENDING' && (
+                <Box display="flex">
+                  <ActivityButton
+                    userId={userId}
+                    activityTypeId={activity.id}
+                    activityType={activity.activityType}
+                    refetchActivity={refetchActivity}
+                    setErrorMessage={setErrorMessage}
+                  />
+                </Box>
+              )}
           </Box>
-
-
         </Box>
 
         {errorMessage && (
           <Box
-            gap='s2'
-            display='flex'
-            flexDirection='row'
-            alignItems='center'
+            gap="s2"
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
             backgroundColor={{ light: 'red-100', dark: 'red-800' }}
             borderRadius="r0 r0 r4 r4"
             padding={{ ml: 's2', lp: 's2', initial: 's2' }}
           >
             <ErrorFilled color={{ light: 'red-600', dark: 'red-300' }} size={24} />
-            <Text
-              variant='h5-semibold'
-              color={{ light: 'red-700', dark: 'red-300' }}
-            >
+            <Text variant="h5-semibold" color={{ light: 'red-700', dark: 'red-300' }}>
               {errorMessage}
             </Text>
           </Box>
-
         )}
 
         {usersSingleActivity?.status === 'PENDING' && (
           <Box
-            gap='s2'
-            display='flex'
-            flexDirection='row'
-            alignItems='center'
+            gap="s2"
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
             backgroundColor={{ light: 'gray-200', dark: 'gray-800' }}
             borderRadius="r0 r0 r4 r4"
             padding={{ ml: 's2', lp: 's2', initial: 's2' }}
           >
             <InfoFilled color={{ light: 'gray-300', dark: 'gray-700' }} size={24} />
 
-            <Text
-              variant='h5-semibold'
-              color={{ light: 'gray-500', dark: 'gray-600' }}
-            >
+            <Text variant="h5-semibold" color={{ light: 'gray-500', dark: 'gray-600' }}>
               Verification Pending: Expected completion within 24-72 hours.
             </Text>
           </Box>
         )}
-
       </Box>
-
     </Skeleton>
   );
 };
