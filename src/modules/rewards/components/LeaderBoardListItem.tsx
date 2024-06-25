@@ -43,7 +43,6 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
       display="flex"
       justifyContent="space-between"
       alignItems="center"
-      cursor="pointer"
       // TODO: Fix ds-blocks
       css={css`
         border-bottom: 1px solid var(--${mode === 'dark' ? 'gray-800' : 'gray-200'});

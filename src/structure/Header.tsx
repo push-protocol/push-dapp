@@ -101,14 +101,14 @@ const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: strin
             display={{ ml: 'none', dp: 'block' }}
             color={{ light: 'gray-1000', dark: 'gray-100' }}
           >
-            {userDetails?.totalPoints}
+            {userDetails && userDetails?.totalPoints > 0 ? userDetails?.totalPoints : ''}
           </Text>
           <Text
             variant="h5-bold"
             display={{ ml: 'block', dp: 'none' }}
             color={{ light: 'gray-1000', dark: 'gray-100' }}
           >
-            {userDetails?.totalPoints}
+            {userDetails && userDetails?.totalPoints > 0 ? userDetails?.totalPoints : ''}
           </Text>
           <Lozenge icon={<Star />}>NEW</Lozenge>
         </Box>
