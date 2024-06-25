@@ -54,6 +54,7 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activit
         const credential = TwitterAuthProvider.credentialFromResult(result);
         if (credential) {
 
+
           const user = result.user;
           return user;
         } else {
@@ -63,9 +64,8 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activit
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        const email = error.customData.email;
         const credential = TwitterAuthProvider.credentialFromError(error);
-        console.log('Error in connecting twitter >>>', errorCode, errorMessage, email, credential);
+        console.log('Error in connecting twitter >>>', errorCode, errorMessage, credential);
         return null;
       });
   };
@@ -79,12 +79,12 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activit
     setErrorMessage('');
     const userDetails = await handleConnect();
 
-    const username = userDetails?.displayName;
-
-    if (username) {
+    if (userDetails) {
       setVerifying(true);
+      const twitterHandle = userDetails.reloadUserInfo.screenName;
+
       const data = {
-        twitter: username,
+        twitter: twitterHandle
       }
 
       const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
@@ -99,8 +99,11 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activit
         },
         {
           onSuccess: (response) => {
-            console.log('Response >>>>', response);
             if (response.status === 'COMPLETED') {
+              refetchActivity();
+              setVerifying(false);
+            }
+            if (response.status === 'PENDING') {
               refetchActivity();
               setVerifying(false);
             }

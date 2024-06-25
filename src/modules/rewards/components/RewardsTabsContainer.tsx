@@ -13,21 +13,33 @@ import { RewardsActivitiesSection } from './RewardsActivitiesSection';
 //Types
 import { RewardsTabs as RewardsTabsType } from '../Rewards.types';
 import { UserStoreType } from 'types';
+import { UserRewardsDetailResponse } from 'queries';
 
 export type RewardsTabsContainerProps = {
   activeTab: RewardsTabsType;
   handleSetActiveTab: (tab: RewardsTabsType) => void;
   setShowConnectModal: Dispatch<SetStateAction<boolean>>;
+  userDetails: UserRewardsDetailResponse | undefined;
 };
 
 const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({
   activeTab,
   handleSetActiveTab,
-  setShowConnectModal
+  setShowConnectModal,
+  userDetails
 }) => {
 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
+  useEffect(() => {
+    if (activeTab === 'activity' && userPushSDKInstance && userPushSDKInstance.readmode()) {
+      setShowConnectModal(true);
+    }
+
+    if (activeTab !== 'activity' && userDetails) {
+      setShowConnectModal(false);
+    }
+  }, [activeTab, userPushSDKInstance]);
 
   return (
     <Box

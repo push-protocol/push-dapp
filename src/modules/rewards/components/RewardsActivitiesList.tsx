@@ -38,7 +38,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
     <Box
       display="flex"
       flexDirection="column"
-      gap={{ ml: 's4', initial: 's1' }}
+      gap={{ ml: 's4', initial: 's2' }}
     >
       {activityList.map((activity: Activity) => (
         <RewardsActivitiesListItem

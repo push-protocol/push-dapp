@@ -136,10 +136,12 @@ const Rewards: FC<RewardsProps> = () => {
           >
             {heading}
           </Text>
+
           <RewardsTabsContainer
             activeTab={activeTab}
             handleSetActiveTab={handleSetActiveTab}
             setShowConnectModal={setConnectModalVisibility}
+            userDetails={userDetails}
           />
 
           {activeTab === 'dashboard' && <ReferralSection />}
@@ -156,7 +158,7 @@ const Rewards: FC<RewardsProps> = () => {
           z-index: 99999;
         `}
       >
-        {isWalletConnected && userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
+        {userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
           <UnlockProfileWrapper
             type={UNLOCK_PROFILE_TYPE.MODAL}
             showConnectModal={showConnectModal}

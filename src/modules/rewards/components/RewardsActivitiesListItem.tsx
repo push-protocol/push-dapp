@@ -98,7 +98,6 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
           display="flex"
           flexDirection="row"
           padding={{ ml: 's3', lp: 's4 s2', initial: 's6' }}
-          // backgroundColor={{ light: 'gray-100', dark: 'gray-1000' }}
           borderRadius="r4 r4 r0 r0"
           alignItems={{ ml: 'flex-start', initial: 'center' }}
           gap="s4"
@@ -108,7 +107,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
           <Box
             display="flex"
             flexDirection={{ ml: 'column', initial: 'row' }}
-            gap="s6"
+            gap={{ ml: "s4", initial: "s6" }}
             css={css`
               flex: 1;
             `}
@@ -133,14 +132,12 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                   gap={{ lp: 's1', initial: 's4' }}
                 >
                   <Skeleton isLoading={isLoading}>
-                    {/* <Link to={activity.JoinURL} target='_blank'> */}
                     {resolveActivityTitle(activity.activityTitle)}
-                    {/* </Link> */}
                   </Skeleton>
 
                   {!!activity.expiryType && (
                     <Box display="flex">
-                      <Lozenge size="small">Expires in {getUpdatedExpiryTime(activity.expiryType)} days</Lozenge>
+                      <Lozenge css={css`text-transform:uppercase;`} size="small">Expires in {getUpdatedExpiryTime(activity.expiryType)} days</Lozenge>
                     </Box>
                   )}
                 </Box>
