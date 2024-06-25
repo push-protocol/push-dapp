@@ -52,17 +52,18 @@ const DashboardSectionHeader: FC<DashboardSectionHeaderProps> = ({ onGetStarted 
               variant="bl-regular"
               color="gray-1000"
             >
-              Discover, participate, and earn rewards with every step you take in Push.{' '}
+              Push Points are the new way to prove that you belong to the Push community and access to some cool
+              surprises in the future.
             </Text>
           </Box>
         </Box>
 
         <Button
           variant="tertiary"
-          size="small"
+          size="medium"
           onClick={onGetStarted}
         >
-          Get started
+          Get Started
         </Button>
       </Box>
     </Box>

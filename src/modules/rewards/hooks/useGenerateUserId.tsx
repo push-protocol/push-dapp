@@ -6,12 +6,12 @@ import { useSelector } from 'react-redux';
 
 //Hooks
 import { useCreateRewardsUser } from 'queries';
-import { generateVerificationProof } from '../utils/generateVerificationProof';
 
 //Types
 import { UserStoreType } from 'types';
 
 //helpers
+import { generateVerificationProof } from '../utils/generateVerificationProof';
 
 const useGenerateUserId = (caip10WalletAddress: string, refetch: () => void) => {
   const [isRewardsLoading, setIsRewardsLoading] = useState<boolean>(false);

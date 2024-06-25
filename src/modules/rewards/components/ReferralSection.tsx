@@ -44,7 +44,11 @@ const ReferralSection: FC<ReferralSectionProps> = () => {
         flexDirection="column"
         gap="s9"
       >
-        <Box>
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap="s2"
+        >
           <Text
             variant="h3-bold"
             color={{ light: 'gray-1000', dark: 'gray-100' }}
@@ -57,12 +61,14 @@ const ReferralSection: FC<ReferralSectionProps> = () => {
           >
             Earn Points.
           </Text>
-          <Text
-            variant="bm-regular"
-            color="gray-500"
-          >
-            Earn +12% of any Points your invites earn, and +2% of any Points your invite’s invites earn.
-          </Text>
+          <Box>
+            <Text
+              variant="bm-regular"
+              color="gray-500"
+            >
+              Earn +12% of any Points your invites earn, and +2% of any Points your invite’s invites earn.
+            </Text>
+          </Box>
         </Box>
 
         <Skeleton isLoading={isLoading}>

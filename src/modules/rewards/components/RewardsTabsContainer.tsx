@@ -23,9 +23,8 @@ export type RewardsTabsContainerProps = {
 const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({
   activeTab,
   handleSetActiveTab,
-  setShowConnectModal
+  setShowConnectModal,
 }) => {
-
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
   useEffect(() => {
@@ -59,7 +58,6 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({
         )}
         {activeTab === 'leaderboard' && <LeaderBoardSection />}
       </Box>
-
     </Box>
   );
 };

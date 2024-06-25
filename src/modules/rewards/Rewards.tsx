@@ -138,23 +138,22 @@ const Rewards: FC<RewardsProps> = () => {
         </Box>
       )}
 
-      <Box
-        display="flex"
-        justifyContent="center"
-        width="-webkit-fill-available"
-        height="100%"
-        alignItems="center"
-        css={css`
-          z-index: 99999;
-        `}
-      >
-        {isWalletConnected && userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
+      {isWalletConnected && userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
+        <Box
+          display="flex"
+          justifyContent="center"
+          width="-webkit-fill-available"
+          alignItems="center"
+          css={css`
+            z-index: 99999;
+          `}
+        >
           <UnlockProfileWrapper
             type={UNLOCK_PROFILE_TYPE.MODAL}
             showConnectModal={showConnectModal}
           />
-        )}
-      </Box>
+        </Box>
+      )}
     </Box>
   );
 };
