@@ -1,6 +1,7 @@
-import { keyframes } from 'styled-components';
+import { CSSProperties } from 'react';
 import { getResponsiveCSS } from '../Blocks.utils';
-import type { TooltipResponsiveCSSPropertiesData, TooltipResponsiveProps, TooltipProps } from './Tooltip.types';
+import type { TooltipResponsiveCSSPropertiesData, TooltipResponsiveProps, TooltipPosition } from './Tooltip.types';
+import { Align, Side } from '@radix-ui/react-popper';
 
 const getTooltipResponsiveCSSProperties = (props: TooltipResponsiveProps): TooltipResponsiveCSSPropertiesData[] => [
   { propName: 'height', prop: props.height },
@@ -16,57 +17,44 @@ export const getTooltipResponsiveCSS = (props: TooltipResponsiveProps) => {
   return getResponsiveCSS(data);
 };
 
-export const fadeInAnimation = keyframes`
-  from {
-    transform: scale(.25);
-    opacity: 0;
-  }
+export const getTooltipPositionalCSS = (tooltipPosition: TooltipPosition) => {
+  let style: { align: Align; side: Side; style: CSSProperties } = {
+    align: 'start',
+    side: 'top',
+    style: {
+      borderBottomLeftRadius: 4,
+    },
+  };
 
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-`;
-
-export const fadeOutAnimation = keyframes`
-  from {
-    transform: scale(1);
-    opacity: 0;
-  }
-
-  to {
-    transform: scale(.25);
-    opacity: 1;
-  }
-`;
-
-export const getTooltipPositionalCSS = ({ tooltipPosition, containerHeight }: TooltipProps) => {
   switch (tooltipPosition) {
-    case 'bottom-right':
-      return `
-        left: 0px;
-        border-top-left-radius: 4px;
-        top: ${containerHeight}px;
-      `;
     case 'bottom-left':
-      return `
-        right: 0px;
-        border-top-right-radius: 4px;
-        top: ${containerHeight}px;
-      `;
+      style = {
+        align: 'end',
+        side: 'bottom',
+        style: {
+          borderTopRightRadius: 4,
+        },
+      };
+      break;
     case 'top-left':
-      return `
-        right: 0px;
-        border-bottom-right-radius: 4px;
-        bottom: ${containerHeight}px;
-      `;
-    case 'top-right':
-      return `
-        left: 0px;
-        border-bottom-left-radius: 4px;
-        bottom: ${containerHeight}px;
-      `;
-    default:
-      return '';
+      style = {
+        align: 'end',
+        side: 'top',
+        style: {
+          borderBottomRightRadius: 4,
+        },
+      };
+      break;
+    case 'bottom-right':
+      style = {
+        align: 'start',
+        side: 'bottom',
+        style: {
+          borderTopLeftRadius: 4,
+        },
+      };
+      break;
   }
+
+  return style;
 };

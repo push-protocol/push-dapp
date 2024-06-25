@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
 
-import type { BlockWithoutStyleProp, ResponsiveProp, SpaceType, ValueOf } from '../Blocks.types';
+import type { ResponsiveProp, SpaceType, ValueOf } from '../Blocks.types';
 import type { FlattenSimpleInterpolation } from 'styled-components';
+import type { TooltipContentProps } from '@radix-ui/react-tooltip';
 
 export type TooltipResponsiveProps = {
   /* Sets height css property */
@@ -22,6 +23,8 @@ export type TooltipResponsiveProps = {
 
 export type TooltipPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
 
+export type TooltipTrigger = 'hover' | 'click';
+
 export type TooltipComponentProps = {
   /* Additional prop from styled components to apply custom css to Tooltip */
   css?: FlattenSimpleInterpolation;
@@ -37,21 +40,14 @@ export type TooltipComponentProps = {
   tooltipPosition?: TooltipPosition;
   /* Boolean value indicating whether Tooltip is visible */
   visible?: boolean;
-  /* Width of the tooltip container */
-  containerWidth?: number;
-  /* Height of the toolip container */
-  containerHeight?: number;
 };
 
 export type TooltipContainerProps = {
   /* Trigger for the Tooltip to open */
-  trigger?: 'hover' | 'click';
+  trigger?: TooltipTrigger | Array<TooltipTrigger>;
 };
 
-export type TooltipProps = TooltipResponsiveProps &
-  TooltipComponentProps &
-  TooltipContainerProps &
-  BlockWithoutStyleProp<HTMLDivElement>;
+export type TooltipProps = TooltipResponsiveProps & TooltipComponentProps & TooltipContainerProps & TooltipContentProps;
 
 export type TooltipResponsiveCSSProperties =
   | 'height'

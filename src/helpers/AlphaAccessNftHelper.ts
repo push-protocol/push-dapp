@@ -2,7 +2,12 @@ import { MerkleTree } from 'merkletreejs';
 import { ethers } from 'ethers';
 
 // Internal Configs
-import whitelistAddressesList from 'config/alphaAccessNft/whitelist.json';
+import { appConfig } from 'config';
+
+import prodWhitelistAddressesList from 'config/alphaAccessNft/whitelist.json';
+import testWhitelistAddressesList from 'config/alphaAccessNft/testWhiteList.json';
+
+const whitelistAddressesList = appConfig.appEnv === 'prod' ? prodWhitelistAddressesList : testWhitelistAddressesList;
 
 interface AlphaAccessNFTHelper {
   getRoot(): Promise<string>;
