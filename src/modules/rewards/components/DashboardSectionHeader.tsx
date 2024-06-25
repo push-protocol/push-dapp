@@ -1,3 +1,6 @@
+// React and other libraries
+import { FC } from 'react';
+
 // Third party libraries
 import { css } from 'styled-components';
 

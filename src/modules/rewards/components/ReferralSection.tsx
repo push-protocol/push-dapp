@@ -1,8 +1,5 @@
 // React and other libraries
-import { FC, useRef, useState } from 'react';
-
-// third party library
-import { css } from 'styled-components';
+import { FC } from 'react';
 
 //hooks
 import { useAccount, useCopy } from 'hooks';
@@ -16,16 +13,15 @@ import { Box, Button, Copy, Text, Referral, Skeleton } from 'blocks';
 
 export type ReferralSectionProps = {};
 
-const ReferralSection: FC<RefferralSectionProps> = () => {
+const ReferralSection: FC<ReferralSectionProps> = () => {
   const baseUrl = window.location.origin;
   const { isWalletConnected, account, connect } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
 
-  const {
-    data: userDetails,
-    isSuccess,
-    isLoading,
-  } = useGetUserRewardsDetails({ caip10WalletAddress: caip10WalletAddress, enabled: isWalletConnected });
+  const { data: userDetails, isLoading } = useGetUserRewardsDetails({
+    caip10WalletAddress: caip10WalletAddress,
+    enabled: isWalletConnected,
+  });
   const { textRef, isCopied, copyToClipboard } = useCopy();
 
   const handleConnectWallet = () => {

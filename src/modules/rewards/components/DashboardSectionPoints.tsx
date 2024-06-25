@@ -9,14 +9,21 @@ import { Box, HoverableSVG, Refresh, Skeleton, Text } from 'blocks';
 
 export type DashboardSectionPointsProps = {
   title: string;
-  points: number;
+  points: number | undefined;
   rank?: number;
   usersInvited?: number;
   refetch?: () => void;
   isLoading: boolean;
 };
 
-const DashboardSectionPoints: FC = ({ title, points, rank, usersInvited, refetch, isLoading }) => {
+const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
+  title,
+  points,
+  rank,
+  usersInvited,
+  refetch,
+  isLoading,
+}) => {
   const { isWalletConnected } = useAccount();
 
   return (

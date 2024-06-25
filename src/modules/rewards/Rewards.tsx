@@ -37,12 +37,10 @@ const Rewards: FC<RewardsProps> = () => {
   const { isWalletConnected, account } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
 
-  const {
-    data: userDetails,
-    refetch,
-    isLoading: isUserLoading,
-    error: userError,
-  } = useGetUserRewardsDetails({ caip10WalletAddress: caip10WalletAddress, enabled: isWalletConnected });
+  const { refetch, error: userError } = useGetUserRewardsDetails({
+    caip10WalletAddress: caip10WalletAddress,
+    enabled: isWalletConnected,
+  });
 
   const query = useQuery();
   const ref = query.get('ref');
@@ -52,14 +50,8 @@ const Rewards: FC<RewardsProps> = () => {
 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const {
-    isRewardsLoading,
-    setIsRewardsLoading,
-    showConnectModal,
-    setConnectModalVisibility,
-    generateUserId,
-    handleError,
-  } = useGenerateUserId(caip10WalletAddress, refetch);
+  const { isRewardsLoading, setIsRewardsLoading, showConnectModal, setConnectModalVisibility, handleError } =
+    useGenerateUserId(caip10WalletAddress, refetch);
 
   useEffect(() => {
     // if no wallet is connected, set loader false so you can see dashboard unconnected state
