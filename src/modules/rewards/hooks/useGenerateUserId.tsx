@@ -65,7 +65,7 @@ const useGenerateUserId = (caip10WalletAddress: string, refetch: () => void) => 
       // handle bad request
       console.error(error, 'Bad request. Please check your input and try again.');
     } else if (error.message.includes('500') && error.response.data.error == 'Failed to retrieve user') {
-      // handle USER not found - render the loading spinner, call the function to generate verification proof and query to create user with the generated verification proof, pgp public key and wallet address(caip 10 format) and ref, if there is a ref in the route query
+      // handle USER not found - call the function to generate verification proof and query to create user with the generated verification proof, pgp public key and wallet address(caip 10 format) and ref, if there is a ref in the route query
       generateUserId(ref);
     } else {
       console.error(error);

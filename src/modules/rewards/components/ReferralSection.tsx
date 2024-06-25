@@ -17,6 +17,7 @@ import { Box, Button, Copy, Text, Referral, Skeleton } from 'blocks';
 export type ReferralSectionProps = {};
 
 const ReferralSection: FC<RefferralSectionProps> = () => {
+  const baseUrl = window.location.origin;
   const { isWalletConnected, account, connect } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
 
@@ -89,7 +90,7 @@ const ReferralSection: FC<RefferralSectionProps> = () => {
                   ref={textRef}
                   color={{ light: 'gray-1000', dark: 'gray-100' }}
                 >
-                  https://app.push.org/points?ref={userDetails?.userId}
+                  {baseUrl}/points?ref={userDetails?.userId}
                 </Text>
               </Box>
               <Button
