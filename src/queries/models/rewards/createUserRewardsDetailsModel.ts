@@ -1,3 +1,4 @@
 import { createUserRewardsDetailsResponse } from '../../types/rewards';
 
-export const createUserRewardsDetailModel = (response: any): any => response;
+export const createUserRewardsDetailModel = (response: UserRewardsDetailResponse): UserRewardsDetailResponse =>
+  response;

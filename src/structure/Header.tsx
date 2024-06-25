@@ -75,7 +75,9 @@ const EXTRA_HEADER_TAGS = {
 };
 
 const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: string }) => {
-  const { data: userDetails } = useGetUserRewardsDetails({ caip10WalletAddress });
+  const { data: userDetails } = useGetUserRewardsDetails({
+    caip10WalletAddress: caip10WalletAddress,
+  });
   return (
     <Box
       display="flex"

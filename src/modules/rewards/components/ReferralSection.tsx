@@ -1,4 +1,7 @@
+// React and other libraries
 import { FC, useRef, useState } from 'react';
+
+// third party library
 import { css } from 'styled-components';
 
 //hooks
@@ -17,7 +20,11 @@ const ReferralSection: FC<RefferralSectionProps> = () => {
   const { isWalletConnected, account, connect } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
 
-  const { data: userDetails, isSuccess, isLoading } = useGetUserRewardsDetails({ caip10WalletAddress });
+  const {
+    data: userDetails,
+    isSuccess,
+    isLoading,
+  } = useGetUserRewardsDetails({ caip10WalletAddress: caip10WalletAddress, enabled: isWalletConnected });
   const { textRef, isCopied, copyToClipboard } = useCopy();
 
   const handleConnectWallet = () => {
@@ -62,7 +69,7 @@ const ReferralSection: FC<RefferralSectionProps> = () => {
         </Box>
 
         <Skeleton isLoading={isLoading}>
-          {isWalletConnected && userDetails && (
+          {isWalletConnected && (
             <Box
               display="flex"
               gap="s2"

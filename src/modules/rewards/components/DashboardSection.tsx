@@ -9,7 +9,7 @@ import { useGetUserRewardsDetails } from 'queries';
 import { walletToCAIP10 } from 'helpers/w2w';
 
 //components
-import { Box, Skeleton, Text } from 'blocks';
+import { Box, Text } from 'blocks';
 import { DashboardSectionHeader } from './DashboardSectionHeader';
 import { DashboardSectionPoints } from './DashboardSectionPoints';
 
@@ -20,7 +20,11 @@ export type DashboardSectionProps = {
 const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
   const { isWalletConnected, account } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
-  const { data: userDetails, refetch, isLoading } = useGetUserRewardsDetails({ caip10WalletAddress });
+  const {
+    data: userDetails,
+    refetch,
+    isLoading,
+  } = useGetUserRewardsDetails({ caip10WalletAddress: caip10WalletAddress, enabled: isWalletConnected });
 
   const handleRefetch = () => {
     refetch();

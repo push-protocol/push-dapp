@@ -13,13 +13,6 @@ const useRewardsTabs = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (location.pathname === '/points' || location.pathname === '/points/') {
-      setActiveTab('');
-      navigate(`/points`);
-    }
-  }, []);
-
-  useEffect(() => {
     const locationArray = location.pathname.split('/');
     const currentTab = locationArray[2];
     if (currentTab && currentTab !== activeTab) {
