@@ -101,8 +101,8 @@ const Rewards: FC<RewardsProps> = () => {
           `}
         >
           <LoaderSpinner
-            type={LOADER_TYPE}
-            spinnerSize="36"
+            type={LOADER_TYPE.SEAMLESS}
+            spinnerSize={36}
           />
         </Box>
       )}
