@@ -12,7 +12,7 @@ import ErrorContextProvider from './contexts/ErrorContext';
 import { VideoCallContextProvider } from './contexts/VideoCallContext';
 import './index.css';
 import store from './redux/store';
-import { unregister as unregisterServiceWorker } from './serviceWorker';
+import { register as registerServiceWorker } from './serviceWorker';
 import GlobalContextProvider from './contexts/GlobalContext';
 
 // Internal Configs
@@ -49,4 +49,15 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-unregisterServiceWorker();
+// Register the service worker
+registerServiceWorker({
+  onUpdate: (registration) => {
+    alert('New content is available; please refresh.');
+    if (registration && registration.waiting) {
+      registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+    }
+  },
+  onSuccess: (registration) => {
+    console.log('Service worker registered successfully:', registration);
+  },
+});

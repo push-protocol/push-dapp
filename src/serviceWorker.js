@@ -19,21 +19,24 @@ const isLocalhost = Boolean(
 );
 
 export function register(config) {
-  if (import.meta.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+  if (import.meta.env.VITE_APP_NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
-    const publicUrl = new URL(import.meta.env.PUBLIC_URL, window.location.href);
+    const publicUrl = new URL(import.meta.env.VITE_APP_PUBLIC_URL, window.location.href);
+
     if (publicUrl.origin !== window.location.origin) {
       // Our service worker won't work if PUBLIC_URL is on a different origin
       // from what our page is served on. This might happen if a CDN is used to
       // serve assets; see https://github.com/facebook/create-react-app/issues/2374
       return;
     }
-
+    console.debug('url', publicUrl.origin !== window.location.origin);
     window.addEventListener('load', () => {
-      const swUrl = `${import.meta.env.PUBLIC_URL}/service-worker.js`;
+      console.debug('Window');
+      const swUrl = `${import.meta.env.VITE_APP_PUBLIC_URL}/service-worker.js`;
 
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
+
         checkValidServiceWorker(swUrl, config);
 
         // Add some additional logging to localhost, pointing developers to the
@@ -56,6 +59,7 @@ function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
+      console.debug('Service Worker registered with scope:', registration.scope);
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (installingWorker == null) {
@@ -113,6 +117,7 @@ function checkValidServiceWorker(swUrl, config) {
         });
       } else {
         // Service worker found. Proceed as normal.
+        console.debug('registration');
         registerValidSW(swUrl, config);
       }
     })

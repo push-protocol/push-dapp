@@ -10,7 +10,7 @@ export function useBrowserNotification() {
   // const { account } = useAccount();
   // const { readOnlyWallet } = useContext(GlobalContext);
   const [triggerNotification, setTriggerNotification] = useState(false);
-
+  console.debug(triggerNotification, 'notif');
   // useEffect(() => {
   //   if (!('serviceWorker' in navigator)) return;
   //   if (!account || account == readOnlyWallet) return;
@@ -22,6 +22,7 @@ export function useBrowserNotification() {
 
   useEffect(() => {
     if (!('serviceWorker' in navigator)) return;
+    console.debug('serviceWorker', 'serviceWorker' in navigator);
     // const { onMessageListener } = require('firebase');
     onMessageListener()
       .then((payload) => {
@@ -39,7 +40,7 @@ export function useBrowserNotification() {
               url: payload?.data?.acta || payload?.data?.url,
             },
           };
-          var notification = new Notification(notificationTitle, notificationOptions);
+          new Notification(notificationTitle, notificationOptions);
         }
       })
       .catch((err) => console.error('failed: ', err))

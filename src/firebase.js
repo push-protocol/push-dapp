@@ -14,7 +14,7 @@ const CACHEPREFIX = 'PUSH_TOKEN_';
 
 const firebaseApp = initializeApp(firebaseConfig);
 const messaging = getMessaging(firebaseApp);
-
+console.debug(messaging, 'messaging');
 const getLocalToken = () => localStorage.getItem(TOKEN_KEY);
 const setLocalToken = (token) => localStorage.setItem(TOKEN_KEY, token);
 
@@ -24,10 +24,12 @@ export const getPushToken = async () => {
     console.debug(token, 'serviceWorker' in navigator, 'token');
     console.debug(appConfig.vapidKey, 'vapidkey');
     if (!token) {
+      console.debug('calling func');
       token = await getToken(messaging, {
         vapidKey: appConfig.vapidKey,
         serviceWorkerRegistration: await navigator.serviceWorker.ready, // Ensure the service worker is ready
       });
+      console.debug('token', token);
       setLocalToken(token);
     }
     return token;
@@ -38,10 +40,18 @@ export const getPushToken = async () => {
 };
 
 export const onMessageListener = () =>
-  new Promise((resolve) => {
-    onMessage(messaging, (payload) => {
-      resolve(payload);
-    });
+  new Promise((resolve, reject) => {
+    onMessage(
+      messaging,
+      (payload) => {
+        console.debug('onMessage', payload);
+
+        resolve(payload);
+      },
+      (err) => {
+        reject(err);
+      }
+    );
   });
 
 export const browserFunction = async (account) => {
