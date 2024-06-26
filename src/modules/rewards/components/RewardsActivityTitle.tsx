@@ -1,5 +1,6 @@
 import { Box, Link, Skeleton, Text } from 'blocks';
 import { FC } from 'react';
+import { getRewardsActivityTitle } from '../utils/getRewardsActivityTitle';
 
 type RewardsActivityTitleProps = {
   activityTitle: string;
@@ -7,19 +8,10 @@ type RewardsActivityTitleProps = {
 };
 
 const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({ activityTitle, isLoading }) => {
+  const extractedTitle = getRewardsActivityTitle(activityTitle);
 
-  // If url is present in the title
-  const regex = /\[([^\]]+)\]\(([^)]+)\)/;
-  const match = activityTitle?.match(regex);
-  if (match) {
-    const preText = activityTitle.substring(0, match.index);
-    const linkedText = match[1];
-    const url = match[2];
-    let postText;
-    if (match.index) {
-      postText = activityTitle.substring(match.index + match[0].length);
-    }
-
+  if (extractedTitle) {
+    const { preText, url, linkedText, postText } = extractedTitle;
     return (
       <Skeleton isLoading={isLoading}>
         <Box display="flex" gap="s1">
@@ -33,16 +25,13 @@ const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({ activityTitle, is
         </Box>
       </Skeleton>
     );
-  }
-
-  // If no url is present in the title
-  return (
-    <Skeleton isLoading={isLoading}>
+  } else {
+    return <Skeleton isLoading={isLoading}>
       <Text variant="bl-semibold" color={{ light: 'gray-1000', dark: 'gray-100' }}>
         {activityTitle}
       </Text>
     </Skeleton>
-  );
+  }
 };
 
 export { RewardsActivityTitle };
