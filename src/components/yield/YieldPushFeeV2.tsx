@@ -174,7 +174,7 @@ const Container = styled(SectionV2)`
   border-radius: 24px;
   padding: 20px;
   margin: 10px;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
 `;

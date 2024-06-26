@@ -471,7 +471,7 @@ const StateText = styled.div`
   border-radius: 25px;
   height: 26px;
   background-color: pink;
-  font-family: Strawford, Source Sans Pro;
+  font-family: FK Grotesk Neu, Source Sans Pro;
 `;
 
 const ChanneStateText = styled(StateText)`
@@ -557,7 +557,7 @@ const Verified = styled.div`
 
 const ChannelName = styled.div`
   display: flex;
-  font-family: Strawford, Source Sans Pro;
+  font-family: FK Grotesk Neu, Source Sans Pro;
   flex-direction: row;
   margin-right: 8px;
   margin-top: 12px;
@@ -589,7 +589,7 @@ const SectionDate = styled.div`
 
 const SectionDes = styled.div`
   text-transform: none;
-  font-family: Strawford, Source Sans Pro;
+  font-family: FK Grotesk Neu, Source Sans Pro;
   // color: #657795;
   color: ${(props) => props.theme.default.secondaryColor};
   margin: ${(props) => (props.margin ? props.margin : '24px 0px')};
@@ -612,7 +612,7 @@ const SubmitButton = styled(Button)`
   background: #d53a94;
   color: #fff;
   z-index: 0;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 14px;

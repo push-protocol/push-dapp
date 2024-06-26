@@ -316,7 +316,7 @@ const GroupDescription = styled(TextField)`
   border-radius: 12px;
   box-sizing: border-box;
   padding: 13px 16px;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -353,7 +353,7 @@ const CustomInput = styled(Input)`
   border-radius: 12px;
   background: ${(props) => props.theme.modalInputBackgrundColor};
   padding: 8px 16px;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 18px;

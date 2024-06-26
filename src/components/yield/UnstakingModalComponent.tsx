@@ -119,7 +119,7 @@ const Container = styled(ItemVV2)`
   padding: 8px;
   width: 340px;
   gap: 20px;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   line-height: 150%;
@@ -198,7 +198,7 @@ const WarningText = styled.p`
   margin: 0px;
   color: #d53a94;
   text-align: center;
-  font-family: Strawford;
+  font-family: FK Grotesk Neu;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;

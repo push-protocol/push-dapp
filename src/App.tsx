@@ -95,7 +95,7 @@ const GlobalStyle = createGlobalStyle`
     // TODO: Add more as needed
 
     /* Font Family */
-    --font-family: 'FKGroteskNeue';
+    --font-family: 'FK Grotesk Neu';
 
     /* Colors */
     ${Object.entries(blocksColors)

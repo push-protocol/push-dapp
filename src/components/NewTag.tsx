@@ -6,7 +6,7 @@ const NewTag = () => {
 };
 
 const NewTagContainer = styled(SpanV2)`
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 400;
   font-size: 10px;

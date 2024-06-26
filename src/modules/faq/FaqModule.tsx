@@ -694,7 +694,7 @@ const Heading = styled.h2`
   margin: ${(props) => props.margin || '20px 0px'};
   padding: ${(props) => props.padding || '0px'};
   letter-spacing: ${(props) => props.spacing || 'inherit'};
-  font-family: ${(props) => props.family || "'Strawford', 'Source Sans Pro', Helvetica, sans-serif"};
+  font-family: ${(props) => props.family || "'FK Grotesk Neu', 'Source Sans Pro', Helvetica, sans-serif"};
   text-align: ${(props) => props.textAlign || 'inherit'};
   margin-left: 20px;
   @media (max-width: 768px) {

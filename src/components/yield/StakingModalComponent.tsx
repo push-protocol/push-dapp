@@ -400,7 +400,7 @@ export default StakingModalComponent;
 const Container = styled.div`
   padding: 16px 20px;
   width: 340px;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   line-height: 150%;

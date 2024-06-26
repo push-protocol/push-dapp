@@ -90,7 +90,7 @@ const CustomButton = styled.button`
   box-sizing: border-box;
   cursor: pointer;
   color: ${(props) => props.color || 'white'};
-  font-family: Strawford;
+  font-family: FK Grotesk Neu;
   font-size: 1.125rem;
   font-weight: 500;
   letter-spacing: 0em;

@@ -84,7 +84,7 @@ export const ItemVV2 = styled(ItemHV2)`
 
 export const H2V2 = styled.h2`
   color: ${(props) => props.color || themeLight.default.color};
-  font-family: ${(props) => props.family || "'Strawford', Helvetica, sans-serif"};
+  font-family: ${(props) => props.family || "'FK Grotesk Neu', Helvetica, sans-serif"};
   font-size: ${(props) => props.fontSize || 'initial'};
   font-weight: ${(props) => props.fontWeight || 'initial'};
   letter-spacing: ${(props) => props.letterSpacing || 'initial'};

@@ -878,7 +878,7 @@ const Content = styled.div`
   left: 5px;
   color: #fff;
   background: #131313;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 400;
   font-size: 0.9rem;
@@ -896,7 +896,7 @@ const Container = styled(SectionV2)`
   border-radius: 24px;
   padding: 20px;
   margin: 10px 10px 10px 0;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   min-height: 587px;
@@ -906,7 +906,7 @@ const Container = styled(SectionV2)`
     margin: 10px 0;
   }
   @media (max-width: 600px) {
-    padding: 16px;
+    padding: 20px;
   }
 `;
 

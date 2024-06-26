@@ -173,7 +173,7 @@ const TokenStatus = styled.div`
 `;
 const Tokenbalance = styled.div`
   margin: 0px;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -186,7 +186,7 @@ const Tokenbalance = styled.div`
 
 const ImportToken = styled.div`
   align-self: end;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 400;
   font-size: 12px;

@@ -1489,7 +1489,7 @@ const StateText = styled.div`
   border-radius: 25px;
   height: 26px;
   background-color: pink;
-  font-family: Strawford, Source Sans Pro;
+  font-family: FK Grotesk Neu, Source Sans Pro;
 `;
 
 const ChanneStateText = styled(StateText)`

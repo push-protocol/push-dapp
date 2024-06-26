@@ -1051,7 +1051,7 @@ const Container = styled(SectionV2)`
   border: 1px solid ${(props) => props.theme.stakingBorder};
   border-radius: 24px;
   padding: 24px 19px;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   // min-height: 587px;

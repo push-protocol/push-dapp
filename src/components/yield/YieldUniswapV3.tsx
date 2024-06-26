@@ -689,7 +689,7 @@ const Container = styled(SectionV2)`
   border-radius: 24px;
   padding: 20px;
 
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
 
   margin: 10px 0 10px 10px;
 

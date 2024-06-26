@@ -420,7 +420,7 @@ const CustomDateTimePicker = styled(DateTimePicker)`
   flex: 6;
   display: flex;
   align-items: center !important;
-  font-family: Strawford, Source Sans Pro;
+  font-family: FK Grotesk Neu, Source Sans Pro;
   .react-datetime-picker__wrapper {
     border: 0px !important;
     border-radius: 5px !important;

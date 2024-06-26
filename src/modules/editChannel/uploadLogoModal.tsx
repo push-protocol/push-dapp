@@ -154,7 +154,7 @@ const ModalContainer = styled.div`
 
 const ModalPrimaryText = styled.p`
   margin: 0px;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 400;
   font-size: 15px;
@@ -183,7 +183,7 @@ const DragText = styled(Item)`
 const ModalFooter = styled(ItemVV2)``;
 
 const CropButton = styled(Button)`
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 18px;
@@ -199,7 +199,7 @@ const CropButton = styled(Button)`
 `;
 
 const UploadButton = styled(Button)`
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 18px;
