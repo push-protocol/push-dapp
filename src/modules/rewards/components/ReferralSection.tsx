@@ -18,7 +18,9 @@ import { Box, Button, Copy, Text, Referral, Skeleton } from 'blocks';
 export type ReferralSectionProps = {};
 
 const ReferralSection: FC<ReferralSectionProps> = () => {
-  const baseUrl = window.location.origin + getPreviewBasePath();
+  const previewBasePath = getPreviewBasePath() || '';
+  const baseUrl = window.location.origin + previewBasePath;
+
   const { isWalletConnected, account, connect } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
 
