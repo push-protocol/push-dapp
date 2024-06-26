@@ -20,11 +20,8 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
 
   const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities();
 
-  const filteredActivities = (rewardActivitiesResponse?.activities || []).filter((activity) => activity.activityType !== 'follow_push_on_twitter');
-
-  //Getting user Id by wallet address
+  // Getting user Id by wallet address
   const caip10WalletAddress = walletToCAIP10({ account });
-
   const { data: userDetails, isLoading: isLoadingUserDetails } = useGetUserRewardsDetails({
     caip10WalletAddress: caip10WalletAddress
   });
@@ -32,13 +29,13 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
   const isLoading = isLoadingUserDetails || isLoadingActivities;
 
   // If there are activities then render them else render 5 skeletons
-  const activityList = isLoading ? Array(3).fill(0) : filteredActivities || [];
+  const activityList = isLoading ? Array(3).fill(0) : rewardActivitiesResponse?.activities || [];
 
   return (
     <Box
       display="flex"
       flexDirection="column"
-      gap={{ ml: 's4', initial: 's1' }}
+      gap={{ ml: 's4', initial: 's2' }}
     >
       {activityList.map((activity: Activity) => (
         <RewardsActivitiesListItem

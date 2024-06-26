@@ -1,11 +1,8 @@
 // React and other libraries
 import { FC } from 'react';
 
-// Third-party libraries
-import { css } from 'styled-components';
-
 //Components
-import { Box, Button, Skeleton } from 'blocks';
+import { ActivityStatusButton } from './ActivityStatusButton';
 
 type DefaultActivityButtonProps = {
   userId: string;
@@ -19,21 +16,12 @@ const DefaultActivityButton: FC<DefaultActivityButtonProps> = ({ userId, activit
   };
 
   return (
-    <Box display="flex" alignItems={{ ml: 'flex-start', initial: 'center' }} flexDirection="column" minWidth="100px">
-      <Skeleton width="100%">
-        <Button
-          variant="tertiary"
-          size="small"
-          css={css`
-            width: 100%;
-          `}
-          onClick={handleVerification}
-        >
-          Verify
-        </Button>
-      </Skeleton>
-    </Box>
+    <ActivityStatusButton
+      label='Verify'
+      disabled={false}
+      onClick={handleVerification}
+    />
   );
 };
 
-export default DefaultActivityButton;
+export { DefaultActivityButton };

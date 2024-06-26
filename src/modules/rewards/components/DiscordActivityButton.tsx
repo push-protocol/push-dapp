@@ -4,10 +4,9 @@ import { FC, useEffect, useState } from 'react';
 // Third-party libraries
 import { PushAPI } from '@pushprotocol/restapi';
 import { useSelector } from 'react-redux';
-import { css } from 'styled-components';
 
-//Components
-import { Box, Button, Skeleton } from 'blocks';
+// Components
+import { ActivityStatusButton } from './ActivityStatusButton';
 
 //helpers
 import { generateVerificationProof } from '../utils/generateVerificationProof';
@@ -73,6 +72,8 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activit
         discord_token: token
       };
 
+      console.log("Data >>>", data, userPushSDKInstance);
+
       const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
       claimRewardsActivity(
         {
@@ -87,6 +88,7 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activit
             if (response.status === 'COMPLETED') {
               refetchActivity();
               setVerifying(false);
+              setErrorMessage('');
             }
           },
           onError: (error: Error) => {
@@ -102,22 +104,13 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activit
   };
 
   return (
-    <Box display="flex" alignItems={{ ml: 'flex-start', initial: 'center' }} flexDirection="column" minWidth="100px">
-      <Skeleton isLoading={verifying} width="100%">
-        <Button
-          variant="tertiary"
-          size="small"
-          css={css`
-            width: 100%;
-          `}
-          // disabled={disabled}
-          onClick={handleVerification}
-        >
-          Verify
-        </Button>
-      </Skeleton>
-    </Box>
+    <ActivityStatusButton
+      label='Verify'
+      isLoading={verifying}
+      disabled={verifying}
+      onClick={handleVerification}
+    />
   );
 };
 
-export default DiscordActivityButton;
+export { DiscordActivityButton };
