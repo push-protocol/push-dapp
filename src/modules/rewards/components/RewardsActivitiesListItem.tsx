@@ -1,5 +1,5 @@
 // React and other libraries
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 
 // Third-party libraries
 import { css } from 'styled-components';
@@ -23,7 +23,6 @@ import {
   Twitter
 } from 'blocks';
 import ActivityButton from './ActivityButton';
-// import { Link } from 'react-router-dom';
 
 export type RewardActivitiesListItemProps = {
   userId: string;
@@ -108,9 +107,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
             display="flex"
             flexDirection={{ ml: 'column', initial: 'row' }}
             gap={{ ml: "s4", initial: "s6" }}
-            css={css`
-              flex: 1;
-            `}
+            width='100%'
             alignItems={{ ml: 'baseline', initial: 'center' }}
           >
             {/* Rewards Contents */}
@@ -120,9 +117,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
               gap={{ ml: 's1', initial: 's4' }}
               alignItems={{ ml: 'flex-start', initial: 'center' }}
               justifyContent="space-between"
-              css={css`
-                flex: 1;
-              `}
+              width='100%'
             >
               {/* Rewards Description */}
               <Box display="flex" flexDirection="column" gap="s1">
@@ -149,15 +144,12 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
               </Box>
 
               {/* Rewards Points */}
-              <Box display="flex" minWidth="160px" flexDirection="row" gap="s2" alignItems="center">
+              <Box display="flex" minWidth="200px" flexDirection="row" gap="s2" alignItems="center">
                 <Skeleton isLoading={isLoading} height="32px">
                   <RewardsBell width={32} height={32} />
                   <Text
                     variant="h4-semibold"
                     color={{ light: 'gray-1000', dark: 'gray-100' }}
-                    css={css`
-                      margin-right: 24px;
-                    `}
                   >
                     {activity.points?.toLocaleString()} points
                   </Text>
