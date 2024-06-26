@@ -1,74 +1,34 @@
-// Tabs.tsx
 import React from 'react';
-import { Tabs as ReachTabs, TabList, Tab, TabPanels, TabPanel } from '@reach/tabs';
-import styled from 'styled-components';
+import { TabPanels, TabPanel } from '@reach/tabs';
 import '@reach/tabs/styles.css';
+import { useBlocksTheme } from '../Blocks.hooks';
+import {
+  StyledFillTab,
+  StyledFillTabList,
+  StyledFillTabs,
+  StyledLineTab,
+  StyledLineTabList,
+  StyledLineTabs,
+} from './Tabs.styled';
 
-interface TabItem {
+export type TabItem = {
   key: string;
   label: React.ReactNode;
   children: React.ReactNode;
   disabled?: boolean;
   icon?: React.ReactNode;
-}
+};
 
-interface TabsProps {
+export type TabsProps = {
   items: TabItem[];
   onChange: (activeKey: string) => void;
-}
+  activeKey?: string;
+  variant?: 'line' | 'fill';
+};
 
-// Styled Components
-const StyledTabs = styled(ReachTabs)`
-  font-family: Arial, sans-serif;
-  margin: 20px;
-`;
+const Tabs: React.FC<TabsProps> = ({ items, onChange, variant = 'line', activeKey }) => {
+  const { mode } = useBlocksTheme();
 
-const StyledTabList = styled(TabList)`
-  display: flex;
-  border-bottom: 2px solid #ddd;
-  margin-bottom: 16px;
-`;
-
-const StyledTab = styled(Tab)<{ disabled?: boolean }>`
-  padding: 10px 20px;
-  cursor: pointer;
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  display: flex;
-  align-items: center;
-  transition: border-color 0.3s;
-
-  &[data-selected] {
-    border-bottom-color: #007bff;
-    color: #007bff;
-  }
-
-  &:focus {
-    outline: none;
-    border-bottom-color: #0056b3;
-  }
-
-  &[aria-disabled='true'] {
-    cursor: not-allowed;
-    color: #ccc;
-  }
-
-  .icon {
-    margin-right: 8px;
-  }
-`;
-
-const StyledTabPanels = styled(TabPanels)``;
-
-const StyledTabPanel = styled(TabPanel)`
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-`;
-
-// Tabs Component
-const Tabs: React.FC<TabsProps> = ({ items, onChange }) => {
   const handleChange = (index: number) => {
     const activeItem = items[index];
     if (activeItem && !activeItem.disabled) {
@@ -76,26 +36,38 @@ const Tabs: React.FC<TabsProps> = ({ items, onChange }) => {
     }
   };
 
+  const TabsContainer = variant === 'line' ? StyledLineTabs : StyledFillTabs;
+
+  const TabList = variant === 'line' ? StyledLineTabList : StyledFillTabList;
+
+  const Tab = variant === 'line' ? StyledLineTab : StyledFillTab;
+
+  const activeTabIndex = activeKey ? items.findIndex((item) => item.key === activeKey) : undefined;
+
   return (
-    <StyledTabs onChange={handleChange}>
-      <StyledTabList>
+    <TabsContainer
+      onChange={handleChange}
+      index={activeTabIndex}
+    >
+      <TabList mode={mode}>
         {items.map((item) => (
-          <StyledTab
+          <Tab
             key={item.key}
             disabled={item.disabled}
             aria-disabled={item.disabled}
+            mode={mode}
           >
-            {item.icon && <span className="icon">{item.icon}</span>}
+            {item.icon && item.icon}
             {item.label}
-          </StyledTab>
+          </Tab>
         ))}
-      </StyledTabList>
-      <StyledTabPanels>
+      </TabList>
+      <TabPanels>
         {items.map((item) => (
-          <StyledTabPanel key={item.key}>{item.children}</StyledTabPanel>
+          <TabPanel key={item.key}>{item.children}</TabPanel>
         ))}
-      </StyledTabPanels>
-    </StyledTabs>
+      </TabPanels>
+    </TabsContainer>
   );
 };
 
