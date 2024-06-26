@@ -52,7 +52,9 @@ export type ClaimRewardsActivityProps = {
   pgpPublicKey: string;
 };
 
-export type ClaimActivitesResponse = {};
+export type ClaimActivitesResponse = {
+  status: 'COMPLETED' | 'PENDING';
+};
 
 export type DiscordDetails = {
   id: string;

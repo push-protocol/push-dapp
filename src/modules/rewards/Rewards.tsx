@@ -54,18 +54,31 @@ const Rewards: FC<RewardsProps> = () => {
   const { isRewardsLoading, setIsRewardsLoading, showConnectModal, setConnectModalVisibility, handleError } =
     useGenerateUserId(caip10WalletAddress, refetch);
 
+
   useEffect(() => {
+    // TO handle the case where the user switches the tab or click back button.
+    if (activeTab !== 'activity') {
+      setConnectModalVisibility(false);
+    }
+
+    // To handle the case where the user clicks on activities tab and the wallet is not connected.
+    if (activeTab === 'activity' && !isWalletConnected) {
+      setConnectModalVisibility(true);
+      return;
+    }
+
     // if no wallet is connected, set loader false so you can see dashboard unconnected state
     if (!isWalletConnected) {
       setIsRewardsLoading(false);
       return;
     }
+
     // if there is no converted caip wallet address, userPushSDKInstance, or wallet is not connected, or no error, return
     if (!caip10WalletAddress || !userPushSDKInstance || !userError || !isWalletConnected) return;
 
     setIsRewardsLoading(true);
     handleError(userError, ref);
-  }, [caip10WalletAddress, userPushSDKInstance, userError, isWalletConnected]);
+  }, [caip10WalletAddress, userPushSDKInstance, userError, isWalletConnected, activeTab]);
 
   const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
 
@@ -114,17 +127,17 @@ const Rewards: FC<RewardsProps> = () => {
           >
             {heading}
           </Text>
+
           <RewardsTabsContainer
             activeTab={activeTab}
             handleSetActiveTab={handleSetActiveTab}
-            setShowConnectModal={setConnectModalVisibility}
           />
 
           {activeTab === 'dashboard' && <ReferralSection />}
         </Box>
       )}
 
-      {isWalletConnected && userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
+      {userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
         <Box
           display="flex"
           justifyContent="center"
