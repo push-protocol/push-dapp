@@ -3,7 +3,7 @@ import { FC, useEffect } from 'react';
 
 // third party libraries
 import { css } from 'styled-components';
-import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 //Hooks
@@ -30,12 +30,11 @@ import { useDiscordSession } from './hooks/useDiscordSession';
 
 export type RewardsProps = {};
 
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
-
 const Rewards: FC<RewardsProps> = () => {
+  const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
+
   const { isWalletConnected, account } = useAccount();
+
   const caip10WalletAddress = walletToCAIP10({ account });
 
   // Used to set the discord session after discord redirects back to the Dapp.
@@ -46,13 +45,11 @@ const Rewards: FC<RewardsProps> = () => {
     enabled: isWalletConnected,
   });
 
-  const query = useQuery();
-  const ref = query.get('ref');
+  const [searchParams] = useSearchParams();
 
+  const ref = searchParams.get('ref');
+  console.log('PARAMS', ref);
   const { activeTab, handleSetActiveTab } = useRewardsTabs();
-  const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
-
-  const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
   const { isRewardsLoading, setIsRewardsLoading, showConnectModal, setConnectModalVisibility, handleError } =
     useGenerateUserId(caip10WalletAddress, refetch);
@@ -69,6 +66,8 @@ const Rewards: FC<RewardsProps> = () => {
     setIsRewardsLoading(true);
     handleError(userError, ref);
   }, [caip10WalletAddress, userPushSDKInstance, userError, isWalletConnected]);
+
+  const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
 
   return (
     <Box
