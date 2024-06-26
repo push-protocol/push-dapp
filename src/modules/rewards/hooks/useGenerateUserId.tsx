@@ -14,8 +14,10 @@ import { UserStoreType } from 'types';
 import { generateVerificationProof } from '../utils/generateVerificationProof';
 
 const useGenerateUserId = (caip10WalletAddress: string, refetch: () => void) => {
-  const [isRewardsLoading, setIsRewardsLoading] = useState<boolean>(false);
-  const [showConnectModal, setConnectModalVisibility] = useState<boolean>(false);
+  const [isRewardsLoading, setIsRewardsLoading] = useState(false);
+
+  const [showConnectModal, setConnectModalVisibility] = useState(false);
+
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
   const { mutate: createUser } = useCreateRewardsUser();
