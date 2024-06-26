@@ -5,6 +5,7 @@ export { Link, type LinkProps } from './link';
 export { Separator, type SeparatorProps } from './separator';
 export { Skeleton, type SkeletonProps } from './skeleton';
 export { Text, type TextProps } from './text';
+export { Tooltip, type TooltipProps } from './tooltip';
 
 export * from './Blocks.colors';
 export * from './Blocks.constants';
