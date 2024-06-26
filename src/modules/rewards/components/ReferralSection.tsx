@@ -60,13 +60,7 @@ const ReferralSection: FC<ReferralSectionProps> = () => {
             variant="h3-bold"
             color={{ light: 'gray-1000', dark: 'gray-100' }}
           >
-            Onboard Users on Push.
-          </Text>
-          <Text
-            variant="h3-bold"
-            color={{ light: 'gray-1000', dark: 'gray-100' }}
-          >
-            Earn Points.
+            Onboard Users on Push. <br /> Earn Points.
           </Text>
           <Box>
             <Text
