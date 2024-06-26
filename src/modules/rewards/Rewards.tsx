@@ -48,7 +48,7 @@ const Rewards: FC<RewardsProps> = () => {
   const [searchParams] = useSearchParams();
 
   const ref = searchParams.get('ref');
-  console.log('PARAMS', ref);
+
   const { activeTab, handleSetActiveTab } = useRewardsTabs();
 
   const { isRewardsLoading, setIsRewardsLoading, showConnectModal, setConnectModalVisibility, handleError } =
