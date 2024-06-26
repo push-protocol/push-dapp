@@ -14,6 +14,7 @@ export type DashboardSectionPointsProps = {
   usersInvited?: number;
   refetch?: () => void;
   isLoading: boolean;
+  isFetching?: boolean;
 };
 
 const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
@@ -23,6 +24,7 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
   usersInvited,
   refetch,
   isLoading,
+  isFetching,
 }) => {
   const { isWalletConnected } = useAccount();
 
@@ -71,7 +73,7 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
                 variant="bs-semibold"
                 color="gray-500"
               >
-                Update
+                {isFetching ? 'Updating...' : 'Update'}
               </Text>
             </Box>
           </Box>

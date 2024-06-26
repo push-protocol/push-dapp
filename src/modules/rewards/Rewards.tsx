@@ -29,7 +29,7 @@ export type RewardsProps = {};
 const Rewards: FC<RewardsProps> = () => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const { account, isWalletConnected } = useAccount();
+  const { account } = useAccount();
 
   const caip10WalletAddress = walletToCAIP10({ account });
 
@@ -48,7 +48,6 @@ const Rewards: FC<RewardsProps> = () => {
     if (activeTab === 'activity' && userPushSDKInstance && userPushSDKInstance.readmode()) {
       setConnectModalVisibility(true);
     }
-
   }, [activeTab, account, userPushSDKInstance]);
 
   const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
@@ -56,7 +55,8 @@ const Rewards: FC<RewardsProps> = () => {
   return (
     <Box
       height="100%"
-      margin={{ initial: 's4 s6 s4 s6', ml: 's4' }}
+      // margin={{ initial: 's4 s6 s4 s6', ml: 's4' }}
+      width="-webkit-fill-available"
     >
       <Box
         flexDirection="column"

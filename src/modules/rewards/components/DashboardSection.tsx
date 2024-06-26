@@ -25,6 +25,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
     isSuccess,
     refetch,
     isLoading: isUserLoading,
+    isFetching,
   } = useGetUserRewardsDetails({ caip10WalletAddress: caip10WalletAddress, enabled: isWalletConnected });
 
   const isLoading = isUserLoading || !isSuccess;
@@ -55,6 +56,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
             points={userDetails?.totalPoints}
             rank={userDetails?.rank}
             isLoading={isLoading}
+            isFetching={isFetching}
             refetch={() => refetch()}
           />
 
