@@ -10,15 +10,15 @@ import { useGetUserRewardsDetails } from 'queries';
 
 //helpers
 import { walletToCAIP10 } from 'helpers/w2w';
+import { getPreviewBasePath } from '../../../../basePath';
 
 // components
 import { Box, Button, Copy, Text, Referral, Skeleton } from 'blocks';
-import { getPreviewBasePath } from '../../../../basePath';
 
 export type ReferralSectionProps = {};
 
 const ReferralSection: FC<ReferralSectionProps> = () => {
-  const baseUrl = window.location.origin;
+  const baseUrl = window.location.origin + getPreviewBasePath();
   const { isWalletConnected, account, connect } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
 
@@ -100,8 +100,7 @@ const ReferralSection: FC<ReferralSectionProps> = () => {
                   ref={textRef}
                   color={{ light: 'gray-1000', dark: 'gray-100' }}
                 >
-                  {baseUrl}
-                  {getPreviewBasePath()}/points?ref={userDetails?.userId}
+                  {baseUrl}/points?ref={userDetails?.userId}
                 </Text>
               </Box>
               <Button
