@@ -69,9 +69,10 @@ import { MODAL_POSITION } from 'hooks/useModalBlur';
 import MetamaskPushSnapModal from 'modules/receiveNotifs/MetamaskPushSnapModal';
 import SnapPage from 'pages/SnapPage';
 import { AppContextType } from 'types/context';
-import { getPublicAssetPath } from 'helpers/RoutesHelper';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { ModeProp } from 'blocks';
+
+const rewardsPagePaths = [APP_PATHS.Rewards, APP_PATHS.RewardsActivities, APP_PATHS.RewardsLeaderboard];
 
 // Create Header
 function MasterInterfacePage() {
@@ -90,7 +91,6 @@ function MasterInterfacePage() {
   const { showMetamaskPushSnap } = useContext(AppContext);
   const { mode } = useBlocksTheme();
 
-  const rewardsPagePaths = [APP_PATHS.Rewards, APP_PATHS.RewardsActivities, APP_PATHS.RewardsLeaderboard];
   useEffect(() => {
     if (location.hash == '#receive-notifications') {
       showMetamaskPushSnap();

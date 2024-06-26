@@ -26,10 +26,6 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
     isLoading,
   } = useGetUserRewardsDetails({ caip10WalletAddress: caip10WalletAddress, enabled: isWalletConnected });
 
-  const handleRefetch = () => {
-    refetch();
-  };
-
   return (
     <>
       <Box

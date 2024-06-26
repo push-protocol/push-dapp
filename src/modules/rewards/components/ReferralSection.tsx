@@ -1,8 +1,5 @@
 // React and other libraries
-import { FC, useRef, useState } from 'react';
-
-// third party library
-import { css } from 'styled-components';
+import { FC } from 'react';
 
 //hooks
 import { useAccount, useCopy } from 'hooks';
@@ -16,15 +13,15 @@ import { Box, Button, Copy, Text, Referral, Skeleton } from 'blocks';
 
 export type ReferralSectionProps = {};
 
-const ReferralSection: FC<RefferralSectionProps> = () => {
+const ReferralSection: FC<ReferralSectionProps> = () => {
+  const baseUrl = window.location.origin;
   const { isWalletConnected, account, connect } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
 
-  const {
-    data: userDetails,
-    isSuccess,
-    isLoading,
-  } = useGetUserRewardsDetails({ caip10WalletAddress: caip10WalletAddress, enabled: isWalletConnected });
+  const { data: userDetails, isLoading } = useGetUserRewardsDetails({
+    caip10WalletAddress: caip10WalletAddress,
+    enabled: isWalletConnected,
+  });
   const { textRef, isCopied, copyToClipboard } = useCopy();
 
   const handleConnectWallet = () => {
@@ -47,7 +44,11 @@ const ReferralSection: FC<RefferralSectionProps> = () => {
         flexDirection="column"
         gap="s9"
       >
-        <Box>
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap="s2"
+        >
           <Text
             variant="h3-bold"
             color={{ light: 'gray-1000', dark: 'gray-100' }}
@@ -60,16 +61,18 @@ const ReferralSection: FC<RefferralSectionProps> = () => {
           >
             Earn Points.
           </Text>
-          <Text
-            variant="bm-regular"
-            color="gray-500"
-          >
-            Earn +12% of any Points your invites earn, and +2% of any Points your invite’s invites earn.
-          </Text>
+          <Box>
+            <Text
+              variant="bm-regular"
+              color="gray-500"
+            >
+              Earn +12% of any Points your invites earn, and +2% of any Points your invite’s invites earn.
+            </Text>
+          </Box>
         </Box>
 
-        <Skeleton isLoading={isLoading}>
-          {isWalletConnected && (
+        {isWalletConnected && (
+          <Skeleton isLoading={isLoading}>
             <Box
               display="flex"
               gap="s2"
@@ -89,7 +92,7 @@ const ReferralSection: FC<RefferralSectionProps> = () => {
                   ref={textRef}
                   color={{ light: 'gray-1000', dark: 'gray-100' }}
                 >
-                  https://app.push.org/points?ref={userDetails?.userId}
+                  {baseUrl}/points?ref={userDetails?.userId}
                 </Text>
               </Box>
               <Button
@@ -99,8 +102,8 @@ const ReferralSection: FC<RefferralSectionProps> = () => {
                 {isCopied ? 'Copied' : 'Copy Link'}
               </Button>
             </Box>
-          )}
-        </Skeleton>
+          </Skeleton>
+        )}
 
         {!isWalletConnected && (
           <Box>

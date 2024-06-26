@@ -5,7 +5,7 @@ import { FC } from 'react';
 import { DiscordActivityButton } from './DiscordActivityButton';
 import { TwitterActivityButton } from './TwitterActivityButton';
 import { DefaultActivityButton } from './DefaultActivityButton';
-import { StatusButtonComponent } from './StatusButtonComponent';
+import { ActivityStatusButton } from './ActivityStatusButton';
 
 //Queries
 import { ActvityType, UsersActivity } from 'queries';
@@ -27,13 +27,12 @@ const ActivityButton: FC<ActivityButtonProps> = ({
   setErrorMessage,
   usersSingleActivity
 }) => {
-  let componentToRender;
 
   switch (usersSingleActivity.status) {
     case 'COMPLETED':
-      return <StatusButtonComponent label="Claimed" disabled={true} />;
+      return <ActivityStatusButton label="Claimed" disabled={true} />;
     case 'PENDING':
-      return <StatusButtonComponent label="Pending" disabled={true} />;
+      return <ActivityStatusButton label="Pending" disabled={true} />;
     default:
       switch (activityType) {
         case 'follow_push_on_discord':
@@ -56,12 +55,8 @@ const ActivityButton: FC<ActivityButtonProps> = ({
             activityTypeId={activityTypeId}
             refetchActivity={refetchActivity}
           />
-          break;
       }
-      break;
   }
-
-  return <div>{componentToRender}</div>;
 };
 
-export default ActivityButton;
+export { ActivityButton };

@@ -43,7 +43,6 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({
         {activeTab === 'activity' && <RewardsActivitiesSection />}
         {activeTab === 'leaderboard' && <LeaderBoardSection />}
       </Box>
-
     </Box>
   );
 };

@@ -14,7 +14,7 @@ import {
   Skeleton,
   Text
 } from 'blocks';
-import ActivityButton from './ActivityButton';
+import { ActivityButton } from './ActivityButton';
 import { RewardsActivityIcon } from './RewardsActivityIcon';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
 

@@ -1,3 +1,6 @@
+// React and other libraries
+import { FC } from 'react';
+
 // Third party libraries
 import { css } from 'styled-components';
 
@@ -41,25 +44,28 @@ const DashboardSectionHeader: FC<DashboardSectionHeaderProps> = ({ onGetStarted 
           >
             <Text
               variant="h4-semibold"
-              color="gray-1000"
+              color="black"
             >
               Earn Rewards for Exploring!
             </Text>
-            <Text
-              variant="bl-regular"
-              color="gray-1000"
-            >
-              Discover, participate, and earn rewards with every step you take in Push.{' '}
-            </Text>
+            <Box maxWidth={{ tb: 'auto', initial: '567px' }}>
+              <Text
+                variant="bl-regular"
+                color="black"
+              >
+                Push Points are the new way to prove that you belong to the Push community and access to some cool
+                surprises in the future.
+              </Text>
+            </Box>
           </Box>
         </Box>
 
         <Button
           variant="tertiary"
-          size="small"
+          size="medium"
           onClick={onGetStarted}
         >
-          Get started
+          Get Started
         </Button>
       </Box>
     </Box>

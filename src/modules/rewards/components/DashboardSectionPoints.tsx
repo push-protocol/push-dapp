@@ -9,14 +9,21 @@ import { Box, HoverableSVG, Refresh, Skeleton, Text } from 'blocks';
 
 export type DashboardSectionPointsProps = {
   title: string;
-  points: number;
+  points: number | undefined;
   rank?: number;
   usersInvited?: number;
   refetch?: () => void;
   isLoading: boolean;
 };
 
-const DashboardSectionPoints: FC = ({ title, points, rank, usersInvited, refetch, isLoading }) => {
+const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
+  title,
+  points,
+  rank,
+  usersInvited,
+  refetch,
+  isLoading,
+}) => {
   const { isWalletConnected } = useAccount();
 
   return (
@@ -28,6 +35,8 @@ const DashboardSectionPoints: FC = ({ title, points, rank, usersInvited, refetch
       borderRadius="r6"
       gap="s3"
       border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
+      minHeight={{ tb: '115px', initial: '125px' }}
+      justifyContent="space-between"
     >
       <Box
         width="-webkit-fill-available"
@@ -51,8 +60,8 @@ const DashboardSectionPoints: FC = ({ title, points, rank, usersInvited, refetch
             onClick={refetch}
           >
             <HoverableSVG
-              defaultBackground="pink-200"
-              hoverBackground="pink-200"
+              defaultBackground={{ light: 'pink-200', dark: 'pink-300' }}
+              hoverBackground={{ light: 'pink-200', dark: 'pink-300' }}
               padding="s1"
               borderRadius="r4"
               icon={<Refresh color="pink-400" />}
@@ -90,26 +99,27 @@ const DashboardSectionPoints: FC = ({ title, points, rank, usersInvited, refetch
           </Text>
         )}
 
+        {/* show rank only when user has points more than 0 */}
         <Skeleton isLoading={isLoading}>
-          {rank != null && (
+          {points && points > 0 && rank != null ? (
             <Text
               variant="h5-bold"
               color="gray-500"
             >
-              {rank > 0 ? `Rank #${rank}` : 'Rank -'}
+              {rank > 0 && `Rank #${rank}`}
             </Text>
-          )}
+          ) : null}
         </Skeleton>
 
         <Skeleton isLoading={isLoading}>
-          {usersInvited != null && (
+          {usersInvited && usersInvited > 0 ? (
             <Text
               variant="h5-bold"
               color="gray-500"
             >
               {usersInvited > 1 ? `${usersInvited} Users Invited` : `${usersInvited} User Invited`}
             </Text>
-          )}
+          ) : null}
         </Skeleton>
       </Box>
     </Box>

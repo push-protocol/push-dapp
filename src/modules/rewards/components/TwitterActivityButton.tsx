@@ -7,17 +7,17 @@ import { getAuth, signInWithPopup, TwitterAuthProvider, User } from 'firebase/au
 import { useSelector } from 'react-redux';
 
 //Components
-import { useClaimRewardsActivity } from 'queries';
 import { generateVerificationProof } from '../utils/generateVerificationProof';
-import { StatusButtonComponent } from './StatusButtonComponent';
+import { ActivityStatusButton } from './ActivityStatusButton';
+
+//Queries
+import { useClaimRewardsActivity } from 'queries';
 
 //Config
 import { appConfig } from 'config';
 
 //types
 import { UserStoreType } from 'types';
-
-
 
 type TwitterActivityButtonProps = {
   userId: string;
@@ -120,7 +120,7 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activit
   };
 
   return (
-    <StatusButtonComponent
+    <ActivityStatusButton
       label='Verify'
       isLoading={verifying}
       disabled={verifying}

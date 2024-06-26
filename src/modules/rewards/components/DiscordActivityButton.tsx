@@ -5,6 +5,9 @@ import { FC, useEffect, useState } from 'react';
 import { PushAPI } from '@pushprotocol/restapi';
 import { useSelector } from 'react-redux';
 
+// Components
+import { ActivityStatusButton } from './ActivityStatusButton';
+
 //helpers
 import { generateVerificationProof } from '../utils/generateVerificationProof';
 import { useClaimRewardsActivity, useGetUserDiscordDetails } from 'queries';
@@ -14,7 +17,6 @@ import { appConfig } from 'config';
 
 //Types
 import { UserStoreType } from 'types';
-import { StatusButtonComponent } from './StatusButtonComponent';
 
 type DiscordActivityButtonProps = {
   userId: string;
@@ -99,7 +101,7 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activit
   };
 
   return (
-    <StatusButtonComponent
+    <ActivityStatusButton
       label='Verify'
       isLoading={verifying}
       disabled={verifying}

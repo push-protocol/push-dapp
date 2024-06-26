@@ -2,7 +2,7 @@
 import { FC } from 'react';
 
 //Components
-import { StatusButtonComponent } from './StatusButtonComponent';
+import { ActivityStatusButton } from './ActivityStatusButton';
 
 type DefaultActivityButtonProps = {
   userId: string;
@@ -16,7 +16,7 @@ const DefaultActivityButton: FC<DefaultActivityButtonProps> = ({ userId, activit
   };
 
   return (
-    <StatusButtonComponent
+    <ActivityStatusButton
       label='Verify'
       disabled={false}
       onClick={handleVerification}

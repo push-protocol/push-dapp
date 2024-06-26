@@ -3,6 +3,7 @@ import { BoxResponsiveCSSPropertiesData, BoxResponsiveProps } from './Box.types'
 
 const getBoxResponsiveCSSProperties = (props: BoxResponsiveProps): BoxResponsiveCSSPropertiesData[] => [
   { propName: 'align-items', prop: props.alignItems },
+  { propName: 'align-self', prop: props.alignSelf },
   { propName: 'display', prop: props.display },
   { propName: 'flex-direction', prop: props.flexDirection },
   { propName: 'gap', prop: props.gap },
@@ -14,7 +15,7 @@ const getBoxResponsiveCSSProperties = (props: BoxResponsiveProps): BoxResponsive
   { propName: 'max-width', prop: props.maxWidth },
   { propName: 'min-width', prop: props.minWidth },
   { propName: 'padding', prop: props.padding },
-  { propName: 'width', prop: props.width }
+  { propName: 'width', prop: props.width },
 ];
 
 export const getBoxResponsiveCSS = (props: BoxResponsiveProps) => {

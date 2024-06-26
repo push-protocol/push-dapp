@@ -37,12 +37,10 @@ const Rewards: FC<RewardsProps> = () => {
   const { isWalletConnected, account, wallet } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
 
-  const {
-    data: userDetails,
-    refetch,
-    isLoading: isUserLoading,
-    error: userError,
-  } = useGetUserRewardsDetails({ caip10WalletAddress: caip10WalletAddress, enabled: isWalletConnected });
+  const { refetch, error: userError } = useGetUserRewardsDetails({
+    caip10WalletAddress: caip10WalletAddress,
+    enabled: isWalletConnected,
+  });
 
   const query = useQuery();
   const ref = query.get('ref');
@@ -52,14 +50,8 @@ const Rewards: FC<RewardsProps> = () => {
 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const {
-    isRewardsLoading,
-    setIsRewardsLoading,
-    showConnectModal,
-    setConnectModalVisibility,
-    generateUserId,
-    handleError,
-  } = useGenerateUserId(caip10WalletAddress, refetch);
+  const { isRewardsLoading, setIsRewardsLoading, showConnectModal, setConnectModalVisibility, handleError } =
+    useGenerateUserId(caip10WalletAddress, refetch);
 
 
   useEffect(() => {
@@ -124,8 +116,8 @@ const Rewards: FC<RewardsProps> = () => {
           `}
         >
           <LoaderSpinner
-            type={LOADER_TYPE}
-            spinnerSize="36"
+            type={LOADER_TYPE.SEAMLESS}
+            spinnerSize={36}
           />
         </Box>
       )}
@@ -161,23 +153,22 @@ const Rewards: FC<RewardsProps> = () => {
         </Box>
       )}
 
-      <Box
-        display="flex"
-        justifyContent="center"
-        width="-webkit-fill-available"
-        height="100%"
-        alignItems="center"
-        css={css`
-          z-index: 99999;
-        `}
-      >
-        {userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
+      {userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
+        <Box
+          display="flex"
+          justifyContent="center"
+          width="-webkit-fill-available"
+          alignItems="center"
+          css={css`
+            z-index: 99999;
+          `}
+        >
           <UnlockProfileWrapper
             type={UNLOCK_PROFILE_TYPE.MODAL}
             showConnectModal={showConnectModal}
           />
-        )}
-      </Box>
+        </Box>
+      )}
     </Box>
   );
 };
