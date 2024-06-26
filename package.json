@@ -37,6 +37,7 @@
     "@pushprotocol/restapi": "1.7.20",
     "@pushprotocol/socket": "0.5.3",
     "@pushprotocol/uiweb": "1.4.1",
+    "@radix-ui/react-tooltip": "^1.1.1",
     "@reduxjs/toolkit": "^1.7.1",
     "@tanstack/react-query": "^5.44.0",
     "@tanstack/react-query-devtools": "^5.44.0",
