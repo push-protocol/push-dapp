@@ -17,10 +17,18 @@ const Add: FC<IconProps> = (allProps) => {
           {...props}
         >
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M17.7143 5.71429C17.7143 4.76751 16.9468 4 16 4C15.0532 4 14.2857 4.76751 14.2857 5.71429V14.2857H5.71429C4.76751 14.2857 4 15.0532 4 16C4 16.9468 4.76751 17.7143 5.71429 17.7143H14.2857V26.2857C14.2857 27.2325 15.0532 28 16 28C16.9468 28 17.7143 27.2325 17.7143 26.2857V17.7143H26.2857C27.2325 17.7143 28 16.9468 28 16C28 15.0532 27.2325 14.2857 26.2857 14.2857H17.7143V5.71429Z"
-            fill="currentColor"
+            d="M16.87 4L16.87 28"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M28.87 16L4.87 16"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           />
         </svg>
       }
