@@ -1,8 +1,14 @@
+// React and other libraries
 import { FC } from 'react';
-import DiscordActivityButton from './DiscordActivityButton';
-import TwitterActivityButton from './TwitterActivityButton';
-import DefaultActivityButton from './DefaultActivityButton';
-import { ActvityType } from 'queries';
+
+// Component
+import { DiscordActivityButton } from './DiscordActivityButton';
+import { TwitterActivityButton } from './TwitterActivityButton';
+import { DefaultActivityButton } from './DefaultActivityButton';
+import { StatusButtonComponent } from './StatusButtonComponent';
+
+//Queries
+import { ActvityType, UsersActivity } from 'queries';
 
 type ActivityButtonProps = {
   userId: string;
@@ -10,6 +16,7 @@ type ActivityButtonProps = {
   activityType: ActvityType;
   refetchActivity: () => void;
   setErrorMessage: (errorMessage: string) => void;
+  usersSingleActivity: UsersActivity;
 };
 
 const ActivityButton: FC<ActivityButtonProps> = ({
@@ -17,40 +24,40 @@ const ActivityButton: FC<ActivityButtonProps> = ({
   activityTypeId,
   refetchActivity,
   activityType,
-  setErrorMessage
+  setErrorMessage,
+  usersSingleActivity
 }) => {
-
-
   let componentToRender;
-  switch (activityType) {
-    case 'follow_push_on_discord':
-      componentToRender = (
-        <DiscordActivityButton
-          userId={userId}
-          activityTypeId={activityTypeId}
-          refetchActivity={refetchActivity}
-          setErrorMessage={setErrorMessage}
-        />
-      );
-      break;
-    case 'follow_push_on_twitter':
-      componentToRender = (
-        <TwitterActivityButton
-          userId={userId}
-          activityTypeId={activityTypeId}
-          refetchActivity={refetchActivity}
-          setErrorMessage={setErrorMessage}
-        />
-      );
-      break;
+
+  switch (usersSingleActivity.status) {
+    case 'COMPLETED':
+      return <StatusButtonComponent label="Claimed" disabled={true} />;
+    case 'PENDING':
+      return <StatusButtonComponent label="Pending" disabled={true} />;
     default:
-      componentToRender = (
-        <DefaultActivityButton
-          userId={userId}
-          activityTypeId={activityTypeId}
-          refetchActivity={refetchActivity}
-        />
-      );
+      switch (activityType) {
+        case 'follow_push_on_discord':
+          return <DiscordActivityButton
+            userId={userId}
+            activityTypeId={activityTypeId}
+            refetchActivity={refetchActivity}
+            setErrorMessage={setErrorMessage}
+          />
+        case 'follow_push_on_twitter':
+          return <TwitterActivityButton
+            userId={userId}
+            activityTypeId={activityTypeId}
+            refetchActivity={refetchActivity}
+            setErrorMessage={setErrorMessage}
+          />
+        default:
+          return <DefaultActivityButton
+            userId={userId}
+            activityTypeId={activityTypeId}
+            refetchActivity={refetchActivity}
+          />
+          break;
+      }
       break;
   }
 

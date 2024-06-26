@@ -1,28 +1,22 @@
 // React and other libraries
 import { FC, useState } from 'react';
 
-// Third-party libraries
-import { css } from 'styled-components';
-
 //Hooks
-import { Activity, ActvityType, useGetRewardsActivity } from 'queries';
+import { Activity, useGetRewardsActivity } from 'queries';
 
 //Components
 import {
   Box,
-  Button,
-  Discord,
   ErrorFilled,
   InfoFilled,
-  Link,
   Lozenge,
-  RewardsActivity,
   RewardsBell,
   Skeleton,
-  Text,
-  Twitter
+  Text
 } from 'blocks';
 import ActivityButton from './ActivityButton';
+import { RewardsActivityIcon } from './RewardsActivityIcon';
+import { RewardsActivityTitle } from './RewardsActivityTitle';
 
 export type RewardActivitiesListItemProps = {
   userId: string;
@@ -44,47 +38,6 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
 
   const [errorMessage, setErrorMessage] = useState('');
 
-  const RewardsActivityIcon = (type: ActvityType) => {
-    if (type === 'follow_push_on_discord') {
-      return <Discord width={48} height={48} />;
-    }
-
-    if (type === 'follow_push_on_twitter') {
-      return <Twitter width={48} height={48} />;
-    }
-
-    return <RewardsActivity />;
-  };
-
-  const resolveActivityTitle = (activityTitle: string) => {
-    const regex = /\[([^\]]+)\]\(([^)]+)\)/;
-    const match = activityTitle?.match(regex);
-    if (match) {
-      const preText = activityTitle.substring(0, match.index);
-      const linkedText = match[1];
-      const url = match[2];
-      let postText;
-      if (match.index) {
-        postText = activityTitle.substring(match.index + match[0].length);
-      }
-
-      return (
-        <Box display="flex" gap='s1'>
-          <Text variant="bl-semibold"> {preText}</Text>
-          <Link color='pink-500' to={url} target="_blank" rel="noopener noreferrer">
-            <Text variant="bl-semibold" color='pink-500'>{linkedText}</Text>
-          </Link>
-          <Text variant="bl-semibold"> {postText}</Text>
-        </Box>
-      );
-    }
-    return (
-      <Text variant="bl-semibold" color={{ light: 'gray-1000', dark: 'gray-100' }}>
-        {activityTitle}
-      </Text>
-    );
-  };
-
   return (
     <Skeleton isLoading={isLoadingItem} height="90px">
       <Box
@@ -101,13 +54,13 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
           alignItems={{ ml: 'flex-start', initial: 'center' }}
           gap="s4"
         >
-          {RewardsActivityIcon(activity.activityType)}
+          <RewardsActivityIcon type={activity.activityType} />
 
           <Box
             display="flex"
             flexDirection={{ ml: 'column', initial: 'row' }}
-            gap={{ ml: "s4", initial: "s6" }}
-            width='100%'
+            gap={{ ml: 's4', initial: 's6' }}
+            width="100%"
             alignItems={{ ml: 'baseline', initial: 'center' }}
           >
             {/* Rewards Contents */}
@@ -117,7 +70,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
               gap={{ ml: 's1', initial: 's4' }}
               alignItems={{ ml: 'flex-start', initial: 'center' }}
               justifyContent="space-between"
-              width='100%'
+              width="100%"
             >
               {/* Rewards Description */}
               <Box display="flex" flexDirection="column" gap="s1">
@@ -126,36 +79,38 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                   flexDirection={{ lp: 'column-reverse', initial: 'row' }}
                   gap={{ lp: 's1', initial: 's4' }}
                 >
-                  <Skeleton isLoading={isLoading}>
-                    {resolveActivityTitle(activity.activityTitle)}
-                  </Skeleton>
+                  <RewardsActivityTitle
+                    activityTitle={activity.activityTitle}
+                    isLoading={isLoading}
+                  />
 
                   {!!activity.expiryType && (
                     <Box display="flex">
-                      <Lozenge css={css`text-transform:uppercase;`} size="small">Expires in {getUpdatedExpiryTime(activity.expiryType)} days</Lozenge>
+                      <Lozenge
+                        size="small"
+                      >
+                        {`Expires in ${getUpdatedExpiryTime(activity.expiryType)} days`.toUpperCase()}
+                      </Lozenge>
                     </Box>
                   )}
                 </Box>
 
-                {/* We no need to show the Description when the title is discord and twitter according to the design */}
-                {activity.activityType !== 'follow_push_on_discord' && activity.activityType !== 'follow_push_on_twitter' && (
-                  <Skeleton isLoading={isLoading}>
-                    <Text variant="h5-regular" color="gray-500">
-                      {activity.activityDesc}
-                    </Text>
-                  </Skeleton>
-                )}
-
+                {/* We don't need to show the Description when the title is discord and twitter according to the design */}
+                {activity.activityType !== 'follow_push_on_discord' &&
+                  activity.activityType !== 'follow_push_on_twitter' && (
+                    <Skeleton isLoading={isLoading}>
+                      <Text variant="h5-regular" color="gray-500">
+                        {activity.activityDesc}
+                      </Text>
+                    </Skeleton>
+                  )}
               </Box>
 
               {/* Rewards Points */}
               <Box display="flex" minWidth="200px" flexDirection="row" gap="s2" alignItems="center">
                 <Skeleton isLoading={isLoading} height="32px">
                   <RewardsBell width={32} height={32} />
-                  <Text
-                    variant="h4-semibold"
-                    color={{ light: 'gray-1000', dark: 'gray-100' }}
-                  >
+                  <Text variant="h4-semibold" color={{ light: 'gray-1000', dark: 'gray-100' }}>
                     {activity.points?.toLocaleString()} points
                   </Text>
                 </Skeleton>
@@ -163,54 +118,8 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
             </Box>
 
             {/* Buttons Logic */}
-
-            {usersSingleActivity?.status === 'COMPLETED' && (
-              <Box
-                display="flex"
-                alignItems={{ ml: 'flex-start', initial: 'center' }}
-                flexDirection="column"
-                minWidth="100px"
-              >
-                <Skeleton width="100%" isLoading={isLoading}>
-                  <Button
-                    variant="tertiary"
-                    size="small"
-                    css={css`
-                      width: 100%;
-                    `}
-                    disabled={true}
-                  >
-                    Claimed
-                  </Button>
-                </Skeleton>
-              </Box>
-            )}
-
-            {usersSingleActivity?.status === 'PENDING' && (
-              <Box
-                display="flex"
-                alignItems={{ ml: 'flex-start', initial: 'center' }}
-                flexDirection="column"
-                minWidth="100px"
-              >
-                <Skeleton width="100%" isLoading={isLoading}>
-                  <Button
-                    variant="tertiary"
-                    size="small"
-                    css={css`
-                      width: 100%;
-                    `}
-                    disabled={true}
-                  >
-                    Pending
-                  </Button>
-                </Skeleton>
-              </Box>
-            )}
-
             {usersSingleActivity &&
-              usersSingleActivity?.status !== 'COMPLETED' &&
-              usersSingleActivity?.status !== 'PENDING' && (
+              (
                 <Box display="flex">
                   <ActivityButton
                     userId={userId}
@@ -218,6 +127,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                     activityType={activity.activityType}
                     refetchActivity={refetchActivity}
                     setErrorMessage={setErrorMessage}
+                    usersSingleActivity={usersSingleActivity}
                   />
                 </Box>
               )}

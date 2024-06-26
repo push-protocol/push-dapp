@@ -34,7 +34,7 @@ function useQuery() {
 }
 
 const Rewards: FC<RewardsProps> = () => {
-  const { isWalletConnected, account } = useAccount();
+  const { isWalletConnected, account, wallet } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
 
   const {
@@ -61,21 +61,36 @@ const Rewards: FC<RewardsProps> = () => {
     handleError,
   } = useGenerateUserId(caip10WalletAddress, refetch);
 
+
   useEffect(() => {
+    // TO handle the case where the user switches the tab or click back button.
+    if (activeTab !== 'activity') {
+      setConnectModalVisibility(false);
+    }
+
+    // To handle the case where the user clicks on activities tab and the wallet is not connected.
+    if (activeTab === 'activity' && !isWalletConnected) {
+      setConnectModalVisibility(true);
+      return;
+    }
+
     // if no wallet is connected, set loader false so you can see dashboard unconnected state
     if (!isWalletConnected) {
       setIsRewardsLoading(false);
       return;
     }
+
     // if there is no converted caip wallet address, userPushSDKInstance, or wallet is not connected, or no error, return
     if (!caip10WalletAddress || !userPushSDKInstance || !userError || !isWalletConnected) return;
 
     setIsRewardsLoading(true);
     handleError(userError, ref);
-  }, [caip10WalletAddress, userPushSDKInstance, userError, isWalletConnected]);
+  }, [caip10WalletAddress, userPushSDKInstance, userError, isWalletConnected, activeTab]);
 
   const location = useLocation();
 
+  //Tried creating hook for this. It was not working access_token was not getting stored in the session storage.
+  // This is for the case when the user authorizes the dapp for discord and it redirects the user to the redirected url with the access_token and expires_in present in the url.
   useEffect(() => {
     if (location.hash) {
       const params = new URLSearchParams(location.hash.substring(1));
@@ -140,8 +155,6 @@ const Rewards: FC<RewardsProps> = () => {
           <RewardsTabsContainer
             activeTab={activeTab}
             handleSetActiveTab={handleSetActiveTab}
-            setShowConnectModal={setConnectModalVisibility}
-            userDetails={userDetails}
           />
 
           {activeTab === 'dashboard' && <ReferralSection />}

@@ -1,7 +1,4 @@
-import { Dispatch, FC, SetStateAction, useEffect } from 'react';
-
-//3rd party libraries
-import { useSelector } from 'react-redux';
+import { FC } from 'react';
 
 //Components
 import { Box } from 'blocks';
@@ -12,34 +9,16 @@ import { RewardsActivitiesSection } from './RewardsActivitiesSection';
 
 //Types
 import { RewardsTabs as RewardsTabsType } from '../Rewards.types';
-import { UserStoreType } from 'types';
-import { UserRewardsDetailResponse } from 'queries';
 
 export type RewardsTabsContainerProps = {
   activeTab: RewardsTabsType;
   handleSetActiveTab: (tab: RewardsTabsType) => void;
-  setShowConnectModal: Dispatch<SetStateAction<boolean>>;
-  userDetails: UserRewardsDetailResponse | undefined;
 };
 
 const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({
   activeTab,
   handleSetActiveTab,
-  setShowConnectModal,
-  userDetails
 }) => {
-
-  const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
-
-  useEffect(() => {
-    if (activeTab === 'activity' && userPushSDKInstance && userPushSDKInstance.readmode()) {
-      setShowConnectModal(true);
-    }
-
-    if (activeTab !== 'activity' && userDetails) {
-      setShowConnectModal(false);
-    }
-  }, [activeTab, userPushSDKInstance]);
 
   return (
     <Box
@@ -61,9 +40,7 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({
         />
 
         {activeTab === 'dashboard' && <DashboardSection onGetStarted={() => handleSetActiveTab('activity')} />}
-        {activeTab === 'activity' && (
-          <RewardsActivitiesSection />
-        )}
+        {activeTab === 'activity' && <RewardsActivitiesSection />}
         {activeTab === 'leaderboard' && <LeaderBoardSection />}
       </Box>
 

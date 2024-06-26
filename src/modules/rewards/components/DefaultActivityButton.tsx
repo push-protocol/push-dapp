@@ -19,7 +19,12 @@ const DefaultActivityButton: FC<DefaultActivityButtonProps> = ({ userId, activit
   };
 
   return (
-    <Box display="flex" alignItems={{ ml: 'flex-start', initial: 'center' }} flexDirection="column" minWidth="100px">
+    <Box
+      display="flex"
+      alignItems={{ ml: 'flex-start', initial: 'center' }}
+      flexDirection="column"
+      minWidth="100px"
+    >
       <Skeleton width="100%">
         <Button
           variant="tertiary"
@@ -36,4 +41,4 @@ const DefaultActivityButton: FC<DefaultActivityButtonProps> = ({ userId, activit
   );
 };
 
-export default DefaultActivityButton;
+export { DefaultActivityButton };

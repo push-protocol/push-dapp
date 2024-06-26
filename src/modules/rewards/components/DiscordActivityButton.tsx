@@ -4,10 +4,6 @@ import { FC, useEffect, useState } from 'react';
 // Third-party libraries
 import { PushAPI } from '@pushprotocol/restapi';
 import { useSelector } from 'react-redux';
-import { css } from 'styled-components';
-
-//Components
-import { Box, Button, Skeleton } from 'blocks';
 
 //helpers
 import { generateVerificationProof } from '../utils/generateVerificationProof';
@@ -18,6 +14,7 @@ import { appConfig } from 'config';
 
 //Types
 import { UserStoreType } from 'types';
+import { StatusButtonComponent } from './StatusButtonComponent';
 
 type DiscordActivityButtonProps = {
   userId: string;
@@ -102,22 +99,13 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activit
   };
 
   return (
-    <Box display="flex" alignItems={{ ml: 'flex-start', initial: 'center' }} flexDirection="column" minWidth="100px">
-      <Skeleton isLoading={verifying} width="100%">
-        <Button
-          variant="tertiary"
-          size="small"
-          css={css`
-            width: 100%;
-          `}
-          disabled={verifying}
-          onClick={handleVerification}
-        >
-          Verify
-        </Button>
-      </Skeleton>
-    </Box>
+    <StatusButtonComponent
+      label='Verify'
+      isLoading={verifying}
+      disabled={verifying}
+      onClick={handleVerification}
+    />
   );
 };
 
-export default DiscordActivityButton;
+export { DiscordActivityButton };

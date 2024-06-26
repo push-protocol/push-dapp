@@ -2,21 +2,21 @@
 import { FC, useState } from 'react';
 
 // Third-party libraries
-import { css } from 'styled-components';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithPopup, TwitterAuthProvider, User } from 'firebase/auth';
 import { useSelector } from 'react-redux';
 
 //Components
-import { Box, Button, Skeleton } from 'blocks';
 import { useClaimRewardsActivity } from 'queries';
 import { generateVerificationProof } from '../utils/generateVerificationProof';
+import { StatusButtonComponent } from './StatusButtonComponent';
 
 //Config
 import { appConfig } from 'config';
 
 //types
 import { UserStoreType } from 'types';
+
 
 
 type TwitterActivityButtonProps = {
@@ -43,7 +43,8 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activit
   };
   const app = initializeApp(firebaseConfig);
 
-  // const app = initializeApp(appConfig.firebaseConfig);//TODO:Intialise the Twitter Authorisation based on the firebase config.
+  // const app = initializeApp(appConfig.firebaseConfig);/
+  //TODO:Intialise the Twitter Authorisation based on the firebase config.
 
   const provider = new TwitterAuthProvider();
   const auth = getAuth();
@@ -53,8 +54,6 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activit
       .then((result) => {
         const credential = TwitterAuthProvider.credentialFromResult(result);
         if (credential) {
-
-
           const user = result.user;
           return user;
         } else {
@@ -83,18 +82,18 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activit
       setVerifying(true);
       const twitterHandle = userDetails.reloadUserInfo.screenName;
 
-      const data = {
+      const verificationProof = await generateVerificationProof({
         twitter: twitterHandle
-      }
-
-      const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
+      }, userPushSDKInstance);
 
       claimRewardsActivity(
         {
           userId,
           activityTypeId,
           pgpPublicKey: userPushSDKInstance.pgpPublicKey as string,
-          data: data,
+          data: {
+            twitter: twitterHandle
+          },
           verificationProof: verificationProof as string
         },
         {
@@ -121,22 +120,13 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activit
   };
 
   return (
-    <Box display="flex" alignItems={{ ml: 'flex-start', initial: 'center' }} flexDirection="column" minWidth="100px">
-      <Skeleton width="100%" isLoading={verifying}>
-        <Button
-          variant="tertiary"
-          size="small"
-          css={css`
-            width: 100%;
-          `}
-          disabled={verifying}
-          onClick={handleVerification}
-        >
-          Verify
-        </Button>
-      </Skeleton>
-    </Box>
+    <StatusButtonComponent
+      label='Verify'
+      isLoading={verifying}
+      disabled={verifying}
+      onClick={handleVerification}
+    />
   );
 };
 
-export default TwitterActivityButton;
+export { TwitterActivityButton };
