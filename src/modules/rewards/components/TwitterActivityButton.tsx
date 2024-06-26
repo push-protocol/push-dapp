@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 // Third-party libraries
 import { initializeApp } from 'firebase/app';
@@ -30,6 +30,11 @@ type TwitterActivityButtonProps = {
 const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activityTypeId, refetchActivity, setErrorMessage }) => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
   const [verifying, setVerifying] = useState(false);
+
+  //For One case where the error is already present and user relogins the account
+  useEffect(() => {
+    setErrorMessage('')
+  }, [])
 
   //TODO: Remove the following firebase config and add the line no. 41 const app.
   const firebaseConfig = {
@@ -85,6 +90,14 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activit
       const verificationProof = await generateVerificationProof({
         twitter: twitterHandle
       }, userPushSDKInstance);
+
+      if (verificationProof == null || verificationProof == undefined) {
+        if (userPushSDKInstance && userPushSDKInstance.readmode()) {
+          setVerifying(false);
+          setErrorMessage('Please Enable Push profile')
+        }
+        return;
+      }
 
       claimRewardsActivity(
         {

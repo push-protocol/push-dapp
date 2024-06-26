@@ -17,6 +17,8 @@ import {
 import { ActivityButton } from './ActivityButton';
 import { RewardsActivityIcon } from './RewardsActivityIcon';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
+import { useSelector } from 'react-redux';
+import { UserStoreType } from 'types';
 
 export type RewardActivitiesListItemProps = {
   userId: string;
@@ -36,7 +38,12 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
     { enabled: !!userId }
   );
 
+  const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
+
+  console.log("User Push SDK Instance ", userPushSDKInstance, userPushSDKInstance?.readmode());
+
   const [errorMessage, setErrorMessage] = useState('');
+  console.log("Error Message", errorMessage);
 
   return (
     <Skeleton isLoading={isLoadingItem} height="90px">
@@ -118,7 +125,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
             </Box>
 
             {/* Buttons Logic */}
-            {usersSingleActivity &&
+            {usersSingleActivity && userPushSDKInstance && !userPushSDKInstance?.readmode() &&
               (
                 <Box display="flex">
                   <ActivityButton

@@ -18,6 +18,7 @@ import { appConfig } from 'config';
 //Types
 import { UserStoreType } from 'types';
 
+
 type DiscordActivityButtonProps = {
   userId: string;
   activityTypeId: string;
@@ -28,8 +29,11 @@ type DiscordActivityButtonProps = {
 const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activityTypeId, refetchActivity, setErrorMessage }) => {
   const access_token = sessionStorage.getItem('access_token');
   const [token, setToken] = useState(access_token);
-
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
+
+  useEffect(() => {
+    setErrorMessage('')
+  }, [])
 
   const handleConnect = () => {
     const CLIENT_ID = appConfig.discord_client_id;
@@ -72,9 +76,16 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activit
         discord_token: token
       };
 
-      console.log("Data >>>", data, userPushSDKInstance);
-
       const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
+
+      if (verificationProof == null || verificationProof == undefined) {
+        if (userPushSDKInstance && userPushSDKInstance.readmode()) {
+          setVerifying(false);
+          setErrorMessage('Please Enable Push profile')
+        }
+        return;
+      }
+
       claimRewardsActivity(
         {
           userId,

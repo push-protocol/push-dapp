@@ -29,7 +29,7 @@ export type RewardsProps = {};
 const Rewards: FC<RewardsProps> = () => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const { isWalletConnected, account } = useAccount();
+  const { account, isWalletConnected } = useAccount();
 
   const caip10WalletAddress = walletToCAIP10({ account });
 
@@ -41,17 +41,15 @@ const Rewards: FC<RewardsProps> = () => {
   const { showConnectModal, setConnectModalVisibility } = useGenerateUserId(caip10WalletAddress);
 
   useEffect(() => {
-    // TO handle the case where the user switches the tab or click back button.
     if (activeTab !== 'activity') {
       setConnectModalVisibility(false);
     }
 
-    // To handle the case where the user clicks on activities tab and the wallet is not connected.
-    if (activeTab === 'activity' && !isWalletConnected) {
+    if (activeTab === 'activity' && userPushSDKInstance && userPushSDKInstance.readmode()) {
       setConnectModalVisibility(true);
-      return;
     }
-  }, [activeTab]);
+
+  }, [activeTab, account, userPushSDKInstance]);
 
   const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
 
