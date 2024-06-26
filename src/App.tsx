@@ -434,7 +434,8 @@ const ParentContainer = styled.div`
   background-repeat: no-repeat;
   // background: ${(props) => props.bg};
   margin: ${(props) => props.headerHeight}px 0px 0px 0px;
-  min-height: calc(100vh - ${(props) => props.headerHeight}px);
+  min-height: calc(100dvh - ${(props) => props.headerHeight}px);
+  max-height: calc(100dvh - ${(props) => props.headerHeight}px);
 `;
 
 const LeftBarContainer = styled.div`

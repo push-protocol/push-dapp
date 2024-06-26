@@ -112,13 +112,14 @@ const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
               Are you sure you want to deactivate the channel? You will no longer be able to send notifications from it.
             </ModalMessage>
             <ButtonContainer>
-              <CloseButtonSVG
-                src={CloseButtonSvg}
+              <CloseButtonSvg
+                width={36}
+                height={36}
                 onClick={handleClose}
               />
 
               <BellIconContainer onClick={handleConfirm}>
-                <BellIconImage src={BellIconSvg} />
+                <BellIconSvg />
               </BellIconContainer>
             </ButtonContainer>
           </>
@@ -197,6 +198,7 @@ const BellIconContainer = styled.div`
   height: 36px;
   background: #e93636;
   display: flex;
+  align-items: center;
   justify-content: center;
   border-radius: 50%;
   cursor: pointer;

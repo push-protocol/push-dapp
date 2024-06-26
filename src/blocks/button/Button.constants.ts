@@ -170,7 +170,7 @@ export const getButtonSizeStyles = ({
             border-radius: var(--r2);
             gap: var(--s1);
             height: 32px;
-            padding: var(--s3);
+            padding: var(--s3) var(--s4);
       `}
 
       /* Button text size css */
@@ -208,7 +208,7 @@ export const getButtonSizeStyles = ({
             border-radius: var(--r3);
             gap: var(--s1);
             height: 40px;
-            padding: var(--s3);
+            padding: var(--s3) var(--s6);
       `}
 
       /* Button text size css */
@@ -247,7 +247,7 @@ export const getButtonSizeStyles = ({
             border-radius: var(--r3);
             gap: var(--s1);
             height: 48px;
-            padding: var(--s4);
+            padding: var(--s4) var(--s6);
       `}
 
       /* Button text size css */
@@ -285,7 +285,7 @@ export const getButtonSizeStyles = ({
           border-radius: var(--r3);
           gap: var(--s1);
           height: 52px;
-          padding: var(--s4);
+          padding: var(--s4) var(--s8);
     `}
 
     /* Button text size css */
