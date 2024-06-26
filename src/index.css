@@ -406,15 +406,14 @@ template {
  * Custom CSS
  */
  @font-face {
-  font-family: 'Strawford';
-  src: url('./assets/fonts/Strawford-ExtraLight.woff2') format('woff2'),
-      url('./assets/fonts/Strawford-ExtraLight.otf') format('otf'),
-      url('./assets/fonts/Strawford-ExtraLight.ttf') format('ttf');
+  font-family: 'FKGroteskNeue';
+  src: url('./assets/fonts/FKGroteskNeue-Regular.woff2') format('woff2'),
+       url('./assets/fonts/FKGroteskNeue-Regular.woff') format('woff');
   font-weight: 100 200;
   font-style: normal;
 }
 
-@font-face {
+/* @font-face {
   font-family: 'Strawford';
   src: url('./assets/fonts/Strawford-Light.woff2') format('woff2'),
       url('./assets/fonts/Strawford-Light.otf') format('otf'),
@@ -440,17 +439,14 @@ template {
       url('./assets/fonts/Strawford-Medium.ttf') format('ttf');
   font-weight: 600;
   font-style: normal;
-}
+} */
 
 @font-face {
-  font-family: 'Strawford';
-  src: url('./assets/fonts/Strawford-Black.woff2') format('woff2'),
-        url('./assets/fonts/Strawford-Black.woff') format('woff'),
-        url('./assets/fonts/Strawford-Black.eot'),
-        url('./assets/fonts/Strawford-Black.ttf') format('truetype');
-  font-weight: 700;
+  font-family: 'FKGroteskNeueBold';
+  src: url('./assets/fonts/FKGroteskNeue-Bold.woff') format('woff');
+  font-weight: 700;  
   font-style: normal;
-  font-display: swap;
+
 }
 
  /* @font-face {

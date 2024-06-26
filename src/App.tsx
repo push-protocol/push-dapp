@@ -95,7 +95,7 @@ const GlobalStyle = createGlobalStyle`
     // TODO: Add more as needed
 
     /* Font Family */
-    --font-family: 'Strawford', 'Source Sans Pro', Helvetica, sans-serif;
+    --font-family: 'FKGroteskNeue';
 
     /* Colors */
     ${Object.entries(blocksColors)
