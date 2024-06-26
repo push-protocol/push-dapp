@@ -17,6 +17,7 @@ import styled, { css, useTheme } from 'styled-components';
 
 // Internal Compoonents
 import { deviceMediaQ } from 'blocks';
+import AllowNotificationModal from './channel/AllowNotificationModal';
 import MetaInfoDisplayer from 'components/MetaInfoDisplayer';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2 } from 'components/reusables/SharedStylingV2';
@@ -37,11 +38,13 @@ import { ImageV2 } from './reusables/SharedStylingV2';
 import Tooltip from './reusables/tooltip/Tooltip';
 import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
 import VerifiedTooltipContent from './VerifiedTooltipContent';
+import { setAllowNotifModalVisibility } from 'redux/slices/modalSlice';
 
 // Internal Configs
 import APP_PATHS from 'config/AppPaths';
-import { addresses, appConfig, CHAIN_DETAILS } from 'config/index.js';
+import { addresses, appConfig, CHAIN_DETAILS, ALLOW_NOTIF_MODAL_LAST_TIMESTAMP } from 'config/index.js';
 import { IPFSGateway } from 'helpers/IpfsHelper';
+import { checkPermission } from 'helpers/channel/allowNotification';
 import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 // Create Header
@@ -58,6 +61,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
     (state) => state.contracts
   );
   const { canVerify, channelDetails, coreChannelAdmin } = useSelector((state) => state.admin);
+  const { isAllowNotifModalVisible } = useSelector((state) => state.modal);
   const {
     channelsCache,
     CHANNEL_BLACKLIST,
@@ -85,6 +89,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
   const [channelObjectFromHash, setChannelObjectFromHash] = useState({});
   const [channelObjectStartBlock, setChannelObjectStartBlock] = useState({});
   const [showChannelChangedWarning, setShowChannelChangedWarning] = useState(false);
+
   const isVerified = channelObject.verified_status;
   const isBlocked = channelObject.blocked;
   const isMobile = useDeviceWidthCheck(600);
@@ -103,6 +108,13 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
     //TODO: Here is the main thing hehehe
     setSubscribed(subscriptionStatus[channelObject.channel]);
   }, [subscriptionStatus]);
+
+  useEffect(() => {
+    if (isAllowNotifModalVisible)
+      setTimeout(() => {
+        dispatch(setAllowNotifModalVisibility({ flag: false }));
+      }, 10000);
+  }, [isAllowNotifModalVisible]);
 
   useEffect(() => {
     setIsPushAdmin(pushAdminAddress == account);
@@ -401,6 +413,29 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
     const containerHeight = document.getElementById(channelObject?.channel)?.getBoundingClientRect();
     setToolTipheight(containerHeight?.top);
   };
+
+  const onAllowModalOpen = () => {
+    /* checks if the user doesnot have
+     permission set, then opens the modal only if 
+    the modal was last opened 24 hours before
+    */
+    if (checkPermission() === 'pending') {
+      let lastTime = localStorage.getItem(ALLOW_NOTIF_MODAL_LAST_TIMESTAMP);
+      let today = new Date().getTime() + (1 * 24 * 60 * 60 * 1000);
+      if (lastTime) {
+        lastTime = parseInt(lastTime);
+        if (lastTime >= today) {
+          dispatch(setAllowNotifModalVisibility({ flag: true }));
+        }
+      }
+      else {
+        dispatch(setAllowNotifModalVisibility({ flag: true }));
+      }
+      //sets the recent opened time in localstorage.
+      localStorage.setItem(ALLOW_NOTIF_MODAL_LAST_TIMESTAMP, today);
+    }
+
+  }
 
   // render
   return (
@@ -941,8 +976,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                     channelDetail={channelObject}
                     setLoading={setTxInProgress}
                     onSuccessOptin={() => {
-                      setSubscribed(true);
-                      setSubscriberCount((prevSubscriberCount) => prevSubscriberCount + 1);
+                      onAllowModalOpen();
                     }}
                   >
                     <SubscribeButton
@@ -1024,6 +1058,12 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
           clearToast={clearToast}
         />
       )}
+      {/* modal to allow notification */}
+      {isAllowNotifModalVisible &&
+        <AllowNotificationModal onModalClose={() =>
+          dispatch(setAllowNotifModalVisibility({ flag: false }))}
+        />
+      }
     </Container>
   );
 }

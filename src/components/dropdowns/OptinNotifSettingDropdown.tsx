@@ -262,6 +262,7 @@ const OptinNotifSettingDropdown: FC<OptinNotifSettingDropdownProps> = (options) 
               settings: userSettingsFromDefaultChannelSetting({ channelSetting: channelSettings }),
             })
           );
+          onSuccessOptin();
 
           subscribeToast.showMessageToast({
             toastTitle: 'Success',

@@ -38,6 +38,10 @@ export const convertAddressToAddrCaip = (userAddress: string, chainId: number): 
   return `eip155:${chainId}:${userAddress}`;
 };
 
+export const convertAddressToPartialCaip = (userAddress: string): string => {
+  return `eip155:${userAddress}`;
+};
+
 export const convertAddrCaipToAddress = (addressInCaip: string): string => {
   const caipArr: string[] = addressInCaip.split(':');
   if (caipArr.length == 3 && caipArr[0] == 'eip155') {
