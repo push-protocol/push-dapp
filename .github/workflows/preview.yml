@@ -23,7 +23,6 @@ jobs:
           echo "TSC_COMPILE_ON_ERROR=true" >> $GITHUB_ENV
           echo "DISABLE_ESLINT_PLUGIN=true" >> $GITHUB_ENV
           echo "GENERATE_SOURCEMAP=true" >> $GITHUB_ENV
-          echo "VITE_APP_DISCORD_CLIENT_ID=1253336966875840532" >> $GITHUB_ENV
 
       - name: Checkout
         uses: actions/checkout@v3
@@ -32,7 +31,7 @@ jobs:
         if: github.event.action != 'closed' # You might want to skip the build if the PR has been closed
         env:
           VITE_APP_WALLETCONNECT_PROJECT_ID: ${{ secrets.VITE_APP_WALLETCONNECT_PROJECT_ID }}
-
+          VITE_APP_DISCORD_CLIENT_ID: ${{ secrets.VITE_APP_DISCORD_CLIENT_ID }}
         run: |
           yarn install
           yarn build:pr:preview
