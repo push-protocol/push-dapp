@@ -1,5 +1,5 @@
 import { UseQueryOptions, useQuery } from '@tanstack/react-query';
-import { usersSingleActivity } from '../../queryKeys';
+import { rewardsActivity } from '../../queryKeys';
 import { getRewardsActivity } from '../../services/rewards';
 import { UsersActivity } from '../../types';
 
@@ -8,7 +8,7 @@ export const useGetRewardsActivity = (
   config?: Partial<UseQueryOptions<UsersActivity>>
 ) =>
   useQuery<UsersActivity>({
-    queryKey: [usersSingleActivity, userId, activityId],
+    queryKey: [rewardsActivity, userId, activityId],
     queryFn: () => getRewardsActivity(userId, activityId),
     ...config
   });
