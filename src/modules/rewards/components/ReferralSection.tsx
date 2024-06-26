@@ -1,6 +1,9 @@
 // React and other libraries
 import { FC } from 'react';
 
+// third party libraries
+import { css } from 'styled-components';
+
 //hooks
 import { useAccount, useCopy } from 'hooks';
 import { useGetUserRewardsDetails } from 'queries';
@@ -10,11 +13,12 @@ import { walletToCAIP10 } from 'helpers/w2w';
 
 // components
 import { Box, Button, Copy, Text, Referral, Skeleton } from 'blocks';
-import { getBaseURL } from '../utils/getBaseURL';
+import { getPreviewBasePath } from '../../../../basePath';
 
 export type ReferralSectionProps = {};
 
 const ReferralSection: FC<ReferralSectionProps> = () => {
+  const baseUrl = window.location.origin;
   const { isWalletConnected, account, connect } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
 
@@ -80,20 +84,24 @@ const ReferralSection: FC<ReferralSectionProps> = () => {
               flexDirection={{ tb: 'column', initial: 'row' }}
             >
               <Box
-                width={{ tb: '-webkit-fill-available', initial: '344px' }}
+                minWidth={{ tb: '-webkit-fill-available', initial: '344px' }}
                 display="flex"
                 alignItems="center"
                 padding="s3"
                 borderRadius="r3"
                 border={{ light: '1.5px solid gray-200', dark: 'none' }}
                 backgroundColor={{ light: 'transparent', dark: 'gray-800' }}
+                css={css`
+                  white-space: nowrap;
+                `}
               >
                 <Text
                   variant="bs-regular"
                   ref={textRef}
                   color={{ light: 'gray-1000', dark: 'gray-100' }}
                 >
-                  {getBaseURL()}/points?ref={userDetails?.userId}
+                  {baseUrl}
+                  {getPreviewBasePath()}/points?ref={userDetails?.userId}
                 </Text>
               </Box>
               <Button
