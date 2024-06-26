@@ -22,9 +22,12 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
   const caip10WalletAddress = walletToCAIP10({ account });
   const {
     data: userDetails,
+    isSuccess,
     refetch,
-    isLoading,
+    isLoading: isUserLoading,
   } = useGetUserRewardsDetails({ caip10WalletAddress: caip10WalletAddress, enabled: isWalletConnected });
+
+  const isLoading = isUserLoading || !isSuccess;
 
   return (
     <>

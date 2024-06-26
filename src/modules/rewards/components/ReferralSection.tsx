@@ -18,10 +18,17 @@ const ReferralSection: FC<ReferralSectionProps> = () => {
   const { isWalletConnected, account, connect } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
 
-  const { data: userDetails, isLoading } = useGetUserRewardsDetails({
+  const {
+    data: userDetails,
+    isSuccess,
+    isLoading: isUserLoading,
+  } = useGetUserRewardsDetails({
     caip10WalletAddress: caip10WalletAddress,
     enabled: isWalletConnected,
   });
+
+  const isLoading = isUserLoading || !isSuccess;
+
   const { textRef, isCopied, copyToClipboard } = useCopy();
 
   const handleConnectWallet = () => {
