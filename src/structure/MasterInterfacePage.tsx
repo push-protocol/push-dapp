@@ -396,7 +396,8 @@ const Container = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${(props) => props.theme.interfaceTopPadding});
+  min-height: calc(100dvh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${(props) => props.theme.interfaceTopPadding});
+  max-height: calc(100dvh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${(props) => props.theme.interfaceTopPadding});
   /* Padding to be handled by Modules individually */
   /* padding: ${(props) => props.theme.interfaceTopPadding} 20px 20px 20px; */
   align-items: stretch;
