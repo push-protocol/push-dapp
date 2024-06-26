@@ -26,6 +26,7 @@ import { ReferralSection } from './components/ReferralSection';
 import { RewardsTabsContainer } from './components/RewardsTabsContainer';
 import UnlockProfileWrapper from 'components/chat/unlockProfile/UnlockProfileWrapper';
 import LoaderSpinner from 'components/reusables/loaders/LoaderSpinner';
+import { useDiscordSession } from './hooks/useDiscordSession';
 
 export type RewardsProps = {};
 
@@ -36,6 +37,9 @@ function useQuery() {
 const Rewards: FC<RewardsProps> = () => {
   const { isWalletConnected, account, wallet } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
+
+  // Used to set the discord session after discord redirects back to the Dapp.
+  useDiscordSession();
 
   const { refetch, error: userError } = useGetUserRewardsDetails({
     caip10WalletAddress: caip10WalletAddress,
@@ -78,25 +82,6 @@ const Rewards: FC<RewardsProps> = () => {
     setIsRewardsLoading(true);
     handleError(userError, ref);
   }, [caip10WalletAddress, userPushSDKInstance, userError, isWalletConnected, activeTab]);
-
-  const location = useLocation();
-
-  //Tried creating hook for this. It was not working access_token was not getting stored in the session storage.
-  // This is for the case when the user authorizes the dapp for discord and it redirects the user to the redirected url with the access_token and expires_in present in the url.
-  useEffect(() => {
-    if (location.hash) {
-      const params = new URLSearchParams(location.hash.substring(1));
-      const token = params.get('access_token');
-      const expiresIn = params.get('expires_in');
-
-      if (token && expiresIn) {
-        sessionStorage.setItem('access_token', token);
-        sessionStorage.setItem('expires_in', expiresIn);
-      }
-
-      window.history.replaceState({}, '', location.pathname);
-    }
-  }, []);
 
   return (
     <Box

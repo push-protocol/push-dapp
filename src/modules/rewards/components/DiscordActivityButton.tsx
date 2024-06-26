@@ -72,6 +72,8 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activit
         discord_token: token
       };
 
+      console.log("Data >>>", data, userPushSDKInstance);
+
       const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
       claimRewardsActivity(
         {
@@ -86,6 +88,7 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activit
             if (response.status === 'COMPLETED') {
               refetchActivity();
               setVerifying(false);
+              setErrorMessage('');
             }
           },
           onError: (error: Error) => {
