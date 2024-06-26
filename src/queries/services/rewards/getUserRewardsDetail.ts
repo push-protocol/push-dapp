@@ -2,12 +2,10 @@ import axios from 'axios';
 
 import { getUserRewardsDetailModel } from '../../models';
 import { UserRewardsDetailParams } from '../../types/rewards';
-
-/* this url will change as per the env once the apis are ready */
-const apiUrl = 'https://us-east1-push-dev-apps.cloudfunctions.net/helloWorld/users/wallet/';
+import { getRewardsBaseURL } from '../../baseURL';
 
 export const getUserRewardsDetail = ({ caip10WalletAddress }: UserRewardsDetailParams) =>
   axios({
     method: 'GET',
-    url: `${apiUrl}${caip10WalletAddress}`,
+    url: `${getRewardsBaseURL()}/users/wallet/${caip10WalletAddress}`,
   }).then((response) => getUserRewardsDetailModel(response.data));

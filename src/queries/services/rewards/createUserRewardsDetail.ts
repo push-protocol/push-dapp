@@ -1,16 +1,12 @@
 import axios from 'axios';
 
-import { appConfig } from '../../../config/index';
 import { createUserRewardsDetailModel } from '../../models';
-import { createUserRewardsDetailsProps } from '../../types/rewards';
-
-/* this url will change as per the env once the apis are ready */
-const url = 'https://us-east1-push-dev-apps.cloudfunctions.net/helloWorld/users/';
+import { getRewardsBaseURL } from 'queries/baseURL';
 
 export const createUserRewardsDetail = (payload: any) =>
   axios({
     method: 'POST',
-    url,
+    url: `${getRewardsBaseURL()}/users/`,
     data: {
       userWallet: payload.userWallet,
       pgpPublicKey: payload.pgpPublicKey,
