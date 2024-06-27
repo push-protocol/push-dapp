@@ -46,7 +46,7 @@ export const config = {
    * Analaytics + Firebase
    */
   googleAnalyticsId: 'UA-165415629-5',
-  vapidKey: 'BFRmmAEEXOhk31FIsooph5CxlXKh6N0_NocUWHzvtpoUEvqQTwLXu6XtwkrH7ckyr2CvVz1ll-8q4oo6-ZqFJPY',
+  vapidKey: 'BJYsH1MYRqzfuzduyHLNaUfZCYdAahcJXsdWzdTqleWox0vOLaycyVPdy_J9XWzSIKvRu0xkwxo75mhDiVJhNnw',
   firebaseConfig: {
     apiKey: 'AIzaSyB4aXx2pJ9T5sw0Q1bba3jI1EAGp0Z5kBI',
     authDomain: 'push-dev-a6a63.firebaseapp.com',
