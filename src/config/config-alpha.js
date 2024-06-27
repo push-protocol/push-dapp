@@ -54,14 +54,14 @@ export const config = {
   googleAnalyticsId: 'UA-165415629-1',
   vapidKey: 'BFRmmAEEXOhk31FIsooph5CxlXKh6N0_NocUWHzvtpoUEvqQTwLXu6XtwkrH7ckyr2CvVz1ll-8q4oo6-ZqFJPY',
   firebaseConfig: {
-    apiKey: 'AIzaSyClOk4qP0ttFW-BPnXy7WT920xfdXSbFu8',
-    authDomain: 'epns-internal.firebaseapp.com',
-    databaseURL: 'https://epns-internal.firebaseio.com',
-    projectId: 'epns-internal',
-    storageBucket: 'epns-internal.appspot.com',
-    messagingSenderId: '755180533582',
-    appId: '1:755180533582:web:752ff8db31905506b7d01f',
-    measurementId: 'G-ZJH2T7R9S1',
+    apiKey: 'AIzaSyBrzkFPyNmVDFzGY7dKz2HocUO4m-ni-Fc',
+    authDomain: 'epns-ethereum-push-service.firebaseapp.com',
+    databaseURL: 'https://epns-ethereum-push-service.firebaseio.com',
+    projectId: 'epns-ethereum-push-service',
+    storageBucket: 'epns-ethereum-push-service.appspot.com',
+    messagingSenderId: '915758146133',
+    appId: '1:915758146133:web:2de388356233f5c22f2adc',
+    measurementId: 'G-X1L5P2E4EP',
   },
 
   /**
