@@ -7,11 +7,11 @@ import { css } from 'styled-components';
 //components
 import { Box } from 'blocks';
 
-type PageWrapperProps = {
+type ContentLayoutProps = {
   children: ReactNode;
 };
 
-const PageWrapper: FC<PageWrapperProps> = ({ children }) => {
+const ContentLayout: FC<ContentLayoutProps> = ({ children }) => {
   return (
     <Box
       alignItems="center"
@@ -31,4 +31,4 @@ const PageWrapper: FC<PageWrapperProps> = ({ children }) => {
     </Box>
   );
 };
-export { PageWrapper };
+export { ContentLayout };

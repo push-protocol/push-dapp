@@ -5,15 +5,7 @@ import { FC, useState } from 'react';
 import { Activity, useGetRewardsActivity } from 'queries';
 
 //Components
-import {
-  Box,
-  ErrorFilled,
-  InfoFilled,
-  Lozenge,
-  RewardsBell,
-  Skeleton,
-  Text
-} from 'blocks';
+import { Box, ErrorFilled, InfoFilled, Lozenge, RewardsBell, Skeleton, Text } from 'blocks';
 import { ActivityButton } from './ActivityButton';
 import { RewardsActivityIcon } from './RewardsActivityIcon';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
@@ -33,20 +25,21 @@ const getUpdatedExpiryTime = (timestamp: number) => {
 };
 
 const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, activity, isLoadingItem }) => {
-  const { data: usersSingleActivity, isLoading, refetch: refetchActivity } = useGetRewardsActivity(
-    { userId, activityId: activity.id },
-    { enabled: !!userId }
-  );
+  const {
+    data: usersSingleActivity,
+    isLoading,
+    refetch: refetchActivity,
+  } = useGetRewardsActivity({ userId, activityId: activity.id }, { enabled: !!userId });
 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  console.log("User Push SDK Instance ", userPushSDKInstance, userPushSDKInstance?.readmode());
-
   const [errorMessage, setErrorMessage] = useState('');
-  console.log("Error Message", errorMessage);
 
   return (
-    <Skeleton isLoading={isLoadingItem} height="90px">
+    <Skeleton
+      isLoading={isLoadingItem}
+      height="90px"
+    >
       <Box
         display="flex"
         flexDirection="column"
@@ -80,7 +73,11 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
               width="100%"
             >
               {/* Rewards Description */}
-              <Box display="flex" flexDirection="column" gap="s1">
+              <Box
+                display="flex"
+                flexDirection="column"
+                gap="s1"
+              >
                 <Box
                   display="flex"
                   flexDirection={{ lp: 'column-reverse', initial: 'row' }}
@@ -93,9 +90,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
 
                   {!!activity.expiryType && (
                     <Box display="flex">
-                      <Lozenge
-                        size="small"
-                      >
+                      <Lozenge size="small">
                         {`Expires in ${getUpdatedExpiryTime(activity.expiryType)} days`.toUpperCase()}
                       </Lozenge>
                     </Box>
@@ -106,7 +101,10 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                 {activity.activityType !== 'follow_push_on_discord' &&
                   activity.activityType !== 'follow_push_on_twitter' && (
                     <Skeleton isLoading={isLoading}>
-                      <Text variant="h5-regular" color="gray-500">
+                      <Text
+                        variant="h5-regular"
+                        color="gray-500"
+                      >
                         {activity.activityDesc}
                       </Text>
                     </Skeleton>
@@ -114,10 +112,25 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
               </Box>
 
               {/* Rewards Points */}
-              <Box display="flex" minWidth="200px" flexDirection="row" gap="s2" alignItems="center">
-                <Skeleton isLoading={isLoading} height="32px">
-                  <RewardsBell width={32} height={32} />
-                  <Text variant="h4-semibold" color={{ light: 'gray-1000', dark: 'gray-100' }}>
+              <Box
+                display="flex"
+                minWidth="200px"
+                flexDirection="row"
+                gap="s2"
+                alignItems="center"
+              >
+                <Skeleton
+                  isLoading={isLoading}
+                  height="32px"
+                >
+                  <RewardsBell
+                    width={32}
+                    height={32}
+                  />
+                  <Text
+                    variant="h4-semibold"
+                    color={{ light: 'gray-1000', dark: 'gray-100' }}
+                  >
                     {activity.points?.toLocaleString()} points
                   </Text>
                 </Skeleton>
@@ -125,19 +138,18 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
             </Box>
 
             {/* Buttons Logic */}
-            {usersSingleActivity && userPushSDKInstance && !userPushSDKInstance?.readmode() &&
-              (
-                <Box display="flex">
-                  <ActivityButton
-                    userId={userId}
-                    activityTypeId={activity.id}
-                    activityType={activity.activityType}
-                    refetchActivity={refetchActivity}
-                    setErrorMessage={setErrorMessage}
-                    usersSingleActivity={usersSingleActivity}
-                  />
-                </Box>
-              )}
+            {usersSingleActivity && userPushSDKInstance && !userPushSDKInstance?.readmode() && (
+              <Box display="flex">
+                <ActivityButton
+                  userId={userId}
+                  activityTypeId={activity.id}
+                  activityType={activity.activityType}
+                  refetchActivity={refetchActivity}
+                  setErrorMessage={setErrorMessage}
+                  usersSingleActivity={usersSingleActivity}
+                />
+              </Box>
+            )}
           </Box>
         </Box>
 
@@ -151,8 +163,14 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
             borderRadius="r0 r0 r4 r4"
             padding={{ ml: 's2', lp: 's2', initial: 's2' }}
           >
-            <ErrorFilled color={{ light: 'red-600', dark: 'red-300' }} size={24} />
-            <Text variant="h5-semibold" color={{ light: 'red-700', dark: 'red-300' }}>
+            <ErrorFilled
+              color={{ light: 'red-600', dark: 'red-300' }}
+              size={24}
+            />
+            <Text
+              variant="h5-semibold"
+              color={{ light: 'red-700', dark: 'red-300' }}
+            >
               {errorMessage}
             </Text>
           </Box>
@@ -168,9 +186,15 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
             borderRadius="r0 r0 r4 r4"
             padding={{ ml: 's2', lp: 's2', initial: 's2' }}
           >
-            <InfoFilled color={{ light: 'gray-300', dark: 'gray-700' }} size={24} />
+            <InfoFilled
+              color={{ light: 'gray-300', dark: 'gray-700' }}
+              size={24}
+            />
 
-            <Text variant="h5-semibold" color={{ light: 'gray-500', dark: 'gray-600' }}>
+            <Text
+              variant="h5-semibold"
+              color={{ light: 'gray-500', dark: 'gray-600' }}
+            >
               Verification Pending: Expected completion within 24-72 hours.
             </Text>
           </Box>

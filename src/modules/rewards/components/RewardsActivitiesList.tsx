@@ -23,7 +23,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
   // Getting user Id by wallet address
   const caip10WalletAddress = walletToCAIP10({ account });
   const { data: userDetails, isLoading: isLoadingUserDetails } = useGetUserRewardsDetails({
-    caip10WalletAddress: caip10WalletAddress
+    caip10WalletAddress: caip10WalletAddress,
   });
 
   const isLoading = isLoadingUserDetails || isLoadingActivities;

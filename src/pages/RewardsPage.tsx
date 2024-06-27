@@ -1,12 +1,12 @@
 //components
 import { Rewards } from 'modules/rewards';
-import { PageWrapper } from 'common/components/PageWrapper';
+import { ContentLayout } from 'common';
 
 const RewardsPage = () => {
   return (
-    <PageWrapper>
+    <ContentLayout>
       <Rewards />
-    </PageWrapper>
+    </ContentLayout>
   );
 };
 export default RewardsPage;

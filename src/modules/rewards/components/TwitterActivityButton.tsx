@@ -13,9 +13,6 @@ import { ActivityStatusButton } from './ActivityStatusButton';
 //Queries
 import { useClaimRewardsActivity } from 'queries';
 
-//Config
-import { appConfig } from 'config';
-
 //types
 import { UserStoreType } from 'types';
 
@@ -24,17 +21,21 @@ type TwitterActivityButtonProps = {
   activityTypeId: string;
   refetchActivity: () => void;
   setErrorMessage: (errorMessage: string) => void;
-
 };
 
-const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activityTypeId, refetchActivity, setErrorMessage }) => {
+const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({
+  userId,
+  activityTypeId,
+  refetchActivity,
+  setErrorMessage,
+}) => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
   const [verifying, setVerifying] = useState(false);
 
   //For One case where the error is already present and user relogins the account
   useEffect(() => {
-    setErrorMessage('')
-  }, [])
+    setErrorMessage('');
+  }, []);
 
   //TODO: Remove the following firebase config and add the line no. 41 const app.
   const firebaseConfig = {
@@ -44,7 +45,7 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activit
     storageBucket: 'push-login-8a0f9.appspot.com',
     messagingSenderId: '937398385572',
     appId: '1:937398385572:web:d9fb710282e1831c859f31',
-    measurementId: 'G-0XW5EWYC8Q'
+    measurementId: 'G-0XW5EWYC8Q',
   };
   const app = initializeApp(firebaseConfig);
 
@@ -76,7 +77,7 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activit
 
   const { mutate: claimRewardsActivity } = useClaimRewardsActivity({
     userId,
-    activityTypeId
+    activityTypeId,
   });
 
   const handleVerification = async () => {
@@ -85,16 +86,21 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activit
 
     if (userDetails) {
       setVerifying(true);
+
+      // @ts-expect-error
       const twitterHandle = userDetails.reloadUserInfo.screenName;
 
-      const verificationProof = await generateVerificationProof({
-        twitter: twitterHandle
-      }, userPushSDKInstance);
+      const verificationProof = await generateVerificationProof(
+        {
+          twitter: twitterHandle,
+        },
+        userPushSDKInstance
+      );
 
       if (verificationProof == null || verificationProof == undefined) {
         if (userPushSDKInstance && userPushSDKInstance.readmode()) {
           setVerifying(false);
-          setErrorMessage('Please Enable Push profile')
+          setErrorMessage('Please Enable Push profile');
         }
         return;
       }
@@ -105,9 +111,9 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activit
           activityTypeId,
           pgpPublicKey: userPushSDKInstance.pgpPublicKey as string,
           data: {
-            twitter: twitterHandle
+            twitter: twitterHandle,
           },
-          verificationProof: verificationProof as string
+          verificationProof: verificationProof as string,
         },
         {
           onSuccess: (response) => {
@@ -120,13 +126,13 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activit
               setVerifying(false);
             }
           },
-          onError: (error: Error) => {
+          onError: (error: any) => {
             console.log('Error in creating activiy', error);
             setVerifying(false);
             if (error.name) {
               setErrorMessage(error.response.data.error);
             }
-          }
+          },
         }
       );
     }
@@ -134,7 +140,7 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({ userId, activit
 
   return (
     <ActivityStatusButton
-      label='Verify'
+      label="Verify"
       isLoading={verifying}
       disabled={verifying}
       onClick={handleVerification}

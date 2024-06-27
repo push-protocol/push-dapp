@@ -5,19 +5,17 @@ import { FC, useEffect, useState } from 'react';
 import { PushAPI } from '@pushprotocol/restapi';
 import { useSelector } from 'react-redux';
 
+import { appConfig } from 'config';
+import { useClaimRewardsActivity, useGetUserDiscordDetails } from 'queries';
+
 // Components
 import { ActivityStatusButton } from './ActivityStatusButton';
 
 //helpers
 import { generateVerificationProof } from '../utils/generateVerificationProof';
-import { useClaimRewardsActivity, useGetUserDiscordDetails } from 'queries';
-
-//Hooks
-import { appConfig } from 'config';
 
 //Types
 import { UserStoreType } from 'types';
-
 
 type DiscordActivityButtonProps = {
   userId: string;
@@ -26,22 +24,30 @@ type DiscordActivityButtonProps = {
   setErrorMessage: (errorMessage: string) => void;
 };
 
-const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activityTypeId, refetchActivity, setErrorMessage }) => {
-  const access_token = sessionStorage.getItem('access_token');
-  const [token, setToken] = useState(access_token);
+const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({
+  userId,
+  activityTypeId,
+  refetchActivity,
+  setErrorMessage,
+}) => {
+  const token = sessionStorage.getItem('access_token');
+
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
   useEffect(() => {
-    setErrorMessage('')
-  }, [])
+    setErrorMessage('');
+  }, []);
 
   const handleConnect = () => {
-    const CLIENT_ID = appConfig.discord_client_id;
-    const REDIRECT_URI = window.location.href; //it will redirect the user to the current page
-    const SCOPE = 'identify email guilds.members.read';
-    const AUTH_URL = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token&scope=${SCOPE}`;
+    const clientID = appConfig.discord_client_id;
 
-    window.location.href = AUTH_URL;
+    const redirectURI = window.location.href; //it will redirect the user to the current page
+
+    const scope = 'identify email guilds.members.read';
+
+    const authURL = `https://discord.com/api/oauth2/authorize?client_id=${clientID}&redirect_uri=${redirectURI}&response_type=token&scope=${scope}`;
+
+    window.location.href = authURL;
   };
 
   const handleVerification = () => {
@@ -63,7 +69,7 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activit
 
   const { mutate: claimRewardsActivity } = useClaimRewardsActivity({
     userId,
-    activityTypeId
+    activityTypeId,
   });
 
   const [verifying, setVerifying] = useState(false);
@@ -73,7 +79,7 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activit
       setVerifying(true);
       const data = {
         discord: userDiscordDetails.global_name,
-        discord_token: token
+        discord_token: token,
       };
 
       const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
@@ -81,7 +87,7 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activit
       if (verificationProof == null || verificationProof == undefined) {
         if (userPushSDKInstance && userPushSDKInstance.readmode()) {
           setVerifying(false);
-          setErrorMessage('Please Enable Push profile')
+          setErrorMessage('Please Enable Push profile');
         }
         return;
       }
@@ -92,7 +98,7 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activit
           activityTypeId,
           pgpPublicKey: userPushSDKInstance.pgpPublicKey as string,
           data: data,
-          verificationProof: verificationProof as string
+          verificationProof: verificationProof as string,
         },
         {
           onSuccess: (response) => {
@@ -102,13 +108,13 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activit
               setErrorMessage('');
             }
           },
-          onError: (error: Error) => {
+          onError: (error: any) => {
             console.log('Error in creating activiy', error);
             setVerifying(false);
             if (error.name) {
               setErrorMessage(error.response.data.error);
             }
-          }
+          },
         }
       );
     }
@@ -116,7 +122,7 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({ userId, activit
 
   return (
     <ActivityStatusButton
-      label='Verify'
+      label="Verify"
       isLoading={verifying}
       disabled={verifying}
       onClick={handleVerification}
