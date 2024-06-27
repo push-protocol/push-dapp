@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // Internal Components
 import { onMessageListener } from 'firebase';
@@ -10,7 +10,7 @@ export function useBrowserNotification() {
   // const { account } = useAccount();
   // const { readOnlyWallet } = useContext(GlobalContext);
   const [triggerNotification, setTriggerNotification] = useState(false);
-  console.debug(triggerNotification, 'notif');
+
   // useEffect(() => {
   //   if (!('serviceWorker' in navigator)) return;
   //   if (!account || account == readOnlyWallet) return;
@@ -22,7 +22,6 @@ export function useBrowserNotification() {
 
   useEffect(() => {
     if (!('serviceWorker' in navigator)) return;
-    console.debug('serviceWorker', 'serviceWorker' in navigator);
     // const { onMessageListener } = require('firebase');
     onMessageListener()
       .then((payload) => {
@@ -30,6 +29,7 @@ export function useBrowserNotification() {
         if (!('Notification' in window)) {
           // useStream handles this case of showing in page notif (if showing notifs is not allowed)
         } else {
+          console.debug('notif', payload);
           const notificationTitle = payload.notification.title;
           const notificationOptions = {
             title: payload?.notification?.title,

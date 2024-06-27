@@ -21,13 +21,10 @@ const setLocalToken = (token) => localStorage.setItem(TOKEN_KEY, token);
 export const getPushToken = async () => {
   try {
     let token = getLocalToken(TOKEN_KEY);
-    console.debug(token, 'serviceWorker' in navigator, 'token');
-    console.debug(appConfig.vapidKey, 'vapidkey');
+    console.debug(token, 'token initial');
     if (!token) {
-      console.debug('calling func');
       token = await getToken(messaging, {
         vapidKey: appConfig.vapidKey,
-        serviceWorkerRegistration: await navigator.serviceWorker.ready, // Ensure the service worker is ready
       });
       console.debug('token', token);
       setLocalToken(token);

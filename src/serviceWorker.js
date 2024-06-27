@@ -29,9 +29,7 @@ export function register(config) {
       // serve assets; see https://github.com/facebook/create-react-app/issues/2374
       return;
     }
-    console.debug('url', publicUrl.origin !== window.location.origin);
     window.addEventListener('load', () => {
-      console.debug('Window');
       const swUrl = `${import.meta.env.VITE_APP_PUBLIC_URL}/service-worker.js`;
 
       if (isLocalhost) {
@@ -117,7 +115,6 @@ function checkValidServiceWorker(swUrl, config) {
         });
       } else {
         // Service worker found. Proceed as normal.
-        console.debug('registration');
         registerValidSW(swUrl, config);
       }
     })
