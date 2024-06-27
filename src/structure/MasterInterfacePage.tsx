@@ -39,8 +39,8 @@ const TutorialPage = lazy(() => import('pages/TutorialPage'));
 const YieldFarmingV2Page = lazy(() => import('pages/YieldFarmingPageV2'));
 const UserSettingsPage = lazy(() => import('pages/UserSettingsPage'));
 const ClaimGalxePage = lazy(() => import('pages/ClaimGalxePage'));
-const Dashboard = lazy(() => import('modules/dashboard'));
-const Rewards = lazy(() => import('pages/RewardsPage'));
+const WelcomDashboardPage = lazy(() => import('pages/WelcomeDashboardPage'));
+const RewardPointsPage = lazy(() => import('pages/RewardPointsPage'));
 
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
@@ -72,7 +72,7 @@ import { AppContextType } from 'types/context';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { ModeProp } from 'blocks';
 
-const rewardsPagePaths = [APP_PATHS.Rewards, APP_PATHS.RewardsActivities, APP_PATHS.RewardsLeaderboard];
+const rewardsPointsPagePaths = [APP_PATHS.Rewards, APP_PATHS.RewardsActivities, APP_PATHS.RewardsLeaderboard];
 
 // Create Header
 function MasterInterfacePage() {
@@ -160,13 +160,13 @@ function MasterInterfacePage() {
           <Routes>
             <Route
               path={APP_PATHS.WelcomeDashboard}
-              element={<Dashboard />}
+              element={<WelcomDashboardPage />}
             />
-            {rewardsPagePaths.map((path, index) => (
+            {rewardsPointsPagePaths.map((path, index) => (
               <Route
                 path={path}
                 key={index}
-                element={<Rewards />}
+                element={<RewardPointsPage />}
               />
             ))}
 

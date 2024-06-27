@@ -105,7 +105,6 @@ const FeaturedChannels: FC<FeaturedChannelsProps> = () => {
         <FeaturedChannelsList
           listRef={listRef}
           featuredChannelsList={featureChannelsForCurrrentEnv}
-          projectedItemWidth={(listRef?.current?.clientWidth! / itemsPerPage) as number}
         />
       )}
     </Box>

@@ -2,11 +2,11 @@
 import { Rewards } from 'modules/rewards';
 import { ContentLayout } from 'common';
 
-const RewardsPage = () => {
+const RewardsPointsPage = () => {
   return (
     <ContentLayout>
       <Rewards />
     </ContentLayout>
   );
 };
-export default RewardsPage;
+export default RewardsPointsPage;
