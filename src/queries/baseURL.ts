@@ -11,8 +11,8 @@ export const getRewardsBaseURL = () => {
   switch (appConfig.appEnv) {
     case 'prod':
       return `https://us-east1-push-stage-apps.cloudfunctions.net/pushpointsrewardsystem`;
-    case 'staging': // To be provided by Ashish and changed here
-      return `https://us-east1-push-stage-apps.cloudfunctions.net/pushpointsrewardsystem`;
+    case 'staging':
+      return `https://us-east1-push-dev-apps.cloudfunctions.net/pushpointsrewardsystem`;
     case 'dev':
       return `https://us-east1-push-dev-apps.cloudfunctions.net/helloWorld`;
     default:
