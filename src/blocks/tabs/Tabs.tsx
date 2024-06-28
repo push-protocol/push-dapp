@@ -1,5 +1,5 @@
 import React from 'react';
-import { TabPanels, TabPanel } from '@reach/tabs';
+import { TabPanels, TabPanel, TabsKeyboardActivation } from '@reach/tabs';
 import '@reach/tabs/styles.css';
 import { useBlocksTheme } from '../Blocks.hooks';
 import {
@@ -10,6 +10,7 @@ import {
   StyledLineTabList,
   StyledLineTabs,
 } from './Tabs.styled';
+import { Text } from 'blocks/text';
 
 export type TabItem = {
   key: string;
@@ -21,7 +22,7 @@ export type TabItem = {
 
 export type TabsProps = {
   items: TabItem[];
-  onChange: (activeKey: string) => void;
+  onChange?: (activeKey: string) => void;
   activeKey?: string;
   variant?: 'line' | 'fill';
 };
@@ -32,7 +33,7 @@ const Tabs: React.FC<TabsProps> = ({ items, onChange, variant = 'line', activeKe
   const handleChange = (index: number) => {
     const activeItem = items[index];
     if (activeItem && !activeItem.disabled) {
-      onChange(activeItem.key);
+      onChange?.(activeItem.key);
     }
   };
 
@@ -48,17 +49,23 @@ const Tabs: React.FC<TabsProps> = ({ items, onChange, variant = 'line', activeKe
     <TabsContainer
       onChange={handleChange}
       index={activeTabIndex}
+      role="tabpanel"
+      keyboardActivation={TabsKeyboardActivation.Auto}
     >
-      <TabList mode={mode}>
+      <TabList
+        mode={mode}
+        role="tablist"
+      >
         {items.map((item) => (
           <Tab
+            aria-disabled={item.disabled}
+            role="tab"
             key={item.key}
             disabled={item.disabled}
-            aria-disabled={item.disabled}
             mode={mode}
           >
             {item.icon && item.icon}
-            {item.label}
+            <Text variant="h5-semibold">{item.label}</Text>
           </Tab>
         ))}
       </TabList>
