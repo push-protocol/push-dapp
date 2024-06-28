@@ -1,4 +1,3 @@
-import { Refresh } from 'blocks';
 export * from './IconWrapper';
 export * from './Icons.types';
 
@@ -17,8 +16,6 @@ export { default as CaretDown } from './components/CaretDown';
 export { default as CaretUp } from './components/CaretUp';
 
 export { default as CameraFilled } from './components/CameraFilled';
-
-export { default as Copy } from './components/Copy';
 
 export { default as Channel } from './components/Channel';
 export { default as ChannelFilled } from './components/ChannelFilled';
@@ -103,7 +100,6 @@ export { default as PrivateChat } from './components/PrivateChat';
 export { default as QRCode } from './components/QRCode';
 
 export { default as ReceiveNotification } from './components/ReceiveNotification';
-export { default as Refresh } from './components/Refresh';
 export { default as ReceiveNotificationFilled } from './components/ReceiveNotificationFilled';
 
 export { default as Refresh } from './components/Refresh';
@@ -148,5 +144,3 @@ export { default as WaveformFilled } from './components/WaveformFilled';
 
 export { default as YieldFarming } from './components/YieldFarming';
 export { default as YieldFarmingFilled } from './components/YieldFarmingFilled';
-
-export { default as UserSwitch } from './components/UserSwitch';
