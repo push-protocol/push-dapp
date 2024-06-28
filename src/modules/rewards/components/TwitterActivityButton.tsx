@@ -6,6 +6,8 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithPopup, TwitterAuthProvider, User } from 'firebase/auth';
 import { useSelector } from 'react-redux';
 
+import { appConfig } from 'config';
+
 //Components
 import { generateVerificationProof } from '../utils/generateVerificationProof';
 import { ActivityStatusButton } from './ActivityStatusButton';
@@ -37,20 +39,7 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({
     setErrorMessage('');
   }, []);
 
-  //TODO: Remove the following firebase config and add the line no. 41 const app.
-  const firebaseConfig = {
-    apiKey: 'AIzaSyCBcenRUEiP1VhssDp3a3VBhUa5xS_xKFA',
-    authDomain: 'push-login-8a0f9.firebaseapp.com',
-    projectId: 'push-login-8a0f9',
-    storageBucket: 'push-login-8a0f9.appspot.com',
-    messagingSenderId: '937398385572',
-    appId: '1:937398385572:web:d9fb710282e1831c859f31',
-    measurementId: 'G-0XW5EWYC8Q',
-  };
-  const app = initializeApp(firebaseConfig);
-
-  // const app = initializeApp(appConfig.firebaseConfig);/
-  //TODO:Intialise the Twitter Authorisation based on the firebase config.
+  initializeApp(appConfig.firebaseConfig);
 
   const provider = new TwitterAuthProvider();
   const auth = getAuth();
