@@ -32,8 +32,8 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
   const [activeIcon, setActiveIcon] = useState(null);
 
   useEffect(() => {
-    setIcon(navigationIcons[data.src]);
-    setActiveIcon(navigationIcons[data.activeSrc]);
+    setIcon(navigationIcons[data.src] ?? data.src);
+    setActiveIcon(navigationIcons[data.activeSrc] ?? data.activeSrc);
   }, [data.src, data.activeSrc]);
 
   const { showMetamaskPushSnap, handleConnectWallet } = useContext(AppContext);
@@ -85,7 +85,6 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
   const handleDisallowedNav = () => {
     handleConnectWallet();
   };
-
   return (
     <>
       {data.loading && (
@@ -114,7 +113,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
           disabled={data.disabled}
           radius="16px"
           align="stretch"
-          padding="10px"
+          padding="8px 4px"
           margin={definedMargin}
           bg={bg}
           active={active ? 1 : 0}
@@ -133,14 +132,14 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
               {!active ? (
                 <SelectedIcon
                   src={icon}
-                  margin="0 5px"
+                  margin="0 4px"
                   alt={`${data.alt}`}
                   active={active ? 1 : 0}
                 />
               ) : (
                 <SelectedIcon
                   src={activeIcon}
-                  margin="0 5px"
+                  margin="0 4px"
                   alt={`${data.alt}`}
                   active={active ? 1 : 0}
                 />
@@ -152,7 +151,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
                   cursor="pointer"
                   weight={!active ? '300' : '600'}
                   spacing="0"
-                  margin="0 5px"
+                  margin="0 4px"
                   color={theme.nav.color}
                   onClick={data?.hasOnClickFunction && showMetamaskPushSnap}
                   size="16px"
@@ -196,7 +195,8 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
 const InheritedSectionGroupIcon = styled(Image)`
   height: 25px;
   width: 25px;
-  margin: 0 5px;
+  margin: 0 4px;
+  border-radius: 50%;
 
   @media (max-width: 992px) {
     margin: 0px 0px;
@@ -212,7 +212,7 @@ const InheritedSectionGroupIcon = styled(Image)`
 const InheritedSectionItemIcon = styled(Image)`
   height: 25px;
   width: 25px;
-  margin: 0 5px;
+  margin: 0 4px;
 
   @media (max-width: 992px) {
     margin: 0px 0px;
