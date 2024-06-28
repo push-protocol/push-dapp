@@ -24,7 +24,7 @@ const Refresh: FC<IconProps> = (allProps) => {
             stroke-linejoin="round"
           />
           <path
-            d="M18.6675 11.5789H26.2464V4"
+            d="M18.6674 11.5789H26.2463V4"
             stroke="currentColor"
             stroke-width="2"
             stroke-linecap="round"

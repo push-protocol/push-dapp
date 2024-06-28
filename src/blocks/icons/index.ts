@@ -9,6 +9,7 @@ export { default as AddEmoji } from './components/AddEmoji';
 export { default as Back } from './components/Back';
 
 export { default as BellRingFilled } from './components/BellRingFilled';
+export { default as BellSimple } from './components/BellSimple';
 
 export { default as CalendarBlank } from './components/CalendarBlank';
 
@@ -27,6 +28,8 @@ export { default as ChannelHomeFilled } from './components/ChannelHomeFilled';
 
 export { default as Chat } from './components/Chat';
 export { default as ChatFilled } from './components/ChatFilled';
+
+export { default as Copy } from './components/Copy';
 
 export { default as Cross } from './components/Cross';
 export { default as CrossFilled } from './components/CrossFilled';
@@ -76,6 +79,8 @@ export { default as MoonFilled } from './components/MoonFilled';
 
 export { default as NFTGated } from './components/NFTGated';
 
+export { default as NoRewards } from './components/NoRewards';
+
 export { default as NextIconSlider } from './components/NextIconSlider';
 
 export { default as NotificationMobile } from './components/NotificationMobile';
@@ -101,6 +106,8 @@ export { default as ReceiveNotification } from './components/ReceiveNotification
 export { default as Refresh } from './components/Refresh';
 export { default as ReceiveNotificationFilled } from './components/ReceiveNotificationFilled';
 
+export { default as Refresh } from './components/Refresh';
+
 export { default as SealCheck } from './components/SealCheck';
 export { default as SealCheckFilled } from './components/SealCheckFilled';
 
@@ -125,6 +132,8 @@ export { default as TickCircleFilled } from './components/TickCircleFilled';
 export { default as TickDecoratedCircleFilled } from './components/TickDecoratedCircleFilled';
 
 export { default as UserFilled } from './components/UserFilled';
+
+export { default as UserSwitch } from './components/UserSwitch';
 
 export { default as VideoCamera } from './components/VideoCamera';
 export { default as VideoCameraFilled } from './components/VideoCameraFilled';
