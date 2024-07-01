@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
 
-import { ChatUIProvider, darkChatTheme } from '@pushprotocol/uiweb';
+import { ChatUIProvider, darkChatTheme, IChatTheme } from '@pushprotocol/uiweb';
 import { createGlobalStyle } from 'styled-components';
 
 // Internal Compoonents
@@ -54,6 +54,22 @@ import { blocksColors } from 'blocks';
 import { textVariants } from 'blocks/text/Text.constants';
 
 dotenv.config();
+
+/**
+  TODO: Remove the below config once the following issue is resolved
+  https://github.com/push-protocol/push-sdk/issues/1373
+*/
+const chatDarkThemeCustomised: IChatTheme = {
+  ...darkChatTheme,
+  backgroundColor: {
+    ...darkChatTheme.backgroundColor,
+    chatPreviewBackground: 'var(--gray-900)',
+    userProfileBackground: 'var(--gray-900)',
+    modalBackground: 'var(--gray-900)',
+    criteriaLabelBackground: 'var(--gray-900)',
+    chatWidgetModalBackground: 'var(--gray-900)',
+  },
+};
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -327,7 +343,7 @@ export default function App() {
         <NavigationContextProvider>
           <ChatUIProvider
             user={userPushSDKInstance}
-            theme={darkMode && darkChatTheme}
+            theme={darkMode && chatDarkThemeCustomised}
             debug={false}
             uiConfig={{
               suppressToast: false,
@@ -370,12 +386,7 @@ export default function App() {
                   />
                 </HeaderContainer>
 
-                <ParentContainer
-                  bg={
-                    darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG
-                  }
-                  headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
-                >
+                <ParentContainer headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
                   {!isSnapPage && (
                     <LeftBarContainer
                       leftBarWidth={

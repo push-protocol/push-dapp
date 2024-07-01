@@ -153,7 +153,6 @@ function MasterInterfacePage() {
           }
         >
           <Routes>
-
             <Route
               path={APP_PATHS.WelcomeDashboard}
               element={<Dashboard />}
@@ -167,7 +166,6 @@ function MasterInterfacePage() {
               path={APP_PATHS.Spam}
               element={<InboxPage />}
             />
-
 
             {/* <Route element={<ConnectedWalletRoute />}> */}
             <Route
@@ -401,10 +399,6 @@ const Container = styled.div`
   /* Padding to be handled by Modules individually */
   /* padding: ${(props) => props.theme.interfaceTopPadding} 20px 20px 20px; */
   align-items: stretch;
-
-  background-image: url('${getPublicAssetPath('svg')}/${(props) =>
-    props.theme.scheme === 'dark' ? 'dark' : 'light'}bg.svg');
-  background-size: 100% 100%;
 
   position: relative;
 `;

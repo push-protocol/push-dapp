@@ -313,7 +313,7 @@ const themeDark = {
 
   // Default Theme
   default: {
-    bg: '#2F3137',
+    bg: '#202124',
     secondaryBg: '#282A2E',
     border: '#4A4F67',
     color: '#FFF',
@@ -332,12 +332,12 @@ const themeDark = {
 
   // Header Theme
   header: {
-    bg: '#212228', // alt color to try - #F4F5FA, #FFF
+    bg: '#17181B', // alt color to try - #F4F5FA, #FFF
   },
 
   // Navigation Theme
   nav: {
-    bg: '#212228', // alt color to try - #212228, #2F3137
+    bg: '#17181B', // alt color to try - #212228, #2F3137
     hamburgerBg: '#00000066',
     color: '#B6BCD6',
     activeColor: '#404650',
@@ -347,9 +347,9 @@ const themeDark = {
   chat: {
     snapFocusBg: '#404650',
     chatBg: '#282A2E',
-    primaryBg: '#2F3137',
+    primaryBg: '#202124',
     modulesBg: '#404550',
-    modalBg: '#2F3137',
+    modalBg: '#202124',
     sendMesageBg: '#404650',
     sendMessageFontColor: '#B6BCD6',
     gifContainerBg: '#282A2E',
