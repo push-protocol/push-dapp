@@ -55,6 +55,10 @@ import { textVariants } from 'blocks/text/Text.constants';
 
 dotenv.config();
 
+/**
+  TODO: Remove the below config once the following issue is resolved
+  https://github.com/push-protocol/push-sdk/issues/1373
+*/
 const chatDarkThemeCustomised: IChatTheme = {
   ...darkChatTheme,
   backgroundColor: {
