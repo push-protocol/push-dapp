@@ -7,6 +7,7 @@ import { appConfig } from 'config/index.js';
 // Constants
 const BASE_URL = appConfig.apiUrl;
 const TOOLING_BASE_URL = appConfig.toolingApiUrl;
+const DELIVERY_NODE_BASE_URL = appConfig.deliveryNodeApiUrl;
 
 /**
  * A function used to make get requests throughout the entire application
@@ -44,6 +45,20 @@ export const postReq = async (path, obj) => {
 export const toolingPostReq = async (path, obj) => {
   try {
     const response = await axios.post(TOOLING_BASE_URL + path, obj, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error(error.response.data);
+    throw error.response.data;
+  }
+};
+
+export const deliveryNodePostReq = async (path, obj) => {
+  try {
+    const response = await axios.post(DELIVERY_NODE_BASE_URL + path, obj, {
       headers: {
         'Content-Type': 'application/json',
       },

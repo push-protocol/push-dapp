@@ -28,6 +28,7 @@ import Header from 'structure/Header';
 import MasterInterfacePage from 'structure/MasterInterfacePage';
 import Navigation from 'structure/Navigation';
 import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJourneySlice';
+import { useBrowserNotification } from 'hooks/useBrowserNotification';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -225,6 +226,8 @@ export default function App() {
     const now = Date.now() / 1000;
     setcurrentTime(now);
   }, []);
+
+  useBrowserNotification();
 
   useEffect(() => {
     if (!account) return;

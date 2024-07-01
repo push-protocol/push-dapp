@@ -14,6 +14,7 @@ export const config = {
   apiUrl: 'https://backend-staging.epns.io/apis',
   w2wApiUrl: 'https://backend-staging.epns.io/apis',
   toolingApiUrl: 'https://staging-tooling.epns.io/apis',
+  deliveryNodeApiUrl: 'https://delivery-staging.epns.io/apis',
 
   ipfsInfuraAPIKey: import.meta.env.VITE_APP_IPFS_INFURA_API_KEY || '2DVyu4GEkiFksOrihKk8NMEWWwY',
   ipfsInfuraAPISecret: import.meta.env.VITE_APP_IPFS_INFURA_API_SECRET || '8e39eefc3d70b851b47f90611d40cfa5',
@@ -54,7 +55,7 @@ export const config = {
    * Analaytics + Firebase
    */
   googleAnalyticsId: 'UA-165415629-5',
-  vapidKey: 'BFRmmAEEXOhk31FIsooph5CxlXKh6N0_NocUWHzvtpoUEvqQTwLXu6XtwkrH7ckyr2CvVz1ll-8q4oo6-ZqFJPY',
+  vapidKey: 'BO-oYHtENkaP1nRQMmXAmjbkyWz_4sms1Z5OzE8B7h5gmuXiePvLmbXRiJNA233WtzzEo83yWZAVX1blsJQkNFg',
   firebaseConfig: {
     apiKey: 'AIzaSyClOk4qP0ttFW-BPnXy7WT920xfdXSbFu8',
     authDomain: 'epns-internal.firebaseapp.com',
