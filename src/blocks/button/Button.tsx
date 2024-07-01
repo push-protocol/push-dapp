@@ -1,9 +1,9 @@
 import { ReactNode, forwardRef } from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
-import { getButtonSizeStyles, getButtonVariantStyles } from './Button.constants';
+import { useBlocksTheme } from '../Blocks.hooks';
 import type { ModeProp, TransformedHTMLAttributes } from '../Blocks.types';
 import type { ButtonSize, ButtonVariant } from './Button.types';
-import { useBlocksTheme } from 'blocks/Blocks.hooks';
+import { getButtonSizeStyles, getButtonVariantStyles } from './Button.utils';
 
 export type ButtonProps = {
   /* Child react nodes rendered by Box */
