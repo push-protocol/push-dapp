@@ -738,7 +738,7 @@ const TextSpan = styled(Span)`
   text-transform: uppercase;
   font-weight: 700;
   font-size: 10px;
-  margin-left: 10px;
+  margin-left: 15px;
   color: #8c93a0;
   letter-spacing: 1.6px;
 `;
