@@ -347,9 +347,9 @@ const themeDark = {
   chat: {
     snapFocusBg: '#404650',
     chatBg: '#282A2E',
-    primaryBg: '#2F3137',
+    primaryBg: '#202124',
     modulesBg: '#404550',
-    modalBg: '#2F3137',
+    modalBg: '#202124',
     sendMesageBg: '#404650',
     sendMessageFontColor: '#B6BCD6',
     gifContainerBg: '#282A2E',
