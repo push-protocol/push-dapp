@@ -83,37 +83,38 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
             />
           </Skeleton>
 
-          {/* <Dropdown
+          <Dropdown
             overlay={
               <Menu>
                 <MenuItem
-                  icon={() => <AiFillExclamationCircle color="red" />}
+                  icon={<AiFillExclamationCircle color="red" />}
                   onClick={() => {
                     alert('wewe');
                   }}
                   label="Archive"
                 />
                 <MenuItem
-                  icon={() => <AiFillExclamationCircle color="red" />}
+                  icon={<AiFillExclamationCircle color="red" />}
                   onClick={() => {}}
                   label="New Archive"
                 />
                 <MenuItem
-                  icon={() => <AiFillExclamationCircle color="red" />}
+                  icon={<AiFillExclamationCircle color="red" />}
                   onClick={() => {}}
                   label="New Test"
                 />
                 <MenuItem
-                  icon={() => <AiFillExclamationCircle color="red" />}
+                  icon={<AiFillExclamationCircle color="red" />}
                   onClick={() => {}}
                   label="Delete"
                 />
               </Menu>
             }
-            placement="bottom"
+            // trigger="hover"
+            // dropdownPosition="top"
           >
-            {/* {(isOpen) = <button>Click me</button>} */}
-          </Dropdown> */}
+            <Button size="small">Actions</Button>
+          </Dropdown>
 
           {!isSubscribed && (
             <Skeleton

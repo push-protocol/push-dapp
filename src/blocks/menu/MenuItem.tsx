@@ -1,46 +1,45 @@
-import { FC,forwardRef } from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
 
-import { MenuProps } from './Menu.types';
-import { BlockWithoutStyleProp, ModeProp } from 'blocks/Blocks.types';
-import { getVariantStyles } from '../text/Text.utils';
+import { MenuItemComponentProps } from './Menu.types';
+import { ModeProp } from 'blocks/Blocks.types';
 import { getBlocksColor } from '../Blocks.utils';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
-
+import { Text } from 'blocks/text';
+import { Box } from 'blocks/box';
 
 const StyledMenuItem = styled.div.withConfig({
   shouldForwardProp: (prop, defaultValidatorFn) => !['mode'].includes(prop) && defaultValidatorFn(prop),
-})<MenuItemProps & ModeProp>`
-  padding: 4px 4px;
+})<MenuItemComponentProps & ModeProp>`
+  // Menu default styles
+  padding: var(--s1);
   display: flex;
   flex-direction: row;
+  flex: 1;
   align-items: center;
-  border-radius: 8px;
+  gap: var(--s1);
+  border-radius: var(--r2);
   &:hover {
     background-color: ${({ mode }) => getBlocksColor(mode, { light: 'gray-100', dark: 'gray-1000' })};
   }
   .menu-icon {
-    margin-right: 5px;
-    padding: 2px;
-    width: 24px;
-    height: 24px;
     svg {
-      width: 24px;
-      height: 24px;
+      width: 100%;
+      height: 100%;
     }
   }
-  .menu-label {
-    justify-content: center;
-    align-items: center;
-    color: ${({ mode }) => getBlocksColor(mode, { light: 'gray-1000', dark: 'gray-100' })};
-  }
+  // .menu-label {
+  //   justify-content: center;
+  //   align-items: center;
+  //   color: ${({ mode }) => getBlocksColor(mode, { light: 'gray-1000', dark: 'gray-100' })};
+  // }
   cursor: pointer;
   font-size: 15px;
   /* Extra CSS props */
   ${(props) => props.css || ''}
 `;
 
-const MenuItem = forwardRef<HTMLElement, MenuProps>(({ icon, label, onClick, ...props }, ref) => {
+const MenuItem: FC<MenuItemComponentProps> = ({ icon, label, onClick, ...props }) => {
   const { mode } = useBlocksTheme();
 
   return (
@@ -49,11 +48,25 @@ const MenuItem = forwardRef<HTMLElement, MenuProps>(({ icon, label, onClick, ...
       mode={mode}
       {...props}
     >
-      {icon && <span className='menu-icon'>{icon()}</span>}
-      <span className='menu-label'>{label}</span>
+      {icon && (
+        <Box
+          width="24px"
+          height="24px"
+        >
+          {icon && <span className="menu-icon">{icon}</span>}
+        </Box>
+      )}
+
+      <Text
+        className="menu-label"
+        variant="bs-regular"
+        color={{ light: 'gray-1000', dark: 'gray-100' }}
+      >
+        {label}
+      </Text>
     </StyledMenuItem>
   );
-});
+};
 
 MenuItem.displayName = 'MenuItem';
 

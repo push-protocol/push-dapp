@@ -1,13 +1,23 @@
 import { ReactNode } from 'react';
+import { FlattenSimpleInterpolation } from 'styled-components';
+import { DropdownMenuContentProps } from '@radix-ui/react-dropdown-menu';
 
-export type DropdownProps = {
+// export type DropdownPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
+export type DropdownPosition = 'bottom' | 'left' | 'top' | 'right';
+
+export type DropdownTrigger = 'hover' | 'click';
+
+export type DropdownComponentProps = {
   // This will be content upon clicking on which the dropdown overlay will open
-  children?: (isOpen: boolean) => ReactNode;
-  placement?: 'bottom' | 'bottomLeft' | 'top' | 'topRight' | 'bottomRight' | 'topLeft';
+  children?: ReactNode;
+  // position of menu
+  dropdownPosition?: DropdownPosition;
   // on which action to open the dropdown
-  trigger?: 'click' | 'hover';
+  trigger?: DropdownTrigger;
   // This is used for custom css instead of style prop, check Box/Text component
   css?: FlattenSimpleInterpolation;
   // This will be the contents of the dropdown overlay
-  overlay: ReactNode;
+  overlay?: ReactNode;
 };
+
+export type DropdownProps = DropdownComponentProps & DropdownMenuContentProps;
