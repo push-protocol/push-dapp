@@ -30,6 +30,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
 
   const [icon, setIcon] = useState(null);
   const [activeIcon, setActiveIcon] = useState(null);
+  const iconBorderRadius = navigationIcons[data.src] ? '0' : '50%';
 
   useEffect(() => {
     setIcon(navigationIcons[data.src] ?? data.src);
@@ -134,6 +135,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
                   src={icon}
                   margin="0 4px"
                   alt={`${data.alt}`}
+                  borderRadius={iconBorderRadius}
                   active={active ? 1 : 0}
                 />
               ) : (
@@ -141,6 +143,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
                   src={activeIcon}
                   margin="0 4px"
                   alt={`${data.alt}`}
+                  borderRadius={iconBorderRadius}
                   active={active ? 1 : 0}
                 />
               )}
@@ -196,12 +199,11 @@ const InheritedSectionGroupIcon = styled(Image)`
   height: 25px;
   width: 25px;
   margin: 0 4px;
-  border-radius: 50%;
 
   @media (max-width: 992px) {
     margin: 0px 0px;
   }
-
+  border-radius : ${(props) => props.borderRadius};
   ${(props) =>
     props.active &&
     css`
@@ -213,6 +215,8 @@ const InheritedSectionItemIcon = styled(Image)`
   height: 25px;
   width: 25px;
   margin: 0 4px;
+  border-radius : ${(props) => props.borderRadius};
+
 
   @media (max-width: 992px) {
     margin: 0px 0px;
