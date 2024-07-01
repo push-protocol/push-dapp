@@ -1,0 +1,1 @@
+export { PointsVault } from './PointsVault';

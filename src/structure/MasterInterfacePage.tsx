@@ -41,6 +41,7 @@ const UserSettingsPage = lazy(() => import('pages/UserSettingsPage'));
 const ClaimGalxePage = lazy(() => import('pages/ClaimGalxePage'));
 const WelcomDashboardPage = lazy(() => import('pages/WelcomeDashboardPage'));
 const RewardPointsPage = lazy(() => import('pages/RewardPointsPage'));
+const PointsVaultPage = lazy(() => import('pages/PointsVaultPage'));
 
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
@@ -73,6 +74,7 @@ import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { ModeProp } from 'blocks';
 
 const rewardsPointsPagePaths = [APP_PATHS.Rewards, APP_PATHS.RewardsActivities, APP_PATHS.RewardsLeaderboard];
+const pointsVaultPagePaths = [APP_PATHS.PointsVault, APP_PATHS.PointsVaultLogin];
 
 // Create Header
 function MasterInterfacePage() {
@@ -170,10 +172,19 @@ function MasterInterfacePage() {
               />
             ))}
 
+            {pointsVaultPagePaths.map((path, index) => (
+              <Route
+                path={path}
+                key={index}
+                element={<PointsVaultPage />}
+              />
+            ))}
+
             <Route
               path={APP_PATHS.Inbox}
               element={<InboxPage />}
             />
+
             <Route
               path={APP_PATHS.Spam}
               element={<InboxPage />}
