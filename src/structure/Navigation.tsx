@@ -62,8 +62,8 @@ function Navigation() {
 
       if (channelDetails !== 'unfetched' && channelDetails != null) {
         newNavSetup.developersList[0].data.name = channelDetails.name;
-        newNavSetup.developersList[0].data.src = 'homeOffIcon';
-        newNavSetup.developersList[0].data.activeSrc = 'homeOnIcon';
+        newNavSetup.developersList[0].data.src = channelDetails.iconV2;
+        newNavSetup.developersList[0].data.activeSrc = channelDetails.iconV2;
         newNavSetup.developersList[0].data.hidden = false;
         newNavSetup.developersList[0].data.loading = false;
       } else {
@@ -748,7 +748,7 @@ const TextSpan = styled(Span)`
   text-transform: uppercase;
   font-weight: 700;
   font-size: 10px;
-  padding: 0px 5px;
+  margin-left: 15px;
   color: #8c93a0;
   letter-spacing: 1.6px;
 `;
