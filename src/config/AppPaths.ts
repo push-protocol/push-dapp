@@ -11,7 +11,6 @@ enum APP_PATHS {
   RewardsActivities = '/points/activity',
   RewardsLeaderboard = '/points/leaderboard',
   PointsVault = '/points/vault',
-  PointsVaultLogin = '/points/vault/login',
   Send = '/send',
   Receive = '/receive',
   Govern = '/govern',

@@ -74,7 +74,6 @@ import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { ModeProp } from 'blocks';
 
 const rewardsPointsPagePaths = [APP_PATHS.Rewards, APP_PATHS.RewardsActivities, APP_PATHS.RewardsLeaderboard];
-const pointsVaultPagePaths = [APP_PATHS.PointsVault, APP_PATHS.PointsVaultLogin];
 
 // Create Header
 function MasterInterfacePage() {
@@ -172,13 +171,10 @@ function MasterInterfacePage() {
               />
             ))}
 
-            {pointsVaultPagePaths.map((path, index) => (
-              <Route
-                path={path}
-                key={index}
-                element={<PointsVaultPage />}
-              />
-            ))}
+            <Route
+              path={APP_PATHS.PointsVault}
+              element={<PointsVaultPage />}
+            />
 
             <Route
               path={APP_PATHS.Inbox}
