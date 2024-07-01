@@ -6,8 +6,12 @@ import {
   CSSPropName,
   CSSPropValueType,
   DeviceSizeName,
+  ThemeModeColors,
   PixelValue,
   ResponsiveCSSPropertyData,
+  ThemeMode,
+  ThemeModeBorder,
+  BorderValue
 } from './Blocks.types';
 
 /**
@@ -16,7 +20,14 @@ import {
  * @returns value of a CSS property
  */
 const getCSSValue = (propName: CSSPropName, value: CSSPropValueType | undefined) => {
-  return propName === 'padding' || propName === 'margin' ? `var(--${value})` : value;
+  if (propName === 'padding' || propName === 'margin') {
+    if (typeof value === 'string') {
+      return value.replace(/\b(\w+)\b/g, 'var(--$1)');
+    }
+  } else if (propName === 'gap' || propName === 'border-radius') {
+    return `var(--${value})`;
+  }
+  return value;
 };
 
 /**
@@ -98,7 +109,7 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
     tablet: '',
     laptop: '',
     laptopL: '',
-    desktop: '',
+    desktop: ''
   };
 
   data.forEach(({ prop, propName }) => {
@@ -126,10 +137,32 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
  * @param color
  * @returns color as a css variable: var(--primary)
  */
-export const getBlocksColor = (color?: BlocksColors) => {
+export const getBlocksColor = (mode: ThemeMode, color?: BlocksColors | ThemeModeColors) => {
   // If color is not given return undefined, to avoid any breakages
   if (!color) return color;
 
+  // Handle the colors for light and dark mode
+  if (typeof color === 'object') {
+    return `var(--${color[mode]})`;
+  }
+
   // If passed a design system color then use color as a variable
   return `var(--${color})`;
+};
+
+/**
+ * @param border
+ * @returns border
+ */
+export const getBlocksBorder = (mode: ThemeMode, border?: BorderValue | ThemeModeBorder) => {
+  // If border is not given return undefined, to avoid any breakages
+  if (!border) return border;
+  // Handle the border for light and dark mode
+  let borderValues;
+  if (typeof border === 'object') borderValues = border[mode].split(' ');
+  else borderValues = border.split(' ');
+
+  // If passed a design system border then use border as a variable
+  borderValues[2] = `var(--${borderValues[2]})`;
+  return borderValues.join(' ');
 };

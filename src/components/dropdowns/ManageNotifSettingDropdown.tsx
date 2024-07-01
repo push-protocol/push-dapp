@@ -98,7 +98,7 @@ const ManageNotifSettingDropdownContainer: FC<ManageNotifSettingDropdownContaine
             <LoaderSpinner
               type={LOADER_TYPE.SEAMLESS}
               spinnerSize={16}
-              spinnerColor="#FFF"
+              spinnerColor="#000"
             />
           )}
           {!txInProgress && <ActionTitle hideIt={txInProgress}>Opt-out</ActionTitle>}
@@ -109,7 +109,7 @@ const ManageNotifSettingDropdownContainer: FC<ManageNotifSettingDropdownContaine
 };
 
 const ManageNotifSettingDropdown: FC<ManageNotifSettingDropdownProps> = (options) => {
-  const { children, centerOnMobile, userSetting, channelDetail } = options;
+  const { children, centerOnMobile, userSetting, channelDetail, onSuccessOptout } = options;
   const [isOpen, setIsOpen] = useState(false);
   const { chainId, provider, account } = useAccount();
   const { userPushSDKInstance } = useSelector((state: any) => {
@@ -177,7 +177,7 @@ const ManageNotifSettingDropdown: FC<ManageNotifSettingDropdownProps> = (options
               />
             ),
           });
-
+          onSuccessOptout();
           closeDropdown();
         },
         onError: () => {

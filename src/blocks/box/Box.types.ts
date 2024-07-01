@@ -1,6 +1,14 @@
 import { CSSProperties, ReactNode } from 'react';
 
-import { BlocksColors, ResponsiveProp, SpaceType, ValueOf } from '../Blocks.types';
+import {
+  BlocksColors,
+  BorderValue,
+  ResponsiveProp,
+  SpaceType,
+  ThemeModeBorder,
+  ThemeModeColors,
+  ValueOf,
+} from '../Blocks.types';
 import { FlattenSimpleInterpolation } from 'styled-components';
 
 export type BoxResponsiveProps = {
@@ -8,6 +16,8 @@ export type BoxResponsiveProps = {
   alignItems?: ResponsiveProp<CSSProperties['alignItems']>;
   /* Sets flex-direction css property */
   flexDirection?: ResponsiveProp<CSSProperties['flexDirection']>;
+  /* Sets gap between the elements */
+  gap?: ResponsiveProp<SpaceType>;
   /* Sets display css property */
   display?: ResponsiveProp<CSSProperties['display']>;
   /* Sets height css property */
@@ -32,19 +42,21 @@ export type BoxResponsiveProps = {
 
 export type BoxNonResponsiveProps = {
   /* Sets border css property */
-  border?: string;
+  border?: BorderValue | ThemeModeBorder;
   /* Sets border-radius css property */
   borderRadius?: string;
   /* Sets background-color css property */
-  backgroundColor?: BlocksColors;
+  backgroundColor?: BlocksColors | ThemeModeColors;
   /* Sets color css property */
-  color?: BlocksColors;
+  color?: BlocksColors | ThemeModeColors;
   /* Sets cursor css property */
   cursor?: CSSProperties['cursor'];
   /* Sets position css property */
   position?: CSSProperties['position'];
   /* Sets box-shadow css property */
   boxShadow?: string;
+  /* Sets overflow css property */
+  overflow?: CSSProperties['overflow'];
 };
 
 export type BoxCSSProps = BoxResponsiveProps & BoxNonResponsiveProps;
@@ -64,6 +76,7 @@ export type BoxResponsiveCSSProperties =
   | 'align-items'
   | 'display'
   | 'flex-direction'
+  | 'gap'
   | 'height'
   | 'justify-content'
   | 'margin'

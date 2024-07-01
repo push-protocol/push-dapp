@@ -1,6 +1,16 @@
 import { HTMLAttributes } from 'react';
 import { BoxResponsiveCSSProperties, BoxResponsiveCSSPropertiesData, BoxResponsivePropValues } from './box';
 import { blocksColorsLegacy } from './Blocks.colors';
+import {
+  SkeletonResponsiveCSSProperties,
+  SkeletonResponsiveCSSPropertiesData,
+  SkeletonResponsivePropValues,
+} from './skeleton';
+import {
+  SeparatorResponsiveCSSProperties,
+  SeparatorResponsiveCSSPropertiesData,
+  SeparatorResponsivePropValues,
+} from './separator';
 
 export type DeviceSize = '320px' | '375px' | '425px' | '768px' | '1024px' | '1440px' | '2560px';
 
@@ -10,19 +20,27 @@ export type Breakpoint = 'initial' | 'ms' | 'mm' | 'ml' | 'tb' | 'lp' | 'll' | '
 
 export type ResponsiveProp<T> = T | { [key in Breakpoint]?: T };
 
-export type SpaceType = `s${number}`;
+export type RadiusType = `r${number}`;
+
+export type SpaceType = `s${number}` | `s${number} s${number}` | `s${number} s${number} s${number} s${number}`;
 
 export type PixelValue = `${number}px`;
 
 export type ValueOf<T> = T[keyof T];
 
-export type CSSPropName = BoxResponsiveCSSProperties;
+export type CSSPropName =
+  | BoxResponsiveCSSProperties
+  | SeparatorResponsiveCSSProperties
+  | SkeletonResponsiveCSSProperties;
 
-export type CSSPropValueType = BoxResponsivePropValues;
+export type CSSPropValueType = BoxResponsivePropValues | SeparatorResponsivePropValues | SkeletonResponsivePropValues;
 
-export type ResponsiveCSSPropertyData = BoxResponsiveCSSPropertiesData;
+export type ResponsiveCSSPropertyData =
+  | BoxResponsiveCSSPropertiesData
+  | SeparatorResponsiveCSSPropertiesData
+  | SkeletonResponsiveCSSPropertiesData;
 
-export type BlockWithoutStyleProp<T> = Omit<HTMLAttributes<T>, 'style'>;
+export type TransformedHTMLAttributes<T> = Omit<HTMLAttributes<T>, 'style' | 'color'>;
 
 /* This needs to be removed when the color dependency from Globals.js is removed. */
 export type GlobalColors = Record<keyof typeof blocksColorsLegacy, string>;
@@ -36,3 +54,13 @@ export type BlocksColorData = {
 };
 
 export type BlocksColors = keyof BlocksColorData;
+
+export type ThemeMode = 'light' | 'dark';
+
+export type ThemeModeColors = Record<ThemeMode, BlocksColors>;
+
+export type BorderValue = `${number}px ${string} ${BlocksColors}`;
+
+export type ThemeModeBorder = Record<ThemeMode, BorderValue>;
+
+export type ModeProp = { mode: ThemeMode };
