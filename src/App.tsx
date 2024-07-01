@@ -370,12 +370,7 @@ export default function App() {
                   />
                 </HeaderContainer>
 
-                <ParentContainer
-                  bg={
-                    darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG
-                  }
-                  headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
-                >
+                <ParentContainer headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
                   {!isSnapPage && (
                     <LeftBarContainer
                       leftBarWidth={

@@ -1,150 +1,165 @@
 import { FlattenSimpleInterpolation, css } from 'styled-components';
-import { ButtonSize, ButtonVariantStyles } from './Button.types';
+import { ButtonSize, ButtonVariant } from './Button.types';
+import { ThemeMode } from 'blocks/Blocks.types';
+import { getBlocksColor } from 'blocks/Blocks.utils';
 
-export const buttonVariantStyles: ButtonVariantStyles = {
-  primary: `
-    background-color: var(--pink-400);
-    color: var(--white);
+export const getButtonVariantStyles = (mode: ThemeMode, variant: ButtonVariant) => {
+  switch (variant) {
+    case 'primary': {
+      return `
+        background-color: var(--pink-500);
+        color: var(--white);
 
-    &:hover {
-      background-color: var(--pink-400);
-    }
+        &:hover {
+          background-color: var(--pink-400);
+        }
 
-    &:active {
-      background-color: var(--pink-800);
-    }
+        &:active {
+          background-color: ${getBlocksColor(mode, { light: 'pink-800', dark: 'pink-600' })};
+        }
 
-    &:focus-visible {
-      border: 1px solid var(--pink-300);
-      outline: none;
-    }
+        &:focus-visible {
+          background-color: ${getBlocksColor(mode, { light: 'pink-500', dark: 'pink-400' })};
+          border: 1px solid ${getBlocksColor(mode, { light: 'pink-700', dark: 'pink-200' })};
+          outline: none;
+        }
 
-    &:disabled {
-      background-color: var(--gray-200);
-      color: var(--gray-300);
+        &:disabled {
+          background-color: ${getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
+          color: ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-700' })};
+        }
+      `;
     }
-  `,
-  secondary: `
-    background-color: var(--gray-100);
-    color: var(--gray-1000);
+    case 'secondary': {
+      return `
+        background-color: ${getBlocksColor(mode, { light: 'gray-100', dark: 'gray-800' })};
+        color: ${getBlocksColor(mode, { light: 'gray-1000', dark: 'white' })};
 
-    &:hover {
-      background-color: var(--gray-200);
-    }
+        &:hover {
+          background-color: ${getBlocksColor(mode, { light: 'gray-200', dark: 'gray-700' })};
+        }
 
-    &:active {
-      background-color: var(--gray-300);
-    }
+        &:active {
+          background-color: ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-1000' })};
+        }
 
-    &:focus-visible {
-      background-color: var(--pink-100);
-      border: 1px solid var(--pink-300);
-      outline: none;
-    }
+        &:focus-visible {
+          background-color: ${getBlocksColor(mode, { light: 'gray-100', dark: 'gray-800' })};
+          border: 1px solid ${getBlocksColor(mode, { light: 'pink-300', dark: 'pink-400' })};
+          outline: none;
+        }
 
-    &:disabled {
-      background-color: var(--gray-200);
-      color: var(--gray-300);
+        &:disabled {
+          background-color: ${getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
+          color: ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-700' })};
+        }
+      `;
     }
-  `,
-  tertiary: `
-    background-color: var(--gray-1000);
-    color: var(--white);
+    case 'tertiary': {
+      return `
+        background-color: ${getBlocksColor(mode, { light: 'gray-1000', dark: 'gray-700' })};
+        color: var(--white);
 
-    &:hover {
-      background-color: var(--gray-900);
-    }
+        &:hover {
+          color: ${getBlocksColor(mode, { light: 'white', dark: 'gray-200' })};
+          background-color: ${getBlocksColor(mode, { light: 'gray-900', dark: 'gray-300' })};
+        }
 
-    &:active {
-      background-color: var(--gray-100);
-      color: var(--gray-1000);
-    }
+        &:active {
+          background-color: ${getBlocksColor(mode, { light: 'gray-100', dark: 'gray-1000' })};
+          color: ${getBlocksColor(mode, { light: 'gray-1000', dark: 'white' })};
+        }
 
-    &:focus-visible {
-      border: 1px solid var(--pink-300);
-      background-color: var(--pink-100);
-      color: var(--gray-1000);
-      outline: none;
-    }
+        &:focus-visible {
+          border: 1px solid ${getBlocksColor(mode, { light: 'pink-300', dark: 'pink-400' })};
+          background-color: ${getBlocksColor(mode, { light: 'gray-1000', dark: 'gray-700' })};
+          color: ${getBlocksColor(mode, { light: 'white', dark: 'gray-200' })};
+          outline: none;
+        }
 
-    &:disabled {
-      background-color: var(--gray-200);
-      color: var(--gray-300);
+        &:disabled {
+          background-color: ${getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
+          color: ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-700' })};
+        }
+      `;
     }
-  `,
-  danger: `
-    background-color: var(--red-600);
-    color: var(--white);
+    case 'danger': {
+      return `
+        background-color: ${getBlocksColor(mode, { light: 'red-600', dark: 'red-500' })};
+        color: var(--white);
 
-    &:hover {
-      background-color: var(--red-500);
-    }
+        &:hover {
+          background-color: ${getBlocksColor(mode, { light: 'red-500', dark: 'red-400' })};
+        }
 
-    &:active {
-      background-color: var(--red-800);
-    }
+        &:active {
+          background-color: ${getBlocksColor(mode, { light: 'red-800', dark: 'red-700' })};
+        }
 
-    &:focus-visible {
-      background-color: var(--red-500);
-      border: 1px solid var(--red-300);
-      outline: none;
+        &:focus-visible {
+          background-color: ${getBlocksColor(mode, { light: 'red-500', dark: 'red-400' })};
+          border: 1px solid ${getBlocksColor(mode, { light: 'red-800', dark: 'red-600' })};
+          outline: none;
+        }
+        
+        &:disabled {
+          background-color: ${getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
+          color: ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-700' })};
+        }
+      `;
     }
-    
-    &:disabled {
-      background-color: var(--gray-200);
-      color: var(--gray-300);
-    }
-  `,
-  dangerSecondary: `
-    background-color: var(--red-200);
-    color: var(--red-700);
+    case 'dangerSecondary': {
+      return `
+        background-color: ${getBlocksColor(mode, { light: 'red-200', dark: 'red-800' })};
+        color: ${getBlocksColor(mode, { light: 'red-700', dark: 'white' })};
 
-    &:hover {
-      background-color: var(--red-100);
-    }
+        &:hover {
+          background-color: ${getBlocksColor(mode, { light: 'red-100', dark: 'red-700' })};
+        }
 
-    &:active {
-      background-color: var(--red-500);
-      color: var(--red-700);
-    }
+        &:active {
+          background-color: ${getBlocksColor(mode, { light: 'red-500', dark: 'red-1000' })};
+        }
 
-    &:focus-visible {
-      background-color: var(--red-100);
-      border: 1px solid var(--red-300);
-      outline: none;
+        &:focus-visible {
+          background-color: ${getBlocksColor(mode, { light: 'red-100', dark: 'red-700' })};
+          border: 1px solid ${getBlocksColor(mode, { light: 'red-800', dark: 'red-400' })};
+          outline: none;
+        }
+        
+        &:disabled {
+          background-color: ${getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
+          color: ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-700' })};
+        }
+      `;
     }
-    
-    &:disabled {
-      background-color: var(--gray-200);
-      color: var(--gray-300);
-    }
-  `,
-  outline: `
-    background-color: var(--white);
-    border: 1px solid var(--gray-300);
-    color: var(--gray-1000);
+    case 'outline': {
+      return `
+        background-color: transparent;
+        border: 1px solid ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-700' })};
+        color: ${getBlocksColor(mode, { light: 'gray-1000', dark: 'gray-100' })};
+        outline: none;
 
-    &:hover {
-      background-color: var(--white);
-    }
+        &:hover {
+          border: 1px solid ${getBlocksColor(mode, { light: 'pink-300', dark: 'gray-800' })};
+        }
 
-    &:active {
-      background-color: var(--white);
-      border: 1px solid var(--gray-600);
-    }
+        &:active {
+          border: 1px solid ${getBlocksColor(mode, { light: 'gray-600', dark: 'gray-300' })};
+        }
 
-    &:focus-visible {
-      background-color: var(--white);
-      border: 1px solid var(--pink-300);
-      outline: none;
+        &:focus-visible {
+          border: 1px solid ${getBlocksColor(mode, { light: 'pink-300', dark: 'pink-400' })};
+        }
+        
+        &:disabled {
+          border: none;
+          background-color: ${getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
+          color: ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-700' })};
+        }
+      `;
     }
-    
-    &:disabled {
-      border: none;
-      background-color: var(--gray-200);
-      color: var(--gray-300);
-    }
-  `,
+  }
 };
 
 export const getButtonSizeStyles = ({

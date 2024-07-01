@@ -1,8 +1,9 @@
 import { ReactNode, forwardRef } from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
-import { getButtonSizeStyles, buttonVariantStyles } from './Button.constants';
-import { TransformedHTMLAttributes } from '../Blocks.types';
-import { ButtonSize, ButtonVariant } from './Button.types';
+import { getButtonSizeStyles, getButtonVariantStyles } from './Button.constants';
+import type { ModeProp, TransformedHTMLAttributes } from '../Blocks.types';
+import type { ButtonSize, ButtonVariant } from './Button.types';
+import { useBlocksTheme } from 'blocks/Blocks.hooks';
 
 export type ButtonProps = {
   /* Child react nodes rendered by Box */
@@ -25,7 +26,7 @@ export type ButtonProps = {
   variant?: ButtonVariant;
 } & TransformedHTMLAttributes<HTMLButtonElement>;
 
-const StyledButton = styled.button<ButtonProps>`
+const StyledButton = styled.button<ButtonProps & ModeProp>`
   /* Common Button CSS */
 
   align-items: center;
@@ -43,7 +44,7 @@ const StyledButton = styled.button<ButtonProps>`
   }
 
   /* Button variant CSS styles */
-  ${(props) => buttonVariantStyles[props.variant || 'primary']}
+  ${({ mode, variant }) => getButtonVariantStyles(mode, variant || 'primary')}
 
   /* Button and font size CSS styles */
   ${({ iconOnly, size }) => getButtonSizeStyles({ iconOnly: !!iconOnly, size: size || 'medium' })}
@@ -70,6 +71,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
+    const { mode } = useBlocksTheme();
     return (
       <StyledButton
         {...(disabled ? { 'aria-disabled': true } : {})}
@@ -80,6 +82,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         size={size}
         variant={variant}
+        mode={mode}
         {...props}
       >
         {leadingIcon && <span className="icon icon-text">{leadingIcon}</span>}
