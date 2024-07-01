@@ -52,6 +52,7 @@ import SpaceContextProvider from 'contexts/SpaceContext';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 import { blocksColors } from 'blocks';
 import { textVariants } from 'blocks/text/Text.constants';
+import APP_PATHS from 'config/AppPaths';
 
 dotenv.config();
 
@@ -311,7 +312,8 @@ export default function App() {
   // const { spaceUI } = useSpaceComponents();
 
   const location = useLocation();
-  const isSnapPage = location?.pathname.includes('/snap');
+  const isHeaderHidden = location?.pathname.includes(APP_PATHS.PointsVault);
+  const isSidebarHidden = location?.pathname.includes(APP_PATHS.PointsVault) || location?.pathname.includes('/snap');
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
@@ -363,15 +365,17 @@ export default function App() {
                   }}
                 />
 
-                <HeaderContainer>
-                  <Header
-                    isDarkMode={darkMode}
-                    darkModeToggle={toggleDarkMode}
-                  />
-                </HeaderContainer>
+                {!isHeaderHidden && (
+                  <HeaderContainer>
+                    <Header
+                      isDarkMode={darkMode}
+                      darkModeToggle={toggleDarkMode}
+                    />
+                  </HeaderContainer>
+                )}
 
                 <ParentContainer headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
-                  {!isSnapPage && (
+                  {!isSidebarHidden && (
                     <LeftBarContainer
                       leftBarWidth={
                         sidebarCollapsed

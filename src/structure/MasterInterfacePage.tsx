@@ -41,6 +41,7 @@ const UserSettingsPage = lazy(() => import('pages/UserSettingsPage'));
 const ClaimGalxePage = lazy(() => import('pages/ClaimGalxePage'));
 const WelcomDashboardPage = lazy(() => import('pages/WelcomeDashboardPage'));
 const RewardPointsPage = lazy(() => import('pages/RewardPointsPage'));
+const PointsVaultPage = lazy(() => import('pages/PointsVaultPage'));
 
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
@@ -171,9 +172,15 @@ function MasterInterfacePage() {
             ))}
 
             <Route
+              path={APP_PATHS.PointsVault}
+              element={<PointsVaultPage />}
+            />
+
+            <Route
               path={APP_PATHS.Inbox}
               element={<InboxPage />}
             />
+
             <Route
               path={APP_PATHS.Spam}
               element={<InboxPage />}
