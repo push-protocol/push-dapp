@@ -123,7 +123,7 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({
   return (
     <ActivityStatusButton
       label="Verify"
-      isLoading={verifying}
+      disabledLabel='Verifying'
       disabled={verifying}
       onClick={handleVerification}
     />

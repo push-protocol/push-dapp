@@ -130,9 +130,9 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({
   return (
     <ActivityStatusButton
       label="Verify"
-      isLoading={verifying}
       disabled={verifying}
       onClick={handleVerification}
+      disabledLabel='Verifying'
     />
   );
 };

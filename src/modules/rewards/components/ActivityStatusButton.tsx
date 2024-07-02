@@ -7,16 +7,19 @@ import { Box, Button, Skeleton } from 'blocks';
 
 type ActivityStatusButtonProps = {
   label: string;
+  disabledLabel?: string;
   isLoading?: boolean;
   onClick?: () => void;
   disabled: boolean;
+
 }
 
 const ActivityStatusButton: FC<ActivityStatusButtonProps> = ({
   label,
   isLoading,
   onClick,
-  disabled
+  disabled,
+  disabledLabel
 }) => {
   return (
     <Box
@@ -31,7 +34,10 @@ const ActivityStatusButton: FC<ActivityStatusButtonProps> = ({
           onClick={onClick}
           disabled={disabled}
         >
-          {label}
+
+          {disabledLabel && disabled ? disabledLabel : label}
+
+          {/* {label} */}
         </Button>
       </Skeleton>
     </Box>
