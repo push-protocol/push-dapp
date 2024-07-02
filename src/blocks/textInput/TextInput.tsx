@@ -4,13 +4,13 @@ import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
 import { ModeProp } from '../Blocks.types';
 
-import { getInputFieldState, getInputFieldStateStyles } from './InputField.utils';
+import { getTextInputState, getTextInputStateStyles } from './TextInput.utils';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { CrossFilled } from 'blocks/icons';
 import { Text } from 'blocks/text';
-import { descriptionColor } from './InputField.constants';
+import { descriptionColor } from './TextInput.constants';
 
-export type InputFieldProps = {
+export type TextInputProps = {
   /* Additional prop from styled components to apply custom css to input field */
   css?: FlattenSimpleInterpolation;
   /* Render an icon before input field contents */
@@ -43,7 +43,7 @@ export type InputFieldProps = {
   errorMessage?: string;
 };
 
-const StyledInputField = styled.div<InputFieldProps & ModeProp>`
+const StyledTextInput = styled.div<TextInputProps & ModeProp>`
   /* Common Input field CSS */
   display: flex;
   flex-direction: column;
@@ -96,15 +96,15 @@ const StyledInputField = styled.div<InputFieldProps & ModeProp>`
       }
     }
   }
-  /* InputField type CSS styles */
+  /* TextInput type CSS styles */
   ${({ mode, error, disabled }) =>
-    getInputFieldStateStyles({ mode, state: getInputFieldState({ error: !!error, disabled: !!disabled }) })}
+    getTextInputStateStyles({ mode, state: getTextInputState({ error: !!error, disabled: !!disabled }) })}
 
   /* Custom CSS applied via styled component css prop */
   ${(props) => props.css || ''}
 `;
 
-const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
+const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   (
     {
       disabled,
@@ -127,9 +127,9 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
     ref
   ) => {
     const { mode } = useBlocksTheme();
-    const state = getInputFieldState({ error: !!error, disabled: !!disabled });
+    const state = getTextInputState({ error: !!error, disabled: !!disabled });
     return (
-      <StyledInputField
+      <StyledTextInput
         disabled={disabled}
         error={error}
         required={required}
@@ -182,11 +182,11 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
             {errorMessage}
           </Text>
         )}
-      </StyledInputField>
+      </StyledTextInput>
     );
   }
 );
 
-InputField.displayName = 'InputField';
+TextInput.displayName = 'TextInput';
 
-export { InputField };
+export { TextInput };

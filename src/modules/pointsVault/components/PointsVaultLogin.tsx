@@ -1,4 +1,4 @@
-import { Box, Button, InputField, PushLogo, Text } from 'blocks';
+import { Box, Button, TextInput, PushLogo, Text } from 'blocks';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { FC, useState } from 'react';
@@ -97,7 +97,7 @@ const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveComponent 
             gap="s3"
             width="100%"
           >
-            <InputField
+            <TextInput
               placeholder="User"
               value={formik.values.username}
               disabled={isPending}
@@ -106,7 +106,7 @@ const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveComponent 
               errorMessage={formik.touched.username ? formik.errors.username : ''}
             />
 
-            <InputField
+            <TextInput
               type="password"
               placeholder="Password"
               disabled={isPending}

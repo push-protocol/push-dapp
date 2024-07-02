@@ -1,10 +1,10 @@
 import { ThemeMode } from 'blocks/Blocks.types';
 import { getBlocksColor } from 'blocks/Blocks.utils';
 
-import { backgroundColor, borderColor, descriptionColor, textColor } from './InputField.constants';
-import { InputFieldStates } from './InputField.types';
+import { backgroundColor, borderColor, textColor } from './TextInput.constants';
+import { TextInputStates } from './TextInput.types';
 
-export const getInputFieldState = ({ error, disabled }: { error: boolean; disabled: boolean }): InputFieldStates => {
+export const getTextInputState = ({ error, disabled }: { error: boolean; disabled: boolean }): TextInputStates => {
   if (error) {
     return 'error';
   } else if (disabled) {
@@ -13,7 +13,7 @@ export const getInputFieldState = ({ error, disabled }: { error: boolean; disabl
   return 'default';
 };
 
-export const getInputFieldStateStyles = ({ mode, state }: { mode: ThemeMode; state: InputFieldStates }) => {
+export const getTextInputStateStyles = ({ mode, state }: { mode: ThemeMode; state: TextInputStates }) => {
   //add for dark mode, label count  icon colors and placeholder color
   return `
   
