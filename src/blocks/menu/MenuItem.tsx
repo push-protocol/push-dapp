@@ -29,7 +29,6 @@ const StyledMenuItem = styled.div.withConfig({
     }
   }
   cursor: pointer;
-  font-size: 15px;
   /* Extra CSS props */
   ${(props) => props.css || ''}
 `;
