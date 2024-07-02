@@ -2,7 +2,6 @@ import { FC } from 'react';
 
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import styled from 'styled-components';
 import { MdError } from 'react-icons/md';
 
 import { usePointsVaultUserLogin } from 'queries';
@@ -102,47 +101,43 @@ const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveView }) =>
         >
           Points Vault Login
         </Text>
-        <StyledForm onSubmit={formik.handleSubmit}>
-          <Box
-            display="flex"
-            alignItems="center"
-            flexDirection="column"
-            gap="s3"
-            width="100%"
-          >
-            <TextInput
-              placeholder="User"
-              value={formik.values.username}
-              disabled={isPending}
-              onChange={formik.handleChange('username')}
-              error={formik.touched.username && Boolean(formik.errors.username)}
-              errorMessage={formik.touched.username ? formik.errors.username : ''}
-            />
+        <Box width="100%">
+          <form onSubmit={formik.handleSubmit}>
+            <Box
+              display="flex"
+              alignItems="center"
+              flexDirection="column"
+              gap="s3"
+              width="100%"
+            >
+              <TextInput
+                placeholder="User"
+                value={formik.values.username}
+                disabled={isPending}
+                onChange={formik.handleChange('username')}
+                error={formik.touched.username && Boolean(formik.errors.username)}
+                errorMessage={formik.touched.username ? formik.errors.username : ''}
+              />
 
-            <TextInput
-              type="password"
-              placeholder="Password"
-              disabled={isPending}
-              value={formik.values.password}
-              onChange={formik.handleChange('password')}
-              error={formik.touched.password && Boolean(formik.errors.password)}
-              errorMessage={formik.touched.password ? formik.errors.password : ''}
-            />
+              <TextInput
+                type="password"
+                placeholder="Password"
+                disabled={isPending}
+                value={formik.values.password}
+                onChange={formik.handleChange('password')}
+                error={formik.touched.password && Boolean(formik.errors.password)}
+                errorMessage={formik.touched.password ? formik.errors.password : ''}
+              />
 
-            <Box margin="s6 s0 s0 s0">
-              <Button disabled={isPending}>{isPending ? 'Authenticating' : 'Login'}</Button>
+              <Box margin="s6 s0 s0 s0">
+                <Button disabled={isPending}>{isPending ? 'Authenticating' : 'Login'}</Button>
+              </Box>
             </Box>
-          </Box>
-        </StyledForm>
+          </form>
+        </Box>
       </Box>
     </Box>
   );
 };
 
 export { PointsVaultLogin };
-
-//styles
-
-const StyledForm = styled.form`
-  width: 100%;
-`;

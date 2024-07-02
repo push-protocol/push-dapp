@@ -96,7 +96,10 @@ const StyledTextInput = styled.div<TextInputProps & ModeProp>`
   }
   /* TextInput type CSS styles */
   ${({ mode, error, disabled }) =>
-    getTextInputStateStyles({ mode, state: getTextInputState({ error: !!error, disabled: !!disabled }) })}
+    getTextInputStateStyles({
+      mode,
+      state: getTextInputState({ error: !!error, disabled: !!disabled }),
+    })}
 
   /* Custom CSS applied via styled component css prop */
   ${(props) => props.css || ''}

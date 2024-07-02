@@ -26,7 +26,10 @@ export const getTextInputStateStyles = ({ mode, state }: { mode: ThemeMode; stat
 
 
      &:hover {
-          border: 1.5px solid ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-700' })};
+          border: 1.5px solid ${getBlocksColor(mode, {
+            light: 'gray-300',
+            dark: 'gray-700',
+          })};
         };
    
      &:focus-within {
@@ -37,7 +40,10 @@ export const getTextInputStateStyles = ({ mode, state }: { mode: ThemeMode; stat
         };
     
     .icon,.clear {
-         color: ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-100' })};
+         color: ${getBlocksColor(mode, {
+           light: 'gray-300',
+           dark: 'gray-100',
+         })};
         };
     
     & input{
