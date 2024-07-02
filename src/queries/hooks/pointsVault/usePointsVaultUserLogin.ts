@@ -1,12 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { vaultUserLogin } from '../../queryKeys';
+import { pointsVaultUserLogin } from '../../queryKeys';
 
 import { PointsVaultUserLoginProps } from '../../types';
-import { pointsVaultUserLogin } from '../../services';
+import { pointsVaultUserLogin as pointsVaultUserLoginfunction } from '../../services';
 
-export const usePointsVaultUserLogin = (payload: PointsVaultUserLoginProps) =>
+export const usePointsVaultUserLogin = () =>
   useMutation({
-    mutationKey: [vaultUserLogin, payload.username, payload.password],
-    mutationFn: pointsVaultUserLogin,
+    mutationKey: [pointsVaultUserLogin],
+    mutationFn: pointsVaultUserLoginfunction,
   });

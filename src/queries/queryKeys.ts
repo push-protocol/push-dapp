@@ -11,4 +11,4 @@ export const UserRewardsDetails = 'userRewardsDetails';
 export const userRewardsDetails = 'userRewardsDetails';
 export const createUserRewardsDetails = 'createUserRewardsDetails';
 export const rewardsLeaderboard = 'rewardsLeaderboard';
-export const vaultUserLogin = 'vaultUserLogin';
+export const pointsVaultUserLogin = 'pointsVaultUserLogin';

@@ -1,5 +1,4 @@
-import { PointsVaultUserLoginResponse } from 'queries/types';
+import { PointsVaultUserLoginPayload } from 'queries/types';
 
-export const pointsVaultUserLoginModelCreator = (
-  response: PointsVaultUserLoginResponse
-): PointsVaultUserLoginResponse => response;
+export const pointsVaultUserLoginModelCreator = (response: PointsVaultUserLoginPayload): PointsVaultUserLoginPayload =>
+  response;

@@ -56,7 +56,7 @@ export type PointsVaultUserLoginProps = {
   username: string;
   password: string;
 };
-export type PointsVaultUserLoginResponse = {
+export type PointsVaultUserLoginPayload = {
   token: string;
 };
 

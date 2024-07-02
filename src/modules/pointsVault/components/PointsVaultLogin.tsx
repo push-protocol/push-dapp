@@ -8,26 +8,23 @@ import { MdError } from 'react-icons/md';
 import { usePointsVaultUserLogin } from 'queries';
 import useToast from 'hooks/useToast';
 
-import { Box, Button, TextInput, PushLogo, Text, BellSimple } from 'blocks';
+import { Box, Button, TextInput, PushLogo, Text } from 'blocks';
 
-import { PointsVaultComponents } from '../PointsVault.types';
+import { PointsVaultView, VaultLoginformValues } from '../PointsVault.types';
 
 export type PointsVaultLoginProps = {
-  handleSetActiveComponent: (component: PointsVaultComponents) => void;
+  handleSetActiveView: (component: PointsVaultView) => void;
 };
 
-const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveComponent }) => {
-  const { mutate: pointsVaultUserLogin, isPending } = usePointsVaultUserLogin({
-    username: '',
-    password: '',
-  });
+const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveView }) => {
+  const { mutate: pointsVaultUserLogin, isPending } = usePointsVaultUserLogin();
 
   const validationSchema = yup.object().shape({
     username: yup.string().required('Username is required'),
     password: yup.string().required('Password is required'),
   });
 
-  const formik = useFormik({
+  const formik = useFormik<VaultLoginformValues>({
     initialValues: {
       username: '',
       password: '',
@@ -48,7 +45,7 @@ const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveComponent 
       {
         onSuccess: (response) => {
           //response.token is the auth token
-          handleSetActiveComponent('list');
+          handleSetActiveView('list');
         },
         onError: (error: any) => {
           if (error.name) {

@@ -46,7 +46,7 @@ const StyledTextInput = styled.div<TextInputProps & ModeProp>`
   /* Common Input field CSS */
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: inherit;
   gap: var(--s2);
   .label-count {
     display: flex;
@@ -82,7 +82,6 @@ const StyledTextInput = styled.div<TextInputProps & ModeProp>`
     & input {
       border: none;
       background-color: transparent;
-      width: 100%;
       padding: var(--s3) var(--s0);
       &:focus {
         outline: none;
@@ -120,13 +119,11 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       onClear,
       description,
       errorMessage,
-
       ...props
     },
     ref
   ) => {
     const { mode } = useBlocksTheme();
-    const state = getTextInputState({ error: !!error, disabled: !!disabled });
     return (
       <StyledTextInput
         disabled={disabled}
@@ -139,8 +136,8 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       >
         {(label || totalCount) && (
           <div className="label-count">
-            {label && <Text className="label">{label}</Text>}
-            {totalCount && <Text className="count">{totalCount}</Text>}
+            {label && <Text>{label}</Text>}
+            {totalCount && <Text>{totalCount}</Text>}
           </div>
         )}
         <div className="input-container">
@@ -166,7 +163,6 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         {description && (
           <Text
             variant="c-regular"
-            className="description"
             color={{ light: 'gray-600', dark: 'gray-600' }}
           >
             {description}
@@ -176,7 +172,6 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           <Text
             variant="c-regular"
             color={{ light: 'red-700', dark: 'red-700' }}
-            className="error-message"
           >
             {errorMessage}
           </Text>
