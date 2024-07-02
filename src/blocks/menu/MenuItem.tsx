@@ -67,7 +67,7 @@ const MenuItem: FC<MenuItemComponentProps> = ({ icon, label, onClick, destinatio
       {destination ? (
         <Link
           to={destination}
-          newTab={newTab}
+          {...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
         >
           {menuContent}
         </Link>
