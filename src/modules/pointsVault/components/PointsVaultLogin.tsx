@@ -1,22 +1,22 @@
-import { Box, Button, TextInput, PushLogo, Text } from 'blocks';
+import { FC } from 'react';
+
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { FC, useState } from 'react';
-import { usePointsVaultUserLogin } from 'queries';
-import { PointsVaultComponents } from '../PointsVault.types';
 import styled from 'styled-components';
+import { MdError } from 'react-icons/md';
 
-const StyledForm = styled.form`
-  width: 100%;
-`;
+import { usePointsVaultUserLogin } from 'queries';
+import useToast from 'hooks/useToast';
+
+import { Box, Button, TextInput, PushLogo, Text } from 'blocks';
+
+import { PointsVaultComponents } from '../PointsVault.types';
 
 export type PointsVaultLoginProps = {
   handleSetActiveComponent: (component: PointsVaultComponents) => void;
 };
 
 const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveComponent }) => {
-  const [errorMessage, setErrorMessage] = useState<string>('');
-
   const { mutate: pointsVaultUserLogin, isPending } = usePointsVaultUserLogin({
     username: '',
     password: '',
@@ -37,6 +37,7 @@ const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveComponent 
       handleLogin({ ...values });
     },
   });
+  const toast = useToast();
 
   const handleLogin = ({ username, password }: { username: string; password: string }) => {
     pointsVaultUserLogin(
@@ -46,12 +47,22 @@ const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveComponent 
       },
       {
         onSuccess: (response) => {
-          setErrorMessage('');
+          //response.token is the auth token
           handleSetActiveComponent('list');
         },
         onError: (error: any) => {
           if (error.name) {
-            setErrorMessage(error.response.data.error);
+            toast.showMessageToast({
+              toastTitle: 'Error',
+              toastMessage: error.response.data.error,
+              toastType: 'ERROR',
+              getToastIcon: (size) => (
+                <MdError
+                  size={size}
+                  color="red"
+                />
+              ),
+            });
           }
         },
       }
@@ -116,14 +127,7 @@ const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveComponent 
               errorMessage={formik.touched.password ? formik.errors.password : ''}
             />
 
-            <Box
-              margin="s6 s0 s0 s0"
-              display="flex"
-              flexDirection="column"
-              alignItems="centr"
-              gap="s2"
-            >
-              <Text color="red-400">{errorMessage}</Text>
+            <Box margin="s6 s0 s0 s0">
               <Button disabled={isPending}>{isPending ? 'Authenticating' : 'Login'}</Button>
             </Box>
           </Box>
@@ -134,3 +138,9 @@ const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveComponent 
 };
 
 export { PointsVaultLogin };
+
+//styles
+
+const StyledForm = styled.form`
+  width: 100%;
+`;
