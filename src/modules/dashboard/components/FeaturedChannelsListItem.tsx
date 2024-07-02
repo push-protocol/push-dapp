@@ -33,6 +33,10 @@ type FeaturedChannelsListItemProps = {
   width: string;
 };
 
+type isOpenProps = {
+  isOpen: boolean;
+};
+
 const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
   const { channelAddress, width } = props;
 
@@ -110,10 +114,10 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
                 />
               </Menu>
             }
-            trigger="hover"
+            // trigger="hover"
             // dropdownPosition="top"
           >
-            {({ isOpen }: { isOpen: boolean }) => (
+            {({ isOpen }: isOpenProps) => (
               <Button
                 size="small"
                 trailingIcon={isOpen ? <CaretUp size={20} /> : <CaretDown size={20} />}

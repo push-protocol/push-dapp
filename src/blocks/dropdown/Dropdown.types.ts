@@ -9,8 +9,6 @@ export type DropdownTrigger = 'hover' | 'click';
 export type DropdownComponentProps = {
   // This will be content upon clicking on which the dropdown overlay will open
   children?: ((props: { isOpen: boolean }) => ReactElement) | ReactNode | any;
-  // children?: ((props: { isOpen: boolean }) => ReactElement) | ReactElement | ReactNode | any;
-  // children?: ReactNode;
   // position of menu
   dropdownPosition?: DropdownPosition;
   // on which action to open the dropdown

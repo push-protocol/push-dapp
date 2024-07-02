@@ -37,7 +37,7 @@ const Dropdown: FC<DropdownProps> = forwardRef<HTMLButtonElement, DropdownProps>
         </RadixDropdown.Trigger>
         <RadixDropdown.Portal>
           <RadixDropdownContent
-            sideOffset={3}
+            sideOffset={2}
             onMouseEnter={() => trigger == 'hover' && showDropdown()}
             onMouseLeave={() => trigger == 'hover' && hideDropdown()}
             onPointerDownOutside={() => hideDropdown()}
