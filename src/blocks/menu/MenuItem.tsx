@@ -22,6 +22,11 @@ const StyledMenuItem = styled(RadixDropdown.Item).withConfig({
   gap: var(--s1);
   border-radius: var(--r2);
 
+  [role='img'] {
+    width: 24px;
+    height: 24px;
+  }
+
   &:hover {
     background-color: ${({ mode }) => getBlocksColor(mode, { light: 'gray-100', dark: 'gray-1000' })};
     outline: none !important;
@@ -44,14 +49,7 @@ const MenuItem: FC<MenuItemComponentProps> = ({ icon, label, onClick, destinatio
       mode={mode}
       {...props}
     >
-      {icon && (
-        <Box
-          display="flex"
-          alignItems="center"
-        >
-          {icon}
-        </Box>
-      )}
+      {icon ? icon : null}
       <Text
         className="menu-label"
         variant="bs-regular"

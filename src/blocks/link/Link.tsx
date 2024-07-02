@@ -10,7 +10,6 @@ import { Text, TextProps } from '../text';
 export type LinkProps = RouterLinkProps & {
   css?: FlattenSimpleInterpolation;
   textProps?: TextProps;
-  target?: string;
 } & TransformedHTMLAttributes<HTMLAnchorElement>;
 
 const StyledLink = styled(RouterLink).withConfig({
@@ -28,13 +27,12 @@ const StyledLink = styled(RouterLink).withConfig({
   ${(props) => props.css || ''}
 `;
 
-const Link: FC<LinkProps> = ({ textProps, target, ...props }) => {
+const Link: FC<LinkProps> = ({ textProps, ...props }) => {
   const { mode } = useBlocksTheme();
 
   return (
     <StyledLink
       mode={mode}
-      target={target}
       {...props}
     >
       <Text {...textProps}>{props?.children}</Text>

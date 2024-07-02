@@ -9,7 +9,7 @@ const RadixDropdownContent = styled(RadixDropdown.Content)<DropdownProps>`
 `;
 
 const Dropdown: FC<DropdownProps> = forwardRef<HTMLButtonElement, DropdownProps>(
-  ({ overlay, trigger = 'click', children, dropdownPosition = 'bottom', ...props }, ref) => {
+  ({ overlay, trigger = 'click', children, ...props }, ref) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const showDropdown = () => setIsOpen(true);
@@ -38,7 +38,6 @@ const Dropdown: FC<DropdownProps> = forwardRef<HTMLButtonElement, DropdownProps>
             onMouseEnter={() => trigger == 'hover' && showDropdown()}
             onMouseLeave={() => trigger == 'hover' && hideDropdown()}
             onPointerDownOutside={() => hideDropdown()}
-            side={dropdownPosition}
             {...props}
           >
             {overlay}
