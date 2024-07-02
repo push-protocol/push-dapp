@@ -89,7 +89,7 @@ const ChatSection = ({ chatId, setChatId, loggedIn }) => {
 
             {/* Render unlock profile here if user is not logged in and chat instance is loaded */}
             {userPushSDKInstance && userPushSDKInstance?.readmode() && chatId && (
-              <UnlockProfileWrapper type={UNLOCK_PROFILE_TYPE.BOTTOM_BAR} />
+              <UnlockProfileWrapper type={UNLOCK_PROFILE_TYPE.MODAL} />
             )}
           </ChatViewContainer>
         )}
@@ -127,7 +127,7 @@ const ChatViewContainer = styled(ItemVV2)`
   overflow: hidden;
 `;
 
-const IntroContainer = styled(ItemVV2)<IntroContainerProps>`
+const IntroContainer = styled(ItemVV2) <IntroContainerProps>`
   flex: 1;
   height: inherit;
   background: ${(props) => props.bg || 'transparent'};
