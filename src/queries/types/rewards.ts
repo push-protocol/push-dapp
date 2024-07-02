@@ -52,6 +52,14 @@ export type ClaimRewardsActivityProps = {
   pgpPublicKey: string;
 };
 
+export type PointsVaultUserLoginProps = {
+  username: string;
+  password: string;
+};
+export type PointsVaultUserLoginResponse = {
+  token: string;
+};
+
 export type ClaimActivitesResponse = {
   status: 'COMPLETED' | 'PENDING';
 };

@@ -389,7 +389,9 @@ export default function App() {
 
                   <ContentContainer
                     leftBarWidth={
-                      sidebarCollapsed
+                      isSidebarHidden
+                        ? GLOBALS.CONSTANTS.NO_LEFT_BAR_WIDTH
+                        : sidebarCollapsed
                         ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH
                         : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH
                     }
