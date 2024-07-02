@@ -13,7 +13,7 @@ import { useAccount } from 'hooks';
 import { formatSubscriberCount } from '../Dashboard.utils';
 
 // Components
-import { Box, Button, CaretDown, Dropdown, Menu, MenuItem, NotificationMobile, Skeleton, Text } from 'blocks';
+import { Box, Button, CaretDown, CaretUp, Dropdown, Menu, MenuItem, NotificationMobile, Skeleton, Text } from 'blocks';
 import { AiFillExclamationCircle } from 'react-icons/ai';
 import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
 import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannelDropdown';
@@ -110,10 +110,18 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
                 />
               </Menu>
             }
-            // trigger="hover"
+            trigger="hover"
             // dropdownPosition="top"
           >
-            <Button size="small">Actions</Button>
+            {({ isOpen }: { isOpen: boolean }) => (
+              <Button
+                size="small"
+                trailingIcon={isOpen ? <CaretUp size={20} /> : <CaretDown size={20} />}
+              >
+                {/* {isOpen ? 'Actionssss' : 'Actions'} */}
+                Actions
+              </Button>
+            )}
           </Dropdown>
 
           {!isSubscribed && (
