@@ -49,7 +49,7 @@ const MenuItem: FC<MenuItemComponentProps> = ({ icon, label, onClick, destinatio
       mode={mode}
       {...props}
     >
-      {icon ? icon : null}
+      {icon}
       <Text
         className="menu-label"
         variant="bs-regular"
