@@ -30,3 +30,5 @@ export { default as Referral } from './components/Referral';
 export { default as Twitter } from './components/Twitter';
 
 export { default as RewardsActivity } from './components/RewardsActivity';
+
+export { default as PushLogo } from './components/PushLogo';
