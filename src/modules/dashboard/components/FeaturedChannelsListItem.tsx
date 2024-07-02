@@ -13,8 +13,7 @@ import { useAccount } from 'hooks';
 import { formatSubscriberCount } from '../Dashboard.utils';
 
 // Components
-import { Box, Button, CaretDown, CaretUp, Dropdown, Menu, MenuItem, NotificationMobile, Skeleton, Text } from 'blocks';
-import { AiFillExclamationCircle } from 'react-icons/ai';
+import { Box, Button, CaretDown, NotificationMobile, Skeleton, Text } from 'blocks';
 import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
 import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannelDropdown';
 import TickDecoratedCircleFilled from 'blocks/icons/components/TickDecoratedCircleFilled';
@@ -31,10 +30,6 @@ import { ImageV3 } from '../Dashboard.styled';
 type FeaturedChannelsListItemProps = {
   channelAddress: string;
   width: string;
-};
-
-type isOpenProps = {
-  isOpen: boolean;
 };
 
 const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
@@ -86,46 +81,6 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
               alt={channelDetails?.name}
             />
           </Skeleton>
-
-          <Dropdown
-            overlay={
-              <Menu>
-                <MenuItem
-                  icon={<AiFillExclamationCircle color="red" />}
-                  onClick={() => {
-                    alert('wewe');
-                  }}
-                  label="Archive"
-                />
-                <MenuItem
-                  icon={<AiFillExclamationCircle color="red" />}
-                  onClick={() => {}}
-                  label="New Archive"
-                />
-                <MenuItem
-                  icon={<AiFillExclamationCircle color="red" />}
-                  onClick={() => {}}
-                  label="New Test"
-                />
-                <MenuItem
-                  icon={<AiFillExclamationCircle color="red" />}
-                  onClick={() => {}}
-                  label="Delete"
-                />
-              </Menu>
-            }
-            // trigger="hover"
-            // dropdownPosition="top"
-          >
-            {({ isOpen }: isOpenProps) => (
-              <Button
-                size="small"
-                trailingIcon={isOpen ? <CaretUp size={20} /> : <CaretDown size={20} />}
-              >
-                Actions
-              </Button>
-            )}
-          </Dropdown>
 
           {!isSubscribed && (
             <Skeleton
