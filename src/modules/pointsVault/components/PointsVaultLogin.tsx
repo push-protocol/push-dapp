@@ -8,7 +8,7 @@ import { MdError } from 'react-icons/md';
 import { usePointsVaultUserLogin } from 'queries';
 import useToast from 'hooks/useToast';
 
-import { Box, Button, TextInput, PushLogo, Text } from 'blocks';
+import { Box, Button, TextInput, PushLogo, Text, BellSimple } from 'blocks';
 
 import { PointsVaultComponents } from '../PointsVault.types';
 
@@ -82,7 +82,12 @@ const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveComponent 
         alignItems="center"
       >
         <PushLogo />
-        <Text variant="h2-semibold">Push</Text>
+        <Text
+          variant="h2-semibold"
+          color={{ light: 'gray-1000', dark: 'white' }}
+        >
+          Push
+        </Text>
       </Box>
       <Box
         width="374px"

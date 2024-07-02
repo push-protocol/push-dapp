@@ -3,7 +3,7 @@ import { TextInputStyles } from './TextInput.types';
 //optimisation needed for this part
 export const backgroundColor: TextInputStyles = {
   error: { light: 'red-100', dark: 'red-100' },
-  disabled: { light: 'gray-200', dark: 'gray-600' },
+  disabled: { light: 'gray-200', dark: 'gray-800' },
   default: { light: 'white', dark: 'gray-800' },
 };
 
@@ -19,8 +19,8 @@ export const textColor: TextInputStyles = {
   default: { light: 'gray-1000', dark: 'gray-100' },
 };
 
-export const descriptionColor: TextInputStyles = {
-  error: { light: 'red-700', dark: 'red-700' },
-  disabled: { light: 'gray-600', dark: 'gray-600' },
-  default: { light: 'gray-600', dark: 'gray-600' },
+export const placeholderColor: TextInputStyles = {
+  error: { light: 'red-600', dark: 'red-600' },
+  disabled: { light: 'gray-400', dark: 'gray-700' },
+  default: { light: 'gray-400', dark: 'gray-500' },
 };

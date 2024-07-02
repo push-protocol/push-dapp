@@ -8,7 +8,6 @@ import { getTextInputState, getTextInputStateStyles } from './TextInput.utils';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { CrossFilled } from 'blocks/icons';
 import { Text } from 'blocks/text';
-import { descriptionColor } from './TextInput.constants';
 
 export type TextInputProps = {
   /* Additional prop from styled components to apply custom css to input field */
@@ -168,7 +167,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           <Text
             variant="c-regular"
             className="description"
-            color={descriptionColor[state]}
+            color={{ light: 'gray-600', dark: 'gray-600' }}
           >
             {description}
           </Text>
@@ -176,7 +175,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         {errorMessage && (
           <Text
             variant="c-regular"
-            color={descriptionColor.error}
+            color={{ light: 'red-700', dark: 'red-700' }}
             className="error-message"
           >
             {errorMessage}

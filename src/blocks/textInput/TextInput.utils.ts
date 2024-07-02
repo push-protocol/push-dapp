@@ -1,7 +1,7 @@
 import { ThemeMode } from 'blocks/Blocks.types';
 import { getBlocksColor } from 'blocks/Blocks.utils';
 
-import { backgroundColor, borderColor, textColor } from './TextInput.constants';
+import { backgroundColor, borderColor, placeholderColor, textColor } from './TextInput.constants';
 import { TextInputStates } from './TextInput.types';
 
 export const getTextInputState = ({ error, disabled }: { error: boolean; disabled: boolean }): TextInputStates => {
@@ -14,7 +14,9 @@ export const getTextInputState = ({ error, disabled }: { error: boolean; disable
 };
 
 export const getTextInputStateStyles = ({ mode, state }: { mode: ThemeMode; state: TextInputStates }) => {
-  //add for dark mode, label count  icon colors and placeholder color
+  /*check all dark mode , label ,count and icon and placeholder colors
+  add success state
+  */
   return `
   
   .input-container {
@@ -41,7 +43,7 @@ export const getTextInputStateStyles = ({ mode, state }: { mode: ThemeMode; stat
     & input{
          color: ${getBlocksColor(mode, textColor[state])};
          ::placeholder {
-           color: ${getBlocksColor(mode, { light: 'gray-400', dark: 'gray-100' })};
+           color: ${getBlocksColor(mode, placeholderColor[state])};
 
         };
   }
