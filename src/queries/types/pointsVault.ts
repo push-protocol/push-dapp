@@ -62,4 +62,5 @@ export type PointsVaultSearchPayload = {
   token?: string;
   page?: number;
   pageSize?: number;
+  status?: PointsVaultStatus;
 };

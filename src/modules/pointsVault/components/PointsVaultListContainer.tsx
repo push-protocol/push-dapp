@@ -40,7 +40,7 @@ const PointsVaultListContainer = () => {
     isLoading: isLoadingSearch,
     isError: isErrorSearch,
     refetch: refetchSearch,
-  } = useSearchPVUsers({ query: debouncedQuery });
+  } = useSearchPVUsers({ query: debouncedQuery, status: type });
 
   const ActiveListData = () => {
     return (
