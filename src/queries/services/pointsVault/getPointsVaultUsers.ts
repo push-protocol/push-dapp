@@ -3,12 +3,19 @@ import { getRewardsBaseURL } from 'queries/baseURL';
 import { getPVUsersModelCreator } from 'queries/models';
 import { PointsVaultGetUsersPayload } from 'queries/types';
 
-export const getPointsVaultUsers = ({ page, status, pageSize, token }: PointsVaultGetUsersPayload) =>
+export const getPointsVaultUsers = ({ page, status, pageSize, token, wallet, twitter }: PointsVaultGetUsersPayload) =>
   axios({
     method: 'GET',
-    url: `${getRewardsBaseURL()}/activities/list?status=${status.toUpperCase()}&page=${page}&pageSize=${pageSize}`,
+    url: `${getRewardsBaseURL()}/activities/list`,
+    params: {
+      status,
+      page,
+      pageSize,
+      wallet,
+      twitter,
+    },
     headers: {
       'Content-Type': 'application/json',
-      Authorization: token ?? '',
+      Authorization: token,
     },
   }).then((response) => getPVUsersModelCreator(response.data));

@@ -1,18 +1,20 @@
 import { Box, Link, Skeleton, Text } from 'blocks';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
-import { PointsVaultActivity, useGetUserTwitterDetails } from 'queries';
+import { PointsVaultActivity, useGetUserTwitterDetails, usePointsVaultToken } from 'queries';
 import { css } from 'styled-components';
-import { PointsVaultListItemButtons } from './PointsVaultListItemButtons';
+import { PointsVaultListActionButtons } from './PointsVaultListActionButtons';
 import { caip10ToWallet } from 'helpers/w2w';
 
 export type PointsVaultListItemProps = {
   item: PointsVaultActivity;
   isLoading: boolean;
+  refetch: () => void;
 };
 
-const PointsVaultListItem = ({ isLoading, item }: PointsVaultListItemProps) => {
+const PointsVaultListItem = ({ isLoading, item, refetch }: PointsVaultListItemProps) => {
   const { mode } = useBlocksTheme();
-  const { data } = useGetUserTwitterDetails(item.data?.twitter);
+  const token = usePointsVaultToken();
+  const { data } = useGetUserTwitterDetails(item.data?.twitter, token);
 
   return (
     <Box
@@ -47,7 +49,11 @@ const PointsVaultListItem = ({ isLoading, item }: PointsVaultListItemProps) => {
           alignItems="center"
           width="345px"
         >
-          <Link to={`https://x.com/${item.data?.twitter}`}>
+          <Link
+            to={`https://x.com/${item.data?.twitter}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Text
               color="pink-600"
               variant="bs-semibold"
@@ -68,12 +74,10 @@ const PointsVaultListItem = ({ isLoading, item }: PointsVaultListItemProps) => {
           <Text
             variant="bs-semibold"
             color={
-              data?.data.public_metrics.followers_count && data.data.public_metrics.followers_count < 50
-                ? 'red-700'
-                : { light: 'gray-1000', dark: 'gray-100' }
+              data?.followersCount && data.followersCount < 50 ? 'red-700' : { light: 'gray-1000', dark: 'gray-100' }
             }
           >
-            {data?.data.public_metrics.followers_count ?? '-'}
+            {data?.followersCount ?? '-'}
           </Text>
         </Box>
       </Skeleton>
@@ -85,7 +89,8 @@ const PointsVaultListItem = ({ isLoading, item }: PointsVaultListItemProps) => {
           display="flex"
           justifyContent="center"
         >
-          <PointsVaultListItemButtons
+          <PointsVaultListActionButtons
+            refetch={refetch}
             status={item.status}
             item={item}
           />

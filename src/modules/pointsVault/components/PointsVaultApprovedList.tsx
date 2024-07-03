@@ -3,32 +3,32 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import InfiniteScroll from 'react-infinite-scroller';
 import { PointsVaultListColumns } from './PointsVaultListColumns';
 import { PointsVaultListItem } from './PointsVaultListItem';
-import { PointsVaultActivitiesResponse } from 'queries';
+import { PointsVaultActivitiesResponse, useGetPointsVaultApprovedUsers, usePointsVaultToken } from 'queries';
 import { LeaderBoardNullState } from 'modules/rewards/components/LeaderboardNullState';
-import { InfiniteData } from '@tanstack/react-query';
 
-export type PointsVaultListProps = {
-  isLoading: boolean;
-  isFetchingNextPage: boolean;
-  hasNextPage: boolean;
-  data: InfiniteData<PointsVaultActivitiesResponse> | undefined;
-  isError: boolean;
-  refetch: () => void;
-  fetchNextPage: () => void;
+type PointsVaultApprovedListProps = {
+  query: {
+    wallet?: string;
+    twitter?: string;
+  };
 };
 
-const PointsVaultList = ({
-  data,
-  isLoading,
-  hasNextPage,
-  isFetchingNextPage,
-  isError,
-  refetch,
-  fetchNextPage,
-}: PointsVaultListProps) => {
+const PointsVaultApprovedList = ({ query }: PointsVaultApprovedListProps) => {
+  const token = usePointsVaultToken();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, refetch } =
+    useGetPointsVaultApprovedUsers({
+      status: 'COMPLETED',
+      token,
+      pageSize: 20,
+      twitter: query.twitter,
+      wallet: query.wallet,
+    });
+
   const hasMoreData = !isFetchingNextPage && hasNextPage;
 
-  const pointsVaultList = isLoading ? Array(5).fill(0) : data?.pages.flatMap((page: any) => page) || [];
+  const pointsVaultList = isLoading
+    ? Array(5).fill(0)
+    : data?.pages.flatMap((page: PointsVaultActivitiesResponse) => page.activities) || [];
 
   if (!pointsVaultList.length) {
     return (
@@ -75,6 +75,7 @@ const PointsVaultList = ({
               key={item?.activityId || index}
               item={item}
               isLoading={isLoading}
+              refetch={refetch}
             />
           ))}
         </InfiniteScroll>
@@ -83,4 +84,4 @@ const PointsVaultList = ({
   );
 };
 
-export { PointsVaultList };
+export { PointsVaultApprovedList };

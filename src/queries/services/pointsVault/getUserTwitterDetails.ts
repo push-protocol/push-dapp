@@ -9,6 +9,6 @@ export const getUserTwitterDetails = ({ twitterHandle, token }: UserTwitterDetai
     url: `${getRewardsBaseURL()}/twitter/user/${twitterHandle}`,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: token ?? '',
+      Authorization: token,
     },
   }).then((response) => getUserTwitterDetailsModelCreator(response.data));

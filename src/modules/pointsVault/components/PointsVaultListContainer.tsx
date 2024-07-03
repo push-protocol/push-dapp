@@ -1,60 +1,25 @@
 import { Box, Link, Search, Tabs, Text, TextInput } from 'blocks';
-import { PointsVaultList } from './PointsVaultList';
+import { PointsVaultApprovedList } from './PointsVaultApprovedList';
 import PushIcon from 'assets/snap/PushIcon.svg';
 import { css } from 'styled-components';
-import { useFormik } from 'formik';
-import { PointsVaultSearchPayload, PointsVaultStatus, useGetPointsVaultUsers, useSearchPVUsers } from 'queries';
+import { PointsVaultPendingList } from './PointsVaultPendingList';
+import { PointsVaultRejectedList } from './PointsVaultRejectedList';
 import { useDebounce } from 'react-use';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { ethers } from 'ethers';
 
 const PointsVaultListContainer = () => {
-  const [type, setType] = useState<PointsVaultStatus>('PENDING');
-  const [showSearch, setShowSearch] = useState(false);
+  const [query, setQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState({});
 
-  const formik = useFormik<PointsVaultSearchPayload>({
-    initialValues: { query: '' },
-    onSubmit: () => {},
-  });
+  const getFormattedQuery = useCallback((qry: string) => {
+    const isAddress = ethers.utils.isAddress(qry);
+    const key = isAddress ? 'wallet' : 'twitter';
+    const value = isAddress ? `eip155:${qry}` : qry;
+    return { [key]: value };
+  }, []);
 
-  const [debouncedQuery, setDebouncedQuery] = useState(formik.values.query);
-
-  useDebounce(
-    () => {
-      setShowSearch(!!formik.values.query);
-      setDebouncedQuery(formik.values.query);
-    },
-    500,
-    [formik.values.query]
-  );
-
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, refetch } = useGetPointsVaultUsers({
-    pageSize: 20,
-    status: type,
-  });
-
-  const {
-    data: searchResults,
-    hasNextPage: hasNextPageSearch,
-    fetchNextPage: fetchNextPageSearch,
-    isFetchingNextPage: isFetchingNextPageSearch,
-    isLoading: isLoadingSearch,
-    isError: isErrorSearch,
-    refetch: refetchSearch,
-  } = useSearchPVUsers({ query: debouncedQuery, status: type });
-
-  const ActiveListData = () => {
-    return (
-      <PointsVaultList
-        data={showSearch ? searchResults : data}
-        hasNextPage={showSearch ? hasNextPageSearch : hasNextPage}
-        isFetchingNextPage={showSearch ? isFetchingNextPageSearch : isFetchingNextPage}
-        isError={showSearch ? isErrorSearch : isError}
-        isLoading={showSearch ? isLoadingSearch : isLoading}
-        refetch={showSearch ? refetchSearch : refetch}
-        fetchNextPage={showSearch ? fetchNextPageSearch : fetchNextPage}
-      />
-    );
-  };
+  useDebounce(() => setDebouncedQuery(getFormattedQuery(query)), 500, [query]);
 
   return (
     <Box
@@ -75,6 +40,7 @@ const PointsVaultListContainer = () => {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
+        // TODO: fix ds-blocks
         css={[{ marginBottom: 'var(--s6)' }]}
       >
         <Box
@@ -117,6 +83,7 @@ const PointsVaultListContainer = () => {
       >
         <Box
           position="absolute"
+          width="302px"
           // TODO: Fix ds-blocks
           css={css`
             right: 0px;
@@ -125,36 +92,29 @@ const PointsVaultListContainer = () => {
           <TextInput
             placeholder="Search user or x handle or else"
             icon={<Search />}
-            value={formik.values.query}
-            onChange={formik.handleChange('query')}
-            // TODO: Fix ds-blocks
-            css={css`
-              width: 302px;
-            `}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
           />
         </Box>
       </Box>
       <Tabs
         variant="fill"
-        onChange={(key) => {
-          formik.setValues({ query: '' });
-          setType(key as PointsVaultStatus);
-        }}
+        onChange={() => setQuery('')}
         items={[
           {
             key: 'PENDING',
             label: 'Pending',
-            children: <ActiveListData />,
+            children: <PointsVaultPendingList query={debouncedQuery} />,
           },
           {
             key: 'COMPLETED',
             label: 'Approved',
-            children: <ActiveListData />,
+            children: <PointsVaultApprovedList query={debouncedQuery} />,
           },
           {
             key: 'REJECTED',
             label: 'Rejected',
-            children: <ActiveListData />,
+            children: <PointsVaultRejectedList query={debouncedQuery} />,
           },
         ]}
       />

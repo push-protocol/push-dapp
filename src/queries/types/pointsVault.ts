@@ -4,7 +4,9 @@ export type PointsVaultGetUsersPayload = {
   status: PointsVaultStatus;
   page?: number;
   pageSize?: number;
-  token?: string;
+  token: string;
+  twitter?: string;
+  wallet?: string;
 };
 
 export type PointsVaultActivity = {
@@ -23,23 +25,28 @@ export type PointsVaultActivity = {
   userWallet: string;
 };
 
-export type PointsVaultActivitiesResponse = Array<PointsVaultActivity>;
+export type PointsVaultActivitiesResponse = {
+  activities: Array<PointsVaultActivity>;
+  total: number;
+  page: number;
+  pageSize: number;
+};
 
 export type RejectPointsVaultUserPayload = {
   activityId: string;
   currentStatus: PointsVaultStatus;
-  token?: string;
+  token: string;
 };
 
 export type ApprovePointsVaultUserPayload = {
   activityId: string;
   currentStatus: PointsVaultStatus;
-  token?: string;
+  token: string;
 };
 
 export type UserTwitterDetailsPayload = {
   twitterHandle: string;
-  token?: string;
+  token: string;
 };
 
 export type UserTwitterDetailsResponse = {
@@ -55,6 +62,17 @@ export type UserTwitterDetailsResponse = {
     id: string;
     name: string;
   };
+};
+
+export type UserTwitterDetailsModelledResponse = {
+  followersCount: number;
+  followingCount: number;
+  tweetCount: number;
+  listedCount: number;
+  likeCount: number;
+  username: string;
+  id: string;
+  name: string;
 };
 
 export type PointsVaultSearchPayload = {

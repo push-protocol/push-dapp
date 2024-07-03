@@ -11,6 +11,6 @@ export const approvePointsVaultUser = ({ activityId, token }: ApprovePointsVault
     },
     headers: {
       'Content-Type': 'application/json',
-      Authorization: token ?? '',
+      Authorization: token,
     },
   }).then((response) => response.data);

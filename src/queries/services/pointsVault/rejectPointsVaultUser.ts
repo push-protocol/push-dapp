@@ -9,6 +9,6 @@ export const rejectPointsVaultUser = ({ activityId, token }: RejectPointsVaultUs
     data: { activities: [{ activityId }] },
     headers: {
       'Content-Type': 'application/json',
-      Authorization: token ?? '',
+      Authorization: token,
     },
   }).then((response) => response.data);
