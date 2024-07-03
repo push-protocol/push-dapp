@@ -1,4 +1,6 @@
+export * from './colors/colors.brands';
 export * from './colors/colors.primitives';
+export * from './colors/colors.semantics';
 
 export * from './device/theme.device';
 
