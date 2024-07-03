@@ -39,7 +39,9 @@ const TutorialPage = lazy(() => import('pages/TutorialPage'));
 const YieldFarmingV2Page = lazy(() => import('pages/YieldFarmingPageV2'));
 const UserSettingsPage = lazy(() => import('pages/UserSettingsPage'));
 const ClaimGalxePage = lazy(() => import('pages/ClaimGalxePage'));
-const Dashboard = lazy(() => import('modules/dashboard'));
+const WelcomDashboardPage = lazy(() => import('pages/WelcomeDashboardPage'));
+const RewardPointsPage = lazy(() => import('pages/RewardPointsPage'));
+const PointsVaultPage = lazy(() => import('pages/PointsVaultPage'));
 
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
@@ -68,7 +70,10 @@ import { MODAL_POSITION } from 'hooks/useModalBlur';
 import MetamaskPushSnapModal from 'modules/receiveNotifs/MetamaskPushSnapModal';
 import SnapPage from 'pages/SnapPage';
 import { AppContextType } from 'types/context';
-import { getPublicAssetPath } from 'helpers/RoutesHelper';
+import { useBlocksTheme } from 'blocks/Blocks.hooks';
+import { ModeProp } from 'blocks';
+
+const rewardsPointsPagePaths = [APP_PATHS.Rewards, APP_PATHS.RewardsActivities, APP_PATHS.RewardsLeaderboard];
 
 // Create Header
 function MasterInterfacePage() {
@@ -85,6 +90,7 @@ function MasterInterfacePage() {
   const { MetamaskPushSnapModalComponent, blockedLoading }: AppContextType = useContext(AppContext);
 
   const { showMetamaskPushSnap } = useContext(AppContext);
+  const { mode } = useBlocksTheme();
 
   useEffect(() => {
     if (location.hash == '#receive-notifications') {
@@ -140,7 +146,7 @@ function MasterInterfacePage() {
 
   // Render
   return (
-    <Container>
+    <Container mode={mode}>
       <Interface location={location.pathname}>
         <Suspense
           fallback={
@@ -155,13 +161,26 @@ function MasterInterfacePage() {
           <Routes>
             <Route
               path={APP_PATHS.WelcomeDashboard}
-              element={<Dashboard />}
+              element={<WelcomDashboardPage />}
+            />
+            {rewardsPointsPagePaths.map((path, index) => (
+              <Route
+                path={path}
+                key={index}
+                element={<RewardPointsPage />}
+              />
+            ))}
+
+            <Route
+              path={APP_PATHS.PointsVault}
+              element={<PointsVaultPage />}
             />
 
             <Route
               path={APP_PATHS.Inbox}
               element={<InboxPage />}
             />
+
             <Route
               path={APP_PATHS.Spam}
               element={<InboxPage />}
@@ -390,7 +409,7 @@ function MasterInterfacePage() {
 }
 
 // css style
-const Container = styled.div`
+const Container = styled.div<ModeProp>`
   display: flex;
   flex: 1;
   flex-direction: column;

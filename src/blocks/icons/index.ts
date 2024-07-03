@@ -117,6 +117,8 @@ export { default as SendNotificationFilled } from './components/SendNotification
 
 export { default as Smiley } from './components/Smiley';
 
+export { default as Star } from './components/Star';
+
 export { default as Settings } from './components/Settings';
 
 export { default as Swap } from './components/Swap';

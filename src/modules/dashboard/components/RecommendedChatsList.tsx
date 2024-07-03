@@ -11,7 +11,7 @@ const RecommendedChatsList = () => {
       display="flex"
       flexDirection="column"
       gap="s4"
-      borderRadius="var(--r6)"
+      borderRadius="r6"
       border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
       padding="s4"
     >

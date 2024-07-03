@@ -31,7 +31,7 @@ jobs:
         if: github.event.action != 'closed' # You might want to skip the build if the PR has been closed
         env:
           VITE_APP_WALLETCONNECT_PROJECT_ID: ${{ secrets.VITE_APP_WALLETCONNECT_PROJECT_ID }}
-
+          VITE_APP_DISCORD_CLIENT_ID: ${{ secrets.VITE_APP_DISCORD_CLIENT_ID }}
         run: |
           yarn install
           yarn build:pr:preview

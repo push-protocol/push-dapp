@@ -1,7 +1,6 @@
 import { Suspense, useContext, useEffect, useRef, useState } from 'react';
 
 // React + Web3 Essentials
-import { Link } from 'react-router-dom';
 
 // External Packages
 import { AiOutlineMenu } from 'react-icons/ai';
@@ -10,13 +9,10 @@ import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import OpenLink from 'assets/snap/GoToImage.svg?react';
-import MetamaskLogo from 'assets/snap/metamasksnap.svg?react';
+import { Box, Link, Text, Star, Lozenge, RewardsBell } from 'blocks';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
-import { AppContext } from 'contexts/AppContext';
 import { ErrorContext } from 'contexts/ErrorContext';
-import { GlobalContext } from 'contexts/GlobalContext';
 import { NavigationContext } from 'contexts/NavigationContext';
 
 import Profile from 'primaries/Profile';
@@ -26,18 +22,30 @@ import PushLogoLight from '../assets/pushLight.svg';
 
 // Internal Configs
 import ChainIndicator from 'components/ChainIndicator';
-import { SpanV2 } from 'components/reusables/SharedStylingV2';
 import APP_PATHS from 'config/AppPaths';
 import GLOBALS from 'config/Globals';
 import { themeDark, themeLight } from 'config/Themization';
-import { appConfig } from 'config/index.js';
-import { UnsupportedChainIdError } from 'connectors/error';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { useClickAway } from 'react-use';
 import MobileNavigation from './MobileNavigation';
 import { getPublicAssetPath } from 'helpers/RoutesHelper';
+import { walletToCAIP10 } from 'helpers/w2w';
+
+// hooks
+import { useGetUserRewardsDetails } from 'queries';
 
 // header tags for pages that are not there in navigationList (Sidebar)
+const REWARDS_HEADER_TAG = {
+  title: 'Reward Points',
+  light: {
+    bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+    fg: themeLight.headerTagFg,
+  },
+  dark: {
+    bg: themeDark.headerTagBg,
+    fg: themeDark.headerTagFg,
+  },
+};
 const EXTRA_HEADER_TAGS = {
   [APP_PATHS.UserSettings]: {
     title: 'Settings',
@@ -61,6 +69,52 @@ const EXTRA_HEADER_TAGS = {
       fg: themeDark.headerTagFg,
     },
   },
+  [APP_PATHS.Rewards]: REWARDS_HEADER_TAG,
+  [APP_PATHS.RewardsActivities]: REWARDS_HEADER_TAG,
+  [APP_PATHS.RewardsLeaderboard]: REWARDS_HEADER_TAG,
+};
+
+const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: string }) => {
+  const { data: userDetails } = useGetUserRewardsDetails({
+    caip10WalletAddress: caip10WalletAddress,
+  });
+  return (
+    <Box
+      display="flex"
+      alignItems="center"
+      gap={{ ml: 's1', dp: 's2' }}
+    >
+      <Link
+        to="/points"
+        isText={false}
+      >
+        <Box
+          display="flex"
+          gap="s2"
+        >
+          <RewardsBell
+            width={24}
+            height={28}
+          />
+          <Text
+            variant="h4-bold"
+            display={{ ml: 'none', dp: 'block' }}
+            color={{ light: 'gray-1000', dark: 'gray-100' }}
+          >
+            {userDetails && userDetails?.totalPoints > 0 ? userDetails?.totalPoints : ''}
+          </Text>
+          <Text
+            variant="h5-bold"
+            display={{ ml: 'block', dp: 'none' }}
+            color={{ light: 'gray-1000', dark: 'gray-100' }}
+          >
+            {userDetails && userDetails?.totalPoints > 0 ? userDetails?.totalPoints : ''}
+          </Text>
+          <Lozenge icon={<Star />}>NEW</Lozenge>
+        </Box>
+      </Link>
+    </Box>
+  );
 };
 
 // Create Header
@@ -70,9 +124,10 @@ function Header({ isDarkMode, darkModeToggle }) {
   const navRef = useRef();
 
   const { navigationSetup } = useContext(NavigationContext);
-  const { setSnapInstalled, snapInstalled } = useContext(AppContext);
 
-  const { isActive, switchChain, wallet } = useAccount();
+  const { isActive, wallet, account } = useAccount();
+  const caip10WalletAddress = walletToCAIP10({ account });
+
   const { authError: error } = useContext(ErrorContext);
 
   const [showLoginControls, setShowLoginControls] = useState(false);
@@ -85,8 +140,7 @@ function Header({ isDarkMode, darkModeToggle }) {
 
   // Get Location
   const location = useLocation();
-
-  // const [snapInstalled, setSnapInstalled] =  useState(false);
+  const isSnapPage = location?.pathname === '/snap';
 
   useEffect(() => {
     // runs when navigation setup is updated, will run on init
@@ -118,66 +172,7 @@ function Header({ isDarkMode, darkModeToggle }) {
     setShowNavBar(!showNavBar);
   });
 
-  // handle error functions
-  function getErrorMessage(error: Error) {
-    if (error instanceof UnsupportedChainIdError) {
-      switchChain(appConfig.coreContractChain);
-      if (appConfig.coreContractChain === 42)
-        return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Amoy network';
-      else if (appConfig.coreContractChain === 11155111)
-        return 'Unsupported Network, please connect to the Ethereum Sepolia, Polygon Amoy, BNB testnet, Optimism Sepolia, Arbitrum Sepolia or Polygon zkEVM testnet';
-      else
-        return 'Unsupported Network, please connect to the Ethereum, Polygon, BNB, Optimism, Arbitrum or Polygon zkEVM Mainnet';
-    } else {
-      console.error(error);
-      return 'An unknown error occurred. Check the console for more details';
-    }
-  }
-
-  const bellPressed = () => {
-    setShowLoginControls(!showLoginControls);
-  };
-
   const isMobile = useDeviceWidthCheck(600);
-  const showSnapMobile = useDeviceWidthCheck(600);
-  const isSnapPage = location?.pathname === '/snap';
-
-  const isSnapInstalled = async () => {
-    const installedSnaps = await window.ethereum.request({
-      method: 'wallet_getSnaps',
-    });
-    Object.keys(installedSnaps).forEach((snap) => {
-      if (snap == 'npm:@pushprotocol/snap') {
-        setSnapInstalled(true);
-      }
-    });
-  };
-
-  useEffect(() => {
-    isSnapInstalled();
-  }, []);
-
-  const SnapHeader = () => {
-    return (
-      <SnapSection>
-        <MetamaskLogo
-          width={24}
-          height={22}
-        />
-        <InstallText>
-          <SpanV2
-            fontSize="12px"
-            fontWeight="400"
-          >
-            Get Notifications directly in MetaMask
-          </SpanV2>
-          <StyledLink to="/snap">
-            Install Push Snap <OpenLink />
-          </StyledLink>
-        </InstallText>
-      </SnapSection>
-    );
-  };
 
   return (
     <Container
@@ -216,7 +211,9 @@ function Header({ isDarkMode, darkModeToggle }) {
             tabletAlign="flex-start"
           >
             <NavMenu>
-              {showSnapMobile && <SnapHeader />}
+              {/* <Box display={{ ml: 'block', dp: 'none' }}>
+                <RewardsHeaderLink />
+              </Box> */}
               <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
 
@@ -230,91 +227,111 @@ function Header({ isDarkMode, darkModeToggle }) {
           </NavMenuContainer>
         )}
       </ItemH>
-
-      <ItemH justify="flex-end">
-        {headerTag && !error && !isSnapPage && (
-          <HeaderTag
-            align="flex-start"
-            overflow="hidden"
-          >
-            <Span
-              textTransform="capitalize"
-              spacing="-0.02em"
-              weight="normal"
-              padding={isMobile ? '8px 7px' : '8px 20px'}
-              className="text"
-              color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}
-            >
-              {headerTag.title}
-            </Span>
-          </HeaderTag>
-        )}
-
-        <Suspense
-          fallback={
-            <Spinner
-              size={24}
-              color={GLOBALS.COLORS.PRIMARY_PINK}
-              type={LOADER_SPINNER_TYPE.PROCESSING}
-            />
-          }
+      <Box
+        display="flex"
+        width="100%"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap="s0"
+          alignItems={{ ml: 'flex-start', initial: 'center' }}
         >
-          {!showSnapMobile && !snapInstalled && <SnapHeader />}
-        </Suspense>
-
-        {isActive && !showLoginControls && !error && (
-          <DarkModeSwitch
-            style={{ margin: '0 1rem' }}
-            checked={isDarkMode}
-            onChange={darkModeToggle}
-            size={28}
-            sunColor="#494D5F"
-            moonColor="#787E99"
-          />
-        )}
-
-        {isActive && !error && (
-          <RightBarMobile>
-            <Button
-              bg="transparent"
-              padding="5px"
-              radius="4px"
-              onClick={() => {
-                setShowNavBar(!showNavBar);
-              }}
+          {headerTag && !error && !isSnapPage && (
+            <HeaderTag
+              align="flex-start"
+              overflow="hidden"
             >
-              <AiOutlineMenu
-                size={30}
-                color={theme.headerIconsBg}
+              <Span
+                textTransform="capitalize"
+                spacing="-0.02em"
+                weight="normal"
+                // padding={isMobile ? '8px 7px' : '8px 20px'}
+                className="text"
+                color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}
+              >
+                {headerTag.title}
+              </Span>
+            </HeaderTag>
+          )}
+
+          <Suspense
+            fallback={
+              <Spinner
+                size={24}
+                color={GLOBALS.COLORS.PRIMARY_PINK}
+                type={LOADER_SPINNER_TYPE.PROCESSING}
               />
-            </Button>
-          </RightBarMobile>
-        )}
-
-        <ItemH
-          justify="flex-end"
-          flex="initial"
+            }
+          >
+            <Box display={{ ml: 'block', dp: 'none' }}>
+              <RewardsHeaderLink caip10WalletAddress={caip10WalletAddress} />
+            </Box>
+          </Suspense>
+        </Box>
+        <Box
+          display="flex"
+          alignItems="center"
         >
-          {/* {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>} */}
-          {/* {!isActive && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>} */}
-          {/* {!!error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>} */}
-          {/* {isActive && !showLoginControls && !error && (
+          <Box display={{ ml: 'none', dp: 'block' }}>
+            <RewardsHeaderLink caip10WalletAddress={caip10WalletAddress} />
+          </Box>
+          {isActive && !showLoginControls && !error && (
+            <DarkModeSwitch
+              style={{ margin: '0 1rem' }}
+              checked={isDarkMode}
+              onChange={darkModeToggle}
+              size={28}
+              sunColor="#494D5F"
+              moonColor="#787E99"
+            />
+          )}
+
+          {isActive && !error && (
+            <RightBarMobile>
+              <Button
+                bg="transparent"
+                padding="5px"
+                radius="4px"
+                onClick={() => {
+                  setShowNavBar(!showNavBar);
+                }}
+              >
+                <AiOutlineMenu
+                  size={30}
+                  color={theme.headerIconsBg}
+                />
+              </Button>
+            </RightBarMobile>
+          )}
+
+          <ItemH
+            justify="flex-end"
+            flex="initial"
+          >
+            {/* {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>} */}
+            {/* {!isActive && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>} */}
+            {/* {!!error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>} */}
+            {/* {isActive && !showLoginControls && !error && (
             <RightBarDesktop justify="flex-end" flex="initial">
               <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
             </RightBarDesktop>
           )}{' '} */}
 
-          <RightBarDesktop
-            justify="flex-end"
-            flex="initial"
-          >
-            {/* //TODO: The chain Indicator should be removed in guest mode */}
-            {wallet?.accounts?.length > 0 && <ChainIndicator isDarkMode={isDarkMode} />}
-            <Profile isDarkMode={isDarkMode} />
-          </RightBarDesktop>
-        </ItemH>
-      </ItemH>
+            <RightBarDesktop
+              justify="flex-end"
+              flex="initial"
+            >
+              {/* //TODO: The chain Indicator should be removed in guest mode */}
+              {wallet?.accounts?.length > 0 && <ChainIndicator isDarkMode={isDarkMode} />}
+              <Profile isDarkMode={isDarkMode} />
+            </RightBarDesktop>
+          </ItemH>
+        </Box>
+      </Box>
     </Container>
   );
 }
@@ -323,9 +340,11 @@ function Header({ isDarkMode, darkModeToggle }) {
 const Container = styled(Section)`
   background: ${(props) => props.theme.header.bg};
   height: ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px;
+  gap: 16px;
   padding: 0 1.5rem;
   @media (max-width: 425px) {
     padding: 0 1rem;
+    gap: 12px;
   }
 `;
 
@@ -398,27 +417,6 @@ const NavMenuInner = styled(Item)`
   height: calc(100vh - 100px);
 `;
 
-const Notice = styled.span`
-  border: 0;
-  outline: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 15px;
-  margin: 10px;
-  color: #fff;
-  border-radius: 20px;
-  font-size: 14px;
-`;
-
-const PrimaryTheme = styled(Notice)`
-  background: #e20880;
-`;
-
-const ThirdTheme = styled(Notice)`
-  background: #674c9f;
-`;
-
 const HeaderTag = styled(Item)`
   flex: 1;
   margin: 0px 5px;
@@ -435,58 +433,6 @@ const HeaderTag = styled(Item)`
     @media (max-width: 993px) {
       font-size: 20px;
     }
-  }
-`;
-
-const DarkMode = styled(Item)`
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const SnapSection = styled.div`
-  width: 251px;
-  height: 28px;
-  display: flex;
-  flex-direction: row;
-  border-radius: 12px;
-  border: 1px solid #d4dcea;
-  border: 1px solid ${(props) => props.theme.default.border};
-  background: ${(props) => props.theme.default.bg};
-  padding: 12px 16px;
-  align-items: center;
-  gap: 9px;
-  @media (max-width: 600px) {
-    width: auto;
-    padding: 12px 14px;
-  }
-`;
-
-const InstallText = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  @media (max-width: 600px) {
-    display: block;
-    width: auto;
-  }
-`;
-
-const StyledLink = styled(Link)`
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 400;
-  color: #d53a94;
-  text-align: start;
-  text-decoration: none;
-
-  @media (max-width: 600px) {
-    margin-left: 5px;
-  }
-
-  &:hover {
-    text-decoration: underline;
-    text-underline-position: under;
   }
 `;
 

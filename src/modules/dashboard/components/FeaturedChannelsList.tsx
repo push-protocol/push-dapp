@@ -12,10 +12,9 @@ import { css } from 'styled-components';
 export type FeaturedChannelsListProps = {
   listRef: any;
   featuredChannelsList: FeaturedChannelDetailsProps[];
-  projectedItemWidth: number;
 };
 
-const FeaturedChannelsList: FC<FeaturedChannelsListProps> = ({ listRef, featuredChannelsList, projectedItemWidth }) => {
+const FeaturedChannelsList: FC<FeaturedChannelsListProps> = ({ listRef, featuredChannelsList }) => {
   return (
     <Box
       ref={listRef}
@@ -24,19 +23,12 @@ const FeaturedChannelsList: FC<FeaturedChannelsListProps> = ({ listRef, featured
       gap="s6"
       padding="s4 s0"
       overflow="scroll"
-      width={{ initial: 'calc(100vw - 346px)' }}
       css={css`
         overflow-y: scroll;
       `}
     >
       {featuredChannelsList?.map((channel) => {
-        return (
-          <FeaturedChannelsListItem
-            channelAddress={channel.channel}
-            // client width without the item gap
-            width={`${projectedItemWidth - 66}px`}
-          />
-        );
+        return <FeaturedChannelsListItem channelAddress={channel.channel} />;
       })}
     </Box>
   );
