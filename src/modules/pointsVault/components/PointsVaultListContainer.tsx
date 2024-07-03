@@ -13,6 +13,7 @@ const PointsVaultListContainer = () => {
   const [debouncedQuery, setDebouncedQuery] = useState({});
 
   const getFormattedQuery = useCallback((qry: string) => {
+    if (!qry) return {};
     const isAddress = ethers.utils.isAddress(qry);
     const key = isAddress ? 'wallet' : 'twitter';
     const value = isAddress ? `eip155:${qry}` : qry;
