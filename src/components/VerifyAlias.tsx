@@ -69,6 +69,10 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
       label: 'Cyber ETH',
       url: 'https://cyber-testnet.testnets.rollbridge.app/',
     },
+    59141: {
+      label: 'Linea Sepolia',
+      url: 'https://www.infura.io/faucet/linea',
+    },
   };
 
   const checkAlias = async () => {

@@ -9,14 +9,16 @@ type Props = {
 };
 
 export const getAliasDetails = async ({ account, chainId }: Props) => {
+  console.log(account, aliasChainIdToChainName[chainId], appConfig?.appEnv);
   try {
     const response = await PushAPI.alias.getAliasInfo({
       alias: account,
       aliasChain: aliasChainIdToChainName[chainId],
-      env: appConfig.appEnv,
+      env: appConfig?.appEnv,
     });
     return response;
   } catch (err) {
+    console.log(err);
     throw new Error(err.message);
   }
 };

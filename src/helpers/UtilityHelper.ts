@@ -19,7 +19,8 @@ const UtilityHelper = {
       chainId === 10 ||
       chainId === 42161 ||
       chainId === 122 ||
-      chainId === 7560
+      chainId === 7560 ||
+      chainId === 59144
     ) {
       return true;
     }
@@ -62,6 +63,8 @@ export const MaskedAliasChannels: {
   123: {},
   111557560: {},
   7560: {},
+  59141: {},
+  59144: {},
 };
 
 export const findObject = (data: any, parentArray: any[], property: string): boolean => {
@@ -126,6 +129,8 @@ export const networkName = {
   123: 'Fuse Testnet',
   111557560: 'Cyber Testnet',
   7560: 'Cyber Mainnet',
+  59141: 'Linea Sepolia',
+  59144: 'Linea Mainnet',
 };
 
 export const chainNameBackendStandard = {
@@ -151,6 +156,8 @@ export const aliasChainIdToChainName = {
   123: 'FUSE',
   111557560: 'CYBERCONNECT',
   7560: 'CYBERCONNECT',
+  59141: 'LINEA',
+  59144: 'LINEA',
 };
 
 export const aliasChainIdsMapping = {
@@ -259,6 +266,20 @@ export const NETWORK_DETAILS = {
     rpcUrls: ['https://cyber.alt.technology/'],
     blockExplorerUrls: [' https://.cyberscan.co/'],
   },
+  LINEA_TESTNET: {
+    chainId: utils.hexValue(59141),
+    chainName: 'Linea Sepolia',
+    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    rpcUrls: ['https://rpc.sepolia.linea.build'],
+    blockExplorerUrls: ['https://sepolia.lineascan.build'],
+  },
+  LINEA_MAINNET: {
+    chainId: utils.hexValue(59144),
+    chainName: 'Linea Mainnet',
+    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    rpcUrls: ['https://rpc.linea.build'],
+    blockExplorerUrls: ['https://explorer.linea.build'],
+  },
 };
 
 export const CORE_CHAIN_ID: number = appConfig.coreContractChain;
@@ -283,35 +304,47 @@ export const LOGO_FROM_CHAIN_ID: {
   123: 'Fuse.svg',
   111557560: 'Cyber.svg',
   7560: 'Cyber.svg',
+  59141: 'Linea.svg',
+  59144: 'Linea.svg',
 };
 
 export type getAliasResponseType = {
   address: string | null;
   chainId: string | null;
 };
-
 export const getAliasFromChannelDetails = (channelDetails: Object | null | string): getAliasResponseType => {
   if (!channelDetails || channelDetails === 'unfetched') return null;
 
-  if (channelDetails['aliasDetails']) {
-    const aliasDetails = channelDetails['aliasDetails'];
-    const aliasDetail = { chainId: null, address: null };
-    appConfig.allowedNetworks.forEach((chainID) => {
-      const caipChainId = convertChainIdToChainCaip(chainID);
-      if (aliasDetails[caipChainId!]) {
-        aliasDetail.address = aliasDetails[caipChainId!];
-        aliasDetail.chainId = chainID;
-      }
-    });
-    if (aliasDetail.address) return aliasDetail;
-  } else if (channelDetails['address'] != null && channelDetails['address'] != '') {
-    if (appConfig.allowedNetworks.includes(+channelDetails['chain_id'])) {
-      return { address: channelDetails['address'], chainId: channelDetails['chain_id'] };
+  if (channelDetails['alias_address'] != null && channelDetails['alias_address'] != '') {
+    if (appConfig.allowedNetworks.includes(+channelDetails['alias_blockchain_id'])) {
+      return { address: channelDetails['alias_address'], chainId: channelDetails['alias_blockchain_id'] };
     }
   }
-
-  return { address: null, chainId: null };
+  return null;
 };
+
+// export const getAliasFromChannelDetails = (channelDetails: Object | null | string): getAliasResponseType => {
+//   if (!channelDetails || channelDetails === 'unfetched') return null;
+
+//   if (channelDetails['aliasDetails']) {
+//     const aliasDetails = channelDetails['aliasDetails'];
+//     const aliasDetail = { chainId: null, address: null };
+//     appConfig.allowedNetworks.forEach((chainID) => {
+//       const caipChainId = convertChainIdToChainCaip(chainID);
+//       if (aliasDetails[caipChainId!]) {
+//         aliasDetail.address = aliasDetails[caipChainId!];
+//         aliasDetail.chainId = chainID;
+//       }
+//     });
+//     if (aliasDetail.address) return aliasDetail;
+//   } else if (channelDetails['address'] != null && channelDetails['address'] != '') {
+//     if (appConfig.allowedNetworks.includes(+channelDetails['chain_id'])) {
+//       return { address: channelDetails['address'], chainId: channelDetails['chain_id'] };
+//     }
+//   }
+
+//   return { address: null, chainId: null };
+// };
 
 export const CHANNEL_TYPE = {
   TIMEBOUND: 4,
