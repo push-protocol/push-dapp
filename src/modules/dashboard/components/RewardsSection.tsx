@@ -2,20 +2,20 @@
 import { css } from 'styled-components';
 
 // Components
-import { Box, Text, Button, Link, Metamask } from 'blocks';
+import { Box, Text, Button, Link, Points } from 'blocks';
 
-const SnapSection = () => {
+const RewardsSection = () => {
   return (
     <Box
       display="flex"
       gap="s3"
-      borderRadius="var(--r6)"
+      borderRadius="r6"
       padding="s4"
       alignItems="center"
       flexDirection={{ ml: 'column' }}
       justifyContent="space-between"
       css={css`
-        background: radial-gradient(174.95% 108.75% at 64.27% 0%, #f2befb 0%, #ffd7c0 100%);
+        background: radial-gradient(circle, rgba(222, 190, 255, 1) 0%, rgba(192, 255, 247, 1) 85%);
       `}
     >
       <Box
@@ -24,31 +24,31 @@ const SnapSection = () => {
         alignItems="center"
         gap="s3"
       >
-        <Metamask />
+        <Points svgProps={{ width: 60, height: 56 }} />
         <Text
           variant="h5-semibold"
           display={{ ml: 'none', dp: 'block' }}
         >
-          Receive Instant Notifications in Metamask with Push Snap.
+          Complete Tasks on Push. Earn Reward Points.
         </Text>
         <Text
           variant="h5-semibold"
           display={{ ml: 'block', dp: 'none' }}
           textAlign="center"
         >
-          Receive Instant Notifications in Metamask with Push Snap.
+          Complete Tasks on Push. Earn Reward Points.
         </Text>
       </Box>
-      <Link to={'/snap'}>
+      <Link to={'/points'}>
         <Button
           variant="tertiary"
           size="small"
         >
-          Get Push Snap
+          Points Dashboard
         </Button>
       </Link>
     </Box>
   );
 };
 
-export { SnapSection };
+export { RewardsSection };

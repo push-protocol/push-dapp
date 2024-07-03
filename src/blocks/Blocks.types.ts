@@ -20,7 +20,7 @@ export type Breakpoint = 'initial' | 'ms' | 'mm' | 'ml' | 'tb' | 'lp' | 'll' | '
 
 export type ResponsiveProp<T> = T | { [key in Breakpoint]?: T };
 
-export type RadiusType = `r${number}`;
+export type RadiusType = `r${number}` | `r${number} r${number}` | `r${number} r${number} r${number} r${number}`;
 
 export type SpaceType = `s${number}` | `s${number} s${number}` | `s${number} s${number} s${number} s${number}`;
 
@@ -59,7 +59,7 @@ export type ThemeMode = 'light' | 'dark';
 
 export type ThemeModeColors = Record<ThemeMode, BlocksColors>;
 
-export type BorderValue = `${number}px ${string} ${BlocksColors}`;
+export type BorderValue = `${number}px ${string} ${BlocksColors}` | 'none';
 
 export type ThemeModeBorder = Record<ThemeMode, BorderValue>;
 

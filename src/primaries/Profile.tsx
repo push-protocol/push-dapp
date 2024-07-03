@@ -25,7 +25,7 @@ import { getPublicAssetPath } from 'helpers/RoutesHelper.js';
 
 // Create Header
 const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
-  const { web3NameList, removePGPKeyForUser }: AppContextType = useContext(AppContext);
+  const { web3NameList, removePGPKeyForUser, initializePushSdkReadMode }: AppContextType = useContext(AppContext);
   const { setReadOnlyWallet, setMode }: GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
@@ -51,21 +51,21 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
       id: 'walletAddress',
       value: account,
       title: account,
-      function: () => {},
+      function: () => { },
       invertedIcon: getPublicAssetPath('copy.svg'),
     },
     {
       id: 'userSettings',
       value: '',
       title: 'Settings',
-      function: () => {},
+      function: () => { },
       to: APP_PATHS.UserSettings,
       invertedIcon: getPublicAssetPath('svg/setting.svg'),
     },
     {
       id: 'prodDapp',
       value: '',
-      function: () => {},
+      function: () => { },
       link: `https://${envUtil.prod}`,
       title: 'Production dapp',
       invertedIcon: getPublicAssetPath('prod.svg'),
@@ -79,6 +79,7 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
         setMode(ReadOnlyWalletMode.GUEST_MODE);
         setReadOnlyWallet('0x0000000000000000000000000000000000000001');
         setShowDropdown(false);
+        await initializePushSdkReadMode();
       },
       title: 'Logout',
       invertedIcon: getPublicAssetPath('logout.svg'),

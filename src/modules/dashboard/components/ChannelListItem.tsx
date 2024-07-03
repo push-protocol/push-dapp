@@ -88,7 +88,7 @@ const ChannelListItem: FC<ChannelListItemProps> = ({
           <Box
             width="40px"
             height="40px"
-            borderRadius="var(--r3)"
+            borderRadius="r3"
             css={css`
               overflow: hidden;
             `}

@@ -186,6 +186,7 @@ export const getButtonSizeStyles = ({
             gap: var(--s1);
             height: 32px;
             padding: var(--s3) var(--s4);
+            min-width: 100px;
       `}
 
       /* Button text size css */
@@ -224,6 +225,7 @@ export const getButtonSizeStyles = ({
             gap: var(--s1);
             height: 40px;
             padding: var(--s3) var(--s6);
+            min-width: 100px;
       `}
 
       /* Button text size css */
@@ -263,6 +265,7 @@ export const getButtonSizeStyles = ({
             gap: var(--s1);
             height: 48px;
             padding: var(--s4) var(--s6);
+            min-width: 100px;
       `}
 
       /* Button text size css */
@@ -301,6 +304,7 @@ export const getButtonSizeStyles = ({
           gap: var(--s1);
           height: 52px;
           padding: var(--s4) var(--s8);
+          min-width: 100px;
     `}
 
     /* Button text size css */
