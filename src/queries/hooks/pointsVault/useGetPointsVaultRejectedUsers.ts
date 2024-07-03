@@ -11,7 +11,7 @@ export const useGetPointsVaultRejectedUsers = ({
   wallet,
 }: PointsVaultGetUsersPayload) => {
   return useInfiniteQuery({
-    queryKey: [pointsVaultRejectedUsers, JSON.stringify({ twitter, wallet })],
+    queryKey: [pointsVaultRejectedUsers, `${twitter}-${wallet}`],
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
       getPointsVaultUsers({ status, page: pageParam as number, pageSize, token, twitter, wallet }),
