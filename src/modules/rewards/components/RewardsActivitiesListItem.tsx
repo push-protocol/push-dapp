@@ -44,6 +44,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
         display="flex"
         flexDirection="column"
         borderRadius="r4"
+        margin={{ ml: 's4 s0', initial: 's2 s0' }}
         backgroundColor={{ light: 'gray-100', dark: 'gray-1000' }}
       >
         <Box
