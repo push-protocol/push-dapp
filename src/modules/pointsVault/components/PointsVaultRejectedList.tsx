@@ -1,9 +1,15 @@
 import { Box } from 'blocks';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { useQueryClient } from '@tanstack/react-query';
 import InfiniteScroll from 'react-infinite-scroller';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { PointsVaultListColumns } from './PointsVaultListColumns';
 import { PointsVaultListItem } from './PointsVaultListItem';
-import { PointsVaultActivitiesResponse, useGetPointsVaultRejectedUsers, usePointsVaultToken } from 'queries';
+import {
+  PointsVaultActivitiesResponse,
+  pointsVaultApprovedUsers,
+  useGetPointsVaultRejectedUsers,
+  usePointsVaultToken,
+} from 'queries';
 import { LeaderBoardNullState } from 'modules/rewards/components/LeaderboardNullState';
 
 type PointsVaultRejectedListProps = {
@@ -15,6 +21,9 @@ type PointsVaultRejectedListProps = {
 
 const PointsVaultRejectedList = ({ query }: PointsVaultRejectedListProps) => {
   const token = usePointsVaultToken();
+
+  const queryClient = useQueryClient();
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, refetch } =
     useGetPointsVaultRejectedUsers({
       status: 'REJECTED',
@@ -40,6 +49,11 @@ const PointsVaultRejectedList = ({ query }: PointsVaultRejectedListProps) => {
       />
     );
   }
+
+  const handleRefetch = () => {
+    refetch();
+    queryClient.invalidateQueries({ queryKey: [pointsVaultApprovedUsers] });
+  };
 
   return (
     <Box
@@ -75,7 +89,7 @@ const PointsVaultRejectedList = ({ query }: PointsVaultRejectedListProps) => {
               key={item?.activityId || index}
               item={item}
               isLoading={isLoading}
-              refetch={refetch}
+              refetch={handleRefetch}
             />
           ))}
         </InfiniteScroll>

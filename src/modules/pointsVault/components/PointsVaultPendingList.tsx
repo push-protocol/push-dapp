@@ -1,9 +1,17 @@
 import { Box } from 'blocks';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { useQueryClient } from '@tanstack/react-query';
 import InfiniteScroll from 'react-infinite-scroller';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { PointsVaultListColumns } from './PointsVaultListColumns';
 import { PointsVaultListItem } from './PointsVaultListItem';
-import { PointsVaultActivitiesResponse, useGetPointsVaultPendingUsers, usePointsVaultToken } from 'queries';
+import {
+  PointsVaultActivitiesResponse,
+  PointsVaultStatus,
+  pointsVaultApprovedUsers,
+  pointsVaultRejectedUsers,
+  useGetPointsVaultPendingUsers,
+  usePointsVaultToken,
+} from 'queries';
 import { LeaderBoardNullState } from 'modules/rewards/components/LeaderboardNullState';
 
 type PointsVaultPendingListProps = {
@@ -15,6 +23,9 @@ type PointsVaultPendingListProps = {
 
 const PointsVaultPendingList = ({ query }: PointsVaultPendingListProps) => {
   const token = usePointsVaultToken();
+
+  const queryClient = useQueryClient();
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, refetch } =
     useGetPointsVaultPendingUsers({
       status: 'PENDING',
@@ -40,6 +51,17 @@ const PointsVaultPendingList = ({ query }: PointsVaultPendingListProps) => {
       />
     );
   }
+
+  const handleRefetch = (action?: PointsVaultStatus) => {
+    refetch();
+
+    const key =
+      action === 'COMPLETED' ? pointsVaultApprovedUsers : action === 'REJECTED' ? pointsVaultRejectedUsers : undefined;
+
+    if (key) {
+      queryClient.invalidateQueries({ queryKey: [key] });
+    }
+  };
 
   return (
     <Box
@@ -75,7 +97,7 @@ const PointsVaultPendingList = ({ query }: PointsVaultPendingListProps) => {
               key={item?.activityId || index}
               item={item}
               isLoading={isLoading}
-              refetch={refetch}
+              refetch={handleRefetch}
             />
           ))}
         </InfiniteScroll>

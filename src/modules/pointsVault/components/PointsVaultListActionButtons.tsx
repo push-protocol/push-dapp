@@ -10,7 +10,7 @@ import {
 export type PointsVaultListActionButtonsProps = {
   item: PointsVaultActivity;
   status: PointsVaultStatus;
-  refetch: () => void;
+  refetch: (actions?: PointsVaultStatus) => void;
 };
 
 const PointsVaultListActionButtons = ({ status, item, refetch }: PointsVaultListActionButtonsProps) => {
@@ -27,7 +27,7 @@ const PointsVaultListActionButtons = ({ status, item, refetch }: PointsVaultList
         currentStatus: status,
         token,
       },
-      { onSuccess: () => refetch() }
+      { onSuccess: () => refetch('REJECTED') }
     );
   };
 
@@ -38,7 +38,7 @@ const PointsVaultListActionButtons = ({ status, item, refetch }: PointsVaultList
         currentStatus: status,
         token,
       },
-      { onSuccess: () => refetch() }
+      { onSuccess: () => refetch('COMPLETED') }
     );
   };
 

@@ -1,9 +1,9 @@
 import { useMutationState } from '@tanstack/react-query';
-import { pointsVaultUserLogin } from 'queries/queryKeys';
+import { pointsVaultUserLoginKey } from 'queries/queryKeys';
 
 export const usePointsVaultToken = () => {
   const data: any = useMutationState({
-    filters: { mutationKey: [pointsVaultUserLogin] },
+    filters: { mutationKey: [pointsVaultUserLoginKey] },
     select: (mutation) => mutation.state.data,
   });
 

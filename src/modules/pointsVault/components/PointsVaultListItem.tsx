@@ -1,6 +1,6 @@
 import { Box, Link, Skeleton, Text } from 'blocks';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
-import { PointsVaultActivity, useGetUserTwitterDetails, usePointsVaultToken } from 'queries';
+import { PointsVaultActivity, PointsVaultStatus, useGetUserTwitterDetails, usePointsVaultToken } from 'queries';
 import { css } from 'styled-components';
 import { PointsVaultListActionButtons } from './PointsVaultListActionButtons';
 import { caip10ToWallet } from 'helpers/w2w';
@@ -8,7 +8,7 @@ import { caip10ToWallet } from 'helpers/w2w';
 export type PointsVaultListItemProps = {
   item: PointsVaultActivity;
   isLoading: boolean;
-  refetch: () => void;
+  refetch: (actions?: PointsVaultStatus) => void;
 };
 
 const PointsVaultListItem = ({ isLoading, item, refetch }: PointsVaultListItemProps) => {
