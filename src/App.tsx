@@ -344,7 +344,7 @@ export default function App() {
           <ChatUIProvider
             user={userPushSDKInstance}
             theme={darkMode && chatDarkThemeCustomised}
-            debug={true}
+            debug={false}
             uiConfig={{
               suppressToast: false,
             }}
