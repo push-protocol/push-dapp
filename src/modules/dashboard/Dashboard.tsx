@@ -28,7 +28,6 @@ const Dashboard: FC<DashboardProps> = () => {
       />
 
       {showSubHeader && <DashboardSubHeader />}
-
       <Box
         display="flex"
         flexDirection="column"
@@ -42,3 +41,4 @@ const Dashboard: FC<DashboardProps> = () => {
 };
 
 export { Dashboard };
+// colors > brand tokens > semantics (for individual components)

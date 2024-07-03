@@ -418,7 +418,6 @@ const Container = styled.div<ModeProp>`
   /* Padding to be handled by Modules individually */
   /* padding: ${(props) => props.theme.interfaceTopPadding} 20px 20px 20px; */
   align-items: stretch;
-  background-color: ${(props) => (props.mode === 'dark' ? '#17181B' : '#F4F5FA')};
 
   position: relative;
 `;

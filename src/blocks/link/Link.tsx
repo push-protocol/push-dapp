@@ -30,6 +30,7 @@ const StyledLink = styled(RouterLink).withConfig({
 
 const Link: FC<LinkProps> = ({ textProps, isText = true, ...props }) => {
   const { mode } = useBlocksTheme();
+
   return (
     <StyledLink
       mode={mode}
