@@ -30,6 +30,12 @@ export type MenuItemComponentProps = {
   onClick?: () => void;
   /* menu item text */
   label?: string;
+  /* link option incase you need to redirect or open a link */
+  destination?: string;
+  // add the option to open in a new tab
+  newTab?: boolean;
+  /* disabled option on the item*/
+  disabled?: boolean;
   /* Additional prop from styled components to apply custom css to Menu */
   css?: FlattenSimpleInterpolation;
 };

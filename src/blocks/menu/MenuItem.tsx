@@ -7,51 +7,49 @@ import { getBlocksColor } from '../Blocks.utils';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { Text } from 'blocks/text';
 import { Box } from 'blocks/box';
+import * as RadixDropdown from '@radix-ui/react-dropdown-menu';
+import { Link } from 'blocks/link';
 
-const StyledMenuItem = styled.div.withConfig({
+const StyledMenuItem = styled(RadixDropdown.Item).withConfig({
   shouldForwardProp: (prop, defaultValidatorFn) => !['mode'].includes(prop) && defaultValidatorFn(prop),
 })<MenuItemComponentProps & ModeProp>`
   // Menu default styles
-  padding: var(--s1);
+  padding: var(--s0) var(--s1);
   display: flex;
   flex-direction: row;
   flex: 1;
   align-items: center;
   gap: var(--s1);
   border-radius: var(--r2);
+
+  [role='img'] {
+    width: 24px;
+    height: 24px;
+  }
+
   &:hover {
     background-color: ${({ mode }) => getBlocksColor(mode, { light: 'gray-100', dark: 'gray-1000' })};
+    outline: none !important;
   }
-  .menu-icon {
-    svg {
-      width: 100%;
-      height: 100%;
-    }
-  }
+
   cursor: pointer;
-  font-size: 15px;
+  min-height: 32px;
+
   /* Extra CSS props */
-  ${(props) => props.css || ''}
+  ${(props) => props.css || ''};
 `;
 
-const MenuItem: FC<MenuItemComponentProps> = ({ icon, label, onClick, ...props }) => {
+const MenuItem: FC<MenuItemComponentProps> = ({ icon, label, onClick, destination, newTab, disabled, ...props }) => {
   const { mode } = useBlocksTheme();
 
-  return (
+  const menuContent = (
     <StyledMenuItem
-      onClick={onClick}
+      onSelect={onClick}
+      disabled={disabled}
       mode={mode}
       {...props}
     >
-      {icon && (
-        <Box
-          width="24px"
-          height="24px"
-        >
-          {icon && <span className="menu-icon">{icon}</span>}
-        </Box>
-      )}
-
+      {icon}
       <Text
         className="menu-label"
         variant="bs-regular"
@@ -60,6 +58,21 @@ const MenuItem: FC<MenuItemComponentProps> = ({ icon, label, onClick, ...props }
         {label}
       </Text>
     </StyledMenuItem>
+  );
+
+  return (
+    <Box>
+      {destination ? (
+        <Link
+          to={destination}
+          {...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        >
+          {menuContent}
+        </Link>
+      ) : (
+        menuContent
+      )}
+    </Box>
   );
 };
 
