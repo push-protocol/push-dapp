@@ -19,8 +19,8 @@ const LeaderBoardList: FC = () => {
   const { data, isError, refetch, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
     useGetRewardsLeaderboard({ pageSize: 20 });
 
-  // If there are channels then render them else render 5 skeletons
-  const leaderboardList = isLoading ? Array(5).fill(0) : data?.pages.flatMap((page) => page.users) || [];
+  // If there are channels then render them else render 10 skeletons
+  const leaderboardList = isLoading ? Array(10).fill(0) : data?.pages.flatMap((page) => page.users) || [];
 
   const hasMoreData = !isFetchingNextPage && hasNextPage;
 

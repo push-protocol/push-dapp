@@ -80,6 +80,7 @@ const StyledTextInput = styled.div<TextInputProps & ModeProp>`
     }
 
     & input {
+      flex: 1;
       border: none;
       background-color: transparent;
       padding: var(--s3) var(--s0);
