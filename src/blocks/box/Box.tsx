@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { useBlocksTheme } from '../Blocks.hooks';
 import { TransformedHTMLAttributes, ModeProp } from '../Blocks.types';
-import { getBlocksColor, getBlocksBorder } from '../Blocks.utils';
+import { getBlocksColor, getBlocksBorder, getBlocksBorderRadius } from '../Blocks.utils';
 import { BoxCSSProps, BoxComponentProps } from './Box.types';
 import { getBoxResponsiveCSS } from './Box.utils';
 import { boxRestrictedCSSPropKeys } from './Box.constants';
@@ -13,7 +13,7 @@ export type BoxProps = BoxCSSProps & BoxComponentProps & TransformedHTMLAttribut
 const StyledBox = styled.div.withConfig({
   shouldForwardProp: (prop, defaultValidatorFn) =>
     !boxRestrictedCSSPropKeys.includes(prop as keyof BoxCSSProps) && defaultValidatorFn(prop),
-}) <BoxProps & ModeProp>`
+})<BoxProps & ModeProp>`
   /* Responsive props */
   ${(props) => getBoxResponsiveCSS(props)}
 
@@ -21,7 +21,7 @@ const StyledBox = styled.div.withConfig({
   color: ${(props) => getBlocksColor(props.mode, props.color)};
   background-color: ${(props) => getBlocksColor(props.mode, props.backgroundColor)};
   box-shadow: ${(props) => props.boxShadow};
-  border-radius: ${(props) => props.borderRadius};
+  border-radius: ${(props) => getBlocksBorderRadius(props.borderRadius)};
   cursor: ${(props) => props.cursor};
   overflow: ${(props) => props.overflow};
   border: ${(props) => getBlocksBorder(props.mode, props.border)};

@@ -1,5 +1,5 @@
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import useModalBlur from 'hooks/useModalBlur';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import { useEffect } from 'react';
 import styled from 'styled-components';
 import UnlockProfile from './UnlockProfile';
@@ -11,13 +11,14 @@ export enum UNLOCK_PROFILE_TYPE {
 
 interface IntroContainerProps {
   type?: UNLOCK_PROFILE_TYPE;
+  showConnectModal?: boolean
 }
 
 const DEFAULT_PROPS = {
   type: UNLOCK_PROFILE_TYPE.MODAL,
 };
 
-const UnlockProfileWrapper = ({ type = DEFAULT_PROPS.type }: IntroContainerProps) => {
+const UnlockProfileWrapper = ({ type = DEFAULT_PROPS.type, showConnectModal }: IntroContainerProps) => {
   const {
     isModalOpen: isProfileModalOpen,
     showModal: showProfileModal,
@@ -25,7 +26,7 @@ const UnlockProfileWrapper = ({ type = DEFAULT_PROPS.type }: IntroContainerProps
   } = useModalBlur();
 
   useEffect(() => {
-    if (type === UNLOCK_PROFILE_TYPE.MODAL) {
+    if (type === UNLOCK_PROFILE_TYPE.MODAL && showConnectModal) {
       showProfileModal();
     }
   }, [type]);
@@ -39,6 +40,7 @@ const UnlockProfileWrapper = ({ type = DEFAULT_PROPS.type }: IntroContainerProps
         }}
         modalRadius="24px"
         modalBorder={false}
+        modalPosition={MODAL_POSITION.ON_PARENT}
       />
     );
   } else {

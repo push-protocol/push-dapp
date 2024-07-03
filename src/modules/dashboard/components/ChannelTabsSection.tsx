@@ -46,7 +46,7 @@ const ChannelTabsSection = () => {
           padding="s1"
           height="fit-content"
           justifyContent="space-between"
-          borderRadius="var(--r4)"
+          borderRadius="r4"
           width={{ lp: 'auto', initial: 'fit-content' }}
         >
           {dahboardChannelTabs?.map((channelTab, index) => {
@@ -62,7 +62,7 @@ const ChannelTabsSection = () => {
                 width={{ ll: '100%' }}
                 alignItems="center"
                 padding="s2 s3"
-                borderRadius="var(--r4)"
+                borderRadius="r4"
                 backgroundColor={
                   selectedChannelTab === channelTab.value ? { dark: 'gray-800', light: 'white' } : 'transparent'
                 }
@@ -84,7 +84,7 @@ const ChannelTabsSection = () => {
         display="flex"
         flexDirection="column"
         overflow="hidden auto"
-        borderRadius="var(--r6)"
+        borderRadius="r6"
         minHeight="285px"
         maxHeight="285px"
         border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}

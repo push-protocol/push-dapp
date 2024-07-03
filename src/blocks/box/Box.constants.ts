@@ -10,6 +10,7 @@ export const boxRestrictedCSSPropKeys: (keyof BoxCSSProps | keyof ModeProp)[] = 
   'position',
   'boxShadow',
   'alignItems',
+  'alignSelf',
   'display',
   'flexDirection',
   'gap',
