@@ -132,7 +132,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                     variant="h4-semibold"
                     color={{ light: 'gray-1000', dark: 'gray-100' }}
                   >
-                    {activity.points?.toLocaleString()} points
+                    {activity.points?.toLocaleString()} Points
                   </Text>
                 </Skeleton>
               </Box>
