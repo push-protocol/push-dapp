@@ -3986,9 +3986,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:1.7.20":
-  version: 1.7.20
-  resolution: "@pushprotocol/restapi@npm:1.7.20"
+"@pushprotocol/restapi@npm:1.7.25":
+  version: 1.7.25
+  resolution: "@pushprotocol/restapi@npm:1.7.25"
   dependencies:
     "@metamask/eth-sig-util": "npm:^5.0.2"
     axios: "npm:^0.27.2"
@@ -4011,7 +4011,7 @@ __metadata:
   peerDependenciesMeta:
     ethers:
       optional: true
-  checksum: 10/42ca0e0ce0ba2068c330973f0252dd5cb18167d5375cb191371086a0a5be9cf46382c5125503fe4dac1c2d33641b37f43348f160802e3d48cb2eea860b6c856d
+  checksum: 10/1da9268e81c3038871904336f16b6161fb039e9d0995a060f403f95c553a8ca8c9faada73c1806fb8ba3557cbdcc33b53c0e223c4cb743ddc9ed24da0b91c992
   languageName: node
   linkType: hard
 
@@ -13424,9 +13424,9 @@ __metadata:
   linkType: hard
 
 "hls.js@npm:^1.4.12":
-  version: 1.5.12
-  resolution: "hls.js@npm:1.5.12"
-  checksum: 10/a51a56c85696a1001f1b925705443091c3b55b5b5625cc5020881085fd9b064c0b203478d9691638c40038e971583fd7f8b93eac48d61b23cd2c9b683b1127e2
+  version: 1.5.13
+  resolution: "hls.js@npm:1.5.13"
+  checksum: 10/ccb709c07322d81e8be7cde428ca83543a8f61bdaad2e825018013e25c710d9e7cf0570aad1547c95ad635019869d1a2d680c743e2094f7da4a97b44201589e2
   languageName: node
   linkType: hard
 
@@ -18116,7 +18116,7 @@ __metadata:
     "@metamask/eth-sig-util": "npm:^4.0.0"
     "@mui/icons-material": "npm:^5.8.4"
     "@mui/material": "npm:^5.5.0"
-    "@pushprotocol/restapi": "npm:1.7.20"
+    "@pushprotocol/restapi": "npm:1.7.25"
     "@pushprotocol/socket": "npm:0.5.3"
     "@pushprotocol/uiweb": "npm:1.6.0-alpha.6"
     "@radix-ui/react-dropdown-menu": "npm:^2.1.1"
