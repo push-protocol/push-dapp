@@ -42,7 +42,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
   const { type } = InnerComponentProps;
 
   const theme = useTheme();
-  const { handleConnectWallet } = useContext(AppContext);
+  const { handleConnectWallet, initializePushSDK } = useContext(AppContext);
 
   const { account, wallet, connect } = useAccount();
 
@@ -82,6 +82,8 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
       const decryptedPGPKeys = retrieveUserPGPKeyFromStorage(account);
       if (decryptedPGPKeys) {
         setIsLoading(true);
+        // If wallet is connected and PGP keys are already present.
+        initializePushSDK(wallet);
       }
     }
 
