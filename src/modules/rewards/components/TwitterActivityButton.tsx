@@ -33,6 +33,7 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({
 }) => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
   const [verifying, setVerifying] = useState(false);
+  const [activityStatus, setActivityStatus] = useState<string | null>(null);
 
   //For One case where the error is already present and user relogins the account
   useEffect(() => {
@@ -60,6 +61,7 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({
         const errorMessage = error.message;
         const credential = TwitterAuthProvider.credentialFromError(error);
         console.log('Error in connecting twitter >>>', errorCode, errorMessage, credential);
+        setVerifying(false);
         return null;
       });
   };
@@ -71,10 +73,10 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({
 
   const handleVerification = async () => {
     setErrorMessage('');
+    setVerifying(true);
     const userDetails = await handleConnect();
 
     if (userDetails) {
-      setVerifying(true);
 
       // @ts-expect-error
       const twitterHandle = userDetails.reloadUserInfo.screenName;
@@ -107,10 +109,12 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({
         {
           onSuccess: (response) => {
             if (response.status === 'COMPLETED') {
+              setActivityStatus('Claimed')
               refetchActivity();
               setVerifying(false);
             }
             if (response.status === 'PENDING') {
+              setActivityStatus('Pending')
               refetchActivity();
               setVerifying(false);
             }
@@ -129,10 +133,11 @@ const TwitterActivityButton: FC<TwitterActivityButtonProps> = ({
 
   return (
     <ActivityStatusButton
-      label="Verify"
-      disabled={verifying}
+      label={activityStatus ? activityStatus : 'Verify'}
+      disabledLabel={activityStatus ? activityStatus : 'Verifying'}
+      disabled={verifying || activityStatus === 'Claimed' || activityStatus === 'Pending'}
       onClick={handleVerification}
-      disabledLabel='Verifying'
+
     />
   );
 };
