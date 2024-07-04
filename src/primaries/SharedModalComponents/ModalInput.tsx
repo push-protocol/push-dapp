@@ -48,7 +48,7 @@ const InputTitle = styled.h4`
   font-family: FK Grotesk Neu;
   font-size: ${(props) => props.fontSize || '0.95rem'};
   font-weight: ${(props) => props.fontWeight || '600'};
-  letter-spacing: 0em;
+  letter-spacing: normal;
   margin: 0;
   padding: 0;
   margin-bottom: ${(props) => props.marginBottom || '3%'};

@@ -33,7 +33,7 @@ function NotAvailablePage(props) {
           <Item align="center">
             <Heading
               color="#333"
-              spacing="0.05em"
+              spacing="normal"
               size="2rem"
               weight={700}
             >
@@ -54,7 +54,7 @@ const Heading = styled.h2`
   text-transform: ${(props) => props.textTransform || 'inherit'};
   margin: ${(props) => props.margin || '20px 0px'};
   padding: ${(props) => props.padding || '0px'};
-  letter-spacing: ${(props) => props.spacing || 'inherit'};
+  letter-spacing: ${(props) => props.spacing || 'normal'};
   font-family: ${(props) => props.family || "'FK Grotesk Neu', 'Source Sans Pro', Helvetica, sans-serif"};
   text-align: ${(props) => props.textAlign || 'inherit'};
 

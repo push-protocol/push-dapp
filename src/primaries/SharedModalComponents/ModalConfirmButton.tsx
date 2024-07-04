@@ -93,7 +93,7 @@ const CustomButton = styled.button`
   font-family: FK Grotesk Neu;
   font-size: 1.125rem;
   font-weight: 500;
-  letter-spacing: 0em;
+  letter-spacing: normal;
   background-color: ${(props) => props.backgroundColor || '#CF1C84'};
   border: ${(props) => props.border || '1px solid transparent'};
   border-radius: 15px;

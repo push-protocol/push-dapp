@@ -84,7 +84,7 @@ export default function AliasVerificationModal({ onClose, onSuccess, verificatio
             <Item align="flex-start">
               <H2
                 textTransform="uppercase"
-                spacing="0.1em"
+                spacing="normal"
               >
                 <Span
                   weight="200"
@@ -154,7 +154,7 @@ export default function AliasVerificationModal({ onClose, onSuccess, verificatio
                       color="#fff"
                       weight="400"
                       size="0.8em"
-                      spacing="0.2em"
+                      spacing="normal"
                       value={loading ? loading : 'Verify Alias'}
                     />
                   </Button>

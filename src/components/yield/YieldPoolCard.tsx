@@ -622,7 +622,7 @@ const YieldPoolCard = ({
                   fontSize={isMobile ? '18px' : '24px'}
                   fontWeight="600"
                   color="#D53A94"
-                  letterSpacing="-0.03em"
+                  letterSpacing="normal"
                 >
                   0 PUSH
                 </H2V2>
@@ -658,7 +658,7 @@ const YieldPoolCard = ({
                 <StakedAmount
                   fontSize={isMobile ? '18px' : '24px'}
                   fontWeight="600"
-                  letterSpacing="-0.03em"
+                  letterSpacing="normal"
                 >
                   {numberWithCommas(formatTokens(PoolStats?.poolBalance))} {poolName == 'UNI-V2' ? 'UNI-V2' : 'PUSH'}
                 </StakedAmount>
@@ -684,7 +684,7 @@ const YieldPoolCard = ({
           alignSelf="end"
           margin="12px 13px 24px 0px"
           color="#575D73"
-          letterSpacing="-0.03em"
+          letterSpacing="normal"
         >
           {PoolStats ? (
             <>
@@ -1061,7 +1061,7 @@ const Container = styled(SectionV2)`
 const Heading = styled(H2V2)`
   font-size: 24px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   display: flex;
   align-items: center;
   color: ${(props) => props.theme.stakingPrimaryText};
@@ -1093,7 +1093,7 @@ const SecondaryText = styled.p`
   margin: 0px;
   font-size: 18px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
 
   @media (max-width: 600px) {
     font-size: 16px;
@@ -1108,7 +1108,7 @@ const Line = styled.div`
 const DataTitle = styled.div`
   font-size: 18px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1125,7 +1125,7 @@ const StakedAmount = styled(H2V2)`
 const EpochNo = styled(B)`
   font-weight: 600;
   text-align: right;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   font-size: 16px;
   margin-left: 5px;
   line-height: 141%;
@@ -1152,7 +1152,7 @@ const RewardContainer = styled(ItemHV2)`
 const DataValue = styled(H2V2)`
   font-size: 18px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: ${(props) => props.theme.stakingPrimaryText};
 
   @media (max-width: 600px) {
@@ -1183,7 +1183,7 @@ const FilledButton = styled(ButtonV2)`
   font-size: 16px;
   line-height: 141%;
   flex-direction: row;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: #ffffff;
   cursor: pointer;
   & > div {
@@ -1200,7 +1200,7 @@ const MigrateButton = styled(ButtonV2)`
   font-size: 16px;
   line-height: 141%;
   flex-direction: row;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: #ffffff;
   cursor: pointer;
   justify-content: flex-start;

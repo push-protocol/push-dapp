@@ -152,7 +152,7 @@ const AirdropModule = () => {
           size="16px"
           textTransform="none"
           textAlign="center"
-          spacing="0.03em"
+          spacing="normal"
           margin="0px 0px"
         >
           We would never be here without you! Thanks for the PUSH!!!
@@ -465,7 +465,7 @@ const QnAItem = styled(Item)`
     text-transform: uppercase;
     & ${Span} {
       font-weight: 400;
-      letter-spacing: 0.2em;
+      letter-spacing: normal;
       margin-left: 10px;
       flex: 1;
     }

@@ -96,15 +96,27 @@ function Navigation() {
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
     const primaryList = returnTransformedList(navigationList.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY);
-    const notificationList = returnTransformedList(navigationList.secondary.Notifications, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.NOTIFICATION);
-    const messagingList = returnTransformedList(navigationList.secondary.Messsaging, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MESSAGING);
-    const developersList = returnTransformedList(navigationList.secondary.Developers, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.DEVELOPERS);
+    const notificationList = returnTransformedList(
+      navigationList.secondary.Notifications,
+      GLOBALS.CONSTANTS.NAVBAR_SECTIONS.NOTIFICATION
+    );
+    const messagingList = returnTransformedList(
+      navigationList.secondary.Messsaging,
+      GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MESSAGING
+    );
+    const developersList = returnTransformedList(
+      navigationList.secondary.Developers,
+      GLOBALS.CONSTANTS.NAVBAR_SECTIONS.DEVELOPERS
+    );
     const thirdList = returnTransformedList(navigationList.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD);
 
     // Set Nav List
     let count = -1;
     let navList = returnNavList(navigationList.primary, count);
-    navList = Object.assign(navList, returnNavList(navigationList.secondary.Notifications, Object.keys(navList).length));
+    navList = Object.assign(
+      navList,
+      returnNavList(navigationList.secondary.Notifications, Object.keys(navList).length)
+    );
     navList = Object.assign(navList, returnNavList(navigationList.secondary.Messsaging, Object.keys(navList).length));
     navList = Object.assign(navList, returnNavList(navigationList.secondary.Developers, Object.keys(navList).length));
     navList = Object.assign(navList, returnNavList(navigationList.third, Object.keys(navList).length));
@@ -115,8 +127,8 @@ function Navigation() {
       messagingList: messagingList,
       developersList: developersList,
       third: thirdList,
-      navigation: navList
-    }
+      navigation: navList,
+    };
 
     setNavigationSetup(finalList);
   }, []);
@@ -189,11 +201,13 @@ function Navigation() {
     if (navigationSetup) {
       // loop and find the item in question
       Object.entries(navigationSetup).forEach(([key, value]) => {
-        if (key === 'primary' ||
+        if (
+          key === 'primary' ||
           key === 'notificationList' ||
           key === 'messagingList' ||
           key === 'developersList' ||
-          key === 'third') {
+          key === 'third'
+        ) {
           const topSection = navigationSetup[key];
 
           Object.entries(topSection).forEach(([key, value]) => {
@@ -253,11 +267,13 @@ function Navigation() {
 
     if (activeDrilldownId == null) {
       Object.keys(transformedMenuList).forEach((key) => {
-        if (key === 'primary' ||
+        if (
+          key === 'primary' ||
           key === 'notificationList' ||
           key === 'messagingList' ||
           key === 'developersList' ||
-          key === 'third') {
+          key === 'third'
+        ) {
           Object.keys(transformedMenuList[key]).forEach((sectionkey) => {
             const section = transformedMenuList[key][sectionkey];
 
@@ -279,11 +295,13 @@ function Navigation() {
     } else {
       // menu item is getting selected
       Object.keys(transformedMenuList).forEach((key) => {
-        if (key === 'primary' ||
+        if (
+          key === 'primary' ||
           key === 'notificationList' ||
           key === 'messagingList' ||
           key === 'developersList' ||
-          key === 'third') {
+          key === 'third'
+        ) {
           Object.keys(transformedMenuList[key]).forEach((sectionkey) => {
             const section = transformedMenuList[key][sectionkey];
 
@@ -421,7 +439,7 @@ function Navigation() {
           align="stretch"
           size={fontSize}
           wrap="nowrap"
-          margin={secondaryButton && "0 5px 0 10px"}
+          margin={secondaryButton && '0 5px 0 10px'}
         >
           {secondaryButton ? (
             <Item
@@ -644,33 +662,22 @@ function Navigation() {
           <Primary>
             {renderMainItems(navigationSetup.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)}
 
-
             <PrimaryInner>
-              <TextSpan>
-                {sidebarCollapsed ? 'Notifs' : 'Notifications'}
-              </TextSpan>
+              <TextSpan>{sidebarCollapsed ? 'Notifs' : 'Notifications'}</TextSpan>
 
               {renderMainItems(navigationSetup.notificationList, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.NOTIFICATION)}
-
             </PrimaryInner>
 
             <PrimaryInner>
-              <TextSpan>
-                {sidebarCollapsed ? 'Msgs' : 'Messaging'}
-              </TextSpan>
+              <TextSpan>{sidebarCollapsed ? 'Msgs' : 'Messaging'}</TextSpan>
 
               {renderMainItems(navigationSetup.messagingList, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MESSAGING)}
-
             </PrimaryInner>
 
             <PrimaryInner>
-              <TextSpan>
-                {sidebarCollapsed ? 'Devs' : 'Developers'}
-              </TextSpan>
+              <TextSpan>{sidebarCollapsed ? 'Devs' : 'Developers'}</TextSpan>
               {renderMainItems(navigationSetup.developersList, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.DEVELOPERS)}
-
             </PrimaryInner>
-
           </Primary>
           <Footer
             justify="flex-end"
@@ -699,7 +706,7 @@ const Primary = styled(Item)`
   justify-content: flex-start;
   background: '#fff';
   overflow-y: scroll;
-  flex:none;
+  flex: none;
   gap: 8px;
   &::-webkit-scrollbar-track {
     border-radius: 10px;
@@ -722,31 +729,28 @@ const Primary = styled(Item)`
 `;
 
 const PrimaryInner = styled(Primary)`
-  align-items:flex-start;
-  padding:3px 0px;
-  gap:5px;
-`
+  align-items: flex-start;
+  padding: 3px 0px;
+  gap: 5px;
+`;
 
 const TextSpan = styled(Span)`
-  text-transform:uppercase;
-  font-weight:700;
-  font-size:10px;
-  padding:0px 5px;
-  color:#8C93A0;
-  letter-spacing:1.6px;
-  
-`
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 10px;
+  padding: 0px 5px;
+  color: #8c93a0;
+  letter-spacing: normal;
+`;
 
 const InheritedSection = styled(Item)`
   flex: initial;
   align-items: 'center';
-  
 `;
 
 const PrimarySection = styled(InheritedSection)`
   margin-top: -1px;
-  width:100%;
-
+  width: 100%;
 `;
 
 const InheritedSectionGroup = styled(Item)`

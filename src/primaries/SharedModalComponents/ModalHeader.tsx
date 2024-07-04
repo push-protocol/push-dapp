@@ -45,7 +45,7 @@ const ModalHeading = styled.h1`
   font-family: FK Grotesk Neu;
   font-size: 2rem;
   font-weight: 600;
-  letter-spacing: 0em;
+  letter-spacing: normal;
   text-align: center;
   margin: 0;
   padding: 0;
@@ -60,7 +60,7 @@ const ModalSubHeading = styled.h4`
   font-family: FK Grotesk Neu;
   font-size: 0.95rem;
   font-weight: 400;
-  letter-spacing: 0em;
+  letter-spacing: normal;
   text-align: center;
   margin: 0;
   padding: 0;

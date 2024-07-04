@@ -113,7 +113,7 @@ const PushSnapSettings = () => {
                 fontSize="34px"
                 fontWeight="500"
                 color={theme.snapPrimaryText}
-                letterSpacing="-1.02px"
+                letterSpacing="normal"
               >
                 Push Snap
               </H2V2>
@@ -212,7 +212,7 @@ const SnapButton = styled(ButtonV2)`
   font-size: 16px;
   font-weight: 500;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: #ffffff;
   flex: none;
   cursor: pointer;

@@ -87,7 +87,7 @@ export const H2V2 = styled.h2`
   font-family: ${(props) => props.family || "'FK Grotesk Neu', Helvetica, sans-serif"};
   font-size: ${(props) => props.fontSize || 'initial'};
   font-weight: ${(props) => props.fontWeight || 'initial'};
-  letter-spacing: ${(props) => props.letterSpacing || 'initial'};
+  letter-spacing: ${(props) => props.letterSpacing || 'normal'};
   margin: ${(props) => props.margin || '0px'};
   padding: ${(props) => props.padding || '0px'};
   text-align: ${(props) => props.textAlign || 'center'};
@@ -108,7 +108,7 @@ export const ButtonV2 = styled.button`
   font-size: ${(props) => props.fontSize || 'inherit'};
   font-weight: ${(props) => props.fontWeight || 'initial'};
   justify-content: ${(props) => props.justifyContent || 'center'};
-  letter-spacing: ${(props) => props.letterSpacing || 'initial'};
+  letter-spacing: ${(props) => props.letterSpacing || 'normal'};
   margin: ${(props) => props.margin || '0px'};
   max-width: ${(props) => props.maxWidth || 'initial'};
   min-width: ${(props) => props.minWidth || 'auto'};
@@ -172,7 +172,7 @@ export const SpanV2 = styled.span`
   font-size: ${(props) => props.fontSize || 'inherit'};
   font-weight: ${(props) => props.fontWeight || '300'};
   left: ${(props) => props.left || 'auto'};
-  letter-spacing: ${(props) => props.letterSpacing || 'inherit'};
+  letter-spacing: ${(props) => props.letterSpacing || 'normal'};
   line-height: ${(props) => props.lineHeight || 'initial'};
   margin: ${(props) => props.margin || '0px'};
   padding: ${(props) => props.padding || '0px'};
@@ -208,7 +208,7 @@ export const AInlineV2 = styled.a`
   font-weight: ${(props) => props.fontWeight || '300'};
   color: ${(props) => props.color || '#e1087f'};
   display: inline;
-  letter-spacing: inherit;
+  letter-spacing: normal;
   padding: 0px;
   text-transform: initial;
   cursor: ${(props) => props.cursor || 'default'};

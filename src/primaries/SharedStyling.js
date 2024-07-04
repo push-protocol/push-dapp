@@ -153,7 +153,7 @@ export const H2 = styled.h2`
   text-transform: ${(props) => props.textTransform || 'inherit'};
   margin: ${(props) => props.margin || '20px 0px'};
   padding: ${(props) => props.padding || '0px'};
-  letter-spacing: ${(props) => props.spacing || 'inherit'};
+  letter-spacing: ${(props) => props.spacing || 'normal'};
   font-family: ${(props) => props.family || "'FK Grotesk Neu', 'Source Sans Pro', Helvetica, sans-serif"};
   text-align: ${(props) => props.textAlign || 'inherit'};
 `;
@@ -165,7 +165,7 @@ export const H3 = styled.h3`
   text-transform: ${(props) => props.textTransform || 'uppercase'};
   margin: ${(props) => props.margin || '-15px 0px 20px 0px'};
   padding: ${(props) => props.padding || '0px'};
-  letter-spacing: ${(props) => props.spacing || '0.1em'};
+  letter-spacing: ${(props) => props.spacing || 'normal'};
   font-family: ${(props) => props.family || "'FK Grotesk Neu', 'Source Sans Pro', Helvetica, sans-serif"};
   text-align: ${(props) => props.textAlign || 'inherit'};
   max-width: ${(props) => props.maxWidth || 'initial'};
@@ -191,13 +191,13 @@ export const P = styled.p`
   margin: ${(props) => props.margin || '20px 0px'};
   padding: ${(props) => props.padding || '0px'};
   line-height: ${(props) => props.lineHeight || 'auto'};
-  letter-spacing: ${(props) => props.spacing || 'inherit'};
+  letter-spacing: ${(props) => props.spacing || 'normal'};
   text-align: ${(props) => props.textAlign || 'initial'};
 `;
 
 export const Para = styled(P)`
   font-weight: ${(props) => props.weight || 300};
-  letter-spacing: ${(props) => props.spacing || '0.02em'};
+  letter-spacing: ${(props) => props.spacing || 'normal'};
   font-size: ${(props) => props.size || '1.1em'};
   color: ${(props) => props.color || '#000000ee'};
 `;
@@ -213,7 +213,7 @@ export const Span = styled.span`
   text-transform: ${(props) => props.textTransform || 'inherit'};
   margin: ${(props) => props.margin || '0px'};
   padding: ${(props) => props.padding || '0px'};
-  letter-spacing: ${(props) => props.spacing || 'inherit'};
+  letter-spacing: ${(props) => props.spacing || 'normal'};
   text-align: ${(props) => props.textAlign || 'initial'};
   border-radius: ${(props) => props.bRadius || 'initial'};
   min-width: ${(props) => props.minWidth || 'auto'};
@@ -251,7 +251,7 @@ export const Anchor = styled.a`
   background: ${(props) => props.bg || 'transparent'};
   margin: ${(props) => props.margin || '0'};
   padding: ${(props) => props.padding || '10px 15px'};
-  letter-spacing: ${(props) => props.spacing || '0.2em'};
+  letter-spacing: ${(props) => props.spacing || 'normal'};
   border: ${(props) => props.border || 'none'};
   border-radius: ${(props) => props.radius || '0px'};
   width: ${(props) => props.width || 'initial'};
@@ -323,7 +323,7 @@ export const RouterLink = styled(Link)`
   background: ${(props) => props.bg || 'transparent'};
   margin: ${(props) => props.margin || '0'};
   padding: ${(props) => props.padding || '10px 15px'};
-  letter-spacing: ${(props) => props.spacing || '0.2em'};
+  letter-spacing: ${(props) => props.spacing || 'normal'};
   border: ${(props) => props.border || 'none'};
   border-radius: ${(props) => props.radius || '0px'};
   width: ${(props) => props.width || 'initial'};
@@ -393,7 +393,7 @@ export const A = styled(Anchor)`
   margin: ${(props) => props.margin || 'initial'};
   background: transparent;
   padding: 0px;
-  letter-spacing: inherit;
+  letter-spacing: normal;
   text-transform: initial;
 `;
 
@@ -402,7 +402,7 @@ export const C = styled(Anchor)`
   color: '#4292e4';
   background: transparent;
   padding: 0px;
-  letter-spacing: inherit;
+  letter-spacing: normal;
   text-transform: initial;
 `;
 
@@ -418,7 +418,7 @@ export const Button = styled.button`
   background: ${(props) => props.bg || 'tranparent'};
   margin: ${(props) => props.margin || '0'};
   padding: ${(props) => props.padding || '10px 15px'};
-  letter-spacing: ${(props) => props.spacing || 'initial'};
+  letter-spacing: ${(props) => props.spacing || 'normal'};
   border: ${(props) => props.border || 'none'};
   border-radius: ${(props) => props.radius || '0px'};
   text-transform: ${(props) => props.textTransform || 'initial'};
@@ -531,7 +531,7 @@ export const Input = styled.input`
   background: ${(props) => props.bg || 'transparent'};
   margin: ${(props) => props.margin || '0px'};
   padding: ${(props) => props.padding || '0px'};
-  letter-spacing: ${(props) => props.spacing || 'inherit'};
+  letter-spacing: ${(props) => props.spacing || 'normal'};
   border: ${(props) => props.border || 'none'};
   border-radius: ${(props) => props.radius || '0px'};
   outline: ${(props) => props.outline || 'none'};
@@ -570,7 +570,7 @@ export const TextField = styled.textarea`
   background: ${(props) => props.bg || 'transparent'};
   margin: ${(props) => props.margin || '0px'};
   padding: ${(props) => props.padding || '0px'};
-  letter-spacing: ${(props) => props.spacing || 'inherit'};
+  letter-spacing: ${(props) => props.spacing || 'normal'};
   border: ${(props) => props.border || 'none'};
   border-radius: ${(props) => props.radius || '0px'};
   outline: ${(props) => props.outline || 'none'};

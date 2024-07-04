@@ -78,7 +78,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
               size="14px"
               textTransform="uppercase"
               color="#fff"
-              spacing="1px"
+              spacing="normal"
               width="max-content"
             >
               <DesktopAddress>{dropdownValue?.title}</DesktopAddress>
@@ -128,7 +128,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
                 src={dropdownValue.invertedIcon}
                 alt="icon"
                 width="max-content"
-                spacing="1px"
+                spacing="normal"
                 filter={iconFilter ? iconFilter : theme.snackbarBorderIcon}
               />
             )}
@@ -219,7 +219,7 @@ const DropdownItemContainer = styled(ItemH)`
   justify-content: flex-start;
   flex-wrap: nowrap;
   margin: 1px 0;
-  padding: 2px 8px;
+  padding: 8px;
   border-radius: 12px;
   cursor: pointer;
   text-align: left;

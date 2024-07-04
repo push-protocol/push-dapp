@@ -582,7 +582,7 @@ const SectionDate = styled.div`
   font-weight: 600;
   font-size: 16px;
   line-height: 25px;
-  letter-spacing: 0.1em;
+  letter-spacing: normal;
   text-transform: uppercase;
   margin-bottom: 18px;
 `;

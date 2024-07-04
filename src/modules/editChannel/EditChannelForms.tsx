@@ -208,7 +208,7 @@ const Label = styled.div`
   font-weight: 500;
   font-size: 15px;
   line-height: 150%;
-  letter-spacing: -0.011em;
+  letter-spacing: normal;
   color: #1e1e1e;
 `;
 

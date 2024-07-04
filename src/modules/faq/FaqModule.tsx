@@ -57,7 +57,7 @@ function FaqModule() {
         >
           <H2
             textTransform="uppercase"
-            spacing="0.1em"
+            spacing="normal"
             margin="20px 0px 20px 0px"
             size="1.6rem"
           >
@@ -333,7 +333,7 @@ function FaqModule() {
         >
           <H2
             textTransform="uppercase"
-            spacing="0.1em"
+            spacing="normal"
             margin="30px 0px 20px 0px"
             size="1.6rem"
           >
@@ -693,7 +693,7 @@ const Heading = styled.h2`
   text-transform: ${(props) => props.textTransform || 'inherit'};
   margin: ${(props) => props.margin || '20px 0px'};
   padding: ${(props) => props.padding || '0px'};
-  letter-spacing: ${(props) => props.spacing || 'inherit'};
+  letter-spacing: ${(props) => props.spacing || 'normal'};
   font-family: ${(props) => props.family || "'FK Grotesk Neu', 'Source Sans Pro', Helvetica, sans-serif"};
   text-align: ${(props) => props.textAlign || 'inherit'};
   margin-left: 20px;
@@ -727,7 +727,7 @@ const QnAItem = styled(Item)`
     text-transform: uppercase;
     & ${Span} {
       font-weight: 400;
-      letter-spacing: 0.2em;
+      letter-spacing: normal;
       margin-left: 10px;
       flex: 1;
     }

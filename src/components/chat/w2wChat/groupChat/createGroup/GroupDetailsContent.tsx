@@ -358,7 +358,7 @@ const CustomInput = styled(Input)`
   font-weight: 500;
   font-size: 18px;
   line-height: 150%;
-  letter-spacing: -0.019em;
+  letter-spacing: normal;
   &:focus {
     border: 1px solid #ffdbf0;
   }

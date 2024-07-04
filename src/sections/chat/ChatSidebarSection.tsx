@@ -234,7 +234,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, chatId, selectedChatId, setS
                   margin="0 8px"
                   fontSize="16px"
                   fontWeight="500"
-                  letterSpacing="-0.019em"
+                  letterSpacing="normal"
                   color={theme.default.secondaryColor}
                 >
                   Create Group

@@ -45,7 +45,7 @@ const YieldPushFeeV2 = () => {
               fontSize="24px"
               fontWeight="700"
               color="#D53A94"
-              letterSpacing="-0.03em"
+              letterSpacing="normal"
             >
               24,900 PUSH
             </H2V2>
@@ -64,7 +64,7 @@ const YieldPushFeeV2 = () => {
             <H2V2
               fontSize="24px"
               fontWeight="700"
-              letterSpacing="-0.03em"
+              letterSpacing="normal"
             >
               12.725 Uni-V2
             </H2V2>
@@ -76,7 +76,7 @@ const YieldPushFeeV2 = () => {
           alignSelf="end"
           margin="12px 13px 24px 0px"
           color="#575D73"
-          letterSpacing="-0.03em"
+          letterSpacing="normal"
         >
           Current Epoch 100/100
         </ItemHV2>
@@ -185,14 +185,14 @@ const Note = styled(ItemHV2)`
   border-radius: 8px;
   font-size: 14px;
   line-height: 118.5%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: rgba(87, 93, 115, 0.8);
 `;
 
 const Heading = styled(H2V2)`
   font-size: 24px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: #333333;
   display: flex;
   align-items: center;
@@ -214,7 +214,7 @@ const SecondaryText = styled.p`
   margin: 0px;
   font-size: 18px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: ${(props) => props.theme.modalMessageColor};
 `;
 
@@ -231,7 +231,7 @@ const Line = styled.div`
 const DataTitle = styled.div`
   font-size: 18px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: ${(props) => props.theme.modalDescriptionTextColor};
   display: flex;
   justify-content: center;
@@ -241,14 +241,14 @@ const DataTitle = styled.div`
 const DataValue = styled(H2V2)`
   font-size: 18px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: ${(props) => props.theme.modalMessageColor};
 `;
 
 const EpochText = styled(ItemHV2)`
   align-self: end;
   margin: 12px 13px 24px 0px;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: ${(props) => props.theme.modalDescriptionTextColor};
 `;
 
@@ -266,7 +266,7 @@ const FilledButton = styled(ButtonV2)`
   padding: 12px;
   font-size: 18px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: #ffffff;
   cursor: pointer;
   & > div {
@@ -281,7 +281,7 @@ const EmptyButton = styled.button`
   background: transparent;
   font-size: 18px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: #657795;
   flex: 1;
   cursor: pointer;

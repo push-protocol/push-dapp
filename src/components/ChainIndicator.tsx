@@ -93,7 +93,7 @@ const ChainIndicator = ({ isDarkMode }) => {
                 margin="0px 1px 6px 0"
                 textTransform="none"
                 family="FK Grotesk Neu"
-                spacing="0.01rem"
+                spacing="normal"
                 weight="400"
                 size="15px"
               >
@@ -183,7 +183,7 @@ const ChainName = styled(H3)`
   margin: 10px 0 10px 15px;
   font-weight: 400;
   size: 18px;
-  letter-spacing: -0.01em;
+  letter-spacing: normal;
   cursor: pointer;
 
   @media (max-width: 992px) {

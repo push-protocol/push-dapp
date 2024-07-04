@@ -63,7 +63,7 @@ const StepsTransactionModal = ({ onClose, InnerComponentProps }) => {
                   <H2V2
                     fontSize="28px"
                     fontWeight="500"
-                    letterSpacing="-0.84px"
+                    letterSpacing="normal"
                   >
                     Please sign transaction {currentTransactionNo}/{totalTransactionNo}
                   </H2V2>
@@ -103,7 +103,7 @@ const StepsTransactionModal = ({ onClose, InnerComponentProps }) => {
                 <H2V2
                   fontSize="28px"
                   fontWeight="500"
-                  letterSpacing="-0.84px"
+                  letterSpacing="normal"
                 >
                   Transaction Error
                 </H2V2>
@@ -130,7 +130,7 @@ const StepsTransactionModal = ({ onClose, InnerComponentProps }) => {
                   <H2V2
                     fontSize="28px"
                     fontWeight="500"
-                    letterSpacing="-0.84px"
+                    letterSpacing="normal"
                   >
                     Transactions Successful
                   </H2V2>
@@ -176,7 +176,7 @@ const FilledButton = styled(ButtonV2)`
   padding: 12px;
   font-size: 16px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: #ffffff;
   cursor: pointer;
   & > div {
