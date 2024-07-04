@@ -92,7 +92,7 @@ const Faucets = () => {
       value: 'Linea',
       title: 'Linea Sepolia Faucet',
       function: () => {},
-      link: 'https://www.infura.io/faucet/linea',
+      link: 'https://faucets.chain.link/linea-sepolia',
     },
   ];
 
