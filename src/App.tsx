@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
 
-import { ChatUIProvider, darkChatTheme } from '@pushprotocol/uiweb';
+import { ChatUIProvider, darkChatTheme, IChatTheme } from '@pushprotocol/uiweb';
 import { createGlobalStyle } from 'styled-components';
 
 // Internal Compoonents
@@ -52,8 +52,25 @@ import SpaceContextProvider from 'contexts/SpaceContext';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 import { blocksColors } from 'blocks';
 import { textVariants } from 'blocks/text/Text.constants';
+import APP_PATHS from 'config/AppPaths';
 
 dotenv.config();
+
+/**
+  TODO: Remove the below config once the following issue is resolved
+  https://github.com/push-protocol/push-sdk/issues/1373
+*/
+const chatDarkThemeCustomised: IChatTheme = {
+  ...darkChatTheme,
+  backgroundColor: {
+    ...darkChatTheme.backgroundColor,
+    chatPreviewBackground: 'var(--gray-900)',
+    userProfileBackground: 'var(--gray-900)',
+    modalBackground: 'var(--gray-900)',
+    criteriaLabelBackground: 'var(--gray-900)',
+    chatWidgetModalBackground: 'var(--gray-900)',
+  },
+};
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -311,7 +328,8 @@ export default function App() {
   // const { spaceUI } = useSpaceComponents();
 
   const location = useLocation();
-  const isSnapPage = location?.pathname.includes('/snap');
+  const isHeaderHidden = location?.pathname.includes(APP_PATHS.PointsVault);
+  const isSidebarHidden = location?.pathname.includes(APP_PATHS.PointsVault) || location?.pathname.includes('/snap');
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
@@ -327,7 +345,7 @@ export default function App() {
         <NavigationContextProvider>
           <ChatUIProvider
             user={userPushSDKInstance}
-            theme={darkMode && darkChatTheme}
+            theme={darkMode && chatDarkThemeCustomised}
             debug={false}
             uiConfig={{
               suppressToast: false,
@@ -363,20 +381,17 @@ export default function App() {
                   }}
                 />
 
-                <HeaderContainer>
-                  <Header
-                    isDarkMode={darkMode}
-                    darkModeToggle={toggleDarkMode}
-                  />
-                </HeaderContainer>
+                {!isHeaderHidden && (
+                  <HeaderContainer>
+                    <Header
+                      isDarkMode={darkMode}
+                      darkModeToggle={toggleDarkMode}
+                    />
+                  </HeaderContainer>
+                )}
 
-                <ParentContainer
-                  bg={
-                    darkMode ? themeDark.backgroundBG : !isActive ? themeLight.connectWalletBg : themeLight.backgroundBG
-                  }
-                  headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
-                >
-                  {!isSnapPage && (
+                <ParentContainer headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
+                  {!isSidebarHidden && (
                     <LeftBarContainer
                       leftBarWidth={
                         sidebarCollapsed
@@ -390,7 +405,9 @@ export default function App() {
 
                   <ContentContainer
                     leftBarWidth={
-                      sidebarCollapsed
+                      isSidebarHidden
+                        ? GLOBALS.CONSTANTS.NO_LEFT_BAR_WIDTH
+                        : sidebarCollapsed
                         ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH
                         : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH
                     }

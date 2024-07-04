@@ -17,6 +17,7 @@ export const config = {
 
   ipfsInfuraAPIKey: import.meta.env.VITE_APP_IPFS_INFURA_API_KEY || '22rfiNb1J645FdehoqbKMpLbF6V',
   ipfsInfuraAPISecret: import.meta.env.VITE_APP_IPFS_INFURA_API_SECRET || 'a757597f020425c3ae532e6be84de552',
+  discord_client_id: import.meta.env.VITE_APP_DISCORD_CLIENT_ID,
 
   /**
    * Allowed Networks
@@ -51,16 +52,16 @@ export const config = {
    * Analaytics + Firebase
    */
   googleAnalyticsId: 'UA-165415629-1',
-  vapidKey: 'BFRmmAEEXOhk31FIsooph5CxlXKh6N0_NocUWHzvtpoUEvqQTwLXu6XtwkrH7ckyr2CvVz1ll-8q4oo6-ZqFJPY',
+  vapidKey: 'BOMOB--KihZkwM8SQ_OrPEsuu8UcSYiRB9AvMjsWil3WJDmxBEcDex8g4d5rFGgA8U-7esfRM5pvR98jaE1nX0M',
   firebaseConfig: {
-    apiKey: 'AIzaSyClOk4qP0ttFW-BPnXy7WT920xfdXSbFu8',
-    authDomain: 'epns-internal.firebaseapp.com',
-    databaseURL: 'https://epns-internal.firebaseio.com',
-    projectId: 'epns-internal',
-    storageBucket: 'epns-internal.appspot.com',
-    messagingSenderId: '755180533582',
-    appId: '1:755180533582:web:752ff8db31905506b7d01f',
-    measurementId: 'G-ZJH2T7R9S1',
+    apiKey: 'AIzaSyBrzkFPyNmVDFzGY7dKz2HocUO4m-ni-Fc',
+    authDomain: 'epns-ethereum-push-service.firebaseapp.com',
+    databaseURL: 'https://epns-ethereum-push-service.firebaseio.com',
+    projectId: 'epns-ethereum-push-service',
+    storageBucket: 'epns-ethereum-push-service.appspot.com',
+    messagingSenderId: '915758146133',
+    appId: '1:915758146133:web:2de388356233f5c22f2adc',
+    measurementId: 'G-X1L5P2E4EP',
   },
 
   /**

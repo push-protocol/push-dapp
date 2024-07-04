@@ -29,11 +29,10 @@ import { ImageV3 } from '../Dashboard.styled';
 
 type FeaturedChannelsListItemProps = {
   channelAddress: string;
-  width: string;
 };
 
 const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
-  const { channelAddress, width } = props;
+  const { channelAddress } = props;
 
   const { wallet } = useAccount();
   const isWalletConnected = !!wallet?.accounts?.length;
@@ -62,12 +61,13 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
         flexDirection="column"
         border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
         padding="s6"
-        borderRadius="24px"
+        borderRadius="r6"
         gap="s3"
-        width={{ initial: width }}
+        width={{ initial: '27.35%', tb: 'fit-content', ml: '75%' }}
         css={css`
           flex-shrink: 0;
         `}
+        minHeight={{ initial: 'auto', tb: '180px' }}
       >
         <Box
           display="flex"

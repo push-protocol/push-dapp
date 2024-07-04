@@ -267,9 +267,6 @@ const AppContextProvider = ({ children }) => {
         });
       }
 
-      // connect stream as well
-      await setupStream(userInstance);
-
       console.debug('src::contexts::AppContext::initializePushSDK::User Intance Initialized', userInstance);
       if (userInstance) {
         setBlockedLoading({
@@ -281,6 +278,9 @@ const AppContextProvider = ({ children }) => {
         });
       }
       dispatch(setUserPushSDKInstance(userInstance));
+
+      // connect stream as well
+      await setupStream(userInstance);
       return userInstance;
     } catch (error) {
       // Handle initialization error

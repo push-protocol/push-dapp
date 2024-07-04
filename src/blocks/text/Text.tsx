@@ -35,7 +35,8 @@ export type TextProps = {
   TransformedHTMLAttributes<HTMLParagraphElement | HTMLSpanElement>;
 
 const StyledText = styled.p.withConfig({
-  shouldForwardProp: (prop, defaultValidatorFn) => !['mode', 'color'].includes(prop) && defaultValidatorFn(prop),
+  shouldForwardProp: (prop, defaultValidatorFn) =>
+    !['mode', 'color', 'display'].includes(prop) && defaultValidatorFn(prop),
 })<TextProps & ModeProp>`
   /* Variant CSS */
   ${({ variant }) => getVariantStyles(variant)}

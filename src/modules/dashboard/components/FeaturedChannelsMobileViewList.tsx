@@ -37,10 +37,7 @@ const FeaturedChannelsMobileViewList: FC<FeaturedChannelsMobileViewListProps> = 
             `}
           >
             {channelListArray.map((channel: FeaturedChannelDetailsProps) => (
-              <FeaturedChannelsListItem
-                channelAddress={channel.channel}
-                width="-webkit-fill-available"
-              />
+              <FeaturedChannelsListItem channelAddress={channel.channel} />
             ))}
           </Box>
         );

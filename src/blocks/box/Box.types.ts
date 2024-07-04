@@ -3,6 +3,7 @@ import { CSSProperties, ReactNode } from 'react';
 import {
   BlocksColors,
   BorderValue,
+  RadiusType,
   ResponsiveProp,
   SpaceType,
   ThemeModeBorder,
@@ -14,6 +15,8 @@ import { FlattenSimpleInterpolation } from 'styled-components';
 export type BoxResponsiveProps = {
   /* Sets align-items css property */
   alignItems?: ResponsiveProp<CSSProperties['alignItems']>;
+  /* Sets align-self css property */
+  alignSelf?: ResponsiveProp<CSSProperties['alignSelf']>;
   /* Sets flex-direction css property */
   flexDirection?: ResponsiveProp<CSSProperties['flexDirection']>;
   /* Sets gap between the elements */
@@ -44,7 +47,7 @@ export type BoxNonResponsiveProps = {
   /* Sets border css property */
   border?: BorderValue | ThemeModeBorder;
   /* Sets border-radius css property */
-  borderRadius?: string;
+  borderRadius?: RadiusType;
   /* Sets background-color css property */
   backgroundColor?: BlocksColors | ThemeModeColors;
   /* Sets color css property */
@@ -74,6 +77,7 @@ export type BoxComponentProps = {
 
 export type BoxResponsiveCSSProperties =
   | 'align-items'
+  | 'align-self'
   | 'display'
   | 'flex-direction'
   | 'gap'

@@ -1,3 +1,3 @@
 export * from './Button';
-export * from './Button.constants';
+export * from './Button.utils';
 export * from './Button.types';
