@@ -121,6 +121,7 @@ const Rewards: FC<RewardsProps> = () => {
           <UnlockProfileWrapper
             type={UNLOCK_PROFILE_TYPE.MODAL}
             showConnectModal={showConnectModal}
+            label="Unlock your profile to proceed."
           />
         </Box>
       )}

@@ -11,14 +11,15 @@ export enum UNLOCK_PROFILE_TYPE {
 
 interface IntroContainerProps {
   type?: UNLOCK_PROFILE_TYPE;
-  showConnectModal?: boolean
+  showConnectModal?: boolean;
+  label?: string;
 }
 
 const DEFAULT_PROPS = {
   type: UNLOCK_PROFILE_TYPE.MODAL,
 };
 
-const UnlockProfileWrapper = ({ type = DEFAULT_PROPS.type, showConnectModal }: IntroContainerProps) => {
+const UnlockProfileWrapper = ({ type = DEFAULT_PROPS.type, showConnectModal, label }: IntroContainerProps) => {
   const {
     isModalOpen: isProfileModalOpen,
     showModal: showProfileModal,
@@ -31,12 +32,15 @@ const UnlockProfileWrapper = ({ type = DEFAULT_PROPS.type, showConnectModal }: I
     }
   }, [type]);
 
+  console.log(label, 'label');
+
   if (type === UNLOCK_PROFILE_TYPE.MODAL) {
     return (
       <ProfileModalComponent
         InnerComponent={UnlockProfile}
         InnerComponentProps={{
           type,
+          label,
         }}
         modalRadius="24px"
         modalBorder={false}
@@ -46,7 +50,7 @@ const UnlockProfileWrapper = ({ type = DEFAULT_PROPS.type, showConnectModal }: I
   } else {
     return (
       <Container className={type}>
-        <UnlockProfile InnerComponentProps={{ type }} />
+        <UnlockProfile InnerComponentProps={{ type, label }} />
       </Container>
     );
   }
