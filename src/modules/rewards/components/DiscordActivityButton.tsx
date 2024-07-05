@@ -34,6 +34,9 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({
 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
+  const [activityStatus, setActivityStatus] = useState<string | null>(null);
+  const [verifying, setVerifying] = useState(token ? true : false);
+
   useEffect(() => {
     setErrorMessage('');
   }, []);
@@ -63,6 +66,7 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({
 
   useEffect(() => {
     if (token && userDiscordDetails) {
+      setVerifying(true);
       handleVerify(userPushSDKInstance);
     }
   }, [token, userDiscordDetails]);
@@ -72,7 +76,6 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({
     activityTypeId,
   });
 
-  const [verifying, setVerifying] = useState(false);
 
   const handleVerify = async (userPushSDKInstance: PushAPI) => {
     if (userDiscordDetails && token) {
@@ -103,6 +106,7 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({
         {
           onSuccess: (response) => {
             if (response.status === 'COMPLETED') {
+              setActivityStatus('Claimed');
               refetchActivity();
               setVerifying(false);
               setErrorMessage('');
@@ -122,9 +126,9 @@ const DiscordActivityButton: FC<DiscordActivityButtonProps> = ({
 
   return (
     <ActivityStatusButton
-      label="Verify"
-      disabledLabel="Verifying"
-      disabled={verifying}
+      label={activityStatus ? activityStatus : 'Verify'}
+      disabledLabel={activityStatus ? activityStatus : 'Verifying'}
+      disabled={verifying || activityStatus === 'Claimed'}
       onClick={handleVerification}
     />
   );
