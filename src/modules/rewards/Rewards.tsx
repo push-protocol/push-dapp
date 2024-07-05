@@ -2,18 +2,17 @@
 import { FC, useEffect } from 'react';
 
 // third party libraries
-import { css } from 'styled-components';
 import { useSelector } from 'react-redux';
+import { css } from 'styled-components';
 
 //Hooks
 import { useAccount } from 'hooks';
 import { useRewardsTabs } from './hooks/useRewardsTabs';
-import { useGenerateUserId } from './hooks/useGenerateUserId';
 import { useDiscordSession } from './hooks/useDiscordSession';
+import { useGenerateUserId } from './hooks/useGenerateUserId';
 
 //Types
 import { UserStoreType } from 'types';
-import { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfile';
 
 //helpers
 import { walletToCAIP10 } from 'helpers/w2w';
@@ -22,14 +21,18 @@ import { walletToCAIP10 } from 'helpers/w2w';
 import { Box, Text } from 'blocks';
 import { ReferralSection } from './components/ReferralSection';
 import { RewardsTabsContainer } from './components/RewardsTabsContainer';
-import UnlockProfileWrapper from 'components/chat/unlockProfile/UnlockProfileWrapper';
+import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
+import { useContext } from 'react';
+import { AppContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
 
 export type RewardsProps = {};
 
 const Rewards: FC<RewardsProps> = () => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const { account } = useAccount();
+  const { account, isWalletConnected } = useAccount();
+  const { isUserProfileUnlocked } = useContext<AppContextType>(AppContext);
 
   const caip10WalletAddress = walletToCAIP10({ account });
 
@@ -38,19 +41,41 @@ const Rewards: FC<RewardsProps> = () => {
 
   const { activeTab, handleSetActiveTab } = useRewardsTabs();
 
-  const { showConnectModal, setConnectModalVisibility } = useGenerateUserId(caip10WalletAddress);
+  const { showConnectModal, setConnectModalVisibility, unlockUser, handleCreateUser, isPending } =
+    useGenerateUserId(caip10WalletAddress);
 
   useEffect(() => {
-    if (activeTab !== 'activity') {
-      setConnectModalVisibility(false);
-    }
+    //   if (activeTab !== 'activity') {
+    setConnectModalVisibility(false);
+    //   }
 
-    if (activeTab === 'activity' && userPushSDKInstance && userPushSDKInstance.readmode()) {
-      setConnectModalVisibility(true);
+    // if (activeTab === 'activity' && userPushSDKInstance && userPushSDKInstance.readmode()) {
+    //   setConnectModalVisibility(true);
+    // }
+
+    // if (isUserProfileUnlocked && userPushSDKInstance) {
+    //   handleCreateUser;
+    // }
+  }, [account, userPushSDKInstance]);
+
+  useEffect(() => {
+    if (isUserProfileUnlocked && userPushSDKInstance) {
+      handleCreateUser();
     }
-  }, [activeTab, account, userPushSDKInstance]);
+  }, [userPushSDKInstance, isUserProfileUnlocked]);
 
   const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
+
+  // const handleUser = useCallback(() => {
+  const handleUser = () => {
+    if (isUserProfileUnlocked) {
+      handleCreateUser();
+    } else {
+      unlockUser();
+    }
+  };
+
+  // console.log(SHA256(account).toString().slice(0, 7));
 
   return (
     <Box
@@ -83,10 +108,15 @@ const Rewards: FC<RewardsProps> = () => {
           handleSetActiveTab={handleSetActiveTab}
         />
 
-        {activeTab === 'dashboard' && <ReferralSection />}
+        {activeTab === 'dashboard' && (
+          <ReferralSection
+            generateUser={handleUser}
+            isPending={isPending}
+          />
+        )}
       </Box>
 
-      {userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
+      {isWalletConnected && userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
         <Box
           display="flex"
           justifyContent="center"

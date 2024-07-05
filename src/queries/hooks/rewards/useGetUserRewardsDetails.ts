@@ -9,4 +9,5 @@ export const useGetUserRewardsDetails = (options: UserRewardsDetailParams) =>
     queryKey: [userRewardsDetails, options.caip10WalletAddress],
     queryFn: () => getUserRewardsDetail(options),
     enabled: options.enabled,
+    retry: false,
   });

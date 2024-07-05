@@ -28,7 +28,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
     isFetching,
   } = useGetUserRewardsDetails({ caip10WalletAddress: caip10WalletAddress, enabled: isWalletConnected });
 
-  const isLoading = isUserLoading || !isSuccess;
+  const isLoading = isUserLoading;
 
   return (
     <>

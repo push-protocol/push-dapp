@@ -1,5 +1,5 @@
 // React and other libraries
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 // third party libraries
 import { useSelector } from 'react-redux';
@@ -10,64 +10,64 @@ import { useGetUserRewardsDetails, useCreateRewardsUser } from 'queries';
 
 //Types
 import { UserStoreType } from 'types';
-import { AxiosError } from 'axios';
 
 //helpers
 import { generateVerificationProof } from '../utils/generateVerificationProof';
+import { useAccount } from 'hooks';
 
 const useGenerateUserId = (caip10WalletAddress: string) => {
   const [searchParams] = useSearchParams();
 
   const ref = searchParams.get('ref');
+  if (ref) sessionStorage.setItem('ref', ref);
   const [showConnectModal, setConnectModalVisibility] = useState(false);
 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
+  const { isWalletConnected } = useAccount();
 
-  const {
-    data: userDetails,
-    status,
-    refetch,
-    error,
-  } = useGetUserRewardsDetails({
+  const { refetch, isPending, status } = useGetUserRewardsDetails({
     caip10WalletAddress: caip10WalletAddress,
   });
 
   const { mutate: createUser } = useCreateRewardsUser();
 
-  const errorMessage = 'Failed to retrieve user';
-
-  useEffect(() => {
-    if (status === 'error' && error instanceof AxiosError && error?.response?.data?.error === errorMessage) {
-      // generate userId
-      generateUserId(ref);
-    }
-    // bad request error
-  }, [userDetails, status]);
-
-  const generateUserId = async (ref: string | null) => {
-    // userPushSDKInstance null check
-    if (!userPushSDKInstance) return;
-
+  const getRefAndData = () => {
     // if ref is present, add it to the data needed to generate verification proof, if not - send only user wallet
+    const ref = sessionStorage.getItem('ref');
     const data = {
       ...(ref && { refPrimary: ref }),
       userWallet: caip10WalletAddress,
     };
 
+    return { data, ref };
+  };
+
+  const unlockUser = async () => {
+    if (!userPushSDKInstance) return;
+
+    const { data } = getRefAndData();
+
     // generate verification proof
     const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
 
-    //if verification proof is null, unlock push profile to get the decrypted pgp pvt key needed for the verification proof
-    if (verificationProof == null || verificationProof == undefined) {
-      if (userPushSDKInstance && userPushSDKInstance.readmode()) {
+    //if verification proof is null, unlock push profile update to update userPUSHSDKInstance
+    if (verificationProof === null || verificationProof === undefined) {
+      if (isWalletConnected && userPushSDKInstance && userPushSDKInstance.readmode()) {
         setConnectModalVisibility(true);
       }
       return;
     }
+  };
 
-    console.log(verificationProof, ref, errorMessage);
+  const handleCreateUser = async () => {
+    if (!userPushSDKInstance || status === 'success') return;
 
-    // mutate action to make the request and on success - call the get user by wallet address fn with the id again
+    const { data, ref } = getRefAndData();
+
+    //generate verification proof again, after unlocking profile
+    const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
+    if (!verificationProof) return;
+
     createUser(
       {
         pgpPublicKey: userPushSDKInstance?.pgpPublicKey,
@@ -89,6 +89,9 @@ const useGenerateUserId = (caip10WalletAddress: string) => {
   return {
     showConnectModal,
     setConnectModalVisibility,
+    isPending,
+    unlockUser,
+    handleCreateUser,
   };
 };
 

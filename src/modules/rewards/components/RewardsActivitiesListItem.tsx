@@ -1,16 +1,22 @@
 // React and other libraries
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 //Hooks
 import { Activity, useGetRewardsActivity } from 'queries';
 
 //Components
-import { Box, ErrorFilled, InfoFilled, Lozenge, RewardsBell, Skeleton, Text } from 'blocks';
+import { Box, Button, ErrorFilled, InfoFilled, Lozenge, RewardsBell, Skeleton, Text } from 'blocks';
 import { ActivityButton } from './ActivityButton';
 import { RewardsActivityIcon } from './RewardsActivityIcon';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
 import { useSelector } from 'react-redux';
 import { UserStoreType } from 'types';
+import { ActivityStatusButton } from './ActivityStatusButton';
+import { useGenerateUserId } from '../hooks/useGenerateUserId';
+import { useAccount } from 'hooks/useAccount';
+import { walletToCAIP10 } from 'helpers/w2w';
+import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
+import { css } from 'styled-components';
 
 export type RewardActivitiesListItemProps = {
   userId: string;
@@ -25,6 +31,9 @@ const getUpdatedExpiryTime = (timestamp: number) => {
 };
 
 const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, activity, isLoadingItem }) => {
+  const { account, isWalletConnected } = useAccount();
+
+  const caip10WalletAddress = walletToCAIP10({ account });
   const {
     data: usersSingleActivity,
     isLoading,
@@ -34,6 +43,16 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
   const [errorMessage, setErrorMessage] = useState('');
+
+  // useEffect(() => {
+  // if (activeTab !== 'activity') {
+  //   setConnectModalVisibility(false);
+  // }
+
+  // if (activeTab === 'activity' && userPushSDKInstance && userPushSDKInstance.readmode()) {
+  // setConnectModalVisibility(true);
+  // }
+  // }, [activeTab, account, userPushSDKInstance]);
 
   return (
     <Skeleton
@@ -151,8 +170,36 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                 />
               </Box>
             )}
+
+            {/* {isWalletConnected && !usersSingleActivity && userId === '' && (
+              <Box>
+                <ActivityStatusButton
+                  label="Authenticate"
+                  disabled={false}
+                  isLoading={isPending}
+                  onClick={handleAuth}
+                />
+              </Box>
+            )} */}
           </Box>
         </Box>
+
+        {/* {userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
+          <Box
+            display="flex"
+            justifyContent="center"
+            width="-webkit-fill-available"
+            alignItems="center"
+            css={css`
+              z-index: 99999;
+            `}
+          >
+            <UnlockProfileWrapper
+              type={UNLOCK_PROFILE_TYPE.MODAL}
+              showConnectModal={showConnectModal}
+            />
+          </Box>
+        )} */}
 
         {errorMessage && (
           <Box

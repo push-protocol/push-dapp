@@ -14,10 +14,14 @@ import { getPreviewBasePath } from '../../../../basePath';
 
 // components
 import { Box, Button, Copy, Text, Referral, Skeleton } from 'blocks';
+import { ActivityStatusButton } from './ActivityStatusButton';
 
-export type ReferralSectionProps = {};
+export type ReferralSectionProps = {
+  generateUser: () => void;
+  isPending: boolean;
+};
 
-const ReferralSection: FC<ReferralSectionProps> = () => {
+const ReferralSection: FC<ReferralSectionProps> = ({ generateUser, isPending }) => {
   const previewBasePath = getPreviewBasePath() || '';
   const baseUrl = window.location.origin + previewBasePath;
 
@@ -33,7 +37,7 @@ const ReferralSection: FC<ReferralSectionProps> = () => {
     enabled: isWalletConnected,
   });
 
-  const isLoading = isUserLoading || !isSuccess;
+  const isLoading = isUserLoading;
 
   const { textRef, isCopied, copyToClipboard } = useCopy();
 
@@ -78,8 +82,8 @@ const ReferralSection: FC<ReferralSectionProps> = () => {
           </Box>
         </Box>
 
-        {isWalletConnected && (
-          <Skeleton isLoading={isLoading}>
+        <Skeleton isLoading={isLoading}>
+          {isWalletConnected && userDetails && (
             <Box
               display="flex"
               gap="s2"
@@ -112,8 +116,27 @@ const ReferralSection: FC<ReferralSectionProps> = () => {
                 {isCopied ? 'Copied' : 'Copy Link'}
               </Button>
             </Box>
-          </Skeleton>
-        )}
+          )}
+        </Skeleton>
+
+        <Skeleton isLoading={isLoading}>
+          {isWalletConnected && !userDetails && (
+            <Box
+              display="flex"
+              flexDirection="row"
+              alignItems="flex-start"
+            >
+              <ActivityStatusButton
+                size="small"
+                variant="primary"
+                onClick={generateUser}
+                disabled={false}
+                label="Unlock Profile"
+                isLoading={isPending}
+              />
+            </Box>
+          )}
+        </Skeleton>
 
         {!isWalletConnected && (
           <Box>
