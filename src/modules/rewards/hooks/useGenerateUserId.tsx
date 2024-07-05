@@ -92,6 +92,7 @@ const useGenerateUserId = (caip10WalletAddress: string) => {
     isPending,
     unlockUser,
     handleCreateUser,
+    status,
   };
 };
 

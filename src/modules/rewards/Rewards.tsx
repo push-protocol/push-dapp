@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useContext } from 'react';
 
 // third party libraries
 import { useSelector } from 'react-redux';
@@ -16,14 +16,13 @@ import { UserStoreType } from 'types';
 
 //helpers
 import { walletToCAIP10 } from 'helpers/w2w';
+import { AppContext } from 'contexts/AppContext';
 
 //Components
 import { Box, Text } from 'blocks';
 import { ReferralSection } from './components/ReferralSection';
 import { RewardsTabsContainer } from './components/RewardsTabsContainer';
 import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
-import { useContext } from 'react';
-import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
 
 export type RewardsProps = {};
@@ -41,22 +40,18 @@ const Rewards: FC<RewardsProps> = () => {
 
   const { activeTab, handleSetActiveTab } = useRewardsTabs();
 
-  const { showConnectModal, setConnectModalVisibility, unlockUser, handleCreateUser, isPending } =
+  const { showConnectModal, setConnectModalVisibility, unlockUser, handleCreateUser, isPending, status } =
     useGenerateUserId(caip10WalletAddress);
 
   useEffect(() => {
-    //   if (activeTab !== 'activity') {
-    setConnectModalVisibility(false);
-    //   }
+    if (activeTab !== 'activity') {
+      setConnectModalVisibility(false);
+    }
 
-    // if (activeTab === 'activity' && userPushSDKInstance && userPushSDKInstance.readmode()) {
-    //   setConnectModalVisibility(true);
-    // }
-
-    // if (isUserProfileUnlocked && userPushSDKInstance) {
-    //   handleCreateUser;
-    // }
-  }, [account, userPushSDKInstance]);
+    if (status == 'success' && activeTab === 'activity' && userPushSDKInstance && userPushSDKInstance.readmode()) {
+      setConnectModalVisibility(true);
+    }
+  }, [account, userPushSDKInstance, activeTab]);
 
   useEffect(() => {
     if (isUserProfileUnlocked && userPushSDKInstance) {
@@ -66,7 +61,6 @@ const Rewards: FC<RewardsProps> = () => {
 
   const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
 
-  // const handleUser = useCallback(() => {
   const handleUser = () => {
     if (isUserProfileUnlocked) {
       handleCreateUser();
@@ -74,8 +68,6 @@ const Rewards: FC<RewardsProps> = () => {
       unlockUser();
     }
   };
-
-  // console.log(SHA256(account).toString().slice(0, 7));
 
   return (
     <Box
