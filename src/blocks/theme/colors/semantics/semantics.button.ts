@@ -21,7 +21,7 @@ export const primaryButtonSemantics = {
   'stroke-focus': { light: colorBrands['primary-700'], dark: colorBrands['primary-200'] },
 };
 
-export const SecondaryButtonSemantics = {
+export const secondaryButtonSemantics = {
   'background-default': { light: colorBrands['neutral-100'], dark: colorBrands['neutral-800'] },
   'background-hover': { light: colorBrands['neutral-200'], dark: colorBrands['neutral-700'] },
   'background-pressed': { light: colorBrands['neutral-300'], dark: colorBrands['neutral-1000'] },

@@ -1,5 +1,5 @@
 import {
-  SecondaryButtonSemantics,
+  secondaryButtonSemantics,
   dangerButtonSemantics,
   dangerSecondaryButtonSemantics,
   outlineButtonSemantics,
@@ -15,24 +15,25 @@ import { surfaceSemantics } from './semantics/semantics.surface';
 import { switchSemantics } from './semantics/semantics.switch';
 import { textSemantics } from './semantics/semantics.text';
 import { textAreaSemantics } from './semantics/semantics.textarea';
+import { toastSemantics } from './semantics/semantics.toast';
 import { tooltipSemantics } from './semantics/semantics.tooltip';
 
 export const colorSemantics = {
-  'button-primary': primaryButtonSemantics,
-  'button-secondary': SecondaryButtonSemantics,
-  'button-tertiary': tertiaryButtonSemantics,
-  'button-outline': outlineButtonSemantics,
-  'button-danger': dangerButtonSemantics,
-  'button-danger-secondary': dangerSecondaryButtonSemantics,
-  dropdown: dropdownSemantics,
+  'components-button-primary': primaryButtonSemantics,
+  'components-button-secondary': secondaryButtonSemantics,
+  'components-button-tertiary': tertiaryButtonSemantics,
+  'components-button-outline': outlineButtonSemantics,
+  'components-button-danger': dangerButtonSemantics,
+  'components-button-danger-secondary': dangerSecondaryButtonSemantics,
+  'components-dropdown': dropdownSemantics,
   icon: iconSemantics,
-  'input-field': inputSemantics,
-  'radio-button': radioSemantics,
+  'components-input-field': inputSemantics,
+  'components-radio-button': radioSemantics,
   surface: surfaceSemantics,
   stroke: strokeSemantics,
   text: textSemantics,
-  textarea: textAreaSemantics,
-  toast: {},
-  'toggle-switch': switchSemantics,
-  tooltip: tooltipSemantics,
+  'components-textarea': textAreaSemantics,
+  'components-toast': toastSemantics,
+  'components-toggle-switch': switchSemantics,
+  'components-tooltip': tooltipSemantics,
 };
