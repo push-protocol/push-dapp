@@ -1,5 +1,5 @@
-import { colorBrands } from '../colors.brands';
-import { colorPrimitives } from '../colors.primitives';
+import { colorBrands } from '../colors/colors.brands';
+import { colorPrimitives } from '../colors/colors.primitives';
 import { iconSemantics } from './semantics.icon';
 import { strokeSemantics } from './semantics.stroke';
 import { surfaceSemantics } from './semantics.surface';

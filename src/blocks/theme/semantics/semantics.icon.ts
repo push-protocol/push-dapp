@@ -1,4 +1,4 @@
-import { colorBrands } from '../colors.brands';
+import { colorBrands } from '../colors/colors.brands';
 
 export const iconSemantics = {
   primary: { light: colorBrands['neutral-900'], dark: colorBrands['neutral-400'] },

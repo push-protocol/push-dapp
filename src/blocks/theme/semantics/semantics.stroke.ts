@@ -1,4 +1,4 @@
-import { colorBrands } from '../colors.brands';
+import { colorBrands } from '../colors/colors.brands';
 
 export const strokeSemantics = {
   primary: { light: colorBrands['neutral-100'], dark: colorBrands['neutral-900'] },

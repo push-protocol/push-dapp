@@ -4,6 +4,8 @@ export * from './colors/colors.semantics';
 
 export * from './device/theme.device';
 
+export * from './Theme';
+
 export * from './variables/variables.blur';
 export * from './variables/variables.borderRadius';
 export * from './variables/variables.borderSize';

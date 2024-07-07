@@ -1,5 +1,5 @@
-import { colorBrands } from '../colors.brands';
-import { colorPrimitives } from '../colors.primitives';
+import { colorBrands } from '../colors/colors.brands';
+import { colorPrimitives } from '../colors/colors.primitives';
 
 export const surfaceSemantics = {
   primary: { light: colorPrimitives['white-100'], dark: colorBrands['neutral-900'] },

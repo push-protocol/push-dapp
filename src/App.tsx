@@ -52,6 +52,7 @@ import SpaceContextProvider from 'contexts/SpaceContext';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 import { blocksColors } from 'blocks';
 import { textVariants } from 'blocks/text/Text.constants';
+import { getBlocksGlobalStyles } from 'blocks';
 
 dotenv.config();
 
@@ -77,6 +78,8 @@ const GlobalStyle = createGlobalStyle`
     padding-right: 0 !important;
   }
   :root{
+
+    /* deprecated */
     /* Spaces */
     --s0: 0px;
     --s1: 4px;
@@ -96,6 +99,7 @@ const GlobalStyle = createGlobalStyle`
     --s15: 60px;
     // TODO: Add more as needed
 
+    /* deprecated */
     /* Border Radius */
     --r0: 0px;
     --r1: 4px;
@@ -109,28 +113,18 @@ const GlobalStyle = createGlobalStyle`
     --r9: 36px;
     --r10: 40px;
     // TODO: Add more as needed
-
-    /* Font Family */
-    --font-family: 'Strawford', 'Source Sans Pro', Helvetica, sans-serif;
-
+    
+    /* deprecated */
     /* Colors */
     ${Object.entries(blocksColors)
       .map(([colorName, code]) => `--${colorName}: ${code};`)
       .join('')}
-  
-    /* Typography Variants */
-    ${Object.entries(textVariants)
-      .map(
-        ([fontVariant, value]) => `
-            --${fontVariant}-font-size: ${value.fontSize};
-            --${fontVariant}-line-height: ${value.lineHeight};
-            --${fontVariant}-font-weight: ${value.fontWeight};
-            ${value.fontStyle ? `--${fontVariant}-font-style: ${value.fontStyle};` : ''}
-            ${value.letterSpacing ? `--${fontVariant}-letter-spacing: ${value.letterSpacing};` : ''}
-            ${value.textTransform ? `--${fontVariant}-text-transform: ${value.textTransform};` : ''}
-          `
-      )
-      .join('')}
+
+    /* Font Family */
+    --font-family: 'Strawford', 'Source Sans Pro', Helvetica, sans-serif;
+
+    /* New blocks theme css variables*/
+    ${(props) => getBlocksGlobalStyles(props.theme.blocksTheme)}
   }
 
 `;

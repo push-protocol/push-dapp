@@ -1,11 +1,11 @@
-import { colorBrands } from '../colors.brands';
-import { colorPrimitives } from '../colors.primitives';
+import { colorBrands } from '../colors/colors.brands';
+import { colorPrimitives } from '../colors/colors.primitives';
 import { iconSemantics } from './semantics.icon';
 import { strokeSemantics } from './semantics.stroke';
 import { surfaceSemantics } from './semantics.surface';
 import { textSemantics } from './semantics.text';
 
-export const dropdownSemantics = {
+export const textAreaSemantics = {
   'background-default': { light: colorPrimitives['white-100'], dark: colorBrands['neutral-800'] },
   'background-hover': { light: colorPrimitives['white-100'], dark: colorBrands['neutral-800'] },
   'background-pressed': { light: colorPrimitives['white-100'], dark: colorBrands['neutral-800'] },

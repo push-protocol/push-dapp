@@ -11,9 +11,10 @@ export { Text, type TextProps } from './text';
 export { Tooltip, type TooltipProps } from './tooltip';
 
 export * from './Blocks.colors';
-export * from './Blocks.constants';
 export * from './Blocks.types';
 export * from './Blocks.utils';
 
 export * from './icons';
 export * from './illustrations';
+
+export * from './theme';
