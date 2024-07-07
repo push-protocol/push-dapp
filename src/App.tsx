@@ -51,7 +51,6 @@ import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
 import SpaceContextProvider from 'contexts/SpaceContext';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 import { blocksColors } from 'blocks';
-import { textVariants } from 'blocks/text/Text.constants';
 import { getBlocksGlobalStyles } from 'blocks';
 
 dotenv.config();
