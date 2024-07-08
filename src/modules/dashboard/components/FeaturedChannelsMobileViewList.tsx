@@ -3,8 +3,8 @@ import { FC } from 'react';
 
 //Third party libraries
 import { css } from 'styled-components';
-import useEmblaCarousel from 'embla-carousel-react'
-import { EmblaOptionsType } from 'embla-carousel'
+import useEmblaCarousel from 'embla-carousel-react';
+import { EmblaOptionsType } from 'embla-carousel';
 
 // Components
 import { Box, HoverableSVG, Text, Link, NextIconSlider, PrevIconSlider } from 'blocks';
@@ -16,32 +16,24 @@ import { useFeaturedChannelsCarouselButtons } from '../hooks/useFeaturedChannels
 // Internal Configs
 import { FeaturedChannelDetailsProps } from '../configs';
 
-
 export type FeaturedChannelsMobileViewListProps = {
   featuredChannelsList: FeaturedChannelDetailsProps[][];
 };
 
 const FeaturedChannelsMobileViewList: FC<FeaturedChannelsMobileViewListProps> = ({ featuredChannelsList }) => {
-
   const CarouselOptions: EmblaOptionsType = {
     slidesToScroll: 'auto',
-    align: 'start'
-  }
+    align: 'start',
+  };
 
-  const [emblaRef, emblaApi] = useEmblaCarousel(CarouselOptions)
+  const [emblaRef, emblaApi] = useEmblaCarousel(CarouselOptions);
 
   //Initiating Carousel Buttons
-  const {
-    prevBtnDisabled,
-    nextBtnDisabled,
-    onPrevButtonClick,
-    onNextButtonClick
-  } = useFeaturedChannelsCarouselButtons(emblaApi)
-
+  const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } =
+    useFeaturedChannelsCarouselButtons(emblaApi);
 
   return (
     <>
-
       {/* Featured Channels Header with Buttons */}
       <Box
         display="flex"
@@ -95,18 +87,37 @@ const FeaturedChannelsMobileViewList: FC<FeaturedChannelsMobileViewListProps> = 
         </Box>
       </Box>
 
-
       {/* Featured Channels Carousel */}
-      <Box width='20rem' css={css` overflow: hidden;`} ref={emblaRef}>
-        <Box gap="s6" display='flex' css={css`backface-visibility: hidden; touch-action: pan-y pinch-zoom;`}>
+      <Box
+        width="20rem"
+        css={css`
+          overflow: hidden;
+        `}
+        ref={emblaRef}
+      >
+        <Box
+          gap="s6"
+          display="flex"
+          css={css`
+            backface-visibility: hidden;
+            touch-action: pan-y pinch-zoom;
+          `}
+        >
           {featuredChannelsList.map((channelListArray) => {
             return (
-              <Box css={css`flex: 0 0 100%`} gap='s6' display='flex' flexDirection='column'>
+              <Box
+                css={css`
+                  flex: 0 0 100%;
+                `}
+                gap="s6"
+                display="flex"
+                flexDirection="column"
+              >
                 {channelListArray.map((channel: FeaturedChannelDetailsProps) => (
                   <FeaturedChannelsListItem channelAddress={channel.channel} />
                 ))}
               </Box>
-            )
+            );
           })}
         </Box>
       </Box>

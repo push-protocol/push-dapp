@@ -19,41 +19,51 @@ export type FeaturedChannelsListProps = {
 };
 
 const FeaturedChannelsList: FC<FeaturedChannelsListProps> = ({ featuredChannelsList }) => {
-
   const CarouselOptions: EmblaOptionsType = {
     slidesToScroll: 3,
-    align: 'start'
+    align: 'start',
   };
 
   const [emblaRef, emblaApi] = useEmblaCarousel(CarouselOptions);
 
-  const {
-    prevBtnDisabled,
-    nextBtnDisabled,
-    onPrevButtonClick,
-    onNextButtonClick
-  } = useFeaturedChannelsCarouselButtons(emblaApi);
+  const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } =
+    useFeaturedChannelsCarouselButtons(emblaApi);
 
   return (
     <>
-      <Box display="flex" justifyContent="space-between" flexDirection={{ tb: 'column' }} gap={{ tb: 's3' }}>
-        <Text variant="h4-bold" color={{ light: 'black', dark: 'white' }}>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        flexDirection={{ tb: 'column' }}
+        gap={{ tb: 's3' }}
+      >
+        <Text
+          variant="h4-bold"
+          color={{ light: 'black', dark: 'white' }}
+        >
           Featured Notification Channels
         </Text>
 
-        <Box display="flex" flexDirection="row" alignItems="center" gap="s4">
+        <Box
+          display="flex"
+          flexDirection="row"
+          alignItems="center"
+          gap="s4"
+        >
           <Link
             to="/channels"
             textProps={{
               variant: 'h5-semibold',
-              color: { light: 'black', dark: 'white' }
+              color: { light: 'black', dark: 'white' },
             }}
           >
             View All
           </Link>
 
-          <Box display="flex" flexDirection="row">
-
+          <Box
+            display="flex"
+            flexDirection="row"
+          >
             {/* Previous Button  */}
             <HoverableSVG
               onClick={onPrevButtonClick}

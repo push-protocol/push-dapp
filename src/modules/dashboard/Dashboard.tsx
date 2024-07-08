@@ -41,4 +41,3 @@ const Dashboard: FC<DashboardProps> = () => {
 };
 
 export { Dashboard };
-// colors > brand tokens > semantics (for individual components)

@@ -20,7 +20,6 @@ export const useFeaturedChannelsCarouselButtons = (
   }, [emblaApi]);
 
   const onNextButtonClick = useCallback(() => {
-    console.log('emblaApi', emblaApi);
     if (!emblaApi) return;
     emblaApi.scrollNext();
   }, [emblaApi]);
@@ -41,6 +40,6 @@ export const useFeaturedChannelsCarouselButtons = (
     prevBtnDisabled,
     nextBtnDisabled,
     onPrevButtonClick,
-    onNextButtonClick
+    onNextButtonClick,
   };
 };
