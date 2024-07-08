@@ -32,7 +32,7 @@ const ActivityButton: FC<ActivityButtonProps> = ({
   }
 
   return (
-    // verify button
+    // Verify button
     <ActivityVerificationButton
       activityType={activityType}
       userId={userId}

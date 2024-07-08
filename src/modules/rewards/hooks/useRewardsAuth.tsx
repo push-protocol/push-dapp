@@ -17,7 +17,7 @@ import { useGetUserRewardsDetails } from 'queries/hooks/rewards';
 import { AxiosError } from 'axios';
 import { UserStoreType } from 'types';
 
-const handleRewardsAuth = () => {
+const useRewardsAuth = () => {
   const { account, isWalletConnected, connect } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
@@ -128,4 +128,4 @@ const handleRewardsAuth = () => {
   };
 };
 
-export { handleRewardsAuth };
+export { useRewardsAuth };

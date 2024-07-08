@@ -63,16 +63,14 @@ const useVerifyDiscord = ({
 
     const authURL = `https://discord.com/api/oauth2/authorize?client_id=${clientID}&redirect_uri=${redirectURI}&response_type=token&scope=${scope}`;
 
-    const newWindow = window.open(authURL, "_blank");
+    const newWindow = window.open(authURL, '_blank');
 
     const checkAuth = setInterval(() => {
       if (newWindow?.closed) {
         clearInterval(checkAuth);
-        handleVerify(userPushSDKInstance)
+        handleVerify(userPushSDKInstance);
       }
-
-    }, 1000)
-
+    }, 1000);
   };
 
   const handleVerify = async (userPushSDKInstance: PushAPI) => {
@@ -96,9 +94,9 @@ const useVerifyDiscord = ({
         return;
       }
 
-      localStorage.removeItem('access_token')
-      localStorage.removeItem('username')
-      localStorage.removeItem('expires_in')
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('username');
+      localStorage.removeItem('expires_in');
 
       claimRewardsActivity(
         {

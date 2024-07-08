@@ -1,21 +1,13 @@
-// React and other libraries
 import { FC } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 
-//Hooks
-import { Activity } from 'queries';
-import { useAccount } from 'hooks';
-import { useGetRewardsActivities, useGetUserRewardsDetails } from 'queries/hooks/rewards';
-
-//Components
-import { RewardsActivitiesListItem } from './RewardsActivitiesListItem';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-
-//Helpers
-import { walletToCAIP10 } from 'helpers/w2w';
-
-//Components
 import { Box } from 'blocks';
+import { useAccount } from 'hooks';
+import { walletToCAIP10 } from 'helpers/w2w';
+import { Activity, useGetRewardsActivities, useGetUserRewardsDetails } from 'queries';
+
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { RewardsActivitiesListItem } from './RewardsActivitiesListItem';
 
 export type RewardActivitiesProps = {};
 
@@ -32,7 +24,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
 
   // Getting user Id by wallet address
   const caip10WalletAddress = walletToCAIP10({ account });
-  const { data: userDetails, isLoading: isLoadingUserDetails } = useGetUserRewardsDetails({
+  const { data: userDetails } = useGetUserRewardsDetails({
     caip10WalletAddress: caip10WalletAddress,
   });
 

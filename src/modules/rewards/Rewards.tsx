@@ -9,8 +9,8 @@ import { useSearchParams } from 'react-router-dom';
 //Hooks
 import { useRewardsTabs } from './hooks/useRewardsTabs';
 import { useDiscordSession } from './hooks/useDiscordSession';
-import { handleRewardsAuth } from './hooks/handleRewardsAuth';
-import { handleCreateRewardsUser } from './hooks/handleCreateUser';
+import { useRewardsAuth } from './hooks/useRewardsAuth';
+import { useCreateRewardsUser } from './hooks/useCreateRewardsUser';
 
 //Types
 import { UserStoreType } from 'types';
@@ -37,20 +37,9 @@ const Rewards: FC<RewardsProps> = () => {
 
   const { activeTab, handleSetActiveTab } = useRewardsTabs();
 
-  const { showConnectModal } = handleRewardsAuth();
-  handleCreateRewardsUser();
+  const { showConnectModal } = useRewardsAuth();
 
-  // const userMessage = 'Error decrypting PGP private key ...swiching to Guest mode';
-
-  // reject signature
-  // const hasError =
-  //   userPushSDKInstance?.errors.some((error) => error.type === 'ERROR' && error.message === userMessage);
-
-  // useEffect(() => {
-  //   if (hasError && isWalletConnected) {
-  //     //   setShowConnectModal(false);
-  //   }
-  // }, [userPushSDKInstance, showConnectModal, hasError]);
+  useCreateRewardsUser();
 
   const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
 

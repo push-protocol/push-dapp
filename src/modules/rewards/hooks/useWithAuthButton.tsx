@@ -6,8 +6,8 @@ import { useSelector } from 'react-redux';
 
 //Hooks
 import { useAccount } from 'hooks';
-import { handleRewardsAuth } from './handleRewardsAuth';
-import { handleCreateRewardsUser } from './handleCreateUser';
+import { useRewardsAuth } from './useRewardsAuth';
+import { useCreateRewardsUser } from './useCreateRewardsUser';
 
 // types
 import { UserStoreType } from 'types';
@@ -22,8 +22,8 @@ export const useAuthWithButton = ({ onSuccess }: { onSuccess: () => void }) => {
   const { isWalletConnected } = useAccount();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const { showConnectModal, connectWallet, handleVerify, userDetails } = handleRewardsAuth();
-  const { isSuccess, isUserProfileUnlocked } = handleCreateRewardsUser();
+  const { showConnectModal, connectWallet, handleVerify, userDetails } = useRewardsAuth();
+  const { isSuccess, isUserProfileUnlocked } = useCreateRewardsUser();
 
   const showAuthModal = async () => {
     setShowAuth(true);

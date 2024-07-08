@@ -7,7 +7,7 @@ import { css } from 'styled-components';
 //hooks
 import { useAccount, useCopy } from 'hooks';
 import { useGetUserRewardsDetails } from 'queries';
-import { handleRewardsAuth } from '../hooks/handleRewardsAuth';
+import { useRewardsAuth } from '../hooks/useRewardsAuth';
 
 //helpers
 import { walletToCAIP10 } from 'helpers/w2w';
@@ -29,7 +29,7 @@ const ReferralSection: FC<ReferralSectionProps> = () => {
     caip10WalletAddress: caip10WalletAddress,
   });
 
-  const { status } = handleRewardsAuth();
+  const { status } = useRewardsAuth();
 
   const isLoading = isUserLoading;
 

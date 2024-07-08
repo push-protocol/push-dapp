@@ -11,24 +11,29 @@ import { walletToCAIP10 } from 'helpers/w2w';
 import { AppContext } from 'contexts/AppContext';
 
 // hooks
-import { useCreateRewardsUser, useGetUserRewardsDetails } from 'queries/hooks';
+import { useCreateRewardsUser as useCreateRewardsUserQuery, useGetUserRewardsDetails } from 'queries/hooks';
 
 // types
 import { UserStoreType } from 'types';
 import { AppContextType } from 'types/context';
 
-const handleCreateRewardsUser = () => {
-  const { account, isWalletConnected } = useAccount();
+const useCreateRewardsUser = () => {
+  const { account } = useAccount();
+
   const caip10WalletAddress = walletToCAIP10({ account });
+
   const [isSuccess, setIsSuccess] = useState(false);
+
+  // @ts-expect-error
   const { isUserProfileUnlocked } = useContext<AppContextType>(AppContext);
+
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
   const { status, refetch } = useGetUserRewardsDetails({
     caip10WalletAddress: caip10WalletAddress,
   });
 
-  const { mutate: createUser } = useCreateRewardsUser();
+  const { mutate: createUser } = useCreateRewardsUserQuery();
 
   const handleCreateUser = async () => {
     // get ref, send with user wallet. if ref is null, send only user wallet
@@ -66,7 +71,8 @@ const handleCreateRewardsUser = () => {
       handleCreateUser();
     }
   }, [isUserProfileUnlocked, userPushSDKInstance, status]);
+
   return { handleCreateUser, isSuccess, isUserProfileUnlocked };
 };
 
-export { handleCreateRewardsUser };
+export { useCreateRewardsUser };

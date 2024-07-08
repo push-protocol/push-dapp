@@ -37,8 +37,6 @@ export const ActivityVerificationButton = ({
   const { isWalletConnected } = useAccount();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  // const { status, unlockProfileRejected } = handleRewardsAuth();
-
   const { handleTwitterVerification } = useVerifyTwitter({ userId, activityTypeId, refetchActivity, setErrorMessage });
 
   const { handleDiscordVerification } = useVerifyDiscord({
@@ -69,17 +67,6 @@ export const ActivityVerificationButton = ({
   const { isAuthenticated, authButton, showConnectModal } = useAuthWithButton({
     onSuccess: () => activityData?.action(),
   });
-
-  // if unlock profile is achieved
-  // if (
-  //   !isAuthenticated &&
-  //   isWalletConnected &&
-  //   unlockProfileRejected &&
-  //   userPushSDKInstance?.readmode() &&
-  //   status !== 'success'
-  // ) {
-  //   return <div>Unlock Profile</div>;
-  // }
 
   if (userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal) {
     return (

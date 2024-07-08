@@ -1,10 +1,7 @@
-// React and other libraries
 import { FC, useState } from 'react';
 
-//Hooks
 import { Activity, useGetRewardsActivity } from 'queries';
 
-//Components
 import { Box, ErrorFilled, InfoFilled, Lozenge, RewardsBell, Skeleton, Text } from 'blocks';
 import { ActivityButton } from './ActivityButton';
 import { RewardsActivityIcon } from './RewardsActivityIcon';

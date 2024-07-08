@@ -14,12 +14,12 @@ import { useClaimRewardsActivity } from 'queries';
 // types
 import { UserStoreType } from 'types';
 
-interface UseTwitterVerifyParams {
+export type UseTwitterVerifyParams = {
   userId: string;
   activityTypeId: string;
   setErrorMessage: (errorMessage: string) => void;
   refetchActivity: () => void;
-}
+};
 
 const useVerifyTwitter = ({ userId, activityTypeId, setErrorMessage, refetchActivity }: UseTwitterVerifyParams) => {
   const [verifying, setVerifying] = useState(false);
