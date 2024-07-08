@@ -26,34 +26,39 @@ const DiscordVerification = () => {
   return (
     <Box
       display="flex"
-      padding="s6"
-      flexDirection="column"
       alignItems="center"
-      width="360px"
-      gap="s3"
-      backgroundColor="white"
-      borderRadius="r6"
+      height="calc(100vh - 140px)"
     >
-      <Discord
-        width={48}
-        height={48}
-      />
-
       <Box
         display="flex"
+        padding="s6"
         flexDirection="column"
         alignItems="center"
+        width="360px"
+        gap="s3"
+        backgroundColor="white"
+        borderRadius="r6"
       >
-        <Text variant="h4-semibold">Complete Verification</Text>
-        <Text
-          variant="bs-regular"
-          color="gray-500"
+        <Discord
+          width={48}
+          height={48}
+        />
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
         >
-          Continue to complete the verification process.
-        </Text>
-      </Box>
+          <Text variant="h4-semibold">Complete Verification</Text>
+          <Text
+            variant="bs-regular"
+            color="gray-500"
+          >
+            Continue to complete the verification process.
+          </Text>
+        </Box>
 
-      <Button onClick={handleContinueVerification}>Continue</Button>
+        <Button onClick={handleContinueVerification}>Continue</Button>
+      </Box>
     </Box>
   );
 };
