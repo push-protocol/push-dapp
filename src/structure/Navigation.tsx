@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled, { css, useTheme } from 'styled-components';
 
 // Internal Compoonents
@@ -23,6 +23,8 @@ import GLOBALS from 'config/Globals';
 import navigationList from 'config/NavigationList';
 import { appConfig } from 'config/index.js';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { Box, PlusCircle, Text } from 'blocks';
+import Curve from 'blocks/icons/components/Curve';
 
 // Create Header
 function Navigation() {
@@ -43,6 +45,7 @@ function Navigation() {
 
   const theme = useTheme();
   const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { canSend } = useSelector((state: any) => {
@@ -430,6 +433,7 @@ function Navigation() {
       const section = items[key];
       const data = section.data;
       const uid = section.data.uid;
+      const isChannelPresent = channelDetails !== 'unfetched' && channelDetails != null;
       // if(uid === 2 ){
       //   if(section.opened)
       //   dispatch(setCommunicateOpen(true))
@@ -557,6 +561,33 @@ function Navigation() {
                   active={checkIfNavigationItemIsActive(section)}
                   bg={returnNavigationBgColor(checkIfNavigationItemIsActive(section))}
                 />
+                {isChannelPresent && data.name === channelDetails.name && (
+                  <Box
+                    display="flex"
+                    alignSelf="center"
+                    padding="s2 s0"
+                  >
+                    <Curve
+                      color="gray-300"
+                      size={18}
+                    />
+                    <Box
+                      display="flex"
+                      gap="s1"
+                      alignItems="center"
+                      cursor="pointer"
+                      onClick={() => navigate('/addNewChain')}
+                    >
+                      <PlusCircle size={32} />
+                      <Text
+                        variant="bm-semibold"
+                        color="gray-800"
+                      >
+                        Add New Chain
+                      </Text>
+                    </Box>
+                  </Box>
+                )}
               </SectionInnerGroupContainer>
 
               {/* { 

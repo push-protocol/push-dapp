@@ -7,10 +7,10 @@ import { Box, Text } from 'blocks';
 type StepperProps = {
   steps: Array<{ label: string }>;
   activeStepIndex: number;
-  setActiveStep: (stepIndex: number) => void;
+  setActiveStepIndex: (stepIndex: number) => void;
 };
 
-const Stepper: FC<StepperProps> = ({ steps, setActiveStep, activeStepIndex }) => {
+const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, activeStepIndex }) => {
   return (
     <Box
       display="flex"
@@ -24,7 +24,7 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStep, activeStepIndex }) =>
           width="180px"
           cursor="pointer"
           color={activeStepIndex == index ? 'pink-500' : 'gray-500'}
-          onClick={() => setActiveStep(1)}
+          onClick={() => setActiveStepIndex(index)}
         >
           <Text
             textAlign="center"
