@@ -51,7 +51,7 @@ import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
 import SpaceContextProvider from 'contexts/SpaceContext';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 import { blocksColors } from 'blocks';
-import { getBlocksGlobalStyles } from 'blocks';
+import { getBlocksCSSVariables } from 'blocks';
 
 dotenv.config();
 
@@ -123,7 +123,7 @@ const GlobalStyle = createGlobalStyle`
     --font-family: 'Strawford', 'Source Sans Pro', Helvetica, sans-serif;
 
     /* New blocks theme css variables*/
-    ${(props) => getBlocksGlobalStyles(props.theme.blocksTheme)}
+    ${(props) => getBlocksCSSVariables(props.theme.blocksTheme)}
   }
 
 `;
