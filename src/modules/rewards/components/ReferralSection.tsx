@@ -29,7 +29,7 @@ const ReferralSection: FC<ReferralSectionProps> = () => {
     caip10WalletAddress: caip10WalletAddress,
   });
 
-  const { status } = useRewardsAuth();
+  const { status, connectUserWallet } = useRewardsAuth();
 
   const isLoading = isUserLoading;
 
@@ -116,7 +116,12 @@ const ReferralSection: FC<ReferralSectionProps> = () => {
         <Skeleton isLoading={isLoading}>
           {isWalletConnected && status == 'error' && (
             <Box>
-              <Button size="small">Unlock Profile</Button>
+              <Button
+                size="small"
+                onClick={connectUserWallet}
+              >
+                Unlock Profile
+              </Button>
             </Box>
           )}
         </Skeleton>
