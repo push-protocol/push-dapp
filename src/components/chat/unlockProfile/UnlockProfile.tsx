@@ -42,9 +42,9 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
   const { type } = InnerComponentProps;
 
   const theme = useTheme();
-  const { handleConnectWallet, connectWallet } = useContext(AppContext);
+  const { handleConnectWallet, initializePushSDK } = useContext(AppContext);
 
-  const { account, wallet } = useAccount();
+  const { account, wallet, connect } = useAccount();
 
   // Ensures if profile is stored then true is returned else false
   const [rememberMe, setRememberMe] = useState(false);
@@ -82,6 +82,8 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
       const decryptedPGPKeys = retrieveUserPGPKeyFromStorage(account);
       if (decryptedPGPKeys) {
         setIsLoading(true);
+        // If wallet is connected and PGP keys are already present.
+        initializePushSDK(wallet);
       }
     }
 
@@ -193,7 +195,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
                   activeStatus={activeStatus.status}
                   status={PROFILESTATE.CONNECT_WALLET}
                   disabled={activeStatus.status !== PROFILESTATE.CONNECT_WALLET && true}
-                  onClick={() => connectWallet()}
+                  onClick={() => connect()}
                 >
                   Connect Wallet
                 </DefaultButton>

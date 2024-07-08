@@ -129,7 +129,6 @@ function Navigation() {
       third: thirdList,
       navigation: navList,
     };
-
     setNavigationSetup(finalList);
   }, []);
 
@@ -200,6 +199,7 @@ function Navigation() {
   useEffect(() => {
     if (navigationSetup) {
       // loop and find the item in question
+
       Object.entries(navigationSetup).forEach(([key, value]) => {
         if (
           key === 'primary' ||
@@ -340,6 +340,17 @@ function Navigation() {
     return transformedMenuList;
   };
 
+  //checks if the navigation item is active
+  const checkIfNavigationItemIsActive = (item) => {
+    if (location.pathname === item.data.href && item.active) return true;
+    return false;
+  };
+
+  //returns navigationBgColor color
+  const returnNavigationBgColor = (isActive: boolean) => {
+    return isActive ? theme.nav.activeColor : 'transparent';
+  };
+
   const returnNavList = (lists, count) => {
     let transformedList = [];
 
@@ -417,7 +428,6 @@ function Navigation() {
     }
     let rendered = Object.keys(items).map(function (key) {
       const section = items[key];
-      // console.log(section)
       const data = section.data;
       const uid = section.data.uid;
       // if(uid === 2 ){
@@ -466,8 +476,8 @@ function Navigation() {
                   item={section}
                   data={data}
                   sectionID={sectionID}
-                  active={section.active}
-                  bg={!section.active ? 'transparent' : theme.nav.activeColor}
+                  active={checkIfNavigationItemIsActive(section)}
+                  bg={returnNavigationBgColor(checkIfNavigationItemIsActive(section))}
                 />
               </SectionInnerGroupContainer>
 
@@ -544,8 +554,8 @@ function Navigation() {
                   item={section}
                   data={data}
                   sectionID={sectionID}
-                  active={section.active}
-                  bg={!section.active ? 'transparent' : theme.nav.activeColor}
+                  active={checkIfNavigationItemIsActive(section)}
+                  bg={returnNavigationBgColor(checkIfNavigationItemIsActive(section))}
                 />
               </SectionInnerGroupContainer>
 
@@ -628,8 +638,8 @@ function Navigation() {
                   item={item}
                   data={data}
                   sectionID={sectionID}
-                  active={item.active}
-                  bg={!item.active ? 'transparent' : theme.nav.activeColor}
+                  active={checkIfNavigationItemIsActive(item)}
+                  bg={returnNavigationBgColor(checkIfNavigationItemIsActive(item))}
                 />
               </SectionInnerItemContainer>
             </SectionItem>

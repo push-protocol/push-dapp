@@ -50,8 +50,8 @@ import { darkTheme, lightTheme } from 'config/spaceTheme';
 import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
 import SpaceContextProvider from 'contexts/SpaceContext';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
-import { blocksColors } from 'blocks';
-import { getBlocksCSSVariables } from 'blocks';
+import { blocksColors, getBlocksCSSVariables } from 'blocks';
+import APP_PATHS from 'config/AppPaths';
 
 dotenv.config();
 
@@ -320,7 +320,8 @@ export default function App() {
   // const { spaceUI } = useSpaceComponents();
 
   const location = useLocation();
-  const isSnapPage = location?.pathname.includes('/snap');
+  const isHeaderHidden = location?.pathname.includes(APP_PATHS.PointsVault);
+  const isSidebarHidden = location?.pathname.includes(APP_PATHS.PointsVault) || location?.pathname.includes('/snap');
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
@@ -372,15 +373,17 @@ export default function App() {
                   }}
                 />
 
-                <HeaderContainer>
-                  <Header
-                    isDarkMode={darkMode}
-                    darkModeToggle={toggleDarkMode}
-                  />
-                </HeaderContainer>
+                {!isHeaderHidden && (
+                  <HeaderContainer>
+                    <Header
+                      isDarkMode={darkMode}
+                      darkModeToggle={toggleDarkMode}
+                    />
+                  </HeaderContainer>
+                )}
 
                 <ParentContainer headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
-                  {!isSnapPage && (
+                  {!isSidebarHidden && (
                     <LeftBarContainer
                       leftBarWidth={
                         sidebarCollapsed
@@ -394,7 +397,9 @@ export default function App() {
 
                   <ContentContainer
                     leftBarWidth={
-                      sidebarCollapsed
+                      isSidebarHidden
+                        ? GLOBALS.CONSTANTS.NO_LEFT_BAR_WIDTH
+                        : sidebarCollapsed
                         ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH
                         : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH
                     }

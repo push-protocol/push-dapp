@@ -40,7 +40,7 @@ const FeaturedChannels: FC<FeaturedChannelsProps> = () => {
 
   return (
     <Box
-      borderRadius="24px"
+      borderRadius="r6"
       padding={{ ml: 's6 s4', initial: 's6' }}
       display="flex"
       flexDirection="column"
@@ -105,7 +105,6 @@ const FeaturedChannels: FC<FeaturedChannelsProps> = () => {
         <FeaturedChannelsList
           listRef={listRef}
           featuredChannelsList={featureChannelsForCurrrentEnv}
-          projectedItemWidth={(listRef?.current?.clientWidth! / itemsPerPage) as number}
         />
       )}
     </Box>
