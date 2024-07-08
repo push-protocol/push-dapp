@@ -31,7 +31,7 @@ const iconColor: TextInputStyles = {
   error: { light: 'red-700', dark: 'red-500' },
   success: { light: 'green-600', dark: 'green-400' },
   disabled: { light: 'gray-400', dark: 'gray-700' },
-  default: { light: 'gray-300', dark: 'gray-700' },
+  default: { light: 'gray-300', dark: 'gray-600' },
 };
 
 export const textInputColor = {
