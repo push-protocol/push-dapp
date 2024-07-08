@@ -58,7 +58,7 @@ export const useAuthWithButton = ({ onSuccess }: { onSuccess: () => void }) => {
           size="small"
           onClick={showAuthModal}
         >
-          Verifyyy
+          Verify
         </Button>
       </>
     ),

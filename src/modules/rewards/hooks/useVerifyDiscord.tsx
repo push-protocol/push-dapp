@@ -14,6 +14,9 @@ import { generateVerificationProof } from '../utils/generateVerificationProof';
 // Types
 import { UserStoreType } from 'types';
 
+//Config
+import APP_PATHS from 'config/AppPaths';
+
 type UseDiscordActivityVerificationProps = {
   userId: string;
   activityTypeId: string;
@@ -27,7 +30,7 @@ const useVerifyDiscord = ({
   refetchActivity,
   setErrorMessage,
 }: UseDiscordActivityVerificationProps) => {
-  const token = sessionStorage.getItem('access_token');
+  const token = localStorage.getItem('access_token');
 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
@@ -48,29 +51,38 @@ const useVerifyDiscord = ({
 
   const handleDiscordVerification = () => {
     setErrorMessage('');
-    if (token) {
-      handleVerify(userPushSDKInstance);
-    } else {
-      localStorage.setItem('discordVerificationTriggered', 'true');
-      handleConnect();
-    }
+    localStorage.setItem('discordVerificationTriggered', 'true');
+    handleConnect();
   };
 
   const handleConnect = () => {
     const clientID = appConfig.discord_client_id;
-    const redirectURI = window.location.href; // it will redirect the user to the current page
+    const baseURL = window.location.origin;
+    const redirectURI = `${baseURL}${APP_PATHS.DiscordVerification}`;
     const scope = 'identify email guilds.members.read';
 
     const authURL = `https://discord.com/api/oauth2/authorize?client_id=${clientID}&redirect_uri=${redirectURI}&response_type=token&scope=${scope}`;
 
-    window.location.href = authURL;
+    const newWindow = window.open(authURL, "_blank");
+
+    const checkAuth = setInterval(() => {
+      if (newWindow?.closed) {
+        clearInterval(checkAuth);
+        handleVerify(userPushSDKInstance)
+      }
+
+    }, 1000)
+
   };
 
   const handleVerify = async (userPushSDKInstance: PushAPI) => {
-    if (userDiscordDetails && token) {
+    const token = localStorage.getItem('access_token');
+    const username = localStorage.getItem('username');
+
+    if (username && token) {
       setVerifying(true);
       const data = {
-        discord: userDiscordDetails.global_name,
+        discord: username,
         discord_token: token,
       };
 
@@ -83,6 +95,10 @@ const useVerifyDiscord = ({
         }
         return;
       }
+
+      localStorage.removeItem('access_token')
+      localStorage.removeItem('username')
+      localStorage.removeItem('expires_in')
 
       claimRewardsActivity(
         {
