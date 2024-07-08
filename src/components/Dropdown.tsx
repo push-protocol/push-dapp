@@ -57,7 +57,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
   };
 
   return (
-    <>
+    <Div>
       {dropdownValues.map((dropdownValue) =>
         dropdownValue.id === 'walletAddress' ? (
           <ItemH
@@ -188,11 +188,16 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
           </DropdownItemContainer>
         )
       )}
-    </>
+    </Div>
   );
 }
 
 // css styles
+const Div = styled.div`
+  span {
+    white-space: nowrap;
+  }
+`;
 const SpanAddress = styled(Span)`
   margin: 11px 11px 11px 2px;
   font-weight: 400;
@@ -215,11 +220,10 @@ const DesktopAddress = styled(SpanAddress)`
 `;
 
 const DropdownItemContainer = styled(ItemH)`
-  width: 12.5rem;
   justify-content: flex-start;
   flex-wrap: nowrap;
   margin: 1px 0;
-  padding: 8px;
+  padding: 4px 8px;
   border-radius: 12px;
   cursor: pointer;
   text-align: left;

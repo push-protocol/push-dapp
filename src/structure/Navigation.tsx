@@ -746,11 +746,11 @@ const PrimaryInner = styled(Primary)`
 
 const TextSpan = styled(Span)`
   text-transform: uppercase;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 10px;
   margin-left: 15px;
   color: #8c93a0;
-  letter-spacing: normal;
+  letter-spacing: 1.6px;
 `;
 
 const InheritedSection = styled(Item)`

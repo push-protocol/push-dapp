@@ -152,7 +152,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
                 <Span
                   flex="1"
                   cursor="pointer"
-                  weight={!active ? '300' : '600'}
+                  weight={!active ? '600' : '700'}
                   spacing="normal"
                   margin="0 4px"
                   color={theme.nav.color}

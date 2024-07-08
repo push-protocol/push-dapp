@@ -35,7 +35,7 @@ const RecommendedChatListItem: FC<RecommendedChatListItemProps> = ({ chat }) => 
             {chat?.payload?.chatParticipant}
           </Text>
           <Text
-            variant="c-regular"
+            variant="bs-regular"
             color={{ light: 'gray-600', dark: 'gray-500' }}
           >
             {chat?.payload?.chatMsg?.messageContent}
