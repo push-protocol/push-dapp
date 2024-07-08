@@ -42,13 +42,13 @@ export enum PROFILESTATE {
 type UnlockProfileModalProps = {
   InnerComponentProps: {
     type: UNLOCK_PROFILE_TYPE | undefined;
-    label?: string;
+    description?: string;
   };
   onClose?: () => void;
 };
 
 const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps) => {
-  const { type, label } = InnerComponentProps;
+  const { type, description } = InnerComponentProps;
 
   const theme = useTheme();
   const { handleConnectWallet, initializePushSDK } = useContext(AppContext);
@@ -77,7 +77,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
       setActiveStatus({
         status: PROFILESTATE.UNLOCK_PROFILE,
         title: 'Unlock Profile',
-        body: label ? label : 'Unlock your profile to read and send messages.',
+        body: description ? description : 'Unlock your profile to read and send messages.',
       });
     }
   }, [wallet]);

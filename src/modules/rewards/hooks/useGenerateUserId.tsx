@@ -21,6 +21,7 @@ const useGenerateUserId = (caip10WalletAddress: string) => {
   const ref = searchParams.get('ref');
   if (ref) sessionStorage.setItem('ref', ref);
   const [showConnectModal, setConnectModalVisibility] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
   const { isWalletConnected } = useAccount();
@@ -32,7 +33,7 @@ const useGenerateUserId = (caip10WalletAddress: string) => {
   const { mutate: createUser } = useCreateRewardsUser();
 
   const getRefAndData = () => {
-    // if ref is present, add it to the data needed to generate verification proof, if not - send only user wallet
+    // get ref, send with user wallet. if ref is null, send only user wallet
     const ref = sessionStorage.getItem('ref');
     const data = {
       ...(ref && { refPrimary: ref }),
@@ -41,56 +42,40 @@ const useGenerateUserId = (caip10WalletAddress: string) => {
 
     return { data, ref };
   };
-
-  const unlockUser = async () => {
-    if (!userPushSDKInstance) return;
-
-    const { data } = getRefAndData();
-
-    // generate verification proof
-    const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
-
-    //if verification proof is null, unlock push profile update to update userPUSHSDKInstance
-    if (verificationProof === null || verificationProof === undefined) {
-      if (isWalletConnected && userPushSDKInstance && userPushSDKInstance.readmode()) {
-        setConnectModalVisibility(true);
-      }
-      return;
-    }
-  };
-
   const handleCreateUser = async () => {
     if (!userPushSDKInstance || status === 'success') return;
 
-    const { data, ref } = getRefAndData();
+    // const { data, ref } = getRefAndData();
 
     //generate verification proof again, after unlocking profile
-    const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
-    if (!verificationProof) return;
+    // const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
+    // if (!verificationProof) return;
 
-    createUser(
-      {
-        pgpPublicKey: userPushSDKInstance?.pgpPublicKey,
-        userWallet: caip10WalletAddress,
-        verificationProof: verificationProof as string,
-        refPrimary: ref,
-      },
-      {
-        onSuccess: () => {
-          refetch();
-        },
-        onError: (err) => {
-          console.error('Error', err);
-        },
-      }
-    );
+    // console.log('finish create');
+    // createUser(
+    //   {
+    //     pgpPublicKey: userPushSDKInstance?.pgpPublicKey,
+    //     userWallet: caip10WalletAddress,
+    //     verificationProof: verificationProof as string,
+    //     refPrimary: ref,
+    //   },
+    //   {
+    //     onSuccess: () => {
+    //       refetch();
+    //        setIsSuccess(true);
+    //     },
+    //     onError: (err) => {
+    //       console.error('Error', err);
+    //     },
+    //   }
+    // );
   };
 
   return {
     showConnectModal,
     setConnectModalVisibility,
     isPending,
-    unlockUser,
+    isSuccess,
     handleCreateUser,
     status,
   };

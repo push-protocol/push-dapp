@@ -27,7 +27,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
     isLoading: isLoadingActivities,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage
+    isFetchingNextPage,
   } = useGetRewardsActivities({ pageSize: 5 });
 
   // Getting user Id by wallet address
@@ -36,10 +36,13 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
     caip10WalletAddress: caip10WalletAddress,
   });
 
-  const isLoading = isLoadingUserDetails || isLoadingActivities;
+  const isLoading = isLoadingActivities;
+  // const isLoading = isLoadingUserDetails || isLoadingActivities;
 
   // If there are activities then render them else render 5 skeletons
-  const activityList = isLoading ? Array(3).fill(0) : rewardActivitiesResponse?.pages.flatMap((page) => page.activities) || [];
+  const activityList = isLoading
+    ? Array(3).fill(0)
+    : rewardActivitiesResponse?.pages.flatMap((page) => page.activities) || [];
 
   const hasMoreData = !isFetchingNextPage && hasNextPage;
 

@@ -1,73 +1,58 @@
 // React and other libraries
-import { FC, useEffect, useContext } from 'react';
+import { FC } from 'react';
 
 // third party libraries
 import { useSelector } from 'react-redux';
 import { css } from 'styled-components';
+import { useSearchParams } from 'react-router-dom';
 
 //Hooks
-import { useAccount } from 'hooks';
 import { useRewardsTabs } from './hooks/useRewardsTabs';
 import { useDiscordSession } from './hooks/useDiscordSession';
-import { useGenerateUserId } from './hooks/useGenerateUserId';
+import { handleRewardsAuth } from './hooks/handleRewardsAuth';
+import { handleCreateRewardsUser } from './hooks/handleCreateUser';
 
 //Types
 import { UserStoreType } from 'types';
-
-//helpers
-import { walletToCAIP10 } from 'helpers/w2w';
-import { AppContext } from 'contexts/AppContext';
 
 //Components
 import { Box, Text } from 'blocks';
 import { ReferralSection } from './components/ReferralSection';
 import { RewardsTabsContainer } from './components/RewardsTabsContainer';
 import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
-import { AppContextType } from 'types/context';
 
 export type RewardsProps = {};
 
 const Rewards: FC<RewardsProps> = () => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const { account, isWalletConnected } = useAccount();
-  const { isUserProfileUnlocked } = useContext<AppContextType>(AppContext);
+  //fetch ref from url
+  const [searchParams] = useSearchParams();
 
-  const caip10WalletAddress = walletToCAIP10({ account });
+  const ref = searchParams.get('ref');
+  if (ref) sessionStorage.setItem('ref', ref);
 
   // Used to set the discord session after discord redirects back to the Dapp.
   useDiscordSession();
 
   const { activeTab, handleSetActiveTab } = useRewardsTabs();
 
-  const { showConnectModal, setConnectModalVisibility, unlockUser, handleCreateUser, isPending, status } =
-    useGenerateUserId(caip10WalletAddress);
+  const { showConnectModal } = handleRewardsAuth();
+  handleCreateRewardsUser();
 
-  useEffect(() => {
-    if (activeTab !== 'activity') {
-      setConnectModalVisibility(false);
-    }
+  // const userMessage = 'Error decrypting PGP private key ...swiching to Guest mode';
 
-    if (status == 'success' && activeTab === 'activity' && userPushSDKInstance && userPushSDKInstance.readmode()) {
-      setConnectModalVisibility(true);
-    }
-  }, [account, userPushSDKInstance, activeTab]);
+  // reject signature
+  // const hasError =
+  //   userPushSDKInstance?.errors.some((error) => error.type === 'ERROR' && error.message === userMessage);
 
-  useEffect(() => {
-    if (isUserProfileUnlocked && userPushSDKInstance) {
-      handleCreateUser();
-    }
-  }, [userPushSDKInstance, isUserProfileUnlocked]);
+  // useEffect(() => {
+  //   if (hasError && isWalletConnected) {
+  //     //   setShowConnectModal(false);
+  //   }
+  // }, [userPushSDKInstance, showConnectModal, hasError]);
 
   const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
-
-  const handleUser = () => {
-    if (isUserProfileUnlocked) {
-      handleCreateUser();
-    } else {
-      unlockUser();
-    }
-  };
 
   return (
     <Box
@@ -100,15 +85,10 @@ const Rewards: FC<RewardsProps> = () => {
           handleSetActiveTab={handleSetActiveTab}
         />
 
-        {activeTab === 'dashboard' && (
-          <ReferralSection
-            generateUser={handleUser}
-            isPending={isPending}
-          />
-        )}
+        {activeTab === 'dashboard' && <ReferralSection />}
       </Box>
 
-      {isWalletConnected && userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
+      {userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
         <Box
           display="flex"
           justifyContent="center"
@@ -121,7 +101,7 @@ const Rewards: FC<RewardsProps> = () => {
           <UnlockProfileWrapper
             type={UNLOCK_PROFILE_TYPE.MODAL}
             showConnectModal={showConnectModal}
-            label="Unlock your profile to proceed."
+            description="Unlock your profile to proceed."
           />
         </Box>
       )}

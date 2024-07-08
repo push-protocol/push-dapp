@@ -1,14 +1,10 @@
 // React and other libraries
 import { FC } from 'react';
 
-// Component
-import { DiscordActivityButton } from './DiscordActivityButton';
-import { TwitterActivityButton } from './TwitterActivityButton';
-import { DefaultActivityButton } from './DefaultActivityButton';
-import { ActivityStatusButton } from './ActivityStatusButton';
-
 //Queries
 import { ActvityType, UsersActivity } from 'queries';
+import { Button } from 'blocks';
+import { ActivityVerificationButton } from './ActivityVerificationButton';
 
 type ActivityButtonProps = {
   userId: string;
@@ -16,7 +12,7 @@ type ActivityButtonProps = {
   activityType: ActvityType;
   refetchActivity: () => void;
   setErrorMessage: (errorMessage: string) => void;
-  usersSingleActivity: UsersActivity;
+  usersSingleActivity?: UsersActivity;
 };
 
 const ActivityButton: FC<ActivityButtonProps> = ({
@@ -25,38 +21,26 @@ const ActivityButton: FC<ActivityButtonProps> = ({
   refetchActivity,
   activityType,
   setErrorMessage,
-  usersSingleActivity
+  usersSingleActivity,
 }) => {
-
-  switch (usersSingleActivity.status) {
-    case 'COMPLETED':
-      return <ActivityStatusButton label="Claimed" disabled={true} />;
-    case 'PENDING':
-      return <ActivityStatusButton label="Pending" disabled={true} />;
-    default:
-      switch (activityType) {
-        case 'follow_push_on_discord':
-          return <DiscordActivityButton
-            userId={userId}
-            activityTypeId={activityTypeId}
-            refetchActivity={refetchActivity}
-            setErrorMessage={setErrorMessage}
-          />
-        case 'follow_push_on_twitter':
-          return <TwitterActivityButton
-            userId={userId}
-            activityTypeId={activityTypeId}
-            refetchActivity={refetchActivity}
-            setErrorMessage={setErrorMessage}
-          />
-        default:
-          return <DefaultActivityButton
-            userId={userId}
-            activityTypeId={activityTypeId}
-            refetchActivity={refetchActivity}
-          />
-      }
+  if (usersSingleActivity?.status === 'COMPLETED') {
+    return <Button variant="tertiary">Claimed</Button>;
   }
+
+  if (usersSingleActivity?.status === 'PENDING') {
+    return <Button variant="tertiary">Pending</Button>;
+  }
+
+  return (
+    // verify button
+    <ActivityVerificationButton
+      activityType={activityType}
+      userId={userId}
+      activityTypeId={activityTypeId}
+      refetchActivity={refetchActivity}
+      setErrorMessage={setErrorMessage}
+    />
+  );
 };
 
 export { ActivityButton };

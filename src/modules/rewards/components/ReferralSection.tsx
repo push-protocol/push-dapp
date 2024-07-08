@@ -7,6 +7,7 @@ import { css } from 'styled-components';
 //hooks
 import { useAccount, useCopy } from 'hooks';
 import { useGetUserRewardsDetails } from 'queries';
+import { handleRewardsAuth } from '../hooks/handleRewardsAuth';
 
 //helpers
 import { walletToCAIP10 } from 'helpers/w2w';
@@ -14,28 +15,21 @@ import { getPreviewBasePath } from '../../../../basePath';
 
 // components
 import { Box, Button, Copy, Text, Referral, Skeleton } from 'blocks';
-import { ActivityStatusButton } from './ActivityStatusButton';
 
-export type ReferralSectionProps = {
-  generateUser: () => void;
-  isPending: boolean;
-};
+export type ReferralSectionProps = {};
 
-const ReferralSection: FC<ReferralSectionProps> = ({ generateUser, isPending }) => {
+const ReferralSection: FC<ReferralSectionProps> = () => {
   const previewBasePath = getPreviewBasePath() || '';
   const baseUrl = window.location.origin + previewBasePath;
 
   const { isWalletConnected, account, connect } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
 
-  const {
-    data: userDetails,
-    isSuccess,
-    isLoading: isUserLoading,
-  } = useGetUserRewardsDetails({
+  const { data: userDetails, isLoading: isUserLoading } = useGetUserRewardsDetails({
     caip10WalletAddress: caip10WalletAddress,
-    enabled: isWalletConnected,
   });
+
+  const { status } = handleRewardsAuth();
 
   const isLoading = isUserLoading;
 
@@ -120,20 +114,9 @@ const ReferralSection: FC<ReferralSectionProps> = ({ generateUser, isPending }) 
         </Skeleton>
 
         <Skeleton isLoading={isLoading}>
-          {isWalletConnected && !userDetails && (
-            <Box
-              display="flex"
-              flexDirection="row"
-              alignItems="flex-start"
-            >
-              <ActivityStatusButton
-                size="small"
-                variant="primary"
-                onClick={generateUser}
-                disabled={false}
-                label="Unlock Profile"
-                isLoading={isPending}
-              />
+          {isWalletConnected && status == 'error' && (
+            <Box>
+              <Button size="small">Unlock Profile</Button>
             </Box>
           )}
         </Skeleton>
