@@ -6,6 +6,7 @@ enum APP_PATHS {
   Chat = '/chat',
   Spaces = '/spaces',
   Channels = '/channels',
+  CreateChannel = '/createChannel',
   Dashboard = '/dashboard',
   Rewards = '/points',
   RewardsActivities = '/points/activity',
@@ -26,7 +27,7 @@ enum APP_PATHS {
   Support = '/support',
   UserSettings = '/user/settings',
   ChannelSettings = '/channel/settings',
-  ClaimGalxe = 'claim/galxe',
+  ClaimGalxe = 'claim/galxe'
 }
 
 export default APP_PATHS;

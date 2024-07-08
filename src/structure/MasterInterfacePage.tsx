@@ -42,6 +42,7 @@ const ClaimGalxePage = lazy(() => import('pages/ClaimGalxePage'));
 const WelcomDashboardPage = lazy(() => import('pages/WelcomeDashboardPage'));
 const RewardPointsPage = lazy(() => import('pages/RewardPointsPage'));
 const PointsVaultPage = lazy(() => import('pages/PointsVaultPage'));
+const CreateChannelPage = lazy(() => import('pages/CreateChannelPage'));
 
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
@@ -221,6 +222,11 @@ function MasterInterfacePage() {
             <Route
               path={APP_PATHS.Channels}
               element={<ChannelsProfilePage />}
+            />
+
+            <Route
+              path={`${APP_PATHS.CreateChannel}`}
+              element={<CreateChannelPage />}
             />
 
             <Route
