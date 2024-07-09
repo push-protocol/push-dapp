@@ -1,5 +1,7 @@
 import { BlocksColorData, BlocksColors, GlobalColors } from './Blocks.types';
 
+// TODO This file needs to be removed after all the blcoks components uses the new design theme
+
 const brandColors = {
   /* New brand colors */
 
