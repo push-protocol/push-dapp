@@ -37,6 +37,17 @@ const brandColors = {
   'RED-800': '#A40A0A',
   'RED-900': '#670000',
   'RED-1000': '#400000',
+
+  'GREEN-100': '#D8F7F0',
+  'GREEN-200': '#AFEFE1',
+  'GREEN-300': '#51DCBD',
+  'GREEN-400': '#00C296',
+  'GREEN-500': '#00A47F',
+  'GREEN-600': '#008769',
+  'GREEN-700': '#006B53',
+  'GREEN-800': '#A40A0A',
+  'GREEN-900': '#00382B',
+  'GREEN-1000': '#002019',
 };
 
 export const blocksColorsLegacy = {
