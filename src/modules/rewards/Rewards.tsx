@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 // third party libraries
 import { useSelector } from 'react-redux';
@@ -26,6 +26,8 @@ export type RewardsProps = {};
 const Rewards: FC<RewardsProps> = () => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
+  const [hasError, setHasError] = useState<{} | null>(null);
+
   //fetch ref from url
   const [searchParams] = useSearchParams();
 
@@ -37,11 +39,33 @@ const Rewards: FC<RewardsProps> = () => {
 
   const { activeTab, handleSetActiveTab } = useRewardsTabs();
 
-  const { showConnectModal } = useRewardsAuth();
+  const { showConnectModal, setShowConnectModal, status, connectUserWallet } = useRewardsAuth();
 
   useCreateRewardsUser();
 
   const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
+
+  const userMessage = 'Error decrypting PGP private key ...swiching to Guest mode';
+
+  // unlock profile reject listener
+  const errorExists = userPushSDKInstance?.errors.some(
+    (error) => error.type === 'ERROR' && error.message === userMessage
+  );
+
+  const isErrorPresent = userPushSDKInstance?.errors;
+
+  useEffect(() => {
+    if (isErrorPresent && showConnectModal && status === 'error' && errorExists) {
+      setHasError(isErrorPresent);
+      setShowConnectModal(false);
+    }
+  }, [isErrorPresent, showConnectModal, errorExists]);
+
+  // retry unlock profile
+  const handleUnlockProfile = () => {
+    setHasError(null);
+    connectUserWallet();
+  };
 
   return (
     <Box
@@ -74,7 +98,7 @@ const Rewards: FC<RewardsProps> = () => {
           handleSetActiveTab={handleSetActiveTab}
         />
 
-        {activeTab === 'dashboard' && <ReferralSection />}
+        {activeTab === 'dashboard' && <ReferralSection handleUnlockProfile={handleUnlockProfile} />}
       </Box>
 
       {userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (

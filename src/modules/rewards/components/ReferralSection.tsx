@@ -16,9 +16,11 @@ import { getPreviewBasePath } from '../../../../basePath';
 // components
 import { Box, Button, Copy, Text, Referral, Skeleton } from 'blocks';
 
-export type ReferralSectionProps = {};
+export type ReferralSectionProps = {
+  handleUnlockProfile: () => void;
+};
 
-const ReferralSection: FC<ReferralSectionProps> = () => {
+const ReferralSection: FC<ReferralSectionProps> = ({ handleUnlockProfile }) => {
   const previewBasePath = getPreviewBasePath() || '';
   const baseUrl = window.location.origin + previewBasePath;
 
@@ -29,7 +31,7 @@ const ReferralSection: FC<ReferralSectionProps> = () => {
     caip10WalletAddress: caip10WalletAddress,
   });
 
-  const { status, connectUserWallet } = useRewardsAuth();
+  const { status } = useRewardsAuth();
 
   const isLoading = isUserLoading;
 
@@ -118,7 +120,7 @@ const ReferralSection: FC<ReferralSectionProps> = () => {
             <Box>
               <Button
                 size="small"
-                onClick={connectUserWallet}
+                onClick={handleUnlockProfile}
               >
                 Unlock Profile
               </Button>

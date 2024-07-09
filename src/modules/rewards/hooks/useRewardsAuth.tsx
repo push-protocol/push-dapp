@@ -84,7 +84,7 @@ const useRewardsAuth = () => {
 
   useEffect(() => {
     // dashboard connect wallet flow
-    if (status === 'error' && activeTab == 'dashboard' && !isVerifyClicked) {
+    if (status === 'error' && activeTab == 'dashboard' && !isVerifyClicked && !!userPushSDKInstance.errors) {
       if (error instanceof AxiosError && error?.response?.data?.error === errorMessage) {
         unlockProfile();
       }
