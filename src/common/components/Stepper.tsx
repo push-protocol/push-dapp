@@ -8,9 +8,14 @@ type StepperProps = {
   steps: Array<{ label: string }>;
   activeStepIndex: number;
   setActiveStepIndex: (stepIndex: number) => void;
+  config?: { restrictedForwardSteps?: Array<number>; restrictedBackwardSteps?: Array<number> };
 };
 
-const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, activeStepIndex }) => {
+const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, activeStepIndex, config }) => {
+  const handleChangeActiveStep = (stepIndex: number) => {
+    if (!config?.restrictedBackwardSteps?.includes(stepIndex) && !config?.restrictedForwardSteps?.includes(stepIndex))
+      setActiveStepIndex(stepIndex);
+  };
   return (
     <Box
       display="flex"
@@ -24,7 +29,7 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, activeStepIndex 
           width="180px"
           cursor="pointer"
           color={activeStepIndex == index ? 'pink-500' : 'gray-500'}
-          onClick={() => setActiveStepIndex(index)}
+          onClick={() => handleChangeActiveStep(index)}
         >
           <Text
             textAlign="center"

@@ -1,9 +1,11 @@
 import { Box, Button, Text, TextInput } from 'blocks';
+import APP_PATHS from 'config/AppPaths';
 import useToast from 'hooks/useToast';
 import { useVerifyAliasChain } from 'queries';
 import { FC } from 'react';
-import { MdError } from 'react-icons/md';
+import { MdCheckCircle, MdError } from 'react-icons/md';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { UserStoreType } from 'types';
 
 export type VerifyAliasChainProps = {
@@ -17,6 +19,7 @@ const VerifyAliasChain: FC<VerifyAliasChainProps> = ({ alias }) => {
   const { mutate: verifyAliasChain, isPending } = useVerifyAliasChain();
 
   const toast = useToast();
+  const navigate = useNavigate();
 
   const aliasParts = alias.split(':');
   const handleVerifyAliasChain = () => {
@@ -28,13 +31,24 @@ const VerifyAliasChain: FC<VerifyAliasChainProps> = ({ alias }) => {
       {
         onSuccess: (response) => {
           console.debug(response, 'response');
+          toast.showMessageToast({
+            toastTitle: 'Success',
+            toastMessage: 'Verification Successfull',
+            toastType: 'SUCCESS',
+            getToastIcon: (size) => (
+              <MdCheckCircle
+                size={size}
+                color="green"
+              />
+            ),
+          });
+          navigate(APP_PATHS.Dashboard);
         },
         onError: (error: any) => {
-          if (error.name) {
-            console.debug(error, 'error');
+          if (error) {
             toast.showMessageToast({
               toastTitle: 'Error',
-              toastMessage: error.response.data.error,
+              toastMessage: error.message,
               toastType: 'ERROR',
               getToastIcon: (size) => (
                 <MdError

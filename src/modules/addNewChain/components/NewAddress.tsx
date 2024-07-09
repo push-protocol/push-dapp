@@ -25,7 +25,7 @@ const NewAddress: FC<NewAddressProps> = ({ setAddress, handleNextStep }) => {
 
   const toast = useToast();
 
-  const { mutate: initiateNewChain, isPending } = useInitiateNewChain();
+  const { mutate: initiateNewChain, isPending, isError } = useInitiateNewChain();
 
   const validationSchema = yup.object().shape({
     alias: yup
@@ -52,16 +52,14 @@ const NewAddress: FC<NewAddressProps> = ({ setAddress, handleNextStep }) => {
         alias,
       },
       {
-        onSuccess: (response) => {
-          console.debug(response, 'error');
+        onSuccess: () => {
           handleNextStep();
         },
         onError: (error: any) => {
-          if (error.name) {
-            console.debug(error, 'error');
+          if (error) {
             toast.showMessageToast({
               toastTitle: 'Error',
-              toastMessage: error.response.data.error,
+              toastMessage: error.message,
               toastType: 'ERROR',
               getToastIcon: (size) => (
                 <MdError
@@ -101,10 +99,10 @@ const NewAddress: FC<NewAddressProps> = ({ setAddress, handleNextStep }) => {
             />
           </Box>
           <Button
-            disabled={!formik.values.alias || isPending}
+            disabled={!formik.values.alias || (isPending && !isError)}
             variant="primary"
           >
-            {isPending ? 'Initiating' : 'Next'}
+            {isPending && !isError ? 'Initiating' : 'Next'}
           </Button>
         </Box>
       </form>
@@ -114,6 +112,7 @@ const NewAddress: FC<NewAddressProps> = ({ setAddress, handleNextStep }) => {
 
 export { NewAddress };
 
-//toast and take to channel page
-// stepper
+//error messages fix
 // navigation
+//fix import order
+//select button

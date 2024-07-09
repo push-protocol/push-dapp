@@ -9,18 +9,26 @@ import { addNewChainSteps } from './AddNewChain.constants';
 import { NewAddress } from './components/NewAddress';
 import { ChangeNetwork } from './components/ChangeNetwork';
 import { VerifyAliasChain } from './components/VerifyAliasChain';
+import { useSelector } from 'react-redux';
+import { UserStoreType } from 'types';
+import { css } from 'styled-components';
+import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
 
 export type AddNewChainProps = {};
 
-//new to switch to write mode for adding chain
+let restrictedForwardSteps = [1, 2];
+
 const AddNewChain: FC<AddNewChainProps> = () => {
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
   const [alias, setAlias] = useState<string>('');
 
+  const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
+
   const handleNextStep = () => {
     if (activeStepIndex < 2) setActiveStepIndex(activeStepIndex + 1);
   };
-
+  restrictedForwardSteps = restrictedForwardSteps.filter((item) => item !== activeStepIndex);
+  console.debug(restrictedForwardSteps);
   return (
     <Box
       display="flex"
@@ -55,6 +63,7 @@ const AddNewChain: FC<AddNewChainProps> = () => {
         steps={addNewChainSteps}
         setActiveStepIndex={setActiveStepIndex}
         activeStepIndex={activeStepIndex}
+        config={{ restrictedForwardSteps: restrictedForwardSteps }}
       />
       {/* check if we need formik */}
       {activeStepIndex === 0 && (
@@ -70,6 +79,22 @@ const AddNewChain: FC<AddNewChainProps> = () => {
         />
       )}
       {activeStepIndex === 2 && <VerifyAliasChain alias={alias} />}
+      {userPushSDKInstance && userPushSDKInstance?.readmode() && (
+        <Box
+          display="flex"
+          justifyContent="center"
+          width="-webkit-fill-available"
+          alignItems="center"
+          css={css`
+            z-index: 99999;
+          `}
+        >
+          <UnlockProfileWrapper
+            type={UNLOCK_PROFILE_TYPE.MODAL}
+            showConnectModal={true}
+          />
+        </Box>
+      )}
     </Box>
   );
 };
