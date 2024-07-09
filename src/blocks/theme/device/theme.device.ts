@@ -1,4 +1,4 @@
-import { DeviceSizeName, DeviceSize, Breakpoint } from './Blocks.types';
+import { DeviceSizeName, DeviceSize, Breakpoint } from '../../Blocks.types';
 
 export const deviceSizes: Record<DeviceSizeName, DeviceSize> = {
   mobileS: '320px',
