@@ -32,6 +32,7 @@ const StyledBox = styled.div.withConfig({
 `;
 const Box = forwardRef<HTMLElement, BoxProps>(({ as = 'div', ...props }, ref) => {
   const { mode } = useBlocksTheme();
+  // TODO: We need to remove color dependency from BlocksColors | ThemeModeColors to fix this error
   return (
     <StyledBox
       as={as}

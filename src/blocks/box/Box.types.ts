@@ -11,6 +11,7 @@ import {
   ValueOf,
 } from '../Blocks.types';
 import { FlattenSimpleInterpolation } from 'styled-components';
+import { ThemeColors } from 'blocks/theme/Theme.types';
 
 export type BoxResponsiveProps = {
   /* Sets align-items css property */
@@ -49,9 +50,9 @@ export type BoxNonResponsiveProps = {
   /* Sets border-radius css property */
   borderRadius?: RadiusType;
   /* Sets background-color css property */
-  backgroundColor?: BlocksColors | ThemeModeColors;
+  backgroundColor?: BlocksColors | ThemeModeColors | ThemeColors;
   /* Sets color css property */
-  color?: BlocksColors | ThemeModeColors;
+  color?: BlocksColors | ThemeModeColors | ThemeColors;
   /* Sets cursor css property */
   cursor?: CSSProperties['cursor'];
   /* Sets position css property */
