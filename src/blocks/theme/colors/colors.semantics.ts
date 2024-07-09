@@ -29,7 +29,7 @@ export const colorSemantics = {
   'components-checkbox': checkboxSemantics,
   'components-dropdown': dropdownSemantics,
   icon: iconSemantics,
-  'components-input-field': inputSemantics,
+  'components-inputs': inputSemantics,
   'components-radio-button': radioSemantics,
   surface: surfaceSemantics,
   stroke: strokeSemantics,
