@@ -24,11 +24,25 @@ const ActivityButton: FC<ActivityButtonProps> = ({
   usersSingleActivity,
 }) => {
   if (usersSingleActivity?.status === 'COMPLETED') {
-    return <Button variant="tertiary">Claimed</Button>;
+    return (
+      <Button
+        variant="tertiary"
+        disabled
+      >
+        Claimed
+      </Button>
+    );
   }
 
   if (usersSingleActivity?.status === 'PENDING') {
-    return <Button variant="tertiary">Pending</Button>;
+    return (
+      <Button
+        variant="tertiary"
+        disabled
+      >
+        Pending
+      </Button>
+    );
   }
 
   return (

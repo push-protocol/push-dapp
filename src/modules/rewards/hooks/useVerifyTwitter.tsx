@@ -15,16 +15,16 @@ import { useClaimRewardsActivity } from 'queries';
 import { UserStoreType } from 'types';
 
 export type UseTwitterVerifyParams = {
-  userId: string;
   activityTypeId: string;
   setErrorMessage: (errorMessage: string) => void;
   refetchActivity: () => void;
 };
 
-const useVerifyTwitter = ({ userId, activityTypeId, setErrorMessage, refetchActivity }: UseTwitterVerifyParams) => {
+const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: UseTwitterVerifyParams) => {
   const [verifying, setVerifying] = useState(false);
   const [activityStatus, setActivityStatus] = useState<string | null>(null);
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
+  const [updatedId, setUpdatedId] = useState<string | null>(null);
 
   useEffect(() => {
     setErrorMessage('');
@@ -35,8 +35,9 @@ const useVerifyTwitter = ({ userId, activityTypeId, setErrorMessage, refetchActi
   const provider = new TwitterAuthProvider();
   const auth = getAuth();
 
-  const handleTwitterVerification = () => {
-    handleVerify();
+  const handleTwitterVerification = (userId: string) => {
+    setUpdatedId(userId);
+    handleVerify(userId);
   };
 
   const handleConnect = (): Promise<User | null> => {
@@ -62,18 +63,19 @@ const useVerifyTwitter = ({ userId, activityTypeId, setErrorMessage, refetchActi
   };
 
   const { mutate: claimRewardsActivity } = useClaimRewardsActivity({
-    userId,
+    userId: updatedId as string,
     activityTypeId,
   });
 
-  const handleVerify = async () => {
+  const handleVerify = async (userId: string | null) => {
     setErrorMessage('');
     setVerifying(true);
-    const userDetails = await handleConnect();
 
-    if (userDetails) {
+    const userTwitterDetails = await handleConnect();
+
+    if (userTwitterDetails) {
       // @ts-expect-error
-      const twitterHandle = userDetails.reloadUserInfo.screenName;
+      const twitterHandle = userTwitterDetails.reloadUserInfo.screenName;
 
       const verificationProof = await generateVerificationProof(
         {
@@ -92,7 +94,7 @@ const useVerifyTwitter = ({ userId, activityTypeId, setErrorMessage, refetchActi
 
       claimRewardsActivity(
         {
-          userId,
+          userId: updatedId || (userId as string),
           activityTypeId,
           pgpPublicKey: userPushSDKInstance.pgpPublicKey as string,
           data: {

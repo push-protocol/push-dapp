@@ -18,6 +18,7 @@ import { UserStoreType } from 'types';
 // components
 import { Box, Button } from 'blocks';
 import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
+import { useRewardsAuth } from '../hooks/useRewardsAuth';
 
 type ActivityVerificationButtonProps = {
   userId: string;
@@ -37,24 +38,21 @@ export const ActivityVerificationButton = ({
   const { isWalletConnected } = useAccount();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const { handleTwitterVerification } = useVerifyTwitter({ userId, activityTypeId, refetchActivity, setErrorMessage });
+  // const { setShowConnectModal } = useRewardsAuth();
+
+  const { handleTwitterVerification } = useVerifyTwitter({
+    activityTypeId,
+    refetchActivity,
+    setErrorMessage,
+  });
 
   const { handleDiscordVerification } = useVerifyDiscord({
-    userId,
     activityTypeId,
     refetchActivity,
     setErrorMessage,
   });
 
   const activityData = useMemo(() => {
-    if (activityType === 'follow_push_on_twitter') {
-      return {
-        isLoading: false,
-        label: 'Verify',
-        action: handleTwitterVerification,
-      };
-    }
-
     if (activityType === 'follow_push_on_discord') {
       return {
         isLoading: false,
@@ -62,11 +60,28 @@ export const ActivityVerificationButton = ({
         action: handleDiscordVerification,
       };
     }
+
+    if (activityType === 'follow_push_on_twitter') {
+      return {
+        isLoading: false,
+        label: 'Verify',
+        action: handleTwitterVerification,
+      };
+    }
   }, [activityType, userPushSDKInstance]);
 
-  const { isAuthenticated, authButton, showConnectModal } = useAuthWithButton({
-    onSuccess: () => activityData?.action(),
+  const { isAuthenticated, authButton, showConnectModal, setShowConnectModal } = useAuthWithButton({
+    onSuccess: (userDetails) => activityData?.action(userDetails?.userId),
   });
+
+  const handleCloseModal = () => {
+    setShowConnectModal(false);
+  };
+
+  console.log('Modal closed');
+  console.log('isAuthenticated:', isAuthenticated);
+  console.log('isWalletConnected:', isWalletConnected);
+  console.log('showConnectModal:', showConnectModal);
 
   if (userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal) {
     return (
@@ -83,6 +98,8 @@ export const ActivityVerificationButton = ({
         <UnlockProfileWrapper
           type={UNLOCK_PROFILE_TYPE.MODAL}
           showConnectModal={showConnectModal}
+          // onClose={handleCloseModal}
+          // closeIcon={true}
           description="Unlock your profile to proceed."
         />
       </Box>
@@ -94,7 +111,7 @@ export const ActivityVerificationButton = ({
       <Button
         variant="tertiary"
         size="small"
-        onClick={activityData?.action}
+        onClick={() => activityData?.action(userId)}
       >
         {activityData?.label || 'Verify'}
       </Button>

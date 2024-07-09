@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 // third party libraries
 import { useSelector } from 'react-redux';
@@ -37,6 +37,16 @@ const Rewards: FC<RewardsProps> = () => {
   // Used to set the discord session after discord redirects back to the Dapp.
   useDiscordSession();
 
+  const userMessage = 'Error decrypting PGP private key ...swiching to Guest mode';
+
+  // reject unlock profile listener
+  const errorExists = useMemo(
+    () => userPushSDKInstance?.errors.some((error) => error.type === 'ERROR' && error.message === userMessage),
+    [userPushSDKInstance?.errors]
+  );
+
+  const isErrorPresent = userPushSDKInstance?.errors;
+
   const { activeTab, handleSetActiveTab } = useRewardsTabs();
 
   const { showConnectModal, setShowConnectModal, status, connectUserWallet } = useRewardsAuth();
@@ -45,17 +55,8 @@ const Rewards: FC<RewardsProps> = () => {
 
   const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
 
-  const userMessage = 'Error decrypting PGP private key ...swiching to Guest mode';
-
-  // unlock profile reject listener
-  const errorExists = userPushSDKInstance?.errors.some(
-    (error) => error.type === 'ERROR' && error.message === userMessage
-  );
-
-  const isErrorPresent = userPushSDKInstance?.errors;
-
   useEffect(() => {
-    if (isErrorPresent && showConnectModal && status === 'error' && errorExists) {
+    if (isErrorPresent && showConnectModal && status === 'error' && errorExists && activeTab === 'dashboard') {
       setHasError(isErrorPresent);
       setShowConnectModal(false);
     }

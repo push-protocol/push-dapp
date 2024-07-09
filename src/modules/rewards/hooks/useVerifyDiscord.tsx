@@ -6,7 +6,7 @@ import { PushAPI } from '@pushprotocol/restapi';
 import { useSelector } from 'react-redux';
 
 import { appConfig } from 'config';
-import { useClaimRewardsActivity, useGetUserDiscordDetails } from 'queries';
+import { useClaimRewardsActivity } from 'queries';
 
 // helpers
 import { generateVerificationProof } from '../utils/generateVerificationProof';
@@ -18,14 +18,12 @@ import { UserStoreType } from 'types';
 import APP_PATHS from 'config/AppPaths';
 
 type UseDiscordActivityVerificationProps = {
-  userId: string;
   activityTypeId: string;
   refetchActivity: () => void;
   setErrorMessage: (errorMessage: string) => void;
 };
 
 const useVerifyDiscord = ({
-  userId,
   activityTypeId,
   refetchActivity,
   setErrorMessage,
@@ -36,26 +34,24 @@ const useVerifyDiscord = ({
 
   const [activityStatus, setActivityStatus] = useState<string | null>(null);
   const [verifying, setVerifying] = useState(token ? true : false);
-  const [triggerVerification, setTriggerVerification] = useState(false);
+  const [updatedId, setUpdatedId] = useState<string | null>(null);
 
   useEffect(() => {
     setErrorMessage('');
   }, [setErrorMessage]);
 
   const { mutate: claimRewardsActivity } = useClaimRewardsActivity({
-    userId,
+    userId: updatedId as string,
     activityTypeId,
   });
 
-  const { data: userDiscordDetails } = useGetUserDiscordDetails(token as string);
-
-  const handleDiscordVerification = () => {
+  const handleDiscordVerification = (userId: string) => {
+    setUpdatedId(userId);
     setErrorMessage('');
-    localStorage.setItem('discordVerificationTriggered', 'true');
-    handleConnect();
+    handleConnect(userId);
   };
 
-  const handleConnect = () => {
+  const handleConnect = (userId: string) => {
     const clientID = appConfig.discord_client_id;
     const baseURL = window.location.origin;
     const redirectURI = `${baseURL}${APP_PATHS.DiscordVerification}`;
@@ -68,12 +64,12 @@ const useVerifyDiscord = ({
     const checkAuth = setInterval(() => {
       if (newWindow?.closed) {
         clearInterval(checkAuth);
-        handleVerify(userPushSDKInstance);
+        handleVerify(userPushSDKInstance, userId);
       }
     }, 1000);
   };
 
-  const handleVerify = async (userPushSDKInstance: PushAPI) => {
+  const handleVerify = async (userPushSDKInstance: PushAPI, userId: string) => {
     const token = localStorage.getItem('access_token');
     const username = localStorage.getItem('username');
 
@@ -100,7 +96,7 @@ const useVerifyDiscord = ({
 
       claimRewardsActivity(
         {
-          userId,
+          userId: updatedId || (userId as string),
           activityTypeId,
           pgpPublicKey: userPushSDKInstance.pgpPublicKey as string,
           data: data,
@@ -113,7 +109,7 @@ const useVerifyDiscord = ({
               refetchActivity();
               setVerifying(false);
               setErrorMessage('');
-              localStorage.removeItem('discordVerificationTriggered');
+              // localStorage.removeItem('discordVerificationTriggered');
             }
           },
           onError: (error: any) => {
@@ -127,14 +123,6 @@ const useVerifyDiscord = ({
       );
     }
   };
-
-  useEffect(() => {
-    const discordVerificationTriggered = localStorage.getItem('discordVerificationTriggered') === 'true';
-    if (discordVerificationTriggered && token && userDiscordDetails) {
-      setVerifying(true);
-      handleVerify(userPushSDKInstance);
-    }
-  }, [token, userDiscordDetails, triggerVerification]);
 
   return {
     activityStatus,

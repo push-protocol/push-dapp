@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { useAccount } from 'hooks';
 import { useRewardsAuth } from './useRewardsAuth';
 import { useCreateRewardsUser } from './useCreateRewardsUser';
+import { UserRewardsDetailResponse } from 'queries';
 
 // types
 import { UserStoreType } from 'types';
@@ -15,14 +16,14 @@ import { UserStoreType } from 'types';
 // components
 import { Button } from 'blocks';
 
-export const useAuthWithButton = ({ onSuccess }: { onSuccess: () => void }) => {
+export const useAuthWithButton = ({ onSuccess }: { onSuccess: (userDetails: UserRewardsDetailResponse) => void }) => {
   const [isWalletConnectedAndProfileUnlocked, setIsWalletConnectedAndProfileUnlocked] = useState(false);
   const [showAuth, setShowAuth] = useState(false); // Track button click
 
   const { isWalletConnected } = useAccount();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const { showConnectModal, connectWallet, handleVerify, userDetails } = useRewardsAuth();
+  const { showConnectModal, setShowConnectModal, connectWallet, handleVerify, userDetails } = useRewardsAuth();
   const { isSuccess, isUserProfileUnlocked } = useCreateRewardsUser();
 
   const showAuthModal = async () => {
@@ -42,17 +43,18 @@ export const useAuthWithButton = ({ onSuccess }: { onSuccess: () => void }) => {
     );
   }, [showAuth, isSuccess, userDetails, isUserProfileUnlocked, handleVerify, userPushSDKInstance]);
 
-  const handleSuccess = () => {
+  const handleSuccess = (userDetails: UserRewardsDetailResponse) => {
     setIsWalletConnectedAndProfileUnlocked(true);
-    onSuccess();
+    onSuccess(userDetails);
     setShowAuth(false);
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
-      handleSuccess();
+    if (isAuthenticated && userDetails) {
+      handleSuccess(userDetails);
+      console.log('handle Success');
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, userDetails]);
 
   const authButton = useMemo(
     () => (
@@ -66,12 +68,13 @@ export const useAuthWithButton = ({ onSuccess }: { onSuccess: () => void }) => {
         </Button>
       </>
     ),
-    [showConnectModal, isWalletConnected]
+    [isWalletConnected, showConnectModal]
   );
 
   return {
     authButton,
     isAuthenticated: isWalletConnectedAndProfileUnlocked,
     showConnectModal: showConnectModal,
+    setShowConnectModal: setShowConnectModal,
   };
 };

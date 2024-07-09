@@ -25,6 +25,7 @@ import { device, size } from 'config/Globals';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import UnlockLogo from '../../../assets/chat/unlock.svg';
 import Wallet from '../../../assets/chat/wallet.svg';
+import { Box, CrossFilled, HoverableSVG } from 'blocks';
 
 // Constants
 export enum UNLOCK_PROFILE_TYPE {
@@ -43,12 +44,13 @@ type UnlockProfileModalProps = {
   InnerComponentProps: {
     type: UNLOCK_PROFILE_TYPE | undefined;
     description?: string;
+    closeIcon?: boolean;
   };
   onClose?: () => void;
 };
 
 const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps) => {
-  const { type, description } = InnerComponentProps;
+  const { type, description, closeIcon } = InnerComponentProps;
 
   const theme = useTheme();
   const { handleConnectWallet, initializePushSDK } = useContext(AppContext);
@@ -99,6 +101,26 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
 
   return (
     <Container type={type}>
+      {closeIcon && (
+        <Box
+          width="-webkit-fill-available"
+          display="flex"
+          flexDirection="row"
+          alignItems="flex-end"
+          justifyContent="flex-end"
+        >
+          <HoverableSVG
+            icon={
+              <CrossFilled
+                size={24}
+                color="pink-700"
+                onClick={onClose}
+              />
+            }
+          />
+        </Box>
+      )}
+
       <SubContainer type={type}>
         {/* Logo and Left Text */}
         <ItemHV2
