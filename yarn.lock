@@ -4427,9 +4427,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:1.0.0-exp.17":
-  version: 1.0.0-exp.17
-  resolution: "@pushprotocol/uiweb@npm:1.0.0-exp.17"
+"@pushprotocol/uiweb@npm:1.6.0-alpha.7":
+  version: 1.6.0-alpha.7
+  resolution: "@pushprotocol/uiweb@npm:1.6.0-alpha.7"
   dependencies:
     "@livekit/components-react": "npm:^1.2.2"
     "@livekit/components-styles": "npm:^1.0.6"
@@ -4471,7 +4471,7 @@ __metadata:
     react-dom: 17.0.2
     styled-components: ^6.0.8
     viem: ^1.3.0
-  checksum: 10/c1b375436b5d0b183a5c2331d0ef2b45096eb415eb1df8383bbb2b126b88f3a62d41d82d48a14557ac9c967f6ee556f15f39f72280cf64cd1129852c8bdbfc0c
+  checksum: 10/0f3fe4439e6070fde6173ff10e64eab03fca958d4459d295fb1cc7f07f7245b3e6ed97ec3023b8c802d11b0f43632360f43ad348dec57a978fcffb76eb7c3be9
   languageName: node
   linkType: hard
 
@@ -18577,7 +18577,7 @@ __metadata:
     "@mui/material": "npm:^5.5.0"
     "@pushprotocol/restapi": "npm:1.7.20"
     "@pushprotocol/socket": "npm:0.5.3"
-    "@pushprotocol/uiweb": "npm:1.0.0-exp.17"
+    "@pushprotocol/uiweb": "npm:1.6.0-alpha.7"
     "@radix-ui/react-dropdown-menu": "npm:^2.1.1"
     "@radix-ui/react-tooltip": "npm:^1.1.1"
     "@reach/tabs": "npm:^0.18.0"
