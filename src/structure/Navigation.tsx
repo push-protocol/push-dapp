@@ -52,6 +52,7 @@ function Navigation() {
     return state.canSend;
   });
 
+  console.debug(channelDetails, 'channel');
   useEffect(() => {
     if (!navigationSetup) return;
 

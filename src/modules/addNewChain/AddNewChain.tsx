@@ -12,9 +12,10 @@ import { VerifyAliasChain } from './components/VerifyAliasChain';
 
 export type AddNewChainProps = {};
 
+//new to switch to write mode for adding chain
 const AddNewChain: FC<AddNewChainProps> = () => {
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
-  const [address, setAddress] = useState<string>('');
+  const [alias, setAlias] = useState<string>('');
 
   const handleNextStep = () => {
     if (activeStepIndex < 2) setActiveStepIndex(activeStepIndex + 1);
@@ -58,15 +59,19 @@ const AddNewChain: FC<AddNewChainProps> = () => {
       {/* check if we need formik */}
       {activeStepIndex === 0 && (
         <NewAddress
-          setAddress={setAddress}
+          setAddress={setAlias}
           handleNextStep={handleNextStep}
         />
       )}
-      {activeStepIndex === 1 && <ChangeNetwork handleNextStep={handleNextStep} />}
-      {activeStepIndex === 2 && <VerifyAliasChain address={address} />}
+      {activeStepIndex === 1 && (
+        <ChangeNetwork
+          handleNextStep={handleNextStep}
+          alias={alias}
+        />
+      )}
+      {activeStepIndex === 2 && <VerifyAliasChain alias={alias} />}
     </Box>
   );
 };
 
 export { AddNewChain };
-// colors > brand tokens > semantics (for individual components)

@@ -5,6 +5,13 @@ import * as yup from 'yup';
 import { Box, Button, TextInput } from 'blocks';
 import { NewChainAddressValue } from '../AddNewChain.types';
 import { FC } from 'react';
+import { useInitiateNewChain } from 'queries';
+import { useSelector } from 'react-redux';
+import { UserStoreType } from 'types';
+import useToast from 'hooks/useToast';
+import { MdError } from 'react-icons/md';
+import { isValidAddress } from 'helpers/ValidationHelper';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 export type NewAddressProps = {
   setAddress: React.Dispatch<React.SetStateAction<string>>;
@@ -12,21 +19,62 @@ export type NewAddressProps = {
 };
 
 const NewAddress: FC<NewAddressProps> = ({ setAddress, handleNextStep }) => {
+  const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
+    return state.user;
+  });
+
+  const toast = useToast();
+
+  const { mutate: initiateNewChain, isPending } = useInitiateNewChain();
+
   const validationSchema = yup.object().shape({
-    address: yup.string().required('Address is required'),
+    alias: yup
+      .string()
+      .required('Address is required')
+      .test('is-valid-address', 'Invalid wallet address', isValidAddress),
   });
   const formik = useFormik<NewChainAddressValue>({
     initialValues: {
-      address: '',
+      alias: '',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.debug('in set addrss', values);
-      setAddress(values.address);
-      handleNextStep();
+      setAddress(convertAddressToAddrCaip(values.alias, 80002));
+      handleInitiate(values.alias);
     },
   });
 
+  //convert to caip before passing the address
+  const handleInitiate = (alias: string) => {
+    initiateNewChain(
+      {
+        userPushSDKInstance,
+        alias,
+      },
+      {
+        onSuccess: (response) => {
+          console.debug(response, 'error');
+          handleNextStep();
+        },
+        onError: (error: any) => {
+          if (error.name) {
+            console.debug(error, 'error');
+            toast.showMessageToast({
+              toastTitle: 'Error',
+              toastMessage: error.response.data.error,
+              toastType: 'ERROR',
+              getToastIcon: (size) => (
+                <MdError
+                  size={size}
+                  color="red"
+                />
+              ),
+            });
+          }
+        },
+      }
+    );
+  };
   return (
     <Box width="100%">
       <form onSubmit={formik.handleSubmit}>
@@ -45,18 +93,18 @@ const NewAddress: FC<NewAddressProps> = ({ setAddress, handleNextStep }) => {
           >
             <TextInput
               label="Your Address on New Chain"
-              description="Make sure you own this address as verification will take place."
-              value={formik.values.address}
-              onChange={formik.handleChange('address')}
-              error={formik.touched.address && Boolean(formik.errors.address)}
-              errorMessage={formik.touched.address ? formik.errors.address : ''}
+              description="Make sure you own this alias as verification will take place."
+              value={formik.values.alias}
+              onChange={formik.handleChange('alias')}
+              error={formik.touched.alias && Boolean(formik.errors.alias)}
+              errorMessage={formik.touched.alias ? formik.errors.alias : ''}
             />
           </Box>
           <Button
-            disabled={!formik.values.address}
+            disabled={!formik.values.alias || isPending}
             variant="primary"
           >
-            Next
+            {isPending ? 'Initiating' : 'Next'}
           </Button>
         </Box>
       </form>
@@ -65,3 +113,7 @@ const NewAddress: FC<NewAddressProps> = ({ setAddress, handleNextStep }) => {
 };
 
 export { NewAddress };
+
+//toast and take to channel page
+// stepper
+// navigation

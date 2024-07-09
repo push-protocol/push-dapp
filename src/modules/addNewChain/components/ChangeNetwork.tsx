@@ -5,15 +5,16 @@ import { useSelector } from 'react-redux';
 
 export type ChangeNetworkProps = {
   handleNextStep: () => void;
+  alias: string;
 };
 
-const ChangeNetwork: FC<ChangeNetworkProps> = ({ handleNextStep }) => {
+const ChangeNetwork: FC<ChangeNetworkProps> = ({ handleNextStep, alias }) => {
   const { switchChain, chainId } = useAccount();
-
-  //this chanin will be fetched from the select chainvalue
+  const aliasChainId = parseInt(alias.split(':')[1]);
 
   useEffect(() => {
-    if (chainId === 80002) {
+    console.debug(chainId === aliasChainId, chainId, aliasChainId);
+    if (chainId === aliasChainId) {
       handleNextStep();
     }
   }, [chainId]);
