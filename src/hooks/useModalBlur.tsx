@@ -105,7 +105,7 @@ const useModalBlur = () => {
               background={themes.blurModalContentBackground}
               alignSelf="center"
               flex="initial"
-              padding={modalPadding ? modalPadding : '1.2% 2%'}
+              padding={modalPadding ? modalPadding : '0px'}
               borderRadius={modalRadius ? modalRadius : '16px'}
               boxShadow="0px 4px 16px rgba(0, 0, 0, 0.02)"
               border={modalBorder && `1px solid ${themes.modalBorderColor}`}

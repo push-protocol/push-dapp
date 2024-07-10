@@ -2,7 +2,7 @@
 import { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import styled, { useTheme } from 'styled-components';
+import styled, { css, useTheme } from 'styled-components';
 
 // Internal Compoonents
 import {
@@ -25,7 +25,7 @@ import { device, size } from 'config/Globals';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import UnlockLogo from '../../../assets/chat/unlock.svg';
 import Wallet from '../../../assets/chat/wallet.svg';
-import { Box, CrossFilled, HoverableSVG } from 'blocks';
+import { Box, Cross, HoverableSVG } from 'blocks';
 
 // Constants
 export enum UNLOCK_PROFILE_TYPE {
@@ -102,16 +102,21 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
     <Container type={type}>
       {onClose && (
         <Box
-          width="-webkit-fill-available"
+          width="auto"
           display="flex"
           flexDirection="row"
           alignItems="flex-end"
           justifyContent="flex-end"
+          position="absolute"
+          css={css`
+            top: 12px;
+            right: 12px;
+          `}
         >
           <HoverableSVG
             icon={
-              <CrossFilled
-                size={30}
+              <Cross
+                size={16}
                 color="gray-400"
                 onClick={onClose}
               />
@@ -139,7 +144,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
             {!isLoading ? (
               <>
                 <SpanV2
-                  fontSize="24px"
+                  fontSize={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? '20px' : '24px'}
                   fontWeight="500"
                   lineHeight="28.8px"
                   color={theme.default.color}
@@ -147,7 +152,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
                   {activeStatus.title}
                 </SpanV2>
                 <SpanV2
-                  fontSize={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? '16px' : '18px'}
+                  fontSize={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? '14px' : '18px'}
                   fontWeight="400"
                   lineHeight="22.4px"
                   color={theme.default.secondaryColor}
@@ -261,7 +266,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
               <ItemHV2
                 gap="8px"
                 justifyContent={type === UNLOCK_PROFILE_TYPE.MODAL ? 'center' : 'end'}
-                margin={type === UNLOCK_PROFILE_TYPE.MODAL ? '12px 16px 0 40px' : '12px 16px 0 0px'}
+                margin={type === UNLOCK_PROFILE_TYPE.MODAL ? '24px 16px 0 40px' : '12px 16px 0 0px'}
               >
                 <CustomCheckbox
                   checked={rememberMe}
@@ -339,8 +344,8 @@ const RenderToolTip = ({ children, type }) => {
 const Container = styled(ItemHV2)`
   flex-direction: column;
   align-items: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? 'center' : 'end')};
-  width: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '450px' : 'inherit')};
-  padding: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '16px' : '0px')};
+  width: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '322px' : 'inherit')};
+  padding: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '24px' : '0px')};
 
   @media (${device.tablet}) {
     width: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '320px' : 'inherit')};
@@ -350,7 +355,7 @@ const Container = styled(ItemHV2)`
 `;
 
 const SubContainer = styled(ItemVV2)`
-  gap: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '24px' : '0px')};
+  gap: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '16px' : '0px')};
   align-items: end;
   flex-direction: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? 'column' : 'row')};
   justify-content: space-between;
