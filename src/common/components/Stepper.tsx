@@ -28,7 +28,7 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, activeStepIndex,
           gap="s3"
           width="180px"
           cursor="pointer"
-          color={activeStepIndex == index ? 'pink-500' : 'gray-500'}
+          color={activeStepIndex <= index ? 'pink-500' : 'gray-500'}
           onClick={() => handleChangeActiveStep(index)}
         >
           <Text
@@ -41,7 +41,7 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, activeStepIndex,
           <Box
             height="4px"
             borderRadius="r2"
-            backgroundColor={activeStepIndex == index ? 'pink-500' : 'gray-500'}
+            backgroundColor={activeStepIndex <= index ? 'pink-500' : 'gray-500'}
           ></Box>
         </Box>
       ))}
