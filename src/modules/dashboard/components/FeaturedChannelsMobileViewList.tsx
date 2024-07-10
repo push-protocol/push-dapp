@@ -40,6 +40,7 @@ const FeaturedChannelsMobileViewList: FC<FeaturedChannelsMobileViewListProps> = 
         justifyContent="space-between"
         flexDirection={{ tb: 'column' }}
         gap={{ tb: 's3' }}
+        alignSelf='baseline'
       >
         <Text
           variant="h4-bold"

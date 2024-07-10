@@ -8,26 +8,31 @@ import { EmblaOptionsType } from 'embla-carousel';
 
 // Components
 import { FeaturedChannelsListItem } from './FeaturedChannelsListItem';
-import { Box, HoverableSVG, Text, Link, NextIconSlider, PrevIconSlider } from 'blocks';
+import { Box, HoverableSVG, Text, Link, NextIconSlider, PrevIconSlider, deviceSizes } from 'blocks';
 
 // Internal Configs
 import { FeaturedChannelDetailsProps } from '../configs';
 import { useFeaturedChannelsCarouselButtons } from '../hooks/useFeaturedChannelsCarouselButtons';
+import { useDeviceWidthCheck } from 'hooks';
 
 export type FeaturedChannelsListProps = {
   featuredChannelsList: FeaturedChannelDetailsProps[];
 };
 
 const FeaturedChannelsList: FC<FeaturedChannelsListProps> = ({ featuredChannelsList }) => {
+  const isTablet = useDeviceWidthCheck(parseInt(deviceSizes.tablet));
+  const isXsLaptop = useDeviceWidthCheck(parseInt(deviceSizes.laptop));
+
   const CarouselOptions: EmblaOptionsType = {
-    slidesToScroll: 3,
-    align: 'start',
+    slidesToScroll: isTablet || isXsLaptop ? 2 : 3,
+    align: 'start'
   };
 
   const [emblaRef, emblaApi] = useEmblaCarousel(CarouselOptions);
 
-  const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } =
-    useFeaturedChannelsCarouselButtons(emblaApi);
+  const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } = useFeaturedChannelsCarouselButtons(
+    emblaApi
+  );
 
   return (
     <>
@@ -36,34 +41,25 @@ const FeaturedChannelsList: FC<FeaturedChannelsListProps> = ({ featuredChannelsL
         justifyContent="space-between"
         flexDirection={{ tb: 'column' }}
         gap={{ tb: 's3' }}
+        width='100%'
       >
-        <Text
-          variant="h4-bold"
-          color={{ light: 'black', dark: 'white' }}
-        >
+
+        <Text variant="h4-bold" color={{ light: 'black', dark: 'white' }}>
           Featured Notification Channels
         </Text>
 
-        <Box
-          display="flex"
-          flexDirection="row"
-          alignItems="center"
-          gap="s4"
-        >
+        <Box display="flex" flexDirection="row" alignItems="center" gap="s4">
           <Link
             to="/channels"
             textProps={{
               variant: 'h5-semibold',
-              color: { light: 'black', dark: 'white' },
+              color: { light: 'black', dark: 'white' }
             }}
           >
             View All
           </Link>
 
-          <Box
-            display="flex"
-            flexDirection="row"
-          >
+          <Box display="flex" flexDirection="row">
             {/* Previous Button  */}
             <HoverableSVG
               onClick={onPrevButtonClick}
@@ -83,16 +79,10 @@ const FeaturedChannelsList: FC<FeaturedChannelsListProps> = ({ featuredChannelsL
         </Box>
       </Box>
 
-      <Box
-        width="-webkit-fill-available"
-        css={css`
-          margin: auto;
-        `}
-      >
+      <Box width={{ initial: '67rem', tb: '42rem', lp: '42rem' }}>
         <Box
           css={css`
             overflow: hidden;
-            padding: 0px 10px;
           `}
           ref={emblaRef}
         >

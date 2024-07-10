@@ -16,10 +16,9 @@ export type FeaturedChannelsProps = {};
 const FeaturedChannels: FC<FeaturedChannelsProps> = () => {
   const featureChannelsForCurrrentEnv = featuredChannelsList[appConfig.appEnv];
 
-  const isTablet = useDeviceWidthCheck(parseInt(deviceSizes.tablet));
   const isMobile = useDeviceWidthCheck(parseInt(deviceSizes.mobileL));
 
-  const showMobileAndTabletView = isMobile || isTablet;
+  const showMobileAndTabletView = isMobile;
 
   return (
     <Box
@@ -29,6 +28,7 @@ const FeaturedChannels: FC<FeaturedChannelsProps> = () => {
       flexDirection="column"
       backgroundColor={{ light: 'darkWhite', dark: 'gray-900' }}
       gap={{ ml: 's4', initial: 's2' }}
+      alignItems='center'
     >
 
       {showMobileAndTabletView ? (
