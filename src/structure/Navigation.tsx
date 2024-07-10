@@ -25,6 +25,7 @@ import { appConfig } from 'config/index.js';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { Box, PlusCircle, Text } from 'blocks';
 import Curve from 'blocks/icons/components/Curve';
+import { LOGO_ALIAS_CHAIN } from 'modules/dashboard/configs';
 
 // Create Header
 function Navigation() {
@@ -435,6 +436,11 @@ function Navigation() {
       const data = section.data;
       const uid = section.data.uid;
       const isChannelPresent = channelDetails !== 'unfetched' && channelDetails != null;
+
+      const verifiedAliasChainIds =
+        channelDetails?.aliases?.filter((item) => item?.is_alias_verified)?.map((item) => item.alias_blockchain_id) ||
+        [];
+
       // if(uid === 2 ){
       //   if(section.opened)
       //   dispatch(setCommunicateOpen(true))
@@ -565,13 +571,29 @@ function Navigation() {
                 {isChannelPresent && data.name === channelDetails.name && (
                   <Box
                     display="flex"
-                    alignSelf="center"
-                    padding="s2 s0"
+                    padding="s0 s6"
                   >
                     <Curve
                       color="gray-300"
                       size={18}
                     />
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                    >
+                      {/* add sepolia */}
+                      {verifiedAliasChainIds.length > 0 &&
+                        [80002, 11155111, 97].map((aliasChainId: number) => {
+                          const LogoComponent = LOGO_ALIAS_CHAIN[aliasChainId];
+                          return LogoComponent ? (
+                            <LogoComponent
+                              key={aliasChainId}
+                              width={24}
+                              height={24}
+                            />
+                          ) : null;
+                        })}
+                    </Box>
                     <Box
                       display="flex"
                       gap="s1"
@@ -580,12 +602,15 @@ function Navigation() {
                       onClick={() => navigate('/addNewChain')}
                     >
                       <PlusCircle size={32} />
-                      <Text
-                        variant="bm-semibold"
-                        color="gray-800"
-                      >
-                        Add New Chain
-                      </Text>
+
+                      {!verifiedAliasChainIds?.length && (
+                        <Text
+                          variant="bm-semibold"
+                          color="gray-800"
+                        >
+                          Add New Chain
+                        </Text>
+                      )}
                     </Box>
                   </Box>
                 )}

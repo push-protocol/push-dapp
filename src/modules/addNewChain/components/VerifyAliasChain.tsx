@@ -1,11 +1,16 @@
-import { Box, Button, Text, TextInput } from 'blocks';
-import APP_PATHS from 'config/AppPaths';
-import useToast from 'hooks/useToast';
-import { useVerifyAliasChain } from 'queries';
 import { FC } from 'react';
+
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+
+import useToast from 'hooks/useToast';
+import { useVerifyAliasChain } from 'queries';
+
+import APP_PATHS from 'config/AppPaths';
+
+import { Box, Button, Text, TextInput } from 'blocks';
+
 import { UserStoreType } from 'types';
 
 export type VerifyAliasChainProps = {
@@ -33,7 +38,7 @@ const VerifyAliasChain: FC<VerifyAliasChainProps> = ({ alias }) => {
           console.debug(response, 'response');
           toast.showMessageToast({
             toastTitle: 'Success',
-            toastMessage: 'Verification Successfull',
+            toastMessage: 'Verification Successful',
             toastType: 'SUCCESS',
             getToastIcon: (size) => (
               <MdCheckCircle

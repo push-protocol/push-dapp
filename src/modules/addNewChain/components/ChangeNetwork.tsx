@@ -1,7 +1,8 @@
-import { Box, Button, Text } from 'blocks';
-import { useAccount } from 'hooks';
 import { FC, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+
+import { useAccount } from 'hooks';
+
+import { Box, Button, Text } from 'blocks';
 
 export type ChangeNetworkProps = {
   handleNextStep: () => void;

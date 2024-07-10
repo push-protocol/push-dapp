@@ -1,17 +1,21 @@
+import { FC } from 'react';
+
+import { useSelector } from 'react-redux';
+import { MdError } from 'react-icons/md';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
+import useToast from 'hooks/useToast';
+import { useInitiateNewChain } from 'queries';
+
 // Components
 import { Box, Button, TextInput } from 'blocks';
-import { NewChainAddressValue } from '../AddNewChain.types';
-import { FC } from 'react';
-import { useInitiateNewChain } from 'queries';
-import { useSelector } from 'react-redux';
-import { UserStoreType } from 'types';
-import useToast from 'hooks/useToast';
-import { MdError } from 'react-icons/md';
+
 import { isValidAddress } from 'helpers/ValidationHelper';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+
+import { NewChainAddressValue } from '../AddNewChain.types';
+import { UserStoreType } from 'types';
 
 export type NewAddressProps = {
   setAddress: React.Dispatch<React.SetStateAction<string>>;

@@ -1,18 +1,20 @@
 // React and other libraries
 import { FC, useState } from 'react';
 
-// Components
-import { Box, Text } from 'blocks';
-import { Stepper } from 'common';
+import { useSelector } from 'react-redux';
+import { css } from 'styled-components';
+
 import { addNewChainSteps } from './AddNewChain.constants';
 
+// Components
 import { NewAddress } from './components/NewAddress';
 import { ChangeNetwork } from './components/ChangeNetwork';
 import { VerifyAliasChain } from './components/VerifyAliasChain';
-import { useSelector } from 'react-redux';
-import { UserStoreType } from 'types';
-import { css } from 'styled-components';
+import { Box, Text } from 'blocks';
+import { Stepper } from 'common';
 import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
+
+import { UserStoreType } from 'types';
 
 export type AddNewChainProps = {};
 
