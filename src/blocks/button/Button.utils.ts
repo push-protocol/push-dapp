@@ -197,7 +197,7 @@ export const getButtonSizeStyles = ({
       font-weight: 500;
       line-height: 16px;
 
-      .icon {
+      [role='img'] {
         width: 16px;
         height: 16px;
       }
@@ -241,7 +241,7 @@ export const getButtonSizeStyles = ({
       font-weight: 500;
       line-height: 16px;
 
-      .icon {
+      [role='img'] {
         width: 24px;
         height: 24px;
       }
@@ -286,7 +286,7 @@ export const getButtonSizeStyles = ({
       font-weight: 500;
       line-height: 16px;
 
-      .icon {
+      [role='img'] {
         width: 24px;
         height: 24px;
       }
@@ -330,7 +330,7 @@ export const getButtonSizeStyles = ({
     font-weight: 500;
     line-height: 16px;
 
-    .icon {
+    [role='img'] {
       width: 32px;
       height: 32px;
     }
