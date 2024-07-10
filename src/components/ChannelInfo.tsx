@@ -377,12 +377,11 @@ const Label = styled.div`
   font-weight: 600;
   font-size: 14px;
   line-height: 21px;
-  letter-spacing: -0.011em;
+  letter-spacing: normal;
   color: #1e1e1e;
 `;
 
 const TimeBoundToggleContainer = styled(ItemHV2)`
-  height: 25px;
   margin-left: 1.3rem;
   padding: 12px 18px;
   cursor: pointer;
@@ -421,7 +420,7 @@ const CustomDateTimePicker = styled(DateTimePicker)`
   flex: 6;
   display: flex;
   align-items: center !important;
-  font-family: Strawford, Source Sans Pro;
+  font-family: FK Grotesk Neu, Source Sans Pro;
   .react-datetime-picker__wrapper {
     border: 0px !important;
     border-radius: 5px !important;

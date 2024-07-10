@@ -54,27 +54,27 @@ function Navigation() {
 
     let newNavSetup = navigationSetup;
     if (processingState === null) {
-      newNavSetup.secondary[0].data.hidden = true;
-      newNavSetup.secondary[1].data.hidden = true;
+      newNavSetup.developersList[0].data.hidden = true;
+      newNavSetup.developersList[1].data.hidden = true;
     } else {
-      newNavSetup.secondary[0].data.hidden = true;
-      newNavSetup.secondary[1].data.hidden = true;
+      newNavSetup.developersList[0].data.hidden = true;
+      newNavSetup.developersList[1].data.hidden = true;
 
       if (channelDetails !== 'unfetched' && channelDetails != null) {
-        newNavSetup.secondary[0].data.name = channelDetails.name;
-        newNavSetup.secondary[0].data.src = 'homeOffIcon';
-        newNavSetup.secondary[0].data.activeSrc = 'homeOnIcon';
-        newNavSetup.secondary[0].data.hidden = false;
-        newNavSetup.secondary[0].data.loading = false;
+        newNavSetup.developersList[0].data.name = channelDetails.name;
+        newNavSetup.developersList[0].data.src = channelDetails.iconV2;
+        newNavSetup.developersList[0].data.activeSrc = channelDetails.iconV2;
+        newNavSetup.developersList[0].data.hidden = false;
+        newNavSetup.developersList[0].data.loading = false;
       } else {
-        newNavSetup.secondary[0].data.name = 'Create Channel';
-        newNavSetup.secondary[0].data.hidden = false;
-        newNavSetup.secondary[0].data.loading = false;
+        newNavSetup.developersList[0].data.name = 'Create Channel';
+        newNavSetup.developersList[0].data.hidden = false;
+        newNavSetup.developersList[0].data.loading = false;
       }
 
       if (canSend === SEND_NOTIFICATION_STATES.SEND) {
-        newNavSetup.secondary[1].data.name = 'Send Notifications';
-        newNavSetup.secondary[1].data.hidden = false;
+        newNavSetup.developersList[1].data.name = 'Send Notifications';
+        newNavSetup.developersList[1].data.hidden = false;
       }
     }
 
@@ -95,26 +95,40 @@ function Navigation() {
 
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
-    // Set Primary List
     const primaryList = returnTransformedList(navigationList.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY);
-
-    // Set Secondary List
-    const secondaryList = returnTransformedList(navigationList.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
-    const thirdList = returnTransformedList(navigationList.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
+    const notificationList = returnTransformedList(
+      navigationList.secondary.Notifications,
+      GLOBALS.CONSTANTS.NAVBAR_SECTIONS.NOTIFICATION
+    );
+    const messagingList = returnTransformedList(
+      navigationList.secondary.Messsaging,
+      GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MESSAGING
+    );
+    const developersList = returnTransformedList(
+      navigationList.secondary.Developers,
+      GLOBALS.CONSTANTS.NAVBAR_SECTIONS.DEVELOPERS
+    );
+    const thirdList = returnTransformedList(navigationList.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD);
 
     // Set Nav List
     let count = -1;
     let navList = returnNavList(navigationList.primary, count);
-    navList = Object.assign(navList, returnNavList(navigationList.secondary, Object.keys(navList).length));
+    navList = Object.assign(
+      navList,
+      returnNavList(navigationList.secondary.Notifications, Object.keys(navList).length)
+    );
+    navList = Object.assign(navList, returnNavList(navigationList.secondary.Messsaging, Object.keys(navList).length));
+    navList = Object.assign(navList, returnNavList(navigationList.secondary.Developers, Object.keys(navList).length));
     navList = Object.assign(navList, returnNavList(navigationList.third, Object.keys(navList).length));
 
     const finalList = {
       primary: primaryList,
-      secondary: secondaryList,
+      notificationList: notificationList,
+      messagingList: messagingList,
+      developersList: developersList,
       third: thirdList,
       navigation: navList,
     };
-
     setNavigationSetup(finalList);
   }, []);
 
@@ -185,8 +199,15 @@ function Navigation() {
   useEffect(() => {
     if (navigationSetup) {
       // loop and find the item in question
+
       Object.entries(navigationSetup).forEach(([key, value]) => {
-        if (key === 'primary' || key === 'secondary' || key === 'third') {
+        if (
+          key === 'primary' ||
+          key === 'notificationList' ||
+          key === 'messagingList' ||
+          key === 'developersList' ||
+          key === 'third'
+        ) {
           const topSection = navigationSetup[key];
 
           Object.entries(topSection).forEach(([key, value]) => {
@@ -246,7 +267,13 @@ function Navigation() {
 
     if (activeDrilldownId == null) {
       Object.keys(transformedMenuList).forEach((key) => {
-        if (key === 'primary' || key === 'secondary' || key === 'third') {
+        if (
+          key === 'primary' ||
+          key === 'notificationList' ||
+          key === 'messagingList' ||
+          key === 'developersList' ||
+          key === 'third'
+        ) {
           Object.keys(transformedMenuList[key]).forEach((sectionkey) => {
             const section = transformedMenuList[key][sectionkey];
 
@@ -268,7 +295,13 @@ function Navigation() {
     } else {
       // menu item is getting selected
       Object.keys(transformedMenuList).forEach((key) => {
-        if (key === 'primary' || key === 'secondary' || key === 'third') {
+        if (
+          key === 'primary' ||
+          key === 'notificationList' ||
+          key === 'messagingList' ||
+          key === 'developersList' ||
+          key === 'third'
+        ) {
           Object.keys(transformedMenuList[key]).forEach((sectionkey) => {
             const section = transformedMenuList[key][sectionkey];
 
@@ -305,6 +338,17 @@ function Navigation() {
     }
 
     return transformedMenuList;
+  };
+
+  //checks if the navigation item is active
+  const checkIfNavigationItemIsActive = (item) => {
+    if (location.pathname === item.data.href && item.active) return true;
+    return false;
+  };
+
+  //returns navigationBgColor color
+  const returnNavigationBgColor = (isActive: boolean) => {
+    return isActive ? theme.nav.activeColor : 'transparent';
   };
 
   const returnNavList = (lists, count) => {
@@ -361,10 +405,17 @@ function Navigation() {
     let fontSize;
     let secondaryButton = 0;
     switch (sectionID) {
-      case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY:
-        Section = SecondarySection;
+      case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.NOTIFICATION:
+        Section = PrimarySection;
         fontSize = 'small';
-        secondaryButton = 1;
+        break;
+      case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MESSAGING:
+        Section = PrimarySection;
+        fontSize = 'small';
+        break;
+      case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.DEVELOPERS:
+        Section = PrimarySection;
+        fontSize = 'small';
         break;
       case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD:
         Section = SecondarySection;
@@ -377,7 +428,6 @@ function Navigation() {
     }
     let rendered = Object.keys(items).map(function (key) {
       const section = items[key];
-      // console.log(section)
       const data = section.data;
       const uid = section.data.uid;
       // if(uid === 2 ){
@@ -399,7 +449,7 @@ function Navigation() {
           align="stretch"
           size={fontSize}
           wrap="nowrap"
-          margin="0 5px 0 10px"
+          margin={secondaryButton && '0 5px 0 10px'}
         >
           {secondaryButton ? (
             <Item
@@ -426,8 +476,8 @@ function Navigation() {
                   item={section}
                   data={data}
                   sectionID={sectionID}
-                  active={section.active}
-                  bg={!section.active ? 'transparent' : theme.nav.activeColor}
+                  active={checkIfNavigationItemIsActive(section)}
+                  bg={returnNavigationBgColor(checkIfNavigationItemIsActive(section))}
                 />
               </SectionInnerGroupContainer>
 
@@ -504,8 +554,8 @@ function Navigation() {
                   item={section}
                   data={data}
                   sectionID={sectionID}
-                  active={section.active}
-                  bg={!section.active ? 'transparent' : theme.nav.activeColor}
+                  active={checkIfNavigationItemIsActive(section)}
+                  bg={returnNavigationBgColor(checkIfNavigationItemIsActive(section))}
                 />
               </SectionInnerGroupContainer>
 
@@ -535,7 +585,7 @@ function Navigation() {
     let SectionItem;
 
     switch (sectionID) {
-      case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY:
+      case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.NOTIFICATION:
         SectionGroup = PrimarySectionGroup;
         SectionItem = PrimarySectionItem;
         break;
@@ -588,8 +638,8 @@ function Navigation() {
                   item={item}
                   data={data}
                   sectionID={sectionID}
-                  active={item.active}
-                  bg={!item.active ? 'transparent' : theme.nav.activeColor}
+                  active={checkIfNavigationItemIsActive(item)}
+                  bg={returnNavigationBgColor(checkIfNavigationItemIsActive(item))}
                 />
               </SectionInnerItemContainer>
             </SectionItem>
@@ -622,98 +672,28 @@ function Navigation() {
           <Primary>
             {renderMainItems(navigationSetup.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)}
 
-            <Span
-              textTransform="uppercase"
-              weight="700"
-              size="11px"
-              margin="20px 0px 0px 0px"
-              padding={sidebarCollapsed ? '15px 25px' : '15px 30px'}
-              color="#575D73"
-              spacing="0.16em"
-            >
-              {sidebarCollapsed ? 'Devs' : 'Developers'}
-            </Span>
-            {renderMainItems(navigationSetup.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY)}
+            <PrimaryInner>
+              <TextSpan>{sidebarCollapsed ? 'Notifs' : 'Notifications'}</TextSpan>
+
+              {renderMainItems(navigationSetup.notificationList, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.NOTIFICATION)}
+            </PrimaryInner>
+
+            <PrimaryInner>
+              <TextSpan>{sidebarCollapsed ? 'Msgs' : 'Messaging'}</TextSpan>
+
+              {renderMainItems(navigationSetup.messagingList, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MESSAGING)}
+            </PrimaryInner>
+
+            <PrimaryInner>
+              <TextSpan>{sidebarCollapsed ? 'Devs' : 'Developers'}</TextSpan>
+              {renderMainItems(navigationSetup.developersList, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.DEVELOPERS)}
+            </PrimaryInner>
           </Primary>
           <Footer
             justify="flex-end"
             align="stretch"
           >
             {renderMainItems(navigationSetup.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD)}
-
-            {/* Put social */}
-            {/* <ItemH
-                flex="initial"
-                padding="10px"
-                radius="0px 12px 0px 0px"
-                bg={theme.leftBarSocialBg}
-              >
-                <Anchor
-                title="Open Twitter"
-                href="https://twitter.com/epnsproject"
-                target="_blank"
-                bg={theme.leftBarSocialIconBg}
-                radius="4px"
-                padding="10px"
-                margin="5px"
-                onMouseOver={({ target }) => target.style.color = theme.color}
-                onMouseOut={({target})=>target.style.color = "fff"}
-                >
-                  <FaTwitter size={15} color="fff" />
-                </Anchor>
-                <Anchor
-                  title="Open Telegram"
-                  href="https://t.me/epnsproject"
-                  target="_blank"
-                  bg={theme.leftBarSocialIconBg}
-                  radius="4px"
-                  padding="10px"
-                  margin="5px"
-                  onMouseOver={({ target }) => target.style.color = theme.color}
-                  onMouseOut={({target})=>target.style.color = "fff"}
-                >
-                  <FaTelegramPlane size={15} color="#fff"/>
-                </Anchor>
-                <Anchor
-                  title="Open Medium"
-                  href="https://medium.com/ethereum-push-notification-service"
-                  target="_blank"
-                  bg={theme.leftBarSocialIconBg}
-                  radius="4px"
-                  padding="10px"
-                  margin="5px"
-                  onMouseOver={({ target }) => target.style.color = theme.color}
-                  onMouseOut={({target})=>target.style.color = "fff"}
-                >
-                  <FaMedium size={15} color="#fff"/>
-                </Anchor>
-                <Anchor
-                  title="Open Discord"
-                  href="https://discord.gg/YVPB99F9W5"
-                  target="_blank"
-                  bg={theme.leftBarSocialIconBg}
-                  radius="4px"
-                  padding="10px"
-                  margin="5px"
-                  onMouseOver={({ target }) => target.style.color = theme.color}
-                  onMouseOut={({target})=>target.style.color = "fff"}
-                >
-                  <FaDiscord size={15} color="#fff"/>
-                </Anchor>
-                <Anchor
-                  title="Open Github"
-                  href="https://github.com/push-protocol"
-                  target="_blank"
-                  bg={theme.leftBarSocialIconBg}
-                  radius="4px"
-                  padding="10px"
-                  margin="5px"
-                  onMouseOver={({ target }) => target.style.color = theme.color}
-                  onMouseOut={({target})=>target.style.color = "fff"}
-                >
-                  <FaGithub size={15} color={"#fff"}/>
-                </Anchor>
-              </ItemH> */}
           </Footer>
         </>
       )}
@@ -736,7 +716,8 @@ const Primary = styled(Item)`
   justify-content: flex-start;
   background: '#fff';
   overflow-y: scroll;
-  gap: 10px;
+  flex: none;
+  gap: 8px;
   &::-webkit-scrollbar-track {
     border-radius: 10px;
   }
@@ -754,7 +735,22 @@ const Primary = styled(Item)`
       color-stop(0.86, #cf1c84)
     );
   }
-  padding: 10px 0px 20px 0px;
+  padding: 12px 8px 12px 12px;
+`;
+
+const PrimaryInner = styled(Primary)`
+  align-items: flex-start;
+  padding: 3px 0px;
+  gap: 5px;
+`;
+
+const TextSpan = styled(Span)`
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 10px;
+  margin-left: 15px;
+  color: #8c93a0;
+  letter-spacing: 1.6px;
 `;
 
 const InheritedSection = styled(Item)`
@@ -764,6 +760,7 @@ const InheritedSection = styled(Item)`
 
 const PrimarySection = styled(InheritedSection)`
   margin-top: -1px;
+  width: 100%;
 `;
 
 const InheritedSectionGroup = styled(Item)`
@@ -803,7 +800,7 @@ const PrimarySectionItem = styled(Item)``;
 
 const Footer = styled(Item)`
   z-index: 3;
-  gap: 10px;
+  gap: 8px;
   align-items: stretch;
   flex-wrap: nowrap;
   padding: 0 6px 10px 0;

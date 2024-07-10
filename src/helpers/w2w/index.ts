@@ -101,7 +101,7 @@ export const decryptFeeds = async ({
         });
       } catch (e) {
         // console.log(e);
-        if(e.message == decryptionErrorMsg){
+        if (e.message == decryptionErrorMsg) {
           feed.msg.messageType = 'Text';
           feed.msg.messageContent = 'message encrypted before you joined';
         }
@@ -137,7 +137,9 @@ export const decryptMessages = async ({
           const member = getMemberDetails(currentChat, currentChat?.msg?.fromCAIP10);
           signatureValidationPubliKey = member ? member.publicKey : '';
         } else {
-          const latestUserInfo = inbox.find((x) => x.wallets.split(':')[1]?.toLowerCase() === currentChat?.wallets?.split(':')[1]?.toLowerCase());
+          const latestUserInfo = inbox.find(
+            (x) => x.wallets.split(':')[1]?.toLowerCase() === currentChat?.wallets?.split(':')[1]?.toLowerCase()
+          );
 
           if (latestUserInfo) {
             signatureValidationPubliKey = latestUserInfo.publicKey!;
@@ -157,7 +159,7 @@ export const decryptMessages = async ({
       });
     } catch (e) {
       // console.log(e);
-      if(e.message == decryptionErrorMsg){
+      if (e.message == decryptionErrorMsg) {
         savedMsg.messageType = 'Text';
         savedMsg.messageContent = 'message encrypted before you joined';
       }

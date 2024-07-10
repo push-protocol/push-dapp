@@ -30,10 +30,11 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
 
   const [icon, setIcon] = useState(null);
   const [activeIcon, setActiveIcon] = useState(null);
+  const iconBorderRadius = navigationIcons[data.src] ? '0' : '50%';
 
   useEffect(() => {
-    setIcon(navigationIcons[data.src]);
-    setActiveIcon(navigationIcons[data.activeSrc]);
+    setIcon(navigationIcons[data.src] ?? data.src);
+    setActiveIcon(navigationIcons[data.activeSrc] ?? data.activeSrc);
   }, [data.src, data.activeSrc]);
 
   const { showMetamaskPushSnap, handleConnectWallet } = useContext(AppContext);
@@ -50,7 +51,15 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
       SelectedIcon = LeftBarPrimaryItemIcon;
       definedMargin = '5px';
       break;
-    case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY:
+    case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.NOTIFICATION:
+      SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
+      definedMargin = item.isSection ? '0px' : '5px';
+      break;
+    case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MESSAGING:
+      SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
+      definedMargin = item.isSection ? '0px' : '5px';
+      break;
+    case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.DEVELOPERS:
       SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
       definedMargin = item.isSection ? '0px' : '5px';
       break;
@@ -77,7 +86,6 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
   const handleDisallowedNav = () => {
     handleConnectWallet();
   };
-
   return (
     <>
       {data.loading && (
@@ -125,15 +133,17 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
               {!active ? (
                 <SelectedIcon
                   src={icon}
-                  margin="0 5px"
+                  margin="0 4px"
                   alt={`${data.alt}`}
+                  borderRadius={iconBorderRadius}
                   active={active ? 1 : 0}
                 />
               ) : (
                 <SelectedIcon
                   src={activeIcon}
-                  margin="0 5px"
+                  margin="0 4px"
                   alt={`${data.alt}`}
+                  borderRadius={iconBorderRadius}
                   active={active ? 1 : 0}
                 />
               )}
@@ -142,9 +152,9 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
                 <Span
                   flex="1"
                   cursor="pointer"
-                  weight={!active ? '300' : '600'}
-                  spacing="0"
-                  margin="0 5px"
+                  weight={!active ? '600' : '700'}
+                  spacing="normal"
+                  margin="0 4px"
                   color={theme.nav.color}
                   onClick={data?.hasOnClickFunction && showMetamaskPushSnap}
                   size="16px"
@@ -188,12 +198,12 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
 const InheritedSectionGroupIcon = styled(Image)`
   height: 25px;
   width: 25px;
-  margin: 0 5px;
+  margin: 0 4px;
 
   @media (max-width: 992px) {
     margin: 0px 0px;
   }
-
+  border-radius : ${(props) => props.borderRadius};
   ${(props) =>
     props.active &&
     css`
@@ -204,7 +214,9 @@ const InheritedSectionGroupIcon = styled(Image)`
 const InheritedSectionItemIcon = styled(Image)`
   height: 25px;
   width: 25px;
-  margin: 0 5px;
+  margin: 0 4px;
+  border-radius : ${(props) => props.borderRadius};
+
 
   @media (max-width: 992px) {
     margin: 0px 0px;
@@ -231,7 +243,7 @@ const LeftBarSecondaryItemIcon = styled(InheritedSectionItemIcon)``;
 const NewTag = styled(SpanV2)`
   font-weight: 600;
   font-size: 12px;
-  letter-spacing: 0;
+  letter-spacing: normal;
   line-height: 140%;
   display: flex;
   align-items: center;

@@ -63,9 +63,17 @@ function NftModule() {
     <Container>
       <Section>
         <Content padding="20px 0px">
-          <ItemVV2 alignSelf="stretch" justifyContent="flex-start" margin="0 0 40px 0">
+          <ItemVV2
+            alignSelf="stretch"
+            justifyContent="flex-start"
+            margin="0 0 40px 0"
+          >
             <H2>
-              <Span weight="400" size="32px" color={theme.color}>
+              <Span
+                weight="400"
+                size="32px"
+                color={theme.color}
+              >
                 Rockstar of Push (EPNS)
               </Span>
             </H2>
@@ -75,24 +83,38 @@ function NftModule() {
               size="16px"
               textTransform="none"
               textAlign="center"
-              spacing="0.03em"
-              margin="0px 0px">
+              spacing="normal"
+              margin="0px 0px"
+            >
               Thank you community for all your support. Over the next year, we are excited to continue returning our
               gratitude!
             </Span>
           </ItemVV2>
 
-          <Item align="stretch" justify="flex-start" margin="0px 20px 0px 20px">
+          <Item
+            align="stretch"
+            justify="flex-start"
+            margin="0px 20px 0px 20px"
+          >
             {/* Question */}
-            <Item align="stretch" margin="0px 0px 20px 0px">
+            <Item
+              align="stretch"
+              margin="0px 0px 20px 0px"
+            >
               <QnAItem>
                 <Question
                   onClick={() => {
                     toggleShowAnswer(1);
                   }}
-                  hover="#e20880">
-                  <Span color={theme.color}>Does $ROCKSTAR of Push (EPNS) Vol 2 NFTs carry something along with NFTs?</Span>
-                  <BsChevronExpand size={20} color={'#ddd'} />
+                  hover="#e20880"
+                >
+                  <Span color={theme.color}>
+                    Does $ROCKSTAR of Push (EPNS) Vol 2 NFTs carry something along with NFTs?
+                  </Span>
+                  <BsChevronExpand
+                    size={20}
+                    color={'#ddd'}
+                  />
                 </Question>
 
                 {showAnswers[1] && (
@@ -102,7 +124,8 @@ function NftModule() {
                       <AMod
                         href="https://medium.com/ethereum-push-notification-service/push-token-economics-d7f566c29b1a"
                         target="_blank"
-                        title="Read more about $PUSH tokeneconomics">
+                        title="Read more about $PUSH tokeneconomics"
+                      >
                         Learn about $PUSH Token Economics.
                       </AMod>
                     </Span>
@@ -115,9 +138,13 @@ function NftModule() {
                   onClick={() => {
                     toggleShowAnswer(2);
                   }}
-                  hover="#e20880">
+                  hover="#e20880"
+                >
                   <Span color={theme.color}>How to get $ROCKSTAR of Push (EPNS)?</Span>
-                  <BsChevronExpand size={20} color={'#ddd'} />
+                  <BsChevronExpand
+                    size={20}
+                    color={'#ddd'}
+                  />
                 </Question>
 
                 {showAnswers[2] && (
@@ -128,7 +155,8 @@ function NftModule() {
                       <AMod
                         href="https://medium.com/push-protocol/announcing-volume-2-of-epns-rockstars-64f0b3246604"
                         target="_blank"
-                        title="Read how to get $ROCKSTAR of Push (EPNS)">
+                        title="Read how to get $ROCKSTAR of Push (EPNS)"
+                      >
                         Here are some ways by which you can get one!
                       </AMod>
                     </Span>
@@ -139,8 +167,14 @@ function NftModule() {
           </Item>
         </Content>
 
-        <Content padding="20px 0px" bg="#eee">
-          <Item align="flex-start" margin="0px 20px 0px 20px">
+        <Content
+          padding="20px 0px"
+          bg="#eee"
+        >
+          <Item
+            align="flex-start"
+            margin="0px 20px 0px 20px"
+          >
             <Controls>
               <SubscribeButton
                 className={version === 2 ? 'v2' : 'v1'}
@@ -148,7 +182,8 @@ function NftModule() {
                 // active={version == 0 ? 1 : 0}
                 onClick={() => {
                   userClickedAt(2);
-                }}>
+                }}
+              >
                 <ActionTitle>ROCKSTAR V2</ActionTitle>
               </SubscribeButton>
 
@@ -158,33 +193,54 @@ function NftModule() {
                 // active={version == 1 ? 1 : 0}
                 onClick={() => {
                   userClickedAt(1);
-                }}>
+                }}
+              >
                 <ActionTitle>ROCKSTAR V1</ActionTitle>
               </SubscribeButton>
 
               <CheckSpace>
-                <input type="checkbox" className="checkbox" onChange={handleChange} />
+                <input
+                  type="checkbox"
+                  className="checkbox"
+                  onChange={handleChange}
+                />
                 {/* <span className=""></span> */}
                 Show mine
               </CheckSpace>
             </Controls>
 
             {controlAt === 0 && version === 1 && (
-              <MyNFTs controlAt={controlAt} setControlAt={setControlAt} setTokenId={setTokenId} />
+              <MyNFTs
+                controlAt={controlAt}
+                setControlAt={setControlAt}
+                setTokenId={setTokenId}
+              />
             )}
 
             {controlAt === 0 && version === 2 && (
-              <MyNFTsV2 controlAt={controlAt} setControlAt={setControlAt} setTokenId={setTokenId} />
+              <MyNFTsV2
+                controlAt={controlAt}
+                setControlAt={setControlAt}
+                setTokenId={setTokenId}
+              />
             )}
 
             {/* NFTs version 1 */}
             {controlAt === 1 && version === 1 && (
-              <AllNFTs controlAt={controlAt} setControlAt={setControlAt} setTokenId={setTokenId} />
+              <AllNFTs
+                controlAt={controlAt}
+                setControlAt={setControlAt}
+                setTokenId={setTokenId}
+              />
             )}
 
             {/* NFTs version 2 */}
             {controlAt === 1 && version === 2 && (
-              <AllNFTsV2 controlAt={controlAt} setControlAt={setControlAt} setTokenId={setTokenId} />
+              <AllNFTsV2
+                controlAt={controlAt}
+                setControlAt={setControlAt}
+                setTokenId={setTokenId}
+              />
             )}
             {controlAt === 2 && tokenId && <TransferNFT tokenId={tokenId} />}
             {controlAt === 3 && tokenId && <TransferNFTv2 tokenId={tokenId} />}
@@ -376,7 +432,7 @@ const SubscribeButton = styled(ChannelActionButton)`
   }
   border-radius: 0px;
   font-size: 1rem;
-  letter-spacing: 0.1rem;
+  letter-spacing: normal;
 `;
 
 const ActionTitle = styled.span`
@@ -412,7 +468,7 @@ const QnAItem = styled(Item)`
     text-transform: uppercase;
     & ${Span} {
       font-weight: 400;
-      letter-spacing: 0.2em;
+      letter-spacing: normal;
       margin-left: 10px;
       flex: 1;
     }

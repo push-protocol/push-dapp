@@ -5,7 +5,15 @@ import { useContext, useEffect, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ButtonV2, ImageV2, ItemHV2, ItemVV2, Skeleton, SkeletonLine, SpanV2 } from 'components/reusables/SharedStylingV2';
+import {
+  ButtonV2,
+  ImageV2,
+  ItemHV2,
+  ItemVV2,
+  Skeleton,
+  SkeletonLine,
+  SpanV2,
+} from 'components/reusables/SharedStylingV2';
 import { AppContext } from 'contexts/AppContext';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { retrieveUserPGPKeyFromStorage } from 'helpers/connectWalletHelper';
@@ -17,6 +25,7 @@ import { device, size } from 'config/Globals';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import UnlockLogo from '../../../assets/chat/unlock.svg';
 import Wallet from '../../../assets/chat/wallet.svg';
+import { Box, CrossFilled, HoverableSVG } from 'blocks';
 
 // Constants
 export enum UNLOCK_PROFILE_TYPE {
@@ -34,17 +43,18 @@ export enum PROFILESTATE {
 type UnlockProfileModalProps = {
   InnerComponentProps: {
     type: UNLOCK_PROFILE_TYPE | undefined;
+    description?: string;
   };
   onClose?: () => void;
 };
 
 const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps) => {
-  const { type } = InnerComponentProps;
+  const { type, description, closeIcon } = InnerComponentProps;
 
   const theme = useTheme();
-  const { handleConnectWallet, connectWallet } = useContext(AppContext);
+  const { handleConnectWallet, initializePushSDK } = useContext(AppContext);
 
-  const { account, wallet } = useAccount();
+  const { account, wallet, connect } = useAccount();
 
   // Ensures if profile is stored then true is returned else false
   const [rememberMe, setRememberMe] = useState(false);
@@ -68,7 +78,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
       setActiveStatus({
         status: PROFILESTATE.UNLOCK_PROFILE,
         title: 'Unlock Profile',
-        body: 'Unlock your profile to read and send messages.',
+        body: description ? description : 'Unlock your profile to read and send messages.',
       });
     }
   }, [wallet]);
@@ -82,13 +92,34 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
       const decryptedPGPKeys = retrieveUserPGPKeyFromStorage(account);
       if (decryptedPGPKeys) {
         setIsLoading(true);
+        // If wallet is connected and PGP keys are already present.
+        initializePushSDK(wallet);
       }
     }
-
-  }, [account])
+  }, [account]);
 
   return (
     <Container type={type}>
+      {onClose && (
+        <Box
+          width="-webkit-fill-available"
+          display="flex"
+          flexDirection="row"
+          alignItems="flex-end"
+          justifyContent="flex-end"
+        >
+          <HoverableSVG
+            icon={
+              <CrossFilled
+                size={30}
+                color="gray-400"
+                onClick={onClose}
+              />
+            }
+          />
+        </Box>
+      )}
+
       <SubContainer type={type}>
         {/* Logo and Left Text */}
         <ItemHV2
@@ -105,7 +136,6 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
           />
 
           <ItemVV2 alignItems={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? 'center' : 'baseline'}>
-
             {!isLoading ? (
               <>
                 <SpanV2
@@ -129,21 +159,19 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
               <SkeletonWrapper>
                 <SkeletonLine
                   height="24px"
-                  width='100%'
+                  width="100%"
                   margin="0 0 8px 0"
-                  borderRadius='4px'
+                  borderRadius="4px"
                 ></SkeletonLine>
 
                 <SkeletonLine
                   height="16px"
-                  width='100%'
+                  width="100%"
                   margin="0 0 8px 0"
-                  borderRadius='4px'
+                  borderRadius="4px"
                 ></SkeletonLine>
-
               </SkeletonWrapper>
             )}
-
           </ItemVV2>
         </ItemHV2>
 
@@ -186,14 +214,13 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
             alignItems="baseline"
             flexDirection={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? 'column' : 'row'}
           >
-
             {!isLoading ? (
               <>
                 <DefaultButton
                   activeStatus={activeStatus.status}
                   status={PROFILESTATE.CONNECT_WALLET}
                   disabled={activeStatus.status !== PROFILESTATE.CONNECT_WALLET && true}
-                  onClick={() => connectWallet()}
+                  onClick={() => connect()}
                 >
                   Connect Wallet
                 </DefaultButton>
@@ -221,7 +248,6 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
                   width="150px"
                 ></SkeletonLine>
               </SkeletonContainer>
-
             )}
           </ItemHV2>
         </ItemVV2>
@@ -250,7 +276,6 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
                   Remember Me
                 </SpanV2>
               </ItemHV2>
-
             </RenderToolTip>
           ) : (
             <ItemVV2
@@ -265,7 +290,6 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
               ></SkeletonLine>
             </ItemVV2>
           )}
-
         </>
       )}
     </Container>
@@ -283,21 +307,21 @@ const RenderToolTip = ({ children, type }) => {
       placementProps={
         type === UNLOCK_PROFILE_TYPE.MODAL
           ? {
-            background: 'black',
-            width: '220px',
-            padding: '8px 12px',
-            top: '10px',
-            left: '60px',
-            borderRadius: '4px 12px 12px 12px',
-          }
+              background: 'black',
+              width: '220px',
+              padding: '8px 12px',
+              top: '10px',
+              left: '60px',
+              borderRadius: '4px 12px 12px 12px',
+            }
           : {
-            background: 'black',
-            width: '120px',
-            padding: '8px 12px',
-            bottom: '0px',
-            right: '-30px',
-            borderRadius: '12px 12px 12px 4px',
-          }
+              background: 'black',
+              width: '120px',
+              padding: '8px 12px',
+              bottom: '0px',
+              right: '-30px',
+              borderRadius: '12px 12px 12px 4px',
+            }
       }
       tooltipContent={
         <SpanV2
@@ -394,7 +418,7 @@ const DefaultButton = styled(ButtonV2)`
 
 const SkeletonWrapper = styled.div`
   overflow: hidden;
-  min-width:220px;
+  min-width: 220px;
 `;
 
 const SkeletonContainer = styled(Skeleton)`

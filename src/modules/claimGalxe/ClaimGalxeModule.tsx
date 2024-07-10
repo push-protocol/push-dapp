@@ -4,15 +4,17 @@ import { useEffect, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
-import { MdCheckCircle, MdError } from 'react-icons/md';
+import { MdError } from 'react-icons/md';
 
 // Internal Compoonents
 import { ImageV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Section } from 'primaries/SharedStyling';
 import { useAccount } from 'hooks';
+import useModalBlur from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import AlphaAccessNFTHelper from 'helpers/AlphaAccessNftHelper';
 import 'react-toastify/dist/ReactToastify.min.css';
+import { NFTSuccessModal } from './NFTSuccessModal';
 
 // Internal Configs
 import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config/index.js';
@@ -33,6 +35,8 @@ const ClaimGalxeModule = () => {
   });
   const [nftRevealContract, setNftRevealContract] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const { isModalOpen: isNFTModalOpen, ModalComponent: NFTModalComponent, showModal: showNFTModal } = useModalBlur();
 
   const onPolygonChain = chainId === 137 || chainId === 80002;
   const isProdEnv = appConfig?.appEnv === 'prod';
@@ -112,17 +116,9 @@ const ClaimGalxeModule = () => {
 
         await provider.waitForTransaction(tx.hash);
 
-        txToast.showMessageToast({
-          toastTitle: 'Success',
-          toastMessage: 'NFT successfully minted!',
-          toastType: 'SUCCESS',
-          getToastIcon: (size) => (
-            <MdCheckCircle
-              size={size}
-              color="green"
-            />
-          ),
-        });
+        txToast.hideToast();
+        showNFTModal();
+
         setSubmitbtnInfo({
           btnText: 'Claimed',
           enabled: false,
@@ -147,6 +143,16 @@ const ClaimGalxeModule = () => {
 
   return (
     <Container>
+      {isNFTModalOpen && <NFTModalComponent InnerComponent={NFTSuccessModal} />}
+      <ClaimBanner>
+        <ImageV2
+          src={getPublicAssetPath('svg/claim-galxe-banner.svg')}
+          height="18px"
+          width="18px"
+          padding="0 11px 0 0"
+        />
+        The Alpha Access NFT Claim Window for "Communicate With Push" Galxe contest winners is now officially OPEN! 🎉
+      </ClaimBanner>
       <ClaimInnerContainer>
         <ClaimLeftContainer>
           <GalxeImg
@@ -161,7 +167,7 @@ const ClaimGalxeModule = () => {
             fontWeight={600}
             padding="0 0 12px 0"
           >
-            Claim your reward for Decentralize with Push quest
+            Claim your Push Alpha Pass NFT Reward
           </SpanText>
           <SpanText
             fontSize="1rem"
@@ -194,7 +200,6 @@ const ClaimGalxeModule = () => {
         </ClaimLeftContainer>
         <AlphaImageContainer>
           <AlphaImageInnerContainer>
-            <AlphaAccessTextImg src={getPublicAssetPath('svg/AccessNFTText.svg')} />
             <AlphaAccessImg src={getPublicAssetPath('svg/AccessNFT.svg')} />
           </AlphaImageInnerContainer>
         </AlphaImageContainer>
@@ -209,9 +214,6 @@ export default ClaimGalxeModule;
 const Container = styled(Section)`
   align-items: center;
   align-self: center;
-  background: ${(props) => props.theme.default.bg};
-  border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
-  box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
   display: flex;
   flex-direction: column;
   flex: initial;
@@ -233,7 +235,7 @@ const Container = styled(Section)`
     );
   }
 
-  @media ${device.mobileM} {
+  @media ${device.tablet} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
     width: calc(
       100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} -
@@ -242,10 +244,25 @@ const Container = styled(Section)`
   }
 `;
 
+const ClaimBanner = styled.div`
+  background: ${(props) => props.theme.default.bg};
+  border-radius: 20px;
+  margin-bottom: 24px;
+  padding: 16px;
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: row;
+  width: fill-available;
+`;
+
 const ClaimInnerContainer = styled.div`
   display: flex;
   gap: 1rem;
   align-self: flex-start;
+  background: ${(props) => props.theme.default.bg};
+  border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+  overflow: hidden;
   @media ${device.tablet} {
     flex-direction: column-reverse;
   }
@@ -283,8 +300,6 @@ const AlphaImageInnerContainer = styled(ItemHV2)`
     gap: 2rem;
   }
 `;
-
-const AlphaAccessTextImg = styled(ImageV2)``;
 
 const AlphaAccessImg = styled(ImageV2)`
   padding: 0 12px;

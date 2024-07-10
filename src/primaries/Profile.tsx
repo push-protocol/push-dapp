@@ -25,7 +25,8 @@ import { getPublicAssetPath } from 'helpers/RoutesHelper.js';
 
 // Create Header
 const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
-  const { web3NameList, removePGPKeyForUser }: AppContextType = useContext(AppContext);
+  const { web3NameList, removePGPKeyForUser, initializePushSdkReadMode, setUserProfileUnlocked } =
+    useContext<AppContextType>(AppContext);
   const { setReadOnlyWallet, setMode }: GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
@@ -74,11 +75,13 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
       id: 'disconnect',
       value: '',
       function: async () => {
+        setUserProfileUnlocked(false);
         removePGPKeyForUser(userPushSDKInstance.account);
         await disconnect(wallet);
         setMode(ReadOnlyWalletMode.GUEST_MODE);
         setReadOnlyWallet('0x0000000000000000000000000000000000000001');
         setShowDropdown(false);
+        await initializePushSdkReadMode();
       },
       title: 'Logout',
       invertedIcon: getPublicAssetPath('logout.svg'),

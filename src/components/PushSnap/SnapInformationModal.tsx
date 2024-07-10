@@ -51,18 +51,23 @@ const SnapInformationModal = ({ handleCloseModal }) => {
   return (
     <Container>
       <ItemHV2 margin="0 0 23px 0">
-        <Image
-          src={theme.scheme == 'light' ? PushLogoLight : PushLogoDark}
-          alt="PushIcon"
-          height="37px"
-          width="95px"
-        />
+        {theme.scheme == 'light' ? (
+          <PushLogoLight
+            height="37"
+            width="95px"
+          />
+        ) : (
+          <PushLogoDark
+            height="37"
+            width="95px"
+          />
+        )}
       </ItemHV2>
 
       <SpanV2
         fontSize="22px"
         fontWeight="500"
-        letterSpacing="-0.44px"
+        letterSpacing="normal"
         color={theme.snapPrimaryText}
       >
         Connect to Metamask Push Snap
@@ -73,10 +78,7 @@ const SnapInformationModal = ({ handleCloseModal }) => {
         margin="32px 0"
       >
         <ItemHV2 alignItems="baseline">
-          <Image
-            src={NotificationLogo}
-            height="32px"
-          />
+          <NotificationLogo />
           <ItemVV2 margin="0 0 0 16px">
             <PrimaryText>Notifications</PrimaryText>
             <SecondaryText>Get notified by your favourite channels using Push Snap.</SecondaryText>
@@ -84,10 +86,7 @@ const SnapInformationModal = ({ handleCloseModal }) => {
         </ItemHV2>
 
         <ItemHV2 alignItems="baseline">
-          <Image
-            src={WalletLogo}
-            height="32px"
-          />
+          <WalletLogo />
           <ItemVV2 margin="0 0 0 16px">
             <PrimaryText>Address Selection</PrimaryText>
             <SecondaryText>Add or remove your wallet preferred wallet addresses for notifications.</SecondaryText>
@@ -95,10 +94,7 @@ const SnapInformationModal = ({ handleCloseModal }) => {
         </ItemHV2>
 
         <ItemHV2 alignItems="baseline">
-          <Image
-            src={HandTap}
-            height="32px"
-          />
+          <HandTap />
           <ItemVV2 margin="0 0 0 16px">
             <PrimaryText>Customize Notification Pop-ups</PrimaryText>
             <SecondaryText>Snooze popup notifications as per your convenience.</SecondaryText>
@@ -108,11 +104,7 @@ const SnapInformationModal = ({ handleCloseModal }) => {
 
       <ItemVV2>
         <InstallButton onClick={() => installSnap()}>
-          <Image
-            src={Metamask}
-            width="15px"
-            alt="Metamask"
-          />
+          <Metamask width="15px" />
           <SpanV2
             margin="0 0 0 5px"
             fontSize="14px"
@@ -130,10 +122,6 @@ export default SnapInformationModal;
 
 const Container = styled(ItemVV2)`
   padding: 0px 9px 12px 9px;
-`;
-const Image = styled.img`
-  // height:100px;
-  // width:100px;
 `;
 
 const PrimaryText = styled.p`
@@ -159,7 +147,7 @@ const InstallButton = styled(Button)`
   background: #d53a94;
   color: #fff;
   z-index: 0;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 14px;

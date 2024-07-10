@@ -23,6 +23,7 @@ import { notifUserSettingFormatString, userSettingsFromDefaultChannelSetting } f
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { updateUserSetting } from 'redux/slices/channelSlice';
+import { Text } from 'blocks';
 
 interface UpdateNotifSettingDropdownProps {
   children: ReactNode;
@@ -150,14 +151,13 @@ const UpdateNotifSettingDropdownContainer: FC<UpdateNotifSettingDropdownContaine
         </DropdownInnerContainer>
       ))}
       <DropdownSubmitItem>
-        <SpanV2
-          color={theme.textcolor}
-          fontSize="15px"
-          fontWeight="500"
+        <Text
+          color={{ light: 'gray-1000', dark: 'gray-400' }}
+          variant="bs-semibold"
           textAlign="left"
         >
           You will receive all important updates from this channel.
-        </SpanV2>
+        </Text>
         <DropdownSubmitButton
           onClick={() => saveUserSettingHandler({ userSettings: modifiedSettings, setLoading: setTxInProgress })}
         >

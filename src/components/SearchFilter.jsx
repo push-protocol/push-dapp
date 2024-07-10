@@ -144,7 +144,7 @@ const SDateTimePicker = styled(DateTimePicker)`
   flex: 6;
   display: flex;
   align-items: center !important;
-  font-family: Strawford, Source Sans Pro;
+  font-family: FK Grotesk Neu, Source Sans Pro;
   .react-datetime-picker__wrapper {
     border: 0px !important;
     border-radius: 5px !important;
@@ -254,7 +254,7 @@ const SMultiSelect = styled(MultiSelect)`
   .dropdown-content {
     .panel-content {
       overflow: hidden;
-      font-family: Strawford, Source Sans Pro;
+      font-family: FK Grotesk Neu, Source Sans Pro;
       font-weight: 18px;
     }
   }
@@ -298,7 +298,7 @@ const LabelText = styled.div`
 const SelectChannel = styled.div`
   border: 1px solid ${(props) => props.theme.faucetBorder};
   border-radius: 5px;
-  font-family: Strawford, Source Sans Pro;
+  font-family: FK Grotesk Neu, Source Sans Pro;
   font-style: normal;
   font-weight: 400;
   /* background: #F4F5FA; */
@@ -325,7 +325,7 @@ const Input = styled.input`
   &::placeholder {
     opacity: 1;
     font-weight: 400;
-    font-family: Strawford, Source Sans Pro;
+    font-family: FK Grotesk Neu, Source Sans Pro;
     // color: #B0B0B0 !important;
     color: ${(props) => props.theme.color};
   }
@@ -372,7 +372,7 @@ const ButtonContainer = styled.div`
   flex-direction: row;
   justify-content: flex-end;
   margin: 0.3rem 2rem 1.6rem 0;
-  font-family: Strawford, Source Sans Pro;
+  font-family: FK Grotesk Neu, Source Sans Pro;
   @media (max-width: 600px) {
     justify-content: space-evenly;
     margin-right: 0;
@@ -399,7 +399,7 @@ const ButtonFeed = styled.button`
   @media (max-width: 500px) {
     margin-right: ${(props) => (props.mright ? '1.5rem' : '')};
   }
-  font-family: Strawford, Source Sans Pro;
+  font-family: FK Grotesk Neu, Source Sans Pro;
 `;
 
 const ResetButton = styled(ButtonFeed)`
@@ -414,7 +414,7 @@ const SearchOptions = styled.div`
   flex-direction: row;
   margin-left: 2rem;
   margin-right: 2rem;
-  font-family: Strawford, Source Sans Pro;
+  font-family: FK Grotesk Neu, Source Sans Pro;
 
   @media (max-width: 600px) {
     flex-direction: column;

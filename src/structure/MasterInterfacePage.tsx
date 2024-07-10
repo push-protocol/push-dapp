@@ -39,7 +39,10 @@ const TutorialPage = lazy(() => import('pages/TutorialPage'));
 const YieldFarmingV2Page = lazy(() => import('pages/YieldFarmingPageV2'));
 const UserSettingsPage = lazy(() => import('pages/UserSettingsPage'));
 const ClaimGalxePage = lazy(() => import('pages/ClaimGalxePage'));
-
+const WelcomDashboardPage = lazy(() => import('pages/WelcomeDashboardPage'));
+const RewardPointsPage = lazy(() => import('pages/RewardPointsPage'));
+const PointsVaultPage = lazy(() => import('pages/PointsVaultPage'));
+const DiscordVerificationPage = lazy(() => import('pages/DiscordVerificationPage'));
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
 // import ChannelsPage from 'pages/ChannelsPage';
@@ -67,7 +70,10 @@ import { MODAL_POSITION } from 'hooks/useModalBlur';
 import MetamaskPushSnapModal from 'modules/receiveNotifs/MetamaskPushSnapModal';
 import SnapPage from 'pages/SnapPage';
 import { AppContextType } from 'types/context';
-import { getPublicAssetPath } from 'helpers/RoutesHelper';
+import { useBlocksTheme } from 'blocks/Blocks.hooks';
+import { ModeProp } from 'blocks';
+
+const rewardsPointsPagePaths = [APP_PATHS.Rewards, APP_PATHS.RewardsActivities, APP_PATHS.RewardsLeaderboard];
 
 // Create Header
 function MasterInterfacePage() {
@@ -84,6 +90,7 @@ function MasterInterfacePage() {
   const { MetamaskPushSnapModalComponent, blockedLoading }: AppContextType = useContext(AppContext);
 
   const { showMetamaskPushSnap } = useContext(AppContext);
+  const { mode } = useBlocksTheme();
 
   useEffect(() => {
     if (location.hash == '#receive-notifications') {
@@ -139,7 +146,7 @@ function MasterInterfacePage() {
 
   // Render
   return (
-    <Container>
+    <Container mode={mode}>
       <Interface location={location.pathname}>
         <Suspense
           fallback={
@@ -153,9 +160,32 @@ function MasterInterfacePage() {
         >
           <Routes>
             <Route
+              path={APP_PATHS.WelcomeDashboard}
+              element={<WelcomDashboardPage />}
+            />
+            {rewardsPointsPagePaths.map((path, index) => (
+              <Route
+                path={path}
+                key={index}
+                element={<RewardPointsPage />}
+              />
+            ))}
+
+            <Route
+              path={APP_PATHS.DiscordVerification}
+              element={<DiscordVerificationPage />}
+            />
+
+            <Route
+              path={APP_PATHS.PointsVault}
+              element={<PointsVaultPage />}
+            />
+
+            <Route
               path={APP_PATHS.Inbox}
               element={<InboxPage />}
             />
+
             <Route
               path={APP_PATHS.Spam}
               element={<InboxPage />}
@@ -263,7 +293,7 @@ function MasterInterfacePage() {
             />
             <Route
               path="/"
-              element={<Navigate to={APP_PATHS.Channels} />}
+              element={<Navigate to={APP_PATHS.WelcomeDashboard} />}
             />
             <Route
               path={APP_PATHS.Support}
@@ -384,18 +414,15 @@ function MasterInterfacePage() {
 }
 
 // css style
-const Container = styled.div`
+const Container = styled.div<ModeProp>`
   display: flex;
   flex: 1;
   flex-direction: column;
-  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${(props) => props.theme.interfaceTopPadding});
+  min-height: calc(100dvh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${(props) => props.theme.interfaceTopPadding});
+  max-height: calc(100dvh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${(props) => props.theme.interfaceTopPadding});
   /* Padding to be handled by Modules individually */
   /* padding: ${(props) => props.theme.interfaceTopPadding} 20px 20px 20px; */
   align-items: stretch;
-
-  background-image: url('${getPublicAssetPath('svg')}/${(props) =>
-    props.theme.scheme === 'dark' ? 'dark' : 'light'}bg.svg');
-  background-size: 100% 100%;
 
   position: relative;
 `;
@@ -404,7 +431,6 @@ const Interface = styled(Item)`
   flex: 1;
   display: flex;
   align-items: stretch;
-
   // box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
   // border-radius: 20px;
   // border: 1px solid ${(props) => props.theme.interfaceBorder};

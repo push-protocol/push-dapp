@@ -119,7 +119,7 @@ const Container = styled(ItemVV2)`
   padding: 8px;
   width: 340px;
   gap: 20px;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   line-height: 150%;
@@ -138,7 +138,7 @@ const PrimaryText = styled(H2V2)`
   font-size: 16px;
   font-weight: 500;
   line-height: 150%; /* 24px */
-  letter-spacing: -0.304px;
+  letter-spacing: normal;
   color: ${(props) => props.theme.stakingPrimaryText};
 `;
 
@@ -158,7 +158,7 @@ const FilledButton = styled(ButtonV2)`
   padding: 12px;
   font-size: 16px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: #ffffff;
   cursor: pointer;
   & > div {
@@ -198,7 +198,7 @@ const WarningText = styled.p`
   margin: 0px;
   color: #d53a94;
   text-align: center;
-  font-family: Strawford;
+  font-family: FK Grotesk Neu;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;

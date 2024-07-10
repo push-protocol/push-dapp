@@ -40,11 +40,20 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none', showNavBa
   let definedMargin;
 
   switch (sectionID) {
+
     case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MOBILE:
       SelectedIcon = LeftBarPrimaryItemIcon;
       definedMargin = '5px';
       break;
-    case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY:
+    case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.NOTIFICATION:
+      SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
+      definedMargin = item.isSection ? '0px' : '5px';
+      break;
+    case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MESSAGING:
+      SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
+      definedMargin = item.isSection ? '0px' : '5px';
+      break;
+    case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.DEVELOPERS:
       SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
       definedMargin = item.isSection ? '0px' : '5px';
       break;
@@ -133,7 +142,7 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none', showNavBa
               <Span
                 flex="1"
                 weight={!active ? '300' : '600'}
-                spacing="0"
+                spacing="normal"
                 margin="0 10px"
                 color={theme.nav.color}
                 onClick={data?.hasOnClickFunction && showMetamaskPushSnap}
@@ -203,7 +212,7 @@ const LeftBarSecondaryItemIcon = styled(InheritedSectionItemIcon)``;
 const NewTag = styled(SpanV2)`
   font-weight: 600;
   font-size: 12px;
-  letter-spacing: 0;
+  letter-spacing: normal;
   line-height: 140%;
   display: flex;
   align-items: center;

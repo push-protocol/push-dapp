@@ -51,27 +51,27 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
 
     let newNavSetup = navigationSetup;
     if (processingState === null) {
-      newNavSetup.secondary[0].data.hidden = true;
-      newNavSetup.secondary[1].data.hidden = true;
+      newNavSetup.developersList[0].data.hidden = true;
+      newNavSetup.developersList[1].data.hidden = true;
     } else {
-      newNavSetup.secondary[0].data.hidden = true;
-      newNavSetup.secondary[1].data.hidden = true;
+      newNavSetup.developersList[0].data.hidden = true;
+      newNavSetup.developersList[1].data.hidden = true;
 
       if (channelDetails !== 'unfetched' && channelDetails != null) {
-        newNavSetup.secondary[0].data.name = channelDetails.name;
-        newNavSetup.secondary[0].data.src = 'homeOffIcon';
-        newNavSetup.secondary[0].data.activeSrc = 'homeOnIcon';
-        newNavSetup.secondary[0].data.hidden = false;
-        newNavSetup.secondary[0].data.loading = false;
+        newNavSetup.developersList[0].data.name = channelDetails.name;
+        newNavSetup.developersList[0].data.src = 'homeOffIcon';
+        newNavSetup.developersList[0].data.activeSrc = 'homeOnIcon';
+        newNavSetup.developersList[0].data.hidden = false;
+        newNavSetup.developersList[0].data.loading = false;
       } else {
-        newNavSetup.secondary[0].data.name = 'Create Channel';
-        newNavSetup.secondary[0].data.hidden = false;
-        newNavSetup.secondary[0].data.loading = false;
+        newNavSetup.developersList[0].data.name = 'Create Channel';
+        newNavSetup.developersList[0].data.hidden = false;
+        newNavSetup.developersList[0].data.loading = false;
       }
 
       if (canSend === SEND_NOTIFICATION_STATES.SEND) {
-        newNavSetup.secondary[1].data.name = 'Send Notifications';
-        newNavSetup.secondary[1].data.hidden = false;
+        newNavSetup.developersList[1].data.name = 'Send Notifications';
+        newNavSetup.developersList[1].data.hidden = false;
       }
     }
 
@@ -92,26 +92,40 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
 
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
-    // Set Primary List
     const primaryList = returnTransformedList(navigationList.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY);
-
-    // Set Secondary List
-    const secondaryList = returnTransformedList(navigationList.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
-    const thirdList = returnTransformedList(navigationList.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
+    const notificationList = returnTransformedList(
+      navigationList.secondary.Notifications,
+      GLOBALS.CONSTANTS.NAVBAR_SECTIONS.NOTIFICATION
+    );
+    const messagingList = returnTransformedList(
+      navigationList.secondary.Messsaging,
+      GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MESSAGING
+    );
+    const developersList = returnTransformedList(
+      navigationList.secondary.Developers,
+      GLOBALS.CONSTANTS.NAVBAR_SECTIONS.DEVELOPERS
+    );
+    const thirdList = returnTransformedList(navigationList.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD);
 
     // Set Nav List
     let count = -1;
     let navList = returnNavList(navigationList.primary, count);
-    navList = Object.assign(navList, returnNavList(navigationList.secondary, Object.keys(navList).length));
+    navList = Object.assign(
+      navList,
+      returnNavList(navigationList.secondary.Notifications, Object.keys(navList).length)
+    );
+    navList = Object.assign(navList, returnNavList(navigationList.secondary.Messsaging, Object.keys(navList).length));
+    navList = Object.assign(navList, returnNavList(navigationList.secondary.Developers, Object.keys(navList).length));
     navList = Object.assign(navList, returnNavList(navigationList.third, Object.keys(navList).length));
 
     const finalList = {
       primary: primaryList,
-      secondary: secondaryList,
+      notificationList: notificationList,
+      messagingList: messagingList,
+      developersList: developersList,
       third: thirdList,
       navigation: navList,
     };
-
     setNavigationSetup(finalList);
   }, []);
 
@@ -183,7 +197,13 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
     if (navigationSetup) {
       // loop and find the item in question
       Object.entries(navigationSetup).forEach(([key, value]) => {
-        if (key === 'primary' || key === 'secondary' || key === 'third') {
+        if (
+          key === 'primary' ||
+          key === 'notificationList' ||
+          key === 'messagingList' ||
+          key === 'developersList' ||
+          key === 'third'
+        ) {
           const topSection = navigationSetup[key];
 
           Object.entries(topSection).forEach(([key, value]) => {
@@ -243,7 +263,13 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
 
     if (activeDrilldownId == null) {
       Object.keys(transformedMenuList).forEach((key) => {
-        if (key === 'primary' || key === 'secondary' || key === 'third') {
+        if (
+          key === 'primary' ||
+          key === 'notificationList' ||
+          key === 'messagingList' ||
+          key === 'developersList' ||
+          key === 'third'
+        ) {
           Object.keys(transformedMenuList[key]).forEach((sectionkey) => {
             const section = transformedMenuList[key][sectionkey];
 
@@ -265,7 +291,13 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
     } else {
       // menu item is getting selected
       Object.keys(transformedMenuList).forEach((key) => {
-        if (key === 'primary' || key === 'secondary' || key === 'third') {
+        if (
+          key === 'primary' ||
+          key === 'notificationList' ||
+          key === 'messagingList' ||
+          key === 'developersList' ||
+          key === 'third'
+        ) {
           Object.keys(transformedMenuList[key]).forEach((sectionkey) => {
             const section = transformedMenuList[key][sectionkey];
 
@@ -358,10 +390,17 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
     let fontSize;
     let secondaryButton = 0;
     switch (sectionID) {
-      case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY:
-        Section = SecondarySection;
+      case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.NOTIFICATION:
+        Section = PrimarySection;
         fontSize = 'small';
-        secondaryButton = 1;
+        break;
+      case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MESSAGING:
+        Section = PrimarySection;
+        fontSize = 'small';
+        break;
+      case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.DEVELOPERS:
+        Section = PrimarySection;
+        fontSize = 'small';
         break;
       case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD:
         Section = SecondarySection;
@@ -508,7 +547,7 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
     let SectionItem;
 
     switch (sectionID) {
-      case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY:
+      case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.NOTIFICATION:
         SectionGroup = PrimarySectionGroup;
         SectionItem = PrimarySectionItem;
         break;
@@ -595,20 +634,27 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
       )}
       {navigationSetup && Object.keys(navigationSetup).length > 0 && (
         <>
-          {renderMainItems(navigationSetup.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)}
+          <Primary>
+            {renderMainItems(navigationSetup.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)}
 
-          <Span
-            textTransform="uppercase"
-            weight="700"
-            size="11px"
-            margin="20px 0px 0px 0px"
-            padding="15px 0px"
-            color="#575D73"
-            spacing="0.16em"
-          >
-            Developers
-          </Span>
-          {renderMainItems(navigationSetup.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY)}
+            <PrimaryInner>
+              <TextSpan>Notifications</TextSpan>
+
+              {renderMainItems(navigationSetup.notificationList, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.NOTIFICATION)}
+            </PrimaryInner>
+
+            <PrimaryInner>
+              <TextSpan>Messaging</TextSpan>
+
+              {renderMainItems(navigationSetup.messagingList, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MESSAGING)}
+            </PrimaryInner>
+
+            <PrimaryInner>
+              <TextSpan>Developers</TextSpan>
+              {renderMainItems(navigationSetup.developersList, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.DEVELOPERS)}
+            </PrimaryInner>
+          </Primary>
+
           <Footer
             justify="flex-start"
             align="stretch"
@@ -622,6 +668,23 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
 }
 
 // CSS Styles
+
+const Primary = styled(Item)`
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  justify-content: flex-start;
+  background: '#fff';
+  flex: none;
+  width: 100%;
+  gap: 8px;
+`;
+
+const PrimaryInner = styled(Primary)`
+  align-items: flex-start;
+  padding: 3px 0px;
+  gap: 5px;
+`;
 
 const InheritedSection = styled(Item)`
   flex: initial;
@@ -650,6 +713,15 @@ const SectionInnerGroupContainer = styled(Item)`
     left: 0;
     height: 10px;
   }
+`;
+
+const TextSpan = styled(Span)`
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 10px;
+  padding: 0px 5px;
+  color: #8c93a0;
+  letter-spacing: normal;
 `;
 
 const SectionInnerItemContainer = styled(Item)``;
