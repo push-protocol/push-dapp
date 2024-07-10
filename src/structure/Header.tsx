@@ -246,7 +246,7 @@ function Header({ isDarkMode, darkModeToggle }) {
             >
               <Span
                 textTransform="capitalize"
-                spacing="-0.02em"
+                spacing="normal"
                 weight="normal"
                 // padding={isMobile ? '8px 7px' : '8px 20px'}
                 className="text"

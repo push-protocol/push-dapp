@@ -2,15 +2,18 @@ import { CSSProperties, ReactNode } from 'react';
 
 import {
   BlocksColors,
+  BorderRadiusType,
   BorderValue,
   RadiusType,
   ResponsiveProp,
   SpaceType,
+  SpacingType,
   ThemeModeBorder,
   ThemeModeColors,
   ValueOf,
 } from '../Blocks.types';
 import { FlattenSimpleInterpolation } from 'styled-components';
+import { Spacing, ThemeColors } from 'blocks/theme/Theme.types';
 
 export type BoxResponsiveProps = {
   /* Sets align-items css property */
@@ -20,7 +23,7 @@ export type BoxResponsiveProps = {
   /* Sets flex-direction css property */
   flexDirection?: ResponsiveProp<CSSProperties['flexDirection']>;
   /* Sets gap between the elements */
-  gap?: ResponsiveProp<SpaceType>;
+  gap?: ResponsiveProp<SpaceType | Spacing>;
   /* Sets display css property */
   display?: ResponsiveProp<CSSProperties['display']>;
   /* Sets height css property */
@@ -28,7 +31,7 @@ export type BoxResponsiveProps = {
   /* Sets justify-content css property */
   justifyContent?: ResponsiveProp<CSSProperties['justifyContent']>;
   /* Sets margin css property */
-  margin?: ResponsiveProp<SpaceType>;
+  margin?: ResponsiveProp<SpaceType | SpacingType>;
   /* Sets max-height css property */
   maxHeight?: ResponsiveProp<string>;
   /* Sets min-height css property */
@@ -38,7 +41,7 @@ export type BoxResponsiveProps = {
   /* Sets min-width css property */
   minWidth?: ResponsiveProp<string>;
   /* Sets padding css property */
-  padding?: ResponsiveProp<SpaceType>;
+  padding?: ResponsiveProp<SpaceType | SpacingType>;
   /* Sets width css property */
   width?: ResponsiveProp<string>;
 };
@@ -47,11 +50,11 @@ export type BoxNonResponsiveProps = {
   /* Sets border css property */
   border?: BorderValue | ThemeModeBorder;
   /* Sets border-radius css property */
-  borderRadius?: RadiusType;
+  borderRadius?: RadiusType | BorderRadiusType;
   /* Sets background-color css property */
-  backgroundColor?: BlocksColors | ThemeModeColors;
+  backgroundColor?: BlocksColors | ThemeModeColors | ThemeColors;
   /* Sets color css property */
-  color?: BlocksColors | ThemeModeColors;
+  color?: BlocksColors | ThemeModeColors | ThemeColors;
   /* Sets cursor css property */
   cursor?: CSSProperties['cursor'];
   /* Sets position css property */

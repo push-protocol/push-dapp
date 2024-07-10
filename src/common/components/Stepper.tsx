@@ -22,20 +22,20 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, config, complete
   return (
     <Box
       display="flex"
-      gap="s8"
+      gap="spacing-lg"
     >
       {steps.map((step, index) => (
         <Box
           display="flex"
           flexDirection="column"
-          gap="s3"
+          gap="spacing-xs"
           width="180px"
           cursor="pointer"
-          color={completedSteps.includes(index) ? 'pink-500' : 'gray-500'}
           onClick={() => handleChangeActiveStep(index)}
         >
           <Text
             textAlign="center"
+            color={completedSteps.includes(index) ? 'text-brand-medium' : 'text-tertiary'}
             variant="h5-semibold"
           >
             {step.label}
@@ -44,7 +44,7 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, config, complete
           <Box
             height="4px"
             borderRadius="r2"
-            backgroundColor={completedSteps.includes(index) ? 'pink-500' : 'gray-500'}
+            backgroundColor={completedSteps.includes(index) ? 'stroke-brand-medium' : 'stroke-tertiary'}
           ></Box>
         </Box>
       ))}

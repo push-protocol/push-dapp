@@ -6,7 +6,7 @@ import { ModeProp } from '../Blocks.types';
 
 import { getTextInputState, getTextInputStateStyles } from './TextInput.utils';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
-import { CrossFilled } from 'blocks/icons';
+import { Asterisk, CrossFilled } from 'blocks/icons';
 import { Text } from 'blocks/text';
 
 export type TextInputProps = {
@@ -53,7 +53,10 @@ const StyledTextInput = styled.div<TextInputProps & ModeProp>`
     justify-content: space-between;
     align-items: center;
   }
-
+  .label {
+    display: flex;
+    gap: var(--s1);
+  }
   .input-container {
     cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
     display: flex;
@@ -68,15 +71,9 @@ const StyledTextInput = styled.div<TextInputProps & ModeProp>`
     border-radius: var(--r3);
 
     /* Common icon css added through CSS class */
-    .icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 2px;
-      span {
-        width: 18px;
-        height: 13.5px;
-      }
+    [role='img'] {
+      width: 18px;
+      height: 18px;
     }
 
     & input {
@@ -84,6 +81,7 @@ const StyledTextInput = styled.div<TextInputProps & ModeProp>`
       border: none;
       background-color: transparent;
       padding: var(--s3) var(--s0);
+      margin-left: var(--s1);
       &:focus {
         outline: none;
       }
@@ -96,10 +94,10 @@ const StyledTextInput = styled.div<TextInputProps & ModeProp>`
     }
   }
   /* TextInput type CSS styles */
-  ${({ mode, error, disabled }) =>
+  ${({ mode, error, disabled, success }) =>
     getTextInputStateStyles({
       mode,
-      state: getTextInputState({ error: !!error, disabled: !!disabled }),
+      state: getTextInputState({ error: !!error, disabled: !!disabled, success: !!success }),
     })}
 
   /* Custom CSS applied via styled component css prop */
@@ -132,6 +130,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       <StyledTextInput
         disabled={disabled}
         error={error}
+        success={success}
         required={required}
         role="input"
         mode={mode}
@@ -140,12 +139,35 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       >
         {(label || totalCount) && (
           <div className="label-count">
-            {label && <Text>{label}</Text>}
-            {totalCount && <Text>{totalCount}</Text>}
+            {label && (
+              <div className="label">
+                <Text
+                  variant="h6-semibold"
+                  color={{ light: disabled ? 'gray-400' : 'gray-1000', dark: disabled ? 'gray-700' : 'gray-100' }}
+                >
+                  {label}
+                </Text>
+                {!!required && (
+                  <Asterisk
+                    color={{ light: disabled ? 'gray-400' : 'gray-500', dark: disabled ? 'gray-700' : 'gray-500' }}
+                    size={4.6}
+                  />
+                )}
+              </div>
+            )}
+
+            {totalCount && (
+              <Text
+                variant="c-regular"
+                color={{ light: 'gray-600', dark: 'gray-500' }}
+              >
+                {`${value?.length}/${totalCount}`}
+              </Text>
+            )}
           </div>
         )}
         <div className="input-container">
-          {icon && <span className="icon">{icon}</span>}
+          {icon}
           <input
             type={type}
             disabled={!!disabled}
@@ -154,15 +176,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             onChange={onChange}
             value={value}
           />
-          {/* width is not getting applied */}
-          {onClear && (
-            <CrossFilled
-              width="18px"
-              height="18px"
-              className="clear"
-              onClick={() => onClear?.()}
-            />
-          )}
+          {onClear && <CrossFilled onClick={() => onClear?.()} />}
         </div>
         {description && (
           <Text

@@ -8,6 +8,7 @@ import styled, { useTheme } from 'styled-components';
 import { useClickAway } from 'hooks/useClickAway';
 import { Image, Item } from '../primaries/SharedStyling';
 import Dropdown from './Dropdown';
+import { Text } from 'blocks';
 import { getPublicAssetPath } from 'helpers/RoutesHelper';
 
 type FaucetListType = {
@@ -105,7 +106,13 @@ const Faucets = () => {
             height="32px"
           />
         </ItemHBar>
-        Testnet Faucets
+        <Text
+          variant="bm-regular"
+          ellipsis={true}
+        >
+          {' '}
+          Testnet Faucets
+        </Text>
         <ToggleArrowImg>
           <img
             alt="arrow"
@@ -154,11 +161,11 @@ const Container = styled.button`
 `;
 
 const ItemHBar = styled.div`
-  padding: 0 20px 0 0px;
+  padding: 0 5px 0 0px;
 `;
 const Faucet = styled.div`
   margin: 0px 10px;
-  padding: 5px 15px;
+  padding: 5px 15px 5px 10px;
   display: flex;
   flex-direction: row;
   align-items: center;

@@ -1,0 +1,1 @@
+export const GuestModeWalletAddress = 'eip155:0x0000000000000000000000000000000000000001';

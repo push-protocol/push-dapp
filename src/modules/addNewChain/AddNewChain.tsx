@@ -41,9 +41,9 @@ const AddNewChain: FC<AddNewChainProps> = () => {
       alignItems="center"
       margin="s8 s0 s0 s0"
       padding="s8"
-      gap="s8"
+      gap="spacing-lg"
       borderRadius="r8"
-      backgroundColor="white"
+      backgroundColor="surface-primary"
     >
       <Box
         display="flex"
@@ -52,13 +52,13 @@ const AddNewChain: FC<AddNewChainProps> = () => {
         gap="s1"
       >
         <Text
-          color="gray-1000"
+          color="text-primary"
           variant="h3-semibold"
         >
           Add New Chain to Channel
         </Text>
         <Text
-          color="gray-500"
+          color="text-tertiary"
           variant="bs-regular"
         >
           Add an alias chain to your channel to enable notifications to that chain.

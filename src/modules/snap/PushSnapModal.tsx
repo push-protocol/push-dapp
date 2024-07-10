@@ -30,7 +30,7 @@ const PushSnapModal = () => {
               fontSize="34px"
               fontWeight="500"
               color="#1E1E1E"
-              letterSpacing="-1.02px"
+              letterSpacing="normal"
             >
               Push Snap
             </H2V2>
@@ -94,7 +94,7 @@ const FilledButton = styled(ButtonV2)`
   border-radius: 8px;
   font-size: 16px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: #ffffff;
   flex: none;
   cursor: pointer;

@@ -81,6 +81,6 @@ const WelcomeText = styled(SpanV2)`
   font-weight: 500;
   text-align: center;
   color: ${(props) => props.theme.default.color};
-  letter-spacing: -0.72px;
+  letter-spacing: normal;
   line-height: 141%;
 `;

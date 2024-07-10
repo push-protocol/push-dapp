@@ -574,7 +574,7 @@ function Navigation() {
                     padding="s0 s6"
                   >
                     <Curve
-                      color="gray-300"
+                      color="stroke-tertiary"
                       size={18}
                     />
                     <Box
@@ -606,7 +606,7 @@ function Navigation() {
                       {!verifiedAliasChainIds?.length && (
                         <Text
                           variant="bm-semibold"
-                          color="gray-800"
+                          color="text-secondary"
                         >
                           Add New Chain
                         </Text>
@@ -803,7 +803,7 @@ const PrimaryInner = styled(Primary)`
 
 const TextSpan = styled(Span)`
   text-transform: uppercase;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 10px;
   margin-left: 15px;
   color: #8c93a0;

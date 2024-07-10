@@ -1,5 +1,5 @@
 import { css } from 'styled-components';
-import { deviceMediaQ, deviceSizes, breakpointMap } from './Blocks.constants';
+import { deviceMediaQ, deviceSizes, breakpointMap } from './theme';
 import {
   BlocksColors,
   Breakpoint,
@@ -12,8 +12,10 @@ import {
   ThemeMode,
   ThemeModeBorder,
   BorderValue,
-  RadiusType
+  RadiusType,
+  BorderRadiusType,
 } from './Blocks.types';
+import { ThemeColors } from './theme/Theme.types';
 
 /**
  * @param propName
@@ -110,7 +112,7 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
     tablet: '',
     laptop: '',
     laptopL: '',
-    desktop: ''
+    desktop: '',
   };
 
   data.forEach(({ prop, propName }) => {
@@ -135,10 +137,13 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
 };
 
 /**
+ * @deprecated
  * @param color
  * @returns color as a css variable: var(--primary)
+ *
+ * // TODO: Remove this function. We don't need it.
  */
-export const getBlocksColor = (mode: ThemeMode, color?: BlocksColors | ThemeModeColors) => {
+export const getBlocksColor = (mode: ThemeMode, color?: BlocksColors | ThemeModeColors | ThemeColors) => {
   // If color is not given return undefined, to avoid any breakages
   if (!color) return color;
 
@@ -172,7 +177,8 @@ export const getBlocksBorder = (mode: ThemeMode, border?: BorderValue | ThemeMod
  * @param radius
  * @returns
  */
-export const getBlocksBorderRadius = (radius?: RadiusType) => {
+export const getBlocksBorderRadius = (radius?: RadiusType | BorderRadiusType) => {
+  console.debug(radius);
   // If border-radius is not given return undefined, to avoid any breakages
   if (!radius) return radius;
 

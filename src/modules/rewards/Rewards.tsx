@@ -1,56 +1,72 @@
 // React and other libraries
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 // third party libraries
-import { css } from 'styled-components';
 import { useSelector } from 'react-redux';
+import { css } from 'styled-components';
+import { useSearchParams } from 'react-router-dom';
 
 //Hooks
-import { useAccount } from 'hooks';
 import { useRewardsTabs } from './hooks/useRewardsTabs';
-import { useGenerateUserId } from './hooks/useGenerateUserId';
 import { useDiscordSession } from './hooks/useDiscordSession';
+import { useRewardsAuth } from './hooks/useRewardsAuth';
+import { useCreateRewardsUser } from './hooks/useCreateRewardsUser';
 
 //Types
 import { UserStoreType } from 'types';
-import { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfile';
-
-//helpers
-import { walletToCAIP10 } from 'helpers/w2w';
 
 //Components
 import { Box, Text } from 'blocks';
 import { ReferralSection } from './components/ReferralSection';
 import { RewardsTabsContainer } from './components/RewardsTabsContainer';
-import UnlockProfileWrapper from 'components/chat/unlockProfile/UnlockProfileWrapper';
+import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
 
 export type RewardsProps = {};
 
 const Rewards: FC<RewardsProps> = () => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const { account } = useAccount();
+  const [hasError, setHasError] = useState<{} | null>(null);
 
-  const caip10WalletAddress = walletToCAIP10({ account });
+  //fetch ref from url
+  const [searchParams] = useSearchParams();
+
+  const ref = searchParams.get('ref');
+  if (ref) sessionStorage.setItem('ref', ref);
 
   // Used to set the discord session after discord redirects back to the Dapp.
   useDiscordSession();
 
+  const userMessage = 'Error decrypting PGP private key ...swiching to Guest mode';
+
+  // reject unlock profile listener
+  const errorExists = useMemo(
+    () => userPushSDKInstance?.errors.some((error) => error.type === 'ERROR' && error.message === userMessage),
+    [userPushSDKInstance?.errors]
+  );
+
+  const isErrorPresent = userPushSDKInstance?.errors;
+
   const { activeTab, handleSetActiveTab } = useRewardsTabs();
 
-  const { showConnectModal, setConnectModalVisibility } = useGenerateUserId(caip10WalletAddress);
+  const { isAuthModalVisible, status, connectUserWallet, hideAuthModal } = useRewardsAuth();
 
-  useEffect(() => {
-    if (activeTab !== 'activity') {
-      setConnectModalVisibility(false);
-    }
-
-    if (activeTab === 'activity' && userPushSDKInstance && userPushSDKInstance.readmode()) {
-      setConnectModalVisibility(true);
-    }
-  }, [activeTab, account, userPushSDKInstance]);
+  useCreateRewardsUser();
 
   const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
+
+  useEffect(() => {
+    if (isErrorPresent && isAuthModalVisible && status === 'error' && errorExists && activeTab === 'dashboard') {
+      setHasError(isErrorPresent);
+      hideAuthModal();
+    }
+  }, [isErrorPresent, isAuthModalVisible, errorExists]);
+
+  // retry unlock profile
+  const handleUnlockProfile = () => {
+    setHasError(null);
+    connectUserWallet();
+  };
 
   return (
     <Box
@@ -83,10 +99,10 @@ const Rewards: FC<RewardsProps> = () => {
           handleSetActiveTab={handleSetActiveTab}
         />
 
-        {activeTab === 'dashboard' && <ReferralSection />}
+        {activeTab === 'dashboard' && <ReferralSection handleUnlockProfile={handleUnlockProfile} />}
       </Box>
 
-      {userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
+      {userPushSDKInstance && userPushSDKInstance?.readmode() && isAuthModalVisible && (
         <Box
           display="flex"
           justifyContent="center"
@@ -98,7 +114,9 @@ const Rewards: FC<RewardsProps> = () => {
         >
           <UnlockProfileWrapper
             type={UNLOCK_PROFILE_TYPE.MODAL}
-            showConnectModal={showConnectModal}
+            showConnectModal={isAuthModalVisible}
+            onClose={() => hideAuthModal()}
+            description="Unlock your profile to proceed."
           />
         </Box>
       )}

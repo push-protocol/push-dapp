@@ -234,7 +234,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, chatId, selectedChatId, setS
                   margin="0 8px"
                   fontSize="16px"
                   fontWeight="500"
-                  letterSpacing="-0.019em"
+                  letterSpacing="normal"
                   color={theme.default.secondaryColor}
                 >
                   Create Group
@@ -364,7 +364,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, chatId, selectedChatId, setS
             onChatsCountChange={(count) => {
               console.debug('src::sections::chat::ChatSidebarSection::onChatsCountChage::requests: count is: ', count);
               // remove request badge update when chatId is Push Bot or actively opened
-              if (chatId == RecommendedChatLists[0]?.payload?.chatId || chatId?.split("chatid:")[1] == selectedChatId){
+              if (chatId == RecommendedChatLists[0]?.payload?.chatId || chatId?.split('chatid:')[1] == selectedChatId) {
                 setNumberOfChatReqs(null);
               } else {
                 setNumberOfChatReqs(count);
@@ -467,7 +467,7 @@ const QROutline = styled(AiOutlineQrcode)`
 `;
 
 const TextQR = styled.p`
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
