@@ -19,7 +19,7 @@ import { UserStoreType } from 'types';
 export type AddNewChainProps = {};
 
 let restrictedForwardSteps = [1, 2];
-
+const completedSteps = [0];
 const AddNewChain: FC<AddNewChainProps> = () => {
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
   const [alias, setAlias] = useState<string>('');
@@ -27,7 +27,10 @@ const AddNewChain: FC<AddNewChainProps> = () => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
   const handleNextStep = () => {
-    if (activeStepIndex < 2) setActiveStepIndex(activeStepIndex + 1);
+    if (activeStepIndex < 2) {
+      completedSteps.push(activeStepIndex + 1);
+      setActiveStepIndex(activeStepIndex + 1);
+    }
   };
   restrictedForwardSteps = restrictedForwardSteps.filter((item) => item !== activeStepIndex);
   console.debug(restrictedForwardSteps);
@@ -63,8 +66,8 @@ const AddNewChain: FC<AddNewChainProps> = () => {
       </Box>
       <Stepper
         steps={addNewChainSteps}
+        completedSteps={completedSteps}
         setActiveStepIndex={setActiveStepIndex}
-        activeStepIndex={activeStepIndex}
         config={{ restrictedForwardSteps: restrictedForwardSteps }}
       />
       {/* check if we need formik */}
