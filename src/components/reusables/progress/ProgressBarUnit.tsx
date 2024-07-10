@@ -18,36 +18,43 @@ interface ProgressBarPropsI {
 // Constants
 export const NOTICE_POSITIONING = {
   TOP: 1,
-  BOTTOM: 2
-}
+  BOTTOM: 2,
+};
 
 // Create Progress Bar
-const ProgressBar = ({ percent, color = GLOBALS.COLORS.PRIMARY_PINK, notice = null, noticePositioning = NOTICE_POSITIONING.BOTTOM }: ProgressBarPropsI) => {
+const ProgressBar = ({
+  percent,
+  color = GLOBALS.COLORS.PRIMARY_PINK,
+  notice = null,
+  noticePositioning = NOTICE_POSITIONING.BOTTOM,
+}: ProgressBarPropsI) => {
   const theme = useTheme();
 
   return (
     <ItemVV2
-    zIndex="1000"
-      flexDirection={noticePositioning == NOTICE_POSITIONING.BOTTOM ? "column" : "column-reverse"}
+      zIndex="1000"
+      flexDirection={noticePositioning == NOTICE_POSITIONING.BOTTOM ? 'column' : 'column-reverse'}
     >
       <Progress
         percent={percent}
         color={color}
       />
 
-      {notice &&
+      {notice && (
         <SpanV2
           color={theme.default.secondaryColor}
           fontWeight="400"
           fontSize="12px"
           textTransform="none"
           textAlign="center"
-          letterSpacing="0.03em"
-          margin={`${noticePositioning == NOTICE_POSITIONING.BOTTOM ? "5px" : 0} 0 ${noticePositioning == NOTICE_POSITIONING.TOP ? "5px" : 0} 0`}
+          letterSpacing="normal"
+          margin={`${noticePositioning == NOTICE_POSITIONING.BOTTOM ? '5px' : 0} 0 ${
+            noticePositioning == NOTICE_POSITIONING.TOP ? '5px' : 0
+          } 0`}
         >
           {notice}
         </SpanV2>
-      }
+      )}
     </ItemVV2>
   );
 };

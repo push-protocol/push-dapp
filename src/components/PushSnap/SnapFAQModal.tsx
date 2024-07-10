@@ -573,7 +573,7 @@ const LI = styled.li`
   margin: 5px 0px;
   font-weight: 400;
   color: #62626a;
-  font-family: Strawford;
+  font-family: FK Grotesk Neu;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;

@@ -473,7 +473,7 @@ export default function PoolCard({
       <Item margin="20px" align="stretch" self="stretch" border="1px solid #e1e1e1" radius="12px">
         <Item>
           <Item>
-            <H2 textTransform="uppercase" spacing="0.1em">
+            <H2 textTransform="uppercase" spacing="normal">
               <Span bg={poolName == "Uniswap LP Pool (UNI-V2)" ? "#35c5f3" : "#e20880"} size="0.8em" color="#fff" weight="600" padding="0px 8px">{poolName}</Span>
             </H2>
             <Item
@@ -481,27 +481,27 @@ export default function PoolCard({
               self="stretch"
             >
               <H3>
-                <Span>Current APR </Span><Span bg={poolName == "Uniswap LP Pool (UNI-V2)" ? "#35c5f3" : "#e20880"} padding="2px 8px" weight="600" color="#fff"><b>{Math.max(pushPoolStats.stakingAPR,0)}%</b></Span>
+                <Span>Current APR </Span><Span bg={poolName == "Uniswap LP Pool (UNI-V2)" ? "#35c5f3" : "#e20880"} padding="2px 8px" weight="600" color="#fff"><b>{Math.max(pushPoolStats.stakingAPR, 0)}%</b></Span>
               </H3>
             </Item>
           </Item>
 
           <ItemH margin="10px 0px 0px 0px" self="stretch" items="stretch" bg="#f1f1f1">
             <PoolContainer bg="#fff" margin="5px 15px" radius="12px" border="1px solid #ddd" borderBottom="8px solid #e1e1e1">
-              <PoolBoxTitle margin="15px 10px" fg="#999" textTransform="uppercase" size="10px" spacing="0.2em">Current Reward</PoolBoxTitle>
+              <PoolBoxTitle margin="15px 10px" fg="#999" textTransform="uppercase" size="10px" spacing="normal">Current Reward</PoolBoxTitle>
               <PoolBoxMsg
                 bg="transparent"
                 fg={poolName == "Uniswap LP Pool (UNI-V2)" ? "#35c5f3" : "#e20880"}
                 size="16px"
                 margin="-15px 5px 10px 5px"
-              > 
+              >
                 {/* TODO: fix calculation */}
-                { poolName == "Uniswap LP Pool (UNI-V2)" ? numberWithCommas(formatTokens(pushPoolStats.rewardForCurrentEpoch)) : 0 } PUSH
+                {poolName == "Uniswap LP Pool (UNI-V2)" ? numberWithCommas(formatTokens(pushPoolStats.rewardForCurrentEpoch)) : 0} PUSH
               </PoolBoxMsg>
             </PoolContainer>
 
             <PoolContainer bg="#fff" margin="5px 15px" radius="12px" border="1px solid #ddd" borderBottom="8px solid #e1e1e1">
-              <PoolBoxTitle margin="15px 10px" fg="#999" textTransform="uppercase" size="10px" spacing="0.2em">Total Staked</PoolBoxTitle>
+              <PoolBoxTitle margin="15px 10px" fg="#999" textTransform="uppercase" size="10px" spacing="normal">Total Staked</PoolBoxTitle>
               <PoolBoxMsg
                 bg="transparent"
                 fg={poolName == "Uniswap LP Pool (UNI-V2)" ? "#35c5f3" : "#e20880"}
@@ -520,11 +520,11 @@ export default function PoolCard({
           >
             <EpochDisplayer>
               <Span padding="0px 5px 0px 0px">Current Epoch</Span>
-                <B>
-                  {Math.min(pushPoolStats.currentEpochPUSH,pushPoolStats.totalEpochPUSH).toString()}
-                  /
-                  {pushPoolStats.totalEpochPUSH}
-                </B>
+              <B>
+                {Math.min(pushPoolStats.currentEpochPUSH, pushPoolStats.totalEpochPUSH).toString()}
+                /
+                {pushPoolStats.totalEpochPUSH}
+              </B>
             </EpochDisplayer>
           </Item>
         </Item>
@@ -621,7 +621,7 @@ export default function PoolCard({
                 color="#fff"
                 align="center"
                 textTransform="uppercase"
-                spacing="0.1em"
+                spacing="normal"
                 size="14px"
                 weight="600"
                 padding="10px"
@@ -664,7 +664,7 @@ export default function PoolCard({
           <ButtonAlt
             bg="#000"
             onClick={() => massHarvestTokensAll()}
-            disabled={!(userData.totalAvailableReward>0)}
+            disabled={!(userData.totalAvailableReward > 0)}
           >
             {!txInProgressMassHarvest &&
               <Span color="#fff" weight="400">Harvest</Span>
@@ -697,7 +697,7 @@ const MaxButton = styled(Button)`
   font-size: 12px;
   text-transform: uppercase;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: normal;
 `
 
 const PoolContainer = styled(Item)`
@@ -710,7 +710,7 @@ const PoolBoxTitle = styled(Span)`
   font-weight: 600;
   font-size: ${props => props.size || '12px'};
   margin: ${props => props.margin || '10px 5px'};
-  letter-spacing: 0.1em;
+  letter-spacing: normal;
 `
 
 const PoolBoxMsg = styled(Span)`
@@ -719,7 +719,7 @@ const PoolBoxMsg = styled(Span)`
   font-weight: 600;
   font-size: ${props => props.size || '12px'};
   margin: ${props => props.margin || '5px 5px 10px 5px'};
-  letter-spacing: 0.1em;
+  letter-spacing: normal;
   padding: 4px 15px;
   border-radius: 10px;
 `
@@ -752,7 +752,7 @@ const Heading = styled.h5`
 
 const EpochDisplayer = styled(Span)`
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: normal;
   font-size: 12px;
   background: #f1f1f1;
   padding: 0px 10px 0px 10px;

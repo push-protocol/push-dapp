@@ -67,7 +67,7 @@ const Container = styled(ItemVV2)`
     font-size: 12px;
     font-weight: 600;
     margin-bottom: 10px;
-    letter-spacing: 0.05em;
+    letter-spacing: normal;
     color: #657795;
     display: flex;
     align-self: flex-start;

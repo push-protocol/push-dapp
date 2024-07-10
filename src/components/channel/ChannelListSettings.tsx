@@ -170,7 +170,7 @@ const ChannelName = styled.span`
   font-size: 15px;
   font-weight: 400;
   line-height: 23px;
-  letter-spacing: 0em;
+  letter-spacing: normal;
   color: ${(props) => props.theme.default.color};
 `;
 

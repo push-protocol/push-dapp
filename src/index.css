@@ -62,7 +62,7 @@ hr {
  */
 
 pre {
-  font-family: Strawford, monospace, monospace; /* 1 */
+  font-family: FK Grotesk Neu, monospace, monospace; /* 1 */
   font-size: 1em; /* 2 */
 }
 
@@ -105,7 +105,7 @@ strong {
 code,
 kbd,
 samp {
-  font-family: Strawford, monospace, monospace; /* 1 */
+  font-family: FK Grotesk Neu, monospace, monospace; /* 1 */
   font-size: 1em; /* 2 */
 }
 
@@ -406,64 +406,40 @@ template {
  * Custom CSS
  */
  @font-face {
-  font-family: 'Strawford';
-  src: url('./assets/fonts/Strawford-ExtraLight.woff2') format('woff2'),
-      url('./assets/fonts/Strawford-ExtraLight.otf') format('otf'),
-      url('./assets/fonts/Strawford-ExtraLight.ttf') format('ttf');
-  font-weight: 100 200;
+  font-family: 'FK Grotesk Neu';
+  src: url('./assets/fonts/FKGroteskNeue-Regular.woff2') format('woff2'),
+       url('./assets/fonts/FKGroteskNeue-Regular.woff') format('woff');
+  font-weight: 100 400;
   font-style: normal;
 }
 
-@font-face {
-  font-family: 'Strawford';
-  src: url('./assets/fonts/Strawford-Light.woff2') format('woff2'),
-      url('./assets/fonts/Strawford-Light.otf') format('otf'),
-      url('./assets/fonts/Strawford-Light.ttf') format('ttf');
-  font-weight: 300;
-  font-style: normal;
-}
 
 @font-face {
-  font-family: 'Strawford';
-  src: url('./assets/fonts/Strawford-Regular.woff2') format('woff2'),
-      url('./assets/fonts/Strawford-Regular.woff') format('woff'),
-      url('./assets/fonts/Strawford-Regular.eot') format('eot'),
-      url('./assets/fonts/Strawford-Regular.ttf') format('ttf');
-  font-weight: 400 500;
+  font-family: 'FK Grotesk Neu';
+  src: url('./assets/fonts/FKGroteskNeue-Medium.woff2') format('woff2'),
+       url('./assets/fonts/FKGroteskNeu-Medium.woff') format('woff');
+
+  font-weight: 500 600;
   font-style: normal;
-}
+ 
+} 
 
 @font-face {
-  font-family: 'Strawford';
-  src: url('./assets/fonts/Strawford-Medium.woff2') format('woff2'),
-      url('./assets/fonts/Strawford-Medium.otf') format('otf'),
-      url('./assets/fonts/Strawford-Medium.ttf') format('ttf');
-  font-weight: 600;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Strawford';
-  src: url('./assets/fonts/Strawford-Black.woff2') format('woff2'),
-        url('./assets/fonts/Strawford-Black.woff') format('woff'),
-        url('./assets/fonts/Strawford-Black.eot'),
-        url('./assets/fonts/Strawford-Black.ttf') format('truetype');
-  font-weight: 700;
+  font-family: 'FK Grotesk Neu';
+  src: url('./assets/fonts/FKGroteskNeue-Bold.woff2') format('woff2'),
+       url('./assets/fonts/FKGroteskNeue-Bold.woff') format('woff');
+  font-weight: 700 800;  
   font-style: normal;
   font-display: swap;
 }
 
- /* @font-face {
-  font-family: 'Strawford';
-  src: url('assets/fonts/Strawford-Regular.otf');  
-} */
 
  span, p, label, div {
-  font-family: "Strawford", Helvetica, sans-serif;
+  font-family: "FK Grotesk Neu", Helvetica, sans-serif;
 }
 
 button, a, a:before, a:after {
-  font-family: "Strawford", Helvetica, sans-serif;
+  font-family: "FK Grotesk Neu", Helvetica, sans-serif;
   border: 0;
   outline: 0;
 
@@ -475,18 +451,18 @@ button, a, a:before, a:after {
 
 
  h1 {
-  font-family: "Strawford", Helvetica, sans-serif;
+  font-family: "FK Grotesk Neu", Helvetica, sans-serif;
    font-weight: 700;
    line-height: 1.25em;
    color: #fff;
    text-transform: uppercase;
    font-size: 2.25rem;
    text-shadow: 0 0 20px rgb(255 255 255 / 60%);
-   letter-spacing: 0.1em;
+   letter-spacing: normal;
  }
 
  h2, h3, h4, h5, h6 {
-   font-family: 'Strawford', Helvetica, sans-serif;
+   font-family: 'FK Grotesk Neu', Helvetica, sans-serif;
    font-weight: 500;
    font-size: 32px;
    line-height: 1.25em;

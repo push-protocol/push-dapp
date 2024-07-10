@@ -59,17 +59,6 @@ dotenv.config();
   TODO: Remove the below config once the following issue is resolved
   https://github.com/push-protocol/push-sdk/issues/1373
 */
-const chatDarkThemeCustomised: IChatTheme = {
-  ...darkChatTheme,
-  backgroundColor: {
-    ...darkChatTheme.backgroundColor,
-    chatPreviewBackground: 'var(--gray-900)',
-    userProfileBackground: 'var(--gray-900)',
-    modalBackground: 'var(--gray-900)',
-    criteriaLabelBackground: 'var(--gray-900)',
-    chatWidgetModalBackground: 'var(--gray-900)',
-  },
-};
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -118,9 +107,9 @@ const GlobalStyle = createGlobalStyle`
     ${Object.entries(blocksColors)
       .map(([colorName, code]) => `--${colorName}: ${code};`)
       .join('')}
-
+      
     /* Font Family */
-    --font-family: 'Strawford', 'Source Sans Pro', Helvetica, sans-serif;
+      --font-family: 'FK Grotesk Neu';
 
     /* New blocks theme css variables*/
     ${(props) => getBlocksCSSVariables(props.theme.blocksTheme)}
@@ -341,7 +330,7 @@ export default function App() {
         <NavigationContextProvider>
           <ChatUIProvider
             user={userPushSDKInstance}
-            theme={darkMode && chatDarkThemeCustomised}
+            theme={darkMode && darkChatTheme}
             debug={false}
             uiConfig={{
               suppressToast: false,
