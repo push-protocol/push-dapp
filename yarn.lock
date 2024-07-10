@@ -11251,6 +11251,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"embla-carousel-react@npm:^8.1.6":
+  version: 8.1.6
+  resolution: "embla-carousel-react@npm:8.1.6"
+  dependencies:
+    embla-carousel: "npm:8.1.6"
+    embla-carousel-reactive-utils: "npm:8.1.6"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.1 || ^18.0.0
+  checksum: 10/a8c724c396f8f26d190943c778fd1a29706bd597a0f85b4d8133c5e25e6e651fb30dbc3be0a71b3d58b9698904ae1043052cbea0c4aa23f9a63f3d1205e4a128
+  languageName: node
+  linkType: hard
+
+"embla-carousel-reactive-utils@npm:8.1.6":
+  version: 8.1.6
+  resolution: "embla-carousel-reactive-utils@npm:8.1.6"
+  peerDependencies:
+    embla-carousel: 8.1.6
+  checksum: 10/1524006c5adb3115b7ad5b70c3a857a4a5110c283eb1baaf92db16873736b1543737901b54e7210014f9cfb6d85a9a6771fc702c90192f13781effed7071bc26
+  languageName: node
+  linkType: hard
+
+"embla-carousel@npm:8.1.6":
+  version: 8.1.6
+  resolution: "embla-carousel@npm:8.1.6"
+  checksum: 10/739a112c45b218755d747487b07e182ab137b9e2f262600cf6f0296e4a83a67b442da8fc0b9672219086ff3a0671aa3cdf0a171ebb0d620f2c9264ceaf5752d7
+  languageName: node
+  linkType: hard
+
 "emoji-picker-react@npm:4.9.3":
   version: 4.9.3
   resolution: "emoji-picker-react@npm:4.9.3"
@@ -18163,6 +18191,7 @@ __metadata:
     dompurify: "npm:^3.0.2"
     dotenv: "npm:8.2.0"
     eccrypto: "npm:^1.1.3"
+    embla-carousel-react: "npm:^8.1.6"
     emoji-picker-react: "npm:4.9.3"
     envfile: "npm:6.18.0"
     eslint: "npm:^8.57.0"
