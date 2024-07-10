@@ -49,7 +49,7 @@ const Rewards: FC<RewardsProps> = () => {
 
   const { activeTab, handleSetActiveTab } = useRewardsTabs();
 
-  const { showConnectModal, setShowConnectModal, status, connectUserWallet } = useRewardsAuth();
+  const { showConnectModal, setShowConnectModal, status, connectUserWallet, toggleModalOff } = useRewardsAuth();
 
   useCreateRewardsUser();
 
@@ -115,6 +115,8 @@ const Rewards: FC<RewardsProps> = () => {
           <UnlockProfileWrapper
             type={UNLOCK_PROFILE_TYPE.MODAL}
             showConnectModal={showConnectModal}
+            handleClose={() => toggleModalOff()}
+            closeIcon={true}
             description="Unlock your profile to proceed."
           />
         </Box>

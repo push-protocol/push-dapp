@@ -1,6 +1,6 @@
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import UnlockProfile from './UnlockProfile';
 
@@ -13,8 +13,8 @@ interface IntroContainerProps {
   type?: UNLOCK_PROFILE_TYPE;
   showConnectModal?: boolean;
   description?: string;
-  onClose?: () => void;
   closeIcon?: boolean;
+  handleClose?: () => void;
 }
 
 const DEFAULT_PROPS = {
@@ -24,13 +24,14 @@ const DEFAULT_PROPS = {
 const UnlockProfileWrapper = ({
   type = DEFAULT_PROPS.type,
   showConnectModal,
+  handleClose,
   description,
-  onClose,
   closeIcon,
 }: IntroContainerProps) => {
   const {
     isModalOpen: isProfileModalOpen,
     showModal: showProfileModal,
+    hideModal: hideProfileModal,
     ModalComponent: ProfileModalComponent,
   } = useModalBlur();
 
@@ -38,7 +39,7 @@ const UnlockProfileWrapper = ({
     if (type === UNLOCK_PROFILE_TYPE.MODAL && showConnectModal) {
       showProfileModal();
     }
-  }, [type]);
+  }, [type, showConnectModal]);
 
   if (type === UNLOCK_PROFILE_TYPE.MODAL) {
     return (
@@ -60,7 +61,7 @@ const UnlockProfileWrapper = ({
       <Container className={type}>
         <UnlockProfile
           InnerComponentProps={{ type, description, closeIcon }}
-          onClose={onClose}
+          onClose={handleClose}
         />
       </Container>
     );

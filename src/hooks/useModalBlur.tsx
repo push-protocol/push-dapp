@@ -124,7 +124,7 @@ const useModalBlur = () => {
     );
   };
 
-  return { isModalOpen: open, showModal: handleOpen, ModalComponent };
+  return { isModalOpen: open, showModal: handleOpen, hideModal: handleClose, ModalComponent };
 };
 
 export default useModalBlur;

@@ -3,7 +3,7 @@ import { FC } from 'react';
 
 //Queries
 import { ActvityType, UsersActivity } from 'queries';
-import { Button } from 'blocks';
+import { Box, Button } from 'blocks';
 import { ActivityVerificationButton } from './ActivityVerificationButton';
 
 type ActivityButtonProps = {
@@ -47,13 +47,15 @@ const ActivityButton: FC<ActivityButtonProps> = ({
 
   return (
     // Verify button
-    <ActivityVerificationButton
-      activityType={activityType}
-      userId={userId}
-      activityTypeId={activityTypeId}
-      refetchActivity={refetchActivity}
-      setErrorMessage={setErrorMessage}
-    />
+    <Box>
+      <ActivityVerificationButton
+        activityType={activityType}
+        userId={userId}
+        activityTypeId={activityTypeId}
+        refetchActivity={refetchActivity}
+        setErrorMessage={setErrorMessage}
+      />
+    </Box>
   );
 };
 
