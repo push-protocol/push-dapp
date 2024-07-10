@@ -68,7 +68,7 @@ const Lozenge = forwardRef<HTMLDivElement, LozengeProps>(
         {...props}
       >
         {icon && <span className="icon">{icon}</span>}
-        {children}
+        <span className="text">{children}</span>
       </StyledLozenge>
     );
   }

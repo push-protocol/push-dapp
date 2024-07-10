@@ -2,6 +2,9 @@
 import { FC } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 
+// third party libraries
+import { css } from 'styled-components';
+
 //Hooks
 import { useGetRewardsLeaderboard, ModelledLeaderBoardUser } from 'queries';
 

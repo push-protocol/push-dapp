@@ -8,6 +8,7 @@ import { Activity, useGetRewardsActivities, useGetUserRewardsDetails } from 'que
 
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { RewardsActivitiesListItem } from './RewardsActivitiesListItem';
+import { appConfig } from 'config';
 
 export type RewardActivitiesProps = {};
 
@@ -31,9 +32,9 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
   const isLoading = isLoadingActivities;
   // const isLoading = isLoadingUserDetails || isLoadingActivities;
 
-  // If there are activities then render them else render 5 skeletons
+  // If there are activities then render them else render 3 skeletons on dev, and 2 on other env
   const activityList = isLoading
-    ? Array(3).fill(0)
+    ? Array(appConfig.appEnv == 'dev' ? 3 : 2).fill(0)
     : rewardActivitiesResponse?.pages.flatMap((page) => page.activities) || [];
 
   const hasMoreData = !isFetchingNextPage && hasNextPage;
