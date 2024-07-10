@@ -460,7 +460,7 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
                   fontSize={isMobile ? '18px' : '24px'}
                   fontWeight="600"
                   color="#D53A94"
-                  letterSpacing="-0.03em"
+                  letterSpacing="normal"
                 >
                   {numberWithCommas(formatTokens(PUSHPoolstats?.currentReward))} PUSH
                 </H2V2>
@@ -495,7 +495,7 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
                 <StakedAmount
                   fontSize={isMobile ? '18px' : '24px'}
                   fontWeight="600"
-                  letterSpacing="-0.03em"
+                  letterSpacing="normal"
                 >
                   {numberWithCommas(formatTokens(PUSHPoolstats?.totalStakedAmount))} PUSH
                 </StakedAmount>
@@ -521,7 +521,7 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
           alignSelf="end"
           margin="12px 13px 24px 0px"
           color="#575D73"
-          letterSpacing="-0.03em"
+          letterSpacing="normal"
         >
           {PUSHPoolstats ? (
             <>
@@ -878,7 +878,7 @@ const Content = styled.div`
   left: 5px;
   color: #fff;
   background: #131313;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 400;
   font-size: 0.9rem;
@@ -896,7 +896,7 @@ const Container = styled(SectionV2)`
   border-radius: 24px;
   padding: 20px;
   margin: 10px 10px 10px 0;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   min-height: 587px;
@@ -906,14 +906,14 @@ const Container = styled(SectionV2)`
     margin: 10px 0;
   }
   @media (max-width: 600px) {
-    padding: 16px;
+    padding: 20px;
   }
 `;
 
 const Heading = styled(H2V2)`
   font-size: 24px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: ${(props) => props.theme.stakingPrimaryText};
 
   @media (max-width: 600px) {
@@ -925,7 +925,7 @@ const APRText = styled.div`
   margin: 0px;
   font-size: 18px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -938,7 +938,7 @@ const SecondaryText = styled.p`
   margin: 0px;
   font-size: 18px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   @media (max-width: 600px) {
     font-size: 16px;
   }
@@ -960,7 +960,7 @@ const Line = styled.div`
 const DataTitle = styled.div`
   font-size: 18px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -977,7 +977,7 @@ const StakedAmount = styled(H2V2)`
 const EpochNo = styled(B)`
   font-weight: 600;
   text-align: right;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   font-size: 16px;
   line-height: 141%;
   margin-right: 5px;
@@ -996,7 +996,7 @@ const InfoSpan = styled(SpanV2)`
 const DataValue = styled(H2V2)`
   font-size: 18px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: ${(props) => props.theme.stakingPrimaryText};
 
   @media (max-width: 600px) {
@@ -1007,7 +1007,7 @@ const DataValue = styled(H2V2)`
 const EpochText = styled(ItemHV2)`
   align-self: end;
   margin: 12px 13px 24px 0px;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: ${(props) => props.theme.modalDescriptionTextColor};
 `;
 
@@ -1025,7 +1025,7 @@ const FilledButton = styled(ButtonV2)`
   padding: 12px;
   font-size: 16px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: #ffffff;
   cursor: pointer;
   & > div {

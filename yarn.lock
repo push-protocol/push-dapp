@@ -4427,9 +4427,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:1.6.0-alpha.6":
-  version: 1.6.0-alpha.6
-  resolution: "@pushprotocol/uiweb@npm:1.6.0-alpha.6"
+"@pushprotocol/uiweb@npm:1.4.2":
+  version: 1.4.2
+  resolution: "@pushprotocol/uiweb@npm:1.4.2"
   dependencies:
     "@livekit/components-react": "npm:^1.2.2"
     "@livekit/components-styles": "npm:^1.0.6"
@@ -4471,7 +4471,7 @@ __metadata:
     react-dom: 17.0.2
     styled-components: ^6.0.8
     viem: ^1.3.0
-  checksum: 10/b8354fb552da2727ee5846af154d785f80e00060a9f5be243c508452b63fe56119e83830d73fd41f8ecb098eed3812f6edcbf9b06899deb7b522c92e25ad22e0
+  checksum: 10/0e7dcad131914c204f4035c7a57502bb6a2996e07560f60216eba5eec525721e15fe7a660cbe27cd5b5a64306e9a286b982b8ce98db9655226ecdbda319efc0c
   languageName: node
   linkType: hard
 
@@ -18605,7 +18605,7 @@ __metadata:
     "@mui/material": "npm:^5.5.0"
     "@pushprotocol/restapi": "npm:1.7.20"
     "@pushprotocol/socket": "npm:0.5.3"
-    "@pushprotocol/uiweb": "npm:1.6.0-alpha.6"
+    "@pushprotocol/uiweb": "npm:1.4.2"
     "@radix-ui/react-dropdown-menu": "npm:^2.1.1"
     "@radix-ui/react-tooltip": "npm:^1.1.1"
     "@reach/tabs": "npm:^0.18.0"

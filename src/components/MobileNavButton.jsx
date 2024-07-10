@@ -142,7 +142,7 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none', showNavBa
               <Span
                 flex="1"
                 weight={!active ? '300' : '600'}
-                spacing="0"
+                spacing="normal"
                 margin="0 10px"
                 color={theme.nav.color}
                 onClick={data?.hasOnClickFunction && showMetamaskPushSnap}
@@ -212,7 +212,7 @@ const LeftBarSecondaryItemIcon = styled(InheritedSectionItemIcon)``;
 const NewTag = styled(SpanV2)`
   font-weight: 600;
   font-size: 12px;
-  letter-spacing: 0;
+  letter-spacing: normal;
   line-height: 140%;
   display: flex;
   align-items: center;

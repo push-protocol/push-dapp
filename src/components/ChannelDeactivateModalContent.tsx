@@ -152,7 +152,7 @@ const VerifyingContainer = styled(ItemVV2)`
   //   margin-top:33px;
 `;
 const TransactionText = styled.p`
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 18px;

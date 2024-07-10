@@ -117,7 +117,7 @@ const SnapButton = styled(ButtonV2)`
   align-self: end;
   height: 36px;
   z-index: 0;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
