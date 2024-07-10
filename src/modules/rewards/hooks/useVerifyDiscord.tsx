@@ -32,8 +32,8 @@ const useVerifyDiscord = ({
 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const [activityStatus, setActivityStatus] = useState<string | null>(null);
-  const [verifying, setVerifying] = useState(token ? true : false);
+  const [discordActivityStatus, setDiscordActivityStatus] = useState<string | null>(null);
+  const [verifyingDiscord, setVerifyingDiscord] = useState(token ? true : false);
   const [updatedId, setUpdatedId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -74,7 +74,7 @@ const useVerifyDiscord = ({
     const username = localStorage.getItem('username');
 
     if (username && token) {
-      setVerifying(true);
+      setVerifyingDiscord(true);
       const data = {
         discord: username,
         discord_token: token,
@@ -84,7 +84,7 @@ const useVerifyDiscord = ({
 
       if (verificationProof == null || verificationProof == undefined) {
         if (userPushSDKInstance && userPushSDKInstance.readmode()) {
-          setVerifying(false);
+          setVerifyingDiscord(false);
           setErrorMessage('Please Enable Push profile');
         }
         return;
@@ -105,16 +105,15 @@ const useVerifyDiscord = ({
         {
           onSuccess: (response) => {
             if (response.status === 'COMPLETED') {
-              setActivityStatus('Claimed');
+              setDiscordActivityStatus('Claimed');
               refetchActivity();
-              setVerifying(false);
+              setVerifyingDiscord(false);
               setErrorMessage('');
-              // localStorage.removeItem('discordVerificationTriggered');
             }
           },
           onError: (error: any) => {
             console.log('Error in creating activity', error);
-            setVerifying(false);
+            setVerifyingDiscord(false);
             if (error.name) {
               setErrorMessage(error.response.data.error);
             }
@@ -125,8 +124,8 @@ const useVerifyDiscord = ({
   };
 
   return {
-    activityStatus,
-    verifying,
+    verifyingDiscord,
+    discordActivityStatus,
     handleDiscordVerification,
   };
 };
