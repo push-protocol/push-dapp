@@ -50,8 +50,7 @@ import { darkTheme, lightTheme } from 'config/spaceTheme';
 import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
 import SpaceContextProvider from 'contexts/SpaceContext';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
-import { blocksColors } from 'blocks';
-import { textVariants } from 'blocks/text/Text.constants';
+import { blocksColors, getBlocksCSSVariables } from 'blocks';
 import APP_PATHS from 'config/AppPaths';
 
 dotenv.config();
@@ -67,6 +66,8 @@ const GlobalStyle = createGlobalStyle`
     padding-right: 0 !important;
   }
   :root{
+
+    /* deprecated */
     /* Spaces */
     --s0: 0px;
     --s1: 4px;
@@ -86,6 +87,7 @@ const GlobalStyle = createGlobalStyle`
     --s15: 60px;
     // TODO: Add more as needed
 
+    /* deprecated */
     /* Border Radius */
     --r0: 0px;
     --r1: 4px;
@@ -99,28 +101,18 @@ const GlobalStyle = createGlobalStyle`
     --r9: 36px;
     --r10: 40px;
     // TODO: Add more as needed
-
-    /* Font Family */
-    --font-family: 'FK Grotesk Neu';
-
+    
+    /* deprecated */
     /* Colors */
     ${Object.entries(blocksColors)
       .map(([colorName, code]) => `--${colorName}: ${code};`)
       .join('')}
-  
-    /* Typography Variants */
-    ${Object.entries(textVariants)
-      .map(
-        ([fontVariant, value]) => `
-            --${fontVariant}-font-size: ${value.fontSize};
-            --${fontVariant}-line-height: ${value.lineHeight};
-            --${fontVariant}-font-weight: ${value.fontWeight};
-            ${value.fontStyle ? `--${fontVariant}-font-style: ${value.fontStyle};` : ''}
-            ${value.letterSpacing ? `--${fontVariant}-letter-spacing: ${value.letterSpacing};` : ''}
-            ${value.textTransform ? `--${fontVariant}-text-transform: ${value.textTransform};` : ''}
-          `
-      )
-      .join('')}
+      
+    /* Font Family */
+      --font-family: 'FK Grotesk Neu';
+
+    /* New blocks theme css variables*/
+    ${(props) => getBlocksCSSVariables(props.theme.blocksTheme)}
   }
 
 `;
@@ -317,8 +309,12 @@ export default function App() {
   // const { spaceUI } = useSpaceComponents();
 
   const location = useLocation();
-  const isHeaderHidden = location?.pathname.includes(APP_PATHS.PointsVault);
-  const isSidebarHidden = location?.pathname.includes(APP_PATHS.PointsVault) || location?.pathname.includes('/snap');
+  const isHeaderHidden =
+    location?.pathname.includes(APP_PATHS.PointsVault) || location?.pathname.includes(APP_PATHS.DiscordVerification);
+  const isSidebarHidden =
+    location?.pathname.includes(APP_PATHS.PointsVault) ||
+    location?.pathname.includes('/snap') ||
+    location?.pathname.includes(APP_PATHS.DiscordVerification);
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>

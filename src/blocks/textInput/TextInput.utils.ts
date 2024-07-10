@@ -1,14 +1,24 @@
 import { ThemeMode } from 'blocks/Blocks.types';
 import { getBlocksColor } from 'blocks/Blocks.utils';
 
-import { backgroundColor, borderColor, placeholderColor, textColor } from './TextInput.constants';
+import { textInputColor } from './TextInput.constants';
 import { TextInputStates } from './TextInput.types';
 
-export const getTextInputState = ({ error, disabled }: { error: boolean; disabled: boolean }): TextInputStates => {
+export const getTextInputState = ({
+  error,
+  disabled,
+  success,
+}: {
+  error: boolean;
+  disabled: boolean;
+  success: boolean;
+}): TextInputStates => {
   if (error) {
     return 'error';
   } else if (disabled) {
     return 'disabled';
+  } else if (success) {
+    return 'success';
   }
   return 'default';
 };
@@ -20,9 +30,9 @@ export const getTextInputStateStyles = ({ mode, state }: { mode: ThemeMode; stat
   return `
   
   .input-container {
-     background-color:   ${getBlocksColor(mode, backgroundColor[state])};
+     background-color:   ${getBlocksColor(mode, textInputColor.backgroundColor[state])};
  
-     border: 1.5px solid ${getBlocksColor(mode, borderColor[state])};
+     border: 1.5px solid ${getBlocksColor(mode, textInputColor.borderColor[state])};
 
 
      &:hover {
@@ -35,21 +45,21 @@ export const getTextInputStateStyles = ({ mode, state }: { mode: ThemeMode; stat
      &:focus-within {
          border: 1.5px solid ${getBlocksColor(
            mode,
-           state === 'error' ? borderColor.error : { light: 'pink-300', dark: 'pink-300' }
+           state === 'error' ? textInputColor.borderColor.error : { light: 'pink-300', dark: 'pink-300' }
          )};
         };
     
-    .icon,.clear {
-         color: ${getBlocksColor(mode, {
-           light: 'gray-300',
-           dark: 'gray-100',
-         })};
+    [role='img'] {
+         color: ${getBlocksColor(mode, textInputColor.iconColor[state])};
         };
     
     & input{
-         color: ${getBlocksColor(mode, textColor[state])};
+         color: ${getBlocksColor(mode, textInputColor.textColor[state])};
          ::placeholder {
-           color: ${getBlocksColor(mode, placeholderColor[state])};
+           color: ${getBlocksColor(mode, {
+             light: 'gray-400',
+             dark: 'gray-600',
+           })};
 
         };
   }

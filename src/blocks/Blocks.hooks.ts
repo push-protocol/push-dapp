@@ -2,7 +2,7 @@ import { themeDark, themeLight } from 'config/Themization';
 import { useTheme } from 'styled-components';
 import { ThemeMode } from './Blocks.types';
 
-// TODO: Improve this approach in future
+// TODO: Remove this when we remove dependency from this hook
 
 type ThemeData = typeof themeLight | typeof themeDark;
 
