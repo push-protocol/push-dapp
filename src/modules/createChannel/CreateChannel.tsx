@@ -1,31 +1,66 @@
 // This is the Parent component for the Create Channel flow.
+// React + web3 essentials
+import { useEffect, useState } from "react";
+
+//common
+import { Stepper } from "common";
 
 // Components
 import { Box } from "blocks";
 import { CreateChannelHeader } from "./components/CreateChannelHeader";
-import { CreateChannelStep } from "./components/CreateChannelStep";
 import { ChannelInfo } from "./components/ChannelInfo";
-import { useState } from "react";
 import { UploadLogo } from "./components/UploadLogo";
 import { StakeFees } from "./components/StakeFees";
 import { isEmpty, isValidUrl } from "./CreateChannel.utils";
+import { CreateChannelSteps, minStakeFees } from "./CreateChannel.constants";
+import { handleLogoSizeLimitation, toDataURL } from "helpers/LogoSizeHelper";
+import { CreateChannelProcessingInfo } from "./components/CreateChannelProcessingInfo";
 
 const CreateChannel = () => {
 
-  const [stepFlow, setStepFlow] = useState(0);
+  const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
 
+
+  const [channelStakeFees, setChannelStakeFees] = useState(minStakeFees);
+
+  let restrictedForwardSteps = [1, 2]
+
+  // Channel Info
   const [channelName, setChannelName] = useState('');
   const [channelDesc, setChannelDesc] = useState('');
   const [channelURL, setChannelURL] = useState('');
 
+  // Upload Logo
+  const [view, setView] = useState(false);
+  const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
+  const [imageType, setImageType] = useState<string | undefined>(undefined);
+  const [croppedImage, setCroppedImage] = useState<string | undefined>(undefined);
+  const [channelFile, setChannelFile] = useState<string | undefined>(undefined);
+
+  // Process status
   const [channelInfoDone, setChannelInfoDone] = useState(false);
   const [uploadLogoDone, setUploadLogoDone] = useState(false);
+  const [stakeFeesChosen, setStakeFeesChoosen] = useState(false);
 
   const [errorInfo, setErrorInfo] = useState({
     name: '',
     description: '',
     url: ''
   });
+
+  useEffect(() => {
+    if (croppedImage) {
+      console.debug('Image cropped', croppedImage);
+      toDataURL(croppedImage, function (dataUrl: string) {
+        const response = handleLogoSizeLimitation(dataUrl);
+        console.debug('response', response);
+        if (response.success) {
+          console.debug('Cropped Image....', croppedImage);
+          setChannelFile(croppedImage);
+        }
+      });
+    }
+  }, [croppedImage]);
 
   // Setting Error Infos for missing Fields
   const checkFormInput = () => {
@@ -80,13 +115,23 @@ const CreateChannel = () => {
 
   }
 
+  const handleNextStep = () => {
+    if (activeStepIndex < 2) setActiveStepIndex(activeStepIndex + 1);
+  };
+  restrictedForwardSteps = restrictedForwardSteps.filter((item) => item !== activeStepIndex);
+  console.debug(restrictedForwardSteps);
+
+  const handleCreateChannel = () => {
+
+  }
+
   return (
     <Box
       padding='s8'
-      backgroundColor='white'
+      backgroundColor={{ light: 'white', dark: 'gray-900' }}
       borderRadius="r8"
       width='584px'
-      height='579px'
+      // height='579px'
       display='flex'
       flexDirection='column'
       alignItems='center'
@@ -101,11 +146,14 @@ const CreateChannel = () => {
         alignItems='center'
         alignSelf='stretch'
       >
-        <CreateChannelStep
-          stepFlow={stepFlow}
-          setStepFlow={setStepFlow}
+        <Stepper
+          steps={CreateChannelSteps}
+          activeStepIndex={activeStepIndex}
+          setActiveStepIndex={setActiveStepIndex}
+          config={{ restrictedForwardSteps: restrictedForwardSteps }}
         />
-        {stepFlow == 0 && <ChannelInfo
+
+        {activeStepIndex == 0 && <ChannelInfo
           channelName={channelName}
           channelDesc={channelDesc}
           channelURL={channelURL}
@@ -115,11 +163,35 @@ const CreateChannel = () => {
           setChannelURL={setChannelURL}
           checkFormInput={checkFormInput}
           setChannelInfoDone={setChannelInfoDone}
-          setStepFlow={setStepFlow}
+          setActiveStepIndex={setActiveStepIndex}
+          handleNextStep={handleNextStep}
         />}
-        {stepFlow === 1 && <UploadLogo />}
-        {stepFlow === 2 && <StakeFees />}
+        {activeStepIndex === 1 && <UploadLogo
+          view={view}
+          imageSrc={imageSrc}
+          imageType={imageType}
+          croppedImage={croppedImage}
+          setView={setView}
+          setImageSrc={setImageSrc}
+          setImageType={setImageType}
+          setCroppedImage={setCroppedImage}
+          setUploadDone={setUploadLogoDone}
+          setActiveStepIndex={setActiveStepIndex}
+          handleNextStep={handleNextStep}
+        />}
+        {activeStepIndex === 2 && <StakeFees
+          channelStakeFees={channelStakeFees}
+          handleCreateChannel={handleCreateChannel}
+          setStakeFeesChoosen={setStakeFeesChoosen}
+        />}
+
       </Box>
+
+      {/* <CreateChannelProcessingInfo
+        progress={10}
+        processingInfo="Payload uploaded"
+      /> */}
+
 
     </Box>
   );

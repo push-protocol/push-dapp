@@ -13,6 +13,8 @@ interface ProgressBarPropsI {
   color?: string;
   notice?: string;
   noticePositioning?: number;
+  backgroundColor?: string;
+  height?: string;
 }
 
 // Constants
@@ -22,17 +24,26 @@ export const NOTICE_POSITIONING = {
 }
 
 // Create Progress Bar
-const ProgressBar = ({ percent, color = GLOBALS.COLORS.PRIMARY_PINK, notice = null, noticePositioning = NOTICE_POSITIONING.BOTTOM }: ProgressBarPropsI) => {
+const ProgressBar = ({
+  percent,
+  color = GLOBALS.COLORS.PRIMARY_PINK,
+  notice = null,
+  noticePositioning = NOTICE_POSITIONING.BOTTOM,
+  backgroundColor = GLOBALS.COLORS.PLACEHOLDER_DARK_GRAY,
+  height = '10px',
+}: ProgressBarPropsI) => {
   const theme = useTheme();
 
   return (
     <ItemVV2
-    zIndex="1000"
+      zIndex="1000"
       flexDirection={noticePositioning == NOTICE_POSITIONING.BOTTOM ? "column" : "column-reverse"}
+      height={height}
     >
       <Progress
         percent={percent}
         color={color}
+        backgroundColor={backgroundColor}
       />
 
       {notice &&
@@ -54,9 +65,9 @@ const ProgressBar = ({ percent, color = GLOBALS.COLORS.PRIMARY_PINK, notice = nu
 export default ProgressBar;
 
 const Progress = styled.div`
-  background: ${GLOBALS.COLORS.PLACEHOLDER_DARK_GRAY};
+  background: ${(props) => props.backgroundColor ? props.backgroundColor : GLOBALS.COLORS.PLACEHOLDER_DARK_GRAY};
   border-radius: 18px;
-  height: 8px;
+  height: inherit;
   overflow: hidden;
   width: 100%;
   position: relative;

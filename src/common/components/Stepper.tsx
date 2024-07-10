@@ -23,6 +23,7 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, activeStepIndex,
     >
       {steps.map((step, index) => (
         <Box
+          key={index}
           display="flex"
           flexDirection="column"
           gap="s3"

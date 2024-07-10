@@ -18,7 +18,9 @@ type ChannelInfoProps = {
   setChannelURL: (channelURL: string) => void;
   checkFormInput: () => boolean;
   setChannelInfoDone: (channelInfoDone: boolean) => void;
-  setStepFlow: (stepFlow: number) => void;
+  setActiveStepIndex: (stepFlow: number) => void;
+  handleNextStep: () => void;
+
 }
 
 const ChannelInfo: FC<ChannelInfoProps> = ({
@@ -31,7 +33,8 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
   setChannelURL,
   checkFormInput,
   setChannelInfoDone,
-  setStepFlow
+  setActiveStepIndex,
+  handleNextStep
 }) => {
 
   const checkButtonStatus = () => {
@@ -93,7 +96,7 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
 
         </Box>
         <Box display='flex' flexDirection='column' width='100%'>
-          <Text variant="h6-semibold">Channel Wensite URL</Text>
+          <Text variant="h6-semibold">Channel Website URL</Text>
           <TextInput
             value={channelURL}
             onChange={(e) => {
@@ -112,7 +115,8 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
           console.log("Next is clicked")
           if (!checkFormInput()) return;
           setChannelInfoDone(true);
-          setStepFlow(1);
+          handleNextStep();
+          setActiveStepIndex(1);
         }}
       >
         Next
