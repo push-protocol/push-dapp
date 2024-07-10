@@ -22,7 +22,7 @@ const useRewardsAuth = () => {
   const caip10WalletAddress = walletToCAIP10({ account });
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const [showConnectModal, setShowConnectModal] = useState(false);
+  const [isAuthModalVisible, setIsAuthModalVisible] = useState(false);
 
   const [isVerifyClicked, setIsVerifyClicked] = useState(false);
   const [isDashClicked, setIsDashClicked] = useState(false);
@@ -44,7 +44,7 @@ const useRewardsAuth = () => {
   const connectWallet = () => {
     setHandleVerify(false);
     setIsVerifyClicked(true);
-    setShowConnectModal(false);
+    setIsAuthModalVisible(false);
 
     if (!isWalletConnected) {
       connect();
@@ -53,16 +53,16 @@ const useRewardsAuth = () => {
 
   // dashboard referral section unlock profile
   const connectUserWallet = () => {
-    setShowConnectModal(false);
+    setIsAuthModalVisible(false);
     setIsDashClicked(true);
   };
 
-  const toggleModalOn = () => {
-    setShowConnectModal(true);
+  const showAuthModal = () => {
+    setIsAuthModalVisible(true);
   };
 
-  const toggleModalOff = () => {
-    setShowConnectModal(false);
+  const hideAuthModal = () => {
+    setIsAuthModalVisible(false);
   };
 
   // unlock profile function
@@ -80,7 +80,7 @@ const useRewardsAuth = () => {
     //if verification proof is null, unlock push profile update to update userPUSHSDKInstance
     if (verificationProof === null || verificationProof === undefined) {
       if (userPushSDKInstance && userPushSDKInstance.readmode()) {
-        setShowConnectModal(true);
+        setIsAuthModalVisible(true);
       }
     }
 
@@ -102,7 +102,7 @@ const useRewardsAuth = () => {
 
     // user disconnects while modal is open
     if (status === 'pending' && !isWalletConnected) {
-      setShowConnectModal(false);
+      setIsAuthModalVisible(false);
     }
 
     // rewards activity first user
@@ -127,16 +127,16 @@ const useRewardsAuth = () => {
     caip10WalletAddress,
     status,
     unlockProfile,
-    showConnectModal,
-    setShowConnectModal,
+    isAuthModalVisible,
+    setIsAuthModalVisible,
     connectWallet,
     handleVerify,
     userDetails,
     isVerifyClicked,
     connectUserWallet,
     isDashClicked,
-    toggleModalOff,
-    toggleModalOn,
+    hideAuthModal,
+    showAuthModal,
   };
 };
 

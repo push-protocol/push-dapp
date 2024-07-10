@@ -67,7 +67,7 @@ export const ActivityVerificationButton = ({
     }
   }, [activityType, userPushSDKInstance]);
 
-  const { isAuthenticated, authButton, showConnectModal, toggleModalOff } = useAuthWithButton({
+  const { isAuthenticated, authButton, isAuthModalVisible, hideAuthModal } = useAuthWithButton({
     onSuccess: (userDetails) => activityData?.action(userDetails?.userId),
   });
 
@@ -85,7 +85,7 @@ export const ActivityVerificationButton = ({
 
   return (
     <Box>
-      {userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
+      {userPushSDKInstance && userPushSDKInstance?.readmode() && isAuthModalVisible && (
         <Box
           display="flex"
           justifyContent="center"
@@ -98,9 +98,8 @@ export const ActivityVerificationButton = ({
         >
           <UnlockProfileWrapper
             type={UNLOCK_PROFILE_TYPE.MODAL}
-            showConnectModal={showConnectModal}
-            handleClose={() => toggleModalOff()}
-            closeIcon={true}
+            showConnectModal={isAuthModalVisible}
+            onClose={() => hideAuthModal()}
             description="Unlock your profile to proceed."
           />
         </Box>

@@ -44,7 +44,6 @@ type UnlockProfileModalProps = {
   InnerComponentProps: {
     type: UNLOCK_PROFILE_TYPE | undefined;
     description?: string;
-    closeIcon?: boolean;
   };
   onClose?: () => void;
 };
@@ -101,7 +100,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
 
   return (
     <Container type={type}>
-      {closeIcon && (
+      {onClose && (
         <Box
           width="-webkit-fill-available"
           display="flex"
