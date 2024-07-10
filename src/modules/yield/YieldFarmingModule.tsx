@@ -400,7 +400,7 @@ const StatsHeading = styled(Item)`
   top: 0px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: normal;
   font-size: 15px;
   text-align: center;
   padding: 10px 5px;
@@ -419,7 +419,7 @@ const StatsPreview = styled(Span)`
   font-weight: 600;
   font-size: 12px;
   opacity: 0.25;
-  letter-spacing: 0.1em;
+  letter-spacing: normal;
   text-transform: uppercase;
   color: ${(props) => props.color || '#000'};
   z-index: -1;
@@ -428,7 +428,7 @@ const StatsPreview = styled(Span)`
 const StatsInnerTitle = styled.span`
   font-weight: bold;
   font-size: 22px;
-  letter-spacing: 0.1em;
+  letter-spacing: normal;
 `;
 
 const StatsInnerSub = styled.span`

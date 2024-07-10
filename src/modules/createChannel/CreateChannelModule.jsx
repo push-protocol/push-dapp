@@ -247,13 +247,12 @@ function CreateChannelModule() {
     if (!isAllFilledAndValid()) {
       channelToast.showMessageToast({
         toastTitle: 'Error',
-        toastMessage: `${
-          errorInfo.name ||
+        toastMessage: `${errorInfo.name ||
           errorInfo.description ||
           errorInfo.address ||
           errorInfo.url ||
           'Please enter the channel details'
-        }`,
+          }`,
         toastType: 'ERROR',
         getToastIcon: (size) => (
           <MdError
@@ -712,14 +711,14 @@ const BodySection = styled(Section)`
         font-size: 16px;
         text-transform: none;
         text-align: center;
-        letter-spacing: 0.03em;
+        letter-spacing: normal;
         margin: 0px 0px;
 
         @media (max-width: 768px) {
           font-weight: 300;
           font-size: 14px;
           text-align: center;
-          letter-spacing: 0em;
+          letter-spacing: normal;
           line-height: 140%;
         }
       }

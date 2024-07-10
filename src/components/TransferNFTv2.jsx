@@ -70,13 +70,13 @@ function TransferNFTv2({ tokenId }) {
           <Item align="flex-start">
             <H2
               textTransform="uppercase"
-              spacing="0.1em"
+              spacing="normal"
             >
               <Span weight="200">Transfer Your NFT!</Span>
             </H2>
             <H2
               textTransform="uppercase"
-              spacing="0.1em"
+              spacing="normal"
             >
               <Span
                 bg="#674c9f"
@@ -164,7 +164,7 @@ function TransferNFTv2({ tokenId }) {
                     color="#fff"
                     weight="400"
                     size="0.8em"
-                    spacing="0.2em"
+                    spacing="normal"
                     type="submit"
                     value="Transfer"
                   />
@@ -187,7 +187,7 @@ function TransferNFTv2({ tokenId }) {
               <Span
                 color="#fff"
                 textTransform="uppercase"
-                spacing="0.1em"
+                spacing="normal"
                 weight="400"
                 size="1em"
               >

@@ -96,7 +96,7 @@ function NavButton({ item, data, sectionID, active }) {
         <Span
           flex="1"
           weight={!active ? '300' : '600'}
-          spacing="0"
+          spacing="normal"
           margin="0 5px"
           color={theme.nav.color}
           size="14px"

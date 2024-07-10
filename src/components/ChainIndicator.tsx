@@ -92,8 +92,8 @@ const ChainIndicator = ({ isDarkMode }) => {
                 color={theme.chainIndicatorHeading}
                 margin="0px 1px 6px 0"
                 textTransform="none"
-                family="Strawford"
-                spacing="0.01rem"
+                family="FK Grotesk Neu"
+                spacing="normal"
                 weight="400"
                 size="15px"
               >
@@ -178,12 +178,12 @@ const CurrentChainInfo = styled(ItemH)`
 
 const ChainName = styled(H3)`
   display: none;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   text-transform: none;
   margin: 10px 0 10px 15px;
   font-weight: 400;
   size: 18px;
-  letter-spacing: -0.01em;
+  letter-spacing: normal;
   cursor: pointer;
 
   @media (max-width: 992px) {

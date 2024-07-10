@@ -17,10 +17,10 @@ const Dashboard: FC<DashboardProps> = () => {
     <Box
       flexDirection="column"
       display="flex"
-      margin={{ initial: 's4 s6 s4 s6', ml: 's4' }}
+      margin={{ initial: 's4 s10 s4 s10', ml: 's4', lp: 's4' }}
       gap={{ ml: 's6' }}
       height="100%"
-      width="-webkit-fill-available"
+      width="auto"
     >
       <DashboardHeader
         showSubHeader={showSubHeader}
@@ -41,4 +41,3 @@ const Dashboard: FC<DashboardProps> = () => {
 };
 
 export { Dashboard };
-// colors > brand tokens > semantics (for individual components)

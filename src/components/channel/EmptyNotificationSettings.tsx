@@ -55,7 +55,7 @@ const EmptyNotificationTitle = styled.div`
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
-  letter-spacing: 0em;
+  letter-spacing: normal;
   text-align: left;
   color: ${(props) => props.theme.default.color};
 `;

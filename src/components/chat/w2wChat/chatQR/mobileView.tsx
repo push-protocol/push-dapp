@@ -103,7 +103,7 @@ const CloseButton = styled(AiOutlineClose)`
 const Image = styled.img``;
 
 const TextContainer = styled(ItemVV2)`
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   line-height: 140%;
 `;

@@ -11,12 +11,14 @@ type ColorSemantics = typeof colorSemantics;
 
 type StringKeys<T> = Extract<keyof T, string>;
 
-type ThemeColors = {
+type ThemeColorsConfig = {
   [K1 in StringKeys<ColorSemantics> as `${K1}-${StringKeys<ColorSemantics[K1]>}`]: string;
 };
 
+export type ThemeColors = keyof ThemeColorsConfig;
+
 export type Theme = {
-  colors: ThemeColors;
+  colors: ThemeColorsConfig;
   blur: typeof blurVariables;
   borderRadius: typeof borderRadiusVariables;
   borderSize: typeof borderSizeVariables;
