@@ -49,18 +49,18 @@ const Rewards: FC<RewardsProps> = () => {
 
   const { activeTab, handleSetActiveTab } = useRewardsTabs();
 
-  const { showConnectModal, setShowConnectModal, status, connectUserWallet } = useRewardsAuth();
+  const { isAuthModalVisible, status, connectUserWallet, hideAuthModal } = useRewardsAuth();
 
   useCreateRewardsUser();
 
   const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
 
   useEffect(() => {
-    if (isErrorPresent && showConnectModal && status === 'error' && errorExists && activeTab === 'dashboard') {
+    if (isErrorPresent && isAuthModalVisible && status === 'error' && errorExists && activeTab === 'dashboard') {
       setHasError(isErrorPresent);
-      setShowConnectModal(false);
+      hideAuthModal();
     }
-  }, [isErrorPresent, showConnectModal, errorExists]);
+  }, [isErrorPresent, isAuthModalVisible, errorExists]);
 
   // retry unlock profile
   const handleUnlockProfile = () => {
@@ -102,7 +102,7 @@ const Rewards: FC<RewardsProps> = () => {
         {activeTab === 'dashboard' && <ReferralSection handleUnlockProfile={handleUnlockProfile} />}
       </Box>
 
-      {userPushSDKInstance && userPushSDKInstance?.readmode() && showConnectModal && (
+      {userPushSDKInstance && userPushSDKInstance?.readmode() && isAuthModalVisible && (
         <Box
           display="flex"
           justifyContent="center"
@@ -114,7 +114,8 @@ const Rewards: FC<RewardsProps> = () => {
         >
           <UnlockProfileWrapper
             type={UNLOCK_PROFILE_TYPE.MODAL}
-            showConnectModal={showConnectModal}
+            showConnectModal={isAuthModalVisible}
+            onClose={() => hideAuthModal()}
             description="Unlock your profile to proceed."
           />
         </Box>
