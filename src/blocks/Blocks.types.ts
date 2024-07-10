@@ -1,6 +1,7 @@
 import { HTMLAttributes } from 'react';
 import { BoxResponsiveCSSProperties, BoxResponsiveCSSPropertiesData, BoxResponsivePropValues } from './box';
 import { blocksColorsLegacy } from './Blocks.colors';
+import { ThemeColors } from './theme/Theme.types';
 import {
   SkeletonResponsiveCSSProperties,
   SkeletonResponsiveCSSPropertiesData,
@@ -57,7 +58,8 @@ export type BlocksColors = keyof BlocksColorData;
 
 export type ThemeMode = 'light' | 'dark';
 
-export type ThemeModeColors = Record<ThemeMode, BlocksColors>;
+// TODO: Remove BlocksColors
+export type ThemeModeColors = Record<ThemeMode, BlocksColors | ThemeColors>;
 
 export type BorderValue = `${number}px ${string} ${BlocksColors}` | 'none';
 
