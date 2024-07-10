@@ -14,6 +14,7 @@ import {
   BorderValue,
   RadiusType,
 } from './Blocks.types';
+import { ThemeColors } from './theme/Theme.types';
 
 /**
  * @param propName
@@ -135,10 +136,13 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
 };
 
 /**
+ * @deprecated
  * @param color
  * @returns color as a css variable: var(--primary)
+ *
+ * // TODO: Remove this function. We don't need it.
  */
-export const getBlocksColor = (mode: ThemeMode, color?: BlocksColors | ThemeModeColors) => {
+export const getBlocksColor = (mode: ThemeMode, color?: BlocksColors | ThemeModeColors | ThemeColors) => {
   // If color is not given return undefined, to avoid any breakages
   if (!color) return color;
 
