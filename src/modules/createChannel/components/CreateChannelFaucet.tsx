@@ -2,7 +2,7 @@
 import { FC } from "react";
 
 // Components
-import { Box, Button, Link, Swap, Text } from "blocks";
+import { Box, Button, Link, Skeleton, Swap, Text } from "blocks";
 import { UniswapWidgetModal } from "components/UniswapWidget";
 
 // Hooks
@@ -14,11 +14,13 @@ import { appConfig } from "config";
 type CreateChannelFaucetProps = {
   mintPushToken: (noOfTokens: number) => void;
   noOfPushTokensToCheck: number;
+  mintingPush: boolean;
 }
 
 const CreateChannelFaucet: FC<CreateChannelFaucetProps> = ({
   mintPushToken,
-  noOfPushTokensToCheck
+  noOfPushTokensToCheck,
+  mintingPush
 }) => {
   const isProd = appConfig.appEnv === 'prod';
 
@@ -37,11 +39,13 @@ const CreateChannelFaucet: FC<CreateChannelFaucetProps> = ({
       justifyContent='space-between'
       alignItems='center'
     >
-      <Text variant="c-regular" color='gray-1000'>
-        {isProd ?
-          'Your balance is low. Swap to get PUSH Tokens.' :
-          'Follow these steps to get Testnet PUSH.'}
-      </Text>
+      <Skeleton isLoading={mintingPush}>
+        <Text variant="c-regular" color='gray-1000'>
+          {isProd ?
+            'Your balance is low. Swap to get PUSH Tokens.' :
+            'Follow these steps to get Testnet PUSH.'}
+        </Text>
+      </Skeleton>
 
       {isProd ? (
         <Button
@@ -53,13 +57,39 @@ const CreateChannelFaucet: FC<CreateChannelFaucetProps> = ({
         </Button>
       ) : (
         <Box display='flex' gap='s3'>
-          <Link to='https://chaindrop.org/?chainid=11155111&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' target="_blank">
+          <Skeleton isLoading={mintingPush}>
+            <Link to='https://chaindrop.org/?chainid=11155111&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' target="_blank">
+              <Box
+                display='flex'
+                gap='s2'
+                alignItems='baseline'
+                color='pink-600'
+                cursor='pointer'
+              >
+                <Box
+                  border='1px solid pink-600'
+                  width='16px'
+                  height='15px'
+                  borderRadius="r10"
+                  display='flex'
+                  justifyContent='center'
+
+                >
+                  <Text variant="c-regular">1</Text>
+                </Box>
+                <Text>Sepolia ETH Faucet</Text>
+              </Box>
+            </Link>
+          </Skeleton>
+
+          <Skeleton isLoading={mintingPush}>
             <Box
               display='flex'
               gap='s2'
               alignItems='baseline'
               color='pink-600'
               cursor='pointer'
+              onClick={() => mintPushToken(1000)}
             >
               <Box
                 border='1px solid pink-600'
@@ -70,33 +100,11 @@ const CreateChannelFaucet: FC<CreateChannelFaucetProps> = ({
                 justifyContent='center'
 
               >
-                <Text variant="c-regular">1</Text>
+                <Text variant="c-regular">2</Text>
               </Box>
-              <Text>Sepolia ETH Faucet</Text>
+              <Text>Get Testnet Push</Text>
             </Box>
-          </Link>
-
-          <Box
-            display='flex'
-            gap='s2'
-            alignItems='baseline'
-            color='pink-600'
-            cursor='pointer'
-            onClick={() => mintPushToken(1000)}
-          >
-            <Box
-              border='1px solid pink-600'
-              width='16px'
-              height='15px'
-              borderRadius="r10"
-              display='flex'
-              justifyContent='center'
-
-            >
-              <Text variant="c-regular">2</Text>
-            </Box>
-            <Text>Get Testnet Push</Text>
-          </Box>
+          </Skeleton>
         </Box>
       )}
 

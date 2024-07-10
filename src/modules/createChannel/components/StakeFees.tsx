@@ -22,24 +22,32 @@ const StakeFees: FC<StakeFeesProps> = ({
   const { loading, error, executeAsyncFunction: executeImportPushTokenFunc } = useAsyncOperation(importPushToken);
 
   const [balance, setBalance] = useState(0);
-  const [faucetLoading, setFaucetLoading] = useState(false);
 
+  const [mintingPush, setMintingPush] = useState(false);
 
   const mintPushTokenHandler = async (noOfTokens: number) => {
     if (!isWalletConnected) {
       connect();
     }
     if (isWalletConnected) {
-      setFaucetLoading(true);
-      const amount = await mintPushToken({ noOfTokens, provider, account });
-      console.log('Token Minted >>>', amount);
-      setFaucetLoading(false);
-      setBalance(amount);
+      setMintingPush(true);
+      try {
+        const amount = await mintPushToken({ noOfTokens, provider, account });
+        console.log('Token Minted >>>', amount);
+        setMintingPush(false)
+        setBalance(amount);
+
+      } catch (error) {
+        console.log("Error >>", error);
+        setMintingPush(false)
+
+      }
     }
   };
 
   //check Push token in wallet
   const pushTokenInWallet = async () => {
+    console.log("Fetching token")
     const amount = await getPushTokenFromWallet({
       address: account,
       provider: provider
@@ -49,18 +57,24 @@ const StakeFees: FC<StakeFeesProps> = ({
   };
 
   useEffect(() => {
+    console.log("Balance useEffect is called", balance);
     pushTokenInWallet();
     checkSetFaucetVisibility();
   }, [balance, account]);
 
 
   const handlePushTokenImport = async () => {
+    if (!isWalletConnected) {
+      return;
+    }
     await executeImportPushTokenFunc();
   };
 
   const [isFaucetVisible, setIsFaucetVisible] = useState<boolean>(false);
 
   const checkSetFaucetVisibility = async () => {
+    console.log("Checking if faucet should be displayed");
+
     const hasEnoughPushToken = await getHasEnoughPushToken({
       address: account,
       provider: provider,
@@ -79,7 +93,7 @@ const StakeFees: FC<StakeFeesProps> = ({
             flexDirection="row"
             justifyContent="space-between"
             backgroundColor={{ light: "gray-100", dark: 'gray-1000' }}
-            borderRadius={!faucetLoading && isFaucetVisible ? "r4 r4 r0 r0" : "r4"}
+            borderRadius={isFaucetVisible ? "r4 r4 r0 r0" : "r4"}
             padding="s4 s6"
             alignItems="center"
           >
@@ -98,9 +112,10 @@ const StakeFees: FC<StakeFeesProps> = ({
               </Text>
             </Box>
           </Box>
-          {!faucetLoading && isFaucetVisible && <CreateChannelFaucet
+          {isFaucetVisible && <CreateChannelFaucet
             mintPushToken={mintPushTokenHandler}
             noOfPushTokensToCheck={50}
+            mintingPush={mintingPush}
           />}
         </Box>
 
@@ -127,7 +142,9 @@ const StakeFees: FC<StakeFeesProps> = ({
             setStakeFeesChoosen(true)
             handleCreateChannel()
           }}
-        >Create Channel</Button>
+        >
+          Create Channel
+        </Button>
       </Box>
     </Box>
   );

@@ -5,11 +5,13 @@ import { FC } from "react";
 
 type CreateChannelProcessingInfoProps = {
   progress: number;
+  progressInfo: string;
   processingInfo: string;
 }
 
 const CreateChannelProcessingInfo: FC<CreateChannelProcessingInfoProps> = ({
   progress,
+  progressInfo,
   processingInfo
 }) => {
   return (
@@ -27,7 +29,7 @@ const CreateChannelProcessingInfo: FC<CreateChannelProcessingInfoProps> = ({
         width='-webkit-fill-available'
       >
         <Text textAlign='center' variant='h5-semibold' color='pink-600'>
-          Please complete the transaction in your wallet to proceed.
+          {progressInfo}
         </Text>
       </Box>
 

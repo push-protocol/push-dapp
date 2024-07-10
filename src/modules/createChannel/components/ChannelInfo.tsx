@@ -1,4 +1,4 @@
-import { Box, Button, Text, TextInput } from "blocks";
+import { Box, Button, Text, TextArea, TextInput } from "blocks";
 import { FC, useMemo } from "react";
 import { isEmpty } from "../CreateChannel.utils";
 
@@ -69,7 +69,7 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
             label="Channel Name"
             value={channelName}
             onChange={(e) => {
-              setChannelName(e.target.value.slice(0.32))
+              setChannelName(e.target.value.slice(0, 32))
             }}
             error={!!errorInfo?.name}
             errorMessage={errorInfo.name}
@@ -78,19 +78,21 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
         </Box>
 
         <Box width='100%'>
-          <TextInput
+
+          <TextArea
             required
-            value={channelDesc}
             label="Channel Description"
             placeholder="Get notified about ..."
             description='Enter a Brief description of the notifications the user will receive'
-            onChange={(e) => {
-              setChannelDesc(e.target.value.slice(0, 250))
-            }}
             error={!!errorInfo?.description}
             errorMessage={errorInfo.description}
             totalCount={250}
+            value={channelDesc}
+            onChange={(e) => {
+              setChannelDesc(e.target.value.slice(0, 250))
+            }}
           />
+
         </Box>
 
         <Box width='100%'>
@@ -99,7 +101,7 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
             required
             value={channelURL}
             onChange={(e) => {
-              setChannelURL(e.target.value.slice(0.32))
+              setChannelURL(e.target.value.slice(0, 32))
             }}
             error={!!errorInfo?.url}
             errorMessage={errorInfo.url}
@@ -107,11 +109,7 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
           />
         </Box>
 
-
-
-
       </Box>
-
 
       <Button
         disabled={disableButton}

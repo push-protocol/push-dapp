@@ -161,7 +161,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
                 variant="c-regular"
                 color={{ light: 'gray-600', dark: 'gray-500' }}
               >
-                {`${value?.length}/${totalCount}`}
+                {`${value?.length} / ${totalCount}`}
               </Text>
             )}
           </div>
