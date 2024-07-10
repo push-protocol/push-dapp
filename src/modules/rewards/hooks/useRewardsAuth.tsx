@@ -124,17 +124,12 @@ const useRewardsAuth = () => {
   }, [status, isVerifyClicked, isDashClicked]);
 
   return {
-    caip10WalletAddress,
     status,
-    unlockProfile,
     isAuthModalVisible,
-    setIsAuthModalVisible,
     connectWallet,
     handleVerify,
     userDetails,
-    isVerifyClicked,
     connectUserWallet,
-    isDashClicked,
     hideAuthModal,
     showAuthModal,
   };

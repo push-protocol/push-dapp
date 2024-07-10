@@ -49,7 +49,7 @@ const Rewards: FC<RewardsProps> = () => {
 
   const { activeTab, handleSetActiveTab } = useRewardsTabs();
 
-  const { isAuthModalVisible, setIsAuthModalVisible, status, connectUserWallet, hideAuthModal } = useRewardsAuth();
+  const { isAuthModalVisible, status, connectUserWallet, hideAuthModal } = useRewardsAuth();
 
   useCreateRewardsUser();
 
@@ -58,7 +58,7 @@ const Rewards: FC<RewardsProps> = () => {
   useEffect(() => {
     if (isErrorPresent && isAuthModalVisible && status === 'error' && errorExists && activeTab === 'dashboard') {
       setHasError(isErrorPresent);
-      setIsAuthModalVisible(false);
+      hideAuthModal();
     }
   }, [isErrorPresent, isAuthModalVisible, errorExists]);
 
