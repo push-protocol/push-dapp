@@ -4,6 +4,7 @@ import styled, { FlattenSimpleInterpolation } from 'styled-components';
 import { useBlocksTheme } from '../Blocks.hooks';
 import { TransformedHTMLAttributes, BlocksColors, ModeProp, ThemeModeColors } from '../Blocks.types';
 import { getBlocksColor } from '../Blocks.utils';
+import { ThemeColors } from '../theme/Theme.types';
 import { TextAlign, TextHTMLTags, TextResponsiveProps, TextTransform, TextVariants } from './Text.types';
 import { getVariantStyles } from './Text.utils';
 import { getTextResponsiveCSS } from './Text.utils';
@@ -14,7 +15,7 @@ export type TextProps = {
   /* Children pass to the Text component */
   children?: ReactNode;
   /* Sets the css property for text color */
-  color?: BlocksColors | ThemeModeColors;
+  color?: BlocksColors | ThemeModeColors | ThemeColors;
   /* Extra css prop from styled components to apply custom css not supported by Text component */
   css?: FlattenSimpleInterpolation;
   /* For truncating the contents with ... when there's container overflow */
@@ -88,6 +89,7 @@ const StyledText = styled.p.withConfig({
 const Text = forwardRef<HTMLElement, TextProps>(({ as = 'p', ...props }, ref) => {
   const { mode } = useBlocksTheme();
   return (
+    // TODO: We need to remove color dependency from BlocksColors | ThemeModeColors to fix this error
     <StyledText
       as={as}
       mode={mode}

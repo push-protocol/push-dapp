@@ -32,7 +32,7 @@ const Profile = ({ setActiveTab, showQR, setShowQR }: any): JSX.Element => {
       {/* <Tooltip title="Profile" placement="top-start"> */}
       <WalletDetailsContainer
         direction="row"
-        spacing={2}
+        spacing="normal"
         onClick={(): void => setActiveTab(2)}
       >
         <ItemVV2

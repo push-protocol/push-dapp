@@ -431,7 +431,7 @@ const StateText = styled.div`
   border-radius: 25px;
   height: 26px;
   background-color: pink;
-  font-family: Strawford, Source Sans Pro;
+  font-family: FK Grotesk Neu, Source Sans Pro;
   @media ${device.laptop} {
     padding: 1px 8px;
   }
@@ -503,7 +503,7 @@ const Date = styled.div`
 
 const ChannelName = styled.div`
   display: flex;
-  font-family: Strawford, Source Sans Pro;
+  font-family: FK Grotesk Neu, Source Sans Pro;
   flex-direction: row;
   margin-right: 8px;
   font-weight: 500;
@@ -545,7 +545,7 @@ const Footer = styled(ItemHV2)`
 const FooterPrimaryText = styled.p`
   margin: 0px;
   color: ${(props) => props.theme.editChannelPrimaryText};
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 20px;
@@ -561,7 +561,7 @@ const TickImage = styled.img``;
 const ReactivateFee = styled.p`
   margin: 0px 0px 0px 5px;
   color: #d53893;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 20px;
@@ -583,7 +583,7 @@ const ButtonContainer = styled(ItemHV2)`
 
 const ConfirmButton = styled(Button)`
   margin: 0 auto;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 18px;
@@ -615,7 +615,7 @@ const VerifyingContainer = styled(ItemVV2)`
 `;
 
 const TransactionText = styled.p`
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 18px;

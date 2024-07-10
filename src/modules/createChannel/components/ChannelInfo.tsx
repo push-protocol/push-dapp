@@ -63,25 +63,25 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
         gap='s4'
         alignSelf='stretch'
       >
-        <Box display='flex' flexDirection='column' width='100%'>
-          <Text variant="h6-semibold">Channel Name</Text>
+        <Box width='100%'>
           <TextInput
+            required
+            label="Channel Name"
             value={channelName}
             onChange={(e) => {
-              setChannelName(e.target.value)
+              setChannelName(e.target.value.slice(0.32))
             }}
             error={!!errorInfo?.name}
             errorMessage={errorInfo.name}
+            totalCount={32}
           />
         </Box>
-        <Box display='flex' flexDirection='column' width='100%'>
-          <Box display='flex' flexDirection='row' alignItems='center' justifyContent='space-between'>
-            <Text variant="h6-semibold">Channel Description</Text>
-            <Text variant="c-regular" color='gray-600'>{250 - channelDesc?.length}</Text>
-          </Box>
+
+        <Box width='100%'>
           <TextInput
             required
             value={channelDesc}
+            label="Channel Description"
             placeholder="Get notified about ..."
             description='Enter a Brief description of the notifications the user will receive'
             onChange={(e) => {
@@ -89,23 +89,27 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
             }}
             error={!!errorInfo?.description}
             errorMessage={errorInfo.description}
+            totalCount={250}
           />
-
-          {/* <textarea rows={4} maxLength={250} /> */}
-
-
         </Box>
-        <Box display='flex' flexDirection='column' width='100%'>
-          <Text variant="h6-semibold">Channel Website URL</Text>
+
+        <Box width='100%'>
           <TextInput
+            label="Channel Website URL"
+            required
             value={channelURL}
             onChange={(e) => {
-              setChannelURL(e.target.value)
+              setChannelURL(e.target.value.slice(0.32))
             }}
             error={!!errorInfo?.url}
             errorMessage={errorInfo.url}
+            totalCount={32}
           />
         </Box>
+
+
+
+
       </Box>
 
 

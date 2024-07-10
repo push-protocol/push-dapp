@@ -351,28 +351,6 @@ const ButtonsContainer = styled.div`
   }
 `;
 
-const FilledButton = styled(ButtonV2)`
-  background: #d53a94;
-  border-radius: 15px;
-  padding: 13px 0px;
-  font-size: 16px;
-  line-height: 141%;
-  letter-spacing: -0.03em;
-  color: #ffffff;
-  width: 175px;
-  cursor: pointer;
-  & > div {
-    display: block;
-  }
-
-  @media (max-width: 600px) {
-    font-size: 14px;
-  }
-  @media ${device.mobileL} {
-    width: 100%;
-  }
-`;
-
 const EmptyButton = styled(ButtonV2)`
   font-size: 16px;
   line-height: 19px;

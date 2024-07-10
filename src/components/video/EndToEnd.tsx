@@ -38,7 +38,7 @@ const Image = styled.img`
 `;
 
 const Text = styled.div`
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 400;
   font-size: 15px;

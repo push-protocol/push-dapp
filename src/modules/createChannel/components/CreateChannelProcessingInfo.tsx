@@ -22,7 +22,7 @@ const CreateChannelProcessingInfo: FC<CreateChannelProcessingInfoProps> = ({
     >
       <Box
         padding='s6'
-        backgroundColor='gray-100'
+        backgroundColor={{ light: 'gray-100', dark: 'gray-1000' }}
         borderRadius="r4"
         width='-webkit-fill-available'
       >
@@ -42,7 +42,7 @@ const CreateChannelProcessingInfo: FC<CreateChannelProcessingInfoProps> = ({
 
       <Box display='flex' flexDirection='row' alignItems='center' gap='s1'>
         <Spinner type={SPINNER_TYPE.PROCESSING} size={16} />
-        <Text variant="bs-semibold" color='gray-800'>
+        <Text variant="bs-semibold" color={{ light: 'gray-800', dark: 'gray-300' }}>
           {processingInfo}
         </Text>
       </Box>

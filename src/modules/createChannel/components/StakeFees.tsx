@@ -78,14 +78,19 @@ const StakeFees: FC<StakeFeesProps> = ({
             display="flex"
             flexDirection="row"
             justifyContent="space-between"
-            backgroundColor="gray-100"
-            borderRadius="r4 r4 r0 r0"
+            backgroundColor={{ light: "gray-100", dark: 'gray-1000' }}
+            borderRadius={!faucetLoading && isFaucetVisible ? "r4 r4 r0 r0" : "r4"}
             padding="s4 s6"
             alignItems="center"
           >
-            <Text variant="h4-semibold">Amout For Staking</Text>
+            <Text
+              variant="h4-semibold"
+              color={{ light: 'gray-1000', dark: 'gray-100' }}
+            >
+              Amout For Staking
+            </Text>
             <Box>
-              <Text variant="h4-semibold" color="pink-500">
+              <Text variant="h4-semibold" color={{ light: "pink-500", dark: 'pink-400' }}>
                 {channelStakeFees} PUSH
               </Text>
               <Text variant="bes-semibold" color="gray-500">

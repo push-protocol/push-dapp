@@ -83,9 +83,9 @@ const UploadLogo: FC<UploadLogoProps> = ({
           display='flex'
           flexDirection='column'
           alignItems='center'
-          border='1px dashed gray-300'
+          border={{ light: '1px dashed gray-300', dark: '1px dashed gray-700' }}
           borderRadius="r6"
-          backgroundColor='gray-100'
+          backgroundColor={{ light: 'gray-100', dark: 'gray-1000' }}
           gap='s6'
         >
 
@@ -114,11 +114,14 @@ const UploadLogo: FC<UploadLogoProps> = ({
           )}
 
           <Box display='flex' gap='s1'>
-            <Text variant="bs-semibold"> Drag and Drop or</Text>
+            <Text
+              variant="bs-semibold"
+              color={{ light: 'gray-1000', dark: 'gray-600' }}
+            > Drag and Drop or</Text>
             <label htmlFor="file-upload">
               <Text
                 variant="bs-semibold"
-                color='pink-600'
+                color={{ light: 'pink-600', dark: 'pink-400' }}
                 css={css`cursor:pointer;`}
               >
                 Browse to Choose

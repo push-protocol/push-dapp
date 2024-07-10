@@ -84,7 +84,7 @@ const ChannelTutorial = ({ addr, bgColor, loadTeaser, playTeaser }) => {
                   padding="4px 10px"
                   margin="0px 0px 10px 0px"
                   self="flex-end"
-                  spacing="0.1em"
+                  spacing="normal"
                   textTransform="uppercase"
                   size="bold"
                 >

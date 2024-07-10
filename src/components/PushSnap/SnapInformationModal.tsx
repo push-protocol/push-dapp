@@ -67,7 +67,7 @@ const SnapInformationModal = ({ handleCloseModal }) => {
       <SpanV2
         fontSize="22px"
         fontWeight="500"
-        letterSpacing="-0.44px"
+        letterSpacing="normal"
         color={theme.snapPrimaryText}
       >
         Connect to Metamask Push Snap
@@ -147,7 +147,7 @@ const InstallButton = styled(Button)`
   background: #d53a94;
   color: #fff;
   z-index: 0;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 14px;

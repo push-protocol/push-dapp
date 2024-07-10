@@ -133,7 +133,7 @@ const SpaceUser = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: 150%;
-  letter-spacing: -0.342px;
+  letter-spacing: normal;
   margin-left: 10px;
   color: ${({ theme }) => theme.spaceHostTextColor};
 `;

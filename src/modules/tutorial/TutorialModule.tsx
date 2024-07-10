@@ -51,7 +51,7 @@ function TutorialModule() {
             size="16px"
             textTransform="none"
             textAlign="center"
-            spacing="0.03em"
+            spacing="normal"
             margin="0px 0px"
           >
             Let's walk you through the core functions of Push (EPNS), the communication protocol of Web3!
@@ -145,7 +145,7 @@ const QnAItem = styled(Item)`
 
     & ${Span} {
       font-weight: 400;
-      letter-spacing: 0.2em;
+      letter-spacing: normal;
       margin-left: 10px;
       flex: 1;
     }

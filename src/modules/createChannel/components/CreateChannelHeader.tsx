@@ -10,11 +10,11 @@ const CreateChannelHeader = () => {
       alignSelf="stretch"
     >
 
-      <Text variant="h3-semibold">
+      <Text variant="h3-semibold" color={{ light: 'gray-1000', dark: 'gray-100' }}>
         Create Your Channel
       </Text>
 
-      <Text variant="bs-regular" color='gray-500'>
+      <Text variant="bs-regular" color={{ light: 'gray-500', dark: 'gray-600' }}>
         Creating your own notification channel to manage, send and notify users.
       </Text>
 
