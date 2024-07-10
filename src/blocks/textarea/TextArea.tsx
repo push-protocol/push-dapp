@@ -160,7 +160,13 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         {description && (
           <Text
             variant="c-regular"
-            color={success || error ? 'components-inputs-text-default' : 'components-inputs-text-disabled'}
+            color={
+              success || error
+                ? 'components-inputs-text-default'
+                : disabled
+                ? 'components-inputs-text-disabled'
+                : 'components-inputs-text-placeholder'
+            }
           >
             {description}
           </Text>
