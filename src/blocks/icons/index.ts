@@ -5,6 +5,8 @@ export { default as Add } from './components/Add';
 
 export { default as AddEmoji } from './components/AddEmoji';
 
+export { default as Asterisk } from './components/Asterisk';
+
 export { default as Back } from './components/Back';
 
 export { default as BellRingFilled } from './components/BellRingFilled';

@@ -9,11 +9,7 @@ interface DashboardHeaderProps {
   showSubHeader: boolean;
 }
 
-
-const DashboardHeader: FC<DashboardHeaderProps> = ({
-  setSubHeaderVisibility,
-  showSubHeader
-}) => {
+const DashboardHeader: FC<DashboardHeaderProps> = ({ setSubHeaderVisibility, showSubHeader }) => {
   return (
     <Box
       flexDirection="row"

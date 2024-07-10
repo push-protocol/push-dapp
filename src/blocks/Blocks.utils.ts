@@ -1,5 +1,5 @@
 import { css } from 'styled-components';
-import { deviceMediaQ, deviceSizes, breakpointMap } from './Blocks.constants';
+import { deviceMediaQ, deviceSizes, breakpointMap } from './theme';
 import {
   BlocksColors,
   Breakpoint,
@@ -12,7 +12,7 @@ import {
   ThemeMode,
   ThemeModeBorder,
   BorderValue,
-  RadiusType
+  RadiusType,
 } from './Blocks.types';
 
 /**
@@ -110,7 +110,7 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
     tablet: '',
     laptop: '',
     laptopL: '',
-    desktop: ''
+    desktop: '',
   };
 
   data.forEach(({ prop, propName }) => {
