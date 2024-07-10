@@ -64,6 +64,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
       >
         {activityList.map((activity: Activity) => (
           <RewardsActivitiesListItem
+            key={activity.activityType}
             userId={userDetails?.userId || ''}
             activity={activity}
             isLoadingItem={isLoading}
