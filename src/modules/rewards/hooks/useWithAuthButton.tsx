@@ -23,7 +23,15 @@ export const useAuthWithButton = ({ onSuccess }: { onSuccess: (userDetails: User
   const { isWalletConnected } = useAccount();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const { showConnectModal, setShowConnectModal, connectWallet, handleVerify, userDetails } = useRewardsAuth();
+  const {
+    showConnectModal,
+    setShowConnectModal,
+    connectWallet,
+    handleVerify,
+    userDetails,
+    toggleModalOff,
+    toggleModalOn,
+  } = useRewardsAuth();
   const { isSuccess, isUserProfileUnlocked } = useCreateRewardsUser();
 
   const showAuthModal = async () => {
@@ -76,5 +84,7 @@ export const useAuthWithButton = ({ onSuccess }: { onSuccess: (userDetails: User
     isAuthenticated: isWalletConnectedAndProfileUnlocked,
     showConnectModal: showConnectModal,
     setShowConnectModal: setShowConnectModal,
+    toggleModalOff: toggleModalOff,
+    toggleModalOn: toggleModalOn,
   };
 };

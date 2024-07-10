@@ -44,6 +44,7 @@ const useRewardsAuth = () => {
   const connectWallet = () => {
     setHandleVerify(false);
     setIsVerifyClicked(true);
+    setShowConnectModal(false);
 
     if (!isWalletConnected) {
       connect();
@@ -52,7 +53,16 @@ const useRewardsAuth = () => {
 
   // dashboard referral section unlock profile
   const connectUserWallet = () => {
+    setShowConnectModal(false);
     setIsDashClicked(true);
+  };
+
+  const toggleModalOn = () => {
+    setShowConnectModal(true);
+  };
+
+  const toggleModalOff = () => {
+    setShowConnectModal(false);
   };
 
   // unlock profile function
@@ -125,6 +135,8 @@ const useRewardsAuth = () => {
     isVerifyClicked,
     connectUserWallet,
     isDashClicked,
+    toggleModalOff,
+    toggleModalOn,
   };
 };
 

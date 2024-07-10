@@ -13,7 +13,7 @@ interface IntroContainerProps {
   type?: UNLOCK_PROFILE_TYPE;
   showConnectModal?: boolean;
   description?: string;
-  onClose?: () => void;
+  handleClose?: () => void;
   closeIcon?: boolean;
 }
 
@@ -25,7 +25,7 @@ const UnlockProfileWrapper = ({
   type = DEFAULT_PROPS.type,
   showConnectModal,
   description,
-  onClose,
+  handleClose,
   closeIcon,
 }: IntroContainerProps) => {
   const {
@@ -38,7 +38,7 @@ const UnlockProfileWrapper = ({
     if (type === UNLOCK_PROFILE_TYPE.MODAL && showConnectModal) {
       showProfileModal();
     }
-  }, [type]);
+  }, [type, showConnectModal]);
 
   if (type === UNLOCK_PROFILE_TYPE.MODAL) {
     return (

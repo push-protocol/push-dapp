@@ -112,8 +112,8 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
           <HoverableSVG
             icon={
               <CrossFilled
-                size={24}
-                color="pink-700"
+                size={30}
+                color="gray-400"
                 onClick={onClose}
               />
             }
