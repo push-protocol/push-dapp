@@ -42,7 +42,7 @@ const ClaimGalxePage = lazy(() => import('pages/ClaimGalxePage'));
 const WelcomDashboardPage = lazy(() => import('pages/WelcomeDashboardPage'));
 const RewardPointsPage = lazy(() => import('pages/RewardPointsPage'));
 const PointsVaultPage = lazy(() => import('pages/PointsVaultPage'));
-
+const DiscordVerificationPage = lazy(() => import('pages/DiscordVerificationPage'));
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
 // import ChannelsPage from 'pages/ChannelsPage';
@@ -170,6 +170,11 @@ function MasterInterfacePage() {
                 element={<RewardPointsPage />}
               />
             ))}
+
+            <Route
+              path={APP_PATHS.DiscordVerification}
+              element={<DiscordVerificationPage />}
+            />
 
             <Route
               path={APP_PATHS.PointsVault}

@@ -1,9 +1,11 @@
 // React and other libraries
 import { FC } from 'react';
 
+// type
+import { ButtonSize, ButtonVariant } from 'blocks/button';
+
 //Components
 import { Box, Button, Skeleton } from 'blocks';
-
 
 type ActivityStatusButtonProps = {
   label: string;
@@ -11,15 +13,18 @@ type ActivityStatusButtonProps = {
   isLoading?: boolean;
   onClick?: () => void;
   disabled: boolean;
-
-}
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+};
 
 const ActivityStatusButton: FC<ActivityStatusButtonProps> = ({
   label,
   isLoading,
   onClick,
   disabled,
-  disabledLabel
+  disabledLabel,
+  variant,
+  size,
 }) => {
   return (
     <Box
@@ -27,14 +32,16 @@ const ActivityStatusButton: FC<ActivityStatusButtonProps> = ({
       alignItems={{ ml: 'flex-start', initial: 'center' }}
       flexDirection="column"
     >
-      <Skeleton width="100%" isLoading={isLoading} >
+      <Skeleton
+        width="100%"
+        isLoading={isLoading}
+      >
         <Button
-          variant="tertiary"
-          size="extraSmall"
+          variant={variant || 'tertiary'}
+          size={size || 'extraSmall'}
           onClick={onClick}
           disabled={disabled}
         >
-
           {disabledLabel && disabled ? disabledLabel : label}
 
           {/* {label} */}

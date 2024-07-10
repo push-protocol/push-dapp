@@ -60,6 +60,7 @@ const AppContextProvider = ({ children }) => {
   });
 
   const [SnapState, setSnapState] = useState<number>(1);
+  const [isUserProfileUnlocked, setUserProfileUnlocked] = useState<boolean>(false);
   const {
     isModalOpen: isMetamaskPushSnapOpen,
     showModal: showMetamaskPushSnap,
@@ -131,7 +132,7 @@ const AppContextProvider = ({ children }) => {
 
     // reset the ref to true
     shouldInitializeRef.current = true; // Directly modify the ref to disable useEffect execution
-
+    setUserProfileUnlocked(true);
     return user;
   };
 
@@ -544,6 +545,8 @@ const AppContextProvider = ({ children }) => {
         initializePushSdkReadMode,
         removePGPKeyForUser,
         storePGPKeyForUser,
+        isUserProfileUnlocked,
+        setUserProfileUnlocked,
       }}
     >
       {children}

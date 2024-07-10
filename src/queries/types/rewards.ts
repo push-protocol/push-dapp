@@ -84,7 +84,6 @@ export type DiscordDetails = {
 
 export type UserRewardsDetailParams = {
   caip10WalletAddress: string;
-  enabled?: boolean;
 };
 
 export type UserRewardsDetailResponse = {
