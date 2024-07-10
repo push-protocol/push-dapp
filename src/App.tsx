@@ -320,8 +320,12 @@ export default function App() {
   // const { spaceUI } = useSpaceComponents();
 
   const location = useLocation();
-  const isHeaderHidden = location?.pathname.includes(APP_PATHS.PointsVault);
-  const isSidebarHidden = location?.pathname.includes(APP_PATHS.PointsVault) || location?.pathname.includes('/snap');
+  const isHeaderHidden =
+    location?.pathname.includes(APP_PATHS.PointsVault) || location?.pathname.includes(APP_PATHS.DiscordVerification);
+  const isSidebarHidden =
+    location?.pathname.includes(APP_PATHS.PointsVault) ||
+    location?.pathname.includes('/snap') ||
+    location?.pathname.includes(APP_PATHS.DiscordVerification);
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
