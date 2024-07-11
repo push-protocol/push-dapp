@@ -25,3 +25,9 @@ export type Theme = {
   opacity: typeof opacityVariables;
   spacing: typeof spacingVariables;
 };
+
+export type ThemeBorderRadius = keyof Theme['borderRadius'];
+
+export type ThemeBorderSize = keyof Theme['borderSize'];
+
+export type ThemeSpacing = keyof Theme['spacing'];
