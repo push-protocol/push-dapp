@@ -16,7 +16,13 @@ import { UserStoreType } from 'types';
 // components
 import { Button } from 'blocks';
 
-export const useAuthWithButton = ({ onSuccess }: { onSuccess: (userDetails: UserRewardsDetailResponse) => void }) => {
+export const useAuthWithButton = ({
+  onSuccess,
+  isLoading,
+}: {
+  onSuccess: (userDetails: UserRewardsDetailResponse) => void;
+  isLoading: boolean;
+}) => {
   const [isWalletConnectedAndProfileUnlocked, setIsWalletConnectedAndProfileUnlocked] = useState(false);
   const [showAuth, setShowAuth] = useState(false); // Track button click
 
@@ -58,12 +64,13 @@ export const useAuthWithButton = ({ onSuccess }: { onSuccess: (userDetails: User
           variant="tertiary"
           size="small"
           onClick={handleAuthModal}
+          disabled={isLoading}
         >
           Verify
         </Button>
       </>
     ),
-    [isWalletConnected, isAuthModalVisible]
+    [isWalletConnected, isAuthModalVisible, isLoading]
   );
 
   return {

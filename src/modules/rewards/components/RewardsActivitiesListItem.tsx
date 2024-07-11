@@ -137,6 +137,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                 refetchActivity={refetchActivity}
                 setErrorMessage={setErrorMessage}
                 usersSingleActivity={usersSingleActivity}
+                isLoadingActivity={isLoading}
               />
             </Box>
           </Box>
