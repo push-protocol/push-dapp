@@ -27,6 +27,7 @@ const ActivityButton: FC<ActivityButtonProps> = ({
     return (
       <Button
         variant="tertiary"
+        size="small"
         disabled
       >
         Claimed
@@ -38,6 +39,7 @@ const ActivityButton: FC<ActivityButtonProps> = ({
     return (
       <Button
         variant="tertiary"
+        size="small"
         disabled
       >
         Pending

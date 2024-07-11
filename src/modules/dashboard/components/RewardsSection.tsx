@@ -29,14 +29,14 @@ const RewardsSection = () => {
           variant="h5-semibold"
           display={{ ml: 'none', dp: 'block' }}
         >
-          Complete Tasks on Push. Earn Reward Points.
+          Complete Tasks on Push. Earn Push Points and Unlock Rewards.
         </Text>
         <Text
           variant="h5-semibold"
           display={{ ml: 'block', dp: 'none' }}
           textAlign="center"
         >
-          Complete Tasks on Push. Earn Reward Points.
+          Complete Tasks on Push. Earn Push Points and Unlock Rewards.
         </Text>
       </Box>
       <Link to={'/points'}>

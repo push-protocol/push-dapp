@@ -56,6 +56,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
             rank={userDetails?.rank}
             isLoading={isLoading}
             isFetching={isFetching}
+            data={userDetails}
             refetch={() => refetch()}
           />
 
