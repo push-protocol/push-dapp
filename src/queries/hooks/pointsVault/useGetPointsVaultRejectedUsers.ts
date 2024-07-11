@@ -9,12 +9,13 @@ export const useGetPointsVaultRejectedUsers = ({
   token,
   twitter,
   wallet,
+  activityTypeId,
 }: PointsVaultGetUsersPayload) => {
   return useInfiniteQuery({
     queryKey: [pointsVaultRejectedUsers, `${twitter}-${wallet}`],
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
-      getPointsVaultUsers({ status, page: pageParam as number, pageSize, token, twitter, wallet }),
+      getPointsVaultUsers({ status, page: pageParam as number, pageSize, token, twitter, wallet, activityTypeId }),
     getNextPageParam: ({ page, total }) => {
       if (page >= total) {
         return null;
