@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC } from 'react';
 
 // third party libraries
 import { useSelector } from 'react-redux';
