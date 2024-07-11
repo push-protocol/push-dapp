@@ -1,5 +1,10 @@
-import { Box, ErrorFilled, Text } from 'blocks';
+//React + web3 essentials
 import { FC } from 'react';
+
+// Components
+import { Box, ErrorFilled, Text } from 'blocks';
+
+// Types
 import { ChannelCreationError } from '../CreateChannel.types';
 
 type CreateChannelError = {

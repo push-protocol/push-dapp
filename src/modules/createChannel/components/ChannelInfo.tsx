@@ -1,6 +1,13 @@
-import { Box, Button, TextArea, TextInput } from "blocks";
+// React + web3 essentials
 import { FC } from "react";
+
+// Third party librabries
 import { FormikProps } from "formik";
+
+// Components
+import { Box, Button, TextArea, TextInput } from "blocks";
+
+// Types
 import { ChannelInfoFormValues } from "../CreateChannel.types";
 
 type ChannelInfoProps = {

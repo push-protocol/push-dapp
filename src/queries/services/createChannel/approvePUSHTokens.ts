@@ -1,10 +1,6 @@
 import { abis, addresses } from 'config';
 import { ContractReceipt, ethers } from 'ethers';
-
-type ApprovePUSHTokenPayload = {
-  noOfTokenToApprove: ethers.BigNumber;
-  signer: ethers.providers.JsonRpcSigner;
-};
+import { ApprovePUSHTokenPayload } from 'queries/types';
 
 export const approvePUSHTokens = async (payload: ApprovePUSHTokenPayload): Promise<ContractReceipt> => {
   const { noOfTokenToApprove, signer } = payload;

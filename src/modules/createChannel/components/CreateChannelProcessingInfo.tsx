@@ -1,7 +1,12 @@
+// React + web3 essentials
+import { FC } from "react";
+
+// Components
 import { Box, Text } from "blocks";
 import ProgressBar from "components/reusables/progress/ProgressBarUnit";
 import Spinner, { SPINNER_TYPE } from "components/reusables/spinners/SpinnerUnit";
-import { FC } from "react";
+
+// Types
 import { CreateChannelProgressType } from "../CreateChannel.types";
 
 type CreateChannelProcessingInfoProps = {

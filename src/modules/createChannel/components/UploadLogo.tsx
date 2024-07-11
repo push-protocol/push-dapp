@@ -6,11 +6,11 @@ import { FC, useRef } from "react";
 // Third party libraries
 import { css } from "styled-components";
 import * as Yup from 'yup';
+import { useFormik } from "formik";
 
 // Component
 import { Box, Button, CloudUpload, Text } from "blocks";
 import ImageClipper from "primaries/ImageClipper";
-import { useFormik } from "formik";
 import { isImageFile } from "../CreateChannel.utils";
 
 type UploadLogoProps = {

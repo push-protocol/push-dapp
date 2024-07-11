@@ -1,3 +1,4 @@
+// Components
 import { Box, Text } from 'blocks';
 
 const CreateChannelHeader = () => {

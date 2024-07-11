@@ -23,6 +23,7 @@ import { CreateChannelProcessingInfo } from './components/CreateChannelProcessin
 import { CHANNEL_STAKE_FEES, CreateChannelSteps } from './CreateChannel.constants';
 import { ChannelCreationError, ChannelInfoFormValues, CreateChannelProgressType } from './CreateChannel.types';
 import { channelInfoValidationSchema, checkImageSize, checkPushTokenApprovalFunc } from './CreateChannel.utils';
+import { DifferentChainPage } from './components/DifferentChainPage';
 
 // Helpers
 import { IPFSupload } from 'helpers/IpfsHelper';
@@ -30,6 +31,8 @@ import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
 
 // Config
 import { useApprovePUSHToken, useCreateChannel } from 'queries/hooks/createChannel';
+import { appConfig } from 'config';
+
 
 const completedSteps = [0];
 const fees = ethers.utils.parseUnits(CHANNEL_STAKE_FEES.toString(), 18);
@@ -46,7 +49,9 @@ const errorInitialState: ChannelCreationError = {
 };
 
 const CreateChannel = () => {
-  const { account, provider, isWalletConnected, connect } = useAccount();
+  const { account, provider, isWalletConnected, chainId, connect } = useAccount();
+
+  const onCoreNetwork = appConfig.coreContractChain === chainId;
 
   const { mutate: approvePUSHToken, isPending: pendingApproval } = useApprovePUSHToken();
   const { mutate: createNewChannel, isPending: createChannelPending } = useCreateChannel();
@@ -74,7 +79,7 @@ const CreateChannel = () => {
   // Progress Bar and text
   const [progressState, setProgressState] = useState<CreateChannelProgressType>(progressInitialState);
 
-  //Error status and text
+  // Error status and text
   const [channelCreationError, setChannelCreationError] = useState<ChannelCreationError>(errorInitialState);
 
 
@@ -281,11 +286,14 @@ const CreateChannel = () => {
       backgroundColor={{ light: 'white', dark: 'gray-900' }}
       borderRadius="r8"
       display="flex"
+      width={{ initial: '648px', ml: '325px' }}
       flexDirection="column"
       alignItems="center"
       gap="s10"
     >
       <CreateChannelHeader />
+
+      {!onCoreNetwork && <DifferentChainPage />}
 
       {channelCreationError.txErrorStatus !== 0 && <CreateChannelError channelCreationError={channelCreationError} />}
 

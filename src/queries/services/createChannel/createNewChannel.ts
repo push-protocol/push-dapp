@@ -1,12 +1,6 @@
 import { abis, addresses } from 'config';
 import { ContractReceipt, ethers } from 'ethers';
-
-type CreateNewChannelPayload = {
-  channelType: number;
-  identityBytes: Uint8Array;
-  fees: ethers.BigNumber;
-  signer: ethers.providers.JsonRpcSigner;
-};
+import { CreateNewChannelPayload } from 'queries/types';
 
 export const createNewChannel = async (payload: CreateNewChannelPayload): Promise<ContractReceipt> => {
   const { channelType, identityBytes, fees, signer } = payload;
