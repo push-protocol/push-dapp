@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -49,7 +49,7 @@ type UnlockProfileModalProps = {
 };
 
 const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps) => {
-  const { type, description, closeIcon } = InnerComponentProps;
+  const { type, description } = InnerComponentProps;
 
   const theme = useTheme();
   const { handleConnectWallet, initializePushSDK } = useContext(AppContext);
@@ -70,7 +70,17 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
   };
 
   const handleChatprofileUnlock = async () => {
-    await handleConnectWallet({ remember: rememberMe });
+    const user = await handleConnectWallet({ remember: rememberMe });
+
+    // reject unlock profile listener
+    const userMessage = 'Error decrypting PGP private key ...swiching to Guest mode';
+    const errorExists = user?.errors.some(
+      (error: { type: string; message: string }) => error.type === 'ERROR' && error.message === userMessage
+    );
+
+    if (errorExists && onClose) {
+      onClose();
+    }
   };
 
   useEffect(() => {

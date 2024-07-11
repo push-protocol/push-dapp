@@ -20,13 +20,12 @@ import { Box, Text } from 'blocks';
 import { ReferralSection } from './components/ReferralSection';
 import { RewardsTabsContainer } from './components/RewardsTabsContainer';
 import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
+import { useRewardsContext } from 'contexts/RewardsContext';
 
 export type RewardsProps = {};
 
 const Rewards: FC<RewardsProps> = () => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
-
-  const [hasError, setHasError] = useState<{} | null>(null);
 
   //fetch ref from url
   const [searchParams] = useSearchParams();
@@ -37,34 +36,18 @@ const Rewards: FC<RewardsProps> = () => {
   // Used to set the discord session after discord redirects back to the Dapp.
   useDiscordSession();
 
-  const userMessage = 'Error decrypting PGP private key ...swiching to Guest mode';
-
-  // reject unlock profile listener
-  const errorExists = useMemo(
-    () => userPushSDKInstance?.errors.some((error) => error.type === 'ERROR' && error.message === userMessage),
-    [userPushSDKInstance?.errors]
-  );
-
-  const isErrorPresent = userPushSDKInstance?.errors;
-
   const { activeTab, handleSetActiveTab } = useRewardsTabs();
 
-  const { isAuthModalVisible, status, connectUserWallet, hideAuthModal } = useRewardsAuth();
+  const { isAuthModalVisible } = useRewardsContext();
+
+  const { connectUserWallet, hideAuthModal } = useRewardsAuth();
 
   useCreateRewardsUser();
 
   const heading = activeTab === 'leaderboard' ? 'Push Reward Points' : 'Introducing Push Reward Points Program';
 
-  useEffect(() => {
-    if (isErrorPresent && isAuthModalVisible && status === 'error' && errorExists && activeTab === 'dashboard') {
-      setHasError(isErrorPresent);
-      hideAuthModal();
-    }
-  }, [isErrorPresent, isAuthModalVisible, errorExists]);
-
   // retry unlock profile
   const handleUnlockProfile = () => {
-    setHasError(null);
     connectUserWallet();
   };
 

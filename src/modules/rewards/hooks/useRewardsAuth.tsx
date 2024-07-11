@@ -16,18 +16,24 @@ import { useGetUserRewardsDetails } from 'queries/hooks/rewards';
 // types
 import { AxiosError } from 'axios';
 import { UserStoreType } from 'types';
+import { useRewardsContext } from 'contexts/RewardsContext';
 
 const useRewardsAuth = () => {
   const { account, isWalletConnected, connect } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const [isAuthModalVisible, setIsAuthModalVisible] = useState(false);
+  const { isAuthModalVisible, setIsAuthModalVisible } = useRewardsContext();
 
   const [isVerifyClicked, setIsVerifyClicked] = useState(false);
-  const [isDashClicked, setIsDashClicked] = useState(false);
   const [handleVerify, setHandleVerify] = useState(false);
   const { activeTab } = useRewardsTabs();
+
+  // reject unlock profile listener
+  const userMessage = 'Error decrypting PGP private key ...swiching to Guest mode';
+  const errorExists = userPushSDKInstance?.errors.some(
+    (error: { type: string; message: string }) => error.type === 'ERROR' && error.message === userMessage
+  );
 
   const {
     data: userDetails,
@@ -54,7 +60,7 @@ const useRewardsAuth = () => {
   // dashboard referral section unlock profile
   const connectUserWallet = () => {
     setIsAuthModalVisible(false);
-    setIsDashClicked(true);
+    unlockProfile();
   };
 
   const showAuthModal = () => {
@@ -79,7 +85,8 @@ const useRewardsAuth = () => {
 
     //if verification proof is null, unlock push profile update to update userPUSHSDKInstance
     if (verificationProof === null || verificationProof === undefined) {
-      if (userPushSDKInstance && userPushSDKInstance.readmode()) {
+      if (isWalletConnected && userPushSDKInstance && userPushSDKInstance.readmode()) {
+        console.log('open modal');
         setIsAuthModalVisible(true);
       }
     }
@@ -89,13 +96,15 @@ const useRewardsAuth = () => {
       setHandleVerify(true);
     }
     setIsVerifyClicked(false);
-    setIsDashClicked(false);
   };
 
   useEffect(() => {
+    if (!isWalletConnected || !userPushSDKInstance) return;
+
     // dashboard connect wallet flow
-    if (status === 'error' && activeTab == 'dashboard' && !isVerifyClicked && !!userPushSDKInstance?.errors) {
+    if (status === 'error' && activeTab == 'dashboard' && !isVerifyClicked) {
       if (error instanceof AxiosError && error?.response?.data?.error === errorMessage) {
+        if (errorExists || !isWalletConnected) return;
         unlockProfile();
       }
     }
@@ -116,12 +125,11 @@ const useRewardsAuth = () => {
     if (isVerifyClicked && userDetails && !handleVerify) {
       unlockProfile();
     }
+  }, [status, isVerifyClicked, userPushSDKInstance]);
 
-    // referral section click
-    if (isDashClicked && status == 'error') {
-      unlockProfile();
-    }
-  }, [status, isVerifyClicked, isDashClicked]);
+  useEffect(() => {
+    if (!isWalletConnected) hideAuthModal();
+  }, [isWalletConnected]);
 
   return {
     status,

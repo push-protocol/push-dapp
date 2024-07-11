@@ -33,15 +33,10 @@ export const useAuthWithButton = ({ onSuccess }: { onSuccess: (userDetails: User
 
   const isAuthenticated = useMemo(() => {
     return (
-      showAuth &&
-      (isSuccess ||
-        (userDetails &&
-          isUserProfileUnlocked &&
-          handleVerify &&
-          userPushSDKInstance &&
-          !userPushSDKInstance.readmode()))
+      isSuccess ||
+      (userDetails && isUserProfileUnlocked && handleVerify && userPushSDKInstance && !userPushSDKInstance.readmode())
     );
-  }, [showAuth, isSuccess, userDetails, isUserProfileUnlocked, handleVerify, userPushSDKInstance]);
+  }, [isSuccess, userDetails, isUserProfileUnlocked, handleVerify, userPushSDKInstance]);
 
   const handleSuccess = (userDetails: UserRewardsDetailResponse) => {
     setIsWalletConnectedAndProfileUnlocked(true);
@@ -49,8 +44,18 @@ export const useAuthWithButton = ({ onSuccess }: { onSuccess: (userDetails: User
     setShowAuth(false);
   };
 
+  console.log(
+    'showAuth',
+    showAuth,
+    'isSuccess',
+    isSuccess,
+    'userDetails',
+    userDetails,
+    'isUserProfileUnlocked',
+    isUserProfileUnlocked
+  );
   useEffect(() => {
-    if (isAuthenticated && userDetails) {
+    if (showAuth && isAuthenticated && userDetails) {
       handleSuccess(userDetails);
       console.log('handle Success');
     }
