@@ -27,6 +27,29 @@ const StyledBox = styled.div.withConfig({
   border: ${(props) => getBlocksBorder(props.mode, props.border)};
   position: ${(props) => props.position};
 
+  // push custom scroll
+  &::-webkit-scrollbar-track {
+    background-color: none;
+    border-radius: 9px;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: none;
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0.44, #cf1c84),
+      color-stop(0.72, #cf1c84),
+      color-stop(0.86, #cf1c84)
+    );
+  }
+
   /* Extra CSS prop */
   ${(props) => props.css || ''}
 `;
