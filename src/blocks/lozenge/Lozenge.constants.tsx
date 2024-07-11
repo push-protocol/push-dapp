@@ -47,6 +47,8 @@ export const getLozengeSizeStyles = ({
   if (size === 'small') {
     return css`
       /* Lozenge tag container size css */
+      max-height: 14px;
+      min-height: 14px;
 
       ${iconOnly
         ? `
