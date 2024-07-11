@@ -26,6 +26,7 @@ import Tooltip from 'components/reusables/tooltip/Tooltip';
 import UnlockLogo from '../../../assets/chat/unlock.svg';
 import Wallet from '../../../assets/chat/wallet.svg';
 import { Box, CrossFilled, HoverableSVG } from 'blocks';
+import { checkUnlockProfileErrors } from './UnlockProfile.utils';
 
 // Constants
 export enum UNLOCK_PROFILE_TYPE {
@@ -73,10 +74,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
     const user = await handleConnectWallet({ remember: rememberMe });
 
     // reject unlock profile listener
-    const userMessage = 'Error decrypting PGP private key ...swiching to Guest mode';
-    const errorExists = user?.errors.some(
-      (error: { type: string; message: string }) => error.type === 'ERROR' && error.message === userMessage
-    );
+    const errorExists = checkUnlockProfileErrors(user);
 
     if (errorExists && onClose) {
       onClose();

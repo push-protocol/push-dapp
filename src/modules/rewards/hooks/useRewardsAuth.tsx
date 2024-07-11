@@ -17,6 +17,7 @@ import { useGetUserRewardsDetails } from 'queries/hooks/rewards';
 import { AxiosError } from 'axios';
 import { UserStoreType } from 'types';
 import { useRewardsContext } from 'contexts/RewardsContext';
+import { checkUnlockProfileErrors } from 'components/chat/unlockProfile/UnlockProfile.utils';
 
 const useRewardsAuth = () => {
   const { account, isWalletConnected, connect } = useAccount();
@@ -28,12 +29,6 @@ const useRewardsAuth = () => {
   const [isVerifyClicked, setIsVerifyClicked] = useState(false);
   const [handleVerify, setHandleVerify] = useState(false);
   const { activeTab } = useRewardsTabs();
-
-  // reject unlock profile listener
-  const userMessage = 'Error decrypting PGP private key ...swiching to Guest mode';
-  const errorExists = userPushSDKInstance?.errors.some(
-    (error: { type: string; message: string }) => error.type === 'ERROR' && error.message === userMessage
-  );
 
   const {
     data: userDetails,
@@ -104,7 +99,8 @@ const useRewardsAuth = () => {
     // dashboard connect wallet flow
     if (status === 'error' && activeTab == 'dashboard' && !isVerifyClicked) {
       if (error instanceof AxiosError && error?.response?.data?.error === errorMessage) {
-        if (errorExists || !isWalletConnected) return;
+        const errorExistsInUnlockProfile = checkUnlockProfileErrors(userPushSDKInstance);
+        if (errorExistsInUnlockProfile || !isWalletConnected) return;
         unlockProfile();
       }
     }
