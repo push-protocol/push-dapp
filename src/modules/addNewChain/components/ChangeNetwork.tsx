@@ -23,7 +23,7 @@ const ChangeNetwork: FC<ChangeNetworkProps> = ({ handleNextStep, alias }) => {
     <Box
       display="flex"
       flexDirection="column"
-      gap="s10"
+      gap="spacing-xl"
       alignItems="center"
     >
       <Text

@@ -571,7 +571,7 @@ function Navigation() {
                 {isChannelPresent && data.name === channelDetails.name && (
                   <Box
                     display="flex"
-                    padding="s0 s6"
+                    padding="spacing-none spacing-md"
                   >
                     <Curve
                       color="stroke-tertiary"
@@ -581,7 +581,6 @@ function Navigation() {
                       display="flex"
                       alignItems="center"
                     >
-                      {/* add sepolia */}
                       {verifiedAliasChainIds.length > 0 &&
                         //fix the design and optimise
                         [80002, 11155111, 97].map((aliasChainId: number) => {
@@ -597,7 +596,7 @@ function Navigation() {
                     </Box>
                     <Box
                       display="flex"
-                      gap="s1"
+                      gap="spacing-xxxs"
                       alignItems="center"
                       cursor="pointer"
                       onClick={() => navigate('/addNewChain')}

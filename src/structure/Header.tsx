@@ -46,6 +46,7 @@ const REWARDS_HEADER_TAG = {
     fg: themeDark.headerTagFg,
   },
 };
+
 const EXTRA_HEADER_TAGS = {
   [APP_PATHS.UserSettings]: {
     title: 'Settings',
@@ -60,6 +61,17 @@ const EXTRA_HEADER_TAGS = {
   },
   [APP_PATHS.ChannelSettings]: {
     title: 'Notification Settings',
+    light: {
+      bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+      fg: themeLight.headerTagFg,
+    },
+    dark: {
+      bg: themeDark.headerTagBg,
+      fg: themeDark.headerTagFg,
+    },
+  },
+  [APP_PATHS.AddNewChain]: {
+    title: 'Dashboard',
     light: {
       bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
       fg: themeLight.headerTagFg,
@@ -90,7 +102,8 @@ const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: strin
       >
         <Box
           display="flex"
-          gap="s2"
+          gap="s1"
+          alignItems="center"
         >
           <RewardsBell
             width={24}
@@ -428,7 +441,7 @@ const HeaderTag = styled(Item)`
     margin: 5px 0px;
   }
   .text {
-    font-size: 24px;
+    font-size: 18px;
 
     @media (max-width: 993px) {
       font-size: 20px;

@@ -1,7 +1,7 @@
 import { HTMLAttributes } from 'react';
 import { BoxResponsiveCSSProperties, BoxResponsiveCSSPropertiesData, BoxResponsivePropValues } from './box';
 import { blocksColorsLegacy } from './Blocks.colors';
-import { Radius, Spacing, ThemeColors } from './theme/Theme.types';
+import { ThemeBorderRadius, ThemeBorderSize, ThemeColors, ThemeSpacing } from './theme/Theme.types';
 import {
   SkeletonResponsiveCSSProperties,
   SkeletonResponsiveCSSPropertiesData,
@@ -21,13 +21,25 @@ export type Breakpoint = 'initial' | 'ms' | 'mm' | 'ml' | 'tb' | 'lp' | 'll' | '
 
 export type ResponsiveProp<T> = T | { [key in Breakpoint]?: T };
 
-export type RadiusType = `r${number}` | `r${number} r${number}` | `r${number} r${number} r${number} r${number}`;
+// Remove old RadiusType types
+export type BlocksRadiusType =
+  | `r${number}`
+  | `r${number} r${number}`
+  | `r${number} r${number} r${number} r${number}`
+  | ThemeBorderRadius
+  | `${ThemeBorderRadius} ${ThemeBorderRadius}`
+  | `${ThemeBorderRadius} ${ThemeBorderRadius} ${ThemeBorderRadius} ${ThemeBorderRadius}`;
 
-export type BorderRadiusType = `${Radius}` | `${Radius} ${Radius}` | `${Radius} ${Radius} ${Radius} ${Radius}`;
+// Remove old SpaceType types
+export type BlocksSpaceType =
+  | `s${number}`
+  | `s${number} s${number}`
+  | `s${number} s${number} s${number} s${number}`
+  | ThemeSpacing
+  | `${ThemeSpacing} ${ThemeSpacing}`
+  | `${ThemeSpacing} ${ThemeSpacing} ${ThemeSpacing} ${ThemeSpacing}`;
 
-export type SpaceType = `s${number}` | `s${number} s${number}` | `s${number} s${number} s${number} s${number}`;
-
-export type SpacingType = `${Spacing}` | `${Spacing} ${Spacing}` | `${Spacing} ${Spacing} ${Spacing} ${Spacing}`;
+export type BlocksGapType = ThemeSpacing | `${ThemeSpacing} ${ThemeSpacing}`;
 
 export type PixelValue = `${number}px`;
 
@@ -62,10 +74,11 @@ export type BlocksColors = keyof BlocksColorData;
 
 export type ThemeMode = 'light' | 'dark';
 
-// TODO: Remove BlocksColors
+// TODO: Remove ThemeModeColors
 export type ThemeModeColors = Record<ThemeMode, BlocksColors | ThemeColors>;
 
-export type BorderValue = `${number}px ${string} ${BlocksColors}` | 'none';
+// TODO: Remove the blocks colors border size
+export type BorderValue = `${number}px ${string} ${BlocksColors}` | `${number}px ${string} ${ThemeBorderSize}` | 'none';
 
 export type ThemeModeBorder = Record<ThemeMode, BorderValue>;
 

@@ -1,11 +1,11 @@
-import { TransformedHTMLAttributes, ResponsiveProp, SpaceType, ValueOf } from '../Blocks.types';
+import { TransformedHTMLAttributes, ResponsiveProp, BlocksSpaceType, ValueOf } from '../Blocks.types';
 import { FlattenSimpleInterpolation } from 'styled-components';
 
 export type SeparatorResponsiveProps = {
   /* Sets height css property */
   height?: ResponsiveProp<string>;
   /* Sets margin css property */
-  margin?: ResponsiveProp<SpaceType>;
+  margin?: ResponsiveProp<BlocksSpaceType>;
   /* Sets width css property */
   width?: ResponsiveProp<string>;
 };

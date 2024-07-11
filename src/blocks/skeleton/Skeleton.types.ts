@@ -1,17 +1,23 @@
 import { ReactNode } from 'react';
 
-import type { TransformedHTMLAttributes, RadiusType, ResponsiveProp, SpaceType, ValueOf } from '../Blocks.types';
+import type {
+  TransformedHTMLAttributes,
+  BlocksRadiusType,
+  ResponsiveProp,
+  BlocksSpaceType,
+  ValueOf,
+} from '../Blocks.types';
 import type { FlattenSimpleInterpolation } from 'styled-components';
 
 export type SkeletonResponsiveProps = {
   /* Sets height css property */
   height?: ResponsiveProp<string>;
   /* Sets margin css property */
-  margin?: ResponsiveProp<SpaceType>;
+  margin?: ResponsiveProp<BlocksSpaceType>;
   /* Sets width css property */
   width?: ResponsiveProp<string>;
   /* Sets border radius css property */
-  borderRadius?: ResponsiveProp<RadiusType>;
+  borderRadius?: ResponsiveProp<BlocksRadiusType>;
 };
 
 export type SkeletonProps = SkeletonResponsiveProps &

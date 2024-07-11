@@ -39,27 +39,46 @@ const AddNewChain: FC<AddNewChainProps> = () => {
       display="flex"
       flexDirection="column"
       alignItems="center"
-      margin="s8 s0 s0 s0"
-      padding="s8"
+      margin={{
+        ml: 'spacing-lg spacing-md',
+        dp: 'spacing-lg spacing-none spacing-none spacing-none',
+      }}
+      padding={{ dp: 'spacing-lg', ml: 'spacing-sm' }}
       gap="spacing-lg"
-      borderRadius="r8"
+      borderRadius="radius-lg"
       backgroundColor="surface-primary"
     >
       <Box
         display="flex"
         flexDirection="column"
         alignItems="center"
-        gap="s1"
+        gap="spacing-xxxs"
       >
         <Text
           color="text-primary"
           variant="h3-semibold"
+          display={{ ml: 'none', dp: 'block' }}
+        >
+          Add New Chain to Channel
+        </Text>
+        <Text
+          color="text-primary"
+          variant="h4-semibold"
+          display={{ ml: 'block', dp: 'none' }}
         >
           Add New Chain to Channel
         </Text>
         <Text
           color="text-tertiary"
           variant="bs-regular"
+          display={{ ml: 'none', dp: 'block' }}
+        >
+          Add an alias chain to your channel to enable notifications to that chain.
+        </Text>
+        <Text
+          display={{ ml: 'block', dp: 'none' }}
+          color="text-tertiary"
+          variant="bes-regular"
         >
           Add an alias chain to your channel to enable notifications to that chain.
         </Text>

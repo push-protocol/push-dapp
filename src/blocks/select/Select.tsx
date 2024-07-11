@@ -56,6 +56,7 @@ const StyledBox = styled.div<{
       display: flex;
       align-self: stretch;
       align-items: center;
+      justify-content: space-between;
       border-radius: var(--radius-xs, 12px);
       border: 1.5px solid
         var(--components-inputs-stroke-${defaultState}, ${colors[`components-inputs-stroke-${defaultState}`]});
@@ -124,6 +125,7 @@ const StyledList = styled(ComboboxList)`
 `;
 const StyledCombobox = styled(Combobox)`
   position: relative;
+  width: 100%;
 `;
 const StyledOption = styled(ComboboxOption)`
   display: flex;

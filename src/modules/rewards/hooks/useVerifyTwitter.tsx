@@ -21,8 +21,8 @@ export type UseTwitterVerifyParams = {
 };
 
 const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: UseTwitterVerifyParams) => {
-  const [verifying, setVerifying] = useState(false);
-  const [activityStatus, setActivityStatus] = useState<string | null>(null);
+  const [verifyingTwitter, setVerifyingTwitter] = useState(false);
+  const [twitterActivityStatus, setTwitterActivityStatus] = useState<string | null>(null);
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
   const [updatedId, setUpdatedId] = useState<string | null>(null);
 
@@ -57,7 +57,7 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
         setErrorMessage(errorMessage);
         const credential = TwitterAuthProvider.credentialFromError(error);
         console.log('Error in connecting twitter >>>', errorCode, errorMessage, credential);
-        setVerifying(false);
+        setVerifyingTwitter(false);
         return null;
       });
   };
@@ -69,7 +69,7 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
 
   const handleVerify = async (userId: string | null) => {
     setErrorMessage('');
-    setVerifying(true);
+    setVerifyingTwitter(true);
 
     const userTwitterDetails = await handleConnect();
 
@@ -86,7 +86,7 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
 
       if (verificationProof == null || verificationProof == undefined) {
         if (userPushSDKInstance && userPushSDKInstance.readmode()) {
-          setVerifying(false);
+          setVerifyingTwitter(false);
           setErrorMessage('Please Enable Push profile');
         }
         return;
@@ -105,19 +105,19 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
         {
           onSuccess: (response) => {
             if (response.status === 'COMPLETED') {
-              setActivityStatus('Claimed');
+              setTwitterActivityStatus('Claimed');
               refetchActivity();
-              setVerifying(false);
+              setVerifyingTwitter(false);
             }
             if (response.status === 'PENDING') {
-              setActivityStatus('Pending');
+              setTwitterActivityStatus('Pending');
               refetchActivity();
-              setVerifying(false);
+              setVerifyingTwitter(false);
             }
           },
           onError: (error: any) => {
             console.log('Error in creating activity', error);
-            setVerifying(false);
+            setVerifyingTwitter(false);
             if (error.name) {
               setErrorMessage(error.response.data.error);
             }
@@ -128,8 +128,8 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
   };
 
   return {
-    verifying,
-    activityStatus,
+    verifyingTwitter,
+    twitterActivityStatus,
     handleTwitterVerification,
   };
 };

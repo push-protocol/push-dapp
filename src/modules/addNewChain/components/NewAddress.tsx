@@ -9,7 +9,7 @@ import useToast from 'hooks/useToast';
 import { useInitiateNewChain } from 'queries';
 
 // Components
-import { BNB, Box, Button, Polygon, Select, TextInput } from 'blocks';
+import { Box, Button, Select, TextInput } from 'blocks';
 
 import { isValidAddress } from 'helpers/ValidationHelper';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
@@ -101,12 +101,13 @@ const NewAddress: FC<NewAddressProps> = ({ setAddress, handleNextStep }) => {
           flexDirection="column"
           alignItems="center"
           width="100%"
-          gap="s10"
+          gap="spacing-xl"
         >
           <Box
             display="flex"
+            flexDirection={{ ml: 'column', dp: 'row' }}
             alignItems="center"
-            gap="s3"
+            gap="spacing-xs"
             width="100%"
             justifyContent="center"
           >
@@ -118,14 +119,16 @@ const NewAddress: FC<NewAddressProps> = ({ setAddress, handleNextStep }) => {
               error={formik.touched.alias && Boolean(formik.errors.alias)}
               errorMessage={formik.touched.alias ? formik.errors.alias : ''}
             />
-            <Select
-              options={selectOptions}
-              selectedValue={selectedChainValue}
-              onSelect={(value) => {
-                console.debug(value, 'value');
-                setSelectedChainValue(value);
-              }}
-            />
+            <Box width={{ dp: 'auto', ml: '100%' }}>
+              <Select
+                options={selectOptions}
+                selectedValue={selectedChainValue}
+                onSelect={(value) => {
+                  console.debug(value, 'value');
+                  setSelectedChainValue(value);
+                }}
+              />
+            </Box>
           </Box>
           <Button
             disabled={!formik.values.alias || (isPending && !isError)}

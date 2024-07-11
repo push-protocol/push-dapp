@@ -26,5 +26,8 @@ export type Theme = {
   spacing: typeof spacingVariables;
 };
 
-export type Spacing = keyof Theme['spacing'];
-export type Radius = keyof Theme['borderRadius'];
+export type ThemeBorderRadius = keyof Theme['borderRadius'];
+
+export type ThemeBorderSize = keyof Theme['borderSize'];
+
+export type ThemeSpacing = keyof Theme['spacing'];

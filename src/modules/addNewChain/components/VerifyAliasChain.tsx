@@ -71,13 +71,13 @@ const VerifyAliasChain: FC<VerifyAliasChainProps> = ({ alias }) => {
     <Box
       display="flex"
       flexDirection="column"
-      gap="s10"
+      gap="spacing-xl"
       alignItems="center"
     >
       <Box
         display="flex"
         flexDirection="column"
-        gap="s4"
+        gap="spacing-sm"
       >
         <Text
           variant="bs-semibold"
