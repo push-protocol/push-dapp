@@ -27,7 +27,7 @@ const ReferralSection: FC<ReferralSectionProps> = ({ handleUnlockProfile }) => {
   const { isWalletConnected, account, connect } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
 
-  const { data: userDetails } = useGetUserRewardsDetails({
+  const { data: userDetails, isLoading } = useGetUserRewardsDetails({
     caip10WalletAddress: caip10WalletAddress,
   });
 
@@ -111,7 +111,7 @@ const ReferralSection: FC<ReferralSectionProps> = ({ handleUnlockProfile }) => {
           </Box>
         )}
 
-        {isWalletConnected && status == 'error' && (
+        {isWalletConnected && status == 'error' && !isLoading && (
           <Box>
             <Button
               size="small"
