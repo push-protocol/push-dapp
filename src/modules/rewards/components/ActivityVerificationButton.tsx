@@ -65,7 +65,7 @@ export const ActivityVerificationButton = ({
         isVerificationComplete: twitterActivityStatus == 'Claimed' || twitterActivityStatus == 'Pending',
       };
     }
-  }, [activityType, userPushSDKInstance]);
+  }, [activityType, userPushSDKInstance, twitterActivityStatus, discordActivityStatus]);
 
   const { isAuthenticated, authButton } = useAuthWithButton({
     onSuccess: (userDetails) => activityData?.action(userDetails?.userId),

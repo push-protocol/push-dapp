@@ -44,16 +44,6 @@ export const useAuthWithButton = ({ onSuccess }: { onSuccess: (userDetails: User
     setShowAuth(false);
   };
 
-  console.log(
-    'showAuth',
-    showAuth,
-    'isSuccess',
-    isSuccess,
-    'userDetails',
-    userDetails,
-    'isUserProfileUnlocked',
-    isUserProfileUnlocked
-  );
   useEffect(() => {
     if (showAuth && isAuthenticated && userDetails) {
       handleSuccess(userDetails);

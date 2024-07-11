@@ -129,7 +129,6 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
             </Box>
 
             {/* Buttons Logic */}
-            {/* <Skeleton isLoading={isLoading}> */}
             <Box display="flex">
               <ActivityButton
                 userId={userId}
@@ -140,7 +139,6 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                 usersSingleActivity={usersSingleActivity}
               />
             </Box>
-            {/* </Skeleton> */}
           </Box>
         </Box>
 
