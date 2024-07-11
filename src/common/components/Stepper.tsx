@@ -6,20 +6,22 @@ import { Box, Text } from 'blocks';
 
 type StepperProps = {
   steps: Array<{ label: string }>;
-  activeStepIndex: number;
   setActiveStepIndex: (stepIndex: number) => void;
-  config?: { restrictedForwardSteps?: Array<number>; restrictedBackwardSteps?: Array<number> };
+  completedSteps: Array<number>;
 };
 
-const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, activeStepIndex, config }) => {
+const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, completedSteps }) => {
   const handleChangeActiveStep = (stepIndex: number) => {
-    if (!config?.restrictedBackwardSteps?.includes(stepIndex) && !config?.restrictedForwardSteps?.includes(stepIndex))
+    if (completedSteps?.includes(stepIndex)) {
       setActiveStepIndex(stepIndex);
+    }
   };
+
   return (
     <Box
       display="flex"
       gap="s8"
+      width='-webkit-fill-available'
     >
       {steps.map((step, index) => (
         <Box
@@ -27,14 +29,23 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, activeStepIndex,
           display="flex"
           flexDirection="column"
           gap="s3"
-          width="180px"
+          width="inherit"
           cursor="pointer"
-          color={activeStepIndex == index ? 'pink-500' : 'gray-500'}
+          color={completedSteps.includes(index) ? 'pink-500' : 'gray-500'}
           onClick={() => handleChangeActiveStep(index)}
         >
           <Text
             textAlign="center"
             variant="h5-semibold"
+            display={{ ml: 'none', dp: 'block' }}
+          >
+            {step.label}
+          </Text>
+
+          <Text
+            textAlign="center"
+            variant="h6-semibold"
+            display={{ ml: 'block', dp: 'none' }}
           >
             {step.label}
           </Text>
@@ -42,7 +53,7 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, activeStepIndex,
           <Box
             height="4px"
             borderRadius="r2"
-            backgroundColor={activeStepIndex == index ? 'pink-500' : 'gray-500'}
+            backgroundColor={completedSteps.includes(index) ? 'pink-500' : 'gray-500'}
           ></Box>
         </Box>
       ))}

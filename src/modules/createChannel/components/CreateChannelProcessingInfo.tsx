@@ -2,17 +2,14 @@ import { Box, Text } from "blocks";
 import ProgressBar from "components/reusables/progress/ProgressBarUnit";
 import Spinner, { SPINNER_TYPE } from "components/reusables/spinners/SpinnerUnit";
 import { FC } from "react";
+import { CreateChannelProgressType } from "../CreateChannel.types";
 
 type CreateChannelProcessingInfoProps = {
-  progress: number;
-  progressInfo: string;
-  processingInfo: string;
+  progressState: CreateChannelProgressType
 }
 
 const CreateChannelProcessingInfo: FC<CreateChannelProcessingInfoProps> = ({
-  progress,
-  progressInfo,
-  processingInfo
+  progressState
 }) => {
   return (
     <Box
@@ -29,13 +26,13 @@ const CreateChannelProcessingInfo: FC<CreateChannelProcessingInfoProps> = ({
         width='-webkit-fill-available'
       >
         <Text textAlign='center' variant='h5-semibold' color='pink-600'>
-          {progressInfo}
+          {progressState.progressInfo}
         </Text>
       </Box>
 
       <Box width='400px'>
         <ProgressBar
-          percent={progress}
+          percent={progressState.progress}
           color='#D548EC'
           backgroundColor="#F3AEFF"
           height='4px'
@@ -45,7 +42,7 @@ const CreateChannelProcessingInfo: FC<CreateChannelProcessingInfoProps> = ({
       <Box display='flex' flexDirection='row' alignItems='center' gap='s1'>
         <Spinner type={SPINNER_TYPE.PROCESSING} size={16} />
         <Text variant="bs-semibold" color={{ light: 'gray-800', dark: 'gray-300' }}>
-          {processingInfo}
+          {progressState.processingInfo}
         </Text>
       </Box>
 

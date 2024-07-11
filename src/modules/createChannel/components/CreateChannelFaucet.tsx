@@ -38,6 +38,8 @@ const CreateChannelFaucet: FC<CreateChannelFaucetProps> = ({
       borderRadius="r0 r0 r4 r4"
       justifyContent='space-between'
       alignItems='center'
+      flexDirection={{ ml: 'column', initial: 'row' }}
+      gap='s3'
     >
       <Skeleton isLoading={mintingPush}>
         <Text variant="c-regular" color='gray-1000'>

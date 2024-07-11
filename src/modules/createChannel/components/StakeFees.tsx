@@ -1,30 +1,38 @@
-import { Box, Button, Text } from 'blocks';
+//React + web3 essentials
 import { FC, useEffect, useMemo, useState } from 'react';
+
+// Third party libraries
 import { css } from 'styled-components';
+
+// Components
+import { Box, Button, Skeleton, Text } from 'blocks';
 import { CreateChannelFaucet } from './CreateChannelFaucet';
-import { getHasEnoughPushToken, getPushTokenFromWallet, importPushToken, mintPushToken } from 'helpers';
-import { useAccount, useAsyncOperation } from 'hooks';
+import { getPushTokenFromWallet, importPushToken, mintPushToken } from 'helpers';
+
+// Hooks
+import { useAccount } from 'hooks';
+
+// Constans
+import { CHANNEL_STAKE_FEES } from '../CreateChannel.constants';
 
 type StakeFeesProps = {
   channelStakeFees: number;
-  handleCreateChannel: () => void;
-  setStakeFeesChoosen: (stakeFeesChosen: boolean) => void;
+  handleCreateNewChannel: () => void;
 };
 
 const StakeFees: FC<StakeFeesProps> = ({
   channelStakeFees,
-  handleCreateChannel,
-  setStakeFeesChoosen
+  handleCreateNewChannel,
 
 }) => {
-  const noOfPushTokensToCheck = 50;
+  const noOfPushTokensToCheck = CHANNEL_STAKE_FEES;
   const { provider, account, isWalletConnected, connect } = useAccount();
-  const { loading, error, executeAsyncFunction: executeImportPushTokenFunc } = useAsyncOperation(importPushToken);
 
   const [balance, setBalance] = useState(0);
-
   const [mintingPush, setMintingPush] = useState(false);
+  const [fetchingbalance, setFetchingBalance] = useState(false);
 
+  // Mint Test PUSH token
   const mintPushTokenHandler = async (noOfTokens: number) => {
     if (!isWalletConnected) {
       connect();
@@ -33,56 +41,48 @@ const StakeFees: FC<StakeFeesProps> = ({
       setMintingPush(true);
       try {
         const amount = await mintPushToken({ noOfTokens, provider, account });
-        console.log('Token Minted >>>', amount);
         setMintingPush(false)
         setBalance(amount);
-
       } catch (error) {
         console.log("Error >>", error);
         setMintingPush(false)
-
       }
     }
   };
 
-  //check Push token in wallet
+  // Check PUSH Token in wallet
   const pushTokenInWallet = async () => {
-    console.log("Fetching token")
+    setFetchingBalance(true)
     const amount = await getPushTokenFromWallet({
       address: account,
       provider: provider
     });
-    console.log('Amount in the wallet >>', amount);
+    setFetchingBalance(false)
     setBalance(amount);
   };
 
   useEffect(() => {
-    console.log("Balance useEffect is called", balance);
     pushTokenInWallet();
-    checkSetFaucetVisibility();
   }, [balance, account]);
 
-
+  // Import Push Token in Your wallet
   const handlePushTokenImport = async () => {
     if (!isWalletConnected) {
       return;
     }
-    await executeImportPushTokenFunc();
+    await importPushToken();
   };
 
-  const [isFaucetVisible, setIsFaucetVisible] = useState<boolean>(false);
+  // Check if the faucet or swap PUSH token model should be visible or not
+  const showFaucet = useMemo(() => {
+    if (balance < noOfPushTokensToCheck) {
+      return true
+    } else {
+      return false
+    }
+  }, [balance])
 
-  const checkSetFaucetVisibility = async () => {
-    console.log("Checking if faucet should be displayed");
 
-    const hasEnoughPushToken = await getHasEnoughPushToken({
-      address: account,
-      provider: provider,
-      noOfPushTokensToCheck,
-    });
-    console.log("Has Enough Push Token >>>", hasEnoughPushToken);
-    setIsFaucetVisible(!hasEnoughPushToken);
-  }
 
   return (
     <Box display="flex" flexDirection="column" alignSelf="stretch" justifyContent="center" gap="s10">
@@ -93,13 +93,22 @@ const StakeFees: FC<StakeFeesProps> = ({
             flexDirection="row"
             justifyContent="space-between"
             backgroundColor={{ light: "gray-100", dark: 'gray-1000' }}
-            borderRadius={isFaucetVisible ? "r4 r4 r0 r0" : "r4"}
+            borderRadius={showFaucet ? "r4 r4 r0 r0" : "r4"}
             padding="s4 s6"
             alignItems="center"
           >
             <Text
               variant="h4-semibold"
               color={{ light: 'gray-1000', dark: 'gray-100' }}
+              display={{ ml: 'none', dp: 'block' }}
+            >
+              Amout For Staking
+            </Text>
+
+            <Text
+              variant="h5-semibold"
+              color={{ light: 'gray-1000', dark: 'gray-100' }}
+              display={{ ml: 'block', dp: 'none' }}
             >
               Amout For Staking
             </Text>
@@ -107,16 +116,21 @@ const StakeFees: FC<StakeFeesProps> = ({
               <Text variant="h4-semibold" color={{ light: "pink-500", dark: 'pink-400' }}>
                 {channelStakeFees} PUSH
               </Text>
-              <Text variant="bes-semibold" color="gray-500">
-                Balance: {balance?.toLocaleString()}
-              </Text>
+              <Skeleton isLoading={fetchingbalance}>
+                <Text variant="bes-semibold" color="gray-500">
+                  Balance: {balance?.toLocaleString()}
+                </Text>
+              </Skeleton>
+
             </Box>
           </Box>
-          {isFaucetVisible && <CreateChannelFaucet
+
+          {showFaucet && <CreateChannelFaucet
             mintPushToken={mintPushTokenHandler}
             noOfPushTokensToCheck={50}
             mintingPush={mintingPush}
           />}
+
         </Box>
 
         <Box display="flex" flexDirection="row" gap="s1" justifyContent="center">
@@ -139,8 +153,7 @@ const StakeFees: FC<StakeFeesProps> = ({
       <Box display="flex" justifyContent="center">
         <Button
           onClick={() => {
-            setStakeFeesChoosen(true)
-            handleCreateChannel()
+            handleCreateNewChannel()
           }}
         >
           Create Channel

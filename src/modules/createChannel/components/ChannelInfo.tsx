@@ -1,51 +1,15 @@
-import { Box, Button, Text, TextArea, TextInput } from "blocks";
-import { FC, useMemo } from "react";
-import { isEmpty } from "../CreateChannel.utils";
-
-type ErrorInfoType = {
-  name: string;
-  description: string;
-  url: string;
-}
+import { Box, Button, TextArea, TextInput } from "blocks";
+import { FC } from "react";
+import { FormikProps } from "formik";
+import { ChannelInfoFormValues } from "../CreateChannel.types";
 
 type ChannelInfoProps = {
-  channelName: string;
-  channelDesc: string;
-  channelURL: string;
-  errorInfo: ErrorInfoType
-  setChannelName: (channelName: string) => void;
-  setChannelDesc: (channelDesc: string) => void;
-  setChannelURL: (channelURL: string) => void;
-  checkFormInput: () => boolean;
-  setChannelInfoDone: (channelInfoDone: boolean) => void;
-  setActiveStepIndex: (stepFlow: number) => void;
-  handleNextStep: () => void;
-
+  channelInfoFormik: FormikProps<ChannelInfoFormValues>;
 }
 
 const ChannelInfo: FC<ChannelInfoProps> = ({
-  channelName,
-  channelDesc,
-  channelURL,
-  errorInfo,
-  setChannelName,
-  setChannelDesc,
-  setChannelURL,
-  checkFormInput,
-  setChannelInfoDone,
-  setActiveStepIndex,
-  handleNextStep
+  channelInfoFormik,
 }) => {
-
-  const checkButtonStatus = () => {
-    if (isEmpty(channelName) || isEmpty(channelDesc) || isEmpty(channelURL)) {
-      return true
-    } else {
-      return false
-    }
-  }
-
-  const disableButton = useMemo(checkButtonStatus, [channelName, channelDesc, channelURL])
 
   return (
     <Box
@@ -59,70 +23,65 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
       <Box
         display='flex'
         flexDirection='column'
-        alignItems='flex-start'
         gap='s4'
         alignSelf='stretch'
       >
-        <Box width='100%'>
-          <TextInput
-            required
-            label="Channel Name"
-            value={channelName}
-            onChange={(e) => {
-              setChannelName(e.target.value.slice(0, 32))
-            }}
-            error={!!errorInfo?.name}
-            errorMessage={errorInfo.name}
-            totalCount={32}
-          />
-        </Box>
 
-        <Box width='100%'>
+        <form onSubmit={channelInfoFormik.handleSubmit}>
+          <Box
+            display='flex'
+            flexDirection='column'
+            gap='s4'
+            alignSelf='stretch'
+          >
+            <TextInput
+              required
+              label="Channel Name"
+              value={channelInfoFormik.values.channelName}
+              onChange={(e) => {
+                const maxLength = 32;
+                const inputValue = e.target.value.slice(0, maxLength);
+                channelInfoFormik.setFieldValue('channelName', inputValue);
+              }}
+              error={channelInfoFormik.touched.channelName && Boolean(channelInfoFormik.errors.channelName)}
+              errorMessage={channelInfoFormik.touched.channelName ? channelInfoFormik.errors.channelName : ''}
+              totalCount={32}
+            />
 
-          <TextArea
-            required
-            label="Channel Description"
-            placeholder="Get notified about ..."
-            description='Enter a Brief description of the notifications the user will receive'
-            error={!!errorInfo?.description}
-            errorMessage={errorInfo.description}
-            totalCount={250}
-            value={channelDesc}
-            onChange={(e) => {
-              setChannelDesc(e.target.value.slice(0, 250))
-            }}
-          />
+            <TextArea
+              required
+              label="Channel Description"
+              placeholder="Get notified about ..."
+              description='Enter a Brief description of the notifications the user will receive'
+              error={channelInfoFormik.touched.channelDesc && Boolean(channelInfoFormik.errors.channelDesc)}
+              errorMessage={channelInfoFormik.touched.channelDesc ? channelInfoFormik.errors.channelDesc : ''}
+              totalCount={250}
+              value={channelInfoFormik.values.channelDesc}
+              onChange={(e) => {
+                const maxLength = 250;
+                const inputValue = e.target.value.slice(0, maxLength);
+                channelInfoFormik.setFieldValue('channelDesc', inputValue);
+              }}
+            />
 
-        </Box>
+            <TextInput
+              required
+              label="Channel Website URL"
+              value={channelInfoFormik.values.channelURL}
+              onChange={channelInfoFormik.handleChange('channelURL')}
+              error={channelInfoFormik.touched.channelURL && Boolean(channelInfoFormik.errors.channelURL)}
+              errorMessage={channelInfoFormik.touched.channelURL ? channelInfoFormik.errors.channelURL : ''}
+            />
 
-        <Box width='100%'>
-          <TextInput
-            label="Channel Website URL"
-            required
-            value={channelURL}
-            onChange={(e) => {
-              setChannelURL(e.target.value.slice(0, 32))
-            }}
-            error={!!errorInfo?.url}
-            errorMessage={errorInfo.url}
-            totalCount={32}
-          />
-        </Box>
+            <Box display='flex' justifyContent='center'>
+              <Button disabled={!channelInfoFormik.isValid}>
+                Next
+              </Button>
+            </Box>
+          </Box>
 
+        </form>
       </Box>
-
-      <Button
-        disabled={disableButton}
-        onClick={() => {
-          console.log("Next is clicked")
-          if (!checkFormInput()) return;
-          setChannelInfoDone(true);
-          handleNextStep();
-          setActiveStepIndex(1);
-        }}
-      >
-        Next
-      </Button>
 
 
     </Box>

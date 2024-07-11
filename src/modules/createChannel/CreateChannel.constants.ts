@@ -10,4 +10,4 @@ export const CreateChannelSteps = [
   }
 ];
 
-export const minStakeFees = 50;
+export const CHANNEL_STAKE_FEES = 50;

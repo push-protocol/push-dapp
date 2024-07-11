@@ -1,402 +1,325 @@
 // This is the Parent component for the Create Channel flow.
 // React + web3 essentials
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from 'react';
+
+// Third party libraries
+import { useFormik } from 'formik';
+import { ethers } from 'ethers';
+
+// Hooks
+import { useAccount } from 'hooks';
 
 //common
-import { Stepper } from "common";
+import { Stepper } from 'common';
 
 // Components
-import { Box, Text } from "blocks";
-import { CreateChannelHeader } from "./components/CreateChannelHeader";
-import { ChannelInfo } from "./components/ChannelInfo";
-import { UploadLogo } from "./components/UploadLogo";
-import { StakeFees } from "./components/StakeFees";
-import { isEmpty, isValidUrl } from "./CreateChannel.utils";
-import { CreateChannelSteps, minStakeFees } from "./CreateChannel.constants";
-import { handleLogoSizeLimitation, toDataURL } from "helpers/LogoSizeHelper";
-import { CreateChannelProcessingInfo } from "./components/CreateChannelProcessingInfo";
-import { abis, addresses, appConfig } from "config";
-import { IPFSupload } from "helpers/IpfsHelper";
-import { useAccount } from "hooks";
-import { ethers } from "ethers";
-import { CHANNEL_TYPE } from "helpers/UtilityHelper";
+import { Box } from 'blocks';
+import { StakeFees } from './components/StakeFees';
+import { UploadLogo } from './components/UploadLogo';
+import { ChannelInfo } from './components/ChannelInfo';
+import { CreateChannelError } from './components/CreateChannelError';
+import { CreateChannelHeader } from './components/CreateChannelHeader';
+import { CreateChannelProcessingInfo } from './components/CreateChannelProcessingInfo';
+import { CHANNEL_STAKE_FEES, CreateChannelSteps } from './CreateChannel.constants';
+import { ChannelCreationError, ChannelInfoFormValues, CreateChannelProgressType } from './CreateChannel.types';
+import { channelInfoValidationSchema, checkImageSize, checkPushTokenApprovalFunc } from './CreateChannel.utils';
 
-const coreChainId = appConfig.coreContractChain;
-const CORE_CHAIN_ID = appConfig.coreContractChain;
+// Helpers
+import { IPFSupload } from 'helpers/IpfsHelper';
+import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
+
+// Config
+import { useApprovePUSHToken, useCreateChannel } from 'queries/hooks/createChannel';
+
+const completedSteps = [0];
+const fees = ethers.utils.parseUnits(CHANNEL_STAKE_FEES.toString(), 18);
+
+const progressInitialState: CreateChannelProgressType = {
+  progress: null,
+  progressInfo: '',
+  processingInfo: ''
+};
+
+const errorInitialState: ChannelCreationError = {
+  txErrorStatus: 0,
+  txError: ''
+};
 
 const CreateChannel = () => {
-  const { account, provider, chainId } = useAccount();
+  const { account, provider, isWalletConnected, connect } = useAccount();
 
-  const onCoreNetwork = CORE_CHAIN_ID === chainId;
+  const { mutate: approvePUSHToken, isPending: pendingApproval } = useApprovePUSHToken();
+  const { mutate: createNewChannel, isPending: createChannelPending } = useCreateChannel();
 
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
 
-  const [channelStakeFees, setChannelStakeFees] = useState(minStakeFees);
-  const [pushTokenAmountVal, setPushTokenAmountVal] = useState(50.0);
-
-  let restrictedForwardSteps = []
-
-  // Channel Info
-  const [channelName, setChannelName] = useState('');
-  const [channelDesc, setChannelDesc] = useState('');
-  const [channelURL, setChannelURL] = useState('');
-  const [chainDetails, setChainDetails] = useState(CORE_CHAIN_ID);
+  const channelInfoFormik = useFormik<ChannelInfoFormValues>({
+    initialValues: {
+      channelName: '',
+      channelDesc: '',
+      channelURL: ''
+    },
+    validationSchema: channelInfoValidationSchema,
+    onSubmit: (values) => {
+      console.log('Values ', values);
+      handleNextStep();
+      setActiveStepIndex(1);
+    }
+  });
 
   // Upload Logo
   const [view, setView] = useState(false);
-  const [imageSrc, setImageSrc] = useState<string | undefined>(undefined);
-  const [imageType, setImageType] = useState<string | undefined>(undefined);
   const [croppedImage, setCroppedImage] = useState<string | undefined>(undefined);
-  const [channelFile, setChannelFile] = useState<string | undefined>(undefined);
 
-  // Process status
-  const [channelInfoDone, setChannelInfoDone] = useState(false);
-  const [uploadLogoDone, setUploadLogoDone] = useState(false);
-  const [stakeFeesChosen, setStakeFeesChoosen] = useState(false);
+  // Progress Bar and text
+  const [progressState, setProgressState] = useState<CreateChannelProgressType>(progressInitialState);
 
-  const [progress, setProgress] = useState(0);
-  const [progressInfo, setProgressInfo] = useState('');
-  const [processingInfo, setProcessingInfo] = useState('');
+  //Error status and text
+  const [channelCreationError, setChannelCreationError] = useState<ChannelCreationError>(errorInitialState);
 
-  const [isChannelCreationStarted, setIsChannelCreationStarted] = useState(false);
 
-  const [errorInfo, setErrorInfo] = useState({
-    name: '',
-    description: '',
-    url: ''
-  });
-
+  // To handle the stepper
   const handleNextStep = () => {
-    if (activeStepIndex < 2) setActiveStepIndex(activeStepIndex + 1);
+    if (activeStepIndex < 2) {
+      const nextStepIndex = activeStepIndex + 1;
+      completedSteps.push(nextStepIndex);
+      setActiveStepIndex(nextStepIndex);
+    }
   };
-  restrictedForwardSteps = restrictedForwardSteps.filter((item) => item !== activeStepIndex);
-  console.debug(restrictedForwardSteps);
-
 
   useEffect(() => {
     if (croppedImage) {
-      console.debug('Image cropped', croppedImage);
-      toDataURL(croppedImage, function (dataUrl: string) {
-        const response = handleLogoSizeLimitation(dataUrl);
-        console.debug('response', response);
-        if (response.success) {
-          console.debug('Cropped Image....', croppedImage);
-          setChannelFile(croppedImage);
-        }
-      });
+      checkImageSize(croppedImage, setCroppedImage);
     }
   }, [croppedImage]);
 
-  const checkPushTokenApprovalFunc = async () => {
-    let checkPushTokenApprovedAmount = new ethers.Contract(addresses.pushToken, abis.pushToken, provider);
-
-    let value = await checkPushTokenApprovedAmount.allowance(account, addresses.epnscore);
-    value = value?.toString();
-    const convertedVal = ethers.utils.formatEther(value);
-    console.log("Number value >>>", convertedVal, Number(convertedVal))
-    setPushTokenAmountVal(Number(convertedVal));
-    return Number(convertedVal)
+  const updateProgressState = (progress: number, progressInfo: string, processingInfo: string) => {
+    setProgressState((prevState) => ({
+      ...prevState,
+      progress: progress,
+      progressInfo: progressInfo,
+      processingInfo: processingInfo
+    }));
   };
 
-  // Setting Error Infos for missing Fields
-  const checkFormInput = () => {
+  const updateChannelCreationError = (txErrorStatus: number, txError: string) => {
+    setChannelCreationError((prev) => ({
+      ...prev,
+      txErrorStatus: txErrorStatus,
+      txError: txError
+    }));
+  };
 
-    setErrorInfo(() => ({
-      name: '',
-      description: '',
-      url: ''
-    }))
 
-    if (
-      isEmpty(channelName) ||
-      isEmpty(channelDesc) ||
-      isEmpty(channelURL)
-    ) {
+  const handleApprovePushToken = (signer: ethers.providers.JsonRpcSigner, storagePointer: string) => {
+    approvePUSHToken(
+      {
+        noOfTokenToApprove: fees,
+        signer
+      },
+      {
+        onSuccess: (response) => {
+          if (response.status === 1) {
+            updateProgressState(
+              60,
+              'Please complete the transaction in your wallet to continue.',
+              'Approving PUSH'
+            );
 
-      if (isEmpty(channelName)) {
-        setErrorInfo((x) => ({
-          ...x,
-          name: 'Please, enter the channel name.',
-        }));
+            createChannel(signer, storagePointer);
+          }
+        },
+        onError: (error: any) => {
+          console.log('Error in approving PUSH Token', error);
+          if (error.code === 4001 || error.code === 'ACTION_REJECTED') {
+            console.log('Signature error ', error);
+            updateChannelCreationError(1, 'User Rejected Signature. Please try again.');
+          } else {
+            updateChannelCreationError(2, 'Transaction failed due to one of the following reasons:');
+          }
+          setProgressState(progressInitialState)
+          return false;
+        }
       }
+    );
+  };
 
-      if (isEmpty(channelDesc)) {
-        setErrorInfo((x) => ({
-          ...x,
-          description: 'Please, enter the channel description',
-        }));
+  const createChannel = (signer: ethers.providers.JsonRpcSigner, storagePointer: string) => {
+    let channelType = CHANNEL_TYPE['GENERAL'];
+    const identity = '1+' + storagePointer;
+    const identityBytes = ethers.utils.toUtf8Bytes(identity);
+
+    updateProgressState(
+      70,
+      'Please complete the transaction in your wallet to continue.',
+      'Creating Channel...'
+    );
+
+    createNewChannel(
+      {
+        channelType,
+        identityBytes,
+        fees,
+        signer
+      },
+      {
+        onSuccess: (response) => {
+          if (response.status === 0) {
+            // It means their is smart contract error,  either network congestion or gas issue
+            // We are not sure about this error so we cant display (EDGE CASE)
+            updateChannelCreationError(2, 'Transaction failed due to one of the following reasons:');
+          } else {
+            console.log('Tx Successful', response);
+
+            updateProgressState(
+              80,
+              'Please wait while we confirm the transaction..',
+              'Transaction Confirmed..'
+            );
+
+            setTimeout(() => {
+              updateProgressState(
+                90,
+                'Creating your channel, Aligning pixels, adjusting padding... This may take some time.',
+                'Redirecting... Please do not refresh'
+              );
+            }, 2000);
+
+            setTimeout(() => {
+              updateProgressState(
+                100,
+                'Creating your channel, Aligning pixels, adjusting padding... This may take some time.',
+                'Redirecting... Please do not refresh'
+              );
+              window.location.reload();
+            }, 3000);
+          }
+        },
+        onError: (error: any) => {
+          console.log('Error in transaction from query >>>>', error);
+          //User Rejected query handle it here
+          if (error.code === 4001 || error.code === 'ACTION_REJECTED') {
+            console.log('Signature error ', error);
+            updateChannelCreationError(1, 'User Rejected Signature. Please try again.');
+            setProgressState(progressInitialState)
+          } else {
+            // Other unknown error
+            console.error('Error --> %o', error);
+            console.error({ error });
+            updateProgressState(
+              0,
+              'There was an error in creating the Channel',
+              'Kindly Contact support@epns.io to resolve the issue.'
+            );
+          }
+        }
       }
+    );
+  };
 
-      if (isEmpty(channelURL)) {
-        setErrorInfo((x) => ({
-          ...x,
-          url: 'Please, enter the channel url',
-        }));
-      }
+  const handleCreateNewChannel = async () => {
+    setProgressState(progressInitialState);
+    setChannelCreationError(errorInitialState);
 
-      return false;
-
+    if (!isWalletConnected) {
+      connect();
+      return;
     }
 
-
-    if (!isValidUrl(channelURL)) {
-      setErrorInfo((x) => ({
-        ...x,
-        url: 'Channel URL is invalid! Please enter a valid url!',
-      }));
-      return false;
+    if (!channelInfoFormik.isValid) {
+      setActiveStepIndex(0);
+      return;
     }
 
-    return true;
-
-  }
-
-
-  const handleCreateChannel = async () => {
-
-    // TODO: Handle all the cases here
-    /**
-     * Process for the Channel Creation
-     * 1. Check if all the Channel Inputs are filled or not
-     * 2. Check if the user has uploaded the logo or not
-     * 3. Start the progressbar
-     * 3. Calculate the approval token amount
-     * 4. Upload the stringify input to the IPFS.
-     * 5. If the user approval token amount is less than 50, then ask user to approve the token amount
-     * 6. Create the channel
-     * 
-     * 7. If at any state the user rejects the signature then, redirect the user to the Stake Fees Page
-     * 8. If the channel Creation is successful then what?
-     * 9. What if their is a smart contract error
-     * 
-     */
-
-    if (!checkFormInput) {
-      console.log("Errors are present in channel Info")
-      return
+    if (!croppedImage) {
+      setActiveStepIndex(1);
+      return;
     }
 
-    if (!channelFile) {
-      console.log("Channel Logo is not correct")
-      return
-    }
-
-    // Start the progress bar of the channel creation
-    setIsChannelCreationStarted(true);
+    updateProgressState(10, 'Checking for PUSH Token Approval', 'Loading...');
 
     // Calculate the approval amount of the user
-    const approvedTokenAmount = await checkPushTokenApprovalFunc();
-    console.log("Approved Token Amount >>", approvedTokenAmount);
+    const approvedTokenAmount = await checkPushTokenApprovalFunc({ provider, account });
+    console.log('Approved Token Amount >>', approvedTokenAmount);
 
     let input = {
-      name: channelName,
-      info: channelDesc,
-      url: channelURL,
-      icon: channelFile,
+      name: channelInfoFormik.values.channelName,
+      info: channelInfoFormik.values.channelDesc,
+      url: channelInfoFormik.values.channelURL,
+      icon: croppedImage
     };
 
-    console.log("Channel Input before  >>", input);
-
     const ChannelInput = JSON.stringify(input);
-    setProgress(0);
 
-    console.log("Channel Input after>>", ChannelInput);
-
-    setProcessingInfo('Loading...');
-    setProgressInfo('Please wait, payload is getting uploaded to IPFS.');
-    setProgress(5);
+    updateProgressState(20, 'Please wait, payload is getting uploaded to IPFS', 'Loading...');
 
     let storagePointer = await IPFSupload(ChannelInput);
-    console.log('IPFS storagePointer:', storagePointer);
+    console.debug('IPFS storagePointer:', storagePointer);
 
-    setProcessingInfo('Payload Uploaded');
-    setProgressInfo('Please complete the transaction in your wallet to continue.');
-    setProgress(10);
-
+    updateProgressState(
+      40,
+      'Please complete the transaction in your wallet to continue.',
+      'Payload Uploaded...'
+    );
 
     var signer = provider.getSigner(account);
     console.debug(signer);
-    let pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
 
-    // Total fee required to create a channel
-    const fees = ethers.utils.parseUnits(channelStakeFees.toString(), 18);
-
-    try {
-
-      // Asking user to approve 50 PUSH token
-      if (approvedTokenAmount < 50.0) {
-        var sendTransactionPromise = pushTokenContract.approve(addresses.epnscore, fees);
-        const tx = await sendTransactionPromise;
-
-        console.debug(tx);
-        console.debug('waiting for tx to finish');
-        setProgress(30);
-
-        await provider.waitForTransaction(tx.hash);
-      }
-
-      let contract = new ethers.Contract(addresses.epnscore, abis.epnscore, signer);
-
-      let channelType = CHANNEL_TYPE['GENERAL']; // Open Channel
-      const identity = '1+' + storagePointer; // IPFS Storage Type and HASH
-      const identityBytes = ethers.utils.toUtf8Bytes(identity);
-
-      setProgress(50);
-      console.log("Processing contract wait ser")
-
-      let timestampIfTimebound = 0;
-
-      const tx = await contract.createChannelWithPUSH(channelType, identityBytes, fees, timestampIfTimebound, {
-        gasLimit: 600000,
-      });
-
-      console.debug(tx);
-      console.debug('Check: ' + account);
-      let txCheck = await provider.waitForTransaction(tx.hash);
-
-      console.log("Tx Check >>>", txCheck);
-
-      if (txCheck.status === 0) {
-        // Error from the contract side handle it here
-        console.log("Channel Not created their is an error>>");
-        // setTxStatus(0);
-        setActiveStepIndex(1);
-
-      } else {
-        // Channel Creation successfull
-        setProgress(60);
-        setProgressInfo('Please wait while we confirm the transaction.');
-        setProcessingInfo('Transaction Confirmed');
-
-        setTimeout(() => {
-          setProgress(80);
-          setProgressInfo('Creating your channel, Aligning pixels, adjusting padding... This may take some time.');
-          setProcessingInfo('Redirecting... Please do not refresh');
-          setProgress(90);
-        }, 2000);
-
-
-        //TODO: What to do when the process if completed
-        // setTimeout(() => {
-        //   setProgress(100);
-        //   window.location.reload();
-        // }, 2000);
-
-
-      }
-
-
-    } catch (error) {
-      if (error.code === 4001 || error.code === 'ACTION_REJECTED') {
-        // EIP-1193 userRejectedRequest error
-        console.log("Signature error ", error);
-      } else {
-        console.error('Error --> %o', error);
-        console.error({ error });
-        setProgress(0);
-        setProgressInfo('There was an error in creating the Channel');
-        setProcessingInfo('Kindly Contact support@epns.io to resolve the issue.');
-      }
-
-
-      console.log("Error in the transaction >>", error);
-      // Stop the channel creation flow
-      setIsChannelCreationStarted(false);
-
-
-
-
-
+    // Asking user to approve 50 PUSH token
+    if (approvedTokenAmount < 50.0) {
+      handleApprovePushToken(signer, storagePointer);
+    } else {
+      createChannel(signer, storagePointer);
     }
+  };
 
 
-
-  }
 
   return (
     <Box
-      padding='s8'
+      padding={{ initial: 's8', ml: 's4' }}
       backgroundColor={{ light: 'white', dark: 'gray-900' }}
       borderRadius="r8"
-      width='584px'
-      // height='579px'
-      display='flex'
-      flexDirection='column'
-      alignItems='center'
-      gap='s10'
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      gap="s10"
     >
       <CreateChannelHeader />
 
-      {/* //TODO: If the transaction fails due to contract errors */}
-      {/* {txStatus === 0 && (
-      <Box>
-        <Text variant="h5-semibold" color='gray-700'>Transaction failed due to one of the following reasons:</Text>
-        <Text variant="h5-regular" color='pink-400'>1. There is not enough PUSH in your wallet.</Text>
-        <Text variant="h5-regular" color='pink-400'>2. Gas price increased due to network congestion. Adjust gas limit manually.</Text>
-      </Box>
-      )} */}
+      {channelCreationError.txErrorStatus !== 0 && <CreateChannelError channelCreationError={channelCreationError} />}
 
-      {!isChannelCreationStarted ? (
-        <Box
-          display='flex'
-          flexDirection='column'
-          gap='s8'
-          alignItems='center'
-          alignSelf='stretch'
-        >
+      {progressState.progress === null ? (
+        <Box display="flex" flexDirection="column" gap="s8" alignItems="center" alignSelf="stretch">
           <Stepper
             steps={CreateChannelSteps}
-            activeStepIndex={activeStepIndex}
+            completedSteps={completedSteps}
             setActiveStepIndex={setActiveStepIndex}
-            config={{ restrictedForwardSteps: restrictedForwardSteps }}
           />
 
-          {activeStepIndex == 0 && <ChannelInfo
-            channelName={channelName}
-            channelDesc={channelDesc}
-            channelURL={channelURL}
-            errorInfo={errorInfo}
-            setChannelName={setChannelName}
-            setChannelDesc={setChannelDesc}
-            setChannelURL={setChannelURL}
-            checkFormInput={checkFormInput}
-            setChannelInfoDone={setChannelInfoDone}
-            setActiveStepIndex={setActiveStepIndex}
-            handleNextStep={handleNextStep}
-          />}
-          {activeStepIndex === 1 && <UploadLogo
-            view={view}
-            imageSrc={imageSrc}
-            imageType={imageType}
-            croppedImage={croppedImage}
-            setView={setView}
-            setImageSrc={setImageSrc}
-            setImageType={setImageType}
-            setCroppedImage={setCroppedImage}
-            setUploadDone={setUploadLogoDone}
-            setActiveStepIndex={setActiveStepIndex}
-            handleNextStep={handleNextStep}
-          />}
-          {activeStepIndex === 2 && <StakeFees
-            channelStakeFees={channelStakeFees}
-            handleCreateChannel={handleCreateChannel}
-            setStakeFeesChoosen={setStakeFeesChoosen}
-          />}
+          {activeStepIndex == 0 && <ChannelInfo channelInfoFormik={channelInfoFormik} />}
 
+          {activeStepIndex === 1 && (
+            <UploadLogo
+              view={view}
+              croppedImage={croppedImage}
+              setView={setView}
+              setCroppedImage={setCroppedImage}
+              setActiveStepIndex={setActiveStepIndex}
+              handleNextStep={handleNextStep}
+            />
+          )}
+
+          {activeStepIndex === 2 && (
+            <StakeFees
+              channelStakeFees={CHANNEL_STAKE_FEES}
+              handleCreateNewChannel={handleCreateNewChannel}
+            />
+          )}
         </Box>
       ) : (
-        <CreateChannelProcessingInfo
-          progress={progress}
-          processingInfo={processingInfo}
-          progressInfo={progressInfo}
-        />
+        <CreateChannelProcessingInfo progressState={progressState} />
       )}
-
-
-
-
-
-
     </Box>
   );
 };
