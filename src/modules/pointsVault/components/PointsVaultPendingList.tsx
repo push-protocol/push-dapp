@@ -33,6 +33,7 @@ const PointsVaultPendingList = ({ query }: PointsVaultPendingListProps) => {
       pageSize: 20,
       twitter: query.twitter,
       wallet: query.wallet,
+      activityTypeId: 'follow_push_on_twitter',
     });
 
   const hasMoreData = !isFetchingNextPage && hasNextPage;
