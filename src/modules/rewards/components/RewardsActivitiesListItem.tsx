@@ -29,10 +29,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
   const [errorMessage, setErrorMessage] = useState('');
 
   return (
-    <Skeleton
-      isLoading={isLoadingItem}
-      height="90px"
-    >
+    <Skeleton isLoading={isLoadingItem}>
       <Box
         display="flex"
         flexDirection="column"
@@ -132,16 +129,18 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
             </Box>
 
             {/* Buttons Logic */}
-            <Box display="flex">
-              <ActivityButton
-                userId={userId}
-                activityTypeId={activity.id}
-                activityType={activity.activityType}
-                refetchActivity={refetchActivity}
-                setErrorMessage={setErrorMessage}
-                usersSingleActivity={usersSingleActivity}
-              />
-            </Box>
+            <Skeleton isLoading={isLoading}>
+              <Box display="flex">
+                <ActivityButton
+                  userId={userId}
+                  activityTypeId={activity.id}
+                  activityType={activity.activityType}
+                  refetchActivity={refetchActivity}
+                  setErrorMessage={setErrorMessage}
+                  usersSingleActivity={usersSingleActivity}
+                />
+              </Box>
+            </Skeleton>
           </Box>
         </Box>
 

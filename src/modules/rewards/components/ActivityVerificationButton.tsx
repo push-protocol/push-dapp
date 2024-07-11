@@ -37,13 +37,13 @@ export const ActivityVerificationButton = ({
   const { isWalletConnected } = useAccount();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const { handleTwitterVerification } = useVerifyTwitter({
+  const { handleTwitterVerification, verifyingTwitter, twitterActivityStatus } = useVerifyTwitter({
     activityTypeId,
     refetchActivity,
     setErrorMessage,
   });
 
-  const { handleDiscordVerification } = useVerifyDiscord({
+  const { handleDiscordVerification, verifyingDiscord, discordActivityStatus } = useVerifyDiscord({
     activityTypeId,
     refetchActivity,
     setErrorMessage,
@@ -52,20 +52,22 @@ export const ActivityVerificationButton = ({
   const activityData = useMemo(() => {
     if (activityType === 'follow_push_on_discord') {
       return {
-        isLoading: false,
+        isLoading: verifyingTwitter,
         label: 'Verify',
         action: handleDiscordVerification,
+        isVerificationComplete: twitterActivityStatus == 'Claimed' || twitterActivityStatus == 'Pending',
       };
     }
 
     if (activityType === 'follow_push_on_twitter') {
       return {
-        isLoading: false,
+        isLoading: verifyingDiscord,
         label: 'Verify',
         action: handleTwitterVerification,
+        isVerificationComplete: discordActivityStatus == 'Claimed',
       };
     }
-  }, [activityType, userPushSDKInstance]);
+  }, [activityType, userPushSDKInstance, twitterActivityStatus, discordActivityStatus]);
 
   const { isAuthenticated, authButton, isAuthModalVisible, hideAuthModal } = useAuthWithButton({
     onSuccess: (userDetails) => activityData?.action(userDetails?.userId),
@@ -77,8 +79,9 @@ export const ActivityVerificationButton = ({
         variant="tertiary"
         size="small"
         onClick={() => activityData?.action(userId)}
+        disabled={activityData?.isVerificationComplete}
       >
-        {activityData?.label || 'Verify'}
+        {activityData?.isVerificationComplete ? 'Verifying...' : activityData?.label ? activityData?.label : 'Verify'}
       </Button>
     );
   }
