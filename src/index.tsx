@@ -11,6 +11,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 // Internal Components
 import App from './App';
 import ErrorContextProvider from './contexts/ErrorContext';
+import { RewardsContextProvider } from 'contexts/RewardsContext';
 import { VideoCallContextProvider } from './contexts/VideoCallContext';
 import './index.css';
 import store from './redux/store';
@@ -37,14 +38,16 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <GlobalContextProvider>
         <Web3OnboardProvider web3Onboard={web3Onboard}>
           <ErrorContextProvider>
-            <AppContextProvider>
-              <VideoCallContextProvider>
-                <QueryClientProvider client={queryClient}>
-                  <App />
-                  <ReactQueryDevtools initialIsOpen={false} />
-                </QueryClientProvider>
-              </VideoCallContextProvider>
-            </AppContextProvider>
+            <RewardsContextProvider>
+              <AppContextProvider>
+                <VideoCallContextProvider>
+                  <QueryClientProvider client={queryClient}>
+                    <App />
+                    <ReactQueryDevtools initialIsOpen={false} />
+                  </QueryClientProvider>
+                </VideoCallContextProvider>
+              </AppContextProvider>
+            </RewardsContextProvider>
           </ErrorContextProvider>
         </Web3OnboardProvider>
       </GlobalContextProvider>
