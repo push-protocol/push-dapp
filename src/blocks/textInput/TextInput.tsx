@@ -80,7 +80,8 @@ const StyledTextInput = styled.div<TextInputProps & ModeProp>`
       flex: 1;
       border: none;
       background-color: transparent;
-      padding: var(--s3) var(--s0);
+      height: 44px;
+      // padding: var(--s3) var(--s0);
       margin-left: var(--s1);
       &:focus {
         outline: none;

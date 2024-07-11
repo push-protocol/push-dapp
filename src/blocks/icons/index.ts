@@ -2,6 +2,7 @@ export * from './IconWrapper';
 export * from './Icons.types';
 
 export { default as Add } from './components/Add';
+export { default as ArrowDown } from './components/ArrowDown';
 
 export { default as AddEmoji } from './components/AddEmoji';
 

@@ -26,7 +26,12 @@ const ChangeNetwork: FC<ChangeNetworkProps> = ({ handleNextStep, alias }) => {
       gap="s10"
       alignItems="center"
     >
-      <Text variant="bs-semibold">Switch to the desired chain in your wallet to add it to your channel.</Text>
+      <Text
+        variant="bs-semibold"
+        color="text-primary"
+      >
+        Switch to the desired chain in your wallet to add it to your channel.
+      </Text>
       <Button onClick={() => switchChain(80002)}>Change Network</Button>
     </Box>
   );

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import { useSelector } from 'react-redux';
 import { MdError } from 'react-icons/md';
@@ -9,13 +9,15 @@ import useToast from 'hooks/useToast';
 import { useInitiateNewChain } from 'queries';
 
 // Components
-import { Box, Button, TextInput } from 'blocks';
+import { BNB, Box, Button, Polygon, Select, TextInput } from 'blocks';
 
 import { isValidAddress } from 'helpers/ValidationHelper';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 import { NewChainAddressValue } from '../AddNewChain.types';
 import { UserStoreType } from 'types';
+import { LOGO_ALIAS_CHAIN } from 'modules/dashboard/configs';
+import { chainLabels } from '../AddNewChain.constants';
 
 export type NewAddressProps = {
   setAddress: React.Dispatch<React.SetStateAction<string>>;
@@ -23,6 +25,7 @@ export type NewAddressProps = {
 };
 
 const NewAddress: FC<NewAddressProps> = ({ setAddress, handleNextStep }) => {
+  const [selectedChainValue, setSelectedChainValue] = useState<string>('80002');
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
     return state.user;
   });
@@ -30,6 +33,19 @@ const NewAddress: FC<NewAddressProps> = ({ setAddress, handleNextStep }) => {
   const toast = useToast();
 
   const { mutate: initiateNewChain, isPending, isError } = useInitiateNewChain();
+
+  //optimise this
+  const selectOptions = Object.keys(LOGO_ALIAS_CHAIN).map((key) => {
+    const chainId = parseInt(key, 10);
+    const Component = LOGO_ALIAS_CHAIN[chainId];
+    return {
+      value: key,
+      label: chainLabels[chainId],
+      icon: <Component />,
+    };
+  });
+
+  console.debug(selectOptions, 'chain');
 
   const validationSchema = yup.object().shape({
     alias: yup
@@ -92,6 +108,7 @@ const NewAddress: FC<NewAddressProps> = ({ setAddress, handleNextStep }) => {
             alignItems="center"
             gap="s3"
             width="100%"
+            justifyContent="center"
           >
             <TextInput
               label="Your Address on New Chain"
@@ -100,6 +117,14 @@ const NewAddress: FC<NewAddressProps> = ({ setAddress, handleNextStep }) => {
               onChange={formik.handleChange('alias')}
               error={formik.touched.alias && Boolean(formik.errors.alias)}
               errorMessage={formik.touched.alias ? formik.errors.alias : ''}
+            />
+            <Select
+              options={selectOptions}
+              selectedValue={selectedChainValue}
+              onSelect={(value) => {
+                console.debug(value, 'value');
+                setSelectedChainValue(value);
+              }}
             />
           </Box>
           <Button

@@ -82,6 +82,7 @@ const VerifyAliasChain: FC<VerifyAliasChainProps> = ({ alias }) => {
         <Text
           variant="bs-semibold"
           textAlign="center"
+          color="text-primary"
         >
           You’re almost there!
           <br /> Verify the address on the new chain to send notifications.

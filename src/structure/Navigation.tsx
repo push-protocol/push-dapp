@@ -583,6 +583,7 @@ function Navigation() {
                     >
                       {/* add sepolia */}
                       {verifiedAliasChainIds.length > 0 &&
+                        //fix the design and optimise
                         [80002, 11155111, 97].map((aliasChainId: number) => {
                           const LogoComponent = LOGO_ALIAS_CHAIN[aliasChainId];
                           return LogoComponent ? (
@@ -601,7 +602,10 @@ function Navigation() {
                       cursor="pointer"
                       onClick={() => navigate('/addNewChain')}
                     >
-                      <PlusCircle size={32} />
+                      <PlusCircle
+                        size={32}
+                        color="icon-primary"
+                      />
 
                       {!verifiedAliasChainIds?.length && (
                         <Text

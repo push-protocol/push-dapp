@@ -5489,6 +5489,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@reach/combobox@npm:^0.18.0":
+  version: 0.18.0
+  resolution: "@reach/combobox@npm:0.18.0"
+  dependencies:
+    "@reach/auto-id": "npm:0.18.0"
+    "@reach/descendants": "npm:0.18.0"
+    "@reach/polymorphic": "npm:0.18.0"
+    "@reach/popover": "npm:0.18.0"
+    "@reach/portal": "npm:0.18.0"
+    "@reach/utils": "npm:0.18.0"
+  peerDependencies:
+    react: ^16.8.0 || 17.x
+    react-dom: ^16.8.0 || 17.x
+  checksum: 10/2e2d7f66f6bbf452835bb0630dd5522078394c8422f74493aa74bf8c5bfc4b783f36253a90a79ac552fd040ce869d807616cb7dacca6828c73b570bae4a5f86d
+  languageName: node
+  linkType: hard
+
 "@reach/descendants@npm:0.18.0":
   version: 0.18.0
   resolution: "@reach/descendants@npm:0.18.0"
@@ -5501,12 +5518,60 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@reach/observe-rect@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@reach/observe-rect@npm:1.2.0"
+  checksum: 10/7dd903eeaad0e22c6d973bd26265d91eadba56ab5134701ceb3e85214db75339fae94aa7e8b88a65e8daa64bc7cf1b915d4ffcdfd324466b561dc6adc3c6e070
+  languageName: node
+  linkType: hard
+
 "@reach/polymorphic@npm:0.18.0":
   version: 0.18.0
   resolution: "@reach/polymorphic@npm:0.18.0"
   peerDependencies:
     react: ^16.8.0 || 17.x
   checksum: 10/68b432dd9c3750213f0b0748eb81c3cf78b4cbc18274aa0ff9b77519f9fdf62f1c598bcd5c3893a0283be1cc7fb610e6b44edf3aff3f4fe0232c49653334246a
+  languageName: node
+  linkType: hard
+
+"@reach/popover@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@reach/popover@npm:0.18.0"
+  dependencies:
+    "@reach/polymorphic": "npm:0.18.0"
+    "@reach/portal": "npm:0.18.0"
+    "@reach/rect": "npm:0.18.0"
+    "@reach/utils": "npm:0.18.0"
+    tabbable: "npm:^5.3.3"
+  peerDependencies:
+    react: ^16.8.0 || 17.x
+    react-dom: ^16.8.0 || 17.x
+  checksum: 10/44cbf56a8dc14a9e8d260915afb8f74cd1bf176a9659d78c91f63df99a914920ad886d9e568794785ad5b3257dfd7058b1b35d13f02f6937f872ff1c6aaaed98
+  languageName: node
+  linkType: hard
+
+"@reach/portal@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@reach/portal@npm:0.18.0"
+  dependencies:
+    "@reach/utils": "npm:0.18.0"
+  peerDependencies:
+    react: ^16.8.0 || 17.x
+    react-dom: ^16.8.0 || 17.x
+  checksum: 10/ec4714fae246141f76532beebe68945cdea83c4f425e9dff0db336b820f6e2c67447aaed9f85848f999712d83d6063dcc867a4e2ca12f7a0a8f4faef04ca71a2
+  languageName: node
+  linkType: hard
+
+"@reach/rect@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@reach/rect@npm:0.18.0"
+  dependencies:
+    "@reach/observe-rect": "npm:1.2.0"
+    "@reach/utils": "npm:0.18.0"
+  peerDependencies:
+    react: ^16.8.0 || 17.x
+    react-dom: ^16.8.0 || 17.x
+  checksum: 10/4d5c0f277cf8a11eed82cf299d9e30b58b85172f8928d92b7f20a249d702ee5b4ee73b1ada78fb328fc0806a55d01129b40a2cc73085584fe1ec1fdbeeb8776f
   languageName: node
   linkType: hard
 
@@ -18608,6 +18673,7 @@ __metadata:
     "@pushprotocol/uiweb": "npm:1.4.2"
     "@radix-ui/react-dropdown-menu": "npm:^2.1.1"
     "@radix-ui/react-tooltip": "npm:^1.1.1"
+    "@reach/combobox": "npm:^0.18.0"
     "@reach/tabs": "npm:^0.18.0"
     "@reduxjs/toolkit": "npm:^1.7.1"
     "@tanstack/react-query": "npm:^5.44.0"
@@ -21218,6 +21284,13 @@ __metadata:
   version: 0.1.0
   resolution: "system-architecture@npm:0.1.0"
   checksum: 10/ca0dd793c45c354ab57dd7fc8ce7dc9923a6e07382bd3b22eb5b08f55ddb0217c390d00767549c5155fd4ce7ef23ffdd8cfb33dd4344cbbd37837d085a50f6f0
+  languageName: node
+  linkType: hard
+
+"tabbable@npm:^5.3.3":
+  version: 5.3.3
+  resolution: "tabbable@npm:5.3.3"
+  checksum: 10/5da150c9ac7aaed95f901623214794ffac9472a86009a1762c7b436249d33b157b7d86d93610986090d0fb1ef152f5dec2c201552e0b67ca895ba00c145a51c5
   languageName: node
   linkType: hard
 
