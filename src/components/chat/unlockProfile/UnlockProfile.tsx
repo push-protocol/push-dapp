@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -26,6 +26,7 @@ import Tooltip from 'components/reusables/tooltip/Tooltip';
 import UnlockLogo from '../../../assets/chat/unlock.svg';
 import Wallet from '../../../assets/chat/wallet.svg';
 import { Box, CrossFilled, HoverableSVG } from 'blocks';
+import { checkUnlockProfileErrors } from './UnlockProfile.utils';
 
 // Constants
 export enum UNLOCK_PROFILE_TYPE {
@@ -49,7 +50,7 @@ type UnlockProfileModalProps = {
 };
 
 const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps) => {
-  const { type, description, closeIcon } = InnerComponentProps;
+  const { type, description } = InnerComponentProps;
 
   const theme = useTheme();
   const { handleConnectWallet, initializePushSDK } = useContext(AppContext);
@@ -70,7 +71,14 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
   };
 
   const handleChatprofileUnlock = async () => {
-    await handleConnectWallet({ remember: rememberMe });
+    const user = await handleConnectWallet({ remember: rememberMe });
+
+    // reject unlock profile listener
+    const errorExists = checkUnlockProfileErrors(user);
+
+    if (errorExists && onClose) {
+      onClose();
+    }
   };
 
   useEffect(() => {
