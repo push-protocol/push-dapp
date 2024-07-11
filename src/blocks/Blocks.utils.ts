@@ -12,9 +12,10 @@ import {
   ThemeMode,
   ThemeModeBorder,
   BorderValue,
-  RadiusType,
+  BlocksRadiusType,
 } from './Blocks.types';
 import { ThemeColors } from './theme/Theme.types';
+import { newRadiusRegex, newSpacingRegex, oldRadiusRegex, oldSpacingRegex } from './Blocks.constants';
 
 /**
  * @param propName
@@ -24,7 +25,10 @@ import { ThemeColors } from './theme/Theme.types';
 const getCSSValue = (propName: CSSPropName, value: CSSPropValueType | undefined) => {
   if (propName === 'padding' || propName === 'margin') {
     if (typeof value === 'string') {
-      return value.replace(/\b(\w+)\b/g, 'var(--$1)');
+      return value.replace(
+        newSpacingRegex.test(value) ? newSpacingRegex : oldSpacingRegex,
+        (match) => `var(--${match})`
+      );
     }
   } else if (propName === 'gap' || propName === 'border-radius') {
     return `var(--${value})`;
@@ -176,12 +180,14 @@ export const getBlocksBorder = (mode: ThemeMode, border?: BorderValue | ThemeMod
  * @param radius
  * @returns
  */
-export const getBlocksBorderRadius = (radius?: RadiusType) => {
+export const getBlocksBorderRadius = (radius?: BlocksRadiusType) => {
   // If border-radius is not given return undefined, to avoid any breakages
   if (!radius) return radius;
 
-  return radius.replace(/\b(\w+)\b/g, 'var(--$1)');
+  const result = radius.replace(
+    newRadiusRegex.test(radius) ? newRadiusRegex : oldRadiusRegex,
+    (match) => `var(--${match})`
+  );
 
-  // If passed a design system border-radius then use radius as a variable
-  return `var(--${radius})`;
+  return result;
 };
