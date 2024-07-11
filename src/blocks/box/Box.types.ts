@@ -9,6 +9,7 @@ import {
   ThemeModeBorder,
   ThemeModeColors,
   ValueOf,
+  BlocksGapType,
 } from '../Blocks.types';
 import { FlattenSimpleInterpolation } from 'styled-components';
 import { ThemeColors } from 'blocks/theme/Theme.types';
@@ -21,7 +22,7 @@ export type BoxResponsiveProps = {
   /* Sets flex-direction css property */
   flexDirection?: ResponsiveProp<CSSProperties['flexDirection']>;
   /* Sets gap between the elements */
-  gap?: ResponsiveProp<BlocksSpaceType>;
+  gap?: ResponsiveProp<BlocksGapType | BlocksSpaceType>;
   /* Sets display css property */
   display?: ResponsiveProp<CSSProperties['display']>;
   /* Sets height css property */

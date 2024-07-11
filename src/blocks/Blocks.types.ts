@@ -39,6 +39,8 @@ export type BlocksSpaceType =
   | `${ThemeSpacing} ${ThemeSpacing}`
   | `${ThemeSpacing} ${ThemeSpacing} ${ThemeSpacing} ${ThemeSpacing}`;
 
+export type BlocksGapType = ThemeSpacing | `${ThemeSpacing} ${ThemeSpacing}`;
+
 export type PixelValue = `${number}px`;
 
 export type ValueOf<T> = T[keyof T];
