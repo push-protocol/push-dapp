@@ -4,31 +4,33 @@ import { useBlocksTheme } from '../Blocks.hooks';
 import {
   BlocksColors,
   ThemeModeColors,
-  SpaceType,
+  BlocksSpaceType,
   ModeProp,
   TransformedHTMLAttributes,
-  RadiusType,
+  BlocksRadiusType,
 } from '../Blocks.types';
 import { getBlocksColor, getBlocksBorderRadius } from '../Blocks.utils';
+import { ThemeColors } from '../theme/Theme.types';
+
 export type HoverableSVGProps = {
   /* Icon component */
   icon: React.ReactNode;
   /* Sets the initial color for SVG */
-  defaultColor?: BlocksColors | ThemeModeColors;
+  defaultColor?: BlocksColors | ThemeModeColors | ThemeColors;
   /* Sets button as disabled */
   disabled?: boolean;
   /* Sets the hover color for SVG */
-  hoverColor?: BlocksColors | ThemeModeColors;
+  hoverColor?: BlocksColors | ThemeModeColors | ThemeColors;
   /* Sets the initial background color for SVG */
-  defaultBackground?: BlocksColors | ThemeModeColors;
+  defaultBackground?: BlocksColors | ThemeModeColors | ThemeColors;
   /* Sets the initial background color for SVG */
-  hoverBackground?: BlocksColors | ThemeModeColors;
+  hoverBackground?: BlocksColors | ThemeModeColors | ThemeColors;
   /* Sets the padding for SVG button container */
-  padding?: SpaceType;
+  padding?: BlocksSpaceType;
   /* Sets the margin for SVG button container */
-  margin?: SpaceType;
+  margin?: BlocksSpaceType;
   /* Sets the margin for SVG button container */
-  borderRadius?: RadiusType;
+  borderRadius?: BlocksRadiusType;
 } & TransformedHTMLAttributes<HTMLButtonElement>;
 
 const StyledButton = styled.button.withConfig({
