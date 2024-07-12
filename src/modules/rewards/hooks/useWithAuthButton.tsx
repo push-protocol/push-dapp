@@ -16,32 +16,33 @@ import { UserStoreType } from 'types';
 // components
 import { Button } from 'blocks';
 
-export const useAuthWithButton = ({ onSuccess }: { onSuccess: (userDetails: UserRewardsDetailResponse) => void }) => {
+export const useAuthWithButton = ({
+  onSuccess,
+  isLoading,
+}: {
+  onSuccess: (userDetails: UserRewardsDetailResponse) => void;
+  isLoading: boolean;
+}) => {
   const [isWalletConnectedAndProfileUnlocked, setIsWalletConnectedAndProfileUnlocked] = useState(false);
   const [showAuth, setShowAuth] = useState(false); // Track button click
 
   const { isWalletConnected } = useAccount();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const { showConnectModal, setShowConnectModal, connectWallet, handleVerify, userDetails } = useRewardsAuth();
+  const { isAuthModalVisible, connectWallet, handleVerify, userDetails, hideAuthModal } = useRewardsAuth();
   const { isSuccess, isUserProfileUnlocked } = useCreateRewardsUser();
 
-  const showAuthModal = async () => {
+  const handleAuthModal = async () => {
     setShowAuth(true);
     connectWallet();
   };
 
   const isAuthenticated = useMemo(() => {
     return (
-      showAuth &&
-      (isSuccess ||
-        (userDetails &&
-          isUserProfileUnlocked &&
-          handleVerify &&
-          userPushSDKInstance &&
-          !userPushSDKInstance.readmode()))
+      isSuccess ||
+      (userDetails && isUserProfileUnlocked && handleVerify && userPushSDKInstance && !userPushSDKInstance.readmode())
     );
-  }, [showAuth, isSuccess, userDetails, isUserProfileUnlocked, handleVerify, userPushSDKInstance]);
+  }, [isSuccess, userDetails, isUserProfileUnlocked, handleVerify, userPushSDKInstance]);
 
   const handleSuccess = (userDetails: UserRewardsDetailResponse) => {
     setIsWalletConnectedAndProfileUnlocked(true);
@@ -50,7 +51,7 @@ export const useAuthWithButton = ({ onSuccess }: { onSuccess: (userDetails: User
   };
 
   useEffect(() => {
-    if (isAuthenticated && userDetails) {
+    if (showAuth && isAuthenticated && userDetails) {
       handleSuccess(userDetails);
       console.log('handle Success');
     }
@@ -62,19 +63,20 @@ export const useAuthWithButton = ({ onSuccess }: { onSuccess: (userDetails: User
         <Button
           variant="tertiary"
           size="small"
-          onClick={showAuthModal}
+          onClick={handleAuthModal}
+          disabled={isLoading}
         >
           Verify
         </Button>
       </>
     ),
-    [isWalletConnected, showConnectModal]
+    [isWalletConnected, isAuthModalVisible, isLoading]
   );
 
   return {
     authButton,
     isAuthenticated: isWalletConnectedAndProfileUnlocked,
-    showConnectModal: showConnectModal,
-    setShowConnectModal: setShowConnectModal,
+    isAuthModalVisible,
+    hideAuthModal,
   };
 };

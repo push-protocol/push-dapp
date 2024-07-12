@@ -31,9 +31,9 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
   const isLoading = isLoadingActivities;
   // const isLoading = isLoadingUserDetails || isLoadingActivities;
 
-  // If there are activities then render them else render 5 skeletons
+  // If there are activities then render them else render 2 skeletons
   const activityList = isLoading
-    ? Array(3).fill(0)
+    ? Array(2).fill(0)
     : rewardActivitiesResponse?.pages.flatMap((page) => page.activities) || [];
 
   const hasMoreData = !isFetchingNextPage && hasNextPage;
@@ -64,6 +64,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
       >
         {activityList.map((activity: Activity) => (
           <RewardsActivitiesListItem
+            key={activity.activityType}
             userId={userDetails?.userId || ''}
             activity={activity}
             isLoadingItem={isLoading}

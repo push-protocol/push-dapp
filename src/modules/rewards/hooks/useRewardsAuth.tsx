@@ -16,16 +16,17 @@ import { useGetUserRewardsDetails } from 'queries/hooks/rewards';
 // types
 import { AxiosError } from 'axios';
 import { UserStoreType } from 'types';
+import { useRewardsContext } from 'contexts/RewardsContext';
+import { checkUnlockProfileErrors } from 'components/chat/unlockProfile/UnlockProfile.utils';
 
 const useRewardsAuth = () => {
   const { account, isWalletConnected, connect } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const [showConnectModal, setShowConnectModal] = useState(false);
+  const { isAuthModalVisible, setIsAuthModalVisible } = useRewardsContext();
 
   const [isVerifyClicked, setIsVerifyClicked] = useState(false);
-  const [isDashClicked, setIsDashClicked] = useState(false);
   const [handleVerify, setHandleVerify] = useState(false);
   const { activeTab } = useRewardsTabs();
 
@@ -44,6 +45,7 @@ const useRewardsAuth = () => {
   const connectWallet = () => {
     setHandleVerify(false);
     setIsVerifyClicked(true);
+    setIsAuthModalVisible(false);
 
     if (!isWalletConnected) {
       connect();
@@ -52,7 +54,16 @@ const useRewardsAuth = () => {
 
   // dashboard referral section unlock profile
   const connectUserWallet = () => {
-    setIsDashClicked(true);
+    setIsAuthModalVisible(false);
+    unlockProfile();
+  };
+
+  const showAuthModal = () => {
+    setIsAuthModalVisible(true);
+  };
+
+  const hideAuthModal = () => {
+    setIsAuthModalVisible(false);
   };
 
   // unlock profile function
@@ -69,8 +80,9 @@ const useRewardsAuth = () => {
 
     //if verification proof is null, unlock push profile update to update userPUSHSDKInstance
     if (verificationProof === null || verificationProof === undefined) {
-      if (userPushSDKInstance && userPushSDKInstance.readmode()) {
-        setShowConnectModal(true);
+      if (isWalletConnected && userPushSDKInstance && userPushSDKInstance.readmode()) {
+        console.log('open modal');
+        setIsAuthModalVisible(true);
       }
     }
 
@@ -79,20 +91,23 @@ const useRewardsAuth = () => {
       setHandleVerify(true);
     }
     setIsVerifyClicked(false);
-    setIsDashClicked(false);
   };
 
   useEffect(() => {
+    if (!isWalletConnected || !userPushSDKInstance) return;
+
     // dashboard connect wallet flow
-    if (status === 'error' && activeTab == 'dashboard' && !isVerifyClicked && !!userPushSDKInstance?.errors) {
+    if (status === 'error' && activeTab == 'dashboard' && !isVerifyClicked) {
       if (error instanceof AxiosError && error?.response?.data?.error === errorMessage) {
+        const errorExistsInUnlockProfile = checkUnlockProfileErrors(userPushSDKInstance);
+        if (errorExistsInUnlockProfile || !isWalletConnected) return;
         unlockProfile();
       }
     }
 
     // user disconnects while modal is open
     if (status === 'pending' && !isWalletConnected) {
-      setShowConnectModal(false);
+      setIsAuthModalVisible(false);
     }
 
     // rewards activity first user
@@ -106,25 +121,21 @@ const useRewardsAuth = () => {
     if (isVerifyClicked && userDetails && !handleVerify) {
       unlockProfile();
     }
+  }, [status, isVerifyClicked, userPushSDKInstance]);
 
-    // referral section click
-    if (isDashClicked && status == 'error') {
-      unlockProfile();
-    }
-  }, [status, isVerifyClicked, isDashClicked]);
+  useEffect(() => {
+    if (!isWalletConnected) hideAuthModal();
+  }, [isWalletConnected]);
 
   return {
-    caip10WalletAddress,
     status,
-    unlockProfile,
-    showConnectModal,
-    setShowConnectModal,
+    isAuthModalVisible,
     connectWallet,
     handleVerify,
     userDetails,
-    isVerifyClicked,
     connectUserWallet,
-    isDashClicked,
+    hideAuthModal,
+    showAuthModal,
   };
 };
 
