@@ -124,11 +124,6 @@ const StakeFees: FC<StakeFeesProps> = ({
 
             </Box>
           </Box>
-          <CreateChannelFaucet
-            mintPushToken={mintPushTokenHandler}
-            noOfPushTokensToCheck={50}
-            mintingPush={mintingPush}
-          />
 
           {showFaucet && <CreateChannelFaucet
             mintPushToken={mintPushTokenHandler}
