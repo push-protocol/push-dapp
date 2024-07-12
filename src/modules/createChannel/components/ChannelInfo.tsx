@@ -22,23 +22,20 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
     <Box
       display='flex'
       flexDirection='column'
-      alignItems='center'
-      gap='s10'
       alignSelf='stretch'
     >
 
-      <Box
-        display='flex'
-        flexDirection='column'
-        gap='s4'
-        alignSelf='stretch'
-      >
-
-        <form onSubmit={channelInfoFormik.handleSubmit}>
+      <form onSubmit={channelInfoFormik.handleSubmit}>
+        <Box
+          display='flex'
+          flexDirection='column'
+          gap='spacing-xl'
+          alignSelf='stretch'
+        >
           <Box
             display='flex'
             flexDirection='column'
-            gap='s4'
+            gap='spacing-sm'
             alignSelf='stretch'
           >
             <TextInput
@@ -79,19 +76,18 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
               error={channelInfoFormik.touched.channelURL && Boolean(channelInfoFormik.errors.channelURL)}
               errorMessage={channelInfoFormik.touched.channelURL ? channelInfoFormik.errors.channelURL : ''}
             />
-
-            <Box display='flex' justifyContent='center'>
-              <Button disabled={!channelInfoFormik.isValid}>
-                Next
-              </Button>
-            </Box>
           </Box>
 
-        </form>
-      </Box>
+          <Box display='flex' justifyContent='center'>
+            <Button disabled={!channelInfoFormik.isValid}>
+              Next
+            </Button>
+          </Box>
+        </Box>
 
-
+      </form>
     </Box>
+
   );
 };
 

@@ -100,20 +100,20 @@ const UploadLogo: FC<UploadLogoProps> = ({
         alignItems='center'
         gap='s8'
       >
-        <Text variant="bes-regular" color='gray-500'>
+        <Text variant="bes-regular" color='text-tertiary'>
           Upload a PNG, JPG upto 1MB. Crop the image to resize to 128px.
         </Text>
 
         <form onSubmit={formik.handleSubmit}>
           <Box
             width={{ initial: '500px', ml: '325px' }}
-            padding='s12 s0'
+            padding='spacing-xxl spacing-none'
             display='flex'
             flexDirection='column'
             alignItems='center'
             border={{ light: '1px dashed gray-300', dark: '1px dashed gray-700' }}
             borderRadius="r6"
-            backgroundColor={{ light: 'gray-100', dark: 'gray-1000' }}
+            backgroundColor='surface-secondary'
             gap='s6'
             onDragOver={(e) => e.preventDefault()}
             onDrop={handleDrop}

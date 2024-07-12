@@ -21,16 +21,16 @@ const CreateChannelProcessingInfo: FC<CreateChannelProcessingInfoProps> = ({
       display='flex'
       flexDirection='column'
       alignSelf='stretch'
-      gap='s10'
+      gap='spacing-xl'
       alignItems='center'
     >
       <Box
         padding='s6'
-        backgroundColor={{ light: 'gray-100', dark: 'gray-1000' }}
-        borderRadius="r4"
+        backgroundColor='surface-secondary'
+        borderRadius="radius-sm"
         width='-webkit-fill-available'
       >
-        <Text textAlign='center' variant='h5-semibold' color='pink-600'>
+        <Text textAlign='center' variant='h5-semibold' color='text-brand-medium'>
           {progressState.progressInfo}
         </Text>
       </Box>
@@ -44,9 +44,9 @@ const CreateChannelProcessingInfo: FC<CreateChannelProcessingInfoProps> = ({
         />
       </Box>
 
-      <Box display='flex' flexDirection='row' alignItems='center' gap='s1'>
+      <Box display='flex' flexDirection='row' alignItems='center' gap='spacing-xxxs'>
         <Spinner type={SPINNER_TYPE.PROCESSING} size={16} color="#D548EC" />
-        <Text variant="bs-semibold" color={{ light: 'gray-800', dark: 'gray-300' }}>
+        <Text variant="bs-semibold" color='text-secondary'>
           {progressState.processingInfo}
         </Text>
       </Box>

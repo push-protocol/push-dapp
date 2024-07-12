@@ -85,21 +85,21 @@ const StakeFees: FC<StakeFeesProps> = ({
 
 
   return (
-    <Box display="flex" flexDirection="column" alignSelf="stretch" justifyContent="center" gap="s10">
-      <Box display="flex" flexDirection="column" gap="s4">
+    <Box display="flex" flexDirection="column" alignSelf="stretch" justifyContent="center" gap="spacing-xl">
+      <Box display="flex" flexDirection="column" gap="spacing-sm">
         <Box display="flex" flexDirection="column" alignSelf="stretch">
           <Box
             display="flex"
             flexDirection="row"
             justifyContent="space-between"
-            backgroundColor={{ light: "gray-100", dark: 'gray-1000' }}
-            borderRadius={showFaucet ? "r4 r4 r0 r0" : "r4"}
-            padding="s4 s6"
+            backgroundColor='surface-secondary'
+            borderRadius={showFaucet ? "radius-sm radius-sm radius-none radius-none" : "radius-sm"}
+            padding="spacing-sm spacing-md"
             alignItems="center"
           >
             <Text
               variant="h4-semibold"
-              color={{ light: 'gray-1000', dark: 'gray-100' }}
+              color='text-primary'
               display={{ ml: 'none', dp: 'block' }}
             >
               Amout For Staking
@@ -107,23 +107,28 @@ const StakeFees: FC<StakeFeesProps> = ({
 
             <Text
               variant="h5-semibold"
-              color={{ light: 'gray-1000', dark: 'gray-100' }}
+              color='text-primary'
               display={{ ml: 'block', dp: 'none' }}
             >
               Amout For Staking
             </Text>
             <Box>
-              <Text variant="h4-semibold" color={{ light: "pink-500", dark: 'pink-400' }}>
+              <Text variant="h4-semibold" color='text-brand-medium'>
                 {channelStakeFees} PUSH
               </Text>
               <Skeleton isLoading={fetchingbalance}>
-                <Text variant="bes-semibold" color="gray-500">
+                <Text variant="bes-semibold" color='text-tertiary'>
                   Balance: {balance?.toLocaleString()}
                 </Text>
               </Skeleton>
 
             </Box>
           </Box>
+          <CreateChannelFaucet
+            mintPushToken={mintPushTokenHandler}
+            noOfPushTokensToCheck={50}
+            mintingPush={mintingPush}
+          />
 
           {showFaucet && <CreateChannelFaucet
             mintPushToken={mintPushTokenHandler}
@@ -134,7 +139,7 @@ const StakeFees: FC<StakeFeesProps> = ({
         </Box>
 
         <Box display="flex" flexDirection="row" gap="s1" justifyContent="center">
-          <Text variant="bes-semibold" color="gray-500">
+          <Text variant="bes-semibold" color='text-tertiary'>
             Don't see Push token in your wallet?
           </Text>
           <Text
@@ -142,7 +147,7 @@ const StakeFees: FC<StakeFeesProps> = ({
               cursor: pointer;
             `}
             variant="bes-semibold"
-            color="pink-500"
+            color="text-brand-medium"
             onClick={handlePushTokenImport}
           >
             Import Token

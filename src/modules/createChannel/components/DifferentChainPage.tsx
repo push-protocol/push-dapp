@@ -14,12 +14,12 @@ const DifferentChainPage = () => {
       <Box
         display='flex'
         flexDirection='column'
-        padding='s6'
-        backgroundColor={{ light: 'gray-100', dark: 'gray-1000' }}
-        borderRadius="r4"
+        padding='spacing-md'
+        backgroundColor='surface-secondary'
+        borderRadius='radius-sm'
         width='-webkit-fill-available'
       >
-        <Text textAlign='center' variant='h5-semibold' color='pink-600'>
+        <Text textAlign='center' variant='h5-semibold' color='text-brand-medium'>
           Please select Ethereum Sepolia Network in your Wallet to create a channel.
         </Text>
 

@@ -18,15 +18,15 @@ const CreateChannelError: FC<CreateChannelErrorProp> = ({
       gap="s2"
       display="flex"
       flexDirection="row"
-      backgroundColor={{ light: 'red-100', dark: 'red-800' }}
-      borderRadius="r4"
-      padding={{ ml: 's2', lp: 's2', initial: 's2' }}
+      backgroundColor='surface-danger-subtle'
+      borderRadius="radius-xs"
+      padding='s2'
       width="100%"
     >
       <ErrorFilled color={{ light: 'red-600', dark: 'red-300' }} size={24} />
 
       <Box color={{ light: 'red-700', dark: 'red-300' }}>
-        <Text variant="h5-semibold" color={{ light: 'red-700', dark: 'red-300' }}>
+        <Text variant="h5-semibold" color='text-danger-bold'>
           {channelCreationError.txError}
         </Text>
 

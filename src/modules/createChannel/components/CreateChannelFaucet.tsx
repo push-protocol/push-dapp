@@ -33,16 +33,16 @@ const CreateChannelFaucet: FC<CreateChannelFaucetProps> = ({
   return (
     <Box
       display='flex'
-      padding='s4 s6'
-      backgroundColor='pink-200'
-      borderRadius="r0 r0 r4 r4"
+      padding='spacing-sm spacing-md'
+      backgroundColor='surface-brand-subtle'
+      borderRadius="radius-none radius-none radius-sm radius-sm"
       justifyContent='space-between'
       alignItems='center'
       flexDirection={{ ml: 'column', initial: 'row' }}
       gap='s3'
     >
       <Skeleton isLoading={mintingPush}>
-        <Text variant="c-regular" color='gray-1000'>
+        <Text variant="c-regular" color='text-primary'>
           {isProd ?
             'Your balance is low. Swap to get PUSH Tokens.' :
             'Follow these steps to get Testnet PUSH.'}
@@ -65,7 +65,7 @@ const CreateChannelFaucet: FC<CreateChannelFaucetProps> = ({
                 display='flex'
                 gap='s2'
                 alignItems='baseline'
-                color='pink-600'
+                color='text-brand-medium'
                 cursor='pointer'
               >
                 <Box
@@ -89,7 +89,7 @@ const CreateChannelFaucet: FC<CreateChannelFaucetProps> = ({
               display='flex'
               gap='s2'
               alignItems='baseline'
-              color='pink-600'
+              color='text-brand-medium'
               cursor='pointer'
               onClick={() => mintPushToken(1000)}
             >

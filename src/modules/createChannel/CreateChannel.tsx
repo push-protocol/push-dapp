@@ -280,9 +280,9 @@ const CreateChannel = () => {
 
   return (
     <Box
-      padding={{ initial: 's8', ml: 's4' }}
-      backgroundColor={{ light: 'white', dark: 'gray-900' }}
-      borderRadius="r8"
+      padding={{ initial: 'spacing-lg', ml: 'spacing-sm' }}
+      backgroundColor='surface-primary'
+      borderRadius="radius-md"
       display="flex"
       width={{ initial: '648px', ml: '325px' }}
       flexDirection="column"
@@ -291,41 +291,48 @@ const CreateChannel = () => {
     >
       <CreateChannelHeader />
 
-      {!onCoreNetwork && <DifferentChainPage />}
+      {!onCoreNetwork ? <DifferentChainPage /> : (
+        <>
+          {channelCreationError.txErrorStatus !== 0 && <CreateChannelError channelCreationError={channelCreationError} />}
 
-      {channelCreationError.txErrorStatus !== 0 && <CreateChannelError channelCreationError={channelCreationError} />}
+          {progressState.progress === null ? (
+            <Box display="flex" flexDirection="column" gap="s8" alignItems="center" alignSelf="stretch">
+              <Stepper
+                steps={CreateChannelSteps}
+                completedSteps={completedSteps}
+                setActiveStepIndex={setActiveStepIndex}
+              />
 
-      {progressState.progress === null ? (
-        <Box display="flex" flexDirection="column" gap="s8" alignItems="center" alignSelf="stretch">
-          <Stepper
-            steps={CreateChannelSteps}
-            completedSteps={completedSteps}
-            setActiveStepIndex={setActiveStepIndex}
-          />
+              {activeStepIndex == 0 && <ChannelInfo channelInfoFormik={channelInfoFormik} />}
 
-          {activeStepIndex == 0 && <ChannelInfo channelInfoFormik={channelInfoFormik} />}
+              {activeStepIndex === 1 && (
+                <UploadLogo
+                  view={view}
+                  croppedImage={croppedImage}
+                  setView={setView}
+                  setCroppedImage={setCroppedImage}
+                  setActiveStepIndex={setActiveStepIndex}
+                  handleNextStep={handleNextStep}
+                />
+              )}
 
-          {activeStepIndex === 1 && (
-            <UploadLogo
-              view={view}
-              croppedImage={croppedImage}
-              setView={setView}
-              setCroppedImage={setCroppedImage}
-              setActiveStepIndex={setActiveStepIndex}
-              handleNextStep={handleNextStep}
-            />
+              {activeStepIndex === 2 && (
+                <StakeFees
+                  channelStakeFees={CHANNEL_STAKE_FEES}
+                  handleCreateNewChannel={handleCreateNewChannel}
+                />
+              )}
+            </Box>
+          ) : (
+            <CreateChannelProcessingInfo progressState={progressState} />
           )}
 
-          {activeStepIndex === 2 && (
-            <StakeFees
-              channelStakeFees={CHANNEL_STAKE_FEES}
-              handleCreateNewChannel={handleCreateNewChannel}
-            />
-          )}
-        </Box>
-      ) : (
-        <CreateChannelProcessingInfo progressState={progressState} />
+        </>
       )}
+
+
+
+
     </Box>
   );
 };
