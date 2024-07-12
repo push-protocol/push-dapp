@@ -1,3 +1,4 @@
+import React, { useRef, useEffect, useState } from 'react';
 import styled, { FlattenSimpleInterpolation, css } from 'styled-components';
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from '@reach/combobox';
 import '@reach/combobox/styles.css';
@@ -26,6 +27,7 @@ export type SelectProps = {
   required?: boolean;
   success?: boolean;
 };
+
 const Container = styled.div<{ css?: FlattenSimpleInterpolation }>`
   align-items: flex-start;
   display: flex;
@@ -105,8 +107,8 @@ const StyledBox = styled.div<{
   }}
 `;
 
-const StyledPopover = styled(ComboboxPopover)`
-  position: absolute;
+const StyledPopover = styled(ComboboxPopover)<{ popoverWidth: number }>`
+  width: ${({ popoverWidth }) => popoverWidth}px;
   margin: var(--spacing-xxs) var(--spacing-none) var(--spacing-none) var(--spacing-none);
   padding: var(--spacing-xxs, 8px);
   border-radius: var(--radius-xs, 12px);
@@ -114,19 +116,20 @@ const StyledPopover = styled(ComboboxPopover)`
   background: var(--surface-primary, #fff);
   overflow: hidden auto;
   max-height: 20rem;
-  width: 100%;
+  position: absolute;
 `;
 
 const StyledCombobox = styled(Combobox)`
   position: relative;
   width: 100%;
 `;
+
 const StyledList = styled(ComboboxList)`
   display: flex;
-
   flex-direction: column;
   gap: var(--spacing-xs, 12px);
 `;
+
 const StyledOption = styled(ComboboxOption)`
   display: flex;
   align-items: center;
@@ -143,7 +146,7 @@ const StyledOption = styled(ComboboxOption)`
     border-radius: var(--radius-xxs, 8px);
     background: var(--surface-secondary, #f5f6f8);
   }
-  [role:img] {
+  [role='img'] {
     width: 24px;
     height: 24px;
   }
@@ -159,12 +162,31 @@ const Select: React.FC<SelectProps> = ({
   success,
   disabled,
 }) => {
+  const [popoverWidth, setPopoverWidth] = useState(0);
+  const comboboxRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (comboboxRef.current) {
+        setPopoverWidth(comboboxRef.current.offsetWidth - 18);
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   const selectedOption = options.find((option) => option.value === selectedValue);
+
   return (
     <Container css={css}>
       {/* label will be added here  */}
 
       <StyledCombobox
+        ref={comboboxRef}
         aria-labelledby="select"
         openOnFocus
         onSelect={(value: string) => onSelect?.(value)}
@@ -191,7 +213,10 @@ const Select: React.FC<SelectProps> = ({
           />
         </StyledBox>
 
-        <StyledPopover portal={false}>
+        <StyledPopover
+          portal={false}
+          popoverWidth={popoverWidth}
+        >
           <StyledList>
             {options.map((option) => (
               <StyledOption
