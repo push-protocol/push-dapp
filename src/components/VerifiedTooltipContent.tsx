@@ -13,7 +13,7 @@ const VerifiedTooltipContent = ({ verifierIcon, verifierName, height }: Verified
   return (
     <Container
       style={{
-        width: 212 + (displayedVerifierName && displayedVerifierName.length*2) + 'px',
+        width: 212 + (displayedVerifierName && displayedVerifierName.length * 2) + 'px',
         borderRadius: height < 160 ? '0.125rem 1rem 1rem 1rem' : '1rem 1rem 1rem 0.125rem',
       }}
     >
@@ -39,7 +39,7 @@ const Container = styled(ItemVV2)`
 `;
 
 const Heading = styled(H2V2)`
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 14px;

@@ -50,8 +50,7 @@ import { darkTheme, lightTheme } from 'config/spaceTheme';
 import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
 import SpaceContextProvider from 'contexts/SpaceContext';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
-import { blocksColors } from 'blocks';
-import { textVariants } from 'blocks/text/Text.constants';
+import { blocksColors, getBlocksCSSVariables } from 'blocks';
 import APP_PATHS from 'config/AppPaths';
 
 dotenv.config();
@@ -60,17 +59,6 @@ dotenv.config();
   TODO: Remove the below config once the following issue is resolved
   https://github.com/push-protocol/push-sdk/issues/1373
 */
-const chatDarkThemeCustomised: IChatTheme = {
-  ...darkChatTheme,
-  backgroundColor: {
-    ...darkChatTheme.backgroundColor,
-    chatPreviewBackground: 'var(--gray-900)',
-    userProfileBackground: 'var(--gray-900)',
-    modalBackground: 'var(--gray-900)',
-    criteriaLabelBackground: 'var(--gray-900)',
-    chatWidgetModalBackground: 'var(--gray-900)',
-  },
-};
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -78,6 +66,8 @@ const GlobalStyle = createGlobalStyle`
     padding-right: 0 !important;
   }
   :root{
+
+    /* deprecated */
     /* Spaces */
     --s0: 0px;
     --s1: 4px;
@@ -97,6 +87,7 @@ const GlobalStyle = createGlobalStyle`
     --s15: 60px;
     // TODO: Add more as needed
 
+    /* deprecated */
     /* Border Radius */
     --r0: 0px;
     --r1: 4px;
@@ -110,28 +101,18 @@ const GlobalStyle = createGlobalStyle`
     --r9: 36px;
     --r10: 40px;
     // TODO: Add more as needed
-
-    /* Font Family */
-    --font-family: 'Strawford', 'Source Sans Pro', Helvetica, sans-serif;
-
+    
+    /* deprecated */
     /* Colors */
     ${Object.entries(blocksColors)
-    .map(([colorName, code]) => `--${colorName}: ${code};`)
-    .join('')}
-  
-    /* Typography Variants */
-    ${Object.entries(textVariants)
-    .map(
-      ([fontVariant, value]) => `
-            --${fontVariant}-font-size: ${value.fontSize};
-            --${fontVariant}-line-height: ${value.lineHeight};
-            --${fontVariant}-font-weight: ${value.fontWeight};
-            ${value.fontStyle ? `--${fontVariant}-font-style: ${value.fontStyle};` : ''}
-            ${value.letterSpacing ? `--${fontVariant}-letter-spacing: ${value.letterSpacing};` : ''}
-            ${value.textTransform ? `--${fontVariant}-text-transform: ${value.textTransform};` : ''}
-          `
-    )
-    .join('')}
+      .map(([colorName, code]) => `--${colorName}: ${code};`)
+      .join('')}
+      
+    /* Font Family */
+      --font-family: 'FK Grotesk Neu';
+
+    /* New blocks theme css variables*/
+    ${(props) => getBlocksCSSVariables(props.theme.blocksTheme)}
   }
 
 `;
@@ -155,7 +136,7 @@ const extendConsole = () => {
         window.console = {};
       }
       if (window.console[level] === 'undefined' || !window.console[level] || window.console[level] === null) {
-        window.console[level] = function () { };
+        window.console[level] = function () {};
       }
       if (enabled) {
         if (disabledConsoles[level]) {
@@ -163,7 +144,7 @@ const extendConsole = () => {
         }
       } else {
         disabledConsoles[level] = window.console[level];
-        window.console[level] = function () { };
+        window.console[level] = function () {};
       }
     };
   } catch (e) {
@@ -328,8 +309,12 @@ export default function App() {
   // const { spaceUI } = useSpaceComponents();
 
   const location = useLocation();
-  const isHeaderHidden = location?.pathname.includes(APP_PATHS.PointsVault);
-  const isSidebarHidden = location?.pathname.includes(APP_PATHS.PointsVault) || location?.pathname.includes('/snap');
+  const isHeaderHidden =
+    location?.pathname.includes(APP_PATHS.PointsVault) || location?.pathname.includes(APP_PATHS.DiscordVerification);
+  const isSidebarHidden =
+    location?.pathname.includes(APP_PATHS.PointsVault) ||
+    location?.pathname.includes('/snap') ||
+    location?.pathname.includes(APP_PATHS.DiscordVerification);
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
@@ -345,8 +330,8 @@ export default function App() {
         <NavigationContextProvider>
           <ChatUIProvider
             user={userPushSDKInstance}
-            theme={darkMode && chatDarkThemeCustomised}
-            debug={true}
+            theme={darkMode && darkChatTheme}
+            debug={false}
             uiConfig={{
               suppressToast: false,
             }}
@@ -408,8 +393,8 @@ export default function App() {
                       isSidebarHidden
                         ? GLOBALS.CONSTANTS.NO_LEFT_BAR_WIDTH
                         : sidebarCollapsed
-                          ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH
-                          : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH
+                        ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH
+                        : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH
                     }
                   >
                     {/* Shared among all pages, load universal things here */}

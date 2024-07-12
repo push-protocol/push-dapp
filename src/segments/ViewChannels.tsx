@@ -286,7 +286,7 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
                     // }}
                     key={channel.channel}
                     self="stretch"
-                  // id={channel.channel}
+                    // id={channel.channel}
                   >
                     {!MaskedChannels[channel.channel] &&
                       channel &&
@@ -348,7 +348,7 @@ const SearchBar = styled.input`
     display: none;
   }
   &::placeholder {
-    letter-spacing: -0.019em;
+    letter-spacing: normal;
     color: #657795;
   }
   &:hover,

@@ -90,7 +90,8 @@ const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: strin
       >
         <Box
           display="flex"
-          gap="s2"
+          gap="s1"
+          alignItems="center"
         >
           <RewardsBell
             width={24}
@@ -246,7 +247,7 @@ function Header({ isDarkMode, darkModeToggle }) {
             >
               <Span
                 textTransform="capitalize"
-                spacing="-0.02em"
+                spacing="normal"
                 weight="normal"
                 // padding={isMobile ? '8px 7px' : '8px 20px'}
                 className="text"

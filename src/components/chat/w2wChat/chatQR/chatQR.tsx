@@ -201,7 +201,7 @@ const QRHeading = styled.div`
 `;
 
 const TextInfo = styled.div`
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
@@ -212,7 +212,7 @@ const TextInfo = styled.div`
 
 const NoteText = styled.p`
   margin: 0px;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 400;
   font-size: 14px;

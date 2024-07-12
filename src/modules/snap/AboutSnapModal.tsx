@@ -37,7 +37,7 @@ const AboutSnapModal = ({ onClose }) => {
           <H2V2
             fontSize="22px"
             fontWeight="500"
-            letterSpacing="-0.44px"
+            letterSpacing="normal"
             color={theme.snapPrimaryText}
           >
             Installing Push Snap

@@ -1,6 +1,11 @@
+import { blocksTheme } from 'blocks/theme/Theme';
+
 // Define what props.theme will look like
 const themeLight = {
   scheme: 'light',
+
+  // theme for the new blocks design system
+  blocksTheme: blocksTheme.light,
 
   // Default Theme
   default: {
@@ -310,6 +315,9 @@ const themeLight = {
 
 const themeDark = {
   scheme: 'dark',
+
+  // theme for the new blocks design system
+  blocksTheme: blocksTheme.dark,
 
   // Default Theme
   default: {

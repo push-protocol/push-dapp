@@ -6,6 +6,7 @@ import { useAccount } from 'hooks';
 
 //components
 import { Box, HoverableSVG, Refresh, Skeleton, Text } from 'blocks';
+import { UserRewardsDetailResponse } from 'queries';
 
 export type DashboardSectionPointsProps = {
   title: string;
@@ -15,6 +16,7 @@ export type DashboardSectionPointsProps = {
   refetch?: () => void;
   isLoading: boolean;
   isFetching?: boolean;
+  data?: UserRewardsDetailResponse;
 };
 
 const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
@@ -25,6 +27,7 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
   refetch,
   isLoading,
   isFetching,
+  data,
 }) => {
   const { isWalletConnected } = useAccount();
 
@@ -54,7 +57,7 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
           {title}
         </Text>
 
-        {refetch && isWalletConnected && (
+        {data && refetch && isWalletConnected && (
           <Box
             display="flex"
             alignItems="center"

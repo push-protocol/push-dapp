@@ -60,10 +60,10 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
         display="flex"
         flexDirection="column"
         border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
-        padding="s6"
+        padding={{ initial: 's6', ml: 's6 s4', tb: 's5', lp: 's5' }}
         borderRadius="r6"
         gap="s3"
-        width={{ initial: '27.35%', tb: 'fit-content', ml: '75%' }}
+        width={{ initial: '290px', ml: 'auto', tb: '278px', lp: '278px' }}
         css={css`
           flex-shrink: 0;
         `}

@@ -1,5 +1,5 @@
 import { css } from 'styled-components';
-import { deviceMediaQ, deviceSizes, breakpointMap } from './Blocks.constants';
+import { deviceMediaQ, deviceSizes, breakpointMap } from './theme';
 import {
   BlocksColors,
   Breakpoint,
@@ -12,8 +12,10 @@ import {
   ThemeMode,
   ThemeModeBorder,
   BorderValue,
-  RadiusType
+  BlocksRadiusType,
 } from './Blocks.types';
+import { ThemeColors } from './theme/Theme.types';
+import { newRadiusRegex, newSpacingRegex, oldRadiusRegex, oldSpacingRegex } from './Blocks.constants';
 
 /**
  * @param propName
@@ -23,7 +25,10 @@ import {
 const getCSSValue = (propName: CSSPropName, value: CSSPropValueType | undefined) => {
   if (propName === 'padding' || propName === 'margin') {
     if (typeof value === 'string') {
-      return value.replace(/\b(\w+)\b/g, 'var(--$1)');
+      return value.replace(
+        newSpacingRegex.test(value) ? newSpacingRegex : oldSpacingRegex,
+        (match) => `var(--${match})`
+      );
     }
   } else if (propName === 'gap' || propName === 'border-radius') {
     return `var(--${value})`;
@@ -110,7 +115,7 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
     tablet: '',
     laptop: '',
     laptopL: '',
-    desktop: ''
+    desktop: '',
   };
 
   data.forEach(({ prop, propName }) => {
@@ -135,10 +140,13 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
 };
 
 /**
+ * @deprecated
  * @param color
  * @returns color as a css variable: var(--primary)
+ *
+ * // TODO: Remove this function. We don't need it.
  */
-export const getBlocksColor = (mode: ThemeMode, color?: BlocksColors | ThemeModeColors) => {
+export const getBlocksColor = (mode: ThemeMode, color?: BlocksColors | ThemeModeColors | ThemeColors) => {
   // If color is not given return undefined, to avoid any breakages
   if (!color) return color;
 
@@ -172,12 +180,14 @@ export const getBlocksBorder = (mode: ThemeMode, border?: BorderValue | ThemeMod
  * @param radius
  * @returns
  */
-export const getBlocksBorderRadius = (radius?: RadiusType) => {
+export const getBlocksBorderRadius = (radius?: BlocksRadiusType) => {
   // If border-radius is not given return undefined, to avoid any breakages
   if (!radius) return radius;
 
-  return radius.replace(/\b(\w+)\b/g, 'var(--$1)');
+  const result = radius.replace(
+    newRadiusRegex.test(radius) ? newRadiusRegex : oldRadiusRegex,
+    (match) => `var(--${match})`
+  );
 
-  // If passed a design system border-radius then use radius as a variable
-  return `var(--${radius})`;
+  return result;
 };

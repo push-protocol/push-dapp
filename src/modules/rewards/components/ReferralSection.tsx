@@ -7,6 +7,7 @@ import { css } from 'styled-components';
 //hooks
 import { useAccount, useCopy } from 'hooks';
 import { useGetUserRewardsDetails } from 'queries';
+import { useRewardsAuth } from '../hooks/useRewardsAuth';
 
 //helpers
 import { walletToCAIP10 } from 'helpers/w2w';
@@ -15,25 +16,22 @@ import { getPreviewBasePath } from '../../../../basePath';
 // components
 import { Box, Button, Copy, Text, Referral, Skeleton } from 'blocks';
 
-export type ReferralSectionProps = {};
+export type ReferralSectionProps = {
+  handleUnlockProfile: () => void;
+};
 
-const ReferralSection: FC<ReferralSectionProps> = () => {
+const ReferralSection: FC<ReferralSectionProps> = ({ handleUnlockProfile }) => {
   const previewBasePath = getPreviewBasePath() || '';
   const baseUrl = window.location.origin + previewBasePath;
 
   const { isWalletConnected, account, connect } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
 
-  const {
-    data: userDetails,
-    isSuccess,
-    isLoading: isUserLoading,
-  } = useGetUserRewardsDetails({
+  const { data: userDetails, isLoading } = useGetUserRewardsDetails({
     caip10WalletAddress: caip10WalletAddress,
-    enabled: isWalletConnected,
   });
 
-  const isLoading = isUserLoading || !isSuccess;
+  const { status } = useRewardsAuth();
 
   const { textRef, isCopied, copyToClipboard } = useCopy();
 
@@ -78,41 +76,50 @@ const ReferralSection: FC<ReferralSectionProps> = () => {
           </Box>
         </Box>
 
-        {isWalletConnected && (
-          <Skeleton isLoading={isLoading}>
+        {isWalletConnected && userDetails && (
+          <Box
+            display="flex"
+            gap="s2"
+            flexDirection={{ tb: 'column', initial: 'row' }}
+          >
             <Box
+              minWidth={{ tb: '-webkit-fill-available', initial: '344px' }}
               display="flex"
-              gap="s2"
-              flexDirection={{ tb: 'column', initial: 'row' }}
+              alignItems="center"
+              padding="s3"
+              borderRadius="r3"
+              border={{ light: '1.5px solid gray-200', dark: 'none' }}
+              backgroundColor={{ light: 'transparent', dark: 'gray-800' }}
+              css={css`
+                white-space: nowrap;
+              `}
             >
-              <Box
-                minWidth={{ tb: '-webkit-fill-available', initial: '344px' }}
-                display="flex"
-                alignItems="center"
-                padding="s3"
-                borderRadius="r3"
-                border={{ light: '1.5px solid gray-200', dark: 'none' }}
-                backgroundColor={{ light: 'transparent', dark: 'gray-800' }}
-                css={css`
-                  white-space: nowrap;
-                `}
+              <Text
+                variant="bs-regular"
+                ref={textRef}
+                color={{ light: 'gray-1000', dark: 'gray-100' }}
               >
-                <Text
-                  variant="bs-regular"
-                  ref={textRef}
-                  color={{ light: 'gray-1000', dark: 'gray-100' }}
-                >
-                  {baseUrl}/points?ref={userDetails?.userId}
-                </Text>
-              </Box>
-              <Button
-                leadingIcon={<Copy />}
-                onClick={copyToClipboard}
-              >
-                {isCopied ? 'Copied' : 'Copy Link'}
-              </Button>
+                {baseUrl}/points?ref={userDetails?.userId}
+              </Text>
             </Box>
-          </Skeleton>
+            <Button
+              leadingIcon={<Copy />}
+              onClick={copyToClipboard}
+            >
+              {isCopied ? 'Copied' : 'Copy Link'}
+            </Button>
+          </Box>
+        )}
+
+        {isWalletConnected && status == 'error' && !isLoading && (
+          <Box>
+            <Button
+              size="small"
+              onClick={handleUnlockProfile}
+            >
+              Unlock Profile
+            </Button>
+          </Box>
         )}
 
         {!isWalletConnected && (
