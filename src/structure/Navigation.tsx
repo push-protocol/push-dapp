@@ -27,6 +27,68 @@ import { Box, PlusCircle, Text } from 'blocks';
 import Curve from 'blocks/icons/components/Curve';
 import { LOGO_ALIAS_CHAIN } from 'common';
 
+const AddNewChainNavigation = () => {
+  const { channelDetails } = useSelector((state: any) => state.admin);
+  const navigate = useNavigate();
+  const verifiedAliasChainIds =
+    channelDetails?.aliases?.filter((item) => item?.is_alias_verified)?.map((item) => item.alias_blockchain_id) || [];
+  return (
+    <Box
+      display="flex"
+      padding="spacing-none spacing-md"
+    >
+      <Curve
+        color="stroke-tertiary"
+        size={18}
+      />
+      <Box
+        display="flex"
+        alignItems="center"
+        margin="spacing-none spacing-none spacing-none spacing-xs"
+      >
+        {verifiedAliasChainIds.length > 0 &&
+          verifiedAliasChainIds.map((aliasChainId: number) => {
+            const LogoComponent = LOGO_ALIAS_CHAIN[aliasChainId];
+            return LogoComponent ? (
+              <Box
+                display="flex"
+                css={css`
+                  margin-left: -8px;
+                `}
+              >
+                <LogoComponent
+                  key={aliasChainId}
+                  width={24}
+                  height={24}
+                />
+              </Box>
+            ) : null;
+          })}
+      </Box>
+      <Box
+        display="flex"
+        gap="spacing-xxxs"
+        alignItems="center"
+        cursor="pointer"
+        onClick={() => navigate('/addNewChain')}
+      >
+        <PlusCircle
+          size={32}
+          color="icon-primary"
+        />
+
+        {!verifiedAliasChainIds?.length && (
+          <Text
+            variant="bm-semibold"
+            color="text-secondary"
+          >
+            Add New Chain
+          </Text>
+        )}
+      </Box>
+    </Box>
+  );
+};
 // Create Header
 function Navigation() {
   const {
@@ -46,7 +108,7 @@ function Navigation() {
 
   const theme = useTheme();
   const location = useLocation();
-  const navigate = useNavigate();
+
   const dispatch = useDispatch();
 
   const { canSend } = useSelector((state: any) => {
@@ -436,10 +498,6 @@ function Navigation() {
       const uid = section.data.uid;
       const isChannelPresent = channelDetails !== 'unfetched' && channelDetails != null;
 
-      const verifiedAliasChainIds =
-        channelDetails?.aliases?.filter((item) => item?.is_alias_verified)?.map((item) => item.alias_blockchain_id) ||
-        [];
-
       // if(uid === 2 ){
       //   if(section.opened)
       //   dispatch(setCommunicateOpen(true))
@@ -567,62 +625,7 @@ function Navigation() {
                   active={checkIfNavigationItemIsActive(section)}
                   bg={returnNavigationBgColor(checkIfNavigationItemIsActive(section))}
                 />
-                {isChannelPresent && data.name === channelDetails.name && (
-                  <Box
-                    display="flex"
-                    padding="spacing-none spacing-md"
-                  >
-                    <Curve
-                      color="stroke-tertiary"
-                      size={18}
-                    />
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      margin="spacing-none spacing-none spacing-none spacing-xs"
-                    >
-                      {verifiedAliasChainIds.length > 0 &&
-                        verifiedAliasChainIds.map((aliasChainId: number) => {
-                          const LogoComponent = LOGO_ALIAS_CHAIN[aliasChainId];
-                          return LogoComponent ? (
-                            <Box
-                              display="flex"
-                              css={css`
-                                margin-left: -8px;
-                              `}
-                            >
-                              <LogoComponent
-                                key={aliasChainId}
-                                width={24}
-                                height={24}
-                              />
-                            </Box>
-                          ) : null;
-                        })}
-                    </Box>
-                    <Box
-                      display="flex"
-                      gap="spacing-xxxs"
-                      alignItems="center"
-                      cursor="pointer"
-                      onClick={() => navigate('/addNewChain')}
-                    >
-                      <PlusCircle
-                        size={32}
-                        color="icon-primary"
-                      />
-
-                      {!verifiedAliasChainIds?.length && (
-                        <Text
-                          variant="bm-semibold"
-                          color="text-secondary"
-                        >
-                          Add New Chain
-                        </Text>
-                      )}
-                    </Box>
-                  </Box>
-                )}
+                {isChannelPresent && data.name === channelDetails.name && <AddNewChainNavigation />}
               </SectionInnerGroupContainer>
 
               {/* { 
