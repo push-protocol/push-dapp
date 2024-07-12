@@ -25,7 +25,7 @@ import { appConfig } from 'config/index.js';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { Box, PlusCircle, Text } from 'blocks';
 import Curve from 'blocks/icons/components/Curve';
-import { LOGO_ALIAS_CHAIN } from 'modules/dashboard/configs';
+import { LOGO_ALIAS_CHAIN } from 'common';
 
 // Create Header
 function Navigation() {
@@ -53,7 +53,6 @@ function Navigation() {
     return state.canSend;
   });
 
-  console.debug(channelDetails, 'channel');
   useEffect(() => {
     if (!navigationSetup) return;
 
@@ -580,17 +579,24 @@ function Navigation() {
                     <Box
                       display="flex"
                       alignItems="center"
+                      margin="spacing-none spacing-none spacing-none spacing-xs"
                     >
                       {verifiedAliasChainIds.length > 0 &&
-                        //fix the design and optimise
-                        [80002, 11155111, 97].map((aliasChainId: number) => {
+                        verifiedAliasChainIds.map((aliasChainId: number) => {
                           const LogoComponent = LOGO_ALIAS_CHAIN[aliasChainId];
                           return LogoComponent ? (
-                            <LogoComponent
-                              key={aliasChainId}
-                              width={24}
-                              height={24}
-                            />
+                            <Box
+                              display="flex"
+                              css={css`
+                                margin-left: -8px;
+                              `}
+                            >
+                              <LogoComponent
+                                key={aliasChainId}
+                                width={24}
+                                height={24}
+                              />
+                            </Box>
                           ) : null;
                         })}
                     </Box>

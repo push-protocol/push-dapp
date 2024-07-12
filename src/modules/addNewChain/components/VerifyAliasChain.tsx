@@ -35,7 +35,6 @@ const VerifyAliasChain: FC<VerifyAliasChainProps> = ({ alias }) => {
       },
       {
         onSuccess: (response) => {
-          console.debug(response, 'response');
           toast.showMessageToast({
             toastTitle: 'Success',
             toastMessage: 'Verification Successful',

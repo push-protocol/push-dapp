@@ -8,6 +8,9 @@ import * as yup from 'yup';
 import useToast from 'hooks/useToast';
 import { useInitiateNewChain } from 'queries';
 
+import { chainLabels } from '../AddNewChain.constants';
+import { LOGO_ALIAS_CHAIN } from 'common';
+
 // Components
 import { Box, Button, Select, TextInput } from 'blocks';
 
@@ -16,8 +19,6 @@ import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 import { NewChainAddressValue } from '../AddNewChain.types';
 import { UserStoreType } from 'types';
-import { LOGO_ALIAS_CHAIN } from 'modules/dashboard/configs';
-import { chainLabels } from '../AddNewChain.constants';
 
 export type NewAddressProps = {
   setAddress: React.Dispatch<React.SetStateAction<string>>;
@@ -59,12 +60,11 @@ const NewAddress: FC<NewAddressProps> = ({ setAddress, handleNextStep }) => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      setAddress(convertAddressToAddrCaip(values.alias, 80002));
+      setAddress(convertAddressToAddrCaip(values.alias, parseInt(selectedChainValue)));
       handleInitiate(values.alias);
     },
   });
 
-  //convert to caip before passing the address
   const handleInitiate = (alias: string) => {
     initiateNewChain(
       {
@@ -119,12 +119,15 @@ const NewAddress: FC<NewAddressProps> = ({ setAddress, handleNextStep }) => {
               error={formik.touched.alias && Boolean(formik.errors.alias)}
               errorMessage={formik.touched.alias ? formik.errors.alias : ''}
             />
-            <Box width={{ dp: 'auto', ml: '100%' }}>
+            <Box
+              width={{ dp: 'auto', ml: '100%' }}
+              margin="spacing-xxxs spacing-none spacing-none spacing-none"
+            >
+              {/* add formik */}
               <Select
                 options={selectOptions}
                 selectedValue={selectedChainValue}
                 onSelect={(value) => {
-                  console.debug(value, 'value');
                   setSelectedChainValue(value);
                 }}
               />
@@ -143,8 +146,3 @@ const NewAddress: FC<NewAddressProps> = ({ setAddress, handleNextStep }) => {
 };
 
 export { NewAddress };
-
-//error messages fix
-// navigation
-//fix import order
-//select button

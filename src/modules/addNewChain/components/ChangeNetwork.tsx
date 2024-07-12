@@ -14,7 +14,6 @@ const ChangeNetwork: FC<ChangeNetworkProps> = ({ handleNextStep, alias }) => {
   const aliasChainId = parseInt(alias.split(':')[1]);
 
   useEffect(() => {
-    console.debug(chainId === aliasChainId, chainId, aliasChainId);
     if (chainId === aliasChainId) {
       handleNextStep();
     }
@@ -32,7 +31,7 @@ const ChangeNetwork: FC<ChangeNetworkProps> = ({ handleNextStep, alias }) => {
       >
         Switch to the desired chain in your wallet to add it to your channel.
       </Text>
-      <Button onClick={() => switchChain(80002)}>Change Network</Button>
+      <Button onClick={() => switchChain(aliasChainId)}>Change Network</Button>
     </Box>
   );
 };

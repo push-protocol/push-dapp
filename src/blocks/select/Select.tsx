@@ -1,15 +1,10 @@
 import styled, { FlattenSimpleInterpolation, css } from 'styled-components';
-import { textVariants } from '../text';
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxPopover,
-  ComboboxList,
-  ComboboxOption,
-  ComboboxOptionText,
-} from '@reach/combobox';
+import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from '@reach/combobox';
 import '@reach/combobox/styles.css';
+
+import { textVariants } from '../text';
 import { ArrowDown } from '../icons';
+import { Box } from 'blocks/box';
 
 export type SelectOption = {
   value: string;
@@ -69,7 +64,7 @@ const StyledBox = styled.div<{
         border: 1.5px solid var(--components-inputs-stroke-hover, #c4cbd5);
       }
 
-      &:focus {
+      &:focus-within {
         border: 1.5px solid
           var(--components-inputs-stroke-${focusState}, ${colors[`components-inputs-stroke-${focusState}`]});
         outline: none;
@@ -112,20 +107,25 @@ const StyledBox = styled.div<{
 
 const StyledPopover = styled(ComboboxPopover)`
   position: absolute;
+  margin: var(--spacing-xxs) var(--spacing-none) var(--spacing-none) var(--spacing-none);
   padding: var(--spacing-xxs, 8px);
   border-radius: var(--radius-xs, 12px);
   border: var(--border-sm, 1px) solid var(--stroke-secondary, #eaebf2);
   background: var(--surface-primary, #fff);
+  overflow: hidden auto;
+  max-height: 20rem;
+  width: 100%;
 `;
 
-const StyledList = styled(ComboboxList)`
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs, 12px);
-`;
 const StyledCombobox = styled(Combobox)`
   position: relative;
   width: 100%;
+`;
+const StyledList = styled(ComboboxList)`
+  display: flex;
+
+  flex-direction: column;
+  gap: var(--spacing-xs, 12px);
 `;
 const StyledOption = styled(ComboboxOption)`
   display: flex;
@@ -135,7 +135,6 @@ const StyledOption = styled(ComboboxOption)`
   color: var(--components-dropdown-text-default, #17181b);
   text-align: center;
   font-family: var(--font-family);
-  white-space: nowrap;
   font-size: ${textVariants['bs-regular'].fontSize};
   font-style: ${textVariants['bs-regular'].fontStyle};
   font-weight: ${textVariants['bs-regular'].fontWeight};
@@ -160,9 +159,7 @@ const Select: React.FC<SelectProps> = ({
   success,
   disabled,
 }) => {
-  // check if there is other way to get value
   const selectedOption = options.find((option) => option.value === selectedValue);
-  console.debug(selectedOption, 'option');
   return (
     <Container css={css}>
       {/* label will be added here  */}
@@ -170,7 +167,6 @@ const Select: React.FC<SelectProps> = ({
       <StyledCombobox
         aria-labelledby="select"
         openOnFocus
-        //not working because of lable issue
         onSelect={(value: string) => onSelect?.(value)}
       >
         <StyledBox
@@ -178,13 +174,17 @@ const Select: React.FC<SelectProps> = ({
           success={success}
           disabled={disabled}
         >
-          {/* icon not working */}
-          {/* {selectedOption?.icon} */}
-          <ComboboxInput
-            disabled={disabled}
-            placeholder={placeholder}
-            value={selectedOption?.label}
-          />
+          <Box
+            display="flex"
+            gap="spacing-xxs"
+          >
+            {selectedOption?.icon}
+            <ComboboxInput
+              disabled={disabled}
+              placeholder={placeholder}
+              value={selectedOption?.label}
+            />
+          </Box>
           <ArrowDown
             size={11}
             color="icon-tertiary"
@@ -195,10 +195,11 @@ const Select: React.FC<SelectProps> = ({
           <StyledList>
             {options.map((option) => (
               <StyledOption
-                value={option.label}
+                value={option.value}
                 key={option.value}
               >
-                {option?.icon} <ComboboxOptionText />
+                {option?.icon}
+                {option.label}
               </StyledOption>
             ))}
           </StyledList>

@@ -442,6 +442,7 @@ const HeaderTag = styled(Item)`
   }
   .text {
     font-size: 18px;
+    font-weight: 500;
 
     @media (max-width: 993px) {
       font-size: 20px;

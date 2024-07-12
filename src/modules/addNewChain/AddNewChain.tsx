@@ -18,7 +18,6 @@ import { UserStoreType } from 'types';
 
 export type AddNewChainProps = {};
 
-let restrictedForwardSteps = [1, 2];
 const completedSteps = [0];
 const AddNewChain: FC<AddNewChainProps> = () => {
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
@@ -32,8 +31,7 @@ const AddNewChain: FC<AddNewChainProps> = () => {
       setActiveStepIndex(activeStepIndex + 1);
     }
   };
-  restrictedForwardSteps = restrictedForwardSteps.filter((item) => item !== activeStepIndex);
-  console.debug(restrictedForwardSteps);
+
   return (
     <Box
       display="flex"
@@ -87,9 +85,7 @@ const AddNewChain: FC<AddNewChainProps> = () => {
         steps={addNewChainSteps}
         completedSteps={completedSteps}
         setActiveStepIndex={setActiveStepIndex}
-        config={{ restrictedForwardSteps: restrictedForwardSteps }}
       />
-      {/* check if we need formik */}
       {activeStepIndex === 0 && (
         <NewAddress
           setAddress={setAlias}

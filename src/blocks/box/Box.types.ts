@@ -2,7 +2,6 @@ import { CSSProperties, ReactNode } from 'react';
 
 import {
   BlocksColors,
-  BorderRadiusType,
   BorderValue,
   BlocksRadiusType,
   ResponsiveProp,
@@ -13,7 +12,7 @@ import {
   BlocksGapType,
 } from '../Blocks.types';
 import { FlattenSimpleInterpolation } from 'styled-components';
-import { Spacing, ThemeColors } from 'blocks/theme/Theme.types';
+import { ThemeColors } from 'blocks/theme/Theme.types';
 
 export type BoxResponsiveProps = {
   /* Sets align-items css property */
