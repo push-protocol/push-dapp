@@ -174,7 +174,6 @@ const CreateChannel = () => {
             // We are not sure about this error so we cant display (EDGE CASE)
             updateChannelCreationError(2, 'Transaction failed due to one of the following reasons:');
           } else {
-            console.log('Tx Successful', response);
 
             updateProgressState(
               80,
@@ -209,7 +208,7 @@ const CreateChannel = () => {
             setProgressState(progressInitialState)
           } else {
             // Other unknown error
-            console.error('Error --> %o', error);
+            console.error('Error in creating channel--> %o', error);
             console.error({ error });
             updateProgressState(
               0,
@@ -245,7 +244,6 @@ const CreateChannel = () => {
 
     // Calculate the approval amount of the user
     const approvedTokenAmount = await checkPushTokenApprovalFunc({ provider, account });
-    console.log('Approved Token Amount >>', approvedTokenAmount);
 
     let input = {
       name: channelInfoFormik.values.channelName,

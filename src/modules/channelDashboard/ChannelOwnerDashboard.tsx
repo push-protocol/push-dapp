@@ -32,6 +32,8 @@ import { Button } from 'components/SharedStyling';
 import EditChannel from 'modules/editChannel/EditChannel';
 import useModalBlur from 'hooks/useModalBlur';
 import { AppContext } from 'contexts/AppContext';
+import { CreateChannel } from 'modules/createChannel';
+import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 // Constants
 // interval after which alias details api will be called, in seconds
@@ -201,10 +203,11 @@ const ChannelOwnerDashboard = () => {
           height="fit-content"
         >
           {/* display the create channel page if there are no details */}
-          {!channelDetails && processingState === 0 && <CreateChannelModule />}
+          {/* {!channelDetails && processingState === 0 && <CreateChannelModule />} */}
+          {!channelDetails && processingState === 0 && <CreateChannel />}
 
           {isChannelDetails && processingState !== null && (
-            <>
+            <Container>
               {editChannel ? (
                 <EditChannel
                   closeEditChannel={closeEditChannel}
@@ -216,10 +219,8 @@ const ChannelOwnerDashboard = () => {
                 <>
                   {channelDetails && !isMobile && (
                     <ItemHV2
-                      position="absolute"
-                      top="0"
-                      right="0"
                       zIndex="1"
+                      justifyContent="end"
                     >
                       {!isChannelExpired && onCoreNetwork && (
                         <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>
@@ -252,7 +253,7 @@ const ChannelOwnerDashboard = () => {
                   )}
                 </>
               )}
-            </>
+            </Container>
           )}
 
           {/* processing box */}
@@ -271,6 +272,47 @@ const ChannelOwnerDashboard = () => {
 };
 
 export default ChannelOwnerDashboard;
+
+const Container = styled(ItemVV2)`
+  align-items: center;
+  align-self: center;
+  background: ${(props) => props.theme.default.bg};
+  display: flex;
+  flex-direction: column;
+  flex: initial;
+  justify-content: center;
+  max-width: 1200px;
+  border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}
+    ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+  width: calc(
+    100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT} -
+      ${GLOBALS.ADJUSTMENTS.PADDING.HUGE} - ${GLOBALS.ADJUSTMENTS.PADDING.HUGE}
+  );
+  padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+  position: relative;
+  margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
+
+  @media ${device.laptop} {
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
+    width: calc(
+      100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} -
+        ${GLOBALS.ADJUSTMENTS.PADDING.BIG} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG}
+    );
+  }
+
+  @media ${device.mobileL} {
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.BIG_MODULES.MOBILE};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+    width: calc(
+      100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} -
+        ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
+    );
+    min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.MOBILE.TOP});
+    overflow-y: scroll;
+    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} 0 0;
+  }
+`;
 
 const DestroyChannelBtn = styled(ButtonV2)`
   height: ${(props) => props.height || '100%'};

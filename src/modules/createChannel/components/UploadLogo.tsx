@@ -52,7 +52,6 @@ const UploadLogo: FC<UploadLogoProps> = ({
 
   // handle Input file type
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("File change")
     const file = e.currentTarget.files?.[0];
     setView(false)
     setCroppedImage(undefined)

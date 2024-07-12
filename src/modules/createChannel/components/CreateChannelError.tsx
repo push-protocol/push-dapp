@@ -7,10 +7,10 @@ import { Box, ErrorFilled, Text } from 'blocks';
 // Types
 import { ChannelCreationError } from '../CreateChannel.types';
 
-type CreateChannelError = {
+type CreateChannelErrorProp = {
   channelCreationError: ChannelCreationError;
 }
-const CreateChannelError: FC<CreateChannelError> = ({
+const CreateChannelError: FC<CreateChannelErrorProp> = ({
   channelCreationError
 }) => {
   return (

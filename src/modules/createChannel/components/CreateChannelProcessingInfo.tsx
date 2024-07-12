@@ -45,7 +45,7 @@ const CreateChannelProcessingInfo: FC<CreateChannelProcessingInfoProps> = ({
       </Box>
 
       <Box display='flex' flexDirection='row' alignItems='center' gap='s1'>
-        <Spinner type={SPINNER_TYPE.PROCESSING} size={16} />
+        <Spinner type={SPINNER_TYPE.PROCESSING} size={16} color="#D548EC" />
         <Text variant="bs-semibold" color={{ light: 'gray-800', dark: 'gray-300' }}>
           {progressState.processingInfo}
         </Text>
