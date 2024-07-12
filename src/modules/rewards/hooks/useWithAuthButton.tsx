@@ -16,7 +16,13 @@ import { UserStoreType } from 'types';
 // components
 import { Button } from 'blocks';
 
-export const useAuthWithButton = ({ onSuccess }: { onSuccess: (userDetails: UserRewardsDetailResponse) => void }) => {
+export const useAuthWithButton = ({
+  onSuccess,
+  isLoading,
+}: {
+  onSuccess: (userDetails: UserRewardsDetailResponse) => void;
+  isLoading: boolean;
+}) => {
   const [isWalletConnectedAndProfileUnlocked, setIsWalletConnectedAndProfileUnlocked] = useState(false);
   const [showAuth, setShowAuth] = useState(false); // Track button click
 
@@ -33,15 +39,10 @@ export const useAuthWithButton = ({ onSuccess }: { onSuccess: (userDetails: User
 
   const isAuthenticated = useMemo(() => {
     return (
-      showAuth &&
-      (isSuccess ||
-        (userDetails &&
-          isUserProfileUnlocked &&
-          handleVerify &&
-          userPushSDKInstance &&
-          !userPushSDKInstance.readmode()))
+      isSuccess ||
+      (userDetails && isUserProfileUnlocked && handleVerify && userPushSDKInstance && !userPushSDKInstance.readmode())
     );
-  }, [showAuth, isSuccess, userDetails, isUserProfileUnlocked, handleVerify, userPushSDKInstance]);
+  }, [isSuccess, userDetails, isUserProfileUnlocked, handleVerify, userPushSDKInstance]);
 
   const handleSuccess = (userDetails: UserRewardsDetailResponse) => {
     setIsWalletConnectedAndProfileUnlocked(true);
@@ -50,7 +51,7 @@ export const useAuthWithButton = ({ onSuccess }: { onSuccess: (userDetails: User
   };
 
   useEffect(() => {
-    if (isAuthenticated && userDetails) {
+    if (showAuth && isAuthenticated && userDetails) {
       handleSuccess(userDetails);
       console.log('handle Success');
     }
@@ -63,12 +64,13 @@ export const useAuthWithButton = ({ onSuccess }: { onSuccess: (userDetails: User
           variant="tertiary"
           size="small"
           onClick={handleAuthModal}
+          disabled={isLoading}
         >
           Verify
         </Button>
       </>
     ),
-    [isWalletConnected, isAuthModalVisible]
+    [isWalletConnected, isAuthModalVisible, isLoading]
   );
 
   return {
