@@ -7,7 +7,7 @@ import { MdError } from 'react-icons/md';
 import { usePointsVaultUserLogin } from 'queries';
 import useToast from 'hooks/useToast';
 
-import { Box, Button, TextInput, PushLogo, Text, BellSimple } from 'blocks';
+import { Box, Button, TextInput, PushLogo, Text } from 'blocks';
 
 import { PointsVaultView, VaultLoginformValues } from '../PointsVault.types';
 
