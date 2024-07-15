@@ -7,7 +7,7 @@ import { MdError } from 'react-icons/md';
 import { usePointsVaultUserLogin } from 'queries';
 import useToast from 'hooks/useToast';
 
-import { Box, Button, TextInput, PushLogo, Text } from 'blocks';
+import { Box, Button, TextInput, PushLogo, Text, BellSimple } from 'blocks';
 
 import { PointsVaultView, VaultLoginformValues } from '../PointsVault.types';
 
@@ -110,25 +110,77 @@ const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveView }) =>
               gap="s3"
               width="100%"
             >
-              <TextInput
-                placeholder="User"
-                value={formik.values.username}
-                disabled={isPending}
-                onChange={formik.handleChange('username')}
-                error={formik.touched.username && Boolean(formik.errors.username)}
-                errorMessage={formik.touched.username ? formik.errors.username : ''}
-              />
-
-              <TextInput
-                type="password"
-                placeholder="Password"
-                disabled={isPending}
-                value={formik.values.password}
-                onChange={formik.handleChange('password')}
-                error={formik.touched.password && Boolean(formik.errors.password)}
-                errorMessage={formik.touched.password ? formik.errors.password : ''}
-              />
-
+              <Box width="100%">
+                <TextInput
+                  placeholder="User"
+                  value={formik.values.username}
+                  disabled={isPending}
+                  onChange={formik.handleChange('username')}
+                  error={formik.touched.username && Boolean(formik.errors.username)}
+                  errorMessage={formik.touched.username ? formik.errors.username : ''}
+                  totalCount={30}
+                  description="yhtis is hint"
+                  onClear={() => {}}
+                  icon={<BellSimple />}
+                />
+              </Box>
+              <Box width="100%">
+                <TextInput
+                  placeholder="User"
+                  value={formik.values.username}
+                  disabled={isPending}
+                  onChange={formik.handleChange('username')}
+                  error={true}
+                  errorMessage={'this is error'}
+                  onClear={() => {}}
+                  label={'input'}
+                  totalCount={30}
+                  description="yhtis is hint"
+                  icon={<BellSimple />}
+                />
+              </Box>
+              <Box width="100%">
+                <TextInput
+                  placeholder="User"
+                  value={formik.values.username}
+                  disabled={isPending}
+                  onChange={formik.handleChange('username')}
+                  success={true}
+                  label={'input'}
+                  required={true}
+                  totalCount={30}
+                  description="yhtis is hint"
+                  onClear={() => {}}
+                  icon={<BellSimple />}
+                />
+              </Box>
+              <Box width="100%">
+                <TextInput
+                  placeholder="User"
+                  value={formik.values.username}
+                  onChange={formik.handleChange('username')}
+                  disabled={true}
+                  error={formik.touched.username && Boolean(formik.errors.username)}
+                  errorMessage={formik.touched.username ? formik.errors.username : ''}
+                  description="yhtis is hint"
+                  onClear={() => {}}
+                  required={true}
+                  totalCount={30}
+                  label={'input'}
+                  icon={<BellSimple />}
+                />
+              </Box>
+              <Box width="100%">
+                <TextInput
+                  type="password"
+                  placeholder="Password"
+                  disabled={isPending}
+                  value={formik.values.password}
+                  onChange={formik.handleChange('password')}
+                  error={formik.touched.password && Boolean(formik.errors.password)}
+                  errorMessage={formik.touched.password ? formik.errors.password : ''}
+                />
+              </Box>
               <Box margin="s6 s0 s0 s0">
                 <Button disabled={isPending}>{isPending ? 'Authenticating' : 'Login'}</Button>
               </Box>
