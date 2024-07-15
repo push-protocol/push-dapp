@@ -2,11 +2,11 @@ import { FC } from 'react';
 import { IllustrationWrapper } from '../IllustrationWrapper';
 import { IllustrationProps } from '../Illustrations.types';
 
-const Optimisim: FC<IllustrationProps> = (allProps) => {
+const Optimism: FC<IllustrationProps> = (allProps) => {
   const { svgProps: props, ...restProps } = allProps;
   return (
     <IllustrationWrapper
-      componentName="Optimisim"
+      componentName="Optimism"
       illustration={
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -46,4 +46,4 @@ const Optimisim: FC<IllustrationProps> = (allProps) => {
   );
 };
 
-export default Optimisim;
+export default Optimism;

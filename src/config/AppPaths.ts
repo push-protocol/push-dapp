@@ -27,6 +27,7 @@ enum APP_PATHS {
   Support = '/support',
   UserSettings = '/user/settings',
   ChannelSettings = '/channel/settings',
+  ChannelDashboard = '/channel/dashboard',
   ClaimGalxe = 'claim/galxe'
 }
 
