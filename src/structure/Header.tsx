@@ -216,7 +216,21 @@ function Header({ isDarkMode, darkModeToggle }) {
                 <RewardsHeaderLink />
               </Box> */}
               <ChainIndicator isDarkMode={isDarkMode} />
-              <Profile isDarkMode={isDarkMode} />
+              <Box
+                display="flex"
+                flexDirection="row"
+                gap="spacing-sm"
+                alignItems="center"
+              >
+                <Profile isDarkMode={isDarkMode} />
+                <DarkModeSwitch
+                  checked={isDarkMode}
+                  onChange={darkModeToggle}
+                  size={28}
+                  sunColor="#494D5F"
+                  moonColor="#787E99"
+                />
+              </Box>
 
               <NavMenuInner tabletAlign="flex-start">
                 <MobileNavigation
@@ -257,7 +271,11 @@ function Header({ isDarkMode, darkModeToggle }) {
               </Span>
             </HeaderTag>
           )}
-
+        </Box>
+        <Box
+          display="flex"
+          alignItems="center"
+        >
           <Suspense
             fallback={
               <Spinner
@@ -267,31 +285,28 @@ function Header({ isDarkMode, darkModeToggle }) {
               />
             }
           >
-            <Box display={{ ml: 'block', dp: 'none' }}>
+            <Box display="block">
               <RewardsHeaderLink caip10WalletAddress={caip10WalletAddress} />
             </Box>
           </Suspense>
-        </Box>
-        <Box
-          display="flex"
-          alignItems="center"
-        >
-          <Box display={{ ml: 'none', dp: 'block' }}>
-            <RewardsHeaderLink caip10WalletAddress={caip10WalletAddress} />
+          <Box display={{ lp: 'none', dp: 'block' }}>
+            {isActive && !showLoginControls && !error && (
+              <DarkModeSwitch
+                style={{ margin: '0 1rem' }}
+                checked={isDarkMode}
+                onChange={darkModeToggle}
+                size={28}
+                sunColor="#494D5F"
+                moonColor="#787E99"
+              />
+            )}
           </Box>
-          {isActive && !showLoginControls && !error && (
-            <DarkModeSwitch
-              style={{ margin: '0 1rem' }}
-              checked={isDarkMode}
-              onChange={darkModeToggle}
-              size={28}
-              sunColor="#494D5F"
-              moonColor="#787E99"
-            />
-          )}
 
           {isActive && !error && (
-            <RightBarMobile>
+            <Box
+              display={{ lp: 'flex', dp: 'none' }}
+              flexDirection="row"
+            >
               <Button
                 bg="transparent"
                 padding="5px"
@@ -305,7 +320,7 @@ function Header({ isDarkMode, darkModeToggle }) {
                   color={theme.headerIconsBg}
                 />
               </Button>
-            </RightBarMobile>
+            </Box>
           )}
 
           <ItemH
@@ -356,22 +371,13 @@ const Logo = styled.img`
 const RightBarContainer = styled(ItemH)``;
 
 const RightBarDesktop = styled(ItemH)`
-  @media (max-width: 992px) {
-    display: none;
-  }
-`;
-
-const RightBarMobile = styled(ItemH)`
-  max-width: 40px !important;
-  margin: 5px 0px 5px -5px;
-
-  @media (min-width: 993px) {
+  @media (max-width: 1024px) {
     display: none;
   }
 `;
 
 const LogoMobile = styled(ItemH)`
-  @media (min-width: 993px) {
+  @media (min-width: 1024px) {
     display: none;
   }
 `;
@@ -394,7 +400,7 @@ const NavMenuContainer = styled(Item)`
   box-shadow: 0 0 0 10000px rgba(0, 0, 0, 0.9);
   padding: 30px 30px;
 
-  @media (min-width: 993px) {
+  @media (min-width: 1024px) {
     display: none;
   }
 `;
@@ -421,17 +427,17 @@ const NavMenuInner = styled(Item)`
 const HeaderTag = styled(Item)`
   flex: 1;
   margin: 0px 5px;
-  @media (min-width: 993px) {
+  @media (min-width: 1024px) {
     margin: 5px 10px;
   }
 
-  @media (max-width: 993px) {
+  @media (max-width: 1024px) {
     margin: 5px 0px;
   }
   .text {
     font-size: 24px;
 
-    @media (max-width: 993px) {
+    @media (max-width: 1024px) {
       font-size: 20px;
     }
   }
