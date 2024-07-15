@@ -102,7 +102,7 @@ const StakeFees: FC<StakeFeesProps> = ({
               color='text-primary'
               display={{ ml: 'none', dp: 'block' }}
             >
-              Amout For Staking
+              Amount for Staking
             </Text>
 
             <Text

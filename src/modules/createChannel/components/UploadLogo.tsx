@@ -146,12 +146,12 @@ const UploadLogo: FC<UploadLogoProps> = ({
             <Box display='flex' gap='s1'>
               <Text
                 variant="bs-semibold"
-                color={{ light: 'gray-1000', dark: 'gray-600' }}
+                color='text-tertiary'
               > Drag and Drop or</Text>
               <label htmlFor="file-upload">
                 <Text
                   variant="bs-semibold"
-                  color={{ light: 'pink-600', dark: 'pink-400' }}
+                  color='text-brand-medium'
                   css={css`cursor:pointer;`}
                 >
                   Browse to Choose
