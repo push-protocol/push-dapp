@@ -118,58 +118,9 @@ const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveView }) =>
                   onChange={formik.handleChange('username')}
                   error={formik.touched.username && Boolean(formik.errors.username)}
                   errorMessage={formik.touched.username ? formik.errors.username : ''}
-                  totalCount={30}
-                  description="yhtis is hint"
-                  onClear={() => {}}
-                  icon={<BellSimple />}
                 />
               </Box>
-              <Box width="100%">
-                <TextInput
-                  placeholder="User"
-                  value={formik.values.username}
-                  disabled={isPending}
-                  onChange={formik.handleChange('username')}
-                  error={true}
-                  errorMessage={'this is error'}
-                  onClear={() => {}}
-                  label={'input'}
-                  totalCount={30}
-                  description="yhtis is hint"
-                  icon={<BellSimple />}
-                />
-              </Box>
-              <Box width="100%">
-                <TextInput
-                  placeholder="User"
-                  value={formik.values.username}
-                  disabled={isPending}
-                  onChange={formik.handleChange('username')}
-                  success={true}
-                  label={'input'}
-                  required={true}
-                  totalCount={30}
-                  description="yhtis is hint"
-                  onClear={() => {}}
-                  icon={<BellSimple />}
-                />
-              </Box>
-              <Box width="100%">
-                <TextInput
-                  placeholder="User"
-                  value={formik.values.username}
-                  onChange={formik.handleChange('username')}
-                  disabled={true}
-                  error={formik.touched.username && Boolean(formik.errors.username)}
-                  errorMessage={formik.touched.username ? formik.errors.username : ''}
-                  description="yhtis is hint"
-                  onClear={() => {}}
-                  required={true}
-                  totalCount={30}
-                  label={'input'}
-                  icon={<BellSimple />}
-                />
-              </Box>
+
               <Box width="100%">
                 <TextInput
                   type="password"

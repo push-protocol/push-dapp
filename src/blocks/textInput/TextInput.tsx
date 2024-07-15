@@ -81,14 +81,13 @@ const StyledTextInput = styled.div<{
         border: none;
         background: transparent;
         &:focus,
-        :hover,
         :disabled {
           outline: none;
         }
       }
 
       &:hover {
-        outline: none;
+        border: 1.5px solid var(--components-inputs-stroke-hover, ${colors['components-inputs-stroke-hover']});
       }
 
       &:focus-within {
