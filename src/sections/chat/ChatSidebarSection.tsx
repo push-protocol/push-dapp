@@ -215,6 +215,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, chatId, selectedChatId, setS
 
             {!searchedUser && (
               <Button
+                block
                 variant="secondary"
                 onClick={() => {
                   showCreateGroupModal();

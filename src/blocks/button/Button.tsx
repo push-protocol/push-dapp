@@ -24,6 +24,8 @@ export type ButtonProps = {
   trailingIcon?: ReactNode;
   /* Sets the variant of the button */
   variant?: ButtonVariant;
+  /* Button takes the full width if enabled */
+  block?: boolean;
 } & TransformedHTMLAttributes<HTMLButtonElement>;
 
 const StyledButton = styled.button<ButtonProps & ModeProp>`
@@ -42,6 +44,9 @@ const StyledButton = styled.button<ButtonProps & ModeProp>`
     align-items: center;
     justify-content: center;
   }
+
+  /* Prop specific CSS */
+  ${({ block }) => block && 'width: 100%;'}
 
   /* Button variant CSS styles */
   ${({ mode, variant }) => getButtonVariantStyles(mode, variant || 'primary')}
