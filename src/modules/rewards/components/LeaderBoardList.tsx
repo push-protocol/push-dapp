@@ -1,7 +1,6 @@
 // React and other libraries
 import { FC } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
-import { css } from 'styled-components';
 
 //Hooks
 import { useGetRewardsLeaderboard, ModelledLeaderBoardUser } from 'queries';
@@ -42,12 +41,8 @@ const LeaderBoardList: FC = () => {
         <LeaderboardListColumns />
         <Box
           height="calc(100vh - 356px)"
-          overflow="hidden"
-          css={css`
-            &:hover {
-              overflow: auto;
-            }
-          `}
+          overflow="auto"
+          customScrollbar={true}
         >
           <InfiniteScroll
             pageStart={0}

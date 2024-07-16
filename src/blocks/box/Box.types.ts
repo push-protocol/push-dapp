@@ -75,6 +75,8 @@ export type BoxComponentProps = {
   css?: FlattenSimpleInterpolation;
   /* Child react nodes rendered by Box */
   children?: ReactNode;
+  // option to add custom scroll bar to box
+  customScrollbar?: boolean;
 };
 
 export type BoxResponsiveCSSProperties =
