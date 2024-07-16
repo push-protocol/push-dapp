@@ -399,9 +399,10 @@ const NavMenuContainer = styled(Item)`
   width: 250px;
   box-shadow: 0 0 0 10000px rgba(0, 0, 0, 0.9);
   padding: 30px 30px;
+  display: none;
 
-  @media (min-width: 1024px) {
-    display: none;
+  @media (max-width: 1024px) {
+    display: block;
   }
 `;
 
