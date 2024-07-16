@@ -34,6 +34,7 @@ export const config = {
     123, // fuse testnet
     111557560, // Cyber testnet
     59141, // Linea testnet
+    84532, //base sepolia
   ],
 
   /**
@@ -186,5 +187,12 @@ export const CHAIN_DETAILS = {
     chainid: 59141,
     rpcUrl: 'https://rpc.sepolia.linea.build',
     commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
+  },
+  84532: {
+    label: 'Base Sepolia',
+    name: 'BASE_TESTNET',
+    chainid: 84532,
+    rpcUrl: 'https://sepolia.base.org/',
+    commAddress: '0x6e489B7af21cEb969f49A90E481274966ce9D74d',
   },
 };

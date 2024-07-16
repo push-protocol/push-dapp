@@ -136,6 +136,12 @@ export const MAINNET_CHAINS: ChainConfig = {
     nativeCurrency: ETH,
     blockExplorerUrls: ['https://explorer.linea.build'],
   },
+  8453: {
+    name: 'Base Mainnet',
+    urls: ['https://mainnet.base.org/'],
+    nativeCurrency: ETH,
+    blockExplorerUrls: ['https://basescan.org/'],
+  },
 };
 
 export const TESTNET_CHAINS: ChainConfig = {
@@ -203,6 +209,12 @@ export const TESTNET_CHAINS: ChainConfig = {
     urls: ['https://rpc.sepolia.linea.build'],
     nativeCurrency: ETH,
     blockExplorerUrls: ['https://sepolia.lineascan.build'],
+  },
+  84532: {
+    name: 'Base Sepolia',
+    urls: ['https://sepolia.base.org/'],
+    nativeCurrency: ETH,
+    blockExplorerUrls: ['https://sepolia-explorer.base.org/'],
   },
 };
 
