@@ -10,7 +10,8 @@ import { BsCloudUpload } from 'react-icons/bs';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import UtilityHelper from 'helpers/UtilityHelper';
 import ImageClipper from 'primaries/ImageClipper';
-import { Button, Content, FormSubmision, H3, Input, Item, Section, Span } from 'primaries/SharedStyling';
+import { Content, FormSubmision, H3, Input, Item, Section, Span } from 'primaries/SharedStyling';
+import { Button } from 'blocks';
 
 // Internal Configs
 import { abis, addresses } from 'config/index.js';
@@ -164,11 +165,8 @@ const UploadLogo = ({
             margin="100px auto 50px auto"
           >
             <Button
-              bg="#e20880"
-              color="#fff"
-              flex="1"
-              radius="15px"
-              padding="20px 10px"
+              variant="primary"
+              size="medium"
               onClick={() => {
                 childRef.current.showCroppedImage();
               }}
@@ -203,11 +201,8 @@ const UploadLogo = ({
               margin="100px auto 50px auto"
             >
               <Button
-                bg="#e20880"
-                color="#fff"
-                flex="1"
-                radius="15px"
-                padding="20px 10px"
+                size="medium"
+                variant="primary"
                 disabled={processing == 1 ? true : false}
               >
                 {processing == 1 && (

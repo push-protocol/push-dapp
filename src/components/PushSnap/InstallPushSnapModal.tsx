@@ -13,7 +13,7 @@ import PushIcon from 'assets/snap/PushIcon.svg';
 import UDIcon from 'assets/snap/UDIcon.svg';
 import VersoIcon from 'assets/snap/VersoIcon.svg';
 import Metamask from 'assets/snap/metamasksnap.svg';
-import { Button } from 'components/SharedStyling';
+import { Button } from 'blocks';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { A } from 'primaries/SharedStyling';
 
@@ -55,16 +55,22 @@ const InstallPushSnapModal = ({ setSnapState, configure, setConfigure }) => {
           </SpanV2>
         </SnapInner>
         {configure ? (
-          <InstallButton
+          <Button
+            size="small"
             onClick={() => {
               setSnapState(3);
               // navigate('/snap')
             }}
           >
             Configure
-          </InstallButton>
+          </Button>
         ) : (
-          <InstallButton onClick={() => setSnapState(2)}>Install</InstallButton>
+          <Button
+            onClick={() => setSnapState(2)}
+            size="small"
+          >
+            Install
+          </Button>
         )}
       </SnapContainer>
       <SnapContainer>
@@ -85,7 +91,7 @@ const InstallPushSnapModal = ({ setSnapState, configure, setConfigure }) => {
           href="https://chromewebstore.google.com/detail/push-protocol-alpha/lbdcbpaldalgiieffakjhiccoeebchmg"
           target="_blank"
         >
-          <InstallButton>Install</InstallButton>
+          <Button size="small">Install</Button>
         </a>
       </SnapContainer>
       <SnapContainer>
@@ -107,27 +113,33 @@ const InstallPushSnapModal = ({ setSnapState, configure, setConfigure }) => {
             href="https://apps.apple.com/ng/app/verso-wallet-crypto-nft/id1539304605"
             target="_blank"
           >
-            <AppstoreInstallBtn>
-              <Image
-                src={AppleIcon}
-                width="16px"
-                height="20px"
-                alt="App store"
-              />
-            </AppstoreInstallBtn>
+            <Button
+              iconOnly
+              variant="tertiary"
+              size="small"
+              trailingIcon={
+                <Image
+                  src={AppleIcon}
+                  alt="App store"
+                />
+              }
+            />
           </a>
           <a
             href="https://play.google.com/store/apps/details?id=com.btuprotocol.btu_wallet"
             target="_blank"
           >
-            <AppstoreInstallBtn>
-              <Image
-                src={PlayStore}
-                width="16px"
-                height="20px"
-                alt="Play store"
-              />
-            </AppstoreInstallBtn>
+            <Button
+              iconOnly
+              variant="tertiary"
+              size="small"
+              trailingIcon={
+                <Image
+                  src={PlayStore}
+                  alt="Play store"
+                />
+              }
+            />
           </a>
         </SnapInner>
       </SnapContainer>
@@ -150,27 +162,33 @@ const InstallPushSnapModal = ({ setSnapState, configure, setConfigure }) => {
             href="https://apps.apple.com/nz/app/unstoppable-domains/id1544748602"
             target="_blank"
           >
-            <AppstoreInstallBtn>
-              <Image
-                src={AppleIcon}
-                width="16px"
-                height="20px"
-                alt="App store"
-              />
-            </AppstoreInstallBtn>
+            <Button
+              iconOnly
+              variant="tertiary"
+              size="small"
+              trailingIcon={
+                <Image
+                  src={AppleIcon}
+                  alt="App store"
+                />
+              }
+            />
           </a>
           <a
             href="https://play.google.com/store/apps/details?id=com.unstoppabledomains.manager&hl=en&gl=US"
             target="_blank"
           >
-            <AppstoreInstallBtn>
-              <Image
-                src={PlayStore}
-                width="16px"
-                height="20px"
-                alt="Play store"
-              />
-            </AppstoreInstallBtn>
+            <Button
+              iconOnly
+              variant="tertiary"
+              size="small"
+              trailingIcon={
+                <Image
+                  src={PlayStore}
+                  alt="Play store"
+                />
+              }
+            />
           </a>
         </SnapInner>
       </SnapContainer>
@@ -272,29 +290,6 @@ const Logo = styled.img``;
 
 const Image = styled.img`
   border-radius: 14px;
-`;
-
-const InstallButton = styled(Button)`
-  width: fit-content;
-  min-width: 102px;
-  background: #d53a94;
-  color: #fff;
-  z-index: 0;
-  font-family: 'Strawford';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: normal;
-  border-radius: 8px;
-  padding: 14px 16px;
-`;
-
-const AppstoreInstallBtn = styled(InstallButton)`
-  background: #000;
-  min-width: 0;
-  margin-left: 6px;
-  height: 36px;
-  width: 36px;
 `;
 
 const QRCodeContainer = styled(ItemVV2)`

@@ -95,6 +95,16 @@ const GlobalStyle = createGlobalStyle`
     --s13: 52px;
     --s14: 56px;
     --s15: 60px;
+    --s16: 64px;
+    --s17: 68px;
+    --s18: 72px;
+    --s19: 76px;
+    --s20: 80px;
+    --s21: 84px;
+    --s22: 88px;
+    --s23: 92px;
+    --s24: 96px;
+    --s25: 100px;
     // TODO: Add more as needed
 
     /* Border Radius */
@@ -488,30 +498,6 @@ const ContentContainer = styled.div`
 const PushLogo = styled.div`
   width: 200px;
   padding-bottom: 20px;
-`;
-
-const ProviderButton = styled.button`
-  flex: none;
-  min-width: 179px;
-  background: ${(props) => props.theme.default.bg};
-  margin: 20px 15px;
-  overflow: hidden;
-  padding: 20px 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 24px;
-  display: flex;
-  flex-direction: column;
-
-  &:hover {
-    cursor: pointer;
-    background: rgba(207, 206, 255, 0.24);
-  }
-  &:active {
-    cursor: pointer;
-    background: rgba(207, 206, 255, 0.24);
-  }
 `;
 
 const ProviderImage = styled.img`

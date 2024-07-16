@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import SnapExample from 'assets/snap/SnapExample.svg?react';
 import InfoLogo from 'assets/snap/spam-icon.svg?react';
 import { Image, Section } from 'components/SharedStyling';
-import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { device } from 'config/Globals';
 import { useAccount } from 'hooks';
@@ -10,6 +10,7 @@ import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import AboutSnapModal from 'modules/snap/AboutSnapModal';
 import styled, { useTheme } from 'styled-components';
 import PushSnapConfigureModal from './PushSnapConfigureModal';
+import { Button } from 'blocks';
 
 const PushSnapSettings = () => {
   const { account } = useAccount();
@@ -145,7 +146,7 @@ const PushSnapSettings = () => {
                 spinnerSize={44}
               />
             ) : (
-              <ConnectButton onClick={() => connectToMetaMask()}>{!snapInstalled && 'Connect Snap'}</ConnectButton>
+              <Button onClick={() => connectToMetaMask()}>{!snapInstalled && 'Connect Snap'}</Button>
             )}
           </ItemVV2>
 
@@ -204,33 +205,6 @@ const Container = styled(Section)`
   @media ${device.mobileL} {
     width: 330px;
   }
-`;
-
-const SnapButton = styled(ButtonV2)`
-  height: 44px;
-  border-radius: 15px;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 141%;
-  letter-spacing: -0.03em;
-  color: #ffffff;
-  flex: none;
-  cursor: pointer;
-
-  & > div {
-    display: block;
-  }
-
-  @media (max-width: 600px) {
-    font-size: 14px;
-  }
-`;
-
-const ConnectButton = styled(SnapButton)`
-  min-width: 230px;
-  padding: 16px 24px;
-  background: #d53a94;
-  border: 1px solid #d53a94;
 `;
 
 const InfoDiv = styled(ItemHV2)`

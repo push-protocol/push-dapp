@@ -14,7 +14,7 @@ import FaucetInfo from 'components/FaucetInfo';
 // Internal Configs
 import { addresses } from 'config/index.js';
 import GLOBALS, { device } from 'config/Globals';
-import { Button } from '../../components/SharedStyling';
+import { Button } from 'blocks';
 import EditChannelForms from './EditChannelForms';
 import useToast from 'hooks/useToast';
 import { MODAL_POSITION } from 'hooks/useModalBlur';
@@ -364,14 +364,15 @@ export default function EditChannel({ closeEditChannel, UploadLogoComponent, dis
       <EditableContainer>
         <AdaptiveMobileItemHV22>
           <ImageSection src={channelLogo}></ImageSection>
-          <UploadButton
+          <Button
+            variant="secondary"
             onClick={() => {
               displayUplaodLogoModal();
               setShowUploadLogoModal(true);
             }}
           >
             Upload Logo
-          </UploadButton>
+          </Button>
         </AdaptiveMobileItemHV22>
 
         {!isMobile && <VerticalLine></VerticalLine>}
@@ -423,18 +424,29 @@ export default function EditChannel({ closeEditChannel, UploadLogoComponent, dis
         <>
           {/* This below is Footer Buttons i.e, Cancel and save changes */}
           <ButtonContainer>
-            <CancelButtons onClick={closeEditChannel}>Cancel</CancelButtons>
+            <Button
+              onClick={closeEditChannel}
+              variant="outline"
+              size="large"
+            >
+              Cancel
+            </Button>
 
             {pushApprovalAmount >= feesRequiredForEdit ? (
-              <FooterButtons
+              <Button
                 disabled={isDetailsAltered()}
-                style={{ background: isDetailsAltered() ? ' #F4DCEA' : '#CF1C84' }}
                 onClick={editChannel}
+                size="large"
               >
                 Save Changes
-              </FooterButtons>
+              </Button>
             ) : (
-              <FooterButtons onClick={depositPush}>Approve PUSH</FooterButtons>
+              <Button
+                onClick={depositPush}
+                size="large"
+              >
+                Approve PUSH
+              </Button>
             )}
           </ButtonContainer>
         </>
@@ -459,18 +471,6 @@ const EditableContainer = styled(ItemVV2)`
   @media (max-width: 425px) {
     margin-bottom: 40px;
   }
-`;
-
-const UploadButton = styled(Button)`
-  border-radius: 8px;
-  background: ${(props) => props.theme.logoBtnBg};
-  color: ${(props) => props.theme.logoBtnColor};
-  font-family: 'Strawford';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 17px;
-  padding: 10px 12px;
 `;
 
 const TickImage = styled.img``;
@@ -589,56 +589,8 @@ const TransactionText = styled.p`
 const ButtonContainer = styled(ItemHV2)`
   justify-content: end;
   margin-top: 35px;
+  gap: 14px;
   @media (max-width: 425px) {
     flex-direction: column-reverse;
   }
-`;
-
-const FooterButtons = styled(Button)`
-  font-family: 'Strawford';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 22px;
-  display: flex;
-  border-radius: 15px;
-  align-items: center;
-  text-align: center;
-  background: #cf1c84;
-  color: #fff;
-  padding: 16px 27px;
-  width: 12rem;
-
-  @media (min-width: 425px) and (max-width: 600px) {
-    font-size: 15px;
-    padding: 12px 12px;
-    width: 8rem;
-  }
-
-  @media (max-width: 425px) {
-    width: -webkit-fill-available;
-  }
-`;
-
-const CancelButtons = styled(FooterButtons)`
-    margin-right:14px;
-    background:${(props) => props.theme.default.bg};
-    color:${(props) => props.theme.logoBtnColor};
-    border:1px solid #CF1C84;
-
-    @media (max-width:425px){
-        margin-right:0px;
-        margin-top:10px;
-    }
-
-    &:hover{
-        color:#AC106C;
-        border:border: 1px solid #AC106C;
-        background:transparent;
-        opacity:1;
-    }
-
-    &:after{
-        background:white;
-    }
 `;

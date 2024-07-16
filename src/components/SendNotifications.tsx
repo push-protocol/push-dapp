@@ -15,18 +15,8 @@ import styled, { useTheme } from 'styled-components';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { AInlineV2, SectionV2 } from 'components/reusables/SharedStylingV2';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import {
-  Button,
-  Content,
-  FormSubmision,
-  H2,
-  Input,
-  Item,
-  ItemH,
-  Section,
-  Span,
-  TextField,
-} from 'primaries/SharedStyling';
+import { Content, FormSubmision, H2, Input, Item, ItemH, Section, Span, TextField } from 'primaries/SharedStyling';
+import { Box, Button } from 'blocks';
 import useToast from '../hooks/useToast';
 import PreviewNotif from './PreviewNotif';
 
@@ -1105,26 +1095,32 @@ function SendNotifications() {
                 )}
 
                 {nfType && (
-                  <SubmitButton disabled={nfProcessing == 1 ? true : false}>
-                    {nfProcessing == 1 && (
-                      <LoaderSpinner
-                        type={LOADER_TYPE.SEAMLESS}
-                        spinnerSize={24}
-                        spinnerColor="#FFF"
-                      />
-                    )}
-                    {nfProcessing != 1 && (
-                      <Input
-                        cursor="hand"
-                        textTransform="none"
-                        color="#fff"
-                        weight="600"
-                        size="16px"
-                        type="submit"
-                        value="Send Notification"
-                      />
-                    )}
-                  </SubmitButton>
+                  <Box margin="s18 s0 s0 s0">
+                    <Button
+                      disabled={nfProcessing == 1 ? true : false}
+                      variant="primary"
+                      size="large"
+                    >
+                      {nfProcessing == 1 && (
+                        <LoaderSpinner
+                          type={LOADER_TYPE.SEAMLESS}
+                          spinnerSize={24}
+                          spinnerColor="#FFF"
+                        />
+                      )}
+                      {nfProcessing != 1 && (
+                        <Input
+                          cursor="hand"
+                          textTransform="none"
+                          color="#fff"
+                          weight="600"
+                          size="16px"
+                          type="submit"
+                          value="Send Notification"
+                        />
+                      )}
+                    </Button>
+                  </Box>
                 )}
               </FormSubmision>
             </Item>
@@ -1385,22 +1381,6 @@ const ToggleOption = styled(ItemH)`
   @media (max-width: 640px) {
     width: 100%;
     margin: 5px 0px;
-  }
-`;
-
-const SubmitButton = styled(Button)`
-  width: 15rem;
-  margin: 70px auto 0px auto;
-  padding: 20px 10px;
-  border-radius: 15px;
-  background: #cf1c84;
-  color: #fff;
-  @media (max-width: 640px) {
-    width: 13rem;
-    padding: 20px 20px;
-  }
-  @media (max-width: 380px) {
-    width: 9.5rem;
   }
 `;
 

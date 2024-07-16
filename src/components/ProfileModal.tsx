@@ -1,8 +1,9 @@
 import styled, { useTheme } from 'styled-components';
 
-import { A, Button, Image, ItemH, Span } from 'primaries/SharedStyling';
+import { A, Image, ItemH, Span } from 'primaries/SharedStyling';
 import { BsXLg } from 'react-icons/bs';
 import { shortenText } from 'helpers/UtilityHelper';
+import { Box, Button } from 'blocks';
 
 const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues }) => {
   const theme = useTheme();
@@ -15,20 +16,21 @@ const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues }) => {
 
   return (
     <ModalContainer>
-      <Button
-        bg="transparent"
-        margin="10px 10px 10px 0px"
-        self="flex-end"
-        onClick={() => {
-          setShowDropdown(!showDropdown);
-          return 'nothing';
-        }}
+      <Box
+        margin="s3 s6 s3 s0"
+        alignSelf="flex-end"
       >
-        <BsXLg
-          size={22}
-          color={theme.headerIconsBg}
+        <Button
+          size="small"
+          variant="outline"
+          iconOnly
+          leadingIcon={<BsXLg color={theme.headerIconsBg} />}
+          onClick={() => {
+            setShowDropdown(!showDropdown);
+            return 'nothing';
+          }}
         />
-      </Button>
+      </Box>
 
       <>
         {dropdownValues.map((dropdownValue) =>

@@ -6,7 +6,8 @@ import styled from 'styled-components';
 
 // Internal Components
 import FaucetInfo from './FaucetInfo';
-import { Button, Item, Span } from 'primaries/SharedStyling';
+import { Item, Span } from 'primaries/SharedStyling';
+import { Button } from 'blocks';
 
 // Internal Configs
 import { useAccount, useAsyncOperation, useDeviceWidthCheck } from 'hooks';
@@ -99,25 +100,14 @@ const StakingInfo = ({ channelStakeFees, setStakeFeesChoosen, setProcessingInfo,
           margin={isMobile ? '70px auto 50px auto' : '100px auto 50px auto'}
         >
           <Button
-            bg="#e20880"
-            color="#fff"
-            flex="1"
-            radius="15px"
-            padding="20px 10px"
             onClick={() => {
               setStakeFeesChoosen(true);
               handleCreateChannel();
             }}
+            variant="primary"
+            size="large"
           >
-            <Span
-              color="#fff"
-              weight="600"
-              textTransform="none"
-              line="22px"
-              size="16px"
-            >
-              Create Channel
-            </Span>
+            Create Channel
           </Button>
         </Item>
       </ItemContent>

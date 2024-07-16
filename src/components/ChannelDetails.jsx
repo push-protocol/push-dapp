@@ -10,8 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 // Internal Compoonents
-import { Button, Item } from 'components/SharedStyling';
-import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { Item } from 'components/SharedStyling';
+import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
@@ -33,6 +33,7 @@ import { AppContext } from 'contexts/AppContext';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import { getDateFromTimestamp, nextDaysDateFromTimestamp, timeRemaining } from 'helpers/TimerHelper';
 import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
+import { Button } from 'blocks';
 
 const DATE_FORMAT = 'DD MMM, YYYY';
 
@@ -275,21 +276,26 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
           padding="0 0 15px 0"
           alignSelf="center"
           display="flex"
+          gap="8px"
         >
-          {!isChannelExpired && onCoreNetwork && <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>}
+          {!isChannelExpired && onCoreNetwork && (
+            <Button
+              onClick={showEditChannel}
+              size="small"
+              variant="outline"
+            >
+              Edit Channel
+            </Button>
+          )}
           {!isChannelExpired && <ChannelSettings />}
           {isChannelExpired && onCoreNetwork && (
-            <DestroyChannelBtn
+            <Button
               onClick={destroyChannel}
-              background="#E93636"
-              color="#fff"
-              height="36px"
-              width="123px"
-              borderRadius="8px"
-              fontSize="14px"
+              size="small"
+              variant="danger"
             >
               Delete Channel
-            </DestroyChannelBtn>
+            </Button>
           )}
         </ItemHV2>
       )}
@@ -396,11 +402,6 @@ const AdaptiveMobileItemVV2 = styled(ItemVV2)`
   @media (max-width: 767px) {
     align-items: center;
   }
-`;
-
-const DestroyChannelBtn = styled(ButtonV2)`
-  height: ${(props) => props.height || '100%'};
-  width: ${(props) => props.width || '100%'};
 `;
 
 const AdaptiveMobileItemHV2 = styled(ItemHV2)`
@@ -605,21 +606,6 @@ const SectionDes = styled.div`
     margin: 10px 0px 10px 0px;
     padding: 0 0 0 0;
   }
-`;
-
-const SubmitButton = styled(Button)`
-  width: fit-content;
-  background: #d53a94;
-  color: #fff;
-  z-index: 0;
-  font-family: 'Strawford';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 17px;
-  margin-right: 9px;
-  border-radius: 8px;
-  padding: 10px 16px;
 `;
 
 const DelegateContainer = styled(Item)`

@@ -12,8 +12,8 @@ import HandTap from 'assets/snap/HandTap.svg?react';
 import NotificationLogo from 'assets/snap/Notification.svg?react';
 import WalletLogo from 'assets/snap/Wallet.svg?react';
 import Metamask from 'assets/snap/metamasksnap.svg?react';
-import { Button } from 'components/SharedStyling';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { Button } from 'blocks';
 
 const SnapInformationModal = ({ handleCloseModal }) => {
   const theme = useTheme();
@@ -103,16 +103,14 @@ const SnapInformationModal = ({ handleCloseModal }) => {
       </ItemVV2>
 
       <ItemVV2>
-        <InstallButton onClick={() => installSnap()}>
-          <Metamask width="15px" />
-          <SpanV2
-            margin="0 0 0 5px"
-            fontSize="14px"
-            fontWeight="500"
-          >
-            Install Snap
-          </SpanV2>
-        </InstallButton>
+        <Button
+          onClick={() => installSnap()}
+          variant="primary"
+          leadingIcon={<Metamask />}
+          size="large"
+        >
+          Install Snap
+        </Button>
       </ItemVV2>
     </Container>
   );
@@ -139,19 +137,4 @@ const SecondaryText = styled.p`
   line-height: 24px;
   color: ${(props) => props.theme.snapSecondaryText};
   text-align: left;
-`;
-
-const InstallButton = styled(Button)`
-  width: fit-content;
-  min-width: 102px;
-  background: #d53a94;
-  color: #fff;
-  z-index: 0;
-  font-family: 'Strawford';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: normal;
-  border-radius: 8px;
-  padding: 14px;
 `;

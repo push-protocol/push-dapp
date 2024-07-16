@@ -9,14 +9,14 @@ import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import { Box, Link, Text, Star, Lozenge, RewardsBell } from 'blocks';
+import { Box, Link, Text, Star, Lozenge, RewardsBell, Button } from 'blocks';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { NavigationContext } from 'contexts/NavigationContext';
 
 import Profile from 'primaries/Profile';
-import { Button, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
+import { Button as IButton, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
 import PushLogoDark from '../assets/pushDark.svg';
 import PushLogoLight from '../assets/pushLight.svg';
 
@@ -291,19 +291,17 @@ function Header({ isDarkMode, darkModeToggle }) {
 
           {isActive && !error && (
             <RightBarMobile>
-              <Button
-                bg="transparent"
-                padding="5px"
-                radius="4px"
-                onClick={() => {
-                  setShowNavBar(!showNavBar);
-                }}
+              <Box
+                margin="s1"
+                display="flex"
+                alignItems="center"
               >
                 <AiOutlineMenu
+                  onClick={() => setShowNavBar((prev) => !prev)}
                   size={30}
                   color={theme.headerIconsBg}
                 />
-              </Button>
+              </Box>
             </RightBarMobile>
           )}
 
