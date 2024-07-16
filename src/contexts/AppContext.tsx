@@ -33,6 +33,7 @@ const AppContextProvider = ({ children }) => {
   const shouldInitializeRef = useRef(true); // Using a ref to control useEffect execution
 
   const { connect, provider, account, wallet, connecting } = useAccount();
+
   const web3onboardToast = useToast();
 
   const { readOnlyWallet } = useContext(GlobalContext);
@@ -96,7 +97,17 @@ const AppContextProvider = ({ children }) => {
   };
 
   // TODO: Change function name to handleConnectWalletAndUser
-  const handleConnectWallet = async ({ remember = false, showToast = false, toastMessage = undefined } = {}) => {
+  const handleConnectWallet = async ({
+    remember = false,
+    showToast = false,
+    toastMessage = undefined,
+    wallet,
+  }: {
+    wallet?: any;
+    remember?: any;
+    showToast?: boolean;
+    toastMessage?: string;
+  }) => {
     shouldInitializeRef.current = false; // Directly modify the ref to disable useEffect execution
 
     if (showToast) {
@@ -116,7 +127,7 @@ const AppContextProvider = ({ children }) => {
     let user;
 
     if (wallet?.accounts?.length > 0) {
-      user = await initializePushSDK();
+      user = await initializePushSDK(wallet);
     } else {
       const walletConnected = await connect();
       if (walletConnected.length > 0) {
