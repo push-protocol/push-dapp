@@ -31,6 +31,7 @@ export const config = {
     1101, // polygon zkevm mainnet
     122, // fuse mainnet
     7560, // Cyber mainnet
+    8453, //base mainnet
   ],
 
   /**
@@ -173,6 +174,13 @@ export const CHAIN_DETAILS = {
     name: 'CYBER_MAINNET',
     chainid: 7560,
     rpcUrl: 'https://cyber.alt.technology/',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
+  },
+  8453: {
+    label: 'Base Mainnet',
+    name: 'BASE_MAINNET',
+    chainid: 8453,
+    rpcUrl: 'https://mainnet.base.org/',
     commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
   },
 };
