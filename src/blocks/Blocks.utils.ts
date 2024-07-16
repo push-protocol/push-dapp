@@ -10,12 +10,11 @@ import {
   PixelValue,
   ResponsiveCSSPropertyData,
   ThemeMode,
-  ThemeModeBorder,
   BorderValue,
   BlocksRadiusType,
 } from './Blocks.types';
 import { ThemeColors } from './theme/Theme.types';
-import { newRadiusRegex, newSpacingRegex, oldRadiusRegex, oldSpacingRegex } from './Blocks.constants';
+import { radiusRegex, spacingRegex } from './Blocks.constants';
 
 /**
  * @param propName
@@ -25,10 +24,7 @@ import { newRadiusRegex, newSpacingRegex, oldRadiusRegex, oldSpacingRegex } from
 const getCSSValue = (propName: CSSPropName, value: CSSPropValueType | undefined) => {
   if (propName === 'padding' || propName === 'margin') {
     if (typeof value === 'string') {
-      return value.replace(
-        newSpacingRegex.test(value) ? newSpacingRegex : oldSpacingRegex,
-        (match) => `var(--${match})`
-      );
+      return value.replace(spacingRegex, (match) => `var(--${match})`);
     }
   } else if (propName === 'gap' || propName === 'border-radius') {
     return `var(--${value})`;
@@ -163,15 +159,16 @@ export const getBlocksColor = (mode: ThemeMode, color?: BlocksColors | ThemeMode
  * @param border
  * @returns border
  */
-export const getBlocksBorder = (mode: ThemeMode, border?: BorderValue | ThemeModeBorder) => {
+export const getBlocksBorder = (border?: BorderValue) => {
   // If border is not given return undefined, to avoid any breakages
   if (!border) return border;
-  // Handle the border for light and dark mode
-  let borderValues;
-  if (typeof border === 'object') borderValues = border[mode].split(' ');
-  else borderValues = border.split(' ');
 
-  // If passed a design system border then use border as a variable
+  let borderValues;
+
+  borderValues = border.split(' ');
+
+  borderValues[0] = `var(--${borderValues[0]})`;
+
   borderValues[2] = `var(--${borderValues[2]})`;
   return borderValues.join(' ');
 };
@@ -184,10 +181,7 @@ export const getBlocksBorderRadius = (radius?: BlocksRadiusType) => {
   // If border-radius is not given return undefined, to avoid any breakages
   if (!radius) return radius;
 
-  const result = radius.replace(
-    newRadiusRegex.test(radius) ? newRadiusRegex : oldRadiusRegex,
-    (match) => `var(--${match})`
-  );
+  const result = radius.replace(radiusRegex, (match) => `var(--${match})`);
 
   return result;
 };

@@ -19,23 +19,66 @@ import { textAreaSemantics } from '../semantics/semantics.textarea';
 import { toastSemantics } from '../semantics/semantics.toast';
 import { tooltipSemantics } from '../semantics/semantics.tooltip';
 
+// TODO: find a better way to do this in future
+type SemanticKeys = {
+  buttonPrimary: 'components-button-primary';
+  buttonSecondary: 'components-button-secondary';
+  buttonTertiary: 'components-button-tertiary';
+  buttonOutline: 'components-button-outline';
+  buttonDanger: 'components-button-danger';
+  buttonDangerSecondary: 'components-button-danger-secondary';
+  checkbox: 'components-checkbox';
+  dropdown: 'components-dropdown';
+  icon: 'icon';
+  input: 'components-inputs';
+  radio: 'components-radio-button';
+  surface: 'surface';
+  stroke: 'stroke';
+  text: 'text';
+  textArea: 'components-textarea';
+  toast: 'components-toast';
+  toggle: 'components-toggle-switch';
+  tooltip: 'components-tooltip';
+};
+
+export const semanticKeys: SemanticKeys = {
+  buttonPrimary: 'components-button-primary',
+  buttonSecondary: 'components-button-secondary',
+  buttonTertiary: 'components-button-tertiary',
+  buttonOutline: 'components-button-outline',
+  buttonDanger: 'components-button-danger',
+  buttonDangerSecondary: 'components-button-danger-secondary',
+  checkbox: 'components-checkbox',
+  dropdown: 'components-dropdown',
+  icon: 'icon',
+  input: 'components-inputs',
+  radio: 'components-radio-button',
+  surface: 'surface',
+  stroke: 'stroke',
+  text: 'text',
+  textArea: 'components-textarea',
+  toast: 'components-toast',
+  toggle: 'components-toggle-switch',
+  tooltip: 'components-tooltip',
+};
+
 export const colorSemantics = {
-  'components-button-primary': primaryButtonSemantics,
-  'components-button-secondary': secondaryButtonSemantics,
-  'components-button-tertiary': tertiaryButtonSemantics,
-  'components-button-outline': outlineButtonSemantics,
-  'components-button-danger': dangerButtonSemantics,
-  'components-button-danger-secondary': dangerSecondaryButtonSemantics,
-  'components-checkbox': checkboxSemantics,
-  'components-dropdown': dropdownSemantics,
-  icon: iconSemantics,
-  'components-inputs': inputSemantics,
-  'components-radio-button': radioSemantics,
-  surface: surfaceSemantics,
-  stroke: strokeSemantics,
-  text: textSemantics,
-  'components-textarea': textAreaSemantics,
-  'components-toast': toastSemantics,
-  'components-toggle-switch': switchSemantics,
-  'components-tooltip': tooltipSemantics,
+  [semanticKeys.buttonPrimary]: primaryButtonSemantics,
+  [semanticKeys.buttonSecondary]: secondaryButtonSemantics,
+  [semanticKeys.buttonTertiary]: tertiaryButtonSemantics,
+  [semanticKeys.buttonOutline]: outlineButtonSemantics,
+  [semanticKeys.buttonDanger]: dangerButtonSemantics,
+  [semanticKeys.buttonDangerSecondary]: dangerSecondaryButtonSemantics,
+  [semanticKeys.checkbox]: checkboxSemantics,
+  [semanticKeys.dropdown]: dropdownSemantics,
+  [semanticKeys.icon]: iconSemantics,
+  [semanticKeys.input]: inputSemantics,
+  [semanticKeys.radio]: radioSemantics,
+  [semanticKeys.surface]: surfaceSemantics,
+  [semanticKeys.stroke]: strokeSemantics,
+  [semanticKeys.text]: textSemantics,
+  [semanticKeys.textArea]: textAreaSemantics,
+  [semanticKeys.toast]: toastSemantics,
+  [semanticKeys.toggle]: switchSemantics,
+  [semanticKeys.tooltip]: tooltipSemantics,
 };

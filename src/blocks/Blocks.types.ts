@@ -1,7 +1,7 @@
 import { HTMLAttributes } from 'react';
 import { BoxResponsiveCSSProperties, BoxResponsiveCSSPropertiesData, BoxResponsivePropValues } from './box';
 import { blocksColorsLegacy } from './Blocks.colors';
-import { ThemeBorderRadius, ThemeBorderSize, ThemeColors, ThemeSpacing } from './theme/Theme.types';
+import { StrokeColors, ThemeBorderRadius, ThemeBorderSize, ThemeColors, ThemeSpacing } from './theme/Theme.types';
 import {
   SkeletonResponsiveCSSProperties,
   SkeletonResponsiveCSSPropertiesData,
@@ -23,9 +23,6 @@ export type ResponsiveProp<T> = T | { [key in Breakpoint]?: T };
 
 // Remove old RadiusType types
 export type BlocksRadiusType =
-  | `r${number}`
-  | `r${number} r${number}`
-  | `r${number} r${number} r${number} r${number}`
   | ThemeBorderRadius
   | `${ThemeBorderRadius} ${ThemeBorderRadius}`
   | `${ThemeBorderRadius} ${ThemeBorderRadius} ${ThemeBorderRadius} ${ThemeBorderRadius}`;
@@ -78,7 +75,7 @@ export type ThemeMode = 'light' | 'dark';
 export type ThemeModeColors = Record<ThemeMode, BlocksColors | ThemeColors>;
 
 // TODO: Remove the blocks colors border size
-export type BorderValue = `${number}px ${string} ${BlocksColors}` | `${number}px ${string} ${ThemeBorderSize}` | 'none';
+export type BorderValue = `${ThemeBorderSize} ${string} ${StrokeColors}` | 'none';
 
 export type ThemeModeBorder = Record<ThemeMode, BorderValue>;
 
