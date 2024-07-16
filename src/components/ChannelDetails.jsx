@@ -37,7 +37,7 @@ import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
 const DATE_FORMAT = 'DD MMM, YYYY';
 
 export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, showEditChannel, destroyChannel }) {
-  const { account, chainId, isWalletConnected, wallet } = useAccount();
+  const { account, chainId, wallet } = useAccount();
   const {
     delegatees,
     channelDetails,
