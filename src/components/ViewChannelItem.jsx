@@ -1227,7 +1227,7 @@ const VerifiedBy = styled.span`
   color: #ec008c;
   font-size: 16px;
   line-height: 20px;
-  letter-spacing: 0.05em;
+  letter-spacing: normal;
   font-weight: 600;
   display: flex;
   flex-direction: row;
@@ -1246,7 +1246,7 @@ const VerifierName = styled.span`
   font-weight: 400;
   color: ${(props) => props.theme.color};
   font-size: 16px;
-  letter-spacing: 0em;
+  letter-spacing:normal;
   @media (max-width: 1024px) {
     margin-top: 10px;
   }
@@ -1490,7 +1490,7 @@ const StateText = styled.div`
   border-radius: 25px;
   height: 26px;
   background-color: pink;
-  font-family: Strawford, Source Sans Pro;
+  font-family: FK Grotesk Neu, Source Sans Pro;
 `;
 
 const ChanneStateText = styled(StateText)`

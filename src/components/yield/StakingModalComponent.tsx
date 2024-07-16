@@ -395,7 +395,7 @@ export default StakingModalComponent;
 const Container = styled.div`
   padding: 16px 20px;
   width: 340px;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   line-height: 150%;
@@ -408,7 +408,7 @@ const Container = styled.div`
 
 const PrimaryText = styled(H2V2)`
   font-size: 16px;
-  letter-spacing: -0.019em;
+  letter-spacing: normal;
   color: ${(props) => props.theme.stakingPrimaryText};
 `;
 

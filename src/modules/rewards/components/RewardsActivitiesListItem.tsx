@@ -1,16 +1,11 @@
-// React and other libraries
 import { FC, useState } from 'react';
 
-//Hooks
 import { Activity, useGetRewardsActivity } from 'queries';
 
-//Components
 import { Box, ErrorFilled, InfoFilled, Lozenge, RewardsBell, Skeleton, Text } from 'blocks';
 import { ActivityButton } from './ActivityButton';
 import { RewardsActivityIcon } from './RewardsActivityIcon';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
-import { useSelector } from 'react-redux';
-import { UserStoreType } from 'types';
 
 export type RewardActivitiesListItemProps = {
   userId: string;
@@ -31,15 +26,10 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
     refetch: refetchActivity,
   } = useGetRewardsActivity({ userId, activityId: activity.id }, { enabled: !!userId });
 
-  const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
-
   const [errorMessage, setErrorMessage] = useState('');
 
   return (
-    <Skeleton
-      isLoading={isLoadingItem}
-      height="90px"
-    >
+    <Skeleton isLoading={isLoadingItem}>
       <Box
         display="flex"
         flexDirection="column"
@@ -132,25 +122,24 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                     variant="h4-semibold"
                     color={{ light: 'gray-1000', dark: 'gray-100' }}
                   >
-                    {activity.points?.toLocaleString()} points
+                    {activity.points?.toLocaleString()} Points
                   </Text>
                 </Skeleton>
               </Box>
             </Box>
 
             {/* Buttons Logic */}
-            {usersSingleActivity && userPushSDKInstance && !userPushSDKInstance?.readmode() && (
-              <Box display="flex">
-                <ActivityButton
-                  userId={userId}
-                  activityTypeId={activity.id}
-                  activityType={activity.activityType}
-                  refetchActivity={refetchActivity}
-                  setErrorMessage={setErrorMessage}
-                  usersSingleActivity={usersSingleActivity}
-                />
-              </Box>
-            )}
+            <Box display="flex">
+              <ActivityButton
+                userId={userId}
+                activityTypeId={activity.id}
+                activityType={activity.activityType}
+                refetchActivity={refetchActivity}
+                setErrorMessage={setErrorMessage}
+                usersSingleActivity={usersSingleActivity}
+                isLoadingActivity={isLoading}
+              />
+            </Box>
           </Box>
         </Box>
 

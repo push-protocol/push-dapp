@@ -59,10 +59,10 @@ const Container = styled(ItemVV2)`
 `;
 
 const BodyContainer = styled(ItemVV2)`
-  font-family: Strawford;
+  font-family: FK Grotesk Neu;
   font-style: normal;
   line-height: 141%; /* 39.48px */
-  letter-spacing: -0.84px;
+  letter-spacing: normal;
 `;
 
 const PrimaryText = styled.div`

@@ -49,9 +49,9 @@ export default function PreviewNotif({ details }) {
         <Span
           weight="700"
           size="12px"
-          spacing="0.2em"
+          spacing="normal"
           color="#575D73"
-          // style={{ color: theme.color }}
+        // style={{ color: theme.color }}
         >
           PREVIEW NOTIFICATION
         </Span>

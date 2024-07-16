@@ -152,7 +152,7 @@ const PageTitle = styled.div`
   font-size: 32px;
   font-weight: 500;
   line-height: 45px;
-  letter-spacing: 0em;
+  letter-spacing: normal;
   text-align: left;
   color: ${(props) => props.theme.default.color};
 
@@ -166,7 +166,7 @@ const PageDescription = styled.div`
   font-size: 15px;
   font-weight: 400;
   line-height: 21px;
-  letter-spacing: 0em;
+  letter-spacing: normal;
   text-align: left;
   color: ${(props) => props.theme.default.secondaryColor};
   margin-bottom: 40px;
@@ -268,7 +268,7 @@ const SectionTitle = styled.div`
   font-size: 22px;
   font-weight: 500;
   line-height: 33px;
-  letter-spacing: -0.019em;
+  letter-spacing: normal;
   text-align: left;
   margin-bottom: 20px;
   color: ${(props) => props.theme.default.color};
@@ -299,7 +299,7 @@ const ChannelName = styled.span`
   font-size: 15px;
   font-weight: 400;
   line-height: 23px;
-  letter-spacing: 0em;
+  letter-spacing: normal;
   color: ${(props) => props.theme.default.color};
 `;
 

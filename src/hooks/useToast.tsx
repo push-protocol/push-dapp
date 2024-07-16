@@ -192,7 +192,7 @@ const LoaderMessage = styled.div`
   font-size: 1rem;
   font-weight: 600;
   line-height: 1.3rem;
-  letter-spacing: 0em;
+  letter-spacing: normal;
   text-align: left;
 `;
 
@@ -214,9 +214,8 @@ const ToastContent = styled.div`
 const ToastTitle = styled.div`
   font-weight: 500;
   font-size: 1.125rem;
-  letter-spacing: -0.019em;
+  letter-spacing: normal;
   line-height: 1.4rem;
-  letter-spacing: 0em;
   text-align: left;
   margin-bottom: 1%;
 `;

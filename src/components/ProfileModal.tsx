@@ -76,7 +76,7 @@ const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues }) => {
                   src={dropdownValue.invertedIcon}
                   alt="icon"
                   width="max-content"
-                  spacing="1px"
+                  spacing="normal"
                   filter={theme.snackbarBorderIcon}
                 />
               )}
@@ -85,7 +85,7 @@ const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues }) => {
                   src={dropdownValue.icon}
                   alt="icon"
                   width="max-content"
-                  spacing="1px"
+                  spacing="normal"
                 />
               )}
               {!dropdownValue?.link && dropdownValue?.function && (

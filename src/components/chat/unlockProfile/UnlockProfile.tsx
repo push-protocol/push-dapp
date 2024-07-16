@@ -17,7 +17,8 @@ import { device, size } from 'config/Globals';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import UnlockLogo from '../../../assets/chat/unlock.svg';
 import Wallet from '../../../assets/chat/wallet.svg';
-import { Button } from 'blocks';
+import { Button, Box, CrossFilled, HoverableSVG } from 'blocks';
+import { checkUnlockProfileErrors } from './UnlockProfile.utils';
 
 // Constants
 export enum UNLOCK_PROFILE_TYPE {
@@ -35,15 +36,16 @@ export enum PROFILESTATE {
 type UnlockProfileModalProps = {
   InnerComponentProps: {
     type: UNLOCK_PROFILE_TYPE | undefined;
+    description?: string;
   };
   onClose?: () => void;
 };
 
 const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps) => {
-  const { type } = InnerComponentProps;
+  const { type, description } = InnerComponentProps;
 
   const theme = useTheme();
-  const { handleConnectWallet } = useContext(AppContext);
+  const { handleConnectWallet, initializePushSDK } = useContext(AppContext);
 
   const { account, wallet, connect } = useAccount();
 
@@ -61,7 +63,14 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
   };
 
   const handleChatprofileUnlock = async () => {
-    await handleConnectWallet({ remember: rememberMe });
+    const user = await handleConnectWallet({ remember: rememberMe });
+
+    // reject unlock profile listener
+    const errorExists = checkUnlockProfileErrors(user);
+
+    if (errorExists && onClose) {
+      onClose();
+    }
   };
 
   useEffect(() => {
@@ -69,7 +78,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
       setActiveStatus({
         status: PROFILESTATE.UNLOCK_PROFILE,
         title: 'Unlock Profile',
-        body: 'Unlock your profile to read and send messages.',
+        body: description ? description : 'Unlock your profile to read and send messages.',
       });
     }
   }, [wallet]);
@@ -83,12 +92,34 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
       const decryptedPGPKeys = retrieveUserPGPKeyFromStorage(account);
       if (decryptedPGPKeys) {
         setIsLoading(true);
+        // If wallet is connected and PGP keys are already present.
+        initializePushSDK(wallet);
       }
     }
   }, [account]);
 
   return (
     <Container type={type}>
+      {onClose && (
+        <Box
+          width="-webkit-fill-available"
+          display="flex"
+          flexDirection="row"
+          alignItems="flex-end"
+          justifyContent="flex-end"
+        >
+          <HoverableSVG
+            icon={
+              <CrossFilled
+                size={30}
+                color="gray-400"
+                onClick={onClose}
+              />
+            }
+          />
+        </Box>
+      )}
+
       <SubContainer type={type}>
         {/* Logo and Left Text */}
         <ItemHV2

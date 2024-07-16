@@ -1,32 +1,7 @@
-import { DeviceSizeName, DeviceSize, Breakpoint } from './Blocks.types';
+export const newRadiusRegex = /\bradius-[a-z]+\b/g;
 
-export const deviceSizes: Record<DeviceSizeName, DeviceSize> = {
-  mobileS: '320px',
-  mobileM: '375px',
-  mobileL: '425px',
-  tablet: '768px',
-  laptop: '1024px',
-  laptopL: '1440px',
-  desktop: '2560px',
-};
+export const oldRadiusRegex = /\br[0-9]+\b/g;
 
-export const deviceMediaQ: Record<DeviceSizeName, `(max-width: ${DeviceSize})`> = {
-  mobileS: `(max-width: ${deviceSizes.mobileS})`,
-  mobileM: `(max-width: ${deviceSizes.mobileM})`,
-  mobileL: `(max-width: ${deviceSizes.mobileL})`,
-  tablet: `(max-width: ${deviceSizes.tablet})`,
-  laptop: `(max-width: ${deviceSizes.laptop})`,
-  laptopL: `(max-width: ${deviceSizes.laptopL})`,
-  desktop: `(max-width: ${deviceSizes.desktop})`,
-};
+export const newSpacingRegex = /\bspacing-[a-z]+\b/g;
 
-export const breakpointMap: Record<Breakpoint | 'initial', DeviceSizeName | ''> = {
-  initial: '',
-  ms: 'mobileS',
-  mm: 'mobileM',
-  ml: 'mobileL',
-  tb: 'tablet',
-  lp: 'laptop',
-  ll: 'laptopL',
-  dp: 'desktop',
-};
+export const oldSpacingRegex = /\bs[0-9]+\b/g;

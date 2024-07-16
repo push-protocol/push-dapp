@@ -18,17 +18,16 @@ export type DashboardSectionProps = {
 };
 
 const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
-  const { isWalletConnected, account } = useAccount();
+  const { account } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
   const {
     data: userDetails,
-    isSuccess,
     refetch,
     isLoading: isUserLoading,
     isFetching,
-  } = useGetUserRewardsDetails({ caip10WalletAddress: caip10WalletAddress, enabled: isWalletConnected });
+  } = useGetUserRewardsDetails({ caip10WalletAddress: caip10WalletAddress });
 
-  const isLoading = isUserLoading || !isSuccess;
+  const isLoading = isUserLoading;
 
   return (
     <>
@@ -57,6 +56,7 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
             rank={userDetails?.rank}
             isLoading={isLoading}
             isFetching={isFetching}
+            data={userDetails}
             refetch={() => refetch()}
           />
 

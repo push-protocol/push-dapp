@@ -134,7 +134,7 @@ const TabSpace = styled.div`
     color: #1e1e1e;
     font-weight: 500;
     font-size: 20px;
-    letter-spacing: -0.011em;
+    letter-spacing: normal;
     margin-left: 50px;
     @media (max-width: 768px) {
       margin-left: 20px;
@@ -147,7 +147,7 @@ const TabSpace = styled.div`
     font-size: 26px;
     line-height: 150%;
     text-align: right;
-    letter-spacing: -0.019em;
+    letter-spacing: normal;
     color: #cf1c84;
     margin-right: 50px;
     @media (max-width: 758px) {
@@ -163,7 +163,7 @@ const TokenStatus = styled.div`
 `;
 const Tokenbalance = styled.div`
   margin: 0px;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -176,7 +176,7 @@ const Tokenbalance = styled.div`
 
 const ImportToken = styled.div`
   align-self: end;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 400;
   font-size: 12px;

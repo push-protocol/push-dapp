@@ -215,7 +215,7 @@ const SnapModule = ({ route }) => {
                   fontSize="34px"
                   fontWeight="500"
                   color={theme.snapPrimaryText}
-                  letterSpacing="-1.02px"
+                  letterSpacing="normal"
                 >
                   Push Snap
                 </H2V2>

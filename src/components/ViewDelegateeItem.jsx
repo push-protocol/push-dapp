@@ -233,7 +233,7 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
               size="12px"
               color="#fff"
               padding="0px 0px 0px 10px"
-              spacing="0.2em"
+              spacing="normal"
               weight="600"
               textAlign="center"
             >
@@ -270,7 +270,7 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
             <DelegateeWallet
               size="0.5em"
               color="#aaa"
-              spacing="0.2em"
+              spacing="normal"
               weight="600"
               textAlign="center"
             >
@@ -382,7 +382,7 @@ const DelegateeItem = styled.div`
     right: 0;
     bottom: 0;
     background: ${(props) =>
-      props.theme == 'nominee' ? '#35c5f3' : 'linear-gradient( 283deg, #34c5f2 0%, #e20880 45%, #35c5f3 100%)'};
+    props.theme == 'nominee' ? '#35c5f3' : 'linear-gradient( 283deg, #34c5f2 0%, #e20880 45%, #35c5f3 100%)'};
   }
 `;
 

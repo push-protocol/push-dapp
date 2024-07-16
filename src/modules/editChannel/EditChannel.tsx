@@ -543,7 +543,7 @@ const Footer = styled(ItemVV2)`
 const FooterPrimaryText = styled.p`
   margin: 0px;
   color: ${(props) => props.theme.editChannelPrimaryText};
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 20px;
@@ -561,7 +561,7 @@ const FooterSecondaryText = styled.p`
 const EditFee = styled.p`
   margin: 0px 0px 0px 5px;
   color: #d53893;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 20px;
@@ -574,7 +574,7 @@ const VerifyingContainer = styled(ItemVV2)`
 `;
 
 const TransactionText = styled.p`
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 500;
   font-size: 18px;

@@ -311,7 +311,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                   fontSize={isMobile ? '18px' : '24px'}
                   fontWeight="600"
                   color="#D53A94"
-                  letterSpacing="-0.03em"
+                  letterSpacing="normal"
                 >
                   {numberWithCommas(formatTokens(lpPoolStats?.rewardForCurrentEpoch))} PUSH
                 </H2V2>
@@ -347,7 +347,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                 <StakedAmount
                   fontSize={isMobile ? '18px' : '24px'}
                   fontWeight="600"
-                  letterSpacing="-0.03em"
+                  letterSpacing="normal"
                 >
                   {numberWithCommas(formatTokens(lpPoolStats?.poolBalance))} UNI-V2
                 </StakedAmount>
@@ -373,7 +373,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
           alignSelf="end"
           margin="12px 13px 24px 0px"
           color="#575D73"
-          letterSpacing="-0.03em"
+          letterSpacing="normal"
         >
           {lpPoolStats ? (
             <>
@@ -681,7 +681,7 @@ const Container = styled(SectionV2)`
   border-radius: 24px;
   padding: 20px;
 
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
 
   margin: 10px 0 10px 10px;
 
@@ -701,7 +701,7 @@ const Container = styled(SectionV2)`
 const Heading = styled(H2V2)`
   font-size: 24px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: ${(props) => props.theme.stakingPrimaryText};
 
   @media (max-width: 600px) {
@@ -712,7 +712,7 @@ const SecondaryText = styled.div`
   margin: 0px;
   font-size: 18px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   // color: #333333;
 
   @media (max-width: 600px) {
@@ -736,7 +736,7 @@ const Line = styled.div`
 const DataTitle = styled.div`
   font-size: 18px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   // color: rgba(87, 93, 115, 0.8);
   display: flex;
   justify-content: center;
@@ -755,7 +755,7 @@ const StakedAmount = styled(H2V2)`
 const EpochNo = styled(B)`
   font-weight: 600;
   text-align: right;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   font-size: 16px;
   line-height: 141%;
   margin-right: 5px;
@@ -774,7 +774,7 @@ const InfoSpan = styled(SpanV2)`
 const DataValue = styled(H2V2)`
   font-size: 18px;
   line-height: 141%;
-  letter-spacing: -0.03em;
+  letter-spacing: normal;
   color: ${(props) => props.theme.stakingPrimaryText};
 
   @media (max-width: 600px) {

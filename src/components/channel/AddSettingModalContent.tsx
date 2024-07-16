@@ -553,7 +553,7 @@ const ModalTitle = styled.div`
   font-size: 24px;
   font-weight: 500;
   line-height: 29px;
-  letter-spacing: -0.02em;
+  letter-spacing: normal;
   text-align: center;
   color: ${(props) => props.theme.default.color};
 `;
@@ -579,7 +579,7 @@ const Label = styled.div<{ padding?: string }>`
   font-weight: 500;
   font-size: 16px;
   line-height: 150%;
-  letter-spacing: -0.011em;
+  letter-spacing: normal;
   color: ${(props) => props.theme.default.color};
   padding: ${(props) => props.padding || '0px'};
 `;
@@ -592,7 +592,7 @@ const Description = styled.div`
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
-  letter-spacing: 0em;
+  letter-spacing: normal;
   text-align: left;
   color: ${(props) => props.theme.default.secondaryColor};
 `;
@@ -614,7 +614,7 @@ const ErrorInfo = styled.span`
   font-size: 12px;
   font-weight: 500;
   line-height: 18px;
-  letter-spacing: 0em;
+  letter-spacing: normal;
   text-align: left;
   color: ${(props) => props.theme.nfsError};
   margin-top: 4px;

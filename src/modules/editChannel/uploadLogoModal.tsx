@@ -159,7 +159,7 @@ const ModalContainer = styled.div`
 
 const ModalPrimaryText = styled.p`
   margin: 0px;
-  font-family: 'Strawford';
+  font-family: 'FK Grotesk Neu';
   font-style: normal;
   font-weight: 400;
   font-size: 15px;

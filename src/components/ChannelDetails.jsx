@@ -472,7 +472,7 @@ const StateText = styled.div`
   border-radius: 25px;
   height: 26px;
   background-color: pink;
-  font-family: Strawford, Source Sans Pro;
+  font-family: FK Grotesk Neu, Source Sans Pro;
 `;
 
 const ChanneStateText = styled(StateText)`
@@ -558,7 +558,7 @@ const Verified = styled.div`
 
 const ChannelName = styled.div`
   display: flex;
-  font-family: Strawford, Source Sans Pro;
+  font-family: FK Grotesk Neu, Source Sans Pro;
   flex-direction: row;
   margin-right: 8px;
   margin-top: 12px;
@@ -583,14 +583,14 @@ const SectionDate = styled.div`
   font-weight: 600;
   font-size: 16px;
   line-height: 25px;
-  letter-spacing: 0.1em;
+  letter-spacing: normal;
   text-transform: uppercase;
   margin-bottom: 18px;
 `;
 
 const SectionDes = styled.div`
   text-transform: none;
-  font-family: Strawford, Source Sans Pro;
+  font-family: FK Grotesk Neu, Source Sans Pro;
   // color: #657795;
   color: ${(props) => props.theme.default.secondaryColor};
   margin: ${(props) => (props.margin ? props.margin : '24px 0px')};

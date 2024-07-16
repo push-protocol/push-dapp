@@ -61,4 +61,6 @@ export interface AppContextType {
   setDisplayQR: (displayQR: boolean) => void;
   createUserIfNecessary: () => Promise<ConnectedUser>;
   initializePushSdkReadMode: () => Promise<void>;
+  isUserProfileUnlocked: boolean;
+  setUserProfileUnlocked: (isUserProfileUnlocked: boolean) => void;
 }

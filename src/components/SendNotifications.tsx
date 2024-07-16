@@ -557,7 +557,7 @@ function SendNotifications() {
               weight={isMobile ? '300' : '400'}
               size="14px"
               textTransform="none"
-              spacing="0.03em"
+              spacing="normal"
               margin={isMobile ? '10px 0px' : '0px 0px'}
               textAlign="center"
             >
@@ -1194,7 +1194,7 @@ const ModifiedContent = styled(Content)`
 const DropdownHeader = styled.div`
   color: ${(props) => props.theme.color || '#000'};
   padding: 10px;
-  letter-spacing: 3px;
+  letter-spacing: normal;
   font-size: 14px;
 `;
 
@@ -1203,7 +1203,7 @@ const Label = styled.div`
   font-weight: 600;
   font-size: 14px;
   line-height: 21px;
-  letter-spacing: -0.011em;
+  letter-spacing: normal;
   color: #1e1e1e;
 `;
 
@@ -1340,7 +1340,7 @@ const CustomDropdownItem = styled.div`
   div {
     color: ${(props) => props.theme.default.color};
     font-size: 16px;
-    letter-spacing: 2px;
+    letter-spacing: normal;
   }
 `;
 

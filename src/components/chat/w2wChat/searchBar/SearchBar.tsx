@@ -181,6 +181,7 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
 const Input = styled.input<InputProps>`
   box-sizing: border-box;
   display: flex;
+  font-size: 14px;
   flex: 1;
   width: 100%;
   height: 48px;

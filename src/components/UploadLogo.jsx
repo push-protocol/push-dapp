@@ -71,7 +71,7 @@ const UploadLogo = ({
           textTransform="none"
           weight="300"
           size="15px"
-          spacing="0.05"
+          spacing="normal"
           textAlign="center"
         >
           Please upload a PNG, JPG. Crop the image to resize to 128px.
