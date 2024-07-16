@@ -8,14 +8,14 @@ import { useAccount } from 'hooks';
 import { ChannelTabs } from '../Dashboard.types';
 
 // Components
-import { Box, Text } from 'blocks';
+import { Box, TabItem, Tabs } from 'blocks';
 import { TrendingChannelsList } from './TrendingChannelsList';
 import { SubscribedChannelsList } from './SubscribedChannelsList';
-import { dahboardChannelTabs } from '../Dashboard.constants';
+import { dashboardChannelTabs } from '../Dashboard.constants';
 import { HottestChannelsList } from './HottestChannelsList';
 
 const ChannelTabsSection = () => {
-  const [selectedChannelTab, setSelectedChannelTab] = useState<ChannelTabs>(dahboardChannelTabs[0].value);
+  const [selectedChannelTab, setSelectedChannelTab] = useState<ChannelTabs>(dashboardChannelTabs[0].key as ChannelTabs);
   const { wallet } = useAccount();
 
   const isWalletConnected = !!wallet?.accounts?.length;
@@ -29,6 +29,13 @@ const ChannelTabsSection = () => {
       setSelectedChannelTab(newTabValue);
     }
   }, [isWalletConnected]);
+
+  const getUpdatedDashboardTabs = (dashboardChannelTabs: TabItem[]): TabItem[] => {
+    if (!isWalletConnected) return dashboardChannelTabs.filter((tabs) => tabs.key !== 'subscribed');
+
+    if (isWalletConnected) return dashboardChannelTabs.filter((tabs) => tabs.key !== 'hottest');
+    return dashboardChannelTabs;
+  };
 
   return (
     <Box
@@ -49,35 +56,47 @@ const ChannelTabsSection = () => {
           borderRadius="r4"
           width={{ lp: 'auto', initial: 'fit-content' }}
         >
-          {dahboardChannelTabs?.map((channelTab, index) => {
-            if (channelTab.value === 'subscribed' && !isWalletConnected) return null;
+          {/* {dashboardChannelTabs?.map((channelTab, index) => {
+            if (channelTab.key === 'subscribed' && !isWalletConnected) return null;
 
-            if (channelTab.value === 'hottest' && isWalletConnected) return null;
+            if (channelTab.key === 'hottest' && isWalletConnected) return null;
 
             return (
-              <Box
-                key={`${index}`}
-                display="flex"
-                justifyContent="center"
-                width={{ ll: '100%' }}
-                alignItems="center"
-                padding="s2 s3"
-                borderRadius="r4"
-                backgroundColor={
-                  selectedChannelTab === channelTab.value ? { dark: 'gray-800', light: 'white' } : 'transparent'
-                }
-                onClick={() => setSelectedChannelTab(channelTab.value)}
-              >
-                <Text
-                  color={{ light: 'gray-1000', dark: 'white' }}
-                  variant="h5-semibold"
-                  ellipsis={true}
-                >
-                  {channelTab?.label}
-                </Text>
-              </Box>
+              // <Box
+              //   key={`${index}`}
+              //   display="flex"
+              //   justifyContent="center"
+              //   width={{ ll: '100%' }}
+              //   alignItems="center"
+              //   padding="s2 s3"
+              //   borderRadius="r4"
+              //   backgroundColor={
+              //     selectedChannelTab === channelTab.value ? { dark: 'gray-800', light: 'white' } : 'transparent'
+              //   }
+              //   onClick={() => setSelectedChannelTab(channelTab.value)}
+              // >
+              //   <Text
+              //     color={{ light: 'gray-1000', dark: 'white' }}
+              //     variant="h5-semibold"
+              //     ellipsis={true}
+              //   >
+              //     {channelTab?.label}
+              //   </Text>
+              // </Box>
+              <Tabs
+                items={[]}
+                activeKey={selectedChannelTab}
+                variant="fill"
+                onChange={() => setSelectedChannelTab(channelTab.key)}
+              />
             );
-          })}
+          })} */}
+          <Tabs
+            items={getUpdatedDashboardTabs(dashboardChannelTabs)}
+            activeKey={selectedChannelTab}
+            variant="fill"
+            onChange={(activeKey) => setSelectedChannelTab(activeKey as ChannelTabs)}
+          />
         </Box>
       </Box>
       <Box

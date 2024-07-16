@@ -1,13 +1,23 @@
 //Components
-import { PushAlpha, PushBot, PushDev } from 'blocks';
+import { PushAlpha, PushBot, PushDev, TabItem } from 'blocks';
 
 //Types
 import { ChatType, DashboardChannelTabsType, EnvKeys, SourceKeys } from './Dashboard.types';
+import { TrendingChannelsList } from './components/TrendingChannelsList';
+import { HottestChannelsList } from './components/HottestChannelsList';
+import { SubscribedChannelsList } from './components/SubscribedChannelsList';
+import { ReactNode } from 'react';
 
-export const dahboardChannelTabs: DashboardChannelTabsType = [
-  { label: 'Trending Channels', value: 'trending' },
-  { label: 'Hottest Channels', value: 'hottest' },
-  { label: 'Subscribed', value: 'subscribed' },
+// export const dahboardChannelTabsOld: DashboardChannelTabsType = [
+//   { label: 'Trending Channels', value: 'trending' },
+//   { label: 'Hottest Channels', value: 'hottest' },
+//   { label: 'Subscribed', value: 'subscribed' },
+// ];
+
+export const dashboardChannelTabs: TabItem[] = [
+  { label: 'Trending Channels', key: 'trending', children: '' },
+  { label: 'Hottest Channels', key: 'hottest', children: '' },
+  { label: 'Subscribed', key: 'subscribed', children: '' },
 ];
 
 export const recommendedChatList: ChatType[] = [
