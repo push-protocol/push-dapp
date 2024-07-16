@@ -20,7 +20,8 @@ const UtilityHelper = {
       chainId === 42161 ||
       chainId === 122 ||
       chainId === 7560 ||
-      chainId === 8453
+      chainId === 8453 ||
+      chainId === 59144
     ) {
       return true;
     }
@@ -65,6 +66,8 @@ export const MaskedAliasChannels: {
   7560: {},
   8453: {},
   84532: {},
+  59141: {},
+  59144: {},
 };
 
 export const findObject = (data: any, parentArray: any[], property: string): boolean => {
@@ -131,6 +134,8 @@ export const networkName = {
   7560: 'Cyber Mainnet',
   8453: 'Base Mainnet',
   84532: 'Base Sepolia',
+  59141: 'Linea Sepolia',
+  59144: 'Linea Mainnet',
 };
 
 export const chainNameBackendStandard = {
@@ -158,6 +163,8 @@ export const aliasChainIdToChainName = {
   7560: 'CYBERCONNECT',
   8453: 'BASE',
   84532: 'BASE',
+  59141: 'LINEA',
+  59144: 'LINEA',
 };
 
 export const aliasChainIdsMapping = {
@@ -280,6 +287,20 @@ export const NETWORK_DETAILS = {
     rpcUrls: ['https://mainnet.base.org/'],
     blockExplorerUrls: ['https://basescan.org/'],
   },
+  LINEA_TESTNET: {
+    chainId: utils.hexValue(59141),
+    chainName: 'Linea Sepolia',
+    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    rpcUrls: ['https://rpc.sepolia.linea.build'],
+    blockExplorerUrls: ['https://sepolia.lineascan.build'],
+  },
+  LINEA_MAINNET: {
+    chainId: utils.hexValue(59144),
+    chainName: 'Linea Mainnet',
+    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    rpcUrls: ['https://rpc.linea.build'],
+    blockExplorerUrls: ['https://explorer.linea.build'],
+  },
 };
 
 export const CORE_CHAIN_ID: number = appConfig.coreContractChain;
@@ -306,6 +327,8 @@ export const LOGO_FROM_CHAIN_ID: {
   7560: 'Cyber.svg',
   8453: 'Base.svg',
   84532: 'Base.svg',
+  59141: 'Linea.svg',
+  59144: 'Linea.svg',
 };
 
 export type getAliasResponseType = {

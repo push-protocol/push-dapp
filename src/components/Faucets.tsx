@@ -95,6 +95,13 @@ const Faucets = () => {
       function: () => {},
       link: 'https://www.alchemy.com/faucets/base-sepolia',
     },
+    {
+      id: '59141',
+      value: 'Linea',
+      title: 'Linea Sepolia Faucet',
+      function: () => {},
+      link: 'https://www.infura.io/faucet/linea',
+    },
   ];
 
   // render

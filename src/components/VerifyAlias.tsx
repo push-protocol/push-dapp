@@ -73,6 +73,10 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
       label: 'Base Sepolia',
       url: 'https://www.alchemy.com/faucets/base-sepolia',
     },
+    59141: {
+      label: 'Linea Sepolia',
+      url: 'https://www.infura.io/faucet/linea',
+    },
   };
 
   const checkAlias = async () => {
