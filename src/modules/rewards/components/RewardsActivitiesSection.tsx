@@ -15,6 +15,10 @@ const RewardsActivitiesSection = () => {
         Activities
       </Text>
       <RewardsActivitiesList />
+
+      {/* add hr */}
+
+      {/* update activities */}
     </Box>
   );
 };
