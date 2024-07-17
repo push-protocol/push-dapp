@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import styled from 'styled-components';
-import { BlocksSpaceType, ModeProp, TransformedHTMLAttributes } from '../Blocks.types';
+import { BlocksSpaceType, TransformedHTMLAttributes } from '../Blocks.types';
 import { getBlocksBorderRadius } from '../Blocks.utils';
 import { IconColors, SurfaceColors, ThemeBorderRadius } from '../theme/Theme.types';
 
@@ -25,24 +25,22 @@ export type HoverableSVGProps = {
   borderRadius?: ThemeBorderRadius;
 } & TransformedHTMLAttributes<HTMLButtonElement>;
 
-const StyledButton = styled.button.withConfig({
-  shouldForwardProp: (prop, defaultValidatorFn) => !['mode'].includes(prop) && defaultValidatorFn(prop),
-})<Omit<HoverableSVGProps, 'icon'>>`
+const StyledButton = styled.button<Omit<HoverableSVGProps, 'icon'>>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--${(props) => props.padding || 's0'});
-  margin: var(--${(props) => props.margin || 's0'});
+  padding: var(--${(props) => props.padding || 'spacing-none'});
+  margin: var(--${(props) => props.margin || 'spacing-none'});
   border-radius: ${(props) => getBlocksBorderRadius(props.borderRadius)};
-  background-color: ${({ defaultBackground }) => defaultBackground || 'transparent'};
-  color: ${({ defaultColor }) => defaultColor || 'inherit'};
+  background-color: var(--${({ defaultBackground }) => defaultBackground || 'surface-transparent'});
+  color: ${({ defaultColor }) => `var(--${defaultColor})` || 'inherit'};
   border: none;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   transition: background-color 0.3s, color 0.3s;
   height: fit-content;
   &:hover {
-    background-color: ${({ hoverBackground }) => hoverBackground || 'transparent'};
-    color: ${({ hoverColor }) => hoverColor || 'inherit'};
+    background-color: var(--${({ hoverBackground }) => hoverBackground || 'surface-transparent'});
+    color: ${({ hoverColor }) => `var(--${hoverColor})` || 'inherit'};
   }
   &:disabled > span {
     color: var(--icon-disabled);

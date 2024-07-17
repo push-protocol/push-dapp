@@ -1,41 +1,39 @@
 import { Tabs as ReachTabs, TabList, Tab } from '@reach/tabs';
 import styled from 'styled-components';
-import { ModeProp } from '../Blocks.types';
-import { getBlocksColor } from '../Blocks.utils';
 
 export const StyledFillTabs = styled(ReachTabs)`
   display: flex;
   flex-direction: column;
-  gap: var(--s4);
+  gap: var(--spacing-sm);
 `;
 
-export const StyledFillTabList = styled(TabList)<ModeProp>`
+export const StyledFillTabList = styled(TabList)`
   display: flex;
   width: fit-content;
-  padding: var(--s1);
-  background-color: ${({ mode }) => getBlocksColor(mode, { light: 'gray-100', dark: 'gray-1000' })};
-  border-radius: var(--r4);
-  gap: var(--s2);
+  padding: var(--spacing-xxxs);
+  background-color: var(--surface-secondary);
+  border-radius: var(--radius-sm);
+  gap: var(--spacing-xxs);
 `;
 
-export const StyledFillTab = styled(Tab)<ModeProp>`
+export const StyledFillTab = styled(Tab)`
   display: flex;
-  padding: var(--s0) var(--s4);
+  padding: var(--spacing-none) var(--spacing-sm);
   height: 40px;
   justify-content: center;
   align-items: center;
-  gap: var(--s2);
+  gap: var(--spacing-xxs);
   align-self: stretch;
   cursor: pointer;
-  color: ${({ mode }) => getBlocksColor(mode, { light: 'gray-800', dark: 'gray-300' })};
-  background-color: ${getBlocksColor('light', 'transparent')};
-  border-radius: var(--r3);
+  color: var(--text-secondary);
+  background-color: var(--surface-transparent);
+  border-radius: var(--radius-xs);
   transition: background-color 0.3s, color 0.3s;
   border-bottom: none;
 
   &[data-selected] {
-    background-color: ${({ mode }) => getBlocksColor(mode, { light: 'white', dark: 'gray-800' })};
-    color: ${({ mode }) => getBlocksColor(mode, { light: 'gray-1000', dark: 'white' })};
+    background-color: var(--components-button-tertiary-background-inverse);
+    color: var(--text-secondary);
   }
 
   &:focus {
@@ -43,21 +41,21 @@ export const StyledFillTab = styled(Tab)<ModeProp>`
   }
 
   &:hover {
-    color: ${({ mode }) => getBlocksColor(mode, { light: 'gray-1000', dark: 'white' })};
+    color: var(--components-button-secondary-text-default);
   }
 
   &:focus-visible {
-    outline: 1px solid ${getBlocksColor('light', 'pink-300')};
+    outline: var(--border-sm) solid var(--stroke-state-focused);
   }
 
   &:active {
-    background-color: ${getBlocksColor('light', 'transparent')};
-    color: ${({ mode }) => getBlocksColor(mode, { light: 'gray-1000', dark: 'white' })};
+    background-color: var(--surface-transparent);
+    color: var(--components-button-secondary-text-default);
   }
 
   &[aria-disabled='true'] {
     cursor: not-allowed;
-    color: ${({ mode }) => getBlocksColor(mode, { light: 'gray-300', dark: 'gray-700' })};
+    color: var(--components-button-secondary-text-disabled);
     opacity: 1;
   }
 `;
@@ -65,56 +63,56 @@ export const StyledFillTab = styled(Tab)<ModeProp>`
 export const StyledLineTabs = styled(ReachTabs)`
   display: flex;
   flex-direction: column;
-  gap: var(--s4);
+  gap: var(--spacing-sm);
 `;
 
-export const StyledLineTabList = styled(TabList)<ModeProp>`
+export const StyledLineTabList = styled(TabList)`
   display: flex;
-  background-color: ${getBlocksColor('light', 'transparent')};
-  gap: var(--s3);
+  background-color: var(--surface-transparent);
+  gap: var(--spacing-xs);
   justify-content: flex-start;
-  border-bottom: 1px solid ${({ mode }) => getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
+  border-bottom: var(--border-sm) solid var(--stroke-secondary);
 `;
 
-export const StyledLineTab = styled(Tab)<ModeProp>`
+export const StyledLineTab = styled(Tab)`
   display: flex;
-  padding: var(--s0) var(--s4);
+  padding: var(--spacing-none) var(--spacing-sm);
   height: 40px;
   justify-content: center;
   align-items: center;
-  gap: var(--s2);
+  gap: var(--spacing-xxs);
   cursor: pointer;
   margin-bottom: -1px;
-  background-color: ${getBlocksColor('light', 'transparent')};
-  color: ${({ mode }) => getBlocksColor(mode, { light: 'gray-800', dark: 'gray-300' })};
+  background-color: var(--surface-transparent);
+  color: var(--text-secondary);
   transition: background-color 0.3s, color 0.3s;
-  border-bottom: 2px solid ${getBlocksColor('light', 'transparent')};
+  border-bottom: var(--border-md) solid var(--surface-transparent);
 
   &[data-selected] {
-    border-bottom: 2px solid ${getBlocksColor('light', 'pink-400')};
-    color: ${({ mode }) => getBlocksColor(mode, { light: 'gray-1000', dark: 'gray-100' })};
+    border-bottom: var(--border-md) solid var(--stroke-brand-medium);
+    color: var(--text-primary);
   }
 
   &:hover {
-    color: ${({ mode }) => getBlocksColor(mode, { light: 'gray-1000', dark: 'gray-100' })};
+    color: var(--text-primary);
   }
 
   &:focus-visible {
-    outline: 2px solid ${getBlocksColor('light', 'pink-300')};
-    border-bottom: 2px solid ${getBlocksColor('light', 'transparent')};
-    border-radius: var(--r3);
+    outline: var(--border-md) solid var(--stroke-state-focused);
+    border-bottom: var(--border-md) solid var(--surface-transparent);
+    border-radius: var(--radius-xs);
     margin-bottom: -2px;
   }
 
   &:active {
-    background-color: ${getBlocksColor('light', 'transparent')};
-    color: ${getBlocksColor('light', 'gray-1000')};
+    background-color: var(--surface-transparent);
+    color: var(--text-primary);
   }
 
   &[aria-disabled='true'] {
     cursor: not-allowed;
-    color: ${({ mode }) => getBlocksColor(mode, { light: 'gray-400', dark: 'gray-700' })};
-    border-bottom: 2px solid ${({ mode }) => getBlocksColor(mode, { light: 'gray-300', dark: 'gray-800' })};
+    color: var(--text-state-disabled);
+    border-bottom: var(--border-md) solid var(--stroke-disabled);
     opacity: 1;
   }
 `;

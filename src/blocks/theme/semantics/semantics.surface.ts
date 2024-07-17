@@ -30,4 +30,6 @@ export const surfaceSemantics = {
   'danger-bold': { light: colorBrands['danger-500'], dark: colorBrands['danger-200'] },
 
   disabled: { light: colorBrands['neutral-200'], dark: colorBrands['neutral-800'] },
+
+  transparent: { light: colorPrimitives['transparent'], dark: colorPrimitives['transparent'] },
 };

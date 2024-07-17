@@ -1,9 +1,7 @@
 import { ReactNode, forwardRef } from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
-import { useBlocksTheme } from '../Blocks.hooks';
-import { TransformedHTMLAttributes, BlocksColors, ModeProp, ThemeModeColors } from '../Blocks.types';
-import { getBlocksColor } from '../Blocks.utils';
+import { TransformedHTMLAttributes } from '../Blocks.types';
 import { ThemeColors } from '../theme/Theme.types';
 import { TextAlign, TextHTMLTags, TextResponsiveProps, TextTransform, TextVariants } from './Text.types';
 import { getVariantStyles } from './Text.utils';
@@ -15,7 +13,7 @@ export type TextProps = {
   /* Children pass to the Text component */
   children?: ReactNode;
   /* Sets the css property for text color */
-  color?: BlocksColors | ThemeModeColors | ThemeColors;
+  color?: ThemeColors;
   /* Extra css prop from styled components to apply custom css not supported by Text component */
   css?: FlattenSimpleInterpolation;
   /* For truncating the contents with ... when there's container overflow */
@@ -36,13 +34,12 @@ export type TextProps = {
   TransformedHTMLAttributes<HTMLParagraphElement | HTMLSpanElement>;
 
 const StyledText = styled.p.withConfig({
-  shouldForwardProp: (prop, defaultValidatorFn) =>
-    !['mode', 'color', 'display'].includes(prop) && defaultValidatorFn(prop),
-})<TextProps & ModeProp>`
+  shouldForwardProp: (prop, defaultValidatorFn) => !['color', 'display'].includes(prop) && defaultValidatorFn(prop),
+})<TextProps>`
   /* Variant CSS */
   ${({ variant }) => getVariantStyles(variant)}
 
-  color: ${({ color, mode }) => getBlocksColor(mode, color)};
+  color: ${({ color }) => (color ? `var(--${color})` : '')};
   font-family: var(--font-family);
   margin: 0px;
   text-align: ${({ textAlign }) => textAlign};
@@ -87,12 +84,9 @@ const StyledText = styled.p.withConfig({
 `;
 
 const Text = forwardRef<HTMLElement, TextProps>(({ as = 'p', ...props }, ref) => {
-  const { mode } = useBlocksTheme();
   return (
-    // TODO: We need to remove color dependency from BlocksColors | ThemeModeColors to fix this error
     <StyledText
       as={as}
-      mode={mode}
       ref={ref}
       {...props}
     />

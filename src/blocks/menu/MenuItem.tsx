@@ -2,25 +2,20 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { MenuItemComponentProps } from './Menu.types';
-import { ModeProp } from 'blocks/Blocks.types';
-import { getBlocksColor } from '../Blocks.utils';
-import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { Text } from 'blocks/text';
 import { Box } from 'blocks/box';
 import * as RadixDropdown from '@radix-ui/react-dropdown-menu';
 import { Link } from 'blocks/link';
 
-const StyledMenuItem = styled(RadixDropdown.Item).withConfig({
-  shouldForwardProp: (prop, defaultValidatorFn) => !['mode'].includes(prop) && defaultValidatorFn(prop),
-})<MenuItemComponentProps & ModeProp>`
+const StyledMenuItem = styled(RadixDropdown.Item)<MenuItemComponentProps>`
   // Menu default styles
-  padding: var(--s0) var(--s1);
+  padding: var(--spacing-none) var(--spacing-xxxs);
   display: flex;
   flex-direction: row;
   flex: 1;
   align-items: center;
-  gap: var(--s1);
-  border-radius: var(--r2);
+  gap: var(--spacing-xxxs);
+  border-radius: var(--radius-xxs);
 
   [role='img'] {
     width: 24px;
@@ -28,7 +23,7 @@ const StyledMenuItem = styled(RadixDropdown.Item).withConfig({
   }
 
   &:hover {
-    background-color: ${({ mode }) => getBlocksColor(mode, { light: 'gray-100', dark: 'gray-1000' })};
+    background-color: var(--surface-secondary);
     outline: none !important;
   }
 
@@ -40,20 +35,17 @@ const StyledMenuItem = styled(RadixDropdown.Item).withConfig({
 `;
 
 const MenuItem: FC<MenuItemComponentProps> = ({ icon, label, onClick, destination, newTab, disabled, ...props }) => {
-  const { mode } = useBlocksTheme();
-
   const menuContent = (
     <StyledMenuItem
       onSelect={onClick}
       disabled={disabled}
-      mode={mode}
       {...props}
     >
       {icon}
       <Text
         className="menu-label"
         variant="bs-regular"
-        color={{ light: 'gray-1000', dark: 'gray-100' }}
+        color="components-dropdown-text-default"
       >
         {label}
       </Text>

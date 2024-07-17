@@ -36,22 +36,17 @@ const StyledTextArea = styled.textarea<{
   success?: boolean;
   resizable?: boolean;
 }>`
-  ${({ theme, resizable, success, error }) => {
-    const colors = theme?.blocksTheme?.colors;
+  ${({ resizable, success, error }) => {
     const defaultState = error ? 'danger' : success ? 'success' : 'default';
     const focusState = error ? 'danger' : success ? 'success' : 'focus';
     return css`
       align-self: stretch;
       align-items: flex-start;
       border-radius: var(--radius-xs, 12px);
-      border: 1.5px solid
-        var(--components-inputs-stroke-${defaultState}, ${colors[`components-inputs-stroke-${defaultState}`]});
-      background: var(
-        --components-inputs-background-${defaultState},
-        ${colors[`components-inputs-background-${defaultState}`]}
-      );
+      border: 1.5px solid var(--components-inputs-stroke-${defaultState});
+      background: var(--components-inputs-background-${defaultState});
 
-      color: var(--components-inputs-text-default, ${colors['components-inputs-text-default']});
+      color: var(--components-inputs-text-default);
 
       display: flex;
 
@@ -66,7 +61,7 @@ const StyledTextArea = styled.textarea<{
 
       padding: var(--spacing-xs, 12px);
       ::placeholder {
-        color: var(--components-inputs-text-placeholder, ${colors['components-inputs-text-placeholder']});
+        color: var(--components-inputs-text-placeholder);
       }
 
       resize: ${resizable ? 'vertical' : 'none'};
@@ -76,16 +71,15 @@ const StyledTextArea = styled.textarea<{
       }
 
       &:focus {
-        border: 1.5px solid
-          var(--components-inputs-stroke-${focusState}, ${colors[`components-inputs-stroke-${focusState}`]});
+        border: 1.5px solid var(--components-inputs-stroke-${focusState});
         outline: none;
       }
 
       &:disabled {
-        border: 1.5px solid var(--components-inputs-stroke-default, ${colors['components-inputs-stroke-default']});
-        background: var(--components-inputs-background-disabled, ${colors['components-inputs-background-disabled']});
+        border: 1.5px solid var(--components-inputs-stroke-default);
+        background: var(--components-inputs-background-disabled);
         cursor: not-allowed;
-        color: var(--components-inputs-text-disabled, ${colors['components-inputs-text-disabled']});
+        color: var(--components-inputs-text-disabled);
       }
     `;
   }}
