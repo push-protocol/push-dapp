@@ -68,6 +68,8 @@ export { default as KebabMenuHorizontal } from './components/KebabMenuHorizontal
 
 export { default as LightFilled } from './components/LightFilled';
 
+export { default as Lock } from './components/Lock';
+
 export { default as MaximizeRight } from './components/MaximizeRight';
 export { default as MaximizeLeft } from './components/MaximizeLeft';
 

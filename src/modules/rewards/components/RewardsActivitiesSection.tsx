@@ -1,5 +1,6 @@
-import { Box, Text } from 'blocks';
+import { Box, Lock, Text } from 'blocks';
 import { RewardsActivitiesList } from './RewardsActivitiesList';
+import { css } from 'styled-components';
 
 const RewardsActivitiesSection = () => {
   return (
@@ -15,6 +16,38 @@ const RewardsActivitiesSection = () => {
         Activities
       </Text>
       <RewardsActivitiesList />
+
+      <Box
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
+        gap="spacing-xxs"
+        css={css`
+          &:before,
+          &:after {
+            content: '';
+            flex: 1 1;
+            border-bottom: 1px solid var(--stroke-secondary);
+            margin: auto;
+          }
+
+          &:before {
+            margin-right: var(--s3);
+          }
+
+          &:after {
+            margin-left: var(--s3);
+          }
+        `}
+      >
+        <Lock size={28} />
+        <Text
+          variant="bs-semibold"
+          color="text-tertiary"
+        >
+          Verify X and Discord to unlock more activities
+        </Text>
+      </Box>
 
       {/* add hr */}
 
