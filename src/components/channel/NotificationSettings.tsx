@@ -31,7 +31,7 @@ import { NotificationSetting } from '@pushprotocol/restapi/src/lib/pushNotificat
 const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 function NotificationSettings() {
-  const { account, chainId } = useAccount();
+  const { account, chainId, wallet } = useAccount();
   const { coreChannelAdmin, delegatees } = useSelector((state: any) => state.admin);
   const { channelSettings } = useSelector((state: any) => state.channels);
 
@@ -45,7 +45,7 @@ function NotificationSettings() {
   const [settingToEdit, setSettingToEdit] = useState<ChannelSetting>();
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingSettings, setIsLoadingSettings] = useState(true);
-  const { handleConnectWallet } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -134,7 +134,7 @@ function NotificationSettings() {
 
       let userPushInstance = userPushSDKInstance;
       if (!userPushInstance.signer) {
-        userPushInstance = await handleConnectWallet();
+        userPushInstance = await handleConnectWalletAndEnableProfile({ wallet });
         if (!userPushInstance) {
           setIsLoading(false);
           return;

@@ -44,7 +44,12 @@ export interface AppContextType {
   initializePushSDK: () => Promise<void>;
   snapInstalled: boolean;
   setSnapInstalled: (snapInstalled: boolean) => void;
-  handleConnectWallet: (showToast?: boolean, toastMessage?: string) => any;
+  handleConnectWalletAndEnableProfile: (
+    showToast?: boolean,
+    toastMessage?: string,
+    wallet?: any,
+    remember?: any
+  ) => any;
   connectWallet: (showToast?: boolean, toastMessage?: string) => any;
   setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
   blockedLoading: BlockedLoadingI;
