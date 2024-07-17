@@ -73,7 +73,7 @@ function Chat({ chatid }) {
     setConnectedUser,
     displayQR,
     setDisplayQR,
-    handleConnectWallet,
+    handleConnectWalletAndEnableProfile,
   } = useContext(AppContext);
 
   const { userPushSDKInstance } = useSelector((state: any) => {

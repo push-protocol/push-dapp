@@ -110,25 +110,28 @@ const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveView }) =>
               gap="s3"
               width="100%"
             >
-              <TextInput
-                placeholder="User"
-                value={formik.values.username}
-                disabled={isPending}
-                onChange={formik.handleChange('username')}
-                error={formik.touched.username && Boolean(formik.errors.username)}
-                errorMessage={formik.touched.username ? formik.errors.username : ''}
-              />
+              <Box width="100%">
+                <TextInput
+                  placeholder="User"
+                  value={formik.values.username}
+                  disabled={isPending}
+                  onChange={formik.handleChange('username')}
+                  error={formik.touched.username && Boolean(formik.errors.username)}
+                  errorMessage={formik.touched.username ? formik.errors.username : ''}
+                />
+              </Box>
 
-              <TextInput
-                type="password"
-                placeholder="Password"
-                disabled={isPending}
-                value={formik.values.password}
-                onChange={formik.handleChange('password')}
-                error={formik.touched.password && Boolean(formik.errors.password)}
-                errorMessage={formik.touched.password ? formik.errors.password : ''}
-              />
-
+              <Box width="100%">
+                <TextInput
+                  type="password"
+                  placeholder="Password"
+                  disabled={isPending}
+                  value={formik.values.password}
+                  onChange={formik.handleChange('password')}
+                  error={formik.touched.password && Boolean(formik.errors.password)}
+                  errorMessage={formik.touched.password ? formik.errors.password : ''}
+                />
+              </Box>
               <Box margin="s6 s0 s0 s0">
                 <Button disabled={isPending}>{isPending ? 'Authenticating' : 'Login'}</Button>
               </Box>
