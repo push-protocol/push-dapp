@@ -121,7 +121,6 @@ const StyledBox = styled.div<{
 `;
 
 const StyledPopover = styled(ComboboxPopover)`
-  width: inherit;
   margin: var(--spacing-sm) var(--spacing-xl) var(--spacing-none) var(--spacing-none);
   padding: var(--spacing-xxs, 8px);
   border-radius: var(--radius-xs, 12px);
