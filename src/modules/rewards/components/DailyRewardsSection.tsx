@@ -15,42 +15,46 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
     {
       day: 1,
       points: 100,
-      status: 'active',
+      status: 'inactive',
     },
     {
       day: 2,
-      points: 100,
+      points: 50,
       status: 'active',
     },
     {
       day: 3,
-      points: 100,
-      status: 'active',
+      points: 25,
+      status: 'inactive',
     },
     {
       day: 4,
-      points: 100,
-      status: 'active',
+      points: 25,
+      status: 'inactive',
     },
 
     {
       day: 5,
-      points: 100,
-      status: 'active',
+      points: 75,
+      status: 'inactive',
     },
     {
       day: 6,
-      points: 100,
-      status: 'active',
+      points: 75,
+      status: 'inactive',
     },
     {
       day: 7,
-      points: 100,
-      status: 'active',
+      points: 150,
+      status: 'inactive',
     },
   ];
   return (
-    <Box>
+    <Box
+      display="flex"
+      flexDirection="column"
+      gap="spacing-md"
+    >
       <Box
         display="flex"
         flexDirection="row"
@@ -82,7 +86,14 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
 
       <Box
         display="grid"
-        css={css``}
+        css={css`
+          grid-template-columns: repeat(7, minmax(0, 1fr));
+          gap: var(--s4);
+
+          @media (max-width: 1200px) {
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+          }
+        `}
       >
         {dailyRewardsArray.map((item) => (
           <DailyRewardsItem item={item} />
