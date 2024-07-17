@@ -4775,6 +4775,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@radix-ui/react-switch@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@radix-ui/react-switch@npm:1.1.0"
+  dependencies:
+    "@radix-ui/primitive": "npm:1.1.0"
+    "@radix-ui/react-compose-refs": "npm:1.1.0"
+    "@radix-ui/react-context": "npm:1.1.0"
+    "@radix-ui/react-primitive": "npm:2.0.0"
+    "@radix-ui/react-use-controllable-state": "npm:1.1.0"
+    "@radix-ui/react-use-previous": "npm:1.1.0"
+    "@radix-ui/react-use-size": "npm:1.1.0"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10/847930e2a25699015e83f07ffb5065c2e925ffcf84b2ef2222e63e7862a9753e09ea8cd64504d20cbb689060ece1ad2e3b8a4c04702bc8040c5fda7d13ef71ae
+  languageName: node
+  linkType: hard
+
 "@radix-ui/react-tooltip@npm:^1.1.1":
   version: 1.1.2
   resolution: "@radix-ui/react-tooltip@npm:1.1.2"
@@ -4935,6 +4960,19 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10/66b4312e857c58b75f3bf62a2048ef090b79a159e9da06c19a468c93e62336969c33dbef60ff16969f00b20386cc25d138f6a353f1658b35baac0a6eff4761b9
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-use-previous@npm:1.1.0":
+  version: 1.1.0
+  resolution: "@radix-ui/react-use-previous@npm:1.1.0"
+  peerDependencies:
+    "@types/react": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10/8a2407e3db6248ab52bf425f5f4161355d09f1a228038094959250ae53552e73543532b3bb80e452f6ad624621e2e1c6aebb8c702f2dfaa5e89f07ec629d9304
   languageName: node
   linkType: hard
 
@@ -18133,6 +18171,7 @@ __metadata:
     "@pushprotocol/socket": "npm:0.5.3"
     "@pushprotocol/uiweb": "npm:1.4.2"
     "@radix-ui/react-dropdown-menu": "npm:^2.1.1"
+    "@radix-ui/react-switch": "npm:^1.1.0"
     "@radix-ui/react-tooltip": "npm:^1.1.1"
     "@reach/tabs": "npm:^0.18.0"
     "@reduxjs/toolkit": "npm:^1.7.1"
