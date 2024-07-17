@@ -36,11 +36,11 @@ const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 // Create Header
 function CreateChannelModule() {
-  const { account, provider, chainId } = useAccount();
+  const { account, provider, chainId, wallet } = useAccount();
   const { userPushSDKInstance } = useSelector((state) => {
     return state.user;
   });
-  const { handleConnectWallet } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
 
   const theme = useTheme();
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
@@ -240,7 +240,7 @@ function CreateChannelModule() {
     // e.preventDefault();
 
     if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
+      handleConnectWalletAndEnableProfile({wallet});
       return;
     }
 

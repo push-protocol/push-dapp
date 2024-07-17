@@ -3,12 +3,13 @@ import { CSSProperties, ReactNode } from 'react';
 import {
   BlocksColors,
   BorderValue,
-  RadiusType,
+  BlocksRadiusType,
   ResponsiveProp,
-  SpaceType,
+  BlocksSpaceType,
   ThemeModeBorder,
   ThemeModeColors,
   ValueOf,
+  BlocksGapType,
 } from '../Blocks.types';
 import { FlattenSimpleInterpolation } from 'styled-components';
 import { ThemeColors } from 'blocks/theme/Theme.types';
@@ -21,7 +22,7 @@ export type BoxResponsiveProps = {
   /* Sets flex-direction css property */
   flexDirection?: ResponsiveProp<CSSProperties['flexDirection']>;
   /* Sets gap between the elements */
-  gap?: ResponsiveProp<SpaceType>;
+  gap?: ResponsiveProp<BlocksGapType | BlocksSpaceType>;
   /* Sets display css property */
   display?: ResponsiveProp<CSSProperties['display']>;
   /* Sets height css property */
@@ -29,7 +30,7 @@ export type BoxResponsiveProps = {
   /* Sets justify-content css property */
   justifyContent?: ResponsiveProp<CSSProperties['justifyContent']>;
   /* Sets margin css property */
-  margin?: ResponsiveProp<SpaceType>;
+  margin?: ResponsiveProp<BlocksSpaceType>;
   /* Sets max-height css property */
   maxHeight?: ResponsiveProp<string>;
   /* Sets min-height css property */
@@ -39,7 +40,7 @@ export type BoxResponsiveProps = {
   /* Sets min-width css property */
   minWidth?: ResponsiveProp<string>;
   /* Sets padding css property */
-  padding?: ResponsiveProp<SpaceType>;
+  padding?: ResponsiveProp<BlocksSpaceType>;
   /* Sets width css property */
   width?: ResponsiveProp<string>;
 };
@@ -48,7 +49,7 @@ export type BoxNonResponsiveProps = {
   /* Sets border css property */
   border?: BorderValue | ThemeModeBorder;
   /* Sets border-radius css property */
-  borderRadius?: RadiusType;
+  borderRadius?: BlocksRadiusType;
   /* Sets background-color css property */
   backgroundColor?: BlocksColors | ThemeModeColors | ThemeColors;
   /* Sets color css property */
@@ -74,6 +75,8 @@ export type BoxComponentProps = {
   css?: FlattenSimpleInterpolation;
   /* Child react nodes rendered by Box */
   children?: ReactNode;
+  // option to add custom scroll bar to box
+  customScrollbar?: boolean;
 };
 
 export type BoxResponsiveCSSProperties =

@@ -3,7 +3,6 @@ import { useMemo } from 'react';
 
 // third party libraries
 import { useSelector } from 'react-redux';
-import { css } from 'styled-components';
 
 // hooks
 import { useAuthWithButton } from '../hooks/useWithAuthButton';
@@ -16,8 +15,7 @@ import { ActvityType } from 'queries/types';
 import { UserStoreType } from 'types';
 
 // components
-import { Box, Button } from 'blocks';
-import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
+import { Button } from 'blocks';
 
 type ActivityVerificationButtonProps = {
   userId: string;
@@ -25,6 +23,7 @@ type ActivityVerificationButtonProps = {
   activityType: ActvityType;
   refetchActivity: () => void;
   setErrorMessage: (errorMessage: string) => void;
+  isLoadingActivity: boolean;
 };
 
 export const ActivityVerificationButton = ({
@@ -33,17 +32,18 @@ export const ActivityVerificationButton = ({
   refetchActivity,
   setErrorMessage,
   userId,
+  isLoadingActivity,
 }: ActivityVerificationButtonProps) => {
   const { isWalletConnected } = useAccount();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const { handleTwitterVerification } = useVerifyTwitter({
+  const { handleTwitterVerification, verifyingTwitter, twitterActivityStatus } = useVerifyTwitter({
     activityTypeId,
     refetchActivity,
     setErrorMessage,
   });
 
-  const { handleDiscordVerification } = useVerifyDiscord({
+  const { handleDiscordVerification, verifyingDiscord, discordActivityStatus } = useVerifyDiscord({
     activityTypeId,
     refetchActivity,
     setErrorMessage,
@@ -52,22 +52,25 @@ export const ActivityVerificationButton = ({
   const activityData = useMemo(() => {
     if (activityType === 'follow_push_on_discord') {
       return {
-        isLoading: false,
+        isLoading: verifyingDiscord,
         label: 'Verify',
         action: handleDiscordVerification,
+        isVerificationComplete: discordActivityStatus == 'Claimed',
       };
     }
 
     if (activityType === 'follow_push_on_twitter') {
       return {
-        isLoading: false,
+        isLoading: verifyingTwitter,
         label: 'Verify',
         action: handleTwitterVerification,
+        isVerificationComplete: twitterActivityStatus == 'Claimed' || twitterActivityStatus == 'Pending',
       };
     }
-  }, [activityType, userPushSDKInstance]);
+  }, [activityType, userPushSDKInstance, twitterActivityStatus, discordActivityStatus]);
 
-  const { isAuthenticated, authButton, isAuthModalVisible, hideAuthModal } = useAuthWithButton({
+  const { isAuthenticated, authButton } = useAuthWithButton({
+    isLoading: isLoadingActivity,
     onSuccess: (userDetails) => activityData?.action(userDetails?.userId),
   });
 
@@ -77,34 +80,12 @@ export const ActivityVerificationButton = ({
         variant="tertiary"
         size="small"
         onClick={() => activityData?.action(userId)}
+        disabled={activityData?.isVerificationComplete || isLoadingActivity}
       >
-        {activityData?.label || 'Verify'}
+        {activityData?.isVerificationComplete ? 'Verifying...' : activityData?.label ? activityData?.label : 'Verify'}
       </Button>
     );
   }
 
-  return (
-    <Box>
-      {userPushSDKInstance && userPushSDKInstance?.readmode() && isAuthModalVisible && (
-        <Box
-          display="flex"
-          justifyContent="center"
-          width="-webkit-fill-available"
-          height="-webkit-fill-available"
-          alignItems="center"
-          css={css`
-            z-index: 99999;
-          `}
-        >
-          <UnlockProfileWrapper
-            type={UNLOCK_PROFILE_TYPE.MODAL}
-            showConnectModal={isAuthModalVisible}
-            onClose={() => hideAuthModal()}
-            description="Unlock your profile to proceed."
-          />
-        </Box>
-      )}
-      {authButton}
-    </Box>
-  );
+  return authButton;
 };

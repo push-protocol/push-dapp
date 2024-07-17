@@ -1,3 +1,5 @@
+import { ActvityType } from './rewards';
+
 export type PointsVaultStatus = 'COMPLETED' | 'PENDING' | 'REJECTED';
 
 export type PointsVaultGetUsersPayload = {
@@ -7,6 +9,7 @@ export type PointsVaultGetUsersPayload = {
   token: string;
   twitter?: string;
   wallet?: string;
+  activityTypeId?: ActvityType;
 };
 
 export type PointsVaultActivity = {

@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
 // External Packages
 import styled, { css, useTheme } from 'styled-components';
@@ -25,7 +25,8 @@ import { device, size } from 'config/Globals';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import UnlockLogo from '../../../assets/chat/unlock.svg';
 import Wallet from '../../../assets/chat/wallet.svg';
-import { Box, Cross, HoverableSVG } from 'blocks';
+import { Box, CrossFilled, HoverableSVG } from 'blocks';
+import { checkUnlockProfileErrors } from './UnlockProfile.utils';
 
 // Constants
 export enum UNLOCK_PROFILE_TYPE {
@@ -49,10 +50,10 @@ type UnlockProfileModalProps = {
 };
 
 const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps) => {
-  const { type, description, closeIcon } = InnerComponentProps;
+  const { type, description } = InnerComponentProps;
 
   const theme = useTheme();
-  const { handleConnectWallet, initializePushSDK } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile, initializePushSDK } = useContext(AppContext);
 
   const { account, wallet, connect } = useAccount();
 
@@ -65,13 +66,24 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
     body: 'Sign with wallet to continue.',
   });
 
-  const handleRememberMeChange = (event) => {
+  // const handleRememberMeChange = (event: any) => {
+  const handleRememberMeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRememberMe(event.target.checked);
   };
 
-  const handleChatprofileUnlock = async () => {
-    await handleConnectWallet({ remember: rememberMe });
+  const connectWallet = () => {
+    connect();
   };
+
+  const handleChatprofileUnlock = useCallback(async () => {
+    const user = await handleConnectWalletAndEnableProfile({ remember: rememberMe, wallet });
+
+    const errorExists = checkUnlockProfileErrors(user);
+
+    if (errorExists && onClose) {
+      onClose();
+    }
+  }, [wallet, rememberMe]);
 
   useEffect(() => {
     if (wallet?.accounts?.length > 0) {
@@ -225,7 +237,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
                   activeStatus={activeStatus.status}
                   status={PROFILESTATE.CONNECT_WALLET}
                   disabled={activeStatus.status !== PROFILESTATE.CONNECT_WALLET && true}
-                  onClick={() => connect()}
+                  onClick={() => connectWallet()}
                 >
                   Connect Wallet
                 </DefaultButton>

@@ -7,6 +7,7 @@ import { getBlocksColor, getBlocksBorder, getBlocksBorderRadius } from '../Block
 import { BoxCSSProps, BoxComponentProps } from './Box.types';
 import { getBoxResponsiveCSS } from './Box.utils';
 import { boxRestrictedCSSPropKeys } from './Box.constants';
+import { colorBrands } from 'blocks/theme/colors/colors.brands';
 
 export type BoxProps = BoxCSSProps & BoxComponentProps & TransformedHTMLAttributes<HTMLDivElement>;
 
@@ -26,6 +27,26 @@ const StyledBox = styled.div.withConfig({
   overflow: ${(props) => props.overflow};
   border: ${(props) => getBlocksBorder(props.mode, props.border)};
   position: ${(props) => props.position};
+
+  // push custom scroll
+  ${(props) =>
+    props.customScrollbar &&
+    `
+    &::-webkit-scrollbar-track {
+      background-color: none;
+      border-radius: 9px;
+    }
+
+    &::-webkit-scrollbar {
+      background-color: none;
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background: ${colorBrands[`primary-500`]};
+    }
+  `}
 
   /* Extra CSS prop */
   ${(props) => props.css || ''}
