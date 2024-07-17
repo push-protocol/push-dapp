@@ -25,7 +25,7 @@ import { device, size } from 'config/Globals';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import UnlockLogo from '../../../assets/chat/unlock.svg';
 import Wallet from '../../../assets/chat/wallet.svg';
-import { Box, CrossFilled, HoverableSVG } from 'blocks';
+import { Box, Cross, HoverableSVG } from 'blocks';
 import { checkUnlockProfileErrors } from './UnlockProfile.utils';
 
 // Constants
