@@ -96,8 +96,7 @@ const AppContextProvider = ({ children }) => {
     }
   };
 
-  // TODO: Change function name to handleConnectWalletAndUser
-  const handleConnectWallet = async ({
+  const handleConnectWalletAndEnableProfile = async ({
     remember = false,
     showToast = false,
     toastMessage = undefined,
@@ -126,7 +125,7 @@ const AppContextProvider = ({ children }) => {
 
     let user;
 
-    if (wallet?.accounts?.length > 0) {
+    if (wallet && typeof wallet === 'object' && wallet?.accounts?.length > 0) {
       user = await initializePushSDK(wallet);
     } else {
       const walletConnected = await connect();
@@ -535,7 +534,7 @@ const AppContextProvider = ({ children }) => {
         setSnapState,
         initializePushSDK,
         SnapState,
-        handleConnectWallet,
+        handleConnectWalletAndEnableProfile,
         connectWallet,
         setSnapInstalled,
         snapInstalled,
