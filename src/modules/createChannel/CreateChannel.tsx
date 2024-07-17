@@ -1,38 +1,40 @@
-// This is the Parent component for the Create Channel flow.
-// React + web3 essentials
+// React and other libraries
 import { useEffect, useState } from 'react';
 
 // Third party libraries
-import { useFormik } from 'formik';
 import { ethers } from 'ethers';
 
 // Hooks
 import { useAccount } from 'hooks';
 
-//common
+// Common
 import { Stepper } from 'common';
+
+// Helpers
+import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
+import { IPFSupload } from 'helpers/IpfsHelper';
+
+// Config
+import { appConfig } from 'config';
+import { createChannelInfoForm, uploadLogoForm } from './CreateChannel.form';
+import { useApprovePUSHToken, useCreateChannel } from 'queries/hooks/createChannel';
+
+// Utility funcs
+import { checkImageSize, checkPushTokenApprovalFunc } from './CreateChannel.utils';
 
 // Components
 import { Box } from 'blocks';
-import { StakeFees } from './components/StakeFees';
-import { UploadLogo } from './components/UploadLogo';
 import { ChannelInfo } from './components/ChannelInfo';
+import { CHANNEL_STAKE_FEES, CreateChannelSteps } from './CreateChannel.constants';
 import { CreateChannelError } from './components/CreateChannelError';
 import { CreateChannelHeader } from './components/CreateChannelHeader';
 import { CreateChannelProcessingInfo } from './components/CreateChannelProcessingInfo';
-import { CHANNEL_STAKE_FEES, CreateChannelSteps } from './CreateChannel.constants';
-import { ChannelCreationError, ChannelInfoFormValues, CreateChannelProgressType } from './CreateChannel.types';
-import { channelInfoValidationSchema, checkImageSize, checkPushTokenApprovalFunc } from './CreateChannel.utils';
 import { DifferentChainPage } from './components/DifferentChainPage';
+import { StakeFees } from './components/StakeFees';
+import { UploadLogo } from './components/UploadLogo';
 
-// Helpers
-import { IPFSupload } from 'helpers/IpfsHelper';
-import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
-
-// Config
-import { useApprovePUSHToken, useCreateChannel } from 'queries/hooks/createChannel';
-import { appConfig } from 'config';
-
+// Types
+import { ChannelCreationError, CreateChannelProgressType } from './CreateChannel.types';
 
 const completedSteps = [0];
 const fees = ethers.utils.parseUnits(CHANNEL_STAKE_FEES.toString(), 18);
@@ -58,19 +60,18 @@ const CreateChannel = () => {
 
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
 
-  const channelInfoFormik = useFormik<ChannelInfoFormValues>({
-    initialValues: {
-      channelName: '',
-      channelDesc: '',
-      channelURL: ''
-    },
-    validationSchema: channelInfoValidationSchema,
-    onSubmit: (values) => {
-      console.log('Values ', values);
-      handleNextStep();
-      setActiveStepIndex(1);
+  // To handle the stepper
+  const handleNextStep = () => {
+    if (activeStepIndex < 2) {
+      const nextStepIndex = activeStepIndex + 1;
+      completedSteps.push(nextStepIndex);
+      setActiveStepIndex(nextStepIndex);
     }
-  });
+  };
+
+  // Forms
+  const channelInfoFormik = createChannelInfoForm({ handleNextStep, setActiveStepIndex });
+  const uploadLogoFormik = uploadLogoForm();
 
   // Upload Logo
   const [view, setView] = useState(false);
@@ -81,16 +82,6 @@ const CreateChannel = () => {
 
   // Error status and text
   const [channelCreationError, setChannelCreationError] = useState<ChannelCreationError>(errorInitialState);
-
-
-  // To handle the stepper
-  const handleNextStep = () => {
-    if (activeStepIndex < 2) {
-      const nextStepIndex = activeStepIndex + 1;
-      completedSteps.push(nextStepIndex);
-      setActiveStepIndex(nextStepIndex);
-    }
-  };
 
   useEffect(() => {
     if (croppedImage) {
@@ -115,7 +106,7 @@ const CreateChannel = () => {
     }));
   };
 
-
+  // Approving PUSH Token for the contract
   const handleApprovePushToken = (signer: ethers.providers.JsonRpcSigner, storagePointer: string) => {
     approvePUSHToken(
       {
@@ -149,6 +140,7 @@ const CreateChannel = () => {
     );
   };
 
+  // Create Channel from Contract using Mutation
   const createChannel = (signer: ethers.providers.JsonRpcSigner, storagePointer: string) => {
     let channelType = CHANNEL_TYPE['GENERAL'];
     const identity = '1+' + storagePointer;
@@ -221,6 +213,7 @@ const CreateChannel = () => {
     );
   };
 
+  // Main function to create Channel.
   const handleCreateNewChannel = async () => {
     setProgressState(progressInitialState);
     setChannelCreationError(errorInitialState);
@@ -291,12 +284,22 @@ const CreateChannel = () => {
     >
       <CreateChannelHeader />
 
-      {!onCoreNetwork ? <DifferentChainPage /> : (
+      {!onCoreNetwork && <DifferentChainPage />}
+
+      {onCoreNetwork && (
         <>
-          {channelCreationError.txErrorStatus !== 0 && <CreateChannelError channelCreationError={channelCreationError} />}
+          {channelCreationError.txErrorStatus !== 0 &&
+            <CreateChannelError channelCreationError={channelCreationError} />
+          }
 
           {progressState.progress === null ? (
-            <Box display="flex" flexDirection="column" gap="s8" alignItems="center" alignSelf="stretch">
+            <Box
+              display="flex"
+              flexDirection="column"
+              gap="s8"
+              alignItems="center"
+              alignSelf="stretch"
+            >
               <Stepper
                 steps={CreateChannelSteps}
                 completedSteps={completedSteps}
@@ -313,6 +316,7 @@ const CreateChannel = () => {
                   setCroppedImage={setCroppedImage}
                   setActiveStepIndex={setActiveStepIndex}
                   handleNextStep={handleNextStep}
+                  uploadLogoFormik={uploadLogoFormik}
                 />
               )}
 
@@ -329,9 +333,6 @@ const CreateChannel = () => {
 
         </>
       )}
-
-
-
 
     </Box>
   );

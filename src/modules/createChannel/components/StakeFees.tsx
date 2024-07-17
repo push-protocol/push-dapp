@@ -4,16 +4,19 @@ import { FC, useEffect, useMemo, useState } from 'react';
 // Third party libraries
 import { css } from 'styled-components';
 
-// Components
-import { Box, Button, Skeleton, Text } from 'blocks';
-import { CreateChannelFaucet } from './CreateChannelFaucet';
-import { getPushTokenFromWallet, importPushToken, mintPushToken } from 'helpers';
-
 // Hooks
 import { useAccount } from 'hooks';
 
 // Constans
 import { CHANNEL_STAKE_FEES } from '../CreateChannel.constants';
+
+// Helpers
+import { getPushTokenFromWallet, importPushToken, mintPushToken } from 'helpers';
+
+// Components
+import { Box, Button, Skeleton, Text } from 'blocks';
+import { CreateChannelFaucet } from './CreateChannelFaucet';
+
 
 type StakeFeesProps = {
   channelStakeFees: number;
@@ -152,6 +155,7 @@ const StakeFees: FC<StakeFeesProps> = ({
 
       <Box display="flex" justifyContent="center">
         <Button
+          disabled={mintingPush}
           onClick={() => {
             handleCreateNewChannel()
           }}

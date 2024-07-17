@@ -43,8 +43,7 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
               label="Channel Name"
               value={channelInfoFormik.values.channelName}
               onChange={(e) => {
-                const maxLength = 32;
-                const inputValue = e.target.value.slice(0, maxLength);
+                const inputValue = e.target.value;
                 channelInfoFormik.setFieldValue('channelName', inputValue);
               }}
               error={channelInfoFormik.touched.channelName && Boolean(channelInfoFormik.errors.channelName)}
@@ -59,13 +58,12 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
               description='Enter a Brief description of the notifications the user will receive'
               error={channelInfoFormik.touched.channelDesc && Boolean(channelInfoFormik.errors.channelDesc)}
               errorMessage={channelInfoFormik.touched.channelDesc ? channelInfoFormik.errors.channelDesc : ''}
-              totalCount={250}
               value={channelInfoFormik.values.channelDesc}
               onChange={(e) => {
-                const maxLength = 250;
-                const inputValue = e.target.value.slice(0, maxLength);
+                const inputValue = e.target.value;
                 channelInfoFormik.setFieldValue('channelDesc', inputValue);
               }}
+              totalCount={250}
             />
 
             <TextInput
@@ -79,7 +77,7 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
           </Box>
 
           <Box display='flex' justifyContent='center'>
-            <Button disabled={!channelInfoFormik.isValid}>
+            <Button>
               Next
             </Button>
           </Box>

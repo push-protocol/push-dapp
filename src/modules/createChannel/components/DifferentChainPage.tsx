@@ -1,11 +1,11 @@
 // Hooks
 import { useAccount } from 'hooks';
 
-// Components
-import { Box, Button, Text } from 'blocks';
-
 // Configs
 import { appConfig } from 'config';
+
+// Components
+import { Box, Button, Text } from 'blocks';
 
 const DifferentChainPage = () => {
   const { switchChain } = useAccount();

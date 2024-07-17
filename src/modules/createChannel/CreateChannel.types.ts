@@ -4,6 +4,12 @@ export type ChannelInfoFormValues = {
   channelURL: string;
 };
 
+export type UploadLogoFormValues = {
+  image: null;
+  imageSrc: string;
+  imageType: string;
+};
+
 export type CreateChannelProgressType = {
   progress: number | null;
   progressInfo: string;

@@ -1,17 +1,16 @@
 //? Since this is used just in Create channel flow so I have not moved it in the common folder
-
 // React + web3 essentials
 import { FC, useRef } from "react";
 
 // Third party libraries
 import { css } from "styled-components";
-import * as Yup from 'yup';
-import { useFormik } from "formik";
+import { FormikProps } from "formik";
 
 // Component
 import { Box, Button, CloudUpload, Text } from "blocks";
 import ImageClipper from "primaries/ImageClipper";
 import { isImageFile } from "../CreateChannel.utils";
+import { UploadLogoFormValues } from "../CreateChannel.types";
 
 type UploadLogoProps = {
   view: boolean;
@@ -20,6 +19,7 @@ type UploadLogoProps = {
   setCroppedImage: (croppedImage: string | undefined) => void;
   setActiveStepIndex: (stepFlow: number) => void;
   handleNextStep: () => void;
+  uploadLogoFormik: FormikProps<UploadLogoFormValues>;
 }
 
 const UploadLogo: FC<UploadLogoProps> = ({
@@ -28,27 +28,11 @@ const UploadLogo: FC<UploadLogoProps> = ({
   setView,
   setCroppedImage,
   setActiveStepIndex,
-  handleNextStep
+  handleNextStep,
+  uploadLogoFormik
 }) => {
 
   const childRef = useRef();
-
-  const logoValidationSchema = Yup.object().shape({
-    image: Yup.mixed().required('Image is required'),
-  });
-
-
-  const formik = useFormik({
-    initialValues: {
-      image: null,
-      imageSrc: '',
-      imageType: ''
-    },
-    validationSchema: logoValidationSchema,
-    onSubmit: (values) => {
-      // Handle form submission logic here
-    },
-  });
 
   // handle Input file type
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,17 +58,16 @@ const UploadLogo: FC<UploadLogoProps> = ({
 
   // Process Image
   const processFile = async (file: File) => {
-    formik.setFieldValue('image', file);
+    uploadLogoFormik.setFieldValue('image', file);
     // Read the file and set imageSrc and imageType
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      formik.setFieldValue('imageSrc', reader.result as string);
-      formik.setFieldValue('imageType', file.type);
+      uploadLogoFormik.setFieldValue('imageSrc', reader.result as string);
+      uploadLogoFormik.setFieldValue('imageType', file.type);
     };
     setView(true);
   };
-
 
   return (
     <Box
@@ -104,7 +87,7 @@ const UploadLogo: FC<UploadLogoProps> = ({
           Upload a PNG, JPG upto 1MB. Crop the image to resize to 128px.
         </Text>
 
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={uploadLogoFormik.handleSubmit}>
           <Box
             width={{ initial: '500px', ml: '325px' }}
             padding='spacing-xxl spacing-none'
@@ -133,8 +116,8 @@ const UploadLogo: FC<UploadLogoProps> = ({
                 <ImageClipper
                   width='200px'
                   height='200px'
-                  imageSrc={formik.values.imageSrc}
-                  imageType={formik.values.imageType}
+                  imageSrc={uploadLogoFormik.values.imageSrc}
+                  imageType={uploadLogoFormik.values.imageType}
                   onImageCropped={(croppedImage: string) => setCroppedImage(croppedImage)}
                   ref={childRef}
                 />
