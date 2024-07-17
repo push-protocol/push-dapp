@@ -186,7 +186,7 @@ const UpdateNotifSettingDropdown: FC<UpdateNotifSettingDropdownProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { chainId } = useAccount();
+  const { chainId, wallet } = useAccount();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
@@ -202,7 +202,7 @@ const UpdateNotifSettingDropdown: FC<UpdateNotifSettingDropdownProps> = ({
     setIsOpen(false);
   };
 
-  const { handleConnectWallet } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
 
   const subscribeToast = useToast();
   const saveUserSettingHandler = async ({
@@ -219,7 +219,7 @@ const UpdateNotifSettingDropdown: FC<UpdateNotifSettingDropdownProps> = ({
     let userPushInstance = userPushSDKInstance;
 
     if (!userPushInstance.signer) {
-      userPushInstance = await handleConnectWallet();
+      userPushInstance = await handleConnectWalletAndEnableProfile({ wallet });
       if (!userPushInstance) {
         setLoadingFunc(false);
         return;

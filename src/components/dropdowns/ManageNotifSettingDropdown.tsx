@@ -111,7 +111,7 @@ const ManageNotifSettingDropdownContainer: FC<ManageNotifSettingDropdownContaine
 const ManageNotifSettingDropdown: FC<ManageNotifSettingDropdownProps> = (options) => {
   const { children, centerOnMobile, userSetting, channelDetail, onSuccessOptout } = options;
   const [isOpen, setIsOpen] = useState(false);
-  const { chainId, provider, account } = useAccount();
+  const { chainId, provider, account, wallet } = useAccount();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
@@ -142,7 +142,7 @@ const ManageNotifSettingDropdown: FC<ManageNotifSettingDropdownProps> = (options
 
     //TODO: We can change this back to use Push User
     // if (!userPushInstance.signer) {
-    //   userPushInstance = await handleConnectWallet();
+    //   userPushInstance = await handleConnectWalletAndEnableProfile({ wallet });
     //   if (!userPushInstance) {
     //     setLoadingFunc(false);
     //     return;
