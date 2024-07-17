@@ -2,34 +2,85 @@
 import { FC, useState } from 'react';
 
 import { useSelector } from 'react-redux';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 import { css } from 'styled-components';
+import { MdError } from 'react-icons/md';
 
-import { addNewChainSteps } from './AddNewChain.constants';
+import useToast from 'hooks/useToast';
+import { useInitiateNewChain } from 'queries';
 
-// Components
 import { NewAddress } from './components/NewAddress';
 import { ChangeNetwork } from './components/ChangeNetwork';
 import { VerifyAliasChain } from './components/VerifyAliasChain';
+import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
 import { Box, Text } from 'blocks';
 import { Stepper } from 'common';
-import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
 
 import { UserStoreType } from 'types';
+import { ActiveStepKey, NewChainAddressValue } from './AddNewChain.types';
 
-export type AddNewChainProps = {};
+import { isValidAddress } from 'helpers/ValidationHelper';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { addNewChainSteps } from './AddNewChain.constants';
 
-const completedSteps = [0];
-const AddNewChain: FC<AddNewChainProps> = () => {
-  const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
-  const [alias, setAlias] = useState<string>('');
+const AddNewChain: FC = () => {
+  const [activeStepKey, setActiveStepKey] = useState<ActiveStepKey>('newaddress');
+  const [completedSteps, setCompletedSteps] = useState<Array<ActiveStepKey>>(['newaddress']);
 
+  const toast = useToast();
+  const { mutate: initiateNewChain, isPending, isError } = useInitiateNewChain();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const handleNextStep = () => {
-    if (activeStepIndex < 2) {
-      completedSteps.push(activeStepIndex + 1);
-      setActiveStepIndex(activeStepIndex + 1);
-    }
+  const validationSchema = yup.object().shape({
+    alias: yup
+      .string()
+      .required('Address is required')
+      .test('is-valid-address', 'Invalid wallet address', isValidAddress),
+    chainId: yup.string().required('ChainId is required'),
+  });
+  const formik = useFormik<NewChainAddressValue>({
+    initialValues: {
+      alias: '',
+      chainId: '11155111',
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      handleInitiate(values.alias, values.chainId);
+    },
+  });
+  const handleInitiate = (alias: string, chainId: string) => {
+    initiateNewChain(
+      {
+        userPushSDKInstance,
+        alias: convertAddressToAddrCaip(alias, parseInt(chainId)),
+      },
+      {
+        onSuccess: () => {
+          handleNextStep('changenetwork');
+        },
+        onError: (error: any) => {
+          if (error) {
+            toast.showMessageToast({
+              toastTitle: 'Error',
+              toastMessage: error.message,
+              toastType: 'ERROR',
+              getToastIcon: (size) => (
+                <MdError
+                  size={size}
+                  color="red"
+                />
+              ),
+            });
+          }
+        },
+      }
+    );
+  };
+
+  const handleNextStep = (key: ActiveStepKey) => {
+    setCompletedSteps([...new Set([...completedSteps, key])]);
+    setActiveStepKey(key);
   };
 
   return (
@@ -84,21 +135,21 @@ const AddNewChain: FC<AddNewChainProps> = () => {
       <Stepper
         steps={addNewChainSteps}
         completedSteps={completedSteps}
-        setActiveStepIndex={setActiveStepIndex}
+        setActiveStepKey={(key) => setActiveStepKey(key as ActiveStepKey)}
       />
-      {activeStepIndex === 0 && (
+      {activeStepKey === 'newaddress' && (
         <NewAddress
-          setAddress={setAlias}
-          handleNextStep={handleNextStep}
+          formik={formik}
+          isLoading={isPending && !isError}
         />
       )}
-      {activeStepIndex === 1 && (
+      {activeStepKey === 'changenetwork' && (
         <ChangeNetwork
           handleNextStep={handleNextStep}
-          alias={alias}
+          formik={formik}
         />
       )}
-      {activeStepIndex === 2 && <VerifyAliasChain alias={alias} />}
+      {activeStepKey === 'verifyalias' && <VerifyAliasChain formik={formik} />}
       {userPushSDKInstance && userPushSDKInstance?.readmode() && (
         <Box
           display="flex"

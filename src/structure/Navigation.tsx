@@ -24,8 +24,8 @@ import navigationList from 'config/NavigationList';
 import { appConfig } from 'config/index.js';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { Box, PlusCircle, Text } from 'blocks';
-import Curve from 'blocks/icons/components/Curve';
 import { LOGO_ALIAS_CHAIN } from 'common';
+import APP_PATHS from 'config/AppPaths';
 
 const AddNewChainNavigation = () => {
   const { channelDetails } = useSelector((state: any) => state.admin);
@@ -36,18 +36,25 @@ const AddNewChainNavigation = () => {
     <Box
       display="flex"
       padding="spacing-none spacing-md"
+      height="48px"
     >
-      <Curve
-        color="stroke-tertiary"
-        size={18}
-      />
       <Box
-        display="flex"
-        alignItems="center"
-        margin="spacing-none spacing-none spacing-none spacing-xs"
-      >
-        {verifiedAliasChainIds.length > 0 &&
-          verifiedAliasChainIds.map((aliasChainId: number) => {
+        css={css`
+          border-bottom: 1.5px solid var(--stroke-tertiary);
+          border-left: 1.5px solid var(--stroke-tertiary);
+          border-bottom-left-radius: 10px;
+        `}
+        width="20px"
+        height="24px"
+      ></Box>
+
+      {verifiedAliasChainIds.length > 0 && (
+        <Box
+          display="flex"
+          alignItems="center"
+          margin="spacing-none spacing-none spacing-none spacing-xs"
+        >
+          {verifiedAliasChainIds.map((aliasChainId: number) => {
             const LogoComponent = LOGO_ALIAS_CHAIN[aliasChainId];
             return LogoComponent ? (
               <Box
@@ -64,13 +71,15 @@ const AddNewChainNavigation = () => {
               </Box>
             ) : null;
           })}
-      </Box>
+        </Box>
+      )}
+
       <Box
         display="flex"
         gap="spacing-xxxs"
         alignItems="center"
         cursor="pointer"
-        onClick={() => navigate('/addNewChain')}
+        onClick={() => navigate(APP_PATHS.AddNewChain)}
       >
         <PlusCircle
           size={32}
@@ -81,6 +90,7 @@ const AddNewChainNavigation = () => {
           <Text
             variant="bm-semibold"
             color="text-secondary"
+            ellipsis
           >
             Add New Chain
           </Text>

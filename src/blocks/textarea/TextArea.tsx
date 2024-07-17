@@ -52,7 +52,7 @@ const StyledTextArea = styled.textarea<{
         ${colors[`components-inputs-background-${defaultState}`]}
       );
 
-      color: var(--components-inputs-text-default, ${colors['components-inputs-text-default']});
+      color: var(--components-inputs-text-${defaultState}, ${colors[`components-inputs-text-${defaultState}`]});
 
       display: flex;
 
@@ -129,7 +129,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           <LabelContainer>
             <Text
               variant="h6-semibold"
-              color="components-inputs-text-default"
+              color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-default'}
             >
               <LabelTextContainer>
                 {label}
@@ -139,7 +139,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             {totalCount && (
               <Text
                 variant="c-regular"
-                color="components-inputs-text-secondary"
+                color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-secondary'}
               >{`${value?.length || 0} / ${totalCount}`}</Text>
             )}
           </LabelContainer>

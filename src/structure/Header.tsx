@@ -71,7 +71,7 @@ const EXTRA_HEADER_TAGS = {
     },
   },
   [APP_PATHS.AddNewChain]: {
-    title: 'Dashboard',
+    title: 'Create Channel',
     light: {
       bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
       fg: themeLight.headerTagFg,

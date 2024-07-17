@@ -5,15 +5,15 @@ import { FC } from 'react';
 import { Box, Text } from 'blocks';
 
 type StepperProps = {
-  steps: Array<{ label: string }>;
-  setActiveStepIndex: (stepIndex: number) => void;
-  completedSteps: Array<number>;
+  steps: Array<{ label: string; key: string }>;
+  setActiveStepKey: (step: string) => void;
+  completedSteps: Array<string>;
 };
 
-const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, completedSteps }) => {
-  const handleChangeActiveStep = (stepIndex: number) => {
-    if (completedSteps?.includes(stepIndex)) {
-      setActiveStepIndex(stepIndex);
+const Stepper: FC<StepperProps> = ({ steps, setActiveStepKey, completedSteps }) => {
+  const handleChangeActiveStep = (step: string) => {
+    if (completedSteps?.includes(step)) {
+      setActiveStepKey(step);
     }
   };
   return (
@@ -21,18 +21,18 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, completedSteps }
       display="flex"
       gap="spacing-lg"
     >
-      {steps.map((step, index) => (
+      {steps.map((step) => (
         <Box
           display="flex"
           flexDirection="column"
           gap="spacing-xs"
           width="180px"
           cursor="pointer"
-          onClick={() => handleChangeActiveStep(index)}
+          onClick={() => handleChangeActiveStep(step.key)}
         >
           <Text
             textAlign="center"
-            color={completedSteps.includes(index) ? 'text-brand-medium' : 'text-tertiary'}
+            color={completedSteps.includes(step.key) ? 'text-brand-medium' : 'text-tertiary'}
             variant="h5-semibold"
             display={{ ml: 'none', dp: 'block' }}
           >
@@ -50,7 +50,7 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, completedSteps }
           <Box
             height="4px"
             borderRadius="r2"
-            backgroundColor={completedSteps.includes(index) ? 'stroke-brand-medium' : 'stroke-tertiary'}
+            backgroundColor={completedSteps.includes(step.key) ? 'stroke-brand-medium' : 'stroke-tertiary'}
           ></Box>
         </Box>
       ))}

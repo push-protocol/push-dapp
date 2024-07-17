@@ -11,13 +11,16 @@ import APP_PATHS from 'config/AppPaths';
 
 import { Box, Button, Text, TextInput } from 'blocks';
 
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+
 import { UserStoreType } from 'types';
 
 export type VerifyAliasChainProps = {
-  alias: string;
+  // alias: string;
+  formik: any;
 };
 
-const VerifyAliasChain: FC<VerifyAliasChainProps> = ({ alias }) => {
+const VerifyAliasChain: FC<VerifyAliasChainProps> = ({ formik }) => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
     return state.user;
   });
@@ -26,12 +29,14 @@ const VerifyAliasChain: FC<VerifyAliasChainProps> = ({ alias }) => {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const aliasParts = alias.split(':');
+  const selectedChainId = parseInt(formik.values.chainId);
+  const aliasAddress = formik.values.alias;
+
   const handleVerifyAliasChain = () => {
     verifyAliasChain(
       {
         userPushSDKInstance,
-        alias,
+        alias: convertAddressToAddrCaip(aliasAddress, selectedChainId),
       },
       {
         onSuccess: () => {
@@ -88,7 +93,7 @@ const VerifyAliasChain: FC<VerifyAliasChainProps> = ({ alias }) => {
         </Text>
         <TextInput
           disabled
-          value={aliasParts[2]}
+          value={aliasAddress}
         />
       </Box>
       <Button

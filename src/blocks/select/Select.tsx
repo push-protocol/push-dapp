@@ -4,27 +4,39 @@ import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption 
 import '@reach/combobox/styles.css';
 
 import { textVariants } from '../text';
-import { ArrowDown } from '../icons';
+import { CaretDown } from '../icons';
 import { Box } from 'blocks/box';
 
 export type SelectOption = {
-  value: string;
-  label: string;
   icon?: React.ReactNode;
+  label: string;
+  value: string;
 };
 
 export type SelectProps = {
-  options: SelectOption[];
-  onSelect?: (value: string) => void;
-  selectedValue?: string;
+  /* Additional prop from styled components to apply custom css to Button */
   css?: FlattenSimpleInterpolation;
+  /* Description below the select field*/
   description?: string;
+  /* Sets button as disabled */
   disabled?: boolean;
+  /* Sets error state */
   error?: boolean;
+  /* The error message to be shown */
   errorMessage?: string;
+  /* Shows the label for the select field */
   label?: string;
+  /* Function invoked when an option is selected */
+  onSelect?: (value: string) => void;
+  /* Select option list */
+  options: SelectOption[];
+  /* Placeholder to be shown when nothing is selected */
   placeholder?: string;
+  /* To make the field compulsory  */
   required?: boolean;
+  /* Selected value */
+  value?: string;
+  /* Sets success state */
   success?: boolean;
 };
 
@@ -52,6 +64,7 @@ const StyledBox = styled.div<{
     return css`
       display: flex;
       align-self: stretch;
+      cursor: pointer;
       align-items: center;
       justify-content: space-between;
       border-radius: var(--radius-xs, 12px);
@@ -107,23 +120,24 @@ const StyledBox = styled.div<{
   }}
 `;
 
-const StyledPopover = styled(ComboboxPopover)<{ popoverWidth: number }>`
-  width: ${({ popoverWidth }) => popoverWidth}px;
-  margin: var(--spacing-xxs) var(--spacing-none) var(--spacing-none) var(--spacing-none);
+const StyledPopover = styled(ComboboxPopover)`
+  width: inherit;
+  margin: var(--spacing-sm) var(--spacing-xl) var(--spacing-none) var(--spacing-none);
   padding: var(--spacing-xxs, 8px);
   border-radius: var(--radius-xs, 12px);
   border: var(--border-sm, 1px) solid var(--stroke-secondary, #eaebf2);
   background: var(--surface-primary, #fff);
   overflow: hidden auto;
   max-height: 20rem;
-  position: absolute;
 `;
 
 const StyledCombobox = styled(Combobox)`
-  position: relative;
   width: 100%;
 `;
 
+const StyledInput = styled(ComboboxInput)`
+  width: 100%;
+`;
 const StyledList = styled(ComboboxList)`
   display: flex;
   flex-direction: column;
@@ -136,7 +150,6 @@ const StyledOption = styled(ComboboxOption)`
   padding: var(--spacing-xxxs, 4px);
   gap: var(--spacing-xxs, 8px);
   color: var(--components-dropdown-text-default, #17181b);
-  text-align: center;
   font-family: var(--font-family);
   font-size: ${textVariants['bs-regular'].fontSize};
   font-style: ${textVariants['bs-regular'].fontStyle};
@@ -156,30 +169,36 @@ const Select: React.FC<SelectProps> = ({
   options,
   onSelect,
   css,
-  selectedValue,
+  value,
   placeholder = '',
   error,
   success,
   disabled,
 }) => {
   const [popoverWidth, setPopoverWidth] = useState(0);
+  const [viewPopover, setViewPopover] = useState(true);
   const comboboxRef = useRef<HTMLDivElement>(null);
+  const parentRef = useRef<HTMLDivElement>(null);
+  const childRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (comboboxRef.current) {
-        setPopoverWidth(comboboxRef.current.offsetWidth - 18);
-      }
-    };
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     if (comboboxRef.current) {
+  //       setPopoverWidth(comboboxRef.current.offsetWidth - 18);
+  //     }
+  //   };
 
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  //   handleResize();
+  //   window.addEventListener('resize', handleResize);
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, []);
+  const selectedOption = options.find((option) => option.value === value);
 
-  const selectedOption = options.find((option) => option.value === selectedValue);
+  const handleParentFocus = () => {
+    childRef?.current?.focus();
+  };
 
   return (
     <Container css={css}>
@@ -189,46 +208,56 @@ const Select: React.FC<SelectProps> = ({
         ref={comboboxRef}
         aria-labelledby="select"
         openOnFocus
-        onSelect={(value: string) => onSelect?.(value)}
+        onSelect={(value: string) => {
+          onSelect?.(value);
+          setViewPopover(false);
+        }}
       >
         <StyledBox
+          ref={parentRef}
           error={error}
           success={success}
           disabled={disabled}
+          onFocus={handleParentFocus}
+          onClick={() => {
+            handleParentFocus();
+            setViewPopover(true);
+          }}
         >
           <Box
             display="flex"
             gap="spacing-xxs"
+            width="100%"
           >
             {selectedOption?.icon}
-            <ComboboxInput
+            <StyledInput
+              ref={childRef}
               disabled={disabled}
               placeholder={placeholder}
               value={selectedOption?.label}
             />
           </Box>
-          <ArrowDown
-            size={11}
+          <CaretDown
+            size={20}
             color="icon-tertiary"
           />
         </StyledBox>
 
-        <StyledPopover
-          portal={false}
-          popoverWidth={popoverWidth}
-        >
-          <StyledList>
-            {options.map((option) => (
-              <StyledOption
-                value={option.value}
-                key={option.value}
-              >
-                {option?.icon}
-                {option.label}
-              </StyledOption>
-            ))}
-          </StyledList>
-        </StyledPopover>
+        {viewPopover && (
+          <StyledPopover>
+            <StyledList>
+              {options.map((option) => (
+                <StyledOption
+                  value={option.value}
+                  key={option.value}
+                >
+                  {option?.icon}
+                  {option.label}
+                </StyledOption>
+              ))}
+            </StyledList>
+          </StyledPopover>
+        )}
       </StyledCombobox>
       {/* description and error message will be added here  */}
     </Container>

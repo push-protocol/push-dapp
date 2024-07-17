@@ -3,21 +3,22 @@ import { FC, useEffect } from 'react';
 import { useAccount } from 'hooks';
 
 import { Box, Button, Text } from 'blocks';
+import { ActiveStepKey } from '../AddNewChain.types';
 
 export type ChangeNetworkProps = {
-  handleNextStep: () => void;
-  alias: string;
+  handleNextStep: (key: ActiveStepKey) => void;
+  formik: any;
 };
 
-const ChangeNetwork: FC<ChangeNetworkProps> = ({ handleNextStep, alias }) => {
+const ChangeNetwork: FC<ChangeNetworkProps> = ({ handleNextStep, formik }) => {
   const { switchChain, chainId } = useAccount();
-  const aliasChainId = parseInt(alias.split(':')[1]);
-
+  const selectedChainId = parseInt(formik.values.chainId);
   useEffect(() => {
-    if (chainId === aliasChainId) {
-      handleNextStep();
+    if (chainId === selectedChainId) {
+      handleNextStep('verifyalias');
     }
   }, [chainId]);
+
   return (
     <Box
       display="flex"
@@ -31,7 +32,7 @@ const ChangeNetwork: FC<ChangeNetworkProps> = ({ handleNextStep, alias }) => {
       >
         Switch to the desired chain in your wallet to add it to your channel.
       </Text>
-      <Button onClick={() => switchChain(aliasChainId)}>Change Network</Button>
+      <Button onClick={() => switchChain(selectedChainId)}>Change Network</Button>
     </Box>
   );
 };
