@@ -38,8 +38,7 @@ const StyledTextInput = styled.div<{
   success?: boolean;
   disabled?: boolean;
 }>`
-  ${({ theme, success, error, disabled }) => {
-    const colors = theme?.blocksTheme?.colors;
+  ${({ success, error, disabled }) => {
     const defaultState = error ? 'danger' : success ? 'success' : disabled ? 'disabled' : 'default';
     const focusState = error ? 'danger' : success ? 'success' : 'focus';
     return css`
@@ -47,12 +46,8 @@ const StyledTextInput = styled.div<{
       justify-content: space-between;
       align-items: flex-start;
       border-radius: var(--radius-xs, 12px);
-      border: 1.5px solid
-        var(--components-inputs-stroke-${defaultState}, ${colors[`components-inputs-stroke-${defaultState}`]});
-      background: var(
-        --components-inputs-background-${defaultState},
-        ${colors[`components-inputs-background-${defaultState}`]}
-      );
+      border: 1.5px solid var(--components-inputs-stroke-${defaultState});
+      background: var(--components-inputs-background-${defaultState});
 
       display: flex;
 
@@ -69,14 +64,14 @@ const StyledTextInput = styled.div<{
         width: 24px;
         height: 24px;
 
-        color: var(--components-inputs-icon-${defaultState}, ${colors[`components-inputs-icon-${defaultState}`]});
+        color: var(--components-inputs-icon-${defaultState});
       }
       & input {
-        color: var(--components-inputs-text-${defaultState}, ${colors[`components-inputs-text-${defaultState}`]});
+        color: var(--components-inputs-text-${defaultState});
 
         width: 100%;
         ::placeholder {
-          color: var(--components-inputs-text-placeholder, ${colors['components-inputs-text-placeholder']});
+          color: var(--components-inputs-text-placeholder);
         }
         border: none;
         background: transparent;
@@ -87,20 +82,19 @@ const StyledTextInput = styled.div<{
       }
 
       &:hover {
-        border: 1.5px solid var(--components-inputs-stroke-hover, ${colors['components-inputs-stroke-hover']});
+        border: 1.5px solid var(--components-inputs-stroke-hover);
       }
 
       &:focus-within {
-        border: 1.5px solid
-          var(--components-inputs-stroke-${focusState}, ${colors[`components-inputs-stroke-${focusState}`]});
+        border: 1.5px solid var(--components-inputs-stroke-${focusState});
         outline: none;
       }
 
       &:disabled {
-        border: 1.5px solid var(--components-inputs-stroke-default, ${colors['components-inputs-stroke-default']});
-        background: var(--components-inputs-background-disabled, ${colors['components-inputs-background-disabled']});
+        border: 1.5px solid var(--components-inputs-stroke-default);
+        background: var(--components-inputs-background-disabled);
         cursor: not-allowed;
-        color: var(--components-inputs-text-disabled, ${colors['components-inputs-text-disabled']});
+        color: var(--components-inputs-text-disabled);
       }
     `;
   }}

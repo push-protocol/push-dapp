@@ -1,19 +1,15 @@
 import { css } from 'styled-components';
 import { deviceMediaQ, deviceSizes, breakpointMap } from './theme';
 import {
-  BlocksColors,
   Breakpoint,
   CSSPropName,
   CSSPropValueType,
   DeviceSizeName,
-  ThemeModeColors,
   PixelValue,
   ResponsiveCSSPropertyData,
-  ThemeMode,
   BorderValue,
   BlocksRadiusType,
 } from './Blocks.types';
-import { ThemeColors } from './theme/Theme.types';
 import { radiusRegex, spacingRegex } from './Blocks.constants';
 
 /**
@@ -133,26 +129,6 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
     ${initialCSS}
     ${createBreakpointCSS(breakpointData)}
   `;
-};
-
-/**
- * @deprecated
- * @param color
- * @returns color as a css variable: var(--primary)
- *
- * // TODO: Remove this function. We don't need it.
- */
-export const getBlocksColor = (mode: ThemeMode, color?: BlocksColors | ThemeModeColors | ThemeColors) => {
-  // If color is not given return undefined, to avoid any breakages
-  if (!color) return color;
-
-  // Handle the colors for light and dark mode
-  if (typeof color === 'object') {
-    return `var(--${color[mode]})`;
-  }
-
-  // If passed a design system color then use color as a variable
-  return `var(--${color})`;
 };
 
 /**

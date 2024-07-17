@@ -15,21 +15,21 @@ export const surfaceSemantics = {
   'glass-subtle': { light: colorPrimitives['white-80'], dark: colorPrimitives['black-80'] },
   'glass-bold': { light: colorPrimitives['white-50'], dark: colorPrimitives['black-50'] },
 
+  transparent: { light: colorPrimitives['transparent'], dark: colorPrimitives['transparent'] },
+
   // surface states
 
-  'success-subtle': { light: colorBrands['success-100'], dark: colorBrands['success-500'] },
-  'success-bold': { light: colorBrands['success-500'], dark: colorBrands['success-200'] },
+  'state-success-subtle': { light: colorBrands['success-100'], dark: colorBrands['success-500'] },
+  'state-success-bold': { light: colorBrands['success-500'], dark: colorBrands['success-200'] },
 
-  'info-subtle': { light: colorBrands['info-100'], dark: colorBrands['info-500'] },
-  'info-bold': { light: colorBrands['info-500'], dark: colorBrands['info-200'] },
+  'state-info-subtle': { light: colorBrands['info-100'], dark: colorBrands['info-500'] },
+  'state-info-bold': { light: colorBrands['info-500'], dark: colorBrands['info-200'] },
 
-  'warning-subtle': { light: colorBrands['warning-100'], dark: colorBrands['warning-500'] },
-  'warning-bold': { light: colorBrands['warning-500'], dark: colorBrands['warning-200'] },
+  'state-warning-subtle': { light: colorBrands['warning-100'], dark: colorBrands['warning-500'] },
+  'state-warning-bold': { light: colorBrands['warning-500'], dark: colorBrands['warning-200'] },
 
-  'danger-subtle': { light: colorBrands['danger-100'], dark: colorBrands['danger-800'] },
-  'danger-bold': { light: colorBrands['danger-500'], dark: colorBrands['danger-200'] },
+  'state-danger-subtle': { light: colorBrands['danger-100'], dark: colorBrands['danger-800'] },
+  'state-danger-bold': { light: colorBrands['danger-500'], dark: colorBrands['danger-200'] },
 
-  disabled: { light: colorBrands['neutral-200'], dark: colorBrands['neutral-800'] },
-
-  transparent: { light: colorPrimitives['transparent'], dark: colorPrimitives['transparent'] },
+  'state-disabled': { light: colorBrands['neutral-200'], dark: colorBrands['neutral-800'] },
 };

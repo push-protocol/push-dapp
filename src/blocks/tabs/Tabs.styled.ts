@@ -112,7 +112,7 @@ export const StyledLineTab = styled(Tab)`
   &[aria-disabled='true'] {
     cursor: not-allowed;
     color: var(--text-state-disabled);
-    border-bottom: var(--border-md) solid var(--stroke-disabled);
+    border-bottom: var(--border-md) solid var(--stroke-state-disabled);
     opacity: 1;
   }
 `;

@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import * as RadixTooltip from '@radix-ui/react-tooltip';
 import type { TooltipProps } from './Tooltip.types';
 import { getTooltipPositionalCSS } from './Tooltip.utils';
-import { getBlocksColor } from 'blocks/Blocks.utils';
 import { tooltipCSSPropsKeys } from './Tooltip.constants';
 import { useIsVisible } from 'common';
 import { Text } from 'blocks/text';
@@ -19,8 +18,8 @@ const RadixTooltipContent = styled(RadixTooltip.Content).withConfig({
   border-radius: var(--r3);
   font-family: var(--font-family);
   word-wrap: break-word;
-  color: ${getBlocksColor('light', 'white')};
-  background-color: ${getBlocksColor('light', 'black')};
+  color: var(--text-primary-inverse);
+  background-color: var(--surface-primary-inverse);
 
   /* Tooltip non-responsive styles */
   width: ${({ width }) => width};
@@ -89,11 +88,18 @@ const Tooltip: FC<TooltipProps> = ({
               overlay
             ) : (
               <>
-                {title && <Text variant="c-semibold">{title}</Text>}
+                {title && (
+                  <Text
+                    variant="c-semibold"
+                    color="text-primary-inverse"
+                  >
+                    {title}
+                  </Text>
+                )}
                 {description && (
                   <Text
                     variant="c-regular"
-                    color="gray-400"
+                    color="text-secondary-inverse"
                   >
                     {description}
                   </Text>

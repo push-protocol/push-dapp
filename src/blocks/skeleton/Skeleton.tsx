@@ -16,7 +16,7 @@ const StyledSkeleton = styled.div.withConfig({
   ${(props) => props.css || ''}
 
   /* Animation props */
-  animation: ${getSkeletonPulseAnimation('var(--surface-disabled)', 'var(--surface-tertiary)')}
+  animation: ${getSkeletonPulseAnimation('var(--surface-state-disabled)', 'var(--surface-tertiary)')}
     1s infinite alternate-reverse;
 
   /* Hide children */
