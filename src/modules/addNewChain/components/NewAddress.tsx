@@ -1,12 +1,10 @@
 import { FC } from 'react';
 
-import { useFormikContext } from 'formik';
-
 import { Box, Button, Select, TextInput } from 'blocks';
 
 import { getSelectChains } from '../AddNewChain.utils';
 
-import { NewChainAddressValue } from '../AddNewChain.form';
+import { useChainAliasForm } from '../AddNewChain.form';
 
 export type NewAddressProps = {
   isLoading: boolean;
@@ -14,7 +12,7 @@ export type NewAddressProps = {
 
 const NewAddress: FC<NewAddressProps> = ({ isLoading }) => {
   const selectOptions = getSelectChains();
-  const { values: formValues, handleSubmit, handleChange, errors, touched } = useFormikContext<NewChainAddressValue>();
+  const { values: formValues, handleSubmit, handleChange, errors, touched } = useChainAliasForm();
   return (
     <Box width="100%">
       <form onSubmit={handleSubmit}>
@@ -39,7 +37,7 @@ const NewAddress: FC<NewAddressProps> = ({ isLoading }) => {
               value={formValues.alias}
               onChange={handleChange('alias')}
               error={touched?.alias && Boolean(errors?.alias)}
-              errorMessage={touched?.alias && errors?.alias}
+              errorMessage={touched?.alias ? errors?.alias : ''}
             />
             <Box
               display="flex"
@@ -52,7 +50,7 @@ const NewAddress: FC<NewAddressProps> = ({ isLoading }) => {
                 value={formValues.chainId}
                 onSelect={handleChange('chainId')}
                 error={touched?.chainId && Boolean(errors?.chainId)}
-                errorMessage={errors?.chainId}
+                errorMessage={touched?.chainId ? errors.chainId : ''}
               />
             </Box>
           </Box>

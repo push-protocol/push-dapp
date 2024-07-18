@@ -1,13 +1,11 @@
 import { FC, useEffect } from 'react';
 
-import { useFormikContext } from 'formik';
-
 import { useAccount } from 'hooks';
 
 import { Box, Button, Text } from 'blocks';
 import { ActiveStepKey } from '../AddNewChain.types';
 
-import { NewChainAddressValue } from '../AddNewChain.form';
+import { useChainAliasForm } from '../AddNewChain.form';
 
 export type ChangeNetworkProps = {
   handleNextStep: (key: ActiveStepKey) => void;
@@ -15,7 +13,7 @@ export type ChangeNetworkProps = {
 
 const ChangeNetwork: FC<ChangeNetworkProps> = ({ handleNextStep }) => {
   const { switchChain, chainId } = useAccount();
-  const { values: formValues } = useFormikContext<NewChainAddressValue>();
+  const { values: formValues } = useChainAliasForm();
   const selectedChainId = parseInt(formValues.chainId);
   useEffect(() => {
     if (chainId === selectedChainId) {

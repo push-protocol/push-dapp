@@ -4,7 +4,6 @@ import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { css } from 'styled-components';
 import { MdError } from 'react-icons/md';
-import { useFormik, FormikProvider } from 'formik';
 
 import useToast from 'hooks/useToast';
 import { useInitiateNewChain } from 'queries';
@@ -23,7 +22,7 @@ import { ActiveStepKey } from './AddNewChain.types';
 
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
-import { validationSchema, NewChainAddressValue, initialValues } from './AddNewChain.form';
+import { FormikChainAliasProvider } from './AddNewChain.form';
 
 const AddNewChain: FC = () => {
   const [activeStepKey, setActiveStepKey] = useState<ActiveStepKey>('newaddress');
@@ -33,13 +32,13 @@ const AddNewChain: FC = () => {
   const { mutate: initiateNewChain, isPending, isError } = useInitiateNewChain();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const formik = useFormik<NewChainAddressValue>({
-    initialValues: initialValues,
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      handleInitiate(values.alias, values.chainId);
-    },
-  });
+  // const formik = useFormik<NewChainAddressValue>({
+  //   initialValues: initialValues,
+  //   validationSchema: validationSchema,
+  //   onSubmit: (values) => {
+  //     handleInitiate(values.alias, values.chainId);
+  //   },
+  // });
 
   const handleInitiate = (alias: string, chainId: string) => {
     initiateNewChain(
@@ -76,7 +75,7 @@ const AddNewChain: FC = () => {
   };
 
   return (
-    <FormikProvider value={formik}>
+    <FormikChainAliasProvider onSubmit={(values) => handleInitiate(values.alias, values.chainId)}>
       <Box
         display="flex"
         flexDirection="column"
@@ -164,7 +163,7 @@ const AddNewChain: FC = () => {
           </Box>
         )}
       </Box>
-    </FormikProvider>
+    </FormikChainAliasProvider>
   );
 };
 

@@ -13,7 +13,7 @@ export type TextInputProps = {
   type?: 'text' | 'password';
   errorMessage?: string;
   label?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClear?: () => void;
   placeholder?: string;
   required?: boolean;

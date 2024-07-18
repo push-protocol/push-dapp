@@ -3,7 +3,6 @@ import { FC } from 'react';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useFormikContext } from 'formik';
 
 import useToast from 'hooks/useToast';
 import { useVerifyAliasChain } from 'queries';
@@ -16,7 +15,7 @@ import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 import { UserStoreType } from 'types';
 
-import { NewChainAddressValue } from '../AddNewChain.form';
+import { useChainAliasForm } from '../AddNewChain.form';
 
 const VerifyAliasChain: FC = () => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
@@ -24,7 +23,7 @@ const VerifyAliasChain: FC = () => {
   });
   const { mutate: verifyAliasChain, isPending } = useVerifyAliasChain();
 
-  const { values: formValues } = useFormikContext<NewChainAddressValue>();
+  const { values: formValues } = useChainAliasForm();
   const toast = useToast();
   const navigate = useNavigate();
 
