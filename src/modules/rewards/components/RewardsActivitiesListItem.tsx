@@ -143,7 +143,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
           </Box>
         </Box>
 
-        {errorMessage && (
+        {(errorMessage || usersSingleActivity?.status === 'REJECTED') && (
           <Box
             gap="spacing-xxs"
             display="flex"
@@ -161,7 +161,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
               variant="h5-semibold"
               color="text-state-danger-bold"
             >
-              {errorMessage}
+              {errorMessage || 'Verification Rejected. Please contact the Push team over discord.'}
             </Text>
           </Box>
         )}
