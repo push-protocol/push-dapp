@@ -9,11 +9,12 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import SearchIcon from 'assets/chat/search.svg?react';
-import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext } from 'types/chat';
 import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
+import { Box, Button } from 'blocks';
 
 interface InputProps {
   typed: boolean;
@@ -118,13 +119,12 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
             placeholder="Search Web3 domain or 0x123..."
           />
           {searchedUser.length > 0 && (
-            <CloseIconButton
+            <CloseIconStyled
+              theme={theme}
               width="24px"
               height="24px"
               onClick={clearInput}
-            >
-              <CloseIconStyled theme={theme} />
-            </CloseIconButton>
+            />
           )}
           <ItemVV2
             position="absolute"
@@ -159,26 +159,15 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
         </ItemVV2>
 
         {activeTab !== 3 && activeTab !== 4 && (
-          <ItemVV2
-            flex="initial"
-            margin="0px 0px 0px 10px"
-            alignItems="center"
-            width="48px"
-            height="48px"
-            top="10px"
-            right="0px"
-            zIndex="1"
-          >
-            <ButtonV2
-              alignSelf="stretch"
-              background="#D53893"
-              hoverBackground="transparent"
-              borderRadius="32px 32px 32px 4px"
+          <Box margin="spacing-none spacing-none spacing-none spacing-xs">
+            <Button
+              iconOnly
+              leadingIcon={<AddIconStyled />}
+              circular
+              size="small"
               onClick={() => setActiveTab(3)}
-            >
-              <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }} />
-            </ButtonV2>
-          </ItemVV2>
+            />
+          </Box>
         )}
       </ItemHV2>
     </ItemVV2>
@@ -222,14 +211,17 @@ const Input = styled.input<InputProps>`
 
 export default SearchBar;
 
-const CloseIconButton = styled(ButtonV2)`
+const CloseIconStyled = styled(CloseIcon)`
+  color: ${(props) => props.theme.default.color || '#000'};
   position: absolute;
   cursor: pointer;
   background: transparent;
   top: 22px;
   right: 14px;
+  z-index: 1;
 `;
 
-const CloseIconStyled = styled(CloseIcon)`
-  color: ${(props) => props.theme.default.color || '#000'};
+const AddIconStyled = styled(AddIcon)`
+  color: #ffffff;
+  font-size: 24px;
 `;

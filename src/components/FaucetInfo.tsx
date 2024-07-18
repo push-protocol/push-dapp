@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 
 // Internal Components
-import { ButtonV2, ImageV2, SpanV2 } from './reusables/SharedStylingV2';
+import { ImageV2, SpanV2 } from './reusables/SharedStylingV2';
 import swapIcon from '../assets/icons/swapIcon.svg';
 import { useAccount } from 'hooks';
 
@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { getHasEnoughPushToken } from 'helpers';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import { UniswapWidgetModal } from './UniswapWidget';
+import { Button } from 'blocks';
 
 type FaucetInfoType = {
   onMintPushToken: (noOfTokens: number) => Promise<void>;
@@ -63,15 +64,19 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
                 : 'Follow these steps to ensure you have enough Testnet Push to proceed.'}
             </InfoText>
             {isProd ? (
-              <SwapTokensButton onClick={showUniswapWidgetModal}>
-                <ImageV2
-                  width="12px"
-                  height="12px"
-                  margin="0 0.5rem 0 0"
-                  src={swapIcon}
-                />
-                <ButtonLabel>Swap Tokens for PUSH</ButtonLabel>
-              </SwapTokensButton>
+              <Button
+                leadingIcon={
+                  <ImageV2
+                    width="12px"
+                    height="12px"
+                    margin="0 0.5rem 0 0"
+                    src={swapIcon}
+                  />
+                }
+                size="extraSmall"
+              >
+                Swap Tokens for PUSH
+              </Button>
             ) : (
               <ItemBody>
                 <AnchorLink
@@ -158,28 +163,6 @@ const InfoText = styled(SpanV2)`
 const ItemBody = styled.div`
   display: flex;
   flex-direction: row;
-`;
-
-const SwapTokensButton = styled(ButtonV2)`
-  display: flex;
-  flex-direction: row;
-  box-sizing: border-box;
-  background-color: #d53a94;
-  width: fit-content;
-  min-width: fit-content;
-  max-width: fit-content;
-  padding: 8px 12px;
-  border-radius: 31px;
-  margin-right: 1.2rem;
-  @media ${device.laptop} {
-    margin-right: 0.6rem;
-  }
-`;
-
-const ButtonLabel = styled(SpanV2)`
-  color: white;
-  font-size: 14px;
-  font-weight: 500;
 `;
 
 const AnchorLink = styled.a`

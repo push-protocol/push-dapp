@@ -8,6 +8,7 @@ import FadeLoader from 'react-spinners/FadeLoader';
 import { toast } from 'react-toastify';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 import useMediaQuery from './useMediaQuery';
+import { Box } from 'blocks';
 
 // Types
 type LoaderToastType = { msg: string; loaderColor: string; textColor: string };
@@ -37,12 +38,16 @@ const LoaderToast = ({ msg, loaderColor, textColor }: LoaderToastType) => (
 );
 
 const CloseButton = ({ closeToast }) => (
-  <Button onClick={closeToast}>
+  <Box
+    width="20px"
+    height="20px"
+    onClick={closeToast}
+  >
     <MdOutlineClose
       color="#657795"
       size="100%"
     />
-  </Button>
+  </Box>
 );
 
 export type ShowLoaderToastType = ({ loaderMessage }: { loaderMessage: string }) => React.ReactText;
@@ -219,15 +224,6 @@ const ToastMessage = styled.div`
   font-size: 0.9375rem;
   line-height: 1.3rem;
   text-align: left;
-`;
-
-const Button = styled.button`
-  cursor: pointer;
-  background: none;
-  margin: 0;
-  padding: 0;
-  width: 1.3rem;
-  height: 1.3rem;
 `;
 
 export default useToast;

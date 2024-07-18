@@ -17,6 +17,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import StyleHelper from 'helpers/StyleHelper';
 import { getIsNewTagVisible } from 'helpers/TimerHelper';
 import { Context } from 'modules/chat/ChatModule';
+import { Button } from 'blocks/index.js';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
@@ -213,20 +214,12 @@ const ChatSidebarSection = ({ showCreateGroupModal, chatId, selectedChatId, setS
             />
 
             {!searchedUser && (
-              <CreateGroupContainer
-                // justifyContent="flex-start"
-                flex="none"
-                padding="20px 10px 24px 10px"
-                zIndex="1"
-                borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
+              <Button
+                block
+                variant="secondary"
                 onClick={() => {
                   showCreateGroupModal();
                 }}
-                background="transparent"
-                hover={theme.chat.snapFocusBg}
-                hoverBackground="transparent"
-                onMouseEnter={() => StyleHelper.changeStyle(createGroupOnMouseEnter)}
-                onMouseLeave={() => StyleHelper.changeStyle(createGroupOnMouseLeave)}
               >
                 <CreateGroupIcon id="create-group-icon" />
                 <CreateGroupFillIcon id="create-group-fill-icon" />
@@ -240,7 +233,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, chatId, selectedChatId, setS
                   Create Group
                 </SpanV2>
                 {isNewTagVisible && <NewTag />}
-              </CreateGroupContainer>
+              </Button>
             )}
           </>
         )}
@@ -290,12 +283,9 @@ const ChatSidebarSection = ({ showCreateGroupModal, chatId, selectedChatId, setS
 
                 {/* // Only show refresh prompt if there are no chats */}
                 {primaryChatLoading.showRefreshPrompt && (
-                  <ButtonV2
-                    flex="initial"
-                    padding="8px 12px"
-                    background="#D53A94"
-                    color="#fff"
-                    borderRadius="16px"
+                  <Button
+                    variant="primary"
+                    size="extraSmall"
                     onClick={() => {
                       setPrimaryChatLoading({
                         ...primaryChatLoading,
@@ -305,7 +295,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, chatId, selectedChatId, setS
                     }}
                   >
                     Refresh
-                  </ButtonV2>
+                  </Button>
                 )}
               </ItemHV2>
             </ItemVV2>
@@ -432,54 +422,6 @@ const ProfileContainer = styled(ItemHV2)`
   justify-content: space-between;
   // padding: 14px 10px 0px 10px;
   border-top: ${(props) => props.borderTop};
-`;
-
-const QRCodeContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 8px;
-  gap: 9px;
-  width: 200px;
-  z-index: 100;
-  height: 48px;
-  background: #ffffff;
-  border: 1px solid #bac4d6;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
-  border-radius: 12px;
-  cursor: pointer;
-  position: absolute;
-  z-index: 100;
-  bottom: 45px;
-
-  @media (max-width: 768px) {
-    right: 30px;
-  }
-
-  @media (min-width: 768px) {
-    left: 85px;
-  }
-`;
-
-const QROutline = styled(AiOutlineQrcode)`
-  width: 35px;
-  height: 30px;
-`;
-
-const TextQR = styled.p`
-  font-family: 'FK Grotesk Neu';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 140%;
-  text-align: center;
-  // color: #657795;
-`;
-
-const CreateGroupContainer = styled(ButtonV2)`
-  flex-direction: row;
-  align-self: stretch;
-  justify-content: flex-start;
 `;
 
 const MainContent = styled(ItemVV2)`
