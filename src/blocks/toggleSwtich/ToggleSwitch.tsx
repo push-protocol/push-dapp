@@ -3,7 +3,8 @@ import React from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
 import * as Switch from '@radix-ui/react-switch';
 
-import { Text } from '../text';
+import { TextVariants, textVariants } from '../text';
+import { ThemeColors } from 'blocks/theme/Theme.types';
 
 export type ToggleSwitchProps = {
   /* Additional prop from styled components to apply custom css to Toggle switch */
@@ -69,6 +70,16 @@ const LabelContainer = styled.div`
   align-items: flex-start;
   flex-direction: column;
 `;
+const TextContainer = styled.p<{ variant: TextVariants; color: ThemeColors }>`
+  margin: 0;
+  color: ${({ color }) => color};
+  ${({ variant }) =>
+    `font-family: var(--font-family);
+      font-size: ${textVariants[variant].fontSize};
+      font-style: ${textVariants[variant].fontStyle};
+      font-weight: ${textVariants[variant].fontWeight};
+      line-height: ${textVariants[variant].lineHeight};`}
+`;
 const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   label,
   description,
@@ -90,20 +101,20 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
       {(label || description) && (
         <LabelContainer>
           {label && (
-            <Text
+            <TextContainer
               variant="bs-bold"
               color="components-radio-button-text-default"
             >
               {label}
-            </Text>
+            </TextContainer>
           )}
           {description && (
-            <Text
+            <TextContainer
               variant="c-regular"
               color="components-radio-button-text-secondary"
             >
               {description}
-            </Text>
+            </TextContainer>
           )}
         </LabelContainer>
       )}
