@@ -5,7 +5,6 @@ import '@reach/combobox/styles.css';
 
 import { textVariants } from '../text';
 import { CaretDown } from '../icons';
-import { Box } from 'blocks/box';
 
 export type SelectOption = {
   icon?: React.ReactNode;
@@ -134,6 +133,12 @@ const StyledCombobox = styled(Combobox)`
   width: 100%;
 `;
 
+const StyledInputContainer = styled.div`
+  display: flex;
+  width: 100%;
+  gap: var(--spacing-xxs);
+`;
+
 const StyledInput = styled(ComboboxInput)`
   width: 100%;
 `;
@@ -223,11 +228,7 @@ const Select: React.FC<SelectProps> = ({
             setViewPopover(true);
           }}
         >
-          <Box
-            display="flex"
-            gap="spacing-xxs"
-            width="100%"
-          >
+          <StyledInputContainer>
             {selectedOption?.icon}
             <StyledInput
               ref={childRef}
@@ -235,7 +236,7 @@ const Select: React.FC<SelectProps> = ({
               placeholder={placeholder}
               value={selectedOption?.label}
             />
-          </Box>
+          </StyledInputContainer>
           <CaretDown
             size={20}
             color="icon-tertiary"
