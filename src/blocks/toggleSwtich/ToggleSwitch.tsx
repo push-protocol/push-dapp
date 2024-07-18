@@ -1,12 +1,14 @@
 import React from 'react';
 
-import styled from 'styled-components';
+import styled, { FlattenSimpleInterpolation } from 'styled-components';
 import * as Switch from '@radix-ui/react-switch';
 
 import { Box } from '../box';
 import { Text } from '../text';
 
 export type ToggleSwitchProps = {
+  /* Additional prop from styled components to apply custom css to Toggle switch */
+  css?: FlattenSimpleInterpolation;
   /* Label for the toggle switch */
   label?: string;
   /* Description for the toggle switch */
@@ -25,17 +27,17 @@ const StyledToggleRoot = styled(Switch.Root)`
   width: 38px;
   height: 20px;
   padding: 3px;
-  background-color: var(--components-toggle-switch-background-unselected, #c4cbd5);
+  background-color: var(--components-toggle-switch-background-unselected);
   border-radius: var(--radius-md);
   position: relative;
   &[data-state='checked'] {
-    background-color: var(--components-toggle-switch-background-selected, #c742dd);
+    background-color: var(--components-toggle-switch-background-selected);
   }
   &:disabled {
     cursor: not-allowed;
-    background: var(--components-toggle-switch-background-disabled, #eaebf2);
+    background: var(--components-toggle-switch-background-disabled);
     span {
-      background: var(--components-toggle-switch-icon-disabled, #b0b3b9);
+      background: var(--components-toggle-switch-icon-disabled);
     }
   }
 `;
@@ -44,13 +46,29 @@ const StyledToggleThumb = styled(Switch.Thumb)`
   cursor: pointer;
   width: 14px;
   height: 14px;
-  background-color: var(--components-toggle-switch-icon-default, #fff);
+  background-color: var(--components-toggle-switch-icon-default);
   border-radius: var(--radius-round);
   transition: transform 100ms;
   will-change: transform;
   &[data-state='checked'] {
     transform: translateX(17.5px);
   }
+`;
+
+const Container = styled.div<{ css?: FlattenSimpleInterpolation; flexDirection: string }>`
+  display: flex;
+  flex-direction: ${({ flexDirection }) => flexDirection || ''};
+  gap: var(--spacing-xxs);
+  justifycontent: space-between;
+
+  /* Custom CSS applied via styled component css prop */
+  ${(props) => props.css || ''};
+`;
+
+const LabelContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
 `;
 const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   label,
@@ -61,12 +79,7 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   checked,
 }) => {
   return (
-    <Box
-      display="flex"
-      gap="spacing-xxs"
-      justifyContent="space-between"
-      flexDirection={leadingToggle ? 'row' : 'row-reverse'}
-    >
+    <Container flexDirection={leadingToggle ? 'row' : 'row-reverse'}>
       <StyledToggleRoot
         role="switch"
         checked={checked}
@@ -76,11 +89,7 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
         <StyledToggleThumb />
       </StyledToggleRoot>
       {(label || description) && (
-        <Box
-          display="flex"
-          alignItems="flex-start"
-          flexDirection="column"
-        >
+        <LabelContainer>
           {label && (
             <Text
               variant="bs-bold"
@@ -97,9 +106,9 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
               {description}
             </Text>
           )}
-        </Box>
+        </LabelContainer>
       )}
-    </Box>
+    </Container>
   );
 };
 
