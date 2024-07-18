@@ -45,7 +45,7 @@ let intervalID = null;
 // CREATE CHANNEL OWNER DASHBOARD
 const ChannelOwnerDashboard = () => {
   const theme = useTheme();
-  const { account, chainId } = useAccount();
+  const { account, chainId, wallet } = useAccount();
   const {
     channelDetails,
     delegatees,
@@ -56,7 +56,7 @@ const ChannelOwnerDashboard = () => {
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
-  const { handleConnectWallet } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
 
   const isChannelDetails = channelDetails && channelDetails !== 'unfetched';
 
@@ -75,8 +75,9 @@ const ChannelOwnerDashboard = () => {
   useEffect(() => {
     if (!onCoreNetwork || !channelDetails || aliasAddrFromContract || channelDetails === 'unfetched') return;
 
-    const { address: aliasAddress, chainId: aliasChainId } = getAliasFromChannelDetails(channelDetails);
-    if (aliasAddress) {
+    const aliasDetails = getAliasFromChannelDetails(channelDetails);
+    if (aliasDetails) {
+      const { address: aliasAddress, chainId: aliasChainId } = aliasDetails;
       dispatch(setAliasAddressFromContract(aliasAddress));
       dispatch(setAliasChainId(aliasChainId));
       // dispatch(setAliasAddress(aliasAddress));
@@ -176,7 +177,7 @@ const ChannelOwnerDashboard = () => {
 
   const showEditChannel = () => {
     // if (!userPushSDKInstance.signer) {
-    //   handleConnectWallet();
+    //   handleConnectWalletAndEnableProfile({wallet});
     //   return;
     // }
     setEditChannel(true);

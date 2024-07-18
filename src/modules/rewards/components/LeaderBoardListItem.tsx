@@ -63,7 +63,7 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
               variant="bm-bold"
               color={{ light: 'gray-1000', dark: 'gray-100' }}
             >
-              {rank}
+              {rank > 0 && rank}
             </Text>
           </Box>
           <Box
@@ -114,14 +114,14 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
             display={{ ml: 'none', dp: 'block' }}
             color={{ light: 'gray-1000', dark: 'gray-100' }}
           >
-            {points}
+            {points?.toLocaleString()}
           </Text>
           <Text
             variant="bs-bold"
             display={{ ml: 'block', dp: 'none' }}
             color={{ light: 'gray-1000', dark: 'gray-100' }}
           >
-            {points}
+            {points?.toLocaleString()}
           </Text>
         </Box>
       </Skeleton>
