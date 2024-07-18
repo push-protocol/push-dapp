@@ -1,7 +1,13 @@
 export const trendingChannels = 'trendingChannels';
 export const allUserSubscriptions = 'allUserSubscriptions';
+export const addDelegate = 'addDelegate';
+export const addNewSubgraph = 'addNewSubgraph';
 export const userSubscription = 'userSubscription';
 export const channelDetails = 'channelDetails';
+export const channelDelegates = 'channelDelegates';
+export const removeDelegate = 'removeDelegate';
+export const reactivatingChannel = 'reactivatingChannel';
+export const deactivatingChannel = 'deactivatingChannel';
 export const allActivities = 'allActivities';
 export const rewardsActivity = 'rewardsActivity';
 export const discordDetails = 'discordDetails';

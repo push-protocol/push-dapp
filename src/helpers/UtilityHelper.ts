@@ -24,7 +24,7 @@ const UtilityHelper = {
       return true;
     }
     return false;
-  },
+  }
 };
 
 export const MaskedAliasChannels: {
@@ -47,7 +47,7 @@ export const MaskedAliasChannels: {
     '0xe8381F84a32A4C2B08c328BfF68c0E889a34F255': 0, // Good Ghosting
     '0x2f5ccA6f594118ef54f4157927A323BaA982Fd78': 0, // mean finance
     '0x77f319B1d9c43a8B729399f81515166632100744': 0, // ethsign
-    '0x27F68B2C092DB48928D70EA781F7dE8B844ad07B': 0, // polychain
+    '0x27F68B2C092DB48928D70EA781F7dE8B844ad07B': 0 // polychain
   },
   56: {},
   80002: {},
@@ -61,7 +61,7 @@ export const MaskedAliasChannels: {
   122: {},
   123: {},
   111557560: {},
-  7560: {},
+  7560: {}
 };
 
 export const findObject = (data: any, parentArray: any[], property: string): boolean => {
@@ -84,14 +84,14 @@ export const MaskedChannels = {
   '0xf192080bdFbF1ED6f2c6a38Cd273a8ff59018176': 1,
   '0xEC864BE26084ba3bbF3cAAcF8F6961A9263319C4': 1,
   '0x7183a02EBb534a7B183741Bab09F4ec932DCe27B': 1,
-  '0xcf3224c64FF2d5b18b5e4460b1103FF9037eFAC2': 1,
+  '0xcf3224c64FF2d5b18b5e4460b1103FF9037eFAC2': 1
 };
 
 export const envUtil = {
   prod: 'app.push.org',
   staging: 'staging.push.org',
   dev: 'dev.push.org',
-  localhost: 'localhost',
+  localhost: 'localhost'
 };
 
 export const EnvHelper = {
@@ -104,7 +104,7 @@ export const EnvHelper = {
   },
   dappTitle(): string {
     return `Push (EPNS) ${this.isStaging ? 'Staging' : this.isDev ? 'Dev' : ''} App`;
-  },
+  }
 };
 
 export const networkName = {
@@ -125,7 +125,7 @@ export const networkName = {
   122: 'Fuse Mainnet',
   123: 'Fuse Testnet',
   111557560: 'Cyber Testnet',
-  7560: 'Cyber Mainnet',
+  7560: 'Cyber Mainnet'
 };
 
 export const chainNameBackendStandard = {
@@ -133,7 +133,7 @@ export const chainNameBackendStandard = {
   11155111: 'ETH_TEST_SEPOLIA',
   1: 'ETH_MAINNET',
   137: 'POLYGON_MAINNET',
-  80002: 'POLYGON_TEST_AMOY',
+  80002: 'POLYGON_TEST_AMOY'
 };
 
 export const aliasChainIdToChainName = {
@@ -150,14 +150,14 @@ export const aliasChainIdToChainName = {
   122: 'FUSE',
   123: 'FUSE',
   111557560: 'CYBERCONNECT',
-  7560: 'CYBERCONNECT',
+  7560: 'CYBERCONNECT'
 };
 
 export const aliasChainIdsMapping = {
   1: 137,
   42: 80002,
   5: 80002,
-  11155111: 80002,
+  11155111: 80002
 };
 
 export const NETWORK_DETAILS = {
@@ -166,99 +166,99 @@ export const NETWORK_DETAILS = {
     chainName: 'Polygon Amoy Testnet',
     nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
     rpcUrls: ['https://rpc-amoy.polygon.technology/'],
-    blockExplorerUrls: ['https://www.oklink.com/amoy/'],
+    blockExplorerUrls: ['https://www.oklink.com/amoy/']
   },
   POLYGON_MAINNET: {
     chainId: utils.hexValue(137),
     chainName: 'Polygon Mainnet',
     nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
     rpcUrls: ['https://polygon-rpc.com'],
-    blockExplorerUrls: ['https://www.polygonscan.com/'],
+    blockExplorerUrls: ['https://www.polygonscan.com/']
   },
   BNB_TESTNET: {
     chainId: utils.hexValue(97),
     chainName: 'BNB Testnet',
     nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
     rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
-    blockExplorerUrls: ['https://testnet.bscscan.com/'],
+    blockExplorerUrls: ['https://testnet.bscscan.com/']
   },
   BNB_MAINNET: {
     chainId: utils.hexValue(56),
     chainName: 'BNB Mainnet',
     nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
     rpcUrls: ['https://bsc-dataseed.binance.org/'],
-    blockExplorerUrls: ['https://bscscan.com/'],
+    blockExplorerUrls: ['https://bscscan.com/']
   },
   OPTIMISM_TESTNET: {
     chainId: utils.hexValue(11155420),
     chainName: 'Optimism Testnet',
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://sepolia.optimism.io'],
-    blockExplorerUrls: ['https://sepolia-optimistic.etherscan.io'],
+    blockExplorerUrls: ['https://sepolia-optimistic.etherscan.io']
   },
   OPTIMISM_MAINNET: {
     chainId: utils.hexValue(10),
     chainName: 'Optimism Mainnet',
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://endpoints.omniatech.io/v1/op/mainnet/public'],
-    blockExplorerUrls: ['https://optimistic.etherscan.io/'],
+    blockExplorerUrls: ['https://optimistic.etherscan.io/']
   },
   POLYGON_ZK_EVM_TESTNET: {
     chainId: utils.hexValue(2442),
     chainName: 'Polygon zkEVM Testnet',
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://rpc.cardona.zkevm-rpc.com'],
-    blockExplorerUrls: ['https://cardona-zkevm.polygonscan.com/'],
+    blockExplorerUrls: ['https://cardona-zkevm.polygonscan.com/']
   },
   POLYGON_ZK_EVM_MAINNET: {
     chainId: utils.hexValue(1101),
     chainName: 'Polygon zkEVM Mainnet',
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://rpc.polygon-zkevm.gateway.fm'],
-    blockExplorerUrls: ['https://zkevm.polygonscan.com'],
+    blockExplorerUrls: ['https://zkevm.polygonscan.com']
   },
   ARBITRUM_TESTNET: {
     chainId: utils.hexValue(421614),
     chainName: 'Arbitrum Testnet',
     nativeCurrency: { name: 'AETH', symbol: 'AETH', decimals: 18 },
     rpcUrls: ['https://sepolia-rollup.arbitrum.io/rpc'],
-    blockExplorerUrls: ['https://sepolia.arbiscan.io/'],
+    blockExplorerUrls: ['https://sepolia.arbiscan.io/']
   },
   ARBITRUMONE_MAINNET: {
     chainId: utils.hexValue(42161),
     chainName: 'ArbitrumOne Mainnet',
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://arb1.arbitrum.io/rpc'],
-    blockExplorerUrls: ['https://arbiscan.io/'],
+    blockExplorerUrls: ['https://arbiscan.io/']
   },
   FUSE_TESTNET: {
     chainId: utils.hexValue(123),
     chainName: 'Fuse Testnet',
     nativeCurrency: { name: 'SPARK', symbol: 'SPARK', decimals: 18 },
     rpcUrls: ['https://rpc.fusespark.io'],
-    blockExplorerUrls: ['	https://explorer.fusespark.io/'],
+    blockExplorerUrls: ['	https://explorer.fusespark.io/']
   },
   FUSE_MAINNET: {
     chainId: utils.hexValue(122),
     chainName: 'Fuse Mainnet',
     nativeCurrency: { name: 'Fuse', symbol: 'Fuse', decimals: 18 },
     rpcUrls: ['https://rpc.fuse.io'],
-    blockExplorerUrls: ['	https://explorer.fuse.io/'],
+    blockExplorerUrls: ['	https://explorer.fuse.io/']
   },
   CYBER_TESTNET: {
     chainId: utils.hexValue(111557560),
     chainName: 'Cyber Testnet',
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://cyber-testnet.alt.technology/'],
-    blockExplorerUrls: [' https://testnet.cyberscan.co/'],
+    blockExplorerUrls: [' https://testnet.cyberscan.co/']
   },
   CYBER_MAINNET: {
     chainId: utils.hexValue(7560),
     chainName: 'Cyber Mainnet',
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://cyber.alt.technology/'],
-    blockExplorerUrls: [' https://.cyberscan.co/'],
-  },
+    blockExplorerUrls: [' https://.cyberscan.co/']
+  }
 };
 
 export const CORE_CHAIN_ID: number = appConfig.coreContractChain;
@@ -282,7 +282,7 @@ export const LOGO_FROM_CHAIN_ID: {
   122: 'Fuse.svg',
   123: 'Fuse.svg',
   111557560: 'Cyber.svg',
-  7560: 'Cyber.svg',
+  7560: 'Cyber.svg'
 };
 
 export type getAliasResponseType = {
@@ -315,7 +315,7 @@ export const getAliasFromChannelDetails = (channelDetails: Object | null | strin
 
 export const CHANNEL_TYPE = {
   TIMEBOUND: 4,
-  GENERAL: 2,
+  GENERAL: 2
 };
 
 export const shortenText = (str: string, substringLengthStart: number, substringLengthEnd?: number): string => {

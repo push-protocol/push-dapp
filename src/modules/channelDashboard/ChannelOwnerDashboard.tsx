@@ -32,6 +32,7 @@ import { Button } from 'components/SharedStyling';
 import EditChannel from 'modules/editChannel/EditChannel';
 import useModalBlur from 'hooks/useModalBlur';
 import { AppContext } from 'contexts/AppContext';
+import { ChannelDashboard } from './ChannelDashboard';
 
 // Constants
 // interval after which alias details api will be called, in seconds
@@ -119,77 +120,78 @@ const ChannelOwnerDashboard = () => {
     clearInterval(intervalID);
   }
 
-  const destroyChannel = async () => {
-    try {
-      destroyChannelToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
-      const tx = await epnsWriteProvider.destroyTimeBoundChannel(account, {
-        gasLimit: 1000000,
-      });
+  //? This is used only for Timebound Channel
+  // const destroyChannel = async () => {
+  //   try {
+  //     destroyChannelToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
+  //     const tx = await epnsWriteProvider.destroyTimeBoundChannel(account, {
+  //       gasLimit: 1000000,
+  //     });
 
-      console.debug(tx);
-      console.debug('Check: ' + account);
-      await tx.wait();
-      destroyChannelToast.showMessageToast({
-        toastTitle: 'Success',
-        toastMessage: `Successfully deleted the channel`,
-        toastType: 'SUCCESS',
-        getToastIcon: (size) => (
-          <MdError
-            size={size}
-            color="green"
-          />
-        ),
-      });
-      dispatch(setUserChannelDetails(null));
-    } catch (err) {
-      console.error(err);
-      if (err.code == 'ACTION_REJECTED') {
-        // EIP-1193 userRejectedRequest error
-        destroyChannelToast.showMessageToast({
-          toastTitle: 'Error',
-          toastMessage: `User denied message signature.`,
-          toastType: 'ERROR',
-          getToastIcon: (size) => (
-            <MdError
-              size={size}
-              color="red"
-            />
-          ),
-        });
-      } else {
-        destroyChannelToast.showMessageToast({
-          toastTitle: 'Error',
-          toastMessage: `There was an error in deleting the channel`,
-          toastType: 'ERROR',
-          getToastIcon: (size) => (
-            <MdError
-              size={size}
-              color="red"
-            />
-          ),
-        });
-      }
-    }
-  };
+  //     console.debug(tx);
+  //     console.debug('Check: ' + account);
+  //     await tx.wait();
+  //     destroyChannelToast.showMessageToast({
+  //       toastTitle: 'Success',
+  //       toastMessage: `Successfully deleted the channel`,
+  //       toastType: 'SUCCESS',
+  //       getToastIcon: (size) => (
+  //         <MdError
+  //           size={size}
+  //           color="green"
+  //         />
+  //       ),
+  //     });
+  //     dispatch(setUserChannelDetails(null));
+  //   } catch (err) {
+  //     console.error(err);
+  //     if (err.code == 'ACTION_REJECTED') {
+  //       // EIP-1193 userRejectedRequest error
+  //       destroyChannelToast.showMessageToast({
+  //         toastTitle: 'Error',
+  //         toastMessage: `User denied message signature.`,
+  //         toastType: 'ERROR',
+  //         getToastIcon: (size) => (
+  //           <MdError
+  //             size={size}
+  //             color="red"
+  //           />
+  //         ),
+  //       });
+  //     } else {
+  //       destroyChannelToast.showMessageToast({
+  //         toastTitle: 'Error',
+  //         toastMessage: `There was an error in deleting the channel`,
+  //         toastType: 'ERROR',
+  //         getToastIcon: (size) => (
+  //           <MdError
+  //             size={size}
+  //             color="red"
+  //           />
+  //         ),
+  //       });
+  //     }
+  //   }
+  // };
 
-  const showEditChannel = () => {
-    // if (!userPushSDKInstance.signer) {
-    //   handleConnectWallet();
-    //   return;
-    // }
-    setEditChannel(true);
-  };
+  // const showEditChannel = () => {
+  //   // if (!userPushSDKInstance.signer) {
+  //   //   handleConnectWallet();
+  //   //   return;
+  //   // }
+  //   setEditChannel(true);
+  // };
 
-  const closeEditChannel = () => {
-    setEditChannel(false);
-  };
+  // const closeEditChannel = () => {
+  //   setEditChannel(false);
+  // };
 
   //here the useModal hook is used to display Upload Logo Modal
-  const {
-    isModalOpen: isUploadLogoModalOpen,
-    showModal: displayUplaodLogoModal,
-    ModalComponent: UploadLogoComponent,
-  } = useModalBlur();
+  // const {
+  //   isModalOpen: isUploadLogoModalOpen,
+  //   showModal: displayUplaodLogoModal,
+  //   ModalComponent: UploadLogoComponent,
+  // } = useModalBlur();
 
   return (
     <ItemHV2>
@@ -203,7 +205,9 @@ const ChannelOwnerDashboard = () => {
           {/* display the create channel page if there are no details */}
           {!channelDetails && processingState === 0 && <CreateChannelModule />}
 
-          {isChannelDetails && processingState !== null && (
+          {channelDetails && <ChannelDashboard />}
+
+          {/* {isChannelDetails && processingState !== null && (
             <>
               {editChannel ? (
                 <EditChannel
@@ -241,19 +245,21 @@ const ChannelOwnerDashboard = () => {
                     </ItemHV2>
                   )}
                   {channelDetails ? (
-                    <ChannelDetails
-                      isChannelExpired={isChannelExpired}
-                      setIsChannelExpired={setIsChannelExpired}
-                      showEditChannel={showEditChannel}
-                      destroyChannel={destroyChannel}
-                    />
+                    <ChannelDashboard />
+
+                    // <ChannelDetails
+                    //   isChannelExpired={isChannelExpired}
+                    //   setIsChannelExpired={setIsChannelExpired}
+                    //   showEditChannel={showEditChannel}
+                    //   destroyChannel={destroyChannel}
+                    // />
                   ) : (
                     ''
                   )}
                 </>
               )}
             </>
-          )}
+          )} */}
 
           {/* processing box */}
           {processingState !== 0 && processingState !== null && isChannelDetails && !editChannel && (

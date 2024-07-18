@@ -11,6 +11,7 @@ export { default as Back } from './components/Back';
 
 export { default as BellRingFilled } from './components/BellRingFilled';
 export { default as BellSimple } from './components/BellSimple';
+export { default as BellSimpleSlash } from './components/BellSimpleSlash';
 
 export { default as CalendarBlank } from './components/CalendarBlank';
 
@@ -32,6 +33,10 @@ export { default as Copy } from './components/Copy';
 
 export { default as Cross } from './components/Cross';
 export { default as CrossFilled } from './components/CrossFilled';
+
+export { default as CrownSimple } from './components/CrownSimple';
+
+export { default as Cube } from './components/Cube';
 
 export { default as Dash } from './components/Dash';
 

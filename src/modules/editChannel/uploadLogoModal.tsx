@@ -1,355 +1,195 @@
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import { Button, Item } from 'components/SharedStyling';
+import { Box, Button, Cross, Text } from 'blocks';
+import { FormikProps, useFormik } from 'formik';
+import { ChannelInfoFormValues } from 'modules/channelDashboard/ChannelDashboard.types';
+import { isImageFile } from 'modules/channelDashboard/ChannelDashboard.utils';
 import ImageClipper from 'primaries/ImageClipper';
-import { useRef } from 'react';
-import { AiOutlineClose } from 'react-icons/ai';
-import { useClickAway } from 'react-use';
-import styled from 'styled-components';
+import { FC, useRef, useState } from 'react';
+import { css } from 'styled-components';
+import * as Yup from 'yup';
 
-const uploadLogoModal = ({ onClose, InnerComponentProps }) => {
-  const { setChannelLogo, croppedImage, setCroppedImage, imageSrc, setImageSrc, imageType, setImageType } =
-    InnerComponentProps;
+type UploadlogoModelProps = {
+  onClose: () => void;
+  InnerComponentProps: {
+    channelForm: FormikProps<ChannelInfoFormValues>;
+  }
+}
 
-  const childRef = useRef();
-  const containerRef = useRef(null);
-  useClickAway(containerRef, () => {
-    onClose();
+const uploadLogoModal: FC<UploadlogoModelProps> = ({ onClose, InnerComponentProps }) => {
+
+  const { channelForm } = InnerComponentProps;
+
+  const logoValidationSchema = Yup.object().shape({
+    image: Yup.mixed().required('Image is required')
   });
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  };
+  const uploadLogoForm = useFormik({
+    initialValues: {
+      image: channelForm.values.channelIcon,
+      imageSrc: '',
+      imageType: ''
+    },
+    validationSchema: logoValidationSchema,
+    onSubmit: (values) => {
+      // Handle form submission logic here
+    }
+  });
 
-  const handleOnDrop = (e) => {
-    //prevent the browser from opening the image
-    e.preventDefault();
-    e.stopPropagation();
-    //let's grab the image file
-    handleFile(e.dataTransfer, 'transfer', e);
-  };
 
-  const handleFile = async (file, path, e) => {
-    e.preventDefault();
-    setCroppedImage(undefined);
-    // setView(true);
+  const childRef = useRef();
 
-    //you can carry out any file validations here...
-    if (file?.files[0]) {
-      var reader = new FileReader();
-      reader.readAsDataURL(file?.files[0]);
+  // Upload Logo
+  const [croppedImage, setCroppedImage] = useState<string | undefined>(uploadLogoForm.values.image);
 
-      reader.onloadend = function (e) {
-        setImageSrc(reader.result);
-        setImageType(file?.files[0]?.type);
-      };
+
+  // handle Input file type
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.currentTarget.files?.[0];
+    setCroppedImage(undefined)
+    if (file && isImageFile(file)) {
+      await processFile(file);
     }
   };
 
+  // Handle Drop Image
+  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCroppedImage(undefined)
+    const file = e.dataTransfer.files?.[0];
+    if (file && isImageFile(file)) {
+      await processFile(file);
+    }
+  };
+
+  // Process Image
+  const processFile = async (file: File) => {
+    uploadLogoForm.setFieldValue('image', file);
+    // Read the file and set imageSrc and imageType
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      uploadLogoForm.setFieldValue('imageSrc', reader.result as string);
+      uploadLogoForm.setFieldValue('imageType', file.type);
+    };
+  };
+
+
   return (
-    <Container ref={containerRef}>
-      <ModalNav>
-        <CloseButton onClick={onClose} />
-      </ModalNav>
+    <Box
+      display='flex'
+      flexDirection='column'
+      gap='s8'
+      alignItems='center'
+      alignSelf='stretch'
+    >
+      <Box display='flex' width='100%' justifyContent='end' color='text-tertiary' cursor='pointer'>
+        <Cross size={24} onClick={onClose} />
+      </Box>
+      <Box
+        display='flex'
+        flexDirection='column'
+        alignItems='center'
+        gap='s8'
+      >
+        <Text variant="bes-regular" color='text-tertiary'>
+          Upload a PNG, JPG upto 1MB. Crop the image to resize to 128px.
+        </Text>
 
-      <ModalContainer>
-        <ModalPrimaryText>Please upload a PNG, JPG. Crop the image to resize to 128px.</ModalPrimaryText>
-        <Space className="">
-          {/* <div> */}
-          <div
-            onDragOver={(e) => handleDragOver(e)}
-            onDrop={(e) => handleOnDrop(e)}
-            className="bordered"
-          >
-            <div className="inner">
-              <div className="crop-div">
-                {croppedImage ? (
-                  <div className="crop-innderdiv">
-                    <div>
-                      <img
-                        alt="Cropped Img"
-                        src={croppedImage}
-                        className="croppedImage"
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="crop-innderdiv">
-                    <ImageClipper
-                      className="cropper"
-                      imageSrc={imageSrc}
-                      imageType={imageType}
-                      onImageCropped={(croppedImage) => setCroppedImage(croppedImage)}
-                      width="128px"
-                      height="128px"
-                      ref={childRef}
-                    />
-                  </div>
-                )}
-              </div>
-
-              <DragText>
-                <p className="text-below">Drag and Drop or</p>
-                <div className="text-div">
-                  <label
-                    htmlFor="file-upload"
-                    className="labeled"
-                  >
-                    <div>Browse to Choose</div>
-                    <input
-                      id="file-upload"
-                      accept="image/*"
-                      name="file-upload"
-                      hidden
-                      onChange={(e) => handleFile(e.target, 'target', e)}
-                      type="file"
-                      className="sr-only"
-                      readOnly
-                    />
-                  </label>
-                </div>
-              </DragText>
-            </div>
-          </div>
-          {/* </div> */}
-        </Space>
-
-        <ModalFooter>
+        {/* <form onSubmit={uploadLogoFormik.handleSubmit}> */}
+        <Box
+          width={{ initial: '500px', ml: '325px' }}
+          padding='spacing-xxl spacing-none'
+          display='flex'
+          flexDirection='column'
+          alignItems='center'
+          border={{ light: '1px dashed gray-300', dark: '1px dashed gray-700' }}
+          borderRadius="r6"
+          backgroundColor='surface-secondary'
+          gap='s6'
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={handleDrop}
+        >
           {croppedImage ? (
-            <>
-              <UploadButton
-                onClick={() => {
-                  setChannelLogo(croppedImage);
-                  onClose();
-                }}
-              >
-                Upload Image
-              </UploadButton>
-            </>
+            <Box
+              width='128px'
+              height='128px'
+              borderRadius="r5"
+            >
+              <img style={{ borderRadius: 'inherit' }} width="100%"
+                height="100%" src={croppedImage} alt="Cropped Img" />
+            </Box>
           ) : (
-            <>
-              <CropButton
-                onClick={() => {
-                  childRef.current.showCroppedImage();
-                }}
-              >
-                Crop Image
-              </CropButton>
-            </>
+            <ImageClipper
+              width='200px'
+              height='200px'
+              imageSrc={uploadLogoForm.values.imageSrc}
+              imageType={uploadLogoForm.values.imageType}
+              onImageCropped={(croppedImage: string) => setCroppedImage(croppedImage)}
+              ref={childRef}
+            />
           )}
-        </ModalFooter>
-      </ModalContainer>
-    </Container>
+
+          <Box display='flex' gap='s1'>
+            <Text
+              variant="bs-semibold"
+              color='text-tertiary'
+            > Drag and Drop or</Text>
+            <label htmlFor="file-upload">
+              <Text
+                variant="bs-semibold"
+                color='text-brand-medium'
+                css={css`cursor:pointer;`}
+              >
+                Browse to Choose
+              </Text>
+            </label>
+          </Box>
+
+          <input
+            id="file-upload"
+            accept="image/*"
+            name="file-upload"
+            hidden
+            onChange={handleFileChange}
+            type="file"
+            readOnly
+          />
+
+        </Box>
+        {/* </form> */}
+
+      </Box>
+
+      <Box>
+        {croppedImage ? (
+          <>
+            <Button
+              onClick={() => {
+                if (uploadLogoForm.isValid) {
+                  // Also Check if the value of Icon is changed or not
+                  channelForm.setFieldValue('channelIcon', croppedImage)
+                  onClose();
+                }
+              }}
+            >
+              Upload Image
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              onClick={() => {
+                childRef.current.showCroppedImage();
+              }}
+            >
+              Crop Image
+            </Button>
+          </>
+        )}
+      </Box>
+
+    </Box>
   );
 };
 
 export default uploadLogoModal;
-
-const Container = styled.div``;
-
-const ModalContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 18px 10px 32px 10px;
-`;
-
-const ModalPrimaryText = styled.p`
-  margin: 0px;
-  font-family: 'FK Grotesk Neu';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 140%;
-  text-align: center;
-  color: ${(props) => props.theme.modalTextColor};
-`;
-
-const ModalNav = styled.div`
-  text-align: end;
-  width: 100%;
-`;
-
-const CloseButton = styled(AiOutlineClose)`
-  cursor: pointer;
-  font-size: 20px;
-  color: ${(props) => props.theme.modalTextColor};
-`;
-
-const DragText = styled(Item)`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const ModalFooter = styled(ItemVV2)``;
-
-const CropButton = styled(Button)`
-  font-family: 'FK Grotesk Neu';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 22px;
-  display: flex;
-  border-radius: 15px;
-  align-items: center;
-  text-align: center;
-  background: #cf1c84;
-  color: #fff;
-  padding: 16px 27px;
-  width: 12rem;
-`;
-
-const UploadButton = styled(Button)`
-  font-family: 'FK Grotesk Neu';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 22px;
-  display: flex;
-  border-radius: 15px;
-  align-items: center;
-  text-align: center;
-  background: #cf1c84;
-  color: #fff;
-  padding: 16px 18px;
-  width: 12rem;
-`;
-
-const Space = styled.div`
-  width: 100%;
-  margin: 24px 0px 44px 0px;
-  font-weight: 500;
-  font-size: 15px;
-  line-height: 150%;
-  .bordered {
-    display: flex;
-    justify-content: center;
-    border: 1px dashed #8c99b0;
-    align-items: flex-end;
-    border-radius: 12px;
-    padding: 0px 50px 0px 50px;
-    background: ${(props) => props.theme.modalbackgroundColor};
-    .inner {
-      margin-top: 0.25rem;
-      text-align: center;
-      padding: 23px 15px 23px 15px;
-      width: 100%;
-      .crop-div {
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        @media (max-width: 768px) {
-          flex-direction: column;
-        }
-        justify-content: space-evenly;
-        align-items: center;
-        margin-right: auto;
-        .crop-innderdiv {
-          width: 100%;
-          background: ${(props) => props.theme.modalImageBgColor};
-          border-radius: 20px;
-          padding: 17px 100px 17px 100px;
-          @media (max-width: 768px) {
-            padding: 17px 2px 17px;
-          }
-
-          margin-bottom: 12px;
-        }
-
-        div {
-          height: 128px;
-          // width:128px;
-          .croppedImage {
-            border-radius: 20px;
-            // @media (max-width: 768px) {
-            //   margin-top: 1rem;
-            // }
-          }
-        }
-        .cropper {
-          border-radius: 20px;
-          width: 128px;
-          height: 128px;
-        }
-      }
-      .check-space {
-        .croppedImage {
-          width: auto;
-          height: auto;
-          border-radius: 5px;
-        }
-        .button-space {
-          margin-top: 1rem;
-          width: 100%;
-          display: flex;
-          justify-content: center;
-        }
-      }
-      .crop-button {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-        @media (max-width: 768px) {
-          margin-top: 1rem;
-        }
-      }
-      .svg {
-        margin: 0px auto;
-        height: 3rem;
-        width: 3rem;
-        color: #ccc;
-      }
-      .text-div {
-        display: flex;
-        font-weight: 400;
-        font-size: 15px;
-        line-height: 140%;
-        color: #ccc;
-        justify-content: center;
-        .labeled {
-          position: relative;
-          cursor: pointer;
-          border-radius: 4px;
-          color: #cf1c84;
-          &:hover {
-            text-decoration: underline;
-          }
-        }
-      }
-      .text-below {
-        font-weight: 400;
-        font-size: 15px;
-        line-height: 140%;
-        color: ${(props) => props.theme.modalTextColor};
-        margin: 0px 0.3rem 0px 0px;
-      }
-    }
-  }
-  .image-error {
-    font-size: 1rem;
-    line-height: 1rem;
-    color: red;
-    margin-top: 0.5rem;
-  }
-  .image {
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: row;
-    .item {
-      width: 4rem;
-      height: auto;
-      border-radius: 4px;
-    }
-    .image-border {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      margin-left: 2rem;
-      .text {
-        font-size: 1rem;
-        line-height: 1rem;
-        color: #ccc;
-        margin-top: 1rem;
-      }
-    }
-  }
-`;

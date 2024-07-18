@@ -12,8 +12,8 @@ const PrivacyPolicy = () => {
     >
       <Box
         display='flex'
-        flexDirection='row'
-        gap='s4'
+        flexDirection={{ initial: 'row', ml: 'column' }}
+        gap={{ initial: 's4', ml: 's0' }}
       >
         <Text variant='bes-semibold'>Privacy Policy</Text>
         <Text variant='bes-semibold'>Terms and Conditions</Text>

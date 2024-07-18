@@ -37,7 +37,7 @@ function ChannelDashboardModule() {
 
   // Render
   return (
-    <Container>
+    <>
       {adminStatusLoaded ? <ChannelOwnerDashboard /> : <ChannelLoading />}
       {toast && (
         <NotificationToast
@@ -45,7 +45,7 @@ function ChannelDashboardModule() {
           clearToast={clearToast}
         />
       )}
-    </Container>
+    </>
   );
 }
 

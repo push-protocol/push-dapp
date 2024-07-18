@@ -14,7 +14,6 @@ import FaucetInfo from 'components/FaucetInfo';
 // Internal Configs
 import { addresses } from 'config/index.js';
 import GLOBALS, { device } from 'config/Globals';
-import { Button } from '../../components/SharedStyling';
 import EditChannelForms from './EditChannelForms';
 import useToast from 'hooks/useToast';
 import { MODAL_POSITION } from 'hooks/useModalBlur';
@@ -29,6 +28,8 @@ import { IPFSupload } from 'helpers/IpfsHelper';
 import { isEmpty } from 'helpers/InputValidation';
 import { isLengthValid, isValidUrl } from 'helpers/ValidationHelper';
 import { handleLogoSizeLimitation, toDataURL } from 'helpers/LogoSizeHelper';
+import { Box, Button, deviceSizes, Skeleton, Text, TickCircleFilled } from 'blocks';
+import Spinner from 'components/reusables/spinners/SpinnerUnit';
 
 export default function EditChannel({ closeEditChannel, UploadLogoComponent, displayUplaodLogoModal }) {
   const { account, provider } = useAccount();
@@ -372,6 +373,7 @@ export default function EditChannel({ closeEditChannel, UploadLogoComponent, dis
           >
             Upload Logo
           </UploadButton>
+
         </AdaptiveMobileItemHV22>
 
         {!isMobile && <VerticalLine></VerticalLine>}
@@ -389,65 +391,116 @@ export default function EditChannel({ closeEditChannel, UploadLogoComponent, dis
           setErrorInfo={setErrorInfo}
         />
       </EditableContainer>
+      
 
       {/* This is Footer container that is present over the buttons */}
-      <Footer>
-        <div>
-          <FooterPrimaryText>Channel edit fee</FooterPrimaryText>
-          <FooterSecondaryText>Editing channel details requires fees to be deposited</FooterSecondaryText>
-        </div>
-        <ItemHV2 flex="0">
-          {pushDeposited ? <TickImage src={VerifyLogo} /> : null}
-          <EditFee>{feesRequiredForEdit} PUSH</EditFee>
-        </ItemHV2>
-      </Footer>
+      <Box display="flex" flexDirection="column" alignSelf="stretch">
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          backgroundColor='surface-secondary'
+          borderRadius="radius-sm"
+          padding="spacing-sm spacing-md"
+          alignItems="center"
+        >
+          <Box>
+            <Text
+              variant="h4-semibold"
+              color='text-primary'
+              display={{ ml: 'none', dp: 'block' }}
+            >
+              Channel edit fee
+            </Text>
+            <Text
+              variant="h5-semibold"
+              color='text-primary'
+              display={{ ml: 'block', dp: 'none' }}
+            >
+              Channel edit fee
+            </Text>
+
+
+            <Text
+              variant="c-regular"
+              color='text-tertiary'
+              display={{ ml: 'none', dp: 'block' }}
+            >
+              Editing channel details requires fees to be deposited
+            </Text>
+
+            <Text
+              variant="c-regular"
+              color='text-tertiary'
+              display={{ ml: 'block', dp: 'none' }}
+            >
+              Editing channel details requires fees to be deposited
+            </Text>
+          </Box>
+
+          <Box display='flex' gap='s1' alignItems='center'>
+            {pushDeposited && <TickCircleFilled color='text-brand-medium' size={24} />}
+            <Text variant="h4-semibold" color='text-brand-medium'>
+              {feesRequiredForEdit} PUSH
+            </Text>
+          </Box>
+        </Box>
+
+      </Box>
+
       <FaucetInfo
         noOfPushTokensToCheck={feesRequiredForEdit}
         containerProps={{ width: '100%' }}
         onMintPushToken={mintPushTokenHandler}
       />
 
-      {isLoading ? (
-        <>
-          {/* Verifying Spinner and Text */}
-          <VerifyingContainer>
-            <Spinner
-              size={42}
-              color={GLOBALS.COLORS.PRIMARY_PINK}
-              type={LOADER_SPINNER_TYPE.PROCESSING}
-            />
-            <TransactionText>Verifying Transaction</TransactionText>
-          </VerifyingContainer>
-        </>
-      ) : (
-        <>
-          {/* This below is Footer Buttons i.e, Cancel and save changes */}
-          <ButtonContainer>
-            <CancelButtons onClick={closeEditChannel}>Cancel</CancelButtons>
+      <Box width='100%' margin='spacing-lg spacing-none spacing-none spacing-none'>
+        {isLoading ? (
+          <>
+            {/* Verifying Spinner and Text */}
+            <VerifyingContainer>
+              <Spinner
+                size={42}
+                color={GLOBALS.COLORS.PRIMARY_PINK}
+                type={LOADER_SPINNER_TYPE.PROCESSING}
+              />
+              <TransactionText>Verifying Transaction</TransactionText>
+            </VerifyingContainer>
+          </>
+        ) : (
+          <>
+            {/* This below is Footer Buttons i.e, Cancel and save changes */}
+            <Box display='flex' justifyContent='end' gap='s3'>
+              <Button onClick={closeEditChannel} variant='outline' size='medium'>Cancel</Button>
 
-            {pushApprovalAmount >= feesRequiredForEdit ? (
-              <FooterButtons
-                disabled={isDetailsAltered()}
-                style={{ background: isDetailsAltered() ? ' #F4DCEA' : '#CF1C84' }}
-                onClick={editChannel}
-              >
-                Save Changes
-              </FooterButtons>
-            ) : (
-              <FooterButtons onClick={depositPush}>Approve PUSH</FooterButtons>
-            )}
-          </ButtonContainer>
-        </>
-      )}
+              {pushApprovalAmount >= feesRequiredForEdit ? (
+                <Button onClick={editChannel} disabled={isDetailsAltered()}>
+                  Save Changes
+                </Button>
+
+
+              ) : (
+                <Button variant='primary' size='medium' onClick={depositPush}>Approve PUSH</Button>
+              )}
+            </Box>
+          </>
+        )}
+      </Box>
     </EditChannelContainer>
   );
 }
 
 const EditChannelContainer = styled(ItemVV2)`
   padding: 0px;
-  @media (min-width: 1140px) {
-    padding: 15px 50px 0px 50px;
-  }
+  background: ${(props) => props.theme.default.bg};
+  align-self: center;
+  border-radius:32px;
+  padding:24px;
+  width:846px;
+   @media ${deviceSizes.mobileL}{
+   width:357px;
+   }
+  
 `;
 
 const EditableContainer = styled(ItemVV2)`

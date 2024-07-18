@@ -1,34 +1,41 @@
-import { Box } from "blocks";
-import { ChannelDashboardHeader } from "./components/ChannelDashboardHeader";
-import { PrivacyPolicy } from "./components/PrivacyPolicy";
-import { ChannelDashboardNotificationSettings } from "./components/ChannelDashboardNotificationSettings";
-import { ChannelDashboardDelegates } from "./components/ChannelDashboardDelegates";
+// React and other libraries
+import { useState } from 'react';
+
+// Components
+import { Box } from 'blocks';
+import { ChannelAddSubgraph } from './components/ChannelAddSubgraph';
+import { ChannelAddDelegate } from './components/ChannelAddDelegate';
+import { ReactivateChannel } from './components/ReactivateChannel';
+import { DeactivateChannel } from './components/DeactivateChannel';
+import { UserChannelDashboard } from './components/UserChannelDashboard';
+
+// Types
+import { DashboardActiveState } from './ChannelDashboard.types';
+import { EditChannelComponent } from './components/EditChannelComponent';
 
 const ChannelDashboard = () => {
+  const [activeState, setActiveState] = useState<DashboardActiveState>('dashboard');
+  /**
+   * We need to have 3 things here
+   * 1. Channel Dashboard
+   * 2. Add Subgraph Details
+   * 3. Add Delegate
+   * 4. Reactivate Channel
+   * 5. Edit Channel
+   * 6. Activate Channel
+   */
+
   return (
-    <Box
-      display='flex'
-      width='846px'
-      padding='s6'
-      flexDirection='column'
-      alignItems='center'
-      gap='spacing-lg'
-      backgroundColor='surface-primary'
-      borderRadius='radius-lg'
-    >
-      <ChannelDashboardHeader />
+    <Box>
+      {activeState === 'dashboard' && <UserChannelDashboard setActiveState={setActiveState} />}
 
-      <Box
-        display='flex'
-        gap='spacing-md'
-        width='100%'
-      >
-        <ChannelDashboardNotificationSettings />
-        <ChannelDashboardDelegates />
-      </Box>
+      {activeState === 'add_delegate' && <ChannelAddDelegate setActiveState={setActiveState} />}
+      {activeState === 'add_subgraph' && <ChannelAddSubgraph setActiveState={setActiveState} />}
 
-      <PrivacyPolicy />
+      {activeState === 'reactivate_channel' && <ReactivateChannel setActiveState={setActiveState} />}
+      {activeState === 'deactivate_channel' && <DeactivateChannel setActiveState={setActiveState} />}
 
+      {activeState === 'edit_channel' && <EditChannelComponent setActiveState={setActiveState} />}
     </Box>
   );
 };
