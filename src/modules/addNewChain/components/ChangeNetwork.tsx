@@ -1,18 +1,22 @@
 import { FC, useEffect } from 'react';
 
+import { useFormikContext } from 'formik';
+
 import { useAccount } from 'hooks';
 
 import { Box, Button, Text } from 'blocks';
 import { ActiveStepKey } from '../AddNewChain.types';
 
+import { NewChainAddressValue } from '../AddNewChain.form';
+
 export type ChangeNetworkProps = {
   handleNextStep: (key: ActiveStepKey) => void;
-  formik: any;
 };
 
-const ChangeNetwork: FC<ChangeNetworkProps> = ({ handleNextStep, formik }) => {
+const ChangeNetwork: FC<ChangeNetworkProps> = ({ handleNextStep }) => {
   const { switchChain, chainId } = useAccount();
-  const selectedChainId = parseInt(formik.values.chainId);
+  const { values: formValues } = useFormikContext<NewChainAddressValue>();
+  const selectedChainId = parseInt(formValues.chainId);
   useEffect(() => {
     if (chainId === selectedChainId) {
       handleNextStep('verifyalias');

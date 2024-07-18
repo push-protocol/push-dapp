@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useFormikContext } from 'formik';
 
 import useToast from 'hooks/useToast';
 import { useVerifyAliasChain } from 'queries';
@@ -15,22 +16,20 @@ import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 import { UserStoreType } from 'types';
 
-export type VerifyAliasChainProps = {
-  // alias: string;
-  formik: any;
-};
+import { NewChainAddressValue } from '../AddNewChain.form';
 
-const VerifyAliasChain: FC<VerifyAliasChainProps> = ({ formik }) => {
+const VerifyAliasChain: FC = () => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
     return state.user;
   });
   const { mutate: verifyAliasChain, isPending } = useVerifyAliasChain();
 
+  const { values: formValues } = useFormikContext<NewChainAddressValue>();
   const toast = useToast();
   const navigate = useNavigate();
 
-  const selectedChainId = parseInt(formik.values.chainId);
-  const aliasAddress = formik.values.alias;
+  const selectedChainId = parseInt(formValues.chainId);
+  const aliasAddress = formValues.alias;
 
   const handleVerifyAliasChain = () => {
     verifyAliasChain(

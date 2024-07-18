@@ -2,13 +2,14 @@
 import { FC, useState } from 'react';
 
 import { useSelector } from 'react-redux';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
 import { css } from 'styled-components';
 import { MdError } from 'react-icons/md';
+import { useFormik, FormikProvider } from 'formik';
 
 import useToast from 'hooks/useToast';
 import { useInitiateNewChain } from 'queries';
+
+import { addNewChainSteps } from './AddNewChain.constants';
 
 import { NewAddress } from './components/NewAddress';
 import { ChangeNetwork } from './components/ChangeNetwork';
@@ -18,11 +19,11 @@ import { Box, Text } from 'blocks';
 import { Stepper } from 'common';
 
 import { UserStoreType } from 'types';
-import { ActiveStepKey, NewChainAddressValue } from './AddNewChain.types';
+import { ActiveStepKey } from './AddNewChain.types';
 
-import { isValidAddress } from 'helpers/ValidationHelper';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import { addNewChainSteps } from './AddNewChain.constants';
+
+import { validationSchema, NewChainAddressValue, initialValues } from './AddNewChain.form';
 
 const AddNewChain: FC = () => {
   const [activeStepKey, setActiveStepKey] = useState<ActiveStepKey>('newaddress');
@@ -32,23 +33,14 @@ const AddNewChain: FC = () => {
   const { mutate: initiateNewChain, isPending, isError } = useInitiateNewChain();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const validationSchema = yup.object().shape({
-    alias: yup
-      .string()
-      .required('Address is required')
-      .test('is-valid-address', 'Invalid wallet address', isValidAddress),
-    chainId: yup.string().required('ChainId is required'),
-  });
   const formik = useFormik<NewChainAddressValue>({
-    initialValues: {
-      alias: '',
-      chainId: '11155111',
-    },
+    initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: (values) => {
       handleInitiate(values.alias, values.chainId);
     },
   });
+
   const handleInitiate = (alias: string, chainId: string) => {
     initiateNewChain(
       {
@@ -84,89 +76,95 @@ const AddNewChain: FC = () => {
   };
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      margin={{
-        ml: 'spacing-lg spacing-md',
-        dp: 'spacing-lg spacing-none spacing-none spacing-none',
-      }}
-      padding={{ dp: 'spacing-lg', ml: 'spacing-sm' }}
-      gap="spacing-lg"
-      borderRadius="radius-lg"
-      backgroundColor="surface-primary"
-    >
+    <FormikProvider value={formik}>
       <Box
         display="flex"
         flexDirection="column"
         alignItems="center"
-        gap="spacing-xxxs"
+        margin={{
+          ml: 'spacing-lg spacing-md',
+          dp: 'spacing-lg spacing-none spacing-none spacing-none',
+        }}
+        padding={{ dp: 'spacing-lg', ml: 'spacing-sm' }}
+        gap="spacing-lg"
+        borderRadius="radius-lg"
+        backgroundColor="surface-primary"
       >
-        <Text
-          color="text-primary"
-          variant="h3-semibold"
-          display={{ ml: 'none', dp: 'block' }}
-        >
-          Add New Chain to Channel
-        </Text>
-        <Text
-          color="text-primary"
-          variant="h4-semibold"
-          display={{ ml: 'block', dp: 'none' }}
-        >
-          Add New Chain to Channel
-        </Text>
-        <Text
-          color="text-tertiary"
-          variant="bs-regular"
-          display={{ ml: 'none', dp: 'block' }}
-        >
-          Add an alias chain to your channel to enable notifications to that chain.
-        </Text>
-        <Text
-          display={{ ml: 'block', dp: 'none' }}
-          color="text-tertiary"
-          variant="bes-regular"
-        >
-          Add an alias chain to your channel to enable notifications to that chain.
-        </Text>
-      </Box>
-      <Stepper
-        steps={addNewChainSteps}
-        completedSteps={completedSteps}
-        setActiveStepKey={(key) => setActiveStepKey(key as ActiveStepKey)}
-      />
-      {activeStepKey === 'newaddress' && (
-        <NewAddress
-          formik={formik}
-          isLoading={isPending && !isError}
-        />
-      )}
-      {activeStepKey === 'changenetwork' && (
-        <ChangeNetwork
-          handleNextStep={handleNextStep}
-          formik={formik}
-        />
-      )}
-      {activeStepKey === 'verifyalias' && <VerifyAliasChain formik={formik} />}
-      {userPushSDKInstance && userPushSDKInstance?.readmode() && (
         <Box
           display="flex"
-          justifyContent="center"
-          width="-webkit-fill-available"
+          flexDirection="column"
           alignItems="center"
-          css={css`
-            z-index: 99999;
-          `}
+          gap="spacing-xxxs"
         >
-          <UnlockProfileWrapper
-            type={UNLOCK_PROFILE_TYPE.MODAL}
-            showConnectModal={true}
-          />
+          <Text
+            color="text-primary"
+            variant="h3-semibold"
+            display={{ ml: 'none', dp: 'block' }}
+          >
+            Add New Chain to Channel
+          </Text>
+          <Text
+            color="text-primary"
+            variant="h4-semibold"
+            display={{ ml: 'block', dp: 'none' }}
+          >
+            Add New Chain to Channel
+          </Text>
+          <Text
+            color="text-tertiary"
+            variant="bs-regular"
+            display={{ ml: 'none', dp: 'block' }}
+          >
+            Add an alias chain to your channel to enable notifications to that chain.
+          </Text>
+          <Text
+            display={{ ml: 'block', dp: 'none' }}
+            color="text-tertiary"
+            variant="bes-regular"
+          >
+            Add an alias chain to your channel to enable notifications to that chain.
+          </Text>
         </Box>
-      )}
-    </Box>
+        <Stepper
+          steps={addNewChainSteps}
+          completedSteps={completedSteps}
+          setActiveStepKey={(key) => setActiveStepKey(key as ActiveStepKey)}
+        />
+        {activeStepKey === 'newaddress' && (
+          <NewAddress
+            // form={formik}
+            isLoading={isPending && !isError}
+          />
+        )}
+        {activeStepKey === 'changenetwork' && (
+          <ChangeNetwork
+            handleNextStep={handleNextStep}
+            // form={formik}
+          />
+        )}
+        {activeStepKey === 'verifyalias' && (
+          <VerifyAliasChain
+          // form={formik}
+          />
+        )}
+        {userPushSDKInstance && userPushSDKInstance?.readmode() && (
+          <Box
+            display="flex"
+            justifyContent="center"
+            width="-webkit-fill-available"
+            alignItems="center"
+            css={css`
+              z-index: 99999;
+            `}
+          >
+            <UnlockProfileWrapper
+              type={UNLOCK_PROFILE_TYPE.MODAL}
+              showConnectModal={true}
+            />
+          </Box>
+        )}
+      </Box>
+    </FormikProvider>
   );
 };
 

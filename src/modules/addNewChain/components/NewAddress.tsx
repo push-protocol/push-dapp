@@ -1,20 +1,23 @@
 import { FC } from 'react';
 
+import { useFormikContext } from 'formik';
+
 import { Box, Button, Select, TextInput } from 'blocks';
 
 import { getSelectChains } from '../AddNewChain.utils';
 
+import { NewChainAddressValue } from '../AddNewChain.form';
+
 export type NewAddressProps = {
-  formik: any;
   isLoading: boolean;
 };
 
-const NewAddress: FC<NewAddressProps> = ({ isLoading, formik }) => {
+const NewAddress: FC<NewAddressProps> = ({ isLoading }) => {
   const selectOptions = getSelectChains();
-
+  const { values: formValues, handleSubmit, handleChange, errors, touched } = useFormikContext<NewChainAddressValue>();
   return (
     <Box width="100%">
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <Box
           display="flex"
           flexDirection="column"
@@ -33,10 +36,10 @@ const NewAddress: FC<NewAddressProps> = ({ isLoading, formik }) => {
             <TextInput
               label="Your Address on New Chain"
               description="Make sure you own this alias as verification will take place."
-              value={formik.values.alias}
-              onChange={formik.handleChange('alias')}
-              error={formik?.touched?.alias && Boolean(formik?.errors?.alias)}
-              errorMessage={formik?.touched?.alias && formik?.errors?.alias}
+              value={formValues.alias}
+              onChange={handleChange('alias')}
+              error={touched?.alias && Boolean(errors?.alias)}
+              errorMessage={touched?.alias && errors?.alias}
             />
             <Box
               display="flex"
@@ -46,15 +49,15 @@ const NewAddress: FC<NewAddressProps> = ({ isLoading, formik }) => {
             >
               <Select
                 options={selectOptions}
-                value={formik.values.chainId}
-                onSelect={formik.handleChange('chainId')}
-                error={formik?.touched?.chainId && Boolean(formik?.errors?.chainId)}
-                errorMessage={formik?.touched?.chainId && formik?.errors?.chainId}
+                value={formValues.chainId}
+                onSelect={handleChange('chainId')}
+                error={touched?.chainId && Boolean(errors?.chainId)}
+                errorMessage={errors?.chainId}
               />
             </Box>
           </Box>
           <Button
-            disabled={!formik.values.alias || isLoading}
+            disabled={!formValues.alias || isLoading}
             variant="primary"
           >
             {isLoading ? 'Initiating' : 'Add'}
