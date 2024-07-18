@@ -19,6 +19,7 @@ import UnlockLogo from '../../../assets/chat/unlock.svg';
 import Wallet from '../../../assets/chat/wallet.svg';
 import { Button, Box, CrossFilled, HoverableSVG } from 'blocks';
 import { checkUnlockProfileErrors } from './UnlockProfile.utils';
+import { colorBrands } from 'blocks/theme/colors/colors.brands';
 
 // Constants
 export enum UNLOCK_PROFILE_TYPE {
@@ -190,7 +191,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
             flexDirection={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? 'column' : 'row'}
           >
             <StepsLeftDesign
-              background={'var(--pink-500)'}
+              background={colorBrands['primary-500']}
               color={theme.btn.primaryColor}
             >
               1
@@ -202,7 +203,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
             ></HorizontalBar>
             <StepsLeftDesign
               background={
-                activeStatus.status !== PROFILESTATE.CONNECT_WALLET ? 'var(--pink-500)' : theme.btn.disabledBg
+                activeStatus.status !== PROFILESTATE.CONNECT_WALLET ? colorBrands['primary-500'] : theme.btn.disabledBg
               }
               color={
                 activeStatus.status !== PROFILESTATE.CONNECT_WALLET ? theme.btn.primaryColor : theme.btn.disabledColor
@@ -393,8 +394,8 @@ const HorizontalBar = styled.div`
   height: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '40px' : '3px')};
   background: ${(props) =>
     props.activeState === PROFILESTATE.CONNECT_WALLET
-      ? `linear-gradient(to right, var(--pink-500), ${props.theme.btn.disabledBg})`
-      : 'var(--pink-500)'};
+      ? `linear-gradient(to right, ${colorBrands['primary-500']}, ${props.theme.btn.disabledBg})`
+      : colorBrands['primary-500']};
 
   @media ${device.tablet} {
     width: 2px;
