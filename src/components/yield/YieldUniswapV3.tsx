@@ -784,7 +784,7 @@ const DataValue = styled(H2V2)`
 
 const ButtonsContainer = styled.div`
   display: flex;
-  gap: var(--s3);
+  gap: var(--spacing-xxxs, 4px);
   margin: 15px 0px 0px 0px;
 `;
 

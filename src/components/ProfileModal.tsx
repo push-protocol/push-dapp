@@ -17,7 +17,7 @@ const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues }) => {
   return (
     <ModalContainer>
       <Box
-        margin="s3 s6 s3 s0"
+        margin="spacing-xs spacing-md spacing-xs spacing-none"
         alignSelf="flex-end"
       >
         <Button

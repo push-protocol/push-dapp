@@ -130,7 +130,7 @@ const SearchFilter = ({
           display="flex"
           flexDirection="row"
           justifyContent="flex-end"
-          margin="s1 s8 s6 s0"
+          margin="spacing-xxxs spacing-lg spacing-md spacing-none"
           gap="s2"
         >
           <Button

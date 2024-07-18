@@ -191,7 +191,7 @@ const ClaimGalxeModule = () => {
               tb: '13rem',
               initial: '15rem',
             }}
-            margin="s0 s0 s4 s0"
+            margin="spacing-none spacing-none spacing-xxxs spacing-none"
           >
             {wallet && wallet?.accounts?.length > 0 ? (
               <Button

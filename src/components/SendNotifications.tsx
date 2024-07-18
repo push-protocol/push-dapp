@@ -1095,7 +1095,7 @@ function SendNotifications() {
                 )}
 
                 {nfType && (
-                  <Box margin="s18 s0 s0 s0">
+                  <Box margin="spacing-xxxl spacing-none spacing-none spacing-none">
                     <Button
                       disabled={nfProcessing == 1 ? true : false}
                       variant="primary"

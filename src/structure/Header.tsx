@@ -293,7 +293,7 @@ function Header({ isDarkMode, darkModeToggle }) {
           {isActive && !error && (
             <RightBarMobile>
               <Box
-                margin="s1"
+                margin="spacing-xxxs"
                 display="flex"
                 alignItems="center"
               >

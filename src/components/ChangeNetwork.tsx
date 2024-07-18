@@ -47,7 +47,7 @@ const ChangeNetwork = () => {
         display="flex"
         alignSelf="center"
         alignItems="center"
-        margin="s25 s0 s12 s0"
+        margin="spacing-xxxl spacing-none spacing-xxl spacing-none"
       >
         <Button
           variant="primary"

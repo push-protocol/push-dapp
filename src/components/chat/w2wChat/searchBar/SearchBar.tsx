@@ -14,6 +14,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext } from 'types/chat';
 import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
+import { Box, Button } from 'blocks';
 
 interface InputProps {
   typed: boolean;
@@ -158,20 +159,15 @@ const SearchBar = ({ autofilled, searchedUser, setSearchedUser }) => {
         </ItemVV2>
 
         {activeTab !== 3 && activeTab !== 4 && (
-          <ItemVV2
-            flex="initial"
-            margin="0px 0px 0px 10px"
-            alignItems="center"
-            width="48px"
-            height="48px"
-            top="10px"
-            right="0px"
-            zIndex="1"
-            background="#d53893"
-            borderRadius="32px 32px 32px 4px"
-          >
-            <AddIconStyled onClick={() => setActiveTab(3)} />
-          </ItemVV2>
+          <Box margin="spacing-none spacing-none spacing-none spacing-xs">
+            <Button
+              iconOnly
+              leadingIcon={<AddIconStyled />}
+              circular
+              size="small"
+              onClick={() => setActiveTab(3)}
+            />
+          </Box>
         )}
       </ItemHV2>
     </ItemVV2>
