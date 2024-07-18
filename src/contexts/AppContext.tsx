@@ -164,6 +164,8 @@ const AppContextProvider = ({ children }) => {
     const value = localStorage.getItem(key);
 
     if (isPGPKey(value)) {
+      setUserProfileUnlocked(true);
+
       return value;
     }
 
