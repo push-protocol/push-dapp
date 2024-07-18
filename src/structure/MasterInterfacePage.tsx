@@ -45,6 +45,8 @@ const PointsVaultPage = lazy(() => import('pages/PointsVaultPage'));
 const CreateChannelPage = lazy(() => import('pages/CreateChannelPage'));
 
 const DiscordVerificationPage = lazy(() => import('pages/DiscordVerificationPage'));
+
+const SendNotificationPage = lazy(() => import('pages/SendNotificationPage'));
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
 // import ChannelsPage from 'pages/ChannelsPage';
@@ -241,7 +243,7 @@ function MasterInterfacePage() {
             />
             <Route
               path={APP_PATHS.Send}
-              element={<SendNotifsPage />}
+              element={<SendNotificationPage />}
             />
             <Route
               path={APP_PATHS.Receive}
