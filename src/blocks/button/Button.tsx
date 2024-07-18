@@ -45,9 +45,6 @@ const StyledButton = styled.button<ButtonProps & ModeProp>`
     justify-content: center;
   }
 
-  /* Prop specific CSS */
-  ${({ block }) => block && 'width: 100%;'}
-
   /* Button variant CSS styles */
   ${({ mode, variant }) => getButtonVariantStyles(mode, variant || 'primary')}
 
@@ -56,6 +53,9 @@ const StyledButton = styled.button<ButtonProps & ModeProp>`
 
   /* Circular CSS for rounded icon only buttons */
   ${({ circular, iconOnly }) => circular && iconOnly && `border-radius: var(--r10)`}
+
+  /* Prop specific CSS */
+  ${({ block }) => block && 'width: 100%;'}
 
   /* Custom CSS applied via styled component css prop */
   ${(props) => props.css || ''}
