@@ -42,8 +42,8 @@ const StyledButton = styled.button<Omit<HoverableSVGProps, 'icon'>>`
     background-color: var(--${({ hoverBackground }) => hoverBackground || 'surface-transparent'});
     color: ${({ hoverColor }) => `var(--${hoverColor})` || 'inherit'};
   }
-  &:disabled > span {
-    color: var(--icon-disabled);
+  &:disabled {
+    color: var(--icon-state-disabled);
   }
 `;
 const HoverableSVG: FC<HoverableSVGProps> = ({

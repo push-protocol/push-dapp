@@ -42,7 +42,7 @@ const IconWrapper: FC<IconWrapperProps> = ({
   size: sizeProp,
   ...restProps
 }) => {
-  const color = (colorProp ?? 'currentColor') as string;
+  const color = colorProp ? `var(--${colorProp})` : 'currentColor';
   const size = sizeProp ? `${sizeProp}px` : autoSize ? '1em' : '16px';
   return (
     <StyledIconWrapper

@@ -28,7 +28,7 @@ const FeaturedChannels: FC<FeaturedChannelsProps> = () => {
       flexDirection="column"
       backgroundColor="surface-primary"
       gap={{ ml: 'spacing-sm', initial: 'spacing-xxs' }}
-      alignItems="center"
+      alignItems="flex-start"
     >
       {showMobileAndTabletView ? (
         <FeaturedChannelsMobileViewList featuredChannelsList={mobileFeaturedChannelsList} />
