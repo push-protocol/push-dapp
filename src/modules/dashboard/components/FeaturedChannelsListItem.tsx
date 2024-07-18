@@ -59,10 +59,10 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
       <Box
         display="flex"
         flexDirection="column"
-        border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
-        padding={{ initial: 's6', ml: 's6 s4', tb: 's5', lp: 's5' }}
-        borderRadius="r6"
-        gap="s3"
+        border="border-sm solid stroke-secondary"
+        padding={{ initial: 'spacing-md', ml: 'spacing-md spacing-sm', tb: 'spacing-md', lp: 'spacing-md' }}
+        borderRadius="radius-md"
+        gap="spacing-xs"
         width={{ initial: '290px', ml: 'auto', tb: '278px', lp: '278px' }}
         css={css`
           flex-shrink: 0;
@@ -128,12 +128,12 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
         <Box
           display="flex"
           flexDirection="column"
-          gap="s2"
+          gap="spacing-xxs"
         >
           <Box
             display="flex"
             flexDirection="column"
-            gap="s1"
+            gap="spacing-xxxs"
           >
             <Skeleton
               isLoading={isLoading}
@@ -142,7 +142,7 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
               <Box
                 display="flex"
                 flexDirection="row"
-                gap="s1"
+                gap="spacing-xxxs"
                 alignItems="center"
               >
                 <Link
@@ -151,7 +151,7 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
                 >
                   <Text
                     variant="h5-semibold"
-                    color={{ light: 'gray-1000', dark: 'gray-100' }}
+                    color="text-primary"
                   >
                     {channelDetails?.name}
                   </Text>
@@ -161,7 +161,7 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
                   <VerifiedToolTipComponent>
                     <TickDecoratedCircleFilled
                       size={16}
-                      color={{ light: 'gray-300', dark: 'gray-700' }}
+                      color="icon-tertiary"
                     />
                   </VerifiedToolTipComponent>
                 )}
@@ -186,7 +186,7 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
             >
               <Text
                 variant="c-regular"
-                color={{ light: 'gray-600', dark: 'gray-500' }}
+                color="text-tertiary-inverse"
               >
                 {formatSubscriberCount(channelDetails?.subscriber_count)} subscribers
               </Text>
@@ -199,7 +199,7 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
             >
               <Text
                 variant="bs-regular"
-                color={{ light: 'gray-600', dark: 'gray-500' }}
+                color="text-tertiary-inverse"
                 numberOfLines={2}
               >
                 {channelDetails?.info}

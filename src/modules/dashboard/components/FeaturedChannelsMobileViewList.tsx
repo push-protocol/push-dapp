@@ -39,12 +39,12 @@ const FeaturedChannelsMobileViewList: FC<FeaturedChannelsMobileViewListProps> = 
         display="flex"
         justifyContent="space-between"
         flexDirection={{ tb: 'column' }}
-        gap={{ tb: 's3' }}
-        alignSelf='baseline'
+        gap={{ tb: 'spacing-xs' }}
+        alignSelf="baseline"
       >
         <Text
           variant="h4-bold"
-          color={{ light: 'black', dark: 'white' }}
+          color="text-primary"
         >
           Featured Notification Channels
         </Text>
@@ -53,13 +53,13 @@ const FeaturedChannelsMobileViewList: FC<FeaturedChannelsMobileViewListProps> = 
           display="flex"
           flexDirection="row"
           alignItems="center"
-          gap="s4"
+          gap="spacing-sm"
         >
           <Link
             to="/channels"
             textProps={{
               variant: 'h5-semibold',
-              color: { light: 'black', dark: 'white' },
+              color: 'text-primary',
             }}
           >
             View All
@@ -72,7 +72,7 @@ const FeaturedChannelsMobileViewList: FC<FeaturedChannelsMobileViewListProps> = 
             {/* Previous Button  */}
             <HoverableSVG
               onClick={onPrevButtonClick}
-              defaultColor={{ light: 'gray-900', dark: 'gray-400' }}
+              defaultColor="icon-primary"
               disabled={prevBtnDisabled}
               icon={<PrevIconSlider size={24} />}
             ></HoverableSVG>
@@ -80,7 +80,7 @@ const FeaturedChannelsMobileViewList: FC<FeaturedChannelsMobileViewListProps> = 
             {/* Next button */}
             <HoverableSVG
               onClick={onNextButtonClick}
-              defaultColor={{ light: 'gray-900', dark: 'gray-400' }}
+              defaultColor="icon-primary"
               disabled={nextBtnDisabled}
               icon={<NextIconSlider size={24} />}
             ></HoverableSVG>
@@ -97,7 +97,7 @@ const FeaturedChannelsMobileViewList: FC<FeaturedChannelsMobileViewListProps> = 
         ref={emblaRef}
       >
         <Box
-          gap="s6"
+          gap="spacing-md"
           display="flex"
           css={css`
             backface-visibility: hidden;
@@ -110,7 +110,7 @@ const FeaturedChannelsMobileViewList: FC<FeaturedChannelsMobileViewListProps> = 
                 css={css`
                   flex: 0 0 100%;
                 `}
-                gap="s6"
+                gap="spacing-md"
                 display="flex"
                 flexDirection="column"
               >

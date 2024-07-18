@@ -1,5 +1,5 @@
 import { Asterisk } from 'blocks/icons';
-import { Text } from 'blocks/text/Text';
+import { textVariants } from '../text';
 import React, { forwardRef } from 'react';
 import styled, { FlattenSimpleInterpolation, css } from 'styled-components';
 
@@ -92,10 +92,28 @@ const LabelContainer = styled.div`
   width: 100%;
 `;
 
+const LabelText = styled.span<{ color: string }>`
+  color: var(--${({ color }) => color});
+  font-family: var(--font-family);
+  font-size: ${textVariants['h6-semibold'].fontSize};
+  font-style: ${textVariants['h6-semibold'].fontStyle};
+  font-weight: ${textVariants['h6-semibold'].fontWeight};
+  line-height: ${textVariants['h6-semibold'].lineHeight};
+`;
+
 const LabelTextContainer = styled.div`
   display: flex;
   align-items: flex-start;
   gap: var(--spacing-xxxs, 4px);
+`;
+
+const LabelCount = styled.span<{ color: string }>`
+  color: var(--${({ color }) => color});
+  font-family: var(--font-family);
+  font-size: ${textVariants['c-regular'].fontSize};
+  font-style: ${textVariants['c-regular'].fontStyle};
+  font-weight: ${textVariants['c-regular'].fontWeight};
+  line-height: ${textVariants['c-regular'].lineHeight};
 `;
 
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
@@ -122,20 +140,16 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       <Container css={css}>
         {label && (
           <LabelContainer>
-            <Text
-              variant="h6-semibold"
-              color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-default'}
-            >
+            <LabelText color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-default'}>
               <LabelTextContainer>
                 {label}
                 {required && <Asterisk size={4.6} />}
               </LabelTextContainer>
-            </Text>
+            </LabelText>
             {totalCount && (
-              <Text
-                variant="c-regular"
-                color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-secondary'}
-              >{`${value?.length || 0} / ${totalCount}`}</Text>
+              <LabelCount color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-secondary'}>
+                {`${value?.length || 0} / ${totalCount}`}
+              </LabelCount>
             )}
           </LabelContainer>
         )}
@@ -152,8 +166,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           value={value}
         />
         {description && (
-          <Text
-            variant="c-regular"
+          <LabelCount
             color={
               success || error
                 ? 'components-inputs-text-default'
@@ -163,16 +176,9 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             }
           >
             {description}
-          </Text>
+          </LabelCount>
         )}
-        {errorMessage && (
-          <Text
-            variant="c-regular"
-            color="components-inputs-text-danger"
-          >
-            {errorMessage}
-          </Text>
-        )}
+        {errorMessage && <LabelCount color="components-inputs-text-danger">{errorMessage}</LabelCount>}
       </Container>
     );
   }

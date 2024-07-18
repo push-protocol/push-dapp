@@ -176,11 +176,11 @@ export const getButtonSizeStyles = ({
 
       ${iconOnly
         ? `
-            border-radius: 9.6px;
+            border-radius: var(--radius-xxs);
             gap: var(--spacing-none);
             height: 32px;
             width: 32px;
-            padding: 9.6px var(--spacing-none);
+            padding: var(--spacing-none);
         `
         : `
             border-radius: var(--radius-xxs);
@@ -224,7 +224,7 @@ export const getButtonSizeStyles = ({
             gap: var(--spacing-none);
             height: 40px;
             width: 40px;
-            padding: var(--spacing-xs);
+            padding: var(--spacing-none);
         `
         : `
             border-radius: var(--radius-xs);
@@ -265,11 +265,11 @@ export const getButtonSizeStyles = ({
 
       ${iconOnly
         ? `
-            border-radius: 14.4px;
+            border-radius: var(--spacing-sm);
             gap: var(--spacing-none);
             height: 48px;
             width: 48px;
-            padding: 14.4px;
+            padding: var(--spacing-none);
         `
         : `
             border-radius: var(--radius-xs);
@@ -309,11 +309,11 @@ export const getButtonSizeStyles = ({
 
     ${iconOnly
       ? `
-          border-radius: 15.6px;
+          border-radius: var(--spacing-sm);
           gap: var(--spacing-none);
           height: 52px;
           width: 52px;
-          padding: 15.6px;
+          padding: var(--spacing-none);
       `
       : `
           border-radius: var(--radius-xs);

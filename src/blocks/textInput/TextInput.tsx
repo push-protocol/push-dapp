@@ -1,6 +1,5 @@
-import { Box } from 'blocks';
 import { Asterisk, CrossFilled } from '../icons';
-import { Text, textVariants } from '../text';
+import { TextVariants, textVariants } from '../text';
 import React, { ReactNode, forwardRef } from 'react';
 import styled, { FlattenSimpleInterpolation, css } from 'styled-components';
 
@@ -107,10 +106,28 @@ const LabelContainer = styled.div`
   width: 100%;
 `;
 
+const InputText = styled.span<{ color: string; variant: TextVariants }>`
+  color: var(--${({ color }) => color});
+  font-family: var(--font-family);
+  ${({ variant }) =>
+    `
+  font-size: ${textVariants[variant].fontSize};
+  font-style: ${textVariants[variant].fontStyle};
+  font-weight: ${textVariants[variant].fontWeight};
+  line-height: ${textVariants[variant].lineHeight};
+  `}
+`;
+
 const LabelTextContainer = styled.div`
   display: flex;
   align-items: flex-start;
   gap: var(--spacing-xxxs, 4px);
+`;
+
+const InputContainer = styled.div`
+  display: flex;
+  gap: var(--spacing-xxs);
+  width: 100%;
 `;
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
@@ -138,20 +155,22 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       <Container css={css}>
         {label && (
           <LabelContainer>
-            <Text
-              variant="h6-semibold"
+            <InputText
               color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-default'}
+              variant="h6-bold"
             >
               <LabelTextContainer>
                 {label}
                 {required && <Asterisk size={4.6} />}
               </LabelTextContainer>
-            </Text>
+            </InputText>
             {totalCount && (
-              <Text
-                variant="c-regular"
+              <InputText
                 color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-secondary'}
-              >{`${value?.length || 0} / ${totalCount}`}</Text>
+                variant="c-regular"
+              >
+                {`${value?.length || 0} / ${totalCount}`}
+              </InputText>
             )}
           </LabelContainer>
         )}
@@ -162,11 +181,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           ref={ref}
           success={success}
         >
-          <Box
-            display="flex"
-            gap="spacing-xxs"
-            width="100%"
-          >
+          <InputContainer>
             {icon}
             <input
               type={type}
@@ -177,12 +192,11 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
               onChange={onChange}
               value={value}
             />
-          </Box>
+          </InputContainer>
           {onClear && <CrossFilled onClick={() => onClear?.()} />}
         </StyledTextInput>
         {description && (
-          <Text
-            variant="c-regular"
+          <InputText
             color={
               success || error
                 ? 'components-inputs-text-default'
@@ -190,17 +204,18 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
                 ? 'components-inputs-text-disabled'
                 : 'components-inputs-text-placeholder'
             }
+            variant="c-regular"
           >
             {description}
-          </Text>
+          </InputText>
         )}
         {errorMessage && (
-          <Text
-            variant="c-regular"
+          <InputText
             color="components-inputs-text-danger"
+            variant="c-regular"
           >
             {errorMessage}
-          </Text>
+          </InputText>
         )}
       </Container>
     );

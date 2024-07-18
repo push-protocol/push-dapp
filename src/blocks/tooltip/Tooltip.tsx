@@ -5,7 +5,7 @@ import type { TooltipProps } from './Tooltip.types';
 import { getTooltipPositionalCSS } from './Tooltip.utils';
 import { tooltipCSSPropsKeys } from './Tooltip.constants';
 import { useIsVisible } from 'common';
-import { Text } from 'blocks/text';
+import { textVariants } from '../text';
 
 const RadixTooltipContent = styled(RadixTooltip.Content).withConfig({
   shouldForwardProp: (prop) => !tooltipCSSPropsKeys.includes(prop as keyof TooltipProps),
@@ -30,6 +30,24 @@ const RadixTooltipContent = styled(RadixTooltip.Content).withConfig({
   max-height: ${({ maxHeight }) => maxHeight};
 
   ${(props) => props.css || ''};
+`;
+
+const StyledTitle = styled.span`
+  color: var(--text-primary-inverse);
+  font-family: var(--font-family);
+  font-size: ${textVariants['c-semibold'].fontSize};
+  font-style: ${textVariants['c-semibold'].fontStyle};
+  font-weight: ${textVariants['c-semibold'].fontWeight};
+  line-height: ${textVariants['c-semibold'].lineHeight};
+`;
+
+const StyledDescription = styled.span`
+  color: var(--text-primary-inverse);
+  font-family: var(--font-family);
+  font-size: ${textVariants['c-regular'].fontSize};
+  font-style: ${textVariants['c-regular'].fontStyle};
+  font-weight: ${textVariants['c-regular'].fontWeight};
+  line-height: ${textVariants['c-regular'].lineHeight};
 `;
 
 const Tooltip: FC<TooltipProps> = ({
@@ -88,22 +106,8 @@ const Tooltip: FC<TooltipProps> = ({
               overlay
             ) : (
               <>
-                {title && (
-                  <Text
-                    variant="c-semibold"
-                    color="text-primary-inverse"
-                  >
-                    {title}
-                  </Text>
-                )}
-                {description && (
-                  <Text
-                    variant="c-regular"
-                    color="text-secondary-inverse"
-                  >
-                    {description}
-                  </Text>
-                )}
+                {title && <StyledTitle>{title}</StyledTitle>}
+                {description && <StyledDescription>{description}</StyledDescription>}
               </>
             )}
           </RadixTooltipContent>

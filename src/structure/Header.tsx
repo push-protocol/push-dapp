@@ -82,7 +82,7 @@ const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: strin
     <Box
       display="flex"
       alignItems="center"
-      gap={{ ml: 's1', dp: 's2' }}
+      gap={{ ml: 'spacing-xxxs', dp: 'spacing-xs' }}
     >
       <Link
         to="/points"
@@ -90,7 +90,7 @@ const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: strin
       >
         <Box
           display="flex"
-          gap="s1"
+          gap="spacing-xxxs"
           alignItems="center"
         >
           <RewardsBell
@@ -100,14 +100,14 @@ const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: strin
           <Text
             variant="h4-bold"
             display={{ ml: 'none', dp: 'block' }}
-            color={{ light: 'gray-1000', dark: 'gray-100' }}
+            color="text-primary"
           >
             {userDetails && userDetails?.totalPoints > 0 ? userDetails?.totalPoints?.toLocaleString() : ''}
           </Text>
           <Text
             variant="h5-bold"
             display={{ ml: 'block', dp: 'none' }}
-            color={{ light: 'gray-1000', dark: 'gray-100' }}
+            color="text-primary"
           >
             {userDetails && userDetails?.totalPoints > 0 ? userDetails?.totalPoints?.toLocaleString() : ''}
           </Text>
@@ -237,7 +237,7 @@ function Header({ isDarkMode, darkModeToggle }) {
         <Box
           display="flex"
           flexDirection="column"
-          gap="s0"
+          gap="spacing-none"
           alignItems={{ ml: 'flex-start', initial: 'center' }}
         >
           {headerTag && !error && !isSnapPage && (

@@ -6,11 +6,11 @@ const RewardsActivitiesSection = () => {
     <Box
       display="flex"
       flexDirection="column"
-      gap="s4"
+      gap="spacing-sm"
     >
       <Text
         variant="h4-bold"
-        color={{ light: 'gray-1000', dark: 'gray-100' }}
+        color="text-primary"
       >
         Activities
       </Text>

@@ -152,7 +152,6 @@ const UpdateNotifSettingDropdownContainer: FC<UpdateNotifSettingDropdownContaine
       ))}
       <DropdownSubmitItem>
         <Text
-          color={{ light: 'gray-1000', dark: 'gray-400' }}
           variant="bs-semibold"
           textAlign="left"
         >

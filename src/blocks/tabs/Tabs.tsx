@@ -8,8 +8,8 @@ import {
   StyledLineTab,
   StyledLineTabList,
   StyledLineTabs,
+  StyledTabLabel,
 } from './Tabs.styled';
-import { Text } from 'blocks/text';
 
 export type TabItem = {
   key: string;
@@ -58,7 +58,7 @@ const Tabs: React.FC<TabsProps> = ({ items, onChange, variant = 'line', activeKe
             disabled={item.disabled}
           >
             {item.icon && item.icon}
-            <Text variant="h5-semibold">{item.label}</Text>
+            <StyledTabLabel>{item.label}</StyledTabLabel>
           </Tab>
         ))}
       </TabList>

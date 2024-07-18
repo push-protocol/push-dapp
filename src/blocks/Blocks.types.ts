@@ -1,7 +1,7 @@
 import { HTMLAttributes } from 'react';
 import { BoxResponsiveCSSProperties, BoxResponsiveCSSPropertiesData, BoxResponsivePropValues } from './box';
 import { blocksColorsLegacy } from './Blocks.colors';
-import { StrokeColors, ThemeBorderRadius, ThemeBorderSize, ThemeColors, ThemeSpacing } from './theme/Theme.types';
+import { StrokeColors, ThemeBorderRadius, ThemeBorderSize, ThemeSpacing } from './theme/Theme.types';
 import {
   SkeletonResponsiveCSSProperties,
   SkeletonResponsiveCSSPropertiesData,
@@ -21,17 +21,12 @@ export type Breakpoint = 'initial' | 'ms' | 'mm' | 'ml' | 'tb' | 'lp' | 'll' | '
 
 export type ResponsiveProp<T> = T | { [key in Breakpoint]?: T };
 
-// Remove old RadiusType types
 export type BlocksRadiusType =
   | ThemeBorderRadius
   | `${ThemeBorderRadius} ${ThemeBorderRadius}`
   | `${ThemeBorderRadius} ${ThemeBorderRadius} ${ThemeBorderRadius} ${ThemeBorderRadius}`;
 
-// Remove old SpaceType types
 export type BlocksSpaceType =
-  | `s${number}`
-  | `s${number} s${number}`
-  | `s${number} s${number} s${number} s${number}`
   | ThemeSpacing
   | `${ThemeSpacing} ${ThemeSpacing}`
   | `${ThemeSpacing} ${ThemeSpacing} ${ThemeSpacing} ${ThemeSpacing}`;
@@ -71,12 +66,6 @@ export type BlocksColors = keyof BlocksColorData;
 
 export type ThemeMode = 'light' | 'dark';
 
-// TODO: Remove ThemeModeColors
-export type ThemeModeColors = Record<ThemeMode, BlocksColors | ThemeColors>;
-
-// TODO: Remove the blocks colors border size
 export type BorderValue = `${ThemeBorderSize} ${string} ${StrokeColors}` | 'none';
-
-export type ThemeModeBorder = Record<ThemeMode, BorderValue>;
 
 export type ModeProp = { mode: ThemeMode };

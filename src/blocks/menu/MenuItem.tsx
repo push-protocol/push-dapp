@@ -2,10 +2,9 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { MenuItemComponentProps } from './Menu.types';
-import { Text } from 'blocks/text';
-import { Box } from 'blocks/box';
 import * as RadixDropdown from '@radix-ui/react-dropdown-menu';
-import { Link } from 'blocks/link';
+import { Link } from '../link';
+import { textVariants } from '../text';
 
 const StyledMenuItem = styled(RadixDropdown.Item)<MenuItemComponentProps>`
   // Menu default styles
@@ -34,6 +33,17 @@ const StyledMenuItem = styled(RadixDropdown.Item)<MenuItemComponentProps>`
   ${(props) => props.css || ''};
 `;
 
+const StyledLabel = styled.span`
+  color: var(--components-dropdown-text-default);
+  text-align: center;
+
+  font-family: var(--font-family);
+  font-size: ${textVariants['bs-regular'].fontSize};
+  font-style: ${textVariants['bs-regular'].fontStyle};
+  font-weight: ${textVariants['bs-regular'].fontWeight};
+  line-height: ${textVariants['bs-regular'].lineHeight};
+`;
+
 const MenuItem: FC<MenuItemComponentProps> = ({ icon, label, onClick, destination, newTab, disabled, ...props }) => {
   const menuContent = (
     <StyledMenuItem
@@ -42,18 +52,12 @@ const MenuItem: FC<MenuItemComponentProps> = ({ icon, label, onClick, destinatio
       {...props}
     >
       {icon}
-      <Text
-        className="menu-label"
-        variant="bs-regular"
-        color="components-dropdown-text-default"
-      >
-        {label}
-      </Text>
+      <StyledLabel>{label}</StyledLabel>
     </StyledMenuItem>
   );
 
   return (
-    <Box>
+    <div>
       {destination ? (
         <Link
           to={destination}
@@ -64,7 +68,7 @@ const MenuItem: FC<MenuItemComponentProps> = ({ icon, label, onClick, destinatio
       ) : (
         menuContent
       )}
-    </Box>
+    </div>
   );
 };
 

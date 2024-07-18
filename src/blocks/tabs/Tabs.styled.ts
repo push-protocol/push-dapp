@@ -1,4 +1,5 @@
 import { Tabs as ReachTabs, TabList, Tab } from '@reach/tabs';
+import { textVariants } from '../text';
 import styled from 'styled-components';
 
 export const StyledFillTabs = styled(ReachTabs)`
@@ -115,4 +116,12 @@ export const StyledLineTab = styled(Tab)`
     border-bottom: var(--border-md) solid var(--stroke-state-disabled);
     opacity: 1;
   }
+`;
+
+export const StyledTabLabel = styled.span`
+  font-family: var(--font-family);
+  font-size: ${textVariants['h5-semibold'].fontSize};
+  font-style: ${textVariants['h5-semibold'].fontStyle};
+  font-weight: ${textVariants['h5-semibold'].fontWeight};
+  line-height: ${textVariants['h5-semibold'].lineHeight};
 `;

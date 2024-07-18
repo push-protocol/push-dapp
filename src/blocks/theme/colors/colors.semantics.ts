@@ -11,6 +11,7 @@ import { dropdownSemantics } from '../semantics/semantics.dropdown';
 import { iconSemantics } from '../semantics/semantics.icon';
 import { inputSemantics } from '../semantics/semantics.input';
 import { radioSemantics } from '../semantics/semantics.radio';
+import { skeletonSemantics } from '../semantics/semantics.skeleton';
 import { strokeSemantics } from '../semantics/semantics.stroke';
 import { surfaceSemantics } from '../semantics/semantics.surface';
 import { switchSemantics } from '../semantics/semantics.switch';
@@ -34,6 +35,7 @@ type SemanticKeys = {
   radio: 'components-radio-button';
   surface: 'surface';
   stroke: 'stroke';
+  skeleton: 'components-skeleton-loader';
   text: 'text';
   textArea: 'components-textarea';
   toast: 'components-toast';
@@ -55,6 +57,7 @@ export const semanticKeys: SemanticKeys = {
   radio: 'components-radio-button',
   surface: 'surface',
   stroke: 'stroke',
+  skeleton: 'components-skeleton-loader',
   text: 'text',
   textArea: 'components-textarea',
   toast: 'components-toast',
@@ -76,6 +79,7 @@ export const colorSemantics = {
   [semanticKeys.radio]: radioSemantics,
   [semanticKeys.surface]: surfaceSemantics,
   [semanticKeys.stroke]: strokeSemantics,
+  [semanticKeys.skeleton]: skeletonSemantics,
   [semanticKeys.text]: textSemantics,
   [semanticKeys.textArea]: textAreaSemantics,
   [semanticKeys.toast]: toastSemantics,
