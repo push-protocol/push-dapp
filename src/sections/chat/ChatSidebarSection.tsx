@@ -86,7 +86,7 @@ const ChatSidebarSection = ({ showCreateGroupModal, chatId, selectedChatId, setS
   //     showCreateGroupModal();
   //   } else {
   //     if (userPushSDKInstance.account === readOnlyWallet) {
-  //       handleConnectWallet();
+  //       handleConnectWalletAndEnableProfile();
   //     } else {
   //       if (userPushSDKInstance.signer === undefined) {
   //         await initializePushSDK();

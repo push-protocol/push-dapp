@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -45,7 +45,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
   const { type, description } = InnerComponentProps;
 
   const theme = useTheme();
-  const { handleConnectWallet, initializePushSDK } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile, initializePushSDK } = useContext(AppContext);
 
   const { account, wallet, connect } = useAccount();
 
@@ -58,20 +58,24 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
     body: 'Sign with wallet to continue.',
   });
 
-  const handleRememberMeChange = (event) => {
+  // const handleRememberMeChange = (event: any) => {
+  const handleRememberMeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRememberMe(event.target.checked);
   };
 
-  const handleChatprofileUnlock = async () => {
-    const user = await handleConnectWallet({ remember: rememberMe });
+  const connectWallet = () => {
+    connect();
+  };
 
-    // reject unlock profile listener
+  const handleChatprofileUnlock = useCallback(async () => {
+    const user = await handleConnectWalletAndEnableProfile({ remember: rememberMe, wallet });
+
     const errorExists = checkUnlockProfileErrors(user);
 
     if (errorExists && onClose) {
       onClose();
     }
-  };
+  }, [wallet, rememberMe]);
 
   useEffect(() => {
     if (wallet?.accounts?.length > 0) {
@@ -218,8 +222,8 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
               <>
                 <Button
                   disabled={activeStatus.status !== PROFILESTATE.CONNECT_WALLET && true}
-                  onClick={() => connect()}
                   variant="primary"
+                  onClick={() => connectWallet()}
                 >
                   Connect Wallet
                 </Button>

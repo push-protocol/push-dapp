@@ -189,7 +189,7 @@ const OptinNotifSettingDropdown: FC<OptinNotifSettingDropdownProps> = (options) 
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const { handleConnectWallet, connectWallet } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile, connectWallet } = useContext(AppContext);
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
@@ -222,7 +222,7 @@ const OptinNotifSettingDropdown: FC<OptinNotifSettingDropdownProps> = (options) 
 
     let userPushInstance = userPushSDKInstance;
     // if (!userPushInstance.signer) {
-    //   userPushInstance = await handleConnectWallet();
+    //   userPushInstance = await handleConnectWalletAndEnableProfile({ wallet });
     //   if (!userPushInstance) {
     //     setLoadingFunc(false);
     //     return;

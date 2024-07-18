@@ -8,7 +8,6 @@ import { ethers } from 'ethers';
 // External Packages
 import styled, { useTheme } from 'styled-components';
 import { MdCheckCircle, MdError } from 'react-icons/md';
-import { useSelector } from 'react-redux';
 
 // Internal Compoonents
 import Close from 'assets/chat/group-chat/close.svg?react';
@@ -26,7 +25,7 @@ import { useAccount, useDeviceWidthCheck } from 'hooks';
 const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) => {
   const { title, getUserData, getPoolStats, setUnstakeErrorMessage, setWithdrawErrorMessage } = InnerComponentProps;
 
-  const { account, provider } = useAccount();
+  const { account, provider, isWalletConnected, connect } = useAccount();
 
   const [maxAmount, setMaxAmount] = useState(0);
   const [approvedToken, setApprovedToken] = useState(0);
@@ -37,10 +36,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
   const [txnMessage, setTxnMessage] = useState(null);
 
-  const { userPushSDKInstance } = useSelector((state: any) => {
-    return state.user;
-  });
-  const { handleConnectWallet } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
 
   const [depositAmount, setDepositAmount] = useState(0);
 
@@ -86,8 +82,8 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
   }, []);
 
   const approveDeposit = async () => {
-    if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
+    if (!isWalletConnected) {
+      connect();
       return;
     }
 
@@ -163,8 +159,8 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
   };
 
   const depositAmountTokenFarmSingleTx = async () => {
-    if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
+    if (!isWalletConnected) {
+      connect();
       return;
     }
 

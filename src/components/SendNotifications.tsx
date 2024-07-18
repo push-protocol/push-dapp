@@ -104,7 +104,7 @@ const LIMITER_KEYS = ['Enter', ','];
 function SendNotifications() {
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(425);
-  const { account, provider, chainId } = useAccount();
+  const { account, provider, chainId, wallet } = useAccount();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
@@ -119,7 +119,7 @@ function SendNotifications() {
     return state.canSend;
   });
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
-  const { handleConnectWallet } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
   const [nfProcessing, setNFProcessing] = useState(0);
   const [channelAddress, setChannelAddress] = useState('');
   const [nfRecipient, setNFRecipient] = useState(account);
@@ -306,7 +306,7 @@ function SendNotifications() {
 
     let userPushInstance = userPushSDKInstance;
     if (!userPushInstance.signer) {
-      userPushInstance = await handleConnectWallet();
+      userPushInstance = await handleConnectWalletAndEnableProfile({ wallet });
       if (!userPushInstance) {
         return;
       }
