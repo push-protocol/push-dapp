@@ -9,7 +9,7 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import MinusCircle from 'assets/snap/MinusCircle.svg?react';
-import { Button } from 'components/SharedStyling';
+import { Button } from 'blocks';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { AppContext } from 'contexts/AppContext';
 import { shortenText } from 'helpers/UtilityHelper';
@@ -180,7 +180,12 @@ const PushSnapConfigureModal = ({
           placeholder="0x123 .... 4567"
         />
 
-        <FilledButton onClick={addWalletAddresses}>Add</FilledButton>
+        <Button
+          onClick={addWalletAddresses}
+          size="medium"
+        >
+          Add
+        </Button>
       </ItemHV2>
 
       <AddressesContainer ref={containerRef}>
@@ -287,24 +292,6 @@ const Container = styled(ItemVV2)`
   padding: 0px 0px 12px 9px;
 `;
 
-const ToolTipContainer = styled(ItemVV2)`
-  box-sizing: border-box;
-  width: 18.75rem;
-  // height: 7.5rem;
-  // max-height: 7.5rem;
-  background: ${(props) => props.theme.default.bg};
-  border-radius: 1rem 1rem 1rem 0.125rem;
-  justify-content: flex-start;
-  border: 1px solid rgba(173, 176, 190, 0.2);
-  align-items: flex-start;
-  padding: 0.75rem 0.25rem 0.75rem 1rem;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
-
-  @media (max-width: 400px) {
-    width: 16.75rem;
-  }
-`;
-
 const PrimaryText = styled.p`
   margin: 0px;
   font-size: 18px;
@@ -323,58 +310,6 @@ const SecondaryText = styled.p`
   text-overflow: ellipsis; // Show ellipsis (...) when text overflows
 
   color: ${(props) => props.theme.snapSecondaryText};
-`;
-
-const ToolTipText = styled.p`
-  margin: 0px;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 24px;
-  color: #62626a;
-  color: ${(props) => props.theme.modalMessageColor};
-  text-align: left;
-`;
-
-const SnapButton = styled(Button)`
-  align-self: end;
-  height: 36px;
-  z-index: 0;
-  font-family: 'FK Grotesk Neu';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: normal;
-  border-radius: 8px;
-`;
-
-const FilledButton = styled(SnapButton)`
-  min-width: 79px;
-  padding: 14px;
-  background: #d53a94;
-  width: 79px;
-  height: 48px;
-  radius: 12px;
-  color: #fff;
-`;
-
-const EnptyButton = styled(SnapButton)`
-  flex-direction: row;
-  color: ${(props) => props.theme.default.secondaryColor};
-  text-align: center;
-  width: auto;
-  padding: 16px 24px;
-  border: 1px solid #bac4d6;
-  background: ${(props) => props.theme.default.bg};
-  gap: 4px;
-`;
-
-const ImageInfo = styled.img`
-  margin-right: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  align-self: center;
-  cursor: pointer;
 `;
 
 const Input = styled.input`

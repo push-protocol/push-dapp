@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import Close from 'assets/chat/group-chat/close.svg?react';
-import { ButtonV2, ItemVV2 } from './reusables/SharedStylingV2';
+import { ItemVV2 } from './reusables/SharedStylingV2';
 import styled from 'styled-components';
 import { appConfig } from 'config/index.js';
 import { useAccount } from 'hooks';
+import { Button } from 'blocks';
 
 const YieldFarmChainError = ({ onClose }) => {
   const { chainId: currentChainId, switchChain } = useAccount();
@@ -38,7 +39,13 @@ const YieldFarmChainError = ({ onClose }) => {
       </BodyContainer>
 
       <ButtonContainer>
-        <FilledButton onClick={handleChainChange}>Switch Network</FilledButton>
+        <Button
+          onClick={handleChainChange}
+          variant="primary"
+          size="large"
+        >
+          Switch Network
+        </Button>
       </ButtonContainer>
     </Container>
   );
@@ -72,24 +79,3 @@ const SecondaryText = styled.div`
   margin: 10px 0 24px 0;
 `;
 const ButtonContainer = styled.div``;
-
-const FilledButton = styled(ButtonV2)`
-  // width:100%;
-  background: #d53a94;
-  border: 1px solid #d53a94;
-  border-radius: 8px;
-  padding: 16px;
-  width: 165px;
-  font-size: 16px;
-  line-height: 141%;
-  letter-spacing: normal;
-  color: #ffffff;
-  cursor: pointer;
-  & > div {
-    display: block;
-  }
-
-  @media (max-width: 600px) {
-    font-size: 14px;
-  }
-`;

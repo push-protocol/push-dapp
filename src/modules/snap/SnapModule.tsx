@@ -14,6 +14,7 @@ import { AppContext } from 'contexts/AppContext';
 import { useAccount } from 'hooks';
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import { Image, Section } from '../../primaries/SharedStyling';
+import { Button } from 'blocks';
 
 // Internal Configs
 import ActiveIcon from 'assets/snap/ActiveIcon.svg';
@@ -26,6 +27,7 @@ import SnapExample from 'assets/snap/SnapExample.svg';
 import InfoLogo from 'assets/snap/spam-icon.svg';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import AboutSnapModal from './AboutSnapModal';
+import Metamask from 'assets/snap/metamasksnap.svg?react';
 
 const SnapModule = ({ route }) => {
   const [loading, setLoading] = useState(false);
@@ -315,12 +317,14 @@ const SnapModule = ({ route }) => {
                     spinnerSize={44}
                   />
                 ) : (
-                  <ConnectButton
+                  <Button
                     disabled={!snapInstalled ? false : true}
                     onClick={() => connectToMetaMask()}
+                    variant="primary"
+                    size="medium"
                   >
                     {!snapInstalled ? 'Step 1: Install Snap' : 'Step 1: Completed'}
-                  </ConnectButton>
+                  </Button>
                 )}
                 {loading && snapInstalled ? (
                   <LoaderSpinner
@@ -328,26 +332,26 @@ const SnapModule = ({ route }) => {
                     spinnerSize={44}
                   />
                 ) : (
-                  <ConnectButton
+                  <Button
                     disabled={snapInstalled ? false : true}
-                    signOnMM={snapInstalled ? true : false}
                     onClick={() => connectToMetaMask()}
+                    trailingIcon={<Metamask />}
                   >
-                    Step 2: Sign In with Metamask 🦊
-                  </ConnectButton>
+                    Step 2: Sign In with Metamask
+                  </Button>
                 )}
               </ItemVV2>
             )}
 
             {walletConnected || addedAddress ? (
               <ButtonContainer gap="12px">
-                <SettingsButton onClick={handleSettingsClick}>
-                  <GearIcon
-                    height="20px"
-                    width="20px"
-                  />
+                <Button
+                  onClick={handleSettingsClick}
+                  variant="outline"
+                  leadingIcon={<GearIcon />}
+                >
                   Settings
-                </SettingsButton>
+                </Button>
               </ButtonContainer>
             ) : (
               <InfoDiv
@@ -448,60 +452,6 @@ const SubContainer = styled(Section)`
   }
 `;
 
-const SnapButton = styled(ButtonV2)`
-  height: 44px;
-  border-radius: 15px;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 141%;
-  letter-spacing: normal;
-  color: #ffffff;
-  flex: none;
-  cursor: pointer;
-
-  & > div {
-    display: block;
-  }
-
-  @media (max-width: 600px) {
-    font-size: 14px;
-  }
-`;
-
-const Steps = styled(ItemVV2)`
-  flex-wrap: wrap;
-
-  &::after {
-    content: '';
-    width: 100%;
-  }
-`;
-
-const ConnectButton = styled(SnapButton)`
-  min-width: 280px;
-  padding: 16px 24px;
-  background: ${(props) => (props.signOnMM ? '#222222' : '#d53a94')};
-  border: ${(props) => (props.signOnMM ? '1px solid #2a2a2a' : '1px solid #d53a94')};
-  opacity: ${(props) => (props.disabled ? '0.5' : '1')};
-  pointer-events: ${(props) => (props.disabled ? 'none' : 'auto')};
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
-`;
-
-const SettingsButton = styled(SnapButton)`
-  flex-direction: row;
-  color: ${(props) => props.theme.default.secondaryColor};
-  text-align: center;
-  width: 279px;
-  padding: 16px 24px;
-  border: 1px solid ${(props) => props.theme.snapBorderColor};
-  background: ${(props) => props.theme.default.bg};
-  gap: 4px;
-
-  @media ${device.mobileL} {
-    min-width: 246px;
-  }
-`;
-
 const PrimaryText = styled.p`
   margin: 0px;
   font-size: 18px;
@@ -526,16 +476,6 @@ const ChannelSpan = styled(SpanV2)`
   cursor: pointer;
   &:hover {
     text-decoration: underline;
-  }
-`;
-
-const FilledButton = styled(SnapButton)`
-  width: 135px;
-  padding: 16px 24px;
-  background: #d53a94;
-
-  @media ${device.mobileL} {
-    min-width: 246px;
   }
 `;
 
