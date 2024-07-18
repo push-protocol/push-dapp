@@ -37,7 +37,7 @@ import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
 const DATE_FORMAT = 'DD MMM, YYYY';
 
 export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, showEditChannel, destroyChannel }) {
-  const { account, chainId } = useAccount();
+  const { account, chainId, wallet } = useAccount();
   const {
     delegatees,
     channelDetails,
@@ -48,7 +48,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
   const { userPushSDKInstance } = useSelector((state) => {
     return state.user;
   });
-  const { handleConnectWallet } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
   const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector((state) => state.channels);
   const { processingState } = useSelector((state) => state.channelCreation);
   const [verifyingChannel, setVerifyingChannel] = useState([]);
@@ -78,7 +78,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
 
   const handleDelegateModal = async () => {
     if (!userPushSDKInstance.signer) {
-      await handleConnectWallet();
+      await handleConnectWalletAndEnableProfile({ wallet });
     }
     showAddDelegateModal();
   };
@@ -157,7 +157,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
   const removeDelegate = async (walletAddress) => {
     let userPushInstance = userPushSDKInstance;
     if (!userPushInstance.signer) {
-      userPushInstance = await handleConnectWallet();
+      userPushInstance = await handleConnectWalletAndEnableProfile({ wallet });
       if (!userPushInstance) {
         return;
       }

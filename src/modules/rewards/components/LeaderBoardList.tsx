@@ -42,6 +42,7 @@ const LeaderBoardList: FC = () => {
         <Box
           height="calc(100vh - 356px)"
           overflow="auto"
+          customScrollbar={true}
         >
           <InfiniteScroll
             pageStart={0}
