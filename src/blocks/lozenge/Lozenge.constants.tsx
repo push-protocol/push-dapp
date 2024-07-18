@@ -44,11 +44,11 @@ export const getLozengeSizeStyles = ({
       /* Lozenge text size css */
       leading-trim: both;
       text-edge: cap;
-      font-size: ${textVariants['ol-bold'].fontSize};
-      font-style: ${textVariants['ol-bold'].fontStyle};
-      font-weight: ${textVariants['ol-bold'].fontWeight};
-      line-height: ${textVariants['ol-bold'].lineHeight};
-      text-transform: ${textVariants['ol-bold'].textTransform};
+      font-size: ${textVariants['os-bold'].fontSize};
+      font-style: ${textVariants['os-bold'].fontStyle};
+      font-weight: ${textVariants['os-bold'].fontWeight};
+      line-height: ${textVariants['os-bold'].lineHeight};
+      text-transform: ${textVariants['os-bold'].textTransform};
 
       .icon > span {
         height: 8px;
