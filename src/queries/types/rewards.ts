@@ -32,7 +32,7 @@ export type UsersActivity = {
   userId: string;
   activityTypeId: string;
   data: { twitter?: string; discord?: string };
-  status: 'COMPLETED' | 'PENDING';
+  status: 'COMPLETED' | 'PENDING' | 'LOCKED';
   points: number;
   multiplier: number;
   verificationProof: string;

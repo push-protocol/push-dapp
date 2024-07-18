@@ -2,17 +2,15 @@
 import { FC } from 'react';
 
 // hooks
-import { useRewardsTabs } from '../hooks/useRewardsTabs';
 
 // components
 import { RewardsActivitiesSection } from './RewardsActivitiesSection';
 import { Box } from 'blocks';
+import { BonusActivities } from './BonusActivities';
 
 export type RewardsActivitiesBottomSectionProps = {};
 
 const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = () => {
-  const { activeTab } = useRewardsTabs();
-
   return (
     <>
       <Box
@@ -22,8 +20,10 @@ const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = 
         flexDirection="column"
         padding={{ ml: 's4 s3', initial: 's6' }}
       >
-        {activeTab === 'activity' && <RewardsActivitiesSection />}
-      </Box>{' '}
+        <RewardsActivitiesSection />
+      </Box>
+
+      <BonusActivities />
     </>
   );
 };
