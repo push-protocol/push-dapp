@@ -3,7 +3,6 @@ import React from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
 import * as Switch from '@radix-ui/react-switch';
 
-import { Box } from '../box';
 import { Text } from '../text';
 
 export type ToggleSwitchProps = {
