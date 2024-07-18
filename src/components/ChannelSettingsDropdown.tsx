@@ -24,7 +24,6 @@ import ChannelReactivateModalContent from './ChannelReactivateModalContent';
 // Internal Configs
 import { appConfig } from 'config/index.js';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
-import { AppContext } from 'contexts/AppContext';
 
 import { ethers } from 'ethers';
 
@@ -47,7 +46,6 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
-  const { handleConnectWallet } = React.useContext(AppContext);
 
   const theme = useTheme();
   const { channelState } = channelDetails;
@@ -122,10 +120,6 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
   const userSignerToast = useToast();
   const toggleChannelActivationState = () => {
     if (isChannelBlocked) return;
-    // if (!userPushSDKInstance.signer) {
-    //   handleConnectWallet();
-    //   return;
-    // }
     if (isChannelDeactivated) {
       showReactivateChannelModal();
     } else {

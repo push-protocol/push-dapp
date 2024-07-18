@@ -12,6 +12,7 @@ export { Text, type TextProps } from './text';
 export { Tooltip, type TooltipProps } from './tooltip';
 export { TextArea, type TextAreaProps } from './textarea';
 export { TextInput } from './textInput';
+export { ToggleSwitch } from './toggleSwtich';
 
 export * from './Blocks.colors';
 export * from './Blocks.types';

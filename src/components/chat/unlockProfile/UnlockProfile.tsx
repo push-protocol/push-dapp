@@ -53,7 +53,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
   const { type, description } = InnerComponentProps;
 
   const theme = useTheme();
-  const { handleConnectWallet, initializePushSDK } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile, initializePushSDK } = useContext(AppContext);
 
   const { account, wallet, connect } = useAccount();
 
@@ -76,7 +76,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
   };
 
   const handleChatprofileUnlock = useCallback(async () => {
-    const user = await handleConnectWallet({ remember: rememberMe, wallet });
+    const user = await handleConnectWalletAndEnableProfile({ remember: rememberMe, wallet });
 
     const errorExists = checkUnlockProfileErrors(user);
 

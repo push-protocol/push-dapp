@@ -35,7 +35,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
   const [txnMessage, setTxnMessage] = useState(null);
 
-  const { handleConnectWallet } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
 
   const [depositAmount, setDepositAmount] = useState(0);
 
@@ -81,7 +81,6 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
   }, []);
 
   const approveDeposit = async () => {
-
     if (!isWalletConnected) {
       connect();
       return;
