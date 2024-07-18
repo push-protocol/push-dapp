@@ -49,18 +49,6 @@ const ActivityButton: FC<ActivityButtonProps> = ({
     );
   }
 
-  if (usersSingleActivity?.status === 'REJECTED') {
-    return (
-      <Button
-        variant="danger"
-        size="small"
-        disabled
-      >
-        Rejected
-      </Button>
-    );
-  }
-
   return (
     // Verify button
     <ActivityVerificationButton
