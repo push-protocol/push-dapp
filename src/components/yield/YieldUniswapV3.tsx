@@ -16,7 +16,6 @@ import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';
 import StakingToolTip from './StakingToolTip';
 import StakingModalComponent from './StakingModalComponent';
 import {
-  ButtonV2,
   H2V2,
   ImageV2,
   ItemHV2,
@@ -26,6 +25,7 @@ import {
   SkeletonLine,
   SpanV2,
 } from 'components/reusables/SharedStylingV2';
+import { Button } from 'blocks';
 
 // Internal Configs
 import { abis, addresses } from 'config/index.js';
@@ -559,13 +559,15 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
         {userDataLP ? (
           <>
             <ItemHV2>
-              <FilledButton
+              <Button
+                variant="primary"
+                size="medium"
                 onClick={() => {
                   handleStakingModal();
                 }}
               >
                 Stake $UNI-V2 LP Tokens
-              </FilledButton>
+              </Button>
             </ItemHV2>
             <ButtonsContainer>
               {formatTokens(userDataLP?.epochStakeNext) === '0' ? (
@@ -573,14 +575,11 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                   error={true}
                   ToolTipTitle={'Nothing to unstake! Stake First.'}
                   ToolTipWidth={'16rem'}
-                  margin={'0 10px 0 0'}
                   bottom={'-30px'}
                 >
-                  <EmptyButton
-                    border="none"
-                    background={theme.disableButtonBg}
-                    cursor="default"
-                    color={theme.disabledButtonText}
+                  <Button
+                    disabled={true}
+                    size="medium"
                   >
                     {txInProgressWithdraw ? (
                       <LoaderSpinner
@@ -591,16 +590,13 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                     ) : (
                       'Unstake $UNI-V2'
                     )}
-                  </EmptyButton>
+                  </Button>
                 </StakingToolTip>
               ) : (
-                <EmptyButton
-                  border={`1px solid ${theme.activeButtonText}`}
-                  background={'transparent'}
-                  color={theme.activeButtonText}
-                  cursor="pointer"
+                <Button
+                  size="medium"
+                  variant="outline"
                   onClick={withdrawAmountTokenFarmAutomatic}
-                  style={{ margin: '0px 10px 0px 0px' }}
                 >
                   {txInProgressWithdraw ? (
                     <LoaderSpinner
@@ -613,7 +609,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                   ) : (
                     'Unstake $UNI-V2'
                   )}
-                </EmptyButton>
+                </Button>
               )}
 
               {userDataLP?.totalAvailableReward === '0.00' ? (
@@ -624,11 +620,9 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                   error={true}
                   ToolTipWidth={'10rem'}
                 >
-                  <EmptyButton
-                    border="none"
-                    cursor="default"
-                    background={theme.disableButtonBg}
-                    color={theme.disabledButtonText}
+                  <Button
+                    disabled={true}
+                    size="medium"
                   >
                     {txInProgressClaimRewards ? (
                       <LoaderSpinner
@@ -639,14 +633,12 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                     ) : (
                       'Claim Rewards'
                     )}
-                  </EmptyButton>
+                  </Button>
                 </StakingToolTip>
               ) : (
-                <EmptyButton
-                  border={`1px solid ${theme.activeButtonText}`}
-                  background={'transparent'}
-                  color={theme.activeButtonText}
-                  cursor="pointer"
+                <Button
+                  variant="outline"
+                  size="medium"
                   onClick={() => massClaimRewardsTokensAll()}
                 >
                   {txInProgressClaimRewards ? (
@@ -660,7 +652,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                   ) : (
                     'Claim Rewards'
                   )}
-                </EmptyButton>
+                </Button>
               )}
             </ButtonsContainer>
           </>
@@ -792,63 +784,8 @@ const DataValue = styled(H2V2)`
 
 const ButtonsContainer = styled.div`
   display: flex;
-  width: 100%;
+  gap: var(--spacing-xxxs, 4px);
   margin: 15px 0px 0px 0px;
-`;
-
-const FilledButton = styled(ButtonV2)`
-  width: 100%;
-  background: #d53a94;
-  border: 1px solid #d53a94;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 16px;
-  line-height: 141%;
-  letter-spacing: normal;
-  color: #ffffff;
-  cursor: pointer;
-  & > div {
-    display: block;
-  }
-
-  @media (max-width: 600px) {
-    font-size: 14px;
-  }
-`;
-
-const EmptyButton = styled(ButtonV2)`
-  font-size: 16px;
-  line-height: 19px;
-  flex-direction: row;
-  flex: 1;
-  height: 49px;
-  padding: 12px;
-  border-radius: 8px;
-  & > div {
-    display: block;
-  }
-  &:after {
-    background: transparent;
-  }
-
-  &:hover {
-    opacity: 1;
-  }
-
-  @media (max-width: 600px) {
-    font-size: 14px;
-  }
-`;
-
-const Toaster = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin: 0px 10px;
-`;
-
-const ToasterMsg = styled.div`
-  margin: 0px 10px;
 `;
 
 const SkeletonContainer = styled(Skeleton)`
@@ -856,16 +793,4 @@ const SkeletonContainer = styled(Skeleton)`
   max-width: -webkit-fill-available;
   border-radius: 5px;
   gap: 5px;
-`;
-
-const UserSkeletonLine = styled(SkeletonLine)`
-  height: 25px;
-  width: 100%;
-  border-radius: 2px;
-`;
-
-const RewardSkeletonLine = styled(SkeletonLine)`
-  height: 20px;
-  width: 100%;
-  border-radius: 2px;
 `;

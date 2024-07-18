@@ -24,6 +24,8 @@ export type ButtonProps = {
   trailingIcon?: ReactNode;
   /* Sets the variant of the button */
   variant?: ButtonVariant;
+  /* Button takes the full width if enabled */
+  block?: boolean;
 } & TransformedHTMLAttributes<HTMLButtonElement>;
 
 const StyledButton = styled.button<ButtonProps & ModeProp>`
@@ -51,6 +53,9 @@ const StyledButton = styled.button<ButtonProps & ModeProp>`
 
   /* Circular CSS for rounded icon only buttons */
   ${({ circular, iconOnly }) => circular && iconOnly && `border-radius: var(--r10)`}
+
+  /* Prop specific CSS */
+  ${({ block }) => block && 'width: 100%;'}
 
   /* Custom CSS applied via styled component css prop */
   ${(props) => props.css || ''}
