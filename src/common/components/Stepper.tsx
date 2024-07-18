@@ -4,38 +4,39 @@ import { FC } from 'react';
 // Components
 import { Box, Text } from 'blocks';
 
+// Types
+import { ActiveStepKey } from 'modules/createChannel/CreateChannel.types';
+
+
 type StepperProps = {
-  steps: Array<{ label: string }>;
-  setActiveStepIndex: (stepIndex: number) => void;
-  completedSteps: Array<number>;
+  steps: Array<{ label: string; key: ActiveStepKey }>;
+  completedSteps: Array<string>;
+  setActiveStepKey: (step: string) => void;
 };
 
-const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, completedSteps }) => {
-  const handleChangeActiveStep = (stepIndex: number) => {
-    if (completedSteps?.includes(stepIndex)) {
-      setActiveStepIndex(stepIndex);
+const Stepper: FC<StepperProps> = ({ steps, setActiveStepKey, completedSteps }) => {
+  const handleChangeActiveStep = (step: ActiveStepKey) => {
+    if (completedSteps?.includes(step)) {
+      setActiveStepKey(step);
     }
   };
-
   return (
     <Box
       display="flex"
-      gap="s8"
-      width='-webkit-fill-available'
+      gap="spacing-lg"
     >
-      {steps.map((step, index) => (
+      {steps.map((step) => (
         <Box
-          key={index}
           display="flex"
           flexDirection="column"
-          gap="s3"
-          width="inherit"
+          gap="spacing-xs"
+          width="180px"
           cursor="pointer"
-          color={completedSteps.includes(index) ? 'pink-500' : 'gray-500'}
-          onClick={() => handleChangeActiveStep(index)}
+          onClick={() => handleChangeActiveStep(step.key)}
         >
           <Text
             textAlign="center"
+            color={completedSteps.includes(step.key) ? 'text-brand-medium' : 'text-tertiary'}
             variant="h5-semibold"
             display={{ ml: 'none', dp: 'block' }}
           >
@@ -53,7 +54,7 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepIndex, completedSteps }
           <Box
             height="4px"
             borderRadius="r2"
-            backgroundColor={completedSteps.includes(index) ? 'pink-500' : 'gray-500'}
+            backgroundColor={completedSteps.includes(step.key) ? 'stroke-brand-medium' : 'stroke-tertiary'}
           ></Box>
         </Box>
       ))}

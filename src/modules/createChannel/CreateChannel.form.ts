@@ -1,10 +1,10 @@
 import { useFormik } from 'formik';
-import { ChannelInfoFormValues } from './CreateChannel.types';
+import { ActiveStepKey, ChannelInfoFormValues } from './CreateChannel.types';
 import * as Yup from 'yup';
 
 interface FormikProps {
-  handleNextStep: () => void;
-  setActiveStepIndex: (index: number) => void;
+  handleNextStep: (key: ActiveStepKey) => void;
+  setActiveStepKey: (key: ActiveStepKey) => void;
 }
 
 const channelInfoValidationSchema = Yup.object().shape({
@@ -22,7 +22,7 @@ const channelInfoValidationSchema = Yup.object().shape({
     })
 });
 
-export const createChannelInfoForm = ({ handleNextStep, setActiveStepIndex }: FormikProps) =>
+export const createChannelInfoForm = ({ handleNextStep, setActiveStepKey }: FormikProps) =>
   useFormik<ChannelInfoFormValues>({
     initialValues: {
       channelName: '',
@@ -31,8 +31,8 @@ export const createChannelInfoForm = ({ handleNextStep, setActiveStepIndex }: Fo
     },
     validationSchema: channelInfoValidationSchema,
     onSubmit: (values) => {
-      handleNextStep();
-      setActiveStepIndex(1);
+      handleNextStep('upload_logo');
+      setActiveStepKey('upload_logo');
     }
   });
 

@@ -10,15 +10,15 @@ import { FormikProps } from "formik";
 import { Box, Button, CloudUpload, Text } from "blocks";
 import ImageClipper from "primaries/ImageClipper";
 import { isImageFile } from "../CreateChannel.utils";
-import { UploadLogoFormValues } from "../CreateChannel.types";
+import { ActiveStepKey, UploadLogoFormValues } from "../CreateChannel.types";
 
 type UploadLogoProps = {
   view: boolean;
   croppedImage: string | undefined;
   setView: (view: boolean) => void;
   setCroppedImage: (croppedImage: string | undefined) => void;
-  setActiveStepIndex: (stepFlow: number) => void;
-  handleNextStep: () => void;
+  setActiveStepKey: (key: ActiveStepKey) => void;
+  handleNextStep: (key: ActiveStepKey) => void;
   uploadLogoFormik: FormikProps<UploadLogoFormValues>;
 }
 
@@ -27,7 +27,7 @@ const UploadLogo: FC<UploadLogoProps> = ({
   croppedImage,
   setView,
   setCroppedImage,
-  setActiveStepIndex,
+  setActiveStepKey,
   handleNextStep,
   uploadLogoFormik
 }) => {
@@ -169,8 +169,8 @@ const UploadLogo: FC<UploadLogoProps> = ({
         <Button
           disabled={!view && !croppedImage}
           onClick={() => {
-            handleNextStep();
-            setActiveStepIndex(2)
+            handleNextStep('stake_fees');
+            setActiveStepKey('stake_fees');
           }}
         >
           Next

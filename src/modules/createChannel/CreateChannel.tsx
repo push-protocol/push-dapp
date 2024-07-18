@@ -25,7 +25,7 @@ import { checkImageSize, checkPushTokenApprovalFunc } from './CreateChannel.util
 // Components
 import { Box } from 'blocks';
 import { ChannelInfo } from './components/ChannelInfo';
-import { CHANNEL_STAKE_FEES, CreateChannelSteps } from './CreateChannel.constants';
+import { CHANNEL_STAKE_FEES, createChannelSteps } from './CreateChannel.constants';
 import { CreateChannelError } from './components/CreateChannelError';
 import { CreateChannelHeader } from './components/CreateChannelHeader';
 import { CreateChannelProcessingInfo } from './components/CreateChannelProcessingInfo';
@@ -34,9 +34,8 @@ import { StakeFees } from './components/StakeFees';
 import { UploadLogo } from './components/UploadLogo';
 
 // Types
-import { ChannelCreationError, CreateChannelProgressType } from './CreateChannel.types';
+import { ActiveStepKey, ChannelCreationError, CreateChannelProgressType } from './CreateChannel.types';
 
-const completedSteps = [0];
 const fees = ethers.utils.parseUnits(CHANNEL_STAKE_FEES.toString(), 18);
 
 const progressInitialState: CreateChannelProgressType = {
@@ -58,19 +57,17 @@ const CreateChannel = () => {
   const { mutate: approvePUSHToken, isPending: pendingApproval } = useApprovePUSHToken();
   const { mutate: createNewChannel, isPending: createChannelPending } = useCreateChannel();
 
-  const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
+  const [activeStepKey, setActiveStepKey] = useState<ActiveStepKey>('channel_info');
+  const [completedSteps, setCompletedSteps] = useState<Array<ActiveStepKey>>(['channel_info']);
 
   // To handle the stepper
-  const handleNextStep = () => {
-    if (activeStepIndex < 2) {
-      const nextStepIndex = activeStepIndex + 1;
-      completedSteps.push(nextStepIndex);
-      setActiveStepIndex(nextStepIndex);
-    }
+  const handleNextStep = (key: ActiveStepKey) => {
+    setCompletedSteps([...new Set([...completedSteps, key])]);
+    setActiveStepKey(key);
   };
 
   // Forms
-  const channelInfoFormik = createChannelInfoForm({ handleNextStep, setActiveStepIndex });
+  const channelInfoFormik = createChannelInfoForm({ handleNextStep, setActiveStepKey });
   const uploadLogoFormik = uploadLogoForm();
 
   // Upload Logo
@@ -224,12 +221,12 @@ const CreateChannel = () => {
     }
 
     if (!channelInfoFormik.isValid) {
-      setActiveStepIndex(0);
+      setActiveStepKey('channel_info');
       return;
     }
 
     if (!croppedImage) {
-      setActiveStepIndex(1);
+      setActiveStepKey('upload_logo');
       return;
     }
 
@@ -270,7 +267,6 @@ const CreateChannel = () => {
   };
 
 
-
   return (
     <Box
       padding={{ initial: 'spacing-lg', ml: 'spacing-sm' }}
@@ -301,26 +297,26 @@ const CreateChannel = () => {
               alignSelf="stretch"
             >
               <Stepper
-                steps={CreateChannelSteps}
+                steps={createChannelSteps}
                 completedSteps={completedSteps}
-                setActiveStepIndex={setActiveStepIndex}
+                setActiveStepKey={(key) => setActiveStepKey(key as ActiveStepKey)}
               />
 
-              {activeStepIndex == 0 && <ChannelInfo channelInfoFormik={channelInfoFormik} />}
+              {activeStepKey == 'channel_info' && <ChannelInfo channelInfoFormik={channelInfoFormik} />}
 
-              {activeStepIndex === 1 && (
+              {activeStepKey === 'upload_logo' && (
                 <UploadLogo
                   view={view}
                   croppedImage={croppedImage}
                   setView={setView}
                   setCroppedImage={setCroppedImage}
-                  setActiveStepIndex={setActiveStepIndex}
+                  setActiveStepKey={setActiveStepKey}
                   handleNextStep={handleNextStep}
                   uploadLogoFormik={uploadLogoFormik}
                 />
               )}
 
-              {activeStepIndex === 2 && (
+              {activeStepKey === 'stake_fees' && (
                 <StakeFees
                   channelStakeFees={CHANNEL_STAKE_FEES}
                   handleCreateNewChannel={handleCreateNewChannel}
