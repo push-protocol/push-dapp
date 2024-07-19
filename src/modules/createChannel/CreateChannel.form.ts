@@ -1,6 +1,7 @@
 import { useFormik } from 'formik';
 import { ActiveStepKey, ChannelInfoFormValues } from './CreateChannel.types';
 import * as Yup from 'yup';
+import { getMaxCharLimitFieldMessage, getRequiredFieldMessage, URLRegex } from 'common/Common.form';
 
 interface FormikProps {
   handleNextStep: (key: ActiveStepKey) => void;
@@ -8,18 +9,13 @@ interface FormikProps {
 }
 
 const channelInfoValidationSchema = Yup.object().shape({
-  channelName: Yup.string()
-    .max(32, 'Must be 32 characters only')
-    .required('Please Enter Channel Name'),
+  channelName: Yup.string().required(getRequiredFieldMessage('Channel Name')).max(32, getMaxCharLimitFieldMessage(32)),
   channelDesc: Yup.string()
-    .max(250, 'Channel Description can be 250 characters only')
-    .required('Please Enter Channel Description'),
+    .required(getRequiredFieldMessage('Channel Description'))
+    .max(250, getMaxCharLimitFieldMessage(250)),
   channelURL: Yup.string()
-    .required('Please Enter Channel URL')
-    .test('url', 'Please Enter a valid channel url', function(value) {
-      const urlPattern = /^(http:\/\/|https:\/\/|www\.)?([\w-]+\.)+[\w-]{2,}(\/[\w.-]*)*\/?$/;
-      return urlPattern.test(value);
-    })
+    .required(getRequiredFieldMessage('Channel URL'))
+    .test('url', 'Please enter a valid channel url', (value) => URLRegex.test(value)),
 });
 
 export const createChannelInfoForm = ({ handleNextStep, setActiveStepKey }: FormikProps) =>
@@ -27,17 +23,17 @@ export const createChannelInfoForm = ({ handleNextStep, setActiveStepKey }: Form
     initialValues: {
       channelName: '',
       channelDesc: '',
-      channelURL: ''
+      channelURL: '',
     },
     validationSchema: channelInfoValidationSchema,
     onSubmit: (values) => {
       handleNextStep('upload_logo');
       setActiveStepKey('upload_logo');
-    }
+    },
   });
 
 const logoValidationSchema = Yup.object().shape({
-  image: Yup.mixed().required('Image is required')
+  image: Yup.mixed().required('Image is required'),
 });
 
 export const uploadLogoForm = () =>
@@ -45,10 +41,10 @@ export const uploadLogoForm = () =>
     initialValues: {
       image: null,
       imageSrc: '',
-      imageType: ''
+      imageType: '',
     },
     validationSchema: logoValidationSchema,
     onSubmit: (values) => {
       // Handle form submission logic here
-    }
+    },
   });
