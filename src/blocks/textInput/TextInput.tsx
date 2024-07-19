@@ -13,7 +13,7 @@ export type TextInputProps = {
   type?: 'text' | 'password';
   errorMessage?: string;
   label?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClear?: () => void;
   placeholder?: string;
   required?: boolean;
@@ -56,12 +56,6 @@ const StyledTextInput = styled.div<{
 
       display: flex;
 
-      font-family: var(--font-family);
-      font-size: ${textVariants['bs-regular'].fontSize};
-      font-style: ${textVariants['bs-regular'].fontStyle};
-      font-weight: ${textVariants['bs-regular'].fontWeight};
-      line-height: ${textVariants['bs-regular'].lineHeight};
-
       gap: var(--spacing-xxs, 8px);
 
       padding: var(--spacing-xs, 12px);
@@ -74,6 +68,11 @@ const StyledTextInput = styled.div<{
       & input {
         color: var(--components-inputs-text-${defaultState}, ${colors[`components-inputs-text-${defaultState}`]});
 
+        font-family: var(--font-family);
+        font-size: ${textVariants['bs-regular'].fontSize};
+        font-style: ${textVariants['bs-regular'].fontStyle};
+        font-weight: ${textVariants['bs-regular'].fontWeight};
+        line-height: ${textVariants['bs-regular'].lineHeight};
         width: 100%;
         ::placeholder {
           color: var(--components-inputs-text-placeholder, ${colors['components-inputs-text-placeholder']});

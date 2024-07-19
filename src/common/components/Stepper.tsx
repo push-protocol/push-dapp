@@ -4,18 +4,14 @@ import { FC } from 'react';
 // Components
 import { Box, Text } from 'blocks';
 
-// Types
-import { ActiveStepKey } from 'modules/createChannel/CreateChannel.types';
-
-
 type StepperProps = {
-  steps: Array<{ label: string; key: ActiveStepKey }>;
-  completedSteps: Array<string>;
+  steps: Array<{ label: string; key: string }>;
   setActiveStepKey: (step: string) => void;
+  completedSteps: Array<string>;
 };
 
 const Stepper: FC<StepperProps> = ({ steps, setActiveStepKey, completedSteps }) => {
-  const handleChangeActiveStep = (step: ActiveStepKey) => {
+  const handleChangeActiveStep = (step: string) => {
     if (completedSteps?.includes(step)) {
       setActiveStepKey(step);
     }
