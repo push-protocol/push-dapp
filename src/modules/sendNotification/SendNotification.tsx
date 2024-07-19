@@ -1,10 +1,15 @@
 import { Box, Button, Text, ToggleSwitch } from 'blocks';
 import { FC } from 'react';
 import { FormFields } from './components/FormFields';
+import { useGetChannelDetails } from 'queries';
+import { useAccount } from 'hooks';
 
 //add formik
 //add conditon for /send url
 const SendNotification: FC = () => {
+  const { account } = useAccount();
+  const { data } = useGetChannelDetails(account);
+  console.debug(data, 'channelDetails');
   return (
     <Box
       padding={{ dp: 'spacing-lg', ml: 'spacing-sm' }}
