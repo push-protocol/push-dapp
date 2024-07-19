@@ -1,14 +1,9 @@
-// React and other libraries
 import { useEffect, useState } from 'react';
+import { css } from 'styled-components';
 
-//Hooks
-import { useAccount } from 'hooks';
-
-// Constants
-import { ChannelTabs } from '../Dashboard.types';
-
-// Components
 import { Box, Text } from 'blocks';
+import { useAccount } from 'hooks';
+import { ChannelTabs } from '../Dashboard.types';
 import { TrendingChannelsList } from './TrendingChannelsList';
 import { SubscribedChannelsList } from './SubscribedChannelsList';
 import { dahboardChannelTabs } from '../Dashboard.constants';
@@ -35,18 +30,19 @@ const ChannelTabsSection = () => {
       display="flex"
       flexDirection="column"
       width={{ ml: '100%', initial: '50%' }}
-      gap="s4"
+      gap="spacing-sm"
     >
       <Box width="100%">
+        {/* TODO: Use Tabs component here */}
         <Box
-          backgroundColor={{ light: 'gray-100', dark: 'gray-1000' }}
+          backgroundColor="surface-secondary"
           cursor="pointer"
           display="flex"
-          gap="s1"
-          padding="s1"
+          gap="spacing-xxxs"
+          padding="spacing-xxxs"
           height="fit-content"
           justifyContent="space-between"
-          borderRadius="r4"
+          borderRadius="radius-sm"
           width={{ lp: 'auto', initial: 'fit-content' }}
         >
           {dahboardChannelTabs?.map((channelTab, index) => {
@@ -61,17 +57,21 @@ const ChannelTabsSection = () => {
                 justifyContent="center"
                 width={{ ll: '100%' }}
                 alignItems="center"
-                padding="s2 s3"
-                borderRadius="r4"
-                backgroundColor={
-                  selectedChannelTab === channelTab.value ? { dark: 'gray-800', light: 'white' } : 'transparent'
-                }
+                padding="spacing-xxs spacing-xs"
+                borderRadius="radius-sm"
                 onClick={() => setSelectedChannelTab(channelTab.value)}
+                css={css`
+                  background-color: var(
+                    --${selectedChannelTab === channelTab.value ? 'components-button-tertiary-background-inverse' : 'surface-transparent'}
+                  );
+                `}
               >
                 <Text
-                  color={{ light: 'gray-1000', dark: 'white' }}
                   variant="h5-semibold"
                   ellipsis={true}
+                  css={css`
+                    color: var(--components-button-secondary-text-default);
+                  `}
                 >
                   {channelTab?.label}
                 </Text>
@@ -84,11 +84,11 @@ const ChannelTabsSection = () => {
         display="flex"
         flexDirection="column"
         overflow="hidden auto"
-        borderRadius="r6"
+        borderRadius="radius-md"
         minHeight="285px"
         maxHeight="285px"
-        border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
-        padding="s2 s4"
+        border="border-sm solid stroke-secondary"
+        padding="spacing-xxs spacing-sm"
       >
         {selectedChannelTab === 'trending' && <TrendingChannelsList />}
         {selectedChannelTab === 'subscribed' && <SubscribedChannelsList />}

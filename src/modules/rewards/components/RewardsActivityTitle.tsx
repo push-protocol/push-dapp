@@ -16,23 +16,33 @@ const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({ activityTitle, is
       <Skeleton isLoading={isLoading}>
         <Box
           display="flex"
-          gap="s1"
+          gap="spacing-xxxs"
         >
-          <Text variant="bl-semibold"> {preText}</Text>
+          <Text
+            variant="bl-semibold"
+            color="text-primary"
+          >
+            {preText}
+          </Text>
           <Link
-            color="pink-500"
             to={url}
             target="_blank"
             rel="noopener noreferrer"
           >
             <Text
               variant="bl-semibold"
-              color="pink-500"
+              color="text-brand-medium"
             >
               {linkedText}
             </Text>
           </Link>
-          <Text variant="bl-semibold"> {postText}</Text>
+          <Text
+            variant="bl-semibold"
+            color="text-primary"
+          >
+            {' '}
+            {postText}
+          </Text>
         </Box>
       </Skeleton>
     );
@@ -41,7 +51,7 @@ const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({ activityTitle, is
       <Skeleton isLoading={isLoading}>
         <Text
           variant="bl-semibold"
-          color={{ light: 'gray-1000', dark: 'gray-100' }}
+          color="text-primary"
         >
           {activityTitle}
         </Text>

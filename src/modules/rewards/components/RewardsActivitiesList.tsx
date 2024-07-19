@@ -57,7 +57,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
         hasMore={hasMoreData}
         loader={
           <Box
-            margin="s3"
+            margin="spacing-xs"
             key="loader-spinner"
           >
             <LoaderSpinner

@@ -13,17 +13,17 @@ export const iconSemantics = {
 
   // icon states
 
-  'success-subtle': { light: colorBrands['success-200'], dark: colorBrands['success-600'] },
-  'success-bold': { light: colorBrands['success-600'], dark: colorBrands['success-300'] },
+  'state-success-subtle': { light: colorBrands['success-200'], dark: colorBrands['success-600'] },
+  'state-success-bold': { light: colorBrands['success-600'], dark: colorBrands['success-300'] },
 
-  'info-subtle': { light: colorBrands['info-200'], dark: colorBrands['info-600'] },
-  'info-bold': { light: colorBrands['info-600'], dark: colorBrands['info-200'] },
+  'state-info-subtle': { light: colorBrands['info-200'], dark: colorBrands['info-600'] },
+  'state-info-bold': { light: colorBrands['info-600'], dark: colorBrands['info-200'] },
 
-  'warning-subtle': { light: colorBrands['warning-200'], dark: colorBrands['warning-600'] },
-  'warning-bold': { light: colorBrands['warning-600'], dark: colorBrands['warning-200'] },
+  'state-warning-subtle': { light: colorBrands['warning-200'], dark: colorBrands['warning-600'] },
+  'state-warning-bold': { light: colorBrands['warning-600'], dark: colorBrands['warning-200'] },
 
-  'danger-subtle': { light: colorBrands['danger-200'], dark: colorBrands['danger-600'] },
-  'danger-bold': { light: colorBrands['danger-600'], dark: colorBrands['danger-300'] },
+  'state-danger-subtle': { light: colorBrands['danger-200'], dark: colorBrands['danger-600'] },
+  'state-danger-bold': { light: colorBrands['danger-600'], dark: colorBrands['danger-300'] },
 
-  disabled: { light: colorBrands['neutral-400'], dark: colorBrands['neutral-700'] },
+  'state-disabled': { light: colorBrands['neutral-400'], dark: colorBrands['neutral-700'] },
 };

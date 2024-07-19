@@ -38,10 +38,10 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
       width="-webkit-fill-available"
       display="flex"
       flexDirection="column"
-      padding="s6"
-      borderRadius="r6"
-      gap="s3"
-      border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
+      padding="spacing-md"
+      borderRadius="radius-md"
+      gap="spacing-xs"
+      border="border-sm solid stroke-secondary"
       minHeight={{ tb: '115px', initial: '125px' }}
       justifyContent="space-between"
     >
@@ -54,7 +54,7 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
         <Text
           variant="h5-bold"
           textTransform="uppercase"
-          color={{ light: 'gray-1000', dark: 'gray-100' }}
+          color="text-primary"
         >
           {title}
         </Text>
@@ -67,16 +67,16 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
             onClick={refetch}
           >
             <HoverableSVG
-              defaultBackground={{ light: 'pink-200', dark: 'pink-300' }}
-              hoverBackground={{ light: 'pink-200', dark: 'pink-300' }}
-              padding="s1"
-              borderRadius="r4"
-              icon={<Refresh color="pink-400" />}
+              defaultBackground="surface-brand-subtle"
+              hoverBackground="surface-brand-subtle"
+              padding="spacing-xxxs"
+              borderRadius="radius-sm"
+              icon={<Refresh color="icon-brand-medium" />}
             ></HoverableSVG>
-            <Box margin="s0 s0 s0 s1">
+            <Box margin="spacing-none spacing-none spacing-none spacing-xxxs">
               <Text
                 variant="bs-semibold"
-                color="gray-500"
+                color="text-tertiary"
               >
                 {isFetching ? 'Updating...' : 'Update'}
               </Text>
@@ -91,7 +91,7 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
           {isWalletConnected && !multiplier && (
             <Text
               variant="h1-bold"
-              color={{ light: 'gray-1000', dark: 'gray-100' }}
+              color="text-primary"
             >
               {points !== undefined ? points?.toLocaleString() : '0'}
             </Text>
@@ -102,7 +102,7 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
         {!isWalletConnected && !multiplier && (
           <Text
             variant="h1-bold"
-            color={{ light: 'gray-1000', dark: 'gray-100' }}
+            color="text-primary"
           >
             0
           </Text>
@@ -141,7 +141,7 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
           {points && points > 0 && rank != null ? (
             <Text
               variant="h5-bold"
-              color="gray-500"
+              color="text-tertiary"
             >
               {rank > 0 && `Rank #${rank}`}
             </Text>
@@ -153,7 +153,7 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
           {usersInvited && usersInvited > 0 ? (
             <Text
               variant="h5-bold"
-              color="gray-500"
+              color="text-tertiary"
             >
               {usersInvited > 1 ? `${usersInvited} Users Invited` : `${usersInvited} User Invited`}
             </Text>

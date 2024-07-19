@@ -60,20 +60,20 @@ const Rewards: FC<RewardsProps> = () => {
       <Box
         flexDirection="column"
         display="flex"
-        gap="s6"
+        gap="spacing-md"
         height="100%"
       >
         <Text
           variant="h3-bold"
           display={{ ml: 'none', dp: 'block' }}
-          color={{ light: 'gray-1000', dark: 'gray-100' }}
+          color="text-primary"
         >
           {heading}
         </Text>
         <Text
           variant="h4-semibold"
           display={{ ml: 'block', dp: 'none' }}
-          color={{ light: 'gray-1000', dark: 'gray-100' }}
+          color="text-primary"
         >
           {heading}
         </Text>

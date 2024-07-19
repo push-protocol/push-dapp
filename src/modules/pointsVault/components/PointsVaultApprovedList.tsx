@@ -58,7 +58,7 @@ const PointsVaultApprovedList = ({ query }: PointsVaultApprovedListProps) => {
 
   return (
     <Box
-      gap="s4"
+      gap="spacing-sm"
       display="flex"
       flexDirection="column"
     >
@@ -73,7 +73,7 @@ const PointsVaultApprovedList = ({ query }: PointsVaultApprovedListProps) => {
           hasMore={hasMoreData}
           loader={
             <Box
-              margin="s3"
+              margin="spacing-xs"
               key="loader-spinner"
             >
               <LoaderSpinner

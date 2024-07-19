@@ -117,7 +117,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
             icon={
               <CrossFilled
                 size={30}
-                color="gray-400"
+                color="icon-primary"
                 onClick={onClose}
               />
             }
