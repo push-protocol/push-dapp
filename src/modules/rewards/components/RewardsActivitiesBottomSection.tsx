@@ -9,6 +9,7 @@ import { RewardsActivitiesSection } from './RewardsActivitiesSection';
 import { Box } from 'blocks';
 import { BonusActivities } from './BonusActivitiesSection';
 import { StakePushSection } from './StakePushSection';
+import { stakePush, stakePushMultiplier } from '../utils/stakePushArray';
 
 export type RewardsActivitiesBottomSectionProps = {};
 
@@ -62,7 +63,7 @@ const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = 
           subtitle="Visit app.push.org/yieldv2 and stake tokens in the Fee Pool or LP Pool to activate multipliers."
         />
       </Box>
-    </Box>
+    </>
   );
 };
 
