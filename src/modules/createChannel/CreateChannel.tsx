@@ -1,29 +1,14 @@
-// React and other libraries
 import { useEffect, useState } from 'react';
-
-// Third party libraries
 import { ethers } from 'ethers';
 
-// Hooks
-import { useAccount } from 'hooks';
-
-// Common
+import { Box } from 'blocks';
+import { appConfig } from 'config';
 import { Stepper } from 'common';
-
-// Helpers
+import { useAccount } from 'hooks';
 import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
+import { useApprovePUSHToken, useCreateChannel } from 'queries';
 
-// Config
-import { appConfig } from 'config';
-import { createChannelInfoForm, uploadLogoForm } from './CreateChannel.form';
-import { useApprovePUSHToken, useCreateChannel } from 'queries/hooks/createChannel';
-
-// Utility funcs
-import { checkImageSize, checkPushTokenApprovalFunc } from './CreateChannel.utils';
-
-// Components
-import { Box } from 'blocks';
 import { ChannelInfo } from './components/ChannelInfo';
 import { CHANNEL_STAKE_FEES, createChannelSteps } from './CreateChannel.constants';
 import { CreateChannelError } from './components/CreateChannelError';
@@ -33,6 +18,9 @@ import { DifferentChainPage } from './components/DifferentChainPage';
 import { StakeFees } from './components/StakeFees';
 import { UploadLogo } from './components/UploadLogo';
 
+import { createChannelInfoForm, uploadLogoForm } from './CreateChannel.form';
+import { checkImageSize, checkPushTokenApprovalFunc } from './CreateChannel.utils';
+
 // Types
 import { ActiveStepKey, ChannelCreationError, CreateChannelProgressType } from './CreateChannel.types';
 
@@ -41,12 +29,12 @@ const fees = ethers.utils.parseUnits(CHANNEL_STAKE_FEES.toString(), 18);
 const progressInitialState: CreateChannelProgressType = {
   progress: null,
   progressInfo: '',
-  processingInfo: ''
+  processingInfo: '',
 };
 
 const errorInitialState: ChannelCreationError = {
   txErrorStatus: 0,
-  txError: ''
+  txError: '',
 };
 
 const CreateChannel = () => {
@@ -54,30 +42,25 @@ const CreateChannel = () => {
 
   const onCoreNetwork = appConfig.coreContractChain === chainId;
 
-  const { mutate: approvePUSHToken, isPending: pendingApproval } = useApprovePUSHToken();
-  const { mutate: createNewChannel, isPending: createChannelPending } = useCreateChannel();
+  const { mutate: approvePUSHToken } = useApprovePUSHToken();
+  const { mutate: createNewChannel } = useCreateChannel();
 
   const [activeStepKey, setActiveStepKey] = useState<ActiveStepKey>('channel_info');
   const [completedSteps, setCompletedSteps] = useState<Array<ActiveStepKey>>(['channel_info']);
 
-  // To handle the stepper
   const handleNextStep = (key: ActiveStepKey) => {
     setCompletedSteps([...new Set([...completedSteps, key])]);
     setActiveStepKey(key);
   };
 
-  // Forms
   const channelInfoFormik = createChannelInfoForm({ handleNextStep, setActiveStepKey });
   const uploadLogoFormik = uploadLogoForm();
 
-  // Upload Logo
   const [view, setView] = useState(false);
   const [croppedImage, setCroppedImage] = useState<string | undefined>(undefined);
 
-  // Progress Bar and text
   const [progressState, setProgressState] = useState<CreateChannelProgressType>(progressInitialState);
 
-  // Error status and text
   const [channelCreationError, setChannelCreationError] = useState<ChannelCreationError>(errorInitialState);
 
   useEffect(() => {
@@ -91,7 +74,7 @@ const CreateChannel = () => {
       ...prevState,
       progress: progress,
       progressInfo: progressInfo,
-      processingInfo: processingInfo
+      processingInfo: processingInfo,
     }));
   };
 
@@ -99,7 +82,7 @@ const CreateChannel = () => {
     setChannelCreationError((prev) => ({
       ...prev,
       txErrorStatus: txErrorStatus,
-      txError: txError
+      txError: txError,
     }));
   };
 
@@ -108,16 +91,12 @@ const CreateChannel = () => {
     approvePUSHToken(
       {
         noOfTokenToApprove: fees,
-        signer
+        signer,
       },
       {
         onSuccess: (response) => {
           if (response.status === 1) {
-            updateProgressState(
-              60,
-              'Please complete the transaction in your wallet to continue.',
-              'Approving PUSH'
-            );
+            updateProgressState(60, 'Please complete the transaction in your wallet to continue.', 'Approving PUSH');
 
             createChannel(signer, storagePointer);
           }
@@ -130,9 +109,9 @@ const CreateChannel = () => {
           } else {
             updateChannelCreationError(2, 'Transaction failed due to one of the following reasons:');
           }
-          setProgressState(progressInitialState)
+          setProgressState(progressInitialState);
           return false;
-        }
+        },
       }
     );
   };
@@ -143,18 +122,14 @@ const CreateChannel = () => {
     const identity = '1+' + storagePointer;
     const identityBytes = ethers.utils.toUtf8Bytes(identity);
 
-    updateProgressState(
-      70,
-      'Please complete the transaction in your wallet to continue.',
-      'Creating Channel...'
-    );
+    updateProgressState(70, 'Please complete the transaction in your wallet to continue.', 'Creating Channel...');
 
     createNewChannel(
       {
         channelType,
         identityBytes,
         fees,
-        signer
+        signer,
       },
       {
         onSuccess: (response) => {
@@ -163,12 +138,7 @@ const CreateChannel = () => {
             // We are not sure about this error so we cant display (EDGE CASE)
             updateChannelCreationError(2, 'Transaction failed due to one of the following reasons:');
           } else {
-
-            updateProgressState(
-              80,
-              'Please wait while we confirm the transaction..',
-              'Transaction Confirmed..'
-            );
+            updateProgressState(80, 'Please wait while we confirm the transaction..', 'Transaction Confirmed..');
 
             setTimeout(() => {
               updateProgressState(
@@ -194,7 +164,7 @@ const CreateChannel = () => {
           if (error.code === 4001 || error.code === 'ACTION_REJECTED') {
             console.log('Signature error ', error);
             updateChannelCreationError(1, 'User Rejected Signature. Please try again.');
-            setProgressState(progressInitialState)
+            setProgressState(progressInitialState);
           } else {
             // Other unknown error
             console.error('Error in creating channel--> %o', error);
@@ -205,7 +175,7 @@ const CreateChannel = () => {
               'Kindly Contact support@epns.io to resolve the issue.'
             );
           }
-        }
+        },
       }
     );
   };
@@ -239,7 +209,7 @@ const CreateChannel = () => {
       name: channelInfoFormik.values.channelName,
       info: channelInfoFormik.values.channelDesc,
       url: channelInfoFormik.values.channelURL,
-      icon: croppedImage
+      icon: croppedImage,
     };
 
     const ChannelInput = JSON.stringify(input);
@@ -249,11 +219,7 @@ const CreateChannel = () => {
     let storagePointer = await IPFSupload(ChannelInput);
     console.debug('IPFS storagePointer:', storagePointer);
 
-    updateProgressState(
-      40,
-      'Please complete the transaction in your wallet to continue.',
-      'Payload Uploaded...'
-    );
+    updateProgressState(40, 'Please complete the transaction in your wallet to continue.', 'Payload Uploaded...');
 
     var signer = provider.getSigner(account);
     console.debug(signer);
@@ -266,11 +232,10 @@ const CreateChannel = () => {
     }
   };
 
-
   return (
     <Box
       padding={{ initial: 'spacing-lg', ml: 'spacing-sm' }}
-      backgroundColor='surface-primary'
+      backgroundColor="surface-primary"
       borderRadius="radius-md"
       display="flex"
       width={{ initial: '648px', ml: '325px' }}
@@ -284,9 +249,9 @@ const CreateChannel = () => {
 
       {onCoreNetwork && (
         <>
-          {channelCreationError.txErrorStatus !== 0 &&
+          {channelCreationError.txErrorStatus !== 0 && (
             <CreateChannelError channelCreationError={channelCreationError} />
-          }
+          )}
 
           {progressState.progress === null ? (
             <Box
@@ -326,10 +291,8 @@ const CreateChannel = () => {
           ) : (
             <CreateChannelProcessingInfo progressState={progressState} />
           )}
-
         </>
       )}
-
     </Box>
   );
 };
