@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ethers } from 'ethers';
 
-import { Box } from 'blocks';
+import { Alert, Box, ErrorFilled } from 'blocks';
 import { appConfig } from 'config';
 import { Stepper } from 'common';
 import { useAccount } from 'hooks';
@@ -16,7 +16,6 @@ import {
   progressInitialState,
   errorInitialState
 } from './CreateChannel.constants';
-import { CreateChannelError } from './components/CreateChannelError';
 import { CreateChannelHeader } from './components/CreateChannelHeader';
 import { CreateChannelProcessingInfo } from './components/CreateChannelProcessingInfo';
 import { DifferentChainPage } from './components/DifferentChainPage';
@@ -221,7 +220,12 @@ const CreateChannel = () => {
         {onCoreNetwork && (
           <>
             {channelCreationError.txErrorStatus !== 0 && (
-              <CreateChannelError channelCreationError={channelCreationError} />
+              <Alert
+                variant='error'
+                icon={<ErrorFilled color='text-danger-bold' size={24} />}
+                message={channelCreationError.txError}
+                width='100%'
+              />
             )}
 
             {!progressState.progress ? (
