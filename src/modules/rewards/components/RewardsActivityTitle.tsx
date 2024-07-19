@@ -14,10 +14,21 @@ const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({ activityTitle, is
     const { preText, url, linkedText, postText } = extractedTitle;
     return (
       <Skeleton isLoading={isLoading}>
-        <Box display="flex" gap="s1">
+        <Box
+          display="flex"
+          gap="s1"
+        >
           <Text variant="bl-semibold"> {preText}</Text>
-          <Link color="pink-500" to={url} target="_blank" rel="noopener noreferrer">
-            <Text variant="bl-semibold" color="pink-500">
+          <Link
+            color="pink-500"
+            to={url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Text
+              variant="bl-semibold"
+              color="pink-500"
+            >
               {linkedText}
             </Text>
           </Link>
@@ -26,11 +37,16 @@ const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({ activityTitle, is
       </Skeleton>
     );
   } else {
-    return <Skeleton isLoading={isLoading}>
-      <Text variant="bl-semibold" color={{ light: 'gray-1000', dark: 'gray-100' }}>
-        {activityTitle}
-      </Text>
-    </Skeleton>
+    return (
+      <Skeleton isLoading={isLoading}>
+        <Text
+          variant="bl-semibold"
+          color={{ light: 'gray-1000', dark: 'gray-100' }}
+        >
+          {activityTitle}
+        </Text>
+      </Skeleton>
+    );
   }
 };
 
