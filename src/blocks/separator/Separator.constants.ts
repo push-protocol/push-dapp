@@ -6,5 +6,4 @@ export const separatorRestrictedPropsKeys: (keyof SeparatorProps | keyof ModePro
   'margin',
   'width',
   'orientation',
-  'mode',
 ];

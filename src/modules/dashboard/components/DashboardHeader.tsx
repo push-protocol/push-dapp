@@ -15,17 +15,17 @@ const DashboardHeader: FC<DashboardHeaderProps> = ({ setSubHeaderVisibility, sho
       flexDirection="row"
       display="flex"
       justifyContent="space-between"
-      margin={showSubHeader ? 's0' : 's0 s0 s4 s0'}
+      margin={showSubHeader ? 'spacing-none' : 'spacing-none spacing-none spacing-sm spacing-none'}
     >
       <Box
         flexDirection="row"
         display="flex"
-        gap="s3"
+        gap="spacing-xs"
       >
         <Text variant="h3-semibold">👋</Text>
         <Text
           variant="h3-semibold"
-          color={{ light: 'black', dark: 'white' }}
+          color="text-primary"
         >
           GM! Welcome to Push.
         </Text>
@@ -41,7 +41,7 @@ const DashboardHeader: FC<DashboardHeaderProps> = ({ setSubHeaderVisibility, sho
             icon={
               <Dash
                 size={20}
-                color={{ light: 'gray-300', dark: 'gray-700' }}
+                color="icon-tertiary"
               />
             }
           ></HoverableSVG>
@@ -50,7 +50,7 @@ const DashboardHeader: FC<DashboardHeaderProps> = ({ setSubHeaderVisibility, sho
             icon={
               <Add
                 size={20}
-                color={{ light: 'gray-300', dark: 'gray-700' }}
+                color="icon-tertiary"
               />
             }
           ></HoverableSVG>

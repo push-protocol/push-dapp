@@ -49,7 +49,7 @@ const PointsVaultListActionButtons = ({ status, item, refetch }: PointsVaultList
       minHeight="22px"
       display="flex"
       justifyContent="center"
-      gap="s2"
+      gap="spacing-xxs"
     >
       {status !== 'COMPLETED' && (
         <Button

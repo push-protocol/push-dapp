@@ -70,17 +70,17 @@ const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveView }) =>
       alignItems="center"
       display="flex"
       flexDirection="column"
-      gap="s12"
+      gap="spacing-xxl"
     >
       <Box
         display="flex"
-        gap="s1"
+        gap="spacing-xxxs"
         alignItems="center"
       >
         <PushLogo />
         <Text
           variant="h2-semibold"
-          color={{ light: 'gray-1000', dark: 'white' }}
+          color="text-primary"
         >
           Push
         </Text>
@@ -89,15 +89,15 @@ const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveView }) =>
         width="374px"
         display="flex"
         alignItems="center"
-        padding="s6"
+        padding="spacing-md"
         flexDirection="column"
-        gap="s6"
-        backgroundColor={{ dark: 'gray-900', light: 'white' }}
-        borderRadius="r6"
+        gap="spacing-md"
+        backgroundColor="surface-primary"
+        borderRadius="radius-md"
       >
         <Text
           variant="h4-bold"
-          color={{ light: 'gray-1000', dark: 'gray-100' }}
+          color="text-primary"
         >
           Points Vault Login
         </Text>
@@ -107,7 +107,7 @@ const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveView }) =>
               display="flex"
               alignItems="center"
               flexDirection="column"
-              gap="s3"
+              gap="spacing-xs"
               width="100%"
             >
               <Box width="100%">
@@ -132,7 +132,7 @@ const PointsVaultLogin: FC<PointsVaultLoginProps> = ({ handleSetActiveView }) =>
                   errorMessage={formik.touched.password ? formik.errors.password : ''}
                 />
               </Box>
-              <Box margin="s6 s0 s0 s0">
+              <Box margin="spacing-md spacing-none spacing-none spacing-none">
                 <Button disabled={isPending}>{isPending ? 'Authenticating' : 'Login'}</Button>
               </Box>
             </Box>

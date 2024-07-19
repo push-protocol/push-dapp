@@ -4,8 +4,6 @@ import { FC, useContext } from 'react';
 // Third-party libraries
 import { css } from 'styled-components';
 import BlockiesSvg from 'blockies-react-svg';
-//Hooks
-import { useBlocksTheme } from 'blocks/Blocks.hooks';
 
 //Components
 import { Box, Skeleton, Text } from 'blocks';
@@ -29,7 +27,6 @@ export type LeaderboardListItemProps = {
 };
 
 const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, points, isLoading }) => {
-  const { mode } = useBlocksTheme();
   const { web3NameList }: AppContextType = useContext(AppContext)!;
 
   useResolveWeb3Name(address);
@@ -43,15 +40,14 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
       display="flex"
       justifyContent="space-between"
       alignItems="center"
-      // TODO: Fix ds-blocks
       css={css`
-        border-bottom: 1px solid var(--${mode === 'dark' ? 'gray-800' : 'gray-200'});
+        border-bottom: var(--border-sm) solid var(--stroke-secondary);
       `}
     >
       <Skeleton isLoading={isLoading}>
         <Box
           display="flex"
-          gap="s3"
+          gap="spacing-xs"
           alignItems="center"
         >
           <Box
@@ -61,20 +57,20 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
           >
             <Text
               variant="bm-bold"
-              color={{ light: 'gray-1000', dark: 'gray-100' }}
+              color="text-primary"
             >
               {rank > 0 && rank}
             </Text>
           </Box>
           <Box
             display="flex"
-            gap="s3"
+            gap="spacing-xs"
             alignItems="center"
           >
             <Box
               width="32px"
               height="32px"
-              borderRadius="r10"
+              borderRadius="radius-xl"
               overflow="hidden"
             >
               <BlockiesSvg
@@ -86,14 +82,14 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
             <Text
               variant="bm-bold"
               display={{ ml: 'none', dp: 'block' }}
-              color={{ light: 'gray-1000', dark: 'gray-100' }}
+              color="text-primary"
             >
               {displayName}
             </Text>
             <Text
               variant="bs-bold"
               display={{ ml: 'block', dp: 'none' }}
-              color={{ light: 'gray-1000', dark: 'gray-100' }}
+              color="text-primary"
             >
               {displayName}
             </Text>
@@ -112,14 +108,14 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
           <Text
             variant="bm-bold"
             display={{ ml: 'none', dp: 'block' }}
-            color={{ light: 'gray-1000', dark: 'gray-100' }}
+            color="text-primary"
           >
             {points?.toLocaleString()}
           </Text>
           <Text
             variant="bs-bold"
             display={{ ml: 'block', dp: 'none' }}
-            color={{ light: 'gray-1000', dark: 'gray-100' }}
+            color="text-primary"
           >
             {points?.toLocaleString()}
           </Text>

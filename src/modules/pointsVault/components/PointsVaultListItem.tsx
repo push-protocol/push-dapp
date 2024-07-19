@@ -1,5 +1,4 @@
 import { Box, Link, Skeleton, Text } from 'blocks';
-import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { PointsVaultActivity, PointsVaultStatus, useGetUserTwitterDetails, usePointsVaultToken } from 'queries';
 import { css } from 'styled-components';
 import { PointsVaultListActionButtons } from './PointsVaultListActionButtons';
@@ -12,7 +11,6 @@ export type PointsVaultListItemProps = {
 };
 
 const PointsVaultListItem = ({ isLoading, item, refetch }: PointsVaultListItemProps) => {
-  const { mode } = useBlocksTheme();
   const token = usePointsVaultToken();
   const { data } = useGetUserTwitterDetails(item.data?.twitter, token);
 
@@ -22,9 +20,8 @@ const PointsVaultListItem = ({ isLoading, item, refetch }: PointsVaultListItemPr
       display="flex"
       justifyContent="space-between"
       alignItems="center"
-      // TODO: Fix ds-blocks
       css={css`
-        border-bottom: 1px solid var(--${mode === 'dark' ? 'gray-800' : 'gray-200'});
+        border-bottom: var(--border-sm) solid var(--stroke-secondary);
       `}
     >
       <Skeleton isLoading={isLoading}>
@@ -36,7 +33,7 @@ const PointsVaultListItem = ({ isLoading, item, refetch }: PointsVaultListItemPr
         >
           <Text
             variant="bs-semibold"
-            color={{ light: 'gray-1000', dark: 'gray-100' }}
+            color="text-secondary"
           >
             {caip10ToWallet(item.userWallet)}
           </Text>
@@ -55,7 +52,7 @@ const PointsVaultListItem = ({ isLoading, item, refetch }: PointsVaultListItemPr
             rel="noopener noreferrer"
           >
             <Text
-              color="pink-600"
+              color="text-brand-medium"
               variant="bs-semibold"
             >
               https://x.com/{item.data?.twitter}
@@ -73,9 +70,7 @@ const PointsVaultListItem = ({ isLoading, item, refetch }: PointsVaultListItemPr
         >
           <Text
             variant="bs-semibold"
-            color={
-              data?.followersCount && data.followersCount < 50 ? 'red-700' : { light: 'gray-1000', dark: 'gray-100' }
-            }
+            color={data?.followersCount && data.followersCount < 50 ? 'text-state-danger-bold' : 'text-primary'}
           >
             {data?.followersCount ?? '-'}
           </Text>
