@@ -7,19 +7,29 @@ import { FormFields } from './components/FormFields';
 const SendNotification: FC = () => {
   return (
     <Box
-      padding="spacing-lg"
+      padding={{ dp: 'spacing-lg', ml: 'spacing-sm' }}
       display="flex"
       flexDirection="column"
-      gap="spacing-xl"
-      width="648px"
+      gap={{ dp: 'spacing-xl', ml: 'spacing-md' }}
+      alignSelf="center"
+      width={{ dp: '648px', ml: '357px' }}
+      //this has to be responsive
       borderRadius="radius-lg"
       alignItems="center"
       backgroundColor="surface-primary"
-      margin="spacing-lg spacing-none spacing-none spacing-none"
+      margin={{ dp: 'spacing-lg', ml: 'spacing-sm' }}
     >
       <Text
         color="text-primary"
         variant="h3-semibold"
+        display={{ dp: 'block', ml: 'none' }}
+      >
+        Send Notification
+      </Text>
+      <Text
+        color="text-primary"
+        variant="h5-semibold"
+        display={{ dp: 'none', ml: 'block' }}
       >
         Send Notification
       </Text>

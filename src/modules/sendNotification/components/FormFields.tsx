@@ -1,5 +1,6 @@
 import { Box, Text, TextArea, TextInput, ToggleSwitch } from 'blocks';
-import { ChangeEvent, FC, useState } from 'react';
+import { FC, useState } from 'react';
+import { css } from 'styled-components';
 
 const FormFields: FC = () => {
   //move these to formik
@@ -10,7 +11,7 @@ const FormFields: FC = () => {
   return (
     <Box
       display="flex"
-      gap="spacing-md"
+      gap={{ dp: 'spacing-md', ml: 'spacing-sm' }}
       width="100%"
       flexDirection="column"
     >
@@ -24,16 +25,27 @@ const FormFields: FC = () => {
         display="flex"
         gap="spacing-sm"
         justifyContent="space-between"
+        css={css`
+          flex-wrap: wrap;
+        `}
       >
         <Box
+          css={css`
+            flex: 1;
+          `}
           display="flex"
           alignItems="center"
           backgroundColor="surface-secondary"
           borderRadius="radius-xs"
-          gap="spacing-xxxl"
+          justifyContent="space-between"
           padding="spacing-xs"
         >
-          <Text>Title</Text>
+          <Text
+            ellipsis
+            variant="bs-semibold"
+          >
+            Title
+          </Text>
           <ToggleSwitch
             leadingToggle={false}
             checked={titleChecked}
@@ -41,14 +53,22 @@ const FormFields: FC = () => {
           />
         </Box>
         <Box
+          css={css`
+            flex: 1;
+          `}
           display="flex"
           backgroundColor="surface-secondary"
           borderRadius="radius-xs"
-          gap="spacing-xxxl"
           alignItems="center"
+          justifyContent="space-between"
           padding="spacing-xs"
         >
-          <Text>Media URL</Text>
+          <Text
+            ellipsis
+            variant="bs-semibold"
+          >
+            Media URL
+          </Text>
           <ToggleSwitch
             leadingToggle={false}
             checked={mediaUrlChecked}
@@ -56,14 +76,22 @@ const FormFields: FC = () => {
           />
         </Box>
         <Box
+          css={css`
+            flex: 1;
+          `}
           display="flex"
           backgroundColor="surface-secondary"
           borderRadius="radius-xs"
           alignItems="center"
-          gap="spacing-xxxl"
+          justifyContent="space-between"
           padding="spacing-xs"
         >
-          <Text>CTA Link</Text>
+          <Text
+            ellipsis
+            variant="bs-semibold"
+          >
+            CTA Link
+          </Text>
           <ToggleSwitch
             leadingToggle={false}
             checked={ctaLinkChecked}
