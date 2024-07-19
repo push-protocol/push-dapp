@@ -10,13 +10,13 @@ interface FormikProps {
 const channelInfoValidationSchema = Yup.object().shape({
   channelName: Yup.string()
     .max(32, 'Must be 32 characters only')
-    .required('Required'),
+    .required('Please Enter Channel Name'),
   channelDesc: Yup.string()
     .max(250, 'Channel Description can be 250 characters only')
-    .required('Required'),
+    .required('Please Enter Channel Description'),
   channelURL: Yup.string()
-    .required('Required')
-    .test('url', 'Invalid URL', function(value) {
+    .required('Please Enter Channel URL')
+    .test('url', 'Please Enter a valid channel url', function(value) {
       const urlPattern = /^(http:\/\/|https:\/\/|www\.)?([\w-]+\.)+[\w-]{2,}(\/[\w.-]*)*\/?$/;
       return urlPattern.test(value);
     })

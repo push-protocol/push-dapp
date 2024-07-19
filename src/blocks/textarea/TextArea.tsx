@@ -151,7 +151,6 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           onChange={onChange}
           placeholder={placeholder}
           ref={ref}
-          required={required}
           resizable={resizable}
           rows={numberOfLines}
           success={success}
@@ -164,8 +163,8 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
               success || error
                 ? 'components-inputs-text-default'
                 : disabled
-                ? 'components-inputs-text-disabled'
-                : 'components-inputs-text-placeholder'
+                  ? 'components-inputs-text-disabled'
+                  : 'components-inputs-text-placeholder'
             }
           >
             {description}
