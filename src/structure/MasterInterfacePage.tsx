@@ -43,6 +43,7 @@ const WelcomDashboardPage = lazy(() => import('pages/WelcomeDashboardPage'));
 const RewardPointsPage = lazy(() => import('pages/RewardPointsPage'));
 const PointsVaultPage = lazy(() => import('pages/PointsVaultPage'));
 const CreateChannelPage = lazy(() => import('pages/CreateChannelPage'));
+const AddNewChainPage = lazy(() => import('pages/AddNewChain'));
 
 const DiscordVerificationPage = lazy(() => import('pages/DiscordVerificationPage'));
 // import AirdropPage from 'pages/AirdropPage';
@@ -161,6 +162,10 @@ function MasterInterfacePage() {
           }
         >
           <Routes>
+            <Route
+              path={APP_PATHS.AddNewChain}
+              element={<AddNewChainPage />}
+            />
             <Route
               path={APP_PATHS.WelcomeDashboard}
               element={<WelcomDashboardPage />}
