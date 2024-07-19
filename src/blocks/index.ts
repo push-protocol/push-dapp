@@ -14,6 +14,7 @@ export { Tooltip, type TooltipProps } from './tooltip';
 export { TextArea, type TextAreaProps } from './textarea';
 export { TextInput } from './textInput';
 export { ToggleSwitch } from './toggleSwtich';
+export { FileUpload } from './fileUpload';
 
 
 export * from './Blocks.colors';

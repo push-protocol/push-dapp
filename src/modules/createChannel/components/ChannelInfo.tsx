@@ -1,22 +1,43 @@
-// React + web3 essentials
 import { FC } from "react";
 
-// Third party librabries
-import { FormikProps } from "formik";
-
-// Components
 import { Box, Button, TextArea, TextInput } from "blocks";
 
-// Types
-import { ChannelInfoFormValues } from "../CreateChannel.types";
+import { useCreateChannelForm } from "../CreateChannel.form";
+import { ActiveStepKey } from "../CreateChannel.types";
+
 
 type ChannelInfoProps = {
-  channelInfoFormik: FormikProps<ChannelInfoFormValues>;
+  setActiveStepKey: (key: ActiveStepKey) => void;
+  handleNextStep: (key: ActiveStepKey) => void;
 }
-
 const ChannelInfo: FC<ChannelInfoProps> = ({
-  channelInfoFormik,
+  handleNextStep,
+  setActiveStepKey
 }) => {
+
+  const {
+    values: formValues,
+    touched,
+    setFieldTouched,
+    setFieldValue,
+    errors,
+    validateForm,
+    setTouched,
+  } = useCreateChannelForm();
+
+  const handleNext = () => {
+    validateForm().then((errors) => {
+      setTouched({
+        channelName: true,
+        channelDesc: true,
+        channelURL: true,
+      });
+      if (Object.keys(errors).length === 0) {
+        handleNextStep('uploadLogo');
+        setActiveStepKey('uploadLogo');
+      }
+    })
+  }
 
   return (
     <Box
@@ -24,66 +45,68 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
       flexDirection='column'
       alignSelf='stretch'
     >
-
-      <form onSubmit={channelInfoFormik.handleSubmit}>
+      <Box
+        display='flex'
+        flexDirection='column'
+        gap='spacing-xl'
+        alignSelf='stretch'
+      >
         <Box
           display='flex'
           flexDirection='column'
-          gap='spacing-xl'
+          gap='spacing-sm'
           alignSelf='stretch'
         >
-          <Box
-            display='flex'
-            flexDirection='column'
-            gap='spacing-sm'
-            alignSelf='stretch'
-          >
-            <TextInput
-              required
-              label="Channel Name"
-              value={channelInfoFormik.values.channelName}
-              onChange={(e) => {
-                const inputValue = e.target.value;
-                channelInfoFormik.setFieldValue('channelName', inputValue);
-              }}
-              error={channelInfoFormik.touched.channelName && Boolean(channelInfoFormik.errors.channelName)}
-              errorMessage={channelInfoFormik.touched.channelName ? channelInfoFormik.errors.channelName : ''}
-              totalCount={32}
-            />
+          <TextInput
+            required
+            label="Channel Name"
+            value={formValues.channelName}
+            onChange={(e) => {
+              const value = e.target.value;
+              setFieldTouched('channelName', true);
+              setFieldValue('channelName', value);
+            }}
+            totalCount={32}
+            error={touched.channelName && Boolean(errors?.channelName)}
+            errorMessage={touched.channelName ? errors?.channelName : ''}
+          />
 
-            <TextArea
-              required
-              label="Channel Description"
-              placeholder="Get notified about ..."
-              description='Enter a Brief description of the notifications the user will receive'
-              error={channelInfoFormik.touched.channelDesc && Boolean(channelInfoFormik.errors.channelDesc)}
-              errorMessage={channelInfoFormik.touched.channelDesc ? channelInfoFormik.errors.channelDesc : ''}
-              value={channelInfoFormik.values.channelDesc}
-              onChange={(e) => {
-                const inputValue = e.target.value;
-                channelInfoFormik.setFieldValue('channelDesc', inputValue);
-              }}
-              totalCount={250}
-            />
+          <TextArea
+            required
+            label="Channel Description"
+            placeholder="Get notified about ..."
+            description='Enter a Brief description of the notifications the user will receive'
+            value={formValues.channelDesc}
+            onChange={(e) => {
+              const value = e.target.value;
+              setFieldTouched('channelDesc', true);
+              setFieldValue('channelDesc', value);
+            }}
+            totalCount={250}
+            error={touched.channelDesc && Boolean(errors?.channelDesc)}
+            errorMessage={touched.channelURL ? errors?.channelDesc : ''}
+          />
 
-            <TextInput
-              required
-              label="Channel Website URL"
-              value={channelInfoFormik.values.channelURL}
-              onChange={channelInfoFormik.handleChange('channelURL')}
-              error={channelInfoFormik.touched.channelURL && Boolean(channelInfoFormik.errors.channelURL)}
-              errorMessage={channelInfoFormik.touched.channelURL ? channelInfoFormik.errors.channelURL : ''}
-            />
-          </Box>
-
-          <Box display='flex' justifyContent='center'>
-            <Button>
-              Next
-            </Button>
-          </Box>
+          <TextInput
+            required
+            label="Channel Website URL"
+            value={formValues.channelURL}
+            onChange={(e) => {
+              const value = e.target.value;
+              setFieldTouched('channelURL', true);
+              setFieldValue('channelURL', value);
+            }}
+            error={touched.channelURL && Boolean(errors?.channelURL)}
+            errorMessage={touched.channelURL ? errors?.channelURL : ''}
+          />
         </Box>
 
-      </form>
+        <Box display='flex' justifyContent='center'>
+          <Button onClick={handleNext}>
+            Next
+          </Button>
+        </Box>
+      </Box>
     </Box>
 
   );

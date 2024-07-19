@@ -2,6 +2,9 @@ export type ChannelInfoFormValues = {
   channelName: string;
   channelDesc: string;
   channelURL: string;
+  image: null;
+  imageSrc?: string;
+  imageType?: string;
 };
 
 export type UploadLogoFormValues = {

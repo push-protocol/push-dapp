@@ -1,72 +1,60 @@
-//? Since this is used just in Create channel flow so I have not moved it in the common folder
-// React + web3 essentials
 import { FC, useRef } from "react";
-
-// Third party libraries
 import { css } from "styled-components";
-import { FormikProps } from "formik";
 
-// Component
-import { Box, Button, CloudUpload, Text } from "blocks";
+import { Box, Button, CloudUpload, FileUpload, Text, Tick } from "blocks";
 import ImageClipper from "primaries/ImageClipper";
-import { isImageFile } from "../CreateChannel.utils";
-import { ActiveStepKey, UploadLogoFormValues } from "../CreateChannel.types";
 
-type UploadLogoProps = {
+import { isImageFile } from "../CreateChannel.utils";
+import { ActiveStepKey } from "../CreateChannel.types";
+import { useCreateChannelForm } from "../CreateChannel.form";
+
+type UploadChannelLogoProps = {
   view: boolean;
-  croppedImage: string | undefined;
   setView: (view: boolean) => void;
-  setCroppedImage: (croppedImage: string | undefined) => void;
   setActiveStepKey: (key: ActiveStepKey) => void;
   handleNextStep: (key: ActiveStepKey) => void;
-  uploadLogoFormik: FormikProps<UploadLogoFormValues>;
 }
 
-const UploadLogo: FC<UploadLogoProps> = ({
+const UploadChannelLogo: FC<UploadChannelLogoProps> = ({
   view,
-  croppedImage,
   setView,
-  setCroppedImage,
   setActiveStepKey,
   handleNextStep,
-  uploadLogoFormik
 }) => {
 
   const childRef = useRef();
 
-  // handle Input file type
+  const {
+    values: formValues,
+    setFieldValue,
+  } = useCreateChannelForm();
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.currentTarget.files?.[0];
     setView(false)
-    setCroppedImage(undefined)
     if (file && isImageFile(file)) {
       await processFile(file);
     }
   };
 
-  // Handle Drop Image
   const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setView(false)
-    setCroppedImage(undefined)
     const file = e.dataTransfer.files?.[0];
     if (file && isImageFile(file)) {
       await processFile(file);
     }
   };
 
-  // Process Image
   const processFile = async (file: File) => {
-    uploadLogoFormik.setFieldValue('image', file);
-    // Read the file and set imageSrc and imageType
+    setFieldValue('image', file);
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      uploadLogoFormik.setFieldValue('imageSrc', reader.result as string);
-      uploadLogoFormik.setFieldValue('imageType', file.type);
+      setFieldValue('imageSrc', reader.result as string);
+      setFieldValue('imageType', file.type);
     };
-    setView(true);
   };
 
   return (
@@ -87,7 +75,12 @@ const UploadLogo: FC<UploadLogoProps> = ({
           Upload a PNG, JPG upto 1MB. Crop the image to resize to 128px.
         </Text>
 
-        <form onSubmit={uploadLogoFormik.handleSubmit}>
+        <FileUpload
+          hidden={true}
+          id='file-upload'
+          onChange={handleFileChange}
+          onDrop={handleDrop}
+        >
           <Box
             width={{ initial: '500px', ml: '325px' }}
             padding='spacing-xxl spacing-none'
@@ -98,27 +91,28 @@ const UploadLogo: FC<UploadLogoProps> = ({
             borderRadius="r6"
             backgroundColor='surface-secondary'
             gap='s6'
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={handleDrop}
           >
 
-            {view ? (
-              croppedImage ? (
+            {formValues?.image ? (
+              view ? (
                 <Box
                   width='128px'
                   height='128px'
                   borderRadius="r5"
                 >
                   <img style={{ borderRadius: 'inherit' }} width="100%"
-                    height="100%" src={croppedImage} alt="Cropped Img" />
+                    height="100%" src={formValues.image} alt="Cropped Img" />
                 </Box>
               ) : (
                 <ImageClipper
                   width='200px'
                   height='200px'
-                  imageSrc={uploadLogoFormik.values.imageSrc}
-                  imageType={uploadLogoFormik.values.imageType}
-                  onImageCropped={(croppedImage: string) => setCroppedImage(croppedImage)}
+                  imageSrc={formValues.imageSrc}
+                  imageType={formValues.imageType}
+                  onImageCropped={(croppedImage: string) => {
+                    setView(true);
+                    setFieldValue('image', croppedImage)
+                  }}
                   ref={childRef}
                 />
               )
@@ -141,44 +135,39 @@ const UploadLogo: FC<UploadLogoProps> = ({
                 </Text>
               </label>
             </Box>
-
-            <input
-              id="file-upload"
-              accept="image/*"
-              name="file-upload"
-              hidden
-              onChange={handleFileChange}
-              type="file"
-              readOnly
-            />
-
           </Box>
-        </form>
-
+        </FileUpload>
       </Box>
 
-      {!croppedImage && view ? (
-        <Button
-          onClick={() => {
-            childRef.current.showCroppedImage();
-          }}
-        >
-          Crop Image
-        </Button>
-      ) : (
-        <Button
-          disabled={!view && !croppedImage}
-          onClick={() => {
-            handleNextStep('stakeFees');
-            setActiveStepKey('stakeFees');
-          }}
-        >
-          Next
-        </Button>
+
+      {formValues?.image && (
+        view ? (
+          <>
+            <Button
+              disabled={!view && !formValues?.image}
+              onClick={() => {
+                handleNextStep('stakeFees');
+                setActiveStepKey('stakeFees');
+              }}
+            >
+              Next
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              onClick={() => {
+                childRef.current.showCroppedImage();
+              }}
+            >
+              Crop Image
+            </Button>
+          </>
+        )
       )}
 
     </Box>
   );
 };
 
-export { UploadLogo };
+export { UploadChannelLogo };

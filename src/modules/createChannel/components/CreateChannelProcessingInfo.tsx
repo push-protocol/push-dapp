@@ -1,12 +1,9 @@
-// React + web3 essentials
 import { FC } from "react";
 
-// Components
 import { Box, Text } from "blocks";
 import ProgressBar from "components/reusables/progress/ProgressBarUnit";
 import Spinner, { SPINNER_TYPE } from "components/reusables/spinners/SpinnerUnit";
 
-// Types
 import { CreateChannelProgressType } from "../CreateChannel.types";
 
 type CreateChannelProcessingInfoProps = {
@@ -50,8 +47,6 @@ const CreateChannelProcessingInfo: FC<CreateChannelProcessingInfoProps> = ({
           {progressState.processingInfo}
         </Text>
       </Box>
-
-
 
     </Box>
   );

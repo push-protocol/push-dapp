@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ethers } from 'ethers';
 
 import { Box } from 'blocks';
@@ -14,18 +14,18 @@ import {
   CHANNEL_STAKE_FEES,
   createChannelSteps,
   progressInitialState,
-  errorInitialState,
+  errorInitialState
 } from './CreateChannel.constants';
 import { CreateChannelError } from './components/CreateChannelError';
 import { CreateChannelHeader } from './components/CreateChannelHeader';
 import { CreateChannelProcessingInfo } from './components/CreateChannelProcessingInfo';
 import { DifferentChainPage } from './components/DifferentChainPage';
 import { StakeFees } from './components/StakeFees';
-import { UploadLogo } from './components/UploadLogo';
+import { UploadChannelLogo } from './components/UploadChannelLogo';
 
-import { createChannelInfoForm, uploadLogoForm } from './CreateChannel.form';
-import { checkImageSize, checkPushTokenApprovalFunc } from './CreateChannel.utils';
-import { ActiveStepKey, ChannelCreationError, CreateChannelProgressType } from './CreateChannel.types';
+import { CreateChannelFormProvider } from './CreateChannel.form';
+import { checkApprovePushTokens } from './CreateChannel.utils';
+import { ActiveStepKey, ChannelCreationError, ChannelInfoFormValues, CreateChannelProgressType } from './CreateChannel.types';
 
 const fees = ethers.utils.parseUnits(CHANNEL_STAKE_FEES.toString(), 18);
 
@@ -45,28 +45,18 @@ const CreateChannel = () => {
     setActiveStepKey(value);
   };
 
-  const channelInfoFormik = createChannelInfoForm({ handleNextStep, setActiveStepKey });
-  const uploadLogoFormik = uploadLogoForm();
-
   const [view, setView] = useState(false);
-  const [croppedImage, setCroppedImage] = useState<string | undefined>(undefined);
 
   const [progressState, setProgressState] = useState<CreateChannelProgressType>(progressInitialState);
 
   const [channelCreationError, setChannelCreationError] = useState<ChannelCreationError>(errorInitialState);
-
-  useEffect(() => {
-    if (croppedImage) {
-      checkImageSize(croppedImage, setCroppedImage);
-    }
-  }, [croppedImage]);
 
   const handleProgressBar = (progress: number, progressInfo: string, processingInfo: string) => {
     setProgressState((prevState) => ({
       ...prevState,
       progress: progress,
       progressInfo: progressInfo,
-      processingInfo: processingInfo,
+      processingInfo: processingInfo
     }));
   };
 
@@ -74,7 +64,7 @@ const CreateChannel = () => {
     setChannelCreationError((prev) => ({
       ...prev,
       txErrorStatus: txErrorStatus,
-      txError: txError,
+      txError: txError
     }));
   };
 
@@ -83,7 +73,7 @@ const CreateChannel = () => {
     approvePUSHToken(
       {
         noOfTokenToApprove: fees,
-        signer,
+        signer
       },
       {
         onSuccess: (response) => {
@@ -103,7 +93,7 @@ const CreateChannel = () => {
           }
           setProgressState(progressInitialState);
           return false;
-        },
+        }
       }
     );
   };
@@ -121,7 +111,7 @@ const CreateChannel = () => {
         channelType,
         identityBytes,
         fees,
-        signer,
+        signer
       },
       {
         onSuccess: (response) => {
@@ -167,13 +157,13 @@ const CreateChannel = () => {
               'Kindly Contact support@epns.io to resolve the issue.'
             );
           }
-        },
+        }
       }
     );
   };
 
   // Main function to create Channel.
-  const handleCreateNewChannel = async () => {
+  const handleCreateNewChannel = async (values: ChannelInfoFormValues) => {
     setProgressState(progressInitialState);
     setChannelCreationError(errorInitialState);
 
@@ -182,26 +172,16 @@ const CreateChannel = () => {
       return;
     }
 
-    if (!channelInfoFormik.isValid) {
-      setActiveStepKey('channelInfo');
-      return;
-    }
-
-    if (!croppedImage) {
-      setActiveStepKey('uploadLogo');
-      return;
-    }
-
     handleProgressBar(10, 'Checking for PUSH Token Approval', 'Loading...');
 
     // Calculate the approval amount of the user
-    const approvedTokenAmount = await checkPushTokenApprovalFunc({ provider, account });
+    const approvedTokenAmount = await checkApprovePushTokens({ provider, account });
 
     const ChannelInput = JSON.stringify({
-      name: channelInfoFormik.values.channelName,
-      info: channelInfoFormik.values.channelDesc,
-      url: channelInfoFormik.values.channelURL,
-      icon: croppedImage,
+      name: values.channelName,
+      info: values.channelDesc,
+      url: values.channelURL,
+      icon: values.image,
     });
 
     handleProgressBar(20, 'Please wait, payload is getting uploaded to IPFS', 'Loading...');
@@ -223,67 +203,62 @@ const CreateChannel = () => {
   };
 
   return (
-    <Box
-      padding={{ initial: 'spacing-lg', ml: 'spacing-sm' }}
-      backgroundColor="surface-primary"
-      borderRadius="radius-md"
-      display="flex"
-      width={{ initial: '648px', ml: '325px' }}
-      flexDirection="column"
-      alignItems="center"
-      gap="s10"
-    >
-      <CreateChannelHeader />
+    <CreateChannelFormProvider onSubmit={(values: ChannelInfoFormValues) => handleCreateNewChannel(values)}>
+      <Box
+        padding={{ initial: 'spacing-lg', ml: 'spacing-sm' }}
+        backgroundColor="surface-primary"
+        borderRadius="radius-md"
+        display="flex"
+        width={{ initial: '648px', ml: '325px' }}
+        flexDirection="column"
+        alignItems="center"
+        gap="s10"
+      >
+        <CreateChannelHeader />
 
-      {!onCoreNetwork && <DifferentChainPage />}
+        {!onCoreNetwork && <DifferentChainPage />}
 
-      {onCoreNetwork && (
-        <>
-          {channelCreationError.txErrorStatus !== 0 && (
-            <CreateChannelError channelCreationError={channelCreationError} />
-          )}
+        {onCoreNetwork && (
+          <>
+            {channelCreationError.txErrorStatus !== 0 && (
+              <CreateChannelError channelCreationError={channelCreationError} />
+            )}
 
-          {!progressState.progress ? (
-            <Box
-              display="flex"
-              flexDirection="column"
-              gap="s8"
-              alignItems="center"
-              alignSelf="stretch"
-            >
-              <Stepper
-                steps={createChannelSteps}
-                completedSteps={completedSteps}
-                setActiveStepKey={(key) => setActiveStepKey(key as ActiveStepKey)}
-              />
-
-              {activeStepKey == 'channelInfo' && <ChannelInfo channelInfoFormik={channelInfoFormik} />}
-
-              {activeStepKey === 'uploadLogo' && (
-                <UploadLogo
-                  view={view}
-                  croppedImage={croppedImage}
-                  setView={setView}
-                  setCroppedImage={setCroppedImage}
-                  setActiveStepKey={setActiveStepKey}
-                  handleNextStep={handleNextStep}
-                  uploadLogoFormik={uploadLogoFormik}
+            {!progressState.progress ? (
+              <Box display="flex" flexDirection="column" gap="s8" alignItems="center" alignSelf="stretch">
+                <Stepper
+                  steps={createChannelSteps}
+                  completedSteps={completedSteps}
+                  setActiveStepKey={(key) => setActiveStepKey(key as ActiveStepKey)}
                 />
-              )}
 
-              {activeStepKey === 'stakeFees' && (
-                <StakeFees
-                  channelStakeFees={CHANNEL_STAKE_FEES}
-                  handleCreateNewChannel={handleCreateNewChannel}
-                />
-              )}
-            </Box>
-          ) : (
-            <CreateChannelProcessingInfo progressState={progressState} />
-          )}
-        </>
-      )}
-    </Box>
+                {activeStepKey == 'channelInfo' && (
+                  <ChannelInfo handleNextStep={handleNextStep} setActiveStepKey={setActiveStepKey} />
+                )}
+
+                {activeStepKey === 'uploadLogo' && (
+                  <UploadChannelLogo
+                    view={view}
+                    setView={setView}
+                    setActiveStepKey={setActiveStepKey}
+                    handleNextStep={handleNextStep}
+                  />
+                )}
+
+                {activeStepKey === 'stakeFees' && (
+                  <StakeFees
+                    channelStakeFees={CHANNEL_STAKE_FEES}
+                    handleNextStep={handleNextStep}
+                  />
+                )}
+              </Box>
+            ) : (
+              <CreateChannelProcessingInfo progressState={progressState} />
+            )}
+          </>
+        )}
+      </Box>
+    </CreateChannelFormProvider>
   );
 };
 
