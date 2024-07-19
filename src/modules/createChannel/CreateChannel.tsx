@@ -10,7 +10,12 @@ import { IPFSupload } from 'helpers/IpfsHelper';
 import { useApprovePUSHToken, useCreateChannel } from 'queries';
 
 import { ChannelInfo } from './components/ChannelInfo';
-import { CHANNEL_STAKE_FEES, createChannelSteps } from './CreateChannel.constants';
+import {
+  CHANNEL_STAKE_FEES,
+  createChannelSteps,
+  progressInitialState,
+  errorInitialState,
+} from './CreateChannel.constants';
 import { CreateChannelError } from './components/CreateChannelError';
 import { CreateChannelHeader } from './components/CreateChannelHeader';
 import { CreateChannelProcessingInfo } from './components/CreateChannelProcessingInfo';
@@ -20,22 +25,9 @@ import { UploadLogo } from './components/UploadLogo';
 
 import { createChannelInfoForm, uploadLogoForm } from './CreateChannel.form';
 import { checkImageSize, checkPushTokenApprovalFunc } from './CreateChannel.utils';
-
-// Types
 import { ActiveStepKey, ChannelCreationError, CreateChannelProgressType } from './CreateChannel.types';
 
 const fees = ethers.utils.parseUnits(CHANNEL_STAKE_FEES.toString(), 18);
-
-const progressInitialState: CreateChannelProgressType = {
-  progress: null,
-  progressInfo: '',
-  processingInfo: '',
-};
-
-const errorInitialState: ChannelCreationError = {
-  txErrorStatus: 0,
-  txError: '',
-};
 
 const CreateChannel = () => {
   const { account, provider, isWalletConnected, chainId, connect } = useAccount();
@@ -69,7 +61,7 @@ const CreateChannel = () => {
     }
   }, [croppedImage]);
 
-  const updateProgressState = (progress: number, progressInfo: string, processingInfo: string) => {
+  const handleProgressBar = (progress: number, progressInfo: string, processingInfo: string) => {
     setProgressState((prevState) => ({
       ...prevState,
       progress: progress,
@@ -96,7 +88,7 @@ const CreateChannel = () => {
       {
         onSuccess: (response) => {
           if (response.status === 1) {
-            updateProgressState(60, 'Please complete the transaction in your wallet to continue.', 'Approving PUSH');
+            handleProgressBar(60, 'Please complete the transaction in your wallet to continue.', 'Approving PUSH');
 
             createChannel(signer, storagePointer);
           }
@@ -122,7 +114,7 @@ const CreateChannel = () => {
     const identity = '1+' + storagePointer;
     const identityBytes = ethers.utils.toUtf8Bytes(identity);
 
-    updateProgressState(70, 'Please complete the transaction in your wallet to continue.', 'Creating Channel...');
+    handleProgressBar(70, 'Please complete the transaction in your wallet to continue.', 'Creating Channel...');
 
     createNewChannel(
       {
@@ -138,10 +130,10 @@ const CreateChannel = () => {
             // We are not sure about this error so we cant display (EDGE CASE)
             updateChannelCreationError(2, 'Transaction failed due to one of the following reasons:');
           } else {
-            updateProgressState(80, 'Please wait while we confirm the transaction..', 'Transaction Confirmed..');
+            handleProgressBar(80, 'Please wait while we confirm the transaction..', 'Transaction Confirmed..');
 
             setTimeout(() => {
-              updateProgressState(
+              handleProgressBar(
                 90,
                 'Creating your channel, Aligning pixels, adjusting padding... This may take some time.',
                 'Redirecting... Please do not refresh'
@@ -149,7 +141,7 @@ const CreateChannel = () => {
             }, 2000);
 
             setTimeout(() => {
-              updateProgressState(
+              handleProgressBar(
                 100,
                 'Creating your channel, Aligning pixels, adjusting padding... This may take some time.',
                 'Redirecting... Please do not refresh'
@@ -169,7 +161,7 @@ const CreateChannel = () => {
             // Other unknown error
             console.error('Error in creating channel--> %o', error);
             console.error({ error });
-            updateProgressState(
+            handleProgressBar(
               0,
               'There was an error in creating the Channel',
               'Kindly Contact support@epns.io to resolve the issue.'
@@ -200,26 +192,24 @@ const CreateChannel = () => {
       return;
     }
 
-    updateProgressState(10, 'Checking for PUSH Token Approval', 'Loading...');
+    handleProgressBar(10, 'Checking for PUSH Token Approval', 'Loading...');
 
     // Calculate the approval amount of the user
     const approvedTokenAmount = await checkPushTokenApprovalFunc({ provider, account });
 
-    let input = {
+    const ChannelInput = JSON.stringify({
       name: channelInfoFormik.values.channelName,
       info: channelInfoFormik.values.channelDesc,
       url: channelInfoFormik.values.channelURL,
       icon: croppedImage,
-    };
+    });
 
-    const ChannelInput = JSON.stringify(input);
-
-    updateProgressState(20, 'Please wait, payload is getting uploaded to IPFS', 'Loading...');
+    handleProgressBar(20, 'Please wait, payload is getting uploaded to IPFS', 'Loading...');
 
     let storagePointer = await IPFSupload(ChannelInput);
     console.debug('IPFS storagePointer:', storagePointer);
 
-    updateProgressState(40, 'Please complete the transaction in your wallet to continue.', 'Payload Uploaded...');
+    handleProgressBar(40, 'Please complete the transaction in your wallet to continue.', 'Payload Uploaded...');
 
     var signer = provider.getSigner(account);
     console.debug(signer);
@@ -253,7 +243,7 @@ const CreateChannel = () => {
             <CreateChannelError channelCreationError={channelCreationError} />
           )}
 
-          {progressState.progress === null ? (
+          {!progressState.progress ? (
             <Box
               display="flex"
               flexDirection="column"
