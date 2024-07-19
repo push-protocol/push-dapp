@@ -34,7 +34,7 @@ const LeaderBoardList: FC = () => {
   ) : (
     !!leaderboardList.length && (
       <Box
-        gap="s4"
+        gap="spacing-sm"
         display="flex"
         flexDirection="column"
       >
@@ -42,6 +42,7 @@ const LeaderBoardList: FC = () => {
         <Box
           height="calc(100vh - 356px)"
           overflow="auto"
+          customScrollbar={true}
         >
           <InfiniteScroll
             pageStart={0}
@@ -49,7 +50,7 @@ const LeaderBoardList: FC = () => {
             hasMore={hasMoreData}
             loader={
               <Box
-                margin="s3"
+                margin="spacing-xs"
                 key="loader-spinner"
               >
                 <LoaderSpinner

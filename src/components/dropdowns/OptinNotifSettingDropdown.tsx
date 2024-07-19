@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // Internal Components
 import { DropdownBtnHandler } from './DropdownBtnHandler';
 import InputSlider from 'components/reusables/sliders/InputSlider';
+import { Button } from 'blocks';
 
 // Internal Configs
 import { SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -158,7 +159,9 @@ const OptinNotifSettingDropdownContainer: FC<OptinNotifSettingDropdownContainerP
         >
           You will receive all important updates from this channel.
         </SpanV2>
-        <DropdownSubmitButton
+        <Button
+          variant="primary"
+          size="extraSmall"
           onClick={() => optInHandler({ channelSettings: modifiedSettings, setLoading: setTxInProgress })}
         >
           {txInProgress && (
@@ -169,7 +172,7 @@ const OptinNotifSettingDropdownContainer: FC<OptinNotifSettingDropdownContainerP
             />
           )}
           {!txInProgress && <ActionTitle hideIt={txInProgress}>Opt-in</ActionTitle>}
-        </DropdownSubmitButton>
+        </Button>
       </DropdownSubmitItem>
     </DropdownOuterContainer>
   );
@@ -186,7 +189,7 @@ const OptinNotifSettingDropdown: FC<OptinNotifSettingDropdownProps> = (options) 
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const { handleConnectWallet, connectWallet } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile, connectWallet } = useContext(AppContext);
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
@@ -219,7 +222,7 @@ const OptinNotifSettingDropdown: FC<OptinNotifSettingDropdownProps> = (options) 
 
     let userPushInstance = userPushSDKInstance;
     // if (!userPushInstance.signer) {
-    //   userPushInstance = await handleConnectWallet();
+    //   userPushInstance = await handleConnectWalletAndEnableProfile({ wallet });
     //   if (!userPushInstance) {
     //     setLoadingFunc(false);
     //     return;
@@ -400,47 +403,6 @@ const DropdownSubmitItem = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 12px 0px;
-`;
-
-const DropdownSubmitButton = styled.button`
-  border: 0;
-  outline: 0;
-  display: flex;
-  align-items: center;
-  min-width: 90px;
-  justify-content: center;
-  margin: 0px 0px 0px 10px;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 400;
-  position: relative;
-  background: #e20880;
-  border-radius: 8px;
-  padding: 9px 20px;
-  &:hover {
-    opacity: 0.9;
-    cursor: pointer;
-    pointer: hand;
-  }
-  &:active {
-    opacity: 0.75;
-    cursor: pointer;
-    pointer: hand;
-  }
-  ${(props) =>
-    props.disabled &&
-    css`
-      &:hover {
-        opacity: 1;
-        cursor: default;
-        pointer: default;
-      }
-      &:active {
-        opacity: 1;
-        cursor: default;
-        pointer: default;
-      }
-    `}
 `;
 
 const DropdownSliderItem = styled.div`

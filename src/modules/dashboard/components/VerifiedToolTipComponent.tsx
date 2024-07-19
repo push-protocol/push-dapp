@@ -43,22 +43,22 @@ export { VerifiedToolTipComponent };
 const ToolTipContent = () => {
   return (
     <Box
-      backgroundColor="black"
+      backgroundColor="surface-primary"
       height="20px"
       width="175px"
-      padding="s2 s4"
+      padding="spacing-xxs spacing-sm"
       display="flex"
       justifyContent="space-between"
       alignItems="center"
-      borderRadius="1rem 1rem 1rem 0.125rem"
       css={css`
         z-index: 1000;
+        border-radius: 1rem 1rem 1rem 0.125rem;
       `}
     >
       <Text variant="bs-semibold">Verified By: </Text>
       <Box
         display="flex"
-        gap="s2"
+        gap="spacing-xxs"
         alignItems="center"
       >
         <PushLogo

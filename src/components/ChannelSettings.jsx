@@ -8,7 +8,6 @@ import styled, { useTheme } from 'styled-components';
 // Internal Compoonents
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import ChannelSettingsDropdown from './ChannelSettingsDropdown';
-import { Button } from './SharedStyling';
 
 export default function ChannelSettings() {
   const DropdownRef = React.useRef(null);
@@ -69,22 +68,4 @@ const Settings = styled(AiOutlineEllipsis)`
   cursor: pointer;
   transition: 400ms;
   transform: ${(props) => (props.active ? 'rotateZ(90deg)' : 'none')};
-`;
-
-const SubmitButton = styled(Button)`
-  width: 7rem;
-  background: #cf1c84;
-  color: #fff;
-  z-index: 0;
-  font-family: 'FK Grotesk Neu';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 17px;
-  margin-right: 20px;
-  border-radius: 8px;
-  padding: 11px 10px;
-  @media (min-width: 600px) and (max-width: 700px) {
-    margin-right: 9px;
-  }
 `;

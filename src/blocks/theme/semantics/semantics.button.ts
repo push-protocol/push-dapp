@@ -10,13 +10,16 @@ export const primaryButtonSemantics = {
   'background-hover': { light: colorBrands['primary-400'], dark: colorBrands['primary-400'] },
   'background-pressed': { light: colorBrands['primary-800'], dark: colorBrands['primary-600'] },
   'background-focus': { light: colorBrands['primary-500'], dark: colorBrands['primary-400'] },
-  'background-disabled': { light: surfaceSemantics['disabled'].light, dark: surfaceSemantics['disabled'].dark },
+  'background-disabled': {
+    light: surfaceSemantics['state-disabled'].light,
+    dark: surfaceSemantics['state-disabled'].dark,
+  },
 
   'text-default': { light: colorPrimitives['white-100'], dark: colorPrimitives['white-100'] },
-  'text-disabled': { light: textSemantics['disabled'].light, dark: textSemantics['disabled'].dark },
+  'text-disabled': { light: textSemantics['state-disabled'].light, dark: textSemantics['state-disabled'].dark },
 
   'icon-default': { light: colorPrimitives['white-100'], dark: colorPrimitives['white-100'] },
-  'icon-disabled': { light: iconSemantics['disabled'].light, dark: iconSemantics['disabled'].dark },
+  'icon-disabled': { light: iconSemantics['state-disabled'].light, dark: iconSemantics['state-disabled'].dark },
 
   'stroke-focus': { light: colorBrands['primary-700'], dark: colorBrands['primary-200'] },
 };
@@ -26,13 +29,16 @@ export const secondaryButtonSemantics = {
   'background-hover': { light: colorBrands['neutral-200'], dark: colorBrands['neutral-700'] },
   'background-pressed': { light: colorBrands['neutral-300'], dark: colorBrands['neutral-1000'] },
   'background-focus': { light: colorBrands['neutral-100'], dark: colorBrands['neutral-800'] },
-  'background-disabled': { light: surfaceSemantics['disabled'].light, dark: surfaceSemantics['disabled'].dark },
+  'background-disabled': {
+    light: surfaceSemantics['state-disabled'].light,
+    dark: surfaceSemantics['state-disabled'].dark,
+  },
 
   'text-default': { light: colorBrands['neutral-1000'], dark: colorPrimitives['white-100'] },
-  'text-disabled': { light: textSemantics['disabled'].light, dark: textSemantics['disabled'].dark },
+  'text-disabled': { light: textSemantics['state-disabled'].light, dark: textSemantics['state-disabled'].dark },
 
   'icon-default': { light: colorBrands['neutral-800'], dark: colorPrimitives['white-60'] },
-  'icon-disabled': { light: iconSemantics['disabled'].light, dark: iconSemantics['disabled'].dark },
+  'icon-disabled': { light: iconSemantics['state-disabled'].light, dark: iconSemantics['state-disabled'].dark },
 
   'stroke-focus': { light: colorBrands['primary-300'], dark: colorBrands['primary-400'] },
 };
@@ -43,13 +49,16 @@ export const tertiaryButtonSemantics = {
   'background-hover': { light: colorBrands['neutral-900'], dark: colorBrands['neutral-300'] },
   'background-pressed': { light: colorBrands['neutral-100'], dark: colorPrimitives['gray-1000'] },
   'background-focus': { light: colorBrands['neutral-1000'], dark: colorBrands['neutral-700'] },
-  'background-disabled': { light: surfaceSemantics['disabled'].light, dark: surfaceSemantics['disabled'].dark },
+  'background-disabled': {
+    light: surfaceSemantics['state-disabled'].light,
+    dark: surfaceSemantics['state-disabled'].dark,
+  },
 
   'text-default': { light: colorPrimitives['white-100'], dark: colorPrimitives['gray-200'] },
-  'text-disabled': { light: textSemantics['disabled'].light, dark: textSemantics['disabled'].dark },
+  'text-disabled': { light: textSemantics['state-disabled'].light, dark: textSemantics['state-disabled'].dark },
 
   'icon-default': { light: colorBrands['neutral-300'], dark: colorPrimitives['white-50'] },
-  'icon-disabled': { light: iconSemantics['disabled'].light, dark: iconSemantics['disabled'].dark },
+  'icon-disabled': { light: iconSemantics['state-disabled'].light, dark: iconSemantics['state-disabled'].dark },
 
   'stroke-focus': { light: colorBrands['primary-400'], dark: colorBrands['primary-400'] },
 };
@@ -59,13 +68,16 @@ export const outlineButtonSemantics = {
   'background-hover': { light: colorPrimitives['transparent'], dark: colorPrimitives['transparent'] },
   'background-pressed': { light: colorPrimitives['transparent'], dark: colorPrimitives['transparent'] },
   'background-focus': { light: colorPrimitives['transparent'], dark: colorPrimitives['transparent'] },
-  'background-disabled': { light: surfaceSemantics['disabled'].light, dark: surfaceSemantics['disabled'].dark },
+  'background-disabled': {
+    light: surfaceSemantics['state-disabled'].light,
+    dark: surfaceSemantics['state-disabled'].dark,
+  },
 
   'text-default': { light: textSemantics['primary'].light, dark: textSemantics['primary'].dark },
-  'text-disabled': { light: textSemantics['disabled'].light, dark: textSemantics['disabled'].dark },
+  'text-disabled': { light: textSemantics['state-disabled'].light, dark: textSemantics['state-disabled'].dark },
 
   'icon-default': { light: iconSemantics['primary'].light, dark: iconSemantics['secondary'].dark },
-  'icon-disabled': { light: iconSemantics['disabled'].light, dark: iconSemantics['disabled'].dark },
+  'icon-disabled': { light: iconSemantics['state-disabled'].light, dark: iconSemantics['state-disabled'].dark },
 
   'stroke-default': { light: strokeSemantics['tertiary'].light, dark: strokeSemantics['tertiary'].dark },
   'stroke-focus': { light: colorBrands['primary-300'], dark: colorBrands['primary-400'] },
@@ -78,13 +90,16 @@ export const dangerButtonSemantics = {
   'background-hover': { light: colorBrands['danger-500'], dark: colorBrands['danger-400'] },
   'background-pressed': { light: colorBrands['danger-800'], dark: colorBrands['danger-700'] },
   'background-focus': { light: colorBrands['danger-500'], dark: colorBrands['danger-400'] },
-  'background-disabled': { light: surfaceSemantics['disabled'].light, dark: surfaceSemantics['disabled'].dark },
+  'background-disabled': {
+    light: surfaceSemantics['state-disabled'].light,
+    dark: surfaceSemantics['state-disabled'].dark,
+  },
 
   'text-default': { light: colorPrimitives['white-100'], dark: colorPrimitives['white-100'] },
-  'text-disabled': { light: textSemantics['disabled'].light, dark: textSemantics['disabled'].dark },
+  'text-disabled': { light: textSemantics['state-disabled'].light, dark: textSemantics['state-disabled'].dark },
 
   'icon-default': { light: colorPrimitives['white-70'], dark: colorPrimitives['white-70'] },
-  'icon-disabled': { light: iconSemantics['disabled'].light, dark: iconSemantics['disabled'].dark },
+  'icon-disabled': { light: iconSemantics['state-disabled'].light, dark: iconSemantics['state-disabled'].dark },
 
   'stroke-focus': { light: colorBrands['danger-800'], dark: colorBrands['danger-600'] },
 };
@@ -94,13 +109,16 @@ export const dangerSecondaryButtonSemantics = {
   'background-hover': { light: colorBrands['danger-100'], dark: colorBrands['danger-700'] },
   'background-pressed': { light: colorBrands['danger-500'], dark: colorBrands['danger-1000'] },
   'background-focus': { light: colorBrands['danger-100'], dark: colorBrands['danger-700'] },
-  'background-disabled': { light: surfaceSemantics['disabled'].light, dark: surfaceSemantics['disabled'].dark },
+  'background-disabled': {
+    light: surfaceSemantics['state-disabled'].light,
+    dark: surfaceSemantics['state-disabled'].dark,
+  },
 
   'text-default': { light: colorBrands['danger-700'], dark: colorPrimitives['white-100'] },
-  'text-disabled': { light: textSemantics['disabled'].light, dark: textSemantics['disabled'].dark },
+  'text-disabled': { light: textSemantics['state-disabled'].light, dark: textSemantics['state-disabled'].dark },
 
   'icon-default': { light: colorBrands['danger-400'], dark: colorPrimitives['white-70'] },
-  'icon-disabled': { light: iconSemantics['disabled'].light, dark: iconSemantics['disabled'].dark },
+  'icon-disabled': { light: iconSemantics['state-disabled'].light, dark: iconSemantics['state-disabled'].dark },
 
   'stroke-focus': { light: colorBrands['danger-800'], dark: colorBrands['danger-400'] },
 };

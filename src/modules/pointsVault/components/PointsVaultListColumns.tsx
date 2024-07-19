@@ -10,7 +10,7 @@ const PointsVaultListColumns: FC = () => {
       <Box width="345px">
         <Text
           variant="c-bold"
-          color={{ light: 'gray-500', dark: 'gray-600' }}
+          color="text-tertiary"
         >
           USER
         </Text>
@@ -19,7 +19,7 @@ const PointsVaultListColumns: FC = () => {
       <Box width="345px">
         <Text
           variant="c-bold"
-          color={{ light: 'gray-500', dark: 'gray-600' }}
+          color="text-tertiary"
         >
           TWITTER LINK
         </Text>
@@ -32,7 +32,7 @@ const PointsVaultListColumns: FC = () => {
       >
         <Text
           variant="c-bold"
-          color={{ light: 'gray-500', dark: 'gray-600' }}
+          color="text-tertiary"
         >
           FOLLOWERS
         </Text>
@@ -45,7 +45,7 @@ const PointsVaultListColumns: FC = () => {
       >
         <Text
           variant="c-bold"
-          color={{ light: 'gray-500', dark: 'gray-600' }}
+          color="text-tertiary"
         >
           ACTION
         </Text>

@@ -2,11 +2,9 @@ import { ReactNode, forwardRef } from 'react';
 
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
-import { useBlocksTheme } from '../Blocks.hooks';
-
 import { getLozengeSizeStyles, getLozengeVariantStyles } from './Lozenge.constants';
 
-import { ModeProp, TransformedHTMLAttributes } from '../Blocks.types';
+import { TransformedHTMLAttributes } from '../Blocks.types';
 import { LozengeSize, LozengeVariant } from './Lozenge.types';
 
 export type LozengeProps = {
@@ -22,11 +20,9 @@ export type LozengeProps = {
   variant?: LozengeVariant;
 } & TransformedHTMLAttributes<HTMLDivElement>;
 
-type StyledLozengeProps = LozengeProps & ModeProp & { iconOnly: boolean };
+type StyledLozengeProps = LozengeProps & { iconOnly: boolean };
 
-const StyledLozenge = styled.div.withConfig({
-  shouldForwardProp: (prop, defaultValidatorFn) => !['mode'].includes(prop) && defaultValidatorFn(prop),
-})<StyledLozengeProps>`
+const StyledLozenge = styled.div<StyledLozengeProps>`
   /* Common Lozenge CSS */
 
   align-items: center;
@@ -43,7 +39,7 @@ const StyledLozenge = styled.div.withConfig({
   }
 
   /* Lozenge variant CSS styles */
-  ${({ variant, mode }) => getLozengeVariantStyles({ variant: variant || 'primary', mode })}
+  ${({ variant }) => getLozengeVariantStyles(variant || 'primary')}
 
   /* Lozenge and font size CSS styles */
   ${({ iconOnly, size }) => getLozengeSizeStyles({ iconOnly, size: size || 'small' })}
@@ -54,7 +50,6 @@ const StyledLozenge = styled.div.withConfig({
 
 const Lozenge = forwardRef<HTMLDivElement, LozengeProps>(
   ({ variant = 'primary', size = 'small', icon, children, ...props }, ref) => {
-    const { mode } = useBlocksTheme();
     const iconOnly = !children;
 
     return (
@@ -62,7 +57,6 @@ const Lozenge = forwardRef<HTMLDivElement, LozengeProps>(
         role="div"
         iconOnly={iconOnly}
         ref={ref}
-        mode={mode}
         size={size}
         variant={variant}
         {...props}

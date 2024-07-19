@@ -1,19 +1,11 @@
 // React + Web3 Essentials
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import {
-  ButtonV2,
-  ImageV2,
-  ItemHV2,
-  ItemVV2,
-  Skeleton,
-  SkeletonLine,
-  SpanV2,
-} from 'components/reusables/SharedStylingV2';
+import { ImageV2, ItemHV2, ItemVV2, Skeleton, SkeletonLine, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { AppContext } from 'contexts/AppContext';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { retrieveUserPGPKeyFromStorage } from 'helpers/connectWalletHelper';
@@ -25,8 +17,9 @@ import { device, size } from 'config/Globals';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import UnlockLogo from '../../../assets/chat/unlock.svg';
 import Wallet from '../../../assets/chat/wallet.svg';
-import { Box, CrossFilled, HoverableSVG } from 'blocks';
+import { Button, Box, CrossFilled, HoverableSVG } from 'blocks';
 import { checkUnlockProfileErrors } from './UnlockProfile.utils';
+import { colorBrands } from 'blocks/theme/colors/colors.brands';
 
 // Constants
 export enum UNLOCK_PROFILE_TYPE {
@@ -53,7 +46,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
   const { type, description } = InnerComponentProps;
 
   const theme = useTheme();
-  const { handleConnectWallet, initializePushSDK } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile, initializePushSDK } = useContext(AppContext);
 
   const { account, wallet, connect } = useAccount();
 
@@ -66,20 +59,24 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
     body: 'Sign with wallet to continue.',
   });
 
-  const handleRememberMeChange = (event) => {
+  // const handleRememberMeChange = (event: any) => {
+  const handleRememberMeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRememberMe(event.target.checked);
   };
 
-  const handleChatprofileUnlock = async () => {
-    const user = await handleConnectWallet({ remember: rememberMe });
+  const connectWallet = () => {
+    connect();
+  };
 
-    // reject unlock profile listener
+  const handleChatprofileUnlock = useCallback(async () => {
+    const user = await handleConnectWalletAndEnableProfile({ remember: rememberMe, wallet });
+
     const errorExists = checkUnlockProfileErrors(user);
 
     if (errorExists && onClose) {
       onClose();
     }
-  };
+  }, [wallet, rememberMe]);
 
   useEffect(() => {
     if (wallet?.accounts?.length > 0) {
@@ -120,7 +117,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
             icon={
               <CrossFilled
                 size={30}
-                color="gray-400"
+                color="icon-primary"
                 onClick={onClose}
               />
             }
@@ -194,7 +191,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
             flexDirection={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? 'column' : 'row'}
           >
             <StepsLeftDesign
-              background={theme.btn.primaryBg}
+              background={colorBrands['primary-500']}
               color={theme.btn.primaryColor}
             >
               1
@@ -206,7 +203,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
             ></HorizontalBar>
             <StepsLeftDesign
               background={
-                activeStatus.status !== PROFILESTATE.CONNECT_WALLET ? theme.btn.primaryBg : theme.btn.disabledBg
+                activeStatus.status !== PROFILESTATE.CONNECT_WALLET ? colorBrands['primary-500'] : theme.btn.disabledBg
               }
               color={
                 activeStatus.status !== PROFILESTATE.CONNECT_WALLET ? theme.btn.primaryColor : theme.btn.disabledColor
@@ -224,23 +221,21 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
           >
             {!isLoading ? (
               <>
-                <DefaultButton
-                  activeStatus={activeStatus.status}
-                  status={PROFILESTATE.CONNECT_WALLET}
+                <Button
                   disabled={activeStatus.status !== PROFILESTATE.CONNECT_WALLET && true}
-                  onClick={() => connect()}
+                  variant="primary"
+                  onClick={() => connectWallet()}
                 >
                   Connect Wallet
-                </DefaultButton>
+                </Button>
 
-                <DefaultButton
-                  activeStatus={activeStatus.status}
-                  status={PROFILESTATE.UNLOCK_PROFILE}
+                <Button
                   disabled={activeStatus.status === PROFILESTATE.CONNECT_WALLET && true}
                   onClick={handleChatprofileUnlock}
+                  variant="primary"
                 >
                   Unlock Profile
-                </DefaultButton>
+                </Button>
               </>
             ) : (
               <SkeletonContainer
@@ -399,29 +394,13 @@ const HorizontalBar = styled.div`
   height: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '40px' : '3px')};
   background: ${(props) =>
     props.activeState === PROFILESTATE.CONNECT_WALLET
-      ? `linear-gradient(to right, ${props.theme.btn.primaryBg}, ${props.theme.btn.disabledBg})`
-      : props.theme.btn.primaryBg};
+      ? `linear-gradient(to right, ${colorBrands['primary-500']}, ${props.theme.btn.disabledBg})`
+      : colorBrands['primary-500']};
 
   @media ${device.tablet} {
     width: 2px;
     height: 40px;
   }
-`;
-
-const DefaultButton = styled(ButtonV2)`
-  flex: none;
-  padding: 12px 16px;
-  border-radius: 12px;
-  min-width: 150px;
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 16px;
-  background: ${(props) =>
-    props.activeStatus === props.status ? props.theme.btn.primaryBg : props.theme.btn.disabledBg};
-  color: ${(props) =>
-    props.activeStatus === props.status ? props.theme.btn.primaryColor : props.theme.btn.disabledColor};
-  cursor: ${(props) => (props.activeStatus !== props.status ? 'not-allowed' : 'pointer')};
 `;
 
 const SkeletonWrapper = styled.div`

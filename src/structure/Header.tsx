@@ -16,7 +16,7 @@ import { ErrorContext } from 'contexts/ErrorContext';
 import { NavigationContext } from 'contexts/NavigationContext';
 
 import Profile from 'primaries/Profile';
-import { Button, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
+import { Item, ItemH, Section, Span } from 'primaries/SharedStyling';
 import PushLogoDark from '../assets/pushDark.svg';
 import PushLogoLight from '../assets/pushLight.svg';
 
@@ -82,7 +82,7 @@ const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: strin
     <Box
       display="flex"
       alignItems="center"
-      gap={{ ml: 's1', dp: 's2' }}
+      gap={{ ml: 'spacing-xxxs', dp: 'spacing-xs' }}
     >
       <Link
         to="/points"
@@ -90,7 +90,7 @@ const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: strin
       >
         <Box
           display="flex"
-          gap="s1"
+          gap="spacing-xxxs"
           alignItems="center"
         >
           <RewardsBell
@@ -100,14 +100,14 @@ const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: strin
           <Text
             variant="h4-bold"
             display={{ ml: 'none', dp: 'block' }}
-            color={{ light: 'gray-1000', dark: 'gray-100' }}
+            color="text-primary"
           >
             {userDetails && userDetails?.totalPoints > 0 ? userDetails?.totalPoints?.toLocaleString() : ''}
           </Text>
           <Text
             variant="h5-bold"
             display={{ ml: 'block', dp: 'none' }}
-            color={{ light: 'gray-1000', dark: 'gray-100' }}
+            color="text-primary"
           >
             {userDetails && userDetails?.totalPoints > 0 ? userDetails?.totalPoints?.toLocaleString() : ''}
           </Text>
@@ -251,7 +251,7 @@ function Header({ isDarkMode, darkModeToggle }) {
         <Box
           display="flex"
           flexDirection="column"
-          gap="s0"
+          gap="spacing-none"
           alignItems={{ ml: 'flex-start', initial: 'center' }}
         >
           {headerTag && !error && !isSnapPage && (
@@ -304,22 +304,16 @@ function Header({ isDarkMode, darkModeToggle }) {
 
           {isActive && !error && (
             <Box
-              display={{ lp: 'flex', dp: 'none' }}
-              flexDirection="row"
+              margin="spacing-xxxs"
+              display="flex"
+              alignItems="center"
+              display={{ lp: 'block', dp: 'none' }}
             >
-              <Button
-                bg="transparent"
-                padding="5px"
-                radius="4px"
-                onClick={() => {
-                  setShowNavBar(!showNavBar);
-                }}
-              >
-                <AiOutlineMenu
-                  size={30}
-                  color={theme.headerIconsBg}
-                />
-              </Button>
+              <AiOutlineMenu
+                onClick={() => setShowNavBar((prev) => !prev)}
+                size={30}
+                color={theme.headerIconsBg}
+              />
             </Box>
           )}
 
@@ -377,8 +371,9 @@ const RightBarDesktop = styled(ItemH)`
 `;
 
 const LogoMobile = styled(ItemH)`
-  @media (min-width: 1024px) {
-    display: none;
+  display: none;
+  @media (max-width: 1024px) {
+    display: block;
   }
 `;
 

@@ -41,7 +41,7 @@ const YieldPoolCard = ({
   tokenAddress,
   setActiveTab,
 }: any) => {
-  const { account, provider } = useAccount();
+  const { account, provider, wallet } = useAccount();
 
   const [txInProgressWithdraw, setTxInProgressWithdraw] = useState(false);
   const [txInProgressClaimRewards, setTxInProgressClaimRewards] = useState(false);
@@ -55,7 +55,7 @@ const YieldPoolCard = ({
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
-  const { handleConnectWallet } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
 
   const [filled, setFilled] = useState(0);
 
@@ -65,7 +65,7 @@ const YieldPoolCard = ({
 
   const massClaimRewardsTokensAll = async () => {
     if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
+      handleConnectWalletAndEnableProfile({ wallet });
       return;
     }
 
@@ -153,7 +153,7 @@ const YieldPoolCard = ({
 
   const withdrawTokens = async () => {
     if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
+      handleConnectWalletAndEnableProfile({ wallet });
       return;
     }
 
@@ -234,7 +234,7 @@ const YieldPoolCard = ({
 
   const migrateToNewPool = async () => {
     if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
+      handleConnectWalletAndEnableProfile({ wallet });
       return;
     }
 
@@ -457,7 +457,7 @@ const YieldPoolCard = ({
 
   const depositLpToken = async (tx, withdrawAmount, totalTxnSteps) => {
     if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
+      handleConnectWalletAndEnableProfile({ wallet });
       return;
     }
 
@@ -510,7 +510,7 @@ const YieldPoolCard = ({
 
   const depositPushToken = async (tx, withdrawAmount, totalTxnSteps) => {
     if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
+      handleConnectWalletAndEnableProfile({ wallet });
       return;
     }
 

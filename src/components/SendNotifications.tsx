@@ -15,18 +15,8 @@ import styled, { useTheme } from 'styled-components';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { AInlineV2, SectionV2 } from 'components/reusables/SharedStylingV2';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import {
-  Button,
-  Content,
-  FormSubmision,
-  H2,
-  Input,
-  Item,
-  ItemH,
-  Section,
-  Span,
-  TextField,
-} from 'primaries/SharedStyling';
+import { Content, FormSubmision, H2, Input, Item, ItemH, Section, Span, TextField } from 'primaries/SharedStyling';
+import { Box, Button } from 'blocks';
 import useToast from '../hooks/useToast';
 import PreviewNotif from './PreviewNotif';
 
@@ -114,7 +104,7 @@ const LIMITER_KEYS = ['Enter', ','];
 function SendNotifications() {
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(425);
-  const { account, provider, chainId } = useAccount();
+  const { account, provider, chainId, wallet } = useAccount();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
@@ -129,7 +119,7 @@ function SendNotifications() {
     return state.canSend;
   });
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
-  const { handleConnectWallet } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
   const [nfProcessing, setNFProcessing] = useState(0);
   const [channelAddress, setChannelAddress] = useState('');
   const [nfRecipient, setNFRecipient] = useState(account);
@@ -316,7 +306,7 @@ function SendNotifications() {
 
     let userPushInstance = userPushSDKInstance;
     if (!userPushInstance.signer) {
-      userPushInstance = await handleConnectWallet();
+      userPushInstance = await handleConnectWalletAndEnableProfile({ wallet });
       if (!userPushInstance) {
         return;
       }
@@ -1105,26 +1095,32 @@ function SendNotifications() {
                 )}
 
                 {nfType && (
-                  <SubmitButton disabled={nfProcessing == 1 ? true : false}>
-                    {nfProcessing == 1 && (
-                      <LoaderSpinner
-                        type={LOADER_TYPE.SEAMLESS}
-                        spinnerSize={24}
-                        spinnerColor="#FFF"
-                      />
-                    )}
-                    {nfProcessing != 1 && (
-                      <Input
-                        cursor="hand"
-                        textTransform="none"
-                        color="#fff"
-                        weight="600"
-                        size="16px"
-                        type="submit"
-                        value="Send Notification"
-                      />
-                    )}
-                  </SubmitButton>
+                  <Box margin="spacing-xxxl spacing-none spacing-none spacing-none">
+                    <Button
+                      disabled={nfProcessing == 1 ? true : false}
+                      variant="primary"
+                      size="large"
+                    >
+                      {nfProcessing == 1 && (
+                        <LoaderSpinner
+                          type={LOADER_TYPE.SEAMLESS}
+                          spinnerSize={24}
+                          spinnerColor="#FFF"
+                        />
+                      )}
+                      {nfProcessing != 1 && (
+                        <Input
+                          cursor="hand"
+                          textTransform="none"
+                          color="#fff"
+                          weight="600"
+                          size="16px"
+                          type="submit"
+                          value="Send Notification"
+                        />
+                      )}
+                    </Button>
+                  </Box>
                 )}
               </FormSubmision>
             </Item>
@@ -1385,22 +1381,6 @@ const ToggleOption = styled(ItemH)`
   @media (max-width: 640px) {
     width: 100%;
     margin: 5px 0px;
-  }
-`;
-
-const SubmitButton = styled(Button)`
-  width: 15rem;
-  margin: 70px auto 0px auto;
-  padding: 20px 10px;
-  border-radius: 15px;
-  background: #cf1c84;
-  color: #fff;
-  @media (max-width: 640px) {
-    width: 13rem;
-    padding: 20px 20px;
-  }
-  @media (max-width: 380px) {
-    width: 9.5rem;
   }
 `;
 

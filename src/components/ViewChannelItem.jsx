@@ -16,7 +16,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { css, useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { deviceMediaQ } from 'blocks';
+import { Button, deviceMediaQ } from 'blocks';
 import MetaInfoDisplayer from 'components/MetaInfoDisplayer';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2 } from 'components/reusables/SharedStylingV2';
@@ -112,7 +112,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
     try {
       //TODO:here is the data store
       const channelJson = await ChannelsDataStore.getInstance().getChannelJsonStartBlockAsync(channelObject.channel);
-      console.log("Channel JSON !!!!!", channelJson, channelObject.channel);
+      console.log('Channel JSON !!!!!', channelJson, channelObject.channel);
       return channelJson;
     } catch (err) {
       console.error(err);
@@ -169,7 +169,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
               verifierAddrDetails = await userPushSDKInstance.channel.info(
                 convertAddressToAddrCaip(verifierAddress, appConfig.coreContractChain)
               );
-              console.log("Verifier Details >>>", verifierAddrDetails);
+              console.log('Verifier Details >>>', verifierAddrDetails);
             }
 
             dispatch(
@@ -450,19 +450,19 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                           placementProps={
                             tooltTipHeight < 250
                               ? {
-                                background: 'none',
-                                // bottom: "25px",
-                                top: '20px',
-                                // right: "-175px",
-                                left: mobileToolTip ? '-100px' : '5px',
-                              }
+                                  background: 'none',
+                                  // bottom: "25px",
+                                  top: '20px',
+                                  // right: "-175px",
+                                  left: mobileToolTip ? '-100px' : '5px',
+                                }
                               : {
-                                background: 'none',
-                                bottom: '25px',
-                                // top: "20px",
-                                // right: "-175px",
-                                left: mobileToolTip ? '-100px' : '5px',
-                              }
+                                  background: 'none',
+                                  bottom: '25px',
+                                  // top: "20px",
+                                  // right: "-175px",
+                                  left: mobileToolTip ? '-100px' : '5px',
+                                }
                           }
                           tooltipContent={
                             <UpdateChannelTooltipContent
@@ -508,15 +508,15 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                           placementProps={
                             tooltTipHeight < 160
                               ? {
-                                background: 'none',
-                                top: '20px', // for lower displaying
-                                left: '7px',
-                              }
+                                  background: 'none',
+                                  top: '20px', // for lower displaying
+                                  left: '7px',
+                                }
                               : {
-                                background: 'none',
-                                bottom: '28px', // above display
-                                left: '7px',
-                              }
+                                  background: 'none',
+                                  bottom: '28px', // above display
+                                  left: '7px',
+                                }
                           }
                           tooltipContent={
                             <VerifiedTooltipContent
@@ -624,19 +624,19 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                         placementProps={
                           tooltTipHeight < 250
                             ? {
-                              background: 'none',
-                              // bottom: "25px",
-                              top: '20px',
-                              // right: "-175px",
-                              left: '5px',
-                            }
+                                background: 'none',
+                                // bottom: "25px",
+                                top: '20px',
+                                // right: "-175px",
+                                left: '5px',
+                              }
                             : {
-                              background: 'none',
-                              bottom: '25px',
-                              // top: "20px",
-                              // right: "-175px",
-                              left: '5px',
-                            }
+                                background: 'none',
+                                bottom: '25px',
+                                // top: "20px",
+                                // right: "-175px",
+                                left: '5px',
+                              }
                         }
                         tooltipContent={
                           <UpdateChannelTooltipContent
@@ -680,15 +680,15 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                           placementProps={
                             tooltTipHeight < 160
                               ? {
-                                background: 'none',
-                                top: '20px', // for lower displaying
-                                left: '7px',
-                              }
+                                  background: 'none',
+                                  top: '20px', // for lower displaying
+                                  left: '7px',
+                                }
                               : {
-                                background: 'none',
-                                bottom: '28px', // above display
-                                left: '7px',
-                              }
+                                  background: 'none',
+                                  bottom: '28px', // above display
+                                  left: '7px',
+                                }
                           }
                           tooltipContent={
                             <VerifiedTooltipContent
@@ -875,9 +875,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
             )}
 
             {!loading && isPushAdmin && profileType == 'Channel' && (
-              <SubscribeButton
+              <Button
                 onClick={blockChannel}
                 disabled={bLoading}
+                size="small"
               >
                 {bLoading && (
                   <ActionLoader>
@@ -889,10 +890,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                   </ActionLoader>
                 )}
                 <ActionTitle hideit={bLoading}>Block channel</ActionTitle>
-              </SubscribeButton>
+              </Button>
             )}
             {!loading && (isPushAdmin || canVerify) && !isVerified && profileType == 'Channel' && (
-              <SubscribeButton
+              <Button
+                size="small"
                 onClick={verifyChannel}
                 disabled={vLoading}
               >
@@ -906,10 +908,12 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                   </ActionLoader>
                 )}
                 <ActionTitle hideit={vLoading}>Verify Channel</ActionTitle>
-              </SubscribeButton>
+              </Button>
             )}
             {!loading && (isPushAdmin || canUnverify) && isVerified && profileType == 'Channel' && (
-              <UnsubscribeButton
+              <Button
+                size="small"
+                variant="outline"
                 onClick={unverifyChannel}
                 disabled={vLoading}
               >
@@ -923,16 +927,21 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                   </ActionLoader>
                 )}
                 <ActionTitle hideit={vLoading}>Unverify Channel</ActionTitle>
-              </UnsubscribeButton>
+              </Button>
             )}
             {!loading && !subscribed && (
               <>
                 {isOwner && (
                   <>
                     {profileType == 'Profile' ? (
-                      <DashboardButton onClick={() => navigate('/dashboard')}>Go To Dashboard</DashboardButton>
+                      <Button
+                        size="small"
+                        onClick={() => navigate('/dashboard')}
+                      >
+                        Go To Dashboard
+                      </Button>
                     ) : (
-                      <OwnerButton disabled>Owner</OwnerButton>
+                      <OwnerLabel>Owner</OwnerLabel>
                     )}
                   </>
                 )}
@@ -945,10 +954,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                       setSubscriberCount((prevSubscriberCount) => prevSubscriberCount + 1);
                     }}
                   >
-                    <SubscribeButton
-                      onClick={() => { }}
+                    <Button
+                      size="small"
+                      onClick={() => {}}
                       disabled={txInProgress}
-                      className="optin"
                     >
                       {txInProgress && (
                         <ActionLoader>
@@ -960,7 +969,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                         </ActionLoader>
                       )}
                       <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
-                    </SubscribeButton>
+                    </Button>
                   </OptinNotifSettingDropdown>
                 )}
               </>
@@ -971,9 +980,14 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                 {isOwner && (
                   <>
                     {profileType == 'Profile' ? (
-                      <DashboardButton onClick={() => navigate('/dashboard')}>Go To Dashboard</DashboardButton>
+                      <Button
+                        size="small"
+                        onClick={() => navigate('/dashboard')}
+                      >
+                        Go To Dashboard
+                      </Button>
                     ) : (
-                      <OwnerButton disabled>Owner</OwnerButton>
+                      <OwnerLabel disabled>Owner</OwnerLabel>
                     )}
                   </>
                 )}
@@ -991,7 +1005,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                     }}
                   >
                     <UnsubscribeButton
-                      onClick={() => { }}
+                      onClick={() => {}}
                       disabled={txInProgress}
                     >
                       {txInProgress && (
@@ -1432,15 +1446,6 @@ const SkeletonButton = styled.div`
   flex: 1;
 `;
 
-const SubscribeButton = styled(ChannelActionButton)`
-  background: #e20880;
-  color: #fff;
-  border-radius: 8px;
-  padding: 0px;
-  min-height: 36px;
-  min-width: 108px;
-`;
-
 const UnsubscribeButton = styled(ChannelActionButton)`
   background: transparent;
   color: ${(props) => props.theme.viewChannelPrimaryText};
@@ -1452,19 +1457,15 @@ const UnsubscribeButton = styled(ChannelActionButton)`
   min-width: 108px;
 `;
 
-const OwnerButton = styled(ChannelActionButton)`
+const OwnerLabel = styled.div`
   background: #35c5f3;
   border-radius: 8px;
   min-height: 36px;
   min-width: 108px;
-`;
-
-const DashboardButton = styled(ChannelActionButton)`
-  background: #e20880;
-  border-radius: 8px;
-  padding: 7px 14px;
-  min-height: 36px;
-  min-width: max-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
 `;
 
 const Toaster = styled.div`

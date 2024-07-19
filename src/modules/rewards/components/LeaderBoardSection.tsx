@@ -12,20 +12,20 @@ const LeaderBoardSection: FC<LeaderBoardSectionProps> = () => {
     <Box
       display="flex"
       flexDirection="column"
-      gap="s4"
-      backgroundColor={{ dark: 'gray-900', light: 'white' }}
+      gap="spacing-sm"
+      backgroundColor="surface-primary"
     >
       <Text
         variant="h4-bold"
         display={{ ml: 'none', dp: 'block' }}
-        color={{ light: 'gray-1000', dark: 'gray-100' }}
+        color="text-primary"
       >
         Leaderboard
       </Text>
       <Text
         variant="h5-bold"
         display={{ ml: 'block', dp: 'none' }}
-        color={{ light: 'gray-1000', dark: 'gray-100' }}
+        color="text-primary"
       >
         Leaderboard
       </Text>

@@ -25,14 +25,13 @@ const FeaturedChannelsList: FC<FeaturedChannelsListProps> = ({ featuredChannelsL
 
   const CarouselOptions: EmblaOptionsType = {
     slidesToScroll: isTablet || isXsLaptop ? 2 : 3,
-    align: 'start'
+    align: 'start',
   };
 
   const [emblaRef, emblaApi] = useEmblaCarousel(CarouselOptions);
 
-  const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } = useFeaturedChannelsCarouselButtons(
-    emblaApi
-  );
+  const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } =
+    useFeaturedChannelsCarouselButtons(emblaApi);
 
   return (
     <>
@@ -40,30 +39,40 @@ const FeaturedChannelsList: FC<FeaturedChannelsListProps> = ({ featuredChannelsL
         display="flex"
         justifyContent="space-between"
         flexDirection={{ tb: 'column' }}
-        gap={{ tb: 's3' }}
-        width='100%'
+        gap={{ tb: 'spacing-xs' }}
+        width="100%"
       >
-
-        <Text variant="h4-bold" color={{ light: 'black', dark: 'white' }}>
+        <Text
+          variant="h4-bold"
+          color="text-primary"
+        >
           Featured Notification Channels
         </Text>
 
-        <Box display="flex" flexDirection="row" alignItems="center" gap="s4">
+        <Box
+          display="flex"
+          flexDirection="row"
+          alignItems="center"
+          gap="spacing-sm"
+        >
           <Link
             to="/channels"
             textProps={{
               variant: 'h5-semibold',
-              color: { light: 'black', dark: 'white' }
+              color: 'text-primary',
             }}
           >
             View All
           </Link>
 
-          <Box display="flex" flexDirection="row">
+          <Box
+            display="flex"
+            flexDirection="row"
+          >
             {/* Previous Button  */}
             <HoverableSVG
               onClick={onPrevButtonClick}
-              defaultColor={{ light: 'gray-900', dark: 'gray-400' }}
+              defaultColor="icon-primary"
               disabled={prevBtnDisabled}
               icon={<PrevIconSlider size={24} />}
             ></HoverableSVG>
@@ -71,7 +80,7 @@ const FeaturedChannelsList: FC<FeaturedChannelsListProps> = ({ featuredChannelsL
             {/* Next button */}
             <HoverableSVG
               onClick={onNextButtonClick}
-              defaultColor={{ light: 'gray-900', dark: 'gray-400' }}
+              defaultColor="icon-primary"
               disabled={nextBtnDisabled}
               icon={<NextIconSlider size={24} />}
             ></HoverableSVG>
@@ -87,7 +96,7 @@ const FeaturedChannelsList: FC<FeaturedChannelsListProps> = ({ featuredChannelsL
           ref={emblaRef}
         >
           <Box
-            gap="s6"
+            gap="spacing-md"
             display="flex"
             css={css`
               backface-visibility: hidden;

@@ -6,6 +6,7 @@ import styled, { ThemeProvider, useTheme } from 'styled-components';
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { Button } from 'blocks';
 
 // Types
 type ModalConfirmButtonType = {
@@ -20,17 +21,7 @@ type ModalConfirmButtonType = {
   padding?: string;
 };
 
-const ModalConfirmButton = ({
-  text,
-  onClick,
-  isLoading,
-  color,
-  backgroundColor,
-  border,
-  topMargin,
-  loaderTitle,
-  padding,
-}: ModalConfirmButtonType) => {
+const ModalConfirmButton = ({ text, onClick, isLoading, topMargin, loaderTitle }: ModalConfirmButtonType) => {
   const themes = useTheme();
   return (
     <ThemeProvider theme={themes}>
@@ -50,15 +41,13 @@ const ModalConfirmButton = ({
             />
           </LoaderContainer>
         ) : (
-          <CustomButton
+          <Button
             onClick={onClick}
-            color={color}
-            backgroundColor={backgroundColor}
-            border={border}
-            style={{ padding: padding ? padding : '16px' }}
+            variant="primary"
+            size="large"
           >
             {text}
-          </CustomButton>
+          </Button>
         )}
       </ModalButtonContainer>
     </ThemeProvider>
@@ -83,20 +72,6 @@ const LoaderContainer = styled.div`
   border-radius: 15px;
   // padding: 3% 8%;
   padding: 8px 16px;
-`;
-
-const CustomButton = styled.button`
-  min-width: 50%;
-  box-sizing: border-box;
-  cursor: pointer;
-  color: ${(props) => props.color || 'white'};
-  font-family: FK Grotesk Neu;
-  font-size: 1.125rem;
-  font-weight: 500;
-  letter-spacing: normal;
-  background-color: ${(props) => props.backgroundColor || '#CF1C84'};
-  border: ${(props) => props.border || '1px solid transparent'};
-  border-radius: 15px;
 `;
 
 export default ModalConfirmButton;

@@ -24,16 +24,13 @@ const PointsVaultListContainer = () => {
 
   return (
     <Box
-      backgroundColor={{
-        light: 'white',
-        dark: 'gray-900',
-      }}
-      padding="s6"
-      borderRadius="r6"
+      backgroundColor="surface-primary"
+      padding="spacing-md"
+      borderRadius="radius-md"
     >
       <Text
         variant="h4-bold"
-        color="gray-1000"
+        color="text-primary"
       >
         Points Vault
       </Text>
@@ -41,15 +38,14 @@ const PointsVaultListContainer = () => {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        // TODO: fix ds-blocks
-        css={[{ marginBottom: 'var(--s6)' }]}
+        margin="spacing-none spacing-none spacing-md spacing-none"
       >
         <Box
           display="flex"
-          gap="s1"
+          gap="spacing-xxxs"
         >
           <Text
-            color="gray-500"
+            color="text-tertiary"
             variant="bs-regular"
           >
             Ensure the user has at-least 50 Followers and is following
@@ -60,14 +56,14 @@ const PointsVaultListContainer = () => {
             referrerPolicy="no-referrer"
           >
             <Text
-              color="pink-400"
+              color="text-brand-medium"
               variant="bs-regular"
             >
               @pushprotocol
             </Text>
           </Link>{' '}
           <Text
-            color="gray-500"
+            color="text-tertiary"
             variant="bs-regular"
           >
             on Twitter
@@ -85,7 +81,6 @@ const PointsVaultListContainer = () => {
         <Box
           position="absolute"
           width="302px"
-          // TODO: Fix ds-blocks
           css={css`
             right: 0px;
           `}

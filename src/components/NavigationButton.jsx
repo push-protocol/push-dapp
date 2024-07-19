@@ -37,7 +37,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
     setActiveIcon(navigationIcons[data.activeSrc] ?? data.activeSrc);
   }, [data.src, data.activeSrc]);
 
-  const { showMetamaskPushSnap, handleConnectWallet } = useContext(AppContext);
+  const { showMetamaskPushSnap } = useContext(AppContext);
   const { readOnlyWallet, mode, sidebarCollapsed } = useContext(GlobalContext);
 
   const navigationToast = useToast(5000);
@@ -83,9 +83,6 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
     RouteLogic = ProtectedRoute;
   }
 
-  const handleDisallowedNav = () => {
-    handleConnectWallet();
-  };
   return (
     <>
       {data.loading && (
@@ -118,7 +115,6 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
           margin={definedMargin}
           bg={bg}
           active={active ? 1 : 0}
-          // onClick={disallowNavigation && handleDisallowedNav}
           className={data?.name?.toLowerCase()}
         >
           {data.iconFactory ? (

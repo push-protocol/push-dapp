@@ -15,7 +15,8 @@ import { GAS_LIMIT, PUSH_BALANCE_TRESHOLD } from 'components/ViewDelegateeItem';
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 import Blockies from 'primaries/BlockiesIdenticon';
 import InfoTooltip from 'primaries/InfoTooltip';
-import { A, B, Button, H2, H3, Input, Item, ItemH, LI, Section, Span, UL } from 'primaries/SharedStyling';
+import { A, B, Button as ButtonSS, H2, H3, Input, Item, ItemH, LI, Section, Span, UL } from 'primaries/SharedStyling';
+import { Box, Button } from 'blocks';
 import LoaderSpinner from 'components/reusables/loaders/LoaderSpinner';
 import ViewDelegateeItem from 'components/ViewDelegateeItem';
 import { createTransactionObject } from 'helpers/GaslessHelper';
@@ -586,82 +587,82 @@ const GovModule = () => {
                           <br />
                         </div>
                       </RadioGroup>
-                      {!txInProgress && (
-                        <ButtonAlt
-                          bg={txInProgress ? '#999' : '#e20880'}
-                          disabled={txInProgress ? true : false}
+                      <Box
+                        gap="s2"
+                        display="flex"
+                        flexDirection="row"
+                      >
+                        {!txInProgress && (
+                          <Button
+                            variant="primary"
+                            size="small"
+                            disabled={txInProgress}
+                            onClick={() => {
+                              if (showDelegateePrompt) {
+                                delegateAction(newDelegateeAddress);
+                              } else {
+                                setShowDelegateePrompt(true);
+                              }
+                            }}
+                          >
+                            <Span
+                              color="#fff"
+                              weight="400"
+                            >
+                              Delegate to Others
+                            </Span>
+                          </Button>
+                        )}
+                        {!showDelegateePrompt && !txInProgress && (
+                          <Button
+                            variant="outline"
+                            size="small"
+                            disabled={txInProgress}
+                            onClick={() => {
+                              delegateAction(account);
+                            }}
+                          >
+                            Delegate to Myself
+                          </Button>
+                        )}
+
+                        <Button
+                          variant="tertiary"
+                          size="small"
                           onClick={() => {
                             if (showDelegateePrompt) {
-                              delegateAction(newDelegateeAddress);
+                              getVotingPower(newDelegateeAddress);
                             } else {
                               setShowDelegateePrompt(true);
                             }
                           }}
                         >
-                          <Span
-                            color="#fff"
-                            weight="400"
-                          >
-                            Delegate to Others
-                          </Span>
-                        </ButtonAlt>
-                      )}
-                      {!showDelegateePrompt && !txInProgress && (
-                        <ButtonAlt
-                          bg={txInProgress ? '#999' : '#51CAF3'}
-                          disabled={txInProgress ? true : false}
-                          onClick={() => {
-                            delegateAction(account);
-                          }}
-                        >
-                          <Span
-                            color="#fff"
-                            weight="400"
-                          >
-                            Delegate to Myself
-                          </Span>
-                        </ButtonAlt>
-                      )}
+                          {txInProgress ? (
+                            <ActionTitle>
+                              <LoaderSpinner />
+                            </ActionTitle>
+                          ) : (
+                            <Span
+                              color="#fff"
+                              weight="400"
+                            >
+                              Query Voting Power
+                            </Span>
+                          )}
+                        </Button>
 
-                      <ButtonAlt
-                        bg={'#000'}
-                        onClick={() => {
-                          if (showDelegateePrompt) {
-                            getVotingPower(newDelegateeAddress);
-                          } else {
-                            setShowDelegateePrompt(true);
-                          }
-                        }}
-                      >
-                        {txInProgress ? (
-                          <ActionTitle>
-                            <LoaderSpinner />
-                          </ActionTitle>
-                        ) : (
-                          <Span
-                            color="#fff"
-                            weight="400"
-                          >
-                            Query Voting Power
-                          </Span>
-                        )}
-                      </ButtonAlt>
-
-                      {showDelegateePrompt && (
-                        <ButtonAlt
-                          bg="#000"
-                          onClick={() => {
-                            setShowDelegateePrompt(false);
-                          }}
-                        >
-                          <Span
-                            color="#fff"
-                            weight="400"
+                        {showDelegateePrompt && (
+                          <Button
+                            variant="tertiary"
+                            size="small"
+                            onClick={() => {
+                              setShowDelegateePrompt(false);
+                            }}
                           >
                             Close
-                          </Span>
-                        </ButtonAlt>
-                      )}
+                          </Button>
+                        )}
+                      </Box>
                     </ItemH>
                   </Item>
                 </StatsContent>
@@ -1141,7 +1142,7 @@ const ContainerInfo = styled.div`
   padding: 20px;
 `;
 
-const Question = styled(Button)`
+const Question = styled(ButtonSS)`
   align-items: stretch;
   align-self: stretch;
   background: #fff;
@@ -1297,45 +1298,6 @@ const StatsInnerTitle = styled.span`
   letter-spacing: normal;
   align-items: left;
   margin-top: 10px;
-`;
-
-const ButtonAlt = styled(Button)`
-  border: 0;
-  outline: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 15px;
-  margin: 10px;
-  color: #fff;
-  border-radius: 5px;
-  font-size: 14px;
-  font-weight: 400;
-  position: relative;
-  &:hover {
-    opacity: 0.9;
-    cursor: pointer;
-    pointer: hand;
-  }
-  &:active {
-    opacity: 0.75;
-    cursor: pointer;
-    pointer: hand;
-  }
-  ${(props) =>
-    props.disabled &&
-    css`
-      &:hover {
-        opacity: 1;
-        cursor: default;
-        pointer: default;
-      }
-      &:active {
-        opacity: 1;
-        cursor: default;
-        pointer: default;
-      }
-    `}
 `;
 
 const CurvedSpan = styled(Span)`

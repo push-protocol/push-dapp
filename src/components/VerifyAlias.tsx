@@ -11,7 +11,8 @@ import FadeLoader from 'react-spinners/FadeLoader';
 // Internal Components
 import { SpanV2 } from 'components/reusables/SharedStylingV2';
 import { setProcessingState } from 'redux/slices/channelCreationSlice';
-import { A, Button, Item, Span } from '../primaries/SharedStyling';
+import { A, Item, Span } from '../primaries/SharedStyling';
+import { Button } from 'blocks';
 import { getAliasDetails } from 'services';
 import { useAccount } from 'hooks';
 
@@ -69,6 +70,10 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
       label: 'Cyber ETH',
       url: 'https://cyber-testnet.testnets.rollbridge.app/',
     },
+    84532: {
+      label: 'Base Sepolia',
+      url: 'https://www.alchemy.com/faucets/base-sepolia',
+    },
   };
 
   const checkAlias = async () => {
@@ -95,16 +100,13 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
       .then(async (tx) => {
         console.debug(tx);
         setLoading('Transaction Sent! It usually takes 5mins to verify.');
-
         await tx.wait(1);
         setTimeout(() => {
           setLoading('Transaction Mined!');
         }, 2000);
-
         setTimeout(() => {
           setLoading('Loading...');
         }, 2000);
-
         const intervalId = setInterval(async () => {
           const { aliasVerified } = await checkAliasVerification();
           if (aliasVerified) {
@@ -211,21 +213,11 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
             margin="60px auto 0px auto"
           >
             <Button
-              bg="#e20880"
-              color="#fff"
-              radius="15px"
-              padding="20px 10px"
+              variant="primary"
+              size="medium"
               onClick={checkAlias}
             >
-              <Span
-                color="#fff"
-                weight="600"
-                textTransform="none"
-                line="22px"
-                size="16px"
-              >
-                Verify Alias Address
-              </Span>
+              Verify Alias Address
             </Button>
           </Item>
         ))}
