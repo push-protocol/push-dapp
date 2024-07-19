@@ -23,6 +23,6 @@ export type ChannelCreationError = {
 
 export type CreateChannelStepIndex = 'channel_info' | 'upload_logo' | 'stake_fees';
 
-export type ActiveStepKey = 'channel_info' | 'upload_logo' | 'stake_fees';
+export type ActiveStepKey = 'channelInfo' | 'uploadLogo' | 'stakeFees';
 
-export type createChannelStepsType = Array<{ label: string; key: ActiveStepKey }>;
+export type createChannelStepsType = Array<{ label: string; value: ActiveStepKey }>;

@@ -169,8 +169,8 @@ const UploadLogo: FC<UploadLogoProps> = ({
         <Button
           disabled={!view && !croppedImage}
           onClick={() => {
-            handleNextStep('stake_fees');
-            setActiveStepKey('stake_fees');
+            handleNextStep('stakeFees');
+            setActiveStepKey('stakeFees');
           }}
         >
           Next

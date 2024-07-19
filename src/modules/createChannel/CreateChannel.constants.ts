@@ -3,18 +3,18 @@ import { ChannelCreationError, CreateChannelProgressType, createChannelStepsType
 export const CHANNEL_STAKE_FEES = 50;
 
 export const createChannelSteps: createChannelStepsType = [
-  { label: 'Channel Info', key: 'channel_info' },
-  { label: 'Upload Logo', key: 'upload_logo' },
-  { label: 'Stake Fees', key: 'stake_fees' },
+  { label: 'Channel Info', value: 'channelInfo' },
+  { label: 'Upload Logo', value: 'uploadLogo' },
+  { label: 'Stake Fees', value: 'stakeFees' }
 ];
 
 export const progressInitialState: CreateChannelProgressType = {
   progress: null,
   progressInfo: '',
-  processingInfo: '',
+  processingInfo: ''
 };
 
 export const errorInitialState: ChannelCreationError = {
   txErrorStatus: 0,
-  txError: '',
+  txError: ''
 };

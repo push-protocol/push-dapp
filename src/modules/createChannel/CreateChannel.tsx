@@ -37,12 +37,12 @@ const CreateChannel = () => {
   const { mutate: approvePUSHToken } = useApprovePUSHToken();
   const { mutate: createNewChannel } = useCreateChannel();
 
-  const [activeStepKey, setActiveStepKey] = useState<ActiveStepKey>('channel_info');
-  const [completedSteps, setCompletedSteps] = useState<Array<ActiveStepKey>>(['channel_info']);
+  const [activeStepKey, setActiveStepKey] = useState<ActiveStepKey>('channelInfo');
+  const [completedSteps, setCompletedSteps] = useState<Array<ActiveStepKey>>(['channelInfo']);
 
-  const handleNextStep = (key: ActiveStepKey) => {
-    setCompletedSteps([...new Set([...completedSteps, key])]);
-    setActiveStepKey(key);
+  const handleNextStep = (value: ActiveStepKey) => {
+    setCompletedSteps([...new Set([...completedSteps, value])]);
+    setActiveStepKey(value);
   };
 
   const channelInfoFormik = createChannelInfoForm({ handleNextStep, setActiveStepKey });
@@ -183,12 +183,12 @@ const CreateChannel = () => {
     }
 
     if (!channelInfoFormik.isValid) {
-      setActiveStepKey('channel_info');
+      setActiveStepKey('channelInfo');
       return;
     }
 
     if (!croppedImage) {
-      setActiveStepKey('upload_logo');
+      setActiveStepKey('uploadLogo');
       return;
     }
 
@@ -257,9 +257,9 @@ const CreateChannel = () => {
                 setActiveStepKey={(key) => setActiveStepKey(key as ActiveStepKey)}
               />
 
-              {activeStepKey == 'channel_info' && <ChannelInfo channelInfoFormik={channelInfoFormik} />}
+              {activeStepKey == 'channelInfo' && <ChannelInfo channelInfoFormik={channelInfoFormik} />}
 
-              {activeStepKey === 'upload_logo' && (
+              {activeStepKey === 'uploadLogo' && (
                 <UploadLogo
                   view={view}
                   croppedImage={croppedImage}
@@ -271,7 +271,7 @@ const CreateChannel = () => {
                 />
               )}
 
-              {activeStepKey === 'stake_fees' && (
+              {activeStepKey === 'stakeFees' && (
                 <StakeFees
                   channelStakeFees={CHANNEL_STAKE_FEES}
                   handleCreateNewChannel={handleCreateNewChannel}
