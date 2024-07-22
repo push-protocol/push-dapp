@@ -1,7 +1,6 @@
 import { FC } from "react";
 
 import { css } from "styled-components";
-import { useNavigate } from "react-router-dom";
 
 import { Box, Button, Dropdown, KebabMenuHorizontal, Skeleton } from "blocks";
 
@@ -11,7 +10,6 @@ import { ChannelDashboardInfo } from "./ChannelDashboardInfo";
 import { ChannelDashboardDropdown } from "./ChannelDashboardDropdown";
 
 import { DashboardActiveState } from "../ChannelDashboard.types";
-import APP_PATHS from "config/AppPaths";
 
 type ChannelDashboardHeaderProps = {
   channelDetails?: ChannelDetailsResponse;
@@ -25,7 +23,6 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
   setActiveState
 }) => {
 
-  const navgiate = useNavigate()
 
   return (
     <Box
@@ -47,7 +44,7 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
           <Button
             variant="outline"
             size="small"
-            onClick={() => navgiate(APP_PATHS.EditChannel)}
+            onClick={() => setActiveState('editChannel')}
             disabled={channelDetails?.activation_status === 0}
           >
             Edit Channel

@@ -11,16 +11,28 @@ const PrivacyPolicy = () => {
       color="text-tertiary"
     >
       <Box display="flex" flexDirection={{ initial: 'row', ml: 'column' }} gap={{ initial: 's4', ml: 's0' }}>
-        <Link to="https://push.org/privacy/" target="_blank">
+        <Link
+          to="https://push.org/privacy/"
+          target="_blank"
+          textProps={{
+            color: 'text-tertiary'
+          }}
+        >
           <Text variant="bes-semibold">Privacy Policy</Text>
         </Link>
-        <Link to="https://push.org/tos/" target="_blank">
+        <Link
+          to="https://push.org/tos/"
+          target="_blank"
+          textProps={{
+            color: 'text-tertiary'
+          }}
+        >
           <Text variant="bes-semibold">Terms and Conditions</Text>
         </Link>
       </Box>
       <Box display="flex" alignItems="center" gap="s2">
-        <CircleFilled color='icon-success-bold' size={9} />
-        <Text variant="bes-semibold">All systems operational</Text>
+        <CircleFilled color="icon-success-bold" size={9} />
+        <Text variant="bes-semibold" color='text-tertiary'>All systems operational</Text>
       </Box>
     </Box>
   );

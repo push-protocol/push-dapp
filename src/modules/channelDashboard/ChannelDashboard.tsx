@@ -11,6 +11,7 @@ import { UserChannelDashboard } from './components/UserChannelDashboard';
 
 // Types
 import { DashboardActiveState } from './ChannelDashboard.types';
+import { EditChannel } from 'modules/editChannel/EditChannel';
 
 const ChannelDashboard = () => {
   const [activeState, setActiveState] = useState<DashboardActiveState>('dashboard');
@@ -32,6 +33,9 @@ const ChannelDashboard = () => {
 
       {activeState === 'reactivateChannel' && <ReactivateChannel setActiveState={setActiveState} />}
       {activeState === 'deactivateChannel' && <DeactivateChannel setActiveState={setActiveState} />}
+
+      {activeState === 'editChannel' && <EditChannel setActiveState={setActiveState} />}
+
     </Box>
   );
 };

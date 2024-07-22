@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 import { ethers } from 'ethers';
 import isEqual from 'lodash/isEqual';
-import { useNavigate } from 'react-router-dom';
 
 import { Box, Button } from 'blocks';
 
@@ -16,14 +15,19 @@ import { useAccount } from 'hooks';
 
 import { useApprovePUSHToken, useEditChannel, useGetChannelDetails } from 'queries';
 import { useEditChannelForm } from '../EditChannel.forms';
-import APP_PATHS from 'config/AppPaths';
+import { DashboardActiveState } from 'modules/channelDashboard/ChannelDashboard.types';
 
 const minFeesForAddChannel = 50;
 
-const EditChannelFooter = () => {
-  const { account, provider, chainId } = useAccount();
+type EditChannelFooterProps = {
+  setActiveState: (activeState: DashboardActiveState) => void;
 
-  const navigate = useNavigate();
+}
+
+const EditChannelFooter: FC<EditChannelFooterProps> = ({
+  setActiveState
+}) => {
+  const { account, provider, chainId } = useAccount();
 
   const {
     values: formValues,
@@ -146,7 +150,7 @@ const EditChannelFooter = () => {
           onSuccess: () => {
             console.log('Successfully edited channel');
             refetchChannelDetails();
-            navigate(`${APP_PATHS.ChannelDashboard}/${account}`)
+            setActiveState('dashboard')
           },
           onError: (error) => {
             console.log('Error in updating channel details', error, error.code);
@@ -180,7 +184,7 @@ const EditChannelFooter = () => {
         margin="spacing-lg spacing-none spacing-none spacing-none"
       >
         <Button size="medium" variant="outline"
-          onClick={() => navigate(`${APP_PATHS.ChannelDashboard}/${account}`)}
+          onClick={() => setActiveState('dashboard')}
         >
           Back
         </Button>

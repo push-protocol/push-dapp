@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import { css } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +8,6 @@ import { Box, CircleFilled, Copy, Ethereum, PlusCircle, Skeleton, Text, Tooltip 
 import { LOGO_ALIAS_CHAIN } from 'common';
 
 import { shortenText } from 'helpers/UtilityHelper';
-
 
 import { ChannelDetailsResponse } from 'queries';
 
@@ -31,6 +30,18 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
 
   const verifiedAliasChainIds =
     channelDetails?.aliases?.filter((item) => item?.is_alias_verified)?.map((item) => item.alias_blockchain_id) || [];
+
+
+  const [tooltipText, setToolTipText] = useState('Copy Wallet');
+  const copyWalletAddress = () => {
+    if (channelDetails) {
+      navigator.clipboard.writeText(channelDetails.channel);
+      setToolTipText('Copied')
+    }
+    setTimeout(() => {
+      setToolTipText('Copy Wallet')
+    }, 1000)
+  }
 
   return (
     <Box
@@ -109,9 +120,9 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
               </Text>
 
               <Tooltip
-                description='Copy Wallet'
+                description={tooltipText}
                 children={<Box cursor="pointer">
-                  <Copy size={14} color="icon-tertiary" />
+                  <Copy onClick={copyWalletAddress} size={14} color="icon-tertiary" />
                 </Box>
                 }
               />

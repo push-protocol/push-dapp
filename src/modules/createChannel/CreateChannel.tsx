@@ -127,7 +127,7 @@ const CreateChannel = () => {
                 'Creating your channel, Aligning pixels, adjusting padding... This may take some time.',
                 'Redirecting... Please do not refresh'
               );
-            }, 2000);
+            }, 3000);
 
             setTimeout(() => {
               handleProgressBar(
@@ -136,12 +136,12 @@ const CreateChannel = () => {
                 'Redirecting... Please do not refresh'
               );
               window.location.reload();
-            }, 3000);
+            }, 5000);
           }
         },
         onError: (error: any) => {
           console.log('Error in transaction from query >>>>', error);
-          //User Rejected query handle it here
+          // User Rejected query handle it here
           if (error.code === 4001 || error.code === 'ACTION_REJECTED') {
             console.log('Signature error ', error);
             updateChannelCreationError(1, 'User Rejected Signature. Please try again.');

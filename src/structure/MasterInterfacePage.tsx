@@ -43,7 +43,6 @@ const ClaimGalxePage = lazy(() => import('pages/ClaimGalxePage'));
 const WelcomDashboardPage = lazy(() => import('pages/WelcomeDashboardPage'));
 const RewardPointsPage = lazy(() => import('pages/RewardPointsPage'));
 const PointsVaultPage = lazy(() => import('pages/PointsVaultPage'));
-const EditChannelPage = lazy(() => import('pages/EditChannelPage'));
 const AddNewChainPage = lazy(() => import('pages/AddNewChain'));
 
 const DiscordVerificationPage = lazy(() => import('pages/DiscordVerificationPage'));
@@ -238,11 +237,6 @@ function MasterInterfacePage() {
             <Route
               path={APP_PATHS.Channels}
               element={<ChannelsProfilePage />}
-            />
-
-            <Route
-              path={`${APP_PATHS.EditChannel}`}
-              element={<EditChannelPage />}
             />
 
             {/* Dep channel dashboard page */}

@@ -9,9 +9,16 @@ import { EditChannelFooter } from './components/EditChannelFooter';
 import { EditChannelForm } from './components/EditChannelForm';
 
 import { EditChanelFormProvider } from './EditChannel.forms';
+import { FC } from 'react';
+import { DashboardActiveState } from 'modules/channelDashboard/ChannelDashboard.types';
 
+type EditChannelProps = {
+  setActiveState: (activeState: DashboardActiveState) => void;
+}
 
-const EditChannel = () => {
+const EditChannel: FC<EditChannelProps> = ({
+  setActiveState
+}) => {
   const { account } = useAccount();
 
   const { data: channelDetails } = useGetChannelDetails(account);
@@ -42,7 +49,7 @@ const EditChannel = () => {
             channelDetails={channelDetails}
           />
         )}
-        <EditChannelFooter />
+        <EditChannelFooter setActiveState={setActiveState} />
 
       </Box>
 

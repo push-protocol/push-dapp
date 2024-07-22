@@ -45,4 +45,5 @@ export type DashboardActiveState =
   | 'addDelegate'
   | 'dashboard'
   | 'reactivateChannel'
-  | 'deactivateChannel';
+  | 'deactivateChannel'
+  | 'editChannel';
