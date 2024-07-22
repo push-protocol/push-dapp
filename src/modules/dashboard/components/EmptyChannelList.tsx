@@ -13,24 +13,24 @@ const EmptyChannelList: FC<EmptyChannelListProps> = ({ heading, subHeading }) =>
       display="flex"
       flexDirection="column"
       alignItems="center"
-      gap="s4"
-      margin="s9 s0 s0 s0"
+      gap="spacing-sm"
+      margin="spacing-xl spacing-none spacing-none spacing-none"
     >
       <EmptyInbox
         size={48}
-        color="gray-600"
+        color="icon-primary"
       />
       <Box
         display="flex"
         flexDirection="column"
         alignItems="center"
-        gap="s1"
+        gap="spacing-xs"
       >
         {heading && (
           <Text
             textAlign="center"
             variant="h5-bold"
-            color={{ light: 'black', dark: 'white' }}
+            color="text-primary"
           >
             {heading}
           </Text>
@@ -39,7 +39,7 @@ const EmptyChannelList: FC<EmptyChannelListProps> = ({ heading, subHeading }) =>
           <Text
             textAlign="center"
             variant="bs-regular"
-            color={{ light: 'gray-600', dark: 'gray-500' }}
+            color="text-primary-inverse"
           >
             {subHeading}
           </Text>

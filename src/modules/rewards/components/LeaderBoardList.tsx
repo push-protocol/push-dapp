@@ -34,7 +34,7 @@ const LeaderBoardList: FC = () => {
   ) : (
     !!leaderboardList.length && (
       <Box
-        gap="s4"
+        gap="spacing-sm"
         display="flex"
         flexDirection="column"
       >
@@ -50,7 +50,7 @@ const LeaderBoardList: FC = () => {
             hasMore={hasMoreData}
             loader={
               <Box
-                margin="s3"
+                margin="spacing-xs"
                 key="loader-spinner"
               >
                 <LoaderSpinner

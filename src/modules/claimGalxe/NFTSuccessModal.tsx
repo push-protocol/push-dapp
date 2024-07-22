@@ -19,8 +19,8 @@ const NFTSuccessModal = ({ onClose }: ModalInnerComponentType) => {
       display="inline-flex"
       flexDirection="column"
       alignItems="center"
-      gap="s6"
-      padding="s3 s1 s6 s1"
+      gap="spacing-md"
+      padding="spacing-xs spacing-xxxs spacing-md spacing-xxxs"
     >
       <Box
         display="flex"
@@ -36,7 +36,7 @@ const NFTSuccessModal = ({ onClose }: ModalInnerComponentType) => {
             icon={
               <Cross
                 size={18}
-                color="gray-600"
+                color="icon-primary"
               />
             }
             onClick={() => {
@@ -49,7 +49,6 @@ const NFTSuccessModal = ({ onClose }: ModalInnerComponentType) => {
         <Text
           variant="bs-regular"
           textAlign="center"
-          color="gray-600"
         >
           Join the exclusive Push alpha community for further updates!
         </Text>
@@ -58,7 +57,7 @@ const NFTSuccessModal = ({ onClose }: ModalInnerComponentType) => {
         display="flex"
         alignItems="center"
         flexDirection="column"
-        gap="s3"
+        gap="spacing-xs"
       >
         <img
           src={pushAlphaCommunityChat.payload.chatPic}
@@ -69,7 +68,7 @@ const NFTSuccessModal = ({ onClose }: ModalInnerComponentType) => {
           display="flex"
           alignItems="center"
           flexDirection="column"
-          gap="s6"
+          gap="spacing-md"
         >
           <Box>
             <Text variant="h5-semibold">Push Alpha Community</Text>

@@ -10,10 +10,10 @@ const RecommendedChatsList = () => {
     <Box
       display="flex"
       flexDirection="column"
-      gap="s4"
-      borderRadius="r6"
-      border={{ light: '1px solid gray-200', dark: '1px solid gray-800' }}
-      padding="s4"
+      gap="spacing-sm"
+      borderRadius="radius-md"
+      border="border-sm solid stroke-secondary"
+      padding="spacing-sm"
     >
       {recommendedChatList.map((item, index) => {
         return (
