@@ -13,6 +13,7 @@ import { shortenText } from 'helpers/UtilityHelper';
 import { ChannelDetailsResponse } from 'queries';
 
 import { ImageV3 } from '../ChannelDashboard.styled';
+import APP_PATHS from 'config/AppPaths';
 
 type ChannelDashboardInfoProps = {
   channelDetails?: ChannelDetailsResponse;
@@ -92,7 +93,8 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
                 )}
               </Box>
 
-              {showAddNewChain && <Box display='flex' cursor='pointer' onClick={() => navigate('/addNewChain')}>
+              {showAddNewChain && <Box display='flex' cursor='pointer'
+                onClick={() => navigate(APP_PATHS.AddNewChain)}>
                 <PlusCircle size={18} color="icon-primary" />
               </Box>}
 
