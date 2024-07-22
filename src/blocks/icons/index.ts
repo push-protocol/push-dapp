@@ -28,6 +28,8 @@ export { default as ChannelHomeFilled } from './components/ChannelHomeFilled';
 export { default as Chat } from './components/Chat';
 export { default as ChatFilled } from './components/ChatFilled';
 
+export { default as CloudUpload } from './components/CloudUpload';
+
 export { default as Copy } from './components/Copy';
 
 export { default as Cross } from './components/Cross';

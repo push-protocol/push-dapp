@@ -178,7 +178,6 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
               disabled={!!disabled}
               {...(disabled ? { 'aria-disabled': true } : {})}
               placeholder={placeholder}
-              required={required}
               onChange={onChange}
               value={value}
             />
@@ -192,8 +191,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
               success || error
                 ? 'components-inputs-text-default'
                 : disabled
-                ? 'components-inputs-text-disabled'
-                : 'components-inputs-text-placeholder'
+                  ? 'components-inputs-text-disabled'
+                  : 'components-inputs-text-placeholder'
             }
           >
             {description}

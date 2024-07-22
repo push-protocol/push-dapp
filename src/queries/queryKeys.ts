@@ -19,5 +19,7 @@ export const userTwitterDetails = 'userTwitterDetails';
 export const pointsVaultSearch = 'pointsVaultSearch';
 export const approveVaultUser = 'approveVaultUser';
 export const rejectVaultUser = 'rejectVaultUser';
+export const creatingNewChannel = 'creatingNewChannel';
+export const approvingPUSHToken = 'approvingPUSHToken';
 export const initiateNewChain = 'initiateNewChain';
 export const verifyAliasChain = 'verifyAliasChain';
