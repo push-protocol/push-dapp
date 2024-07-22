@@ -60,3 +60,7 @@ export type ChannelDetailsResponse = {
   verified_status: number;
   verify_verification_proof: string | null;
 };
+
+export type InitiateVerifyAliasChainResponse = {
+  tx: string;
+};

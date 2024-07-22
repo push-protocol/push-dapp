@@ -13,16 +13,15 @@ type FormikChainAliasProviderProps = {
   children: React.ReactNode;
   onSubmit: (values: NewChainAddressValue) => void;
 };
+const validationSchema = yup.object().shape({
+  alias: yup
+    .string()
+    .required('Address is required')
+    .test('is-valid-address', 'Invalid wallet address', isValidAddress),
+  chainId: yup.string().required('ChainId is required'),
+});
 
 const FormikChainAliasProvider: FC<FormikChainAliasProviderProps> = ({ children, onSubmit }) => {
-  const validationSchema = yup.object().shape({
-    alias: yup
-      .string()
-      .required('Address is required')
-      .test('is-valid-address', 'Invalid wallet address', isValidAddress),
-    chainId: yup.string().required('ChainId is required'),
-  });
-
   const formik = useFormik<NewChainAddressValue>({
     initialValues: {
       alias: '',

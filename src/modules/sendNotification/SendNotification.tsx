@@ -6,10 +6,8 @@ import { useAccount } from 'hooks';
 
 //add formik
 //add conditon for /send url
+
 const SendNotification: FC = () => {
-  const { account } = useAccount();
-  const { data } = useGetChannelDetails(account);
-  console.debug(data, 'channelDetails');
   return (
     <Box
       padding={{ dp: 'spacing-lg', ml: 'spacing-sm' }}
@@ -39,7 +37,6 @@ const SendNotification: FC = () => {
         Send Notification
       </Text>
       <FormFields />
-      <Button> Send Notification</Button>
     </Box>
   );
 };
