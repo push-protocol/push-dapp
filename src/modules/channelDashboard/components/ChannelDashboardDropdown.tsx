@@ -24,21 +24,21 @@ const ChannelDashboardDropdown: FC<ChannelDashboardDropdownProps> = ({
     {
       title: 'Add Subgraph Details',
       logo: Cube,
-      onClick: () => setActiveState('add_subgraph'),
+      onClick: () => setActiveState('addSubgraph'),
       color: 'text-primary',
       show: true,
     },
     {
       title: 'Deactivate Channel',
       logo: BellSimpleSlash,
-      onClick: () => setActiveState('deactivate_channel'),
+      onClick: () => setActiveState('deactivateChannel'),
       color: 'text-danger-bold',
       show: channelDetails?.activation_status === 0 ? false : true //Channel is deactivated
     },
     {
       title: 'Activate Channel',
       logo: BellSimple,
-      onClick: () => setActiveState('reactivate_channel'),
+      onClick: () => setActiveState('reactivateChannel'),
       color: 'text-success-bold',
       show: channelDetails?.activation_status === 0 ? true : false
     }

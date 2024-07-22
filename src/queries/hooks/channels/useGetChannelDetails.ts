@@ -17,6 +17,7 @@ export const useGetChannelDetails = (address: string) => {
   const query = useQuery({
     queryKey: [channelDetails, address],
     queryFn: () => getChannelDetails({ userPushSDKInstance, address }),
+    refetchOnWindowFocus: false
   });
   return query;
 };

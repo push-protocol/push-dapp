@@ -26,6 +26,7 @@ import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import { ChannelSetting } from 'helpers/channel/types';
 import { updateChannelSetting } from 'redux/slices/channelSlice';
 import { NotificationSetting } from '@pushprotocol/restapi/src/lib/pushNotification/PushNotificationTypes';
+import APP_PATHS from 'config/AppPaths';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -106,7 +107,7 @@ function NotificationSettings() {
   const navigate = useNavigate();
 
   const goBack = () => {
-    navigate('/dashboard', { replace: true });
+    navigate(`${APP_PATHS.ChannelDashboard}/${account}`, { replace: true });
   };
 
   const addSetting = (newSetting: ChannelSetting) => {

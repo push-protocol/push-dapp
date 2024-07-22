@@ -11,6 +11,7 @@ import { ChannelDashboardInfo } from "./ChannelDashboardInfo";
 import { ChannelDashboardDropdown } from "./ChannelDashboardDropdown";
 
 import { DashboardActiveState } from "../ChannelDashboard.types";
+import APP_PATHS from "config/AppPaths";
 
 type ChannelDashboardHeaderProps = {
   channelDetails?: ChannelDetailsResponse;
@@ -46,7 +47,7 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
           <Button
             variant="outline"
             size="small"
-            onClick={() => navgiate('/editChannel')}
+            onClick={() => navgiate(APP_PATHS.EditChannel)}
             disabled={channelDetails?.activation_status === 0}
           >
             Edit Channel

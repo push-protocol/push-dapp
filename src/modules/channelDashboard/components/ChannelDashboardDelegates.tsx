@@ -45,7 +45,7 @@ const ChannelDashboardDelegates: FC<ChannelDashboardDelegatesProps> = ({
           </Box>
 
           <Button
-            onClick={() => setActiveState('add_delegate')}
+            onClick={() => setActiveState('addDelegate')}
             size="extraSmall"
             variant="tertiary"
             leadingIcon={<Add />}

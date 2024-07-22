@@ -16,6 +16,7 @@ import { useAccount } from 'hooks';
 
 import { useApprovePUSHToken, useEditChannel, useGetChannelDetails } from 'queries';
 import { useEditChannelForm } from '../EditChannel.forms';
+import APP_PATHS from 'config/AppPaths';
 
 const minFeesForAddChannel = 50;
 
@@ -145,7 +146,7 @@ const EditChannelFooter = () => {
           onSuccess: () => {
             console.log('Successfully edited channel');
             refetchChannelDetails();
-            navigate('/dashboard')
+            navigate(`${APP_PATHS.ChannelDashboard}/${account}`)
           },
           onError: (error) => {
             console.log('Error in updating channel details', error, error.code);
@@ -178,7 +179,9 @@ const EditChannelFooter = () => {
         gap="spacing-sm"
         margin="spacing-lg spacing-none spacing-none spacing-none"
       >
-        <Button size="medium" variant="outline" onClick={() => navigate('/dashboard')}>
+        <Button size="medium" variant="outline"
+          onClick={() => navigate(`${APP_PATHS.ChannelDashboard}/${account}`)}
+        >
           Back
         </Button>
 

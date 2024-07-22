@@ -5,7 +5,7 @@ import { lazy, Suspense, useState, useEffect, useContext } from 'react';
 import useToast from 'hooks/useToast';
 import { MdWarning } from 'react-icons/md';
 import { VscClose } from 'react-icons/vsc';
-import { Navigate, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled from 'styled-components';
@@ -19,6 +19,7 @@ import LoaderSpinner, {
 import { Anchor, Item } from '../primaries/SharedStyling';
 const AirdropPage = lazy(() => import('pages/AirdropPage'));
 const ChannelDashboardPage = lazy(() => import('pages/ChannelDashboardPage'));
+const ChannelDashboardPageV2 = lazy(() => import('pages/ChannelDashboardPageV2'));
 const ChannelsPage = lazy(() => import('pages/ChannelsPage'));
 const ChatPage = lazy(() => import('pages/ChatPage'));
 const ComingSoonPage = lazy(() => import('pages/ComingSoonPage'));
@@ -83,6 +84,7 @@ const rewardsPointsPagePaths = [APP_PATHS.Rewards, APP_PATHS.RewardsActivities, 
 function MasterInterfacePage() {
   // Get search params
   const [searchParams] = useSearchParams();
+  const params = useParams();
 
   // get location
   const location = useLocation();
@@ -129,7 +131,9 @@ function MasterInterfacePage() {
   //   checkAndRedirect();
   // }, []);
 
+
   const ChannelsProfilePage = () => {
+
     const channelid = searchParams.get('channel');
 
     if (channelid) {
@@ -241,10 +245,22 @@ function MasterInterfacePage() {
               element={<EditChannelPage />}
             />
 
+            {/* Dep channel dashboard page */}
             <Route
               path={APP_PATHS.Dashboard}
               element={<ChannelDashboardPage />}
             />
+
+            <Route
+              path={APP_PATHS.ChannelDashboard}
+              element={<ChannelDashboardPageV2 />}
+            />
+
+            <Route
+              path={`${APP_PATHS.ChannelDashboard}/:channelId`}
+              element={<ChannelDashboardPageV2 />}
+            />
+
             <Route
               path={APP_PATHS.Send}
               element={<SendNotifsPage />}

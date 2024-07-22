@@ -42,7 +42,6 @@ const ChannelAddSubgraph: FC<ChannelAddSubgraphProps> = ({
     },
     validationSchema: subgraphFormValidation,
     onSubmit: (values) => {
-      console.log("Valuess", values);
       handleAddSubgraph();
     }
   })

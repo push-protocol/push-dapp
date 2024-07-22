@@ -31,8 +31,6 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
 
   const verifiedAliasChainIds =
     channelDetails?.aliases?.filter((item) => item?.is_alias_verified)?.map((item) => item.alias_blockchain_id) || [];
-  console.log("verifiedAliasChainIds", verifiedAliasChainIds);
-
 
   return (
     <Box

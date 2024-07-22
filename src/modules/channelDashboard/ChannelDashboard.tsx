@@ -27,11 +27,11 @@ const ChannelDashboard = () => {
     <Box>
       {activeState === 'dashboard' && <UserChannelDashboard setActiveState={setActiveState} />}
 
-      {activeState === 'add_delegate' && <ChannelAddDelegate setActiveState={setActiveState} />}
-      {activeState === 'add_subgraph' && <ChannelAddSubgraph setActiveState={setActiveState} />}
+      {activeState === 'addDelegate' && <ChannelAddDelegate setActiveState={setActiveState} />}
+      {activeState === 'addSubgraph' && <ChannelAddSubgraph setActiveState={setActiveState} />}
 
-      {activeState === 'reactivate_channel' && <ReactivateChannel setActiveState={setActiveState} />}
-      {activeState === 'deactivate_channel' && <DeactivateChannel setActiveState={setActiveState} />}
+      {activeState === 'reactivateChannel' && <ReactivateChannel setActiveState={setActiveState} />}
+      {activeState === 'deactivateChannel' && <DeactivateChannel setActiveState={setActiveState} />}
     </Box>
   );
 };

@@ -66,7 +66,6 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
       signer
     }, {
       onSuccess: () => {
-        console.log("Successfully Approved PUSH");
         checkApprovedPUSHTokenAmount();
       },
       onError: (error) => {
@@ -99,9 +98,9 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
           setActiveState('dashboard')
 
         },
-        onError: () => {
+        onError: (error) => {
           console.log("Error in Reactivating channel");
-          setReactivationError('User rejected signature. Please try again.')
+          setReactivationError(error.reason)
         }
       }
     )
@@ -133,7 +132,7 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
 
       <Box display="flex" flexDirection="column" gap="spacing-sm" width='-webkit-fill-available'>
         <StakingVariant
-          title="You will receive as a refund"
+          title="Channel Reactivation Fee"
           fees={feesRequiredForReactivation}
           pushApprovalAmount={pushApprovalAmount}
           showFaucet

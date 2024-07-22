@@ -29,7 +29,6 @@ const ChannelDelegateList: FC<ChannelDelegateListProps> = ({
   const { mutate: removeDelegate, isPending } = useRemoveDelegate();
 
   const handleRemoveDelegate = async () => {
-    console.log("Removing Delegate");
 
     let userPushInstance = userPushSDKInstance;
 

@@ -41,8 +41,8 @@ export type ChannelDropdownTypes = {
 };
 
 export type DashboardActiveState =
-  | 'add_subgraph'
-  | 'add_delegate'
+  | 'addSubgraph'
+  | 'addDelegate'
   | 'dashboard'
-  | 'reactivate_channel'
-  | 'deactivate_channel';
+  | 'reactivateChannel'
+  | 'deactivateChannel';

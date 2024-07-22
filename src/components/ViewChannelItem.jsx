@@ -930,7 +930,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                 {isOwner && (
                   <>
                     {profileType == 'Profile' ? (
-                      <DashboardButton onClick={() => navigate('/dashboard')}>Go To Dashboard</DashboardButton>
+                      <DashboardButton onClick={() => navigate(`${APP_PATHS.ChannelDashboard}/${account}`)}>Go To Dashboard</DashboardButton>
                     ) : (
                       <OwnerButton disabled>Owner</OwnerButton>
                     )}
@@ -971,7 +971,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                 {isOwner && (
                   <>
                     {profileType == 'Profile' ? (
-                      <DashboardButton onClick={() => navigate('/dashboard')}>Go To Dashboard</DashboardButton>
+                      <DashboardButton onClick={() => navigate(`${APP_PATHS.ChannelDashboard}/${account}`)}>Go To Dashboard</DashboardButton>
                     ) : (
                       <OwnerButton disabled>Owner</OwnerButton>
                     )}
