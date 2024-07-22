@@ -196,6 +196,7 @@ export default function App() {
 
   const { pgpPvtKey } = useContext<any>(AppContext);
   const { sidebarCollapsed, setSidebarCollapsed } = useContext(GlobalContext);
+  const mounted = useRef<any>();
 
   const updateOnboardTheme = useUpdateTheme();
   const { userPushSDKInstance } = useSelector((state: any) => {
@@ -218,20 +219,21 @@ export default function App() {
     setcurrentTime(now);
   }, []);
 
-  const mounted = useRef<any>();
+  const resetState = () => {
+    dispatch(resetSpamSlice());
+    dispatch(resetNotificationsSlice());
+    dispatch(resetCanSendSlice());
+    dispatch(resetChannelCreationSlice());
+    dispatch(resetAdminSlice());
+    dispatch(resetUserSlice());
+  };
 
   useEffect(() => {
     if (!mounted.current) {
       // do componentDidMount logic
       mounted.current = true;
-
       if (!account) return;
-      dispatch(resetSpamSlice());
-      dispatch(resetNotificationsSlice());
-      dispatch(resetCanSendSlice());
-      dispatch(resetChannelCreationSlice());
-      dispatch(resetAdminSlice());
-      dispatch(resetUserSlice());
+      resetState();
     }
   }, [account]);
 
@@ -348,7 +350,7 @@ export default function App() {
           <ChatUIProvider
             user={userPushSDKInstance}
             theme={darkMode && darkChatTheme}
-            debug={true}
+            debug={false}
             uiConfig={{
               suppressToast: false,
             }}
