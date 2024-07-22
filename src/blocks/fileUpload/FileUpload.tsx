@@ -7,7 +7,6 @@ export type FileUploadProps = {
   disabled?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onDrop?: DragEventHandler;
-  hidden?: boolean;
   id: string;
 };
 
@@ -24,7 +23,7 @@ const Container = styled.div<{ css?: FlattenSimpleInterpolation }>`
 
 
 export const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(
-  ({ disabled, children, onChange, onDrop, hidden, id }, ref) => {
+  ({ disabled, children, onChange, onDrop, id }, ref) => {
 
     const handleDragOver: DragEventHandler<HTMLDivElement> = (e) => {
       e.preventDefault();
@@ -38,7 +37,7 @@ export const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(
           id={id}
           type="file"
           accept="image/*"
-          hidden={hidden}
+          hidden={true}
           disabled={!!disabled}
           {...(disabled ? { 'aria-disabled': true } : {})}
           onChange={onChange}

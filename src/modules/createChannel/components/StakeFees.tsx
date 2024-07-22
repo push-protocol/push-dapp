@@ -81,7 +81,7 @@ const StakeFees: FC<StakeFeesProps> = ({ channelStakeFees, handleNextStep }) => 
         handleNextStep('uploadLogo')
       }
 
-      if (Object.keys(errors).length === 0) {
+      if (!Object.keys(errors).length) {
         handleSubmit();
       }
 
