@@ -99,3 +99,12 @@ export type RemoveChannelDelegateParams = {
 export type AddChannelDelegateResponse = {
   transactionHash: string;
 };
+
+export type ApprovePUSHTokenPayload = {
+  noOfTokenToApprove: ethers.BigNumber;
+  signer: ethers.providers.JsonRpcSigner;
+};
+
+export type editChannelDetailsResponse = {
+  transactionHash: string;
+};

@@ -44,13 +44,5 @@ export type DashboardActiveState =
   | 'add_subgraph'
   | 'add_delegate'
   | 'dashboard'
-  | 'edit_channel'
   | 'reactivate_channel'
   | 'deactivate_channel';
-
-export type ChannelInfoFormValues = {
-  channelName: string | undefined;
-  channelDesc: string | undefined;
-  channelURL: string | undefined;
-  channelIcon: string | undefined;
-};

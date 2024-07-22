@@ -263,14 +263,14 @@ const ChannelOwnerDashboard = () => {
           )} */}
 
           {/* processing box */}
-          {processingState !== 0 && processingState !== null && isChannelDetails && !editChannel && (
+          {/* {processingState !== 0 && processingState !== null && isChannelDetails && !editChannel && (
             <>
               <AliasProcessing
                 aliasEthAccount={aliasEthAddr}
                 setAliasVerified={setAliasVerified}
               />
             </>
-          )}
+          )} */}
         </ItemVV2>
       )}
     </ItemHV2>

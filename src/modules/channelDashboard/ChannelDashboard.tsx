@@ -11,7 +11,6 @@ import { UserChannelDashboard } from './components/UserChannelDashboard';
 
 // Types
 import { DashboardActiveState } from './ChannelDashboard.types';
-import { EditChannelComponent } from './components/EditChannelComponent';
 
 const ChannelDashboard = () => {
   const [activeState, setActiveState] = useState<DashboardActiveState>('dashboard');
@@ -21,7 +20,6 @@ const ChannelDashboard = () => {
    * 2. Add Subgraph Details
    * 3. Add Delegate
    * 4. Reactivate Channel
-   * 5. Edit Channel
    * 6. Activate Channel
    */
 
@@ -34,8 +32,6 @@ const ChannelDashboard = () => {
 
       {activeState === 'reactivate_channel' && <ReactivateChannel setActiveState={setActiveState} />}
       {activeState === 'deactivate_channel' && <DeactivateChannel setActiveState={setActiveState} />}
-
-      {activeState === 'edit_channel' && <EditChannelComponent setActiveState={setActiveState} />}
     </Box>
   );
 };

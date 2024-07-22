@@ -1,5 +1,7 @@
 export const trendingChannels = 'trendingChannels';
 export const allUserSubscriptions = 'allUserSubscriptions';
+export const approvingPUSHToken = 'approvingPUSHToken';
+export const updateChannelDetails = 'updateChannelDetails';
 export const addDelegate = 'addDelegate';
 export const addNewSubgraph = 'addNewSubgraph';
 export const userSubscription = 'userSubscription';

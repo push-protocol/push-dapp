@@ -1,15 +1,21 @@
-import { Box, Button, Skeleton, Text } from "blocks";
-import { useAccount } from "hooks";
-import { useGetChannelDetails, useReactivateChannel } from "queries";
-import { ChannelDashboardInfo } from "./ChannelDashboardInfo";
-import { ChannelAddHeader } from "./ChannelAddHeader";
-import { DashboardActiveState } from "../ChannelDashboard.types";
-import { FC, useEffect, useMemo, useState } from "react";
-import { getPushTokenFromWallet, importPushToken, mintPushToken } from "helpers";
-import { ReactivateChannelFaucet } from "./ReactivateChannelFaucet";
-import { css } from "styled-components";
+import { FC, useEffect, useState } from "react";
 import { ethers } from "ethers";
-import InlineError from "common/components/InlineError";
+
+import { Box, Button } from "blocks";
+
+import { InlineError, ModalHeader, StakingVariant } from "common";
+
+import { addresses } from "config";
+
+import { getPushTokenApprovalAmount } from "helpers";
+
+import { useAccount } from "hooks";
+
+import { useApprovePUSHToken, useGetChannelDetails, useReactivateChannel } from "queries";
+
+import { ChannelDashboardInfo } from "./ChannelDashboardInfo";
+import { DashboardActiveState } from "../ChannelDashboard.types";
+import ImportPushTokenMessage from "common/components/ImportPushTokenMessage";
 
 
 const feesRequiredForReactivation = 50;
@@ -27,57 +33,59 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
   const [reactivationError, setReactivationError] = useState('');
 
   const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
-  console.log("Channel Details in reactivate Channnel ", channelDetails);
 
-  const [balance, setBalance] = useState(0);
-  const [mintingPush, setMintingPush] = useState(false);
-  const [fetchingbalance, setFetchingBalance] = useState(false);
+  const [pushApprovalAmount, setPushApprovalAmount] = useState(0);
 
-  // Check PUSH Token in wallet
-  const pushTokenInWallet = async () => {
-    setFetchingBalance(true)
-    const amount = await getPushTokenFromWallet({
+  const checkApprovedPUSHTokenAmount = async () => {
+    const pushTokenApprovalAmount = await getPushTokenApprovalAmount({
       address: account,
-      provider: provider
+      provider: provider,
+      contractAddress: addresses.epnscore,
     });
-    setFetchingBalance(false)
-    setBalance(amount);
-  };
+    setPushApprovalAmount(parseInt(pushTokenApprovalAmount));
+  }
 
   useEffect(() => {
-    pushTokenInWallet();
-  }, [balance, account]);
+    if (!account || !provider) return;
+    checkApprovedPUSHTokenAmount();
+  }, [account, provider]);
 
-  // Mint Test PUSH token
-  const mintPushTokenHandler = async (noOfTokens: number) => {
-    setMintingPush(true);
-    try {
-      const amount = await mintPushToken({ noOfTokens, provider, account });
-      setMintingPush(false)
-      setBalance(amount);
-    } catch (error) {
-      console.log("Error >>", error);
-      setMintingPush(false)
+  const { mutate: approvePUSHToken, isPending: approvingPUSH } = useApprovePUSHToken();
+
+  const handleApprovePUSH = () => {
+    setReactivationError('')
+
+    var signer = provider.getSigner(account);
+    console.debug(signer);
+
+    const fees = ethers.utils.parseUnits((feesRequiredForReactivation - pushApprovalAmount).toString(), 18);
+
+    approvePUSHToken({
+      noOfTokenToApprove: fees,
+      signer
+    }, {
+      onSuccess: () => {
+        console.log("Successfully Approved PUSH");
+        checkApprovedPUSHTokenAmount();
+      },
+      onError: (error) => {
+        console.log("Error in Approving PUSH", error);
+        if (error.code == 'ACTION_REJECTED') {
+          setReactivationError('User rejected signature. Please try again.');
+        } else {
+          setReactivationError(error.reason);
+
+        }
+      }
     }
-  };
+    )
 
-  // Import Push Token in Your wallet
-  const handlePushTokenImport = async () => {
-    await importPushToken();
-  };
-
-  // Check if the faucet or swap PUSH token model should be visible or not
-  const showFaucet = useMemo(() => {
-    if (balance < feesRequiredForReactivation) {
-      return true
-    } else {
-      return false
-    }
-  }, [balance])
+  }
 
   const { mutate: reactivateChannel, isPending } = useReactivateChannel();
 
   const handleReactivate = () => {
+    setReactivationError('')
     const fees = ethers.utils.parseUnits(feesRequiredForReactivation.toString(), 18);
     var signer = provider.getSigner(account);
     console.debug(signer);
@@ -113,7 +121,7 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
       borderRadius='radius-lg'
       margin='spacing-none spacing-none spacing-sm spacing-none'
     >
-      <ChannelAddHeader
+      <ModalHeader
         title="Reactivate Channel"
         description="Performing this action will make your channel visible to users."
       />
@@ -125,75 +133,26 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
         loadingChannelDetails={loadingChannelDetails}
       />
 
-      {/* //TODO: Change this component to make it common for Create Channel and Reactivate Channel */}
       <Box display="flex" flexDirection="column" gap="spacing-sm" width='-webkit-fill-available'>
-        <Box display="flex" flexDirection="column" alignSelf="stretch">
-          <Box
-            display="flex"
-            flexDirection="row"
-            justifyContent="space-between"
-            backgroundColor='surface-secondary'
-            borderRadius={showFaucet ? "radius-sm radius-sm radius-none radius-none" : "radius-sm"}
-            padding="spacing-sm spacing-md"
-            alignItems="center"
-          >
-            <Text
-              variant="h4-semibold"
-              color='text-primary'
-              display={{ ml: 'none', dp: 'block' }}
-            >
-              Channel Reactivation fee
-            </Text>
-
-            <Text
-              variant="h5-semibold"
-              color='text-primary'
-              display={{ ml: 'block', dp: 'none' }}
-            >
-              Channel Reactivation fee
-            </Text>
-            <Box>
-              <Text variant="h4-semibold" color='text-brand-medium'>
-                {feesRequiredForReactivation} PUSH
-              </Text>
-              <Skeleton isLoading={fetchingbalance}>
-                <Text variant="bes-semibold" color='text-tertiary'>
-                  Balance: {balance?.toLocaleString()}
-                </Text>
-              </Skeleton>
-
-            </Box>
-          </Box>
-
-          {showFaucet && <ReactivateChannelFaucet
-            mintPushToken={mintPushTokenHandler}
-            noOfPushTokensToCheck={50}
-            mintingPush={mintingPush}
-          />}
-
-        </Box>
-
-        <Box display="flex" flexDirection="row" gap="s1" justifyContent="center">
-          <Text variant="bes-semibold" color='text-tertiary'>
-            Don't see Push token in your wallet?
-          </Text>
-          <Text
-            css={css`
-              cursor: pointer;
-            `}
-            variant="bes-semibold"
-            color="text-brand-medium"
-            onClick={handlePushTokenImport}
-          >
-            Import Token
-          </Text>
-        </Box>
+        <StakingVariant
+          title="You will receive as a refund"
+          fees={feesRequiredForReactivation}
+          pushApprovalAmount={pushApprovalAmount}
+          showFaucet
+          showBalance
+        />
+        <ImportPushTokenMessage title='Don’t see Push token in your wallet?' />
       </Box>
-
 
       <Box display='flex' gap='spacing-sm' justifyContent='center'>
         <Button size="medium" variant="outline" onClick={() => setActiveState('dashboard')}>Back</Button>
-        <Button disabled={isPending} onClick={handleReactivate}>Activate</Button>
+
+        {pushApprovalAmount >= feesRequiredForReactivation ? (
+          <Button disabled={isPending} onClick={handleReactivate}>{isPending ? 'Activating' : 'Activate'}</Button>
+        ) : (
+          <Button disabled={approvingPUSH} onClick={handleApprovePUSH}>{approvingPUSH ? 'Approving' : 'Approve PUSH'}</Button>
+        )}
+
       </Box>
 
 

@@ -25,4 +25,4 @@ const InlineError: FC<InlineErrorProp> = ({
   );
 };
 
-export default InlineError;
+export { InlineError };

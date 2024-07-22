@@ -5,6 +5,7 @@ import { ChannelDashboardDropdown } from "./ChannelDashboardDropdown";
 import { css } from "styled-components";
 import { ChannelDetailsResponse } from "queries";
 import { DashboardActiveState } from "../ChannelDashboard.types";
+import { useNavigate } from "react-router-dom";
 
 type ChannelDashboardHeaderProps = {
   channelDetails?: ChannelDetailsResponse;
@@ -17,6 +18,8 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
   loadingChannelDetails,
   setActiveState
 }) => {
+
+  const navgiate = useNavigate();
 
   return (
     <Box
@@ -38,7 +41,7 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
           <Button
             variant="outline"
             size="small"
-            onClick={() => setActiveState('edit_channel')}
+            onClick={() => navgiate('/editChannel')}
             disabled={channelDetails?.activation_status === 0}
           >
             Edit Channel

@@ -3,11 +3,10 @@ import { useFormik } from "formik";
 import { FC, useState } from "react";
 import * as Yup from 'yup';
 import { DashboardActiveState } from "../ChannelDashboard.types";
-import { ChannelAddHeader } from "./ChannelAddHeader";
 import { useAddSubgraph } from "queries";
 import { ethers } from "ethers";
 import { useAccount } from "hooks";
-import InlineError from "common/components/InlineError";
+import { InlineError, ModalHeader } from "common";
 
 type ChannelAddSubgraphProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
@@ -85,7 +84,7 @@ const ChannelAddSubgraph: FC<ChannelAddSubgraphProps> = ({
       width={{ initial: '537px', ml: '275px' }}
     >
 
-      <ChannelAddHeader
+      <ModalHeader
         title="Add Subgraph"
         description="Enter Subgraph ID and Poll time (atleast 60 sec)"
       />
@@ -97,6 +96,7 @@ const ChannelAddSubgraph: FC<ChannelAddSubgraphProps> = ({
           <TextInput
             required
             label="Subgraph ID"
+            value={subgraphForm.values.subgraphId}
             onChange={(e) => {
               const inputValue = e.target.value;
               subgraphForm.setFieldValue('subgraphId', inputValue);
@@ -107,6 +107,7 @@ const ChannelAddSubgraph: FC<ChannelAddSubgraphProps> = ({
           <TextInput
             required
             label="Poll Time (in Seconds)"
+            value={subgraphForm.values.pollTime}
             onChange={(e) => {
               const inputValue = e.target.value;
               subgraphForm.setFieldValue('pollTime', inputValue);

@@ -3,13 +3,12 @@ import { useFormik } from "formik";
 import * as Yup from 'yup';
 import { DashboardActiveState } from "../ChannelDashboard.types";
 import { FC, useContext, useState } from "react";
-import { ChannelAddHeader } from "./ChannelAddHeader";
 import { useAddDelegate, useGetChannelDelegates } from "queries";
 import { useSelector } from "react-redux";
 import { UserStoreType } from "types";
 import { AppContext } from "contexts/AppContext";
-import InlineError from "common/components/InlineError";
 import { ethers } from "ethers";
+import { InlineError, ModalHeader } from "common";
 
 type ChannelAddDelegateProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
@@ -93,7 +92,7 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
       width={{ initial: '537px', ml: '275px' }}
     >
 
-      <ChannelAddHeader
+      <ModalHeader
         title="Add Delegate"
         description="Add an account who can send notifications on behalf of the channel"
       />
@@ -109,6 +108,7 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
               const inputValue = e.target.value;
               delegateForm.setFieldValue('delegateAddress', inputValue);
             }}
+            value={delegateForm.values.delegateAddress}
             error={Boolean(delegateForm.errors.delegateAddress)}
             errorMessage={delegateForm.errors.delegateAddress}
           />

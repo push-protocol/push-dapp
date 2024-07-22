@@ -1,7 +1,6 @@
 import { Box } from "blocks";
 import { ChannelDashboardHeader } from "./ChannelDashboardHeader";
-import { InlineSuccess } from "common";
-import InlineError from "common/components/InlineError";
+import { InlineError, InlineSuccess } from "common";
 import { ChannelDashboardBody } from "./ChannelDashboardBody";
 import { PrivacyPolicy } from "./PrivacyPolicy";
 import { useGetChannelDetails } from "queries";
@@ -21,7 +20,6 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({
   const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
 
   const [channelDashboardError, setChannelDashboardError] = useState('')
-
 
   return (
     <>
@@ -44,7 +42,7 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({
         />
 
         <Box display='flex' flexDirection='column' gap='spacing-sm' width='100%'>
-          <InlineSuccess />
+          {/* <InlineSuccess /> */}
           {channelDashboardError && <InlineError title={channelDashboardError} />}
           <ChannelDashboardBody
             setChannelDashboardError={setChannelDashboardError}

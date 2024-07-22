@@ -59,9 +59,6 @@ const ChannelDashboardNotificationSettings: FC<ChannelDashboardNotificationSetti
         <Separator />
       </Box>
 
-
-
-
       <Box
         display="flex"
         flexDirection="column"

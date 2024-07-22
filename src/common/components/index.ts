@@ -4,3 +4,6 @@ export * from './SubscribeChannelDropdown';
 export * from './UnsubscribeChannelDropdown';
 export * from './InlineSuccess';
 export * from './InlineError';
+export * from './ModalHeader';
+export * from './StakingVariant';
+export * from './TokenFaucet';

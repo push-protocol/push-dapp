@@ -1,12 +1,12 @@
 import { Box, Text } from "blocks";
 import { FC } from "react";
 
-type ChannelAddHeaderProps = {
+type ModalHeaderProps = {
   title: string;
   description: string;
 }
 
-const ChannelAddHeader: FC<ChannelAddHeaderProps> = ({
+const ModalHeader: FC<ModalHeaderProps> = ({
   title,
   description
 }) => {
@@ -58,4 +58,4 @@ const ChannelAddHeader: FC<ChannelAddHeaderProps> = ({
   );
 };
 
-export { ChannelAddHeader };
+export { ModalHeader };

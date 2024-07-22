@@ -21,8 +21,7 @@ const ChannelDelegateList: FC<ChannelDelegateListProps> = ({
     return state.user;
   });
   const { handleConnectWallet } = useContext(AppContext);
-  const { mutate: removeDelegate, isPending, isError, } = useRemoveDelegate();
-
+  const { mutate: removeDelegate, isPending } = useRemoveDelegate();
 
   const handleRemoveDelegate = async () => {
     console.log("Removing Delegate");

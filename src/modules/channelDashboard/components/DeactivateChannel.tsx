@@ -1,16 +1,16 @@
 import { Box, Button, Text } from "blocks";
-import { ChannelAddHeader } from "./ChannelAddHeader";
 import { DashboardActiveState } from "../ChannelDashboard.types";
 import { FC, useState } from "react";
 import { useDeactivateChannel, useGetChannelDetails } from "queries";
 import { useAccount } from "hooks";
-import InlineError from "common/components/InlineError";
 import { ChannelDashboardInfo } from "./ChannelDashboardInfo";
-import { css } from "styled-components";
+import { InlineError, ModalHeader, StakingVariant } from "common";
 
 type DeactivateChannelProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
 }
+
+const ChannelDeactivationRefund = 40;
 
 const DeactivateChannel: FC<DeactivateChannelProps> = ({
   setActiveState
@@ -21,6 +21,7 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({
   const { mutate: deactivateChannel, isPending } = useDeactivateChannel();
   const [deactivateError, setDeactivateError] = useState('');
   const handleDeactivateChannel = () => {
+    setDeactivateError('');
     var signer = provider.getSigner(account);
     console.debug(signer);
 
@@ -55,7 +56,7 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({
       borderRadius='radius-lg'
       margin='spacing-none spacing-none spacing-sm spacing-none'
     >
-      <ChannelAddHeader
+      <ModalHeader
         title="Deactivate Channel"
         description="Deactivating your channel will disable sending notifications from it."
       />
@@ -67,46 +68,13 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({
         loadingChannelDetails={loadingChannelDetails}
       />
 
-      <Box display="flex" flexDirection="column" gap="spacing-sm" width='-webkit-fill-available'>
-        <Box display="flex" flexDirection="column" alignSelf="stretch">
-          <Box
-            display="flex"
-            flexDirection="row"
-            justifyContent="space-between"
-            backgroundColor='surface-secondary'
-            borderRadius="radius-sm"
-            padding="spacing-sm spacing-md"
-            alignItems="center"
-          >
-            <Text
-              variant="h4-semibold"
-              color='text-primary'
-              display={{ ml: 'none', dp: 'block' }}
-            >
-              You will reveive as a refund
-            </Text>
-
-            <Text
-              variant="h5-semibold"
-              color='text-primary'
-              display={{ ml: 'block', dp: 'none' }}
-            >
-              You will reveive as a refund
-            </Text>
-            <Box>
-              <Text variant="h4-semibold" color='text-brand-medium'>
-                40 PUSH
-              </Text>
-            </Box>
-          </Box>
-        </Box>
-      </Box>
+      <StakingVariant fees={ChannelDeactivationRefund} title="You will receive as a refund" />
 
       <Text variant="bs-semibold" color='text-primary'>Are you sure you want to deactivate your channel?</Text>
 
       <Box display='flex' gap='spacing-sm' justifyContent='center'>
         <Button size="medium" variant="outline" onClick={() => setActiveState('dashboard')}>Back</Button>
-        <Button disabled={isPending} variant="danger" onClick={handleDeactivateChannel}>Deactivate</Button>
+        <Button disabled={isPending} variant="danger" onClick={handleDeactivateChannel}>{isPending ? 'Deactivating' : 'Deactivate'}</Button>
       </Box>
 
 

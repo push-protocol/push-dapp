@@ -152,10 +152,10 @@ const YieldPoolCard = ({
   };
 
   const withdrawTokens = async () => {
-    if (!userPushSDKInstance.signer) {
-      handleConnectWalletAndEnableProfile({ wallet });
-      return;
-    }
+    // if (!userPushSDKInstance.signer) {
+    //   handleConnectWalletAndEnableProfile({ wallet });
+    //   return;
+    // }
 
     if (txInProgressWithdraw) {
       return;
@@ -218,7 +218,7 @@ const YieldPoolCard = ({
     }).catch((err) => {
       yieldFarmToast.showMessageToast({
         toastTitle: 'Error',
-        toastMessage: `Transaction Cancelled!`,
+        toastMessage: `Transaction Cancelled! ${err}`,
         toastType: 'ERROR',
         getToastIcon: (size) => (
           <MdError
@@ -613,7 +613,7 @@ const YieldPoolCard = ({
           <ItemVV2
             margin={isMobile ? '0px 6px 0 0 ' : '0px 18px 0px 0px'}
             padding={isMobile ? ' 7px' : '10px'}
-            // padding="10px"
+          // padding="10px"
           >
             {PoolStats ? (
               <>
@@ -650,7 +650,7 @@ const YieldPoolCard = ({
           <ItemVV2
             margin={isMobile ? '0px 6px 0 0 ' : '0px 18px 0px 0px'}
             padding={isMobile ? ' 7px' : '10px'}
-            //  padding="10px"
+          //  padding="10px"
           >
             {PoolStats ? (
               <>

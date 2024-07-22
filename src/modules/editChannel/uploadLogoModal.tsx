@@ -1,22 +1,24 @@
 import { Box, Button, Cross, Text } from 'blocks';
 import { FormikProps, useFormik } from 'formik';
-import { ChannelInfoFormValues } from 'modules/channelDashboard/ChannelDashboard.types';
 import { isImageFile } from 'modules/channelDashboard/ChannelDashboard.utils';
 import ImageClipper from 'primaries/ImageClipper';
 import { FC, useRef, useState } from 'react';
 import { css } from 'styled-components';
 import * as Yup from 'yup';
+import { useEditChannelForm } from './EditChannel.forms';
 
 type UploadlogoModelProps = {
   onClose: () => void;
-  InnerComponentProps: {
-    channelForm: FormikProps<ChannelInfoFormValues>;
-  }
 }
 
-const uploadLogoModal: FC<UploadlogoModelProps> = ({ onClose, InnerComponentProps }) => {
+const uploadLogoModal: FC<UploadlogoModelProps> = ({ onClose }) => {
 
-  const { channelForm } = InnerComponentProps;
+
+  const {
+    values: formValues,
+    setFieldValue,
+  } = useEditChannelForm();
+
 
   const logoValidationSchema = Yup.object().shape({
     image: Yup.mixed().required('Image is required')
@@ -24,7 +26,7 @@ const uploadLogoModal: FC<UploadlogoModelProps> = ({ onClose, InnerComponentProp
 
   const uploadLogoForm = useFormik({
     initialValues: {
-      image: channelForm.values.channelIcon,
+      image: formValues.channelIcon,
       imageSrc: '',
       imageType: ''
     },
@@ -167,7 +169,7 @@ const uploadLogoModal: FC<UploadlogoModelProps> = ({ onClose, InnerComponentProp
               onClick={() => {
                 if (uploadLogoForm.isValid) {
                   // Also Check if the value of Icon is changed or not
-                  channelForm.setFieldValue('channelIcon', croppedImage)
+                  setFieldValue('channelIcon', croppedImage)
                   onClose();
                 }
               }}

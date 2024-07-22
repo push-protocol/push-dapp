@@ -1,39 +1,35 @@
-import { FormikProps } from 'formik';
-import { ChannelDetailsResponse } from 'queries';
-import { FC, useMemo } from 'react';
-import { ChannelInfoFormValues } from '../ChannelDashboard.types';
-import { Box, Button, Separator, TextArea, TextInput } from 'blocks';
-import { ImageV3 } from '../ChannelDashboard.styled';
+import { FC } from 'react';
 import { css } from 'styled-components';
-import isEqual from 'lodash/isEqual';
-import uploadLogoModal from 'modules/editChannel/uploadLogoModal';
+
+import { Box, Button, Separator, TextArea, TextInput } from 'blocks';
+
 import { MODAL_POSITION } from 'hooks/useModalBlur';
+
+import uploadLogoModal from 'modules/editChannel/uploadLogoModal';
+import { ChannelDetailsResponse } from 'queries';
+
+import { ImageV3 } from 'modules/channelDashboard/ChannelDashboard.styled';
+import { useEditChannelForm } from '../EditChannel.forms';
+
 
 type EditChannelFormProps = {
   channelDetails: ChannelDetailsResponse,
-  channelForm: FormikProps<ChannelInfoFormValues>;
   UploadLogoComponent: any;
   displayUplaodLogoModal: any;
 }
 
 const EditChannelForm: FC<EditChannelFormProps> = ({
-  channelDetails,
-  channelForm,
   UploadLogoComponent,
-  displayUplaodLogoModal
+  displayUplaodLogoModal,
 }) => {
 
-  console.log("Channel Form", channelForm);
-
-  const checkForChanges = useMemo(() => {
-    if (!isEqual(channelForm.values, channelForm.initialValues)) {
-      return false
-    } else {
-      return true
-    }
-  }, [channelForm.values])
-
-
+  const {
+    values: formValues,
+    touched,
+    setFieldValue,
+    errors,
+    setTouched,
+  } = useEditChannelForm();
 
   return (
     <Box display='flex' gap='s8' width='100%' padding='spacing-sm spacing-md' justifyContent='center'>
@@ -47,7 +43,7 @@ const EditChannelForm: FC<EditChannelFormProps> = ({
           <ImageV3
             width="100%"
             height="100%"
-            src={channelForm.values.channelIcon}
+            src={formValues.channelIcon}
           />
         </Box>
         <Button size='extraSmall' onClick={displayUplaodLogoModal}>Upload Logo</Button>
@@ -74,13 +70,16 @@ const EditChannelForm: FC<EditChannelFormProps> = ({
               <TextInput
                 required
                 label="Channel Name"
-                value={channelForm.values.channelName}
+                value={formValues.channelName as string}
                 onChange={(e) => {
                   const inputValue = e.target.value;
-                  channelForm.setFieldValue('channelName', inputValue);
+                  setTouched({
+                    channelName: true
+                  })
+                  setFieldValue('channelName', inputValue);
                 }}
-                error={channelForm.touched.channelName && Boolean(channelForm.errors.channelName)}
-                errorMessage={channelForm.touched.channelName ? channelForm.errors.channelName : ''}
+                error={touched.channelName && Boolean(errors.channelName)}
+                errorMessage={touched.channelName ? errors.channelName : ''}
                 totalCount={32}
               />
 
@@ -89,12 +88,15 @@ const EditChannelForm: FC<EditChannelFormProps> = ({
                 label="Channel Description"
                 placeholder="Get notified about ..."
                 description='Enter a Brief description of the notifications the user will receive'
-                error={channelForm.touched.channelDesc && Boolean(channelForm.errors.channelDesc)}
-                errorMessage={channelForm.touched.channelDesc ? channelForm.errors.channelDesc : ''}
-                value={channelForm.values.channelDesc}
+                error={touched.channelDesc && Boolean(errors.channelDesc)}
+                errorMessage={touched.channelDesc ? errors.channelDesc : ''}
+                value={formValues.channelDesc}
                 onChange={(e) => {
                   const inputValue = e.target.value;
-                  channelForm.setFieldValue('channelDesc', inputValue);
+                  setTouched({
+                    channelDesc: true
+                  })
+                  setFieldValue('channelDesc', inputValue);
                 }}
                 totalCount={250}
               />
@@ -102,10 +104,16 @@ const EditChannelForm: FC<EditChannelFormProps> = ({
               <TextInput
                 required
                 label="Channel Website URL"
-                value={channelForm.values.channelURL}
-                onChange={channelForm.handleChange('channelURL')}
-                error={channelForm.touched.channelURL && Boolean(channelForm.errors.channelURL)}
-                errorMessage={channelForm.touched.channelURL ? channelForm.errors.channelURL : ''}
+                value={formValues.channelURL as string}
+                onChange={(e) => {
+                  const inputValue = e.target.value;
+                  setTouched({
+                    channelURL: true
+                  })
+                  setFieldValue('channelURL', inputValue)
+                }}
+                error={touched.channelURL && Boolean(errors.channelURL)}
+                errorMessage={touched.channelURL ? errors.channelURL : ''}
               />
             </Box>
           </Box>
@@ -115,7 +123,6 @@ const EditChannelForm: FC<EditChannelFormProps> = ({
 
       <UploadLogoComponent
         InnerComponent={uploadLogoModal}
-        InnerComponentProps={{ channelForm }}
         modalPosition={MODAL_POSITION.ON_PARENT}
       />
 

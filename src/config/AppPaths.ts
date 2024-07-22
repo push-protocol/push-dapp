@@ -7,6 +7,7 @@ enum APP_PATHS {
   Spaces = '/spaces',
   Channels = '/channels',
   CreateChannel = '/createChannel',
+  EditChannel = '/editChannel',
   Dashboard = '/dashboard',
   DiscordVerification = '/discord/verification',
   Rewards = '/points',
