@@ -82,9 +82,6 @@ export const approvePushToken = async ({ signer, contractAddress, amount }: Push
   }
 };
 
-type ImportPushTokenType = {
-  provider: any;
-};
 export const importPushToken = async (): Promise<boolean> => {
   try {
     const name = 'Ethereum Push Notification Service';

@@ -5,7 +5,7 @@ import { FC } from 'react';
 import { Box, Text } from 'blocks';
 
 type StepperProps = {
-  steps: Array<{ label: string; key: string }>;
+  steps: Array<{ label: string; value: string }>;
   setActiveStepKey: (step: string) => void;
   completedSteps: Array<string>;
 };
@@ -28,11 +28,11 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepKey, completedSteps }) 
           gap="spacing-xs"
           width="180px"
           cursor="pointer"
-          onClick={() => handleChangeActiveStep(step.key)}
+          onClick={() => handleChangeActiveStep(step.value)}
         >
           <Text
             textAlign="center"
-            color={completedSteps.includes(step.key) ? 'text-brand-medium' : 'text-tertiary'}
+            color={completedSteps.includes(step.value) ? 'text-brand-medium' : 'text-tertiary'}
             variant="h5-semibold"
             display={{ ml: 'none', dp: 'block' }}
           >
@@ -50,7 +50,7 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepKey, completedSteps }) 
           <Box
             height="4px"
             borderRadius="r2"
-            backgroundColor={completedSteps.includes(step.key) ? 'stroke-brand-medium' : 'stroke-tertiary'}
+            backgroundColor={completedSteps.includes(step.value) ? 'stroke-brand-medium' : 'stroke-tertiary'}
           ></Box>
         </Box>
       ))}

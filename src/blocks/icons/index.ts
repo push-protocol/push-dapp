@@ -30,6 +30,7 @@ export { default as Chat } from './components/Chat';
 export { default as ChatFilled } from './components/ChatFilled';
 
 export { default as CircleFilled } from './components/CircleFilled';
+export { default as CloudUpload } from './components/CloudUpload';
 
 export { default as Copy } from './components/Copy';
 
