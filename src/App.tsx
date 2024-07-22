@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { FC, useContext, useEffect, useMemo, useState } from 'react';
+import { FC, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 // External Packages
 import * as dotenv from 'dotenv';
@@ -218,14 +218,21 @@ export default function App() {
     setcurrentTime(now);
   }, []);
 
+  const mounted = useRef<any>();
+
   useEffect(() => {
-    if (!account) return;
-    dispatch(resetSpamSlice());
-    dispatch(resetNotificationsSlice());
-    dispatch(resetCanSendSlice());
-    dispatch(resetChannelCreationSlice());
-    dispatch(resetAdminSlice());
-    dispatch(resetUserSlice());
+    if (!mounted.current) {
+      // do componentDidMount logic
+      mounted.current = true;
+
+      if (!account) return;
+      dispatch(resetSpamSlice());
+      dispatch(resetNotificationsSlice());
+      dispatch(resetCanSendSlice());
+      dispatch(resetChannelCreationSlice());
+      dispatch(resetAdminSlice());
+      dispatch(resetUserSlice());
+    }
   }, [account]);
 
   // Initialize Theme
@@ -341,7 +348,7 @@ export default function App() {
           <ChatUIProvider
             user={userPushSDKInstance}
             theme={darkMode && darkChatTheme}
-            debug={false}
+            debug={true}
             uiConfig={{
               suppressToast: false,
             }}
