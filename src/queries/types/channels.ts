@@ -108,3 +108,7 @@ export type ApprovePUSHTokenPayload = {
 export type editChannelDetailsResponse = {
   transactionHash: string;
 };
+
+export type InitiateVerifyAliasChainResponse = {
+  tx: string;
+};

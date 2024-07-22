@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Arbitrum, BNB, Cyber, Ethereum, Fuse, IllustrationProps, Optimism, Polygon, PolygonZk } from 'blocks';
 import { FC } from 'react';
 
@@ -21,3 +22,5 @@ export const LOGO_ALIAS_CHAIN: {
   122: Fuse,
   123: Fuse
 };
+=======
+>>>>>>> 9a68be0cedc51c30b8c351423fb58ffc1d417ffa

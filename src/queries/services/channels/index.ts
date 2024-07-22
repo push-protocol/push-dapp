@@ -8,3 +8,5 @@ export * from './reactivateChannel';
 export * from './deactivateChannel';
 export * from './approvePUSHTokens';
 export * from './editChannelDetails';
+export * from './initiateNewChain';
+export * from './verifyAliasChain';

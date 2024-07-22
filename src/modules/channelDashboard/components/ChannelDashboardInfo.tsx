@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom';
 
 import { Box, CircleFilled, Copy, Ethereum, PlusCircle, Skeleton, Text, Tooltip } from 'blocks';
 
+import { LOGO_ALIAS_CHAIN } from 'common';
+
 import { shortenText } from 'helpers/UtilityHelper';
 
-import { LOGO_ALIAS_CHAIN } from 'modules/dashboard/configs';
 
 import { ChannelDetailsResponse } from 'queries';
 
