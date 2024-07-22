@@ -30,9 +30,21 @@ const EditChannelFooter = () => {
     initialValues
   } = useEditChannelForm();
 
+  const { data: channelDetails, refetch: refetchChannelDetails } = useGetChannelDetails(account);
+  const { mutate: approvePUSHToken, isPending: approvingPUSH } = useApprovePUSHToken();
+  const { mutate: editChannel, isPending: editingChannel } = useEditChannel();
+
 
   const [feesRequiredForEdit, setFeesRequiredForEdit] = useState<number>(0);
   const [pushApprovalAmount, setPushApprovalAmount] = useState<number>(0);
+  const [updateChannelError, setUpdateChannelError] = useState('');
+
+
+  useEffect(() => {
+    if (!account || !provider) return;
+    getChannelUpdateCounter();
+    checkApprovedPUSHTokenAmount();
+  }, [account, provider]);
 
   const getChannelUpdateCounter = async () => {
     const onCoreNetwork: boolean = appConfig.coreContractChain === chainId;
@@ -54,11 +66,6 @@ const EditChannelFooter = () => {
     setPushApprovalAmount(parseInt(pushTokenApprovalAmount));
   };
 
-  useEffect(() => {
-    if (!account || !provider) return;
-    getChannelUpdateCounter();
-    checkApprovedPUSHTokenAmount();
-  }, [account, provider]);
 
   const checkForChanges = useMemo(() => {
     if (!isEqual(formValues, initialValues)) {
@@ -67,10 +74,6 @@ const EditChannelFooter = () => {
       return true;
     }
   }, [formValues]);
-
-  const { mutate: approvePUSHToken, isPending: approvingPUSH } = useApprovePUSHToken();
-
-  const [updateChannelError, setUpdateChannelError] = useState('');
 
   const handleApprovePUSH = () => {
     setUpdateChannelError('');
@@ -104,8 +107,6 @@ const EditChannelFooter = () => {
     );
   };
 
-  const { mutate: editChannel, isPending: editingChannel } = useEditChannel();
-  const { data: channelDetails, refetch: refetchChannelDetails } = useGetChannelDetails(account);
 
   const handleEditChannel = async () => {
     setUpdateChannelError('');

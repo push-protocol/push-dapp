@@ -1,14 +1,19 @@
-import { Box, Button, TextInput } from "blocks";
-import { useFormik } from "formik";
-import * as Yup from 'yup';
-import { DashboardActiveState } from "../ChannelDashboard.types";
 import { FC, useContext, useState } from "react";
-import { useAddDelegate, useGetChannelDelegates } from "queries";
-import { useSelector } from "react-redux";
-import { UserStoreType } from "types";
-import { AppContext } from "contexts/AppContext";
+
 import { ethers } from "ethers";
+import { useFormik } from "formik";
+import { useSelector } from "react-redux";
+import * as Yup from 'yup';
+
+import { Box, Button, TextInput } from "blocks";
+
+import { AppContext } from "contexts/AppContext";
 import { InlineError, ModalHeader } from "common";
+
+import { useAddDelegate, useGetChannelDelegates } from "queries";
+
+import { UserStoreType } from "types";
+import { DashboardActiveState } from "../ChannelDashboard.types";
 
 type ChannelAddDelegateProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
@@ -30,7 +35,6 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
       .required('Required')
       .test('address', 'Invalid Address', value => {
         const isWallet = ethers.utils.isAddress(value);
-        console.log("Wallet", value, isWallet);
         return isWallet;
       })
   })
@@ -41,14 +45,12 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
     },
     validationSchema: delegateValidation,
     onSubmit: (values) => {
-      console.log("Valuess", values);
       handleAddDelegate();
     }
   })
 
-  const { mutate: addDelegate, isPending, isError } = useAddDelegate();
+  const { mutate: addDelegate, isPending } = useAddDelegate();
   const { refetch: refetchChannelDelegate } = useGetChannelDelegates(userPushSDKInstance);
-
 
   const handleAddDelegate = async () => {
     if (!delegateForm.isValid) {
@@ -75,7 +77,7 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
       },
       onError: (error) => {
         console.log("Error in adding delegatee", error);
-        setAddDelegateError('User rejected signature. Please try again.')
+        setAddDelegateError(error.message)
       }
     })
   }

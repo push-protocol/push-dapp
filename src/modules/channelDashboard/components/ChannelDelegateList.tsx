@@ -1,9 +1,14 @@
-import { Box, OptOut, Separator, Skeleton, Text } from "blocks";
-import { AppContext } from "contexts/AppContext";
-import { shortenText } from "helpers/UtilityHelper";
-import { useRemoveDelegate } from "queries";
 import { FC, useContext } from "react";
 import { useSelector } from "react-redux";
+
+import { Box, OptOut, Separator, Skeleton, Text } from "blocks";
+
+import { AppContext } from "contexts/AppContext";
+
+import { shortenText } from "helpers/UtilityHelper";
+
+import { useRemoveDelegate } from "queries";
+
 import { UserStoreType } from "types";
 
 type ChannelDelegateListProps = {

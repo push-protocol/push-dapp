@@ -3,9 +3,7 @@ import { FC, useEffect, useState } from "react";
 import { Box, Skeleton, Text, TickCircleFilled } from "blocks";
 
 import { useAccount } from "hooks";
-import { getPushTokenApprovalAmount, getPushTokenFromWallet, mintPushToken } from "helpers";
-
-import { addresses } from "config";
+import { getPushTokenFromWallet, mintPushToken } from "helpers";
 
 import TokenFaucet from "./TokenFaucet";
 
@@ -33,7 +31,6 @@ const StakingVariant: FC<StakingVariantProps> = ({
   const [fetchingbalance, setFetchingBalance] = useState(false);
 
   const [mintingPush, setMintingPush] = useState(false);
-  // const [pushApprovalAmount, setPushApprovalAmount] = useState(0);
 
   // Check PUSH Token in wallet
   const pushTokenInWallet = async () => {
@@ -46,21 +43,10 @@ const StakingVariant: FC<StakingVariantProps> = ({
     setBalance(amount);
   };
 
-  // const checkApprovedPUSHTokenAmount = async () => {
-  //   const pushTokenApprovalAmount = await getPushTokenApprovalAmount({
-  //     address: account,
-  //     provider: provider,
-  //     contractAddress: addresses.epnscore,
-  //   });
-
-  //   setPushApprovalAmount(parseInt(pushTokenApprovalAmount));
-  // }
-
   useEffect(() => {
     if (!account || !provider) return;
     // Checking Push Token in wallet and how much user has approved PUSH Tokens
     pushTokenInWallet();
-    // checkApprovedPUSHTokenAmount();
   }, [balance, account]);
 
   // Mint Test PUSH token

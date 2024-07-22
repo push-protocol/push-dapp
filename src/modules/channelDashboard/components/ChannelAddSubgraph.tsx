@@ -1,12 +1,18 @@
-import { Box, Button, TextInput } from "blocks";
-import { useFormik } from "formik";
 import { FC, useState } from "react";
-import * as Yup from 'yup';
-import { DashboardActiveState } from "../ChannelDashboard.types";
-import { useAddSubgraph } from "queries";
+
 import { ethers } from "ethers";
-import { useAccount } from "hooks";
+import { useFormik } from "formik";
+import * as Yup from 'yup';
+
+import { Box, Button, TextInput } from "blocks";
+
 import { InlineError, ModalHeader } from "common";
+
+import { useAccount } from "hooks";
+
+import { useAddSubgraph } from "queries";
+
+import { DashboardActiveState } from "../ChannelDashboard.types";
 
 type ChannelAddSubgraphProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
@@ -62,15 +68,12 @@ const ChannelAddSubgraph: FC<ChannelAddSubgraphProps> = ({
         setActiveState('dashboard');
       },
       onError: (error) => {
-        console.log("Error in adding delegatee", error);
-        setAddSubgraphError('User rejected signature. Please try again.')
+        console.log("Error in adding subgraoh", error);
+        setAddSubgraphError(error.message)
       }
     }
     )
-
   }
-
-
 
   return (
     <Box
@@ -122,8 +125,8 @@ const ChannelAddSubgraph: FC<ChannelAddSubgraphProps> = ({
         <Button size="medium" variant="outline" onClick={() => setActiveState('dashboard')}>
           Back
         </Button>
-        <Button onClick={() => subgraphForm.handleSubmit()}>
-          Add Subgraph
+        <Button disabled={addingSubgraph} onClick={() => subgraphForm.handleSubmit()}>
+          {addingSubgraph ? 'Adding' : 'Add Subgraph'}
         </Button>
       </Box>
 

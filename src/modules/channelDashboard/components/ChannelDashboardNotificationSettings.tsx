@@ -74,7 +74,7 @@ const ChannelDashboardNotificationSettings: FC<ChannelDashboardNotificationSetti
           </>
         ) : (
           <ChannelDashboardNullState
-            state="notification_settings"
+            state="notificationSettings"
             title="No settings yet"
             subTitle="Add options for users to customize notifications."
             onClick={handleAddSettings}

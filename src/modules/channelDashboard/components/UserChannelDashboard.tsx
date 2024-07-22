@@ -1,13 +1,18 @@
-import { Box } from "blocks";
-import { ChannelDashboardHeader } from "./ChannelDashboardHeader";
-import { InlineError, InlineSuccess } from "common";
-import { ChannelDashboardBody } from "./ChannelDashboardBody";
-import { PrivacyPolicy } from "./PrivacyPolicy";
-import { useGetChannelDetails } from "queries";
-import { DashboardActiveState } from "../ChannelDashboard.types";
 import { FC, useState } from "react";
+
+import { Box } from "blocks";
+
+import { InlineError } from "common";
+
 import { useAccount } from "hooks";
 
+import { useGetChannelDetails } from "queries";
+
+import { ChannelDashboardHeader } from "./ChannelDashboardHeader";
+import { ChannelDashboardBody } from "./ChannelDashboardBody";
+import { PrivacyPolicy } from "./PrivacyPolicy";
+
+import { DashboardActiveState } from "../ChannelDashboard.types";
 
 type UserChannelDashboardProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
@@ -26,7 +31,7 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({
       <Box
         display='flex'
         width={{ initial: '846px', ml: '357px' }}
-        padding='s6'
+        padding='spacing-md'
         flexDirection='column'
         alignItems='center'
         gap='spacing-lg'

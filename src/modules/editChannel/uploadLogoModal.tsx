@@ -1,10 +1,14 @@
-import { Box, Button, Cross, Text } from 'blocks';
-import { FormikProps, useFormik } from 'formik';
-import { isImageFile } from 'modules/channelDashboard/ChannelDashboard.utils';
-import ImageClipper from 'primaries/ImageClipper';
 import { FC, useRef, useState } from 'react';
+
+import { useFormik } from 'formik';
 import { css } from 'styled-components';
 import * as Yup from 'yup';
+
+import { Box, Button, Cross, Text } from 'blocks';
+
+import { isImageFile } from 'modules/channelDashboard/ChannelDashboard.utils';
+import ImageClipper from 'primaries/ImageClipper';
+
 import { useEditChannelForm } from './EditChannel.forms';
 
 type UploadlogoModelProps = {

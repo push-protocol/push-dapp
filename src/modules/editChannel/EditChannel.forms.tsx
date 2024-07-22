@@ -1,8 +1,12 @@
-import { FormikProvider, useFormik, useFormikContext } from "formik"
-import { useAccount } from "hooks";
-import { useGetChannelDetails } from "queries";
 import { FC } from "react";
+
+import { FormikProvider, useFormik, useFormikContext } from "formik"
 import * as Yup from 'yup';
+
+import { useAccount } from "hooks";
+
+import { useGetChannelDetails } from "queries";
+
 import { getMaxCharLimitFieldMessage, getRequiredFieldMessage, URLRegex } from 'common/Common.form';
 
 type EditChannelFormProviderProps = {

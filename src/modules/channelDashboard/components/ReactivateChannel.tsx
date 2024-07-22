@@ -29,12 +29,20 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
 }) => {
 
   const { provider, account } = useAccount();
-
-  const [reactivationError, setReactivationError] = useState('');
+  const { mutate: approvePUSHToken, isPending: approvingPUSH } = useApprovePUSHToken();
 
   const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
 
+  const { mutate: reactivateChannel, isPending } = useReactivateChannel();
+
+  const [reactivationError, setReactivationError] = useState('');
   const [pushApprovalAmount, setPushApprovalAmount] = useState(0);
+
+  useEffect(() => {
+    if (!account || !provider) return;
+    checkApprovedPUSHTokenAmount();
+  }, [account, provider]);
+
 
   const checkApprovedPUSHTokenAmount = async () => {
     const pushTokenApprovalAmount = await getPushTokenApprovalAmount({
@@ -44,13 +52,6 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
     });
     setPushApprovalAmount(parseInt(pushTokenApprovalAmount));
   }
-
-  useEffect(() => {
-    if (!account || !provider) return;
-    checkApprovedPUSHTokenAmount();
-  }, [account, provider]);
-
-  const { mutate: approvePUSHToken, isPending: approvingPUSH } = useApprovePUSHToken();
 
   const handleApprovePUSH = () => {
     setReactivationError('')
@@ -79,10 +80,7 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
       }
     }
     )
-
   }
-
-  const { mutate: reactivateChannel, isPending } = useReactivateChannel();
 
   const handleReactivate = () => {
     setReactivationError('')

@@ -1,10 +1,16 @@
-import { Box, Button, Text } from "blocks";
-import { DashboardActiveState } from "../ChannelDashboard.types";
 import { FC, useState } from "react";
-import { useDeactivateChannel, useGetChannelDetails } from "queries";
-import { useAccount } from "hooks";
-import { ChannelDashboardInfo } from "./ChannelDashboardInfo";
+
+import { Box, Button, Text } from "blocks";
+
 import { InlineError, ModalHeader, StakingVariant } from "common";
+
+import { useAccount } from "hooks";
+
+import { useDeactivateChannel, useGetChannelDetails } from "queries";
+
+import { ChannelDashboardInfo } from "./ChannelDashboardInfo";
+
+import { DashboardActiveState } from "../ChannelDashboard.types";
 
 type DeactivateChannelProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
@@ -18,8 +24,11 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({
 
   const { provider, account } = useAccount();
 
+  const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
   const { mutate: deactivateChannel, isPending } = useDeactivateChannel();
+
   const [deactivateError, setDeactivateError] = useState('');
+
   const handleDeactivateChannel = () => {
     setDeactivateError('');
     var signer = provider.getSigner(account);
@@ -42,7 +51,6 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({
     )
   }
 
-  const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
 
   return (
     <Box

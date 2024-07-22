@@ -1,8 +1,13 @@
-import { Box, Button, Link, Skeleton, Swap, Text } from "blocks";
-import { UniswapWidgetModal } from "components/UniswapWidget";
-import { appConfig } from "config";
-import useModalBlur, { MODAL_POSITION } from "hooks/useModalBlur";
 import { FC } from "react";
+
+import { Box, Button, Link, Skeleton, Swap, Text } from "blocks";
+
+import { appConfig } from "config";
+
+import useModalBlur, { MODAL_POSITION } from "hooks/useModalBlur";
+
+import { UniswapWidgetModal } from "components/UniswapWidget";
+
 
 type TokenFaucetProps = {
   noOfPushTokensToCheck: number;

@@ -1,8 +1,9 @@
-import { Box, Button, CrownSimple, ReceiveNotification, Text } from 'blocks';
 import { FC } from 'react';
 
+import { Box, Button, CrownSimple, ReceiveNotification, Text } from 'blocks';
+
 type ChannelDashboardNullStateProps = {
-  state: 'notification_settings' | 'delegatee';
+  state: 'notificationSettings' | 'delegatee';
   title: string;
   subTitle: string;
   onClick?: any;
@@ -24,7 +25,7 @@ const ChannelDashboardNullState: FC<ChannelDashboardNullStateProps> = ({
       height="200px"
     >
       {state == 'delegatee' && <CrownSimple size={48} color="gray-300" />}
-      {state == 'notification_settings' && <ReceiveNotification size={48} color="gray-300" />}
+      {state == 'notificationSettings' && <ReceiveNotification size={48} color="gray-300" />}
 
       <Box display="flex" flexDirection="column" alignItems="center" gap="s1">
         {/* {heading && ( */}

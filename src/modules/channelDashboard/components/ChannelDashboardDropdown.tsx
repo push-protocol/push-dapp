@@ -1,9 +1,14 @@
-import { BellSimple, BellSimpleSlash, Box, Cube, Text } from "blocks";
-import { css } from "styled-components";
-import { ChannelDropdownTypes, DashboardActiveState } from "../ChannelDashboard.types";
 import { FC } from "react";
+
+import { css } from "styled-components";
+
+import { BellSimple, BellSimpleSlash, Box, Cube, Text } from "blocks";
+
 import { useAccount } from "hooks";
+
 import { useGetChannelDetails } from "queries";
+
+import { ChannelDropdownTypes, DashboardActiveState } from "../ChannelDashboard.types";
 
 type ChannelDashboardDropdownProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
@@ -13,9 +18,7 @@ const ChannelDashboardDropdown: FC<ChannelDashboardDropdownProps> = ({
 }) => {
 
   const { account } = useAccount();
-
   const { data: channelDetails } = useGetChannelDetails(account);
-
 
   const dropdownItems: ChannelDropdownTypes[] = [
     {

@@ -1,11 +1,16 @@
-import { Box, Button, Dropdown, KebabMenuHorizontal, Skeleton } from "blocks";
 import { FC } from "react";
+
+import { css } from "styled-components";
+import { useNavigate } from "react-router-dom";
+
+import { Box, Button, Dropdown, KebabMenuHorizontal, Skeleton } from "blocks";
+
+import { ChannelDetailsResponse } from "queries";
+
 import { ChannelDashboardInfo } from "./ChannelDashboardInfo";
 import { ChannelDashboardDropdown } from "./ChannelDashboardDropdown";
-import { css } from "styled-components";
-import { ChannelDetailsResponse } from "queries";
+
 import { DashboardActiveState } from "../ChannelDashboard.types";
-import { useNavigate } from "react-router-dom";
 
 type ChannelDashboardHeaderProps = {
   channelDetails?: ChannelDetailsResponse;
@@ -19,7 +24,7 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
   setActiveState
 }) => {
 
-  const navgiate = useNavigate();
+  const navgiate = useNavigate()
 
   return (
     <Box
@@ -53,7 +58,6 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
           <Dropdown
             trigger="click"
             overlay={<ChannelDashboardDropdown
-
               setActiveState={setActiveState}
             />}
           >
@@ -68,8 +72,9 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
               css={css`
               `}
             >
-
-              <KebabMenuHorizontal size={24} color={{ dark: 'gray-400', light: 'gray-900' }} />
+              <KebabMenuHorizontal size={24}
+                color='icon-primary'
+              />
             </Box>
           </Dropdown>
         </Skeleton>

@@ -1,5 +1,5 @@
-import { Box, Text } from "blocks";
 import { FC } from "react";
+import { Box, Text } from "blocks";
 
 type ModalHeaderProps = {
   title: string;

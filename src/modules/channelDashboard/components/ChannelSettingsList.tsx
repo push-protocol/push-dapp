@@ -1,5 +1,6 @@
-import { Box, Lozenge, Separator, Text } from "blocks";
 import { FC } from "react";
+
+import { Box, Lozenge, Separator, Text } from "blocks";
 
 type ChannelSettingsListProps = {
   settingName: string;

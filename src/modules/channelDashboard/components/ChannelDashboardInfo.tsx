@@ -1,11 +1,17 @@
-import { Box, Copy, Ethereum, PlusCircle, Skeleton, Text, Tooltip } from 'blocks';
-import { shortenText } from 'helpers/UtilityHelper';
-import { css } from 'styled-components';
-import { LOGO_ALIAS_CHAIN } from 'modules/dashboard/configs';
-import { useNavigate } from 'react-router-dom';
-import { ChannelDetailsResponse } from 'queries';
-import { ImageV3 } from '../ChannelDashboard.styled';
 import { FC } from 'react';
+
+import { css } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+
+import { Box, CircleFilled, Copy, Ethereum, PlusCircle, Skeleton, Text, Tooltip } from 'blocks';
+
+import { shortenText } from 'helpers/UtilityHelper';
+
+import { LOGO_ALIAS_CHAIN } from 'modules/dashboard/configs';
+
+import { ChannelDetailsResponse } from 'queries';
+
+import { ImageV3 } from '../ChannelDashboard.styled';
 
 type ChannelDashboardInfoProps = {
   channelDetails?: ChannelDetailsResponse;
@@ -19,8 +25,12 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
   showAddNewChain = false,
 }) => {
 
-  const LOGOS = [137, 10]
   const navigate = useNavigate();
+
+  const verifiedAliasChainIds =
+    channelDetails?.aliases?.filter((item) => item?.is_alias_verified)?.map((item) => item.alias_blockchain_id) || [];
+  console.log("verifiedAliasChainIds", verifiedAliasChainIds);
+
 
   return (
     <Box
@@ -62,21 +72,23 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
                   width={18}
                   height={18}
                 />
-                {LOGOS.map((chain) => {
-                  const LogoComponent = LOGO_ALIAS_CHAIN[chain];
-                  return LogoComponent ? (
-                    <Box
-                      display="flex"
-                      css={css`margin-left: -4px;`}
-                    >
-                      <LogoComponent
-                        key={chain}
-                        width={18}
-                        height={18}
-                      />
-                    </Box>
-                  ) : null;
-                })}
+                {verifiedAliasChainIds.length > 0 && (
+                  verifiedAliasChainIds.map((aliasChainId: number) => {
+                    const LogoComponent = LOGO_ALIAS_CHAIN[aliasChainId];
+                    return LogoComponent ? (
+                      <Box
+                        display="flex"
+                        css={css`margin-left: -4px;`}
+                      >
+                        <LogoComponent
+                          key={aliasChainId}
+                          width={18}
+                          height={18}
+                        />
+                      </Box>
+                    ) : null;
+                  })
+                )}
               </Box>
 
               {showAddNewChain && <Box display='flex' cursor='pointer' onClick={() => navigate('/addNewChain')}>
@@ -94,7 +106,6 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
               <Text color="text-tertiary" variant="c-regular">
                 {shortenText(channelDetails ? channelDetails?.channel : '', 5)}
               </Text>
-
 
               <Tooltip
                 description='Copy Wallet'
@@ -120,13 +131,11 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
                 alignItems="center"
                 gap="spacing-xxxs"
                 padding="spacing-none spacing-xxxs"
-                backgroundColor="red-100"
+                backgroundColor="surface-danger-subtle"
                 borderRadius="radius-xs"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
-                  <circle cx="4" cy="4" r="4" fill="#E93636" />
-                </svg>
-                <Text color='red-500' variant='bes-semibold'> Deactivated</Text>
+                <CircleFilled size={8} color='icon-danger-bold' />
+                <Text color='text-danger-bold' variant='bes-semibold'> Deactivated</Text>
               </Box>
             )}
 
@@ -136,13 +145,12 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
                 alignItems="center"
                 gap="spacing-xxxs"
                 padding="spacing-none spacing-xxxs"
-                backgroundColor="green-100"
+                backgroundColor="surface-success-subtle"
                 borderRadius="radius-xs"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
-                  <circle cx="4" cy="4" r="4" fill="#008769" />
-                </svg>
-                <Text color='green-500' variant='bes-semibold'> Active</Text>
+
+                <CircleFilled size={8} color='icon-success-bold' />
+                <Text color='text-success-bold' variant='bes-semibold'> Active</Text>
               </Box>
             )}
 
