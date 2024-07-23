@@ -1,8 +1,10 @@
-export type NotificationType = 'broadcast' | 'targeted' | 'subset';
+import { NotificationType } from '@pushprotocol/restapi';
+
 export type NotficationValue = {
   channelAddress: string;
   chainId: string;
   type: NotificationType;
+  recipient: string;
   titleChecked: boolean;
   mediaUrlChecked: boolean;
   ctaLinkChecked: boolean;

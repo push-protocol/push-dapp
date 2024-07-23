@@ -1,4 +1,12 @@
+import { NotificationType } from '@pushprotocol/restapi';
+
 import { Box } from 'blocks';
+import { SelectOption } from 'blocks/select/Select';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+
+import { ChannelSetting } from 'helpers/channel/types';
+
+import { ChannelDetails } from 'common';
 
 //fix the height
 export const getReactNodeIcon = ({ icon, alt }: { icon: string; alt: string }) => {
@@ -20,32 +28,53 @@ export const getReactNodeIcon = ({ icon, alt }: { icon: string; alt: string }) =
 };
 
 //add types
-export const getChannelChainList = (channelDetails) => {
-  const aliases = channelDetails?.aliases?.map((alias) => alias.alias_blockchain_id) || [];
+export const getChannelChainList = (channelDetails: ChannelDetails) => {
+  const aliases = channelDetails?.aliases?.map((alias) => parseInt(alias.alias_blockchain_id)) || [];
   return [...aliases, 11155111];
 };
 
-export const getChannelDelegatesOptions = (channelDetails) => {
-  //map delegates here
-  if (channelDetails)
-    return [
-      {
-        icon: getReactNodeIcon({ icon: channelDetails.iconV2, alt: channelDetails.name }),
-        label: channelDetails?.name,
-        value: channelDetails?.channel,
-      },
-    ];
+export const getChannelDelegatesOptions = (delegatees: [ChannelDetails]) => {
+  if (delegatees && delegatees.length) {
+    return delegatees?.map((channel) => ({
+      icon: getReactNodeIcon({ icon: channel?.iconV2, alt: channel?.name }),
+      label: channel?.name,
+      value: channel?.channel,
+    }));
+  }
+
   return [];
 };
 
-export const getChannelSettingsOptions = (channelDetails) => {
+export const getChannelSettingsOptions = (channelDetails: ChannelDetails) => {
   let settingsOptions = [];
   const defaultOption = { label: 'Default', value: '0' };
   if (channelDetails) {
-    settingsOptions = JSON.parse(channelDetails?.channel_settings)?.map((settings, index) => ({
-      label: settings?.description,
-      value: (index + 1).toString(),
-    }));
+    settingsOptions =
+      JSON.parse(channelDetails?.channel_settings)?.map((settings: ChannelSetting, index: number) => ({
+        label: settings?.description,
+        value: (index + 1).toString(),
+      })) || [];
   }
   return [...settingsOptions, defaultOption];
+};
+
+export const getRecipients = (type: NotificationType, recipient: string) => {
+  if (recipient) {
+    if (type === 'SUBSET') {
+      return recipient.split(',');
+    }
+    if (type === 'TARGETTED') return [recipient];
+  }
+  return ['*'];
+};
+
+export const getChannelAddress = (channelOption: ChannelDetails, chainId: string, onCoreNetwork: boolean) => {
+  console.debug(channelOption);
+  if (onCoreNetwork) return convertAddressToAddrCaip(channelOption.channel, parseInt(chainId));
+  else {
+    const aliasAddress =
+      channelOption.aliases.find((alias) => alias.alias_blockchain_id === chainId)?.alias_address ||
+      channelOption.channel;
+    return aliasAddress;
+  }
 };

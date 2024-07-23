@@ -8,9 +8,9 @@ const RewardsSection = () => {
   return (
     <Box
       display="flex"
-      gap="s3"
-      borderRadius="r6"
-      padding="s4"
+      gap="spacing-xs"
+      borderRadius="radius-md"
+      padding="spacing-sm"
       alignItems="center"
       flexDirection={{ ml: 'column' }}
       justifyContent="space-between"
@@ -22,7 +22,7 @@ const RewardsSection = () => {
         display="flex"
         flexDirection={{ ml: 'column' }}
         alignItems="center"
-        gap="s3"
+        gap="spacing-xs"
       >
         <Points svgProps={{ width: 60, height: 56 }} />
         <Text

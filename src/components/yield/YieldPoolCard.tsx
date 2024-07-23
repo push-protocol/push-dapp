@@ -5,7 +5,6 @@ import { ethers } from 'ethers';
 // External Packages
 import styled, { useTheme } from 'styled-components';
 import { MdCheckCircle, MdError } from 'react-icons/md';
-import { useSelector } from 'react-redux';
 
 // Internal Compoonents
 import useToast from 'hooks/useToast';
@@ -26,7 +25,6 @@ import {
   SkeletonLine,
   SpanV2,
 } from 'components/reusables/SharedStylingV2';
-import { AppContext } from 'contexts/AppContext';
 
 // Internal Configs
 import { abis, addresses } from 'config/index.js';
@@ -41,7 +39,8 @@ const YieldPoolCard = ({
   tokenAddress,
   setActiveTab,
 }: any) => {
-  const { account, provider, wallet } = useAccount();
+  const { account, provider, wallet, isWalletConnected, connect } = useAccount();
+
 
   const [txInProgressWithdraw, setTxInProgressWithdraw] = useState(false);
   const [txInProgressClaimRewards, setTxInProgressClaimRewards] = useState(false);
@@ -52,11 +51,6 @@ const YieldPoolCard = ({
   const [unstakeErrorMessage, setUnstakeErrorMessage] = useState(null);
   const [withdrawErrorMessage, setWithdrawErrorMessage] = useState(null);
 
-  const { userPushSDKInstance } = useSelector((state: any) => {
-    return state.user;
-  });
-  const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
-
   const [filled, setFilled] = useState(0);
 
   const yieldFarmToast = useToast();
@@ -64,8 +58,8 @@ const YieldPoolCard = ({
   const theme = useTheme();
 
   const massClaimRewardsTokensAll = async () => {
-    if (!userPushSDKInstance.signer) {
-      handleConnectWalletAndEnableProfile({ wallet });
+    if (!isWalletConnected) {
+      connect();
       return;
     }
 
@@ -152,10 +146,12 @@ const YieldPoolCard = ({
   };
 
   const withdrawTokens = async () => {
-    if (!userPushSDKInstance.signer) {
-      handleConnectWalletAndEnableProfile({ wallet });
+
+    if (!isWalletConnected) {
+      connect();
       return;
     }
+
 
     if (txInProgressWithdraw) {
       return;
@@ -218,7 +214,7 @@ const YieldPoolCard = ({
     }).catch((err) => {
       yieldFarmToast.showMessageToast({
         toastTitle: 'Error',
-        toastMessage: `Transaction Cancelled!`,
+        toastMessage: `Transaction Cancelled! ${err.message}`,
         toastType: 'ERROR',
         getToastIcon: (size) => (
           <MdError
@@ -233,8 +229,8 @@ const YieldPoolCard = ({
   };
 
   const migrateToNewPool = async () => {
-    if (!userPushSDKInstance.signer) {
-      handleConnectWalletAndEnableProfile({ wallet });
+    if (!isWalletConnected) {
+      connect();
       return;
     }
 
@@ -456,8 +452,8 @@ const YieldPoolCard = ({
   };
 
   const depositLpToken = async (tx, withdrawAmount, totalTxnSteps) => {
-    if (!userPushSDKInstance.signer) {
-      handleConnectWalletAndEnableProfile({ wallet });
+    if (!isWalletConnected) {
+      connect();
       return;
     }
 
@@ -509,8 +505,8 @@ const YieldPoolCard = ({
   };
 
   const depositPushToken = async (tx, withdrawAmount, totalTxnSteps) => {
-    if (!userPushSDKInstance.signer) {
-      handleConnectWalletAndEnableProfile({ wallet });
+    if (!isWalletConnected) {
+      connect();
       return;
     }
 
@@ -613,7 +609,7 @@ const YieldPoolCard = ({
           <ItemVV2
             margin={isMobile ? '0px 6px 0 0 ' : '0px 18px 0px 0px'}
             padding={isMobile ? ' 7px' : '10px'}
-            // padding="10px"
+          // padding="10px"
           >
             {PoolStats ? (
               <>
@@ -650,7 +646,7 @@ const YieldPoolCard = ({
           <ItemVV2
             margin={isMobile ? '0px 6px 0 0 ' : '0px 18px 0px 0px'}
             padding={isMobile ? ' 7px' : '10px'}
-            //  padding="10px"
+          //  padding="10px"
           >
             {PoolStats ? (
               <>

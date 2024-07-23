@@ -1,7 +1,7 @@
 import { NotificationOptionType } from './SendNotification.types';
 
 export const notificationTypeOptions: NotificationOptionType = [
-  { label: 'Broadcast', value: 'broadcast' },
-  { label: 'Targeted', value: 'targeted' },
-  { label: 'Subset', value: 'subset' },
+  { label: 'Broadcast', value: 'BROADCAST' },
+  { label: 'Targeted', value: 'TARGETTED' },
+  { label: 'Subset', value: 'SUBSET' },
 ];

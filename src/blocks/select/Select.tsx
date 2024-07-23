@@ -4,7 +4,7 @@ import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption 
 import '@reach/combobox/styles.css';
 
 import { textVariants } from '../text';
-import { CaretDown } from '../icons';
+import { Asterisk, CaretDown } from '../icons';
 
 export type SelectOption = {
   icon?: React.ReactNode;
@@ -170,7 +170,26 @@ const StyledOption = styled(ComboboxOption)`
     height: 24px;
   }
 `;
+const LabelContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+const LabelText = styled.span<{ color: string }>`
+  color: var(--${({ color }) => color});
+  font-family: var(--font-family);
+  font-size: ${textVariants['h6-semibold'].fontSize};
+  font-style: ${textVariants['h6-semibold'].fontStyle};
+  font-weight: ${textVariants['h6-semibold'].fontWeight};
+  line-height: ${textVariants['h6-semibold'].lineHeight};
+`;
 
+const LabelTextContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-xxxs, 4px);
+`;
 const Select: React.FC<SelectProps> = ({
   options,
   onSelect,
@@ -179,6 +198,9 @@ const Select: React.FC<SelectProps> = ({
   placeholder = '',
   error,
   success,
+  label,
+  required,
+  tag,
   disabled,
 }) => {
   const [popoverWidth, setPopoverWidth] = useState(0);
@@ -208,7 +230,15 @@ const Select: React.FC<SelectProps> = ({
 
   return (
     <Container css={css}>
-      {/* label will be added here  */}
+      <LabelContainer>
+        <LabelText color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-default'}>
+          <LabelTextContainer>
+            {label}
+            {required && <Asterisk size={4.6} />}
+          </LabelTextContainer>
+        </LabelText>
+        {tag}
+      </LabelContainer>
 
       <StyledCombobox
         ref={comboboxRef}
@@ -248,10 +278,10 @@ const Select: React.FC<SelectProps> = ({
         {viewPopover && (
           <StyledPopover>
             <StyledList>
-              {options.map((option) => (
+              {options.map((option, index) => (
                 <StyledOption
                   value={option.value}
-                  key={option.value}
+                  key={`${option.value}${index}`}
                 >
                   {option?.icon}
                   {option.label}

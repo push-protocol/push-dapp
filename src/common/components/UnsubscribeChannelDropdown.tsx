@@ -2,7 +2,7 @@
 import { FC, ReactNode } from 'react';
 
 // Utility functions
-import { ChannelDetailsResponse } from 'queries';
+import { ChannelDetails } from 'common';
 
 // Components
 import ManageNotifSettingDropdown from 'components/dropdowns/ManageNotifSettingDropdown';
@@ -10,7 +10,7 @@ import { UserSetting } from 'helpers/channel/types';
 
 export type UnsubscribeChannelDropdownProps = {
   children: ReactNode;
-  channelDetail: ChannelDetailsResponse;
+  channelDetail: ChannelDetails;
   centeronMobile?: boolean;
   onSuccess: () => void;
   userSetting?: UserSetting[] | undefined;

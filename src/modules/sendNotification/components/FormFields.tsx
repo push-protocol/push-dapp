@@ -1,286 +1,397 @@
-import { Box, Button, Select, Text, TextArea, TextInput, ToggleSwitch } from 'blocks';
-import { FC } from 'react';
+import { FC, KeyboardEventHandler, useState } from 'react';
+
 import { useFormik } from 'formik';
-import * as yup from 'yup';
 import { css } from 'styled-components';
-import { NotficationValue } from '../SendNotification.types';
-import { useAccount } from 'hooks';
-import { useGetChannelDetails, useSendNotification } from 'queries';
-import { notificationTypeOptions } from '../SendNotification.constants';
-import { getChannelChainList, getChannelDelegatesOptions, getChannelSettingsOptions } from '../SendNotification.utils';
-import { getSelectChains } from 'common';
-import useToast from 'hooks/useToast';
-import { MdError } from 'react-icons/md';
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { useSelector } from 'react-redux';
+import { MdCheckCircle, MdError } from 'react-icons/md';
+
 import { NotificationPreview } from './NotificationPreview';
-import { title } from 'process';
+import { Box, Button, Cross, Link, Select, Text, TextArea, TextInput, ToggleSwitch } from 'blocks';
+
+import { useAccount } from 'hooks';
+import useToast from 'hooks/useToast';
+import { useGetChannelDetails, useSendNotification } from 'queries';
+
+import {
+  getChannelAddress,
+  getChannelChainList,
+  getChannelDelegatesOptions,
+  getChannelSettingsOptions,
+  getRecipients,
+} from '../SendNotification.utils';
+import { CORE_CHAIN_ID } from 'helpers/UtilityHelper';
+import { getSelectChains, ChannelDetails } from 'common';
+
+import { notificationTypeOptions } from '../SendNotification.constants';
+
+import { NotficationValue } from '../SendNotification.types';
+import { UserStoreType } from 'types';
+
+import { getFormInitialValues, getValidationSchema } from '../SendNotification.form';
 
 const FormFields: FC = () => {
-  const { account } = useAccount();
-  // const { mutate: sendNotification, isPending } = useSendNotification();
+  const [subsetRecipients, setSubsetRecipients] = useState<Array<string>>([]);
+  const { account, chainId } = useAccount();
+  const { mutate: sendNotification, isPending } = useSendNotification();
   const { data: channelDetails } = useGetChannelDetails(account);
   const toast = useToast();
+  const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
+  /** replace the delegatees with high level sdk function once it is available */
+  const { delegatees } = useSelector((state: any) => state.admin);
+  const onCoreNetwork = CORE_CHAIN_ID === chainId;
+  const delegateesOptions = getChannelDelegatesOptions(
+    delegatees?.length ? delegatees : channelDetails ? [channelDetails] : []
+  );
 
-  const alaisChainOptions = getSelectChains(getChannelChainList(channelDetails));
-  //get delegates
-  console.debug(channelDetails, 'channelDetails');
-  //add validation
-
-  const validationSchema = yup.object().shape({
-    channelAddress: yup.string().required('Delegate is required'),
-    chainId: yup.string().required('Chain is required'),
-    type: yup.string().required('Type is required'),
-    body: yup.string().required('Description is required'),
-    setting: yup.string().required('Setting is required'),
-    // titleChecked: yup.boolean().required('Title is required'),
-    // mediaUrlChecked: yup.boolean().required('Title is required'),
-    // ctaLinkChecked:yup.boolean().required('Title is required'),
-    title: yup.string().test('title', 'Title is Required', function () {
-      return this.parent.title;
-    }),
-    // title: yup.string().required('title is required'),
-    mediaUrl: yup.string().test('mediaUrl', 'Media URL is Required', function () {
-      return this.parent.mediaUrl;
-    }),
-    ctaLink: yup.string().test('ctaLink', 'CTA Link is Required', function () {
-      return this.parent.ctaLink;
-    }),
-  });
-  //optimise and shift
-
-  // const getChannelDelegatesValues = () => {
-  //   if (channelDetails) return [channelDetails?.channel];
-  //   return [];
-  // };
   const formik = useFormik<NotficationValue>({
-    initialValues: {
-      channelAddress: channelDetails?.channel || '',
-      chainId: alaisChainOptions[0].value,
-      type: 'broadcast',
-      titleChecked: false,
-      mediaUrlChecked: false,
-      ctaLinkChecked: false,
-      title: '',
-      body: '',
-      setting: '0',
-      mediaUrl: '',
-      ctaLink: '',
-    },
-    validationSchema: validationSchema,
+    initialValues: getFormInitialValues(delegateesOptions),
+    validationSchema: getValidationSchema(!!subsetRecipients.length),
     onSubmit: (values) => {
-      // handleSendNotification(values);
+      handleSendNotification(values);
     },
   });
-  // const handleSendNotification = ({channelAddress,chainId,t}: NotficationValue) => {
-  //   sendNotification(
-  //     {
-  //       channel: convertAddressToAddrCaip(),
-  //       password,
-  //     },
-  //     {
-  //       onSuccess: (response) => {
-  //         console.debug(response, 'response');
-  //       },
-  //       onError: (error: any) => {
-  //         console.debug(error, 'response');
-  //         // if (error.name) {
-  //         //   toast.showMessageToast({
-  //         //     toastTitle: 'Error',
-  //         //     toastMessage: error.response.data.error,
-  //         //     toastType: 'ERROR',
-  //         //     getToastIcon: (size) => (
-  //         //       <MdError
-  //         //         size={size}
-  //         //         color="red"
-  //         //       />
-  //         //     ),
-  //         //   });
-  //         // }
-  //       },
-  //     }
-  //   );
-  // };
+  const selectedChannel = delegatees?.find(
+    (delegatee: ChannelDetails) => delegatee.channel === formik.values.channelAddress
+  );
+  const alaisChainOptions = getSelectChains(getChannelChainList(selectedChannel));
 
+  const showPreview = formik.values.body || formik.values.title || formik.values.ctaLink || formik.values.mediaUrl;
+
+  const handleSendNotification = ({
+    chainId,
+    title,
+    type,
+    recipient,
+    ctaLink,
+    mediaUrl,
+    body,
+    setting,
+  }: NotficationValue) => {
+    sendNotification(
+      {
+        channel: getChannelAddress(selectedChannel, chainId, onCoreNetwork),
+        recipients: getRecipients(type, recipient || subsetRecipients.join()),
+        notification: { title, body },
+        userPushSDKInstance,
+        payload: {
+          title,
+          body,
+          cta: ctaLink,
+          embed: mediaUrl,
+          category: parseInt(setting) ?? undefined,
+        },
+      },
+      {
+        onSuccess: () => {
+          toast.showMessageToast({
+            toastTitle: 'Success',
+            toastMessage: 'Successfully sent notification',
+            toastType: 'SUCCESS',
+            getToastIcon: (size) => (
+              <MdCheckCircle
+                size={size}
+                color="green"
+              />
+            ),
+          });
+          formik.resetForm();
+        },
+        onError: (error: any) => {
+          if (error) {
+            toast.showMessageToast({
+              toastTitle: 'Error',
+              toastMessage: 'Unable to send notification',
+              toastType: 'ERROR',
+              getToastIcon: (size) => (
+                <MdError
+                  size={size}
+                  color="red"
+                />
+              ),
+            });
+          }
+        },
+      }
+    );
+  };
+
+  const handleSubsetInputChange: KeyboardEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault();
+    const LIMITER_KEYS = ['Enter', ','];
+    if (LIMITER_KEYS.includes(e.key)) {
+      const newRecipients = formik.values.recipient.split(' ').filter((recipient) => recipient); // Remove any empty strings
+
+      setSubsetRecipients((oldRecipients) => {
+        const uniqueRecipients = new Set([...oldRecipients, ...newRecipients]);
+        return Array.from(uniqueRecipients);
+      });
+
+      formik.setFieldValue('recipient', '');
+    }
+  };
+  const handleRemoveRecipient = (index: number) => {
+    setSubsetRecipients((oldRecipients) => oldRecipients.filter((_, i) => i !== index));
+  };
+
+  const handleTypeChange = (value: string) => {
+    formik.setFieldValue('type', value);
+    formik.setFieldValue('recipient', '');
+    setSubsetRecipients([]);
+  };
   return (
     <form onSubmit={formik.handleSubmit}>
       <Box
         display="flex"
-        gap={{ dp: 'spacing-md', ml: 'spacing-sm' }}
-        width="100%"
         flexDirection="column"
+        gap="spacing-xl"
+        alignItems="center"
       >
         <Box
           display="flex"
-          gap="spacing-sm"
-          flexDirection={{ dp: 'row', ml: 'column' }}
+          gap={{ dp: 'spacing-md', ml: 'spacing-sm' }}
+          width="100%"
+          flexDirection="column"
         >
-          <Box width="65%">
+          <Box
+            display="flex"
+            gap="spacing-sm"
+            flexDirection={{ dp: 'row', ml: 'column' }}
+          >
+            <Box width="65%">
+              <Select
+                options={delegateesOptions}
+                value={formik.values.channelAddress}
+                onSelect={formik.handleChange('channelAddress')}
+                error={formik.touched.channelAddress && Boolean(formik.errors.channelAddress)}
+                errorMessage={formik.touched.channelAddress ? formik.errors.channelAddress : ''}
+              />
+            </Box>
             <Select
-              options={getChannelDelegatesOptions(channelDetails)}
-              value={formik.values.channelAddress}
-              onSelect={formik.handleChange('channelAddress')}
-              error={formik.touched.channelAddress && Boolean(formik.errors.channelAddress)}
-              errorMessage={formik.touched.channelAddress ? formik.errors.channelAddress : ''}
+              options={alaisChainOptions}
+              value={formik.values.chainId}
+              onSelect={formik.handleChange('chainId')}
+              error={formik.touched.chainId && Boolean(formik.errors.chainId)}
+              errorMessage={formik.touched.chainId ? formik.errors.chainId : ''}
             />
           </Box>
           <Select
-            options={alaisChainOptions}
-            value={formik.values.chainId}
-            onSelect={formik.handleChange('chainId')}
-            error={formik.touched.chainId && Boolean(formik.errors.chainId)}
-            errorMessage={formik.touched.chainId ? formik.errors.chainId : ''}
+            options={notificationTypeOptions}
+            value={formik.values.type}
+            onSelect={(value) => handleTypeChange(value)}
+            error={formik.touched.type && Boolean(formik.errors.type)}
+            errorMessage={formik.touched.type ? formik.errors.type : ''}
           />
-        </Box>
-        <Select
-          options={notificationTypeOptions}
-          value={formik.values.type}
-          onSelect={formik.handleChange('type')}
-          error={formik.touched.type && Boolean(formik.errors.type)}
-          errorMessage={formik.touched.type ? formik.errors.type : ''}
-        />
-        <Box
-          display="flex"
-          gap="spacing-sm"
-          justifyContent="space-between"
-          css={css`
-            flex-wrap: wrap;
-          `}
-        >
           <Box
-            css={css`
-              flex: 1;
-            `}
             display="flex"
-            alignItems="center"
-            backgroundColor="surface-secondary"
-            borderRadius="radius-xs"
+            gap="spacing-sm"
             justifyContent="space-between"
-            padding="spacing-xs"
-          >
-            <Text
-              ellipsis
-              variant="bs-semibold"
-            >
-              Title
-            </Text>
-            <ToggleSwitch
-              leadingToggle={false}
-              checked={formik.values.titleChecked}
-              onCheckedChange={(checked) => formik.setFieldValue('titleChecked', checked)}
-            />
-          </Box>
-          <Box
             css={css`
-              flex: 1;
+              flex-wrap: wrap;
             `}
-            display="flex"
-            backgroundColor="surface-secondary"
-            borderRadius="radius-xs"
-            alignItems="center"
-            justifyContent="space-between"
-            padding="spacing-xs"
           >
-            <Text
-              ellipsis
-              variant="bs-semibold"
+            <Box
+              css={css`
+                flex: 1;
+              `}
+              display="flex"
+              alignItems="center"
+              backgroundColor="surface-secondary"
+              borderRadius="radius-xs"
+              justifyContent="space-between"
+              padding="spacing-xs"
             >
-              Media URL
-            </Text>
-            <ToggleSwitch
-              leadingToggle={false}
-              checked={formik.values.mediaUrlChecked}
-              onCheckedChange={(checked) => formik.setFieldValue('mediaUrlChecked', checked)}
-            />
-          </Box>
-          <Box
-            css={css`
-              flex: 1;
-            `}
-            display="flex"
-            backgroundColor="surface-secondary"
-            borderRadius="radius-xs"
-            alignItems="center"
-            justifyContent="space-between"
-            padding="spacing-xs"
-          >
-            <Text
-              ellipsis
-              variant="bs-semibold"
+              <Text
+                ellipsis
+                variant="bs-semibold"
+              >
+                Title
+              </Text>
+              <ToggleSwitch
+                leadingToggle={false}
+                checked={formik.values.titleChecked}
+                onCheckedChange={(checked) => formik.setFieldValue('titleChecked', checked)}
+              />
+            </Box>
+            <Box
+              css={css`
+                flex: 1;
+              `}
+              display="flex"
+              backgroundColor="surface-secondary"
+              borderRadius="radius-xs"
+              alignItems="center"
+              justifyContent="space-between"
+              padding="spacing-xs"
             >
-              CTA Link
-            </Text>
-            <ToggleSwitch
-              leadingToggle={false}
-              checked={formik.values.ctaLinkChecked}
-              onCheckedChange={(checked) => formik.setFieldValue('ctaLinkChecked', checked)}
-            />
+              <Text
+                ellipsis
+                variant="bs-semibold"
+              >
+                Media URL
+              </Text>
+              <ToggleSwitch
+                leadingToggle={false}
+                checked={formik.values.mediaUrlChecked}
+                onCheckedChange={(checked) => formik.setFieldValue('mediaUrlChecked', checked)}
+              />
+            </Box>
+            <Box
+              css={css`
+                flex: 1;
+              `}
+              display="flex"
+              backgroundColor="surface-secondary"
+              borderRadius="radius-xs"
+              alignItems="center"
+              justifyContent="space-between"
+              padding="spacing-xs"
+            >
+              <Text
+                ellipsis
+                variant="bs-semibold"
+              >
+                CTA Link
+              </Text>
+              <ToggleSwitch
+                leadingToggle={false}
+                checked={formik.values.ctaLinkChecked}
+                onCheckedChange={(checked) => formik.setFieldValue('ctaLinkChecked', checked)}
+              />
+            </Box>
           </Box>
-        </Box>
-        {formik.values.titleChecked && (
-          <TextInput
-            totalCount={80}
+          {formik.values.type === 'TARGETTED' && (
+            <TextInput
+              placeholder="Input Value"
+              label="Recipient Wallet Address"
+              onChange={formik.handleChange('recipient')}
+              value={formik.values.recipient}
+              error={formik.touched.recipient && Boolean(formik.errors.recipient)}
+              errorMessage={formik.touched.recipient ? formik.errors.recipient : ''}
+            />
+          )}
+          {formik.values.type === 'SUBSET' && (
+            <Box
+              display="flex"
+              flexDirection="column"
+              gap="spacing-xs"
+              onKeyUp={(e) => handleSubsetInputChange(e)}
+            >
+              <Box
+                display="flex"
+                gap="spacing-xxs"
+                css={css`
+                  flex-wrap: wrap;
+                `}
+              >
+                {!!subsetRecipients.length &&
+                  subsetRecipients.map((address: string, index: number) => (
+                    <Box
+                      display="flex"
+                      gap="spacing-xxs"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      padding="spacing-xxxs spacing-xxs"
+                      borderRadius="radius-xxxs"
+                      backgroundColor="surface-brand-medium"
+                    >
+                      <Text color="text-brand-subtle">{address.slice(0, -1)}</Text>
+                      <Box
+                        cursor="pointer"
+                        display="flex"
+                        alignItems="center"
+                        onClick={() => handleRemoveRecipient(index)}
+                      >
+                        <Cross
+                          size={14}
+                          color="icon-secondary"
+                        />
+                      </Box>
+                    </Box>
+                  ))}
+              </Box>
+              <TextInput
+                placeholder="Input Value"
+                label="Enter Recipients Wallet Addresses"
+                description="Enter recipients wallet addresses separated by a comma or by pressing the enter key"
+                onChange={(e) => formik.setFieldValue('recipient', e.target.value)}
+                value={formik.values.recipient}
+                error={formik.touched.recipient && Boolean(formik.errors.recipient)}
+                errorMessage={formik.touched.recipient ? formik.errors.recipient : ''}
+              />
+            </Box>
+          )}
+          {formik.values.titleChecked && (
+            <TextInput
+              totalCount={80}
+              placeholder="Input Value"
+              label="Notification Title"
+              onChange={formik.handleChange('title')}
+              value={formik.values.title}
+              error={formik.touched.title && Boolean(formik.errors.title)}
+              errorMessage={formik.touched.title ? formik.errors.title : ''}
+            />
+          )}
+          <TextArea
+            label="Notification Message"
             placeholder="Input Value"
-            label="Notification Title"
-            onChange={formik.handleChange('title')}
-            value={formik.values.title}
-            error={formik.touched.title && Boolean(formik.errors.title)}
-            errorMessage={formik.touched.title ? formik.errors.title : ''}
+            totalCount={500}
+            onChange={formik.handleChange('body')}
+            value={formik.values.body}
+            error={formik.touched.body && Boolean(formik.errors.body)}
+            errorMessage={formik.touched.body ? formik.errors.body : ''}
           />
-        )}
-        <TextArea
-          label="Notification Message"
-          placeholder="Input Value"
-          totalCount={500}
-          onChange={formik.handleChange('body')}
-          value={formik.values.body}
-          error={formik.touched.body && Boolean(formik.errors.body)}
-          errorMessage={formik.touched.body ? formik.errors.body : ''}
-        />
-        {/* settings and tag in select */}
-        <Select
-          label="Notification Setting Type"
-          options={getChannelSettingsOptions(channelDetails)}
-          value={formik.values.setting}
-          onSelect={formik.handleChange('setting')}
-          error={formik.touched.setting && Boolean(formik.errors.setting)}
-          errorMessage={formik.touched.setting ? formik.errors.setting : ''}
-        />
+          <Select
+            tag={
+              <Link
+                textProps={{ color: 'text-brand-medium' }}
+                to="/channel/settings"
+              >
+                Manage Setting
+              </Link>
+            }
+            label="Notification Setting Type"
+            options={getChannelSettingsOptions(selectedChannel)}
+            value={formik.values.setting}
+            onSelect={formik.handleChange('setting')}
+            error={formik.touched.setting && Boolean(formik.errors.setting)}
+            errorMessage={formik.touched.setting ? formik.errors.setting : ''}
+          />
 
-        {formik.values.mediaUrlChecked && (
-          <TextInput
-            placeholder="Input Value"
-            label="Media URL"
-            onChange={formik.handleChange('mediaUrl')}
-            value={formik.values.mediaUrl}
-            error={formik.touched.mediaUrl && Boolean(formik.errors.mediaUrl)}
-            errorMessage={formik.touched.mediaUrl ? formik.errors.mediaUrl : ''}
-          />
-        )}
-        {formik.values.ctaLinkChecked && (
-          <TextInput
-            placeholder="Input Value"
-            label="CTA Link"
-            onChange={formik.handleChange('ctaLink')}
-            value={formik.values.ctaLink}
-            error={formik.touched.ctaLink && Boolean(formik.errors.ctaLink)}
-            errorMessage={formik.touched.ctaLink ? formik.errors.ctaLink : ''}
-          />
-        )}
-        {formik.values.body && (
-          <NotificationPreview
-            title={formik.values.title}
-            body={formik.values.body}
-            cta={formik.values.ctaLink}
-            channelName={channelDetails?.name || ''}
-            icon={channelDetails?.iconV2 || ''}
-            image={formik.values.mediaUrl}
-            chainId={parseInt(formik.values.chainId)}
-          />
-        )}
+          {formik.values.mediaUrlChecked && (
+            <TextInput
+              placeholder="Input Value"
+              label="Media URL"
+              onChange={formik.handleChange('mediaUrl')}
+              value={formik.values.mediaUrl}
+              error={formik.touched.mediaUrl && Boolean(formik.errors.mediaUrl)}
+              errorMessage={formik.touched.mediaUrl ? formik.errors.mediaUrl : ''}
+            />
+          )}
+          {formik.values.ctaLinkChecked && (
+            <TextInput
+              placeholder="Input Value"
+              label="CTA Link"
+              onChange={formik.handleChange('ctaLink')}
+              value={formik.values.ctaLink}
+              error={formik.touched.ctaLink && Boolean(formik.errors.ctaLink)}
+              errorMessage={formik.touched.ctaLink ? formik.errors.ctaLink : ''}
+            />
+          )}
+          {showPreview && (
+            <NotificationPreview
+              title={formik.values.title}
+              body={formik.values.body}
+              cta={formik.values.ctaLink}
+              channelName={selectedChannel?.name || ''}
+              icon={selectedChannel?.iconV2 || ''}
+              image={formik.values.mediaUrl}
+              chainId={parseInt(formik.values.chainId)}
+            />
+          )}
+        </Box>
+
+        <Button disabled={isPending}>{isPending ? 'Sending' : ' Send Notification'}</Button>
       </Box>
-      {/* doesnot update body */}
-
-      <Button> Send Notification</Button>
     </form>
   );
 };

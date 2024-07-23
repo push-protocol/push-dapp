@@ -1,4 +1,4 @@
-import { ChannelDetailsResponse } from '../../types';
+import { ChannelDetails } from 'common';
 
 //any remodelling needed in the response can be done here
-export const getChannelDetailsModelCreator = (response: ChannelDetailsResponse): ChannelDetailsResponse => response;
+export const getChannelDetailsModelCreator = (response: ChannelDetails): ChannelDetails => response;

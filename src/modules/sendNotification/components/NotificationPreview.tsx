@@ -1,8 +1,12 @@
-import { NotificationItem, chainNameType } from '@pushprotocol/uiweb';
-import { Box, Text } from 'blocks';
-import { useBlocksTheme } from 'blocks/Blocks.hooks';
-import { chainNameBackendStandard } from 'helpers/UtilityHelper';
 import { FC } from 'react';
+
+import { NotificationItem, chainNameType } from '@pushprotocol/uiweb';
+
+import { useBlocksTheme } from 'blocks/Blocks.hooks';
+
+import { Box, Text } from 'blocks';
+
+import { chainNameBackendStandard } from 'helpers/UtilityHelper';
 
 type NotificationPreviewProps = {
   title: string;
@@ -14,21 +18,11 @@ type NotificationPreviewProps = {
   chainId: number;
 };
 
-const NotificationPreview: FC<NotificationPreviewProps> = ({ title, body, cta, channelName, icon, image, chainId }) => {
+const NotificationPreview: FC<NotificationPreviewProps> = (props) => {
   const theme = useBlocksTheme();
-  return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      gap="spacing-none"
-    >
-      <Text
-        variant="h6-semibold"
-        color="components-inputs-text-default"
-        textTransform="uppercase"
-      >
-        Preview Notification
-      </Text>
+
+  const NotifItem = ({ title, body, cta, channelName, icon, image, chainId }: NotificationPreviewProps) => {
+    return (
       <NotificationItem
         notificationTitle={title}
         notificationBody={body}
@@ -40,6 +34,22 @@ const NotificationPreview: FC<NotificationPreviewProps> = ({ title, body, cta, c
         theme={theme.mode}
         url={''}
       />
+    );
+  };
+  return (
+    <Box
+      display="flex"
+      flexDirection="column"
+      gap="spacing-none"
+    >
+      <Text
+        variant="h6-semibold"
+        color="text-primary"
+        textTransform="uppercase"
+      >
+        Preview Notification
+      </Text>
+      <NotifItem {...props} />
     </Box>
   );
 };

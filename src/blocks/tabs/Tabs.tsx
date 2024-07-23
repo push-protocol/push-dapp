@@ -1,7 +1,6 @@
 import React from 'react';
 import { TabPanels, TabPanel, TabsKeyboardActivation } from '@reach/tabs';
 import '@reach/tabs/styles.css';
-import { useBlocksTheme } from '../Blocks.hooks';
 import {
   StyledFillTab,
   StyledFillTabList,
@@ -9,8 +8,8 @@ import {
   StyledLineTab,
   StyledLineTabList,
   StyledLineTabs,
+  StyledTabLabel,
 } from './Tabs.styled';
-import { Text } from 'blocks/text';
 
 export type TabItem = {
   key: string;
@@ -28,8 +27,6 @@ export type TabsProps = {
 };
 
 const Tabs: React.FC<TabsProps> = ({ items, onChange, variant = 'line', activeKey }) => {
-  const { mode } = useBlocksTheme();
-
   const handleChange = (index: number) => {
     const activeItem = items[index];
     if (activeItem && !activeItem.disabled) {
@@ -52,20 +49,16 @@ const Tabs: React.FC<TabsProps> = ({ items, onChange, variant = 'line', activeKe
       role="tabpanel"
       keyboardActivation={TabsKeyboardActivation.Auto}
     >
-      <TabList
-        mode={mode}
-        role="tablist"
-      >
+      <TabList role="tablist">
         {items.map((item) => (
           <Tab
             aria-disabled={item.disabled}
             role="tab"
             key={item.key}
             disabled={item.disabled}
-            mode={mode}
           >
             {item.icon && item.icon}
-            <Text variant="h5-semibold">{item.label}</Text>
+            <StyledTabLabel>{item.label}</StyledTabLabel>
           </Tab>
         ))}
       </TabList>

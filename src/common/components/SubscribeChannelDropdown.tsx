@@ -2,14 +2,14 @@
 import { FC, ReactNode } from 'react';
 
 // Utility functions
-import { ChannelDetailsResponse } from 'queries';
+import { ChannelDetails } from 'common';
 
 // Components
 import OptinNotifSettingDropdown from 'components/dropdowns/OptinNotifSettingDropdown';
 
 export type SubscribeChannelDropdownProps = {
   children: ReactNode;
-  channelDetails: ChannelDetailsResponse;
+  channelDetails: ChannelDetails;
   onSuccess: () => void;
 };
 

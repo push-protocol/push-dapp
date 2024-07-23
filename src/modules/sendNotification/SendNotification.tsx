@@ -1,13 +1,19 @@
-import { Box, Button, Text, ToggleSwitch } from 'blocks';
 import { FC } from 'react';
+
+import { css } from 'styled-components';
+import { useSelector } from 'react-redux';
+
+import { Box, Text } from 'blocks';
 import { FormFields } from './components/FormFields';
-import { useGetChannelDetails } from 'queries';
-import { useAccount } from 'hooks';
+import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
+
+import { UserStoreType } from 'types';
 
 //add formik
 //add conditon for /send url
 
 const SendNotification: FC = () => {
+  const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
   return (
     <Box
       padding={{ dp: 'spacing-lg', ml: 'spacing-sm' }}
@@ -37,6 +43,22 @@ const SendNotification: FC = () => {
         Send Notification
       </Text>
       <FormFields />
+      {userPushSDKInstance && userPushSDKInstance?.readmode() && (
+        <Box
+          display="flex"
+          justifyContent="center"
+          width="-webkit-fill-available"
+          alignItems="center"
+          css={css`
+            z-index: 99999;
+          `}
+        >
+          <UnlockProfileWrapper
+            type={UNLOCK_PROFILE_TYPE.MODAL}
+            showConnectModal={true}
+          />
+        </Box>
+      )}
     </Box>
   );
 };

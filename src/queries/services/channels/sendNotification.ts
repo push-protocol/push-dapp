@@ -1,8 +1,9 @@
 import { INotification, IPayload, PushAPI } from '@pushprotocol/restapi';
+import { sendNotificationModelCreator } from 'queries/models/channels';
 
 type SendNotificationParams = {
   userPushSDKInstance: PushAPI;
-  recipients: Array<string>;
+  recipients: Array<string> | ['*'];
   payload: IPayload;
   notification: INotification;
   channel: string; //chain address in caip format
@@ -21,4 +22,4 @@ export const sendNotification = ({
       payload,
       channel,
     })
-    .then(console.debug);
+    .then(sendNotificationModelCreator);
