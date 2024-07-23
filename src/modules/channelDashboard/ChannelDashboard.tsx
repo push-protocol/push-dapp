@@ -15,14 +15,6 @@ import { EditChannel } from 'modules/editChannel/EditChannel';
 
 const ChannelDashboard = () => {
   const [activeState, setActiveState] = useState<DashboardActiveState>('dashboard');
-  /**
-   * We need to have 3 things here
-   * 1. Channel Dashboard
-   * 2. Add Subgraph Details
-   * 3. Add Delegate
-   * 4. Reactivate Channel
-   * 6. Activate Channel
-   */
 
   return (
     <Box>

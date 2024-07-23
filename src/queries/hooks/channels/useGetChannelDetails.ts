@@ -17,6 +17,16 @@ export const useGetChannelDetails = (address: string) => {
   const query = useQuery({
     queryKey: [channelDetails, address],
     queryFn: () => getChannelDetails({ userPushSDKInstance, address }),
+    retry: (failureCount, error) => {
+      if (failureCount < 3 && error) {
+        return true;
+      }
+      return false;
+    },
+    retryDelay: (retryAttempt) => {
+      return 4000;
+    },
+    staleTime: Infinity,
     refetchOnWindowFocus: false
   });
   return query;

@@ -1,48 +1,26 @@
 import { FC, useEffect, useState } from 'react';
-import { css } from 'styled-components';
 
-import { Box, Button, Skeleton, Text } from 'blocks';
+import { Box, Button } from 'blocks';
 
-import { getPushTokenFromWallet, importPushToken, mintPushToken } from 'helpers';
+import { getPushTokenFromWallet } from 'helpers';
 import { useAccount } from 'hooks';
 
 import { CHANNEL_STAKE_FEES } from '../CreateChannel.constants';
 
-import { CreateChannelFaucet } from './CreateChannelFaucet';
 import { useCreateChannelForm } from '../CreateChannel.form';
 import { ActiveStepKey } from '../CreateChannel.types';
+import { StakingVariant } from 'common';
+import ImportPushTokenMessage from 'common/components/ImportPushTokenMessage';
 
 type StakeFeesProps = {
-  channelStakeFees: number;
   handleNextStep: (key: ActiveStepKey) => void;
-
 };
 
-const StakeFees: FC<StakeFeesProps> = ({ channelStakeFees, handleNextStep }) => {
-  const noOfPushTokensToCheck = CHANNEL_STAKE_FEES;
-  const { provider, account, isWalletConnected, connect } = useAccount();
+const StakeFees: FC<StakeFeesProps> = ({ handleNextStep }) => {
+  const { provider, account } = useAccount();
 
   const [balance, setBalance] = useState(0);
-  const [mintingPush, setMintingPush] = useState(false);
   const [fetchingbalance, setFetchingBalance] = useState(false);
-
-  // Mint Test PUSH token
-  const mintPushTokenHandler = async (noOfTokens: number) => {
-    if (!isWalletConnected) {
-      connect();
-    }
-    if (isWalletConnected) {
-      setMintingPush(true);
-      try {
-        const amount = await mintPushToken({ noOfTokens, provider, account });
-        setMintingPush(false);
-        setBalance(amount);
-      } catch (error) {
-        console.log('Error >>', error);
-        setMintingPush(false);
-      }
-    }
-  };
 
   // Check PUSH Token in wallet
   const pushTokenInWallet = async () => {
@@ -58,16 +36,6 @@ const StakeFees: FC<StakeFeesProps> = ({ channelStakeFees, handleNextStep }) => 
   useEffect(() => {
     pushTokenInWallet();
   }, [balance, account]);
-
-  // Import Push Token in Your wallet
-  const handlePushTokenImport = async () => {
-    if (!isWalletConnected) {
-      return;
-    }
-    await importPushToken();
-  };
-
-  const showFaucet = balance < noOfPushTokensToCheck;
 
   const { handleSubmit, validateForm } = useCreateChannelForm();
 
@@ -91,64 +59,20 @@ const StakeFees: FC<StakeFeesProps> = ({ channelStakeFees, handleNextStep }) => 
   return (
     <Box display="flex" flexDirection="column" alignSelf="stretch" justifyContent="center" gap="spacing-xl">
       <Box display="flex" flexDirection="column" gap="spacing-sm">
-        <Box display="flex" flexDirection="column" alignSelf="stretch">
-          <Box
-            display="flex"
-            flexDirection="row"
-            justifyContent="space-between"
-            backgroundColor="surface-secondary"
-            borderRadius={showFaucet ? 'radius-sm radius-sm radius-none radius-none' : 'radius-sm'}
-            padding="spacing-sm spacing-md"
-            alignItems="center"
-          >
-            <Text variant="h4-semibold" color="text-primary" display={{ ml: 'none', dp: 'block' }}>
-              Amount for Staking
-            </Text>
-
-            <Text variant="h5-semibold" color="text-primary" display={{ ml: 'block', dp: 'none' }}>
-              Amout For Staking
-            </Text>
-            <Box>
-              <Text variant="h4-semibold" color="text-brand-medium">
-                {channelStakeFees} PUSH
-              </Text>
-              <Skeleton isLoading={fetchingbalance}>
-                <Text variant="bes-semibold" color="text-tertiary">
-                  Balance: {balance?.toLocaleString()}
-                </Text>
-              </Skeleton>
-            </Box>
-          </Box>
-
-          {showFaucet && (
-            <CreateChannelFaucet
-              mintPushToken={mintPushTokenHandler}
-              noOfPushTokensToCheck={50}
-              mintingPush={mintingPush}
-            />
-          )}
-        </Box>
-
-        <Box display="flex" flexDirection="row" gap="s1" justifyContent="center">
-          <Text variant="bes-semibold" color="text-tertiary">
-            Don't see Push token in your wallet?
-          </Text>
-          <Text
-            css={css`
-                cursor: pointer;
-              `}
-            variant="bes-semibold"
-            color="text-brand-medium"
-            onClick={handlePushTokenImport}
-          >
-            Import Token
-          </Text>
+        <Box display="flex" flexDirection="column" gap="spacing-sm" width='-webkit-fill-available'>
+          <StakingVariant
+            title="Amount for Staking"
+            fees={CHANNEL_STAKE_FEES}
+            showFaucet
+            showBalance
+          />
+          <ImportPushTokenMessage title='Don’t see Push token in your wallet?' />
         </Box>
       </Box>
 
       <Box display="flex" justifyContent="center">
         <Button
-          disabled={mintingPush}
+          disabled={fetchingbalance}
           onClick={() => {
             handleCreateChannel();
           }}

@@ -79,7 +79,7 @@ const ChannelDelegateList: FC<ChannelDelegateListProps> = ({
             gap='spacing-xxxs'
             onClick={handleRemoveDelegate}
           >
-            <OptOut size={16} />
+            <OptOut size={16} color='icon-primary' />
             <Text color='text-tertiary-inverse'>Remove</Text>
           </Box>
         </Skeleton>

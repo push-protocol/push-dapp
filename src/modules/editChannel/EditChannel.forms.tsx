@@ -37,7 +37,9 @@ const EditChanelFormProvider: FC<EditChannelFormProviderProps> = ({
       channelName: channelDetails?.name,
       channelDesc: channelDetails?.info,
       channelURL: channelDetails?.url,
-      channelIcon: channelDetails?.iconV2
+      channelIcon: channelDetails?.iconV2,
+      imageSrc: '',
+      imageType: ''
     },
     validationSchema: channelFormValidation,
     onSubmit: () => {

@@ -1,10 +1,8 @@
 import { FC, useRef, useState } from 'react';
 
-import { useFormik } from 'formik';
 import { css } from 'styled-components';
-import * as Yup from 'yup';
 
-import { Box, Button, Cross, Text } from 'blocks';
+import { Box, Button, Cross, FileUpload, Text } from 'blocks';
 
 import { isImageFile } from 'modules/channelDashboard/ChannelDashboard.utils';
 import ImageClipper from 'primaries/ImageClipper';
@@ -17,35 +15,16 @@ type UploadlogoModelProps = {
 
 const uploadLogoModal: FC<UploadlogoModelProps> = ({ onClose }) => {
 
-
   const {
     values: formValues,
     setFieldValue,
+    isValid
   } = useEditChannelForm();
-
-
-  const logoValidationSchema = Yup.object().shape({
-    image: Yup.mixed().required('Image is required')
-  });
-
-  const uploadLogoForm = useFormik({
-    initialValues: {
-      image: formValues.channelIcon,
-      imageSrc: '',
-      imageType: ''
-    },
-    validationSchema: logoValidationSchema,
-    onSubmit: (values) => {
-      // Handle form submission logic here
-    }
-  });
-
 
   const childRef = useRef();
 
   // Upload Logo
-  const [croppedImage, setCroppedImage] = useState<string | undefined>(uploadLogoForm.values.image);
-
+  const [croppedImage, setCroppedImage] = useState<string | undefined>(formValues.channelIcon);
 
   // handle Input file type
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,13 +48,13 @@ const uploadLogoModal: FC<UploadlogoModelProps> = ({ onClose }) => {
 
   // Process Image
   const processFile = async (file: File) => {
-    uploadLogoForm.setFieldValue('image', file);
+    setFieldValue('channelIcon', file);
     // Read the file and set imageSrc and imageType
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      uploadLogoForm.setFieldValue('imageSrc', reader.result as string);
-      uploadLogoForm.setFieldValue('imageType', file.type);
+      setFieldValue('imageSrc', reader.result as string);
+      setFieldValue('imageType', file.type);
     };
   };
 
@@ -101,69 +80,59 @@ const uploadLogoModal: FC<UploadlogoModelProps> = ({ onClose }) => {
           Upload a PNG, JPG upto 1MB. Crop the image to resize to 128px.
         </Text>
 
-        {/* <form onSubmit={uploadLogoFormik.handleSubmit}> */}
-        <Box
-          width={{ initial: '500px', ml: '325px' }}
-          padding='spacing-xxl spacing-none'
-          display='flex'
-          flexDirection='column'
-          alignItems='center'
-          border={{ light: '1px dashed gray-300', dark: '1px dashed gray-700' }}
-          borderRadius="r6"
-          backgroundColor='surface-secondary'
-          gap='s6'
-          onDragOver={(e) => e.preventDefault()}
+        <FileUpload
+          id='file-upload'
+          onChange={handleFileChange}
           onDrop={handleDrop}
         >
-          {croppedImage ? (
-            <Box
-              width='128px'
-              height='128px'
-              borderRadius="r5"
-            >
-              <img style={{ borderRadius: 'inherit' }} width="100%"
-                height="100%" src={croppedImage} alt="Cropped Img" />
-            </Box>
-          ) : (
-            <ImageClipper
-              width='200px'
-              height='200px'
-              imageSrc={uploadLogoForm.values.imageSrc}
-              imageType={uploadLogoForm.values.imageType}
-              onImageCropped={(croppedImage: string) => setCroppedImage(croppedImage)}
-              ref={childRef}
-            />
-          )}
+          <Box
+            width={{ initial: '500px', ml: '325px' }}
+            padding='spacing-xxl spacing-none'
+            display='flex'
+            flexDirection='column'
+            alignItems='center'
+            border={{ light: '1px dashed gray-300', dark: '1px dashed gray-700' }}
+            borderRadius="r6"
+            backgroundColor='surface-secondary'
+            gap='s6'
+          >
+            {croppedImage ? (
+              <Box
+                width='128px'
+                height='128px'
+                borderRadius="r5"
+              >
+                <img style={{ borderRadius: 'inherit' }} width="100%"
+                  height="100%" src={croppedImage} alt="Cropped Img" />
+              </Box>
+            ) : (
+              <ImageClipper
+                width='200px'
+                height='200px'
+                imageSrc={formValues.imageSrc}
+                imageType={formValues.imageType}
+                onImageCropped={(croppedImage: string) => setCroppedImage(croppedImage)}
+                ref={childRef}
+              />
+            )}
 
-          <Box display='flex' gap='s1'>
-            <Text
-              variant="bs-semibold"
-              color='text-tertiary'
-            > Drag and Drop or</Text>
-            <label htmlFor="file-upload">
+            <Box display='flex' gap='s1'>
               <Text
                 variant="bs-semibold"
-                color='text-brand-medium'
-                css={css`cursor:pointer;`}
-              >
-                Browse to Choose
-              </Text>
-            </label>
+                color='text-tertiary'
+              > Drag and Drop or</Text>
+              <label htmlFor="file-upload">
+                <Text
+                  variant="bs-semibold"
+                  color='text-brand-medium'
+                  css={css`cursor:pointer;`}
+                >
+                  Browse to Choose
+                </Text>
+              </label>
+            </Box>
           </Box>
-
-          <input
-            id="file-upload"
-            accept="image/*"
-            name="file-upload"
-            hidden
-            onChange={handleFileChange}
-            type="file"
-            readOnly
-          />
-
-        </Box>
-        {/* </form> */}
-
+        </FileUpload>
       </Box>
 
       <Box>
@@ -171,7 +140,7 @@ const uploadLogoModal: FC<UploadlogoModelProps> = ({ onClose }) => {
           <>
             <Button
               onClick={() => {
-                if (uploadLogoForm.isValid) {
+                if (isValid) {
                   // Also Check if the value of Icon is changed or not
                   setFieldValue('channelIcon', croppedImage)
                   onClose();

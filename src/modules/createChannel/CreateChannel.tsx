@@ -251,7 +251,6 @@ const CreateChannel = () => {
 
                 {activeStepKey === 'stakeFees' && (
                   <StakeFees
-                    channelStakeFees={CHANNEL_STAKE_FEES}
                     handleNextStep={handleNextStep}
                   />
                 )}

@@ -175,6 +175,7 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({
         description="Editing channel details requires fees to be deposited"
         fees={feesRequiredForEdit}
         pushApprovalAmount={pushApprovalAmount}
+        showFaucet
       />
 
       <Box
