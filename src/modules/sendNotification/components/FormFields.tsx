@@ -157,7 +157,7 @@ const FormFields: FC = () => {
             gap="spacing-sm"
             flexDirection={{ dp: 'row', ml: 'column' }}
           >
-            <Box width="65%">
+            <Box width={{ dp: '65%', ml: 'auto' }}>
               <Select
                 options={delegateesOptions}
                 value={formik.values.channelAddress}

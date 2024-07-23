@@ -42,7 +42,9 @@ const SendNotification: FC = () => {
       >
         Send Notification
       </Text>
-      <FormFields />
+      <Box width="100%">
+        <FormFields />
+      </Box>
       {userPushSDKInstance && userPushSDKInstance?.readmode() && (
         <Box
           display="flex"
