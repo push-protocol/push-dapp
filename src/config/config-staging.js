@@ -33,7 +33,8 @@ export const config = {
     421614, // arbitrum testnet
     123, // fuse testnet
     111557560, // Cyber testnet
-    84532, //base sepolia
+    // comment base
+    // 84532, //base sepolia
   ],
 
   /**
@@ -180,11 +181,12 @@ export const CHAIN_DETAILS = {
     rpcUrl: 'https://cyber-testnet.alt.technology/',
     commAddress: '0x6e489B7af21cEb969f49A90E481274966ce9D74d',
   },
-  84532: {
-    label: 'Base Sepolia',
-    name: 'BASE_TESTNET',
-    chainid: 84532,
-    rpcUrl: 'https://sepolia.base.org/',
-    commAddress: '0x6e489B7af21cEb969f49A90E481274966ce9D74d',
-  },
+  // comment base
+  // 84532: {
+  //   label: 'Base Sepolia',
+  //   name: 'BASE_TESTNET',
+  //   chainid: 84532,
+  //   rpcUrl: 'https://sepolia.base.org/',
+  //   commAddress: '0x6e489B7af21cEb969f49A90E481274966ce9D74d',
+  // },
 };
