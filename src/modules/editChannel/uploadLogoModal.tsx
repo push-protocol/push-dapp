@@ -58,7 +58,6 @@ const uploadLogoModal: FC<UploadlogoModelProps> = ({ onClose }) => {
     };
   };
 
-
   return (
     <Box
       display='flex'
@@ -111,7 +110,10 @@ const uploadLogoModal: FC<UploadlogoModelProps> = ({ onClose }) => {
                 height='200px'
                 imageSrc={formValues.imageSrc}
                 imageType={formValues.imageType}
-                onImageCropped={(croppedImage: string) => setCroppedImage(croppedImage)}
+                onImageCropped={(croppedImage: string) => {
+                  setCroppedImage(croppedImage)
+                  setFieldValue('channelIcon', croppedImage);
+                }}
                 ref={childRef}
               />
             )}

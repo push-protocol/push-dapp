@@ -35,7 +35,7 @@ const ChannelDashboardPageV2: FC<ChannelDashboardPageProps> = ({
     if (channelDetails) {
       navigate(`${APP_PATHS.ChannelDashboard}/${account}`);
     } else {
-      navigate(APP_PATHS.ChannelDashboard)
+      navigate(`${APP_PATHS.ChannelDashboard}`)
     }
   }, [channelDetails, navigate]);
 
@@ -53,14 +53,6 @@ const ChannelDashboardPageV2: FC<ChannelDashboardPageProps> = ({
     )
   }
 
-  if (channelDetails) {
-    return (
-      <ContentLayout>
-        <ChannelDashboard />
-      </ContentLayout>
-    )
-  }
-
   if (!channelDetails) {
     return (
       <ContentLayout>
@@ -70,6 +62,13 @@ const ChannelDashboardPageV2: FC<ChannelDashboardPageProps> = ({
   }
 
 
+  if (channelDetails) {
+    return (
+      <ContentLayout>
+        <ChannelDashboard />
+      </ContentLayout>
+    )
+  }
 
 };
 

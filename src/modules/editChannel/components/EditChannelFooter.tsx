@@ -129,7 +129,6 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({
         info: formValues.channelDesc,
         url: formValues.channelURL,
         icon: formValues.channelIcon,
-        aliasDetails: channelDetails.alias_verification_event
       });
 
       const storagePointer = await IPFSupload(input);
