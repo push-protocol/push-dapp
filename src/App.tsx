@@ -196,7 +196,7 @@ export default function App() {
 
   const { pgpPvtKey } = useContext<any>(AppContext);
   const { sidebarCollapsed, setSidebarCollapsed } = useContext(GlobalContext);
-  const mounted = useRef<any>();
+  const [hasMounted, setHasMounted] = useState(false);
 
   const updateOnboardTheme = useUpdateTheme();
   const { userPushSDKInstance } = useSelector((state: any) => {
@@ -229,9 +229,9 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (!mounted.current) {
+    if (!hasMounted) {
       // do componentDidMount logic
-      mounted.current = true;
+      setHasMounted(true);
       if (!account) return;
       resetState();
     }
