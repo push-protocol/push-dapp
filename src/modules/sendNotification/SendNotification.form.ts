@@ -11,8 +11,7 @@ export const getValidationSchema = (isSubsetRecipientPresent: boolean) => {
     setting: yup.string().required('Setting is required'),
     recipient: yup.string().test('recipient', 'Recipient is Required', function (value) {
       return (
-        (this.parent.type !== 'SUBSET' || !this.options.context || isSubsetRecipientPresent || !!value) &&
-        (this.parent.type !== 'TARGETTED' || !!value)
+        (this.parent.type !== 'SUBSET' || isSubsetRecipientPresent) && (this.parent.type !== 'TARGETTED' || !!value)
       );
     }),
     title: yup.string().test('title', 'Title is Required', function (value) {
