@@ -157,7 +157,6 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           onChange={onChange}
           placeholder={placeholder}
           ref={ref}
-          required={required}
           resizable={resizable}
           rows={numberOfLines}
           success={success}

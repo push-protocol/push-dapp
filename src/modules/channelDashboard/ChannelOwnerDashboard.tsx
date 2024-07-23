@@ -32,6 +32,8 @@ import { appConfig } from 'config/index.js';
 import EditChannel from 'modules/editChannel/EditChannel';
 import useModalBlur from 'hooks/useModalBlur';
 import { AppContext } from 'contexts/AppContext';
+import { CreateChannel } from 'modules/createChannel';
+import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 // Constants
 // interval after which alias details api will be called, in seconds
@@ -202,10 +204,11 @@ const ChannelOwnerDashboard = () => {
           height="fit-content"
         >
           {/* display the create channel page if there are no details */}
-          {!channelDetails && processingState === 0 && <CreateChannelModule />}
+          {/* {!channelDetails && processingState === 0 && <CreateChannelModule />} */}
+          {!channelDetails && processingState === 0 && <CreateChannel />}
 
           {isChannelDetails && processingState !== null && (
-            <>
+            <Container>
               {editChannel ? (
                 <EditChannel
                   closeEditChannel={closeEditChannel}
@@ -217,9 +220,6 @@ const ChannelOwnerDashboard = () => {
                 <>
                   {channelDetails && !isMobile && (
                     <ItemHV2
-                      position="absolute"
-                      top="0"
-                      right="0"
                       zIndex="1"
                       gap="8px"
                     >
@@ -256,7 +256,7 @@ const ChannelOwnerDashboard = () => {
                   )}
                 </>
               )}
-            </>
+            </Container>
           )}
 
           {/* processing box */}
