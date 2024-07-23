@@ -37,7 +37,7 @@ const TokenFaucet: FC<TokenFaucetProps> = ({
       justifyContent='space-between'
       alignItems='center'
       flexDirection={{ ml: 'column', initial: 'row' }}
-      gap='s3'
+      gap='spacing-xs'
     >
       <Skeleton
         isLoading={mintingPush}
@@ -65,23 +65,23 @@ const TokenFaucet: FC<TokenFaucetProps> = ({
             <Link to='https://chaindrop.org/?chainid=11155111&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' target="_blank">
               <Box
                 display='flex'
-                gap='s2'
+                gap='spacing-xxs'
                 alignItems='baseline'
                 color='text-brand-medium'
                 cursor='pointer'
               >
                 <Box
-                  border='1px solid pink-600'
+                  border='border-sm solid stroke-brand-medium'
                   width='16px'
                   height='15px'
-                  borderRadius="r10"
+                  borderRadius="radius-xl"
                   display='flex'
                   justifyContent='center'
-
+                  color='text-brand-medium'
                 >
-                  <Text variant="c-regular">1</Text>
+                  <Text variant="c-regular" color='text-brand-medium'>1</Text>
                 </Box>
-                <Text>Sepolia ETH Faucet</Text>
+                <Text color='text-brand-medium'>Sepolia ETH Faucet</Text>
               </Box>
             </Link>
           </Skeleton>
@@ -91,24 +91,24 @@ const TokenFaucet: FC<TokenFaucetProps> = ({
           >
             <Box
               display='flex'
-              gap='s2'
+              gap='spacing-xxs'
               alignItems='baseline'
               color='text-brand-medium'
               cursor='pointer'
               onClick={() => mintPushToken(1000)}
             >
               <Box
-                border='1px solid pink-600'
+                border='border-sm solid stroke-brand-medium'
                 width='16px'
                 height='15px'
-                borderRadius="r10"
+                borderRadius="radius-xl"
                 display='flex'
                 justifyContent='center'
 
               >
-                <Text variant="c-regular">2</Text>
+                <Text variant="c-regular" color='text-brand-medium'>2</Text>
               </Box>
-              <Text>Get Testnet Push</Text>
+              <Text color='text-brand-medium'>Get Testnet Push</Text>
             </Box>
           </Skeleton>
         </Box>

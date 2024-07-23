@@ -1,9 +1,13 @@
+import { FC } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+
 import { Box, Button, Separator, Settings, Skeleton, Text } from 'blocks';
+
 import { ChannelSettingsList } from './ChannelSettingsList';
 import ChannelDashboardNullState from './ChannelDashboardNullState';
+
 import { ChannelSetting } from '../ChannelDashboard.types';
-import { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 type ChannelDashboardNotificationSettingsProps = {
   channel_settings?: string;
@@ -25,13 +29,13 @@ const ChannelDashboardNotificationSettings: FC<ChannelDashboardNotificationSetti
       display="flex"
       padding="spacing-sm"
       width="-webkit-fill-available"
-      border={{ light: '1px solid gray-300', dark: '1px solid gray-700' }}
+      border='border-sm solid stroke-tertiary'
       borderRadius="radius-sm"
       flexDirection="column"
     >
-      <Box display="flex" flexDirection="column" gap="s2">
+      <Box display="flex" flexDirection="column" gap="spacing-xxs">
         <Box display="flex" justifyContent="space-between">
-          <Box display='flex' flexDirection='column' gap='s1'>
+          <Box display='flex' flexDirection='column'>
             <Skeleton isLoading={loadingChannelSettings}>
               <Text variant="h5-semibold" color="text-primary">
                 Notification Settings

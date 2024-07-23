@@ -19,7 +19,6 @@ const ChannelDashboardBody: FC<ChannelDashboardBodyProps> = ({
   setActiveState
 }) => {
   const { account } = useAccount();
-  // Fetch channel settings and delegatees and then render
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
     return state.user;
   });

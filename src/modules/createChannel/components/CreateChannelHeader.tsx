@@ -7,7 +7,6 @@ const CreateChannelHeader = () => {
       display="flex"
       flexDirection="column"
       alignItems="center"
-      gap="s1"
       alignSelf="stretch"
     >
 

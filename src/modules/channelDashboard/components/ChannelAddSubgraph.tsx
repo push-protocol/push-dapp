@@ -92,7 +92,7 @@ const ChannelAddSubgraph: FC<ChannelAddSubgraphProps> = ({
 
       {addSubgraphError && <Alert
         variant='error'
-        icon={<ErrorFilled color='text-danger-bold' size={24} />}
+        icon={<ErrorFilled color='icon-state-danger-bold' size={24} />}
         message={addSubgraphError}
         width='100%'
       />}
@@ -125,7 +125,11 @@ const ChannelAddSubgraph: FC<ChannelAddSubgraphProps> = ({
       </form>
 
       <Box display='flex' gap='spacing-sm' justifyContent='center'>
-        <Button size="medium" variant="outline" onClick={() => setActiveState('dashboard')}>
+        <Button
+          size="medium"
+          variant="outline"
+          onClick={() => setActiveState('dashboard')}
+        >
           Back
         </Button>
         <Button disabled={addingSubgraph} onClick={() => subgraphForm.handleSubmit()}>

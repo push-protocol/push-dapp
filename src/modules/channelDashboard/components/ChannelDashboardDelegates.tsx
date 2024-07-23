@@ -1,8 +1,10 @@
 import { FC } from 'react';
 import { Add, Box, Button, Separator, Skeleton, Text } from 'blocks';
+import { ChannelDelegatesResponse } from 'queries';
+
 import { ChannelDelegateList } from './ChannelDelegateList';
 import ChannelDashboardNullState from './ChannelDashboardNullState';
-import { ChannelDelegatesResponse } from 'queries';
+
 import { DashboardActiveState } from '../ChannelDashboard.types';
 
 type ChannelDashboardDelegatesProps = {
@@ -23,14 +25,14 @@ const ChannelDashboardDelegates: FC<ChannelDashboardDelegatesProps> = ({
     <Box
       display="flex"
       padding="spacing-sm"
-      border={{ light: '1px solid gray-300', dark: '1px solid gray-700' }}
+      border='border-sm solid stroke-tertiary'
       borderRadius="radius-sm"
       width="-webkit-fill-available"
       flexDirection="column"
     >
-      <Box display="flex" flexDirection="column" gap="s2">
+      <Box display="flex" flexDirection="column" gap="spacing-xxs">
         <Box display="flex" justifyContent="space-between">
-          <Box display="flex" flexDirection="column" gap="s1">
+          <Box display="flex" flexDirection="column">
             <Skeleton isLoading={loadingDelegates}>
               <Text variant="h5-semibold" color="text-primary">
                 Channel Delegates

@@ -39,17 +39,14 @@ const ChannelDashboardPageV2: FC<ChannelDashboardPageProps> = ({
     }
   }, [channelDetails, navigate]);
 
-
   if (loadingChannelDetails) {
     return (
-      <ContentLayout>
-        <Box>
-          <LoaderSpinner
-            type={LOADER_TYPE.SEAMLESS}
-            title="Loading Channel Details. Please wait..."
-          />
-        </Box>
-      </ContentLayout>
+      <Box height='100%' display='flex' justifyContent='center' alignItems='center'>
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          title="Loading Channel Details. Please wait..."
+        />
+      </Box>
     )
   }
 

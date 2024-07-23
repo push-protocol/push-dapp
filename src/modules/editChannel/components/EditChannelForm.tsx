@@ -32,12 +32,12 @@ const EditChannelForm: FC<EditChannelFormProps> = ({
   } = useEditChannelForm();
 
   return (
-    <Box display='flex' gap='s8' width='100%' padding='spacing-sm spacing-md' justifyContent='center'>
-      <Box display='flex' flexDirection='column' alignItems='center' gap='s4'>
+    <Box display='flex' gap='spacing-lg' width='100%' padding='spacing-sm spacing-md' justifyContent='center'>
+      <Box display='flex' flexDirection='column' alignItems='center' gap='spacing-sm'>
         <Box
           width="90px"
           height="90px"
-          border='1px solid gray-100'
+          border='border-sm solid stroke-tertiary'
           borderRadius="radius-md"
         >
           <ImageV3

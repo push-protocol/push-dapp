@@ -21,13 +21,13 @@ const ChannelDashboardNullState: FC<ChannelDashboardNullStateProps> = ({
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      gap="s4"
+      gap="spacing-sm"
       height="200px"
     >
-      {state == 'delegatee' && <CrownSimple size={48} color="gray-300" />}
-      {state == 'notificationSettings' && <ReceiveNotification size={48} color="gray-300" />}
+      {state == 'delegatee' && <CrownSimple size={48} color='icon-tertiary' />}
+      {state == 'notificationSettings' && <ReceiveNotification size={48} color='icon-tertiary' />}
 
-      <Box display="flex" flexDirection="column" alignItems="center" gap="s1">
+      <Box display="flex" flexDirection="column" alignItems="center" >
         {/* {heading && ( */}
         <Text textAlign="center" variant="h6-semibold" color='text-secondary'>
           {title}

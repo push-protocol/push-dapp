@@ -60,7 +60,7 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({
     <Box
       display='flex'
       width={{ initial: '648px', ml: '357px' }}
-      padding='s6'
+      padding='spacing-md'
       flexDirection='column'
       alignItems='center'
       gap='spacing-lg'
@@ -75,7 +75,7 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({
 
       {deactivateError && <Alert
         variant='error'
-        icon={<ErrorFilled color='text-danger-bold' size={24} />}
+        icon={<ErrorFilled color='icon-state-danger-bold' size={24} />}
         message={deactivateError}
         width='100%'
       />}

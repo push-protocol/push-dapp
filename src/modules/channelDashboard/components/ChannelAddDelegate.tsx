@@ -1,29 +1,26 @@
-import { FC, useContext, useState } from "react";
+import { FC, useContext, useState } from 'react';
 
-import { ethers } from "ethers";
-import { useFormik } from "formik";
-import { useSelector } from "react-redux";
+import { ethers } from 'ethers';
+import { useFormik } from 'formik';
+import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
-import { Alert, Box, Button, ErrorFilled, TextInput } from "blocks";
+import { Alert, Box, Button, ErrorFilled, TextInput } from 'blocks';
 
-import { AppContext } from "contexts/AppContext";
-import { ModalHeader } from "common";
+import { AppContext } from 'contexts/AppContext';
+import { ModalHeader } from 'common';
 
-import { useAccount } from "hooks";
+import { useAccount } from 'hooks';
 
-import { useAddDelegate, useGetChannelDelegates } from "queries";
+import { useAddDelegate, useGetChannelDelegates } from 'queries';
 
-import { UserStoreType } from "types";
-import { DashboardActiveState } from "../ChannelDashboard.types";
+import { UserStoreType } from 'types';
+import { DashboardActiveState } from '../ChannelDashboard.types';
 
 type ChannelAddDelegateProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
-}
-const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
-  setActiveState,
-}) => {
-
+};
+const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({ setActiveState }) => {
   const { wallet } = useAccount();
 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
@@ -39,15 +36,15 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
   const delegateValidation = Yup.object().shape({
     delegateAddress: Yup.string()
       .required('Required')
-      .test('address', 'Invalid Address', value => {
+      .test('address', 'Invalid Address', (value) => {
         const isWallet = ethers.utils.isAddress(value);
         return isWallet;
       })
-      .test('uniqueDelegate', 'Delegate address already exists', value => {
-        const existingDelegate = channel_delegates?.find(delegateAddress => delegateAddress === value);
+      .test('uniqueDelegate', 'Delegate address already exists', (value) => {
+        const existingDelegate = channel_delegates?.find((delegateAddress) => delegateAddress === value);
         return !existingDelegate;
       })
-  })
+  });
 
   const delegateForm = useFormik({
     initialValues: {
@@ -57,10 +54,9 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
     onSubmit: (values) => {
       handleAddDelegate();
     }
-  })
+  });
 
   const { mutate: addDelegate, isPending } = useAddDelegate();
-
 
   const handleAddDelegate = async () => {
     if (!delegateForm.isValid) {
@@ -78,48 +74,52 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
       }
     }
 
-    addDelegate({
-      userPushSDKInstance: userPushInstance,
-      delegateAddress: delegateForm.values.delegateAddress
-    }, {
-      onSuccess: () => {
-        console.log("Channel Delegate Added Successfully");
-        refetchChannelDelegate();
-        setActiveState('dashboard');
+    addDelegate(
+      {
+        userPushSDKInstance: userPushInstance,
+        delegateAddress: delegateForm.values.delegateAddress
       },
-      onError: (error) => {
-        console.log("Error in adding delegatee", error);
-        setAddDelegateError('Error in delegating. Check console for more reasons')
+      {
+        onSuccess: () => {
+          console.log('Channel Delegate Added Successfully');
+          refetchChannelDelegate();
+          setActiveState('dashboard');
+        },
+        onError: (error) => {
+          console.log('Error in adding delegatee', error);
+          setAddDelegateError('Error in delegating. Check console for more reasons');
+        }
       }
-    })
-  }
+    );
+  };
 
   return (
     <Box
-      display='flex'
-      alignSelf='stretch'
-      flexDirection='column'
-      backgroundColor='surface-primary'
+      display="flex"
+      alignSelf="stretch"
+      flexDirection="column"
+      backgroundColor="surface-primary"
       borderRadius="radius-lg"
-      padding='spacing-lg'
-      gap='spacing-xl'
+      padding="spacing-lg"
+      gap="spacing-xl"
       width={{ initial: '537px', ml: '275px' }}
     >
-
       <ModalHeader
         title="Add Delegate"
         description="Add an account who can send notifications on behalf of the channel"
       />
 
-      {addDelegateError && <Alert
-        variant='error'
-        icon={<ErrorFilled color='text-danger-bold' size={24} />}
-        message={addDelegateError}
-        width='100%'
-      />}
+      {addDelegateError && (
+        <Alert
+          variant="error"
+          icon={<ErrorFilled color="icon-state-danger-bold" size={24} />}
+          message={addDelegateError}
+          width="100%"
+        />
+      )}
 
       <form onSubmit={delegateForm.handleSubmit}>
-        <Box display='flex' flexDirection='column' gap='spacing-md'>
+        <Box display="flex" flexDirection="column" gap="spacing-md">
           <TextInput
             required
             label="Delegate Address"
@@ -132,8 +132,14 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
             errorMessage={delegateForm.errors.delegateAddress}
           />
 
-          <Box display='flex' gap='spacing-sm' justifyContent='center'>
-            <Button size="medium" variant="outline" onClick={() => setActiveState('dashboard')}>Back</Button>
+          <Box display="flex" gap="spacing-sm" justifyContent="center">
+            <Button
+              size="medium"
+              variant="outline"
+              onClick={() => setActiveState('dashboard')}
+            >
+              Back
+            </Button>
             <Button disabled={isPending}>{isPending ? 'Adding' : 'Add'}</Button>
           </Box>
         </Box>

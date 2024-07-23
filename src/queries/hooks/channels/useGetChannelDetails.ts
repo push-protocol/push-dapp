@@ -24,7 +24,7 @@ export const useGetChannelDetails = (address: string) => {
       return false;
     },
     retryDelay: (retryAttempt) => {
-      return 3000;
+      return 2000;
     },
     staleTime: Infinity,
     refetchOnWindowFocus: false

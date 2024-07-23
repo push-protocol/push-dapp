@@ -211,7 +211,7 @@ const CreateChannel = () => {
         width={{ initial: '648px', ml: '325px' }}
         flexDirection="column"
         alignItems="center"
-        gap="s10"
+        gap="spacing-xl"
       >
         <CreateChannelHeader />
 
@@ -222,14 +222,20 @@ const CreateChannel = () => {
             {channelCreationError.txErrorStatus !== 0 && (
               <Alert
                 variant='error'
-                icon={<ErrorFilled color='text-danger-bold' size={24} />}
+                icon={<ErrorFilled color='icon-state-danger-bold' size={24} />}
                 message={channelCreationError.txError}
                 width='100%'
               />
             )}
 
             {!progressState.progress ? (
-              <Box display="flex" flexDirection="column" gap="s8" alignItems="center" alignSelf="stretch">
+              <Box
+                display="flex"
+                flexDirection="column"
+                gap="spacing-lg"
+                alignItems="center"
+                alignSelf="stretch"
+              >
                 <Stepper
                   steps={createChannelSteps}
                   completedSteps={completedSteps}

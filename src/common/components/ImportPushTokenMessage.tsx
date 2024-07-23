@@ -18,7 +18,7 @@ const ImportPushTokenMessage: FC<ImportPushTokenMessageProps> = ({
 
 
   return (
-    <Box display="flex" flexDirection="row" gap="s1" justifyContent="center">
+    <Box display="flex" flexDirection="row" justifyContent="center" gap='spacing-xxxs'>
       <Text variant="bes-semibold" color='text-tertiary'>
         {title}
       </Text>

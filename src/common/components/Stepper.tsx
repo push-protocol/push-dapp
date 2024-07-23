@@ -49,8 +49,8 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepKey, completedSteps }) 
 
           <Box
             height="4px"
-            borderRadius="r2"
-            backgroundColor={completedSteps.includes(step.value) ? 'stroke-brand-medium' : 'stroke-tertiary'}
+            borderRadius="radius-xxs"
+            backgroundColor={completedSteps.includes(step.value) ? 'surface-brand-medium' : 'surface-tertiary'}
           ></Box>
         </Box>
       ))}

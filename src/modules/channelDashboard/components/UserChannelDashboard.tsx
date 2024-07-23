@@ -47,7 +47,7 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({
         <Box display='flex' flexDirection='column' gap='spacing-sm' width='100%'>
           {channelDashboardError && <Alert
             variant='error'
-            icon={<ErrorFilled color='text-danger-bold' size={24} />}
+            icon={<ErrorFilled color='icon-state-danger-bold' size={24} />}
             message={channelDashboardError}
             width='100%'
           />}

@@ -61,7 +61,7 @@ const UploadChannelLogo: FC<UploadChannelLogoProps> = ({
     <Box
       display='flex'
       flexDirection='column'
-      gap='s8'
+      gap='spacing-lg'
       alignItems='center'
       alignSelf='stretch'
     >
@@ -69,14 +69,14 @@ const UploadChannelLogo: FC<UploadChannelLogoProps> = ({
         display='flex'
         flexDirection='column'
         alignItems='center'
-        gap='s8'
+        gap='spacing-lg'
       >
         <Text variant="bes-regular" color='text-tertiary'>
           Upload a PNG, JPG upto 1MB. Crop the image to resize to 128px.
         </Text>
 
         <FileUpload
-          hidden={true}
+
           id='file-upload'
           onChange={handleFileChange}
           onDrop={handleDrop}
@@ -87,10 +87,10 @@ const UploadChannelLogo: FC<UploadChannelLogoProps> = ({
             display='flex'
             flexDirection='column'
             alignItems='center'
-            border={{ light: '1px dashed gray-300', dark: '1px dashed gray-700' }}
-            borderRadius="r6"
+            border='border-sm dashed stroke-tertiary'
+            borderRadius="radius-md"
             backgroundColor='surface-secondary'
-            gap='s6'
+            gap='spacing-md'
           >
 
             {formValues?.image ? (
@@ -98,7 +98,7 @@ const UploadChannelLogo: FC<UploadChannelLogoProps> = ({
                 <Box
                   width='128px'
                   height='128px'
-                  borderRadius="r5"
+                  borderRadius="radius-md"
                 >
                   <img style={{ borderRadius: 'inherit' }} width="100%"
                     height="100%" src={formValues.image} alt="Cropped Img" />
@@ -120,11 +120,13 @@ const UploadChannelLogo: FC<UploadChannelLogoProps> = ({
               <CloudUpload size={50} />
             )}
 
-            <Box display='flex' gap='s1'>
+            <Box display='flex' gap='spacing-xxxs'>
               <Text
                 variant="bs-semibold"
                 color='text-tertiary'
-              > Drag and Drop or</Text>
+              >
+                Drag and Drop or
+              </Text>
               <label htmlFor="file-upload">
                 <Text
                   variant="bs-semibold"

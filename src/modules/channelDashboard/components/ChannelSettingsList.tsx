@@ -28,10 +28,8 @@ const ChannelSettingsList: FC<ChannelSettingsListProps> = ({
           {settingName}
         </Text>
 
-        {/* //TODO: Lozenge will be given for this in blue color */}
         {type == 2 && <Lozenge >Range</Lozenge>}
         {type == 3 && <Lozenge >Multi-Range</Lozenge>}
-
 
       </Box>
 

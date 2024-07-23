@@ -34,7 +34,7 @@ const EditChannel: FC<EditChannelProps> = ({
       <Box
         display="flex"
         width={{ initial: '846px', ml: '357px' }}
-        padding="s6"
+        padding='spacing-md'
         flexDirection="column"
         alignItems="center"
         gap="spacing-lg"

@@ -1,7 +1,5 @@
 import { FC } from "react";
 
-import { css } from "styled-components";
-
 import { Box, Button, Dropdown, KebabMenuHorizontal, Skeleton } from "blocks";
 
 import { ChannelDetailsResponse } from "queries";
@@ -61,14 +59,12 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
           >
             <Box
               padding='spacing-xs'
-              border={{ light: '1px solid gray-300', dark: '1px solid gray-700' }}
+              border='border-sm solid stroke-tertiary'
               borderRadius="radius-xs"
               display='flex'
               height='16px'
               cursor='pointer'
               alignItems='center'
-              css={css`
-              `}
             >
               <KebabMenuHorizontal size={24}
                 color='icon-primary'

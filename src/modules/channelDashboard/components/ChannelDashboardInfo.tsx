@@ -53,7 +53,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
         <Box
           width="90px"
           height="90px"
-          border='1px solid gray-100'
+          border='border-sm solid stroke-tertiary'
           borderRadius="radius-md"
         >
           <ImageV3
@@ -115,7 +115,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
 
         <Box display="flex" flexDirection="column" gap="spacing-xs">
           <Skeleton isLoading={loadingChannelDetails} width='100%'>
-            <Box display="flex" gap="s1">
+            <Box display="flex">
 
               <Text color="text-tertiary" variant="c-regular">
                 {shortenText(channelDetails ? channelDetails?.channel : '', 5)}
@@ -145,11 +145,11 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
                 alignItems="center"
                 gap="spacing-xxxs"
                 padding="spacing-none spacing-xxxs"
-                backgroundColor="surface-danger-subtle"
+                backgroundColor='surface-state-danger-subtle'
                 borderRadius="radius-xs"
               >
-                <CircleFilled size={8} color='icon-danger-bold' />
-                <Text color='text-danger-bold' variant='bes-semibold'> Deactivated</Text>
+                <CircleFilled size={8} color='icon-state-danger-bold' />
+                <Text color='text-state-danger-bold' variant='bes-semibold'> Deactivated</Text>
               </Box>
             )}
 
@@ -159,12 +159,12 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
                 alignItems="center"
                 gap="spacing-xxxs"
                 padding="spacing-none spacing-xxxs"
-                backgroundColor="surface-success-subtle"
+                backgroundColor='surface-state-success-subtle'
                 borderRadius="radius-xs"
               >
 
-                <CircleFilled size={8} color='icon-success-bold' />
-                <Text color='text-success-bold' variant='bes-semibold'> Active</Text>
+                <CircleFilled size={8} color='icon-state-success-bold' />
+                <Text color='text-state-success-bold' variant='bes-semibold'> Active</Text>
               </Box>
             )}
 

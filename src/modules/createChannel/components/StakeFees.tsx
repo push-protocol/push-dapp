@@ -57,7 +57,13 @@ const StakeFees: FC<StakeFeesProps> = ({ handleNextStep }) => {
   }
 
   return (
-    <Box display="flex" flexDirection="column" alignSelf="stretch" justifyContent="center" gap="spacing-xl">
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignSelf="stretch"
+      justifyContent="center"
+      gap="spacing-xl"
+    >
       <Box display="flex" flexDirection="column" gap="spacing-sm">
         <Box display="flex" flexDirection="column" gap="spacing-sm" width='-webkit-fill-available'>
           <StakingVariant

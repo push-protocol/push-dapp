@@ -21,29 +21,20 @@ const minFeesForAddChannel = 50;
 
 type EditChannelFooterProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
+};
 
-}
-
-const EditChannelFooter: FC<EditChannelFooterProps> = ({
-  setActiveState
-}) => {
+const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
   const { account, provider, chainId } = useAccount();
 
-  const {
-    values: formValues,
-    isValid,
-    initialValues
-  } = useEditChannelForm();
+  const { values: formValues, isValid, initialValues } = useEditChannelForm();
 
   const { data: channelDetails, refetch: refetchChannelDetails } = useGetChannelDetails(account);
   const { mutate: approvePUSHToken, isPending: approvingPUSH } = useApprovePUSHToken();
   const { mutate: editChannel, isPending: editingChannel } = useEditChannel();
 
-
   const [feesRequiredForEdit, setFeesRequiredForEdit] = useState<number>(0);
   const [pushApprovalAmount, setPushApprovalAmount] = useState<number>(0);
   const [updateChannelError, setUpdateChannelError] = useState('');
-
 
   useEffect(() => {
     if (!account || !provider) return;
@@ -60,7 +51,7 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({
     const amount = await coreContractInstance.channelUpdateCounter(account);
 
     setFeesRequiredForEdit(minFeesForAddChannel * (Number(amount) + 1)); //50
-  }
+  };
 
   const checkApprovedPUSHTokenAmount = async () => {
     const pushTokenApprovalAmount = await getPushTokenApprovalAmount({
@@ -70,7 +61,6 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({
     });
     setPushApprovalAmount(parseInt(pushTokenApprovalAmount));
   };
-
 
   const checkForChanges = useMemo(() => {
     if (!isEqual(formValues, initialValues)) {
@@ -112,7 +102,6 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({
     );
   };
 
-
   const handleEditChannel = async () => {
     setUpdateChannelError('');
 
@@ -128,7 +117,7 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({
         name: formValues.channelName,
         info: formValues.channelDesc,
         url: formValues.channelURL,
-        icon: formValues.channelIcon,
+        icon: formValues.channelIcon
       });
 
       const storagePointer = await IPFSupload(input);
@@ -149,7 +138,7 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({
           onSuccess: () => {
             console.log('Successfully edited channel');
             refetchChannelDetails();
-            setActiveState('dashboard')
+            setActiveState('dashboard');
           },
           onError: (error) => {
             console.log('Error in updating channel details', error, error.code);
@@ -158,7 +147,6 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({
             } else {
               setUpdateChannelError('Error in updating Channel. Check console for more reasons.');
             }
-
           }
         }
       );
@@ -167,12 +155,14 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({
 
   return (
     <Box display="flex" flexDirection="column" alignSelf="stretch">
-      {updateChannelError && <Alert
-        variant='error'
-        icon={<ErrorFilled color='text-danger-bold' size={24} />}
-        message={updateChannelError}
-        width='100%'
-      />}
+      {updateChannelError && (
+        <Alert
+          variant="error"
+          icon={<ErrorFilled color="icon-state-danger-bold" size={24} />}
+          message={updateChannelError}
+          width="100%"
+        />
+      )}
 
       <StakingVariant
         title="Channel edit fee"
@@ -188,9 +178,7 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({
         gap="spacing-sm"
         margin="spacing-lg spacing-none spacing-none spacing-none"
       >
-        <Button size="medium" variant="outline"
-          onClick={() => setActiveState('dashboard')}
-        >
+        <Button size="medium" variant="outline" onClick={() => setActiveState('dashboard')}>
           Back
         </Button>
 

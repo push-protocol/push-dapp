@@ -109,7 +109,7 @@ const StakingVariant: FC<StakingVariantProps> = ({
           </Box>
 
           <Box display='flex'>
-            {!!pushApprovalAmount && pushApprovalAmount >= fees && <TickCircleFilled color='text-brand-medium' size={27} />}
+            {!!pushApprovalAmount && pushApprovalAmount >= fees && <TickCircleFilled color='icon-brand-medium' size={27} />}
 
             <Box>
               <Text variant="h4-semibold" color='text-brand-medium'>

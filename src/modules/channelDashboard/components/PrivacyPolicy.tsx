@@ -10,7 +10,7 @@ const PrivacyPolicy = () => {
       padding="spacing-none spacing-sm"
       color="text-tertiary"
     >
-      <Box display="flex" flexDirection={{ initial: 'row', ml: 'column' }} gap={{ initial: 's4', ml: 's0' }}>
+      <Box display="flex" flexDirection={{ initial: 'row', ml: 'column' }} gap={{ initial: 'spacing-sm', ml: 'spacing-none' }}>
         <Link
           to="https://push.org/privacy/"
           target="_blank"
