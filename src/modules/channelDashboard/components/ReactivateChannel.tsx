@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from "react";
 import { ethers } from "ethers";
 
-import { Box, Button } from "blocks";
+import { Alert, Box, Button, ErrorFilled } from "blocks";
 
-import { InlineError, ModalHeader, StakingVariant } from "common";
+import { ModalHeader, StakingVariant } from "common";
 
 import { addresses } from "config";
 
@@ -29,10 +29,9 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
 }) => {
 
   const { provider, account } = useAccount();
+
+  const { data: channelDetails, isLoading: loadingChannelDetails, refetch: refetchChannelDetails } = useGetChannelDetails(account);
   const { mutate: approvePUSHToken, isPending: approvingPUSH } = useApprovePUSHToken();
-
-  const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
-
   const { mutate: reactivateChannel, isPending } = useReactivateChannel();
 
   const [reactivationError, setReactivationError] = useState('');
@@ -73,8 +72,7 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
         if (error.code == 'ACTION_REJECTED') {
           setReactivationError('User rejected signature. Please try again.');
         } else {
-          setReactivationError(error.reason);
-
+          setReactivationError('Error in approving PUSH Tokens');
         }
       }
     }
@@ -95,12 +93,16 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
       {
         onSuccess: () => {
           console.log("Channel Reactivated");
+          refetchChannelDetails();
           setActiveState('dashboard')
-
         },
         onError: (error) => {
-          console.log("Error in Reactivating channel");
-          setReactivationError(error.reason)
+          console.log("Error in Reactivating channel", error);
+          if (error.code == 'ACTION_REJECTED') {
+            setReactivationError('User rejected signature. Please try again.');
+          } else {
+            setReactivationError('Error in reactivating channel. Check console for more reasons.')
+          }
         }
       }
     )
@@ -123,7 +125,12 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
         description="Performing this action will make your channel visible to users."
       />
 
-      {reactivationError && <InlineError title={reactivationError} />}
+      {reactivationError && <Alert
+        variant='error'
+        icon={<ErrorFilled color='text-danger-bold' size={24} />}
+        message={reactivationError}
+        width='100%'
+      />}
 
       <ChannelDashboardInfo
         channelDetails={channelDetails}
@@ -151,9 +158,6 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
         )}
 
       </Box>
-
-
-
     </Box>
   );
 };

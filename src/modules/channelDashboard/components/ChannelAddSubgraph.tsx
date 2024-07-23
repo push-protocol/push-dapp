@@ -4,9 +4,9 @@ import { ethers } from "ethers";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 
-import { Box, Button, TextInput } from "blocks";
+import { Alert, Box, Button, ErrorFilled, TextInput } from "blocks";
 
-import { InlineError, ModalHeader } from "common";
+import { ModalHeader } from "common";
 
 import { useAccount } from "hooks";
 
@@ -50,9 +50,8 @@ const ChannelAddSubgraph: FC<ChannelAddSubgraphProps> = ({
   const [addSubgraphError, setAddSubgraphError] = useState('');
 
   const handleAddSubgraph = () => {
-
+    setAddSubgraphError('')
     const input = subgraphForm.values.pollTime + '+' + subgraphForm.values.subgraphId;
-    // Prepare Identity bytes
     const identityBytes = ethers.utils.toUtf8Bytes(input);
 
     var signer = provider.getSigner(account);
@@ -68,7 +67,7 @@ const ChannelAddSubgraph: FC<ChannelAddSubgraphProps> = ({
       },
       onError: (error) => {
         console.log("Error in adding subgraoh", error);
-        setAddSubgraphError(error.message)
+        setAddSubgraphError('Error in adding subgraph. Please Check console for more reason')
       }
     }
     )
@@ -91,7 +90,12 @@ const ChannelAddSubgraph: FC<ChannelAddSubgraphProps> = ({
         description="Enter Subgraph ID and Poll time (atleast 60 sec)"
       />
 
-      {addSubgraphError && <InlineError title={addSubgraphError} />}
+      {addSubgraphError && <Alert
+        variant='error'
+        icon={<ErrorFilled color='text-danger-bold' size={24} />}
+        message={addSubgraphError}
+        width='100%'
+      />}
 
       <form onSubmit={subgraphForm.handleSubmit}>
         <Box display='flex' flexDirection='column' gap='spacing-md'>

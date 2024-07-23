@@ -30,10 +30,10 @@ const PrivacyPolicy = () => {
           <Text variant="bes-semibold">Terms and Conditions</Text>
         </Link>
       </Box>
-      <Box display="flex" alignItems="center" gap="s2">
+      {/* <Box display="flex" alignItems="center" gap="s2">
         <CircleFilled color="icon-success-bold" size={9} />
         <Text variant="bes-semibold" color='text-tertiary'>All systems operational</Text>
-      </Box>
+      </Box> */}
     </Box>
   );
 };

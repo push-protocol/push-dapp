@@ -3,10 +3,10 @@ import { FC, useEffect, useMemo, useState } from 'react';
 import { ethers } from 'ethers';
 import isEqual from 'lodash/isEqual';
 
-import { Box, Button } from 'blocks';
+import { Alert, Box, Button, ErrorFilled } from 'blocks';
 
 import { abis, addresses, appConfig } from 'config';
-import { InlineError, StakingVariant } from 'common';
+import { StakingVariant } from 'common';
 
 import { getPushTokenApprovalAmount } from 'helpers';
 import { IPFSupload } from 'helpers/IpfsHelper';
@@ -101,11 +101,11 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({
           checkApprovedPUSHTokenAmount();
         },
         onError: (error) => {
-          console.log('Error in Approving PUSH', error, error.reason);
+          console.log('Error in Approving PUSH', error);
           if (error.code == 'ACTION_REJECTED') {
             setUpdateChannelError('User rejected signature. Please try again.');
           } else {
-            setUpdateChannelError(error.reason);
+            setUpdateChannelError('Error in approving PUSH Tokens');
           }
         }
       }
@@ -156,7 +156,7 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({
             if (error.code == 'ACTION_REJECTED') {
               setUpdateChannelError('User rejected signature. Please try again.');
             } else {
-              setUpdateChannelError(error.reason);
+              setUpdateChannelError('Error in updating Channel. Check console for more reasons.');
             }
 
           }
@@ -167,7 +167,12 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({
 
   return (
     <Box display="flex" flexDirection="column" alignSelf="stretch">
-      {updateChannelError && <InlineError title={updateChannelError} />}
+      {updateChannelError && <Alert
+        variant='error'
+        icon={<ErrorFilled color='text-danger-bold' size={24} />}
+        message={updateChannelError}
+        width='100%'
+      />}
 
       <StakingVariant
         title="Channel edit fee"

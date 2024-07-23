@@ -27,6 +27,7 @@ import { ChannelSetting } from 'helpers/channel/types';
 import { updateChannelSetting } from 'redux/slices/channelSlice';
 import { NotificationSetting } from '@pushprotocol/restapi/src/lib/pushNotification/PushNotificationTypes';
 import APP_PATHS from 'config/AppPaths';
+import { useGetChannelDetails } from 'queries';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -105,6 +106,7 @@ function NotificationSettings() {
   const notificationToast = useToast(5000);
 
   const navigate = useNavigate();
+  const { refetch: refetchChannelDetails } = useGetChannelDetails(account);
 
   const goBack = () => {
     navigate(`${APP_PATHS.ChannelDashboard}/${account}`, { replace: true });
@@ -215,7 +217,7 @@ function NotificationSettings() {
           />
         ),
       });
-
+      refetchChannelDetails();
       // Go back to channel dashboard
       setTimeout(() => goBack(), 2000);
     } catch (err) {

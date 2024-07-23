@@ -1,8 +1,6 @@
 import { FC, useState } from "react";
 
-import { Box } from "blocks";
-
-import { InlineError } from "common";
+import { Alert, Box, ErrorFilled } from "blocks";
 
 import { useAccount } from "hooks";
 
@@ -47,8 +45,12 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({
         />
 
         <Box display='flex' flexDirection='column' gap='spacing-sm' width='100%'>
-          {/* <InlineSuccess /> */}
-          {channelDashboardError && <InlineError title={channelDashboardError} />}
+          {channelDashboardError && <Alert
+            variant='error'
+            icon={<ErrorFilled color='text-danger-bold' size={24} />}
+            message={channelDashboardError}
+            width='100%'
+          />}
           <ChannelDashboardBody
             setChannelDashboardError={setChannelDashboardError}
             setActiveState={setActiveState}

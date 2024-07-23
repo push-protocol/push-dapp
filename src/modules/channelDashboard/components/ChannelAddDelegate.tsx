@@ -5,10 +5,10 @@ import { useFormik } from "formik";
 import { useSelector } from "react-redux";
 import * as Yup from 'yup';
 
-import { Box, Button, TextInput } from "blocks";
+import { Alert, Box, Button, ErrorFilled, TextInput } from "blocks";
 
 import { AppContext } from "contexts/AppContext";
-import { InlineError, ModalHeader } from "common";
+import { ModalHeader } from "common";
 
 import { useAccount } from "hooks";
 
@@ -67,6 +67,8 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
       return;
     }
 
+    setAddDelegateError('');
+
     let userPushInstance = userPushSDKInstance;
 
     if (userPushSDKInstance?.readmode()) {
@@ -87,7 +89,7 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
       },
       onError: (error) => {
         console.log("Error in adding delegatee", error);
-        setAddDelegateError(error.message)
+        setAddDelegateError('Error in delegating. Check console for more reasons')
       }
     })
   }
@@ -109,7 +111,12 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
         description="Add an account who can send notifications on behalf of the channel"
       />
 
-      {addDelegateError && <InlineError title={addDelegateError} />}
+      {addDelegateError && <Alert
+        variant='error'
+        icon={<ErrorFilled color='text-danger-bold' size={24} />}
+        message={addDelegateError}
+        width='100%'
+      />}
 
       <form onSubmit={delegateForm.handleSubmit}>
         <Box display='flex' flexDirection='column' gap='spacing-md'>

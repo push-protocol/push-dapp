@@ -3,7 +3,7 @@ import { FC, useState } from 'react';
 import { css } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-import { Box, CircleFilled, Copy, Ethereum, PlusCircle, Skeleton, Text, Tooltip } from 'blocks';
+import { Box, CircleFilled, Copy, Ethereum, PlusCircle, Skeleton, Text, TickCircleFilled, Tooltip } from 'blocks';
 
 import { LOGO_ALIAS_CHAIN } from 'common';
 
@@ -67,7 +67,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
 
       <Box display="flex" flexDirection="column" gap='s1'>
         <Skeleton isLoading={loadingChannelDetails} width='100%'>
-          <Box display="flex" flexDirection={{ ml: 'column', initial: 'row' }}>
+          <Box display="flex" alignItems='center' flexDirection={{ ml: 'column', initial: 'row' }}>
 
             <Text variant="h4-semibold" color="text-primary">
               {channelDetails?.name}
@@ -77,8 +77,10 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
               <Box
                 display="flex"
                 alignItems="center"
-                margin={{ initial: "spacing-none spacing-none spacing-none spacing-xs", ml: 'spacing-none' }}
+                margin={{ initial: "spacing-none spacing-none spacing-none spacing-xxxs", ml: 'spacing-none' }}
               >
+                {!!channelDetails?.is_alias_verified && <TickCircleFilled size={22} color='icon-tertiary' />}
+
                 <Ethereum
                   width={18}
                   height={18}

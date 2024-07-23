@@ -1,8 +1,8 @@
 import { FC, useState } from "react";
 
-import { Box, Button, Text } from "blocks";
+import { Alert, Box, Button, ErrorFilled, Text } from "blocks";
 
-import { InlineError, ModalHeader, StakingVariant } from "common";
+import { ModalHeader, StakingVariant } from "common";
 
 import { useAccount } from "hooks";
 
@@ -24,7 +24,7 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({
 
   const { provider, account } = useAccount();
 
-  const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
+  const { data: channelDetails, isLoading: loadingChannelDetails, refetch: refetchChannelDetails } = useGetChannelDetails(account);
   const { mutate: deactivateChannel, isPending } = useDeactivateChannel();
 
   const [deactivateError, setDeactivateError] = useState('');
@@ -40,17 +40,21 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({
       {
         onSuccess: () => {
           console.log("Channel Deactivated Successfully");
+          refetchChannelDetails();
           setActiveState('dashboard');
         },
         onError: (error) => {
           console.log("Error in Deactivating Channel", error);
-          setDeactivateError('User rejected signature. Please try again.')
+          if (error.code == 'ACTION_REJECTED') {
+            setDeactivateError('User rejected signature. Please try again.');
+          } else {
+            setDeactivateError('Error in deactivating Channel. Check console for more reason.')
+          }
 
         }
       }
     )
   }
-
 
   return (
     <Box
@@ -69,7 +73,12 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({
         description="Deactivating your channel will disable sending notifications from it."
       />
 
-      {deactivateError && <InlineError title={deactivateError} />}
+      {deactivateError && <Alert
+        variant='error'
+        icon={<ErrorFilled color='text-danger-bold' size={24} />}
+        message={deactivateError}
+        width='100%'
+      />}
 
       <ChannelDashboardInfo
         channelDetails={channelDetails}
@@ -84,7 +93,6 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({
         <Button size="medium" variant="outline" onClick={() => setActiveState('dashboard')}>Back</Button>
         <Button disabled={isPending} variant="danger" onClick={handleDeactivateChannel}>{isPending ? 'Deactivating' : 'Deactivate'}</Button>
       </Box>
-
 
     </Box>
   );
