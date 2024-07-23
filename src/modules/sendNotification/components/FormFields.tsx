@@ -116,7 +116,7 @@ const FormFields: FC = () => {
   };
 
   const handleSubsetInputChange: KeyboardEventHandler<HTMLDivElement> = (e) => {
-    e.preventDefault();
+    if (e.key === 'Enter') e.preventDefault();
     const LIMITER_KEYS = ['Enter', ','];
     if (LIMITER_KEYS.includes(e.key)) {
       const newRecipients = formik.values.recipient.split(' ').filter((recipient) => recipient); // Remove any empty strings
@@ -274,7 +274,7 @@ const FormFields: FC = () => {
               display="flex"
               flexDirection="column"
               gap="spacing-xs"
-              onKeyUp={(e) => handleSubsetInputChange(e)}
+              onKeyDown={(e) => handleSubsetInputChange(e)}
             >
               <Box
                 display="flex"
