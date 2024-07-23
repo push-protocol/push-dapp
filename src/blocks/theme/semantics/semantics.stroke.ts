@@ -11,21 +11,21 @@ export const strokeSemantics = {
 
   // stroke states
 
-  'success-subtle': { light: colorBrands['success-300'], dark: colorBrands['success-500'] },
-  'success-bold': { light: colorBrands['success-700'], dark: colorBrands['success-300'] },
+  'state-success-subtle': { light: colorBrands['success-300'], dark: colorBrands['success-500'] },
+  'state-success-bold': { light: colorBrands['success-700'], dark: colorBrands['success-300'] },
 
-  'info-subtle': { light: colorBrands['info-300'], dark: colorBrands['info-500'] },
-  'info-bold': { light: colorBrands['info-700'], dark: colorBrands['info-300'] },
+  'state-info-subtle': { light: colorBrands['info-300'], dark: colorBrands['info-500'] },
+  'state-info-bold': { light: colorBrands['info-700'], dark: colorBrands['info-300'] },
 
-  'warning-subtle': { light: colorBrands['warning-300'], dark: colorBrands['warning-500'] },
-  'warning-bold': { light: colorBrands['warning-700'], dark: colorBrands['warning-300'] },
+  'state-warning-subtle': { light: colorBrands['warning-300'], dark: colorBrands['warning-500'] },
+  'state-warning-bold': { light: colorBrands['warning-700'], dark: colorBrands['warning-300'] },
 
-  'danger-subtle': { light: colorBrands['danger-300'], dark: colorBrands['danger-500'] },
-  'danger-bold': { light: colorBrands['danger-500'], dark: colorBrands['danger-300'] },
+  'state-danger-subtle': { light: colorBrands['danger-300'], dark: colorBrands['danger-500'] },
+  'state-danger-bold': { light: colorBrands['danger-500'], dark: colorBrands['danger-300'] },
 
-  hover: { light: colorBrands['success-300'], dark: colorBrands['success-800'] },
-  focus: { light: colorBrands['success-300'], dark: colorBrands['success-300'] },
+  'state-hover': { light: colorBrands['success-300'], dark: colorBrands['success-800'] },
+  'state-focus': { light: colorBrands['success-300'], dark: colorBrands['success-300'] },
 
-  pressed: { light: colorBrands['info-800'], dark: colorBrands['info-300'] },
-  disabled: { light: colorBrands['info-300'], dark: colorBrands['info-800'] },
+  'state-pressed': { light: colorBrands['info-800'], dark: colorBrands['info-300'] },
+  'state-disabled': { light: colorBrands['info-300'], dark: colorBrands['info-800'] },
 };

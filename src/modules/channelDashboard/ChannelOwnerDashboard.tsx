@@ -12,7 +12,8 @@ import ChannelDetails from 'components/ChannelDetails';
 import ChannelLoading from 'components/ChannelLoading';
 import ChannelSettings from 'components/ChannelSettings';
 import CreateChannelModule from '../createChannel/CreateChannelModule';
-import { ButtonV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { Button } from 'blocks';
 import { getAliasFromChannelDetails } from 'helpers/UtilityHelper';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import {
@@ -28,7 +29,6 @@ import useToast from 'hooks/useToast';
 
 // Internal Configs
 import { appConfig } from 'config/index.js';
-import { Button } from 'components/SharedStyling';
 import EditChannel from 'modules/editChannel/EditChannel';
 import useModalBlur from 'hooks/useModalBlur';
 import { AppContext } from 'contexts/AppContext';
@@ -226,24 +226,26 @@ const ChannelOwnerDashboard = () => {
                   {channelDetails && !isMobile && (
                     <ItemHV2
                       zIndex="1"
-                      justifyContent="end"
+                      gap="8px"
                     >
                       {!isChannelExpired && onCoreNetwork && (
-                        <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>
+                        <Button
+                          onClick={showEditChannel}
+                          size="small"
+                          variant="outline"
+                        >
+                          Edit Channel
+                        </Button>
                       )}
                       {!isChannelExpired && <ChannelSettings />}
                       {isChannelExpired && onCoreNetwork && (
-                        <DestroyChannelBtn
+                        <Button
                           onClick={destroyChannel}
-                          background="#E93636"
-                          color="#fff"
-                          height="36px"
-                          width="123px"
-                          borderRadius="8px"
-                          fontSize="14px"
+                          size="small"
+                          variant="danger"
                         >
                           Delete Channel
-                        </DestroyChannelBtn>
+                        </Button>
                       )}
                     </ItemHV2>
                   )}
@@ -281,67 +283,3 @@ const ChannelOwnerDashboard = () => {
 };
 
 export default ChannelOwnerDashboard;
-
-const Container = styled(ItemVV2)`
-  align-items: center;
-  align-self: center;
-  background: ${(props) => props.theme.default.bg};
-  display: flex;
-  flex-direction: column;
-  flex: initial;
-  justify-content: center;
-  max-width: 1200px;
-  border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}
-    ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
-  width: calc(
-    100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT} -
-      ${GLOBALS.ADJUSTMENTS.PADDING.HUGE} - ${GLOBALS.ADJUSTMENTS.PADDING.HUGE}
-  );
-  padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
-  position: relative;
-  margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-
-  @media ${device.laptop} {
-    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
-    padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
-    width: calc(
-      100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} -
-        ${GLOBALS.ADJUSTMENTS.PADDING.BIG} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG}
-    );
-  }
-
-  @media ${device.mobileL} {
-    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.BIG_MODULES.MOBILE};
-    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
-    width: calc(
-      100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} -
-        ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
-    );
-    min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.MOBILE.TOP});
-    overflow-y: scroll;
-    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} 0 0;
-  }
-`;
-
-const DestroyChannelBtn = styled(ButtonV2)`
-  height: ${(props) => props.height || '100%'};
-  width: ${(props) => props.width || '100%'};
-`;
-
-const SubmitButton = styled(Button)`
-  width: 7rem;
-  background: #cf1c84;
-  color: #fff;
-  z-index: 0;
-  font-family: 'FK Grotesk Neu';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 17px;
-  margin-right: 20px;
-  border-radius: 8px;
-  padding: 11px 10px;
-  @media (min-width: 600px) and (max-width: 700px) {
-    margin-right: 9px;
-  }
-`;

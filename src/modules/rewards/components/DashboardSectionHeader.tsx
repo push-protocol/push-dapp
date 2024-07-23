@@ -14,9 +14,9 @@ export type DashboardSectionHeaderProps = {
 const DashboardSectionHeader: FC<DashboardSectionHeaderProps> = ({ onGetStarted }) => {
   return (
     <Box
-      borderRadius="r6"
+      borderRadius="radius-md"
       display="flex"
-      padding={{ tb: 's4', initial: 's6' }}
+      padding={{ tb: 'spacing-sm', initial: 'spacing-md' }}
       alignItems="center"
       justifyContent="space-between"
       flexDirection={{ tb: 'column', initial: 'row' }}
@@ -28,12 +28,12 @@ const DashboardSectionHeader: FC<DashboardSectionHeaderProps> = ({ onGetStarted 
         width="-webkit-fill-available"
         display="flex"
         flexDirection={{ tb: 'column', initial: 'row' }}
-        gap={{ tb: 's4' }}
+        gap={{ tb: 'spacing-sm' }}
         alignItems={{ tb: 'stretch', initial: 'center' }}
         justifyContent="space-between"
       >
         <Box
-          gap="s3"
+          gap="spacing-xs"
           display="flex"
           alignItems="center"
         >
@@ -44,14 +44,14 @@ const DashboardSectionHeader: FC<DashboardSectionHeaderProps> = ({ onGetStarted 
           >
             <Text
               variant="h4-semibold"
-              color="black"
+              color="text-on-light-bg"
             >
               Earn Rewards for Exploring!
             </Text>
             <Box maxWidth={{ tb: 'auto', initial: '567px' }}>
               <Text
                 variant="bl-regular"
-                color="black"
+                color="text-on-light-bg"
               >
                 Push Points are the new way to prove that you belong to the Push community and access to some cool
                 surprises in the future.

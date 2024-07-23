@@ -31,13 +31,14 @@ const DiscordVerification = () => {
     >
       <Box
         display="flex"
-        padding="s6"
+        padding="spacing-md"
         flexDirection="column"
         alignItems="center"
         width="360px"
-        gap="s3"
-        backgroundColor="white"
-        borderRadius="r6"
+        gap="spacing-xs"
+        backgroundColor="surface-primary"
+        borderRadius="radius-md"
+        border="border-sm solid stroke-secondary"
       >
         <Discord
           width={48}
@@ -48,10 +49,15 @@ const DiscordVerification = () => {
           flexDirection="column"
           alignItems="center"
         >
-          <Text variant="h4-semibold">Complete Verification</Text>
+          <Text
+            variant="h4-semibold"
+            color="text-primary"
+          >
+            Complete Verification
+          </Text>
           <Text
             variant="bs-regular"
-            color="gray-500"
+            color="text-tertiary"
           >
             Continue to complete the verification process.
           </Text>

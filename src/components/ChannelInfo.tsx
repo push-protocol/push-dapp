@@ -9,7 +9,7 @@ import styled, { useTheme } from 'styled-components';
 import DateTimePicker from 'react-datetime-picker';
 
 // Internal Compoonents
-import { Button, Input, Item, Section, Span, TextField } from 'primaries/SharedStyling';
+import { Button as SharedButton, Input, Item, Section, Span, TextField } from 'primaries/SharedStyling';
 import '../modules/createChannel/createChannel.css';
 import { useDeviceWidthCheck } from 'hooks';
 import { ItemHV2 } from './reusables/SharedStylingV2';
@@ -19,6 +19,7 @@ import { device } from 'config/Globals';
 import NewTag from './NewTag';
 import ErrorMessage from './reusables/errorMessageLabel/errorMessageLabel';
 import { getIsNewTagVisible } from 'helpers/TimerHelper';
+import { Box, Button } from 'blocks';
 
 const coreChainId = appConfig.coreContractChain;
 
@@ -313,19 +314,15 @@ const ChannelInfo = ({
         </Item>
         {errorInfo?.url && <ErrorMessage message={errorInfo?.url} />}
 
-        <Item
-          width="12.2em"
-          self="stretch"
-          align="stretch"
-          margin="70px auto 50px auto"
+        <Box
+          display="flex"
+          alignSelf="center"
+          margin="spacing-xxxl spacing-none spacing-xxl spacing-none"
         >
           <Button
-            bg={disabled ? '#F4DCEA' : '#CF1C84'}
-            color={disabled ? '#CF1C84' : '#fff'}
-            // disabled={disabled}
-            flex="1"
-            radius="15px"
-            padding="20px 10px"
+            variant="primary"
+            disabled={false}
+            size="large"
             onClick={() => {
               if (!isAllFilledAndValid()) return;
               setTxStatus(2);
@@ -333,17 +330,9 @@ const ChannelInfo = ({
               setStepFlow(1);
             }}
           >
-            <Span
-              color={disabled ? '#CF1C84' : '#fff'}
-              weight="600"
-              textTransform="none"
-              line="22px"
-              size="16px"
-            >
-              Next
-            </Span>
+            Next
           </Button>
-        </Item>
+        </Box>
       </MainContainer>
     </Section>
   );

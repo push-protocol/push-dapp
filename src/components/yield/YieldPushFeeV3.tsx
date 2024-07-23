@@ -16,7 +16,6 @@ import { formatTokens, numberWithCommas } from 'helpers/StakingHelper';
 import StakingToolTip, { StakingToolTipContent } from './StakingToolTip';
 import StakingModalComponent from './StakingModalComponent';
 import {
-  ButtonV2,
   H2V2,
   ImageV2,
   ItemHV2,
@@ -26,6 +25,7 @@ import {
   SkeletonLine,
   SpanV2,
 } from 'components/reusables/SharedStylingV2';
+import { Button } from 'blocks';
 
 // Internal Configs
 import { abis, addresses } from 'config/index.js';
@@ -699,7 +699,13 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
         {userDataPush ? (
           <>
             <ItemHV2>
-              <FilledButton onClick={showStakingModal}> Stake $PUSH</FilledButton>
+              <Button
+                variant="primary"
+                size="medium"
+                onClick={showStakingModal}
+              >
+                Stake $PUSH
+              </Button>
             </ItemHV2>
             <ButtonsContainer>
               {PUSHPoolstats?.currentEpochNumber <= 2 ? (
@@ -713,13 +719,10 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
                   ButtonTitle={'Unstake PUSH'}
                 />
               ) : (
-                <EmptyButton
-                  border={`1px solid ${theme.activeButtonText}`}
-                  background={'transparent'}
-                  color={theme.activeButtonText}
-                  cursor="pointer"
+                <Button
+                  variant="outline"
+                  size="medium"
                   onClick={unstakeTokensPaginated}
-                  style={{ margin: '0px 10px 0px 0px' }}
                 >
                   {txInProgressWithdraw ? (
                     <LoaderSpinner
@@ -732,7 +735,7 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
                   ) : (
                     'Unstake $PUSH'
                   )}
-                </EmptyButton>
+                </Button>
               )}
 
               {userDataPush?.availableRewards === 0.0 ? (
@@ -743,11 +746,9 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
                   left={'40px'}
                   ToolTipWidth={'10rem'}
                 >
-                  <EmptyButton
-                    border="none"
-                    background={theme.disableButtonBg}
-                    cursor="default"
-                    color={theme.disabledButtonText}
+                  <Button
+                    size="medium"
+                    disabled={true}
                   >
                     {txInProgressClaimRewards ? (
                       <LoaderSpinner
@@ -758,14 +759,12 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
                     ) : (
                       'Claim Rewards'
                     )}
-                  </EmptyButton>
+                  </Button>
                 </StakingToolTip>
               ) : (
-                <EmptyButton
-                  border={`1px solid ${theme.activeButtonText}`}
-                  background={'transparent'}
-                  color={theme.activeButtonText}
-                  cursor="pointer"
+                <Button
+                  variant="outline"
+                  size="medium"
                   onClick={claimRewards}
                 >
                   {txInProgressClaimRewards ? (
@@ -779,7 +778,7 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
                   ) : (
                     'Claim Rewards'
                   )}
-                </EmptyButton>
+                </Button>
               )}
             </ButtonsContainer>
           </>
@@ -804,23 +803,19 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
 export default YieldPushFeeV3;
 
 const ErrorToolTip = (props) => {
-  const theme = useTheme();
   return (
     <StakingToolTip
       error={true}
       ToolTipTitle={props.ToolTipTitle}
       ToolTipWidth={'16rem'}
-      margin={'0 10px 0 0'}
       bottom={'-30px'}
     >
-      <EmptyButton
-        border="none"
-        background={theme.disableButtonBg}
-        cursor="default"
-        color={theme.disabledButtonText}
+      <Button
+        size="medium"
+        disabled={true}
       >
         {props.ButtonTitle}
-      </EmptyButton>
+      </Button>
     </StakingToolTip>
   );
 };
@@ -1004,63 +999,10 @@ const DataValue = styled(H2V2)`
   }
 `;
 
-const EpochText = styled(ItemHV2)`
-  align-self: end;
-  margin: 12px 13px 24px 0px;
-  letter-spacing: normal;
-  color: ${(props) => props.theme.modalDescriptionTextColor};
-`;
-
 const ButtonsContainer = styled.div`
   display: flex;
-  width: 100%;
   margin: 15px 0px 0px 0px;
-`;
-
-const FilledButton = styled(ButtonV2)`
-  width: 100%;
-  background: #d53a94;
-  border: 1px solid #d53a94;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 16px;
-  line-height: 141%;
-  letter-spacing: normal;
-  color: #ffffff;
-  cursor: pointer;
-  & > div {
-    display: block;
-  }
-
-  @media (max-width: 600px) {
-    font-size: 14px;
-  }
-`;
-
-const EmptyButton = styled(ButtonV2)`
-  font-size: 16px;
-  line-height: 19px;
-  flex-direction: row;
-  flex: 1;
-  padding: 11px;
-  // width: 145px;
-  height: 49px;
-  border-radius: 8px;
-
-  & > div {
-    display: block;
-  }
-  &:after {
-    background: transparent;
-  }
-
-  &:hover {
-    opacity: 1;
-  }
-
-  @media (max-width: 600px) {
-    font-size: 14px;
-  }
+  gap: var(--s3);
 `;
 
 const SkeletonContainer = styled(Skeleton)`
@@ -1068,16 +1010,4 @@ const SkeletonContainer = styled(Skeleton)`
   max-width: -webkit-fill-available;
   border-radius: 5px;
   gap: 5px;
-`;
-
-const UserSkeletonLine = styled(SkeletonLine)`
-  height: 25px;
-  width: 100%;
-  border-radius: 2px;
-`;
-
-const RewardSkeletonLine = styled(SkeletonLine)`
-  height: 20px;
-  width: 100%;
-  border-radius: 2px;
 `;

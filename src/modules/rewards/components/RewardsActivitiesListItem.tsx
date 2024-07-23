@@ -33,24 +33,24 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
       <Box
         display="flex"
         flexDirection="column"
-        borderRadius="r4"
-        margin={{ ml: 's4 s0', initial: 's2 s0' }}
-        backgroundColor={{ light: 'gray-100', dark: 'gray-1000' }}
+        borderRadius="radius-sm"
+        margin={{ ml: 'spacing-sm spacing-none', initial: 'spacing-xxs spacing-none' }}
+        backgroundColor="surface-secondary"
       >
         <Box
           display="flex"
           flexDirection="row"
-          padding={{ ml: 's3', lp: 's4 s2', initial: 's6' }}
-          borderRadius="r4 r4 r0 r0"
+          padding={{ ml: 'spacing-xs', lp: 'spacing-sm spacing-xxs', initial: 'spacing-md' }}
+          borderRadius="radius-sm radius-sm radius-none radius-none"
           alignItems={{ ml: 'flex-start', initial: 'center' }}
-          gap="s4"
+          gap="spacing-sm"
         >
           <RewardsActivityIcon type={activity.activityType} />
 
           <Box
             display="flex"
             flexDirection={{ ml: 'column', initial: 'row' }}
-            gap={{ ml: 's4', initial: 's6' }}
+            gap={{ ml: 'spacing-sm', initial: 'spacing-md' }}
             width="100%"
             alignItems={{ ml: 'baseline', initial: 'center' }}
           >
@@ -58,7 +58,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
             <Box
               display="flex"
               flexDirection={{ ml: 'column', initial: 'row' }}
-              gap={{ ml: 's1', initial: 's4' }}
+              gap={{ ml: 'spacing-xxxs', initial: 'spacing-sm' }}
               alignItems={{ ml: 'flex-start', initial: 'center' }}
               justifyContent="space-between"
               width="100%"
@@ -67,12 +67,12 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
               <Box
                 display="flex"
                 flexDirection="column"
-                gap="s1"
+                gap="spacing-xxxs"
               >
                 <Box
                   display="flex"
                   flexDirection={{ lp: 'column-reverse', initial: 'row' }}
-                  gap={{ lp: 's1', initial: 's4' }}
+                  gap={{ lp: 'spacing-xxxs', initial: 'spacing-sm' }}
                 >
                   <RewardsActivityTitle
                     activityTitle={activity.activityTitle}
@@ -94,7 +94,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                     <Skeleton isLoading={isLoading}>
                       <Text
                         variant="h5-regular"
-                        color="gray-500"
+                        color="text-tertiary"
                       >
                         {activity.activityDesc}
                       </Text>
@@ -107,7 +107,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                 display="flex"
                 minWidth="200px"
                 flexDirection="row"
-                gap="s2"
+                gap="spacing-xxs"
                 alignItems="center"
               >
                 <Skeleton
@@ -120,7 +120,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                   />
                   <Text
                     variant="h4-semibold"
-                    color={{ light: 'gray-1000', dark: 'gray-100' }}
+                    color="text-primary"
                   >
                     {activity.points?.toLocaleString()} Points
                   </Text>
@@ -145,21 +145,21 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
 
         {(errorMessage || usersSingleActivity?.status === 'REJECTED') && (
           <Box
-            gap="s2"
+            gap="spacing-xxs"
             display="flex"
             flexDirection="row"
             alignItems="center"
-            backgroundColor={{ light: 'red-100', dark: 'red-800' }}
-            borderRadius="r0 r0 r4 r4"
-            padding={{ ml: 's2', lp: 's2', initial: 's2' }}
+            backgroundColor="surface-state-danger-subtle"
+            borderRadius="radius-none radius-none radius-sm radius-sm"
+            padding={{ ml: 'spacing-xxs', lp: 'spacing-xxs', initial: 'spacing-xxs' }}
           >
             <ErrorFilled
-              color={{ light: 'red-600', dark: 'red-300' }}
+              color="icon-state-danger-bold"
               size={24}
             />
             <Text
               variant="h5-semibold"
-              color={{ light: 'red-700', dark: 'red-300' }}
+              color="text-state-danger-bold"
             >
               {errorMessage || 'Verification Rejected. Please contact the Push team over discord.'}
             </Text>
@@ -168,22 +168,22 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
 
         {usersSingleActivity?.status === 'PENDING' && (
           <Box
-            gap="s2"
+            gap="spacing-xs"
             display="flex"
             flexDirection="row"
             alignItems="center"
-            backgroundColor={{ light: 'gray-200', dark: 'gray-800' }}
-            borderRadius="r0 r0 r4 r4"
-            padding={{ ml: 's2', lp: 's2', initial: 's2' }}
+            backgroundColor="surface-state-disabled"
+            borderRadius="radius-none radius-none radius-sm radius-sm"
+            padding={{ ml: 'spacing-xxs', lp: 'spacing-xxs', initial: 'spacing-xxs' }}
           >
             <InfoFilled
-              color={{ light: 'gray-300', dark: 'gray-700' }}
+              color="icon-tertiary"
               size={24}
             />
 
             <Text
               variant="h5-semibold"
-              color={{ light: 'gray-500', dark: 'gray-600' }}
+              color="text-tertiary"
             >
               Verification Pending: Expected completion within 24-72 hours.
             </Text>

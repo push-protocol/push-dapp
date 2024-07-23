@@ -9,24 +9,24 @@ const LeaderboardListColumns: FC = () => {
     >
       <Box
         display="flex"
-        gap="s3"
+        gap="spacing-xs"
       >
         <Text
           variant="c-bold"
-          color={{ light: 'gray-500', dark: 'gray-600' }}
+          color="text-tertiary"
         >
           RANK
         </Text>
         <Text
           variant="c-bold"
-          color={{ light: 'gray-500', dark: 'gray-600' }}
+          color="text-tertiary"
         >
           USER
         </Text>
       </Box>
       <Text
         variant="c-bold"
-        color={{ light: 'gray-500', dark: 'gray-600' }}
+        color="text-tertiary"
       >
         TOTAL POINTS
       </Text>
