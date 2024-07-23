@@ -14,6 +14,7 @@ export const config = {
   apiUrl: 'https://backend.epns.io/apis',
   w2wApiUrl: 'https://backend.epns.io/apis',
   toolingApiUrl: 'https://tooling.epns.io/apis',
+  deliveryNodeApiUrl: 'https://delivery-prod.epns.io/apis',
 
   ipfsInfuraAPIKey: import.meta.env.VITE_APP_IPFS_INFURA_API_KEY || '2DVyu4GEkiFksOrihKk8NMEWWwY',
   ipfsInfuraAPISecret: import.meta.env.VITE_APP_IPFS_INFURA_API_SECRET || '8e39eefc3d70b851b47f90611d40cfa5',
