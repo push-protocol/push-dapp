@@ -14,12 +14,17 @@ export type RewardsActivitiesBottomSectionProps = {};
 
 const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = () => {
   return (
-    <>
+    <Box
+      display="flex"
+      flexDirection="column"
+      gap="spacing-lg"
+    >
       <Box
         backgroundColor="surface-primary"
         borderRadius="r4"
         display="flex"
         flexDirection="column"
+        margin="spacing-xs spacing-none spacing-none spacing-none"
         padding={{ ml: 's4 s3', initial: 's6' }}
       >
         <RewardsActivitiesSection />
@@ -57,7 +62,7 @@ const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = 
           subtitle="Visit app.push.org/yieldv2 and stake tokens in the Fee Pool or LP Pool to activate multipliers."
         />
       </Box>
-    </>
+    </Box>
   );
 };
 
