@@ -46,6 +46,7 @@ const REWARDS_HEADER_TAG = {
     fg: themeDark.headerTagFg,
   },
 };
+
 const EXTRA_HEADER_TAGS = {
   [APP_PATHS.UserSettings]: {
     title: 'Settings',
@@ -60,6 +61,17 @@ const EXTRA_HEADER_TAGS = {
   },
   [APP_PATHS.ChannelSettings]: {
     title: 'Notification Settings',
+    light: {
+      bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+      fg: themeLight.headerTagFg,
+    },
+    dark: {
+      bg: themeDark.headerTagBg,
+      fg: themeDark.headerTagFg,
+    },
+  },
+  [APP_PATHS.AddNewChain]: {
+    title: 'Create Channel',
     light: {
       bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
       fg: themeLight.headerTagFg,
@@ -427,7 +439,8 @@ const HeaderTag = styled(Item)`
     margin: 5px 0px;
   }
   .text {
-    font-size: 24px;
+    font-size: 18px;
+    font-weight: 500;
 
     @media (max-width: 993px) {
       font-size: 20px;

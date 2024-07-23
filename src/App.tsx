@@ -115,8 +115,8 @@ const GlobalStyle = createGlobalStyle`
     /* deprecated */
     /* Colors */
     ${Object.entries(blocksColors)
-      .map(([colorName, code]) => `--${colorName}: ${code};`)
-      .join('')}
+    .map(([colorName, code]) => `--${colorName}: ${code};`)
+    .join('')}
       
     /* Font Family */
       --font-family: 'FK Grotesk Neu';
@@ -146,7 +146,7 @@ const extendConsole = () => {
         window.console = {};
       }
       if (window.console[level] === 'undefined' || !window.console[level] || window.console[level] === null) {
-        window.console[level] = function () {};
+        window.console[level] = function () { };
       }
       if (enabled) {
         if (disabledConsoles[level]) {
@@ -154,7 +154,7 @@ const extendConsole = () => {
         }
       } else {
         disabledConsoles[level] = window.console[level];
-        window.console[level] = function () {};
+        window.console[level] = function () { };
       }
     };
   } catch (e) {
@@ -341,7 +341,7 @@ export default function App() {
           <ChatUIProvider
             user={userPushSDKInstance}
             theme={darkMode && darkChatTheme}
-            debug={false}
+            debug={true}
             uiConfig={{
               suppressToast: false,
             }}
@@ -403,8 +403,8 @@ export default function App() {
                       isSidebarHidden
                         ? GLOBALS.CONSTANTS.NO_LEFT_BAR_WIDTH
                         : sidebarCollapsed
-                        ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH
-                        : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH
+                          ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH
+                          : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH
                     }
                   >
                     {/* Shared among all pages, load universal things here */}

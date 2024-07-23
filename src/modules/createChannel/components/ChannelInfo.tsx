@@ -1,125 +1,114 @@
-import { Box, Button, Text, TextInput } from "blocks";
-import { FC, useMemo } from "react";
-import { isEmpty } from "../CreateChannel.utils";
+import { FC } from "react";
 
-type ErrorInfoType = {
-  name: string;
-  description: string;
-  url: string;
-}
+import { Box, Button, TextArea, TextInput } from "blocks";
+
+import { useCreateChannelForm } from "../CreateChannel.form";
+import { ActiveStepKey } from "../CreateChannel.types";
+
 
 type ChannelInfoProps = {
-  channelName: string;
-  channelDesc: string;
-  channelURL: string;
-  errorInfo: ErrorInfoType
-  setChannelName: (channelName: string) => void;
-  setChannelDesc: (channelDesc: string) => void;
-  setChannelURL: (channelURL: string) => void;
-  checkFormInput: () => boolean;
-  setChannelInfoDone: (channelInfoDone: boolean) => void;
-  setStepFlow: (stepFlow: number) => void;
+  setActiveStepKey: (key: ActiveStepKey) => void;
+  handleNextStep: (key: ActiveStepKey) => void;
 }
-
 const ChannelInfo: FC<ChannelInfoProps> = ({
-  channelName,
-  channelDesc,
-  channelURL,
-  errorInfo,
-  setChannelName,
-  setChannelDesc,
-  setChannelURL,
-  checkFormInput,
-  setChannelInfoDone,
-  setStepFlow
+  handleNextStep,
+  setActiveStepKey
 }) => {
 
-  const checkButtonStatus = () => {
-    if (isEmpty(channelName) || isEmpty(channelDesc) || isEmpty(channelURL)) {
-      return true
-    } else {
-      return false
-    }
-  }
+  const {
+    values: formValues,
+    touched,
+    setFieldTouched,
+    setFieldValue,
+    errors,
+    validateForm,
+    setTouched,
+  } = useCreateChannelForm();
 
-  const disableButton = useMemo(checkButtonStatus, [channelName, channelDesc, channelURL])
+  const handleNext = () => {
+    validateForm().then((errors) => {
+      setTouched({
+        channelName: true,
+        channelDesc: true,
+        channelURL: true,
+      });
+      if (Object.keys(errors).length === 0) {
+        handleNextStep('uploadLogo');
+        setActiveStepKey('uploadLogo');
+      }
+    })
+  }
 
   return (
     <Box
       display='flex'
       flexDirection='column'
-      alignItems='center'
-      gap='s10'
       alignSelf='stretch'
     >
-
       <Box
         display='flex'
         flexDirection='column'
-        alignItems='flex-start'
-        gap='s4'
+        gap='spacing-xl'
         alignSelf='stretch'
       >
-        <Box display='flex' flexDirection='column' width='100%'>
-          <Text variant="h6-semibold">Channel Name</Text>
-          <TextInput
-            value={channelName}
-            onChange={(e) => {
-              setChannelName(e.target.value)
-            }}
-            error={!!errorInfo?.name}
-            errorMessage={errorInfo.name}
-          />
-        </Box>
-        <Box display='flex' flexDirection='column' width='100%'>
-          <Box display='flex' flexDirection='row' alignItems='center' justifyContent='space-between'>
-            <Text variant="h6-semibold">Channel Description</Text>
-            <Text variant="c-regular" color='gray-600'>{250 - channelDesc?.length}</Text>
-          </Box>
+        <Box
+          display='flex'
+          flexDirection='column'
+          gap='spacing-sm'
+          alignSelf='stretch'
+        >
           <TextInput
             required
-            value={channelDesc}
+            label="Channel Name"
+            value={formValues.channelName}
+            onChange={(e) => {
+              const value = e.target.value;
+              setFieldTouched('channelName', true);
+              setFieldValue('channelName', value);
+            }}
+            totalCount={32}
+            error={touched.channelName && Boolean(errors?.channelName)}
+            errorMessage={touched.channelName ? errors?.channelName : ''}
+          />
+
+          <TextArea
+            required
+            label="Channel Description"
             placeholder="Get notified about ..."
             description='Enter a Brief description of the notifications the user will receive'
+            value={formValues.channelDesc}
             onChange={(e) => {
-              setChannelDesc(e.target.value.slice(0, 250))
+              const value = e.target.value;
+              setFieldTouched('channelDesc', true);
+              setFieldValue('channelDesc', value);
             }}
-            error={!!errorInfo?.description}
-            errorMessage={errorInfo.description}
+            totalCount={250}
+            error={touched.channelDesc && Boolean(errors?.channelDesc)}
+            errorMessage={touched.channelURL ? errors?.channelDesc : ''}
           />
 
-          {/* <textarea rows={4} maxLength={250} /> */}
-
-
-        </Box>
-        <Box display='flex' flexDirection='column' width='100%'>
-          <Text variant="h6-semibold">Channel Wensite URL</Text>
           <TextInput
-            value={channelURL}
+            required
+            label="Channel Website URL"
+            value={formValues.channelURL}
             onChange={(e) => {
-              setChannelURL(e.target.value)
+              const value = e.target.value;
+              setFieldTouched('channelURL', true);
+              setFieldValue('channelURL', value);
             }}
-            error={!!errorInfo?.url}
-            errorMessage={errorInfo.url}
+            error={touched.channelURL && Boolean(errors?.channelURL)}
+            errorMessage={touched.channelURL ? errors?.channelURL : ''}
           />
+        </Box>
+
+        <Box display='flex' justifyContent='center'>
+          <Button onClick={handleNext}>
+            Next
+          </Button>
         </Box>
       </Box>
-
-
-      <Button
-        disabled={disableButton}
-        onClick={() => {
-          console.log("Next is clicked")
-          if (!checkFormInput()) return;
-          setChannelInfoDone(true);
-          setStepFlow(1);
-        }}
-      >
-        Next
-      </Button>
-
-
     </Box>
+
   );
 };
 
