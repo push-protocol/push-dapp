@@ -19,8 +19,7 @@ const UtilityHelper = {
       chainId === 10 ||
       chainId === 42161 ||
       chainId === 122 ||
-      chainId === 7560 ||
-      chainId === 8453
+      chainId === 7560
     ) {
       return true;
     }
@@ -63,8 +62,9 @@ export const MaskedAliasChannels: {
   123: {},
   111557560: {},
   7560: {},
-  8453: {},
-  84532: {},
+  // comment base
+  // 8453: {},
+  // 84532: {},
 };
 
 export const findObject = (data: any, parentArray: any[], property: string): boolean => {
@@ -129,8 +129,9 @@ export const networkName = {
   123: 'Fuse Testnet',
   111557560: 'Cyber Testnet',
   7560: 'Cyber Mainnet',
-  8453: 'Base Mainnet',
-  84532: 'Base Sepolia',
+  // comment base
+  // 8453: 'Base Mainnet',
+  // 84532: 'Base Sepolia',
 };
 
 export const chainNameBackendStandard = {
@@ -156,8 +157,9 @@ export const aliasChainIdToChainName = {
   123: 'FUSE',
   111557560: 'CYBERCONNECT',
   7560: 'CYBERCONNECT',
-  8453: 'BASE',
-  84532: 'BASE',
+  // comment base
+  // 8453: 'BASE',
+  // 84532: 'BASE',
 };
 
 export const aliasChainIdsMapping = {
@@ -266,20 +268,21 @@ export const NETWORK_DETAILS = {
     rpcUrls: ['https://cyber.alt.technology/'],
     blockExplorerUrls: [' https://.cyberscan.co/'],
   },
-  BASE_TESTNET: {
-    chainId: utils.hexValue(84532),
-    chainName: 'Base Testnet',
-    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
-    rpcUrls: ['https://sepolia.base.org/'],
-    blockExplorerUrls: ['https://sepolia-explorer.base.org/'],
-  },
-  BASE_MAINNET: {
-    chainId: utils.hexValue(8453),
-    chainName: 'Base Mainnet',
-    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
-    rpcUrls: ['https://mainnet.base.org/'],
-    blockExplorerUrls: ['https://basescan.org/'],
-  },
+  // comment base
+  // BASE_TESTNET: {
+  //   chainId: utils.hexValue(84532),
+  //   chainName: 'Base Testnet',
+  //   nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+  //   rpcUrls: ['https://sepolia.base.org/'],
+  //   blockExplorerUrls: ['https://sepolia-explorer.base.org/'],
+  // },
+  // BASE_MAINNET: {
+  //   chainId: utils.hexValue(8453),
+  //   chainName: 'Base Mainnet',
+  //   nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+  //   rpcUrls: ['https://mainnet.base.org/'],
+  //   blockExplorerUrls: ['https://basescan.org/'],
+  // },
 };
 
 export const CORE_CHAIN_ID: number = appConfig.coreContractChain;
@@ -304,8 +307,9 @@ export const LOGO_FROM_CHAIN_ID: {
   123: 'Fuse.svg',
   111557560: 'Cyber.svg',
   7560: 'Cyber.svg',
-  8453: 'Base.svg',
-  84532: 'Base.svg',
+  // comment base
+  // 8453: 'Base.svg',
+  // 84532: 'Base.svg',
 };
 
 export type getAliasResponseType = {

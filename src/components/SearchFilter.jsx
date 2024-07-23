@@ -6,6 +6,7 @@ import { MultiSelect } from 'react-multi-select-component';
 import styled, { useTheme } from 'styled-components';
 import { ThemeProvider } from 'styled-components';
 import DateTimePicker from 'react-datetime-picker';
+import { Box, Button } from 'blocks';
 
 // Constants
 const DEBOUNCE_TIMEOUT = 500; //time in millisecond which we want to wait for then to finish typing
@@ -125,15 +126,28 @@ const SearchFilter = ({
             </RangeSection>
           </SectionSearch>
         </SearchOptions>
-        <ButtonContainer>
-          <ResetButton onClick={resetIt}>Reset</ResetButton>
-          <ButtonFeed
-            bgColor="#e20880"
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="flex-end"
+          margin="spacing-xxxs spacing-lg spacing-md spacing-none"
+          gap="s2"
+        >
+          <Button
+            variant="outline"
+            size="small"
+            onClick={resetIt}
+          >
+            Reset
+          </Button>
+          <Button
+            variant="primary"
+            size="small"
             onClick={applySearch}
           >
             Search
-          </ButtonFeed>
-        </ButtonContainer>
+          </Button>
+        </Box>
       </Container>
     </ThemeProvider>
   );
@@ -365,48 +379,6 @@ const Container = styled.div`
     margin-right: 0.5rem;
     padding: 0.5rem;
   }
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  margin: 0.3rem 2rem 1.6rem 0;
-  font-family: FK Grotesk Neu, Source Sans Pro;
-  @media (max-width: 600px) {
-    justify-content: space-evenly;
-    margin-right: 0;
-  }
-`;
-
-const ButtonFeed = styled.button`
-  width: 110px;
-  height: 36px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 17px;
-  background-color: ${(props) => (props.bgColor ? props.bgColor : '')};
-  margin-right: ${(props) => (props.mright ? props.mright : '')};
-  &:hover {
-    cursor: pointer;
-    pointer: hand;
-  }
-  @media (max-width: 500px) {
-    margin-right: ${(props) => (props.mright ? '1.5rem' : '')};
-  }
-  font-family: FK Grotesk Neu, Source Sans Pro;
-`;
-
-const ResetButton = styled(ButtonFeed)`
-  background: ${(props) => props.theme.backgroundBG};
-  border: 1px solid #bac4d6;
-  color: #657795;
-  margin-right: 10px;
 `;
 
 const SearchOptions = styled.div`

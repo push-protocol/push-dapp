@@ -1,5 +1,5 @@
 import { Asterisk } from 'blocks/icons';
-import { Text } from 'blocks/text/Text';
+import { textVariants } from '../text';
 import React, { forwardRef } from 'react';
 import styled, { FlattenSimpleInterpolation, css } from 'styled-components';
 
@@ -36,22 +36,17 @@ const StyledTextArea = styled.textarea<{
   success?: boolean;
   resizable?: boolean;
 }>`
-  ${({ theme, resizable, success, error }) => {
-    const colors = theme?.blocksTheme?.colors;
+  ${({ resizable, success, error }) => {
     const defaultState = error ? 'danger' : success ? 'success' : 'default';
     const focusState = error ? 'danger' : success ? 'success' : 'focus';
     return css`
       align-self: stretch;
       align-items: flex-start;
       border-radius: var(--radius-xs, 12px);
-      border: 1.5px solid
-        var(--components-inputs-stroke-${defaultState}, ${colors[`components-inputs-stroke-${defaultState}`]});
-      background: var(
-        --components-inputs-background-${defaultState},
-        ${colors[`components-inputs-background-${defaultState}`]}
-      );
+      border: 1.5px solid var(--components-inputs-stroke-${defaultState});
+      background: var(--components-inputs-background-${defaultState});
 
-      color: var(--components-inputs-text-${defaultState}, ${colors[`components-inputs-text-${defaultState}`]});
+      color: var(--components-inputs-text-${defaultState});
 
       display: flex;
 
@@ -66,7 +61,7 @@ const StyledTextArea = styled.textarea<{
 
       padding: var(--spacing-xs, 12px);
       ::placeholder {
-        color: var(--components-inputs-text-placeholder, ${colors['components-inputs-text-placeholder']});
+        color: var(--components-inputs-text-placeholder);
       }
 
       resize: ${resizable ? 'vertical' : 'none'};
@@ -76,16 +71,15 @@ const StyledTextArea = styled.textarea<{
       }
 
       &:focus {
-        border: 1.5px solid
-          var(--components-inputs-stroke-${focusState}, ${colors[`components-inputs-stroke-${focusState}`]});
+        border: 1.5px solid var(--components-inputs-stroke-${focusState});
         outline: none;
       }
 
       &:disabled {
-        border: 1.5px solid var(--components-inputs-stroke-default, ${colors['components-inputs-stroke-default']});
-        background: var(--components-inputs-background-disabled, ${colors['components-inputs-background-disabled']});
+        border: 1.5px solid var(--components-inputs-stroke-default);
+        background: var(--components-inputs-background-disabled);
         cursor: not-allowed;
-        color: var(--components-inputs-text-disabled, ${colors['components-inputs-text-disabled']});
+        color: var(--components-inputs-text-disabled);
       }
     `;
   }}
@@ -98,10 +92,28 @@ const LabelContainer = styled.div`
   width: 100%;
 `;
 
+const LabelText = styled.span<{ color: string }>`
+  color: var(--${({ color }) => color});
+  font-family: var(--font-family);
+  font-size: ${textVariants['h6-semibold'].fontSize};
+  font-style: ${textVariants['h6-semibold'].fontStyle};
+  font-weight: ${textVariants['h6-semibold'].fontWeight};
+  line-height: ${textVariants['h6-semibold'].lineHeight};
+`;
+
 const LabelTextContainer = styled.div`
   display: flex;
   align-items: flex-start;
   gap: var(--spacing-xxxs, 4px);
+`;
+
+const LabelCount = styled.span<{ color: string }>`
+  color: var(--${({ color }) => color});
+  font-family: var(--font-family);
+  font-size: ${textVariants['c-regular'].fontSize};
+  font-style: ${textVariants['c-regular'].fontStyle};
+  font-weight: ${textVariants['c-regular'].fontWeight};
+  line-height: ${textVariants['c-regular'].lineHeight};
 `;
 
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
@@ -128,20 +140,16 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       <Container css={css}>
         {label && (
           <LabelContainer>
-            <Text
-              variant="h6-semibold"
-              color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-default'}
-            >
+            <LabelText color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-default'}>
               <LabelTextContainer>
                 {label}
                 {required && <Asterisk size={4.6} />}
               </LabelTextContainer>
-            </Text>
+            </LabelText>
             {totalCount && (
-              <Text
-                variant="c-regular"
-                color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-secondary'}
-              >{`${value?.length || 0} / ${totalCount}`}</Text>
+              <LabelCount color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-secondary'}>
+                {`${value?.length || 0} / ${totalCount}`}
+              </LabelCount>
             )}
           </LabelContainer>
         )}
@@ -158,8 +166,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           value={value}
         />
         {description && (
-          <Text
-            variant="c-regular"
+          <LabelCount
             color={
               success || error
                 ? 'components-inputs-text-default'
@@ -169,16 +176,9 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             }
           >
             {description}
-          </Text>
+          </LabelCount>
         )}
-        {errorMessage && (
-          <Text
-            variant="c-regular"
-            color="components-inputs-text-danger"
-          >
-            {errorMessage}
-          </Text>
-        )}
+        {errorMessage && <LabelCount color="components-inputs-text-danger">{errorMessage}</LabelCount>}
       </Container>
     );
   }

@@ -1,11 +1,11 @@
-import React from 'react';
 import Close from 'assets/chat/group-chat/close.svg?react';
-import { ButtonV2, H2V2, ItemHV2, ItemVV2 } from './reusables/SharedStylingV2';
+import { H2V2, ItemHV2, ItemVV2 } from './reusables/SharedStylingV2';
 import styled from 'styled-components';
 import Globals from 'config/Globals';
 import { LOADER_SPINNER_TYPE } from './reusables/loaders/LoaderSpinner';
 import Spinner from './reusables/spinners/SpinnerUnit';
 import CheckMark from 'assets/checkmark.svg?react';
+import { Button } from 'blocks';
 
 const StepsTransactionModal = ({ onClose, InnerComponentProps }) => {
   const {
@@ -113,7 +113,13 @@ const StepsTransactionModal = ({ onClose, InnerComponentProps }) => {
               </ItemVV2>
 
               <ItemVV2>
-                <FilledButton onClick={retryClaimingRewards}>Retry</FilledButton>
+                <Button
+                  variant="primary"
+                  size="medium"
+                  onClick={retryClaimingRewards}
+                >
+                  Retry
+                </Button>
               </ItemVV2>
             </ItemVV2>
           )}
@@ -144,9 +150,13 @@ const StepsTransactionModal = ({ onClose, InnerComponentProps }) => {
                 </ItemVV2>
               </ItemVV2>
 
-              <ItemVV2 onClick={handleClose}>
-                <FilledButton>Close</FilledButton>
-              </ItemVV2>
+              <Button
+                variant="primary"
+                size="medium"
+                onClick={handleClose}
+              >
+                Close
+              </Button>
             </ItemVV2>
           )}
         </>
@@ -166,24 +176,4 @@ export default StepsTransactionModal;
 const Container = styled(ItemVV2)`
   min-width: 493px;
   padding: 32px 24px;
-`;
-
-const FilledButton = styled(ButtonV2)`
-  min-width: 200px;
-  background: #d53a94;
-  border: 1px solid #d53a94;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 16px;
-  line-height: 141%;
-  letter-spacing: normal;
-  color: #ffffff;
-  cursor: pointer;
-  & > div {
-    display: block;
-  }
-
-  @media (max-width: 600px) {
-    font-size: 14px;
-  }
 `;

@@ -20,8 +20,8 @@ const ContentLayout: FC<ContentLayoutProps> = ({ children }) => {
       justifyContent="center"
       alignSelf="center"
       maxWidth="1200px"
-      backgroundColor="transparent"
-      width="calc(100% - (var(--s4) * 2))"
+      backgroundColor="surface-transparent"
+      width="calc(100% - (var(--spacing-sm) * 2))"
       css={css`
         flex: initial;
         margin: 0 0 auto 0;
