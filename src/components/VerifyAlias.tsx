@@ -69,10 +69,11 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
       label: 'Cyber ETH',
       url: 'https://cyber-testnet.testnets.rollbridge.app/',
     },
-    84532: {
-      label: 'Base Sepolia',
-      url: 'https://www.alchemy.com/faucets/base-sepolia',
-    },
+    // comment base
+    // 84532: {
+    //   label: 'Base Sepolia',
+    //   url: 'https://www.alchemy.com/faucets/base-sepolia',
+    // },
   };
 
   const checkAlias = async () => {
