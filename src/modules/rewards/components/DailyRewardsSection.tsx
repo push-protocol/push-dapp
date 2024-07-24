@@ -4,6 +4,9 @@ import { FC } from 'react';
 // third party libraries
 import { css } from 'styled-components';
 
+// hooks
+import { useGetRewardsActivities } from 'queries';
+
 // components
 import { Box, Button, Text } from 'blocks';
 import { DailyRewardsItem } from './DailyRewardsItem';
@@ -11,44 +14,28 @@ import { DailyRewardsItem } from './DailyRewardsItem';
 export type DailyRewardsSectionProps = {};
 
 const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
-  const dailyRewardsArray = [
-    {
-      day: 1,
-      points: 100,
-      status: 'inactive',
-    },
-    {
-      day: 2,
-      points: 50,
-      status: 'active',
-    },
-    {
-      day: 3,
-      points: 25,
-      status: 'inactive',
-    },
-    {
-      day: 4,
-      points: 25,
-      status: 'inactive',
-    },
+  const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities({ pageSize: 50 });
 
-    {
-      day: 5,
-      points: 75,
-      status: 'inactive',
-    },
-    {
-      day: 6,
-      points: 75,
-      status: 'inactive',
-    },
-    {
-      day: 7,
-      points: 150,
-      status: 'inactive',
-    },
-  ];
+  const isLoading = isLoadingActivities;
+  // const isLoading = isLoadingUserDetails || isLoadingActivities;
+
+  // If there are activities then render them else render 2 skeletons
+  const activityList = isLoading
+    ? Array(7).fill(0)
+    : rewardActivitiesResponse?.pages.flatMap((page) => page.activities) || [];
+
+  // Filter activities based on the index
+  const dailyActivities = activityList.filter((activity) => activity.index < 0);
+
+  // Function to extract the day number from the activity title or type
+  const getDayNumber = (activity: any) => {
+    const dayMatch = activity?.activityTitle.match(/Day (\d+)/) || activity?.activityType.match(/day(\d+)/);
+    return dayMatch ? parseInt(dayMatch[1], 10) : 0;
+  };
+
+  // Sort the activities based on the extracted day number
+  const dailyRewardsActivities = dailyActivities?.sort((a, b) => getDayNumber(a) - getDayNumber(b));
+
   return (
     <Box
       display="flex"
@@ -95,8 +82,8 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
           }
         `}
       >
-        {dailyRewardsArray.map((item) => (
-          <DailyRewardsItem item={item} />
+        {dailyRewardsActivities.map((activity) => (
+          <DailyRewardsItem activity={activity} />
         ))}
       </Box>
     </Box>

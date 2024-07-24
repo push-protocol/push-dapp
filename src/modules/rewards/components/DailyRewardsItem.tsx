@@ -6,23 +6,19 @@ import { Box, Text } from 'blocks';
 import RewardsIcon from 'blocks/illustrations/components/RewardsCoin';
 import MultipleRewardsIcon from 'blocks/illustrations/components/MultipleRewardsCoin';
 import TripleRewardsIcon from 'blocks/illustrations/components/TripleRewardsCoin';
-
-interface DailyItemProp {
-  day: number;
-  points: number;
-  status: string;
-}
+import { Activity } from 'queries';
 
 export type DailyRewardsItemProps = {
-  item: DailyItemProp;
+  activity: Activity;
 };
 
-const DailyRewardsItem: FC<DailyRewardsItemProps> = ({ item }) => {
+const DailyRewardsItem: FC<DailyRewardsItemProps> = ({ activity }) => {
+  const day = parseInt(activity?.activityTitle?.split('- Day')[1]);
   return (
     <Box
       padding="spacing-md"
       backgroundColor={
-        item.status == 'active' ? 'surface-brand-medium' : item.day == 7 ? 'surface-brand-subtle' : 'surface-secondary'
+        activity.status != 'ENABLED' ? 'surface-brand-medium' : day == 7 ? 'surface-brand-subtle' : 'surface-secondary'
       }
       borderRadius="radius-md"
       display="flex"
@@ -33,22 +29,22 @@ const DailyRewardsItem: FC<DailyRewardsItemProps> = ({ item }) => {
     >
       <Text
         variant="bm-semibold"
-        color={item?.status == 'active' ? 'text-on-dark-bg' : item.day == 7 ? 'text-on-light-bg' : 'text-secondary'}
+        color={activity.status != 'ENABLED' ? 'text-on-dark-bg' : day == 7 ? 'text-on-light-bg' : 'text-secondary'}
       >
-        Day {item.day}
+        {activity?.activityTitle?.split('-')[1]}
       </Text>
 
-      {item.day < 5 && <RewardsIcon />}
+      {day < 5 && <RewardsIcon />}
 
-      {item.day >= 5 && item.day < 7 && <TripleRewardsIcon />}
+      {day >= 5 && day < 7 && <TripleRewardsIcon />}
 
-      {item.day == 7 && <MultipleRewardsIcon />}
+      {day == 7 && <MultipleRewardsIcon />}
 
       <Text
         variant="bm-semibold"
-        color={item?.status == 'active' ? 'text-on-dark-bg' : item.day == 7 ? 'text-on-light-bg' : 'text-secondary'}
+        color={activity.status != 'ENABLED' ? 'text-on-dark-bg' : day == 7 ? 'text-on-light-bg' : 'text-secondary'}
       >
-        +{item.points}
+        {activity.points?.toLocaleString()} Points
       </Text>
     </Box>
   );
