@@ -29,11 +29,13 @@ import { UserStoreType } from 'types';
 
 import { getFormInitialValues, getValidationSchema } from '../SendNotification.form';
 
-const FormFields: FC = () => {
+type FormFielsProps = {
+  channelDetails: ChannelDetails | undefined;
+};
+const FormFields: FC<FormFielsProps> = ({ channelDetails }) => {
   const [subsetRecipients, setSubsetRecipients] = useState<Array<string>>([]);
   const { account, chainId } = useAccount();
   const { mutate: sendNotification, isPending } = useSendNotification();
-  const { data: channelDetails } = useGetChannelDetails(account);
   const toast = useToast();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
   /** replace the delegatees with high level sdk function once it is available */

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
 import { css } from 'styled-components';
 import { useSelector } from 'react-redux';
@@ -8,12 +8,23 @@ import { FormFields } from './components/FormFields';
 import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
 
 import { UserStoreType } from 'types';
+import { useGetChannelDetails } from 'queries';
+import { useAccount } from 'hooks';
+import { useNavigate } from 'react-router-dom';
 
 //add formik
 //add conditon for /send url
 
 const SendNotification: FC = () => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
+  const { account } = useAccount();
+  const { data: channelDetails } = useGetChannelDetails(account);
+  const nagivate = useNavigate();
+
+  useEffect(() => {
+    if (!channelDetails) nagivate('/channels');
+  }, [channelDetails]);
+
   return (
     <Box
       padding={{ dp: 'spacing-lg', ml: 'spacing-sm' }}
@@ -43,7 +54,7 @@ const SendNotification: FC = () => {
         Send Notification
       </Text>
       <Box width="100%">
-        <FormFields />
+        <FormFields channelDetails={channelDetails} />
       </Box>
       {userPushSDKInstance && userPushSDKInstance?.readmode() && (
         <Box

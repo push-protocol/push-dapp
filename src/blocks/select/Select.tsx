@@ -190,6 +190,14 @@ const LabelTextContainer = styled.div`
   align-items: flex-start;
   gap: var(--spacing-xxxs, 4px);
 `;
+const Description = styled.span<{ color: string }>`
+  color: var(--${({ color }) => color});
+  font-family: var(--font-family);
+  font-size: ${textVariants['c-regular'].fontSize};
+  font-style: ${textVariants['c-regular'].fontStyle};
+  font-weight: ${textVariants['c-regular'].fontWeight};
+  line-height: ${textVariants['c-regular'].lineHeight};
+`;
 const Select: React.FC<SelectProps> = ({
   options,
   onSelect,
@@ -200,6 +208,8 @@ const Select: React.FC<SelectProps> = ({
   success,
   label,
   required,
+  description,
+  errorMessage,
   tag,
   disabled,
 }) => {
@@ -291,7 +301,20 @@ const Select: React.FC<SelectProps> = ({
           </StyledPopover>
         )}
       </StyledCombobox>
-      {/* description and error message will be added here  */}
+      {description && (
+        <Description
+          color={
+            success || error
+              ? 'components-inputs-text-default'
+              : disabled
+              ? 'components-inputs-text-disabled'
+              : 'components-inputs-text-placeholder'
+          }
+        >
+          {description}
+        </Description>
+      )}
+      {errorMessage && <Description color="components-inputs-text-danger">{errorMessage}</Description>}
     </Container>
   );
 };

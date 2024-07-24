@@ -1,5 +1,5 @@
 import { INotification, IPayload, PushAPI } from '@pushprotocol/restapi';
-import { sendNotificationModelCreator } from 'queries/models/channels';
+import { sendNotificationModelCreator } from '../../models';
 
 type SendNotificationParams = {
   userPushSDKInstance: PushAPI;
