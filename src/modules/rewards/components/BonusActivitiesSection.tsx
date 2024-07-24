@@ -4,6 +4,13 @@ import { FC } from 'react';
 // third party libraries
 import { css } from 'styled-components';
 
+// hooks
+import { useGetRewardsActivities, useGetUserRewardsDetails } from 'queries';
+import { useAccount } from 'hooks';
+
+// helpers
+import { walletToCAIP10 } from 'helpers/w2w';
+
 // components
 import { Box, Text } from 'blocks';
 import { BonusActivitiesItem } from './BonusActivitiesItem';
@@ -11,48 +18,25 @@ import { BonusActivitiesItem } from './BonusActivitiesItem';
 export type BonusActivitiesSectionProps = {};
 
 const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
-  const bonusActivities = [
-    {
-      header: 'Create a Channel on Push',
-      subheader: 'Visit app.push.org and create a notification channel.',
-      points: 20000,
-    },
-    {
-      header: '100 Subscribers',
-      subheader: 'Get 100 Subscribers for your channel.',
-      points: 500,
-    },
-    {
-      header: '500 Subscribers',
-      subheader: 'Get 500 Subscribers for your channel.',
-      points: 3000,
-    },
-    {
-      header: '1k Subscribers',
-      subheader: 'Get 1,000 Subscribers for your channel.',
-      points: 6000,
-    },
-    {
-      header: '5k Subscribers',
-      subheader: 'Get 5,000 Subscribers for your channel.',
-      points: 32000,
-    },
-    {
-      header: '10k Subscribers',
-      subheader: 'Get 10,000 Subscribers for your channel.',
-      points: 72000,
-    },
-    {
-      header: '50k Subscribers',
-      subheader: 'Get 50,000 Subscribers for your channel.',
-      multipliers: 1.5,
-    },
-    {
-      header: '100k Subscribers',
-      subheader: 'Get 100,000 Subscribers for your channel.',
-      multipliers: 2,
-    },
-  ];
+  const { account } = useAccount();
+
+  const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities({ pageSize: 50 });
+
+  // Getting user Id by wallet address
+  const caip10WalletAddress = walletToCAIP10({ account });
+  const { data: userDetails } = useGetUserRewardsDetails({
+    caip10WalletAddress: caip10WalletAddress,
+  });
+
+  const isLoading = isLoadingActivities;
+
+  // If there are activities then render them else render 2 skeletons
+  const activityList = isLoading
+    ? Array(8).fill(0)
+    : rewardActivitiesResponse?.pages.flatMap((page) => page.activities) || [];
+
+  const bonusActivities = activityList.filter((activity) => activity.index >= 5 && activity.index <= 12);
+
   return (
     <Box
       display="flex"
@@ -77,8 +61,13 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
           }
         `}
       >
-        {bonusActivities.map((item) => (
-          <BonusActivitiesItem item={item} />
+        {bonusActivities.map((activity) => (
+          <BonusActivitiesItem
+            key={activity.activityType}
+            userId={userDetails?.userId || ''}
+            activity={activity}
+            isLoadingItem={isLoading}
+          />
         ))}
       </Box>
     </Box>

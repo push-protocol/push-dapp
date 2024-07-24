@@ -1,0 +1,97 @@
+// react and other libraries
+import { useEffect, useState } from 'react';
+
+// third party libraries
+import { useSelector } from 'react-redux';
+
+// helpers
+import { generateVerificationProof } from '../utils/generateVerificationProof';
+import { useClaimRewardsActivity } from 'queries';
+
+// types
+import { UserStoreType } from 'types';
+
+export type UseVerifyRewardsParams = {
+  activityTypeId: string;
+  setErrorMessage: (errorMessage: string) => void;
+  refetchActivity: () => void;
+};
+
+const useVerifyRewards = ({ activityTypeId, setErrorMessage, refetchActivity }: UseVerifyRewardsParams) => {
+  const [verifyingRewards, setVerifyingRewards] = useState(false);
+  const [rewardsActivityStatus, setRewardsActivityStatus] = useState<string | null>(null);
+  const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
+  const [updatedId, setUpdatedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setErrorMessage('');
+  }, [setErrorMessage]);
+
+  const handleRewardsVerification = (userId: string) => {
+    setUpdatedId(userId);
+    handleVerify(userId);
+  };
+
+  const { mutate: claimRewardsActivity } = useClaimRewardsActivity({
+    userId: updatedId as string,
+    activityTypeId,
+  });
+
+  const handleVerify = async (userId: string | null) => {
+    setErrorMessage('');
+    setVerifyingRewards(true);
+
+    const data = {};
+
+    const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
+
+    if (verificationProof == null || verificationProof == undefined) {
+      if (userPushSDKInstance && userPushSDKInstance.readmode()) {
+        setVerifyingRewards(false);
+        setErrorMessage('Please Enable Push profile');
+      }
+      return;
+    }
+
+    console.log('final stage', activityTypeId);
+
+    // claimRewardsActivity(
+    //   {
+    //     userId: updatedId || (userId as string),
+    //     activityTypeId,
+    //     pgpPublicKey: userPushSDKInstance.pgpPublicKey as string,
+    //     data: {},
+    //     verificationProof: verificationProof as string,
+    //   },
+    //   {
+    //     onSuccess: (response) => {
+    //       if (response.status === 'COMPLETED') {
+    //         setRewardsActivityStatus('Claimed');
+    //         refetchActivity();
+    //         setVerifyingRewards(false);
+    //       }
+    //       if (response.status === 'PENDING') {
+    //         setRewardsActivityStatus('Pending');
+    //         refetchActivity();
+    //         setVerifyingRewards(false);
+    //       }
+    //     },
+    //     onError: (error: any) => {
+    //       console.log('Error in creating activity', error);
+    //       setVerifyingRewards(false);
+    //       if (error.name) {
+    //         setErrorMessage(error.response.data.error);
+    //       }
+    //     },
+    //   }
+    // );
+  };
+
+  return {
+    verifyingRewards,
+    rewardsActivityStatus,
+    handleRewardsVerification,
+  };
+};
+
+export { useVerifyRewards };

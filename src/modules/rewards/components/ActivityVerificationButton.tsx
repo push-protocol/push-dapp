@@ -16,6 +16,7 @@ import { UserStoreType } from 'types';
 
 // components
 import { Button } from 'blocks';
+import { useVerifyRewards } from '../hooks/useVerifyRewards';
 
 type ActivityVerificationButtonProps = {
   userId: string;
@@ -37,6 +38,27 @@ export const ActivityVerificationButton = ({
   const { isWalletConnected } = useAccount();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
+  const otherRewardActivities = [
+    'create_gated_group_push_chat',
+    'subscribe_5_channels_push',
+    'subscribe_20_channels_push',
+    'setup_push_user_profile',
+    'active_push_chat_user',
+    'hold_push_alpha_access_nft',
+    'hold_push_rockstar_nft',
+  ];
+
+  const bonusRewardActivities = [
+    'create_channel_push',
+    'reach_100_subscribers',
+    'reach_500_subscribers',
+    'reach_1000_subscribers',
+    'reach_5000_subscribers',
+    'reach_10000_subscribers',
+    'reach_50000_subscribers',
+    'reach_100000_subscribers',
+  ];
+
   const { handleTwitterVerification, verifyingTwitter, twitterActivityStatus } = useVerifyTwitter({
     activityTypeId,
     refetchActivity,
@@ -44,6 +66,12 @@ export const ActivityVerificationButton = ({
   });
 
   const { handleDiscordVerification, verifyingDiscord, discordActivityStatus } = useVerifyDiscord({
+    activityTypeId,
+    refetchActivity,
+    setErrorMessage,
+  });
+
+  const { handleRewardsVerification, verifyingRewards, rewardsActivityStatus } = useVerifyRewards({
     activityTypeId,
     refetchActivity,
     setErrorMessage,
@@ -65,6 +93,15 @@ export const ActivityVerificationButton = ({
         label: 'Verify',
         action: handleTwitterVerification,
         isVerificationComplete: twitterActivityStatus == 'Claimed' || twitterActivityStatus == 'Pending',
+      };
+    }
+
+    if (otherRewardActivities.includes(activityType) || bonusRewardActivities.includes(activityType)) {
+      return {
+        isLoading: verifyingRewards,
+        label: 'Verify',
+        action: handleRewardsVerification,
+        isVerificationComplete: rewardsActivityStatus == 'Claimed' || rewardsActivityStatus == 'Pending',
       };
     }
   }, [activityType, userPushSDKInstance, twitterActivityStatus, discordActivityStatus]);

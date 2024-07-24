@@ -6,7 +6,25 @@ export type RewardsAcitivitesResponse = {
 };
 
 //TODO: Remove the test expiry type
-export type ActvityType = 'follow_push_on_discord' | 'follow_push_on_twitter' | 'test_expiry_type';
+export type ActvityType =
+  | 'follow_push_on_discord'
+  | 'follow_push_on_twitter'
+  | 'test_expiry_type'
+  | 'create_gated_group_push_chat'
+  | 'subscribe_5_channels_push'
+  | 'subscribe_20_channels_push'
+  | 'setup_push_user_profile'
+  | 'active_push_chat_user'
+  | 'hold_push_alpha_access_nft'
+  | 'hold_push_rockstar_nft'
+  | 'create_channel_push'
+  | 'reach_100_subscribers'
+  | 'reach_500_subscribers'
+  | 'reach_1000_subscribers'
+  | 'reach_5000_subscribers'
+  | 'reach_10000_subscribers'
+  | 'reach_50000_subscribers'
+  | 'reach_100000_subscribers';
 
 export type Activity = {
   id: string;
@@ -18,6 +36,9 @@ export type Activity = {
   expiryType: number;
   name?: string;
   JoinURL: string;
+  index: number;
+  status: 'ENABLED' | 'DISABLED';
+  tags: [];
 };
 
 export type UsersAllActivitiesResponse = {
@@ -32,7 +53,7 @@ export type UsersActivity = {
   userId: string;
   activityTypeId: string;
   data: { twitter?: string; discord?: string };
-  status: 'COMPLETED' | 'PENDING' | 'LOCKED';
+  status: 'COMPLETED' | 'PENDING';
   points: number;
   multiplier: number;
   verificationProof: string;

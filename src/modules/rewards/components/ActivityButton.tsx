@@ -25,17 +25,17 @@ const ActivityButton: FC<ActivityButtonProps> = ({
   usersSingleActivity,
   isLoadingActivity,
 }) => {
-  if (usersSingleActivity?.status === 'LOCKED') {
-    return (
-      <Button
-        variant="tertiary"
-        size="small"
-        disabled
-      >
-        Locked
-      </Button>
-    );
-  }
+  // if (usersSingleActivity?.status === 'LOCKED') {
+  //   return (
+  //     <Button
+  //       variant="tertiary"
+  //       size="small"
+  //       disabled
+  //     >
+  //       Locked
+  //     </Button>
+  //   );
+  // }
 
   if (usersSingleActivity?.status === 'COMPLETED') {
     return (
