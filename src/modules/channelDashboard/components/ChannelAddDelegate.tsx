@@ -16,6 +16,7 @@ import { useAddDelegate, useGetChannelDelegates } from 'queries';
 
 import { UserStoreType } from 'types';
 import { DashboardActiveState } from '../ChannelDashboard.types';
+import { getRequiredFieldMessage } from 'common/Common.form';
 
 type ChannelAddDelegateProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
@@ -35,8 +36,8 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({ setActiveState }) => 
 
   const delegateValidation = Yup.object().shape({
     delegateAddress: Yup.string()
-      .required('Required')
-      .test('address', 'Invalid Address', (value) => {
+      .required(getRequiredFieldMessage('Delegate Address'))
+      .test('address', 'Invalid Wallet Address', (value) => {
         const isWallet = ethers.utils.isAddress(value);
         return isWallet;
       })

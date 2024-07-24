@@ -8,7 +8,7 @@ import { useGetChannelDetails } from "queries";
 
 import { ChannelDashboardHeader } from "./ChannelDashboardHeader";
 import { ChannelDashboardBody } from "./ChannelDashboardBody";
-import { PrivacyPolicy } from "./PrivacyPolicy";
+import { FooterComponent } from "./FooterComponent";
 
 import { DashboardActiveState } from "../ChannelDashboard.types";
 
@@ -58,7 +58,7 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({
         </Box>
 
       </Box>
-      <PrivacyPolicy />
+      <FooterComponent />
     </>
   );
 };

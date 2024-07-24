@@ -1,6 +1,6 @@
-import { Box, CircleFilled, Link, Text } from 'blocks';
+import { Box, Link } from 'blocks';
 
-const PrivacyPolicy = () => {
+const FooterComponent = () => {
   return (
     <Box
       display="flex"
@@ -15,19 +15,21 @@ const PrivacyPolicy = () => {
           to="https://push.org/privacy/"
           target="_blank"
           textProps={{
+            variant: 'bes-semibold',
             color: 'text-tertiary'
           }}
         >
-          <Text variant="bes-semibold">Privacy Policy</Text>
+          Privacy Policy
         </Link>
         <Link
           to="https://push.org/tos/"
           target="_blank"
           textProps={{
+            variant: 'bes-semibold',
             color: 'text-tertiary'
           }}
         >
-          <Text variant="bes-semibold">Terms and Conditions</Text>
+          Terms and Conditions
         </Link>
       </Box>
       {/* <Box display="flex" alignItems="center" gap="s2">
@@ -38,4 +40,4 @@ const PrivacyPolicy = () => {
   );
 };
 
-export { PrivacyPolicy };
+export { FooterComponent };

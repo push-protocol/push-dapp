@@ -13,6 +13,7 @@ import { useAccount } from "hooks";
 import { useAddSubgraph } from "queries";
 
 import { DashboardActiveState } from "../ChannelDashboard.types";
+import { getRequiredFieldMessage } from "common/Common.form";
 
 type ChannelAddSubgraphProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
@@ -25,11 +26,11 @@ const ChannelAddSubgraph: FC<ChannelAddSubgraphProps> = ({
   const { account, provider } = useAccount();
 
   const subgraphFormValidation = Yup.object().shape({
-    subgraphId: Yup.string().required('Required'),
+    subgraphId: Yup.string().required(getRequiredFieldMessage('Subgraph Id')),
     pollTime: Yup.string()
-      .required('Required')
+      .required(getRequiredFieldMessage('Poll Time'))
       .matches(/^\d+$/, 'Must be a valid timestamp in seconds')  // Ensure pollTime is a number
-      .test('is-valid-timestamp', 'Invalid timestamp', value => {
+      .test('is-valid-timestamp', 'Invalid timestamp format', value => {
         const timestamp = parseInt(value, 10);
         return !isNaN(timestamp) && timestamp > 0;
       }),
