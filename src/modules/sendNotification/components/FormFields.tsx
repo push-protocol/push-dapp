@@ -10,7 +10,7 @@ import { Box, Button, Cross, Link, Select, Text, TextArea, TextInput, ToggleSwit
 
 import { useAccount } from 'hooks';
 import useToast from 'hooks/useToast';
-import { useGetChannelDetails, useSendNotification } from 'queries';
+import { useSendNotification } from 'queries';
 
 import {
   getChannelAddress,
@@ -34,7 +34,7 @@ type FormFielsProps = {
 };
 const FormFields: FC<FormFielsProps> = ({ channelDetails }) => {
   const [subsetRecipients, setSubsetRecipients] = useState<Array<string>>([]);
-  const { account, chainId } = useAccount();
+  const { chainId } = useAccount();
   const { mutate: sendNotification, isPending } = useSendNotification();
   const toast = useToast();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);

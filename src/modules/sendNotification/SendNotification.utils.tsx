@@ -29,7 +29,10 @@ export const getReactNodeIcon = ({ icon, alt }: { icon: string; alt: string }) =
 
 //add types
 export const getChannelChainList = (channelDetails: ChannelDetails) => {
-  const aliases = channelDetails?.aliases?.map((alias) => parseInt(alias.alias_blockchain_id)) || [];
+  const aliases =
+    channelDetails?.aliases
+      ?.filter((alias) => alias.is_alias_verified)
+      ?.map((alias) => parseInt(alias.alias_blockchain_id)) || [];
   return [...aliases, 11155111];
 };
 
