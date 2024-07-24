@@ -150,6 +150,8 @@ function Navigation() {
         newNavSetup.developersList[0].data.name = 'Create Channel';
         newNavSetup.developersList[0].data.hidden = false;
         newNavSetup.developersList[0].data.loading = false;
+        newNavSetup.developersList[0].data.src = 'createChannelIcon';
+        newNavSetup.developersList[0].data.activeSrc = 'createChannelIcon';
       }
 
       if (canSend === SEND_NOTIFICATION_STATES.SEND) {
