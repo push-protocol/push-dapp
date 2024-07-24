@@ -2,9 +2,10 @@ import { FC, ReactNode } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import styled from 'styled-components';
 import { Button, ButtonProps } from '../button';
-import { Cross } from '../icons';
+import { Back, Cross } from '../icons';
+import { ModalSize } from './Modal.types';
 
-type ButtonAlignment = 'start' | 'center';
+type ButtonAlignment = 'end' | 'center';
 
 export type ModalProps = {
   acceptButtonProps?: ButtonProps;
@@ -13,24 +14,25 @@ export type ModalProps = {
   children: ReactNode;
   closeOnOverlayClick?: boolean;
   isOpen: boolean;
+  onBack?: () => void;
   onClose: () => void;
-  width?: string;
+  size?: ModalSize;
 };
 
 const Overlay = styled(Dialog.Overlay)`
-  background: var(--surface-glass-bold, rgba(255, 255, 255, 0.5));
+  background: var(--surface-glass-bold);
   backdrop-filter: blur(calc(var(--blur-lg) / 2));
   position: fixed;
   inset: 0;
   z-index: 1000;
 `;
 
-const ContentContainer = styled(Dialog.Content)<{ width: string }>`
+const ContentContainer = styled(Dialog.Content)<{ size: ModalSize }>`
   display: flex;
   border-radius: var(--radius-sm);
   border: var(--border-sm) solid var(--stroke-secondary);
   background: var(--components-modal-background-default);
-  padding: var(--spacing-xs, 12px);
+  padding: var(--spacing-${({ size }) => (size === 'small' ? 'xs' : 'sm')});
   flex-direction: column;
   align-items: flex-start;
   position: fixed;
@@ -38,24 +40,41 @@ const ContentContainer = styled(Dialog.Content)<{ width: string }>`
   left: 50%;
   transform: translate(-50%, -50%);
   min-width: 300px;
-  width: ${({ width }) => width};
-  gap: var(--spacing-xs);
+  width: ${({ size }) => (size === 'small' ? '360px' : size === 'medium' ? '500px' : '700px')};
+  gap: var(--spacing-sm);
   z-index: 1100;
 `;
 
-const ContentChildren = styled.div`
+const ContentChildren = styled.div<{ size: ModalSize }>`
   display: flex;
-  padding: var(--spacing-xxs) var(--spacing-xxs) var(--spacing-none) var(--spacing-xxs);
   flex-direction: column;
   align-items: flex-start;
   flex: 1 0 0;
+  padding-top: var(--spacing-${({ size }) => (size === 'small' ? 'xxs' : 'xs')});
 `;
 
-const CloseButton = styled(Dialog.Close)`
-  position: absolute;
-  right: var(--spacing-xs);
+const HeaderContainer = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+const BackButton = styled.div`
   cursor: pointer;
   color: var(--components-modal-icon-default);
+  padding: var(--spacing-none);
+  position: absolute;
+  left: 0;
+  top: 0;
+`;
+
+const CloseButton = styled.div`
+  background-color: var(--surface-transparent);
+  cursor: pointer;
+  color: var(--components-modal-icon-default);
+  padding: var(--spacing-none);
+  position: absolute;
+  right: 0;
+  top: 0;
 `;
 
 const ButtonsContainer = styled.div<{ buttonAlignment: ButtonAlignment }>`
@@ -63,8 +82,8 @@ const ButtonsContainer = styled.div<{ buttonAlignment: ButtonAlignment }>`
   padding: var(--spacing-xxs);
   justify-content: center;
   align-items: center;
-  gap: var(--spacing-xxs);
-  align-self: ${({ buttonAlignment }) => (buttonAlignment === 'start' ? 'baseline' : 'center')};
+  gap: var(--spacing-xs);
+  align-self: ${({ buttonAlignment }) => (buttonAlignment === 'end' ? 'flex-end' : 'center')};
 `;
 
 const Modal: FC<ModalProps> = ({
@@ -74,8 +93,9 @@ const Modal: FC<ModalProps> = ({
   cancelButtonProps = { children: 'Cancel', onClick: () => onClose() },
   children,
   isOpen,
+  onBack,
   onClose,
-  width = 'auto',
+  size = 'medium',
 }) => {
   const handleOverlayClick = () => {
     if (closeOnOverlayClick) {
@@ -83,6 +103,7 @@ const Modal: FC<ModalProps> = ({
     }
   };
 
+  const iconSize = size === 'small' ? 16 : 24;
   return (
     <Dialog.Root
       open={isOpen}
@@ -91,13 +112,20 @@ const Modal: FC<ModalProps> = ({
       <Dialog.Portal>
         <Overlay onClick={handleOverlayClick} />
         <ContentContainer
-          width={width}
+          size={size}
           onInteractOutside={(e) => e.preventDefault()}
         >
-          <CloseButton asChild>
-            <Cross size={16} />
-          </CloseButton>
-          <ContentChildren>{children}</ContentChildren>
+          <HeaderContainer>
+            {onBack && (
+              <BackButton onClick={onBack}>
+                <Back size={iconSize} />
+              </BackButton>
+            )}
+            <CloseButton onClick={onClose}>
+              <Cross size={iconSize} />
+            </CloseButton>
+          </HeaderContainer>
+          <ContentChildren size={size}>{children}</ContentChildren>
           <ButtonsContainer buttonAlignment={buttonAlignment}>
             {cancelButtonProps && (
               <Button
