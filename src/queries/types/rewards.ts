@@ -73,6 +73,11 @@ export type ClaimRewardsActivityProps = {
   pgpPublicKey: string;
 };
 
+export type SendRecentActivityProps = {
+  userId: string;
+  activities: any;
+};
+
 export type PointsVaultUserLoginProps = {
   username: string;
   password: string;

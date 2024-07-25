@@ -5,7 +5,11 @@ import { FC } from 'react';
 import { css } from 'styled-components';
 
 // hooks
-import { useGetRewardsActivities } from 'queries';
+import { useGetRewardsActivities, useGetUserRewardsDetails, useSendRecentActivities } from 'queries';
+import { useAccount } from 'hooks';
+
+//helpers
+import { walletToCAIP10 } from 'helpers/w2w';
 
 // components
 import { Box, Button, Text } from 'blocks';
@@ -14,6 +18,13 @@ import { DailyRewardsItem } from './DailyRewardsItem';
 export type DailyRewardsSectionProps = {};
 
 const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
+  const { account } = useAccount();
+
+  // Getting user Id by wallet address
+  const caip10WalletAddress = walletToCAIP10({ account });
+  const { data: userDetails } = useGetUserRewardsDetails({
+    caip10WalletAddress: caip10WalletAddress,
+  });
   const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities({ pageSize: 50 });
 
   const isLoading = isLoadingActivities;
@@ -35,6 +46,30 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
 
   // Sort the activities based on the extracted day number
   const dailyRewardsActivities = dailyActivities?.sort((a, b) => getDayNumber(a) - getDayNumber(b));
+
+  const { mutate: sendRecentActivities } = useSendRecentActivities({
+    userId: userDetails?.userId as string,
+  });
+
+  const handleCheckIn = () => {
+    // Extract activityType into an array
+    const activityTitles = dailyRewardsActivities?.map((activity) => activity.activityType);
+
+    console.log(activityTitles);
+
+    sendRecentActivities(
+      {
+        userId: userDetails?.userId as string,
+        activities: ['a', 'b'],
+      },
+      {
+        onSuccess: () => {},
+        onError: (err) => {
+          console.error('Error', err);
+        },
+      }
+    );
+  };
 
   return (
     <Box
@@ -66,6 +101,7 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
         <Button
           variant="tertiary"
           size="small"
+          onClick={handleCheckIn}
         >
           Check In
         </Button>
