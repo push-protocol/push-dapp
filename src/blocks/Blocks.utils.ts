@@ -11,6 +11,8 @@ import {
   BlocksRadiusType,
 } from './Blocks.types';
 import { radiusRegex, spacingRegex } from './Blocks.constants';
+import { textVariants, TextVariants } from './text';
+import { ThemeColors } from './theme/Theme.types';
 
 /**
  * @param propName
@@ -161,3 +163,15 @@ export const getBlocksBorderRadius = (radius?: BlocksRadiusType) => {
 
   return result;
 };
+
+export const getTextVariantStyles = (variant: TextVariants, color: ThemeColors) => css`
+  color: var(--${color});
+  font-family: var(--font-family);
+  font-size: ${textVariants[variant].fontSize};
+  font-style: ${textVariants[variant].fontStyle};
+  font-weight: ${textVariants[variant].fontWeight};
+  line-height: ${textVariants[variant].lineHeight};
+  letter-spacing: ${textVariants[variant].letterSpacing};
+  text-transform: ${textVariants[variant].textTransform};
+  margin: var(--spacing-none);
+`;
