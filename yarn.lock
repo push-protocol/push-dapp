@@ -4244,7 +4244,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@radix-ui/react-dialog@npm:^1.0.4":
+"@radix-ui/react-dialog@npm:^1.0.4, @radix-ui/react-dialog@npm:^1.1.1":
   version: 1.1.1
   resolution: "@radix-ui/react-dialog@npm:1.1.1"
   dependencies:
@@ -18204,6 +18204,7 @@ __metadata:
     "@pushprotocol/restapi": "npm:1.7.23"
     "@pushprotocol/socket": "npm:0.5.3"
     "@pushprotocol/uiweb": "npm:1.4.2"
+    "@radix-ui/react-dialog": "npm:^1.1.1"
     "@radix-ui/react-dropdown-menu": "npm:^2.1.1"
     "@radix-ui/react-switch": "npm:^1.1.0"
     "@radix-ui/react-tooltip": "npm:^1.1.1"
