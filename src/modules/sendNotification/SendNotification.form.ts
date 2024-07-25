@@ -1,26 +1,28 @@
 import { NotificationType } from '@pushprotocol/restapi';
-import { SelectOption } from 'blocks/select/Select';
 import * as yup from 'yup';
+
+import { SelectOption } from 'blocks/select/Select';
+import { getRequiredFieldMessage } from 'common';
 
 export const getValidationSchema = (isSubsetRecipientPresent: boolean) => {
   return yup.object().shape({
-    channelAddress: yup.string().required('Delegate is required'),
-    chainId: yup.string().required('Chain is required'),
-    type: yup.string().required('Type is required'),
-    body: yup.string().required('Description is required'),
-    setting: yup.string().required('Setting is required'),
-    recipient: yup.string().test('recipient', 'Recipient is Required', function (value) {
+    channelAddress: yup.string().required(getRequiredFieldMessage('Delegate')),
+    chainId: yup.string().required(getRequiredFieldMessage('Chain')),
+    type: yup.string().required(getRequiredFieldMessage('Type')),
+    body: yup.string().required(getRequiredFieldMessage('Description')),
+    setting: yup.string().required(getRequiredFieldMessage('Setting')),
+    recipient: yup.string().test('recipient', getRequiredFieldMessage('Recipient'), function (value) {
       return (
         (this.parent.type !== 'SUBSET' || isSubsetRecipientPresent) && (this.parent.type !== 'TARGETTED' || !!value)
       );
     }),
-    title: yup.string().test('title', 'Title is Required', function (value) {
+    title: yup.string().test('title', getRequiredFieldMessage('Title'), function (value) {
       return !this.parent.titleChecked || !!value;
     }),
-    mediaUrl: yup.string().test('mediaUrl', 'Media URL is Required', function (value) {
+    mediaUrl: yup.string().test('mediaUrl', getRequiredFieldMessage('Media URL'), function (value) {
       return !this.parent.mediaUrlChecked || !!value;
     }),
-    ctaLink: yup.string().test('ctaLink', 'CTA Link is Required', function (value) {
+    ctaLink: yup.string().test('ctaLink', getRequiredFieldMessage('CTA Link'), function (value) {
       return !this.parent.ctaLinkChecked || !!value;
     }),
   });

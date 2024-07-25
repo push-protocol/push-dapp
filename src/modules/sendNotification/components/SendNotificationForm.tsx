@@ -10,7 +10,7 @@ import { Box, Button, Cross, Link, Select, Text, TextArea, TextInput, ToggleSwit
 
 import { useAccount } from 'hooks';
 import useToast from 'hooks/useToast';
-import { useSendNotification } from 'queries';
+import { useSendNotification, ChannelDetails } from 'queries';
 
 import {
   getChannelAddress,
@@ -20,7 +20,7 @@ import {
   getRecipients,
 } from '../SendNotification.utils';
 import { CORE_CHAIN_ID } from 'helpers/UtilityHelper';
-import { getSelectChains, ChannelDetails } from 'common';
+import { getSelectChains } from 'common';
 
 import { notificationTypeOptions } from '../SendNotification.constants';
 
@@ -29,10 +29,10 @@ import { UserStoreType } from 'types';
 
 import { getFormInitialValues, getValidationSchema } from '../SendNotification.form';
 
-type FormFielsProps = {
+type SendNotificationFormProps = {
   channelDetails: ChannelDetails | undefined;
 };
-const FormFields: FC<FormFielsProps> = ({ channelDetails }) => {
+const SendNotificationForm: FC<SendNotificationFormProps> = ({ channelDetails }) => {
   const [subsetRecipients, setSubsetRecipients] = useState<Array<string>>([]);
   const { chainId } = useAccount();
   const { mutate: sendNotification, isPending } = useSendNotification();
@@ -343,7 +343,7 @@ const FormFields: FC<FormFielsProps> = ({ channelDetails }) => {
             errorMessage={formik.touched.body ? formik.errors.body : ''}
           />
           <Select
-            tag={
+            action={
               <Link
                 textProps={{ color: 'text-brand-medium' }}
                 to="/channel/settings"
@@ -398,4 +398,4 @@ const FormFields: FC<FormFielsProps> = ({ channelDetails }) => {
   );
 };
 
-export { FormFields };
+export { SendNotificationForm };

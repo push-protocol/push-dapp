@@ -37,8 +37,8 @@ export type SelectProps = {
   value?: string;
   /* Sets success state */
   success?: boolean;
-  /* Tag component on the top left of the Select */
-  tag?: ReactNode;
+  /* Action component on the top left of the Select */
+  action?: ReactNode;
 };
 
 const Container = styled.div<{ css?: FlattenSimpleInterpolation }>`
@@ -210,7 +210,7 @@ const Select: React.FC<SelectProps> = ({
   required,
   description,
   errorMessage,
-  tag,
+  action,
   disabled,
 }) => {
   const [popoverWidth, setPopoverWidth] = useState(0);
@@ -247,7 +247,7 @@ const Select: React.FC<SelectProps> = ({
             {required && <Asterisk size={4.6} />}
           </LabelTextContainer>
         </LabelText>
-        {tag}
+        {action}
       </LabelContainer>
 
       <StyledCombobox

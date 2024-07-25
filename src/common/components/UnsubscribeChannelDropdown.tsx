@@ -2,7 +2,7 @@
 import { FC, ReactNode } from 'react';
 
 // Utility functions
-import { ChannelDetails } from 'common';
+import { ChannelDetails } from 'queries';
 
 // Components
 import ManageNotifSettingDropdown from 'components/dropdowns/ManageNotifSettingDropdown';

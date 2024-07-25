@@ -24,9 +24,9 @@ import navigationList from 'config/NavigationList';
 import { appConfig } from 'config/index.js';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { Box, PlusCircle, Text } from 'blocks';
-import { ChannelDetails, LOGO_ALIAS_CHAIN } from 'common';
+import { LOGO_ALIAS_CHAIN } from 'common';
 import APP_PATHS from 'config/AppPaths';
-import { useGetChannelDetails } from 'queries';
+import { useGetChannelDetails, ChannelDetails } from 'queries';
 
 type AddNewChainNavigationProps = {
   channelDetails: ChannelDetails;

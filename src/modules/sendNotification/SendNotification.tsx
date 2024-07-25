@@ -4,7 +4,7 @@ import { css } from 'styled-components';
 import { useSelector } from 'react-redux';
 
 import { Box, Text } from 'blocks';
-import { FormFields } from './components/FormFields';
+import { SendNotificationForm } from './components/SendNotificationForm';
 import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
 
 import { UserStoreType } from 'types';
@@ -54,7 +54,7 @@ const SendNotification: FC = () => {
         Send Notification
       </Text>
       <Box width="100%">
-        <FormFields channelDetails={channelDetails} />
+        <SendNotificationForm channelDetails={channelDetails} />
       </Box>
       {userPushSDKInstance && userPushSDKInstance?.readmode() && (
         <Box

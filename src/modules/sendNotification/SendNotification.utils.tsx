@@ -1,33 +1,12 @@
 import { NotificationType } from '@pushprotocol/restapi';
 
 import { Box } from 'blocks';
-import { SelectOption } from 'blocks/select/Select';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 import { ChannelSetting } from 'helpers/channel/types';
 
-import { ChannelDetails } from 'common';
+import { ChannelDetails } from 'queries';
 
-//fix the height
-export const getReactNodeIcon = ({ icon, alt }: { icon: string; alt: string }) => {
-  return (
-    <Box
-      width="24px"
-      height="24px"
-      borderRadius="radius-xxs"
-      overflow="hidden"
-    >
-      <img
-        width="100%"
-        height="100%"
-        src={icon}
-        alt={alt}
-      />
-    </Box>
-  );
-};
-
-//add types
 export const getChannelChainList = (channelDetails: ChannelDetails) => {
   const aliases =
     channelDetails?.aliases
@@ -39,7 +18,21 @@ export const getChannelChainList = (channelDetails: ChannelDetails) => {
 export const getChannelDelegatesOptions = (delegatees: [ChannelDetails]) => {
   if (delegatees && delegatees.length) {
     return delegatees?.map((channel) => ({
-      icon: getReactNodeIcon({ icon: channel?.iconV2, alt: channel?.name }),
+      icon: (
+        <Box
+          width="24px"
+          height="24px"
+          borderRadius="radius-xxs"
+          overflow="hidden"
+        >
+          <img
+            width="100%"
+            height="100%"
+            src={channel?.iconV2}
+            alt={channel?.name}
+          />
+        </Box>
+      ),
       label: channel?.name,
       value: channel?.channel,
     }));
