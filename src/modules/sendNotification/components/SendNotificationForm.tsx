@@ -365,6 +365,7 @@ const SendNotificationForm: FC<SendNotificationFormProps> = ({ channelDetails })
               label="Media URL"
               onChange={formik.handleChange('mediaUrl')}
               value={formik.values.mediaUrl}
+              totalCount={80}
               error={formik.touched.mediaUrl && Boolean(formik.errors.mediaUrl)}
               errorMessage={formik.touched.mediaUrl ? formik.errors.mediaUrl : ''}
             />
@@ -373,6 +374,7 @@ const SendNotificationForm: FC<SendNotificationFormProps> = ({ channelDetails })
             <TextInput
               placeholder="Input Value"
               label="CTA Link"
+              totalCount={80}
               onChange={formik.handleChange('ctaLink')}
               value={formik.values.ctaLink}
               error={formik.touched.ctaLink && Boolean(formik.errors.ctaLink)}
