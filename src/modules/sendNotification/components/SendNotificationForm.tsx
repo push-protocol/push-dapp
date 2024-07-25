@@ -52,9 +52,10 @@ const SendNotificationForm: FC<SendNotificationFormProps> = ({ channelDetails })
       handleSendNotification(values);
     },
   });
-  const selectedChannel = delegatees?.find(
-    (delegatee: ChannelDetails) => delegatee.channel === formik.values.channelAddress
-  );
+  const selectedChannel =
+    delegatees?.find((delegatee: ChannelDetails) => delegatee.channel === formik.values.channelAddress) ||
+    channelDetails;
+
   const alaisChainOptions = getSelectChains(getChannelChainList(selectedChannel));
 
   const showPreview = formik.values.body || formik.values.title || formik.values.ctaLink || formik.values.mediaUrl;
