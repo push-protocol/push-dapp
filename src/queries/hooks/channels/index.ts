@@ -9,3 +9,4 @@ export * from './useDeactivateChannel';
 export * from './useEditChannel';
 export * from './useInitiateNewChain';
 export * from './useVerifyAliasChain';
+export * from './useSendNotification';

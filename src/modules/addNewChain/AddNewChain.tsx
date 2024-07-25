@@ -1,12 +1,14 @@
 // React and other libraries
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { useSelector } from 'react-redux';
 import { css } from 'styled-components';
 import { MdError } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 
 import useToast from 'hooks/useToast';
-import { useInitiateNewChain } from 'queries';
+import { useGetChannelDetails, useInitiateNewChain } from 'queries';
+import { useAccount } from 'hooks';
 
 import { addNewChainSteps } from './AddNewChain.constants';
 
@@ -31,14 +33,13 @@ const AddNewChain: FC = () => {
   const toast = useToast();
   const { mutate: initiateNewChain, isPending, isError } = useInitiateNewChain();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
+  const { account } = useAccount();
+  const { data: channelDetails } = useGetChannelDetails(account);
+  const nagivate = useNavigate();
 
-  // const formik = useFormik<NewChainAddressValue>({
-  //   initialValues: initialValues,
-  //   validationSchema: validationSchema,
-  //   onSubmit: (values) => {
-  //     handleInitiate(values.alias, values.chainId);
-  //   },
-  // });
+  useEffect(() => {
+    if (!channelDetails) nagivate('/channels');
+  }, [channelDetails]);
 
   const handleInitiate = (alias: string, chainId: string) => {
     initiateNewChain(
@@ -129,23 +130,9 @@ const AddNewChain: FC = () => {
           completedSteps={completedSteps}
           setActiveStepKey={(key) => setActiveStepKey(key as ActiveStepKey)}
         />
-        {activeStepKey === 'newaddress' && (
-          <NewAddress
-            // form={formik}
-            isLoading={isPending && !isError}
-          />
-        )}
-        {activeStepKey === 'changenetwork' && (
-          <ChangeNetwork
-            handleNextStep={handleNextStep}
-            // form={formik}
-          />
-        )}
-        {activeStepKey === 'verifyalias' && (
-          <VerifyAliasChain
-          // form={formik}
-          />
-        )}
+        {activeStepKey === 'newaddress' && <NewAddress isLoading={isPending && !isError} />}
+        {activeStepKey === 'changenetwork' && <ChangeNetwork handleNextStep={handleNextStep} />}
+        {activeStepKey === 'verifyalias' && <VerifyAliasChain />}
         {userPushSDKInstance && userPushSDKInstance?.readmode() && (
           <Box
             display="flex"

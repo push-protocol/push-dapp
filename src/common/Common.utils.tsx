@@ -1,9 +1,8 @@
-import { LOGO_ALIAS_CHAIN } from 'common';
-import { appConfig } from 'config';
+import { LOGO_ALIAS_CHAIN } from './Common.constants';
 import { networkName } from 'helpers/UtilityHelper';
 
-export const getSelectChains = () => {
-  return appConfig.allowedNetworks.map((key: number) => {
+export const getSelectChains = (chainIdList: Array<number>) => {
+  return chainIdList?.map((key: number) => {
     const Component = LOGO_ALIAS_CHAIN[key];
     return {
       value: key.toString(),

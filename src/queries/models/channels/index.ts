@@ -5,3 +5,4 @@ export * from './getChannelDelegatesModelCreator';
 export * from './addChannelDelegateModelCreator';
 export * from './initiateNewChainModelCreator';
 export * from './verifyAliasChainModalCreator';
+export * from './sendNotificationModelCreator';

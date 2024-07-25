@@ -9,3 +9,4 @@ export * from './deactivateChannel';
 export * from './editChannelDetails';
 export * from './initiateNewChain';
 export * from './verifyAliasChain';
+export * from './sendNotification';
