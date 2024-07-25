@@ -1,10 +1,10 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState, ReactNode } from 'react';
 import styled, { FlattenSimpleInterpolation, css } from 'styled-components';
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from '@reach/combobox';
 import '@reach/combobox/styles.css';
 
 import { textVariants } from '../text';
-import { CaretDown } from '../icons';
+import { Asterisk, CaretDown } from '../icons';
 
 export type SelectOption = {
   icon?: React.ReactNode;
@@ -37,6 +37,8 @@ export type SelectProps = {
   value?: string;
   /* Sets success state */
   success?: boolean;
+  /* Action component on the top left of the Select */
+  action?: ReactNode;
 };
 
 const Container = styled.div<{ css?: FlattenSimpleInterpolation }>`
@@ -168,7 +170,34 @@ const StyledOption = styled(ComboboxOption)`
     height: 24px;
   }
 `;
+const LabelContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+const LabelText = styled.span<{ color: string }>`
+  color: var(--${({ color }) => color});
+  font-family: var(--font-family);
+  font-size: ${textVariants['h6-semibold'].fontSize};
+  font-style: ${textVariants['h6-semibold'].fontStyle};
+  font-weight: ${textVariants['h6-semibold'].fontWeight};
+  line-height: ${textVariants['h6-semibold'].lineHeight};
+`;
 
+const LabelTextContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-xxxs, 4px);
+`;
+const Description = styled.span<{ color: string }>`
+  color: var(--${({ color }) => color});
+  font-family: var(--font-family);
+  font-size: ${textVariants['c-regular'].fontSize};
+  font-style: ${textVariants['c-regular'].fontStyle};
+  font-weight: ${textVariants['c-regular'].fontWeight};
+  line-height: ${textVariants['c-regular'].lineHeight};
+`;
 const Select: React.FC<SelectProps> = ({
   options,
   onSelect,
@@ -177,6 +206,11 @@ const Select: React.FC<SelectProps> = ({
   placeholder = '',
   error,
   success,
+  label,
+  required,
+  description,
+  errorMessage,
+  action,
   disabled,
 }) => {
   const [popoverWidth, setPopoverWidth] = useState(0);
@@ -206,7 +240,15 @@ const Select: React.FC<SelectProps> = ({
 
   return (
     <Container css={css}>
-      {/* label will be added here  */}
+      <LabelContainer>
+        <LabelText color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-default'}>
+          <LabelTextContainer>
+            {label}
+            {required && <Asterisk size={4.6} />}
+          </LabelTextContainer>
+        </LabelText>
+        {action}
+      </LabelContainer>
 
       <StyledCombobox
         ref={comboboxRef}
@@ -246,10 +288,10 @@ const Select: React.FC<SelectProps> = ({
         {viewPopover && (
           <StyledPopover>
             <StyledList>
-              {options.map((option) => (
+              {options.map((option, index) => (
                 <StyledOption
                   value={option.value}
-                  key={option.value}
+                  key={`${option.value}${index}`}
                 >
                   {option?.icon}
                   {option.label}
@@ -259,7 +301,20 @@ const Select: React.FC<SelectProps> = ({
           </StyledPopover>
         )}
       </StyledCombobox>
-      {/* description and error message will be added here  */}
+      {description && (
+        <Description
+          color={
+            success || error
+              ? 'components-inputs-text-default'
+              : disabled
+              ? 'components-inputs-text-disabled'
+              : 'components-inputs-text-placeholder'
+          }
+        >
+          {description}
+        </Description>
+      )}
+      {errorMessage && <Description color="components-inputs-text-danger">{errorMessage}</Description>}
     </Container>
   );
 };
