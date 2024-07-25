@@ -53,38 +53,36 @@ const useVerifyRewards = ({ activityTypeId, setErrorMessage, refetchActivity }: 
       return;
     }
 
-    console.log('final stage', activityTypeId);
-
-    // claimRewardsActivity(
-    //   {
-    //     userId: updatedId || (userId as string),
-    //     activityTypeId,
-    //     pgpPublicKey: userPushSDKInstance.pgpPublicKey as string,
-    //     data: {},
-    //     verificationProof: verificationProof as string,
-    //   },
-    //   {
-    //     onSuccess: (response) => {
-    //       if (response.status === 'COMPLETED') {
-    //         setRewardsActivityStatus('Claimed');
-    //         refetchActivity();
-    //         setVerifyingRewards(false);
-    //       }
-    //       if (response.status === 'PENDING') {
-    //         setRewardsActivityStatus('Pending');
-    //         refetchActivity();
-    //         setVerifyingRewards(false);
-    //       }
-    //     },
-    //     onError: (error: any) => {
-    //       console.log('Error in creating activity', error);
-    //       setVerifyingRewards(false);
-    //       if (error.name) {
-    //         setErrorMessage(error.response.data.error);
-    //       }
-    //     },
-    //   }
-    // );
+    claimRewardsActivity(
+      {
+        userId: updatedId || (userId as string),
+        activityTypeId,
+        pgpPublicKey: userPushSDKInstance.pgpPublicKey as string,
+        data: {},
+        verificationProof: verificationProof as string,
+      },
+      {
+        onSuccess: (response) => {
+          if (response.status === 'COMPLETED') {
+            setRewardsActivityStatus('Claimed');
+            refetchActivity();
+            setVerifyingRewards(false);
+          }
+          if (response.status === 'PENDING') {
+            setRewardsActivityStatus('Pending');
+            refetchActivity();
+            setVerifyingRewards(false);
+          }
+        },
+        onError: (error: any) => {
+          console.log('Error in creating activity', error);
+          setVerifyingRewards(false);
+          if (error.name) {
+            setErrorMessage(error.response.data.error);
+          }
+        },
+      }
+    );
   };
 
   return {

@@ -28,7 +28,6 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
   const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities({ pageSize: 50 });
 
   const isLoading = isLoadingActivities;
-  // const isLoading = isLoadingUserDetails || isLoadingActivities;
 
   // If there are activities then render them else render 2 skeletons
   const activityList = isLoading
@@ -63,7 +62,12 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
         activities: ['a', 'b'],
       },
       {
-        onSuccess: () => {},
+        onSuccess: () => {
+          // get response
+          // sort response according to latest timestamp
+          //  and check if it up to 24 hrs btw latest timestamp and current time
+          // if not up to 24 hrs, set Check In status as disabled. If more than 24 hrs, set Check In status as allowed
+        },
         onError: (err) => {
           console.error('Error', err);
         },
