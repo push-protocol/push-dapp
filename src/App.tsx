@@ -472,7 +472,7 @@ const LeftBarContainer = styled.div`
   position: fixed;
   // position: absolute;
 
-  @media (max-width: 992px) {
+  @media (max-width: 1024px) {
     display: none;
   }
 `;
@@ -484,7 +484,7 @@ const ContentContainer = styled.div`
   width: calc(100% - ${(props) => props.leftBarWidth}px);
   margin: 0px 0px 0px ${(props) => props.leftBarWidth}px;
 
-  @media (max-width: 992px) {
+  @media (max-width: 1024px) {
     margin: 0px;
   }
 `;
