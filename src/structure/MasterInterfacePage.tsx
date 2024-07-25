@@ -20,6 +20,7 @@ import { Anchor, Item } from '../primaries/SharedStyling';
 const AirdropPage = lazy(() => import('pages/AirdropPage'));
 const ChannelDashboardPage = lazy(() => import('pages/ChannelDashboardPage'));
 const ChannelDashboardPageV2 = lazy(() => import('pages/ChannelDashboardPageV2'));
+const CreateChannelpage = lazy(() => import('pages/CreateChannelpage'));
 const ChannelsPage = lazy(() => import('pages/ChannelsPage'));
 const ChatPage = lazy(() => import('pages/ChatPage'));
 const ComingSoonPage = lazy(() => import('pages/ComingSoonPage'));
@@ -84,7 +85,6 @@ function MasterInterfacePage() {
   // Get search params
   const [searchParams] = useSearchParams();
   const params = useParams();
-
   // get location
   const location = useLocation();
 
@@ -129,7 +129,6 @@ function MasterInterfacePage() {
 
   //   checkAndRedirect();
   // }, []);
-
 
   const ChannelsProfilePage = () => {
 
@@ -243,6 +242,11 @@ function MasterInterfacePage() {
             <Route
               path={APP_PATHS.Dashboard}
               element={<ChannelDashboardPage />}
+            />
+
+            <Route
+              path={APP_PATHS.CreateChannel}
+              element={<CreateChannelpage />}
             />
 
             <Route

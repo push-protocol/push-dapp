@@ -1,9 +1,13 @@
 import { useState } from 'react';
+
 import { ethers } from 'ethers';
+import { useNavigate } from 'react-router-dom';
 
 import { Alert, Box, ErrorFilled } from 'blocks';
-import { appConfig } from 'config';
 import { Stepper } from 'common';
+import APP_PATHS from 'config/AppPaths';
+import { appConfig } from 'config';
+
 import { useAccount } from 'hooks';
 import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
@@ -35,6 +39,8 @@ const CreateChannel = () => {
 
   const { mutate: approvePUSHToken } = useApprovePUSHToken();
   const { mutate: createNewChannel } = useCreateChannel();
+
+  const navigate = useNavigate();
 
   const [activeStepKey, setActiveStepKey] = useState<ActiveStepKey>('channelInfo');
   const [completedSteps, setCompletedSteps] = useState<Array<ActiveStepKey>>(['channelInfo']);
@@ -135,7 +141,8 @@ const CreateChannel = () => {
                 'Creating your channel, Aligning pixels, adjusting padding... This may take some time.',
                 'Redirecting... Please do not refresh'
               );
-              window.location.reload();
+              console.log("Navigating to Channel Dashboard route");
+              navigate(`${APP_PATHS.ChannelDashboard}/${account}`)
             }, 5000);
           }
         },

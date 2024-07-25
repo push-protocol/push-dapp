@@ -10,7 +10,6 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { useAccount } from 'hooks';
 
 import { ChannelDashboard } from 'modules/channelDashboard';
-import { CreateChannel } from 'modules/createChannel';
 
 import { useGetChannelDetails } from 'queries';
 import APP_PATHS from 'config/AppPaths';
@@ -22,44 +21,46 @@ type ChannelDashboardPageProps = {
 const ChannelDashboardPageV2: FC<ChannelDashboardPageProps> = ({
   channelID
 }) => {
-  let { channelId } = useParams();
-  const calculatedChannelID = channelId ? channelId : channelID;
+
+  const { channelId } = useParams();
 
   const { account } = useAccount();
-
   const navigate = useNavigate();
 
-  const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
+  const { data: channelDetails, isLoading: loadingChannelDetails, refetch, isRefetching } = useGetChannelDetails(account);
 
   useEffect(() => {
-    if (channelDetails) {
-      navigate(`${APP_PATHS.ChannelDashboard}/${account}`);
-    } else {
-      navigate(`${APP_PATHS.ChannelDashboard}`)
+    if (!channelDetails) {
+      navigate(`${APP_PATHS.CreateChannel}`)
     }
-  }, [channelDetails, navigate]);
 
-  if (loadingChannelDetails) {
-    return (
-      <Box height='100%' display='flex' justifyContent='center' alignItems='center'>
-        <LoaderSpinner
-          type={LOADER_TYPE.SEAMLESS}
-          title="Loading Channel Details. Please wait..."
-        />
-      </Box>
-    )
+  }, [channelDetails])
+
+  useEffect(() => {
+    let interval: string | number | NodeJS.Timeout | undefined;
+    if (channelDetails && !channelDetails.name) {
+      interval = setInterval(() => {
+        refetch()
+      }, 3000)
+    }
+
+    return () => {
+      clearInterval(interval)
+    }
+
+  }, [channelDetails, channelDetails?.name])
+
+  if (loadingChannelDetails || isRefetching || !channelDetails?.name) {
+    return <Box height='100%' display='flex' justifyContent='center' alignItems='center'>
+      <LoaderSpinner
+        type={LOADER_TYPE.SEAMLESS}
+        title="Loading Channel Details. Please wait..."
+      />
+    </Box>
   }
 
-  if (!channelDetails) {
-    return (
-      <ContentLayout>
-        <CreateChannel />
-      </ContentLayout>
-    )
-  }
 
-
-  if (channelDetails) {
+  if (channelDetails?.name) {
     return (
       <ContentLayout>
         <ChannelDashboard />
