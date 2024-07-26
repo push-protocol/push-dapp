@@ -32,3 +32,6 @@ export const LOGO_ALIAS_CHAIN: {
   122: Fuse,
   123: Fuse
 };
+
+export const SepoliaFaucetLink =
+  'https://chaindrop.org/?chainid=11155111&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';

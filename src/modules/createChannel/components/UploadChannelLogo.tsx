@@ -4,7 +4,6 @@ import { css } from "styled-components";
 import { Box, Button, CloudUpload, FileUpload, Text, Tick } from "blocks";
 import ImageClipper from "primaries/ImageClipper";
 
-import { isImageFile } from "../CreateChannel.utils";
 import { ActiveStepKey } from "../CreateChannel.types";
 import { useCreateChannelForm } from "../CreateChannel.form";
 
@@ -32,7 +31,7 @@ const UploadChannelLogo: FC<UploadChannelLogoProps> = ({
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.currentTarget.files?.[0];
     setView(false)
-    if (file && isImageFile(file)) {
+    if (file) {
       await processFile(file);
     }
   };
@@ -42,7 +41,7 @@ const UploadChannelLogo: FC<UploadChannelLogoProps> = ({
     e.stopPropagation();
     setView(false)
     const file = e.dataTransfer.files?.[0];
-    if (file && isImageFile(file)) {
+    if (file) {
       await processFile(file);
     }
   };
@@ -76,7 +75,6 @@ const UploadChannelLogo: FC<UploadChannelLogoProps> = ({
         </Text>
 
         <FileUpload
-
           id='file-upload'
           onChange={handleFileChange}
           onDrop={handleDrop}

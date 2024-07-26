@@ -17,7 +17,7 @@ export type TextAreaProps = {
   resizable?: boolean;
   success?: boolean;
   totalCount?: number;
-  value?: string;
+  value: string;
 };
 
 const Container = styled.div<{ css?: FlattenSimpleInterpolation }>`
@@ -168,8 +168,8 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
               success || error
                 ? 'components-inputs-text-default'
                 : disabled
-                ? 'components-inputs-text-disabled'
-                : 'components-inputs-text-placeholder'
+                  ? 'components-inputs-text-disabled'
+                  : 'components-inputs-text-placeholder'
             }
           >
             {description}

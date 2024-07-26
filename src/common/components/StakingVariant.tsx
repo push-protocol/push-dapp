@@ -15,6 +15,8 @@ type StakingVariantProps = {
   showFaucet?: boolean;
   showBalance?: boolean;
   showImportTokenMessage?: boolean;
+  balance?: number;
+  setBalance?: (balance: number) => void;
 }
 
 const StakingVariant: FC<StakingVariantProps> = ({
@@ -22,12 +24,14 @@ const StakingVariant: FC<StakingVariantProps> = ({
   pushApprovalAmount,
   title,
   description,
+  balance = 0,
+  setBalance = () => { },
   showFaucet = false,
   showBalance = false,
 }) => {
   const { provider, account } = useAccount();
 
-  const [balance, setBalance] = useState(0);
+  // const [balance, setBalance] = useState(0);
   const [fetchingbalance, setFetchingBalance] = useState(false);
 
   const [mintingPush, setMintingPush] = useState(false);
@@ -74,7 +78,7 @@ const StakingVariant: FC<StakingVariantProps> = ({
           padding="spacing-sm spacing-md"
           alignItems="center"
         >
-          <Box>
+          <Box width={{ initial: 'inherit', ml: '200px' }}>
             <Text
               variant="h4-semibold"
               color='text-primary'
@@ -89,7 +93,6 @@ const StakingVariant: FC<StakingVariantProps> = ({
             >
               {title}
             </Text>
-
 
             <Text
               variant="c-regular"
@@ -109,15 +112,27 @@ const StakingVariant: FC<StakingVariantProps> = ({
           </Box>
 
           <Box display='flex'>
-            {!!pushApprovalAmount && pushApprovalAmount >= fees && <TickCircleFilled color='icon-brand-medium' size={27} />}
+            {!!pushApprovalAmount && pushApprovalAmount >= fees && <TickCircleFilled color='icon-brand-medium' size={22} />}
 
             <Box>
-              <Text variant="h4-semibold" color='text-brand-medium'>
+              <Text
+                variant="h4-semibold"
+                color='text-brand-medium'
+                display={{ ml: 'none', dp: 'block' }}
+              >
                 {fees} PUSH
               </Text>
+              <Text
+                variant="h5-semibold"
+                color='text-brand-medium'
+                display={{ ml: 'block', dp: 'none' }}
+              >
+                {fees} PUSH
+              </Text>
+
               {showBalance && <Skeleton isLoading={fetchingbalance}>
                 <Text variant="bes-semibold" color='text-tertiary'>
-                  Balance:
+                  Balance:{''}
                   {balance?.toLocaleString()}
                 </Text>
               </Skeleton>}

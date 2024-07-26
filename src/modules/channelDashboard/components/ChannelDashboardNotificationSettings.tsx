@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Button, Separator, Settings, Skeleton, Text } from 'blocks';
 
 import { ChannelSettingsList } from './ChannelSettingsList';
-import ChannelDashboardNullState from './ChannelDashboardNullState';
+import { ChannelDashboardNullState } from './ChannelDashboardNullState';
 
 import { ChannelSetting } from '../ChannelDashboard.types';
 
@@ -29,13 +29,13 @@ const ChannelDashboardNotificationSettings: FC<ChannelDashboardNotificationSetti
       display="flex"
       padding="spacing-sm"
       width="-webkit-fill-available"
-      border='border-sm solid stroke-tertiary'
+      border="border-sm solid stroke-tertiary"
       borderRadius="radius-sm"
       flexDirection="column"
     >
       <Box display="flex" flexDirection="column" gap="spacing-xxs">
         <Box display="flex" justifyContent="space-between">
-          <Box display='flex' flexDirection='column'>
+          <Box display="flex" flexDirection="column" gap='spacing-xxxs'>
             <Skeleton isLoading={loadingChannelSettings}>
               <Text variant="h5-semibold" color="text-primary">
                 Notification Settings
@@ -67,7 +67,7 @@ const ChannelDashboardNotificationSettings: FC<ChannelDashboardNotificationSetti
         display="flex"
         flexDirection="column"
         overflow="auto"
-        height={{ initial: "274px", ml: '230px' }}
+        height={{ initial: '274px', ml: '230px' }}
         justifyContent={channel_settings ? 'flex-start' : 'center'}
       >
         {channel_settings ? (

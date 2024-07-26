@@ -4,22 +4,16 @@ import { css } from 'styled-components';
 
 import { Box, Button, Cross, FileUpload, Text } from 'blocks';
 
-import { isImageFile } from 'modules/channelDashboard/ChannelDashboard.utils';
 import ImageClipper from 'primaries/ImageClipper';
 
-import { useEditChannelForm } from './EditChannel.forms';
+import { useEditChannelForm } from './EditChannel.form';
 
 type UploadlogoModelProps = {
   onClose: () => void;
-}
+};
 
 const uploadLogoModal: FC<UploadlogoModelProps> = ({ onClose }) => {
-
-  const {
-    values: formValues,
-    setFieldValue,
-    isValid
-  } = useEditChannelForm();
+  const { values: formValues, setFieldValue, isValid } = useEditChannelForm();
 
   const childRef = useRef();
 
@@ -29,8 +23,8 @@ const uploadLogoModal: FC<UploadlogoModelProps> = ({ onClose }) => {
   // handle Input file type
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.currentTarget.files?.[0];
-    setCroppedImage(undefined)
-    if (file && isImageFile(file)) {
+    setCroppedImage(undefined);
+    if (file) {
       await processFile(file);
     }
   };
@@ -39,9 +33,9 @@ const uploadLogoModal: FC<UploadlogoModelProps> = ({ onClose }) => {
   const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    setCroppedImage(undefined)
+    setCroppedImage(undefined);
     const file = e.dataTransfer.files?.[0];
-    if (file && isImageFile(file)) {
+    if (file) {
       await processFile(file);
     }
   };
@@ -59,75 +53,62 @@ const uploadLogoModal: FC<UploadlogoModelProps> = ({ onClose }) => {
   };
 
   return (
-    <Box
-      display='flex'
-      flexDirection='column'
-      gap='spacing-lg'
-      alignItems='center'
-      alignSelf='stretch'
-    >
-      <Box display='flex' width='100%' justifyContent='end' color='text-tertiary' cursor='pointer'>
+    <Box display="flex" flexDirection="column" gap="spacing-lg" alignItems="center" alignSelf="stretch">
+      <Box display="flex" width="100%" justifyContent="end" color="text-tertiary" cursor="pointer">
         <Cross size={24} onClick={onClose} />
       </Box>
-      <Box
-        display='flex'
-        flexDirection='column'
-        alignItems='center'
-        gap='spacing-lg'
-      >
-        <Text variant="bes-regular" color='text-tertiary'>
+      <Box display="flex" flexDirection="column" alignItems="center" gap="spacing-lg">
+        <Text variant="bes-regular" color="text-tertiary">
           Upload a PNG, JPG upto 1MB. Crop the image to resize to 128px.
         </Text>
 
-        <FileUpload
-          id='file-upload'
-          onChange={handleFileChange}
-          onDrop={handleDrop}
-        >
+        <FileUpload id="file-upload" onChange={handleFileChange} onDrop={handleDrop}>
           <Box
             width={{ initial: '500px', ml: '325px' }}
-            padding='spacing-xxl spacing-none'
-            display='flex'
-            flexDirection='column'
-            alignItems='center'
-            border='border-sm dashed stroke-tertiary'
-            borderRadius='radius-md'
-            backgroundColor='surface-secondary'
-            gap='spacing-md'
+            padding="spacing-xxl spacing-none"
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            border="border-sm dashed stroke-tertiary"
+            borderRadius="radius-md"
+            backgroundColor="surface-secondary"
+            gap="spacing-md"
           >
             {croppedImage ? (
-              <Box
-                width='128px'
-                height='128px'
-                borderRadius="radius-md"
-              >
-                <img style={{ borderRadius: 'inherit' }} width="100%"
-                  height="100%" src={croppedImage} alt="Cropped Img" />
+              <Box width="128px" height="128px" borderRadius="radius-md">
+                <img
+                  style={{ borderRadius: 'inherit' }}
+                  width="100%"
+                  height="100%"
+                  src={croppedImage}
+                  alt="Cropped Img"
+                />
               </Box>
             ) : (
               <ImageClipper
-                width='200px'
-                height='200px'
+                width="200px"
+                height="200px"
                 imageSrc={formValues.imageSrc}
                 imageType={formValues.imageType}
                 onImageCropped={(croppedImage: string) => {
-                  setCroppedImage(croppedImage)
+                  setCroppedImage(croppedImage);
                   setFieldValue('channelIcon', croppedImage);
                 }}
                 ref={childRef}
               />
             )}
 
-            <Box display='flex'>
-              <Text
-                variant="bs-semibold"
-                color='text-tertiary'
-              > Drag and Drop or</Text>
+            <Box display="flex" gap='spacing-xxxs'>
+              <Text variant="bs-semibold" color="text-tertiary">
+                Drag and Drop or
+              </Text>
               <label htmlFor="file-upload">
                 <Text
                   variant="bs-semibold"
-                  color='text-brand-medium'
-                  css={css`cursor:pointer;`}
+                  color="text-brand-medium"
+                  css={css`
+                    cursor: pointer;
+                  `}
                 >
                   Browse to Choose
                 </Text>
@@ -144,7 +125,7 @@ const uploadLogoModal: FC<UploadlogoModelProps> = ({ onClose }) => {
               onClick={() => {
                 if (isValid) {
                   // Also Check if the value of Icon is changed or not
-                  setFieldValue('channelIcon', croppedImage)
+                  setFieldValue('channelIcon', croppedImage);
                   onClose();
                 }
               }}
@@ -164,9 +145,8 @@ const uploadLogoModal: FC<UploadlogoModelProps> = ({ onClose }) => {
           </>
         )}
       </Box>
-
     </Box>
   );
 };
 
-export default uploadLogoModal;
+export { uploadLogoModal };

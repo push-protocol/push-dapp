@@ -251,11 +251,6 @@ function MasterInterfacePage() {
             />
 
             <Route
-              path={APP_PATHS.ChannelDashboard}
-              element={<ChannelDashboardPageV2 />}
-            />
-
-            <Route
               path={`${APP_PATHS.ChannelDashboard}/:channelId`}
               element={<ChannelDashboardPageV2 />}
             />

@@ -1,9 +1,6 @@
 import { FC, useContext, useState } from 'react';
 
-import { ethers } from 'ethers';
-import { useFormik } from 'formik';
 import { useSelector } from 'react-redux';
-import * as Yup from 'yup';
 
 import { Alert, Box, Button, ErrorFilled, TextInput } from 'blocks';
 
@@ -16,7 +13,7 @@ import { useAddDelegate, useGetChannelDelegates } from 'queries';
 
 import { UserStoreType } from 'types';
 import { DashboardActiveState } from '../ChannelDashboard.types';
-import { getRequiredFieldMessage } from 'common/Common.form';
+import { createDelegateForm } from '../forms';
 
 type ChannelAddDelegateProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
@@ -30,32 +27,9 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({ setActiveState }) => 
 
   const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
 
-  const [addDelegateError, setAddDelegateError] = useState('');
+  const [addDelegateError, setAddDelegateError] = useState<string | null>(null);
 
   const { data: channel_delegates, refetch: refetchChannelDelegate } = useGetChannelDelegates(userPushSDKInstance);
-
-  const delegateValidation = Yup.object().shape({
-    delegateAddress: Yup.string()
-      .required(getRequiredFieldMessage('Delegate Address'))
-      .test('address', 'Invalid Wallet Address', (value) => {
-        const isWallet = ethers.utils.isAddress(value);
-        return isWallet;
-      })
-      .test('uniqueDelegate', 'Delegate address already exists', (value) => {
-        const existingDelegate = channel_delegates?.find((delegateAddress) => delegateAddress === value);
-        return !existingDelegate;
-      })
-  });
-
-  const delegateForm = useFormik({
-    initialValues: {
-      delegateAddress: ''
-    },
-    validationSchema: delegateValidation,
-    onSubmit: (values) => {
-      handleAddDelegate();
-    }
-  });
 
   const { mutate: addDelegate, isPending } = useAddDelegate();
 
@@ -64,7 +38,7 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({ setActiveState }) => 
       return;
     }
 
-    setAddDelegateError('');
+    setAddDelegateError(null);
 
     let userPushInstance = userPushSDKInstance;
 
@@ -93,6 +67,11 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({ setActiveState }) => 
       }
     );
   };
+
+  const delegateForm = createDelegateForm({
+    handleAddDelegate,
+    channel_delegates
+  });
 
   return (
     <Box
@@ -124,21 +103,14 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({ setActiveState }) => 
           <TextInput
             required
             label="Delegate Address"
-            onChange={(e) => {
-              const inputValue = e.target.value;
-              delegateForm.setFieldValue('delegateAddress', inputValue);
-            }}
+            onChange={delegateForm.handleChange('delegateAddress')}
             value={delegateForm.values.delegateAddress}
             error={Boolean(delegateForm.errors.delegateAddress)}
             errorMessage={delegateForm.errors.delegateAddress}
           />
 
           <Box display="flex" gap="spacing-sm" justifyContent="center">
-            <Button
-              size="medium"
-              variant="outline"
-              onClick={() => setActiveState('dashboard')}
-            >
+            <Button size="medium" variant="outline" onClick={() => setActiveState('dashboard')}>
               Back
             </Button>
             <Button disabled={isPending}>{isPending ? 'Adding' : 'Add'}</Button>

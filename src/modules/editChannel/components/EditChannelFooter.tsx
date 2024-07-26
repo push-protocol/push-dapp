@@ -8,13 +8,13 @@ import { Alert, Box, Button, ErrorFilled } from 'blocks';
 import { abis, addresses, appConfig } from 'config';
 import { StakingVariant } from 'common';
 
-import { getPushTokenApprovalAmount } from 'helpers';
+import { getPushTokenApprovalAmount, getPushTokenFromWallet } from 'helpers';
 import { IPFSupload } from 'helpers/IpfsHelper';
 
 import { useAccount } from 'hooks';
 
 import { useApprovePUSHToken, useEditChannel, useGetChannelDetails } from 'queries';
-import { useEditChannelForm } from '../EditChannel.forms';
+import { useEditChannelForm } from '../EditChannel.form';
 import { DashboardActiveState } from 'modules/channelDashboard/ChannelDashboard.types';
 
 const minFeesForAddChannel = 50;
@@ -36,10 +36,25 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
   const [pushApprovalAmount, setPushApprovalAmount] = useState<number>(0);
   const [updateChannelError, setUpdateChannelError] = useState('');
 
+  const [balance, setBalance] = useState(0);
+  const [fetchingbalance, setFetchingBalance] = useState(false);
+
+  // Check PUSH Token in wallet
+  const pushTokenInWallet = async () => {
+    setFetchingBalance(true)
+    const amount = await getPushTokenFromWallet({
+      address: account,
+      provider: provider
+    });
+    setFetchingBalance(false)
+    setBalance(amount);
+  };
+
   useEffect(() => {
     if (!account || !provider) return;
     getChannelUpdateCounter();
     checkApprovedPUSHTokenAmount();
+    pushTokenInWallet();
   }, [account, provider]);
 
   const getChannelUpdateCounter = async () => {
@@ -90,7 +105,7 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
           console.log('Successfully Approved PUSH');
           checkApprovedPUSHTokenAmount();
         },
-        onError: (error) => {
+        onError: (error: any) => {
           console.log('Error in Approving PUSH', error);
           if (error.code == 'ACTION_REJECTED') {
             setUpdateChannelError('User rejected signature. Please try again.');
@@ -140,8 +155,8 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
             refetchChannelDetails();
             setActiveState('dashboard');
           },
-          onError: (error) => {
-            console.log('Error in updating channel details', error, error.code);
+          onError: (error: any) => {
+            console.log('Error in updating channel details', error);
             if (error.code == 'ACTION_REJECTED') {
               setUpdateChannelError('User rejected signature. Please try again.');
             } else {
@@ -170,6 +185,9 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
         fees={feesRequiredForEdit}
         pushApprovalAmount={pushApprovalAmount}
         showFaucet
+        showBalance
+        balance={balance}
+        setBalance={setBalance}
       />
 
       <Box

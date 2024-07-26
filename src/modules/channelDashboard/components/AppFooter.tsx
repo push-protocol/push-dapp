@@ -1,6 +1,6 @@
 import { Box, Link } from 'blocks';
 
-const FooterComponent = () => {
+const AppFooter = () => {
   return (
     <Box
       display="flex"
@@ -10,7 +10,11 @@ const FooterComponent = () => {
       padding="spacing-none spacing-sm"
       color="text-tertiary"
     >
-      <Box display="flex" flexDirection={{ initial: 'row', ml: 'column' }} gap={{ initial: 'spacing-sm', ml: 'spacing-none' }}>
+      <Box
+        display="flex"
+        flexDirection={{ initial: 'row', ml: 'column' }}
+        gap={{ initial: 'spacing-sm', ml: 'spacing-none' }}
+      >
         <Link
           to="https://push.org/privacy/"
           target="_blank"
@@ -40,4 +44,4 @@ const FooterComponent = () => {
   );
 };
 
-export { FooterComponent };
+export { AppFooter };

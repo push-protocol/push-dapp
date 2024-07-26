@@ -84,7 +84,7 @@ const ChannelDelegateList: FC<ChannelDelegateListProps> = ({
         height='100%'
 
       >
-        <Box display='flex' alignItems='center'>
+        <Box display='flex' alignItems='center' gap='spacing-xxxs'>
           <Text variant='bs-semibold' color='text-primary'>
             {shortenText(delegate_address, 7)}
           </Text>

@@ -1,12 +1,16 @@
+import { FC } from "react";
+import { useSelector } from "react-redux";
+
 import { Box } from "blocks";
+import { useAccount } from "hooks";
+
+import { useGetChannelDelegates, useGetChannelDetails } from "queries";
+
 import { ChannelDashboardNotificationSettings } from "./ChannelDashboardNotificationSettings";
 import { ChannelDashboardDelegates } from "./ChannelDashboardDelegates";
-import { useGetChannelDelegates, useGetChannelDetails } from "queries";
-import { useAccount } from "hooks";
-import { useSelector } from "react-redux";
-import { UserStoreType } from "types";
-import { FC } from "react";
+
 import { DashboardActiveState } from "../ChannelDashboard.types";
+import { UserStoreType } from "types";
 
 type ChannelDashboardBodyProps = {
   setChannelDashboardError: (error: string) => void;

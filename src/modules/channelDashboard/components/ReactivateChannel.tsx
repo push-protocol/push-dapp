@@ -7,7 +7,7 @@ import { ModalHeader, StakingVariant } from 'common';
 
 import { addresses } from 'config';
 
-import { getPushTokenApprovalAmount } from 'helpers';
+import { getPushTokenApprovalAmount, getPushTokenFromWallet } from 'helpers';
 
 import { useAccount } from 'hooks';
 
@@ -15,7 +15,7 @@ import { useApprovePUSHToken, useGetChannelDetails, useReactivateChannel } from 
 
 import { ChannelDashboardInfo } from './ChannelDashboardInfo';
 import { DashboardActiveState } from '../ChannelDashboard.types';
-import ImportPushTokenMessage from 'common/components/ImportPushTokenMessage';
+import { ImportPushTokenMessage } from 'common/components/ImportPushTokenMessage';
 
 const feesRequiredForReactivation = 50;
 
@@ -35,10 +35,24 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({ setActiveState }) => {
 
   const [reactivationError, setReactivationError] = useState('');
   const [pushApprovalAmount, setPushApprovalAmount] = useState(0);
+  const [balance, setBalance] = useState(0);
+  const [fetchingbalance, setFetchingBalance] = useState(false);
+
+  // Check PUSH Token in wallet
+  const pushTokenInWallet = async () => {
+    setFetchingBalance(true)
+    const amount = await getPushTokenFromWallet({
+      address: account,
+      provider: provider
+    });
+    setFetchingBalance(false)
+    setBalance(amount);
+  };
 
   useEffect(() => {
     if (!account || !provider) return;
     checkApprovedPUSHTokenAmount();
+    pushTokenInWallet();
   }, [account, provider]);
 
   const checkApprovedPUSHTokenAmount = async () => {
@@ -67,7 +81,7 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({ setActiveState }) => {
         onSuccess: () => {
           checkApprovedPUSHTokenAmount();
         },
-        onError: (error) => {
+        onError: (error: any) => {
           console.log('Error in Approving PUSH', error);
           if (error.code == 'ACTION_REJECTED') {
             setReactivationError('User rejected signature. Please try again.');
@@ -96,7 +110,7 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({ setActiveState }) => {
           refetchChannelDetails();
           setActiveState('dashboard');
         },
-        onError: (error) => {
+        onError: (error: any) => {
           console.log('Error in Reactivating channel', error);
           if (error.code == 'ACTION_REJECTED') {
             setReactivationError('User rejected signature. Please try again.');
@@ -143,6 +157,8 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({ setActiveState }) => {
           pushApprovalAmount={pushApprovalAmount}
           showFaucet
           showBalance
+          balance={balance}
+          setBalance={setBalance}
         />
         <ImportPushTokenMessage title="Don’t see Push token in your wallet?" />
       </Box>

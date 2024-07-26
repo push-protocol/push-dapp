@@ -5,27 +5,23 @@ import { css } from 'styled-components';
 
 type ImportPushTokenMessageProps = {
   title: string;
-}
+};
 
-const ImportPushTokenMessage: FC<ImportPushTokenMessageProps> = ({
-  title
-}) => {
-
+const ImportPushTokenMessage: FC<ImportPushTokenMessageProps> = ({ title }) => {
   // Import Push Token in Your wallet
   const handlePushTokenImport = async () => {
     await importPushToken();
   };
 
-
   return (
-    <Box display="flex" flexDirection="row" justifyContent="center" gap='spacing-xxxs'>
-      <Text variant="bes-semibold" color='text-tertiary'>
+    <Box display="flex" flexDirection="row" justifyContent="center" gap="spacing-xxxs">
+      <Text variant="bes-semibold" color="text-tertiary">
         {title}
       </Text>
       <Text
         css={css`
-        cursor: pointer;
-      `}
+          cursor: pointer;
+        `}
         variant="bes-semibold"
         color="text-brand-medium"
         onClick={handlePushTokenImport}
@@ -36,4 +32,4 @@ const ImportPushTokenMessage: FC<ImportPushTokenMessageProps> = ({
   );
 };
 
-export default ImportPushTokenMessage;
+export { ImportPushTokenMessage };

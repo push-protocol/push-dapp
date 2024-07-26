@@ -1,8 +1,8 @@
 type EditChannelInfoFormValues = {
-  channelName: string | undefined;
-  channelDesc: string | undefined;
-  channelURL: string | undefined;
-  channelIcon: string | undefined;
+  channelName: string;
+  channelDesc: string;
+  channelURL: string;
+  channelIcon: string;
   imageSrc: string | undefined;
   imageType: string | undefined;
 };
