@@ -94,18 +94,14 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
                       <MenuItem
                         key={index}
                         label={Item.title}
-                        icon={<LogoComponent size={18} />}
+                        icon={<LogoComponent size={24} />}
                         onClick={Item.onClick}
                         css={css`
-                        color: ${Item.color};
-                        span {
                           color: ${Item.color};
-                        }
-                        svg {
-                          width: 18px;
-                          height: 18px;
-                        }
-                      `}
+                          span {
+                            color: ${Item.color};
+                          }
+                        `}
                       />
                     )
                   );

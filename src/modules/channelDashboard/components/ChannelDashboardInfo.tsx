@@ -101,7 +101,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
 
         <Box display="flex" flexDirection="column" gap="spacing-xs">
           <Skeleton isLoading={loadingChannelDetails} width="100%">
-            <Box display="flex">
+            <Box display="flex" gap='spacing-xxxs'>
               <Text color="text-tertiary" variant="c-regular">
                 {shortenText(channelDetails ? channelDetails?.channel : '', 5)}
               </Text>

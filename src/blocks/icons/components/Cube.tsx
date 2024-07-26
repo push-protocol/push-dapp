@@ -9,26 +9,26 @@ const Cube: FC<IconProps> = (allProps) => {
       componentName="Cube"
       icon={
         <svg
-          xmlns="http://www.w3.org/2000/svg"
           width="inherit"
           height="inherit"
-          viewBox="0 0 18 18"
+          viewBox="0 0 24 24"
           fill="none"
+          xmlns="http://www.w3.org/2000/svg"
           {...props}
         >
           <path
-            d="M8.84706 9.15278L1.6665 4.95139L8.84706 0.75L16.3332 4.95139L8.84706 9.15278Z"
+            d="M11.8471 12.1528L4.6665 7.95139L11.8471 3.75L19.3332 7.95139L11.8471 12.1528Z"
             stroke="currentColor"
             stroke-width="1.5"
             stroke-linejoin="round"
           />
           <path
-            d="M1.6665 5.02783V13.457L8.84706 17.2501L16.3332 13.457V5.02783"
+            d="M4.6665 8.02783V16.457L11.8471 20.2501L19.3332 16.457V8.02783"
             stroke="currentColor"
             stroke-width="1.5"
             stroke-linejoin="round"
           />
-          <path d="M8.84717 17.2501V9.15283" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M11.8472 20.2501V12.1528" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
         </svg>
       }
       {...restProps}

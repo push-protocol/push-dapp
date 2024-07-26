@@ -9,29 +9,29 @@ const BellSimpleSlash: FC<IconProps> = (allProps) => {
       componentName="BellSimpleSlash"
       icon={
         <svg
-          xmlns="http://www.w3.org/2000/svg"
           width="inherit"
           height="inherit"
-          viewBox="0 0 18 18"
+          viewBox="0 0 24 24"
           fill="none"
+          xmlns="http://www.w3.org/2000/svg"
           {...props}
         >
           <path
-            d="M2.52783 1.4353L16.3386 16.6"
+            d="M5.52783 4.4353L19.3386 19.6"
             stroke="currentColor"
             stroke-width="1.5"
             stroke-linecap="round"
             stroke-linejoin="round"
           />
           <path
-            d="M4.42357 3.49341C4.04446 3.90863 3.28622 5.18319 3.28622 6.95964C3.28622 9.18019 2.85294 12.8631 1.39062 14.4337H14.2265"
+            d="M7.42357 6.49341C7.04446 6.90863 6.28622 8.18319 6.28622 9.95964C6.28622 12.1802 5.85294 15.8631 4.39062 17.4337H17.2265"
             stroke="currentColor"
             stroke-width="1.5"
             stroke-linecap="round"
             stroke-linejoin="round"
           />
           <path
-            d="M6.59013 17.25H12.3852M6.31934 1.70613C7.61917 0.803471 10.9554 -0.265283 13.9017 2.68101C14.2912 3.07049 15.4295 4.23159 15.5807 7.93451C15.6168 8.81912 15.8731 11.0541 16.6097 12.9172"
+            d="M9.59013 20.25H15.3852M9.31934 4.70613C10.6192 3.80347 13.9554 2.73472 16.9017 5.68101C17.2912 6.07049 18.4295 7.23159 18.5807 10.9345C18.6168 11.8191 18.8731 14.0541 19.6097 15.9172"
             stroke="currentColor"
             stroke-width="1.5"
             stroke-linecap="round"
