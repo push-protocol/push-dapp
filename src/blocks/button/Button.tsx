@@ -26,6 +26,8 @@ export type ButtonProps = {
   variant?: ButtonVariant;
   /* Button takes the full width if enabled */
   block?: boolean;
+  /* Button loading state */
+  loading?: boolean;
 } & TransformedHTMLAttributes<HTMLButtonElement>;
 
 const StyledButton = styled.button<ButtonProps>`
@@ -46,7 +48,9 @@ const StyledButton = styled.button<ButtonProps>`
   }
 
   /* Button variant CSS styles */
-  ${({ variant }) => getButtonVariantStyles(variant || 'primary')}
+  ${({ variant, loading }) => getButtonVariantStyles(variant || 'primary', loading || false)}
+
+  ${({ loading }) => loading && 'opacity: 0.8;'}
 
   /* Button and font size CSS styles */
   ${({ iconOnly, size }) => getButtonSizeStyles({ iconOnly: !!iconOnly, size: size || 'medium' })}
@@ -69,6 +73,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       size = 'medium',
       leadingIcon,
       trailingIcon,
+      loading = false,
       iconOnly,
       circular = false,
       children,
@@ -81,6 +86,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       circular={circular}
       disabled={disabled}
       iconOnly={iconOnly}
+      loading={loading}
       role="button"
       ref={ref}
       size={size}

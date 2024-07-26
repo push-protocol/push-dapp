@@ -1,13 +1,15 @@
 import { FlattenSimpleInterpolation, css } from 'styled-components';
 import { ButtonSize, ButtonVariant } from './Button.types';
 
-export const getButtonVariantStyles = (variant: ButtonVariant) => {
+export const getButtonVariantStyles = (variant: ButtonVariant, loading: boolean) => {
   switch (variant) {
     case 'primary': {
       return `
-        background-color: var(--components-button-primary-background-default);
+        background-color:  var(--${
+          loading ? 'components-button-primary-background-loading' : 'components-button-primary-background-default'
+        });
         color: var(--components-button-primary-text-default);
-
+        
         &:hover {
           background-color: var(--components-button-primary-background-hover)
         }

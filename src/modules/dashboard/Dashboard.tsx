@@ -2,7 +2,7 @@
 import { FC, useState } from 'react';
 
 // Components
-import { Box } from 'blocks';
+import { Box, Button } from 'blocks';
 import { DashboardSubHeader } from './components/DashboardSubHeader';
 import { FeaturedChannels } from './components/FeaturedChannels';
 import { ChannelVariantsSection } from './components/ChannelVariantsSection';
@@ -22,6 +22,12 @@ const Dashboard: FC<DashboardProps> = () => {
       height="100%"
       width="auto"
     >
+      <Box
+        display="flex"
+        alignItems="center"
+      >
+        <Button loading>Button</Button>
+      </Box>
       <DashboardHeader
         showSubHeader={showSubHeader}
         setSubHeaderVisibility={setSubHeaderVisibility}

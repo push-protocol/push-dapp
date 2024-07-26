@@ -10,6 +10,7 @@ export const primaryButtonSemantics = {
   'background-hover': { light: colorBrands['primary-400'], dark: colorBrands['primary-400'] },
   'background-pressed': { light: colorBrands['primary-800'], dark: colorBrands['primary-600'] },
   'background-focus': { light: colorBrands['primary-500'], dark: colorBrands['primary-400'] },
+  'background-loading': { light: colorBrands['primary-400'], dark: colorBrands['primary-400'] },
   'background-disabled': {
     light: surfaceSemantics['state-disabled'].light,
     dark: surfaceSemantics['state-disabled'].dark,
@@ -29,6 +30,7 @@ export const secondaryButtonSemantics = {
   'background-hover': { light: colorBrands['neutral-200'], dark: colorBrands['neutral-700'] },
   'background-pressed': { light: colorBrands['neutral-300'], dark: colorBrands['neutral-1000'] },
   'background-focus': { light: colorBrands['neutral-100'], dark: colorBrands['neutral-800'] },
+  'background-loading': { light: colorBrands['neutral-100'], dark: colorBrands['neutral-800'] },
   'background-disabled': {
     light: surfaceSemantics['state-disabled'].light,
     dark: surfaceSemantics['state-disabled'].dark,
@@ -49,6 +51,7 @@ export const tertiaryButtonSemantics = {
   'background-hover': { light: colorBrands['neutral-900'], dark: colorBrands['neutral-300'] },
   'background-pressed': { light: colorBrands['neutral-100'], dark: colorPrimitives['gray-1000'] },
   'background-focus': { light: colorBrands['neutral-1000'], dark: colorBrands['neutral-700'] },
+  'background-loading': { light: colorBrands['neutral-900'], dark: colorBrands['neutral-700'] },
   'background-disabled': {
     light: surfaceSemantics['state-disabled'].light,
     dark: surfaceSemantics['state-disabled'].dark,
@@ -81,6 +84,7 @@ export const outlineButtonSemantics = {
 
   'stroke-default': { light: strokeSemantics['tertiary'].light, dark: strokeSemantics['tertiary'].dark },
   'stroke-focus': { light: colorBrands['primary-300'], dark: colorBrands['primary-400'] },
+  'stroke-loading': { light: colorBrands['neutral-200'], dark: colorBrands['primary-400'] },
   'stroke-hover': { light: strokeSemantics['brand-subtle'].light, dark: strokeSemantics['secondary'].dark },
   'stroke-pressed': { light: colorBrands['neutral-600'], dark: colorBrands['neutral-300'] },
 };
@@ -90,6 +94,7 @@ export const dangerButtonSemantics = {
   'background-hover': { light: colorBrands['danger-500'], dark: colorBrands['danger-400'] },
   'background-pressed': { light: colorBrands['danger-800'], dark: colorBrands['danger-700'] },
   'background-focus': { light: colorBrands['danger-500'], dark: colorBrands['danger-400'] },
+  'background-loading': { light: colorBrands['danger-500'], dark: colorBrands['danger-400'] },
   'background-disabled': {
     light: surfaceSemantics['state-disabled'].light,
     dark: surfaceSemantics['state-disabled'].dark,
@@ -109,6 +114,7 @@ export const dangerSecondaryButtonSemantics = {
   'background-hover': { light: colorBrands['danger-100'], dark: colorBrands['danger-700'] },
   'background-pressed': { light: colorBrands['danger-500'], dark: colorBrands['danger-1000'] },
   'background-focus': { light: colorBrands['danger-100'], dark: colorBrands['danger-700'] },
+  'background-loading': { light: colorBrands['danger-100'], dark: colorBrands['danger-700'] },
   'background-disabled': {
     light: surfaceSemantics['state-disabled'].light,
     dark: surfaceSemantics['state-disabled'].dark,
