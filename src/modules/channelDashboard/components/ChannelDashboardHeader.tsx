@@ -36,21 +36,21 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
       title: 'Add Subgraph Details',
       logo: Cube,
       onClick: () => setActiveState('addSubgraph'),
-      color: '#17181B', //color is used like this because MenuItem has no color prop to pass and it is used as css={css};
+      color: 'text-primary',
       show: true
     },
     {
       title: 'Deactivate Channel',
       logo: BellSimpleSlash,
       onClick: () => setActiveState('deactivateChannel'),
-      color: '#D43B3B',
+      color: 'text-state-danger-bold',
       show: channelDetails?.activation_status === 0 ? false : true //Channel is deactivated
     },
     {
       title: 'Activate Channel',
       logo: BellSimple,
       onClick: () => setActiveState('reactivateChannel'),
-      color: '#00A47F',
+      color: 'text-state-success-bold',
       show: channelDetails?.activation_status === 0 ? true : false
     }
   ];
@@ -97,9 +97,9 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
                         icon={<LogoComponent size={24} />}
                         onClick={Item.onClick}
                         css={css`
-                          color: ${Item.color};
+                          color: var(--${Item.color});
                           span {
-                            color: ${Item.color};
+                            color: var(--${Item.color});
                           }
                         `}
                       />

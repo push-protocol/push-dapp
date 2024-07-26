@@ -22,8 +22,7 @@ export type ChannelDropdownTypes = {
   title: string;
   logo: FC<IconProps>;
   onClick: () => void;
-  // color: 'text-primary' | 'text-state-danger-bold' | 'text-state-success-bold';
-  color: '#17181B' | '#D43B3B' | '#00A47F';
+  color: 'text-primary' | 'text-state-danger-bold' | 'text-state-success-bold';
   show: boolean;
 };
 
