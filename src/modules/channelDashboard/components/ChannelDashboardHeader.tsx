@@ -64,37 +64,24 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
             overlay={
               <Menu>
                 <MenuItem
-                  label='Add Subgraph Details'
+                  label="Add Subgraph Details"
                   icon={<Cube size={24} />}
                   onClick={() => setActiveState('addSubgraph')}
-                  css={css`
-                    color: var(--text-primary);
-                    span {
-                      color: var(--text-primary);
-                    }
-                  `}
+                  color="text-primary"
                 />
-                {channelDetails?.activation_status ? <MenuItem
-                  label='Deactivate Channel'
-                  icon={<BellSimpleSlash size={24} />}
-                  onClick={() => setActiveState('deactivateChannel')}
-                  css={css`
-                    color: var(--text-state-danger-bold);
-                    span {
-                      color: var(--text-state-danger-bold);
-                    }
-                  `}
-                /> : (
+                {channelDetails?.activation_status ? (
                   <MenuItem
-                    label='Activate Channel'
-                    icon={<BellSimple size={24} />}
+                    label="Deactivate Channel"
+                    icon={<BellSimpleSlash size={24} color="icon-state-danger-bold" />}
+                    onClick={() => setActiveState('deactivateChannel')}
+                    color="text-state-danger-bold"
+                  />
+                ) : (
+                  <MenuItem
+                    label="Activate Channel"
+                    icon={<BellSimple size={24} color="icon-state-success-bold" />}
                     onClick={() => setActiveState('reactivateChannel')}
-                    css={css`
-                    color: var(--text-state-success-bold);
-                    span {
-                      color: var(--text-state-success-bold);
-                    }
-                  `}
+                    color="text-state-success-bold"
                   />
                 )}
               </Menu>

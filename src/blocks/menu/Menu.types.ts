@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { FlattenSimpleInterpolation } from 'styled-components';
+import { TextColors } from 'blocks/theme/Theme.types';
 
 export type MenuNonResponsiveProps = {
   /* Sets height css property */
@@ -26,6 +27,8 @@ export type MenuComponentProps = {
 export type MenuItemComponentProps = {
   /* icon element  */
   icon?: ReactNode;
+  /* Sets color css property */
+  color?: TextColors;
   /* function attached to the menu item */
   onClick?: () => void;
   /* menu item text */

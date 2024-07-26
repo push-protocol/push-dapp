@@ -6,7 +6,7 @@ import * as RadixDropdown from '@radix-ui/react-dropdown-menu';
 import { Link } from '../link';
 import { textVariants } from '../text';
 
-const StyledMenuItem = styled(RadixDropdown.Item)<MenuItemComponentProps>`
+const StyledMenuItem = styled(RadixDropdown.Item) <MenuItemComponentProps>`
   // Menu default styles
   padding: var(--spacing-none) var(--spacing-xxxs);
   display: flex;
@@ -33,8 +33,8 @@ const StyledMenuItem = styled(RadixDropdown.Item)<MenuItemComponentProps>`
   ${(props) => props.css || ''};
 `;
 
-const StyledLabel = styled.span`
-  color: var(--components-dropdown-text-default);
+const StyledLabel = styled.span<{ color?: string }>`
+  color: var(--${({ color }) => (color ? color : 'components-dropdown-text-default')});
   text-align: center;
 
   font-family: var(--font-family);
@@ -44,25 +44,27 @@ const StyledLabel = styled.span`
   line-height: ${textVariants['bs-regular'].lineHeight};
 `;
 
-const MenuItem: FC<MenuItemComponentProps> = ({ icon, label, onClick, destination, newTab, disabled, ...props }) => {
+const MenuItem: FC<MenuItemComponentProps> = ({
+  icon,
+  label,
+  color,
+  onClick,
+  destination,
+  newTab,
+  disabled,
+  ...props
+}) => {
   const menuContent = (
-    <StyledMenuItem
-      onSelect={onClick}
-      disabled={disabled}
-      {...props}
-    >
+    <StyledMenuItem onSelect={onClick} disabled={disabled} {...props}>
       {icon}
-      <StyledLabel>{label}</StyledLabel>
+      <StyledLabel color={color}>{label}</StyledLabel>
     </StyledMenuItem>
   );
 
   return (
     <div>
       {destination ? (
-        <Link
-          to={destination}
-          {...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-        >
+        <Link to={destination} {...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
           {menuContent}
         </Link>
       ) : (
