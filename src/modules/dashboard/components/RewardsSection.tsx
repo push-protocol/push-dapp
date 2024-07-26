@@ -28,6 +28,7 @@ const RewardsSection = () => {
         <Text
           variant="h5-semibold"
           display={{ ml: 'none', dp: 'block' }}
+          color="text-on-light-bg"
         >
           Complete Tasks on Push. Earn Push Points and Unlock Rewards.
         </Text>
@@ -35,6 +36,7 @@ const RewardsSection = () => {
           variant="h5-semibold"
           display={{ ml: 'block', dp: 'none' }}
           textAlign="center"
+          color="text-on-light-bg"
         >
           Complete Tasks on Push. Earn Push Points and Unlock Rewards.
         </Text>
