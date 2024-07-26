@@ -17,7 +17,7 @@ import { ChannelDetails } from 'queries';
 
 import { ChannelDashboardInfo } from './ChannelDashboardInfo';
 
-import { ChannelDropdownTypes, DashboardActiveState } from '../ChannelDashboard.types';
+import { DashboardActiveState } from '../ChannelDashboard.types';
 import { css } from 'styled-components';
 
 type ChannelDashboardHeaderProps = {
@@ -31,30 +31,6 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
   loadingChannelDetails,
   setActiveState
 }) => {
-  const dropdownItems: ChannelDropdownTypes[] = [
-    {
-      title: 'Add Subgraph Details',
-      logo: Cube,
-      onClick: () => setActiveState('addSubgraph'),
-      color: 'text-primary',
-      show: true
-    },
-    {
-      title: 'Deactivate Channel',
-      logo: BellSimpleSlash,
-      onClick: () => setActiveState('deactivateChannel'),
-      color: 'text-state-danger-bold',
-      show: channelDetails?.activation_status === 0 ? false : true //Channel is deactivated
-    },
-    {
-      title: 'Activate Channel',
-      logo: BellSimple,
-      onClick: () => setActiveState('reactivateChannel'),
-      color: 'text-state-success-bold',
-      show: channelDetails?.activation_status === 0 ? true : false
-    }
-  ];
-
   return (
     <Box
       display="flex"
@@ -87,25 +63,40 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
             trigger="click"
             overlay={
               <Menu>
-                {dropdownItems.map((Item, index) => {
-                  const LogoComponent = Item.logo;
-                  return (
-                    Item.show && (
-                      <MenuItem
-                        key={index}
-                        label={Item.title}
-                        icon={<LogoComponent size={24} />}
-                        onClick={Item.onClick}
-                        css={css`
-                          color: var(--${Item.color});
-                          span {
-                            color: var(--${Item.color});
-                          }
-                        `}
-                      />
-                    )
-                  );
-                })}
+                <MenuItem
+                  label='Add Subgraph Details'
+                  icon={<Cube size={24} />}
+                  onClick={() => setActiveState('addSubgraph')}
+                  css={css`
+                    color: var(--text-primary);
+                    span {
+                      color: var(--text-primary);
+                    }
+                  `}
+                />
+                {channelDetails?.activation_status ? <MenuItem
+                  label='Deactivate Channel'
+                  icon={<BellSimpleSlash size={24} />}
+                  onClick={() => setActiveState('deactivateChannel')}
+                  css={css`
+                    color: var(--text-state-danger-bold);
+                    span {
+                      color: var(--text-state-danger-bold);
+                    }
+                  `}
+                /> : (
+                  <MenuItem
+                    label='Activate Channel'
+                    icon={<BellSimple size={24} />}
+                    onClick={() => setActiveState('reactivateChannel')}
+                    css={css`
+                    color: var(--text-state-success-bold);
+                    span {
+                      color: var(--text-state-success-bold);
+                    }
+                  `}
+                  />
+                )}
               </Menu>
             }
           >
