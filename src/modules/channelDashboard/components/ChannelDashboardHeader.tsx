@@ -18,7 +18,6 @@ import { ChannelDetails } from 'queries';
 import { ChannelDashboardInfo } from './ChannelDashboardInfo';
 
 import { DashboardActiveState } from '../ChannelDashboard.types';
-import { css } from 'styled-components';
 
 type ChannelDashboardHeaderProps = {
   channelDetails?: ChannelDetails;
@@ -67,21 +66,21 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
                   label="Add Subgraph Details"
                   icon={<Cube size={24} />}
                   onClick={() => setActiveState('addSubgraph')}
-                  color="text-primary"
                 />
+
                 {channelDetails?.activation_status ? (
                   <MenuItem
                     label="Deactivate Channel"
-                    icon={<BellSimpleSlash size={24} color="icon-state-danger-bold" />}
+                    icon={<BellSimpleSlash size={24} />}
                     onClick={() => setActiveState('deactivateChannel')}
-                    color="text-state-danger-bold"
+                    type='error'
                   />
                 ) : (
                   <MenuItem
                     label="Activate Channel"
-                    icon={<BellSimple size={24} color="icon-state-success-bold" />}
+                    icon={<BellSimple size={24} />}
                     onClick={() => setActiveState('reactivateChannel')}
-                    color="text-state-success-bold"
+                    type='success'
                   />
                 )}
               </Menu>

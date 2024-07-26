@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { MenuItemComponentProps } from './Menu.types';
+import { MenuItemComponentProps, MenuItemTypeVariant } from './Menu.types';
 import * as RadixDropdown from '@radix-ui/react-dropdown-menu';
 import { Link } from '../link';
 import { textVariants } from '../text';
@@ -19,6 +19,7 @@ const StyledMenuItem = styled(RadixDropdown.Item) <MenuItemComponentProps>`
   [role='img'] {
     width: 24px;
     height: 24px;
+   color: var(--components-list-item-icon-${({ type }) => (type ? type : 'default')});
   }
 
   &:hover {
@@ -33,8 +34,8 @@ const StyledMenuItem = styled(RadixDropdown.Item) <MenuItemComponentProps>`
   ${(props) => props.css || ''};
 `;
 
-const StyledLabel = styled.span<{ color?: string }>`
-  color: var(--${({ color }) => (color ? color : 'components-dropdown-text-default')});
+const StyledLabel = styled.span<{ type?: MenuItemTypeVariant }>`
+  color: var(--components-list-item-text-${({ type }) => (type ? type : 'default')});
   text-align: center;
 
   font-family: var(--font-family);
@@ -47,7 +48,7 @@ const StyledLabel = styled.span<{ color?: string }>`
 const MenuItem: FC<MenuItemComponentProps> = ({
   icon,
   label,
-  color,
+  type,
   onClick,
   destination,
   newTab,
@@ -55,9 +56,9 @@ const MenuItem: FC<MenuItemComponentProps> = ({
   ...props
 }) => {
   const menuContent = (
-    <StyledMenuItem onSelect={onClick} disabled={disabled} {...props}>
+    <StyledMenuItem onSelect={onClick} disabled={disabled} type={type} {...props}>
       {icon}
-      <StyledLabel color={color}>{label}</StyledLabel>
+      <StyledLabel type={type}>{label}</StyledLabel>
     </StyledMenuItem>
   );
 

@@ -39,3 +39,5 @@ export type TextColors = keyof ThemeColorsConfig<{ [semanticKeys.text]: ColorSem
 export type IconColors = keyof ThemeColorsConfig<{ [semanticKeys.icon]: ColorSemantics['icon'] }>;
 
 export type StrokeColors = keyof ThemeColorsConfig<{ [semanticKeys.stroke]: ColorSemantics['stroke'] }>;
+
+export type ListItemColors = keyof ThemeColorsConfig<{ [semanticKeys.listItem]: ColorSemantics['components-list-item'] }>;
