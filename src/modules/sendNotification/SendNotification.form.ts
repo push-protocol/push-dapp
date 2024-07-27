@@ -3,6 +3,7 @@ import * as yup from 'yup';
 
 import { SelectOption } from 'blocks/select/Select';
 import { getRequiredFieldMessage } from 'common';
+import { appConfig } from 'config';
 
 export const getValidationSchema = (isSubsetRecipientPresent: boolean) => {
   return yup.object().shape({
@@ -31,7 +32,7 @@ export const getValidationSchema = (isSubsetRecipientPresent: boolean) => {
 export const getFormInitialValues = (delegateesOptions: SelectOption[]) => {
   return {
     channelAddress: delegateesOptions[0]?.value || '',
-    chainId: '11155111',
+    chainId: appConfig.coreContractChain.toString(),
     type: 'BROADCAST' as NotificationType,
     recipient: '',
     titleChecked: false,

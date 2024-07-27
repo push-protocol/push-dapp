@@ -61,7 +61,7 @@ function ChannelDashboardPage() {
           {!channelAdmin && (
             <Navigate
               replace
-              to="/dashboard"
+              to="/channel"
             />
           )}
           {channelAdmin && <SendNotifications />}

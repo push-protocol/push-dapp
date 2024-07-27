@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import * as RadixDropdown from '@radix-ui/react-dropdown-menu';
 import { DropdownProps } from './Dropdown.types';
 
-const RadixDropdownContent = styled(RadixDropdown.Content)<DropdownProps>`
+const RadixDropdownContent = styled(RadixDropdown.Content) <DropdownProps>`
   /* Extra CSS props */
   ${(props) => props.css || ''}
 `;

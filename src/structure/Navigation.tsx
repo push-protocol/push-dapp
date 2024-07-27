@@ -140,7 +140,7 @@ function Navigation() {
       newNavSetup.developersList[0].data.hidden = true;
       newNavSetup.developersList[1].data.hidden = true;
 
-      if (channelDetails !== 'unfetched' && channelDetails != null) {
+      if (channelDetails !== 'unfetched' && channelDetails != null && channelDetails?.name !== null) {
         newNavSetup.developersList[0].data.name = channelDetails.name;
         newNavSetup.developersList[0].data.src = channelDetails.iconV2;
         newNavSetup.developersList[0].data.activeSrc = channelDetails.iconV2;
@@ -164,10 +164,11 @@ function Navigation() {
   }, [canSend, channelDetails, navigationSetup, processingState, account]);
 
   useEffect(() => {
+    console.debug(channelDetails, 'channelDetials');
     if (processingState !== 0) {
       dispatch(setCanSend(SEND_NOTIFICATION_STATES.LOADING));
     } else {
-      if (isAliasVerified || (delegatees && delegatees.length > 0)) {
+      if (isAliasVerified || (delegatees && delegatees.length > 0) || channelDetails) {
         dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
       } else {
         dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));

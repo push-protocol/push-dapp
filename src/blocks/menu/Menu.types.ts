@@ -26,6 +26,8 @@ export type MenuComponentProps = {
 export type MenuItemComponentProps = {
   /* icon element  */
   icon?: ReactNode;
+  /* Sets color css property */
+  type?: MenuItemTypeVariant;
   /* function attached to the menu item */
   onClick?: () => void;
   /* menu item text */
@@ -39,5 +41,7 @@ export type MenuItemComponentProps = {
   /* Additional prop from styled components to apply custom css to Menu */
   css?: FlattenSimpleInterpolation;
 };
+
+export type MenuItemTypeVariant = 'success' | 'error';
 
 export type MenuProps = MenuNonResponsiveProps & MenuComponentProps;

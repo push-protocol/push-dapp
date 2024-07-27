@@ -4,12 +4,12 @@ import {
   dangerSecondaryButtonSemantics,
   outlineButtonSemantics,
   primaryButtonSemantics,
-  tertiaryButtonSemantics,
+  tertiaryButtonSemantics
 } from '../semantics/semantics.button';
 import { checkboxSemantics } from '../semantics/semantics.checkbox';
-import { dropdownSemantics } from '../semantics/semantics.dropdown';
 import { iconSemantics } from '../semantics/semantics.icon';
 import { inputSemantics } from '../semantics/semantics.input';
+import { listItemSemantics } from '../semantics/semantics.listItem';
 import { radioSemantics } from '../semantics/semantics.radio';
 import { skeletonSemantics } from '../semantics/semantics.skeleton';
 import { strokeSemantics } from '../semantics/semantics.stroke';
@@ -29,7 +29,7 @@ type SemanticKeys = {
   buttonDanger: 'components-button-danger';
   buttonDangerSecondary: 'components-button-danger-secondary';
   checkbox: 'components-checkbox';
-  dropdown: 'components-dropdown';
+  listItem: 'components-list-item';
   icon: 'icon';
   input: 'components-inputs';
   radio: 'components-radio-button';
@@ -51,7 +51,7 @@ export const semanticKeys: SemanticKeys = {
   buttonDanger: 'components-button-danger',
   buttonDangerSecondary: 'components-button-danger-secondary',
   checkbox: 'components-checkbox',
-  dropdown: 'components-dropdown',
+  listItem: 'components-list-item',
   icon: 'icon',
   input: 'components-inputs',
   radio: 'components-radio-button',
@@ -62,7 +62,7 @@ export const semanticKeys: SemanticKeys = {
   textArea: 'components-textarea',
   toast: 'components-toast',
   toggle: 'components-toggle-switch',
-  tooltip: 'components-tooltip',
+  tooltip: 'components-tooltip'
 };
 
 export const colorSemantics = {
@@ -73,7 +73,7 @@ export const colorSemantics = {
   [semanticKeys.buttonDanger]: dangerButtonSemantics,
   [semanticKeys.buttonDangerSecondary]: dangerSecondaryButtonSemantics,
   [semanticKeys.checkbox]: checkboxSemantics,
-  [semanticKeys.dropdown]: dropdownSemantics,
+  [semanticKeys.listItem]: listItemSemantics,
   [semanticKeys.icon]: iconSemantics,
   [semanticKeys.input]: inputSemantics,
   [semanticKeys.radio]: radioSemantics,
@@ -84,5 +84,5 @@ export const colorSemantics = {
   [semanticKeys.textArea]: textAreaSemantics,
   [semanticKeys.toast]: toastSemantics,
   [semanticKeys.toggle]: switchSemantics,
-  [semanticKeys.tooltip]: tooltipSemantics,
+  [semanticKeys.tooltip]: tooltipSemantics
 };

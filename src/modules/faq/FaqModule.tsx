@@ -372,7 +372,7 @@ function FaqModule() {
                     Easiest way to create a channel is from our{' '}
                     <AMod
                       target="_blank"
-                      href="https://app.push.org/dashboard"
+                      href="https://app.push.org/channel"
                     >
                       Push (EPNS) Dapp
                     </AMod>{' '}

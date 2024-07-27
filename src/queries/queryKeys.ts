@@ -1,3 +1,10 @@
+export const updateChannelDetails = 'updateChannelDetails';
+export const addDelegate = 'addDelegate';
+export const addNewSubgraph = 'addNewSubgraph';
+export const channelDelegates = 'channelDelegates';
+export const removeDelegate = 'removeDelegate';
+export const reactivatingChannel = 'reactivatingChannel';
+export const deactivatingChannel = 'deactivatingChannel';
 export const UserRewardsDetails = 'userRewardsDetails';
 export const allActivities = 'allActivities';
 export const allUserSubscriptions = 'allUserSubscriptions';
