@@ -28,6 +28,8 @@ export { default as ChannelHomeFilled } from './components/ChannelHomeFilled';
 export { default as Chat } from './components/Chat';
 export { default as ChatFilled } from './components/ChatFilled';
 
+export { default as Clockwise } from './components/Clockwise';
+
 export { default as Copy } from './components/Copy';
 
 export { default as Cross } from './components/Cross';
@@ -68,6 +70,8 @@ export { default as KebabMenuHorizontal } from './components/KebabMenuHorizontal
 
 export { default as LightFilled } from './components/LightFilled';
 
+export { default as Lock } from './components/Lock';
+
 export { default as MaximizeRight } from './components/MaximizeRight';
 export { default as MaximizeLeft } from './components/MaximizeLeft';
 
@@ -75,6 +79,8 @@ export { default as MegaPhone } from './components/MegaPhone';
 
 export { default as Moon } from './components/Moon';
 export { default as MoonFilled } from './components/MoonFilled';
+
+export { default as Multiplier } from './components/Multiplier';
 
 export { default as NFTGated } from './components/NFTGated';
 
