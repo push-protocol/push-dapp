@@ -5,6 +5,8 @@ export { default as ChatIllustration } from './components/Chat';
 
 export { default as ChatDark } from './components/ChatDark';
 
+export { default as CheckCircle } from './components/CheckCircle';
+
 export { default as Communication } from './components/Communication';
 
 export { default as CommunicationDark } from './components/CommunicationDark';

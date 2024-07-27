@@ -2,11 +2,11 @@ import { FC } from 'react';
 import { IllustrationWrapper } from '../IllustrationWrapper';
 import { IllustrationProps } from '../Illustrations.types';
 
-const RewardsIcon: FC<IllustrationProps> = (allProps) => {
+const RewardsCoin: FC<IllustrationProps> = (allProps) => {
   const { svgProps: props, ...restProps } = allProps;
   return (
     <IllustrationWrapper
-      componentName="RewardsIcon"
+      componentName="RewardsCoin"
       illustration={
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -117,4 +117,4 @@ const RewardsIcon: FC<IllustrationProps> = (allProps) => {
   );
 };
 
-export default RewardsIcon;
+export default RewardsCoin;

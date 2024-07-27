@@ -24,7 +24,14 @@ export type ActvityType =
   | 'reach_5000_subscribers'
   | 'reach_10000_subscribers'
   | 'reach_50000_subscribers'
-  | 'reach_100000_subscribers';
+  | 'reach_100000_subscribers'
+  | 'daily_check_in_7_days_day1'
+  | 'daily_check_in_7_days_day2'
+  | 'daily_check_in_7_days_day3'
+  | 'daily_check_in_7_days_day4'
+  | 'daily_check_in_7_days_day5'
+  | 'daily_check_in_7_days_day6'
+  | 'daily_check_in_7_days_day7';
 
 export type Activity = {
   id: string;

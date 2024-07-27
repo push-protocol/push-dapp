@@ -1,52 +1,70 @@
 // React and other libraries
 import { FC } from 'react';
 
-// components
-import { Box, Text } from 'blocks';
-import RewardsIcon from 'blocks/illustrations/components/RewardsCoin';
-import MultipleRewardsIcon from 'blocks/illustrations/components/MultipleRewardsCoin';
-import TripleRewardsIcon from 'blocks/illustrations/components/TripleRewardsCoin';
+// types
 import { Activity } from 'queries';
+
+// components
+import { Box, CheckCircle, Skeleton, Text, RewardsCoin, TripleRewardsCoin, MultipleRewardsCoin } from 'blocks';
 
 export type DailyRewardsItemProps = {
   activity: Activity;
+  activeDay: number;
+  isLoading: boolean;
+  isActivityDisabled: boolean;
 };
 
-const DailyRewardsItem: FC<DailyRewardsItemProps> = ({ activity }) => {
+const DailyRewardsItem: FC<DailyRewardsItemProps> = ({ activity, activeDay, isLoading, isActivityDisabled }) => {
   const day = parseInt(activity?.activityTitle?.split('- Day')[1]);
+  const isActive = day === activeDay && !isActivityDisabled;
+
+  // style variables
+  const backgroundColor = isActive ? 'surface-brand-medium' : day === 7 ? 'surface-brand-subtle' : 'surface-secondary';
+
+  const textColor = isActive
+    ? 'text-on-dark-bg'
+    : activeDay > day
+    ? 'text-tertiary'
+    : day == 7
+    ? 'text-on-light-bg'
+    : 'text-secondary';
+
+  const getIconComponent = (day: number) => {
+    if (day < 5) return <RewardsCoin />;
+    if (day >= 5 && day < 7) return <TripleRewardsCoin />;
+    return <MultipleRewardsCoin />;
+  };
+
   return (
-    <Box
-      padding="spacing-md"
-      backgroundColor={
-        activity.status != 'ENABLED' ? 'surface-brand-medium' : day == 7 ? 'surface-brand-subtle' : 'surface-secondary'
-      }
-      borderRadius="radius-md"
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      minHeight="100px"
-      justifyContent="space-between"
-    >
-      <Text
-        variant="bm-semibold"
-        color={activity.status != 'ENABLED' ? 'text-on-dark-bg' : day == 7 ? 'text-on-light-bg' : 'text-secondary'}
+    <Skeleton isLoading={isLoading}>
+      <Box
+        padding="spacing-md"
+        backgroundColor={backgroundColor}
+        borderRadius="radius-md"
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        minHeight="100px"
+        justifyContent="space-between"
+        border={activeDay > day ? '1px solid gray-200' : 'none'}
       >
-        {activity?.activityTitle?.split('-')[1]}
-      </Text>
+        <Text
+          variant="bm-semibold"
+          color={textColor}
+        >
+          {activity?.activityTitle?.split('-')[1]}
+        </Text>
 
-      {day < 5 && <RewardsIcon />}
+        {activeDay <= day ? <Box>{getIconComponent(day)}</Box> : <CheckCircle />}
 
-      {day >= 5 && day < 7 && <TripleRewardsIcon />}
-
-      {day == 7 && <MultipleRewardsIcon />}
-
-      <Text
-        variant="bm-semibold"
-        color={activity.status != 'ENABLED' ? 'text-on-dark-bg' : day == 7 ? 'text-on-light-bg' : 'text-secondary'}
-      >
-        {activity.points?.toLocaleString()} Points
-      </Text>
-    </Box>
+        <Text
+          variant="bm-semibold"
+          color={textColor}
+        >
+          +{activity.points?.toLocaleString()}
+        </Text>
+      </Box>
+    </Skeleton>
   );
 };
 

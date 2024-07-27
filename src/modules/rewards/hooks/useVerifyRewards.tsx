@@ -53,6 +53,8 @@ const useVerifyRewards = ({ activityTypeId, setErrorMessage, refetchActivity }: 
       return;
     }
 
+    console.log('final call', activityTypeId);
+
     claimRewardsActivity(
       {
         userId: updatedId || (userId as string),

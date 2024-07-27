@@ -6,14 +6,14 @@ const StakePushActivitiesListItem = ({ item }: { item: any }) => {
       backgroundColor="surface-secondary"
       borderRadius="radius-md"
       display="flex"
-      flexDirection="row"
+      flexDirection={{ ml: 'column', initial: 'row' }}
       alignItems="center"
       padding="spacing-sm"
       justifyContent="space-between"
     >
       <Box
         display="flex"
-        flexDirection="row"
+        flexDirection={{ ml: 'column', initial: 'row' }}
         alignItems="center"
       >
         <Box
@@ -33,12 +33,14 @@ const StakePushActivitiesListItem = ({ item }: { item: any }) => {
           display="flex"
           flexDirection="column"
           justifyContent="center"
-          margin="spacing-none spacing-none spacing-none spacing-md"
+          margin={{ ml: 'spacing-none', initial: 'spacing-none spacing-none spacing-none spacing-md' }}
           gap="spacing-xxxs"
+          alignItems={{ ml: 'center' }}
         >
           <Text
             variant="bl-semibold"
             color="text-primary"
+            textAlign="center"
           >
             {item.header}
           </Text>

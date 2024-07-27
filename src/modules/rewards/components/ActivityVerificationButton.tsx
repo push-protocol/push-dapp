@@ -59,6 +59,16 @@ export const ActivityVerificationButton = ({
     'reach_100000_subscribers',
   ];
 
+  const dailyRewardActivities = [
+    'daily_check_in_7_days_day1',
+    'daily_check_in_7_days_day2',
+    'daily_check_in_7_days_day3',
+    'daily_check_in_7_days_day4',
+    'daily_check_in_7_days_day5',
+    'daily_check_in_7_days_day6',
+    'daily_check_in_7_days_day7',
+  ];
+
   const { handleTwitterVerification, verifyingTwitter, twitterActivityStatus } = useVerifyTwitter({
     activityTypeId,
     refetchActivity,
@@ -100,6 +110,15 @@ export const ActivityVerificationButton = ({
       return {
         isLoading: verifyingRewards,
         label: 'Verify',
+        action: handleRewardsVerification,
+        isVerificationComplete: rewardsActivityStatus == 'Claimed' || rewardsActivityStatus == 'Pending',
+      };
+    }
+
+    if (dailyRewardActivities.includes(activityType)) {
+      return {
+        isLoading: verifyingRewards,
+        label: 'Check In',
         action: handleRewardsVerification,
         isVerificationComplete: rewardsActivityStatus == 'Claimed' || rewardsActivityStatus == 'Pending',
       };
