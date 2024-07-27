@@ -16,6 +16,7 @@ import { checkTimeToCurrent, getActivityStatus, getDayNumber } from '../utils/ge
 import { Box, Button, Text } from 'blocks';
 import { DailyRewardsItem } from './DailyRewardsItem';
 import { ActivityVerificationButton } from './ActivityVerificationButton';
+import useLockedStatus from '../hooks/useLockedStatus';
 
 export type DailyRewardsSectionProps = {};
 
@@ -47,6 +48,8 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
 
   // Sort the activities based on the extracted day number
   const dailyRewardsActivities = dailyActivities?.sort((a, b) => getDayNumber(a) - getDayNumber(b));
+
+  const { isLocked } = useLockedStatus();
 
   const { mutate: sendRecentActivities } = useSendRecentActivities({
     userId: userDetails?.userId as string,
@@ -143,26 +146,38 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
           </Text>
         </Box>
 
-        {isActivityDisabled && activeDay > 1 && userDetails && (
+        {isLocked ? (
           <Button
             variant="tertiary"
             size="small"
             disabled
           >
-            Claimed
+            Locked
           </Button>
-        )}
+        ) : (
+          <>
+            {isActivityDisabled && activeDay > 1 && userDetails && (
+              <Button
+                variant="tertiary"
+                size="small"
+                disabled
+              >
+                Claimed
+              </Button>
+            )}
 
-        {!isActivityDisabled && activeDay > 0 && activeItem && userDetails && (
-          <ActivityVerificationButton
-            activityType={activeItem?.activityType}
-            userId={userDetails?.userId}
-            activityTypeId={activeItem?.id}
-            refetchActivity={() => handleCheckIn()}
-            setErrorMessage={setErrorMessage}
-            isLoadingActivity={false}
-            startingLabel="Check In"
-          />
+            {!isActivityDisabled && activeDay > 0 && activeItem && userDetails && (
+              <ActivityVerificationButton
+                activityType={activeItem?.activityType}
+                userId={userDetails?.userId}
+                activityTypeId={activeItem?.id}
+                refetchActivity={() => handleCheckIn()}
+                setErrorMessage={setErrorMessage}
+                isLoadingActivity={false}
+                startingLabel="Check In"
+              />
+            )}
+          </>
         )}
       </Box>
 

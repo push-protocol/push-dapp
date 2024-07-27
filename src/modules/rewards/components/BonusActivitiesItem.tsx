@@ -3,9 +3,10 @@ import { FC, useState } from 'react';
 
 // hooks
 import { Activity, useGetRewardsActivity } from 'queries';
+import useLockedStatus from '../hooks/useLockedStatus';
 
 // components
-import { Box, Lock, RewardsBell, Skeleton, Text } from 'blocks';
+import { Box, Button, Lock, RewardsBell, Skeleton, Text } from 'blocks';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
 import { ActivityButton } from './ActivityButton';
 
@@ -23,6 +24,8 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, i
   } = useGetRewardsActivity({ userId, activityId: activity.id }, { enabled: !!userId });
 
   const [errorMessage, setErrorMessage] = useState('');
+
+  const { isLocked } = useLockedStatus();
 
   return (
     <Skeleton isLoading={isLoadingItem}>
@@ -97,15 +100,25 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, i
           display="flex"
           margin="spacing-md spacing-none spacing-none spacing-none"
         >
-          <ActivityButton
-            userId={userId}
-            activityTypeId={activity.id}
-            activityType={activity.activityType}
-            refetchActivity={refetchActivity}
-            setErrorMessage={setErrorMessage}
-            usersSingleActivity={usersSingleActivity}
-            isLoadingActivity={isLoading}
-          />
+          {isLocked ? (
+            <Button
+              size="small"
+              variant="tertiary"
+              disabled={true}
+            >
+              Locked
+            </Button>
+          ) : (
+            <ActivityButton
+              userId={userId}
+              activityTypeId={activity.id}
+              activityType={activity.activityType}
+              refetchActivity={refetchActivity}
+              setErrorMessage={setErrorMessage}
+              usersSingleActivity={usersSingleActivity}
+              isLoadingActivity={isLoading}
+            />
+          )}
         </Box>
       </Box>
     </Skeleton>
