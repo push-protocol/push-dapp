@@ -2,10 +2,11 @@ import { FC, useState } from 'react';
 
 import { Activity, useGetRewardsActivity } from 'queries';
 
-import { Box, ErrorFilled, InfoFilled, Lozenge, RewardsBell, Skeleton, Text } from 'blocks';
+import { Box, Button, ErrorFilled, InfoFilled, Lozenge, RewardsBell, Skeleton, Text, Lock } from 'blocks';
 import { ActivityButton } from './ActivityButton';
 import { RewardsActivityIcon } from './RewardsActivityIcon';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
+import useLockedStatus from '../hooks/useLockedStatus';
 
 export type RewardActivitiesListItemProps = {
   userId: string;
@@ -20,6 +21,7 @@ const getUpdatedExpiryTime = (timestamp: number) => {
 };
 
 const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, activity, isLoadingItem }) => {
+  const { isLocked } = useLockedStatus();
   const {
     data: usersSingleActivity,
     isLoading,
@@ -27,6 +29,11 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
   } = useGetRewardsActivity({ userId, activityId: activity.id }, { enabled: !!userId });
 
   const [errorMessage, setErrorMessage] = useState('');
+
+  const isRewardsLocked =
+    isLocked &&
+    activity.activityType !== 'follow_push_on_discord' &&
+    activity.activityType !== 'follow_push_on_twitter';
 
   return (
     <Skeleton isLoading={isLoadingItem}>
@@ -45,7 +52,22 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
           alignItems={{ ml: 'flex-start', initial: 'center' }}
           gap="spacing-sm"
         >
-          <RewardsActivityIcon type={activity.activityType} />
+          {isRewardsLocked ? (
+            <Box
+              width="48px"
+              height="48px"
+              borderRadius="radius-round"
+              backgroundColor="surface-tertiary"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              border="1px solid gray-300"
+            >
+              <Lock size={28} />
+            </Box>
+          ) : (
+            <RewardsActivityIcon type={activity.activityType} />
+          )}
 
           <Box
             display="flex"
@@ -130,15 +152,27 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
 
             {/* Buttons Logic */}
             <Box display="flex">
-              <ActivityButton
-                userId={userId}
-                activityTypeId={activity.id}
-                activityType={activity.activityType}
-                refetchActivity={refetchActivity}
-                setErrorMessage={setErrorMessage}
-                usersSingleActivity={usersSingleActivity}
-                isLoadingActivity={isLoading}
-              />
+              {isRewardsLocked && (
+                <Button
+                  size="small"
+                  variant="tertiary"
+                  disabled
+                >
+                  Locked
+                </Button>
+              )}
+
+              {!isRewardsLocked && (
+                <ActivityButton
+                  userId={userId}
+                  activityTypeId={activity.id}
+                  activityType={activity.activityType}
+                  refetchActivity={refetchActivity}
+                  setErrorMessage={setErrorMessage}
+                  usersSingleActivity={usersSingleActivity}
+                  isLoadingActivity={isLoading}
+                />
+              )}
             </Box>
           </Box>
         </Box>

@@ -9,6 +9,7 @@ import { useAuthWithButton } from '../hooks/useWithAuthButton';
 import { useVerifyTwitter } from '../hooks/useVerifyTwitter';
 import { useAccount } from 'hooks';
 import { useVerifyDiscord } from '../hooks/useVerifyDiscord';
+import { useVerifyRewards } from '../hooks/useVerifyRewards';
 
 // types
 import { ActvityType } from 'queries/types';
@@ -24,6 +25,7 @@ type ActivityVerificationButtonProps = {
   refetchActivity: () => void;
   setErrorMessage: (errorMessage: string) => void;
   isLoadingActivity: boolean;
+  startingLabel?: string;
 };
 
 export const ActivityVerificationButton = ({
@@ -33,9 +35,41 @@ export const ActivityVerificationButton = ({
   setErrorMessage,
   userId,
   isLoadingActivity,
+  startingLabel,
 }: ActivityVerificationButtonProps) => {
   const { isWalletConnected } = useAccount();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
+
+  const otherRewardActivities = [
+    'create_gated_group_push_chat',
+    'subscribe_5_channels_push',
+    'subscribe_20_channels_push',
+    'setup_push_user_profile',
+    'active_push_chat_user',
+    'hold_push_alpha_access_nft',
+    'hold_push_rockstar_nft',
+  ];
+
+  const bonusRewardActivities = [
+    'create_channel_push',
+    'reach_100_subscribers',
+    'reach_500_subscribers',
+    'reach_1000_subscribers',
+    'reach_5000_subscribers',
+    'reach_10000_subscribers',
+    'reach_50000_subscribers',
+    'reach_100000_subscribers',
+  ];
+
+  const dailyRewardActivities = [
+    'daily_check_in_7_days_day1',
+    'daily_check_in_7_days_day2',
+    'daily_check_in_7_days_day3',
+    'daily_check_in_7_days_day4',
+    'daily_check_in_7_days_day5',
+    'daily_check_in_7_days_day6',
+    'daily_check_in_7_days_day7',
+  ];
 
   const { handleTwitterVerification, verifyingTwitter, twitterActivityStatus } = useVerifyTwitter({
     activityTypeId,
@@ -44,6 +78,12 @@ export const ActivityVerificationButton = ({
   });
 
   const { handleDiscordVerification, verifyingDiscord, discordActivityStatus } = useVerifyDiscord({
+    activityTypeId,
+    refetchActivity,
+    setErrorMessage,
+  });
+
+  const { handleRewardsVerification, verifyingRewards, rewardsActivityStatus } = useVerifyRewards({
     activityTypeId,
     refetchActivity,
     setErrorMessage,
@@ -67,11 +107,30 @@ export const ActivityVerificationButton = ({
         isVerificationComplete: twitterActivityStatus == 'Claimed' || twitterActivityStatus == 'Pending',
       };
     }
+
+    if (otherRewardActivities.includes(activityType) || bonusRewardActivities.includes(activityType)) {
+      return {
+        isLoading: verifyingRewards,
+        label: 'Verify',
+        action: handleRewardsVerification,
+        isVerificationComplete: rewardsActivityStatus == 'Claimed' || rewardsActivityStatus == 'Pending',
+      };
+    }
+
+    if (dailyRewardActivities.includes(activityType)) {
+      return {
+        isLoading: verifyingRewards,
+        label: 'Check In',
+        action: handleRewardsVerification,
+        isVerificationComplete: rewardsActivityStatus == 'Claimed' || rewardsActivityStatus == 'Pending',
+      };
+    }
   }, [activityType, userPushSDKInstance, twitterActivityStatus, discordActivityStatus]);
 
   const { isAuthenticated, authButton } = useAuthWithButton({
     isLoading: isLoadingActivity,
     onSuccess: (userDetails) => activityData?.action(userDetails?.userId),
+    startingLabel: startingLabel,
   });
 
   if (isAuthenticated && isWalletConnected && !userPushSDKInstance?.readmode()) {

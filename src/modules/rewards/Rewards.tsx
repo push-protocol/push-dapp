@@ -21,6 +21,7 @@ import { ReferralSection } from './components/ReferralSection';
 import { RewardsTabsContainer } from './components/RewardsTabsContainer';
 import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
 import { useRewardsContext } from 'contexts/RewardsContext';
+import { RewardsActivitiesBottomSection } from './components/RewardsActivitiesBottomSection';
 
 export type RewardsProps = {};
 
@@ -83,6 +84,7 @@ const Rewards: FC<RewardsProps> = () => {
         />
 
         {activeTab === 'dashboard' && <ReferralSection handleUnlockProfile={handleUnlockProfile} />}
+        {activeTab === 'activity' && <RewardsActivitiesBottomSection />}
       </Box>
 
       {userPushSDKInstance && userPushSDKInstance?.readmode() && isAuthModalVisible && (
