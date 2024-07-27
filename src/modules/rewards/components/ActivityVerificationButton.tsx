@@ -25,6 +25,7 @@ type ActivityVerificationButtonProps = {
   refetchActivity: () => void;
   setErrorMessage: (errorMessage: string) => void;
   isLoadingActivity: boolean;
+  startingLabel?: string;
 };
 
 export const ActivityVerificationButton = ({
@@ -34,6 +35,7 @@ export const ActivityVerificationButton = ({
   setErrorMessage,
   userId,
   isLoadingActivity,
+  startingLabel,
 }: ActivityVerificationButtonProps) => {
   const { isWalletConnected } = useAccount();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
@@ -127,6 +129,7 @@ export const ActivityVerificationButton = ({
 
   const { isAuthenticated, authButton } = useAuthWithButton({
     isLoading: isLoadingActivity,
+    startingLabel: startingLabel,
     onSuccess: (userDetails) => activityData?.action(userDetails?.userId),
   });
 

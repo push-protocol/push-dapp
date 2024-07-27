@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 
 // third party libraries
 import { css } from 'styled-components';
@@ -52,15 +52,15 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
     userId: userDetails?.userId as string,
   });
 
-  const resetState = () => {
+  const resetState = useCallback(() => {
     setActiveDay(0);
     setActiveItem(null);
     setIsActivityDisabled(false);
     setIsLoadingRewards(false);
-  };
+  }, []);
 
   useEffect(() => {
-    if (dailyRewardsActivities && isWalletConnected && userDetails?.userId) {
+    if (dailyRewardsActivities.length > 0 && isWalletConnected && userDetails?.userId) {
       setIsLoadingRewards(true);
       handleCheckIn();
     }
@@ -161,6 +161,7 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
             refetchActivity={() => handleCheckIn()}
             setErrorMessage={setErrorMessage}
             isLoadingActivity={false}
+            startingLabel="Check In"
           />
         )}
       </Box>

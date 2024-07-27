@@ -36,7 +36,10 @@ const DailyRewardsItem: FC<DailyRewardsItemProps> = ({ activity, activeDay, isLo
   };
 
   return (
-    <Skeleton isLoading={isLoading}>
+    <Skeleton
+      isLoading={isLoading}
+      borderRadius="radius-md"
+    >
       <Box
         padding="spacing-md"
         backgroundColor={backgroundColor}
