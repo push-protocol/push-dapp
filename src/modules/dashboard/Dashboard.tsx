@@ -6,7 +6,7 @@ import { Box } from 'blocks';
 import { DashboardSubHeader } from './components/DashboardSubHeader';
 import { FeaturedChannels } from './components/FeaturedChannels';
 import { ChannelVariantsSection } from './components/ChannelVariantsSection';
-import DashboardHeader from './components/DashboardHeader';
+import { DashboardHeader } from './components/DashboardHeader';
 
 export type DashboardProps = {};
 

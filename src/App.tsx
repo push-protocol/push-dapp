@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { FC, useContext, useEffect, useMemo, useState } from 'react';
+import { FC, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 // External Packages
 import * as dotenv from 'dotenv';
@@ -196,6 +196,7 @@ export default function App() {
 
   const { pgpPvtKey } = useContext<any>(AppContext);
   const { sidebarCollapsed, setSidebarCollapsed } = useContext(GlobalContext);
+  const [hasMounted, setHasMounted] = useState(false);
 
   const updateOnboardTheme = useUpdateTheme();
   const { userPushSDKInstance } = useSelector((state: any) => {
@@ -218,14 +219,22 @@ export default function App() {
     setcurrentTime(now);
   }, []);
 
-  useEffect(() => {
-    if (!account) return;
+  const resetState = () => {
     dispatch(resetSpamSlice());
     dispatch(resetNotificationsSlice());
     dispatch(resetCanSendSlice());
     dispatch(resetChannelCreationSlice());
     dispatch(resetAdminSlice());
     dispatch(resetUserSlice());
+  };
+
+  useEffect(() => {
+    if (!hasMounted) {
+      // do componentDidMount logic
+      setHasMounted(true);
+      if (!account) return;
+      resetState();
+    }
   }, [account]);
 
   // Initialize Theme
@@ -463,7 +472,7 @@ const LeftBarContainer = styled.div`
   position: fixed;
   // position: absolute;
 
-  @media (max-width: 992px) {
+  @media (max-width: 1024px) {
     display: none;
   }
 `;
@@ -475,7 +484,7 @@ const ContentContainer = styled.div`
   width: calc(100% - ${(props) => props.leftBarWidth}px);
   margin: 0px 0px 0px ${(props) => props.leftBarWidth}px;
 
-  @media (max-width: 992px) {
+  @media (max-width: 1024px) {
     margin: 0px;
   }
 `;
