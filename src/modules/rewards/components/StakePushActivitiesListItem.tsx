@@ -24,7 +24,7 @@ const StakePushActivitiesListItem = ({ item }: { item: any }) => {
           display="flex"
           alignItems="center"
           justifyContent="center"
-          border="1px solid gray-300"
+          border="border-xs solid stroke-tertiary"
         >
           <Lock size={28} />
         </Box>

@@ -49,7 +49,7 @@ const DailyRewardsItem: FC<DailyRewardsItemProps> = ({ activity, activeDay, isLo
         alignItems="center"
         minHeight="100px"
         justifyContent="space-between"
-        border={activeDay > day ? '1px solid gray-200' : 'none'}
+        border={activeDay > day ? 'border-xs solid stroke-secondary' : 'none'}
       >
         <Text
           variant="bm-semibold"

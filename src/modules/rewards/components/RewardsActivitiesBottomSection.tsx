@@ -21,11 +21,11 @@ const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = 
     >
       <Box
         backgroundColor="surface-primary"
-        borderRadius="r4"
+        borderRadius="radius-md"
         display="flex"
         flexDirection="column"
         margin="spacing-xs spacing-none spacing-none spacing-none"
-        padding={{ ml: 's4 s3', initial: 's6' }}
+        padding={{ ml: 'spacing-sm spacing-xs', initial: 'spacing-md' }}
       >
         <RewardsActivitiesSection />
       </Box>
@@ -34,10 +34,10 @@ const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = 
 
       <Box
         backgroundColor="surface-primary"
-        borderRadius="r4"
+        borderRadius="radius-md"
         display="flex"
         flexDirection="column"
-        padding={{ ml: 's4 s3', initial: 's6' }}
+        padding={{ ml: 'spacing-sm spacing-xs', initial: 'spacing-md' }}
       >
         <StakePushSection
           stakeArray={stakePush}
@@ -50,10 +50,10 @@ const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = 
 
       <Box
         backgroundColor="surface-primary"
-        borderRadius="r4"
+        borderRadius="radius-md"
         display="flex"
         flexDirection="column"
-        padding={{ ml: 's4 s3', initial: 's6' }}
+        padding={{ ml: 'spacing-sm spacing-xs', initial: 'spacing-md' }}
         margin="spacing-none spacing-none spacing-md spacing-none"
       >
         <StakePushSection

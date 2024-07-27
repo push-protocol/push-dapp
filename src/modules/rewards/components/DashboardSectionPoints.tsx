@@ -112,7 +112,7 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
         {!isWalletConnected && multiplier && (
           <Text
             variant="h1-bold"
-            color={{ light: 'gray-1000', dark: 'gray-100' }}
+            color="text-primary"
           >
             1x
           </Text>
@@ -123,7 +123,7 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
           <>
             <Text
               variant="h1-bold"
-              color={{ light: 'gray-1000', dark: 'gray-100' }}
+              color="text-primary"
             >
               {`${data?.multiplier}x`}
             </Text>
