@@ -100,7 +100,7 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, i
           display="flex"
           margin="spacing-md spacing-none spacing-none spacing-none"
         >
-          {isLocked ? (
+          {isLocked && (
             <Button
               size="small"
               variant="tertiary"
@@ -108,7 +108,8 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, i
             >
               Locked
             </Button>
-          ) : (
+          )}
+          {!isLocked && (
             <ActivityButton
               userId={userId}
               activityTypeId={activity.id}
@@ -117,6 +118,7 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, i
               setErrorMessage={setErrorMessage}
               usersSingleActivity={usersSingleActivity}
               isLoadingActivity={isLoading}
+              startingLabel="Claim"
             />
           )}
         </Box>

@@ -14,6 +14,7 @@ type ActivityButtonProps = {
   setErrorMessage: (errorMessage: string) => void;
   usersSingleActivity?: UsersActivity;
   isLoadingActivity: boolean;
+  startingLabel?: string;
 };
 
 const ActivityButton: FC<ActivityButtonProps> = ({
@@ -24,6 +25,7 @@ const ActivityButton: FC<ActivityButtonProps> = ({
   setErrorMessage,
   usersSingleActivity,
   isLoadingActivity,
+  startingLabel,
 }) => {
   if (usersSingleActivity?.status === 'COMPLETED') {
     return (
@@ -58,6 +60,7 @@ const ActivityButton: FC<ActivityButtonProps> = ({
       refetchActivity={refetchActivity}
       setErrorMessage={setErrorMessage}
       isLoadingActivity={isLoadingActivity}
+      startingLabel={startingLabel}
     />
   );
 };

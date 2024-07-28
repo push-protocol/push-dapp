@@ -35,6 +35,9 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
     activity.activityType !== 'follow_push_on_discord' &&
     activity.activityType !== 'follow_push_on_twitter';
 
+  const isNotDiscordOrTwitter =
+    activity.activityType !== 'follow_push_on_discord' && activity.activityType !== 'follow_push_on_twitter';
+
   return (
     <Skeleton isLoading={isLoadingItem}>
       <Box
@@ -171,6 +174,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                   setErrorMessage={setErrorMessage}
                   usersSingleActivity={usersSingleActivity}
                   isLoadingActivity={isLoading}
+                  startingLabel={isNotDiscordOrTwitter ? 'Claim' : 'Verify'}
                 />
               )}
             </Box>
