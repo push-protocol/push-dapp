@@ -1,13 +1,22 @@
 import { Box, Link, Skeleton, Text } from 'blocks';
 import { FC } from 'react';
 import { getRewardsActivityTitle } from '../utils/getRewardsActivityTitle';
+import { TextVariants } from 'blocks/text';
+import { TextColors } from 'blocks/theme/Theme.types';
 
 type RewardsActivityTitleProps = {
   activityTitle: string;
   isLoading: boolean;
+  defaultColor?: TextColors;
+  defaultVariant?: TextVariants;
 };
 
-const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({ activityTitle, isLoading }) => {
+const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({
+  activityTitle,
+  isLoading,
+  defaultColor,
+  defaultVariant,
+}) => {
   const extractedTitle = getRewardsActivityTitle(activityTitle);
 
   if (extractedTitle) {
@@ -19,8 +28,8 @@ const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({ activityTitle, is
           gap="spacing-xxxs"
         >
           <Text
-            variant="bl-semibold"
-            color="text-primary"
+            variant={defaultVariant || 'bl-semibold'}
+            color={defaultColor || 'text-primary'}
           >
             {preText}
           </Text>
@@ -30,15 +39,15 @@ const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({ activityTitle, is
             rel="noopener noreferrer"
           >
             <Text
-              variant="bl-semibold"
+              variant={defaultVariant || 'bl-semibold'}
               color="text-brand-medium"
             >
               {linkedText}
             </Text>
           </Link>
           <Text
-            variant="bl-semibold"
-            color="text-primary"
+            variant={defaultVariant || 'bl-semibold'}
+            color={defaultColor || 'text-primary'}
           >
             {' '}
             {postText}
@@ -50,8 +59,8 @@ const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({ activityTitle, is
     return (
       <Skeleton isLoading={isLoading}>
         <Text
-          variant="bl-semibold"
-          color="text-primary"
+          variant={defaultVariant || 'bl-semibold'}
+          color={defaultColor || 'text-primary'}
         >
           {activityTitle}
         </Text>

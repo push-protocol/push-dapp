@@ -7,6 +7,7 @@ import { Box, Lock, Text } from 'blocks';
 import { useAccount } from 'hooks';
 import { walletToCAIP10 } from 'helpers/w2w';
 import { Activity, useGetRewardsActivities, useGetUserRewardsDetails } from 'queries';
+import useLockedStatus from '../hooks/useLockedStatus';
 
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { RewardsActivitiesListItem } from './RewardsActivitiesListItem';
@@ -45,6 +46,8 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
 
   const hasMoreData = !isFetchingNextPage && hasNextPage;
 
+  const { isLocked } = useLockedStatus();
+
   return (
     <Box
       display="flex"
@@ -80,36 +83,38 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
           </>
         ))}
 
-        <Box
-          display="flex"
-          flexDirection="row"
-          alignItems="center"
-          margin="spacing-md spacing-none"
-          gap="spacing-xxs"
-          css={css`
-            &:before,
-            &:after {
-              content: '';
-              flex: 1 1;
-              border-bottom: 1px solid var(--stroke-secondary);
-              margin: auto;
-            }
-            &:before {
-              margin-right: var(--s3);
-            }
-            &:after {
-              margin-left: var(--s3);
-            }
-          `}
-        >
-          <Lock size={28} />
-          <Text
-            variant="bs-semibold"
-            color="text-tertiary"
+        {isLocked && (
+          <Box
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            margin="spacing-md spacing-none"
+            gap="spacing-xxs"
+            css={css`
+              &:before,
+              &:after {
+                content: '';
+                flex: 1 1;
+                border-bottom: 1px solid var(--stroke-secondary);
+                margin: auto;
+              }
+              &:before {
+                margin-right: var(--s3);
+              }
+              &:after {
+                margin-left: var(--s3);
+              }
+            `}
           >
-            Verify X and Discord to unlock more activities
-          </Text>
-        </Box>
+            <Lock size={28} />
+            <Text
+              variant="bs-semibold"
+              color="text-tertiary"
+            >
+              Verify X and Discord to unlock more activities
+            </Text>
+          </Box>
+        )}
 
         {secondGroupActivities?.map((activity: Activity) => (
           <>

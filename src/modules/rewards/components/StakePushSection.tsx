@@ -5,6 +5,7 @@ import { FC } from 'react';
 import { Box, Clockwise, Text } from 'blocks';
 import { StakePushActivitiesListItem } from './StakePushActivitiesListItem';
 import { css } from 'styled-components';
+import { RewardsActivityTitle } from './RewardsActivityTitle';
 
 export type StakePushPoints = {
   stakeArray: any;
@@ -35,12 +36,13 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, stak
           >
             {title}
           </Text>
-          <Text
-            variant="bm-regular"
-            color="text-tertiary"
-          >
-            {subtitle}
-          </Text>
+
+          <RewardsActivityTitle
+            activityTitle={subtitle}
+            isLoading={false}
+            defaultColor="text-tertiary"
+            defaultVariant="bm-regular"
+          />
         </Box>
 
         {timeline && (
