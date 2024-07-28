@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 
 import { Activity, useGetRewardsActivity } from 'queries';
 
-import { Box, Button, ErrorFilled, InfoFilled, Lozenge, RewardsBell, Skeleton, Text, Lock } from 'blocks';
+import { Box, Button, ErrorFilled, InfoFilled, Lozenge, RewardsBell, Skeleton, Text, Lock, Multiplier } from 'blocks';
 import { ActivityButton } from './ActivityButton';
 import { RewardsActivityIcon } from './RewardsActivityIcon';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
@@ -127,29 +127,53 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                   )}
               </Box>
 
-              {/* Rewards Points */}
               <Box
                 display="flex"
-                minWidth="200px"
                 flexDirection="row"
-                gap="spacing-xxs"
+                gap="spacing-sm"
                 alignItems="center"
               >
-                <Skeleton
-                  isLoading={isLoading}
-                  height="32px"
-                >
-                  <RewardsBell
-                    width={32}
-                    height={32}
-                  />
-                  <Text
-                    variant="h4-semibold"
-                    color="text-primary"
+                {/* Rewards Multiplier and Points */}
+                {activity.multiplier > 1 && (
+                  <Box
+                    display="flex"
+                    flexDirection="row"
+                    alignItems="center"
+                    gap="spacing-xxxs"
                   >
-                    {activity.points?.toLocaleString()} Points
-                  </Text>
-                </Skeleton>
+                    <Multiplier size={28} />
+                    <Text
+                      variant="bs-semibold"
+                      color="text-state-success-bold"
+                    >
+                      {activity.multiplier?.toLocaleString()}x
+                    </Text>
+                  </Box>
+                )}
+
+                <Box
+                  display="flex"
+                  minWidth="200px"
+                  flexDirection="row"
+                  gap="spacing-xxs"
+                  alignItems="center"
+                >
+                  <Skeleton
+                    isLoading={isLoading}
+                    height="32px"
+                  >
+                    <RewardsBell
+                      width={32}
+                      height={32}
+                    />
+                    <Text
+                      variant="h4-semibold"
+                      color="text-primary"
+                    >
+                      {activity.points?.toLocaleString()} Points
+                    </Text>
+                  </Skeleton>
+                </Box>
               </Box>
             </Box>
 
