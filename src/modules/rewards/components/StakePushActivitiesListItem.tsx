@@ -33,8 +33,11 @@ const StakePushActivitiesListItem = ({ item }: { item: any }) => {
           display="flex"
           flexDirection="column"
           justifyContent="center"
-          margin={{ ml: 'spacing-none', initial: 'spacing-none spacing-none spacing-none spacing-md' }}
-          gap="spacing-xxxs"
+          margin={{
+            ml: 'spacing-xxs spacing-none spacing-sm spacing-none',
+            initial: 'spacing-none spacing-none spacing-none spacing-md',
+          }}
+          gap={{ ml: 'spacing-sm', initial: 'spacing-xxxs' }}
           alignItems={{ ml: 'center' }}
         >
           <Text
@@ -78,7 +81,7 @@ const StakePushActivitiesListItem = ({ item }: { item: any }) => {
                 {item.multiplier?.toLocaleString()}x
               </Text>
             </Box>
-          )}{' '}
+          )}
         </Box>
       </Box>
 

@@ -17,10 +17,10 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handle
   return (
     <Box
       backgroundColor="surface-primary"
-      borderRadius="radius-sm"
+      borderRadius="radius-md"
       display="flex"
       flexDirection="column"
-      padding={{ ml: 'spacing-sm spacing-xs', initial: 'spacing-md' }}
+      padding={{ ml: 'spacing-sm', initial: 'spacing-md' }}
     >
       <Box
         gap="spacing-md"

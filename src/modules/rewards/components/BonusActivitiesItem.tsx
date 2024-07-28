@@ -91,7 +91,7 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, i
             variant="bm-semibold"
             color="text-primary"
           >
-            {activity.points?.toLocaleString()} Points
+            {activity.points?.toLocaleString()}
           </Text>
         </Box>
 

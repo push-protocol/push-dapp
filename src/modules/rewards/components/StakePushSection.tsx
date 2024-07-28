@@ -23,9 +23,10 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, stak
     >
       <Box
         display="flex"
-        flexDirection="row"
+        flexDirection={{ ml: 'column', initial: 'row' }}
         width="-webkit-fill-available"
         justifyContent="space-between"
+        gap={{ ml: 'spacing-sm' }}
       >
         <Box>
           <Text
@@ -65,9 +66,6 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, stak
         css={css`
           grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: var(--s4);
-          @media (max-width: 1200px) {
-            // grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-          }
         `}
       >
         {stakeArray?.map((item: any) => (

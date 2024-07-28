@@ -56,7 +56,7 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
           grid-template-columns: repeat(4, minmax(0, 1fr));
           gap: var(--s4);
           @media (max-width: 1200px) {
-            // grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            grid-template-columns: repeat(2, minmax(0, 1fr));
           }
         `}
       >

@@ -5,7 +5,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { css } from 'styled-components';
 
 // hooks
-import { Activity, useGetRewardsActivities, useGetUserRewardsDetails, useSendRecentActivities } from 'queries';
+import { useGetRewardsActivities, useGetUserRewardsDetails, useSendRecentActivities } from 'queries';
 import { useAccount } from 'hooks';
 
 //helpers
