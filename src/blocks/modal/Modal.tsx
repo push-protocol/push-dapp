@@ -8,7 +8,7 @@ import { ModalSize } from './Modal.types';
 type ButtonAlignment = 'end' | 'center';
 
 export type ModalProps = {
-  acceptButtonProps?: ButtonProps;
+  acceptButtonProps?: ButtonProps | null;
   buttonAlignment?: ButtonAlignment;
   cancelButtonProps?: ButtonProps | null;
   children: ReactNode;
@@ -50,6 +50,7 @@ const ContentChildren = styled.div<{ size: ModalSize }>`
   flex-direction: column;
   align-items: flex-start;
   flex: 1 0 0;
+  width: 100%;
   padding-top: var(--spacing-${({ size }) => (size === 'small' ? 'xxs' : 'xs')});
 `;
 
@@ -137,13 +138,15 @@ const Modal: FC<ModalProps> = ({
                 {cancelButtonProps?.children}
               </Button>
             )}
-            <Button
-              size="small"
-              variant="primary"
-              {...acceptButtonProps}
-            >
-              {acceptButtonProps?.children || 'Accept'}
-            </Button>
+            {acceptButtonProps && (
+              <Button
+                size="small"
+                variant="primary"
+                {...acceptButtonProps}
+              >
+                {acceptButtonProps?.children || 'Accept'}
+              </Button>
+            )}
           </ButtonsContainer>
         </ContentContainer>
       </Dialog.Portal>
