@@ -53,8 +53,7 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
             Check-in daily and unlock more rewards each day.
           </Text>
         </Box>
-
-        {isLocked ? (
+        {isLocked && (
           <Button
             variant="tertiary"
             size="small"
@@ -62,7 +61,9 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
           >
             Locked
           </Button>
-        ) : (
+        )}
+
+        {!isLocked && (
           <>
             {isActivityDisabled && activeDay > 1 && userDetails && (
               <Button
@@ -94,12 +95,17 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
         gap={{ ml: 'spacing-xs', initial: 'spacing-sm' }}
         css={css`
           grid-template-columns: repeat(7, minmax(0, 1fr));
+
           @media (max-width: 1200px) {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+          }
+
+          @media (max-width: 700px) {
             grid-template-columns: repeat(2, minmax(0, 1fr));
           }
         `}
       >
-        {dailyRewardsActivities.map((activity) => (
+        {dailyRewardsActivities?.map((activity) => (
           <DailyRewardsItem
             activity={activity}
             activeDay={activeDay}

@@ -48,9 +48,23 @@ const useDailyRewards = () => {
     setIsLoadingRewards(false);
   }, []);
 
+  // Effect for handling check-in on first render
+  useEffect(() => {
+    if (isWalletConnected && userDetails?.userId) {
+      if (dailyRewardsActivities.length <= 0) return;
+      setIsLoadingRewards(true);
+      handleCheckIn();
+    }
+
+    if (!isWalletConnected) {
+      resetState();
+    }
+  }, []);
+
   // Effect for handling check-in when user details change or wallet is connected
   useEffect(() => {
-    if (dailyRewardsActivities.length > 0 && isWalletConnected && userDetails?.userId) {
+    if (isWalletConnected && userDetails?.userId) {
+      if (dailyRewardsActivities.length <= 0) return;
       setIsLoadingRewards(true);
       handleCheckIn();
     }
