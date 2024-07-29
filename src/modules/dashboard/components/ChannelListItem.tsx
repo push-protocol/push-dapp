@@ -79,16 +79,16 @@ const ChannelListItem: FC<ChannelListItemProps> = ({
       <Box
         display="flex"
         justifyContent="space-between"
-        margin="s2 s0"
+        margin="spacing-xxs spacing-none"
       >
         <Box
           display="flex"
-          gap="s3"
+          gap="spacing-xs"
         >
           <Box
             width="40px"
             height="40px"
-            borderRadius="r3"
+            borderRadius="radius-xs"
             css={css`
               overflow: hidden;
             `}
@@ -106,21 +106,21 @@ const ChannelListItem: FC<ChannelListItemProps> = ({
           >
             <Box
               display="flex"
-              gap="s1"
+              gap="spacing-xxs"
               alignItems="center"
             >
               <Link
                 to={`/channels/${channelDetails?.channel}`}
                 textProps={{
                   variant: 'h5-semibold',
-                  color: { light: 'gray-1000', dark: 'white' },
+                  color: 'text-primary',
                 }}
               >
                 {channelDetails?.name}
               </Link>
               {!!channelDetails?.verified_status && (
                 <VerifiedToolTipComponent>
-                  <TickDecoratedCircleFilled color={{ light: 'gray-300', dark: 'gray-700' }} />
+                  <TickDecoratedCircleFilled color="icon-tertiary" />
                 </VerifiedToolTipComponent>
               )}
               <Ethereum
@@ -136,7 +136,7 @@ const ChannelListItem: FC<ChannelListItemProps> = ({
             </Box>
             <Text
               variant="c-regular"
-              color={{ light: 'gray-600', dark: 'gray-500' }}
+              color="text-tertiary-inverse"
             >
               {formatSubscriberCount(channelDetails?.subscriber_count || 0)} subscribers
             </Text>

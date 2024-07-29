@@ -16,7 +16,7 @@ import { ErrorContext } from 'contexts/ErrorContext';
 import { NavigationContext } from 'contexts/NavigationContext';
 
 import Profile from 'primaries/Profile';
-import { Button, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
+import { Item, ItemH, Section, Span } from 'primaries/SharedStyling';
 import PushLogoDark from '../assets/pushDark.svg';
 import PushLogoLight from '../assets/pushLight.svg';
 
@@ -94,7 +94,7 @@ const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: strin
     <Box
       display="flex"
       alignItems="center"
-      gap={{ ml: 's1', dp: 's2' }}
+      gap={{ ml: 'spacing-xxxs', dp: 'spacing-xs' }}
     >
       <Link
         to="/points"
@@ -102,7 +102,7 @@ const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: strin
       >
         <Box
           display="flex"
-          gap="s1"
+          gap="spacing-xxxs"
           alignItems="center"
         >
           <RewardsBell
@@ -112,14 +112,14 @@ const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: strin
           <Text
             variant="h4-bold"
             display={{ ml: 'none', dp: 'block' }}
-            color={{ light: 'gray-1000', dark: 'gray-100' }}
+            color="text-primary"
           >
             {userDetails && userDetails?.totalPoints > 0 ? userDetails?.totalPoints?.toLocaleString() : ''}
           </Text>
           <Text
             variant="h5-bold"
             display={{ ml: 'block', dp: 'none' }}
-            color={{ light: 'gray-1000', dark: 'gray-100' }}
+            color="text-primary"
           >
             {userDetails && userDetails?.totalPoints > 0 ? userDetails?.totalPoints?.toLocaleString() : ''}
           </Text>
@@ -228,7 +228,21 @@ function Header({ isDarkMode, darkModeToggle }) {
                 <RewardsHeaderLink />
               </Box> */}
               <ChainIndicator isDarkMode={isDarkMode} />
-              <Profile isDarkMode={isDarkMode} />
+              <Box
+                display="flex"
+                flexDirection="row"
+                gap="spacing-sm"
+                alignItems="center"
+              >
+                <Profile isDarkMode={isDarkMode} />
+                <DarkModeSwitch
+                  checked={isDarkMode}
+                  onChange={darkModeToggle}
+                  size={28}
+                  sunColor="#494D5F"
+                  moonColor="#787E99"
+                />
+              </Box>
 
               <NavMenuInner tabletAlign="flex-start">
                 <MobileNavigation
@@ -249,7 +263,7 @@ function Header({ isDarkMode, darkModeToggle }) {
         <Box
           display="flex"
           flexDirection="column"
-          gap="s0"
+          gap="spacing-none"
           alignItems={{ ml: 'flex-start', initial: 'center' }}
         >
           {headerTag && !error && !isSnapPage && (
@@ -269,7 +283,11 @@ function Header({ isDarkMode, darkModeToggle }) {
               </Span>
             </HeaderTag>
           )}
-
+        </Box>
+        <Box
+          display="flex"
+          alignItems="center"
+        >
           <Suspense
             fallback={
               <Spinner
@@ -279,45 +297,36 @@ function Header({ isDarkMode, darkModeToggle }) {
               />
             }
           >
-            <Box display={{ ml: 'block', dp: 'none' }}>
+            <Box display="block">
               <RewardsHeaderLink caip10WalletAddress={caip10WalletAddress} />
             </Box>
           </Suspense>
-        </Box>
-        <Box
-          display="flex"
-          alignItems="center"
-        >
-          <Box display={{ ml: 'none', dp: 'block' }}>
-            <RewardsHeaderLink caip10WalletAddress={caip10WalletAddress} />
+          <Box display={{ lp: 'none', dp: 'block' }}>
+            {isActive && !showLoginControls && !error && (
+              <DarkModeSwitch
+                style={{ margin: '0 1rem' }}
+                checked={isDarkMode}
+                onChange={darkModeToggle}
+                size={28}
+                sunColor="#494D5F"
+                moonColor="#787E99"
+              />
+            )}
           </Box>
-          {isActive && !showLoginControls && !error && (
-            <DarkModeSwitch
-              style={{ margin: '0 1rem' }}
-              checked={isDarkMode}
-              onChange={darkModeToggle}
-              size={28}
-              sunColor="#494D5F"
-              moonColor="#787E99"
-            />
-          )}
 
           {isActive && !error && (
-            <RightBarMobile>
-              <Button
-                bg="transparent"
-                padding="5px"
-                radius="4px"
-                onClick={() => {
-                  setShowNavBar(!showNavBar);
-                }}
-              >
-                <AiOutlineMenu
-                  size={30}
-                  color={theme.headerIconsBg}
-                />
-              </Button>
-            </RightBarMobile>
+            <Box
+              margin="spacing-xxxs"
+              // display="flex"
+              alignItems="center"
+              display={{ lp: 'block', dp: 'none' }}
+            >
+              <AiOutlineMenu
+                onClick={() => setShowNavBar((prev) => !prev)}
+                size={30}
+                color={theme.headerIconsBg}
+              />
+            </Box>
           )}
 
           <ItemH
@@ -368,23 +377,15 @@ const Logo = styled.img`
 const RightBarContainer = styled(ItemH)``;
 
 const RightBarDesktop = styled(ItemH)`
-  @media (max-width: 992px) {
-    display: none;
-  }
-`;
-
-const RightBarMobile = styled(ItemH)`
-  max-width: 40px !important;
-  margin: 5px 0px 5px -5px;
-
-  @media (min-width: 993px) {
+  @media (max-width: 1024px) {
     display: none;
   }
 `;
 
 const LogoMobile = styled(ItemH)`
-  @media (min-width: 993px) {
-    display: none;
+  display: none;
+  @media (max-width: 1024px) {
+    display: block;
   }
 `;
 
@@ -405,9 +406,10 @@ const NavMenuContainer = styled(Item)`
   width: 250px;
   box-shadow: 0 0 0 10000px rgba(0, 0, 0, 0.9);
   padding: 30px 30px;
+  display: none;
 
-  @media (min-width: 993px) {
-    display: none;
+  @media (max-width: 1024px) {
+    display: block;
   }
 `;
 
@@ -433,18 +435,18 @@ const NavMenuInner = styled(Item)`
 const HeaderTag = styled(Item)`
   flex: 1;
   margin: 0px 5px;
-  @media (min-width: 993px) {
+  @media (min-width: 1024px) {
     margin: 5px 10px;
   }
 
-  @media (max-width: 993px) {
+  @media (max-width: 1024px) {
     margin: 5px 0px;
   }
   .text {
     font-size: 18px;
     font-weight: 500;
 
-    @media (max-width: 993px) {
+    @media (max-width: 1024px) {
       font-size: 20px;
     }
   }

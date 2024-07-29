@@ -28,25 +28,25 @@ const LeaderBoardNullState: FC<LeaderBoardNullStateProps> = ({
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      gap="s4"
-      padding="s15"
+      gap="spacing-sm"
+      padding="spacing-xxxl"
       height="200px"
     >
       <UserSwitch
         size={48}
-        color="gray-300"
+        color="icon-primary"
       />
       <Box
         display="flex"
         flexDirection="column"
         alignItems="center"
-        gap="s1"
+        gap="spacing-xxxs"
       >
         {heading && (
           <Text
             textAlign="center"
             variant="h5-bold"
-            color={{ light: 'black', dark: 'white' }}
+            color="text-primary"
           >
             {heading}
           </Text>
@@ -55,7 +55,7 @@ const LeaderBoardNullState: FC<LeaderBoardNullStateProps> = ({
           <Text
             textAlign="center"
             variant="bs-regular"
-            color={{ light: 'gray-600', dark: 'gray-500' }}
+            color="text-tertiary-inverse"
           >
             {subHeading}
           </Text>

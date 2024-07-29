@@ -1,9 +1,8 @@
 import { forwardRef } from 'react';
 import styled from 'styled-components';
 
-import { useBlocksTheme } from '../Blocks.hooks';
-import { TransformedHTMLAttributes, ModeProp } from '../Blocks.types';
-import { getBlocksColor, getBlocksBorder, getBlocksBorderRadius } from '../Blocks.utils';
+import { TransformedHTMLAttributes } from '../Blocks.types';
+import { getBlocksBorder, getBlocksBorderRadius } from '../Blocks.utils';
 import { BoxCSSProps, BoxComponentProps } from './Box.types';
 import { getBoxResponsiveCSS } from './Box.utils';
 import { boxRestrictedCSSPropKeys } from './Box.constants';
@@ -14,18 +13,18 @@ export type BoxProps = BoxCSSProps & BoxComponentProps & TransformedHTMLAttribut
 const StyledBox = styled.div.withConfig({
   shouldForwardProp: (prop, defaultValidatorFn) =>
     !boxRestrictedCSSPropKeys.includes(prop as keyof BoxCSSProps) && defaultValidatorFn(prop),
-})<BoxProps & ModeProp>`
+})<BoxProps>`
   /* Responsive props */
   ${(props) => getBoxResponsiveCSS(props)}
 
   /* Non-responsive props */
-  color: ${(props) => getBlocksColor(props.mode, props.color)};
-  background-color: ${(props) => getBlocksColor(props.mode, props.backgroundColor)};
+  color: ${(props) => (props?.color ? `var(--${props.color})` : ``)};
+  background-color: ${(props) => (props?.backgroundColor ? `var(--${props.backgroundColor})` : ``)};
   box-shadow: ${(props) => props.boxShadow};
   border-radius: ${(props) => getBlocksBorderRadius(props.borderRadius)};
   cursor: ${(props) => props.cursor};
   overflow: ${(props) => props.overflow};
-  border: ${(props) => getBlocksBorder(props.mode, props.border)};
+  border: ${(props) => getBlocksBorder(props.border)};
   position: ${(props) => props.position};
 
   // push custom scroll
@@ -51,18 +50,13 @@ const StyledBox = styled.div.withConfig({
   /* Extra CSS prop */
   ${(props) => props.css || ''}
 `;
-const Box = forwardRef<HTMLElement, BoxProps>(({ as = 'div', ...props }, ref) => {
-  const { mode } = useBlocksTheme();
-  // TODO: We need to remove color dependency from BlocksColors | ThemeModeColors to fix this error
-  return (
-    <StyledBox
-      as={as}
-      mode={mode}
-      ref={ref}
-      {...props}
-    />
-  );
-});
+const Box = forwardRef<HTMLElement, BoxProps>(({ as = 'div', ...props }, ref) => (
+  <StyledBox
+    as={as}
+    ref={ref}
+    {...props}
+  />
+));
 
 Box.displayName = 'Box';
 

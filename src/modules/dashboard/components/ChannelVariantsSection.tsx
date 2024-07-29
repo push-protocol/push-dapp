@@ -12,11 +12,11 @@ export type ChannelVariantsSectionProps = {};
 const ChannelVariantsSection: FC<ChannelVariantsSectionProps> = () => {
   return (
     <Box
-      backgroundColor={{ dark: 'gray-900', light: 'white' }}
-      borderRadius="r6"
-      padding="s6"
+      backgroundColor="surface-primary"
+      borderRadius="radius-md"
+      padding="spacing-md"
       display="flex"
-      gap="s6"
+      gap="spacing-md"
       flexDirection={{ ml: 'column' }}
       justifyContent="space-between"
     >
@@ -25,10 +25,10 @@ const ChannelVariantsSection: FC<ChannelVariantsSectionProps> = () => {
         display="flex"
         flexDirection="column"
         width={{ ml: '100%', initial: '50%' }}
-        gap="s6"
+        gap="spacing-md"
       >
         <Text
-          color={{ light: 'gray-1000', dark: 'white' }}
+          color="text-primary"
           variant="h4-bold"
         >
           Recommended Chats

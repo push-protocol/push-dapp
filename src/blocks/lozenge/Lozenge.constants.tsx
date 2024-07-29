@@ -1,39 +1,19 @@
 import { FlattenSimpleInterpolation, css } from 'styled-components';
 
-//Types
+import { textVariants } from '../text';
 import { LozengeSize, LozengeVariant } from './Lozenge.types';
-import { ThemeMode } from '../Blocks.types';
 
-export const getLozengeVariantStyles = ({
-  mode,
-  variant,
-}: {
-  mode?: ThemeMode;
-  variant: LozengeVariant;
-}): FlattenSimpleInterpolation => {
-  if (mode === 'dark') {
-    if (variant === 'primary') {
-      return css`
-        /* Lozenge tag container variant css */
-        background-color: var(--pink-300);
-        color: var(--pink-800);
-        .icon {
-          color: var(--pink-400);
-        }
-      `;
-    }
-    return css``;
-  }
+export const getLozengeVariantStyles = (variant: LozengeVariant): FlattenSimpleInterpolation => {
   if (variant === 'primary') {
     return css`
-      /* Lozenge tag container variant css */
-      background-color: var(--pink-200);
-      color: var(--pink-600);
+      background-color: var(--surface-brand-subtle);
+      color: var(--text-brand-bold);
       .icon {
-        color: var(--pink-400);
+        color: var(--icon-brand-medium);
       }
     `;
   }
+
   return css``;
 };
 
@@ -50,25 +30,25 @@ export const getLozengeSizeStyles = ({
       max-height: 14px;
       min-height: 14px;
 
+      border-radius: var(--radius-xxxs);
       ${iconOnly
         ? `
-            border-radius: var(--r1);
-            gap: var(--s0);
-            padding: var(--s1);
+            gap: var(--spacing-none);
+            padding: var(--spacing-xxxs);
         `
         : `
-            border-radius: var(--r1);
-            gap: var(--s1);
-            padding: var(--s1) var(--s2);
+            gap: var(--spacing-xxxs);
+            padding: var(--spacing-xxxs) var(--spacing-xxs);
       `}
 
       /* Lozenge text size css */
       leading-trim: both;
       text-edge: cap;
-      font-size: 10px;
-      font-style: normal;
-      font-weight: 700;
-      line-height: 14px;
+      font-size: ${textVariants['os-bold'].fontSize};
+      font-style: ${textVariants['os-bold'].fontStyle};
+      font-weight: ${textVariants['os-bold'].fontWeight};
+      line-height: ${textVariants['os-bold'].lineHeight};
+      text-transform: ${textVariants['os-bold'].textTransform};
 
       .icon > span {
         height: 8px;
@@ -81,17 +61,19 @@ export const getLozengeSizeStyles = ({
     /* Lozenge tag container size css 
     note: - add medium small and large sizes */
 
-    ${iconOnly
-      ? `
-          border-radius: 15.6px;
-          gap: var(--s0);
-          padding: 15.6px;
+     var(--spacing-sm);
+
+    ${
+      iconOnly
+        ? `
+          border-radius: var(--radius-sm);
+          gap: var(--spacing-none);
       `
-      : `
-          border-radius: var(--r3);
-          gap: var(--s1);
-          padding: var(--s4);
-    `}
+        : `
+          border-radius: var(--radius-xs);
+          gap: var(--spacing-xxxs);
+    `
+    }
 
     /* Lozenge text size css */
     leading-trim: both;

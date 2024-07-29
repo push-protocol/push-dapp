@@ -19,7 +19,7 @@ const RecommendedChatListItem: FC<RecommendedChatListItemProps> = ({ chat }) => 
     >
       <Box
         display="flex"
-        gap="s3"
+        gap="spacing-xs"
         justifyContent="center"
       >
         <chat.payload.chatPic />
@@ -30,13 +30,13 @@ const RecommendedChatListItem: FC<RecommendedChatListItemProps> = ({ chat }) => 
         >
           <Text
             variant="h5-semibold"
-            color={{ light: 'gray-1000', dark: 'white' }}
+            color="text-primary"
           >
             {chat?.payload?.chatParticipant}
           </Text>
           <Text
             variant="bs-regular"
-            color={{ light: 'gray-600', dark: 'gray-500' }}
+            color="text-tertiary-inverse"
           >
             {chat?.payload?.chatMsg?.messageContent}
           </Text>

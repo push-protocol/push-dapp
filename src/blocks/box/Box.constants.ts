@@ -24,5 +24,4 @@ export const boxRestrictedCSSPropKeys: (keyof BoxCSSProps | keyof ModeProp)[] = 
   'overflow',
   'padding',
   'width',
-  'mode',
 ];
