@@ -1,17 +1,13 @@
-import { FC, useMemo } from 'react';
-import { ArrowUpRight, Box, Button, EarnOnPush, Link, PushLogo, Text } from 'blocks';
+import { FC } from 'react';
 import { css } from 'styled-components';
-import { useAccount } from 'hooks';
-import YieldFarmingDataStoreV2 from 'singletons/YieldFarmingDataStoreV2';
+import { ArrowUpRight, Box, Button, EarnOnPush, Link, PushLogo, Text } from 'blocks';
+import { usePushStakingStats } from 'common';
 
 export type StakingPoolsProps = {};
 
 const StakingPools: FC<StakingPoolsProps> = () => {
-  const { provider } = useAccount();
-
-  const pushStats = YieldFarmingDataStoreV2.getInstance().getUserDataPUSH(provider);
-
-  console.log(pushStats);
+  const { poolStats } = usePushStakingStats();
+  console.log(poolStats);
   return (
     <Box
       backgroundColor="surface-primary"
