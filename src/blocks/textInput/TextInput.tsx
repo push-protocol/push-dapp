@@ -1,6 +1,5 @@
-import { Box } from 'blocks';
 import { Asterisk, CrossFilled } from '../icons';
-import { Text, textVariants } from '../text';
+import { TextVariants, textVariants } from '../text';
 import React, { ReactNode, forwardRef } from 'react';
 import styled, { FlattenSimpleInterpolation, css } from 'styled-components';
 
@@ -38,8 +37,7 @@ const StyledTextInput = styled.div<{
   success?: boolean;
   disabled?: boolean;
 }>`
-  ${({ theme, success, error, disabled }) => {
-    const colors = theme?.blocksTheme?.colors;
+  ${({ success, error, disabled }) => {
     const defaultState = error ? 'danger' : success ? 'success' : disabled ? 'disabled' : 'default';
     const focusState = error ? 'danger' : success ? 'success' : 'focus';
     return css`
@@ -47,12 +45,8 @@ const StyledTextInput = styled.div<{
       justify-content: space-between;
       align-items: flex-start;
       border-radius: var(--radius-xs, 12px);
-      border: 1.5px solid
-        var(--components-inputs-stroke-${defaultState}, ${colors[`components-inputs-stroke-${defaultState}`]});
-      background: var(
-        --components-inputs-background-${defaultState},
-        ${colors[`components-inputs-background-${defaultState}`]}
-      );
+      border: 1.5px solid var(--components-inputs-stroke-${defaultState});
+      background: var(--components-inputs-background-${defaultState});
 
       display: flex;
 
@@ -63,10 +57,10 @@ const StyledTextInput = styled.div<{
         width: 24px;
         height: 24px;
 
-        color: var(--components-inputs-icon-${defaultState}, ${colors[`components-inputs-icon-${defaultState}`]});
+        color: var(--components-inputs-icon-${defaultState});
       }
       & input {
-        color: var(--components-inputs-text-${defaultState}, ${colors[`components-inputs-text-${defaultState}`]});
+        color: var(--components-inputs-text-${defaultState});
 
         font-family: var(--font-family);
         font-size: ${textVariants['bs-regular'].fontSize};
@@ -75,7 +69,7 @@ const StyledTextInput = styled.div<{
         line-height: ${textVariants['bs-regular'].lineHeight};
         width: 100%;
         ::placeholder {
-          color: var(--components-inputs-text-placeholder, ${colors['components-inputs-text-placeholder']});
+          color: var(--components-inputs-text-placeholder);
         }
         border: none;
         background: transparent;
@@ -86,20 +80,19 @@ const StyledTextInput = styled.div<{
       }
 
       &:hover {
-        border: 1.5px solid var(--components-inputs-stroke-hover, ${colors['components-inputs-stroke-hover']});
+        border: 1.5px solid var(--components-inputs-stroke-hover);
       }
 
       &:focus-within {
-        border: 1.5px solid
-          var(--components-inputs-stroke-${focusState}, ${colors[`components-inputs-stroke-${focusState}`]});
+        border: 1.5px solid var(--components-inputs-stroke-${focusState});
         outline: none;
       }
 
       &:disabled {
-        border: 1.5px solid var(--components-inputs-stroke-default, ${colors['components-inputs-stroke-default']});
-        background: var(--components-inputs-background-disabled, ${colors['components-inputs-background-disabled']});
+        border: 1.5px solid var(--components-inputs-stroke-default);
+        background: var(--components-inputs-background-disabled);
         cursor: not-allowed;
-        color: var(--components-inputs-text-disabled, ${colors['components-inputs-text-disabled']});
+        color: var(--components-inputs-text-disabled);
       }
     `;
   }}
@@ -112,10 +105,28 @@ const LabelContainer = styled.div`
   width: 100%;
 `;
 
+const InputText = styled.span<{ color: string; variant: TextVariants }>`
+  color: var(--${({ color }) => color});
+  font-family: var(--font-family);
+  ${({ variant }) =>
+    `
+  font-size: ${textVariants[variant].fontSize};
+  font-style: ${textVariants[variant].fontStyle};
+  font-weight: ${textVariants[variant].fontWeight};
+  line-height: ${textVariants[variant].lineHeight};
+  `}
+`;
+
 const LabelTextContainer = styled.div`
   display: flex;
   align-items: flex-start;
   gap: var(--spacing-xxxs, 4px);
+`;
+
+const InputContainer = styled.div`
+  display: flex;
+  gap: var(--spacing-xxs);
+  width: 100%;
 `;
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
@@ -143,20 +154,22 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       <Container css={css}>
         {label && (
           <LabelContainer>
-            <Text
-              variant="h6-semibold"
+            <InputText
               color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-default'}
+              variant="h6-bold"
             >
               <LabelTextContainer>
                 {label}
                 {required && <Asterisk size={4.6} />}
               </LabelTextContainer>
-            </Text>
+            </InputText>
             {totalCount && (
-              <Text
-                variant="c-regular"
+              <InputText
                 color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-secondary'}
-              >{`${value?.length || 0} / ${totalCount}`}</Text>
+                variant="c-regular"
+              >
+                {`${value?.length || 0} / ${totalCount}`}
+              </InputText>
             )}
           </LabelContainer>
         )}
@@ -167,11 +180,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           ref={ref}
           success={success}
         >
-          <Box
-            display="flex"
-            gap="spacing-xxs"
-            width="100%"
-          >
+          <InputContainer>
             {icon}
             <input
               type={type}
@@ -182,12 +191,11 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
               onChange={onChange}
               value={value}
             />
-          </Box>
+          </InputContainer>
           {onClear && <CrossFilled onClick={() => onClear?.()} />}
         </StyledTextInput>
         {description && (
-          <Text
-            variant="c-regular"
+          <InputText
             color={
               success || error
                 ? 'components-inputs-text-default'
@@ -195,17 +203,18 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
                 ? 'components-inputs-text-disabled'
                 : 'components-inputs-text-placeholder'
             }
+            variant="c-regular"
           >
             {description}
-          </Text>
+          </InputText>
         )}
         {errorMessage && (
-          <Text
-            variant="c-regular"
+          <InputText
             color="components-inputs-text-danger"
+            variant="c-regular"
           >
             {errorMessage}
-          </Text>
+          </InputText>
         )}
       </Container>
     );

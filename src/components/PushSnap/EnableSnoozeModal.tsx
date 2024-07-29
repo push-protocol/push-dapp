@@ -5,7 +5,8 @@ import { useState, useContext } from 'react';
 import styled from 'styled-components';
 
 // Internal Compoonents
-import { ButtonV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { Button } from 'blocks';
 
 // Internal Configs
 import { defaultSnapOrigin } from 'config/index.js';
@@ -78,10 +79,17 @@ const EnableSnoozeModal = ({
         />
       </ItemHV2>
 
-      <ItemHV2 margin="24px 0 0 0">
-        <EnptyButton onClick={handleCancel}>Cancel </EnptyButton>
-
-        <FilledButton onClick={handleChange}> Enable Snooze </FilledButton>
+      <ItemHV2
+        margin="24px 0 0 0"
+        gap="8px"
+      >
+        <Button
+          onClick={handleCancel}
+          variant="outline"
+        >
+          Cancel
+        </Button>
+        <Button onClick={handleChange}>Enable Snooze</Button>
       </ItemHV2>
     </Container>
   );
@@ -111,41 +119,6 @@ const SecondaryText = styled.p`
   text-overflow: ellipsis; // Show ellipsis (...) when text overflows
 
   color: ${(props) => props.theme.snapSecondaryText};
-`;
-
-const SnapButton = styled(ButtonV2)`
-  align-self: end;
-  height: 36px;
-  z-index: 0;
-  font-family: 'FK Grotesk Neu';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: normal;
-  border-radius: 8px;
-`;
-
-const FilledButton = styled(SnapButton)`
-  min-width: 79px;
-  padding: 14px;
-  background: #d53a94;
-  height: 48px;
-  radius: 12px;
-  padding: 0px 24px 0px 24px;
-  color: #fff;
-  white-space: nowrap;
-`;
-
-const EnptyButton = styled(SnapButton)`
-  flex-direction: row;
-  text-align: center;
-  height: 48px;
-  padding: 0px 24px 0px 24px;
-  margin-right: 8px;
-  border: 1px solid #bac4d6;
-  color: ${(props) => props.theme.default.color};
-  background: ${(props) => props.theme.default.bg};
-  gap: 4px;
 `;
 
 const Input = styled.input`

@@ -1,21 +1,18 @@
 import { css } from 'styled-components';
 import { deviceMediaQ, deviceSizes, breakpointMap } from './theme';
 import {
-  BlocksColors,
   Breakpoint,
   CSSPropName,
   CSSPropValueType,
   DeviceSizeName,
-  ThemeModeColors,
   PixelValue,
   ResponsiveCSSPropertyData,
-  ThemeMode,
-  ThemeModeBorder,
   BorderValue,
   BlocksRadiusType,
 } from './Blocks.types';
+import { radiusRegex, spacingRegex } from './Blocks.constants';
+import { textVariants, TextVariants } from './text';
 import { ThemeColors } from './theme/Theme.types';
-import { newRadiusRegex, newSpacingRegex, oldRadiusRegex, oldSpacingRegex } from './Blocks.constants';
 
 /**
  * @param propName
@@ -25,10 +22,7 @@ import { newRadiusRegex, newSpacingRegex, oldRadiusRegex, oldSpacingRegex } from
 const getCSSValue = (propName: CSSPropName, value: CSSPropValueType | undefined) => {
   if (propName === 'padding' || propName === 'margin') {
     if (typeof value === 'string') {
-      return value.replace(
-        newSpacingRegex.test(value) ? newSpacingRegex : oldSpacingRegex,
-        (match) => `var(--${match})`
-      );
+      return value.replace(spacingRegex, (match) => `var(--${match})`);
     }
   } else if (propName === 'gap' || propName === 'border-radius') {
     return `var(--${value})`;
@@ -140,38 +134,19 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
 };
 
 /**
- * @deprecated
- * @param color
- * @returns color as a css variable: var(--primary)
- *
- * // TODO: Remove this function. We don't need it.
- */
-export const getBlocksColor = (mode: ThemeMode, color?: BlocksColors | ThemeModeColors | ThemeColors) => {
-  // If color is not given return undefined, to avoid any breakages
-  if (!color) return color;
-
-  // Handle the colors for light and dark mode
-  if (typeof color === 'object') {
-    return `var(--${color[mode]})`;
-  }
-
-  // If passed a design system color then use color as a variable
-  return `var(--${color})`;
-};
-
-/**
  * @param border
  * @returns border
  */
-export const getBlocksBorder = (mode: ThemeMode, border?: BorderValue | ThemeModeBorder) => {
+export const getBlocksBorder = (border?: BorderValue) => {
   // If border is not given return undefined, to avoid any breakages
   if (!border) return border;
-  // Handle the border for light and dark mode
-  let borderValues;
-  if (typeof border === 'object') borderValues = border[mode].split(' ');
-  else borderValues = border.split(' ');
 
-  // If passed a design system border then use border as a variable
+  let borderValues;
+
+  borderValues = border.split(' ');
+
+  borderValues[0] = `var(--${borderValues[0]})`;
+
   borderValues[2] = `var(--${borderValues[2]})`;
   return borderValues.join(' ');
 };
@@ -184,10 +159,19 @@ export const getBlocksBorderRadius = (radius?: BlocksRadiusType) => {
   // If border-radius is not given return undefined, to avoid any breakages
   if (!radius) return radius;
 
-  const result = radius.replace(
-    newRadiusRegex.test(radius) ? newRadiusRegex : oldRadiusRegex,
-    (match) => `var(--${match})`
-  );
+  const result = radius.replace(radiusRegex, (match) => `var(--${match})`);
 
   return result;
 };
+
+export const getTextVariantStyles = (variant: TextVariants, color: ThemeColors) => css`
+  color: var(--${color});
+  font-family: var(--font-family);
+  font-size: ${textVariants[variant].fontSize};
+  font-style: ${textVariants[variant].fontStyle};
+  font-weight: ${textVariants[variant].fontWeight};
+  line-height: ${textVariants[variant].lineHeight};
+  letter-spacing: ${textVariants[variant].letterSpacing};
+  text-transform: ${textVariants[variant].textTransform};
+  margin: var(--spacing-none);
+`;

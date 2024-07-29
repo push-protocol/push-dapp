@@ -14,7 +14,8 @@ import Close from 'assets/chat/group-chat/close.svg?react';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { bnToInt, formatTokens } from 'helpers/StakingHelper';
 import { P } from 'components/SharedStyling';
-import { ButtonV2, H2V2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { H2V2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { Button } from 'blocks';
 import { AppContext } from 'contexts/AppContext';
 
 // Internal Configs
@@ -325,11 +326,14 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
         </ItemHV2>
       </ItemVV2>
 
-      <ItemHV2 margin="20px 0">
-        <FilledButton
+      <ItemHV2
+        margin="20px 0"
+        gap="12px"
+      >
+        <Button
+          variant="primary"
+          size="medium"
           onClick={approveDeposit}
-          background={!depositApproved ? '#D53A94' : theme.stakingEmptyButtonBG}
-          cursor={!depositApproved ? 'pointer' : 'default'}
           disabled={!depositApproved ? false : true}
         >
           {!depositApproved && !txInProgressApprDep && (
@@ -359,23 +363,14 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
               Approved
             </Span>
           )}
-        </FilledButton>
-        <EmptyButton
-          cursor={!depositApproved ? 'default' : 'pointer'}
-          background={!depositApproved ? theme.stakingEmptyButtonBG : '#D53A94'}
+        </Button>
+        <Button
+          variant="outline"
+          size="medium"
           disabled={!depositApproved || txInProgressDep ? true : false}
           onClick={depositAmountTokenFarmSingleTx}
         >
-          {!txInProgressDep && (
-            <Span
-              color={!depositApproved ? theme.emptyButtonText : '#FFFFFF'}
-              weight="400"
-              cursor={!depositApproved ? 'default' : 'pointer'}
-            >
-              Deposit
-            </Span>
-          )}
-
+          {!txInProgressDep && 'Deposit'}
           {txInProgressDep && (
             <LoaderSpinner
               type={LOADER_TYPE.SEAMLESS}
@@ -385,7 +380,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
               titleColor="#FFF"
             />
           )}
-        </EmptyButton>
+        </Button>
       </ItemHV2>
     </Container>
   );
@@ -424,47 +419,4 @@ const MaxText = styled.p`
   color: #657795;
   margin: 0px;
   cursor: pointer;
-`;
-
-const FilledButton = styled(ButtonV2)`
-  width: 100%;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 16px;
-  line-height: 141%;
-  letter-spacing: normal;
-  width: 145px;
-  height: 48px;
-  border: none;
-  & > div {
-    display: block;
-  }
-  &:after {
-    background: transparent;
-  }
-
-  &:hover {
-    opacity: 1;
-  }
-`;
-
-const EmptyButton = styled(ButtonV2)`
-  font-size: 16px;
-  line-height: 19px;
-  flex: 1;
-  width: 145px;
-  height: 48px;
-  border-radius: 8px;
-  margin-left: 10px;
-  border: none;
-  & > div {
-    display: block;
-  }
-  &:after {
-    background: transparent;
-  }
-
-  &:hover {
-    opacity: 1;
-  }
 `;

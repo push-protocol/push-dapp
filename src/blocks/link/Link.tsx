@@ -2,9 +2,7 @@ import { FC } from 'react';
 import { Link as RouterLink, LinkProps as RouterLinkProps } from 'react-router-dom';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
-import { useBlocksTheme } from '../Blocks.hooks';
-import { TransformedHTMLAttributes, ModeProp } from '../Blocks.types';
-import { getBlocksColor } from '../Blocks.utils';
+import { TransformedHTMLAttributes } from '../Blocks.types';
 import { Text, TextProps } from '../text';
 
 export type LinkProps = RouterLinkProps & {
@@ -13,15 +11,13 @@ export type LinkProps = RouterLinkProps & {
   isText?: boolean;
 } & TransformedHTMLAttributes<HTMLAnchorElement>;
 
-const StyledLink = styled(RouterLink).withConfig({
-  shouldForwardProp: (prop, defaultValidatorFn) => !['mode'].includes(prop) && defaultValidatorFn(prop),
-})<LinkProps & ModeProp>`
+const StyledLink = styled(RouterLink)<LinkProps>`
   /* Link CSS */
 
   text-decoration: none;
 
   &:hover > * {
-    color: ${({ mode, isText }) => (isText ? getBlocksColor(mode, { light: 'pink-600', dark: 'pink-400' }) : '')};
+    color: ${({ isText }) => (isText ? 'var(--text-brand-medium)' : '')};
   }
 
   /* Extra CSS props */
@@ -29,11 +25,8 @@ const StyledLink = styled(RouterLink).withConfig({
 `;
 
 const Link: FC<LinkProps> = ({ textProps, isText = true, ...props }) => {
-  const { mode } = useBlocksTheme();
-
   return (
     <StyledLink
-      mode={mode}
       isText={isText}
       {...props}
     >

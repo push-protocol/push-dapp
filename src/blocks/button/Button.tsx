@@ -1,7 +1,7 @@
 import { ReactNode, forwardRef } from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
-import { useBlocksTheme } from '../Blocks.hooks';
-import type { ModeProp, TransformedHTMLAttributes } from '../Blocks.types';
+
+import type { TransformedHTMLAttributes } from '../Blocks.types';
 import type { ButtonSize, ButtonVariant } from './Button.types';
 import { getButtonSizeStyles, getButtonVariantStyles } from './Button.utils';
 
@@ -24,9 +24,11 @@ export type ButtonProps = {
   trailingIcon?: ReactNode;
   /* Sets the variant of the button */
   variant?: ButtonVariant;
+  /* Button takes the full width if enabled */
+  block?: boolean;
 } & TransformedHTMLAttributes<HTMLButtonElement>;
 
-const StyledButton = styled.button<ButtonProps & ModeProp>`
+const StyledButton = styled.button<ButtonProps>`
   /* Common Button CSS */
 
   align-items: center;
@@ -44,13 +46,16 @@ const StyledButton = styled.button<ButtonProps & ModeProp>`
   }
 
   /* Button variant CSS styles */
-  ${({ mode, variant }) => getButtonVariantStyles(mode, variant || 'primary')}
+  ${({ variant }) => getButtonVariantStyles(variant || 'primary')}
 
   /* Button and font size CSS styles */
   ${({ iconOnly, size }) => getButtonSizeStyles({ iconOnly: !!iconOnly, size: size || 'medium' })}
 
   /* Circular CSS for rounded icon only buttons */
   ${({ circular, iconOnly }) => circular && iconOnly && `border-radius: var(--r10)`}
+
+  /* Prop specific CSS */
+  ${({ block }) => block && 'width: 100%;'}
 
   /* Custom CSS applied via styled component css prop */
   ${(props) => props.css || ''}
@@ -70,28 +75,24 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ...props
     },
     ref
-  ) => {
-    const { mode } = useBlocksTheme();
-    return (
-      <StyledButton
-        {...(disabled ? { 'aria-disabled': true } : {})}
-        circular={circular}
-        disabled={disabled}
-        iconOnly={iconOnly}
-        role="button"
-        ref={ref}
-        size={size}
-        variant={variant}
-        mode={mode}
-        {...props}
-      >
-        {leadingIcon && <span className="icon icon-text">{leadingIcon}</span>}
-        {!iconOnly && children}
-        {trailingIcon && <span className="icon icon-text">{trailingIcon}</span>}
-        {iconOnly && !children && <span className="icon icon-only">{iconOnly}</span>}
-      </StyledButton>
-    );
-  }
+  ) => (
+    <StyledButton
+      {...(disabled ? { 'aria-disabled': true } : {})}
+      circular={circular}
+      disabled={disabled}
+      iconOnly={iconOnly}
+      role="button"
+      ref={ref}
+      size={size}
+      variant={variant}
+      {...props}
+    >
+      {leadingIcon && <span className="icon icon-text">{leadingIcon}</span>}
+      {!iconOnly && children}
+      {trailingIcon && <span className="icon icon-text">{trailingIcon}</span>}
+      {iconOnly && !children && <span className="icon icon-only">{iconOnly}</span>}
+    </StyledButton>
+  )
 );
 
 Button.displayName = 'Button';

@@ -6,7 +6,7 @@ import { Box } from 'blocks';
 import { DashboardSubHeader } from './components/DashboardSubHeader';
 import { FeaturedChannels } from './components/FeaturedChannels';
 import { ChannelVariantsSection } from './components/ChannelVariantsSection';
-import DashboardHeader from './components/DashboardHeader';
+import { DashboardHeader } from './components/DashboardHeader';
 
 export type DashboardProps = {};
 
@@ -17,8 +17,8 @@ const Dashboard: FC<DashboardProps> = () => {
     <Box
       flexDirection="column"
       display="flex"
-      margin={{ initial: 's4 s10 s4 s10', ml: 's4', lp: 's4' }}
-      gap={{ ml: 's6' }}
+      margin={{ initial: 'spacing-sm spacing-xl spacing-sm spacing-xl', ml: 'spacing-sm', lp: 'spacing-sm' }}
+      gap={{ ml: 'spacing-md' }}
       height="100%"
       width="auto"
     >
@@ -31,7 +31,7 @@ const Dashboard: FC<DashboardProps> = () => {
       <Box
         display="flex"
         flexDirection="column"
-        gap="s6"
+        gap="spacing-md"
       >
         <FeaturedChannels />
         <ChannelVariantsSection />

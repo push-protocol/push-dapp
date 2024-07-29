@@ -14,7 +14,7 @@ import { walletToCAIP10 } from 'helpers/w2w';
 import { getPreviewBasePath } from '../../../../basePath';
 
 // components
-import { Box, Button, Copy, Text, Referral, Skeleton } from 'blocks';
+import { Box, Button, Copy, Text, Referral } from 'blocks';
 
 export type ReferralSectionProps = {
   handleUnlockProfile: () => void;
@@ -43,33 +43,33 @@ const ReferralSection: FC<ReferralSectionProps> = ({ handleUnlockProfile }) => {
     <Box
       display="flex"
       flexDirection={{ tb: 'column-reverse', initial: 'row' }}
-      padding="s12"
-      borderRadius="r6"
-      backgroundColor={{ light: 'white', dark: 'gray-900' }}
+      padding="spacing-xxl"
+      borderRadius="radius-md"
+      backgroundColor="surface-primary"
       alignItems={{ tb: 'flex-start', initial: 'center' }}
       justifyContent="space-between"
-      gap={{ tb: 's9' }}
+      gap={{ tb: 'spacing-lg' }}
     >
       <Box
         display="flex"
         flexDirection="column"
-        gap="s9"
+        gap="spacing-lg"
       >
         <Box
           display="flex"
           flexDirection="column"
-          gap="s2"
+          gap="spacing-xxs"
         >
           <Text
             variant="h3-bold"
-            color={{ light: 'gray-1000', dark: 'gray-100' }}
+            color="text-primary"
           >
             Onboard Users on Push. <br /> Earn Points.
           </Text>
           <Box>
             <Text
               variant="bm-regular"
-              color="gray-500"
+              color="text-tertiary"
             >
               Earn +12% of any Points your invites earn, and +2% of any Points your invite’s invites earn.
             </Text>
@@ -79,25 +79,27 @@ const ReferralSection: FC<ReferralSectionProps> = ({ handleUnlockProfile }) => {
         {isWalletConnected && userDetails && (
           <Box
             display="flex"
-            gap="s2"
+            gap="spacing-xxs"
             flexDirection={{ tb: 'column', initial: 'row' }}
           >
             <Box
               minWidth={{ tb: '-webkit-fill-available', initial: '344px' }}
               display="flex"
               alignItems="center"
-              padding="s3"
-              borderRadius="r3"
-              border={{ light: '1.5px solid gray-200', dark: 'none' }}
-              backgroundColor={{ light: 'transparent', dark: 'gray-800' }}
+              padding="spacing-xs"
+              borderRadius="radius-xs"
+              border="border-md solid stroke-secondary"
               css={css`
                 white-space: nowrap;
+                background-color: var(--components-inputs-background-default);
               `}
             >
               <Text
                 variant="bs-regular"
                 ref={textRef}
-                color={{ light: 'gray-1000', dark: 'gray-100' }}
+                css={css`
+                  color: var(--components-inputs-text-default);
+                `}
               >
                 {baseUrl}/points?ref={userDetails?.userId}
               </Text>

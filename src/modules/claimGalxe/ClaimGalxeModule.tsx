@@ -15,6 +15,7 @@ import useToast from 'hooks/useToast';
 import AlphaAccessNFTHelper from 'helpers/AlphaAccessNftHelper';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { NFTSuccessModal } from './NFTSuccessModal';
+import { Box, Button } from 'blocks';
 
 // Internal Configs
 import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config/index.js';
@@ -184,18 +185,27 @@ const ClaimGalxeModule = () => {
             Please ensure you are using the same address used on Galxe. In-case of any issues please reach out on our
             community Discord.
           </SpanText>
-          {wallet && wallet?.accounts?.length > 0 ? (
-            <SubmitButton
-              disabled={!submitbtnInfo.enabled}
-              onClick={() => {
-                if (submitbtnInfo.enabled) mintNft();
-              }}
-            >
-              {submitbtnInfo.btnText}
-            </SubmitButton>
-          ) : (
-            <SubmitButton onClick={() => connect()}>Connect Wallet</SubmitButton>
-          )}
+          <Box
+            width={{
+              ml: '9.5rem',
+              tb: '13rem',
+              initial: '15rem',
+            }}
+            margin="spacing-none spacing-none spacing-xxxs spacing-none"
+          >
+            {wallet && wallet?.accounts?.length > 0 ? (
+              <Button
+                disabled={!submitbtnInfo.enabled}
+                onClick={() => {
+                  if (submitbtnInfo.enabled) mintNft();
+                }}
+              >
+                {submitbtnInfo.btnText}
+              </Button>
+            ) : (
+              <Button onClick={() => connect()}>Connect Wallet</Button>
+            )}
+          </Box>
           <SpanText margin="0 0 3rem 0">{submitbtnInfo.info}</SpanText>
         </ClaimLeftContainer>
         <AlphaImageContainer>
@@ -307,32 +317,6 @@ const AlphaAccessImg = styled(ImageV2)`
 
 const GalxeImg = styled(ImageV2)`
   align-self: flex-start;
-`;
-
-const SubmitButton = styled.button`
-  width: 15rem;
-  padding: 16px 32px;
-  border-radius: 15px;
-  background: ${(props) => (props.disabled ? props.theme.btn.disabledBg : '#cf1c84')};
-  color: ${(props) => (props.disabled ? props.theme.btn.disabledColor : '#fff')};
-  cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
-
-  align-self: flex-start;
-  flex: none;
-  margin-bottom: 1rem;
-  :hover {
-    opacity: 0.8;
-  }
-
-  @media ${device.tablet} {
-    margin-bottom: 1rem;
-  }
-  @media (max-width: 640px) {
-    width: 13rem;
-  }
-  @media (max-width: 380px) {
-    width: 9.5rem;
-  }
 `;
 
 const SpanText = styled(SpanV2)`
