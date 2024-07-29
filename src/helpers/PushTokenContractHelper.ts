@@ -88,17 +88,17 @@ export const importPushToken = async (): Promise<boolean> => {
     const symbol = 'PUSH';
     const decimals = 18;
 
-    // await window.ethereum.request({
-    //   method: 'wallet_watchAsset',
-    //   params: {
-    //     type: 'ERC20',
-    //     options: {
-    //       address: addresses.pushToken,
-    //       symbol: symbol,
-    //       decimals: decimals
-    //     }
-    //   }
-    // });
+    await window.ethereum.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: addresses.pushToken,
+          symbol: symbol,
+          decimals: decimals
+        }
+      }
+    });
     return true;
   } catch (err) {
     console.error(err);
