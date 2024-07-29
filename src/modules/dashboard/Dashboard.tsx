@@ -39,7 +39,7 @@ const Dashboard: FC<DashboardProps> = () => {
         <ChannelVariantsSection />
         <Box
           display="flex"
-          flexDirection="row"
+          flexDirection={{ initial: 'row', ml: 'column' }}
           gap="spacing-md"
         >
           <AnalyticsOverview />

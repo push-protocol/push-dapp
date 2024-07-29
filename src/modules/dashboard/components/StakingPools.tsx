@@ -1,10 +1,17 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { ArrowUpRight, Box, Button, EarnOnPush, Link, PushLogo, Text } from 'blocks';
 import { css } from 'styled-components';
+import { useAccount } from 'hooks';
+import YieldFarmingDataStoreV2 from 'singletons/YieldFarmingDataStoreV2';
 
 export type StakingPoolsProps = {};
 
 const StakingPools: FC<StakingPoolsProps> = () => {
+  const { provider } = useAccount();
+
+  const pushStats = YieldFarmingDataStoreV2.getInstance().getUserDataPUSH(provider);
+
+  console.log(pushStats);
   return (
     <Box
       backgroundColor="surface-primary"
@@ -17,9 +24,12 @@ const StakingPools: FC<StakingPoolsProps> = () => {
     >
       <Box
         display="flex"
-        alignItems="flex-start"
+        alignItems={{ initial: 'flex-start', tb: 'center' }}
         justifyContent="space-between"
         width="-webkit-fill-available"
+        flexDirection={{ initial: 'row', tb: 'column' }}
+        textAlign={{ tb: 'center' }}
+        gap={{ initial: 'spacing-none', tb: 'spacing-sm' }}
       >
         <Box maxWidth="303px">
           <Text variant="h4-semibold">Staking Pools</Text>
@@ -32,7 +42,8 @@ const StakingPools: FC<StakingPoolsProps> = () => {
         </Box>
         <Box
           display="flex"
-          gap="spacing-md"
+          gap={{ initial: 'spacing-md', ml: 'spacing-sm' }}
+          flexDirection={{ initial: 'row', ml: 'column' }}
         >
           <Box>
             <Text variant="h5-semibold">Total Value Locked</Text>
@@ -46,8 +57,9 @@ const StakingPools: FC<StakingPoolsProps> = () => {
       </Box>
       <Box
         display="flex"
-        gap="spacing-sm"
+        gap={{ initial: 'spacing-sm', tb: 'spacing-md' }}
         width="-webkit-fill-available"
+        flexDirection={{ initial: 'row', tb: 'column' }}
       >
         <Box
           padding="spacing-md"
@@ -57,7 +69,8 @@ const StakingPools: FC<StakingPoolsProps> = () => {
           alignItems="center"
           borderRadius="radius-md"
           border="border-sm solid stroke-secondary"
-          width="65%"
+          width={{ tb: '-webkit-fill-available', initial: '65%' }}
+          gap={{ initial: 'spacing-none', tb: 'spacing-md' }}
         >
           <Box
             display="flex"
@@ -143,7 +156,7 @@ const StakingPools: FC<StakingPoolsProps> = () => {
           flexDirection="column"
           borderRadius="radius-md"
           padding="spacing-md"
-          width="55%"
+          width={{ tb: '-webkit-fill-available', initial: '55%' }}
           css={css`
             background: linear-gradient(269deg, #eeb4fd 0.85%, #dad1ff 99.15%);
           `}

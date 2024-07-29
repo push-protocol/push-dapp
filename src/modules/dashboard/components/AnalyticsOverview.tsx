@@ -1,9 +1,10 @@
 import { FC } from 'react';
-import { Box, Text } from 'blocks';
+import { Box, Skeleton, Text } from 'blocks';
+import { useGetSentNotificationCount } from 'queries';
 
 export type AnalyticsOverviewProps = {};
 
-const StatsContainer: FC<{ title: string; stats: string }> = ({ title, stats }) => {
+const StatsContainer: FC<{ title: string; stats: string; isLoading: boolean }> = ({ title, stats, isLoading }) => {
   return (
     <Box
       display="flex"
@@ -15,12 +16,16 @@ const StatsContainer: FC<{ title: string; stats: string }> = ({ title, stats }) 
       gap="spacing-xxxs"
     >
       <Text variant="h5-semibold">{title}</Text>
-      <Text variant="h3-bold">{Number(stats).toLocaleString()}</Text>
+      <Skeleton isLoading={isLoading}>
+        <Text variant="h3-bold">{Number(stats).toLocaleString()}</Text>
+      </Skeleton>
     </Box>
   );
 };
 
 const AnalyticsOverview: FC<AnalyticsOverviewProps> = () => {
+  const { data: notificationCount, isLoading: loadingNotficationCount } = useGetSentNotificationCount();
+
   return (
     <Box
       backgroundColor="surface-primary"
@@ -29,21 +34,23 @@ const AnalyticsOverview: FC<AnalyticsOverviewProps> = () => {
       display="flex"
       gap="spacing-sm"
       flexDirection="column"
-      justifyContent="space-between"
-      minWidth="22%"
+      minWidth={{ initial: '22%', tb: '30%' }}
     >
       <Text variant="h4-bold">Analytics Overview</Text>
       <StatsContainer
         title="Notifications Sent"
-        stats="123456"
+        stats={`${notificationCount || 0}`}
+        isLoading={loadingNotficationCount}
       />
       <StatsContainer
         title="Subscribers"
         stats="123456"
+        isLoading={false}
       />
       <StatsContainer
         title="Messages Sent"
         stats="123456"
+        isLoading={false}
       />
     </Box>
   );
