@@ -39,7 +39,7 @@ const EmptyChannelList: FC<EmptyChannelListProps> = ({ heading, subHeading }) =>
           <Text
             textAlign="center"
             variant="bs-regular"
-            color="text-primary-inverse"
+            color="text-tertiary-inverse"
           >
             {subHeading}
           </Text>

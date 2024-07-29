@@ -60,4 +60,4 @@ const DashboardHeader: FC<DashboardHeaderProps> = ({ setSubHeaderVisibility, sho
   );
 };
 
-export default DashboardHeader;
+export { DashboardHeader };

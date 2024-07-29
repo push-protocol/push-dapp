@@ -10,6 +10,7 @@ import { checkboxSemantics } from '../semantics/semantics.checkbox';
 import { iconSemantics } from '../semantics/semantics.icon';
 import { inputSemantics } from '../semantics/semantics.input';
 import { listItemSemantics } from '../semantics/semantics.listItem';
+import { modalSemantics } from '../semantics/semantics.modal';
 import { radioSemantics } from '../semantics/semantics.radio';
 import { skeletonSemantics } from '../semantics/semantics.skeleton';
 import { strokeSemantics } from '../semantics/semantics.stroke';
@@ -32,6 +33,7 @@ type SemanticKeys = {
   listItem: 'components-list-item';
   icon: 'icon';
   input: 'components-inputs';
+  modal: 'components-modal';
   radio: 'components-radio-button';
   surface: 'surface';
   stroke: 'stroke';
@@ -54,6 +56,7 @@ export const semanticKeys: SemanticKeys = {
   listItem: 'components-list-item',
   icon: 'icon',
   input: 'components-inputs',
+  modal: 'components-modal',
   radio: 'components-radio-button',
   surface: 'surface',
   stroke: 'stroke',
@@ -76,6 +79,7 @@ export const colorSemantics = {
   [semanticKeys.listItem]: listItemSemantics,
   [semanticKeys.icon]: iconSemantics,
   [semanticKeys.input]: inputSemantics,
+  [semanticKeys.modal]: modalSemantics,
   [semanticKeys.radio]: radioSemantics,
   [semanticKeys.surface]: surfaceSemantics,
   [semanticKeys.stroke]: strokeSemantics,
