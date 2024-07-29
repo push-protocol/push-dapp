@@ -110,17 +110,19 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
 
         {/* multipler placeholder for new users or when wallet is not connected */}
         {((!isWalletConnected && multiplier) || (isWalletConnected && multiplier && !data)) && (
-          <Text
-            variant="h1-bold"
-            color="text-primary"
-          >
-            1x
-          </Text>
+          <Skeleton isLoading={isLoading}>
+            <Text
+              variant="h1-bold"
+              color="text-primary"
+            >
+              1x
+            </Text>
+          </Skeleton>
         )}
 
         {/* show multiplier for center box */}
         {isWalletConnected && multiplier && data && (
-          <>
+          <Skeleton isLoading={isLoading}>
             <Text
               variant="h1-bold"
               color="text-primary"
@@ -133,7 +135,7 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
             >
               Complete activities to increase
             </Text>
-          </>
+          </Skeleton>
         )}
 
         {/* show rank only when user has points more than 0 */}
