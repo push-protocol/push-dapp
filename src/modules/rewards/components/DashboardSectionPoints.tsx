@@ -108,8 +108,8 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
           </Text>
         )}
 
-        {/* multipler placeholder */}
-        {!isWalletConnected && multiplier && (
+        {/* multipler placeholder for new users or when wallet is not connected */}
+        {((!isWalletConnected && multiplier) || (isWalletConnected && multiplier && !data)) && (
           <Text
             variant="h1-bold"
             color="text-primary"

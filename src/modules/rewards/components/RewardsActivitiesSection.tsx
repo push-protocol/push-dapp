@@ -6,7 +6,7 @@ const RewardsActivitiesSection = () => {
     <Box
       display="flex"
       flexDirection="column"
-      gap="spacing-sm"
+      gap="spacing-xxs"
     >
       <Text
         variant="h4-bold"

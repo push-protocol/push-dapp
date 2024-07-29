@@ -8,26 +8,34 @@ import { useGetUserRewardsDetails, useSendRecentActivities } from 'queries';
 // helpers
 import { walletToCAIP10 } from 'helpers/w2w';
 
+// types
+import { AxiosError } from 'axios';
+
 const useLockedStatus = () => {
   const { account, isWalletConnected } = useAccount();
   const [isLocked, setIsLocked] = useState(false);
 
   const caip10WalletAddress = walletToCAIP10({ account });
-  const { data: userDetails } = useGetUserRewardsDetails({ caip10WalletAddress });
+  const { data: userDetails, status, error } = useGetUserRewardsDetails({ caip10WalletAddress });
 
   const { mutate: sendRecentActivities } = useSendRecentActivities({
     userId: userDetails?.userId as string,
   });
+
+  // error responses
+  const errorMessage = 'Failed to retrieve user';
 
   useEffect(() => {
     if (isWalletConnected && userDetails?.userId) {
       checkIfLocked();
     }
 
-    if (!isWalletConnected) {
-      setIsLocked(false); // Reset the lock status when the wallet is not connected
+    if (status === 'error' && isWalletConnected) {
+      if (error instanceof AxiosError && error?.response?.data?.error === errorMessage) {
+        setIsLocked(true);
+      }
     }
-  }, [userDetails?.userId, isWalletConnected, account]);
+  }, [userDetails?.userId, isWalletConnected, account, status]);
 
   const getLockStatus = (data: any) => {
     if (
