@@ -1,0 +1,1 @@
+import{bi as l,b2 as s,bu as o,__tla as _}from"./index-ChP14JWd.js";let r,i=Promise.all([(()=>{try{return _}catch{}})()]).then(async()=>{r=a=>a==null?void 0:a.map(t=>{const e=o[t];return{value:t.toString(),label:l[t],icon:s.jsx(e,{})}})});export{i as __tla,r as g};
