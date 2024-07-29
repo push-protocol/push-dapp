@@ -25,7 +25,7 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, i
 
   const [errorMessage, setErrorMessage] = useState('');
 
-  const { isLocked } = useLockedStatus();
+  const { isLocked, isWalletConnected } = useLockedStatus();
 
   return (
     <Skeleton isLoading={isLoadingItem}>
@@ -100,7 +100,7 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, i
           display="flex"
           margin="spacing-md spacing-none spacing-none spacing-none"
         >
-          {isLocked && (
+          {(isLocked || !isWalletConnected) && (
             <Button
               size="small"
               variant="tertiary"
@@ -109,7 +109,8 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, i
               Locked
             </Button>
           )}
-          {!isLocked && (
+
+          {!isLocked && isWalletConnected && (
             <ActivityButton
               userId={userId}
               activityTypeId={activity.id}

@@ -21,7 +21,7 @@ const getUpdatedExpiryTime = (timestamp: number) => {
 };
 
 const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, activity, isLoadingItem }) => {
-  const { isLocked } = useLockedStatus();
+  const { isLocked, isWalletConnected } = useLockedStatus();
   const {
     data: usersSingleActivity,
     isLoading,
@@ -31,7 +31,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
   const [errorMessage, setErrorMessage] = useState('');
 
   const isRewardsLocked =
-    isLocked &&
+    (isLocked || !isWalletConnected) &&
     activity.activityType !== 'follow_push_on_discord' &&
     activity.activityType !== 'follow_push_on_twitter';
 
@@ -44,13 +44,13 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
         display="flex"
         flexDirection="column"
         borderRadius="radius-sm"
-        margin={{ ml: 'spacing-sm spacing-none', initial: 'spacing-xxs spacing-none' }}
+        margin={{ ml: 'spacing-sm spacing-none', initial: 'spacing-sm spacing-none' }}
         backgroundColor="surface-secondary"
       >
         <Box
           display="flex"
           flexDirection="row"
-          padding={{ ml: 'spacing-xs', lp: 'spacing-sm spacing-xxs', initial: 'spacing-md' }}
+          padding={{ ml: 'spacing-xs', lp: 'spacing-sm spacing-xxs', initial: 'spacing-sm' }}
           borderRadius="radius-sm radius-sm radius-none radius-none"
           alignItems={{ ml: 'flex-start', initial: 'center' }}
           gap="spacing-sm"
@@ -118,7 +118,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                   activity.activityType !== 'follow_push_on_twitter' && (
                     <Skeleton isLoading={isLoading}>
                       <Text
-                        variant="h5-regular"
+                        variant="bs-regular"
                         color="text-tertiary"
                       >
                         {activity.activityDesc}
@@ -143,7 +143,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                   >
                     <Multiplier size={28} />
                     <Text
-                      variant="bs-semibold"
+                      variant="bm-semibold"
                       color="text-state-success-bold"
                     >
                       {activity.multiplier?.toLocaleString()}x
@@ -167,7 +167,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                       height={32}
                     />
                     <Text
-                      variant="h4-semibold"
+                      variant="bm-semibold"
                       color="text-primary"
                     >
                       {activity.points?.toLocaleString()} Points
