@@ -97,7 +97,15 @@ export const ActivityVerificationButton = ({
         isVerificationComplete: rewardsActivityStatus == 'Claimed' || rewardsActivityStatus == 'Pending',
       };
     }
-  }, [activityType, userPushSDKInstance, twitterActivityStatus, discordActivityStatus]);
+  }, [
+    activityType,
+    userPushSDKInstance,
+    twitterActivityStatus,
+    discordActivityStatus,
+    verifyingRewards,
+    verifyingTwitter,
+    verifyingDiscord,
+  ]);
 
   const { isAuthenticated, authButton } = useAuthWithButton({
     isLoading: isLoadingActivity,
@@ -111,7 +119,7 @@ export const ActivityVerificationButton = ({
         variant="tertiary"
         size="small"
         onClick={() => activityData?.action(userId)}
-        disabled={activityData?.isVerificationComplete || isLoadingActivity}
+        disabled={activityData?.isVerificationComplete || isLoadingActivity || activityData?.isLoading}
       >
         {activityData?.isVerificationComplete ? 'Verifying...' : activityData?.label ? activityData?.label : 'Verify'}
       </Button>

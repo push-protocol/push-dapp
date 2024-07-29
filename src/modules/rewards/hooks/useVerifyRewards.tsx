@@ -29,6 +29,7 @@ const useVerifyRewards = ({ activityTypeId, setErrorMessage, refetchActivity }: 
 
   const handleRewardsVerification = (userId: string) => {
     setUpdatedId(userId);
+    setVerifyingRewards(true);
     handleVerify(userId);
   };
 
@@ -39,7 +40,6 @@ const useVerifyRewards = ({ activityTypeId, setErrorMessage, refetchActivity }: 
 
   const handleVerify = async (userId: string | null) => {
     setErrorMessage('');
-    setVerifyingRewards(true);
 
     const data = {};
 
@@ -52,8 +52,6 @@ const useVerifyRewards = ({ activityTypeId, setErrorMessage, refetchActivity }: 
       }
       return;
     }
-
-    console.log('final call', activityTypeId);
 
     claimRewardsActivity(
       {

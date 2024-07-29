@@ -37,6 +37,8 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
 
   const handleTwitterVerification = (userId: string) => {
     setUpdatedId(userId);
+    setVerifyingTwitter(true);
+
     handleVerify(userId);
   };
 
@@ -69,7 +71,6 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
 
   const handleVerify = async (userId: string | null) => {
     setErrorMessage('');
-    setVerifyingTwitter(true);
 
     const userTwitterDetails = await handleConnect();
 

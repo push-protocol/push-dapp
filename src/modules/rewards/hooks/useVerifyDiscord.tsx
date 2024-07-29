@@ -48,6 +48,8 @@ const useVerifyDiscord = ({
   const handleDiscordVerification = (userId: string) => {
     setUpdatedId(userId);
     setErrorMessage('');
+    setVerifyingDiscord(true);
+
     handleConnect(userId);
   };
 
@@ -74,7 +76,6 @@ const useVerifyDiscord = ({
     const username = localStorage.getItem('username');
 
     if (username && token) {
-      setVerifyingDiscord(true);
       const data = {
         discord: username,
         discord_token: token,
