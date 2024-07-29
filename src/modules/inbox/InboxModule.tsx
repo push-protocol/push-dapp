@@ -31,6 +31,8 @@ const InboxModule = ({ isSpam }) => {
   // React GA Analytics
   ReactGA.pageview(APP_PATHS.Inbox);
 
+  console.log("Inbox Module is shown")
+
   const dispatch = useDispatch();
   const { account, chainId, provider } = useAccount();
   const { epnsReadProvider, epnsCommReadProvider } = useSelector((state) => state.contracts);

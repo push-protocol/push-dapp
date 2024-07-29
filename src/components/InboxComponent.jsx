@@ -14,10 +14,15 @@ import SpamBox from 'segments/Spam';
 import APP_PATHS from 'config/AppPaths';
 
 const InboxComponent = ({ isSpam }) => {
+
+  console.log("Inbox Component is shown")
+
+
   const [showInbox, setShowInbox] = useState(!isSpam);
   const [showFilter, setShowFilter] = useState(false);
   const [search, setSearch] = useState('');
   const themes = useTheme();
+
 
   const navigate = useNavigate();
   const toggleShowInbox = () => setShowInbox((prev) => !prev);

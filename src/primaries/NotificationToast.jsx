@@ -7,26 +7,28 @@ import { toast } from 'react-toastify';
 
 function NotificationToast({ notification, clearToast }) {
 
+  console.log("This is Notification toast")
+
   // toast customize
-  const LoaderToast = ({color }) => (
-      <Toaster>
+  const LoaderToast = ({ color }) => (
+    <Toaster>
       <div>{notification.notificationTitle}</div>
       <div>{notification.notificationBody}</div>
-      </Toaster>
+    </Toaster>
   )
- 
+
   // Render
   return (
     <NotificationWrapper>{
-    toast.dark(<LoaderToast onClick={clearToast} color="#35c5f3"/>, {
-          position: "bottom-right",
-          autoClose: false,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        })
+      toast.dark(<LoaderToast onClick={clearToast} color="#35c5f3" />, {
+        position: "bottom-right",
+        autoClose: false,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
     }
     </NotificationWrapper>
   );

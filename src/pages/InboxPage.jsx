@@ -16,6 +16,7 @@ import GLOBALS from 'config/Globals';
 const InboxPage = () => {
   // RENDER
   const location = useLocation();
+  console.log("Inbox Page is shown")
   return (
     <Container>
       <InboxModule isSpam={location.pathname === '/spam' ? true : false} />

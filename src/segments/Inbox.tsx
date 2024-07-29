@@ -39,6 +39,8 @@ const NOTIFICATIONS_PER_PAGE = 10;
 
 // Create Header
 const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
+  console.log("THis is Inbox child");
+
   const dispatch = useDispatch();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -309,6 +311,9 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
       }
     }
   };
+
+  console.log("Bottom of Inbox");
+
 
   // Render
   return (
