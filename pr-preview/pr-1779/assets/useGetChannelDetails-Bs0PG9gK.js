@@ -1,0 +1,1 @@
+import{bQ as u,cg as c,ch as h,__tla as l}from"./index-m9kvxBZD.js";let t,o=Promise.all([(()=>{try{return l}catch{}})()]).then(async()=>{let a,r;a=s=>s,r=({userPushSDKInstance:s,address:e})=>s.channel.info(e).then(a),t=s=>{const{userPushSDKInstance:e}=u(n=>n.user);return c({queryKey:[h,s],queryFn:()=>r({userPushSDKInstance:e,address:s})})}});export{o as __tla,t as u};
