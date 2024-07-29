@@ -19,4 +19,6 @@ export const userTwitterDetails = 'userTwitterDetails';
 export const pointsVaultSearch = 'pointsVaultSearch';
 export const approveVaultUser = 'approveVaultUser';
 export const rejectVaultUser = 'rejectVaultUser';
+export const sentMessageCount = 'sentMessageCount';
 export const sentNotificationCount = 'sentNotificationCount';
+export const subscriberCount = 'subscriberCount';

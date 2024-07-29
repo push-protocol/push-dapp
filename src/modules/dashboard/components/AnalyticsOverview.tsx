@@ -1,10 +1,10 @@
 import { FC } from 'react';
 import { Box, Skeleton, Text } from 'blocks';
-import { useGetSentNotificationCount } from 'queries';
+import { useGetSubscriberCount, useSentMessageCount, useSentNotificationCount } from 'queries';
 
 export type AnalyticsOverviewProps = {};
 
-const StatsContainer: FC<{ title: string; stats: string; isLoading: boolean }> = ({ title, stats, isLoading }) => {
+const StatsContainer: FC<{ title: string; stats: number; isLoading: boolean }> = ({ title, stats, isLoading }) => {
   return (
     <Box
       display="flex"
@@ -17,14 +17,18 @@ const StatsContainer: FC<{ title: string; stats: string; isLoading: boolean }> =
     >
       <Text variant="h5-semibold">{title}</Text>
       <Skeleton isLoading={isLoading}>
-        <Text variant="h3-bold">{Number(stats).toLocaleString()}</Text>
+        <Text variant="h3-bold">{stats.toLocaleString()}</Text>
       </Skeleton>
     </Box>
   );
 };
 
 const AnalyticsOverview: FC<AnalyticsOverviewProps> = () => {
-  const { data: notificationCount, isLoading: loadingNotficationCount } = useGetSentNotificationCount();
+  const { data: notificationCount, isLoading: loadingNotificationCount } = useSentNotificationCount();
+
+  const { data: subscriberCount, isLoading: loadingSubscriberCount } = useGetSubscriberCount();
+
+  const { data: messageCount, isLoading: loadingMessageCount } = useSentMessageCount();
 
   return (
     <Box
@@ -39,18 +43,18 @@ const AnalyticsOverview: FC<AnalyticsOverviewProps> = () => {
       <Text variant="h4-bold">Analytics Overview</Text>
       <StatsContainer
         title="Notifications Sent"
-        stats={`${notificationCount || 0}`}
-        isLoading={loadingNotficationCount}
+        stats={notificationCount || 0}
+        isLoading={loadingNotificationCount}
       />
       <StatsContainer
         title="Subscribers"
-        stats="123456"
-        isLoading={false}
+        stats={subscriberCount || 0}
+        isLoading={loadingSubscriberCount}
       />
       <StatsContainer
         title="Messages Sent"
-        stats="123456"
-        isLoading={false}
+        stats={messageCount || 0}
+        isLoading={loadingMessageCount}
       />
     </Box>
   );

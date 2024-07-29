@@ -14,38 +14,43 @@ export const usePushStakingStats = () => {
   const [pushCoreV2, setPushCoreV2] = useState<ethers.Contract>();
   const [uniswapV2Router02Instance, setUniswapV2Router02Instance] = useState<ethers.Contract>();
 
-  const [poolStats, setPoolStats] = useState(null);
-  const [lpPoolStats, setLpPoolStats] = useState(null);
-  const [userDataLP, setUserDataLP] = useState(null);
-  const [userDataPush, setUserDataPush] = useState(null);
-  const [PUSHPoolstats, setPUSHPoolStats] = useState(null);
+  const [poolStats, setPoolStats] = useState<null | any>(null);
+  const [lpPoolStats, setLpPoolStats] = useState<null | any>(null);
+  const [userDataLP, setUserDataLP] = useState<null | any>(null);
+  const [userDataPush, setUserDataPush] = useState<null | any>(null);
+  const [pushPoolStats, setPushPoolStats] = useState<null | any>(null);
 
   const library = provider?.getSigner(account);
 
   const getPoolStats = useCallback(async () => {
+    // @ts-expect-error
     const poolStats = await YieldFarmingDataStoreV2.getInstance().getPoolStats(provider);
 
     setPoolStats({ ...poolStats });
   }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance, provider]);
 
   const getLpPoolStats = useCallback(async () => {
+    // @ts-expect-error
     const poolStats = await YieldFarmingDataStoreV2.getInstance().getPoolStats(provider);
 
+    // @ts-expect-error
     const lpPoolStats = await YieldFarmingDataStoreV2.getInstance().getLPPoolStats(poolStats);
 
     setLpPoolStats({ ...lpPoolStats });
   }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance, provider]);
 
   const getUserDataLP = useCallback(async () => {
+    // @ts-expect-error
     const userDataLP = await YieldFarmingDataStoreV2.getInstance().getUserDataLP();
 
     setUserDataLP({ ...userDataLP });
   }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance]);
 
   const getUserDataPush = useCallback(async () => {
+    // @ts-expect-error
     const [pushPoolStats, userDataPush] = await YieldFarmingDataStoreV2.getInstance().getUserDataPUSH(provider);
 
-    setPUSHPoolStats({ ...pushPoolStats });
+    setPushPoolStats({ ...pushPoolStats });
     setUserDataPush({ ...userDataPush });
   }, [staking, pushToken, pushCoreV2, yieldFarmingLP, uniswapV2Router02Instance, provider]);
 
@@ -57,7 +62,7 @@ export const usePushStakingStats = () => {
 
     setLpPoolStats(null);
     setUserDataLP(null);
-    setPUSHPoolStats(null);
+    setPushPoolStats(null);
     setUserDataPush(null);
 
     let staking = new ethers.Contract(addresses.stakingV2, abis.stakingV2, library);
@@ -88,6 +93,7 @@ export const usePushStakingStats = () => {
       setUniswapV2Router02Instance(uniswapV2Router02Instance);
     }
 
+    // @ts-expect-error
     YieldFarmingDataStoreV2.getInstance().init(
       account,
       staking,
@@ -105,5 +111,9 @@ export const usePushStakingStats = () => {
 
   return {
     poolStats,
+    lpPoolStats,
+    userDataLP,
+    userDataPush,
+    pushPoolStats,
   };
 };

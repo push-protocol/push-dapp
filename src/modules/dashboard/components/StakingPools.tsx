@@ -1,13 +1,14 @@
 import { FC } from 'react';
 import { css } from 'styled-components';
-import { ArrowUpRight, Box, Button, EarnOnPush, Link, PushLogo, Text } from 'blocks';
+import { ArrowUpRight, Box, Button, EarnOnPush, Link, PushLogo, Skeleton, Text } from 'blocks';
 import { usePushStakingStats } from 'common';
+import { formatTokens } from 'helpers/StakingHelper';
 
 export type StakingPoolsProps = {};
 
 const StakingPools: FC<StakingPoolsProps> = () => {
-  const { poolStats } = usePushStakingStats();
-  console.log(poolStats);
+  const { poolStats, pushPoolStats } = usePushStakingStats();
+
   return (
     <Box
       backgroundColor="surface-primary"
@@ -43,11 +44,22 @@ const StakingPools: FC<StakingPoolsProps> = () => {
         >
           <Box>
             <Text variant="h5-semibold">Total Value Locked</Text>
-            <Text variant="h3-bold">{`$${Number('12323').toLocaleString()}`}</Text>
+            <Skeleton isLoading={!poolStats?.totalValueLocked}>
+              <Text variant="h3-bold">{`$${poolStats?.totalValueLocked.toFixed(2).toLocaleString()}`}</Text>
+            </Skeleton>
           </Box>
           <Box>
             <Text variant="h5-semibold">Rewards Paid</Text>
-            <Text variant="h3-bold">{`${Number('12323').toLocaleString()}`}</Text>
+            <Skeleton isLoading={!poolStats?.pushRewardsDistributed || !poolStats.totalDistributedAmount}>
+              <Text variant="h3-bold">
+                {poolStats?.pushRewardsDistributed && poolStats?.totalDistributedAmount
+                  ? `${Math.min(
+                      formatTokens(poolStats?.pushRewardsDistributed),
+                      formatTokens(poolStats?.totalDistributedAmount)
+                    ).toLocaleString()}`
+                  : 0}
+              </Text>
+            </Skeleton>
           </Box>
         </Box>
       </Box>
@@ -112,12 +124,14 @@ const StakingPools: FC<StakingPoolsProps> = () => {
                 alignItems="center"
                 flexDirection="column"
               >
-                <Text
-                  variant="h3-bold"
-                  color="text-state-success-bold"
-                >
-                  ~13.99%
-                </Text>
+                <Skeleton isLoading={!pushPoolStats?.stakingAPR}>
+                  <Text
+                    variant="h3-bold"
+                    color="text-state-success-bold"
+                  >
+                    ~{pushPoolStats?.stakingAPR.toLocaleString()}%
+                  </Text>
+                </Skeleton>
                 <Text
                   color="text-tertiary-inverse"
                   variant="c-regular"
@@ -130,7 +144,16 @@ const StakingPools: FC<StakingPoolsProps> = () => {
                 alignItems="center"
                 flexDirection="column"
               >
-                <Text variant="h3-bold">$2,081,261</Text>
+                <Skeleton isLoading={!pushPoolStats?.totalStakedAmount || !poolStats?.pushPrice}>
+                  <Text variant="h3-bold">
+                    $
+                    {pushPoolStats?.totalStakedAmount && poolStats?.pushPrice
+                      ? (
+                          formatTokens(pushPoolStats?.totalStakedAmount) * poolStats?.pushPrice.toFixed(2)
+                        ).toLocaleString()
+                      : 0}
+                  </Text>
+                </Skeleton>
                 <Text
                   color="text-tertiary-inverse"
                   variant="c-regular"
@@ -157,6 +180,8 @@ const StakingPools: FC<StakingPoolsProps> = () => {
             background: linear-gradient(269deg, #eeb4fd 0.85%, #dad1ff 99.15%);
           `}
           gap="spacing-xs"
+          alignItems={{ initial: 'flex-start', tb: 'center' }}
+          textAlign={{ initial: 'start', tb: 'center' }}
         >
           <EarnOnPush />
           <Box width="80%">
