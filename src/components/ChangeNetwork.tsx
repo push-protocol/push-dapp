@@ -9,10 +9,11 @@ import { useSelector } from 'react-redux';
 
 // Internal Components
 import useToast from 'hooks/useToast';
-import { Button, Item, Span } from '../primaries/SharedStyling';
+import { Item, Span } from '../primaries/SharedStyling';
 import { aliasChainIdsMapping, CORE_CHAIN_ID, networkName } from 'helpers/UtilityHelper';
 import { appConfig, CHAIN_DETAILS } from 'config/index.js';
 import { useAccount } from 'hooks';
+import { Box, Button, Text } from 'blocks';
 
 const ChangeNetwork = () => {
   const changeNetworkToast = useToast();
@@ -42,30 +43,20 @@ const ChangeNetwork = () => {
         verifying your Channel Alias.
       </Span>
 
-      <Item
-        width="12.2em"
-        self="center"
-        align="center"
-        margin="100px auto 50px auto"
+      <Box
+        display="flex"
+        alignSelf="center"
+        alignItems="center"
+        margin="spacing-xxxl spacing-none spacing-xxl spacing-none"
       >
         <Button
-          bg="#e20880"
-          color="#fff"
-          radius="15px"
-          padding="20px 20px"
-          onClick={() => switchChain(parseInt(aliasChainId))}
+          variant="primary"
+          onClick={() => switchChain(aliasChainId)}
+          size="large"
         >
-          <Span
-            color="#fff"
-            weight="600"
-            textTransform="none"
-            line="22px"
-            size="16px"
-          >
-            Change Network
-          </Span>
+          <Text color="white">Change Network</Text>
         </Button>
-      </Item>
+      </Box>
     </Item>
   );
 };

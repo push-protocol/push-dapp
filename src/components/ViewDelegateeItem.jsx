@@ -20,6 +20,7 @@ import { toolingPostReq } from '../api/index';
 import { createTransactionObject } from '../helpers/GaslessHelper';
 import { executeDelegateTx } from '../helpers/WithGasHelper';
 import { Anchor, Image, Item, ItemBreak, ItemH, Span } from '../primaries/SharedStyling';
+import { Button } from 'blocks';
 
 // Internal Configs
 import { abis, addresses } from 'config/index.js';
@@ -299,7 +300,10 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
             <option value="withgas">With Gas</option>
           </SelectTag>
           <ItemBreak></ItemBreak>
-          <UnsubscribeButton>
+          <Button
+            size="extraSmall"
+            variant="tertiary"
+          >
             {txLoading ? (
               <ActionTitle>
                 <LoaderSpinner
@@ -319,7 +323,7 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
                 </ActionTitle>
               </>
             )}
-          </UnsubscribeButton>
+          </Button>
 
           <Item
             position="absolute"
@@ -458,10 +462,6 @@ const ActionTitle = styled.span`
     css`
       visibility: hidden;
     `};
-`;
-
-const UnsubscribeButton = styled(ChannelActionButton)`
-  background: #000;
 `;
 
 const Toaster = styled.div`

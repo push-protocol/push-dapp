@@ -6,6 +6,9 @@ export const Eip155EnabledIds: Array<Number> = [
   59141, 59144,
 ];
 
+// comment base
+// 84532, 8453,
+
 // Types
 type CAIPProps = {
   chainId: number;

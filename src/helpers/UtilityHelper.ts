@@ -22,6 +22,7 @@ const UtilityHelper = {
       chainId === 7560 ||
       chainId === 8453 ||
       chainId === 59144
+
     ) {
       return true;
     }
@@ -301,6 +302,7 @@ export const NETWORK_DETAILS = {
     rpcUrls: ['https://rpc.linea.build'],
     blockExplorerUrls: ['https://explorer.linea.build'],
   },
+
 };
 
 export const CORE_CHAIN_ID: number = appConfig.coreContractChain;

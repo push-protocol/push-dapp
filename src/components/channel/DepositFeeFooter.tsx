@@ -11,10 +11,10 @@ import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import FaucetInfo from 'components/FaucetInfo';
 import useToast from 'hooks/useToast';
 import { useAccount } from 'hooks';
+import { Button } from 'blocks';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
-import { Button } from '../SharedStyling';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import VerifyLogo from '../../assets/Vector.svg?react';
@@ -157,27 +157,31 @@ const DepositFeeFooter = ({ title, description, onCancel, disabled, onClick, fee
         <>
           {/* This below is Footer Buttons i.e, Cancel and save changes */}
           <ButtonContainer>
-            <CancelButtons
+            <Button
               onClick={onCancel}
               disabled={false}
+              variant="outline"
+              size="large"
             >
               Cancel
-            </CancelButtons>
+            </Button>
 
             {pushApprovalAmount >= feeRequired ? (
-              <FooterButtons
-                disabled={disabled}
+              <Button
                 onClick={onClick}
+                disabled={disabled}
+                size="large"
               >
                 Save Changes
-              </FooterButtons>
+              </Button>
             ) : (
-              <FooterButtons
-                disabled={disabled}
+              <Button
                 onClick={depositPush}
+                size="large"
+                disabled={disabled}
               >
                 Approve PUSH
-              </FooterButtons>
+              </Button>
             )}
           </ButtonContainer>
         </>
@@ -262,47 +266,9 @@ const TransactionText = styled.p`
 const ButtonContainer = styled(ItemHV2)`
   justify-content: end;
   margin-top: 24px;
+  gap: 14px;
   @media ${device.mobileL} {
     flex-direction: column-reverse;
     flex: 0;
-  }
-`;
-
-const FooterButtons = styled(Button)<{ disabled: boolean }>`
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 22px;
-  display: flex;
-  border-radius: 15px;
-  align-items: center;
-  text-align: center;
-  background: ${(props) => (props.disabled ? props.theme.nfsDisabled : props.theme.default.primaryPushThemeTextColor)};
-  color: ${(props) => (props.disabled ? props.theme.nfsDisabledText : 'white')};
-  padding: 16px 27px;
-  width: 12rem;
-
-  @media ${device.tablet} {
-    font-size: 15px;
-    padding: 12px 12px;
-    width: 8rem;
-  }
-
-  @media ${device.mobileL} {
-    width: -webkit-fill-available;
-  }
-`;
-
-const CancelButtons = styled(FooterButtons)`
-  margin-right: 14px;
-  background: ${(props) => props.theme.default.bg};
-  color: ${(props) => props.theme.logoBtnColor};
-  border: 1px solid
-    ${(props) =>
-      props.theme.scheme === 'light' ? props.theme.default.primaryPushThemeTextColor : props.theme.default.borderColor};
-
-  @media ${device.mobileL} {
-    margin-right: 0px;
-    margin-top: 10px;
   }
 `;

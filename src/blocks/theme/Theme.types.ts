@@ -1,4 +1,4 @@
-import { colorSemantics } from './colors/colors.semantics';
+import { colorSemantics, semanticKeys } from './colors/colors.semantics';
 import { blurVariables } from './variables/variables.blur';
 import { borderRadiusVariables } from './variables/variables.borderRadius';
 import { borderSizeVariables } from './variables/variables.borderSize';
@@ -11,14 +11,14 @@ type ColorSemantics = typeof colorSemantics;
 
 type StringKeys<T> = Extract<keyof T, string>;
 
-type ThemeColorsConfig = {
-  [K1 in StringKeys<ColorSemantics> as `${K1}-${StringKeys<ColorSemantics[K1]>}`]: string;
+type ThemeColorsConfig<T> = {
+  [K1 in StringKeys<T> as `${K1}-${StringKeys<T[K1]>}`]: string;
 };
 
-export type ThemeColors = keyof ThemeColorsConfig;
+export type ThemeColors = keyof ThemeColorsConfig<ColorSemantics>;
 
 export type Theme = {
-  colors: ThemeColorsConfig;
+  colors: ThemeColorsConfig<ColorSemantics>;
   blur: typeof blurVariables;
   borderRadius: typeof borderRadiusVariables;
   borderSize: typeof borderSizeVariables;
@@ -31,3 +31,11 @@ export type ThemeBorderRadius = keyof Theme['borderRadius'];
 export type ThemeBorderSize = keyof Theme['borderSize'];
 
 export type ThemeSpacing = keyof Theme['spacing'];
+
+export type SurfaceColors = keyof ThemeColorsConfig<{ [semanticKeys.surface]: ColorSemantics['surface'] }>;
+
+export type TextColors = keyof ThemeColorsConfig<{ [semanticKeys.text]: ColorSemantics['text'] }>;
+
+export type IconColors = keyof ThemeColorsConfig<{ [semanticKeys.icon]: ColorSemantics['icon'] }>;
+
+export type StrokeColors = keyof ThemeColorsConfig<{ [semanticKeys.stroke]: ColorSemantics['stroke'] }>;

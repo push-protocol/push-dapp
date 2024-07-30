@@ -1,18 +1,15 @@
 import { CSSProperties, ReactNode } from 'react';
 
 import {
-  BlocksColors,
   BorderValue,
   BlocksRadiusType,
   ResponsiveProp,
   BlocksSpaceType,
-  ThemeModeBorder,
-  ThemeModeColors,
   ValueOf,
   BlocksGapType,
 } from '../Blocks.types';
 import { FlattenSimpleInterpolation } from 'styled-components';
-import { ThemeColors } from 'blocks/theme/Theme.types';
+import { SurfaceColors, TextColors } from 'blocks/theme/Theme.types';
 
 export type BoxResponsiveProps = {
   /* Sets align-items css property */
@@ -22,7 +19,7 @@ export type BoxResponsiveProps = {
   /* Sets flex-direction css property */
   flexDirection?: ResponsiveProp<CSSProperties['flexDirection']>;
   /* Sets gap between the elements */
-  gap?: ResponsiveProp<BlocksGapType | BlocksSpaceType>;
+  gap?: ResponsiveProp<BlocksGapType>;
   /* Sets display css property */
   display?: ResponsiveProp<CSSProperties['display']>;
   /* Sets height css property */
@@ -41,19 +38,21 @@ export type BoxResponsiveProps = {
   minWidth?: ResponsiveProp<string>;
   /* Sets padding css property */
   padding?: ResponsiveProp<BlocksSpaceType>;
+  /* Sets text-align css property */
+  textAlign?: ResponsiveProp<CSSProperties['textAlign']>;
   /* Sets width css property */
   width?: ResponsiveProp<string>;
 };
 
 export type BoxNonResponsiveProps = {
   /* Sets border css property */
-  border?: BorderValue | ThemeModeBorder;
+  border?: BorderValue;
   /* Sets border-radius css property */
   borderRadius?: BlocksRadiusType;
   /* Sets background-color css property */
-  backgroundColor?: BlocksColors | ThemeModeColors | ThemeColors;
+  backgroundColor?: SurfaceColors;
   /* Sets color css property */
-  color?: BlocksColors | ThemeModeColors | ThemeColors;
+  color?: TextColors;
   /* Sets cursor css property */
   cursor?: CSSProperties['cursor'];
   /* Sets position css property */
@@ -93,6 +92,7 @@ export type BoxResponsiveCSSProperties =
   | 'max-width'
   | 'min-width'
   | 'padding'
+  | 'text-align'
   | 'width';
 
 export type BoxResponsivePropValues = ValueOf<BoxResponsiveProps>;

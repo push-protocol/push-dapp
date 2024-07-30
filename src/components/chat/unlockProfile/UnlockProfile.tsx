@@ -5,15 +5,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import {
-  ButtonV2,
-  ImageV2,
-  ItemHV2,
-  ItemVV2,
-  Skeleton,
-  SkeletonLine,
-  SpanV2,
-} from 'components/reusables/SharedStylingV2';
+import { ImageV2, ItemHV2, ItemVV2, Skeleton, SkeletonLine, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { AppContext } from 'contexts/AppContext';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import { retrieveUserPGPKeyFromStorage } from 'helpers/connectWalletHelper';
@@ -25,8 +17,9 @@ import { device, size } from 'config/Globals';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import UnlockLogo from '../../../assets/chat/unlock.svg';
 import Wallet from '../../../assets/chat/wallet.svg';
-import { Box, CrossFilled, HoverableSVG } from 'blocks';
+import { Button, Box, CrossFilled, HoverableSVG } from 'blocks';
 import { checkUnlockProfileErrors } from './UnlockProfile.utils';
+import { colorBrands } from 'blocks/theme/colors/colors.brands';
 
 // Constants
 export enum UNLOCK_PROFILE_TYPE {
@@ -40,7 +33,6 @@ export enum PROFILESTATE {
 }
 
 // Interface
-
 type UnlockProfileModalProps = {
   InnerComponentProps: {
     type: UNLOCK_PROFILE_TYPE | undefined;
@@ -112,26 +104,6 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
 
   return (
     <Container type={type}>
-      {onClose && (
-        <Box
-          width="-webkit-fill-available"
-          display="flex"
-          flexDirection="row"
-          alignItems="flex-end"
-          justifyContent="flex-end"
-        >
-          <HoverableSVG
-            icon={
-              <CrossFilled
-                size={30}
-                color="gray-400"
-                onClick={onClose}
-              />
-            }
-          />
-        </Box>
-      )}
-
       <SubContainer type={type}>
         {/* Logo and Left Text */}
         <ItemHV2
@@ -151,7 +123,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
             {!isLoading ? (
               <>
                 <SpanV2
-                  fontSize="24px"
+                  fontSize={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? '20px' : '24px'}
                   fontWeight="500"
                   lineHeight="28.8px"
                   color={theme.default.color}
@@ -159,7 +131,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
                   {activeStatus.title}
                 </SpanV2>
                 <SpanV2
-                  fontSize={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? '16px' : '18px'}
+                  fontSize={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? '14px' : '18px'}
                   fontWeight="400"
                   lineHeight="22.4px"
                   color={theme.default.secondaryColor}
@@ -198,7 +170,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
             flexDirection={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? 'column' : 'row'}
           >
             <StepsLeftDesign
-              background={theme.btn.primaryBg}
+              background={colorBrands['primary-500']}
               color={theme.btn.primaryColor}
             >
               1
@@ -210,7 +182,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
             ></HorizontalBar>
             <StepsLeftDesign
               background={
-                activeStatus.status !== PROFILESTATE.CONNECT_WALLET ? theme.btn.primaryBg : theme.btn.disabledBg
+                activeStatus.status !== PROFILESTATE.CONNECT_WALLET ? colorBrands['primary-500'] : theme.btn.disabledBg
               }
               color={
                 activeStatus.status !== PROFILESTATE.CONNECT_WALLET ? theme.btn.primaryColor : theme.btn.disabledColor
@@ -228,23 +200,21 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
           >
             {!isLoading ? (
               <>
-                <DefaultButton
-                  activeStatus={activeStatus.status}
-                  status={PROFILESTATE.CONNECT_WALLET}
+                <Button
                   disabled={activeStatus.status !== PROFILESTATE.CONNECT_WALLET && true}
+                  variant="primary"
                   onClick={() => connectWallet()}
                 >
                   Connect Wallet
-                </DefaultButton>
+                </Button>
 
-                <DefaultButton
-                  activeStatus={activeStatus.status}
-                  status={PROFILESTATE.UNLOCK_PROFILE}
+                <Button
                   disabled={activeStatus.status === PROFILESTATE.CONNECT_WALLET && true}
                   onClick={handleChatprofileUnlock}
+                  variant="primary"
                 >
                   Unlock Profile
-                </DefaultButton>
+                </Button>
               </>
             ) : (
               <SkeletonContainer
@@ -273,7 +243,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
               <ItemHV2
                 gap="8px"
                 justifyContent={type === UNLOCK_PROFILE_TYPE.MODAL ? 'center' : 'end'}
-                margin={type === UNLOCK_PROFILE_TYPE.MODAL ? '12px 16px 0 40px' : '12px 16px 0 0px'}
+                margin={type === UNLOCK_PROFILE_TYPE.MODAL ? '24px 16px 0 40px' : '12px 16px 0 0px'}
               >
                 <CustomCheckbox
                   checked={rememberMe}
@@ -351,12 +321,12 @@ const RenderToolTip = ({ children, type }) => {
 const Container = styled(ItemHV2)`
   flex-direction: column;
   align-items: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? 'center' : 'end')};
-  width: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '450px' : 'inherit')};
-  padding: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '16px' : '0px')};
+  width: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '100%' : 'inherit')};
+  padding: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '0px' : '0px')};
 
   @media (${device.tablet}) {
-    width: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '320px' : 'inherit')};
-    padding: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '12px' : '0px')};
+    width: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '100%' : 'inherit')};
+    padding: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '0px' : '0px')};
     align-items: center;
   }
 `;
@@ -403,29 +373,13 @@ const HorizontalBar = styled.div`
   height: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '40px' : '3px')};
   background: ${(props) =>
     props.activeState === PROFILESTATE.CONNECT_WALLET
-      ? `linear-gradient(to right, ${props.theme.btn.primaryBg}, ${props.theme.btn.disabledBg})`
-      : props.theme.btn.primaryBg};
+      ? `linear-gradient(to right, ${colorBrands['primary-500']}, ${props.theme.btn.disabledBg})`
+      : colorBrands['primary-500']};
 
   @media ${device.tablet} {
     width: 2px;
     height: 40px;
   }
-`;
-
-const DefaultButton = styled(ButtonV2)`
-  flex: none;
-  padding: 12px 16px;
-  border-radius: 12px;
-  min-width: 150px;
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 16px;
-  background: ${(props) =>
-    props.activeStatus === props.status ? props.theme.btn.primaryBg : props.theme.btn.disabledBg};
-  color: ${(props) =>
-    props.activeStatus === props.status ? props.theme.btn.primaryColor : props.theme.btn.disabledColor};
-  cursor: ${(props) => (props.activeStatus !== props.status ? 'not-allowed' : 'pointer')};
 `;
 
 const SkeletonWrapper = styled.div`

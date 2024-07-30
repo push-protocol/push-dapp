@@ -10,7 +10,9 @@ import { checkboxSemantics } from '../semantics/semantics.checkbox';
 import { dropdownSemantics } from '../semantics/semantics.dropdown';
 import { iconSemantics } from '../semantics/semantics.icon';
 import { inputSemantics } from '../semantics/semantics.input';
+import { modalSemantics } from '../semantics/semantics.modal';
 import { radioSemantics } from '../semantics/semantics.radio';
+import { skeletonSemantics } from '../semantics/semantics.skeleton';
 import { strokeSemantics } from '../semantics/semantics.stroke';
 import { surfaceSemantics } from '../semantics/semantics.surface';
 import { switchSemantics } from '../semantics/semantics.switch';
@@ -19,23 +21,72 @@ import { textAreaSemantics } from '../semantics/semantics.textarea';
 import { toastSemantics } from '../semantics/semantics.toast';
 import { tooltipSemantics } from '../semantics/semantics.tooltip';
 
+// TODO: find a better way to do this in future
+type SemanticKeys = {
+  buttonPrimary: 'components-button-primary';
+  buttonSecondary: 'components-button-secondary';
+  buttonTertiary: 'components-button-tertiary';
+  buttonOutline: 'components-button-outline';
+  buttonDanger: 'components-button-danger';
+  buttonDangerSecondary: 'components-button-danger-secondary';
+  checkbox: 'components-checkbox';
+  dropdown: 'components-dropdown';
+  icon: 'icon';
+  input: 'components-inputs';
+  modal: 'components-modal';
+  radio: 'components-radio-button';
+  surface: 'surface';
+  stroke: 'stroke';
+  skeleton: 'components-skeleton-loader';
+  text: 'text';
+  textArea: 'components-textarea';
+  toast: 'components-toast';
+  toggle: 'components-toggle-switch';
+  tooltip: 'components-tooltip';
+};
+
+export const semanticKeys: SemanticKeys = {
+  buttonPrimary: 'components-button-primary',
+  buttonSecondary: 'components-button-secondary',
+  buttonTertiary: 'components-button-tertiary',
+  buttonOutline: 'components-button-outline',
+  buttonDanger: 'components-button-danger',
+  buttonDangerSecondary: 'components-button-danger-secondary',
+  checkbox: 'components-checkbox',
+  dropdown: 'components-dropdown',
+  icon: 'icon',
+  input: 'components-inputs',
+  modal: 'components-modal',
+  radio: 'components-radio-button',
+  surface: 'surface',
+  stroke: 'stroke',
+  skeleton: 'components-skeleton-loader',
+  text: 'text',
+  textArea: 'components-textarea',
+  toast: 'components-toast',
+  toggle: 'components-toggle-switch',
+  tooltip: 'components-tooltip',
+};
+
 export const colorSemantics = {
-  'components-button-primary': primaryButtonSemantics,
-  'components-button-secondary': secondaryButtonSemantics,
-  'components-button-tertiary': tertiaryButtonSemantics,
-  'components-button-outline': outlineButtonSemantics,
-  'components-button-danger': dangerButtonSemantics,
-  'components-button-danger-secondary': dangerSecondaryButtonSemantics,
-  'components-checkbox': checkboxSemantics,
-  'components-dropdown': dropdownSemantics,
-  icon: iconSemantics,
-  'components-inputs': inputSemantics,
-  'components-radio-button': radioSemantics,
-  surface: surfaceSemantics,
-  stroke: strokeSemantics,
-  text: textSemantics,
-  'components-textarea': textAreaSemantics,
-  'components-toast': toastSemantics,
-  'components-toggle-switch': switchSemantics,
-  'components-tooltip': tooltipSemantics,
+  [semanticKeys.buttonPrimary]: primaryButtonSemantics,
+  [semanticKeys.buttonSecondary]: secondaryButtonSemantics,
+  [semanticKeys.buttonTertiary]: tertiaryButtonSemantics,
+  [semanticKeys.buttonOutline]: outlineButtonSemantics,
+  [semanticKeys.buttonDanger]: dangerButtonSemantics,
+  [semanticKeys.buttonDangerSecondary]: dangerSecondaryButtonSemantics,
+  [semanticKeys.checkbox]: checkboxSemantics,
+  [semanticKeys.dropdown]: dropdownSemantics,
+  [semanticKeys.icon]: iconSemantics,
+  [semanticKeys.input]: inputSemantics,
+  [semanticKeys.modal]: modalSemantics,
+  [semanticKeys.radio]: radioSemantics,
+  [semanticKeys.surface]: surfaceSemantics,
+  [semanticKeys.stroke]: strokeSemantics,
+  [semanticKeys.skeleton]: skeletonSemantics,
+  [semanticKeys.text]: textSemantics,
+  [semanticKeys.textArea]: textAreaSemantics,
+  [semanticKeys.toast]: toastSemantics,
+  [semanticKeys.toggle]: switchSemantics,
+  [semanticKeys.tooltip]: tooltipSemantics,
 };
