@@ -6,6 +6,7 @@ import { Box } from "blocks";
 import { UserChannelDashboard } from './components/UserChannelDashboard';
 
 import { DashboardActiveState } from "./ChannelDashboard.types";
+import { ChannelAddDelegate } from './components/ChannelAddDelegate';
 
 const ChannelDashboard = () => {
 
@@ -24,6 +25,8 @@ const ChannelDashboard = () => {
     */}
 
       {activeState === 'dashboard' && <UserChannelDashboard setActiveState={setActiveState} />}
+
+      {activeState === 'addDelegate' && <ChannelAddDelegate setActiveState={setActiveState} />}
 
     </Box>
   );

@@ -14,10 +14,13 @@ import { UserStoreType } from "types";
 
 type ChannelDashboardBodyProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
+  setChannelDashboardError: (error: string) => void;
+
 }
 
 const ChannelDashboardBody: FC<ChannelDashboardBodyProps> = ({
-  setActiveState
+  setActiveState,
+  setChannelDashboardError
 }) => {
 
   const { account } = useAccount();
@@ -27,7 +30,7 @@ const ChannelDashboardBody: FC<ChannelDashboardBodyProps> = ({
 
   const { data: channelDetails, isLoading: loadingChannelSettings } = useGetChannelDetails(account);
 
-  const { data: channel_delegates, isLoading: loadingDelegates } = useGetChannelDelegates(userPushSDKInstance);
+  const { data: channel_delegates, refetch: refetchChannelDelegate, isLoading: loadingDelegates } = useGetChannelDelegates(userPushSDKInstance);
 
   return (
     <Box
@@ -45,6 +48,8 @@ const ChannelDashboardBody: FC<ChannelDashboardBodyProps> = ({
       <ChannelDashboardDelegates
         channel_delegates={channel_delegates}
         loadingDelegates={loadingDelegates}
+        setChannelDashboardError={setChannelDashboardError}
+        refetchChannelDelegate={refetchChannelDelegate}
         setActiveState={setActiveState}
       />
 

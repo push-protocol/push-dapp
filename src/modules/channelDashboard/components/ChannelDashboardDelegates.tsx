@@ -10,13 +10,17 @@ import { DashboardActiveState } from '../ChannelDashboard.types';
 type ChannelDashboardDelegatesProps = {
   channel_delegates?: ChannelDelegatesResponse;
   loadingDelegates: boolean;
+  setChannelDashboardError: (error: string) => void;
   setActiveState: (activeState: DashboardActiveState) => void;
+  refetchChannelDelegate: () => void;
 }
 
 const ChannelDashboardDelegates: FC<ChannelDashboardDelegatesProps> = ({
   channel_delegates,
   loadingDelegates,
-  setActiveState
+  setChannelDashboardError,
+  setActiveState,
+  refetchChannelDelegate
 }) => {
   return (
     <Box
@@ -66,7 +70,10 @@ const ChannelDashboardDelegates: FC<ChannelDashboardDelegatesProps> = ({
           <>
             {channel_delegates.map((delegate: string) => (
               <ChannelDelegateList
+                key={delegate}
                 delegate_address={delegate}
+                refetchChannelDelegate={refetchChannelDelegate}
+                setChannelDashboardError={setChannelDashboardError}
               />
             ))}
           </>

@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
-import { Box } from 'blocks';
+import { Box, Text } from 'blocks';
 
 import { useAccount } from 'hooks';
 
@@ -22,6 +22,7 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({
   const { account } = useAccount();
   const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
 
+  const [channelDashboardError, setChannelDashboardError] = useState('');
 
   return (
     <>
@@ -42,8 +43,15 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({
           setActiveState={setActiveState}
         />
 
+        {channelDashboardError && (
+          <Box>
+            <Text>{channelDashboardError}</Text>
+          </Box>
+        )}
+
         <ChannelDashboardBody
           setActiveState={setActiveState}
+          setChannelDashboardError={setChannelDashboardError}
         />
 
       </Box>

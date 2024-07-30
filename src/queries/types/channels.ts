@@ -92,3 +92,21 @@ export type ChannelDelegatesResponse = Array<string>;
 export type GetChannelDelegatesParams = {
   userPushSDKInstance: PushAPI;
 };
+
+export type RemoveChannelDelegateParams = {
+  userPushSDKInstance: PushAPI;
+  delegateAddress: string; //chain address in caip format
+};
+
+export type RemoveChannelDelegateResponse = {
+  transactionHash: string;
+};
+
+export type addChannelDelegateParams = {
+  userPushSDKInstance: PushAPI;
+  delegateAddress: string; //chain address in caip format
+};
+
+export type AddChannelDelegateResponse = {
+  transactionHash: string;
+};
