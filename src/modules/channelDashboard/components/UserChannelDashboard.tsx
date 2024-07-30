@@ -42,7 +42,9 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({
           setActiveState={setActiveState}
         />
 
-        <ChannelDashboardBody />
+        <ChannelDashboardBody
+          setActiveState={setActiveState}
+        />
 
       </Box>
 

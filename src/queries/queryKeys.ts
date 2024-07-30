@@ -2,6 +2,7 @@ export const UserRewardsDetails = 'userRewardsDetails';
 export const allActivities = 'allActivities';
 export const allUserSubscriptions = 'allUserSubscriptions';
 export const approveVaultUser = 'approveVaultUser';
+export const channelDelegates = 'channelDelegates';
 export const channelDetails = 'channelDetails';
 export const claimRewards = 'claimRewards';
 export const createUserRewardsDetails = 'createUserRewardsDetails';

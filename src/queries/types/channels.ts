@@ -87,10 +87,8 @@ export type ChannelDetails = {
   aliases: Array<Alias>;
 };
 
-export type InitiateVerifyAliasChainResponse = {
-  tx: string;
-};
+export type ChannelDelegatesResponse = Array<string>;
 
-export type InitiateVerifyAliasChainResponse = {
-  tx: string;
+export type GetChannelDelegatesParams = {
+  userPushSDKInstance: PushAPI;
 };
