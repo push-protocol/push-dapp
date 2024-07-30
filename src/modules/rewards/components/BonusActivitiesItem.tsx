@@ -7,7 +7,6 @@ import useLockedStatus from '../hooks/useLockedStatus';
 
 // components
 import { Box, Button, Lock, RewardsBell, Skeleton, Text } from 'blocks';
-import { RewardsActivityTitle } from './RewardsActivityTitle';
 import { ActivityButton } from './ActivityButton';
 
 export type BonusActivitiesItemProps = {
@@ -28,7 +27,10 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, i
   const { isLocked, isWalletConnected } = useLockedStatus();
 
   return (
-    <Skeleton isLoading={isLoadingItem}>
+    <Skeleton
+      isLoading={isLoadingItem}
+      borderRadius="radius-md"
+    >
       <Box
         backgroundColor="surface-primary"
         borderRadius="radius-md"
@@ -62,10 +64,11 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, i
             variant="bl-semibold"
             textAlign="center"
           >
-            <RewardsActivityTitle
-              activityTitle={activity.activityTitle}
-              isLoading={isLoading}
-            />
+            {/* TODO: ask BE to update Title according to design only */}
+            {activity?.activityTitle?.replace(
+              /Reach\s+([\d,]+)\s+Subscribers\s+for\s+your\s+channel/i,
+              '$1 Subscribers'
+            )}
           </Text>
           <Text
             variant="bs-regular"

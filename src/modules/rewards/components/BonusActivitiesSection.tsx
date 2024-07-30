@@ -31,11 +31,11 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
   const isLoading = isLoadingActivities;
 
   // If there are activities then render them else render 2 skeletons
-  const activityList = isLoading
-    ? Array(8).fill(0)
-    : rewardActivitiesResponse?.pages.flatMap((page) => page.activities) || [];
+  const activityList = rewardActivitiesResponse?.pages.flatMap((page) => page.activities) || [];
 
-  const bonusActivities = activityList.filter((activity) => activity.index >= 5 && activity.index <= 12);
+  const bonusActivities = isLoading
+    ? Array(8).fill(0)
+    : activityList.filter((activity) => activity.index >= 5 && activity.index <= 12);
 
   return (
     <Box

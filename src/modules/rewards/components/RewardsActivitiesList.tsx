@@ -35,14 +35,14 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
   // const isLoading = isLoadingUserDetails || isLoadingActivities;
 
   // If there are activities then render them else render 2 skeletons
-  const activityList = isLoading
-    ? Array(2).fill(0)
-    : rewardActivitiesResponse?.pages.flatMap((page) => page.activities) || [];
+  const activityList = rewardActivitiesResponse?.pages.flatMap((page) => page.activities) || [];
 
   // Filter activities based on the index
-  const firstGroupActivities = activityList.filter((activity) => activity.index >= 0 && activity.index <= 1);
+  const firstGroupActivities = isLoading
+    ? Array(2).fill(0)
+    : activityList.filter((activity) => activity.index >= 0 && activity.index <= 1);
 
-  const secondGroupActivities = activityList.filter((activity) => activity.index >= 13);
+  const secondGroupActivities = isLoading ? Array(7).fill(0) : activityList.filter((activity) => activity.index >= 13);
 
   const hasMoreData = !isFetchingNextPage && hasNextPage;
 
@@ -72,17 +72,14 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
         useWindow={false}
         threshold={150}
       >
-        {firstGroupActivities?.map((activity: Activity) => (
-          <>
-            <RewardsActivitiesListItem
-              key={activity.activityType}
-              userId={userDetails?.userId || ''}
-              activity={activity}
-              isLoadingItem={isLoading}
-            />
-          </>
+        {firstGroupActivities.map((activity: Activity) => (
+          <RewardsActivitiesListItem
+            key={activity.activityType}
+            userId={userDetails?.userId || ''}
+            activity={activity}
+            isLoadingItem={isLoading}
+          />
         ))}
-
         {isLocked && (
           <Box
             display="flex"
@@ -116,15 +113,13 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
           </Box>
         )}
 
-        {secondGroupActivities?.map((activity: Activity) => (
-          <>
-            <RewardsActivitiesListItem
-              key={activity.activityType}
-              userId={userDetails?.userId || ''}
-              activity={activity}
-              isLoadingItem={isLoading}
-            />
-          </>
+        {secondGroupActivities.map((activity: Activity) => (
+          <RewardsActivitiesListItem
+            key={activity.activityType}
+            userId={userDetails?.userId || ''}
+            activity={activity}
+            isLoadingItem={isLoading}
+          />
         ))}
       </InfiniteScroll>
     </Box>

@@ -18,7 +18,7 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
     activeItem,
     activeDay,
     isActivityDisabled,
-    isLoadingRewards,
+    isLoading,
     userDetails,
     dailyRewardsActivities,
     handleCheckIn,
@@ -109,7 +109,7 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
           <DailyRewardsItem
             activity={activity}
             activeDay={activeDay}
-            isLoading={isLoadingRewards}
+            isLoading={isLoading}
             isActivityDisabled={isActivityDisabled}
           />
         ))}
