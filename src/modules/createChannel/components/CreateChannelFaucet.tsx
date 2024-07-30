@@ -1,15 +1,15 @@
 // React+web3 essentials
-import { FC } from "react";
+import { FC } from 'react';
 
 // Components
-import { Box, Button, Link, Skeleton, Swap, Text } from "blocks";
-import { UniswapWidgetModal } from "components/UniswapWidget";
+import { Box, Button, Link, Skeleton, Swap, Text } from 'blocks';
+import { UniswapWidgetModal } from 'components/UniswapWidget';
 
 // Hooks
-import useModalBlur, { MODAL_POSITION } from "hooks/useModalBlur";
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 
 // Config
-import { appConfig } from "config";
+import { appConfig } from 'config';
 
 type CreateChannelFaucetProps = {
   mintPushToken: (noOfTokens: number) => void;
@@ -32,20 +32,21 @@ const CreateChannelFaucet: FC<CreateChannelFaucetProps> = ({
 
   return (
     <Box
-      display='flex'
-      padding='spacing-sm spacing-md'
-      backgroundColor='surface-brand-subtle'
+      display="flex"
+      padding="spacing-sm spacing-md"
+      backgroundColor="surface-brand-subtle"
       borderRadius="radius-none radius-none radius-sm radius-sm"
-      justifyContent='space-between'
-      alignItems='center'
+      justifyContent="space-between"
+      alignItems="center"
       flexDirection={{ ml: 'column', initial: 'row' }}
-      gap='s3'
+      gap="spacing-xs"
     >
       <Skeleton isLoading={mintingPush}>
-        <Text variant="c-regular" color='text-primary'>
-          {isProd ?
-            'Your balance is low. Swap to get PUSH Tokens.' :
-            'Follow these steps to get Testnet PUSH.'}
+        <Text
+          variant="c-regular"
+          color="text-primary"
+        >
+          {isProd ? 'Your balance is low. Swap to get PUSH Tokens.' : 'Follow these steps to get Testnet PUSH.'}
         </Text>
       </Skeleton>
 
@@ -58,24 +59,30 @@ const CreateChannelFaucet: FC<CreateChannelFaucetProps> = ({
           Swap PUSH Token
         </Button>
       ) : (
-        <Box display='flex' gap='s3'>
+        <Box
+          display="flex"
+          gap="spacing-xs"
+        >
           <Skeleton isLoading={mintingPush}>
-            <Link to='https://chaindrop.org/?chainid=11155111&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' target="_blank">
+            <Link
+              to="https://chaindrop.org/?chainid=11155111&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+              target="_blank"
+            >
               <Box
-                display='flex'
-                gap='s2'
-                alignItems='baseline'
-                color='text-brand-medium'
-                cursor='pointer'
+                display="flex"
+                gap="spacing-xxs"
+                alignItems="baseline"
+                color="text-brand-medium"
+                cursor="pointer"
               >
                 <Box
-                  border='1px solid pink-600'
-                  width='16px'
-                  height='15px'
-                  borderRadius="r10"
-                  display='flex'
-                  justifyContent='center'
-
+                  // Abhishek to fix this approach
+                  border="border-sm solid stroke-brand-medium"
+                  width="16px"
+                  height="15px"
+                  borderRadius="radius-xl"
+                  display="flex"
+                  justifyContent="center"
                 >
                   <Text variant="c-regular">1</Text>
                 </Box>
@@ -86,21 +93,20 @@ const CreateChannelFaucet: FC<CreateChannelFaucetProps> = ({
 
           <Skeleton isLoading={mintingPush}>
             <Box
-              display='flex'
-              gap='s2'
-              alignItems='baseline'
-              color='text-brand-medium'
-              cursor='pointer'
+              display="flex"
+              gap="spacing-xxs"
+              alignItems="baseline"
+              color="text-brand-medium"
+              cursor="pointer"
               onClick={() => mintPushToken(1000)}
             >
               <Box
-                border='1px solid pink-600'
-                width='16px'
-                height='15px'
-                borderRadius="r10"
-                display='flex'
-                justifyContent='center'
-
+                border="border-sm solid stroke-brand-medium"
+                width="16px"
+                height="15px"
+                borderRadius="radius-xl"
+                display="flex"
+                justifyContent="center"
               >
                 <Text variant="c-regular">2</Text>
               </Box>
@@ -118,10 +124,8 @@ const CreateChannelFaucet: FC<CreateChannelFaucetProps> = ({
           modalPosition={MODAL_POSITION.ON_ROOT}
         />
       )}
-    </Box >
+    </Box>
   );
-
-
 };
 
 export { CreateChannelFaucet };

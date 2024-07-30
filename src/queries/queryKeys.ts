@@ -31,3 +31,6 @@ export const userRewardsDetails = 'userRewardsDetails';
 export const userSubscription = 'userSubscription';
 export const userTwitterDetails = 'userTwitterDetails';
 export const verifyAliasChain = 'verifyAliasChain';
+export const sentMessageCount = 'sentMessageCount';
+export const sentNotificationCount = 'sentNotificationCount';
+export const subscriberCount = 'subscriberCount';

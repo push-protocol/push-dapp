@@ -4,16 +4,10 @@ import { useEffect, useState, useContext } from 'react';
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
 import styled, { useTheme } from 'styled-components';
-import { MdError } from 'react-icons/md';
 
 // Internal Compoonents
-import AliasProcessing from 'components/AliasProcessing';
-import ChannelDetails from 'components/ChannelDetails';
 import ChannelLoading from 'components/ChannelLoading';
-import ChannelSettings from 'components/ChannelSettings';
-import CreateChannelModule from '../createChannel/CreateChannelModule';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
-import { Button } from 'blocks';
 import { getAliasFromChannelDetails } from 'helpers/UtilityHelper';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import {
@@ -21,7 +15,6 @@ import {
   setAliasAddressFromContract,
   setAliasChainId,
   setAliasVerified,
-  setUserChannelDetails,
 } from 'redux/slices/adminSlice';
 import { setProcessingState } from 'redux/slices/channelCreationSlice';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
@@ -29,8 +22,6 @@ import useToast from 'hooks/useToast';
 
 // Internal Configs
 import { appConfig } from 'config/index.js';
-import EditChannel from 'modules/editChannel/EditChannel';
-import useModalBlur from 'hooks/useModalBlur';
 import { AppContext } from 'contexts/AppContext';
 import { ChannelDashboard } from './ChannelDashboard';
 import { CreateChannel } from 'modules/createChannel';
@@ -213,7 +204,7 @@ const ChannelOwnerDashboard = () => {
 
           {/* 
           {isChannelDetails && processingState !== null && (
-            <>
+            <Container>
               {editChannel ? (
                 <EditChannel
                   closeEditChannel={closeEditChannel}

@@ -75,7 +75,7 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
             required
             label="Channel Description"
             placeholder="Get notified about ..."
-            description='Enter a Brief description of the notifications the user will receive'
+            description="Enter a Brief description of the notifications the user will receive"
             value={formValues.channelDesc}
             onChange={(e) => {
               const value = e.target.value;
@@ -101,14 +101,14 @@ const ChannelInfo: FC<ChannelInfoProps> = ({
           />
         </Box>
 
-        <Box display='flex' justifyContent='center'>
-          <Button onClick={handleNext}>
-            Next
-          </Button>
+        <Box
+          display="flex"
+          justifyContent="center"
+        >
+          <Button onClick={handleNext}>Next</Button>
         </Box>
       </Box>
     </Box>
-
   );
 };
 

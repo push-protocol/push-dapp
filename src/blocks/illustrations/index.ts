@@ -12,6 +12,8 @@ export { default as Discord } from './components/Discord';
 export { default as Arbitrum } from './components/Arbitrum';
 export { default as BNB } from './components/BNB';
 export { default as Cyber } from './components/Cyber';
+export { default as EarnOnPush } from './components/EarnOnPush';
+
 export { default as Ethereum } from './components/Ethereum';
 export { default as Fuse } from './components/Fuse';
 export { default as Optimism } from './components/Optimism';

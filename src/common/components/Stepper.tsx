@@ -21,9 +21,8 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepKey, completedSteps }) 
       display="flex"
       gap="spacing-lg"
     >
-      {steps.map((step, index) => (
+      {steps.map((step) => (
         <Box
-          key={index}
           display="flex"
           flexDirection="column"
           gap="spacing-xs"
@@ -51,7 +50,9 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepKey, completedSteps }) 
           <Box
             height="4px"
             borderRadius="radius-xxs"
-            backgroundColor={completedSteps.includes(step.value) ? 'surface-brand-medium' : 'surface-tertiary'}
+            // TODO: Monalisha has to fix this
+            // @ts-expect-error
+            backgroundColor={completedSteps.includes(step.value) ? 'stroke-brand-medium' : 'stroke-tertiary'}
           ></Box>
         </Box>
       ))}
