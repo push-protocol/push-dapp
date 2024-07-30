@@ -294,7 +294,7 @@ const Container = styled(ItemVV2)`
   padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
   position: relative;
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-  @media ${device.laptop} {
+  <<<<<<< HEAD =======>>>>>>>60e48167be7f381c8f5afa2fbd509fe526a74b71 @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
     padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
     width: calc(

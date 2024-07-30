@@ -86,3 +86,7 @@ export type ChannelDetails = {
   verify_verification_proof: string | null;
   aliases: Array<Alias>;
 };
+
+export type InitiateVerifyAliasChainResponse = {
+  tx: string;
+};
