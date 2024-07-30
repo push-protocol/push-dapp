@@ -19,6 +19,8 @@ import LoaderSpinner, {
 import { Anchor, Item } from '../primaries/SharedStyling';
 const AirdropPage = lazy(() => import('pages/AirdropPage'));
 const ChannelDashboardPage = lazy(() => import('pages/ChannelDashboardPage'));
+const ChannelDashboardPageV2 = lazy(() => import('pages/ChannelDashboardPageV2'));
+const CreateChannelPage = lazy(() => import('pages/CreateChannelPage'));
 const ChannelsPage = lazy(() => import('pages/ChannelsPage'));
 const ChatPage = lazy(() => import('pages/ChatPage'));
 const ComingSoonPage = lazy(() => import('pages/ComingSoonPage'));
@@ -240,6 +242,17 @@ function MasterInterfacePage() {
               path={APP_PATHS.Dashboard}
               element={<ChannelDashboardPage />}
             />
+
+            <Route
+              path={APP_PATHS.CreateChannel}
+              element={<CreateChannelPage />}
+            />
+
+            <Route
+              path={`${APP_PATHS.ChannelDashboard}/:channelId`}
+              element={<ChannelDashboardPageV2 />}
+            />
+
             <Route
               path={APP_PATHS.Send}
               element={<SendNotificationPage />}
