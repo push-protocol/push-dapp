@@ -39,6 +39,8 @@ export { default as Copy } from './components/Copy';
 export { default as Cross } from './components/Cross';
 export { default as CrossFilled } from './components/CrossFilled';
 
+export { default as CrownSimple } from './components/CrownSimple';
+
 export { default as Cube } from './components/Cube';
 
 export { default as Dash } from './components/Dash';

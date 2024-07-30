@@ -8,6 +8,8 @@ import { useGetChannelDetails } from 'queries';
 
 import { ChannelDashboardHeader } from './ChannelDashboardHeader';
 import { AppFooter } from './AppFooter';
+import { ChannelDashboardBody } from './ChannelDashboardBody';
+
 import { DashboardActiveState } from '../ChannelDashboard.types';
 
 type UserChannelDashboardProps = {
@@ -39,6 +41,8 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({
           loadingChannelDetails={loadingChannelDetails}
           setActiveState={setActiveState}
         />
+
+        <ChannelDashboardBody />
 
       </Box>
 
