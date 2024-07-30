@@ -1,8 +1,8 @@
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
-import { useEffect } from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import UnlockProfile from './UnlockProfile';
+import { Modal } from 'blocks';
 
 export enum UNLOCK_PROFILE_TYPE {
   BOTTOM_BAR = 'bottombar',
@@ -13,54 +13,50 @@ interface IntroContainerProps {
   type?: UNLOCK_PROFILE_TYPE;
   showConnectModal?: boolean;
   description?: string;
-  onClose?: () => void;
+  onClose: () => void;
 }
 
 const DEFAULT_PROPS = {
   type: UNLOCK_PROFILE_TYPE.MODAL,
 };
 
-const UnlockProfileWrapper = ({
+const UnlockProfileWrapper: FC<IntroContainerProps> = ({
   type = DEFAULT_PROPS.type,
-  showConnectModal,
+  showConnectModal = false,
   description,
   onClose,
-}: IntroContainerProps) => {
-  const {
-    isModalOpen: isProfileModalOpen,
-    showModal: showProfileModal,
-    ModalComponent: ProfileModalComponent,
-  } = useModalBlur();
-
-  useEffect(() => {
-    if (type === UNLOCK_PROFILE_TYPE.MODAL && showConnectModal) {
-      showProfileModal();
-    }
-  }, [type, showConnectModal]);
-
-  if (type === UNLOCK_PROFILE_TYPE.MODAL) {
-    return (
-      <ProfileModalComponent
-        InnerComponent={UnlockProfile}
-        InnerComponentProps={{
-          type,
-          description,
-        }}
-        modalRadius="24px"
-        modalBorder={false}
-        modalPosition={MODAL_POSITION.ON_PARENT}
-      />
-    );
-  } else {
-    return (
-      <Container className={type}>
-        <UnlockProfile
-          InnerComponentProps={{ type, description }}
+}) => {
+  return (
+    <>
+      {type === UNLOCK_PROFILE_TYPE.MODAL ? (
+        <Modal
+          isOpen={showConnectModal}
           onClose={onClose}
-        />
-      </Container>
-    );
-  }
+          size="small"
+          acceptButtonProps={null}
+          cancelButtonProps={null}
+        >
+          <UnlockProfile
+            InnerComponentProps={{
+              type,
+              description,
+            }}
+            onClose={onClose}
+          />
+        </Modal>
+      ) : (
+        <Container className={type}>
+          <UnlockProfile
+            InnerComponentProps={{
+              type,
+              description,
+            }}
+            onClose={onClose}
+          />
+        </Container>
+      )}
+    </>
+  );
 };
 
 export default UnlockProfileWrapper;
@@ -70,7 +66,6 @@ const Container = styled(ItemVV2)`
   border-radius: 24px;
   padding: 24px;
   align-items: center;
-  // overflow: hidden;
   backdrop-filter: blur(8px);
 
   &.bottombar {
@@ -81,7 +76,6 @@ const Container = styled(ItemVV2)`
     width: auto;
     bottom: 0;
     flex-direction: row;
-    // overflow: hidden;
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
   }
