@@ -1,9 +1,9 @@
 // React + Web3 Essentials
-import { useContext, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled, { css, useTheme } from 'styled-components';
 
 // Internal Compoonents
@@ -23,13 +23,92 @@ import GLOBALS from 'config/Globals';
 import navigationList from 'config/NavigationList';
 import { appConfig } from 'config/index.js';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { Box, PlusCircle, Text } from 'blocks';
+import { LOGO_ALIAS_CHAIN } from 'common';
+import APP_PATHS from 'config/AppPaths';
+import { useGetChannelDetails, ChannelDetails } from 'queries';
 
+type AddNewChainNavigationProps = {
+  channelDetails: ChannelDetails;
+};
+const AddNewChainNavigation: FC<AddNewChainNavigationProps> = ({ channelDetails }) => {
+  const navigate = useNavigate();
+  const verifiedAliasChainIds =
+    channelDetails?.aliases
+      ?.filter((item) => item?.is_alias_verified)
+      ?.map((item) => parseInt(item.alias_blockchain_id)) || [];
+  return (
+    <Box
+      display="flex"
+      padding="spacing-none spacing-md"
+      height="48px"
+    >
+      <Box
+        css={css`
+          border-bottom: 1.5px solid var(--stroke-tertiary);
+          border-left: 1.5px solid var(--stroke-tertiary);
+          border-bottom-left-radius: 10px;
+        `}
+        width="20px"
+        height="24px"
+      ></Box>
+
+      {verifiedAliasChainIds.length > 0 && (
+        <Box
+          display="flex"
+          alignItems="center"
+          margin="spacing-none spacing-none spacing-none spacing-xs"
+        >
+          {verifiedAliasChainIds.map((aliasChainId: number) => {
+            const LogoComponent = LOGO_ALIAS_CHAIN[aliasChainId];
+            return LogoComponent ? (
+              <Box
+                display="flex"
+                css={css`
+                  margin-left: -8px;
+                `}
+              >
+                <LogoComponent
+                  key={aliasChainId}
+                  width={24}
+                  height={24}
+                />
+              </Box>
+            ) : null;
+          })}
+        </Box>
+      )}
+
+      <Box
+        display="flex"
+        gap="spacing-xxxs"
+        alignItems="center"
+        cursor="pointer"
+        onClick={() => navigate(APP_PATHS.AddNewChain)}
+      >
+        <PlusCircle
+          size={32}
+          color="icon-primary"
+        />
+
+        {!verifiedAliasChainIds?.length && (
+          <Text
+            variant="bm-semibold"
+            color="text-secondary"
+            ellipsis
+          >
+            Add New Chain
+          </Text>
+        )}
+      </Box>
+    </Box>
+  );
+};
 // Create Header
 function Navigation() {
   const {
-    channelDetails,
     delegatees,
-    aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified },
+    // aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified },
   } = useSelector((state: any) => state.admin);
   const [refresh, setRefresh] = useState(false);
   const { processingState } = useSelector((state: any) => state.channelCreation);
@@ -39,10 +118,11 @@ function Navigation() {
 
   const CORE_CHAIN_ID = appConfig.coreContractChain;
   const { account, chainId } = useAccount();
-  const onCoreNetwork = CORE_CHAIN_ID === chainId;
-
+  const { data: channelDetails } = useGetChannelDetails(account);
+  const isAliasVerified = channelDetails?.aliases.some((alias) => alias.is_alias_verified);
   const theme = useTheme();
   const location = useLocation();
+
   const dispatch = useDispatch();
 
   const { canSend } = useSelector((state: any) => {
@@ -70,6 +150,8 @@ function Navigation() {
         newNavSetup.developersList[0].data.name = 'Create Channel';
         newNavSetup.developersList[0].data.hidden = false;
         newNavSetup.developersList[0].data.loading = false;
+        newNavSetup.developersList[0].data.src = 'createChannelIcon';
+        newNavSetup.developersList[0].data.activeSrc = 'createChannelIcon';
       }
 
       if (canSend === SEND_NOTIFICATION_STATES.SEND) {
@@ -85,13 +167,13 @@ function Navigation() {
     if (processingState !== 0) {
       dispatch(setCanSend(SEND_NOTIFICATION_STATES.LOADING));
     } else {
-      if (((aliasAddr || aliasEthAddr) && isAliasVerified) || (delegatees && delegatees.length > 0)) {
+      if (isAliasVerified || (delegatees && delegatees.length > 0)) {
         dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
       } else {
         dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
       }
     }
-  }, [channelDetails, aliasAddr, isAliasVerified, delegatees, canSend, processingState, account]);
+  }, [channelDetails, isAliasVerified, delegatees, canSend, processingState, account]);
 
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
@@ -430,6 +512,8 @@ function Navigation() {
       const section = items[key];
       const data = section.data;
       const uid = section.data.uid;
+      const isChannelPresent = channelDetails !== 'unfetched' && channelDetails != null;
+
       // if(uid === 2 ){
       //   if(section.opened)
       //   dispatch(setCommunicateOpen(true))
@@ -557,6 +641,9 @@ function Navigation() {
                   active={checkIfNavigationItemIsActive(section)}
                   bg={returnNavigationBgColor(checkIfNavigationItemIsActive(section))}
                 />
+                {isChannelPresent && data.name === channelDetails.name && (
+                  <AddNewChainNavigation channelDetails={channelDetails} />
+                )}
               </SectionInnerGroupContainer>
 
               {/* { 
