@@ -1,7 +1,7 @@
 import { FC, useContext, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { Box, Copy, OptOut, Separator, Text, Tooltip } from 'blocks';
+import { Box, Copy, OptOut, Separator, Text } from 'blocks';
 
 import { AppContext } from 'contexts/AppContext';
 
@@ -95,15 +95,15 @@ const ChannelDelegateList: FC<ChannelDelegateListProps> = ({
           >
             {shortenText(delegate_address, 7)}
           </Text>
-          <Tooltip description={tooltipText}>
-            <Box cursor="pointer">
-              <Copy
-                onClick={copyWalletAddress}
-                size={14}
-                color="icon-tertiary"
-              />
-            </Box>
-          </Tooltip>
+          {/* <Tooltip description={tooltipText}> */}
+          <Box cursor="pointer">
+            <Copy
+              onClick={copyWalletAddress}
+              size={14}
+              color="icon-tertiary"
+            />
+          </Box>
+          {/* </Tooltip> */}
         </Box>
 
         <Box
