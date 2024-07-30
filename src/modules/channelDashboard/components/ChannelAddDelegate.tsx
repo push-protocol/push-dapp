@@ -24,7 +24,7 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({ setActiveState }) => 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
     return state.user;
   });
-
+  // @ts-expect-error
   const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
 
   const [addDelegateError, setAddDelegateError] = useState<string | null>(null);
@@ -52,7 +52,7 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({ setActiveState }) => 
     addDelegate(
       {
         userPushSDKInstance: userPushInstance,
-        delegateAddress: delegateForm.values.delegateAddress
+        delegateAddress: delegateForm.values.delegateAddress,
       },
       {
         onSuccess: () => {
@@ -63,14 +63,14 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({ setActiveState }) => 
         onError: (error) => {
           console.log('Error in adding delegatee', error);
           setAddDelegateError('Error in delegating. Check console for more reasons');
-        }
+        },
       }
     );
   };
 
   const delegateForm = createDelegateForm({
     handleAddDelegate,
-    channel_delegates
+    channel_delegates,
   });
 
   return (
@@ -92,14 +92,23 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({ setActiveState }) => 
       {addDelegateError && (
         <Alert
           variant="error"
-          icon={<ErrorFilled color="icon-state-danger-bold" size={24} />}
+          icon={
+            <ErrorFilled
+              color="icon-state-danger-bold"
+              size={24}
+            />
+          }
           message={addDelegateError}
           width="100%"
         />
       )}
 
       <form onSubmit={delegateForm.handleSubmit}>
-        <Box display="flex" flexDirection="column" gap="spacing-md">
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap="spacing-md"
+        >
           <TextInput
             required
             label="Delegate Address"
@@ -109,8 +118,16 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({ setActiveState }) => 
             errorMessage={delegateForm.errors.delegateAddress}
           />
 
-          <Box display="flex" gap="spacing-sm" justifyContent="center">
-            <Button size="medium" variant="outline" onClick={() => setActiveState('dashboard')}>
+          <Box
+            display="flex"
+            gap="spacing-sm"
+            justifyContent="center"
+          >
+            <Button
+              size="medium"
+              variant="outline"
+              onClick={() => setActiveState('dashboard')}
+            >
               Back
             </Button>
             <Button disabled={isPending}>{isPending ? 'Adding' : 'Add'}</Button>
