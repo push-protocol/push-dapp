@@ -1,3 +1,4 @@
+// Components
 import { Box, Text } from 'blocks';
 
 const CreateChannelHeader = () => {
@@ -6,18 +7,41 @@ const CreateChannelHeader = () => {
       display="flex"
       flexDirection="column"
       alignItems="center"
-      gap="s1"
+      gap="spacing-xxs"
       alignSelf="stretch"
     >
-
-      <Text variant="h3-semibold">
+      <Text
+        variant="h3-semibold"
+        color="text-primary"
+        display={{ ml: 'none', dp: 'block' }}
+      >
         Create Your Channel
       </Text>
 
-      <Text variant="bs-regular" color='gray-500'>
+      <Text
+        variant="bs-regular"
+        color="text-tertiary"
+        display={{ ml: 'none', dp: 'block' }}
+      >
         Creating your own notification channel to manage, send and notify users.
       </Text>
 
+      <Text
+        variant={'h4-semibold'}
+        color="text-primary"
+        display={{ ml: 'block', dp: 'none' }}
+      >
+        Create Your Channel
+      </Text>
+
+      <Text
+        variant="bes-regular"
+        color="text-tertiary"
+        display={{ ml: 'block', dp: 'none' }}
+        textAlign="center"
+      >
+        Creating your own notification channel to manage, send and notify users.
+      </Text>
     </Box>
   );
 };

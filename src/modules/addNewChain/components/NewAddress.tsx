@@ -2,16 +2,18 @@ import { FC } from 'react';
 
 import { Box, Button, Select, TextInput } from 'blocks';
 
-import { getSelectChains } from '../AddNewChain.utils';
+import { getSelectChains } from 'common';
 
 import { useChainAliasForm } from '../AddNewChain.form';
+
+import { appConfig } from 'config';
 
 export type NewAddressProps = {
   isLoading: boolean;
 };
 
 const NewAddress: FC<NewAddressProps> = ({ isLoading }) => {
-  const selectOptions = getSelectChains();
+  const selectOptions = getSelectChains(appConfig.allowedNetworks);
   const { values: formValues, handleSubmit, handleChange, errors, touched } = useChainAliasForm();
   return (
     <Box width="100%">
