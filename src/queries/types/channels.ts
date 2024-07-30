@@ -30,7 +30,32 @@ export type GetChannelDetailsParams = {
   address: string;
 };
 
-export type ChannelDetailsResponse = {
+export type InitiateVerifyAliasChainResponse = {
+  tx: string;
+};
+
+export type SendNotificationParams = {
+  data: string;
+  status: number;
+  statusText: string;
+  headers: {};
+  config: {};
+  request?: any;
+};
+
+export type Alias = {
+  id: number;
+  channel: string;
+  processed: number;
+  alias_address: string;
+  is_alias_verified: number;
+  alias_verification_event: string | null;
+  timestamp: string;
+  initiate_verification_proof: string;
+  verify_verification_proof: string;
+  alias_blockchain_id: string;
+};
+export type ChannelDetails = {
   activation_status: number;
   alias_address: string | null;
   alias_blockchain_id: string | null;
@@ -59,6 +84,7 @@ export type ChannelDetailsResponse = {
   url: string;
   verified_status: number;
   verify_verification_proof: string | null;
+  aliases: Array<Alias>;
 };
 
 export type InitiateVerifyAliasChainResponse = {
