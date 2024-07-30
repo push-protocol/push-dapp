@@ -8,6 +8,7 @@ import useLockedStatus from '../hooks/useLockedStatus';
 // components
 import { Box, Button, Lock, RewardsBell, Skeleton, Text } from 'blocks';
 import { ActivityButton } from './ActivityButton';
+import { RewardsActivityIcon } from './RewardsActivityIcon';
 
 export type BonusActivitiesItemProps = {
   userId: string;
@@ -26,6 +27,8 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, i
 
   const { isLocked, isWalletConnected } = useLockedStatus();
 
+  const isLockedOrNotConnected = isLocked || !isWalletConnected;
+
   return (
     <Skeleton
       isLoading={isLoadingItem}
@@ -40,18 +43,22 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, i
         padding="spacing-sm"
         justifyContent="space-between"
       >
-        <Box
-          width="48px"
-          height="48px"
-          borderRadius="radius-round"
-          backgroundColor="surface-tertiary"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          border="border-xs solid stroke-tertiary"
-        >
-          <Lock size={28} />
-        </Box>
+        {isLockedOrNotConnected ? (
+          <Box
+            width="48px"
+            height="48px"
+            borderRadius="radius-round"
+            backgroundColor="surface-tertiary"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            border="border-xs solid stroke-tertiary"
+          >
+            <Lock size={28} />
+          </Box>
+        ) : (
+          <RewardsActivityIcon type={activity.activityType} />
+        )}
 
         <Box
           display="flex"
@@ -103,7 +110,7 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, i
           display="flex"
           margin="spacing-md spacing-none spacing-none spacing-none"
         >
-          {(isLocked || !isWalletConnected) && (
+          {isLockedOrNotConnected && (
             <Button
               size="small"
               variant="tertiary"

@@ -107,6 +107,7 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
       >
         {dailyRewardsActivities?.map((activity) => (
           <DailyRewardsItem
+            key={activity.activityType}
             activity={activity}
             activeDay={activeDay}
             isLoading={isLoading}
