@@ -20,6 +20,7 @@ import { textSemantics } from '../semantics/semantics.text';
 import { textAreaSemantics } from '../semantics/semantics.textarea';
 import { toastSemantics } from '../semantics/semantics.toast';
 import { tooltipSemantics } from '../semantics/semantics.tooltip';
+import { spinnerSemantics } from '../semantics/semantics.spinner';
 
 // TODO: find a better way to do this in future
 type SemanticKeys = {
@@ -43,6 +44,7 @@ type SemanticKeys = {
   toast: 'components-toast';
   toggle: 'components-toggle-switch';
   tooltip: 'components-tooltip';
+  spinner: 'components-spin-loader-spinner';
 };
 
 export const semanticKeys: SemanticKeys = {
@@ -66,6 +68,7 @@ export const semanticKeys: SemanticKeys = {
   toast: 'components-toast',
   toggle: 'components-toggle-switch',
   tooltip: 'components-tooltip',
+  spinner: 'components-spin-loader-spinner',
 };
 
 export const colorSemantics = {
@@ -89,4 +92,5 @@ export const colorSemantics = {
   [semanticKeys.toast]: toastSemantics,
   [semanticKeys.toggle]: switchSemantics,
   [semanticKeys.tooltip]: tooltipSemantics,
+  [semanticKeys.spinner]: spinnerSemantics,
 };
