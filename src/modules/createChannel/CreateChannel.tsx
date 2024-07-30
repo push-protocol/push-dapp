@@ -14,7 +14,7 @@ import {
   CHANNEL_STAKE_FEES,
   createChannelSteps,
   progressInitialState,
-  errorInitialState
+  errorInitialState,
 } from './CreateChannel.constants';
 import { CreateChannelHeader } from './components/CreateChannelHeader';
 import { CreateChannelProcessingInfo } from './components/CreateChannelProcessingInfo';
@@ -24,7 +24,12 @@ import { UploadChannelLogo } from './components/UploadChannelLogo';
 
 import { CreateChannelFormProvider } from './CreateChannel.form';
 import { checkApprovePushTokens } from './CreateChannel.utils';
-import { ActiveStepKey, ChannelCreationError, ChannelInfoFormValues, CreateChannelProgressType } from './CreateChannel.types';
+import {
+  ActiveStepKey,
+  ChannelCreationError,
+  ChannelInfoFormValues,
+  CreateChannelProgressType,
+} from './CreateChannel.types';
 
 const fees = ethers.utils.parseUnits(CHANNEL_STAKE_FEES.toString(), 18);
 
@@ -55,7 +60,7 @@ const CreateChannel = () => {
       ...prevState,
       progress: progress,
       progressInfo: progressInfo,
-      processingInfo: processingInfo
+      processingInfo: processingInfo,
     }));
   };
 
@@ -63,7 +68,7 @@ const CreateChannel = () => {
     setChannelCreationError((prev) => ({
       ...prev,
       txErrorStatus: txErrorStatus,
-      txError: txError
+      txError: txError,
     }));
   };
 
@@ -72,7 +77,7 @@ const CreateChannel = () => {
     approvePUSHToken(
       {
         noOfTokenToApprove: fees,
-        signer
+        signer,
       },
       {
         onSuccess: (response) => {
@@ -92,7 +97,7 @@ const CreateChannel = () => {
           }
           setProgressState(progressInitialState);
           return false;
-        }
+        },
       }
     );
   };
@@ -110,7 +115,7 @@ const CreateChannel = () => {
         channelType,
         identityBytes,
         fees,
-        signer
+        signer,
       },
       {
         onSuccess: (response) => {
@@ -156,7 +161,7 @@ const CreateChannel = () => {
               'Kindly Contact support@epns.io to resolve the issue.'
             );
           }
-        }
+        },
       }
     );
   };
@@ -211,7 +216,7 @@ const CreateChannel = () => {
         width={{ initial: '648px', ml: '325px' }}
         flexDirection="column"
         alignItems="center"
-        gap="s10"
+        gap="spacing-xl"
       >
         <CreateChannelHeader />
 
@@ -221,15 +226,26 @@ const CreateChannel = () => {
           <>
             {channelCreationError.txErrorStatus !== 0 && (
               <Alert
-                variant='error'
-                icon={<ErrorFilled color='text-danger-bold' size={24} />}
+                variant="error"
+                icon={
+                  <ErrorFilled
+                    color="icon-state-danger-bold"
+                    size={24}
+                  />
+                }
                 message={channelCreationError.txError}
-                width='100%'
+                width="100%"
               />
             )}
 
             {!progressState.progress ? (
-              <Box display="flex" flexDirection="column" gap="s8" alignItems="center" alignSelf="stretch">
+              <Box
+                display="flex"
+                flexDirection="column"
+                gap="spacing-lg"
+                alignItems="center"
+                alignSelf="stretch"
+              >
                 <Stepper
                   steps={createChannelSteps}
                   completedSteps={completedSteps}
@@ -237,7 +253,10 @@ const CreateChannel = () => {
                 />
 
                 {activeStepKey == 'channelInfo' && (
-                  <ChannelInfo handleNextStep={handleNextStep} setActiveStepKey={setActiveStepKey} />
+                  <ChannelInfo
+                    handleNextStep={handleNextStep}
+                    setActiveStepKey={setActiveStepKey}
+                  />
                 )}
 
                 {activeStepKey === 'uploadLogo' && (

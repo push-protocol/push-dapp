@@ -49,7 +49,9 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepKey, completedSteps }) 
 
           <Box
             height="4px"
-            borderRadius="r2"
+            borderRadius="radius-xxs"
+            // TODO: Monalisha has to fix this
+            // @ts-expect-error
             backgroundColor={completedSteps.includes(step.value) ? 'stroke-brand-medium' : 'stroke-tertiary'}
           ></Box>
         </Box>

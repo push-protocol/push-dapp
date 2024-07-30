@@ -237,6 +237,11 @@ function MasterInterfacePage() {
             />
 
             <Route
+              path={`${APP_PATHS.CreateChannel}`}
+              element={<CreateChannelPage />}
+            />
+
+            <Route
               path={APP_PATHS.Dashboard}
               element={<ChannelDashboardPage />}
             />

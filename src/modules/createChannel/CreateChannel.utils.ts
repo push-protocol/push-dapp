@@ -13,6 +13,8 @@ export const isImageFile = (file: File) => {
   return file.type.startsWith('image/');
 };
 
+// Monalisha to add types here
+// @ts-expect-error
 export const checkApprovePushTokens = async ({ provider, account }) => {
   let checkPushTokenApprovedAmount = new ethers.Contract(addresses.pushToken, abis.pushToken, provider);
   let value = await checkPushTokenApprovedAmount.allowance(account, addresses.epnscore);
@@ -22,7 +24,7 @@ export const checkApprovePushTokens = async ({ provider, account }) => {
 };
 
 export const checkImageSize = (croppedImage: string) => {
-  toDataURL(croppedImage, function(dataUrl: string) {
+  toDataURL(croppedImage, function (dataUrl: string) {
     const response = handleLogoSizeLimitation(dataUrl);
     if (response.success) {
       return true;

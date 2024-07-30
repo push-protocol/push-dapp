@@ -15,7 +15,6 @@ import { ActiveStepKey } from '../CreateChannel.types';
 type StakeFeesProps = {
   channelStakeFees: number;
   handleNextStep: (key: ActiveStepKey) => void;
-
 };
 
 const StakeFees: FC<StakeFeesProps> = ({ channelStakeFees, handleNextStep }) => {
@@ -49,7 +48,7 @@ const StakeFees: FC<StakeFeesProps> = ({ channelStakeFees, handleNextStep }) => 
     setFetchingBalance(true);
     const amount = await getPushTokenFromWallet({
       address: account,
-      provider: provider
+      provider: provider,
     });
     setFetchingBalance(false);
     setBalance(amount);
@@ -74,24 +73,37 @@ const StakeFees: FC<StakeFeesProps> = ({ channelStakeFees, handleNextStep }) => 
   const handleCreateChannel = () => {
     validateForm().then((errors) => {
       if (errors.channelName || errors.channelDesc || errors.channelURL) {
-        handleNextStep('channelInfo')
+        handleNextStep('channelInfo');
       }
 
       if (errors.image) {
-        handleNextStep('uploadLogo')
+        handleNextStep('uploadLogo');
       }
 
       if (!Object.keys(errors).length) {
         handleSubmit();
       }
-
-    })
-  }
+    });
+  };
 
   return (
-    <Box display="flex" flexDirection="column" alignSelf="stretch" justifyContent="center" gap="spacing-xl">
-      <Box display="flex" flexDirection="column" gap="spacing-sm">
-        <Box display="flex" flexDirection="column" alignSelf="stretch">
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignSelf="stretch"
+      justifyContent="center"
+      gap="spacing-xl"
+    >
+      <Box
+        display="flex"
+        flexDirection="column"
+        gap="spacing-sm"
+      >
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignSelf="stretch"
+        >
           <Box
             display="flex"
             flexDirection="row"
@@ -101,19 +113,33 @@ const StakeFees: FC<StakeFeesProps> = ({ channelStakeFees, handleNextStep }) => 
             padding="spacing-sm spacing-md"
             alignItems="center"
           >
-            <Text variant="h4-semibold" color="text-primary" display={{ ml: 'none', dp: 'block' }}>
+            <Text
+              variant="h4-semibold"
+              color="text-primary"
+              display={{ ml: 'none', dp: 'block' }}
+            >
               Amount for Staking
             </Text>
 
-            <Text variant="h5-semibold" color="text-primary" display={{ ml: 'block', dp: 'none' }}>
+            <Text
+              variant="h5-semibold"
+              color="text-primary"
+              display={{ ml: 'block', dp: 'none' }}
+            >
               Amout For Staking
             </Text>
             <Box>
-              <Text variant="h4-semibold" color="text-brand-medium">
+              <Text
+                variant="h4-semibold"
+                color="text-brand-medium"
+              >
                 {channelStakeFees} PUSH
               </Text>
               <Skeleton isLoading={fetchingbalance}>
-                <Text variant="bes-semibold" color="text-tertiary">
+                <Text
+                  variant="bes-semibold"
+                  color="text-tertiary"
+                >
                   Balance: {balance?.toLocaleString()}
                 </Text>
               </Skeleton>
@@ -129,14 +155,22 @@ const StakeFees: FC<StakeFeesProps> = ({ channelStakeFees, handleNextStep }) => 
           )}
         </Box>
 
-        <Box display="flex" flexDirection="row" gap="s1" justifyContent="center">
-          <Text variant="bes-semibold" color="text-tertiary">
+        <Box
+          display="flex"
+          flexDirection="row"
+          gap="spacing-xxs"
+          justifyContent="center"
+        >
+          <Text
+            variant="bes-semibold"
+            color="text-tertiary"
+          >
             Don't see Push token in your wallet?
           </Text>
           <Text
             css={css`
-                cursor: pointer;
-              `}
+              cursor: pointer;
+            `}
             variant="bes-semibold"
             color="text-brand-medium"
             onClick={handlePushTokenImport}
@@ -146,7 +180,10 @@ const StakeFees: FC<StakeFeesProps> = ({ channelStakeFees, handleNextStep }) => 
         </Box>
       </Box>
 
-      <Box display="flex" justifyContent="center">
+      <Box
+        display="flex"
+        justifyContent="center"
+      >
         <Button
           disabled={mintingPush}
           onClick={() => {

@@ -90,3 +90,7 @@ export type ChannelDetails = {
 export type InitiateVerifyAliasChainResponse = {
   tx: string;
 };
+
+export type InitiateVerifyAliasChainResponse = {
+  tx: string;
+};
