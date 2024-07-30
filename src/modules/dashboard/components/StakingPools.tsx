@@ -45,7 +45,7 @@ const StakingPools: FC<StakingPoolsProps> = () => {
           <Box>
             <Text variant="h5-semibold">Total Value Locked</Text>
             <Skeleton isLoading={!poolStats?.totalValueLocked}>
-              <Text variant="h3-bold">{`$${poolStats?.totalValueLocked.toFixed(2).toLocaleString()}`}</Text>
+              <Text variant="h3-bold">{`$${Number(poolStats?.totalValueLocked.toFixed(2)).toLocaleString()}`}</Text>
             </Skeleton>
           </Box>
           <Box>
