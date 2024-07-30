@@ -1,10 +1,16 @@
-import { FC, useState } from "react";
-import { DashboardActiveState } from "../ChannelDashboard.types";
-import { Box, Button, Text } from "blocks";
-import { ModalHeader, StakingVariant } from "common";
-import { ChannelDashboardInfo } from "./ChannelDashboardInfo";
-import { useDeactivateChannel, useGetChannelDetails } from "queries";
-import { useAccount } from "hooks";
+import { FC, useState } from 'react';
+
+import { Box, Button, Text } from 'blocks';
+
+import { ModalHeader, StakingVariant } from 'common';
+
+import { useAccount } from 'hooks';
+
+import { useDeactivateChannel, useGetChannelDetails } from 'queries';
+
+import { ChannelDashboardInfo } from './ChannelDashboardInfo';
+
+import { DashboardActiveState } from '../ChannelDashboard.types';
 
 type DeactivateChannelProps = {
   setActiveState: (activeState: DashboardActiveState) => void;

@@ -115,3 +115,8 @@ export type AddChannelDelegateResponse = {
 export type deactivateChannelParams = {
   signer: ethers.providers.JsonRpcSigner;
 };
+
+export type addChannelSubgraphParams = {
+  identityBytes: Uint8Array;
+  signer: ethers.providers.JsonRpcSigner;
+};

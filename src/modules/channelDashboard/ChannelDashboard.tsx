@@ -8,6 +8,7 @@ import { UserChannelDashboard } from './components/UserChannelDashboard';
 import { DashboardActiveState } from "./ChannelDashboard.types";
 import { ChannelAddDelegate } from './components/ChannelAddDelegate';
 import { DeactivateChannel } from './components/DeactivateChannel';
+import { ChannelAddSubgraph } from './components/ChannelAddSubgraph';
 
 const ChannelDashboard = () => {
 
@@ -28,6 +29,7 @@ const ChannelDashboard = () => {
       {activeState === 'dashboard' && <UserChannelDashboard setActiveState={setActiveState} />}
 
       {activeState === 'addDelegate' && <ChannelAddDelegate setActiveState={setActiveState} />}
+      {activeState === 'addSubgraph' && <ChannelAddSubgraph setActiveState={setActiveState} />}
 
       {activeState === 'deactivateChannel' && <DeactivateChannel setActiveState={setActiveState} />}
     </Box>

@@ -7,3 +7,4 @@ export * from './useInitiateNewChain';
 export * from './useVerifyAliasChain';
 export * from './useSendNotification';
 export * from './useAddDelegate';
+export * from './useAddSubgraph';
