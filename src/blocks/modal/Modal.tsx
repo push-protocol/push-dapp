@@ -88,7 +88,7 @@ const ButtonsContainer = styled.div<{ buttonAlignment: ButtonAlignment }>`
 `;
 
 const Modal: FC<ModalProps> = ({
-  acceptButtonProps,
+  acceptButtonProps = { children: 'Accept' },
   closeOnOverlayClick = false,
   buttonAlignment = 'center',
   cancelButtonProps = { children: 'Cancel', onClick: () => onClose() },
@@ -130,6 +130,7 @@ const Modal: FC<ModalProps> = ({
           <ButtonsContainer buttonAlignment={buttonAlignment}>
             {cancelButtonProps && (
               <Button
+                aria-label="Cancel"
                 size="small"
                 variant="outline"
                 onClick={cancelButtonProps?.onClick || onClose}
@@ -140,11 +141,12 @@ const Modal: FC<ModalProps> = ({
             )}
             {acceptButtonProps && (
               <Button
+                aria-label="Accept"
                 size="small"
                 variant="primary"
                 {...acceptButtonProps}
               >
-                {acceptButtonProps?.children || 'Accept'}
+                {acceptButtonProps?.children}
               </Button>
             )}
           </ButtonsContainer>

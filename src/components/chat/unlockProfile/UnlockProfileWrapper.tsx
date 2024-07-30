@@ -33,9 +33,8 @@ const UnlockProfileWrapper: FC<IntroContainerProps> = ({
           isOpen={showConnectModal}
           onClose={onClose}
           size="small"
-          closeOnOverlayClick
-          cancelButtonProps={null}
           acceptButtonProps={null}
+          cancelButtonProps={null}
         >
           <UnlockProfile
             InnerComponentProps={{
