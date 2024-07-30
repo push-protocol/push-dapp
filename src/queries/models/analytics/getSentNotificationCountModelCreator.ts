@@ -7,11 +7,12 @@ export const getNotificationCountModelCreator = (response: NotificationCountResp
 
   let total = 0;
 
-  notifictionAnalyticsData.forEach((item: any) => {
+  notifictionAnalyticsData.forEach((item) => {
     for (let key in item) {
       if (key === 'date') {
         continue;
       } else {
+        // @ts-expect-error
         total += item[key]?.notification;
       }
     }

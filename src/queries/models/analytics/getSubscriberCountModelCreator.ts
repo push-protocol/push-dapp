@@ -27,7 +27,7 @@ export const getSubscriberCountModelCreator = (
     interval: 1,
   });
 
-  let subscriberArray: any[] = [];
+  let subscriberArray: { date: string; subscribers: number }[] = [];
   for (let i = 0; i < subscriberAnalyticsData?.length; i++) {
     let total = 0,
       dat = '';
