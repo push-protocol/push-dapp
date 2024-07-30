@@ -1,3 +1,4 @@
+import { alertSemantics } from '../semantics/semantics.alert';
 import {
   secondaryButtonSemantics,
   dangerButtonSemantics,
@@ -23,6 +24,7 @@ import { tooltipSemantics } from '../semantics/semantics.tooltip';
 
 // TODO: find a better way to do this in future
 type SemanticKeys = {
+  alert: 'components-alert';
   buttonPrimary: 'components-button-primary';
   buttonSecondary: 'components-button-secondary';
   buttonTertiary: 'components-button-tertiary';
@@ -46,6 +48,7 @@ type SemanticKeys = {
 };
 
 export const semanticKeys: SemanticKeys = {
+  alert: 'components-alert',
   buttonPrimary: 'components-button-primary',
   buttonSecondary: 'components-button-secondary',
   buttonTertiary: 'components-button-tertiary',
@@ -69,6 +72,7 @@ export const semanticKeys: SemanticKeys = {
 };
 
 export const colorSemantics = {
+  [semanticKeys.alert]: alertSemantics,
   [semanticKeys.buttonPrimary]: primaryButtonSemantics,
   [semanticKeys.buttonSecondary]: secondaryButtonSemantics,
   [semanticKeys.buttonTertiary]: tertiaryButtonSemantics,
