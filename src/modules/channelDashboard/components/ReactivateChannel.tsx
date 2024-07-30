@@ -28,7 +28,7 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({ setActiveState }) => {
   const {
     data: channelDetails,
     isLoading: loadingChannelDetails,
-    refetch: refetchChannelDetails
+    refetch: refetchChannelDetails,
   } = useGetChannelDetails(account);
   const { mutate: approvePUSHToken, isPending: approvingPUSH } = useApprovePUSHToken();
   const { mutate: reactivateChannel, isPending } = useReactivateChannel();
@@ -40,12 +40,12 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({ setActiveState }) => {
 
   // Check PUSH Token in wallet
   const pushTokenInWallet = async () => {
-    setFetchingBalance(true)
+    setFetchingBalance(true);
     const amount = await getPushTokenFromWallet({
       address: account,
-      provider: provider
+      provider: provider,
     });
-    setFetchingBalance(false)
+    setFetchingBalance(false);
     setBalance(amount);
   };
 
@@ -59,7 +59,7 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({ setActiveState }) => {
     const pushTokenApprovalAmount = await getPushTokenApprovalAmount({
       address: account,
       provider: provider,
-      contractAddress: addresses.epnscore
+      contractAddress: addresses.epnscore,
     });
     setPushApprovalAmount(parseInt(pushTokenApprovalAmount));
   };
@@ -75,7 +75,7 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({ setActiveState }) => {
     approvePUSHToken(
       {
         noOfTokenToApprove: fees,
-        signer
+        signer,
       },
       {
         onSuccess: () => {
@@ -88,7 +88,7 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({ setActiveState }) => {
           } else {
             setReactivationError('Error in approving PUSH Tokens');
           }
-        }
+        },
       }
     );
   };
@@ -102,7 +102,7 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({ setActiveState }) => {
     reactivateChannel(
       {
         fees,
-        signer
+        signer,
       },
       {
         onSuccess: () => {
@@ -117,7 +117,7 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({ setActiveState }) => {
           } else {
             setReactivationError('Error in reactivating channel. Check console for more reasons.');
           }
-        }
+        },
       }
     );
   };
@@ -142,15 +142,28 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({ setActiveState }) => {
       {reactivationError && (
         <Alert
           variant="error"
-          icon={<ErrorFilled color="icon-state-danger-bold" size={24} />}
+          icon={
+            <ErrorFilled
+              color="icon-state-danger-bold"
+              size={24}
+            />
+          }
           message={reactivationError}
           width="100%"
         />
       )}
 
-      <ChannelDashboardInfo channelDetails={channelDetails} loadingChannelDetails={loadingChannelDetails} />
+      <ChannelDashboardInfo
+        channelDetails={channelDetails}
+        loadingChannelDetails={loadingChannelDetails}
+      />
 
-      <Box display="flex" flexDirection="column" gap="spacing-sm" width="-webkit-fill-available">
+      <Box
+        display="flex"
+        flexDirection="column"
+        gap="spacing-sm"
+        width="-webkit-fill-available"
+      >
         <StakingVariant
           title="Channel Reactivation Fee"
           fees={feesRequiredForReactivation}
@@ -163,17 +176,31 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({ setActiveState }) => {
         <ImportPushTokenMessage title="Don’t see Push token in your wallet?" />
       </Box>
 
-      <Box display="flex" gap="spacing-sm" justifyContent="center">
-        <Button size="medium" variant="outline" onClick={() => setActiveState('dashboard')}>
+      <Box
+        display="flex"
+        gap="spacing-sm"
+        justifyContent="center"
+      >
+        <Button
+          size="medium"
+          variant="outline"
+          onClick={() => setActiveState('dashboard')}
+        >
           Back
         </Button>
 
         {pushApprovalAmount >= feesRequiredForReactivation ? (
-          <Button disabled={isPending} onClick={handleReactivate}>
+          <Button
+            disabled={isPending}
+            onClick={handleReactivate}
+          >
             {isPending ? 'Activating' : 'Activate'}
           </Button>
         ) : (
-          <Button disabled={approvingPUSH} onClick={handleApprovePUSH}>
+          <Button
+            disabled={approvingPUSH}
+            onClick={handleApprovePUSH}
+          >
             {approvingPUSH ? 'Approving' : 'Approve PUSH'}
           </Button>
         )}

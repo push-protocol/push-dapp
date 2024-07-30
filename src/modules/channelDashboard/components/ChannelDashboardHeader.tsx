@@ -10,7 +10,7 @@ import {
   KebabMenuHorizontal,
   Menu,
   MenuItem,
-  Skeleton
+  Skeleton,
 } from 'blocks';
 
 import { ChannelDetails } from 'queries';
@@ -28,7 +28,7 @@ type ChannelDashboardHeaderProps = {
 const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
   channelDetails,
   loadingChannelDetails,
-  setActiveState
+  setActiveState,
 }) => {
   return (
     <Box
@@ -45,7 +45,12 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
       />
 
       {/* Edit Channel and Dropdown */}
-      <Box display="flex" height="fit-content" gap="spacing-xxs" justifyContent="center">
+      <Box
+        display="flex"
+        height="fit-content"
+        gap="spacing-xxs"
+        justifyContent="center"
+      >
         <Skeleton isLoading={loadingChannelDetails}>
           <Button
             variant="outline"
@@ -73,14 +78,14 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
                     label="Deactivate Channel"
                     icon={<BellSimpleSlash size={24} />}
                     onClick={() => setActiveState('deactivateChannel')}
-                    type='error'
+                    type="error"
                   />
                 ) : (
                   <MenuItem
                     label="Activate Channel"
                     icon={<BellSimple size={24} />}
                     onClick={() => setActiveState('reactivateChannel')}
-                    type='success'
+                    type="success"
                   />
                 )}
               </Menu>
@@ -95,7 +100,10 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
               cursor="pointer"
               alignItems="center"
             >
-              <KebabMenuHorizontal size={24} color="icon-primary" />
+              <KebabMenuHorizontal
+                size={24}
+                color="icon-primary"
+              />
             </Box>
           </Dropdown>
         </Skeleton>

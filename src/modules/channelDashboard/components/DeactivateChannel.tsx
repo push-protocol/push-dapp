@@ -24,7 +24,7 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({ setActiveState }) => {
   const {
     data: channelDetails,
     isLoading: loadingChannelDetails,
-    refetch: refetchChannelDetails
+    refetch: refetchChannelDetails,
   } = useGetChannelDetails(account);
   const { mutate: deactivateChannel, isPending } = useDeactivateChannel();
 
@@ -37,7 +37,7 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({ setActiveState }) => {
 
     deactivateChannel(
       {
-        signer
+        signer,
       },
       {
         onSuccess: () => {
@@ -52,7 +52,7 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({ setActiveState }) => {
           } else {
             setDeactivateError('Error in deactivating Channel. Check console for more reason.');
           }
-        }
+        },
       }
     );
   };
@@ -77,25 +77,51 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({ setActiveState }) => {
       {deactivateError && (
         <Alert
           variant="error"
-          icon={<ErrorFilled color="icon-state-danger-bold" size={24} />}
+          icon={
+            <ErrorFilled
+              color="icon-state-danger-bold"
+              size={24}
+            />
+          }
           message={deactivateError}
           width="100%"
         />
       )}
 
-      <ChannelDashboardInfo channelDetails={channelDetails} loadingChannelDetails={loadingChannelDetails} />
+      <ChannelDashboardInfo
+        channelDetails={channelDetails}
+        loadingChannelDetails={loadingChannelDetails}
+      />
 
-      <StakingVariant fees={ChannelDeactivationRefund} title="You will receive as a refund" />
+      <StakingVariant
+        fees={ChannelDeactivationRefund}
+        title="You will receive as a refund"
+      />
 
-      <Text variant="bs-semibold" color="text-primary">
+      <Text
+        variant="bs-semibold"
+        color="text-primary"
+      >
         Are you sure you want to deactivate your channel?
       </Text>
 
-      <Box display="flex" gap="spacing-sm" justifyContent="center">
-        <Button size="medium" variant="outline" onClick={() => setActiveState('dashboard')}>
+      <Box
+        display="flex"
+        gap="spacing-sm"
+        justifyContent="center"
+      >
+        <Button
+          size="medium"
+          variant="outline"
+          onClick={() => setActiveState('dashboard')}
+        >
           Back
         </Button>
-        <Button disabled={isPending} variant="danger" onClick={handleDeactivateChannel}>
+        <Button
+          disabled={isPending}
+          variant="danger"
+          onClick={handleDeactivateChannel}
+        >
           {isPending ? 'Deactivating' : 'Deactivate'}
         </Button>
       </Box>
