@@ -6,6 +6,7 @@ import { Box } from 'blocks';
 
 import { ContentLayout } from 'common';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ChannelDashboard } from 'modules/channelDashboard/ChannelDashboard';
 
 import { useAccount } from 'hooks';
 
@@ -58,7 +59,7 @@ const ChannelDashboardPageV2 = () => {
   if (channelDetails?.name) {
     return (
       <ContentLayout>
-        Dashboard
+        <ChannelDashboard />
       </ContentLayout>
     )
   }
