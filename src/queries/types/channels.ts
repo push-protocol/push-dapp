@@ -1,4 +1,5 @@
 import { PushAPI } from '@pushprotocol/restapi';
+import { ethers } from 'ethers';
 import { SourceKeys } from 'modules/dashboard/Dashboard.types';
 
 export type TrendingChannelsParams = {
@@ -109,4 +110,8 @@ export type addChannelDelegateParams = {
 
 export type AddChannelDelegateResponse = {
   transactionHash: string;
+};
+
+export type deactivateChannelParams = {
+  signer: ethers.providers.JsonRpcSigner;
 };

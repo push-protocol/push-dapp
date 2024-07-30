@@ -7,6 +7,7 @@ export const channelDelegates = 'channelDelegates';
 export const channelDetails = 'channelDetails';
 export const claimRewards = 'claimRewards';
 export const createUserRewardsDetails = 'createUserRewardsDetails';
+export const deactivatingChannel = 'deactivatingChannel';
 export const discordDetails = 'discordDetails';
 export const generateUserIdByWallet = 'generateUserIdByWallet';
 export const creatingNewChannel = 'creatingNewChannel';
