@@ -100,7 +100,7 @@ export type addChannelDelegateParams = {
 };
 
 export type addChannelSubgraphParams = {
-  identityBytes: Uint8Array;
+  identityBytes: string;
   signer: ethers.providers.JsonRpcSigner;
 };
 

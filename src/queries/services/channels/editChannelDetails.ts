@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 
 type EditChannelPayload = {
   signer: ethers.providers.JsonRpcSigner;
-  identityBytes: Uint8Array;
+  identityBytes: string;
   fees: ethers.BigNumber;
   account: string;
 };
@@ -14,7 +14,7 @@ export const editChannelDetails = async (payload: EditChannelPayload) => {
   let contract = new ethers.Contract(addresses.epnscore, abis.epnscore, signer);
 
   const tx = await contract.updateChannelMeta(account, identityBytes, fees, {
-    gasLimit: 1000000
+    gasLimit: 1000000,
   });
 
   return tx.wait();
