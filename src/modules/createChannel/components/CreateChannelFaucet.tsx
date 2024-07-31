@@ -10,6 +10,7 @@ import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 
 // Config
 import { appConfig } from 'config';
+import { SepoliaFaucetLink } from 'common';
 
 type CreateChannelFaucetProps = {
   mintPushToken: (noOfTokens: number) => void;
@@ -60,29 +61,22 @@ const CreateChannelFaucet: FC<CreateChannelFaucetProps> = ({ mintPushToken, noOf
           gap="spacing-xs"
         >
           <Skeleton isLoading={mintingPush}>
-            <Link
-              to="https://chaindrop.org/?chainid=11155111&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-              target="_blank"
-            >
-              <Box
-                display="flex"
-                gap="spacing-xxs"
-                alignItems="baseline"
-                color="text-brand-medium"
-                cursor="pointer"
-              >
+            <Link to={SepoliaFaucetLink} target="_blank">
+              <Box display="flex" gap="spacing-xxs" alignItems="baseline" color="text-brand-medium" cursor="pointer">
                 <Box
-                  // Abhishek to fix this approach
                   border="border-sm solid stroke-brand-medium"
                   width="16px"
                   height="15px"
                   borderRadius="radius-xl"
                   display="flex"
                   justifyContent="center"
+                  color="text-brand-medium"
                 >
-                  <Text variant="c-regular">1</Text>
+                  <Text variant="c-regular" color="text-brand-medium">
+                    1
+                  </Text>
                 </Box>
-                <Text>Sepolia ETH Faucet</Text>
+                <Text color="text-brand-medium">Sepolia ETH Faucet</Text>
               </Box>
             </Link>
           </Skeleton>
@@ -104,9 +98,11 @@ const CreateChannelFaucet: FC<CreateChannelFaucetProps> = ({ mintPushToken, noOf
                 display="flex"
                 justifyContent="center"
               >
-                <Text variant="c-regular">2</Text>
+                <Text variant="c-regular" color="text-brand-medium">
+                  2
+                </Text>
               </Box>
-              <Text>Get Testnet Push</Text>
+              <Text color="text-brand-medium">Get Testnet Push</Text>
             </Box>
           </Skeleton>
         </Box>

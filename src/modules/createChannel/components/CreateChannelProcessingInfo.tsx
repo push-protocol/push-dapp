@@ -22,7 +22,7 @@ const CreateChannelProcessingInfo: FC<CreateChannelProcessingInfoProps> = ({
       alignItems='center'
     >
       <Box
-        padding='s6'
+        padding='spacing-md'
         backgroundColor='surface-secondary'
         borderRadius="radius-sm"
         width='-webkit-fill-available'

@@ -140,7 +140,7 @@ function Navigation() {
       newNavSetup.developersList[0].data.hidden = true;
       newNavSetup.developersList[1].data.hidden = true;
 
-      if (channelDetails !== 'unfetched' && channelDetails != null) {
+      if (channelDetails !== 'unfetched' && channelDetails != null && channelDetails?.name !== null) {
         newNavSetup.developersList[0].data.name = channelDetails.name;
         newNavSetup.developersList[0].data.src = channelDetails.iconV2;
         newNavSetup.developersList[0].data.activeSrc = channelDetails.iconV2;
