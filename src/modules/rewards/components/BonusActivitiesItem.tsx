@@ -29,6 +29,12 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, i
 
   const isLockedOrNotConnected = isLocked || !isWalletConnected;
 
+  /* TODO: ask BE to update Title according to design only */
+  const updatedTitle = activity?.activityTitle?.replace(
+    /Reach\s+([\d,]+)\s+Subscribers\s+for\s+your\s+channel/i,
+    '$1 Subscribers'
+  );
+
   return (
     <Skeleton
       isLoading={isLoadingItem}
@@ -66,17 +72,25 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, i
           alignItems="center"
           margin="spacing-xs spacing-none spacing-none spacing-none"
         >
-          <Text
-            color="text-primary"
-            variant="bl-semibold"
-            textAlign="center"
-          >
-            {/* TODO: ask BE to update Title according to design only */}
-            {activity?.activityTitle?.replace(
-              /Reach\s+([\d,]+)\s+Subscribers\s+for\s+your\s+channel/i,
-              '$1 Subscribers'
-            )}
-          </Text>
+          <Box display={{ ml: 'block', initial: 'none' }}>
+            <Text
+              color="text-primary"
+              variant="h6-bold"
+              textAlign="center"
+            >
+              {updatedTitle}
+            </Text>
+          </Box>
+          <Box display={{ ml: 'none', initial: 'block' }}>
+            <Text
+              color="text-primary"
+              variant="bl-semibold"
+              textAlign="center"
+            >
+              {updatedTitle}
+            </Text>
+          </Box>
+
           <Text
             variant="bs-regular"
             color="text-tertiary"
