@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 // third party libraries
 import { css } from 'styled-components';
@@ -12,7 +12,7 @@ import { useAccount } from 'hooks';
 import { walletToCAIP10 } from 'helpers/w2w';
 
 // components
-import { Box, Text } from 'blocks';
+import { Alert, Box, Text } from 'blocks';
 import { BonusActivitiesItem } from './BonusActivitiesItem';
 
 export type BonusActivitiesSectionProps = {};
@@ -37,6 +37,8 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
     ? Array(8).fill(0)
     : activityList.filter((activity) => activity.index >= 5 && activity.index <= 12);
 
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
   return (
     <Box
       display="flex"
@@ -49,6 +51,16 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
       >
         Bonus Activities
       </Text>
+
+      <Box width="-webkit-fill-available">
+        {errorMessage && (
+          <Alert
+            heading={errorMessage}
+            variant="error"
+            onClose={() => setErrorMessage('')}
+          />
+        )}
+      </Box>
 
       <Box
         display="grid"
@@ -66,6 +78,7 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
             userId={userDetails?.userId || ''}
             activity={activity}
             isLoadingItem={isLoading}
+            setErrorMessage={setErrorMessage}
           />
         ))}
       </Box>

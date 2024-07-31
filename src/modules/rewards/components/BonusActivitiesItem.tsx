@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 // hooks
 import { Activity, useGetRewardsActivity } from 'queries';
@@ -14,16 +14,15 @@ export type BonusActivitiesItemProps = {
   userId: string;
   activity: Activity;
   isLoadingItem: boolean;
+  setErrorMessage: (errorMessage: string) => void;
 };
 
-const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, isLoadingItem }) => {
+const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, isLoadingItem, setErrorMessage }) => {
   const {
     data: usersSingleActivity,
     isLoading,
     refetch: refetchActivity,
   } = useGetRewardsActivity({ userId, activityId: activity.id }, { enabled: !!userId });
-
-  const [errorMessage, setErrorMessage] = useState('');
 
   const { isLocked, isWalletConnected } = useLockedStatus();
 
