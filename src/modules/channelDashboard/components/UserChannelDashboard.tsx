@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 
-import { Box, Text } from 'blocks';
+import { Alert, Box, ErrorFilled } from 'blocks';
 
 import { useAccount } from 'hooks';
 
@@ -44,9 +44,12 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({
         />
 
         {channelDashboardError && (
-          <Box>
-            <Text>{channelDashboardError}</Text>
-          </Box>
+          <Alert
+            variant="error"
+            icon={<ErrorFilled color="icon-state-danger-bold" size={24} />}
+            message={channelDashboardError}
+            width="100%"
+          />
         )}
 
         <ChannelDashboardBody

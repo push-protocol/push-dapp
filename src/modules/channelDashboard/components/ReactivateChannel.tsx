@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 
-import { Box, Button, Text } from 'blocks';
+import { Alert, Box, Button, ErrorFilled } from 'blocks';
 
 import { ModalHeader, StakingVariant } from 'common';
 
@@ -146,9 +146,17 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
       />
 
       {reactivationError && (
-        <Box>
-          <Text>{reactivationError}</Text>
-        </Box>
+        <Alert
+          variant="error"
+          icon={
+            <ErrorFilled
+              color="icon-state-danger-bold"
+              size={24}
+            />
+          }
+          message={reactivationError}
+          width="100%"
+        />
       )}
 
       <ChannelDashboardInfo

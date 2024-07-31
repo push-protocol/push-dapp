@@ -2,7 +2,7 @@ import { FC, useContext, useState } from 'react';
 
 import { useSelector } from 'react-redux';
 
-import { Box, Button, Text, TextInput } from 'blocks';
+import { Alert, Box, Button, ErrorFilled, TextInput } from 'blocks';
 
 import { AppContext } from 'contexts/AppContext';
 import { ModalHeader } from 'common';
@@ -93,9 +93,17 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
 
 
       {addDelegateError && (
-        <Box>
-          <Text>{addDelegateError}</Text>
-        </Box>
+        <Alert
+          variant="error"
+          icon={
+            <ErrorFilled
+              color="icon-state-danger-bold"
+              size={24}
+            />
+          }
+          message={addDelegateError}
+          width="100%"
+        />
       )}
 
       <form onSubmit={delegateForm.handleSubmit}>

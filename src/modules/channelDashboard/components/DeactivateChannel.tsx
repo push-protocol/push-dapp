@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 
-import { Box, Button, Text } from 'blocks';
+import { Alert, Box, Button, ErrorFilled, Text } from 'blocks';
 
 import { ModalHeader, StakingVariant } from 'common';
 
@@ -78,9 +78,17 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({
       />
 
       {deactivateError && (
-        <Box>
-          <Text>{deactivateError}</Text>
-        </Box>
+        <Alert
+          variant="error"
+          icon={
+            <ErrorFilled
+              color="icon-state-danger-bold"
+              size={24}
+            />
+          }
+          message={deactivateError}
+          width="100%"
+        />
       )}
 
       <ChannelDashboardInfo

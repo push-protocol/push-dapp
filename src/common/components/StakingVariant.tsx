@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 
-import { Box, Skeleton, Text, TickCircleFilled } from "blocks";
+import { Box, Skeleton, Text } from "blocks";
 
 import { useAccount } from "hooks";
 import { getPushTokenFromWallet, mintPushToken } from "helpers";
@@ -19,7 +19,6 @@ type StakingVariantProps = {
 }
 const StakingVariant: FC<StakingVariantProps> = ({
   fees,
-  pushApprovalAmount,
   title,
   description,
   balance = 0,
@@ -109,9 +108,8 @@ const StakingVariant: FC<StakingVariantProps> = ({
           </Box>
 
           <Box display='flex'>
-            {!!pushApprovalAmount && pushApprovalAmount >= fees && <TickCircleFilled color='icon-brand-medium' size={22} />}
-
             <Box>
+
               <Text
                 variant="h4-semibold"
                 color='text-brand-medium'

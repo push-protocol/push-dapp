@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 
 import { ethers } from 'ethers';
 
-import { Box, Button, Text, TextInput } from 'blocks';
+import { Alert, Box, Button, ErrorFilled, TextInput } from 'blocks';
 
 import { ModalHeader } from 'common';
 
@@ -76,9 +76,12 @@ const ChannelAddSubgraph: FC<ChannelAddSubgraphProps> = ({
       />
 
       {addSubgraphError && (
-        <Box>
-          <Text>{addSubgraphError}</Text>
-        </Box>
+        <Alert
+          variant="error"
+          icon={<ErrorFilled color="icon-state-danger-bold" size={24} />}
+          message={addSubgraphError}
+          width="100%"
+        />
       )}
 
       <form onSubmit={subgraphForm.handleSubmit}>
