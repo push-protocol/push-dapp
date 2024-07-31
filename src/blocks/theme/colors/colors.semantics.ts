@@ -44,7 +44,7 @@ type SemanticKeys = {
   toast: 'components-toast';
   toggle: 'components-toggle-switch';
   tooltip: 'components-tooltip';
-  spinner: 'components-spin-loader';
+  spinner: 'components-spinner';
 };
 
 export const semanticKeys: SemanticKeys = {
@@ -68,7 +68,7 @@ export const semanticKeys: SemanticKeys = {
   toast: 'components-toast',
   toggle: 'components-toggle-switch',
   tooltip: 'components-tooltip',
-  spinner: 'components-spin-loader',
+  spinner: 'components-spinner',
 };
 
 export const colorSemantics = {
