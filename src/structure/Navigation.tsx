@@ -164,10 +164,11 @@ function Navigation() {
   }, [canSend, channelDetails, navigationSetup, processingState, account]);
 
   useEffect(() => {
+    console.debug(channelDetails, 'channelDetials');
     if (processingState !== 0) {
       dispatch(setCanSend(SEND_NOTIFICATION_STATES.LOADING));
     } else {
-      if (isAliasVerified || (delegatees && delegatees.length > 0)) {
+      if (isAliasVerified || (delegatees && delegatees.length > 0) || channelDetails) {
         dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
       } else {
         dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));

@@ -28,6 +28,7 @@ import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import { ChannelSetting } from 'helpers/channel/types';
 import { updateChannelSetting } from 'redux/slices/channelSlice';
 import { NotificationSetting } from '@pushprotocol/restapi/src/lib/pushNotification/PushNotificationTypes';
+import { useGetChannelDetails } from 'queries';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -48,6 +49,8 @@ function NotificationSettings() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingSettings, setIsLoadingSettings] = useState(true);
   const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
+
+  const { refetch: refetchChannelDetails } = useGetChannelDetails(account);
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -216,7 +219,7 @@ function NotificationSettings() {
           />
         ),
       });
-
+      refetchChannelDetails();
       // Go back to channel dashboard
       setTimeout(() => goBack(), 2000);
     } catch (err) {
