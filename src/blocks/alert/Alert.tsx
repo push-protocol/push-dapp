@@ -13,16 +13,12 @@ export type AlertProps = {
   css?: FlattenSimpleInterpolation;
   /* Sets the variant of the alert */
   variant: AlertVariant;
-  /* Boolean to set the alert as closable */
-  closeable?: boolean;
   /* Close function to be called on close button click */
   onClose?: () => void;
-  /* Boolean to set the alert as retryable */
-  retryable?: boolean;
-  /* Retry function to be called on retry button click */
-  onRetry?: () => void;
-  /* Text to be displayed on the retry button */
-  retryText?: string;
+  /* Retry function to be called on action button click */
+  onAction?: () => void;
+  /* Text to be displayed on the action button */
+  actionText?: string;
   /* Boolean to set the visibility of the icon */
   showIcon?: boolean;
   /* Header text for the alert */
@@ -92,8 +88,8 @@ const Alert: FC<AlertProps> = ({
   description,
   heading,
   onClose,
-  onRetry,
-  retryText = 'Try Again',
+  onAction,
+  actionText = 'Try Again',
   showIcon = true,
   variant = 'info',
   ...props
@@ -116,12 +112,12 @@ const Alert: FC<AlertProps> = ({
         {description && <Description>{description}</Description>}
       </TextContainer>
       <RightContainer>
-        {onRetry && (
+        {onAction && (
           <StyledLink
             variant={variant}
-            onClick={onRetry}
+            onClick={onAction}
           >
-            {retryText}
+            {actionText}
           </StyledLink>
         )}
         {onClose && (
