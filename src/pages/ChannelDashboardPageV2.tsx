@@ -20,8 +20,6 @@ const ChannelDashboardPageV2 = () => {
 
   const { data: channelDetails, isLoading: loadingChannelDetails, refetch, isRefetching } = useGetChannelDetails(account);
 
-  console.log("Getting channel details in dashboard", channelDetails, isRefetching);
-
   useEffect(() => {
     if (!channelDetails) {
       navigate(`${APP_PATHS.CreateChannel}`)
@@ -31,8 +29,6 @@ const ChannelDashboardPageV2 = () => {
 
   useEffect(() => {
     let interval: string | number | NodeJS.Timeout | undefined;
-    console.log("channelDetails && !channelDetails.name", channelDetails && !channelDetails.name);
-
     if (channelDetails && !channelDetails.name) {
       interval = setInterval(() => {
         refetch()

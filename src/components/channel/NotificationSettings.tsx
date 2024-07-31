@@ -22,6 +22,8 @@ import { AppContext } from 'contexts/AppContext';
 
 // Internal Configs
 import { appConfig } from 'config/index.js';
+import APP_PATHS from 'config/AppPaths';
+
 import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import { ChannelSetting } from 'helpers/channel/types';
 import { updateChannelSetting } from 'redux/slices/channelSlice';
@@ -106,7 +108,7 @@ function NotificationSettings() {
   const navigate = useNavigate();
 
   const goBack = () => {
-    navigate('/dashboard', { replace: true });
+    navigate(`${APP_PATHS.ChannelDashboard}/${account}`, { replace: true });
   };
 
   const addSetting = (newSetting: ChannelSetting) => {
