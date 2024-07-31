@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ethers } from 'ethers';
 
-import { Alert, Box, ErrorFilled } from 'blocks';
+import { Alert, Box } from 'blocks';
 import { appConfig } from 'config';
 import { Stepper } from 'common';
 import { useAccount } from 'hooks';
@@ -226,15 +226,9 @@ const CreateChannel = () => {
           <>
             {channelCreationError.txErrorStatus !== 0 && (
               <Alert
-                variant="error"
-                icon={
-                  <ErrorFilled
-                    color="icon-state-danger-bold"
-                    size={24}
-                  />
-                }
-                message={channelCreationError.txError}
-                width="100%"
+                variant='error'
+                heading={channelCreationError.txError}
+                showIcon
               />
             )}
 

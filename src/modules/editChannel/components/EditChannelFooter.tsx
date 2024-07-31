@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react';
 
 import { ethers } from 'ethers';
 
-import { Alert, Box, Button, ErrorFilled } from 'blocks';
+import { Alert, Box, Button } from 'blocks';
 
 import { abis, addresses, appConfig } from 'config';
 import { StakingVariant } from 'common';
@@ -104,10 +104,9 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
     <Box display="flex" flexDirection="column" alignSelf="stretch">
       {updateChannelError && (
         <Alert
-          variant="error"
-          icon={<ErrorFilled color="icon-state-danger-bold" size={24} />}
-          message={updateChannelError}
-          width="100%"
+          variant='error'
+          heading={updateChannelError}
+          showIcon
         />
       )}
 

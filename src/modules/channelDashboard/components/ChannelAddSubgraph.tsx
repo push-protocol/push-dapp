@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 
 import { ethers } from 'ethers';
 
-import { Alert, Box, Button, ErrorFilled, TextInput } from 'blocks';
+import { Alert, Box, Button, TextInput } from 'blocks';
 
 import { ModalHeader } from 'common';
 
@@ -77,10 +77,9 @@ const ChannelAddSubgraph: FC<ChannelAddSubgraphProps> = ({
 
       {addSubgraphError && (
         <Alert
-          variant="error"
-          icon={<ErrorFilled color="icon-state-danger-bold" size={24} />}
-          message={addSubgraphError}
-          width="100%"
+          variant='error'
+          heading={addSubgraphError}
+          showIcon
         />
       )}
 
