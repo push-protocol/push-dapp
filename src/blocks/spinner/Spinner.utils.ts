@@ -1,6 +1,6 @@
 import { SpinnerSize, SpinnerVariant } from './Spinner.types';
 
-export const getSize = (size: SpinnerSize) => {
+export const getSpinnerSize = (size: SpinnerSize) => {
   switch (size) {
     case 'small':
       return '16px';
@@ -12,7 +12,7 @@ export const getSize = (size: SpinnerSize) => {
       return '48px';
   }
 };
-export const getStokeWidth = (size: SpinnerSize) => {
+export const getSpinnerStrokeWidth = (size: SpinnerSize) => {
   switch (size) {
     case 'small':
       return '1px';
