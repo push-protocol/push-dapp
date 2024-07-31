@@ -1,7 +1,7 @@
-import { FC, useContext } from 'react';
+import { FC, useContext, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { Box, OptOut, Separator, Text } from 'blocks';
+import { Box, Copy, OptOut, Separator, Text, Tooltip } from 'blocks';
 
 import { AppContext } from 'contexts/AppContext';
 
@@ -62,6 +62,17 @@ const ChannelDelegateList: FC<ChannelDelegateListProps> = ({
 
   }
 
+  const [tooltipText, setToolTipText] = useState('Copy Wallet');
+  const copyWalletAddress = () => {
+    if (delegate_address) {
+      navigator.clipboard.writeText(delegate_address);
+      setToolTipText('Copied');
+    }
+    setTimeout(() => {
+      setToolTipText('Copy Wallet');
+    }, 1000);
+  };
+
   return (
     <Box
       display="flex"
@@ -85,15 +96,16 @@ const ChannelDelegateList: FC<ChannelDelegateListProps> = ({
           >
             {shortenText(delegate_address, 7)}
           </Text>
-          {/* <Tooltip description={tooltipText}> */}
-          {/* <Box cursor="pointer">
-            <Copy
-              onClick={copyWalletAddress}
-              size={14}
-              color="icon-tertiary"
-            />
-          </Box> */}
-          {/* </Tooltip> */}
+
+          <Tooltip title={tooltipText}>
+            <Box cursor="pointer">
+              <Copy
+                onClick={copyWalletAddress}
+                size={14}
+                color="icon-tertiary"
+              />
+            </Box>
+          </Tooltip>
         </Box>
 
         <Box

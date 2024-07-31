@@ -164,7 +164,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
                 {shortenText(channelDetails ? channelDetails?.channel : '', 5)}
               </Text>
 
-              <Tooltip description={tooltipText}>
+              <Tooltip title={tooltipText}>
                 <Box cursor="pointer">
                   <Copy
                     onClick={copyWalletAddress}
