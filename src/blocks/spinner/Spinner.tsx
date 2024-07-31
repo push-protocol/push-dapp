@@ -28,7 +28,7 @@ const Container = styled.div<{ css?: FlattenSimpleInterpolation; size: SpinnerSi
   ${({ size, variant }) => ` 
     border-width: var(--${getSpinnerStrokeWidth(size)}) ;
     border-style: solid;
-    border-color: var(--components-spin-loader-spinner-${variant})
+    border-color: var(--components-spinner-icon-${variant})
     transparent transparent transparent;
     width: ${getSpinnerSize(size)};
     height: ${getSpinnerSize(size)};
@@ -37,7 +37,7 @@ const Container = styled.div<{ css?: FlattenSimpleInterpolation; size: SpinnerSi
       width: var(--${getSpinnerStrokeWidth(size)});
       height: var(--${getSpinnerStrokeWidth(size)});
       border-radius: 50%;
-      background: var(--components-spin-loader-spinner-${variant});
+      background: var(--components-spinner-icon-${variant});
       position: absolute;
     }
     :before {
@@ -54,7 +54,7 @@ const Container = styled.div<{ css?: FlattenSimpleInterpolation; size: SpinnerSi
   ${(props) => props.css || ''};
 `;
 
-const Spinner: React.FC<SpinnerProps> = ({ size = 'small', css, variant = 'primary' }) => {
+const Spinner: React.FC<SpinnerProps> = ({ size = 'small', css, variant = 'default' }) => {
   return (
     <Container
       size={size}
