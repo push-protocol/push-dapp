@@ -1,6 +1,7 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 import { ethers } from 'ethers';
+import { isEqual } from 'lodash';
 
 import { Alert, Box, Button } from 'blocks';
 
@@ -24,7 +25,7 @@ type EditChannelFooterProps = {
 
 const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
   const { account, provider, chainId } = useAccount();
-  const { values: formValues, isValid } = useEditChannelForm();
+  const { values: formValues, isValid, initialValues } = useEditChannelForm();
 
   const { data: channelDetails, refetch: refetchChannelDetails } = useGetChannelDetails(account);
 
@@ -71,6 +72,14 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
     checkApprovedPUSHTokenAmount();
     pushTokenInWallet();
   }, [account, provider]);
+
+  const checkForChanges = useMemo(() => {
+    if (!isEqual(formValues, initialValues)) {
+      return false;
+    } else {
+      return true;
+    }
+  }, [formValues]);
 
 
   const handleApprovePUSH = () => {
@@ -190,7 +199,7 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
         </Button>
 
         {feesRequiredForEdit && pushApprovalAmount >= feesRequiredForEdit ? (
-          <Button disabled={editingChannel || !isValid} onClick={handleEditChannel}>
+          <Button disabled={checkForChanges || editingChannel || !isValid} onClick={handleEditChannel}>
             {editingChannel ? 'Updating' : 'Save Changes'}
           </Button>
         ) : (
