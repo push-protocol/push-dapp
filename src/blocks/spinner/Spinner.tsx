@@ -26,7 +26,7 @@ const Container = styled.div<{ css?: FlattenSimpleInterpolation; size: SpinnerSi
   animation: ${spin} 1s linear infinite;
   border-radius: 50%;
   ${({ size, variant }) => ` 
-    border-width: ${getSpinnerStrokeWidth(size)} ;
+    border-width: var(--${getSpinnerStrokeWidth(size)}) ;
     border-style: solid;
     border-color: var(--components-spin-loader-spinner-${variant})
     transparent transparent transparent;
@@ -34,8 +34,8 @@ const Container = styled.div<{ css?: FlattenSimpleInterpolation; size: SpinnerSi
     height: ${getSpinnerSize(size)};
     :before,:after {
       content: '';
-      width: ${getSpinnerStrokeWidth(size)};
-      height: ${getSpinnerStrokeWidth(size)};
+      width: var(--${getSpinnerStrokeWidth(size)});
+      height: var(--${getSpinnerStrokeWidth(size)});
       border-radius: 50%;
       background: var(--components-spin-loader-spinner-${variant});
       position: absolute;

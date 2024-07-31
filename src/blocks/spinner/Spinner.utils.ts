@@ -15,14 +15,14 @@ export const getSpinnerSize = (size: SpinnerSize) => {
 export const getSpinnerStrokeWidth = (size: SpinnerSize) => {
   switch (size) {
     case 'small':
-      return '1px';
+      return 'border-sm';
     case 'medium':
-      return '1.5px';
+      return 'border-xmd';
     case 'large':
-      return '2px';
+      return 'border-md';
     case 'extraLarge':
-      return '3px';
+      return 'border-lg';
     default:
-      return '1px';
+      return 'border-xs';
   }
 };
