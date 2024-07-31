@@ -26,21 +26,3 @@ export const getSpinnerStrokeWidth = (size: SpinnerSize) => {
       return '1px';
   }
 };
-export const getSpinnerVariant = (variant: SpinnerVariant) => {
-  switch (variant) {
-    case 'primary':
-      return 'primary';
-    case 'secondary':
-      return 'secondary';
-    case 'tertiary':
-      return 'tertiary';
-    case 'outline':
-      return 'outline';
-    case 'danger':
-      return 'danger';
-    case 'dangerSecondary':
-      return 'danger-secondary';
-    default:
-      return 'default';
-  }
-};

@@ -1,4 +1,4 @@
-import { Box } from 'blocks';
+import { Box, Spinner } from 'blocks';
 import { FC, useState } from 'react';
 import { PointsVaultLogin } from './components/PointsVaultLogin';
 import { PointsVaultListContainer } from './components/PointsVaultListContainer';
@@ -11,9 +11,18 @@ const PointsVault: FC = () => {
     <Box
       height="100%"
       width="-webkit-fill-available"
+      display="flex"
+      flexDirection="column"
+      gap="spacing-xxl"
+      margin="spacing-xxxl"
     >
-      {activeView === 'login' && <PointsVaultLogin handleSetActiveView={setActiveView} />}
-      {activeView === 'list' && <PointsVaultListContainer />}
+      <Spinner variant="primary" />
+      <Spinner variant="secondary" />
+      <Spinner size="medium" />
+      <Spinner size="large" />
+      <Spinner size="extraLarge" />
+      {/* {activeView === 'login' && <PointsVaultLogin handleSetActiveView={setActiveView} />}
+      {activeView === 'list' && <PointsVaultListContainer />} */}
     </Box>
   );
 };

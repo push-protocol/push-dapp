@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { FlattenSimpleInterpolation, keyframes } from 'styled-components';
 import { SpinnerSize, SpinnerVariant } from './Spinner.types';
-import { getSpinnerSize, getSpinnerVariant, getSpinnerStrokeWidth } from './Spinner.utils';
+import { getSpinnerSize, getSpinnerStrokeWidth } from './Spinner.utils';
 
 export type SpinnerProps = {
   /* Additional prop from styled components to apply custom css to Spinner */
@@ -28,7 +28,7 @@ const Container = styled.div<{ css?: FlattenSimpleInterpolation; size: SpinnerSi
   ${({ size, variant }) => ` 
     border-width: ${getSpinnerStrokeWidth(size)} ;
     border-style: solid;
-    border-color: var(--components-spin-loader-spinner-${getSpinnerVariant(variant)})
+    border-color: var(--components-spin-loader-spinner-${variant})
     transparent transparent transparent;
     width: ${getSpinnerSize(size)};
     height: ${getSpinnerSize(size)};
@@ -37,7 +37,7 @@ const Container = styled.div<{ css?: FlattenSimpleInterpolation; size: SpinnerSi
       width: ${getSpinnerStrokeWidth(size)};
       height: ${getSpinnerStrokeWidth(size)};
       border-radius: 50%;
-      background: var(--components-spin-loader-spinner-${getSpinnerVariant(variant)});
+      background: var(--components-spin-loader-spinner-${variant});
       position: absolute;
     }
     :before {
@@ -54,7 +54,7 @@ const Container = styled.div<{ css?: FlattenSimpleInterpolation; size: SpinnerSi
   ${(props) => props.css || ''};
 `;
 
-const Spinner: React.FC<SpinnerProps> = ({ size = 'small', css, variant = 'default' }) => {
+const Spinner: React.FC<SpinnerProps> = ({ size = 'small', css, variant = 'primary' }) => {
   return (
     <Container
       size={size}
