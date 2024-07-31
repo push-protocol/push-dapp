@@ -120,3 +120,8 @@ export type addChannelSubgraphParams = {
   identityBytes: Uint8Array;
   signer: ethers.providers.JsonRpcSigner;
 };
+
+export type reactivateChannelParams = {
+  fees: ethers.BigNumber;
+  signer: ethers.providers.JsonRpcSigner;
+};

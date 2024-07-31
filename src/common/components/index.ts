@@ -4,3 +4,4 @@ export * from './SubscribeChannelDropdown';
 export * from './UnsubscribeChannelDropdown';
 export * from './ModalHeader';
 export * from './StakingVariant';
+export * from './TokenFaucet';

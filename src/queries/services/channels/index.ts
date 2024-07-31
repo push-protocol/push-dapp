@@ -8,3 +8,4 @@ export * from './initiateNewChain';
 export * from './removeChannelDelegate';
 export * from './sendNotification';
 export * from './verifyAliasChain';
+export * from './reactivateChannel';

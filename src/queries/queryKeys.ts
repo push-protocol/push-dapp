@@ -19,6 +19,7 @@ export const pointsVaultPendingUsers = 'pointsVaultPendingUsers';
 export const pointsVaultRejectedUsers = 'pointsVaultRejectedUsers';
 export const pointsVaultSearch = 'pointsVaultSearch';
 export const pointsVaultUserLoginKey = 'pointsVaultUserLogin';
+export const reactivatingChannel = 'reactivatingChannel';
 export const rejectVaultUser = 'rejectVaultUser';
 export const removeDelegate = 'removeDelegate';
 export const rewardsActivity = 'rewardsActivity';

@@ -8,3 +8,4 @@ export * from './useVerifyAliasChain';
 export * from './useSendNotification';
 export * from './useAddDelegate';
 export * from './useAddSubgraph';
+export * from './useReactivateChannel';
