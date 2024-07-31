@@ -80,7 +80,7 @@ const ChannelAddSubgraph: FC<ChannelAddSubgraphProps> = ({
           variant="error"
           icon={<ErrorFilled color="icon-state-danger-bold" size={24} />}
           message={addSubgraphError}
-          width="100%"
+          width="-webkit-fill-available"
         />
       )}
 

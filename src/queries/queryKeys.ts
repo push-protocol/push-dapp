@@ -26,6 +26,7 @@ export const rewardsActivity = 'rewardsActivity';
 export const rewardsLeaderboard = 'rewardsLeaderboard';
 export const sendNotification = 'sendNotification';
 export const trendingChannels = 'trendingChannels';
+export const updateChannelDetails = 'updateChannelDetails';
 export const userRewardsDetails = 'userRewardsDetails';
 export const userSubscription = 'userSubscription';
 export const userTwitterDetails = 'userTwitterDetails';

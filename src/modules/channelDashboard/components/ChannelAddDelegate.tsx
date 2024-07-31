@@ -102,7 +102,7 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
             />
           }
           message={addDelegateError}
-          width="100%"
+          width="-webkit-fill-available"
         />
       )}
 

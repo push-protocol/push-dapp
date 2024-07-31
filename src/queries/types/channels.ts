@@ -125,3 +125,10 @@ export type reactivateChannelParams = {
   fees: ethers.BigNumber;
   signer: ethers.providers.JsonRpcSigner;
 };
+
+export type EditChannelPayload = {
+  signer: ethers.providers.JsonRpcSigner;
+  identityBytes: Uint8Array;
+  fees: ethers.BigNumber;
+  account: string;
+};

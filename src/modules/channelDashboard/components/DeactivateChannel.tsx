@@ -87,7 +87,7 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({
             />
           }
           message={deactivateError}
-          width="100%"
+          width="-webkit-fill-available"
         />
       )}
 
