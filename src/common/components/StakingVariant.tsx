@@ -129,8 +129,8 @@ const StakingVariant: FC<StakingVariantProps> = ({
 
               {showBalance && <Skeleton isLoading={fetchingbalance}>
                 <Text variant="bes-semibold" color='text-tertiary'>
-                  Balance:{''}
-                  {balance?.toLocaleString()}
+                  Balance:
+                  {" "}{balance?.toLocaleString()}
                 </Text>
               </Skeleton>}
             </Box>

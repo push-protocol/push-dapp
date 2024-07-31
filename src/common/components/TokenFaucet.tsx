@@ -102,6 +102,7 @@ const TokenFaucet: FC<TokenFaucetProps> = ({
         </Box>
       )}
 
+      {/* //TODO: This will get changed with the new modal design */}
       {isUniswapWidgetModalOpen && (
         <UniswapWidgetModalComponent
           // @ts-ignore
