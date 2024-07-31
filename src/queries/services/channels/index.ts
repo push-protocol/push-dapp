@@ -1,4 +1,5 @@
 export * from './deactivateChannel';
+export * from './editChannelDetails';
 export * from './getTrendingChannels';
 export * from './getChannelDetails';
 export * from './getChannelDelegates';

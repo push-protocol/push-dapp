@@ -8,10 +8,12 @@ import { abis, addresses, appConfig } from 'config';
 import { StakingVariant } from 'common';
 
 import { getPushTokenApprovalAmount, getPushTokenFromWallet } from 'helpers';
+import { IPFSupload } from 'helpers/IpfsHelper';
 
 import { useAccount } from 'hooks';
 
-import { useApprovePUSHToken } from 'queries';
+import { useApprovePUSHToken, useEditChannel, useGetChannelDetails } from 'queries';
+import { useEditChannelForm } from '../EditChannel.form';
 import { DashboardActiveState } from 'modules/channelDashboard/ChannelDashboard.types';
 
 const minFeesForAddChannel = 50;
@@ -22,6 +24,9 @@ type EditChannelFooterProps = {
 
 const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
   const { account, provider, chainId } = useAccount();
+  const { values: formValues, isValid } = useEditChannelForm();
+
+  const { data: channelDetails, refetch: refetchChannelDetails } = useGetChannelDetails(account);
 
   const { mutate: approvePUSHToken, isPending: approvingPUSH } = useApprovePUSHToken();
 
@@ -100,6 +105,59 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
     );
   };
 
+  const { mutate: editChannel, isPending: editingChannel } = useEditChannel();
+
+  const handleEditChannel = async () => {
+    setUpdateChannelError('');
+
+    if (!isValid) {
+      return;
+    }
+
+    var signer = provider.getSigner(account);
+    console.debug(signer);
+
+    if (channelDetails) {
+      const input = JSON.stringify({
+        name: formValues.channelName,
+        info: formValues.channelDesc,
+        url: formValues.channelURL,
+        icon: formValues.channelIcon
+      });
+
+      const storagePointer = await IPFSupload(input);
+      console.debug('IPFS storagePointer:', storagePointer);
+
+      const identity = '1+' + storagePointer; // IPFS Storage Type and HASH
+      const identityBytes = ethers.utils.toUtf8Bytes(identity);
+      const parsedFees = ethers.utils.parseUnits(feesRequiredForEdit.toString(), 18);
+
+      editChannel(
+        {
+          account,
+          identityBytes,
+          fees: parsedFees,
+          signer
+        },
+        {
+          onSuccess: () => {
+            console.log('Successfully edited channel');
+            refetchChannelDetails();
+            setActiveState('dashboard');
+          },
+          onError: (error: any) => {
+            console.log('Error in updating channel details', error);
+            if (error.code == 'ACTION_REJECTED') {
+              setUpdateChannelError('User rejected signature. Please try again.');
+            } else {
+              setUpdateChannelError('Error in updating Channel. Check console for more reasons.');
+            }
+          }
+        }
+      );
+    }
+  }
+
   return (
     <Box display="flex" flexDirection="column" alignSelf="stretch">
       {updateChannelError && (
@@ -132,11 +190,8 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
         </Button>
 
         {feesRequiredForEdit && pushApprovalAmount >= feesRequiredForEdit ? (
-          // <Button disabled={checkForChanges || editingChannel || !isValid} onClick={handleEditChannel}>
-          //   {editingChannel ? 'Updating' : 'Save Changes'}
-          // </Button>
-          <Button>
-            Save Changes
+          <Button disabled={editingChannel || !isValid} onClick={handleEditChannel}>
+            {editingChannel ? 'Updating' : 'Save Changes'}
           </Button>
         ) : (
           <Button variant="primary" size="medium" disabled={approvingPUSH} onClick={handleApprovePUSH}>
