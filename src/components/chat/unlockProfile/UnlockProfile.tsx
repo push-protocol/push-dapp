@@ -33,7 +33,6 @@ export enum PROFILESTATE {
 }
 
 // Interface
-
 type UnlockProfileModalProps = {
   InnerComponentProps: {
     type: UNLOCK_PROFILE_TYPE | undefined;
@@ -105,26 +104,6 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
 
   return (
     <Container type={type}>
-      {onClose && (
-        <Box
-          width="-webkit-fill-available"
-          display="flex"
-          flexDirection="row"
-          alignItems="flex-end"
-          justifyContent="flex-end"
-        >
-          <HoverableSVG
-            icon={
-              <CrossFilled
-                size={30}
-                color="icon-primary"
-                onClick={onClose}
-              />
-            }
-          />
-        </Box>
-      )}
-
       <SubContainer type={type}>
         {/* Logo and Left Text */}
         <ItemHV2
@@ -144,7 +123,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
             {!isLoading ? (
               <>
                 <SpanV2
-                  fontSize="24px"
+                  fontSize={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? '20px' : '24px'}
                   fontWeight="500"
                   lineHeight="28.8px"
                   color={theme.default.color}
@@ -152,7 +131,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
                   {activeStatus.title}
                 </SpanV2>
                 <SpanV2
-                  fontSize={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? '16px' : '18px'}
+                  fontSize={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? '14px' : '18px'}
                   fontWeight="400"
                   lineHeight="22.4px"
                   color={theme.default.secondaryColor}
@@ -264,7 +243,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
               <ItemHV2
                 gap="8px"
                 justifyContent={type === UNLOCK_PROFILE_TYPE.MODAL ? 'center' : 'end'}
-                margin={type === UNLOCK_PROFILE_TYPE.MODAL ? '12px 16px 0 40px' : '12px 16px 0 0px'}
+                margin={type === UNLOCK_PROFILE_TYPE.MODAL ? '24px 16px 0 40px' : '12px 16px 0 0px'}
               >
                 <CustomCheckbox
                   checked={rememberMe}
@@ -342,12 +321,12 @@ const RenderToolTip = ({ children, type }) => {
 const Container = styled(ItemHV2)`
   flex-direction: column;
   align-items: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? 'center' : 'end')};
-  width: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '450px' : 'inherit')};
-  padding: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '16px' : '0px')};
+  width: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '100%' : 'inherit')};
+  padding: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '0px' : '0px')};
 
   @media (${device.tablet}) {
-    width: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '320px' : 'inherit')};
-    padding: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '12px' : '0px')};
+    width: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '100%' : 'inherit')};
+    padding: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '0px' : '0px')};
     align-items: center;
   }
 `;

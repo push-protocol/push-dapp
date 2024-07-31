@@ -15,6 +15,7 @@ const getBoxResponsiveCSSProperties = (props: BoxResponsiveProps): BoxResponsive
   { propName: 'max-width', prop: props.maxWidth },
   { propName: 'min-width', prop: props.minWidth },
   { propName: 'padding', prop: props.padding },
+  { propName: 'text-align', prop: props.textAlign },
   { propName: 'width', prop: props.width },
 ];
 
