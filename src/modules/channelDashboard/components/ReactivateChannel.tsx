@@ -155,7 +155,7 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
             />
           }
           message={reactivationError}
-          width="-webkit-fill-available"
+          width="100%"
         />
       )}
 

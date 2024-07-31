@@ -48,7 +48,7 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({
             variant="error"
             icon={<ErrorFilled color="icon-state-danger-bold" size={24} />}
             message={channelDashboardError}
-            width="-webkit-fill-available"
+            width="100%"
           />
         )}
 

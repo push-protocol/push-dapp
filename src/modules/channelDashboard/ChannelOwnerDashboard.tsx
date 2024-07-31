@@ -29,7 +29,7 @@ import useToast from 'hooks/useToast';
 
 // Internal Configs
 import { appConfig } from 'config/index.js';
-import EditChannelDep from 'modules/editChannel/EditChannelDep';
+import EditChannel from 'modules/editChannel/EditChannel';
 import useModalBlur from 'hooks/useModalBlur';
 import { AppContext } from 'contexts/AppContext';
 import { CreateChannel } from 'modules/createChannel';
@@ -210,7 +210,7 @@ const ChannelOwnerDashboard = () => {
           {isChannelDetails && processingState !== null && (
             <Container>
               {editChannel ? (
-                <EditChannelDep
+                <EditChannel
                   closeEditChannel={closeEditChannel}
                   UploadLogoComponent={UploadLogoComponent}
                   displayUplaodLogoModal={displayUplaodLogoModal}
