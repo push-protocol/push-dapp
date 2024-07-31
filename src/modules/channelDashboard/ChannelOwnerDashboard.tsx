@@ -210,13 +210,12 @@ const ChannelOwnerDashboard = () => {
           {isChannelDetails && processingState !== null && (
             <Container>
               {editChannel ? (
-                // <EditChannelDep
-                //   closeEditChannel={closeEditChannel}
-                //   UploadLogoComponent={UploadLogoComponent}
-                //   displayUplaodLogoModal={displayUplaodLogoModal}
-                //   isUploadLogoModalOpen={isUploadLogoModalOpen}
-                // />
-                <div>Edit Channel</div>
+                <EditChannelDep
+                  closeEditChannel={closeEditChannel}
+                  UploadLogoComponent={UploadLogoComponent}
+                  displayUplaodLogoModal={displayUplaodLogoModal}
+                  isUploadLogoModalOpen={isUploadLogoModalOpen}
+                />
               ) : (
                 <>
                   {channelDetails && !isMobile && (

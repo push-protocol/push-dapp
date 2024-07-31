@@ -22,7 +22,7 @@ import { useClickAway } from 'react-use';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import VerifyLogo from '../../assets/Vector.svg';
 import { MdCheckCircle, MdError } from 'react-icons/md';
-import { uploadLogoModal } from './uploadLogoModal';
+import uploadLogoModal from './uploadLogoModal';
 import { approvePushToken, getPushTokenApprovalAmount, mintPushToken } from 'helpers';
 import { getCAIPObj } from 'helpers/CaipHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
