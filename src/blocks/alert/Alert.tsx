@@ -1,4 +1,4 @@
-import type { ReactNode, FC } from 'react';
+import type { FC } from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
 import type { TransformedHTMLAttributes } from '../Blocks.types';
@@ -6,16 +6,13 @@ import type { AlertVariant } from './Alert.types';
 import { alertVariants } from './Alert.utils';
 import { Cross } from 'blocks/icons';
 import { HoverableSVG } from 'blocks/hoverableSVG';
-import type { ThemeColors } from 'blocks/theme/Theme.types';
 import { getTextVariantStyles } from 'blocks/Blocks.utils';
 
 export type AlertProps = {
-  /* Child react nodes rendered by Box */
-  children?: ReactNode;
   /* Additional prop from styled components to apply custom css to Alert */
   css?: FlattenSimpleInterpolation;
   /* Sets the variant of the alert */
-  variant?: AlertVariant;
+  variant: AlertVariant;
   /* Boolean to set the alert as closable */
   closeable?: boolean;
   /* Close function to be called on close button click */
@@ -34,7 +31,7 @@ export type AlertProps = {
   description?: string;
 } & TransformedHTMLAttributes<HTMLDivElement>;
 
-const StyledAlert = styled.div<AlertProps & { iconColor: ThemeColors; borderColor: ThemeColors; bgColor: ThemeColors }>`
+const StyledAlert = styled.div<AlertProps>`
   /* Common Alert CSS */
 
   display: flex;
@@ -42,28 +39,30 @@ const StyledAlert = styled.div<AlertProps & { iconColor: ThemeColors; borderColo
   border-radius: var(--radius-sm);
   justify-content: center;
   white-space: nowrap;
-  padding: 12px;
+  padding: var(--spacing-xs);
   justify-content: space-between;
-  border: 1px solid var(--${({ borderColor }) => borderColor});
-  background-color: var(--${({ bgColor }) => bgColor});
+  ${({ variant }) => `
+    border: var(--border-sm) solid var(--${alertVariants[variant].borderColor});
+    background-color: var(--${alertVariants[variant].bgColor});
+  `}
 
   /* Common icon css added through CSS class */
   .icon {
     display: flex;
     justify-content: center;
     margin-right: var(--spacing-xxxs);
-    color: var(--${({ iconColor }) => iconColor});
+    color: var(--${({ variant }) => alertVariants[variant].iconColor});
   }
 
   /* Custom CSS applied via styled component css prop */
   ${(props) => props.css || ''}
 `;
 
-const StyledLink = styled.div<{ ctaColor: ThemeColors }>`
+const StyledLink = styled.div<{ variant: AlertVariant }>`
   /* Link CSS */
   text-decoration: none;
   cursor: pointer;
-  color: var(--${({ ctaColor }) => ctaColor});
+  color: var(--${({ variant }) => alertVariants[variant].ctaColor});
 `;
 
 const TextContainer = styled.div`
@@ -90,23 +89,21 @@ const Description = styled.p`
 `;
 
 const Alert: FC<AlertProps> = ({
-  closeable = true,
   description,
   heading,
   onClose,
   onRetry,
-  retryable = true,
   retryText = 'Try Again',
   showIcon = true,
   variant = 'info',
   ...props
 }) => {
-  const { icon: Icon, iconColor, borderColor, bgColor, ctaColor } = alertVariants[variant];
+  const { icon: Icon } = alertVariants[variant];
 
   return (
     <StyledAlert
       role="alert"
-      {...{ variant, iconColor, borderColor, bgColor }}
+      {...{ variant }}
       {...props}
     >
       {showIcon && (
@@ -119,15 +116,15 @@ const Alert: FC<AlertProps> = ({
         {description && <Description>{description}</Description>}
       </TextContainer>
       <RightContainer>
-        {retryable && (
+        {onRetry && (
           <StyledLink
-            ctaColor={ctaColor}
+            variant={variant}
             onClick={onRetry}
           >
             {retryText}
           </StyledLink>
         )}
-        {closeable && (
+        {onClose && (
           <HoverableSVG
             icon={
               <Cross
