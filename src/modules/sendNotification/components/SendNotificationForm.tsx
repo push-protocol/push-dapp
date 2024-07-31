@@ -34,7 +34,7 @@ type SendNotificationFormProps = {
 };
 const SendNotificationForm: FC<SendNotificationFormProps> = ({ channelDetails }) => {
   const [subsetRecipients, setSubsetRecipients] = useState<Array<string>>([]);
-  const { chainId } = useAccount();
+  const { chainId, switchChain } = useAccount();
   const { mutate: sendNotification, isPending } = useSendNotification();
   const toast = useToast();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
@@ -171,7 +171,10 @@ const SendNotificationForm: FC<SendNotificationFormProps> = ({ channelDetails })
             <Select
               options={alaisChainOptions}
               value={formik.values.chainId}
-              onSelect={formik.handleChange('chainId')}
+              onSelect={(value) => {
+                formik.setFieldValue('chainId', value);
+                switchChain(parseInt(value));
+              }}
               error={formik.touched.chainId && Boolean(formik.errors.chainId)}
               errorMessage={formik.touched.chainId ? formik.errors.chainId : ''}
             />

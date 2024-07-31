@@ -106,10 +106,7 @@ const AddNewChainNavigation: FC<AddNewChainNavigationProps> = ({ channelDetails 
 };
 // Create Header
 function Navigation() {
-  const {
-    delegatees,
-    // aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified },
-  } = useSelector((state: any) => state.admin);
+  const { delegatees } = useSelector((state: any) => state.admin);
   const [refresh, setRefresh] = useState(false);
   const { processingState } = useSelector((state: any) => state.channelCreation);
   const { run, stepIndex, isCommunicateOpen, isDeveloperOpen } = useSelector((state: any) => state.userJourney);
@@ -164,7 +161,6 @@ function Navigation() {
   }, [canSend, channelDetails, navigationSetup, processingState, account]);
 
   useEffect(() => {
-    console.debug(channelDetails, 'channelDetials');
     if (processingState !== 0) {
       dispatch(setCanSend(SEND_NOTIFICATION_STATES.LOADING));
     } else {

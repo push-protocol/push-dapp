@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import useToast from 'hooks/useToast';
 import { useVerifyAliasChain } from 'queries';
+import { useAccount } from 'hooks';
 
 import APP_PATHS from 'config/AppPaths';
 
@@ -21,6 +22,7 @@ const VerifyAliasChain: FC = () => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
     return state.user;
   });
+  const { account } = useAccount();
   const { mutate: verifyAliasChain, isPending } = useVerifyAliasChain();
 
   const { values: formValues } = useChainAliasForm();
@@ -49,7 +51,7 @@ const VerifyAliasChain: FC = () => {
               />
             ),
           });
-          navigate(APP_PATHS.Dashboard);
+          navigate(`${APP_PATHS.ChannelDashboard}/${account}}`);
         },
         onError: (error: any) => {
           if (error) {
