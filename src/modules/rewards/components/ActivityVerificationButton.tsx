@@ -19,7 +19,7 @@ import { ActvityType } from 'queries/types';
 import { UserStoreType } from 'types';
 
 // components
-import { Button } from 'blocks';
+import { Button, Spinner } from 'blocks';
 
 type ActivityVerificationButtonProps = {
   userId: string;
@@ -118,6 +118,7 @@ export const ActivityVerificationButton = ({
       <Button
         variant="tertiary"
         size="small"
+        leadingIcon={activityData?.isLoading && <Spinner variant="secondary" />}
         onClick={() => activityData?.action(userId)}
         disabled={activityData?.isVerificationComplete || isLoadingActivity || activityData?.isLoading}
       >
