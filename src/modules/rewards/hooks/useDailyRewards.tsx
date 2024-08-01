@@ -58,7 +58,7 @@ const useDailyRewards = () => {
   }, []);
 
   // Handle check-in function
-  const handleCheckIn = useCallback(() => {
+  const handleCheckIn = () => {
     if (!userDetails?.userId) return;
 
     const activityTitles = dailyRewardsActivities?.map((activity) => activity.activityType);
@@ -75,7 +75,7 @@ const useDailyRewards = () => {
         },
       }
     );
-  }, [dailyRewardsActivities, sendRecentActivities, userDetails?.userId]);
+  };
 
   // Handle success response from sending recent activities
   const handleSuccess = (data: any) => {
