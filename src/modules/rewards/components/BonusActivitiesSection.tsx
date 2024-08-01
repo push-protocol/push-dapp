@@ -35,7 +35,7 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
 
   const bonusActivities = isLoading
     ? Array(8).fill(0)
-    : activityList.filter((activity) => activity.index >= 5 && activity.index <= 12);
+    : activityList.filter((activity) => activity.index >= 3 && activity.index <= 10);
 
   const [errorMessage, setErrorMessage] = useState<string>('');
 

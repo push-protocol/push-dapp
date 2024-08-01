@@ -42,7 +42,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
     ? Array(2).fill(0)
     : activityList.filter((activity) => activity.index >= 0 && activity.index <= 1);
 
-  const secondGroupActivities = isLoading ? Array(7).fill(0) : activityList.filter((activity) => activity.index >= 13);
+  const secondGroupActivities = isLoading ? Array(7).fill(0) : activityList.filter((activity) => activity.index >= 11);
 
   const hasMoreData = !isFetchingNextPage && hasNextPage;
 

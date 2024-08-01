@@ -30,7 +30,11 @@ const useDailyRewards = () => {
 
   // Flatten the activities response and filter daily activities
   const activityList = rewardActivitiesResponse?.pages.flatMap((page) => page.activities) || [];
-  const dailyActivities = activityList.filter((activity) => activity.index < 0);
+
+  const dailyActivities = activityList.filter(
+    (activity) => activity.index < 0 && activity.activityType.startsWith(`daily_check_in_7_days_day`)
+  );
+  // .filter((activity) => activity.activityType.startsWith(`daily_check_in_7_days_day`));
   const dailyRewardsActivities = isLoading
     ? Array(7).fill(0)
     : dailyActivities.sort((a, b) => {
@@ -74,33 +78,30 @@ const useDailyRewards = () => {
   }, [dailyRewardsActivities, sendRecentActivities, userDetails?.userId]);
 
   // Handle success response from sending recent activities
-  const handleSuccess = useCallback(
-    (data: any) => {
-      const { activities: dataActivity } = data;
-      const { isEmpty, firstEmptyActivity, latestActivityKey } = getActivityStatus(dataActivity);
+  const handleSuccess = (data: any) => {
+    const { activities: dataActivity } = data;
+    const { isEmpty, firstEmptyActivity, latestActivityKey } = getActivityStatus(dataActivity);
 
-      const targetActivity = isEmpty
-        ? dailyRewardsActivities?.find((activity) => activity.activityType === firstEmptyActivity)
-        : dailyRewardsActivities?.find((activity) => activity.activityType === latestActivityKey);
+    const targetActivity = isEmpty
+      ? dailyRewardsActivities?.find((activity) => activity.activityType === firstEmptyActivity)
+      : dailyRewardsActivities?.find((activity) => activity.activityType === latestActivityKey);
 
-      const newDay = isEmpty ? 1 : getDayNumber(targetActivity) + 1;
-      const newDayData = dailyRewardsActivities?.find(
-        (activity) => activity.activityType === `daily_check_in_7_days_day${newDay}`
-      );
+    const newDay = isEmpty ? 1 : getDayNumber(targetActivity) + 1;
+    const newDayData = dailyRewardsActivities?.find(
+      (activity) => activity.activityType === `daily_check_in_7_days_day${newDay}`
+    );
 
-      if (latestActivityKey && !isEmpty) {
-        const number = checkTimeToCurrent(dataActivity?.[latestActivityKey]?.updatedAt);
-        if (number) {
-          setIsActivityDisabled(true);
-        }
+    if (latestActivityKey && !isEmpty) {
+      const number = checkTimeToCurrent(dataActivity?.[latestActivityKey]?.updatedAt);
+      if (number) {
+        setIsActivityDisabled(true);
       }
+    }
 
-      setActiveDay(newDay);
-      setActiveItem(newDayData);
-      setIsLoadingRewards(false);
-    },
-    [dailyRewardsActivities]
-  );
+    setActiveDay(newDay);
+    setActiveItem(newDayData);
+    setIsLoadingRewards(false);
+  };
 
   // Effect for handling check-in when user details change or wallet is connected
   useEffect(() => {
