@@ -174,10 +174,10 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
         >
           You will need{' '}
           <A
-            href={Faucets[chainId].url}
+            href={Faucets[chainId]?.url}
             target="_blank"
           >
-            {Faucets[chainId].label}
+            {Faucets[chainId]?.label}
           </A>{' '}
           to proceed.
         </SpanV2>
