@@ -12,6 +12,7 @@ import { dropdownSemantics } from '../semantics/semantics.dropdown';
 import { iconSemantics } from '../semantics/semantics.icon';
 import { inputSemantics } from '../semantics/semantics.input';
 import { modalSemantics } from '../semantics/semantics.modal';
+import { progressBarSemantics } from '../semantics/semantics.progress-bar';
 import { radioSemantics } from '../semantics/semantics.radio';
 import { skeletonSemantics } from '../semantics/semantics.skeleton';
 import { strokeSemantics } from '../semantics/semantics.stroke';
@@ -37,6 +38,7 @@ type SemanticKeys = {
   icon: 'icon';
   input: 'components-inputs';
   modal: 'components-modal';
+  progressBar: 'components-progress-bar';
   radio: 'components-radio-button';
   surface: 'surface';
   stroke: 'stroke';
@@ -62,6 +64,7 @@ export const semanticKeys: SemanticKeys = {
   icon: 'icon',
   input: 'components-inputs',
   modal: 'components-modal',
+  progressBar: 'components-progress-bar',
   radio: 'components-radio-button',
   surface: 'surface',
   stroke: 'stroke',
@@ -87,6 +90,7 @@ export const colorSemantics = {
   [semanticKeys.icon]: iconSemantics,
   [semanticKeys.input]: inputSemantics,
   [semanticKeys.modal]: modalSemantics,
+  [semanticKeys.progressBar]: progressBarSemantics,
   [semanticKeys.radio]: radioSemantics,
   [semanticKeys.surface]: surfaceSemantics,
   [semanticKeys.stroke]: strokeSemantics,
