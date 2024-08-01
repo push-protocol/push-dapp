@@ -24,12 +24,6 @@ const Dashboard: FC<DashboardProps> = () => {
       height="100%"
       width="auto"
     >
-      <Box
-        display="flex"
-        alignItems="center"
-      >
-        <Button loading>Button</Button>
-      </Box>
       <DashboardHeader
         showSubHeader={showSubHeader}
         setSubHeaderVisibility={setSubHeaderVisibility}
