@@ -47,17 +47,8 @@ const StyledButton = styled.button<ButtonProps>`
     align-items: center;
     justify-content: center;
   }
-  [role='spinner'] {
-    margin: 6.667px;
-  }
   /* Button variant CSS styles */
   ${({ variant, loading }) => getButtonVariantStyles(variant || 'primary', loading!)}
-
-  /* ${({ iconOnly }) =>
-    !iconOnly &&
-    `[role='spinner'] {
-        margin-right: var(--spacing-xxxs);
-      };`} */
 
   ${({ loading }) => loading && 'opacity: var(--opacity-80);'}
 
@@ -74,6 +65,9 @@ const StyledButton = styled.button<ButtonProps>`
   ${(props) => props.css || ''}
 `;
 
+const SpinnerContainer = styled.div`
+  padding: 5px;
+`;
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
@@ -102,7 +96,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       variant={variant}
       {...props}
     >
-      {loading && <Spinner />}
+      {loading && (
+        <SpinnerContainer>
+          <Spinner />
+        </SpinnerContainer>
+      )}
       {leadingIcon && <span className="icon icon-text">{leadingIcon}</span>}
       {!iconOnly && children}
       {trailingIcon && <span className="icon icon-text">{trailingIcon}</span>}

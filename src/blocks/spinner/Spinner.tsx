@@ -1,7 +1,8 @@
 import React from 'react';
 import styled, { FlattenSimpleInterpolation, keyframes } from 'styled-components';
 import { SpinnerSize, SpinnerVariant } from './Spinner.types';
-import { getSpinnerSize, getSpinnerStrokeWidth } from './Spinner.utils';
+import { getSpinnerSize } from './Spinner.utils';
+import { Ellipse } from '../icons';
 
 export type SpinnerProps = {
   /* Additional prop from styled components to apply custom css to Spinner */
@@ -13,55 +14,40 @@ export type SpinnerProps = {
 };
 
 const spin = keyframes`
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+ from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
 `;
 
-const Container = styled.div<{ css?: FlattenSimpleInterpolation; size: SpinnerSize; variant: SpinnerVariant }>`
-  position: relative;
-  animation: ${spin} 1s linear infinite;
-  border-radius: 50%;
-  ${({ size, variant }) => ` 
-    border-width: var(--${getSpinnerStrokeWidth(size)}) ;
-    border-style: solid;
-    border-color: var(--components-spinner-icon-${variant})
-    transparent transparent transparent;
-    width: ${getSpinnerSize(size)};
-    height: ${getSpinnerSize(size)};
-    :before,:after {
-      content: '';
-      width: var(--${getSpinnerStrokeWidth(size)});
-      height: var(--${getSpinnerStrokeWidth(size)});
-      border-radius: 50%;
-      background: var(--components-spinner-icon-${variant});
-      position: absolute;
-    }
-    :before {
-        top: 8.65%;
-        left: 10%;
-      }
-    :after {
-        top: 8.65%;
-        right: 10%;
-      }
-    `}
+const Container = styled.div<{ css?: FlattenSimpleInterpolation; size: SpinnerSize }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation-name: ${spin};
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  ${({ size }) => ` 
+    width: ${getSpinnerSize(size)}px;
+    height: ${getSpinnerSize(size)}px;
+  `}
 
   /* Custom CSS applied via styled component css prop */
   ${(props) => props.css || ''};
 `;
 
-const Spinner: React.FC<SpinnerProps> = ({ size = 'small', css, variant = 'default' }) => {
+const Spinner: React.FC<SpinnerProps> = ({ size = 'small', css }) => {
   return (
     <Container
-      role="spinner"
       size={size}
       css={css}
-      variant={variant}
-    />
+      role="spinner"
+    >
+      <Ellipse size={getSpinnerSize(size)} />
+    </Container>
   );
 };
 
