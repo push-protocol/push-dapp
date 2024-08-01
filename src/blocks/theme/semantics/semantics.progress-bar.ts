@@ -1,6 +1,6 @@
-import { colorBrands } from '../colors/colors.brands';
+import { surfaceSemantics } from './semantics.surface';
 
 export const progressBarSemantics = {
-  'background-default': { light: colorBrands['neutral-100'], dark: colorBrands['neutral-800'] },
-  'background-progress': { light: colorBrands['primary-600'], dark: colorBrands['primary-500'] },
+  'background-default': { light: surfaceSemantics['secondary'].light, dark: surfaceSemantics['secondary'].dark },
+  'background-progress': { light: surfaceSemantics['brand-medium'].light, dark: surfaceSemantics['brand-medium'].dark },
 };

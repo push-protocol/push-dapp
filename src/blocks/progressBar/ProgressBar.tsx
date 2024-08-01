@@ -1,10 +1,10 @@
 import type { FC } from 'react';
-import styled from 'styled-components';
+import styled, { FlattenSimpleInterpolation } from 'styled-components';
 
 import type { ProgressBarProps } from './ProgressBar.types';
 import { getProgressWidthPercentage } from './ProgressBar.utils';
 
-const StyledProgressBarContainer = styled.div<Omit<ProgressBarProps, 'progress' | 'max'>>`
+const StyledProgressBarContainer = styled.div<{ css?: FlattenSimpleInterpolation }>`
   /* Default CSS */
   background-color: var(--components-progress-bar-background-default);
   width: 100%;
@@ -15,12 +15,12 @@ const StyledProgressBarContainer = styled.div<Omit<ProgressBarProps, 'progress' 
   ${({ css }) => css || ''}
 `;
 
-const StyledProgressBar = styled.div<ProgressBarProps>`
+const StyledProgressBar = styled.div<{ width: string }>`
   /* Default CSS */
   border-radius: var(--radius-xxs, 8px);
   background-color: var(--components-progress-bar-background-progress);
   height: 100%;
-  width: ${({ progress, max }) => `${getProgressWidthPercentage(progress, max)}%`};
+  width: ${({ width }) => width};
   transition: width 0.3s ease;
 `;
 
@@ -32,7 +32,7 @@ const ProgressBar: FC<ProgressBarProps> = ({ progress, max = 100, ...rest }) => 
     aria-valuenow={progress}
     {...rest}
   >
-    <StyledProgressBar {...{ progress, max }} />
+    <StyledProgressBar width={`${getProgressWidthPercentage(progress, max)}%`} />
   </StyledProgressBarContainer>
 );
 
