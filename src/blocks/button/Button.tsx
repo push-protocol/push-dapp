@@ -53,12 +53,6 @@ const StyledButton = styled.button<ButtonProps>`
   /* Button variant CSS styles */
   ${({ variant, loading }) => getButtonVariantStyles(variant || 'primary', loading!)}
 
-  /* ${({ iconOnly }) =>
-    !iconOnly &&
-    `[role='spinner'] {
-        margin-right: var(--spacing-xxxs);
-      };`} */
-
   ${({ loading }) => loading && 'opacity: var(--opacity-80);'}
 
   /* Button and font size CSS styles */
