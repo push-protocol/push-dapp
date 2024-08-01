@@ -7,6 +7,7 @@ import { css } from 'styled-components';
 // hooks
 import { useGetRewardsActivities, useGetUserRewardsDetails } from 'queries';
 import { useAccount } from 'hooks';
+import useLockedStatus from '../hooks/useLockedStatus';
 
 // helpers
 import { walletToCAIP10 } from 'helpers/w2w';
@@ -36,6 +37,8 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
   const bonusActivities = isLoading
     ? Array(8).fill(0)
     : activityList.filter((activity) => activity.index >= 3 && activity.index <= 10);
+
+  const { isLocked } = useLockedStatus();
 
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -79,6 +82,7 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
             activity={activity}
             isLoadingItem={isLoading}
             setErrorMessage={setErrorMessage}
+            isLocked={isLocked}
           />
         ))}
       </Box>

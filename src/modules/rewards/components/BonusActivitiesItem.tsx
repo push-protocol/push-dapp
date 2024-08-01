@@ -3,7 +3,7 @@ import { FC } from 'react';
 
 // hooks
 import { Activity, useGetRewardsActivity } from 'queries';
-import useLockedStatus from '../hooks/useLockedStatus';
+import { useAccount } from 'hooks';
 
 // components
 import { Box, Button, Lock, RewardsBell, Skeleton, Text } from 'blocks';
@@ -15,16 +15,23 @@ export type BonusActivitiesItemProps = {
   activity: Activity;
   isLoadingItem: boolean;
   setErrorMessage: (errorMessage: string) => void;
+  isLocked: boolean;
 };
 
-const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({ userId, activity, isLoadingItem, setErrorMessage }) => {
+const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({
+  userId,
+  activity,
+  isLoadingItem,
+  setErrorMessage,
+  isLocked,
+}) => {
   const {
     data: usersSingleActivity,
     isLoading,
     refetch: refetchActivity,
   } = useGetRewardsActivity({ userId, activityId: activity.id }, { enabled: !!userId });
 
-  const { isLocked, isWalletConnected } = useLockedStatus();
+  const { isWalletConnected } = useAccount();
 
   const isLockedOrNotConnected = isLocked || !isWalletConnected;
 

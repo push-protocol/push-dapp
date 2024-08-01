@@ -78,6 +78,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
             userId={userDetails?.userId || ''}
             activity={activity}
             isLoadingItem={isLoading}
+            isLocked={isLocked}
           />
         ))}
         {isLocked && (
@@ -119,6 +120,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
             userId={userDetails?.userId || ''}
             activity={activity}
             isLoadingItem={isLoading}
+            isLocked={isLocked}
           />
         ))}
       </InfiniteScroll>

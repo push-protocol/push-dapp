@@ -14,6 +14,7 @@ import { AxiosError } from 'axios';
 const useLockedStatus = () => {
   const { account, isWalletConnected } = useAccount();
   const [isLocked, setIsLocked] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
 
   const caip10WalletAddress = walletToCAIP10({ account });
   const { data: userDetails, status, error } = useGetUserRewardsDetails({ caip10WalletAddress });
@@ -26,8 +27,12 @@ const useLockedStatus = () => {
   const errorMessage = 'Failed to retrieve user';
 
   useEffect(() => {
-    if (isWalletConnected && userDetails?.userId) {
-      checkIfLocked();
+    if (!hasMounted) {
+      if (isWalletConnected && userDetails?.userId) {
+        // do componentDidMount logic
+        setHasMounted(true);
+        checkIfLocked();
+      }
     }
 
     if (status === 'error' && isWalletConnected) {

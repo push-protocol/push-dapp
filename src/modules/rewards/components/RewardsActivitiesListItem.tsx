@@ -1,17 +1,18 @@
 import { FC, useState } from 'react';
 
 import { Activity, useGetRewardsActivity } from 'queries';
+import { useAccount } from 'hooks';
 
 import { Box, Button, ErrorFilled, InfoFilled, Lozenge, RewardsBell, Skeleton, Text, Lock, Multiplier } from 'blocks';
 import { ActivityButton } from './ActivityButton';
 import { RewardsActivityIcon } from './RewardsActivityIcon';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
-import useLockedStatus from '../hooks/useLockedStatus';
 
 export type RewardActivitiesListItemProps = {
   userId: string;
   activity: Activity;
   isLoadingItem: boolean;
+  isLocked: boolean;
 };
 
 const getUpdatedExpiryTime = (timestamp: number) => {
@@ -20,8 +21,13 @@ const getUpdatedExpiryTime = (timestamp: number) => {
   return days;
 };
 
-const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, activity, isLoadingItem }) => {
-  const { isLocked, isWalletConnected } = useLockedStatus();
+const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
+  userId,
+  activity,
+  isLoadingItem,
+  isLocked,
+}) => {
+  const { isWalletConnected } = useAccount();
   const {
     data: usersSingleActivity,
     isLoading,
