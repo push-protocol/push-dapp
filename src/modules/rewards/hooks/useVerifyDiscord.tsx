@@ -5,8 +5,10 @@ import { useEffect, useState } from 'react';
 import { PushAPI } from '@pushprotocol/restapi';
 import { useSelector } from 'react-redux';
 
+// hooks;
 import { appConfig } from 'config';
 import { useClaimRewardsActivity } from 'queries';
+import useLockedStatus from './useLockedStatus';
 
 // helpers
 import { generateVerificationProof } from '../utils/generateVerificationProof';
@@ -35,6 +37,7 @@ const useVerifyDiscord = ({
   const [discordActivityStatus, setDiscordActivityStatus] = useState<string | null>(null);
   const [verifyingDiscord, setVerifyingDiscord] = useState(token ? true : false);
   const [updatedId, setUpdatedId] = useState<string | null>(null);
+  const { checkIfLocked } = useLockedStatus();
 
   useEffect(() => {
     setErrorMessage('');
@@ -110,6 +113,7 @@ const useVerifyDiscord = ({
               refetchActivity();
               setVerifyingDiscord(false);
               setErrorMessage('');
+              checkIfLocked();
             }
           },
           onError: (error: any) => {

@@ -6,6 +6,9 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithPopup, TwitterAuthProvider, User } from 'firebase/auth';
 import { useSelector } from 'react-redux';
 
+// hooks
+import useLockedStatus from './useLockedStatus';
+
 // helpers
 import { appConfig } from 'config';
 import { generateVerificationProof } from '../utils/generateVerificationProof';
@@ -25,6 +28,7 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
   const [twitterActivityStatus, setTwitterActivityStatus] = useState<string | null>(null);
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
   const [updatedId, setUpdatedId] = useState<string | null>(null);
+  const { checkIfLocked } = useLockedStatus();
 
   useEffect(() => {
     setErrorMessage('');
@@ -115,6 +119,7 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
               refetchActivity();
               setVerifyingTwitter(false);
             }
+            checkIfLocked();
           },
           onError: (error: any) => {
             console.log('Error in creating activity', error);

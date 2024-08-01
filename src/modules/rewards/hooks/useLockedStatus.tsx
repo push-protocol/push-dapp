@@ -67,7 +67,7 @@ const useLockedStatus = () => {
     );
   };
 
-  return { isLocked, isWalletConnected };
+  return { isLocked, isWalletConnected, checkIfLocked };
 };
 
 export default useLockedStatus;
