@@ -47,17 +47,19 @@ const StyledButton = styled.button<ButtonProps>`
     align-items: center;
     justify-content: center;
   }
-
+  [role='spinner'] {
+    margin: 6.667px;
+  }
   /* Button variant CSS styles */
-  ${({ variant, loading }) => getButtonVariantStyles(variant || 'primary', loading || false)}
+  ${({ variant, loading }) => getButtonVariantStyles(variant || 'primary', loading!)}
 
-  ${({ iconOnly }) =>
+  /* ${({ iconOnly }) =>
     !iconOnly &&
     `[role='spinner'] {
         margin-right: var(--spacing-xxxs);
-      };`}
+      };`} */
 
-  ${({ loading }) => loading && 'opacity: 0.8;'}
+  ${({ loading }) => loading && 'opacity: var(--opacity-80);'}
 
   /* Button and font size CSS styles */
   ${({ iconOnly, size }) => getButtonSizeStyles({ iconOnly: !!iconOnly, size: size || 'medium' })}
@@ -89,9 +91,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => (
     <StyledButton
-      {...(disabled ? { 'aria-disabled': true } : {})}
+      {...(disabled || loading ? { 'aria-disabled': true } : {})}
       circular={circular}
-      disabled={disabled}
+      disabled={disabled || loading}
       iconOnly={iconOnly}
       loading={loading}
       role="button"
