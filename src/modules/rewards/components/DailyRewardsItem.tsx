@@ -17,15 +17,20 @@ export type DailyRewardsItemProps = {
 const DailyRewardsItem: FC<DailyRewardsItemProps> = ({ activity, activeDay, isLoading, isActivityDisabled }) => {
   const day = parseInt(activity?.activityTitle?.split('- Day')[1]);
   const isActive = day === activeDay && !isActivityDisabled;
+  const isCompleted = activeDay <= day;
 
   // style variables
-  const backgroundColor = isActive ? 'surface-brand-medium' : day === 7 ? 'surface-brand-subtle' : 'surface-secondary';
+  const backgroundColor = isActive
+    ? 'surface-brand-medium'
+    : day === 7 && isCompleted
+    ? 'surface-brand-subtle'
+    : 'surface-secondary';
 
   const textColor = isActive
     ? 'text-on-dark-bg'
     : activeDay > day
     ? 'text-tertiary'
-    : day == 7
+    : day == 7 && isCompleted
     ? 'text-on-light-bg'
     : 'text-secondary';
 
@@ -58,7 +63,7 @@ const DailyRewardsItem: FC<DailyRewardsItemProps> = ({ activity, activeDay, isLo
           {activity?.activityTitle?.split('-')[1]}
         </Text>
 
-        {activeDay <= day ? <Box>{getIconComponent(day)}</Box> : <CheckCircle />}
+        {isCompleted ? <Box>{getIconComponent(day)}</Box> : <CheckCircle />}
 
         <Text
           variant="bm-semibold"
