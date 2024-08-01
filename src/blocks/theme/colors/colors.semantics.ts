@@ -1,3 +1,4 @@
+import { alertSemantics } from '../semantics/semantics.alert';
 import {
   secondaryButtonSemantics,
   dangerButtonSemantics,
@@ -20,9 +21,11 @@ import { textSemantics } from '../semantics/semantics.text';
 import { textAreaSemantics } from '../semantics/semantics.textarea';
 import { toastSemantics } from '../semantics/semantics.toast';
 import { tooltipSemantics } from '../semantics/semantics.tooltip';
+import { spinnerSemantics } from '../semantics/semantics.spinner';
 
 // TODO: find a better way to do this in future
 type SemanticKeys = {
+  alert: 'components-alert';
   buttonPrimary: 'components-button-primary';
   buttonSecondary: 'components-button-secondary';
   buttonTertiary: 'components-button-tertiary';
@@ -43,9 +46,11 @@ type SemanticKeys = {
   toast: 'components-toast';
   toggle: 'components-toggle-switch';
   tooltip: 'components-tooltip';
+  spinner: 'components-spinner';
 };
 
 export const semanticKeys: SemanticKeys = {
+  alert: 'components-alert',
   buttonPrimary: 'components-button-primary',
   buttonSecondary: 'components-button-secondary',
   buttonTertiary: 'components-button-tertiary',
@@ -66,9 +71,11 @@ export const semanticKeys: SemanticKeys = {
   toast: 'components-toast',
   toggle: 'components-toggle-switch',
   tooltip: 'components-tooltip',
+  spinner: 'components-spinner',
 };
 
 export const colorSemantics = {
+  [semanticKeys.alert]: alertSemantics,
   [semanticKeys.buttonPrimary]: primaryButtonSemantics,
   [semanticKeys.buttonSecondary]: secondaryButtonSemantics,
   [semanticKeys.buttonTertiary]: tertiaryButtonSemantics,
@@ -89,4 +96,5 @@ export const colorSemantics = {
   [semanticKeys.toast]: toastSemantics,
   [semanticKeys.toggle]: switchSemantics,
   [semanticKeys.tooltip]: tooltipSemantics,
+  [semanticKeys.spinner]: spinnerSemantics,
 };

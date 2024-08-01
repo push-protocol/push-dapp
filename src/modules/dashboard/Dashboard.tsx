@@ -2,11 +2,13 @@
 import { FC, useState } from 'react';
 
 // Components
-import { Box, Button } from 'blocks';
-import { DashboardSubHeader } from './components/DashboardSubHeader';
-import { FeaturedChannels } from './components/FeaturedChannels';
+import { Box } from 'blocks';
+import { AnalyticsOverview } from './components/AnalyticsOverview';
 import { ChannelVariantsSection } from './components/ChannelVariantsSection';
 import { DashboardHeader } from './components/DashboardHeader';
+import { DashboardSubHeader } from './components/DashboardSubHeader';
+import { FeaturedChannels } from './components/FeaturedChannels';
+import { StakingPools } from './components/StakingPools';
 
 export type DashboardProps = {};
 
@@ -41,6 +43,14 @@ const Dashboard: FC<DashboardProps> = () => {
       >
         <FeaturedChannels />
         <ChannelVariantsSection />
+        <Box
+          display="flex"
+          flexDirection={{ initial: 'row', ml: 'column' }}
+          gap="spacing-md"
+        >
+          <AnalyticsOverview />
+          <StakingPools />
+        </Box>
       </Box>
     </Box>
   );

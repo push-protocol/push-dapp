@@ -305,7 +305,7 @@ function Header({ isDarkMode, darkModeToggle }) {
           {isActive && !error && (
             <Box
               margin="spacing-xxxs"
-              display="flex"
+              // display="flex"
               alignItems="center"
               display={{ lp: 'block', dp: 'none' }}
             >

@@ -38,6 +38,8 @@ export type BoxResponsiveProps = {
   minWidth?: ResponsiveProp<string>;
   /* Sets padding css property */
   padding?: ResponsiveProp<BlocksSpaceType>;
+  /* Sets text-align css property */
+  textAlign?: ResponsiveProp<CSSProperties['textAlign']>;
   /* Sets width css property */
   width?: ResponsiveProp<string>;
 };
@@ -90,6 +92,7 @@ export type BoxResponsiveCSSProperties =
   | 'max-width'
   | 'min-width'
   | 'padding'
+  | 'text-align'
   | 'width';
 
 export type BoxResponsivePropValues = ValueOf<BoxResponsiveProps>;

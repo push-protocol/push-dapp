@@ -28,6 +28,11 @@ export const getButtonVariantStyles = (variant: ButtonVariant, loading: boolean)
           background-color: var(--components-button-primary-background-disabled);
           color: var(--components-button-primary-text-disabled);
         }
+
+        [role='spinner'] {
+          border-color: var(--components-button-primary-icon-default) transparent transparent transparent;
+          backrgound:var(--components-button-primary-icon-default);
+        }
       `;
     }
     case 'secondary': {
@@ -52,6 +57,11 @@ export const getButtonVariantStyles = (variant: ButtonVariant, loading: boolean)
         &:disabled {
           background-color: var(--components-button-secondary-background-disabled);
           color: var(--components-button-secondary-text-disabled)
+        }
+
+        [role='spinner']{
+          border-color: var(--components-button-secondary-icon-default) transparent transparent transparent;
+          backrgound:var(--components-button-secondary-icon-default);
         }
       `;
     }
@@ -81,6 +91,10 @@ export const getButtonVariantStyles = (variant: ButtonVariant, loading: boolean)
           background-color: var(--components-button-tertiary-background-disabled);
           color: var(--components-button-tertiary-text-disabled);
         }
+        [role='spinner']{
+          border-color: var(--components-button-tertiary-icon-default) transparent transparent transparent;
+          backrgound:var(--components-button-tertiary-icon-default);
+        }
       `;
     }
     case 'danger': {
@@ -106,6 +120,11 @@ export const getButtonVariantStyles = (variant: ButtonVariant, loading: boolean)
           background-color: var(--components-button-danger-background-disabled);
           color: var(--components-button-danger-text-disabled);
         }
+
+        [role='spinner']{
+          border-color: var(--components-button-danger-icon-default) transparent transparent transparent;
+          backrgound:var(--components-button-danger-icon-default);
+        }
       `;
     }
     case 'dangerSecondary': {
@@ -130,6 +149,10 @@ export const getButtonVariantStyles = (variant: ButtonVariant, loading: boolean)
         &:disabled {
           background-color: var(--components-button-danger-secondary-background-disabled);
           color:var(--components-button-danger-secondary-text-disabled);
+        }
+        [role='spinner']{
+          border-color: var(--components-button-danger-secondary-icon-default) transparent transparent transparent;
+          backrgound:var(--components-button-danger-secondary-icon-default);
         }
       `;
     }
@@ -159,6 +182,10 @@ export const getButtonVariantStyles = (variant: ButtonVariant, loading: boolean)
           border: none;
           background-color: var(--components-button-tertiary-background-disabled);
           color: var(--components-button-outline-text-disabled);
+        }
+        [role='spinner']{
+          border-color: var(--components-button-outline-icon-default) transparent transparent transparent;
+          backrgound:var(--components-button-outline-icon-default);
         }
       `;
     }
@@ -200,7 +227,8 @@ export const getButtonSizeStyles = ({
       font-weight: 500;
       line-height: 16px;
 
-      [role='img'] {
+      [role='img'],
+      [role='spinner'] {
         width: 16px;
         height: 16px;
       }
@@ -244,7 +272,8 @@ export const getButtonSizeStyles = ({
       font-weight: 500;
       line-height: 16px;
 
-      [role='img'] {
+      [role='img'],
+      [role='spinner'] {
         width: 24px;
         height: 24px;
       }
@@ -289,7 +318,8 @@ export const getButtonSizeStyles = ({
       font-weight: 500;
       line-height: 16px;
 
-      [role='img'] {
+      [role='img'],
+      [role='spinner'] {
         width: 24px;
         height: 24px;
       }
@@ -333,7 +363,8 @@ export const getButtonSizeStyles = ({
     font-weight: 500;
     line-height: 16px;
 
-    [role='img'] {
+    [role='img'],
+    [role='spinner'] {
       width: 32px;
       height: 32px;
     }

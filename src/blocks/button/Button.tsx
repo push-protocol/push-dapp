@@ -4,6 +4,7 @@ import styled, { FlattenSimpleInterpolation } from 'styled-components';
 import type { TransformedHTMLAttributes } from '../Blocks.types';
 import type { ButtonSize, ButtonVariant } from './Button.types';
 import { getButtonSizeStyles, getButtonVariantStyles } from './Button.utils';
+import { Spinner } from '../spinner';
 
 export type ButtonProps = {
   /* Child react nodes rendered by Box */
@@ -50,6 +51,12 @@ const StyledButton = styled.button<ButtonProps>`
   /* Button variant CSS styles */
   ${({ variant, loading }) => getButtonVariantStyles(variant || 'primary', loading || false)}
 
+  ${({ iconOnly }) =>
+    !iconOnly &&
+    `[role='spinner'] {
+        margin-right: var(--spacing-xxxs);
+      };`}
+
   ${({ loading }) => loading && 'opacity: 0.8;'}
 
   /* Button and font size CSS styles */
@@ -93,10 +100,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       variant={variant}
       {...props}
     >
+      {loading && <Spinner />}
       {leadingIcon && <span className="icon icon-text">{leadingIcon}</span>}
       {!iconOnly && children}
       {trailingIcon && <span className="icon icon-text">{trailingIcon}</span>}
-      {iconOnly && !children && <span className="icon icon-only">{iconOnly}</span>}
+      {iconOnly && !loading && !children && <span className="icon icon-only">{iconOnly}</span>}
     </StyledButton>
   )
 );
