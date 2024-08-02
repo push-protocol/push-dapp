@@ -4,6 +4,7 @@ import styled, { FlattenSimpleInterpolation } from 'styled-components';
 import type { TransformedHTMLAttributes } from '../Blocks.types';
 import type { ButtonSize, ButtonVariant } from './Button.types';
 import { getButtonSizeStyles, getButtonVariantStyles } from './Button.utils';
+import { Spinner } from '../spinner';
 
 export type ButtonProps = {
   /* Child react nodes rendered by Box */
@@ -26,6 +27,8 @@ export type ButtonProps = {
   variant?: ButtonVariant;
   /* Button takes the full width if enabled */
   block?: boolean;
+  /* Button loading state */
+  loading?: boolean;
 } & TransformedHTMLAttributes<HTMLButtonElement>;
 
 const StyledButton = styled.button<ButtonProps>`
@@ -44,9 +47,10 @@ const StyledButton = styled.button<ButtonProps>`
     align-items: center;
     justify-content: center;
   }
-
   /* Button variant CSS styles */
-  ${({ variant }) => getButtonVariantStyles(variant || 'primary')}
+  ${({ variant, loading }) => getButtonVariantStyles(variant || 'primary', loading!)}
+
+  ${({ loading }) => loading && 'opacity: var(--opacity-80);'}
 
   /* Button and font size CSS styles */
   ${({ iconOnly, size }) => getButtonSizeStyles({ iconOnly: !!iconOnly, size: size || 'medium' })}
@@ -61,6 +65,9 @@ const StyledButton = styled.button<ButtonProps>`
   ${(props) => props.css || ''}
 `;
 
+const SpinnerContainer = styled.div`
+  padding: 5px;
+`;
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
@@ -69,6 +76,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       size = 'medium',
       leadingIcon,
       trailingIcon,
+      loading = false,
       iconOnly,
       circular = false,
       children,
@@ -77,20 +85,26 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => (
     <StyledButton
-      {...(disabled ? { 'aria-disabled': true } : {})}
+      {...(disabled || loading ? { 'aria-disabled': true } : {})}
       circular={circular}
-      disabled={disabled}
+      disabled={disabled || loading}
       iconOnly={iconOnly}
+      loading={loading}
       role="button"
       ref={ref}
       size={size}
       variant={variant}
       {...props}
     >
+      {loading && (
+        <SpinnerContainer>
+          <Spinner />
+        </SpinnerContainer>
+      )}
       {leadingIcon && <span className="icon icon-text">{leadingIcon}</span>}
       {!iconOnly && children}
       {trailingIcon && <span className="icon icon-text">{trailingIcon}</span>}
-      {iconOnly && !children && <span className="icon icon-only">{iconOnly}</span>}
+      {iconOnly && !loading && !children && <span className="icon icon-only">{iconOnly}</span>}
     </StyledButton>
   )
 );

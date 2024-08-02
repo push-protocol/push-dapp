@@ -8,7 +8,7 @@ import styled, { useTheme } from 'styled-components';
 // Internal Compoonents
 import ProfileModal from 'components/ProfileModal';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { envUtil, shortenText } from 'helpers/UtilityHelper';
+import { EnvHelper, envUtil, shortenText } from 'helpers/UtilityHelper';
 import { useAccount } from 'hooks';
 import { useClickAway } from 'hooks/useClickAway';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
@@ -63,14 +63,18 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
       to: APP_PATHS.UserSettings,
       invertedIcon: getPublicAssetPath('svg/setting.svg'),
     },
-    {
-      id: 'prodDapp',
-      value: '',
-      function: () => {},
-      link: `https://${envUtil.prod}`,
-      title: 'Production dapp',
-      invertedIcon: getPublicAssetPath('prod.svg'),
-    },
+    ...(EnvHelper.isProd
+      ? []
+      : [
+          {
+            id: 'prodDapp',
+            value: '',
+            function: () => {},
+            link: `https://${envUtil.prod}`,
+            title: 'Production dapp',
+            invertedIcon: getPublicAssetPath('prod.svg'),
+          },
+        ]),
     {
       id: 'disconnect',
       value: '',

@@ -7,6 +7,7 @@ export { Link, type LinkProps } from './link';
 export { Lozenge, type LozengeProps } from './lozenge';
 export { Menu, type MenuProps, MenuItem, type MenuItemComponentProps } from './menu';
 export { Modal, type ModalProps, modal } from './modal';
+export { ProgressBar, type ProgressBarProps } from './progressBar';
 export { Separator, type SeparatorProps } from './separator';
 export { Skeleton, type SkeletonProps } from './skeleton';
 export { Select, type SelectProps } from './select';
@@ -17,6 +18,7 @@ export { TextArea, type TextAreaProps } from './textarea';
 export { TextInput } from './textInput';
 export { ToggleSwitch } from './toggleSwtich';
 export { FileUpload } from './fileUpload';
+export { Spinner, type SpinnerProps } from './spinner';
 
 export * from './Blocks.colors';
 export * from './Blocks.types';
