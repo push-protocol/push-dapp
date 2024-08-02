@@ -1,72 +1,89 @@
 import { FlattenSimpleInterpolation, css } from 'styled-components';
 import { ButtonSize, ButtonVariant } from './Button.types';
 
-export const getButtonVariantStyles = (variant: ButtonVariant) => {
+export const getButtonVariantStyles = (variant: ButtonVariant, loading: boolean) => {
   switch (variant) {
     case 'primary': {
       return `
-        background-color: var(--components-button-primary-background-default);
+        background-color:  var(--${
+          loading ? 'components-button-primary-background-loading' : 'components-button-primary-background-default'
+        });
         color: var(--components-button-primary-text-default);
-
-        &:hover {
-          background-color: var(--components-button-primary-background-hover)
-        }
-
-        &:active {
-          background-color: var(--components-button-primary-background-pressed);
-        }
+         ${
+           !loading &&
+           `
+            &:hover {
+              background-color: var(--components-button-primary-background-hover)
+            }
+            &:active {
+                background-color: var(--components-button-primary-background-pressed);
+              }
+            `
+         };
 
         &:focus-visible {
           background-color:  var(--components-button-primary-background-focus);
           border: var(--border-sm) solid var(--components-button-primary-stroke-focus);
           outline: none;
         }
+        ${
+          !loading &&
+          `&:disabled {
+            background-color: var(--components-button-primary-background-disabled);
+            color: var(--components-button-primary-text-disabled);
+          }`
+        };
 
-        &:disabled {
-          background-color: var(--components-button-primary-background-disabled);
-          color: var(--components-button-primary-text-disabled);
-        }
       `;
     }
     case 'secondary': {
       return `
         background-color: var(--components-button-secondary-background-default);
         color: var(--components-button-secondary-text-default);
+         ${
+           !loading &&
+           `
+            &:hover {
+              background-color: var(--components-button-secondary-background-hover);
+            }
 
-        &:hover {
-          background-color: var(--components-button-secondary-background-hover);
-        }
-
-        &:active {
-          background-color: var(--components-button-secondary-background-pressed);
-        }
+            &:active {
+              background-color: var(--components-button-secondary-background-pressed);
+            }`
+         };
 
         &:focus-visible {
           background-color: var(--components-button-secondary-background-focus);
           border: var(--border-sm) solid var(--components-button-secondary-stroke-focus);
           outline: none;
         }
-
-        &:disabled {
-          background-color: var(--components-button-secondary-background-disabled);
-          color: var(--components-button-secondary-text-disabled)
-        }
+        ${
+          !loading &&
+          `&:disabled {
+            background-color: var(--components-button-secondary-background-disabled);
+            color: var(--components-button-secondary-text-disabled);
+          };`
+        };
+        
       `;
     }
     case 'tertiary': {
       return `
         background-color: var(--components-button-tertiary-background-default);
         color: var(--components-button-tertiary-text-default);
-
-        &:hover {
-          color: var(--components-button-tertiary-text-default);
-          background-color: var(--components-button-tertiary-background-hover);
-        }
-
-        &:active {
-          background-color: var(--components-button-tertiary-background-pressed);
-          color: var(--components-button-secondary-text-default);
-        }
+        ${
+          !loading &&
+          `
+            &:hover {
+              color: var(--components-button-tertiary-text-default);
+              background-color: var(--components-button-tertiary-background-hover);
+            }
+       
+            &:active {
+              background-color: var(--components-button-tertiary-background-pressed);
+              color: var(--components-button-secondary-text-default);
+            }`
+        };
 
         &:focus-visible {
           border: var(--border-sm) solid var(--components-button-tertiary-stroke-focus);
@@ -74,61 +91,73 @@ export const getButtonVariantStyles = (variant: ButtonVariant) => {
           color: var(--components-button-tertiary-text-default);
           outline: none;
         }
-
-        &:disabled {
-          background-color: var(--components-button-tertiary-background-disabled);
-          color: var(--components-button-tertiary-text-disabled);
-        }
+        ${
+          !loading &&
+          `&:disabled {
+            background-color: var(--components-button-tertiary-background-disabled);
+            color: var(--components-button-tertiary-text-disabled);
+          }`
+        };
       `;
     }
     case 'danger': {
       return `
         background-color: var(--components-button-danger-background-default);
         color: var(--components-button-danger-text-default);
+         ${
+           !loading &&
+           `
+            &:hover {
+              background-color: var(--components-button-danger-background-hover);
+            }
 
-        &:hover {
-          background-color: var(--components-button-danger-background-hover);
-        }
-
-        &:active {
-          background-color: var(--components-button-danger-background-pressed);
-        }
+            &:active {
+              background-color: var(--components-button-danger-background-pressed);
+            }`
+         };
 
         &:focus-visible {
           background-color: var(--components-button-danger-background-focus);
           border: var(--border-sm) solid var(--components-button-danger-stroke-focus);
           outline: none;
         }
-        
-        &:disabled {
-          background-color: var(--components-button-danger-background-disabled);
-          color: var(--components-button-danger-text-disabled);
-        }
+        ${
+          !loading &&
+          `&:disabled {
+             background-color: var(--components-button-danger-background-disabled);
+             color: var(--components-button-danger-text-disabled);
+          }`
+        };
       `;
     }
     case 'dangerSecondary': {
       return `
         background-color: var(--components-button-danger-secondary-background-default);
         color: var(--components-button-danger-secondary-text-default);
-
-        &:hover {
-          background-color: var(--components-button-danger-secondary-background-hover);
-        }
-
-        &:active {
-          background-color: var(--components-button-danger-secondary-background-pressed);
-        }
+         ${
+           !loading &&
+           `
+            &:hover {
+              background-color: var(--components-button-danger-secondary-background-hover);
+            }
+       
+          &:active {
+            background-color: var(--components-button-danger-secondary-background-pressed);
+          }`
+         };
 
         &:focus-visible {
           background-color: var(--components-button-danger-secondary-background-focus);
           border: var(--border-sm) solid var(--components-button-danger-secondary-stroke-focus);
           outline: none;
         }
-        
-        &:disabled {
-          background-color: var(--components-button-danger-secondary-background-disabled);
-          color:var(--components-button-danger-secondary-text-disabled);
-        }
+        ${
+          !loading &&
+          `&:disabled {
+              background-color: var(--components-button-danger-secondary-background-disabled);
+              color:var(--components-button-danger-secondary-text-disabled);
+          }`
+        };
       `;
     }
     case 'outline': {
@@ -137,27 +166,33 @@ export const getButtonVariantStyles = (variant: ButtonVariant) => {
         border: var(--border-sm) solid var(--components-button-outline-stroke-default);
         color: var(--components-button-outline-text-default);
         outline: none;
-
-        &:hover {
-          border: var(--border-sm) solid var(--components-button-outline-stroke-hover);
-          background-color: var(--components-button-outline-background-hover);
-        }
-
-        &:active {
-          border:  var(--border-sm) solid var(--components-button-outline-stroke-pressed);
-          background-color: var(--components-button-outline-background-pressed);
-        }
+        ${
+          !loading &&
+          `
+          &:hover {
+            border: var(--border-sm) solid var(--components-button-outline-stroke-hover);
+            background-color: var(--components-button-outline-background-hover);
+          }
+        
+          &:active {
+            border:  var(--border-sm) solid var(--components-button-outline-stroke-pressed);
+            background-color: var(--components-button-outline-background-pressed);
+          }`
+        };
 
         &:focus-visible {
           border: var(--border-sm) solid var(--components-button-outline-stroke-focus);
           background-color: var(--components-button-outline-background-focus);
         }
-        
-        &:disabled {
-          border: none;
-          background-color: var(--components-button-tertiary-background-disabled);
-          color: var(--components-button-outline-text-disabled);
-        }
+
+        ${
+          !loading &&
+          `&:disabled {
+             border: none;
+             background-color: var(--components-button-tertiary-background-disabled);
+             color: var(--components-button-outline-text-disabled);
+          }`
+        };
       `;
     }
   }
@@ -202,6 +237,10 @@ export const getButtonSizeStyles = ({
         width: 16px;
         height: 16px;
       }
+      [role='spinner'] {
+        width: 10.66px;
+        height: 10.66px;
+      }
 
       .icon-text > span {
         height: 16px;
@@ -245,6 +284,10 @@ export const getButtonSizeStyles = ({
       [role='img'] {
         width: 24px;
         height: 24px;
+      }
+      [role='spinner'] {
+        width: 16px;
+        height: 16px;
       }
 
       .icon-text > span {
@@ -291,6 +334,10 @@ export const getButtonSizeStyles = ({
         width: 24px;
         height: 24px;
       }
+      [role='spinner'] {
+        width: 16px;
+        height: 16px;
+      }
 
       .icon-text > span {
         height: 24px;
@@ -335,7 +382,10 @@ export const getButtonSizeStyles = ({
       width: 32px;
       height: 32px;
     }
-
+    [role='spinner'] {
+      width: 21.333px;
+      height: 21.333px;
+    }
     .icon-text > span {
       height: 24px;
       width: 24px;
