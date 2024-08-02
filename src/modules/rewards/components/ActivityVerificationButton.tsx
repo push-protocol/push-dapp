@@ -120,7 +120,7 @@ export const ActivityVerificationButton = ({
         size="small"
         loading={activityData?.isLoading}
         onClick={() => activityData?.action(userId)}
-        disabled={activityData?.isVerificationComplete || isLoadingActivity || activityData?.isLoading}
+        disabled={activityData?.isVerificationComplete || isLoadingActivity}
       >
         {activityData?.isVerificationComplete ? 'Verifying...' : activityData?.label ? activityData?.label : 'Verify'}
       </Button>
