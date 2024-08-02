@@ -15,7 +15,7 @@ import { RewardsActivitiesListItem } from './RewardsActivitiesListItem';
 export type RewardActivitiesProps = {};
 
 const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
-  const { account } = useAccount();
+  const { account, isWalletConnected } = useAccount();
 
   const {
     data: rewardActivitiesResponse,
@@ -81,7 +81,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
             isLocked={isLocked}
           />
         ))}
-        {isLocked && (
+        {(isLocked || !isWalletConnected) && (
           <Box
             display="flex"
             flexDirection="row"
