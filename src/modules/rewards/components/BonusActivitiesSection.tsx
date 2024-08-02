@@ -55,15 +55,15 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
         Bonus Activities
       </Text>
 
-      <Box width="-webkit-fill-available">
-        {errorMessage && (
+      {errorMessage && (
+        <Box width="-webkit-fill-available">
           <Alert
             heading={errorMessage}
             variant="error"
             onClose={() => setErrorMessage('')}
           />
-        )}
-      </Box>
+        </Box>
+      )}
 
       <Box
         display="grid"
