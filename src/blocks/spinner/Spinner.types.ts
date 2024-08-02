@@ -1,2 +1,2 @@
 export type SpinnerSize = 'small' | 'medium' | 'large' | 'extraLarge';
-export type SpinnerVariant = 'primary' | 'secondary';
+export type SpinnerVariant = 'default' | 'secondary';

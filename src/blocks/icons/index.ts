@@ -43,6 +43,8 @@ export { default as Dashboard } from './components/Dashboard';
 
 export { default as EditProfile } from './components/EditProfile';
 
+export { default as Ellipse } from './components/Ellipse';
+
 export { default as Envelope } from './components/Envelope';
 
 export { default as ErrorFilled } from './components/ErrorFilled';

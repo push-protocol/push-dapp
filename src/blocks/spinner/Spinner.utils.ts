@@ -3,13 +3,13 @@ import { SpinnerSize, SpinnerVariant } from './Spinner.types';
 export const getSpinnerSize = (size: SpinnerSize) => {
   switch (size) {
     case 'small':
-      return '16px';
+      return 16;
     case 'medium':
-      return '24px';
+      return 24;
     case 'large':
-      return '32px';
+      return 32;
     default:
-      return '48px';
+      return 48;
   }
 };
 export const getSpinnerStrokeWidth = (size: SpinnerSize) => {
