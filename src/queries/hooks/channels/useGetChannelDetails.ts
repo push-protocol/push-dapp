@@ -9,6 +9,7 @@ import { getChannelDetails } from '../../services';
 
 //Types
 import { UserStoreType } from 'types';
+import { GuestWalletAddress } from 'common';
 
 export const useGetChannelDetails = (address: string) => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
@@ -18,7 +19,8 @@ export const useGetChannelDetails = (address: string) => {
     queryKey: [channelDetails, address],
     queryFn: () => getChannelDetails({ userPushSDKInstance, address }),
     staleTime: Infinity,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    enabled: address !== GuestWalletAddress, // This is required to avoid extra func calls
   });
   return query;
 };

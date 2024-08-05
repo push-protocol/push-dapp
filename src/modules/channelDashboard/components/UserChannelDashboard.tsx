@@ -11,16 +11,15 @@ import { AppFooter } from './AppFooter';
 import { ChannelDashboardBody } from './ChannelDashboardBody';
 
 import { DashboardActiveState } from '../ChannelDashboard.types';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 type UserChannelDashboardProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
-}
+};
 
-const UserChannelDashboard: FC<UserChannelDashboardProps> = ({
-  setActiveState
-}) => {
+const UserChannelDashboard: FC<UserChannelDashboardProps> = ({ setActiveState }) => {
   const { account } = useAccount();
-  const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
+  const { data: channelDetails, isLoading: loadingChannelDetails, isRefetching } = useGetChannelDetails(account);
 
   const [channelDashboardError, setChannelDashboardError] = useState('');
 
@@ -44,18 +43,35 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({
         />
 
         {channelDashboardError && (
-          <Alert
-            variant='error'
-            heading={channelDashboardError}
-            showIcon
-          />
+          <Box width="100%">
+            <Alert
+              variant="error"
+              heading={channelDashboardError}
+              showIcon
+            />
+          </Box>
         )}
 
-        <ChannelDashboardBody
-          setActiveState={setActiveState}
-          setChannelDashboardError={setChannelDashboardError}
-        />
-
+        {loadingChannelDetails ||
+          isRefetching ||
+          !channelDetails?.name ? (
+          <Box
+            height="100%"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <LoaderSpinner
+              type={LOADER_TYPE.SEAMLESS}
+              title="Loading Channel Details. Please wait..."
+            />
+          </Box>
+        ) : (
+          <ChannelDashboardBody
+            setActiveState={setActiveState}
+            setChannelDashboardError={setChannelDashboardError}
+          />
+        )}
       </Box>
 
       <AppFooter />

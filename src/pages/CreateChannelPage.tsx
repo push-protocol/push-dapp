@@ -9,6 +9,7 @@ import APP_PATHS from "config/AppPaths";
 import { useAccount } from "hooks";
 
 import { CreateChannel } from "modules/createChannel";
+
 import { useGetChannelDetails } from "queries";
 
 import LoaderSpinner, { LOADER_TYPE } from "components/reusables/loaders/LoaderSpinner";
@@ -21,7 +22,7 @@ const CreateChannelPage = () => {
   const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
 
   useEffect(() => {
-    if (channelDetails) {
+    if (channelDetails && !loadingChannelDetails) {
       navigate(`${APP_PATHS.ChannelDashboard}/${account}`)
     }
   }, [channelDetails])
@@ -33,16 +34,13 @@ const CreateChannelPage = () => {
         title="Loading Channel Details. Please wait..."
       />
     </Box>
-  }
-
-  if (!channelDetails) {
+  } else {
     return (
       <ContentLayout>
         <CreateChannel />
       </ContentLayout>
     )
   }
-
 };
 
 export default CreateChannelPage;

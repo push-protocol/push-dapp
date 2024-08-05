@@ -16,13 +16,13 @@ import APP_PATHS from 'config/AppPaths';
 type ChannelDashboardInfoProps = {
   channelDetails?: ChannelDetails;
   loadingChannelDetails: boolean;
-  showAddNewChain?: boolean
-}
+  showAddNewChain?: boolean;
+};
 
 const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
   channelDetails,
   loadingChannelDetails,
-  showAddNewChain = false
+  showAddNewChain = false,
 }) => {
   const navigate = useNavigate();
 
@@ -46,8 +46,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
       gap="spacing-sm"
       alignItems="center"
     >
-
-      <Skeleton isLoading={loadingChannelDetails}>
+      <Skeleton isLoading={!channelDetails?.name}>
         <Box
           width="90px"
           height="90px"
@@ -73,8 +72,9 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
         gap="spacing-xxxs"
       >
         <Skeleton
-          isLoading={loadingChannelDetails}
-          width="100%"
+          isLoading={!channelDetails?.name}
+          width="200px"
+          height='30px'
         >
           <Box
             display="flex"
@@ -135,7 +135,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
                   onClick={() => navigate(APP_PATHS.AddNewChain)}
                 >
                   <PlusCircle
-                    size={18}
+                    size={24}
                     color="icon-primary"
                   />
                 </Box>
@@ -150,7 +150,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
           gap="spacing-xs"
         >
           <Skeleton
-            isLoading={loadingChannelDetails}
+            isLoading={!channelDetails?.name}
             width="100%"
           >
             <Box
@@ -180,7 +180,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
             display="flex"
             gap="spacing-xs"
           >
-            <Skeleton isLoading={loadingChannelDetails}>
+            <Skeleton isLoading={!channelDetails?.name}>
               <Text
                 color="text-tertiary"
                 variant="c-regular"
@@ -236,7 +236,6 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
             )}
           </Box>
         </Box>
-
       </Box>
     </Box>
   );

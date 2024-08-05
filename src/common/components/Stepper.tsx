@@ -21,8 +21,9 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepKey, completedSteps }) 
       display="flex"
       gap="spacing-lg"
     >
-      {steps.map((step) => (
+      {steps.map((step, index) => (
         <Box
+          key={index}
           display="flex"
           flexDirection="column"
           gap="spacing-xs"

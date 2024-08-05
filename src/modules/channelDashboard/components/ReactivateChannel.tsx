@@ -146,11 +146,13 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
       />
 
       {reactivationError && (
-        <Alert
-          variant='error'
-          heading={reactivationError}
-          showIcon
-        />
+        <Box width='100%'>
+          <Alert
+            variant='error'
+            heading={reactivationError}
+            showIcon
+          />
+        </Box>
       )}
 
       <ChannelDashboardInfo

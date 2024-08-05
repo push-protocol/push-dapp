@@ -170,11 +170,13 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
   return (
     <Box display="flex" flexDirection="column" alignSelf="stretch">
       {updateChannelError && (
-        <Alert
-          variant='error'
-          heading={updateChannelError}
-          showIcon
-        />
+        <Box width='100%'>
+          <Alert
+            variant='error'
+            heading={updateChannelError}
+            showIcon
+          />
+        </Box>
       )}
 
       <StakingVariant

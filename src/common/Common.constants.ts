@@ -1,4 +1,5 @@
 export const GuestModeWalletAddress = 'eip155:0x0000000000000000000000000000000000000001';
+export const GuestWalletAddress = '0x0000000000000000000000000000000000000001';
 
 import { IllustrationProps } from 'blocks';
 import Arbitrum from 'blocks/illustrations/components/Arbitrum';
@@ -30,7 +31,7 @@ export const LOGO_ALIAS_CHAIN: {
   111557560: Cyber,
   7560: Cyber,
   122: Fuse,
-  123: Fuse
+  123: Fuse,
 };
 
 export const SepoliaFaucetLink =

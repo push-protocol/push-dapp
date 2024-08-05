@@ -93,11 +93,13 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
 
 
       {addDelegateError && (
-        <Alert
-          variant='error'
-          heading={addDelegateError}
-          showIcon
-        />
+        <Box width='100%'>
+          <Alert
+            variant='error'
+            heading={addDelegateError}
+            showIcon
+          />
+        </Box>
       )}
 
       <form onSubmit={delegateForm.handleSubmit}>
