@@ -562,6 +562,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
               <Button
                 variant="primary"
                 size="medium"
+                block
                 onClick={() => {
                   handleStakingModal();
                 }}
@@ -580,6 +581,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                   <Button
                     disabled={true}
                     size="medium"
+                    block
                   >
                     {txInProgressWithdraw ? (
                       <LoaderSpinner
@@ -596,6 +598,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                 <Button
                   size="medium"
                   variant="outline"
+                  block
                   onClick={withdrawAmountTokenFarmAutomatic}
                 >
                   {txInProgressWithdraw ? (
@@ -623,6 +626,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                   <Button
                     disabled={true}
                     size="medium"
+                    block
                   >
                     {txInProgressClaimRewards ? (
                       <LoaderSpinner
@@ -639,6 +643,7 @@ const YieldUniswapV3 = ({ lpPoolStats, userDataLP, getLpPoolStats, getUserDataLP
                 <Button
                   variant="outline"
                   size="medium"
+                  block
                   onClick={() => massClaimRewardsTokensAll()}
                 >
                   {txInProgressClaimRewards ? (
@@ -786,6 +791,7 @@ const ButtonsContainer = styled.div`
   display: flex;
   gap: var(--spacing-xxxs, 4px);
   margin: 15px 0px 0px 0px;
+  width: 100%;
 `;
 
 const SkeletonContainer = styled(Skeleton)`
