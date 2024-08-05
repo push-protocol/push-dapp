@@ -702,6 +702,7 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
               <Button
                 variant="primary"
                 size="medium"
+                block
                 onClick={showStakingModal}
               >
                 Stake $PUSH
@@ -722,6 +723,7 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
                 <Button
                   variant="outline"
                   size="medium"
+                  block
                   onClick={unstakeTokensPaginated}
                 >
                   {txInProgressWithdraw ? (
@@ -748,6 +750,7 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
                 >
                   <Button
                     size="medium"
+                    block
                     disabled={true}
                   >
                     {txInProgressClaimRewards ? (
@@ -765,6 +768,7 @@ const YieldPushFeeV3 = ({ userDataPush, getUserDataPush, PUSHPoolstats, getPUSHP
                 <Button
                   variant="outline"
                   size="medium"
+                  block
                   onClick={claimRewards}
                 >
                   {txInProgressClaimRewards ? (
@@ -1003,6 +1007,7 @@ const ButtonsContainer = styled.div`
   display: flex;
   margin: 15px 0px 0px 0px;
   gap: var(--s3);
+  width: 100%;
 `;
 
 const SkeletonContainer = styled(Skeleton)`
