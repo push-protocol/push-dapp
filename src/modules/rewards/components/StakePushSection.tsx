@@ -52,7 +52,10 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, stak
             alignItems="center"
             gap="spacing-xxxs"
           >
-            <Clockwise size={24} />
+            <Clockwise
+              size={24}
+              color="icon-brand-medium"
+            />
             <Text
               variant="bs-semibold"
               color="text-tertiary"

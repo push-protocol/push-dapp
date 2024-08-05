@@ -104,7 +104,10 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
               }
             `}
           >
-            <Lock size={28} />
+            <Lock
+              size={28}
+              color="icon-tertiary"
+            />
             <Text
               variant="bs-semibold"
               color="text-tertiary"

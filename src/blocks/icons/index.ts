@@ -84,8 +84,6 @@ export { default as MegaPhone } from './components/MegaPhone';
 export { default as Moon } from './components/Moon';
 export { default as MoonFilled } from './components/MoonFilled';
 
-export { default as Multiplier } from './components/Multiplier';
-
 export { default as NFTGated } from './components/NFTGated';
 
 export { default as NoRewards } from './components/NoRewards';

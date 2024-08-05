@@ -2,11 +2,13 @@ export * from './IllustrationWrapper';
 export * from './Illustrations.types';
 
 export { default as ChatIllustration } from './components/Chat';
+
 export { default as ChatDark } from './components/ChatDark';
 
 export { default as CheckCircle } from './components/CheckCircle';
 
 export { default as Communication } from './components/Communication';
+
 export { default as CommunicationDark } from './components/CommunicationDark';
 
 export { default as Discord } from './components/Discord';
@@ -25,12 +27,16 @@ export { default as Points } from './components/Points';
 
 export { default as Metamask } from './components/Metamask';
 
+export { default as Multiplier } from './components/Multiplier';
+
 export { default as MultipleRewardsCoin } from './components/MultipleRewardsCoin';
 
 export { default as Notification } from './components/Notification';
+
 export { default as NotificationDark } from './components/NotificationDark';
 
 export { default as RewardsBell } from './components/RewardsBell';
+
 export { default as Referral } from './components/Referral';
 
 export { default as TripleRewardsCoin } from './components/TripleRewardsCoin';

@@ -72,7 +72,10 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
               justifyContent="center"
               border="border-xs solid stroke-tertiary"
             >
-              <Lock size={28} />
+              <Lock
+                size={28}
+                color="icon-tertiary"
+              />
             </Box>
           ) : (
             <RewardsActivityIcon type={activity.activityType} />
@@ -147,7 +150,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
                     alignItems="center"
                     gap="spacing-xxxs"
                   >
-                    <Multiplier size={28} />
+                    <Multiplier />
                     <Text
                       variant="bm-semibold"
                       color="text-state-success-bold"

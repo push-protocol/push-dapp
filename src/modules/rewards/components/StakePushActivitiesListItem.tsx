@@ -26,7 +26,10 @@ const StakePushActivitiesListItem = ({ item }: { item: any }) => {
           justifyContent="center"
           border="border-xs solid stroke-tertiary"
         >
-          <Lock size={28} />
+          <Lock
+            size={28}
+            color="icon-tertiary"
+          />
         </Box>
 
         <Box
@@ -73,7 +76,7 @@ const StakePushActivitiesListItem = ({ item }: { item: any }) => {
               alignItems="center"
               gap="spacing-xxxs"
             >
-              <Multiplier size={28} />
+              <Multiplier />
               <Text
                 variant="bs-semibold"
                 color="text-primary"
