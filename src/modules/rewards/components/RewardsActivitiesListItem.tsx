@@ -206,7 +206,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
                   setErrorMessage={setErrorMessage}
                   usersSingleActivity={usersSingleActivity}
                   isLoadingActivity={isLoading}
-                  startingLabel={isNotDiscordOrTwitter ? 'Claim' : 'Verify'}
+                  label={isNotDiscordOrTwitter ? 'Claim' : 'Verify'}
                 />
               )}
             </Box>

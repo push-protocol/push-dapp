@@ -40,8 +40,8 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, stak
           <RewardsActivityTitle
             activityTitle={subtitle}
             isLoading={false}
-            defaultColor="text-tertiary"
-            defaultVariant="bm-regular"
+            color="text-tertiary"
+            variant="bm-regular"
           />
         </Box>
 

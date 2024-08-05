@@ -77,7 +77,7 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
                 refetchActivity={() => handleCheckIn()}
                 setErrorMessage={setErrorMessage}
                 isLoadingActivity={false}
-                startingLabel="Check In"
+                label="Check In"
               />
             )}
           </>

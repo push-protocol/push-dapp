@@ -34,7 +34,7 @@ const useVerifyDiscord = ({
 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const [discordActivityStatus, setDiscordActivityStatus] = useState<string | null>(null);
+  const [discordActivityStatus, setDiscordActivityStatus] = useState<'Claimed' | null>(null);
   const [verifyingDiscord, setVerifyingDiscord] = useState(token ? true : false);
   const [updatedId, setUpdatedId] = useState<string | null>(null);
   const { checkIfLocked } = useLockedStatus();

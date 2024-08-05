@@ -25,7 +25,7 @@ export type UseTwitterVerifyParams = {
 
 const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: UseTwitterVerifyParams) => {
   const [verifyingTwitter, setVerifyingTwitter] = useState(false);
-  const [twitterActivityStatus, setTwitterActivityStatus] = useState<string | null>(null);
+  const [twitterActivityStatus, setTwitterActivityStatus] = useState<'Claimed' | 'Pending' | null>(null);
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
   const [updatedId, setUpdatedId] = useState<string | null>(null);
   const { checkIfLocked } = useLockedStatus();

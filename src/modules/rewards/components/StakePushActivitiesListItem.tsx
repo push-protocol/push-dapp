@@ -1,5 +1,6 @@
 import { Box, Button, Lock, Multiplier, RewardsBell, Text } from 'blocks';
 
+// TODO: Add Type for item here
 const StakePushActivitiesListItem = ({ item }: { item: any }) => {
   return (
     <Box

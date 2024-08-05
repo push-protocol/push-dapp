@@ -152,7 +152,7 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({
               setErrorMessage={setErrorMessage}
               usersSingleActivity={usersSingleActivity}
               isLoadingActivity={isLoading}
-              startingLabel="Claim"
+              label="Claim"
             />
           )}
         </Box>
