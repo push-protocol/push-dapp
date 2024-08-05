@@ -50,7 +50,6 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
         display="flex"
         flexDirection="column"
         borderRadius="radius-sm"
-        margin={{ ml: 'spacing-sm spacing-none', initial: 'spacing-sm spacing-none' }}
         backgroundColor="surface-secondary"
       >
         <Box

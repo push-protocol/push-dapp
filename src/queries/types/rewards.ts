@@ -185,8 +185,3 @@ export type LeaderboardParams = {
   pageSize?: number;
   pageNumber?: number;
 };
-
-export type ActivitiesParams = {
-  pageSize?: number;
-  pageNumber?: number;
-};

@@ -23,12 +23,12 @@ const useDailyRewards = () => {
   const { data: userDetails } = useGetUserRewardsDetails({
     caip10WalletAddress,
   });
-  const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities({ pageSize: 50 });
+  const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities();
 
   const isLoading = isLoadingActivities || isLoadingRewards;
 
   // Flatten the activities response and filter daily activities
-  const activityList = rewardActivitiesResponse?.pages.flatMap((page) => page.activities) || [];
+  const activityList = rewardActivitiesResponse?.activities.map((page) => page) || [];
 
   const dailyActivities = activityList.filter(
     (activity) => activity.index < 0 && activity.activityType.startsWith(`daily_check_in_7_days_day`)
