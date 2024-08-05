@@ -14,7 +14,7 @@ const useDailyRewards = () => {
 
   // State variables
   const [activeItem, setActiveItem] = useState<any | null>(null);
-  const [activeDay, setActiveDay] = useState<number>(0);
+  const [activeDay, setActiveDay] = useState(0);
   const [isActivityDisabled, setIsActivityDisabled] = useState(false);
   const [isLoadingRewards, setIsLoadingRewards] = useState(false);
 
