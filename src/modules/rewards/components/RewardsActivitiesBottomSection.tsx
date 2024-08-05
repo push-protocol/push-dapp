@@ -1,14 +1,10 @@
 // React and other libraries
 import { FC } from 'react';
 
-// helpers
-import { stakePush, stakePushMultiplier } from '../utils/stakePushArray';
-
 // components
 import { RewardsActivitiesSection } from './RewardsActivitiesSection';
 import { Box } from 'blocks';
 import { BonusActivities } from './BonusActivitiesSection';
-import { StakePushSection } from './StakePushSection';
 
 export type RewardsActivitiesBottomSectionProps = {};
 

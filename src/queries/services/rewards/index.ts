@@ -5,4 +5,4 @@ export * from './claimRewardsActivity.ts';
 export * from './getUserRewardsDetail.ts';
 export * from './createUserRewardsDetail.ts';
 export * from './getRewardsLeaderboard';
-export * from './sendRecentActivities';
+export * from './getRewardActivityStatus.ts';

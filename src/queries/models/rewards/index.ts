@@ -5,4 +5,4 @@ export * from './claimRewardsActivityModelCreator';
 export * from './getUserRewardDetailsModel';
 export * from './createUserRewardsDetailsModel';
 export * from './getRewardsLeaderboardModalCreator';
-export * from './sendRecentActivitiesModel';
+export * from './getRewardActivityStatusModel';

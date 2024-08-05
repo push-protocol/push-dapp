@@ -5,4 +5,4 @@ export * from './claimRewardsActivity';
 export * from './useGetUserRewardsDetails';
 export * from './useCreateRewardsUser';
 export * from './useGetRewardsLedearboard';
-export * from './useSendRecentActivities';
+export * from './useGetRewardActivityStatus';

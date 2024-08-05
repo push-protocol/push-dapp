@@ -39,13 +39,11 @@ const Container = styled.div<{ css?: FlattenSimpleInterpolation; size: SpinnerSi
   ${(props) => props.css || ''};
 `;
 
-
 const Spinner: React.FC<SpinnerProps> = ({ size = 'small', css }) => {
   return (
     <Container
       size={size}
       css={css}
-
       role="spinner"
     >
       <Ellipse size={getSpinnerSize(size)} />

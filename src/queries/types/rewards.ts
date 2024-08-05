@@ -80,7 +80,7 @@ export type ClaimRewardsActivityProps = {
   pgpPublicKey: string;
 };
 
-export type SendRecentActivityProps = {
+export type RewardActivityStatusProps = {
   userId: string;
   activities: any;
 };

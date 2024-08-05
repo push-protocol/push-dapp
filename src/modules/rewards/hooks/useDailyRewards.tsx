@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 // hooks
-import { useGetRewardsActivities, useGetUserRewardsDetails, useSendRecentActivities } from 'queries';
+import { useGetRewardActivityStatus, useGetRewardsActivities, useGetUserRewardsDetails } from 'queries';
 import { useAccount } from 'hooks';
 
 // helpers
@@ -43,7 +43,7 @@ const useDailyRewards = () => {
       });
 
   // Mutation for sending recent activities
-  const { mutate: sendRecentActivities } = useSendRecentActivities({
+  const { mutate: sendRecentActivities } = useGetRewardActivityStatus({
     userId: userDetails?.userId as string,
   });
 
