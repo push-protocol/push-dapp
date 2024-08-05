@@ -146,12 +146,14 @@ function Navigation() {
         newNavSetup.developersList[0].data.activeSrc = channelDetails.iconV2;
         newNavSetup.developersList[0].data.hidden = false;
         newNavSetup.developersList[0].data.loading = false;
+        newNavSetup.developersList[0].data.href = `${APP_PATHS.ChannelDashboard}/${channelDetails.channel}`;
       } else {
         newNavSetup.developersList[0].data.name = 'Create Channel';
         newNavSetup.developersList[0].data.hidden = false;
         newNavSetup.developersList[0].data.loading = false;
         newNavSetup.developersList[0].data.src = 'createChannelIcon';
         newNavSetup.developersList[0].data.activeSrc = 'createChannelIcon';
+        newNavSetup.developersList[0].data.href = `${APP_PATHS.CreateChannel}`;
       }
 
       if (canSend === SEND_NOTIFICATION_STATES.SEND) {

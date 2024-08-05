@@ -1,45 +1,58 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { Box } from "blocks";
+import { Box } from 'blocks';
 
-import { ContentLayout } from "common";
-import APP_PATHS from "config/AppPaths";
+import { ContentLayout } from 'common';
+import APP_PATHS from 'config/AppPaths';
 
-import { useAccount } from "hooks";
+import { useAccount } from 'hooks';
 
-import { CreateChannel } from "modules/createChannel";
+import { CreateChannel } from 'modules/createChannel';
 
-import { useGetChannelDetails } from "queries";
+import { useGetChannelDetails } from 'queries';
 
-import LoaderSpinner, { LOADER_TYPE } from "components/reusables/loaders/LoaderSpinner";
-
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 const CreateChannelPage = () => {
-  const { account } = useAccount();
+  const { account, isWalletConnected, connect } = useAccount();
   const navigate = useNavigate();
+
+  // To show blocknative modal as soon as user enters the create channel page
+  useEffect(() => {
+    if (!isWalletConnected) {
+      connect();
+    }
+  }, [account]);
 
   const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
 
   useEffect(() => {
     if (channelDetails && !loadingChannelDetails) {
-      navigate(`${APP_PATHS.ChannelDashboard}/${account}`)
+      navigate(`${APP_PATHS.ChannelDashboard}/${account}`);
     }
-  }, [channelDetails])
+  }, [channelDetails]);
 
   if (loadingChannelDetails) {
-    return <Box height='100%' display='flex' justifyContent='center' alignItems='center'>
-      <LoaderSpinner
-        type={LOADER_TYPE.SEAMLESS}
-        title="Loading Channel Details. Please wait..."
-      />
-    </Box>
+    return (
+      <Box
+        height="100%"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          title="Loading Channel Details. Please wait..."
+        />
+      </Box>
+    );
   } else {
     return (
       <ContentLayout>
         <CreateChannel />
       </ContentLayout>
-    )
+    );
   }
 };
 

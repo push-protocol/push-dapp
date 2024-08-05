@@ -3,26 +3,25 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ContentLayout } from 'common';
+import APP_PATHS from 'config/AppPaths';
+
 import { ChannelDashboard } from 'modules/channelDashboard/ChannelDashboard';
 
 import { useAccount } from 'hooks';
 
 import { useGetChannelDetails } from 'queries';
-import APP_PATHS from 'config/AppPaths';
 
 const ChannelDashboardPageV2 = () => {
   const { account } = useAccount();
   const navigate = useNavigate();
 
-  const {
-    data: channelDetails,
-    isLoading: loadingChannelDetails,
-    refetch,
-  } = useGetChannelDetails(account);
+  const { data: channelDetails, isLoading: loadingChannelDetails, refetch } = useGetChannelDetails(account);
 
   useEffect(() => {
     if (!loadingChannelDetails && !channelDetails) {
       navigate(`${APP_PATHS.CreateChannel}`);
+    } else {
+      navigate(`${APP_PATHS.ChannelDashboard}/${account}`);
     }
   }, [channelDetails, loadingChannelDetails]);
 
@@ -44,7 +43,6 @@ const ChannelDashboardPageV2 = () => {
       <ChannelDashboard />
     </ContentLayout>
   );
-
 };
 
 export default ChannelDashboardPageV2;
