@@ -45,7 +45,8 @@ export type Activity = {
   JoinURL: string;
   index: number;
   status: 'ENABLED' | 'DISABLED';
-  tags: [];
+  tags?: [];
+  isExpired?: boolean;
 };
 
 export type UsersAllActivitiesResponse = {

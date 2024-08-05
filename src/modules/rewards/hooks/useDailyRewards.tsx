@@ -9,11 +9,14 @@ import { useAccount } from 'hooks';
 import { walletToCAIP10 } from 'helpers/w2w';
 import { checkTimeToCurrent, getActivityStatus, getDayNumber } from '../utils/getDailyActivityStatus';
 
+// types
+import { Activity } from 'queries';
+
 const useDailyRewards = () => {
   const { account, isWalletConnected } = useAccount();
 
   // State variables
-  const [activeItem, setActiveItem] = useState<any | null>(null);
+  const [activeItem, setActiveItem] = useState<Activity | null>(null);
   const [activeDay, setActiveDay] = useState(0);
   const [isActivityDisabled, setIsActivityDisabled] = useState(false);
   const [isLoadingRewards, setIsLoadingRewards] = useState(false);
@@ -97,6 +100,7 @@ const useDailyRewards = () => {
     }
 
     setActiveDay(newDay);
+    console.log(newDayData);
     setActiveItem(newDayData);
     setIsLoadingRewards(false);
   };

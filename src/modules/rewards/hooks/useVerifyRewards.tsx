@@ -19,7 +19,7 @@ export type UseVerifyRewardsParams = {
 
 const useVerifyRewards = ({ activityTypeId, setErrorMessage, refetchActivity }: UseVerifyRewardsParams) => {
   const [verifyingRewards, setVerifyingRewards] = useState(false);
-  const [rewardsActivityStatus, setRewardsActivityStatus] = useState<string | null>(null);
+  const [rewardsActivityStatus, setRewardsActivityStatus] = useState<'Claimed' | 'Pending' | null>(null);
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
   const [updatedId, setUpdatedId] = useState<string | null>(null);
 
