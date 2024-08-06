@@ -18,15 +18,13 @@ import { DashboardActiveState } from './ChannelDashboard.types';
 import { EditChannelV2 } from 'modules/editChannel/EditChannelV2';
 
 const ChannelDashboard = () => {
-
   const { account } = useAccount();
 
   const [activeState, setActiveState] = useState<DashboardActiveState>('dashboard');
-  const { data: channelDetails } = useGetChannelDetails(account);
+  const { data: channelDetails } = useGetChannelDetails(account, 5000);
 
   return (
     <Box>
-
       {activeState === 'dashboard' && <UserChannelDashboard setActiveState={setActiveState} />}
 
       {activeState === 'addDelegate' && <ChannelAddDelegate setActiveState={setActiveState} />}
@@ -36,7 +34,10 @@ const ChannelDashboard = () => {
       {activeState === 'reactivateChannel' && <ReactivateChannel setActiveState={setActiveState} />}
 
       {activeState === 'editChannel' && channelDetails && (
-        <EditChannelV2 setActiveState={setActiveState} channelDetails={channelDetails} />
+        <EditChannelV2
+          setActiveState={setActiveState}
+          channelDetails={channelDetails}
+        />
       )}
     </Box>
   );

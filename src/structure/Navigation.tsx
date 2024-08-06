@@ -33,10 +33,7 @@ type AddNewChainNavigationProps = {
 };
 const AddNewChainNavigation: FC<AddNewChainNavigationProps> = ({ channelDetails }) => {
   const navigate = useNavigate();
-  const verifiedAliasChainIds =
-    channelDetails?.aliases
-      ?.filter((item) => item?.is_alias_verified)
-      ?.map((item) => parseInt(item.alias_blockchain_id)) || [];
+  const verifiedAliasChainIds = channelDetails?.aliases?.map((item) => parseInt(item.alias_blockchain_id)) || [];
   return (
     <Box
       display="flex"
@@ -116,7 +113,6 @@ function Navigation() {
   const CORE_CHAIN_ID = appConfig.coreContractChain;
   const { account, chainId } = useAccount();
   const { data: channelDetails } = useGetChannelDetails(account);
-  const isAliasVerified = channelDetails?.aliases.some((alias) => alias.is_alias_verified);
   const theme = useTheme();
   const location = useLocation();
 
@@ -166,17 +162,13 @@ function Navigation() {
     if (processingState !== 0) {
       dispatch(setCanSend(SEND_NOTIFICATION_STATES.LOADING));
     } else {
-      if (
-        isAliasVerified ||
-        (delegatees && delegatees.length > 0) ||
-        (channelDetails && channelDetails?.name !== null)
-      ) {
+      if ((delegatees && delegatees.length > 0) || (channelDetails && channelDetails?.name !== null)) {
         dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
       } else {
         dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
       }
     }
-  }, [channelDetails, isAliasVerified, delegatees, canSend, processingState, account]);
+  }, [channelDetails, delegatees, canSend, processingState, account]);
 
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {

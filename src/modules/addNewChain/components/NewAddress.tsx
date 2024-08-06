@@ -6,14 +6,14 @@ import { getSelectChains } from 'common';
 
 import { useChainAliasForm } from '../AddNewChain.form';
 
-import { appConfig } from 'config';
+import { allowedNetworks } from '../AddNewChain.constants';
 
 export type NewAddressProps = {
   isLoading: boolean;
 };
 
 const NewAddress: FC<NewAddressProps> = ({ isLoading }) => {
-  const selectOptions = getSelectChains(appConfig.allowedNetworks);
+  const selectChainOptions = getSelectChains(allowedNetworks);
   const { values: formValues, handleSubmit, handleChange, errors, touched } = useChainAliasForm();
   return (
     <Box width="100%">
@@ -48,7 +48,7 @@ const NewAddress: FC<NewAddressProps> = ({ isLoading }) => {
               margin="spacing-xxxs spacing-none spacing-none spacing-none"
             >
               <Select
-                options={selectOptions}
+                options={selectChainOptions}
                 value={formValues.chainId}
                 onSelect={handleChange('chainId')}
                 error={touched?.chainId && Boolean(errors?.chainId)}
@@ -57,10 +57,11 @@ const NewAddress: FC<NewAddressProps> = ({ isLoading }) => {
             </Box>
           </Box>
           <Button
-            disabled={!formValues.alias || isLoading}
+            disabled={!formValues.alias}
             variant="primary"
+            loading={isLoading}
           >
-            {isLoading ? 'Initiating' : 'Add'}
+            {isLoading ? 'Adding new chain' : 'Add'}
           </Button>
         </Box>
       </form>

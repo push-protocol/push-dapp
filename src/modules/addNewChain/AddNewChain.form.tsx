@@ -3,6 +3,7 @@ import { FormikProvider, useFormik, useFormikContext } from 'formik';
 import * as yup from 'yup';
 
 import { isValidAddress } from 'helpers/ValidationHelper';
+import { allowedNetworks } from './AddNewChain.constants';
 
 export type NewChainAddressValue = {
   alias: string;
@@ -25,7 +26,7 @@ const FormikChainAliasProvider: FC<FormikChainAliasProviderProps> = ({ children,
   const formik = useFormik<NewChainAddressValue>({
     initialValues: {
       alias: '',
-      chainId: '11155111',
+      chainId: allowedNetworks[0].toString(),
     },
     validationSchema: validationSchema,
     onSubmit: onSubmit,

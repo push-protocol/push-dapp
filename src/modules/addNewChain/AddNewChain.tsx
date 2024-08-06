@@ -29,6 +29,7 @@ import { FormikChainAliasProvider } from './AddNewChain.form';
 const AddNewChain: FC = () => {
   const [activeStepKey, setActiveStepKey] = useState<ActiveStepKey>('newaddress');
   const [completedSteps, setCompletedSteps] = useState<Array<ActiveStepKey>>(['newaddress']);
+  const [isAuthModalVisible, setIsAuthModalVisible] = useState(true);
 
   const toast = useToast();
   const { mutate: initiateNewChain, isPending, isError } = useInitiateNewChain();
@@ -36,6 +37,10 @@ const AddNewChain: FC = () => {
   const { account } = useAccount();
   const { data: channelDetails } = useGetChannelDetails(account);
   const nagivate = useNavigate();
+
+  useEffect(() => {
+    setIsAuthModalVisible(userPushSDKInstance && userPushSDKInstance?.readmode());
+  }, [userPushSDKInstance]);
 
   useEffect(() => {
     if (!channelDetails) nagivate('/channels');
@@ -133,7 +138,7 @@ const AddNewChain: FC = () => {
         {activeStepKey === 'newaddress' && <NewAddress isLoading={isPending && !isError} />}
         {activeStepKey === 'changenetwork' && <ChangeNetwork handleNextStep={handleNextStep} />}
         {activeStepKey === 'verifyalias' && <VerifyAliasChain />}
-        {userPushSDKInstance && userPushSDKInstance?.readmode() && (
+        {isAuthModalVisible && (
           <Box
             display="flex"
             justifyContent="center"
@@ -146,6 +151,7 @@ const AddNewChain: FC = () => {
             <UnlockProfileWrapper
               type={UNLOCK_PROFILE_TYPE.MODAL}
               showConnectModal={true}
+              onClose={() => setIsAuthModalVisible(false)}
             />
           </Box>
         )}

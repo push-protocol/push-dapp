@@ -98,7 +98,7 @@ const VerifyAliasChain: FC = () => {
       </Box>
       <Button
         onClick={handleVerifyAliasChain}
-        disabled={isPending}
+        loading={isPending}
       >
         {isPending ? 'Verifying' : 'Verify New Address'}
       </Button>
