@@ -2,6 +2,8 @@ import { FC } from 'react';
 
 import { Box, Button, TextArea, TextInput } from 'blocks';
 
+import { useAccount } from 'hooks';
+
 import { useCreateChannelForm } from '../CreateChannel.form';
 import { ActiveStepKey } from '../CreateChannel.types';
 
@@ -20,6 +22,8 @@ const ChannelInfo: FC<ChannelInfoProps> = ({ handleNextStep, setActiveStepKey })
     setTouched,
   } = useCreateChannelForm();
 
+  const { isWalletConnected, connect } = useAccount();
+
   const handleNext = () => {
     validateForm().then((errors) => {
       setTouched({
@@ -28,6 +32,9 @@ const ChannelInfo: FC<ChannelInfoProps> = ({ handleNextStep, setActiveStepKey })
         channelURL: true,
       });
       if (Object.keys(errors).length === 0) {
+        if (!isWalletConnected) {
+          connect();
+        }
         handleNextStep('uploadLogo');
         setActiveStepKey('uploadLogo');
       }
@@ -65,7 +72,6 @@ const ChannelInfo: FC<ChannelInfoProps> = ({ handleNextStep, setActiveStepKey })
             error={touched.channelName && Boolean(errors?.channelName)}
             errorMessage={touched.channelName ? errors?.channelName : ''}
           />
-
           <TextArea
             required
             label="Channel Description"
@@ -81,7 +87,6 @@ const ChannelInfo: FC<ChannelInfoProps> = ({ handleNextStep, setActiveStepKey })
             error={touched.channelDesc && Boolean(errors?.channelDesc)}
             errorMessage={touched.channelURL ? errors?.channelDesc : ''}
           />
-
           <TextInput
             required
             label="Channel Website URL"
@@ -95,7 +100,6 @@ const ChannelInfo: FC<ChannelInfoProps> = ({ handleNextStep, setActiveStepKey })
             errorMessage={touched.channelURL ? errors?.channelURL : ''}
           />
         </Box>
-
         <Box
           display="flex"
           justifyContent="center"

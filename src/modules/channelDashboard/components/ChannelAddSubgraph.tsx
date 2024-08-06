@@ -76,11 +76,13 @@ const ChannelAddSubgraph: FC<ChannelAddSubgraphProps> = ({
       />
 
       {addSubgraphError && (
-        <Alert
-          variant='error'
-          heading={addSubgraphError}
-          showIcon
-        />
+        <Box width='100%'>
+          <Alert
+            variant='error'
+            heading={addSubgraphError}
+            showIcon
+          />
+        </Box>
       )}
 
       <form onSubmit={subgraphForm.handleSubmit}>

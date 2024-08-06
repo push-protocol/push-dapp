@@ -13,14 +13,14 @@ type ChannelDashboardDelegatesProps = {
   setChannelDashboardError: (error: string) => void;
   setActiveState: (activeState: DashboardActiveState) => void;
   refetchChannelDelegate: () => void;
-}
+};
 
 const ChannelDashboardDelegates: FC<ChannelDashboardDelegatesProps> = ({
   channel_delegates,
   loadingDelegates,
   setChannelDashboardError,
   setActiveState,
-  refetchChannelDelegate
+  refetchChannelDelegate,
 }) => {
   return (
     <Box
@@ -31,16 +31,33 @@ const ChannelDashboardDelegates: FC<ChannelDashboardDelegatesProps> = ({
       width="-webkit-fill-available"
       flexDirection="column"
     >
-      <Box display="flex" flexDirection="column" gap="spacing-xxs">
-        <Box display="flex" justifyContent="space-between">
-          <Box display="flex" flexDirection="column" gap='spacing-xxxs'>
+      <Box
+        display="flex"
+        flexDirection="column"
+        gap="spacing-xxs"
+      >
+        <Box
+          display="flex"
+          justifyContent="space-between"
+        >
+          <Box
+            display="flex"
+            flexDirection="column"
+            gap="spacing-xxxs"
+          >
             <Skeleton isLoading={loadingDelegates}>
-              <Text variant="h5-semibold" color="text-primary">
+              <Text
+                variant="h5-semibold"
+                color="text-primary"
+              >
                 Channel Delegates
               </Text>
             </Skeleton>
             <Skeleton isLoading={loadingDelegates}>
-              <Text variant="c-regular" color="text-tertiary">
+              <Text
+                variant="c-regular"
+                color="text-tertiary"
+              >
                 {' '}
                 Delegates can send channel notifications{' '}
               </Text>
@@ -85,7 +102,6 @@ const ChannelDashboardDelegates: FC<ChannelDashboardDelegatesProps> = ({
           />
         )}
       </Box>
-
     </Box>
   );
 };

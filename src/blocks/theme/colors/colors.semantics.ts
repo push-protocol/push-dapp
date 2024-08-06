@@ -5,13 +5,14 @@ import {
   dangerSecondaryButtonSemantics,
   outlineButtonSemantics,
   primaryButtonSemantics,
-  tertiaryButtonSemantics
+  tertiaryButtonSemantics,
 } from '../semantics/semantics.button';
 import { checkboxSemantics } from '../semantics/semantics.checkbox';
 import { iconSemantics } from '../semantics/semantics.icon';
 import { inputSemantics } from '../semantics/semantics.input';
 import { listItemSemantics } from '../semantics/semantics.listItem';
 import { modalSemantics } from '../semantics/semantics.modal';
+import { progressBarSemantics } from '../semantics/semantics.progress-bar';
 import { radioSemantics } from '../semantics/semantics.radio';
 import { skeletonSemantics } from '../semantics/semantics.skeleton';
 import { strokeSemantics } from '../semantics/semantics.stroke';
@@ -21,6 +22,7 @@ import { textSemantics } from '../semantics/semantics.text';
 import { textAreaSemantics } from '../semantics/semantics.textarea';
 import { toastSemantics } from '../semantics/semantics.toast';
 import { tooltipSemantics } from '../semantics/semantics.tooltip';
+import { spinnerSemantics } from '../semantics/semantics.spinner';
 
 // TODO: find a better way to do this in future
 type SemanticKeys = {
@@ -36,6 +38,7 @@ type SemanticKeys = {
   input: 'components-inputs';
   listItem: 'components-list-item';
   modal: 'components-modal';
+  progressBar: 'components-progress-bar';
   radio: 'components-radio-button';
   surface: 'surface';
   stroke: 'stroke';
@@ -45,6 +48,7 @@ type SemanticKeys = {
   toast: 'components-toast';
   toggle: 'components-toggle-switch';
   tooltip: 'components-tooltip';
+  spinner: 'components-spinner';
 };
 
 export const semanticKeys: SemanticKeys = {
@@ -60,6 +64,7 @@ export const semanticKeys: SemanticKeys = {
   input: 'components-inputs',
   listItem: 'components-list-item',
   modal: 'components-modal',
+  progressBar: 'components-progress-bar',
   radio: 'components-radio-button',
   surface: 'surface',
   stroke: 'stroke',
@@ -68,7 +73,8 @@ export const semanticKeys: SemanticKeys = {
   textArea: 'components-textarea',
   toast: 'components-toast',
   toggle: 'components-toggle-switch',
-  tooltip: 'components-tooltip'
+  tooltip: 'components-tooltip',
+  spinner: 'components-spinner',
 };
 
 export const colorSemantics = {
@@ -84,6 +90,7 @@ export const colorSemantics = {
   [semanticKeys.input]: inputSemantics,
   [semanticKeys.listItem]: listItemSemantics,
   [semanticKeys.modal]: modalSemantics,
+  [semanticKeys.progressBar]: progressBarSemantics,
   [semanticKeys.radio]: radioSemantics,
   [semanticKeys.surface]: surfaceSemantics,
   [semanticKeys.stroke]: strokeSemantics,
@@ -92,5 +99,6 @@ export const colorSemantics = {
   [semanticKeys.textArea]: textAreaSemantics,
   [semanticKeys.toast]: toastSemantics,
   [semanticKeys.toggle]: switchSemantics,
-  [semanticKeys.tooltip]: tooltipSemantics
+  [semanticKeys.tooltip]: tooltipSemantics,
+  [semanticKeys.spinner]: spinnerSemantics,
 };

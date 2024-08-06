@@ -78,11 +78,13 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({
       />
 
       {deactivateError && (
-        <Alert
-          variant='error'
-          heading={deactivateError}
-          showIcon
-        />
+        <Box width='100%'>
+          <Alert
+            variant='error'
+            heading={deactivateError}
+            showIcon
+          />
+        </Box>
       )}
 
       <ChannelDashboardInfo

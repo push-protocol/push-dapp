@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { ethers } from 'ethers';
+import { useNavigate } from 'react-router-dom';
 
 import { Alert, Box } from 'blocks';
 import { appConfig } from 'config';
+import APP_PATHS from 'config/AppPaths';
 import { Stepper } from 'common';
 import { useAccount } from 'hooks';
 import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
@@ -35,6 +37,8 @@ const fees = ethers.utils.parseUnits(CHANNEL_STAKE_FEES.toString(), 18);
 
 const CreateChannel = () => {
   const { account, provider, isWalletConnected, chainId, connect } = useAccount();
+
+  const navigate = useNavigate();
 
   const onCoreNetwork = appConfig.coreContractChain === chainId;
 
@@ -140,7 +144,7 @@ const CreateChannel = () => {
                 'Creating your channel, Aligning pixels, adjusting padding... This may take some time.',
                 'Redirecting... Please do not refresh'
               );
-              window.location.reload();
+              navigate(`${APP_PATHS.ChannelDashboard}/${account}`)
             }, 3000);
           }
         },
@@ -193,7 +197,7 @@ const CreateChannel = () => {
     let storagePointer = await IPFSupload(ChannelInput);
     console.debug('IPFS storagePointer:', storagePointer);
 
-    handleProgressBar(40, 'Please complete the transaction in your wallet to continue.', 'Payload Uploaded...');
+    handleProgressBar(40, 'Please complete the transaction in your wallet to continue.', 'Uploading Payload...');
 
     var signer = provider.getSigner(account);
     console.debug(signer);
@@ -225,11 +229,13 @@ const CreateChannel = () => {
         {onCoreNetwork && (
           <>
             {channelCreationError.txErrorStatus !== 0 && (
-              <Alert
-                variant='error'
-                heading={channelCreationError.txError}
-                showIcon
-              />
+              <Box width="100%">
+                <Alert
+                  variant="error"
+                  heading={channelCreationError.txError}
+                  showIcon
+                />
+              </Box>
             )}
 
             {!progressState.progress ? (

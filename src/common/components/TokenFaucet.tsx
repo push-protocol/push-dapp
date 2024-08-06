@@ -13,12 +13,14 @@ type TokenFaucetProps = {
   noOfPushTokensToCheck: number;
   mintPushToken: (noOfTokens: number) => void;
   mintingPush: boolean;
+  loadingBalance: boolean;
 };
 
 const TokenFaucet: FC<TokenFaucetProps> = ({
   noOfPushTokensToCheck,
   mintPushToken,
-  mintingPush
+  mintingPush,
+  loadingBalance
 }) => {
 
   const isProd = appConfig.appEnv === 'prod';
@@ -42,7 +44,7 @@ const TokenFaucet: FC<TokenFaucetProps> = ({
       gap="spacing-xs"
     >
 
-      <Skeleton isLoading={mintingPush}>
+      <Skeleton isLoading={mintingPush || loadingBalance}>
         <Text variant="c-regular" color="text-primary">
           {isProd ? 'Your balance is low. Swap to get PUSH Tokens.' : 'Follow these steps to get Testnet PUSH.'}
         </Text>
@@ -54,7 +56,7 @@ const TokenFaucet: FC<TokenFaucetProps> = ({
         </Button>
       ) : (
         <Box display="flex" gap="spacing-xs">
-          <Skeleton isLoading={mintingPush}>
+          <Skeleton isLoading={mintingPush || loadingBalance}>
             <Link to={SepoliaFaucetLink} target="_blank">
               <Box display="flex" gap="spacing-xxs" alignItems="baseline" color="text-brand-medium" cursor="pointer">
                 <Box
@@ -75,7 +77,7 @@ const TokenFaucet: FC<TokenFaucetProps> = ({
             </Link>
           </Skeleton>
 
-          <Skeleton isLoading={mintingPush}>
+          <Skeleton isLoading={mintingPush || loadingBalance}>
             <Box
               display="flex"
               gap="spacing-xxs"
@@ -102,6 +104,7 @@ const TokenFaucet: FC<TokenFaucetProps> = ({
         </Box>
       )}
 
+      {/* //TODO: This will get changed with the new modal design */}
       {isUniswapWidgetModalOpen && (
         <UniswapWidgetModalComponent
           // @ts-ignore

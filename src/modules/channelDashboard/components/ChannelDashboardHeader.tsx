@@ -1,6 +1,17 @@
 import { FC } from 'react';
 
-import { BellSimple, BellSimpleSlash, Box, Button, Cube, Dropdown, KebabMenuHorizontal, Menu, MenuItem, Skeleton } from 'blocks';
+import {
+  BellSimple,
+  BellSimpleSlash,
+  Box,
+  Button,
+  Cube,
+  Dropdown,
+  KebabMenuHorizontal,
+  Menu,
+  MenuItem,
+  Skeleton,
+} from 'blocks';
 
 import { ChannelDetails } from 'queries';
 
@@ -11,12 +22,12 @@ type ChannelDashboardHeaderProps = {
   channelDetails?: ChannelDetails;
   loadingChannelDetails: boolean;
   setActiveState: (activeState: DashboardActiveState) => void;
-}
+};
 
 const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
   channelDetails,
   loadingChannelDetails,
-  setActiveState
+  setActiveState,
 }) => {
   return (
     <Box
@@ -39,7 +50,7 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
         gap="spacing-xxs"
         justifyContent="center"
       >
-        <Skeleton isLoading={loadingChannelDetails}>
+        <Skeleton isLoading={!channelDetails?.name}>
           <Button
             variant="outline"
             size="small"
@@ -50,7 +61,7 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
           </Button>
         </Skeleton>
 
-        <Skeleton isLoading={loadingChannelDetails}>
+        <Skeleton isLoading={!channelDetails?.name}>
           <Dropdown
             trigger="click"
             overlay={
@@ -95,9 +106,7 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
             </Box>
           </Dropdown>
         </Skeleton>
-
       </Box>
-
     </Box>
   );
 };
