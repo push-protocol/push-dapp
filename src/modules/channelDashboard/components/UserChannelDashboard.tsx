@@ -52,9 +52,7 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({ setActiveState })
           </Box>
         )}
 
-        {loadingChannelDetails ||
-          isRefetching ||
-          !channelDetails?.name ? (
+        {loadingChannelDetails || !channelDetails?.name ? (
           <Box
             height="100%"
             display="flex"
