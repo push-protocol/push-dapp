@@ -6,7 +6,7 @@ import { Activity, useGetRewardsActivity } from 'queries';
 import { useAccount } from 'hooks';
 
 // components
-import { Box, Button, Lock, RewardsBell, Skeleton, Text } from 'blocks';
+import { Box, Button, Lock, Multiplier, RewardsBell, Skeleton, Text } from 'blocks';
 import { ActivityButton } from './ActivityButton';
 import { RewardsActivityIcon } from './RewardsActivityIcon';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
@@ -105,23 +105,42 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({
           </Box>
         </Box>
 
-        <Box
-          display="flex"
-          flexDirection="row"
-          alignItems="center"
-          gap="spacing-xxs"
-          margin="spacing-md spacing-none spacing-none spacing-none"
-        >
-          <RewardsBell
-            width={28}
-            height={28}
-          />
-          <Text
-            variant="bm-semibold"
-            color="text-primary"
-          >
-            {activity.points?.toLocaleString()}
-          </Text>
+        <Box margin="spacing-md spacing-none spacing-none spacing-none">
+          {/* Rewards Multiplier and Points */}
+          {activity.multiplier > 1 ? (
+            <Box
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              gap="spacing-xxxs"
+            >
+              <Multiplier />
+              <Text
+                variant="bm-semibold"
+                color="text-state-success-bold"
+              >
+                {activity.multiplier?.toLocaleString()}x
+              </Text>
+            </Box>
+          ) : (
+            <Box
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+              gap="spacing-xxs"
+            >
+              <RewardsBell
+                width={28}
+                height={28}
+              />
+              <Text
+                variant="bm-semibold"
+                color="text-primary"
+              >
+                {activity.points?.toLocaleString()}
+              </Text>
+            </Box>
+          )}
         </Box>
 
         {/* Buttons Logic */}
