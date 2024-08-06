@@ -19,7 +19,7 @@ type UserChannelDashboardProps = {
 
 const UserChannelDashboard: FC<UserChannelDashboardProps> = ({ setActiveState }) => {
   const { account } = useAccount();
-  const { data: channelDetails, isLoading: loadingChannelDetails, isRefetching } = useGetChannelDetails(account);
+  const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
 
   const [channelDashboardError, setChannelDashboardError] = useState('');
 
