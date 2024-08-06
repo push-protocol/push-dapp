@@ -8,11 +8,13 @@ import { useSelector } from 'react-redux';
 
 // hooks
 import useLockedStatus from './useLockedStatus';
+import { useAccount } from 'hooks/useAccount';
+import { useClaimRewardsActivity, useGetUserRewardsDetails } from 'queries';
 
 // helpers
 import { appConfig } from 'config';
 import { generateVerificationProof } from '../utils/generateVerificationProof';
-import { useClaimRewardsActivity } from 'queries';
+import { walletToCAIP10 } from 'helpers/w2w';
 
 // types
 import { UserStoreType } from 'types';
@@ -28,7 +30,14 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
   const [twitterActivityStatus, setTwitterActivityStatus] = useState<'Claimed' | 'Pending' | null>(null);
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
   const [updatedId, setUpdatedId] = useState<string | null>(null);
+
+  const { account } = useAccount();
+  const caip10WalletAddress = walletToCAIP10({ account });
   const { checkIfLocked } = useLockedStatus();
+
+  const { refetch: refetchUserDetails } = useGetUserRewardsDetails({
+    caip10WalletAddress: caip10WalletAddress,
+  });
 
   useEffect(() => {
     setErrorMessage('');
@@ -112,14 +121,15 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
             if (response.status === 'COMPLETED') {
               setTwitterActivityStatus('Claimed');
               refetchActivity();
+              refetchUserDetails();
               setVerifyingTwitter(false);
+              checkIfLocked();
             }
             if (response.status === 'PENDING') {
               setTwitterActivityStatus('Pending');
               refetchActivity();
               setVerifyingTwitter(false);
             }
-            checkIfLocked();
           },
           onError: (error: any) => {
             console.log('Error in creating activity', error);

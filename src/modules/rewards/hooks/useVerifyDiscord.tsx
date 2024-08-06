@@ -7,11 +7,13 @@ import { useSelector } from 'react-redux';
 
 // hooks;
 import { appConfig } from 'config';
-import { useClaimRewardsActivity } from 'queries';
+import { useClaimRewardsActivity, useGetUserRewardsDetails } from 'queries';
 import useLockedStatus from './useLockedStatus';
 
 // helpers
 import { generateVerificationProof } from '../utils/generateVerificationProof';
+import { walletToCAIP10 } from 'helpers/w2w';
+import { useAccount } from 'hooks/useAccount';
 
 // Types
 import { UserStoreType } from 'types';
@@ -39,9 +41,16 @@ const useVerifyDiscord = ({
   const [updatedId, setUpdatedId] = useState<string | null>(null);
   const { checkIfLocked } = useLockedStatus();
 
+  const { account } = useAccount();
+  const caip10WalletAddress = walletToCAIP10({ account });
+
   useEffect(() => {
     setErrorMessage('');
   }, [setErrorMessage]);
+
+  const { refetch: refetchUserDetails } = useGetUserRewardsDetails({
+    caip10WalletAddress: caip10WalletAddress,
+  });
 
   const { mutate: claimRewardsActivity } = useClaimRewardsActivity({
     userId: updatedId as string,
@@ -111,6 +120,7 @@ const useVerifyDiscord = ({
             if (response.status === 'COMPLETED') {
               setDiscordActivityStatus('Claimed');
               refetchActivity();
+              refetchUserDetails();
               setVerifyingDiscord(false);
               setErrorMessage('');
               checkIfLocked();
