@@ -21,7 +21,7 @@ export type BonusActivitiesSectionProps = {};
 const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
   const { account } = useAccount();
 
-  const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities({ pageSize: 50 });
+  const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities();
 
   // Getting user Id by wallet address
   const caip10WalletAddress = walletToCAIP10({ account });
@@ -32,7 +32,7 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
   const isLoading = isLoadingActivities;
 
   // If there are activities then render them else render 2 skeletons
-  const activityList = rewardActivitiesResponse?.pages.flatMap((page) => page.activities) || [];
+  const activityList = rewardActivitiesResponse?.activities.flatMap((page) => page) || [];
 
   const bonusActivities = isLoading
     ? Array(8).fill(0)
@@ -55,15 +55,15 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
         Bonus Activities
       </Text>
 
-      <Box width="-webkit-fill-available">
-        {errorMessage && (
+      {errorMessage && (
+        <Box width="-webkit-fill-available">
           <Alert
             heading={errorMessage}
             variant="error"
             onClose={() => setErrorMessage('')}
           />
-        )}
-      </Box>
+        </Box>
+      )}
 
       <Box
         display="grid"

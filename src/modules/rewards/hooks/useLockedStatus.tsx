@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 // hooks
 import { useAccount } from 'hooks';
-import { useGetUserRewardsDetails, useSendRecentActivities } from 'queries';
+import { useGetRewardActivityStatus, useGetUserRewardsDetails } from 'queries';
 
 // helpers
 import { walletToCAIP10 } from 'helpers/w2w';
@@ -19,7 +19,7 @@ const useLockedStatus = () => {
   const caip10WalletAddress = walletToCAIP10({ account });
   const { data: userDetails, status, error } = useGetUserRewardsDetails({ caip10WalletAddress });
 
-  const { mutate: sendRecentActivities } = useSendRecentActivities({
+  const { mutate: sendRecentActivities } = useGetRewardActivityStatus({
     userId: userDetails?.userId as string,
   });
 

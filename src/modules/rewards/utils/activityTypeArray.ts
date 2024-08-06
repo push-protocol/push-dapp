@@ -1,4 +1,6 @@
-export const otherRewardActivities = [
+import { ActvityType } from 'queries';
+
+export const otherRewardActivities: ActvityType[] = [
   'create_gated_group_push_chat',
   'subscribe_5_channels_push',
   'subscribe_20_channels_push',
@@ -8,7 +10,7 @@ export const otherRewardActivities = [
   'hold_push_rockstar_nft',
 ];
 
-export const bonusRewardActivities = [
+export const bonusRewardActivities: ActvityType[] = [
   'create_channel_push',
   'reach_100_subscribers',
   'reach_500_subscribers',
@@ -19,7 +21,7 @@ export const bonusRewardActivities = [
   'reach_100000_subscribers',
 ];
 
-export const dailyRewardActivities = [
+export const dailyRewardActivities: ActvityType[] = [
   'daily_check_in_7_days_day1',
   'daily_check_in_7_days_day2',
   'daily_check_in_7_days_day3',

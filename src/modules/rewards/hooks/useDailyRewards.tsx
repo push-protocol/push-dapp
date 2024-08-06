@@ -2,21 +2,23 @@
 import { useCallback, useEffect, useState } from 'react';
 
 // hooks
-import { useGetRewardsActivities, useGetUserRewardsDetails, useSendRecentActivities } from 'queries';
+import { useGetRewardActivityStatus, useGetRewardsActivities, useGetUserRewardsDetails } from 'queries';
 import { useAccount } from 'hooks';
 
 // helpers
 import { walletToCAIP10 } from 'helpers/w2w';
 import { checkTimeToCurrent, getActivityStatus, getDayNumber } from '../utils/getDailyActivityStatus';
 
+// types
+import { Activity } from 'queries';
+
 const useDailyRewards = () => {
   const { account, isWalletConnected } = useAccount();
 
   // State variables
-  const [activeItem, setActiveItem] = useState<any | null>(null);
-  const [activeDay, setActiveDay] = useState<number>(0);
+  const [activeItem, setActiveItem] = useState<Activity | null>(null);
+  const [activeDay, setActiveDay] = useState(0);
   const [isActivityDisabled, setIsActivityDisabled] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
   const [isLoadingRewards, setIsLoadingRewards] = useState(false);
 
   // Getting user ID by wallet address
@@ -24,17 +26,16 @@ const useDailyRewards = () => {
   const { data: userDetails } = useGetUserRewardsDetails({
     caip10WalletAddress,
   });
-  const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities({ pageSize: 50 });
+  const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities();
 
   const isLoading = isLoadingActivities || isLoadingRewards;
 
   // Flatten the activities response and filter daily activities
-  const activityList = rewardActivitiesResponse?.pages.flatMap((page) => page.activities) || [];
+  const activityList = rewardActivitiesResponse?.activities.map((page) => page) || [];
 
   const dailyActivities = activityList.filter(
     (activity) => activity.index < 0 && activity.activityType.startsWith(`daily_check_in_7_days_day`)
   );
-  // .filter((activity) => activity.activityType.startsWith(`daily_check_in_7_days_day`));
   const dailyRewardsActivities = isLoading
     ? Array(7).fill(0)
     : dailyActivities.sort((a, b) => {
@@ -45,7 +46,7 @@ const useDailyRewards = () => {
       });
 
   // Mutation for sending recent activities
-  const { mutate: sendRecentActivities } = useSendRecentActivities({
+  const { mutate: sendRecentActivities } = useGetRewardActivityStatus({
     userId: userDetails?.userId as string,
   });
 
@@ -99,6 +100,7 @@ const useDailyRewards = () => {
     }
 
     setActiveDay(newDay);
+    console.log(newDayData);
     setActiveItem(newDayData);
     setIsLoadingRewards(false);
   };
@@ -121,12 +123,10 @@ const useDailyRewards = () => {
     activeItem,
     activeDay,
     isActivityDisabled,
-    errorMessage,
     isLoading,
     userDetails,
     dailyRewardsActivities,
     handleCheckIn,
-    setErrorMessage,
     resetState,
   };
 };

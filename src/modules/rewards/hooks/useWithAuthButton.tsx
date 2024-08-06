@@ -19,11 +19,11 @@ import { Button } from 'blocks';
 export const useAuthWithButton = ({
   onSuccess,
   isLoading,
-  startingLabel,
+  label = 'verify',
 }: {
   onSuccess: (userDetails: UserRewardsDetailResponse) => void;
   isLoading: boolean;
-  startingLabel?: string;
+  label?: string;
 }) => {
   const [isWalletConnectedAndProfileUnlocked, setIsWalletConnectedAndProfileUnlocked] = useState(false);
   const [showAuth, setShowAuth] = useState(false); // Track button click
@@ -68,7 +68,7 @@ export const useAuthWithButton = ({
           onClick={handleAuthModal}
           disabled={isLoading}
         >
-          {startingLabel || 'Verify'}
+          {label}
         </Button>
       </>
     ),

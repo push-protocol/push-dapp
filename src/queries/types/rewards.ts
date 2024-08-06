@@ -45,7 +45,8 @@ export type Activity = {
   JoinURL: string;
   index: number;
   status: 'ENABLED' | 'DISABLED';
-  tags: [];
+  tags?: [];
+  isExpired?: boolean;
 };
 
 export type UsersAllActivitiesResponse = {
@@ -80,7 +81,7 @@ export type ClaimRewardsActivityProps = {
   pgpPublicKey: string;
 };
 
-export type SendRecentActivityProps = {
+export type RewardActivityStatusProps = {
   userId: string;
   activities: any;
 };
@@ -182,11 +183,6 @@ export type LeaderboardModelledResponse = {
 
 export type LeaderboardParams = {
   order?: string;
-  pageSize?: number;
-  pageNumber?: number;
-};
-
-export type ActivitiesParams = {
   pageSize?: number;
   pageNumber?: number;
 };

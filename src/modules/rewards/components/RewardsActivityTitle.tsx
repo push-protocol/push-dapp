@@ -7,16 +7,11 @@ import { TextColors } from 'blocks/theme/Theme.types';
 type RewardsActivityTitleProps = {
   activityTitle: string;
   isLoading: boolean;
-  defaultColor?: TextColors;
-  defaultVariant?: TextVariants;
+  color?: TextColors;
+  variant?: TextVariants;
 };
 
-const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({
-  activityTitle,
-  isLoading,
-  defaultColor,
-  defaultVariant,
-}) => {
+const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({ activityTitle, isLoading, color, variant }) => {
   const extractedTitle = getRewardsActivityTitle(activityTitle);
 
   if (extractedTitle) {
@@ -28,8 +23,8 @@ const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({
           gap="spacing-xxxs"
         >
           <Text
-            variant={defaultVariant || 'bl-semibold'}
-            color={defaultColor || 'text-primary'}
+            variant={variant || 'bl-semibold'}
+            color={color || 'text-primary'}
           >
             {preText}
           </Text>
@@ -39,15 +34,15 @@ const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({
             rel="noopener noreferrer"
           >
             <Text
-              variant={defaultVariant || 'bl-semibold'}
+              variant={variant || 'bl-semibold'}
               color="text-brand-medium"
             >
               {linkedText}
             </Text>
           </Link>
           <Text
-            variant={defaultVariant || 'bl-semibold'}
-            color={defaultColor || 'text-primary'}
+            variant={variant || 'bl-semibold'}
+            color={color || 'text-primary'}
           >
             {' '}
             {postText}
@@ -59,8 +54,8 @@ const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({
     return (
       <Skeleton isLoading={isLoading}>
         <Text
-          variant={defaultVariant || 'bl-semibold'}
-          color={defaultColor || 'text-primary'}
+          variant={variant || 'bl-semibold'}
+          color={color || 'text-primary'}
         >
           {activityTitle}
         </Text>

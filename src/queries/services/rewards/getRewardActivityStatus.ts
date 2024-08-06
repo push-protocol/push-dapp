@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { getRewardsBaseURL } from 'queries/baseURL';
-import { sendRecentActivitiesModel } from 'queries/models';
-import { SendRecentActivityProps } from 'queries/types';
+import { getRewardActivityStatusModel } from 'queries/models';
+import { RewardActivityStatusProps } from 'queries/types';
 
-export const sendRecentActivities = (payload: SendRecentActivityProps) =>
+export const getRewardActivityStatus = (payload: RewardActivityStatusProps) =>
   axios({
     method: 'POST',
     url: `${getRewardsBaseURL()}/users/${payload.userId}/recent-activities`,
@@ -11,4 +11,4 @@ export const sendRecentActivities = (payload: SendRecentActivityProps) =>
     headers: {
       'Content-Type': 'application/json',
     },
-  }).then((response) => sendRecentActivitiesModel(response.data));
+  }).then((response) => getRewardActivityStatusModel(response.data));

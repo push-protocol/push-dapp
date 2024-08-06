@@ -50,7 +50,6 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
         display="flex"
         flexDirection="column"
         borderRadius="radius-sm"
-        margin={{ ml: 'spacing-sm spacing-none', initial: 'spacing-sm spacing-none' }}
         backgroundColor="surface-secondary"
       >
         <Box
@@ -72,7 +71,10 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
               justifyContent="center"
               border="border-xs solid stroke-tertiary"
             >
-              <Lock size={28} />
+              <Lock
+                size={28}
+                color="icon-tertiary"
+              />
             </Box>
           ) : (
             <RewardsActivityIcon type={activity.activityType} />
@@ -147,7 +149,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
                     alignItems="center"
                     gap="spacing-xxxs"
                   >
-                    <Multiplier size={28} />
+                    <Multiplier />
                     <Text
                       variant="bm-semibold"
                       color="text-state-success-bold"
@@ -204,7 +206,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
                   setErrorMessage={setErrorMessage}
                   usersSingleActivity={usersSingleActivity}
                   isLoadingActivity={isLoading}
-                  startingLabel={isNotDiscordOrTwitter ? 'Claim' : 'Verify'}
+                  label={isNotDiscordOrTwitter ? 'Claim' : 'Verify'}
                 />
               )}
             </Box>

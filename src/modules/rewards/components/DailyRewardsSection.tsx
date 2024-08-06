@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { css } from 'styled-components';
 
 // hooks
@@ -7,23 +7,17 @@ import useLockedStatus from '../hooks/useLockedStatus';
 import useDailyRewards from '../hooks/useDailyRewards';
 
 // components
-import { Box, Button, Text } from 'blocks';
+import { Alert, Box, Button, Text } from 'blocks';
 import { DailyRewardsItem } from './DailyRewardsItem';
 import { ActivityVerificationButton } from './ActivityVerificationButton';
 
 export type DailyRewardsSectionProps = {};
 
 const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
-  const {
-    activeItem,
-    activeDay,
-    isActivityDisabled,
-    isLoading,
-    userDetails,
-    dailyRewardsActivities,
-    handleCheckIn,
-    setErrorMessage,
-  } = useDailyRewards();
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const { activeItem, activeDay, isActivityDisabled, isLoading, userDetails, dailyRewardsActivities, handleCheckIn } =
+    useDailyRewards();
 
   const { isLocked } = useLockedStatus();
 
@@ -83,12 +77,22 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
                 refetchActivity={() => handleCheckIn()}
                 setErrorMessage={setErrorMessage}
                 isLoadingActivity={false}
-                startingLabel="Check In"
+                label="Check In"
               />
             )}
           </>
         )}
       </Box>
+
+      {errorMessage && (
+        <Box width="-webkit-fill-available">
+          <Alert
+            heading={errorMessage}
+            variant="error"
+            onClose={() => setErrorMessage('')}
+          />
+        </Box>
+      )}
 
       <Box
         display="grid"

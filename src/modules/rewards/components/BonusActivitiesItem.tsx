@@ -66,7 +66,10 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({
             justifyContent="center"
             border="border-xs solid stroke-tertiary"
           >
-            <Lock size={28} />
+            <Lock
+              size={28}
+              color="icon-tertiary"
+            />
           </Box>
         ) : (
           <RewardsActivityIcon type={activity.activityType} />
@@ -149,7 +152,7 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({
               setErrorMessage={setErrorMessage}
               usersSingleActivity={usersSingleActivity}
               isLoadingActivity={isLoading}
-              startingLabel="Claim"
+              label="Claim"
             />
           )}
         </Box>

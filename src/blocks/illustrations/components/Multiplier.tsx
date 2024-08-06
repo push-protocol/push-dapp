@@ -1,17 +1,17 @@
 import { FC } from 'react';
-import { IconWrapper } from '../IconWrapper';
-import { IconProps } from '../Icons.types';
+import { IllustrationWrapper } from '../IllustrationWrapper';
+import { IllustrationProps } from '../Illustrations.types';
 
-const Multiplier: FC<IconProps> = (allProps) => {
+const Multiplier: FC<IllustrationProps> = (allProps) => {
   const { svgProps: props, ...restProps } = allProps;
   return (
-    <IconWrapper
+    <IllustrationWrapper
       componentName="Multiplier"
-      icon={
+      illustration={
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="inherit"
-          height="inherit"
+          width={restProps.width ?? '32'}
+          height={restProps.height ?? '28'}
           viewBox="0 0 32 28"
           fill="none"
           {...props}
