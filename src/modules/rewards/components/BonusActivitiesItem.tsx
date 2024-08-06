@@ -9,6 +9,7 @@ import { useAccount } from 'hooks';
 import { Box, Button, Lock, RewardsBell, Skeleton, Text } from 'blocks';
 import { ActivityButton } from './ActivityButton';
 import { RewardsActivityIcon } from './RewardsActivityIcon';
+import { RewardsActivityTitle } from './RewardsActivityTitle';
 
 export type BonusActivitiesItemProps = {
   userId: string;
@@ -34,12 +35,6 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({
   const { isWalletConnected } = useAccount();
 
   const isLockedOrNotConnected = isLocked || !isWalletConnected;
-
-  /* TODO: ask BE to update Title according to design only */
-  const updatedTitle = activity?.activityTitle?.replace(
-    /Reach\s+([\d,]+)\s+Subscribers\s+for\s+your\s+channel/i,
-    '$1 Subscribers'
-  );
 
   return (
     <Skeleton
@@ -87,7 +82,7 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({
               variant="h6-bold"
               textAlign="center"
             >
-              {updatedTitle}
+              {activity?.activityTitle}
             </Text>
           </Box>
           <Box display={{ ml: 'none', initial: 'block' }}>
@@ -96,17 +91,18 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({
               variant="bl-semibold"
               textAlign="center"
             >
-              {updatedTitle}
+              {activity?.activityTitle}
             </Text>
           </Box>
 
-          <Text
-            variant="bs-regular"
-            color="text-tertiary"
-            textAlign="center"
-          >
-            {activity.activityDesc}
-          </Text>
+          <Box textAlign="center">
+            <RewardsActivityTitle
+              activityTitle={activity.activityDesc}
+              isLoading={isLoading}
+              color="text-tertiary"
+              variant="bs-regular"
+            />
+          </Box>
         </Box>
 
         <Box
