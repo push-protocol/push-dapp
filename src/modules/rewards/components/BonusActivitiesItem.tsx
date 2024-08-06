@@ -98,7 +98,7 @@ const BonusActivitiesItem: FC<BonusActivitiesItemProps> = ({
           <Box textAlign="center">
             <RewardsActivityTitle
               activityTitle={activity.activityDesc}
-              isLoading={isLoading}
+              isLoading={false}
               color="text-tertiary"
               variant="bs-regular"
             />
