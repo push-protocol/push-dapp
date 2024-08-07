@@ -126,7 +126,7 @@ const Container = styled.button`
   flex-direction: row;
   align-items: center;
   display: flex;
-  @media (max-width: 992px) {
+  @media (max-width: 1024px) {
     width: 100%;
     margin-right: 20px;
   }
@@ -160,7 +160,7 @@ const CurrentChain = styled(SpanV2)`
     pointer: hand;
   }
 
-  @media (max-width: 992px) {
+  @media (max-width: 1024px) {
     width: 100%;
     justify-content: space-between;
     border: none;
@@ -186,7 +186,7 @@ const ChainName = styled(H3)`
   letter-spacing: normal;
   cursor: pointer;
 
-  @media (max-width: 992px) {
+  @media (max-width: 1024px) {
     display: flex;
   }
 `;
@@ -223,7 +223,7 @@ const DropdownItem = styled(Item)`
   right: 0rem;
   z-index: 10;
 
-  @media (max-width: 992px) {
+  @media (max-width: 1024px) {
     right: 0.9rem;
     top: 3.5rem;
   }

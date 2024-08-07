@@ -7,10 +7,19 @@ import { textSemantics } from './semantics.text';
 
 export const toastSemantics = {
   'background-default': { light: surfaceSemantics['primary'].light, dark: surfaceSemantics['primary'].dark },
-  'background-success': { light: colorPrimitives['white-100'], dark: surfaceSemantics['success-bold'].dark },
-  'background-warning': { light: surfaceSemantics['danger-bold'].light, dark: surfaceSemantics['danger-bold'].dark },
-  'background-error': { light: surfaceSemantics['warning-bold'].light, dark: surfaceSemantics['warning-bold'].dark },
-  'background-info': { light: surfaceSemantics['info-bold'].light, dark: surfaceSemantics['info-bold'].dark },
+  'background-success': { light: colorPrimitives['white-100'], dark: surfaceSemantics['state-success-bold'].dark },
+  'background-warning': {
+    light: surfaceSemantics['state-danger-bold'].light,
+    dark: surfaceSemantics['state-danger-bold'].dark,
+  },
+  'background-error': {
+    light: surfaceSemantics['state-warning-bold'].light,
+    dark: surfaceSemantics['state-warning-bold'].dark,
+  },
+  'background-info': {
+    light: surfaceSemantics['state-info-bold'].light,
+    dark: surfaceSemantics['state-info-bold'].dark,
+  },
 
   'stroke-bg': { light: strokeSemantics['secondary'].light, dark: strokeSemantics['secondary'].dark },
 

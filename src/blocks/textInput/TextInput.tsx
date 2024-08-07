@@ -1,204 +1,223 @@
-import { ReactNode, forwardRef } from 'react';
-
-import styled, { FlattenSimpleInterpolation } from 'styled-components';
-
-import { ModeProp } from '../Blocks.types';
-
-import { getTextInputState, getTextInputStateStyles } from './TextInput.utils';
-import { useBlocksTheme } from 'blocks/Blocks.hooks';
-import { Asterisk, CrossFilled } from 'blocks/icons';
-import { Text } from 'blocks/text';
+import { Asterisk, CrossFilled } from '../icons';
+import { TextVariants, textVariants } from '../text';
+import React, { ReactNode, forwardRef } from 'react';
+import styled, { FlattenSimpleInterpolation, css } from 'styled-components';
 
 export type TextInputProps = {
-  /* Additional prop from styled components to apply custom css to input field */
   css?: FlattenSimpleInterpolation;
-  /* Render an icon before input field contents */
-  icon?: ReactNode;
-  /* Handles the change in input value */
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  /* Input value */
-  value?: string;
-  /* Input type value */
-  type?: 'text' | 'password';
-  /* Handles the clearing the entire input value */
-  onClear?: () => void;
-  /* Label for the input field */
-  label?: string;
-  /* TotalLength of input value */
-  totalCount?: number;
-  /* Placeholder for input field */
-  placeholder?: string;
-  /* Sets the input field to be compulsory */
-  required?: boolean;
-  /* Sets the input field to error state */
-  error?: boolean;
-  /* Sets the input field to success state */
-  success?: boolean;
-  /* Sets button as disabled */
-  disabled?: boolean;
-  /* Description shown below the input field */
   description?: string;
-  /* Error message shown below the input field */
+  disabled?: boolean;
+  icon?: ReactNode;
+  error?: boolean;
+  type?: 'text' | 'password';
   errorMessage?: string;
+  label?: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onClear?: () => void;
+  placeholder?: string;
+  required?: boolean;
+  success?: boolean;
+  totalCount?: number;
+  value: string;
 };
 
-const StyledTextInput = styled.div<TextInputProps & ModeProp>`
-  /* Common Input field CSS */
+const Container = styled.div<{ css?: FlattenSimpleInterpolation }>`
+  align-items: flex-start;
   display: flex;
   flex-direction: column;
-  width: inherit;
-  gap: var(--s2);
-  .label-count {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .label {
-    display: flex;
-    gap: var(--s1);
-  }
-  .input-container {
-    cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
-    display: flex;
-    align-items: center;
-    font-family: var(--font-family);
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 20px;
-    white-space: nowrap;
-    padding: var(--s0) var(--s3);
-    border-radius: var(--r3);
-
-    /* Common icon css added through CSS class */
-    [role='img'] {
-      width: 18px;
-      height: 18px;
-    }
-
-    & input {
-      flex: 1;
-      border: none;
-      background-color: transparent;
-      padding: var(--s3) var(--s0);
-      margin-left: var(--s1);
-      &:focus {
-        outline: none;
-      }
-      &:hover {
-        outline: none;
-      }
-      :disabled {
-        background-color: transparent;
-      }
-    }
-  }
-  /* TextInput type CSS styles */
-  ${({ mode, error, disabled, success }) =>
-    getTextInputStateStyles({
-      mode,
-      state: getTextInputState({ error: !!error, disabled: !!disabled, success: !!success }),
-    })}
+  flex: 1 0 0;
+  gap: var(--spacing-xxs, 8px);
 
   /* Custom CSS applied via styled component css prop */
-  ${(props) => props.css || ''}
+  ${(props) => props.css || ''};
 `;
 
-const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
+const StyledTextInput = styled.div<{
+  error?: boolean;
+  success?: boolean;
+  disabled?: boolean;
+}>`
+  ${({ success, error, disabled }) => {
+    const defaultState = error ? 'danger' : success ? 'success' : disabled ? 'disabled' : 'default';
+    const focusState = error ? 'danger' : success ? 'success' : 'focus';
+    return css`
+      align-self: stretch;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-radius: var(--radius-xs, 12px);
+      border: 1.5px solid var(--components-inputs-stroke-${defaultState});
+      background: var(--components-inputs-background-${defaultState});
+
+      display: flex;
+
+      font-family: var(--font-family);
+      font-size: ${textVariants['bs-regular'].fontSize};
+      font-style: ${textVariants['bs-regular'].fontStyle};
+      font-weight: ${textVariants['bs-regular'].fontWeight};
+      line-height: ${textVariants['bs-regular'].lineHeight};
+
+      gap: var(--spacing-xxs, 8px);
+
+      padding: var(--spacing-xs, 12px);
+      [role='img'] {
+        width: 24px;
+        height: 24px;
+
+        color: var(--components-inputs-icon-${defaultState});
+      }
+      & input {
+        color: var(--components-inputs-text-${defaultState});
+
+        width: 100%;
+        ::placeholder {
+          color: var(--components-inputs-text-placeholder);
+        }
+        border: none;
+        background: transparent;
+        &:focus,
+        :disabled {
+          outline: none;
+        }
+      }
+
+      &:hover {
+        border: 1.5px solid var(--components-inputs-stroke-hover);
+      }
+
+      &:focus-within {
+        border: 1.5px solid var(--components-inputs-stroke-${focusState});
+        outline: none;
+      }
+
+      &:disabled {
+        border: 1.5px solid var(--components-inputs-stroke-default);
+        background: var(--components-inputs-background-disabled);
+        cursor: not-allowed;
+        color: var(--components-inputs-text-disabled);
+      }
+    `;
+  }}
+`;
+
+const LabelContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+
+const InputText = styled.span<{ color: string; variant: TextVariants }>`
+  color: var(--${({ color }) => color});
+  font-family: var(--font-family);
+  ${({ variant }) =>
+    `
+  font-size: ${textVariants[variant].fontSize};
+  font-style: ${textVariants[variant].fontStyle};
+  font-weight: ${textVariants[variant].fontWeight};
+  line-height: ${textVariants[variant].lineHeight};
+  `}
+`;
+
+const LabelTextContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-xxxs, 4px);
+`;
+
+const InputContainer = styled.div`
+  display: flex;
+  gap: var(--spacing-xxs);
+  width: 100%;
+`;
+
+export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   (
     {
+      css,
+      description,
       disabled,
       error,
-      success,
-      required,
-      label,
-      totalCount,
-      placeholder,
-      icon,
-      type = 'text',
-      onChange,
-      value,
-      onClear,
-      description,
       errorMessage,
-      ...props
+      label,
+      onChange,
+      onClear,
+      placeholder,
+      required,
+      type = 'text',
+      icon,
+      success,
+      totalCount,
+      value,
     },
     ref
   ) => {
-    const { mode } = useBlocksTheme();
     return (
-      <StyledTextInput
-        disabled={disabled}
-        error={error}
-        success={success}
-        required={required}
-        role="input"
-        mode={mode}
-        ref={ref}
-        {...props}
-      >
-        {(label || totalCount) && (
-          <div className="label-count">
-            {label && (
-              <div className="label">
-                <Text
-                  variant="h6-semibold"
-                  color={{ light: disabled ? 'gray-400' : 'gray-1000', dark: disabled ? 'gray-700' : 'gray-100' }}
-                >
-                  {label}
-                </Text>
-                {!!required && (
-                  <Asterisk
-                    color={{ light: disabled ? 'gray-400' : 'gray-500', dark: disabled ? 'gray-700' : 'gray-500' }}
-                    size={4.6}
-                  />
-                )}
-              </div>
-            )}
-
+      <Container css={css}>
+        {label && (
+          <LabelContainer>
+            <InputText
+              color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-default'}
+              variant="h6-bold"
+            >
+              <LabelTextContainer>
+                {label}
+                {required && <Asterisk size={4.6} />}
+              </LabelTextContainer>
+            </InputText>
             {totalCount && (
-              <Text
+              <InputText
+                color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-secondary'}
                 variant="c-regular"
-                color={{ light: 'gray-600', dark: 'gray-500' }}
               >
-                {`${value?.length}/${totalCount}`}
-              </Text>
+                {`${value?.length || 0} / ${totalCount}`}
+              </InputText>
             )}
-          </div>
+          </LabelContainer>
         )}
-        <div className="input-container">
-          {icon}
-          <input
-            type={type}
-            disabled={!!disabled}
-            {...(disabled ? { 'aria-disabled': true } : {})}
-            placeholder={placeholder}
-            onChange={onChange}
-            value={value}
-          />
+        <StyledTextInput
+          disabled={disabled}
+          error={error}
+          onChange={onChange}
+          ref={ref}
+          success={success}
+        >
+          <InputContainer>
+            {icon}
+            <input
+              type={type}
+              disabled={!!disabled}
+              {...(disabled ? { 'aria-disabled': true } : {})}
+              placeholder={placeholder}
+              required={required}
+              onChange={onChange}
+              value={value}
+            />
+          </InputContainer>
           {onClear && <CrossFilled onClick={() => onClear?.()} />}
-        </div>
+        </StyledTextInput>
         {description && (
-          <Text
+          <InputText
+            color={
+              success || error
+                ? 'components-inputs-text-default'
+                : disabled
+                ? 'components-inputs-text-disabled'
+                : 'components-inputs-text-placeholder'
+            }
             variant="c-regular"
-            color={{ light: 'gray-600', dark: 'gray-600' }}
           >
             {description}
-          </Text>
+          </InputText>
         )}
         {errorMessage && (
-          <Text
+          <InputText
+            color="components-inputs-text-danger"
             variant="c-regular"
-            color={{ light: 'red-700', dark: 'red-700' }}
           >
             {errorMessage}
-          </Text>
+          </InputText>
         )}
-      </StyledTextInput>
+      </Container>
     );
   }
 );
-
-TextInput.displayName = 'TextInput';
-
-export { TextInput };

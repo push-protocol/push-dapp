@@ -1,5 +1,6 @@
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import { Button, Item } from 'components/SharedStyling';
+import { Item } from 'components/SharedStyling';
+import { Button } from 'blocks';
 import ImageClipper from 'primaries/ImageClipper';
 import { useRef } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
@@ -116,24 +117,28 @@ const uploadLogoModal = ({ onClose, InnerComponentProps }) => {
         <ModalFooter>
           {croppedImage ? (
             <>
-              <UploadButton
+              <Button
+                variant="primary"
+                size="medium"
                 onClick={() => {
                   setChannelLogo(croppedImage);
                   onClose();
                 }}
               >
                 Upload Image
-              </UploadButton>
+              </Button>
             </>
           ) : (
             <>
-              <CropButton
+              <Button
+                variant="primary"
+                size="medium"
                 onClick={() => {
                   childRef.current.showCroppedImage();
                 }}
               >
                 Crop Image
-              </CropButton>
+              </Button>
             </>
           )}
         </ModalFooter>
@@ -181,38 +186,6 @@ const DragText = styled(Item)`
 `;
 
 const ModalFooter = styled(ItemVV2)``;
-
-const CropButton = styled(Button)`
-  font-family: 'FK Grotesk Neu';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 22px;
-  display: flex;
-  border-radius: 15px;
-  align-items: center;
-  text-align: center;
-  background: #cf1c84;
-  color: #fff;
-  padding: 16px 27px;
-  width: 12rem;
-`;
-
-const UploadButton = styled(Button)`
-  font-family: 'FK Grotesk Neu';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 22px;
-  display: flex;
-  border-radius: 15px;
-  align-items: center;
-  text-align: center;
-  background: #cf1c84;
-  color: #fff;
-  padding: 16px 18px;
-  width: 12rem;
-`;
 
 const Space = styled.div`
   width: 100%;

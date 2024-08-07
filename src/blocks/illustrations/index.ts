@@ -9,6 +9,8 @@ export { default as CommunicationDark } from './components/CommunicationDark';
 
 export { default as Discord } from './components/Discord';
 
+export { default as EarnOnPush } from './components/EarnOnPush';
+
 export { default as Ethereum } from './components/Ethereum';
 
 export { default as PushAlpha } from './components/PushAlpha';

@@ -19,3 +19,5 @@ export const getRewardsBaseURL = () => {
       return `https://us-east1-push-dev-apps.cloudfunctions.net/helloWorld`;
   }
 };
+
+export const analyticsBaseURL = 'https://backend.epns.io/apis/v1';

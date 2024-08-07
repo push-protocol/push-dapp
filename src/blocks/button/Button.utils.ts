@@ -1,162 +1,198 @@
 import { FlattenSimpleInterpolation, css } from 'styled-components';
 import { ButtonSize, ButtonVariant } from './Button.types';
-import { ThemeMode } from 'blocks/Blocks.types';
-import { getBlocksColor } from 'blocks/Blocks.utils';
 
-export const getButtonVariantStyles = (mode: ThemeMode, variant: ButtonVariant) => {
+export const getButtonVariantStyles = (variant: ButtonVariant, loading: boolean) => {
   switch (variant) {
     case 'primary': {
       return `
-        background-color: var(--pink-500);
-        color: var(--white);
-
-        &:hover {
-          background-color: var(--pink-400);
-        }
-
-        &:active {
-          background-color: ${getBlocksColor(mode, { light: 'pink-800', dark: 'pink-600' })};
-        }
+        background-color:  var(--${
+          loading ? 'components-button-primary-background-loading' : 'components-button-primary-background-default'
+        });
+        color: var(--components-button-primary-text-default);
+         ${
+           !loading &&
+           `
+            &:hover {
+              background-color: var(--components-button-primary-background-hover)
+            }
+            &:active {
+                background-color: var(--components-button-primary-background-pressed);
+              }
+            `
+         };
 
         &:focus-visible {
-          background-color: ${getBlocksColor(mode, { light: 'pink-500', dark: 'pink-400' })};
-          border: 1px solid ${getBlocksColor(mode, { light: 'pink-700', dark: 'pink-200' })};
+          background-color:  var(--components-button-primary-background-focus);
+          border: var(--border-sm) solid var(--components-button-primary-stroke-focus);
           outline: none;
         }
+        ${
+          !loading &&
+          `&:disabled {
+            background-color: var(--components-button-primary-background-disabled);
+            color: var(--components-button-primary-text-disabled);
+          }`
+        };
 
-        &:disabled {
-          background-color: ${getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
-          color: ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-700' })};
-        }
       `;
     }
     case 'secondary': {
       return `
-        background-color: ${getBlocksColor(mode, { light: 'gray-100', dark: 'gray-800' })};
-        color: ${getBlocksColor(mode, { light: 'gray-1000', dark: 'white' })};
+        background-color: var(--components-button-secondary-background-default);
+        color: var(--components-button-secondary-text-default);
+         ${
+           !loading &&
+           `
+            &:hover {
+              background-color: var(--components-button-secondary-background-hover);
+            }
 
-        &:hover {
-          background-color: ${getBlocksColor(mode, { light: 'gray-200', dark: 'gray-700' })};
-        }
-
-        &:active {
-          background-color: ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-1000' })};
-        }
+            &:active {
+              background-color: var(--components-button-secondary-background-pressed);
+            }`
+         };
 
         &:focus-visible {
-          background-color: ${getBlocksColor(mode, { light: 'gray-100', dark: 'gray-800' })};
-          border: 1px solid ${getBlocksColor(mode, { light: 'pink-300', dark: 'pink-400' })};
+          background-color: var(--components-button-secondary-background-focus);
+          border: var(--border-sm) solid var(--components-button-secondary-stroke-focus);
           outline: none;
         }
-
-        &:disabled {
-          background-color: ${getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
-          color: ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-700' })};
-        }
+        ${
+          !loading &&
+          `&:disabled {
+            background-color: var(--components-button-secondary-background-disabled);
+            color: var(--components-button-secondary-text-disabled);
+          };`
+        };
+        
       `;
     }
     case 'tertiary': {
       return `
-        background-color: ${getBlocksColor(mode, { light: 'gray-1000', dark: 'gray-700' })};
-        color: var(--white);
-
-        &:hover {
-          color: ${getBlocksColor(mode, { light: 'white', dark: 'gray-200' })};
-          background-color: ${getBlocksColor(mode, { light: 'gray-900', dark: 'gray-300' })};
-        }
-
-        &:active {
-          background-color: ${getBlocksColor(mode, { light: 'gray-100', dark: 'gray-1000' })};
-          color: ${getBlocksColor(mode, { light: 'gray-1000', dark: 'white' })};
-        }
+        background-color: var(--components-button-tertiary-background-default);
+        color: var(--components-button-tertiary-text-default);
+        ${
+          !loading &&
+          `
+            &:hover {
+              color: var(--components-button-tertiary-text-default);
+              background-color: var(--components-button-tertiary-background-hover);
+            }
+       
+            &:active {
+              background-color: var(--components-button-tertiary-background-pressed);
+              color: var(--components-button-secondary-text-default);
+            }`
+        };
 
         &:focus-visible {
-          border: 1px solid ${getBlocksColor(mode, { light: 'pink-300', dark: 'pink-400' })};
-          background-color: ${getBlocksColor(mode, { light: 'gray-1000', dark: 'gray-700' })};
-          color: ${getBlocksColor(mode, { light: 'white', dark: 'gray-200' })};
+          border: var(--border-sm) solid var(--components-button-tertiary-stroke-focus);
+          background-color: var(--components-button-tertiary-background-focus);
+          color: var(--components-button-tertiary-text-default);
           outline: none;
         }
-
-        &:disabled {
-          background-color: ${getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
-          color: ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-700' })};
-        }
+        ${
+          !loading &&
+          `&:disabled {
+            background-color: var(--components-button-tertiary-background-disabled);
+            color: var(--components-button-tertiary-text-disabled);
+          }`
+        };
       `;
     }
     case 'danger': {
       return `
-        background-color: ${getBlocksColor(mode, { light: 'red-600', dark: 'red-500' })};
-        color: var(--white);
+        background-color: var(--components-button-danger-background-default);
+        color: var(--components-button-danger-text-default);
+         ${
+           !loading &&
+           `
+            &:hover {
+              background-color: var(--components-button-danger-background-hover);
+            }
 
-        &:hover {
-          background-color: ${getBlocksColor(mode, { light: 'red-500', dark: 'red-400' })};
-        }
-
-        &:active {
-          background-color: ${getBlocksColor(mode, { light: 'red-800', dark: 'red-700' })};
-        }
+            &:active {
+              background-color: var(--components-button-danger-background-pressed);
+            }`
+         };
 
         &:focus-visible {
-          background-color: ${getBlocksColor(mode, { light: 'red-500', dark: 'red-400' })};
-          border: 1px solid ${getBlocksColor(mode, { light: 'red-800', dark: 'red-600' })};
+          background-color: var(--components-button-danger-background-focus);
+          border: var(--border-sm) solid var(--components-button-danger-stroke-focus);
           outline: none;
         }
-        
-        &:disabled {
-          background-color: ${getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
-          color: ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-700' })};
-        }
+        ${
+          !loading &&
+          `&:disabled {
+             background-color: var(--components-button-danger-background-disabled);
+             color: var(--components-button-danger-text-disabled);
+          }`
+        };
       `;
     }
     case 'dangerSecondary': {
       return `
-        background-color: ${getBlocksColor(mode, { light: 'red-200', dark: 'red-800' })};
-        color: ${getBlocksColor(mode, { light: 'red-700', dark: 'white' })};
-
-        &:hover {
-          background-color: ${getBlocksColor(mode, { light: 'red-100', dark: 'red-700' })};
-        }
-
-        &:active {
-          background-color: ${getBlocksColor(mode, { light: 'red-500', dark: 'red-1000' })};
-        }
+        background-color: var(--components-button-danger-secondary-background-default);
+        color: var(--components-button-danger-secondary-text-default);
+         ${
+           !loading &&
+           `
+            &:hover {
+              background-color: var(--components-button-danger-secondary-background-hover);
+            }
+       
+          &:active {
+            background-color: var(--components-button-danger-secondary-background-pressed);
+          }`
+         };
 
         &:focus-visible {
-          background-color: ${getBlocksColor(mode, { light: 'red-100', dark: 'red-700' })};
-          border: 1px solid ${getBlocksColor(mode, { light: 'red-800', dark: 'red-400' })};
+          background-color: var(--components-button-danger-secondary-background-focus);
+          border: var(--border-sm) solid var(--components-button-danger-secondary-stroke-focus);
           outline: none;
         }
-        
-        &:disabled {
-          background-color: ${getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
-          color: ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-700' })};
-        }
+        ${
+          !loading &&
+          `&:disabled {
+              background-color: var(--components-button-danger-secondary-background-disabled);
+              color:var(--components-button-danger-secondary-text-disabled);
+          }`
+        };
       `;
     }
     case 'outline': {
       return `
-        background-color: transparent;
-        border: 1px solid ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-700' })};
-        color: ${getBlocksColor(mode, { light: 'gray-1000', dark: 'gray-100' })};
+        background-color: var(--components-button-outline-background-default);
+        border: var(--border-sm) solid var(--components-button-outline-stroke-default);
+        color: var(--components-button-outline-text-default);
         outline: none;
-
-        &:hover {
-          border: 1px solid ${getBlocksColor(mode, { light: 'pink-300', dark: 'gray-800' })};
-        }
-
-        &:active {
-          border: 1px solid ${getBlocksColor(mode, { light: 'gray-600', dark: 'gray-300' })};
-        }
+        ${
+          !loading &&
+          `
+          &:hover {
+            border: var(--border-sm) solid var(--components-button-outline-stroke-hover);
+            background-color: var(--components-button-outline-background-hover);
+          }
+        
+          &:active {
+            border:  var(--border-sm) solid var(--components-button-outline-stroke-pressed);
+            background-color: var(--components-button-outline-background-pressed);
+          }`
+        };
 
         &:focus-visible {
-          border: 1px solid ${getBlocksColor(mode, { light: 'pink-300', dark: 'pink-400' })};
+          border: var(--border-sm) solid var(--components-button-outline-stroke-focus);
+          background-color: var(--components-button-outline-background-focus);
         }
-        
-        &:disabled {
-          border: none;
-          background-color: ${getBlocksColor(mode, { light: 'gray-200', dark: 'gray-800' })};
-          color: ${getBlocksColor(mode, { light: 'gray-300', dark: 'gray-700' })};
-        }
+
+        ${
+          !loading &&
+          `&:disabled {
+             border: none;
+             background-color: var(--components-button-tertiary-background-disabled);
+             color: var(--components-button-outline-text-disabled);
+          }`
+        };
       `;
     }
   }
@@ -175,17 +211,17 @@ export const getButtonSizeStyles = ({
 
       ${iconOnly
         ? `
-            border-radius: 9.6px;
-            gap: var(--s0);
+            border-radius: var(--radius-xxs);
+            gap: var(--spacing-none);
             height: 32px;
             width: 32px;
-            padding: 9.6px 0px;
+            padding: var(--spacing-none);
         `
         : `
-            border-radius: var(--r2);
-            gap: var(--s1);
+            border-radius: var(--radius-xxs);
+            gap: var(--spacing-xxxs);
             height: 32px;
-            padding: var(--s3) var(--s4);
+            padding: var(--spacing-xs) var(--spacing-sm);
             min-width: 100px;
       `}
 
@@ -200,6 +236,10 @@ export const getButtonSizeStyles = ({
       [role='img'] {
         width: 16px;
         height: 16px;
+      }
+      [role='spinner'] {
+        width: 10.66px;
+        height: 10.66px;
       }
 
       .icon-text > span {
@@ -219,17 +259,17 @@ export const getButtonSizeStyles = ({
 
       ${iconOnly
         ? `
-            border-radius: var(--r3);
-            gap: var(--s0);
+            border-radius: var(--radius-xs);
+            gap: var(--spacing-none);
             height: 40px;
             width: 40px;
-            padding: var(--s3);
+            padding: var(--spacing-none);
         `
         : `
-            border-radius: var(--r3);
-            gap: var(--s1);
+            border-radius: var(--radius-xs);
+            gap: var(--spacing-xxxs);
             height: 40px;
-            padding: var(--s3) var(--s6);
+            padding: var(--spacing-xs) var(--spacing-md);
             min-width: 100px;
       `}
 
@@ -244,6 +284,10 @@ export const getButtonSizeStyles = ({
       [role='img'] {
         width: 24px;
         height: 24px;
+      }
+      [role='spinner'] {
+        width: 16px;
+        height: 16px;
       }
 
       .icon-text > span {
@@ -264,17 +308,17 @@ export const getButtonSizeStyles = ({
 
       ${iconOnly
         ? `
-            border-radius: 14.4px;
-            gap: var(--s0);
+            border-radius: var(--spacing-sm);
+            gap: var(--spacing-none);
             height: 48px;
             width: 48px;
-            padding: 14.4px;
+            padding: var(--spacing-none);
         `
         : `
-            border-radius: var(--r3);
-            gap: var(--s1);
+            border-radius: var(--radius-xs);
+            gap: var(--spacing-xxxs);
             height: 48px;
-            padding: var(--s4) var(--s6);
+            padding: var(--spacing-sm) var(--spacing-md);
             min-width: 100px;
       `}
 
@@ -289,6 +333,10 @@ export const getButtonSizeStyles = ({
       [role='img'] {
         width: 24px;
         height: 24px;
+      }
+      [role='spinner'] {
+        width: 16px;
+        height: 16px;
       }
 
       .icon-text > span {
@@ -308,17 +356,17 @@ export const getButtonSizeStyles = ({
 
     ${iconOnly
       ? `
-          border-radius: 15.6px;
-          gap: var(--s0);
+          border-radius: var(--spacing-sm);
+          gap: var(--spacing-none);
           height: 52px;
           width: 52px;
-          padding: 15.6px;
+          padding: var(--spacing-none);
       `
       : `
-          border-radius: var(--r3);
-          gap: var(--s1);
+          border-radius: var(--radius-xs);
+          gap: var(--spacing-xxxs);
           height: 52px;
-          padding: var(--s4) var(--s8);
+          padding: var(--spacing-sm) var(--spacing-lg);
           min-width: 100px;
     `}
 
@@ -334,7 +382,10 @@ export const getButtonSizeStyles = ({
       width: 32px;
       height: 32px;
     }
-
+    [role='spinner'] {
+      width: 21.333px;
+      height: 21.333px;
+    }
     .icon-text > span {
       height: 24px;
       width: 24px;

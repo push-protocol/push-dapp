@@ -62,6 +62,9 @@ export const MaskedAliasChannels: {
   123: {},
   111557560: {},
   7560: {},
+  // comment base
+  // 8453: {},
+  // 84532: {},
 };
 
 export const findObject = (data: any, parentArray: any[], property: string): boolean => {
@@ -126,6 +129,9 @@ export const networkName = {
   123: 'Fuse Testnet',
   111557560: 'Cyber Testnet',
   7560: 'Cyber Mainnet',
+  // comment base
+  // 8453: 'Base Mainnet',
+  // 84532: 'Base Sepolia',
 };
 
 export const chainNameBackendStandard = {
@@ -151,6 +157,9 @@ export const aliasChainIdToChainName = {
   123: 'FUSE',
   111557560: 'CYBERCONNECT',
   7560: 'CYBERCONNECT',
+  // comment base
+  // 8453: 'BASE',
+  // 84532: 'BASE',
 };
 
 export const aliasChainIdsMapping = {
@@ -259,6 +268,21 @@ export const NETWORK_DETAILS = {
     rpcUrls: ['https://cyber.alt.technology/'],
     blockExplorerUrls: [' https://.cyberscan.co/'],
   },
+  // comment base
+  // BASE_TESTNET: {
+  //   chainId: utils.hexValue(84532),
+  //   chainName: 'Base Testnet',
+  //   nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+  //   rpcUrls: ['https://sepolia.base.org/'],
+  //   blockExplorerUrls: ['https://sepolia-explorer.base.org/'],
+  // },
+  // BASE_MAINNET: {
+  //   chainId: utils.hexValue(8453),
+  //   chainName: 'Base Mainnet',
+  //   nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+  //   rpcUrls: ['https://mainnet.base.org/'],
+  //   blockExplorerUrls: ['https://basescan.org/'],
+  // },
 };
 
 export const CORE_CHAIN_ID: number = appConfig.coreContractChain;
@@ -283,6 +307,9 @@ export const LOGO_FROM_CHAIN_ID: {
   123: 'Fuse.svg',
   111557560: 'Cyber.svg',
   7560: 'Cyber.svg',
+  // comment base
+  // 8453: 'Base.svg',
+  // 84532: 'Base.svg',
 };
 
 export type getAliasResponseType = {
@@ -290,27 +317,39 @@ export type getAliasResponseType = {
   chainId: string | null;
 };
 
+// check code and verify with sc team or be before removing
+// export const getAliasFromChannelDetails = (channelDetails: Object | null | string): getAliasResponseType => {
+//   if (!channelDetails || channelDetails === 'unfetched') return null;
+
+//   if (channelDetails['aliasDetails']) {
+//     const aliasDetails = channelDetails['aliasDetails'];
+//     const aliasDetail = { chainId: null, address: null };
+//     appConfig.allowedNetworks.forEach((chainID) => {
+//       const caipChainId = convertChainIdToChainCaip(chainID);
+//       if (aliasDetails[caipChainId!]) {
+//         aliasDetail.address = aliasDetails[caipChainId!];
+//         aliasDetail.chainId = chainID;
+//       }
+//     });
+//     if (aliasDetail.address) return aliasDetail;
+//   } else if (channelDetails['address'] != null && channelDetails['address'] != '') {
+//     if (appConfig.allowedNetworks.includes(+channelDetails['chain_id'])) {
+//       return { address: channelDetails['address'], chainId: channelDetails['chain_id'] };
+//     }
+//   }
+
+//   return { address: null, chainId: null };
+// };
+
 export const getAliasFromChannelDetails = (channelDetails: Object | null | string): getAliasResponseType => {
   if (!channelDetails || channelDetails === 'unfetched') return null;
 
-  if (channelDetails['aliasDetails']) {
-    const aliasDetails = channelDetails['aliasDetails'];
-    const aliasDetail = { chainId: null, address: null };
-    appConfig.allowedNetworks.forEach((chainID) => {
-      const caipChainId = convertChainIdToChainCaip(chainID);
-      if (aliasDetails[caipChainId!]) {
-        aliasDetail.address = aliasDetails[caipChainId!];
-        aliasDetail.chainId = chainID;
-      }
-    });
-    if (aliasDetail.address) return aliasDetail;
-  } else if (channelDetails['address'] != null && channelDetails['address'] != '') {
-    if (appConfig.allowedNetworks.includes(+channelDetails['chain_id'])) {
-      return { address: channelDetails['address'], chainId: channelDetails['chain_id'] };
+  if (channelDetails['alias_address'] != null && channelDetails['alias_address'] != '') {
+    if (appConfig.allowedNetworks.includes(+channelDetails['alias_blockchain_id'])) {
+      return { address: channelDetails['alias_address'], chainId: channelDetails['alias_blockchain_id'] };
     }
   }
-
-  return { address: null, chainId: null };
+  return null;
 };
 
 export const CHANNEL_TYPE = {

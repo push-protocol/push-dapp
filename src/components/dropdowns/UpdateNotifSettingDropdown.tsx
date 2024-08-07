@@ -23,7 +23,7 @@ import { notifUserSettingFormatString, userSettingsFromDefaultChannelSetting } f
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { updateUserSetting } from 'redux/slices/channelSlice';
-import { Text } from 'blocks';
+import { Button, Text } from 'blocks';
 
 interface UpdateNotifSettingDropdownProps {
   children: ReactNode;
@@ -152,13 +152,14 @@ const UpdateNotifSettingDropdownContainer: FC<UpdateNotifSettingDropdownContaine
       ))}
       <DropdownSubmitItem>
         <Text
-          color={{ light: 'gray-1000', dark: 'gray-400' }}
           variant="bs-semibold"
           textAlign="left"
         >
           You will receive all important updates from this channel.
         </Text>
-        <DropdownSubmitButton
+        <Button
+          variant="primary"
+          size="extraSmall"
           onClick={() => saveUserSettingHandler({ userSettings: modifiedSettings, setLoading: setTxInProgress })}
         >
           {txInProgress && (
@@ -169,7 +170,7 @@ const UpdateNotifSettingDropdownContainer: FC<UpdateNotifSettingDropdownContaine
             />
           )}
           {!txInProgress && <ActionTitle hideIt={txInProgress}>Save</ActionTitle>}
-        </DropdownSubmitButton>
+        </Button>
       </DropdownSubmitItem>
     </DropdownOuterContainer>
   );
@@ -186,7 +187,7 @@ const UpdateNotifSettingDropdown: FC<UpdateNotifSettingDropdownProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { chainId } = useAccount();
+  const { chainId, wallet } = useAccount();
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
@@ -202,7 +203,7 @@ const UpdateNotifSettingDropdown: FC<UpdateNotifSettingDropdownProps> = ({
     setIsOpen(false);
   };
 
-  const { handleConnectWallet } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
 
   const subscribeToast = useToast();
   const saveUserSettingHandler = async ({
@@ -219,7 +220,7 @@ const UpdateNotifSettingDropdown: FC<UpdateNotifSettingDropdownProps> = ({
     let userPushInstance = userPushSDKInstance;
 
     if (!userPushInstance.signer) {
-      userPushInstance = await handleConnectWallet();
+      userPushInstance = await handleConnectWalletAndEnableProfile({ wallet });
       if (!userPushInstance) {
         setLoadingFunc(false);
         return;
@@ -339,47 +340,6 @@ const DropdownSubmitItem = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 12px 0px;
-`;
-
-const DropdownSubmitButton = styled.button`
-  border: 0;
-  outline: 0;
-  display: flex;
-  align-items: center;
-  min-width: 90px;
-  justify-content: center;
-  margin: 0px 0px 0px 10px;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 400;
-  position: relative;
-  background: #e20880;
-  border-radius: 8px;
-  padding: 9px 20px;
-  &:hover {
-    opacity: 0.9;
-    cursor: pointer;
-    pointer: hand;
-  }
-  &:active {
-    opacity: 0.75;
-    cursor: pointer;
-    pointer: hand;
-  }
-  ${(props) =>
-    props.disabled &&
-    css`
-      &:hover {
-        opacity: 1;
-        cursor: default;
-        pointer: default;
-      }
-      &:active {
-        opacity: 1;
-        cursor: default;
-        pointer: default;
-      }
-    `}
 `;
 
 const DropdownSliderItem = styled.div`

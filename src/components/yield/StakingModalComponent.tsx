@@ -8,14 +8,14 @@ import { ethers } from 'ethers';
 // External Packages
 import styled, { useTheme } from 'styled-components';
 import { MdCheckCircle, MdError } from 'react-icons/md';
-import { useSelector } from 'react-redux';
 
 // Internal Compoonents
 import Close from 'assets/chat/group-chat/close.svg?react';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { bnToInt, formatTokens } from 'helpers/StakingHelper';
 import { P } from 'components/SharedStyling';
-import { ButtonV2, H2V2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { H2V2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { Button } from 'blocks';
 import { AppContext } from 'contexts/AppContext';
 
 // Internal Configs
@@ -25,7 +25,7 @@ import { useAccount, useDeviceWidthCheck } from 'hooks';
 const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) => {
   const { title, getUserData, getPoolStats, setUnstakeErrorMessage, setWithdrawErrorMessage } = InnerComponentProps;
 
-  const { account, provider } = useAccount();
+  const { account, provider, isWalletConnected, connect } = useAccount();
 
   const [maxAmount, setMaxAmount] = useState(0);
   const [approvedToken, setApprovedToken] = useState(0);
@@ -36,10 +36,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
 
   const [txnMessage, setTxnMessage] = useState(null);
 
-  const { userPushSDKInstance } = useSelector((state: any) => {
-    return state.user;
-  });
-  const { handleConnectWallet } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
 
   const [depositAmount, setDepositAmount] = useState(0);
 
@@ -85,8 +82,8 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
   }, []);
 
   const approveDeposit = async () => {
-    if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
+    if (!isWalletConnected) {
+      connect();
       return;
     }
 
@@ -162,8 +159,8 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
   };
 
   const depositAmountTokenFarmSingleTx = async () => {
-    if (!userPushSDKInstance.signer) {
-      handleConnectWallet();
+    if (!isWalletConnected) {
+      connect();
       return;
     }
 
@@ -329,11 +326,14 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
         </ItemHV2>
       </ItemVV2>
 
-      <ItemHV2 margin="20px 0">
-        <FilledButton
+      <ItemHV2
+        margin="20px 0"
+        gap="12px"
+      >
+        <Button
+          variant="primary"
+          size="medium"
           onClick={approveDeposit}
-          background={!depositApproved ? '#D53A94' : theme.stakingEmptyButtonBG}
-          cursor={!depositApproved ? 'pointer' : 'default'}
           disabled={!depositApproved ? false : true}
         >
           {!depositApproved && !txInProgressApprDep && (
@@ -363,23 +363,14 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
               Approved
             </Span>
           )}
-        </FilledButton>
-        <EmptyButton
-          cursor={!depositApproved ? 'default' : 'pointer'}
-          background={!depositApproved ? theme.stakingEmptyButtonBG : '#D53A94'}
+        </Button>
+        <Button
+          variant="outline"
+          size="medium"
           disabled={!depositApproved || txInProgressDep ? true : false}
           onClick={depositAmountTokenFarmSingleTx}
         >
-          {!txInProgressDep && (
-            <Span
-              color={!depositApproved ? theme.emptyButtonText : '#FFFFFF'}
-              weight="400"
-              cursor={!depositApproved ? 'default' : 'pointer'}
-            >
-              Deposit
-            </Span>
-          )}
-
+          {!txInProgressDep && 'Deposit'}
           {txInProgressDep && (
             <LoaderSpinner
               type={LOADER_TYPE.SEAMLESS}
@@ -389,7 +380,7 @@ const StakingModalComponent = ({ onClose, InnerComponentProps, toastObject }) =>
               titleColor="#FFF"
             />
           )}
-        </EmptyButton>
+        </Button>
       </ItemHV2>
     </Container>
   );
@@ -428,47 +419,4 @@ const MaxText = styled.p`
   color: #657795;
   margin: 0px;
   cursor: pointer;
-`;
-
-const FilledButton = styled(ButtonV2)`
-  width: 100%;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 16px;
-  line-height: 141%;
-  letter-spacing: normal;
-  width: 145px;
-  height: 48px;
-  border: none;
-  & > div {
-    display: block;
-  }
-  &:after {
-    background: transparent;
-  }
-
-  &:hover {
-    opacity: 1;
-  }
-`;
-
-const EmptyButton = styled(ButtonV2)`
-  font-size: 16px;
-  line-height: 19px;
-  flex: 1;
-  width: 145px;
-  height: 48px;
-  border-radius: 8px;
-  margin-left: 10px;
-  border: none;
-  & > div {
-    display: block;
-  }
-  &:after {
-    background: transparent;
-  }
-
-  &:hover {
-    opacity: 1;
-  }
 `;

@@ -12,7 +12,8 @@ import ChannelDetails from 'components/ChannelDetails';
 import ChannelLoading from 'components/ChannelLoading';
 import ChannelSettings from 'components/ChannelSettings';
 import CreateChannelModule from '../createChannel/CreateChannelModule';
-import { ButtonV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { Button } from 'blocks';
 import { getAliasFromChannelDetails } from 'helpers/UtilityHelper';
 import { useAccount, useDeviceWidthCheck } from 'hooks';
 import {
@@ -28,7 +29,6 @@ import useToast from 'hooks/useToast';
 
 // Internal Configs
 import { appConfig } from 'config/index.js';
-import { Button } from 'components/SharedStyling';
 import EditChannel from 'modules/editChannel/EditChannel';
 import useModalBlur from 'hooks/useModalBlur';
 import { AppContext } from 'contexts/AppContext';
@@ -43,7 +43,7 @@ let intervalID = null;
 // CREATE CHANNEL OWNER DASHBOARD
 const ChannelOwnerDashboard = () => {
   const theme = useTheme();
-  const { account, chainId } = useAccount();
+  const { account, chainId, wallet } = useAccount();
   const {
     channelDetails,
     delegatees,
@@ -54,7 +54,7 @@ const ChannelOwnerDashboard = () => {
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
-  const { handleConnectWallet } = useContext(AppContext);
+  const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
 
   const isChannelDetails = channelDetails && channelDetails !== 'unfetched';
 
@@ -73,8 +73,9 @@ const ChannelOwnerDashboard = () => {
   useEffect(() => {
     if (!onCoreNetwork || !channelDetails || aliasAddrFromContract || channelDetails === 'unfetched') return;
 
-    const { address: aliasAddress, chainId: aliasChainId } = getAliasFromChannelDetails(channelDetails);
-    if (aliasAddress) {
+    const aliasDetails = getAliasFromChannelDetails(channelDetails);
+    if (aliasDetails) {
+      const { address: aliasAddress, chainId: aliasChainId } = aliasDetails;
       dispatch(setAliasAddressFromContract(aliasAddress));
       dispatch(setAliasChainId(aliasChainId));
       // dispatch(setAliasAddress(aliasAddress));
@@ -174,7 +175,7 @@ const ChannelOwnerDashboard = () => {
 
   const showEditChannel = () => {
     // if (!userPushSDKInstance.signer) {
-    //   handleConnectWallet();
+    //   handleConnectWalletAndEnableProfile({wallet});
     //   return;
     // }
     setEditChannel(true);
@@ -220,23 +221,26 @@ const ChannelOwnerDashboard = () => {
                       top="0"
                       right="0"
                       zIndex="1"
+                      gap="8px"
                     >
                       {!isChannelExpired && onCoreNetwork && (
-                        <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>
+                        <Button
+                          onClick={showEditChannel}
+                          size="small"
+                          variant="outline"
+                        >
+                          Edit Channel
+                        </Button>
                       )}
                       {!isChannelExpired && <ChannelSettings />}
                       {isChannelExpired && onCoreNetwork && (
-                        <DestroyChannelBtn
+                        <Button
                           onClick={destroyChannel}
-                          background="#E93636"
-                          color="#fff"
-                          height="36px"
-                          width="123px"
-                          borderRadius="8px"
-                          fontSize="14px"
+                          size="small"
+                          variant="danger"
                         >
                           Delete Channel
-                        </DestroyChannelBtn>
+                        </Button>
                       )}
                     </ItemHV2>
                   )}
@@ -271,26 +275,3 @@ const ChannelOwnerDashboard = () => {
 };
 
 export default ChannelOwnerDashboard;
-
-const DestroyChannelBtn = styled(ButtonV2)`
-  height: ${(props) => props.height || '100%'};
-  width: ${(props) => props.width || '100%'};
-`;
-
-const SubmitButton = styled(Button)`
-  width: 7rem;
-  background: #cf1c84;
-  color: #fff;
-  z-index: 0;
-  font-family: 'FK Grotesk Neu';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 17px;
-  margin-right: 20px;
-  border-radius: 8px;
-  padding: 11px 10px;
-  @media (min-width: 600px) and (max-width: 700px) {
-    margin-right: 9px;
-  }
-`;

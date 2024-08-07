@@ -5,6 +5,8 @@ export { default as Add } from './components/Add';
 
 export { default as AddEmoji } from './components/AddEmoji';
 
+export { default as ArrowUpRight } from './components/ArrowUpRight';
+
 export { default as Asterisk } from './components/Asterisk';
 
 export { default as Back } from './components/Back';
@@ -38,6 +40,8 @@ export { default as Dash } from './components/Dash';
 export { default as Dashboard } from './components/Dashboard';
 
 export { default as EditProfile } from './components/EditProfile';
+
+export { default as Ellipse } from './components/Ellipse';
 
 export { default as Envelope } from './components/Envelope';
 

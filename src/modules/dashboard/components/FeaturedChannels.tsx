@@ -22,26 +22,19 @@ const FeaturedChannels: FC<FeaturedChannelsProps> = () => {
 
   return (
     <Box
-      borderRadius="r6"
-      padding={{ ml: 's6 s4', initial: 's6' }}
+      borderRadius="radius-md"
+      padding={{ ml: 'spacing-md spacing-sm', initial: 'spacing-md' }}
       display="flex"
       flexDirection="column"
-      backgroundColor={{ light: 'darkWhite', dark: 'gray-900' }}
-      gap={{ ml: 's4', initial: 's2' }}
-      alignItems='center'
+      backgroundColor="surface-primary"
+      gap={{ ml: 'spacing-sm', initial: 'spacing-xxs' }}
+      alignItems="flex-start"
     >
-
       {showMobileAndTabletView ? (
-        <FeaturedChannelsMobileViewList
-          featuredChannelsList={mobileFeaturedChannelsList}
-        />
-
+        <FeaturedChannelsMobileViewList featuredChannelsList={mobileFeaturedChannelsList} />
       ) : (
-        <FeaturedChannelsList
-          featuredChannelsList={featureChannelsForCurrrentEnv}
-        />
+        <FeaturedChannelsList featuredChannelsList={featureChannelsForCurrrentEnv} />
       )}
-
     </Box>
   );
 };

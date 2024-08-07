@@ -19,17 +19,17 @@ export const textSemantics = {
 
   // text states
 
-  'success-subtle': { light: colorBrands['success-100'], dark: colorBrands['success-700'] },
-  'success-bold': { light: colorBrands['success-500'], dark: colorBrands['success-300'] },
+  'state-success-subtle': { light: colorBrands['success-100'], dark: colorBrands['success-700'] },
+  'state-success-bold': { light: colorBrands['success-500'], dark: colorBrands['success-300'] },
 
-  'info-subtle': { light: colorBrands['info-100'], dark: colorBrands['info-700'] },
-  'info-bold': { light: colorBrands['info-700'], dark: colorBrands['info-100'] },
+  'state-info-subtle': { light: colorBrands['info-100'], dark: colorBrands['info-700'] },
+  'state-info-bold': { light: colorBrands['info-700'], dark: colorBrands['info-100'] },
 
-  'warning-subtle': { light: colorBrands['warning-100'], dark: colorBrands['warning-700'] },
+  'state-warning-subtle': { light: colorBrands['warning-100'], dark: colorBrands['warning-700'] },
   'warning-bold': { light: colorBrands['warning-700'], dark: colorBrands['warning-100'] },
 
-  'danger-subtle': { light: colorBrands['danger-100'], dark: colorBrands['danger-700'] },
-  'danger-bold': { light: colorBrands['danger-700'], dark: colorBrands['danger-300'] },
+  'state-danger-subtle': { light: colorBrands['danger-100'], dark: colorBrands['danger-700'] },
+  'state-danger-bold': { light: colorBrands['danger-700'], dark: colorBrands['danger-300'] },
 
-  disabled: { light: colorBrands['neutral-400'], dark: colorBrands['neutral-700'] },
+  'state-disabled': { light: colorBrands['neutral-400'], dark: colorBrands['neutral-700'] },
 };

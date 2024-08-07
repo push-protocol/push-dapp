@@ -23,6 +23,6 @@ export const boxRestrictedCSSPropKeys: (keyof BoxCSSProps | keyof ModeProp)[] = 
   'minWidth',
   'overflow',
   'padding',
+  'textAlign',
   'width',
-  'mode',
 ];
