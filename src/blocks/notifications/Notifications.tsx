@@ -1,21 +1,28 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import * as Toast from '@radix-ui/react-toast';
 import styled from 'styled-components';
 import { Cross } from '../icons';
 import { textVariants } from 'blocks/text';
+import { NotificationProps } from './Notifications.types';
 
-export type NotificationProps = {
-  isOpen?: boolean;
-  icon: any;
-  title: string;
-  description: string;
-  onClick?: () => void;
-  onClose?: () => void;
-};
+// export type NotificationProps = {
+//   isOpen: boolean;
+//   // icon or image element
+//   icon: any;
+//   // notification title
+//   title: string;
+//   // notification description
+//   description: string;
+//   // action to be completed onclick of the notification item
+//   onClick: () => void;
+//   // action to close notification item
+//   onClose?: () => void;
+//   // position of notification item
+//   position?: 'bottom-right' | 'bottom-left';
+// };
 
 const ToastRoot = styled(Toast.Root)`
   position: relative;
-
   background-color: var(--components-in-app-notification-background-default);
   border-radius: var(--radius-xxs);
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.05);
@@ -24,10 +31,10 @@ const ToastRoot = styled(Toast.Root)`
   align-items: center;
 `;
 
-const ToastViewPort = styled(Toast.Viewport)`
+const ToastViewPort = styled(Toast.Viewport)<{ position: 'bottom-right' | 'bottom-left' }>`
   position: fixed;
   bottom: 0;
-  right: 0;
+  ${(props) => (props.position === 'bottom-right' ? 'right: 0;' : 'left: 0;')}
   display: flex;
   flex-direction: column;
   padding: var(--spacing-sm);
@@ -88,39 +95,47 @@ const CloseButton = styled.div`
 `;
 
 const Notifications: FC<NotificationProps> = ({
-  // isOpen,
-  // onClose,
+  isOpen,
+  onClose,
   title,
   description,
   icon,
+  position = 'bottom-right',
+  onClick,
 }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(isOpen);
 
-  const onClose = () => {
+  useEffect(() => {
+    setOpen(isOpen);
+  }, [isOpen]);
+
+  const handleClose = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setOpen(false);
+    if (onClose) onClose();
   };
 
-  const iconSize = 16;
-  return (
-    <Toast.Provider swipeDirection="right">
-      {/* <button
-        className="Button large violet"
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
-        Add to calendar
-      </button> */}
+  const handleAction = () => {
+    onClick();
+    setOpen(false);
+    if (onClose) onClose();
+  };
 
+  return (
+    <Toast.Provider
+      swipeDirection="right"
+      duration={Infinity}
+    >
       <ToastRoot
         open={open}
         onOpenChange={setOpen}
+        onClick={handleAction}
       >
         <ContentContainer>
           <IconContainer>{icon}</IconContainer>
 
-          <CloseButton onClick={onClose}>
-            <Cross size={iconSize} />
+          <CloseButton onClick={handleClose}>
+            <Cross size={16} />
           </CloseButton>
 
           <TextContainer>
@@ -129,7 +144,10 @@ const Notifications: FC<NotificationProps> = ({
           </TextContainer>
         </ContentContainer>
       </ToastRoot>
-      <ToastViewPort className="ToastViewport" />
+      <ToastViewPort
+        className="ToastViewport"
+        position={position}
+      />
     </Toast.Provider>
   );
 };

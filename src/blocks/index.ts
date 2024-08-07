@@ -7,7 +7,7 @@ export { Link, type LinkProps } from './link';
 export { Lozenge, type LozengeProps } from './lozenge';
 export { Menu, type MenuProps, MenuItem, type MenuItemComponentProps } from './menu';
 export { Modal, type ModalProps, modal } from './modal';
-export { Notifications, type NotificationProps } from './notifications';
+export { Notifications, type NotificationProps, notifications } from './notifications';
 export { ProgressBar, type ProgressBarProps } from './progressBar';
 export { Separator, type SeparatorProps } from './separator';
 export { Skeleton, type SkeletonProps } from './skeleton';
