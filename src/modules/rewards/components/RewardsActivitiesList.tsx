@@ -41,7 +41,6 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
     <Box
       display="flex"
       flexDirection="column"
-      // overflow="auto"
       gap="spacing-sm"
     >
       {firstGroupActivities.map((activity: Activity) => (
@@ -58,7 +57,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
           display="flex"
           flexDirection="row"
           alignItems="center"
-          margin="spacing-md spacing-none"
+          margin="spacing-xxs spacing-none"
           gap="spacing-xxs"
           css={css`
             &:before,

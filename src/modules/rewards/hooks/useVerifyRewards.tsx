@@ -6,7 +6,9 @@ import { useSelector } from 'react-redux';
 
 // helpers
 import { generateVerificationProof } from '../utils/generateVerificationProof';
-import { useClaimRewardsActivity } from 'queries';
+import { useClaimRewardsActivity, useGetUserRewardsDetails } from 'queries';
+import { walletToCAIP10 } from 'helpers/w2w';
+import { useAccount } from 'hooks/useAccount';
 
 // types
 import { UserStoreType } from 'types';
@@ -23,6 +25,9 @@ const useVerifyRewards = ({ activityTypeId, setErrorMessage, refetchActivity }: 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
   const [updatedId, setUpdatedId] = useState<string | null>(null);
 
+  const { account } = useAccount();
+  const caip10WalletAddress = walletToCAIP10({ account });
+
   useEffect(() => {
     setErrorMessage('');
   }, [setErrorMessage]);
@@ -32,6 +37,10 @@ const useVerifyRewards = ({ activityTypeId, setErrorMessage, refetchActivity }: 
     setVerifyingRewards(true);
     handleVerify(userId);
   };
+
+  const { refetch: refetchUserDetails } = useGetUserRewardsDetails({
+    caip10WalletAddress: caip10WalletAddress,
+  });
 
   const { mutate: claimRewardsActivity } = useClaimRewardsActivity({
     userId: updatedId as string,
@@ -66,6 +75,7 @@ const useVerifyRewards = ({ activityTypeId, setErrorMessage, refetchActivity }: 
           if (response.status === 'COMPLETED') {
             setRewardsActivityStatus('Claimed');
             refetchActivity();
+            refetchUserDetails();
             setVerifyingRewards(false);
           }
           if (response.status === 'PENDING') {

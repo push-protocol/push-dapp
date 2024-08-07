@@ -125,12 +125,12 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
                 {activity.activityType !== 'follow_push_on_discord' &&
                   activity.activityType !== 'follow_push_on_twitter' && (
                     <Skeleton isLoading={isLoading}>
-                      <Text
-                        variant="bs-regular"
+                      <RewardsActivityTitle
+                        activityTitle={activity.activityDesc}
+                        isLoading={isLoading}
                         color="text-tertiary"
-                      >
-                        {activity.activityDesc}
-                      </Text>
+                        variant="bs-regular"
+                      />
                     </Skeleton>
                   )}
               </Box>
