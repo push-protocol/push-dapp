@@ -27,7 +27,6 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({
 
   const {
     data: channelDetails,
-    isLoading: loadingChannelDetails,
     refetch: refetchChannelDetails,
   } = useGetChannelDetails(account);
 
@@ -89,7 +88,6 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({
 
       <ChannelDashboardInfo
         channelDetails={channelDetails}
-        loadingChannelDetails={loadingChannelDetails}
       />
 
       <StakingVariant
