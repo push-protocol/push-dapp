@@ -1,5 +1,6 @@
 import { TrendingChannelsResponse } from 'queries/types';
 import { TrendingChannelsType } from './Dashboard.types';
+import { TabItem } from 'blocks';
 
 /**
  * @param weekData
@@ -54,7 +55,7 @@ export const getTrendingChannelsData = (
       subscriber: currentSubscriberData[key],
       name: channelDetails[key]?.name || '',
       icon: channelDetails[key]?.icon || '',
-      trend: trend
+      trend: trend,
     });
   }
 
@@ -85,4 +86,16 @@ export const formatSubscriberCount = (count?: number) => {
   } else {
     return 0;
   }
+};
+
+/**
+ * @param dashboardChannelTabs
+ * @param isWalletConnected
+ * @returns returns formatted dashboardChannelTabs label as per wallet connection status
+ */
+export const getUpdatedDashboardTabs = (dashboardChannelTabs: TabItem[], isWalletConnected: boolean): TabItem[] => {
+  if (!isWalletConnected) return dashboardChannelTabs.filter((tabs) => tabs.key !== 'subscribed');
+
+  if (isWalletConnected) return dashboardChannelTabs.filter((tabs) => tabs.key !== 'hottest');
+  return dashboardChannelTabs;
 };

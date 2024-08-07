@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 
-import { Box, TabItem, Tabs } from 'blocks';
+import { Box, Tabs } from 'blocks';
 
 import { useAccount } from 'hooks';
 
 import { ChannelTabs } from '../Dashboard.types';
+
 import { dashboardChannelTabs } from '../Dashboard.constants';
+
+import { getUpdatedDashboardTabs } from '../Dashboard.utils';
 
 const ChannelTabsSection = () => {
   const [selectedChannelTab, setSelectedChannelTab] = useState<ChannelTabs>(dashboardChannelTabs[0].key as ChannelTabs);
@@ -23,13 +26,6 @@ const ChannelTabsSection = () => {
     }
   }, [isWalletConnected]);
 
-  const getUpdatedDashboardTabs = (dashboardChannelTabs: TabItem[]): TabItem[] => {
-    if (!isWalletConnected) return dashboardChannelTabs.filter((tabs) => tabs.key !== 'subscribed');
-
-    if (isWalletConnected) return dashboardChannelTabs.filter((tabs) => tabs.key !== 'hottest');
-    return dashboardChannelTabs;
-  };
-
   return (
     <Box
       display="flex"
@@ -37,7 +33,7 @@ const ChannelTabsSection = () => {
       width={{ ml: '100%', initial: '50%' }}
     >
       <Tabs
-        items={getUpdatedDashboardTabs(dashboardChannelTabs)}
+        items={getUpdatedDashboardTabs(dashboardChannelTabs, isWalletConnected)}
         activeKey={selectedChannelTab}
         variant="fill"
         onChange={(activeKey) => setSelectedChannelTab(activeKey as ChannelTabs)}
