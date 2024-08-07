@@ -5,22 +5,6 @@ import { Cross } from '../icons';
 import { textVariants } from 'blocks/text';
 import { NotificationProps } from './Notifications.types';
 
-// export type NotificationProps = {
-//   isOpen: boolean;
-//   // icon or image element
-//   icon: any;
-//   // notification title
-//   title: string;
-//   // notification description
-//   description: string;
-//   // action to be completed onclick of the notification item
-//   onClick: () => void;
-//   // action to close notification item
-//   onClose?: () => void;
-//   // position of notification item
-//   position?: 'bottom-right' | 'bottom-left';
-// };
-
 const ToastRoot = styled(Toast.Root)`
   position: relative;
   background-color: var(--components-in-app-notification-background-default);
@@ -106,19 +90,25 @@ const Notifications: FC<NotificationProps> = ({
   const [open, setOpen] = useState(isOpen);
 
   useEffect(() => {
-    setOpen(isOpen);
+    const storedState = localStorage.getItem(`notification_id`);
+    if (storedState !== 'dismissed') {
+      setOpen(isOpen);
+    } else {
+      setOpen(false);
+    }
   }, [isOpen]);
 
-  const handleClose = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleClose = (e?: React.MouseEvent) => {
+    if (e !== undefined) e.stopPropagation();
+
+    localStorage.setItem(`notification_id`, 'dismissed');
     setOpen(false);
     if (onClose) onClose();
   };
 
   const handleAction = () => {
     onClick();
-    setOpen(false);
-    if (onClose) onClose();
+    handleClose();
   };
 
   return (

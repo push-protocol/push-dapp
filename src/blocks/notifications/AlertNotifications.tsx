@@ -23,7 +23,12 @@ const renderNotification = (props: NotificationProps) => {
 };
 
 const notifications = {
-  show: (config: Omit<NotificationProps, 'isOpen'>) => renderNotification({ ...config, isOpen: true }),
+  show: (config: Omit<NotificationProps, 'isOpen'>) => {
+    const dismissed = localStorage.getItem(`notification_id`) === 'dismissed';
+    if (!dismissed) {
+      renderNotification({ ...config, isOpen: true });
+    }
+  },
   hide: (onClose?: () => void) => {
     const event = new CustomEvent('notification-hide', { detail: onClose });
     window.dispatchEvent(event);
