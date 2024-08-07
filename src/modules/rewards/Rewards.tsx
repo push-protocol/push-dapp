@@ -16,7 +16,7 @@ import { useCreateRewardsUser } from './hooks/useCreateRewardsUser';
 import { UserStoreType } from 'types';
 
 //Components
-import { Box, Text } from 'blocks';
+import { Box, Notifications, RewardPoints, Text } from 'blocks';
 import { ReferralSection } from './components/ReferralSection';
 import { RewardsTabsContainer } from './components/RewardsTabsContainer';
 import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
@@ -84,6 +84,12 @@ const Rewards: FC<RewardsProps> = () => {
 
         {activeTab === 'dashboard' && <ReferralSection handleUnlockProfile={handleUnlockProfile} />}
       </Box>
+
+      <Notifications
+        title="Push Points are Live"
+        description="Complete Tasks on Push. Check-in, Earn Push Points, Unlock Rewards and Level up!"
+        icon={<RewardPoints />}
+      />
 
       {userPushSDKInstance && userPushSDKInstance?.readmode() && isAuthModalVisible && (
         <Box
