@@ -71,6 +71,7 @@ const Notifications: FC<NotificationProps> = ({
   description,
   icon,
   onClick,
+  duration = Infinity,
   position = 'bottom-right',
 }) => {
   const handleNotificationClick = () => {
@@ -110,7 +111,7 @@ const Notifications: FC<NotificationProps> = ({
       style={{ width: '397px', height: '78px' }}
       visibleToasts={1}
       offset={15}
-      duration={Infinity}
+      duration={duration || Infinity}
       position={position}
     />
   );

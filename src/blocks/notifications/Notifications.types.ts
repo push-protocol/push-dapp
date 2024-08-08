@@ -12,4 +12,6 @@ export type NotificationProps = {
   onClose?: () => void;
   // position of notification item
   position?: 'bottom-right' | 'bottom-left';
+  //duration for in-app notification incase of option
+  duration?: number;
 };
