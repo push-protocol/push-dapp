@@ -220,8 +220,14 @@ const Select: React.FC<SelectProps> = ({
   const childRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    window.addEventListener('scroll', () => setViewPopover(false));
-  });
+    const handleScroll = () => setViewPopover(false);
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const selectedOption = options.find((option) => option.value === value);
 
