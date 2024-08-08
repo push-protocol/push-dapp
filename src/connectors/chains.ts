@@ -130,13 +130,18 @@ export const MAINNET_CHAINS: ChainConfig = {
     nativeCurrency: ETH,
     blockExplorerUrls: ['https://cyberscan.co/'],
   },
-  // comment base
-  // 8453: {
-  //   name: 'Base Mainnet',
-  //   urls: ['https://mainnet.base.org/'],
-  //   nativeCurrency: ETH,
-  //   blockExplorerUrls: ['https://basescan.org/'],
-  // },
+  8453: {
+    name: 'Base Mainnet',
+    urls: ['https://mainnet.base.org/'],
+    nativeCurrency: ETH,
+    blockExplorerUrls: ['https://basescan.org/'],
+  },
+  59144: {
+    name: 'Linea Mainnet',
+    urls: ['https://rpc.linea.build'],
+    nativeCurrency: ETH,
+    blockExplorerUrls: ['https://explorer.linea.build'],
+  },
 };
 
 export const TESTNET_CHAINS: ChainConfig = {
@@ -199,13 +204,18 @@ export const TESTNET_CHAINS: ChainConfig = {
     nativeCurrency: ETH,
     blockExplorerUrls: ['https://testnet.cyberscan.co/'],
   },
-  // comment base
-  // 84532: {
-  //   name: 'Base Sepolia',
-  //   urls: ['https://sepolia.base.org/'],
-  //   nativeCurrency: ETH,
-  //   blockExplorerUrls: ['https://sepolia-explorer.base.org/'],
-  // },
+  84532: {
+    name: 'Base Sepolia',
+    urls: ['https://sepolia.base.org/'],
+    nativeCurrency: ETH,
+    blockExplorerUrls: ['https://sepolia-explorer.base.org/'],
+  },
+  59141: {
+    name: 'Linea Sepolia',
+    urls: ['https://rpc.sepolia.linea.build'],
+    nativeCurrency: ETH,
+    blockExplorerUrls: ['https://sepolia.lineascan.build'],
+  },
 };
 
 export const CHAINS: ChainConfig = {

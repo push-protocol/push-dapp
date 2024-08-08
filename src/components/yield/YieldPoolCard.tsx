@@ -39,6 +39,7 @@ const YieldPoolCard = ({
   tokenAddress,
   setActiveTab,
 }: any) => {
+
   const { account, provider, wallet, isWalletConnected, connect } = useAccount();
 
 
@@ -51,6 +52,7 @@ const YieldPoolCard = ({
   const [unstakeErrorMessage, setUnstakeErrorMessage] = useState(null);
   const [withdrawErrorMessage, setWithdrawErrorMessage] = useState(null);
 
+
   const [filled, setFilled] = useState(0);
 
   const yieldFarmToast = useToast();
@@ -58,6 +60,7 @@ const YieldPoolCard = ({
   const theme = useTheme();
 
   const massClaimRewardsTokensAll = async () => {
+
     if (!isWalletConnected) {
       connect();
       return;
@@ -147,6 +150,7 @@ const YieldPoolCard = ({
 
   const withdrawTokens = async () => {
 
+
     if (!isWalletConnected) {
       connect();
       return;
@@ -229,6 +233,7 @@ const YieldPoolCard = ({
   };
 
   const migrateToNewPool = async () => {
+
     if (!isWalletConnected) {
       connect();
       return;
@@ -452,6 +457,7 @@ const YieldPoolCard = ({
   };
 
   const depositLpToken = async (tx, withdrawAmount, totalTxnSteps) => {
+
     if (!isWalletConnected) {
       connect();
       return;
@@ -505,6 +511,7 @@ const YieldPoolCard = ({
   };
 
   const depositPushToken = async (tx, withdrawAmount, totalTxnSteps) => {
+
     if (!isWalletConnected) {
       connect();
       return;

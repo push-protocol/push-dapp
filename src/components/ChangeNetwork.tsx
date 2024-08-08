@@ -51,7 +51,7 @@ const ChangeNetwork = () => {
       >
         <Button
           variant="primary"
-          onClick={() => switchChain(aliasChainId)}
+          onClick={() => switchChain(parseInt(aliasChainId))}
           size="large"
         >
           <Text color="white">Change Network</Text>
