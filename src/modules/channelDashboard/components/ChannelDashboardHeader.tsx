@@ -20,14 +20,14 @@ import { DashboardActiveState } from '../ChannelDashboard.types';
 
 type ChannelDashboardHeaderProps = {
   channelDetails?: ChannelDetails;
-  loadingChannelDetails: boolean;
   setActiveState: (activeState: DashboardActiveState) => void;
+  onActiveNetwork: boolean;
 };
 
 const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
   channelDetails,
-  loadingChannelDetails,
   setActiveState,
+  onActiveNetwork
 }) => {
   return (
     <Box
@@ -39,74 +39,76 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
     >
       <ChannelDashboardInfo
         channelDetails={channelDetails}
-        loadingChannelDetails={loadingChannelDetails}
         showAddNewChain
+        onActiveNetwork={onActiveNetwork}
       />
 
       {/* Edit Channel and Dropdown */}
-      <Box
-        display="flex"
-        height="fit-content"
-        gap="spacing-xxs"
-        justifyContent="center"
-      >
-        <Skeleton isLoading={!channelDetails?.name}>
-          <Button
-            variant="outline"
-            size="small"
-            onClick={() => setActiveState('editChannel')}
-            disabled={channelDetails?.activation_status === 0}
-          >
-            Edit Channel
-          </Button>
-        </Skeleton>
-
-        <Skeleton isLoading={!channelDetails?.name}>
-          <Dropdown
-            trigger="click"
-            overlay={
-              <Menu>
-                <MenuItem
-                  label="Add Subgraph Details"
-                  icon={<Cube size={24} />}
-                  onClick={() => setActiveState('addSubgraph')}
-                />
-
-                {channelDetails?.activation_status ? (
-                  <MenuItem
-                    label="Deactivate Channel"
-                    icon={<BellSimpleSlash size={24} />}
-                    onClick={() => setActiveState('deactivateChannel')}
-                    type="error"
-                  />
-                ) : (
-                  <MenuItem
-                    label="Activate Channel"
-                    icon={<BellSimple size={24} />}
-                    onClick={() => setActiveState('reactivateChannel')}
-                    type="success"
-                  />
-                )}
-              </Menu>
-            }
-          >
-            <Box
-              padding="spacing-xs"
-              border="border-sm solid stroke-tertiary"
-              borderRadius="radius-xs"
-              display="flex"
-              height="16px"
-              cursor="pointer"
-              alignItems="center"
+      {onActiveNetwork && (
+        <Box
+          display="flex"
+          height="fit-content"
+          gap="spacing-xxs"
+          justifyContent="center"
+        >
+          <Skeleton isLoading={!channelDetails?.name}>
+            <Button
+              variant="outline"
+              size="small"
+              onClick={() => setActiveState('editChannel')}
+              disabled={channelDetails?.activation_status === 0}
             >
-              <KebabMenuHorizontal
-                size={24}
-                color="icon-primary"
-              />
-            </Box>
-          </Dropdown>
-        </Skeleton>
-      </Box>
+              Edit Channel
+            </Button>
+          </Skeleton>
+
+          <Skeleton isLoading={!channelDetails?.name}>
+            <Dropdown
+              trigger="click"
+              overlay={
+                <Menu>
+                  <MenuItem
+                    label="Add Subgraph Details"
+                    icon={<Cube size={24} />}
+                    onClick={() => setActiveState('addSubgraph')}
+                  />
+
+                  {channelDetails?.activation_status ? (
+                    <MenuItem
+                      label="Deactivate Channel"
+                      icon={<BellSimpleSlash size={24} />}
+                      onClick={() => setActiveState('deactivateChannel')}
+                      type="error"
+                    />
+                  ) : (
+                    <MenuItem
+                      label="Activate Channel"
+                      icon={<BellSimple size={24} />}
+                      onClick={() => setActiveState('reactivateChannel')}
+                      type="success"
+                    />
+                  )}
+                </Menu>
+              }
+            >
+              <Box
+                padding="spacing-xs"
+                border="border-sm solid stroke-tertiary"
+                borderRadius="radius-xs"
+                display="flex"
+                height="16px"
+                cursor="pointer"
+                alignItems="center"
+              >
+                <KebabMenuHorizontal
+                  size={24}
+                  color="icon-primary"
+                />
+              </Box>
+            </Dropdown>
+          </Skeleton>
+        </Box>
+      )}
     </Box>
   );
 };

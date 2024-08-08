@@ -32,7 +32,6 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
 
   const {
     data: channelDetails,
-    isLoading: loadingChannelDetails,
     refetch: refetchChannelDetails,
   } = useGetChannelDetails(account);
 
@@ -157,7 +156,6 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
 
       <ChannelDashboardInfo
         channelDetails={channelDetails}
-        loadingChannelDetails={loadingChannelDetails}
       />
 
       <Box
