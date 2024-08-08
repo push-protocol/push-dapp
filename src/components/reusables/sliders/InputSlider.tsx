@@ -126,7 +126,7 @@ const Thumb = styled.div`
 const Active = styled.div`
   width: 100%;
   height: 4px;
-  background-color: ${(props) => props.theme.default.primaryPushThemeTextColor};
+  background-color: #c742dd;
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 `;
@@ -134,7 +134,7 @@ const Active = styled.div`
 const Inactive = styled.div`
   width: 100%;
   height: 4px;
-  background-color: ${(props) => props.theme.snfBorder};
+  background-color: #eaebf2;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
 `;

@@ -12,7 +12,7 @@ export type DropdownComponentProps = {
   // This is used for custom css instead of style prop, check Box/Text component
   css?: FlattenSimpleInterpolation;
   // This will be the contents of the dropdown overlay
-  overlay?: ReactNode;
+  overlay?: ReactNode | ((setIsOpen: (isOpen: boolean) => void) => ReactNode);
 };
 
 export type DropdownProps = DropdownComponentProps & DropdownMenuContentProps;

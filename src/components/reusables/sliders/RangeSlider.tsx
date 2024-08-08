@@ -11,7 +11,7 @@ interface RangeSliderProps extends Omit<ComponentPropsWithoutRef<'div'>, 'childr
   defaultStartVal: number;
   defaultEndVal: number;
   preview?: boolean;
-  onChange: (value: { startVal: number, endVal: number }) => void;
+  onChange: (value: { startVal: number; endVal: number }) => void;
   onDragStart?: (e: React.MouseEvent | React.TouchEvent) => void;
   onDragEnd?: (e: React.MouseEvent | React.TouchEvent) => void;
 }
@@ -132,15 +132,21 @@ const RangeSlider = ({
   const showPreview = () => {
     previewSliderStartRef.current?.style.setProperty('display', 'flex');
     previewSliderEndRef.current?.style.setProperty('display', 'flex');
-  }
+  };
 
   const hidePreview = () => {
     previewSliderStartRef.current?.style.setProperty('display', 'none');
     previewSliderEndRef.current?.style.setProperty('display', 'none');
-  }
+  };
 
   useEffect(() => {
-    if (thumbStartRef.current && inactiveLeftRef.current && thumbEndRef.current && activeRef.current && inactiveRightRef.current) {
+    if (
+      thumbStartRef.current &&
+      inactiveLeftRef.current &&
+      thumbEndRef.current &&
+      activeRef.current &&
+      inactiveRightRef.current
+    ) {
       thumbStartRef.current.style.left = `${((startVal - min) / (max - min)) * 98}%`;
       inactiveLeftRef.current.style.width = `${((startVal - min) / (max - min)) * 100}%`;
       activeRef.current.style.width = `${((endVal - startVal) / (max - min)) * 100}%`;
@@ -185,8 +191,12 @@ const RangeSlider = ({
         onMouseUp={handleMouseUpRightThumb}
       />
       <Inactive ref={inactiveRightRef} />
-      {preview && !Number.isNaN(Number(startVal)) && <PreviewContainer ref={previewSliderStartRef}>{startVal}</PreviewContainer>}
-      {preview && !Number.isNaN(Number(endVal)) && <PreviewContainer ref={previewSliderEndRef}>{endVal}</PreviewContainer>}
+      {preview && !Number.isNaN(Number(startVal)) && (
+        <PreviewContainer ref={previewSliderStartRef}>{startVal}</PreviewContainer>
+      )}
+      {preview && !Number.isNaN(Number(endVal)) && (
+        <PreviewContainer ref={previewSliderEndRef}>{endVal}</PreviewContainer>
+      )}
     </Container>
   );
 };
@@ -206,7 +216,7 @@ const Thumb = styled.div`
 const Active = styled.div`
   width: 100%;
   height: 4px;
-  background-color: ${(props) => props.theme.default.primaryPushThemeTextColor};
+  background-color: #c742dd;
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 `;
@@ -214,7 +224,7 @@ const Active = styled.div`
 const Inactive = styled.div`
   width: 100%;
   height: 4px;
-  background-color: ${(props) => props.theme.snfBorder};
+  background-color: #eaebf2;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
 `;

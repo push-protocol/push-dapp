@@ -13,12 +13,10 @@ import { useAccount } from 'hooks';
 import { formatSubscriberCount } from '../Dashboard.utils';
 
 // Components
-import { Box, Button, CaretDown, NotificationMobile, Skeleton, Text } from 'blocks';
+import { Box, Button, CaretDown, Ethereum, NotificationMobile, Skeleton, Text, TickDecoratedCircleFilled } from 'blocks';
 import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
 import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannelDropdown';
-import TickDecoratedCircleFilled from 'blocks/icons/components/TickDecoratedCircleFilled';
 import { VerifiedToolTipComponent } from './VerifiedToolTipComponent';
-import Ethereum from 'blocks/illustrations/components/Ethereum';
 import { UserSetting } from 'helpers/channel/types';
 
 // Internal Configs
