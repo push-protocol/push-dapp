@@ -1,4 +1,4 @@
-import React, { useRef, useState, ReactNode } from 'react';
+import React, { useRef, useState, ReactNode, useEffect } from 'react';
 import styled, { FlattenSimpleInterpolation, css } from 'styled-components';
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from '@reach/combobox';
 import '@reach/combobox/styles.css';
@@ -219,19 +219,10 @@ const Select: React.FC<SelectProps> = ({
   const parentRef = useRef<HTMLDivElement>(null);
   const childRef = useRef<HTMLInputElement>(null);
 
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     if (comboboxRef.current) {
-  //       setPopoverWidth(comboboxRef.current.offsetWidth - 18);
-  //     }
-  //   };
+  useEffect(() => {
+    window.addEventListener('scroll', () => setViewPopover(false));
+  });
 
-  //   handleResize();
-  //   window.addEventListener('resize', handleResize);
-  //   return () => {
-  //     window.removeEventListener('resize', handleResize);
-  //   };
-  // }, []);
   const selectedOption = options.find((option) => option.value === value);
 
   const handleParentFocus = () => {
