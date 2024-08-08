@@ -1,34 +1,23 @@
-import { FC, useEffect, useState } from 'react';
-import * as Toast from '@radix-ui/react-toast';
+import { FC, useEffect } from 'react';
 import styled from 'styled-components';
 import { Cross } from '../icons';
 import { textVariants } from 'blocks/text';
 import { NotificationProps } from './Notifications.types';
+import { Toaster, toast } from 'sonner';
+import ReactDOM from 'react-dom/client';
 
-const ToastRoot = styled(Toast.Root)`
+const NotificationContainer = styled.div`
   position: relative;
   background-color: var(--components-in-app-notification-background-default);
   border-radius: var(--radius-xxs);
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: row;
-  align-items: center;
-`;
-
-const ToastViewPort = styled(Toast.Viewport)<{ position: 'bottom-right' | 'bottom-left' }>`
-  position: fixed;
-  bottom: 0;
-  ${(props) => (props.position === 'bottom-right' ? 'right: 0;' : 'left: 0;')}
-  display: flex;
-  flex-direction: column;
-  padding: var(--spacing-sm);
-  gap: 10px;
-  width: 397px;
-  max-width: 100vw;
-  margin: 0;
-  list-style: none;
-  z-index: 2147483647;
-  outline: none;
+  align-items: stretch;
+  max-width: 100%;
+  cursor: pointer;
+  box-sizing: border-box;
+  border: var(--border-sm) solid var(--components-in-app-notification-stroke-bg);
 `;
 
 const TextContainer = styled.div`
@@ -37,6 +26,8 @@ const TextContainer = styled.div`
   align-items: flex-start;
   justify-content: center;
   padding: var(--spacing-sm);
+  flex: 1;
+  box-sizing: border-box;
 
   .title {
     color: var(--components-in-app-notification-text-default);
@@ -58,14 +49,9 @@ const TextContainer = styled.div`
 `;
 
 const IconContainer = styled.div`
-  padding: var(--spacing-sm, 16px) var(--spacing-xs, 12px);
+  padding: var(--spacing-sm) var(--spacing-xs);
   border-radius: var(--radius-xxs) var(--radius-none) var(--radius-none) var(--radius-xxs);
   background: radial-gradient(79.55% 79.55% at 50% 50%, #344efd 0%, #171717 100%);
-`;
-
-const ContentContainer = styled.div`
-  display: flex;
-  width: 100%;
 `;
 
 const CloseButton = styled.div`
@@ -84,62 +70,79 @@ const Notifications: FC<NotificationProps> = ({
   title,
   description,
   icon,
-  position = 'bottom-right',
   onClick,
+  position = 'bottom-right',
 }) => {
-  const [open, setOpen] = useState(isOpen);
+  const handleNotificationClick = () => {
+    if (onClick) onClick();
+    handleNotificationClose();
+  };
+
+  const handleNotificationClose = () => {
+    if (onClose) onClose();
+    toast.dismiss();
+  };
 
   useEffect(() => {
-    const storedState = localStorage.getItem(`notification_id`);
-    if (storedState !== 'dismissed') {
-      setOpen(isOpen);
-    } else {
-      setOpen(false);
-    }
-  }, [isOpen]);
-
-  const handleClose = (e?: React.MouseEvent) => {
-    if (e !== undefined) e.stopPropagation();
-
-    localStorage.setItem(`notification_id`, 'dismissed');
-    setOpen(false);
-    if (onClose) onClose();
-  };
-
-  const handleAction = () => {
-    onClick();
-    handleClose();
-  };
-
-  return (
-    <Toast.Provider
-      swipeDirection="right"
-      duration={Infinity}
-    >
-      <ToastRoot
-        open={open}
-        onOpenChange={setOpen}
-        onClick={handleAction}
-      >
-        <ContentContainer>
+    if (isOpen) {
+      toast.custom(() => (
+        <NotificationContainer onClick={handleNotificationClick}>
           <IconContainer>{icon}</IconContainer>
-
-          <CloseButton onClick={handleClose}>
+          <CloseButton
+            onClick={(e) => {
+              e.stopPropagation();
+              handleNotificationClose();
+            }}
+          >
             <Cross size={16} />
           </CloseButton>
-
           <TextContainer>
             <span className="title">{title}</span>
             <span className="description">{description}</span>
           </TextContainer>
-        </ContentContainer>
-      </ToastRoot>
-      <ToastViewPort
-        className="ToastViewport"
-        position={position}
-      />
-    </Toast.Provider>
+        </NotificationContainer>
+      ));
+    }
+  }, [isOpen]);
+
+  return (
+    <Toaster
+      style={{ width: '397px', height: '78px' }}
+      visibleToasts={1}
+      offset={15}
+      duration={Infinity}
+      position={position}
+    />
   );
 };
 
-export { Notifications };
+const renderNotification = (props: NotificationProps) => {
+  const div = document.createElement('div');
+  document.body.appendChild(div);
+
+  const root = ReactDOM.createRoot(div);
+
+  const handleClose = () => {
+    root.unmount();
+    document.body.removeChild(div);
+    if (props.onClose) props.onClose();
+  };
+
+  root.render(
+    <Notifications
+      {...props}
+      onClose={handleClose}
+    />
+  );
+};
+
+const notifications = {
+  show: (config: Omit<NotificationProps, 'isOpen'>) => {
+    renderNotification({ ...config, isOpen: true });
+  },
+  hide: () => {
+    toast.dismiss();
+  },
+};
+
+export { Notifications, notifications };
