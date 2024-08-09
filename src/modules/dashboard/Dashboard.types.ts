@@ -4,7 +4,7 @@ import { FC } from 'react';
 export type ChannelTabs = 'subscribed' | 'trending' | 'hottest';
 export type DashboardChannelTabType = {
   label: string;
-  value: ChannelTabs;
+  key: ChannelTabs;
 };
 export type DashboardChannelTabsType = Array<DashboardChannelTabType>;
 export type TrendingChannelsType = {

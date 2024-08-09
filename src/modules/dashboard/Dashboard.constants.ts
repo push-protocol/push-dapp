@@ -1,14 +1,6 @@
-//Components
 import { PushAlpha, PushBot, PushDev } from 'blocks';
 
-//Types
-import { ChatType, DashboardChannelTabsType, EnvKeys, SourceKeys } from './Dashboard.types';
-
-export const dahboardChannelTabs: DashboardChannelTabsType = [
-  { label: 'Trending Channels', value: 'trending' },
-  { label: 'Hottest Channels', value: 'hottest' },
-  { label: 'Subscribed', value: 'subscribed' },
-];
+import { ChatType, EnvKeys, SourceKeys } from './Dashboard.types';
 
 export const recommendedChatList: ChatType[] = [
   {
