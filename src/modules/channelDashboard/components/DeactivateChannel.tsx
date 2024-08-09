@@ -118,6 +118,7 @@ const DeactivateChannel: FC<DeactivateChannelProps> = ({
           disabled={isPending}
           variant="danger"
           onClick={handleDeactivateChannel}
+          loading={isPending}
         >
           {isPending ? 'Deactivating' : 'Deactivate'}
         </Button>

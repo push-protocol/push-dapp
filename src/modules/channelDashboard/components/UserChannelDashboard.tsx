@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 
 import { Alert, Box } from 'blocks';
 
@@ -26,9 +26,14 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({ setActiveState })
 
   const [channelDashboardError, setChannelDashboardError] = useState('');
 
-  const verifiedAliasChainIds = channelDetails?.aliases?.map((item) => parseInt(item.alias_blockchain_id)) || [];
+  const verifiedAliasChainIds = channelDetails?.aliases?.map((item) => item.is_alias_verified && parseInt(item.alias_blockchain_id)) || [];
   const onActiveNetwork = appConfig.coreContractChain === chainId || verifiedAliasChainIds.includes(chainId);
 
+  const currentAliasDetails = useMemo(() => {
+    return channelDetails?.aliases.find((alias) => {
+      return parseInt(alias.alias_blockchain_id) === chainId;
+    });
+  }, [chainId, channelDetails])
 
   return (
     <>
@@ -47,6 +52,7 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({ setActiveState })
           channelDetails={channelDetails}
           setActiveState={setActiveState}
           onActiveNetwork={onActiveNetwork}
+          currentAliasDetails={currentAliasDetails}
         />
 
         {channelDashboardError && (
@@ -55,7 +61,10 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({ setActiveState })
           </Box>
         )}
 
-        {onActiveNetwork ? (
+
+        {!onActiveNetwork && <ChannelDashboardNullChain currentAliasDetails={currentAliasDetails} />}
+
+        {onActiveNetwork && (
           <Box width="100%" height={{ initial: '355px', tb: 'auto' }}>
             {loadingChannelDetails || !channelDetails?.name ? (
               <Box height="100%" display="flex" justifyContent="center" alignItems="center">
@@ -68,9 +77,8 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({ setActiveState })
               />
             )}
           </Box>
-        ) : (
-          <ChannelDashboardNullChain />
         )}
+
       </Box>
 
       <AppFooter />

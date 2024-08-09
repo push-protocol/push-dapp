@@ -17,12 +17,14 @@ type ChannelDashboardInfoProps = {
   channelDetails?: ChannelDetails;
   showAddNewChain?: boolean;
   onActiveNetwork?: boolean;
+  isAliasVerified?: boolean;
 };
 
 const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
   channelDetails,
   showAddNewChain = false,
-  onActiveNetwork = true
+  onActiveNetwork = true,
+  isAliasVerified,
 }) => {
   const navigate = useNavigate();
 
@@ -41,7 +43,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
 
   return (
     <Box display="flex" gap="spacing-sm" alignItems="center">
-      <Skeleton isLoading={!channelDetails?.name}>
+      <Skeleton isLoading={!channelDetails?.name || isAliasVerified}>
         <Box
           width="90px"
           height="90px"
@@ -58,7 +60,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
       </Skeleton>
 
       <Box display="flex" flexDirection="column" gap="spacing-xxxs">
-        <Skeleton isLoading={!channelDetails?.name} width="200px" height="30px">
+        <Skeleton isLoading={!channelDetails?.name || isAliasVerified} width="200px" height="30px">
           <Box
             display="flex"
             alignItems={{ initial: 'center', ml: 'baseline' }}
@@ -103,7 +105,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
         </Skeleton>
 
         <Box display="flex" flexDirection="column" gap="spacing-xs">
-          <Skeleton isLoading={!channelDetails?.name} width="100%">
+          <Skeleton isLoading={!channelDetails?.name || isAliasVerified} width="100%">
             <Box display="flex" gap="spacing-xxxs">
               <Text color="text-tertiary" variant="c-regular">
                 {shortenText(channelDetails ? channelDetails?.channel : '', 5)}
@@ -118,7 +120,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
           </Skeleton>
 
           <Box display="flex" gap="spacing-xs">
-            <Skeleton isLoading={!channelDetails?.name}>
+            <Skeleton isLoading={!channelDetails?.name || isAliasVerified}>
               <Text color="text-tertiary" variant="c-regular">
                 {channelDetails?.subscriber_count} subscribers
               </Text>
@@ -173,12 +175,6 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
                 )}
               </>
             )}
-
-
-
-
-
-
 
           </Box>
         </Box>

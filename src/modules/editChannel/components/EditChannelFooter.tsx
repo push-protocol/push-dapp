@@ -201,11 +201,21 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
         </Button>
 
         {feesRequiredForEdit && pushApprovalAmount >= feesRequiredForEdit ? (
-          <Button disabled={checkForChanges || editingChannel || !isValid} onClick={handleEditChannel}>
+          <Button
+            disabled={checkForChanges || editingChannel || !isValid}
+            onClick={handleEditChannel}
+            loading={editingChannel}
+          >
             {editingChannel ? 'Updating' : 'Save Changes'}
           </Button>
         ) : (
-          <Button variant="primary" size="medium" disabled={approvingPUSH} onClick={handleApprovePUSH}>
+          <Button
+            variant="primary"
+            size="medium"
+            disabled={approvingPUSH}
+            onClick={handleApprovePUSH}
+            loading={approvingPUSH}
+          >
             {approvingPUSH ? 'Approving' : 'Approve PUSH'}
           </Button>
         )}
