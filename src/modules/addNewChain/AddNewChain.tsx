@@ -42,9 +42,9 @@ const AddNewChain: FC = () => {
     setIsAuthModalVisible(userPushSDKInstance && userPushSDKInstance?.readmode());
   }, [userPushSDKInstance]);
 
-  useEffect(() => {
-    if (!channelDetails) nagivate('/channels');
-  }, [channelDetails]);
+  // useEffect(() => {
+  //   if (!channelDetails) nagivate('/channels');
+  // }, [channelDetails]);
 
   const handleInitiate = (alias: string, chainId: string) => {
     initiateNewChain(
