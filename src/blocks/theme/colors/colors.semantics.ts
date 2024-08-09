@@ -12,6 +12,7 @@ import { dropdownSemantics } from '../semantics/semantics.dropdown';
 import { iconSemantics } from '../semantics/semantics.icon';
 import { inputSemantics } from '../semantics/semantics.input';
 import { modalSemantics } from '../semantics/semantics.modal';
+import { notificationsSemantics } from '../semantics/semantics.notifications';
 import { progressBarSemantics } from '../semantics/semantics.progress-bar';
 import { radioSemantics } from '../semantics/semantics.radio';
 import { skeletonSemantics } from '../semantics/semantics.skeleton';
@@ -38,6 +39,7 @@ type SemanticKeys = {
   icon: 'icon';
   input: 'components-inputs';
   modal: 'components-modal';
+  notifications: 'components-in-app-notification';
   progressBar: 'components-progress-bar';
   radio: 'components-radio-button';
   surface: 'surface';
@@ -64,6 +66,7 @@ export const semanticKeys: SemanticKeys = {
   icon: 'icon',
   input: 'components-inputs',
   modal: 'components-modal',
+  notifications: 'components-in-app-notification',
   progressBar: 'components-progress-bar',
   radio: 'components-radio-button',
   surface: 'surface',
@@ -90,6 +93,7 @@ export const colorSemantics = {
   [semanticKeys.icon]: iconSemantics,
   [semanticKeys.input]: inputSemantics,
   [semanticKeys.modal]: modalSemantics,
+  [semanticKeys.notifications]: notificationsSemantics,
   [semanticKeys.progressBar]: progressBarSemantics,
   [semanticKeys.radio]: radioSemantics,
   [semanticKeys.surface]: surfaceSemantics,

@@ -27,6 +27,9 @@ export { default as Notification } from './components/Notification';
 export { default as NotificationDark } from './components/NotificationDark';
 
 export { default as RewardsBell } from './components/RewardsBell';
+
+export { default as RewardPoints } from './components/RewardPoints';
+
 export { default as Referral } from './components/Referral';
 
 export { default as Twitter } from './components/Twitter';
