@@ -1,6 +1,6 @@
 import { TrendingChannelsResponse } from 'queries/types';
 import { TrendingChannelsType } from './Dashboard.types';
-import { TabItem } from 'blocks';
+
 
 /**
  * @param weekData
