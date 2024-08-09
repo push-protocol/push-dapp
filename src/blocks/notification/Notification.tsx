@@ -1,10 +1,10 @@
 import { FC, useEffect } from 'react';
 import styled from 'styled-components';
 import { Cross } from '../icons';
-import { textVariants } from 'blocks/text';
-import { NotificationProps } from './Notifications.types';
+import { NotificationProps } from './Notification.types';
 import { Toaster, toast } from 'sonner';
 import ReactDOM from 'react-dom/client';
+import { getTextVariantStyles } from 'blocks/Blocks.utils';
 
 const NotificationContainer = styled.div`
   position: relative;
@@ -14,6 +14,8 @@ const NotificationContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: stretch;
+  // height: 78px;
+  min-width: 397px;
   max-width: 100%;
   cursor: pointer;
   box-sizing: border-box;
@@ -28,24 +30,14 @@ const TextContainer = styled.div`
   padding: var(--spacing-sm);
   flex: 1;
   box-sizing: border-box;
+`;
 
-  .title {
-    color: var(--components-in-app-notification-text-default);
-    font-family: var(--font-family);
-    font-size: ${textVariants['h5-semibold'].fontSize};
-    font-style: ${textVariants['h5-semibold'].fontStyle};
-    font-weight: ${textVariants['h5-semibold'].fontWeight};
-    line-height: ${textVariants['h5-semibold'].lineHeight};
-  }
+const NotificationTitle = styled.span`
+  ${() => getTextVariantStyles('h5-semibold', 'components-in-app-notification-text-default')}
+`;
 
-  .description {
-    color: var(--components-in-app-notification-text-secondary);
-    font-family: var(--font-family);
-    font-size: ${textVariants['bes-regular'].fontSize};
-    font-style: ${textVariants['bes-regular'].fontStyle};
-    font-weight: ${textVariants['bes-regular'].fontWeight};
-    line-height: ${textVariants['bes-regular'].lineHeight};
-  }
+const NotificationDescription = styled.span`
+  ${() => getTextVariantStyles('bes-regular', 'components-in-app-notification-text-secondary')}
 `;
 
 const IconContainer = styled.div`
@@ -64,31 +56,28 @@ const CloseButton = styled.div`
   top: var(--spacing-xxs);
 `;
 
-const Notifications: FC<NotificationProps> = ({
-  isOpen,
+const Notification: FC<NotificationProps> = ({
+  visible,
   onClose,
   title,
   description,
-  icon,
+  image,
   onClick,
   duration = Infinity,
   position = 'bottom-right',
 }) => {
-  const handleNotificationClick = () => {
-    if (onClick) onClick();
-    handleNotificationClose();
-  };
+  const handleNotificationClick = () => onClick?.();
 
   const handleNotificationClose = () => {
-    if (onClose) onClose();
+    onClose?.();
     toast.dismiss();
   };
 
   useEffect(() => {
-    if (isOpen) {
+    if (visible) {
       toast.custom(() => (
         <NotificationContainer onClick={handleNotificationClick}>
-          <IconContainer>{icon}</IconContainer>
+          <IconContainer>{image}</IconContainer>
           <CloseButton
             onClick={(e) => {
               e.stopPropagation();
@@ -98,17 +87,17 @@ const Notifications: FC<NotificationProps> = ({
             <Cross size={16} />
           </CloseButton>
           <TextContainer>
-            <span className="title">{title}</span>
-            <span className="description">{description}</span>
+            <NotificationTitle>{title}</NotificationTitle>
+            <NotificationDescription>{description}</NotificationDescription>
           </TextContainer>
         </NotificationContainer>
       ));
     }
-  }, [isOpen]);
+  }, [visible]);
 
   return (
     <Toaster
-      style={{ width: '397px', height: '78px' }}
+      style={{ minWidth: '397px', height: '78px' }}
       visibleToasts={1}
       offset={15}
       duration={duration || Infinity}
@@ -130,20 +119,20 @@ const renderNotification = (props: NotificationProps) => {
   };
 
   root.render(
-    <Notifications
+    <Notification
       {...props}
       onClose={handleClose}
     />
   );
 };
 
-const notifications = {
-  show: (config: Omit<NotificationProps, 'isOpen'>) => {
-    renderNotification({ ...config, isOpen: true });
+const notification = {
+  show: (config: Omit<NotificationProps, 'visible'>) => {
+    renderNotification({ ...config, visible: true });
   },
   hide: () => {
     toast.dismiss();
   },
 };
 
-export { Notifications, notifications };
+export { notification };
