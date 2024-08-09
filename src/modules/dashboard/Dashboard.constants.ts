@@ -1,66 +1,6 @@
-import { Box, PushAlpha, PushBot, PushDev, TabItem } from 'blocks';
-import { TrendingChannelsList } from './components/TrendingChannelsList';
-import { HottestChannelsList } from './components/HottestChannelsList';
-import { SubscribedChannelsList } from './components/SubscribedChannelsList';
+import { PushAlpha, PushBot, PushDev } from 'blocks';
 
 import { ChatType, EnvKeys, SourceKeys } from './Dashboard.types';
-
-export const dashboardChannelTabs: TabItem[] = [
-  {
-    label: 'Trending Channels',
-    key: 'trending',
-    children: (
-      <Box
-        display="flex"
-        flexDirection="column"
-        overflow="hidden auto"
-        borderRadius="radius-md"
-        minHeight="285px"
-        maxHeight="285px"
-        border="border-sm solid stroke-secondary"
-        padding="spacing-xxs spacing-sm"
-      >
-        <TrendingChannelsList />
-      </Box>
-    ),
-  },
-  {
-    label: 'Hottest Channels',
-    key: 'hottest',
-    children: (
-      <Box
-        display="flex"
-        flexDirection="column"
-        overflow="hidden auto"
-        borderRadius="radius-md"
-        minHeight="285px"
-        maxHeight="285px"
-        border="border-sm solid stroke-secondary"
-        padding="spacing-xxs spacing-sm"
-      >
-        <HottestChannelsList />
-      </Box>
-    ),
-  },
-  {
-    label: 'Subscribed',
-    key: 'subscribed',
-    children: (
-      <Box
-        display="flex"
-        flexDirection="column"
-        overflow="hidden auto"
-        borderRadius="radius-md"
-        minHeight="285px"
-        maxHeight="285px"
-        border="border-sm solid stroke-secondary"
-        padding="spacing-xxs spacing-sm"
-      >
-        <SubscribedChannelsList />
-      </Box>
-    ),
-  },
-];
 
 export const recommendedChatList: ChatType[] = [
   {

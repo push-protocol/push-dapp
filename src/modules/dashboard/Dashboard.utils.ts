@@ -87,15 +87,3 @@ export const formatSubscriberCount = (count?: number) => {
     return 0;
   }
 };
-
-/**
- * @param dashboardChannelTabs
- * @param isWalletConnected
- * @returns returns formatted dashboardChannelTabs label as per wallet connection status
- */
-export const getUpdatedDashboardTabs = (dashboardChannelTabs: TabItem[], isWalletConnected: boolean): TabItem[] => {
-  if (!isWalletConnected) return dashboardChannelTabs.filter((tabs) => tabs.key !== 'subscribed');
-
-  if (isWalletConnected) return dashboardChannelTabs.filter((tabs) => tabs.key !== 'hottest');
-  return dashboardChannelTabs;
-};
