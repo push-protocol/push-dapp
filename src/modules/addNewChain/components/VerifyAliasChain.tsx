@@ -12,8 +12,6 @@ import APP_PATHS from 'config/AppPaths';
 
 import { Box, Button, Text, TextInput } from 'blocks';
 
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-
 import { UserStoreType } from 'types';
 
 import { useChainAliasForm } from '../AddNewChain.form';
@@ -29,14 +27,13 @@ const VerifyAliasChain: FC = () => {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const selectedChainId = parseInt(formValues.chainId);
   const aliasAddress = formValues.alias;
 
   const handleVerifyAliasChain = () => {
     verifyAliasChain(
       {
         userPushSDKInstance,
-        alias: convertAddressToAddrCaip(aliasAddress, selectedChainId),
+        channelAddress: account,
       },
       {
         onSuccess: () => {

@@ -3,8 +3,8 @@ import { verifyAliasChainModelCreator } from '../../models';
 
 type VerifyAliasChainParams = {
   userPushSDKInstance: PushAPI;
-  alias: string; //chain address in caip format
+  channelAddress: string; //chain address in caip format
 };
 
-export const verifyAliasChain = ({ userPushSDKInstance, alias }: VerifyAliasChainParams) =>
-  userPushSDKInstance.channel.alias.verify(alias).then(verifyAliasChainModelCreator);
+export const verifyAliasChain = ({ userPushSDKInstance, channelAddress }: VerifyAliasChainParams) =>
+  userPushSDKInstance.channel.alias.verify(channelAddress).then(verifyAliasChainModelCreator);
