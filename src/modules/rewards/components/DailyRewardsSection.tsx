@@ -102,10 +102,40 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
 
           @media (max-width: 1200px) {
             grid-template-columns: repeat(4, minmax(0, 1fr));
+            .item:last-child {
+              grid-column: span 2;
+              display: grid;
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+
+              .day-text {
+                margin: 0 0 auto 0;
+              }
+
+              .count-text {
+                margin: auto 0 0 0;
+              }
+            }
+
+            .item:last-child .inner-item {
+              grid-row: span 2; /* Adjust to span 2 rows on small screens */
+
+              span {
+                width: 85%;
+                height: 85%;
+                svg {
+                  width: 100%;
+                  height: 100%;
+                }
+              }
+            }
           }
 
           @media (max-width: 700px) {
             grid-template-columns: repeat(2, minmax(0, 1fr));
+
+            .item:last-child {
+              grid-column: span 2; /* Adjust to span 2 columns on small screens */
+            }
           }
         `}
       >
