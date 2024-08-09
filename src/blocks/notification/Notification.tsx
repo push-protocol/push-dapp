@@ -14,7 +14,7 @@ const NotificationContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  // height: 78px;
+  max-height: 111px;
   min-width: 397px;
   max-width: 100%;
   cursor: pointer;
@@ -38,6 +38,14 @@ const NotificationTitle = styled.span`
 
 const NotificationDescription = styled.span`
   ${() => getTextVariantStyles('bes-regular', 'components-in-app-notification-text-secondary')}
+
+  /* number of lines to show */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
 `;
 
 const IconContainer = styled.div`
@@ -97,8 +105,8 @@ const Notification: FC<NotificationProps> = ({
 
   return (
     <Toaster
-      style={{ minWidth: '397px', height: '78px' }}
-      visibleToasts={1}
+      style={{ minWidth: '397px', height: '111px' }}
+      expand
       offset={15}
       duration={duration || Infinity}
       position={position}
