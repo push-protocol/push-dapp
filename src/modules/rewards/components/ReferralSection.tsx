@@ -43,7 +43,7 @@ const ReferralSection: FC<ReferralSectionProps> = ({ handleUnlockProfile }) => {
     <Box
       display="flex"
       flexDirection={{ tb: 'column-reverse', initial: 'row' }}
-      padding="spacing-xxl"
+      padding={{ tb: 'spacing-sm', initial: 'spacing-xxl' }}
       borderRadius="radius-md"
       backgroundColor="surface-primary"
       alignItems={{ tb: 'flex-start', initial: 'center' }}
@@ -80,17 +80,17 @@ const ReferralSection: FC<ReferralSectionProps> = ({ handleUnlockProfile }) => {
           <Box
             display="flex"
             gap="spacing-xxs"
+            width="100%"
             flexDirection={{ tb: 'column', initial: 'row' }}
           >
             <Box
-              minWidth={{ tb: '-webkit-fill-available', initial: '344px' }}
+              minWidth={{ tb: 'auto', initial: '344px' }}
               display="flex"
               alignItems="center"
               padding="spacing-xs"
               borderRadius="radius-xs"
               border="border-md solid stroke-secondary"
               css={css`
-                white-space: nowrap;
                 background-color: var(--components-inputs-background-default);
               `}
             >

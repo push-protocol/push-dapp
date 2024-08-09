@@ -9,6 +9,10 @@ import { useAuthWithButton } from '../hooks/useWithAuthButton';
 import { useVerifyTwitter } from '../hooks/useVerifyTwitter';
 import { useAccount } from 'hooks';
 import { useVerifyDiscord } from '../hooks/useVerifyDiscord';
+import { useVerifyRewards } from '../hooks/useVerifyRewards';
+
+// helpers
+import { bonusRewardActivities, dailyRewardActivities, otherRewardActivities } from '../utils/activityTypeArray';
 
 // types
 import { ActvityType } from 'queries/types';
@@ -24,6 +28,7 @@ type ActivityVerificationButtonProps = {
   refetchActivity: () => void;
   setErrorMessage: (errorMessage: string) => void;
   isLoadingActivity: boolean;
+  label?: string;
 };
 
 export const ActivityVerificationButton = ({
@@ -33,6 +38,7 @@ export const ActivityVerificationButton = ({
   setErrorMessage,
   userId,
   isLoadingActivity,
+  label,
 }: ActivityVerificationButtonProps) => {
   const { isWalletConnected } = useAccount();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
@@ -44,6 +50,12 @@ export const ActivityVerificationButton = ({
   });
 
   const { handleDiscordVerification, verifyingDiscord, discordActivityStatus } = useVerifyDiscord({
+    activityTypeId,
+    refetchActivity,
+    setErrorMessage,
+  });
+
+  const { handleRewardsVerification, verifyingRewards, rewardsActivityStatus } = useVerifyRewards({
     activityTypeId,
     refetchActivity,
     setErrorMessage,
@@ -67,11 +79,38 @@ export const ActivityVerificationButton = ({
         isVerificationComplete: twitterActivityStatus == 'Claimed' || twitterActivityStatus == 'Pending',
       };
     }
-  }, [activityType, userPushSDKInstance, twitterActivityStatus, discordActivityStatus]);
+
+    if (otherRewardActivities.includes(activityType) || bonusRewardActivities.includes(activityType)) {
+      return {
+        isLoading: verifyingRewards,
+        label: 'Claim',
+        action: handleRewardsVerification,
+        isVerificationComplete: rewardsActivityStatus == 'Claimed' || rewardsActivityStatus == 'Pending',
+      };
+    }
+
+    if (dailyRewardActivities.includes(activityType)) {
+      return {
+        isLoading: verifyingRewards,
+        label: 'Check In',
+        action: handleRewardsVerification,
+        isVerificationComplete: rewardsActivityStatus == 'Claimed' || rewardsActivityStatus == 'Pending',
+      };
+    }
+  }, [
+    activityType,
+    userPushSDKInstance,
+    twitterActivityStatus,
+    discordActivityStatus,
+    verifyingRewards,
+    verifyingTwitter,
+    verifyingDiscord,
+  ]);
 
   const { isAuthenticated, authButton } = useAuthWithButton({
     isLoading: isLoadingActivity,
     onSuccess: (userDetails) => activityData?.action(userDetails?.userId),
+    label: label,
   });
 
   if (isAuthenticated && isWalletConnected && !userPushSDKInstance?.readmode()) {
@@ -79,6 +118,7 @@ export const ActivityVerificationButton = ({
       <Button
         variant="tertiary"
         size="small"
+        loading={activityData?.isLoading}
         onClick={() => activityData?.action(userId)}
         disabled={activityData?.isVerificationComplete || isLoadingActivity}
       >

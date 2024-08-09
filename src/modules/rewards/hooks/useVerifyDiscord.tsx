@@ -5,11 +5,15 @@ import { useEffect, useState } from 'react';
 import { PushAPI } from '@pushprotocol/restapi';
 import { useSelector } from 'react-redux';
 
+// hooks;
 import { appConfig } from 'config';
-import { useClaimRewardsActivity } from 'queries';
+import { useClaimRewardsActivity, useGetUserRewardsDetails } from 'queries';
+import useLockedStatus from './useLockedStatus';
 
 // helpers
 import { generateVerificationProof } from '../utils/generateVerificationProof';
+import { walletToCAIP10 } from 'helpers/w2w';
+import { useAccount } from 'hooks/useAccount';
 
 // Types
 import { UserStoreType } from 'types';
@@ -32,13 +36,21 @@ const useVerifyDiscord = ({
 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
-  const [discordActivityStatus, setDiscordActivityStatus] = useState<string | null>(null);
+  const [discordActivityStatus, setDiscordActivityStatus] = useState<'Claimed' | null>(null);
   const [verifyingDiscord, setVerifyingDiscord] = useState(token ? true : false);
   const [updatedId, setUpdatedId] = useState<string | null>(null);
+  const { checkIfLocked } = useLockedStatus();
+
+  const { account } = useAccount();
+  const caip10WalletAddress = walletToCAIP10({ account });
 
   useEffect(() => {
     setErrorMessage('');
   }, [setErrorMessage]);
+
+  const { refetch: refetchUserDetails } = useGetUserRewardsDetails({
+    caip10WalletAddress: caip10WalletAddress,
+  });
 
   const { mutate: claimRewardsActivity } = useClaimRewardsActivity({
     userId: updatedId as string,
@@ -48,6 +60,8 @@ const useVerifyDiscord = ({
   const handleDiscordVerification = (userId: string) => {
     setUpdatedId(userId);
     setErrorMessage('');
+    setVerifyingDiscord(true);
+
     handleConnect(userId);
   };
 
@@ -74,7 +88,6 @@ const useVerifyDiscord = ({
     const username = localStorage.getItem('username');
 
     if (username && token) {
-      setVerifyingDiscord(true);
       const data = {
         discord: username,
         discord_token: token,
@@ -107,8 +120,10 @@ const useVerifyDiscord = ({
             if (response.status === 'COMPLETED') {
               setDiscordActivityStatus('Claimed');
               refetchActivity();
+              refetchUserDetails();
               setVerifyingDiscord(false);
               setErrorMessage('');
+              checkIfLocked();
             }
           },
           onError: (error: any) => {

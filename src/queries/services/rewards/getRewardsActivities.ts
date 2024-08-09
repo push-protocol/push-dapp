@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { getRewardsActivitiesModelCreator } from '../../models/rewards';
 import { getRewardsBaseURL } from '../../baseURL';
-import { ActivitiesParams } from 'queries/types';
 
-export const getRewardsActivities = ({ pageSize, pageNumber }: ActivitiesParams) =>
+const pageSize = 50;
+
+export const getRewardsActivities = () =>
   axios({
     method: 'GET',
     url: `${`${getRewardsBaseURL()}`}/activities/all`,
     params: {
-      pageSize: pageSize || 1,
-      pageNumber: pageNumber || 1
-    }
+      pageSize: pageSize,
+    },
   }).then((response) => getRewardsActivitiesModelCreator(response.data));
