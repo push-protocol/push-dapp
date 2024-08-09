@@ -1,11 +1,12 @@
 import { FC } from 'react';
 
-import { Box, TabItem, Tabs } from 'blocks';
+//Components
+import { Box } from 'blocks';
+import { RewardsTabs } from './RewardsTabs';
 import { DashboardSection } from './DashboardSection';
 import { LeaderBoardSection } from './LeaderBoardSection';
 import { RewardsActivitiesSection } from './RewardsActivitiesSection';
-
-import { RewardsTabs, RewardsTabs as RewardsTabsType } from '../Rewards.types';
+import { RewardsTabs as RewardsTabsType } from '../Rewards.types';
 
 export type RewardsTabsContainerProps = {
   activeTab: RewardsTabsType;
@@ -13,24 +14,6 @@ export type RewardsTabsContainerProps = {
 };
 
 const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handleSetActiveTab }) => {
-  const rewardsTabs: TabItem[] = [
-    {
-      key: 'dashboard',
-      label: 'Dashboard',
-      children: <DashboardSection onGetStarted={() => handleSetActiveTab('activity')} />,
-    },
-    {
-      key: 'activity',
-      label: 'Reward Activities',
-      children: <RewardsActivitiesSection />,
-    },
-    {
-      key: 'leaderboard',
-      label: 'Leaderboard',
-      children: <LeaderBoardSection />,
-    },
-  ];
-
   return (
     <Box
       backgroundColor="surface-primary"
@@ -39,11 +22,20 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handle
       flexDirection="column"
       padding={{ ml: 'spacing-sm spacing-xs', initial: 'spacing-md' }}
     >
-      <Tabs
-        items={rewardsTabs}
-        activeKey={activeTab}
-        onChange={(activeKey) => handleSetActiveTab(activeKey as RewardsTabs)}
-      />
+      <Box
+        gap="spacing-md"
+        display="flex"
+        flexDirection="column"
+      >
+        <RewardsTabs
+          activeTab={activeTab}
+          handleSetActiveTab={handleSetActiveTab}
+        />
+
+        {activeTab === 'dashboard' && <DashboardSection onGetStarted={() => handleSetActiveTab('activity')} />}
+        {activeTab === 'activity' && <RewardsActivitiesSection />}
+        {activeTab === 'leaderboard' && <LeaderBoardSection />}
+      </Box>
     </Box>
   );
 };
