@@ -132,3 +132,11 @@ export type EditChannelPayload = {
   fees: ethers.BigNumber;
   account: string;
 };
+
+export type AliasInfoResponse = {
+  activation_status: number;
+  alias_address: string;
+  blocked: number;
+  channel: string;
+  is_alias_verified: number;
+};

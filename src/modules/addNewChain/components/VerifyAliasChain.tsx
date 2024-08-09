@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import useToast from 'hooks/useToast';
-import { useVerifyAliasChain } from 'queries';
+import { useVerifyAliasChain, useGetAliasInfo } from 'queries';
 import { useAccount } from 'hooks';
 
 import APP_PATHS from 'config/AppPaths';
@@ -13,8 +13,11 @@ import APP_PATHS from 'config/AppPaths';
 import { Box, Button, Text, TextInput } from 'blocks';
 
 import { UserStoreType } from 'types';
+import { ALIAS_CHAIN } from '../AddNewChain.types';
 
 import { useChainAliasForm } from '../AddNewChain.form';
+
+import { aliasChainIdToChainName } from 'helpers/UtilityHelper';
 
 const VerifyAliasChain: FC = () => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
@@ -24,16 +27,24 @@ const VerifyAliasChain: FC = () => {
   const { mutate: verifyAliasChain, isPending } = useVerifyAliasChain();
 
   const { values: formValues } = useChainAliasForm();
-  const toast = useToast();
-  const navigate = useNavigate();
+
+  const selectedChainId = parseInt(formValues.chainId);
+
+  const { data: aliasData } = useGetAliasInfo({
+    alias: account,
+    aliasChain: aliasChainIdToChainName[selectedChainId as keyof typeof aliasChainIdToChainName] as ALIAS_CHAIN,
+  });
 
   const aliasAddress = formValues.alias;
+
+  const toast = useToast();
+  const navigate = useNavigate();
 
   const handleVerifyAliasChain = () => {
     verifyAliasChain(
       {
         userPushSDKInstance,
-        channelAddress: account,
+        channelAddress: aliasData?.channel ?? '',
       },
       {
         onSuccess: () => {

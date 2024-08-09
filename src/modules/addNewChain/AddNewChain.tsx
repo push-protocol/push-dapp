@@ -4,10 +4,9 @@ import { FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { css } from 'styled-components';
 import { MdError } from 'react-icons/md';
-import { useNavigate } from 'react-router-dom';
 
 import useToast from 'hooks/useToast';
-import { useGetChannelDetails, useInitiateNewChain } from 'queries';
+import { useInitiateNewChain } from 'queries';
 import { useAccount } from 'hooks';
 
 import { addNewChainSteps } from './AddNewChain.constants';
@@ -34,16 +33,21 @@ const AddNewChain: FC = () => {
   const toast = useToast();
   const { mutate: initiateNewChain, isPending, isError } = useInitiateNewChain();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
-  const { account } = useAccount();
-  const { data: channelDetails } = useGetChannelDetails(account);
-  const nagivate = useNavigate();
+  // const { account, chainId } = useAccount();
+  // const { data: channelDetails } = useGetChannelDetails(account);
+
+  // const { data: aliasData } = useGetAliasInfo({
+  //   alias: account,
+  //   aliasChain: aliasChainIdToChainName[chainId as keyof typeof aliasChainIdToChainName] as ALIAS_CHAIN,
+  // });
+  // const nagivate = useNavigate();
 
   useEffect(() => {
     setIsAuthModalVisible(userPushSDKInstance && userPushSDKInstance?.readmode());
   }, [userPushSDKInstance]);
-
+  // console.debug(aliasData, 'alias');
   // useEffect(() => {
-  //   if (!channelDetails) nagivate('/channels');
+  //   if (!channelDetails && !aliasData) nagivate('/channels');
   // }, [channelDetails]);
 
   const handleInitiate = (alias: string, chainId: string) => {

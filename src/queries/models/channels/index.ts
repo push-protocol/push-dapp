@@ -6,3 +6,4 @@ export * from './initiateNewChainModelCreator';
 export * from './removeChannelDelegateModelCreator';
 export * from './sendNotificationModelCreator';
 export * from './verifyAliasChainModalCreator';
+export * from './getAliasInfoModelCreator';
