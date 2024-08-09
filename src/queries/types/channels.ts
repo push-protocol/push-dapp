@@ -92,6 +92,7 @@ export type ChannelDelegatesResponse = Array<string>;
 
 export type GetChannelDelegatesParams = {
   userPushSDKInstance: PushAPI;
+  channelAddressinCAIP: string;
 };
 
 export type RemoveChannelDelegateParams = {

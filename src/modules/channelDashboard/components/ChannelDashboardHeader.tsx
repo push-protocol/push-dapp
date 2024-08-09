@@ -13,22 +13,31 @@ import {
   Skeleton,
 } from 'blocks';
 
-import { ChannelDetails } from 'queries';
+import { Alias, ChannelDetails } from 'queries';
+
+import { useAccount } from 'hooks';
+import { appConfig } from 'config';
 
 import { ChannelDashboardInfo } from './ChannelDashboardInfo';
 import { DashboardActiveState } from '../ChannelDashboard.types';
+
 
 type ChannelDashboardHeaderProps = {
   channelDetails?: ChannelDetails;
   setActiveState: (activeState: DashboardActiveState) => void;
   onActiveNetwork: boolean;
+  currentAliasDetails?: Alias;
 };
 
 const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
   channelDetails,
   setActiveState,
-  onActiveNetwork
+  onActiveNetwork,
+  currentAliasDetails
 }) => {
+  const { chainId } = useAccount();
+  const isAliasVerified = currentAliasDetails && currentAliasDetails?.is_alias_verified === 0;
+  const onCoreNetwork: boolean = appConfig.coreContractChain === chainId;
   return (
     <Box
       display="flex"
@@ -41,10 +50,11 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
         channelDetails={channelDetails}
         showAddNewChain
         onActiveNetwork={onActiveNetwork}
+        isAliasVerified={isAliasVerified}
       />
 
-      {/* Edit Channel and Dropdown */}
-      {onActiveNetwork && (
+      {/* Edit Channel and Dropdown only visible on Core network */}
+      {onCoreNetwork && (
         <Box
           display="flex"
           height="fit-content"

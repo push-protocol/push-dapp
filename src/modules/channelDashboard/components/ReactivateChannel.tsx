@@ -193,6 +193,7 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
           <Button
             disabled={isPending}
             onClick={handleReactivate}
+            loading={isPending}
           >
             {isPending ? 'Activating' : 'Activate'}
           </Button>
@@ -200,6 +201,7 @@ const ReactivateChannel: FC<ReactivateChannelProps> = ({
           <Button
             disabled={approvingPUSH}
             onClick={handleApprovePUSH}
+            loading={approvingPUSH}
           >
             {approvingPUSH ? 'Approving' : 'Approve PUSH'}
           </Button>

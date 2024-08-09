@@ -1,4 +1,4 @@
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useMemo, useState } from 'react';
 
 import { useSelector } from 'react-redux';
 
@@ -14,6 +14,7 @@ import { useAddDelegate, useGetChannelDelegates } from 'queries';
 import { UserStoreType } from 'types';
 import { DashboardActiveState } from '../ChannelDashboard.types';
 import { createDelegateForm } from '../forms';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 type ChannelAddDelegateProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
@@ -26,15 +27,19 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
     return state.user;
   });
 
-  const { wallet } = useAccount();
+  const { wallet, chainId, account } = useAccount();
 
   // @ts-expect-error
   const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
 
   const [addDelegateError, setAddDelegateError] = useState<string | null>(null);
 
-  const { data: channel_delegates, refetch: refetchChannelDelegate } = useGetChannelDelegates(userPushSDKInstance);
+  const addressinCaip = useMemo(() => {
+    return convertAddressToAddrCaip(account, chainId);
+  }, [chainId, account]);
 
+
+  const { data: channel_delegates, refetch: refetchChannelDelegate } = useGetChannelDelegates(userPushSDKInstance, addressinCaip);
 
   const { mutate: addDelegate, isPending } = useAddDelegate();
 
@@ -52,7 +57,7 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
     addDelegate(
       {
         userPushSDKInstance: userPushInstance,
-        delegateAddress: delegateForm.values.delegateAddress,
+        delegateAddress: convertAddressToAddrCaip(delegateForm.values.delegateAddress, chainId),
       },
       {
         onSuccess: () => {
@@ -129,7 +134,7 @@ const ChannelAddDelegate: FC<ChannelAddDelegateProps> = ({
             >
               Back
             </Button>
-            <Button disabled={isPending}>{isPending ? 'Adding' : 'Add'}</Button>
+            <Button disabled={isPending} loading={isPending}>{isPending ? 'Adding' : 'Add'}</Button>
           </Box>
         </Box>
       </form>
