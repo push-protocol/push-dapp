@@ -51,13 +51,11 @@ const StyledTextArea = styled.textarea<{
       display: flex;
 
       font-family: var(--font-family);
-      font-size: 14px;
-      font-style: normal;
-      font-weight: 400;
-
+      font-size: ${textVariants['bs-regular'].fontSize};
+      font-style: ${textVariants['bs-regular'].fontStyle};
+      font-weight: ${textVariants['bs-regular'].fontWeight};
+      line-height: ${textVariants['bs-regular'].lineHeight};
       gap: var(--spacing-none, 0px);
-
-      line-height: 20px;
 
       padding: var(--spacing-xs, 12px);
       ::placeholder {
@@ -159,7 +157,6 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           onChange={onChange}
           placeholder={placeholder}
           ref={ref}
-          required={required}
           resizable={resizable}
           rows={numberOfLines}
           success={success}
@@ -171,8 +168,8 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
               success || error
                 ? 'components-inputs-text-default'
                 : disabled
-                ? 'components-inputs-text-disabled'
-                : 'components-inputs-text-placeholder'
+                  ? 'components-inputs-text-disabled'
+                  : 'components-inputs-text-placeholder'
             }
           >
             {description}

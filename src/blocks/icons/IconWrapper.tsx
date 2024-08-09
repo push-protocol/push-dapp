@@ -1,6 +1,7 @@
 import { FC, ReactNode } from 'react';
 import styled, { FlattenSimpleInterpolation } from 'styled-components';
 import { IconProps } from './Icons.types';
+import { ThemeColors } from 'blocks/theme/Theme.types';
 
 type IconWrapperProps = Omit<IconProps, 'as' | 'ref'> & {
   /* Name of the component to be used as aria-label for accessibility */
@@ -13,7 +14,7 @@ type IconWrapperProps = Omit<IconProps, 'as' | 'ref'> & {
 
 type StyledIconWrapperProps = {
   /* Color to be applied to the svg */
-  color: string;
+  color: string | ThemeColors;
   /* css prop provided by styled components to provide additional css to icon */
   css?: FlattenSimpleInterpolation;
   /* Child react nodes rendered by Wrapper */

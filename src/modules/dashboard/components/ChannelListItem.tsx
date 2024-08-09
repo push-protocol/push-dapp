@@ -6,7 +6,7 @@ import { css } from 'styled-components';
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 
 //Configs
-import { LOGO_ALIAS_CHAIN } from '../configs';
+import { LOGO_ALIAS_CHAIN } from 'common';
 
 //Utility functions
 import { formatSubscriberCount } from '../Dashboard.utils';

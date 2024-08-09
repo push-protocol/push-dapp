@@ -10,12 +10,14 @@ export { Modal, type ModalProps, modal } from './modal';
 export { ProgressBar, type ProgressBarProps } from './progressBar';
 export { Separator, type SeparatorProps } from './separator';
 export { Skeleton, type SkeletonProps } from './skeleton';
+export { Select, type SelectProps } from './select';
 export { Tabs, type TabsProps, type TabItem } from './tabs';
 export { Text, type TextProps } from './text';
 export { Tooltip, type TooltipProps } from './tooltip';
 export { TextArea, type TextAreaProps } from './textarea';
 export { TextInput } from './textInput';
 export { ToggleSwitch } from './toggleSwtich';
+export { FileUpload } from './fileUpload';
 export { Spinner, type SpinnerProps } from './spinner';
 
 export * from './Blocks.colors';

@@ -19,6 +19,8 @@ import LoaderSpinner, {
 import { Anchor, Item } from '../primaries/SharedStyling';
 const AirdropPage = lazy(() => import('pages/AirdropPage'));
 const ChannelDashboardPage = lazy(() => import('pages/ChannelDashboardPage'));
+const ChannelDashboardPageV2 = lazy(() => import('pages/ChannelDashboardPageV2'));
+const CreateChannelPage = lazy(() => import('pages/CreateChannelPage'));
 const ChannelsPage = lazy(() => import('pages/ChannelsPage'));
 const ChatPage = lazy(() => import('pages/ChatPage'));
 const ComingSoonPage = lazy(() => import('pages/ComingSoonPage'));
@@ -42,7 +44,11 @@ const ClaimGalxePage = lazy(() => import('pages/ClaimGalxePage'));
 const WelcomDashboardPage = lazy(() => import('pages/WelcomeDashboardPage'));
 const RewardPointsPage = lazy(() => import('pages/RewardPointsPage'));
 const PointsVaultPage = lazy(() => import('pages/PointsVaultPage'));
+const AddNewChainPage = lazy(() => import('pages/AddNewChain'));
+
 const DiscordVerificationPage = lazy(() => import('pages/DiscordVerificationPage'));
+
+const SendNotificationPage = lazy(() => import('pages/SendNotificationPage'));
 // import AirdropPage from 'pages/AirdropPage';
 // import ChannelDashboardPage from 'pages/ChannelDashboardPage';
 // import ChannelsPage from 'pages/ChannelsPage';
@@ -160,6 +166,10 @@ function MasterInterfacePage() {
         >
           <Routes>
             <Route
+              path={APP_PATHS.AddNewChain}
+              element={<AddNewChainPage />}
+            />
+            <Route
               path={APP_PATHS.WelcomeDashboard}
               element={<WelcomDashboardPage />}
             />
@@ -232,9 +242,20 @@ function MasterInterfacePage() {
               path={APP_PATHS.Dashboard}
               element={<ChannelDashboardPage />}
             />
+
+            <Route
+              path={APP_PATHS.CreateChannel}
+              element={<CreateChannelPage />}
+            />
+
+            <Route
+              path={`${APP_PATHS.ChannelDashboard}/:channelId`}
+              element={<ChannelDashboardPageV2 />}
+            />
+
             <Route
               path={APP_PATHS.Send}
-              element={<SendNotifsPage />}
+              element={<SendNotificationPage />}
             />
             <Route
               path={APP_PATHS.Receive}

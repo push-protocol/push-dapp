@@ -132,7 +132,7 @@ const NavigationList = {
         name: 'Create Channel',
         title: 'Create Channel',
         alt: 'Create Channels / Dashboard',
-        href: APP_PATHS.Dashboard,
+        href: APP_PATHS.CreateChannel,
         newTab: false,
         isRoute: true,
         hasMenuLogic: true,

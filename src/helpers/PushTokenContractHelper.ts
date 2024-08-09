@@ -11,7 +11,7 @@ type PushTokenApprovalAmountType = {
 export const getPushTokenApprovalAmount = async ({
   address,
   provider,
-  contractAddress,
+  contractAddress
 }: PushTokenApprovalAmountType): Promise<string> => {
   try {
     const pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, provider);
@@ -32,7 +32,7 @@ type HasEnoughPushToken = {
 export const getHasEnoughPushToken = async ({
   address,
   provider,
-  noOfPushTokensToCheck,
+  noOfPushTokensToCheck
 }: HasEnoughPushToken): Promise<boolean> => {
   try {
     const pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, provider);
@@ -82,25 +82,22 @@ export const approvePushToken = async ({ signer, contractAddress, amount }: Push
   }
 };
 
-type ImportPushTokenType = {
-  provider: any;
-};
-export const importPushToken = async ({ provider }: ImportPushTokenType): Promise<boolean> => {
+export const importPushToken = async (): Promise<boolean> => {
   try {
     const name = 'Ethereum Push Notification Service';
     const symbol = 'PUSH';
     const decimals = 18;
 
-    await provider.request({
+    await window.ethereum.request({
       method: 'wallet_watchAsset',
       params: {
         type: 'ERC20',
         options: {
           address: addresses.pushToken,
           symbol: symbol,
-          decimals: decimals,
-        },
-      },
+          decimals: decimals
+        }
+      }
     });
     return true;
   } catch (err) {
@@ -119,7 +116,7 @@ export const mintPushToken = async ({ noOfTokens, provider, account }: MintPushT
     var signer = provider.getSigner(account);
     let pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
     console.info({
-      pushTokenContract,
+      pushTokenContract
     });
     console.info(1);
     let pushTokenAmount = noOfTokens;
@@ -136,5 +133,6 @@ export const mintPushToken = async ({ noOfTokens, provider, account }: MintPushT
     return noOfTokens;
   } catch (err) {
     console.error(err);
+    return 0;
   }
 };

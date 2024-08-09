@@ -9,8 +9,10 @@
  */
 
 html {
-  line-height: 1.15; /* 1 */
-  -webkit-text-size-adjust: 100%; /* 2 */
+  line-height: 1.15;
+  /* 1 */
+  -webkit-text-size-adjust: 100%;
+  /* 2 */
 }
 
 /* Sections
@@ -51,9 +53,12 @@ h1 {
  */
 
 hr {
-  box-sizing: content-box; /* 1 */
-  height: 0; /* 1 */
-  overflow: visible; /* 2 */
+  box-sizing: content-box;
+  /* 1 */
+  height: 0;
+  /* 1 */
+  overflow: visible;
+  /* 2 */
 }
 
 /**
@@ -62,8 +67,10 @@ hr {
  */
 
 pre {
-  font-family: FK Grotesk Neu, monospace, monospace; /* 1 */
-  font-size: 1em; /* 2 */
+  font-family: FK Grotesk Neu, monospace, monospace;
+  /* 1 */
+  font-size: 1em;
+  /* 2 */
 }
 
 /* Text-level semantics
@@ -83,9 +90,12 @@ a {
  */
 
 abbr[title] {
-  border-bottom: none; /* 1 */
-  text-decoration: underline; /* 2 */
-  text-decoration: underline dotted; /* 2 */
+  border-bottom: none;
+  /* 1 */
+  text-decoration: underline;
+  /* 2 */
+  text-decoration: underline dotted;
+  /* 2 */
 }
 
 /**
@@ -105,8 +115,10 @@ strong {
 code,
 kbd,
 samp {
-  font-family: FK Grotesk Neu, monospace, monospace; /* 1 */
-  font-size: 1em; /* 2 */
+  font-family: FK Grotesk Neu, monospace, monospace;
+  /* 1 */
+  font-size: 1em;
+  /* 2 */
 }
 
 /**
@@ -162,10 +174,14 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: inherit; /* 1 */
-  font-size: 100%; /* 1 */
-  line-height: 1.15; /* 1 */
-  margin: 0; /* 2 */
+  font-family: inherit;
+  /* 1 */
+  font-size: 100%;
+  /* 1 */
+  line-height: 1.15;
+  /* 1 */
+  margin: 0;
+  /* 2 */
 }
 
 /**
@@ -174,7 +190,8 @@ textarea {
  */
 
 button,
-input { /* 1 */
+input {
+  /* 1 */
   overflow: visible;
 }
 
@@ -184,7 +201,8 @@ input { /* 1 */
  */
 
 button,
-select { /* 1 */
+select {
+  /* 1 */
   text-transform: none;
 }
 
@@ -238,12 +256,18 @@ fieldset {
  */
 
 legend {
-  box-sizing: border-box; /* 1 */
-  color: inherit; /* 2 */
-  display: table; /* 1 */
-  max-width: 100%; /* 1 */
-  padding: 0; /* 3 */
-  white-space: normal; /* 1 */
+  box-sizing: border-box;
+  /* 1 */
+  color: inherit;
+  /* 2 */
+  display: table;
+  /* 1 */
+  max-width: 100%;
+  /* 1 */
+  padding: 0;
+  /* 3 */
+  white-space: normal;
+  /* 1 */
 }
 
 /**
@@ -269,8 +293,10 @@ textarea {
 
 [type="checkbox"],
 [type="radio"] {
-  box-sizing: border-box; /* 1 */
-  padding: 0; /* 2 */
+  box-sizing: border-box;
+  /* 1 */
+  padding: 0;
+  /* 2 */
 }
 
 /**
@@ -288,8 +314,10 @@ textarea {
  */
 
 [type="search"] {
-  -webkit-appearance: textfield; /* 1 */
-  outline-offset: -2px; /* 2 */
+  -webkit-appearance: textfield;
+  /* 1 */
+  outline-offset: -2px;
+  /* 2 */
 }
 
 /**
@@ -306,8 +334,10 @@ textarea {
  */
 
 ::-webkit-file-upload-button {
-  -webkit-appearance: button; /* 1 */
-  font: inherit; /* 2 */
+  -webkit-appearance: button;
+  /* 1 */
+  font: inherit;
+  /* 2 */
 }
 
 /* Interactive
@@ -355,49 +385,49 @@ template {
 .Toastify {
   z-index: 999999;
 }
-.Toastify__toast {
-  
-}
-.Toastify__toast--rtl {
-}
-.Toastify__toast--dark {
-}
-.Toastify__toast--default {
-}
-.Toastify__toast--info {
-}
-.Toastify__toast--success {
-}
-.Toastify__toast--warning {
-}
-.Toastify__toast--error {
-}
+
+.Toastify__toast {}
+
+.Toastify__toast--rtl {}
+
+.Toastify__toast--dark {}
+
+.Toastify__toast--default {}
+
+.Toastify__toast--info {}
+
+.Toastify__toast--success {}
+
+.Toastify__toast--warning {}
+
+.Toastify__toast--error {}
+
 .Toastify__toast-body {
   font-size: 12px;
   line-height: 1.5em;
 }
 
 /** Classes for the close button. Better use your own closeButton **/
-.Toastify__close-button {
-}
-.Toastify__close-button--default {
-}
-.Toastify__close-button > svg {
-}
-.Toastify__close-button:hover, .Toastify__close-button:focus {
-}
+.Toastify__close-button {}
+
+.Toastify__close-button--default {}
+
+.Toastify__close-button>svg {}
+
+.Toastify__close-button:hover,
+.Toastify__close-button:focus {}
 
 /** Classes for the progress bar **/
-.Toastify__progress-bar {
-}
-.Toastify__progress-bar--animated {
-}
-.Toastify__progress-bar--controlled {
-}
-.Toastify__progress-bar--rtl {
-}
-.Toastify__progress-bar--default {
-}
+.Toastify__progress-bar {}
+
+.Toastify__progress-bar--animated {}
+
+.Toastify__progress-bar--controlled {}
+
+.Toastify__progress-bar--rtl {}
+
+.Toastify__progress-bar--default {}
+
 .Toastify__progress-bar--dark {
   background: #e1087f !important;
 }
@@ -405,10 +435,10 @@ template {
 /**
  * Custom CSS
  */
- @font-face {
+@font-face {
   font-family: 'FK Grotesk Neu';
   src: url('./assets/fonts/FKGroteskNeue-Regular.woff2') format('woff2'),
-       url('./assets/fonts/FKGroteskNeue-Regular.woff') format('woff');
+    url('./assets/fonts/FKGroteskNeue-Regular.woff') format('woff');
   font-weight: 100 400;
   font-style: normal;
 }
@@ -417,28 +447,34 @@ template {
 @font-face {
   font-family: 'FK Grotesk Neu';
   src: url('./assets/fonts/FKGroteskNeue-Medium.woff2') format('woff2'),
-       url('./assets/fonts/FKGroteskNeu-Medium.woff') format('woff');
+    url('./assets/fonts/FKGroteskNeu-Medium.woff') format('woff');
 
   font-weight: 500 600;
   font-style: normal;
- 
-} 
+
+}
 
 @font-face {
   font-family: 'FK Grotesk Neu';
   src: url('./assets/fonts/FKGroteskNeue-Bold.woff2') format('woff2'),
-       url('./assets/fonts/FKGroteskNeue-Bold.woff') format('woff');
-  font-weight: 700 800;  
+    url('./assets/fonts/FKGroteskNeue-Bold.woff') format('woff');
+  font-weight: 700 800;
   font-style: normal;
   font-display: swap;
 }
 
 
- span, p, label, div {
+span,
+p,
+label,
+div {
   font-family: "FK Grotesk Neu", Helvetica, sans-serif;
 }
 
-button, a, a:before, a:after {
+button,
+a,
+a:before,
+a:after {
   font-family: "FK Grotesk Neu", Helvetica, sans-serif;
   border: 0;
   outline: 0;
@@ -450,31 +486,36 @@ button, a, a:before, a:after {
 }
 
 
- h1 {
+h1 {
   font-family: "FK Grotesk Neu", Helvetica, sans-serif;
-   font-weight: 700;
-   line-height: 1.25em;
-   color: #fff;
-   text-transform: uppercase;
-   font-size: 2.25rem;
-   text-shadow: 0 0 20px rgb(255 255 255 / 60%);
-   letter-spacing: normal;
- }
+  font-weight: 700;
+  line-height: 1.25em;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 2.25rem;
+  text-shadow: 0 0 20px rgb(255 255 255 / 60%);
+  letter-spacing: normal;
+}
 
- h2, h3, h4, h5, h6 {
-   font-family: 'FK Grotesk Neu', Helvetica, sans-serif;
-   font-weight: 500;
-   font-size: 32px;
-   line-height: 1.25em;
-   line-height: 1.25em;
- }
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'FK Grotesk Neu', Helvetica, sans-serif;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 1.25em;
+  line-height: 1.25em;
+}
 
 /*
  *  VIDEO WRAPPER
  */
- .videoWrapper {
+.videoWrapper {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 */
+  padding-bottom: 56.25%;
+  /* 16:9 */
   height: 0;
   width: 100%;
 }
@@ -492,38 +533,39 @@ button, a, a:before, a:after {
  */
 /* Secondary */
 #scrollstyle-secondary::-webkit-scrollbar-track {
-	background-color: #EEE;
-	border-radius: 10px;
+  background-color: #EEE;
+  border-radius: 10px;
 }
 
 #scrollstyle-secondary::-webkit-scrollbar {
-	width: 6px;
-	background-color: #EEE;
+  width: 6px;
+  background-color: #EEE;
 }
 
 #scrollstyle-secondary::-webkit-scrollbar-thumb {
-	border-radius: 10px;
-	background-image: -webkit-gradient(linear,
-									   left top,
-									   left bottom,
-									   color-stop(0.44, #35c5f3),
-									   color-stop(0.72, #35b0f3),
-									   color-stop(0.86, #35a1f3));
+  border-radius: 10px;
+  background-image: -webkit-gradient(linear,
+      left top,
+      left bottom,
+      color-stop(0.44, #35c5f3),
+      color-stop(0.72, #35b0f3),
+      color-stop(0.86, #35a1f3));
 }
 
 /* style modification for react select */
-.select__control{
+.select__control {
   height: 100% !important;
   border-radius: 0 !important;
   border: 1px solid black !important;
 
   box-shadow: unset !important;
 }
-.select__control:hover{
+
+.select__control:hover {
   border-color: black !important;
 }
 
-.basic-single{
+.basic-single {
   position: absolute !important;
   width: 20% !important;
   min-width: 200px !important;
@@ -542,8 +584,8 @@ button, a, a:before, a:after {
   --w3o-action-color: #C631C6 !important;
   --w3o-border-radius: 24px !important;
   --w3o-font-family: unset !important;
-  --onboard-modal-backdrop: transparent !important;
-  --onboard-modal-z-index:999999 !important;
+  /* --onboard-modal-backdrop: transparent !important; */
+  --onboard-modal-z-index: 999999 !important;
   --modal-backdrop: transparent !important;
 
   /* Wallet connect modal z-index */
@@ -560,21 +602,20 @@ button, a, a:before, a:after {
   --w3o-border-radius: 24px !important;
   --w3o-font-family: unset !important;
   --onboard-modal-backdrop: transparent !important;
-  --onboard-modal-z-index:999999 !important;
+  --onboard-modal-z-index: 999999 !important;
   --modal-backdrop: transparent !important;
 }
 
 #onboard-container {
-  position: absolute; 
+  position: absolute;
   top: 14rem;
   margin: auto;
-  background-color: transparent; 
+  background-color: transparent;
   left: 20px;
-  right: 20px; 
-  margin-left: auto; 
+  right: 20px;
+  margin-left: auto;
   margin-right: auto;
   border-radius: var(--w3o-border-radius);
   overflow: auto;
-	z-index: 9999999;
+  z-index: 9999999;
 }
-
