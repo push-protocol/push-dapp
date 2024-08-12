@@ -2,7 +2,7 @@
 import { CONSTANTS, ProgressHookType, PushAPI } from '@pushprotocol/restapi';
 import { ethers } from 'ethers';
 import useModalBlur from 'hooks/useModalBlur';
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 
 // Internal Components
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -29,7 +29,7 @@ import { GlobalContext } from './GlobalContext';
 
 export const AppContext = createContext<AppContextType | null>(null);
 
-const AppContextProvider = ({ children }) => {
+const AppContextProvider = ({ children }: { children: ReactNode }) => {
   // To ensure intialize via [account] is not run on certain logic points
   const shouldInitializeRef = useRef(true); // Using a ref to control useEffect execution
 
@@ -550,6 +550,14 @@ const AppContextProvider = ({ children }) => {
       {children}
     </AppContext.Provider>
   );
+};
+
+export const useAppContext = () => {
+  const context = useContext(AppContext);
+  if (context === null) {
+    throw new Error('useAppContext must be used within an AppContextProvider');
+  }
+  return context;
 };
 
 export default AppContextProvider;

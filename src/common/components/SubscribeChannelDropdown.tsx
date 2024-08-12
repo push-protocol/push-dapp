@@ -1,12 +1,12 @@
 // React and other libraries
-import { FC, ReactNode, useContext } from 'react';
+import { FC, ReactNode } from 'react';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 
 import { ethers } from 'ethers';
 
 import { Box, Dropdown } from 'blocks';
 import { appConfig } from 'config';
-import { AppContext } from 'contexts/AppContext';
+import { useAppContext } from 'contexts/AppContext';
 
 import { useAccount } from 'hooks';
 
@@ -29,11 +29,7 @@ const SubscribeChannelDropdown: FC<SubscribeChannelDropdownProps> = (options) =>
   const { children, channelDetails, onSuccess } = options;
   const { account, provider, wallet, chainId } = useAccount();
 
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error('App Context is null');
-  }
-  const { connectWallet } = context;
+  const { connectWallet } = useAppContext();
 
   const channelSettings =
     channelDetails && channelDetails?.channel_settings ? JSON.parse(channelDetails?.channel_settings) : null;

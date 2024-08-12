@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC, ReactNode, useContext } from 'react';
+import { FC, ReactNode } from 'react';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 
 import { useSelector } from 'react-redux';
@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { Dropdown, Menu, MenuItem, OptOut } from 'blocks';
 
 import { appConfig } from 'config';
-import { AppContext } from 'contexts/AppContext';
+import { useAppContext } from 'contexts/AppContext';
 
 import { useAccount } from 'hooks';
 import useToast from 'hooks/useToast';
@@ -38,11 +38,7 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
 }) => {
   const { account, chainId, provider, wallet } = useAccount();
 
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error('App Context is null');
-  }
-  const { handleConnectWalletAndEnableProfile } = context;
+  const { handleConnectWalletAndEnableProfile } = useAppContext();
 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
