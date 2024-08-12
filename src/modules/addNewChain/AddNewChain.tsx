@@ -4,23 +4,27 @@ import { FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { css } from 'styled-components';
 import { MdError } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 
 import useToast from 'hooks/useToast';
-import { useInitiateNewChain } from 'queries';
+import { useGetAliasInfo, useGetChannelDetails, useInitiateNewChain } from 'queries';
 import { useAccount } from 'hooks';
 
 import { addNewChainSteps } from './AddNewChain.constants';
+import APP_PATHS from 'config/AppPaths';
+import { appConfig } from 'config';
 
 import { NewAddress } from './components/NewAddress';
 import { ChangeNetwork } from './components/ChangeNetwork';
 import { VerifyAliasChain } from './components/VerifyAliasChain';
 import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
-import { Box, Text } from 'blocks';
+import { Alert, Box, Button, Text } from 'blocks';
 import { Stepper } from 'common';
 
 import { UserStoreType } from 'types';
-import { ActiveStepKey } from './AddNewChain.types';
+import { ALIAS_CHAIN, ActiveStepKey } from './AddNewChain.types';
 
+import { aliasChainIdToChainName } from 'helpers/UtilityHelper';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 import { FormikChainAliasProvider } from './AddNewChain.form';
@@ -33,22 +37,18 @@ const AddNewChain: FC = () => {
   const toast = useToast();
   const { mutate: initiateNewChain, isPending, isError } = useInitiateNewChain();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
-  // const { account, chainId } = useAccount();
-  // const { data: channelDetails } = useGetChannelDetails(account);
+  const { account, chainId, switchChain } = useAccount();
+  const { data: channelDetails } = useGetChannelDetails(account);
+  const { data: alaisDetails } = useGetAliasInfo({
+    alias: account,
+    aliasChain: aliasChainIdToChainName[chainId as keyof typeof aliasChainIdToChainName] as ALIAS_CHAIN,
+  });
 
-  // const { data: aliasData } = useGetAliasInfo({
-  //   alias: account,
-  //   aliasChain: aliasChainIdToChainName[chainId as keyof typeof aliasChainIdToChainName] as ALIAS_CHAIN,
-  // });
-  // const nagivate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsAuthModalVisible(userPushSDKInstance && userPushSDKInstance?.readmode());
   }, [userPushSDKInstance]);
-  // console.debug(aliasData, 'alias');
-  // useEffect(() => {
-  //   if (!channelDetails && !aliasData) nagivate('/channels');
-  // }, [channelDetails]);
 
   const handleInitiate = (alias: string, chainId: string) => {
     initiateNewChain(
@@ -82,6 +82,12 @@ const AddNewChain: FC = () => {
   const handleNextStep = (key: ActiveStepKey) => {
     setCompletedSteps([...new Set([...completedSteps, key])]);
     setActiveStepKey(key);
+  };
+
+  const handleCloseAuthModal = () => {
+    if (channelDetails) navigate(`${APP_PATHS.ChannelDashboard}/${account}}`);
+    else navigate(APP_PATHS.WelcomeDashboard);
+    setIsAuthModalVisible(false);
   };
 
   return (
@@ -134,30 +140,70 @@ const AddNewChain: FC = () => {
             Add an alias chain to your channel to enable notifications to that chain.
           </Text>
         </Box>
-        <Stepper
-          steps={addNewChainSteps}
-          completedSteps={completedSteps}
-          setActiveStepKey={(key) => setActiveStepKey(key as ActiveStepKey)}
-        />
-        {activeStepKey === 'newaddress' && <NewAddress isLoading={isPending && !isError} />}
-        {activeStepKey === 'changenetwork' && <ChangeNetwork handleNextStep={handleNextStep} />}
-        {activeStepKey === 'verifyalias' && <VerifyAliasChain />}
-        {isAuthModalVisible && (
-          <Box
-            display="flex"
-            justifyContent="center"
-            width="-webkit-fill-available"
-            alignItems="center"
-            css={css`
-              z-index: 99999;
-            `}
-          >
-            <UnlockProfileWrapper
-              type={UNLOCK_PROFILE_TYPE.MODAL}
-              showConnectModal={true}
-              onClose={() => setIsAuthModalVisible(false)}
+        {chainId !== appConfig.coreContractChain && completedSteps.length === 1 ? (
+          <>
+            <Box
+              display="flex"
+              padding="spacing-md"
+              flexDirection="column"
+              gap="spacing-sm"
+              alignSelf="stretch"
+              alignItems="flex-start"
+              borderRadius="radius-sm"
+              backgroundColor="surface-secondary"
+            >
+              <Text
+                textAlign="center"
+                color="text-brand-medium"
+                variant="h5-semibold"
+              >
+                Please change your network to Ethereum to proceed.
+              </Text>
+            </Box>
+            <Button onClick={() => switchChain(appConfig.coreContractChain)}>Change Network</Button>
+          </>
+        ) : channelDetails || alaisDetails ? (
+          <>
+            <Stepper
+              steps={addNewChainSteps}
+              completedSteps={completedSteps}
+              setActiveStepKey={(key) => setActiveStepKey(key as ActiveStepKey)}
             />
-          </Box>
+            {activeStepKey === 'newaddress' && (
+              <NewAddress
+                isLoading={isPending && !isError}
+                channelDetails={channelDetails}
+              />
+            )}
+            {activeStepKey === 'changenetwork' && <ChangeNetwork handleNextStep={handleNextStep} />}
+            {activeStepKey === 'verifyalias' && <VerifyAliasChain alaisDetails={alaisDetails} />}
+            {isAuthModalVisible && (
+              <Box
+                display="flex"
+                justifyContent="center"
+                width="-webkit-fill-available"
+                alignItems="center"
+                css={css`
+                  z-index: 99999;
+                `}
+              >
+                <UnlockProfileWrapper
+                  type={UNLOCK_PROFILE_TYPE.MODAL}
+                  showConnectModal={true}
+                  onClose={handleCloseAuthModal}
+                />
+              </Box>
+            )}
+          </>
+        ) : (
+          <>
+            <Alert
+              variant="error"
+              showIcon
+              heading="User does not have a channel on Push. Create a channel to proceed."
+            />
+            <Button onClick={() => navigate(APP_PATHS.CreateChannel)}>Create Channel</Button>
+          </>
         )}
       </Box>
     </FormikChainAliasProvider>

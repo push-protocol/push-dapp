@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { Box, Button, Select, TextInput } from 'blocks';
+import { Alert, Box, Button, Select, TextInput } from 'blocks';
 
 import { getSelectChains } from 'common';
 
@@ -8,15 +8,39 @@ import { useChainAliasForm } from '../AddNewChain.form';
 
 import { allowedNetworks } from '../AddNewChain.constants';
 
+import { ChannelDetails } from 'queries';
+
 export type NewAddressProps = {
   isLoading: boolean;
+  channelDetails: ChannelDetails | undefined;
 };
 
-const NewAddress: FC<NewAddressProps> = ({ isLoading }) => {
+const NewAddress: FC<NewAddressProps> = ({ isLoading, channelDetails }) => {
   const selectChainOptions = getSelectChains(allowedNetworks);
   const { values: formValues, handleSubmit, handleChange, errors, touched } = useChainAliasForm();
+  const isAliasNetworkExists = channelDetails?.aliases.find(
+    (alias) => alias.alias_blockchain_id === formValues.chainId
+  );
+
+  const validateInput = () => {
+    if (!isAliasNetworkExists && formValues.alias) return false;
+    return true;
+  };
+
   return (
-    <Box width="100%">
+    <Box
+      width="100%"
+      display="flex"
+      flexDirection="column"
+      gap="spacing-lg"
+    >
+      {isAliasNetworkExists && (
+        <Alert
+          variant={'error'}
+          heading="Channel already exists on this chain. Select a different chain to proceed."
+          showIcon
+        />
+      )}
       <form onSubmit={handleSubmit}>
         <Box
           display="flex"
@@ -31,7 +55,6 @@ const NewAddress: FC<NewAddressProps> = ({ isLoading }) => {
             gap="spacing-xs"
             alignItems="flex-start"
             width="100%"
-            // justifyContent="center"
           >
             <TextInput
               label="Your Address on New Chain"
@@ -57,7 +80,7 @@ const NewAddress: FC<NewAddressProps> = ({ isLoading }) => {
             </Box>
           </Box>
           <Button
-            disabled={!formValues.alias}
+            disabled={validateInput()}
             variant="primary"
             loading={isLoading}
           >

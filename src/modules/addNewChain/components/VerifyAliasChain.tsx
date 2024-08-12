@@ -5,46 +5,57 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import useToast from 'hooks/useToast';
-import { useVerifyAliasChain, useGetAliasInfo } from 'queries';
+import { useVerifyAliasChain, AliasInfoResponse, useGetChannelDetails } from 'queries';
 import { useAccount } from 'hooks';
 
 import APP_PATHS from 'config/AppPaths';
 
-import { Box, Button, Text, TextInput } from 'blocks';
+import { Alert, Box, Button, Text, TextInput } from 'blocks';
 
 import { UserStoreType } from 'types';
-import { ALIAS_CHAIN } from '../AddNewChain.types';
 
 import { useChainAliasForm } from '../AddNewChain.form';
 
-import { aliasChainIdToChainName } from 'helpers/UtilityHelper';
+export type VerifyAliasChainProps = {
+  alaisDetails: AliasInfoResponse | undefined;
+};
 
-const VerifyAliasChain: FC = () => {
+const VerifyAliasChain: FC<VerifyAliasChainProps> = ({ alaisDetails }) => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
     return state.user;
   });
-  const { account } = useAccount();
+  const { account, chainId } = useAccount();
   const { mutate: verifyAliasChain, isPending } = useVerifyAliasChain();
 
   const { values: formValues } = useChainAliasForm();
 
   const selectedChainId = parseInt(formValues.chainId);
 
-  const { data: aliasData } = useGetAliasInfo({
-    alias: account,
-    aliasChain: aliasChainIdToChainName[selectedChainId as keyof typeof aliasChainIdToChainName] as ALIAS_CHAIN,
-  });
+  const { data: channelDetails } = useGetChannelDetails(alaisDetails?.channel || '');
 
   const aliasAddress = formValues.alias;
 
   const toast = useToast();
   const navigate = useNavigate();
+  const isAliasNetworkVerified = channelDetails?.aliases.find(
+    (alias) => alias.alias_blockchain_id === formValues.chainId && alias.is_alias_verified
+  );
+  const errorMessage = isAliasNetworkVerified
+    ? 'Channel already exists on this chain.'
+    : account !== aliasAddress
+    ? 'Incorrect address. Connect using the correct address to proceed.'
+    : '';
+
+  const validateInput = () => {
+    if (!isAliasNetworkVerified && chainId === selectedChainId && account === aliasAddress) return false;
+    return true;
+  };
 
   const handleVerifyAliasChain = () => {
     verifyAliasChain(
       {
         userPushSDKInstance,
-        channelAddress: aliasData?.channel ?? '',
+        channelAddress: alaisDetails?.channel ?? '',
       },
       {
         onSuccess: () => {
@@ -84,8 +95,21 @@ const VerifyAliasChain: FC = () => {
       display="flex"
       flexDirection="column"
       gap="spacing-xl"
+      width="100%"
       alignItems="center"
     >
+      {errorMessage && (
+        <Box width="100%">
+          <Alert
+            variant="error"
+            heading={errorMessage}
+            showIcon
+            onAction={isAliasNetworkVerified ? () => navigate(`${APP_PATHS.ChannelDashboard}/${account}}`) : undefined}
+            actionText={isAliasNetworkVerified ? 'Back to Home' : undefined}
+          />
+        </Box>
+      )}
+
       <Box
         display="flex"
         flexDirection="column"
@@ -105,6 +129,7 @@ const VerifyAliasChain: FC = () => {
         />
       </Box>
       <Button
+        disabled={validateInput()}
         onClick={handleVerifyAliasChain}
         loading={isPending}
       >
