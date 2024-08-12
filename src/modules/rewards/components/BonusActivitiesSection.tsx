@@ -20,6 +20,7 @@ export type BonusActivitiesSectionProps = {};
 
 const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
   const { account } = useAccount();
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities();
 
@@ -36,11 +37,9 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
 
   const bonusActivities = isLoading
     ? Array(8).fill(0)
-    : activityList.filter((activity) => activity.index >= 3 && activity.index <= 10);
+    : activityList.filter((activity) => activity.index.startsWith(`bonus-activity`));
 
   const { isLocked } = useLockedStatus();
-
-  const [errorMessage, setErrorMessage] = useState<string>('');
 
   return (
     <Box

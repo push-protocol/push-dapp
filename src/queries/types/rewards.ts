@@ -31,7 +31,27 @@ export type ActvityType =
   | 'daily_check_in_7_days_day4'
   | 'daily_check_in_7_days_day5'
   | 'daily_check_in_7_days_day6'
-  | 'daily_check_in_7_days_day7';
+  | 'daily_check_in_7_days_day7'
+  | 'stake_1k_push_epoch'
+  | 'stake_10k_push_epoch'
+  | 'stake_50k_push_epoch'
+  | 'stake_100k_push_epoch'
+  | 'stake_500k_push_epoch'
+  | 'stake_1_uni_v2_lp_epoch'
+  | 'stake_10_uni_v2_lp_epoch'
+  | 'stake_50_uni_v2_lp_epoch'
+  | 'stake_100_uni_v2_lp_epoch'
+  | 'stake_500_uni_v2_lp_epoch'
+  | 'stake_1k_push_one_time'
+  | 'stake_10k_push_one_time'
+  | 'stake_50k_push_one_time'
+  | 'stake_100k_push_one_time'
+  | 'stake_500k_push_one_time'
+  | 'stake_1_uni_v2_lp_one_time'
+  | 'stake_10_uni_v2_lp_one_time'
+  | 'stake_50_uni_v2_lp_one_time'
+  | 'stake_100_uni_v2_lp_one_time'
+  | 'stake_500_uni_v2_lp_one_time';
 
 export type Activity = {
   id: string;
@@ -43,7 +63,7 @@ export type Activity = {
   expiryType: number;
   name?: string;
   JoinURL: string;
-  index: number;
+  index: string;
   status: 'ENABLED' | 'DISABLED';
   tags?: [];
   isExpired?: boolean;

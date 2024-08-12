@@ -12,7 +12,12 @@ import { useVerifyDiscord } from '../hooks/useVerifyDiscord';
 import { useVerifyRewards } from '../hooks/useVerifyRewards';
 
 // helpers
-import { bonusRewardActivities, dailyRewardActivities, otherRewardActivities } from '../utils/activityTypeArray';
+import {
+  bonusRewardActivities,
+  dailyRewardActivities,
+  otherRewardActivities,
+  stakeRewardActivities,
+} from '../utils/activityTypeArray';
 
 // types
 import { ActvityType } from 'queries/types';
@@ -80,7 +85,11 @@ export const ActivityVerificationButton = ({
       };
     }
 
-    if (otherRewardActivities.includes(activityType) || bonusRewardActivities.includes(activityType)) {
+    if (
+      otherRewardActivities.includes(activityType) ||
+      bonusRewardActivities.includes(activityType) ||
+      stakeRewardActivities.includes(activityType)
+    ) {
       return {
         isLoading: verifyingRewards,
         label: 'Claim',

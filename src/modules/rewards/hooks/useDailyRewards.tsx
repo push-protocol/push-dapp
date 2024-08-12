@@ -33,9 +33,7 @@ const useDailyRewards = () => {
   // Flatten the activities response and filter daily activities
   const activityList = rewardActivitiesResponse?.activities.map((page) => page) || [];
 
-  const dailyActivities = activityList.filter(
-    (activity) => activity.index < 0 && activity.activityType.startsWith(`daily_check_in_7_days_day`)
-  );
+  const dailyActivities = activityList.filter((activity) => activity.index.startsWith(`daily-activity`));
   const dailyRewardsActivities = isLoading
     ? Array(7).fill(0)
     : dailyActivities.sort((a, b) => {
