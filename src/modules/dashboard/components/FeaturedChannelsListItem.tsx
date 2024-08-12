@@ -13,7 +13,7 @@ import { useAccount } from 'hooks';
 import { formatSubscriberCount } from '../Dashboard.utils';
 
 // Components
-import { Box, Button, CaretDown, notification, NotificationMobile, RewardPoints, Skeleton, Text } from 'blocks';
+import { Box, Button, CaretDown, NotificationMobile, Skeleton, Text } from 'blocks';
 import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
 import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannelDropdown';
 import TickDecoratedCircleFilled from 'blocks/icons/components/TickDecoratedCircleFilled';
@@ -81,13 +81,7 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
               alt={channelDetails?.name}
             />
           </Skeleton>
-          <Button
-            onClick={() =>
-              notification.show({ title: 'HEllow', description: 'This is a test description', image: <RewardPoints /> })
-            }
-          >
-            Click Me
-          </Button>
+
           {!isSubscribed && (
             <Skeleton
               isLoading={isSubscriptionLoading || isLoading}

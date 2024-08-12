@@ -1,9 +1,8 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
 import { Cross } from '../icons';
 import { NotificationProps } from './Notification.types';
-import { Toaster, toast } from 'sonner';
-import ReactDOM from 'react-dom/client';
+import { toast } from 'sonner';
 import { getTextVariantStyles } from 'blocks/Blocks.utils';
 
 const NotificationContainer = styled.div`
@@ -38,8 +37,6 @@ const NotificationTitle = styled.span`
 
 const NotificationDescription = styled.span`
   ${() => getTextVariantStyles('bes-regular', 'components-in-app-notification-text-secondary')}
-
-  /* number of lines to show */
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -64,90 +61,49 @@ const CloseButton = styled.div`
   top: var(--spacing-xxs);
 `;
 
-// generate custom id for each notification
-const notificationId = `notification-${Date.now()}-${Math.random()}`;
-
-const Notification: FC<NotificationProps> = ({
-  visible,
-  onClose,
-  title,
-  description,
-  image,
-  onClick,
-  duration = Infinity,
-  position = 'bottom-right',
-}) => {
+const Notification: FC<NotificationProps> = ({ onClose, title, description, image, onClick }) => {
   const handleNotificationClick = () => onClick?.();
 
   const handleNotificationClose = () => {
     onClose?.();
-    toast.dismiss(notificationId);
+    notification.hide();
   };
-
-  useEffect(() => {
-    if (visible) {
-      toast.custom(() => (
-        <NotificationContainer onClick={handleNotificationClick}>
-          <IconContainer>{image}</IconContainer>
-          <CloseButton
-            onClick={(e) => {
-              e.stopPropagation();
-              handleNotificationClose();
-            }}
-          >
-            <Cross size={16} />
-          </CloseButton>
-          <TextContainer>
-            <NotificationTitle>{title}</NotificationTitle>
-            <NotificationDescription>{description}</NotificationDescription>
-          </TextContainer>
-        </NotificationContainer>
-      ));
-    }
-  }, [visible]);
 
   return (
-    <Toaster
-      style={{ minWidth: '397px', height: '111px' }}
-      expand
-      offset={15}
-      duration={duration || Infinity}
-      position={position}
-    />
+    <NotificationContainer onClick={handleNotificationClick}>
+      <IconContainer>{image}</IconContainer>
+      <CloseButton
+        onClick={(e) => {
+          e.stopPropagation();
+          handleNotificationClose();
+        }}
+      >
+        <Cross size={16} />
+      </CloseButton>
+      <TextContainer>
+        <NotificationTitle>{title}</NotificationTitle>
+        <NotificationDescription>{description}</NotificationDescription>
+      </TextContainer>
+    </NotificationContainer>
   );
 };
 
-const renderNotification = (props: NotificationProps) => {
-  const div = document.createElement('div');
-  document.body.appendChild(div);
+// Store the toastId(s) in an array to manage multiple notifications
+const toastIds: Array<string | number> = [];
 
-  const root = ReactDOM.createRoot(div);
-
-  const handleClose = () => {
-    root.unmount();
-    if (div.parentNode) {
-      div.parentNode.removeChild(div); // Ensure the div is part of the DOM before removing it
-    }
-    if (props.onClose) props.onClose();
-  };
-
-  root.render(
-    <Notification
-      {...props}
-      onClose={handleClose}
-    />
-  );
-};
-
+// Export the notification object with show and hide methods
 const notification = {
-  show: (config: Omit<NotificationProps, 'visible'>) => {
-    renderNotification({ ...config, visible: true });
+  show: (config: NotificationProps) => {
+    const toastId = toast.custom(() => <Notification {...config} />, {
+      duration: config.duration || Infinity,
+      position: config.position || 'bottom-right',
+    });
+    toastIds.push(toastId);
   },
   hide: () => {
-    if (notificationId) {
-      toast.dismiss(notificationId);
-    } else {
-      toast.dismiss();
+    if (toastIds.length > 0) {
+      const toastId = toastIds.pop();
+      toast.dismiss(toastId);
     }
   },
 };

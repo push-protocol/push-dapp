@@ -1,8 +1,6 @@
 import { ReactNode } from 'react';
 
 export type NotificationProps = {
-  /* Boolean to decide the visibility of the notification */
-  visible: boolean;
   /* Svg React component to be passed as the image. */
   image: ReactNode;
   /* Title of the notification */
