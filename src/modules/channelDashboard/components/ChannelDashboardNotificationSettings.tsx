@@ -9,6 +9,8 @@ import { ChannelDashboardNullState } from './ChannelDashboardNullState';
 
 import { ChannelSetting } from '../ChannelDashboard.types';
 import APP_PATHS from 'config/AppPaths';
+import { useAccount } from 'hooks';
+import { appConfig } from 'config';
 
 type ChannelDashboardNotificationSettingsProps = {
   channel_settings?: string;
@@ -17,9 +19,12 @@ type ChannelDashboardNotificationSettingsProps = {
 
 const ChannelDashboardNotificationSettings: FC<ChannelDashboardNotificationSettingsProps> = ({
   channel_settings,
-  loadingChannelSettings,
+  loadingChannelSettings
 }) => {
   const navigate = useNavigate();
+
+  const { chainId } = useAccount();
+  const onCoreNetwork: boolean = appConfig.coreContractChain === chainId;
 
   const handleAddSettings = () => {
     navigate(APP_PATHS.ChannelSettings);
@@ -34,33 +39,16 @@ const ChannelDashboardNotificationSettings: FC<ChannelDashboardNotificationSetti
       borderRadius="radius-sm"
       flexDirection="column"
     >
-      <Box
-        display="flex"
-        flexDirection="column"
-        gap="spacing-xxs"
-      >
-        <Box
-          display="flex"
-          justifyContent="space-between"
-        >
-          <Box
-            display="flex"
-            flexDirection="column"
-            gap="spacing-xxxs"
-          >
+      <Box display="flex" flexDirection="column" gap="spacing-xxs">
+        <Box display="flex" justifyContent="space-between">
+          <Box display="flex" flexDirection="column" gap="spacing-xxxs">
             <Skeleton isLoading={loadingChannelSettings}>
-              <Text
-                variant="h5-semibold"
-                color="text-primary"
-              >
+              <Text variant="h5-semibold" color="text-primary">
                 Notification Settings
               </Text>
             </Skeleton>
             <Skeleton isLoading={loadingChannelSettings}>
-              <Text
-                variant="c-regular"
-                color="text-tertiary"
-              >
+              <Text variant="c-regular" color="text-tertiary">
                 {' '}
                 Manage notification preferences for users
               </Text>
@@ -93,11 +81,7 @@ const ChannelDashboardNotificationSettings: FC<ChannelDashboardNotificationSetti
           <>
             {JSON.parse(channel_settings).map((channelsetting: ChannelSetting, index: number) => {
               return (
-                <ChannelSettingsList
-                  key={index}
-                  settingName={channelsetting.description}
-                  type={channelsetting.type}
-                />
+                <ChannelSettingsList key={index} settingName={channelsetting.description} type={channelsetting.type} />
               );
             })}
           </>
@@ -106,7 +90,7 @@ const ChannelDashboardNotificationSettings: FC<ChannelDashboardNotificationSetti
             state="notificationSettings"
             title="No settings yet"
             subTitle="Add options for users to customize notifications."
-            onClick={handleAddSettings}
+            onClick={onCoreNetwork && handleAddSettings}
           />
         )}
       </Box>

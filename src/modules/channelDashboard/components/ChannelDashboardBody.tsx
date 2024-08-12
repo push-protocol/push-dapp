@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Box } from 'blocks';
 import { useAccount } from 'hooks';
 
-import { useGetChannelDelegates, useGetChannelDetails } from 'queries';
+import { ChannelDetails, useGetChannelDelegates } from 'queries';
 
 import { ChannelDashboardNotificationSettings } from './ChannelDashboardNotificationSettings';
 import { ChannelDashboardDelegates } from './ChannelDashboardDelegates';
@@ -16,15 +16,21 @@ import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 type ChannelDashboardBodyProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
   setChannelDashboardError: (error: string) => void;
+  channelDetails?: ChannelDetails;
+  loadingChannelDetails: boolean;
 };
 
-const ChannelDashboardBody: FC<ChannelDashboardBodyProps> = ({ setActiveState, setChannelDashboardError }) => {
+const ChannelDashboardBody: FC<ChannelDashboardBodyProps> = ({
+  setActiveState,
+  setChannelDashboardError,
+  channelDetails,
+  loadingChannelDetails
+
+}) => {
   const { account, chainId } = useAccount();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
     return state.user;
   });
-
-  const { data: channelDetails, isLoading: loadingChannelSettings } = useGetChannelDetails(account);
 
   const addressinCaip = useMemo(() => {
     return convertAddressToAddrCaip(account, chainId);
@@ -40,7 +46,7 @@ const ChannelDashboardBody: FC<ChannelDashboardBodyProps> = ({ setActiveState, s
     <Box display="flex" gap="spacing-md" width="100%" flexDirection={{ ml: 'column', initial: 'row' }}>
       <ChannelDashboardNotificationSettings
         channel_settings={channelDetails?.channel_settings}
-        loadingChannelSettings={loadingChannelSettings}
+        loadingChannelSettings={loadingChannelDetails}
       />
 
       <ChannelDashboardDelegates

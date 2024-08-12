@@ -6,7 +6,7 @@ import { ModalHeader, StakingVariant } from 'common';
 
 import { useAccount } from 'hooks';
 
-import { useDeactivateChannel, useGetChannelDetails } from 'queries';
+import { ChannelDetails, useDeactivateChannel } from 'queries';
 
 import { ChannelDashboardInfo } from './ChannelDashboardInfo';
 
@@ -14,21 +14,20 @@ import { DashboardActiveState } from '../ChannelDashboard.types';
 
 type DeactivateChannelProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
+  channelDetails?: ChannelDetails;
+  refetchChannelDetails: () => void;
 };
 
 const ChannelDeactivationRefund = 40;
 const DeactivateChannel: FC<DeactivateChannelProps> = ({
-  setActiveState
+  setActiveState,
+  channelDetails,
+  refetchChannelDetails
 }) => {
 
   const { provider, account } = useAccount();
 
   const [deactivateError, setDeactivateError] = useState('');
-
-  const {
-    data: channelDetails,
-    refetch: refetchChannelDetails,
-  } = useGetChannelDetails(account);
 
   const { mutate: deactivateChannel, isPending } = useDeactivateChannel();
 

@@ -11,7 +11,7 @@ import { getPushTokenApprovalAmount, getPushTokenFromWallet } from 'helpers';
 
 import { useAccount } from 'hooks';
 
-import { useApprovePUSHToken, useGetChannelDetails, useReactivateChannel } from 'queries';
+import { ChannelDetails, useApprovePUSHToken, useReactivateChannel } from 'queries';
 
 import { ChannelDashboardInfo } from './ChannelDashboardInfo';
 import { DashboardActiveState } from '../ChannelDashboard.types';
@@ -20,20 +20,19 @@ import { ImportPushTokenMessage } from 'common/components/ImportPushTokenMessage
 
 type ReactivateChannelProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
+  channelDetails?: ChannelDetails;
+  refetchChannelDetails: () => void;
 };
 
 const feesRequiredForReactivation = 50;
 
 const ReactivateChannel: FC<ReactivateChannelProps> = ({
-  setActiveState
+  setActiveState,
+  channelDetails,
+  refetchChannelDetails
 }) => {
 
   const { provider, account } = useAccount();
-
-  const {
-    data: channelDetails,
-    refetch: refetchChannelDetails,
-  } = useGetChannelDetails(account);
 
   const [reactivationError, setReactivationError] = useState('');
   const [pushApprovalAmount, setPushApprovalAmount] = useState(0);
