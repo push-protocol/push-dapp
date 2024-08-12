@@ -18,6 +18,7 @@ import { skeletonSemantics } from '../semantics/semantics.skeleton';
 import { strokeSemantics } from '../semantics/semantics.stroke';
 import { surfaceSemantics } from '../semantics/semantics.surface';
 import { switchSemantics } from '../semantics/semantics.switch';
+import { tagSemantics } from '../semantics/semantics.tag';
 import { textSemantics } from '../semantics/semantics.text';
 import { textAreaSemantics } from '../semantics/semantics.textarea';
 import { toastSemantics } from '../semantics/semantics.toast';
@@ -43,6 +44,7 @@ type SemanticKeys = {
   surface: 'surface';
   stroke: 'stroke';
   skeleton: 'components-skeleton-loader';
+  tag: 'components-tag';
   text: 'text';
   textArea: 'components-textarea';
   toast: 'components-toast';
@@ -69,6 +71,7 @@ export const semanticKeys: SemanticKeys = {
   surface: 'surface',
   stroke: 'stroke',
   skeleton: 'components-skeleton-loader',
+  tag: 'components-tag',
   text: 'text',
   textArea: 'components-textarea',
   toast: 'components-toast',
@@ -95,6 +98,7 @@ export const colorSemantics = {
   [semanticKeys.surface]: surfaceSemantics,
   [semanticKeys.stroke]: strokeSemantics,
   [semanticKeys.skeleton]: skeletonSemantics,
+  [semanticKeys.tag]: tagSemantics,
   [semanticKeys.text]: textSemantics,
   [semanticKeys.textArea]: textAreaSemantics,
   [semanticKeys.toast]: toastSemantics,
