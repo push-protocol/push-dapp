@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,7 +26,9 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { Box, PlusCircle, Text } from 'blocks';
 import { LOGO_ALIAS_CHAIN } from 'common';
 import APP_PATHS from 'config/AppPaths';
-import { useGetChannelDetails, ChannelDetails } from 'queries';
+import { ChannelDetails } from 'queries';
+import useFetchChannelDetails from 'common/hooks/useFetchUsersChannelDetails';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 type AddNewChainNavigationProps = {
   channelDetails: ChannelDetails;
@@ -35,11 +37,7 @@ const AddNewChainNavigation: FC<AddNewChainNavigationProps> = ({ channelDetails 
   const navigate = useNavigate();
   const verifiedAliasChainIds = channelDetails?.aliases?.map((item) => parseInt(item.alias_blockchain_id)) || [];
   return (
-    <Box
-      display="flex"
-      padding="spacing-none spacing-md"
-      height="48px"
-    >
+    <Box display="flex" padding="spacing-none spacing-md" height="48px">
       <Box
         css={css`
           border-bottom: 1.5px solid var(--stroke-tertiary);
@@ -51,11 +49,7 @@ const AddNewChainNavigation: FC<AddNewChainNavigationProps> = ({ channelDetails 
       ></Box>
 
       {verifiedAliasChainIds.length > 0 && (
-        <Box
-          display="flex"
-          alignItems="center"
-          margin="spacing-none spacing-none spacing-none spacing-xs"
-        >
+        <Box display="flex" alignItems="center" margin="spacing-none spacing-none spacing-none spacing-xs">
           {verifiedAliasChainIds.map((aliasChainId: number) => {
             const LogoComponent = LOGO_ALIAS_CHAIN[aliasChainId];
             return LogoComponent ? (
@@ -65,11 +59,7 @@ const AddNewChainNavigation: FC<AddNewChainNavigationProps> = ({ channelDetails 
                   margin-left: -8px;
                 `}
               >
-                <LogoComponent
-                  key={aliasChainId}
-                  width={24}
-                  height={24}
-                />
+                <LogoComponent key={aliasChainId} width={24} height={24} />
               </Box>
             ) : null;
           })}
@@ -83,17 +73,10 @@ const AddNewChainNavigation: FC<AddNewChainNavigationProps> = ({ channelDetails 
         cursor="pointer"
         onClick={() => navigate(APP_PATHS.AddNewChain)}
       >
-        <PlusCircle
-          size={32}
-          color="icon-primary"
-        />
+        <PlusCircle size={32} color="icon-primary" />
 
         {!verifiedAliasChainIds?.length && (
-          <Text
-            variant="bm-semibold"
-            color="text-secondary"
-            ellipsis
-          >
+          <Text variant="bm-semibold" color="text-secondary" ellipsis>
             Add New Chain
           </Text>
         )}
@@ -112,7 +95,17 @@ function Navigation() {
 
   const CORE_CHAIN_ID = appConfig.coreContractChain;
   const { account, chainId } = useAccount();
-  const { data: channelDetails } = useGetChannelDetails(account);
+
+  const { channelDetails } = useFetchChannelDetails();
+  const filteredAlias = useMemo(() => {
+    return channelDetails?.aliases.find((alias) => alias.alias_address === convertAddressToAddrCaip(account, chainId));
+  }, [channelDetails, account, chainId]);
+
+  const checkIfAliasIsVerified = filteredAlias && !!filteredAlias?.is_alias_verified ? true : false;
+  const onActiveNetwork =
+    appConfig.coreContractChain === chainId ||
+    (checkIfAliasIsVerified && parseInt(filteredAlias?.alias_blockchain_id as string) === chainId);
+
   const theme = useTheme();
   const location = useLocation();
 
@@ -162,13 +155,21 @@ function Navigation() {
     if (processingState !== 0) {
       dispatch(setCanSend(SEND_NOTIFICATION_STATES.LOADING));
     } else {
-      if ((delegatees && delegatees.length > 0) || (channelDetails && channelDetails?.name !== null)) {
+      /**
+       * If its a delegate
+       * If the channel Details is present on the core network
+       */
+      if (delegatees && delegatees.length > 0) {
+        dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
+      }
+
+      if (onActiveNetwork && channelDetails && channelDetails?.name !== null) {
         dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
       } else {
         dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
       }
     }
-  }, [channelDetails, delegatees, canSend, processingState, account]);
+  }, [channelDetails, delegatees, canSend, processingState, account, onActiveNetwork]);
 
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
@@ -204,7 +205,7 @@ function Navigation() {
       messagingList: messagingList,
       developersList: developersList,
       third: thirdList,
-      navigation: navList,
+      navigation: navList
     };
     setNavigationSetup(finalList);
   }, []);
@@ -503,7 +504,7 @@ function Navigation() {
         Section = PrimarySection;
         fontSize = 'normal';
     }
-    let rendered = Object.keys(items).map(function (key) {
+    let rendered = Object.keys(items).map(function(key) {
       const section = items[key];
       const data = section.data;
       const uid = section.data.uid;
@@ -531,11 +532,7 @@ function Navigation() {
           margin={secondaryButton && '0 5px 0 10px'}
         >
           {secondaryButton ? (
-            <Item
-              flexBasis="100%"
-              direction="row"
-              overflow="hidden"
-            >
+            <Item flexBasis="100%" direction="row" overflow="hidden">
               {section.hasItems
                 ? renderChildItems(data.drilldown, section.opened, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)
                 : null}
@@ -565,7 +562,7 @@ function Navigation() {
                   wrapperProps={{
                     width: '100%',
                     maxWidth: 'fit-content',
-                    minWidth: 'fit-content',
+                    minWidth: 'fit-content'
                   }}
                   placementProps={{
                     width: 'fit-content',
@@ -577,7 +574,7 @@ function Navigation() {
                     background: '#000',
                     borderRadius: '2px 8px 8px 8px',
                     fontSize: '13px',
-                    fontWeight: '400',
+                    fontWeight: '400'
                   }}
                   tooltipContent={<div>{sidebarCollapsed ? 'Expand Sidebar' : 'Minimize Sidebar'}</div>}
                 >
@@ -591,12 +588,7 @@ function Navigation() {
               )}
             </Item>
           ) : (
-            <Item
-              flexBasis="100%"
-              align="stretch"
-              direction="row"
-              overflow="hidden"
-            >
+            <Item flexBasis="100%" align="stretch" direction="row" overflow="hidden">
               <SectionInnerGroupContainer
                 flex="1"
                 align="stretch"
@@ -636,7 +628,7 @@ function Navigation() {
                   active={checkIfNavigationItemIsActive(section)}
                   bg={returnNavigationBgColor(checkIfNavigationItemIsActive(section))}
                 />
-                {isChannelPresent && data.name === channelDetails.name && (
+                {isChannelPresent && data.name === channelDetails.name && CORE_CHAIN_ID === chainId && (
                   <AddNewChainNavigation channelDetails={channelDetails} />
                 )}
               </SectionInnerGroupContainer>
@@ -677,22 +669,12 @@ function Navigation() {
     }
 
     let rendered = (
-      <SectionGroup
-        align="stretch"
-        margin="10px 0px"
-        opened={opened}
-        refresh={refresh}
-      >
-        {Object.keys(drilldown).map(function (key) {
+      <SectionGroup align="stretch" margin="10px 0px" opened={opened} refresh={refresh}>
+        {Object.keys(drilldown).map(function(key) {
           const item = drilldown[key];
           const data = item.data;
           return (
-            <SectionItem
-              key={key}
-              flex="1"
-              align="stretch"
-              size="small"
-            >
+            <SectionItem key={key} flex="1" align="stretch" size="small">
               <SectionInnerItemContainer
                 flex="1"
                 align="stretch"
@@ -734,19 +716,10 @@ function Navigation() {
   };
 
   return (
-    <Container
-      direction="column"
-      headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
-    >
+    <Container direction="column" headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
       {!navigationSetup && (
-        <Item
-          padding="20px"
-          justify="flex-start"
-        >
-          <LoaderSpinner
-            type={LOADER_TYPE.SEAMLESS}
-            spinnerSize={24}
-          />
+        <Item padding="20px" justify="flex-start">
+          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
         </Item>
       )}
       {navigationSetup && Object.keys(navigationSetup).length > 0 && (
@@ -771,10 +744,7 @@ function Navigation() {
               {renderMainItems(navigationSetup.developersList, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.DEVELOPERS)}
             </PrimaryInner>
           </Primary>
-          <Footer
-            justify="flex-end"
-            align="stretch"
-          >
+          <Footer justify="flex-end" align="stretch">
             {renderMainItems(navigationSetup.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD)}
           </Footer>
         </>

@@ -3,19 +3,18 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ContentLayout } from 'common';
+import useFetchChannelDetails from 'common/hooks/useFetchUsersChannelDetails';
 import APP_PATHS from 'config/AppPaths';
 
 import { ChannelDashboard } from 'modules/channelDashboard/ChannelDashboard';
 
 import { useAccount } from 'hooks';
 
-import { useGetChannelDetails } from 'queries';
-
 const ChannelDashboardPageV2 = () => {
   const { account } = useAccount();
   const navigate = useNavigate();
 
-  const { data: channelDetails, isLoading: loadingChannelDetails, refetch } = useGetChannelDetails(account);
+  const { channelDetails, loadingChannelDetails, refetchChannelDetails } = useFetchChannelDetails();
 
   useEffect(() => {
     if (!loadingChannelDetails && !channelDetails) {
@@ -29,7 +28,7 @@ const ChannelDashboardPageV2 = () => {
     let interval: string | number | NodeJS.Timeout | undefined;
     if (channelDetails && !channelDetails.name) {
       interval = setInterval(() => {
-        refetch();
+        refetchChannelDetails();
       }, 3000);
     }
 

@@ -10,9 +10,8 @@ import { useAccount } from 'hooks';
 
 import { CreateChannel } from 'modules/createChannel';
 
-import { useGetChannelDetails } from 'queries';
-
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import useFetchChannelDetails from 'common/hooks/useFetchUsersChannelDetails';
 
 const CreateChannelPage = () => {
   const { account, isWalletConnected, connect } = useAccount();
@@ -25,7 +24,7 @@ const CreateChannelPage = () => {
     }
   }, [account]);
 
-  const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
+  const { channelDetails, loadingChannelDetails } = useFetchChannelDetails();
 
   useEffect(() => {
     if (channelDetails && !loadingChannelDetails) {

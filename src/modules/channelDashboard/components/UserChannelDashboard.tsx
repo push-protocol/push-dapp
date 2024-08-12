@@ -6,7 +6,7 @@ import { appConfig } from 'config';
 
 import { useAccount } from 'hooks';
 
-import { useGetChannelDetails } from 'queries';
+import { ChannelDetails } from 'queries';
 
 import { ChannelDashboardHeader } from './ChannelDashboardHeader';
 import { AppFooter } from './AppFooter';
@@ -15,25 +15,48 @@ import { ChannelDashboardBody } from './ChannelDashboardBody';
 import { DashboardActiveState } from '../ChannelDashboard.types';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ChannelDashboardNullChain } from './ChannelDashboardNullChain';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 type UserChannelDashboardProps = {
   setActiveState: (activeState: DashboardActiveState) => void;
+  channelDetails?: ChannelDetails;
+  loadingChannelDetails: boolean;
 };
 
-const UserChannelDashboard: FC<UserChannelDashboardProps> = ({ setActiveState }) => {
-  const { account, chainId } = useAccount();
-  const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
+const UserChannelDashboard: FC<UserChannelDashboardProps> = ({
+  setActiveState,
+  channelDetails,
+  loadingChannelDetails
+}) => {
+  const { chainId, account } = useAccount();
 
   const [channelDashboardError, setChannelDashboardError] = useState('');
 
-  const verifiedAliasChainIds = channelDetails?.aliases?.map((item) => item.is_alias_verified && parseInt(item.alias_blockchain_id)) || [];
-  const onActiveNetwork = appConfig.coreContractChain === chainId || verifiedAliasChainIds.includes(chainId);
+  /**
+   ** Alias Logic:
+   * 1. First Filter out the alias based on alias address and caip address (Note: It will only give a single alias because we are using caip Address which means only single channel exists per user on a chain)
+   * 2. Check If the Filtered alias exists and is verified or not
+   * 3. If verified, then it is an active network (means: Channel is present and is active on this chain)
+   * 4. If not, then it is not on active network -> then we pass filtered alias details to the ChannelDashboardNullChain to check if loading or not
+   * 5. We check that alias is present and is_alias_verified is 0 (alias not verified), then we show laoding state
+   * 6. If alias is not present, then we show add new chain button
+   */
 
-  const currentAliasDetails = useMemo(() => {
-    return channelDetails?.aliases.find((alias) => {
-      return parseInt(alias.alias_blockchain_id) === chainId;
-    });
-  }, [chainId, channelDetails])
+  // Only those aliases where you have added yourself as an alias on the other chain
+  const filteredAlias = channelDetails?.aliases.find(
+    (alias) => alias.alias_address === convertAddressToAddrCaip(account, chainId)
+  );
+
+  const checkIfAliasIsVerified = filteredAlias && !!filteredAlias?.is_alias_verified ? true : false;
+
+  /**
+   * Active network will only be true when:
+   * 1. Then chain is core (e.g, Sepolia or mainnet)
+   * 2. Channel Alias is present and is verified (is_alias_verified === 1)
+   */
+  const onActiveNetwork =
+    appConfig.coreContractChain === chainId ||
+    (checkIfAliasIsVerified && parseInt(filteredAlias?.alias_blockchain_id as string) === chainId);
 
   return (
     <>
@@ -52,7 +75,7 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({ setActiveState })
           channelDetails={channelDetails}
           setActiveState={setActiveState}
           onActiveNetwork={onActiveNetwork}
-          currentAliasDetails={currentAliasDetails}
+          currentAliasDetails={filteredAlias}
         />
 
         {channelDashboardError && (
@@ -61,8 +84,7 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({ setActiveState })
           </Box>
         )}
 
-
-        {!onActiveNetwork && <ChannelDashboardNullChain currentAliasDetails={currentAliasDetails} />}
+        {!onActiveNetwork && <ChannelDashboardNullChain currentAliasDetails={filteredAlias} />}
 
         {onActiveNetwork && (
           <Box width="100%" height={{ initial: '355px', tb: 'auto' }}>
@@ -74,11 +96,12 @@ const UserChannelDashboard: FC<UserChannelDashboardProps> = ({ setActiveState })
               <ChannelDashboardBody
                 setActiveState={setActiveState}
                 setChannelDashboardError={setChannelDashboardError}
+                channelDetails={channelDetails}
+                loadingChannelDetails={loadingChannelDetails}
               />
             )}
           </Box>
         )}
-
       </Box>
 
       <AppFooter />
