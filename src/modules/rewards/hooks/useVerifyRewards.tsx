@@ -6,20 +6,33 @@ import { useSelector } from 'react-redux';
 
 // helpers
 import { generateVerificationProof } from '../utils/generateVerificationProof';
-import { useClaimRewardsActivity, useGetUserRewardsDetails } from 'queries';
+import {
+  useClaimRewardsActivity,
+  useGetPushStakeEpoch,
+  useGetUniV2StakeEpoch,
+  useGetUserRewardsDetails,
+} from 'queries';
 import { walletToCAIP10 } from 'helpers/w2w';
 import { useAccount } from 'hooks/useAccount';
 
 // types
 import { UserStoreType } from 'types';
+import { ActvityType } from 'queries';
+import { getActivityData } from '../utils/stakeRewardUtilities';
 
 export type UseVerifyRewardsParams = {
   activityTypeId: string;
   setErrorMessage: (errorMessage: string) => void;
   refetchActivity: () => void;
+  activityType: ActvityType;
 };
 
-const useVerifyRewards = ({ activityTypeId, setErrorMessage, refetchActivity }: UseVerifyRewardsParams) => {
+const useVerifyRewards = ({
+  activityTypeId,
+  setErrorMessage,
+  refetchActivity,
+  activityType,
+}: UseVerifyRewardsParams) => {
   const [verifyingRewards, setVerifyingRewards] = useState(false);
   const [rewardsActivityStatus, setRewardsActivityStatus] = useState<'Claimed' | 'Pending' | null>(null);
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
@@ -38,6 +51,9 @@ const useVerifyRewards = ({ activityTypeId, setErrorMessage, refetchActivity }: 
     handleVerify(userId);
   };
 
+  const { data: pushStakeData } = useGetPushStakeEpoch();
+  const { data: uniV2StakeData } = useGetUniV2StakeEpoch();
+
   const { refetch: refetchUserDetails } = useGetUserRewardsDetails({
     caip10WalletAddress: caip10WalletAddress,
   });
@@ -50,7 +66,7 @@ const useVerifyRewards = ({ activityTypeId, setErrorMessage, refetchActivity }: 
   const handleVerify = async (userId: string | null) => {
     setErrorMessage('');
 
-    const data = {};
+    const data = getActivityData(activityType, pushStakeData, uniV2StakeData);
 
     const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
 

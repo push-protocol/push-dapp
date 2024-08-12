@@ -206,3 +206,9 @@ export type LeaderboardParams = {
   pageSize?: number;
   pageNumber?: number;
 };
+
+export type RewardsStakeParams = {
+  currentEpoch: number;
+  fromBlock: number;
+  toBlock: number;
+};

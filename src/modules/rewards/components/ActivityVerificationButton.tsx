@@ -64,6 +64,7 @@ export const ActivityVerificationButton = ({
     activityTypeId,
     refetchActivity,
     setErrorMessage,
+    activityType,
   });
 
   const activityData = useMemo(() => {
