@@ -50,7 +50,7 @@ import { darkTheme, lightTheme } from 'config/spaceTheme';
 import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
 import SpaceContextProvider from 'contexts/SpaceContext';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
-import { blocksColors, getBlocksCSSVariables, notification, RewardPoints } from 'blocks';
+import { blocksColors, getBlocksCSSVariables } from 'blocks';
 import APP_PATHS from 'config/AppPaths';
 
 dotenv.config();
@@ -334,17 +334,6 @@ export default function App() {
     location?.pathname.includes(APP_PATHS.PointsVault) ||
     location?.pathname.includes('/snap') ||
     location?.pathname.includes(APP_PATHS.DiscordVerification);
-
-  useEffect(() => {
-    notification.show({
-      image: <RewardPoints />, // Replace with your actual icon component
-      title: 'Title',
-      description: 'This is the',
-      onClick: () => {
-        alert('Notification clicked!');
-      },
-    });
-  }, []);
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>

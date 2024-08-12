@@ -26,7 +26,7 @@ const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start;
   padding: var(--spacing-sm);
   flex: 1;
   box-sizing: border-box;
@@ -64,6 +64,9 @@ const CloseButton = styled.div`
   top: var(--spacing-xxs);
 `;
 
+// generate custom id for each notification
+const notificationId = `notification-${Date.now()}-${Math.random()}`;
+
 const Notification: FC<NotificationProps> = ({
   visible,
   onClose,
@@ -78,7 +81,7 @@ const Notification: FC<NotificationProps> = ({
 
   const handleNotificationClose = () => {
     onClose?.();
-    toast.dismiss();
+    toast.dismiss(notificationId);
   };
 
   useEffect(() => {
@@ -122,7 +125,9 @@ const renderNotification = (props: NotificationProps) => {
 
   const handleClose = () => {
     root.unmount();
-    document.body.removeChild(div);
+    if (div.parentNode) {
+      div.parentNode.removeChild(div); // Ensure the div is part of the DOM before removing it
+    }
     if (props.onClose) props.onClose();
   };
 
@@ -139,7 +144,11 @@ const notification = {
     renderNotification({ ...config, visible: true });
   },
   hide: () => {
-    toast.dismiss();
+    if (notificationId) {
+      toast.dismiss(notificationId);
+    } else {
+      toast.dismiss();
+    }
   },
 };
 
