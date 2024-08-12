@@ -6,15 +6,13 @@ export const unsubscribeChannel = async ({
   signer,
   channelAddress,
   userAddress,
-  env,
+  env
 }: UnsubscribeChannelParams): Promise<UnsubscribeChannelResponse> => {
   const res = await PushAPI.channels.unsubscribe({
     signer: signer,
     channelAddress: channelAddress, // channel address in CAIP
     userAddress: userAddress, // user address in CAIP
-    env,
+    env
   });
-  console.log('Response >>>', res);
-
   return res;
 };

@@ -1,4 +1,4 @@
-import { ProgressHookType } from '@pushprotocol/restapi';
+import { ProgressHookType, PushAPI } from '@pushprotocol/restapi';
 import { ConnectedUser } from './chat';
 
 export interface Web3NameListType {
@@ -34,6 +34,13 @@ export interface ConnectedPeerIDType {
   peerID: string;
 }
 
+export type handleConnectWalletAndEnableProfileProps = {
+  showToast?: boolean;
+  toastMessage?: string;
+  wallet?: any;
+  remember?: boolean;
+};
+
 export interface AppContextType {
   web3NameList: Web3NameListType;
   setWeb3NameList: (ens: Web3NameListType) => void;
@@ -44,12 +51,7 @@ export interface AppContextType {
   initializePushSDK: () => Promise<void>;
   snapInstalled: boolean;
   setSnapInstalled: (snapInstalled: boolean) => void;
-  handleConnectWalletAndEnableProfile: (
-    showToast?: boolean,
-    toastMessage?: string,
-    wallet?: any,
-    remember?: any
-  ) => any;
+  handleConnectWalletAndEnableProfile: (props: handleConnectWalletAndEnableProfileProps) => Promise<PushAPI>;
   connectWallet: (showToast?: boolean, toastMessage?: string) => any;
   setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
   blockedLoading: BlockedLoadingI;

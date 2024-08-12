@@ -1,10 +1,10 @@
 // React and other libraries
-import { FC, ReactNode, useContext, useMemo } from 'react';
+import { FC, ReactNode, useContext } from 'react';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 
 import { useSelector } from 'react-redux';
 
-import { Box, Dropdown, Menu, MenuItem, OptOut } from 'blocks';
+import { Dropdown, Menu, MenuItem, OptOut } from 'blocks';
 
 import { appConfig } from 'config';
 import { AppContext } from 'contexts/AppContext';
@@ -21,6 +21,7 @@ import { ChannelDetailsResponse, useUnsubscribeChannel, useUpdateNotificationSet
 
 // Components
 import { ManageSettingsDropdown } from './ManageSettingsDropdown';
+import { UserStoreType } from 'types';
 
 export type UnsubscribeChannelDropdownProps = {
   children: ReactNode;
@@ -37,17 +38,16 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
 }) => {
   const { account, chainId, provider, wallet } = useAccount();
 
-  const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
-  const { userPushSDKInstance } = useSelector((state: any) => {
-    return state.user;
-  });
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error('App Context is null');
+  }
+  const { handleConnectWalletAndEnableProfile } = context;
 
-  const channelSetting = useMemo(() => {
-    if (channelDetail && channelDetail?.channel_settings) {
-      return JSON.parse(channelDetail?.channel_settings);
-    }
-    return null;
-  }, [channelDetail]);
+  const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
+
+  const channelSetting =
+    channelDetail && channelDetail?.channel_settings ? JSON.parse(channelDetail?.channel_settings) : null;
 
   const { mutate: saveNotificationSettings, isPending: updatingNotificationSettings } = useUpdateNotificationSettings();
   const { mutate: unsubscribeChannel, isPending: unsubscribing } = useUnsubscribeChannel();
@@ -58,28 +58,15 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
   const handleSaveNotificationSettings = async (settings: UserSetting[]) => {
     const onCoreNetwork = chainId === appConfig.coreContractChain;
 
-    let channelAddress = channelDetail.channel;
-    if (!onCoreNetwork) {
-      channelAddress = channelDetail.alias_address as string;
-    }
+    const channelAddress = !onCoreNetwork ? (channelDetail.alias_address as string) : channelDetail.channel;
 
-    if (settings) {
-      const userSettings = notifUserSettingFormatString({ settings: settings });
-      console.log('User Setting after >>', userSettings);
-    }
-
-    let userPushInstance = userPushSDKInstance;
-
-    if (!userPushInstance.signer) {
-      userPushInstance = await handleConnectWalletAndEnableProfile({ wallet });
-      if (!userPushInstance) {
-        return;
-      }
-    }
+    const sdkInstance = !userPushSDKInstance.signer
+      ? (await handleConnectWalletAndEnableProfile({ wallet })) ?? undefined
+      : userPushSDKInstance;
 
     saveNotificationSettings(
       {
-        userPushSDKInstance: userPushInstance,
+        userPushSDKInstance: sdkInstance,
         channelAddress: convertAddressToAddrCaip(channelAddress, chainId),
         settings: notifUserSettingFormatString({ settings: settings })
       },
@@ -91,25 +78,15 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
               toastTitle: 'Success',
               toastMessage: 'Successfully saved the user settings!',
               toastType: 'SUCCESS',
-              getToastIcon: (size) => (
-                <MdCheckCircle
-                  size={size}
-                  color="green"
-                />
-              ),
+              getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
             });
           } else {
-            console.log("Error in Saving notification settings", response);
+            console.log('Error in Saving notification settings', response);
             unsubscribeToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: `There was an error in saving the settings`,
               toastType: 'ERROR',
-              getToastIcon: (size) => (
-                <MdError
-                  size={size}
-                  color="red"
-                />
-              ),
+              getToastIcon: (size) => <MdError size={size} color="red" />
             });
           }
         },
@@ -121,12 +98,9 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
   };
 
   const handleOptOut = async () => {
-    let channelAddress = channelDetail.channel;
     const onCoreNetwork = chainId === appConfig.coreContractChain;
 
-    if (!onCoreNetwork) {
-      channelAddress = channelDetail.alias_address as string;
-    }
+    const channelAddress = !onCoreNetwork ? (channelDetail.alias_address as string) : channelDetail.channel;
 
     const _signer = await provider.getSigner(account);
 
@@ -145,24 +119,14 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
               toastTitle: 'Success',
               toastMessage: 'Successfully opted out of channel !',
               toastType: 'SUCCESS',
-              getToastIcon: (size) => (
-                <MdCheckCircle
-                  size={size}
-                  color="green"
-                />
-              ),
+              getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
             });
           } else {
             unsubscribeToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: `There was an error opting out of channel`,
               toastType: 'ERROR',
-              getToastIcon: (size) => (
-                <MdError
-                  size={size}
-                  color="red"
-                />
-              ),
+              getToastIcon: (size) => <MdError size={size} color="red" />
             });
           }
         },
@@ -187,15 +151,13 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
             />
           }
         >
-          <Box display="flex" alignItems="center" cursor="pointer">
-            {children}
-          </Box>
+          {children}
         </Dropdown>
       ) : (
         <Dropdown
           overlay={
             <Menu>
-              <MenuItem label='Opt-out' icon={<OptOut />} onClick={handleOptOut} />
+              <MenuItem label="Opt-out" icon={<OptOut />} onClick={handleOptOut} />
             </Menu>
           }
         >

@@ -7,16 +7,14 @@ export const subscribeToChannel = async ({
   channelAddress,
   userAddress,
   settings,
-  env,
+  env
 }: SubscribeChannelParams): Promise<SubsribeChannelResponse> => {
   const res = await PushAPI.channels.subscribeV2({
     signer: signer,
     channelAddress: channelAddress, // channel address in CAIP
     userAddress: userAddress, // user address in CAIP
     settings: settings,
-    env,
+    env
   });
-  console.log('Response >>>', res);
-
   return res;
 };

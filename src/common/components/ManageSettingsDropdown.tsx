@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-import { css } from 'styled-components';
 
 import { Box, Button, Separator, Text, ToggleSwitch } from 'blocks';
 
@@ -23,7 +22,6 @@ const ManageSettingsDropdown: FC<NotificationSettingsDropdownProps> = ({
   unsubscribing,
   unsubscribe
 }) => {
-
   const [modifiedSettings, setModifiedSettings] = useState([...userSetting]);
 
   const handleSliderChange = (index: number, value: number | { lower: number; upper: number }) => {
@@ -54,9 +52,8 @@ const ManageSettingsDropdown: FC<NotificationSettingsDropdownProps> = ({
   };
 
   const handleUpdateNotificationSettings = () => {
-    console.log('Modified Settings >>', modifiedSettings);
-    updateNotificationSettings(modifiedSettings)
-  }
+    updateNotificationSettings(modifiedSettings);
+  };
 
   const handleOptOut = async () => {
     unsubscribe();
@@ -79,14 +76,8 @@ const ManageSettingsDropdown: FC<NotificationSettingsDropdownProps> = ({
         gap="spacing-xxs"
         alignItems="center"
       >
-        <Box
-          display="flex"
-          flexDirection="column"
-          width="-webkit-fill-available"
-        >
+        <Box display="flex" flexDirection="column" width="-webkit-fill-available">
           {modifiedSettings.map((setting, index) => {
-            console.log('Index and settings length', index, modifiedSettings.length);
-
             return (
               <Box key={index}>
                 <Box
@@ -96,19 +87,9 @@ const ManageSettingsDropdown: FC<NotificationSettingsDropdownProps> = ({
                   gap="spacing-xxs"
                   alignSelf="stretch"
                   alignItems="flex-start"
-                // border="border-sm solid stroke-tertiary"
                 >
-                  <Box
-                    display="flex"
-                    flexDirection="row"
-                    justifyContent="space-between"
-                    alignSelf="stretch"
-                  >
-                    <Text
-                      variant="h6-bold"
-                      color="text-primary"
-                      textTransform="capitalize"
-                    >
+                  <Box display="flex" flexDirection="row" justifyContent="space-between" alignSelf="stretch">
+                    <Text variant="h6-bold" color="text-primary" textTransform="capitalize">
                       {setting.description}
                     </Text>
                     <ToggleSwitch
@@ -124,11 +105,7 @@ const ManageSettingsDropdown: FC<NotificationSettingsDropdownProps> = ({
                       alignItems="flex-start"
                       alignSelf="stretch"
                     >
-                      <Text
-                        variant="h6-bold"
-                        color="text-primary"
-                        textTransform="capitalize"
-                      >
+                      <Text variant="h6-bold" color="text-primary" textTransform="capitalize">
                         {setting.user || setting.default}
                       </Text>
                       <InputSlider
@@ -150,11 +127,7 @@ const ManageSettingsDropdown: FC<NotificationSettingsDropdownProps> = ({
                       alignItems="flex-start"
                       alignSelf="stretch"
                     >
-                      <Text
-                        variant="h6-bold"
-                        color="text-primary"
-                        textTransform="capitalize"
-                      >
+                      <Text variant="h6-bold" color="text-primary" textTransform="capitalize">
                         {setting.user.lower || setting.default.lower} - {setting.user.upper || setting.default.upper}
                       </Text>
                       <RangeSlider
@@ -184,32 +157,23 @@ const ManageSettingsDropdown: FC<NotificationSettingsDropdownProps> = ({
           alignSelf="stretch"
           alignItems="center"
           justifyContent="flex-end"
-          flexDirection='column'
+          flexDirection="column"
         >
-          <Text
-            color="text-tertiary"
-            variant="bes-regular"
-          >
+          <Text color="text-tertiary" variant="bes-regular">
             You will receive all important updates from this channel.
           </Text>
-          <Box
-            display='flex'
-            flexDirection='column'
-            gap='spacing-md'
-            alignItems='center'
-            width='100%'
-          >
+          <Box display="flex" flexDirection="column" gap="spacing-md" alignItems="center" width="100%">
             <Button
               size="small"
               variant="primary"
               onClick={handleUpdateNotificationSettings}
-              css={css`width:100%;`}
+              block
               loading={updatingNotificationSettings}
             >
               {updatingNotificationSettings ? 'Updating' : 'Update Preferences'}
             </Button>
-            <Box width='100%' cursor='pointer' onClick={handleOptOut}>
-              <Text textAlign='center' variant='bs-semibold'>
+            <Box width="100%" cursor="pointer" onClick={handleOptOut}>
+              <Text textAlign="center" variant="bs-semibold">
                 {unsubscribing ? 'Unsubscribing' : 'Unsubscribe'}
               </Text>
             </Box>

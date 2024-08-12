@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC, ReactNode, useContext, useMemo } from 'react';
+import { FC, ReactNode, useContext } from 'react';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 
 import { ethers } from 'ethers';
@@ -28,42 +28,35 @@ export type SubscribeChannelDropdownProps = {
 const SubscribeChannelDropdown: FC<SubscribeChannelDropdownProps> = (options) => {
   const { children, channelDetails, onSuccess } = options;
   const { account, provider, wallet, chainId } = useAccount();
-  const { connectWallet } = useContext(AppContext);
 
-  const channelSettings = useMemo(() => {
-    if (channelDetails && channelDetails?.channel_settings) {
-      return JSON.parse(channelDetails?.channel_settings);
-    }
-    return null;
-  }, [channelDetails]);
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error('App Context is null');
+  }
+  const { connectWallet } = context;
+
+  const channelSettings =
+    channelDetails && channelDetails?.channel_settings ? JSON.parse(channelDetails?.channel_settings) : null;
 
   const { mutate: subscribeChannel, isPending } = useSubscribeChannel();
   const subscribeToast = useToast();
 
   const optInHandler = async (channelSetting?: ChannelSetting[]) => {
-    let walletAddress = account;
-    let web3Provider = provider;
+    const hasAccount = wallet?.accounts?.length > 0;
+
+    const connectedWallet = !hasAccount ? await connectWallet() : null;
+
+    const walletAddress = hasAccount ? account : connectedWallet.accounts[0].address;
+    const web3Provider = hasAccount ? provider : new ethers.providers.Web3Provider(connectedWallet.provider, 'any');
     const onCoreNetwork = chainId === appConfig.coreContractChain;
 
-    if (!(wallet?.accounts?.length > 0)) {
-      const connectedWallet = await connectWallet();
-      walletAddress = connectedWallet.accounts[0].address;
-      web3Provider = new ethers.providers.Web3Provider(connectedWallet.provider, 'any');
-    }
-
-    let channelAddress = channelDetails.channel;
-    if (!onCoreNetwork) {
-      channelAddress = channelDetails.alias_address as string;
-    }
+    const channelAddress = !onCoreNetwork ? (channelDetails.alias_address as string) : channelDetails.channel;
 
     const _signer = await web3Provider?.getSigner(walletAddress);
 
-    let minimalNotifSettings; // this changes the settings into a single thread e.g:3+1-1+2-1-745+3-1-35-395
-
-    if (channelSetting) {
-      let notificationSettings = notifChannelSettingFormatString({ settings: channelSetting });
-      minimalNotifSettings = getMinimalUserSetting(notificationSettings);
-    }
+    const minimalNotifSettings = channelSetting
+      ? getMinimalUserSetting(notifChannelSettingFormatString({ settings: channelSetting }))
+      : null;
 
     subscribeChannel(
       {
@@ -100,9 +93,6 @@ const SubscribeChannelDropdown: FC<SubscribeChannelDropdownProps> = (options) =>
       }
     );
   };
-
-
-
 
   return (
     <>
