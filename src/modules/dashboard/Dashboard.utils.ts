@@ -1,6 +1,7 @@
 import { TrendingChannelsResponse } from 'queries/types';
 import { TrendingChannelsType } from './Dashboard.types';
 
+
 /**
  * @param weekData
  * @param currentData
@@ -54,7 +55,7 @@ export const getTrendingChannelsData = (
       subscriber: currentSubscriberData[key],
       name: channelDetails[key]?.name || '',
       icon: channelDetails[key]?.icon || '',
-      trend: trend
+      trend: trend,
     });
   }
 

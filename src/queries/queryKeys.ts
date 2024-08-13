@@ -35,3 +35,6 @@ export const verifyAliasChain = 'verifyAliasChain';
 export const sentMessageCount = 'sentMessageCount';
 export const sentNotificationCount = 'sentNotificationCount';
 export const subscriberCount = 'subscriberCount';
+export const subscribe = 'subscribe';
+export const unsubscribe = 'unsubscribe';
+export const updatingNotificationSetting = 'updatingNotificationSetting';
