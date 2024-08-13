@@ -95,116 +95,129 @@ const AddNewChain: FC = () => {
       <Box
         display="flex"
         flexDirection="column"
+        gap="spacing-sm"
         alignItems="center"
-        margin={{
-          ml: 'spacing-lg spacing-md',
-          dp: 'spacing-lg spacing-none spacing-none spacing-none',
-        }}
-        padding={{ dp: 'spacing-lg', ml: 'spacing-sm' }}
-        gap="spacing-lg"
-        borderRadius="radius-lg"
-        backgroundColor="surface-primary"
       >
         <Box
           display="flex"
           flexDirection="column"
           alignItems="center"
-          gap="spacing-xxxs"
+          margin={{
+            ml: 'spacing-lg spacing-md spacing-none spacing-md',
+            dp: 'spacing-lg spacing-none spacing-none spacing-none',
+          }}
+          padding={{ dp: 'spacing-lg', ml: 'spacing-sm' }}
+          gap="spacing-lg"
+          borderRadius="radius-lg"
+          backgroundColor="surface-primary"
         >
-          <Text
-            color="text-primary"
-            variant="h3-semibold"
-            display={{ ml: 'none', dp: 'block' }}
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            gap="spacing-xxxs"
           >
-            Add New Chain to Channel
-          </Text>
-          <Text
-            color="text-primary"
-            variant="h4-semibold"
-            display={{ ml: 'block', dp: 'none' }}
-          >
-            Add New Chain to Channel
-          </Text>
-          <Text
-            color="text-tertiary"
-            variant="bs-regular"
-            display={{ ml: 'none', dp: 'block' }}
-          >
-            Add an alias chain to your channel to enable notifications to that chain.
-          </Text>
-          <Text
-            display={{ ml: 'block', dp: 'none' }}
-            color="text-tertiary"
-            variant="bes-regular"
-          >
-            Add an alias chain to your channel to enable notifications to that chain.
-          </Text>
-        </Box>
-        {chainId !== appConfig.coreContractChain && completedSteps.length === 1 ? (
-          <>
-            <Box
-              display="flex"
-              padding="spacing-md"
-              flexDirection="column"
-              gap="spacing-sm"
-              alignSelf="stretch"
-              alignItems="flex-start"
-              borderRadius="radius-sm"
-              backgroundColor="surface-secondary"
+            <Text
+              color="text-primary"
+              variant="h3-semibold"
+              display={{ ml: 'none', dp: 'block' }}
             >
-              <Text
-                textAlign="center"
-                color="text-brand-medium"
-                variant="h5-semibold"
-              >
-                Please change your network to Ethereum to proceed.
-              </Text>
-            </Box>
-            <Button onClick={() => switchChain(appConfig.coreContractChain)}>Change Network</Button>
-          </>
-        ) : channelDetails || alaisDetails ? (
-          <>
-            <Stepper
-              steps={addNewChainSteps}
-              completedSteps={completedSteps}
-              setActiveStepKey={(key) => setActiveStepKey(key as ActiveStepKey)}
-            />
-            {activeStepKey === 'newaddress' && (
-              <NewAddress
-                isLoading={isPending && !isError}
-                channelDetails={channelDetails}
-              />
-            )}
-            {activeStepKey === 'changenetwork' && <ChangeNetwork handleNextStep={handleNextStep} />}
-            {activeStepKey === 'verifyalias' && <VerifyAliasChain alaisDetails={alaisDetails} />}
-            {isAuthModalVisible && (
+              Add New Chain to Channel
+            </Text>
+            <Text
+              color="text-primary"
+              variant="h4-semibold"
+              display={{ ml: 'block', dp: 'none' }}
+            >
+              Add New Chain to Channel
+            </Text>
+            <Text
+              color="text-tertiary"
+              variant="bs-regular"
+              display={{ ml: 'none', dp: 'block' }}
+            >
+              Add an alias chain to your channel to enable notifications to that chain.
+            </Text>
+            <Text
+              display={{ ml: 'block', dp: 'none' }}
+              color="text-tertiary"
+              variant="bes-regular"
+            >
+              Add an alias chain to your channel to enable notifications to that chain.
+            </Text>
+          </Box>
+          {chainId !== appConfig.coreContractChain && completedSteps.length === 1 ? (
+            <>
               <Box
                 display="flex"
-                justifyContent="center"
-                width="-webkit-fill-available"
-                alignItems="center"
-                css={css`
-                  z-index: 99999;
-                `}
+                padding="spacing-md"
+                flexDirection="column"
+                gap="spacing-sm"
+                alignSelf="stretch"
+                alignItems="flex-start"
+                borderRadius="radius-sm"
+                backgroundColor="surface-secondary"
               >
-                <UnlockProfileWrapper
-                  type={UNLOCK_PROFILE_TYPE.MODAL}
-                  showConnectModal={true}
-                  onClose={handleCloseAuthModal}
-                />
+                <Text
+                  textAlign="center"
+                  color="text-brand-medium"
+                  variant="h5-semibold"
+                >
+                  Please change your network to Ethereum to proceed.
+                </Text>
               </Box>
-            )}
-          </>
-        ) : (
-          <>
-            <Alert
-              variant="error"
-              showIcon
-              heading="User does not have a channel on Push. Create a channel to proceed."
-            />
-            <Button onClick={() => navigate(APP_PATHS.CreateChannel)}>Create Channel</Button>
-          </>
-        )}
+              <Button onClick={() => switchChain(appConfig.coreContractChain)}>Change Network</Button>
+            </>
+          ) : channelDetails || alaisDetails ? (
+            <>
+              <Stepper
+                steps={addNewChainSteps}
+                completedSteps={completedSteps}
+                setActiveStepKey={(key) => setActiveStepKey(key as ActiveStepKey)}
+              />
+              {activeStepKey === 'newaddress' && (
+                <NewAddress
+                  isLoading={isPending && !isError}
+                  channelDetails={channelDetails}
+                />
+              )}
+              {activeStepKey === 'changenetwork' && <ChangeNetwork handleNextStep={handleNextStep} />}
+              {activeStepKey === 'verifyalias' && <VerifyAliasChain alaisDetails={alaisDetails} />}
+              {isAuthModalVisible && (
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  width="-webkit-fill-available"
+                  alignItems="center"
+                  css={css`
+                    z-index: 99999;
+                  `}
+                >
+                  <UnlockProfileWrapper
+                    type={UNLOCK_PROFILE_TYPE.MODAL}
+                    showConnectModal={true}
+                    onClose={handleCloseAuthModal}
+                  />
+                </Box>
+              )}
+            </>
+          ) : (
+            <>
+              <Alert
+                variant="error"
+                showIcon
+                heading="User does not have a channel on Push. Create a channel to proceed."
+              />
+              <Button onClick={() => navigate(APP_PATHS.CreateChannel)}>Create Channel</Button>
+            </>
+          )}
+        </Box>
+        <Text
+          color="text-tertiary"
+          variant="c-semibold"
+        >
+          Tip: Please do not exit the process before the address is verified. If you leave, you will need to start over.
+        </Text>
       </Box>
     </FormikChainAliasProvider>
   );
