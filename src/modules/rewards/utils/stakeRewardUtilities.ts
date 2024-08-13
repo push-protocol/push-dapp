@@ -1,4 +1,4 @@
-import { ActvityType, RewardsStakeParams } from 'queries';
+import { RewardsStakeParams } from 'queries';
 
 export const sortByIndexNumber = (a: any, b: any) => {
   const numA = parseInt(a.index?.split('-').pop() || '0', 10);
@@ -8,15 +8,15 @@ export const sortByIndexNumber = (a: any, b: any) => {
 
 // Helper function to determine the data based on activity type
 export const getActivityData = (
-  activityType: ActvityType | undefined,
+  activityTypeIndex: string | undefined,
   pushStakeData: RewardsStakeParams | undefined,
   uniV2StakeData: RewardsStakeParams | undefined
 ) => {
-  if (activityType?.startsWith('point-push') || activityType?.startsWith('multiplier-push')) {
+  if (activityTypeIndex?.startsWith('point-push') || activityTypeIndex?.startsWith('multiplier-push')) {
     return pushStakeData as RewardsStakeParams;
   }
 
-  if (activityType?.startsWith('uni-v2-push') || activityType?.startsWith('multiplier-v2-push')) {
+  if (activityTypeIndex?.startsWith('point-uni-v2') || activityTypeIndex?.startsWith('multiplier-uni-v2')) {
     return uniV2StakeData as RewardsStakeParams;
   }
   // Default to an empty object if none match

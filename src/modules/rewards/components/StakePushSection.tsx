@@ -42,10 +42,16 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, bott
   const activityList = rewardActivitiesResponse?.activities.flatMap((page) => page) || [];
 
   // Filter and sort activities based on the type
-  const stakeArray = isLoading
-    ? Array(10).fill(0)
+  const stakePushArray = isLoading
+    ? Array(5).fill(0)
     : activityList
-        .filter((activity) => activity.index.startsWith(multiplier ? 'multiplier-stake' : 'point-stake'))
+        .filter((activity) => activity.index.startsWith(multiplier ? 'multiplier-push' : 'point-push'))
+        .sort(sortByIndexNumber);
+
+  const uniV2PushArray = isLoading
+    ? Array(5).fill(0)
+    : activityList
+        .filter((activity) => activity.index.startsWith(multiplier ? 'multiplier-uni-v2' : 'point-uni-v2'))
         .sort(sortByIndexNumber);
 
   return (
@@ -120,7 +126,7 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, bott
           width="100%"
           gap="spacing-sm"
         >
-          {stakeArray?.slice(0, 5).map((activity) => (
+          {stakePushArray?.map((activity) => (
             <StakePushActivitiesListItem
               key={activity.activityType}
               userId={userDetails?.userId || ''}
@@ -138,7 +144,7 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, bott
           width="100%"
           gap="spacing-sm"
         >
-          {stakeArray?.slice(5, 10).map((activity) => (
+          {uniV2PushArray?.map((activity) => (
             <StakePushActivitiesListItem
               key={activity.activityType}
               userId={userDetails?.userId || ''}

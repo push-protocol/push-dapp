@@ -148,6 +148,7 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
             <ActivityButton
               userId={userId}
               activityTypeId={activity.id}
+              activityTypeIndex={activity.index}
               activityType={activity.activityType}
               refetchActivity={refetchActivity}
               setErrorMessage={setErrorMessage}

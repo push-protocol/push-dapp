@@ -17,21 +17,20 @@ import { useAccount } from 'hooks/useAccount';
 
 // types
 import { UserStoreType } from 'types';
-import { ActvityType } from 'queries';
 import { getActivityData } from '../utils/stakeRewardUtilities';
 
 export type UseVerifyRewardsParams = {
   activityTypeId: string;
   setErrorMessage: (errorMessage: string) => void;
   refetchActivity: () => void;
-  activityType: ActvityType;
+  activityTypeIndex?: string;
 };
 
 const useVerifyRewards = ({
   activityTypeId,
   setErrorMessage,
   refetchActivity,
-  activityType,
+  activityTypeIndex,
 }: UseVerifyRewardsParams) => {
   const [verifyingRewards, setVerifyingRewards] = useState(false);
   const [rewardsActivityStatus, setRewardsActivityStatus] = useState<'Claimed' | 'Pending' | null>(null);
@@ -66,7 +65,7 @@ const useVerifyRewards = ({
   const handleVerify = async (userId: string | null) => {
     setErrorMessage('');
 
-    const data = getActivityData(activityType, pushStakeData, uniV2StakeData);
+    const data = getActivityData(activityTypeIndex, pushStakeData, uniV2StakeData);
 
     const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
 
@@ -83,7 +82,7 @@ const useVerifyRewards = ({
         userId: updatedId || (userId as string),
         activityTypeId,
         pgpPublicKey: userPushSDKInstance.pgpPublicKey as string,
-        data: {},
+        data: data,
         verificationProof: verificationProof as string,
       },
       {

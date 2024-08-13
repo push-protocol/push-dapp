@@ -29,6 +29,7 @@ import { Button } from 'blocks';
 type ActivityVerificationButtonProps = {
   userId: string;
   activityTypeId: string;
+  activityTypeIndex?: string;
   activityType: ActvityType;
   refetchActivity: () => void;
   setErrorMessage: (errorMessage: string) => void;
@@ -39,6 +40,7 @@ type ActivityVerificationButtonProps = {
 export const ActivityVerificationButton = ({
   activityType,
   activityTypeId,
+  activityTypeIndex,
   refetchActivity,
   setErrorMessage,
   userId,
@@ -64,7 +66,7 @@ export const ActivityVerificationButton = ({
     activityTypeId,
     refetchActivity,
     setErrorMessage,
-    activityType,
+    activityTypeIndex,
   });
 
   const activityData = useMemo(() => {

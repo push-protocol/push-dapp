@@ -9,6 +9,7 @@ import { ActivityVerificationButton } from './ActivityVerificationButton';
 type ActivityButtonProps = {
   userId: string;
   activityTypeId: string;
+  activityTypeIndex?: string;
   activityType: ActvityType;
   refetchActivity: () => void;
   setErrorMessage: (errorMessage: string) => void;
@@ -20,6 +21,7 @@ type ActivityButtonProps = {
 const ActivityButton: FC<ActivityButtonProps> = ({
   userId,
   activityTypeId,
+  activityTypeIndex,
   refetchActivity,
   activityType,
   setErrorMessage,
@@ -57,6 +59,7 @@ const ActivityButton: FC<ActivityButtonProps> = ({
       activityType={activityType}
       userId={userId}
       activityTypeId={activityTypeId}
+      activityTypeIndex={activityTypeIndex}
       refetchActivity={refetchActivity}
       setErrorMessage={setErrorMessage}
       isLoadingActivity={isLoadingActivity}
