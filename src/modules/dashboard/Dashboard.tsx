@@ -2,7 +2,7 @@
 import { FC, useState } from 'react';
 
 // Components
-import { Box, Tag } from 'blocks';
+import { Box } from 'blocks';
 import { AnalyticsOverview } from './components/AnalyticsOverview';
 import { ChannelVariantsSection } from './components/ChannelVariantsSection';
 import { DashboardHeader } from './components/DashboardHeader';
@@ -24,27 +24,6 @@ const Dashboard: FC<DashboardProps> = () => {
       height="100%"
       width="auto"
     >
-      <Tag label="Default" />
-      <Tag
-        label="Success"
-        variant="success"
-      />
-      <Tag
-        label="Danger"
-        variant="danger"
-      />
-      <Tag
-        label="Warning"
-        variant="warning"
-      />
-      <Tag
-        label="Info"
-        variant="info"
-      />
-      <Tag
-        label="Disabled"
-        variant="disabled"
-      />
       <DashboardHeader
         showSubHeader={showSubHeader}
         setSubHeaderVisibility={setSubHeaderVisibility}
