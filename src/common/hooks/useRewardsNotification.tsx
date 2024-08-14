@@ -30,18 +30,19 @@ export const useRewardsNotification = () => {
   };
 
   const showNotification = () => {
-    if (!isPointsPage && !notificationAlreadyShown) {
-      notificationItem();
+    if (!notificationAlreadyShown && !isPointsPage) {
+      // include componentDidMount logic
+      if (!hasMounted) {
+        notificationItem();
+        setHasMounted(true);
+      }
     } else {
       notification.hide();
+      setHasMounted(false);
     }
   };
 
   useEffect(() => {
-    if (!hasMounted) {
-      // do componentDidMount logic
-      setHasMounted(true);
-      showNotification();
-    }
+    showNotification();
   }, [isPointsPage]);
 };
