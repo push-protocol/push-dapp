@@ -11,7 +11,7 @@ import {
   ChatIllustration,
   Communication,
   CommunicationDark,
-  Notification,
+  NotificationImg,
   NotificationDark,
   Text,
 } from 'blocks';
@@ -52,7 +52,7 @@ const DashboardSubHeader: FC<DashboardSubHeaderProps> = () => {
         alignItems="center"
         width={{ tb: '-webkit-fill-available', initial: 'inherit' }}
       >
-        {mode === 'dark' ? <NotificationDark /> : <Notification />}
+        {mode === 'dark' ? <NotificationDark /> : <NotificationImg />}
         <Text
           variant="h5-semibold"
           color="text-primary"

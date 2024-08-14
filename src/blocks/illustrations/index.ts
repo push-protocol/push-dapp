@@ -23,7 +23,7 @@ export { default as Points } from './components/Points';
 
 export { default as Metamask } from './components/Metamask';
 
-export { default as Notification } from './components/Notification';
+export { default as NotificationImg } from './components/NotificationImg';
 export { default as NotificationDark } from './components/NotificationDark';
 
 export { default as RewardsBell } from './components/RewardsBell';

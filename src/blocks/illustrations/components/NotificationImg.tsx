@@ -2,11 +2,11 @@ import { FC } from 'react';
 import { IllustrationWrapper } from '../IllustrationWrapper';
 import { IllustrationProps } from '../Illustrations.types';
 
-const Notification: FC<IllustrationProps> = (allProps) => {
+const NotificationImg: FC<IllustrationProps> = (allProps) => {
   const { svgProps: props, ...restProps } = allProps;
   return (
     <IllustrationWrapper
-      componentName="Notification"
+      componentName="NotificationImg"
       illustration={
         <svg
           width={restProps.width ?? '56'}
@@ -83,4 +83,4 @@ const Notification: FC<IllustrationProps> = (allProps) => {
   );
 };
 
-export default Notification;
+export default NotificationImg;
