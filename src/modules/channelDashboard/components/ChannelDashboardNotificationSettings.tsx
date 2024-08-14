@@ -58,6 +58,7 @@ const ChannelDashboardNotificationSettings: FC<ChannelDashboardNotificationSetti
           {channel_settings && (
             <Button
               size="extraSmall"
+              disabled={!onCoreNetwork}
               variant="tertiary"
               leadingIcon={<Settings />}
               onClick={() => navigate(APP_PATHS.ChannelSettings)}

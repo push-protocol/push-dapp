@@ -32,11 +32,20 @@ const useFetchChannelDetails = () => {
     return account;
   }, [onCoreNetwork, aliasData, account]);
 
+  // Refetch interval is set based on alias is verified or not.
+  // 5000 is given for the case when the user is not on core network and has alias details
+  const refetchInterval = useMemo(() => {
+    if (!!(!onCoreNetwork && aliasData && aliasData?.channel)) {
+      return 5000;
+    }
+    return 0;
+  }, [onCoreNetwork, aliasData]);
+
   const {
     data: channelDetails,
     isLoading: loadingChannelDetails,
     refetch: refetchChannelDetails
-  } = useGetChannelDetails(accountToFetchChannelDetails);
+  } = useGetChannelDetails(accountToFetchChannelDetails, refetchInterval);
 
   return { channelDetails, loadingChannelDetails, refetchChannelDetails };
 };
