@@ -31,7 +31,7 @@ export { default as Multiplier } from './components/Multiplier';
 
 export { default as MultipleRewardsCoin } from './components/MultipleRewardsCoin';
 
-export { default as Notification } from './components/Notification';
+export { default as NotificationImg } from './components/NotificationImg';
 
 export { default as NotificationDark } from './components/NotificationDark';
 
