@@ -1,5 +1,5 @@
 // React and other libraries
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 // components
@@ -8,11 +8,12 @@ import { notification, RewardPoints } from 'blocks';
 export const useRewardsNotification = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [hasMounted, setHasMounted] = useState(false);
 
   const notificationAlreadyShown = localStorage.getItem('notificationShown') === 'true';
   const isPointsPage = location?.pathname.includes('/points');
 
-  const showNotification = () => {
+  const notificationItem = () => {
     notification.show({
       title: 'Push Points are Live',
       description: 'Complete Tasks on Push. Check-in, Earn Push Points, Unlock Rewards and Level up!',
@@ -28,11 +29,19 @@ export const useRewardsNotification = () => {
     });
   };
 
-  useEffect(() => {
+  const showNotification = () => {
     if (!isPointsPage && !notificationAlreadyShown) {
-      showNotification();
+      notificationItem();
     } else {
       notification.hide();
+    }
+  };
+
+  useEffect(() => {
+    if (!hasMounted) {
+      // do componentDidMount logic
+      setHasMounted(true);
+      showNotification();
     }
   }, [isPointsPage]);
 };
