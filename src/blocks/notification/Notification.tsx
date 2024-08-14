@@ -62,6 +62,7 @@ const CloseButton = styled.div`
 `;
 
 const NotificationItem: FC<NotificationProps> = ({ onClose, title, description, image, onClick }) => {
+
   const handleNotificationClick = () => onClick?.();
 
   const handleNotificationClose = () => {
@@ -98,6 +99,7 @@ const Notification = () => {
   );
 };
 
+
 // Store the toastId(s) in an array to manage multiple notifications
 const toastIds: Array<string | number> = [];
 
@@ -105,6 +107,7 @@ const toastIds: Array<string | number> = [];
 const notification = {
   show: (config: NotificationProps) => {
     const toastId = toast.custom(() => <NotificationItem {...config} />, {
+
       duration: config.duration || Infinity,
       position: config.position || 'bottom-right',
     });
@@ -119,3 +122,4 @@ const notification = {
 };
 
 export { notification, Notification };
+

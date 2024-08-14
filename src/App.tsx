@@ -11,6 +11,7 @@ import styled, { ThemeProvider } from 'styled-components';
 
 import { ChatUIProvider, darkChatTheme, IChatTheme } from '@pushprotocol/uiweb';
 import { createGlobalStyle } from 'styled-components';
+import { Toaster } from 'sonner';
 
 // Internal Compoonents
 import InitState from 'components/InitState';
