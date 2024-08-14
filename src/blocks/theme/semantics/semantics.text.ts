@@ -26,7 +26,7 @@ export const textSemantics = {
   'state-info-bold': { light: colorBrands['info-700'], dark: colorBrands['info-100'] },
 
   'state-warning-subtle': { light: colorBrands['warning-100'], dark: colorBrands['warning-700'] },
-  'warning-bold': { light: colorBrands['warning-700'], dark: colorBrands['warning-100'] },
+  'state-warning-bold': { light: colorBrands['warning-700'], dark: colorBrands['warning-100'] },
 
   'state-danger-subtle': { light: colorBrands['danger-100'], dark: colorBrands['danger-700'] },
   'state-danger-bold': { light: colorBrands['danger-700'], dark: colorBrands['danger-300'] },
