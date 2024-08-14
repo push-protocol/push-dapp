@@ -100,7 +100,7 @@ const AddNewChainNavigation: FC<AddNewChainNavigationProps> = ({ channelDetails,
           />
         </Link>
 
-        {!sidebarCollapsed && verifiedAliasChainIds?.length && (
+        {!sidebarCollapsed && !verifiedAliasChainIds?.length && (
           <Link
             to={APP_PATHS.AddNewChain}
             textProps={{ variant: 'bm-semibold', color: 'text-secondary', ellipsis: true }}
