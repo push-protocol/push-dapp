@@ -1,13 +1,13 @@
 // React and other libraries
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 // components
 import { notification, RewardPoints } from 'blocks';
 
 export const useRewardsNotification = () => {
+  const location = useLocation();
   const navigate = useNavigate();
-  const [showNotif, setShowNotif] = useState(false);
 
   const notificationAlreadyShown = localStorage.getItem('notificationShown') === 'true';
   const isPointsPage = location?.pathname.includes('/points');
@@ -26,15 +26,13 @@ export const useRewardsNotification = () => {
         localStorage.setItem('notificationShown', 'true');
       },
     });
-    setShowNotif(true);
   };
 
   useEffect(() => {
     if (!isPointsPage && !notificationAlreadyShown) {
-      if (!showNotif) showNotification();
+      showNotification();
     } else {
       notification.hide();
-      setShowNotif(false);
     }
-  }, [location?.pathname]);
+  }, [isPointsPage]);
 };
