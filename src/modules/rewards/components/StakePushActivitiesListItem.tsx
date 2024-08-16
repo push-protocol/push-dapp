@@ -83,13 +83,25 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
             gap={{ ml: 'spacing-sm', initial: 'spacing-xxxs' }}
             alignItems={{ ml: 'center' }}
           >
-            <Text
-              variant="bl-semibold"
-              color="text-primary"
-              textAlign="center"
-            >
-              {activity?.activityTitle}
-            </Text>
+            <Box display={{ ml: 'block', initial: 'none' }}>
+              <Text
+                color="text-primary"
+                variant="h6-bold"
+                textAlign="center"
+              >
+                {activity?.activityTitle}
+              </Text>
+            </Box>
+            <Box display={{ ml: 'none', initial: 'block' }}>
+              <Text
+                color="text-primary"
+                variant="bl-semibold"
+                textAlign="center"
+              >
+                {activity?.activityTitle}
+              </Text>
+            </Box>
+
             {activity.points > 0 && (
               <Box
                 display="flex"
