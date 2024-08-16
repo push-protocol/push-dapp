@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.21.0",
-    "@emotion/react": "^11.8.2",
+    "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.8.1",
     "@ethersproject/abi": "^5.6.0",
     "@ethersproject/providers": "^5.6.0",
@@ -43,6 +43,7 @@
     "@radix-ui/react-tooltip": "^1.1.1",
     "@reach/tabs": "^0.18.0",
     "@reduxjs/toolkit": "^1.7.1",
+    "@table-library/react-table-library": "^4.1.7",
     "@tanstack/react-query": "^5.44.0",
     "@tanstack/react-query-devtools": "^5.44.0",
     "@testing-library/dom": "^9.0.1",

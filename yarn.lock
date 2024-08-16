@@ -797,7 +797,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/react@npm:^11.8.2":
+"@emotion/react@npm:^11.13.0":
   version: 11.13.0
   resolution: "@emotion/react@npm:11.13.0"
   dependencies:
@@ -6176,6 +6176,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@table-library/react-table-library@npm:^4.1.7":
+  version: 4.1.7
+  resolution: "@table-library/react-table-library@npm:4.1.7"
+  dependencies:
+    clsx: "npm:1.1.1"
+    react-virtualized-auto-sizer: "npm:1.0.7"
+    react-window: "npm:1.8.7"
+  peerDependencies:
+    "@emotion/react": ">= 11"
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 10/14fba2fdfd09d25d6e8321874b934ce250814e7bdb8a5c5dc627dbcd61f5d2c5d1d5ae3a52ce4036a1f28fb883ecec88ed9bd4441b2756258fe05dfce2d4fd15
+  languageName: node
+  linkType: hard
+
 "@tanstack/query-async-storage-persister@npm:4.29.23":
   version: 4.29.23
   resolution: "@tanstack/query-async-storage-persister@npm:4.29.23"
@@ -9896,6 +9911,13 @@ __metadata:
   version: 2.1.2
   resolution: "clone@npm:2.1.2"
   checksum: 10/d9c79efba655f0bf601ab299c57eb54cbaa9860fb011aee9d89ed5ac0d12df1660ab7642fddaabb9a26b7eff0e117d4520512cb70798319ff5d30a111b5310c2
+  languageName: node
+  linkType: hard
+
+"clsx@npm:1.1.1":
+  version: 1.1.1
+  resolution: "clsx@npm:1.1.1"
+  checksum: 10/ff052650329773b9b245177305fc4c4dc3129f7b2be84af4f58dc5defa99538c61d4207be7419405a5f8f3d92007c954f4daba5a7b74e563d5de71c28c830063
   languageName: node
   linkType: hard
 
@@ -18151,7 +18173,7 @@ __metadata:
     "@3id/connect": "npm:0.4.1"
     "@babel/runtime": "npm:^7.21.0"
     "@ceramicnetwork/ceramic-core": "npm:0.12.4"
-    "@emotion/react": "npm:^11.8.2"
+    "@emotion/react": "npm:^11.13.0"
     "@emotion/styled": "npm:^11.8.1"
     "@ethersproject/abi": "npm:^5.6.0"
     "@ethersproject/providers": "npm:^5.6.0"
@@ -18170,6 +18192,7 @@ __metadata:
     "@radix-ui/react-tooltip": "npm:^1.1.1"
     "@reach/tabs": "npm:^0.18.0"
     "@reduxjs/toolkit": "npm:^1.7.1"
+    "@table-library/react-table-library": "npm:^4.1.7"
     "@tanstack/react-query": "npm:^5.44.0"
     "@tanstack/react-query-devtools": "npm:^5.44.0"
     "@testing-library/dom": "npm:^9.0.1"
@@ -19129,6 +19152,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-virtualized-auto-sizer@npm:1.0.7":
+  version: 1.0.7
+  resolution: "react-virtualized-auto-sizer@npm:1.0.7"
+  peerDependencies:
+    react: ^15.3.0 || ^16.0.0-alpha || ^17.0.0 || ^18.0.0-rc
+    react-dom: ^15.3.0 || ^16.0.0-alpha || ^17.0.0 || ^18.0.0-rc
+  checksum: 10/a16d8ac11a0efa20d44f36a5cf3854027895b806363a409f2ddc07ff92bfc92aaf5b8eee21f3e1b153cee2273db5e5383b6334d4b530d934ed08808ecfb45b9f
+  languageName: node
+  linkType: hard
+
 "react-virtualized-auto-sizer@npm:^1.0.2":
   version: 1.0.24
   resolution: "react-virtualized-auto-sizer@npm:1.0.24"
@@ -19149,6 +19182,19 @@ __metadata:
   peerDependencies:
     react: ^15.3.0 || ^16.0.0
   checksum: 10/8776085a69dc165c686dcebb71de8064ff392c523596e60e946dd955f8ea64cbdb9ccd2f97ab57cd4ddfceedd72156e943cc08f576cfde657719b1a0aca0b32d
+  languageName: node
+  linkType: hard
+
+"react-window@npm:1.8.7":
+  version: 1.8.7
+  resolution: "react-window@npm:1.8.7"
+  dependencies:
+    "@babel/runtime": "npm:^7.0.0"
+    memoize-one: "npm:>=3.1.1 <6"
+  peerDependencies:
+    react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: 10/c838d60be2d2a6535e5a7db63da451aad6bc75f01de37ba3cdab13fee9acc7a75ff16f17772228faadfbfedfa51addc9496806fde92e7bec7bc5f35549b37450
   languageName: node
   linkType: hard
 

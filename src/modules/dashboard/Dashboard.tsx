@@ -2,7 +2,7 @@
 import { FC, useState } from 'react';
 
 // Components
-import { Box } from 'blocks';
+import { Box, Table } from 'blocks';
 import { AnalyticsOverview } from './components/AnalyticsOverview';
 import { ChannelVariantsSection } from './components/ChannelVariantsSection';
 import { DashboardHeader } from './components/DashboardHeader';
@@ -35,16 +35,7 @@ const Dashboard: FC<DashboardProps> = () => {
         flexDirection="column"
         gap="spacing-md"
       >
-        <FeaturedChannels />
-        <ChannelVariantsSection />
-        <Box
-          display="flex"
-          flexDirection={{ initial: 'row', ml: 'column' }}
-          gap="spacing-md"
-        >
-          <AnalyticsOverview />
-          <StakingPools />
-        </Box>
+        {/* <Table /> */}
       </Box>
     </Box>
   );

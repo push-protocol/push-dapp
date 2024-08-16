@@ -12,6 +12,7 @@ export { ProgressBar, type ProgressBarProps } from './progressBar';
 export { Separator, type SeparatorProps } from './separator';
 export { Skeleton, type SkeletonProps } from './skeleton';
 export { Tabs, type TabsProps, type TabItem } from './tabs';
+export { Table, type TableProps } from './table';
 export { Tag } from './tag';
 export { Text, type TextProps } from './text';
 export { Tooltip, type TooltipProps } from './tooltip';
