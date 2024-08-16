@@ -26,8 +26,9 @@ const SubscribedChannelsList = () => {
         />
       )}
       {channelList?.map((channel, index) => (
-        <Box key={`${index}`}>
+        <Box key={`${channel}`}>
           <ChannelListItem
+            key={`${channel}`}
             channelAddress={channel.channel}
             isLoading={isLoading}
             refetchChannels={refetch}

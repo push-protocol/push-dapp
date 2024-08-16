@@ -104,7 +104,10 @@ const FeaturedChannelsList: FC<FeaturedChannelsListProps> = ({ featuredChannelsL
             `}
           >
             {featuredChannelsList.map((channel) => (
-              <FeaturedChannelsListItem channelAddress={channel.channel} />
+              <FeaturedChannelsListItem
+                key={channel.channel}
+                channelAddress={channel.channel}
+              />
             ))}
           </Box>
         </Box>
