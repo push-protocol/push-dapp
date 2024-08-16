@@ -66,9 +66,8 @@ const TrendingChannelsList = () => {
       )}
 
       {channelList.map((channel, index) => (
-        <Box key={`${channel}`}>
+        <Box key={`${index}`}>
           <ChannelListItem
-            key={`${channel}`}
             channelAddress={channel}
             isLoading={isLoadingTrendingChannels}
             refetchChannels={handleRefetch}

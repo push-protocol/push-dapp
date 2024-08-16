@@ -6,9 +6,8 @@ import { EnvKeys } from '../Dashboard.types';
 
 const HottestChannelsList = () => {
   return hottestChannels[appConfig.appEnv as EnvKeys]?.map((channel, index) => (
-    <Box key={`${channel}`}>
+    <Box key={`${index}`}>
       <ChannelListItem
-        key={`${channel}`}
         allowSubscribe={false}
         channelAddress={channel}
       />
