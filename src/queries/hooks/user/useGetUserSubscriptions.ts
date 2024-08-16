@@ -15,10 +15,13 @@ import { UserSubscriptionsResponse } from 'queries/types';
  * If address is not passed then it returns list od user subscribed channels.
  * If a sepacifc channel address is passed then it returns details of that particular channel
  */
-export const useGetUserSubscriptions = (
-  channelAddress?: string,
-  config?: Partial<UseQueryOptions<UserSubscriptionsResponse>>
-) => {
+export const useGetUserSubscriptions = ({
+  channelAddress,
+  config,
+}: {
+  channelAddress?: string;
+  config?: Partial<UseQueryOptions<UserSubscriptionsResponse>>;
+}) => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
     return state.user;
   });
@@ -29,6 +32,9 @@ export const useGetUserSubscriptions = (
     queryKey: [key, userPushSDKInstance?.account, channelAddress || null],
     queryFn: () => getUserSubscriptions(userPushSDKInstance, channelAddress),
     ...config,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+    refetchIntervalInBackground: true,
   });
   return query;
 };

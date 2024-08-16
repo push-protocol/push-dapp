@@ -8,8 +8,12 @@ import { ChannelListItem } from './ChannelListItem';
 import { EmptyChannelList } from './EmptyChannelList';
 
 const SubscribedChannelsList = () => {
-  const { data: subscribedChannels, isLoading, refetch, isSuccess } = useGetUserSubscriptions();
-
+  const {
+    data: subscribedChannels,
+    isLoading,
+    refetch,
+    isSuccess,
+  } = useGetUserSubscriptions({ config: { refetchInterval: 2000 } });
   // If there are channels then render them else render 5 skeletons
   const channelList = isLoading ? Array(5).fill(0) : subscribedChannels;
 

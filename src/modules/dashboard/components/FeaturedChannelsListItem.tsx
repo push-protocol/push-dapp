@@ -13,7 +13,16 @@ import { useAccount } from 'hooks';
 import { formatSubscriberCount } from '../Dashboard.utils';
 
 // Components
-import { Box, Button, CaretDown, Ethereum, NotificationMobile, Skeleton, Text, TickDecoratedCircleFilled } from 'blocks';
+import {
+  Box,
+  Button,
+  CaretDown,
+  Ethereum,
+  NotificationMobile,
+  Skeleton,
+  Text,
+  TickDecoratedCircleFilled,
+} from 'blocks';
 import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
 import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannelDropdown';
 import { VerifiedToolTipComponent } from './VerifiedToolTipComponent';
@@ -43,7 +52,7 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
     data: userSubscription,
     refetch,
     isLoading: isSubscriptionLoading,
-  } = useGetUserSubscriptions(channelAddress, { enabled: isWalletConnected });
+  } = useGetUserSubscriptions({ channelAddress, config: { enabled: isWalletConnected } });
 
   const isSubscribed = userSubscription && userSubscription?.length;
 

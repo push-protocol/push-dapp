@@ -58,8 +58,11 @@ const ChannelListItem: FC<ChannelListItemProps> = ({
     data: userSubscription,
     refetch: refetchUserSubscription,
     isLoading: isSubscriptionLoading,
-  } = useGetUserSubscriptions(channelAddress, {
-    enabled: isWalletConnected,
+  } = useGetUserSubscriptions({
+    channelAddress,
+    config: {
+      enabled: isWalletConnected,
+    },
   });
 
   const AliasChain = channelDetails?.alias_blockchain_id && LOGO_ALIAS_CHAIN[+channelDetails.alias_blockchain_id];
