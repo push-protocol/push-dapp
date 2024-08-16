@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { css } from 'styled-components';
 import { useSelector } from 'react-redux';
@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 //add conditon for /send url
 
 const SendNotification: FC = () => {
+  const [isAuthModalVisible, setIsAuthModalVisible] = useState(true);
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
   const { account } = useAccount();
   const { data: channelDetails } = useGetChannelDetails(account);
@@ -56,7 +57,7 @@ const SendNotification: FC = () => {
       <Box width="100%">
         <SendNotificationForm channelDetails={channelDetails} />
       </Box>
-      {userPushSDKInstance && userPushSDKInstance?.readmode() && (
+      {isAuthModalVisible && userPushSDKInstance && userPushSDKInstance?.readmode() && (
         <Box
           display="flex"
           justifyContent="center"
@@ -69,6 +70,7 @@ const SendNotification: FC = () => {
           <UnlockProfileWrapper
             type={UNLOCK_PROFILE_TYPE.MODAL}
             showConnectModal={true}
+            onClose={() => setIsAuthModalVisible(false)}
           />
         </Box>
       )}
