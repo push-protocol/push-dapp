@@ -5,11 +5,11 @@ import { Box, TabItem, Tabs } from 'blocks';
 import { DashboardSection } from './DashboardSection';
 import { LeaderBoardSection } from './LeaderBoardSection';
 import { RewardsActivitiesSection } from './RewardsActivitiesSection';
-import { RewardsTabs, RewardsTabs as RewardsTabsType } from '../Rewards.types';
+import { RewardsTabs } from '../Rewards.types';
 
 export type RewardsTabsContainerProps = {
-  activeTab: RewardsTabsType;
-  handleSetActiveTab: (tab: RewardsTabsType) => void;
+  activeTab: RewardsTabs;
+  handleSetActiveTab: (tab: RewardsTabs) => void;
 };
 
 const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handleSetActiveTab }) => {
