@@ -183,23 +183,6 @@ const AddNewChain: FC = () => {
               )}
               {activeStepKey === 'changenetwork' && <ChangeNetwork handleNextStep={handleNextStep} />}
               {activeStepKey === 'verifyalias' && <VerifyAliasChain alaisDetails={alaisDetails} />}
-              {isAuthModalVisible && (
-                <Box
-                  display="flex"
-                  justifyContent="center"
-                  width="-webkit-fill-available"
-                  alignItems="center"
-                  css={css`
-                    z-index: 99999;
-                  `}
-                >
-                  <UnlockProfileWrapper
-                    type={UNLOCK_PROFILE_TYPE.MODAL}
-                    showConnectModal={true}
-                    onClose={handleCloseAuthModal}
-                  />
-                </Box>
-              )}
             </>
           ) : (
             <>
@@ -210,6 +193,23 @@ const AddNewChain: FC = () => {
               />
               <Button onClick={() => navigate(APP_PATHS.CreateChannel)}>Create Channel</Button>
             </>
+          )}
+          {isAuthModalVisible && (
+            <Box
+              display="flex"
+              justifyContent="center"
+              width="-webkit-fill-available"
+              alignItems="center"
+              css={css`
+                z-index: 99999;
+              `}
+            >
+              <UnlockProfileWrapper
+                type={UNLOCK_PROFILE_TYPE.MODAL}
+                showConnectModal={true}
+                onClose={handleCloseAuthModal}
+              />
+            </Box>
           )}
         </Box>
         <Text

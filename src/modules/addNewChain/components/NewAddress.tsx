@@ -56,19 +56,21 @@ const NewAddress: FC<NewAddressProps> = ({ isLoading, channelDetails }) => {
             alignItems="flex-start"
             width="100%"
           >
-            <TextInput
-              label="Your Address on New Chain"
-              description="Make sure you own this alias as verification will take place."
-              value={formValues.alias}
-              onChange={handleChange('alias')}
-              error={touched?.alias && Boolean(errors?.alias)}
-              errorMessage={touched?.alias ? errors?.alias : ''}
-            />
+            <Box width={{ dp: '60%', ml: '100%' }}>
+              <TextInput
+                label="Your Address on New Chain"
+                description="Make sure you own this alias as verification will take place."
+                value={formValues.alias}
+                onChange={handleChange('alias')}
+                error={touched?.alias && Boolean(errors?.alias)}
+                errorMessage={touched?.alias ? errors?.alias : ''}
+              />
+            </Box>
             <Box
               display="flex"
               alignSelf="center"
               width={{ dp: 'auto', ml: '100%' }}
-              margin="spacing-xxxs spacing-none spacing-none spacing-none"
+              margin="spacing-none spacing-none spacing-xxxs spacing-none"
             >
               <Select
                 options={selectChainOptions}
