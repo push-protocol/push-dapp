@@ -12,12 +12,14 @@ import { iconSemantics } from '../semantics/semantics.icon';
 import { inputSemantics } from '../semantics/semantics.input';
 import { listItemSemantics } from '../semantics/semantics.listItem';
 import { modalSemantics } from '../semantics/semantics.modal';
+import { notificationsSemantics } from '../semantics/semantics.notifications';
 import { progressBarSemantics } from '../semantics/semantics.progress-bar';
 import { radioSemantics } from '../semantics/semantics.radio';
 import { skeletonSemantics } from '../semantics/semantics.skeleton';
 import { strokeSemantics } from '../semantics/semantics.stroke';
 import { surfaceSemantics } from '../semantics/semantics.surface';
 import { switchSemantics } from '../semantics/semantics.switch';
+import { tagSemantics } from '../semantics/semantics.tag';
 import { textSemantics } from '../semantics/semantics.text';
 import { textAreaSemantics } from '../semantics/semantics.textarea';
 import { toastSemantics } from '../semantics/semantics.toast';
@@ -38,11 +40,13 @@ type SemanticKeys = {
   input: 'components-inputs';
   listItem: 'components-list-item';
   modal: 'components-modal';
+  notifications: 'components-in-app-notification';
   progressBar: 'components-progress-bar';
   radio: 'components-radio-button';
   surface: 'surface';
   stroke: 'stroke';
   skeleton: 'components-skeleton-loader';
+  tag: 'components-tag';
   text: 'text';
   textArea: 'components-textarea';
   toast: 'components-toast';
@@ -64,11 +68,13 @@ export const semanticKeys: SemanticKeys = {
   input: 'components-inputs',
   listItem: 'components-list-item',
   modal: 'components-modal',
+  notifications: 'components-in-app-notification',
   progressBar: 'components-progress-bar',
   radio: 'components-radio-button',
   surface: 'surface',
   stroke: 'stroke',
   skeleton: 'components-skeleton-loader',
+  tag: 'components-tag',
   text: 'text',
   textArea: 'components-textarea',
   toast: 'components-toast',
@@ -90,11 +96,13 @@ export const colorSemantics = {
   [semanticKeys.input]: inputSemantics,
   [semanticKeys.listItem]: listItemSemantics,
   [semanticKeys.modal]: modalSemantics,
+  [semanticKeys.notifications]: notificationsSemantics,
   [semanticKeys.progressBar]: progressBarSemantics,
   [semanticKeys.radio]: radioSemantics,
   [semanticKeys.surface]: surfaceSemantics,
   [semanticKeys.stroke]: strokeSemantics,
   [semanticKeys.skeleton]: skeletonSemantics,
+  [semanticKeys.tag]: tagSemantics,
   [semanticKeys.text]: textSemantics,
   [semanticKeys.textArea]: textAreaSemantics,
   [semanticKeys.toast]: toastSemantics,

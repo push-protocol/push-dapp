@@ -11,6 +11,7 @@ import styled, { ThemeProvider } from 'styled-components';
 
 import { ChatUIProvider, darkChatTheme, IChatTheme } from '@pushprotocol/uiweb';
 import { createGlobalStyle } from 'styled-components';
+import { Toaster } from 'sonner';
 
 // Internal Compoonents
 import InitState from 'components/InitState';
@@ -346,6 +347,11 @@ export default function App() {
       <>
         <GlobalStyle />
         <InitState />
+        <Toaster
+          style={{ minWidth: '397px', height: '111px' }}
+          offset={15}
+          visibleToasts={5}
+        />
         <NavigationContextProvider>
           <ChatUIProvider
             user={userPushSDKInstance}
