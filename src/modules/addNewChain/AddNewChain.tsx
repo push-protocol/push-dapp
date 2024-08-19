@@ -51,6 +51,7 @@ const AddNewChain: FC = () => {
   }, [userPushSDKInstance]);
 
   const handleInitiate = (alias: string, chainId: string) => {
+    setCompletedSteps(['newaddress']);
     initiateNewChain(
       {
         userPushSDKInstance,

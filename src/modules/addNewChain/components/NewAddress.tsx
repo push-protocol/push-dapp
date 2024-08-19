@@ -19,7 +19,7 @@ const NewAddress: FC<NewAddressProps> = ({ isLoading, channelDetails }) => {
   const selectChainOptions = getSelectChains(allowedNetworks);
   const { values: formValues, handleSubmit, handleChange, errors, touched } = useChainAliasForm();
   const isAliasNetworkExists = channelDetails?.aliases.find(
-    (alias) => alias.alias_blockchain_id === formValues.chainId
+    (alias) => alias.alias_blockchain_id === formValues.chainId && alias.is_alias_verified
   );
 
   const validateInput = () => {
