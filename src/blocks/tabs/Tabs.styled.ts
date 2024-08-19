@@ -9,6 +9,7 @@ export const StyledFillTabs = styled(ReachTabs)`
 `;
 
 export const StyledFillTabList = styled(TabList)`
+  overflow: scroll hidden;
   display: flex;
   width: fit-content;
   padding: var(--spacing-xxxs);
@@ -68,6 +69,7 @@ export const StyledLineTabs = styled(ReachTabs)`
 `;
 
 export const StyledLineTabList = styled(TabList)`
+  overflow: scroll hidden;
   display: flex;
   background-color: var(--surface-transparent);
   gap: var(--spacing-xs);
@@ -119,6 +121,7 @@ export const StyledLineTab = styled(Tab)`
 `;
 
 export const StyledTabLabel = styled.span`
+  white-space: nowrap;
   font-family: var(--font-family);
   font-size: ${textVariants['h5-semibold'].fontSize};
   font-style: ${textVariants['h5-semibold'].fontStyle};
