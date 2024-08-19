@@ -187,24 +187,20 @@ function Navigation() {
   }, [canSend, channelDetails, navigationSetup, processingState, account]);
 
   useEffect(() => {
-    if (processingState !== 0) {
-      dispatch(setCanSend(SEND_NOTIFICATION_STATES.LOADING));
-    } else {
-      /**
-       * If its a delegate
-       * If the channel Details is present on the core network
-       */
-      if (delegatees && delegatees.length > 0) {
-        dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
-      }
-
-      if (onActiveNetwork && channelDetails && channelDetails?.name !== null) {
-        dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
-      } else {
-        dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
-      }
+    /**
+     * If its a delegate
+     * If the channel Details is present on the core network
+     */
+    if (delegatees && delegatees.length > 0) {
+      dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
     }
-  }, [channelDetails, delegatees, canSend, processingState, account, onActiveNetwork]);
+
+    if (onActiveNetwork && channelDetails && channelDetails?.name !== null) {
+      dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
+    } else {
+      dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
+    }
+  }, [channelDetails, delegatees, canSend, account, onActiveNetwork]);
 
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
