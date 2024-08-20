@@ -171,11 +171,13 @@ const AddNewChain: FC = () => {
             </>
           ) : channelDetails || alaisDetails ? (
             <>
-              <Stepper
-                steps={addNewChainSteps}
-                completedSteps={completedSteps}
-                setActiveStepKey={(key) => setActiveStepKey(key as ActiveStepKey)}
-              />
+              <Box width="100%">
+                <Stepper
+                  steps={addNewChainSteps}
+                  completedSteps={completedSteps}
+                  setActiveStepKey={(key) => setActiveStepKey(key as ActiveStepKey)}
+                />
+              </Box>
               {activeStepKey === 'newaddress' && (
                 <NewAddress
                   isLoading={isPending && !isError}
