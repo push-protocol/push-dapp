@@ -70,11 +70,14 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
       label: 'Cyber ETH',
       url: 'https://cyber-testnet.testnets.rollbridge.app/',
     },
-    // comment base
-    // 84532: {
-    //   label: 'Base Sepolia',
-    //   url: 'https://www.alchemy.com/faucets/base-sepolia',
-    // },
+    84532: {
+      label: 'Base Sepolia',
+      url: 'https://www.alchemy.com/faucets/base-sepolia',
+    },
+    59141: {
+      label: 'Linea Sepolia',
+      url: 'https://www.infura.io/faucet/linea',
+    },
   };
 
   const checkAlias = async () => {
@@ -171,10 +174,10 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
         >
           You will need{' '}
           <A
-            href={Faucets[chainId].url}
+            href={Faucets[chainId]?.url}
             target="_blank"
           >
-            {Faucets[chainId].label}
+            {Faucets[chainId]?.label}
           </A>{' '}
           to proceed.
         </SpanV2>
