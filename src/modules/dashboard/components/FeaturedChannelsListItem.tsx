@@ -29,7 +29,7 @@ import { VerifiedToolTipComponent } from './VerifiedToolTipComponent';
 import { UserSetting } from 'helpers/channel/types';
 
 // Internal Configs
-import { LOGO_ALIAS_CHAIN } from '../configs/chainDetails.config';
+import { LOGO_ALIAS_CHAIN } from 'common';
 
 // Styles
 import { ImageV3 } from '../Dashboard.styled';

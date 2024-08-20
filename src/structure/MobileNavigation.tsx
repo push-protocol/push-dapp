@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 
@@ -21,13 +21,15 @@ import { incrementStepIndex, setTutorialContinous } from '../redux/slices/userJo
 import MobileNavButton from 'components/MobileNavButton';
 import GLOBALS from 'config/Globals';
 import { appConfig } from 'config/index.js';
+import useFetchChannelDetails from 'common/hooks/useFetchUsersChannelDetails';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import APP_PATHS from 'config/AppPaths';
 
 // Create Header
 function MobileNavigation({ showNavBar, setShowNavBar }) {
   const {
-    channelDetails,
     delegatees,
-    aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified },
+    aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified }
   } = useSelector((state: any) => state.admin);
   const [refresh, setRefresh] = useState(false);
   const { processingState } = useSelector((state: any) => state.channelCreation);
@@ -46,6 +48,16 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
     return state.canSend;
   });
 
+  const { channelDetails } = useFetchChannelDetails();
+  const filteredAlias = useMemo(() => {
+    return channelDetails?.aliases.find((alias) => alias.alias_address === convertAddressToAddrCaip(account, chainId));
+  }, [channelDetails, account, chainId]);
+
+  const checkIfAliasIsVerified = filteredAlias && !!filteredAlias?.is_alias_verified ? true : false;
+  const onActiveNetwork =
+    appConfig.coreContractChain === chainId ||
+    (checkIfAliasIsVerified && parseInt(filteredAlias?.alias_blockchain_id as string) === chainId);
+
   useEffect(() => {
     if (!navigationSetup) return;
 
@@ -57,16 +69,20 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
       newNavSetup.developersList[0].data.hidden = true;
       newNavSetup.developersList[1].data.hidden = true;
 
-      if (channelDetails !== 'unfetched' && channelDetails != null) {
+      if (channelDetails !== 'unfetched' && channelDetails != null && channelDetails?.name !== null) {
         newNavSetup.developersList[0].data.name = channelDetails.name;
-        newNavSetup.developersList[0].data.src = 'homeOffIcon';
-        newNavSetup.developersList[0].data.activeSrc = 'homeOnIcon';
+        newNavSetup.developersList[0].data.src = channelDetails.iconV2;
+        newNavSetup.developersList[0].data.activeSrc = channelDetails.iconV2;
         newNavSetup.developersList[0].data.hidden = false;
         newNavSetup.developersList[0].data.loading = false;
+        newNavSetup.developersList[0].data.href = `${APP_PATHS.ChannelDashboard}/${channelDetails.channel}`;
       } else {
         newNavSetup.developersList[0].data.name = 'Create Channel';
         newNavSetup.developersList[0].data.hidden = false;
         newNavSetup.developersList[0].data.loading = false;
+        newNavSetup.developersList[0].data.src = 'createChannelIcon';
+        newNavSetup.developersList[0].data.activeSrc = 'createChannelIcon';
+        newNavSetup.developersList[0].data.href = `${APP_PATHS.CreateChannel}`;
       }
 
       if (canSend === SEND_NOTIFICATION_STATES.SEND) {
@@ -82,13 +98,21 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
     if (processingState !== 0) {
       dispatch(setCanSend(SEND_NOTIFICATION_STATES.LOADING));
     } else {
-      if (((aliasAddr || aliasEthAddr) && isAliasVerified) || (delegatees && delegatees.length > 0)) {
+      /**
+       * If its a delegate
+       * If the channel Details is present on the core network
+       */
+      if (delegatees && delegatees.length > 0) {
+        dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
+      }
+
+      if (onActiveNetwork && channelDetails && channelDetails?.name !== null) {
         dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
       } else {
         dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
       }
     }
-  }, [channelDetails, aliasAddr, isAliasVerified, delegatees, canSend, processingState, account]);
+  }, [channelDetails, delegatees, canSend, processingState, account, onActiveNetwork]);
 
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
@@ -124,7 +148,7 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
       messagingList: messagingList,
       developersList: developersList,
       third: thirdList,
-      navigation: navList,
+      navigation: navList
     };
     setNavigationSetup(finalList);
   }, []);
@@ -411,7 +435,7 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
         Section = PrimarySection;
         fontSize = 'normal';
     }
-    let rendered = Object.keys(items).map(function (key) {
+    let rendered = Object.keys(items).map(function(key) {
       const section = items[key];
       // console.log(section)
       const data = section.data;
@@ -429,20 +453,9 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
       //   dispatch(setDeveloperOpen(false))
       // }
       let innerRendered = (
-        <Section
-          key={key}
-          flex="1"
-          align="stretch"
-          size={fontSize}
-        >
+        <Section key={key} flex="1" align="stretch" size={fontSize}>
           {secondaryButton ? (
-            <Item
-              padding="5px 0px"
-              flexBasis="100%"
-              align="stretch"
-              direction="row"
-              overflow="hidden"
-            >
+            <Item padding="5px 0px" flexBasis="100%" align="stretch" direction="row" overflow="hidden">
               {section.hasItems
                 ? renderChildItems(data.drilldown, section.opened, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)
                 : null}
@@ -471,13 +484,7 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
               </SectionInnerGroupContainer>
             </Item>
           ) : (
-            <Item
-              padding="5px 0px"
-              flexBasis="100%"
-              align="stretch"
-              direction="row"
-              overflow="hidden"
-            >
+            <Item padding="5px 0px" flexBasis="100%" align="stretch" direction="row" overflow="hidden">
               <SectionInnerGroupContainer
                 flex="1"
                 align="stretch"
@@ -557,22 +564,12 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
     }
 
     let rendered = (
-      <SectionGroup
-        align="stretch"
-        margin="5px 0px"
-        opened={opened}
-        refresh={refresh}
-      >
-        {Object.keys(drilldown).map(function (key) {
+      <SectionGroup align="stretch" margin="5px 0px" opened={opened} refresh={refresh}>
+        {Object.keys(drilldown).map(function(key) {
           const item = drilldown[key];
           const data = item.data;
           return (
-            <SectionItem
-              key={key}
-              flex="1"
-              align="stretch"
-              size="small"
-            >
+            <SectionItem key={key} flex="1" align="stretch" size="small">
               <SectionInnerItemContainer
                 flex="1"
                 align="stretch"
@@ -617,19 +614,10 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
   };
 
   return (
-    <Item
-      direction="column"
-      align="flex-start"
-    >
+    <Item direction="column" align="flex-start">
       {!navigationSetup && (
-        <Item
-          padding="20px"
-          justify="flex-start"
-        >
-          <LoaderSpinner
-            type={LOADER_TYPE.SEAMLESS}
-            spinnerSize={24}
-          />
+        <Item padding="20px" justify="flex-start">
+          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
         </Item>
       )}
       {navigationSetup && Object.keys(navigationSetup).length > 0 && (
@@ -655,10 +643,7 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
             </PrimaryInner>
           </Primary>
 
-          <Footer
-            justify="flex-start"
-            align="stretch"
-          >
+          <Footer justify="flex-start" align="stretch">
             {renderMainItems(navigationSetup.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD)}
           </Footer>
         </>

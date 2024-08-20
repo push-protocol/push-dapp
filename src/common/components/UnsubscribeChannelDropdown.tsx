@@ -17,7 +17,8 @@ import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import { notifUserSettingFormatString, userSettingsFromDefaultChannelSetting } from 'helpers/channel/notifSetting';
 
 // Utility functions
-import { ChannelDetailsResponse, useUnsubscribeChannel, useUpdateNotificationSettings } from 'queries';
+import { ChannelDetails } from 'queries';
+import { useUnsubscribeChannel, useUpdateNotificationSettings } from 'queries';
 
 // Components
 import { ManageSettingsDropdown } from './ManageSettingsDropdown';
@@ -25,7 +26,8 @@ import { UserStoreType } from 'types';
 
 export type UnsubscribeChannelDropdownProps = {
   children: ReactNode;
-  channelDetail: ChannelDetailsResponse;
+  channelDetail: ChannelDetails;
+  centeronMobile?: boolean;
   onSuccess: () => void;
   userSetting?: UserSetting[] | undefined;
 };
@@ -34,7 +36,7 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
   children,
   channelDetail,
   onSuccess,
-  userSetting
+  userSetting,
 }) => {
   const { account, chainId, provider, wallet } = useAccount();
 
@@ -64,7 +66,7 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
       {
         userPushSDKInstance: sdkInstance,
         channelAddress: convertAddressToAddrCaip(channelAddress, chainId),
-        settings: notifUserSettingFormatString({ settings: settings })
+        settings: notifUserSettingFormatString({ settings: settings }),
       },
       {
         onSuccess: (response) => {
@@ -74,7 +76,12 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
               toastTitle: 'Success',
               toastMessage: 'Successfully saved the user settings!',
               toastType: 'SUCCESS',
-              getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
+              getToastIcon: (size) => (
+                <MdCheckCircle
+                  size={size}
+                  color="green"
+                />
+              ),
             });
           } else {
             console.log('Error in Saving notification settings', response);
@@ -82,13 +89,18 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
               toastTitle: 'Error',
               toastMessage: `There was an error in saving the settings`,
               toastType: 'ERROR',
-              getToastIcon: (size) => <MdError size={size} color="red" />
+              getToastIcon: (size) => (
+                <MdError
+                  size={size}
+                  color="red"
+                />
+              ),
             });
           }
         },
         onError: (error) => {
           console.log('Error in saving notification settings', error);
-        }
+        },
       }
     );
   };
@@ -105,7 +117,7 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
         signer: _signer,
         channelAddress: convertAddressToAddrCaip(channelAddress, chainId),
         userAddress: convertAddressToAddrCaip(account, chainId),
-        env: appConfig.pushNodesEnv
+        env: appConfig.pushNodesEnv,
       },
       {
         onSuccess: (response) => {
@@ -115,20 +127,30 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
               toastTitle: 'Success',
               toastMessage: 'Successfully opted out of channel !',
               toastType: 'SUCCESS',
-              getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
+              getToastIcon: (size) => (
+                <MdCheckCircle
+                  size={size}
+                  color="green"
+                />
+              ),
             });
           } else {
             unsubscribeToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: `There was an error opting out of channel`,
               toastType: 'ERROR',
-              getToastIcon: (size) => <MdError size={size} color="red" />
+              getToastIcon: (size) => (
+                <MdError
+                  size={size}
+                  color="red"
+                />
+              ),
             });
           }
         },
         onError: (error) => {
           console.log('Error in the unsubcribe channel', error);
-        }
+        },
       }
     );
   };
@@ -153,7 +175,11 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
         <Dropdown
           overlay={
             <Menu>
-              <MenuItem label="Opt-out" icon={<OptOut />} onClick={handleOptOut} />
+              <MenuItem
+                label="Opt-out"
+                icon={<OptOut />}
+                onClick={handleOptOut}
+              />
             </Menu>
           }
         >

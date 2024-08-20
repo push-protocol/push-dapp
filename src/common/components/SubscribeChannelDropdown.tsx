@@ -2,6 +2,8 @@
 import { FC, ReactNode } from 'react';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 
+// Utility functions
+import { ChannelDetails } from 'queries';
 import { ethers } from 'ethers';
 
 import { Box, Dropdown } from 'blocks';
@@ -15,13 +17,13 @@ import { getMinimalUserSetting, notifChannelSettingFormatString } from 'helpers/
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import useToast from 'hooks/useToast';
 
-import { ChannelDetailsResponse, useSubscribeChannel } from 'queries';
+import { useSubscribeChannel } from 'queries';
 
 import { NotificationSettingsDropdown } from './NotificationSettingsDropdown';
 
 export type SubscribeChannelDropdownProps = {
   children: ReactNode;
-  channelDetails: ChannelDetailsResponse;
+  channelDetails: ChannelDetails;
   onSuccess: () => void;
 };
 
@@ -60,7 +62,7 @@ const SubscribeChannelDropdown: FC<SubscribeChannelDropdownProps> = (options) =>
         channelAddress: convertAddressToAddrCaip(channelAddress, chainId),
         userAddress: convertAddressToAddrCaip(walletAddress, chainId),
         settings: minimalNotifSettings,
-        env: appConfig.pushNodesEnv
+        env: appConfig.pushNodesEnv,
       },
       {
         onSuccess: (response) => {
@@ -71,7 +73,12 @@ const SubscribeChannelDropdown: FC<SubscribeChannelDropdownProps> = (options) =>
               toastTitle: 'Success',
               toastMessage: 'Successfully opted into channel !',
               toastType: 'SUCCESS',
-              getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
+              getToastIcon: (size) => (
+                <MdCheckCircle
+                  size={size}
+                  color="green"
+                />
+              ),
             });
           } else {
             console.log('Error in the response >>', response);
@@ -79,13 +86,18 @@ const SubscribeChannelDropdown: FC<SubscribeChannelDropdownProps> = (options) =>
               toastTitle: 'Error',
               toastMessage: `There was an error opting into channel`,
               toastType: 'ERROR',
-              getToastIcon: (size) => <MdError size={size} color="red" />
+              getToastIcon: (size) => (
+                <MdError
+                  size={size}
+                  color="red"
+                />
+              ),
             });
           }
         },
         onError: (error) => {
           console.log('Error in the schnnale', error);
-        }
+        },
       }
     );
   };

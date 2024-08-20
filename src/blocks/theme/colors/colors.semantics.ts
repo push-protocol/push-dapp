@@ -8,9 +8,9 @@ import {
   tertiaryButtonSemantics,
 } from '../semantics/semantics.button';
 import { checkboxSemantics } from '../semantics/semantics.checkbox';
-import { dropdownSemantics } from '../semantics/semantics.dropdown';
 import { iconSemantics } from '../semantics/semantics.icon';
 import { inputSemantics } from '../semantics/semantics.input';
+import { listItemSemantics } from '../semantics/semantics.listItem';
 import { modalSemantics } from '../semantics/semantics.modal';
 import { notificationsSemantics } from '../semantics/semantics.notifications';
 import { progressBarSemantics } from '../semantics/semantics.progress-bar';
@@ -36,9 +36,9 @@ type SemanticKeys = {
   buttonDanger: 'components-button-danger';
   buttonDangerSecondary: 'components-button-danger-secondary';
   checkbox: 'components-checkbox';
-  dropdown: 'components-dropdown';
   icon: 'icon';
   input: 'components-inputs';
+  listItem: 'components-list-item';
   modal: 'components-modal';
   notifications: 'components-in-app-notification';
   progressBar: 'components-progress-bar';
@@ -64,9 +64,9 @@ export const semanticKeys: SemanticKeys = {
   buttonDanger: 'components-button-danger',
   buttonDangerSecondary: 'components-button-danger-secondary',
   checkbox: 'components-checkbox',
-  dropdown: 'components-dropdown',
   icon: 'icon',
   input: 'components-inputs',
+  listItem: 'components-list-item',
   modal: 'components-modal',
   notifications: 'components-in-app-notification',
   progressBar: 'components-progress-bar',
@@ -92,9 +92,9 @@ export const colorSemantics = {
   [semanticKeys.buttonDanger]: dangerButtonSemantics,
   [semanticKeys.buttonDangerSecondary]: dangerSecondaryButtonSemantics,
   [semanticKeys.checkbox]: checkboxSemantics,
-  [semanticKeys.dropdown]: dropdownSemantics,
   [semanticKeys.icon]: iconSemantics,
   [semanticKeys.input]: inputSemantics,
+  [semanticKeys.listItem]: listItemSemantics,
   [semanticKeys.modal]: modalSemantics,
   [semanticKeys.notifications]: notificationsSemantics,
   [semanticKeys.progressBar]: progressBarSemantics,

@@ -1,4 +1,5 @@
 import { PushAPI } from '@pushprotocol/restapi';
+import { ethers } from 'ethers';
 import { SourceKeys } from 'modules/dashboard/Dashboard.types';
 
 export type TrendingChannelsParams = {
@@ -30,7 +31,32 @@ export type GetChannelDetailsParams = {
   address: string;
 };
 
-export type ChannelDetailsResponse = {
+export type InitiateVerifyAliasChainResponse = {
+  tx: string;
+};
+
+export type SendNotificationParams = {
+  data: string;
+  status: number;
+  statusText: string;
+  headers: {};
+  config: {};
+  request?: any;
+};
+
+export type Alias = {
+  id: number;
+  channel: string;
+  processed: number;
+  alias_address: string;
+  is_alias_verified: number;
+  alias_verification_event: string | null;
+  timestamp: string;
+  initiate_verification_proof: string;
+  verify_verification_proof: string;
+  alias_blockchain_id: string;
+};
+export type ChannelDetails = {
   activation_status: number;
   alias_address: string | null;
   alias_blockchain_id: string | null;
@@ -59,4 +85,59 @@ export type ChannelDetailsResponse = {
   url: string;
   verified_status: number;
   verify_verification_proof: string | null;
+  aliases: Array<Alias>;
+};
+
+export type ChannelDelegatesResponse = Array<string>;
+
+export type GetChannelDelegatesParams = {
+  userPushSDKInstance: PushAPI;
+  channelAddressinCAIP: string;
+};
+
+export type RemoveChannelDelegateParams = {
+  userPushSDKInstance: PushAPI;
+  delegateAddress: string; //chain address in caip format
+};
+
+export type RemoveChannelDelegateResponse = {
+  transactionHash: string;
+};
+
+export type addChannelDelegateParams = {
+  userPushSDKInstance: PushAPI;
+  delegateAddress: string; //chain address in caip format
+};
+
+export type AddChannelDelegateResponse = {
+  transactionHash: string;
+};
+
+export type deactivateChannelParams = {
+  signer: ethers.providers.JsonRpcSigner;
+};
+
+export type addChannelSubgraphParams = {
+  identityBytes: Uint8Array;
+  signer: ethers.providers.JsonRpcSigner;
+};
+
+export type reactivateChannelParams = {
+  fees: ethers.BigNumber;
+  signer: ethers.providers.JsonRpcSigner;
+};
+
+export type EditChannelPayload = {
+  signer: ethers.providers.JsonRpcSigner;
+  identityBytes: Uint8Array;
+  fees: ethers.BigNumber;
+  account: string;
+};
+
+export type AliasInfoResponse = {
+  activation_status: number;
+  alias_address: string;
+  blocked: number;
+  channel: string;
+  is_alias_verified: number;
 };

@@ -1,6 +1,10 @@
 export * from './IllustrationWrapper';
 export * from './Illustrations.types';
 
+export { default as Arbitrum } from './components/Arbitrum';
+
+export { default as BNB } from './components/BNB';
+
 export { default as ChatIllustration } from './components/Chat';
 export { default as ChatDark } from './components/ChatDark';
 
@@ -37,3 +41,6 @@ export { default as Twitter } from './components/Twitter';
 export { default as RewardsActivity } from './components/RewardsActivity';
 
 export { default as PushLogo } from './components/PushLogo';
+
+export { default as Polygon } from './components/Polygon';
+export { default as PolygonZK } from './components/PolygonZK';
