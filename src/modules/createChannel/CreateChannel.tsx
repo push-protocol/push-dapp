@@ -144,7 +144,7 @@ const CreateChannel = () => {
                 'Creating your channel, Aligning pixels, adjusting padding... This may take some time.',
                 'Redirecting... Please do not refresh'
               );
-              navigate(`${APP_PATHS.ChannelDashboard}/${account}`)
+              navigate(`${APP_PATHS.ChannelDashboard}/${account}`);
             }, 3000);
           }
         },
@@ -213,14 +213,16 @@ const CreateChannel = () => {
   return (
     <CreateChannelFormProvider onSubmit={(values: ChannelInfoFormValues) => handleCreateNewChannel(values)}>
       <Box
-        padding={{ initial: 'spacing-lg', ml: 'spacing-sm' }}
-        backgroundColor="surface-primary"
-        borderRadius="radius-md"
+        padding={{ dp: 'spacing-lg', ml: 'spacing-sm' }}
         display="flex"
-        width={{ initial: '648px', ml: '325px' }}
         flexDirection="column"
-        alignItems="center"
         gap="spacing-xl"
+        alignSelf="center"
+        width={{ dp: '648px', ml: '357px' }}
+        borderRadius="radius-md"
+        alignItems="center"
+        backgroundColor="surface-primary"
+        margin={{ dp: 'spacing-lg', ml: 'spacing-sm' }}
       >
         <CreateChannelHeader />
 
@@ -251,7 +253,6 @@ const CreateChannel = () => {
                   completedSteps={completedSteps}
                   setActiveStepKey={(key) => setActiveStepKey(key as ActiveStepKey)}
                 />
-
                 {activeStepKey == 'channelInfo' && (
                   <ChannelInfo
                     handleNextStep={handleNextStep}
