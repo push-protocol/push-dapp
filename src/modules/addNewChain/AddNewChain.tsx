@@ -211,6 +211,7 @@ const AddNewChain: FC = () => {
                 type={UNLOCK_PROFILE_TYPE.MODAL}
                 showConnectModal={true}
                 onClose={handleCloseAuthModal}
+                description="Unlock your profile to proceed."
               />
             </Box>
           )}

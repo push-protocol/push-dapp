@@ -82,7 +82,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
       setActiveStatus({
         status: PROFILESTATE.UNLOCK_PROFILE,
         title: 'Unlock Profile',
-        body: description ? description : 'Unlock your profile to proceed.',
+        body: description ? description : 'Unlock your profile to read and send messages.',
       });
     }
   }, [wallet]);

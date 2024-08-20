@@ -71,6 +71,7 @@ const SendNotification: FC = () => {
             type={UNLOCK_PROFILE_TYPE.MODAL}
             showConnectModal={true}
             onClose={() => setIsAuthModalVisible(false)}
+            description="Unlock your profile to proceed."
           />
         </Box>
       )}
