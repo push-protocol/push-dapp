@@ -31,8 +31,8 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none', showNavBa
   const { showMetamaskPushSnap } = useContext(AppContext);
 
   useEffect(() => {
-    setIcon(navigationIcons[data.src]);
-    setActiveIcon(navigationIcons[data.activeSrc]);
+    setIcon(navigationIcons[data.src] ?? data.src);
+    setActiveIcon(navigationIcons[data.activeSrc] ?? data.activeSrc);
   }, [data.src, data.activeSrc]);
 
   let SelectedIcon;
@@ -123,6 +123,7 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none', showNavBa
             </ItemHV2>
           ) : (
             <ItemH align="center">
+
               {!active ? (
                 <SelectedIcon
                   src={icon}

@@ -2,7 +2,7 @@
 import { CONSTANTS, ProgressHookType, PushAPI } from '@pushprotocol/restapi';
 import { ethers } from 'ethers';
 import useModalBlur from 'hooks/useModalBlur';
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 
 // Internal Components
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -22,13 +22,14 @@ import {
   ConnectedPeerIDType,
   LocalPeerType,
   Web3NameListType,
-  onboardingProgressI,
+  handleConnectWalletAndEnableProfileProps,
+  onboardingProgressI
 } from 'types/context';
 import { GlobalContext } from './GlobalContext';
 
 export const AppContext = createContext<AppContextType | null>(null);
 
-const AppContextProvider = ({ children }) => {
+const AppContextProvider = ({ children }: { children: ReactNode }) => {
   // To ensure intialize via [account] is not run on certain logic points
   const shouldInitializeRef = useRef(true); // Using a ref to control useEffect execution
 
@@ -45,14 +46,14 @@ const AppContextProvider = ({ children }) => {
   const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
   const [localPeer, setLocalPeer] = useState<LocalPeerType>({
     peer: '',
-    peerID: '',
+    peerID: ''
   });
   const [connectedPeerID, setConnectedPeerID] = useState<ConnectedPeerIDType>({
-    peerID: '',
+    peerID: ''
   });
   const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
     enabled: false,
-    title: null,
+    title: null
   });
   const [displayQR, setDisplayQR] = useState<boolean>(false);
 
@@ -65,7 +66,7 @@ const AppContextProvider = ({ children }) => {
   const {
     isModalOpen: isMetamaskPushSnapOpen,
     showModal: showMetamaskPushSnap,
-    ModalComponent: MetamaskPushSnapModalComponent,
+    ModalComponent: MetamaskPushSnapModalComponent
   } = useModalBlur();
 
   const dispatch = useDispatch();
@@ -76,12 +77,7 @@ const AppContextProvider = ({ children }) => {
         toastMessage: toastMessage || 'Please connect your wallet to continue',
         toastTitle: 'Connect Wallet',
         toastType: 'ERROR',
-        getToastIcon: (size) => (
-          <MdError
-            size={size}
-            color="red"
-          />
-        ),
+        getToastIcon: (size) => <MdError size={size} color="red" />
       });
     }
 
@@ -100,13 +96,8 @@ const AppContextProvider = ({ children }) => {
     remember = false,
     showToast = false,
     toastMessage = undefined,
-    wallet,
-  }: {
-    wallet?: any;
-    remember?: any;
-    showToast?: boolean;
-    toastMessage?: string;
-  }) => {
+    wallet
+  }: handleConnectWalletAndEnableProfileProps) => {
     shouldInitializeRef.current = false; // Directly modify the ref to disable useEffect execution
 
     if (showToast) {
@@ -114,12 +105,7 @@ const AppContextProvider = ({ children }) => {
         toastMessage: toastMessage || 'Please connect your wallet to continue',
         toastTitle: 'Connect Wallet',
         toastType: 'ERROR',
-        getToastIcon: (size) => (
-          <MdError
-            size={size}
-            color="red"
-          />
-        ),
+        getToastIcon: (size) => <MdError size={size} color="red" />
       });
     }
 
@@ -207,7 +193,7 @@ const AppContextProvider = ({ children }) => {
     userInstance = await PushAPI.initialize({
       account: readOnlyWallet,
       env: appConfig.appEnv,
-      alpha: { feature: ['SCALABILITY_V2'] },
+      alpha: { feature: ['SCALABILITY_V2'] }
     });
 
     console.debug('src::contexts::AppContext::initializePushSdkGuestMode::User Instance Initialized', userInstance);
@@ -235,7 +221,7 @@ const AppContextProvider = ({ children }) => {
       decryptedPGPPrivateKey: null,
       env: appConfig.appEnv,
       account: account,
-      alpha: { feature: ['SCALABILITY_V2'] },
+      alpha: { feature: ['SCALABILITY_V2'] }
     });
 
     console.debug('src::contexts::AppContext::initializePushSdkReadMode::User Instance Initialized', userInstance);
@@ -269,14 +255,14 @@ const AppContextProvider = ({ children }) => {
           env: appConfig.appEnv,
           account: currentAddress,
           progressHook: onboardingProgressReformatter,
-          alpha: { feature: ['SCALABILITY_V2'] },
+          alpha: { feature: ['SCALABILITY_V2'] }
         });
       } else {
         userInstance = await PushAPI.initialize(librarySigner!, {
           env: appConfig.appEnv,
           account: currentAddress,
           progressHook: onboardingProgressReformatter,
-          alpha: { feature: ['SCALABILITY_V2'] },
+          alpha: { feature: ['SCALABILITY_V2'] }
         });
       }
 
@@ -287,7 +273,7 @@ const AppContextProvider = ({ children }) => {
           title: 'Push Profile Setup Complete',
           spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
           progressEnabled: false,
-          progress: 100,
+          progress: 100
         });
       }
       dispatch(setUserPushSDKInstance(userInstance));
@@ -310,7 +296,7 @@ const AppContextProvider = ({ children }) => {
       CONSTANTS.STREAM.CHAT,
       CONSTANTS.STREAM.CHAT_OPS,
       CONSTANTS.STREAM.NOTIF,
-      CONSTANTS.STREAM.VIDEO,
+      CONSTANTS.STREAM.VIDEO
     ]);
 
     stream.on(CONSTANTS.STREAM.CONNECT, () => {
@@ -328,7 +314,7 @@ const AppContextProvider = ({ children }) => {
       hookInfo: progressHook,
       spinnerType: LOADER_SPINNER_TYPE.PROCESSING,
       progress: 0,
-      errorMessage: '',
+      errorMessage: ''
     };
 
     if (progressHook) {
@@ -431,7 +417,7 @@ const AppContextProvider = ({ children }) => {
       progressEnabled: onboardingProgress.progress ? true : false,
       progress: onboardingProgress.progress,
       progressNotice: onboardingProgress.hookInfo.progressInfo,
-      errorMessage: onboardingProgress.errorMessage,
+      errorMessage: onboardingProgress.errorMessage
     });
   };
 
@@ -471,7 +457,7 @@ const AppContextProvider = ({ children }) => {
         sigType: '',
         signature: '',
         linkedListHash: '',
-        privateKey: '',
+        privateKey: ''
       };
     }
 
@@ -502,18 +488,18 @@ const AppContextProvider = ({ children }) => {
         account: account,
         env: appConfig.appEnv,
         signer: signer,
-        progressHook: onboardingProgressReformatter,
+        progressHook: onboardingProgressReformatter
       });
       const createdUser = await PushAPI.user.get({
         account: account,
-        env: appConfig.appEnv,
+        env: appConfig.appEnv
       });
       const pvtkey = await PushAPI.chat.decryptPGPKey({
         encryptedPGPPrivateKey: createdUser.encryptedPrivateKey,
         signer: signer,
         env: appConfig.appEnv,
         toUpgrade: true,
-        progressHook: onboardingProgressReformatter,
+        progressHook: onboardingProgressReformatter
       });
 
       const createdConnectedUser = { ...createdUser, privateKey: pvtkey };
@@ -558,12 +544,20 @@ const AppContextProvider = ({ children }) => {
         removePGPKeyForUser,
         storePGPKeyForUser,
         isUserProfileUnlocked,
-        setUserProfileUnlocked,
+        setUserProfileUnlocked
       }}
     >
       {children}
     </AppContext.Provider>
   );
+};
+
+export const useAppContext = () => {
+  const context = useContext(AppContext);
+  if (context === null) {
+    throw new Error('useAppContext must be used within an AppContextProvider');
+  }
+  return context;
 };
 
 export default AppContextProvider;

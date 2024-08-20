@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { useContext, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,14 +23,105 @@ import GLOBALS from 'config/Globals';
 import navigationList from 'config/NavigationList';
 import { appConfig } from 'config/index.js';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { Box, Link, PlusCircle, Text } from 'blocks';
+import { LOGO_ALIAS_CHAIN } from 'common';
+import APP_PATHS from 'config/AppPaths';
+import { ChannelDetails } from 'queries';
+import useFetchChannelDetails from 'common/hooks/useFetchUsersChannelDetails';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
+type AddNewChainNavigationProps = {
+  channelDetails: ChannelDetails;
+  sidebarCollapsed: boolean;
+};
+const AddNewChainNavigation: FC<AddNewChainNavigationProps> = ({ channelDetails, sidebarCollapsed }) => {
+  let verifiedAliasChainIds =
+    channelDetails?.aliases
+      ?.filter((item) => item.is_alias_verified)
+      .map((item) => parseInt(item.alias_blockchain_id)) || [];
+
+  if (verifiedAliasChainIds.length > 0) {
+    verifiedAliasChainIds.push(appConfig.coreContractChain);
+  }
+  return (
+    <Box
+      display="flex"
+      padding="spacing-none spacing-md"
+      height="48px"
+    >
+      {!sidebarCollapsed && (
+        <>
+          <Box
+            css={css`
+              border-bottom: 1.5px solid var(--stroke-tertiary);
+              border-left: 1.5px solid var(--stroke-tertiary);
+              border-bottom-left-radius: 10px;
+            `}
+            width="20px"
+            height="24px"
+          ></Box>
+
+          {verifiedAliasChainIds.length > 0 && (
+            <Box
+              display="flex"
+              alignItems="center"
+              margin="spacing-none spacing-none spacing-none spacing-xs"
+            >
+              {verifiedAliasChainIds.map((aliasChainId: number) => {
+                const LogoComponent = LOGO_ALIAS_CHAIN[aliasChainId];
+                return LogoComponent ? (
+                  <Box
+                    display="flex"
+                    css={css`
+                      margin-left: -8px;
+                    `}
+                  >
+                    <LogoComponent
+                      key={aliasChainId}
+                      width={24}
+                      height={24}
+                    />
+                  </Box>
+                ) : null;
+              })}
+            </Box>
+          )}
+        </>
+      )}
+      <Box
+        display="flex"
+        gap="spacing-xxxs"
+        alignItems="center"
+        cursor="pointer"
+      >
+        <Link
+          to={APP_PATHS.AddNewChain}
+          isText={false}
+          css={css`
+            margin-top: 3px;
+          `}
+        >
+          <PlusCircle
+            size={32}
+            color="icon-primary"
+          />
+        </Link>
+
+        {!sidebarCollapsed && !verifiedAliasChainIds?.length && (
+          <Link
+            to={APP_PATHS.AddNewChain}
+            textProps={{ variant: 'bm-semibold', color: 'text-secondary', ellipsis: true }}
+          >
+            Add New Chain
+          </Link>
+        )}
+      </Box>
+    </Box>
+  );
+};
 // Create Header
 function Navigation() {
-  const {
-    channelDetails,
-    delegatees,
-    aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified },
-  } = useSelector((state: any) => state.admin);
+  const { delegatees } = useSelector((state: any) => state.admin);
   const [refresh, setRefresh] = useState(false);
   const { processingState } = useSelector((state: any) => state.channelCreation);
   const { run, stepIndex, isCommunicateOpen, isDeveloperOpen } = useSelector((state: any) => state.userJourney);
@@ -39,10 +130,20 @@ function Navigation() {
 
   const CORE_CHAIN_ID = appConfig.coreContractChain;
   const { account, chainId } = useAccount();
-  const onCoreNetwork = CORE_CHAIN_ID === chainId;
+
+  const { channelDetails } = useFetchChannelDetails();
+  const filteredAlias = useMemo(() => {
+    return channelDetails?.aliases.find((alias) => alias.alias_address === convertAddressToAddrCaip(account, chainId));
+  }, [channelDetails, account, chainId]);
+
+  const checkIfAliasIsVerified = filteredAlias && !!filteredAlias?.is_alias_verified ? true : false;
+  const onActiveNetwork =
+    appConfig.coreContractChain === chainId ||
+    (checkIfAliasIsVerified && parseInt(filteredAlias?.alias_blockchain_id as string) === chainId);
 
   const theme = useTheme();
   const location = useLocation();
+
   const dispatch = useDispatch();
 
   const { canSend } = useSelector((state: any) => {
@@ -60,16 +161,20 @@ function Navigation() {
       newNavSetup.developersList[0].data.hidden = true;
       newNavSetup.developersList[1].data.hidden = true;
 
-      if (channelDetails !== 'unfetched' && channelDetails != null) {
+      if (channelDetails !== 'unfetched' && channelDetails != null && channelDetails?.name !== null) {
         newNavSetup.developersList[0].data.name = channelDetails.name;
         newNavSetup.developersList[0].data.src = channelDetails.iconV2;
         newNavSetup.developersList[0].data.activeSrc = channelDetails.iconV2;
         newNavSetup.developersList[0].data.hidden = false;
         newNavSetup.developersList[0].data.loading = false;
+        newNavSetup.developersList[0].data.href = `${APP_PATHS.ChannelDashboard}/${channelDetails.channel}`;
       } else {
         newNavSetup.developersList[0].data.name = 'Create Channel';
         newNavSetup.developersList[0].data.hidden = false;
         newNavSetup.developersList[0].data.loading = false;
+        newNavSetup.developersList[0].data.src = 'createChannelIcon';
+        newNavSetup.developersList[0].data.activeSrc = 'createChannelIcon';
+        newNavSetup.developersList[0].data.href = `${APP_PATHS.CreateChannel}`;
       }
 
       if (canSend === SEND_NOTIFICATION_STATES.SEND) {
@@ -82,16 +187,20 @@ function Navigation() {
   }, [canSend, channelDetails, navigationSetup, processingState, account]);
 
   useEffect(() => {
-    if (processingState !== 0) {
-      dispatch(setCanSend(SEND_NOTIFICATION_STATES.LOADING));
-    } else {
-      if (((aliasAddr || aliasEthAddr) && isAliasVerified) || (delegatees && delegatees.length > 0)) {
-        dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
-      } else {
-        dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
-      }
+    /**
+     * If its a delegate
+     * If the channel Details is present on the core network
+     */
+    if (delegatees && delegatees.length > 0) {
+      dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
     }
-  }, [channelDetails, aliasAddr, isAliasVerified, delegatees, canSend, processingState, account]);
+
+    if (onActiveNetwork && channelDetails && channelDetails?.name !== null) {
+      dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
+    } else {
+      dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
+    }
+  }, [channelDetails, delegatees, canSend, account, onActiveNetwork]);
 
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
@@ -430,6 +539,8 @@ function Navigation() {
       const section = items[key];
       const data = section.data;
       const uid = section.data.uid;
+      const isChannelPresent = channelDetails !== 'unfetched' && channelDetails != null;
+
       // if(uid === 2 ){
       //   if(section.opened)
       //   dispatch(setCommunicateOpen(true))
@@ -557,6 +668,12 @@ function Navigation() {
                   active={checkIfNavigationItemIsActive(section)}
                   bg={returnNavigationBgColor(checkIfNavigationItemIsActive(section))}
                 />
+                {isChannelPresent && data.name === channelDetails.name && CORE_CHAIN_ID === chainId && (
+                  <AddNewChainNavigation
+                    channelDetails={channelDetails}
+                    sidebarCollapsed={sidebarCollapsed}
+                  />
+                )}
               </SectionInnerGroupContainer>
 
               {/* { 

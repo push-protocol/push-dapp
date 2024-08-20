@@ -12,7 +12,12 @@ import { useVerifyDiscord } from '../hooks/useVerifyDiscord';
 import { useVerifyRewards } from '../hooks/useVerifyRewards';
 
 // helpers
-import { bonusRewardActivities, dailyRewardActivities, otherRewardActivities } from '../utils/activityTypeArray';
+import {
+  bonusRewardActivities,
+  dailyRewardActivities,
+  otherRewardActivities,
+  stakeRewardActivities,
+} from '../utils/activityTypeArray';
 
 // types
 import { ActvityType } from 'queries/types';
@@ -24,6 +29,7 @@ import { Button } from 'blocks';
 type ActivityVerificationButtonProps = {
   userId: string;
   activityTypeId: string;
+  activityTypeIndex?: string;
   activityType: ActvityType;
   refetchActivity: () => void;
   setErrorMessage: (errorMessage: string) => void;
@@ -34,6 +40,7 @@ type ActivityVerificationButtonProps = {
 export const ActivityVerificationButton = ({
   activityType,
   activityTypeId,
+  activityTypeIndex,
   refetchActivity,
   setErrorMessage,
   userId,
@@ -59,6 +66,7 @@ export const ActivityVerificationButton = ({
     activityTypeId,
     refetchActivity,
     setErrorMessage,
+    activityTypeIndex,
   });
 
   const activityData = useMemo(() => {
@@ -80,7 +88,11 @@ export const ActivityVerificationButton = ({
       };
     }
 
-    if (otherRewardActivities.includes(activityType) || bonusRewardActivities.includes(activityType)) {
+    if (
+      otherRewardActivities.includes(activityType) ||
+      bonusRewardActivities.includes(activityType) ||
+      stakeRewardActivities.includes(activityType)
+    ) {
       return {
         isLoading: verifyingRewards,
         label: 'Claim',

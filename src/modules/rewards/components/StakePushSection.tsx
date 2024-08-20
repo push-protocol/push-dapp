@@ -1,21 +1,59 @@
 // React and other libraries
-import { FC } from 'react';
+import { FC, useState } from 'react';
+
+// hooks
+import { useAccount } from 'hooks';
+import { useGetRewardsActivities, useGetUserRewardsDetails } from 'queries';
+import useLockedStatus from '../hooks/useLockedStatus';
+
+// helpers
+import { walletToCAIP10 } from 'helpers/w2w';
+import { sortByIndexNumber } from '../utils/stakeRewardUtilities';
 
 // components
-import { Box, Clockwise, Text } from 'blocks';
+import { Alert, Box, Clockwise, Text } from 'blocks';
 import { StakePushActivitiesListItem } from './StakePushActivitiesListItem';
-import { css } from 'styled-components';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
 
 export type StakePushPoints = {
-  stakeArray: any;
   title: string;
   subtitle: string;
   timeline?: boolean;
   bottomText?: boolean;
+  multiplier?: boolean;
 };
 
-const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, stakeArray, bottomText }) => {
+const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, bottomText, multiplier }) => {
+  const { account } = useAccount();
+  const { isLocked } = useLockedStatus();
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities();
+
+  // Getting user Id by wallet address
+  const caip10WalletAddress = walletToCAIP10({ account });
+  const { data: userDetails } = useGetUserRewardsDetails({
+    caip10WalletAddress: caip10WalletAddress,
+  });
+
+  const isLoading = isLoadingActivities;
+
+  // If there are activities then render them else render 2 skeletons
+  const activityList = rewardActivitiesResponse?.activities.flatMap((page) => page) || [];
+
+  // Filter and sort activities based on the type
+  const stakePushArray = isLoading
+    ? Array(5).fill(0)
+    : activityList
+        .filter((activity) => activity.index.startsWith(multiplier ? 'multiplier-push' : 'point-push'))
+        .sort(sortByIndexNumber);
+
+  const uniV2PushArray = isLoading
+    ? Array(5).fill(0)
+    : activityList
+        .filter((activity) => activity.index.startsWith(multiplier ? 'multiplier-uni-v2' : 'point-uni-v2'))
+        .sort(sortByIndexNumber);
+
   return (
     <Box
       display="flex"
@@ -66,16 +104,57 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, stak
         )}
       </Box>
 
+      {errorMessage && (
+        <Box width="-webkit-fill-available">
+          <Alert
+            heading={errorMessage}
+            variant="error"
+            onClose={() => setErrorMessage('')}
+          />
+        </Box>
+      )}
+
       <Box
-        display="grid"
-        css={css`
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: var(--s4);
-        `}
+        display="flex"
+        flexDirection="row"
+        width="100%"
+        gap="spacing-sm"
       >
-        {stakeArray?.map((item: any) => (
-          <StakePushActivitiesListItem item={item} />
-        ))}
+        <Box
+          display="flex"
+          flexDirection="column"
+          width="100%"
+          gap="spacing-sm"
+        >
+          {stakePushArray?.map((activity) => (
+            <StakePushActivitiesListItem
+              key={activity.activityType}
+              userId={userDetails?.userId || ''}
+              activity={activity}
+              isLoadingItem={isLoading}
+              setErrorMessage={setErrorMessage}
+              isLocked={isLocked}
+            />
+          ))}
+        </Box>
+
+        <Box
+          display="flex"
+          flexDirection="column"
+          width="100%"
+          gap="spacing-sm"
+        >
+          {uniV2PushArray?.map((activity) => (
+            <StakePushActivitiesListItem
+              key={activity.activityType}
+              userId={userDetails?.userId || ''}
+              activity={activity}
+              isLoadingItem={isLoading}
+              setErrorMessage={setErrorMessage}
+              isLocked={isLocked}
+            />
+          ))}
+        </Box>
       </Box>
 
       {bottomText && (

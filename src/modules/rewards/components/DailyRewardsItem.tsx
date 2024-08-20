@@ -55,19 +55,22 @@ const DailyRewardsItem: FC<DailyRewardsItemProps> = ({ activity, activeDay, isLo
         minHeight="100px"
         justifyContent="space-between"
         border={activeDay > day ? 'border-xs solid stroke-secondary' : 'none'}
+        className="item"
       >
         <Text
           variant="bm-semibold"
           color={textColor}
+          className="day-text"
         >
           {activity?.activityTitle?.split('-')[1]}
         </Text>
 
-        {isCompleted ? <Box>{getIconComponent(day)}</Box> : <CheckCircle />}
+        {isCompleted ? <Box className="inner-item">{getIconComponent(day)}</Box> : <CheckCircle />}
 
         <Text
           variant="bm-semibold"
           color={textColor}
+          className="count-text"
         >
           +{activity.points?.toLocaleString()}
         </Text>

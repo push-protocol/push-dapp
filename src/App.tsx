@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { FC, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import * as dotenv from 'dotenv';
@@ -50,8 +50,9 @@ import { darkTheme, lightTheme } from 'config/spaceTheme';
 import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
 import SpaceContextProvider from 'contexts/SpaceContext';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
-import { blocksColors, getBlocksCSSVariables } from 'blocks';
+import { blocksColors, getBlocksCSSVariables, Notification } from 'blocks';
 import APP_PATHS from 'config/AppPaths';
+import { useRewardsNotification } from 'common/hooks/useRewardsNotification';
 
 dotenv.config();
 
@@ -115,8 +116,8 @@ const GlobalStyle = createGlobalStyle`
     /* deprecated */
     /* Colors */
     ${Object.entries(blocksColors)
-      .map(([colorName, code]) => `--${colorName}: ${code};`)
-      .join('')}
+    .map(([colorName, code]) => `--${colorName}: ${code};`)
+    .join('')}
       
     /* Font Family */
       --font-family: 'FK Grotesk Neu';
@@ -146,7 +147,7 @@ const extendConsole = () => {
         window.console = {};
       }
       if (window.console[level] === 'undefined' || !window.console[level] || window.console[level] === null) {
-        window.console[level] = function () {};
+        window.console[level] = function () { };
       }
       if (enabled) {
         if (disabledConsoles[level]) {
@@ -154,7 +155,7 @@ const extendConsole = () => {
         }
       } else {
         disabledConsoles[level] = window.console[level];
-        window.console[level] = function () {};
+        window.console[level] = function () { };
       }
     };
   } catch (e) {
@@ -192,6 +193,7 @@ export default function App() {
   const dispatch = useDispatch();
 
   const { isActive, account, provider } = useAccount();
+  useRewardsNotification();
   const [currentTime, setcurrentTime] = useState(0);
 
   const { pgpPvtKey } = useContext<any>(AppContext);
@@ -346,11 +348,12 @@ export default function App() {
       <>
         <GlobalStyle />
         <InitState />
+        <Notification />
         <NavigationContextProvider>
           <ChatUIProvider
             user={userPushSDKInstance}
             theme={darkMode && darkChatTheme}
-            debug={false}
+            debug={true}
             uiConfig={{
               suppressToast: false,
             }}
@@ -412,8 +415,8 @@ export default function App() {
                       isSidebarHidden
                         ? GLOBALS.CONSTANTS.NO_LEFT_BAR_WIDTH
                         : sidebarCollapsed
-                        ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH
-                        : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH
+                          ? GLOBALS.CONSTANTS.COLLAPSABLE_RIGHT_BAR_WIDTH
+                          : GLOBALS.CONSTANTS.LEFT_BAR_WIDTH
                     }
                   >
                     {/* Shared among all pages, load universal things here */}

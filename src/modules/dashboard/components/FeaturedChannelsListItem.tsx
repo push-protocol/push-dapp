@@ -13,16 +13,23 @@ import { useAccount } from 'hooks';
 import { formatSubscriberCount } from '../Dashboard.utils';
 
 // Components
-import { Box, Button, CaretDown, NotificationMobile, Skeleton, Text } from 'blocks';
+import {
+  Box,
+  Button,
+  CaretDown,
+  Ethereum,
+  NotificationMobile,
+  Skeleton,
+  Text,
+  TickDecoratedCircleFilled,
+} from 'blocks';
 import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
 import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannelDropdown';
-import TickDecoratedCircleFilled from 'blocks/icons/components/TickDecoratedCircleFilled';
 import { VerifiedToolTipComponent } from './VerifiedToolTipComponent';
-import Ethereum from 'blocks/illustrations/components/Ethereum';
 import { UserSetting } from 'helpers/channel/types';
 
 // Internal Configs
-import { LOGO_ALIAS_CHAIN } from '../configs/chainDetails.config';
+import { LOGO_ALIAS_CHAIN } from 'common';
 
 // Styles
 import { ImageV3 } from '../Dashboard.styled';
@@ -39,7 +46,7 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
 
   /* Fetching Channel Details based on Channel Address */
   const { data: channelDetails, isLoading } = useGetChannelDetails(channelAddress);
-
+  const { refetch: refetchAllSubscriptions } = useGetUserSubscriptions();
   /* Fetching User Subscribed Channel Details along with user settings */
   const {
     data: userSubscription,
@@ -54,6 +61,10 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
   const hasAliasAddress =
     channelDetails && channelDetails?.alias_address != null && channelDetails?.alias_address != 'NULL';
 
+  const handleRefetch = () => {
+    refetch();
+    refetchAllSubscriptions();
+  };
   return (
     <>
       <Box
@@ -89,7 +100,7 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
             >
               <SubscribeChannelDropdown
                 channelDetails={channelDetails!}
-                onSuccess={refetch}
+                onSuccess={handleRefetch}
               >
                 <Button
                   id="basic-button"
@@ -110,7 +121,7 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
             >
               <UnsubscribeChannelDropdown
                 channelDetail={channelDetails!}
-                onSuccess={refetch}
+                onSuccess={handleRefetch}
                 userSetting={JSON.parse(userSubscription[0].user_settings) as UserSetting[]}
               >
                 <Button

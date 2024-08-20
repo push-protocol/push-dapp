@@ -5,6 +5,7 @@ import { FC } from 'react';
 import { RewardsActivitiesSection } from './RewardsActivitiesSection';
 import { Box } from 'blocks';
 import { BonusActivities } from './BonusActivitiesSection';
+import { StakePushSection } from './StakePushSection';
 
 export type RewardsActivitiesBottomSectionProps = {};
 
@@ -29,7 +30,7 @@ const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = 
 
       <BonusActivities />
 
-      {/* <Box
+      <Box
         backgroundColor="surface-primary"
         borderRadius="radius-md"
         display="flex"
@@ -37,7 +38,6 @@ const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = 
         padding={{ ml: 'spacing-sm', initial: 'spacing-md' }}
       >
         <StakePushSection
-          stakeArray={stakePush}
           title="Stake Push to Earn Points"
           subtitle="Visit [app.push.org/yieldv2](https://app.push.org/yieldv2) and stake tokens in the Fee Pool or LP Pool to redeem points."
           timeline={true}
@@ -54,11 +54,11 @@ const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = 
         margin="spacing-none spacing-none spacing-md spacing-none"
       >
         <StakePushSection
-          stakeArray={stakePushMultiplier}
+          multiplier={true}
           title="Stake Push to Earn Multipliers"
           subtitle="Visit [app.push.org/yieldv2](https://app.push.org/yieldv2) and stake tokens in the Fee Pool or LP Pool to activate multipliers."
         />
-      </Box> */}
+      </Box>
     </Box>
   );
 };

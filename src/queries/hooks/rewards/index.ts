@@ -6,3 +6,5 @@ export * from './useGetUserRewardsDetails';
 export * from './useCreateRewardsUser';
 export * from './useGetRewardsLedearboard';
 export * from './useGetRewardActivityStatus';
+export * from './useGetPushStakeEpoch';
+export * from './useGetUniV2StakeEpoch';

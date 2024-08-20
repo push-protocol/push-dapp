@@ -13,6 +13,8 @@ interface ProgressBarPropsI {
   color?: string;
   notice?: string;
   noticePositioning?: number;
+  backgroundColor?: string;
+  height?: string;
 }
 
 // Constants
@@ -27,17 +29,21 @@ const ProgressBar = ({
   color = GLOBALS.COLORS.PRIMARY_PINK,
   notice = null,
   noticePositioning = NOTICE_POSITIONING.BOTTOM,
+  backgroundColor = GLOBALS.COLORS.PLACEHOLDER_DARK_GRAY,
+  height = '10px',
 }: ProgressBarPropsI) => {
   const theme = useTheme();
 
   return (
     <ItemVV2
       zIndex="1000"
-      flexDirection={noticePositioning == NOTICE_POSITIONING.BOTTOM ? 'column' : 'column-reverse'}
+      flexDirection={noticePositioning == NOTICE_POSITIONING.BOTTOM ? "column" : "column-reverse"}
+      height={height}
     >
       <Progress
         percent={percent}
         color={color}
+        backgroundColor={backgroundColor}
       />
 
       {notice && (
@@ -48,9 +54,8 @@ const ProgressBar = ({
           textTransform="none"
           textAlign="center"
           letterSpacing="normal"
-          margin={`${noticePositioning == NOTICE_POSITIONING.BOTTOM ? '5px' : 0} 0 ${
-            noticePositioning == NOTICE_POSITIONING.TOP ? '5px' : 0
-          } 0`}
+          margin={`${noticePositioning == NOTICE_POSITIONING.BOTTOM ? '5px' : 0} 0 ${noticePositioning == NOTICE_POSITIONING.TOP ? '5px' : 0
+            } 0`}
         >
           {notice}
         </SpanV2>
@@ -61,9 +66,9 @@ const ProgressBar = ({
 export default ProgressBar;
 
 const Progress = styled.div`
-  background: ${GLOBALS.COLORS.PLACEHOLDER_DARK_GRAY};
+  background: ${(props) => props.backgroundColor ? props.backgroundColor : GLOBALS.COLORS.PLACEHOLDER_DARK_GRAY};
   border-radius: 18px;
-  height: 8px;
+  height: inherit;
   overflow: hidden;
   width: 100%;
   position: relative;

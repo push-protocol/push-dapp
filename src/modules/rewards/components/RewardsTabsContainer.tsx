@@ -1,20 +1,17 @@
 import { FC } from 'react';
 
-// types
-import { RewardsTabs as RewardsTabsType } from '../Rewards.types';
-
 //Components
-import { Box } from 'blocks';
-import { RewardsTabs } from './RewardsTabs';
+import { Box, TabItem, Tabs } from 'blocks';
 import { DashboardSection } from './DashboardSection';
 import { LeaderBoardSection } from './LeaderBoardSection';
-import { DailyRewardsSection } from './DailyRewardsSection';
-import { RewardsActivitiesBottomSection } from './RewardsActivitiesBottomSection';
+import { RewardsTabs } from '../Rewards.types';
 import { ReferralSection } from './ReferralSection';
+import { RewardsActivitiesBottomSection } from './RewardsActivitiesBottomSection';
+import { DailyRewardsSection } from './DailyRewardsSection';
 
 export type RewardsTabsContainerProps = {
-  activeTab: RewardsTabsType;
-  handleSetActiveTab: (tab: RewardsTabsType) => void;
+  activeTab: RewardsTabs;
+  handleSetActiveTab: (tab: RewardsTabs) => void;
   handleUnlockProfile: () => void;
 };
 
@@ -23,6 +20,24 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({
   handleSetActiveTab,
   handleUnlockProfile,
 }) => {
+  const rewardsTabs: TabItem[] = [
+    {
+      key: 'dashboard',
+      label: 'Dashboard',
+      children: <DashboardSection onGetStarted={() => handleSetActiveTab('activity')} />,
+    },
+    {
+      key: 'activity',
+      label: 'Reward Activities',
+      children: <DailyRewardsSection />,
+    },
+    {
+      key: 'leaderboard',
+      label: 'Leaderboard',
+      children: <LeaderBoardSection />,
+    },
+  ];
+
   return (
     <>
       <Box
@@ -32,21 +47,11 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({
         flexDirection="column"
         padding={{ ml: 'spacing-sm', initial: 'spacing-md' }}
       >
-        <Box
-          gap="spacing-md"
-          display="flex"
-          flexDirection="column"
-        >
-          {/* tabs and top section */}
-          <RewardsTabs
-            activeTab={activeTab}
-            handleSetActiveTab={handleSetActiveTab}
-          />
-
-          {activeTab === 'dashboard' && <DashboardSection onGetStarted={() => handleSetActiveTab('activity')} />}
-          {activeTab === 'activity' && <DailyRewardsSection />}
-          {activeTab === 'leaderboard' && <LeaderBoardSection />}
-        </Box>
+        <Tabs
+          items={rewardsTabs}
+          activeKey={activeTab}
+          onChange={(activeKey) => handleSetActiveTab(activeKey as RewardsTabs)}
+        />
       </Box>
 
       {/* bottom sections */}

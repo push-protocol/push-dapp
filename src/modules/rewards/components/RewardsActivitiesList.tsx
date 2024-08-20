@@ -31,9 +31,11 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
   // Filter activities based on the index
   const firstGroupActivities = isLoading
     ? Array(2).fill(0)
-    : activityList.filter((activity) => activity.index >= 0 && activity.index <= 1);
+    : activityList.filter((activity) => activity.index.startsWith(`social-activity`));
 
-  const secondGroupActivities = isLoading ? Array(7).fill(0) : activityList.filter((activity) => activity.index >= 11);
+  const secondGroupActivities = isLoading
+    ? Array(7).fill(0)
+    : activityList.filter((activity) => activity.index.startsWith(`reward-activity`) && activity?.status === 'ENABLED');
 
   const { isLocked } = useLockedStatus();
 
