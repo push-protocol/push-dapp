@@ -248,11 +248,13 @@ const CreateChannel = () => {
                 alignItems="center"
                 alignSelf="stretch"
               >
-                <Stepper
-                  steps={createChannelSteps}
-                  completedSteps={completedSteps}
-                  setActiveStepKey={(key) => setActiveStepKey(key as ActiveStepKey)}
-                />
+                <Box width="100%">
+                  <Stepper
+                    steps={createChannelSteps}
+                    completedSteps={completedSteps}
+                    setActiveStepKey={(key) => setActiveStepKey(key as ActiveStepKey)}
+                  />
+                </Box>
                 {activeStepKey == 'channelInfo' && (
                   <ChannelInfo
                     handleNextStep={handleNextStep}
