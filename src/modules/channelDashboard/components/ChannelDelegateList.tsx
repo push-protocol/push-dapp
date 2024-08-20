@@ -11,6 +11,7 @@ import { useAccount } from 'hooks';
 import { useRemoveDelegate } from 'queries';
 
 import { UserStoreType } from 'types';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 type ChannelDelegateListProps = {
   delegate_address: string;
@@ -25,7 +26,8 @@ const ChannelDelegateList: FC<ChannelDelegateListProps> = ({
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
     return state.user;
   });
-  const { wallet } = useAccount();
+
+  const { wallet, chainId } = useAccount();
 
   // @ts-expect-error
   const { handleConnectWalletAndEnableProfile } = useContext(AppContext);
@@ -46,7 +48,7 @@ const ChannelDelegateList: FC<ChannelDelegateListProps> = ({
     removeDelegate(
       {
         userPushSDKInstance: userPushInstance,
-        delegateAddress: delegate_address,
+        delegateAddress: convertAddressToAddrCaip(delegate_address, chainId),
       },
       {
         onSuccess: () => {

@@ -1,17 +1,21 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 import { ethers } from 'ethers';
+import { isEqual } from 'lodash';
 
-import { Alert, Box, Button, ErrorFilled } from 'blocks';
+import { Alert, Box, Button } from 'blocks';
 
 import { abis, addresses, appConfig } from 'config';
 import { StakingVariant } from 'common';
 
 import { getPushTokenApprovalAmount, getPushTokenFromWallet } from 'helpers';
 
+import { IPFSupload } from 'helpers/IpfsHelper';
+
 import { useAccount } from 'hooks';
 
-import { useApprovePUSHToken } from 'queries';
+import { useApprovePUSHToken, useEditChannel, useGetChannelDetails } from 'queries';
+import { useEditChannelForm } from '../EditChannel.form';
 import { DashboardActiveState } from 'modules/channelDashboard/ChannelDashboard.types';
 
 const minFeesForAddChannel = 50;
@@ -22,6 +26,10 @@ type EditChannelFooterProps = {
 
 const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
   const { account, provider, chainId } = useAccount();
+
+  const { values: formValues, isValid, initialValues } = useEditChannelForm();
+
+  const { data: channelDetails, refetch: refetchChannelDetails } = useGetChannelDetails(account);
 
   const { mutate: approvePUSHToken, isPending: approvingPUSH } = useApprovePUSHToken();
 
@@ -68,6 +76,15 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
   }, [account, provider]);
 
 
+  const checkForChanges = useMemo(() => {
+    if (!isEqual(formValues, initialValues)) {
+      return false;
+    } else {
+      return true;
+    }
+  }, [formValues]);
+
+
   const handleApprovePUSH = () => {
     setUpdateChannelError('');
 
@@ -100,15 +117,70 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
     );
   };
 
+
+  const { mutate: editChannel, isPending: editingChannel } = useEditChannel();
+
+  const handleEditChannel = async () => {
+    setUpdateChannelError('');
+
+    if (!isValid) {
+      return;
+    }
+
+    var signer = provider.getSigner(account);
+    console.debug(signer);
+
+    if (channelDetails) {
+      const input = JSON.stringify({
+        name: formValues.channelName,
+        info: formValues.channelDesc,
+        url: formValues.channelURL,
+        icon: formValues.channelIcon
+      });
+
+      const storagePointer = await IPFSupload(input);
+      console.debug('IPFS storagePointer:', storagePointer);
+
+      const identity = '1+' + storagePointer; // IPFS Storage Type and HASH
+      const identityBytes = ethers.utils.toUtf8Bytes(identity);
+      const parsedFees = ethers.utils.parseUnits(feesRequiredForEdit.toString(), 18);
+
+      editChannel(
+        {
+          account,
+          identityBytes,
+          fees: parsedFees,
+          signer
+        },
+        {
+          onSuccess: () => {
+            console.log('Successfully edited channel');
+            refetchChannelDetails();
+            setActiveState('dashboard');
+          },
+          onError: (error: any) => {
+            console.log('Error in updating channel details', error);
+            if (error.code == 'ACTION_REJECTED') {
+              setUpdateChannelError('User rejected signature. Please try again.');
+            } else {
+              setUpdateChannelError('Error in updating Channel. Check console for more reasons.');
+            }
+          }
+        }
+      );
+    }
+  }
+
   return (
     <Box display="flex" flexDirection="column" alignSelf="stretch">
       {updateChannelError && (
-        <Alert
-          variant="error"
-          icon={<ErrorFilled color="icon-state-danger-bold" size={24} />}
-          message={updateChannelError}
-          width="100%"
-        />
+        <Box width='100%'>
+          <Alert
+            variant='error'
+            heading={updateChannelError}
+            showIcon
+          />
+        </Box>
       )}
 
       <StakingVariant
@@ -133,14 +205,22 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
         </Button>
 
         {feesRequiredForEdit && pushApprovalAmount >= feesRequiredForEdit ? (
-          // <Button disabled={checkForChanges || editingChannel || !isValid} onClick={handleEditChannel}>
-          //   {editingChannel ? 'Updating' : 'Save Changes'}
-          // </Button>
-          <Button>
-            Save Changes
+
+          <Button
+            disabled={checkForChanges || editingChannel || !isValid}
+            onClick={handleEditChannel}
+            loading={editingChannel}
+          >
+            {editingChannel ? 'Updating' : 'Save Changes'}
           </Button>
         ) : (
-          <Button variant="primary" size="medium" disabled={approvingPUSH} onClick={handleApprovePUSH}>
+          <Button
+            variant="primary"
+            size="medium"
+            disabled={approvingPUSH}
+            onClick={handleApprovePUSH}
+            loading={approvingPUSH}
+          >
             {approvingPUSH ? 'Approving' : 'Approve PUSH'}
           </Button>
         )}

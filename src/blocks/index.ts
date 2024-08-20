@@ -1,3 +1,4 @@
+export { Alert, type AlertProps } from './alert';
 export { Box, type BoxProps } from './box';
 export { Button, type ButtonProps } from './button';
 export { Dropdown, type DropdownProps } from './dropdown';
@@ -6,14 +7,20 @@ export { Link, type LinkProps } from './link';
 export { Lozenge, type LozengeProps } from './lozenge';
 export { Menu, type MenuProps, MenuItem, type MenuItemComponentProps } from './menu';
 export { Modal, type ModalProps, modal } from './modal';
+export { notification } from './notification';
+export { ProgressBar, type ProgressBarProps } from './progressBar';
 export { Separator, type SeparatorProps } from './separator';
 export { Skeleton, type SkeletonProps } from './skeleton';
+export { Select, type SelectProps } from './select';
 export { Tabs, type TabsProps, type TabItem } from './tabs';
+export { Tag } from './tag';
 export { Text, type TextProps } from './text';
 export { Tooltip, type TooltipProps } from './tooltip';
 export { TextArea, type TextAreaProps } from './textarea';
 export { TextInput } from './textInput';
 export { ToggleSwitch } from './toggleSwtich';
+export { FileUpload } from './fileUpload';
+export { Spinner, type SpinnerProps } from './spinner';
 
 export * from './Blocks.colors';
 export * from './Blocks.types';

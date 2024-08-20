@@ -3,7 +3,8 @@ import { FC, useState } from 'react';
 import { css } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-import { Box, CircleFilled, Copy, Ethereum, PlusCircle, Skeleton, Text, TickCircleFilled, Tooltip } from 'blocks';
+
+import { Box, Copy, Ethereum, PlusCircle, Skeleton, Tag, Text, TickCircleFilled, Tooltip } from 'blocks';
 
 import { LOGO_ALIAS_CHAIN } from 'common';
 
@@ -13,21 +14,27 @@ import { ChannelDetails } from 'queries';
 
 import APP_PATHS from 'config/AppPaths';
 
+import { appConfig } from 'config';
+
 type ChannelDashboardInfoProps = {
   channelDetails?: ChannelDetails;
-  loadingChannelDetails: boolean;
-  showAddNewChain?: boolean
-}
+  showAddNewChain?: boolean;
+  onActiveNetwork?: boolean;
+  isAliasVerified?: boolean;
+};
 
 const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
   channelDetails,
-  loadingChannelDetails,
-  showAddNewChain = false
+  showAddNewChain = false,
+  onActiveNetwork = true,
+  isAliasVerified,
 }) => {
   const navigate = useNavigate();
 
-  const verifiedAliasChainIds =
-    channelDetails?.aliases?.filter((item) => item?.is_alias_verified)?.map((item) => item.alias_blockchain_id) || [];
+  let verifiedAliasChainIds =
+    channelDetails?.aliases
+      ?.filter((item) => item.is_alias_verified)
+      .map((item) => parseInt(item.alias_blockchain_id)) || [];
 
   const [tooltipText, setToolTipText] = useState('Copy Wallet');
   const copyWalletAddress = () => {
@@ -47,7 +54,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
       alignItems="center"
     >
 
-      <Skeleton isLoading={loadingChannelDetails}>
+      <Skeleton isLoading={!channelDetails?.name || isAliasVerified}>
         <Box
           width="90px"
           height="90px"
@@ -73,8 +80,9 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
         gap="spacing-xxxs"
       >
         <Skeleton
-          isLoading={loadingChannelDetails}
-          width="100%"
+          isLoading={!channelDetails?.name || isAliasVerified}
+          width="200px"
+          height="30px"
         >
           <Box
             display="flex"
@@ -97,7 +105,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
                 alignItems="center"
                 margin={{ initial: 'spacing-none spacing-none spacing-none spacing-xxxs', ml: 'spacing-none' }}
               >
-                {!!channelDetails?.is_alias_verified && (
+                {!!channelDetails?.verified_status && (
                   <TickCircleFilled
                     size={22}
                     color="icon-tertiary"
@@ -109,8 +117,8 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
                   height={18}
                 />
                 {verifiedAliasChainIds.length > 0 &&
-                  verifiedAliasChainIds.map((aliasChainId) => {
-                    const LogoComponent = LOGO_ALIAS_CHAIN[Number(aliasChainId)];
+                  verifiedAliasChainIds.map((aliasChainId: number) => {
+                    const LogoComponent = LOGO_ALIAS_CHAIN[aliasChainId];
                     return LogoComponent ? (
                       <Box
                         display="flex"
@@ -135,7 +143,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
                   onClick={() => navigate(APP_PATHS.AddNewChain)}
                 >
                   <PlusCircle
-                    size={18}
+                    size={24}
                     color="icon-primary"
                   />
                 </Box>
@@ -150,7 +158,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
           gap="spacing-xs"
         >
           <Skeleton
-            isLoading={loadingChannelDetails}
+            isLoading={!channelDetails?.name || isAliasVerified}
             width="100%"
           >
             <Box
@@ -180,7 +188,7 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
             display="flex"
             gap="spacing-xs"
           >
-            <Skeleton isLoading={loadingChannelDetails}>
+            <Skeleton isLoading={!channelDetails?.name || isAliasVerified}>
               <Text
                 color="text-tertiary"
                 variant="c-regular"
@@ -189,57 +197,34 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
               </Text>
             </Skeleton>
 
-            {channelDetails?.activation_status === 0 && (
-              <Box
-                display="flex"
-                alignItems="center"
-                gap="spacing-xxxs"
-                padding="spacing-none spacing-xxxs"
-                backgroundColor="surface-state-danger-subtle"
-                borderRadius="radius-xs"
-              >
-                <CircleFilled
-                  size={8}
-                  color="icon-state-danger-bold"
-                />
-                <Text
-                  color="text-state-danger-bold"
-                  variant="bes-semibold"
-                >
-                  {' '}
-                  Deactivated
-                </Text>
-              </Box>
-            )}
 
-            {channelDetails?.activation_status === 1 && (
-              <Box
-                display="flex"
-                alignItems="center"
-                gap="spacing-xxxs"
-                padding="spacing-none spacing-xxxs"
-                backgroundColor="surface-state-success-subtle"
-                borderRadius="radius-xs"
-              >
-                <CircleFilled
-                  size={8}
-                  color="icon-state-success-bold"
-                />
-                <Text
-                  color="text-state-success-bold"
-                  variant="bes-semibold"
-                >
-                  {' '}
-                  Active
-                </Text>
-              </Box>
+            {!onActiveNetwork ? (
+              <Tag
+                label="Setup Pending"
+                variant="warning"
+              />
+            ) : (
+              <>
+                {channelDetails?.activation_status === 0 && (
+                  <Tag
+                    label="Deactivated"
+                    variant="danger"
+                  />
+                )}
+                {channelDetails?.activation_status === 1 && (
+                  <Tag
+                    label="Active"
+                    variant="success"
+                  />
+                )}
+              </>
             )}
           </Box>
         </Box>
-
       </Box>
     </Box>
   );
 };
+
 
 export { ChannelDashboardInfo };
