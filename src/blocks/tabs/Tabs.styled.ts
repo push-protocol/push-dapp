@@ -9,7 +9,7 @@ export const StyledFillTabs = styled(ReachTabs)`
 `;
 
 export const StyledFillTabList = styled(TabList)`
-  overflow: scroll hidden;
+  overflow: auto hidden;
   display: flex;
   width: fit-content;
   padding: var(--spacing-xxxs);
@@ -69,7 +69,7 @@ export const StyledLineTabs = styled(ReachTabs)`
 `;
 
 export const StyledLineTabList = styled(TabList)`
-  overflow: scroll hidden;
+  overflow: auto hidden;
   display: flex;
   background-color: var(--surface-transparent);
   gap: var(--spacing-xs);
