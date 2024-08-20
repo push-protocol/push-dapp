@@ -12,6 +12,7 @@ import { shortenText } from 'helpers/UtilityHelper';
 import { ChannelDetails } from 'queries';
 
 import APP_PATHS from 'config/AppPaths';
+import { appConfig } from 'config';
 
 type ChannelDashboardInfoProps = {
   channelDetails?: ChannelDetails;
@@ -28,7 +29,10 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  const verifiedAliasChainIds = channelDetails?.aliases?.map((item) => parseInt(item.alias_blockchain_id)) || [];
+  let verifiedAliasChainIds =
+    channelDetails?.aliases
+      ?.filter((item) => item.is_alias_verified)
+      .map((item) => parseInt(item.alias_blockchain_id)) || [];
 
   const [tooltipText, setToolTipText] = useState('Copy Wallet');
   const copyWalletAddress = () => {
