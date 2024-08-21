@@ -1,6 +1,7 @@
 import { NotificationType } from '@pushprotocol/restapi';
 
 import { Box } from 'blocks';
+import { appConfig } from 'config';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 import { ChannelSetting } from 'helpers/channel/types';
@@ -12,7 +13,7 @@ export const getChannelChainList = (channelDetails: ChannelDetails) => {
     channelDetails?.aliases
       ?.filter((alias) => alias.is_alias_verified)
       ?.map((alias) => parseInt(alias.alias_blockchain_id)) || [];
-  return [...aliases, 11155111];
+  return [...aliases, appConfig.coreContractChain];
 };
 
 export const getChannelDelegatesOptions = (delegatees: [ChannelDetails]) => {
