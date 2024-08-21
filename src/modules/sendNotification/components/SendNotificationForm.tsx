@@ -48,7 +48,7 @@ const SendNotificationForm: FC<SendNotificationFormProps> = ({ channelDetails })
   const selectedChannel =
     delegatees?.find((delegatee: ChannelDetails) => delegatee.channel === formik.values.channelAddress) ||
     channelDetails;
-  const aliasChainOptions = getSelectChains(getChannelChainList(selectedChannel, account, onCoreNetwork));
+  const aliasChainOptions = getSelectChains(getChannelChainList(selectedChannel, account));
 
   const formik = useFormik<NotficationValue>({
     initialValues: getFormInitialValues(delegateesOptions, aliasChainOptions),

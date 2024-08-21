@@ -8,13 +8,12 @@ import { ChannelSetting } from 'helpers/channel/types';
 
 import { ChannelDetails } from 'queries';
 
-export const getChannelChainList = (channelDetails: ChannelDetails, account: string, onCoreNetwork: boolean) => {
+export const getChannelChainList = (channelDetails: ChannelDetails, account: string) => {
   const aliases =
     channelDetails?.aliases
       ?.filter((alias) => alias.is_alias_verified && convertAddrCaipToAddress(alias.alias_address) === account)
       ?.map((alias) => parseInt(alias.alias_blockchain_id)) || [];
-  if (onCoreNetwork) return [...aliases, appConfig.coreContractChain];
-  else return aliases;
+  return [...aliases, appConfig.coreContractChain];
 };
 
 export const getChannelDelegatesOptions = (delegatees: [ChannelDetails]) => {
