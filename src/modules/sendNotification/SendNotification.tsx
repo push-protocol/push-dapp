@@ -8,9 +8,11 @@ import { SendNotificationForm } from './components/SendNotificationForm';
 import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
 
 import { UserStoreType } from 'types';
-import { useGetChannelDetails } from 'queries';
+import { useGetAliasInfo, useGetChannelDetails } from 'queries';
 import { useAccount } from 'hooks';
 import { useNavigate } from 'react-router-dom';
+import { aliasChainIdToChainName } from 'helpers/UtilityHelper';
+import { ALIAS_CHAIN } from '@pushprotocol/restapi/src/lib/config';
 
 //add formik
 //add conditon for /send url
@@ -18,12 +20,18 @@ import { useNavigate } from 'react-router-dom';
 const SendNotification: FC = () => {
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(true);
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
-  const { account } = useAccount();
+  const { account, chainId } = useAccount();
   const { data: channelDetails } = useGetChannelDetails(account);
+  const { data: alaisDetails } = useGetAliasInfo({
+    alias: account,
+    aliasChain: aliasChainIdToChainName[chainId as keyof typeof aliasChainIdToChainName] as ALIAS_CHAIN,
+  });
+  const { delegatees } = useSelector((state: any) => state.admin);
   const nagivate = useNavigate();
+  console.debug(delegatees, alaisDetails, 'delegtees');
 
   useEffect(() => {
-    if (!channelDetails) nagivate('/channels');
+    if (!channelDetails && !delegatees?.length && !alaisDetails) nagivate('/channels');
   }, [channelDetails]);
 
   return (
@@ -71,6 +79,7 @@ const SendNotification: FC = () => {
             type={UNLOCK_PROFILE_TYPE.MODAL}
             showConnectModal={true}
             onClose={() => setIsAuthModalVisible(false)}
+            description="Unlock your profile to proceed."
           />
         </Box>
       )}
