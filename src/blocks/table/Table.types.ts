@@ -1,7 +1,10 @@
+import { ReactNode } from 'react';
+
 export type Column = {
   title: string;
   dataIndex: string;
-  render?: (text: any, record: any) => React.ReactNode;
+  render?: (text: string, record: any) => ReactNode;
+  width?: string;
 };
 
 export type DataSource = {

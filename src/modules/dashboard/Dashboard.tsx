@@ -12,52 +12,6 @@ import { StakingPools } from './components/StakingPools';
 
 export type DashboardProps = {};
 
-const dataSource = [
-  {
-    id: '1',
-    name: 'Task 1',
-    deadline: new Date(),
-    type: 'Type A',
-    isComplete: false,
-    nodes: [],
-  },
-  {
-    id: '2',
-    name: 'Task 2',
-    deadline: new Date(),
-    type: 'Type B',
-    isComplete: true,
-    nodes: [],
-  },
-];
-
-const columns = [
-  { title: 'Task', dataIndex: 'name' },
-  // { title: 'Task2', dataIndex: 'name' },
-  // { title: 'Task3', dataIndex: 'name' },
-  // { title: 'Task4', dataIndex: 'name' },
-  // { title: 'Task5', dataIndex: 'name' },
-  // { title: 'Task6', dataIndex: 'name' },
-  // { title: 'Task7', dataIndex: 'name' },
-  // { title: 'Task8', dataIndex: 'name' },
-  // { title: 'Task9', dataIndex: 'name' },
-  // { title: 'Task10', dataIndex: 'name' },
-  // { title: 'Task11', dataIndex: 'name' },
-  {
-    title: 'Deadline',
-    dataIndex: 'deadline',
-    render: (text: any) =>
-      text.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      }),
-  },
-  { title: 'Type', dataIndex: 'type' },
-  // { title: 'Complete', dataIndex: 'isComplete' },
-  { title: 'Tasks', dataIndex: 'nodes', render: (nodes: any[]) => nodes.length },
-];
-
 const Dashboard: FC<DashboardProps> = () => {
   const [showSubHeader, setSubHeaderVisibility] = useState(true);
 
@@ -76,10 +30,116 @@ const Dashboard: FC<DashboardProps> = () => {
       />
 
       {showSubHeader && <DashboardSubHeader />}
-      <Table
-        columns={columns}
-        dataSource={dataSource}
-      />
+      <Box
+        height="300px"
+        // overflow="scroll"
+      >
+        <Table
+          fixedHeader
+          columns={[
+            { title: 'Task', dataIndex: 'name', width: '30%' },
+            {
+              title: 'Deadline',
+              dataIndex: 'deadline',
+              width: '30%',
+            },
+            { title: 'Type', dataIndex: 'type', width: '30%' },
+            { title: 'Complete', dataIndex: 'isComplete', width: '30%' },
+            { title: 'Tasks', dataIndex: 'nodes' },
+          ]}
+          dataSource={[
+            {
+              id: '0',
+              name: 'Shopping List',
+              deadline: new Date(2020, 1, 15),
+              type: 'TASK',
+              isComplete: true,
+              nodes: 3,
+            },
+            {
+              id: '1',
+              name: 'Shopping List',
+              deadline: new Date(2020, 1, 15),
+              type: 'TASK',
+              isComplete: true,
+              nodes: 2,
+            },
+            {
+              id: '2',
+              name: 'Shopping List',
+              deadline: new Date(2020, 1, 15),
+              type: 'TASK',
+              isComplete: true,
+              nodes: 2,
+            },
+            {
+              id: '3',
+              name: 'Shopping List',
+              deadline: new Date(2020, 1, 15),
+              type: 'TASK',
+              isComplete: true,
+              nodes: 2,
+            },
+            {
+              id: '4',
+              name: 'Shopping List',
+              deadline: new Date(2020, 1, 15),
+              type: 'TASK',
+              isComplete: true,
+              nodes: 2,
+            },
+            {
+              id: '5',
+              name: 'Shopping List',
+              deadline: new Date(2020, 1, 15),
+              type: 'TASK',
+              isComplete: true,
+              nodes: 2,
+            },
+            {
+              id: '6',
+              name: 'Shopping List',
+              deadline: new Date(2020, 1, 15),
+              type: 'TASK',
+              isComplete: true,
+              nodes: 2,
+            },
+
+            {
+              id: '7',
+              name: 'Shopping List',
+              deadline: new Date(2020, 1, 15),
+              type: 'TASK',
+              isComplete: true,
+              nodes: 2,
+            },
+            {
+              id: '8',
+              name: 'Shopping List',
+              deadline: new Date(2020, 1, 15),
+              type: 'TASK',
+              isComplete: true,
+              nodes: 2,
+            },
+            {
+              id: '9',
+              name: 'Shopping List',
+              deadline: new Date(2020, 1, 15),
+              type: 'TASK',
+              isComplete: true,
+              nodes: 2,
+            },
+            {
+              id: '10',
+              name: 'Shopping List',
+              deadline: new Date(2020, 1, 15),
+              type: 'TASK',
+              isComplete: true,
+              nodes: 2,
+            },
+          ]}
+        />{' '}
+      </Box>
       <Box
         display="flex"
         flexDirection="column"

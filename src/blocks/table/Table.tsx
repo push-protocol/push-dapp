@@ -15,15 +15,17 @@ import { Column, DataSource } from './Table.types';
 export type TableProps = {
   columns: Column[];
   dataSource: DataSource[];
+  fixedHeader?: boolean;
 };
 
-const Table: FC<TableProps> = ({ columns, dataSource }) => {
-  const theme = useTheme([
-    {
-      Table: `
-        --data-table-library_grid-template-columns:  25% 25% 25% 25% minmax(150px, 1fr);
+const Table: FC<TableProps> = ({ columns, dataSource, fixedHeader = false }) => {
+  const gridTemplateColumns = columns.map((col) => col.width || '1fr').join(' ');
+
+  const theme = useTheme({
+    Table: `
+      --data-table-library_grid-template-columns: ${gridTemplateColumns};
       `,
-      Cell: `
+    Cell: `
       align-items: center;
       align-self: stretch;
       border-bottom: var(--border-sm, 1px) solid var(--components-table-stroke-default);
@@ -38,13 +40,13 @@ const Table: FC<TableProps> = ({ columns, dataSource }) => {
       height: 56px;
       padding: var(--spacing-xxxs);
       `,
-      Row: `
-      background: var(--surface-transparent);
+    Row: `
+      background: var(--surface-secondary);
       `,
-      HeaderRow: `
-      background: var(--surface-transparent);
+    HeaderRow: `
+      background: var(--surface-secondary);
       `,
-      HeaderCell: `
+    HeaderCell: `
       align-items: center;
       color: var(--components-table-text-heading);
       display: flex;
@@ -56,36 +58,40 @@ const Table: FC<TableProps> = ({ columns, dataSource }) => {
       padding: var(--spacing-xxs) var(--spacing-xxxs);
       gap: 10px;
       `,
-    },
-  ]);
+  });
 
   return (
     <ReactTable
-      data={{ nodes: dataSource }}
+      data={{
+        nodes: dataSource,
+      }}
       theme={theme}
-      layout={{ horizontalScroll: true }}
+      layout={{ custom: true, horizontalScroll: true, fixedHeader }}
     >
       {(tableList: DataSource[]) => (
         <>
           <Header>
             <HeaderRow>
-              {columns.map((col) => (
-                <HeaderCell key={col.dataIndex}>{col.title}</HeaderCell>
+              {columns.map((column, index) => (
+                <HeaderCell key={`${column.title}-${index}`}>{column.title}</HeaderCell>
               ))}
             </HeaderRow>
           </Header>
 
           <Body>
-            {tableList.map((item) => (
+            {tableList.map((record) => (
               <Row
-                key={item.id}
-                item={item}
+                key={record.id}
+                item={record}
               >
-                {columns.map((col) => (
-                  <Cell key={col.dataIndex}>
-                    {col.render ? col.render(item[col.dataIndex], item) : item[col.dataIndex]}
-                  </Cell>
-                ))}
+                {columns.map((column) => {
+                  const cellValue = `${record[column.dataIndex]}`;
+                  return (
+                    <Cell key={`${column.dataIndex}-${record.id}`}>
+                      {column.render ? column.render(cellValue, record) : cellValue}
+                    </Cell>
+                  );
+                })}
               </Row>
             ))}
           </Body>
