@@ -2,18 +2,19 @@ import { NotificationType } from '@pushprotocol/restapi';
 
 import { Box } from 'blocks';
 import { appConfig } from 'config';
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { convertAddrCaipToAddress, convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 import { ChannelSetting } from 'helpers/channel/types';
 
 import { ChannelDetails } from 'queries';
 
-export const getChannelChainList = (channelDetails: ChannelDetails) => {
+export const getChannelChainList = (channelDetails: ChannelDetails, account: string, onCoreNetwork: boolean) => {
   const aliases =
     channelDetails?.aliases
-      ?.filter((alias) => alias.is_alias_verified)
+      ?.filter((alias) => alias.is_alias_verified && convertAddrCaipToAddress(alias.alias_address) === account)
       ?.map((alias) => parseInt(alias.alias_blockchain_id)) || [];
-  return [...aliases, appConfig.coreContractChain];
+  if (onCoreNetwork) return [...aliases, appConfig.coreContractChain];
+  else return aliases;
 };
 
 export const getChannelDelegatesOptions = (delegatees: [ChannelDetails]) => {
