@@ -3,6 +3,7 @@ import { FC } from 'react';
 
 // Components
 import { Box, Text } from 'blocks';
+import { css } from 'styled-components';
 
 type StepperProps = {
   steps: Array<{ label: string; value: string }>;
@@ -20,6 +21,8 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepKey, completedSteps }) 
     <Box
       display="flex"
       gap="spacing-lg"
+      width="inherit"
+      justifyContent="space-between"
     >
       {steps.map((step, index) => (
         <Box
@@ -27,7 +30,9 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepKey, completedSteps }) 
           display="flex"
           flexDirection="column"
           gap="spacing-xs"
-          width="180px"
+          css={css`
+            flex: 1;
+          `}
           cursor="pointer"
           onClick={() => handleChangeActiveStep(step.value)}
         >
