@@ -9,8 +9,8 @@ const Linea: FC<IllustrationProps> = (allProps) => {
       componentName="Linea"
       illustration={
         <svg
-          width={restProps?.width ?? '32'}
-          height={restProps?.height ?? '32'}
+          width={restProps?.width ?? '24'}
+          height={restProps?.height ?? '24'}
           viewBox="0 0 32 32"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"

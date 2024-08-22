@@ -10,8 +10,8 @@ const Base: FC<IllustrationProps> = (allProps) => {
       illustration={
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width={restProps?.width ?? '32'}
-          height={restProps?.height ?? '32'}
+          width={restProps?.width ?? '24'}
+          height={restProps?.height ?? '24'}
           viewBox="0 0 32 32"
           fill="none"
           {...props}
