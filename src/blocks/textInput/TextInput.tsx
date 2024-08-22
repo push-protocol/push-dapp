@@ -9,7 +9,7 @@ export type TextInputProps = {
   disabled?: boolean;
   icon?: ReactNode;
   error?: boolean;
-  type?: 'text' | 'password';
+  type?: 'text' | 'password' | 'number';
   errorMessage?: string;
   label?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -18,7 +18,7 @@ export type TextInputProps = {
   required?: boolean;
   success?: boolean;
   totalCount?: number;
-  value: string;
+  value: string | number;
 };
 
 const Container = styled.div<{ css?: FlattenSimpleInterpolation }>`
@@ -168,7 +168,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
                 color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-secondary'}
                 variant="c-regular"
               >
-                {`${value?.length || 0} / ${totalCount}`}
+                {`${typeof value === 'string' && value?.length || 0} / ${totalCount}`}
               </InputText>
             )}
           </LabelContainer>

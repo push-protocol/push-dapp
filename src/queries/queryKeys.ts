@@ -1,5 +1,6 @@
 export const UserRewardsDetails = 'userRewardsDetails';
 export const addDelegate = 'addDelegate';
+export const addSettings = 'addSettings';
 export const addNewSubgraph = 'addNewSubgraph';
 export const aliasInfo = 'aliasInfo';
 export const allActivities = 'allActivities';
