@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import {
   Table as ReactTable,
   Header,
@@ -10,41 +10,75 @@ import {
 } from '@table-library/react-table-library/table';
 import { useTheme } from '@table-library/react-table-library/theme';
 import { textVariants } from '../text';
+import { SurfaceColors } from '../theme/Theme.types';
 import { Column, DataSource } from './Table.types';
 
 export type TableProps = {
   columns: Column[];
   dataSource: DataSource[];
   fixedHeader?: boolean;
+  backgroundColor?: SurfaceColors;
 };
 
-const Table: FC<TableProps> = ({ columns, dataSource, fixedHeader = false }) => {
-  const gridTemplateColumns = columns.map((col) => col.width || '1fr').join(' ');
+const Table: FC<TableProps> = ({ backgroundColor = 'surface-secondary', columns, dataSource, fixedHeader = false }) => {
+  const columnData = useMemo(() => {
+    const columnWidths = columns.map((col) => col.width || `${100 / columns.length}%`);
+
+    const leftRightPositionCSS = columns
+      .map((col, index) => {
+        if (col?.fixed == 'left') {
+          return `
+            &:nth-of-type(${index + 1}) {
+              left: ${index === 0 ? '0px' : columnWidths[index]};
+            };
+          `;
+        }
+        if (col?.fixed == 'right') {
+          return `
+            &:nth-of-type(${index + 1}) {
+              right: ${index + 1 === columns.length ? '0px' : columnWidths[index]};
+            };
+          `;
+        }
+
+        return '';
+      })
+      .join('');
+
+    return {
+      columnWidthCSS: columnWidths.join(' '),
+      leftRightPositionCSS,
+    };
+  }, [columns]);
 
   const theme = useTheme({
     Table: `
-      --data-table-library_grid-template-columns: ${gridTemplateColumns};
+        --data-table-library_grid-template-columns: ${columnData.columnWidthCSS};
       `,
+    BaseCell: `
+      ${columnData.leftRightPositionCSS}
+    `,
     Cell: `
       align-items: center;
       align-self: stretch;
-      border-bottom: var(--border-sm, 1px) solid var(--components-table-stroke-default);
+      border-bottom: var(--border-sm) solid var(--components-table-stroke-default);
+      color: var(--components-table-text-default);
       display: flex;
       flex: 1 0 0;
       font-family: var(--font-family);
-      font-size: ${textVariants['bs-bold'].fontSize};
-      font-style: ${textVariants['bs-bold'].fontStyle};
-      font-weight: ${textVariants['bs-bold'].fontWeight};
-      line-height: ${textVariants['bs-bold'].lineHeight};
+      font-size: ${textVariants['bs-semibold'].fontSize};
+      font-style: ${textVariants['bs-semibold'].fontStyle};
+      font-weight: ${textVariants['bs-semibold'].fontWeight};
+      line-height: ${textVariants['bs-semibold'].lineHeight};
       gap: var(--spacing-xxs);
       height: 56px;
       padding: var(--spacing-xxxs);
       `,
     Row: `
-      background: var(--surface-secondary);
+      background: var(--${backgroundColor});
       `,
     HeaderRow: `
-      background: var(--surface-secondary);
+      background: var(--${backgroundColor});
       `,
     HeaderCell: `
       align-items: center;
@@ -73,7 +107,13 @@ const Table: FC<TableProps> = ({ columns, dataSource, fixedHeader = false }) => 
           <Header>
             <HeaderRow>
               {columns.map((column, index) => (
-                <HeaderCell key={`${column.title}-${index}`}>{column.title}</HeaderCell>
+                <HeaderCell
+                  key={`${column.title}-${index}`}
+                  pinLeft={column?.fixed === 'left'}
+                  pinRight={column?.fixed === 'right'}
+                >
+                  {column.title}
+                </HeaderCell>
               ))}
             </HeaderRow>
           </Header>
@@ -85,9 +125,13 @@ const Table: FC<TableProps> = ({ columns, dataSource, fixedHeader = false }) => 
                 item={record}
               >
                 {columns.map((column) => {
-                  const cellValue = `${record[column.dataIndex]}`;
+                  const cellValue = `${record?.[column.dataIndex] || ''}`;
                   return (
-                    <Cell key={`${column.dataIndex}-${record.id}`}>
+                    <Cell
+                      key={`${column.dataIndex}-${record.id}`}
+                      pinLeft={column?.fixed === 'left'}
+                      pinRight={column?.fixed === 'right'}
+                    >
                       {column.render ? column.render(cellValue, record) : cellValue}
                     </Cell>
                   );

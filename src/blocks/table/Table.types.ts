@@ -5,6 +5,7 @@ export type Column = {
   dataIndex: string;
   render?: (text: string, record: any) => ReactNode;
   width?: string;
+  fixed?: 'left' | 'right';
 };
 
 export type DataSource = {
