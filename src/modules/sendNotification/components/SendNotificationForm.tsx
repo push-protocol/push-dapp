@@ -41,13 +41,13 @@ const SendNotificationForm: FC<SendNotificationFormProps> = ({ channelDetails })
   /** replace the delegatees with high level sdk function once it is available */
   const { delegatees } = useSelector((state: any) => state.admin);
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
-  const delegateesOptions = getChannelDelegatesOptions(
-    delegatees?.length ? delegatees : channelDetails ? [channelDetails] : []
-  );
+
+  const delegateesOptions = getChannelDelegatesOptions(delegatees, channelDetails);
 
   const selectedChannel =
-    delegatees?.find((delegatee: ChannelDetails) => delegatee.channel === formik.values.channelAddress) ||
+    delegatees?.find((delegatee: ChannelDetails) => delegatee.channel === delegateesOptions[0]?.value) ||
     channelDetails;
+
   const aliasChainOptions = getSelectChains(getChannelChainList(selectedChannel, account));
 
   const formik = useFormik<NotficationValue>({

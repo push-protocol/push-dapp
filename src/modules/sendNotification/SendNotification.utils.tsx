@@ -16,9 +16,13 @@ export const getChannelChainList = (channelDetails: ChannelDetails, account: str
   return [...aliases, appConfig.coreContractChain];
 };
 
-export const getChannelDelegatesOptions = (delegatees: [ChannelDetails]) => {
-  if (delegatees && delegatees.length) {
-    return delegatees?.map((channel) => ({
+export const getChannelDelegatesOptions = (
+  delegatees: [ChannelDetails],
+  channelDetails: ChannelDetails | undefined
+) => {
+  const delegateesArray = [...(delegatees || []), ...(channelDetails ? [channelDetails] : [])];
+  if (delegateesArray && delegateesArray.length) {
+    return delegateesArray?.map((channel) => ({
       icon: (
         <Box
           width="24px"
@@ -66,7 +70,6 @@ export const getRecipients = (type: NotificationType, recipient: string) => {
 };
 
 export const getChannelAddress = (channelOption: ChannelDetails, chainId: string, onCoreNetwork: boolean) => {
-  console.debug(channelOption);
   if (onCoreNetwork) return convertAddressToAddrCaip(channelOption.channel, parseInt(chainId));
   else {
     const aliasAddress =
