@@ -88,11 +88,8 @@ const NavigationList = {
           },
         },
       },
-
-
     },
     Messsaging: {
-
       chat: {
         src: 'chatOffIcon',
         activeSrc: 'chatOnIcon',
@@ -118,12 +115,8 @@ const NavigationList = {
           },
         },
       },
-
-
-
     },
     Developers: {
-
       createChannel: {
         uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.CREATE_CHANNEL,
         src: 'createChannelIcon',
@@ -176,11 +169,7 @@ const NavigationList = {
           },
         },
       },
-
-
-
-
-    }
+    },
   },
   third: {
     yieldv2: {
@@ -257,31 +246,31 @@ const NavigationList = {
     //     }
     //   }
     // },
-    governance: {
-      uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.GOVERNANCE,
-      src: 'govOffIcon',
-      activeSrc: 'govOnIcon',
-      iconFactory: null,
-      name: 'Governance',
-      title: 'Governance',
-      alt: 'Governance',
-      href: APP_PATHS.Govern,
-      newTab: false,
-      isRoute: true,
-      hasMenuLogic: true,
-      hidden: false,
-      headerTag: {
-        title: 'Governance',
-        light: {
-          bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-          fg: themeLight.headerTagFg,
-        },
-        dark: {
-          bg: themeDark.headerTagBg,
-          fg: themeDark.headerTagFg,
-        },
-      },
-    },
+    // governance: {
+    //   uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.GOVERNANCE,
+    //   src: 'govOffIcon',
+    //   activeSrc: 'govOnIcon',
+    //   iconFactory: null,
+    //   name: 'Governance',
+    //   title: 'Governance',
+    //   alt: 'Governance',
+    //   href: APP_PATHS.Govern,
+    //   newTab: false,
+    //   isRoute: true,
+    //   hasMenuLogic: true,
+    //   hidden: false,
+    //   headerTag: {
+    //     title: 'Governance',
+    //     light: {
+    //       bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+    //       fg: themeLight.headerTagFg,
+    //     },
+    //     dark: {
+    //       bg: themeDark.headerTagBg,
+    //       fg: themeDark.headerTagFg,
+    //     },
+    //   },
+    // },
 
     // incentives: {
     //   src: 'incentivesOffIcon',
@@ -471,8 +460,8 @@ const NavigationList = {
         },
       },
     },
-  }
-}
+  },
+};
 
 // // remove secret feature
 // if (

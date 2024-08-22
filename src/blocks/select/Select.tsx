@@ -155,7 +155,7 @@ const StyledOption = styled(ComboboxOption)`
   align-items: center;
   padding: var(--spacing-xxxs, 4px);
   gap: var(--spacing-xxs, 8px);
-  color: var(--components-dropdown-text-default, #17181b);
+  color: var(--components-list-item-text-default);
   font-family: var(--font-family);
   font-size: ${textVariants['bs-regular'].fontSize};
   font-style: ${textVariants['bs-regular'].fontStyle};

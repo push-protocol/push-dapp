@@ -1,19 +1,35 @@
 import { FC } from 'react';
 
 //Components
-import { Box } from 'blocks';
-import { RewardsTabs } from './RewardsTabs';
+import { Box, TabItem, Tabs } from 'blocks';
 import { DashboardSection } from './DashboardSection';
 import { LeaderBoardSection } from './LeaderBoardSection';
 import { RewardsActivitiesSection } from './RewardsActivitiesSection';
-import { RewardsTabs as RewardsTabsType } from '../Rewards.types';
+import { RewardsTabs } from '../Rewards.types';
 
 export type RewardsTabsContainerProps = {
-  activeTab: RewardsTabsType;
-  handleSetActiveTab: (tab: RewardsTabsType) => void;
+  activeTab: RewardsTabs;
+  handleSetActiveTab: (tab: RewardsTabs) => void;
 };
 
 const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handleSetActiveTab }) => {
+  const rewardsTabs: TabItem[] = [
+    {
+      key: 'dashboard',
+      label: 'Dashboard',
+      children: <DashboardSection onGetStarted={() => handleSetActiveTab('activity')} />,
+    },
+    {
+      key: 'activity',
+      label: 'Reward Activities',
+      children: <RewardsActivitiesSection />,
+    },
+    {
+      key: 'leaderboard',
+      label: 'Leaderboard',
+      children: <LeaderBoardSection />,
+    },
+  ];
   return (
     <Box
       backgroundColor="surface-primary"
@@ -27,14 +43,11 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handle
         display="flex"
         flexDirection="column"
       >
-        <RewardsTabs
-          activeTab={activeTab}
-          handleSetActiveTab={handleSetActiveTab}
+        <Tabs
+          items={rewardsTabs}
+          activeKey={activeTab}
+          onChange={(activeKey) => handleSetActiveTab(activeKey as RewardsTabs)}
         />
-
-        {activeTab === 'dashboard' && <DashboardSection onGetStarted={() => handleSetActiveTab('activity')} />}
-        {activeTab === 'activity' && <RewardsActivitiesSection />}
-        {activeTab === 'leaderboard' && <LeaderBoardSection />}
       </Box>
     </Box>
   );
