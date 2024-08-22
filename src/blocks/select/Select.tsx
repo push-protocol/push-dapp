@@ -122,17 +122,23 @@ const StyledBox = styled.div<{
 `;
 
 const StyledPopover = styled(ComboboxPopover)`
-  margin: var(--spacing-sm) var(--spacing-xl) var(--spacing-none) var(--spacing-none);
+  margin: var(--spacing-sm) var(--spacing-none) var(--spacing-none) var(--spacing-none);
   padding: var(--spacing-xxs, 8px);
   border-radius: var(--radius-xs, 12px);
   border: var(--border-sm, 1px) solid var(--stroke-secondary, #eaebf2);
   background: var(--surface-primary, #fff);
   overflow: hidden auto;
   max-height: 20rem;
+  left: 0 !important;
+  right: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: auto !important;
 `;
 
 const StyledCombobox = styled(Combobox)`
   width: 100%;
+  position: relative;
 `;
 
 const StyledInputContainer = styled.div`
@@ -153,6 +159,7 @@ const StyledList = styled(ComboboxList)`
 const StyledOption = styled(ComboboxOption)`
   display: flex;
   align-items: center;
+  white-space: nowrap;
   padding: var(--spacing-xxxs, 4px);
   gap: var(--spacing-xxs, 8px);
   color: var(--components-list-item-text-default);
