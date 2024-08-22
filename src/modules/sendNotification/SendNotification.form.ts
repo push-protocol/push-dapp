@@ -29,10 +29,10 @@ export const getValidationSchema = (isSubsetRecipientPresent: boolean) => {
   });
 };
 
-export const getFormInitialValues = (delegateesOptions: SelectOption[]) => {
+export const getFormInitialValues = (delegateesOptions: SelectOption[], aliasChainOptions: SelectOption[]) => {
   return {
     channelAddress: delegateesOptions[0]?.value || '',
-    chainId: appConfig.coreContractChain.toString(),
+    chainId: aliasChainOptions[0]?.value || appConfig.coreContractChain.toString(),
     type: 'BROADCAST' as NotificationType,
     recipient: '',
     titleChecked: false,

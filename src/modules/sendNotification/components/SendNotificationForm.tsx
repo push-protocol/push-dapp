@@ -34,28 +34,29 @@ type SendNotificationFormProps = {
 };
 const SendNotificationForm: FC<SendNotificationFormProps> = ({ channelDetails }) => {
   const [subsetRecipients, setSubsetRecipients] = useState<Array<string>>([]);
-  const { chainId, switchChain } = useAccount();
+  const { chainId, switchChain, account } = useAccount();
   const { mutate: sendNotification, isPending } = useSendNotification();
   const toast = useToast();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
   /** replace the delegatees with high level sdk function once it is available */
   const { delegatees } = useSelector((state: any) => state.admin);
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
-  const delegateesOptions = getChannelDelegatesOptions(
-    delegatees?.length ? delegatees : channelDetails ? [channelDetails] : []
-  );
+
+  const delegateesOptions = getChannelDelegatesOptions(delegatees, channelDetails);
+
+  const selectedChannel =
+    delegatees?.find((delegatee: ChannelDetails) => delegatee.channel === delegateesOptions[0]?.value) ||
+    channelDetails;
+
+  const aliasChainOptions = getSelectChains(getChannelChainList(selectedChannel, account));
 
   const formik = useFormik<NotficationValue>({
-    initialValues: getFormInitialValues(delegateesOptions),
+    initialValues: getFormInitialValues(delegateesOptions, aliasChainOptions),
     validationSchema: getValidationSchema(!!subsetRecipients.length),
     onSubmit: (values) => {
       handleSendNotification(values);
     },
   });
-  const selectedChannel =
-    delegatees?.find((delegatee: ChannelDetails) => delegatee.channel === formik.values.channelAddress) ||
-    channelDetails;
-  const alaisChainOptions = getSelectChains(getChannelChainList(selectedChannel));
 
   const showPreview = formik.values.body || formik.values.title || formik.values.ctaLink || formik.values.mediaUrl;
 
@@ -169,7 +170,7 @@ const SendNotificationForm: FC<SendNotificationFormProps> = ({ channelDetails })
               />
             </Box>
             <Select
-              options={alaisChainOptions}
+              options={aliasChainOptions}
               value={formik.values.chainId}
               onSelect={(value) => {
                 formik.setFieldValue('chainId', value);

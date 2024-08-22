@@ -187,18 +187,20 @@ function Navigation() {
   }, [canSend, channelDetails, navigationSetup, processingState, account]);
 
   useEffect(() => {
-    /**
-     * If its a delegate
-     * If the channel Details is present on the core network
-     */
-    if (delegatees && delegatees.length > 0) {
-      dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
+    if (!onActiveNetwork) {
+      if (delegatees && delegatees.length > 0) {
+        dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
+      } else {
+        dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
+      }
     }
 
-    if (onActiveNetwork && channelDetails && channelDetails?.name !== null) {
-      dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
-    } else {
-      dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
+    if (onActiveNetwork) {
+      if ((channelDetails && channelDetails?.name !== null) || (delegatees && delegatees.length > 0)) {
+        dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
+      } else {
+        dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
+      }
     }
   }, [channelDetails, delegatees, canSend, account, onActiveNetwork]);
 

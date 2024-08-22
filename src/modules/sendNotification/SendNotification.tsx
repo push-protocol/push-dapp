@@ -8,22 +8,27 @@ import { SendNotificationForm } from './components/SendNotificationForm';
 import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
 
 import { UserStoreType } from 'types';
-import { useGetChannelDetails } from 'queries';
+import { useGetAliasInfo, useGetChannelDetails } from 'queries';
 import { useAccount } from 'hooks';
 import { useNavigate } from 'react-router-dom';
-
-//add formik
-//add conditon for /send url
+import { aliasChainIdToChainName } from 'helpers/UtilityHelper';
+import { ALIAS_CHAIN } from '@pushprotocol/restapi/src/lib/config';
 
 const SendNotification: FC = () => {
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(true);
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
-  const { account } = useAccount();
-  const { data: channelDetails } = useGetChannelDetails(account);
+  const { account, chainId } = useAccount();
+
+  const { data: alaisDetails } = useGetAliasInfo({
+    alias: account,
+    aliasChain: aliasChainIdToChainName[chainId as keyof typeof aliasChainIdToChainName] as ALIAS_CHAIN,
+  });
+  const { data: channelDetails } = useGetChannelDetails(alaisDetails?.channel || account);
+  const { delegatees } = useSelector((state: any) => state.admin);
   const nagivate = useNavigate();
 
   useEffect(() => {
-    if (!channelDetails) nagivate('/channels');
+    if (!channelDetails && !delegatees?.length && !alaisDetails) nagivate('/channels');
   }, [channelDetails]);
 
   return (
