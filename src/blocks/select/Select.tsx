@@ -233,8 +233,9 @@ const Select: React.FC<SelectProps> = ({
 
   const updatePopoverPosition = useCallback(() => {
     if (comboboxRef.current) {
-      setPopoverWidth(comboboxRef.current.offsetWidth);
-      setPopoverLeft(comboboxRef.current.offsetLeft);
+      const comboboxRect = comboboxRef.current.getBoundingClientRect();
+      setPopoverWidth(comboboxRect.width);
+      setPopoverLeft(comboboxRect.left);
     }
   }, []);
 
