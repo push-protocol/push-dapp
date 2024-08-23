@@ -1,0 +1,1 @@
+import{bh as l,b1 as s,bv as o,__tla as _}from"./index-B2wAmwQg.js";let r,c=Promise.all([(()=>{try{return _}catch{}})()]).then(async()=>{r=a=>a==null?void 0:a.map(t=>{const e=o[t];return{value:t.toString(),label:l[t],icon:s.jsx(e,{})}})});export{c as __tla,r as g};
