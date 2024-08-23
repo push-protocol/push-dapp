@@ -1,14 +1,12 @@
 import Pagination from 'rc-pagination';
 import styled from 'styled-components';
 import 'rc-pagination/assets/index.css';
-import { useState } from 'react';
-import { Box } from 'blocks/box';
+import { FC } from 'react';
 import { CaretLeft, CaretRight } from 'blocks/icons';
 import { getTextVariantStyles } from 'blocks/Blocks.utils';
+import { PaginationProps } from './Pagination.types';
 
-const items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8', 'Item 9'];
-
-const StyledPagination = styled(Pagination)`
+const StyledPagination = styled(Pagination)<{ disabled?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,16 +17,21 @@ const StyledPagination = styled(Pagination)`
     align-items: center;
     border: none !important;
     background: transparent !important;
-    margin: 0px !important;
+    margin: var(--spacing-none) !important;
     height: 24px;
     line-height: 24px;
-    width: auto !important;
+    width: auto;
     font-family: var(--font-family);
-    ${() => getTextVariantStyles('bes-semibold', 'components-pagination-text-default')};
+    ${({ disabled }) =>
+      getTextVariantStyles(
+        'bes-semibold',
+        disabled ? 'components-pagination-text-disabled' : 'components-pagination-text-default'
+      )};
 
     &-active {
       font-weight: bold;
-      color: var(--components-pagination-text-selected);
+      color: ${({ disabled }) =>
+        disabled ? 'var(--components-pagination-text-disabled)' : 'var(--components-pagination-text-selected)'};
     }
 
     a {
@@ -45,7 +48,7 @@ const StyledPagination = styled(Pagination)`
     align-items: center;
     border: none !important;
     background: transparent !important;
-    margin: 0px !important;
+    margin: var(--spacing-none) var(--spacing-xxs) !important;
   }
 
   .rc-pagination-prev:focus-visible,
@@ -75,38 +78,25 @@ const IconComponent = styled.div`
   }
 `;
 
-const PaginationItem = () => {
-  const [current, setCurrent] = useState(1);
-  const pageSize = 3;
-
-  const paginatedItems = items.slice((current - 1) * pageSize, current * pageSize);
-
+const PaginationItem: FC<PaginationProps> = ({ startPage = 1, totalCount, disabled = false, onChange, perPage }) => {
   return (
-    <div>
-      <Box>
-        <ul>
-          {paginatedItems.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>
-      </Box>
-      <StyledPagination
-        current={current}
-        pageSize={pageSize}
-        total={items.length}
-        onChange={(page) => setCurrent(page)}
-        prevIcon={
-          <IconComponent>
-            <CaretLeft color="icon-primary" />
-          </IconComponent>
-        }
-        nextIcon={
-          <IconComponent>
-            <CaretRight color="icon-primary" />
-          </IconComponent>
-        }
-      />
-    </div>
+    <StyledPagination
+      current={startPage}
+      pageSize={perPage}
+      total={totalCount}
+      onChange={onChange}
+      disabled={disabled}
+      prevIcon={
+        <IconComponent>
+          <CaretLeft color="icon-primary" />
+        </IconComponent>
+      }
+      nextIcon={
+        <IconComponent>
+          <CaretRight color="icon-primary" />
+        </IconComponent>
+      }
+    />
   );
 };
 
