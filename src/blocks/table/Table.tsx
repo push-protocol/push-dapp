@@ -9,6 +9,7 @@ import {
   Cell,
 } from '@table-library/react-table-library/table';
 import { useTheme } from '@table-library/react-table-library/theme';
+import styled from 'styled-components';
 import { textVariants } from '../text';
 import { SurfaceColors } from '../theme/Theme.types';
 import { Column, DataSource } from './Table.types';
@@ -19,6 +20,30 @@ export type TableProps = {
   fixedHeader?: boolean;
   backgroundColor?: SurfaceColors;
 };
+
+const StyledHeaderCell = styled(HeaderCell)<{ headerAlignment?: Column['headerAlignment'] }>`
+  ${({ headerAlignment }) =>
+    headerAlignment
+      ? `
+         div {
+          display: flex;
+          justify-content: ${headerAlignment};
+         }
+        `
+      : ''}
+`;
+
+const StyledRowCell = styled(Cell)<{ cellAlignment?: Column['cellAlignment'] }>`
+  ${({ cellAlignment }) =>
+    cellAlignment
+      ? `
+       div {
+        display: flex;
+        justify-content: ${cellAlignment};
+       }
+      `
+      : ''}
+`;
 
 const Table: FC<TableProps> = ({ backgroundColor = 'surface-secondary', columns, dataSource, fixedHeader = false }) => {
   const columnData = useMemo(() => {
@@ -107,13 +132,14 @@ const Table: FC<TableProps> = ({ backgroundColor = 'surface-secondary', columns,
           <Header>
             <HeaderRow>
               {columns.map((column, index) => (
-                <HeaderCell
+                <StyledHeaderCell
+                  headerAlignment={column.headerAlignment}
                   key={`${column.title}-${index}`}
                   pinLeft={column?.fixed === 'left'}
                   pinRight={column?.fixed === 'right'}
                 >
                   {column.title}
-                </HeaderCell>
+                </StyledHeaderCell>
               ))}
             </HeaderRow>
           </Header>
@@ -127,13 +153,14 @@ const Table: FC<TableProps> = ({ backgroundColor = 'surface-secondary', columns,
                 {columns.map((column) => {
                   const cellValue = `${record?.[column.dataIndex] || ''}`;
                   return (
-                    <Cell
+                    <StyledRowCell
+                      cellAlignment={column.cellAlignment}
                       key={`${column.dataIndex}-${record.id}`}
                       pinLeft={column?.fixed === 'left'}
                       pinRight={column?.fixed === 'right'}
                     >
                       {column.render ? column.render(cellValue, record) : cellValue}
-                    </Cell>
+                    </StyledRowCell>
                   );
                 })}
               </Row>
