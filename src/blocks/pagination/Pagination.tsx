@@ -5,6 +5,7 @@ import { FC } from 'react';
 import { CaretLeft, CaretRight } from 'blocks/icons';
 import { getTextVariantStyles } from 'blocks/Blocks.utils';
 import { PaginationProps } from './Pagination.types';
+import enUS from 'rc-pagination/lib/locale/en_US';
 
 const StyledPagination = styled(Pagination)<{ disabled?: boolean }>`
   display: flex;
@@ -17,10 +18,11 @@ const StyledPagination = styled(Pagination)<{ disabled?: boolean }>`
     align-items: center;
     border: none !important;
     background: transparent !important;
-    margin: var(--spacing-none) !important;
+    margin: var(--spacing-none) var(--spacing-xxxs) !important;
     height: 24px;
+    min-width: 18px !important;
+    max-width: 18px !important;
     line-height: 24px;
-    width: auto;
     font-family: var(--font-family);
     ${({ disabled }) =>
       getTextVariantStyles(
@@ -48,7 +50,7 @@ const StyledPagination = styled(Pagination)<{ disabled?: boolean }>`
     align-items: center;
     border: none !important;
     background: transparent !important;
-    margin: var(--spacing-none) var(--spacing-xxs) !important;
+    margin: var(--spacing-none) var(--spacing-xxxs) !important;
   }
 
   .rc-pagination-prev:focus-visible,
@@ -86,6 +88,7 @@ const PaginationItem: FC<PaginationProps> = ({ startPage = 1, totalCount, disabl
       total={totalCount}
       onChange={onChange}
       disabled={disabled}
+      locale={enUS}
       prevIcon={
         <IconComponent>
           <CaretLeft color="icon-primary" />
