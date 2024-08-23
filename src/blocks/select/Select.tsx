@@ -1,4 +1,4 @@
-import React, { useRef, useState, ReactNode, useEffect } from 'react';
+import React, { useRef, useState, ReactNode, useEffect, useCallback } from 'react';
 import styled, { FlattenSimpleInterpolation, css } from 'styled-components';
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from '@reach/combobox';
 import '@reach/combobox/styles.css';
@@ -129,11 +129,6 @@ const StyledPopover = styled(ComboboxPopover)`
   background: var(--surface-primary, #fff);
   overflow: hidden auto;
   max-height: 20rem;
-  left: 0 !important;
-  right: 0 !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  width: auto !important;
 `;
 
 const StyledCombobox = styled(Combobox)`
@@ -159,7 +154,6 @@ const StyledList = styled(ComboboxList)`
 const StyledOption = styled(ComboboxOption)`
   display: flex;
   align-items: center;
-  white-space: nowrap;
   padding: var(--spacing-xxxs, 4px);
   gap: var(--spacing-xxs, 8px);
   color: var(--components-list-item-text-default);
@@ -222,6 +216,7 @@ const Select: React.FC<SelectProps> = ({
 }) => {
   const [popoverWidth, setPopoverWidth] = useState(0);
   const [viewPopover, setViewPopover] = useState(true);
+  const [popoverLeft, setPopoverLeft] = useState(0);
   const comboboxRef = useRef<HTMLDivElement>(null);
   const parentRef = useRef<HTMLDivElement>(null);
   const childRef = useRef<HTMLInputElement>(null);
@@ -235,6 +230,22 @@ const Select: React.FC<SelectProps> = ({
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  const updatePopoverPosition = useCallback(() => {
+    if (comboboxRef.current) {
+      setPopoverWidth(comboboxRef.current.offsetWidth);
+      setPopoverLeft(comboboxRef.current.offsetLeft);
+    }
+  }, []);
+
+  useEffect(() => {
+    updatePopoverPosition();
+    window.addEventListener('resize', updatePopoverPosition);
+
+    return () => {
+      window.removeEventListener('resize', updatePopoverPosition);
+    };
+  }, [updatePopoverPosition]);
 
   const selectedOption = options.find((option) => option.value === value);
 
@@ -290,7 +301,7 @@ const Select: React.FC<SelectProps> = ({
         </StyledBox>
 
         {viewPopover && (
-          <StyledPopover>
+          <StyledPopover style={{ width: popoverWidth, left: popoverLeft, boxSizing: 'border-box' }}>
             <StyledList>
               {options.map((option, index) => (
                 <StyledOption
