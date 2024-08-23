@@ -1,5 +1,5 @@
 export type ChannelSetting = {
-  type: 1 | 2 | 3;
+  type: number;
   default:
     | boolean
     | number
@@ -7,12 +7,12 @@ export type ChannelSetting = {
         lower: number;
         upper: number;
       };
-  enabled: boolean;
+  enabled?: boolean;
   description: string;
-  index: number;
-  lowerLimit: number;
-  upperLimit: number;
-  ticker: number;
+  index?: number;
+  lowerLimit?: number;
+  upperLimit?: number;
+  ticker?: number;
 };
 
 export type DashboardActiveState =
