@@ -18,7 +18,7 @@ const CaretRight: FC<IconProps> = (allProps) => {
         >
           <path
             d="M1.16748 1.27502L4.89246 5L1.16748 8.72498"
-            stroke="#202124"
+            stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
           />

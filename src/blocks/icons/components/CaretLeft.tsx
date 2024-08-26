@@ -18,7 +18,7 @@ const CaretLeft: FC<IconProps> = (allProps) => {
         >
           <path
             d="M4.89258 8.72499L1.16758 4.99999L4.89258 1.27499"
-            stroke="#202124"
+            stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
           />

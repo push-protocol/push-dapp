@@ -1,4 +1,4 @@
-import Pagination from 'rc-pagination';
+import RCPagination from 'rc-pagination';
 import styled from 'styled-components';
 import 'rc-pagination/assets/index.css';
 import { FC } from 'react';
@@ -7,7 +7,7 @@ import { getTextVariantStyles } from 'blocks/Blocks.utils';
 import { PaginationProps } from './Pagination.types';
 import enUS from 'rc-pagination/lib/locale/en_US';
 
-const StyledPagination = styled(Pagination)<{ disabled?: boolean }>`
+const StyledPagination = styled(RCPagination)<{ disabled?: PaginationProps['disabled'] }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,6 +19,7 @@ const StyledPagination = styled(Pagination)<{ disabled?: boolean }>`
     border: none !important;
     background: transparent !important;
     margin: var(--spacing-none) var(--spacing-xxxs) !important;
+    padding: 0;
     height: 24px;
     min-width: 18px !important;
     max-width: 18px !important;
@@ -43,6 +44,38 @@ const StyledPagination = styled(Pagination)<{ disabled?: boolean }>`
     }
   }
 
+  .rc-pagination-jump-prev,
+  .rc-pagination-jump-next {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none !important;
+    background: transparent !important;
+    min-width: 18px !important;
+    max-width: 18px !important;
+    margin: var(--spacing-none) var(--spacing-xxxs) !important;
+    padding: 0;
+
+    /* Hide the original ellipsis content */
+    & > * {
+      display: none;
+    }
+
+    &::before {
+      content: '...';
+      color: ${({ disabled }) =>
+        disabled ? 'var(--components-pagination-text-disabled)' : 'var(--components-pagination-text-default)'};
+      display: inline-block;
+      line-height: 24px;
+      vertical-align: middle;
+      margin-bottom: var(--spacing-xxxs);
+    }
+
+    &:hover::before {
+      color: var(--components-pagination-text-default);
+    }
+  }
+
   .rc-pagination-prev,
   .rc-pagination-next {
     display: flex;
@@ -50,7 +83,8 @@ const StyledPagination = styled(Pagination)<{ disabled?: boolean }>`
     align-items: center;
     border: none !important;
     background: transparent !important;
-    margin: var(--spacing-none) var(--spacing-xxxs) !important;
+    margin: 0 !important;
+    padding: 0;
   }
 
   .rc-pagination-prev:focus-visible,
@@ -61,7 +95,7 @@ const StyledPagination = styled(Pagination)<{ disabled?: boolean }>`
   }
 `;
 
-const IconComponent = styled.div`
+const CaretIcon = styled.div`
   background: var(--components-pagination-background-default);
   width: 24px;
   height: 24px;
@@ -80,27 +114,27 @@ const IconComponent = styled.div`
   }
 `;
 
-const PaginationItem: FC<PaginationProps> = ({ startPage = 1, totalCount, disabled = false, onChange, perPage }) => {
+const Pagination: FC<PaginationProps> = ({ current = 1, total, disabled = false, onChange, pageSize }) => {
   return (
     <StyledPagination
-      current={startPage}
-      pageSize={perPage}
-      total={totalCount}
+      current={current}
+      pageSize={pageSize}
+      total={total}
       onChange={onChange}
       disabled={disabled}
       locale={enUS}
       prevIcon={
-        <IconComponent>
+        <CaretIcon>
           <CaretLeft color="icon-primary" />
-        </IconComponent>
+        </CaretIcon>
       }
       nextIcon={
-        <IconComponent>
+        <CaretIcon>
           <CaretRight color="icon-primary" />
-        </IconComponent>
+        </CaretIcon>
       }
     />
   );
 };
 
-export { PaginationItem as Pagination };
+export { Pagination };

@@ -1,12 +1,12 @@
 export type PaginationProps = {
-  //onChange function
+  // Called when the page number is changed, and it takes the resulting page number as argument
   onChange: (page: number) => void;
-  // items per page
-  perPage: number;
-  // startPage of pagination
-  startPage: number;
-  // total number of items
-  totalCount: number;
-  /* Option to disable the pagination component */
+  // Number of data items per page
+  pageSize: number;
+  // Default initial page number
+  current: number;
+  // Total number of data items
+  total: number;
+  // Disable pagination item
   disabled?: boolean;
 };
