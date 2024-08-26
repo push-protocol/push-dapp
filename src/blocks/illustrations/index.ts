@@ -3,6 +3,7 @@ export * from './Illustrations.types';
 
 export { default as Arbitrum } from './components/Arbitrum';
 
+export { default as Base } from './components/Base';
 export { default as BNB } from './components/BNB';
 
 export { default as ChatIllustration } from './components/Chat';
@@ -16,6 +17,8 @@ export { default as Discord } from './components/Discord';
 export { default as EarnOnPush } from './components/EarnOnPush';
 
 export { default as Ethereum } from './components/Ethereum';
+
+export { default as Linea } from './components/Linea';
 
 export { default as PushAlpha } from './components/PushAlpha';
 
