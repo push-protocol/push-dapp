@@ -1,23 +1,28 @@
 import { NotificationType } from '@pushprotocol/restapi';
 
 import { Box } from 'blocks';
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { appConfig } from 'config';
+import { convertAddrCaipToAddress, convertAddressToAddrCaip } from 'helpers/CaipHelper';
 
 import { ChannelSetting } from 'helpers/channel/types';
 
 import { ChannelDetails } from 'queries';
 
-export const getChannelChainList = (channelDetails: ChannelDetails) => {
+export const getChannelChainList = (channelDetails: ChannelDetails, account: string) => {
   const aliases =
     channelDetails?.aliases
-      ?.filter((alias) => alias.is_alias_verified)
+      ?.filter((alias) => alias.is_alias_verified && convertAddrCaipToAddress(alias.alias_address) === account)
       ?.map((alias) => parseInt(alias.alias_blockchain_id)) || [];
-  return [...aliases, 11155111];
+  return [...aliases, appConfig.coreContractChain];
 };
 
-export const getChannelDelegatesOptions = (delegatees: [ChannelDetails]) => {
-  if (delegatees && delegatees.length) {
-    return delegatees?.map((channel) => ({
+export const getChannelDelegatesOptions = (
+  delegatees: [ChannelDetails],
+  channelDetails: ChannelDetails | undefined
+) => {
+  const delegateesArray = [...(delegatees || []), ...(channelDetails ? [channelDetails] : [])];
+  if (delegateesArray && delegateesArray.length) {
+    return delegateesArray?.map((channel) => ({
       icon: (
         <Box
           width="24px"
@@ -65,7 +70,6 @@ export const getRecipients = (type: NotificationType, recipient: string) => {
 };
 
 export const getChannelAddress = (channelOption: ChannelDetails, chainId: string, onCoreNetwork: boolean) => {
-  console.debug(channelOption);
   if (onCoreNetwork) return convertAddressToAddrCaip(channelOption.channel, parseInt(chainId));
   else {
     const aliasAddress =
