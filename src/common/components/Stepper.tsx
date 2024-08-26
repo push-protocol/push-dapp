@@ -1,5 +1,5 @@
 // React + web3 essentials
-import { FC } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 
 // Components
 import { Box, Text } from 'blocks';
@@ -12,17 +12,39 @@ type StepperProps = {
 };
 
 const Stepper: FC<StepperProps> = ({ steps, setActiveStepKey, completedSteps }) => {
+  const [stepWidth, setStepWidth] = useState(0);
+  const parentRef = useRef<HTMLDivElement>(null);
+  const stepLength = steps?.length;
   const handleChangeActiveStep = (step: string) => {
     if (completedSteps?.includes(step)) {
       setActiveStepKey(step);
     }
   };
+  const updateStepWidth = useCallback(() => {
+    if (parentRef.current) {
+      setStepWidth((parentRef.current.offsetWidth - 32 * (stepLength - 1)) / stepLength);
+    }
+  }, []);
+
+  useEffect(() => {
+    updateStepWidth();
+    window.addEventListener('resize', updateStepWidth);
+
+    return () => {
+      window.removeEventListener('resize', updateStepWidth);
+    };
+  }, [updateStepWidth]);
+
   return (
     <Box
       display="flex"
       gap="spacing-lg"
-      width="inherit"
       justifyContent="space-between"
+      ref={parentRef}
+      width="inherit"
+      css={css`
+        box-sizing: content-box;
+      `}
     >
       {steps.map((step, index) => (
         <Box
@@ -30,9 +52,7 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepKey, completedSteps }) 
           display="flex"
           flexDirection="column"
           gap="spacing-xs"
-          css={css`
-            flex: 1;
-          `}
+          width={`${stepWidth}px`}
           cursor="pointer"
           onClick={() => handleChangeActiveStep(step.value)}
         >
@@ -40,12 +60,14 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepKey, completedSteps }) 
             textAlign="center"
             color={completedSteps.includes(step.value) ? 'text-brand-medium' : 'text-tertiary'}
             variant="h5-semibold"
+            ellipsis
             display={{ ml: 'none', dp: 'block' }}
           >
             {step.label}
           </Text>
 
           <Text
+            ellipsis
             textAlign="center"
             variant="h6-semibold"
             display={{ ml: 'block', dp: 'none' }}
