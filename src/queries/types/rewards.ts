@@ -211,3 +211,26 @@ export type RewardsStakeParams = {
   fromBlock: number;
   toBlock: number;
 };
+
+export type ActivityData = {
+  discord?: string;
+  discord_token?: string;
+  twitter?: string;
+};
+
+export type RewardActivityStatus = {
+  activityId: string;
+  activityTypeId: string;
+  createdAt: string;
+  data: ActivityData | {};
+  multiplier: number;
+  points: number;
+  status: string;
+  updatedAt: string;
+  userId: string;
+  verificationProof: string;
+};
+
+export type RewardActivityStatusResponse = {
+  [key: string]: RewardActivityStatus | {};
+};

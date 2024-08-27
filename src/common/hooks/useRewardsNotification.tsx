@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 // components
 import { notification, RewardPoints } from 'blocks';
+import { CommonLocalStorageKeys } from 'common';
 
 export const useRewardsNotification = () => {
   const location = useLocation();
@@ -13,27 +14,26 @@ export const useRewardsNotification = () => {
   const notificationAlreadyShown = localStorage.getItem('notificationShown') === 'true';
   const isPointsPage = location?.pathname.includes('/points');
 
-  const notificationItem = () => {
+  const showNotification = () =>
     notification.show({
       title: 'Push Points are Live',
       description: 'Complete Tasks on Push. Check-in, Earn Push Points, Unlock Rewards and Level up!',
       image: <RewardPoints />,
       onClick: () => {
         navigate('/points');
-        localStorage.setItem('notificationShown', 'true');
+        localStorage.setItem(CommonLocalStorageKeys.notificationShown, 'true');
         notification.hide();
       },
       onClose: () => {
-        localStorage.setItem('notificationShown', 'true');
+        localStorage.setItem(CommonLocalStorageKeys.notificationShown, 'true');
       },
     });
-  };
 
-  const showNotification = () => {
+  const showNotificationFn = () => {
     if (!notificationAlreadyShown && !isPointsPage) {
       // include componentDidMount logic
       if (!hasMounted) {
-        notificationItem();
+        showNotification();
         setHasMounted(true);
       }
     } else {
@@ -43,6 +43,6 @@ export const useRewardsNotification = () => {
   };
 
   useEffect(() => {
-    showNotification();
+    showNotificationFn();
   }, [isPointsPage]);
 };
