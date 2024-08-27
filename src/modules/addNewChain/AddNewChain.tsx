@@ -100,6 +100,7 @@ const AddNewChain: FC = () => {
         alignItems="center"
       >
         <Box
+          width={{ dp: '648px', ml: '357px' }}
           display="flex"
           flexDirection="column"
           alignItems="center"
@@ -216,12 +217,15 @@ const AddNewChain: FC = () => {
             </Box>
           )}
         </Box>
-        <Text
-          color="text-tertiary"
-          variant="c-semibold"
-        >
-          Tip: Please do not exit the process before the address is verified. If you leave, you will need to start over.
-        </Text>
+        <Box margin="spacing-none spacing-md">
+          <Text
+            color="text-tertiary"
+            variant="c-semibold"
+          >
+            Tip: Please do not exit the process before the address is verified. If you leave, you will need to start
+            over.
+          </Text>
+        </Box>
       </Box>
     </FormikChainAliasProvider>
   );
