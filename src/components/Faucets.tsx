@@ -88,14 +88,20 @@ const Faucets = () => {
       function: () => {},
       link: 'https://cyber-testnet.testnets.rollbridge.app/',
     },
-    // comment base
-    // {
-    //   id: '84532',
-    //   value: 'Base Sepolia',
-    //   title: 'Base Sepolia Faucet',
-    //   function: () => {},
-    //   link: 'https://www.alchemy.com/faucets/base-sepolia',
-    // },
+    {
+      id: '59141',
+      value: 'Linea',
+      title: 'Linea Sepolia Faucet',
+      function: () => {},
+      link: 'https://www.infura.io/faucet/linea',
+    },
+    {
+      id: '84532',
+      value: 'Base Sepolia',
+      title: 'Base Sepolia Faucet',
+      function: () => {},
+      link: 'https://www.alchemy.com/faucets/base-sepolia',
+    },
   ];
 
   // render
