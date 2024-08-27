@@ -77,10 +77,12 @@ const RightContainer = styled.div`
 `;
 
 const Heading = styled.p`
+  white-space: break-spaces;
   ${() => getTextVariantStyles('h5-semibold', 'components-alert-text-default')}
 `;
 
 const Description = styled.p`
+  white-space: break-spaces;
   ${() => getTextVariantStyles('bs-regular', 'components-alert-text-body')}
 `;
 
