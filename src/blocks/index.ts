@@ -8,6 +8,7 @@ export { Lozenge, type LozengeProps } from './lozenge';
 export { Menu, type MenuProps, MenuItem, type MenuItemComponentProps } from './menu';
 export { Modal, type ModalProps, modal } from './modal';
 export { notification } from './notification';
+export { Pagination, type PaginationProps } from './pagination';
 export { ProgressBar, type ProgressBarProps } from './progressBar';
 export { Separator, type SeparatorProps } from './separator';
 export { Skeleton, type SkeletonProps } from './skeleton';
