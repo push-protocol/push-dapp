@@ -1,12 +1,12 @@
 export type PaginationProps = {
-  // Called when the page number is changed, and it takes the resulting page number as argument
+  /* Called when the page is changed, and it takes the resulting page number as argument */
   onChange: (page: number) => void;
-  // Number of data items per page
+  /* Number of data items per page */
   pageSize: number;
-  // Default initial page number
+  /* Default initial page number */
   current: number;
-  // Total number of data items
+  /* Total number of data items */
   total: number;
-  // Disable pagination item
+  /* Disable pagination item */
   disabled?: boolean;
 };
