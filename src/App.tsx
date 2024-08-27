@@ -52,7 +52,7 @@ import SpaceContextProvider from 'contexts/SpaceContext';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 import { blocksColors, getBlocksCSSVariables, Notification } from 'blocks';
 import APP_PATHS from 'config/AppPaths';
-import { useRewardsNotification } from 'common/hooks/useRewardsNotification';
+import { useRewardsNotification } from 'common';
 
 dotenv.config();
 

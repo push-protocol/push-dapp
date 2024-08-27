@@ -4,7 +4,7 @@ import { css } from 'styled-components';
 
 // hooks
 import useLockedStatus from '../hooks/useLockedStatus';
-import useDailyRewards from '../hooks/useDailyRewards';
+import { useDailyRewards } from '../hooks/useDailyRewards';
 
 // components
 import { Alert, Box, Button, Text } from 'blocks';

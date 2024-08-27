@@ -129,4 +129,4 @@ const useDailyRewards = () => {
   };
 };
 
-export default useDailyRewards;
+export { useDailyRewards };
