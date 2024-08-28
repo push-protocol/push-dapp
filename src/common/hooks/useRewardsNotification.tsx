@@ -12,7 +12,7 @@ export const useRewardsNotification = () => {
   const [hasMounted, setHasMounted] = useState(false);
 
   const notificationAlreadyShown = localStorage.getItem('notificationShown') === 'true';
-  const isPointsPage = location?.pathname.includes('/points');
+  const isRewardsRelatedPage = location?.pathname.includes('/points') || location?.pathname.includes('/discord');
 
   const showNotification = () =>
     notification.show({
@@ -30,7 +30,7 @@ export const useRewardsNotification = () => {
     });
 
   const showNotificationFn = () => {
-    if (!notificationAlreadyShown && !isPointsPage) {
+    if (!notificationAlreadyShown && !isRewardsRelatedPage) {
       // include componentDidMount logic
       if (!hasMounted) {
         showNotification();
@@ -44,5 +44,5 @@ export const useRewardsNotification = () => {
 
   useEffect(() => {
     showNotificationFn();
-  }, [isPointsPage]);
+  }, [isRewardsRelatedPage]);
 };
