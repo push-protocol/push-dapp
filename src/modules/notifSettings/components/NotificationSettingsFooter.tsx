@@ -27,7 +27,7 @@ const EDIT_SETTING_FEE = 50;
 
 const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSettings, channelSettings }) => {
   const navigate = useNavigate();
-  const { account, provider, wallet } = useAccount();
+  const { account, provider, wallet, isWalletConnected, connect } = useAccount();
 
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
@@ -57,8 +57,14 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
 
   const approvePUSH = async () => {
     if (!provider) return;
-    const signer = provider.getSigner(account);
 
+    if (!isWalletConnected) {
+      connect();
+      return;
+    }
+
+    setErrorMessage('');
+    const signer = provider.getSigner(account);
     const fees = ethers.utils.parseUnits((EDIT_SETTING_FEE - pushApprovalAmount).toString(), 18);
 
     approvePUSHToken(
@@ -72,7 +78,6 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
         },
         onError: (error: any) => {
           console.log('Error in Approving PUSH', error);
-
           if (error.code == 'ACTION_REJECTED') {
             setErrorMessage('User rejected signature. Please try again.');
           } else {
@@ -94,6 +99,7 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
       }
     }
 
+    setErrorMessage('');
     if (newSettings.length > 0) {
       const newsettingData: ChannelSetting[] = newSettings.map((setting) => {
         if (setting.type === 1) {
@@ -174,9 +180,10 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
       display="flex"
       flexDirection="column"
     >
+
       {errorMessage && (
         <Alert
-          actionText={errorMessage}
+          heading={errorMessage}
           variant="error"
         />
       )}

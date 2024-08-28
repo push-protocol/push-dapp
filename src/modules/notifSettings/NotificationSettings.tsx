@@ -15,15 +15,16 @@ import { settingInitialValue } from './NotificationSettings.constants';
 
 const NotificationSettings = () => {
   const { account } = useAccount();
-
   const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
   const channelSettings = channelDetails?.channel_settings ? channelDetails?.channel_settings : '';
+
+  console.log("Channel detaisls >>>", channelDetails);
 
   const modifiedChannelSettings = loadingChannelDetails
     ? Array(3).fill(0)
     : channelSettings
-    ? JSON.parse(channelSettings)
-    : [];
+      ? JSON.parse(channelSettings)
+      : [];
 
   const modalControl = useModal();
 

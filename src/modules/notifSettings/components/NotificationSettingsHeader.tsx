@@ -6,6 +6,7 @@ import { ModalResponse } from 'common';
 
 import { ChannelSetting } from 'modules/channelDashboard/ChannelDashboard.types';
 import { settingInitialValue } from '../NotificationSettings.constants';
+import { useAccount } from 'hooks';
 
 type NotificationSettingsHeaderProps = {
   modalControl: ModalResponse;
@@ -13,6 +14,15 @@ type NotificationSettingsHeaderProps = {
 };
 const NotificationSettingsHeader: FC<NotificationSettingsHeaderProps> = ({ modalControl, setSettingsToEdit }) => {
   const { open } = modalControl;
+  const { isWalletConnected, connect } = useAccount();
+
+  const openModal = () => {
+    if (!isWalletConnected) {
+      connect();
+    } else {
+      open();
+    }
+  }
 
   return (
     <Box
@@ -41,7 +51,7 @@ const NotificationSettingsHeader: FC<NotificationSettingsHeaderProps> = ({ modal
         leadingIcon={<Add />}
         onClick={() => {
           setSettingsToEdit(settingInitialValue);
-          open();
+          openModal();
         }}
       >
         Add Setting

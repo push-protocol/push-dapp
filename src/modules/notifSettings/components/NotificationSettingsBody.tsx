@@ -4,6 +4,8 @@ import { Box } from 'blocks';
 
 import { ModalResponse } from 'common';
 
+import { useAccount } from 'hooks';
+
 import { ChannelDashboardNullState } from 'modules/channelDashboard/components/ChannelDashboardNullState';
 import { ChannelSetting } from 'modules/channelDashboard/ChannelDashboard.types';
 
@@ -26,6 +28,8 @@ const NotificationSettingsBody: FC<NotificationSettingsBodyProps> = ({
   settingsToEdit,
   setSettingsToEdit,
 }) => {
+
+  const { isWalletConnected, connect } = useAccount();
   const [newSettings, setNewSettings] = useState<ChannelSetting[]>([]);
 
   const { open } = modalControl;
@@ -50,6 +54,14 @@ const NotificationSettingsBody: FC<NotificationSettingsBodyProps> = ({
     }
   };
 
+  const openModal = () => {
+    if (!isWalletConnected) {
+      connect();
+    } else {
+      open();
+    }
+  }
+
   return (
     <Box
       width="100%"
@@ -71,7 +83,7 @@ const NotificationSettingsBody: FC<NotificationSettingsBodyProps> = ({
           state="notificationSettings"
           title="No settings yet"
           subTitle="Add options for users to customize notifications."
-          onClick={open}
+          onClick={openModal}
         />
       )}
 

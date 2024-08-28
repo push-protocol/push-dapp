@@ -10,7 +10,7 @@ import RangeSlider from 'components/reusables/sliders/RangeSlider';
 import { useEditNotificationSettingsForm } from '../EditNotificationSetting.form';
 
 const NotificationSettingsRangeSelector = () => {
-  const { values: formValues, handleChange, setFieldValue } = useEditNotificationSettingsForm();
+  const { values: formValues, handleChange, setFieldValue, errors, touched } = useEditNotificationSettingsForm();
 
   const showPreview = useMemo(() => {
     return (
@@ -25,10 +25,10 @@ const NotificationSettingsRangeSelector = () => {
       Number(formValues.sliderStepValue) <= Number(formValues.rangeupperlimit) - Number(formValues.rangelowerlimit) &&
       (formValues.enableMultiRange
         ? Number(formValues.multirangelowerlimit) >= Number(formValues.rangelowerlimit) &&
-          Number(formValues.multirangeupperlimit) <= Number(formValues.rangeupperlimit) &&
-          Number(formValues.multirangeupperlimit) > Number(formValues.multirangelowerlimit)
+        Number(formValues.multirangeupperlimit) <= Number(formValues.rangeupperlimit) &&
+        Number(formValues.multirangeupperlimit) > Number(formValues.multirangelowerlimit)
         : Number(formValues.defaultValue) >= Number(formValues.rangelowerlimit) &&
-          Number(formValues.defaultValue) <= Number(formValues.rangeupperlimit))
+        Number(formValues.defaultValue) <= Number(formValues.rangeupperlimit))
     );
   }, [
     formValues.rangelowerlimit,
@@ -56,13 +56,15 @@ const NotificationSettingsRangeSelector = () => {
           display="flex"
           gap="spacing-xxs"
           width="100%"
-          alignItems="center"
+          alignItems="baseline"
         >
           <TextInput
             placeholder="e.g.0"
             type="number"
             value={formValues.rangelowerlimit}
             onChange={handleChange('rangelowerlimit')}
+            error={touched.rangelowerlimit && Boolean(errors.rangelowerlimit)}
+            errorMessage={touched.rangelowerlimit ? errors.rangelowerlimit : ''}
           />
           <Text variant="bm-regular">to</Text>
           <TextInput
@@ -72,6 +74,8 @@ const NotificationSettingsRangeSelector = () => {
             onChange={(e) => {
               setFieldValue('rangeupperlimit', e.target.value);
             }}
+            error={touched.rangeupperlimit && Boolean(errors.rangeupperlimit)}
+            errorMessage={touched.rangeupperlimit ? errors.rangeupperlimit : ''}
           />
         </Box>
       </Box>
@@ -105,6 +109,8 @@ const NotificationSettingsRangeSelector = () => {
             setFieldValue('defaultValue', e.target.value);
           }}
           label="Default Value"
+          error={touched.defaultValue && Boolean(errors.defaultValue)}
+          errorMessage={touched.defaultValue ? errors.defaultValue : ''}
         />
       )}
 
@@ -119,7 +125,7 @@ const NotificationSettingsRangeSelector = () => {
             display="flex"
             gap="spacing-xxs"
             width="100%"
-            alignItems="center"
+            alignItems="baseline"
           >
             <TextInput
               placeholder="e.g.0"
@@ -129,6 +135,8 @@ const NotificationSettingsRangeSelector = () => {
                 setFieldValue('multirangelowerlimit', e.target.value);
                 setSliderPreviewStartVal(Number(e.target.value));
               }}
+              error={touched.multirangelowerlimit && Boolean(errors.multirangelowerlimit)}
+              errorMessage={touched.multirangelowerlimit ? errors.multirangelowerlimit : ''}
             />
             <Text variant="bm-regular">to</Text>
             <TextInput
@@ -139,6 +147,8 @@ const NotificationSettingsRangeSelector = () => {
                 setFieldValue('multirangeupperlimit', e.target.value);
                 setSliderPreviewEndVal(Number(e.target.value));
               }}
+              error={touched.multirangeupperlimit && Boolean(errors.multirangeupperlimit)}
+              errorMessage={touched.multirangeupperlimit ? errors.multirangeupperlimit : ''}
             />
           </Box>
         </Box>
@@ -154,6 +164,8 @@ const NotificationSettingsRangeSelector = () => {
             setFieldValue('sliderStepValue', e.target.value);
           }}
           label="Slider Step Value"
+          error={touched.sliderStepValue && Boolean(errors.sliderStepValue)}
+          errorMessage={touched.sliderStepValue ? errors.sliderStepValue : ''}
         />
       </Box>
 
