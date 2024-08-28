@@ -68,7 +68,7 @@ export const NotificationSettingsSchema = Yup.object().shape({
             'Multi-range lower limit must be between lower limit and upper limit',
             function (value) {
               const { rangelowerlimit, rangeupperlimit } = this.parent;
-              return value >= rangelowerlimit && value <= rangeupperlimit;
+              return value > rangelowerlimit && value < rangeupperlimit;
             }
           ),
       otherwise: () => Yup.number(),
@@ -86,7 +86,7 @@ export const NotificationSettingsSchema = Yup.object().shape({
             'Multi-range upper limit must be between lower limit and upper limit',
             function (value) {
               const { rangelowerlimit, rangeupperlimit } = this.parent;
-              return value >= rangelowerlimit && value <= rangeupperlimit;
+              return value > rangelowerlimit && value < rangeupperlimit;
             }
           ),
       otherwise: () => Yup.number(),
@@ -94,11 +94,11 @@ export const NotificationSettingsSchema = Yup.object().shape({
 
 
   defaultValue: Yup.number()
-    .when('enableRange', {
-      is: true,
+    .when('enableMultiRange', {
+      is: false,
       then: () =>
         Yup.number()
-          .min(1, getMinCharLimitMessage(1))
+          .min(0, getMinCharLimitMessage(0))
           .required(getRequiredFieldMessage('Default Value'))
           .test(
             'is-within-range',
@@ -120,7 +120,7 @@ export const NotificationSettingsSchema = Yup.object().shape({
           'Slider step value must not be greater than upper limit',
           function (value) {
             const { rangeupperlimit } = this.parent;
-            return value <= rangeupperlimit;
+            return value < rangeupperlimit;
           }
         ),
       otherwise: () => Yup.number(),

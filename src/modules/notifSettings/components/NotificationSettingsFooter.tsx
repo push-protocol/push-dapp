@@ -138,7 +138,7 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
           },
           onError: (error: any) => {
             console.log('Error in adding setting', error);
-            setErrorMessage(error.message);
+            setErrorMessage('Error in saving settings. Please try again later');
           },
         }
       );
