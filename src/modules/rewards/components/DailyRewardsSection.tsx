@@ -3,8 +3,8 @@ import { FC, useState } from 'react';
 import { css } from 'styled-components';
 
 // hooks
-import useLockedStatus from '../hooks/useLockedStatus';
 import { useDailyRewards } from '../hooks/useDailyRewards';
+import { useRewardsContext } from 'contexts/RewardsContext';
 
 // components
 import { Alert, Box, Button, Text } from 'blocks';
@@ -19,7 +19,7 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
   const { activeItem, activeDay, isActivityDisabled, isLoading, userDetails, dailyRewardsActivities, handleCheckIn } =
     useDailyRewards();
 
-  const { isLocked } = useLockedStatus();
+  const { isLocked } = useRewardsContext();
 
   return (
     <Box

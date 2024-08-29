@@ -95,7 +95,7 @@ type Prop = {
 export type ClaimRewardsActivityProps = {
   userId: string;
   activityTypeId: string;
-  data: Prop;
+  data: Prop | {};
   verificationProof: string;
   pgpPublicKey: string;
 };

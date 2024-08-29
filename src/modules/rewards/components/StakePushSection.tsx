@@ -4,7 +4,7 @@ import { FC, useState } from 'react';
 // hooks
 import { useAccount } from 'hooks';
 import { useGetRewardsActivities, useGetUserRewardsDetails } from 'queries';
-import useLockedStatus from '../hooks/useLockedStatus';
+import { useRewardsContext } from 'contexts/RewardsContext';
 
 // helpers
 import { walletToCAIP10 } from 'helpers/w2w';
@@ -26,7 +26,7 @@ export type StakePushPoints = {
 
 const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, bottomText, multiplier }) => {
   const { account, isWalletConnected } = useAccount();
-  const { isLocked } = useLockedStatus();
+  const { isLocked } = useRewardsContext();
   const { formattedDuration } = useFormattedDuration();
   const [errorMessage, setErrorMessage] = useState<string>('');
 

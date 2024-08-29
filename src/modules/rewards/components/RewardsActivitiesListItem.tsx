@@ -36,12 +36,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
   } = useGetRewardsActivity({ userId, activityId: activity.id }, { enabled: !!userId });
 
   const [errorMessage, setErrorMessage] = useState('');
-  const { checkIfLocked } = useLockedStatus();
-
-  // const isRewardsLocked =
-  //   (isLocked || !isWalletConnected) &&
-  //   activity.activityType !== 'follow_push_on_discord' &&
-  //   activity.activityType !== 'follow_push_on_twitter';
+  const { handleLockStatus } = useLockedStatus();
 
   const isRewardsLocked = useMemo(() => {
     return (
@@ -54,12 +49,10 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
   const isNotDiscordOrTwitter =
     activity.activityType !== 'follow_push_on_discord' && activity.activityType !== 'follow_push_on_twitter';
 
+  // if activityType is twitter or discord, then re-call check lock status fn
   useEffect(() => {
-    // Check if the activity status is complete, then call the function
-    if (activity.activityType == 'follow_push_on_discord' && usersSingleActivity?.status === 'COMPLETED') {
-      // Call the checkIfLocked function or any other logic you need
-      console.log('check');
-      checkIfLocked();
+    if (activity.activityType == 'follow_push_on_discord' || activity.activityType == 'follow_push_on_twitter') {
+      handleLockStatus();
     }
   }, [usersSingleActivity?.status, activity.activityType]);
 

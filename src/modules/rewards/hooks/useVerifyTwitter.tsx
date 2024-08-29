@@ -7,7 +7,6 @@ import { getAuth, signInWithPopup, TwitterAuthProvider, User } from 'firebase/au
 import { useSelector } from 'react-redux';
 
 // hooks
-import useLockedStatus from './useLockedStatus';
 import { useAccount } from 'hooks/useAccount';
 import { useClaimRewardsActivity, useGetUserRewardsDetails } from 'queries';
 
@@ -33,7 +32,6 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
 
   const { account } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
-  const { checkIfLocked } = useLockedStatus();
 
   const { refetch: refetchUserDetails } = useGetUserRewardsDetails({
     caip10WalletAddress: caip10WalletAddress,
@@ -123,7 +121,6 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
               refetchActivity();
               refetchUserDetails();
               setVerifyingTwitter(false);
-              checkIfLocked();
             }
             if (response.status === 'PENDING') {
               setTwitterActivityStatus('Pending');

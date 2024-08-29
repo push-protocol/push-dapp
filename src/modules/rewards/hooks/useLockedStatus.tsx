@@ -10,10 +10,11 @@ import { walletToCAIP10 } from 'helpers/w2w';
 
 // types
 import { AxiosError } from 'axios';
+import { useRewardsContext } from 'contexts/RewardsContext';
 
 const useLockedStatus = () => {
   const { account, isWalletConnected } = useAccount();
-  const [isLocked, setIsLocked] = useState(true);
+  const { setIsLocked } = useRewardsContext();
   const [hasMounted, setHasMounted] = useState(false);
 
   const caip10WalletAddress = walletToCAIP10({ account });
@@ -31,7 +32,7 @@ const useLockedStatus = () => {
       if (isWalletConnected && userDetails?.userId) {
         // do componentDidMount logic
         setHasMounted(true);
-        checkIfLocked();
+        handleLockStatus();
       }
     }
 
@@ -53,9 +54,9 @@ const useLockedStatus = () => {
     }
   };
 
-  const checkIfLocked = () => {
+  const handleLockStatus = () => {
     if (!userDetails?.userId) {
-      console.log('No userId, exiting checkIfLocked');
+      console.log('No userId, exiting handleLockStatus');
       return;
     }
 
@@ -76,7 +77,7 @@ const useLockedStatus = () => {
     );
   };
 
-  return { isLocked, isWalletConnected, checkIfLocked };
+  return { handleLockStatus };
 };
 
 export default useLockedStatus;

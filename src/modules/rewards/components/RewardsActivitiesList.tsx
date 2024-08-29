@@ -6,7 +6,7 @@ import { Box, Lock, Text } from 'blocks';
 import { useAccount } from 'hooks';
 import { walletToCAIP10 } from 'helpers/w2w';
 import { Activity, useGetRewardsActivities, useGetUserRewardsDetails } from 'queries';
-import useLockedStatus from '../hooks/useLockedStatus';
+import { useRewardsContext } from 'contexts/RewardsContext';
 
 import { RewardsActivitiesListItem } from './RewardsActivitiesListItem';
 
@@ -37,7 +37,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
     ? Array(7).fill(0)
     : activityList.filter((activity) => activity.index.startsWith(`reward-activity`) && activity?.status === 'ENABLED');
 
-  const { isLocked } = useLockedStatus();
+  const { isLocked } = useRewardsContext();
 
   return (
     <Box
