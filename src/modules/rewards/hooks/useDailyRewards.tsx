@@ -98,7 +98,6 @@ const useDailyRewards = () => {
     }
 
     setActiveDay(newDay);
-    console.log(newDayData);
     setActiveItem(newDayData);
     setIsLoadingRewards(false);
   };

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 import { Activity, useGetRewardsActivity } from 'queries';
 import { useAccount } from 'hooks';
@@ -7,6 +7,7 @@ import { Box, Button, ErrorFilled, InfoFilled, Lozenge, RewardsBell, Skeleton, T
 import { ActivityButton } from './ActivityButton';
 import { RewardsActivityIcon } from './RewardsActivityIcon';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
+import useLockedStatus from '../hooks/useLockedStatus';
 
 export type RewardActivitiesListItemProps = {
   userId: string;
@@ -35,14 +36,32 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
   } = useGetRewardsActivity({ userId, activityId: activity.id }, { enabled: !!userId });
 
   const [errorMessage, setErrorMessage] = useState('');
+  const { checkIfLocked } = useLockedStatus();
 
-  const isRewardsLocked =
-    (isLocked || !isWalletConnected) &&
-    activity.activityType !== 'follow_push_on_discord' &&
-    activity.activityType !== 'follow_push_on_twitter';
+  // const isRewardsLocked =
+  //   (isLocked || !isWalletConnected) &&
+  //   activity.activityType !== 'follow_push_on_discord' &&
+  //   activity.activityType !== 'follow_push_on_twitter';
+
+  const isRewardsLocked = useMemo(() => {
+    return (
+      (isLocked || !isWalletConnected) &&
+      activity.activityType !== 'follow_push_on_discord' &&
+      activity.activityType !== 'follow_push_on_twitter'
+    );
+  }, [isLocked, isWalletConnected, activity.activityType]);
 
   const isNotDiscordOrTwitter =
     activity.activityType !== 'follow_push_on_discord' && activity.activityType !== 'follow_push_on_twitter';
+
+  useEffect(() => {
+    // Check if the activity status is complete, then call the function
+    if (activity.activityType == 'follow_push_on_discord' && usersSingleActivity?.status === 'COMPLETED') {
+      // Call the checkIfLocked function or any other logic you need
+      console.log('check');
+      checkIfLocked();
+    }
+  }, [usersSingleActivity?.status, activity.activityType]);
 
   return (
     <Skeleton isLoading={isLoadingItem}>

@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux';
 // hooks;
 import { appConfig } from 'config';
 import { useClaimRewardsActivity, useGetUserRewardsDetails } from 'queries';
-import useLockedStatus from './useLockedStatus';
 
 // helpers
 import { generateVerificationProof } from '../utils/generateVerificationProof';
@@ -39,7 +38,6 @@ const useVerifyDiscord = ({
   const [discordActivityStatus, setDiscordActivityStatus] = useState<'Claimed' | null>(null);
   const [verifyingDiscord, setVerifyingDiscord] = useState(token ? true : false);
   const [updatedId, setUpdatedId] = useState<string | null>(null);
-  const { checkIfLocked } = useLockedStatus();
 
   const { account } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
@@ -123,7 +121,6 @@ const useVerifyDiscord = ({
               refetchUserDetails();
               setVerifyingDiscord(false);
               setErrorMessage('');
-              checkIfLocked();
             }
           },
           onError: (error: any) => {

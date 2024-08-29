@@ -13,7 +13,7 @@ import { AxiosError } from 'axios';
 
 const useLockedStatus = () => {
   const { account, isWalletConnected } = useAccount();
-  const [isLocked, setIsLocked] = useState(false);
+  const [isLocked, setIsLocked] = useState(true);
   const [hasMounted, setHasMounted] = useState(false);
 
   const caip10WalletAddress = walletToCAIP10({ account });
@@ -54,19 +54,23 @@ const useLockedStatus = () => {
   };
 
   const checkIfLocked = () => {
-    if (!userDetails?.userId) return;
+    if (!userDetails?.userId) {
+      console.log('No userId, exiting checkIfLocked');
+      return;
+    }
 
     sendRecentActivities(
       {
-        userId: userDetails.userId,
+        userId: userDetails?.userId,
         activities: ['follow_push_on_discord', 'follow_push_on_twitter'],
       },
       {
         onSuccess: (data) => {
-          getLockStatus(data.activities);
+          getLockStatus(data?.activities);
         },
+
         onError: (err) => {
-          console.error('Error', err);
+          console.error('Error in sendRecentActivities:', err);
         },
       }
     );
