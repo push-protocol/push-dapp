@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import { Box, Button, Text, TextInput, ToggleSwitch } from 'blocks';
+import { css } from 'styled-components';
 
 import { ModalResponse } from 'common';
 
@@ -23,7 +24,7 @@ const AddNotificationSettingsModalContent: FC<AddNotificationSettingsModalConten
 
   const { onClose } = modalControl;
   return (
-    <Box width="100%">
+    <Box width="100%"  >
       <form onSubmit={handleSubmit}>
         <Box
           display="flex"
@@ -43,8 +44,11 @@ const AddNotificationSettingsModalContent: FC<AddNotificationSettingsModalConten
             display="flex"
             flexDirection="column"
             gap="spacing-md"
-            padding="spacing-none spacing-xs"
+            padding="spacing-xxs spacing-xs"
             width="-webkit-fill-available"
+            maxHeight='440px'
+            css={css`overflow-y:scroll;`}
+            customScrollbar
           >
             <TextInput
               placeholder="e.g. Announcements"

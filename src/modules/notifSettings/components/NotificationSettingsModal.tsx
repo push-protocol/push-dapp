@@ -28,34 +28,34 @@ const NotificationSettingsModal: FC<NotificationSettingsModalProps> = ({
     const newAddedSettings: ChannelSetting = values.enableRange
       ? values.enableMultiRange
         ? {
-            type: 3,
-            default: {
-              lower: Number(values.multirangelowerlimit),
-              upper: Number(values.multirangeupperlimit),
-            },
-            enabled: values.isDefault,
-            description: values.settingName,
-            lowerLimit: Number(values.rangelowerlimit),
-            upperLimit: Number(values.rangeupperlimit),
-            ticker: Number(values.sliderStepValue),
-            index: index,
-          }
-        : {
-            type: 2,
-            default: Number(values.defaultValue),
-            enabled: values.isDefault,
-            description: values.settingName,
-            lowerLimit: Number(values.rangelowerlimit),
-            upperLimit: Number(values.rangeupperlimit),
-            ticker: Number(values.sliderStepValue),
-            index: index,
-          }
-      : {
-          type: 1,
-          default: values.isDefault,
+          type: 3,
+          default: {
+            lower: Number(values.multirangelowerlimit),
+            upper: Number(values.multirangeupperlimit),
+          },
+          enabled: values.isDefault,
           description: values.settingName,
+          lowerLimit: Number(values.rangelowerlimit),
+          upperLimit: Number(values.rangeupperlimit),
+          ticker: Number(values.sliderStepValue),
           index: index,
-        };
+        }
+        : {
+          type: 2,
+          default: Number(values.defaultValue),
+          enabled: values.isDefault,
+          description: values.settingName,
+          lowerLimit: Number(values.rangelowerlimit),
+          upperLimit: Number(values.rangeupperlimit),
+          ticker: Number(values.sliderStepValue),
+          index: index,
+        }
+      : {
+        type: 1,
+        default: values.isDefault,
+        description: values.settingName,
+        index: index,
+      };
 
     handleSettingsChange(newAddedSettings);
 

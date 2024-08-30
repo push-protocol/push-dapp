@@ -191,8 +191,7 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
       <StakingVariant
         title="Modify Setting Fee"
         description="Make sure all settings are ready before proceeding to the next step"
-        fees={50}
-        balance={100}
+        fees={EDIT_SETTING_FEE}
       />
 
       <Box
