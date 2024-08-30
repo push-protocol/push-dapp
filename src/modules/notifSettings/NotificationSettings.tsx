@@ -18,8 +18,6 @@ const NotificationSettings = () => {
   const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
   const channelSettings = channelDetails?.channel_settings ? channelDetails?.channel_settings : '';
 
-  console.log("Channel detaisls >>>", channelDetails);
-
   const modifiedChannelSettings = loadingChannelDetails
     ? Array(3).fill(0)
     : channelSettings

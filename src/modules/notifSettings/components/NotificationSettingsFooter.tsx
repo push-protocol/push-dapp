@@ -134,6 +134,7 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
             if (response.transactionHash) {
               console.log('Call channel details refetch and navigate to dashboard page');
               refetchChannelDetails();
+              navigate(`${APP_PATHS.ChannelDashboard}/${account}`)
             }
           },
           onError: (error: any) => {
