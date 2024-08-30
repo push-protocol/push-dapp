@@ -450,19 +450,19 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                           placementProps={
                             tooltTipHeight < 250
                               ? {
-                                  background: 'none',
-                                  // bottom: "25px",
-                                  top: '20px',
-                                  // right: "-175px",
-                                  left: mobileToolTip ? '-100px' : '5px',
-                                }
+                                background: 'none',
+                                // bottom: "25px",
+                                top: '20px',
+                                // right: "-175px",
+                                left: mobileToolTip ? '-100px' : '5px',
+                              }
                               : {
-                                  background: 'none',
-                                  bottom: '25px',
-                                  // top: "20px",
-                                  // right: "-175px",
-                                  left: mobileToolTip ? '-100px' : '5px',
-                                }
+                                background: 'none',
+                                bottom: '25px',
+                                // top: "20px",
+                                // right: "-175px",
+                                left: mobileToolTip ? '-100px' : '5px',
+                              }
                           }
                           tooltipContent={
                             <UpdateChannelTooltipContent
@@ -508,15 +508,15 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                           placementProps={
                             tooltTipHeight < 160
                               ? {
-                                  background: 'none',
-                                  top: '20px', // for lower displaying
-                                  left: '7px',
-                                }
+                                background: 'none',
+                                top: '20px', // for lower displaying
+                                left: '7px',
+                              }
                               : {
-                                  background: 'none',
-                                  bottom: '28px', // above display
-                                  left: '7px',
-                                }
+                                background: 'none',
+                                bottom: '28px', // above display
+                                left: '7px',
+                              }
                           }
                           tooltipContent={
                             <VerifiedTooltipContent
@@ -624,19 +624,19 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                         placementProps={
                           tooltTipHeight < 250
                             ? {
-                                background: 'none',
-                                // bottom: "25px",
-                                top: '20px',
-                                // right: "-175px",
-                                left: '5px',
-                              }
+                              background: 'none',
+                              // bottom: "25px",
+                              top: '20px',
+                              // right: "-175px",
+                              left: '5px',
+                            }
                             : {
-                                background: 'none',
-                                bottom: '25px',
-                                // top: "20px",
-                                // right: "-175px",
-                                left: '5px',
-                              }
+                              background: 'none',
+                              bottom: '25px',
+                              // top: "20px",
+                              // right: "-175px",
+                              left: '5px',
+                            }
                         }
                         tooltipContent={
                           <UpdateChannelTooltipContent
@@ -680,15 +680,15 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                           placementProps={
                             tooltTipHeight < 160
                               ? {
-                                  background: 'none',
-                                  top: '20px', // for lower displaying
-                                  left: '7px',
-                                }
+                                background: 'none',
+                                top: '20px', // for lower displaying
+                                left: '7px',
+                              }
                               : {
-                                  background: 'none',
-                                  bottom: '28px', // above display
-                                  left: '7px',
-                                }
+                                background: 'none',
+                                bottom: '28px', // above display
+                                left: '7px',
+                              }
                           }
                           tooltipContent={
                             <VerifiedTooltipContent
@@ -956,19 +956,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                   >
                     <Button
                       size="small"
-                      onClick={() => {}}
+                      onClick={() => { }}
                       disabled={txInProgress}
+                      loading={txInProgress}
                     >
-                      {txInProgress && (
-                        <ActionLoader>
-                          <LoaderSpinner
-                            type={LOADER_TYPE.SEAMLESS}
-                            spinnerSize={16}
-                            spinnerColor="#FFF"
-                          />
-                        </ActionLoader>
-                      )}
-                      <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
+                      {!txInProgress && 'Opt-In'}
                     </Button>
                   </OptinNotifSettingDropdown>
                 )}
@@ -1005,7 +997,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                     }}
                   >
                     <UnsubscribeButton
-                      onClick={() => {}}
+                      onClick={() => { }}
                       disabled={txInProgress}
                     >
                       {txInProgress && (
