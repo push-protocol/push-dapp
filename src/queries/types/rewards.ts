@@ -9,7 +9,6 @@ export type RewardsAcitivitesResponse = {
 export type ActvityType =
   | 'follow_push_on_discord'
   | 'follow_push_on_twitter'
-  | 'test_expiry_type'
   | 'create_gated_group_push_chat'
   | 'subscribe_5_channels_push'
   | 'subscribe_20_channels_push'
@@ -96,7 +95,7 @@ type Prop = {
 export type ClaimRewardsActivityProps = {
   userId: string;
   activityTypeId: string;
-  data: Prop;
+  data: Prop | {};
   verificationProof: string;
   pgpPublicKey: string;
 };
@@ -211,4 +210,27 @@ export type RewardsStakeParams = {
   currentEpoch: number;
   fromBlock: number;
   toBlock: number;
+};
+
+export type ActivityData = {
+  discord?: string;
+  discord_token?: string;
+  twitter?: string;
+};
+
+export type RewardActivityStatus = {
+  activityId: string;
+  activityTypeId: string;
+  createdAt: string;
+  data: ActivityData | {};
+  multiplier: number;
+  points: number;
+  status: string;
+  updatedAt: string;
+  userId: string;
+  verificationProof: string;
+};
+
+export type RewardActivityStatusResponse = {
+  [key: string]: RewardActivityStatus | {};
 };

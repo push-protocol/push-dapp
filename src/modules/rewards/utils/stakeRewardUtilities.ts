@@ -1,17 +1,39 @@
 import { RewardsStakeParams } from 'queries';
 
-export const sortByIndexNumber = (a: any, b: any) => {
+/**
+ * Compares two objects based on the numerical value of their `index` property.
+ * Assumes `index` is a string with a hyphen ('-') and takes the last segment as the number.
+ * Compares these numbers and returns the result to sort in numerical order.
+ *
+ * @param {{ index?: string }} a - First object to compare, optionally having an `index` property.
+ * @param {{ index?: string }} b - Second object to compare, optionally having an `index` property.
+ * @returns {number} - Negative if `a` < `b`, positive if `a` > `b`, or `0` if they are equal.
+ */
+
+export const sortByIndexNumber = (a: { index?: string }, b: { index?: string }): number => {
   const numA = parseInt(a.index?.split('-').pop() || '0', 10);
   const numB = parseInt(b.index?.split('-').pop() || '0', 10);
   return numA - numB;
 };
 
-// Helper function to determine the data based on activity type
+/**
+ * Returns the appropriate staking data based on the activity type.
+ *
+ * - If `activityTypeIndex` starts with 'point-push' or 'multiplier-push', returns `pushStakeData`.
+ * - If `activityTypeIndex` starts with 'point-uni-v2' or 'multiplier-uni-v2', returns `uniV2StakeData`.
+ * - Returns an empty object if no match is found.
+ *
+ * @param {string | undefined} activityTypeIndex - The type of activity.
+ * @param {RewardsStakeParams} [pushStakeData] - Staking data for Push.
+ * @param {RewardsStakeParams} [uniV2StakeData] - Staking data for Uni V2.
+ *
+ * @returns {RewardsStakeParams | {}} - Corresponding stake data or an empty object.
+ */
 export const getActivityData = (
   activityTypeIndex: string | undefined,
-  pushStakeData: RewardsStakeParams | undefined,
-  uniV2StakeData: RewardsStakeParams | undefined
-) => {
+  pushStakeData?: RewardsStakeParams,
+  uniV2StakeData?: RewardsStakeParams
+): RewardsStakeParams | {} => {
   if (activityTypeIndex?.startsWith('point-push') || activityTypeIndex?.startsWith('multiplier-push')) {
     return pushStakeData as RewardsStakeParams;
   }
@@ -19,6 +41,6 @@ export const getActivityData = (
   if (activityTypeIndex?.startsWith('point-uni-v2') || activityTypeIndex?.startsWith('multiplier-uni-v2')) {
     return uniV2StakeData as RewardsStakeParams;
   }
-  // Default to an empty object if none match
-  return {};
+
+  return {}; // Default if no match
 };

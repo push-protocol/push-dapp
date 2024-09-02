@@ -10,10 +10,11 @@ import { walletToCAIP10 } from 'helpers/w2w';
 
 // types
 import { AxiosError } from 'axios';
+import { useRewardsContext } from 'contexts/RewardsContext';
 
 const useLockedStatus = () => {
   const { account, isWalletConnected } = useAccount();
-  const [isLocked, setIsLocked] = useState(false);
+  const { setIsLocked } = useRewardsContext();
   const [hasMounted, setHasMounted] = useState(false);
 
   const caip10WalletAddress = walletToCAIP10({ account });
@@ -31,7 +32,7 @@ const useLockedStatus = () => {
       if (isWalletConnected && userDetails?.userId) {
         // do componentDidMount logic
         setHasMounted(true);
-        checkIfLocked();
+        handleLockStatus();
       }
     }
 
@@ -53,26 +54,30 @@ const useLockedStatus = () => {
     }
   };
 
-  const checkIfLocked = () => {
-    if (!userDetails?.userId) return;
+  const handleLockStatus = () => {
+    if (!userDetails?.userId) {
+      console.log('No userId, exiting handleLockStatus');
+      return;
+    }
 
     sendRecentActivities(
       {
-        userId: userDetails.userId,
+        userId: userDetails?.userId,
         activities: ['follow_push_on_discord', 'follow_push_on_twitter'],
       },
       {
         onSuccess: (data) => {
-          getLockStatus(data.activities);
+          getLockStatus(data?.activities);
         },
+
         onError: (err) => {
-          console.error('Error', err);
+          console.error('Error in sendRecentActivities:', err);
         },
       }
     );
   };
 
-  return { isLocked, isWalletConnected, checkIfLocked };
+  return { handleLockStatus };
 };
 
 export default useLockedStatus;

@@ -7,7 +7,7 @@ import { css } from 'styled-components';
 // hooks
 import { useGetRewardsActivities, useGetUserRewardsDetails } from 'queries';
 import { useAccount } from 'hooks';
-import useLockedStatus from '../hooks/useLockedStatus';
+import { useRewardsContext } from 'contexts/RewardsContext';
 
 // helpers
 import { walletToCAIP10 } from 'helpers/w2w';
@@ -39,7 +39,7 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
     ? Array(8).fill(0)
     : activityList.filter((activity) => activity.index.startsWith(`bonus-activity`));
 
-  const { isLocked } = useLockedStatus();
+  const { isLocked } = useRewardsContext();
 
   return (
     <Box

@@ -1,9 +1,6 @@
 // React and other libraries
 import { FC } from 'react';
 
-// third party libraries
-import { css } from 'styled-components';
-
 // hooks
 import { getRewardsActivityTitle } from '../utils/getRewardsActivityTitle';
 
@@ -12,7 +9,7 @@ import { TextVariants } from 'blocks/text';
 import { TextColors } from 'blocks/theme/Theme.types';
 
 // components
-import { Box, Skeleton, Text } from 'blocks';
+import { Box, Link, Skeleton, Text } from 'blocks';
 
 type RewardsActivityTitleProps = {
   activityTitle: string;
@@ -23,10 +20,6 @@ type RewardsActivityTitleProps = {
 
 const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({ activityTitle, isLoading, color, variant }) => {
   const extractedTitle = getRewardsActivityTitle(activityTitle);
-
-  const handleLinkClick = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
 
   if (extractedTitle) {
     const { preText, url, linkedText, postText } = extractedTitle;
@@ -44,17 +37,18 @@ const RewardsActivityTitle: FC<RewardsActivityTitleProps> = ({ activityTitle, is
             {preText}
           </Text>
 
-          <Text
-            variant={variant || 'bl-semibold'}
-            color="text-brand-medium"
-            onClick={() => handleLinkClick(url)}
-            as="span"
-            css={css`
-              cursor: pointer;
-            `}
+          <Link
+            to={url}
+            isText
+            target="_blank"
+            textProps={{
+              variant: variant || 'bl-semibold',
+              color: 'text-brand-medium',
+              display: 'inline-block',
+            }}
           >
             {linkedText}
-          </Text>
+          </Link>
 
           <Text
             variant={variant || 'bl-semibold'}

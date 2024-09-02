@@ -4,16 +4,17 @@ import { FC, useState } from 'react';
 // hooks
 import { useAccount } from 'hooks';
 import { useGetRewardsActivities, useGetUserRewardsDetails } from 'queries';
-import useLockedStatus from '../hooks/useLockedStatus';
+import { useRewardsContext } from 'contexts/RewardsContext';
 
 // helpers
 import { walletToCAIP10 } from 'helpers/w2w';
 import { sortByIndexNumber } from '../utils/stakeRewardUtilities';
 
 // components
-import { Alert, Box, Clockwise, Text } from 'blocks';
+import { Alert, Box, Clockwise, Skeleton, Text } from 'blocks';
 import { StakePushActivitiesListItem } from './StakePushActivitiesListItem';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
+import { useFormattedDuration } from '../hooks/useFormattedDuration';
 
 export type StakePushPoints = {
   title: string;
@@ -24,8 +25,9 @@ export type StakePushPoints = {
 };
 
 const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, bottomText, multiplier }) => {
-  const { account } = useAccount();
-  const { isLocked } = useLockedStatus();
+  const { account, isWalletConnected } = useAccount();
+  const { isLocked } = useRewardsContext();
+  const { formattedDuration } = useFormattedDuration();
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities();
@@ -83,25 +85,38 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, bott
           />
         </Box>
 
-        {timeline && (
-          <Box
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-            gap="spacing-xxxs"
-          >
-            <Clockwise
-              size={24}
-              color="icon-brand-medium"
-            />
-            <Text
-              variant="bs-semibold"
-              color="text-tertiary"
+        <Box
+          display="flex"
+          flexDirection="row"
+          alignItems="center"
+          gap="spacing-xxxs"
+        >
+          {isWalletConnected && timeline && (
+            <Skeleton
+              isLoading={formattedDuration == null}
+              width="240px"
+              height="20px"
             >
-              Activity resets in 13 days
-            </Text>
-          </Box>
-        )}
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                gap="spacing-xxxs"
+              >
+                <Clockwise
+                  size={24}
+                  color="icon-brand-medium"
+                />
+                <Text
+                  variant="bs-semibold"
+                  color="text-tertiary"
+                >
+                  Activity resets in {formattedDuration}
+                </Text>
+              </Box>
+            </Skeleton>
+          )}
+        </Box>
       </Box>
 
       {errorMessage && (

@@ -1,1 +1,4 @@
-export const getRewardActivityStatusModel = (response: any): any => response;
+import { RewardActivityStatusResponse } from 'queries/types';
+
+export const getRewardActivityStatusModel = (response: RewardActivityStatusResponse): RewardActivityStatusResponse =>
+  response;

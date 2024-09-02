@@ -31,8 +31,8 @@ export const config = {
     1101, // polygon zkevm mainnet
     122, // fuse mainnet
     7560, // Cyber mainnet
-    // comment base
-    // 8453, //base ma innet
+    8453, //base mainnet
+    59144, // Linea mainnet
   ],
 
   /**
@@ -177,12 +177,18 @@ export const CHAIN_DETAILS = {
     rpcUrl: 'https://cyber.alt.technology/',
     commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
   },
-  // comment base
-  // 8453: {
-  //   label: 'Base Mainnet',
-  //   name: 'BASE_MAINNET',
-  //   chainid: 8453,
-  //   rpcUrl: 'https://mainnet.base.org/',
-  //   commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
-  // },
+  8453: {
+    label: 'Base Mainnet',
+    name: 'BASE_MAINNET',
+    chainid: 8453,
+    rpcUrl: 'https://mainnet.base.org/',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
+  },
+  59144: {
+    label: 'Linea Mainnet',
+    name: 'LINEA_MAINNET',
+    chainid: 59144,
+    rpcUrl: 'https://rpc.linea.build',
+    commAddress: '0x0d8e75CB5d8873c43c5d9Add71Fd71a09F7Ef890',
+  },
 };
