@@ -217,8 +217,8 @@ const OptinNotifSettingDropdown: FC<OptinNotifSettingDropdownProps> = (options) 
     channelSettings?: ChannelSetting[];
     setLoading?: Dispatch<SetStateAction<boolean>>;
   }) => {
-    const setLoadingFunc = setLoading || (options && options.setLoading) || (() => {});
-    setLoadingFunc(true);
+    const setLoadingFunc = setLoading || (options && options.setLoading) || (() => { });
+
 
     let userPushInstance = userPushSDKInstance;
     // if (!userPushInstance.signer) {
@@ -239,6 +239,7 @@ const OptinNotifSettingDropdown: FC<OptinNotifSettingDropdownProps> = (options) 
     }
 
     try {
+      setLoadingFunc(true);
       let channelAddress = channelDetail.channel;
       if (!onCoreNetwork) {
         channelAddress = channelDetail.alias_address;
