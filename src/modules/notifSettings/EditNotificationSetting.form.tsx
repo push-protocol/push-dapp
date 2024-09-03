@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 
 import { FormikProvider, useFormik, useFormikContext } from 'formik';
 
-import { getMinCharLimitMessage, getRequiredFieldMessage } from 'common';
+import { getMinNumValueMessage, getRangeValueMessage, getRequiredFieldMessage } from 'common';
 
 import { ChannelSetting } from 'modules/channelDashboard/ChannelDashboard.types';
 
@@ -41,7 +41,7 @@ export const NotificationSettingsSchema = Yup.object().shape({
 
   rangelowerlimit: Yup.number().when('enableRange', {
     is: true,
-    then: () => Yup.number().min(1, getMinCharLimitMessage(1)).required(getRequiredFieldMessage('Range')),
+    then: () => Yup.number().min(1, getMinNumValueMessage(1)).required(getRequiredFieldMessage('Range')),
     otherwise: () => Yup.number(),
   }),
 
@@ -49,82 +49,68 @@ export const NotificationSettingsSchema = Yup.object().shape({
     is: true,
     then: () =>
       Yup.number()
-        .min(Yup.ref('rangelowerlimit'), getMinCharLimitMessage('lower limit'))
+        .min(Yup.ref('rangelowerlimit'), getMinNumValueMessage('Lower limit'))
         .required(getRequiredFieldMessage('Range')),
     otherwise: () => Yup.number(),
   }),
 
-  enableMultiRange: Yup.boolean().required('This field is required'),
+  enableMultiRange: Yup.boolean().required(getRequiredFieldMessage('')),
 
-  multirangelowerlimit: Yup.number()
-    .when('enableMultiRange', {
-      is: true,
-      then: () =>
-        Yup.number()
-          .min(1, getMinCharLimitMessage(1))
-          .required(getRequiredFieldMessage('Range'))
-          .test(
-            'is-multi-range-within-range',
-            'Multi-range lower limit must be between lower limit and upper limit',
-            function (value) {
-              const { rangelowerlimit, rangeupperlimit } = this.parent;
-              return value >= rangelowerlimit && value < rangeupperlimit;
-            }
-          ),
-      otherwise: () => Yup.number(),
-    }),
+  multirangelowerlimit: Yup.number().when('enableMultiRange', {
+    is: true,
+    then: () =>
+      Yup.number()
+        .min(1, getMinNumValueMessage(1))
+        .required(getRequiredFieldMessage('Range'))
+        .test('is-multi-range-within-range', getRangeValueMessage('Multi-range lower limit'), (value, context) => {
+          const { rangelowerlimit, rangeupperlimit } = context.parent;
+          return value >= rangelowerlimit && value < rangeupperlimit;
+        }),
+    otherwise: () => Yup.number(),
+  }),
 
-  multirangeupperlimit: Yup.number()
-    .when('enableMultiRange', {
-      is: true,
-      then: () =>
-        Yup.number()
-          .min(Yup.ref('multirangelowerlimit'), getMinCharLimitMessage('lower limit'))
-          .required(getRequiredFieldMessage('Range'))
-          .test(
-            'is-multi-range-upper-within-range',
-            'Multi-range upper limit must be between lower limit and upper limit',
-            function (value) {
-              const { rangelowerlimit, rangeupperlimit } = this.parent;
-              return value > rangelowerlimit && value <= rangeupperlimit;
-            }
-          ),
-      otherwise: () => Yup.number(),
-    }),
-
-
-  defaultValue: Yup.number()
-    .when('enableMultiRange', {
-      is: false,
-      then: () =>
-        Yup.number()
-          .min(0, getMinCharLimitMessage(0))
-          .required(getRequiredFieldMessage('Default Value'))
-          .test(
-            'is-within-range',
-            'Default value must be between lower limit and upper limit',
-            function (value) {
-              const { rangelowerlimit, rangeupperlimit } = this.parent;
-              return value >= rangelowerlimit && value <= rangeupperlimit;
-            }
-          ),
-      otherwise: () => Yup.number(),
-    }),
-
-  sliderStepValue: Yup.number()
-    .when('enableRange', {
-      is: true,
-      then: () => Yup.number().min(1, getMinCharLimitMessage(1)).required(getRequiredFieldMessage('Slider Step'))
+  multirangeupperlimit: Yup.number().when('enableMultiRange', {
+    is: true,
+    then: () =>
+      Yup.number()
+        .min(Yup.ref('multirangelowerlimit'), getMinNumValueMessage('Lower limit'))
+        .required(getRequiredFieldMessage('Range'))
         .test(
-          'is-step-value-valid',
-          'Slider step value must not be greater than upper limit',
-          function (value) {
-            const { rangeupperlimit } = this.parent;
-            return value < rangeupperlimit;
+          'is-multi-range-upper-within-range',
+          getRangeValueMessage('Multi-range upper limit'),
+          (value, context) => {
+            const { rangelowerlimit, rangeupperlimit } = context.parent;
+            return value > rangelowerlimit && value <= rangeupperlimit;
           }
         ),
-      otherwise: () => Yup.number(),
-    }),
+    otherwise: () => Yup.number(),
+  }),
+
+  defaultValue: Yup.number().when('enableMultiRange', {
+    is: false,
+    then: () =>
+      Yup.number()
+        .min(0, getMinNumValueMessage(0))
+        .required(getRequiredFieldMessage('Default Value'))
+        .test('is-within-range', getRangeValueMessage('Default value'), (value, context) => {
+          const { rangelowerlimit, rangeupperlimit } = context.parent;
+          return value >= rangelowerlimit && value <= rangeupperlimit;
+        }),
+    otherwise: () => Yup.number(),
+  }),
+
+  sliderStepValue: Yup.number().when('enableRange', {
+    is: true,
+    then: () =>
+      Yup.number()
+        .min(1, getMinNumValueMessage(1))
+        .required(getRequiredFieldMessage('Slider Step'))
+        .test('is-step-value-valid', 'Slider step value must not exceed the range limits.', (value, context) => {
+          const { rangeupperlimit } = context.parent;
+          return value < rangeupperlimit;
+        }),
+    otherwise: () => Yup.number(),
+  }),
 });
 
 const EditNotificationSettingsFormProvider: FC<EditNotificationSettingsFormProviderProps> = ({

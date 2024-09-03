@@ -82,4 +82,4 @@ const NotificationSettingsListItem: FC<NotificationSettingsListItemProps> = ({
   );
 };
 
-export default NotificationSettingsListItem;
+export { NotificationSettingsListItem };

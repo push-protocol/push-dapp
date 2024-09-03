@@ -6,7 +6,7 @@ import { ModalResponse } from 'common';
 
 import { ChannelSetting } from 'modules/channelDashboard/ChannelDashboard.types';
 
-import NotificationSettingsListItem from './NotificationSettingsListItem';
+import { NotificationSettingsListItem } from './NotificationSettingsListItem';
 
 type NotificationSettingsListsProps = {
   newSettings: ChannelSetting[];

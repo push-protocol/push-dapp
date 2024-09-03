@@ -25,20 +25,12 @@ const NotificationSettingsRangeSelector = () => {
       Number(formValues.sliderStepValue) <= Number(formValues.rangeupperlimit) - Number(formValues.rangelowerlimit) &&
       (formValues.enableMultiRange
         ? Number(formValues.multirangelowerlimit) >= Number(formValues.rangelowerlimit) &&
-        Number(formValues.multirangeupperlimit) <= Number(formValues.rangeupperlimit) &&
-        Number(formValues.multirangeupperlimit) > Number(formValues.multirangelowerlimit)
+          Number(formValues.multirangeupperlimit) <= Number(formValues.rangeupperlimit) &&
+          Number(formValues.multirangeupperlimit) > Number(formValues.multirangelowerlimit)
         : Number(formValues.defaultValue) >= Number(formValues.rangelowerlimit) &&
-        Number(formValues.defaultValue) <= Number(formValues.rangeupperlimit))
+          Number(formValues.defaultValue) <= Number(formValues.rangeupperlimit))
     );
-  }, [
-    formValues.rangelowerlimit,
-    formValues.rangeupperlimit,
-    formValues.defaultValue,
-    formValues.sliderStepValue,
-    formValues.multirangelowerlimit,
-    formValues.multirangeupperlimit,
-    formValues.enableMultiRange,
-  ]);
+  }, [formValues]);
 
   const [sliderPreviewVal, setSliderPreviewVal] = useState<number>(formValues.defaultValue);
   const [sliderPreviewStartVal, setSliderPreviewStartVal] = useState<number>(formValues.multirangelowerlimit);
@@ -159,10 +151,11 @@ const NotificationSettingsRangeSelector = () => {
           placeholder="e.g.0"
           type="number"
           value={formValues.sliderStepValue}
-          onChange={(e) => {
-            handleChange('sliderStepValue');
-            setFieldValue('sliderStepValue', e.target.value);
-          }}
+          // onChange={(e) => {
+          //   handleChange('sliderStepValue');
+          //   setFieldValue('sliderStepValue', e.target.value);
+          // }}
+          onChange={handleChange('sliderStepValue')}
           label="Slider Step Value"
           error={touched.sliderStepValue && Boolean(errors.sliderStepValue)}
           errorMessage={touched.sliderStepValue ? errors.sliderStepValue : ''}

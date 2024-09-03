@@ -16,13 +16,7 @@ const NotificationSettingsHeader: FC<NotificationSettingsHeaderProps> = ({ modal
   const { open } = modalControl;
   const { isWalletConnected, connect } = useAccount();
 
-  const openModal = () => {
-    if (!isWalletConnected) {
-      connect();
-    } else {
-      open();
-    }
-  }
+  const openModal = () => (!isWalletConnected ? connect() : open());
 
   return (
     <Box

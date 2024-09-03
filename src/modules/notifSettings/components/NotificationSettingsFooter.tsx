@@ -100,7 +100,7 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
     }
 
     setErrorMessage('');
-    if (newSettings.length > 0) {
+    if (newSettings.length) {
       const newsettingData: ChannelSetting[] = newSettings.map((setting) => {
         if (setting.type === 1) {
           return {
@@ -130,11 +130,9 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
         },
         {
           onSuccess: (response) => {
-            console.log('onSuccess >>>', response);
             if (response.transactionHash) {
-              console.log('Call channel details refetch and navigate to dashboard page');
               refetchChannelDetails();
-              navigate(`${APP_PATHS.ChannelDashboard}/${account}`)
+              navigate(`${APP_PATHS.ChannelDashboard}/${account}`);
             }
           },
           onError: (error: any) => {
@@ -181,7 +179,6 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
       display="flex"
       flexDirection="column"
     >
-
       {errorMessage && (
         <Alert
           heading={errorMessage}

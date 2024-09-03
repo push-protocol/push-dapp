@@ -28,7 +28,6 @@ const NotificationSettingsBody: FC<NotificationSettingsBodyProps> = ({
   settingsToEdit,
   setSettingsToEdit,
 }) => {
-
   const { isWalletConnected, connect } = useAccount();
   const [newSettings, setNewSettings] = useState<ChannelSetting[]>([]);
 
@@ -50,17 +49,14 @@ const NotificationSettingsBody: FC<NotificationSettingsBodyProps> = ({
     else {
       const updatedSetting = [...newSettings];
       updatedSetting[index] = newSetting;
+
+      // const updatedSetting = newSettings.map((setting, settingIndex)=>settingIndex===index? {...newSetting} : setting);
+
       setNewSettings(updatedSetting);
     }
   };
 
-  const openModal = () => {
-    if (!isWalletConnected) {
-      connect();
-    } else {
-      open();
-    }
-  }
+  const openModal = () => (!isWalletConnected ? connect() : open());
 
   return (
     <Box
