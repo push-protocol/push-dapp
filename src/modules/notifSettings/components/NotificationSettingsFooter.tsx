@@ -145,31 +145,42 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
   };
 
   const settingsChanged = useMemo(() => {
-    if (!channelSettings) return false; // if there are no channel settings
-    if (newSettings.length !== channelSettings.length) return true; // new settings length is not equal to channel settings
-    let isUnchanged = true;
-    for (let i = 0; i < newSettings.length; i++) {
-      const setting1 = newSettings[i];
-      const setting2 = channelSettings[i];
-      if (setting1.type === 1) {
-        isUnchanged =
-          isUnchanged &&
-          setting1.type === setting2.type &&
-          setting1.description === setting2.description &&
-          setting1.default === setting2.default;
-      } else if (setting1.type === 2) {
-        isUnchanged =
-          isUnchanged &&
-          setting1.type === setting2.type &&
-          setting1.description === setting2.description &&
-          setting1.default === setting2.default &&
-          setting1.enabled === setting2.enabled &&
-          setting1.lowerLimit === setting2.lowerLimit &&
-          setting1.upperLimit === setting2.upperLimit &&
-          setting1.ticker === setting2.ticker;
+    if (!channelSettings) return false;
+    if (newSettings.length !== channelSettings.length) return true;
+
+    let isChanged = false;
+
+    newSettings.forEach((setting1, index) => {
+      const setting2 = channelSettings[index];
+
+      if (setting1.type !== setting2.type) {
+        isChanged = true;
+        return;
       }
-    }
-    return isUnchanged === false;
+
+      if (setting1.type === 1) {
+        if (setting1.description !== setting2.description || setting1.default !== setting2.default) {
+          isChanged = true;
+          return;
+        }
+      }
+
+      if (setting1.type === 2) {
+        if (
+          setting1.description !== setting2.description ||
+          setting1.default !== setting2.default ||
+          setting1.enabled !== setting2.enabled ||
+          setting1.lowerLimit !== setting2.lowerLimit ||
+          setting1.upperLimit !== setting2.upperLimit ||
+          setting1.ticker !== setting2.ticker
+        ) {
+          isChanged = true;
+          return;
+        }
+      }
+    });
+
+    return isChanged;
   }, [newSettings, channelSettings]);
 
   return (

@@ -13,23 +13,32 @@ const NotificationSettingsRangeSelector = () => {
   const { values: formValues, handleChange, setFieldValue, errors, touched } = useEditNotificationSettingsForm();
 
   const showPreview = useMemo(() => {
-    return (
-      formValues.rangelowerlimit > 0 &&
-      formValues.rangeupperlimit > 0 &&
-      (formValues.enableMultiRange
-        ? formValues.multirangelowerlimit > 0 && formValues.multirangeupperlimit > 0
-        : formValues.defaultValue > 0) &&
-      formValues.sliderStepValue > 0 &&
-      Number(formValues.rangelowerlimit) <= Number(formValues.rangeupperlimit) &&
-      Number(formValues.sliderStepValue) > 0 &&
-      Number(formValues.sliderStepValue) <= Number(formValues.rangeupperlimit) - Number(formValues.rangelowerlimit) &&
-      (formValues.enableMultiRange
-        ? Number(formValues.multirangelowerlimit) >= Number(formValues.rangelowerlimit) &&
-          Number(formValues.multirangeupperlimit) <= Number(formValues.rangeupperlimit) &&
-          Number(formValues.multirangeupperlimit) > Number(formValues.multirangelowerlimit)
-        : Number(formValues.defaultValue) >= Number(formValues.rangelowerlimit) &&
-          Number(formValues.defaultValue) <= Number(formValues.rangeupperlimit))
-    );
+    const {
+      rangelowerlimit,
+      rangeupperlimit,
+      enableMultiRange,
+      multirangelowerlimit,
+      multirangeupperlimit,
+      defaultValue,
+      sliderStepValue,
+    } = formValues;
+
+    const isRangeValid = Number(rangelowerlimit) > 0 && Number(rangeupperlimit) > 0;
+    const isSliderStepValid =
+      Number(sliderStepValue) > 0 && Number(sliderStepValue) <= Number(rangeupperlimit) - Number(rangelowerlimit);
+
+    const isDefaultValid =
+      !enableMultiRange &&
+      Number(defaultValue) >= Number(rangelowerlimit) &&
+      Number(defaultValue) <= Number(rangeupperlimit);
+
+    const isMultiRangeValid =
+      enableMultiRange &&
+      Number(multirangelowerlimit) >= Number(rangelowerlimit) &&
+      Number(multirangeupperlimit) <= Number(rangeupperlimit) &&
+      Number(multirangeupperlimit) > Number(multirangelowerlimit);
+
+    return isRangeValid && isSliderStepValid && (isMultiRangeValid || isDefaultValid);
   }, [formValues]);
 
   const [sliderPreviewVal, setSliderPreviewVal] = useState<number>(formValues.defaultValue);

@@ -47,11 +47,9 @@ const NotificationSettingsBody: FC<NotificationSettingsBodyProps> = ({
     const index = newSettings.findIndex((setting) => setting.index === newSetting.index);
     if (index === -1) setNewSettings([...newSettings, newSetting]);
     else {
-      const updatedSetting = [...newSettings];
-      updatedSetting[index] = newSetting;
-
-      // const updatedSetting = newSettings.map((setting, settingIndex)=>settingIndex===index? {...newSetting} : setting);
-
+      const updatedSetting = newSettings.map((setting, settingIndex) =>
+        settingIndex === index ? { ...newSetting } : setting
+      );
       setNewSettings(updatedSetting);
     }
   };
