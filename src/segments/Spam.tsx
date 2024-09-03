@@ -236,7 +236,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     setLoadFilter(true);
     try {
       const results = await userPushSDKInstance.notification.list('SPAM', {
-        limit: 100000,
+        limit: 100,
         page: 1,
         raw: true,
       });

@@ -160,7 +160,6 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
     setBgUpdateLoading(true);
     setLoading(true);
     try {
-
       const results = await userPushSDKInstance.notification.list('INBOX', {
         raw: true,
         page: 1,
@@ -202,7 +201,7 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
     setLoadFilter(true);
     try {
       const results = await userPushSDKInstance.notification.list('INBOX', {
-        limit: 100000,
+        limit: 100,
         page: page,
         raw: true,
       });
