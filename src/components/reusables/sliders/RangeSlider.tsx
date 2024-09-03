@@ -243,7 +243,7 @@ const Container = styled.div`
 const PreviewContainer = styled.div`
   display: none;
   position: absolute;
-  bottom: -48px;
+  top: -48px;
   border-radius: 4px;
   border: 1px solid ${(props) => props.theme.default.border};
   background: ${(props) => props.theme.default.bg};

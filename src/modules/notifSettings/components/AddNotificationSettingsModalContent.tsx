@@ -46,7 +46,7 @@ const AddNotificationSettingsModalContent: FC<AddNotificationSettingsModalConten
             gap="spacing-md"
             padding="spacing-xxs spacing-xs"
             width="-webkit-fill-available"
-            maxHeight='440px'
+            maxHeight={{ initial: '440px', ml: '340px' }}
             css={css`overflow-y:scroll;`}
             customScrollbar
           >

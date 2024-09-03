@@ -68,7 +68,7 @@ export const NotificationSettingsSchema = Yup.object().shape({
             'Multi-range lower limit must be between lower limit and upper limit',
             function (value) {
               const { rangelowerlimit, rangeupperlimit } = this.parent;
-              return value > rangelowerlimit && value < rangeupperlimit;
+              return value >= rangelowerlimit && value < rangeupperlimit;
             }
           ),
       otherwise: () => Yup.number(),
@@ -86,7 +86,7 @@ export const NotificationSettingsSchema = Yup.object().shape({
             'Multi-range upper limit must be between lower limit and upper limit',
             function (value) {
               const { rangelowerlimit, rangeupperlimit } = this.parent;
-              return value > rangelowerlimit && value < rangeupperlimit;
+              return value > rangelowerlimit && value <= rangeupperlimit;
             }
           ),
       otherwise: () => Yup.number(),
