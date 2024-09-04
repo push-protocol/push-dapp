@@ -22,7 +22,7 @@ import {
   setFinishedFetching,
   updateTopNotifications,
 } from 'redux/slices/spamSlice';
-import SearchFilter from '../components/SearchFilter';
+// import SearchFilter from '../components/SearchFilter';
 import DisplayNotice from '../primaries/DisplayNotice';
 import NotificationToast from '../primaries/NotificationToast';
 import useToast from 'hooks/useToast';
@@ -46,11 +46,11 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const modalRef = useRef(null);
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
   const { account, chainId, provider } = useAccount();
-  const { epnsCommReadProvider } = useSelector((state: any) => state.contracts);
+  // const { epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const { subscriptionStatus } = useSelector((state: any) => state.channels);
 
   const themes = useTheme();
-  let user = convertAddressToAddrCaip(account, chainId);
+  // let user = convertAddressToAddrCaip(account, chainId);
 
   // toast related section
   const [toast, showToast] = useState(null);
@@ -59,20 +59,20 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const { run } = useSelector((state: any) => state.userJourney);
 
   const { notifications, page, finishedFetching } = useSelector((state: any) => state.spam);
-  const EPNS_DOMAIN = {
-    name: 'EPNS COMM V1',
-    chainId: chainId,
-    verifyingContract: epnsCommReadProvider?.address,
-  };
-  const [allNotif, setNotif] = useState([]);
-  const [loadFilter, setLoadFilter] = useState(false);
-  const [filteredNotifications, setFilteredNotifications] = useState([]);
-  const [filter, setFilter] = useState(false);
-  const [allFilter, setAllFilter] = useState([]);
+  // const EPNS_DOMAIN = {
+  //   name: 'EPNS COMM V1',
+  //   chainId: chainId,
+  //   verifyingContract: epnsCommReadProvider?.address,
+  // };
+  // const [allNotif, setNotif] = useState([]);
+  // const [loadFilter, setLoadFilter] = useState(false);
+  // const [filteredNotifications, setFilteredNotifications] = useState([]);
+  // const [filter, setFilter] = useState(false);
+  // const [allFilter, setAllFilter] = useState([]);
   const [bgUpdateLoading, setBgUpdateLoading] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const onCoreNetwork = chainId === appConfig.coreContractChain;
+  // const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const NormalToast = ({ msg }) => (
     <Toaster>
@@ -96,50 +96,50 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     ETH_MAINNET: 1,
   };
 
-  const reset = () => setFilter(false);
-  const filterNotifications = async (query, channels, startDate, endDate) => {
-    if (loading) return;
-    setLoading(true);
-    setBgUpdateLoading(true);
-    setFilter(true);
-    if (startDate == null) startDate = new Date('January 1, 2000');
-    if (endDate == null) endDate = new Date('January 1, 3000');
-    startDate = startDate.getTime() / 1000;
-    endDate = endDate.getTime() / 1000;
-    var Filter = {
-      channels: channels,
-      date: { lowDate: startDate, highDate: endDate },
-    };
-    if (channels.length == 0) delete Filter.channels;
+  // const reset = () => setFilter(false);
+  // const filterNotifications = async (query, channels, startDate, endDate) => {
+  //   if (loading) return;
+  //   setLoading(true);
+  //   setBgUpdateLoading(true);
+  //   setFilter(true);
+  //   if (startDate == null) startDate = new Date('January 1, 2000');
+  //   if (endDate == null) endDate = new Date('January 1, 3000');
+  //   startDate = startDate.getTime() / 1000;
+  //   endDate = endDate.getTime() / 1000;
+  //   var Filter = {
+  //     channels: channels,
+  //     date: { lowDate: startDate, highDate: endDate },
+  //   };
+  //   if (channels.length == 0) delete Filter.channels;
 
-    setFilteredNotifications([]);
+  //   setFilteredNotifications([]);
 
-    let filterNotif = [];
-    for (const notif of allNotif) {
-      let timestamp;
-      const matches = notif.message.match(/\[timestamp:(.*?)\]/);
-      if (matches) {
-        timestamp = matches[1];
-      } else timestamp = notif.epoch;
-      if (
-        (Filter.channels === undefined ? true : Filter.channels.includes(notif.channel)) &&
-        timestamp >= startDate &&
-        timestamp <= endDate &&
-        notif.message.toLowerCase().includes(query.toLowerCase())
-      )
-        filterNotif.push(notif);
-    }
-    const newNotifs = filterNotif;
-    setAllFilter(newNotifs);
-    // }
-    setLoading(false);
-    setBgUpdateLoading(false);
-  };
+  //   let filterNotif = [];
+  //   for (const notif of allNotif) {
+  //     let timestamp;
+  //     const matches = notif.message.match(/\[timestamp:(.*?)\]/);
+  //     if (matches) {
+  //       timestamp = matches[1];
+  //     } else timestamp = notif.epoch;
+  //     if (
+  //       (Filter.channels === undefined ? true : Filter.channels.includes(notif.channel)) &&
+  //       timestamp >= startDate &&
+  //       timestamp <= endDate &&
+  //       notif.message.toLowerCase().includes(query.toLowerCase())
+  //     )
+  //       filterNotif.push(notif);
+  //   }
+  //   const newNotifs = filterNotif;
+  //   setAllFilter(newNotifs);
+  //   // }
+  //   setLoading(false);
+  //   setBgUpdateLoading(false);
+  // };
 
-  useEffect(() => {
-    console.debug(filteredNotifications, allFilter);
-    setFilteredNotifications(allFilter);
-  }, [allFilter]);
+  // useEffect(() => {
+  //   console.debug(filteredNotifications, allFilter);
+  //   setFilteredNotifications(allFilter);
+  // }, [allFilter]);
 
   const loadNotifications = async () => {
     if (loading || finishedFetching || run || !userPushSDKInstance) return;
@@ -192,6 +192,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
         page: 1,
         raw: true,
       });
+
       if (!notifications.length) {
         dispatch(incrementPage());
       }
@@ -215,12 +216,12 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
         return { ...elem };
       });
       parsedResponse = await Promise.all(parsedResponsePromise);
-      // dispatch(
-      //   updateTopNotifications({
-      //     notifs: parsedResponse,
-      //     pageSize: NOTIFICATIONS_PER_PAGE,
-      //   })
-      // );
+      dispatch(
+        updateTopNotifications({
+          notifs: parsedResponse,
+          pageSize: NOTIFICATIONS_PER_PAGE,
+        })
+      );
       if (parsedResponse.length === 0) {
         dispatch(setFinishedFetching());
       }
@@ -231,68 +232,67 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
       setLoading(false);
     }
   };
+  // const fetchAllNotif = async () => {
+  //   setLoadFilter(true);
+  //   try {
+  //     const results = await userPushSDKInstance.notification.list('SPAM', {
+  //       limit: 100,
+  //       page: 1,
+  //       raw: true,
+  //     });
 
-  const fetchAllNotif = async () => {
-    setLoadFilter(true);
-    try {
-      const results = await userPushSDKInstance.notification.list('SPAM', {
-        limit: 100,
-        page: 1,
-        raw: true,
-      });
+  //     if (!notifications.length) {
+  //       dispatch(incrementPage());
+  //     }
+  //     let parsedResponse = PushAPI.utils.parseApiResponse(results);
+  //     parsedResponse.forEach((each, i) => {
+  //       each['date'] = results[i].epoch;
+  //       each['epoch'] = new Date(each['date']).getTime() / 1000;
+  //     });
+  //     const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
+  //       elem.channel = results[i].sender;
+  //       let address = results[i].sender;
 
-      if (!notifications.length) {
-        dispatch(incrementPage());
-      }
-      let parsedResponse = PushAPI.utils.parseApiResponse(results);
-      parsedResponse.forEach((each, i) => {
-        each['date'] = results[i].epoch;
-        each['epoch'] = new Date(each['date']).getTime() / 1000;
-      });
-      const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
-        elem.channel = results[i].sender;
-        let address = results[i].sender;
-
-        // const {
-        //   data: { subscribers }
-        // } = await postReq('/channels/_get_subscribers', {
-        //   channel: account,
-        //   blockchain: chainId,
-        //   op: 'read'
-        // });
-        // elem.subscribers = subscribers;
-        return { ...elem };
-      });
-      parsedResponse = await Promise.all(parsedResponsePromise);
-      console.debug(parsedResponse);
-      let res = parsedResponse.filter((notif) => !isSubscribedFn(notif['channel']));
-      dispatch(
-        updateTopNotifications({
-          notifs: res,
-          pageSize: NOTIFICATIONS_PER_PAGE,
-        })
-      );
-      setNotif(res);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setBgUpdateLoading(false);
-      setLoading(false);
-      setLoadFilter(false);
-    }
-  };
+  //       // const {
+  //       //   data: { subscribers }
+  //       // } = await postReq('/channels/_get_subscribers', {
+  //       //   channel: account,
+  //       //   blockchain: chainId,
+  //       //   op: 'read'
+  //       // });
+  //       // elem.subscribers = subscribers;
+  //       return { ...elem };
+  //     });
+  //     parsedResponse = await Promise.all(parsedResponsePromise);
+  //     console.debug(parsedResponse);
+  //     let res = parsedResponse.filter((notif) => !isSubscribedFn(notif['channel']));
+  //     dispatch(
+  //       updateTopNotifications({
+  //         notifs: res,
+  //         pageSize: NOTIFICATIONS_PER_PAGE,
+  //       })
+  //     );
+  //     setNotif(res);
+  //   } catch (err) {
+  //     console.error(err);
+  //   } finally {
+  //     setBgUpdateLoading(false);
+  //     setLoading(false);
+  //     setLoadFilter(false);
+  //   }
+  // };
 
   useEffect(() => {
     if (!userPushSDKInstance) return;
     fetchLatestNotifications();
-    fetchAllNotif();
+    // fetchAllNotif();
   }, [userPushSDKInstance]);
 
-  useEffect(() => {
-    if (epnsCommReadProvider) {
-      loadNotifications();
-    }
-  }, [epnsCommReadProvider, account]);
+  // useEffect(() => {
+  //   if (epnsCommReadProvider) {
+  //     loadNotifications();
+  //   }
+  // }, [epnsCommReadProvider, account]);
 
   //function to query more notifications
   const handlePagination = async () => {
@@ -423,7 +423,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   return (
     <ThemeProvider theme={themes}>
       <Container>
-        <div ref={modalRef}>
+        {/* <div ref={modalRef}>
           <SearchFilter
             notifications={allNotif}
             filterNotifications={filterNotifications}
@@ -435,7 +435,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
             search={search}
             setSearch={setSearch}
           />
-        </div>
+        </div> */}
         <ScrollItem>
           {notifications && (
             <Items id="scrollstyle-secondary">
@@ -444,7 +444,8 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
                   <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
                 </Item>
               )}
-              {(filter && !run ? filteredNotifications : allNotif).map((oneNotification, index) => {
+              {/* {(filter && !run ? filteredNotifications : allNotif).map */}
+              {notifications.map((oneNotification, index) => {
                 const { cta, title, message, app, icon, image, secret, notification, channel, blockchain, url } =
                   oneNotification;
                 // render the notification item
@@ -473,11 +474,14 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
               {loading && !bgUpdateLoading && <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />}
             </Items>
           )}
-          {(!notifications.length || (filter && !filteredNotifications.length)) && !loading && (
-            <CenteredContainerInfo>
-              <DisplayNotice title="You currently have no spam notifications." />
-            </CenteredContainerInfo>
-          )}
+          {!notifications.length &&
+            // ||
+            // (filter && !filteredNotifications.length)
+            !loading && (
+              <CenteredContainerInfo>
+                <DisplayNotice title="You currently have no spam notifications." />
+              </CenteredContainerInfo>
+            )}
           {toast && (
             <NotificationToast
               notification={toast}
