@@ -13,12 +13,15 @@ import styled from 'styled-components';
 import { textVariants } from '../text';
 import { SurfaceColors } from '../theme/Theme.types';
 import { Column, DataSource } from './Table.types';
+import { Spinner } from 'blocks/spinner';
 
 export type TableProps = {
+  backgroundColor?: SurfaceColors;
   columns: Column[];
   dataSource: DataSource[];
   fixedHeader?: boolean;
-  backgroundColor?: SurfaceColors;
+  loading?: boolean;
+  onRow?: { onClick: (record: any, rowIndex: number) => void };
 };
 
 const StyledHeaderCell = styled(HeaderCell)<{ headerAlignment?: Column['headerAlignment'] }>`
@@ -45,7 +48,16 @@ const StyledRowCell = styled(Cell)<{ cellAlignment?: Column['cellAlignment'] }>`
       : ''}
 `;
 
-const Table: FC<TableProps> = ({ backgroundColor = 'surface-secondary', columns, dataSource, fixedHeader = false }) => {
+const LoadingContainer = styled.div``;
+
+const Table: FC<TableProps> = ({
+  backgroundColor = 'surface-secondary',
+  columns,
+  dataSource,
+  fixedHeader = false,
+  loading = false,
+  onRow,
+}) => {
   const columnData = useMemo(() => {
     const columnWidths = columns.map((col) => col.width || `${100 / columns.length}%`);
 
@@ -145,10 +157,21 @@ const Table: FC<TableProps> = ({ backgroundColor = 'surface-secondary', columns,
           </Header>
 
           <Body>
-            {tableList.map((record) => (
+            {/* <Row
+              item={{ id: 'loader' }}
+              key="loader"
+            >
+              <Cell colSpan={columns.length}>
+                <LoadingContainer>
+                  <Spinner size="medium" />
+                </LoadingContainer>
+              </Cell>
+            </Row> */}
+            {tableList.map((record, recordIndex) => (
               <Row
                 key={record.id}
                 item={record}
+                onClick={() => onRow?.onClick?.(record, recordIndex)}
               >
                 {columns.map((column) => {
                   const cellValue = `${record?.[column.dataIndex] || ''}`;
