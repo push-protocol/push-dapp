@@ -13,6 +13,7 @@ import { inputSemantics } from '../semantics/semantics.input';
 import { listItemSemantics } from '../semantics/semantics.listItem';
 import { modalSemantics } from '../semantics/semantics.modal';
 import { notificationsSemantics } from '../semantics/semantics.notifications';
+import { paginationSemantics } from '../semantics/semantics.pagination';
 import { progressBarSemantics } from '../semantics/semantics.progress-bar';
 import { radioSemantics } from '../semantics/semantics.radio';
 import { skeletonSemantics } from '../semantics/semantics.skeleton';
@@ -43,6 +44,7 @@ type SemanticKeys = {
   listItem: 'components-list-item';
   modal: 'components-modal';
   notifications: 'components-in-app-notification';
+  pagination: 'components-pagination';
   progressBar: 'components-progress-bar';
   radio: 'components-radio-button';
   surface: 'surface';
@@ -73,6 +75,7 @@ export const semanticKeys: SemanticKeys = {
   listItem: 'components-list-item',
   modal: 'components-modal',
   notifications: 'components-in-app-notification',
+  pagination: 'components-pagination',
   progressBar: 'components-progress-bar',
   radio: 'components-radio-button',
   surface: 'surface',
@@ -103,6 +106,7 @@ export const colorSemantics = {
   [semanticKeys.listItem]: listItemSemantics,
   [semanticKeys.modal]: modalSemantics,
   [semanticKeys.notifications]: notificationsSemantics,
+  [semanticKeys.pagination]: paginationSemantics,
   [semanticKeys.progressBar]: progressBarSemantics,
   [semanticKeys.radio]: radioSemantics,
   [semanticKeys.surface]: surfaceSemantics,

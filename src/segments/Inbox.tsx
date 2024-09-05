@@ -14,7 +14,7 @@ import { NotificationItem } from '@pushprotocol/uiweb';
 import Close from 'assets/chat/group-chat/close.svg?react';
 import OpenLink from 'assets/snap/GoToImage.svg?react';
 import MetamaskLogo from 'assets/snap/metamasksnap.svg?react';
-import SearchFilter from 'components/SearchFilter';
+// import SearchFilter from 'components/SearchFilter';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { GlobalContext } from 'contexts/GlobalContext';
 import CryptoHelper from 'helpers/CryptoHelper';
@@ -57,12 +57,12 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
 
   const { run, welcomeNotifs } = useSelector((state: any) => state.userJourney);
 
-  const [limit, setLimit] = useState(10);
-  const [allNotf, setNotif] = useState([]);
-  const [filteredNotifications, setFilteredNotifications] = useState([]);
-  const [filter, setFilter] = useState(false);
-  const [allFilter, setAllFilter] = useState([]);
-  const [loadFilter, setLoadFilter] = useState(false);
+  // const [limit, setLimit] = useState(10);
+  // const [allNotf, setNotif] = useState([]);
+  // const [filteredNotifications, setFilteredNotifications] = useState([]);
+  // const [filter, setFilter] = useState(false);
+  // const [allFilter, setAllFilter] = useState([]);
+  // const [loadFilter, setLoadFilter] = useState(false);
   const [bgUpdateLoading, setBgUpdateLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const { readOnlyWallet } = useContext(GlobalContext);
@@ -87,53 +87,53 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
     }
   }, [toast]);
 
-  const reset = () => setFilter(false);
-  const filterNotifications = async (query, channels, startDate, endDate) => {
-    if (startDate == null) startDate = new Date('January 1, 2000');
-    if (endDate == null) endDate = new Date('January 1, 3000');
-    startDate = startDate.getTime() / 1000;
-    endDate = endDate.getTime() / 1000;
+  // const reset = () => setFilter(false);
+  // const filterNotifications = async (query, channels, startDate, endDate) => {
+  //   if (startDate == null) startDate = new Date('January 1, 2000');
+  //   if (endDate == null) endDate = new Date('January 1, 3000');
+  //   startDate = startDate.getTime() / 1000;
+  //   endDate = endDate.getTime() / 1000;
 
-    if (loading) return;
-    setBgUpdateLoading(true);
-    setLoading(true);
-    setFilter(true);
-    var Filter = {
-      channels: channels,
-      date: { lowDate: startDate, highDate: endDate },
-    };
-    if (channels.length == 0) delete Filter.channels;
+  //   if (loading) return;
+  //   setBgUpdateLoading(true);
+  //   setLoading(true);
+  //   setFilter(true);
+  //   var Filter = {
+  //     channels: channels,
+  //     date: { lowDate: startDate, highDate: endDate },
+  //   };
+  //   if (channels.length == 0) delete Filter.channels;
 
-    setFilteredNotifications([]);
-    try {
-      let filterNotif = [];
-      for (const notif of allNotf) {
-        let timestamp;
-        const matches = notif.message.match(/\[timestamp:(.*?)\]/);
-        if (matches) {
-          timestamp = matches[1];
-        } else timestamp = notif.epoch;
-        if (
-          (Filter.channels === undefined ? true : Filter.channels.includes(notif.channel)) &&
-          timestamp >= startDate &&
-          timestamp <= endDate &&
-          (query === '' || notif.message.toLowerCase().includes(query.toLowerCase()))
-        )
-          filterNotif.push(notif);
-      }
-      const newNotifs = filterNotif;
-      setAllFilter(newNotifs);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-      setBgUpdateLoading(false);
-    }
-  };
+  //   setFilteredNotifications([]);
+  //   try {
+  //     let filterNotif = [];
+  //     for (const notif of allNotf) {
+  //       let timestamp;
+  //       const matches = notif.message.match(/\[timestamp:(.*?)\]/);
+  //       if (matches) {
+  //         timestamp = matches[1];
+  //       } else timestamp = notif.epoch;
+  //       if (
+  //         (Filter.channels === undefined ? true : Filter.channels.includes(notif.channel)) &&
+  //         timestamp >= startDate &&
+  //         timestamp <= endDate &&
+  //         (query === '' || notif.message.toLowerCase().includes(query.toLowerCase()))
+  //       )
+  //         filterNotif.push(notif);
+  //     }
+  //     const newNotifs = filterNotif;
+  //     setAllFilter(newNotifs);
+  //   } catch (err) {
+  //     console.error(err);
+  //   } finally {
+  //     setLoading(false);
+  //     setBgUpdateLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    setFilteredNotifications(allFilter);
-  }, [allFilter]);
+  // useEffect(() => {
+  //   setFilteredNotifications(allFilter);
+  // }, [allFilter]);
 
   const loadNotifications = async () => {
     if (loading || finishedFetching || !userPushSDKInstance) return;
@@ -160,7 +160,6 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
     setBgUpdateLoading(true);
     setLoading(true);
     try {
-
       const results = await userPushSDKInstance.notification.list('INBOX', {
         raw: true,
         page: 1,
@@ -198,56 +197,57 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
     }
   };
 
-  const fetchAllNotif = async () => {
-    setLoadFilter(true);
-    try {
-      const results = await userPushSDKInstance.notification.list('INBOX', {
-        limit: 100000,
-        page: page,
-        raw: true,
-      });
+  // const fetchAllNotif = async () => {
+  //   setLoadFilter(true);
+  //   try {
+  //     const results = await userPushSDKInstance.notification.list('INBOX', {
+  //       limit: 100,
+  //       page: page,
+  //       raw: true,
+  //     });
 
-      const parsedResponse = pushApiUtils.parseApiResponse(results);
-      const map1 = new Map();
-      const map2 = new Map();
-      results.forEach((each) => {
-        map1.set(each.payload.data.sid, each.epoch);
-        map2.set(each.payload.data.sid, each.sender);
-      });
-      parsedResponse.forEach((each) => {
-        each['date'] = map1.get(each.sid);
-        each['epoch'] = new Date(each['date']).getTime() / 1000;
-        each['channel'] = map2.get(each.sid);
-      });
-      setNotif(parsedResponse);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoadFilter(false);
-    }
-  };
+  //     const parsedResponse = pushApiUtils.parseApiResponse(results);
+  //     const map1 = new Map();
+  //     const map2 = new Map();
+  //     results.forEach((each) => {
+  //       map1.set(each.payload.data.sid, each.epoch);
+  //       map2.set(each.payload.data.sid, each.sender);
+  //     });
+  //     parsedResponse.forEach((each) => {
+  //       each['date'] = map1.get(each.sid);
+  //       each['epoch'] = new Date(each['date']).getTime() / 1000;
+  //       each['channel'] = map2.get(each.sid);
+  //     });
+  //     setNotif(parsedResponse);
+  //   } catch (err) {
+  //     console.error(err);
+  //   } finally {
+  //     setLoadFilter(false);
+  //   }
+  // };
 
   useEffect(() => {
     if (userPushSDKInstance?.account == readOnlyWallet || !userPushSDKInstance) return;
     fetchLatestNotifications();
-    fetchAllNotif();
+    // fetchAllNotif();
   }, [toggle, userPushSDKInstance]);
 
   //function to query more notifications
   const handlePagination = async () => {
-    if (filter) {
-      setLimit(limit + 10);
-    } else {
-      loadNotifications();
-    }
+    // if (filter) {
+    //   setLimit(limit + 10);
+    // } else {
+    loadNotifications();
+    // }
   };
 
   const showWayPoint = (index: any) => {
-    if (!filter) {
-      return Number(index) === notifications.length - 1 && !finishedFetching && !bgUpdateLoading;
-    } else {
-      return Number(index) === limit - 1;
-    }
+    // if (!filter) {
+    return Number(index) === notifications.length - 1 && !finishedFetching && !bgUpdateLoading;
+    // }
+    // else {
+    //   return Number(index) === limit - 1;
+    // }
   };
 
   const onDecrypt = async ({ secret, title, message, image, cta }) => {
@@ -314,7 +314,7 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
   return (
     <ThemeProvider theme={themes}>
       <Container>
-        <div ref={modalRef}>
+        {/* <div ref={modalRef}>
           <SearchFilter
             notifications={allNotf}
             filterNotifications={filterNotifications}
@@ -326,7 +326,7 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
             search={search}
             setSearch={setSearch}
           />
-        </div>
+        </div> */}
 
         <ScrollItem>
           {showSnapInfo && (
@@ -354,7 +354,8 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
           )}
 
           {((!run && !notifications.length) ||
-            (!run && filter && !filteredNotifications.length) ||
+            // (!run && filter && !filteredNotifications.length) ||
+            // !run ||
             (run && !welcomeNotifs.length)) &&
             !loading && (
               <div style={{ textAlign: 'center' }}>
@@ -389,7 +390,8 @@ const Inbox = ({ showFilter, setShowFilter, search, setSearch }) => {
                     </NotifsOuter>
                   );
                 })}
-              {(filter ? filteredNotifications : notifications).map((oneNotification, index) => {
+              {/* {(filter ? filteredNotifications : notifications).map */}
+              {notifications.map((oneNotification, index) => {
                 const { cta, title, message, app, icon, image, secret, notification, blockchain, url } =
                   oneNotification;
                 if (run) return;
