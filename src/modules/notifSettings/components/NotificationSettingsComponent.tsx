@@ -1,37 +1,33 @@
 import { FC, useEffect, useState } from 'react';
 
-import { Box } from 'blocks';
-
 import { ModalResponse } from 'common';
 
 import { useAccount } from 'hooks';
 
-import { ChannelDashboardNullState } from 'modules/channelDashboard/components/ChannelDashboardNullState';
 import { ChannelSetting } from 'modules/channelDashboard/ChannelDashboard.types';
+import { ChannelDashboardNullState } from 'modules/channelDashboard/components/ChannelDashboardNullState';
 
+import { NotificationSettingsHeader } from './NotificationSettingsHeader';
+import { settingInitialValue } from '../NotificationSettings.constants';
 import { NotificationSettingsLists } from './NotificationSettingsLists';
 import { NotificationSettingsFooter } from './NotificationSettingsFooter';
 import { NotificationSettingsModal } from './NotificationSettingsModal';
 
-type NotificationSettingsBodyProps = {
+type NotificationSettingsComponentProps = {
   modalControl: ModalResponse;
   channelSettings: ChannelSetting[];
   loadingSettings: boolean;
-  settingsToEdit: ChannelSetting;
-  setSettingsToEdit: (settingsToEdit: ChannelSetting) => void;
 };
 
-const NotificationSettingsBody: FC<NotificationSettingsBodyProps> = ({
+const NotificationSettingsComponent: FC<NotificationSettingsComponentProps> = ({
   modalControl,
   channelSettings,
   loadingSettings,
-  settingsToEdit,
-  setSettingsToEdit,
 }) => {
   const { isWalletConnected, connect } = useAccount();
-  const [newSettings, setNewSettings] = useState<ChannelSetting[]>([]);
+  const [settingsToEdit, setSettingsToEdit] = useState<ChannelSetting>(settingInitialValue);
 
-  const { open } = modalControl;
+  const [newSettings, setNewSettings] = useState<ChannelSetting[]>([]);
 
   useEffect(() => {
     if (channelSettings && !loadingSettings) {
@@ -57,12 +53,12 @@ const NotificationSettingsBody: FC<NotificationSettingsBodyProps> = ({
   const openModal = () => (!isWalletConnected ? connect() : open());
 
   return (
-    <Box
-      width="100%"
-      display="flex"
-      flexDirection="column"
-      gap="spacing-md"
-    >
+    <>
+      <NotificationSettingsHeader
+        modalControl={modalControl}
+        setSettingsToEdit={setSettingsToEdit}
+      />
+
       {newSettings.length > 0 ? (
         <NotificationSettingsLists
           newSettings={newSettings}
@@ -92,8 +88,8 @@ const NotificationSettingsBody: FC<NotificationSettingsBodyProps> = ({
         newSettings={newSettings}
         channelSettings={channelSettings}
       />
-    </Box>
+    </>
   );
 };
 
-export { NotificationSettingsBody };
+export { NotificationSettingsComponent };

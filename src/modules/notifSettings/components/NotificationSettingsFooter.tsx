@@ -11,7 +11,7 @@ import { addresses } from 'config';
 import APP_PATHS from 'config/AppPaths';
 import { useAppContext } from 'contexts/AppContext';
 
-import { getPushTokenApprovalAmount } from 'helpers';
+import { getPushTokenApprovalAmount, getPushTokenFromWallet } from 'helpers';
 import { useAccount } from 'hooks';
 
 import { ChannelSetting } from 'modules/channelDashboard/ChannelDashboard.types';
@@ -38,6 +38,16 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
 
   const [pushApprovalAmount, setPushApprovalAmount] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
+  const [balance, setBalance] = useState(0);
+
+  // Check PUSH Token in wallet
+  const pushTokenInWallet = async () => {
+    const amount = await getPushTokenFromWallet({
+      address: account,
+      provider: provider,
+    });
+    setBalance(amount);
+  };
 
   const checkApprovedPUSHTokenAmount = async () => {
     const pushTokenApprovalAmount = await getPushTokenApprovalAmount({
@@ -51,6 +61,7 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
   useEffect(() => {
     if (!account || !provider) return;
     checkApprovedPUSHTokenAmount();
+    pushTokenInWallet();
   }, [account, provider]);
 
   const { mutate: approvePUSHToken, isPending: approvingPUSH } = useApprovePUSHToken();
@@ -201,6 +212,10 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
         title="Modify Setting Fee"
         description="Make sure all settings are ready before proceeding to the next step"
         fees={EDIT_SETTING_FEE}
+        pushApprovalAmount={pushApprovalAmount}
+        showBalance
+        balance={balance}
+        setBalance={setBalance}
       />
 
       <Box

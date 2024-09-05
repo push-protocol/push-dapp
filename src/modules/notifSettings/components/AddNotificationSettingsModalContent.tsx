@@ -1,31 +1,21 @@
 import { FC } from 'react';
 
-import { Box, Button, Text, TextInput, ToggleSwitch } from 'blocks';
+import { Box, Text, TextInput, ToggleSwitch } from 'blocks';
 import { css } from 'styled-components';
-
-import { ModalResponse } from 'common';
 
 import { NotificationSettingsRangeSelector } from './NotificationSettingsRangeSelector';
 import { useEditNotificationSettingsForm } from '../EditNotificationSetting.form';
 
 type AddNotificationSettingsModalContentProps = {
-  modalControl: ModalResponse;
+  onClose: () => void;
 };
 
-const AddNotificationSettingsModalContent: FC<AddNotificationSettingsModalContentProps> = ({ modalControl }) => {
-  const {
-    values: formValues,
-    handleSubmit,
-    handleChange,
-    touched,
-    errors,
-    setFieldValue,
-  } = useEditNotificationSettingsForm();
+const AddNotificationSettingsModalContent: FC<AddNotificationSettingsModalContentProps> = () => {
+  const { values: formValues, handleChange, touched, errors, setFieldValue } = useEditNotificationSettingsForm();
 
-  const { onClose } = modalControl;
   return (
-    <Box width="100%"  >
-      <form onSubmit={handleSubmit}>
+    <Box width="100%">
+      <form onSubmit={() => {}}>
         <Box
           display="flex"
           flexDirection="column"
@@ -46,8 +36,10 @@ const AddNotificationSettingsModalContent: FC<AddNotificationSettingsModalConten
             gap="spacing-md"
             padding="spacing-xxs spacing-xs"
             width="-webkit-fill-available"
-            maxHeight={{ initial: '440px', ml: '340px' }}
-            css={css`overflow-y:scroll;`}
+            maxHeight={{ initial: '85vh', ml: '45vh' }}
+            css={css`
+              overflow-y: scroll;
+            `}
             customScrollbar
           >
             <TextInput
@@ -102,29 +94,6 @@ const AddNotificationSettingsModalContent: FC<AddNotificationSettingsModalConten
               />
             </Box>
             {formValues.enableRange && <NotificationSettingsRangeSelector />}
-          </Box>
-
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            padding="spacing-xxs"
-            gap="spacing-xs"
-            alignSelf="center"
-          >
-            <Button
-              size="small"
-              variant="outline"
-              onClick={onClose}
-            >
-              Cancel
-            </Button>
-            <Button
-              size="small"
-              variant="primary"
-            >
-              Save settings
-            </Button>
           </Box>
         </Box>
       </form>

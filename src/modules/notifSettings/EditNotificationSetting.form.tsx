@@ -86,14 +86,15 @@ export const NotificationSettingsSchema = Yup.object().shape({
     otherwise: () => Yup.number(),
   }),
 
-  defaultValue: Yup.number().when('enableMultiRange', {
-    is: false,
+  defaultValue: Yup.number().when(['enableMultiRange', 'enableRange'], {
+    is: (enableMultiRange: boolean, enableRange: boolean) => !enableMultiRange && enableRange,
     then: () =>
       Yup.number()
         .min(0, getMinNumValueMessage(0))
         .required(getRequiredFieldMessage('Default Value'))
         .test('is-within-range', getRangeValueMessage('Default value'), (value, context) => {
           const { rangelowerlimit, rangeupperlimit } = context.parent;
+          console.log('context', context.parent, value);
           return value >= rangelowerlimit && value <= rangeupperlimit;
         }),
     otherwise: () => Yup.number(),
@@ -118,8 +119,11 @@ const EditNotificationSettingsFormProvider: FC<EditNotificationSettingsFormProvi
   initialValue,
   onSubmit,
 }) => {
+  const initialValues = getFormInitialValus(initialValue);
+
   const addNotificationSettingsForm = useFormik<NotificationSettingFormValues>({
-    initialValues: getFormInitialValus(initialValue),
+    initialValues,
+    enableReinitialize: true,
     validationSchema: NotificationSettingsSchema,
     onSubmit: onSubmit,
   });

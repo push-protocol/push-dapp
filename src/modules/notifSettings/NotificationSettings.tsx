@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Box } from 'blocks';
@@ -11,17 +11,12 @@ import { useAccount } from 'hooks';
 
 import { useGetChannelDetails } from 'queries';
 
-import { NotificationSettingsHeader } from './components/NotificationSettingsHeader';
-import { NotificationSettingsBody } from './components/NotificationSettingsBody';
-import { ChannelSetting } from 'modules/channelDashboard/ChannelDashboard.types';
-import { settingInitialValue } from './NotificationSettings.constants';
+import { NotificationSettingsComponent } from './components/NotificationSettingsComponent';
 
 const NotificationSettings = () => {
   const { account } = useAccount();
   const modalControl = useDisclosure();
   const navigate = useNavigate();
-
-  const [settingsToEdit, setSettingsToEdit] = useState<ChannelSetting>(settingInitialValue);
 
   const { data: channelDetails, isLoading: loadingChannelDetails } = useGetChannelDetails(account);
   const channelSettings = channelDetails?.channel_settings ?? '';
@@ -49,15 +44,8 @@ const NotificationSettings = () => {
       borderRadius="radius-md"
       backgroundColor="surface-primary"
     >
-      <NotificationSettingsHeader
+      <NotificationSettingsComponent
         modalControl={modalControl}
-        setSettingsToEdit={setSettingsToEdit}
-      />
-
-      <NotificationSettingsBody
-        modalControl={modalControl}
-        settingsToEdit={settingsToEdit}
-        setSettingsToEdit={setSettingsToEdit}
         channelSettings={modifiedChannelSettings}
         loadingSettings={loadingChannelDetails}
       />
