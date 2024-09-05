@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 // Components
 import { Box, Button, Ethereum, Link, Table, Tag } from 'blocks';
@@ -16,6 +16,15 @@ export type DashboardProps = {};
 const Dashboard: FC<DashboardProps> = () => {
   const [showSubHeader, setSubHeaderVisibility] = useState(true);
 
+  const [loading, setLoading] = useState(true);
+
+  const [error] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 4000);
+  }, []);
   return (
     <Box
       flexDirection="column"
@@ -33,10 +42,10 @@ const Dashboard: FC<DashboardProps> = () => {
       {showSubHeader && <DashboardSubHeader />}
       <Box
         height="500px"
-        width="1200px"
+        width="400px"
       >
         <Table
-          loading={true}
+          loading={loading}
           fixedHeader
           onRow={{
             onClick: (record, index) => {
@@ -136,119 +145,124 @@ const Dashboard: FC<DashboardProps> = () => {
               ),
             },
           ]}
-          //  dataSource={[]}
-          dataSource={[
-            {
-              id: '0',
-              status: 'success',
-              txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
-              to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              category: 'Notification',
-              age: '2s ago',
-            },
-            {
-              id: '1',
-              status: 'success',
-              txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
-              to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              category: 'Notification',
-              age: '2s ago',
-            },
-            {
-              id: '2',
-              status: 'success',
-              txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
-              to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              category: 'Notification',
-              age: '2s ago',
-            },
-            {
-              id: '3',
-              status: 'success',
-              txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
-              to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              category: 'Notification',
-              age: '2s ago',
-            },
-            {
-              id: '4',
-              status: 'success',
-              txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
-              to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              category: 'Notification',
-              age: '2s ago',
-            },
-            {
-              id: '5',
-              status: 'success',
-              txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
-              to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              category: 'Notification',
-              age: '2s ago',
-            },
-            {
-              id: '6',
-              status: 'success',
-              txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
-              to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              category: 'Notification',
-              age: '2s ago',
-            },
-            {
-              id: '7',
-              status: 'success',
-              txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
-              to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              category: 'Notification',
-              age: '2s ago',
-            },
-            {
-              id: '8',
-              status: 'success',
-              txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
-              to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              category: 'Notification',
-              age: '2s ago',
-            },
-            {
-              id: '9',
-              status: 'success',
-              txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
-              to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              category: 'Notification',
-              age: '2s ago',
-            },
-            {
-              id: '10',
-              status: 'success',
-              txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
-              to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
-              category: 'Notification',
-              age: '2s ago',
-            },
-          ]}
+          error={error}
+          onRetry={() => {}}
+          dataSource={
+            loading || error
+              ? []
+              : [
+                  {
+                    id: '0',
+                    status: 'success',
+                    txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
+                    to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    category: 'Notification',
+                    age: '2s ago',
+                  },
+                  {
+                    id: '1',
+                    status: 'success',
+                    txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
+                    to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    category: 'Notification',
+                    age: '2s ago',
+                  },
+                  {
+                    id: '2',
+                    status: 'success',
+                    txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
+                    to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    category: 'Notification',
+                    age: '2s ago',
+                  },
+                  {
+                    id: '3',
+                    status: 'success',
+                    txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
+                    to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    category: 'Notification',
+                    age: '2s ago',
+                  },
+                  {
+                    id: '4',
+                    status: 'success',
+                    txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
+                    to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    category: 'Notification',
+                    age: '2s ago',
+                  },
+                  {
+                    id: '5',
+                    status: 'success',
+                    txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
+                    to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    category: 'Notification',
+                    age: '2s ago',
+                  },
+                  {
+                    id: '6',
+                    status: 'success',
+                    txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
+                    to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    category: 'Notification',
+                    age: '2s ago',
+                  },
+                  {
+                    id: '7',
+                    status: 'success',
+                    txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
+                    to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    category: 'Notification',
+                    age: '2s ago',
+                  },
+                  {
+                    id: '8',
+                    status: 'success',
+                    txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
+                    to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    category: 'Notification',
+                    age: '2s ago',
+                  },
+                  {
+                    id: '9',
+                    status: 'success',
+                    txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
+                    to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    category: 'Notification',
+                    age: '2s ago',
+                  },
+                  {
+                    id: '10',
+                    status: 'success',
+                    txHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    blockHash: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    from: '323kmi2j2312321321e1w000320ni23ni3r9d93nd',
+                    to: 'd2eonci2j2312321321e1w000320ni23ni3r9d93nd',
+                    category: 'Notification',
+                    age: '2s ago',
+                  },
+                ]
+          }
         />
       </Box>
     </Box>

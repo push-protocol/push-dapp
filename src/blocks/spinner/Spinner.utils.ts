@@ -1,5 +1,16 @@
 import { SpinnerSize, SpinnerVariant } from './Spinner.types';
 
+export const getSpinnerColor = (variant: SpinnerVariant) => {
+  switch (variant) {
+    case 'primary':
+      return 'components-spinner-icon-primary';
+    case 'secondary':
+      return 'components-spinner-icon-secondary';
+    default:
+      return '';
+  }
+};
+
 export const getSpinnerSize = (size: SpinnerSize) => {
   switch (size) {
     case 'small':
