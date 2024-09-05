@@ -11,9 +11,10 @@ import {
 import { useTheme } from '@table-library/react-table-library/theme';
 import styled from 'styled-components';
 import { Button } from '../button';
+import { getTextVariantStyles } from '../Blocks.utils';
 import { ErrorFilled, Refresh, Search } from '../icons';
 import { Spinner } from '../spinner';
-import { Text, textVariants } from '../text';
+import { textVariants } from '../text';
 import { SurfaceColors } from '../theme/Theme.types';
 import { Column, DataSource } from './Table.types';
 
@@ -74,12 +75,24 @@ const NullStateContainer = styled.div`
   flex-direction: column;
 `;
 
-const NullStateTextContiner = styled.div`
+const NullStateTextContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--spacing-xxxs);
   flex-direction: column;
+`;
+
+const NullStateHeading = styled.span`
+  ${() => getTextVariantStyles('bm-semibold', 'text-primary')}
+`;
+
+const NullStateDescription = styled.span`
+  ${() => getTextVariantStyles('bes-regular', 'text-tertiary')}
+`;
+
+const LoadingText = styled.span`
+  ${() => getTextVariantStyles('bm-semibold', 'text-tertiary')}
 `;
 
 const TableContainer = styled.div`
@@ -182,34 +195,21 @@ const Table: FC<TableProps> = ({
             size="medium"
             variant="primary"
           />
-          <Text
-            variant="bm-semibold"
-            color="text-tertiary"
-          >
-            Loading
-          </Text>
+          <LoadingText>Loading</LoadingText>
         </OverlayContainer>
       )}
       {!loading && !dataSource.length && (
         <OverlayContainer>
           <NullStateContainer>
             {error ? <ErrorFilled size={24} /> : <Search size={24} />}
-            <NullStateTextContiner>
-              <Text
-                variant="bm-semibold"
-                color="text-primary"
-              >
-                {error ? 'Trouble Fetching Data' : 'No Results Found'}
-              </Text>
-              <Text
-                variant="bes-regular"
-                color="text-tertiary"
-              >
+            <NullStateTextContainer>
+              <NullStateHeading>{error ? 'Trouble Fetching Data' : 'No Results Found'}</NullStateHeading>
+              <NullStateDescription>
                 {error
                   ? 'Please try again in a few minutes or reload the page.'
                   : 'Try adjusting your search or filter to find what you’re looking for'}
-              </Text>
-            </NullStateTextContiner>
+              </NullStateDescription>
+            </NullStateTextContainer>
             {error && onRetry && (
               <Button
                 size="extraSmall"
