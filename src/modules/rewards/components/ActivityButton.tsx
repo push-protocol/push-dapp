@@ -5,6 +5,7 @@ import { FC } from 'react';
 import { ActvityType, UsersActivity } from 'queries';
 import { Button } from 'blocks';
 import { ActivityVerificationButton } from './ActivityVerificationButton';
+import { useRewardsContext } from 'contexts/RewardsContext';
 
 type ActivityButtonProps = {
   userId: string;
@@ -16,6 +17,7 @@ type ActivityButtonProps = {
   usersSingleActivity?: UsersActivity;
   isLoadingActivity: boolean;
   label?: string;
+  isStakeSection?: boolean;
 };
 
 const ActivityButton: FC<ActivityButtonProps> = ({
@@ -28,7 +30,26 @@ const ActivityButton: FC<ActivityButtonProps> = ({
   usersSingleActivity,
   isLoadingActivity,
   label,
+  isStakeSection,
 }) => {
+  const { resetEpoch } = useRewardsContext();
+
+  if (usersSingleActivity?.status === 'COMPLETED' && isStakeSection && resetEpoch) {
+    return (
+      // default verify button
+      <ActivityVerificationButton
+        activityType={activityType}
+        userId={userId}
+        activityTypeId={activityTypeId}
+        activityTypeIndex={activityTypeIndex}
+        refetchActivity={refetchActivity}
+        setErrorMessage={setErrorMessage}
+        isLoadingActivity={isLoadingActivity}
+        label={label}
+      />
+    );
+  }
+
   if (usersSingleActivity?.status === 'COMPLETED') {
     return (
       <Button
@@ -54,7 +75,7 @@ const ActivityButton: FC<ActivityButtonProps> = ({
   }
 
   return (
-    // Verify button
+    // default verify button
     <ActivityVerificationButton
       activityType={activityType}
       userId={userId}

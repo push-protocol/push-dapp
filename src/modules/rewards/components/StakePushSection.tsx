@@ -1,20 +1,19 @@
 // React and other libraries
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 
 // hooks
 import { useAccount } from 'hooks';
-import { useGetRewardsActivities, useGetUserRewardsDetails } from 'queries';
+import { useGetUserRewardsDetails } from 'queries';
 import { useRewardsContext } from 'contexts/RewardsContext';
 
 // helpers
 import { walletToCAIP10 } from 'helpers/w2w';
-import { sortByIndexNumber } from '../utils/stakeRewardUtilities';
 
 // components
 import { Alert, Box, Clockwise, Skeleton, Text } from 'blocks';
 import { StakePushActivitiesListItem } from './StakePushActivitiesListItem';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
-import { useFormattedDuration } from '../hooks/useFormattedDuration';
+import { useStakeRewardsResetTime } from '../hooks/useStakeRewardsResetTime';
 
 export type StakePushPoints = {
   title: string;
@@ -27,10 +26,10 @@ export type StakePushPoints = {
 const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, bottomText, multiplier }) => {
   const { account, isWalletConnected } = useAccount();
   const { isLocked } = useRewardsContext();
-  const { formattedDuration } = useFormattedDuration();
+  const { stakePushArray, uniV2PushArray, isLoading, resetDate } = useStakeRewardsResetTime({
+    multiplier,
+  });
   const [errorMessage, setErrorMessage] = useState<string>('');
-
-  const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities();
 
   // Getting user Id by wallet address
   const caip10WalletAddress = walletToCAIP10({ account });
@@ -38,23 +37,11 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, bott
     caip10WalletAddress: caip10WalletAddress,
   });
 
-  const isLoading = isLoadingActivities;
-
-  // If there are activities then render them else render 2 skeletons
-  const activityList = rewardActivitiesResponse?.activities.flatMap((page) => page) || [];
-
-  // Filter and sort activities based on the type
-  const stakePushArray = isLoading
-    ? Array(5).fill(0)
-    : activityList
-        .filter((activity) => activity.index.startsWith(multiplier ? 'multiplier-push' : 'point-push'))
-        .sort(sortByIndexNumber);
-
-  const uniV2PushArray = isLoading
-    ? Array(5).fill(0)
-    : activityList
-        .filter((activity) => activity.index.startsWith(multiplier ? 'multiplier-uni-v2' : 'point-uni-v2'))
-        .sort(sortByIndexNumber);
+  const daysToReset = useMemo(() => {
+    const currentTime = Date.now() / 1000; // Current time in seconds
+    const differenceInSeconds = (resetDate as number) - currentTime;
+    return Math.floor(differenceInSeconds / (60 * 60 * 24)); // Convert seconds to days
+  }, [resetDate]);
 
   return (
     <Box
@@ -93,7 +80,7 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, bott
         >
           {isWalletConnected && timeline && (
             <Skeleton
-              isLoading={formattedDuration == null}
+              isLoading={daysToReset == null}
               width="240px"
               height="20px"
             >
@@ -111,7 +98,7 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, bott
                   variant="bs-semibold"
                   color="text-tertiary"
                 >
-                  Activity resets in {formattedDuration}
+                  Activity resets in {daysToReset} days
                 </Text>
               </Box>
             </Skeleton>

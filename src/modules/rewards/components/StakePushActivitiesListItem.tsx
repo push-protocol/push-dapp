@@ -167,6 +167,7 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
               usersSingleActivity={usersSingleActivity}
               isLoadingActivity={isLoading}
               label="Claim"
+              isStakeSection
             />
           )}
         </Box>

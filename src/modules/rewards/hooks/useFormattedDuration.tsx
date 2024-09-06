@@ -2,7 +2,7 @@ import { usePushStakingStats } from 'common';
 import { useState, useEffect, useCallback } from 'react';
 
 export const useFormattedDuration = () => {
-  const [formattedDuration, setFormattedDuration] = useState<string | null>(null);
+  const [formattedDuration, setFormattedDuration] = useState<number | null>(null);
   const { poolStats } = usePushStakingStats();
   const [epochEndTime, setEpochEndTime] = useState<number>();
 
@@ -17,9 +17,10 @@ export const useFormattedDuration = () => {
       const now = new Date().getTime();
       const timeRemaining = (epochEndTime as number) - now;
 
-      const day = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+      // plus 7 day rest period
+      const day = Math.floor(timeRemaining / (1000 * 60 * 60 * 24)) + 7;
 
-      setFormattedDuration(`${day} days `);
+      setFormattedDuration(day);
     }
   };
 
