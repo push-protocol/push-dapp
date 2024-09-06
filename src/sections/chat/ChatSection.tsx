@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // External Packages
@@ -43,6 +43,9 @@ const ChatSection = ({ chatId, setChatId, loggedIn }) => {
 
   // Use the useMediaQuery hook at the top level of the component
   const isTablet = useMediaQuery(device.tablet);
+
+  // State to control the visibility of the unlock profile modal
+  const [visible, setVisible] = useState(true);
 
   // RENDER
   return (
@@ -89,7 +92,11 @@ const ChatSection = ({ chatId, setChatId, loggedIn }) => {
 
             {/* Render unlock profile here if user is not logged in and chat instance is loaded */}
             {userPushSDKInstance && userPushSDKInstance?.readmode() && chatId && (
-              <UnlockProfileWrapper type={UNLOCK_PROFILE_TYPE.MODAL} />
+              <UnlockProfileWrapper
+                type={UNLOCK_PROFILE_TYPE.MODAL}
+                showConnectModal={visible}
+                onClose={() => setVisible(false)}
+              />
             )}
           </ChatViewContainer>
         )}
@@ -127,7 +134,7 @@ const ChatViewContainer = styled(ItemVV2)`
   overflow: hidden;
 `;
 
-const IntroContainer = styled(ItemVV2) <IntroContainerProps>`
+const IntroContainer = styled(ItemVV2)<IntroContainerProps>`
   flex: 1;
   height: inherit;
   background: ${(props) => props.bg || 'transparent'};
