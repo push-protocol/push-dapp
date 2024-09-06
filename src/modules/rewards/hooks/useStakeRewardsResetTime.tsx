@@ -10,9 +10,9 @@ import {
 } from 'queries';
 import { walletToCAIP10 } from 'helpers/w2w';
 
-import { sortByIndexNumber } from '../utils/stakeRewardUtilities';
-import { getActivityStatus } from '../utils/getDailyActivityStatus';
+import { getActivityStatus } from '../utils/resolveRecentActivityStatus';
 import { useRewardsContext } from 'contexts/RewardsContext';
+import { filterAndSortActivities, filterAndSortAllActivities } from '../utils/stakeRewardUtilities';
 
 export type StakeRewardsResetTime = {
   multiplier?: boolean;
@@ -38,19 +38,6 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
   });
 
   const isLoading = isLoadingActivities;
-
-  // Consolidated function for filtering and sorting activities
-  const filterAndSortActivities = (prefix: string, activities: any[], multiplier?: boolean) => {
-    return activities
-      .filter((activity) => activity.index.startsWith(multiplier ? `multiplier-${prefix}` : `point-${prefix}`))
-      .sort(sortByIndexNumber);
-  };
-
-  const filterAndSortAllActivities = (prefix: string, secondprefix: string, activities: any[]) => {
-    return activities.filter(
-      (activity) => activity.index.startsWith(prefix) || activity.index.startsWith(secondprefix)
-    );
-  };
 
   // Memoized Push and UniV2 stake arrays to avoid unnecessary recomputation
   const stakePushArray = useMemo(() => {

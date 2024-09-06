@@ -7,7 +7,7 @@ import { useAccount } from 'hooks';
 
 // helpers
 import { walletToCAIP10 } from 'helpers/w2w';
-import { checkTimeToCurrent, getActivityStatus, getDayNumber } from '../utils/getDailyActivityStatus';
+import { checkTimeToCurrent, getActivityStatus, getDayNumber } from '../utils/resolveRecentActivityStatus';
 
 // types
 import { Activity } from 'queries';

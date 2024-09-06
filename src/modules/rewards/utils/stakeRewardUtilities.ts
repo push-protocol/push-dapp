@@ -44,3 +44,16 @@ export const getActivityData = (
 
   return {}; // Default if no match
 };
+
+// Consolidated function for filtering and sorting activities in stake points and multipliers, we are
+// sorting by the indexes to get multiplier points, mulitplier unis, push points and uni points.
+// and also, doing a filter and sort of all the unis, and all push to get the latest activities in the useStakeRewardsResetTime hook
+export const filterAndSortActivities = (prefix: string, activities: any[], multiplier?: boolean) => {
+  return activities
+    .filter((activity) => activity.index.startsWith(multiplier ? `multiplier-${prefix}` : `point-${prefix}`))
+    .sort(sortByIndexNumber);
+};
+
+export const filterAndSortAllActivities = (prefix: string, secondprefix: string, activities: any[]) => {
+  return activities.filter((activity) => activity.index.startsWith(prefix) || activity.index.startsWith(secondprefix));
+};
