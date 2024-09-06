@@ -1,0 +1,5 @@
+import{e5 as o,e1 as a,e6 as n,e7 as m,__tla as i}from"./index-BmVNSYGI.js";import{C as h,__tla as f}from"./ChannelsModule-o4cMUdFq.js";import{__tla as p}from"./DisplayNotice-CaCRs8-S.js";import{__tla as u}from"./Skeleton-DFa0_9KG.js";import{__tla as y}from"./cloneDeep-BEVaB-DI.js";import{__tla as d}from"./index.esm-D3TqnxQr.js";import{__tla as x}from"./RedCircle-Cp3B4Y7i.js";import{__tla as T}from"./ManageNotifSettingDropdown-32QSn5N6.js";import"./notifSetting-DrLKauYy.js";let r,D=Promise.all([(()=>{try{return i}catch{}})(),(()=>{try{return f}catch{}})(),(()=>{try{return p}catch{}})(),(()=>{try{return u}catch{}})(),(()=>{try{return y}catch{}})(),(()=>{try{return d}catch{}})(),(()=>{try{return x}catch{}})(),(()=>{try{return T}catch{}})()]).then(async()=>{let t;r=({loadTeaser:_,playTeaser:e,channelID:l})=>{let{channelid:c}=o();const s=c||l;return a.jsx(t,{children:a.jsx(h,{channelID:s,loadTeaser:_,playTeaser:e})})},t=n(m)`
+  flex: 1;
+  flex-direction: column;
+  align-self: stretch;
+`});export{D as __tla,r as default};
