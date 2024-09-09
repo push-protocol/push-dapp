@@ -56,7 +56,7 @@ export const NotificationSettingsSchema = Yup.object().shape({
 
   enableMultiRange: Yup.boolean().required(getRequiredFieldMessage('')),
 
-  multirangelowerlimit: Yup.number().when('enableMultiRange', {
+  multirangelowerlimit: Yup.number().when(['enableMultiRange', 'enableRange'], {
     is: (enableMultiRange: boolean, enableRange: boolean) => enableMultiRange && enableRange,
     then: () =>
       Yup.number()
@@ -69,7 +69,7 @@ export const NotificationSettingsSchema = Yup.object().shape({
     otherwise: () => Yup.number(),
   }),
 
-  multirangeupperlimit: Yup.number().when('enableMultiRange', {
+  multirangeupperlimit: Yup.number().when(['enableMultiRange', 'enableRange'], {
     is: (enableMultiRange: boolean, enableRange: boolean) => enableMultiRange && enableRange,
     then: () =>
       Yup.number()
