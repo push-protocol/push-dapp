@@ -36,7 +36,7 @@ const AddNotificationSettingsModalContent: FC<AddNotificationSettingsModalConten
             gap="spacing-md"
             padding="spacing-xxs spacing-xs"
             width="-webkit-fill-available"
-            maxHeight={{ initial: '85vh', ml: '45vh' }}
+            maxHeight={{ initial: '60vh', ml: '45vh' }}
             css={css`
               overflow-y: scroll;
             `}
