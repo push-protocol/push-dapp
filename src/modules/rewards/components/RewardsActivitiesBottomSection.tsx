@@ -41,7 +41,6 @@ const RewardsActivitiesBottomSection: FC<RewardsActivitiesBottomSectionProps> = 
           title="Stake Push to Earn Points"
           subtitle="Visit [app.push.org/yieldv2](https://app.push.org/yieldv2) and stake tokens in the Fee Pool or LP Pool to redeem points."
           timeline={true}
-          bottomText={true}
         />
       </Box>
 

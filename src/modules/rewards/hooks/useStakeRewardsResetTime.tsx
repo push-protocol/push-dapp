@@ -22,7 +22,7 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
   const [resetDate, setResetDate] = useState<number | null>(null); // Local state for latest timestamp
   const { account, isWalletConnected } = useAccount();
   const { setResetEpoch } = useRewardsContext();
-  const SEVEN_DAYS_IN_MS = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+  // const SEVEN_DAYS_IN_MS = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
 
   const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities();
   const caip10WalletAddress = walletToCAIP10({ account });
@@ -72,6 +72,12 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
       rewardActivitiesResponse?.activities.flatMap((page) => page) || []
     );
   }, [rewardActivitiesResponse]);
+
+  const daysToReset = useMemo(() => {
+    const currentTime = Date.now() / 1000; // Current time in seconds
+    const differenceInSeconds = (resetDate as number) - currentTime;
+    return Math.floor(differenceInSeconds / (60 * 60 * 24)); // Convert seconds to days
+  }, [resetDate]);
 
   // Function to handle fetch and timestamp/epoch comparison
   const fetchAndHandleData = () => {
@@ -125,7 +131,7 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
     const currentDate = Date.now();
 
     const isEpochActive = mostRecentStakeActivity?.data?.currentEpoch === stakeData?.currentEpoch;
-    const isPastSevenDays = currentDate > toTimestamp * 1000 + SEVEN_DAYS_IN_MS;
+    const isPastSevenDays = currentDate > toTimestamp * 1000;
 
     if (!isEpochActive && isPastSevenDays) {
       setResetEpoch(true);
@@ -146,7 +152,7 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
     }
   }, [userDetails?.userId, isWalletConnected, isLoadingPushStakeData, isLoadingPushUniData]);
 
-  return { stakePushArray, uniV2PushArray, isLoading, resetDate };
+  return { stakePushArray, uniV2PushArray, isLoading, daysToReset };
 };
 
 export { useStakeRewardsResetTime };

@@ -19,14 +19,13 @@ export type StakePushPoints = {
   title: string;
   subtitle: string;
   timeline?: boolean;
-  bottomText?: boolean;
   multiplier?: boolean;
 };
 
-const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, bottomText, multiplier }) => {
+const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, multiplier }) => {
   const { account, isWalletConnected } = useAccount();
   const { isLocked } = useRewardsContext();
-  const { stakePushArray, uniV2PushArray, isLoading, resetDate } = useStakeRewardsResetTime({
+  const { stakePushArray, uniV2PushArray, isLoading, daysToReset } = useStakeRewardsResetTime({
     multiplier,
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -37,11 +36,11 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, bott
     caip10WalletAddress: caip10WalletAddress,
   });
 
-  const daysToReset = useMemo(() => {
-    const currentTime = Date.now() / 1000; // Current time in seconds
-    const differenceInSeconds = (resetDate as number) - currentTime;
-    return Math.floor(differenceInSeconds / (60 * 60 * 24)); // Convert seconds to days
-  }, [resetDate]);
+  // const daysToReset = useMemo(() => {
+  //   const currentTime = Date.now() / 1000; // Current time in seconds
+  //   const differenceInSeconds = (resetDate as number) - currentTime;
+  //   return Math.floor(differenceInSeconds / (60 * 60 * 24)); // Convert seconds to days
+  // }, [resetDate]);
 
   return (
     <Box
@@ -78,7 +77,7 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, bott
           alignItems="center"
           gap="spacing-xxxs"
         >
-          {isWalletConnected && timeline && (
+          {isWalletConnected && timeline && daysToReset > 0 && (
             <Skeleton
               isLoading={daysToReset == null}
               width="240px"
@@ -158,16 +157,6 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, bott
           ))}
         </Box>
       </Box>
-
-      {bottomText && (
-        <Text
-          variant="bm-regular"
-          color="text-tertiary"
-          textAlign="center"
-        >
-          Activity rewards will be distributed and added to your points after the epoch ends.
-        </Text>
-      )}
     </Box>
   );
 };
