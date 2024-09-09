@@ -17,6 +17,7 @@ import { useAccount } from 'hooks';
 import { ChannelSetting } from 'modules/channelDashboard/ChannelDashboard.types';
 import { useApprovePUSHToken, useCreateNotificationSettings } from 'queries';
 import useFetchChannelDetails from 'common/hooks/useFetchUsersChannelDetails';
+import { compareObject } from '../NotificationSettings.constants';
 
 type NotificationSettingsFooterProps = {
   newSettings: ChannelSetting[];
@@ -111,48 +112,46 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
     }
 
     setErrorMessage('');
-    if (newSettings.length) {
-      const newsettingData: ChannelSetting[] = newSettings.map((setting) => {
-        if (setting.type === 1) {
-          return {
-            type: setting.type,
-            description: setting.description,
-            default: setting.default ? 1 : 0,
-          };
-        } else {
-          return {
-            type: setting.type,
-            description: setting.description,
-            default: setting.default,
-            data: {
-              lower: setting.lowerLimit,
-              upper: setting.upperLimit,
-              ticker: setting.ticker,
-              enabled: setting.enabled,
-            },
-          };
-        }
-      });
+    const newsettingData: ChannelSetting[] = newSettings.map((setting) => {
+      if (setting.type === 1) {
+        return {
+          type: setting.type,
+          description: setting.description,
+          default: setting.default ? 1 : 0,
+        };
+      } else {
+        return {
+          type: setting.type,
+          description: setting.description,
+          default: setting.default,
+          data: {
+            lower: setting.lowerLimit,
+            upper: setting.upperLimit,
+            ticker: setting.ticker,
+            enabled: setting.enabled,
+          },
+        };
+      }
+    });
 
-      createNotificationSettings(
-        {
-          userPushSDKInstance: userPushInstance,
-          settings: newsettingData,
+    createNotificationSettings(
+      {
+        userPushSDKInstance: userPushInstance,
+        settings: newsettingData,
+      },
+      {
+        onSuccess: (response) => {
+          if (response.transactionHash) {
+            refetchChannelDetails();
+            navigate(`${APP_PATHS.ChannelDashboard}/${account}`);
+          }
         },
-        {
-          onSuccess: (response) => {
-            if (response.transactionHash) {
-              refetchChannelDetails();
-              navigate(`${APP_PATHS.ChannelDashboard}/${account}`);
-            }
-          },
-          onError: (error: any) => {
-            console.log('Error in adding setting', error);
-            setErrorMessage('Error in saving settings. Please try again later');
-          },
-        }
-      );
-    }
+        onError: (error: any) => {
+          console.log('Error in adding setting', error);
+          setErrorMessage('Error in saving settings. Please try again later');
+        },
+      }
+    );
   };
 
   const settingsChanged = useMemo(() => {
@@ -180,6 +179,20 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
         if (
           setting1.description !== setting2.description ||
           setting1.default !== setting2.default ||
+          setting1.enabled !== setting2.enabled ||
+          setting1.lowerLimit !== setting2.lowerLimit ||
+          setting1.upperLimit !== setting2.upperLimit ||
+          setting1.ticker !== setting2.ticker
+        ) {
+          isChanged = true;
+          return;
+        }
+      }
+
+      if (setting1.type === 3) {
+        if (
+          setting1.description !== setting2.description ||
+          !compareObject(setting1.default, setting2.default) ||
           setting1.enabled !== setting2.enabled ||
           setting1.lowerLimit !== setting2.lowerLimit ||
           setting1.upperLimit !== setting2.upperLimit ||

@@ -24,6 +24,7 @@ const NotificationSettingsComponent: FC<NotificationSettingsComponentProps> = ({
   channelSettings,
   loadingSettings,
 }) => {
+  const { open } = modalControl;
   const { isWalletConnected, connect } = useAccount();
   const [settingsToEdit, setSettingsToEdit] = useState<ChannelSetting>(settingInitialValue);
 
