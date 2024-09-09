@@ -1,1 +1,0 @@
-const a=/^(http:\/\/|https:\/\/|www\.)?([\w-]+\.)+[\w-]{2,}(\/[\w.-]*)*\/?$/,e=t=>`${t} is required.`,s=t=>`Maximum ${t} characters allowed.`,i=t=>`Must be greater than ${t}`,r=t=>`${t} must be within the defined range limits.`;export{a as U,i as a,r as b,s as c,e as g};
