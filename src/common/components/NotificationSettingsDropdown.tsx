@@ -63,6 +63,7 @@ const NotificationSettingsDropdown: FC<NotificationSettingsDropdownProps> = ({
       <Box
         display="flex"
         flexDirection="column"
+        // padding="spacing-none spacing-xs"
         gap="spacing-xxs"
         alignItems="center"
         alignSelf="stretch"
