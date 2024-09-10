@@ -72,7 +72,7 @@ const NotificationSettingsDropdown: FC<NotificationSettingsDropdownProps> = ({
           display="flex"
           flexDirection="column"
           width="-webkit-fill-available"
-          maxHeight="40vh"
+          maxHeight="30vh"
           padding="spacing-none spacing-xs"
           overflow="scroll"
           customScrollbar
