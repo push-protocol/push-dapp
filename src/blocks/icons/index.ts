@@ -103,6 +103,8 @@ export { default as NotificationMobile } from './components/NotificationMobile';
 
 export { default as OptOut } from './components/OptOut';
 
+export { default as Pencil } from './components/Pencil';
+
 export { default as PlusCircle } from './components/PlusCircle';
 export { default as PlusCircleFilled } from './components/PlusCircleFilled';
 

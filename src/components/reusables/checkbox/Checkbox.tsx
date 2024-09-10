@@ -25,7 +25,7 @@ const CheckboxInput = styled.input`
 
   /* Change the color of the checkbox */
   &:checked {
-    accent-color: #D53A94;
+    accent-color: #C742DD;
   }
 `;
 
