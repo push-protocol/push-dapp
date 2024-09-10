@@ -1,37 +1,42 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-import { Slider as MuiSlider } from '@material-ui/core';
+import ReactSlider from 'react-slider';
 import { SliderProps } from './Slider.types';
+import { isArray } from 'lodash';
 
-const StyledSlider = styled(MuiSlider)`
-  .MuiSlider-rail {
-    color: var(--components-slider-background-default);
+const StyledSlider = styled(ReactSlider)<{ range?: boolean }>`
+  .horizontal-slider-track {
     height: var(--spacing-xxxs);
-    opacity: 1;
+    background-color: var(--components-slider-background-default);
+    border-radius: var(--border-sm);
   }
 
-  .MuiSlider-track {
-    color: var(--components-slider-background-progress);
-    height: var(--spacing-xxxs);
-  }
-
-  .MuiSlider-thumb {
+  .horizontal-slider-thumb {
     width: var(--spacing-sm);
     height: var(--spacing-sm);
     margin-top: -6px;
     background-color: var(--components-slider-icon-default);
     border: var(--border-sm) solid var(--components-slider-stroke-default);
+    border-radius: 50%;
+    cursor: pointer;
+    &:active,
+    &:focus {
+      outline: none;
+    }
   }
 
-  .MuiSlider-thumb:hover,
-  .MuiSlider-thumb:active,
-  .MuiSlider-thumb:focus {
-    box-shadow: none;
-  }
-
-  .MuiSlider-valueLabel {
-    display: none;
-  }
+  ${({ range }) =>
+    range
+      ? css`
+          .horizontal-slider-track-1 {
+            background-color: var(--components-slider-background-progress);
+          }
+        `
+      : css`
+          .horizontal-slider-track-0 {
+            background-color: var(--components-slider-background-progress);
+          }
+        `}
 `;
 
 const Slider = <T extends number | [number, number]>({
@@ -45,7 +50,14 @@ const Slider = <T extends number | [number, number]>({
   return (
     <StyledSlider
       {...{ min, max, value, step, defaultValue }}
-      onChange={(_: MouseEvent, value: T) => onChange(value)}
+      className="horizontal-slider"
+      thumbClassName="horizontal-slider-thumb"
+      trackClassName="horizontal-slider-track"
+      ariaLabel={isArray(value) ? ['Lower thumb', 'Upper thumb'] : 'Thumb'}
+      ariaValuetext={(state) => `Thumb value ${state.valueNow}`}
+      onChange={(value) => onChange(value as T)}
+      value={value}
+      range={isArray(value)}
     />
   );
 };
