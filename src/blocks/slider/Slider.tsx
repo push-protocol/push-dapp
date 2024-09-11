@@ -39,17 +39,10 @@ const StyledSlider = styled(ReactSlider)<{ range?: boolean }>`
         `}
 `;
 
-const Slider = <T extends number | [number, number]>({
-  min,
-  max,
-  onChange,
-  value,
-  step,
-  defaultValue,
-}: SliderProps<T>) => {
+const Slider = <T extends number | [number, number]>({ min, max, onChange, value, step }: SliderProps<T>) => {
   return (
     <StyledSlider
-      {...{ min, max, value, step, defaultValue }}
+      {...{ min, max, value, step }}
       className="horizontal-slider"
       thumbClassName="horizontal-slider-thumb"
       trackClassName="horizontal-slider-track"

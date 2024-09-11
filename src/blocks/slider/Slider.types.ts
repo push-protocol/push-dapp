@@ -7,5 +7,4 @@ export type SliderBaseProps = {
 export type SliderProps<T> = SliderBaseProps & {
   value?: T;
   onChange: (value: T) => void;
-  defaultValue?: T;
 };
