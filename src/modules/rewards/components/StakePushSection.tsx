@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC, useMemo, useState } from 'react';
+import { FC, useState } from 'react';
 
 // hooks
 import { useAccount } from 'hooks';
@@ -35,12 +35,6 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
   const { data: userDetails } = useGetUserRewardsDetails({
     caip10WalletAddress: caip10WalletAddress,
   });
-
-  // const daysToReset = useMemo(() => {
-  //   const currentTime = Date.now() / 1000; // Current time in seconds
-  //   const differenceInSeconds = (resetDate as number) - currentTime;
-  //   return Math.floor(differenceInSeconds / (60 * 60 * 24)); // Convert seconds to days
-  // }, [resetDate]);
 
   return (
     <Box

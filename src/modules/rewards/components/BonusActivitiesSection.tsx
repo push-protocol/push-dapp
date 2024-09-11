@@ -37,7 +37,7 @@ const BonusActivities: FC<BonusActivitiesSectionProps> = () => {
 
   const bonusActivities = isLoading
     ? Array(8).fill(0)
-    : activityList.filter((activity) => activity.index.startsWith(`bonus-activity`));
+    : activityList.filter((activity) => activity.index.startsWith(`bonus-activity`) && activity?.status === 'ENABLED');
 
   const { isLocked } = useRewardsContext();
 

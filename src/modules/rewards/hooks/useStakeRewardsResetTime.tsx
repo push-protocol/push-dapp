@@ -22,7 +22,6 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
   const [resetDate, setResetDate] = useState<number | null>(null); // Local state for latest timestamp
   const { account, isWalletConnected } = useAccount();
   const { setResetEpoch } = useRewardsContext();
-  // const SEVEN_DAYS_IN_MS = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
 
   const { data: rewardActivitiesResponse, isLoading: isLoadingActivities } = useGetRewardsActivities();
   const caip10WalletAddress = walletToCAIP10({ account });
@@ -76,7 +75,7 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
   const daysToReset = useMemo(() => {
     const currentTime = Date.now() / 1000; // Current time in seconds
     const differenceInSeconds = (resetDate as number) - currentTime;
-    return Math.floor(differenceInSeconds / (60 * 60 * 24)); // Convert seconds to days
+    return Math.floor(differenceInSeconds / (60 * 60 * 24) + 7); // Convert seconds to days and add the 7 days rest period
   }, [resetDate]);
 
   // Function to handle fetch and timestamp/epoch comparison

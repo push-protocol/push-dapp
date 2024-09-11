@@ -48,6 +48,26 @@ export { default as RewardPoints } from './components/RewardPoints';
 
 export { default as Referral } from './components/Referral';
 
+export { default as StakePushBlueCoin } from './components/StakePushBlueCoin';
+
+export { default as StakePushBlueMultiplier } from './components/StakePushBlueMultiplier';
+
+export { default as StakePushGradientCoin } from './components/StakePushGradientCoin';
+
+export { default as StakePushGradientMultiplier } from './components/StakePushGradientMultiplier';
+
+export { default as StakePushGreyCoin } from './components/StakePushGreyCoin';
+
+export { default as StakePushGreyMultiplier } from './components/StakePushGreyMultiplier';
+
+export { default as StakePushOrangeCoin } from './components/StakePushOrangeCoin';
+
+export { default as StakePushOrangeMultiplier } from './components/StakePushOrangeMultiplier';
+
+export { default as StakePushYellowCoin } from './components/StakePushYellowCoin';
+
+export { default as StakePushYellowMultiplier } from './components/StakePushYellowMultiplier';
+
 export { default as TripleRewardsCoin } from './components/TripleRewardsCoin';
 
 export { default as Twitter } from './components/Twitter';
