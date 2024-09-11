@@ -2,7 +2,7 @@
 import { Box, Text } from 'blocks';
 import PushLogo from 'blocks/illustrations/components/PushLogo';
 
-export const ToolTipContent = () => {
+export const VerifiedToolTipContent = () => {
   return (
     <Box
       display="flex"

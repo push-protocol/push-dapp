@@ -29,7 +29,7 @@ import {
   Tooltip,
   PushLogo,
 } from 'blocks';
-import { ToolTipContent } from './VerifiedToolTipComponent';
+import { VerifiedToolTipContent } from './VerifiedToolTipComponent';
 import { UserSetting } from 'helpers/channel/types';
 import { useAccount } from 'hooks';
 import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
@@ -121,7 +121,7 @@ const ChannelListItem: FC<ChannelListItemProps> = ({
                 {channelDetails?.name}
               </Link>
               {!!channelDetails?.verified_status && (
-                <Tooltip overlay={<ToolTipContent />}>
+                <Tooltip overlay={<VerifiedToolTipContent />}>
                   <Box cursor="pointer">
                     <TickDecoratedCircleFilled
                       color="icon-tertiary"
