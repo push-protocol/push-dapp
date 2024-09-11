@@ -1,9 +1,7 @@
 // React + Web3 Essentials
-import { useEffect, useState } from 'react';
 
 // External Packages
 import { NotificationItem } from '@pushprotocol/uiweb';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled, { useTheme } from 'styled-components';
 
@@ -17,76 +15,26 @@ import ViewChannelItem from 'components/ViewChannelItem';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import APP_PATHS from 'config/AppPaths';
 import { device } from 'config/Globals';
+import { useGetChannelDetails, useGetChannelNotifications } from 'queries';
 
 // Constants
 const NOTIFICATIONS_PER_PAGE = 20;
 
 // Create Header
 const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileType }) => {
-  const { userPushSDKInstance } = useSelector((state: any) => {
-    return state.user;
-  });
-
   // get theme
   const themes = useTheme();
 
-  // loading
-  const [loading, setLoading] = useState(true);
-  const [loadingNotifs, setLoadingNotifs] = useState(true);
-  const [notifications, setNotifications] = useState([]);
-  const [channelDetails, setChannelDetails] = useState(null);
+  // isChannelLoading
+  const { data: notifications, isLoading: isNotificationsLoading } = useGetChannelNotifications(
+    channelID,
+    1,
+    NOTIFICATIONS_PER_PAGE
+  );
 
+  const { data: channelDetails, isLoading: isChannelLoading } = useGetChannelDetails(channelID);
   // Setup navigation
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setChannelDetails(null);
-    if (userPushSDKInstance) {
-      setLoading(true);
-      (async () => {
-        try {
-          const channelBasedOnChannelID = await userPushSDKInstance.channel.info(channelID);
-          setChannelDetails(channelBasedOnChannelID);
-          setLoading(false);
-        } catch (error) {
-          console.log('Error', error);
-          setLoading(false);
-        }
-      })();
-    }
-  }, [channelID, userPushSDKInstance]);
-
-  // load notifications
-  useEffect(() => {
-    if (userPushSDKInstance) {
-      setLoading(true);
-      userPushSDKInstance.channel
-        .notifications(channelID, {
-          page: 1,
-          limit: NOTIFICATIONS_PER_PAGE,
-        })
-        .then((response) => {
-          console.log(response);
-          setNotifications(response.notifications);
-          setLoadingNotifs(false);
-
-          // ENABLE PAGINATION HERE
-          // dispatch(addPaginatedNotifications(response.notifications));
-          // if (response.notifications.length === 0) {
-          //   dispatch(setFinishedFetching());
-          // }
-        })
-        .catch((err) => {
-          // ENABLE NO NOTIFICATION FOUND HERE
-          console.error('Error >>>>', err);
-          setLoadingNotifs(false);
-        });
-    }
-    return () => {
-      setNotifications([]);
-      setLoadingNotifs(true);
-    };
-  }, [channelID, userPushSDKInstance]);
 
   // Render
   return (
@@ -104,7 +52,7 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
       </BackContainer>
 
       <>
-        {channelDetails && !loading && (
+        {channelDetails && !isChannelLoading && (
           <ViewChannelItem
             channelObjectProp={channelDetails}
             loadTeaser={loadTeaser}
@@ -115,7 +63,7 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
         )}
 
         {/* Show Latest Notifications of the Channel */}
-        {!loading && (
+        {!isChannelLoading && (
           <TextContainer>
             <SpanV2
               fontSize="20px"
@@ -131,20 +79,20 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
         )}
 
         <NotificationItems>
-          {loadingNotifs && (
+          {isNotificationsLoading && (
             <LoaderSpinner
               type={LOADER_TYPE.SEAMLESS}
               spinnerSize={40}
             />
           )}
 
-          {!notifications.length && !loadingNotifs && (
+          {!notifications?.length && !isNotificationsLoading && (
             <div style={{ textAlign: 'center' }}>
               <DisplayNotice title="You currently have no notifications, try subscribing to some channels." />
             </div>
           )}
 
-          {notifications.map((item, index) => {
+          {notifications?.map((item, index) => {
             const payload = item.message.payload;
 
             // render the notification item
@@ -168,7 +116,7 @@ const ChannelProfile = ({ channelID, loadTeaser, playTeaser, minimal, profileTyp
       </>
 
       {/* Add Support chat */}
-      {/* {!loadingNotifs && (
+      {/* {!isNotificationsLoading && (
           <SupportChat
             supportAddress={channelID} //support address, this belongs to you
             account={account} //signer

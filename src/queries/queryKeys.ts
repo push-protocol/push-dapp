@@ -8,6 +8,7 @@ export const allUserSubscriptions = 'allUserSubscriptions';
 export const approveVaultUser = 'approveVaultUser';
 export const channelDelegates = 'channelDelegates';
 export const channelDetails = 'channelDetails';
+export const channelNotifications = 'channelNotifications';
 export const claimRewards = 'claimRewards';
 export const createUserRewardsDetails = 'createUserRewardsDetails';
 export const deactivatingChannel = 'deactivatingChannel';
