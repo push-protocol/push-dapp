@@ -33,6 +33,7 @@ const NotAvailablePage = lazy(() => import('pages/NotAvailablePage'));
 const NotFoundPage = lazy(() => import('pages/NotFoundPage'));
 const ReceiveNotifsPage = lazy(() => import('pages/ReceiveNotifsPage'));
 const NotifSettingsPage = lazy(() => import('pages/NotifSettingsPage'));
+const NotificationSettingsPage = lazy(() => import('pages/NotificationSettingsPage'));
 const SendNotifsPage = lazy(() => import('pages/SendNotifsPage'));
 const SpacePage = lazy(() => import('pages/SpacePage'));
 const SupportPage = lazy(() => import('pages/SupportPage'));
@@ -328,9 +329,13 @@ function MasterInterfacePage() {
               path={APP_PATHS.UserSettings}
               element={<UserSettingsPage />}
             />
-            <Route
+            {/* <Route
               path={APP_PATHS.ChannelSettings}
               element={<NotifSettingsPage />}
+            /> */}
+            <Route
+              path={APP_PATHS.ChannelSettings}
+              element={<NotificationSettingsPage />}
             />
             <Route
               path="*"

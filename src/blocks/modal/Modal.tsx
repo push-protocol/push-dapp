@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Button, ButtonProps } from '../button';
 import { Back, Cross } from '../icons';
 import { ModalSize } from './Modal.types';
+import { deviceMediaQ } from 'blocks/theme';
 
 type ButtonAlignment = 'end' | 'center';
 
@@ -27,7 +28,7 @@ const Overlay = styled(Dialog.Overlay)`
   z-index: 1000;
 `;
 
-const ContentContainer = styled(Dialog.Content)<{ size: ModalSize }>`
+const ContentContainer = styled(Dialog.Content) <{ size: ModalSize }>`
   display: flex;
   border-radius: var(--radius-sm);
   border: var(--border-sm) solid var(--stroke-secondary);
@@ -43,12 +44,15 @@ const ContentContainer = styled(Dialog.Content)<{ size: ModalSize }>`
   width: ${({ size }) => (size === 'small' ? '360px' : size === 'medium' ? '500px' : '700px')};
   gap: var(--spacing-sm);
   z-index: 1100;
+  @media ${deviceMediaQ.mobileL}{
+    width:80%;
+  }
 `;
 
 const ContentChildren = styled.div<{ size: ModalSize }>`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-start; 
   flex: 1 0 0;
   width: 100%;
   padding-top: var(--spacing-${({ size }) => (size === 'small' ? 'xxs' : 'xs')});

@@ -22,6 +22,7 @@ export { TextArea, type TextAreaProps } from './textarea';
 export { TextInput } from './textInput';
 export { ToggleSwitch } from './toggleSwtich';
 export { FileUpload } from './fileUpload';
+export { Slider, type SliderProps } from './slider';
 export { Spinner, type SpinnerProps } from './spinner';
 
 export * from './Blocks.colors';

@@ -22,10 +22,11 @@ import {
   Skeleton,
   Text,
   TickDecoratedCircleFilled,
+  Tooltip,
 } from 'blocks';
 import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
 import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannelDropdown';
-import { VerifiedToolTipComponent } from './VerifiedToolTipComponent';
+import { VerifiedToolTipContent } from './VerifiedToolTipComponent';
 import { UserSetting } from 'helpers/channel/types';
 
 // Internal Configs
@@ -169,12 +170,14 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
                 </Link>
 
                 {!!channelDetails?.verified_status && (
-                  <VerifiedToolTipComponent>
-                    <TickDecoratedCircleFilled
-                      size={16}
-                      color="icon-tertiary"
-                    />
-                  </VerifiedToolTipComponent>
+                  <Tooltip overlay={<VerifiedToolTipContent />}>
+                    <Box cursor="pointer">
+                      <TickDecoratedCircleFilled
+                        color="icon-tertiary"
+                        size={16}
+                      />
+                    </Box>
+                  </Tooltip>
                 )}
 
                 <Ethereum

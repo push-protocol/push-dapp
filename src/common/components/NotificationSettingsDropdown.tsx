@@ -6,6 +6,7 @@ import InputSlider from 'components/reusables/sliders/InputSlider';
 import RangeSlider from 'components/reusables/sliders/RangeSlider';
 
 import { ChannelSetting } from 'helpers/channel/types';
+import { css } from 'styled-components';
 
 type NotificationSettingsDropdownProps = {
   // TODO: Change this to the new channel Settings type
@@ -19,7 +20,7 @@ const NotificationSettingsDropdown: FC<NotificationSettingsDropdownProps> = ({
   optInHandler,
   channelSettings,
   loading,
-  onClose
+  onClose,
 }) => {
   const [modifiedSettings, setModifiedSettings] = useState([...channelSettings]);
 
@@ -62,25 +63,45 @@ const NotificationSettingsDropdown: FC<NotificationSettingsDropdownProps> = ({
       <Box
         display="flex"
         flexDirection="column"
-        padding="spacing-none spacing-xs"
+        // padding="spacing-none spacing-xs"
         gap="spacing-xxs"
         alignItems="center"
         alignSelf="stretch"
       >
-        <Box display="flex" flexDirection="column" width="-webkit-fill-available">
+        <Box
+          display="flex"
+          flexDirection="column"
+          width="-webkit-fill-available"
+          maxHeight="30vh"
+          padding="spacing-none spacing-xs"
+          overflow="scroll"
+          customScrollbar
+          css={css`
+            overflow-x: none;
+          `}
+        >
           {modifiedSettings.map((setting, index) => {
             return (
               <Box key={index}>
                 <Box
                   display="flex"
                   flexDirection="column"
-                  padding="spacing-xs spacing-none"
                   gap="spacing-xxs"
+                  padding="spacing-xs spacing-none"
                   alignSelf="stretch"
                   alignItems="flex-start"
                 >
-                  <Box display="flex" flexDirection="row" justifyContent="space-between" alignSelf="stretch">
-                    <Text variant="h6-bold" color="text-primary" textTransform="capitalize">
+                  <Box
+                    display="flex"
+                    flexDirection="row"
+                    justifyContent="space-between"
+                    alignSelf="stretch"
+                  >
+                    <Text
+                      variant="h6-bold"
+                      color="text-primary"
+                      textTransform="capitalize"
+                    >
                       {setting.description}
                     </Text>
                     <ToggleSwitch
@@ -96,7 +117,11 @@ const NotificationSettingsDropdown: FC<NotificationSettingsDropdownProps> = ({
                       alignItems="flex-start"
                       alignSelf="stretch"
                     >
-                      <Text variant="h6-bold" color="text-primary" textTransform="capitalize">
+                      <Text
+                        variant="h6-bold"
+                        color="text-primary"
+                        textTransform="capitalize"
+                      >
                         {setting.default}
                       </Text>
                       <InputSlider
@@ -118,7 +143,11 @@ const NotificationSettingsDropdown: FC<NotificationSettingsDropdownProps> = ({
                       alignItems="flex-start"
                       alignSelf="stretch"
                     >
-                      <Text variant="h6-bold" color="text-primary" textTransform="capitalize">
+                      <Text
+                        variant="h6-bold"
+                        color="text-primary"
+                        textTransform="capitalize"
+                      >
                         {setting.default.lower} - {setting.default.upper}
                       </Text>
                       <RangeSlider
@@ -149,16 +178,39 @@ const NotificationSettingsDropdown: FC<NotificationSettingsDropdownProps> = ({
           alignItems="center"
           justifyContent="flex-end"
           flexDirection="column"
+          padding="spacing-none spacing-xs"
         >
-          <Text color="text-tertiary" variant="bes-regular">
+          <Text
+            color="text-tertiary"
+            variant="bes-regular"
+          >
             You will receive all important updates from this channel.
           </Text>
-          <Box display="flex" flexDirection="column" gap="spacing-md" alignItems="center" width="100%">
-            <Button size="small" variant="primary" onClick={handleOptIn} block loading={loading}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            gap="spacing-md"
+            alignItems="center"
+            width="100%"
+          >
+            <Button
+              size="small"
+              variant="primary"
+              onClick={handleOptIn}
+              block
+              loading={loading}
+            >
               {loading ? 'Subscribing' : 'Subscribe'}
             </Button>
-            <Box width="100%" cursor="pointer" onClick={onClose}>
-              <Text textAlign="center" variant="bs-semibold">
+            <Box
+              width="100%"
+              cursor="pointer"
+              onClick={onClose}
+            >
+              <Text
+                textAlign="center"
+                variant="bs-semibold"
+              >
                 Cancel
               </Text>
             </Box>

@@ -1,4 +1,5 @@
 export const addDelegate = 'addDelegate';
+export const createNotificationSettings = 'createNotificationSettings';
 export const addNewSubgraph = 'addNewSubgraph';
 export const aliasInfo = 'aliasInfo';
 export const allActivities = 'allActivities';

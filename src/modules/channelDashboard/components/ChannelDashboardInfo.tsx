@@ -12,7 +12,6 @@ import { shortenText } from 'helpers/UtilityHelper';
 import { ChannelDetails } from 'queries';
 
 import APP_PATHS from 'config/AppPaths';
-import { appConfig } from 'config';
 
 type ChannelDashboardInfoProps = {
   channelDetails?: ChannelDetails;
@@ -194,27 +193,29 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
               </Text>
             </Skeleton>
 
-            {!onActiveNetwork ? (
-              <Tag
-                label="Setup Pending"
-                variant="warning"
-              />
-            ) : (
-              <>
-                {channelDetails?.activation_status === 0 && (
-                  <Tag
-                    label="Deactivated"
-                    variant="danger"
-                  />
-                )}
-                {channelDetails?.activation_status === 1 && (
-                  <Tag
-                    label="Active"
-                    variant="success"
-                  />
-                )}
-              </>
-            )}
+            <Skeleton isLoading={!channelDetails?.name || isAliasVerified}>
+              {!onActiveNetwork ? (
+                <Tag
+                  label="Setup Pending"
+                  variant="warning"
+                />
+              ) : (
+                <>
+                  {channelDetails?.activation_status === 0 && (
+                    <Tag
+                      label="Deactivated"
+                      variant="danger"
+                    />
+                  )}
+                  {channelDetails?.activation_status === 1 && (
+                    <Tag
+                      label="Active"
+                      variant="success"
+                    />
+                  )}
+                </>
+              )}
+            </Skeleton>
           </Box>
         </Box>
       </Box>

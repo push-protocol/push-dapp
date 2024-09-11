@@ -26,8 +26,10 @@ import {
   InboxBell,
   TickDecoratedCircleFilled,
   Ethereum,
+  Tooltip,
+  PushLogo,
 } from 'blocks';
-import { VerifiedToolTipComponent } from './VerifiedToolTipComponent';
+import { VerifiedToolTipContent } from './VerifiedToolTipComponent';
 import { UserSetting } from 'helpers/channel/types';
 import { useAccount } from 'hooks';
 import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
@@ -119,9 +121,14 @@ const ChannelListItem: FC<ChannelListItemProps> = ({
                 {channelDetails?.name}
               </Link>
               {!!channelDetails?.verified_status && (
-                <VerifiedToolTipComponent>
-                  <TickDecoratedCircleFilled color="icon-tertiary" />
-                </VerifiedToolTipComponent>
+                <Tooltip overlay={<VerifiedToolTipContent />}>
+                  <Box cursor="pointer">
+                    <TickDecoratedCircleFilled
+                      color="icon-tertiary"
+                      size={16}
+                    />
+                  </Box>
+                </Tooltip>
               )}
               <Ethereum
                 width={16}
