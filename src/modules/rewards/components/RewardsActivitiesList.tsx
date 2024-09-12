@@ -31,7 +31,7 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
   // Filter activities based on the index
   const firstGroupActivities = isLoading
     ? Array(2).fill(0)
-    : activityList.filter((activity) => activity.index.startsWith(`social-activity`));
+    : activityList.filter((activity) => activity.index.startsWith(`social-activity`) && activity?.status === 'ENABLED');
 
   const secondGroupActivities = isLoading
     ? Array(7).fill(0)

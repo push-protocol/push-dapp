@@ -1,9 +1,16 @@
 export * from './IllustrationWrapper';
 export * from './Illustrations.types';
 
+export { default as ActivePushPoints } from './components/ActivePushPoints';
+
+export { default as AlphaAccessNFT } from './components/AlphaAccessNFT';
+
 export { default as Arbitrum } from './components/Arbitrum';
 
 export { default as Base } from './components/Base';
+
+export { default as BlueBonusActivitySubscribers } from './components/BlueBonusActivitySubscribers';
+
 export { default as BNB } from './components/BNB';
 
 export { default as ChatIllustration } from './components/Chat';
@@ -16,13 +23,23 @@ export { default as Communication } from './components/Communication';
 
 export { default as CommunicationDark } from './components/CommunicationDark';
 
+export { default as CreateChannelPoints } from './components/CreateChannelPoints';
+
 export { default as Discord } from './components/Discord';
 
 export { default as EarnOnPush } from './components/EarnOnPush';
 
 export { default as Ethereum } from './components/Ethereum';
 
+export { default as GatedGroupPoints } from './components/GatedGroupPoints';
+
+export { default as GradientBonusActivitySubscribers } from './components/GradientBonusActivitySubscribers';
+
+export { default as GreyBonusActivitySubscribers } from './components/GreyBonusActivitySubscribers';
+
 export { default as Linea } from './components/Linea';
+
+export { default as OrangeBonusActivitySubscribers } from './components/OrangeBonusActivitySubscribers';
 
 export { default as PushAlpha } from './components/PushAlpha';
 
@@ -46,7 +63,11 @@ export { default as RewardsBell } from './components/RewardsBell';
 
 export { default as RewardPoints } from './components/RewardPoints';
 
+export { default as RockstarNFT } from './components/RockstarNFT';
+
 export { default as Referral } from './components/Referral';
+
+export { default as SetupProfilePoints } from './components/SetupProfilePoints';
 
 export { default as StakePushBlueCoin } from './components/StakePushBlueCoin';
 
@@ -68,6 +89,8 @@ export { default as StakePushYellowCoin } from './components/StakePushYellowCoin
 
 export { default as StakePushYellowMultiplier } from './components/StakePushYellowMultiplier';
 
+export { default as SubscribePoints } from './components/SubscribePoints';
+
 export { default as TripleRewardsCoin } from './components/TripleRewardsCoin';
 
 export { default as Twitter } from './components/Twitter';
@@ -79,4 +102,7 @@ export { default as RewardsCoin } from './components/RewardsCoin';
 export { default as PushLogo } from './components/PushLogo';
 
 export { default as Polygon } from './components/Polygon';
+
 export { default as PolygonZK } from './components/PolygonZK';
+
+export { default as YellowBonusActivitySubscribers } from './components/YellowBonusActivitySubscribers';
