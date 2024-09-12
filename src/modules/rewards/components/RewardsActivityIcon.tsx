@@ -20,7 +20,9 @@ import {
   StakePushGreyCoin,
   StakePushGreyMultiplier,
   StakePushOrangeCoin,
+  StakePushOrangeDoubleStarMultiplier,
   StakePushOrangeMultiplier,
+  StakePushPurpleCoin,
   StakePushYellowCoin,
   StakePushYellowMultiplier,
   SubscribePoints,
@@ -169,14 +171,18 @@ const RewardsActivityIcon: FC<RewardsActivityIconProp> = ({ type }) => {
     );
   }
 
-  if (
-    type === 'stake_10_uni_v2_lp_epoch' ||
-    type === 'stake_10k_push_epoch' ||
-    type === 'stake_5_uni_v2_lp_epoch' ||
-    type === 'stake_5k_push_epoch'
-  ) {
+  if (type === 'stake_5_uni_v2_lp_epoch' || type === 'stake_5k_push_epoch') {
     return (
       <StakePushOrangeCoin
+        width={48}
+        height={48}
+      />
+    );
+  }
+
+  if (type === 'stake_10_uni_v2_lp_epoch' || type === 'stake_10k_push_epoch') {
+    return (
+      <StakePushPurpleCoin
         width={48}
         height={48}
       />
@@ -219,14 +225,18 @@ const RewardsActivityIcon: FC<RewardsActivityIconProp> = ({ type }) => {
     );
   }
 
-  if (
-    type === 'stake_10_uni_v2_lp_one_time' ||
-    type === 'stake_10k_push_one_time' ||
-    type === 'stake_5_uni_v2_lp_one_time' ||
-    type === 'stake_5k_push_one_time'
-  ) {
+  if (type === 'stake_5_uni_v2_lp_one_time' || type === 'stake_5k_push_one_time') {
     return (
       <StakePushOrangeMultiplier
+        width={48}
+        height={48}
+      />
+    );
+  }
+
+  if (type === 'stake_10_uni_v2_lp_one_time' || type === 'stake_10k_push_one_time') {
+    return (
+      <StakePushOrangeDoubleStarMultiplier
         width={48}
         height={48}
       />

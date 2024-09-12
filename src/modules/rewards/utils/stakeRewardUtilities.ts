@@ -50,11 +50,7 @@ export const getActivityData = (
 // and also, doing a filter and sort of all the unis, and all push to get the latest activities in the useStakeRewardsResetTime hook
 export const filterAndSortActivities = (prefix: string, activities: any[], multiplier?: boolean) => {
   return activities
-    .filter(
-      (activity) =>
-        activity.index.startsWith(multiplier ? `multiplier-${prefix}` : `point-${prefix}`) &&
-        activity?.status === 'ENABLED'
-    )
+    .filter((activity) => activity.index.startsWith(multiplier ? `multiplier-${prefix}` : `point-${prefix}`))
     .sort(sortByIndexNumber);
 };
 

@@ -85,6 +85,10 @@ export { default as StakePushOrangeCoin } from './components/StakePushOrangeCoin
 
 export { default as StakePushOrangeMultiplier } from './components/StakePushOrangeMultiplier';
 
+export { default as StakePushOrangeDoubleStarMultiplier } from './components/StakePushOrangeDoubleStarMultiplier';
+
+export { default as StakePushPurpleCoin } from './components/StakePushPurpleCoin';
+
 export { default as StakePushYellowCoin } from './components/StakePushYellowCoin';
 
 export { default as StakePushYellowMultiplier } from './components/StakePushYellowMultiplier';
