@@ -5,6 +5,8 @@ export { default as Add } from './components/Add';
 
 export { default as AddEmoji } from './components/AddEmoji';
 
+export { default as ArbitrumMonotone } from './components/ArbitrumMonotone';
+
 export { default as ArrowUpRight } from './components/ArrowUpRight';
 
 export { default as Asterisk } from './components/Asterisk';
@@ -14,6 +16,8 @@ export { default as Back } from './components/Back';
 export { default as BellRingFilled } from './components/BellRingFilled';
 export { default as BellSimple } from './components/BellSimple';
 export { default as BellSimpleSlash } from './components/BellSimpleSlash';
+
+export { default as BnbMonotone } from './components/BnbMonotone';
 
 export { default as CalendarBlank } from './components/CalendarBlank';
 
@@ -54,6 +58,8 @@ export { default as Dash } from './components/Dash';
 export { default as Dashboard } from './components/Dashboard';
 
 export { default as EditProfile } from './components/EditProfile';
+
+export { default as EtheriumMonotone } from './components/EtheriumMonotone';
 
 export { default as Ellipse } from './components/Ellipse';
 
@@ -106,6 +112,8 @@ export { default as NotificationMobile } from './components/NotificationMobile';
 
 export { default as OptOut } from './components/OptOut';
 
+export { default as OptimismMonotone } from './components/OptimismMonotone';
+
 export { default as Pencil } from './components/Pencil';
 
 export { default as PlusCircle } from './components/PlusCircle';
@@ -117,6 +125,10 @@ export { default as PlusSquareFilled } from './components/PlusSquareFilled';
 export { default as PrevIconSlider } from './components/PrevIconSlider';
 
 export { default as Pin } from './components/Pin';
+
+export { default as PolygonMonotone } from './components/PolygonMonotone';
+
+export { default as PushMonotone } from './components/PushMonotone';
 
 export { default as PublicChat } from './components/PublicChat';
 export { default as PrivateChat } from './components/PrivateChat';
