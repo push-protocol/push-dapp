@@ -11,3 +11,4 @@ export * from './useAddSubgraph';
 export * from './useReactivateChannel';
 export * from './useEditChannel';
 export * from './useGetAliasInfo';
+export * from './useGetChannelNotifications';
