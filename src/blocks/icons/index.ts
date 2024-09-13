@@ -145,6 +145,8 @@ export { default as Star } from './components/Star';
 
 export { default as Settings } from './components/Settings';
 
+export { default as Stopwatch } from './components/Stopwatch';
+
 export { default as Swap } from './components/Swap';
 
 export { default as Tick } from './components/Tick';

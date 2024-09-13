@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 
 // hooks
 import { useAccount } from 'hooks';
@@ -10,7 +10,7 @@ import { useRewardsContext } from 'contexts/RewardsContext';
 import { walletToCAIP10 } from 'helpers/w2w';
 
 // components
-import { Alert, Box, Clockwise, Skeleton, Text } from 'blocks';
+import { Alert, Box, Clockwise, Lozenge, Skeleton, Stopwatch, Text } from 'blocks';
 import { StakePushActivitiesListItem } from './StakePushActivitiesListItem';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
 import { useStakeRewardsResetTime } from '../hooks/useStakeRewardsResetTime';
@@ -36,6 +36,16 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
     caip10WalletAddress: caip10WalletAddress,
   });
 
+  const activityResetDate = daysToReset + 7;
+
+  const isEpochStatusActive = useMemo(() => {
+    return daysToReset != null && !multiplier && daysToReset >= 0 && activityResetDate > 7;
+  }, [daysToReset, multiplier, activityResetDate]);
+
+  const hasEpochEnded = useMemo(() => {
+    return daysToReset != null && activityResetDate >= 0 && activityResetDate <= 7 && !multiplier;
+  }, [daysToReset, activityResetDate, multiplier]);
+
   return (
     <Box
       display="flex"
@@ -50,12 +60,37 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
         gap={{ ml: 'spacing-sm' }}
       >
         <Box>
-          <Text
-            variant="h4-bold"
-            color="text-primary"
+          <Box
+            display="flex"
+            justifyContent="align-items"
+            alignItems="center"
+            gap="spacing-xs"
           >
-            {title}
-          </Text>
+            <Text
+              variant="h4-bold"
+              color="text-primary"
+            >
+              {title}
+            </Text>
+
+            {isEpochStatusActive && (
+              <Lozenge
+                size="small"
+                icon={<Stopwatch color="icon-brand-medium" />}
+              >
+                {daysToReset} DAYS
+              </Lozenge>
+            )}
+
+            {hasEpochEnded && (
+              <Lozenge
+                size="small"
+                icon={<Stopwatch color="icon-brand-medium" />}
+              >
+                ENDED
+              </Lozenge>
+            )}
+          </Box>
 
           <RewardsActivityTitle
             activityTitle={subtitle}
@@ -71,7 +106,7 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
           alignItems="center"
           gap="spacing-xxxs"
         >
-          {isWalletConnected && timeline && daysToReset > 0 && (
+          {isWalletConnected && timeline && activityResetDate != null && activityResetDate >= 0 && (
             <Skeleton
               isLoading={daysToReset == null}
               width="240px"
@@ -89,9 +124,9 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
                 />
                 <Text
                   variant="bs-semibold"
-                  color="text-tertiary"
+                  color={activityResetDate <= 7 ? 'text-brand-medium' : 'text-tertiary'}
                 >
-                  Activity resets in {daysToReset} days
+                  Activity resets in {activityResetDate} days
                 </Text>
               </Box>
             </Skeleton>
@@ -151,6 +186,16 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
           ))}
         </Box>
       </Box>
+
+      {!multiplier && (
+        <Text
+          textAlign="center"
+          variant="bs-semibold"
+          color="text-tertiary"
+        >
+          Staking rewards can be claimed once per reset after a cooldown period of 7 days.
+        </Text>
+      )}
     </Box>
   );
 };
