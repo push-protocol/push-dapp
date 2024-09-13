@@ -16,6 +16,7 @@ export type StakeActivitiesItemProps = {
   isLoadingItem: boolean;
   setErrorMessage: (errorMessage: string) => void;
   isLocked: boolean;
+  hasEpochEnded?: boolean;
 };
 const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
   userId,
@@ -23,6 +24,7 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
   isLoadingItem,
   setErrorMessage,
   isLocked,
+  hasEpochEnded,
 }) => {
   const {
     data: usersSingleActivity,
@@ -31,6 +33,8 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
   } = useGetRewardsActivity({ userId, activityId: activity.id }, { enabled: !!userId });
 
   const { isWalletConnected } = useAccount();
+
+  const hasActivityEndedUnclaimed = usersSingleActivity?.status !== 'COMPLETED' && hasEpochEnded;
 
   const isLockedOrNotConnected = isLocked || !isWalletConnected;
   return (
@@ -156,7 +160,17 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
             </Button>
           )}
 
-          {!isLocked && isWalletConnected && (
+          {hasActivityEndedUnclaimed && !isLocked && isWalletConnected && (
+            <Button
+              variant="tertiary"
+              size="small"
+              disabled
+            >
+              Ended
+            </Button>
+          )}
+
+          {!hasActivityEndedUnclaimed && !isLocked && isWalletConnected && (
             <ActivityButton
               userId={userId}
               activityTypeId={activity.id}

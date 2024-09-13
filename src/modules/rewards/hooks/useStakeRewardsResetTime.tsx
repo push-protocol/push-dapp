@@ -76,7 +76,7 @@ const useStakeRewardsResetTime = ({ multiplier }: StakeRewardsResetTime) => {
   const daysToReset = useMemo(() => {
     const currentTime = Date.now() / 1000; // Current time in seconds
     const differenceInSeconds = (resetDate as number) - currentTime;
-    return Math.floor(differenceInSeconds / (60 * 60 * 24)); // Convert seconds to days and add the 7 days rest period
+    return Math.floor(differenceInSeconds / (60 * 60 * 24));
   }, [resetDate]);
 
   // Helper function to check if 7 days have passed since the stored epoch time (in seconds)

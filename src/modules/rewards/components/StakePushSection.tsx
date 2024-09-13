@@ -39,12 +39,12 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
   const activityResetDate = daysToReset + 7;
 
   const isEpochStatusActive = useMemo(() => {
-    return daysToReset != null && !multiplier && daysToReset >= 0 && activityResetDate > 7;
-  }, [daysToReset, multiplier, activityResetDate]);
+    return daysToReset != null && !multiplier && daysToReset >= 0 && activityResetDate > 7 && isWalletConnected;
+  }, [daysToReset, multiplier, activityResetDate, isWalletConnected]);
 
   const hasEpochEnded = useMemo(() => {
-    return daysToReset != null && activityResetDate >= 0 && activityResetDate <= 7 && !multiplier;
-  }, [daysToReset, activityResetDate, multiplier]);
+    return daysToReset != null && activityResetDate >= 0 && activityResetDate <= 7 && !multiplier && isWalletConnected;
+  }, [daysToReset, activityResetDate, multiplier, isWalletConnected]);
 
   return (
     <Box
@@ -164,6 +164,7 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
               isLoadingItem={isLoading}
               setErrorMessage={setErrorMessage}
               isLocked={isLocked}
+              hasEpochEnded={hasEpochEnded}
             />
           ))}
         </Box>
@@ -182,6 +183,7 @@ const StakePushSection: FC<StakePushPoints> = ({ title, subtitle, timeline, mult
               isLoadingItem={isLoading}
               setErrorMessage={setErrorMessage}
               isLocked={isLocked}
+              hasEpochEnded={hasEpochEnded}
             />
           ))}
         </Box>
