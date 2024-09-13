@@ -21,12 +21,12 @@ export type TextInputProps = {
   value: string | number;
 };
 
-const Container = styled.div<{ css?: FlattenSimpleInterpolation }>`
+const Container = styled.div<{ css?: FlattenSimpleInterpolation; label: TextInputProps['label'] }>`
   align-items: flex-start;
   display: flex;
   flex-direction: column;
   flex: 1 0 0;
-  gap: var(--spacing-xxs, 8px);
+  gap: var(--spacing-${({ label }) => (label ? 'xxs' : 'none')});
 
   /* Custom CSS applied via styled component css prop */
   ${(props) => props.css || ''};
@@ -151,7 +151,10 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     ref
   ) => {
     return (
-      <Container css={css}>
+      <Container
+        css={css}
+        label={label}
+      >
         {label && (
           <LabelContainer>
             <InputText

@@ -5,7 +5,7 @@ import { lazy, Suspense, useState, useEffect, useContext } from 'react';
 import useToast from 'hooks/useToast';
 import { MdWarning } from 'react-icons/md';
 import { VscClose } from 'react-icons/vsc';
-import { Navigate, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled from 'styled-components';
@@ -32,9 +32,9 @@ const NFTPage = lazy(() => import('pages/NFTPage'));
 const NotAvailablePage = lazy(() => import('pages/NotAvailablePage'));
 const NotFoundPage = lazy(() => import('pages/NotFoundPage'));
 const ReceiveNotifsPage = lazy(() => import('pages/ReceiveNotifsPage'));
-const NotifSettingsPage = lazy(() => import('pages/NotifSettingsPage'));
+// const NotifSettingsPage = lazy(() => import('pages/NotifSettingsPage'));
 const NotificationSettingsPage = lazy(() => import('pages/NotificationSettingsPage'));
-const SendNotifsPage = lazy(() => import('pages/SendNotifsPage'));
+// const SendNotifsPage = lazy(() => import('pages/SendNotifsPage'));
 const SpacePage = lazy(() => import('pages/SpacePage'));
 const SupportPage = lazy(() => import('pages/SupportPage'));
 const TutorialPage = lazy(() => import('pages/TutorialPage'));
@@ -84,9 +84,6 @@ const rewardsPointsPagePaths = [APP_PATHS.Rewards, APP_PATHS.RewardsActivities, 
 
 // Create Header
 function MasterInterfacePage() {
-  // Get search params
-  const [searchParams] = useSearchParams();
-
   // get location
   const location = useLocation();
 
@@ -104,49 +101,6 @@ function MasterInterfacePage() {
       showMetamaskPushSnap();
     }
   }, [location]);
-
-  // Check location and change it if search param is present
-  // Get nativage from useNavigate
-  const navigate = useNavigate();
-
-  // if (searchParams.get('channel')) {
-  //   if (channelid !== searchParams.get('channel')) {
-  //     channelid = searchParams.get('channel');
-  //     console.log('channel search', searchParams.get('channel'));
-  //     navigate(`/chek`, { replace: true, relative: true });
-  //   }
-  // }
-
-  // // For redirecting if required
-  //  useEffect(() => {
-  //   const checkAndRedirect = () => {
-  //     if (location.pathname === APP_PATHS.Channels && searchParams.get('channel')) {
-  //       const navigate = useNavigate();
-
-  //       const channelId = searchParams.get('channel');
-  //       console.log('redirecting to channel', `${APP_PATHS.Channels}/${channelId}`);
-  //       navigate({ pathname: `${APP_PATHS.Channels}/${channelId}` });
-  //     }
-  //   }
-
-  //   checkAndRedirect();
-  // }, []);
-
-  const ChannelsProfilePage = () => {
-    const channelid = searchParams.get('channel');
-
-    if (channelid) {
-      navigate(`${APP_PATHS.Channels}/${channelid}`);
-    }
-
-    return (
-      <ChannelsPage
-        loadTeaser={setLoadTeaserVideo}
-        playTeaser={setPlayTeaserVideo}
-        channelID={channelid}
-      />
-    );
-  };
 
   // For toast
   const blockedLoadingToast = useToast();
@@ -224,21 +178,9 @@ function MasterInterfacePage() {
 
             {/* Enable Channel specific routes */}
             <Route
-              path={`${APP_PATHS.Channels}/:channelid`}
-              element={
-                <ChannelsPage
-                  loadTeaser={setLoadTeaserVideo}
-                  playTeaser={setPlayTeaserVideo}
-                  channelID={null}
-                />
-              }
+              path={`${APP_PATHS.Channels}`}
+              element={<ChannelsPage />}
             />
-
-            <Route
-              path={APP_PATHS.Channels}
-              element={<ChannelsProfilePage />}
-            />
-
             <Route
               path={APP_PATHS.Dashboard}
               element={<ChannelDashboardPage />}
