@@ -182,3 +182,16 @@ export type ChannelNotification = {
 };
 
 export type ChannelsNotificationsRepsonse = { notifications: ChannelNotification[]; total: number };
+
+export type ChannelsListModelledResponse = {
+  channels: Array<ChannelDetails>;
+  page: number;
+  pageSize: number;
+  total: number;
+};
+
+export type ChannelsListParams = {
+  order?: string;
+  pageSize?: number;
+  pageNumber?: number;
+};

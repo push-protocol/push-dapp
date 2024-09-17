@@ -29,7 +29,7 @@ import APP_PATHS from 'config/AppPaths';
 function MobileNavigation({ showNavBar, setShowNavBar }) {
   const {
     delegatees,
-    aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified }
+    aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified },
   } = useSelector((state: any) => state.admin);
   const [refresh, setRefresh] = useState(false);
   const { processingState } = useSelector((state: any) => state.channelCreation);
@@ -75,7 +75,7 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
         newNavSetup.developersList[0].data.activeSrc = channelDetails.iconV2;
         newNavSetup.developersList[0].data.hidden = false;
         newNavSetup.developersList[0].data.loading = false;
-        newNavSetup.developersList[0].data.href = `${APP_PATHS.ChannelDashboard}/${channelDetails.channel}`;
+        newNavSetup.developersList[0].data.href = `${APP_PATHS.ChannelDashboard(channelDetails.channel)}`;
       } else {
         newNavSetup.developersList[0].data.name = 'Create Channel';
         newNavSetup.developersList[0].data.hidden = false;
@@ -148,7 +148,7 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
       messagingList: messagingList,
       developersList: developersList,
       third: thirdList,
-      navigation: navList
+      navigation: navList,
     };
     setNavigationSetup(finalList);
   }, []);
@@ -435,7 +435,7 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
         Section = PrimarySection;
         fontSize = 'normal';
     }
-    let rendered = Object.keys(items).map(function(key) {
+    let rendered = Object.keys(items).map(function (key) {
       const section = items[key];
       // console.log(section)
       const data = section.data;
@@ -453,9 +453,20 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
       //   dispatch(setDeveloperOpen(false))
       // }
       let innerRendered = (
-        <Section key={key} flex="1" align="stretch" size={fontSize}>
+        <Section
+          key={key}
+          flex="1"
+          align="stretch"
+          size={fontSize}
+        >
           {secondaryButton ? (
-            <Item padding="5px 0px" flexBasis="100%" align="stretch" direction="row" overflow="hidden">
+            <Item
+              padding="5px 0px"
+              flexBasis="100%"
+              align="stretch"
+              direction="row"
+              overflow="hidden"
+            >
               {section.hasItems
                 ? renderChildItems(data.drilldown, section.opened, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY)
                 : null}
@@ -484,7 +495,13 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
               </SectionInnerGroupContainer>
             </Item>
           ) : (
-            <Item padding="5px 0px" flexBasis="100%" align="stretch" direction="row" overflow="hidden">
+            <Item
+              padding="5px 0px"
+              flexBasis="100%"
+              align="stretch"
+              direction="row"
+              overflow="hidden"
+            >
               <SectionInnerGroupContainer
                 flex="1"
                 align="stretch"
@@ -564,12 +581,22 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
     }
 
     let rendered = (
-      <SectionGroup align="stretch" margin="5px 0px" opened={opened} refresh={refresh}>
-        {Object.keys(drilldown).map(function(key) {
+      <SectionGroup
+        align="stretch"
+        margin="5px 0px"
+        opened={opened}
+        refresh={refresh}
+      >
+        {Object.keys(drilldown).map(function (key) {
           const item = drilldown[key];
           const data = item.data;
           return (
-            <SectionItem key={key} flex="1" align="stretch" size="small">
+            <SectionItem
+              key={key}
+              flex="1"
+              align="stretch"
+              size="small"
+            >
               <SectionInnerItemContainer
                 flex="1"
                 align="stretch"
@@ -614,10 +641,19 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
   };
 
   return (
-    <Item direction="column" align="flex-start">
+    <Item
+      direction="column"
+      align="flex-start"
+    >
       {!navigationSetup && (
-        <Item padding="20px" justify="flex-start">
-          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
+        <Item
+          padding="20px"
+          justify="flex-start"
+        >
+          <LoaderSpinner
+            type={LOADER_TYPE.SEAMLESS}
+            spinnerSize={24}
+          />
         </Item>
       )}
       {navigationSetup && Object.keys(navigationSetup).length > 0 && (
@@ -643,7 +679,10 @@ function MobileNavigation({ showNavBar, setShowNavBar }) {
             </PrimaryInner>
           </Primary>
 
-          <Footer justify="flex-start" align="stretch">
+          <Footer
+            justify="flex-start"
+            align="stretch"
+          >
             {renderMainItems(navigationSetup.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD)}
           </Footer>
         </>

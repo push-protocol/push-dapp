@@ -185,6 +185,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         >
           <InputContainer>
             {icon}
+            {/* <div>{icon}</div> */}
             <input
               type={type}
               disabled={!!disabled}

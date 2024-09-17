@@ -22,6 +22,7 @@ const ChannelDashboardPage = lazy(() => import('pages/ChannelDashboardPage'));
 const ChannelDashboardPageV2 = lazy(() => import('pages/ChannelDashboardPageV2'));
 const CreateChannelPage = lazy(() => import('pages/CreateChannelPage'));
 const ChannelsPage = lazy(() => import('pages/ChannelsPage'));
+const ChannelDetailsPage = lazy(() => import('pages/ChannelDetailsPage'));
 const ChatPage = lazy(() => import('pages/ChatPage'));
 const ComingSoonPage = lazy(() => import('pages/ComingSoonPage'));
 const FAQPage = lazy(() => import('pages/FAQPage'));
@@ -102,10 +103,8 @@ function MasterInterfacePage() {
     }
   }, [location]);
 
-  // For toast
   const blockedLoadingToast = useToast();
 
-  // Render
   return (
     <Container mode={mode}>
       <Interface location={location.pathname}>
@@ -176,11 +175,17 @@ function MasterInterfacePage() {
             {/* <Route path="chat-new" element={<NewChatPage />} /> */}
             {/* </Route> */}
 
-            {/* Enable Channel specific routes */}
+            {/* Needs to be removed */}
             <Route
               path={`${APP_PATHS.Channels}`}
               element={<ChannelsPage />}
             />
+
+            <Route
+              path={APP_PATHS.ChannelDetails()}
+              element={<ChannelDetailsPage />}
+            />
+
             <Route
               path={APP_PATHS.Dashboard}
               element={<ChannelDashboardPage />}
@@ -192,7 +197,7 @@ function MasterInterfacePage() {
             />
 
             <Route
-              path={`${APP_PATHS.ChannelDashboard}/:channelId`}
+              path={APP_PATHS.ChannelDashboard()}
               element={<ChannelDashboardPageV2 />}
             />
 

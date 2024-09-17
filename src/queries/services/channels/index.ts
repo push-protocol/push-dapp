@@ -12,3 +12,4 @@ export * from './verifyAliasChain';
 export * from './reactivateChannel';
 export * from './getAliasInfo';
 export * from './getChannelNotifications';
+export * from './getChannelsList';

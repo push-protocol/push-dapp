@@ -55,7 +55,7 @@ const VerifyAliasChain: FC<VerifyAliasChainProps> = ({ alaisDetails }) => {
     verifyAliasChain(
       {
         userPushSDKInstance,
-        channelAddress: alaisDetails?.channel ?? ''
+        channelAddress: alaisDetails?.channel ?? '',
       },
       {
         onSuccess: () => {
@@ -63,10 +63,15 @@ const VerifyAliasChain: FC<VerifyAliasChainProps> = ({ alaisDetails }) => {
             toastTitle: 'Success',
             toastMessage: 'Verification Successful',
             toastType: 'SUCCESS',
-            getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
+            getToastIcon: (size) => (
+              <MdCheckCircle
+                size={size}
+                color="green"
+              />
+            ),
           });
           refetchChannelDetails();
-          navigate(`${APP_PATHS.ChannelDashboard}/${account}}`);
+          navigate(`${APP_PATHS.ChannelDashboard(account)}`);
         },
         onError: (error: any) => {
           if (error) {
@@ -74,35 +79,61 @@ const VerifyAliasChain: FC<VerifyAliasChainProps> = ({ alaisDetails }) => {
               toastTitle: 'Error',
               toastMessage: error.message,
               toastType: 'ERROR',
-              getToastIcon: (size) => <MdError size={size} color="red" />
+              getToastIcon: (size) => (
+                <MdError
+                  size={size}
+                  color="red"
+                />
+              ),
             });
           }
-        }
+        },
       }
     );
   };
   return (
-    <Box display="flex" flexDirection="column" gap="spacing-xl" width="100%" alignItems="center">
+    <Box
+      display="flex"
+      flexDirection="column"
+      gap="spacing-xl"
+      width="100%"
+      alignItems="center"
+    >
       {errorMessage && (
         <Box width="100%">
           <Alert
             variant="error"
             heading={errorMessage}
             showIcon
-            onAction={isAliasNetworkVerified ? () => navigate(`${APP_PATHS.ChannelDashboard}/${account}}`) : undefined}
+            onAction={isAliasNetworkVerified ? () => navigate(`${APP_PATHS.ChannelDashboard(account)}`) : undefined}
             actionText={isAliasNetworkVerified ? 'Back to Home' : undefined}
           />
         </Box>
       )}
 
-      <Box display="flex" flexDirection="column" gap="spacing-sm">
-        <Text variant="bs-semibold" textAlign="center" color="text-primary">
+      <Box
+        display="flex"
+        flexDirection="column"
+        gap="spacing-sm"
+      >
+        <Text
+          variant="bs-semibold"
+          textAlign="center"
+          color="text-primary"
+        >
           You’re almost there!
           <br /> Verify the address on the new chain to send notifications.
         </Text>
-        <TextInput disabled value={aliasAddress} />
+        <TextInput
+          disabled
+          value={aliasAddress}
+        />
       </Box>
-      <Button disabled={validateInput()} onClick={handleVerifyAliasChain} loading={isPending}>
+      <Button
+        disabled={validateInput()}
+        onClick={handleVerifyAliasChain}
+        loading={isPending}
+      >
         {isPending ? 'Verifying' : 'Verify New Address'}
       </Button>
     </Box>

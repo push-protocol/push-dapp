@@ -293,7 +293,6 @@ export default function App() {
   }, []);
 
   const steps = UserJourneySteps({ darkMode });
-
   const handleJoyrideCallback = (data: CallBackProps) => {
     const { action, lifecycle, index } = data;
     if (lifecycle === 'ready') {
@@ -356,7 +355,7 @@ export default function App() {
           <ChatUIProvider
             user={userPushSDKInstance}
             theme={darkMode && darkChatTheme}
-            debug={false}
+            debug={true}
             uiConfig={{
               suppressToast: false,
             }}
