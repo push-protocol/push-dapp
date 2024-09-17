@@ -12,8 +12,8 @@ import { isAddress } from 'ethers/lib/utils';
 import APP_PATHS from 'config/AppPaths';
 
 const ChannelDetails: FC = () => {
-  //redirect if if id is null
   const { id } = useParams();
+  console.debug(id, 'channel id');
   const navigate = useNavigate();
   const [selectedChannelId, setSelectedChannelId] = useState<string>(id || '');
 
@@ -27,9 +27,11 @@ const ChannelDetails: FC = () => {
   const selectedChannel = channelsList?.find((channel) => channel?.channel === selectedChannelId);
   console.debug(selectedChannel, channelsList, 'channel');
 
+  //redirect if if id is null
   useEffect(() => {
     if (!isAddress(id || '')) navigate(APP_PATHS.Channels);
   }, [id]);
+
   return (
     <Box
       height="90vh"
