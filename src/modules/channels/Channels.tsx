@@ -1,4 +1,5 @@
 import { FC, useState } from 'react';
+import { ChannelListOrderType, ChannelListSortType } from '@pushprotocol/restapi';
 import InfiniteScroll from 'react-infinite-scroller';
 import { Box, Pill, Search, Select, Spinner, TextInput } from 'blocks';
 import { appConfig } from 'config';
@@ -16,7 +17,8 @@ const Channels: FC<ChannelsProps> = () => {
 
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetChannelslist({
     pageSize: 21,
-    order: 'desc',
+    order: ChannelListOrderType.DESCENDING,
+    sort: ChannelListSortType.SUBSCRIBER,
   });
 
   const channels = isLoading ? Array(9).fill(0) : data?.pages.flatMap((page) => page.channels) || [];

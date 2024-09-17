@@ -190,7 +190,7 @@ export type ChannelsListModelledResponse = {
   total: number;
 };
 
-export type ChannelsListParams = {
+export type ChannelListParams = {
   sort?: ChannelListSortType;
   order?: ChannelListOrderType;
   pageSize?: number;

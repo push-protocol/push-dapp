@@ -1,11 +1,11 @@
 import { PushAPI } from '@pushprotocol/restapi';
 
 import { getChannelsListModelCreator } from '../../models';
-import { ChannelsListParams } from 'queries/types';
+import { ChannelListParams } from 'queries/types';
 
 type GetChannelsListParams = {
   userPushSDKInstance: PushAPI;
-} & ChannelsListParams;
+} & ChannelListParams;
 
 export const getChannelsList = ({ userPushSDKInstance, pageNumber, pageSize, order, sort }: GetChannelsListParams) =>
   userPushSDKInstance.channel
