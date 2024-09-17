@@ -111,7 +111,7 @@ function NotificationSettings() {
   const navigate = useNavigate();
 
   const goBack = () => {
-    navigate(`${APP_PATHS.ChannelDashboard}/${account}`, { replace: true });
+    navigate(`${APP_PATHS.ChannelDashboard(account)}`, { replace: true });
   };
 
   const addSetting = (newSetting: ChannelSetting) => {

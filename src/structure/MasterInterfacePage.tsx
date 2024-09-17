@@ -22,6 +22,7 @@ const ChannelDashboardPage = lazy(() => import('pages/ChannelDashboardPage'));
 const ChannelDashboardPageV2 = lazy(() => import('pages/ChannelDashboardPageV2'));
 const CreateChannelPage = lazy(() => import('pages/CreateChannelPage'));
 const ChannelsPage = lazy(() => import('pages/ChannelsPage'));
+const ChannelDetailsPage = lazy(() => import('pages/ChannelDetailsPage'));
 const ChatPage = lazy(() => import('pages/ChatPage'));
 const ComingSoonPage = lazy(() => import('pages/ComingSoonPage'));
 const FAQPage = lazy(() => import('pages/FAQPage'));
@@ -132,21 +133,21 @@ function MasterInterfacePage() {
   //   checkAndRedirect();
   // }, []);
 
-  const ChannelsProfilePage = () => {
-    const channelid = searchParams.get('channel');
+  // const ChannelsProfilePage = () => {
+  //   const channelid = searchParams.get('channel');
 
-    if (channelid) {
-      navigate(`${APP_PATHS.Channels}/${channelid}`);
-    }
+  //   if (channelid) {
+  //     navigate(`${APP_PATHS.Channels}/${channelid}`);
+  //   }
 
-    return (
-      <ChannelsPage
-        loadTeaser={setLoadTeaserVideo}
-        playTeaser={setPlayTeaserVideo}
-        channelID={channelid}
-      />
-    );
-  };
+  //   return (
+  //     <ChannelsPage
+  //       loadTeaser={setLoadTeaserVideo}
+  //       playTeaser={setPlayTeaserVideo}
+  //       channelID={channelid}
+  //     />
+  //   );
+  // };
 
   // For toast
   const blockedLoadingToast = useToast();
@@ -222,9 +223,9 @@ function MasterInterfacePage() {
             {/* <Route path="chat-new" element={<NewChatPage />} /> */}
             {/* </Route> */}
 
-            {/* Enable Channel specific routes */}
+            {/* Needs to be removed */}
             <Route
-              path={`${APP_PATHS.Channels}/:channelid`}
+              path={`${APP_PATHS.Channels}`}
               element={
                 <ChannelsPage
                   loadTeaser={setLoadTeaserVideo}
@@ -235,8 +236,8 @@ function MasterInterfacePage() {
             />
 
             <Route
-              path={APP_PATHS.Channels}
-              element={<ChannelsProfilePage />}
+              path={APP_PATHS.ChannelDetails()}
+              element={<ChannelDetailsPage />}
             />
 
             <Route
@@ -250,7 +251,7 @@ function MasterInterfacePage() {
             />
 
             <Route
-              path={`${APP_PATHS.ChannelDashboard}/:channelId`}
+              path={APP_PATHS.ChannelDashboard()}
               element={<ChannelDashboardPageV2 />}
             />
 

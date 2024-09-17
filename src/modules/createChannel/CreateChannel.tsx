@@ -144,7 +144,7 @@ const CreateChannel = () => {
                 'Creating your channel, Aligning pixels, adjusting padding... This may take some time.',
                 'Redirecting... Please do not refresh'
               );
-              navigate(`${APP_PATHS.ChannelDashboard}/${account}`);
+              navigate(`${APP_PATHS.ChannelDashboard(account)}`);
             }, 3000);
           }
         },
