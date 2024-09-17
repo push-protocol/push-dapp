@@ -76,6 +76,9 @@ const Channels: FC<ChannelsProps> = () => {
             display="flex"
             overflow="scroll"
             gap="spacing-xs"
+            css={css`
+              flex-shrink: 0;
+            `}
           >
             {categories.map((cat) => (
               <Pill
@@ -99,7 +102,7 @@ const Channels: FC<ChannelsProps> = () => {
             `}
           >
             <InfiniteScroll
-              pageStart={0}
+              pageStart={1}
               loadMore={() => fetchNextPage()}
               hasMore={hasMoreData}
               loader={

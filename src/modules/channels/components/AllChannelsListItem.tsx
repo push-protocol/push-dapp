@@ -35,7 +35,7 @@ const AllChannelsListItem: FC<AllChannelsListItemProps> = ({ channelDetails, isL
       isSubscriptionLoading={isSubscriptionLoading}
       handleRefetch={handleRefetch}
       userSettings={userChannelSettings}
-      //  width={{ initial: 'auto' }}
+      width={{ initial: 'inherit' }}
     />
   );
 };
