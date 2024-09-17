@@ -16,3 +16,21 @@ export const getSelectChains = (chainIdList: Array<number>) => {
     };
   });
 };
+
+/**
+ * @param count
+ * @returns returns formatted number
+ */
+export const formatSubscriberCount = (count?: number) => {
+  if (count) {
+    if (count >= 1000000) {
+      return (count / 1000000).toFixed(1) + 'M';
+    } else if (count >= 1000) {
+      return (count / 1000).toFixed(1) + 'K';
+    } else {
+      return count;
+    }
+  } else {
+    return 0;
+  }
+};

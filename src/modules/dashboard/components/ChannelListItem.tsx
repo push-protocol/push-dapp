@@ -6,10 +6,7 @@ import { css } from 'styled-components';
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 
 //Configs
-import { LOGO_ALIAS_CHAIN } from 'common';
-
-//Utility functions
-import { formatSubscriberCount } from '../Dashboard.utils';
+import { LOGO_ALIAS_CHAIN, formatSubscriberCount, VerifiedChannelTooltipContent } from 'common';
 
 //Hooks
 import { UserSubscriptionsResponse, useGetChannelDetails, useGetUserSubscriptions } from 'queries';
@@ -27,9 +24,8 @@ import {
   TickDecoratedCircleFilled,
   Ethereum,
   Tooltip,
-  PushLogo,
 } from 'blocks';
-import { VerifiedToolTipContent } from './VerifiedToolTipComponent';
+
 import { UserSetting } from 'helpers/channel/types';
 import { useAccount } from 'hooks';
 import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
@@ -121,8 +117,11 @@ const ChannelListItem: FC<ChannelListItemProps> = ({
                 {channelDetails?.name}
               </Link>
               {!!channelDetails?.verified_status && (
-                <Tooltip overlay={<VerifiedToolTipContent />}>
-                  <Box cursor="pointer">
+                <Tooltip overlay={<VerifiedChannelTooltipContent />}>
+                  <Box
+                    cursor="pointer"
+                    display="flex"
+                  >
                     <TickDecoratedCircleFilled
                       color="icon-tertiary"
                       size={16}
