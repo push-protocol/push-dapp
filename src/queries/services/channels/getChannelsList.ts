@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ChannelListSortType } from '@pushprotocol/restapi';
+import { ChannelListSortType, ChannelListOrderType } from '@pushprotocol/restapi';
 import { appConfig } from 'config';
 import { getChannelsListModelCreator } from '../../models';
 import { ChannelListParams } from '../../types';
@@ -9,7 +9,7 @@ export const getChannelsList = ({ pageNumber, pageSize, order, sort }: ChannelLi
     method: 'GET',
     url: `${appConfig.apiUrl}/v1/channels`,
     params: {
-      order: order || 'desc',
+      order: order || ChannelListOrderType.DESCENDING,
       limit: pageSize || 20,
       page: pageNumber || 1,
       sort: sort || ChannelListSortType.SUBSCRIBER,
