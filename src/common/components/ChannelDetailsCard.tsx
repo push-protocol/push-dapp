@@ -13,6 +13,7 @@ import {
   CaretDown,
   Ethereum,
   NotificationMobile,
+  ResponsiveProp,
   Skeleton,
   Text,
   TickDecoratedCircleFilled,
@@ -29,6 +30,7 @@ export type ChannelDetailsCardProps = {
   isSubscriptionLoading: boolean;
   handleRefetch: () => void;
   userSettings: UserSetting[];
+  width?: ResponsiveProp<string>;
 };
 
 const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
@@ -38,6 +40,7 @@ const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
   isSubscriptionLoading,
   handleRefetch,
   userSettings,
+  width,
 }) => {
   const AliasChain = channelDetails?.alias_blockchain_id && LOGO_ALIAS_CHAIN[+channelDetails.alias_blockchain_id];
 
@@ -51,7 +54,7 @@ const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
       padding={{ initial: 'spacing-md', ml: 'spacing-md spacing-sm', tb: 'spacing-sm', lp: 'spacing-sm' }}
       borderRadius="radius-md"
       gap="spacing-xs"
-      width={{ initial: '290px', ml: 'auto', tb: '278px', lp: '278px' }}
+      width={{ initial: '290px', ml: 'auto', tb: '278px', lp: '278px', ...(typeof width !== 'string' && width) }}
       css={css`
         flex-shrink: 0;
       `}
@@ -60,11 +63,18 @@ const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
       <Box
         display="flex"
         justifyContent="space-between"
+        css={css`
+          .channel-card-icon {
+            border: var(--border-sm) solid rgba(0, 0, 0, 0.05);
+            border-radius: var(--radius-sm);
+            height: 52px;
+            width: 52px;
+          }
+        `}
       >
         <Skeleton isLoading={isLoading}>
           <img
-            width="52px"
-            height="52px"
+            className="channel-card-icon"
             src={channelDetails?.iconV2}
             alt={channelDetails?.name}
           />
