@@ -218,6 +218,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
         display="flex"
         flexDirection="column"
         overflow="auto"
+        width="100%"
         customScrollbar={true}
       >
         <Text
@@ -226,7 +227,12 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
         >
           Recent Notifications
         </Text>
-        <Box>
+        <Box
+          display="flex"
+          alignSelf="center"
+          width="100%"
+          flexDirection="column"
+        >
           {isSuccess && !isNotificationsLoading && !notifications?.length && (
             <Box
               display="flex"

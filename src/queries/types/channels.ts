@@ -1,4 +1,4 @@
-import { PushAPI } from '@pushprotocol/restapi';
+import { ChannelListOrderType, ChannelListSortType, PushAPI } from '@pushprotocol/restapi';
 import { ethers } from 'ethers';
 import { SourceKeys } from 'modules/dashboard/Dashboard.types';
 
@@ -191,7 +191,8 @@ export type ChannelsListModelledResponse = {
 };
 
 export type ChannelsListParams = {
-  order?: string;
+  sort?: ChannelListSortType;
+  order?: ChannelListOrderType;
   pageSize?: number;
   pageNumber?: number;
 };
