@@ -29,7 +29,7 @@ const ChannelList: FC<ChannelListProps> = ({
   //error state
   return (
     <Box
-      display="flex"
+      display={{ dp: 'flex', ml: 'none' }}
       width="fit-content"
       justifyContent="start"
       overflow="auto"
@@ -37,12 +37,10 @@ const ChannelList: FC<ChannelListProps> = ({
       height="100%"
       padding="spacing-none spacing-sm spacing-none spacing-none"
       flexDirection="column"
-      gap="spacing-md"
     >
       <InfiniteScroll
         pageStart={0}
         loadMore={() => {
-          console.debug('scroll');
           fetchNextPage();
         }}
         hasMore={hasMoreData}
@@ -57,24 +55,32 @@ const ChannelList: FC<ChannelListProps> = ({
         useWindow={false}
         threshold={150}
       >
-        {channels?.map((channel) => (
-          <Skeleton isLoading={isLoading}>
-            <Box
-              width="46px"
-              height="46px"
-              borderRadius="radius-sm"
-              cursor="pointer"
-              onClick={() => setSelectedChannelId(channel?.channel)}
-            >
-              <img
-                width="100%"
-                height="100%"
-                src={channel?.iconV2}
-                alt={channel?.name}
-              />
-            </Box>
-          </Skeleton>
-        ))}
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap="spacing-md"
+        >
+          {channels?.map((channel) => (
+            <Skeleton isLoading={isLoading}>
+              <Box
+                key={channel?.channel}
+                width="46px"
+                height="46px"
+                overflow="hidden"
+                borderRadius="radius-sm"
+                cursor="pointer"
+                onClick={() => setSelectedChannelId(channel?.channel)}
+              >
+                <img
+                  width="100%"
+                  height="100%"
+                  src={channel?.iconV2}
+                  alt={channel?.name}
+                />
+              </Box>
+            </Skeleton>
+          ))}
+        </Box>
       </InfiniteScroll>
     </Box>
   );
