@@ -6,7 +6,7 @@ import { ChannelsListModelledResponse, ChannelsListParams } from '../../types';
 import { useSelector } from 'react-redux';
 import { UserStoreType } from 'types';
 
-export const useGetChannelslist = ({ order, pageSize }: ChannelsListParams) => {
+export const useGetChannelslist = ({ order, pageSize, sort }: ChannelsListParams) => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
     return state.user;
   });
@@ -16,6 +16,7 @@ export const useGetChannelslist = ({ order, pageSize }: ChannelsListParams) => {
     queryFn: ({ pageParam }) =>
       getChannelsList({
         order,
+        sort,
         pageSize,
         pageNumber: pageParam as number,
         userPushSDKInstance,
