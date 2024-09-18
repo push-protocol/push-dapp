@@ -17,21 +17,19 @@ const AllChannelsListItem: FC<AllChannelsListItemProps> = ({ channelDetails, isL
     isLoading: isSubscriptionLoading,
   } = useGetUserSubscriptions();
 
-  const isSubscribed = !!(userSubscription && userSubscription?.length);
-
   const handleRefetch = () => {
     refetchChannelSubscription();
   };
 
-  const userChannelSettings = (JSON.parse(
-    userSubscription?.find((sub) => sub.channel === channelDetails?.channel)?.user_settings || '[]'
-  ) || []) as UserSetting[];
-  console.log('ALL Subscriptions', userSubscription), userChannelSettings;
+  const channelSubscriptionData = userSubscription?.find((sub) => sub.channel === channelDetails?.channel);
+
+  const userChannelSettings = (JSON.parse(channelSubscriptionData?.user_settings || '[]') || []) as UserSetting[];
+
   return (
     <ChannelDetailsCard
       channelDetails={channelDetails}
       isLoading={isLoading}
-      isSubscribed={isSubscribed}
+      isSubscribed={!!channelSubscriptionData}
       isSubscriptionLoading={isSubscriptionLoading}
       handleRefetch={handleRefetch}
       userSettings={userChannelSettings}

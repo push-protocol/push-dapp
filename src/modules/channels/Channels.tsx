@@ -1,7 +1,7 @@
-import { FC, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import { ChannelListOrderType, ChannelListSortType } from '@pushprotocol/restapi';
 import InfiniteScroll from 'react-infinite-scroller';
-import { Box, Pill, Search, Select, Spinner, TextInput } from 'blocks';
+import { Box, Button, CaretRight, Pill, Search, Select, Spinner, TextInput } from 'blocks';
 import { appConfig } from 'config';
 import { getSelectChains } from 'common';
 import { css } from 'styled-components';
@@ -14,6 +14,8 @@ const Channels: FC<ChannelsProps> = () => {
   const [category, setCategory] = useState(categories[0]);
   const [chain, setChain] = useState(getSelectChains(appConfig.allowedNetworks)[0].value);
   const [query, setQuery] = useState('');
+
+  const categoryContainerRef = useRef<HTMLDivElement>(null);
 
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetChannelslist({
     pageSize: 21,
@@ -74,20 +76,40 @@ const Channels: FC<ChannelsProps> = () => {
           </Box>
           <Box
             display="flex"
-            overflow="scroll"
-            gap="spacing-xs"
+            alignItems="center"
             css={css`
               flex-shrink: 0;
             `}
           >
-            {categories.map((cat) => (
-              <Pill
-                isActive={cat === category}
-                onClick={() => setCategory(cat)}
-              >
-                {cat}
-              </Pill>
-            ))}
+            <Box
+              display="flex"
+              overflow="hidden"
+              gap="spacing-xs"
+              width="96%"
+              ref={categoryContainerRef}
+            >
+              {categories.map((cat) => (
+                <Pill
+                  isActive={cat === category}
+                  onClick={() => setCategory(cat)}
+                >
+                  {cat}
+                </Pill>
+              ))}
+            </Box>
+
+            <Button
+              iconOnly={<CaretRight />}
+              circular
+              variant="outline"
+              size="small"
+              onClick={() => {
+                categoryContainerRef?.current?.scrollTo({
+                  left: categoryContainerRef?.current.scrollWidth,
+                  behavior: 'smooth',
+                });
+              }}
+            />
           </Box>
           <Box
             height="100%"
@@ -105,14 +127,6 @@ const Channels: FC<ChannelsProps> = () => {
               pageStart={1}
               loadMore={() => fetchNextPage()}
               hasMore={hasMoreData}
-              loader={
-                <Box
-                  margin="spacing-xs"
-                  key="loader-spinner"
-                >
-                  <Spinner size="medium" />
-                </Box>
-              }
               useWindow={false}
               threshold={150}
               className="channel-scroll"
@@ -125,6 +139,18 @@ const Channels: FC<ChannelsProps> = () => {
                 />
               ))}
             </InfiniteScroll>
+            {isFetchingNextPage && (
+              <Box
+                justifyContent="center"
+                display="flex"
+                padding="spacing-sm"
+              >
+                <Spinner
+                  size="medium"
+                  variant="primary"
+                />
+              </Box>
+            )}
           </Box>
         </Box>
       </Box>
