@@ -1,4 +1,3 @@
-// Define an enum for the paths
 const APP_PATHS = {
   WelcomeDashboard: '/welcome',
   Inbox: '/inbox',

@@ -1,19 +1,20 @@
 import { FC, useState } from 'react';
 
-//Components
-import { Box, Link, Button, Text, Back, Tag, Copy, Skeleton, CaretDown, Tutorial } from 'blocks';
-import { ChannelDetails, useGetChannelNotifications, useGetUserSubscriptions } from 'queries';
 import { css } from 'styled-components';
-import { copyToClipboard, shortenText } from 'helpers/UtilityHelper';
 import { useNavigate } from 'react-router-dom';
+import { NotificationItem, chainNameType } from '@pushprotocol/uiweb';
+
+import { ChannelDetailSubscribe } from './ChannelDetailSubscribe';
+import { Box, Text, Back, Tag, Copy, Skeleton, Tutorial } from 'blocks';
+import { LOGO_ALIAS_CHAIN } from 'common';
+
+import { useBlocksTheme } from 'blocks/Blocks.hooks';
+import { ChannelDetails, useGetChannelNotifications } from 'queries';
+
+import { copyToClipboard, shortenText } from 'helpers/UtilityHelper';
+
 import APP_PATHS from 'config/AppPaths';
 import { appConfig } from 'config';
-import { LOGO_ALIAS_CHAIN, SubscribeChannelDropdown, UnsubscribeChannelDropdown } from 'common';
-import { NotificationItem, chainNameType } from '@pushprotocol/uiweb';
-import { useBlocksTheme } from 'blocks/Blocks.hooks';
-import { useAccount } from 'hooks';
-import { UserSetting } from 'helpers/channel/types';
-import { ChannelDetailSubscribe } from './ChannelDetailSubscribe';
 
 export type ChannelDetailProps = { channel: ChannelDetails; isLoading: boolean };
 const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
@@ -28,6 +29,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
   } = useGetChannelNotifications(channel?.channel, 1, 20);
 
   const notifications = isNotificationsLoading ? Array(10).fill(0) : notificationsData;
+  //fetch channel category
   //notification component doesnot update in sdk
   //copy color
   //manage button color
@@ -50,6 +52,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
         display="flex"
         flexDirection="column"
         gap="spacing-sm"
+        width="100%"
       >
         <Box
           display="flex"
@@ -202,7 +205,6 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                         Tutotrial
                       </Text>
                     </Box>
-                    {/* fetch from api */}
                     <Tag
                       label="Defi"
                       variant="info"
@@ -211,11 +213,12 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                 </Skeleton>
               </Box>
             </Box>
-            <Box display={{ dp: 'flex', ml: 'none' }}>
+            <Box display={{ dp: 'inline', ml: 'none' }}>
               <ChannelDetailSubscribe channel={channel} />
             </Box>
           </Box>
         </Box>
+
         <Skeleton isLoading={isLoading}>
           <Box>
             <Text
@@ -258,10 +261,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
             </Box>
           </Box>
         </Skeleton>
-        <Box
-          display={{ dp: 'none', ml: 'flex' }}
-          width="100%"
-        >
+        <Box display={{ dp: 'none', ml: 'block' }}>
           <ChannelDetailSubscribe channel={channel} />
         </Box>
       </Box>

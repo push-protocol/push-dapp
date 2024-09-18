@@ -27,40 +27,37 @@ const ChannelDetailSubscribe: FC<ChannelDetailSubscribeProps> = ({ channel }) =>
   };
   return (
     <Skeleton isLoading={isSubscriptionLoading}>
-      <Box
-        width="100%"
-        display="flex"
-      >
-        {channel && !isSubscribed && (
-          <SubscribeChannelDropdown
-            channelDetails={channel}
-            onSuccess={handleRefetch}
+      {channel && !isSubscribed && (
+        <SubscribeChannelDropdown
+          channelDetails={channel}
+          onSuccess={handleRefetch}
+        >
+          <Button
+            variant="tertiary"
+            size="small"
+            block
           >
-            <Button
-              variant="tertiary"
-              size="small"
-            >
-              Subscribe
-            </Button>
-          </SubscribeChannelDropdown>
-        )}
+            Subscribe
+          </Button>
+        </SubscribeChannelDropdown>
+      )}
 
-        {channel && !!isSubscribed && (
-          <UnsubscribeChannelDropdown
-            channelDetail={channel}
-            onSuccess={handleRefetch}
-            userSetting={JSON.parse(userSubscription[0].user_settings) as UserSetting[]}
+      {channel && !!isSubscribed && (
+        <UnsubscribeChannelDropdown
+          channelDetail={channel}
+          onSuccess={handleRefetch}
+          userSetting={JSON.parse(userSubscription[0].user_settings) as UserSetting[]}
+        >
+          <Button
+            variant="outline"
+            size="small"
+            block
+            trailingIcon={<CaretDown />}
           >
-            <Button
-              variant="outline"
-              size="small"
-              trailingIcon={<CaretDown />}
-            >
-              Manage
-            </Button>
-          </UnsubscribeChannelDropdown>
-        )}
-      </Box>
+            Manage
+          </Button>
+        </UnsubscribeChannelDropdown>
+      )}
     </Skeleton>
   );
 };
