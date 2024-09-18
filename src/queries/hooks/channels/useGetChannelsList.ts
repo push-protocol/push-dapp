@@ -5,7 +5,6 @@ import { getChannelsList } from '../../services';
 import { ChannelsListModelledResponse, ChannelListParams } from '../../types';
 import { useSelector } from 'react-redux';
 import { UserStoreType } from 'types';
-import { GuestWalletAddress } from 'common';
 
 export const useGetChannelslist = ({ order, pageSize, sort }: ChannelListParams) => {
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => {
@@ -20,14 +19,14 @@ export const useGetChannelslist = ({ order, pageSize, sort }: ChannelListParams)
         order,
         sort,
         pageSize,
-        pageNumber: pageParam as number,
+        page: pageParam as number,
         userPushSDKInstance,
       }),
-    getNextPageParam: ({ page, itemcount, pageSize }) => {
-      if (pageSize * page >= itemcount) {
+    getNextPageParam: ({ itemcount }, allPages, lastPageParam) => {
+      if (pageSize * ((lastPageParam as number) + 1) >= itemcount) {
         return null;
       }
-      return page + 1;
+      return (lastPageParam as number) + 1;
     },
   });
   return query;

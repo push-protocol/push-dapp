@@ -189,8 +189,8 @@ export type ChannelsListModelledResponse = {
 };
 
 export type ChannelListParams = {
-  sort?: ChannelListSortType;
   order?: ChannelListOrderType;
-  pageSize?: number;
-  pageNumber?: number;
+  pageSize: number;
+  page?: number;
+  sort?: ChannelListSortType;
 };
