@@ -1,13 +1,11 @@
 import { FC } from 'react';
 
-//Components
-import { Box, Link, Button, Text, Spinner, Skeleton } from 'blocks';
-import { ChannelDetails, ChannelsListModelledResponse } from 'queries';
-import { css } from 'styled-components';
-import InfiniteScroll from 'react-infinite-scroller';
-import LoaderSpinner from 'primaries/LoaderSpinner';
-import { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { FetchNextPageOptions, InfiniteData, InfiniteQueryObserverResult } from '@tanstack/react-query';
+import InfiniteScroll from 'react-infinite-scroller';
+
+import { Box, Spinner, Skeleton } from 'blocks';
+
+import { ChannelDetails, ChannelsListModelledResponse } from 'queries';
 
 export type ChannelListProps = {
   channels: Array<ChannelDetails>;
@@ -25,8 +23,6 @@ const ChannelList: FC<ChannelListProps> = ({
   isLoading,
   hasMoreData,
 }) => {
-  //do we need skeleton loading
-  //error state
   return (
     <Box
       display={{ dp: 'flex', ml: 'none' }}

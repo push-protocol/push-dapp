@@ -1,17 +1,13 @@
-import axios from 'axios';
-import { ChannelListSortType, ChannelListOrderType } from '@pushprotocol/restapi';
-import { appConfig } from 'config';
-import { getChannelsListModelCreator } from '../../models';
-import { ChannelListParams } from '../../types';
+import { PushAPI } from '@pushprotocol/restapi';
 
-export const getChannelsList = ({ pageNumber, pageSize, order, sort }: ChannelListParams) =>
-  axios({
-    method: 'GET',
-    url: `${appConfig.apiUrl}/v1/channels`,
-    params: {
-      order: order || ChannelListOrderType.DESCENDING,
-      limit: pageSize || 20,
-      page: pageNumber || 1,
-      sort: sort || ChannelListSortType.SUBSCRIBER,
-    },
-  }).then((response) => getChannelsListModelCreator(response.data));
+import { getChannelsListModelCreator } from '../../models';
+import { ChannelListParams } from 'queries/types';
+
+type GetChannelsListParams = {
+  userPushSDKInstance: PushAPI;
+} & ChannelListParams;
+
+export const getChannelsList = ({ userPushSDKInstance, pageNumber, pageSize, order, sort }: GetChannelsListParams) =>
+  userPushSDKInstance.channel
+    .list({ limit: pageSize, page: pageNumber, order, sort })
+    .then(getChannelsListModelCreator);

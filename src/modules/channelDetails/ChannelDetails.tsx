@@ -1,23 +1,22 @@
-import { Box, Chat, TextInput } from 'blocks';
 import { FC, useEffect, useState } from 'react';
-import { ChannelList } from './components/ChannelList';
-import { useGetChannelslist } from 'queries';
-import { useSelector } from 'react-redux';
-import { UserStoreType } from 'types';
+
 import { useNavigate, useParams } from 'react-router-dom';
+
+import { useGetChannelslist } from 'queries';
+
 import { ChannelDetail } from './components/ChannelDetail';
-import { channel } from 'process';
-import { convertAddrCaipToAddress } from 'helpers/CaipHelper';
+import { ChannelList } from './components/ChannelList';
+import { Box } from 'blocks';
+
 import { isAddress } from 'ethers/lib/utils';
 import APP_PATHS from 'config/AppPaths';
 
 const ChannelDetails: FC = () => {
   const { id } = useParams();
-  console.debug(id, 'channel id');
   const navigate = useNavigate();
   const [selectedChannelId, setSelectedChannelId] = useState<string>(id || '');
 
-  const { data, isError, refetch, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useGetChannelslist({
+  const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useGetChannelslist({
     pageSize: 20,
   });
 
@@ -27,11 +26,12 @@ const ChannelDetails: FC = () => {
   const selectedChannel = channelsList?.find((channel) => channel?.channel === selectedChannelId);
   console.debug(selectedChannel, channelsList, 'channel');
 
-  //redirect if if id is null
   useEffect(() => {
     if (!isAddress(id || '')) navigate(APP_PATHS.Channels);
   }, [id]);
 
+  //channel tutotrial
+  //delete old channel page
   return (
     <Box
       height="90vh"
@@ -39,7 +39,6 @@ const ChannelDetails: FC = () => {
       padding="spacing-md spacing-sm"
       display="flex"
       justifyContent="flex-start"
-      // margin={{ initial: 'spacing-none spacing-sm spacing-sm spacing-xl', ml: 'spacing-sm', lp: 'spacing-sm' }}
       borderRadius="radius-md radius-md radius-none radius-none"
       gap="spacing-md"
       border="border-sm solid stroke-secondary"

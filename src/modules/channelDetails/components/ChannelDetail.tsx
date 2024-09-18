@@ -1,19 +1,20 @@
 import { FC, useState } from 'react';
 
-//Components
-import { Box, Link, Button, Text, Back, Tag, Copy, Skeleton, CaretDown } from 'blocks';
-import { ChannelDetails, useGetChannelNotifications, useGetUserSubscriptions } from 'queries';
 import { css } from 'styled-components';
-import { copyToClipboard, shortenText } from 'helpers/UtilityHelper';
 import { useNavigate } from 'react-router-dom';
+import { NotificationItem, chainNameType } from '@pushprotocol/uiweb';
+
+import { ChannelDetailSubscribe } from './ChannelDetailSubscribe';
+import { Box, Text, Back, Tag, Copy, Skeleton, Tutorial } from 'blocks';
+import { LOGO_ALIAS_CHAIN } from 'common';
+
+import { useBlocksTheme } from 'blocks/Blocks.hooks';
+import { ChannelDetails, useGetChannelNotifications } from 'queries';
+
+import { copyToClipboard, shortenText } from 'helpers/UtilityHelper';
+
 import APP_PATHS from 'config/AppPaths';
 import { appConfig } from 'config';
-import { LOGO_ALIAS_CHAIN, SubscribeChannelDropdown, UnsubscribeChannelDropdown } from 'common';
-import { NotificationItem, chainNameType } from '@pushprotocol/uiweb';
-import { useBlocksTheme } from 'blocks/Blocks.hooks';
-import { useAccount } from 'hooks';
-import { UserSetting } from 'helpers/channel/types';
-import { ChannelDetailSubscribe } from './ChannelDetailSubscribe';
 
 export type ChannelDetailProps = { channel: ChannelDetails; isLoading: boolean };
 const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
@@ -28,6 +29,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
   } = useGetChannelNotifications(channel?.channel, 1, 20);
 
   const notifications = isNotificationsLoading ? Array(10).fill(0) : notificationsData;
+  //fetch channel category
   //notification component doesnot update in sdk
   //copy color
   //manage button color
@@ -50,6 +52,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
         display="flex"
         flexDirection="column"
         gap="spacing-sm"
+        width="100%"
       >
         <Box
           display="flex"
@@ -70,14 +73,31 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
           >
             <Box
               display="flex"
-              gap="spacing-sm"
-              alignItems="center"
+              gap={{ dp: 'spacing-sm', ml: 'spacing-xs' }}
+              alignItems={{ dp: 'center', ml: 'flex-start' }}
             >
               <Skeleton isLoading={isLoading}>
                 <Box
-                  width={{ dp: '90px', ml: '52px' }}
-                  height={{ dp: '90px', ml: '52px' }}
+                  width="90px"
+                  height="90px"
                   borderRadius="radius-md"
+                  display={{ dp: 'flex', ml: 'none' }}
+                  css={css`
+                    overflow: hidden;
+                  `}
+                >
+                  <img
+                    width="100%"
+                    height="100%"
+                    src={channel?.iconV2 || ''}
+                    alt={channel?.name || ''}
+                  />
+                </Box>
+                <Box
+                  width="52px"
+                  height="52px"
+                  borderRadius="radius-sm"
+                  display={{ dp: 'none', ml: 'flex' }}
                   css={css`
                     overflow: hidden;
                   `}
@@ -170,13 +190,21 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                     >
                       {channel?.subscriber_count} subscribers
                     </Text>
-                    <Text
-                      color="text-tertiary-inverse"
-                      variant="c-regular"
+                    <Box
+                      display="flex"
+                      gap="spacing-xxxs"
                     >
-                      Tutotrial
-                    </Text>
-                    {/* fetch from api */}
+                      <Tutorial
+                        size={16}
+                        color="icon-tertiary"
+                      />
+                      <Text
+                        color="text-tertiary-inverse"
+                        variant="c-regular"
+                      >
+                        Tutotrial
+                      </Text>
+                    </Box>
                     <Tag
                       label="Defi"
                       variant="info"
@@ -185,14 +213,24 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                 </Skeleton>
               </Box>
             </Box>
-            <Box display={{ dp: 'flex', ml: 'none' }}>
+            <Box display={{ dp: 'inline', ml: 'none' }}>
               <ChannelDetailSubscribe channel={channel} />
             </Box>
           </Box>
         </Box>
+
         <Skeleton isLoading={isLoading}>
           <Box>
             <Text
+              display={{ dp: 'inline', ml: 'none' }}
+              variant="bs-regular"
+              color="text-tertiary"
+              as="span"
+            >
+              {!showMore ? (channel?.info || '').substring(0, 231) : channel?.info || ''}
+            </Text>
+            <Text
+              display={{ dp: 'none', ml: 'inline' }}
               variant="bs-regular"
               color="text-tertiary"
               as="span"
@@ -205,6 +243,15 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
               onClick={() => setShowMore(!showMore)}
             >
               <Text
+                display={{ dp: 'inline', ml: 'none' }}
+                color="text-brand-medium"
+                as="span"
+              >
+                {' '}
+                {`Show ${!showMore ? 'More' : 'Less'}`}
+              </Text>
+              <Text
+                display={{ dp: 'none', ml: 'inline' }}
                 color="text-brand-medium"
                 as="span"
               >
@@ -214,10 +261,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
             </Box>
           </Box>
         </Skeleton>
-        <Box
-          display={{ dp: 'none', ml: 'flex' }}
-          width="100%"
-        >
+        <Box display={{ dp: 'none', ml: 'block' }}>
           <ChannelDetailSubscribe channel={channel} />
         </Box>
       </Box>
