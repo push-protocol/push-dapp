@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 
 //Components
-import { Box, Link, Button, Text, Back, Tag, Copy, Skeleton, CaretDown } from 'blocks';
+import { Box, Link, Button, Text, Back, Tag, Copy, Skeleton, CaretDown, Tutorial } from 'blocks';
 import { ChannelDetails, useGetChannelNotifications, useGetUserSubscriptions } from 'queries';
 import { css } from 'styled-components';
 import { copyToClipboard, shortenText } from 'helpers/UtilityHelper';
@@ -70,14 +70,31 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
           >
             <Box
               display="flex"
-              gap="spacing-sm"
-              alignItems="center"
+              gap={{ dp: 'spacing-sm', ml: 'spacing-xs' }}
+              alignItems={{ dp: 'center', ml: 'flex-start' }}
             >
               <Skeleton isLoading={isLoading}>
                 <Box
-                  width={{ dp: '90px', ml: '52px' }}
-                  height={{ dp: '90px', ml: '52px' }}
+                  width="90px"
+                  height="90px"
                   borderRadius="radius-md"
+                  display={{ dp: 'flex', ml: 'none' }}
+                  css={css`
+                    overflow: hidden;
+                  `}
+                >
+                  <img
+                    width="100%"
+                    height="100%"
+                    src={channel?.iconV2 || ''}
+                    alt={channel?.name || ''}
+                  />
+                </Box>
+                <Box
+                  width="52px"
+                  height="52px"
+                  borderRadius="radius-sm"
+                  display={{ dp: 'none', ml: 'flex' }}
                   css={css`
                     overflow: hidden;
                   `}
@@ -170,12 +187,21 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                     >
                       {channel?.subscriber_count} subscribers
                     </Text>
-                    <Text
-                      color="text-tertiary-inverse"
-                      variant="c-regular"
+                    <Box
+                      display="flex"
+                      gap="spacing-xxxs"
                     >
-                      Tutotrial
-                    </Text>
+                      <Tutorial
+                        size={16}
+                        color="icon-tertiary"
+                      />
+                      <Text
+                        color="text-tertiary-inverse"
+                        variant="c-regular"
+                      >
+                        Tutotrial
+                      </Text>
+                    </Box>
                     {/* fetch from api */}
                     <Tag
                       label="Defi"
@@ -193,6 +219,15 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
         <Skeleton isLoading={isLoading}>
           <Box>
             <Text
+              display={{ dp: 'inline', ml: 'none' }}
+              variant="bs-regular"
+              color="text-tertiary"
+              as="span"
+            >
+              {!showMore ? (channel?.info || '').substring(0, 231) : channel?.info || ''}
+            </Text>
+            <Text
+              display={{ dp: 'none', ml: 'inline' }}
               variant="bs-regular"
               color="text-tertiary"
               as="span"
@@ -205,6 +240,15 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
               onClick={() => setShowMore(!showMore)}
             >
               <Text
+                display={{ dp: 'inline', ml: 'none' }}
+                color="text-brand-medium"
+                as="span"
+              >
+                {' '}
+                {`Show ${!showMore ? 'More' : 'Less'}`}
+              </Text>
+              <Text
+                display={{ dp: 'none', ml: 'inline' }}
                 color="text-brand-medium"
                 as="span"
               >

@@ -187,7 +187,7 @@ export type ChannelsListModelledResponse = {
   channels: Array<ChannelDetails>;
   page: number;
   pageSize: number;
-  total: number;
+  itemcount: number;
 };
 
 export type ChannelsListParams = {
