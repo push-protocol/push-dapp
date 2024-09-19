@@ -41,3 +41,4 @@ export const subscribe = 'subscribe';
 export const unsubscribe = 'unsubscribe';
 export const updatingNotificationSetting = 'updatingNotificationSetting';
 export const allChannelsList = 'allChannelsList';
+export const channelSearchList = 'channelSearchList';

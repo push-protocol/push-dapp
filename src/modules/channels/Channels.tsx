@@ -1,31 +1,55 @@
-import { FC, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { ChannelListOrderType, ChannelListSortType } from '@pushprotocol/restapi';
 import InfiniteScroll from 'react-infinite-scroller';
-import { Box, Button, CaretRight, Pill, Search, Select, Spinner, TextInput } from 'blocks';
+
+import { Box, Button, CaretLeft, CaretRight, Pill, Search, Select, Spinner, TextInput } from 'blocks';
 import { appConfig } from 'config';
 import { getSelectChains } from 'common';
 import { css } from 'styled-components';
-import { ChannelDetails, useGetChannelslist } from 'queries';
+import { ChannelDetails, useChannelSearch, useGetChannelslist } from 'queries';
 import { AllChannelsListItem } from './components/AllChannelsListItem';
+import { useChannelsFilters } from './hooks/useChannelsFilters';
+import { ChannelSearchAndChainSelection } from './components/ChannelSearchAndChainSelection';
+import { ChannelCategories } from './components/ChannelCategories';
 
 export type ChannelsProps = {};
 
 const Channels: FC<ChannelsProps> = () => {
-  const [category, setCategory] = useState(categories[0]);
-  const [chain, setChain] = useState(getSelectChains(appConfig.allowedNetworks)[0].value);
-  const [query, setQuery] = useState('');
+  const chainOptions = getSelectChains(appConfig.allowedNetworks);
 
-  const categoryContainerRef = useRef<HTMLDivElement>(null);
+  const { filters, setFilter } = useChannelsFilters({
+    initialChain: chainOptions[0].value,
+    initialCategory: categories[0],
+  });
 
-  const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetChannelslist({
+  const {
+    data: channelList,
+    isLoading: loadingChannels,
+    fetchNextPage: fetchChannelsForNextPage,
+    isFetchingNextPage: isFetchingNextPageForChannels,
+    hasNextPage: hasNextPageForChannels,
+  } = useGetChannelslist({
     pageSize: 21,
     order: ChannelListOrderType.DESCENDING,
     sort: ChannelListSortType.SUBSCRIBER,
   });
 
-  const channels = isLoading ? Array(9).fill(0) : data?.pages.flatMap((page) => page.channels) || [];
+  const {
+    data: searchList,
+    isLoading: searchingChannels,
+    fetchNextPage: searchChannelsForNextPage,
+    isFetchingNextPage: isSearchingNextPageForChannels,
+    hasNextPage: hasNextPageForSearch,
+  } = useChannelSearch({ pageSize: 21, query: filters.search });
 
-  const hasMoreData = !isFetchingNextPage && hasNextPage;
+  const channels =
+    loadingChannels || searchingChannels
+      ? Array(9).fill(0)
+      : (filters.search ? searchList : channelList)?.pages.flatMap((page) => page.channels) || [];
+
+  const hasMoreData = filters.search
+    ? !isSearchingNextPageForChannels && hasNextPageForSearch
+    : !isFetchingNextPageForChannels && hasNextPageForChannels;
 
   return (
     <Box
@@ -52,65 +76,14 @@ const Channels: FC<ChannelsProps> = () => {
           gap="spacing-sm"
           height="100%"
         >
-          <Box
-            display="flex"
-            gap="spacing-xs"
-            flexDirection="row"
-            width="100%"
-          >
-            <Box width="100%">
-              <TextInput
-                icon={<Search />}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search Web3 domain or 0x123"
-                value={query}
-              />
-            </Box>
-            <Box width={{ initial: '300px', ml: '200px' }}>
-              <Select
-                options={getSelectChains(appConfig.allowedNetworks)}
-                value={chain}
-                onSelect={(value) => setChain(value)}
-              />
-            </Box>
-          </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            css={css`
-              flex-shrink: 0;
-            `}
-          >
-            <Box
-              display="flex"
-              overflow="hidden"
-              gap="spacing-xs"
-              width="96%"
-              ref={categoryContainerRef}
-            >
-              {categories.map((cat) => (
-                <Pill
-                  isActive={cat === category}
-                  onClick={() => setCategory(cat)}
-                >
-                  {cat}
-                </Pill>
-              ))}
-            </Box>
-
-            <Button
-              iconOnly={<CaretRight />}
-              circular
-              variant="outline"
-              size="small"
-              onClick={() => {
-                categoryContainerRef?.current?.scrollTo({
-                  left: categoryContainerRef?.current.scrollWidth,
-                  behavior: 'smooth',
-                });
-              }}
-            />
-          </Box>
+          <ChannelSearchAndChainSelection
+            filters={filters}
+            setFilter={setFilter}
+          />
+          <ChannelCategories
+            filters={filters}
+            setFilter={setFilter}
+          />
           <Box
             height="100%"
             overflow="auto"
@@ -125,7 +98,7 @@ const Channels: FC<ChannelsProps> = () => {
           >
             <InfiniteScroll
               pageStart={1}
-              loadMore={() => fetchNextPage()}
+              loadMore={() => (filters.search ? searchChannelsForNextPage() : fetchChannelsForNextPage())}
               hasMore={hasMoreData}
               useWindow={false}
               threshold={150}
@@ -135,11 +108,11 @@ const Channels: FC<ChannelsProps> = () => {
                 <AllChannelsListItem
                   key={`${index}`}
                   channelDetails={channel}
-                  isLoading={isLoading}
+                  isLoading={loadingChannels || searchingChannels}
                 />
               ))}
             </InfiniteScroll>
-            {isFetchingNextPage && (
+            {(isFetchingNextPageForChannels || isSearchingNextPageForChannels) && (
               <Box
                 justifyContent="center"
                 display="flex"
@@ -159,6 +132,13 @@ const Channels: FC<ChannelsProps> = () => {
 };
 
 export { Channels };
+
+// Implement Search API
+// Implemente category APIS
+// Make the cat api working with listing and search
+// Make the chain filter working with listing and search
+// Refactor thr codebase.
+// Fix the container
 
 const categories = [
   'All',

@@ -194,3 +194,9 @@ export type ChannelListParams = {
   page?: number;
   sort?: ChannelListSortType;
 };
+
+export type ChannelSearchParams = {
+  page: number;
+  pageSize: number;
+  query: string;
+};
