@@ -10,6 +10,7 @@ import { ChannelDetails, ChannelsListModelledResponse } from 'queries';
 export type ChannelListProps = {
   channels: Array<ChannelDetails>;
   hasMoreData: boolean;
+  isFetchingNextPage: boolean;
   isLoading: boolean;
   setSelectedChannelId: React.Dispatch<React.SetStateAction<string>>;
   fetchNextPage: (
@@ -22,6 +23,7 @@ const ChannelList: FC<ChannelListProps> = ({
   setSelectedChannelId,
   isLoading,
   hasMoreData,
+  isFetchingNextPage,
 }) => {
   return (
     <Box
@@ -40,14 +42,6 @@ const ChannelList: FC<ChannelListProps> = ({
           fetchNextPage();
         }}
         hasMore={hasMoreData}
-        loader={
-          <Box
-            margin="spacing-xs"
-            key="loader-spinner"
-          >
-            <Spinner />
-          </Box>
-        }
         useWindow={false}
         threshold={150}
       >
@@ -78,6 +72,18 @@ const ChannelList: FC<ChannelListProps> = ({
           ))}
         </Box>
       </InfiniteScroll>
+      {isFetchingNextPage && (
+        <Box
+          justifyContent="center"
+          display="flex"
+          padding="spacing-sm"
+        >
+          <Spinner
+            size="small"
+            variant="primary"
+          />
+        </Box>
+      )}
     </Box>
   );
 };

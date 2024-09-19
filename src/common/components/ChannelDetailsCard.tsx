@@ -11,7 +11,6 @@ import {
   Box,
   Button,
   CaretDown,
-  Ethereum,
   NotificationMobile,
   ResponsiveProp,
   Skeleton,
@@ -22,6 +21,7 @@ import {
 import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
 import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannelDropdown';
 import { UserSetting } from 'helpers/channel/types';
+import { appConfig } from 'config';
 
 export type ChannelDetailsCardProps = {
   channelDetails: ChannelDetails | undefined;
@@ -42,10 +42,12 @@ const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
   userSettings,
   width,
 }) => {
-  const AliasChain = channelDetails?.alias_blockchain_id && LOGO_ALIAS_CHAIN[+channelDetails.alias_blockchain_id];
-
-  const hasAliasAddress =
-    channelDetails && channelDetails?.alias_address != null && channelDetails?.alias_address != 'NULL';
+  let verifiedAliasChainIds = [
+    appConfig.coreContractChain,
+    ...(channelDetails?.aliases
+      ?.filter((item) => item.is_alias_verified)
+      .map((item) => parseInt(item.alias_blockchain_id)) || []),
+  ];
   return (
     <Box
       display="flex"
@@ -169,16 +171,30 @@ const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
                 </Tooltip>
               )}
 
-              <Ethereum
-                width={16}
-                height={16}
-              />
-
-              {hasAliasAddress && AliasChain && (
-                <AliasChain
-                  width={16}
-                  height={16}
-                />
+              {verifiedAliasChainIds.length > 0 && (
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  margin="spacing-none spacing-none spacing-none spacing-xxxs"
+                >
+                  {verifiedAliasChainIds.map((aliasChainId: number) => {
+                    const LogoComponent = LOGO_ALIAS_CHAIN[aliasChainId];
+                    return LogoComponent ? (
+                      <Box
+                        display="flex"
+                        css={css`
+                          margin-left: -5px;
+                        `}
+                      >
+                        <LogoComponent
+                          key={aliasChainId}
+                          width={16}
+                          height={16}
+                        />
+                      </Box>
+                    ) : null;
+                  })}
+                </Box>
               )}
             </Box>
           </Skeleton>

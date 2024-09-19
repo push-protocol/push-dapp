@@ -37,7 +37,7 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
       isSubscribed={isSubscribed}
       isSubscriptionLoading={isSubscriptionLoading}
       handleRefetch={handleRefetch}
-      userSettings={JSON.parse(userSubscription?.[0].user_settings || '[]') as UserSetting[]}
+      userSettings={JSON.parse(userSubscription?.[0]?.user_settings || '[]') as UserSetting[]}
     />
   );
 };

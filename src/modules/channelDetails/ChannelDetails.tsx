@@ -34,7 +34,6 @@ const ChannelDetails: FC = () => {
   //delete old channel page
   return (
     <Box
-      height="90vh"
       width="-webkit-fill-available"
       padding="spacing-md spacing-sm"
       display="flex"
@@ -50,6 +49,7 @@ const ChannelDetails: FC = () => {
         hasMoreData={hasMoreData}
         isLoading={isLoading}
         setSelectedChannelId={setSelectedChannelId}
+        isFetchingNextPage={isFetchingNextPage}
       />
       <ChannelDetail
         channel={selectedChannel}

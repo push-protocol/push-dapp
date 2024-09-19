@@ -2,43 +2,37 @@ import { FC, useState } from 'react';
 
 import { css } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { NotificationItem, chainNameType } from '@pushprotocol/uiweb';
 
 import { ChannelDetailSubscribe } from './ChannelDetailSubscribe';
-import { Box, Text, Back, Tag, Copy, Skeleton, Tutorial } from 'blocks';
-import { LOGO_ALIAS_CHAIN } from 'common';
+import { RecentNotifications } from './RecentNotifications';
+import { Box, Text, Back, Tag, Skeleton, Tutorial, Tooltip, TickDecoratedCircleFilled } from 'blocks';
+import { CopyButton, LOGO_ALIAS_CHAIN, VerifiedChannelTooltipContent, formatSubscriberCount } from 'common';
 
-import { useBlocksTheme } from 'blocks/Blocks.hooks';
-import { ChannelDetails, useGetChannelNotifications } from 'queries';
+import { ChannelDetails } from 'queries';
 
-import { copyToClipboard, shortenText } from 'helpers/UtilityHelper';
+import { shortenText } from 'helpers/UtilityHelper';
 
 import APP_PATHS from 'config/AppPaths';
 import { appConfig } from 'config';
+
+import { ChannelTutorialContent } from './ChannelTutorialContent';
+import { getChannelTutorialDetails } from '../ChannelDetails.utils';
 
 export type ChannelDetailProps = { channel: ChannelDetails; isLoading: boolean };
 const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
   const [showMore, setShowMore] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { mode } = useBlocksTheme();
 
-  const {
-    data: notificationsData,
-    isLoading: isNotificationsLoading,
-    isSuccess,
-  } = useGetChannelNotifications(channel?.channel, 1, 20);
-
-  const notifications = isNotificationsLoading ? Array(10).fill(0) : notificationsData;
   //fetch channel category
   //notification component doesnot update in sdk
-  //copy color
-  //manage button color
-  let verifiedAliasChainIds =
-    channel?.aliases?.filter((item) => item.is_alias_verified).map((item) => parseInt(item.alias_blockchain_id)) || [];
 
-  if (verifiedAliasChainIds.length > 0) {
-    verifiedAliasChainIds.unshift(appConfig.coreContractChain);
-  }
+  let verifiedAliasChainIds = [
+    appConfig.coreContractChain,
+    ...(channel?.aliases?.filter((item) => item.is_alias_verified).map((item) => parseInt(item.alias_blockchain_id)) ||
+      []),
+  ];
+
+  const tutotrialDetails = getChannelTutorialDetails(channel?.channel);
 
   return (
     <Box
@@ -64,7 +58,10 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
             onClick={() => navigate(APP_PATHS.Channels)}
             cursor="pointer"
           >
-            <Back size={24} />
+            <Back
+              size={24}
+              color="icon-primary"
+            />
           </Box>
           <Box
             display="flex"
@@ -123,6 +120,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                     <Box
                       display="flex"
                       alignItems="center"
+                      gap="spacing-xxxs"
                     >
                       <Text
                         color="text-primary"
@@ -130,11 +128,24 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                       >
                         {channel?.name || ''}
                       </Text>
+                      {!!channel?.verified_status && (
+                        <Tooltip overlay={<VerifiedChannelTooltipContent />}>
+                          <Box
+                            cursor="pointer"
+                            display="flex"
+                          >
+                            <TickDecoratedCircleFilled
+                              color="icon-tertiary"
+                              size={18}
+                            />
+                          </Box>
+                        </Tooltip>
+                      )}
                       {verifiedAliasChainIds.length > 0 && (
                         <Box
                           display="flex"
                           alignItems="center"
-                          margin="spacing-none spacing-none spacing-none spacing-xs"
+                          margin="spacing-none spacing-none spacing-none spacing-xxxs"
                         >
                           {verifiedAliasChainIds.map((aliasChainId: number) => {
                             const LogoComponent = LOGO_ALIAS_CHAIN[aliasChainId];
@@ -167,15 +178,11 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                       >
                         {shortenText(channel?.channel || '', 10, 10) || ''}
                       </Text>
-                      <Box
-                        cursor="pointer"
-                        onClick={() => copyToClipboard(channel?.channel || '')}
-                      >
-                        <Copy
-                          color="icon-tertiary"
-                          size={12}
-                        />
-                      </Box>
+
+                      <CopyButton
+                        tooltipTitle="Copy Address"
+                        content={channel?.channel || ''}
+                      />
                     </Box>
                   </Box>
                 </Skeleton>
@@ -183,28 +190,18 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                   <Box
                     display="flex"
                     gap="spacing-xs"
+                    css={css`
+                      flex-wrap: wrap;
+                    `}
                   >
                     <Text
                       color="text-tertiary-inverse"
                       variant="c-regular"
                     >
-                      {channel?.subscriber_count} subscribers
+                      {formatSubscriberCount(channel?.subscriber_count)} subscribers
                     </Text>
-                    <Box
-                      display="flex"
-                      gap="spacing-xxxs"
-                    >
-                      <Tutorial
-                        size={16}
-                        color="icon-tertiary"
-                      />
-                      <Text
-                        color="text-tertiary-inverse"
-                        variant="c-regular"
-                      >
-                        Tutotrial
-                      </Text>
-                    </Box>
+
+                    {tutotrialDetails && <ChannelTutorialContent tutotrialDetails={tutotrialDetails} />}
                     <Tag
                       label="Defi"
                       variant="info"
@@ -227,7 +224,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
               color="text-tertiary"
               as="span"
             >
-              {!showMore ? (channel?.info || '').substring(0, 231) : channel?.info || ''}
+              {!showMore ? (channel?.info || '').substring(0, 250) : channel?.info || ''}
             </Text>
             <Text
               display={{ dp: 'none', ml: 'inline' }}
@@ -235,7 +232,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
               color="text-tertiary"
               as="span"
             >
-              {!showMore ? (channel?.info || '').substring(0, 231) : channel?.info || ''}
+              {!showMore ? (channel?.info || '').substring(0, 250) : channel?.info || ''}
             </Text>
             <Box
               as="span"
@@ -265,66 +262,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
           <ChannelDetailSubscribe channel={channel} />
         </Box>
       </Box>
-      <Box
-        display="flex"
-        flexDirection="column"
-        width="100%"
-        overflow="hidden"
-      >
-        <Text
-          color="text-primary"
-          variant="h4-semibold"
-        >
-          Recent Notifications
-        </Text>
-        <Box
-          display="flex"
-          width="100%"
-          flexDirection="column"
-          overflow="auto"
-          justifyContent="flex-start"
-          customScrollbar={true}
-        >
-          {isSuccess && !isNotificationsLoading && !notifications?.length && (
-            <Box
-              display="flex"
-              alignSelf="center"
-              width="fit-content"
-              borderRadius="radius-xl"
-              backgroundColor="surface-secondary"
-              padding="spacing-xxs spacing-sm"
-            >
-              <Text
-                color="text-primary"
-                variant="bs-regular"
-              >
-                {' '}
-                No notifications to show yet
-              </Text>
-            </Box>
-          )}
-          {notifications?.map((item) => {
-            const payload = item?.message?.payload;
-            return (
-              <Skeleton isLoading={isNotificationsLoading}>
-                <Box key={item.payload_id}>
-                  <NotificationItem
-                    notificationTitle={payload?.title}
-                    notificationBody={payload?.body}
-                    cta={payload?.cta}
-                    image={payload?.embed}
-                    app={item?.channel?.name}
-                    icon={item?.channel?.icon}
-                    url={item?.channel?.url}
-                    chainName={item?.source as chainNameType}
-                    theme={mode}
-                  />
-                </Box>
-              </Skeleton>
-            );
-          })}
-        </Box>
-      </Box>
+      <RecentNotifications channelAddress={channel?.channel} />
     </Box>
   );
 };

@@ -1,9 +1,12 @@
-import { Box, Button, CaretDown, Skeleton } from 'blocks';
-import { SubscribeChannelDropdown, UnsubscribeChannelDropdown } from 'common';
-import { UserSetting } from 'helpers/channel/types';
+import { FC } from 'react';
+
 import { useAccount } from 'hooks';
 import { ChannelDetails, useGetUserSubscriptions } from 'queries';
-import { FC } from 'react';
+
+import { Button, CaretDown, NotificationMobile, Skeleton } from 'blocks';
+import { SubscribeChannelDropdown, UnsubscribeChannelDropdown } from 'common';
+
+import { UserSetting } from 'helpers/channel/types';
 
 export type ChannelDetailSubscribeProps = {
   channel: ChannelDetails;
@@ -49,12 +52,13 @@ const ChannelDetailSubscribe: FC<ChannelDetailSubscribeProps> = ({ channel }) =>
           userSetting={JSON.parse(userSubscription[0].user_settings) as UserSetting[]}
         >
           <Button
-            variant="outline"
+            variant="secondary"
             size="small"
             block
+            leadingIcon={<NotificationMobile />}
             trailingIcon={<CaretDown />}
           >
-            Manage
+            Subscribed
           </Button>
         </UnsubscribeChannelDropdown>
       )}
