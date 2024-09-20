@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import { css } from 'styled-components';
-import { Box, Spinner } from 'blocks';
+import { Box, deviceMediaQ, Spinner } from 'blocks';
 import { ChannelDetails } from 'queries';
 import { AllChannelsListItem } from './AllChannelsListItem';
 
@@ -24,6 +24,13 @@ const AllChannelList: FC<AllChannelListProps> = ({ channels, hasMoreData, isLoad
           display: grid;
           gap: var(--spacing-md);
           grid-template-columns: repeat(3, minmax(0px, 1fr));
+
+          @media${deviceMediaQ.tablet} {
+            grid-template-columns: repeat(2, minmax(0px, 1fr));
+          }
+          @media${deviceMediaQ.mobileL} {
+            grid-template-columns: repeat(1, minmax(0px, 1fr));
+          }
         }
       `}
     >

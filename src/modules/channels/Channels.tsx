@@ -55,6 +55,7 @@ const Channels: FC<ChannelsProps> = () => {
       display="flex"
       width="-webkit-fill-available"
       overflow="scroll"
+      padding="spacing-md spacing-md spacing-none spacing-md"
     >
       <Box
         display="flex"
