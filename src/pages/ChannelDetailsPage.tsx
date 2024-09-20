@@ -4,7 +4,7 @@ import { ContentLayout } from 'common';
 
 const ChannelDetailsPage = () => {
   return (
-    <ContentLayout>
+    <ContentLayout variant="verticalStretch">
       <ChannelDetails />
     </ContentLayout>
   );
