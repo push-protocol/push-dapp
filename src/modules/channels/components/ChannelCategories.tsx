@@ -7,6 +7,7 @@ export type ChannelCategoriesProps = {
   filters: Filters;
   setFilter: (filter: Partial<Filters>) => void;
 };
+const scrollAmount = 150;
 
 const ChannelCategories: FC<ChannelCategoriesProps> = ({ filters, setFilter }) => {
   const categoryContainerRef = useRef<HTMLDivElement>(null);
@@ -26,8 +27,8 @@ const ChannelCategories: FC<ChannelCategoriesProps> = ({ filters, setFilter }) =
         variant="outline"
         size="small"
         onClick={() => {
-          categoryContainerRef?.current?.scrollTo({
-            left: 0,
+          categoryContainerRef?.current?.scrollBy({
+            left: -scrollAmount,
             behavior: 'smooth',
           });
         }}
@@ -56,8 +57,8 @@ const ChannelCategories: FC<ChannelCategoriesProps> = ({ filters, setFilter }) =
         variant="outline"
         size="small"
         onClick={() => {
-          categoryContainerRef?.current?.scrollTo({
-            left: categoryContainerRef?.current.scrollWidth,
+          categoryContainerRef?.current?.scrollBy({
+            left: scrollAmount,
             behavior: 'smooth',
           });
         }}
