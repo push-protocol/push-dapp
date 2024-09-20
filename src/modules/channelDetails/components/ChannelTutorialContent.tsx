@@ -1,9 +1,10 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import { Box, Button, Dropdown, ExternalLink, Link, Text, Tutorial } from 'blocks';
+import { UserJourney } from './UserJourneyPreview';
 
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
-import { UserJourney } from './UserJourneyPreview';
+
 import { useDisclosure } from 'common';
 
 export type ChannelTutorialContentProps = { tutotrialDetails: any };
@@ -39,6 +40,7 @@ const ChannelTutorialContent: FC<ChannelTutorialContentProps> = ({ tutotrialDeta
               <Box
                 width="218px"
                 height="142px"
+                overflow="hidden"
                 borderRadius="radius-xs"
               >
                 <img

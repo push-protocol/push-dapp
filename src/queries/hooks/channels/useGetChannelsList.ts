@@ -1,9 +1,10 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { useSelector } from 'react-redux';
 
 import { allChannelsList } from '../../queryKeys';
 import { getChannelsList } from '../../services';
+
 import { ChannelsListModelledResponse, ChannelListParams } from '../../types';
-import { useSelector } from 'react-redux';
 import { UserStoreType } from 'types';
 
 export const useGetChannelslist = ({ order, pageSize, sort }: ChannelListParams) => {

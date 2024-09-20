@@ -24,19 +24,19 @@ const ChannelDetails: FC = () => {
   const hasMoreData = !isFetchingNextPage && hasNextPage;
 
   const selectedChannel = channelsList?.find((channel) => channel?.channel === selectedChannelId);
-  console.debug(selectedChannel, channelsList, 'channel');
 
   useEffect(() => {
     if (!isAddress(id || '')) navigate(APP_PATHS.Channels);
   }, [id]);
 
   //channel tutotrial
-  //delete old channel page
+  //delete old channel and related pages
   return (
     <Box
       width="-webkit-fill-available"
       padding="spacing-md spacing-sm"
       display="flex"
+      height={{ dp: '100vh', ml: 'auto' }}
       justifyContent="flex-start"
       borderRadius="radius-md radius-md radius-none radius-none"
       gap="spacing-md"

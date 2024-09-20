@@ -1,10 +1,9 @@
 // React + Web3 Essentials
-import { lazy, Suspense, useState, useEffect, useContext } from 'react';
+import { lazy, Suspense, useEffect, useContext } from 'react';
 
 // External Packages
 import useToast from 'hooks/useToast';
 import { MdWarning } from 'react-icons/md';
-import { VscClose } from 'react-icons/vsc';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -87,10 +86,6 @@ const rewardsPointsPagePaths = [APP_PATHS.Rewards, APP_PATHS.RewardsActivities, 
 function MasterInterfacePage() {
   // get location
   const location = useLocation();
-
-  // Master Interface controls settings
-  const [playTeaserVideo, setPlayTeaserVideo] = useState(false);
-  const [loadTeaserVideo, setLoadTeaserVideo] = useState(null);
 
   const { MetamaskPushSnapModalComponent, blockedLoading }: AppContextType = useContext(AppContext);
 
@@ -339,48 +334,6 @@ function MasterInterfacePage() {
           progress={blockedLoading.progress}
           progressNotice={blockedLoading.progressNotice}
         />
-      )}
-
-      {/* To play youtube video from anywhere */}
-      {playTeaserVideo && (
-        <PreviewOuter>
-          <PreviewBG
-            href="#"
-            bg="transparent"
-            onClick={(e) => {
-              e.preventDefault();
-              setPlayTeaserVideo(!playTeaserVideo);
-            }}
-          >
-            <PreviewContent className="contentBox">
-              <PreviewClose
-                href="#"
-                bg="transparent"
-                hover="transparent"
-                hoverBG="transparent"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setPlayTeaserVideo(!playTeaserVideo);
-                }}
-              >
-                <VscClose
-                  size={40}
-                  color="#fff"
-                />
-              </PreviewClose>
-              <Preview>
-                <div className="videoWrapper">
-                  <iframe
-                    src={loadTeaserVideo}
-                    frameborder="0"
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen
-                  ></iframe>
-                </div>
-              </Preview>
-            </PreviewContent>
-          </PreviewBG>
-        </PreviewOuter>
       )}
     </Container>
   );

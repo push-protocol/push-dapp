@@ -10,10 +10,12 @@ const UserJourney: FC<UserJourneyProps> = ({ videoLink, modalControl }) => {
       size="large"
       isOpen={isOpen}
       onClose={onClose}
+      acceptButtonProps={null}
+      cancelButtonProps={null}
     >
       <Box
         width="100%"
-        height="100%"
+        height={{ dp: '80vh', ml: 'auto' }}
       >
         <iframe
           width="100%"

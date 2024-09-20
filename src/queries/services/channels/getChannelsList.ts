@@ -1,7 +1,7 @@
 import { PushAPI } from '@pushprotocol/restapi';
 
 import { getChannelsListModelCreator } from '../../models';
-import { ChannelListParams } from 'queries/types';
+import { ChannelListParams } from '../../types';
 
 type GetChannelsListParams = {
   userPushSDKInstance: PushAPI;

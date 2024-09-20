@@ -33,6 +33,7 @@ const ChannelList: FC<ChannelListProps> = ({
       overflow="auto"
       customScrollbar={true}
       height="100%"
+      maxHeight="100%"
       padding="spacing-none spacing-sm spacing-none spacing-none"
       flexDirection="column"
     >

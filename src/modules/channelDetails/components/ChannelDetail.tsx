@@ -3,9 +3,10 @@ import { FC, useState } from 'react';
 import { css } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
+import { ChannelTutorialContent } from './ChannelTutorialContent';
 import { ChannelDetailSubscribe } from './ChannelDetailSubscribe';
 import { RecentNotifications } from './RecentNotifications';
-import { Box, Text, Back, Tag, Skeleton, Tutorial, Tooltip, TickDecoratedCircleFilled } from 'blocks';
+import { Box, Text, Back, Tag, Skeleton, Tooltip, TickDecoratedCircleFilled } from 'blocks';
 import { CopyButton, LOGO_ALIAS_CHAIN, VerifiedChannelTooltipContent, formatSubscriberCount } from 'common';
 
 import { ChannelDetails } from 'queries';
@@ -15,7 +16,6 @@ import { shortenText } from 'helpers/UtilityHelper';
 import APP_PATHS from 'config/AppPaths';
 import { appConfig } from 'config';
 
-import { ChannelTutorialContent } from './ChannelTutorialContent';
 import { getChannelTutorialDetails } from '../ChannelDetails.utils';
 
 export type ChannelDetailProps = { channel: ChannelDetails; isLoading: boolean };
@@ -39,6 +39,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
       display="flex"
       flexDirection="column"
       width="100%"
+      height="100vh"
       gap="spacing-xl"
       padding="spacing-none spacing-xxs"
     >
