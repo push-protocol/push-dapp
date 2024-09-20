@@ -3,7 +3,7 @@ import { ContentLayout } from 'common';
 
 const ChannelsPage = () => {
   return (
-    <ContentLayout>
+    <ContentLayout variant="verticalStretch">
       <Channels />
     </ContentLayout>
   );
