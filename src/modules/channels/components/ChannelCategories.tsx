@@ -18,6 +18,7 @@ const ChannelCategories: FC<ChannelCategoriesProps> = ({ filters, setFilter }) =
         flex-shrink: 0;
       `}
       gap="spacing-xs"
+      maxWidth={{ ml: '346px' }}
     >
       <Button
         iconOnly={<CaretLeft />}

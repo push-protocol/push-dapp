@@ -16,13 +16,13 @@ const ContentLayout: FC<ContentLayoutProps> = ({ children, variant }) => {
   if (variant === 'verticalStretch')
     return (
       <Box
+        alignSelf="center"
         backgroundColor="surface-primary"
         borderRadius="radius-lg"
         display="flex"
         flexDirection="column"
         height="calc(100vh - 96px)"
         overflow="hidden"
-        padding="spacing-md spacing-md spacing-none spacing-md"
         maxWidth="1200px"
         width="calc(100% - (var(--spacing-sm) * 2))"
         css={css`

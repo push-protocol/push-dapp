@@ -40,7 +40,7 @@ const ChannelSearchAndChainSelection: FC<ChannelSearchAndChainSelectionProps> = 
           value={searchQuery}
         />
       </Box>
-      <Box width={{ initial: '300px', ml: '200px' }}>
+      <Box width="100%">
         <Select
           options={getSelectChains(appConfig.allowedNetworks)}
           value={filters.chain}
