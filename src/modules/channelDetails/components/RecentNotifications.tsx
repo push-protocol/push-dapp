@@ -6,6 +6,7 @@ import { Box, Skeleton, Text } from 'blocks';
 
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { useGetChannelNotifications } from 'queries';
+import { css } from 'styled-components';
 
 export type RecentNotificationsProps = { channelAddress: string };
 const RecentNotifications: FC<RecentNotificationsProps> = ({ channelAddress }) => {
@@ -22,7 +23,9 @@ const RecentNotifications: FC<RecentNotificationsProps> = ({ channelAddress }) =
       display="flex"
       flexDirection="column"
       width="100%"
-      overflow="hidden"
+      // height="70%"
+      // padding="spacing-none spacing-none spacing-xxxl spacing-none"
+      overflow="auto"
     >
       <Text
         color="text-primary"
@@ -33,7 +36,10 @@ const RecentNotifications: FC<RecentNotificationsProps> = ({ channelAddress }) =
       <Box
         display="flex"
         width="100%"
+        height="100%"
         flexDirection="column"
+        gap="spacing-sm"
+        padding="spacing-sm spacing-none spacing-none spacing-none"
         overflow="auto"
         justifyContent="flex-start"
         customScrollbar={true}
@@ -60,7 +66,14 @@ const RecentNotifications: FC<RecentNotificationsProps> = ({ channelAddress }) =
           const payload = item?.message?.payload;
           return (
             <Skeleton isLoading={isNotificationsLoading}>
-              <Box key={item.payload_id}>
+              <Box
+                key={item.payload_id}
+                css={css`
+                  & > div {
+                    margin: 0;
+                  }
+                `}
+              >
                 <NotificationItem
                   notificationTitle={payload?.title}
                   notificationBody={payload?.body}

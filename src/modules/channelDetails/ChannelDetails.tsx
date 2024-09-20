@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react';
 
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useGetChannelslist } from 'queries';
+import { useGetChannelDetails, useGetChannelslist } from 'queries';
 
 import { ChannelDetail } from './components/ChannelDetail';
 import { ChannelList } from './components/ChannelList';
@@ -17,13 +17,14 @@ const ChannelDetails: FC = () => {
   const [selectedChannelId, setSelectedChannelId] = useState<string>(id || '');
 
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useGetChannelslist({
-    pageSize: 20,
+    pageSize: 10,
   });
+  const { data: channelDetail } = useGetChannelDetails(id || '');
 
   const channelsList = isLoading ? Array(10).fill(0) : data?.pages.flatMap((page) => page.channels) || [];
   const hasMoreData = !isFetchingNextPage && hasNextPage;
 
-  const selectedChannel = channelsList?.find((channel) => channel?.channel === selectedChannelId);
+  const selectedChannel = channelsList?.find((channel) => channel?.channel === selectedChannelId) || channelDetail;
 
   useEffect(() => {
     if (!isAddress(id || '')) navigate(APP_PATHS.Channels);
@@ -32,30 +33,33 @@ const ChannelDetails: FC = () => {
   //channel tutotrial
   //delete old channel and related pages
   return (
-    <Box
-      width="-webkit-fill-available"
-      padding="spacing-md spacing-sm"
-      display="flex"
-      height={{ dp: '100vh', ml: 'auto' }}
-      justifyContent="flex-start"
-      borderRadius="radius-md radius-md radius-none radius-none"
-      gap="spacing-md"
-      border="border-sm solid stroke-secondary"
-      backgroundColor="surface-primary"
-    >
-      <ChannelList
-        channels={channelsList}
-        fetchNextPage={fetchNextPage}
-        hasMoreData={hasMoreData}
-        isLoading={isLoading}
-        setSelectedChannelId={setSelectedChannelId}
-        isFetchingNextPage={isFetchingNextPage}
-      />
-      <ChannelDetail
-        channel={selectedChannel}
-        isLoading={isLoading}
-      />
-    </Box>
+    channelsList &&
+    channelsList.length && (
+      <Box
+        width="-webkit-fill-available"
+        padding="spacing-md spacing-sm"
+        display="flex"
+        height={{ dp: '100vh', ml: 'auto' }}
+        justifyContent="flex-start"
+        borderRadius="radius-md radius-md radius-none radius-none"
+        gap="spacing-md"
+        border="border-sm solid stroke-secondary"
+        backgroundColor="surface-primary"
+      >
+        <ChannelList
+          channels={channelsList}
+          fetchNextPage={fetchNextPage}
+          hasMoreData={hasMoreData}
+          isLoading={isLoading}
+          setSelectedChannelId={setSelectedChannelId}
+          isFetchingNextPage={isFetchingNextPage}
+        />
+        <ChannelDetail
+          channel={selectedChannel}
+          isLoading={isLoading}
+        />
+      </Box>
+    )
   );
 };
 
