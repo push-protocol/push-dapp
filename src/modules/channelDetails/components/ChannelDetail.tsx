@@ -39,7 +39,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
       display="flex"
       flexDirection="column"
       width="100%"
-      height="100vh"
+      height="100%"
       gap="spacing-xl"
       padding="spacing-none spacing-xxs"
     >
@@ -264,6 +264,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
           <ChannelDetailSubscribe channel={channel} />
         </Box>
       </Box>
+
       <RecentNotifications channelAddress={channel?.channel} />
     </Box>
   );
