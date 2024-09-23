@@ -1,6 +1,7 @@
 // React and other libraries
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
+import { useLocation } from 'react-router-dom';
 
 //Hooks
 import { useGetRewardsLeaderboard, ModelledLeaderBoardUser } from 'queries';
@@ -16,6 +17,8 @@ import { LeaderBoardNullState } from './LeaderboardNullState';
 import { LeaderboardListColumns } from './LeaderBoardListColumns';
 
 const LeaderBoardList: FC = () => {
+  const location = useLocation();
+  const url = '/points/leaderboard';
   const { data, isError, refetch, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } =
     useGetRewardsLeaderboard({ pageSize: 20 });
 
@@ -23,6 +26,12 @@ const LeaderBoardList: FC = () => {
   const leaderboardList = isLoading ? Array(10).fill(0) : data?.pages.flatMap((page) => page.users) || [];
 
   const hasMoreData = !isFetchingNextPage && hasNextPage;
+
+  useEffect(() => {
+    if (url === location.pathname) {
+      refetch();
+    }
+  }, [location.pathname]);
 
   return !leaderboardList.length ? (
     <LeaderBoardNullState
