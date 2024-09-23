@@ -39,7 +39,7 @@ const ChannelList: FC<ChannelListProps> = ({
       display={{ dp: 'flex', ml: 'none' }}
       width="fit-content"
       justifyContent="flex-start"
-      overflow="auto"
+      overflow="scroll"
       customScrollbar={true}
       height="100%"
       maxHeight="100%"
@@ -68,7 +68,6 @@ const ChannelList: FC<ChannelListProps> = ({
                 height="46px"
                 overflow="hidden"
                 borderRadius="radius-sm"
-                // border='border-sm solid rgba(0, 0, 0, 0.05)'
                 cursor="pointer"
                 onClick={() => handleChannelChange(channel)}
                 css={css`
@@ -86,7 +85,7 @@ const ChannelList: FC<ChannelListProps> = ({
           ))}
         </Box>
       </InfiniteScroll>
-      {!isFetchingNextPage && (
+      {isFetchingNextPage && (
         <Box
           justifyContent="center"
           display="flex"

@@ -80,6 +80,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                   height="90px"
                   borderRadius="radius-md"
                   overflow="hidden"
+                  border="border-sm solid stroke-secondary"
                   display={{ dp: 'flex', ml: 'none' }}
                   css={css`
                     flex-shrink: 0;
@@ -96,10 +97,9 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                   width="52px"
                   height="52px"
                   borderRadius="radius-sm"
+                  border="border-sm solid stroke-secondary"
                   display={{ dp: 'none', ml: 'flex' }}
-                  css={css`
-                    overflow: hidden;
-                  `}
+                  overflow="hidden"
                 >
                   <img
                     width="100%"

@@ -24,6 +24,8 @@ const RecentNotifications: FC<RecentNotificationsProps> = ({ channelAddress }) =
       flexDirection="column"
       width="100%"
       height="100%"
+      overflow="scroll"
+      customScrollbar
     >
       <Text
         color="text-primary"

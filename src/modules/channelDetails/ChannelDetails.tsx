@@ -17,7 +17,7 @@ const ChannelDetails: FC = () => {
   const [selectedChannelId, setSelectedChannelId] = useState<string>(id || '');
 
   const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useGetChannelslist({
-    pageSize: 10,
+    pageSize: 15,
   });
   const { data: channelDetail } = useGetChannelDetails(id || '');
 
@@ -30,8 +30,6 @@ const ChannelDetails: FC = () => {
     if (!isAddress(id || '')) navigate(APP_PATHS.Channels);
   }, [id]);
 
-  //channel tutotrial
-  //delete old channel and related pages
   return (
     channelsList &&
     channelsList.length && (
@@ -39,7 +37,7 @@ const ChannelDetails: FC = () => {
         width="-webkit-fill-available"
         padding="spacing-md spacing-sm"
         display="flex"
-        height={{ dp: '100vh', ml: 'auto' }}
+        height="100%"
         justifyContent="flex-start"
         borderRadius="radius-md radius-md radius-none radius-none"
         gap="spacing-md"
