@@ -23,7 +23,7 @@ import {
   LocalPeerType,
   Web3NameListType,
   handleConnectWalletAndEnableProfileProps,
-  onboardingProgressI
+  onboardingProgressI,
 } from 'types/context';
 import { GlobalContext } from './GlobalContext';
 
@@ -46,14 +46,14 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
   const [localPeer, setLocalPeer] = useState<LocalPeerType>({
     peer: '',
-    peerID: ''
+    peerID: '',
   });
   const [connectedPeerID, setConnectedPeerID] = useState<ConnectedPeerIDType>({
-    peerID: ''
+    peerID: '',
   });
   const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
     enabled: false,
-    title: null
+    title: null,
   });
   const [displayQR, setDisplayQR] = useState<boolean>(false);
 
@@ -66,7 +66,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const {
     isModalOpen: isMetamaskPushSnapOpen,
     showModal: showMetamaskPushSnap,
-    ModalComponent: MetamaskPushSnapModalComponent
+    ModalComponent: MetamaskPushSnapModalComponent,
   } = useModalBlur();
 
   const dispatch = useDispatch();
@@ -77,7 +77,12 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
         toastMessage: toastMessage || 'Please connect your wallet to continue',
         toastTitle: 'Connect Wallet',
         toastType: 'ERROR',
-        getToastIcon: (size) => <MdError size={size} color="red" />
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
       });
     }
 
@@ -96,7 +101,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
     remember = false,
     showToast = false,
     toastMessage = undefined,
-    wallet
+    wallet,
   }: handleConnectWalletAndEnableProfileProps) => {
     shouldInitializeRef.current = false; // Directly modify the ref to disable useEffect execution
 
@@ -105,7 +110,12 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
         toastMessage: toastMessage || 'Please connect your wallet to continue',
         toastTitle: 'Connect Wallet',
         toastType: 'ERROR',
-        getToastIcon: (size) => <MdError size={size} color="red" />
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
       });
     }
 
@@ -193,7 +203,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
     userInstance = await PushAPI.initialize({
       account: readOnlyWallet,
       env: appConfig.appEnv,
-      alpha: { feature: ['SCALABILITY_V2'] }
+      alpha: { feature: ['SCALABILITY_V2'] },
     });
 
     console.debug('src::contexts::AppContext::initializePushSdkGuestMode::User Instance Initialized', userInstance);
@@ -221,9 +231,10 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
       decryptedPGPPrivateKey: null,
       env: appConfig.appEnv,
       account: account,
-      alpha: { feature: ['SCALABILITY_V2'] }
+      alpha: { feature: ['SCALABILITY_V2'] },
     });
-
+    // if (!(userPushSDKInstance?.stream && userPushSDKInstance?.stream?.disconnected))
+    await setupStream(userInstance);
     console.debug('src::contexts::AppContext::initializePushSdkReadMode::User Instance Initialized', userInstance);
     dispatch(setUserPushSDKInstance(userInstance));
     return userInstance;
@@ -255,14 +266,14 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
           env: appConfig.appEnv,
           account: currentAddress,
           progressHook: onboardingProgressReformatter,
-          alpha: { feature: ['SCALABILITY_V2'] }
+          alpha: { feature: ['SCALABILITY_V2'] },
         });
       } else {
         userInstance = await PushAPI.initialize(librarySigner!, {
           env: appConfig.appEnv,
           account: currentAddress,
           progressHook: onboardingProgressReformatter,
-          alpha: { feature: ['SCALABILITY_V2'] }
+          alpha: { feature: ['SCALABILITY_V2'] },
         });
       }
 
@@ -273,7 +284,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
           title: 'Push Profile Setup Complete',
           spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
           progressEnabled: false,
-          progress: 100
+          progress: 100,
         });
       }
       dispatch(setUserPushSDKInstance(userInstance));
@@ -290,21 +301,19 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
 
   const setupStream = async (userInstance: any) => {
     // Connect stream as well
-    const stream = await userInstance.initStream([
-      CONSTANTS.STREAM.CONNECT,
-      CONSTANTS.STREAM.DISCONNECT,
-      CONSTANTS.STREAM.CHAT,
-      CONSTANTS.STREAM.CHAT_OPS,
-      CONSTANTS.STREAM.NOTIF,
-      CONSTANTS.STREAM.VIDEO
-    ]);
+    if (!userInstance.stream) {
+      const stream = await userInstance.initStream([
+        CONSTANTS.STREAM.CONNECT,
+        CONSTANTS.STREAM.DISCONNECT,
+        CONSTANTS.STREAM.CHAT,
+        CONSTANTS.STREAM.CHAT_OPS,
+        CONSTANTS.STREAM.NOTIF,
+        CONSTANTS.STREAM.VIDEO,
+      ]);
 
-    stream.on(CONSTANTS.STREAM.CONNECT, () => {
-      console.debug('src::contexts::AppContext::setupStream::CONNECT::');
-    });
-
-    await stream.connect();
-    console.debug('src::contexts::AppContext::setupStream::User Intance Stream Connected', userInstance);
+      await stream.connect();
+      console.debug('src::contexts::AppContext::setupStream::User Intance Stream Connected', userInstance);
+    }
   };
 
   // To reformat errors
@@ -314,7 +323,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
       hookInfo: progressHook,
       spinnerType: LOADER_SPINNER_TYPE.PROCESSING,
       progress: 0,
-      errorMessage: ''
+      errorMessage: '',
     };
 
     if (progressHook) {
@@ -417,7 +426,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
       progressEnabled: onboardingProgress.progress ? true : false,
       progress: onboardingProgress.progress,
       progressNotice: onboardingProgress.hookInfo.progressInfo,
-      errorMessage: onboardingProgress.errorMessage
+      errorMessage: onboardingProgress.errorMessage,
     });
   };
 
@@ -457,7 +466,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
         sigType: '',
         signature: '',
         linkedListHash: '',
-        privateKey: ''
+        privateKey: '',
       };
     }
 
@@ -488,18 +497,18 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
         account: account,
         env: appConfig.appEnv,
         signer: signer,
-        progressHook: onboardingProgressReformatter
+        progressHook: onboardingProgressReformatter,
       });
       const createdUser = await PushAPI.user.get({
         account: account,
-        env: appConfig.appEnv
+        env: appConfig.appEnv,
       });
       const pvtkey = await PushAPI.chat.decryptPGPKey({
         encryptedPGPPrivateKey: createdUser.encryptedPrivateKey,
         signer: signer,
         env: appConfig.appEnv,
         toUpgrade: true,
-        progressHook: onboardingProgressReformatter
+        progressHook: onboardingProgressReformatter,
       });
 
       const createdConnectedUser = { ...createdUser, privateKey: pvtkey };
@@ -544,7 +553,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
         removePGPKeyForUser,
         storePGPKeyForUser,
         isUserProfileUnlocked,
-        setUserProfileUnlocked
+        setUserProfileUnlocked,
       }}
     >
       {children}

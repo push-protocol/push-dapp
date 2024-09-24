@@ -73,9 +73,13 @@ const useSDKStream = () => {
   useEffect(() => {
     if (userPushSDKInstance?.signer) {
       (async () => {
-        const stream = await userPushSDKInstance.initStream([STREAM.CONNECT, STREAM.DISCONNECT, STREAM.NOTIF]);
-        stream.connect();
-        setStream(stream);
+        if (userPushSDKInstance?.stream && userPushSDKInstance?.stream?.disconnected) {
+          setStream(userPushSDKInstance?.stream);
+        } else {
+          const stream = await userPushSDKInstance.initStream([STREAM.CONNECT, STREAM.DISCONNECT, STREAM.NOTIF]);
+          stream.connect();
+          setStream(stream);
+        }
       })();
     }
   }, [userPushSDKInstance]);
