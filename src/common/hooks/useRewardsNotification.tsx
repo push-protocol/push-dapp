@@ -19,6 +19,7 @@ export const useRewardsNotification = () => {
       title: 'Push Points are Live',
       description: 'Complete Tasks on Push. Check-in, Earn Push Points, Unlock Rewards and Level up!',
       image: <RewardPoints />,
+      position: 'bottom-left',
       onClick: () => {
         navigate('/points');
         localStorage.setItem(CommonLocalStorageKeys.notificationShown, 'true');

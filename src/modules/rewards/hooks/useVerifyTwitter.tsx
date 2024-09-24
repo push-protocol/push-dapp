@@ -88,7 +88,7 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
 
     if (userTwitterDetails) {
       // @ts-expect-error
-      const twitterHandle = userTwitterDetails.reloadUserInfo.providerUserInfo[0].screenName;
+      const twitterHandle = userTwitterDetails.reloadUserInfo.screenName;
 
       const verificationProof = await generateVerificationProof(
         {
