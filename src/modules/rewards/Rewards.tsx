@@ -63,14 +63,14 @@ const Rewards: FC<RewardsProps> = () => {
       >
         <Text
           variant="h3-bold"
-          display={{ ml: 'none', dp: 'block' }}
+          display={{ ml: 'none', initial: 'block' }}
           color="text-primary"
         >
           {heading}
         </Text>
         <Text
           variant="h4-semibold"
-          display={{ ml: 'block', dp: 'none' }}
+          display={{ ml: 'block', initial: 'none' }}
           color="text-primary"
         >
           {heading}
