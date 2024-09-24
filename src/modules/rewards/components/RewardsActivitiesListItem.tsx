@@ -190,7 +190,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
                       variant="bm-semibold"
                       color="text-primary"
                     >
-                      {activity.points?.toLocaleString()} Points
+                      {activity.points?.toLocaleString()}
                     </Text>
                   </Skeleton>
                 </Box>

@@ -118,7 +118,7 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
                   height={28}
                 />
                 <Text
-                  variant="bs-semibold"
+                  variant="bm-semibold"
                   color="text-primary"
                 >
                   {activity.points?.toLocaleString()}
@@ -135,7 +135,7 @@ const StakePushActivitiesListItem: FC<StakeActivitiesItemProps> = ({
               >
                 <Multiplier />
                 <Text
-                  variant="bs-semibold"
+                  variant="bm-semibold"
                   color="text-primary"
                 >
                   {activity.multiplier?.toLocaleString()}x

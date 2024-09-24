@@ -84,7 +84,6 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
     setErrorMessage('');
 
     const userTwitterDetails = await handleConnect();
-    console.log(userTwitterDetails, 'twitter details');
 
     if (userTwitterDetails) {
       // @ts-expect-error
