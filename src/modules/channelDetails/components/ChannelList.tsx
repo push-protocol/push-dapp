@@ -6,6 +6,9 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { Box, Spinner, Skeleton } from 'blocks';
 
 import { ChannelDetails, ChannelsListModelledResponse } from 'queries';
+import { useNavigate } from 'react-router-dom';
+import APP_PATHS from 'config/AppPaths';
+import { css } from 'styled-components';
 
 export type ChannelListProps = {
   channels: Array<ChannelDetails>;
@@ -25,12 +28,18 @@ const ChannelList: FC<ChannelListProps> = ({
   hasMoreData,
   isFetchingNextPage,
 }) => {
+  const navigate = useNavigate();
+
+  const handleChannelChange = (channel: ChannelDetails) => {
+    setSelectedChannelId(channel?.channel);
+    navigate(APP_PATHS.ChannelDetails(channel?.channel));
+  };
   return (
     <Box
       display={{ dp: 'flex', ml: 'none' }}
       width="fit-content"
-      justifyContent="start"
-      overflow="auto"
+      justifyContent="flex-start"
+      overflow="scroll"
       customScrollbar={true}
       height="100%"
       maxHeight="100%"
@@ -38,7 +47,7 @@ const ChannelList: FC<ChannelListProps> = ({
       flexDirection="column"
     >
       <InfiniteScroll
-        pageStart={0}
+        pageStart={1}
         loadMore={() => {
           fetchNextPage();
         }}
@@ -60,7 +69,10 @@ const ChannelList: FC<ChannelListProps> = ({
                 overflow="hidden"
                 borderRadius="radius-sm"
                 cursor="pointer"
-                onClick={() => setSelectedChannelId(channel?.channel)}
+                onClick={() => handleChannelChange(channel)}
+                css={css`
+                  flex-shrink: 0;
+                `}
               >
                 <img
                   width="100%"

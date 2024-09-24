@@ -39,7 +39,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
       display="flex"
       flexDirection="column"
       width="100%"
-      height="100vh"
+      height="100%"
       gap="spacing-xl"
       padding="spacing-none spacing-xxs"
     >
@@ -79,9 +79,11 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                   width="90px"
                   height="90px"
                   borderRadius="radius-md"
+                  overflow="hidden"
+                  border="border-sm solid stroke-secondary"
                   display={{ dp: 'flex', ml: 'none' }}
                   css={css`
-                    overflow: hidden;
+                    flex-shrink: 0;
                   `}
                 >
                   <img
@@ -95,10 +97,9 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                   width="52px"
                   height="52px"
                   borderRadius="radius-sm"
+                  border="border-sm solid stroke-secondary"
                   display={{ dp: 'none', ml: 'flex' }}
-                  css={css`
-                    overflow: hidden;
-                  `}
+                  overflow="hidden"
                 >
                   <img
                     width="100%"
@@ -263,6 +264,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
           <ChannelDetailSubscribe channel={channel} />
         </Box>
       </Box>
+
       <RecentNotifications channelAddress={channel?.channel} />
     </Box>
   );
