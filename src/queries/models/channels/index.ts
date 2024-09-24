@@ -10,3 +10,4 @@ export * from './getAliasInfoModelCreator';
 export * from './getChannelNotificationsModelCreator';
 export * from './getChannelsListModelCreator';
 export * from './channelSearchModelCreator';
+export * from './getChannelCategoriesModelCreator';

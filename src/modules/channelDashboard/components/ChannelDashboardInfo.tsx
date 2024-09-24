@@ -216,6 +216,12 @@ const ChannelDashboardInfo: FC<ChannelDashboardInfoProps> = ({
                 </>
               )}
             </Skeleton>
+            <Skeleton isLoading={!channelDetails?.name || isAliasVerified}>
+              <Tag
+                label={channelDetails?.tags.length ? channelDetails.tags[0] : 'Dummy Tag'}
+                variant="info"
+              />
+            </Skeleton>
           </Box>
         </Box>
       </Box>

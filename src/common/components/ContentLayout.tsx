@@ -21,7 +21,7 @@ const ContentLayout: FC<ContentLayoutProps> = ({ children, variant }) => {
         borderRadius="radius-lg"
         display="flex"
         flexDirection="column"
-        height="calc(100vh - 96px)"
+        height="calc(100vh - 76px)"
         overflow="hidden"
         maxWidth="1200px"
         width="calc(100% - (var(--spacing-sm) * 2))"

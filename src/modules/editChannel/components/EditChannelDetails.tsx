@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import { css } from 'styled-components';
 
-import { Box, Button, Separator, TextArea, TextInput } from 'blocks';
+import { Box, Button, Select, Separator, TextArea, TextInput } from 'blocks';
 
 import { MODAL_POSITION } from 'hooks/useModalBlur';
 
-import { ChannelDetails } from 'queries';
+import { ChannelDetails, useGetChannelCategories } from 'queries';
 
 import { useEditChannelForm } from '../EditChannel.form';
 import { UploadLogoModalV2 } from '../UploadLogoModalV2';
@@ -16,13 +16,10 @@ type EditChannelDetailsProps = {
   displayUplaodLogoModal: any;
 };
 
+const EditChannelDetails: FC<EditChannelDetailsProps> = ({ UploadLogoComponent, displayUplaodLogoModal }) => {
+  const { values: formValues, errors, handleChange, setFieldValue, setFieldTouched } = useEditChannelForm();
 
-const EditChannelDetails: FC<EditChannelDetailsProps> = ({
-  UploadLogoComponent,
-  displayUplaodLogoModal
-}) => {
-
-  const { values: formValues, errors, handleChange } = useEditChannelForm();
+  const { data: categories } = useGetChannelCategories();
 
   return (
     <Box
@@ -33,7 +30,12 @@ const EditChannelDetails: FC<EditChannelDetailsProps> = ({
       padding="spacing-sm spacing-md"
       justifyContent="center"
     >
-      <Box display="flex" flexDirection="column" alignItems="center" gap="spacing-sm">
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        gap="spacing-sm"
+      >
         <Box
           width="90px"
           height="90px"
@@ -45,13 +47,24 @@ const EditChannelDetails: FC<EditChannelDetailsProps> = ({
             }
           `}
         >
-          <img width="100%" height="100%" src={formValues.channelIcon} />
+          <img
+            width="100%"
+            height="100%"
+            src={formValues.channelIcon}
+          />
         </Box>
-        <Button size="extraSmall" onClick={displayUplaodLogoModal}>
+        <Button
+          size="extraSmall"
+          onClick={displayUplaodLogoModal}
+        >
           Upload Logo
         </Button>
       </Box>
-      <Box display={{ initial: 'block', ml: 'none' }} height="330px" margin="spacing-none spacing-lg">
+      <Box
+        display={{ initial: 'block', ml: 'none' }}
+        height="330px"
+        margin="spacing-none spacing-lg"
+      >
         <Separator orientation="vertical" />
       </Box>
 
@@ -59,9 +72,14 @@ const EditChannelDetails: FC<EditChannelDetailsProps> = ({
         <Separator orientation="horizontal" />
       </Box>
 
-      <Box width={{ initial: "550px", ml: '350px' }}>
+      <Box width={{ initial: '550px', ml: '350px' }}>
         <form>
-          <Box display="flex" flexDirection="column" gap="spacing-xl" alignSelf="stretch">
+          <Box
+            display="flex"
+            flexDirection="column"
+            gap="spacing-xl"
+            alignSelf="stretch"
+          >
             <Box
               display="flex"
               flexDirection="column"
@@ -80,7 +98,18 @@ const EditChannelDetails: FC<EditChannelDetailsProps> = ({
                 errorMessage={errors.channelName}
                 totalCount={32}
               />
-
+              <Select
+                required
+                label="Channel Category"
+                options={categories?.selectFieldTags || []}
+                value={formValues.channelCategory}
+                error={Boolean(errors?.channelCategory)}
+                errorMessage={errors?.channelCategory}
+                onSelect={(value) => {
+                  setFieldTouched('channelCategory', true);
+                  setFieldValue('channelCategory', value);
+                }}
+              />
               <TextArea
                 required
                 label="Channel Description"

@@ -1,3 +1,4 @@
+import { useGetChannelCategories } from 'queries';
 import { useEffect, useMemo } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
@@ -9,11 +10,12 @@ export type Filters = {
 
 export type UseChannelsFiltersProps = {
   initialChain: string;
-  initialCategory: string;
 };
 
-export const useChannelsFilters = ({ initialChain, initialCategory }: UseChannelsFiltersProps) => {
+export const useChannelsFilters = ({ initialChain }: UseChannelsFiltersProps) => {
   const [, setSearchParams] = useSearchParams();
+
+  const { data: categories, status } = useGetChannelCategories();
 
   const { search } = useLocation();
 
@@ -25,26 +27,27 @@ export const useChannelsFilters = ({ initialChain, initialCategory }: UseChannel
       (acc, [key, value]) => (value ? { ...acc, [key]: value } : acc),
       {}
     );
-
     setSearchParams(updatedFilters);
   };
 
   useEffect(() => {
     const filters: Partial<Filters> = {};
-
     if (!searchFilters.chain) {
       filters['chain'] = initialChain;
+      setFilter(filters);
     }
-    if (!searchFilters.category) {
-      filters['category'] = initialCategory;
-    }
-    setFilter(filters);
   }, []);
+
+  useEffect(() => {
+    if (status === 'success' && !searchFilters.category && categories?.tags?.length) {
+      setFilter({ search: categories.tags[0] });
+    }
+  }, [status]);
 
   return {
     filters: {
       chain: searchFilters?.chain || initialChain,
-      category: searchFilters?.category || initialCategory,
+      category: searchFilters?.category || '',
       search: searchFilters?.search || '',
     },
     setFilter,

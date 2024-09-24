@@ -45,7 +45,7 @@ const StakeFees: FC<StakeFeesProps> = ({ channelStakeFees, handleNextStep }) => 
 
   const handleCreateChannel = () => {
     validateForm().then((errors) => {
-      if (errors.channelName || errors.channelDesc || errors.channelURL) {
+      if (errors.channelName || errors.channelDesc || errors.channelURL || errors.channelCategory) {
         handleNextStep('channelInfo');
       }
 
@@ -74,7 +74,7 @@ const StakeFees: FC<StakeFeesProps> = ({ channelStakeFees, handleNextStep }) => 
       >
         <StakingVariant
           fees={noOfPushTokensToCheck}
-          title='Amount for Staking'
+          title="Amount for Staking"
           balance={balance}
           setBalance={setBalance}
           showFaucet
@@ -82,7 +82,6 @@ const StakeFees: FC<StakeFeesProps> = ({ channelStakeFees, handleNextStep }) => 
         />
 
         <ImportPushTokenMessage title="Don’t see Push token in your wallet?" />
-
       </Box>
 
       <Box

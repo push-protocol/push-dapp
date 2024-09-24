@@ -86,6 +86,7 @@ export type ChannelDetails = {
   verified_status: number;
   verify_verification_proof: string | null;
   aliases: Array<Alias>;
+  tags: string[];
 };
 
 export type ChannelDelegatesResponse = Array<string>;
@@ -199,4 +200,16 @@ export type ChannelSearchParams = {
   page: number;
   pageSize: number;
   query: string;
+};
+
+export type ChannelCategoriesResponse = {
+  tags: {
+    tags: string[];
+    itemCount: number;
+  };
+};
+
+export type ChannelCategoriesModelledResponse = {
+  tags: string[];
+  selectFieldTags: { label: string; value: string }[];
 };

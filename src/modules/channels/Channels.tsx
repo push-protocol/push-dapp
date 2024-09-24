@@ -4,7 +4,6 @@ import { ChannelListOrderType, ChannelListSortType } from '@pushprotocol/restapi
 import { Box } from 'blocks';
 import { appConfig } from 'config';
 import { getSelectChains } from 'common';
-import { css } from 'styled-components';
 import { useChannelSearch, useGetChannelslist } from 'queries';
 import { useChannelsFilters } from './hooks/useChannelsFilters';
 import { ChannelSearchAndChainSelection } from './components/ChannelSearchAndChainSelection';
@@ -18,7 +17,6 @@ const Channels: FC<ChannelsProps> = () => {
 
   const { filters, setFilter } = useChannelsFilters({
     initialChain: chainOptions[0].value,
-    initialCategory: categories[0],
   });
 
   const {
@@ -98,20 +96,3 @@ export { Channels };
 // Make the chain filter working with listing and search
 // Refactor thr codebase. => done
 // Fix the container
-
-const categories = [
-  'All',
-  'Subscribed',
-  'DEFI',
-  'DAO',
-  'NFT',
-  'Metaverse',
-  'Tooling',
-  'Infrastrucuture',
-  'Gaming',
-  'Social',
-  'Serivce',
-  'DEFI',
-  'DAO',
-  'NFT',
-];

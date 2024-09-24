@@ -13,3 +13,4 @@ export * from './reactivateChannel';
 export * from './getAliasInfo';
 export * from './getChannelNotifications';
 export * from './getChannelsList';
+export * from './getChannelCategories';

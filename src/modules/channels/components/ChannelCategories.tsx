@@ -1,6 +1,7 @@
-import { Box, Button, CaretLeft, CaretRight, Pill } from 'blocks';
 import { FC, useRef } from 'react';
+import { Box, Button, CaretLeft, CaretRight, Pill, Skeleton } from 'blocks';
 import { css } from 'styled-components';
+import { useGetChannelCategories } from 'queries';
 import { Filters } from '../hooks/useChannelsFilters';
 
 export type ChannelCategoriesProps = {
@@ -11,6 +12,11 @@ const scrollAmount = 150;
 
 const ChannelCategories: FC<ChannelCategoriesProps> = ({ filters, setFilter }) => {
   const categoryContainerRef = useRef<HTMLDivElement>(null);
+
+  const { data, isLoading } = useGetChannelCategories();
+
+  const channelCategories = isLoading ? Array(15).fill(0) : data?.tags || [];
+
   return (
     <Box
       display="flex"
@@ -40,14 +46,20 @@ const ChannelCategories: FC<ChannelCategoriesProps> = ({ filters, setFilter }) =
         width="100%"
         ref={categoryContainerRef}
       >
-        {categories.map((cat, index) => (
-          <Pill
-            key={`${index}`}
-            isActive={cat === filters.category}
-            onClick={() => setFilter({ category: cat })}
+        {channelCategories.map((cat, index) => (
+          <Skeleton
+            isLoading={isLoading}
+            width="200px"
+            borderRadius="radius-round"
           >
-            {cat}
-          </Pill>
+            <Pill
+              key={`${index}`}
+              isActive={cat === filters.category}
+              onClick={() => setFilter({ category: cat })}
+            >
+              {cat}
+            </Pill>
+          </Skeleton>
         ))}
       </Box>
 
@@ -68,20 +80,3 @@ const ChannelCategories: FC<ChannelCategoriesProps> = ({ filters, setFilter }) =
 };
 
 export { ChannelCategories };
-
-const categories = [
-  'All',
-  'Subscribed',
-  'DEFI',
-  'DAO',
-  'NFT',
-  'Metaverse',
-  'Tooling',
-  'Infrastrucuture',
-  'Gaming',
-  'Social',
-  'Serivce',
-  'DEFI',
-  'DAO',
-  'NFT',
-];

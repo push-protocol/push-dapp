@@ -23,20 +23,22 @@ const EditChanelFormProvider: FC<EditChannelFormProviderProps> = ({ children, ch
       .max(250, getMaxCharLimitFieldMessage(250)),
     channelURL: Yup.string()
       .required(getRequiredFieldMessage('Channel URL'))
-      .test('url', 'Please enter a valid channel url', (value) => URLRegex.test(value))
+      .test('url', 'Please enter a valid channel url', (value) => URLRegex.test(value)),
+    channelCategory: Yup.string().required(getRequiredFieldMessage('Channel Category')),
   });
 
   const editChannelForm = useFormik<EditChannelInfoFormValues>({
     initialValues: {
       channelName: channelDetails.name,
+      channelCategory: channelDetails.tags.length ? channelDetails.tags[0] : '',
       channelDesc: channelDetails.info,
       channelURL: channelDetails.url,
       channelIcon: channelDetails.iconV2,
       imageSrc: '',
-      imageType: ''
+      imageType: '',
     },
     validationSchema: channelFormValidation,
-    onSubmit: () => { }
+    onSubmit: () => {},
   });
 
   return <FormikProvider value={editChannelForm}>{children}</FormikProvider>;
