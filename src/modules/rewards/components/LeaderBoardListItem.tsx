@@ -81,14 +81,14 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
             </Box>
             <Text
               variant="bm-bold"
-              display={{ ml: 'none', dp: 'block' }}
+              display={{ ml: 'none', initial: 'block' }}
               color="text-primary"
             >
               {displayName}
             </Text>
             <Text
               variant="bs-bold"
-              display={{ ml: 'block', dp: 'none' }}
+              display={{ ml: 'block', initial: 'none' }}
               color="text-primary"
             >
               {displayName}
@@ -107,14 +107,14 @@ const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, poin
         >
           <Text
             variant="bm-bold"
-            display={{ ml: 'none', dp: 'block' }}
+            display={{ ml: 'none', initial: 'block' }}
             color="text-primary"
           >
             {points?.toLocaleString()}
           </Text>
           <Text
             variant="bs-bold"
-            display={{ ml: 'block', dp: 'none' }}
+            display={{ ml: 'block', initial: 'none' }}
             color="text-primary"
           >
             {points?.toLocaleString()}

@@ -13,7 +13,7 @@ const CreateChannelHeader = () => {
       <Text
         variant="h3-semibold"
         color="text-primary"
-        display={{ ml: 'none', dp: 'block' }}
+        display={{ ml: 'none', initial: 'block' }}
       >
         Create Your Channel
       </Text>
@@ -21,7 +21,7 @@ const CreateChannelHeader = () => {
       <Text
         variant="bs-regular"
         color="text-tertiary"
-        display={{ ml: 'none', dp: 'block' }}
+        display={{ ml: 'none', initial: 'block' }}
       >
         Creating your own notification channel to manage, send and notify users.
       </Text>
@@ -29,7 +29,7 @@ const CreateChannelHeader = () => {
       <Text
         variant={'h4-semibold'}
         color="text-primary"
-        display={{ ml: 'block', dp: 'none' }}
+        display={{ ml: 'block', initial: 'none' }}
       >
         Create Your Channel
       </Text>
@@ -37,7 +37,7 @@ const CreateChannelHeader = () => {
       <Text
         variant="bes-regular"
         color="text-tertiary"
-        display={{ ml: 'block', dp: 'none' }}
+        display={{ ml: 'block', initial: 'none' }}
         textAlign="center"
       >
         Creating your own notification channel to manage, send and notify users.

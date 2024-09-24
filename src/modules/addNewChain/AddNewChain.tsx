@@ -122,26 +122,26 @@ const AddNewChain: FC = () => {
             <Text
               color="text-primary"
               variant="h3-semibold"
-              display={{ ml: 'none', dp: 'block' }}
+              display={{ ml: 'none', initial: 'block' }}
             >
               Add New Chain to Channel
             </Text>
             <Text
               color="text-primary"
               variant="h4-semibold"
-              display={{ ml: 'block', dp: 'none' }}
+              display={{ ml: 'block', initial: 'none' }}
             >
               Add New Chain to Channel
             </Text>
             <Text
               color="text-tertiary"
               variant="bs-regular"
-              display={{ ml: 'none', dp: 'block' }}
+              display={{ ml: 'none', initial: 'block' }}
             >
               Add an alias chain to your channel to enable notifications to that chain.
             </Text>
             <Text
-              display={{ ml: 'block', dp: 'none' }}
+              display={{ ml: 'block', initial: 'none' }}
               color="text-tertiary"
               variant="bes-regular"
             >
