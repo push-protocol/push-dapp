@@ -194,12 +194,14 @@ export type ChannelListParams = {
   pageSize: number;
   page?: number;
   sort?: ChannelListSortType;
+  chain?: string;
 };
 
 export type ChannelSearchParams = {
   page: number;
   pageSize: number;
   query: string;
+  chain?: string;
 };
 
 export type ChannelCategoriesResponse = {

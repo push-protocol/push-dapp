@@ -195,6 +195,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                     css={css`
                       flex-wrap: wrap;
                     `}
+                    alignItems="center"
                   >
                     <Text
                       color="text-tertiary-inverse"
@@ -204,10 +205,12 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                     </Text>
 
                     {tutotrialDetails && <ChannelTutorialContent tutotrialDetails={tutotrialDetails} />}
-                    <Tag
-                      label="Defi"
-                      variant="info"
-                    />
+                    {channel?.tags?.[0] && (
+                      <Tag
+                        label={channel.tags[0]}
+                        variant="info"
+                      />
+                    )}
                   </Box>
                 </Skeleton>
               </Box>

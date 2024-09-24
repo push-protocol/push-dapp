@@ -7,11 +7,13 @@ import { channelSearch } from 'queries/services/channels/channelSearch';
 export type UseChannelSearchProps = {
   query: ChannelSearchParams['query'];
   pageSize: ChannelSearchParams['pageSize'];
+  chain: ChannelSearchParams['chain'];
 };
 
-export const useChannelSearch = ({ pageSize, query }: UseChannelSearchProps) => {
+// TODO make it a sdk call in future
+export const useChannelSearch = ({ pageSize, query, chain }: UseChannelSearchProps) => {
   const infiniteQuery = useInfiniteQuery<ChannelsListModelledResponse>({
-    queryKey: [channelSearchList, query],
+    queryKey: [channelSearchList, query, chain],
     initialPageParam: 1,
     enabled: !!query,
     queryFn: ({ pageParam }) =>
@@ -19,6 +21,7 @@ export const useChannelSearch = ({ pageSize, query }: UseChannelSearchProps) => 
         pageSize,
         page: pageParam as number,
         query,
+        chain,
       }),
     getNextPageParam: ({ itemcount }, allPages, lastPageParam) => {
       if (pageSize * ((lastPageParam as number) + 1) >= itemcount) {

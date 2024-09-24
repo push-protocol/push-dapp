@@ -177,7 +177,7 @@ const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
                   alignItems="center"
                   margin="spacing-none spacing-none spacing-none spacing-xxxs"
                 >
-                  {verifiedAliasChainIds.map((aliasChainId: number) => {
+                  {verifiedAliasChainIds.map((aliasChainId: number, index) => {
                     const LogoComponent = LOGO_ALIAS_CHAIN[aliasChainId];
                     return LogoComponent ? (
                       <Box
@@ -185,6 +185,7 @@ const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
                         css={css`
                           margin-left: -5px;
                         `}
+                        key={`${index}`}
                       >
                         <LogoComponent
                           key={aliasChainId}

@@ -3,6 +3,7 @@ import { Box, Button, CaretLeft, CaretRight, Pill, Skeleton } from 'blocks';
 import { css } from 'styled-components';
 import { useGetChannelCategories } from 'queries';
 import { Filters } from '../hooks/useChannelsFilters';
+import { AllCategories } from '../Channels.constants';
 
 export type ChannelCategoriesProps = {
   filters: Filters;
@@ -46,6 +47,14 @@ const ChannelCategories: FC<ChannelCategoriesProps> = ({ filters, setFilter }) =
         width="100%"
         ref={categoryContainerRef}
       >
+        {!isLoading && (
+          <Pill
+            isActive={filters.category === AllCategories}
+            onClick={() => setFilter({ category: AllCategories })}
+          >
+            {AllCategories}
+          </Pill>
+        )}
         {channelCategories.map((cat, index) => (
           <Skeleton
             isLoading={isLoading}

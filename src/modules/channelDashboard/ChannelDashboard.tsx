@@ -13,12 +13,13 @@ import { UserChannelDashboard } from './components/UserChannelDashboard';
 import { DashboardActiveState } from './ChannelDashboard.types';
 import { EditChannelV2 } from 'modules/editChannel/EditChannelV2';
 import useFetchChannelDetails from 'common/hooks/useFetchUsersChannelDetails';
+import { useGetChannelCategories } from 'queries';
 
 const ChannelDashboard = () => {
   const [activeState, setActiveState] = useState<DashboardActiveState>('dashboard');
 
   const { channelDetails, loadingChannelDetails, refetchChannelDetails } = useFetchChannelDetails();
-
+  useGetChannelCategories();
   return (
     <Box>
       {activeState === 'dashboard' && (
@@ -48,7 +49,10 @@ const ChannelDashboard = () => {
       )}
 
       {activeState === 'editChannel' && channelDetails && (
-        <EditChannelV2 setActiveState={setActiveState} channelDetails={channelDetails} />
+        <EditChannelV2
+          setActiveState={setActiveState}
+          channelDetails={channelDetails}
+        />
       )}
     </Box>
   );

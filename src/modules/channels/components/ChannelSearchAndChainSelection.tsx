@@ -18,11 +18,11 @@ const ChannelSearchAndChainSelection: FC<ChannelSearchAndChainSelectionProps> = 
     debounce((value) => {
       setFilter({ search: value });
     }, 800),
-    []
+    [setFilter]
   );
 
   useEffect(() => {
-    getSearchResults(searchQuery);
+    (filters.search || searchQuery) && getSearchResults(searchQuery);
   }, [searchQuery]);
 
   return (

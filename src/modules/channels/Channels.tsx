@@ -9,6 +9,7 @@ import { useChannelsFilters } from './hooks/useChannelsFilters';
 import { ChannelSearchAndChainSelection } from './components/ChannelSearchAndChainSelection';
 import { ChannelCategories } from './components/ChannelCategories';
 import { AllChannelList } from './components/AllChannelsList';
+import { AllCategories } from './Channels.constants';
 
 export type ChannelsProps = {};
 
@@ -17,7 +18,10 @@ const Channels: FC<ChannelsProps> = () => {
 
   const { filters, setFilter } = useChannelsFilters({
     initialChain: chainOptions[0].value,
+    initialCategory: AllCategories,
   });
+
+  const isEthereumChain = chainOptions.find((chain) => chain.value === filters.chain)?.label.includes('Ethereum');
 
   const {
     data: channelList,
@@ -29,6 +33,7 @@ const Channels: FC<ChannelsProps> = () => {
     pageSize: 21,
     order: ChannelListOrderType.DESCENDING,
     sort: ChannelListSortType.SUBSCRIBER,
+    chain: isEthereumChain ? '' : filters.chain,
   });
 
   const {
@@ -37,7 +42,11 @@ const Channels: FC<ChannelsProps> = () => {
     fetchNextPage: searchChannelsForNextPage,
     isFetchingNextPage: isSearchingNextPageForChannels,
     hasNextPage: hasNextPageForSearch,
-  } = useChannelSearch({ pageSize: 21, query: filters.search });
+  } = useChannelSearch({
+    pageSize: 21,
+    query: filters.search,
+    chain: isEthereumChain ? '' : filters.chain,
+  });
 
   const channels =
     loadingChannels || searchingChannels
@@ -90,9 +99,4 @@ const Channels: FC<ChannelsProps> = () => {
 
 export { Channels };
 
-// Implement Search API => done
-// Implemente category APIS
 // Make the cat api working with listing and search
-// Make the chain filter working with listing and search
-// Refactor thr codebase. => done
-// Fix the container
