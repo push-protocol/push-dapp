@@ -29,7 +29,7 @@ const ChannelSearchAndChainSelection: FC<ChannelSearchAndChainSelectionProps> = 
     <Box
       display="flex"
       gap="spacing-xs"
-      flexDirection="row"
+      flexDirection={{ initial: 'row', ml: 'column' }}
       width="100%"
     >
       <Box width="100%">

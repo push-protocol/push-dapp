@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { FormikProvider, useFormik, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 
-import { ChannelDetails } from 'queries';
+import { ChannelDetails, useGetChannelCategories } from 'queries';
 
 import { getMaxCharLimitFieldMessage, getRequiredFieldMessage, URLRegex } from 'common/Common.form';
 import { EditChannelInfoFormValues } from './EditChannel.types';
@@ -13,24 +13,24 @@ type EditChannelFormProviderProps = {
   channelDetails: ChannelDetails;
 };
 
+const channelFormValidation = Yup.object().shape({
+  channelName: Yup.string().required(getRequiredFieldMessage('Channel Name')).max(32, getMaxCharLimitFieldMessage(32)),
+  channelDesc: Yup.string()
+    .required(getRequiredFieldMessage('Channel Description'))
+    .max(250, getMaxCharLimitFieldMessage(250)),
+  channelURL: Yup.string()
+    .required(getRequiredFieldMessage('Channel URL'))
+    .test('url', 'Please enter a valid channel url', (value) => URLRegex.test(value)),
+  channelCategory: Yup.string().required(getRequiredFieldMessage('Channel Category')),
+});
+
 const EditChanelFormProvider: FC<EditChannelFormProviderProps> = ({ children, channelDetails }) => {
-  const channelFormValidation = Yup.object().shape({
-    channelName: Yup.string()
-      .required(getRequiredFieldMessage('Channel Name'))
-      .max(32, getMaxCharLimitFieldMessage(32)),
-    channelDesc: Yup.string()
-      .required(getRequiredFieldMessage('Channel Description'))
-      .max(250, getMaxCharLimitFieldMessage(250)),
-    channelURL: Yup.string()
-      .required(getRequiredFieldMessage('Channel URL'))
-      .test('url', 'Please enter a valid channel url', (value) => URLRegex.test(value)),
-    channelCategory: Yup.string().required(getRequiredFieldMessage('Channel Category')),
-  });
+  const { data: categories } = useGetChannelCategories();
 
   const editChannelForm = useFormik<EditChannelInfoFormValues>({
     initialValues: {
       channelName: channelDetails.name,
-      channelCategory: channelDetails.tags.length ? channelDetails.tags[0] : '',
+      channelCategory: channelDetails.tags.length ? channelDetails.tags[0] : categories?.tags[0] || '',
       channelDesc: channelDetails.info,
       channelURL: channelDetails.url,
       channelIcon: channelDetails.iconV2,

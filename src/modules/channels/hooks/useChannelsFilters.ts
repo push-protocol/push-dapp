@@ -26,7 +26,6 @@ export const useChannelsFilters = ({ initialChain, initialCategory }: UseChannel
       {}
     );
 
-    console.log(updatedFilters, searchFilters, filter, search);
     setSearchParams(updatedFilters);
   };
 

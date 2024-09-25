@@ -34,6 +34,7 @@ const Channels: FC<ChannelsProps> = () => {
     order: ChannelListOrderType.DESCENDING,
     sort: ChannelListSortType.SUBSCRIBER,
     chain: isEthereumChain ? '' : filters.chain,
+    tag: filters.category === AllCategories ? '' : filters.category,
   });
 
   const {
@@ -46,6 +47,7 @@ const Channels: FC<ChannelsProps> = () => {
     pageSize: 21,
     query: filters.search,
     chain: isEthereumChain ? '' : filters.chain,
+    tag: filters.category === AllCategories ? '' : filters.category,
   });
 
   const channels =
@@ -98,5 +100,3 @@ const Channels: FC<ChannelsProps> = () => {
 };
 
 export { Channels };
-
-// Make the cat api working with listing and search

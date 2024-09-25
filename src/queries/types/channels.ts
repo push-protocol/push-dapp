@@ -188,6 +188,10 @@ export type ChannelsListModelledResponse = {
   channels: Array<ChannelDetails>;
   itemcount: number;
 };
+export type ChannelsSearchListModelledResponse = {
+  channels: Array<ChannelDetails>;
+  itemCount: number;
+};
 
 export type ChannelListParams = {
   order?: ChannelListOrderType;
@@ -195,6 +199,7 @@ export type ChannelListParams = {
   page?: number;
   sort?: ChannelListSortType;
   chain?: string;
+  tag?: string;
 };
 
 export type ChannelSearchParams = {
@@ -202,6 +207,7 @@ export type ChannelSearchParams = {
   pageSize: number;
   query: string;
   chain?: string;
+  tag?: string;
 };
 
 export type ChannelCategoriesResponse = {

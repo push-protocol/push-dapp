@@ -1,18 +1,19 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { channelSearchList } from '../../queryKeys';
-import { ChannelSearchParams, ChannelsListModelledResponse } from '../../types';
+import { ChannelSearchParams, ChannelsSearchListModelledResponse } from '../../types';
 import { channelSearch } from 'queries/services/channels/channelSearch';
 
 export type UseChannelSearchProps = {
   query: ChannelSearchParams['query'];
   pageSize: ChannelSearchParams['pageSize'];
   chain: ChannelSearchParams['chain'];
+  tag: ChannelSearchParams['tag'];
 };
 
 // TODO make it a sdk call in future
-export const useChannelSearch = ({ pageSize, query, chain }: UseChannelSearchProps) => {
-  const infiniteQuery = useInfiniteQuery<ChannelsListModelledResponse>({
+export const useChannelSearch = ({ pageSize, query, chain, tag }: UseChannelSearchProps) => {
+  const infiniteQuery = useInfiniteQuery<ChannelsSearchListModelledResponse>({
     queryKey: [channelSearchList, query, chain],
     initialPageParam: 1,
     enabled: !!query,
@@ -22,9 +23,11 @@ export const useChannelSearch = ({ pageSize, query, chain }: UseChannelSearchPro
         page: pageParam as number,
         query,
         chain,
+        tag,
       }),
-    getNextPageParam: ({ itemcount }, allPages, lastPageParam) => {
-      if (pageSize * ((lastPageParam as number) + 1) >= itemcount) {
+    getNextPageParam: ({ itemCount }, allPages, lastPageParam) => {
+      console.log(itemCount, lastPageParam, pageSize, pageSize * ((lastPageParam as number) + 1) >= itemCount);
+      if (pageSize * ((lastPageParam as number) + 1) >= itemCount) {
         return null;
       }
       return (lastPageParam as number) + 1;

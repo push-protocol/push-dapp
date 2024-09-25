@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { css } from 'styled-components';
 
 import { Box, Button, Select, Separator, TextArea, TextInput } from 'blocks';
@@ -19,13 +19,8 @@ type EditChannelDetailsProps = {
 const EditChannelDetails: FC<EditChannelDetailsProps> = ({ UploadLogoComponent, displayUplaodLogoModal }) => {
   const { values: formValues, errors, handleChange, setFieldValue } = useEditChannelForm();
 
-  const { data: categories, status } = useGetChannelCategories();
+  const { data: categories } = useGetChannelCategories();
 
-  useEffect(() => {
-    if (status === 'success' && categories.tags.length && !formValues.channelCategory) {
-      setFieldValue('channelCategory', categories.tags[0]);
-    }
-  }, [status]);
   return (
     <Box
       display="flex"
