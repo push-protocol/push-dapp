@@ -26,13 +26,13 @@ const ChannelDetails: FC = () => {
 
   const selectedChannel = channelsList?.find((channel) => channel?.channel === selectedChannelId) || channelDetail;
 
+  /* Redirects to /channels page if the channel address is invalid*/
   useEffect(() => {
     if (!isAddress(id || '')) navigate(APP_PATHS.Channels);
   }, [id]);
 
   return (
-    channelsList &&
-    channelsList.length && (
+    channelsList?.length && (
       <Box
         width="-webkit-fill-available"
         padding="spacing-md spacing-sm"

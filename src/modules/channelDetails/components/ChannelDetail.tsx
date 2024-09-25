@@ -22,9 +22,12 @@ export type ChannelDetailProps = { channel: ChannelDetails; isLoading: boolean }
 const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
   const [showMore, setShowMore] = useState<boolean>(false);
   const navigate = useNavigate();
-
-  //fetch channel category
-  //notification component doesnot update in sdk
+  const isInfoMore = (channel?.info || '').length > 250;
+  const channelInfo = isInfoMore
+    ? !showMore
+      ? (channel?.info || '').substring(0, 250)
+      : channel?.info || ''
+    : channel?.info || '';
 
   let verifiedAliasChainIds = [
     appConfig.coreContractChain,
@@ -71,8 +74,8 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
           >
             <Box
               display="flex"
-              gap={{ dp: 'spacing-sm', ml: 'spacing-xs' }}
-              alignItems={{ dp: 'center', ml: 'flex-start' }}
+              gap={{ initial: 'spacing-sm', ml: 'spacing-xs' }}
+              alignItems={{ initial: 'center', ml: 'flex-start' }}
             >
               <Skeleton isLoading={isLoading}>
                 <Box
@@ -81,7 +84,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                   borderRadius="radius-md"
                   overflow="hidden"
                   border="border-sm solid stroke-secondary"
-                  display={{ dp: 'flex', ml: 'none' }}
+                  display={{ initial: 'flex', ml: 'none' }}
                   css={css`
                     flex-shrink: 0;
                   `}
@@ -98,7 +101,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                   height="52px"
                   borderRadius="radius-sm"
                   border="border-sm solid stroke-secondary"
-                  display={{ dp: 'none', ml: 'flex' }}
+                  display={{ initial: 'none', ml: 'flex' }}
                   overflow="hidden"
                 >
                   <img
@@ -215,7 +218,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                 </Skeleton>
               </Box>
             </Box>
-            <Box display={{ dp: 'inline', ml: 'none' }}>
+            <Box display={{ initial: 'inline', ml: 'none' }}>
               <ChannelDetailSubscribe channel={channel} />
             </Box>
           </Box>
@@ -224,46 +227,48 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
         <Skeleton isLoading={isLoading}>
           <Box>
             <Text
-              display={{ dp: 'inline', ml: 'none' }}
+              display={{ initial: 'inline', ml: 'none' }}
               variant="bs-regular"
               color="text-tertiary"
               as="span"
             >
-              {!showMore ? (channel?.info || '').substring(0, 250) : channel?.info || ''}
+              {channelInfo}
             </Text>
             <Text
-              display={{ dp: 'none', ml: 'inline' }}
+              display={{ initial: 'none', ml: 'inline' }}
               variant="bs-regular"
               color="text-tertiary"
               as="span"
             >
-              {!showMore ? (channel?.info || '').substring(0, 250) : channel?.info || ''}
+              {channelInfo}
             </Text>
-            <Box
-              as="span"
-              cursor="pointer"
-              onClick={() => setShowMore(!showMore)}
-            >
-              <Text
-                display={{ dp: 'inline', ml: 'none' }}
-                color="text-brand-medium"
+            {isInfoMore && (
+              <Box
                 as="span"
+                cursor="pointer"
+                onClick={() => setShowMore(!showMore)}
               >
-                {' '}
-                {`Show ${!showMore ? 'More' : 'Less'}`}
-              </Text>
-              <Text
-                display={{ dp: 'none', ml: 'inline' }}
-                color="text-brand-medium"
-                as="span"
-              >
-                {' '}
-                {`Show ${!showMore ? 'More' : 'Less'}`}
-              </Text>
-            </Box>
+                <Text
+                  display={{ initial: 'inline', ml: 'none' }}
+                  color="text-brand-medium"
+                  as="span"
+                >
+                  {' '}
+                  {`Show ${!showMore ? 'More' : 'Less'}`}
+                </Text>
+                <Text
+                  display={{ initial: 'none', ml: 'inline' }}
+                  color="text-brand-medium"
+                  as="span"
+                >
+                  {' '}
+                  {`Show ${!showMore ? 'More' : 'Less'}`}
+                </Text>
+              </Box>
+            )}
           </Box>
         </Skeleton>
-        <Box display={{ dp: 'none', ml: 'block' }}>
+        <Box display={{ initial: 'none', ml: 'block' }}>
           <ChannelDetailSubscribe channel={channel} />
         </Box>
       </Box>
