@@ -36,7 +36,7 @@ const ChannelList: FC<ChannelListProps> = ({
   };
   return (
     <Box
-      display={{ dp: 'flex', ml: 'none' }}
+      display={{ initial: 'flex', ml: 'none' }}
       width="fit-content"
       justifyContent="flex-start"
       overflow="scroll"
