@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { ChannelListOrderType, ChannelListSortType } from '@pushprotocol/restapi';
 
-import { Box } from 'blocks';
+import { Box, Search, Text } from 'blocks';
 import { appConfig } from 'config';
 import { getSelectChains } from 'common';
 import { useChannelSearch, useGetChannelslist } from 'queries';
@@ -59,12 +59,15 @@ const Channels: FC<ChannelsProps> = () => {
     ? !isSearchingNextPageForChannels && hasNextPageForSearch
     : !isFetchingNextPageForChannels && hasNextPageForChannels;
 
+  const isLoading = loadingChannels || searchingChannels;
+
   return (
     <Box
       display="flex"
       width="-webkit-fill-available"
       overflow="scroll"
       padding="spacing-md spacing-md spacing-none spacing-md"
+      height="100%"
     >
       <Box
         display="flex"
@@ -86,13 +89,27 @@ const Channels: FC<ChannelsProps> = () => {
             filters={filters}
             setFilter={setFilter}
           />
-          <AllChannelList
-            channels={channels}
-            hasMoreData={hasMoreData}
-            isLoading={loadingChannels || searchingChannels}
-            isLoadingNextPage={isFetchingNextPageForChannels || isSearchingNextPageForChannels}
-            loadMore={filters.search ? searchChannelsForNextPage : fetchChannelsForNextPage}
-          />
+          {!channels.length && !isLoading ? (
+            <Box
+              display="flex"
+              gap="spacing-xs"
+              alignItems="center"
+              flexDirection="column"
+              justifyContent="center"
+              height="100%"
+            >
+              <Search size={48} />
+              <Text variant="h5-bold">No channels to display</Text>
+            </Box>
+          ) : (
+            <AllChannelList
+              channels={channels}
+              hasMoreData={hasMoreData}
+              isLoading={isLoading}
+              isLoadingNextPage={isFetchingNextPageForChannels || isSearchingNextPageForChannels}
+              loadMore={filters.search ? searchChannelsForNextPage : fetchChannelsForNextPage}
+            />
+          )}
         </Box>
       </Box>
     </Box>
