@@ -19,6 +19,7 @@ import { device } from 'config/Globals';
 // Assets
 import Back from 'assets/chat/backchat.svg?react';
 import UnlockProfileWrapper from 'components/chat/unlockProfile/UnlockProfileWrapper';
+import { MODAL_POSITION } from 'hooks/useModalBlur';
 
 // Interface
 interface IntroContainerProps {
@@ -96,6 +97,8 @@ const ChatSection = ({ chatId, setChatId, loggedIn }) => {
                 type={UNLOCK_PROFILE_TYPE.MODAL}
                 showConnectModal={visible}
                 onClose={() => setVisible(false)}
+                modalType="container"
+                description="Unlock your profile to proceed."
               />
             )}
           </ChatViewContainer>

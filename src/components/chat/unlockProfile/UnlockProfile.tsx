@@ -17,7 +17,7 @@ import { device, size } from 'config/Globals';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import UnlockLogo from '../../../assets/chat/unlock.svg';
 import Wallet from '../../../assets/chat/wallet.svg';
-import { Button, Box, CrossFilled, HoverableSVG } from 'blocks';
+import { Button, Box, deviceMediaQ } from 'blocks';
 import { checkUnlockProfileErrors } from './UnlockProfile.utils';
 import { colorBrands } from 'blocks/theme/colors/colors.brands';
 
@@ -199,7 +199,10 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
             flexDirection={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? 'column' : 'row'}
           >
             {!isLoading ? (
-              <>
+              <Box
+                display='flex'
+                flexDirection={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? 'column' : 'row'}
+                gap='spacing-sm'>
                 <Button
                   disabled={activeStatus.status !== PROFILESTATE.CONNECT_WALLET && true}
                   variant="primary"
@@ -215,7 +218,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
                 >
                   Unlock Profile
                 </Button>
-              </>
+              </Box>
             ) : (
               <SkeletonContainer
                 width="100%"
@@ -289,21 +292,21 @@ const RenderToolTip = ({ children, type }) => {
       placementProps={
         type === UNLOCK_PROFILE_TYPE.MODAL
           ? {
-              background: 'black',
-              width: '220px',
-              padding: '8px 12px',
-              top: '10px',
-              left: '60px',
-              borderRadius: '4px 12px 12px 12px',
-            }
+            background: 'black',
+            width: '220px',
+            padding: '8px 12px',
+            top: '10px',
+            left: '60px',
+            borderRadius: '4px 12px 12px 12px',
+          }
           : {
-              background: 'black',
-              width: '120px',
-              padding: '8px 12px',
-              bottom: '0px',
-              right: '-30px',
-              borderRadius: '12px 12px 12px 4px',
-            }
+            background: 'black',
+            width: '120px',
+            padding: '8px 12px',
+            bottom: '0px',
+            right: '-30px',
+            borderRadius: '12px 12px 12px 4px',
+          }
       }
       tooltipContent={
         <SpanV2
@@ -321,12 +324,12 @@ const RenderToolTip = ({ children, type }) => {
 const Container = styled(ItemHV2)`
   flex-direction: column;
   align-items: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? 'center' : 'end')};
-  width: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '100%' : 'inherit')};
-  padding: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '0px' : '0px')};
+  width: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '360px' : 'inherit')};
+  padding: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '10px' : '0px')};
 
-  @media (${device.tablet}) {
-    width: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '100%' : 'inherit')};
-    padding: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '0px' : '0px')};
+  @media (${deviceMediaQ.tablet}) {
+    width: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '360px' : 'inherit')};
+    padding: ${(props) => (props.type === UNLOCK_PROFILE_TYPE.MODAL ? '10px' : '0px')};
     align-items: center;
   }
 `;
