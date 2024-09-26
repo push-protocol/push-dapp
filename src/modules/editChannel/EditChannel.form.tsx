@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { FormikProvider, useFormik, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 
-import { ChannelDetails, useGetChannelCategories } from 'queries';
+import { ChannelDetails } from 'queries';
 
 import { getMaxCharLimitFieldMessage, getRequiredFieldMessage, URLRegex } from 'common/Common.form';
 import { EditChannelInfoFormValues } from './EditChannel.types';
@@ -25,12 +25,10 @@ const channelFormValidation = Yup.object().shape({
 });
 
 const EditChanelFormProvider: FC<EditChannelFormProviderProps> = ({ children, channelDetails }) => {
-  const { data: categories } = useGetChannelCategories();
-
   const editChannelForm = useFormik<EditChannelInfoFormValues>({
     initialValues: {
       channelName: channelDetails.name,
-      channelCategory: channelDetails.tags.length ? channelDetails.tags[0] : categories?.tags[0] || '',
+      channelCategory: channelDetails.tags.length ? channelDetails.tags[0] : '',
       channelDesc: channelDetails.info,
       channelURL: channelDetails.url,
       channelIcon: channelDetails.iconV2,

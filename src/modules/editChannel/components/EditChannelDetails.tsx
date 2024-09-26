@@ -101,6 +101,7 @@ const EditChannelDetails: FC<EditChannelDetailsProps> = ({ UploadLogoComponent, 
               <Select
                 required
                 label="Channel Category"
+                placeholder="Please select a category"
                 options={categories?.selectFieldTags || []}
                 value={formValues.channelCategory}
                 error={Boolean(errors?.channelCategory)}
