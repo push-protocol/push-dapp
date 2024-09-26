@@ -14,6 +14,8 @@ export type ChannelSearchAndChainSelectionProps = {
 const ChannelSearchAndChainSelection: FC<ChannelSearchAndChainSelectionProps> = ({ filters, setFilter }) => {
   const [searchQuery, setSearchQuery] = useState(filters.search as string);
 
+  const [initialLoad, setInitialLoad] = useState(true);
+
   const getSearchResults = useCallback(
     debounce((value) => {
       setFilter({ search: value });
@@ -22,8 +24,12 @@ const ChannelSearchAndChainSelection: FC<ChannelSearchAndChainSelectionProps> = 
   );
 
   useEffect(() => {
-    (filters.search || searchQuery) && getSearchResults(searchQuery);
+    !initialLoad && getSearchResults(searchQuery);
   }, [searchQuery]);
+
+  useEffect(() => {
+    setInitialLoad(false);
+  }, []);
 
   return (
     <Box
