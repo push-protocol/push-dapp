@@ -97,7 +97,7 @@ const ChatSection = ({ chatId, setChatId, loggedIn }) => {
                 type={UNLOCK_PROFILE_TYPE.MODAL}
                 showConnectModal={visible}
                 onClose={() => setVisible(false)}
-                position='ON_PARENT'
+                modalType="container"
                 description="Unlock your profile to proceed."
               />
             )}
@@ -137,7 +137,7 @@ const ChatViewContainer = styled(ItemVV2)`
   overflow: hidden;
 `;
 
-const IntroContainer = styled(ItemVV2) <IntroContainerProps>`
+const IntroContainer = styled(ItemVV2)<IntroContainerProps>`
   flex: 1;
   height: inherit;
   background: ${(props) => props.bg || 'transparent'};
