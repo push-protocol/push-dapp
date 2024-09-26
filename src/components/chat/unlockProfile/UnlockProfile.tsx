@@ -199,7 +199,10 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
             flexDirection={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? 'column' : 'row'}
           >
             {!isLoading ? (
-              <Box display='flex' flexDirection='column' gap='spacing-sm'>
+              <Box
+                display='flex'
+                flexDirection={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? 'column' : 'row'}
+                gap='spacing-sm'>
                 <Button
                   disabled={activeStatus.status !== PROFILESTATE.CONNECT_WALLET && true}
                   variant="primary"
