@@ -14,7 +14,7 @@ export type UseChannelSearchProps = {
 // TODO make it a sdk call in future
 export const useChannelSearch = ({ pageSize, query, chain, tag }: UseChannelSearchProps) => {
   const infiniteQuery = useInfiniteQuery<ChannelsSearchListModelledResponse>({
-    queryKey: [channelSearchList, query, chain],
+    queryKey: [channelSearchList, query, chain, tag],
     initialPageParam: 1,
     enabled: !!query,
     queryFn: ({ pageParam }) =>
