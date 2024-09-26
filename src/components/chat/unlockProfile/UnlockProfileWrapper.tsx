@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import UnlockProfile from './UnlockProfile';
 import { Modal } from 'blocks';
+import { MODAL_POSITION } from 'hooks/useModalBlur';
+import { UnlockProfileModalWrapper } from './UnlockProfileModalWrapper';
 
 export enum UNLOCK_PROFILE_TYPE {
   BOTTOM_BAR = 'bottombar',
@@ -14,6 +16,7 @@ interface IntroContainerProps {
   showConnectModal?: boolean;
   description?: string;
   onClose: () => void;
+  position?: number;
 }
 
 const DEFAULT_PROPS = {
@@ -25,10 +28,23 @@ const UnlockProfileWrapper: FC<IntroContainerProps> = ({
   showConnectModal = false,
   description,
   onClose,
+  position = MODAL_POSITION.ON_ROOT,
 }) => {
   return (
     <>
-      {type === UNLOCK_PROFILE_TYPE.MODAL ? (
+      {type === UNLOCK_PROFILE_TYPE.BOTTOM_BAR && (
+        <Container className={type}>
+          <UnlockProfile
+            InnerComponentProps={{
+              type,
+              description,
+            }}
+            onClose={onClose}
+          />
+        </Container>
+      )}
+
+      {type === UNLOCK_PROFILE_TYPE.MODAL && position === MODAL_POSITION.ON_ROOT && (
         <Modal
           isOpen={showConnectModal}
           onClose={onClose}
@@ -44,16 +60,15 @@ const UnlockProfileWrapper: FC<IntroContainerProps> = ({
             onClose={onClose}
           />
         </Modal>
-      ) : (
-        <Container className={type}>
-          <UnlockProfile
-            InnerComponentProps={{
-              type,
-              description,
-            }}
-            onClose={onClose}
-          />
-        </Container>
+      )}
+
+      {/* This is for displaying the Chat profile */}
+      {type === UNLOCK_PROFILE_TYPE.MODAL && position === MODAL_POSITION.ON_PARENT && (
+        <UnlockProfileModalWrapper
+          type={type}
+          showConnectModal={showConnectModal}
+          description={description}
+        />
       )}
     </>
   );
