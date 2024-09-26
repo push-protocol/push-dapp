@@ -97,7 +97,7 @@ const ChatSection = ({ chatId, setChatId, loggedIn }) => {
                 type={UNLOCK_PROFILE_TYPE.MODAL}
                 showConnectModal={visible}
                 onClose={() => setVisible(false)}
-                position={MODAL_POSITION.ON_PARENT}
+                position='ON_PARENT'
                 description="Unlock your profile to proceed."
               />
             )}

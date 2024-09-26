@@ -1,10 +1,14 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import styled from 'styled-components';
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import UnlockProfile from './UnlockProfile';
+
 import { Modal } from 'blocks';
-import { MODAL_POSITION } from 'hooks/useModalBlur';
-import { UnlockProfileModalWrapper } from './UnlockProfileModalWrapper';
+
+import { MODAL_POSITION_TYPE } from 'common';
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+
+import UnlockProfile from './UnlockProfile';
 
 export enum UNLOCK_PROFILE_TYPE {
   BOTTOM_BAR = 'bottombar',
@@ -16,7 +20,7 @@ interface IntroContainerProps {
   showConnectModal?: boolean;
   description?: string;
   onClose: () => void;
-  position?: number;
+  position?: MODAL_POSITION_TYPE; //Defaults to ON_ROOT
 }
 
 const DEFAULT_PROPS = {
@@ -28,8 +32,21 @@ const UnlockProfileWrapper: FC<IntroContainerProps> = ({
   showConnectModal = false,
   description,
   onClose,
-  position = MODAL_POSITION.ON_ROOT,
+  position = 'ON_ROOT',
 }) => {
+  const {
+    isModalOpen: isProfileModalOpen,
+    showModal: showProfileModal,
+    ModalComponent: ProfileModalComponent,
+  } = useModalBlur();
+
+  useEffect(() => {
+    if (type === UNLOCK_PROFILE_TYPE.MODAL && showConnectModal) {
+      showProfileModal();
+    }
+  }, [type, showConnectModal]);
+
+
   return (
     <>
       {type === UNLOCK_PROFILE_TYPE.BOTTOM_BAR && (
@@ -44,7 +61,7 @@ const UnlockProfileWrapper: FC<IntroContainerProps> = ({
         </Container>
       )}
 
-      {type === UNLOCK_PROFILE_TYPE.MODAL && position === MODAL_POSITION.ON_ROOT && (
+      {type === UNLOCK_PROFILE_TYPE.MODAL && position === 'ON_ROOT' && (
         <Modal
           isOpen={showConnectModal}
           onClose={onClose}
@@ -63,11 +80,16 @@ const UnlockProfileWrapper: FC<IntroContainerProps> = ({
       )}
 
       {/* This is for displaying the Chat profile */}
-      {type === UNLOCK_PROFILE_TYPE.MODAL && position === MODAL_POSITION.ON_PARENT && (
-        <UnlockProfileModalWrapper
-          type={type}
-          showConnectModal={showConnectModal}
-          description={description}
+      {type === UNLOCK_PROFILE_TYPE.MODAL && position === 'ON_PARENT' && (
+        <ProfileModalComponent
+          InnerComponent={UnlockProfile}
+          InnerComponentProps={{
+            type,
+            description,
+          }}
+          modalRadius="24px"
+          modalBorder={false}
+          modalPosition={MODAL_POSITION.ON_PARENT}
         />
       )}
     </>
