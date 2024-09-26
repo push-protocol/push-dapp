@@ -18,6 +18,7 @@ import {
   TickDecoratedCircleFilled,
   Tooltip,
 } from 'blocks';
+import APP_PATHS from 'config/AppPaths';
 import { SubscribeChannelDropdown } from 'common/components/SubscribeChannelDropdown';
 import { UnsubscribeChannelDropdown } from 'common/components/UnsubscribeChannelDropdown';
 import { UserSetting } from 'helpers/channel/types';
@@ -146,7 +147,7 @@ const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
               alignItems="center"
             >
               <Link
-                to={`/channels/${channelDetails?.channel}`}
+                to={APP_PATHS.ChannelDetails(channelDetails?.channel)}
                 style={{ textDecoration: 'none' }}
               >
                 <Text
@@ -171,7 +172,7 @@ const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
                 </Tooltip>
               )}
 
-              {verifiedAliasChainIds.length > 0 && (
+              {verifiedAliasChainIds?.length > 0 && (
                 <Box
                   display="flex"
                   alignItems="center"

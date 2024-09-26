@@ -6,11 +6,11 @@ import { getChannelsList } from '../../services';
 import { ChannelsListModelledResponse, ChannelListParams } from '../../types';
 
 export type UseChannelSearchProps = {
-  order: ChannelListParams['order'];
+  order?: ChannelListParams['order'];
   pageSize: ChannelListParams['pageSize'];
-  chain: ChannelListParams['chain'];
-  tag: ChannelListParams['tag'];
-  sort: ChannelListParams['sort'];
+  chain?: ChannelListParams['chain'];
+  tag?: ChannelListParams['tag'];
+  sort?: ChannelListParams['sort'];
 };
 
 // TODO make it a sdk call in future
