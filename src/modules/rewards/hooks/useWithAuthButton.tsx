@@ -57,7 +57,7 @@ export const useAuthWithButton = ({
       handleSuccess(userDetails);
       console.log('handle Success');
     }
-  }, [isAuthenticated, userDetails]);
+  }, [isAuthenticated, userDetails, showAuth]);
 
   const authButton = useMemo(
     () => (

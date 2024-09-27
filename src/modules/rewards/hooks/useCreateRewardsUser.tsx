@@ -16,6 +16,7 @@ import { useCreateRewardsUser as useCreateRewardsUserQuery, useGetUserRewardsDet
 // types
 import { UserStoreType } from 'types';
 import { AppContextType } from 'types/context';
+import { PushAPI } from '@pushprotocol/restapi';
 
 const useCreateRewardsUser = () => {
   const { account } = useAccount();
@@ -28,6 +29,7 @@ const useCreateRewardsUser = () => {
   const { isUserProfileUnlocked } = useContext<AppContextType>(AppContext);
 
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
+  const isActiveAccount = userPushSDKInstance?.account === account;
 
   const { status, refetch } = useGetUserRewardsDetails({
     caip10WalletAddress: caip10WalletAddress,
@@ -35,7 +37,7 @@ const useCreateRewardsUser = () => {
 
   const { mutate: createUser } = useCreateRewardsUserQuery();
 
-  const handleCreateUser = async () => {
+  const handleCreateUser = async ({ userPushSDKInstance }: { userPushSDKInstance: PushAPI }) => {
     // get ref, send with user wallet. if ref is null, send only user wallet
     const ref = sessionStorage.getItem('ref');
     const data = {
@@ -47,6 +49,8 @@ const useCreateRewardsUser = () => {
     const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
     if (!verificationProof) return;
 
+    console.log(userPushSDKInstance?.pgpPublicKey?.slice(-40), 'create user');
+
     createUser(
       {
         pgpPublicKey: userPushSDKInstance?.pgpPublicKey,
@@ -56,8 +60,8 @@ const useCreateRewardsUser = () => {
       },
       {
         onSuccess: () => {
-          refetch();
           setIsSuccess(true);
+          refetch();
         },
         onError: (err) => {
           console.error('Error', err);
@@ -67,10 +71,10 @@ const useCreateRewardsUser = () => {
   };
 
   useEffect(() => {
-    if (isUserProfileUnlocked && userPushSDKInstance && status !== 'success') {
-      handleCreateUser();
+    if (isUserProfileUnlocked && isActiveAccount && status !== 'success') {
+      handleCreateUser({ userPushSDKInstance });
     }
-  }, [isUserProfileUnlocked, userPushSDKInstance, status]);
+  }, [isUserProfileUnlocked, userPushSDKInstance, account]);
 
   return { handleCreateUser, isSuccess, isUserProfileUnlocked };
 };

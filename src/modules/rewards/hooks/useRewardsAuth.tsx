@@ -29,6 +29,7 @@ const useRewardsAuth = () => {
   const [isVerifyClicked, setIsVerifyClicked] = useState(false);
   const [handleVerify, setHandleVerify] = useState(false);
   const { activeTab } = useRewardsTabs();
+  const isActiveAccount = userPushSDKInstance?.account === account;
 
   const {
     data: userDetails,
@@ -81,7 +82,7 @@ const useRewardsAuth = () => {
     //if verification proof is null, unlock push profile update to update userPUSHSDKInstance
     if (verificationProof === null || verificationProof === undefined) {
       if (isWalletConnected && userPushSDKInstance && userPushSDKInstance.readmode()) {
-        console.log('open modal');
+        console.log('open modal', userPushSDKInstance?.pgpPublicKey);
         setIsAuthModalVisible(true);
       }
     }
@@ -97,10 +98,11 @@ const useRewardsAuth = () => {
     if (!isWalletConnected || !userPushSDKInstance) return;
 
     // dashboard connect wallet flow
-    if (status === 'error' && activeTab == 'dashboard' && !isVerifyClicked) {
+    if (status === 'error' && activeTab == 'dashboard' && !isVerifyClicked && isActiveAccount) {
       if (error instanceof AxiosError && error?.response?.data?.error === errorMessage) {
         const errorExistsInUnlockProfile = checkUnlockProfileErrors(userPushSDKInstance);
         if (errorExistsInUnlockProfile || !isWalletConnected) return;
+        console.log('first try');
         unlockProfile();
       }
     }
@@ -111,21 +113,23 @@ const useRewardsAuth = () => {
     }
 
     // rewards activity first user
-    if (isVerifyClicked && status === 'error') {
+    if (isVerifyClicked && status === 'error' && isActiveAccount) {
       if (error instanceof AxiosError && error?.response?.data?.error === errorMessage) {
+        console.log('second try');
         unlockProfile();
       }
     }
 
     // rewards activity existing user
-    if (isVerifyClicked && userDetails && !handleVerify) {
+    if (isVerifyClicked && userDetails && !handleVerify && isActiveAccount) {
+      console.log('third try', isVerifyClicked, handleVerify);
       unlockProfile();
     }
   }, [status, isVerifyClicked, userPushSDKInstance]);
 
   useEffect(() => {
-    if (!isWalletConnected) hideAuthModal();
-  }, [isWalletConnected]);
+    if (!isWalletConnected && activeTab == 'activity') hideAuthModal();
+  }, [isWalletConnected, account]);
 
   return {
     status,

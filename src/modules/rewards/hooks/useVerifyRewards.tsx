@@ -38,6 +38,7 @@ const useVerifyRewards = ({
   const [updatedId, setUpdatedId] = useState<string | null>(null);
 
   const { account } = useAccount();
+
   const caip10WalletAddress = walletToCAIP10({ account });
 
   useEffect(() => {
