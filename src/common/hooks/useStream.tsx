@@ -2,7 +2,7 @@ import { CONSTANTS, NotificationEvent } from '@pushprotocol/restapi';
 import { useEffect, useState } from 'react';
 import { notification } from 'blocks';
 import { useSelector } from 'react-redux';
-import { NotificationOverlay, NotificationToast } from 'common';
+import { NotificationToast, handleNotificationToast } from 'common';
 
 export const useStream = () => {
   const [isStreamConnected, setIsStreamConnected] = useState<boolean>(false);
@@ -39,21 +39,11 @@ export const useStream = () => {
         userPushSDKInstance?.stream,
         data
       );
-      //confirm if only needed for inbox and discuss the working in older file for video
-      // if (data.event === NotificationEventType.INBOX)
-      //shift to app.tsx maybe
-
-      notification.show({
-        overlay: <NotificationToast notification={data} />,
-      });
+      handleNotificationToast(data);
       setNotificationFeed(data);
     });
   };
-  // const removeListeners = () => {
-  //   userPushSDKInstance?.stream?.off(CONSTANTS.STREAM.CONNECT);
-  //   userPushSDKInstance?.stream?.off(CONSTANTS.STREAM.DISCONNECT);
-  //   userPushSDKInstance?.stream?.off(CONSTANTS.STREAM.NOTIF);
-  // };
+
   useEffect(() => {
     (async () => {
       if (userPushSDKInstance && userPushSDKInstance?.stream && userPushSDKInstance?.readmode())
@@ -61,17 +51,8 @@ export const useStream = () => {
     })();
 
     // Cleanup listener on unmount
-    return () => {
-      // (async()=>{
-      //   await userPushSDKInstance.reinit([
-      //     CONSTANTS.STREAM.NOTIF, // Listen for notification events
-      //     CONSTANTS.STREAM.CONNECT, // Listen for connection events
-      //     CONSTANTS.STREAM.DISCONNECT, // Listen for disconnection events
-      //   ]);
-      // })();
-      // removeListeners();
-    };
+    return () => {};
   }, [userPushSDKInstance]);
 
-  return { isStreamConnected, notificationFeed }; // Return the event data so components can use it
+  return { isStreamConnected, notificationFeed };
 };

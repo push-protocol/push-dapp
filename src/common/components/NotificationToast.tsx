@@ -1,9 +1,8 @@
 import { NotificationEvent } from '@pushprotocol/restapi';
 import { NotificationItem, chainNameType } from '@pushprotocol/uiweb';
-import { Box, Text } from 'blocks';
+import { Box } from 'blocks';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { FC } from 'react';
-import { css, useTheme } from 'styled-components';
 
 type NotificationToastProps = {
   notification: NotificationEvent | null;
@@ -15,12 +14,7 @@ const NotificationToast: FC<NotificationToastProps> = ({ notification }) => {
   return (
     <Box
       display="flex"
-      flexDirection="column"
-      borderRadius="radius-sm"
-      backgroundColor="surface-primary"
-      border="border-sm solid stroke-tertiary"
-      padding="spacing-sm"
-      gap="spacing-xxs"
+      width="400px"
     >
       {notification && (
         <NotificationItem
