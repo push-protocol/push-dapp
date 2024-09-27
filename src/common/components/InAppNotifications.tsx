@@ -4,11 +4,11 @@ import { Box } from 'blocks';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { FC } from 'react';
 
-type NotificationToastProps = {
+type InAppNotificationsProps = {
   notification: NotificationEvent | null;
 };
 
-const NotificationToast: FC<NotificationToastProps> = ({ notification }) => {
+const InAppNotifications: FC<InAppNotificationsProps> = ({ notification }) => {
   const payload = notification?.message?.payload;
   const { mode } = useBlocksTheme();
   return (
@@ -33,4 +33,4 @@ const NotificationToast: FC<NotificationToastProps> = ({ notification }) => {
   );
 };
 
-export { NotificationToast };
+export { InAppNotifications };

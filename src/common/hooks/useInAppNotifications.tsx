@@ -2,11 +2,10 @@ import { CONSTANTS, NotificationEvent } from '@pushprotocol/restapi';
 import { useEffect, useState } from 'react';
 import { notification } from 'blocks';
 import { useSelector } from 'react-redux';
-import { NotificationToast, handleNotificationToast } from 'common';
+import { InAppNotifications } from 'common';
 
-export const useStream = () => {
+export const useInAppNotifications = () => {
   const [isStreamConnected, setIsStreamConnected] = useState<boolean>(false);
-  const [notificationFeed, setNotificationFeed] = useState<NotificationEvent | null>(null);
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
@@ -38,8 +37,12 @@ export const useStream = () => {
         userPushSDKInstance?.stream?.uid,
         userPushSDKInstance?.stream
       );
-      handleNotificationToast(data);
-      setNotificationFeed(data);
+      notification.show({
+        overlay: <InAppNotifications notification={data} />,
+      });
+      // setTimeout(() => {
+      //   notification.hide();
+      // }, 10000);
     });
   };
 
@@ -53,5 +56,5 @@ export const useStream = () => {
     return () => {};
   }, [userPushSDKInstance]);
 
-  return { isStreamConnected, notificationFeed };
+  return { isStreamConnected };
 };

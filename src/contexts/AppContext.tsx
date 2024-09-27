@@ -233,6 +233,8 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
       account: account,
       alpha: { feature: ['SCALABILITY_V2'] },
     });
+
+    // sets up stream in read mode
     await setupStream(userInstance);
     console.debug('src::contexts::AppContext::initializePushSdkReadMode::User Instance Initialized', userInstance);
     dispatch(setUserPushSDKInstance(userInstance));

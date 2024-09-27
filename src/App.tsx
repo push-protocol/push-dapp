@@ -53,8 +53,7 @@ import SpaceContextProvider from 'contexts/SpaceContext';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
 import { blocksColors, getBlocksCSSVariables } from 'blocks';
 import APP_PATHS from 'config/AppPaths';
-import { CONSTANTS } from '@pushprotocol/restapi';
-import { useStream } from 'common';
+import { useInAppNotifications } from 'common';
 
 dotenv.config();
 
@@ -338,7 +337,7 @@ export default function App() {
     location?.pathname.includes('/snap') ||
     location?.pathname.includes(APP_PATHS.DiscordVerification);
 
-  useStream();
+  useInAppNotifications();
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
