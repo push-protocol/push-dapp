@@ -176,7 +176,7 @@ const UnsubscribeChannelDropdown: FC<UnsubscribeChannelDropdownProps> = ({
           overlay={
             <Menu>
               <MenuItem
-                label="Opt-out"
+                label="Unsubscribe"
                 icon={<OptOut />}
                 onClick={handleOptOut}
               />
