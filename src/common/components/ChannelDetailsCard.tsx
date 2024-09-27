@@ -76,11 +76,16 @@ const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
         `}
       >
         <Skeleton isLoading={isLoading}>
-          <img
-            className="channel-card-icon"
-            src={channelDetails?.iconV2}
-            alt={channelDetails?.name}
-          />
+          <Link
+            to={APP_PATHS.ChannelDetails(channelDetails?.channel)}
+            style={{ textDecoration: 'none' }}
+          >
+            <img
+              className="channel-card-icon"
+              src={channelDetails?.iconV2}
+              alt={channelDetails?.name}
+            />
+          </Link>
         </Skeleton>
 
         {!isSubscribed && (
