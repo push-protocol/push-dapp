@@ -82,7 +82,7 @@ const useRewardsAuth = () => {
     //if verification proof is null, unlock push profile update to update userPUSHSDKInstance
     if (verificationProof === null || verificationProof === undefined) {
       if (isWalletConnected && userPushSDKInstance && userPushSDKInstance.readmode()) {
-        console.log('open modal', userPushSDKInstance?.pgpPublicKey);
+        console.log('open modal');
         setIsAuthModalVisible(true);
       }
     }
@@ -102,7 +102,6 @@ const useRewardsAuth = () => {
       if (error instanceof AxiosError && error?.response?.data?.error === errorMessage) {
         const errorExistsInUnlockProfile = checkUnlockProfileErrors(userPushSDKInstance);
         if (errorExistsInUnlockProfile || !isWalletConnected) return;
-        console.log('first try');
         unlockProfile();
       }
     }
@@ -115,14 +114,12 @@ const useRewardsAuth = () => {
     // rewards activity first user
     if (isVerifyClicked && status === 'error' && isActiveAccount) {
       if (error instanceof AxiosError && error?.response?.data?.error === errorMessage) {
-        console.log('second try');
         unlockProfile();
       }
     }
 
     // rewards activity existing user
     if (isVerifyClicked && userDetails && !handleVerify && isActiveAccount) {
-      console.log('third try', isVerifyClicked, handleVerify);
       unlockProfile();
     }
   }, [status, isVerifyClicked, userPushSDKInstance]);
