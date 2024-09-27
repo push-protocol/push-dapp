@@ -20,6 +20,7 @@ enum APP_PATHS {
   Govern = '/govern',
   Snap = '/snap',
   YieldV2 = '/yieldv2',
+  Yield = '/yield',
   Rockstar = '/rockstar',
   Gratitude = '/gratitude',
   LiveWalkthrough = '/live_walkthrough',
@@ -30,7 +31,7 @@ enum APP_PATHS {
   Support = '/support',
   UserSettings = '/user/settings',
   ChannelSettings = '/channel/settings',
-  ClaimGalxe = 'claim/galxe'
+  ClaimGalxe = 'claim/galxe',
 }
 
 export default APP_PATHS;
