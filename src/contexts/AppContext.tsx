@@ -233,7 +233,6 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
       account: account,
       alpha: { feature: ['SCALABILITY_V2'] },
     });
-    // if (!(userPushSDKInstance?.stream && userPushSDKInstance?.stream?.disconnected))
     await setupStream(userInstance);
     console.debug('src::contexts::AppContext::initializePushSdkReadMode::User Instance Initialized', userInstance);
     dispatch(setUserPushSDKInstance(userInstance));

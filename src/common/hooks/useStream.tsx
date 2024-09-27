@@ -36,8 +36,7 @@ export const useStream = () => {
         userPushSDKInstance,
         userPushSDKInstance?.uid,
         userPushSDKInstance?.stream?.uid,
-        userPushSDKInstance?.stream,
-        data
+        userPushSDKInstance?.stream
       );
       handleNotificationToast(data);
       setNotificationFeed(data);

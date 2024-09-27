@@ -19,7 +19,7 @@ export const handleNotificationToast = (data: NotificationEvent) => {
   notification.show({
     overlay: <NotificationToast notification={data} />,
   });
-  setTimeout(() => {
-    notification.hide();
-  }, 10000);
+  // setTimeout(() => {
+  //   notification.hide();
+  // }, 10000);
 };
