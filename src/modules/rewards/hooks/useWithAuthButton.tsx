@@ -32,7 +32,7 @@ export const useAuthWithButton = ({
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
   const { isAuthModalVisible, connectWallet, handleVerify, userDetails, hideAuthModal } = useRewardsAuth();
-  const { isSuccess, isUserProfileUnlocked } = useCreateRewardsUser();
+  const { isSuccess, setIsSuccess, isUserProfileUnlocked } = useCreateRewardsUser();
 
   const handleAuthModal = async () => {
     setShowAuth(true);
@@ -41,23 +41,23 @@ export const useAuthWithButton = ({
 
   const isAuthenticated = useMemo(() => {
     return (
-      isSuccess ||
-      (userDetails && isUserProfileUnlocked && handleVerify && userPushSDKInstance && !userPushSDKInstance.readmode())
+      userDetails && isUserProfileUnlocked && handleVerify && userPushSDKInstance && !userPushSDKInstance.readmode()
     );
-  }, [isSuccess, userDetails, isUserProfileUnlocked, handleVerify, userPushSDKInstance]);
+  }, [userDetails, isUserProfileUnlocked, handleVerify, userPushSDKInstance]);
 
   const handleSuccess = (userDetails: UserRewardsDetailResponse) => {
     setIsWalletConnectedAndProfileUnlocked(true);
     onSuccess(userDetails);
+    setIsSuccess(false);
     setShowAuth(false);
   };
 
   useEffect(() => {
-    if (showAuth && isAuthenticated && userDetails) {
+    if ((showAuth && isAuthenticated && userDetails) || (isSuccess && userDetails)) {
       handleSuccess(userDetails);
       console.log('handle Success');
     }
-  }, [isAuthenticated, userDetails, showAuth]);
+  }, [isAuthenticated, userDetails, isSuccess]);
 
   const authButton = useMemo(
     () => (
@@ -72,7 +72,7 @@ export const useAuthWithButton = ({
         </Button>
       </>
     ),
-    [isWalletConnected, isAuthModalVisible, isLoading]
+    [isWalletConnected, isLoading]
   );
 
   return {

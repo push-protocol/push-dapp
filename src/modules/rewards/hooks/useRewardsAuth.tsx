@@ -125,7 +125,7 @@ const useRewardsAuth = () => {
   }, [status, isVerifyClicked, userPushSDKInstance]);
 
   useEffect(() => {
-    if (!isWalletConnected && activeTab == 'activity') hideAuthModal();
+    if (!isWalletConnected || activeTab == 'activity') hideAuthModal();
   }, [isWalletConnected, account]);
 
   return {

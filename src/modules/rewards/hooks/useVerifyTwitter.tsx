@@ -85,11 +85,15 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
     async (userId: string | null) => {
       setErrorMessage('');
 
+      if (!isActiveAccount) return;
+
       const userTwitterDetails = await handleConnect();
 
       if (userTwitterDetails) {
         // @ts-expect-error
         const twitterHandle = userTwitterDetails.reloadUserInfo.screenName;
+
+        console.log(userPushSDKInstance.pgpPublicKey?.slice(-40));
 
         const verificationProof = await generateVerificationProof(
           {

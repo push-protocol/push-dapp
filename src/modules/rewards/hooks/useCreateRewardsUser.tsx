@@ -22,7 +22,6 @@ const useCreateRewardsUser = () => {
   const { account } = useAccount();
 
   const caip10WalletAddress = walletToCAIP10({ account });
-
   const [isSuccess, setIsSuccess] = useState(false);
 
   // @ts-expect-error
@@ -49,6 +48,8 @@ const useCreateRewardsUser = () => {
     const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
     if (!verificationProof) return;
 
+    console.log(userPushSDKInstance?.pgpPublicKey?.slice(-40), 'create user');
+
     createUser(
       {
         pgpPublicKey: userPushSDKInstance?.pgpPublicKey,
@@ -74,7 +75,7 @@ const useCreateRewardsUser = () => {
     }
   }, [isUserProfileUnlocked, userPushSDKInstance, account]);
 
-  return { handleCreateUser, isSuccess, isUserProfileUnlocked };
+  return { handleCreateUser, isSuccess, setIsSuccess, isUserProfileUnlocked };
 };
 
 export { useCreateRewardsUser };
