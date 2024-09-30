@@ -1,34 +1,70 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import styled from 'styled-components';
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import UnlockProfile from './UnlockProfile';
+
 import { Modal } from 'blocks';
+
+import { UnlockProfileModalTypes } from 'common';
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
+
+import UnlockProfile from './UnlockProfile';
 
 export enum UNLOCK_PROFILE_TYPE {
   BOTTOM_BAR = 'bottombar',
   MODAL = 'modal',
 }
 
-interface IntroContainerProps {
+export type UnlockProfileWrapperProps = {
   type?: UNLOCK_PROFILE_TYPE;
   showConnectModal?: boolean;
   description?: string;
   onClose: () => void;
-}
+  modalType?: UnlockProfileModalTypes; //Defaults to ON_ROOT
+};
 
 const DEFAULT_PROPS = {
   type: UNLOCK_PROFILE_TYPE.MODAL,
 };
 
-const UnlockProfileWrapper: FC<IntroContainerProps> = ({
+const UnlockProfileWrapper: FC<UnlockProfileWrapperProps> = ({
   type = DEFAULT_PROPS.type,
   showConnectModal = false,
   description,
   onClose,
+  modalType = 'portal',
 }) => {
+  const renderPortalModal = type === UNLOCK_PROFILE_TYPE.MODAL && modalType === 'portal';
+
+  const renderContainerModal = type === UNLOCK_PROFILE_TYPE.MODAL && modalType === 'container';
+
+  const {
+    isModalOpen: isProfileModalOpen,
+    showModal: showProfileModal,
+    ModalComponent: ProfileModalComponent,
+  } = useModalBlur();
+
+  useEffect(() => {
+    if (renderContainerModal && showConnectModal) {
+      showProfileModal();
+    }
+  }, [type, showConnectModal]);
+
   return (
     <>
-      {type === UNLOCK_PROFILE_TYPE.MODAL ? (
+      {type === UNLOCK_PROFILE_TYPE.BOTTOM_BAR && (
+        <Container className={type}>
+          <UnlockProfile
+            InnerComponentProps={{
+              type,
+              description,
+            }}
+            onClose={onClose}
+          />
+        </Container>
+      )}
+
+      {renderPortalModal && (
         <Modal
           isOpen={showConnectModal}
           onClose={onClose}
@@ -44,16 +80,20 @@ const UnlockProfileWrapper: FC<IntroContainerProps> = ({
             onClose={onClose}
           />
         </Modal>
-      ) : (
-        <Container className={type}>
-          <UnlockProfile
-            InnerComponentProps={{
-              type,
-              description,
-            }}
-            onClose={onClose}
-          />
-        </Container>
+      )}
+
+      {/* This is for displaying the Chat profile */}
+      {renderContainerModal && (
+        <ProfileModalComponent
+          InnerComponent={UnlockProfile}
+          InnerComponentProps={{
+            type,
+            description,
+          }}
+          modalRadius="24px"
+          modalBorder={false}
+          modalPosition={MODAL_POSITION.ON_PARENT}
+        />
       )}
     </>
   );
