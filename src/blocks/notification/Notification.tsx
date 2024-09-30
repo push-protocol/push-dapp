@@ -2,7 +2,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 import { Cross } from '../icons';
 import { NotificationProps } from './Notification.types';
-import { toast } from 'sonner';
+import { toast, Toaster } from 'sonner';
 import { getTextVariantStyles } from 'blocks/Blocks.utils';
 
 const NotificationContainer = styled.div`
@@ -61,7 +61,8 @@ const CloseButton = styled.div`
   top: var(--spacing-xxs);
 `;
 
-const Notification: FC<NotificationProps> = ({ onClose, title, description, image, onClick }) => {
+const NotificationItem: FC<NotificationProps> = ({ onClose, title, description, image, onClick }) => {
+
   const handleNotificationClick = () => onClick?.();
 
   const handleNotificationClose = () => {
@@ -88,13 +89,25 @@ const Notification: FC<NotificationProps> = ({ onClose, title, description, imag
   );
 };
 
+const Notification = () => {
+  return (
+    <Toaster
+      style={{ minWidth: '397px', height: '111px' }}
+      offset={15}
+      visibleToasts={5}
+    />
+  );
+};
+
+
 // Store the toastId(s) in an array to manage multiple notifications
 const toastIds: Array<string | number> = [];
 
 // Export the notification object with show and hide methods
 const notification = {
   show: (config: NotificationProps) => {
-    const toastId = toast.custom(() => <Notification {...config} />, {
+    const toastId = toast.custom(() => <NotificationItem {...config} />, {
+
       duration: config.duration || Infinity,
       position: config.position || 'bottom-right',
     });
@@ -108,4 +121,5 @@ const notification = {
   },
 };
 
-export { notification };
+export { notification, Notification };
+

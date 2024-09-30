@@ -9,6 +9,15 @@ import { useAuthWithButton } from '../hooks/useWithAuthButton';
 import { useVerifyTwitter } from '../hooks/useVerifyTwitter';
 import { useAccount } from 'hooks';
 import { useVerifyDiscord } from '../hooks/useVerifyDiscord';
+import { useVerifyRewards } from '../hooks/useVerifyRewards';
+
+// helpers
+import {
+  bonusRewardActivities,
+  dailyRewardActivities,
+  otherRewardActivities,
+  stakeRewardActivities,
+} from '../utils/activityTypeArray';
 
 // types
 import { ActvityType } from 'queries/types';
@@ -20,19 +29,23 @@ import { Button } from 'blocks';
 type ActivityVerificationButtonProps = {
   userId: string;
   activityTypeId: string;
+  activityTypeIndex?: string;
   activityType: ActvityType;
   refetchActivity: () => void;
   setErrorMessage: (errorMessage: string) => void;
   isLoadingActivity: boolean;
+  label?: string;
 };
 
 export const ActivityVerificationButton = ({
   activityType,
   activityTypeId,
+  activityTypeIndex,
   refetchActivity,
   setErrorMessage,
   userId,
   isLoadingActivity,
+  label,
 }: ActivityVerificationButtonProps) => {
   const { isWalletConnected } = useAccount();
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
@@ -47,6 +60,13 @@ export const ActivityVerificationButton = ({
     activityTypeId,
     refetchActivity,
     setErrorMessage,
+  });
+
+  const { handleRewardsVerification, verifyingRewards, rewardsActivityStatus } = useVerifyRewards({
+    activityTypeId,
+    refetchActivity,
+    setErrorMessage,
+    activityTypeIndex,
   });
 
   const activityData = useMemo(() => {
@@ -67,11 +87,42 @@ export const ActivityVerificationButton = ({
         isVerificationComplete: twitterActivityStatus == 'Claimed' || twitterActivityStatus == 'Pending',
       };
     }
-  }, [activityType, userPushSDKInstance, twitterActivityStatus, discordActivityStatus]);
+
+    if (
+      otherRewardActivities.includes(activityType) ||
+      bonusRewardActivities.includes(activityType) ||
+      stakeRewardActivities.includes(activityType)
+    ) {
+      return {
+        isLoading: verifyingRewards,
+        label: 'Claim',
+        action: handleRewardsVerification,
+        isVerificationComplete: rewardsActivityStatus == 'Claimed' || rewardsActivityStatus == 'Pending',
+      };
+    }
+
+    if (dailyRewardActivities.includes(activityType)) {
+      return {
+        isLoading: verifyingRewards,
+        label: 'Check In',
+        action: handleRewardsVerification,
+        isVerificationComplete: rewardsActivityStatus == 'Claimed' || rewardsActivityStatus == 'Pending',
+      };
+    }
+  }, [
+    activityType,
+    userPushSDKInstance,
+    twitterActivityStatus,
+    discordActivityStatus,
+    verifyingRewards,
+    verifyingTwitter,
+    verifyingDiscord,
+  ]);
 
   const { isAuthenticated, authButton } = useAuthWithButton({
     isLoading: isLoadingActivity,
     onSuccess: (userDetails) => activityData?.action(userDetails?.userId),
+    label: label,
   });
 
   if (isAuthenticated && isWalletConnected && !userPushSDKInstance?.readmode()) {
@@ -79,8 +130,9 @@ export const ActivityVerificationButton = ({
       <Button
         variant="tertiary"
         size="small"
+        loading={activityData?.isLoading || activityData?.isVerificationComplete}
         onClick={() => activityData?.action(userId)}
-        disabled={activityData?.isVerificationComplete || isLoadingActivity}
+        disabled={isLoadingActivity}
       >
         {activityData?.isVerificationComplete ? 'Verifying...' : activityData?.label ? activityData?.label : 'Verify'}
       </Button>

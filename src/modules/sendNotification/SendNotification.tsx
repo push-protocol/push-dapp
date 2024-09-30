@@ -48,14 +48,14 @@ const SendNotification: FC = () => {
       <Text
         color="text-primary"
         variant="h3-semibold"
-        display={{ dp: 'block', ml: 'none' }}
+        display={{ initial: 'block', ml: 'none' }}
       >
         Send Notification
       </Text>
       <Text
         color="text-primary"
         variant="h5-semibold"
-        display={{ dp: 'none', ml: 'block' }}
+        display={{ initial: 'none', ml: 'block' }}
       >
         Send Notification
       </Text>

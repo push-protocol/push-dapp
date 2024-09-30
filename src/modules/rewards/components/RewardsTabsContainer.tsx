@@ -4,15 +4,22 @@ import { FC } from 'react';
 import { Box, TabItem, Tabs } from 'blocks';
 import { DashboardSection } from './DashboardSection';
 import { LeaderBoardSection } from './LeaderBoardSection';
-import { RewardsActivitiesSection } from './RewardsActivitiesSection';
 import { RewardsTabs } from '../Rewards.types';
+import { ReferralSection } from './ReferralSection';
+import { RewardsActivitiesBottomSection } from './RewardsActivitiesBottomSection';
+import { DailyRewardsSection } from './DailyRewardsSection';
 
 export type RewardsTabsContainerProps = {
   activeTab: RewardsTabs;
   handleSetActiveTab: (tab: RewardsTabs) => void;
+  handleUnlockProfile: () => void;
 };
 
-const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handleSetActiveTab }) => {
+const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({
+  activeTab,
+  handleSetActiveTab,
+  handleUnlockProfile,
+}) => {
   const rewardsTabs: TabItem[] = [
     {
       key: 'dashboard',
@@ -22,7 +29,7 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handle
     {
       key: 'activity',
       label: 'Reward Activities',
-      children: <RewardsActivitiesSection />,
+      children: <DailyRewardsSection />,
     },
     {
       key: 'leaderboard',
@@ -30,18 +37,15 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handle
       children: <LeaderBoardSection />,
     },
   ];
+
   return (
-    <Box
-      backgroundColor="surface-primary"
-      borderRadius="radius-sm"
-      display="flex"
-      flexDirection="column"
-      padding={{ ml: 'spacing-sm spacing-xs', initial: 'spacing-md' }}
-    >
+    <>
       <Box
-        gap="spacing-md"
+        backgroundColor="surface-primary"
+        borderRadius="radius-md"
         display="flex"
         flexDirection="column"
+        padding={{ ml: 'spacing-sm', initial: 'spacing-md' }}
       >
         <Tabs
           items={rewardsTabs}
@@ -49,7 +53,11 @@ const RewardsTabsContainer: FC<RewardsTabsContainerProps> = ({ activeTab, handle
           onChange={(activeKey) => handleSetActiveTab(activeKey as RewardsTabs)}
         />
       </Box>
-    </Box>
+
+      {/* bottom sections */}
+      {activeTab === 'dashboard' && <ReferralSection handleUnlockProfile={handleUnlockProfile} />}
+      {activeTab === 'activity' && <RewardsActivitiesBottomSection />}
+    </>
   );
 };
 

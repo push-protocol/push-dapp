@@ -19,9 +19,11 @@ import { Button } from 'blocks';
 export const useAuthWithButton = ({
   onSuccess,
   isLoading,
+  label = 'verify',
 }: {
   onSuccess: (userDetails: UserRewardsDetailResponse) => void;
   isLoading: boolean;
+  label?: string;
 }) => {
   const [isWalletConnectedAndProfileUnlocked, setIsWalletConnectedAndProfileUnlocked] = useState(false);
   const [showAuth, setShowAuth] = useState(false); // Track button click
@@ -30,7 +32,7 @@ export const useAuthWithButton = ({
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
   const { isAuthModalVisible, connectWallet, handleVerify, userDetails, hideAuthModal } = useRewardsAuth();
-  const { isSuccess, isUserProfileUnlocked } = useCreateRewardsUser();
+  const { isSuccess, setIsSuccess, isUserProfileUnlocked } = useCreateRewardsUser();
 
   const handleAuthModal = async () => {
     setShowAuth(true);
@@ -39,23 +41,23 @@ export const useAuthWithButton = ({
 
   const isAuthenticated = useMemo(() => {
     return (
-      isSuccess ||
-      (userDetails && isUserProfileUnlocked && handleVerify && userPushSDKInstance && !userPushSDKInstance.readmode())
+      userDetails && isUserProfileUnlocked && handleVerify && userPushSDKInstance && !userPushSDKInstance.readmode()
     );
-  }, [isSuccess, userDetails, isUserProfileUnlocked, handleVerify, userPushSDKInstance]);
+  }, [userDetails, isUserProfileUnlocked, handleVerify, userPushSDKInstance]);
 
   const handleSuccess = (userDetails: UserRewardsDetailResponse) => {
     setIsWalletConnectedAndProfileUnlocked(true);
     onSuccess(userDetails);
+    setIsSuccess(false);
     setShowAuth(false);
   };
 
   useEffect(() => {
-    if (showAuth && isAuthenticated && userDetails) {
+    if ((showAuth && isAuthenticated && userDetails) || (isSuccess && userDetails)) {
       handleSuccess(userDetails);
       console.log('handle Success');
     }
-  }, [isAuthenticated, userDetails]);
+  }, [isAuthenticated, userDetails, isSuccess]);
 
   const authButton = useMemo(
     () => (
@@ -66,11 +68,11 @@ export const useAuthWithButton = ({
           onClick={handleAuthModal}
           disabled={isLoading}
         >
-          Verify
+          {label}
         </Button>
       </>
     ),
-    [isWalletConnected, isAuthModalVisible, isLoading]
+    [isWalletConnected, isLoading]
   );
 
   return {

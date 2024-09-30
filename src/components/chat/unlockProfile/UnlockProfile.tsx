@@ -20,6 +20,8 @@ import Wallet from '../../../assets/chat/wallet.svg';
 import { Button, Box, deviceMediaQ } from 'blocks';
 import { checkUnlockProfileErrors } from './UnlockProfile.utils';
 import { colorBrands } from 'blocks/theme/colors/colors.brands';
+import { useSelector } from 'react-redux';
+import { UserStoreType } from 'types';
 
 // Constants
 export enum UNLOCK_PROFILE_TYPE {
@@ -46,6 +48,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
 
   const theme = useTheme();
   const { handleConnectWalletAndEnableProfile, initializePushSDK } = useContext(AppContext);
+  const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
   const { account, wallet, connect } = useAccount();
 
@@ -82,7 +85,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
       setActiveStatus({
         status: PROFILESTATE.UNLOCK_PROFILE,
         title: 'Unlock Profile',
-        body: description ? description : 'Unlock your profile to read and send messages.',
+        body: description ? description : 'Unlock your profile to read and send messages',
       });
     }
   }, [wallet]);
@@ -200,9 +203,10 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
           >
             {!isLoading ? (
               <Box
-                display='flex'
+                display="flex"
                 flexDirection={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? 'column' : 'row'}
-                gap='spacing-sm'>
+                gap="spacing-sm"
+              >
                 <Button
                   disabled={activeStatus.status !== PROFILESTATE.CONNECT_WALLET && true}
                   variant="primary"
@@ -292,21 +296,21 @@ const RenderToolTip = ({ children, type }) => {
       placementProps={
         type === UNLOCK_PROFILE_TYPE.MODAL
           ? {
-            background: 'black',
-            width: '220px',
-            padding: '8px 12px',
-            top: '10px',
-            left: '60px',
-            borderRadius: '4px 12px 12px 12px',
-          }
+              background: 'black',
+              width: '220px',
+              padding: '8px 12px',
+              top: '10px',
+              left: '60px',
+              borderRadius: '4px 12px 12px 12px',
+            }
           : {
-            background: 'black',
-            width: '120px',
-            padding: '8px 12px',
-            bottom: '0px',
-            right: '-30px',
-            borderRadius: '12px 12px 12px 4px',
-          }
+              background: 'black',
+              width: '120px',
+              padding: '8px 12px',
+              bottom: '0px',
+              right: '-30px',
+              borderRadius: '12px 12px 12px 4px',
+            }
       }
       tooltipContent={
         <SpanV2

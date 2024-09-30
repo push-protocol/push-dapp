@@ -40,6 +40,7 @@ export { default as ChannelHomeFilled } from './components/ChannelHomeFilled';
 export { default as Chat } from './components/Chat';
 export { default as ChatFilled } from './components/ChatFilled';
 
+export { default as Clockwise } from './components/Clockwise';
 export { default as CircleFilled } from './components/CircleFilled';
 export { default as CloudUpload } from './components/CloudUpload';
 
@@ -90,6 +91,8 @@ export { default as KebabMenuVertical } from './components/KebabMenuVertical';
 export { default as KebabMenuHorizontal } from './components/KebabMenuHorizontal';
 
 export { default as LightFilled } from './components/LightFilled';
+
+export { default as Lock } from './components/Lock';
 
 export { default as MaximizeRight } from './components/MaximizeRight';
 export { default as MaximizeLeft } from './components/MaximizeLeft';
@@ -153,6 +156,8 @@ export { default as Smiley } from './components/Smiley';
 export { default as Star } from './components/Star';
 
 export { default as Settings } from './components/Settings';
+
+export { default as Stopwatch } from './components/Stopwatch';
 
 export { default as Swap } from './components/Swap';
 
