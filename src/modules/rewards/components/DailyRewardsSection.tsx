@@ -1,10 +1,13 @@
 // React and other libraries
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { css } from 'styled-components';
 
 // hooks
 import { useDailyRewards } from '../hooks/useDailyRewards';
 import { useRewardsContext } from 'contexts/RewardsContext';
+
+// type
+import { ActvityType } from 'queries';
 
 // components
 import { Alert, Box, Button, Text } from 'blocks';
@@ -20,6 +23,14 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
     useDailyRewards();
 
   const { isLocked } = useRewardsContext();
+
+  const isDailyRewardClaimed = useMemo(() => {
+    return isActivityDisabled && activeDay > 1 && userDetails;
+  }, [isActivityDisabled, activeDay, userDetails]);
+
+  const displayDailyRewards = useMemo(() => {
+    return !isActivityDisabled && activeDay > 0 && activeItem && userDetails;
+  }, [isActivityDisabled, activeDay, userDetails, activeItem]);
 
   return (
     <Box
@@ -59,7 +70,7 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
 
         {!isLocked && (
           <>
-            {isActivityDisabled && activeDay > 1 && userDetails && (
+            {isDailyRewardClaimed && (
               <Button
                 variant="tertiary"
                 size="small"
@@ -69,11 +80,11 @@ const DailyRewardsSection: FC<DailyRewardsSectionProps> = () => {
               </Button>
             )}
 
-            {!isActivityDisabled && activeDay > 0 && activeItem && userDetails && (
+            {displayDailyRewards && (
               <ActivityVerificationButton
-                activityType={activeItem?.activityType}
-                userId={userDetails?.userId}
-                activityTypeId={activeItem?.id}
+                activityType={activeItem?.activityType as ActvityType}
+                userId={userDetails?.userId as string}
+                activityTypeId={activeItem?.id as string}
                 refetchActivity={() => handleCheckIn()}
                 setErrorMessage={setErrorMessage}
                 isLoadingActivity={false}

@@ -29,6 +29,7 @@ const useRewardsAuth = () => {
   const [isVerifyClicked, setIsVerifyClicked] = useState(false);
   const [handleVerify, setHandleVerify] = useState(false);
   const { activeTab } = useRewardsTabs();
+  const isActiveAccount = userPushSDKInstance?.account === account;
 
   const {
     data: userDetails,
@@ -97,7 +98,7 @@ const useRewardsAuth = () => {
     if (!isWalletConnected || !userPushSDKInstance) return;
 
     // dashboard connect wallet flow
-    if (status === 'error' && activeTab == 'dashboard' && !isVerifyClicked) {
+    if (status === 'error' && activeTab == 'dashboard' && !isVerifyClicked && isActiveAccount) {
       if (error instanceof AxiosError && error?.response?.data?.error === errorMessage) {
         const errorExistsInUnlockProfile = checkUnlockProfileErrors(userPushSDKInstance);
         if (errorExistsInUnlockProfile || !isWalletConnected) return;
@@ -111,21 +112,21 @@ const useRewardsAuth = () => {
     }
 
     // rewards activity first user
-    if (isVerifyClicked && status === 'error') {
+    if (isVerifyClicked && status === 'error' && isActiveAccount) {
       if (error instanceof AxiosError && error?.response?.data?.error === errorMessage) {
         unlockProfile();
       }
     }
 
     // rewards activity existing user
-    if (isVerifyClicked && userDetails && !handleVerify) {
+    if (isVerifyClicked && userDetails && !handleVerify && isActiveAccount) {
       unlockProfile();
     }
   }, [status, isVerifyClicked, userPushSDKInstance]);
 
   useEffect(() => {
-    if (!isWalletConnected) hideAuthModal();
-  }, [isWalletConnected]);
+    if (!isWalletConnected || activeTab == 'activity') hideAuthModal();
+  }, [isWalletConnected, account]);
 
   return {
     status,

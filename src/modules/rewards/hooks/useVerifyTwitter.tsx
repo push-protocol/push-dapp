@@ -1,5 +1,5 @@
 // react and other libraries
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 // third party libraries
 import { initializeApp } from 'firebase/app';
@@ -32,6 +32,7 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
 
   const { account } = useAccount();
   const caip10WalletAddress = walletToCAIP10({ account });
+  const isActiveAccount = userPushSDKInstance?.account === account;
 
   const { refetch: refetchUserDetails } = useGetUserRewardsDetails({
     caip10WalletAddress: caip10WalletAddress,
@@ -39,7 +40,7 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
 
   useEffect(() => {
     setErrorMessage('');
-  }, [setErrorMessage]);
+  }, [setErrorMessage, account]);
 
   initializeApp(appConfig.firebaseConfig);
 
@@ -80,65 +81,72 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
     activityTypeId,
   });
 
-  const handleVerify = async (userId: string | null) => {
-    setErrorMessage('');
+  const handleVerify = useCallback(
+    async (userId: string | null) => {
+      setErrorMessage('');
 
-    const userTwitterDetails = await handleConnect();
+      if (!isActiveAccount) return;
 
-    if (userTwitterDetails) {
-      // @ts-expect-error
-      const twitterHandle = userTwitterDetails.reloadUserInfo.screenName;
+      const userTwitterDetails = await handleConnect();
 
-      const verificationProof = await generateVerificationProof(
-        {
-          twitter: twitterHandle,
-        },
-        userPushSDKInstance
-      );
+      if (userTwitterDetails) {
+        // @ts-expect-error
+        const twitterHandle = userTwitterDetails.reloadUserInfo.screenName;
 
-      if (verificationProof == null || verificationProof == undefined) {
-        if (userPushSDKInstance && userPushSDKInstance.readmode()) {
-          setVerifyingTwitter(false);
-          setErrorMessage('Please Enable Push profile');
-        }
-        return;
-      }
+        console.log(userPushSDKInstance.pgpPublicKey?.slice(-40));
 
-      claimRewardsActivity(
-        {
-          userId: updatedId || (userId as string),
-          activityTypeId,
-          pgpPublicKey: userPushSDKInstance.pgpPublicKey as string,
-          data: {
+        const verificationProof = await generateVerificationProof(
+          {
             twitter: twitterHandle,
           },
-          verificationProof: verificationProof as string,
-        },
-        {
-          onSuccess: (response) => {
-            if (response.status === 'COMPLETED') {
-              setTwitterActivityStatus('Claimed');
-              refetchActivity();
-              refetchUserDetails();
-              setVerifyingTwitter(false);
-            }
-            if (response.status === 'PENDING') {
-              setTwitterActivityStatus('Pending');
-              refetchActivity();
-              setVerifyingTwitter(false);
-            }
-          },
-          onError: (error: any) => {
-            console.log('Error in creating activity', error);
+          userPushSDKInstance
+        );
+
+        if (verificationProof == null || verificationProof == undefined) {
+          if (userPushSDKInstance && userPushSDKInstance.readmode()) {
             setVerifyingTwitter(false);
-            if (error.name) {
-              setErrorMessage(error.response.data.error);
-            }
-          },
+            setErrorMessage('Please Enable Push profile');
+          }
+          return;
         }
-      );
-    }
-  };
+
+        claimRewardsActivity(
+          {
+            userId: updatedId || (userId as string),
+            activityTypeId,
+            pgpPublicKey: userPushSDKInstance.pgpPublicKey as string,
+            data: {
+              twitter: twitterHandle,
+            },
+            verificationProof: verificationProof as string,
+          },
+          {
+            onSuccess: (response) => {
+              if (response.status === 'COMPLETED') {
+                setTwitterActivityStatus('Claimed');
+                refetchActivity();
+                refetchUserDetails();
+                setVerifyingTwitter(false);
+              }
+              if (response.status === 'PENDING') {
+                setTwitterActivityStatus('Pending');
+                refetchActivity();
+                setVerifyingTwitter(false);
+              }
+            },
+            onError: (error: any) => {
+              console.log('Error in creating activity', error);
+              setVerifyingTwitter(false);
+              if (error.name) {
+                setErrorMessage(error.response.data.error);
+              }
+            },
+          }
+        );
+      }
+    },
+    [isActiveAccount, userPushSDKInstance, handleConnect]
+  );
 
   return {
     verifyingTwitter,

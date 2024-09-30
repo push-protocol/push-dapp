@@ -20,6 +20,8 @@ import Wallet from '../../../assets/chat/wallet.svg';
 import { Button, Box, CrossFilled, HoverableSVG } from 'blocks';
 import { checkUnlockProfileErrors } from './UnlockProfile.utils';
 import { colorBrands } from 'blocks/theme/colors/colors.brands';
+import { useSelector } from 'react-redux';
+import { UserStoreType } from 'types';
 
 // Constants
 export enum UNLOCK_PROFILE_TYPE {
@@ -46,6 +48,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
 
   const theme = useTheme();
   const { handleConnectWalletAndEnableProfile, initializePushSDK } = useContext(AppContext);
+  const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
 
   const { account, wallet, connect } = useAccount();
 
@@ -82,10 +85,10 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
       setActiveStatus({
         status: PROFILESTATE.UNLOCK_PROFILE,
         title: 'Unlock Profile',
-        body: description ? description : 'Unlock your profile to read and send messages.',
+        body: description ? description : 'Unlock your profile to read and send messages',
       });
     }
-  }, [wallet]);
+  }, [wallet, userPushSDKInstance]);
 
   const isMobile = useDeviceWidthCheck(parseInt(size.tablet));
 
@@ -100,7 +103,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
         initializePushSDK(wallet);
       }
     }
-  }, [account]);
+  }, [account, userPushSDKInstance]);
 
   return (
     <Container type={type}>

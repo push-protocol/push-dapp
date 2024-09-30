@@ -1,5 +1,5 @@
 // React and other libraries
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 
 // types
 import { Activity } from 'queries';
@@ -20,19 +20,19 @@ const DailyRewardsItem: FC<DailyRewardsItemProps> = ({ activity, activeDay, isLo
   const isCompleted = activeDay <= day;
 
   // style variables
-  const backgroundColor = isActive
-    ? 'surface-brand-medium'
-    : day === 7 && isCompleted
-    ? 'surface-brand-subtle'
-    : 'surface-secondary';
+  const backgroundColor = useMemo(() => {
+    return isActive ? 'surface-brand-medium' : day === 7 && isCompleted ? 'surface-brand-subtle' : 'surface-secondary';
+  }, [isActive, day, isCompleted]);
 
-  const textColor = isActive
-    ? 'text-on-dark-bg'
-    : activeDay > day
-    ? 'text-tertiary'
-    : day == 7 && isCompleted
-    ? 'text-on-light-bg'
-    : 'text-secondary';
+  const textColor = useMemo(() => {
+    return isActive
+      ? 'text-on-dark-bg'
+      : activeDay > day
+      ? 'text-tertiary'
+      : day === 7 && isCompleted
+      ? 'text-on-light-bg'
+      : 'text-secondary';
+  }, [isActive, activeDay, day, isCompleted]);
 
   const getIconComponent = (day: number) => {
     if (day < 5) return <RewardsCoin />;
