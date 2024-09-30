@@ -88,7 +88,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
         body: description ? description : 'Unlock your profile to read and send messages',
       });
     }
-  }, [wallet, userPushSDKInstance]);
+  }, [wallet]);
 
   const isMobile = useDeviceWidthCheck(parseInt(size.tablet));
 
@@ -103,7 +103,7 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
         initializePushSDK(wallet);
       }
     }
-  }, [account, userPushSDKInstance]);
+  }, [account]);
 
   return (
     <Container type={type}>
@@ -203,9 +203,10 @@ const UnlockProfile = ({ InnerComponentProps, onClose }: UnlockProfileModalProps
           >
             {!isLoading ? (
               <Box
-                display='flex'
+                display="flex"
                 flexDirection={type === UNLOCK_PROFILE_TYPE.MODAL || isMobile ? 'column' : 'row'}
-                gap='spacing-sm'>
+                gap="spacing-sm"
+              >
                 <Button
                   disabled={activeStatus.status !== PROFILESTATE.CONNECT_WALLET && true}
                   variant="primary"
@@ -295,21 +296,21 @@ const RenderToolTip = ({ children, type }) => {
       placementProps={
         type === UNLOCK_PROFILE_TYPE.MODAL
           ? {
-            background: 'black',
-            width: '220px',
-            padding: '8px 12px',
-            top: '10px',
-            left: '60px',
-            borderRadius: '4px 12px 12px 12px',
-          }
+              background: 'black',
+              width: '220px',
+              padding: '8px 12px',
+              top: '10px',
+              left: '60px',
+              borderRadius: '4px 12px 12px 12px',
+            }
           : {
-            background: 'black',
-            width: '120px',
-            padding: '8px 12px',
-            bottom: '0px',
-            right: '-30px',
-            borderRadius: '12px 12px 12px 4px',
-          }
+              background: 'black',
+              width: '120px',
+              padding: '8px 12px',
+              bottom: '0px',
+              right: '-30px',
+              borderRadius: '12px 12px 12px 4px',
+            }
       }
       tooltipContent={
         <SpanV2

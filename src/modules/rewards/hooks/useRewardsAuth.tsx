@@ -29,7 +29,6 @@ const useRewardsAuth = () => {
   const [isVerifyClicked, setIsVerifyClicked] = useState(false);
   const [handleVerify, setHandleVerify] = useState(false);
   const { activeTab } = useRewardsTabs();
-  const isActiveAccount = userPushSDKInstance?.account === account;
 
   const {
     data: userDetails,
@@ -98,7 +97,7 @@ const useRewardsAuth = () => {
     if (!isWalletConnected || !userPushSDKInstance) return;
 
     // dashboard connect wallet flow
-    if (status === 'error' && activeTab == 'dashboard' && !isVerifyClicked && isActiveAccount) {
+    if (status === 'error' && activeTab == 'dashboard' && !isVerifyClicked) {
       if (error instanceof AxiosError && error?.response?.data?.error === errorMessage) {
         const errorExistsInUnlockProfile = checkUnlockProfileErrors(userPushSDKInstance);
         if (errorExistsInUnlockProfile || !isWalletConnected) return;
@@ -112,14 +111,14 @@ const useRewardsAuth = () => {
     }
 
     // rewards activity first user
-    if (isVerifyClicked && status === 'error' && isActiveAccount) {
+    if (isVerifyClicked && status === 'error') {
       if (error instanceof AxiosError && error?.response?.data?.error === errorMessage) {
         unlockProfile();
       }
     }
 
     // rewards activity existing user
-    if (isVerifyClicked && userDetails && !handleVerify && isActiveAccount) {
+    if (isVerifyClicked && userDetails && !handleVerify) {
       unlockProfile();
     }
   }, [status, isVerifyClicked, userPushSDKInstance]);
