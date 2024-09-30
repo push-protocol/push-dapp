@@ -48,8 +48,6 @@ const useCreateRewardsUser = () => {
     const verificationProof = await generateVerificationProof(data, userPushSDKInstance);
     if (!verificationProof) return;
 
-    console.log(userPushSDKInstance?.pgpPublicKey?.slice(-40), 'create user');
-
     createUser(
       {
         pgpPublicKey: userPushSDKInstance?.pgpPublicKey,

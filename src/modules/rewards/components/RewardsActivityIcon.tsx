@@ -27,8 +27,8 @@ import {
   SubscribePoints,
   Twitter,
   YellowBonusActivitySubscribers,
+  PushAlpha,
 } from 'blocks';
-import AlphaAccessImg from 'assets/rewards/alpha-asset.png';
 import { ActvityType } from 'queries';
 
 type RewardsActivityIconProp = {
@@ -92,11 +92,9 @@ const RewardsActivityIcon: FC<RewardsActivityIconProp> = ({ type }) => {
 
   if (type === 'hold_push_alpha_access_nft') {
     return (
-      <img
-        width="48px"
-        height="48px"
-        style={{ borderRadius: '100%' }}
-        src={AlphaAccessImg}
+      <PushAlpha
+        width={48}
+        height={48}
       />
     );
   }
