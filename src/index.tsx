@@ -33,8 +33,8 @@ const previewBasePath = getPreviewBasePath();
 const queryClient = new QueryClient({});
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <BrowserRouter basename={previewBasePath || publicURL}>
-    <HelmetProvider>
+  <HelmetProvider>
+    <BrowserRouter basename={previewBasePath || publicURL}>
       <Provider store={store}>
         <GlobalContextProvider>
           <Web3OnboardProvider web3Onboard={web3Onboard}>
@@ -53,8 +53,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           </Web3OnboardProvider>
         </GlobalContextProvider>
       </Provider>
-    </HelmetProvider>
-  </BrowserRouter>
+    </BrowserRouter>
+  </HelmetProvider>
 );
 
 // If you want your app to work offline and load faster, you can change
