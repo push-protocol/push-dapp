@@ -52,36 +52,32 @@ const Rewards: FC<RewardsProps> = () => {
 
   return (
     <Box
+      flexDirection="column"
+      display="flex"
+      width={{ initial: '100%', ml: '370px' }}
+      gap="spacing-md"
       height="100%"
-      width="-webkit-fill-available"
     >
-      <Box
-        flexDirection="column"
-        display="flex"
-        gap="spacing-md"
-        height="100%"
+      <Text
+        variant="h3-bold"
+        display={{ ml: 'none', initial: 'block' }}
+        color="text-primary"
       >
-        <Text
-          variant="h3-bold"
-          display={{ ml: 'none', initial: 'block' }}
-          color="text-primary"
-        >
-          {heading}
-        </Text>
-        <Text
-          variant="h4-semibold"
-          display={{ ml: 'block', initial: 'none' }}
-          color="text-primary"
-        >
-          {heading}
-        </Text>
+        {heading}
+      </Text>
+      <Text
+        variant="h4-semibold"
+        display={{ ml: 'block', initial: 'none' }}
+        color="text-primary"
+      >
+        {heading}
+      </Text>
 
-        <RewardsTabsContainer
-          activeTab={activeTab}
-          handleSetActiveTab={handleSetActiveTab}
-          handleUnlockProfile={handleUnlockProfile}
-        />
-      </Box>
+      <RewardsTabsContainer
+        activeTab={activeTab}
+        handleSetActiveTab={handleSetActiveTab}
+        handleUnlockProfile={handleUnlockProfile}
+      />
 
       {userPushSDKInstance && userPushSDKInstance?.readmode() && isAuthModalVisible && (
         <Box
