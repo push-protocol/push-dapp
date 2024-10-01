@@ -94,6 +94,8 @@ export { default as LightFilled } from './components/LightFilled';
 
 export { default as Lock } from './components/Lock';
 
+export { default as Logout } from './components/Logout';
+
 export { default as MaximizeRight } from './components/MaximizeRight';
 export { default as MaximizeLeft } from './components/MaximizeLeft';
 
@@ -139,6 +141,8 @@ export { default as ReceiveNotification } from './components/ReceiveNotification
 export { default as ReceiveNotificationFilled } from './components/ReceiveNotificationFilled';
 
 export { default as Refresh } from './components/Refresh';
+
+export { default as Sale } from './components/Sale';
 
 export { default as SealCheck } from './components/SealCheck';
 export { default as SealCheckFilled } from './components/SealCheckFilled';
