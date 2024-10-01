@@ -1,28 +1,16 @@
 import { getTextVariantStyles } from 'blocks/Blocks.utils';
 import { FC, ReactNode } from 'react';
 import styled from 'styled-components';
+import { sizeMapping } from './Tag.constants';
 
 export type TagVariant = 'default' | 'success' | 'danger' | 'warning' | 'info' | 'disabled';
-export type SizeVariant = 'sm' | 'md';
+export type SizeVariant = 'small' | 'medium';
 
 export type TagProps = {
   icon?: ReactNode;
   label: string;
   variant?: TagVariant;
   size?: SizeVariant;
-};
-
-const sizeMapping = {
-  sm: {
-    padding: 'var(--spacing-none) var(--spacing-xxxs)',
-    height: '18px',
-    borderRadius: 'var(--radius-xs)',
-  },
-  md: {
-    padding: 'var(--spacing-none) var(--spacing-xxs)',
-    height: '24px',
-    borderRadius: 'var(--radius-md)',
-  },
 };
 
 const StyledTagContainer = styled.div<{ variant: TagVariant; icon: TagProps['icon']; size: SizeVariant }>`
@@ -64,7 +52,7 @@ const StyledTagIcon = styled.div<{ variant: TagVariant }>`
   width: 10px;
 `;
 
-const Tag: FC<TagProps> = ({ icon, label, variant = 'default', size = 'sm' }) => {
+const Tag: FC<TagProps> = ({ icon, label, variant = 'default', size = 'small' }) => {
   return (
     <StyledTagContainer
       variant={variant}
