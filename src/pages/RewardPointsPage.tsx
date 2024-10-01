@@ -7,7 +7,7 @@ const RewardsPointsPage = () => {
     <Helmet>
       <meta
         property="og:url"
-        content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1877/points"
+        content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1833/points"
       />
       <meta
         property="og:type"
@@ -23,7 +23,7 @@ const RewardsPointsPage = () => {
       />
       <meta
         property="og:image"
-        content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1877/previews/rewardsPreview.png"
+        content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1833/previews/rewardsPreview.png"
       />
       <meta
         name="twitter:card"
@@ -31,11 +31,11 @@ const RewardsPointsPage = () => {
       />
       <meta
         property="twitter:domain"
-        content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1877/points"
+        content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1833/points"
       />
       <meta
         property="twitter:url"
-        content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1877/points"
+        content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1833/points"
       />
       <meta
         name="twitter:title"
@@ -47,7 +47,7 @@ const RewardsPointsPage = () => {
       />
       <meta
         name="twitter:image"
-        content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1877/previews/rewardsPreview.png"
+        content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1833/previews/rewardsPreview.png"
       />
       <ContentLayout>
         <Rewards />
