@@ -194,7 +194,7 @@ export default function App() {
 
   const { isActive, account, provider } = useAccount();
   // TODO: comment until rewards v2 launch is accounced
-  // useRewardsNotification();
+  useRewardsNotification();
   const [currentTime, setcurrentTime] = useState(0);
 
   const { pgpPvtKey } = useContext<any>(AppContext);
