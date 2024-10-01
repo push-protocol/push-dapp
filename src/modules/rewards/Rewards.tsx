@@ -54,7 +54,7 @@ const Rewards: FC<RewardsProps> = () => {
     <Box
       flexDirection="column"
       display="flex"
-      width={{ initial: '100%', ml: '370px' }}
+      width={{ initial: '100%', ml: '357px' }}
       gap="spacing-md"
       height="100%"
     >
