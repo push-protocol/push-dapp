@@ -79,7 +79,6 @@ import SnapPage from 'pages/SnapPage';
 import { AppContextType } from 'types/context';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
 import { ModeProp } from 'blocks';
-import { Helmet } from 'react-helmet-async';
 
 const rewardsPointsPagePaths = [APP_PATHS.Rewards, APP_PATHS.RewardsActivities, APP_PATHS.RewardsLeaderboard];
 
@@ -176,54 +175,6 @@ function MasterInterfacePage() {
               element={<WelcomDashboardPage />}
             />
 
-            {location?.pathname?.includes('points') && (
-              <Helmet>
-                <meta
-                  property="og:url"
-                  content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1833/points"
-                />
-                <meta
-                  property="og:type"
-                  content="website"
-                />
-                <meta
-                  property="og:title"
-                  content="Push App (Previously EPNS)"
-                />
-                <meta
-                  property="og:description"
-                  content="Push App (Previously EPNS) | Communication Protocol of Web3"
-                />
-                <meta
-                  property="og:image"
-                  content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1833/previews/rewardsPreview.png"
-                />
-                <meta
-                  name="twitter:card"
-                  content="summary_large_image"
-                />
-                <meta
-                  property="twitter:domain"
-                  content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1833/points"
-                />
-                <meta
-                  property="twitter:url"
-                  content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1833/points"
-                />
-                <meta
-                  name="twitter:title"
-                  content="Push App (Previously EPNS)"
-                />
-                <meta
-                  name="twitter:description"
-                  content="Push App (Previously EPNS) | Communication Protocol of Web3"
-                />
-                <meta
-                  name="twitter:image"
-                  content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1833/previews/rewardsPreview.png"
-                />
-              </Helmet>
-            )}
             {rewardsPointsPagePaths.map((path, index) => (
               <Route
                 path={path}
