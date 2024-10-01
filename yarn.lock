@@ -18373,6 +18373,7 @@ __metadata:
     react-dropdown: "npm:1.9.0"
     react-easy-crop: "npm:^4.1.4"
     react-ga: "npm:2.7.0"
+    react-helmet-async: "npm:^2.0.5"
     react-icons: "npm:4.12.0"
     react-image-file-resizer: "npm:^0.4.7"
     react-infinite-scroller: "npm:^1.2.6"
@@ -18767,7 +18768,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-fast-compare@npm:^3.0.1":
+"react-fast-compare@npm:^3.0.1, react-fast-compare@npm:^3.2.2":
   version: 3.2.2
   resolution: "react-fast-compare@npm:3.2.2"
   checksum: 10/a6826180ba75cefba1c8d3ac539735f9b627ca05d3d307fe155487f5d0228d376dac6c9708d04a283a7b9f9aee599b637446635b79c8c8753d0b4eece56c125c
@@ -18829,6 +18830,19 @@ __metadata:
     prop-types: ^15.6.0
     react: ^15.6.2 || ^16.0
   checksum: 10/5001c26ba7adec05f03a5af871960c5740bfd329964b9f2fee1fc854b6eb5c4f981417d0ae85007ca6b5efa4f57553e96e055eb3cdbeaa2d52332b95b002ad65
+  languageName: node
+  linkType: hard
+
+"react-helmet-async@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "react-helmet-async@npm:2.0.5"
+  dependencies:
+    invariant: "npm:^2.2.4"
+    react-fast-compare: "npm:^3.2.2"
+    shallowequal: "npm:^1.1.0"
+  peerDependencies:
+    react: ^16.6.0 || ^17.0.0 || ^18.0.0
+  checksum: 10/03a8fbf4779c90899012809da09a6b174a2e11e2db4c7f4e61672903dd4e2f3bb732619da4254fc874c502251a07c8da01c752ed7d6df429c7718cf8451d176a
   languageName: node
   linkType: hard
 
