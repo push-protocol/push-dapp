@@ -3,21 +3,37 @@ import { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 
 export type TagVariant = 'default' | 'success' | 'danger' | 'warning' | 'info' | 'disabled';
+export type SizeVariant = 'sm' | 'md';
 
 export type TagProps = {
   icon?: ReactNode;
   label: string;
   variant?: TagVariant;
+  size?: SizeVariant;
 };
 
-const StyledTagContainer = styled.div<{ variant: TagVariant; icon: TagProps['icon'] }>`
+const sizeMapping = {
+  sm: {
+    padding: 'var(--spacing-none) var(--spacing-xxxs)',
+    height: '18px',
+    borderRadius: 'var(--radius-xs)',
+  },
+  md: {
+    padding: 'var(--spacing-none) var(--spacing-xxs)',
+    height: '24px',
+    borderRadius: 'var(--radius-md)',
+  },
+};
+
+const StyledTagContainer = styled.div<{ variant: TagVariant; icon: TagProps['icon']; size: SizeVariant }>`
   align-items: center;
-  border-radius: var(--radius-xs);
+  border-radius: ${({ size }) => sizeMapping[size].borderRadius};
   background: var(--components-tag-background-${({ variant }) => variant});
   display: flex;
   gap: var(--spacing-xxxs);
-  padding: var(--spacing-none) var(--spacing-xxxs);
+  padding: ${({ size }) => sizeMapping[size].padding};
   width: max-content;
+  height: ${({ size }) => sizeMapping[size].height};
 
   ${({ icon }) =>
     icon &&
@@ -48,11 +64,12 @@ const StyledTagIcon = styled.div<{ variant: TagVariant }>`
   width: 10px;
 `;
 
-const Tag: FC<TagProps> = ({ icon, label, variant = 'default' }) => {
+const Tag: FC<TagProps> = ({ icon, label, variant = 'default', size = 'sm' }) => {
   return (
     <StyledTagContainer
       variant={variant}
       icon={!!icon}
+      size={size}
     >
       {icon ? <IconContainer variant={variant}>{icon}</IconContainer> : <StyledTagIcon variant={variant} />}
       <StyledTagText variant={variant}>{label}</StyledTagText>
