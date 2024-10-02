@@ -29,6 +29,7 @@ import {
   YellowBonusActivitySubscribers,
   PushAlpha,
 } from 'blocks';
+import { quickSwapLogo, priceTrackerLogo, walletTrackerLogo } from 'common';
 import { ActvityType } from 'queries';
 
 type RewardsActivityIconProp = {
@@ -158,6 +159,39 @@ const RewardsActivityIcon: FC<RewardsActivityIconProp> = ({ type }) => {
       <GradientBonusActivitySubscribers
         width={48}
         height={48}
+      />
+    );
+  }
+
+  if (type === 'channel_specific_subscriptions:QUICKSWAP_CHANNEL') {
+    return (
+      <img
+        width={48}
+        height={48}
+        src={quickSwapLogo}
+        style={{ borderRadius: 'var(--radius-round)' }}
+      />
+    );
+  }
+
+  if (type === 'channel_specific_subscriptions:PRICETRACKER_CHANNEL') {
+    return (
+      <img
+        width={48}
+        height={48}
+        src={priceTrackerLogo}
+        style={{ borderRadius: 'var(--radius-round)' }}
+      />
+    );
+  }
+
+  if (type === 'channel_specific_subscriptions:WALLETTRACKER_CHANNEL') {
+    return (
+      <img
+        width={48}
+        height={48}
+        src={walletTrackerLogo}
+        style={{ borderRadius: 'var(--radius-round)' }}
       />
     );
   }

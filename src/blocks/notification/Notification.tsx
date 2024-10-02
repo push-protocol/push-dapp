@@ -4,6 +4,7 @@ import { Cross } from '../icons';
 import { NotificationProps } from './Notification.types';
 import { toast, Toaster } from 'sonner';
 import { getTextVariantStyles } from 'blocks/Blocks.utils';
+import { deviceMediaQ } from 'blocks/theme';
 
 const NotificationContainer = styled.div`
   position: relative;
@@ -13,12 +14,15 @@ const NotificationContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  max-height: 111px;
-  min-width: 397px;
-  max-width: 100%;
+  height: 111px;
+  width: 397px;
   cursor: pointer;
   box-sizing: border-box;
   border: var(--border-sm) solid var(--components-in-app-notification-stroke-bg);
+  overflow: hidden;
+  @media${deviceMediaQ.mobileL} {
+    width: -webkit-fill-available;
+  }
 `;
 
 const TextContainer = styled.div`
@@ -62,7 +66,6 @@ const CloseButton = styled.div`
 `;
 
 const NotificationItem: FC<NotificationProps> = ({ onClose, title, description, image, onClick }) => {
-
   const handleNotificationClick = () => onClick?.();
 
   const handleNotificationClose = () => {
@@ -92,13 +95,11 @@ const NotificationItem: FC<NotificationProps> = ({ onClose, title, description, 
 const Notification = () => {
   return (
     <Toaster
-      style={{ minWidth: '397px', height: '111px' }}
       offset={15}
       visibleToasts={5}
     />
   );
 };
-
 
 // Store the toastId(s) in an array to manage multiple notifications
 const toastIds: Array<string | number> = [];
@@ -107,7 +108,6 @@ const toastIds: Array<string | number> = [];
 const notification = {
   show: (config: NotificationProps) => {
     const toastId = toast.custom(() => <NotificationItem {...config} />, {
-
       duration: config.duration || Infinity,
       position: config.position || 'bottom-right',
     });
@@ -122,4 +122,3 @@ const notification = {
 };
 
 export { notification, Notification };
-

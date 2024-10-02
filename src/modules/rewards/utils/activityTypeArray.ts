@@ -10,6 +10,12 @@ export const otherRewardActivities: ActvityType[] = [
   'hold_push_rockstar_nft',
 ];
 
+export const channelSubscriptionActivities: ActvityType[] = [
+  'channel_specific_subscriptions:PRICETRACKER_CHANNEL',
+  'channel_specific_subscriptions:QUICKSWAP_CHANNEL',
+  'channel_specific_subscriptions:WALLETTRACKER_CHANNEL',
+];
+
 export const bonusRewardActivities: ActvityType[] = [
   'create_channel_push',
   'reach_100_subscribers',

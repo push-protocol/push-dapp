@@ -14,6 +14,7 @@ import { useVerifyRewards } from '../hooks/useVerifyRewards';
 // helpers
 import {
   bonusRewardActivities,
+  channelSubscriptionActivities,
   dailyRewardActivities,
   otherRewardActivities,
   stakeRewardActivities,
@@ -91,7 +92,8 @@ export const ActivityVerificationButton = ({
     if (
       otherRewardActivities.includes(activityType) ||
       bonusRewardActivities.includes(activityType) ||
-      stakeRewardActivities.includes(activityType)
+      stakeRewardActivities.includes(activityType) ||
+      channelSubscriptionActivities.includes(activityType)
     ) {
       return {
         isLoading: verifyingRewards,
