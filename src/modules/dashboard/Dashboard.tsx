@@ -34,6 +34,7 @@ const Dashboard: FC<DashboardProps> = () => {
         display="flex"
         flexDirection="column"
         gap="spacing-md"
+        width={{ mm: '340px' }}
       >
         <FeaturedChannels />
         <ChannelVariantsSection />

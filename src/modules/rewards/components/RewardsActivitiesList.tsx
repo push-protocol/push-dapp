@@ -29,13 +29,17 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
   const activityList = rewardActivitiesResponse?.activities?.map((page) => page) || [];
 
   // Filter activities based on the index
-  const firstGroupActivities = isLoading
+  const socialActivities = isLoading
     ? Array(2).fill(0)
     : activityList.filter((activity) => activity.index.startsWith(`social-activity`) && activity?.status === 'ENABLED');
 
-  const secondGroupActivities = isLoading
+  const platformRewardActivities = isLoading
     ? Array(7).fill(0)
     : activityList.filter((activity) => activity.index.startsWith(`reward-activity`) && activity?.status === 'ENABLED');
+
+  const channelSubscriptionActivities = activityList.filter(
+    (activity) => activity.index.startsWith(`channel-subscription`) && activity?.status === 'ENABLED'
+  );
 
   const { isLocked } = useRewardsContext();
 
@@ -45,7 +49,8 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
       flexDirection="column"
       gap="spacing-sm"
     >
-      {firstGroupActivities.map((activity: Activity) => (
+      {/* These are the social activites Twitter and discord */}
+      {socialActivities.map((activity: Activity) => (
         <RewardsActivitiesListItem
           key={activity.activityType}
           userId={userDetails?.userId || ''}
@@ -90,7 +95,19 @@ const RewardsActivitiesList: FC<RewardActivitiesProps> = () => {
         </Box>
       )}
 
-      {secondGroupActivities.map((activity: Activity) => (
+      {/* Activites related specific channel subscription */}
+      {channelSubscriptionActivities.map((activity: Activity) => (
+        <RewardsActivitiesListItem
+          key={activity.activityType}
+          userId={userDetails?.userId || ''}
+          activity={activity}
+          isLoadingItem={isLoading}
+          isLocked={isLocked}
+        />
+      ))}
+
+      {/* These are other platform specifc reward activities */}
+      {platformRewardActivities.map((activity: Activity) => (
         <RewardsActivitiesListItem
           key={activity.activityType}
           userId={userDetails?.userId || ''}
