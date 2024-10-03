@@ -110,6 +110,7 @@ export const getResponsiveCSS = (data: ResponsiveCSSPropertyData[]) => {
     laptop: '',
     laptopL: '',
     desktop: '',
+    ultrawide: '',
   };
 
   data.forEach(({ prop, propName }) => {

@@ -1,4 +1,5 @@
 export const borderSizeVariables = {
+  'border-none': '0px',
   'border-xs': '0.5px',
   'border-sm': '1px',
   'border-xmd': '1.5px',
