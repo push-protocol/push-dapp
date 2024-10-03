@@ -11,7 +11,7 @@ export const StyledFillTabs = styled(ReachTabs)`
 export const StyledFillTabList = styled(TabList)`
   overflow: auto hidden;
   display: flex;
-  width: fit-content;
+  width: 100%;
   padding: var(--spacing-xxxs);
   background-color: var(--surface-secondary);
   border-radius: var(--radius-sm);
