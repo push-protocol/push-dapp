@@ -3,7 +3,20 @@ import { FC, useEffect, useMemo, useState } from 'react';
 import { Activity, useGetRewardsActivity } from 'queries';
 import { useAccount } from 'hooks';
 
-import { Box, Button, ErrorFilled, InfoFilled, Lozenge, RewardsBell, Skeleton, Text, Lock, Multiplier } from 'blocks';
+import {
+  Box,
+  Button,
+  ErrorFilled,
+  InfoFilled,
+  Lozenge,
+  RewardsBell,
+  Skeleton,
+  Text,
+  Lock,
+  Multiplier,
+  Star,
+} from 'blocks';
+import { css } from 'styled-components';
 import { ActivityButton } from './ActivityButton';
 import { RewardsActivityIcon } from './RewardsActivityIcon';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
@@ -82,6 +95,9 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
               alignItems="center"
               justifyContent="center"
               border="border-xs solid stroke-tertiary"
+              css={css`
+                flex-shrink: 0;
+              `}
             >
               <Lock
                 size={28}
@@ -124,13 +140,24 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
                     isLoading={isLoading}
                   />
 
-                  {!!activity.expiryType && (
-                    <Box display="flex">
+                  <Box
+                    display="flex"
+                    gap="spacing-xxs"
+                  >
+                    {!!activity.expiryType && (
                       <Lozenge size="small">
                         {`Expires in ${getUpdatedExpiryTime(activity.expiryType)} days`.toUpperCase()}
                       </Lozenge>
-                    </Box>
-                  )}
+                    )}
+                    {activity.tags.map((tag) => (
+                      <Lozenge
+                        size="small"
+                        icon={<Star />}
+                      >
+                        {tag}
+                      </Lozenge>
+                    ))}
+                  </Box>
                 </Box>
 
                 {/* We don't need to show the Description when the title is discord and twitter according to the design */}
