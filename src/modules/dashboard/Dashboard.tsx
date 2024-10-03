@@ -20,7 +20,7 @@ const Dashboard: FC<DashboardProps> = () => {
       flexDirection="column"
       display="flex"
       width={{ initial: '100%', ml: '357px' }}
-      margin={'spacing-sm spacing-none'}
+      margin="spacing-sm spacing-none"
       gap={{ ml: 'spacing-md' }}
       height="100%"
     >
@@ -34,7 +34,6 @@ const Dashboard: FC<DashboardProps> = () => {
         display="flex"
         flexDirection="column"
         gap="spacing-md"
-        width={{ mm: '340px' }}
       >
         <FeaturedChannels />
         <ChannelVariantsSection />
