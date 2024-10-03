@@ -146,10 +146,10 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
                   >
                     {!!activity.expiryType && (
                       <Lozenge size="small">
-                        {`Expires in ${getUpdatedExpiryTime(activity.expiryType)} days`.toUpperCase()}
+                        {`Expires in ${getUpdatedExpiryTime(activity?.expiryType)} days`.toUpperCase()}
                       </Lozenge>
                     )}
-                    {activity.tags.map((tag) => (
+                    {activity?.tags?.map((tag) => (
                       <Lozenge
                         size="small"
                         icon={<Star />}
