@@ -1,6 +1,6 @@
 import { CONSTANTS, NotificationEvent } from '@pushprotocol/restapi';
 import { useEffect, useState } from 'react';
-import { notification } from 'blocks';
+import { RewardPoints, notification } from 'blocks';
 import { useSelector } from 'react-redux';
 import { InAppNotifications } from 'common';
 
@@ -37,12 +37,17 @@ export const useInAppNotifications = () => {
         userPushSDKInstance?.stream?.uid,
         userPushSDKInstance?.stream
       );
+      // notification.show({
+      //   overlay: <InAppNotifications notificationDetails={data} />,
+      // });
       notification.show({
-        overlay: <InAppNotifications notificationDetails={data} />,
+        title: 'Push Points are Live',
+        description: 'Complete Tasks on Push. Check-in, Earn Push Points, Unlock Rewards and Level up!',
+        image: <RewardPoints />,
       });
-      setTimeout(() => {
-        notification.hide();
-      }, 5000);
+      // setTimeout(() => {
+      //   notification.hide();
+      // }, 5000);
     });
   };
 

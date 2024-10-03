@@ -162,6 +162,7 @@ const NotificationItems = styled(ItemVV2)`
   display: flex;
   align-self: stretch;
   align-items: stretch;
+  gap: 16px;
   justify-content: stretch;
   flex-wrap: nowrap;
 

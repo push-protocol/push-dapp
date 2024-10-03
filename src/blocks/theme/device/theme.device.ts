@@ -8,6 +8,7 @@ export const deviceSizes: Record<DeviceSizeName, DeviceSize> = {
   laptop: '1024px',
   laptopL: '1440px',
   desktop: '2560px',
+  ultrawide: '3440px',
 };
 
 export const deviceMediaQ: Record<DeviceSizeName, `(max-width: ${DeviceSize})`> = {
@@ -18,6 +19,7 @@ export const deviceMediaQ: Record<DeviceSizeName, `(max-width: ${DeviceSize})`> 
   laptop: `(max-width: ${deviceSizes.laptop})`,
   laptopL: `(max-width: ${deviceSizes.laptopL})`,
   desktop: `(max-width: ${deviceSizes.desktop})`,
+  ultrawide: `(max-width: ${deviceSizes.ultrawide})`,
 };
 
 export const breakpointMap: Record<Breakpoint | 'initial', DeviceSizeName | ''> = {
@@ -29,4 +31,5 @@ export const breakpointMap: Record<Breakpoint | 'initial', DeviceSizeName | ''> 
   lp: 'laptop',
   ll: 'laptopL',
   dp: 'desktop',
+  uw: 'ultrawide',
 };

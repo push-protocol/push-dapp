@@ -61,7 +61,7 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepKey, completedSteps }) 
             color={completedSteps.includes(step.value) ? 'text-brand-medium' : 'text-tertiary'}
             variant="h5-semibold"
             ellipsis
-            display={{ ml: 'none', dp: 'block' }}
+            display={{ ml: 'none', initial: 'block' }}
           >
             {step.label}
           </Text>
@@ -70,7 +70,7 @@ const Stepper: FC<StepperProps> = ({ steps, setActiveStepKey, completedSteps }) 
             ellipsis
             textAlign="center"
             variant="h6-semibold"
-            display={{ ml: 'block', dp: 'none' }}
+            display={{ ml: 'block', initial: 'none' }}
           >
             {step.label}
           </Text>

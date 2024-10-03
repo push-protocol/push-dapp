@@ -1,9 +1,10 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 import { NotificationProps } from './Notification.types';
-import { toast } from 'sonner';
 import { Cross } from 'blocks';
+import { toast, Toaster } from 'sonner';
 import { getTextVariantStyles } from 'blocks/Blocks.utils';
+import { deviceMediaQ } from 'blocks/theme';
 
 const NotificationContainer = styled.div`
   position: relative;
@@ -13,12 +14,15 @@ const NotificationContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  max-height: 111px;
-  min-width: 397px;
-  max-width: 100%;
+  height: 111px;
+  width: 397px;
   cursor: pointer;
   box-sizing: border-box;
   border: var(--border-sm) solid var(--components-in-app-notification-stroke-bg);
+  overflow: hidden;
+  @media${deviceMediaQ.mobileL} {
+    width: -webkit-fill-available;
+  }
 `;
 const TextContainer = styled.div`
   display: flex;
@@ -61,7 +65,7 @@ const CloseButton = styled.div`
 `;
 const Container = styled.div``;
 
-const Notification: FC<NotificationProps> = ({ overlay, onClick, onClose, image, title = '', description = '' }) => {
+const NotificationItem: FC<NotificationProps> = ({ overlay, onClose, title, description, image, onClick }) => {
   const handleNotificationClick = () => onClick?.();
   const handleNotificationClose = () => {
     onClose?.();
@@ -92,13 +96,22 @@ const Notification: FC<NotificationProps> = ({ overlay, onClick, onClose, image,
   );
 };
 
+const Notification = () => {
+  return (
+    <Toaster
+      offset={15}
+      visibleToasts={5}
+    />
+  );
+};
+
 // Store the toastId(s) in an array to manage multiple notifications
 const toastIds: Array<string | number> = [];
 
 // Export the notification object with show and hide methods
 const notification = {
   show: (config: NotificationProps) => {
-    const toastId = toast.custom(() => <Notification {...config} />, {
+    const toastId = toast.custom(() => <NotificationItem {...config} />, {
       duration: config.duration || Infinity,
       position: config.position || 'bottom-right',
     });
@@ -112,4 +125,4 @@ const notification = {
   },
 };
 
-export { notification };
+export { notification, Notification };

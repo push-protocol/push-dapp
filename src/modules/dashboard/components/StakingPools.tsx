@@ -116,7 +116,7 @@ const StakingPools: FC<StakingPoolsProps> = () => {
               </Text>
             </Box>
             <Box
-              display="flex"
+              display={{ initial: 'flex', ml: 'block' }}
               gap="spacing-lg"
             >
               <Box

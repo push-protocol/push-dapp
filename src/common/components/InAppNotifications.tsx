@@ -16,7 +16,7 @@ const InAppNotifications: FC<InAppNotificationsProps> = ({ notificationDetails }
     <Link to={payload?.cta || APP_PATHS.Inbox}>
       <Box
         display="flex"
-        width="400px"
+        width="397px"
       >
         {notificationDetails && (
           <NotificationItem

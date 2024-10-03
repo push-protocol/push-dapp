@@ -119,7 +119,7 @@ export const addresses = {
   uniV2LPToken: '0x2333609cc527a9309cdad16e0742a3c6dc1c551b',
   pushToken: '0x37c779a1564DCc0e3914aB130e0e787d93e21804',
 
-  alphaAccessNft: '0x39f77Db4d5d3e85c213233D5Af02C46a85Cf1Db4',
+  alphaAccessNft: '0x8D71C28831074DfAAfBa98AD0F5DE86E2DE594cc',
 };
 
 export const CHAIN_DETAILS = {

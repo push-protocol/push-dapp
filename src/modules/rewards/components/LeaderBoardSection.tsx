@@ -17,14 +17,14 @@ const LeaderBoardSection: FC<LeaderBoardSectionProps> = () => {
     >
       <Text
         variant="h4-bold"
-        display={{ ml: 'none', dp: 'block' }}
+        display={{ ml: 'none', initial: 'block' }}
         color="text-primary"
       >
         Leaderboard
       </Text>
       <Text
         variant="h5-bold"
-        display={{ ml: 'block', dp: 'none' }}
+        display={{ ml: 'block', initial: 'none' }}
         color="text-primary"
       >
         Leaderboard

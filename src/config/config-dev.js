@@ -122,7 +122,7 @@ export const addresses = {
   stakingV2: '0xFf13FBc1dE7FBF300059FE56495c82bBa2F986c6',
   yieldFarmLP: '0xAB531bD9D39c492a05de65Eee85F6C712c05ea0b',
 
-  alphaAccessNft: '0x39f77Db4d5d3e85c213233D5Af02C46a85Cf1Db4',
+  alphaAccessNft: '0x8D71C28831074DfAAfBa98AD0F5DE86E2DE594cc',
 };
 
 export const CHAIN_DETAILS = {

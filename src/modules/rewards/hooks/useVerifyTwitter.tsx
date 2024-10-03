@@ -1,15 +1,19 @@
 // react and other libraries
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 // third party libraries
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithPopup, TwitterAuthProvider, User } from 'firebase/auth';
 import { useSelector } from 'react-redux';
 
+// hooks
+import { useAccount } from 'hooks/useAccount';
+import { useClaimRewardsActivity, useGetUserRewardsDetails } from 'queries';
+
 // helpers
 import { appConfig } from 'config';
 import { generateVerificationProof } from '../utils/generateVerificationProof';
-import { useClaimRewardsActivity } from 'queries';
+import { walletToCAIP10 } from 'helpers/w2w';
 
 // types
 import { UserStoreType } from 'types';
@@ -22,13 +26,21 @@ export type UseTwitterVerifyParams = {
 
 const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: UseTwitterVerifyParams) => {
   const [verifyingTwitter, setVerifyingTwitter] = useState(false);
-  const [twitterActivityStatus, setTwitterActivityStatus] = useState<string | null>(null);
+  const [twitterActivityStatus, setTwitterActivityStatus] = useState<'Claimed' | 'Pending' | null>(null);
   const { userPushSDKInstance } = useSelector((state: UserStoreType) => state.user);
   const [updatedId, setUpdatedId] = useState<string | null>(null);
 
+  const { account } = useAccount();
+  const caip10WalletAddress = walletToCAIP10({ account });
+  const isActiveAccount = userPushSDKInstance?.account === account;
+
+  const { refetch: refetchUserDetails } = useGetUserRewardsDetails({
+    caip10WalletAddress: caip10WalletAddress,
+  });
+
   useEffect(() => {
     setErrorMessage('');
-  }, [setErrorMessage]);
+  }, [setErrorMessage, account]);
 
   initializeApp(appConfig.firebaseConfig);
 
@@ -37,6 +49,8 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
 
   const handleTwitterVerification = (userId: string) => {
     setUpdatedId(userId);
+    setVerifyingTwitter(true);
+
     handleVerify(userId);
   };
 
@@ -67,65 +81,72 @@ const useVerifyTwitter = ({ activityTypeId, setErrorMessage, refetchActivity }: 
     activityTypeId,
   });
 
-  const handleVerify = async (userId: string | null) => {
-    setErrorMessage('');
-    setVerifyingTwitter(true);
+  const handleVerify = useCallback(
+    async (userId: string | null) => {
+      setErrorMessage('');
 
-    const userTwitterDetails = await handleConnect();
+      if (!isActiveAccount) return;
 
-    if (userTwitterDetails) {
-      // @ts-expect-error
-      const twitterHandle = userTwitterDetails.reloadUserInfo.screenName;
+      const userTwitterDetails = await handleConnect();
 
-      const verificationProof = await generateVerificationProof(
-        {
-          twitter: twitterHandle,
-        },
-        userPushSDKInstance
-      );
+      if (userTwitterDetails) {
+        // @ts-expect-error
+        const twitterHandle = userTwitterDetails.reloadUserInfo.screenName;
 
-      if (verificationProof == null || verificationProof == undefined) {
-        if (userPushSDKInstance && userPushSDKInstance.readmode()) {
-          setVerifyingTwitter(false);
-          setErrorMessage('Please Enable Push profile');
-        }
-        return;
-      }
+        console.log(userPushSDKInstance.pgpPublicKey?.slice(-40));
 
-      claimRewardsActivity(
-        {
-          userId: updatedId || (userId as string),
-          activityTypeId,
-          pgpPublicKey: userPushSDKInstance.pgpPublicKey as string,
-          data: {
+        const verificationProof = await generateVerificationProof(
+          {
             twitter: twitterHandle,
           },
-          verificationProof: verificationProof as string,
-        },
-        {
-          onSuccess: (response) => {
-            if (response.status === 'COMPLETED') {
-              setTwitterActivityStatus('Claimed');
-              refetchActivity();
-              setVerifyingTwitter(false);
-            }
-            if (response.status === 'PENDING') {
-              setTwitterActivityStatus('Pending');
-              refetchActivity();
-              setVerifyingTwitter(false);
-            }
-          },
-          onError: (error: any) => {
-            console.log('Error in creating activity', error);
+          userPushSDKInstance
+        );
+
+        if (verificationProof == null || verificationProof == undefined) {
+          if (userPushSDKInstance && userPushSDKInstance.readmode()) {
             setVerifyingTwitter(false);
-            if (error.name) {
-              setErrorMessage(error.response.data.error);
-            }
-          },
+            setErrorMessage('Please Enable Push profile');
+          }
+          return;
         }
-      );
-    }
-  };
+
+        claimRewardsActivity(
+          {
+            userId: updatedId || (userId as string),
+            activityTypeId,
+            pgpPublicKey: userPushSDKInstance.pgpPublicKey as string,
+            data: {
+              twitter: twitterHandle,
+            },
+            verificationProof: verificationProof as string,
+          },
+          {
+            onSuccess: (response) => {
+              if (response.status === 'COMPLETED') {
+                setTwitterActivityStatus('Claimed');
+                refetchActivity();
+                refetchUserDetails();
+                setVerifyingTwitter(false);
+              }
+              if (response.status === 'PENDING') {
+                setTwitterActivityStatus('Pending');
+                refetchActivity();
+                setVerifyingTwitter(false);
+              }
+            },
+            onError: (error: any) => {
+              console.log('Error in creating activity', error);
+              setVerifyingTwitter(false);
+              if (error.name) {
+                setErrorMessage(error.response.data.error);
+              }
+            },
+          }
+        );
+      }
+    },
+    [isActiveAccount, userPushSDKInstance, handleConnect]
+  );
 
   return {
     verifyingTwitter,

@@ -1,6 +1,7 @@
 import { Tabs as ReachTabs, TabList, Tab } from '@reach/tabs';
 import { textVariants } from '../text';
 import styled from 'styled-components';
+import { deviceMediaQ } from '../theme';
 
 export const StyledFillTabs = styled(ReachTabs)`
   display: flex;
@@ -12,6 +13,9 @@ export const StyledFillTabList = styled(TabList)`
   overflow: auto hidden;
   display: flex;
   width: fit-content;
+  @media${deviceMediaQ.mobileL} {
+    width: -webkit-fill-available;
+  }
   padding: var(--spacing-xxxs);
   background-color: var(--surface-secondary);
   border-radius: var(--radius-sm);

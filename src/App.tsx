@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { FC, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useContext, useEffect, useMemo, useState } from 'react';
 
 // External Packages
 import * as dotenv from 'dotenv';
@@ -11,7 +11,6 @@ import styled, { ThemeProvider } from 'styled-components';
 
 import { ChatUIProvider, darkChatTheme, IChatTheme } from '@pushprotocol/uiweb';
 import { createGlobalStyle } from 'styled-components';
-import { Toaster } from 'sonner';
 
 // Internal Compoonents
 import InitState from 'components/InitState';
@@ -51,9 +50,9 @@ import { darkTheme, lightTheme } from 'config/spaceTheme';
 import SpaceComponentContextProvider from 'contexts/SpaceComponentsContext';
 import SpaceContextProvider from 'contexts/SpaceContext';
 import { SpaceWidgetSection } from 'sections/space/SpaceWidgetSection';
-import { blocksColors, getBlocksCSSVariables } from 'blocks';
+import { blocksColors, getBlocksCSSVariables, Notification } from 'blocks';
 import APP_PATHS from 'config/AppPaths';
-import { useInAppNotifications } from 'common';
+import { useInAppNotifications, useRewardsNotification } from 'common';
 
 dotenv.config();
 
@@ -194,6 +193,8 @@ export default function App() {
   const dispatch = useDispatch();
 
   const { isActive, account, provider } = useAccount();
+  // TODO: comment until rewards v2 launch is accounced
+  useRewardsNotification();
   const [currentTime, setcurrentTime] = useState(0);
 
   const { pgpPvtKey } = useContext<any>(AppContext);
@@ -350,11 +351,7 @@ export default function App() {
       <>
         <GlobalStyle />
         <InitState />
-        <Toaster
-          style={{ minWidth: '397px', height: '111px' }}
-          offset={15}
-          visibleToasts={5}
-        />
+        <Notification />
         <NavigationContextProvider>
           <ChatUIProvider
             user={userPushSDKInstance}

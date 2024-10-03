@@ -17,7 +17,6 @@ import { UserStoreType } from 'types';
 
 //Components
 import { Box, Text } from 'blocks';
-import { ReferralSection } from './components/ReferralSection';
 import { RewardsTabsContainer } from './components/RewardsTabsContainer';
 import UnlockProfileWrapper, { UNLOCK_PROFILE_TYPE } from 'components/chat/unlockProfile/UnlockProfileWrapper';
 import { useRewardsContext } from 'contexts/RewardsContext';
@@ -53,37 +52,32 @@ const Rewards: FC<RewardsProps> = () => {
 
   return (
     <Box
+      flexDirection="column"
+      display="flex"
+      width={{ initial: '100%', ml: '357px' }}
+      gap="spacing-md"
       height="100%"
-      width="-webkit-fill-available"
     >
-      <Box
-        flexDirection="column"
-        display="flex"
-        gap="spacing-md"
-        height="100%"
+      <Text
+        variant="h3-bold"
+        display={{ ml: 'none', initial: 'block' }}
+        color="text-primary"
       >
-        <Text
-          variant="h3-bold"
-          display={{ ml: 'none', dp: 'block' }}
-          color="text-primary"
-        >
-          {heading}
-        </Text>
-        <Text
-          variant="h4-semibold"
-          display={{ ml: 'block', dp: 'none' }}
-          color="text-primary"
-        >
-          {heading}
-        </Text>
+        {heading}
+      </Text>
+      <Text
+        variant="h4-semibold"
+        display={{ ml: 'block', initial: 'none' }}
+        color="text-primary"
+      >
+        {heading}
+      </Text>
 
-        <RewardsTabsContainer
-          activeTab={activeTab}
-          handleSetActiveTab={handleSetActiveTab}
-        />
-
-        {activeTab === 'dashboard' && <ReferralSection handleUnlockProfile={handleUnlockProfile} />}
-      </Box>
+      <RewardsTabsContainer
+        activeTab={activeTab}
+        handleSetActiveTab={handleSetActiveTab}
+        handleUnlockProfile={handleUnlockProfile}
+      />
 
       {userPushSDKInstance && userPushSDKInstance?.readmode() && isAuthModalVisible && (
         <Box

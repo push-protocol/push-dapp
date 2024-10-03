@@ -27,14 +27,14 @@ const RewardsSection = () => {
         <Points svgProps={{ width: 60, height: 56 }} />
         <Text
           variant="h5-semibold"
-          display={{ ml: 'none', dp: 'block' }}
+          display={{ ml: 'none', initial: 'block' }}
           color="text-on-light-bg"
         >
           Complete Tasks on Push. Earn Push Points and Unlock Rewards.
         </Text>
         <Text
           variant="h5-semibold"
-          display={{ ml: 'block', dp: 'none' }}
+          display={{ ml: 'block', initial: 'none' }}
           textAlign="center"
           color="text-on-light-bg"
         >

@@ -75,7 +75,7 @@ const FeaturedChannelsListItem: FC<FeaturedChannelsListItemProps> = (props) => {
         padding={{ initial: 'spacing-md', ml: 'spacing-md spacing-sm', tb: 'spacing-sm', lp: 'spacing-sm' }}
         borderRadius="radius-md"
         gap="spacing-xs"
-        width={{ initial: '290px', ml: 'auto', tb: '278px', lp: '278px' }}
+        width={{ initial: '290px', mm: '258px', ml: 'auto', tb: '278px', lp: '278px' }}
         css={css`
           flex-shrink: 0;
         `}
