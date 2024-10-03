@@ -37,17 +37,13 @@ export const useInAppNotifications = () => {
         userPushSDKInstance?.stream?.uid,
         userPushSDKInstance?.stream
       );
-      // notification.show({
-      //   overlay: <InAppNotifications notificationDetails={data} />,
-      // });
       notification.show({
-        title: 'Push Points are Live',
-        description: 'Complete Tasks on Push. Check-in, Earn Push Points, Unlock Rewards and Level up!',
-        image: <RewardPoints />,
+        overlay: <InAppNotifications notificationDetails={data} />,
       });
-      // setTimeout(() => {
-      //   notification.hide();
-      // }, 5000);
+
+      setTimeout(() => {
+        notification.hide();
+      }, 5000);
     });
   };
 

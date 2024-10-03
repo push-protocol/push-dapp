@@ -24,6 +24,12 @@ const NotificationContainer = styled.div`
     width: -webkit-fill-available;
   }
 `;
+const StyledToaster = styled(Toaster)`
+  width: 397px;
+  @media${deviceMediaQ.mobileL} {
+    width: 100%;
+  }
+`;
 const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -98,7 +104,7 @@ const NotificationItem: FC<NotificationProps> = ({ overlay, onClose, title, desc
 
 const Notification = () => {
   return (
-    <Toaster
+    <StyledToaster
       offset={15}
       visibleToasts={5}
     />
