@@ -38,11 +38,11 @@ export const useInAppNotifications = () => {
         userPushSDKInstance?.stream
       );
       notification.show({
-        overlay: <InAppNotifications notification={data} />,
+        overlay: <InAppNotifications notificationDetails={data} />,
       });
-      // setTimeout(() => {
-      //   notification.hide();
-      // }, 10000);
+      setTimeout(() => {
+        notification.hide();
+      }, 5000);
     });
   };
 

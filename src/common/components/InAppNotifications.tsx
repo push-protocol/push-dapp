@@ -1,35 +1,40 @@
 import { NotificationEvent } from '@pushprotocol/restapi';
 import { NotificationItem, chainNameType } from '@pushprotocol/uiweb';
-import { Box } from 'blocks';
+import { Box, Link, notification } from 'blocks';
 import { useBlocksTheme } from 'blocks/Blocks.hooks';
+import APP_PATHS from 'config/AppPaths';
 import { FC } from 'react';
 
 type InAppNotificationsProps = {
-  notification: NotificationEvent | null;
+  notificationDetails: NotificationEvent | null;
 };
 
-const InAppNotifications: FC<InAppNotificationsProps> = ({ notification }) => {
-  const payload = notification?.message?.payload;
+const InAppNotifications: FC<InAppNotificationsProps> = ({ notificationDetails }) => {
+  const payload = notificationDetails?.message?.payload;
   const { mode } = useBlocksTheme();
   return (
-    <Box
-      display="flex"
-      width="400px"
-    >
-      {notification && (
-        <NotificationItem
-          notificationTitle={payload?.title}
-          notificationBody={payload?.body}
-          cta={payload?.cta}
-          image={payload?.embed}
-          app={notification?.channel?.name}
-          icon={notification?.channel?.icon}
-          url={notification?.channel?.url}
-          chainName={notification?.source as chainNameType}
-          theme={mode}
-        />
-      )}
-    </Box>
+    <Link to={payload?.cta || APP_PATHS.Inbox}>
+      <Box
+        display="flex"
+        width="400px"
+      >
+        {notificationDetails && (
+          <NotificationItem
+            isToast
+            onClose={() => notification.hide()}
+            notificationTitle={payload?.title}
+            notificationBody={payload?.body}
+            cta={payload?.cta}
+            image={payload?.embed}
+            app={notificationDetails?.channel?.name}
+            icon={notificationDetails?.channel?.icon}
+            url={notificationDetails?.channel?.url}
+            chainName={notificationDetails?.source as chainNameType}
+            theme={mode}
+          />
+        )}
+      </Box>
+    </Link>
   );
 };
 
