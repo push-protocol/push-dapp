@@ -9,7 +9,7 @@ const HottestChannelsList = () => {
     <Box>
       <ChannelListItem
         key={`${index}`}
-        allowSubscribe={false}
+        allowSubscribe={true}
         channelAddress={channel}
       />
       {index != hottestChannels[appConfig.appEnv as EnvKeys].length - 1 && <Separator />}
