@@ -13,7 +13,10 @@ const InAppChannelNotifications: FC<InAppNotificationsProps> = ({ notificationDe
   const payload = notificationDetails?.message?.payload;
   const { mode } = useBlocksTheme();
   return (
-    <Link to={payload?.cta || APP_PATHS.Inbox}>
+    <Link
+      to={payload?.cta || APP_PATHS.Inbox}
+      target="_blank"
+    >
       <Box
         display="flex"
         width="397px"

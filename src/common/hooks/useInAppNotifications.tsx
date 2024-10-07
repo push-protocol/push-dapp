@@ -46,6 +46,9 @@ export const useInAppNotifications = () => {
         overlay: <InAppChannelNotifications notificationDetails={data} />,
         position: isMobile ? 'top-center' : 'bottom-right',
         duration: 5000,
+        onClick: () => {
+          notification.hide();
+        },
       });
     });
   };
