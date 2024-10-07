@@ -30,9 +30,15 @@ export type RewardActivitiesListItemProps = {
 };
 
 const getUpdatedExpiryTime = (timestamp: number) => {
-  const date = new Date(timestamp * 1000);
-  const days = date.getDate();
-  return days;
+  const currentDate = new Date();
+  const expiryDate = new Date(timestamp * 1000);
+
+  // Calculate the difference in time (milliseconds)
+  const timeDiff = expiryDate.getTime() - currentDate.getTime();
+
+  // Convert the difference from milliseconds to days
+  const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+  return daysLeft;
 };
 
 const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
@@ -144,7 +150,7 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
                     display="flex"
                     gap="spacing-xxs"
                   >
-                    {!!activity.expiryType && (
+                    {!!activity.expiryType && getUpdatedExpiryTime(activity?.expiryType) > 0 && (
                       <Lozenge size="small">
                         {`Expires in ${getUpdatedExpiryTime(activity?.expiryType)} days`.toUpperCase()}
                       </Lozenge>
