@@ -19,8 +19,8 @@ const Dashboard: FC<DashboardProps> = () => {
     <Box
       flexDirection="column"
       display="flex"
-      width={{ initial: '100%', ml: '357px' }}
-      margin="spacing-sm spacing-none"
+      width={{ initial: 'auto', ml: '357px' }}
+      margin={{ initial: 'spacing-sm spacing-xl', ml: 'spacing-sm spacing-none' }}
       gap={{ ml: 'spacing-md' }}
       height="100%"
     >
