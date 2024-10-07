@@ -27,6 +27,7 @@ const AllChannelsListItem: FC<AllChannelsListItemProps> = ({ channelDetails, isL
 
   return (
     <ChannelDetailsCard
+      buttonVariant="outline"
       channelDetails={channelDetails}
       isLoading={isLoading}
       isSubscribed={!!channelSubscriptionData}

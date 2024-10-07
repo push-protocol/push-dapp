@@ -98,7 +98,10 @@ const Channels: FC<ChannelsProps> = () => {
               justifyContent="center"
               height="100%"
             >
-              <Search size={48} />
+              <Search
+                size={48}
+                color="icon-tertiary"
+              />
               <Text variant="h5-bold">No channels to display</Text>
             </Box>
           ) : (

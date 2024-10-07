@@ -10,6 +10,7 @@ import { LOGO_ALIAS_CHAIN, formatSubscriberCount, VerifiedChannelTooltipContent 
 import {
   Box,
   Button,
+  ButtonProps,
   CaretDown,
   NotificationMobile,
   ResponsiveProp,
@@ -32,6 +33,7 @@ export type ChannelDetailsCardProps = {
   handleRefetch: () => void;
   userSettings: UserSetting[];
   width?: ResponsiveProp<string>;
+  buttonVariant?: ButtonProps['variant'];
 };
 
 const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
@@ -42,6 +44,7 @@ const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
   handleRefetch,
   userSettings,
   width,
+  buttonVariant = 'tertiary',
 }) => {
   let verifiedAliasChainIds = [
     appConfig.coreContractChain,
@@ -100,7 +103,7 @@ const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
               <Button
                 id="basic-button"
                 disabled={isLoading}
-                variant="tertiary"
+                variant={buttonVariant}
                 size="small"
               >
                 Subscribe

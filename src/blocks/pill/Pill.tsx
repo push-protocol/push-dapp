@@ -15,7 +15,7 @@ export type PillProps = {
 const StyledPill = styled.div<PillProps>`
   align-items: center;
   border-radius: var(--radius-xl);
-  background: var(--${({ isActive }) => (isActive ? 'surface-primary-inverse' : 'surface-secondary')});
+  background: var(--components-pill-background-${({ isActive }) => (isActive ? 'selected' : 'default')});
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -24,7 +24,15 @@ const StyledPill = styled.div<PillProps>`
   max-width: max-content;
   padding: var(--spacing-none) var(--spacing-sm);
 
-  ${({ isActive }) => getTextVariantStyles('bs-semibold', isActive ? 'text-primary-inverse' : 'text-primary')}
+  ${({ isActive }) =>
+    getTextVariantStyles('bs-semibold', isActive ? 'components-pill-text-selected' : 'components-pill-text-default')}
+
+  &:hover {
+    ${({ isActive }) =>
+      !isActive &&
+      `background: var(--components-pill-background-hover);
+    color: var(--components-pill-text-default);`}
+  }
 
   /* Custom CSS applied via styled component css prop */
   ${(props) => props.css || ''}

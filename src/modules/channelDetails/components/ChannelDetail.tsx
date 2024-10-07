@@ -3,7 +3,7 @@ import { FC, useState } from 'react';
 import { css } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-import { ChannelTutorialContent } from './ChannelTutorialContent';
+// import { ChannelTutorialContent } from './ChannelTutorialContent';
 import { ChannelDetailSubscribe } from './ChannelDetailSubscribe';
 import { RecentNotifications } from './RecentNotifications';
 import { Box, Text, Back, Tag, Skeleton, Tooltip, TickDecoratedCircleFilled } from 'blocks';
@@ -16,7 +16,7 @@ import { shortenText } from 'helpers/UtilityHelper';
 import APP_PATHS from 'config/AppPaths';
 import { appConfig } from 'config';
 
-import { getChannelTutorialDetails } from '../ChannelDetails.utils';
+// import { getChannelTutorialDetails } from '../ChannelDetails.utils';
 
 export type ChannelDetailProps = { channel: ChannelDetails; isLoading: boolean };
 const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
@@ -35,7 +35,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
       []),
   ];
 
-  const tutotrialDetails = getChannelTutorialDetails(channel?.channel);
+  // const tutotrialDetails = getChannelTutorialDetails(channel?.channel);
 
   return (
     <Box
@@ -207,7 +207,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
                       {formatSubscriberCount(channel?.subscriber_count)} subscribers
                     </Text>
 
-                    {tutotrialDetails && <ChannelTutorialContent tutotrialDetails={tutotrialDetails} />}
+                    {/* {tutotrialDetails && <ChannelTutorialContent tutotrialDetails={tutotrialDetails} />} */}
                     {channel?.tags?.[0] && (
                       <Tag
                         label={channel.tags[0]}
