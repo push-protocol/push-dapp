@@ -9,7 +9,7 @@ type InAppNotificationsProps = {
   notificationDetails: NotificationEvent | null;
 };
 
-const InAppNotifications: FC<InAppNotificationsProps> = ({ notificationDetails }) => {
+const InAppChannelNotifications: FC<InAppNotificationsProps> = ({ notificationDetails }) => {
   const payload = notificationDetails?.message?.payload;
   const { mode } = useBlocksTheme();
   return (
@@ -38,4 +38,4 @@ const InAppNotifications: FC<InAppNotificationsProps> = ({ notificationDetails }
   );
 };
 
-export { InAppNotifications };
+export { InAppChannelNotifications };

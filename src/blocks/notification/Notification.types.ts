@@ -13,7 +13,7 @@ export type NotificationProps = {
   /* Optional onClick event for the notification */
   onClick?: () => void;
   /* Position of the notification */
-  position?: 'bottom-right' | 'bottom-left';
+  position?: 'bottom-right' | 'bottom-left' | 'top-center';
   /* Optional duration of the notification component */
   duration?: number;
 };

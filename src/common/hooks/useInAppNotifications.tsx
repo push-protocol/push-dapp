@@ -1,11 +1,16 @@
-import { CONSTANTS, NotificationEvent } from '@pushprotocol/restapi';
 import { useEffect, useState } from 'react';
-import { RewardPoints, notification } from 'blocks';
+
+import { CONSTANTS, NotificationEvent } from '@pushprotocol/restapi';
 import { useSelector } from 'react-redux';
-import { InAppNotifications } from 'common';
+
+import { deviceSizes, notification } from 'blocks';
+import { InAppChannelNotifications } from 'common';
+
+import { useDeviceWidthCheck } from 'hooks';
 
 export const useInAppNotifications = () => {
   const [isStreamConnected, setIsStreamConnected] = useState<boolean>(false);
+  const isMobile = useDeviceWidthCheck(parseInt(deviceSizes.mobileL));
   const { userPushSDKInstance } = useSelector((state: any) => {
     return state.user;
   });
@@ -38,12 +43,10 @@ export const useInAppNotifications = () => {
         userPushSDKInstance?.stream
       );
       notification.show({
-        overlay: <InAppNotifications notificationDetails={data} />,
+        overlay: <InAppChannelNotifications notificationDetails={data} />,
+        position: isMobile ? 'top-center' : 'bottom-right',
+        duration: 5000,
       });
-
-      setTimeout(() => {
-        notification.hide();
-      }, 5000);
     });
   };
 

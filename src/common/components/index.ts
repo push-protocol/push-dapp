@@ -5,4 +5,4 @@ export * from './UnsubscribeChannelDropdown';
 export * from './ModalHeader';
 export * from './StakingVariant';
 export * from './TokenFaucet';
-export * from './InAppNotifications';
+export * from './InAppChannelNotifications';
