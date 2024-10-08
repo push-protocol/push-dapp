@@ -34,6 +34,7 @@ import useModalBlur from 'hooks/useModalBlur';
 import { AppContext } from 'contexts/AppContext';
 import { CreateChannel } from 'modules/createChannel';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import { getChannelDetails } from 'queries';
 
 // Constants
 // interval after which alias details api will be called, in seconds
@@ -88,11 +89,13 @@ const ChannelOwnerDashboard = () => {
   }, [channelDetails, aliasAddrFromContract]);
 
   const fetchChannelDetails = async (address: string) => {
-    let { aliasAddress = null, isAliasVerified = null } =
-      await ChannelsDataStore.getInstance().getChannelDetailsFromAddress(address);
-    if (aliasAddress == 'NULL') aliasAddress = null;
+    let { alias_address = null, is_alias_verified = null } = await getChannelDetails({
+      userPushSDKInstance,
+      address: address,
+    }).then((response) => response);
+    if (alias_address == 'NULL') alias_address = null;
 
-    return { aliasAddress: aliasAddress, aliasVerified: isAliasVerified };
+    return { aliasAddress: alias_address, aliasVerified: is_alias_verified };
   };
 
   useEffect(() => {

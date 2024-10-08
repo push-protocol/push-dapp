@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { useContext, useState, useRef } from 'react';
+import { useContext, useState, useRef, useEffect } from 'react';
 
 // External Packages
 import { useSelector } from 'react-redux';
@@ -27,7 +27,7 @@ import { getPublicAssetPath } from 'helpers/RoutesHelper.js';
 const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
   const { web3NameList, removePGPKeyForUser, initializePushSdkReadMode, setUserProfileUnlocked } =
     useContext<AppContextType>(AppContext);
-  const { setReadOnlyWallet, setMode }: GlobalContextType = useContext(GlobalContext);
+  const { setReadOnlyWallet, setMode, setGlobalWallet }: GlobalContextType = useContext(GlobalContext);
   const { authError } = useContext(ErrorContext);
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
@@ -100,12 +100,17 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
     connect();
   };
 
+  const isWalletConnected = !!wallet?.accounts?.length;
+
+  useEffect(() => {
+    setGlobalWallet?.(isWalletConnected ? wallet : null);
+  }, [isWalletConnected]);
   // to create blockies
   return (
     <>
       {account && account != '' && !authError ? (
         <Body>
-          {!(wallet?.accounts?.length > 0) ? (
+          {!isWalletConnected ? (
             <Wallet
               bg="linear-gradient(87.17deg, #B6A0F5 0%, #F46EF7 57.29%, #FF95D5 100%)"
               color="#FFF"
