@@ -5,7 +5,7 @@ import { ethers } from 'ethers';
 import { useContext, useMemo } from 'react';
 
 export const useAccount = () => {
-  const { readOnlyWallet, setMode, setReadOnlyWallet } = useContext(GlobalContext);
+  const { readOnlyWallet, setMode, setReadOnlyWallet, provider } = useContext(GlobalContext);
 
   const [{ wallet, connecting }, connect, disconnect, updateBalances, setWalletModules, setPrimaryWallet] =
     useConnectWallet();
@@ -15,12 +15,6 @@ export const useAccount = () => {
   const switchChain = async (desiredChain: number) => {
     return setChain({ chainId: ethers.utils.hexValue(desiredChain) });
   };
-
-  const provider = useMemo(() => {
-    return wallet
-      ? new ethers.providers.Web3Provider(wallet.provider, 'any')
-      : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
-  }, [wallet]);
 
   const isActive = useMemo(() => {
     if (readOnlyWallet) {
