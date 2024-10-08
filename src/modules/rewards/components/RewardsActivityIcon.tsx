@@ -29,7 +29,7 @@ import {
   YellowBonusActivitySubscribers,
   PushAlpha,
 } from 'blocks';
-import { quickSwapLogo, priceTrackerLogo, walletTrackerLogo } from 'common';
+import { quickSwapLogo, priceTrackerLogo, walletTrackerLogo, shapeShiftLogo } from 'common';
 import { ActvityType } from 'queries';
 
 type RewardsActivityIconProp = {
@@ -191,6 +191,17 @@ const RewardsActivityIcon: FC<RewardsActivityIconProp> = ({ type }) => {
         width={48}
         height={48}
         src={walletTrackerLogo}
+        style={{ borderRadius: 'var(--radius-round)' }}
+      />
+    );
+  }
+
+  if (type === 'channel_specific_subscriptions:SHAPESHIFT_CHANNEL') {
+    return (
+      <img
+        width={48}
+        height={48}
+        src={shapeShiftLogo}
         style={{ borderRadius: 'var(--radius-round)' }}
       />
     );
