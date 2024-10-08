@@ -35,7 +35,6 @@ const GlobalContextProvider = ({ children }) => {
       : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
   }, [globalWallet]);
 
-  console.log('Global', provider, globalWallet);
   return (
     <GlobalContext.Provider
       value={{

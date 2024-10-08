@@ -103,7 +103,6 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
   const isWalletConnected = !!wallet?.accounts?.length;
 
   useEffect(() => {
-    console.log('HEADER', isWalletConnected);
     setGlobalWallet?.(isWalletConnected ? wallet : null);
   }, [isWalletConnected]);
   // to create blockies
