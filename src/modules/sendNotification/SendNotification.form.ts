@@ -2,7 +2,7 @@ import { NotificationType } from '@pushprotocol/restapi';
 import * as yup from 'yup';
 
 import { SelectOption } from 'blocks/select/Select';
-import { getMaxCharLimitFieldMessage, getRequiredFieldMessage } from 'common';
+import { getMaxCharLimitFieldMessage, getRequiredFieldMessage, getValidURLMessage, isValidURL } from 'common';
 import { appConfig } from 'config';
 
 export const getValidationSchema = (isSubsetRecipientPresent: boolean) => {
@@ -26,8 +26,8 @@ export const getValidationSchema = (isSubsetRecipientPresent: boolean) => {
     mediaUrl: yup.string().test('mediaUrl', getRequiredFieldMessage('Media URL'), function (value) {
       return !this.parent.mediaUrlChecked || !!value;
     }),
-    ctaLink: yup.string().test('ctaLink', getRequiredFieldMessage('CTA Link'), function (value) {
-      return !this.parent.ctaLinkChecked || !!value;
+    ctaLink: yup.string().test('ctaLink', getValidURLMessage('CTA Link'), function (value) {
+      return this.parent.ctaLinkChecked ? !!value && isValidURL(value) : true;
     }),
   });
 };

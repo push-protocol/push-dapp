@@ -8,7 +8,6 @@ import {
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { ADDITIONAL_META_TYPE } from '@pushprotocol/restapi/src/lib/payloads';
 import { VideoCallStatus } from '@pushprotocol/restapi';
-import { showNotifcationToast } from 'components/reusables/toasts/toastController';
 import { useSelector } from 'react-redux';
 
 const useSDKStream = () => {
@@ -60,8 +59,6 @@ const useSDKStream = () => {
                 retry: true,
               });
             }
-          } else {
-            showNotifcationToast(feedItem);
           }
         }
       } catch (e) {

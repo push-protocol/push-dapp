@@ -55,13 +55,14 @@ export const useInAppNotifications = () => {
 
   useEffect(() => {
     (async () => {
-      if (userPushSDKInstance && userPushSDKInstance?.stream && userPushSDKInstance?.readmode())
+      if (userPushSDKInstance && userPushSDKInstance?.stream) {
         await attachListeners();
+      }
     })();
 
     // Cleanup listener on unmount
     return () => {};
-  }, [userPushSDKInstance]);
+  }, [userPushSDKInstance?.account]);
 
   return { isStreamConnected };
 };

@@ -312,7 +312,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
         CONSTANTS.STREAM.VIDEO,
       ]);
 
-      await stream.connect();
+      if (userInstance.readmode()) await stream.connect();
       console.debug('src::contexts::AppContext::setupStream::User Intance Stream Connected', userInstance);
     }
   };
