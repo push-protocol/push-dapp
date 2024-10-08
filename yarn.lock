@@ -8002,27 +8002,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-onboard/core@npm:2.22.2":
-  version: 2.22.2
-  resolution: "@web3-onboard/core@npm:2.22.2"
-  dependencies:
-    "@web3-onboard/common": "npm:^2.4.1"
-    bnc-sdk: "npm:^4.6.7"
-    bowser: "npm:^2.11.0"
-    eventemitter3: "npm:^4.0.7"
-    joi: "npm:17.9.1"
-    lodash.merge: "npm:^4.6.2"
-    lodash.partition: "npm:^4.6.0"
-    nanoid: "npm:^4.0.0"
-    rxjs: "npm:^7.5.5"
-    svelte: "npm:^3.49.0"
-    svelte-i18n: "npm:^3.3.13"
-    viem: "npm:2.12.0"
-  checksum: 10/098750fb1553193181280d40643588a1c0e8107cf4499e3cfef318697099636a0ff48244c41d34f3944e66754ff85da7ed9caf1498634eaa7cdccbae52c807bf
-  languageName: node
-  linkType: hard
-
-"@web3-onboard/core@npm:2.22.3, @web3-onboard/core@npm:^2.21.1":
+"@web3-onboard/core@npm:2.22.3, @web3-onboard/core@npm:^2.21.1, @web3-onboard/core@npm:^2.22.3":
   version: 2.22.3
   resolution: "@web3-onboard/core@npm:2.22.3"
   dependencies:
@@ -18320,7 +18300,7 @@ __metadata:
     "@vitejs/plugin-react": "npm:^4.2.1"
     "@web3-name-sdk/core": "npm:^0.2.0"
     "@web3-onboard/coinbase": "npm:^2.4.1"
-    "@web3-onboard/core": "npm:2.22.2"
+    "@web3-onboard/core": "npm:^2.22.3"
     "@web3-onboard/injected-wallets": "npm:2.11.2"
     "@web3-onboard/react": "npm:^2.9.2"
     "@web3-onboard/walletconnect": "npm:2.6.1"
