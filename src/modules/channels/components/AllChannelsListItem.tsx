@@ -27,12 +27,12 @@ const AllChannelsListItem: FC<AllChannelsListItemProps> = ({ channelDetails, isL
 
   return (
     <ChannelDetailsCard
-      buttonVariant="outline"
       channelDetails={channelDetails}
       isLoading={isLoading}
       isSubscribed={!!channelSubscriptionData}
       isSubscriptionLoading={isSubscriptionLoading}
       handleRefetch={handleRefetch}
+      subscribeButtonVariant="outline"
       userSettings={userChannelSettings}
       width={{ initial: 'inherit', tb: 'auto', lp: 'auto' }}
     />

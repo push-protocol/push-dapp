@@ -33,7 +33,7 @@ export type ChannelDetailsCardProps = {
   handleRefetch: () => void;
   userSettings: UserSetting[];
   width?: ResponsiveProp<string>;
-  buttonVariant?: ButtonProps['variant'];
+  subscribeButtonVariant?: ButtonProps['variant'];
 };
 
 const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
@@ -44,7 +44,7 @@ const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
   handleRefetch,
   userSettings,
   width,
-  buttonVariant = 'tertiary',
+  subscribeButtonVariant = 'tertiary',
 }) => {
   let verifiedAliasChainIds = [
     appConfig.coreContractChain,
@@ -110,7 +110,7 @@ const ChannelDetailsCard: FC<ChannelDetailsCardProps> = ({
               <Button
                 id="basic-button"
                 disabled={isLoading}
-                variant={buttonVariant}
+                variant={subscribeButtonVariant}
                 size="small"
               >
                 Subscribe

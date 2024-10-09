@@ -27,25 +27,36 @@ const ChannelCategories: FC<ChannelCategoriesProps> = ({ filters, setFilter }) =
       `}
       gap="spacing-xs"
       maxWidth={{ ml: '346px' }}
+      position="relative"
     >
-      <Button
-        iconOnly={<CaretLeft />}
-        circular
-        variant="outline"
-        size="small"
-        onClick={() => {
-          categoryContainerRef?.current?.scrollBy({
-            left: -scrollAmount,
-            behavior: 'smooth',
-          });
-        }}
-      />
+      <Box
+        backgroundColor="surface-primary"
+        css={css`
+          position: absolute;
+        `}
+        borderRadius="radius-round"
+      >
+        <Button
+          iconOnly={<CaretLeft />}
+          circular
+          variant="outline"
+          size="small"
+          onClick={() => {
+            categoryContainerRef?.current?.scrollBy({
+              left: -scrollAmount,
+              behavior: 'smooth',
+            });
+          }}
+        />
+      </Box>
+
       <Box
         display="flex"
         overflow="hidden"
         gap="spacing-xs"
         width="100%"
         ref={categoryContainerRef}
+        padding="spacing-none spacing-xxl"
       >
         {!isLoading && (
           <Pill
@@ -71,19 +82,27 @@ const ChannelCategories: FC<ChannelCategoriesProps> = ({ filters, setFilter }) =
           </Skeleton>
         ))}
       </Box>
-
-      <Button
-        iconOnly={<CaretRight />}
-        circular
-        variant="outline"
-        size="small"
-        onClick={() => {
-          categoryContainerRef?.current?.scrollBy({
-            left: scrollAmount,
-            behavior: 'smooth',
-          });
-        }}
-      />
+      <Box
+        backgroundColor="surface-primary"
+        css={css`
+          position: absolute;
+          right: 0;
+        `}
+        borderRadius="radius-round"
+      >
+        <Button
+          iconOnly={<CaretRight />}
+          circular
+          variant="outline"
+          size="small"
+          onClick={() => {
+            categoryContainerRef?.current?.scrollBy({
+              left: scrollAmount,
+              behavior: 'smooth',
+            });
+          }}
+        />
+      </Box>
     </Box>
   );
 };

@@ -57,7 +57,7 @@ const StyledButton = styled.button<ButtonProps>`
   ${({ iconOnly, size }) => getButtonSizeStyles({ iconOnly: !!iconOnly, size: size || 'medium' })}
 
   /* Circular CSS for rounded icon only buttons */
-  ${({ circular, iconOnly }) => circular && iconOnly && `border-radius: var(--r10)`}
+  ${({ circular, iconOnly }) => circular && iconOnly && `border-radius: var(--r10);`}
 
   /* Prop specific CSS */
   ${({ block }) => block && 'width: 100%;'}
