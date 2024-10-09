@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
-import { Cross } from '../icons';
 import { NotificationProps } from './Notification.types';
+import { Cross } from 'blocks';
 import { toast, Toaster } from 'sonner';
 import { getTextVariantStyles } from 'blocks/Blocks.utils';
 import { deviceMediaQ } from 'blocks/theme';
@@ -24,7 +24,12 @@ const NotificationContainer = styled.div`
     width: -webkit-fill-available;
   }
 `;
-
+const StyledToaster = styled(Toaster)`
+  width: 397px;
+  @media${deviceMediaQ.mobileL} {
+    width: 100%;
+  }
+`;
 const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -64,37 +69,42 @@ const CloseButton = styled.div`
   right: var(--spacing-xxs);
   top: var(--spacing-xxs);
 `;
+const Container = styled.div``;
 
-const NotificationItem: FC<NotificationProps> = ({ onClose, title, description, image, onClick }) => {
+const NotificationItem: FC<NotificationProps> = ({ overlay, onClose, title, description, image, onClick }) => {
   const handleNotificationClick = () => onClick?.();
-
   const handleNotificationClose = () => {
     onClose?.();
     notification.hide();
   };
-
   return (
-    <NotificationContainer onClick={handleNotificationClick}>
-      <IconContainer>{image}</IconContainer>
-      <CloseButton
-        onClick={(e) => {
-          e.stopPropagation();
-          handleNotificationClose();
-        }}
-      >
-        <Cross size={16} />
-      </CloseButton>
-      <TextContainer>
-        <NotificationTitle>{title}</NotificationTitle>
-        <NotificationDescription>{description}</NotificationDescription>
-      </TextContainer>
-    </NotificationContainer>
+    <Container onClick={handleNotificationClick}>
+      {overlay ? (
+        <>{overlay}</>
+      ) : (
+        <NotificationContainer>
+          {image && <IconContainer>{image}</IconContainer>}
+          <CloseButton
+            onClick={(e) => {
+              e.stopPropagation();
+              handleNotificationClose();
+            }}
+          >
+            <Cross size={16} />
+          </CloseButton>
+          <TextContainer>
+            <NotificationTitle>{title}</NotificationTitle>
+            <NotificationDescription>{description}</NotificationDescription>
+          </TextContainer>
+        </NotificationContainer>
+      )}
+    </Container>
   );
 };
 
 const Notification = () => {
   return (
-    <Toaster
+    <StyledToaster
       offset={15}
       visibleToasts={5}
     />
