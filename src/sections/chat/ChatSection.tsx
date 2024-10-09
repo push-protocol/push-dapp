@@ -19,6 +19,7 @@ import { device } from 'config/Globals';
 // Assets
 import Back from 'assets/chat/backchat.svg?react';
 import UnlockProfileWrapper from 'components/chat/unlockProfile/UnlockProfileWrapper';
+import { MODAL_POSITION } from 'hooks/useModalBlur';
 
 // Interface
 interface IntroContainerProps {
@@ -70,6 +71,7 @@ const ChatSection = ({ chatId, setChatId, loggedIn }) => {
               chatId={chatId} // 694c523ca30090225b73b7d04941f48a51312bedbe0fa11136e7f3af3687b277
               limit={10}
               isConnected={false}
+              handleReply={true}
               autoConnect={false}
               messageInput={loggedIn ? true : false}
               verificationFailModalPosition={MODAL_POSITION_TYPE.RELATIVE}
@@ -96,6 +98,8 @@ const ChatSection = ({ chatId, setChatId, loggedIn }) => {
                 type={UNLOCK_PROFILE_TYPE.MODAL}
                 showConnectModal={visible}
                 onClose={() => setVisible(false)}
+                modalType="container"
+                description="Unlock your profile to proceed."
               />
             )}
           </ChatViewContainer>
@@ -134,7 +138,7 @@ const ChatViewContainer = styled(ItemVV2)`
   overflow: hidden;
 `;
 
-const IntroContainer = styled(ItemVV2)<IntroContainerProps>`
+const IntroContainer = styled(ItemVV2) <IntroContainerProps>`
   flex: 1;
   height: inherit;
   background: ${(props) => props.bg || 'transparent'};

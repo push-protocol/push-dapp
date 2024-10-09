@@ -19,6 +19,7 @@ const APP_PATHS = {
   Receive: '/receive',
   Govern: '/govern',
   Snap: '/snap',
+  Yield: '/yield',
   YieldV2: '/yieldv2',
   Rockstar: '/rockstar',
   Gratitude: '/gratitude',

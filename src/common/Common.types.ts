@@ -3,3 +3,5 @@ export type ModalResponse = {
   onClose: () => void;
   open: () => void;
 };
+
+export type UnlockProfileModalTypes = 'portal' | 'container';

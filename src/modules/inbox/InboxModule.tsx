@@ -124,8 +124,8 @@ const InboxModule = ({ isSpam }) => {
     // Push (EPNS) Read Provider Set
     if (epnsReadProvider != null && epnsCommReadProvider != null) {
       // Instantiate Data Stores
-      UsersDataStore.getInstance().init(account, epnsReadProvider, epnsCommReadProvider);
-      ChannelsDataStore.getInstance().init(account, epnsReadProvider, epnsCommReadProvider, chainId);
+      // UsersDataStore.getInstance().init(account, epnsReadProvider, epnsCommReadProvider);
+      // ChannelsDataStore.getInstance().init(account, epnsReadProvider, epnsCommReadProvider, chainId);
     }
   }, [epnsReadProvider, epnsCommReadProvider]);
 

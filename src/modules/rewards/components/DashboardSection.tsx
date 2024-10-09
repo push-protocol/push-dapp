@@ -61,6 +61,14 @@ const DashboardSection: FC<DashboardSectionProps> = ({ onGetStarted }) => {
           />
 
           <DashboardSectionPoints
+            title="Multiplier"
+            multiplier={true}
+            points={userDetails?.referralPoints}
+            data={userDetails}
+            isLoading={isLoading}
+          />
+
+          <DashboardSectionPoints
             title="Referral Points"
             points={userDetails?.referralPoints}
             usersInvited={userDetails?.usersInvited}

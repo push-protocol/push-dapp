@@ -111,14 +111,14 @@ const RewardsHeaderLink = ({ caip10WalletAddress }: { caip10WalletAddress: strin
           />
           <Text
             variant="h4-bold"
-            display={{ ml: 'none', dp: 'block' }}
+            display={{ ml: 'none', initial: 'block' }}
             color="text-primary"
           >
             {userDetails && userDetails?.totalPoints > 0 ? userDetails?.totalPoints?.toLocaleString() : ''}
           </Text>
           <Text
             variant="h5-bold"
-            display={{ ml: 'block', dp: 'none' }}
+            display={{ ml: 'block', initial: 'none' }}
             color="text-primary"
           >
             {userDetails && userDetails?.totalPoints > 0 ? userDetails?.totalPoints?.toLocaleString() : ''}
@@ -224,9 +224,6 @@ function Header({ isDarkMode, darkModeToggle }) {
             tabletAlign="flex-start"
           >
             <NavMenu>
-              {/* <Box display={{ ml: 'block', dp: 'none' }}>
-                <RewardsHeaderLink />
-              </Box> */}
               <ChainIndicator isDarkMode={isDarkMode} />
               <Box
                 display="flex"

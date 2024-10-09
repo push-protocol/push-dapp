@@ -7,7 +7,7 @@ export { Link, type LinkProps } from './link';
 export { Lozenge, type LozengeProps } from './lozenge';
 export { Menu, type MenuProps, MenuItem, type MenuItemComponentProps } from './menu';
 export { Modal, type ModalProps, modal } from './modal';
-export { notification } from './notification';
+export { notification, Notification } from './notification';
 export { Pagination, type PaginationProps } from './pagination';
 export { Pill, type PillProps } from './pill';
 export { ProgressBar, type ProgressBarProps } from './progressBar';

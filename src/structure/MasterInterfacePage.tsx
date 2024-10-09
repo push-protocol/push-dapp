@@ -222,9 +222,12 @@ function MasterInterfacePage() {
               element={<SnapPage />}
             />
 
-            {/* <Route path="yield" element={<YieldFarmingPage />} /> */}
             <Route
               path={APP_PATHS.YieldV2}
+              element={<Navigate to={APP_PATHS.Yield} replace />}
+            />
+            <Route
+              path={APP_PATHS.Yield}
               element={<YieldFarmingV2Page />}
             />
             <Route

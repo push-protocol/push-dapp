@@ -8,3 +8,4 @@ export * from './StakingVariant';
 export * from './TokenFaucet';
 export * from './CopyButton';
 export * from './VerifiedChannelTooltipContent';
+export * from './InAppChannelNotifications';

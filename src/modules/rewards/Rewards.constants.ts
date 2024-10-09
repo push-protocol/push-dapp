@@ -3,14 +3,14 @@ import { RewardsTabsList } from './Rewards.types';
 export const rewardsTabsList: RewardsTabsList = [
   {
     value: 'dashboard',
-    label: 'Dashboard'
+    label: 'Dashboard',
   },
   {
     value: 'activity',
-    label: 'Reward Activities'
+    label: 'Reward Activities',
   },
   {
     value: 'leaderboard',
-    label: 'Leaderboard'
-  }
+    label: 'Leaderboard',
+  },
 ];

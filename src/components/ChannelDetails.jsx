@@ -17,7 +17,7 @@ import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import { Section } from 'primaries/SharedStyling';
 import { MdCheckCircle, MdError } from 'react-icons/md';
-import ChannelsDataStore from 'singletons/ChannelsDataStore';
+// import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import RedCircleSvg from '../assets/RedCircle.svg?react';
 import AddDelegateModalContent from './AddDelegateModalContent';
 import ChannelSettings from './ChannelSettings';
@@ -109,8 +109,8 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
   useEffect(() => {
     if (!channelDetails || !canVerify) return;
     (async function () {
-      let channelJson = await ChannelsDataStore.getInstance().getChannelJsonAsync(channelDetails.verifiedBy);
-      setVerifyingChannel(channelJson);
+      // let channelJson = await ChannelsDataStore.getInstance().getChannelJsonAsync(channelDetails.verifiedBy);
+      // setVerifyingChannel(channelJson);
     })();
   }, [channelDetails, canVerify]);
 

@@ -179,7 +179,7 @@ const NavigationList = {
       name: 'Yield Farming V2',
       title: 'Yield Farming V2',
       alt: 'Open Yield Farming V2',
-      href: APP_PATHS.YieldV2,
+      href: APP_PATHS.Yield,
       newTab: false,
       isRoute: true,
       hasMenuLogic: true,

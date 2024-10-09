@@ -19,10 +19,10 @@ const Dashboard: FC<DashboardProps> = () => {
     <Box
       flexDirection="column"
       display="flex"
-      margin={{ initial: 'spacing-sm spacing-xl spacing-sm spacing-xl', ml: 'spacing-sm', lp: 'spacing-sm' }}
+      width={{ initial: 'auto', ml: '357px' }}
+      margin={{ initial: 'spacing-sm spacing-xl', ml: 'spacing-sm spacing-none' }}
       gap={{ ml: 'spacing-md' }}
       height="100%"
-      width="auto"
     >
       <DashboardHeader
         showSubHeader={showSubHeader}

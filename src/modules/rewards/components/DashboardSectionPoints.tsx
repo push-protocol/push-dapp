@@ -17,6 +17,7 @@ export type DashboardSectionPointsProps = {
   isLoading: boolean;
   isFetching?: boolean;
   data?: UserRewardsDetailResponse;
+  multiplier?: boolean;
 };
 
 const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
@@ -28,6 +29,7 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
   isLoading,
   isFetching,
   data,
+  multiplier,
 }) => {
   const { isWalletConnected } = useAccount();
 
@@ -84,8 +86,9 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
       </Box>
 
       <Box>
+        {/* total points */}
         <Skeleton isLoading={isLoading}>
-          {isWalletConnected && (
+          {isWalletConnected && !multiplier && (
             <Text
               variant="h1-bold"
               color="text-primary"
@@ -95,13 +98,44 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
           )}
         </Skeleton>
 
-        {!isWalletConnected && (
+        {/* other section placeholder */}
+        {!isWalletConnected && !multiplier && (
           <Text
             variant="h1-bold"
             color="text-primary"
           >
             0
           </Text>
+        )}
+
+        {/* multipler placeholder for new users or when wallet is not connected */}
+        {((!isWalletConnected && multiplier) || (isWalletConnected && multiplier && !data)) && (
+          <Skeleton isLoading={isLoading}>
+            <Text
+              variant="h1-bold"
+              color="text-primary"
+            >
+              1x
+            </Text>
+          </Skeleton>
+        )}
+
+        {/* show multiplier for center box */}
+        {isWalletConnected && multiplier && data && (
+          <Skeleton isLoading={isLoading}>
+            <Text
+              variant="h1-bold"
+              color="text-primary"
+            >
+              {`${data?.multiplier}x`}
+            </Text>
+            <Text
+              variant="h5-bold"
+              color="text-tertiary"
+            >
+              Complete activities to increase
+            </Text>
+          </Skeleton>
         )}
 
         {/* show rank only when user has points more than 0 */}
@@ -116,6 +150,7 @@ const DashboardSectionPoints: FC<DashboardSectionPointsProps> = ({
           ) : null}
         </Skeleton>
 
+        {/* show users invited only when user has a1or more users invited */}
         <Skeleton isLoading={isLoading}>
           {usersInvited && usersInvited > 0 ? (
             <Text

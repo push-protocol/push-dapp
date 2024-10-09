@@ -13,11 +13,19 @@ import {
   SeparatorResponsivePropValues,
 } from './separator';
 
-export type DeviceSize = '320px' | '375px' | '425px' | '768px' | '1024px' | '1440px' | '2560px';
+export type DeviceSize = '320px' | '375px' | '425px' | '768px' | '1024px' | '1440px' | '2560px' | '3440px';
 
-export type DeviceSizeName = 'mobileS' | 'mobileM' | 'mobileL' | 'tablet' | 'laptop' | 'laptopL' | 'desktop';
+export type DeviceSizeName =
+  | 'mobileS'
+  | 'mobileM'
+  | 'mobileL'
+  | 'tablet'
+  | 'laptop'
+  | 'laptopL'
+  | 'desktop'
+  | 'ultrawide';
 
-export type Breakpoint = 'initial' | 'ms' | 'mm' | 'ml' | 'tb' | 'lp' | 'll' | 'dp';
+export type Breakpoint = 'initial' | 'ms' | 'mm' | 'ml' | 'tb' | 'lp' | 'll' | 'dp' | 'uw';
 
 export type ResponsiveProp<T> = T | { [key in Breakpoint]?: T };
 

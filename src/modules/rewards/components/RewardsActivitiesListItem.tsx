@@ -1,25 +1,53 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 
 import { Activity, useGetRewardsActivity } from 'queries';
+import { useAccount } from 'hooks';
 
-import { Box, ErrorFilled, InfoFilled, Lozenge, RewardsBell, Skeleton, Text } from 'blocks';
+import {
+  Box,
+  Button,
+  ErrorFilled,
+  InfoFilled,
+  Lozenge,
+  RewardsBell,
+  Skeleton,
+  Text,
+  Lock,
+  Multiplier,
+  Star,
+} from 'blocks';
+import { css } from 'styled-components';
 import { ActivityButton } from './ActivityButton';
 import { RewardsActivityIcon } from './RewardsActivityIcon';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
+import useLockedStatus from '../hooks/useLockedStatus';
 
 export type RewardActivitiesListItemProps = {
   userId: string;
   activity: Activity;
   isLoadingItem: boolean;
+  isLocked: boolean;
 };
 
 const getUpdatedExpiryTime = (timestamp: number) => {
-  const date = new Date(timestamp * 1000);
-  const days = date.getDate();
-  return days;
+  const currentDate = new Date();
+  const expiryDate = new Date(timestamp * 1000);
+
+  // Calculate the difference in time (milliseconds)
+  const timeDiff = expiryDate.getTime() - currentDate.getTime();
+
+  // Convert the difference from milliseconds to days
+  const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+  return daysLeft;
 };
 
-const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, activity, isLoadingItem }) => {
+const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
+  userId,
+  activity,
+  isLoadingItem,
+  isLocked,
+}) => {
+  const { isWalletConnected } = useAccount();
   const {
     data: usersSingleActivity,
     isLoading,
@@ -27,6 +55,25 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
   } = useGetRewardsActivity({ userId, activityId: activity.id }, { enabled: !!userId });
 
   const [errorMessage, setErrorMessage] = useState('');
+  const { handleLockStatus } = useLockedStatus();
+
+  const isRewardsLocked = useMemo(() => {
+    return (
+      (isLocked || !isWalletConnected) &&
+      activity.activityType !== 'follow_push_on_discord' &&
+      activity.activityType !== 'follow_push_on_twitter'
+    );
+  }, [isLocked, isWalletConnected, activity.activityType]);
+
+  const isNotDiscordOrTwitter =
+    activity.activityType !== 'follow_push_on_discord' && activity.activityType !== 'follow_push_on_twitter';
+
+  // if activityType is twitter or discord, then re-call check lock status fn
+  useEffect(() => {
+    if (activity.activityType == 'follow_push_on_discord' || activity.activityType == 'follow_push_on_twitter') {
+      handleLockStatus();
+    }
+  }, [usersSingleActivity?.status, activity.activityType]);
 
   return (
     <Skeleton isLoading={isLoadingItem}>
@@ -34,18 +81,38 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
         display="flex"
         flexDirection="column"
         borderRadius="radius-sm"
-        margin={{ ml: 'spacing-sm spacing-none', initial: 'spacing-xxs spacing-none' }}
         backgroundColor="surface-secondary"
       >
         <Box
           display="flex"
           flexDirection="row"
-          padding={{ ml: 'spacing-xs', lp: 'spacing-sm spacing-xxs', initial: 'spacing-md' }}
+          padding={{ ml: 'spacing-xs', lp: 'spacing-sm spacing-xxs', initial: 'spacing-sm' }}
           borderRadius="radius-sm radius-sm radius-none radius-none"
           alignItems={{ ml: 'flex-start', initial: 'center' }}
           gap="spacing-sm"
         >
-          <RewardsActivityIcon type={activity.activityType} />
+          {isRewardsLocked ? (
+            <Box
+              width="48px"
+              height="48px"
+              borderRadius="radius-round"
+              backgroundColor="surface-tertiary"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              border="border-xs solid stroke-tertiary"
+              css={css`
+                flex-shrink: 0;
+              `}
+            >
+              <Lock
+                size={28}
+                color="icon-tertiary"
+              />
+            </Box>
+          ) : (
+            <RewardsActivityIcon type={activity.activityType} />
+          )}
 
           <Box
             display="flex"
@@ -79,66 +146,114 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({ userId, 
                     isLoading={isLoading}
                   />
 
-                  {!!activity.expiryType && (
-                    <Box display="flex">
+                  <Box
+                    display="flex"
+                    gap="spacing-xxs"
+                  >
+                    {!!activity.expiryType && getUpdatedExpiryTime(activity?.expiryType) > 0 && (
                       <Lozenge size="small">
-                        {`Expires in ${getUpdatedExpiryTime(activity.expiryType)} days`.toUpperCase()}
+                        {`Expires in ${getUpdatedExpiryTime(activity?.expiryType)} days`.toUpperCase()}
                       </Lozenge>
-                    </Box>
-                  )}
+                    )}
+                    {activity?.tags?.map((tag) => (
+                      <Lozenge
+                        size="small"
+                        icon={<Star />}
+                      >
+                        {tag}
+                      </Lozenge>
+                    ))}
+                  </Box>
                 </Box>
 
                 {/* We don't need to show the Description when the title is discord and twitter according to the design */}
                 {activity.activityType !== 'follow_push_on_discord' &&
                   activity.activityType !== 'follow_push_on_twitter' && (
                     <Skeleton isLoading={isLoading}>
-                      <Text
-                        variant="h5-regular"
+                      <RewardsActivityTitle
+                        activityTitle={activity.activityDesc}
+                        isLoading={isLoading}
                         color="text-tertiary"
-                      >
-                        {activity.activityDesc}
-                      </Text>
+                        variant="bs-regular"
+                      />
                     </Skeleton>
                   )}
               </Box>
 
-              {/* Rewards Points */}
               <Box
                 display="flex"
-                minWidth="200px"
                 flexDirection="row"
-                gap="spacing-xxs"
+                gap="spacing-sm"
                 alignItems="center"
               >
-                <Skeleton
-                  isLoading={isLoading}
-                  height="32px"
-                >
-                  <RewardsBell
-                    width={32}
-                    height={32}
-                  />
-                  <Text
-                    variant="h4-semibold"
-                    color="text-primary"
+                {/* Rewards Multiplier and Points */}
+                {activity.multiplier > 1 && (
+                  <Box
+                    display="flex"
+                    flexDirection="row"
+                    alignItems="center"
+                    gap="spacing-xxxs"
                   >
-                    {activity.points?.toLocaleString()} Points
-                  </Text>
-                </Skeleton>
+                    <Multiplier />
+                    <Text
+                      variant="bm-semibold"
+                      color="text-state-success-bold"
+                    >
+                      {activity.multiplier?.toLocaleString()}x
+                    </Text>
+                  </Box>
+                )}
+
+                <Box
+                  display="flex"
+                  minWidth="200px"
+                  flexDirection="row"
+                  gap="spacing-xxs"
+                  alignItems="center"
+                >
+                  <Skeleton
+                    isLoading={isLoading}
+                    height="32px"
+                  >
+                    <RewardsBell
+                      width={32}
+                      height={32}
+                    />
+                    <Text
+                      variant="bm-semibold"
+                      color="text-primary"
+                    >
+                      {activity.points?.toLocaleString()}
+                    </Text>
+                  </Skeleton>
+                </Box>
               </Box>
             </Box>
 
             {/* Buttons Logic */}
             <Box display="flex">
-              <ActivityButton
-                userId={userId}
-                activityTypeId={activity.id}
-                activityType={activity.activityType}
-                refetchActivity={refetchActivity}
-                setErrorMessage={setErrorMessage}
-                usersSingleActivity={usersSingleActivity}
-                isLoadingActivity={isLoading}
-              />
+              {isRewardsLocked && (
+                <Button
+                  size="small"
+                  variant="tertiary"
+                  disabled
+                >
+                  Locked
+                </Button>
+              )}
+
+              {!isRewardsLocked && (
+                <ActivityButton
+                  userId={userId}
+                  activityTypeId={activity.id}
+                  activityType={activity.activityType}
+                  refetchActivity={refetchActivity}
+                  setErrorMessage={setErrorMessage}
+                  usersSingleActivity={usersSingleActivity}
+                  isLoadingActivity={isLoading}
+                  label={isNotDiscordOrTwitter ? 'Claim' : 'Verify'}
+                />
+              )}
             </Box>
           </Box>
         </Box>

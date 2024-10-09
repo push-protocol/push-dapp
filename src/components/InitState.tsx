@@ -27,12 +27,13 @@ import {
   setPushAdmin,
 } from 'redux/slices/contractSlice';
 import { getAliasDetails, getUserDelegations } from 'services';
-import ChannelsDataStore from 'singletons/ChannelsDataStore';
+// import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import UsersDataStore from 'singletons/UsersDataStore';
 
 // Internals Configs
 import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config/index.js';
 import useSDKStream from 'hooks/useStream';
+import { getChannelDetails } from 'queries';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -100,8 +101,8 @@ const InitState = () => {
     // Push (EPNS) Read Provider Set
     if (epnsReadProvider != null && epnsCommReadProvider != null) {
       // Instantiate Data Stores
-      UsersDataStore.getInstance().init(account, epnsReadProvider, epnsCommReadProvider);
-      ChannelsDataStore.getInstance().init(account, epnsReadProvider, epnsCommReadProvider, chainId);
+      // UsersDataStore.getInstance().init(account, epnsReadProvider, epnsCommReadProvider);
+      // ChannelsDataStore.getInstance().init(account, epnsReadProvider, epnsCommReadProvider, chainId);
     }
   }, [epnsReadProvider, epnsCommReadProvider, epnsWriteProvider]);
 
@@ -209,14 +210,16 @@ const InitState = () => {
   };
 
   const checkUserForAlias = async (account, userPushSDKInstance) => {
-    let { aliasAddress = null, isAliasVerified = null } =
-      await ChannelsDataStore.getInstance().getChannelDetailsFromAddress(account, userPushSDKInstance);
-    if (aliasAddress == 'NULL') aliasAddress = null;
+    let { alias_address = null, is_alias_verified = null } = await getChannelDetails({
+      userPushSDKInstance,
+      address: account,
+    }).then((response) => response);
+    if (alias_address == 'NULL') alias_address = null;
 
-    if (aliasAddress) {
-      dispatch(setAliasAddress(aliasAddress));
-      dispatch(setAliasVerified(isAliasVerified));
-      if (isAliasVerified) {
+    if (alias_address) {
+      dispatch(setAliasAddress(alias_address));
+      dispatch(setAliasVerified(is_alias_verified));
+      if (is_alias_verified) {
         dispatch(setAliasVerified(true));
         dispatch(setProcessingState(0));
       } else {

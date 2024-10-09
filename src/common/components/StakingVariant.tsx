@@ -95,14 +95,14 @@ const StakingVariant: FC<StakingVariantProps> = ({
               <Text
                 variant="h4-semibold"
                 color="text-primary"
-                display={{ ml: 'none', dp: 'block' }}
+                display={{ ml: 'none', initial: 'block' }}
               >
                 {title}
               </Text>
               <Text
                 variant="h5-semibold"
                 color="text-primary"
-                display={{ ml: 'block', dp: 'none' }}
+                display={{ ml: 'block', initial: 'none' }}
               >
                 {title}
               </Text>
@@ -110,7 +110,7 @@ const StakingVariant: FC<StakingVariantProps> = ({
               <Text
                 variant="c-regular"
                 color="text-tertiary"
-                display={{ ml: 'none', dp: 'block' }}
+                display={{ ml: 'none', initial: 'block' }}
               >
                 {description}
               </Text>
@@ -118,7 +118,7 @@ const StakingVariant: FC<StakingVariantProps> = ({
               <Text
                 variant="c-regular"
                 color="text-tertiary"
-                display={{ ml: 'block', dp: 'none' }}
+                display={{ ml: 'block', initial: 'none' }}
               >
                 {description}
               </Text>
@@ -141,14 +141,14 @@ const StakingVariant: FC<StakingVariantProps> = ({
                 <Text
                   variant="h4-semibold"
                   color="text-brand-medium"
-                  display={{ ml: 'none', dp: 'block' }}
+                  display={{ ml: 'none', initial: 'block' }}
                 >
                   {fees} PUSH
                 </Text>
                 <Text
                   variant="h5-semibold"
                   color="text-brand-medium"
-                  display={{ ml: 'block', dp: 'none' }}
+                  display={{ ml: 'block', initial: 'none' }}
                 >
                   {fees} PUSH
                 </Text>
