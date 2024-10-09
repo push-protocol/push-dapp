@@ -26,7 +26,7 @@ import useToast from 'hooks/useToast';
 import { cacheChannelInfo } from 'redux/slices/channelSlice';
 import { addNewWelcomeNotif, incrementStepIndex } from 'redux/slices/userJourneySlice';
 import ChannelTutorial, { isChannelTutorialized } from 'segments/ChannelTutorial';
-import ChannelsDataStore from 'singletons/ChannelsDataStore';
+// import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import InfoImage from '../assets/info.svg';
 import RedCircleSvg from '../assets/RedCircle.svg?react';
 import NotificationToast from '../primaries/NotificationToast';
@@ -111,7 +111,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
   const fetchChannelJsonWithBlock = async () => {
     try {
       //TODO:here is the data store
-      const channelJson = await ChannelsDataStore.getInstance().getChannelJsonStartBlockAsync(channelObject.channel);
+      const channelJson = {};
+
+      // await ChannelsDataStore.getInstance().getChannelJsonStartBlockAsync(channelObject.channel);
       console.log('Channel JSON !!!!!', channelJson, channelObject.channel);
       return channelJson;
     } catch (err) {
@@ -450,19 +452,19 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                           placementProps={
                             tooltTipHeight < 250
                               ? {
-                                background: 'none',
-                                // bottom: "25px",
-                                top: '20px',
-                                // right: "-175px",
-                                left: mobileToolTip ? '-100px' : '5px',
-                              }
+                                  background: 'none',
+                                  // bottom: "25px",
+                                  top: '20px',
+                                  // right: "-175px",
+                                  left: mobileToolTip ? '-100px' : '5px',
+                                }
                               : {
-                                background: 'none',
-                                bottom: '25px',
-                                // top: "20px",
-                                // right: "-175px",
-                                left: mobileToolTip ? '-100px' : '5px',
-                              }
+                                  background: 'none',
+                                  bottom: '25px',
+                                  // top: "20px",
+                                  // right: "-175px",
+                                  left: mobileToolTip ? '-100px' : '5px',
+                                }
                           }
                           tooltipContent={
                             <UpdateChannelTooltipContent
@@ -508,15 +510,15 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                           placementProps={
                             tooltTipHeight < 160
                               ? {
-                                background: 'none',
-                                top: '20px', // for lower displaying
-                                left: '7px',
-                              }
+                                  background: 'none',
+                                  top: '20px', // for lower displaying
+                                  left: '7px',
+                                }
                               : {
-                                background: 'none',
-                                bottom: '28px', // above display
-                                left: '7px',
-                              }
+                                  background: 'none',
+                                  bottom: '28px', // above display
+                                  left: '7px',
+                                }
                           }
                           tooltipContent={
                             <VerifiedTooltipContent
@@ -624,19 +626,19 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                         placementProps={
                           tooltTipHeight < 250
                             ? {
-                              background: 'none',
-                              // bottom: "25px",
-                              top: '20px',
-                              // right: "-175px",
-                              left: '5px',
-                            }
+                                background: 'none',
+                                // bottom: "25px",
+                                top: '20px',
+                                // right: "-175px",
+                                left: '5px',
+                              }
                             : {
-                              background: 'none',
-                              bottom: '25px',
-                              // top: "20px",
-                              // right: "-175px",
-                              left: '5px',
-                            }
+                                background: 'none',
+                                bottom: '25px',
+                                // top: "20px",
+                                // right: "-175px",
+                                left: '5px',
+                              }
                         }
                         tooltipContent={
                           <UpdateChannelTooltipContent
@@ -680,15 +682,15 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                           placementProps={
                             tooltTipHeight < 160
                               ? {
-                                background: 'none',
-                                top: '20px', // for lower displaying
-                                left: '7px',
-                              }
+                                  background: 'none',
+                                  top: '20px', // for lower displaying
+                                  left: '7px',
+                                }
                               : {
-                                background: 'none',
-                                bottom: '28px', // above display
-                                left: '7px',
-                              }
+                                  background: 'none',
+                                  bottom: '28px', // above display
+                                  left: '7px',
+                                }
                           }
                           tooltipContent={
                             <VerifiedTooltipContent
@@ -956,7 +958,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                   >
                     <Button
                       size="small"
-                      onClick={() => { }}
+                      onClick={() => {}}
                       disabled={txInProgress}
                       loading={txInProgress}
                     >
@@ -997,7 +999,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser, minimal, p
                     }}
                   >
                     <UnsubscribeButton
-                      onClick={() => { }}
+                      onClick={() => {}}
                       disabled={txInProgress}
                     >
                       {txInProgress && (
@@ -1238,7 +1240,7 @@ const VerifierName = styled.span`
   font-weight: 400;
   color: ${(props) => props.theme.color};
   font-size: 16px;
-  letter-spacing:normal;
+  letter-spacing: normal;
   @media (max-width: 1024px) {
     margin-top: 10px;
   }

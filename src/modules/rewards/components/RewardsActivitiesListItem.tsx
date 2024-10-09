@@ -3,7 +3,20 @@ import { FC, useEffect, useMemo, useState } from 'react';
 import { Activity, useGetRewardsActivity } from 'queries';
 import { useAccount } from 'hooks';
 
-import { Box, Button, ErrorFilled, InfoFilled, Lozenge, RewardsBell, Skeleton, Text, Lock, Multiplier } from 'blocks';
+import {
+  Box,
+  Button,
+  ErrorFilled,
+  InfoFilled,
+  Lozenge,
+  RewardsBell,
+  Skeleton,
+  Text,
+  Lock,
+  Multiplier,
+  Star,
+} from 'blocks';
+import { css } from 'styled-components';
 import { ActivityButton } from './ActivityButton';
 import { RewardsActivityIcon } from './RewardsActivityIcon';
 import { RewardsActivityTitle } from './RewardsActivityTitle';
@@ -17,9 +30,15 @@ export type RewardActivitiesListItemProps = {
 };
 
 const getUpdatedExpiryTime = (timestamp: number) => {
-  const date = new Date(timestamp * 1000);
-  const days = date.getDate();
-  return days;
+  const currentDate = new Date();
+  const expiryDate = new Date(timestamp * 1000);
+
+  // Calculate the difference in time (milliseconds)
+  const timeDiff = expiryDate.getTime() - currentDate.getTime();
+
+  // Convert the difference from milliseconds to days
+  const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+  return daysLeft;
 };
 
 const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
@@ -82,6 +101,9 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
               alignItems="center"
               justifyContent="center"
               border="border-xs solid stroke-tertiary"
+              css={css`
+                flex-shrink: 0;
+              `}
             >
               <Lock
                 size={28}
@@ -124,13 +146,24 @@ const RewardsActivitiesListItem: FC<RewardActivitiesListItemProps> = ({
                     isLoading={isLoading}
                   />
 
-                  {!!activity.expiryType && (
-                    <Box display="flex">
+                  <Box
+                    display="flex"
+                    gap="spacing-xxs"
+                  >
+                    {!!activity.expiryType && getUpdatedExpiryTime(activity?.expiryType) > 0 && (
                       <Lozenge size="small">
-                        {`Expires in ${getUpdatedExpiryTime(activity.expiryType)} days`.toUpperCase()}
+                        {`Expires in ${getUpdatedExpiryTime(activity?.expiryType)} days`.toUpperCase()}
                       </Lozenge>
-                    </Box>
-                  )}
+                    )}
+                    {activity?.tags?.map((tag) => (
+                      <Lozenge
+                        size="small"
+                        icon={<Star />}
+                      >
+                        {tag}
+                      </Lozenge>
+                    ))}
+                  </Box>
                 </Box>
 
                 {/* We don't need to show the Description when the title is discord and twitter according to the design */}

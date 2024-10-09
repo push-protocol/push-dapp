@@ -8,7 +8,6 @@ import {
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { ADDITIONAL_META_TYPE } from '@pushprotocol/restapi/src/lib/payloads';
 import { VideoCallStatus } from '@pushprotocol/restapi';
-import { showNotifcationToast } from 'components/reusables/toasts/toastController';
 import { useSelector } from 'react-redux';
 
 const useSDKStream = () => {
@@ -60,8 +59,6 @@ const useSDKStream = () => {
                 retry: true,
               });
             }
-          } else {
-            showNotifcationToast(feedItem);
           }
         }
       } catch (e) {
@@ -73,9 +70,13 @@ const useSDKStream = () => {
   useEffect(() => {
     if (userPushSDKInstance?.signer) {
       (async () => {
-        const stream = await userPushSDKInstance.initStream([STREAM.CONNECT, STREAM.DISCONNECT, STREAM.NOTIF]);
-        stream.connect();
-        setStream(stream);
+        if (userPushSDKInstance?.stream && !userPushSDKInstance?.stream?.disconnected) {
+          setStream(userPushSDKInstance?.stream);
+        } else {
+          const stream = await userPushSDKInstance.initStream([STREAM.CONNECT, STREAM.DISCONNECT, STREAM.NOTIF]);
+          stream.connect();
+          setStream(stream);
+        }
       })();
     }
   }, [userPushSDKInstance]);
