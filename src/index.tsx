@@ -7,7 +7,6 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-
 // Internal Components
 import App from './App';
 import ErrorContextProvider from './contexts/ErrorContext';
@@ -33,26 +32,28 @@ const previewBasePath = getPreviewBasePath();
 const queryClient = new QueryClient({});
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <BrowserRouter basename={previewBasePath || publicURL}>
-    <Provider store={store}>
-      <GlobalContextProvider>
-        <Web3OnboardProvider web3Onboard={web3Onboard}>
-          <ErrorContextProvider>
-            <RewardsContextProvider>
-              <AppContextProvider>
-                <VideoCallContextProvider>
-                  <QueryClientProvider client={queryClient}>
-                    <App />
-                    <ReactQueryDevtools initialIsOpen={false} />
-                  </QueryClientProvider>
-                </VideoCallContextProvider>
-              </AppContextProvider>
-            </RewardsContextProvider>
-          </ErrorContextProvider>
-        </Web3OnboardProvider>
-      </GlobalContextProvider>
-    </Provider>
-  </BrowserRouter>
+  <HelmetProvider>
+    <BrowserRouter basename={previewBasePath || publicURL}>
+      <Provider store={store}>
+        <GlobalContextProvider>
+          <Web3OnboardProvider web3Onboard={web3Onboard}>
+            <ErrorContextProvider>
+              <RewardsContextProvider>
+                <AppContextProvider>
+                  <VideoCallContextProvider>
+                    <QueryClientProvider client={queryClient}>
+                      <App />
+                      <ReactQueryDevtools initialIsOpen={false} />
+                    </QueryClientProvider>
+                  </VideoCallContextProvider>
+                </AppContextProvider>
+              </RewardsContextProvider>
+            </ErrorContextProvider>
+          </Web3OnboardProvider>
+        </GlobalContextProvider>
+      </Provider>
+    </BrowserRouter>
+  </HelmetProvider>
 );
 
 // If you want your app to work offline and load faster, you can change

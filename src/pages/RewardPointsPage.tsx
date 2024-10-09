@@ -1,4 +1,3 @@
-//components
 import { Rewards } from 'modules/rewards';
 import { ContentLayout } from 'common';
 

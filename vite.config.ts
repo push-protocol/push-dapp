@@ -8,6 +8,7 @@ import vitePluginRequire from 'vite-plugin-require';
 import svgr from 'vite-plugin-svgr';
 import topLevelAwait from 'vite-plugin-top-level-await';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
+import vitePrerender from 'vite-plugin-prerender';
 // @ts-expect-error
 import { getPreviewBasePath } from './basePath';
 
@@ -53,6 +54,8 @@ if (localSDKLinking) {
   };
 }
 
+const { PuppeteerRenderer } = vitePrerender;
+
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
@@ -74,6 +77,80 @@ export default defineConfig({
     }),
     nodePolyfills(),
     vitePluginRequire.default(),
+    // vitePrerender({
+    //   staticDir: path.join(__dirname, 'build'),
+    //   outputDir: path.join(__dirname, 'prerendered'),
+    //   indexPath: path.join(__dirname, 'build', 'index.html'),
+    //   routes: ['/points', '/points/activity', '/points/leaderboard'], // Add your points route here
+    //   postProcess(renderedRoute) {
+    //     // Add specific meta tags for the /points route
+    //     if (
+    //       renderedRoute.route === '/points' ||
+    //       renderedRoute.route === '/points/activity' ||
+    //       renderedRoute.route === '/points/leaderboard'
+    //     ) {
+    //       const metaTags = `
+    //         <meta
+    //               property="og:url"
+    //               content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1833/points"
+    //             />
+    //             <meta
+    //               property="og:type"
+    //               content="website"
+    //             />
+    //             <meta
+    //               property="og:title"
+    //               content="Push App (Previously EPNS)"
+    //             />
+    //             <meta
+    //               property="og:description"
+    //               content="Push App (Previously EPNS) | Communication Protocol of Web3"
+    //             />
+    //             <meta
+    //               property="og:image"
+    //               content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1833/previews/rewardsPreview.png"
+    //             />
+    //             <meta
+    //               name="twitter:card"
+    //               content="summary_large_image"
+    //             />
+    //             <meta
+    //               property="twitter:domain"
+    //               content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1833/points"
+    //             />
+    //             <meta
+    //               property="twitter:url"
+    //               content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1833/points"
+    //             />
+    //             <meta
+    //               name="twitter:title"
+    //               content="Push App (Previously EPNS)"
+    //             />
+    //             <meta
+    //               name="twitter:description"
+    //               content="Push App (Previously EPNS) | Communication Protocol of Web3"
+    //             />
+    //             <meta
+    //               name="twitter:image"
+    //               content="https://push-protocol.github.io/push-dapp/pr-preview/pr-1833/previews/rewardsPreview.png"
+    //             />
+    //       `;
+    //       renderedRoute.html = renderedRoute.html.replace('</head>', `${metaTags}</head>`);
+    //     }
+    //     renderedRoute.route = renderedRoute.originalRoute;
+    //     return renderedRoute;
+    //   },
+    //   minify: {
+    //     collapseBooleanAttributes: true,
+    //     collapseWhitespace: true,
+    //   },
+    //   server: {
+    //     port: 3000,
+    //   },
+    //   renderer: new Renderer({
+    //     headless: true,
+    //   }),
+    // }),
   ],
   define: {
     global: 'globalThis',

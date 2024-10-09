@@ -174,6 +174,7 @@ function MasterInterfacePage() {
               path={APP_PATHS.WelcomeDashboard}
               element={<WelcomDashboardPage />}
             />
+
             {rewardsPointsPagePaths.map((path, index) => (
               <Route
                 path={path}
@@ -282,7 +283,12 @@ function MasterInterfacePage() {
 
             <Route
               path={APP_PATHS.YieldV2}
-              element={<Navigate to={APP_PATHS.Yield} replace />}
+              element={
+                <Navigate
+                  to={APP_PATHS.Yield}
+                  replace
+                />
+              }
             />
             <Route
               path={APP_PATHS.Yield}
