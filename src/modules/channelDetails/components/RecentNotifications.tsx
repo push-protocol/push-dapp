@@ -26,20 +26,24 @@ const RecentNotifications: FC<RecentNotificationsProps> = ({ channelAddress }) =
       height="100%"
       overflow="scroll"
       customScrollbar
+      gap="spacing-sm"
     >
-      <Text
-        color="text-primary"
-        variant="h4-semibold"
-      >
-        Recent Notifications
-      </Text>
+      <Box padding={{ ml: 'spacing-none spacing-sm' }}>
+        <Text
+          color="text-primary"
+          variant="h4-semibold"
+        >
+          Recent Notifications
+        </Text>
+      </Box>
       <Box
         display="flex"
-        width="100%"
+        width="-webkit-fill-available"
         height="100%"
         flexDirection="column"
         gap="spacing-sm"
-        padding="spacing-sm spacing-none spacing-none spacing-none"
+        padding={{ ml: 'spacing-none spacing-xxs', initial: 'spacing-none spacing-xxs spacing-none spacing-none' }}
+        margin={{ ml: 'spacing-none spacing-xxs', initial: 'spacing-none spacing-sm spacing-none spacing-none' }}
         overflow="scroll"
         justifyContent="flex-start"
         customScrollbar={true}

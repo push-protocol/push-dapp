@@ -19,6 +19,8 @@ const AllChannelList: FC<AllChannelListProps> = ({ channels, hasMoreData, isLoad
       height="100%"
       overflow="auto"
       customScrollbar={true}
+      padding="spacing-none spacing-xxs"
+      margin={{ initial: 'spacing-none spacing-sm', ml: 'spacing-none spacing-xxs' }}
       css={css`
         .channel-scroll {
           display: grid;

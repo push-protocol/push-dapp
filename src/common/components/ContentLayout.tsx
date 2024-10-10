@@ -24,7 +24,7 @@ const ContentLayout: FC<ContentLayoutProps> = ({ children, variant }) => {
         height="calc(100vh - 76px)"
         overflow="hidden"
         maxWidth="1200px"
-        width="calc(100% - (var(--spacing-sm) * 2))"
+        width={{ initial: 'calc(100% - (var(--spacing-sm) * 2))', ml: '-webkit-fill-available' }}
         css={css`
           border-bottom-right-radius: var(--radius-none);
           border-bottom-left-radius: var(--radius-none);

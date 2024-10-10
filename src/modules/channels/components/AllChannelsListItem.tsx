@@ -34,7 +34,7 @@ const AllChannelsListItem: FC<AllChannelsListItemProps> = ({ channelDetails, isL
       handleRefetch={handleRefetch}
       subscribeButtonVariant="outline"
       userSettings={userChannelSettings}
-      width={{ initial: 'inherit', tb: 'auto', lp: 'auto' }}
+      width={{ initial: 'inherit', tb: 'auto', lp: 'auto', mm: 'auto' }}
     />
   );
 };

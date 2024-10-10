@@ -26,7 +26,7 @@ const ChannelCategories: FC<ChannelCategoriesProps> = ({ filters, setFilter }) =
         flex-shrink: 0;
       `}
       gap="spacing-xs"
-      maxWidth={{ ml: '346px' }}
+      maxWidth={{ mm: '346px', ml: '392px' }}
       position="relative"
     >
       <Box

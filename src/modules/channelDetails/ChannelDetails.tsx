@@ -35,7 +35,7 @@ const ChannelDetails: FC = () => {
     channelsList?.length && (
       <Box
         width="-webkit-fill-available"
-        padding="spacing-md spacing-sm"
+        padding={{ initial: 'spacing-md spacing-none spacing-none spacing-sm', ml: 'spacing-none' }}
         display="flex"
         height="100%"
         justifyContent="flex-start"

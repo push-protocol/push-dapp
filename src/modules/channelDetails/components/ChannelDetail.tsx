@@ -44,13 +44,13 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channel, isLoading }) => {
       width="100%"
       height="100%"
       gap="spacing-xl"
-      padding="spacing-none spacing-xxs"
     >
       <Box
         display="flex"
         flexDirection="column"
         gap="spacing-sm"
-        width="100%"
+        width="-webkit-fill-available"
+        padding={{ initial: 'spacing-none spacing-md spacing-none spacing-none', ml: 'spacing-sm' }}
       >
         <Box
           display="flex"

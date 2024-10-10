@@ -66,20 +66,22 @@ const Channels: FC<ChannelsProps> = () => {
       display="flex"
       width="-webkit-fill-available"
       overflow="scroll"
-      padding="spacing-md spacing-md spacing-none spacing-md"
       height="100%"
     >
       <Box
         display="flex"
         flexDirection="column"
         width="100%"
-        gap="spacing-md"
+        gap={{ initial: 'spacing-md', ml: 'spacing-lg' }}
       >
         <Box
           display="flex"
           flexDirection="column"
           gap="spacing-sm"
-          height="100%"
+          padding={{
+            initial: 'spacing-md spacing-md spacing-none spacing-md',
+            ml: 'spacing-sm spacing-sm spacing-none spacing-sm',
+          }}
         >
           <ChannelSearchAndChainSelection
             filters={filters}
@@ -89,31 +91,31 @@ const Channels: FC<ChannelsProps> = () => {
             filters={filters}
             setFilter={setFilter}
           />
-          {!channels.length && !isLoading ? (
-            <Box
-              display="flex"
-              gap="spacing-xs"
-              alignItems="center"
-              flexDirection="column"
-              justifyContent="center"
-              height="100%"
-            >
-              <Search
-                size={48}
-                color="icon-tertiary"
-              />
-              <Text variant="h5-bold">No channels to display</Text>
-            </Box>
-          ) : (
-            <AllChannelList
-              channels={channels}
-              hasMoreData={hasMoreData}
-              isLoading={isLoading}
-              isLoadingNextPage={isFetchingNextPageForChannels || isSearchingNextPageForChannels}
-              loadMore={filters.search ? searchChannelsForNextPage : fetchChannelsForNextPage}
-            />
-          )}
         </Box>
+        {!channels.length && !isLoading ? (
+          <Box
+            display="flex"
+            gap="spacing-xs"
+            alignItems="center"
+            flexDirection="column"
+            justifyContent="center"
+            height="100%"
+          >
+            <Search
+              size={48}
+              color="icon-tertiary"
+            />
+            <Text variant="h5-bold">No channels to display</Text>
+          </Box>
+        ) : (
+          <AllChannelList
+            channels={channels}
+            hasMoreData={hasMoreData}
+            isLoading={isLoading}
+            isLoadingNextPage={isFetchingNextPageForChannels || isSearchingNextPageForChannels}
+            loadMore={filters.search ? searchChannelsForNextPage : fetchChannelsForNextPage}
+          />
+        )}
       </Box>
     </Box>
   );
