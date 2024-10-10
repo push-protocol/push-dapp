@@ -31,9 +31,10 @@ export const config = {
   /**
    * Core Network Related Data
    */
+  infuraAPIKey: import.meta.env.VITE_APP_IPFS_INFURA_API_KEY,
   coreContractChain: 5, //the chain id of the network which the core contract relies on
-  coreRPC: 'https://goerli.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
-  mainnetCoreRPC: 'https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
+  coreRPC: `https://goerli.infura.io/v3/${infuraAPIKey}`,
+  mainnetCoreRPC: `https://mainnet.infura.io/v3/${infuraAPIKey}`,
   mainnetCoreContractChain: 1,
   aliasRPC: {
     80002: 'https://polygon-amoy.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
@@ -99,7 +100,7 @@ export const CHAIN_DETAILS = {
     label: 'Ethereum Goerli',
     name: 'ETH_TEST_GOERLI',
     chainId: 5,
-    rpcUrl: 'https://goerli.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
+    rpcUrl: `https://goerli.infura.io/v3/${import.meta.env.VITE_APP_IPFS_INFURA_API_KEY}`,
     commAddress: '0xc064F30bac07e84500c97A04D21a9d1bfFC72Ec0',
     network: 'goerli',
   },

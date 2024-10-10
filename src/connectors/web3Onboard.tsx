@@ -1,6 +1,6 @@
 import Onboard from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
-import coinbaseWalletModule from '@web3-onboard/coinbase'
+import coinbaseWalletModule from '@web3-onboard/coinbase';
 import { EnvHelper } from 'helpers/UtilityHelper';
 import { getWeb3OnboardChains } from './chains';
 import { walletConnect } from './walletConnect';
@@ -16,7 +16,7 @@ export const web3Onboard = Onboard({
     icon: PushBlocknativeLogo,
     logo: PushBlocknativeLogo,
     description: 'The Communication Protocol of Web3',
-    explore: "https://app.push.org",
+    explore: 'https://app.push.org',
   },
   accountCenter: {
     desktop: {

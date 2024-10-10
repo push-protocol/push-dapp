@@ -40,9 +40,12 @@ export const config = {
   /**
    * Core Network Related Data
    */
+  infuraAPIKey: EnvHelper.isLocalHost
+    ? import.meta.env.VITE_APP_IPFS_INFURA_API_KEY
+    : 'be75cf427a5c41f9badb591994019d22',
   coreContractChain: 11155111, //the chain id of the network which the core contract relies on
-  coreRPC: 'https://ethereum-sepolia-rpc.publicnode.com',
-  mainnetCoreRPC: 'https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
+  coreRPC: `https://sepolia.infura.io/v3/${infuraAPIKey}`,
+  mainnetCoreRPC: `https://mainnet.infura.io/v3/${infuraAPIKey}`,
   mainnetCoreContractChain: 1,
   aliasRPC: {
     80002: 'https://polygon-amoy.infura.io/v3/5524d420b29f4f7a8d8d2f582a0d43f7',
