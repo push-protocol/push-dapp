@@ -1,9 +1,9 @@
 import { FC } from 'react';
 
-import { Box, Button, TextArea, TextInput } from 'blocks';
+import { Box, Button, Select, TextArea, TextInput } from 'blocks';
 
 import { useAccount } from 'hooks';
-
+import { useGetChannelCategories } from 'queries';
 import { useCreateChannelForm } from '../CreateChannel.form';
 import { ActiveStepKey } from '../CreateChannel.types';
 
@@ -24,11 +24,14 @@ const ChannelInfo: FC<ChannelInfoProps> = ({ handleNextStep, setActiveStepKey })
 
   const { isWalletConnected, connect } = useAccount();
 
+  const { data: categories } = useGetChannelCategories();
+
   const handleNext = () => {
     validateForm().then((errors) => {
       setTouched({
         channelName: true,
         channelDesc: true,
+        channelCategory: true,
         channelURL: true,
       });
       if (Object.keys(errors).length === 0) {
@@ -71,6 +74,18 @@ const ChannelInfo: FC<ChannelInfoProps> = ({ handleNextStep, setActiveStepKey })
             totalCount={32}
             error={touched.channelName && Boolean(errors?.channelName)}
             errorMessage={touched.channelName ? errors?.channelName : ''}
+          />
+          <Select
+            required
+            label="Channel Category"
+            options={categories?.selectFieldTags || []}
+            value={formValues.channelCategory}
+            error={touched.channelCategory && Boolean(errors?.channelCategory)}
+            errorMessage={touched.channelCategory ? errors?.channelCategory : ''}
+            onSelect={(value) => {
+              setFieldTouched('channelCategory', true);
+              setFieldValue('channelCategory', value);
+            }}
           />
           <TextArea
             required

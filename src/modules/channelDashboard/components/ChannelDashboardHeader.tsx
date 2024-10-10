@@ -10,7 +10,7 @@ import {
   KebabMenuHorizontal,
   Menu,
   MenuItem,
-  Skeleton
+  Skeleton,
 } from 'blocks';
 
 import { Alias, ChannelDetails } from 'queries';
@@ -32,7 +32,7 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
   channelDetails,
   setActiveState,
   onActiveNetwork,
-  currentAliasDetails
+  currentAliasDetails,
 }) => {
   const { chainId } = useAccount();
   const isAliasVerified = currentAliasDetails && currentAliasDetails?.is_alias_verified === 0;
@@ -54,7 +54,12 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
 
       {/* Edit Channel and Dropdown only visible on Core network */}
       {onCoreNetwork && (
-        <Box display="flex" height="fit-content" gap="spacing-xxs" justifyContent="center">
+        <Box
+          display="flex"
+          height="fit-content"
+          gap="spacing-xxs"
+          justifyContent="center"
+        >
           <Skeleton isLoading={!channelDetails?.name}>
             <Button
               variant="outline"
@@ -68,7 +73,7 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
 
           <Skeleton isLoading={!channelDetails?.name}>
             <Dropdown
-              trigger="click"
+              trigger="hover"
               overlay={
                 <Menu>
                   <MenuItem
@@ -104,7 +109,10 @@ const ChannelDashboardHeader: FC<ChannelDashboardHeaderProps> = ({
                 cursor="pointer"
                 alignItems="center"
               >
-                <KebabMenuHorizontal size={24} color="icon-primary" />
+                <KebabMenuHorizontal
+                  size={24}
+                  color="icon-primary"
+                />
               </Box>
             </Dropdown>
           </Skeleton>

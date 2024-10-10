@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-import { appConfig } from '../../../config/index';
+import { appConfig } from 'config';
 import { getTrendingChannelsModelCreator } from '../../models';
-import { TrendingChannelsParams } from '../../types/channels';
+import { TrendingChannelsParams } from '../../types';
 
 export const getTrendingChannels = ({ startDate, endDate, channel, source }: TrendingChannelsParams) =>
   axios({

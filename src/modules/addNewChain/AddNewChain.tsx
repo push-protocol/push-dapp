@@ -86,7 +86,7 @@ const AddNewChain: FC = () => {
   };
 
   const handleCloseAuthModal = () => {
-    if (channelDetails) navigate(`${APP_PATHS.ChannelDashboard}/${account}}`);
+    if (channelDetails) navigate(`${APP_PATHS.ChannelDashboard(account)}}`);
     else navigate(APP_PATHS.WelcomeDashboard);
     setIsAuthModalVisible(false);
   };

@@ -41,7 +41,7 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
   const pushTokenInWallet = async () => {
     const amount = await getPushTokenFromWallet({
       address: account,
-      provider: provider
+      provider: provider,
     });
     setBalance(amount);
   };
@@ -61,7 +61,7 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
     const pushTokenApprovalAmount = await getPushTokenApprovalAmount({
       address: account,
       provider: provider,
-      contractAddress: addresses.epnscore
+      contractAddress: addresses.epnscore,
     });
     setPushApprovalAmount(parseInt(pushTokenApprovalAmount));
   };
@@ -81,7 +81,6 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
     }
   }, [formValues]);
 
-
   const handleApprovePUSH = () => {
     setUpdateChannelError('');
 
@@ -95,7 +94,7 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
     approvePUSHToken(
       {
         noOfTokenToApprove: fees,
-        signer
+        signer,
       },
       {
         onSuccess: () => {
@@ -109,7 +108,7 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
           } else {
             setUpdateChannelError('Error in approving PUSH Tokens');
           }
-        }
+        },
       }
     );
   };
@@ -131,7 +130,8 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
         name: formValues.channelName,
         info: formValues.channelDesc,
         url: formValues.channelURL,
-        icon: formValues.channelIcon
+        icon: formValues.channelIcon,
+        tags: [formValues.channelCategory],
       });
 
       const storagePointer = await IPFSupload(input);
@@ -146,7 +146,7 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
           account,
           identityBytes,
           fees: parsedFees,
-          signer
+          signer,
         },
         {
           onSuccess: () => {
@@ -161,18 +161,22 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
             } else {
               setUpdateChannelError('Error in updating Channel. Check console for more reasons.');
             }
-          }
+          },
         }
       );
     }
-  }
+  };
 
   return (
-    <Box display="flex" flexDirection="column" alignSelf="stretch">
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignSelf="stretch"
+    >
       {updateChannelError && (
-        <Box width='100%'>
+        <Box width="100%">
           <Alert
-            variant='error'
+            variant="error"
             heading={updateChannelError}
             showIcon
           />
@@ -196,7 +200,11 @@ const EditChannelFooter: FC<EditChannelFooterProps> = ({ setActiveState }) => {
         gap="spacing-sm"
         margin="spacing-lg spacing-none spacing-none spacing-none"
       >
-        <Button size="medium" variant="outline" onClick={() => setActiveState('dashboard')}>
+        <Button
+          size="medium"
+          variant="outline"
+          onClick={() => setActiveState('dashboard')}
+        >
           Back
         </Button>
 

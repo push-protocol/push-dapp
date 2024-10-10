@@ -1,4 +1,5 @@
 export const addDelegate = 'addDelegate';
+export const allChannelsList = 'allChannelsList';
 export const createNotificationSettings = 'createNotificationSettings';
 export const addNewSubgraph = 'addNewSubgraph';
 export const aliasInfo = 'aliasInfo';
@@ -6,6 +7,8 @@ export const allActivities = 'allActivities';
 export const allUserSubscriptions = 'allUserSubscriptions';
 export const approvingPUSHToken = 'approvingPUSHToken';
 export const approveVaultUser = 'approveVaultUser';
+export const channelSearchList = 'channelSearchList';
+export const channelCategories = 'channelCategories';
 export const channelDelegates = 'channelDelegates';
 export const channelDetails = 'channelDetails';
 export const channelNotifications = 'channelNotifications';

@@ -12,25 +12,22 @@ type CreateChannelFormProviderProps = {
 };
 
 const CreateChannelValidationSchema = Yup.object().shape({
-  channelName: Yup.string()
-    .required(getRequiredFieldMessage('Channel Name'))
-    .max(32, getMaxCharLimitFieldMessage(32)),
+  channelName: Yup.string().required(getRequiredFieldMessage('Channel Name')).max(32, getMaxCharLimitFieldMessage(32)),
   channelDesc: Yup.string()
     .required(getRequiredFieldMessage('Channel Description'))
     .max(250, getMaxCharLimitFieldMessage(250)),
+  channelCategory: Yup.string().required(getRequiredFieldMessage('Channel Category')),
   channelURL: Yup.string()
     .required(getRequiredFieldMessage('Channel URL'))
-    .test('url', 'Please enter a valid channel url', (value) => URLRegex.test(value))
+    .test('url', 'Please enter a valid channel url', (value) => URLRegex.test(value)),
 });
 
-const CreateChannelFormProvider: FC<CreateChannelFormProviderProps> = ({
-  children,
-  onSubmit,
-}) => {
+const CreateChannelFormProvider: FC<CreateChannelFormProviderProps> = ({ children, onSubmit }) => {
   const createChannelForm = useFormik<ChannelInfoFormValues>({
     initialValues: {
       channelName: '',
       channelDesc: '',
+      channelCategory: '',
       channelURL: '',
       image: null,
     },
@@ -39,7 +36,6 @@ const CreateChannelFormProvider: FC<CreateChannelFormProviderProps> = ({
   });
 
   return <FormikProvider value={createChannelForm}>{children}</FormikProvider>;
-
 };
 
 const useCreateChannelForm = () => {
@@ -50,6 +46,4 @@ const useCreateChannelForm = () => {
   return context;
 };
 
-export { useCreateChannelForm, CreateChannelFormProvider }
-
-
+export { useCreateChannelForm, CreateChannelFormProvider };

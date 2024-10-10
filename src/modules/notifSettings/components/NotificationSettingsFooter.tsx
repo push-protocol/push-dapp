@@ -143,7 +143,7 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
         onSuccess: (response) => {
           if (response.transactionHash) {
             refetchChannelDetails();
-            navigate(`${APP_PATHS.ChannelDashboard}/${account}`);
+            navigate(`${APP_PATHS.ChannelDashboard(account)}`);
           }
         },
         onError: (error: any) => {
@@ -238,7 +238,7 @@ const NotificationSettingsFooter: FC<NotificationSettingsFooterProps> = ({ newSe
       >
         <Button
           variant="outline"
-          onClick={() => navigate(`${APP_PATHS.ChannelDashboard}/${account}`)}
+          onClick={() => navigate(`${APP_PATHS.ChannelDashboard(account)}`)}
         >
           Cancel
         </Button>

@@ -23,7 +23,6 @@ import {
 import { incrementStepIndex } from 'redux/slices/userJourneySlice';
 import DisplayNotice from '../primaries/DisplayNotice';
 import { Item } from '../primaries/SharedStyling';
-import { ChannelTYPE } from 'modules/channels/ChannelsModule';
 
 // Internal Configs
 import { appConfig } from 'config/index.js';
@@ -298,7 +297,7 @@ function ViewChannels({ loadTeaser, playTeaser, minimal }) {
                           loadTeaser={loadTeaser}
                           playTeaser={playTeaser}
                           minimal={minimal}
-                          profileType={ChannelTYPE.CHANNEL}
+                          profileType={'Channel'}
                         />
                       )}
                   </ViewChannelItems>

@@ -167,7 +167,7 @@ function Navigation() {
         newNavSetup.developersList[0].data.activeSrc = channelDetails.iconV2;
         newNavSetup.developersList[0].data.hidden = false;
         newNavSetup.developersList[0].data.loading = false;
-        newNavSetup.developersList[0].data.href = `${APP_PATHS.ChannelDashboard}/${channelDetails.channel}`;
+        newNavSetup.developersList[0].data.href = `${APP_PATHS.ChannelDashboard(channelDetails.channel)}`;
       } else {
         newNavSetup.developersList[0].data.name = 'Create Channel';
         newNavSetup.developersList[0].data.hidden = false;

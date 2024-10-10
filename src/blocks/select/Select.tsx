@@ -41,12 +41,12 @@ export type SelectProps = {
   action?: ReactNode;
 };
 
-const Container = styled.div<{ css?: FlattenSimpleInterpolation }>`
+const Container = styled.div<{ css?: FlattenSimpleInterpolation; label: SelectProps['label'] }>`
   align-items: flex-start;
   display: flex;
   flex-direction: column;
   flex: 1 0 0;
-  gap: var(--spacing-xxs, 8px);
+  gap: var(--spacing-${({ label }) => (label ? 'xxs' : 'none')});
 
   /* Custom CSS applied via styled component css prop */
   ${(props) => props.css || ''};
@@ -255,7 +255,10 @@ const Select: React.FC<SelectProps> = ({
   };
 
   return (
-    <Container css={css}>
+    <Container
+      css={css}
+      label={label}
+    >
       <LabelContainer>
         <LabelText color={disabled ? 'components-inputs-text-disabled' : 'components-inputs-text-default'}>
           <LabelTextContainer>

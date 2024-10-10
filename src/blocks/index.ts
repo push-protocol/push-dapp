@@ -9,6 +9,7 @@ export { Menu, type MenuProps, MenuItem, type MenuItemComponentProps } from './m
 export { Modal, type ModalProps, modal } from './modal';
 export { notification, Notification } from './notification';
 export { Pagination, type PaginationProps } from './pagination';
+export { Pill, type PillProps } from './pill';
 export { ProgressBar, type ProgressBarProps } from './progressBar';
 export { Separator, type SeparatorProps } from './separator';
 export { Skeleton, type SkeletonProps } from './skeleton';
