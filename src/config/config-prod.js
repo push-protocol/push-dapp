@@ -38,9 +38,12 @@ export const config = {
   /**
    * Core Network Related Data
    */
+  infuraAPIKey: EnvHelper.isLocalHost
+    ? import.meta.env.VITE_APP_IPFS_INFURA_API_KEY
+    : 'dd262cc008764b29bd6a15249db4772e',
   coreContractChain: 1, //the chain id of the network which the core contract relies on
-  coreRPC: 'https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
-  mainnetCoreRPC: 'https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
+  coreRPC: `https://mainnet.infura.io/v3/${infuraAPIKey}`,
+  mainnetCoreRPC: `https://mainnet.infura.io/v3/${infuraAPIKey}`,
   mainnetCoreContractChain: 1,
   aliasRPC: {
     137: 'https://polygon-mainnet.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9',
@@ -123,7 +126,7 @@ export const CHAIN_DETAILS = {
     label: 'Ethereum Mainnet',
     name: 'ETH_MAINNET',
     chainId: 1,
-    rpcUrl: 'https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
+    rpcUrl: 'https://mainnet.infura.io/v3/dd262cc008764b29bd6a15249db4772e',
     commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa',
     network: 'mainnet',
   },
