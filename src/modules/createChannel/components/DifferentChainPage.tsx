@@ -15,8 +15,6 @@ const DifferentChainPage = () => {
 
   const chainName = networkName[chainId];
 
-  console.log('Chain name', chainName, chainId);
-
   return (
     <>
       <Box
