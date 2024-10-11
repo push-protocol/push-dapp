@@ -39,6 +39,7 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
   });
 
   // resolve web3 name
+  console.debug('calling hook multiple times');
   useResolveWeb3Name(account);
   const web3Name = web3NameList[account];
 
@@ -99,6 +100,7 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
   const handleConnectWallet = () => {
     connect();
   };
+  console.debug(web3Name, 'web3name');
 
   const isWalletConnected = !!wallet?.accounts?.length;
 
@@ -128,7 +130,7 @@ const Profile = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 onClick={() => setShowDropdown(!showDropdown)}
                 ref={toggleArrowRef}
               >
-                {web3Name === null ? (
+                {web3Name === undefined ? (
                   <LoaderSpinner
                     type={LOADER_TYPE.SEAMLESS}
                     spinnerSize={20}

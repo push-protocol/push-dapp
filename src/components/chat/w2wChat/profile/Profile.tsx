@@ -23,7 +23,7 @@ const Profile = ({ setActiveTab, showQR, setShowQR }: any): JSX.Element => {
   const theme = useTheme();
 
   // resolve web3 name
-  useResolveWeb3Name(account);
+  // useResolveWeb3Name(account);
 
   const ensName = web3NameList[account];
 

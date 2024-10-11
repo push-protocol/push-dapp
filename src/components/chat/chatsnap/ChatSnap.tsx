@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React,{useContext} from 'react';
+import React, { useContext } from 'react';
 import { ethers } from 'ethers';
 
 // External Packages
@@ -35,17 +35,17 @@ interface ChatSnapPropsI {
 
 // Other Information section
 const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, isGroup }: ChatSnapPropsI) => {
-  const { web3NameList }:AppContextType=useContext(AppContext);
+  const { web3NameList }: AppContextType = useContext(AppContext);
   let ensName = '';
 
   // get theme
   const theme = useTheme();
 
   // resolve web3 names
-  useResolveWeb3Name(!isGroup ? username : null);
+  // useResolveWeb3Name(!isGroup ? username : null);
 
   // get ens name from context
-  if(!isGroup){
+  if (!isGroup) {
     if (username?.includes(':nft')) {
       // to match "eip155:" followed by any chainId and replace it with "eip155:" and split the string at ':nft' and keep the part before it
       username = username.replace(/eip155:\d+:/, 'eip155:').split(':nft')[0];
@@ -108,11 +108,10 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
 
   let date = null;
   if (timestamp) {
-    
-    if (typeof timestamp === "string" && timestamp?.includes('Z')) {
+    if (typeof timestamp === 'string' && timestamp?.includes('Z')) {
       timestamp = timestamp.replace('Z', '');
     }
-  
+
     date = convertTimestampToDateDayTime(new Date(timestamp));
   }
 

@@ -29,7 +29,7 @@ export type LeaderboardListItemProps = {
 const LeaderboardListItem: FC<LeaderboardListItemProps> = ({ rank, address, points, isLoading }) => {
   const { web3NameList }: AppContextType = useContext(AppContext)!;
 
-  useResolveWeb3Name(address);
+  // useResolveWeb3Name(address);
 
   const web3Name = web3NameList[address];
   const displayName = web3Name ? web3Name : shortenText(address, 10, 10);

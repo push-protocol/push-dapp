@@ -51,7 +51,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
     msg.messageType = 'TwitterFeedLink';
   }
   const walletAddress = shortenText(caip10ToWallet(msg?.fromCAIP10)?.toLowerCase(), 6);
-  useResolveWeb3Name(msg?.fromCAIP10);
+  // useResolveWeb3Name(msg?.fromCAIP10);
 
   const walletLowercase = caip10ToWallet(msg?.fromCAIP10)?.toLowerCase();
   const checksumWallet = walletLowercase ? ethers.utils.getAddress(walletLowercase) : null;

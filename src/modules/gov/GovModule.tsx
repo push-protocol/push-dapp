@@ -71,7 +71,7 @@ const GovModule = () => {
   const [transactionMode, setTransactionMode] = useState('gasless');
 
   // Resolving web3 names
-  useResolveWeb3Name(account);
+  // useResolveWeb3Name(account);
   const web3Name = web3NameList[account];
 
   const toggleShowAnswer = (id) => {
